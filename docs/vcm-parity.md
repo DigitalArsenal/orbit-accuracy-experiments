@@ -45,8 +45,12 @@ released) and modules commits `5695d427`, `e13b7bac`, `2bfce56a`, `eede9c8d`
    can be written as VCMs (or OCMs) and SP VCMs read.
 3. **Jacchia 1970 magnitude.** At equal exospheric temperature our J70
    (GMAT's Jacchia-Roberts, faithfully ported) gives 2–3× JB2008's density at
-   400–700 km, and 1.7–2.1× NRLMSISE-00's. To be checked against SAO SR 313's
-   tables before J70 is used for anything quantitative.
+   400–700 km, and 1.7–2.1× NRLMSISE-00's. An independent Jacchia-Roberts
+   (SatelliteToolbox.jl `jr1971`, its documented 700 km example) is 1.87× its
+   JB2008, so the excess is the model's; but the GMAT port is 35 % above
+   SatelliteToolbox at that example (810 K against 832 K exospheric
+   temperature, and GMAT's semiannual/latitudinal factor 1.19). To be settled
+   against SAO SR 313's tables before J70 is used quantitatively.
 4. **Sample propagation cost.** HPOP re-propagates every sample from the
    initial epoch on the variational path (quadratic in the number of
    samples); experiments that sample densely should use the plain path (steps
