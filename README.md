@@ -41,7 +41,7 @@ Conjunction Screening whitepaper says about the states it screens.
 
 | ID | Question | Status |
 | --- | --- | --- |
-| [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft; harness checks (A0) running |
+| [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft. Harness checks A0.1–A0.4 pass ([report](results/e1/a0/REPORT.md)). |
 
 ## Running
 

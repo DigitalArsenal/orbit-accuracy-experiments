@@ -212,6 +212,20 @@ commit.
 5. Evaluate on test, once. Generate the report.
 6. M2, exploratory. Then E2 in LEO.
 
+## Open before the freeze
+
+- **Heavy tails decide RMS.** In the A0 window one satellite (NORAD 35752)
+  carries 99.6 % of the squared 3D error at 7 days; its errors look like a
+  manoeuvre. At age 0, RMS is 3.76 km with every sample, 2.07 km under the
+  10 km rule, and the median is 1.30 km. A correction of a few kilometres
+  cannot move a 70 km sample, so with every sample in the primary RMS, H1 is
+  decided by manoeuvres rather than by the method. Options for the owner:
+  (a) keep the primary as written; (b) exclude element sets in manoeuvre
+  windows identified from a source independent of the errors; (c) make the
+  primary statistic the 5 robust-sigma clipped RMS, as `gp-error-model` uses,
+  with the unclipped RMS as the sensitivity analysis. Decided and recorded
+  here before the freeze.
+
 ## Amendments
 
 Dated changes to this plan, with their reasons. Amendments after the freeze
