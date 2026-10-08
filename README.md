@@ -42,6 +42,11 @@ Conjunction Screening whitepaper says about the states it screens.
 | ID | Question | Status |
 | --- | --- | --- |
 | [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft. Harness checks A0.1–A0.4 pass ([report](results/e1/a0/REPORT.md)). |
+| [E2](experiments/e2-catalog-covariance/PLAN.md) | Can catalog history (and E1's corrected element sets) give VCM-equivalent products — state, B/BDOT/AGOM and a covariance that stays realistic when propagated? | Plan in draft; needs SDS 1.240.0 and the train/validation truth. |
+
+The parity target for the high-fidelity products is
+[docs/vcm-parity.md](docs/vcm-parity.md): every Vector Covariance Message
+field, its PRW carrier, HPOP's implementation and the evidence for it.
 
 ## Running
 
