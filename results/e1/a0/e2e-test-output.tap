@@ -1,0 +1,27 @@
+
+> orbit-accuracy-experiments@0.1.0 test
+> node --test test/*.test.mjs
+
+TAP version 13
+# Subtest: A0.1 epoch-state through this harness reproduces the Vallado verification set
+ok 1 - A0.1 epoch-state through this harness reproduces the Vallado verification set
+  ---
+  duration_ms: 50.00675
+  type: 'test'
+  ...
+# Subtest: A0.4 the baseline is deterministic
+ok 2 - A0.4 the baseline is deterministic
+  ---
+  duration_ms: 30419.273765
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32421.339932
+exit 0

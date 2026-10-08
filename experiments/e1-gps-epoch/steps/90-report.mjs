@@ -32,7 +32,7 @@ for (const r of runs) {
     lines.push(`| ${id} | ${c.pass ? 'PASS' : 'FAIL'} | ${c.description}; ${detail} | \`${r.id}\` |`);
   }
 }
-lines.push('', 'A0.1 (Vallado vectors) and A0.4 (determinism) are the end-to-end tests in `test/e2e.test.mjs`; their output is in the run log, not in a run directory.', '');
+lines.push('', 'A0.1 (Vallado vectors) and A0.4 (determinism) are the end-to-end tests in `test/e2e.test.mjs`; their TAP output is saved beside this report as `e2e-test-output.tap`.', '');
 
 for (const r of runs.filter((x) => x.metrics.summary)) {
   const m = r.metrics;
@@ -41,7 +41,7 @@ for (const r of runs.filter((x) => x.metrics.summary)) {
     'Intervals are 95 % two-way cluster bootstrap (satellite × day).', '');
   lines.push('| Age (d) | n | Objects | RMS 3D | 95 % interval | RMS R / T / N | Median 3D | RMS 3D, 10 km rule (sensitivity) |', '| ---: | ---: | ---: | ---: | --- | --- | ---: | ---: |');
   for (const s of m.summary) {
-    lines.push(`| ${s.ageDays} | ${s.n} | ${s.objects} | ${km(s.rms3dKm)} | ${km(s.rms3dCi.lower)} – ${km(s.rms3dCi.upper)} | ${s.rmsRtnKm.map(km).join(' / ')} | ${km(s.median3dKm)} | ${km(s.sensitivityTenKmRule?.rms3dKm)} (${s.sensitivityTenKmRule?.excludedSets ?? 0} sets dropped) |`);
+    lines.push(`| ${s.ageDays} | ${s.n} | ${s.objects} | ${km(s.rms3dKm)} | ${km(s.rms3dCi.lower)} – ${km(s.rms3dCi.upper)} | ${s.rmsRtnKm.map(km).join(' / ')} | ${km(s.median3dKm)} | ${km(s.sensitivityTenKmRule?.rms3dKm)} (element sets dropped: ${s.sensitivityTenKmRule?.excludedSets ?? 0}) |`);
   }
   lines.push('', '### Per satellite, age 0', '', '| NORAD | n | Median along-track | RMS 3D |', '| ---: | ---: | ---: | ---: |');
   for (const o of m.perObject) lines.push(`| ${o.norad} | ${o.n} | ${km(o.medianAlongTrackKm)} | ${km(o.rms3dKm)} |`);

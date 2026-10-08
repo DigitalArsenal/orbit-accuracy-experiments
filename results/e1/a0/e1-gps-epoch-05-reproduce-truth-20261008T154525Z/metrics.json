@@ -1,0 +1,38 @@
+{
+ "checks": {
+  "A0.3": {
+   "description": "rebuilds analysis/gp-error-model/docs/truth-2026-08.json through this harness",
+   "published": "analysis/gp-error-model/docs/truth-2026-08.json",
+   "strata": 42,
+   "valuesCompared": 2268,
+   "worstRelative": 0,
+   "limit": 1e-9,
+   "countMismatches": [],
+   "counts": {
+    "reproduced": {
+     "duplicateEpochs": 372,
+     "elementSets": 1565,
+     "objects": 48,
+     "propagationFailures": 0,
+     "referenceEpochs": 47881,
+     "referenceObjectsWithoutElements": 4,
+     "refused": 0,
+     "samples": 733773,
+     "unclassified": 0
+    },
+    "published": {
+     "duplicateEpochs": 372,
+     "elementSets": 1565,
+     "objects": 48,
+     "propagationFailures": 0,
+     "referenceEpochs": 47881,
+     "referenceObjectsWithoutElements": 4,
+     "refused": 0,
+     "samples": 733773,
+     "unclassified": 0
+    }
+   },
+   "pass": true
+  }
+ }
+}
