@@ -1,0 +1,42 @@
+{
+  "experiment": "v1-hpop-physical-truth",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "modules": "../../main-packages/space-data-network-modules",
+    "kernel": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp"
+  },
+  "horizonsHours": [1, 6, 12, 24, 48, 72],
+  "slr": {
+    "objects": [
+      { "name": "lageos1", "norad": 8820, "massKg": 406.965, "diameterM": 0.6, "cr": 1.13 },
+      { "name": "lageos2", "norad": 22195, "massKg": 405.38, "diameterM": 0.6, "cr": 1.13 },
+      { "name": "etalon1", "norad": 19751, "massKg": 1415, "diameterM": 1.294, "cr": 1.2 },
+      { "name": "etalon2", "norad": 20026, "massKg": 1415, "diameterM": 1.294, "cr": 1.2 }
+    ],
+    "arcs": ["260808", "260815"],
+    "seedOffsetsHours": [0, 72]
+  },
+  "gps": {
+    "productPrefix": "IGS0OPSFIN",
+    "seedDays": ["2026-08-02", "2026-08-06", "2026-08-10"],
+    "massKg": 1500,
+    "areaM2": 20,
+    "cr": 1.3
+  },
+  "integrator": { "algorithm": "RK78", "tolerance": 1e-13, "maxStep": 300 },
+  "configurations": {
+    "E-a": {},
+    "E-b": { "degree": 20, "order": 0 },
+    "E-c": { "degree": 20, "order": 0, "thirdBodies": [10, 301] },
+    "E-d": { "degree": 20, "order": 0, "thirdBodies": [10, 301], "srp": true }
+  },
+  "criteria": {
+    "twoBody": { "periods": 5, "muKm3S2": 398600.4418, "limitM": 1 },
+    "slrOrdering": { "atHours": 24, "pairs": [["E-b", "E-a"], ["E-c", "E-b"]], "srpAtHours": 72, "srpPair": ["E-d", "E-c"] },
+    "gpsOrdering": { "atHours": 24, "pairs": [["E-b", "E-a"], ["E-c", "E-b"]] },
+    "tesserals": { "atHours": 24, "pair": ["R-20", "E-b"] },
+    "magnitude": { "configuration": "E-d", "atHours": 24, "medianBelowM": 500 }
+  }
+}
