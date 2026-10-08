@@ -1,0 +1,16 @@
+{
+  "name": "orbit-accuracy-experiments",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pre-registered orbit-accuracy experiments run through Space Data Network modules with the space-data-module-sdk harness.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "flatbuffers": "25.9.23",
+    "space-data-module-sdk": "0.8.26",
+    "spacedatastandards.org": "1.232.0"
+  }
+}

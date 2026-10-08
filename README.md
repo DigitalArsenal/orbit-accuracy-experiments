@@ -1,0 +1,61 @@
+# orbit-accuracy-experiments
+
+Pre-registered experiments on orbit accuracy and uncertainty, run through the
+Space Data Network's WASM modules with the `space-data-module-sdk` harness.
+The results are the evidence behind the accuracy claims in the
+Evidence-Supported ASO Catalog whitepaper, and behind what the Fast
+Conjunction Screening whitepaper says about the states it screens.
+
+## Rules
+
+1. **Modules compute; this repository counts.** Every orbit computation —
+   propagation, frames, time scales, errors in RTN — runs in an SDN module
+   from `space-data-network-modules`. Code here moves records in and out,
+   fits statistical models to the modules' outputs, and computes statistics.
+2. **Plan first.** Each experiment has a `PLAN.md` that states its
+   hypotheses, data windows, methods, endpoints and decision rules. Its
+   `config.json` holds the same numbers for the code. The plan is frozen by a
+   commit before its test window is read, and the code refuses the test window
+   until then.
+3. **Every number has a manifest.** A run writes `runs/<run-id>/manifest.json`:
+   command, config hash, commits of this repository and of the modules, each
+   module's WASM SHA-256, package versions, runtime, and the SHA-256 of every
+   input file. Reports are generated from a run's metrics, never typed.
+4. **Element sets stay on this machine.** Space-Track data and per-sample
+   tables derived from it live in `runs/` (ignored). Only aggregates,
+   manifests and reports are committed, under `results/`.
+5. **Failures are results.** A hypothesis that fails is reported with the
+   same care as one that passes.
+
+## Layout
+
+| Path | Contents |
+| --- | --- |
+| `harness/` | Module loading and provenance, record framing, archive and reference readers, statistics |
+| `experiments/<id>/` | `PLAN.md`, `config.json`, and numbered steps |
+| `test/` | End-to-end checks of the harness against public vectors and the real archive |
+| `runs/` | Run outputs (ignored) |
+| `results/` | Committed run summaries |
+
+## Experiments
+
+| ID | Question | Status |
+| --- | --- | --- |
+| [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft; harness checks (A0) running |
+
+## Running
+
+Requirements: Node 22 or later; a `space-data-network-modules` checkout with
+built `dist/isomorphic/module.wasm` artifacts; the SDN archive's
+`gp_history` and converted reference states.
+
+```sh
+npm ci
+export SDN_MODULES_ROOT=../../main-packages/space-data-network-modules   # default when this repo sits in the stack
+node experiments/e1-gps-epoch/steps/10-baseline.mjs --window a0
+npm test
+```
+
+Paths default to `config.json` and can be overridden with `--modules`,
+`--archive` and `--reference` or the `SDN_MODULES_ROOT`, `SDN_GP_HISTORY`
+and `SDN_REFERENCE_STATES` environment variables.

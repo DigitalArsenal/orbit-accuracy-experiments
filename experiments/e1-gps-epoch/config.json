@@ -1,0 +1,51 @@
+{
+  "experiment": "e1-gps-epoch",
+  "frozen": false,
+  "plan": "PLAN.md",
+  "inputs": {
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "referenceProductPrefix": "IGS0OPSFIN",
+    "modules": "../../main-packages/space-data-network-modules"
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "duplicateEpochSeconds": 1
+  },
+  "windows": {
+    "train": ["2024-10-01", "2025-09-30"],
+    "validation": ["2025-10-01", "2026-03-31"],
+    "test": ["2026-04-01", "2026-09-15"],
+    "a0": ["2026-08-02", "2026-08-15"]
+  },
+  "scoring": {
+    "ageBinsDays": [0, 0.5, 1, 2, 3, 5, 7],
+    "binWidthDays": 0.010416666666666666,
+    "referenceStepSeconds": 0,
+    "primaryAgeDays": 0
+  },
+  "tiers": {
+    "planes": { "count": 6, "assignAt": "2024-10-01" },
+    "unseenGenerationFromLaunchYear": 2018
+  },
+  "statistics": {
+    "bootstrapResamples": 10000,
+    "bootstrapSeed": 20261008,
+    "confidence": 0.95,
+    "alpha": 0.05,
+    "multiplicity": "holm"
+  },
+  "acceptance": {
+    "h1": { "reductionAtLeast": 0.5, "lowerBoundAtLeast": 0.4 },
+    "h2": { "reductionAtLeast": 0.3, "lowerBoundAbove": 0 },
+    "h3": { "tolerance": 0.05, "tailLimit": 0.01, "minimumSamples": 30, "minimumObjects": 3, "agesDays": [[0, 0.5], [0.5, 1], [1, 2], [2, 3]] },
+    "conformalCoverage": [0.935, 0.965],
+    "noHarm": { "worseBy": 0.1, "flagAbove": 1 },
+    "a0": {
+      "valladoPositionKm": 5e-8,
+      "valladoVelocityKmS": 5e-9,
+      "sumRelative": 1e-9
+    }
+  }
+}
