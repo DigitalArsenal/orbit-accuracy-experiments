@@ -3,7 +3,10 @@
 // precise orbits later, force by force (PLAN.md). Modules compute; this file
 // selects states, converts nothing itself, and takes norms of differences.
 //
-//   node experiments/v1-hpop-physical-truth/run.mjs [--modules DIR] [--reference DIR] [--quick]
+//   node experiments/v1-hpop-physical-truth/run.mjs [--modules DIR] [--reference DIR] [--eop FILE] [--quick]
+//        [--budget SECONDS] [--resume RUN_ID]
+// With --budget the run stops after the seed that crosses the budget, keeping
+// what it has in partial.jsonl, and exits 75; --resume continues it.
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -11,16 +14,19 @@ import { loadModule, modulesRoot } from '../../harness/modules.mjs';
 import { decodeOemStream } from '../../harness/records.mjs';
 import { decodeExecution, decodeResident, executionFrame, kernelFrame, residentIngestFrames, residentRequestFrame } from '../../harness/prw.mjs';
 import { convertIso } from '../../harness/time.mjs';
+import { c04Records, eopFrame } from '../../harness/eop.mjs';
 import { repoRoot, startRun } from '../../harness/provenance.mjs';
 import { median } from '../../harness/stats.mjs';
 import { sha256 } from '../../harness/modules.mjs';
 
 const configPath = path.join(path.dirname(new URL(import.meta.url).pathname), 'config.json');
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-const { values } = parseArgs({ options: { modules: { type: 'string' }, reference: { type: 'string' }, quick: { type: 'boolean' } } });
+const { values } = parseArgs({ options: { modules: { type: 'string' }, reference: { type: 'string' }, eop: { type: 'string' }, quick: { type: 'boolean' }, budget: { type: 'string' }, resume: { type: 'string' } } });
 const modules = modulesRoot({ flag: values.modules, configured: config.inputs.modules, repoRoot });
 const referenceDir = path.resolve(values.reference ?? process.env.SDN_REFERENCE_STATES ?? config.inputs.reference);
-const run = startRun({ experiment: config.experiment, step: 'run', configPath, modulesDir: modules, args: values });
+const run = startRun({ experiment: config.experiment, step: 'run', configPath, modulesDir: modules, args: values, resume: values.resume });
+const budgetMs = values.budget ? Number(values.budget) * 1000 : Infinity;
+const invocationStart = performance.now();
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 
 // ── Reference states ──
@@ -75,6 +81,23 @@ run.addModule(time.provenance);
 const kernelBytes = fs.readFileSync(path.join(modules, config.inputs.kernel));
 run.addInputs('kernel', { [config.inputs.kernel]: sha256(kernelBytes) });
 const kernel = kernelFrame(kernelBytes);
+// Earth orientation for the configurations that ask for it (amendment A3):
+// IERS EOP C04 rows through data-source/eop-parser, one window covering every
+// arc, from a day before the first seed to two days after the last target.
+let earthOrientation = null;
+if (Object.values(config.configurations).some((f) => f.eop)) {
+  const eopFile = path.resolve(values.eop ?? process.env.SDN_EOP_C04 ?? config.inputs.eop);
+  const parser = await loadModule(modules, 'data-source/eop-parser');
+  run.addModule(parser.provenance);
+  const parsed = await c04Records(parser, eopFile);
+  run.addInputs('eop', { [path.basename(eopFile)]: parsed.sha256 });
+  const mjd = (iso) => Math.floor(utcMs(iso) / 86400000) + 40587;
+  const first = Math.min(...seeds.map((s) => mjd(s.seed.epoch))) - 1;
+  const last = Math.max(...seeds.flatMap((s) => s.targets.map((t) => mjd(t.truth.epoch)))) + 2;
+  earthOrientation = eopFrame(parsed.records, first, last);
+  log(`EOP: ${earthOrientation.rows} C04 rows, MJD ${first}..${last}`);
+  await parser.destroy();
+}
 const tdbCache = new Map();
 const tdb = async (iso) => {
   if (!tdbCache.has(iso)) tdbCache.set(iso, await convertIso(time, iso, 'UTC', 'TDB'));
@@ -104,9 +127,22 @@ const checks = { 'V1.1': { description: `two-body, ${periods} Kepler periods fro
 log(`V1.1 two-body: ${periods} periods of ${periodS.toFixed(3)} s, return error ${twoBodyErrorM.toExponential(3)} m`);
 
 // ── Execution configurations ──
-const results = [];  // {group, object, norad, arc, seedEpoch, configuration, hours, errorM}
+// results: {group, object, norad, arc, seedEpoch, configuration, hours, errorM},
+// kept one seed at a time in partial.jsonl so a split run can resume.
+const partialFile = path.join(run.dir, 'partial.jsonl');
+const results = fs.existsSync(partialFile) ? fs.readFileSync(partialFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
+const has = (s, cfg) => results.some((x) => x.object === s.object && x.seedEpoch === s.seed.epoch && x.configuration === cfg);
+const keep = (rows) => { results.push(...rows); fs.appendFileSync(partialFile, rows.map((r) => `${JSON.stringify(r)}\n`).join('')); };
+const overBudget = () => performance.now() - invocationStart > budgetMs;
+const stopIncomplete = (done, total) => {
+  run.checkpoint();
+  log(`incomplete: ${done}/${total}; continue with --resume ${run.id}`);
+  process.exit(75);
+};
 const started = performance.now();
 for (const [i, s] of seeds.entries()) {
+  if (Object.keys(config.configurations).every((name) => has(s, name))) continue;
+  const rows = [];
   const epoch = await tdb(s.seed.epoch);
   const targets = [];
   for (const t of s.targets) targets.push(await tdb(t.truth.epoch));
@@ -115,13 +151,15 @@ for (const [i, s] of seeds.entries()) {
     const request = { epoch, timeScale: 'TDB', position: s.seed.position, velocity: s.seed.velocity, samples: targets, target: targets.at(-1),
       integrator: config.integrator, forces: { ...forces, ...(forces.srp ? s.params : {}) }, kernel: withKernel };
     try {
-      const out = decodeExecution(await hpop.invoke('invoke', [executionFrame(request), ...(withKernel ? [kernel] : [])]));
-      out.samples.forEach((p, k) => results.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: name, hours: s.targets[k].hours, errorM: errorM(p.position, s.targets[k].truth.position) }));
+      const out = decodeExecution(await hpop.invoke('invoke', [executionFrame(request), ...(withKernel ? [kernel] : []), ...(forces.eop ? [earthOrientation] : [])]));
+      out.samples.forEach((p, k) => rows.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: name, hours: s.targets[k].hours, errorM: errorM(p.position, s.targets[k].truth.position) }));
     } catch (error) {
-      results.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: name, error: String(error.message).slice(0, 300) });
+      rows.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: name, error: String(error.message).slice(0, 300) });
     }
   }
+  keep(rows);
   if ((i + 1) % 10 === 0) process.stderr.write(`\r${i + 1}/${seeds.length} seeds, ${((performance.now() - started) / 1000).toFixed(0)} s`);
+  if (overBudget() && i < seeds.length - 1) stopIncomplete(`${i + 1} execution seeds`, `${seeds.length}`);
 }
 process.stderr.write('\n');
 
@@ -129,14 +167,18 @@ process.stderr.write('\n');
 const ingest = residentIngestFrames('v1-resident', 1, seeds.map((s, k) => ({ handle: k + 1, norad: s.norad, epoch: s.seed.epoch, position: s.seed.position, velocity: s.seed.velocity })));
 await hpop.invoke('ingest_state', ingest.frames);
 for (const [k, s] of seeds.entries()) {
+  if (has(s, 'R-20')) continue;
+  const rows = [];
   for (const t of s.targets) {
     try {
       const out = decodeResident(await hpop.invoke('propagate_state', [residentRequestFrame(ingest.identity, t.truth.epoch, [k + 1])]));
-      results.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: 'R-20', hours: t.hours, errorM: errorM(out.position, t.truth.position) });
+      rows.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: 'R-20', hours: t.hours, errorM: errorM(out.position, t.truth.position) });
     } catch (error) {
-      results.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: 'R-20', hours: t.hours, error: String(error.message).slice(0, 300) });
+      rows.push({ group: s.group, object: s.object, norad: s.norad, arc: s.arc, seedEpoch: s.seed.epoch, configuration: 'R-20', hours: t.hours, error: String(error.message).slice(0, 300) });
     }
   }
+  keep(rows);
+  if (overBudget() && k < seeds.length - 1) stopIncomplete(`${k + 1} resident seeds`, `${seeds.length}`);
 }
 
 // ── Criteria ──

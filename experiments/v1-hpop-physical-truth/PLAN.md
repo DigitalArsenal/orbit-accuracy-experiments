@@ -97,4 +97,37 @@ criteria.
 
 ## Amendments
 
-None.
+Recorded after the first run, `v1-hpop-physical-truth-run-20261008T155943Z`
+(`--quick`, HPOP artifact `a7375613…`). The criteria above are unchanged.
+
+**A1. The module changed; V1 is rerun on the new artifact.** The first run
+found that E-b equalled E-a to the metre: `SPHERICAL_HARMONICS` without the J
+flags evaluated the point mass alone. That and three other HPOP faults were
+fixed in the HPOP lockdown of 2026-10-08, against Orekit 13.1 (see
+`propagator/hpop/tests/orekit_reference.test.mjs`): the field's column
+recursion and the sign of its tesseral y term, and a clock on single
+Julian-date doubles. `SPHERICAL_HARMONICS` with degree 20 and order 0 is now
+the EGM2008 zonal field to degree 20 in Earth-fixed axes. Each run's manifest
+records the artifact it used.
+
+**A2. The radiation-pressure premise in criterion 2 was wrong.** The
+acceleration is right (about 4e-9 m/s^2 on LAGEOS), but its effect is not
+"over a hundred metres by 72 h". Most of it is periodic, with an amplitude
+of order a/n^2, about 2 cm at LAGEOS; the secular part changes the
+eccentricity by about 1e-7 a day, about a metre. E-d and E-c therefore differ
+by metres while the configurations without tesserals are tens of kilometres
+off, so "E-d < E-c at 72 h" cannot be resolved here and decides nothing. It
+is still evaluated and reported.
+
+**A3. A configuration with every modelled force, descriptive only.** HPOP's
+execution path now takes Earth orientation data (its `earth_orientation`
+input), so it can carry tesserals together with the Sun, Moon and radiation
+pressure, which section 2 said it could not. E-e adds it:
+
+| ID | Path | Forces |
+| --- | --- | --- |
+| E-e | Execution | 20 x 20 EGM2008 field in ITRF + Sun and Moon + cannonball radiation pressure, with IERS EOP C04 |
+
+The EOP rows are the IERS EOP C04 file in `reference-states/products`, read
+by `data-source/eop-parser`. E-e enters no criterion; it is reported beside
+the others.

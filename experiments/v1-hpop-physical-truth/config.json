@@ -5,7 +5,8 @@
   "inputs": {
     "reference": "/opt/data/sdn-archive/reference-states/reference",
     "modules": "../../main-packages/space-data-network-modules",
-    "kernel": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp"
+    "kernel": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp",
+    "eop": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now"
   },
   "horizonsHours": [1, 6, 12, 24, 48, 72],
   "slr": {
@@ -30,7 +31,8 @@
     "E-a": {},
     "E-b": { "degree": 20, "order": 0 },
     "E-c": { "degree": 20, "order": 0, "thirdBodies": [10, 301] },
-    "E-d": { "degree": 20, "order": 0, "thirdBodies": [10, 301], "srp": true }
+    "E-d": { "degree": 20, "order": 0, "thirdBodies": [10, 301], "srp": true },
+    "E-e": { "degree": 20, "order": 20, "thirdBodies": [10, 301], "srp": true, "eop": true }
   },
   "criteria": {
     "twoBody": { "periods": 5, "muKm3S2": 398600.4418, "limitM": 1 },
