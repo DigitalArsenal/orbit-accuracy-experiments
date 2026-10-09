@@ -165,3 +165,22 @@ never published; only the aggregates in `results/e4/` are.
 - OneWeb, SES and Telesat: their formats have no module reader.
 
 ## Amendments
+
+**A1 (2026-10-09, after the first comparison run, before any aggregate was
+computed). Starlink has no 72 h horizon.** A MEME file spans 72 h from its
+`ephemeris_start`, which precedes its `created` time (the cut-off) by about
+a quarter of an hour, and some files span 48 h. The 72 h horizon therefore
+never falls inside a Starlink file, and H1's 72 h bound cannot be tested as
+written. H1 is reported as not decided at 72 h; the median at the last
+horizon reached (60 h) is reported beside it, with no decision attached.
+
+**A2 (2026-10-09, same point). H where the HPOP model has no P₀.** The
+2026-08 HPOP covariance model has no geostationary regime. For Intelsat, H
+is the same propagated state without a covariance; its accuracy is
+reported and it enters no covariance metric.
+
+**A3 (2026-10-09, same point). Galileo truth unavailable.** CODE's server
+(`ftp.aiub.unibe.ch`) did not answer over HTTP or FTP from this machine
+during the run, and ESA publishes no multi-GNSS final for these weeks, so
+H4 is not tested for `cpf` (section 2 anticipated this). GPS and GLONASS
+truth (`ESA0OPSFIN`) were downloaded for every day of the window.
