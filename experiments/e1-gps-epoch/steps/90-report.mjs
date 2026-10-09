@@ -50,6 +50,10 @@ for (const r of runs.filter((x) => x.metrics.step === '30-evaluate')) {
   row('H2', 'G2, unseen plane', H.H2, `R ≥ ${pct(H.H2.criteria.reductionAtLeast)}, lower > ${pct(H.H2.criteria.lowerBoundAbove)}`);
   lines.push(`| H3 | G1, covariance | — | — | — | — | gate at ${byAge(H.H3.coverage).map(([a]) => a).join(', ')} d | ${H.H3.holm.pValue.toExponential(2)} (${H.H3.holm.threshold.toFixed(4)}) | ${H.H3.supported ? 'supported' : 'not supported'} |`, '');
 
+  lines.push('### What can be checked without Space-Track', '',
+    'The truth, Earth orientation and satellite identities are published in `data/e1/` and its release assets (`data/e1/SOURCES.md`), byte for byte as served, with the reference-states index of every product; `analysis/reference-states` rebuilds the reference states from them, and the modules are identified by WASM SHA-256 below. ' +
+    'Every metric in this report scores Space-Track `gp_history` element sets, which Space-Track\'s terms keep off this repository: M0, M3a–c, G2, G3, M4\'s coverage and H1–H3 all need that history to reproduce. Each run manifest lists the SHA-256 of every `gp_history` file read, and the selection rules (PLAN.md §3) are deterministic, so anyone with a Space-Track account can retrieve the same records by creation date. ' +
+    'CelesTrak\'s public GP service serves current element sets, not the 2024–2026 history, so no public GP source covers these epochs.', '');
   lines.push('### Every variant and tier, age 0 (descriptive beside the primary)', '',
     '| Method | n | RMS M0 | RMS method | R, primary (clipped) | R, every sample | R, 10 km rule |', '| --- | ---: | ---: | ---: | --- | --- | --- |');
   const all = [['M3a (Ly et al., reconstructed), G1', m.variants.M3a], ['M3b (Hallgarten La Casta & Amato), G1', m.variants.M3b], ['M3c (hierarchical harmonic), G1', m.variants.M3c],
