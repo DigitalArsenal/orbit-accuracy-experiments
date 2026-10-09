@@ -1,16 +1,20 @@
 // Shared by E7's steps: configuration, the window lock, element sets, truth,
-// the environment inputs and the modules. Bookkeeping only.
+// the environment inputs at an information cutoff, and the modules.
+// Bookkeeping only.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { parseArgs } from 'node:util';
 import { execFileSync } from 'node:child_process';
+import * as fb from 'flatbuffers';
+import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
 import { loadModule, modulesRoot, sha256 } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
-import { kernelFrame } from '../../harness/prw.mjs';
-import { c04Records, eopFrame } from '../../harness/eop.mjs';
+import { PRW_TYPE, kernelFrame } from '../../harness/prw.mjs';
+import { c04Records } from '../../harness/eop.mjs';
 import { readElementSets, epochMs, shiftDay } from '../../harness/gp-archive.mjs';
 import { jb2008Frame, jb2008Rows, readGfzKp, readSetIndices, spaceWeatherFrame, spwRows } from '../../harness/full-force.mjs';
+import { readRsga, releasedEopRecords, releasedJb2008Rows, releasedSpwRows } from '../../harness/cutoff-environment.mjs';
 import { Products } from '../e3-combined-catalog/truth.mjs';
 import { estimationCodec } from '../e2-catalog-covariance/estimation-wire.mjs';
 
@@ -20,13 +24,14 @@ export const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 export const DAY_MS = 86400000;
 export const HOUR_MS = 3600000;
 export const isoUtc = (ms) => new Date(ms).toISOString().replace('Z', '');
+export const utcMs = (text) => Date.parse(/[zZ]$/.test(text) ? text : `${text}Z`);
 
 // The test window stays locked until PLAN.md and config.json are frozen by a
 // commit: `frozen` must be true and both files committed and unchanged here.
 // Returns the freeze commit for the test window, null otherwise.
 export function assertWindowReadable(name) {
   if (name !== 'test') return null;
-  if (config.frozen !== true) throw new Error('the test window is locked until config.json is frozen (PLAN.md section 8)');
+  if (config.frozen !== true) throw new Error('the test window is locked until config.json is frozen (PLAN.md section 9)');
   const files = ['config.json', 'PLAN.md'].map((f) => path.relative(repoRoot, path.join(experimentDir, f)));
   const git = (...args) => execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8' }).trim();
   if (git('status', '--porcelain', '--', ...files)) throw new Error('the test window is locked: PLAN.md or config.json differs from its committed state');
@@ -74,10 +79,10 @@ export function regimeTruth(referenceDir, names) {
   return out;
 }
 
-// Element sets with epochs in [from - margin, to + 8 d] for the objects,
+// Element sets with epochs in [from - marginDays, to + 8 d] for the objects,
 // cached in runs/cache (element sets never leave this machine).
 export function windowSets(archive, window, objects, marginDays) {
-  const from = shiftDay(window.from, -marginDays), to = shiftDay(window.to, 1);
+  const from = shiftDay(window.from, -marginDays), to = shiftDay(window.to, 8);
   const key = sha256(Buffer.from(JSON.stringify({ from, to, objects: [...objects].sort((a, b) => a - b), e: config.elementSets }))).slice(0, 16);
   const file = path.join(repoRoot, 'runs', 'cache', `e7-sets-${window.name}-${key}.json.gz`);
   if (fs.existsSync(file)) return JSON.parse(zlib.gunzipSync(fs.readFileSync(file)));
@@ -90,10 +95,24 @@ export function windowSets(archive, window, objects, marginDays) {
   return { sets: read.sets, files: read.files, duplicates: read.duplicates };
 }
 
-// The samples of a window: for each object of a regime and each product time
-// (window start + k * stride, 00:00 UTC), the object's latest element set with
-// its epoch at or before that time and no more than sampleMaxAgeDays older.
-// Targets: the first truth state at or after epoch + h, within the tolerance.
+export function setsByObjectOf(sets) {
+  const out = new Map();
+  for (const s of sets) {
+    s.epochMs = epochMs(s.epoch);
+    s.createdMs = utcMs(s.creationDate);
+    if (!out.has(s.norad)) out.set(s.norad, []);
+    out.get(s.norad).push(s);
+  }
+  for (const list of out.values()) list.sort((a, b) => a.epochMs - b.epochMs);
+  return out;
+}
+
+// The samples of a window (PLAN.md section 4): for each object of a regime and
+// each product time t (the window's start at 00:00 UTC plus multiples of the
+// stride), the object's OMM with the latest epoch among those created at or
+// before t, at most sampleMaxAgeDays old. Its CREATION_DATE is the sample's
+// information cutoff. Targets: the first truth state at or after epoch + h,
+// within the tolerance.
 export function schedule(window, truthByRegime, setsByObject) {
   const samples = [];
   const lo = Date.parse(`${window.from}T00:00:00Z`), hi = Date.parse(`${window.to}T00:00:00Z`);
@@ -104,7 +123,8 @@ export function schedule(window, truthByRegime, setsByObject) {
       const mine = setsByObject.get(norad) ?? [];
       const used = new Set();
       for (let t = lo; t <= hi; t += stride * DAY_MS) {
-        const k = mine.findLastIndex((s) => s.epochMs <= t);
+        let k = -1;
+        for (let i = 0; i < mine.length && mine[i].epochMs <= t; ++i) if (mine[i].createdMs <= t) k = i;
         if (k < 0 || t - mine[k].epochMs > config.sampleMaxAgeDays * DAY_MS || used.has(mine[k].gpId)) continue;
         used.add(mine[k].gpId);
         const set = mine[k];
@@ -112,7 +132,7 @@ export function schedule(window, truthByRegime, setsByObject) {
           const s = products.firstAtOrAfter(norad, set.epochMs + h * HOUR_MS, tol);
           return s ? { h, ms: s.ms, epoch: s.epoch, r: s.r, v: s.v, file: s.entry.file } : { h, missing: true };
         });
-        samples.push({ regime: name, norad, scheduled: isoUtc(t), gpId: set.gpId, epoch: set.epoch, epochMs: set.epochMs, index: k, targets });
+        samples.push({ regime: name, norad, scheduled: isoUtc(t), gpId: set.gpId, epoch: set.epoch, epochMs: set.epochMs, cutoffMs: set.createdMs, index: k, targets });
       }
       products.dropCache();
     }
@@ -120,19 +140,8 @@ export function schedule(window, truthByRegime, setsByObject) {
   return samples;
 }
 
-export function setsByObjectOf(sets) {
-  const out = new Map();
-  for (const s of sets) {
-    s.epochMs = epochMs(s.epoch);
-    if (!out.has(s.norad)) out.set(s.norad, []);
-    out.get(s.norad).push(s);
-  }
-  for (const list of out.values()) list.sort((a, b) => a.epochMs - b.epochMs);
-  return out;
-}
-
-// Coefficients of an object for H-epoch: Cr*A/m nominal (m^2/kg), or for GPS
-// blocks with a published box-wing that model at the SINEX mass (`gnss`, a
+// Coefficients of an object: Cr*A/m nominal (m^2/kg), or for GPS blocks with
+// a published box-wing that model at the SINEX mass (`gnss`, a
 // readGpsMetadata result); Cd*A/m by rule.
 export function coefficients(regimeName, norad, set, bRule, gnss = null) {
   const p = config.physical;
@@ -146,34 +155,68 @@ export function coefficients(regimeName, norad, set, bRule, gnss = null) {
   return { agom, b: bRule === 'nominal' ? nominalB : bstarB, nominalB, bstarB, ...(boxWing ? { boxWing } : {}), ...(meta ? { gpsBlock: meta.block } : {}) };
 }
 
-// Modules and fixed environment inputs.
-export async function context(modules, run, { estimation = false } = {}) {
+// The force configuration of a variant: the regime's, with the variant's
+// atmosphere (the operational one unless the variant names another).
+export function forcesOf(regimeName, spec) {
+  const f = config.regimes[regimeName].forces;
+  return f.drag ? { ...f, atmosphere: spec.atmosphere ?? config.drivers.operationalAtmosphere } : { ...f };
+}
+
+// Fails fast unless the propagator is the binary the plan names.
+export function assertBinary(provenance) {
+  const want = config.modulesBinary.hpopWasmSha256;
+  if (provenance.wasmSha256 !== want) throw new Error(`propagator/hpop WASM ${provenance.wasmSha256} is not the binary config.json names (${want})`);
+}
+
+// Modules and the environment inputs.
+export async function context(modules, run, { estimation = false, maneuvers = false } = {}) {
   const kernelPath = path.join(repoRoot, config.inputs.kernel.path);
   if (!fs.existsSync(kernelPath)) throw new Error(`DE440s kernel missing: fetch ${config.inputs.kernel.url} to ${config.inputs.kernel.path}`);
   const kernelBytes = fs.readFileSync(kernelPath);
   if (sha256(kernelBytes) !== config.inputs.kernel.sha256) throw new Error('DE440s kernel bytes differ from the pinned SHA-256');
   run.addInputs('kernel', { [path.basename(kernelPath)]: config.inputs.kernel.sha256 });
-  const names = ['analysis/epoch-state', 'analysis/gp-error-model', 'propagator/hpop', 'data-source/eop-parser', 'foundation/frames', ...(estimation ? ['analysis/estimation'] : [])];
+  const names = ['analysis/epoch-state', 'analysis/gp-error-model', 'propagator/hpop', 'data-source/eop-parser', 'foundation/frames',
+    ...(estimation ? ['analysis/estimation'] : []), ...(maneuvers ? ['analysis/maneuver-detection'] : [])];
   const loaded = {};
   for (const name of names) { loaded[name] = await loadModule(modules, name); run.addModule(loaded[name].provenance); }
+  assertBinary(loaded['propagator/hpop'].provenance);
   const eop = await c04Records(loaded['data-source/eop-parser'], config.inputs.eopC04);
   run.addInputs('eop', { [path.basename(config.inputs.eopC04)]: eop.sha256 });
   const set = readSetIndices(config.inputs.solfsmy, config.inputs.dtcfile);
   run.addInputs('jb2008', { 'SOLFSMY.TXT': set.sha256.solfsmy, 'DTCFILE.TXT': set.sha256.dtcfile });
   const gfz = readGfzKp(config.inputs.gfzKp);
   run.addInputs('spaceWeather', { [path.basename(config.inputs.gfzKp)]: gfz.sha256 });
+  const rsga = readRsga(config.inputs.swpcRsga, path.join(repoRoot, 'runs', 'cache', 'rsga'));
+  run.addInputs('swpcRsga', rsga.files);
   const kernel = kernelFrame(kernelBytes);
   const codec = estimation ? await estimationCodec(modules, path.join(repoRoot, 'node_modules/space-data-module-sdk/schemas/orbpro')) : null;
   const mjd = (ms) => Math.floor(ms / DAY_MS) + 40587;
+  const c = config.cutoff;
+  const eopFrame = (records) => {
+    const b = new fb.Builder(1 << 16);
+    P.PRW.finishSizePrefixedPRWBuffer(b, Object.assign(new P.PRWT(), { EARTH_ORIENTATION: Object.assign(new P.PRWEarthOrientationT(), { ROWS: records.map((r) => r.row) }) }).pack(b));
+    return { portId: 'earth_orientation', typeRef: PRW_TYPE, payload: b.asUint8Array().slice() };
+  };
   return {
     ...Object.fromEntries(Object.entries(loaded).map(([k, v]) => [k.split('/')[1], v])),
     codec,
-    // The environment frames for a propagation over [fromMs, toMs]; drivers
-    // persist after persistFromMs when given (JB2008 only).
-    inputsFor(fromMs, toMs, forces, persistFromMs = null) {
-      const frames = [kernel, eopFrame(eop.records, mjd(fromMs) - 2, mjd(toMs) + 2)];
-      if (forces.drag && forces.atmosphere === 'JB2008') frames.push(jb2008Frame(jb2008Rows(set, fromMs - 6 * DAY_MS, toMs + 2 * DAY_MS, persistFromMs)));
-      if (forces.drag && forces.atmosphere === 'NRLMSISE00') frames.push(spaceWeatherFrame(spwRows(gfz, fromMs - 2 * DAY_MS, toMs + 2 * DAY_MS)));
+    // The environment frames for a propagation over [fromMs, toMs].
+    // drivers 'released': what was public at cutoffMs (PLAN.md section 4);
+    // 'observed': the values observed over the span (hindcast).
+    inputsFor(fromMs, toMs, forces, { drivers, cutoffMs }) {
+      const released = drivers === 'released';
+      if (!released && drivers !== 'observed') throw new Error(`unknown drivers ${drivers}`);
+      const from = mjd(fromMs) - 2, to = mjd(toMs) + 2;
+      const eopRecords = released ? releasedEopRecords(eop.records, cutoffMs, c.eopLatencyDays, from, to) : eop.records.filter((r) => r.mjd >= from && r.mjd <= to);
+      const frames = [kernel, eopFrame(eopRecords)];
+      if (forces.drag && forces.atmosphere === 'JB2008') {
+        const a = fromMs - 6 * DAY_MS, b = toMs + 2 * DAY_MS;
+        frames.push(jb2008Frame(released ? releasedJb2008Rows(jb2008Rows, set, a, b, cutoffMs, c.jb2008PublicLatencyDays) : jb2008Rows(set, a, b)));
+      }
+      if (forces.drag && forces.atmosphere === 'NRLMSISE00') {
+        const a = fromMs - 2 * DAY_MS, b = toMs + 2 * DAY_MS;
+        frames.push(spaceWeatherFrame(released ? releasedSpwRows(gfz, rsga, cutoffMs, a, b).rows : spwRows(gfz, a, b)));
+      }
       return frames;
     },
     async destroy() { for (const m of Object.values(loaded)) await m.destroy(); },

@@ -32,6 +32,7 @@ function encode(arm, value, size = 1 << 16) {
 //     'GPS_IIR_M' | 'GPS_IIF'), massKg} (the GNSS box-wing a priori in place of the cannonball),
 //     ecom2 {D0, Y0, B0, D2_COS, ..., B3_SIN} (m/s^2, added to the a priori)},
 //   parameters [{kind}] solved for (their values come from coefficients), stm (bool),
+//   covariance [(6 + p)^2] (SI, GCRF, over the state and the parameters) | null,
 //   integrator {tolerance, maxStep}}
 // SDS 1.241.0: RADIATION_PRESSURE_MODEL, GNSS_BLOCK and ECOM2.
 export const ECOM2_TERMS = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'D4_COS', 'D4_SIN', 'B1_COS', 'B1_SIN', 'B3_COS', 'B3_SIN'];
@@ -71,12 +72,14 @@ export function executionFrame(request) {
     INCLUDE_STM: !!request.stm, STM_TECHNIQUE: P.prwDerivativeTechnique.ANALYTIC,
     DENSITY_TREATMENT: f.drag ? P.prwDensityTreatment.FINITE_DIFFERENCE : P.prwDensityTreatment.NEGLECTED,
     DYNAMIC_PARAMETERS: (request.parameters ?? []).map((p) => P.prwDynamicParameter[p.kind]),
+    INITIAL_COVARIANCE: request.covariance ? table('PRWStateMatrix', { DIMENSION: 6 + (request.parameters ?? []).length, VALUES: request.covariance }) : null,
     SAMPLE_EPOCHS: request.samples.map((s) => instant(s, 'UTC')),
   });
   return { portId: 'request', typeRef: PRW_TYPE, payload: encode('EXECUTION_REQUEST', execution) };
 }
 
-// The samples, in request order: {epoch, state [m, m/s], stm [n*n] | null, n}.
+// The samples, in request order: {epoch, state [m, m/s], stm [n*n] | null,
+// covariance [n*n] | null, n}.
 export function decodeSamples(response) {
   const frame = response.outputs.find((o) => o.portId === 'response');
   const root = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(frame.payload))).unpack();
@@ -86,8 +89,9 @@ export function decodeSamples(response) {
     return {
       epoch: st.EPOCH,
       state: [st.POSITION.X, st.POSITION.Y, st.POSITION.Z, st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z],
-      n: s.STM?.DIMENSION ?? 6,
+      n: s.STM?.DIMENSION ?? s.COVARIANCE?.DIMENSION ?? 6,
       stm: s.STM ? s.STM.VALUES : null,
+      covariance: s.COVARIANCE ? s.COVARIANCE.VALUES : null,
       steps: Number(s.ACCEPTED_STEPS ?? 0),
     };
   });
@@ -120,28 +124,13 @@ export function readSetIndices(solfsmy, dtcfile) {
   return { sol, dtc, sha256: { solfsmy: sha256(solBytes), dtcfile: sha256(dtcBytes) } };
 }
 
-// JB2008 rows for the days [from, to] (ms). With `persistFromMs`, every
-// value published for a time after that instant is replaced by the last one
-// published at or before it (solar indices by day, DTC by hour): the drivers
-// a forecaster holding only the data of that instant would use.
-export function jb2008Rows(set, fromMs, toMs, persistFromMs = null) {
+// JB2008 rows for the days [fromMs, toMs] as SET published them.
+export function jb2008Rows(set, fromMs, toMs) {
   const rows = [];
   for (let t = dayMs(isoDay(fromMs)); t <= toMs; t += DAY_MS) {
     const date = isoDay(t);
     if (!set.sol.has(date) || !set.dtc.has(date)) throw new Error(`no SOLFSMY or DTCFILE row for ${date}`);
     rows.push({ DATE: date, ...set.sol.get(date), DTC_HOURLY_K: [...set.dtc.get(date)] });
-  }
-  if (persistFromMs !== null) {
-    const d0 = dayMs(isoDay(persistFromMs)), h0 = Math.floor((persistFromMs - d0) / 3600000);
-    const base = rows.find((r) => r.DATE === isoDay(d0));
-    if (!base) throw new Error('persistence instant outside the rows');
-    const lastDtc = base.DTC_HOURLY_K[h0];
-    for (const r of rows) {
-      const t = dayMs(r.DATE);
-      if (t > d0) Object.assign(r, { ...Object.fromEntries(Object.entries(base).filter(([k]) => k !== 'DATE' && k !== 'DTC_HOURLY_K')) });
-      if (t > d0) r.DTC_HOURLY_K = r.DTC_HOURLY_K.map(() => lastDtc);
-      if (t === d0) r.DTC_HOURLY_K = r.DTC_HOURLY_K.map((v, h) => (h > h0 ? lastDtc : v));
-    }
   }
   return rows;
 }

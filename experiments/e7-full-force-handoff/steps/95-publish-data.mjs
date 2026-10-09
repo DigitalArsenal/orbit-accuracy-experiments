@@ -30,6 +30,7 @@ const manifest = { experiment: config.experiment, generated: new Date().toISOStr
 for (const [key, terms] of [
   ['eopC04', 'IERS: free use with acknowledgement of the IERS Earth Orientation Centre'],
   ['solfsmy', null], ['dtcfile', null], ['gfzKp', 'GFZ Potsdam: CC BY 4.0 (Matzka et al. 2021)'],
+  ['gnssMetadata', 'IGS: free use with acknowledgement of the IGS (IGS data and product disclaimer and terms of use)'],
 ]) {
   const file = config.inputs[key];
   const bytes = fs.readFileSync(file);
@@ -40,6 +41,28 @@ for (const [key, terms] of [
     sha256: sha256(bytes), gzSha256: sha256(fs.readFileSync(path.join(out, name))), terms: p?.terms ?? terms });
 }
 manifest.listed.push({ file: path.basename(config.inputs.kernel.path), source: config.inputs.kernel.url, sha256: config.inputs.kernel.sha256, terms: 'JPL/NAIF public archive' });
+
+// NOAA SWPC RSGA reports (public domain), as the warehouse serves them: the
+// yearly archive and the 2026 daily files, in one committed tar.gz.
+{
+  const sources = config.inputs.swpcRsga;
+  const staging = path.join(assets, 'swpc-rsga');
+  fs.mkdirSync(staging, { recursive: true });
+  const members = [];
+  for (const src of sources) {
+    if (src.endsWith('.tar.gz')) { fs.copyFileSync(src, path.join(staging, path.basename(src))); members.push({ file: path.basename(src), sha256: sha256(fs.readFileSync(src)), provenance: provenanceOf(src) }); continue; }
+    for (const f of fs.readdirSync(src).filter((n) => /RSGA\.txt$/.test(n)).sort()) {
+      fs.mkdirSync(path.join(staging, '2026'), { recursive: true });
+      fs.copyFileSync(path.join(src, f), path.join(staging, '2026', f));
+      members.push({ file: `2026/${f}`, sha256: sha256(fs.readFileSync(path.join(src, f))), provenance: provenanceOf(path.join(src, f)) });
+    }
+  }
+  const tarFile = path.join(out, 'swpc-rsga.tar.gz');
+  execFileSync('tar', ['-czf', tarFile, '-C', staging, '.']);
+  fs.rmSync(staging, { recursive: true });
+  manifest.committed.push({ file: 'data/e7/swpc-rsga.tar.gz', source: 'ftp://ftp.swpc.noaa.gov/pub/warehouse/ (RSGA)', retrieved: members[0]?.provenance?.retrieved_utc ?? null,
+    sha256: sha256(fs.readFileSync(tarFile)), terms: members[0]?.provenance?.terms ?? 'NOAA/NWS: public domain', members: members.map(({ file, sha256: h, provenance }) => ({ file, sha256: h, url: provenance?.url ?? null })) });
+}
 
 // Truth products behind every reference file a batch read.
 const products = new Map();
