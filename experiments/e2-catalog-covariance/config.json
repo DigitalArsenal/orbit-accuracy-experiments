@@ -1,0 +1,231 @@
+{
+  "experiment": "e2-catalog-covariance",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "modules": "../../main-packages/space-data-network-modules",
+    "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z",
+    "kernel": {
+      "path": "runs/cache/de440s.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    }
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "duplicateEpochSeconds": 1
+  },
+  "windows": {
+    "dev": [
+      "2024-10-01",
+      "2024-11-15"
+    ],
+    "train": [
+      "2025-10-01",
+      "2026-03-31"
+    ],
+    "validation": [
+      "2026-04-01",
+      "2026-06-30"
+    ],
+    "test": [
+      "2026-07-01",
+      "2026-09-15"
+    ]
+  },
+  "regimes": {
+    "GPS": {
+      "productPrefix": "ESA0OPSFIN",
+      "select": "SP3 satellite G",
+      "gpRegime": "MEO 10000-30000 km",
+      "forces": {
+        "degree": 12,
+        "order": 12,
+        "thirdBodies": true,
+        "srp": true,
+        "drag": false,
+        "solidTides": true
+      },
+      "parameters": [
+        {
+          "kind": "SRP_AREA_OVER_MASS",
+          "value": 0.02,
+          "sigma": 0.01
+        }
+      ],
+      "fallbackPrefix": "IGS0OPSFIN"
+    }
+  },
+  "products": {
+    "strideDays": 7,
+    "fitSpansDays": [
+      3,
+      5,
+      7
+    ],
+    "minimumSets": 3,
+    "horizonsDays": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "aprioriStateSigma": [
+      100000.0,
+      100000.0,
+      100000.0,
+      10,
+      10,
+      10
+    ],
+    "fit": {
+      "maximumIterations": 20,
+      "correctionTolerance": 0.001,
+      "sigmaEditThreshold": 0
+    },
+    "integrator": {
+      "tolerance": 1e-12,
+      "maxStep": 300
+    }
+  },
+  "c1": {
+    "epochBinDays": 0.010416666666666666,
+    "ageBinsDays": [
+      [
+        0,
+        0.5
+      ],
+      [
+        0.5,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        5,
+        7
+      ]
+    ]
+  },
+  "c4": {
+    "discretizationSeconds": 600,
+    "fitHorizonsDays": [
+      1,
+      3
+    ]
+  },
+  "maneuvers": {
+    "reducedChiSquareQuantile": 0.99
+  },
+  "acceptance": {
+    "h1": {
+      "meanRatio": [
+        0.8,
+        1.25
+      ],
+      "coverage95": [
+        0.93,
+        0.97
+      ],
+      "cvmCritical5": 0.461,
+      "horizonsDays": [
+        0,
+        1,
+        3
+      ]
+    },
+    "h2": {
+      "upperBelow": 0.9,
+      "horizonsDays": [
+        0,
+        1
+      ]
+    },
+    "h4": {
+      "tooLargeBelow": 0.8,
+      "consistent": [
+        0.8,
+        1.25
+      ],
+      "ageIndex": 0
+    }
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95,
+    "energySamples": 200
+  },
+  "tleVariants": {
+    "tausDays": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "binHalfWidthDays": 0.5,
+    "fineStepDays": 0.5,
+    "fineMaxDays": 7.5,
+    "minimumPairs": 10,
+    "maneuverRobustZ": 5,
+    "clipRobustSigma": 3,
+    "scoreBinDays": 0.002777777777777778,
+    "run": [
+      "C2a",
+      "C2a-quad",
+      "C2b",
+      "C2c",
+      "C4",
+      "C5"
+    ],
+    "notRun": {
+      "C0": "Flohrer et al. 2008 table values not on hand",
+      "C1a": "no module SGP4 STM or RTN covariance mapping",
+      "C1b": "no module Lambert/two-body STM mapping of an RTN covariance",
+      "C3a": "no module propagating element sets to a common epoch with RTN differences",
+      "C3b": "as C3a"
+    }
+  },
+  "fitted": {
+    "c1": {
+      "path": "results/e2/train/c1.json",
+      "sha256": "2cb34b7b28cb13ee9e61641fcae39b7df977abdf25abfa05b820e40533974a7a"
+    },
+    "tleModels": {
+      "path": "results/e2/train/tle-models.json",
+      "sha256": "f531f042f120489a16ff68137c8b3c3c40dbac11ff9c9927cf423b1a355576ec"
+    },
+    "trainFit": {
+      "path": "results/e2/train/fit.json",
+      "sha256": "dfc900bb33826339c41f1c58e1014a49b8d1cb1b7c38befef9b37e8fbb471ce2",
+      "GPS": {
+        "reducedChiSquareThreshold": 2.934130712776058,
+        "qM2S3": {
+          "3": 2.524176732575451e-08,
+          "5": 2.330177748771326e-08,
+          "7": 2.2581448422254166e-08
+        }
+      }
+    }
+  },
+  "chosen": {
+    "method": "F2",
+    "spanDays": 3,
+    "on": "validation",
+    "report": "results/e2/validation/README.md",
+    "rule": "lowest pooled 1-day energy score was F2-7d (1394 m); F2-3d, F2-5d and F2-7d intervals overlap, so the tie goes to the shortest span"
+  }
+}

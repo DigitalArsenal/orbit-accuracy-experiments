@@ -3,7 +3,8 @@
 // hd-wallet-wasm. With the standard test mnemonic, four networks are checked
 // against their published vectors.
 import { Curve, TEST_MNEMONIC, hex, loadWallet } from '../codec/wallet.js';
-import { button, h, inputs, panel, table, note } from '../ui.js';
+import { button, h, inputs, note, panel, short, table } from '../ui.js';
+import { scene3d } from '../scene.js';
 
 // Published addresses for the BIP-39 test mnemonic "abandon … about", no passphrase.
 const VECTORS = {
@@ -34,6 +35,7 @@ export default async function run(ctx) {
   const form = inputs(p, [{ id: 'mnemonic', label: 'BIP-39 mnemonic', type: 'textarea', value: TEST_MNEMONIC, wide: true, rows: 2 }], () => derive());
   const actions = h('div', { class: 'model-actions' });
   p.append(actions);
+  const view = scene3d(ctx, { title: 'One seed, two curves, six networks', earth: false });
   const out = panel(ctx.root, 'Derived addresses');
   note(ctx.root, 'Cardano’s BIP32-Ed25519 derivation is not in hd-wallet-wasm 2.0.21; its row shows the path only. Keys never leave this page.');
   const w = await loadWallet(ctx);
@@ -53,6 +55,31 @@ export default async function run(ctx) {
       ]), { existing: out.querySelector('table') ?? undefined });
       const checked = rows.filter((r) => VECTORS[r.network]);
       const matched = checked.filter((r) => VECTORS[r.network] === r.address).length;
+      await view.draw((g) => {
+        g.grid([0, 0, 0], [1, 0, 0], [0, 1, 0], 9, 1.5);
+        const seed = [0, 0, 0.6];
+        g.box(seed, [1.6, 1.6, 1.2], { color: 'text', alpha: 0.35, outline: true });
+        g.label(seed, 'BIP-39 seed', { color: 'text', align: 'center', dy: 30 });
+        const hubs = { 'secp256k1': [-3.2, 0, 3.4], ed25519: [3.2, 0, 3.4] };
+        g.sphere(hubs.secp256k1, 0.6, { color: 'accent', alpha: 0.8 });
+        g.sphere(hubs.ed25519, 0.6, { color: 'cyan', alpha: 0.8 });
+        g.label(hubs.secp256k1, 'BIP-32 · secp256k1', { color: 'accent', align: 'right', dx: -16, size: 11 });
+        g.label(hubs.ed25519, 'SLIP-10 · ed25519', { color: 'cyan', size: 11, dx: 16 });
+        g.line([seed, hubs.secp256k1], { color: 'accent', width: 2 });
+        g.line([seed, hubs.ed25519], { color: 'cyan', width: 2 });
+        rows.forEach((r, k) => {
+          const hub = r.curve === 'secp256k1' ? 'secp256k1' : 'ed25519';
+          const side = hub === 'secp256k1' ? -1 : 1, j = rows.filter((x, i) => i < k && (x.curve === 'secp256k1') === (hub === 'secp256k1')).length;
+          const leaf = [side * (1.6 + 2.9 * j), 0, 6.2 + ((j + (side > 0 ? 1 : 0)) % 2) * 1.6];
+          const derived = r.address !== null, vector = test && VECTORS[r.network];
+          const tone = !derived ? 'muted' : vector ? (VECTORS[r.network] === r.address ? 'accent' : 'alert') : hub === 'secp256k1' ? 'accent' : 'cyan';
+          g.line([hubs[hub], leaf], { color: tone, width: 1.8, dash: !derived, alpha: derived ? 0.9 : 0.6 });
+          g.sphere(leaf, 0.42, { color: tone, alpha: derived ? 0.85 : 0.25, outline: !derived });
+          g.label(leaf, `${r.network}\n${derived ? short(r.address, 5, 3) : 'not derived'}`, { color: derived ? 'text' : 'muted', size: 10, weight: 500, align: 'center', above: true, dy: -12 });
+        });
+        g.view({ center: [0, 0, 4], radius: 8.6, direction: [0.08, -1, 0.3] });
+      }, { caption: test ? `${matched} of ${checked.length} published vectors matched` : 'Derived from the seed in this page',
+        legend: [['accent', 'secp256k1 paths'], ['cyan', 'ed25519 paths'], ['muted', 'Not derived by this package', 'dash']] });
       return test ? `${matched} of ${checked.length} addresses match their published vectors; five networks from one seed.` : 'Five addresses from one seed, derived in this page.';
     });
   }

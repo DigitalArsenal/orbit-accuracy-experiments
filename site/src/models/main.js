@@ -73,8 +73,9 @@ function isolationNote() {
 }
 
 async function main() {
-  const { paper, model } = body.dataset;
-  const run = await import(`./${paper}/${model}.js`);
+  const { paper, model, dir } = body.dataset;
+  // The orbit-determination pages live in src/od (data-dir="od").
+  const run = dir === 'od' ? await import(`../od/${model}.js`) : await import(`./${paper}/${model}.js`);
   await run.default(ctx);
   body.dataset.done = 'true';
 }

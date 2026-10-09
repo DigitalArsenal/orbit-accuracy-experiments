@@ -5,6 +5,8 @@
 import { formatMeters } from '../../chart.js';
 import { alfanoRequest, decodeCqr, output, probabilityRequest } from '../codec/cqr.js';
 import { chart, inputs, num, panel, tiles } from '../ui.js';
+import { drawPlane } from '../encounter-plane.js';
+import { scene3d } from '../scene.js';
 
 const SIGMAS = Array.from({ length: 41 }, (_, k) => 10 ** (0 + k * 0.1));  // 1 m to 10 km
 
@@ -16,6 +18,7 @@ export default async function run(ctx) {
     { id: 'sigma', label: 'σ in-plane (m)', value: 300, min: 0.1 },
     { id: 'ratio', label: 'Aspect σξ : σζ', value: 3, min: 1 },
   ], () => compute());
+  const view = scene3d(ctx, { title: 'This covariance, and the one that peaks', earth: false });
   const figure = chart(ctx.root, 'Probability against covariance size', 'Foster, in the module, for the miss distance above; the line is Alfano’s maximum');
   const ca = await ctx.module('analysis/conjunction-assessment');
   const foster = async (miss, sigma, ratio, radius) => decodeCqr(output(await ca.invoke('compute_pc', [probabilityRequest({
@@ -40,6 +43,9 @@ export default async function run(ctx) {
         y: { min: 1e-12, format: (v) => (v === 1 ? '1' : `1e${Math.round(Math.log10(v))}`), value: (v) => num(v, 3) },
       });
       const side = sigma < peak[0] ? 'below' : 'above';
+      await view.draw((g) => drawPlane(g, { miss, radius, sigmaXi: sigma * ratio, sigmaZeta: sigma, extra: [{ sigmaXi: peak[0] * ratio, sigmaZeta: peak[0], color: 'text' }] }),
+        { caption: `Foster ${num(one.PROBABILITY, 3)} at σ ${formatMeters(sigma)}; the dashed ellipse is the 1σ at the module’s peak, ${num(peak[1], 3)}`,
+          legend: [['accent', 'Hard body and miss'], ['cyan', 'This covariance, 1σ, 2σ, 3σ'], ['text', 'Peak probability, 1σ', 'dash']] });
       return `Foster gives ${num(one.PROBABILITY, 3)} at σ ${formatMeters(sigma)}; it peaks at ${num(peak[1], 3)} near σ ${formatMeters(peak[0])}, and this σ is ${side} it. Past the peak a larger covariance lowers the probability: dilution.`;
     });
   }

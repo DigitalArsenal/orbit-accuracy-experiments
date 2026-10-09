@@ -8,26 +8,23 @@
 //     formed from them reproduces P(t). P₀ is the sample VCM's, which
 //     files/orbit-products also re-expresses as an SDS OCM.
 import * as flatbuffers from 'flatbuffers';
-import { EOP, EOPT } from 'spacedatastandards.org/lib/js/EOP/main.js';
-import { FRM, FRMFrameTransformRequestT, FRMStateVectorT, FRMT, FRMVector3T, RFMCoordinateSystemT, RFMOriginT, frmOperationCode, frmResultStatus,
-  frmStateRepresentation, rfmAxisType, rfmOriginKind } from 'spacedatastandards.org/lib/js/FRM/main.js';
+import { EOPT } from 'spacedatastandards.org/lib/js/EOP/main.js';
 import { OCM } from 'spacedatastandards.org/lib/js/OCM/main.js';
 import { decodeExecution, executionFrame } from '../../../../harness/prw.mjs';
 import { formatMeters } from '../../chart.js';
 import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
-import { HOUR, decodePrw, encodePrw, frameOf, isoMicro, out } from '../../runs.js';
+import { HOUR, decodePrw, encodePrw, frameOf, isoMicro, out, resampled } from '../../runs.js';
+import { transformState } from '../codec/frames.js';
 import { flatten, readKvn, sdsField } from '../codec/kvn.js';
 import { chart, h, num, panel, table, tiles, note } from '../ui.js';
+import { magnification, rtn, rtnCovariance, scene3d, v3 } from '../scene.js';
 
-const FRM_TYPE = { schemaName: 'FRM.fbs', fileIdentifier: '$FRM', rootTypeName: 'FRM' };
-const EOP_TYPE = { schemaName: 'EOP.fbs', fileIdentifier: '$EOP', rootTypeName: 'EOP' };
-const system = (name, axisType, epoch) => new RFMCoordinateSystemT(name, axisType, new RFMOriginT(rfmOriginKind.CELESTIAL_BODY, 399), 399, epoch, 'UTC', null);
-const encode = (finish, root) => { const b = new flatbuffers.Builder(4096); finish(b, root.pack(b)); return b.asUint8Array().slice(); };
 
 export default async function run(ctx) {
   const fields = panel(ctx.root, 'A CCSDS OCM, field by field');
   const state = panel(ctx.root, 'Its state, to GCRF and forward a day');
   const cov = panel(ctx.root, 'P(t) = Φ P₀ Φᵀ through HPOP');
+  const view = scene3d(ctx, { title: 'The covariance HPOP carries for a day', caption: '1σ position ellipsoids along the orbit, magnified' });
   const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From HPOP’s covariance, RTN, P₀ of the sample VCM');
   const asOcm = panel(ctx.root, 'The same P₀’s message, as an SDS OCM');
 
@@ -55,17 +52,7 @@ export default async function run(ctx) {
     const [x, y, z, vx, vy, vz] = line.slice(1, 7).map(Number);
     const eopRows = (await ctx.fetchJson('./data/eop/eop-1998-12.json')).map((row) => Object.assign(new EOPT(), row));
     const frames = await ctx.module('foundation/frames');
-    const request = encode(FRM.finishFRMBuffer, new FRMT(new FRMFrameTransformRequestT(frmOperationCode.STATE_TRANSFORM, null, null, 0, 0, null,
-      system('ITRF', rfmAxisType.BODY_FIXED, utcIso), system('GCRF', rfmAxisType.ICRF, utcIso),
-      new FRMStateVectorT(frmStateRepresentation.CARTESIAN, [x, y, z, vx, vy, vz].map((v) => v * 1000), new FRMVector3T(x * 1000, y * 1000, z * 1000), new FRMVector3T(vx * 1000, vy * 1000, vz * 1000), 'ITRF', utcIso, 'UTC', 3.986004415e14),
-      frmStateRepresentation.CARTESIAN, utcIso, 'UTC', null), null));
-    const response = await frames.invoke('transform_frame_position', [{ portId: 'request', typeRef: FRM_TYPE, payload: request },
-      ...eopRows.map((row) => ({ portId: 'earth_orientation', typeRef: EOP_TYPE, payload: encode(EOP.finishEOPBuffer, row) }))]);
-    const result = FRM.getRootAsFRM(new flatbuffers.ByteBuffer(response.outputs[0].payload)).FRAME_TRANSFORM_RESULT();
-    if (result.STATUS() !== frmResultStatus.OK) throw new Error(`foundation/frames: ${result.ERROR_MESSAGE()}`);
-    const t = result.TARGET_STATE();
-    const r0 = [t.POSITION().X(), t.POSITION().Y(), t.POSITION().Z()].map((v) => v / 1000);
-    const v0 = [t.VELOCITY().X(), t.VELOCITY().Y(), t.VELOCITY().Z()].map((v) => v / 1000);
+    const { r: r0, v: v0 } = await transformState(frames, { from: 'ITRF', to: 'GCRF', epochIso: utcIso, r: [x, y, z], v: [vx, vy, vz], eopRows });
     const hpop = await ctx.module('propagator/hpop');
     const epochMs = Date.parse(`${utcIso}Z`);
     const samples = Array.from({ length: 24 }, (_, k) => isoMicro(epochMs + (k + 1) * HOUR));
@@ -114,12 +101,34 @@ export default async function run(ctx) {
       rows.push([`${hours} h`, formatMeters(sigma(u)), formatMeters(sigma(tv)), formatMeters(sigma(wv)), num(w, 2)]);
     }
     table(cov, ['Age', 'Radial σ', 'In-track σ', 'Cross-track σ', 'max |ΦP₀Φᵀ − P| / σσ'], rows);
-    tiles(cov, [['Dimension', `${n} (state + B)`], ['Process noise Q', result.SAMPLES[0].PROCESS_NOISE ? 'declared' : 'none'], ['Largest residual', num(worst, 2)]]);
-    covChart.draw({ series: [
-      { name: 'Radial', color: 'var(--series-muted)', points: sig.map((s) => [s[0], s[1]]), label: true },
-      { name: 'Cross-track', color: 'var(--cyan)', points: sig.map((s) => [s[0], s[3]]), label: true },
-      { name: 'In-track', color: 'var(--accent)', points: sig.map((s) => [s[0], s[2]]), label: true },
-    ], x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (x) => `${x} h` } });
+    // The orbit (the same request every 2 min) and P(t)'s position block as
+    // ellipsoids where HPOP reports it.
+    const inputs = [frameOf('request', encodePrw(prw)), frameOf('earth_orientation', out(read, 'earth_orientation'))];
+    const track = await resampled(hpop, inputs, Array.from({ length: 720 }, (_, k) => (k + 1) * 120));
+    const block = (values) => [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => values[i * n + j] / 1e6));  // km²
+    const state = (st) => ({ r: [st.POSITION.X, st.POSITION.Y, st.POSITION.Z].map((x) => x / 1000), v: [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z].map((x) => x / 1000) });
+    const initial = state(prw.EXECUTION_REQUEST.INITIAL.STATE);
+    // Each P(t) in the radial, in-track and cross-track axes of its own
+    // state, nested at the 24 h state: the growth, not the travel.
+    const shown = [{ hours: 0, ...initial, P: block(P0.VALUES) }, ...result.SAMPLES.map((sample, k) => ({ hours: [1, 3, 6, 12, 18, 24][k], ...state(sample.STATE.STATE), P: block(sample.COVARIANCE.VALUES) }))]
+      .map((e) => ({ ...e, Prtn: rtnCovariance(rtn(e.r, e.v), e.P) }));
+    const end = shown.at(-1), basis = rtn(end.r, end.v);
+    const inTrack = Math.sqrt(end.Prtn[4]), across = Math.sqrt(Math.max(end.Prtn[0], end.Prtn[8]));
+    const mag = magnification(inTrack, 1600);
+    const thin = Math.max(1, 10 ** Math.round(Math.log10((0.3 * inTrack) / across)));
+    await view.draw((g) => {
+      g.track(track, { color: 'muted', alpha: 0.5, width: 1, subdivide: 2, frame: false });
+      shown.forEach((e, k) => {
+        const share = k / (shown.length - 1);
+        g.covariance(end.r, basis, e.Prtn, mag.k, { thin: thin, color: k === shown.length - 1 ? 'accent' : 'cyan', alpha: 0.12 + 0.2 * share, outline: k === shown.length - 1 || k === 0, frame: k === shown.length - 1 });
+        const tip = v3.add(end.r, v3.scale(basis[1], Math.sqrt(e.Prtn[4]) * mag.k));
+        if (k === shown.length - 1) g.label(tip, `${e.hours ? `${e.hours} h` : 'P₀'} · ${formatMeters(Math.sqrt(e.Prtn[4]) * 1000)}`, { color: k === shown.length - 1 ? 'accent' : 'text', size: 11, above: true });
+      });
+      g.axes(end.r, basis, inTrack * mag.k * 1.25, ['Radial', 'In-track', 'Cross-track'], { color: 'muted' });
+      g.point(end.r, { color: 'sat', size: 7 });
+      g.view({ direction: v3.unit(v3.add(v3.add(v3.scale(basis[0], 0.55), v3.scale(basis[2], 0.75)), v3.scale(basis[1], -0.3))), includeEarth: false });
+    }, { frame: 'GCRF', epochMs: epochMs + 24 * HOUR, caption: `GCRF at 24 h; 1σ ellipsoids from P₀ to 24 h, ${mag.label}${thin > 1 ? `, the shorter axes a further ×${thin}` : ''}`,
+      legend: [['accent', 'P(24 h)', 'solid'], ['cyan', 'P₀, 1, 3, 6, 12, 18 h', 'solid'], ['muted', 'HPOP, 24 h']] });
     // The VCM re-expressed by files/orbit-products as an SDS OCM record.
     const vcmFrame = read.outputs.find((o) => o.portId === 'vcm');
     const ocmBytes = out(await products.invoke('vcm_to_ocm', [{ portId: 'vcm', payload: vcmFrame.payload, typeRef: vcmFrame.typeRef }]), 'orbit');

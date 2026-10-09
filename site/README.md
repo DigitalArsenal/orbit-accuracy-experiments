@@ -36,10 +36,36 @@ heading against the paper's markdown (`SDN_WHITEPAPERS`, default the stack's
 `section_id` is the heading id `docs/build-whitepapers.mjs` gives the
 section. Each page stands alone in an iframe, takes `?theme=light|dark` or a
 `{sdnTheme}` message, and sets `<body data-done>` when its first run ends.
+Each model also draws what it computes in 3D (`src/models/scene.js`: one
+CesiumJS widget per page, loaded when the model runs, no ion, the Blue Marble
+as the only imagery): orbits, covariance ellipsoids, error histories in
+radial, in-track and cross-track axes, encounter planes, and the key graphs
+of the security paper. Every point drawn is a module output, or the page's
+inputs and its evaluation of the paper's formulas; magnifications are
+stated on the view.
+
 The conjunction module uses shared WebAssembly memory: embedded in a page
 without cross-origin isolation, those six models offer to open in their own
 tab, where the service worker isolates them. E1, E2 and E3 show
 `results/<id>/metrics.json` once it is committed.
+
+## 03 // Orbit Determination
+
+`models/evidence-supported-aso-catalog/<section_id>.html` for the section ids
+`od-batch-fit`, `od-ekf-ukf`, `od-association` and `od-conjunction`
+(`src/od/registry.mjs`; listed in `models/index.json` with
+`"section": "03 // Orbit Determination"`). One scenario: GPS on 2026-08-02.
+`build-od.mjs` writes its inputs from the IGS final orbits
+(`analysis/reference-states` output in `SDN_REFERENCE_STATES`) with modules:
+a dense truth (`propagator/hpop` between IGS epochs), a catalog (each IGS
+state at 00:00 propagated by HPOP with covariance, two satellites withheld),
+and an `analysis/observation-simulator` request (truth in ITRF from
+`foundation/frames`, visibility from `analysis/access`, the Sun from HPOP's
+DE440). In the browser the pages run the simulator, `analysis/association`,
+`analysis/estimation` (batch, EKF, UKF; bindings of its module-local schema
+are generated into `site/.cache/estimation` by flatc at build time) and
+`analysis/conjunction-assessment`. The conjunction's second object is
+hypothetical and says so.
 
 ## Build
 

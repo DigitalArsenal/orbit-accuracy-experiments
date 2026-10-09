@@ -1,0 +1,127 @@
+{
+ "run": "e4-operator-ephemeris-parity-10-compare-iss-20261009T172226Z",
+ "experiment": "e4-operator-ephemeris-parity",
+ "step": "10-compare-iss",
+ "command": [
+  "node",
+  "experiments/e4-operator-ephemeris-parity/steps/10-compare.mjs",
+  "--provider",
+  "iss"
+ ],
+ "args": {
+  "provider": "iss"
+ },
+ "started": "2026-10-09T17:22:26.298Z",
+ "finished": "2026-10-09T17:22:48.745Z",
+ "config": {
+  "path": "experiments/e4-operator-ephemeris-parity/config.json",
+  "sha256": "97946016638513796effa4ba7a0f4ff10f32d3314e542e5c4102ab804d202a8b",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "dd952393567ddac9a29eed18dd6ae6bba925d5ec",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45",
+  "dirty": true
+ },
+ "modules": [
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.1.0",
+   "wasmSha256": "ccb91ff04893834ed09df658f484d5faec8b73609a0800e8d0385cfca708c4e2",
+   "manifestSha256": "7fae978bb3512b18a1226d11f3c5566ae39a8f260fcf7a711f77406c471834b0"
+  },
+  {
+   "path": "analysis/epoch-state",
+   "pluginId": "com.digitalarsenal.analysis.epoch-state",
+   "version": "0.1.0",
+   "wasmSha256": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
+   "manifestSha256": "aa9d1bf2e5d16a79a6890a8a6b3c9dfeb914fcce9e3a5a89e9145a0738115350"
+  },
+  {
+   "path": "propagator/hpop",
+   "pluginId": "com.orbpro.hpop",
+   "version": "1.1.0",
+   "wasmSha256": "473d527175de6606ccf305c45b37218288634fa9de2dcab0d72564a190bdabd1",
+   "manifestSha256": "50db412d6376320f98a243f74dfe1264054359dd9a937a7c2c4310b20b4c9468"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "foundation/time",
+   "pluginId": "com.digitalarsenal.foundation.time",
+   "version": "0.1.0",
+   "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+   "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   21.66748046875,
+   21.00830078125,
+   17.89111328125
+  ]
+ },
+ "inputs": {
+  "models": {
+   "analysis/gp-error-model/docs/model-2026-08-scaled.json": "ba5684212fceb1cea5578286bf36dfe607426c0dccf7f57822f3fa7aca3b6046",
+   "analysis/gp-error-model/docs/hpop-covariance-model-2026-08.json": "3b6d57da76a444056515da8b3baeeeb43cef04c6183832c21ad7983cbe8d1e8a"
+  },
+  "operator": {
+   "iss/20260909T122151Z--ISS.OEM_J2K_EPH.txt": "b3d9930306b645ba4d9a0db7f0201f3ecd5c436f6c4b4dea966878e93ec1cc96",
+   "iss/20260909T221254Z--ISS.OEM_J2K_EPH.txt": "181d5b11705e2a8145bad8c5e35135adcccfe649f2fb96a82196d97dd4196da2",
+   "iss/20260911T145657Z--ISS.OEM_J2K_EPH.txt": "1963ad38489fe0541ca5ba4de3a1e6b5c2523d4265389614562a220196797005",
+   "iss/20260914T155857Z--ISS.OEM_J2K_EPH.txt": "22894ad2b47e218179c3dbfd41e83cfcec40b059c15b93bcc258144580cdfced"
+  },
+  "gpHistory": {
+   "2026/2026-08-29.json.gz": "e622f96865b999a66d824650a977448a6f346378795393db4817277108fc1cfb",
+   "2026/2026-08-30.json.gz": "8cdd9d370fc04df64e5aa805387dbbdf38fe8218bff9431ee359a595d5134deb",
+   "2026/2026-08-31.json.gz": "a4e56f4c72e181d1871399c3ab27e77611de6f09e1937cc10e41746e04c37d9e",
+   "2026/2026-09-01.json.gz": "921e3da9c4b258edcd47767110d9f591a3faa3facc7c1a0610c5fa28f053ba90",
+   "2026/2026-09-02.json.gz": "0b67dafe4353f4c7f74b15e16301d9ad9882ea379bc648ec6342720321a90414",
+   "2026/2026-09-03.json.gz": "cee17c9639d30592adad0538c608b5ca84e456cd2a65a920f828b61a61839878",
+   "2026/2026-09-04.json.gz": "ddd6aab55434d98ebda1678405ec6d077f365506889c1374fb434fabe9baa151",
+   "2026/2026-09-05.json.gz": "bfc01fb9db9554d7206d60f818748ac928356c6b6b224bbfd6c8af0d61ce2344",
+   "2026/2026-09-06.json.gz": "dfc767eb783de84185648c400e52daff380dbb729eb6ca0a6f7e41bc8709a7d7",
+   "2026/2026-09-07.json.gz": "5176cdcf986abf25ffcf12338190e1d315516070556e32822f6c202da1a1c702",
+   "2026/2026-09-08.json.gz": "c2a0cf6a57ca6c2a18b4044113903878b009f5ff5854d998ab7bdbe47613cc9a",
+   "2026/2026-09-09.json.gz": "933073bf5c5303108dc58ade19c8462bf4f0c51776c346c686199bf26e148f15",
+   "2026/2026-09-10.json.gz": "11bd59501df461040d10e9dfbd472e1accabe4f0873959e10365a23fdc8d4ef8",
+   "2026/2026-09-11.json.gz": "f3cf3853ea6ce2301999be98226c604dcfa9e6accb15a19a4847b50a83346291",
+   "2026/2026-09-12.json.gz": "6760d89f0fd31fc739dc8299ec9bb411ba2743c104e3f8349f8b1741b7a0f683",
+   "2026/2026-09-13.json.gz": "dee126e23db624b5df719df72052ef61ee31dff480af13b0dd88943efeb7d88b",
+   "2026/2026-09-14.json.gz": "e8b2f386cd7573d3df1526ef0d0a7212ac8d99d0d961adc340c19cc81470a9ac"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T17:22:26.298Z",
+   "args": {
+    "provider": "iss"
+   }
+  }
+ ],
+ "provider": "iss",
+ "counts": {
+  "cases": 4,
+  "compared": 4,
+  "withoutSet": 0,
+  "skipped": 0
+ }
+}

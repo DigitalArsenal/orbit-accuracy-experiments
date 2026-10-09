@@ -1,0 +1,56 @@
+{
+ "run": "e2-catalog-covariance-30-train-fit-train-20261009T181353Z",
+ "experiment": "e2-catalog-covariance",
+ "step": "30-train-fit-train",
+ "command": [
+  "node",
+  "experiments/e2-catalog-covariance/steps/30-train-fit.mjs",
+  "--products",
+  "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z"
+ ],
+ "args": {
+  "products": "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z",
+  "window": "train"
+ },
+ "started": "2026-10-09T18:13:53.753Z",
+ "finished": "2026-10-09T18:13:53.965Z",
+ "config": {
+  "path": "experiments/e2-catalog-covariance/config.json",
+  "sha256": "a0454aee0ba24eb6d9ba66eb4b12d5b69ed36e628f28b38925d07dbbb77c8999",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "cb607abc72b3f83a150a68426be9313145e06919",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "986811e739ed1a9156ed3e30925a74784502378d",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   89.43408203125,
+   65.93701171875,
+   43.38623046875
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-09T18:13:53.753Z",
+   "args": {
+    "products": "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z",
+    "window": "train"
+   }
+  }
+ ]
+}

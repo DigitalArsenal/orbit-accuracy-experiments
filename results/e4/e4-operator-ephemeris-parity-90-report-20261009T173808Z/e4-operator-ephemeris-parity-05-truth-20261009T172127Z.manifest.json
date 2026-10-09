@@ -1,0 +1,92 @@
+{
+ "run": "e4-operator-ephemeris-parity-05-truth-20261009T172127Z",
+ "experiment": "e4-operator-ephemeris-parity",
+ "step": "05-truth",
+ "command": [
+  "node",
+  "experiments/e4-operator-ephemeris-parity/steps/05-truth.mjs"
+ ],
+ "args": {},
+ "started": "2026-10-09T17:21:27.347Z",
+ "finished": "2026-10-09T17:22:19.266Z",
+ "config": {
+  "path": "experiments/e4-operator-ephemeris-parity/config.json",
+  "sha256": "97946016638513796effa4ba7a0f4ff10f32d3314e542e5c4102ab804d202a8b",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "dd952393567ddac9a29eed18dd6ae6bba925d5ec",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45",
+  "dirty": true
+ },
+ "modules": [
+  {
+   "path": "files/orbit-products",
+   "pluginId": "com.digitalarsenal.files.orbit-products",
+   "version": "0.1.2",
+   "wasmSha256": "1f4118f3958185272dfed18955ab0fb1307192436b868b53223c211afcfa72b8",
+   "manifestSha256": "7d4d03488d10acd78c17fc0293085ad7a2ed8279bece2dd8a4b32c166a3babae"
+  },
+  {
+   "path": "analysis/reference-states",
+   "pluginId": "com.digitalarsenal.analysis.reference-states",
+   "version": "0.1.0",
+   "wasmSha256": "61fde7409de08db0f37d0fcc8c696f2dff10dd04aec3b51453181350c012eb8e",
+   "manifestSha256": "e19a718598ae416315c216cdc2a6b4f11f5a2ea5aa7f39ce88230073d394814c"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   23.39697265625,
+   21.4697265625,
+   17.857421875
+  ]
+ },
+ "inputs": {
+  "satelliteMetadata": {
+   "/opt/data/sdn-archive/reference-states/products/igs_satellite_metadata.snx": "5ae97c6f65d5c9f238f79565cdd478af9e0da1cc0f0f589bf6c5aad0de5234c2"
+  },
+  "eop": {
+   "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z": "0baf00f67a39ab362a3e4f07d2a1f084842178523f56bcf5a861e7ac084d411a"
+  },
+  "truth": {
+   "ESA0OPSFIN_20262510000_01D_05M_ORB.SP3.gz": "45525c3b4f82509457c43a9b6ec362458eea5ad4e498cf7b16f3ce8605559d4b",
+   "ESA0OPSFIN_20262520000_01D_05M_ORB.SP3.gz": "83501dd3d477579d8aba07443be533efa20c3b07f5d17410de687b204b3a15ef",
+   "ESA0OPSFIN_20262530000_01D_05M_ORB.SP3.gz": "2a300e8495da64365532c7c486768b9f6e8256182c13c42b15409514c0be55ab",
+   "ESA0OPSFIN_20262540000_01D_05M_ORB.SP3.gz": "e1f6e4b4a88c4398805ced9bc0679fde5d4ace8cf1dc8d6fbef883a4688bf12a",
+   "ESA0OPSFIN_20262550000_01D_05M_ORB.SP3.gz": "d0e46c8c04a388719dd45045a37351f1ca93d7720173009bc35dfa3093bcc62a",
+   "ESA0OPSFIN_20262560000_01D_05M_ORB.SP3.gz": "fae9a5ed9d9b2dbaa3473ab95ded0270aafcd9f730d1f1c2f1fc736e52243311",
+   "ESA0OPSFIN_20262570000_01D_05M_ORB.SP3.gz": "1316a8a2c06367e2376227cadb0026b8948ac573ff9bf8ed8ede66cfa3bf3d4d",
+   "ESA0OPSFIN_20262580000_01D_05M_ORB.SP3.gz": "d32648fb7fc6be179d8f1ad01f5e3d889175be2f2fa5d235d1ccaa84d37e2272",
+   "ESA0OPSFIN_20262590000_01D_05M_ORB.SP3.gz": "9708123fb3191d89e41f04bc3f835012469e081007140ade0430fbbefc3517f6",
+   "ESA0OPSFIN_20262600000_01D_05M_ORB.SP3.gz": "6789e3a97406c73439c71611959e785805ff1cb3c3e7a7658525c2ccfbcd8a24",
+   "ESA0OPSFIN_20262610000_01D_05M_ORB.SP3.gz": "643082932c5f9ee952780ec9453ecf83562b5d2ef470cf0567fe4e71c609ee00",
+   "ESA0OPSFIN_20262620000_01D_05M_ORB.SP3.gz": "355e95af7a9caef206287bd683b1ec459421fb226db031672594279a5fbbf728",
+   "ESA0OPSFIN_20262630000_01D_05M_ORB.SP3.gz": "32e4b2e93352287953df93a068ef4f112031cb37a8d6aac597ceef7e9e689abc"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T17:21:27.347Z",
+   "args": {}
+  }
+ ]
+}

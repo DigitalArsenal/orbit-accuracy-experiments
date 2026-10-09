@@ -37,16 +37,20 @@ Conjunction Screening whitepaper says about the states it screens.
 | `site/` | The GitHub Pages site: the experiments run live in the browser |
 | `runs/` | Run outputs (ignored) |
 | `results/` | Committed run summaries |
+| `data/` | Operator inputs published for checking, under each provider's terms ([data/e4/SOURCES.md](data/e4/SOURCES.md)) |
 
 ## Experiments
 
 | ID | Question | Status |
 | --- | --- | --- |
 | [V1](experiments/v1-hpop-physical-truth/PLAN.md) | How close does HPOP, seeded from a precise orbit, stay to it over three days, force model by force model? | Reported ([results](results/v1/README.md)): SLR spheres 4.78 m median at 24 h and 13.9 m at 72 h with every force (E-f); GPS 28.5 m at 24 h with a cannonball model. |
-| [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft; amendment 2 fixes the primary statistic (5 robust-sigma clipped RMS) before any fit. Harness checks A0.1–A0.4 pass ([report](results/e1/a0/REPORT.md)). Waiting on two years of IGS final orbits. |
-| [E2](experiments/e2-catalog-covariance/PLAN.md) | Can catalog history (and E1's corrected element sets) give VCM-equivalent products — state, B/BDOT/AGOM and a covariance that stays realistic when propagated? | Plan in draft; needs SDS 1.240.0 and the train/validation truth. |
+| [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Reported ([results](results/e1/README.md)): correction at epoch cuts the GPS element-set 3D RMS from 2.04 km to 0.79 km (R = 61 % [53, 67]); it does not carry to an unseen orbital plane (6 %), and its covariance fails the coverage gate |
+| [E2](experiments/e2-catalog-covariance/PLAN.md) | Can catalog history (and E1's corrected element sets) give VCM-equivalent products — state, B/BDOT/AGOM and a covariance that stays realistic when propagated? | Reported ([results](results/e2/README.md)): the batch fit (F2, 3-day span) gives realistic GPS covariance at 0–1 day (mean d²/3 1.2 and 1.05) and fails at 3 days, driven by two satellites with likely unflagged maneuvers; ten catalog-history covariance variants compared |
 | [E3](experiments/e3-combined-catalog/PLAN.md) | How accurate is a catalog combined from several public sources, against precise orbits, and where does combining stop helping? | Reported ([results](results/e3/README.md)): in GPS, selection across sources gives 3.5 cm at issue and 30 m / 104 m / 336 m median at 1 / 3 / 7 days; elsewhere only Space-Track is scorable (0.3–1.2 km median) |
+| [E4](experiments/e4-operator-ephemeris-parity/PLAN.md) | How closely do products built only from public catalog data match each operator's published ephemeris and its covariance, and where truth exists, which is closer to it? | Reported ([results](results/e4/README.md)): public-data products sit 0.6–5 km from operator ephemerides at their first horizon (Starlink 2.9 km, GPS/GLONASS ~1.2 km, Planet 0.6 km); operators' own predictions are ~0.1 m from truth for GPS/GLONASS |
 | [E5](experiments/e5-density-calibration/PLAN.md) | How much of HASDM's density accuracy can a temperature calibration built only from public densities recover (a stand-in for the Dynamic Calibration of the Atmosphere), and does it improve 1–7-day LEO propagation? | Reported ([results](results/e5/README.md)): on held-out satellites the calibrated JB2008 cuts the spread of ln(observed/model) from 0.155 to 0.056 (−64 % [57, 70]); the forecast keeps 9 % [2, 18] for a day, then nothing; 3-day propagation is not improved (median ratio 1.04 [0.96, 1.10]). Against HASDM (CHAMP, GRACE-A, 2003 and 2008): JB2008 0.148, the one-satellite stand-in 0.112, HASDM 0.078. |
+
+Sources for a high-accuracy catalog from public and login-only data — access, terms, latency and contribution — are inventoried in [docs/hac-sources.md](docs/hac-sources.md).
 
 The parity target for the high-fidelity products is
 [docs/vcm-parity.md](docs/vcm-parity.md): every Vector Covariance Message

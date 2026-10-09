@@ -1,6 +1,7 @@
 // Section 17.4: E1, E2 and E3. Each one's results/<id>/metrics.json shows
 // here once its run is published; until then its slot says so.
 import { h, num, panel, table } from '../ui.js';
+import { scene3d } from '../scene.js';
 
 const EXPERIMENTS = [
   { id: 'e1', title: 'E1 · Correcting GPS element sets at epoch', plan: 'experiments/e1-gps-epoch/PLAN.md' },
@@ -20,8 +21,21 @@ function scalars(value, prefix = '', out = []) {
 }
 
 export default async function run(ctx) {
+  const view = scene3d(ctx, { title: 'Results so far', earth: false });
   await ctx.run('Reading published results', async () => {
     const { published } = await ctx.fetchJson('./data/experiments.json');
+    // A slot per experiment: filled once its metrics are published.
+    await view.draw((g) => {
+      g.grid([0, 0, 0], [1, 0, 0], [0, 1, 0], 6, 1);
+      EXPERIMENTS.forEach((e, k) => {
+        const x = (k - 1) * 4, done = published.includes(e.id);
+        g.box([x, 0, 1.25], [2.4, 2.4, 2.5], done ? { color: 'accent', alpha: 0.55, outline: true } : { color: 'muted', alpha: 0.06, outline: true, outlineAlpha: 0.6 });
+        g.label([x, 0, 3.1], e.id.toUpperCase(), { color: done ? 'accent' : 'text', size: 14, align: 'center', above: true });
+        g.label([x, 0, -0.5], done ? 'published' : 'no run yet', { color: 'muted', size: 11, align: 'center' });
+      });
+      g.view({ center: [0, 0, 1.2], radius: 6.6, direction: [0.35, -1, 0.55] });
+    }, { caption: published.length ? `Published: ${published.map((x) => x.toUpperCase()).join(', ')}` : 'No experiment has published metrics yet; each slot fills when its run does',
+      legend: [['accent', 'Metrics published', 'solid'], ['muted', 'Awaiting a run', 'solid']] });
     for (const e of EXPERIMENTS) {
       const p = panel(ctx.root, e.title);
       p.dataset.slot = `results/${e.id}/metrics.json`;
