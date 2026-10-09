@@ -207,13 +207,16 @@ const sdsSchemaFields = (code) => {
 const sdsVersion = JSON.parse(fs.readFileSync(path.join(repo, 'node_modules/spacedatastandards.org/package.json'), 'utf8')).version;
 for (const code of ['OCM', 'VCM']) write(`data/sds/${code}.json`, { schema: `${code}.fbs`, version: sdsVersion, tables: sdsSchemaFields(code) }, `spacedatastandards.org ${sdsVersion} schema/${code}/main.fbs, fields and doc comments`, 'Apache-2.0 (Space Data Standards)');
 
-// E1, E2 and E3 publish results/<id>/metrics.json when their runs report;
-// the models page shows each one that exists.
+// Each experiment's results: results/<id>/metrics.json, or the latest run
+// directory under results/<id>/ that holds one; the models page shows each.
 const experimentResults = [];
-for (const id of ['e1', 'e2', 'e3']) {
-  const file = path.join(repo, 'results', id, 'metrics.json');
-  if (!fs.existsSync(file)) continue;
-  write(`results/${id}/metrics.json`, fs.readFileSync(file), `results/${id}/metrics.json`, 'MIT');
+for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
+  const dir = path.join(repo, 'results', id);
+  if (!fs.existsSync(dir)) continue;
+  const runs = fs.readdirSync(dir).filter((d) => fs.existsSync(path.join(dir, d, 'metrics.json'))).sort();
+  const relative = fs.existsSync(path.join(dir, 'metrics.json')) ? 'metrics.json' : runs.length ? `${runs.at(-1)}/metrics.json` : null;
+  if (!relative) continue;
+  write(`results/${id}/metrics.json`, fs.readFileSync(path.join(dir, relative)), `results/${id}/${relative}`, 'MIT');
   experimentResults.push(id);
 }
 write('data/experiments.json', { published: experimentResults });
