@@ -33,6 +33,7 @@ const TERMS = {
   IGS0OPSFIN: 'IGS data policy: open, cite the International GNSS Service (IGS)',
   ESA0OPSFIN: 'ESA/ESOC Navigation Support Office final orbit (IGS analysis centre): open, cite ESA/ESOC and the IGS',
   eop: 'IERS data, free with attribution (IERS Earth Orientation Centre, EOP 20 C04)',
+  finals: 'IERS data, free with attribution (IERS Rapid Service/Prediction Centre, finals2000A)',
   sinex: 'IGS data policy: open, cite the IGS',
 };
 const retrieved = (file) => fs.statSync(file).mtime.toISOString();
@@ -84,7 +85,14 @@ const track = (source, name, url, terms, role) => {
   fs.writeFileSync(path.join(out, name), gz);
   manifest.tracked.push({ name: `data/e1/${name}`, bytes: gz.length, sha256: sha256(gz), uncompressedSha256: sha256(raw), url, retrieved: retrieved(source), terms, role });
 };
-track(path.join(productsDir, 'eopc04.1962-now'), 'eopc04.1962-now.gz', [...eopUrls].join(' '), TERMS.eop, 'Earth orientation for the IGS20 → GCRF conversion of the truth');
+// Each Earth-orientation series a product's conversion names: IERS EOP 20
+// C04, or IERS finals2000A where C04 does not reach the day yet.
+for (const url of [...eopUrls].sort()) {
+  const name = path.basename(new URL(url).pathname);
+  const days = products.filter((p) => JSON.parse(fs.readFileSync(path.join(reference, p, 'index.json'), 'utf8')).eop === url).length;
+  track(path.join(productsDir, name), `${name}.gz`, url, name.startsWith('finals') ? TERMS.finals : TERMS.eop,
+    `Earth orientation for the IGS20 → GCRF conversion of the truth (${days} product days)`);
+}
 track(path.join(productsDir, 'igs_satellite_metadata.snx'), 'igs_satellite_metadata.snx.gz', [...sinexUrls].join(' '), TERMS.sinex, 'PRN → SVN → NORAD identities of the truth');
 const indexBytes = fs.readFileSync(indexFile);
 manifest.tracked.push({ name: 'data/e1/reference-indexes.json.gz', bytes: indexBytes.length, sha256: sha256(indexBytes), url: null, retrieved: null,

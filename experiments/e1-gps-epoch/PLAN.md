@@ -353,6 +353,18 @@ are reported with the results.
   as registered and is expected to fail; changing M4 after seeing this
   would tune it to the gate it is tested by.
 
+- **2026-10-09, after the freeze, before the test window is read (5).**
+  Two facts about the truth, found when its download finished. (a) IERS
+  EOP 20 C04 ends on 2026-09-01, so the products of 2026-09-01 to
+  2026-09-23 were converted with IERS finals2000A (observed rows) instead;
+  every product's index names its series, and both files are in
+  `data/e1/`. The difference between the two series is at the level of
+  centimetres at GPS altitude, five orders below the effect. (b) ESA's
+  product for 2025-01-03 states no accuracy for G01 and
+  `analysis/reference-states` refuses it, so that day has no truth;
+  element sets near it lose the samples that would fall on it. Neither
+  changes a method, a window or a decision rule.
+
 ## References
 
 - Ly, D., Lucken, R. and Giolito, D. Correcting TLEs at epoch: Application to
