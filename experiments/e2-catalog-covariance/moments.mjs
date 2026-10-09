@@ -18,6 +18,7 @@ export function fullToLower(full) {
 // (covariance + mean mean'), the clipped block likewise.
 export function addMeanOuter(stratum) {
   const second = (c, m) => fullToLower(lowerToFull(c).map((v, k) => v + m[Math.floor(k / 6)] * m[k % 6]));
+  if (!stratum.covariance || !stratum.mean) return stratum;  // too few samples for moments
   const out = { ...stratum, covariance: second(stratum.covariance, stratum.mean) };
   if (stratum.clipped?.covariance) out.clipped = { ...stratum.clipped, covariance: second(stratum.clipped.covariance, stratum.clipped.mean) };
   return out;
