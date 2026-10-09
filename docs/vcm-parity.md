@@ -59,8 +59,8 @@ round trip VCM → HPOP → VCM → read (3.5e-6).
    43.9 km after a day) or the B and AGOM rows as fractions of their values
    (`fractional`: 4.3 % of B, 493 m after a day). The second is the only one
    a fit to 40 m in-track sigmas is likely to leave, but plausibility is not
-   evidence: E2 settles it with a VCM whose object has a precise orbit (or
-   the interface document does). The site runs both.
+   evidence. A VCM for an object with a precise orbit (none is on hand) or
+   the format's interface document will settle it. The site runs both.
 2. **Consider parameters** (C1, C2, …) have no PRW force and are dropped.
 3. **`$VCM` has no fields for B, BDOT, AGOM, T or the parameter rows of the
    covariance**; they travel in the PRW request and the adapter's report.

@@ -154,13 +154,17 @@ async function runLive() {
   // compare with results/v1, seed by seed.
   const v1 = decodeExecution(await hpop.invoke('invoke', [request(horizonMs), ...extra]));
   const committed = state.metrics.results.filter((r) => r.object === seed.object && r.seedEpoch === seed.seedUtc && r.configuration === cfgName);
-  const reproduced = Math.max(...v1.samples.map((p, k) => {
+  const compared = v1.samples.map((p, k) => {
     const c = committed.find((r) => r.hours === state.config.horizonsHours[k]);
-    return c ? Math.abs(errorM(p.position, at(index.get(horizonMs[k])).position) - c.errorM) : 0;
-  }));
+    return c ? Math.abs(errorM(p.position, at(index.get(horizonMs[k])).position) - c.errorM) : null;
+  }).filter((d) => d !== null);
+  const reproduced = compared.length ? Math.max(...compared) : null;
   const err = (h) => rows.find((r) => Math.abs(r.hours - h) < 1e-9)?.errorM;
   $('tiles').innerHTML = [[1, '1 h'], [24, '24 h'], [72, '72 h']].map(([h, l]) => `<div><dt>${l}</dt><dd>${formatMeters(err(h))}</dd></div>`).join('');
-  status($('status'), `${objectName(seed.object)}, ${cfgName}: ${run.final.steps.toLocaleString()} steps in ${seconds.toFixed(2)} s in this browser. ${reproduced === 0 ? 'Reproduces results/v1 for this seed exactly.' : `Reproduces results/v1 for this seed to ${formatMeters(reproduced, 3)}.`}`);
+  const verdict = reproduced === null ? 'results/v1 has no row for this seed and configuration to compare with.'
+    : reproduced === 0 ? `Reproduces results/v1 for this seed exactly, at all ${compared.length} horizons.`
+    : `Reproduces results/v1 for this seed to ${formatMeters(reproduced, 3)} over ${compared.length} horizons.`;
+  status($('status'), `${objectName(seed.object)}, ${cfgName}: ${run.final.steps.toLocaleString()} steps in ${seconds.toFixed(2)} s in this browser. ${verdict}`);
   const medians = state.metrics.summary.find((r) => r.group === seed.group && r.configuration === cfgName);
   $('chart-caption').textContent = `${objectName(seed.object)}, seeded ${seed.seedUtc.slice(0, 16).replace('T', ' ')} UTC, ${cfgName}`;
   lineChart($('run-chart'), {
@@ -186,7 +190,7 @@ async function runLive() {
   downloadButton(box, 'Run record', `${base}.json`, () => JSON.stringify({
     seed, configuration: cfgName, forces, integrator: state.config.integrator, samples: rows.length,
     modules: [hpop.provenance, time.provenance], inputs: { kernel: withKernel ? 'data/kernel/de440-2026.prw' : null, earthOrientation: forces.eop ? 'data/eop/eop-v1.prw' : null },
-    browserSeconds: seconds, reproducesV1WithinM: reproduced,
+    browserSeconds: seconds, reproducesV1WithinM: reproduced, horizonsCompared: compared.length,
   }, null, 2), 'application/json');
   button.disabled = false;
 }
@@ -336,7 +340,7 @@ async function runVcm(text) {
   $('vcm-notes').innerHTML = [
     `${report.geopotential} ${report.zonals}Z,${report.tesserals}T; drag ${report.drag} as Jacchia-Roberts; B = ${report.ballisticCoefficientM2Kg} m²/kg, carried as a dynamic parameter.`,
     `Covariance ${report.covarianceSize}×${report.covarianceSize}, scaled by WTD RMS² = ${(report.weightedRms ** 2).toFixed(4)}; mean motion read in ${report.meanMotionUnit}, the unit that reproduces the printed sigmas.`,
-    'The format states no units for the B row, and the printed sigmas cover the elements only. Read as printed, B’s sigma is five times B, which a fit to 40 m in-track hardly leaves; read as a fraction, 4 %. Both run here; E2 settles it against a precise orbit.',
+    'The format states no units for the B row, and the printed sigmas cover the elements only. Read as printed, B’s sigma is five times B, which a fit to 40 m in-track hardly leaves; read as a fraction, 4 %. Both run here; a VCM for an object with a precise orbit, or the format’s interface document, would settle it.',
   ].map((n) => `<li>${n}</li>`).join('');
   const last = (rows) => runs[rows].sigmas.at(-1).s;
   lineChart($('vcm-chart'), {

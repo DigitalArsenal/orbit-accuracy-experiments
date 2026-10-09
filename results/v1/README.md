@@ -73,7 +73,8 @@ What the failures say:
   model is not at fault: a probe run (not part of V1) of the execution path
   with the same forces, a 20x20 field with Earth orientation and no third
   bodies, agreed with R-20 to metres seed by seed.
-- **GPS maxima at 48-72 h** (about 90 km in every configuration) are one
+- **GPS maxima at 48-72 h** (about 45 km at 48 h and 90 km at 72 h in every
+  configuration but the point mass, which has 98 and 170 km) are one
   satellite, NORAD 35752, seeded 2026-08-06; the same object carries most of
   the E1 baseline's squared error. It is not modelled by any configuration
   and is left as an open item about the truth or the satellite, not HPOP.
