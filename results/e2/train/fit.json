@@ -1,0 +1,46 @@
+{
+ "products": [
+  "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z",
+  "e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z"
+ ],
+ "regimes": {
+  "GPS": {
+   "counts": {
+    "rows": 1971,
+    "skipped": 204,
+    "failed": 6,
+    "notConverged": 0,
+    "fitted": 1761
+   },
+   "reducedChiSquareThreshold": 2.934130712776058,
+   "spans": {
+    "3": {
+     "products": 544,
+     "q": 2.524176732575451e-8,
+     "objective": 0.6699683775193634,
+     "objectiveWithoutNoise": 932.3196145592414
+    },
+    "5": {
+     "products": 595,
+     "q": 2.330177748771326e-8,
+     "objective": 0.6681769061799709,
+     "objectiveWithoutNoise": 1019.2491380158809
+    },
+    "7": {
+     "products": 604,
+     "q": 2.2581448422254166e-8,
+     "objective": 0.6762524792551872,
+     "objectiveWithoutNoise": 1029.468533128289
+    }
+   }
+  }
+ }
+}
