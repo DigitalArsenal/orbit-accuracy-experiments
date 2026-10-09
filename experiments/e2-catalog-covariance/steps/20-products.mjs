@@ -8,8 +8,8 @@
 // the sets in [epoch - span, epoch] (analysis/epoch-state), weighted by the
 // regime's at-epoch error second moment from train (c1.json, 6x6 RTN). The
 // fit (analysis/estimation fit_batch, propagator/hpop answering) gives the
-// state and parameters at the epoch with the formal covariance scaled by the
-// reduced chi-square. HPOP then propagates the product to the first precise-
+// state and parameters at the epoch with the formal covariance, scaled by
+// the reduced chi-square when that exceeds 1 (PLAN.md section 4). HPOP then propagates the product to the first precise-
 // orbit epoch at or after each horizon twice: with that covariance and no
 // noise (A), and with zero initial covariance and unit white-acceleration
 // noise on the three RTN axes (U), so that any density q gives
@@ -99,7 +99,7 @@ for (const [name, regime] of Object.entries(config.regimes)) {
             parameters: r.fit.estimate.slice(6), parameterSigmas: regime.parameters.map((_, i) => Math.sqrt(r.fit.covariance[(6 + i) * n + 6 + i])) });
           const epochs = scoring.filter((t) => t !== null).map(iso);
           const product = { epoch: reference0.epoch, estimate: r.fit.estimate };
-          const a = await propagateProduct({ hpop: ctx.hpop, inputs }, product, epochs, settings, { covariance: conditioned(r.fit.scaledCovariance), noise: null });
+          const a = await propagateProduct({ hpop: ctx.hpop, inputs }, product, epochs, settings, { covariance: conditioned(r.fit.covariance.map((v) => v * Math.max(1, r.fit.reducedChiSquare))), noise: null });
           const u = await propagateProduct({ hpop: ctx.hpop, inputs }, product, epochs, settings,
             { covariance: Array(n * n).fill(0), noise: { q: [unitQ, unitQ, unitQ], intervalSeconds: config.c4.discretizationSeconds } });
           let k = 0;
