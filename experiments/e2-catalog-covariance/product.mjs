@@ -42,9 +42,13 @@ export function estEpoch(iso) {
   return { jd_day: day + 2440587.5, seconds: (ms - day * 86400000) / 1000 + Number(`0.${frac}`) };
 }
 
-// Batch fit. observations: [{epoch ISO, state [m, m/s]}], each a full-state
-// pseudo-observation with the 6x6 covariance settings.covarianceRtn in the
-// RTN axes of the observed state; reference: {epoch ISO, state}.
+// Batch fit: the entry point E2's C2/C4 (and any lane fitting state and
+// dynamic parameters to full-state observations, e.g. operator ephemerides)
+// uses. observations: [{epoch ISO, state [m, m/s], covariance? [36]}], each
+// a full-state observation with its own 6x6 covariance or else
+// settings.covarianceRtn, in the axes settings.covarianceAxes names ('RTN'
+// of the observed state, the default, or 'INERTIAL' GCRF); reference: {epoch ISO, state}, the
+// product epoch and the first guess.
 // settings: {parameters [{kind, value}], apriori (n x n) | null, covarianceRtn [36], fit options, forces, integrator, fixed}.
 // Returns {fit, rounds, hpopCalls} or throws on a module failure.
 export async function fitProduct({ estimation, hpop, codec, inputs }, reference, observations, settings) {
@@ -64,7 +68,8 @@ export async function fitProduct({ estimation, hpop, codec, inputs }, reference,
       parameter_kinds: settings.parameters.map((p) => ({ DRAG_AREA_OVER_MASS: 1, DRAG_AREA_OVER_MASS_RATE: 2, SRP_AREA_OVER_MASS: 3, IN_TRACK_ACCELERATION: 4 })[p.kind]),
       parameter_values: settings.parameters.map((p) => p.value),
       ...(settings.apriori ? { apriori_covariance: settings.apriori } : {}),
-      observation_covariances: observations.flatMap(() => settings.covarianceRtn), covariance_axes: 1,
+      observation_covariances: observations.flatMap((o) => o.covariance ?? settings.covarianceRtn),
+      covariance_axes: (settings.covarianceAxes ?? 'RTN') === 'RTN' ? 1 : 0,
       maximum_iterations: settings.maximumIterations, correction_tolerance: settings.correctionTolerance, sigma_edit_threshold: settings.sigmaEditThreshold,
     },
   };

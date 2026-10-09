@@ -64,6 +64,7 @@ This repository fits noise models and computes statistics.
 | --- | --- |
 | C0 | SGP4 as published, scored for accuracy only (no covariance), and with the existing GP error model's covariance (`analysis/gp-error-model` `docs/model-2026-08-scaled.json`) as the baseline for realism. |
 | C1 | **Catalog-history empirical covariance** (Osweiler 2006; Flohrer, Krag & Klinkrad 2008): `analysis/gp-error-model` `accumulate` without reference states propagates each element set to the epochs of the object's later sets; their RTN differences give the second moment by regime and age (0–0.5, 0.5–1, 1–2, 2–3, 3–5, 5–7 days). The later sets' own at-epoch error is the pseudo-truth error: the second moment about zero of SGP4 at each set's epoch against every precise-orbit epoch within 15 minutes after it, on train (H4). |
+| C1 variants | C1 as above is **C1a**. The owner asked (2026-10-09) that C1 also cover the methods of Thompson (AMOS 2019), the USU SmallSat paper, IEEE 7531654 and AFIT ETD 3531 (references). Each becomes a named variant (C1b, C1c, …) with its exact method, specified here and in `config.json` (`c1.variants`) before the freeze; the plan is not frozen until they are. |
 | C2 | **Pseudo-observation fit** (after Levit & Marshall 2011): `propagator/hpop`'s state at the product epoch with AGOM (GPS; B for LEO), fitted by weighted batch least squares (`analysis/estimation` `fit_batch`, HPOP answering its queries with the STM and parameter columns) to the full GCRF state of each of the object's element sets at its own epoch (`analysis/epoch-state`) over a fit span of 3, 5 or 7 days (chosen on validation). Each pseudo-observation is weighted by the regime's at-epoch error second moment from train, a 6×6 covariance in the RTN axes of the observed state. A priori: the state at 100 km and 10 m/s (no information), AGOM 0.02 ± 0.01 m²/kg. Covariance: the formal (JᵀWJ + P₀⁻¹)⁻¹ over state and parameters, scaled by the fit's reduced χ² when it exceeds 1 (the convention of SP's VCM sigmas, docs/vcm-parity.md), propagated by HPOP with the parameters. On the dev window the reduced χ² was about 0.1: consecutive element sets agree with each other far better than with the truth, so scaling down would manufacture confidence. |
 | C3 | **C2 on E1-corrected element sets** (the improved element sets at epoch, M3* of E1) with E1's M4 variance as weights. GPS first; LEO when E1's corrections exist there. |
 | C4 | **Process noise**: C2/C3 with white-acceleration noise in RTN (PRW `PROCESS_NOISE`, 600 s steps). HPOP gives, at each scoring epoch, A (the product's covariance, no noise) and U (zero initial covariance, unit density on each RTN axis), so P(q) = A + qU. One density q ≥ 0 per regime and fit span (equal on R, T and N), fitted on train to minimize Σ over 1 and 3 days of (mean d²/3 − 1)². |
@@ -168,6 +169,13 @@ zero (LEO is not tested, Amendment 1).
 - Ly, D., Lucken, R., Giolito, D. (2020). Correcting TLEs at epoch:
   application to the GPS constellation. Journal of Space Safety Engineering
   7(3).
+- Owner-requested C1 sources (methods to be specified as variants):
+  Thompson, AMOS 2019,
+  https://amostech.com/TechnicalPapers/2019/Astrodynamics/Thompson.pdf;
+  USU SmallSat Conference,
+  https://digitalcommons.usu.edu/cgi/viewcontent.cgi?article=6135&context=smallsat;
+  IEEE, https://ieeexplore.ieee.org/document/7531654;
+  AFIT thesis, https://scholar.afit.edu/etd/3531/.
 - Osweiler, V. P. (2006). Covariance estimation and autocorrelation of NORAD
   two-line element sets. MS thesis, AFIT.
 - Poore, A. B., et al. (2016). Covariance and uncertainty realism in space
