@@ -249,3 +249,15 @@ Data on hand when the train and validation windows were run:
   orbit `IGS0OPSFIN` (15 min) of that day is used instead, never both.
 - **A0** lay inside the test window; it is replaced by the dev window
   above, and nothing of E2 read 2026-08-02..15 before the freeze.
+
+## Amendment 2 (2026-10-09, after the freeze, before the test window was read)
+
+GPS precise orbits for 2026-09-01..23 (the end of the test window and its
+7-day horizons) were on hand as ESA SP3 files but not yet converted to
+states. They were converted with `analysis/reference-states`
+(`scripts/fetch-reference-products.mjs --products gps --eop finals`) using
+IERS finals2000A rows, because EOP 20 C04 ends on 2026-09-01; every
+earlier day used C04. The two series differ by well under a metre at GPS
+altitude, against the kilometre errors scored. Precise orbits for
+Sentinel-1, Swarm and the SLR satellites over train and validation began
+downloading after the freeze; they do not change this plan (Amendment 1).
