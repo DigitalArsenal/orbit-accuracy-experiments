@@ -20,7 +20,7 @@ import { DAY_MS, assertFrozen, cli, config, providers } from '../common.mjs';
 import { readCpf, readIntelsat, readMeme, readOem, readPlanetStates, readTle, unzipMembers } from '../operators.mjs';
 
 assertFrozen();
-const { values, nodes, inputs } = cli({ publish: { type: 'boolean' }, 'release-dir': { type: 'string' } });
+const { values, nodes, inputs, truth } = cli({ publish: { type: 'boolean' }, 'release-dir': { type: 'string' } });
 const basename = (url) => decodeURIComponent(new URL(url).pathname.split('/').pop());
 const compact = (iso) => iso.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
 
@@ -152,8 +152,8 @@ if (values.publish) {
     }
   }
   // Truth products (public archives), from step 05's index files.
-  for (const product of fs.existsSync(path.join(cli().truth, 'reference')) ? fs.readdirSync(path.join(cli().truth, 'reference')).sort() : []) {
-    const index = path.join(cli().truth, 'reference', product, 'index.json');
+  for (const product of fs.existsSync(path.join(truth, 'reference')) ? fs.readdirSync(path.join(truth, 'reference')).sort() : []) {
+    const index = path.join(truth, 'reference', product, 'index.json');
     if (!fs.existsSync(index)) continue;
     const i = JSON.parse(fs.readFileSync(index, 'utf8'));
     manifest.truth.push({ product: i.product, url: i.url, sha256: i.sha256, objects: i.objects.length });
