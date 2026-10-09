@@ -201,3 +201,12 @@ never typed.
 
 Dated changes, with their reasons; amendments after the freeze are reported
 with the results.
+
+- **2026-10-09, after the freeze, before any test-window result.** The first
+  test-window scoring run stopped with an error from `analysis/gp-error-model`
+  (an age bin below zero): some Space-Track sets were created at or before
+  the issue time with an epoch after it. SGP4 scoring is forward only, so a
+  set is usable at issue time T when it was created **and** has its epoch at
+  or before T. The train and test windows were both rerun with this rule; no
+  test-window number was produced before the change.
+

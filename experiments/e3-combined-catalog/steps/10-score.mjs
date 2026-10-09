@@ -103,7 +103,7 @@ const want = (s, state) => {
 };
 for (const t of targets) {
   if (!t.state) continue;
-  const available = (setsOf.get(t.norad) ?? []).filter((s) => s.createdMs <= t.T).sort((a, b) => b.epochMs - a.epochMs || b.createdMs - a.createdMs);
+  const available = (setsOf.get(t.norad) ?? []).filter((s) => s.createdMs <= t.T && s.epochMs <= t.T).sort((a, b) => b.epochMs - a.epochMs || b.createdMs - a.createdMs);
   t.st = available.slice(0, 3).map((s) => s.gpId);
   for (const s of available.slice(0, 3)) want(s, t.state);
 }
