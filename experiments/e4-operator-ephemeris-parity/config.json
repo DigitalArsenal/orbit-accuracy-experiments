@@ -1,6 +1,6 @@
 {
   "experiment": "e4-operator-ephemeris-parity",
-  "frozen": false,
+  "frozen": true,
   "plan": "PLAN.md",
   "inputs": {
     "providerNodes": "~/.local/share/spacedatanetwork/ephemeris-provider-nodes",
