@@ -1,0 +1,66 @@
+{
+ "experiment": "e5-density-calibration",
+ "rule": {
+  "degree": "the candidate with the smallest standard deviation of ln(orbit-mean observed / orbit-mean model) over the validation window's held-out satellites, analysis mode (concurrent bins)",
+  "decayHours": "the candidate with the smallest median 3-day 3D error of D2 over the validation window's arcs"
+ },
+ "densityRun": "e5-density-calibration-20-density-validation-20261009T191321Z",
+ "propagationRuns": [
+  "e5-density-calibration-30-propagation-validation-0of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-10of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-11of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-12of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-13of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-1of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-2of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-3of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-4of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-5of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-6of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-7of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-8of14-20261009T191719Z",
+  "e5-density-calibration-30-propagation-validation-9of14-20261009T191719Z"
+ ],
+ "degrees": [
+  {
+   "degree": 0,
+   "n": 11622,
+   "sigma": 0.051673532733114945
+  },
+  {
+   "degree": 1,
+   "n": 11622,
+   "sigma": 0.05433389717231148
+  },
+  {
+   "degree": 2,
+   "n": 11622,
+   "sigma": 0.07582094565903315
+  }
+ ],
+ "d0Sigma": 0.13719223131665975,
+ "degree": 0,
+ "decays": [
+  {
+   "decayHours": 12,
+   "variant": "D2-L0-T12",
+   "arcs": 191,
+   "median3dM": 220.53366209428196
+  },
+  {
+   "decayHours": 48,
+   "variant": "D2-L0-T48",
+   "arcs": 191,
+   "median3dM": 271.1726215428094
+  },
+  {
+   "decayHours": null,
+   "variant": "D2-L0-Tinf",
+   "arcs": 191,
+   "median3dM": 224.6016571612559
+  }
+ ],
+ "d0Median3dM": 276.833034566021,
+ "decayHours": 12,
+ "decided": "2026-10-09T19:52:39.660Z"
+}
