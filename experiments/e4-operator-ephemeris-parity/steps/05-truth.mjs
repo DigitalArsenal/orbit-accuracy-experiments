@@ -34,19 +34,22 @@ async function download(url, file) {
     if (response.status === 404) return null;
     await new Promise((r) => setTimeout(r, 3000 * attempt));
   }
-  return null;
+  return undefined;  // the server did not answer
 }
 
 const report = { products: {}, missing: [] };
 for (const [product, spec] of Object.entries(config.truth.products)) {
   report.products[product] = { days: 0, objects: 0 };
+  let unreachable = false;
   for (let day = Date.parse(`${config.truth.from}T00:00:00Z`); day <= Date.parse(`${config.truth.to}T00:00:00Z`); day += DAY_MS) {
     const d = new Date(day), doy = Math.round((day - Date.UTC(d.getUTCFullYear(), 0, 1)) / DAY_MS) + 1;
     const week = Math.floor((day - Date.UTC(1980, 0, 6)) / (7 * DAY_MS));
     const yyyyddd = `${d.getUTCFullYear()}${String(doy).padStart(3, '0')}`;
     const url = spec.url.replace('{week}', week).replace('{yyyyddd}', yyyyddd).replace('{yyyy}', d.getUTCFullYear());
     const name = path.basename(new URL(url).pathname);
+    if (unreachable) { report.missing.push(`${url} (server unreachable)`); continue; }
     const gz = await download(url, path.join(truth, 'products', name));
+    if (gz === undefined) { unreachable = true; report.missing.push(`${url} (server unreachable)`); log(`server unreachable: ${url}; the product's other days are skipped`); continue; }
     if (!gz) { report.missing.push(url); log(`not available: ${url}`); continue; }
     const satellites = Object.fromEntries(Object.entries(gnssIdentities(sinex.toString(), day + DAY_MS / 2)).filter(([prn]) => spec.systems.includes(prn[0])));
     const key = name.replace('.SP3.gz', '');
