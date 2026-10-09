@@ -11,7 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { loadModule, modulesRoot } from '../../harness/modules.mjs';
-import { decodeOemStream } from '../../harness/records.mjs';
+import { selectSeeds, utcMs } from './seeds.mjs';
 import { decodeExecution, decodeResident, executionFrame, kernelFrame, residentIngestFrames, residentRequestFrame } from '../../harness/prw.mjs';
 import { convertIso } from '../../harness/time.mjs';
 import { c04Records, eopFrame } from '../../harness/eop.mjs';
@@ -29,48 +29,8 @@ const budgetMs = values.budget ? Number(values.budget) * 1000 : Infinity;
 const invocationStart = performance.now();
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 
-// ── Reference states ──
-const HOUR_MS = 3600000;
-const utcMs = (iso) => Date.parse(/Z$/.test(iso) ? iso : `${iso}Z`);
-const readArc = (files) => {
-  const byTime = new Map();
-  for (const file of files) {
-    const bytes = fs.readFileSync(path.join(referenceDir, file));
-    run.addInputs('reference', { [file]: sha256(bytes) });
-    for (const line of decodeOemStream(new Uint8Array(bytes))[0].EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES) {
-      byTime.set(utcMs(line.EPOCH), { epoch: line.EPOCH.replace(/Z$/, ''), position: [line.X, line.Y, line.Z], velocity: [line.X_DOT, line.Y_DOT, line.Z_DOT] });
-    }
-  }
-  return byTime;
-};
-const dirs = fs.readdirSync(referenceDir).sort();
-const seeds = [];  // {group, object, norad, seed, targets: [{hours, truth}], params}
-for (const o of config.slr.objects) {
-  for (const arc of config.slr.arcs) {
-    const product = dirs.find((d) => d.startsWith(`ilrsa.orb.${o.name}.${arc}`));
-    if (!product) { log(`missing ILRS arc ${o.name} ${arc}`); continue; }
-    const states = readArc([path.join(product, `${o.norad}.oem`)]);
-    const t0 = Math.min(...states.keys());
-    for (const offset of config.slr.seedOffsetsHours) {
-      const start = t0 + offset * HOUR_MS;
-      const targets = config.horizonsHours.map((h) => ({ hours: h, truth: states.get(start + h * HOUR_MS) })).filter((t) => t.truth);
-      if (!states.has(start) || targets.length !== config.horizonsHours.length) { log(`skipped ${o.name} ${arc} +${offset} h: horizon not inside the arc`); continue; }
-      const areaM2 = Math.PI * (o.diameterM / 2) ** 2;
-      seeds.push({ group: 'SLR', object: o.name, norad: o.norad, arc, seed: states.get(start), targets, params: { massKg: o.massKg, areaM2, cr: o.cr } });
-    }
-  }
-}
-const igs = dirs.filter((d) => d.startsWith(config.gps.productPrefix));
-const gpsObjects = [...new Set(igs.flatMap((d) => JSON.parse(fs.readFileSync(path.join(referenceDir, d, 'index.json'))).objects.map((o) => o.norad)))].sort((a, b) => a - b);
-for (const norad of values.quick ? gpsObjects.slice(0, 3) : gpsObjects) {
-  const states = readArc(igs.filter((d) => fs.existsSync(path.join(referenceDir, d, `${norad}.oem`))).map((d) => path.join(d, `${norad}.oem`)));
-  for (const day of config.gps.seedDays) {
-    const start = [...states.keys()].sort((a, b) => a - b).find((t) => t >= Date.parse(`${day}T00:00:00Z`));
-    const targets = config.horizonsHours.map((h) => ({ hours: h, truth: states.get(start + h * HOUR_MS) })).filter((t) => t.truth);
-    if (start === undefined || targets.length !== config.horizonsHours.length) continue;
-    seeds.push({ group: 'GPS', object: `gps-${norad}`, norad, arc: day, seed: states.get(start), targets, params: { massKg: config.gps.massKg, areaM2: config.gps.areaM2, cr: config.gps.cr } });
-  }
-}
+// ── Reference states (seeds.mjs) ──
+const seeds = selectSeeds(config, referenceDir, { quick: values.quick, log, onInput: (file, hash) => run.addInputs('reference', { [file]: hash }) });
 log(`${seeds.filter((s) => s.group === 'SLR').length} SLR seeds, ${seeds.filter((s) => s.group === 'GPS').length} GPS seeds`);
 
 // ── Modules ──

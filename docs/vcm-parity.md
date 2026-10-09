@@ -52,10 +52,15 @@ round trip VCM → HPOP → VCM → read (3.5e-6).
 
 ## Remaining gaps
 
-1. **The units of B, BDOT, AGOM and T in the covariance** are taken as the
-   model lines print them; the one sample on hand cannot confirm them (its
-   B variance gives a sigma four times B). Settle against a second VCM or the
-   interface document before trusting a VCM's parameter rows.
+1. **The units of the B, BDOT, AGOM and T rows of the covariance** are not
+   stated, and the printed sigmas (elements only) cannot settle them. The
+   adapter's `parameterRows` option reads them as printed (`absolute`, the
+   default: the sample's B sigma is 5.1 × B, and the in-track sigma reaches
+   43.9 km after a day) or the B and AGOM rows as fractions of their values
+   (`fractional`: 4.3 % of B, 493 m after a day). The second is the only one
+   a fit to 40 m in-track sigmas is likely to leave, but plausibility is not
+   evidence: E2 settles it with a VCM whose object has a precise orbit (or
+   the interface document does). The site runs both.
 2. **Consider parameters** (C1, C2, …) have no PRW force and are dropped.
 3. **`$VCM` has no fields for B, BDOT, AGOM, T or the parameter rows of the
    covariance**; they travel in the PRW request and the adapter's report.
