@@ -1,0 +1,77 @@
+{
+  "experiment": "e3-combined-catalog",
+  "frozen": false,
+  "plan": "PLAN.md",
+  "inputs": {
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "reference": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+    "referenceC04": "/opt/data/sdn-archive/reference-states/reference",
+    "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z",
+    "kernel": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp",
+    "celestrakCaptures": "/opt/data/sdn-archive/celestrak-e3",
+    "vimpelEditions": {
+      "orbits.20260907.txt": "840cda6d499028c17a7e22228b1b22fe500078e996113ef5804c4fff7ba612fa",
+      "orbits.20260921.txt": "61d4ceb343daeb713e0d4c7be9ae756fec3b817f3b29af77f07cb371491f5f47",
+      "datefirst.txt": "56c4ce51df4813f27ee1f59f435239331063f1007246aeb877454c7db0fb81ad"
+    },
+    "modules": "../../main-packages/space-data-network-modules"
+  },
+  "elementSets": { "meanElementTheory": "SGP4", "ephemerisType": "0", "duplicateEpochSeconds": 1, "creationLagDays": 3 },
+  "windows": {
+    "train": ["2026-08-03", "2026-08-24"],
+    "test": ["2026-09-07", "2026-09-26"]
+  },
+  "issueTimeUtc": "00:00:00",
+  "issueOffsetSeconds": -18,
+  "issueTimeNote": "issue time = 00:00:00 GPS time = 23:59:42 UTC the day before (GPS - UTC = 18 s throughout 2026), on the GNSS products' 5-min grid",
+  "horizonsDays": [0, 1, 3, 7],
+  "targetToleranceSeconds": 900,
+  "binHalfWidthSeconds": 2,
+  "regimes": {
+    "GPS": { "truthPrefix": "ESA0OPSFIN", "sp3System": "G" },
+    "LEO 400-800 km": { "objects": { "39452": "Swarm A", "39451": "Swarm B", "39453": "Swarm C", "62261": "Sentinel-1C", "66315": "Sentinel-1D", "27944": "LARETS" } },
+    "SLR LEO 800-1500 km": { "objects": { "22824": "Stella", "7646": "Starlette", "25398": "WESTPAC", "16908": "Ajisai", "38077": "LARES" } },
+    "SLR MEO": { "objects": { "8820": "LAGEOS-1", "22195": "LAGEOS-2", "53105": "LARES-2", "19751": "ETALON-1", "20026": "ETALON-2" } }
+  },
+  "truthPrefixes": ["ESA0OPSFIN", "SW_OPER_SP3", "S1C_OPER_AUX_POEORB", "S1D_OPER_AUX_POEORB", "nsgf.orb.", "ilrsa.orb."],
+  "sources": {
+    "ST": { "name": "Space-Track GP (SGP4)", "lineage": "SSN", "level": 3 },
+    "URA": { "name": "ESA ultra-rapid GNSS orbits (ESA0OPSULT)", "lineage": "GNSS-network", "level": 2, "productPrefix": "ESA0OPSULT", "availableAfterStartHours": 27, "validHours": 48 },
+    "URA-IGS": { "name": "IGS ultra-rapid orbits kept by the SDN gps-precise node (IGS0OPSULT)", "lineage": "GNSS-network", "level": 2, "productPrefix": "IGS0OPSULT", "availableAfterStartHours": 27, "validHours": 48, "sensitivityOnly": true },
+    "HPOP-URA": { "name": "HPOP from the ultra-rapid state at the issue time", "lineage": "GNSS-network", "level": 2, "seedFrom": "URA" }
+  },
+  "methods": {
+    "ST-latest": "the newest Space-Track element set created at or before the issue time",
+    "ST-stack3": "the mean of the errors of the three newest Space-Track element sets created at or before the issue time",
+    "URA": "the ultra-rapid state at the target, when the newest issue available at the issue time covers it",
+    "HPOP-URA": "HPOP from the newest available ultra-rapid state at the issue time",
+    "SEL": "evidence-weighted selection: the applicable method with the lowest train-window median 3D error for the regime and horizon",
+    "FUS": "fusion across lineages: per RTN axis, inverse train-window mean-square weights over the SEL-best applicable method of each lineage"
+  },
+  "selectionCandidates": ["ST-latest", "URA", "HPOP-URA"],
+  "hpop": {
+    "integrator": { "algorithm": "RK78", "tolerance": 1e-13, "maxStep": 300 },
+    "forces": { "degree": 20, "order": 20, "thirdBodies": [10, 301], "srp": true, "eop": true, "solidTides": true, "relativity": "IERS_2010" },
+    "gps": { "massKg": 1500, "areaM2": 20, "cr": 1.3 }
+  },
+  "statistics": {
+    "clipRobustSigma": 5,
+    "madScale": 1.4826,
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95,
+    "quantiles": [0.5, 0.95]
+  },
+  "decisions": {
+    "H1": { "regime": "GPS", "horizonsDays": [0, 1, 3, 7], "ratioUpperBelow": 1, "hacFactor": 10, "hacHorizonsDays": [0, 1] },
+    "H2": { "ratioUpperBelow": 0.95 },
+    "H3": { "ratioUpperBelow": 1 },
+    "L1": { "identicalAtLeast": 0.99 },
+    "A0.1": { "maxDifferenceM": 0.1 },
+    "A0.2": { "relative": 1e-9 }
+  },
+  "celestrak": {
+    "groups": ["gps-ops"],
+    "catalogNumbers": [39452, 39451, 39453, 62261, 66315, 27944, 22824, 7646, 25398, 16908, 38077, 8820, 22195, 53105, 19751, 20026]
+  }
+}
