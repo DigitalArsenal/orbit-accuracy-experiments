@@ -29,6 +29,7 @@
     "planes": { "count": 6, "assignAt": "2024-10-01" },
     "unseenGenerationFromLaunchYear": 2018
   },
+  "primaryClip": { "robustSigma": 5, "madScale": 1.4826, "maskFrom": "M0", "components": "RTN", "decided": "2026-10-08 by the owner, before any fit (PLAN amendment 2)" },
   "statistics": {
     "bootstrapResamples": 10000,
     "bootstrapSeed": 20261008,

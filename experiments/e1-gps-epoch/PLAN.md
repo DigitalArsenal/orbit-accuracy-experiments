@@ -106,8 +106,10 @@ the first IGS epoch after the element-set epoch, at most 15 min later.
 ## 5. Endpoints, statistics and decision rules
 
 **Primary (H1).** R = 1 − RMS₃ᴅ(M3*) / RMS₃ᴅ(M0) at age 0, tier G1, test
-window, where M3* is the method chosen on validation (below). Supported if
-R ≥ 0.50 and the 95 % lower confidence bound is ≥ 0.40.
+window, where M3* is the method chosen on validation (below) and RMS₃ᴅ is
+the 5 robust-sigma clipped RMS over the element sets M0's clip keeps
+(Outliers, below; amendment 2). Supported if R ≥ 0.50 and the 95 % lower
+confidence bound is ≥ 0.40.
 
 **H2.** The same R in tier G2. Supported if R ≥ 0.30 and the lower bound is
 above 0.
@@ -137,10 +139,12 @@ the same element sets against the same truth.
 **Multiplicity.** H1, H2 and H3 are one family, tested by Holm's procedure at
 α = 0.05. Everything else is descriptive and labelled so.
 
-**Outliers.** The primary analysis keeps every sample. A sensitivity analysis
-applies `gp-error-model`'s 5 robust-sigma clip, and another drops element
-sets with more than 10 km 3D error at epoch (Ly et al.'s rule). Both are
-reported beside the primary result, never instead of it.
+**Outliers.** The primary analysis applies `gp-error-model`'s 5 robust-sigma
+clip, with the mask fixed on M0's errors so that every method is scored on
+the same element sets. Sensitivity analyses keep every sample, drop element
+sets with more than 10 km 3D error at epoch (Ly et al.'s rule), and drop
+those inside GPS NANU outages; all are reported beside the primary result,
+never instead of it.
 
 **Secondary, descriptive.** RTN components and velocity at every age, per
 satellite and per tier; the age measured from creation as well as from
@@ -171,7 +175,8 @@ Before any model is fitted:
   The mapping comes from the IGS metadata SINEX current at each product's
   midpoint; changes in the window are listed in the inventory.
 - **Manoeuvres.** GPS station-keeping and repositioning appear as large
-  errors. They stay in the primary analysis (§5).
+  errors. The primary analysis clips them by M0's errors (§5); the unclipped
+  and NANU-excluded analyses show what that clip removes.
 - **Leakage.** Corrections use only covariates known at the element set's
   epoch and, for satellite effects, training-window truth. The test window is
   read once.
@@ -212,19 +217,19 @@ commit.
 5. Evaluate on test, once. Generate the report.
 6. M2, exploratory. Then E2 in LEO.
 
-## Open before the freeze
+## Decided before the freeze
 
 - **Heavy tails decide RMS.** In the A0 window one satellite (NORAD 35752)
   carries 99.6 % of the squared 3D error at 7 days; its errors look like a
   manoeuvre. At age 0, RMS is 3.76 km with every sample, 2.07 km under the
   10 km rule, and the median is 1.30 km. A correction of a few kilometres
-  cannot move a 70 km sample, so with every sample in the primary RMS, H1 is
-  decided by manoeuvres rather than by the method. Options for the owner:
+  cannot move a 70 km sample, so with every sample in the primary RMS, H1
+  would be decided by manoeuvres rather than by the method. The options were
   (a) keep the primary as written; (b) exclude element sets in manoeuvre
   windows identified from a source independent of the errors; (c) make the
-  primary statistic the 5 robust-sigma clipped RMS, as `gp-error-model` uses,
-  with the unclipped RMS as the sensitivity analysis. Decided and recorded
-  here before the freeze.
+  primary statistic the 5 robust-sigma clipped RMS, as `gp-error-model` uses.
+  **Decided by the owner on 2026-10-08, before any model was fitted: (c)**,
+  see amendment 2.
 
 ## Amendments
 
@@ -238,6 +243,20 @@ are reported with the results.
   it: six of 32 satellites were outside, down to −3.2 km. That range is not
   defined at age 0 alone, so the check did not compare like with like.
   Replaced by the rebuild of the published `truth-2026-08.json` above.
+
+- **2026-10-08, before the freeze and before any model was fitted (2).** The
+  primary statistic of H1 and H2 is the 5 robust-sigma clipped 3D RMS. The
+  clip is decided once, on M0's errors: an element set is kept when each of
+  its RTN errors at the age in question lies within 5 robust sigma (1.4826 ×
+  the median absolute deviation about the median, per component and age bin)
+  of the window's median, computed on the window being scored. Every method
+  is then scored on exactly the same element sets, so a method cannot gain
+  by moving samples across the clip. The unclipped RMS (every sample, the
+  former primary) and the 10 km rule of Ly et al. are reported beside it as
+  sensitivity analyses, and so is the exclusion of element sets whose epoch
+  falls within a GPS NANU outage (FCSTDV, FCSTMX, FCSTSUMM, UNUSUFN)
+  when the NANU archive is on hand. H3 is unchanged: its containment gate
+  already follows `gp-error-model`'s clipped convention.
 
 ## References
 
