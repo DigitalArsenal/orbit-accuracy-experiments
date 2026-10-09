@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// E2 step 20: C2 products and their propagated covariance, scored against
+// E2 step 20: F2 products and their propagated covariance, scored against
 // precise orbits (PLAN.md section 4).
 //
 // For each object and each product time (every strideDays from the window's
@@ -13,7 +13,7 @@
 // orbit epoch at or after each horizon twice: with that covariance and no
 // noise (A), and with zero initial covariance and unit white-acceleration
 // noise on the three RTN axes (U), so that any density q gives
-// P(q) = A + q U (C4). Per-product rows go to runs/ (they derive from
+// P(q) = A + q U (F4). Per-product rows go to runs/ (they derive from
 // element sets).
 //
 //   node experiments/e2-catalog-covariance/steps/20-products.mjs --window train --c1 results/e2/train/c1.json \

@@ -48,7 +48,7 @@ export function usable(rows, threshold = Infinity) {
 }
 
 // Samples of one method at one horizon: {object, d2, errorM, a, u, error}.
-// q: white-acceleration density (m^2/s^3) on each RTN axis; 0 is C2.
+// q: white-acceleration density (m^2/s^3) on each RTN axis; 0 is F2.
 export function samples(rows, days, q = 0) {
   const out = [];
   for (const r of rows) {
@@ -137,7 +137,7 @@ export function realism(list, acceptance, statistics) {
   };
 }
 
-// C4: the density q per regime and span that brings mean d^2 / 3 closest to
+// F4: the density q per regime and span that brings mean d^2 / 3 closest to
 // 1 at the fit horizons (least squares in the ratio, golden section in log q;
 // q = 0 when no noise brings it closer).
 export function fitDensity(rows, horizons) {
@@ -155,4 +155,33 @@ export function fitDensity(rows, horizons) {
   const q = Math.exp((lo + hi) / 2);
   const f0 = objective(0), fq = objective(q);
   return fq < f0 ? { q, objective: fq, objectiveWithoutNoise: f0 } : { q: 0, objective: f0, objectiveWithoutNoise: f0 };
+}
+
+// Metrics of catalog-history covariance variants on per-sample RTN errors
+// (km, from analysis/gp-error-model) under one 3x3 covariance (km^2):
+// mean d^2 (target 3) with an object-cluster bootstrap interval, 95 %
+// coverage (d^2 <= 7.815), the Kolmogorov-Smirnov distance of d^2 to
+// chi-square(3), the standard deviation of each axis's normalized error,
+// and the mean Gaussian log score (negative log density, errors in m).
+export function tleMetrics(rows, covarianceKm2, statistics) {
+  const n = rows.length;
+  if (!n) return { n: 0 };
+  const d2s = rows.map((r) => ({ object: r.object, d2: mahalanobis3(r.e, covarianceKm2) }));
+  const c = covarianceKm2.map((v) => v * 1e6);
+  const det = c[0] * (c[4] * c[8] - c[5] * c[7]) - c[1] * (c[3] * c[8] - c[5] * c[6]) + c[2] * (c[3] * c[7] - c[4] * c[6]);
+  const logScore = d2s.reduce((a, x) => a + 0.5 * (x.d2 + Math.log(det) + 3 * Math.log(2 * Math.PI)), 0) / n;
+  const sorted = d2s.map((x) => chi2cdf3(x.d2)).sort((a, b) => a - b);
+  const ks = sorted.reduce((a, u, i) => Math.max(a, Math.abs(u - i / n), Math.abs(u - (i + 1) / n)), 0);
+  const axisNormStd = [0, 1, 2].map((k) => {
+    const z = rows.map((r) => r.e[k] / Math.sqrt(covarianceKm2[k * 4]));
+    const m = z.reduce((a, v) => a + v, 0) / n;
+    return Math.sqrt(z.reduce((a, v) => a + (v - m) ** 2, 0) / Math.max(1, n - 1));
+  });
+  const meanD2 = d2s.reduce((a, x) => a + x.d2, 0) / n;
+  const out = { n, objects: new Set(rows.map((r) => r.object)).size, meanD2, coverage95: d2s.filter((x) => x.d2 <= CHI2_3_95).length / n, ks, axisNormStd, logScore };
+  if (statistics) {
+    const ci = clusterBootstrap(d2s, (xs) => xs.reduce((a, x) => a + x.d2, 0) / xs.length, { resamples: statistics.bootstrapResamples, seed: statistics.bootstrapSeed, confidence: statistics.confidence });
+    out.meanD2Ci = [ci.lower, ci.upper];
+  }
+  return out;
 }

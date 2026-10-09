@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // E2 step 30 (train only): the maneuver edit threshold (the train products'
-// reduced chi-square quantile) and the C4 white-acceleration density per
+// reduced chi-square quantile) and the F4 white-acceleration density per
 // regime and fit span (PLAN.md section 4), from step-20 train runs.
 //
 //   node experiments/e2-catalog-covariance/steps/30-train-fit.mjs --products RUN_ID[,RUN_ID...]

@@ -117,14 +117,7 @@
         5,
         7
       ]
-    ],
-    "variants": [
-      {
-        "id": "C1a",
-        "method": "consecutive-set differences by regime and age (Osweiler 2006; Flohrer, Krag & Klinkrad 2008), analysis/gp-error-model accumulate"
-      }
-    ],
-    "variantsPending": "Owner request 2026-10-09: variants after Thompson (AMOS 2019), the USU SmallSat paper, IEEE 7531654 and AFIT ETD 3531, each specified before the freeze"
+    ]
   },
   "c4": {
     "discretizationSeconds": 600,
@@ -174,5 +167,35 @@
     "bootstrapSeed": 20261009,
     "confidence": 0.95,
     "energySamples": 200
+  },
+  "tleVariants": {
+    "tausDays": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "binHalfWidthDays": 0.5,
+    "fineStepDays": 0.5,
+    "fineMaxDays": 7.5,
+    "minimumPairs": 10,
+    "maneuverRobustZ": 5,
+    "clipRobustSigma": 3,
+    "scoreBinDays": 0.002777777777777778,
+    "run": [
+      "C2a",
+      "C2a-quad",
+      "C2b",
+      "C2c",
+      "C4",
+      "C5"
+    ],
+    "notRun": {
+      "C0": "Flohrer et al. 2008 table values not on hand",
+      "C1a": "no module SGP4 STM or RTN covariance mapping",
+      "C1b": "no module Lambert/two-body STM mapping of an RTN covariance",
+      "C3a": "no module propagating element sets to a common epoch with RTN differences",
+      "C3b": "as C3a"
+    }
   }
 }
