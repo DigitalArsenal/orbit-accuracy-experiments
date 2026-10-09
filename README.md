@@ -45,6 +45,7 @@ Conjunction Screening whitepaper says about the states it screens.
 | [V1](experiments/v1-hpop-physical-truth/PLAN.md) | How close does HPOP, seeded from a precise orbit, stay to it over three days, force model by force model? | Reported ([results](results/v1/README.md)): SLR spheres 4.78 m median at 24 h and 13.9 m at 72 h with every force (E-f); GPS 28.5 m at 24 h with a cannonball model. |
 | [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft; amendment 2 fixes the primary statistic (5 robust-sigma clipped RMS) before any fit. Harness checks A0.1–A0.4 pass ([report](results/e1/a0/REPORT.md)). Waiting on two years of IGS final orbits. |
 | [E2](experiments/e2-catalog-covariance/PLAN.md) | Can catalog history (and E1's corrected element sets) give VCM-equivalent products — state, B/BDOT/AGOM and a covariance that stays realistic when propagated? | Plan in draft; needs SDS 1.240.0 and the train/validation truth. |
+| [E3](experiments/e3-combined-catalog/PLAN.md) | How accurate is a catalog combined from several public sources, against precise orbits, and where does combining stop helping? | Reported ([results](results/e3/README.md)): in GPS, selection across sources gives 3.5 cm at issue and 30 m / 104 m / 336 m median at 1 / 3 / 7 days; elsewhere only Space-Track is scorable (0.3–1.2 km median) |
 
 The parity target for the high-fidelity products is
 [docs/vcm-parity.md](docs/vcm-parity.md): every Vector Covariance Message
