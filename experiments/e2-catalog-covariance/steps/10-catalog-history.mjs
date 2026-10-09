@@ -16,10 +16,11 @@ import { json, loadModule, sha256 } from '../../../harness/modules.mjs';
 import { ommFrame } from '../../../harness/records.mjs';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { epochMs } from '../../../harness/gp-archive.mjs';
-import { DAY_MS, cli, config, configPath, regimeObjects, regimeReference, windowSets } from '../common.mjs';
+import { DAY_MS, cli, config, configPath, regimeObjects, regimeReference, windowSets, assertPinned } from '../common.mjs';
 import { addMeanOuter, correctedModel, lowerToFull, positionTrace } from '../moments.mjs';
 
 const { values, window, modules, archive, reference: referenceDir, objects: only } = cli({ c1: { type: 'string' } });
+if (values.c1) assertPinned('c1', path.resolve(values.c1));
 const run = startRun({ experiment: config.experiment, step: '10-catalog-history', configPath, modulesDir: modules, args: values });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 const gp = await loadModule(modules, 'analysis/gp-error-model');

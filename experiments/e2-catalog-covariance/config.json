@@ -1,6 +1,6 @@
 {
   "experiment": "e2-catalog-covariance",
-  "frozen": false,
+  "frozen": true,
   "plan": "PLAN.md",
   "inputs": {
     "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
@@ -198,5 +198,34 @@
       "C3a": "no module propagating element sets to a common epoch with RTN differences",
       "C3b": "as C3a"
     }
+  },
+  "fitted": {
+    "c1": {
+      "path": "results/e2/train/c1.json",
+      "sha256": "2cb34b7b28cb13ee9e61641fcae39b7df977abdf25abfa05b820e40533974a7a"
+    },
+    "tleModels": {
+      "path": "results/e2/train/tle-models.json",
+      "sha256": "f531f042f120489a16ff68137c8b3c3c40dbac11ff9c9927cf423b1a355576ec"
+    },
+    "trainFit": {
+      "path": "results/e2/train/fit.json",
+      "sha256": "dfc900bb33826339c41f1c58e1014a49b8d1cb1b7c38befef9b37e8fbb471ce2",
+      "GPS": {
+        "reducedChiSquareThreshold": 2.934130712776058,
+        "qM2S3": {
+          "3": 2.524176732575451e-08,
+          "5": 2.330177748771326e-08,
+          "7": 2.2581448422254166e-08
+        }
+      }
+    }
+  },
+  "chosen": {
+    "method": "F2",
+    "spanDays": 3,
+    "on": "validation",
+    "report": "results/e2/validation/README.md",
+    "rule": "lowest pooled 1-day energy score was F2-7d (1394 m); F2-3d, F2-5d and F2-7d intervals overlap, so the tie goes to the shortest span"
   }
 }

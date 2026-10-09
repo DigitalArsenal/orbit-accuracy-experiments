@@ -147,3 +147,12 @@ export function regimeReference(referenceDir, regime) {
   index.products.push(...fallback.products);
   return index;
 }
+
+// After the freeze, a train product (c1.json, tle-models.json, fit.json)
+// must be the exact file config.json pins.
+export function assertPinned(kind, file) {
+  if (!config.frozen) return;
+  const pin = config.fitted?.[kind];
+  const hash = sha256(fs.readFileSync(file));
+  if (!pin || pin.sha256 !== hash) throw new Error(`${file} is not the ${kind} config.json pins (${pin?.sha256 ?? 'none'})`);
+}

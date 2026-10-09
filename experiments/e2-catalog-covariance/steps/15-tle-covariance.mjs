@@ -26,11 +26,12 @@ import { startRun } from '../../../harness/provenance.mjs';
 import { epochMs } from '../../../harness/gp-archive.mjs';
 import { median } from '../../../harness/stats.mjs';
 import { scoreSets } from '../../e1-gps-epoch/score.mjs';
-import { DAY_MS, cli, config, configPath, regimeObjects, regimeReference, windowSets } from '../common.mjs';
+import { DAY_MS, cli, config, configPath, regimeObjects, regimeReference, windowSets, assertPinned } from '../common.mjs';
 import { lowerToFull, symmetricEigenvalues } from '../moments.mjs';
 import { tleMetrics } from '../score.mjs';
 
 const { values, window, modules, archive, reference: referenceDir, objects: only } = cli({ models: { type: 'string' } });
+if (values.models) assertPinned('tleModels', path.resolve(values.models));
 const run = startRun({ experiment: config.experiment, step: `15-tle-covariance-${window.name}`, configPath, modulesDir: modules, args: values });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 const gp = await loadModule(modules, 'analysis/gp-error-model');

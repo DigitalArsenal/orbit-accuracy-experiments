@@ -1,9 +1,15 @@
 # E2 — Covariance from catalog history
 
-Status: **draft, not frozen.** Nothing here has read a test window. The
-numbers become binding in `config.json` at the freeze commit; the code
-refuses the test window until `config.json` says `"frozen": true` and both
-files are committed unchanged.
+Status: **frozen** by the commit that sets `"frozen": true` in
+`config.json` (2026-10-09), after train and validation and before any read
+of the test window. The numbers fitted on train and the validation choice
+are pinned in `config.json` (`fitted`, `chosen`): GPS maneuver edit at
+reduced χ² 2.934; F4 densities 2.52e-8, 2.33e-8 and 2.26e-8 m²/s³ for 3, 5
+and 7-day spans; chosen method **F2 with a 3-day span** (the 1-day energy
+score was lowest for F2-7d, but the F2 intervals overlap, and the tie rule
+takes the shortest span). The code refuses the test window unless both
+files are committed unchanged, and refuses any train product whose SHA-256
+differs from the pin.
 
 ## 1. Question
 

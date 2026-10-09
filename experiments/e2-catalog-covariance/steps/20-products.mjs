@@ -23,7 +23,7 @@ import path from 'node:path';
 import { decodeOemStream } from '../../../harness/records.mjs';
 import { startRun } from '../../../harness/provenance.mjs';
 import { epochMs } from '../../../harness/gp-archive.mjs';
-import { DAY_MS, cli, config, configPath, productContext, regimeObjects, regimeReference, windowSets } from '../common.mjs';
+import { DAY_MS, cli, config, configPath, productContext, regimeObjects, regimeReference, windowSets, assertPinned } from '../common.mjs';
 import { addMeanOuter, lowerToFull } from '../moments.mjs';
 import { conditioned, epochStates, fitProduct, propagateProduct } from '../product.mjs';
 
@@ -34,6 +34,7 @@ if (!values.c1) throw new Error('--c1 (the train window c1.json) is required: th
 const c1 = JSON.parse(fs.readFileSync(path.resolve(values.c1), 'utf8'));
 const spans = (values.spans ?? config.products.fitSpansDays.join(',')).split(',').map(Number);
 const [shard, shards] = (values.shard ?? '0/1').split('/').map(Number);
+if (values.c1) assertPinned('c1', path.resolve(values.c1));
 const run = startRun({ experiment: config.experiment, step: `20-products-${window.name}${shards > 1 ? `-s${shard}of${shards}` : ''}`, configPath, modulesDir: modules, args: values, resume: values.resume });
 run.addInputs('c1', { [path.basename(values.c1)]: (await import('../../../harness/modules.mjs')).sha256(fs.readFileSync(path.resolve(values.c1))) });
 const log = (...a) => console.log(`[${run.id}]`, ...a);

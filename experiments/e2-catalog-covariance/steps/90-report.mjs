@@ -13,13 +13,14 @@ import { parseArgs } from 'node:util';
 import { modulesRoot, sha256 } from '../../../harness/modules.mjs';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { rng } from '../../../harness/stats.mjs';
-import { assertWindowReadable, config, configPath } from '../common.mjs';
+import { assertPinned, assertWindowReadable, config, configPath } from '../common.mjs';
 import { clusterBootstrap, energyScore, readProducts, realism, samples, usable } from '../score.mjs';
 
 const { values } = parseArgs({ options: { window: { type: 'string' }, history: { type: 'string' }, tle: { type: 'string' }, products: { type: 'string' }, fit: { type: 'string' }, publish: { type: 'boolean' }, modules: { type: 'string' } } });
 assertWindowReadable(values.window);
 const modules = modulesRoot({ flag: values.modules, configured: config.inputs.modules, repoRoot });
 const run = startRun({ experiment: config.experiment, step: `90-report-${values.window}`, configPath, modulesDir: modules, args: values });
+assertPinned('trainFit', path.resolve(values.fit));
 const fitBytes = fs.readFileSync(path.resolve(values.fit));
 const fit = JSON.parse(fitBytes);
 run.addInputs('trainFit', { [path.relative(repoRoot, path.resolve(values.fit))]: sha256(fitBytes) });
@@ -117,7 +118,7 @@ lines.push('## Hypotheses', '', '| ID | Result | Detail |', '| --- | --- | --- |
 lines.push(`| H1 | ${metrics.hypotheses.H1.supported ? 'SUPPORTED' : 'NOT SUPPORTED'} | ${chosenKey} in ${metrics.hypotheses.H1.regimesTested.join(', ') || 'no regime'}; not tested: ${metrics.hypotheses.H1.regimesNotTested.join(', ')} |`);
 lines.push(`| H2 | NOT TESTED | ${metrics.hypotheses.H2.reason} |`);
 lines.push(`| H3 | NOT TESTED | ${metrics.hypotheses.H3.reason} |`);
-lines.push(`| H4 | ${Object.keys(h4).length ? (metrics.hypotheses.H4.supported ? 'SUPPORTED' : 'NOT SUPPORTED') : 'NOT TESTED'} | ${Object.entries(h4).map(([k, v]) => `${k}: C1 raw mean d²/3 ${f(v.rawMeanD2Over3)} at 0–0.5 d; corrected ${v.correctedPsd ? f(v.correctedMeanD2Over3) : 'not positive definite (consecutive differences are smaller than the at-epoch error)'}`).join('; ')} |`, '');
+lines.push(`| H4 | ${Object.keys(h4).length ? (metrics.hypotheses.H4.supported ? 'SUPPORTED' : 'NOT SUPPORTED') : 'NOT TESTED'} | ${Object.entries(h4).map(([k, v]) => `${k}: consecutive-difference covariance, mean d²/3 ${f(v.rawMeanD2Over3)} at 0–0.5 d; with the at-epoch error removed ${v.correctedPsd ? f(v.correctedMeanD2Over3) : 'not positive definite (consecutive differences are smaller than the at-epoch error)'}`).join('; ')} |`, '');
 for (const [regime, r] of Object.entries(metrics.regimes)) {
   lines.push(`## ${regime}`, '', `Products: ${r.counts.rows} rows, ${r.counts.usable} usable (${r.counts.skipped} skipped, ${r.counts.failed} failed, ${r.counts.notConverged} not converged, ${r.counts.editedAsManeuver} edited as maneuvers).`, '');
   lines.push('| Method | Horizon | n (objects) | RMS 3D, m | median 3D, m | mean d²/3 [95 % CI] | 95 % coverage | CvM W² (limit) | Consistent |', '| --- | ---: | ---: | ---: | ---: | --- | ---: | --- | --- |');
