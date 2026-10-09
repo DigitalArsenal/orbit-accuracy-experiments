@@ -37,6 +37,7 @@ Conjunction Screening whitepaper says about the states it screens.
 | `site/` | The GitHub Pages site: the experiments run live in the browser |
 | `runs/` | Run outputs (ignored) |
 | `results/` | Committed run summaries |
+| `data/` | Operator inputs published for checking, under each provider's terms ([data/e4/SOURCES.md](data/e4/SOURCES.md)) |
 
 ## Experiments
 
@@ -45,6 +46,7 @@ Conjunction Screening whitepaper says about the states it screens.
 | [V1](experiments/v1-hpop-physical-truth/PLAN.md) | How close does HPOP, seeded from a precise orbit, stay to it over three days, force model by force model? | Reported ([results](results/v1/README.md)): SLR spheres 4.78 m median at 24 h and 13.9 m at 72 h with every force (E-f); GPS 28.5 m at 24 h with a cannonball model. |
 | [E1](experiments/e1-gps-epoch/PLAN.md) | Can a GPS element set's state at epoch be corrected, with an honest uncertainty, from information available at publication? | Plan in draft; amendment 2 fixes the primary statistic (5 robust-sigma clipped RMS) before any fit. Harness checks A0.1–A0.4 pass ([report](results/e1/a0/REPORT.md)). Waiting on two years of IGS final orbits. |
 | [E2](experiments/e2-catalog-covariance/PLAN.md) | Can catalog history (and E1's corrected element sets) give VCM-equivalent products — state, B/BDOT/AGOM and a covariance that stays realistic when propagated? | Plan in draft; needs SDS 1.240.0 and the train/validation truth. |
+| [E4](experiments/e4-operator-ephemeris-parity/PLAN.md) | How closely do products built only from public catalog data match each operator's published ephemeris and its covariance, and where truth exists, which is closer to it? | Frozen and run ([results](results/e4/README.md)); the operator files are in `data/e4/` or listed for release. |
 
 The parity target for the high-fidelity products is
 [docs/vcm-parity.md](docs/vcm-parity.md): every Vector Covariance Message
