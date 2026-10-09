@@ -29,10 +29,13 @@ const lo = Date.parse(`${window.from}T00:00:00Z`), hi = Date.parse(`${window.to}
 const inWindow = (s) => { const t = epochMs(s.epoch); return t >= lo && t < hi; };
 
 // One accumulator per mode, fed one object at a time (prior = the running total).
+// Reference mode (frames given) skips objects without precise orbits in the
+// window, so every batch accumulates in one mode.
 async function accumulate(perObject, options, model) {
   let acc = null;
+  const reference = perObject.some((o) => o.frames.length);
   for (const { sets, frames } of perObject) {
-    if (!sets.length) continue;
+    if (!sets.length || (reference && !frames.length)) continue;
     const inputs = [ommFrame(sets), ...frames, json('options', options)];
     if (model) inputs.push(json('model', model));
     if (acc) inputs.push(json('prior', acc));
