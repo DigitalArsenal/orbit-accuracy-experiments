@@ -218,3 +218,16 @@ committed under `data/e5/`, the rest prepared as release assets.
 `graceA_Density_YY_DDD_v2.txt`. `densities.mjs` now finds each day's file by
 its directory and `_YY_DDD_v2.txt` suffix. No data was read under the wrong
 name (it would have found no files). No other change.
+
+## Amendment 2 (2026-10-09, order of runs)
+
+Section 5 says the selection is recorded before the test windows are run.
+The test- and historical-window calibrations (step 10) and density runs
+(step 20) were started while the validation propagation runs were still
+going, so they ran before `results/e5/selection.json` was committed. They
+computed every candidate (degree 0 for the test windows after the validation
+density run had chosen it; all three decays), so nothing in them depends on
+the selection, and none of their output was read before the selection was
+committed (`14aeeac`). The test propagation runs (step 30) started after it,
+with the selected degree 0 and decay 12 h only. The validation propagation
+runs fitted D0 and D2 only (D1 does not enter the selection).
