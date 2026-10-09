@@ -1,6 +1,6 @@
 # orbit-accuracy-experiments
 
-Pre-registered experiments on orbit accuracy and uncertainty, run through the
+Experiments on orbit accuracy and uncertainty, run through the
 Space Data Network's WASM modules with the `space-data-module-sdk` harness.
 The results are the evidence behind the accuracy claims in the
 Evidence-Supported ASO Catalog whitepaper, and behind what the Fast
