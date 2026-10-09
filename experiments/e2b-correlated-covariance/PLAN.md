@@ -7,7 +7,7 @@ of the test window; the code refuses the test window until then (E2's guard,
 hypotheses, products and decision rules precede every outcome.
 
 Lane: claude-e2b. Modules: `analysis/gp-error-model` at
-space-data-network-modules `da4a33f5` (branch
+space-data-network-modules `d3cc1211` (branch
 `task/e2b-correlated-covariance-20261009`): `common_epoch`, `map_covariance`
 (SGP4, two-body and Lambert state transition matrices) and `screening_cases`,
 added for this experiment with tests against python-sgp4, pyerfa and an
@@ -273,3 +273,38 @@ and `README.md` (generated from the metrics), the train products and
   forecasting. SmallSat Conference, SSC25-IV-03.
 - E2: [experiments/e2-catalog-covariance/PLAN.md](../e2-catalog-covariance/PLAN.md);
   E3: [experiments/e3-combined-catalog/PLAN.md](../e3-combined-catalog/PLAN.md).
+
+## Changes to the draft before the freeze
+
+Dated, with their reasons; none followed from an outcome.
+
+- **2026-10-09, sampling intervals.** The first train run of step 10 took the
+  sampling interval from product names, with 2 minutes for every SLR arc.
+  The arcs are sampled at 2 min (LAGEOS, LARES-2), 3 min (Stella), 4 min
+  (Ajisai) and 15 min (ETALON), so most ETALON targets and many SLR-LEO
+  targets found no precise epoch within the interval used. Each span's
+  interval now comes from its index entry, as section 4 states; the SLR
+  regimes' train measurement was rerun. GPS and LEO-POD were unaffected.
+- **2026-10-09, C1b where the Lambert arc is undefined.** Thompson et al.'s
+  arc between two positions has no plane when the transfer angle is near 0°
+  or 180°, which is common: element-set epochs tend to fall at one orbital
+  phase, so whole revolutions return to the start (on two dev-window GPS
+  satellites, 63 of 120 maps back were refused at a 1° limit). The paper does
+  not treat the case. There C1b uses the two-body state transition matrix
+  from SGP4's state at the earlier epoch (the limit the module already uses
+  for arcs of seconds), and the share of such maps is reported per regime.
+- **2026-10-09, the module's Kepler solution.** On real two-week Lambert arcs
+  of many revolutions (LAGEOS, Swarm, Sentinel-1, SLR LEO) the module's
+  Newton iteration for the universal anomaly could wander to another root, so
+  C1b's map back failed on 4 % to 10 % of anchors in those regimes. The module
+  now brackets the root (`d3cc1211`); the pinned artifact changed before any
+  product was scored, and every run was repeated with it.
+- **2026-10-09, C1b diagnostics.** Thompson et al.'s rule picks the branch
+  whose energy is nearest SGP4's; over tens of revolutions both branches have
+  nearly that energy, and the one chosen can be a nearly radial ellipse (a
+  perigee radius of tens of kilometres on LAGEOS). C1b is scored as the paper
+  defines it; also reported is the share of C1b samples whose arcs have a
+  perigee below the Earth's radius, and C1b on the others.
+- **2026-10-09, T0's bins.** Age bins with fewer than 30 samples are left out
+  of T0's interpolation (`products.t0.minimumBinSamples`).
+

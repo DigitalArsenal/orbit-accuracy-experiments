@@ -9,9 +9,9 @@
   },
   "modules": {
     "analysis/gp-error-model": {
-      "commit": "da4a33f5",
+      "commit": "d3cc1211",
       "branch": "task/e2b-correlated-covariance-20261009",
-      "wasmSha256": "13ffdd03e2d011df0b78eab9cc6e54d21fc37a3237f695a571b983adca409c2e"
+      "wasmSha256": "0f823d02e6236917814b681d5e46a3241b3234fe9386b9eb0a7af8f3d5d07e19"
     }
   },
   "elementSets": {
@@ -247,7 +247,8 @@
     },
     "c1": {
       "spanDays": 14,
-      "minimumSets": 7
+      "minimumSets": 7,
+      "earthRadiusKm": 6378.135
     },
     "c3": {
       "minimumSets": 4,
@@ -255,6 +256,9 @@
         "C3a": 0.5,
         "C3b": 0.25
       }
+    },
+    "t0": {
+      "minimumBinSamples": 30
     }
   },
   "fusion": {
