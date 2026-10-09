@@ -1,0 +1,239 @@
+{
+  "experiment": "e4-operator-ephemeris-parity",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "providerNodes": "~/.local/share/spacedatanetwork/ephemeris-provider-nodes",
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "modules": "../../main-packages/space-data-network-modules",
+    "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z",
+    "satelliteMetadata": "/opt/data/sdn-archive/reference-states/products/igs_satellite_metadata.snx",
+    "sgp4CovarianceModel": "analysis/gp-error-model/docs/model-2026-08-scaled.json",
+    "hpopCovarianceModel": "analysis/gp-error-model/docs/hpop-covariance-model-2026-08.json"
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "lookbackDays": 10
+  },
+  "horizonsHours": [0, 1, 3, 6, 12, 24, 36, 48, 60, 72],
+  "providers": {
+    "spacex-starlink": {
+      "format": "meme",
+      "frame": "MEAN_EQUATOR_EQUINOX_J2000",
+      "cutoff": "stated",
+      "covariance": "UVW",
+      "select": {
+        "objects": 300,
+        "seed": 20261009,
+        "file": "earliest-captured"
+      },
+      "terms": {
+        "redistribute": false,
+        "text": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+        "url": "https://api.starlink.com/public-files/ephemerides/MANIFEST.txt"
+      }
+    },
+    "iss": {
+      "format": "ccsds-oem",
+      "frame": "MEAN_EQUATOR_EQUINOX_J2000",
+      "cutoff": "stated",
+      "norad": 25544,
+      "select": {
+        "file": "every-distinct"
+      },
+      "terms": {
+        "redistribute": true,
+        "text": "NASA (JSC FOD TOPO) public data; a U.S. Government work, not subject to copyright in the United States (NASA media and data usage guidelines). Credit: NASA.",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      }
+    },
+    "css-tiangong": {
+      "format": "ccsds-oem-zip",
+      "frame": "MEAN_EQUATOR_EQUINOX_J2000",
+      "cutoff": "stated",
+      "norad": 48274,
+      "select": {
+        "file": "every-distinct"
+      },
+      "terms": {
+        "redistribute": false,
+        "text": "No license stated on cmse.gov.cn (China Manned Space Engineering Office, BACC orbit data published for space safety).",
+        "url": "https://www.cmse.gov.cn/gfgg/zgkjzgdcs/"
+      }
+    },
+    "planet": {
+      "format": "planet-states",
+      "frame": "MEAN_EQUATOR_EQUINOX_J2000",
+      "timeScale": "TT",
+      "cutoff": "capture",
+      "atEpochOnly": true,
+      "select": {
+        "file": "every-distinct"
+      },
+      "terms": {
+        "redistribute": true,
+        "text": "Copyright Planet Labs PBC; orbital ephemerides licensed under CC BY-NC 4.0 (ephemerides.planet-labs.com).",
+        "url": "https://ephemerides.planet-labs.com/"
+      }
+    },
+    "intelsat": {
+      "format": "intelsat-ecf",
+      "frame": "ITRF",
+      "cutoff": "stated",
+      "statedSigmaM": 100,
+      "statedSigmaBasis": "not stated by the operator; a placeholder the converter requires, used in no metric",
+      "select": {
+        "file": "name-timestamp-within-days-before-capture",
+        "days": 3
+      },
+      "names": {
+        "prefixes": {
+          "g": "GALAXY",
+          "is": "INTELSAT",
+          "h": "HORIZONS",
+          "h3e": "HORIZONS 3E"
+        },
+        "aliases": {
+          "skyb-1": "INTELSAT 32E"
+        },
+        "match": "GP OBJECT_NAME without a parenthesised suffix, exact, payloads only (no DEB, no R/B); ambiguous or absent names are excluded and listed"
+      },
+      "terms": {
+        "redistribute": false,
+        "text": "No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply).",
+        "url": "https://my.intelsat.com/ephemeris/public"
+      }
+    },
+    "gps-precise": {
+      "format": "sp3",
+      "frame": "ITRF",
+      "cutoff": "capture",
+      "systems": ["G"],
+      "truth": "ESA0OPSFIN",
+      "select": {
+        "file": "every-captured"
+      },
+      "terms": {
+        "redistribute": true,
+        "text": "IGS products, IGS Data Policy: CC BY 4.0. Credit: International GNSS Service.",
+        "url": "https://igs.org/data-access/#data-policy"
+      }
+    },
+    "glonass-precise": {
+      "format": "sp3",
+      "frame": "ITRF",
+      "cutoff": "capture",
+      "systems": ["R"],
+      "truth": "ESA0OPSFIN",
+      "select": {
+        "file": "every-captured"
+      },
+      "terms": {
+        "redistribute": true,
+        "text": "ESA/ESOC Navigation Support Office products as an IGS analysis centre, IGS Data Policy: CC BY 4.0. Credit: ESA/ESOC.",
+        "url": "https://navigation-office.esa.int/"
+      }
+    },
+    "esa-pod": {
+      "format": "sp3",
+      "frame": "ITRF",
+      "cutoff": "span-start",
+      "systems": ["G", "R", "L"],
+      "truth": "ESA0OPSFIN",
+      "singleSatellite": {
+        "SWRA": 39452,
+        "cs2": 36508
+      },
+      "statedSigmaM": 0.05,
+      "statedSigmaBasis": "ESOC precise orbit determination, nominal few-cm accuracy; used only where the file states none",
+      "select": {
+        "file": "every-captured"
+      },
+      "terms": {
+        "redistribute": true,
+        "text": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
+        "url": "https://navigation-office.esa.int/"
+      }
+    },
+    "cpf": {
+      "format": "cpf",
+      "frame": "ITRF",
+      "cutoff": "stated",
+      "systems": ["E"],
+      "truth": "COD0MGXFIN",
+      "statedSigmaM": 1,
+      "statedSigmaBasis": "CPF prediction; not stated in the file; a placeholder the converter requires, used in no metric",
+      "select": {
+        "file": "every-captured"
+      },
+      "terms": {
+        "redistribute": true,
+        "text": "ILRS consolidated prediction format files from the ESA/ESOC Navigation Support Office; ILRS data and products are openly available. Credit: ILRS, ESA/ESOC.",
+        "url": "https://ilrs.gsfc.nasa.gov/data_and_products/data/index.html"
+      }
+    }
+  },
+  "notCompared": {
+    "eutelsat-oneweb": "LTEF: no module evaluates the format",
+    "ses": "IESS-412 eleven-parameter ephemeris: no module evaluates it",
+    "telesat": "box-centre longitude and latitude, not a state ephemeris",
+    "eumetsat": "two-line element sets only; no ephemeris and no truth on hand",
+    "space-track": "credentialed; excluded",
+    "spire": "credentialed; excluded",
+    "cpf-edc": "credentialed (EDC account); excluded",
+    "vimpel": "credentialed; excluded"
+  },
+  "truth": {
+    "from": "2026-09-08",
+    "to": "2026-09-20",
+    "products": {
+      "ESA0OPSFIN": {
+        "url": "https://navigation-office.esa.int/products/gnss-products/{week}/ESA0OPSFIN_{yyyyddd}0000_01D_05M_ORB.SP3.gz",
+        "systems": ["G", "R"]
+      },
+      "COD0MGXFIN": {
+        "url": "http://ftp.aiub.unibe.ch/CODE_MGEX/CODE/{yyyy}/COD0MGXFIN_{yyyyddd}0000_01D_05M_ORB.SP3.gz",
+        "systems": ["E"],
+        "note": "ESA publishes no ESA0MGNFIN for these weeks; if CODE's server is unreachable, H4 is not tested for cpf"
+      }
+    }
+  },
+  "scoring": {
+    "ageBinHalfWidthSeconds": 1,
+    "maximumGapSeconds": 1800
+  },
+  "maneuvers": {
+    "floorKm": 10,
+    "robustSigma": 5,
+    "madScale": 1.4826,
+    "horizonHours": 0
+  },
+  "acceptance": {
+    "h1": {
+      "epochMedianKm": 2,
+      "horizon72MedianKm": 30
+    },
+    "h2": {
+      "meanRatio": [0.8, 1.25],
+      "coverage95": [0.93, 0.97],
+      "maxHorizonHours": 72
+    },
+    "h3": {
+      "ratioAtLeast": 10,
+      "axis": "T"
+    },
+    "h4": {
+      "ratioUpperBelow": 0.1
+    }
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95
+  },
+  "publish": {
+    "repositoryMaxCompressedBytes": 1048576,
+    "repositoryBudgetBytes": 200000000
+  }
+}

@@ -1,0 +1,69 @@
+{
+ "run": "e4-operator-ephemeris-parity-90-report-20261009T173808Z",
+ "experiment": "e4-operator-ephemeris-parity",
+ "step": "90-report",
+ "command": [
+  "node",
+  "experiments/e4-operator-ephemeris-parity/steps/90-report.mjs",
+  "--runs",
+  "e4-operator-ephemeris-parity-10-compare-cpf-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-css-tiangong-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-esa-pod-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-gps-precise-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-intelsat-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-iss-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-planet-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-20261009T172226Z",
+  "--truth-run",
+  "e4-operator-ephemeris-parity-05-truth-20261009T172127Z"
+ ],
+ "args": {
+  "runs": "e4-operator-ephemeris-parity-10-compare-cpf-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-css-tiangong-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-esa-pod-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-gps-precise-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-intelsat-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-iss-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-planet-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-20261009T172226Z",
+  "truth-run": "e4-operator-ephemeris-parity-05-truth-20261009T172127Z"
+ },
+ "started": "2026-10-09T17:38:08.130Z",
+ "finished": "2026-10-09T17:38:36.389Z",
+ "config": {
+  "path": "experiments/e4-operator-ephemeris-parity/config.json",
+  "sha256": "97946016638513796effa4ba7a0f4ff10f32d3314e542e5c4102ab804d202a8b",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "6f870f09a0e3068378e7dcb14952b58602701c6e",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "d34cd40d38ca75b95390a91d7c3239895c810f35",
+  "dirty": true
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   18.5390625,
+   23.595703125,
+   22.11767578125
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-09T17:38:08.130Z",
+   "args": {
+    "runs": "e4-operator-ephemeris-parity-10-compare-cpf-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-css-tiangong-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-esa-pod-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-gps-precise-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-intelsat-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-iss-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-planet-20261009T172226Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-20261009T172226Z",
+    "truth-run": "e4-operator-ephemeris-parity-05-truth-20261009T172127Z"
+   }
+  }
+ ],
+ "inputsRuns": [
+  "e4-operator-ephemeris-parity-10-compare-cpf-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-css-tiangong-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-esa-pod-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-glonass-precise-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-gps-precise-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-intelsat-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-iss-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-20261009T172226Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-20261009T172226Z"
+ ]
+}
