@@ -41,14 +41,21 @@ from `propagator/hpop/tests/orekit_reference.test.mjs`.
 The equinoctial covariance is transformed to Cartesian by J P Jᵀ with J
 evaluated exactly (forward-mode dual numbers through the closed-form
 conversion), the B, BDOT, AGOM and T rows the fit solved for carried as
-`DYNAMIC_PARAMETERS`. The format does not state the unit of the mean motion
-n. The survey's sample is a real ISS message, so its printed U, V, W sigmas
-(8.4, 40.2, 7.4 m) are SP's own reading of its covariance; with n in radians
-per 1000 s and the WTD RMS scaling the transformed covariance gives 8.40,
-40.23 and 7.42 m, and with rad/s, rad/min, rev/day or the canonical time
-unit the radial sigma is 1.4 km, 26 m, 8.0 m or 8.5 m. Tested: the sigmas,
-an independent finite-difference Jacobian (2.3e-7 of the sigmas), and a
-round trip VCM → HPOP → VCM → read (3.5e-6).
+`DYNAMIC_PARAMETERS`. The format states no units for the covariance. Four
+messages settle the mean-motion row: the survey's sample (an ISS solution)
+and three SP messages on hand, which are not redistributed (geostationary,
+GPS, and an orbit of eccentricity 0.59 with perigee in the atmosphere). Read
+as dn/n, with the covariance scaled by max(1, WTD RMS)², the transformed
+covariance reproduces every printed U, V and W sigma of all four within 1 %.
+No absolute unit does: the eccentric message's radial sigma is 45.8 m
+printed and 45.8 m as dn/n, but 36.9 m with n in radians per 1000 s and
+51.1 m in rev/day; radians per 1000 s, which the ISS sample alone had
+suggested (8.40 m against 8.4), misses the geostationary and GPS radial
+sigmas by factors of 2.0 and 1.7. The eccentric message (WTD RMS 0.86)
+matches only unscaled, the others (1.09 to 1.15) only scaled. Tested: the
+sample within 1 %, the private messages when `VCM_PRIVATE_DIR` names them, an
+independent finite-difference Jacobian (2.3e-7 of the sigmas), and a round
+trip VCM → HPOP → VCM → read in SP's number format (1.8e-5).
 
 ## Remaining gaps
 

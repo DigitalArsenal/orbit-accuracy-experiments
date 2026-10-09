@@ -127,7 +127,7 @@
         <div class="section-head">
           <p class="eyebrow">VCM Parity · analysis/vcm-adapter</p>
           <h2>A Vector Covariance Message, Round Trip</h2>
-          <p class="lede">An SP Vector Covariance Message read into a PRW request, propagated with its covariance, and written back as a VCM. The adapter transforms the equinoctial covariance exactly; the sigmas it recomputes match the ones the message prints. The format leaves the units of the ballistic coefficient’s row unstated, so both readings run.</p>
+          <p class="lede">An SP Vector Covariance Message read into a PRW request, propagated with its covariance, and written back as a VCM. The format states no units for its covariance. Four SP messages show that its mean-motion row is relative (dn/n); with that reading the sigmas the adapter recomputes match the printed ones within 1 %. The ballistic coefficient’s row is read the same way, with the as-printed reading run beside it.</p>
         </div>
         <div class="grid-2">
           <div class="panel">

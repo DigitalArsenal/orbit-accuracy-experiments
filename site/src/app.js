@@ -339,8 +339,8 @@ async function runVcm(text) {
   }${bRow('fractional', 'B, row as a fraction')}${bRow('absolute', 'B, row as printed')}</tbody>`;
   $('vcm-notes').innerHTML = [
     `${report.geopotential} ${report.zonals}Z,${report.tesserals}T; drag ${report.drag} as Jacchia-Roberts; B = ${report.ballisticCoefficientM2Kg} m²/kg, carried as a dynamic parameter.`,
-    `Covariance ${report.covarianceSize}×${report.covarianceSize}, scaled by WTD RMS² = ${(report.weightedRms ** 2).toFixed(4)}; mean motion read in ${report.meanMotionUnit}, the unit that reproduces the printed sigmas.`,
-    'The format states no units for the B row, and the printed sigmas cover the elements only. Read as printed, B’s sigma is five times B, which a fit to 40 m in-track hardly leaves; read as a fraction, 4 %. Both run here; a VCM for an object with a precise orbit, or the format’s interface document, would settle it.',
+    `Covariance ${report.covarianceSize}×${report.covarianceSize}, scaled by max(1, WTD RMS)² = ${report.covarianceScale.toFixed(4)}; its mean-motion row read as dn/n, the reading that reproduces the printed sigmas of four SP messages within 1 %.`,
+    'The printed sigmas do not cover the B row. Read like the mean-motion row, as a fraction of B (the adapter’s default), its sigma is 4 % of B; read as printed in m²/kg, five times B, which a fit with a 40 m in-track sigma would hardly leave. Both run here.',
   ].map((n) => `<li>${n}</li>`).join('');
   const last = (rows) => runs[rows].sigmas.at(-1).s;
   lineChart($('vcm-chart'), {
