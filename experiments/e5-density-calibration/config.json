@@ -1,0 +1,110 @@
+{
+  "experiment": "e5-density-calibration",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "modules": "../../main-packages/space-data-network-modules",
+    "estimationModules": "/Users/tj/software/worktrees/space-data-network-modules--modules-estimation-batch-fit-20261009",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "eopC04": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now",
+    "kernel": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp",
+    "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+    "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+    "kp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "densities": {
+      "swarmA": { "dir": "/opt/data/sdn-archive/hac/esa-swarm-dns/POD/Sat_A", "pattern": "SW_OPER_DNSAPOD_2__", "norad": 39452, "kind": "POD" },
+      "swarmB": { "dir": "/opt/data/sdn-archive/hac/esa-swarm-dns/POD/Sat_B", "pattern": "SW_OPER_DNSBPOD_2__", "norad": 39451, "kind": "POD" },
+      "swarmC": { "dir": "/opt/data/sdn-archive/hac/esa-swarm-dns/POD/Sat_C", "pattern": "SW_OPER_DNSCPOD_2__", "norad": 39453, "kind": "POD" },
+      "gracefo1": { "dir": "/opt/data/sdn-archive/hac/esa-gracefo-dns/Sat_1", "pattern": "GF_OPER_DNS1ACC_2__", "norad": 43476, "kind": "ACC" }
+    },
+    "historical": {
+      "zip": "/opt/data/sdn-archive/hac/zenodo-4602380-licata-hasdm/20261009",
+      "doi": "10.5281/zenodo.4602380",
+      "satellites": {
+        "champ": { "file": "CHAMP_New.zip", "prefix": "CHAMP_New", "name": "CHAMP_Density", "cadenceSeconds": 10 },
+        "graceA": { "file": "GRACE_A_New.zip", "prefix": "GRACE_A_New", "name": "GRACE_A_Density", "cadenceSeconds": 5 }
+      },
+      "observed": "Density_New (kg/m^3)",
+      "hasdm": "Density_HASDM (kg/m^3)",
+      "jb2008Published": "Density_JB2008 (kg/m^3)",
+      "gpsMinusUtcSeconds": [["1999-01-01", 13], ["2006-01-01", 14], ["2009-01-01", 15]]
+    }
+  },
+  "windows": {
+    "validation": ["2026-04-01", "2026-04-21"],
+    "test": [["2026-01-12", "2026-01-26"], ["2026-03-15", "2026-03-28"], ["2026-06-26", "2026-07-08"]],
+    "historicalTest": [["2003-10-01", "2003-12-31"], ["2008-01-01", "2008-03-31"]]
+  },
+  "windowNote": "Dates are issue days (t0 = 00:00 UTC). Each arc fits the day before t0 and is scored to t0 + 7 d; calibration bins start 2 days before the first issue day.",
+  "density": {
+    "sampleSeconds": 30,
+    "orbitAverage": { "periodSeconds": { "swarmA": 5560, "swarmB": 5660, "swarmC": 5560, "gracefo1": 5650, "champ": 5530, "graceA": 5630 }, "minimumValidFraction": 0.9 },
+    "scoreEverySeconds": 600,
+    "leadBinsDays": [[0, 1], [1, 3], [3, 7]],
+    "heldOut": {
+      "2026": [
+        { "target": "gracefo1", "calibrators": ["swarmA", "swarmB", "swarmC"] },
+        { "target": "swarmB", "calibrators": ["swarmA", "swarmC", "gracefo1"] },
+        { "target": "swarmC", "calibrators": ["swarmB", "gracefo1"] }
+      ],
+      "historical": [
+        { "target": "champ", "calibrators": ["graceA"] },
+        { "target": "graceA", "calibrators": ["champ"] }
+      ]
+    }
+  },
+  "calibration": {
+    "binHours": 3,
+    "logSigma": 0.1,
+    "priorSigmaK": [150, 75, 50],
+    "minPoints": 60,
+    "iterations": 10,
+    "editSigma": 4,
+    "latencyHours": 0,
+    "nowcastWindowHours": 12,
+    "meanWindowDays": 27,
+    "candidates": { "degree": [0, 1, 2], "decayHours": [12, 48, null] },
+    "decayNote": "the forecast relaxes from the nowcast to the mean of the bins of the preceding meanWindowDays with time constant decayHours; null = persistence (the nowcast held)"
+  },
+  "propagation": {
+    "targets": {
+      "39452": { "name": "Swarm A", "b": 0.0045, "agom": 0.009, "calibrators": ["swarmB", "gracefo1"] },
+      "39451": { "name": "Swarm B", "b": 0.0045, "agom": 0.009, "calibrators": ["swarmA", "swarmC", "gracefo1"] },
+      "39453": { "name": "Swarm C", "b": 0.0045, "agom": 0.009, "calibrators": ["swarmB", "gracefo1"] },
+      "39634": { "name": "Sentinel-1A", "b": 0.0126, "agom": 0.015, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "62261": { "name": "Sentinel-1C", "b": 0.0126, "agom": 0.015, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "66315": { "name": "Sentinel-1D", "b": 0.0126, "agom": 0.015, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "7646": { "name": "Starlette", "b": 0.0021, "agom": 0.00108, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "22824": { "name": "Stella", "b": 0.0021, "agom": 0.00108, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "27944": { "name": "LARETS", "b": 0.0043, "agom": 0.0022, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "25398": { "name": "WESTPAC", "b": 0.0042, "agom": 0.0021, "calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] }
+    },
+    "truthPrefixes": ["SW_OPER_SP3", "S1A_OPER_AUX_POEORB", "S1C_OPER_AUX_POEORB", "S1D_OPER_AUX_POEORB", "nsgf.orb."],
+    "fitSpanHours": 24,
+    "observationEverySeconds": 180,
+    "truthToleranceSeconds": 15,
+    "horizonsDays": [1, 3, 7],
+    "observationSigma": { "positionM": 0.1, "velocityMS": 0.0001 },
+    "fit": { "maximumIterations": 12, "correctionTolerance": 0.001, "sigmaEditThreshold": 0 },
+    "forces": { "degree": 40, "order": 40, "thirdBodies": [10, 301], "srp": true, "drag": true, "solidTides": true },
+    "integrator": { "tolerance": 1e-12, "maxStep": 120 },
+    "variants": {
+      "D0": { "atmosphere": "JB2008", "drivers": "SET SOLFSMY/DTCFILE as published" },
+      "D1": { "atmosphere": "NRLMSISE00", "drivers": "GFZ Kp/ap/F10.7 as daily $SPW rows" },
+      "D2": { "atmosphere": "JB2008", "drivers": "SET indices with DTC + the calibrated global temperature correction a00(t)" }
+    }
+  },
+  "regimes": {
+    "basis": "the largest 3-hour Kp (GFZ, definitive) from the issue time to the horizon",
+    "bins": [["quiet", 0, 4], ["active", 4, 6], ["storm", 6, 10]]
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95
+  },
+  "selection": {
+    "degree": "the candidate with the smallest standard deviation of ln(orbit-mean observed / orbit-mean model) over the validation window's held-out satellites, analysis mode (concurrent bins)",
+    "decayHours": "the candidate with the smallest median 3-day 3D error of D2 over the validation window's arcs"
+  }
+}
