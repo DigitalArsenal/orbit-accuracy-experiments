@@ -9,9 +9,15 @@ Format conversion only; values are copied, never computed.
 
 Needs cdflib (tested with 1.3.14) and numpy.
 """
-import gzip, hashlib, io, json, os, sys, tempfile, zipfile
+import gzip, hashlib, io, json, math, os, sys, tempfile, zipfile
 import cdflib
 import numpy as np
+
+def num(x, fmt=None):
+    x = float(x)
+    if not math.isfinite(x):
+        return None  # JSON has no NaN; the reader treats null as invalid
+    return float(fmt % x) if fmt else x
 
 def read_cdf(path):
     c = cdflib.CDF(path)
@@ -21,11 +27,11 @@ def read_cdf(path):
         'satellite': (attrs.get('SATELLITE') or [''])[0],
         'title': (attrs.get('TITLE') or [''])[0],
         'timeSystem': (attrs.get('TIME SYSTEM') or [''])[0],
-        't': [round(float(x), 3) for x in np.asarray(t)],
-        'lat': [round(float(x), 6) for x in c.varget('latitude')],
-        'lon': [round(float(x), 6) for x in c.varget('longitude')],
-        'altKm': [round(float(x) / 1000.0, 6) for x in c.varget('altitude')],
-        'rho': [float('%.6e' % x) for x in c.varget('density')],
+        't': [num(x, '%.3f') for x in np.asarray(t)],
+        'lat': [num(x, '%.6f') for x in c.varget('latitude')],
+        'lon': [num(x, '%.6f') for x in c.varget('longitude')],
+        'altKm': [num(float(x) / 1000.0, '%.6f') for x in c.varget('altitude')],
+        'rho': [num(x, '%.6e') for x in c.varget('density')],
         'flag': [int(x) for x in c.varget('validity_flag')],
     }
     return out
@@ -51,7 +57,7 @@ def main():
         record['source'] = name
         record['sha256'] = hashlib.sha256(raw).hexdigest()
         with gzip.open(target + '.tmp', 'wt') as g:
-            json.dump(record, g, separators=(',', ':'))
+            json.dump(record, g, separators=(',', ':'), allow_nan=False)
         os.replace(target + '.tmp', target)
 
 if __name__ == '__main__':

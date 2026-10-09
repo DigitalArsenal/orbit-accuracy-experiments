@@ -65,6 +65,7 @@ async function msis(s) {
   const spw = new Map(spwRows(isoDay(s.t[0] - 2 * DAY_MS), isoDay(s.t.at(-1) + DAY_MS)).map((r) => [r.DATE, r]));
   const out = [];
   for (let k = 0; k < s.t.length; ++k) {
+    if (!s.valid[k]) { out.push(null); continue; }
     const today = spw.get(isoDay(s.t[k])), yesterday = spw.get(isoDay(s.t[k] - DAY_MS));
     const lon = ((s.lon[k] + 540) % 360) - 180;
     out.push(decodeAtmosphere(await hpop.invoke('invoke', [atmosphereFrame({ epoch: new Date(s.t[k]).toISOString().slice(0, 23), altKm: s.altKm[k], latDeg: s.lat[k],

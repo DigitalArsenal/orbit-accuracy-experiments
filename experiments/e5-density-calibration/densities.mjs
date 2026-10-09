@@ -39,10 +39,11 @@ export function productDay(key, dayIso, inputs) {
   const step = config.density.sampleSeconds * 1000;
   const day = { t: [], lat: [], lon: [], altKm: [], rho: [], valid: [] };
   record.t.forEach((s, i) => {
+    if (s === null) return;
     const ms = Math.round(s * 1000);
     if (ms % step !== 0) return;
     day.t.push(ms); day.lat.push(record.lat[i]); day.lon.push(record.lon[i]); day.altKm.push(record.altKm[i]); day.rho.push(record.rho[i]);
-    day.valid.push(record.flag[i] === 0 && record.rho[i] > 0);
+    day.valid.push(record.flag[i] === 0 && record.rho[i] > 0 && [record.lat[i], record.lon[i], record.altKm[i]].every(Number.isFinite));
   });
   dayCache.set(id, day);
   return day;
