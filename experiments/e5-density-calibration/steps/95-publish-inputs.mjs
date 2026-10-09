@@ -63,6 +63,7 @@ local(config.inputs.solfsmy, 'set-jb2008', TERMS.set, 'release');
 local(config.inputs.dtcfile, 'set-jb2008', TERMS.set, 'release');
 local(config.inputs.kp, 'gfz-kp', TERMS.gfz, 'git');
 local(config.inputs.eopC04, 'eop', TERMS.iers, 'git');
+files.get(path.basename(config.inputs.eopC04)).url ??= 'https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now';
 
 let gitBytes = 0;
 fs.mkdirSync(releaseDir, { recursive: true });
