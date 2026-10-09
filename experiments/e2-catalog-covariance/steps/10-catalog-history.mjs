@@ -14,10 +14,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { json, loadModule, sha256 } from '../../../harness/modules.mjs';
 import { ommFrame } from '../../../harness/records.mjs';
-import { ReferenceIndex } from '../../../harness/reference.mjs';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { epochMs } from '../../../harness/gp-archive.mjs';
-import { DAY_MS, cli, config, configPath, regimeObjects, windowSets } from '../common.mjs';
+import { DAY_MS, cli, config, configPath, regimeObjects, regimeReference, windowSets } from '../common.mjs';
 import { addMeanOuter, correctedModel, lowerToFull, positionTrace } from '../moments.mjs';
 
 const { values, window, modules, archive, reference: referenceDir, objects: only } = cli({ c1: { type: 'string' } });
@@ -49,7 +48,7 @@ const metrics = { window, regimes: {} };
 const c1Out = { window: { name: window.name, from: window.from, to: window.to }, regimes: {} };
 const trainC1 = values.c1 ? JSON.parse(fs.readFileSync(path.resolve(values.c1), 'utf8')) : null;
 for (const [name, regime] of Object.entries(config.regimes)) {
-  const reference = new ReferenceIndex(referenceDir, regime.productPrefix);
+  const reference = regimeReference(referenceDir, regime);
   const objects = new Set([...regimeObjects(referenceDir, regime)].filter((n) => !only || only.has(n)));
   if (!objects.size) { log(`${name}: no reference objects`); continue; }
   const { sets, files } = windowSets(archive, window, objects);

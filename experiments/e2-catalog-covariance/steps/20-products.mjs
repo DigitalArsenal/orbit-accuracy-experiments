@@ -21,10 +21,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { decodeOemStream } from '../../../harness/records.mjs';
-import { ReferenceIndex } from '../../../harness/reference.mjs';
 import { startRun } from '../../../harness/provenance.mjs';
 import { epochMs } from '../../../harness/gp-archive.mjs';
-import { DAY_MS, cli, config, configPath, productContext, regimeObjects, windowSets } from '../common.mjs';
+import { DAY_MS, cli, config, configPath, productContext, regimeObjects, regimeReference, windowSets } from '../common.mjs';
 import { addMeanOuter, lowerToFull } from '../moments.mjs';
 import { conditioned, epochStates, fitProduct, propagateProduct } from '../product.mjs';
 
@@ -61,7 +60,7 @@ for (const [name, regime] of Object.entries(config.regimes)) {
   const settings = { parameters: regime.parameters.map(({ kind, value }) => ({ kind, value })), apriori, covarianceRtn, forces: regime.forces,
     integrator: config.products.integrator, ...config.products.fit };
 
-  const reference = new ReferenceIndex(referenceDir, regime.productPrefix);
+  const reference = regimeReference(referenceDir, regime);
   const objects = [...regimeObjects(referenceDir, regime)].filter((x) => !only || only.has(x)).sort((a, b) => a - b).filter((_, i) => i % shards === shard);
   const { sets, files } = windowSets(archive, window, new Set(objects));
   run.addInputs('gpHistory', files);

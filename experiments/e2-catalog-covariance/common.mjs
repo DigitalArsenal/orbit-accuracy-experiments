@@ -9,6 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { loadModule, modulesRoot, sha256 } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
 import { PRW_TYPE, kernelFrame } from '../../harness/prw.mjs';
+import { ReferenceIndex } from '../../harness/reference.mjs';
 import { readElementSets, shiftDay } from '../../harness/gp-archive.mjs';
 import { estimationCodec } from './estimation-wire.mjs';
 
@@ -56,9 +57,10 @@ export function cli(extra = {}) {
 // Objects of a regime with reference states: NORAD -> true, from the
 // products' index files (the selection string is matched against each
 // object's provenance comment, e.g. "SP3 satellite G" for GPS).
+const prefixes = (regime) => [regime.productPrefix, ...(regime.fallbackPrefix ? [regime.fallbackPrefix] : [])];
 export function regimeObjects(referenceDir, regime) {
   const out = new Set();
-  for (const product of fs.readdirSync(referenceDir).filter((n) => n.startsWith(regime.productPrefix))) {
+  for (const product of fs.readdirSync(referenceDir).filter((n) => prefixes(regime).some((p) => n.startsWith(p)))) {
     const file = path.join(referenceDir, product, 'index.json');
     if (!fs.existsSync(file)) continue;
     for (const o of JSON.parse(fs.readFileSync(file, 'utf8')).objects) if (o.comment?.includes(regime.select)) out.add(o.norad);
@@ -128,4 +130,20 @@ export async function productContext(modules, run) {
     inputsFor: (fromMs, toMs) => [kernel, eopFrame(eop.records, mjdOf(fromMs) - 2, mjdOf(toMs) + 2)],
     async destroy() { for (const m of Object.values(loaded)) await m.destroy(); },
   };
+}
+
+// The regime's precise orbits: the primary product family, plus the
+// fallback family's days where the primary has none (never both for one
+// object and time).
+export function regimeReference(referenceDir, regime) {
+  const index = new ReferenceIndex(referenceDir, regime.productPrefix);
+  if (!regime.fallbackPrefix) return index;
+  const fallback = new ReferenceIndex(referenceDir, regime.fallbackPrefix);
+  for (const [norad, spans] of fallback.byObject) {
+    const own = index.byObject.get(norad) ?? [];
+    const extra = spans.filter((s) => !own.some((o) => o.start < s.stop && s.start < o.stop));
+    if (extra.length) index.byObject.set(norad, [...own, ...extra].sort((a, b) => a.start - b.start));
+  }
+  index.products.push(...fallback.products);
+  return index;
 }

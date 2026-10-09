@@ -55,7 +55,8 @@
           "value": 0.02,
           "sigma": 0.01
         }
-      ]
+      ],
+      "fallbackPrefix": "IGS0OPSFIN"
     }
   },
   "products": {

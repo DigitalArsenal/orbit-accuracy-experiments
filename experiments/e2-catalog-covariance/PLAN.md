@@ -238,6 +238,8 @@ Data on hand when the train and validation windows were run:
 - **E1 corrections.** E1 has not produced corrected element sets (M3*, M4),
   so F3 cannot be run and H2 is not tested.
 - **GPS truth** is ESA's final orbits `ESA0OPSFIN` (5 min) for every window,
-  GPS satellites only (SP3 identifiers G01–G32), not `IGS0OPSFIN`.
+  GPS satellites only (SP3 identifiers G01–G32). Where an ESA day is not on
+  hand (2026-08-02..15, held as IGS products for V1 and E1), the IGS final
+  orbit `IGS0OPSFIN` (15 min) of that day is used instead, never both.
 - **A0** lay inside the test window; it is replaced by the dev window
   above, and nothing of E2 read 2026-08-02..15 before the freeze.

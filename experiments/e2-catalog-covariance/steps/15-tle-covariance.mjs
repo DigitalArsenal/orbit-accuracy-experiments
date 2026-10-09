@@ -22,12 +22,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { json, loadModule, sha256 } from '../../../harness/modules.mjs';
 import { ommFrame } from '../../../harness/records.mjs';
-import { ReferenceIndex } from '../../../harness/reference.mjs';
 import { startRun } from '../../../harness/provenance.mjs';
 import { epochMs } from '../../../harness/gp-archive.mjs';
 import { median } from '../../../harness/stats.mjs';
 import { scoreSets } from '../../e1-gps-epoch/score.mjs';
-import { DAY_MS, cli, config, configPath, regimeObjects, windowSets } from '../common.mjs';
+import { DAY_MS, cli, config, configPath, regimeObjects, regimeReference, windowSets } from '../common.mjs';
 import { lowerToFull, symmetricEigenvalues } from '../moments.mjs';
 import { tleMetrics } from '../score.mjs';
 
@@ -71,7 +70,7 @@ if (values.models) run.addInputs('tleModels', { [path.basename(values.models)]: 
 if (!trained && window.name !== 'train' && window.name !== 'dev') throw new Error('--models (the train window tle-models.json) is required outside train');
 
 for (const [name, regime] of Object.entries(config.regimes)) {
-  const reference = new ReferenceIndex(referenceDir, regime.productPrefix);
+  const reference = regimeReference(referenceDir, regime);
   const objects = new Set([...regimeObjects(referenceDir, regime)].filter((n) => !only || only.has(n)));
   const { sets, files } = windowSets(archive, window, objects);
   run.addInputs('gpHistory', files);
