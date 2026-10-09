@@ -24,6 +24,7 @@ import { loadModule, modulesRoot, gitState } from '../harness/modules.mjs';
 import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
+import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -63,11 +64,12 @@ copyTree(path.join(here, 'node_modules/cesium/Build/Cesium'), 'vendor/cesium');
 fs.copyFileSync(path.join(here, 'node_modules/cesium/LICENSE.md'), path.join(dist, 'vendor/cesium/LICENSE.md'));
 fs.copyFileSync(path.join(here, 'node_modules/coi-serviceworker/coi-serviceworker.min.js'), path.join(dist, 'coi-serviceworker.js'));
 copyTree(path.join(here, 'src/vendor'), 'vendor');
-for (const name of ['index.html', 'site.css']) fs.copyFileSync(path.join(here, 'src', name), path.join(dist, name));
+for (const name of ['index.html', 'site.css', 'models.css']) fs.copyFileSync(path.join(here, 'src', name), path.join(dist, name));
 fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 
 // ── Modules: the exact artifacts the experiments ran ──
-const moduleList = ['propagator/hpop', 'foundation/time', 'analysis/vcm-adapter'];
+const moduleList = ['propagator/hpop', 'foundation/time', 'analysis/vcm-adapter', 'analysis/epoch-state', 'foundation/orbits',
+  'foundation/frames', 'files/orbit-products', 'analysis/conjunction-assessment'];
 const moduleIndex = [];
 const modulesGit = gitState(modules);
 for (const relative of moduleList) {
@@ -169,16 +171,102 @@ for (const step of fs.readdirSync(path.join(repo, 'results/e1/a0')).filter((d) =
   write(`data/e1/a0/${step}.json`, fs.readFileSync(path.join(repo, 'results/e1/a0', step, 'metrics.json')), `results/e1/a0/${step}/metrics.json (aggregates only)`, 'MIT');
 }
 
+// ── Inputs of the paper models ──
+// Vallado's SGP4 verification set (public test vectors, as python-sgp4
+// ships them) with pyerfa GCRF expectations, from analysis/epoch-state.
+write('data/tle/vallado-verification.json', fs.readFileSync(path.join(modules, 'analysis/epoch-state/tests/vallado-verification.json')),
+  'analysis/epoch-state tests/vallado-verification.json: Vallado SGP4-VER.TLE and tcppver.out t=0 rows (python-sgp4 2.27), GCRF by pyerfa', 'Public test vectors (Vallado et al. 2006); MIT (python-sgp4)');
+write('data/ocm/ccsds-ocm-example-2.txt', fs.readFileSync(path.join(here, 'src/data/ccsds-ocm-example-2.txt')),
+  'CCSDS 502.0-B-3 OCM example (OSPREY 5), as Orekit 13.1 ships it in src/test/resources/ccsds/odm/ocm/OCMExample2.txt', 'Apache-2.0 (Orekit test resources)');
+{
+  // Earth orientation at the OCM example's epoch, framed as V1's rows are.
+  const parser = await loadModule(modules, 'data-source/eop-parser');
+  const parsed = await c04Records(parser, eopFile);
+  const first = 51164, last = 51168;  // 1998-12-16 .. 20
+  write('data/eop/eop-1998-12.prw', Buffer.from(eopFrame(parsed.records, first, last).payload), `IERS EOP 20 C04 rows MJD ${first}..${last} through data-source/eop-parser, as a PRW EARTH_ORIENTATION frame`, 'IERS data, free with attribution');
+  write('data/eop/eop-1998-12.json', parsed.records.filter((r) => r.mjd >= first && r.mjd <= last).map((r) => r.row), 'The same rows as $EOP objects', 'IERS data, free with attribution');
+  await parser.destroy();
+}
+// The SDS schemas' fields and their documentation, for the field explorers.
+const sdsSchemaFields = (code) => {
+  const text = fs.readFileSync(path.join(repo, 'node_modules/spacedatastandards.org/schema', code, 'main.fbs'), 'utf8');
+  const tables = {};
+  let table = null, doc = [];
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    const open = /^table\s+(\w+)\s*\{/.exec(line);
+    if (open) { table = tables[open[1]] = []; doc = []; continue; }
+    if (line.startsWith('}')) { table = null; continue; }
+    if (line.startsWith('///')) { doc.push(line.slice(3).trim()); continue; }
+    const field = table && /^(\w+)\s*:\s*([^;=(]+)/.exec(line);
+    if (field) table.push({ name: field[1], type: field[2].trim(), doc: doc.join(' ') });
+    if (!line.startsWith('///')) doc = [];
+  }
+  return tables;
+};
+const sdsVersion = JSON.parse(fs.readFileSync(path.join(repo, 'node_modules/spacedatastandards.org/package.json'), 'utf8')).version;
+for (const code of ['OCM', 'VCM']) write(`data/sds/${code}.json`, { schema: `${code}.fbs`, version: sdsVersion, tables: sdsSchemaFields(code) }, `spacedatastandards.org ${sdsVersion} schema/${code}/main.fbs, fields and doc comments`, 'Apache-2.0 (Space Data Standards)');
+
+// E1, E2 and E3 publish results/<id>/metrics.json when their runs report;
+// the models page shows each one that exists.
+const experimentResults = [];
+for (const id of ['e1', 'e2', 'e3']) {
+  const file = path.join(repo, 'results', id, 'metrics.json');
+  if (!fs.existsSync(file)) continue;
+  write(`results/${id}/metrics.json`, fs.readFileSync(file), `results/${id}/metrics.json`, 'MIT');
+  experimentResults.push(id);
+}
+write('data/experiments.json', { published: experimentResults });
+
+// ── The paper models: a page per section, and the manifest the paper apps read ──
+{
+  const papersDir = process.env.SDN_WHITEPAPERS ?? path.join(modules, '..', 'space-data-network', 'whitepapers');
+  const ids = {};
+  const manifest = [];
+  const template = fs.readFileSync(path.join(here, 'src/models/page.html'), 'utf8');
+  const fill = (text, values) => text.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '');
+  const escHtml = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  for (const m of MODELS) {
+    if (!fs.existsSync(path.join(here, 'src/models', m.paper, `${m.model}.js`))) throw new Error(`model ${m.paper}/${m.model}.js is missing`);
+    if (!ids[m.paper]) {
+      const file = path.join(papersDir, `${m.paper}.md`);
+      ids[m.paper] = fs.existsSync(file) ? headingIds(fs.readFileSync(file, 'utf8')) : null;
+      if (!ids[m.paper]) log(`warning: ${file} not found; section ids are not checked against the paper`);
+    }
+    const sectionId = ids[m.paper] ? ids[m.paper].get(m.heading) : headingIds(`## ${m.heading}`).get(m.heading);
+    if (!sectionId) throw new Error(`${m.paper} has no heading "${m.heading}"`);
+    const url = `models/${m.paper}/${sectionId}.html`;
+    manifest.push({ paper: m.paper, section_id: sectionId, title: m.title, url });
+    fs.mkdirSync(path.join(dist, 'models', m.paper), { recursive: true });
+    fs.writeFileSync(path.join(dist, url), fill(template, {
+      base: '../../', paper: m.paper, model: m.model, title: escHtml(m.title), claim: escHtml(m.claim),
+      paperTitle: escHtml(PAPERS[m.paper]), heading: escHtml(m.heading),
+      paperUrl: `https://spacedatanetwork.org/whitepapers/${m.paper}.html#${sectionId}`,
+    }));
+  }
+  write('models/index.json', JSON.stringify(manifest, null, 2));
+  const list = Object.entries(PAPERS).map(([paper, name]) => `<h2>${escHtml(name)}</h2><ul>${manifest.filter((x) => x.paper === paper)
+    .map((x) => `<li><a href="./${x.url.slice('models/'.length)}">${escHtml(x.title)}</a><span>§ ${escHtml(MODELS.find((m) => m.paper === paper && x.title === m.title).heading)}</span></li>`).join('')}</ul>`).join('');
+  fs.writeFileSync(path.join(dist, 'models/index.html'), fill(fs.readFileSync(path.join(here, 'src/models/index.html'), 'utf8'), { list }));
+  log(`models: ${manifest.length} pages`);
+}
+
 // ── The app: the same harness code the experiments run ──
 await esbuild.build({
-  entryPoints: [path.join(here, 'src/app.js')],
+  entryPoints: { app: path.join(here, 'src/app.js'), models: path.join(here, 'src/models/main.js') },
   // Splitting keeps the SDK's lazily imported crypto backend out of the
   // first load: it is fetched only if a signature is checked.
   bundle: true, format: 'esm', platform: 'browser', target: 'es2022', conditions: ['browser'],
   splitting: true, outdir: dist, entryNames: '[name]', chunkNames: 'chunks/[name]-[hash]',
   minify: true, legalComments: 'linked',
-  alias: { 'node:crypto': path.join(here, 'src/shims/node-crypto.js') },
-  nodePaths: [path.join(repo, 'node_modules')],
+  // The modules repository's own host adapters (record movers) bundle with
+  // this site's SDS and flatbuffers, not the checkout's.
+  alias: {
+    'node:crypto': path.join(here, 'src/shims/node-crypto.js'), '@sdn-modules': modules,
+    'spacedatastandards.org': path.join(repo, 'node_modules/spacedatastandards.org'), flatbuffers: path.join(repo, 'node_modules/flatbuffers'),
+  },
+  nodePaths: [path.join(repo, 'node_modules'), path.join(here, 'node_modules')],
+  define: { __HD_WALLET_VERSION__: JSON.stringify(JSON.parse(fs.readFileSync(path.join(here, 'node_modules/hd-wallet-wasm/package.json'), 'utf8')).version) },
   logLevel: 'warning',
 });
 

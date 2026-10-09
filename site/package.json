@@ -3,10 +3,14 @@
   "private": true,
   "type": "module",
   "description": "The GitHub Pages site: the experiments run live in the browser through the space-data-module-sdk harness, on a CesiumJS globe.",
-  "scripts": { "build": "node build.mjs", "serve": "node serve.mjs" },
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node serve.mjs"
+  },
   "devDependencies": {
     "cesium": "1.146.0",
     "coi-serviceworker": "0.1.7",
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "hd-wallet-wasm": "2.0.21"
   }
 }

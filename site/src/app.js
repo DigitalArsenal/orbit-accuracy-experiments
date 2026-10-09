@@ -4,17 +4,13 @@
 // browser harness, framed by the same harness code the experiments use in
 // Node (harness/prw.mjs, harness/time.mjs). This file moves bytes, takes
 // norms of differences and draws.
-import * as flatbuffers from 'flatbuffers';
-import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
-import { PRW_TYPE, decodeExecution, executionFrame } from '../../harness/prw.mjs';
-import { convertIso } from '../../harness/time.mjs';
 import { COLORS, formatMeters, lineChart, stripChart } from './chart.js';
-import { downloadButton, downloadLink, saveBlob, toCsv } from './download.js';
+import { downloadButton, downloadLink, toCsv } from './download.js';
 import { createGlobe } from './globe.js';
-import { fetchBytes, fetchJson, loadModule } from './modules.js';
+import { fetchJson, loadModule } from './modules.js';
+import { isoMicro, out, runOrekitCase, runV1Seed, runVcm as vcmRoundTrip } from './runs.js';
 
 const $ = (id) => document.getElementById(id);
-const HOUR = 3600e3;
 const GITHUB = 'https://github.com/DigitalArsenal/orbit-accuracy-experiments';
 const CONFIG_TEXT = {
   'E-a': 'Point mass only.',
@@ -27,14 +23,9 @@ const CONFIG_TEXT = {
 };
 const OBJECT_NAMES = { lageos1: 'LAGEOS-1', lageos2: 'LAGEOS-2', etalon1: 'ETALON-1', etalon2: 'ETALON-2' };
 const objectName = (o) => OBJECT_NAMES[o] ?? (o.startsWith('gps-') ? `GPS · NORAD ${o.slice(4)}` : o);
-const isoMicro = (ms) => new Date(ms).toISOString().replace('Z', '').replace(/\.(\d{3})$/, '.$1000');
-const errorM = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) * 1000;
 const status = (node, text, error = false) => { node.textContent = text; node.classList.toggle('error', error); };
-const encodePrw = (root) => { const b = new flatbuffers.Builder(65536); P.PRW.finishSizePrefixedPRWBuffer(b, root.pack(b)); return b.asUint8Array().slice(); };
-const decodePrw = (bytes) => P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(bytes))).unpack();
-const frameOf = (portId, payload) => ({ portId, typeRef: PRW_TYPE, payload });
 
-const state = { modules: {}, truth: new Map() };
+const state = { modules: {} };
 
 async function module(path) {
   state.modules[path] ??= loadModule(path);
@@ -110,60 +101,20 @@ function setupLive() {
   })().catch((e) => { isolationNote(); status($('status'), `The modules could not load: ${e.message}`, true); });
 }
 
-async function truthFor(object) {
-  if (!state.truth.has(object)) state.truth.set(object, fetchJson(`./data/truth/${object}.json`));
-  return state.truth.get(object);
-}
-
 async function runLive() {
   const button = $('run');
   button.disabled = true;
   const seed = state.seeds[Number($('seed').value)];
   const cfgName = $('configuration').value;
-  const forces = state.config.configurations[cfgName];
   status($('status'), `Preparing ${objectName(seed.object)}…`);
-  const [hpop, time, truth] = await Promise.all([module('propagator/hpop'), module('foundation/time'), truthFor(seed.object)]);
-  const withKernel = (forces.thirdBodies ?? []).length > 0 || forces.srp;
-  const extra = [];
-  if (withKernel) extra.push(frameOf('kernel', await fetchBytes('./data/kernel/de440-2026.prw')));
-  if (forces.eop) extra.push(frameOf('earth_orientation', await fetchBytes('./data/eop/eop-v1.prw')));
-  const index = new Map(truth.epochsUnixMs.map((t, i) => [t, i]));
-  const at = (i) => ({ position: truth.position.slice(3 * i, 3 * i + 3), velocity: truth.velocity.slice(3 * i, 3 * i + 3) });
-  const s0 = at(index.get(seed.seedUnixMs));
-  const sampleMs = truth.epochsUnixMs.filter((t) => t > seed.seedUnixMs && t <= seed.seedUnixMs + 72 * HOUR);
-  const horizonMs = state.config.horizonsHours.map((h) => seed.seedUnixMs + h * HOUR);
-  status($('status'), `foundation/time: UTC → TDB for ${sampleMs.length + 1} epochs…`);
-  const tdb = new Map();
-  for (const ms of [seed.seedUnixMs, ...new Set([...sampleMs, ...horizonMs])]) tdb.set(ms, await convertIso(time, isoMicro(ms), 'UTC', 'TDB'));
-  const request = (samples) => executionFrame({
-    epoch: tdb.get(seed.seedUnixMs), timeScale: 'TDB', position: s0.position, velocity: s0.velocity,
-    samples: samples.map((ms) => tdb.get(ms)), target: tdb.get(samples.at(-1)),
-    integrator: state.config.integrator, forces: { ...forces, ...(forces.srp ? seed.params : {}) }, kernel: withKernel,
-  });
-  status($('status'), `propagator/hpop: ${cfgName}, 72 h, ${sampleMs.length} samples…`);
-  const dense = request(sampleMs);
-  const started = performance.now();
-  const response = await hpop.invoke('invoke', [dense, ...extra]);
-  const seconds = (performance.now() - started) / 1000;
-  const run = decodeExecution(response);
-  const rows = run.samples.map((p, k) => {
-    const truthAt = at(index.get(sampleMs[k]));
-    return { ms: sampleMs[k], hours: (sampleMs[k] - seed.seedUnixMs) / HOUR, truth: truthAt.position, hpop: p.position, errorM: errorM(p.position, truthAt.position) };
-  });
-  // The committed V1 run asked for the six horizons only; ask the same and
-  // compare with results/v1, seed by seed.
-  const v1 = decodeExecution(await hpop.invoke('invoke', [request(horizonMs), ...extra]));
-  const committed = state.metrics.results.filter((r) => r.object === seed.object && r.seedEpoch === seed.seedUtc && r.configuration === cfgName);
-  const compared = v1.samples.map((p, k) => {
-    const c = committed.find((r) => r.hours === state.config.horizonsHours[k]);
-    return c ? Math.abs(errorM(p.position, at(index.get(horizonMs[k])).position) - c.errorM) : null;
-  }).filter((d) => d !== null);
-  const reproduced = compared.length ? Math.max(...compared) : null;
+  const [hpop, time] = await Promise.all([module('propagator/hpop'), module('foundation/time')]);
+  const { forces, withKernel, s0, rows, run, dense, response, seconds, reproduced, compared } = await runV1Seed({
+    hpop, time, seed, config: state.config, metrics: state.metrics, cfgName, onStatus: (text) => status($('status'), text) });
   const err = (h) => rows.find((r) => Math.abs(r.hours - h) < 1e-9)?.errorM;
   $('tiles').innerHTML = [[1, '1 h'], [24, '24 h'], [72, '72 h']].map(([h, l]) => `<div><dt>${l}</dt><dd>${formatMeters(err(h))}</dd></div>`).join('');
   const verdict = reproduced === null ? 'results/v1 has no row for this seed and configuration to compare with.'
-    : reproduced === 0 ? `Reproduces results/v1 for this seed exactly, at all ${compared.length} horizons.`
-    : `Reproduces results/v1 for this seed to ${formatMeters(reproduced, 3)} over ${compared.length} horizons.`;
+    : reproduced === 0 ? `Reproduces results/v1 for this seed exactly, at all ${compared} horizons.`
+    : `Reproduces results/v1 for this seed to ${formatMeters(reproduced, 3)} over ${compared} horizons.`;
   status($('status'), `${objectName(seed.object)}, ${cfgName}: ${run.final.steps.toLocaleString()} steps in ${seconds.toFixed(2)} s in this browser. ${verdict}`);
   const medians = state.metrics.summary.find((r) => r.group === seed.group && r.configuration === cfgName);
   $('chart-caption').textContent = `${objectName(seed.object)}, seeded ${seed.seedUtc.slice(0, 16).replace('T', ' ')} UTC, ${cfgName}`;
@@ -176,8 +127,8 @@ async function runLive() {
   });
   const period = 2 * Math.PI * Math.sqrt(Math.hypot(...s0.position) ** 3 / 398600.4418);
   await state.globe.show([
-    { id: 'truth', name: 'Precise orbit', color: 'amber', epochsMs: [seed.seedUnixMs, ...sampleMs], positionsKm: [...s0.position, ...rows.flatMap((r) => r.truth)] },
-    { id: 'hpop', name: 'HPOP', color: 'cyan', epochsMs: [seed.seedUnixMs, ...sampleMs], positionsKm: [...s0.position, ...rows.flatMap((r) => r.hpop)] },
+    { id: 'truth', name: 'Precise orbit', color: 'amber', epochsMs: [seed.seedUnixMs, ...rows.map((r) => r.ms)], positionsKm: [...s0.position, ...rows.flatMap((r) => r.truth)] },
+    { id: 'hpop', name: 'HPOP', color: 'cyan', epochsMs: [seed.seedUnixMs, ...rows.map((r) => r.ms)], positionsKm: [...s0.position, ...rows.flatMap((r) => r.hpop)] },
   ], { periodSeconds: period });
   const base = `${seed.object}-${seed.seedUtc.slice(0, 10)}-${cfgName}`;
   const box = $('run-downloads');
@@ -190,7 +141,7 @@ async function runLive() {
   downloadButton(box, 'Run record', `${base}.json`, () => JSON.stringify({
     seed, configuration: cfgName, forces, integrator: state.config.integrator, samples: rows.length,
     modules: [hpop.provenance, time.provenance], inputs: { kernel: withKernel ? 'data/kernel/de440-2026.prw' : null, earthOrientation: forces.eop ? 'data/eop/eop-v1.prw' : null },
-    browserSeconds: seconds, reproducesV1WithinM: reproduced, horizonsCompared: compared.length,
+    browserSeconds: seconds, reproducesV1WithinM: reproduced, horizonsCompared: compared,
   }, null, 2), 'application/json');
   button.disabled = false;
 }
@@ -270,18 +221,9 @@ async function setupOrekit() {
     const c = cases[Number(select.value)];
     try {
       status($('orekit-status'), `Running ${c.orbit} ${c.forces} in this browser…`);
-      const hpop = await module('propagator/hpop');
-      const inputs = await Promise.all(c.inputs.map(async (i) => frameOf(i.portId, await fetchBytes(`./${i.file}`))));
-      const started = performance.now();
-      const run = decodeExecution(await hpop.invoke('invoke', inputs));
-      let worst = 0, worstAt = 0;
-      run.samples.forEach((p, k) => {
-        const [t, x, y, z] = c.samples[k + 1];
-        const d = Math.hypot(p.position[0] * 1000 - x, p.position[1] * 1000 - y, p.position[2] * 1000 - z);
-        if (d > worst) { worst = d; worstAt = t / 3600; }
-      });
+      const { worst, worstAt, seconds } = await runOrekitCase(await module('propagator/hpop'), c);
       const recorded = results.cases.find((r) => r.id === c.id).worstM;
-      status($('orekit-status'), `${c.orbit} ${c.forces}: largest difference from Orekit ${formatMeters(worst, 3)} at ${worstAt} h (tolerance ${formatMeters(c.toleranceM)}), ${((performance.now() - started) / 1000).toFixed(2)} s in this browser; the recorded run had ${formatMeters(recorded, 3)}.`);
+      status($('orekit-status'), `${c.orbit} ${c.forces}: largest difference from Orekit ${formatMeters(worst, 3)} at ${worstAt} h (tolerance ${formatMeters(c.toleranceM)}), ${seconds.toFixed(2)} s in this browser; the recorded run had ${formatMeters(recorded, 3)}.`);
     } catch (e) { status($('orekit-status'), e.message, true); }
   });
 }
@@ -297,39 +239,7 @@ async function setupVcm() {
 async function runVcm(text) {
   status($('vcm-status'), 'Loading analysis/vcm-adapter and propagator/hpop…');
   const [adapter, hpop] = await Promise.all([module('analysis/vcm-adapter'), module('propagator/hpop')]);
-  const json = (portId, value) => ({ portId, payload: new TextEncoder().encode(JSON.stringify(value)) });
-  const out = (response, port) => response.outputs.find((o) => o.portId === port).payload;
-  // The sample's epoch is 2023; the DE440 excerpt here covers 2026, so the
-  // Sun and Moon come from HPOP's analytical ephemeris for this demo. The
-  // format leaves the units of the B row unstated, so both readings run.
-  const readings = { fractional: 'B row as a fraction of B', absolute: 'B row as printed (m²/kg)' };
-  const runs = {};
-  for (const rows of Object.keys(readings)) {
-    status($('vcm-status'), `analysis/vcm-adapter read, then propagator/hpop 24 h with the 7×7 covariance (${readings[rows]})…`);
-    const read = await adapter.invoke('read', [{ portId: 'message', payload: new TextEncoder().encode(text) }, json('options', { ephemerisSource: 'Analytical', arcSeconds: 86400, parameterRows: rows })]);
-    const report = JSON.parse(new TextDecoder().decode(out(read, 'report')));
-    // Hourly samples with the covariance, on the request the adapter built.
-    const prw = decodePrw(out(read, 'request'));
-    const epochMs = Date.parse(`${report.epochUtc}Z`);
-    prw.EXECUTION_REQUEST.SAMPLE_EPOCHS = Array.from({ length: 24 }, (_, k) => Object.assign(new P.TIMInstantT(), {
-      TIME_SYSTEM: P.timingStandard.UTC, EPOCH_FORMAT: P.timEpochRepresentation.ISO8601, ISO8601: isoMicro(epochMs + (k + 1) * HOUR),
-    }));
-    const request = encodePrw(prw);
-    const run = await hpop.invoke('invoke', [frameOf('request', request), frameOf('earth_orientation', out(read, 'earth_orientation'))]);
-    const result = decodePrw(out(run, 'response')).EXECUTION_RESULT;
-    const sigmas = [{ hours: 0, s: report.recomputedUvwSigmasKm.slice(0, 3).map((x) => x * 1000) }];
-    result.SAMPLES.forEach((sample, k) => {
-      const st = sample.STATE.STATE, n = sample.COVARIANCE.DIMENSION, v = sample.COVARIANCE.VALUES;
-      const r = [st.POSITION.X, st.POSITION.Y, st.POSITION.Z], vel = [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z];
-      const u = r.map((x) => x / Math.hypot(...r));
-      const h = [r[1] * vel[2] - r[2] * vel[1], r[2] * vel[0] - r[0] * vel[2], r[0] * vel[1] - r[1] * vel[0]];
-      const w = h.map((x) => x / Math.hypot(...h));
-      const t = [w[1] * u[2] - w[2] * u[1], w[2] * u[0] - w[0] * u[2], w[0] * u[1] - w[1] * u[0]];
-      const sigma = (a) => Math.sqrt(a.reduce((acc, ai, i) => acc + a.reduce((s, aj, j) => s + ai * v[i * n + j] * aj, 0), 0));
-      sigmas.push({ hours: k + 1, s: [sigma(u), sigma(t), sigma(w)] });
-    });
-    runs[rows] = { report, request, run, sigmas };
-  }
+  const { runs, written: vcmText } = await vcmRoundTrip(adapter, hpop, text, { onStatus: (t) => status($('vcm-status'), t) });
   const { report } = runs.fractional;
   const axes = ['U radial', 'V in-track', 'W cross-track'];
   const b = (rows) => runs[rows].report.parameterSigmas.find((p) => p.name === 'B');
@@ -352,17 +262,6 @@ async function runVcm(text) {
     ],
     x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` },
   });
-  const header = {
-    satelliteNumber: 0, internationalDesignator: report.internationalDesignator, commonName: 'SDN ROUND TRIP', center: 'SDN',
-    geopotential: report.geopotential, zonals: report.zonals, tesserals: report.tesserals, drag: report.drag,
-    lunarSolar: report.lunarSolar ? 'ON' : 'OFF', solarRadiationPressure: report.solarRadiationPressure ? 'ON' : 'OFF',
-    solidEarthTides: report.solidEarthTides ? 'ON' : 'OFF', inTrackThrust: report.inTrackThrust ? 'ON' : 'OFF',
-    ballisticCoefficient: report.ballisticCoefficientM2Kg, f10: report.f10, averageF10: report.averageF10, averageAp: report.averageAp,
-    taiMinusUtcS: report.taiMinusUtcS, ut1MinusUtcS: report.ut1MinusUtcS, ut1RateMsPerDay: report.ut1RateMsPerDay,
-    polarX: report.polarMotionArcsec[0], polarY: report.polarMotionArcsec[1], weightedRms: report.weightedRms, parameterRows: 'fractional',
-  };
-  const written = await adapter.invoke('write', [frameOf('result', out(runs.fractional.run, 'response')), json('header', header)]);
-  const vcmText = new TextDecoder().decode(out(written, 'message'));
   $('vcm-out').textContent = vcmText;
   status($('vcm-status'), `Read, propagated and written in this browser. In-track sigma ${formatMeters(runs.fractional.sigmas[0].s[1])} at epoch; after a day ${formatMeters(last('fractional')[1])} with the B row as a fraction of B, ${formatMeters(last('absolute')[1])} as printed.`);
   const box = $('vcm-downloads');
