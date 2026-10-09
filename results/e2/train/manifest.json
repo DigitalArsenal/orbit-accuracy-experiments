@@ -1,0 +1,91 @@
+{
+ "run": "e2-catalog-covariance-90-report-train-20261009T181425Z",
+ "experiment": "e2-catalog-covariance",
+ "step": "90-report-train",
+ "command": [
+  "node",
+  "experiments/e2-catalog-covariance/steps/90-report.mjs",
+  "--window",
+  "train",
+  "--history",
+  "e2-catalog-covariance-10-catalog-history-20261009T173602Z",
+  "--tle",
+  "e2-catalog-covariance-15-tle-covariance-train-20261009T172615Z",
+  "--products",
+  "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z",
+  "--fit",
+  "results/e2/train/fit.json",
+  "--publish"
+ ],
+ "args": {
+  "window": "train",
+  "history": "e2-catalog-covariance-10-catalog-history-20261009T173602Z",
+  "tle": "e2-catalog-covariance-15-tle-covariance-train-20261009T172615Z",
+  "products": "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z",
+  "fit": "results/e2/train/fit.json",
+  "publish": true
+ },
+ "started": "2026-10-09T18:14:25.294Z",
+ "finished": "2026-10-09T18:14:30.092Z",
+ "config": {
+  "path": "experiments/e2-catalog-covariance/config.json",
+  "sha256": "a0454aee0ba24eb6d9ba66eb4b12d5b69ed36e628f28b38925d07dbbb77c8999",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "0a8e9e1f1afa0aa30d1d3eaab5f39f04b9762006",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "986811e739ed1a9156ed3e30925a74784502378d",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   93.390625,
+   69.10498046875,
+   45.3125
+  ]
+ },
+ "inputs": {
+  "trainFit": {
+   "results/e2/train/fit.json": "dfc900bb33826339c41f1c58e1014a49b8d1cb1b7c38befef9b37e8fbb471ce2"
+  },
+  "runs": {
+   "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z": "c0f091db98c2380684b05a926211b5d59e42ebef2d8279953e3ae448e143e506",
+   "e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z": "9a11bdd39cf0850431d0f91bce354b4a70bf72cca7d144e7785bf5afb60598ac",
+   "e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z": "c5513d2010dbdf3711dda9dcf6edb46852061861e71f74dd7b04cdeb4b025987",
+   "e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z": "0846720371c0fc0ec274f5bdada9779f15190433254676052bac79c1421dc4b0",
+   "e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z": "ed8a7a018cf9ea95600e55a369d05800b18050a2e56a207321cc82e0ad2bc918",
+   "e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z": "0e87c6ee6087fddc20807a305d8affe2001e2d74d5ec0c09d20f654cfaa1ae28",
+   "e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z": "95da5fffa842339407523fdc80d5475e0d1cbfa5920ac6bf81b2a96b4bc9290b",
+   "e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z": "3803ab2d04a1c17ed6027ace337b2606bb6ba0b0aa297e8762961a62e55724ec",
+   "e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z": "83f9ad14110e641f88e74610832894a01e693fe8b6a300b9bdb0d72cf0fe5d69",
+   "e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z": "939e1db30f503d28b1da6df4ad9f124d786a34171383077b766d62e09529632b",
+   "e2-catalog-covariance-10-catalog-history-20261009T173602Z": "b2d33378caaae0929b80a3f24e491f6315d97b0d18c76bb2c88fdb0be6720bc1",
+   "e2-catalog-covariance-15-tle-covariance-train-20261009T172615Z": "d8441e3c4d0980533e96b4ceb8b1ba2ab207c88917ed76bf23504731b52d0f49"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T18:14:25.294Z",
+   "args": {
+    "window": "train",
+    "history": "e2-catalog-covariance-10-catalog-history-20261009T173602Z",
+    "tle": "e2-catalog-covariance-15-tle-covariance-train-20261009T172615Z",
+    "products": "e2-catalog-covariance-20-products-train-s0of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s1of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s2of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s3of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s4of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s5of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s6of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s7of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s8of10-20261009T174406Z,e2-catalog-covariance-20-products-train-s9of10-20261009T174406Z",
+    "fit": "results/e2/train/fit.json",
+    "publish": true
+   }
+  }
+ ]
+}
