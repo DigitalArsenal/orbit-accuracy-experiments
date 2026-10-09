@@ -25,6 +25,8 @@ import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
+import { OD_MODELS, OD_SECTION } from './src/od/registry.mjs';
+import { buildOd, generateEstimationBindings } from './build-od.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -69,7 +71,9 @@ fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 
 // ── Modules: the exact artifacts the experiments ran ──
 const moduleList = ['propagator/hpop', 'foundation/time', 'analysis/vcm-adapter', 'analysis/epoch-state', 'foundation/orbits',
-  'foundation/frames', 'files/orbit-products', 'analysis/conjunction-assessment'];
+  'foundation/frames', 'files/orbit-products', 'analysis/conjunction-assessment',
+  // The orbit-determination pages (site/src/od).
+  'analysis/observation-simulator', 'analysis/access', 'analysis/association', 'analysis/estimation'];
 const moduleIndex = [];
 const modulesGit = gitState(modules);
 for (const relative of moduleList) {
@@ -221,6 +225,15 @@ for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
 }
 write('data/experiments.json', { published: experimentResults });
 
+// ── The orbit-determination pages' inputs (site/build-od.mjs) ──
+{
+  const parser = await loadModule(modules, 'data-source/eop-parser');
+  const parsed = await c04Records(parser, eopFile);
+  await parser.destroy();
+  await buildOd({ modules, referenceDir, eopRecords: parsed.records, kernelPrw: Buffer.from(kernelFrame(kernelBytes).payload), write, log });
+  await generateEstimationBindings(modules, path.join(repo, 'node_modules/space-data-module-sdk/schemas/orbpro'), path.join(here, '.cache/estimation'));
+}
+
 // ── The paper models: a page per section, and the manifest the paper apps read ──
 {
   const papersDir = process.env.SDN_WHITEPAPERS ?? path.join(modules, '..', 'space-data-network', 'whitepapers');
@@ -247,9 +260,26 @@ write('data/experiments.json', { published: experimentResults });
       paperUrl: `https://spacedatanetwork.org/whitepapers/${m.paper}.html#${sectionId}`,
     }));
   }
+  // "03 // Orbit Determination": pages under the catalog paper whose section
+  // ids the paper apps map (site/src/od/registry.mjs).
+  const od = [];
+  for (const m of OD_MODELS) {
+    if (!fs.existsSync(path.join(here, 'src/od', `${m.model}.js`))) throw new Error(`model od/${m.model}.js is missing`);
+    const url = `models/${OD_SECTION.paper}/${m.sectionId}.html`;
+    od.push({ paper: OD_SECTION.paper, section_id: m.sectionId, title: m.title, url, section: OD_SECTION.heading });
+    fs.mkdirSync(path.join(dist, 'models', OD_SECTION.paper), { recursive: true });
+    fs.writeFileSync(path.join(dist, url), fill(template, {
+      base: '../../', paper: OD_SECTION.paper, model: m.model, dir: 'od', title: escHtml(m.title), claim: escHtml(m.claim),
+      paperTitle: escHtml(PAPERS[OD_SECTION.paper]), heading: escHtml(OD_SECTION.heading),
+      paperUrl: `https://spacedatanetwork.org/whitepapers/${OD_SECTION.paper}.html#${m.sectionId}`,
+    }));
+  }
+  manifest.push(...od);
   write('models/index.json', JSON.stringify(manifest, null, 2));
-  const list = Object.entries(PAPERS).map(([paper, name]) => `<h2>${escHtml(name)}</h2><ul>${manifest.filter((x) => x.paper === paper)
-    .map((x) => `<li><a href="./${x.url.slice('models/'.length)}">${escHtml(x.title)}</a><span>§ ${escHtml(MODELS.find((m) => m.paper === paper && x.title === m.title).heading)}</span></li>`).join('')}</ul>`).join('');
+  const list = Object.entries(PAPERS).map(([paper, name]) => `<h2>${escHtml(name)}</h2><ul>${manifest.filter((x) => x.paper === paper && !x.section)
+    .map((x) => `<li><a href="./${x.url.slice('models/'.length)}">${escHtml(x.title)}</a><span>§ ${escHtml(MODELS.find((m) => m.paper === paper && x.title === m.title).heading)}</span></li>`).join('')}</ul>`).join('')
+    + `<section class="od-section"><h2>${escHtml(OD_SECTION.heading)}</h2><p class="claim">${escHtml(OD_SECTION.subtitle)}</p><ul>${od
+      .map((x) => `<li><a href="./${x.url.slice('models/'.length)}">${escHtml(x.title)}</a><span>${escHtml(x.section_id)}</span></li>`).join('')}</ul></section>`;
   fs.writeFileSync(path.join(dist, 'models/index.html'), fill(fs.readFileSync(path.join(here, 'src/models/index.html'), 'utf8'), { list }));
   log(`models: ${manifest.length} pages`);
 }
@@ -265,7 +295,7 @@ await esbuild.build({
   // The modules repository's own host adapters (record movers) bundle with
   // this site's SDS and flatbuffers, not the checkout's.
   alias: {
-    'node:crypto': path.join(here, 'src/shims/node-crypto.js'), '@sdn-modules': modules,
+    'node:crypto': path.join(here, 'src/shims/node-crypto.js'), '@sdn-modules': modules, '@estimation': path.join(here, '.cache/estimation'),
     'spacedatastandards.org': path.join(repo, 'node_modules/spacedatastandards.org'), flatbuffers: path.join(repo, 'node_modules/flatbuffers'),
   },
   nodePaths: [path.join(repo, 'node_modules'), path.join(here, 'node_modules')],

@@ -49,6 +49,24 @@ without cross-origin isolation, those six models offer to open in their own
 tab, where the service worker isolates them. E1, E2 and E3 show
 `results/<id>/metrics.json` once it is committed.
 
+## 03 // Orbit Determination
+
+`models/evidence-supported-aso-catalog/<section_id>.html` for the section ids
+`od-batch-fit`, `od-ekf-ukf`, `od-association` and `od-conjunction`
+(`src/od/registry.mjs`; listed in `models/index.json` with
+`"section": "03 // Orbit Determination"`). One scenario: GPS on 2026-08-02.
+`build-od.mjs` writes its inputs from the IGS final orbits
+(`analysis/reference-states` output in `SDN_REFERENCE_STATES`) with modules:
+a dense truth (`propagator/hpop` between IGS epochs), a catalog (each IGS
+state at 00:00 propagated by HPOP with covariance, two satellites withheld),
+and an `analysis/observation-simulator` request (truth in ITRF from
+`foundation/frames`, visibility from `analysis/access`, the Sun from HPOP's
+DE440). In the browser the pages run the simulator, `analysis/association`,
+`analysis/estimation` (batch, EKF, UKF; bindings of its module-local schema
+are generated into `site/.cache/estimation` by flatc at build time) and
+`analysis/conjunction-assessment`. The conjunction's second object is
+hypothetical and says so.
+
 ## Build
 
 ```sh
