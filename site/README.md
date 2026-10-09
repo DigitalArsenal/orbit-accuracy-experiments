@@ -36,6 +36,14 @@ heading against the paper's markdown (`SDN_WHITEPAPERS`, default the stack's
 `section_id` is the heading id `docs/build-whitepapers.mjs` gives the
 section. Each page stands alone in an iframe, takes `?theme=light|dark` or a
 `{sdnTheme}` message, and sets `<body data-done>` when its first run ends.
+Each model also draws what it computes in 3D (`src/models/scene.js`: one
+CesiumJS widget per page, loaded when the model runs, no ion, the Blue Marble
+as the only imagery): orbits, covariance ellipsoids, error histories in
+radial, in-track and cross-track axes, encounter planes, and the key graphs
+of the security paper. Every point drawn is a module output, or the page's
+inputs and its evaluation of the paper's formulas; magnifications are
+stated on the view.
+
 The conjunction module uses shared WebAssembly memory: embedded in a page
 without cross-origin isolation, those six models offer to open in their own
 tab, where the service worker isolates them. E1, E2 and E3 show
