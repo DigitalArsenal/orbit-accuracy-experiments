@@ -1,6 +1,6 @@
 # E1 — Correcting GPS element sets at epoch
 
-Pre-registration. Status: **draft, not frozen**. The plan is frozen by
+Pre-registration. Status: **frozen** (2026-10-09). The plan is frozen by
 the commit that sets `"frozen": true` in [`config.json`](config.json); that
 commit's SHA is recorded in every later run manifest. Nothing in the test
 window is read before that commit, except the baseline check A0 below, which
@@ -338,6 +338,20 @@ are reported with the results.
   11. *Not computed* in this run, and reported so: the NANU sensitivity
       analysis (no NANU archive is on hand), the age from creation, the
       energy score, and H4 (M2, exploratory, §9 step 6).
+
+- **2026-10-09, the fit, recorded at the freeze.** Step 20 ran once on the
+  full train and validation windows (run
+  `e1-gps-epoch-20-fit-20261009T172522Z`, at commit `7dc2287`). Its
+  model, committed with the freeze as
+  `results/e1/fit/e1-gps-epoch-20-fit-20261009T172522Z/model.json`
+  (SHA-256 `b3426d2f377db1bc40814246ea6f927d0ba1cfa34485f96af602c19e9b4c3452`),
+  is the one the evaluation applies; nothing is refitted on test. M3* is
+  `M3c-K2-ridge1000`. On the validation sets of 2026-01-01 to 2026-03-31,
+  M4 does not pass the gate at any gate age (results/e1/fit/REPORT.md):
+  its 1σ ellipsoid holds too many samples and, from 1 day on, its 3σ
+  ellipsoid too few. M4 is left as amendment 3 specifies, so H3 is tested
+  as registered and is expected to fail; changing M4 after seeing this
+  would tune it to the gate it is tested by.
 
 ## References
 
