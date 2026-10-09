@@ -1,6 +1,6 @@
 {
   "experiment": "e3-combined-catalog",
-  "frozen": false,
+  "frozen": true,
   "plan": "PLAN.md",
   "inputs": {
     "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
