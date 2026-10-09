@@ -131,3 +131,17 @@ pressure, which section 2 said it could not. E-e adds it:
 The EOP rows are the IERS EOP C04 file in `reference-states/products`, read
 by `data-source/eop-parser`. E-e enters no criterion; it is reported beside
 the others.
+
+**A4 (2026-10-08, after the SDS 1.240.0 additions). The IERS 2010 forces,
+descriptive only.** HPOP now carries the IERS 2010 solid Earth tides (section
+6.2, steps 1 and 2) and the relativistic terms of eq. 10.12 (Schwarzschild,
+Lense-Thirring and de Sitter), both checked against Orekit 13.1. E-f is E-e
+with both:
+
+| ID | Path | Forces |
+| --- | --- | --- |
+| E-f | Execution | E-e + IERS 2010 solid tides + IERS 2010 relativity |
+
+E-f enters no criterion. From this amendment the Earth orientation travels
+in the PRW `EARTH_ORIENTATION` arm (SDS 1.240.0) instead of a bare `$EOP`
+stream, with the same rows.

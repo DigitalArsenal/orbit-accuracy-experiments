@@ -32,7 +32,8 @@
     "E-b": { "degree": 20, "order": 0 },
     "E-c": { "degree": 20, "order": 0, "thirdBodies": [10, 301] },
     "E-d": { "degree": 20, "order": 0, "thirdBodies": [10, 301], "srp": true },
-    "E-e": { "degree": 20, "order": 20, "thirdBodies": [10, 301], "srp": true, "eop": true }
+    "E-e": { "degree": 20, "order": 20, "thirdBodies": [10, 301], "srp": true, "eop": true },
+    "E-f": { "degree": 20, "order": 20, "thirdBodies": [10, 301], "srp": true, "eop": true, "solidTides": true, "relativity": "IERS_2010" }
   },
   "criteria": {
     "twoBody": { "periods": 5, "muKm3S2": 398600.4418, "limitM": 1 },

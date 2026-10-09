@@ -1,6 +1,7 @@
-// $PRW framing for propagator/hpop's `invoke` method (SDS 1.232.0 PRW
-// execution request and result). Encoding and unit scaling only (km <-> m);
-// the propagation, frames and time scales are the module's.
+// $PRW framing for propagator/hpop's `invoke` method (SDS 1.240.0 PRW
+// execution request and result, Earth orientation and space weather arms).
+// Encoding and unit scaling only (km <-> m); the propagation, frames and time
+// scales are the module's.
 import { createHash } from 'node:crypto';
 import * as flatbuffers from 'flatbuffers';
 import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
@@ -30,7 +31,8 @@ function gcrf() {
 
 // request: {epoch (ISO), timeScale, position [km], velocity [km/s] (GCRF), samples [ISO],
 //   target (ISO), integrator {algorithm, initialStep, minStep, maxStep, tolerance},
-//   forces {degree, order, thirdBodies [NAIF ids], srp, drag, massKg, areaM2, cr, cd}}
+//   forces {degree, order, thirdBodies [NAIF ids], srp, drag, massKg, areaM2, cr, cd,
+//     solidTides (IERS 2010), relativity ('SCHWARZSCHILD' | 'IERS_2010')}}
 export function executionFrame(request) {
   const f = request.forces, it = request.integrator;
   const scale = request.timeScale ?? 'UTC';
@@ -55,6 +57,8 @@ export function executionFrame(request) {
     INITIAL_MASS_KG: f.massKg ?? 1000, AREA_M2: f.areaM2 ?? 1, REFLECTIVITY_COEFFICIENT: f.cr ?? 1, DRAG_COEFFICIENT: f.cd ?? 2.2,
     ATMOSPHERE_MODEL: P.prwAtmosphereFamily.NRLMSISE00,
     EPHEMERIS_SOURCE: request.kernel ? 'JPL_SPK' : 'Analytical',
+    SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
+    RELATIVITY: f.relativity ? P.prwRelativityTerms[f.relativity] : P.prwRelativityTerms.NONE,
   });
   const integrator = table('PRWIntegratorSettings', {
     ALGORITHM: P.prwSolverAlgorithm[it.algorithm ?? 'RK78'],
