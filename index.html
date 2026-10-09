@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Cross-origin isolation for the modules' shared WebAssembly memory:
+         GitHub Pages sets no headers, so a service worker adds COOP/COEP. -->
+    <script src="./coi-serviceworker.js"></script>
+    <link rel="stylesheet" href="./vendor/sdn-chrome/sdn-chrome.css" />
+    <script src="./vendor/sdn-chrome/sdn-chrome.js"></script>
+    <title>Orbit Accuracy Experiments · Space Data Network</title>
+    <meta name="description" content="Pre-registered experiments on orbit accuracy and covariance, run live in your browser by Space Data Network WebAssembly modules." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'><defs><linearGradient id='t' gradientUnits='userSpaceOnUse' x1='16' y1='29' x2='16' y2='3'><stop offset='0' stop-color='%23f5a524' stop-opacity='0'/><stop offset='.55' stop-color='%23f5a524' stop-opacity='.55'/><stop offset='1' stop-color='%23f5a524'/></linearGradient></defs><circle cx='16' cy='16' r='13' stroke='%23f5f5f7' stroke-width='1.6' opacity='.3'/><path d='M16 29A13 13 0 0 1 16 3' stroke='url(%23t)' stroke-width='2.2' stroke-linecap='round'/><path d='M16 10.2L10.4 20.1H21.6Z' stroke='%23f5f5f7' stroke-width='1.6' stroke-linejoin='round'/><circle cx='16' cy='10.2' r='2.6' fill='%23f5f5f7'/><circle cx='10.4' cy='20.1' r='2.6' fill='%23f5f5f7'/><circle cx='21.6' cy='20.1' r='2.6' fill='%23f5f5f7'/><circle cx='16' cy='3' r='2.5' fill='%23f5a524'/></svg>" />
+    <link rel="stylesheet" href="./vendor/cesium/Widgets/widgets.css" />
+    <link rel="stylesheet" href="./site.css" />
+    <script>window.CESIUM_BASE_URL = './vendor/cesium/';</script>
+    <script src="./vendor/cesium/Cesium.js"></script>
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="sdn-header sdn-header-inflow">
+      <div class="sdn-header-inner">
+        <a class="sdn-header-brand" href="./"><span>Orbit Accuracy Experiments</span></a>
+        <nav class="sdn-header-links" aria-label="Site">
+          <a href="#live">Live</a>
+          <a href="#v1">Results</a>
+          <a href="#verification">Verification</a>
+          <a href="#vcm">VCM</a>
+          <a href="#data">Data</a>
+          <a href="https://github.com/DigitalArsenal/orbit-accuracy-experiments">GitHub</a>
+        </nav>
+        <div class="sdn-header-actions">
+          <button data-sdn-theme-toggle aria-label="Switch between light and dark theme"></button>
+          <button data-sdn-menu-toggle aria-label="Menu"></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <p class="eyebrow">Space Data Network · Evidence</p>
+        <h1>Orbit accuracy, measured in the open.</h1>
+        <p class="lede">Pre-registered experiments on how accurate orbit propagation and catalog covariance are, against precise orbits. Every number here is computed by Space Data Network WebAssembly modules, and you can re-run them on this page, in your browser.</p>
+        <div class="actions">
+          <a class="button primary" href="#live">Run HPOP live</a>
+          <a class="button" href="#data">Download the data</a>
+        </div>
+        <ul class="facts" id="facts" aria-label="Headline results"></ul>
+      </section>
+
+      <section id="live" class="band">
+        <div class="section-head">
+          <p class="eyebrow">Live</p>
+          <h2>Propagate A Real Orbit</h2>
+          <p class="lede">Pick a satellite with a precise orbit and a force model. Your browser loads <code>propagator/hpop</code>, seeds it with the precise state, propagates three days and compares every sample with the precise orbit.</p>
+        </div>
+        <div class="live">
+          <div class="globe-frame">
+            <div id="globe" class="globe" role="img" aria-label="Globe: the precise orbit in amber, HPOP's propagation in cyan"></div>
+            <div class="globe-legend" aria-hidden="true">
+              <span><i class="key amber"></i>Precise orbit</span>
+              <span><i class="key cyan"></i>HPOP</span>
+            </div>
+            <div class="isolation" id="isolation" hidden></div>
+          </div>
+          <form class="panel controls" id="controls">
+            <label>Satellite
+              <select id="object"></select>
+            </label>
+            <label>Seed
+              <select id="seed"></select>
+            </label>
+            <label>Force model
+              <select id="configuration"></select>
+            </label>
+            <p class="hint" id="configuration-hint"></p>
+            <button class="button primary" type="submit" id="run">Propagate 72 h</button>
+            <p class="status" id="status" role="status" aria-live="polite">Loading the modules…</p>
+            <dl class="tiles" id="tiles"></dl>
+            <div class="downloads" id="run-downloads"></div>
+          </form>
+        </div>
+        <figure class="chart-card">
+          <figcaption><strong>3D position error against the precise orbit</strong><span id="chart-caption">Run a propagation to plot it.</span></figcaption>
+          <div id="run-chart" class="chart"></div>
+        </figure>
+      </section>
+
+      <section id="v1" class="band">
+        <div class="section-head">
+          <p class="eyebrow">V1 · HPOP Against Real Orbits</p>
+          <h2>Each Force, Measured</h2>
+          <p class="lede" id="v1-lede">HPOP seeded from 16 SLR states (LAGEOS-1/2, ETALON-1/2) and 96 GPS states, propagated three days and compared with the same precise orbits, force model by force model.</p>
+        </div>
+        <div class="grid-2">
+          <figure class="chart-card"><figcaption><strong>SLR spheres</strong><span>median 3D error, m</span></figcaption><div id="v1-chart-slr" class="chart"></div></figure>
+          <figure class="chart-card"><figcaption><strong>GPS</strong><span>median 3D error, m</span></figcaption><div id="v1-chart-gps" class="chart"></div></figure>
+        </div>
+        <div class="table-wrap"><table id="v1-table" class="data-table"></table></div>
+        <div class="grid-2 notes">
+          <div class="panel"><h3>Criteria</h3><ul id="v1-criteria" class="criteria"></ul></div>
+          <div class="panel"><h3>Configurations</h3><dl id="v1-configs" class="configs"></dl></div>
+        </div>
+        <div class="downloads" id="v1-downloads"></div>
+      </section>
+
+      <section id="verification" class="band">
+        <div class="section-head">
+          <p class="eyebrow">Verification · HPOP Against Orekit 13.1</p>
+          <h2>Locked Down Force By Force</h2>
+          <p class="lede">63 cases on identical states, forces and constants: five orbits, ten force sets, and the IERS 2010, VCM and atmosphere additions. Each point is the largest position difference over a day of hourly samples. Pick one and re-run it here.</p>
+        </div>
+        <figure class="chart-card">
+          <figcaption><strong>Largest difference from Orekit over 24 h</strong><span>m, one point per case; the hairline is the case's tolerance</span></figcaption>
+          <div id="orekit-chart" class="chart tall"></div>
+        </figure>
+        <form class="panel inline" id="orekit-form">
+          <label>Case <select id="orekit-case"></select></label>
+          <button class="button" type="submit">Re-run in this browser</button>
+          <p class="status" id="orekit-status" role="status" aria-live="polite"></p>
+        </form>
+        <div class="downloads" id="orekit-downloads"></div>
+      </section>
+
+      <section id="vcm" class="band">
+        <div class="section-head">
+          <p class="eyebrow">VCM Parity · analysis/vcm-adapter</p>
+          <h2>A Vector Covariance Message, Round Trip</h2>
+          <p class="lede">An SP Vector Covariance Message read into a PRW request, propagated with its covariance, and written back as a VCM. The adapter transforms the equinoctial covariance exactly; the sigmas it recomputes match the ones the message prints. The format leaves the units of the ballistic coefficient’s row unstated, so both readings run.</p>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>The message</h3>
+            <pre class="message" id="vcm-in"></pre>
+            <button class="button primary" id="vcm-run" type="button">Read, propagate 24 h, write</button>
+            <p class="status" id="vcm-status" role="status" aria-live="polite"></p>
+          </div>
+          <div class="panel">
+            <h3>What the adapter read</h3>
+            <div class="table-wrap"><table class="data-table compact" id="vcm-sigmas"></table></div>
+            <ul class="notes-list" id="vcm-notes"></ul>
+          </div>
+        </div>
+        <figure class="chart-card">
+          <figcaption><strong>Position sigmas along the propagation</strong><span>m, from HPOP’s 7×7 covariance with the ballistic coefficient B as a parameter; in-track under both readings of B’s row</span></figcaption>
+          <div id="vcm-chart" class="chart"></div>
+        </figure>
+        <div class="panel"><h3>The VCM written back</h3><pre class="message" id="vcm-out">Run the round trip to write it.</pre></div>
+        <div class="downloads" id="vcm-downloads"></div>
+      </section>
+
+      <section id="experiments" class="band">
+        <div class="section-head">
+          <p class="eyebrow">Experiments</p>
+          <h2>Plans First, Then Numbers</h2>
+          <p class="lede">Each experiment states its hypotheses, data windows and decision rules before its test data is read. Failures are reported with the same care as passes.</p>
+        </div>
+        <div class="cards" id="experiment-cards"></div>
+      </section>
+
+      <section id="data" class="band">
+        <div class="section-head">
+          <p class="eyebrow">Data And Provenance</p>
+          <h2>Every File, With Its Hash</h2>
+          <p class="lede">The module binaries this page runs, the precise orbits, Earth orientation and ephemeris it reads, and the results it shows. Element sets from Space-Track never leave the machine they were fetched to and are not here.</p>
+        </div>
+        <div class="file-groups" id="files"></div>
+        <p class="fine" id="provenance"></p>
+        <div class="downloads"><a class="button small" href="./provenance.json" download>↓ provenance.json</a></div>
+      </section>
+
+      <section id="stack" data-sdn-stack=""></section>
+    </main>
+
+    <footer class="sdn-footer">
+      <div class="sdn-footer-inner">
+        <a class="sdn-footer-brand" href="https://spacedatanetwork.org/">Space Data Network</a>
+        <nav class="sdn-footer-links" aria-label="Footer">
+          <a href="https://spacedatanetwork.org/whitepapers.html">Whitepapers</a>
+          <a href="#data">Data</a>
+          <a href="https://github.com/DigitalArsenal/orbit-accuracy-experiments">GitHub</a>
+        </nav>
+        <p class="sdn-footer-legal">MIT License (code and results) &middot; data under their sources' terms &middot; &copy; Edgesource Corporation &middot; <a href="mailto:tj@edgesource.com">tj@edgesource.com</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
