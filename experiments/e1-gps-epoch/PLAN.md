@@ -258,6 +258,87 @@ are reported with the results.
   when the NANU archive is on hand. H3 is unchanged: its containment gate
   already follows `gp-error-model`'s clipped convention.
 
+- **2026-10-09, before the freeze and before any fit on the full train
+  window (3).** The open numbers and the parts §3–§5 left unspecified,
+  fixed in `config.json` (`inputs`, `fit`, `acceptance.conformalLevel`)
+  and in the step code (`steps/20-fit.mjs`, `steps/30-evaluate.mjs`).
+  Only smoke runs on one month of train data preceded them; the only
+  numbers they produced were used to check the code runs.
+  1. *Truth.* BKG no longer holds the IGS combined final orbit
+     (`IGS0OPSFIN`, 15 min) for older weeks. For those days
+     `analysis/reference-states` takes ESA's final orbit (`ESA0OPSFIN`,
+     5 min, an IGS analysis centre, same IGS20 frame and the same
+     conversion), so the truth is IGS where BKG has the day and ESA
+     elsewhere. Each run's manifest lists every product. ESA's files hold
+     every GNSS; only satellites whose SP3 identifier starts with G count.
+     Reason: the plan's single product is not available for the whole
+     range. ESA's final orbit agrees with the IGS combination at the
+     centimetre level, four orders below the effect.
+  2. *Bins.* A 15 min bin holds three ESA epochs, so an age bin's width is
+     the 15 min of §4 or the product's interval where shorter (5 min). "At
+     epoch" is then the first reference epoch after the element-set epoch
+     at most one product interval later. A bin with two epochs (the shared
+     midnight epoch of consecutive ESA days) is dropped and counted.
+  3. *Covariates* are computed by modules. `foundation/frames` gives the
+     Moon's and the Sun's geocentric GCRF states and their positions in the
+     radial/transverse/normal axes of the set's ascending node, a point
+     `analysis/epoch-state` derives from the set with eccentricity,
+     argument of perigee and mean anomaly zero. From them: each body's
+     distance and its rate, each divided by its train-window standard
+     deviation (the distance about its train mean, sign reversed: close to
+     cos M and sin M of its mean anomaly), and the body's unit vector in
+     the orbit plane's axes. The code is `geometry.mjs` and `features.mjs`.
+  4. *Methods.* M3a: satellite fixed effects plus (cos M☾, sin M☾) and
+     their products with (cos M☉, sin M☉), the linear form of a Moon term
+     whose phase moves with the Sun's distance; an unseen satellite gets
+     the mean of the satellite effects. M3b: one parameter set,
+     [1, sin Ω, cos Ω] ⊗ (cos M☾, sin M☾), Ω the set's own node. M3c: the
+     real solid harmonics of the Moon's and the Sun's unit vectors in the
+     orbit-plane axes up to degree K, both anomaly pairs, and a random
+     intercept per satellite; σ² and τ² by REML, then the fixed effects by
+     generalized least squares at those variances. Every feature is
+     standardized on train. The ridge penalty (λ on the standardized
+     feature coefficients, intercepts unpenalized) takes 0, 10, 100 or
+     1000; K takes 1, 2 or 3. That is 20 candidates.
+  5. *Target.* The regression's response is M0's along-track error at age 0
+     in seconds of flight: the error divided by the along-track
+     sensitivity ∂T/∂Δt, which the modules measure by scoring every 25th
+     train set again with its mean anomaly advanced by n·10 s (the median
+     is used). Only train sets inside the train window's M0 clip at age 0
+     are fitted. The correction is minus the prediction.
+  6. *Model choice* is as §5: the candidate with the lowest clipped 3D RMS
+     at age 0 on validation, the clip being M0's on the validation window.
+     The best candidate of each variant is the one reported on test.
+  7. *M4.* Per gate age (0, 0.5, 1, 2 d) and RTN axis, a zero-mean normal
+     error whose log standard deviation is linear in the two anomaly pairs,
+     fitted by minimum mean CRPS to M3*'s errors on validation sets with
+     epochs 2025-10-01 to 2025-12-31 inside the validation M0 clip. M3* is
+     fitted on train only, so these errors are out of sample; train
+     residuals would understate the error. The covariance is diagonal in
+     RTN. The conformal radius at each gate age is the ⌈0.95 (n + 1)⌉-th
+     smallest d² of M3* against M4 on validation sets with epochs
+     2026-01-01 to 2026-03-31; d² comes from `gp-error-model`'s coverage
+     test. Test coverage is the share of test samples inside that radius.
+  8. *H3* is evaluated with `gp-error-model`'s coverage test per sample
+     (d² against χ²₃, every sample counts) and its gate rule at the four
+     gate ages. It is supported when all four are CALIBRATED and Holm
+     rejects.
+  9. *Tiers.* Planes are clustered from the satellites with an element set
+     within 7 days of 2024-10-01. A satellite without one joins the plane
+     whose members' mean node, from their sets nearest its first set, is
+     closest. G2 and G3 refit M3*'s specification (variant, K, λ) on the
+     train subsets; an unseen satellite gets u = 0 (M3c) or the mean
+     satellite effect (M3a).
+  10. *p-values for Holm.* One-sided bootstrap p-values from the same
+      pigeonhole resamples as the intervals: H1, the share of resamples
+      with R ≤ 0.40 (its lower-bound criterion); H2, the share with R ≤ 0;
+      H3, the share in which the gate fails at some gate age; each as
+      (1 + count)/(1 + resamples). A hypothesis is supported only when its
+      own criteria in §5 hold and Holm rejects it at α = 0.05.
+  11. *Not computed* in this run, and reported so: the NANU sensitivity
+      analysis (no NANU archive is on hand), the age from creation, the
+      energy score, and H4 (M2, exploratory, §9 step 6).
+
 ## References
 
 - Ly, D., Lucken, R. and Giolito, D. Correcting TLEs at epoch: Application to
