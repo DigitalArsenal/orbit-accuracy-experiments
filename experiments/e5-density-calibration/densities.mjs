@@ -25,6 +25,7 @@ function productFile(key, dayIso) {
 // One day of samples, every config.density.sampleSeconds on the UTC grid:
 // {t ms, lat, lon, altKm, rho, valid} arrays, plus the file's provenance.
 const dayCache = new Map();
+const memberCache = new Map();
 export function productDay(key, dayIso, inputs) {
   const id = `${key}/${dayIso}`;
   if (dayCache.has(id)) return dayCache.get(id);
@@ -55,7 +56,13 @@ export function historicalDay(key, dayIso, inputs) {
   const zip = path.join(h.zip, spec.file);
   const [y, m, d] = dayIso.split('-').map(Number);
   const doy = Math.round((Date.UTC(y, m - 1, d) - Date.UTC(y, 0, 1)) / DAY_MS) + 1;
-  const member = `${spec.prefix}/${y}/${spec.name}_${String(y % 100).padStart(2, '0')}_${String(doy).padStart(3, '0')}_v2.txt`;
+  // Members are <prefix>/<year>/<name>_YY_DDD_v2.txt; found by their year and
+  // day suffix (GRACE-A's files are named graceA_Density, not as config.json
+  // has it: PLAN.md amendment 1).
+  const suffix = `_${String(y % 100).padStart(2, '0')}_${String(doy).padStart(3, '0')}_v2.txt`;
+  if (!memberCache.has(zip)) memberCache.set(zip, execFileSync('unzip', ['-Z1', zip], { encoding: 'utf8', maxBuffer: 1 << 26 }).split('\n'));
+  const member = memberCache.get(zip).find((m) => m.startsWith(`${spec.prefix}/${y}/`) && m.endsWith(suffix));
+  if (!member) { dayCache.set(id, null); return null; }
   let text;
   try { text = execFileSync('unzip', ['-p', zip, member], { encoding: 'latin1', maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'ignore'] }); } catch { dayCache.set(id, null); return null; }
   if (!text) { dayCache.set(id, null); return null; }

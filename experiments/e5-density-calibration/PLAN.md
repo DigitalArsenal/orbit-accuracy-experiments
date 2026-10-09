@@ -210,3 +210,11 @@ Committed under `results/e5/`: the selection, the run manifests and metrics,
 and `REPORT.md`, generated from them by `steps/90-report.mjs`. The inputs are
 listed in `data/e5/MANIFEST.json` and `data/e5/SOURCES.md`; small ones are
 committed under `data/e5/`, the rest prepared as release assets.
+
+## Amendment 1 (2026-10-09, after the freeze, before any test-window run)
+
+`config.json` names the GRACE-A files of the Licata et al. archive
+`GRACE_A_Density_YY_DDD_v2.txt`; the archive names them
+`graceA_Density_YY_DDD_v2.txt`. `densities.mjs` now finds each day's file by
+its directory and `_YY_DDD_v2.txt` suffix. No data was read under the wrong
+name (it would have found no files). No other change.
