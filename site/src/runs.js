@@ -72,7 +72,25 @@ export async function runOrekitCase(hpop, c) {
     if (d > worst) { worst = d; worstAt = t / 3600; }
     return [t / 3600, d];
   });
-  return { worst, worstAt, differences, seconds: (performance.now() - started) / 1000 };
+  return { worst, worstAt, differences, samples: run.samples, inputs, seconds: (performance.now() - started) / 1000 };
+}
+
+// A run's own request again, sampled `offsetsSec` after its initial epoch and
+// without covariance: the path between the samples it reports, to draw.
+export async function resampled(hpop, inputs, offsetsSec) {
+  const prw = decodePrw(inputs.find((f) => f.portId === 'request').payload);
+  const request = prw.EXECUTION_REQUEST, initial = request.INITIAL.STATE;
+  const base = Date.parse(`${initial.EPOCH}Z`);
+  const epochs = offsetsSec.map((s) => Object.assign(new P.TIMInstantT(), { TIME_SYSTEM: P.timingStandard[initial.EPOCH_TIME_SYSTEM] ?? P.timingStandard.UTC,
+    EPOCH_FORMAT: P.timEpochRepresentation.ISO8601, ISO8601: new Date(base + s * 1000).toISOString().replace('Z', '') }));
+  request.SAMPLE_EPOCHS = epochs;
+  request.TARGET_EPOCH = Object.assign(new P.TIMInstantT(), epochs.at(-1));
+  request.INCLUDE_STM = false;
+  request.INITIAL.COVARIANCE = null;
+  if ('INITIAL_COVARIANCE' in request) request.INITIAL_COVARIANCE = null;
+  const frames = inputs.map((f) => (f.portId === 'request' ? frameOf('request', encodePrw(prw)) : f));
+  return [[0, [initial.POSITION.X / 1000, initial.POSITION.Y / 1000, initial.POSITION.Z / 1000]],
+    ...decodeExecution(await hpop.invoke('invoke', frames)).samples.map((q, k) => [offsetsSec[k], q.position])];
 }
 
 // RTN position sigmas (m) from a propagated covariance sample.

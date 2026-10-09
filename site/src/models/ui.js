@@ -97,3 +97,5 @@ export function chart(parent, title, caption) {
 
 export const note = (parent, text) => { const p = h('p', { class: 'fine', html: text }); parent.append(p); return p; };
 export const pre = (parent, text, cls = 'message') => { const p = h('pre', { class: cls }, text); parent.append(p); return p; };
+// A long identifier, shortened for a label: its head and tail.
+export const short = (text, head = 6, tail = 4) => (text.length > head + tail + 1 ? `${text.slice(0, head)}…${text.slice(-tail)}` : text);

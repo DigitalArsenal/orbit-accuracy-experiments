@@ -4,6 +4,7 @@
 import { formatMeters } from '../../chart.js';
 import { OPM_TYPE, decodeOemLine, opmBytes } from '../codec/elements.js';
 import { h, inputs, num, panel, table, tiles } from '../ui.js';
+import { scene3d, v3 } from '../scene.js';
 
 const MU = 398600.4418;
 // Basilisk test_orbitalMotion.cpp TwoDimensionElliptical (μ = 398600.436).
@@ -18,6 +19,7 @@ export default async function run(ctx) {
     { id: 'i', label: 'i (deg)', value: 51.6 }, { id: 'raan', label: 'Ω (deg)', value: 30 },
     { id: 'argp', label: 'ω (deg)', value: 90 }, { id: 'u', label: 'u, argument of latitude (deg)', value: 120 },
   ], () => convert());
+  const view = scene3d(ctx, { title: 'The orbit these elements describe', caption: 'J2000 axes; every point is the module’s state at one true anomaly' });
   const orbits = await ctx.module('foundation/orbits');
   const toState = async (o) => decodeOemLine((await orbits.invoke('opm_keplerian_to_oem', [{ portId: 'orbit_parameters', typeRef: OPM_TYPE,
     payload: opmBytes({ name: 'MODEL', id: 'MODEL', epoch: '2026-10-01T00:00:00.000Z', ...o }) }])).outputs[0].payload);
@@ -40,6 +42,23 @@ export default async function run(ctx) {
       tiles(p, [['ν = u − ω', `${num(nu, 6)}°`], ['|r|', `${num(Math.hypot(...s.r), 8)} km`], ['|v|', `${num(Math.hypot(...s.v), 8)} km/s`]]);
       const box = p.querySelector('table') ?? undefined;
       table(p, ['', 'X', 'Y', 'Z'], [['r (km)', ...s.r.map((x) => num(x, 10))], ['v (km/s)', ...s.v.map((x) => num(x, 10))]], { existing: box });
+      // The osculating ellipse: the same elements at true anomalies 0°…355°.
+      const ring = [];
+      for (let k = 0; k < 72; k++) ring.push((await toState({ a, e, i, raan, argp, nu: k * 5, gm: MU })).r);
+      const [ascending, descending] = await Promise.all([toState({ a, e, i, raan, argp, nu: (360 - argp) % 360, gm: MU }), toState({ a, e, i, raan, argp, nu: (540 - argp) % 360, gm: MU })]);
+      await view.draw((g) => {
+        const size = Math.max(...ring.map(v3.norm));
+        g.axes([0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], size * 1.18, ['X  J2000', 'Y', 'Z'], { frame: false });
+        g.line([ascending.r, descending.r], { color: 'muted', dash: true, width: 1.5 });
+        g.label(ascending.r, 'Ascending node', { color: 'muted', size: 11, weight: 500 });
+        g.line(ring, { color: 'accent', width: 2.5, close: true });
+        g.point(ring[0], { color: 'accent', size: 7, label: 'Perigee', labelColor: 'accent' });
+        g.line([[0, 0, 0], s.r], { color: 'text', alpha: 0.55, width: 1.5 });
+        g.arrow(s.r, v3.add(s.r, v3.scale(v3.unit(s.v), size * 0.32)), { color: 'cyan', width: 10 });
+        g.label(v3.add(s.r, v3.scale(v3.unit(s.v), size * 0.32)), `v  ${num(Math.hypot(...s.v), 5)} km/s`, { color: 'cyan' });
+        g.point(s.r, { color: 'sat', size: 10, label: `r  ${num(Math.hypot(...s.r), 6)} km`, labelOptions: { above: true } });
+        g.view({ normal: v3.cross(s.r, s.v) });
+      }, { frame: 'GCRF', epochMs: Date.parse('2026-10-01T00:00:00Z'), legend: [['accent', 'Osculating ellipse'], ['sat', 'State at u', 'dot'], ['cyan', 'Velocity'], ['muted', 'Line of nodes', 'dash']] });
       return 'An instantaneous conversion at the epoch: J2000 axes, μ = 398600.4418 km³/s², no propagation.';
     });
   }
