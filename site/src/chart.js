@@ -64,9 +64,10 @@ function legend(container, series) {
   return box;
 }
 
-// series: [{name, color, points: [[x, y]], markers, label}] with y > 0 on a
-// log axis. x: {min, max, ticks, format, title}. Returns nothing; re-renders
-// on resize.
+// series: [{name, color, points: [[x, y]], markers, label, dash}]. y: {min,
+// max, scale: 'log' (default, y > 0, metres) | 'linear', ticks, format};
+// x: {min, max, ticks, format, scale: 'linear' (default) | 'log'}. Returns
+// nothing; re-renders on resize.
 export function lineChart(container, { series, x, y = {}, empty = 'No data yet.' }) {
   const draw = () => {
     const live = series.filter((s) => s.points.length);
@@ -75,13 +76,17 @@ export function lineChart(container, { series, x, y = {}, empty = 'No data yet.'
     const key = legend(container, live);
     const f = frame(container, { left: 56, right: 92, top: key ? key.offsetHeight + 14 : 16, bottom: 34 });
     if (!live.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = empty; container.appendChild(e); return; }
-    const ys = live.flatMap((s) => s.points.map((p) => p[1])).filter((v) => v > 0 && Number.isFinite(v));
-    const yMin = y.min ?? 10 ** Math.floor(Math.log10(Math.min(...ys))), yMax = y.max ?? 10 ** Math.ceil(Math.log10(Math.max(...ys)));
-    const sx = linScale(x.min, x.max, f.x0, f.x1), sy = logScale(yMin, yMax, f.y0, f.y1);
+    const linear = y.scale === 'linear';
+    const ys = live.flatMap((s) => s.points.map((p) => p[1])).filter((v) => Number.isFinite(v) && (linear || v > 0));
+    const yMin = y.min ?? (linear ? Math.min(...ys) : 10 ** Math.floor(Math.log10(Math.min(...ys))));
+    const yMax = y.max ?? (linear ? Math.max(...ys) : 10 ** Math.ceil(Math.log10(Math.max(...ys))));
+    const sx = x.scale === 'log' ? logScale(x.min, x.max, f.x0, f.x1) : linScale(x.min, x.max, f.x0, f.x1);
+    const sy = linear ? linScale(yMin, yMax, f.y0, f.y1) : logScale(yMin, yMax, f.y0, f.y1);
+    const yLabel = y.format ?? decadeLabel, yValue = y.value ?? y.format ?? formatMeters;
     const axis = el('g', { class: 'axis' }, f.svg);
-    for (const v of decades(yMin, yMax)) {
+    for (const v of y.ticks ?? decades(yMin, yMax)) {
       el('line', { class: 'gridline', x1: f.x0, x2: f.x1, y1: sy(v), y2: sy(v) }, axis);
-      el('text', { x: f.x0 - 8, y: sy(v) + 4, 'text-anchor': 'end' }, axis).textContent = decadeLabel(v);
+      el('text', { x: f.x0 - 8, y: sy(v) + 4, 'text-anchor': 'end' }, axis).textContent = yLabel(v);
     }
     // Ticks that would collide are dropped, the last one kept.
     let lastTick = -Infinity;
@@ -97,8 +102,8 @@ export function lineChart(container, { series, x, y = {}, empty = 'No data yet.'
     const order = [...live].sort((a, b) => (a.color === COLORS.muted ? -1 : 0) - (b.color === COLORS.muted ? -1 : 0));
     const labels = [];
     for (const s of order) {
-      const d = s.points.filter((p) => p[1] > 0).map((p, i) => `${i ? 'L' : 'M'}${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join('');
-      el('path', { d, fill: 'none', stroke: s.color, 'stroke-width': s.width ?? 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, f.svg);
+      const d = s.points.filter((p) => linear || p[1] > 0).map((p, i) => `${i ? 'L' : 'M'}${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join('');
+      el('path', { d, fill: 'none', stroke: s.color, 'stroke-width': s.width ?? 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', ...(s.dash ? { 'stroke-dasharray': '4 4' } : {}) }, f.svg);
       if (s.markers) for (const p of s.points) el('circle', { cx: sx(p[0]), cy: sy(p[1]), r: 4, fill: s.color, stroke: 'var(--surface)', 'stroke-width': 2 }, f.svg);
       if (s.label) {
         const last = s.points.at(-1);
@@ -122,7 +127,7 @@ export function lineChart(container, { series, x, y = {}, empty = 'No data yet.'
       const px = ((event.clientX - box.left) / box.width) * f.width;
       const t = xs.reduce((best, v) => (Math.abs(sx(v) - px) < Math.abs(sx(best) - px) ? v : best), xs[0]);
       cross.setAttribute('x1', sx(t)); cross.setAttribute('x2', sx(t)); cross.setAttribute('visibility', 'visible');
-      const rows = live.map((s) => { const p = s.points.find((q) => q[0] === t); return p ? `<span class="key" style="background:${s.color}"></span>${s.name} <b>${formatMeters(p[1])}</b>` : null; }).filter(Boolean);
+      const rows = live.map((s) => { const p = s.points.find((q) => q[0] === t); return p ? `<span class="key" style="background:${s.color}"></span>${s.name} <b>${yValue(p[1])}</b>` : null; }).filter(Boolean);
       tip.innerHTML = `<div>${x.format ? x.format(t) : t}</div>${rows.join('<br>')}`;
       tip.style.left = `${(sx(t) / f.width) * 100}%`;
       tip.style.top = `${(f.y1 / f.height) * 100 + 8}%`;
