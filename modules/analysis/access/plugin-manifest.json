@@ -1,0 +1,108 @@
+{
+  "pluginId": "com.orbpro.access",
+  "name": "Access Analysis",
+  "version": "1.0.0",
+  "pluginFamily": "analysis",
+  "capabilities": [],
+  "externalInterfaces": [],
+  "invokeSurfaces": [
+    "direct",
+    "command"
+  ],
+  "runtimeTargets": [
+    "browser",
+    "wasmedge"
+  ],
+  "methods": [
+    {
+      "methodId": "compute_access_windows",
+      "displayName": "Compute Access Windows",
+      "inputPorts": [
+        {
+          "portId": "request",
+          "acceptedTypeSets": [
+            {
+              "setId": "analysis.access-window-request",
+              "allowedTypes": [
+                {
+                  "schemaName": "ACW.fbs",
+                  "fileIdentifier": "$ACW",
+                  "rootTypeName": "ACW",
+                  "wireFormat": "flatbuffer"
+                },
+                {
+                  "schemaName": "ACW.fbs",
+                  "fileIdentifier": "$ACW",
+                  "rootTypeName": "ACW",
+                  "wireFormat": "aligned-binary",
+                  "requiredAlignment": 8
+                }
+              ],
+              "description": "SDS ACW request envelope as FlatBuffer or aligned-binary frames."
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true,
+          "description": "SDS ACW access-window analysis requests."
+        }
+      ],
+      "outputPorts": [
+        {
+          "portId": "results",
+          "acceptedTypeSets": [
+            {
+              "setId": "analysis.access-window-result",
+              "allowedTypes": [
+                {
+                  "schemaName": "ACW.fbs",
+                  "fileIdentifier": "$ACW",
+                  "rootTypeName": "ACW",
+                  "wireFormat": "flatbuffer"
+                },
+                {
+                  "schemaName": "ACW.fbs",
+                  "fileIdentifier": "$ACW",
+                  "rootTypeName": "ACW",
+                  "wireFormat": "aligned-binary",
+                  "requiredAlignment": 8
+                }
+              ],
+              "description": "SDS ACW result envelope as FlatBuffer or aligned-binary frames."
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true,
+          "description": "SDS ACW access-window analysis results."
+        }
+      ],
+      "maxBatch": 1,
+      "drainPolicy": "drain-until-yield",
+      "description": "Computes access windows for an asset, target, and time span."
+    }
+  ],
+  "timers": [],
+  "protocols": [],
+  "schemasUsed": [
+    {
+      "schemaName": "ACW.fbs",
+      "fileIdentifier": "$ACW",
+      "rootTypeName": "ACW",
+      "wireFormat": "flatbuffer"
+    }
+  ],
+  "buildArtifacts": [
+    {
+      "artifactId": "access-runtime",
+      "kind": "wasm",
+      "path": "dist/isomorphic/module.wasm",
+      "target": "browser,wasmedge"
+    }
+  ],
+  "abiVersion": 1,
+  "sequentialJustification": {
+    "kind": "inherently-sequential-algorithm",
+    "detail": "Each access interval crossing depends on the preceding ordered trajectory sample and carries the open interval state into the next sample."
+  }
+}

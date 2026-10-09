@@ -8,14 +8,14 @@
   {
     "paper": "evidence-supported-aso-catalog",
     "section_id": "the-handoff-contract",
-    "title": "A TLE handed to a numerical propagator",
+    "title": "An OMM handed to a numerical propagator",
     "url": "models/evidence-supported-aso-catalog/the-handoff-contract.html"
   },
   {
     "paper": "evidence-supported-aso-catalog",
-    "section_id": "levels-of-measurement-of-tle-elements",
-    "title": "What one TLE digit is worth",
-    "url": "models/evidence-supported-aso-catalog/levels-of-measurement-of-tle-elements.html"
+    "section_id": "levels-of-measurement-of-omm-elements",
+    "title": "What one OMM digit is worth",
+    "url": "models/evidence-supported-aso-catalog/levels-of-measurement-of-omm-elements.html"
   },
   {
     "paper": "evidence-supported-aso-catalog",
@@ -43,15 +43,15 @@
   },
   {
     "paper": "evidence-supported-aso-catalog",
-    "section_id": "174-planned-experiments",
+    "section_id": "17-measured-propagation-evidence",
     "title": "E1, E2 and E3 results",
-    "url": "models/evidence-supported-aso-catalog/174-planned-experiments.html"
+    "url": "models/evidence-supported-aso-catalog/17-measured-propagation-evidence.html"
   },
   {
     "paper": "evidence-supported-aso-catalog",
-    "section_id": "175-evidence-baseline-and-reproduction",
+    "section_id": "174-evidence-baseline-and-reproduction",
     "title": "The binaries this page runs",
-    "url": "models/evidence-supported-aso-catalog/175-evidence-baseline-and-reproduction.html"
+    "url": "models/evidence-supported-aso-catalog/174-evidence-baseline-and-reproduction.html"
   },
   {
     "paper": "fast-conjunction-assessment",
@@ -124,5 +124,33 @@
     "section_id": "7-implementation",
     "title": "One seed, six networks",
     "url": "models/adversarial-security/7-implementation.html"
+  },
+  {
+    "paper": "evidence-supported-aso-catalog",
+    "section_id": "od-batch-fit",
+    "title": "A batch least-squares fit with its covariance",
+    "url": "models/evidence-supported-aso-catalog/od-batch-fit.html",
+    "section": "03 // Orbit Determination"
+  },
+  {
+    "paper": "evidence-supported-aso-catalog",
+    "section_id": "od-ekf-ukf",
+    "title": "EKF and UKF: covariance through the pass",
+    "url": "models/evidence-supported-aso-catalog/od-ekf-ukf.html",
+    "section": "03 // Orbit Determination"
+  },
+  {
+    "paper": "evidence-supported-aso-catalog",
+    "section_id": "od-association",
+    "title": "Associating observations with the catalog",
+    "url": "models/evidence-supported-aso-catalog/od-association.html",
+    "section": "03 // Orbit Determination"
+  },
+  {
+    "paper": "evidence-supported-aso-catalog",
+    "section_id": "od-conjunction",
+    "title": "A conjunction from fitted covariances",
+    "url": "models/evidence-supported-aso-catalog/od-conjunction.html",
+    "section": "03 // Orbit Determination"
   }
 ]
