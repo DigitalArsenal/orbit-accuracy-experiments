@@ -114,7 +114,9 @@ for (const p of providers) {
     if (both.length) {
       const ratio = (xs) => median(xs.map((s) => norm3(s.x.H))) / median(xs.map((s) => norm3(s.x.S)));
       const r = bootstrap(both, ratio);
-      m.h5 = { ...r, n: both.length, verdict: r.upper < 1 ? 'H closer' : r.lower > 1 ? 'S closer' : 'undecided' };
+      const objects = new Set(both.map((s) => s.object)).size;
+      // An object-cluster interval needs several objects; with fewer, the ratio is descriptive.
+      m.h5 = { ...r, n: both.length, objects, verdict: objects < 3 ? 'descriptive (fewer than 3 objects)' : r.upper < 1 ? 'H closer' : r.lower > 1 ? 'S closer' : 'undecided' };
     }
     // Our covariance against the difference from the operator (descriptive), all providers.
     for (const [prod, cov] of [['S', 'Sc3'], ['H', 'Hc3']]) {
