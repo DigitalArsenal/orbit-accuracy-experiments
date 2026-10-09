@@ -1,4 +1,4 @@
-// Section 5, the handoff contract: a TLE through analysis/epoch-state (SGP4
+// Section 5, the handoff contract: an OMM through analysis/epoch-state (SGP4
 // at zero elapsed time, TEME to GCRF, round trip checked), compared with
 // Vallado's verification state and an independent pyerfa rotation; then
 // propagator/hpop from that GCRF state.
@@ -15,7 +15,7 @@ const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
 export default async function run(ctx) {
   const vallado = await ctx.fetchJson('./data/tle/vallado-verification.json');
-  const p = panel(ctx.root, 'The TLE');
+  const p = panel(ctx.root, 'The OMM');
   const form = inputs(p, [{ id: 'case', label: 'Vallado verification case', type: 'select', value: 6251, wide: true,
     options: vallado.cases.map((c) => [c.satnum, `${String(c.satnum).padStart(5, '0')} · ${c.epochIso.slice(0, 10)} · ${num(c.MEAN_MOTION, 6)} rev/day`]) }], () => one());
   const tle = pre(p, '');

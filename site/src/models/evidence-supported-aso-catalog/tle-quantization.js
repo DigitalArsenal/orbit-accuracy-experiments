@@ -1,4 +1,4 @@
-// Section 5, levels of measurement: what one encoding increment of each TLE
+// Section 5, levels of measurement: what one encoding increment of each OMM
 // field does to the SGP4 state. Each field is bumped by its last printed
 // digit and every variant goes through analysis/epoch-state in one call; the
 // mean-motion increment, which only shows over time, also goes a day through
@@ -27,7 +27,7 @@ export default async function run(ctx) {
     options: vallado.cases.map((c) => [c.satnum, `${String(c.satnum).padStart(5, '0')} · ${num(c.MEAN_MOTION, 6)} rev/day · e ${c.ECCENTRICITY}`]) }], () => one());
   const out = panel(ctx.root, 'One increment of each field');
   const view = scene3d(ctx, { title: 'States one printed digit apart', caption: 'Each field’s neighbor, from the satellite, magnified' });
-  note(ctx.root, 'Encoding resolution, not total error: a TLE’s physical error is far larger. Directional fields wrap at 360°, so their differences are taken on the state, never on the angle.');
+  note(ctx.root, 'Encoding resolution, not total error: an OMM’s physical error is far larger. Directional fields wrap at 360°, so their differences are taken on the state, never on the angle.');
   const [epochState, hpop] = await Promise.all([ctx.module('analysis/epoch-state'), ctx.module('propagator/hpop')]);
 
   async function one() {

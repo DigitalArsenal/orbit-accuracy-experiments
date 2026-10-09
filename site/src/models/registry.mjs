@@ -13,10 +13,10 @@ export const MODELS = [
   // Evidence-Supported ASO Catalog
   { paper: 'evidence-supported-aso-catalog', heading: 'Vimpel osculating elements', model: 'osculating-elements', title: 'Osculating elements to a J2000 state',
     claim: 'Osculating elements convert to a Cartesian state at the same epoch: no propagation.', modules: ['foundation/orbits'] },
-  { paper: 'evidence-supported-aso-catalog', heading: 'The handoff contract', model: 'handoff', title: 'A TLE handed to a numerical propagator',
+  { paper: 'evidence-supported-aso-catalog', heading: 'The handoff contract', model: 'handoff', title: 'An OMM handed to a numerical propagator',
     claim: 'SGP4 at zero elapsed time, TEME to GCRF with a round-trip check, then HPOP from that state.', modules: ['analysis/epoch-state', 'propagator/hpop', 'foundation/time'] },
-  { paper: 'evidence-supported-aso-catalog', heading: 'Levels of measurement of TLE elements', model: 'tle-quantization', title: 'What one TLE digit is worth',
-    claim: 'One encoding increment of each TLE field moves the SGP4 state by a bounded amount: about 12 m for the angles.', modules: ['analysis/epoch-state', 'propagator/hpop'] },
+  { paper: 'evidence-supported-aso-catalog', heading: 'Levels of measurement of OMM elements', model: 'tle-quantization', title: 'What one OMM digit is worth',
+    claim: 'One encoding increment of each OMM field moves the SGP4 state by a bounded amount: about 12 m for the angles.', modules: ['analysis/epoch-state', 'propagator/hpop'] },
   { paper: 'evidence-supported-aso-catalog', heading: '16.2 Uncertainty estimation and propagation', model: 'ocm-covariance', title: 'OCM fields, and covariance through the STM',
     claim: 'P(t) = Φ P₀ Φᵀ: an initial covariance carried by HPOP’s state-transition matrix; the OCM is its carrier.', modules: ['files/orbit-products', 'foundation/frames', 'propagator/hpop'] },
   { paper: 'evidence-supported-aso-catalog', heading: '17.1 Agreement with Orekit', model: 'orekit', title: 'HPOP against Orekit 13.1',
@@ -25,9 +25,9 @@ export const MODELS = [
     claim: 'From a precise state, every modeled force: about 5 m after a day for the SLR spheres.', modules: ['propagator/hpop', 'foundation/time'] },
   { paper: 'evidence-supported-aso-catalog', heading: '17.3 Vector Covariance Message parity', model: 'vcm', title: 'VCM fields, read, propagated, written',
     claim: 'The adapter reads a VCM into a PRW request, HPOP carries its 7×7 covariance, and the adapter writes it back.', modules: ['analysis/vcm-adapter', 'propagator/hpop', 'files/orbit-products'] },
-  { paper: 'evidence-supported-aso-catalog', heading: '17.4 Planned experiments', model: 'experiments', title: 'E1, E2 and E3 results',
+  { paper: 'evidence-supported-aso-catalog', heading: '17 Measured propagation evidence', model: 'experiments', title: 'E1, E2 and E3 results',
     claim: 'Each experiment’s committed metrics, when its run is published.', modules: [] },
-  { paper: 'evidence-supported-aso-catalog', heading: '17.5 Evidence baseline and reproduction', model: 'baseline', title: 'The binaries this page runs',
+  { paper: 'evidence-supported-aso-catalog', heading: '17.4 Evidence baseline and reproduction', model: 'baseline', title: 'The binaries this page runs',
     claim: 'The HPOP binary the paper names is the one this site serves, byte for byte.', modules: ['propagator/hpop'] },
 
   // Fast All-vs-All Conjunction Screening
