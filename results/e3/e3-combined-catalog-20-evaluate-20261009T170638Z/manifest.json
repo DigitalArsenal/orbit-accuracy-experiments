@@ -1,0 +1,68 @@
+{
+ "run": "e3-combined-catalog-20-evaluate-20261009T170638Z",
+ "experiment": "e3-combined-catalog",
+ "step": "20-evaluate",
+ "command": [
+  "node",
+  "experiments/e3-combined-catalog/steps/20-evaluate.mjs",
+  "--train",
+  "e3-combined-catalog-10-score-train-20261009T162755Z",
+  "--test",
+  "e3-combined-catalog-10-score-test-20261009T162755Z",
+  "--inventory",
+  "e3-combined-catalog-05-inventory-20261009T162422Z"
+ ],
+ "args": {
+  "train": "e3-combined-catalog-10-score-train-20261009T162755Z",
+  "test": "e3-combined-catalog-10-score-test-20261009T162755Z",
+  "inventory": "e3-combined-catalog-05-inventory-20261009T162422Z"
+ },
+ "started": "2026-10-09T17:06:38.310Z",
+ "finished": "2026-10-09T17:07:02.991Z",
+ "config": {
+  "path": "experiments/e3-combined-catalog/config.json",
+  "sha256": "430e1a751abdc74edb7d498a8abf7e7896dce22fcca9495f934b65572944e0af",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "33fa844e95d830c01eccae460a5f579a3f05b0b2",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45",
+  "dirty": true
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   9.8271484375,
+   12.67041015625,
+   16.84033203125
+  ]
+ },
+ "inputs": {
+  "runs": {
+   "e3-combined-catalog-10-score-train-20261009T162755Z/manifest.json": "4a7ef56ad54347e3a38a67be1f899e3a1e7eed7bcb88952be0fdbee7c0fe5150",
+   "e3-combined-catalog-10-score-test-20261009T162755Z/manifest.json": "30f24cce4413ae8a7fa227f40e847702f8918bdf3e575b48f3c09ee20119b0bd"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T17:06:38.310Z",
+   "args": {
+    "train": "e3-combined-catalog-10-score-train-20261009T162755Z",
+    "test": "e3-combined-catalog-10-score-test-20261009T162755Z",
+    "inventory": "e3-combined-catalog-05-inventory-20261009T162422Z"
+   }
+  }
+ ],
+ "resamples": 2000
+}

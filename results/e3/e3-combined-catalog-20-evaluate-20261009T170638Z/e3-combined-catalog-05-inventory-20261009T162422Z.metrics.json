@@ -1,0 +1,72 @@
+{
+ "checks": {
+  "A0.1": {
+   "description": "largest position difference between C04 and finals2000A conversions of the same products",
+   "families": {
+    "S1C_OPER_AUX_POEORB": {
+     "products": 14,
+     "epochs": 130426,
+     "maxM": 0.026460261126387757,
+     "rmsM": 0.010037788190188263
+    },
+    "S1D_OPER_AUX_POEORB": {
+     "products": 14,
+     "epochs": 130605,
+     "maxM": 0.026449857937987174,
+     "rmsM": 0.010003698645488869
+    },
+    "SW_OPER_SP3ACOM": {
+     "products": 14,
+     "epochs": 120960,
+     "maxM": 0.025395286058450317,
+     "rmsM": 0.009549981577063892
+    },
+    "SW_OPER_SP3BCOM": {
+     "products": 14,
+     "epochs": 120960,
+     "maxM": 0.0256443572777621,
+     "rmsM": 0.009723523875638615
+    },
+    "SW_OPER_SP3CCOM": {
+     "products": 14,
+     "epochs": 120960,
+     "maxM": 0.02539537164608991,
+     "rmsM": 0.009546924493383705
+    },
+    "ilrsa.orb.": {
+     "products": 8,
+     "epochs": 22848,
+     "maxM": 0.0950585159691024,
+     "rmsM": 0.022525389393569108
+    }
+   },
+   "maxM": 0.0950585159691024,
+   "limitM": 0.1,
+   "pass": true
+  }
+ },
+ "truthObjects": 48,
+ "vimpel": {
+  "editions": {
+   "orbits.20260907.txt": {
+    "rows": 13808
+   },
+   "orbits.20260921.txt": {
+    "rows": 13889
+   }
+  },
+  "crosswalkRows": 986,
+  "crosswalkNoradIds": 978,
+  "truthObjectsInCrosswalk": []
+ },
+ "celestrak": [
+  {
+   "capture": "20261009T155123Z",
+   "requests": 18,
+   "captured": 0,
+   "failures": [
+    "fetch failed"
+   ]
+  }
+ ]
+}
