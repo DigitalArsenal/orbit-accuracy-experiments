@@ -340,7 +340,7 @@ async function runVcm(text) {
   $('vcm-notes').innerHTML = [
     `${report.geopotential} ${report.zonals}Z,${report.tesserals}T; drag ${report.drag} as Jacchia-Roberts; B = ${report.ballisticCoefficientM2Kg} m²/kg, carried as a dynamic parameter.`,
     `Covariance ${report.covarianceSize}×${report.covarianceSize}, scaled by max(1, WTD RMS)² = ${report.covarianceScale.toFixed(4)}; its mean-motion row read as dn/n, the reading that reproduces the printed sigmas of four SP messages within 1 %.`,
-    'The printed sigmas do not cover the B row. Read like the mean-motion row, as a fraction of B (the adapter’s default), its sigma is 4 % of B; read as printed in m²/kg, five times B, which a fit with a 40 m in-track sigma would hardly leave. Both run here.',
+    'The printed sigmas do not cover the B row. Read like the mean-motion row, as a fraction of B (the adapter’s default), its sigma is 4 % of B; read as printed in m²/kg, five times B. Against a precise orbit, an SP message for a GPS satellite supports the first reading: its sigmas are about twice the errors over a day, where the as-printed reading’s are 7 to 20 times. Both run here.',
   ].map((n) => `<li>${n}</li>`).join('');
   const last = (rows) => runs[rows].sigmas.at(-1).s;
   lineChart($('vcm-chart'), {

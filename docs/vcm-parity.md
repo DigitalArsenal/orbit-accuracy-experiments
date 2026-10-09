@@ -59,15 +59,19 @@ trip VCM → HPOP → VCM → read in SP's number format (1.8e-5).
 
 ## Remaining gaps
 
-1. **The units of the B, BDOT, AGOM and T rows of the covariance** are not
-   stated, and the printed sigmas (elements only) cannot settle them. The
-   adapter's `parameterRows` option reads them as printed (`absolute`, the
-   default: the sample's B sigma is 5.1 × B, and the in-track sigma reaches
-   43.9 km after a day) or the B and AGOM rows as fractions of their values
-   (`fractional`: 4.3 % of B, 493 m after a day). The second is the only one
-   a fit to 40 m in-track sigmas is likely to leave, but plausibility is not
-   evidence. A VCM for an object with a precise orbit (none is on hand) or
-   the format's interface document will settle it. The site runs both.
+1. **The units of the B, BDOT, AGOM and T rows of the covariance.** The
+   printed sigmas do not cover them. The adapter reads the B and AGOM rows as
+   fractions of their values by default, like the mean-motion row
+   (`parameterRows: "fractional"`; 1.5 % to 9.7 % of the value in the four
+   messages, against 0.38 to 5.6 times the value as printed). One measurement
+   supports it: the GPS message, propagated a day by HPOP against ESA's final
+   orbit for the satellite, has radial and in-track errors with RMS 0.46 and
+   0.64 of their sigmas when its AGOM row is a fraction; as printed, the
+   sigmas overstate the radial error about 20 times and the in-track error
+   about 7 times after half a day (in-track sigma 1.29 km at 24 h against an
+   error of 93 m). Cross-track, which the reading does not touch, is 1.27.
+   One satellite over one day; E2's covariance-realism tests are where it
+   gets calibrated. BDOT and T rows are still taken as printed.
 2. **Consider parameters** (C1, C2, …) have no PRW force and are dropped.
 3. **`$VCM` has no fields for B, BDOT, AGOM, T or the parameter rows of the
    covariance**; they travel in the PRW request and the adapter's report.
