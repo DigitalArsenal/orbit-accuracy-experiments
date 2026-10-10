@@ -1,0 +1,164 @@
+--- a/python_utils/astro_function_jit.py
++++ b/python_utils/astro_function_jit.py
+@@ -1723,19 +1723,30 @@
+     lst[lst<0] = lst[lst<0]+24;
+ 
+     # Spatial modes
+-    UhI = np.zeros((n,r));
+-    for j in range (0,r):
+-        UhI[:,j] = F_U[j]((lst,lat,alt));
++    # [claude-e8 perf patch] one RegularGridInterpolator call on the stacked mode values
++    # (same linear interpolation weights and arithmetic per mode as the r+1 separate calls)
++    st = _stacked_mode_interpolant(F_U, M_U, r)(np.stack((lst, lat, alt), axis=-1))
++    UhI = np.ascontiguousarray(st[:, :r])
+ 
+     # Mean density
+-    MI = M_U((lst,lat,alt));
++    MI = st[:, r]
+ 
+     # Density
+     rho = 10**(np.sum(UhI.T*romState,0)+MI.T);
+     rho[alt>maxAtmAlt] = 0;
+ #     set_trace()
+-    
++
+     return rho
++
++def _stacked_mode_interpolant(F_U, M_U, r):
++    # [claude-e8 perf patch] cached on the M_U object (lives as long as the interpolants it stacks)
++    st = getattr(M_U, '_e8_stacked', None)
++    if st is None or st[0] != r or st[1] is not F_U:
++        vals = np.stack([F_U[j].values for j in range(r)] + [M_U.values], axis=-1)
++        itp = RegularGridInterpolator(M_U.grid, vals, bounds_error=False, fill_value=None)
++        st = (r, F_U, itp)
++        M_U._e8_stacked = st
++    return st[2]
+ 
+ def getDensityROM_ml(pos,jdate,romState,r,decoder_model,maxAtmAlt,xdata_log10_mean,xdata_log10_std):
+     """
+@@ -1911,6 +1922,15 @@
+         nu = 0;
+     
+     return nu
++
++_KERNELS_LOADED = [False]
++
++def _ensure_kernels_loaded():
++    # [claude-e8 perf patch] one kclear+furnsh per process
++    if not _KERNELS_LOADED[0]:
++        spiceypy.kclear()
++        spiceypy.furnsh("Data/kernel.txt")
++        _KERNELS_LOADED[0] = True
+ 
+ def computeDerivative_PosVelBcRom(t,xp,AC,BC,SWinputs,r,noo,svs,F_U,M_U,maxAtmAlt,et0,jdate0,highFidelity,GM, Re, C_gravmodel, S_gravmodel, gravdegree, sF_gravmod):
+     """
+@@ -1944,8 +1964,9 @@
+     """
+     ## LOAD KERNELS, GRAVITY MODEL, EARTH ORIENTATION PARAMETERS AND SGP4
+     # Load SPICE kernels and ephemerides
+-    spiceypy.kclear()
+-    spiceypy.furnsh("Data/kernel.txt")
++    # [claude-e8 perf patch] load once per process instead of kclear+furnsh on every call
++    # (same kernel set, same results)
++    _ensure_kernels_loaded()
+ 
+     # Convert state from single column to multi-column matrix
+     x = np.reshape(xp,(svs*noo+r,-1), order='F');
+@@ -2500,12 +2521,16 @@
+     pool.terminate()
+ 
+ 
+-def UKF(X_est,Meas,time,P,RM,Q,nop,svs,r, AC, BC, SWinputs, F_U, M_U, maxAtmAlt, et0, jd0, highFidelity, GM, Re, C_gravmodel,S_gravmodel, gravdegree, sF_gravmod):
++def UKF(X_est,Meas,time,P,RM,Q,nop,svs,r, AC, BC, SWinputs, F_U, M_U, maxAtmAlt, et0, jd0, highFidelity, GM, Re, C_gravmodel,S_gravmodel, gravdegree, sF_gravmod, nproc=None, ckpt_path=None, stop_after=None):
+     """
+     Unscented Kalman Filter to propagate space object and predicted thermospheric mass density
+-    
++
+     Based on Matlab code by David Gondelach, Massachusetts Institute of Technology, 2020
+-    
++
++    [claude-e8 patch] nproc: worker count (default: original cpu_count()-1); one pool for the
++    whole run instead of one per step; ckpt_path: per-step checkpoint (X_est_temp, Pv, S, next
++    step) and resume; stop_after: stop after this many steps (timing runs). Filter arithmetic
++    unchanged.
+     """
+ 
+     # Unscented Filter Parameter
+@@ -2537,18 +2562,50 @@
+     EP_temp = np.ones((6,))
+     rr_temp, vv_temp = ep2pv_jit(EP_temp, mu)
+     EP_temp = pv2ep_jit(rr_temp, vv_temp, mu)
+-    
+-    for i in range (0,m-1): # (0,m-1):
+-        print(i, m-1)
++
++    # [claude-e8 patch] resume from checkpoint
++    i_start = 0
++    if ckpt_path is not None and os.path.exists(ckpt_path):
++        ck = np.load(ckpt_path)
++        X_est_temp[:, :] = ck['X_est_temp']
++        Pv[:, :] = ck['Pv']
++        S = ck['S']
++        i_start = int(ck['i_next'])
++        print('resume at step', i_start, flush=True)
++    if nproc is None:
++        nproc = multiprocessing.cpu_count()-1 or 1
++    pool = multiprocessing.Pool(processes=nproc)
++    n_done = 0
++    try:
++     for i in range (i_start,m-1): # (0,m-1):
++        if stop_after is not None and n_done >= stop_after:
++            break
++        t_step = timer.time()
++        print(i, m-1, flush=True)
+         sigv = np.real(np.hstack((eta*S, -eta*S)));
+         xx = np.hstack((X_est_temp[:,i].reshape(-1,1), (sigv+np.kron(X_est_temp[:,i].reshape(-1,1),np.ones((1,2*L))))))
+ 
+         # Time Update
+-        with poolcontext(processes=multiprocessing.cpu_count()-1 or 1) as pool:
++        if True:
+             Xp = pool.map(partial(propagateState_MeeBcRom, t0=time[i], tf=time[i+1], AC=AC, BC=BC, SWinputs=SWinputs, r=r, nop=nop, svs=svs, F_U=F_U, M_U=M_U,maxAtmAlt=maxAtmAlt,et0=et0,jdate0=jd0,highFidelity=highFidelity,GM=GM, Re=Re, C_gravmodel=C_gravmodel, S_gravmodel=S_gravmodel, gravdegree=gravdegree, sF_gravmod=sF_gravmod), xx.T)
+         Xp = np.squeeze(np.asarray(Xp).T)
+ 
++        # [claude-e8 fix] DESTO (MATLAB) propagates all sigma points in one call and applies the
++        # true-longitude wrap rule of propagateState_MeeBcRom using the NOMINAL sigma point for all
++        # of them. DESTOPy propagates one sigma point per call, so the rule was evaluated per point;
++        # when an object's L is near -pi/2 the sigma points were split by 2*pi and the filter
++        # diverged. Re-apply the rule with the nominal point's decision; points whose own decision
++        # already matches are left untouched (bit-identical to DESTOPy otherwise).
++        for k_obj in range(0, nop):
++            idxL = k_obj*svs+5
++            rawL = wrapToPi(np.array(Xp[idxL, :]))
++            ownW = (rawL > np.pi/2) | (rawL < -np.pi/2)
++            fixW = ownW != ownW[0]
++            if fixW.any():
++                Xp[idxL, fixW] = wrapTo2Pi(rawL[fixW]) if ownW[0] else rawL[fixW]
++                print('L wrap fixed: object index', k_obj, 'sigma points', int(fixW.sum()), flush=True)
+ 
++
+         X_est_temp[:,i+1] = np.real(Wm[0,0] * Xp[:,0] + Wm[0,1] * np.sum(Xp[:,1:],axis=1));
+ 
+         # Get Propagated Square Root
+@@ -2592,10 +2649,20 @@
+ 
+         HH[:,:,i+1] = (np.linalg.pinv(S@S.T)@KG@RM).T;
+         Pv[:,i+1] = np.diag(S@S.T).T;
+-        
+-        if i % 3 == 0: 
++
++        if i % 3 == 0:
+             np.savez('est_variable_temp_pod_AMOS_21Obj_22_2_1.npz',X_est_temp=X_est_temp,Pv=Pv)
+ 
++        # [claude-e8 patch] per-step checkpoint (atomic replace)
++        if ckpt_path is not None:
++            tmp = ckpt_path + '.tmp.npz'
++            np.savez(tmp, X_est_temp=X_est_temp, Pv=Pv, S=S, i_next=i+1)
++            os.replace(tmp, ckpt_path)
++        n_done += 1
++        print('step', i, 'wall_s %.1f' % (timer.time()-t_step), flush=True)
++    finally:
++        pool.terminate()
++
+     return X_est_temp,Pv
+ 
+ def UKF_ml(X_est,Meas,time,P,RM,Q,nop,svs,r, AC, BC, SWinputs, decoder_model, maxAtmAlt, et0, jd0, highFidelity, GM, Re, C_gravmodel,S_gravmodel, gravdegree, sF_gravmod,xdata_log10_mean,xdata_log10_std):

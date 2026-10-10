@@ -1,0 +1,95 @@
+{
+ "run": "e8-omm-density-10-estimate-analysis-validation-K4-global-0of1-20261010T002520Z",
+ "experiment": "e8-omm-density",
+ "step": "10-estimate-analysis-validation-K4-global-0of1",
+ "command": [
+  "node",
+  "experiments/e8-omm-density/steps/10-estimate.mjs",
+  "--window",
+  "validation",
+  "--pool",
+  "e8-omm-density-08-pool-validation-20261010T002339Z",
+  "--mode",
+  "analysis",
+  "--per-bin",
+  "4",
+  "--structure",
+  "global"
+ ],
+ "args": {
+  "window": "validation",
+  "pool": "e8-omm-density-08-pool-validation-20261010T002339Z",
+  "mode": "analysis",
+  "per-bin": "4",
+  "structure": "global",
+  "no-priors": false,
+  "shard": "0/1"
+ },
+ "started": "2026-10-10T00:25:20.098Z",
+ "finished": "2026-10-10T00:35:05.943Z",
+ "config": {
+  "path": "experiments/e8-omm-density/config.json",
+  "sha256": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "6d164388b7bad2af82d6e26dc1dfa70dd0ff8155",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "f258e625e68bc9900846931cb6846519d748848e",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/density-calibration",
+   "pluginId": "com.digitalarsenal.analysis.density-calibration",
+   "version": "0.2.0",
+   "wasmSha256": "cdc177378faaa2a69612eedfc0e3e8de116291f312eb6e5fddf81ff06351dac6",
+   "manifestSha256": "5d1b53b90da3df5db78a332298a271963d7674ae5ecc6459d12cf6e433938a79",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e8-omm-density-20261009",
+   "checkoutState": {
+    "commit": "f258e625e68bc9900846931cb6846519d748848e",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   73.76708984375,
+   79.28857421875,
+   80.826171875
+  ]
+ },
+ "inputs": {
+  "pool": {
+   "e8-omm-density-08-pool-validation-20261010T002339Z": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8"
+  },
+  "elementSetCache": {
+   "validation-0": "f026c8cbaec491c996117d9ddcf625ecc9a2579f76085e9dfbb62e55fa6becc6"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T00:25:20.098Z",
+   "args": {
+    "window": "validation",
+    "pool": "e8-omm-density-08-pool-validation-20261010T002339Z",
+    "mode": "analysis",
+    "per-bin": "4",
+    "structure": "global",
+    "no-priors": false,
+    "shard": "0/1"
+   }
+  }
+ ],
+ "fits": 1
+}
