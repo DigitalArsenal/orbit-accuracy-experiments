@@ -184,3 +184,56 @@ reported and it enters no covariance metric.
 during the run, and ESA publishes no multi-GNSS final for these weeks, so
 H4 is not tested for `cpf` (section 2 anticipated this). GPS and GLONASS
 truth (`ESA0OPSFIN`) were downloaded for every day of the window.
+
+**A4 (2026-10-09, after the first report, before any A4 product was
+computed). Full force, SES, Galileo truth, product names.** The owner's rule
+of 2026-10-09: "HPOP" names the full force model only. Section 3's H, and the
+first report's, is propagator/hpop's resident model (point mass and EGM2008
+20×20), so it is renamed and full-force products are added. Sections 1–7
+stand except as stated here; `config.json` `a4` holds the numbers.
+
+- **Products.** H is renamed **R** (the resident product), unchanged. Added:
+  - **H-epoch**: propagator/hpop with every force below, from the latest
+    element set's epoch state (`analysis/epoch-state`), Cd·A/m from B* in LEO
+    (`a4.bstar`), a nominal Cr·A/m per provider (`a4.physical`), and R's P₀
+    and Q (`hpop_arcs`) propagated with the full force model (none at GEO, as
+    in A2).
+  - **H-arc**: the same force model fitted (`analysis/estimation`
+    `fit_batch`, answered by propagator/hpop) to the epoch states of every
+    element set of the 3-day arc ending at the latest set (at least three),
+    each weighted by its regime's 6×6 RTN second moment in the [0, 0.5] d
+    stratum of `model-2026-08-scaled.json`. It solves for the state and
+    Cd·A/m in LEO (a priori from B*, σ 0.02 m²/kg) or Cr·A/m at MEO and GEO
+    (a priori nominal, σ half of it), with a priori state σ 100 km and
+    10 m/s. Its covariance is the formal one times max(1, reduced χ²),
+    propagated with the fitted parameters. A fit that does not converge gives
+    no H-arc sample; the count is reported.
+- **Issue time.** H-epoch and H-arc are made when their element set is
+  published (its `CREATION_DATE`, at or before T_c). The arc holds the sets
+  created by then. Earth orientation (IERS finals2000A to the day before,
+  the last row held) and NRLMSISE-00 space weather (GFZ Potsdam's observed
+  Kp, ap and F10.7 before the day of the newest NOAA SWPC RSGA issued by
+  then, that report's values and 3-day predictions, then held) are those
+  released by then, E7's operational rule. Like S and R, they depend only on
+  the object and its set.
+- **Forces.** E7's table: EGM2008 70×70 in LEO and 20×20 at MEO and GEO;
+  the Sun, Moon, Venus, Mars and Jupiter (DE440s); cannonball solar
+  radiation pressure; NRLMSISE-00 drag in LEO; IERS 2010 solid tides and
+  relativity. Added to it: Knocke Earth radiation pressure (15° elements, on
+  the same Cr·A/m) and FES2004 ocean tides to degree and order 30, carried by
+  SDS 1.243.0 PRW. The row is the object's gp-error-model regime. RK78,
+  tolerance 1e-11, step at most 300 s.
+- **Hypotheses.** H2 and H3 apply to each product with a covariance (S, R,
+  H-epoch, H-arc), and H4 to each of S, R, H-epoch and H-arc. H5 compares
+  each of R, H-epoch and H-arc with S.
+- **SES** is compared (provider `ses`). `files/orbit-products`
+  `normalize_ses_i11` evaluates each IESS-412 file every 300 s, Earth-fixed
+  on UTC. The positions are transcribed into SP3-c and converted like
+  Intelsat's. The cut-off is the capture time, and the satellite name maps
+  to a catalog number by `providers.ses.names`.
+- **Galileo truth** for `cpf` is GFZ's operational final orbit `GFZ0OPSFIN`
+  (GFZ ISDC), replacing CODE's (A3).
+- **Inputs.** Each provider of the first run reads exactly the files that
+  `data/e4/MANIFEST.json` lists. SES reads its 38 captured files.
+- **Wording.** Where this plan says TLE, read element set (OMM). The file
+  `planet_mc.tle` keeps the name Planet gives it.

@@ -1,11 +1,12 @@
-// Earth-fixed products (SP3, and SP3-c transcribed from ECF and CPF files)
-// to GCRF reference states: files/orbit-products `read_container`, then
+// Earth-fixed products (SP3, and SP3-c transcribed from ECF and CPF files
+// and from SES's eleven-parameter files as files/orbit-products evaluates
+// them) to GCRF reference states: files/orbit-products `read_container`, then
 // analysis/reference-states `reference_states` with IERS EOP rows from
-// data-source/eop-parser. Framing only; the reading, time scales and the
-// ITRS -> GCRS rotation are the modules'.
+// data-source/eop-parser. Framing only; the reading, the eleven-parameter
+// evaluation, time scales and the ITRS -> GCRS rotation are the modules'.
 import fs from 'node:fs';
 import * as fb from 'flatbuffers';
-import { NCD } from 'spacedatastandards.org/lib/js/NCD/main.js';
+import { NCD, ncdContainerFormat } from 'spacedatastandards.org/lib/js/NCD/main.js';
 import { EOP } from 'spacedatastandards.org/lib/js/EOP/main.js';
 import { OEM } from 'spacedatastandards.org/lib/js/OEM/main.js';
 import { loadModule, sha256 } from '../../harness/modules.mjs';
@@ -13,11 +14,14 @@ import { DAY_MS } from './common.mjs';
 
 const typeRef = (code) => ({ schemaName: `${code}.fbs`, fileIdentifier: `$${code}`, rootTypeName: code, wireFormat: 'flatbuffer' });
 
-// [u32 n][$NCD][container], as read_container takes it.
-function containerFrame(bytes) {
+// [u32 n][$NCD][container], as read_container takes it; with `provider`, a
+// PROVIDER_DEFINED container of that format name (normalize_ses_i11).
+function containerFrame(bytes, provider) {
   const b = new fb.Builder(1024);
   const sha = b.createString(sha256(bytes));
+  const name = provider ? b.createString(provider) : 0;
   NCD.startNCD(b);
+  if (provider) { NCD.addFormat(b, ncdContainerFormat.PROVIDER_DEFINED); NCD.addProviderDefinedFormatName(b, name); }
   NCD.addSourceByteLength(b, BigInt(bytes.length));
   NCD.addSourceSha256(b, sha);
   NCD.finishSizePrefixedNCDBuffer(b, NCD.endNCD(b));
@@ -54,6 +58,16 @@ export async function sp3Context(modules, run, eopFile) {
     at += 4 + n;
   }
   return {
+    // An SES eleven-parameter file evaluated by files/orbit-products
+    // normalize_ses_i11: {name (as the file names the satellite), comment,
+    // rows [{ms (UTC calendar ms), position [m] Earth-fixed]}]}.
+    async ses(bytes) {
+      const out = await reader.invoke('normalize_ses_i11', [containerFrame(bytes, 'ses-i11')]);
+      const frame = out.outputs.find((o) => o.portId === 'ephemeris');
+      const block = OEM.getSizePrefixedRootAsOEM(new fb.ByteBuffer(new Uint8Array(frame.payload))).unpack().EPHEMERIS_DATA_BLOCK[0];
+      const rows = block.EPHEMERIS_DATA_LINES.map((l) => ({ ms: Date.parse(/Z$/.test(l.EPOCH) ? l.EPOCH : `${l.EPOCH}Z`), position: [l.X, l.Y, l.Z].map((v) => v * 1000) }));
+      return { name: block.OBJECT.OBJECT_NAME, frame: block.REFERENCE_FRAME?.NAME, comment: block.COMMENT, rows };
+    },
     // sp3: bytes; identities: {product, source, statedSigmaM?, statedSigmaBasis?, satellites}.
     // Returns [{norad, bytes ($OEM, size-prefixed), block (decoded)}].
     async convert(sp3, identities) {

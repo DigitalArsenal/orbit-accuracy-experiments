@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// E4 step 05: truth for the GNSS providers (PLAN.md section 2): the final
-// orbits in config.truth for every day of its window, downloaded from the
-// public archives and converted to GCRF reference states by the modules.
+// E4 step 05: truth for the GNSS providers (PLAN.md section 2, amendment A4):
+// the final orbits in config.truth for every day of its window, downloaded
+// from the public archives and converted to GCRF reference states by the
+// modules.
 // Output (ignored): runs/cache/e4-truth/{products,reference/<product>/<norad>.oem,index.json},
 // the layout harness/reference.mjs reads.
 //
@@ -39,6 +40,8 @@ async function download(url, file) {
 
 const report = { products: {}, missing: [] };
 for (const [product, spec] of Object.entries(config.truth.products)) {
+  // A product an amendment replaced is not fetched (A4: GFZ0OPSFIN for CODE's).
+  if (spec.replacedBy) { report.products[product] = { replacedBy: spec.replacedBy }; continue; }
   report.products[product] = { days: 0, objects: 0 };
   let unreachable = false;
   for (let day = Date.parse(`${config.truth.from}T00:00:00Z`); day <= Date.parse(`${config.truth.to}T00:00:00Z`); day += DAY_MS) {

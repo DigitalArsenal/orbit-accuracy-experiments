@@ -105,6 +105,25 @@
         "url": "https://my.intelsat.com/ephemeris/public"
       }
     },
+    "ses": {
+      "format": "ses-i11",
+      "frame": "ITRF",
+      "cutoff": "capture",
+      "addedBy": "A4",
+      "statedSigmaM": 100,
+      "statedSigmaBasis": "not stated by the operator; a placeholder the converter requires, used in no metric",
+      "select": {
+        "file": "every-distinct"
+      },
+      "names": {
+        "match": "the satellite the file names (files/orbit-products normalize_ses_i11 reports it) and GP OBJECT_NAME without a parenthesised suffix, compared in upper case with spaces and hyphens removed, payloads only (no DEB, no R/B); ambiguous or absent names are excluded and listed"
+      },
+      "terms": {
+        "redistribute": false,
+        "text": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+        "url": "https://www.ses.com/our-coverage/ephemeris"
+      }
+    },
     "gps-precise": {
       "format": "sp3",
       "frame": "ITRF",
@@ -161,7 +180,8 @@
       "frame": "ITRF",
       "cutoff": "stated",
       "systems": ["E"],
-      "truth": "COD0MGXFIN",
+      "truth": "GFZ0OPSFIN",
+      "truthBeforeA4": "COD0MGXFIN",
       "statedSigmaM": 1,
       "statedSigmaBasis": "CPF prediction; not stated in the file; a placeholder the converter requires, used in no metric",
       "select": {
@@ -176,7 +196,6 @@
   },
   "notCompared": {
     "eutelsat-oneweb": "LTEF: no module evaluates the format",
-    "ses": "IESS-412 eleven-parameter ephemeris: no module evaluates it",
     "telesat": "box-centre longitude and latitude, not a state ephemeris",
     "eumetsat": "two-line element sets only; no ephemeris and no truth on hand",
     "space-track": "credentialed; excluded",
@@ -195,7 +214,13 @@
       "COD0MGXFIN": {
         "url": "http://ftp.aiub.unibe.ch/CODE_MGEX/CODE/{yyyy}/COD0MGXFIN_{yyyyddd}0000_01D_05M_ORB.SP3.gz",
         "systems": ["E"],
-        "note": "ESA publishes no ESA0MGNFIN for these weeks; if CODE's server is unreachable, H4 is not tested for cpf"
+        "note": "ESA publishes no ESA0MGNFIN for these weeks; if CODE's server is unreachable, H4 is not tested for cpf",
+        "replacedBy": "GFZ0OPSFIN (amendment A4)"
+      },
+      "GFZ0OPSFIN": {
+        "url": "https://isdc-data.gfz.de/gnss/products/final/w{week}/GFZ0OPSFIN_{yyyyddd}0000_01D_15M_ORB.SP3.gz",
+        "systems": ["E"],
+        "note": "GFZ's operational final orbits (GFZ ISDC), with Galileo; amendment A4"
       }
     }
   },
@@ -235,5 +260,75 @@
   "publish": {
     "repositoryMaxCompressedBytes": 1048576,
     "repositoryBudgetBytes": 200000000
+  },
+  "a4": {
+    "decided": "2026-10-09, amendment A4, after the first report and before any A4 product was computed",
+    "inputs": {
+      "operatorFiles": "data/e4/MANIFEST.json",
+      "operatorFilesNote": "Every provider of the first run reads exactly the files its manifest lists (by SHA-256); ses reads every distinct captured file.",
+      "kernel": {
+        "path": "runs/cache/de440s.bsp",
+        "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+        "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+      },
+      "gfzKp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+      "swpcRsga": ["/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA"]
+    },
+    "products": {
+      "S": "SGP4 from the latest element set (unchanged)",
+      "R": "the resident product, called H before A4 (unchanged): the set's epoch state propagated by propagator/hpop's resident model (point mass and EGM2008 20x20), P0 and Q from the 2026-08 HPOP covariance model",
+      "H-epoch": "every force below from the set's epoch state; Cd*A/m from B* in LEO, the nominal Cr*A/m; R's P0 and Q propagated with the full force model",
+      "H-arc": "the same force model fitted to the epoch states of the 3-day arc ending at the set (analysis/estimation fit_batch); its covariance propagated with the fitted parameters",
+      "P": "Planet only: SGP4 from Planet's own published element set (unchanged)"
+    },
+    "issue": "H-epoch and H-arc are made when their element set is published (its CREATION_DATE, at or before the cut-off): the arc holds the sets created by then, and the Earth orientation and space weather are those released by then. Like S and R they depend only on the object and the set.",
+    "forces": {
+      "LEO": { "degree": 70, "order": 70, "thirdBodies": [10, 301, 2, 4, 5], "drag": true, "atmosphere": "NRLMSISE00", "solidTides": true, "oceanTidesDegree": 30, "earthRadiation": true, "earthRadiationResolutionDeg": 15, "relativity": "IERS_2010" },
+      "MEO": { "degree": 20, "order": 20, "thirdBodies": [10, 301, 2, 4, 5], "drag": false, "solidTides": true, "oceanTidesDegree": 30, "earthRadiation": true, "earthRadiationResolutionDeg": 15, "relativity": "IERS_2010" },
+      "GEO": { "degree": 20, "order": 20, "thirdBodies": [10, 301, 2, 4, 5], "drag": false, "solidTides": true, "oceanTidesDegree": 30, "earthRadiation": true, "earthRadiationResolutionDeg": 15, "relativity": "IERS_2010" }
+    },
+    "forcesNote": "E7's table (EGM2008 70x70 in LEO, 20x20 at GNSS altitudes; Sun, Moon, Venus, Mars and Jupiter from DE440s; cannonball solar radiation pressure; NRLMSISE-00 drag in LEO; IERS 2010 solid tides and relativity) plus Knocke Earth radiation pressure (15 degree elements, on the same Cr*A/m) and FES2004 ocean tides to degree and order 30 (SDS 1.243.0 PRW). The table row is the object's gp-error-model regime (LEO, MEO or GEO).",
+    "integrator": { "tolerance": 1e-11, "maxStep": 300 },
+    "integratorNote": "RK78. Against 1e-12 a 3-day LEO arc moves by about 2 m (1e-10: 21 m); MEO and GEO steps are set by the 300 s maximum.",
+    "bstar": {
+      "toCdAreaOverMass": 12.741621,
+      "note": "Cd*A/m = 2 B* / (rho0 R_E), B* in 1/earth radii, rho0 = 2.461e-8 kg/m^3 (E7); a negative B* is taken as 0"
+    },
+    "physical": {
+      "note": "Nominal, not fitted: Cr*A/m (m^2/kg) for solar and Earth radiation pressure from a mass, a mean Sun-facing area and Cr, in round numbers from the operators' and agencies' descriptions. H-arc fits Cr*A/m at MEO and GEO (this is its a priori) and Cd*A/m in LEO.",
+      "cr": 1.3,
+      "classes": {
+        "starlink": { "massKg": 800, "areaM2": 105, "source": "Starlink V2 Mini: about 800 kg; two solar arrays of about 52.5 m^2 each (SpaceX)" },
+        "iss": { "massKg": 420000, "areaM2": 2500, "source": "ISS: 419,725 kg; solar arrays about 2,500 m^2 (NASA)" },
+        "css": { "massKg": 90000, "areaM2": 700, "source": "Tiangong: three modules of about 23 t each with visiting craft; arrays about 700 m^2 (CMSE)" },
+        "planet": { "massKg": 5, "areaM2": 0.15, "source": "SuperDove: a 3U CubeSat of about 5 kg with deployed panels (Planet)" },
+        "geo": { "massKg": 3000, "areaM2": 50, "source": "a geostationary communications satellite in orbit: about 3 t, arrays and bus about 50 m^2" },
+        "gnss": { "massKg": 1500, "areaM2": 20, "source": "GPS and GLONASS: E7's GPS value" },
+        "galileo": { "massKg": 730, "areaM2": 13, "source": "Galileo FOC: about 730 kg; arrays and bus about 13 m^2 (ESA)" },
+        "swarm": { "massKg": 450, "areaM2": 4, "source": "Swarm: E7's value (ESA)" },
+        "cryosat2": { "massKg": 720, "areaM2": 10, "source": "CryoSat-2: 720 kg; arrays on the roof and one side (ESA)" }
+      },
+      "byProvider": { "spacex-starlink": "starlink", "iss": "iss", "css-tiangong": "css", "planet": "planet", "intelsat": "geo", "ses": "geo", "gps-precise": "gnss", "glonass-precise": "gnss", "esa-pod": "gnss", "cpf": "galileo" },
+      "byObject": { "39452": "swarm", "36508": "cryosat2" }
+    },
+    "fit": {
+      "spanDays": 3,
+      "minimumSets": 3,
+      "weights": "each epoch state weighted by the 6x6 RTN second moment (clipped covariance plus the clipped mean's outer product) of its regime's [0, 0.5] d stratum in model-2026-08-scaled.json",
+      "aprioriStateSigma": [100000, 100000, 100000, 10, 10, 10],
+      "parameters": {
+        "LEO": { "kind": "DRAG_AREA_OVER_MASS", "sigma": 0.02, "aprioriValue": "Cd*A/m from B*" },
+        "MEO": { "kind": "SRP_AREA_OVER_MASS", "relativeSigma": 0.5, "aprioriValue": "the nominal Cr*A/m" },
+        "GEO": { "kind": "SRP_AREA_OVER_MASS", "relativeSigma": 0.5, "aprioriValue": "the nominal Cr*A/m" }
+      },
+      "maximumIterations": 20,
+      "correctionTolerance": 0.001,
+      "sigmaEditThreshold": 0,
+      "covariance": "the formal covariance times max(1, reduced chi-square), propagated with the fitted parameters and no process noise; a fit that does not converge gives no H-arc"
+    },
+    "drivers": {
+      "eopLatencyDays": 1,
+      "note": "Released at the issue time (E7's operational rule): IERS finals2000A rows to the day before, the last one held; NRLMSISE-00 space weather from GFZ Potsdam's observed Kp, ap and F10.7 before the day of the newest NOAA SWPC RSGA issued by then, that report's values and 3-day predictions, then the third day held."
+    }
   }
 }

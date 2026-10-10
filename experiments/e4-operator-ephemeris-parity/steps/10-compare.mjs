@@ -1,12 +1,14 @@
 #!/usr/bin/env node
-// E4 step 10: one provider's comparison (PLAN.md section 4). For each
-// operator file and object: the operator's GCRF states at the horizons, the
-// element set at the cut-off, product S (SGP4) and H (HPOP resident with
-// covariance), their RTN differences from the operator, and, where truth
-// exists, every one of them against truth. Rows go to runs/<id>/rows.jsonl.gz
+// E4 step 10: one provider's comparison (PLAN.md section 4, amendment A4).
+// For each operator file and object: the operator's GCRF states at the
+// horizons, the element set at the cut-off, products S (SGP4), R (the
+// resident product), H-epoch and H-arc (full force), their RTN differences
+// from the operator, and, where truth exists, every one of them against
+// truth. R, H-epoch and H-arc are made once per object and element set, for
+// every epoch any file scores with that set. Rows go to runs/<id>/rows.jsonl.gz
 // (derived from element sets: never committed).
 //
-//   node experiments/e4-operator-ephemeris-parity/steps/10-compare.mjs --provider spacex-starlink [--limit N]
+//   node experiments/e4-operator-ephemeris-parity/steps/10-compare.mjs --provider spacex-starlink [--shard 0/6] [--resume RUN_ID] [--limit N]
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -23,11 +25,12 @@ import { gnssIdentities, sp3Context, sp3Satellites } from '../sp3.mjs';
 import { epochMs, productContext, readSets, setAt } from '../products.mjs';
 
 assertFrozen();
-const { values, modules, archive, inputs, truth: truthDir } = cli({ limit: { type: 'string' } });
+const { values, modules, archive, inputs, truth: truthDir } = cli({ limit: { type: 'string' }, shard: { type: 'string' }, resume: { type: 'string' } });
 const provider = values.provider;
 const spec = config.providers[provider];
 if (!spec) throw new Error(`--provider: one of ${Object.keys(config.providers).join(', ')}`);
-const run = startRun({ experiment: config.experiment, step: `10-compare-${provider}`, configPath, modulesDir: modules, args: values });
+const [shard, shards] = (values.shard ?? '0/1').split('/').map(Number);
+const run = startRun({ experiment: config.experiment, step: `10-compare-${provider}${shards > 1 ? `-s${shard}of${shards}` : ''}`, configPath, modulesDir: modules, args: values, resume: values.resume });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 const record = JSON.parse(fs.readFileSync(path.join(inputs, provider, 'inputs.json'), 'utf8'));
 const iso = (ms) => new Date(ms).toISOString();
@@ -99,17 +102,17 @@ async function cases() {
     }
   } else if (spec.format === 'planet-states') {
     for (const f of files) {
-      const tles = record.files.filter((t) => t.role === 'operator-tle' && t.captured <= f.captured).sort((a, b) => a.captured.localeCompare(b.captured)).at(-1);
-      const tle = tles ? readTle(readInput(tles).toString('latin1')) : [];
-      const byHwid = new Map(tle.map((t) => [t.hwid, t]));
+      const sets = record.files.filter((t) => t.role === 'operator-tle' && t.captured <= f.captured).sort((a, b) => a.captured.localeCompare(b.captured)).at(-1);
+      const operatorSets = sets ? readTle(readInput(sets).toString('latin1')) : [];
+      const byHwid = new Map(operatorSets.map((t) => [t.hwid, t]));
       for (const s of readPlanetStates(readInput(f).toString('latin1'))) {
         const t = byHwid.get(s.hwid);
-        if (!t) { out.push({ file: f.file, hwid: s.hwid, skipped: 'no TLE names this HWID' }); continue; }
+        if (!t) { out.push({ file: f.file, hwid: s.hwid, skipped: 'no element set names this HWID' }); continue; }
         const epoch = `${(await convertIso(ctx.modules['foundation/time'], s.epochTT.replace('Z', ''), 'TT', 'UTC')).replace(/Z?$/, '')}Z`;
         const at = Date.parse(epoch);
         out.push({ file: f.file, hwid: s.hwid, norad: t.norad, tc: f.captured, notAfter: iso(at), kind: 'at-epoch',
           states: [{ h: 'at-epoch', epoch: iso(at), state: await toGcrf(frames, spec.frame, iso(at), s.state) }],
-          operatorTle: t.epochMs <= at ? { norad: t.norad, epoch: t.epoch, elements: t.elements, file: tles.file } : null });
+          operatorSet: t.epochMs <= at ? { norad: t.norad, epoch: t.epoch, elements: t.elements, file: sets.file } : null });
       }
     }
   } else if (spec.format === 'intelsat-ecf') {
@@ -125,6 +128,20 @@ async function cases() {
       const blocks = await (await sp3Ctx()).convert(text, { product: f.file, source: f.url, statedSigmaM: spec.statedSigmaM, statedSigmaBasis: spec.statedSigmaBasis,
         satellites: { L01: { norad, objectId: '', name: parsed.title } } });
       out.push(...blockCases(f, blocks, () => tc, 'forecast'));
+    }
+  } else if (spec.format === 'ses-i11') {
+    // A4: the eleven-parameter model evaluated by files/orbit-products, its
+    // Earth-fixed positions transcribed into SP3-c like Intelsat's.
+    const names = sesNames();
+    for (const f of files) {
+      let ses;
+      try { ses = await (await sp3Ctx()).ses(readInput(f)); } catch (error) { out.push({ file: f.file, skipped: `normalize_ses_i11 refused the file: ${error.message.slice(0, 200)}` }); continue; }
+      const norad = names.resolve(ses.name);
+      if (!norad) { out.push({ file: f.file, token: ses.name, skipped: `no unique catalog name for ${names.key(ses.name)}` }); continue; }
+      const text = sp3Text('L01', ses.rows, 'UTC', [`SES I11 ${ses.name} EVALUATED BY ORBIT-PRODUCTS, KM, UTC`, f.url]);
+      const blocks = await (await sp3Ctx()).convert(text, { product: f.file, source: f.url, statedSigmaM: spec.statedSigmaM, statedSigmaBasis: spec.statedSigmaBasis,
+        satellites: { L01: { norad, objectId: '', name: ses.name } } });
+      out.push(...blockCases(f, blocks, () => Date.parse(f.captured), 'forecast'));
     }
   } else if (spec.format === 'cpf') {
     for (const f of files) {
@@ -154,8 +171,15 @@ async function cases() {
   return out;
 }
 
-// Intelsat file token -> NORAD by catalog name (config.providers.intelsat.names).
+// Catalog names over the files' window: norad -> the latest OBJECT_NAME.
 let gpNames = null;
+function catalogNames(days) {
+  const named = readSets(archive, iso(Date.parse(`${days[0]}T00:00:00Z`) - config.elementSets.lookbackDays * DAY_MS).slice(0, 10), days.at(-1), null, null);
+  return new Map([...named].map(([n, l]) => [n, l.sort((a, b) => a.creationDate.localeCompare(b.creationDate)).at(-1).objectName]));
+}
+const payload = (name) => !/\bDEB\b|R\/B/.test(name);
+
+// Intelsat file token -> NORAD by catalog name (config.providers.intelsat.names).
 function intelsatNames() {
   const rule = spec.names;
   const target = (token) => {
@@ -169,28 +193,46 @@ function intelsatNames() {
     target,
     resolve(token) {
       const want = target(token);
-      const hits = [...gpNames].filter(([, name]) => name.replace(/\s*\(.*$/, '').trim().toUpperCase() === want && !/\bDEB\b|R\/B/.test(name)).map(([n]) => n);
+      const hits = [...gpNames].filter(([, name]) => name.replace(/\s*\(.*$/, '').trim().toUpperCase() === want && payload(name)).map(([n]) => n);
+      return hits.length === 1 ? hits[0] : null;
+    },
+  };
+}
+
+// SES satellite name -> NORAD (config.providers.ses.names): upper case,
+// without a parenthesised suffix, spaces and hyphens removed.
+function sesNames() {
+  const key = (name) => name.replace(/\s*\(.*$/, '').toUpperCase().replace(/[\s-]+/g, '');
+  return {
+    key,
+    resolve(name) {
+      const want = key(name);
+      const hits = [...gpNames].filter(([, n]) => key(n) === want && payload(n)).map(([n]) => n);
       return hits.length === 1 ? hits[0] : null;
     },
   };
 }
 
 // ── run ──
-// Intelsat names resolve against the catalog's object names over the files' window.
-if (spec.format === 'intelsat-ecf') {
-  const stamps = record.files.map((f) => /_(\d{8})_\d{6}\.txt$/.exec(f.file)[1]).map((d) => `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6)}`).sort();
-  const named = readSets(archive, iso(Date.parse(`${stamps[0]}T00:00:00Z`) - config.elementSets.lookbackDays * DAY_MS).slice(0, 10), stamps.at(-1), null, null);
-  gpNames = new Map([...named].map(([n, l]) => [n, l.sort((a, b) => a.creationDate.localeCompare(b.creationDate)).at(-1).objectName]));
-}
+// Intelsat and SES names resolve against the catalog's object names over the files' window.
+if (spec.format === 'intelsat-ecf') gpNames = catalogNames(record.files.map((f) => /_(\d{8})_\d{6}\.txt$/.exec(f.file)[1]).map((d) => `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6)}`).sort());
+if (spec.format === 'ses-i11') gpNames = catalogNames(record.files.map((f) => f.captured.slice(0, 10)).sort());
 const all = await cases();
 let list = all.filter((c) => !c.skipped && c.states?.length);
 if (values.limit) list = list.slice(0, Number(values.limit));
 log(`${all.length} cases (${all.filter((c) => c.skipped).length} skipped, ${all.filter((c) => !c.skipped && !c.states?.length).length} without a horizon in span), ${list.length} compared`);
 
-// Element sets for every case's cut-off.
+// Element sets for every case's cut-off (the first run's window), and the
+// days before it that H-arc's arcs reach back to (A4).
 const tcs = list.map((c) => Date.parse(c.tc));
 const from = iso(Math.min(...tcs) - config.elementSets.lookbackDays * DAY_MS).slice(0, 10), to = iso(Math.max(...tcs)).slice(0, 10);
-const sets = readSets(archive, from, to, spec.format === 'intelsat-ecf' ? null : new Set(list.map((c) => c.norad)), run);
+const norads = new Set(list.map((c) => c.norad));
+const sets = readSets(archive, from, to, norads, run);
+const before = readSets(archive, iso(Date.parse(`${from}T00:00:00Z`) - (config.a4.fit.spanDays + 1) * DAY_MS).slice(0, 10), iso(Date.parse(`${from}T00:00:00Z`) - DAY_MS).slice(0, 10), norads, run);
+const arcPool = new Map([...norads].map((n) => {
+  const byId = new Map([...(before.get(n) ?? []), ...(sets.get(n) ?? [])].map((s) => [s.gpId, s]));
+  return [n, [...byId.values()]];
+}));
 
 // Truth for the case's objects and horizons, when the provider has it.
 let truthIndex = null;
@@ -208,59 +250,105 @@ function truthStates(norad, epochs) {
   return out;
 }
 
+// Cases by object and element set; this shard's groups.
 const rowsFile = path.join(run.dir, 'rows.jsonl');
-fs.writeFileSync(rowsFile, '');
-const counts = { cases: all.length, skipped: all.filter((c) => c.skipped).map((c) => ({ file: c.file, token: c.token, hwid: c.hwid, reason: c.skipped })), compared: 0, withoutSet: 0, hpopUnavailable: {} };
-let done = 0;
+const done = new Set(fs.existsSync(rowsFile) ? fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).group) : []);
+if (!fs.existsSync(rowsFile)) fs.writeFileSync(rowsFile, '');
+const counts = { cases: all.length, skipped: all.filter((c) => c.skipped).map((c) => ({ file: c.file, token: c.token, hwid: c.hwid, reason: c.skipped })), compared: 0, withoutSet: 0, groups: 0, reasons: {} };
+const groups = new Map();
 for (const c of list) {
   const set = setAt(sets.get(c.norad), Date.parse(c.tc), c.notAfter ? Date.parse(c.notAfter) : Date.parse(c.tc));
-  const row = { provider, file: c.file, norad: c.norad, hwid: c.hwid, tc: c.tc, kind: c.kind };
-  if (!set) { ++counts.withoutSet; fs.appendFileSync(rowsFile, `${JSON.stringify({ ...row, skipped: 'no element set at the cut-off' })}\n`); continue; }
-  Object.assign(row, { setEpoch: set.epoch, setCreated: set.creationDate, setAgeAtCutoffDays: (Date.parse(c.tc) - epochMs(set.epoch)) / DAY_MS });
-  const S = await ctx.sgp4Errors(set, c.norad, c.states);
-  const H = await ctx.hpop(set, c.norad, c.states);
-  if (H.reason) counts.hpopUnavailable[H.reason] = (counts.hpopUnavailable[H.reason] ?? 0) + 1;
-  const P = c.operatorTle ? await ctx.sgp4Errors(c.operatorTle, c.norad, c.states) : null;
-  const truth = truthStates(c.norad, c.states.map((s) => Date.parse(s.epoch)));
-  const truthList = c.states.filter((s) => truth.has(Date.parse(s.epoch))).map((s) => ({ epoch: s.epoch, state: truth.get(Date.parse(s.epoch)) }));
-  const ST = truthList.length ? await ctx.sgp4Errors(set, c.norad, truthList) : [];
-  row.regime = H.regime ?? null;
-  row.horizons = [];
-  for (let k = 0; k < c.states.length; ++k) {
-    const s = c.states[k], out = { h: s.h, epoch: s.epoch };
-    if (S[k]) {
-      out.S = S[k].e;
-      out.ageDays = S[k].ageDays;
-      const cov = ctx.sgp4Covariance(S[k].regimeIndex, S[k].ageDays);
-      if (cov) { out.Sc3 = cov.c3; out.Sregime = cov.regime; }
+  const key = set ? `${c.norad}|${set.gpId}` : `${c.norad}|none`;
+  if (!groups.has(key)) groups.set(key, { key, norad: c.norad, set, cases: [] });
+  groups.get(key).cases.push(c);
+}
+const order = [...groups.values()].sort((a, b) => a.norad - b.norad || (a.set && b.set ? epochMs(a.set.epoch) - epochMs(b.set.epoch) : a.set ? 1 : -1));
+const mine = order.filter((_, i) => i % shards === shard);
+log(`${groups.size} object-set groups; shard ${shard}/${shards}: ${mine.length}${done.size ? `, ${done.size} done before` : ''}`);
+const note = (reason) => { if (reason) counts.reasons[reason] = (counts.reasons[reason] ?? 0) + 1; };
+
+let processed = 0;
+const started = Date.now();
+for (const g of mine) {
+  if (done.has(g.key)) continue;
+  const rows = [];
+  if (!g.set) {
+    for (const c of g.cases) rows.push({ group: g.key, provider, file: c.file, norad: c.norad, hwid: c.hwid, tc: c.tc, kind: c.kind, skipped: 'no element set at the cut-off' });
+  } else {
+    // R, H-epoch and H-arc at the union of the group's epochs.
+    const union = new Map();
+    for (const c of g.cases) for (const s of c.states) if (!union.has(s.epoch)) union.set(s.epoch, { epoch: s.epoch, state: s.state });
+    const epochs = [...union.values()].sort((a, b) => Date.parse(a.epoch) - Date.parse(b.epoch));
+    let products;
+    try {
+      products = await ctx.setProducts(g.set, g.norad, provider, arcPool.get(g.norad), epochs);
+    } catch (error) {
+      products = { regime: null, forceRegime: null, R: new Map(), He: new Map(), Ha: new Map(), info: { error: String(error.message).slice(0, 300) } };
     }
-    if (H.samples?.[k]) {
-      const d = await ctx.rtnDifference(s.epoch, H.samples[k].state, s.state, s.state, H.samples[k].covariance);
-      out.H = d.e;
-      if (d.c3) out.Hc3 = d.c3;
+    const info = products.info;
+    for (const k of ['reason', 'rCovariance', 'fullForce', 'hEpochError', 'hArc', 'hArcError', 'error']) note(info[k] ? `${k}: ${String(info[k]).replace(/\d+(\.\d+)?/g, 'n')}` : null);
+    for (const c of g.cases) {
+      const set = g.set;
+      const row = { group: g.key, provider, file: c.file, norad: c.norad, hwid: c.hwid, tc: c.tc, kind: c.kind,
+        setEpoch: set.epoch, setCreated: set.creationDate, setAgeAtCutoffDays: (Date.parse(c.tc) - epochMs(set.epoch)) / DAY_MS,
+        regime: products.regime, forceRegime: products.forceRegime, h: info };
+      const S = await ctx.sgp4Errors(set, c.norad, c.states);
+      const P = c.operatorSet ? await ctx.sgp4Errors(c.operatorSet, c.norad, c.states) : null;
+      const truth = truthStates(c.norad, c.states.map((s) => Date.parse(s.epoch)));
+      const truthList = c.states.filter((s) => truth.has(Date.parse(s.epoch))).map((s) => ({ epoch: s.epoch, state: truth.get(Date.parse(s.epoch)) }));
+      const ST = truthList.length ? await ctx.sgp4Errors(set, c.norad, truthList) : [];
+      row.horizons = [];
+      for (let k = 0; k < c.states.length; ++k) {
+        const s = c.states[k], out = { h: s.h, epoch: s.epoch };
+        if (S[k]) {
+          out.S = S[k].e;
+          out.ageDays = S[k].ageDays;
+          const cov = ctx.sgp4Covariance(S[k].regimeIndex, S[k].ageDays);
+          if (cov) { out.Sc3 = cov.c3; out.Sregime = cov.regime; }
+        }
+        for (const name of ['R', 'He', 'Ha']) {
+          const ours = products[name].get(s.epoch);
+          if (!ours) continue;
+          const d = await ctx.rtnDifference(s.epoch, ours.state, s.state, s.state, ours.covariance, ours.n ?? 6);
+          out[name] = d.e;
+          if (d.c3) out[`${name}c3`] = d.c3;
+        }
+        if (P?.[k]) out.P = P[k].e;
+        if (s.cov) out.opCov = s.cov;
+        const t = truth.get(Date.parse(s.epoch));
+        if (t) {
+          const j = truthList.findIndex((x) => x.epoch === s.epoch);
+          out.truth = { op: (await ctx.rtnDifference(s.epoch, s.state, t, t)).e, S: ST[j]?.e ?? null };
+          for (const name of ['R', 'He', 'Ha']) {
+            const ours = products[name].get(s.epoch);
+            out.truth[name] = ours ? (await ctx.rtnDifference(s.epoch, ours.state, t, t)).e : null;
+          }
+        }
+        row.horizons.push(out);
+      }
+      rows.push(row);
     }
-    if (P?.[k]) out.P = P[k].e;
-    if (s.cov) out.opCov = s.cov;
-    const t = truth.get(Date.parse(s.epoch));
-    if (t) {
-      const j = truthList.findIndex((x) => x.epoch === s.epoch);
-      out.truth = {
-        op: (await ctx.rtnDifference(s.epoch, s.state, t, t)).e,
-        S: ST[j]?.e ?? null,
-        H: H.samples?.[k] ? (await ctx.rtnDifference(s.epoch, H.samples[k].state, t, t)).e : null,
-      };
-    }
-    row.horizons.push(out);
   }
-  fs.appendFileSync(rowsFile, `${JSON.stringify(row)}\n`);
-  ++counts.compared;
-  if (++done % 25 === 0) { log(`${done}/${list.length}`); run.checkpoint(); }
+  fs.appendFileSync(rowsFile, rows.map((r) => `${JSON.stringify(r)}\n`).join(''));
+  ++processed;
+  if (processed % 10 === 0) {
+    const rate = (Date.now() - started) / processed / 1000;
+    log(`${processed}/${mine.length - done.size} groups, ${rate.toFixed(1)} s per group`);
+    run.checkpoint();
+  }
 }
 if (truthIndex) run.addInputs('truth', truthIndex.read);
+const written = fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+counts.groups = new Set(written.map((r) => r.group)).size;
+counts.compared = written.filter((r) => r.horizons).length;
+counts.withoutSet = written.filter((r) => r.skipped).length;
+counts.reasons = {};
+for (const g of new Map(written.filter((r) => r.h).map((r) => [r.group, r.h])).values())
+  for (const k of ['reason', 'rCovariance', 'fullForce', 'hEpochError', 'hArc', 'hArcError', 'error']) note(g[k] ? `${k}: ${String(g[k]).replace(/\d+(\.\d+)?/g, 'n')}` : null);
 fs.writeFileSync(`${rowsFile}.gz`, zlib.gzipSync(fs.readFileSync(rowsFile)));
 fs.rmSync(rowsFile);
 run.write('counts.json', counts);
-run.finish({ provider, counts: { cases: counts.cases, compared: counts.compared, withoutSet: counts.withoutSet, skipped: counts.skipped.length } });
-log(`compared ${counts.compared}; without element set ${counts.withoutSet}; skipped ${counts.skipped.length}; HPOP unavailable ${JSON.stringify(counts.hpopUnavailable)}`);
+run.finish({ provider, shard: `${shard}/${shards}`, counts: { cases: counts.cases, groups: counts.groups, compared: counts.compared, withoutSet: counts.withoutSet, skipped: counts.skipped.length } });
+log(`compared ${counts.compared} in ${counts.groups} groups; without element set ${counts.withoutSet}; skipped ${counts.skipped.length}; ${JSON.stringify(counts.reasons)}`);
 await ctx.destroy();
 if (sp3) await sp3.destroy();

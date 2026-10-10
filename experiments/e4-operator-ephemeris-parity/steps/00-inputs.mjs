@@ -5,7 +5,9 @@
 // inputs.json. With --publish, also writes the published copies: gzip files
 // under data/e4/<provider>/ (redistributable, at most 1 MB compressed each),
 // one .tar.gz release asset per provider for the rest (--release-dir), and
-// data/e4/MANIFEST.json and data/e4/SOURCES.md.
+// data/e4/MANIFEST.json and data/e4/SOURCES.md. Amendment A4: a provider the
+// published manifest lists reads exactly the files it lists (SHA-256, URL and
+// capture time); a provider it does not list (ses) follows its select rule.
 //
 //   node experiments/e4-operator-ephemeris-parity/steps/00-inputs.mjs [--provider p,q] [--publish --release-dir DIR]
 import fs from 'node:fs';
@@ -24,9 +26,21 @@ const { values, nodes, inputs, truth } = cli({ publish: { type: 'boolean' }, 're
 const basename = (url) => decodeURIComponent(new URL(url).pathname.split('/').pop());
 const compact = (iso) => iso.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
 
+// The first run's files per provider (amendment A4), from the published manifest.
+const manifestPath = path.join(repoRoot, config.a4.inputs.operatorFiles);
+const published = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')).files : [];
+
 // Which captured files a provider's comparison reads (config.providers.*.select).
 function select(provider, all) {
   const p = config.providers[provider];
+  const listed = published.filter((e) => e.provider === provider);
+  if (listed.length) {
+    return listed.map((e) => {
+      const d = all.find((x) => x.sha256 === e.sha256 && x.url === e.url && x.captured === e.captured);
+      if (!d) throw new Error(`${provider}: ${e.file} (${e.sha256}) is not in the node`);
+      return { ...d, role: e.role };
+    });
+  }
   const byCapture = [...all].sort((a, b) => a.captured.localeCompare(b.captured) || a.url.localeCompare(b.url));
   const distinct = (list) => { const seen = new Set(); return list.filter((d) => !seen.has(d.sha256) && seen.add(d.sha256)); };
   if (provider === 'spacex-starlink') {
@@ -67,6 +81,7 @@ function describe(provider, format, bytes) {
     if (format === 'tle') { const t = readTle(text()); return { objects: t.length }; }
     if (format === 'intelsat-ecf') { const r = readIntelsat(text()); return { title: r.title, span: span(new Date(r.rows[0].ms).toISOString(), new Date(r.rows.at(-1).ms).toISOString()), samples: r.rows.length }; }
     if (format === 'cpf') { const c = readCpf(text()); return { objects: [c.norad], target: c.target, span: span(new Date(c.rows[0].ms).toISOString(), new Date(c.rows.at(-1).ms).toISOString()), samples: c.rows.length }; }
+    if (format === 'ses-i11') return { title: /ELEVEN PARAMETER EPHEMERIS FOR (.+)/.exec(text())?.[1].trim(), validUntil: /VALID UNTIL (.+)/.exec(text())?.[1].trim() };
     if (format === 'sp3') {
       const t = zlib.gunzipSync(bytes).toString('latin1');
       const head = t.slice(0, 4000).split('\n');
