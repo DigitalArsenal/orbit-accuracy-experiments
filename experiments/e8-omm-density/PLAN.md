@@ -395,3 +395,27 @@ ten are nine payloads the calibration-set rule does not admit and one
 rocket body it did not choose. The comparison is therefore DESTOPy as
 published against D5, not two estimators given the same objects. It stays
 descriptive.
+
+## Amendment 4 (2026-10-10, module build `d0a7bec4`, before any test-window density or orbit is read)
+
+The first test-window fits on `1d700368` stopped at the 12-iteration
+limit in four of the first five forecasts (2026-01-12 to 01-15): the
+temperature steps had fallen below 0.1 K and the offsets below 0.03 m,
+but the largest ln B step shrank only by a factor of about 0.77 per
+iteration (0.005 at the limit). Amendment 1's damping halved an object's
+ln B step on every sign reversal and never restored it, also in the first
+four iterations, where the robust scales and edits are re-estimated and
+the objective changes. The damping now starts afresh on the first
+iteration with held scales and edits (`analysis/density-calibration`
+0.2.1, `d0a7bec4`), so it slows only an object that alternates on the
+fixed problem; the objective, priors, tolerances and iteration limit are
+unchanged. On 2026-01-12 the fit now converges in 7 iterations and its
+correction differs from the stopped one by at most 0.23 K at any node
+(median formal sigma 16 K). The stopped fits are discarded; every test and
+historical fit uses `d0a7bec4`. The validation fits behind section 5's
+choices stay as made on `f258e625`.
+
+One code correction, no change to this plan: step 30 listed a D5 variant
+once per step 10 run, so a forecast configuration fitted in shards would
+have run once per shard; it now lists each configuration once and refuses
+two fits of one configuration for the same day.
