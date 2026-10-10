@@ -3,7 +3,7 @@
 // arcs (runs/cache/e10/partC/<window>, ignored by git: element-set states stay
 // local); each child runs every requested variant on one arc. Resumable.
 //   node steps/30-partc.mjs --window dev|test --variants E26:k=1,UKF,... \
-//        [--sensitivity primary,corr] [--workers 6] [--resume <run-id>] [--limit <arcs>]
+//        [--sensitivity primary,corr] [--workers 6] [--resume <run-id>] [--limit <arcs>] [--days d1,d2]
 //   child: node steps/30-partc.mjs --job <job.json>
 import fs from 'node:fs';
 import path from 'node:path';
@@ -61,8 +61,11 @@ async function driver() {
   const variants = (arg('variants') ?? '').split(',').filter(Boolean);
   const sensitivities = (arg('sensitivity') ?? 'primary').split(',');
   const workers = Math.min(6, Number(arg('workers', 6)));
-  const w = config.partC[`${window}Window`];
-  const run = startRun({ experiment: 'e10-teag-espf', step: `30-partc-${window}`, configPath, modulesDir: modulesDir(), args: { window, variants, sensitivities, workers }, resume: arg('resume') });
+  // --days: a subset of the window's start days (a window split across runs).
+  const w0 = config.partC[`${window}Window`];
+  const w = { ...w0, startDays: arg('days') ? arg('days').split(',') : w0.startDays };
+  for (const d of w.startDays) if (!w0.startDays.includes(d)) throw new Error(`${d} is not a ${window} start day`);
+  const run = startRun({ experiment: 'e10-teag-espf', step: `30-partc-${window}`, configPath, modulesDir: modulesDir(), args: { window, variants, sensitivities, workers, days: w.startDays }, resume: arg('resume') });
   const { loaded } = await loadModules(run, MODULES);
   const cacheDir = path.join(repoRoot, 'runs', 'cache', 'e10', 'partC', window), jobsDir = path.join(run.dir, 'jobs');
   for (const d of [cacheDir, jobsDir]) fs.mkdirSync(d, { recursive: true });
