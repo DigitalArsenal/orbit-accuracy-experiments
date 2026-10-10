@@ -1,11 +1,11 @@
 // E13 step 40: the solver configuration and the forecast time constant, chosen on the development split only (PLAN.md section 4.3, Amendment R1).
 //   1  solver: the candidate (24 h or 12 h nodes x baselines of 3 block lengths or 4 random-walk step sizes) with the smallest pooled standard
 //      deviation of x' - s-bar over the dev split's 12 h windows of Swarm A, B, C and GRACE-FO 1 (hindcast: the whole dev split's calibration arcs);
-//   2  tau: with that solver, the candidate in {12 h, 48 h, held} with the smallest pooled root-mean-square of the dev density residuals of the
-//      nowcast + forecast (the level included: a propagation sees it), over the windows from the issue time to 72 h later, for issue times 00:00 UTC
-//      every second day once 30 days of arcs exist (the density level of each issue is the mean of x over the nowcast's own span).
+//   2  tau: with that solver, the candidate in {12 h, 48 h, held} with the smallest pooled root-mean-square of the density change that the nowcast +
+//      forecast leaves unpredicted: for issue times 00:00 UTC every second day once 30 days of arcs exist, each 12 h window of the next 72 h less the
+//      windows of the 24 h before the issue time (in which a propagation fits Cd*A/m), against the same change of the forecast common mode.
 // A candidate within `tieBand` (2 %) of the smallest sd is tied with it, and ties go to 24 h nodes, then the weaker smoothing, then the random walk over blocks, then
-// the smaller q (or the longer block); tau is chosen by the smallest pooled root-mean-square (Amendment R2). Writes results/e13/selection.json.
+// the smaller q (or the longer block); tau is chosen by the smallest pooled root-mean-square of the unpredicted change (Amendment R2). Writes results/e13/selection.json.
 //
 //   node steps/40-select.mjs [--arcs FILE] [--out FILE] [--through YYYY-MM-DD]     (--through and a non-default --out are for development runs)
 import fs from 'node:fs';
@@ -81,16 +81,18 @@ const tauRows = Object.fromEntries(taus.map((tau) => [String(tau), []]));
 for (const t0 of issues) {
   const sol = nowcast(arcs, t0, nowOptions);
   if (!sol) continue;
-  const first = sol.nodeMs[sol.supported.indexOf(true)], last = sol.nodeMs[sol.supported.lastIndexOf(true)];
+  // What a propagation sees: the change of the density from the window in which Cd*A/m is fitted (the 24 h before the issue time, known from the orbit) to
+  // each window of the next 72 h, d = x_w - mean(x over the fit windows), against the change that the nowcast + forecast predicts, s_w - s over the fit window.
   for (const [key, list] of Object.entries(windows)) {
-    const inSpan = list.filter((w) => w.x !== null && w.startMs >= first && w.startMs + 12 * H <= last);
-    if (inSpan.length < 20) continue;
-    const level = inSpan.reduce((a, w) => a + w.x, 0) / inSpan.length;
+    const at = (t) => list.find((w) => w.startMs === t)?.x ?? null;
+    const fit = [at(t0 - DAY), at(t0 - DAY + 12 * H)];
+    if (fit.some((v) => v === null)) continue;
+    const xFit = (fit[0] + fit[1]) / 2;
     for (const w of list) {
       if (w.x === null || w.startMs < t0 || w.startMs + 12 * H > t0 + 3 * DAY) continue;
       for (const tau of taus) {
-        const sb = forecastMean(sol, w.startMs, w.startMs + 12 * H, tau);
-        if (Number.isFinite(sb)) tauRows[String(tau)].push({ key, lead: (w.startMs - t0) / DAY, res: (w.x - level) - sb, none: w.x - level });
+        const sb = forecastMean(sol, w.startMs, w.startMs + 12 * H, tau), sFit = forecastMean(sol, t0 - DAY, t0, tau);
+        if (Number.isFinite(sb) && Number.isFinite(sFit)) tauRows[String(tau)].push({ key, lead: (w.startMs - t0) / DAY, res: (w.x - xFit) - (sb - sFit), none: w.x - xFit });
       }
     }
   }
@@ -99,7 +101,7 @@ const tauTable = taus.map((tau) => {
   const r = tauRows[String(tau)];
   return { tauHours: tau, windows: r.length, sdResidual: sd(r.map((x) => x.res)), rmsResidual: Math.sqrt(r.reduce((a, x) => a + x.res * x.res, 0) / r.length), sdNoCorrection: sd(r.map((x) => x.none)), rmsNoCorrection: Math.sqrt(r.reduce((a, x) => a + x.none * x.none, 0) / r.length) };
 });
-tauTable.forEach((t) => log(`tau ${t.tauHours ?? 'held'}: ${t.windows} windows, rms(residual) ${t.rmsResidual.toFixed(4)}, sd ${t.sdResidual.toFixed(4)} (no correction: rms ${t.rmsNoCorrection.toFixed(4)}, sd ${t.sdNoCorrection.toFixed(4)})`));
+tauTable.forEach((t) => log(`tau ${t.tauHours ?? 'held'}: ${t.windows} windows, rms of the unpredicted change ${t.rmsResidual.toFixed(4)} (no correction: ${t.rmsNoCorrection.toFixed(4)})`));
 const order = (tau) => (tau === null ? Infinity : tau);
 const tauValid = tauTable.filter((t) => Number.isFinite(t.rmsResidual));
 const tauChosen = tauValid.length ? tauValid.reduce((best, t) => (t.rmsResidual < best.rmsResidual - 1e-12 || (Math.abs(t.rmsResidual - best.rmsResidual) <= 1e-12 && order(t.tauHours) < order(best.tauHours)) ? t : best)) : { tauHours: undefined };

@@ -367,11 +367,13 @@ Section 10's analyses (c)–(e) (the open DCA from Starlink, held-out Starlinks,
    24 h before and at the issue time (`energyArc`, production profile g24lean, Cr*A/m 0.009 m2/kg, starting value 0.0045), under the variant's density; the issue state is propagated to the samples
    nearest +1 d and +3 d; the error is the 3D distance. H5: held-out Doves, every third state that has a regular arc (20-28 h) before it; Cd*A/m from that arc; the horizon states are the Dove's states one
    and three states later when every arc between is regular. H5 runs the variants D0 and D13 only (D13-def is run for H4).
-6. **The selection's second stage** (tau) uses issue times 00:00 UTC every second day from 30 days after the split's start; for each, the nowcast and the forecast over the windows from 0 to 72 h later,
-   against x' less the mean of x over the windows between the nowcast's first and last supported node (the level that the nowcast's mean-zero constraint corresponds to). It chooses by the smallest pooled
-   **root-mean-square** of the residuals, not their standard deviation as section 4.3 says: a propagation sees the level, which the standard deviation hides. Dev arcs to 2025-11-10 (120 windows): the
-   three candidates (12 h, 48 h, held) have root-mean-squares 0.159, 0.136 and 0.089 against 0.161 without a correction, and standard deviations 0.077, 0.077 and 0.084 against 0.078: the density of the
-   next three days is about 0.14 below the previous month's mean, and the latest node holds that level.
+6. **The selection's second stage** (tau) uses issue times 00:00 UTC every second day from 30 days after the split's start. What a propagation sees is the change of the density from the window in which it
+   fits Cd*A/m (the 24 h before the issue time, known from the orbit) to the next 72 h, not the density's level (Cd*A/m absorbs the level). For each 12 h window w of the next 72 h and each satellite,
+   d = x(w) less the mean of x over the 24 h before the issue time; the nowcast and forecast predict the change s(w) less s over those 24 h; tau is chosen by the smallest pooled
+   **root-mean-square** of d less the prediction (section 4.3 said the standard deviation of the density residuals; a standard deviation hides a level, and the level is not what is predicted). Dev arcs to
+   2025-11-14 (168 windows): without a correction 0.1527; tau = 12 h 0.1613, 48 h 0.1592, held 0.1528. No candidate improves on no correction: the latest node is 27-39 h old at the issue time, and the density
+   changes by 15 % (rms) over the next three days against it. The correction is expected not to improve the propagation of H4 and H5 (D0 and D13 then differ little); D13-def, which sees the window itself, is the
+   upper bound. The selection's numbers are in `selection.json`.
 7. **Ties in the solver choice.** Candidates differ in section 6's standard deviation by less than their noise (dev to 2025-11-10: about the best twelve of the 46 lie within 4 %), so a candidate within 2 % of
    the smallest sd is tied with it, and ties go in this order: 24 h nodes, the weaker smoothing (larger smoothSigma, none first), random-walk baselines, the smaller q, the smaller lag (`tieBand` in
    `amendments.json`).
