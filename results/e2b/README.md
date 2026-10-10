@@ -4,6 +4,7 @@ Plan: [experiments/e2b-correlated-covariance/PLAN.md](../../experiments/e2b-corr
 
 | Window | Report | Metrics | Manifest |
 | --- | --- | --- | --- |
+| test | [README](test/README.md) | [metrics.json](test/metrics.json) | [manifest.json](test/manifest.json) |
 | validation | [README](validation/README.md) | [metrics.json](validation/metrics.json) | [manifest.json](validation/manifest.json) |
 | train | [README](train/README.md) | [metrics.json](train/metrics.json) | [manifest.json](train/manifest.json) |
 
