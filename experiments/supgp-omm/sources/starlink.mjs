@@ -91,9 +91,15 @@ export function candidates(ctx, row) {
     .map((v) => ({ id: v.name, name: v.name, url: BASE + v.name, startMs: v.startMs, stopMs: v.startMs + MEME.spanHours * 3600e3, listedIn: v.listedIn }));
 }
 
+// Every windowFitEvery-th set is fetched twice as far (24 h of states) and also fitted on the other windows, so that windows
+// longer than CelesTrak's are scored on real points: the evidence for the 12 h window (lib/summary.mjs) needs them. The gate and
+// the fit that is compared use the 12 h only.
+export const windowFitEvery = 10;
+const widened = (row) => row.index % windowFitEvery === 0;
+
 // First bytes of the file that hold every state up to EPOCH + 12 h (plus a margin); `extra` widens it on a retry.
 export function rangeFor(cand, row, extra = 1) {
-  const endMs = setEpochMs(row) + hours * 3600e3;
+  const endMs = setEpochMs(row) + hours * (widened(row) ? 2 : 1) * 3600e3;
   const states = Math.min(Math.ceil((endMs - cand.startMs) / (MEME.stepSeconds * 1000)) + 1, MEME.spanHours * 3600 / MEME.stepSeconds + 1) + MEME.spareStates;
   return [0, Math.ceil((MEME.headerBytes + states * MEME.bytesPerState) * extra) - 1];
 }

@@ -59,6 +59,16 @@ export class Guard {
     this.must('fit-window', utcMs(fit.rms.span[0]) >= window.fromMs - 1 && utcMs(fit.rms.span[1]) <= window.toMs + 1, `fit points ${fit.rms.span} outside ${window.from}..${window.to}`);
   }
 
+  // A fit on an alternative window (the window evidence) fitted what was asked: one object, no a priori set, the points of that window.
+  windowFit({ report, norad, asked, fit }) {
+    const id = `window-fit:${asked.label}`;
+    this.must(id, report.kind === 'element-fit' && report.fits?.length === 1 && report.fits[0].norad === norad, 'report is not exactly the one requested fit');
+    this.must(id, report.counts?.aprioriSets === 0, `${report.counts?.aprioriSets} a priori sets loaded by the module, expected 0`);
+    if (!fit.converged) return;
+    this.must(id, fit.states.inSpan === fit.rms.n && fit.states.rejected === 0, `states in span ${fit.states.inSpan}, scored ${fit.rms.n}, rejected ${fit.states.rejected}`);
+    this.must(id, utcMs(fit.rms.span[0]) >= asked.fromMs - 1 && utcMs(fit.rms.span[1]) <= asked.toMs + 1, `fit points ${fit.rms.span} outside ${asked.from}..${asked.to}`);
+  }
+
   // The OMM that is persisted is the one that was fitted.
   fitOmm({ ommBytes, norad, fit, decode }) {
     const recs = decode(ommBytes);

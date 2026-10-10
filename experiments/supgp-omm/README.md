@@ -31,6 +31,19 @@ that do, a version holding the whole window beats one that starts after the EPOC
 snapshot was fetched beats a later one, then the closest RMS. A set no version reproduces is unpaired, with the
 nearest miss as the reason. "Ours lower" counts only gate-passing pairs.
 
+## The window
+
+CelesTrak fits each set to a stretch of the operator's ephemeris and publishes the RMS of the fit. The window is
+found, and shown, two ways (`summary.json`: `windowProof`, `windowFits`; `table.mjs` prints both):
+
+- CelesTrak's set is scored on every version that holds the whole window, over the chosen window and over windows 0.5,
+  0.75, 1.5 and 2 times as long from the same start; the window is right where the published RMS comes back.
+- The version does not enter in the second: the least-squares minimum the model reaches over a window is a property of
+  the ephemeris, and the published RMS is that of CelesTrak's own fit, so our fitted minimum over each window, divided by
+  the published RMS, is 1 on CelesTrak's window and not on the others. It is run on the pairs that hold the whole window and
+  reproduce the published RMS within 2 %: every set of the small groups, every tenth Starlink set (those are also fetched
+  24 h deep, so that the longer windows rest on real points). A window longer than the ephemeris is not a test.
+
 ## Sources
 
 | Group | Operator file | Window | Reader |
@@ -45,6 +58,12 @@ nearest miss as the reason. "Ours lower" counts only gate-passing pairs.
 | cpf | EDC CPF of the day, per centre | [EPOCH, end of file] | data-source/cpf-source, reference-states |
 | gps, oneweb, telesat, eumetsat, kuiper, iridium, orbcomm, ast | none can be had | - | recorded with the reason (`sources/unavailable.mjs`) |
 
+SES and Planet replace their files in place (on 2026-10-10 the SES files read were created between 21:04 and 21:06 UTC,
+the Planet files between 00:50 and 20:50 UTC), so the version CelesTrak fitted is gone once its file is replaced. A pass
+pairs them only when it runs after CelesTrak's refit and before the operator's next replacement; `pairClasses` in
+`summary.json` says which pairs rest on a version that holds the whole window and existed when the SupGP snapshot was
+fetched (`complete-causal`) and which do not.
+
 Starlink versions: SpaceX's MANIFEST lists only the newest version of each object. `seed-registry.mjs` adds earlier
 manifests (name lists) to the registry; a file name is fully determined by its start (see `sources/starlink.mjs`).
 
@@ -55,6 +74,14 @@ object's elements fail the gate, mismatched sets trip the guards, and NASA's ISS
 scores as python-sgp4 scores it. Per set (`lib/guards.mjs`): the OMM sent is the snapshot's row; the module answered
 for that set, window and one element set; ours and CelesTrak's set are scored on the same n and span; the persisted
 OMM is the fitted one and re-scores to the fit's statistics.
+
+## Terms
+
+Nothing raw is stored or redistributed, and the derived records stay under `/opt/data/sdn-archive/operator-ephemerides/`
+(never committed). Known terms (E11's README): NASA ISS, U.S. Government work, public domain; Planet, CC BY-NC 4.0;
+SpaceX Starlink, no licence statement, published for space-safety coordination. The rest state none: CMSE, SES,
+Intelsat, ILRS CPF at EDC, IGS metadata. ESA/ESOC files (GLONASS rapid SP3) are under the owner's data-licence
+question, so their derived records are local only.
 
 ## Output
 

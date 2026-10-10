@@ -114,9 +114,31 @@ export async function fitOurs(fitter, row, ephemeris, window, scoredSupgp, guard
   return { result, omm: ommBytes };
 }
 
+// The window evidence that does not depend on which version CelesTrak fitted. The minimum RMS the model reaches over a
+// window is a property of the ephemeris, and CelesTrak publishes the RMS of its own (least-squares) fit: it equals the
+// minimum over the window CelesTrak used, and not over the others. Our fit on windows a fraction or multiple of the
+// chosen one, from the same start: n, span and RMS of each (a longer window than the ephemeris holds is not run).
+async function fitWindows(fitter, row, ephemeris, window, summary, guard) {
+  const out = {};
+  const step = (summary.stepSeconds ?? 60) * 1000;
+  const epoch = window.fitFromEphemerisStart ? 'first' : `${row.epoch}Z`;
+  for (const f of WINDOW_PROOF_FACTORS) {
+    if (f > 1 && window.toMs >= summary.lastMs - step) continue;
+    const toMs = window.fromMs + f * (window.toMs - window.fromMs);
+    const asked = { label: `x${f}`, from: window.from, to: isoZ(toMs), fromMs: window.fromMs, toMs };
+    const run = await fitter.invoke('fit_elements', [ephemeris, json('options', { ...FIT, originator: ORIGINATOR, fits: [{ norad: row.norad, from: asked.from, to: asked.to, epoch, fitBstar: true }] })]);
+    const report = JSON.parse(Buffer.from(run.outputs.find((o) => o.portId === 'report').payload).toString());
+    const fit = report.fits?.[0] ?? {};
+    const result = { converged: fit.converged === true && !fit.error, error: fit.error ?? null, states: fit.states, rms: statsOf(fit.rms) };
+    guard.windowFit({ report, norad: row.norad, asked, fit: result });
+    out[f] = result.converged ? { n: result.rms.n, rmsPerCoordinateKm: result.rms.rmsPerCoordinateKm, iterations: fit.iterations } : { n: 0, converged: false, error: result.error };
+  }
+  return out;
+}
+
 // One candidate version of one set: score CelesTrak's set, apply the gate, fit ours when asked and the gate passes.
 // `ephemeris` is the labelled port frame; `summary` its summarizeOem().
-export async function evaluate(fitter, { row, ephemeris, summary, hours, fit = true, closure = false }) {
+export async function evaluate(fitter, { row, ephemeris, summary, hours, fit = true, closure = false, windowFits = false }) {
   const guard = new Guard(`${row.group}/${row.norad}@${row.epoch}`);
   const window = windowOf({ epoch: row.epoch, hours, summary });
   const t0 = performance.now();
@@ -135,6 +157,11 @@ export async function evaluate(fitter, { row, ephemeris, summary, hours, fit = t
         oursLower: f.result.rms.rmsPerCoordinateKm < supgp.rmsPerCoordinateKm,
         oursRatio: f.result.rms.rmsPerCoordinateKm / supgp.rmsPerCoordinateKm,
       };
+      if (windowFits && window.complete) {
+        const tWindows = performance.now();
+        out.windowFits = { 1: { n: f.result.rms.n, rmsPerCoordinateKm: f.result.rms.rmsPerCoordinateKm }, ...await fitWindows(fitter, row, ephemeris, window, summary, guard) };
+        out.timing.windowFitMs = performance.now() - tWindows;
+      }
     }
   }
   out.guards = guard.checks;

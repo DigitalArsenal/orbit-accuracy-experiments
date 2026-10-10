@@ -14,7 +14,7 @@ const ab = (buf) => (buf.buffer.byteLength === buf.length && buf.byteOffset === 
 const iso = (ms) => (Number.isFinite(ms) ? new Date(ms).toISOString() : null);
 
 export class Timing {
-  constructor() { this.fetchMs = 0; this.fetchRequests = 0; this.fetchBytes = 0; this.workerMs = 0; this.readMs = 0; this.scoreMs = 0; this.fitMs = 0; this.jobs = 0; }
+  constructor() { this.fetchMs = 0; this.fetchRequests = 0; this.fetchBytes = 0; this.workerMs = 0; this.readMs = 0; this.scoreMs = 0; this.fitMs = 0; this.windowFitMs = 0; this.jobs = 0; }
   json() { return { ...this }; }
 }
 
@@ -52,7 +52,7 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
 
   async function evaluate(cand, row, fetched) {
     const body = ab(fetched.body);
-    const out1 = await pool.run({ type: 'evaluate', source: source.id, row, cand, body, context: source.contextFor?.(ctx, cand, row), fit: true, closure: options.closure }, [body]);
+    const out1 = await pool.run({ type: 'evaluate', source: source.id, row, cand, body, context: source.contextFor?.(ctx, cand, row), fit: true, closure: options.closure, windowFits: row.index % (source.windowFitEvery ?? 1) === 0 }, [body]);
     timing.workerMs += out1.wallMs ?? 0;
     ++timing.jobs;
     return out1;
@@ -84,12 +84,13 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
       timing.readMs += r.timing.readMs ?? 0;
       timing.scoreMs += r.timing.scoreMs ?? 0;
       timing.fitMs += r.timing.fitMs ?? 0;
+      timing.windowFitMs += r.timing.windowFitMs ?? 0;
       const createdMs = fetched.provenance.lastModified ? Date.parse(fetched.provenance.lastModified) : null;
       const causal = createdMs === null ? null : createdMs <= Date.parse(snapshot.fetchedUtc);
       const entry = {
         cand, provenance: fetched.provenance, result: r, omm: res.omm ? Buffer.from(res.omm) : null, causal, createdMs, gate: r.gate, window: r.window,
       };
-      tried.push({ id: cand.id, startUtc: iso(cand.startMs), createdUtc: iso(createdMs), ratio: r.gate.ratio, recomputedRmsKm: r.gate.recomputedRmsKm, pass: r.gate.pass, windowComplete: r.window.complete, coverageHours: r.window.availableHours, causal });
+      tried.push({ id: cand.id, startUtc: iso(cand.startMs), createdUtc: iso(createdMs), ratio: r.gate.ratio, recomputedRmsKm: r.gate.recomputedRmsKm, pass: r.gate.pass, windowComplete: r.window.complete, coverageHours: r.window.availableHours, causal, windows: windowScores(r) });
       if (r.gate.pass) {
         passing.push(entry);
         // Nothing outranks a pass on a version that holds the whole window and existed at the snapshot, unless another such version is still to come.
@@ -105,7 +106,9 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
         const codes = new Set(tried.map((t) => t.code ?? 'no-data'));
         return unpaired(row, codes.size === 1 ? [...codes][0] : 'no-data', `no candidate version could be read: ${tried.map((t) => t.error).join('; ')}`, { candidates: tried });
       }
-      return unpaired(row, 'rms-not-reproduced', `${tried.length} version(s) tried; the nearest reproduces ${near.recomputedRmsKm.toFixed(4)} km against the published ${row.publishedRmsKm} km (x${near.ratio.toFixed(2)})`, { candidates: tried, nearest: near });
+      // Every version tried starts after the EPOCH: the file CelesTrak fitted has been replaced (or is not one we can name).
+      const kind = tried.some((t) => t.windowComplete) ? 'whole-window version does not reproduce it' : 'only versions that start after the EPOCH';
+      return unpaired(row, 'rms-not-reproduced', `${tried.length} version(s) tried; the nearest reproduces ${near.recomputedRmsKm.toFixed(4)} km against the published ${row.publishedRmsKm} km (x${near.ratio.toFixed(2)}); ${kind}`, { candidates: tried, nearest: near, kind });
     }
     let best = passing[0];
     for (const c of passing.slice(1)) if (better(c, best)) best = c;
@@ -114,13 +117,14 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
       status: 'paired',
       version: { id: best.cand.id, startUtc: iso(best.cand.startMs), stopUtc: iso(best.cand.stopMs), createdUtc: iso(best.createdMs), listedIn: best.cand.listedIn, ...best.provenance },
       causal: best.causal,
-      window: r.window, windowProof: r.windowProof, ephemeris: r.ephemeris, supgp: r.supgp, gate: r.gate, ours: r.ours, comparison: r.comparison ?? null, guards: r.guards, candidates: tried,
+      window: r.window, windowProof: r.windowProof, windowFits: r.windowFits ?? null, ephemeris: r.ephemeris, supgp: r.supgp, gate: r.gate, ours: r.ours, comparison: r.comparison ?? null, guards: r.guards, candidates: tried,
       omm: undefined, ommBuffer: best.omm, timing: r.timing,
     };
   }
 
   function unpaired(row, code, detail, extra = {}) {
-    return { status: 'unpaired', reason: { code, detail }, ...extra };
+    const { kind, ...rest } = extra;
+    return { status: 'unpaired', reason: { code, ...(kind ? { kind } : {}), detail }, ...rest };
   }
 
   async function loop() {
@@ -148,6 +152,12 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
 
   await Promise.all(Array.from({ length: options.rowsInFlight }, loop));
   return out.filter(Boolean);
+}
+
+// CelesTrak's set scored on this version over the chosen window (factor 1) and over windows a fraction or multiple of its length:
+// the points and the per-coordinate RMS of each, the evidence for the window (lib/summary.mjs).
+function windowScores(r) {
+  return { 1: { n: r.supgp.n, rmsKm: r.supgp.rmsPerCoordinateKm }, ...Object.fromEntries(Object.entries(r.windowProof ?? {}).map(([f, w]) => [f, { n: w.n, rmsKm: w.rmsPerCoordinateKm }])) };
 }
 
 // A group whose source could not be reached or prepared: every set is unpaired, with the reason, and the pass goes on.

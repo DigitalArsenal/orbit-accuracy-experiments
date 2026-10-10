@@ -73,6 +73,15 @@ export async function knownAnswers(fitter, { fitModules = PATHS.fitModules } = {
     const worst = got.map((g, k) => Math.abs(k === 5 ? wrapPi(g - want[k]) : g - want[k]) / (tol[k] || 1));
     check(`${c.name}: the generating elements come back`, worst.every((w, k) => w <= 1 || (!c.fitBstar && k === 6)), `worst parameter/tolerance ${Math.max(...worst).toExponential(2)}`);
     check(`${c.name}: the guards held`, ['set-identity', 'echo:supgp', 'fit-points', 'fit-omm', 'echo:ours', 'ours-rescored'].every((g) => out.guards.includes(g)), out.guards.join(','));
+    if (c.name === 'leo-starlink') {
+      // The window evidence: with the window set to half the ephemeris, the fits on windows 0.5, 0.75, 1, 1.5 and 2 times as long
+      // take the states of those windows (the grid is regular) and, the ephemeris being exact SGP4, reach zero on each.
+      const half = (summary.lastMs - Date.parse(`${c.epoch}Z`)) / 7200e3 + 0.0005;
+      const wide = await evaluate(fitter, { row, ephemeris: e, summary, hours: half, fit: true, windowFits: true });
+      const n = Object.fromEntries(Object.entries(wide.windowFits ?? {}).map(([f, r]) => [f, r.n]));
+      const grid = (f) => Math.floor((f * half * 3600) / c.stepSeconds) + 1;
+      check(`${c.name}: the fits on the other windows take those windows' states and reach zero`, ['0.5', '0.75', '1', '1.5', '2'].every((f) => n[f] && Math.abs(n[f] - grid(Number(f))) <= 1 && wide.windowFits[f].rmsPerCoordinateKm < 2e-6) && wide.guards.includes('window-fit:x2'), `n ${JSON.stringify(n)}, states ${c.count}`);
+    }
   }
 
   // 2. The wrong set. Another object's elements: the gate refuses; a mismatched frame is caught by the guard.

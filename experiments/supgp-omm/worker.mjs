@@ -45,7 +45,7 @@ parentPort.on('message', async (job) => {
       parentPort.postMessage({ id: job.id, ok: true, short: { lastMs: summary.lastMs, wantLastMs, states: summary.states }, wallMs: performance.now() - t0 });
       return;
     }
-    const result = await evaluate(fitter, { row: job.row, ephemeris, summary, hours, fit: job.fit, closure: job.closure });
+    const result = await evaluate(fitter, { row: job.row, ephemeris, summary, hours, fit: job.fit, closure: job.closure, windowFits: job.windowFits });
     const omm = result.omm ? result.omm.buffer.slice(result.omm.byteOffset, result.omm.byteOffset + result.omm.length) : null;
     result.omm = null;
     result.timing.readMs = tRead - t0;
