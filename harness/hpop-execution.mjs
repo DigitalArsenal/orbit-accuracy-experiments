@@ -156,10 +156,13 @@ export function gfzSpaceWeather(path, { minimumDays = 40 } = {}) {
       for (let t = Date.parse(`${from}T00:00:00Z`); t <= Date.parse(`${to}T00:00:00Z`); t += DAY) {
         const date = isoDay(t), d = get(date);
         if (!d) throw new Error(`no GFZ row for ${date}`);
+        // A day after the last reported one repeats that day's row entirely,
+        // its 81-day mean included (persistence).
+        const centre = date <= last ? t : Date.parse(`${last}T00:00:00Z`);
         const window = [];
-        for (let k = -40; k <= 40; ++k) { const day = isoDay(t + k * DAY); const e = day <= last ? days.get(day) : null; if (e && e.f107obs > 0) window.push(e.f107obs); }
+        for (let k = -40; k <= 40; ++k) { const day = isoDay(centre + k * DAY); const e = day <= last ? days.get(day) : null; if (e && e.f107obs > 0) window.push(e.f107obs); }
         if (window.length < minimumDays) throw new Error(`81-day F10.7 window has ${window.length} days around ${date}`);
-        const kp10 = d.kp.map((k) => Math.round(k * 10)), f = f107(t);
+        const kp10 = d.kp.map((k) => Math.round(k * 10)), f = f107(centre);
         rows.push(table('SPW', {
           DATE: date, KP1: kp10[0], KP2: kp10[1], KP3: kp10[2], KP4: kp10[3], KP5: kp10[4], KP6: kp10[5], KP7: kp10[6], KP8: kp10[7],
           KP_SUM: kp10.reduce((a, b) => a + b, 0), AP1: d.ap[0], AP2: d.ap[1], AP3: d.ap[2], AP4: d.ap[3], AP5: d.ap[4], AP6: d.ap[5], AP7: d.ap[6], AP8: d.ap[7],

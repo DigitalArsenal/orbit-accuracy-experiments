@@ -17,7 +17,7 @@ import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { messageText, parseIod, statedSites } from '../iod.mjs';
 
-const { values, satnogs, seesat } = cli({ assets: { type: 'string' } });
+const { values, satnogs, seesat } = cli({ assets: { type: 'string' }, tar: { type: 'boolean' } });
 const out = path.join(repoRoot, 'data/e6');
 fs.mkdirSync(out, { recursive: true });
 const assets = values.assets && path.resolve(values.assets);
@@ -38,7 +38,7 @@ for (const f of fs.readdirSync(passDir).sort()) {
   });
 }
 const sat = config.sources.satnogs.terms;
-write('satnogs-iss-range-rates.jsonl.gz', gzipSync(Buffer.from(rows.map((r) => JSON.stringify(r)).join('\n') + '\n')), { terms: sat, records: rows.length, note: 'one row per 5-s waterfall bin: the signal offset from the frequency the station tuned with its element set. The range rates and $RFO records also depend on that element set (Space-Track, served with each SatNOGS observation) and stay local; steps 10 rebuild them from the SatNOGS API.' });
+write('satnogs-iss-waterfall-offsets.jsonl.gz', gzipSync(Buffer.from(rows.map((r) => JSON.stringify(r)).join('\n') + '\n')), { terms: sat, records: rows.length, note: 'one row per 5-s waterfall bin: the signal offset from the frequency the station tuned with its element set. The range rates and $RFO records also depend on that element set (Space-Track, served with each SatNOGS observation) and stay local; steps 10 rebuild them from the SatNOGS API.' });
 const obsDir = path.join(satnogs, 'observations', '25544');
 const meta = new Map();
 for (const f of fs.readdirSync(obsDir).filter((n) => n.endsWith('.json'))) for (const o of JSON.parse(fs.readFileSync(path.join(obsDir, f)))) if (o.norad_cat_id === 25544) { const { tle0, tle1, tle2, ...rest } = o; meta.set(o.id, rest); }
@@ -62,12 +62,23 @@ manifest.ilrs = fs.readFileSync(path.join(ilrsRoot, 'provenance.jsonl'), 'utf8')
 
 // Release assets.
 if (assets) {
+  // The waterfall images E6 used: listed with their URLs and SHA-256 (from
+  // the capture's provenance); the tarball is built only with --tar, since
+  // it is about 1.5 GB and the lane works under a disk floor.
   const wf = path.join(satnogs, 'waterfalls', '25544');
-  const list = fs.readdirSync(wf).filter((n) => used.has(Number(n.split('_')[1])));
-  const tar = path.join(assets, 'e6-satnogs-iss-waterfalls.tar');
-  execFileSync('tar', ['-cf', tar, '-C', wf, ...list]);
-  const bytes = fs.readFileSync(tar);
-  manifest.releaseAssets.push({ asset: path.basename(tar), sha256: sha256(bytes), bytes: bytes.length, files: list.length, terms: sat, published: false, note: 'prepared; publish as a GitHub release asset (CC BY-SA 4.0 allows it with attribution)' });
+  const list = fs.readdirSync(wf).filter((n) => used.has(Number(n.split('_')[1]))).sort();
+  const prov = new Map(fs.readFileSync(path.join(satnogs, 'provenance.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => r.path.startsWith('waterfalls/')).map((r) => [path.basename(r.path), r]));
+  const listing = list.map((n) => ({ file: n, url: prov.get(n)?.url ?? null, sha256: prov.get(n)?.sha256 ?? null, bytes: prov.get(n)?.bytes ?? null }));
+  const listBody = Buffer.from(`${JSON.stringify(listing, null, 1)}\n`);
+  fs.writeFileSync(path.join(assets, 'e6-satnogs-iss-waterfalls.json'), listBody);
+  const entry = { asset: 'e6-satnogs-iss-waterfalls.tar', files: list.length, bytes: listing.reduce((a, x) => a + (x.bytes ?? 0), 0), list: 'e6-satnogs-iss-waterfalls.json', listSha256: sha256(listBody), terms: sat, published: false };
+  if (values.tar) {
+    const tar = path.join(assets, 'e6-satnogs-iss-waterfalls.tar');
+    execFileSync('tar', ['-cf', tar, '-C', wf, ...list]);
+    entry.sha256 = sha256(fs.readFileSync(tar));
+    entry.note = 'prepared; publish as a GitHub release asset (CC BY-SA 4.0 allows it with attribution)';
+  } else entry.note = 'not built (disk floor): build with --tar from the listed files; CC BY-SA 4.0 allows publishing it with attribution';
+  manifest.releaseAssets.push(entry);
   const iod = new Map(), sites = new Map();
   for (const month of config.sources.seesat.months) {
     const dir = path.join(seesat, month);

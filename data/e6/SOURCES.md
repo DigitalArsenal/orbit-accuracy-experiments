@@ -15,7 +15,7 @@ SatNOGS station owners named in each record.
 
 | File | Contents |
 | --- | --- |
-| `satnogs-iss-range-rates.jsonl.gz` | One row per 5-second waterfall bin of every pass step 10 accepted: observation id and URL, station (id, name, latitude, longitude, altitude), transmitter, f0, segment, the signal's offset from the frequency the station tuned with its element set (Hz) and its uncertainty. CC BY-SA 4.0. |
+| `satnogs-iss-waterfall-offsets.jsonl.gz` | One row per 5-second waterfall bin of every pass step 10 accepted: observation id and URL, station (id, name, latitude, longitude, altitude), transmitter, f0, segment, the signal's offset from the frequency the station tuned with its element set (Hz) and its uncertainty. CC BY-SA 4.0. |
 | `satnogs-iss-observations.json.gz` | The observation metadata E6 captured (2026-08-31..10-09), as the API served it, without the element-set lines. CC BY-SA 4.0. |
 
 Not published here: the range rates and `$RFO` records. Each depends on

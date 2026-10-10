@@ -19,6 +19,20 @@ for (const id of runIds) {
   manifests.push(JSON.parse(fs.readFileSync(path.join(runsDir, id, 'manifest.json'))));
   for (const l of fs.readFileSync(f, 'utf8').split('\n').filter(Boolean)) rows.push(JSON.parse(l));
 }
+// Runs of one window may split the variants (a first wave with the primary
+// variant, a second with the others): one row per object and cutoff, the
+// variants merged (the first run's copy of a variant kept).
+{
+  const merged = new Map();
+  for (const r of rows) {
+    const key = `${r.arm ?? 'satnogs'}|${r.norad ?? 25544}|${r.T}`;
+    if (!merged.has(key)) { merged.set(key, r); continue; }
+    const m = merged.get(key);
+    for (const [k, v] of Object.entries(r.variants ?? {})) if (!(k in (m.variants ?? {})) || (!m.variants[k].scoring && v.scoring)) (m.variants ??= {})[k] = v;
+  }
+  rows.length = 0;
+  rows.push(...merged.values());
+}
 const S = config.statistics;
 const norm = (e) => Math.hypot(e[0], e[1], e[2]);
 function d2(e, c) {
@@ -108,7 +122,9 @@ for (const g of ['satnogs', 'slr']) {
     learningCurve: lc,
   };
 }
-const metrics = { window: windowName, runs: runIds, groups, modules: manifests[0] ? { repository: manifests[0].modulesRepository, modules: manifests[0].modules } : null };
+// Products (local; they derive from Space-Track sets): where they are, how many.
+const products = runIds.map((id) => { const f = path.join(runsDir, id, 'products.jsonl'); return fs.existsSync(f) ? { file: path.relative(repoRoot, f), products: fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).length } : null; }).filter(Boolean);
+const metrics = { window: windowName, runs: runIds, products, groups, modules: manifests[0] ? { repository: manifests[0].modulesRepository, modules: manifests[0].modules } : null };
 const dir = path.join(repoRoot, 'results/e6', windowName);
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, 'metrics.json'), `${JSON.stringify(metrics, null, 1)}\n`);
