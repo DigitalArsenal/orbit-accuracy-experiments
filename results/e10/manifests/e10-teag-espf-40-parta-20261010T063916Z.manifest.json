@@ -1,0 +1,180 @@
+{
+ "run": "e10-teag-espf-40-parta-20261010T063916Z",
+ "experiment": "e10-teag-espf",
+ "step": "40-parta",
+ "command": [
+  "node",
+  "experiments/e10-teag-espf/steps/40-parta.mjs",
+  "--variants",
+  "E26:k=0.5,E25,E25T:l=0,EKF,UKF,BLS,SMF",
+  "--workers",
+  "1"
+ ],
+ "args": {
+  "cases": [
+   "A1-leo-nominal",
+   "A2-leo-error-bias",
+   "A3-geo-area-change"
+  ],
+  "variants": [
+   "E26:k=0.5",
+   "E25",
+   "E25T:l=0",
+   "EKF",
+   "UKF",
+   "BLS",
+   "SMF"
+  ],
+  "workers": 1
+ },
+ "started": "2026-10-10T06:39:16.324Z",
+ "finished": "2026-10-10T09:35:34.976Z",
+ "config": {
+  "path": "experiments/e10-teag-espf/config.json",
+  "sha256": "72de72bc09e2207148f799164e8eecfe22aea3c620ab59c9569fc6dfbbc03d02",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "aec5b48d48b86949f264581e4177403ebca95f3e",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "propagator/hpop",
+   "pluginId": "com.orbpro.hpop",
+   "version": "1.1.0",
+   "wasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
+   "manifestSha256": "50db412d6376320f98a243f74dfe1264054359dd9a937a7c2c4310b20b4c9468",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "foundation/time",
+   "pluginId": "com.digitalarsenal.foundation.time",
+   "version": "0.1.0",
+   "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+   "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "analysis/access",
+   "pluginId": "com.orbpro.access",
+   "version": "1.0.0",
+   "wasmSha256": "1277308cfb5abafcccc7b6d61dc0ce24085a7c36960229d0013698583007b42e",
+   "manifestSha256": "19d7c614d3cfea2a19ac470acc26118fc1e48cee46ef970a80cfa5f4c8397bb2",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "analysis/observation-simulator",
+   "pluginId": "com.digitalarsenal.analysis.observation-simulator",
+   "version": "0.1.0",
+   "wasmSha256": "20edccda3a5c33fba5972495bf8b17b034df9ad5b89d3f77560b012bc8bc5d3f",
+   "manifestSha256": "0e3c4fb7b8e00941bdf87b6cc4f15db59608239c6637e0276f3dca20105eec2e",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "analysis/estimation",
+   "pluginId": "com.digitalarsenal.analysis.estimation",
+   "version": "0.2.0",
+   "wasmSha256": "786d0de99fc5a2692e066d9c3912ac60bb8c34462234f69f77b52913eb7c6310",
+   "manifestSha256": "6c27a412942090f96b0d4133ec299de7a8c66febee4868a999d06c0ece464ba4",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   88.31201171875,
+   94.48681640625,
+   100.14111328125
+  ]
+ },
+ "inputs": {
+  "files": {
+   "kernel2018": "23d817bba6b40e3b82bfb6cca4644c7480a4b261c6ea852faf33747a529c67a7",
+   "eopC04": "a14854ff3fa974a6783b31ed0d6642c9d477647547949e2794308cb46dfeb2b3",
+   "solfsmy": "ced35709d58d57394f2f1bfde5cb3c6dc2ec2c8baf16f1f839f135f3c03f15cc",
+   "dtcfile": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91",
+   "kp": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T06:39:16.324Z",
+   "args": {
+    "cases": [
+     "A1-leo-nominal",
+     "A2-leo-error-bias",
+     "A3-geo-area-change"
+    ],
+    "variants": [
+     "E26:k=0.5",
+     "E25",
+     "E25T:l=0",
+     "EKF",
+     "UKF",
+     "BLS",
+     "SMF"
+    ],
+    "workers": 1
+   }
+  }
+ ],
+ "jobs": 21,
+ "scenarios": 0,
+ "failed": []
+}

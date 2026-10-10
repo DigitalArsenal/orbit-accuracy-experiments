@@ -1,0 +1,609 @@
+{
+  "experiment": "e6-public-observations",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "modules": "../../main-packages/space-data-network-modules",
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "providerNodes": "~/.local/share/spacedatanetwork/ephemeris-provider-nodes",
+    "issOemArchive": "/opt/data/sdn-archive/hac/nasa-iss-oem",
+    "satnogs": "/opt/data/sdn-archive/hac/satnogs",
+    "seesat": "/opt/data/sdn-archive/hac/seesat-l",
+    "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z",
+    "kernel": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp",
+    "spaceWeather": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "gpErrorModel": "analysis/gp-error-model/docs/model-2026-08-scaled.json",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "ilrs": "/opt/data/sdn-archive/hac/ilrs-edc"
+  },
+  "sources": {
+    "userAgent": "orbit-accuracy-experiments/e6 (public-observation research; github.com/DigitalArsenal/orbit-accuracy-experiments)",
+    "satnogs": {
+      "api": "https://network.satnogs.org/api/observations/",
+      "transmitters": "https://db.satnogs.org/api/transmitters/",
+      "minIntervalMs": 2000,
+      "terms": "SatNOGS Network: all observation data distributed under CC BY-SA 4.0 (network.satnogs.org/about); Libre Space Foundation",
+      "objects": {
+        "25544": {
+          "name": "ISS (ZARYA)",
+          "spans": [
+            [
+              "2026-08-31",
+              "2026-09-16"
+            ],
+            [
+              "2026-09-28",
+              "2026-10-09"
+            ]
+          ]
+        },
+        "48274": {
+          "name": "CSS (TIANHE)",
+          "spans": [
+            [
+              "2026-09-20",
+              "2026-10-09"
+            ]
+          ]
+        }
+      }
+    },
+    "seesat": {
+      "base": "https://www.satobs.org/seesat/",
+      "months": [
+        "Jun-2026",
+        "Jul-2026",
+        "Aug-2026",
+        "Sep-2026",
+        "Oct-2026"
+      ],
+      "minIntervalMs": 2000,
+      "terms": "SeeSat-L public mailing-list archive (satobs.org); no license stated; observations are each observer's"
+    },
+    "ilrs": {
+      "normalPoints": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/",
+      "weeklySinex": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/",
+      "span": [
+        "2026-06-25",
+        "2026-08-31"
+      ],
+      "minIntervalMs": 1000,
+      "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+    }
+  },
+  "windows": {
+    "satnogs": {
+      "dev": [
+        [
+          "2026-09-04T12:00:00Z",
+          "2026-09-09T12:00:00Z"
+        ]
+      ],
+      "test": [
+        [
+          "2026-08-29T00:00:00Z",
+          "2026-09-04T12:00:00Z"
+        ],
+        [
+          "2026-09-09T12:00:00Z",
+          "2026-10-10T00:00:00Z"
+        ]
+      ]
+    },
+    "slr": {
+      "dev": [
+        [
+          "2026-06-28T00:00:00Z",
+          "2026-07-16T00:00:00Z"
+        ]
+      ],
+      "test": [
+        [
+          "2026-07-16T00:00:00Z",
+          "2026-08-30T00:00:00Z"
+        ]
+      ]
+    }
+  },
+  "extraction": {
+    "image": {
+      "scales": [
+        {
+          "ratio": [
+            2.35,
+            2.45
+          ],
+          "tickHz": 10000
+        },
+        {
+          "ratio": [
+            2.83,
+            2.92
+          ],
+          "tickHz": 10000
+        },
+        {
+          "ratio": [
+            3.28,
+            3.36
+          ],
+          "tickHz": 10000
+        }
+      ],
+      "timeSteps": [
+        10,
+        20,
+        25,
+        50,
+        100,
+        200,
+        250,
+        500
+      ],
+      "minRecordedFraction": 0.85
+    },
+    "track": {
+      "estimator": "peak",
+      "searchHz": 1500,
+      "zThreshold": 5,
+      "minColumns": 2,
+      "binSeconds": 5,
+      "minRowsPerBin": 5,
+      "floorHz": 5,
+      "editSigma": 4,
+      "runningBins": 6,
+      "excludeDcHz": 0,
+      "jumpHz": 300
+    },
+    "maxCenterHz": 3000,
+    "minCenterHz": 100,
+    "minPoints": 10
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "duplicateEpochSeconds": 1
+  },
+  "scoring": {
+    "everyHours": 3,
+    "horizonsDays": [
+      0,
+      0.25,
+      1,
+      3,
+      7
+    ]
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95
+  },
+  "acceptance": {
+    "primary": {
+      "satnogs": "F2",
+      "slr": "S"
+    },
+    "minimumSegments": {
+      "satnogs": 8,
+      "slr": 3
+    },
+    "h2": {
+      "meanD2over3": [
+        0.8,
+        1.25
+      ],
+      "coverage95": [
+        0.9,
+        0.99
+      ]
+    },
+    "h4": {
+      "minimumLines": 20
+    }
+  },
+  "satnogs": {
+    "norad": 25544,
+    "prior": {
+      "regime": "LEO below 450 km",
+      "note": "the GP error model (2026-08, clipped) at-epoch 6x6 RTN covariance of its LEO-below-450-km stratum, age 0-0.5 d"
+    },
+    "calibration": {
+      "source": "results/e6/dev/calibration.json (step 15, dev window)",
+      "lagSeconds": 0.822,
+      "sigmaScaleCommonLag": 4.25,
+      "sigmaScaleSegmentLag": 1.99,
+      "segmentDriftSigmaMps2": 0.38,
+      "segmentLagSigmaSeconds": 1.07
+    },
+    "fit": {
+      "arcDays": 2,
+      "rangeRateFlags": 2,
+      "settings": {
+        "forces": {
+          "degree": 70,
+          "order": 70,
+          "thirdBodies": [
+            10,
+            301
+          ],
+          "srp": true,
+          "drag": true,
+          "atmosphere": "NRLMSISE00",
+          "solidTides": true,
+          "relativity": "IERS_2010"
+        },
+        "parameters": [
+          {
+            "kind": "DRAG_AREA_OVER_MASS",
+            "value": 0.0054
+          }
+        ],
+        "fixed": {
+          "agom": 0.005
+        },
+        "apriori": [
+          10000000000.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10000000000.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10000000000.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          100.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          100.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          100.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2.6244000000000002e-06
+        ],
+        "integrator": {
+          "tolerance": 1e-10,
+          "maxStep": 120,
+          "minStep": 0.0001
+        },
+        "maximumIterations": 8,
+        "correctionTolerance": 0.01,
+        "sigmaEditThreshold": 4
+      },
+      "options": {
+        "outer": 8,
+        "tolerance": 0.05,
+        "relaxation": 1.8,
+        "segmentEditRms": 5
+      },
+      "minimumSegmentsWithoutHistory": 6
+    },
+    "variants": [
+      {
+        "name": "P",
+        "history": true,
+        "segments": [
+          0
+        ],
+        "sigmaScale": "sigmaScaleSegmentLag",
+        "drift": true,
+        "segmentLag": true
+      },
+      {
+        "name": "F2",
+        "history": true,
+        "sigmaScale": "sigmaScaleSegmentLag",
+        "drift": true,
+        "segmentLag": true,
+        "firstRoundSigmaFactor": 3
+      },
+      {
+        "name": "F1",
+        "history": true,
+        "sigmaScale": "sigmaScaleCommonLag",
+        "drift": true,
+        "segmentLag": false,
+        "firstRoundSigmaFactor": 3,
+        "everyNth": 2
+      },
+      {
+        "name": "O2",
+        "history": false,
+        "sigmaScale": "sigmaScaleSegmentLag",
+        "drift": true,
+        "segmentLag": true,
+        "firstRoundSigmaFactor": 3
+      },
+      {
+        "name": "L",
+        "history": true,
+        "segments": [
+          1,
+          4,
+          16
+        ],
+        "sigmaScale": "sigmaScaleSegmentLag",
+        "drift": true,
+        "segmentLag": true,
+        "firstRoundSigmaFactor": 3,
+        "everyNth": 3
+      }
+    ]
+  },
+  "slr": {
+    "targets": {
+      "starlette": {
+        "norad": 7646,
+        "regime": "LEO 800-1200 km",
+        "b": 0.0021,
+        "agom": 0.00108,
+        "truth": "nsgf.orb.starlette"
+      },
+      "stella": {
+        "norad": 22824,
+        "regime": "LEO 800-1200 km",
+        "b": 0.0021,
+        "agom": 0.00108,
+        "truth": "nsgf.orb.stella"
+      },
+      "larets": {
+        "norad": 27944,
+        "regime": "LEO 600-800 km",
+        "b": 0.0043,
+        "agom": 0.0022,
+        "truth": "nsgf.orb.larets"
+      },
+      "westpac": {
+        "norad": 25398,
+        "regime": "LEO 800-1200 km",
+        "b": 0.0042,
+        "agom": 0.0021,
+        "truth": "nsgf.orb.westpac"
+      },
+      "lares": {
+        "norad": 38077,
+        "regime": "LEO 1200-2000 km",
+        "b": 0.0006,
+        "agom": 0.00032,
+        "truth": "nsgf.orb.lares"
+      }
+    },
+    "note": "b and agom: E5 config.propagation.targets (Cd A/m and Cr A/m of the spheres); the target centre-of-mass offsets (<= 8 cm) are not applied",
+    "measurement": {
+      "kind": "LASER_RANGE",
+      "tag": "bounce time t_transmit + tof/2, light time off, the station at that instant",
+      "troposphere": "not modelled: fit_batch does not apply error_models (PLAN.md section 7); the delay stays in the ranges and their dev-calibrated sigma"
+    },
+    "fit": {
+      "arcDays": 2,
+      "minimumSegmentsWithoutHistory": 3,
+      "flags": 3,
+      "settings": {
+        "forces": {
+          "degree": 70,
+          "order": 70,
+          "thirdBodies": [
+            10,
+            301
+          ],
+          "srp": true,
+          "drag": true,
+          "atmosphere": "NRLMSISE00",
+          "solidTides": true,
+          "relativity": "IERS_2010"
+        },
+        "integrator": {
+          "tolerance": 1e-10,
+          "maxStep": 120,
+          "minStep": 0.0001
+        },
+        "maximumIterations": 10,
+        "correctionTolerance": 0.01,
+        "sigmaEditThreshold": 5,
+        "bPriorFraction": 0.3
+      },
+      "options": {
+        "outer": 1,
+        "tolerance": 0.05,
+        "relaxation": 1,
+        "segmentEditRms": 0
+      },
+      "historyLanes": "position"
+    },
+    "calibration": {
+      "source": "results/e6/dev/slr-calibration.json (step 16, dev window: median reduced chi-square 13.6 of the 80 dev S fits at 1 m)",
+      "rangeSigmaM": 3.7
+    },
+    "variants": [
+      {
+        "name": "P",
+        "history": true,
+        "segments": [
+          0
+        ]
+      },
+      {
+        "name": "S",
+        "history": true,
+        "firstRoundSigmaFactor": 100
+      },
+      {
+        "name": "R",
+        "history": false,
+        "firstRoundSigmaFactor": 100
+      },
+      {
+        "name": "L",
+        "history": true,
+        "segments": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "everyNth": 2,
+        "firstRoundSigmaFactor": 100
+      }
+    ],
+    "minimumElevationDeg": 10,
+    "minimumPointsPerPass": 3,
+    "cutoffEveryHours": 24
+  },
+  "inventory": {
+    "opticalTruth": {
+      "36508": {
+        "name": "CryoSat-2",
+        "truth": "IDS DORIS SSALTO POE (hac/ids-doris), ILRS CPF",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "41240": {
+        "name": "Jason-3",
+        "truth": "IDS DORIS SSALTO POE",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "41335": {
+        "name": "Sentinel-3A",
+        "truth": "IDS DORIS SSALTO POE",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "43437": {
+        "name": "Sentinel-3B",
+        "truth": "IDS DORIS SSALTO POE",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "46984": {
+        "name": "Sentinel-6A",
+        "truth": "IDS DORIS SSALTO POE",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "39086": {
+        "name": "SARAL",
+        "truth": "IDS DORIS SSALTO POE",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "54754": {
+        "name": "SWOT",
+        "truth": "IDS DORIS SSALTO POE",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "39634": {
+        "name": "Sentinel-1A",
+        "truth": "Copernicus POEORB",
+        "from": "2025-10-01",
+        "to": "2026-07-31"
+      },
+      "62261": {
+        "name": "Sentinel-1C",
+        "truth": "Copernicus POEORB",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "66315": {
+        "name": "Sentinel-1D",
+        "truth": "Copernicus POEORB",
+        "from": "2025-10-01",
+        "to": "2026-09-30"
+      },
+      "39451": {
+        "name": "Swarm B",
+        "truth": "ESA Swarm RD/COM SP3",
+        "from": "2025-10-01",
+        "to": "2026-08-19"
+      },
+      "39452": {
+        "name": "Swarm A",
+        "truth": "ESA Swarm RD/COM SP3",
+        "from": "2025-10-01",
+        "to": "2026-08-19"
+      },
+      "39453": {
+        "name": "Swarm C",
+        "truth": "ESA Swarm RD/COM SP3",
+        "from": "2025-10-01",
+        "to": "2026-08-19"
+      },
+      "43476": {
+        "name": "GRACE-FO 1",
+        "truth": "GFZ RSO",
+        "from": "2025-10-01",
+        "to": "2026-10-08"
+      },
+      "43477": {
+        "name": "GRACE-FO 2",
+        "truth": "GFZ RSO",
+        "from": "2025-10-01",
+        "to": "2026-10-08"
+      },
+      "25544": {
+        "name": "ISS",
+        "truth": "NASA ISS OEM (flown spans)",
+        "from": "2026-09-07",
+        "to": "2026-10-09"
+      },
+      "7646": {
+        "name": "Starlette",
+        "truth": "NSGF",
+        "from": "2025-10-01",
+        "to": "2026-08-28"
+      },
+      "22824": {
+        "name": "Stella",
+        "truth": "NSGF",
+        "from": "2025-10-01",
+        "to": "2026-08-28"
+      },
+      "16908": {
+        "name": "Ajisai",
+        "truth": "NSGF",
+        "from": "2025-10-01",
+        "to": "2026-08-28"
+      },
+      "38077": {
+        "name": "LARES",
+        "truth": "NSGF",
+        "from": "2025-10-01",
+        "to": "2026-08-28"
+      }
+    },
+    "note": "objects with public truth on hand (docs/hac-sources.md A.2, A.4, A.5, A.7, A.8, B.3); Starlink and Planet operator ephemerides were captured only from 2026-09-09"
+  }
+}

@@ -1,0 +1,5637 @@
+{
+ "selection": {
+  "pcrbTrigger": 0.5,
+  "pcrbTriggerVariant": "E26:k=0.5",
+  "decayRate": 0,
+  "decayRateVariant": "E25T:l=0"
+ },
+ "thresholds": {
+  "E26.qMin": {
+   "variant": "E26:k=0.5",
+   "epochs": 226,
+   "p99": 615540.3724102537
+  },
+  "E26.choquet": {
+   "variant": "E26:k=0.5",
+   "epochs": 226,
+   "p99": 1
+  },
+  "EKF.nis": {
+   "variant": "EKF",
+   "epochs": 226,
+   "p99": 680.2744298585832
+  },
+  "UKF.nis": {
+   "variant": "UKF",
+   "epochs": 226,
+   "p99": 8.911098504862636
+  }
+ },
+ "runs": {
+  "partB": [
+   "e10-teag-espf-10-partb-test-20261010T024145Z"
+  ],
+  "partC": [
+   "e10-teag-espf-30-partc-test-20261010T042543Z",
+   "e10-teag-espf-30-partc-test-20261010T070155Z"
+  ],
+  "partA": [
+   "e10-teag-espf-40-parta-20261010T063916Z"
+  ],
+  "enclosure": [
+   "e10-teag-espf-50-enclosure-20261010T063914Z"
+  ],
+  "partD": [
+   "e10-teag-espf-60-partd-20261010T085704Z"
+  ],
+  "explore": [
+   "e10-teag-espf-10-partb-dev-20261010T024149Z"
+  ]
+ },
+ "partB": {
+  "variants": {
+   "E26": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 2,
+     "rmsPosM": {
+      "estimate": 4201.457695281024,
+      "lower": 1724.5564925044482,
+      "upper": "Infinity",
+      "lower90": 1724.5564925044482,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 10734.207937037874,
+     "maxPosM": 29274.845319789023,
+     "rmsVelMps": 5.769185203510098,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -21.706884764092088,
+      "medianExtentsM": [
+       7.848710042567466,
+       15.532981163656686,
+       4.628232906675054
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 708.267487854
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 25854.374191169627,
+      "upper": "Infinity",
+      "lower90": 25854.374191169627,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 134475.4837435069,
+     "maxPosM": 893809.8962564521,
+     "rmsVelMps": 95.04513194655055,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -21.681336242451174,
+      "medianExtentsM": [
+       8.401050535363215,
+       14.253592388262224,
+       4.870821365120114
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 709.4651242499999
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 3,
+     "rmsPosM": {
+      "estimate": 4168.6863308708225,
+      "lower": 2035.199562007085,
+      "upper": "Infinity",
+      "lower90": 2035.199562007085,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 10238.31659561638,
+     "maxPosM": 29274.845319789023,
+     "rmsVelMps": 5.2139340864760815,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -21.10506077642073,
+      "medianExtentsM": [
+       7.9837801199015415,
+       16.991088913732433,
+       4.651733051791293
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 693.0671327084999
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 45299.73586611582,
+     "maxPosM": 65272.09336395353,
+     "rmsVelMps": 28.767690979320065,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -22.51760273681343,
+      "medianExtentsM": [
+       7.8066409144073186,
+       10.194341430779197,
+       4.75078875025239
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 689.0138496874999
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 2,
+     "rmsPosM": {
+      "estimate": 4169.843659713719,
+      "lower": 1699.300954804526,
+      "upper": "Infinity",
+      "lower90": 1699.300954804526,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 10775.787065798337,
+     "maxPosM": 29274.845319789023,
+     "rmsVelMps": 5.755448382784588,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -21.454632923948907,
+      "medianExtentsM": [
+       7.694611762549698,
+       15.91367907539462,
+       4.792380151633615
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 719.8893073125
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 3,
+     "rmsPosM": {
+      "estimate": 5842.497458283282,
+      "lower": 2477.155765265188,
+      "upper": "Infinity",
+      "lower90": 2477.155765265188,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 12996.851441156166,
+     "maxPosM": 27198.438895738087,
+     "rmsVelMps": 7.633855621749179,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -21.845820104085814,
+      "medianExtentsM": [
+       7.840720835573803,
+       14.56820511206428,
+       4.8370772728910545
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 730.258642021
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 22771.6094294472,
+      "upper": "Infinity",
+      "lower90": 22771.6094294472,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 84722.39910359767,
+     "maxPosM": 906631.1787662735,
+     "rmsVelMps": 63.34245933082786,
+     "containment": {
+      "set": {
+       "estimate": 0.5164835164835165,
+       "lower": 0.3333333333333333,
+       "upper": 0.7222222222222222,
+       "lower90": 0.34782608695652173,
+       "upper90": 0.6842391304347826,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.5164835164835165,
+       "lower": 0.3333333333333333,
+       "upper": 0.7222222222222222,
+       "lower90": 0.34782608695652173,
+       "upper90": 0.6842391304347826,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.5164835164835165,
+       "lower": 0.3333333333333333,
+       "upper": 0.7222222222222222,
+       "lower90": 0.34782608695652173,
+       "upper90": 0.6842391304347826,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 60.746977857967636,
+      "medianExtentsM": [
+       7168.40493310768,
+       116616.76299160771,
+       2183.7898786243986
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1402.5,
+      "seconds": 603.7384973334999
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 2,
+     "rmsPosM": {
+      "estimate": 4194.687555843855,
+      "lower": 2314.8052738403367,
+      "upper": "Infinity",
+      "lower90": 2314.8052738403367,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 8070.929651139897,
+     "maxPosM": 29274.505338267132,
+     "rmsVelMps": 4.337134036469941,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -20.285812175913748,
+      "medianExtentsM": [
+       8.608095213710618,
+       18.395025522660603,
+       5.5217675537977104
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10327.5,
+      "seconds": 624.775651667
+     }
+    }
+   },
+   "E25": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 4681.244250655956,
+      "upper": "Infinity",
+      "lower90": 4681.244250655956,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 39300.12582414041,
+     "maxPosM": 90486.11299468482,
+     "rmsVelMps": 29.63985644835959,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.2739870034207,
+      "medianExtentsM": [
+       0.009483356361763524,
+       0.009476443072899639,
+       0.009475817054366568
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 121.794840938
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 580574.0285542805,
+     "maxPosM": 2033243.436666982,
+     "rmsVelMps": 456.5772044133254,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.27392739612651,
+      "medianExtentsM": [
+       0.009483249537614891,
+       0.009476537310716068,
+       0.009475820715119857
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 124.59550656249999
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 4681.244250655956,
+      "upper": "Infinity",
+      "lower90": 4681.244250655956,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 39300.12582414041,
+     "maxPosM": 90486.11299468482,
+     "rmsVelMps": 29.63985644835959,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.2739870034207,
+      "medianExtentsM": [
+       0.009483356361763524,
+       0.009476443072899639,
+       0.009475817054366568
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 123.53801808349999
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 74958.19981735501,
+     "maxPosM": 126242.12475465948,
+     "rmsVelMps": 54.14760873021977,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.2739681505579,
+      "medianExtentsM": [
+       0.009483667394933103,
+       0.009476746712792897,
+       0.009476161604467495
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 123.000591125
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 4640.794722407413,
+      "upper": "Infinity",
+      "lower90": 4640.794722407413,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 39226.96406138384,
+     "maxPosM": 90549.72534622528,
+     "rmsVelMps": 29.59925332964535,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.27397262466944,
+      "medianExtentsM": [
+       0.009483356534982704,
+       0.009476442030383135,
+       0.009475817260441007
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 125.514598271
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 8241.649108325186,
+      "upper": "Infinity",
+      "lower90": 8241.649108325186,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 35194.5354503947,
+     "maxPosM": 77687.64010801856,
+     "rmsVelMps": 26.22902077730062,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.27398703946568,
+      "medianExtentsM": [
+       0.00948335673312193,
+       0.009476442684907944,
+       0.0094758174121677
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 125.49755127099999
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 48853.18289559237,
+     "maxPosM": 150102.3984087065,
+     "rmsVelMps": 34.29589041281152,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -5.945859403379944,
+      "medianExtentsM": [
+       28.680159947802647,
+       172.10589663616827,
+       22.46497012404192
+      ]
+     },
+     "cost": {
+      "hpopCalls": 214.5,
+      "seconds": 109.425016646
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 5,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 4656.604497396181,
+      "upper": "Infinity",
+      "lower90": 4656.604497396181,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 39347.98002271133,
+     "maxPosM": 90448.46735771789,
+     "rmsVelMps": 29.674161510650883,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": -81.27394398481212,
+      "medianExtentsM": [
+       0.009483355952435865,
+       0.00947644237510874,
+       0.009475817698864264
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 104.945283979
+     }
+    }
+   },
+   "E25T": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 4224.421404523672,
+      "lower": 2099.5438270808904,
+      "upper": 5267.717282309518,
+      "lower90": 2099.5438270808904,
+      "upper90": 5267.717282309518,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 9153.972614278719,
+     "maxPosM": 26232.835220392077,
+     "rmsVelMps": 5.011711553165663,
+     "containment": {
+      "set": {
+       "estimate": 0.46755162241887904,
+       "lower": 0.252212389380531,
+       "upper": 0.6883174234606119,
+       "lower90": 0.27827380952380953,
+       "upper90": 0.6627393225331369,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.3893805309734513,
+       "lower": 0.1937858912838264,
+       "upper": 0.6073529411764705,
+       "lower90": 0.21976401179941002,
+       "upper90": 0.5712187958883994,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.3893805309734513,
+       "lower": 0.1937858912838264,
+       "upper": 0.6073529411764705,
+       "lower90": 0.21976401179941002,
+       "upper90": 0.5712187958883994,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 49.62939017582461,
+      "medianExtentsM": [
+       2712.4443071423643,
+       16546.941171078666,
+       1494.3789599254428
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 121.905650125
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 129249.03922509888,
+     "maxPosM": 1017404.7032234338,
+     "rmsVelMps": 71.55238154269928,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 43.91815121001672,
+      "medianExtentsM": [
+       1588.086439856254,
+       23516.611249433026,
+       720.0851483225562
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 122.8804050835
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 3906.71287014919,
+      "lower": 2131.327939242082,
+      "upper": 4488.842910514219,
+      "lower90": 2131.327939242082,
+      "upper90": 4488.842910514219,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 8122.74950661085,
+     "maxPosM": 26232.835220392077,
+     "rmsVelMps": 4.2854012839498115,
+     "containment": {
+      "set": {
+       "estimate": 0.5029498525073747,
+       "lower": 0.2873900293255132,
+       "upper": 0.7220588235294118,
+       "lower90": 0.30114760746147606,
+       "upper90": 0.7048458149779736,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.42625368731563423,
+       "lower": 0.21649484536082475,
+       "upper": 0.6505139500734214,
+       "lower90": 0.24193548387096775,
+       "upper90": 0.6257309941520468,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.42625368731563423,
+       "lower": 0.21649484536082475,
+       "upper": 0.6505139500734214,
+       "lower90": 0.24193548387096775,
+       "upper90": 0.6257309941520468,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 51.36307970384327,
+      "medianExtentsM": [
+       3062.4699936884235,
+       17142.176076601674,
+       1729.3960265181279
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 123.5016821455
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 5208.492817099713,
+      "lower": 4096.487425663894,
+      "upper": 12581.77064425519,
+      "lower90": 4096.487425663894,
+      "upper90": 12581.77064425519,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 9235.981057220233,
+     "maxPosM": 26232.835220392077,
+     "rmsVelMps": 5.7417595488115145,
+     "containment": {
+      "set": {
+       "estimate": 0.3702064896755162,
+       "lower": 0.14831130690161526,
+       "upper": 0.5743952585139519,
+       "lower90": 0.1819526627218935,
+       "upper90": 0.540381791483113,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.30383480825958703,
+       "lower": 0.12332838038632987,
+       "upper": 0.4808823529411765,
+       "lower90": 0.14432989690721648,
+       "upper90": 0.4443968255349512,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.30383480825958703,
+       "lower": 0.12332838038632987,
+       "upper": 0.4808823529411765,
+       "lower90": 0.14432989690721648,
+       "upper90": 0.4443968255349512,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 46.421359315883876,
+      "medianExtentsM": [
+       2324.2254746878943,
+       14034.090199058468,
+       2037.6045961116104
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 123.6154319375
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 4223.798030569612,
+      "lower": 2100.37700873002,
+      "upper": 5261.738154487632,
+      "lower90": 2100.37700873002,
+      "upper90": 5261.738154487632,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 9143.906499517085,
+     "maxPosM": 26232.835220392077,
+     "rmsVelMps": 5.008092858344055,
+     "containment": {
+      "set": {
+       "estimate": 0.46755162241887904,
+       "lower": 0.252212389380531,
+       "upper": 0.6883174234606119,
+       "lower90": 0.27827380952380953,
+       "upper90": 0.6627393225331369,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.3893805309734513,
+       "lower": 0.1937858912838264,
+       "upper": 0.6073529411764705,
+       "lower90": 0.21976401179941002,
+       "upper90": 0.5712187958883994,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.3893805309734513,
+       "lower": 0.1937858912838264,
+       "upper": 0.6073529411764705,
+       "lower90": 0.21976401179941002,
+       "upper90": 0.5712187958883994,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 49.620661246557624,
+      "medianExtentsM": [
+       2711.027879775602,
+       16538.651629785916,
+       1494.4137320200725
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 126.06371089550001
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 3988.5410643354785,
+      "lower": 3372.5053302690344,
+      "upper": 5038.497879279748,
+      "lower90": 3372.5053302690344,
+      "upper90": 5038.497879279748,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 6848.245696198568,
+     "maxPosM": 21444.607740459564,
+     "rmsVelMps": 4.2024133701704685,
+     "containment": {
+      "set": {
+       "estimate": 0.42330383480825956,
+       "lower": 0.21726190476190477,
+       "upper": 0.6469719350073855,
+       "lower90": 0.2685459940652819,
+       "upper90": 0.5851851851851851,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.3421828908554572,
+       "lower": 0.17559523809523808,
+       "upper": 0.5368731563421829,
+       "lower90": 0.19555555555555557,
+       "upper90": 0.49333333333333335,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.3421828908554572,
+       "lower": 0.17559523809523808,
+       "upper": 0.5368731563421829,
+       "lower90": 0.19555555555555557,
+       "upper90": 0.49333333333333335,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 46.11485067609111,
+      "medianExtentsM": [
+       2590.326000339893,
+       8051.071948098519,
+       1991.6674581544914
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 124.38175016599999
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 3,
+     "rmsPosM": {
+      "estimate": 11242.080959315448,
+      "lower": 5025.240634974847,
+      "upper": "Infinity",
+      "lower90": 5025.240634974847,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 23597.45699375566,
+     "maxPosM": 43119.10157013067,
+     "rmsVelMps": 15.068023973739827,
+     "containment": {
+      "set": {
+       "estimate": 0.7272727272727273,
+       "lower": 0.4044943820224719,
+       "upper": 0.9326392281387392,
+       "lower90": 0.44651109585907117,
+       "upper90": 0.9230769230769231,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.5454545454545454,
+       "lower": 0.3,
+       "upper": 0.7586206896551724,
+       "lower90": 0.3333333333333333,
+       "upper90": 0.7391304347826086,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.5454545454545454,
+       "lower": 0.3,
+       "upper": 0.7586206896551724,
+       "lower90": 0.3333333333333333,
+       "upper90": 0.7391304347826086,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 68.6694318421094,
+      "medianExtentsM": [
+       14330.733643525273,
+       193242.01485258114,
+       4703.252414016528
+      ]
+     },
+     "cost": {
+      "hpopCalls": 208,
+      "seconds": 109.4766833545
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 4224.97691734704,
+      "lower": 2100.1132355989685,
+      "upper": 5266.009189896688,
+      "lower90": 2100.1132355989685,
+      "upper90": 5266.009189896688,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 9142.53762500434,
+     "maxPosM": 26237.47564484676,
+     "rmsVelMps": 5.010143877089521,
+     "containment": {
+      "set": {
+       "estimate": 0.46755162241887904,
+       "lower": 0.252212389380531,
+       "upper": 0.6883174234606119,
+       "lower90": 0.27827380952380953,
+       "upper90": 0.6627393225331369,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": {
+       "estimate": 0.3893805309734513,
+       "lower": 0.1937858912838264,
+       "upper": 0.6073529411764705,
+       "lower90": 0.21976401179941002,
+       "upper90": 0.5712187958883994,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha05": {
+       "estimate": 0.3893805309734513,
+       "lower": 0.1937858912838264,
+       "upper": 0.6073529411764705,
+       "lower90": 0.21976401179941002,
+       "upper90": 0.5712187958883994,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 49.63377637862068,
+      "medianExtentsM": [
+       2712.9675769947116,
+       16551.96124878042,
+       1494.3212364722538
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 104.5927292705
+     }
+    }
+   },
+   "EKF": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 11.565090277800246,
+      "lower": 9.275798138317574,
+      "upper": 20.86703704797047,
+      "lower90": 9.275798138317574,
+      "upper90": 20.86703704797047,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 23.250609209719087,
+     "maxPosM": 40511.446811499154,
+     "rmsVelMps": 0.01707994475681844,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.7713864306784661,
+       "lower": 0.45374449339207046,
+       "upper": 0.9528023598820059,
+       "lower90": 0.4698972099853157,
+       "upper90": 0.9430284857571214,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.8200589970501475,
+       "lower": 0.4881656804733728,
+       "upper": 0.9970414201183432,
+       "lower90": 0.4963181148748159,
+       "upper90": 0.9940564635958395,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -11.071510852423323,
+      "medianExtentsM": [
+       15.411576012553695,
+       27.492049937113638,
+       16.142841077115214
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.062237604
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 263047.22903466225,
+     "maxPosM": 2076678.0370061668,
+     "rmsVelMps": 179.56309071631108,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 43.9706993138243,
+      "medianExtentsM": [
+       4647.351560340036,
+       47821.67914611108,
+       3855.954772858069
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.7770705415
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 46.644487920856186,
+      "lower": 29.872692613910445,
+      "upper": 96.28063609760206,
+      "lower90": 29.872692613910445,
+      "upper90": 96.28063609760206,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 125.92894692828577,
+     "maxPosM": 40511.446811499154,
+     "rmsVelMps": 0.055726237275869964,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.15191740412979352,
+       "lower": 0.08516886930983847,
+       "upper": 0.20381231671554254,
+       "lower90": 0.09397944199706314,
+       "upper90": 0.19852941176470587,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.2153392330383481,
+       "lower": 0.11538461538461539,
+       "upper": 0.293104045742008,
+       "lower90": 0.13742690058479531,
+       "upper90": 0.2861356932153392,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -7.864111454007205,
+      "medianExtentsM": [
+       19.425434928992935,
+       49.84058797823565,
+       21.553081522161285
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.7882808125
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 51775.892422156125,
+     "maxPosM": 64460.84903144151,
+     "rmsVelMps": 31.252225807558233,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.20501474926253688,
+       "lower": 0.11730205278592376,
+       "upper": 0.25773195876288657,
+       "lower90": 0.1273792093704246,
+       "upper90": 0.25441176470588234,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.2168141592920354,
+       "lower": 0.12794117647058822,
+       "upper": 0.2696337569240795,
+       "lower90": 0.13362701908957417,
+       "upper90": 0.2671641791044776,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 3.721718119171544,
+      "medianExtentsM": [
+       48.03936639332437,
+       1079.5667562211256,
+       36.681032182256914
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.577851188
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 11.175115807034839,
+      "lower": 9.582768784136663,
+      "upper": 20.995434254564493,
+      "lower90": 9.582768784136663,
+      "upper90": 20.995434254564493,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 23.190029894766646,
+     "maxPosM": 40686.97972813881,
+     "rmsVelMps": 0.017109963506607487,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.7861356932153393,
+       "lower": 0.4608567208271787,
+       "upper": 0.9718934911242604,
+       "lower90": 0.4845814977973568,
+       "upper90": 0.9646539027982327,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.8200589970501475,
+       "lower": 0.4881656804733728,
+       "upper": 0.9970414201183432,
+       "lower90": 0.4963181148748159,
+       "upper90": 0.9940564635958395,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -11.071552023504342,
+      "medianExtentsM": [
+       15.411573264775903,
+       27.492027280768713,
+       16.142839823858072
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.619366853999999
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 3,
+     "rmsPosM": {
+      "estimate": 24.34512808082155,
+      "lower": 11.640998112486582,
+      "upper": "Infinity",
+      "lower90": 11.640998112486582,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 17567.72693137107,
+     "maxPosM": 66167.04631286717,
+     "rmsVelMps": 12.964284701413288,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.4616519174041298,
+       "lower": 0.1514705882352941,
+       "upper": 0.7781271974632151,
+       "lower90": 0.1536189069423929,
+       "upper90": 0.7731958762886598,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.48525073746312686,
+       "lower": 0.15735294117647058,
+       "upper": 0.8214285714285714,
+       "lower90": 0.15952732644017725,
+       "upper90": 0.812220566318927,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 5.808288214896679,
+      "medianExtentsM": [
+       298.0143804385887,
+       5808.297518614231,
+       59.49324303955569
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.7459023545
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 223.62159371617528,
+      "lower": 78.53438008058663,
+      "upper": 385.10322924717156,
+      "lower90": 78.53438008058663,
+      "upper90": 385.10322924717156,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 390.6375826674108,
+     "maxPosM": 4687.350786356469,
+     "rmsVelMps": 0.25514268564517434,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.8064516129032258,
+       "lower": 0.5494505494505495,
+       "upper": 0.978494623655914,
+       "lower90": 0.5913978494623656,
+       "upper90": 0.9680851063829787,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.8602150537634409,
+       "lower": 0.6630434782608695,
+       "upper": 0.9894736842105263,
+       "lower90": 0.6989247311827957,
+       "upper90": 0.9789473684210527,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 2.7018988517307645,
+      "medianExtentsM": [
+       41.90251530729209,
+       139.8522086472051,
+       58.78628460113766
+      ]
+     },
+     "cost": {
+      "hpopCalls": 16.5,
+      "seconds": 8.2875464165
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 11.636249057640178,
+      "lower": 9.271914483247667,
+      "upper": 20.867527792761994,
+      "lower90": 9.271914483247667,
+      "upper90": 20.867527792761994,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 23.54367685941542,
+     "maxPosM": 40559.259111354586,
+     "rmsVelMps": 0.017127722622375163,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.7713864306784661,
+       "lower": 0.45374449339207046,
+       "upper": 0.9528023598820059,
+       "lower90": 0.4698972099853157,
+       "upper90": 0.9430284857571214,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.8200589970501475,
+       "lower": 0.4881656804733728,
+       "upper": 0.9970414201183432,
+       "lower90": 0.4963181148748159,
+       "upper90": 0.9940564635958395,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -11.07150972889199,
+      "medianExtentsM": [
+       15.41156854135649,
+       27.492052662771076,
+       16.14284187986584
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 8.203198917
+     }
+    }
+   },
+   "UKF": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 11.410111231073662,
+      "lower": 9.672720476352112,
+      "upper": 11.637755667128356,
+      "lower90": 9.672720476352112,
+      "upper90": 11.637755667128356,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 19.302508726315445,
+     "maxPosM": 88.3770035728288,
+     "rmsVelMps": 0.013095141003941895,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.9070796460176991,
+       "lower": 0.8411764705882353,
+       "upper": 0.9584569732937686,
+       "lower90": 0.8510324483775811,
+       "upper90": 0.9525925925925925,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.976401179941003,
+       "lower": 0.95,
+       "upper": 0.9985207100591716,
+       "lower90": 0.9544787077826725,
+       "upper90": 0.9970282317979198,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -11.042701010791747,
+      "medianExtentsM": [
+       15.40001348729347,
+       25.79276672136467,
+       16.239174096059344
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 123.45583649950001
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 221099.72492522313,
+     "maxPosM": 7482488.350120216,
+     "rmsVelMps": 139.93250582684115,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 53.123791948671155,
+      "medianExtentsM": [
+       4247.12867985025,
+       69848.9012806597,
+       3487.2459596777094
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1553.5,
+      "seconds": 120.15031085449999
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 40.06191620122574,
+      "lower": 30.066535931703886,
+      "upper": 62.33282615231752,
+      "lower90": 30.066535931703886,
+      "upper90": 62.33282615231752,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 84.88548865871078,
+     "maxPosM": 255.74918655648858,
+     "rmsVelMps": 0.04255162095323707,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.19469026548672566,
+       "lower": 0.18059701492537314,
+       "upper": 0.2099125364431487,
+       "lower90": 0.18263473053892215,
+       "upper90": 0.2072992700729927,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.26253687315634217,
+       "lower": 0.2222222222222222,
+       "upper": 0.3001464128843338,
+       "lower90": 0.22767857142857142,
+       "upper90": 0.29515418502202645,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -8.525857713909227,
+      "medianExtentsM": [
+       19.222315608344886,
+       44.57114526456476,
+       19.959983822253104
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 122.629370458
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 54002.119422637974,
+     "maxPosM": 64454.39774562815,
+     "rmsVelMps": 33.41419979186344,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.24631268436578171,
+       "lower": 0.2225475841874085,
+       "upper": 0.2667880468133601,
+       "lower90": 0.22692630551488532,
+       "upper90": 0.2643171806167401,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.2551622418879056,
+       "lower": 0.23718698585681727,
+       "upper": 0.27191679049034173,
+       "lower90": 0.23970588235294119,
+       "upper90": 0.26940277570773535,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 4.087965674491096,
+      "medianExtentsM": [
+       48.483249863059726,
+       1093.2223371997147,
+       36.90839637696108
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 123.0930686245
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 11.045153734992434,
+      "lower": 9.965707804202832,
+      "upper": 11.271088014956689,
+      "lower90": 9.965707804202832,
+      "upper90": 11.271088014956689,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 19.204398517402115,
+     "maxPosM": 88.3770035728288,
+     "rmsVelMps": 0.012659586003739027,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.9380530973451328,
+       "lower": 0.8883953096657166,
+       "upper": 0.9838472834067548,
+       "lower90": 0.8965748684554846,
+       "upper90": 0.9765051395007343,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.971976401179941,
+       "lower": 0.9384164222873901,
+       "upper": 0.9985207100591716,
+       "lower90": 0.9454277286135693,
+       "upper90": 0.9970282317979198,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -11.042742072304677,
+      "medianExtentsM": [
+       15.400019629735379,
+       25.792639404752936,
+       16.239172681183888
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 125.9374986875
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 1,
+     "rmsPosM": {
+      "estimate": 15.719200963272192,
+      "lower": 12.200136433059143,
+      "upper": 7350.52610018814,
+      "lower90": 12.200136433059143,
+      "upper90": 7350.52610018814,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 33.5396338547212,
+     "maxPosM": 23274.192336513603,
+     "rmsVelMps": 0.02409099940292024,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.5973451327433629,
+       "lower": 0.2823529411764706,
+       "upper": 0.9137426900584795,
+       "lower90": 0.2903703703703704,
+       "upper90": 0.8935860058309038,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.6460176991150443,
+       "lower": 0.3161764705882353,
+       "upper": 0.974739970282318,
+       "lower90": 0.3214814814814815,
+       "upper90": 0.966275659824047,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -10.046687183824197,
+      "medianExtentsM": [
+       16.87536637507552,
+       32.3805980005492,
+       18.133372820449175
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 124.90690133300001
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 189.29933359121623,
+      "lower": 42.336564612492026,
+      "upper": 288.2030835495835,
+      "lower90": 42.336564612492026,
+      "upper90": 288.2030835495835,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 255.09037165406176,
+     "maxPosM": 1406.4947751523582,
+     "rmsVelMps": 0.26618666705455907,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 1,
+       "lower": 1,
+       "upper": 1,
+       "lower90": 1,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 1,
+       "lower": 1,
+       "upper": 1,
+       "lower90": 1,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": 2.8466367337691683,
+      "medianExtentsM": [
+       44.244962652035895,
+       135.28250423470712,
+       60.79942079622673
+      ]
+     },
+     "cost": {
+      "hpopCalls": 214.5,
+      "seconds": 108.3503591875
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 11.411418912311241,
+      "lower": 9.671043098445754,
+      "upper": 11.619675820422195,
+      "lower90": 9.671043098445754,
+      "upper90": 11.619675820422195,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 19.493840647690835,
+     "maxPosM": 88.39488127119459,
+     "rmsVelMps": 0.013106583477391374,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.9070796460176991,
+       "lower": 0.8411764705882353,
+       "upper": 0.9584569732937686,
+       "lower90": 0.8510324483775811,
+       "upper90": 0.9525925925925925,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.976401179941003,
+       "lower": 0.95,
+       "upper": 0.9985207100591716,
+       "lower90": 0.9544787077826725,
+       "upper90": 0.9970282317979198,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -11.042700562674888,
+      "medianExtentsM": [
+       15.400009621022436,
+       25.792762870124776,
+       16.239172771593317
+      ]
+     },
+     "cost": {
+      "hpopCalls": 1579.5,
+      "seconds": 105.01583141649999
+     }
+    }
+   },
+   "BLS": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 3.6867200635079413,
+      "lower": 3.1756963948373147,
+      "upper": 5.780857670105271,
+      "lower90": 3.1756963948373147,
+      "upper90": 5.780857670105271,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 6.067470074422386,
+     "maxPosM": 9.357474999516958,
+     "rmsVelMps": 0.004300118872978853,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.33480825958702065,
+       "lower": 0,
+       "upper": 0.6715976331360947,
+       "lower90": 0,
+       "upper90": 0.668141592920354,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -32.75878114298074,
+      "medianExtentsM": [
+       3.323765202110292,
+       6.514763829202197,
+       6.711938759726252
+      ]
+     },
+     "cost": {
+      "hpopCalls": 7.5,
+      "seconds": 64.3528337705
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 3,
+     "rmsPosM": {
+      "estimate": 5.7796831665220365,
+      "lower": 3.3802046219907855,
+      "upper": "Infinity",
+      "lower90": 3.3802046219907855,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 5.149391856524108,
+     "maxPosM": 8.858285796370438,
+     "rmsVelMps": 0.0038456423473838277,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 3,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.3343108504398827,
+       "lower": 0,
+       "upper": 1,
+       "lower90": 0,
+       "upper90": 0.6705882352941176,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 3,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -33.52148762695466,
+      "medianExtentsM": [
+       3.3569331704538365,
+       6.100751834035448,
+       6.529500172390478
+      ]
+     },
+     "cost": {
+      "hpopCalls": 6.5,
+      "seconds": 57.815364771
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 16.34358393833868,
+      "lower": 13.868303199585023,
+      "upper": 18.38528202366399,
+      "lower90": 13.868303199585023,
+      "upper90": 18.38528202366399,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 22.00904037968614,
+     "maxPosM": 31.100673300556767,
+     "rmsVelMps": 0.015901642005889317,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -32.75884100095959,
+      "medianExtentsM": [
+       3.3237416292207813,
+       6.514738839131667,
+       6.711939807228356
+      ]
+     },
+     "cost": {
+      "hpopCalls": 6.5,
+      "seconds": 60.7076658125
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 4,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 8293.112570770343,
+      "upper": "Infinity",
+      "lower90": 8293.112570770343,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 14981.578282549488,
+     "maxPosM": 17341.67331996291,
+     "rmsVelMps": 9.169078985105614,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -32.38180464889875,
+      "medianExtentsM": [
+       3.455772071010898,
+       6.876777394613477,
+       6.798536102215955
+      ]
+     },
+     "cost": {
+      "hpopCalls": 9,
+      "seconds": 80.024292792
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 18.35910053347547,
+      "lower": 13.872244099822344,
+      "upper": 29.388151322306165,
+      "lower90": 13.872244099822344,
+      "upper90": 29.388151322306165,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 42.15702743471505,
+     "maxPosM": 74.63546547876398,
+     "rmsVelMps": 0.026315921993606762,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -32.37279408209804,
+      "medianExtentsM": [
+       3.528663620451818,
+       6.78796156976793,
+       6.82302645659667
+      ]
+     },
+     "cost": {
+      "hpopCalls": 8,
+      "seconds": 75.784412062
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 3.3121110235966733,
+      "lower": 2.8270957066189633,
+      "upper": 5.480843999741127,
+      "lower90": 2.8270957066189633,
+      "upper90": 5.480843999741127,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 5.658664554070884,
+     "maxPosM": 8.920827687363174,
+     "rmsVelMps": 0.0040107350505567034,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.16666666666666666,
+       "lower": 0,
+       "upper": 0.5022222222222222,
+       "lower90": 0,
+       "upper90": 0.4985294117647059,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.33480825958702065,
+       "lower": 0,
+       "upper": 0.6715976331360947,
+       "lower90": 0,
+       "upper90": 0.668141592920354,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -32.06492186248123,
+      "medianExtentsM": [
+       3.5411286057136153,
+       6.992250037292934,
+       7.079317433752272
+      ]
+     },
+     "cost": {
+      "hpopCalls": 10,
+      "seconds": 85.431360896
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 11.515125472462842,
+      "lower": 10.738031419139473,
+      "upper": 13.65964512318115,
+      "lower90": 10.738031419139473,
+      "upper90": 13.65964512318115,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 17.440655850332078,
+     "maxPosM": 28.824417371910034,
+     "rmsVelMps": 0.012899283760795237,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.8279569892473119,
+       "lower": 0.48936170212765956,
+       "upper": 1,
+       "lower90": 0.49473684210526314,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 1,
+       "lower": 1,
+       "upper": 1,
+       "lower90": 1,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -12.18100800041368,
+      "medianExtentsM": [
+       16.836621461091372,
+       43.019497315066815,
+       30.1311234697287
+      ]
+     },
+     "cost": {
+      "hpopCalls": 5,
+      "seconds": 41.1655064375
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 6.653578488826086,
+      "lower": 4.399815713054906,
+      "upper": 7.4527624150522005,
+      "lower90": 4.399815713054906,
+      "upper90": 7.4527624150522005,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 11.674442395905057,
+     "maxPosM": 17.13921812412007,
+     "rmsVelMps": 0.00746951695306217,
+     "containment": {
+      "set": null,
+      "alpha005": null,
+      "alpha05": null,
+      "p95": {
+       "estimate": 0.045722713864306784,
+       "lower": 0.0029239766081871343,
+       "upper": 0.12667660208643816,
+       "lower90": 0.002936857562408223,
+       "upper90": 0.12332838038632987,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "p997": {
+       "estimate": 0.07669616519174041,
+       "lower": 0.002936857562408223,
+       "upper": 0.19970193740685543,
+       "lower90": 0.005891016200294551,
+       "upper90": 0.18684603886397608,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      }
+     },
+     "size": {
+      "medianLogDet": -32.75878099712507,
+      "medianExtentsM": [
+       3.3237437441404705,
+       6.51475428035517,
+       6.711938646784142
+      ]
+     },
+     "cost": {
+      "hpopCalls": 6.5,
+      "seconds": 49.534585104
+     }
+    }
+   },
+   "SMF": {
+    "B1-nominal": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 36.20317234990307,
+      "lower": 32.25171563007959,
+      "upper": 42.24957521403795,
+      "lower90": 32.25171563007959,
+      "upper90": 42.24957521403795,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 72.37872561738405,
+     "maxPosM": 341.2704390610072,
+     "rmsVelMps": 0.05438356333233993,
+     "containment": {
+      "set": {
+       "estimate": 1,
+       "lower": 1,
+       "upper": 1,
+       "lower90": 1,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 14.180900006030157,
+      "medianExtentsM": [
+       90.56465507812442,
+       69.25448677165929,
+       107.46122207499113
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.714299937
+     }
+    },
+    "B2-initial-error": {
+     "runs": 6,
+     "failures": 6,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": "Infinity",
+      "upper": "Infinity",
+      "lower90": "Infinity",
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 195333.9380837544,
+     "maxPosM": 2076678.0370061668,
+     "rmsVelMps": 118.40571634991322,
+     "containment": {
+      "set": {
+       "estimate": 0,
+       "lower": 0,
+       "upper": 0,
+       "lower90": 0,
+       "upper90": 0,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 55.89211816393153,
+      "medianExtentsM": [
+       3860.587925201533,
+       65357.08531647919,
+       2003.5961346042711
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.6856068335
+     }
+    },
+    "B3-station-bias": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 136.75674511295512,
+      "lower": 90.31998203250224,
+      "upper": 424.9143074620685,
+      "lower90": 90.31998203250224,
+      "upper90": 424.9143074620685,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 198.11634865992372,
+     "maxPosM": 1380.2379254203654,
+     "rmsVelMps": 0.1941936492027332,
+     "containment": {
+      "set": {
+       "estimate": 0.43805309734513276,
+       "lower": 0.36148148148148146,
+       "upper": 0.508100147275405,
+       "lower90": 0.3687044108766579,
+       "upper90": 0.5029673590504451,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 11.239855090280122,
+      "medianExtentsM": [
+       78.57426381413978,
+       68.3897300892697,
+       70.79511332642988
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.719076688000001
+     }
+    },
+    "B4-manoeuvre": {
+     "runs": 6,
+     "failures": 4,
+     "rmsPosM": {
+      "estimate": "Infinity",
+      "lower": 3004.064818183907,
+      "upper": "Infinity",
+      "lower90": 3004.064818183907,
+      "upper90": "Infinity",
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 26605.939385583235,
+     "maxPosM": 42680.095377363126,
+     "rmsVelMps": 14.475837482987405,
+     "containment": {
+      "set": {
+       "estimate": 0.3112094395280236,
+       "lower": 0.26175343495062264,
+       "upper": 0.3961507666766886,
+       "lower90": 0.2640117994100295,
+       "upper90": 0.39092240117130306,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 29.883841815642505,
+      "medianExtentsM": [
+       405.83374781767,
+       2605.679593172158,
+       276.9191639401647
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 10.086151417
+     }
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 36.475305050258754,
+      "lower": 32.507857351179894,
+      "upper": 41.68113566364561,
+      "lower90": 32.507857351179894,
+      "upper90": 41.68113566364561,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 72.88256158830214,
+     "maxPosM": 354.2822059055624,
+     "rmsVelMps": 0.05416158532344287,
+     "containment": {
+      "set": {
+       "estimate": 1,
+       "lower": 1,
+       "upper": 1,
+       "lower90": 1,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 14.1774441332448,
+      "medianExtentsM": [
+       90.72769557071435,
+       69.25092693649796,
+       107.40691436683446
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.9198958955
+     }
+    },
+    "B6-outliers": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 56.20457030952146,
+      "lower": 44.63796510287987,
+      "upper": 406.64304685888254,
+      "lower90": 44.63796510287987,
+      "upper90": 406.64304685888254,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 185.3665291438063,
+     "maxPosM": 24980.764338257908,
+     "rmsVelMps": 0.08485082477770241,
+     "containment": {
+      "set": {
+       "estimate": 0.7507374631268436,
+       "lower": 0.43768545994065283,
+       "upper": 0.9554896142433235,
+       "lower90": 0.4768888888888889,
+       "upper90": 0.9397944199706314,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 14.144945540618062,
+      "medianExtentsM": [
+       95.6423916440119,
+       83.16856673360707,
+       102.50923853737919
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 9.6217398955
+     }
+    },
+    "B7-sparse": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 208.64874776150398,
+      "lower": 82.93047164437323,
+      "upper": 3105.3117986683847,
+      "lower90": 82.93047164437323,
+      "upper90": 3105.3117986683847,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 511.5804714159685,
+     "maxPosM": 19189.13953007632,
+     "rmsVelMps": 0.4175299208061571,
+     "containment": {
+      "set": {
+       "estimate": 0.989247311827957,
+       "lower": 0.9680851063829787,
+       "upper": 1,
+       "lower90": 0.968421052631579,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 18.655889698688846,
+      "medianExtentsM": [
+       237.96308223003086,
+       419.0111086557687,
+       187.82248871887373
+      ]
+     },
+     "cost": {
+      "hpopCalls": 16.5,
+      "seconds": 8.4363622705
+     }
+    },
+    "B8-dynamics-mismatch": {
+     "runs": 6,
+     "failures": 0,
+     "rmsPosM": {
+      "estimate": 36.21240191008078,
+      "lower": 32.257095268445475,
+      "upper": 42.24762688581625,
+      "lower90": 32.257095268445475,
+      "upper90": 42.24762688581625,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 6,
+       "cols": 1
+      }
+     },
+     "p95PosM": 72.38637755762831,
+     "maxPosM": 341.2358692645017,
+     "rmsVelMps": 0.054383643885814195,
+     "containment": {
+      "set": {
+       "estimate": 1,
+       "lower": 1,
+       "upper": 1,
+       "lower90": 1,
+       "upper90": 1,
+       "resamples": 2000,
+       "clusters": {
+        "rows": 6,
+        "cols": 1
+       }
+      },
+      "alpha005": null,
+      "alpha05": null,
+      "p95": null,
+      "p997": null
+     },
+     "size": {
+      "medianLogDet": 14.180931562663812,
+      "medianExtentsM": [
+       90.56409212010507,
+       69.25410578060016,
+       107.46151832668846
+      ]
+     },
+     "cost": {
+      "hpopCalls": 121.5,
+      "seconds": 8.2724716875
+     }
+    }
+   }
+  },
+  "ratioToUkf": {
+   "E26": {
+    "B1": {
+     "estimate": 361.01958276614545,
+     "lower": 102.70061568094913,
+     "upper": "Infinity",
+     "lower90": 102.70061568094913,
+     "upper90": "Infinity",
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    },
+    "B2-B8": {
+     "estimate": 786.046164533884,
+     "lower": 234.8619112196681,
+     "upper": "Infinity",
+     "lower90": 234.8619112196681,
+     "upper90": "Infinity",
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    }
+   },
+   "E25": {
+    "B1": {
+     "estimate": "Infinity",
+     "lower": 483.9635614510595,
+     "upper": "Infinity",
+     "lower90": 483.9635614510595,
+     "upper90": "Infinity",
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    },
+    "B2-B8": {
+     "estimate": "Infinity",
+     "lower": "Infinity",
+     "upper": "Infinity",
+     "lower90": "Infinity",
+     "upper90": "Infinity",
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    }
+   },
+   "E25T": {
+    "B1": {
+     "estimate": 336.8991525146866,
+     "lower": 182.1370311895556,
+     "upper": 544.5952144681577,
+     "lower90": 182.1370311895556,
+     "upper90": 544.5952144681577,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    },
+    "B2-B8": {
+     "estimate": 214.5468677542116,
+     "lower": 99.21709667179137,
+     "upper": 297.6736439972111,
+     "lower90": 118.6974115866755,
+     "upper90": 297.6736439972111,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    }
+   },
+   "EKF": {
+    "B1": {
+     "estimate": 1.0032804180927317,
+     "lower": 0.9366514787473572,
+     "upper": 1.6128625520213986,
+     "lower90": 0.9366514787473572,
+     "upper90": 1.6128625520213986,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    },
+    "B2-B8": {
+     "estimate": 1.0631793631274447,
+     "lower": 0.9906052198435314,
+     "upper": 12.3517392969939,
+     "lower90": 0.9990037676613864,
+     "upper90": 12.3517392969939,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    }
+   },
+   "BLS": {
+    "B1": {
+     "estimate": 0.3167865794995984,
+     "lower": 0.2630438646849703,
+     "upper": 0.5014938198390747,
+     "lower90": 0.2630438646849703,
+     "upper90": 0.5014938198390747,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    },
+    "B2-B8": {
+     "estimate": 0.34895817231996623,
+     "lower": 0.16969831300668156,
+     "upper": 0.44693392303135066,
+     "lower90": 0.21522597311861708,
+     "upper90": 0.44693392303135066,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    }
+   },
+   "SMF": {
+    "B1": {
+     "estimate": 3.184268345693848,
+     "lower": 2.516042475615842,
+     "upper": 3.396197068736549,
+     "lower90": 2.516042475615842,
+     "upper90": 3.396197068736549,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    },
+    "B2-B8": {
+     "estimate": 3.166385349528815,
+     "lower": 2.4590254398028857,
+     "upper": 3.4110097549375458,
+     "lower90": 2.4590254398028857,
+     "upper90": 3.4110097549375458,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 6,
+      "cols": 1
+     }
+    }
+   }
+  },
+  "detection": {
+   "E26 q_min": {
+    "threshold": 615540.3724102537,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 6,
+     "medianDelaySeconds": 9669.0845,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 3,
+     "medianDelaySeconds": 22399.721,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 46,
+     "epochs": 678
+    }
+   },
+   "E26 Choquet surprisal": {
+    "threshold": 1,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 0,
+     "medianDelaySeconds": null,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 0,
+     "medianDelaySeconds": null,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 0,
+     "epochs": 678
+    }
+   },
+   "UKF NIS": {
+    "threshold": 8.911098504862636,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 6,
+     "medianDelaySeconds": 3345.359,
+     "falseAlarmsBefore": 4,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 3,
+     "medianDelaySeconds": 34503.644,
+     "falseAlarmsBefore": 4,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 7,
+     "epochs": 678
+    }
+   },
+   "EKF NIS": {
+    "threshold": 680.2744298585832,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 6,
+     "medianDelaySeconds": 3414.1735,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 1,
+     "medianDelaySeconds": 15843.445,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 6,
+     "epochs": 678
+    }
+   },
+   "E25 inconsistency": {
+    "threshold": null,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 6,
+     "medianDelaySeconds": 3282.5495,
+     "falseAlarmsBefore": 174,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 6,
+     "medianDelaySeconds": 3282.3014999999996,
+     "falseAlarmsBefore": 174,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 678,
+     "epochs": 678
+    }
+   },
+   "E25T inconsistency": {
+    "threshold": null,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 5,
+     "medianDelaySeconds": 5973.557,
+     "falseAlarmsBefore": 48,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 5,
+     "medianDelaySeconds": 9855.993,
+     "falseAlarmsBefore": 48,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 156,
+     "epochs": 678
+    }
+   },
+   "SMF inconsistency": {
+    "threshold": null,
+    "B4-manoeuvre": {
+     "runs": 6,
+     "detected": 6,
+     "medianDelaySeconds": 3414.1735,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B5-area-change": {
+     "runs": 6,
+     "detected": 0,
+     "medianDelaySeconds": null,
+     "falseAlarmsBefore": 0,
+     "epochsBefore": 174
+    },
+    "B1-nominal": {
+     "falseAlarms": 0,
+     "epochs": 678
+    }
+   }
+  }
+ },
+ "partC": {
+  "variants": {
+   "E26|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 4739.10866823277,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 3.988723773450687,
+     "lower": 2.193524912317754,
+     "upper": 6.059578206299602,
+     "lower90": 2.6469513199390016,
+     "upper90": 5.807104361912314,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 1
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha05": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     2241.288951893389,
+     34696.50977705179,
+     1874.2779720387352
+    ],
+    "cost": {
+     "hpopCalls": 255,
+     "seconds": 64.795848375
+    }
+   },
+   "E25|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 12088.537099398833,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 9.102622293544217,
+     "lower": 5.853874691749993,
+     "upper": 14.094032525617711,
+     "lower90": 6.199555528136295,
+     "upper90": 13.588900250768878,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 1
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.884090909090909,
+      "lower": 0.8093220821842879,
+      "upper": 0.9670803390455132,
+      "lower90": 0.8211560105363985,
+      "upper90": 0.9516966416390199,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": {
+      "estimate": 0.8022727272727272,
+      "lower": 0.7116374490827103,
+      "upper": 0.9114979619565216,
+      "lower90": 0.7274507922170788,
+      "upper90": 0.8888888888888888,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha05": {
+      "estimate": 0.8022727272727272,
+      "lower": 0.7116374490827103,
+      "upper": 0.9114979619565216,
+      "lower90": 0.7274507922170788,
+      "upper90": 0.8888888888888888,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     5984.312936677436,
+     97993.71161016182,
+     5936.77419790519
+    ],
+    "cost": {
+     "hpopCalls": 39,
+     "seconds": 9.860009084
+    }
+   },
+   "E25T|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 23,
+    "finalErrorM": 20958.138460436363,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 21.82153657505304,
+     "lower": 10.539239174363924,
+     "upper": 38.75570734796184,
+     "lower90": 11.293801110139313,
+     "upper90": 37.30186970148998,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 1
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.9977272727272727,
+      "lower": 0.987471266893748,
+      "upper": 1,
+      "lower90": 0.990674901422565,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": {
+      "estimate": 0.9454545454545454,
+      "lower": 0.8975594512195122,
+      "upper": 0.9780605510641808,
+      "lower90": 0.9063216615962836,
+      "upper90": 0.9733025889967638,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha05": {
+      "estimate": 0.9454545454545454,
+      "lower": 0.8975594512195122,
+      "upper": 0.9780605510641808,
+      "lower90": 0.9063216615962836,
+      "upper90": 0.9733025889967638,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     15373.61863579302,
+     372128.20525221585,
+     11803.733878166728
+    ],
+    "cost": {
+     "hpopCalls": 39,
+     "seconds": 9.731408333
+    }
+   },
+   "EKF|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1234.16660175189,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 1.042703844062287,
+     "lower": 0.9580491523120105,
+     "upper": 1.132418105942817,
+     "lower90": 0.9603251055827093,
+     "upper90": 1.1191029869221638,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.6686656671664168
+    },
+    "containment": {
+     "set": null,
+     "alpha005": null,
+     "alpha05": null,
+     "p95": {
+      "estimate": 0.975,
+      "lower": 0.9156464384449982,
+      "upper": 1,
+      "lower90": 0.9295774647887324,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p997": {
+      "estimate": 1,
+      "lower": 1,
+      "upper": 1,
+      "lower90": 1,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     }
+    },
+    "medianExtentsM": [
+     931.0122431261158,
+     10137.82274664758,
+     853.6887675750935
+    ],
+    "cost": {
+     "hpopCalls": 3,
+     "seconds": 0.762880458
+    }
+   },
+   "UKF|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1228.6931561079118,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 1.0392939132945738,
+     "lower": 0.9578505498311842,
+     "upper": 1.1403178424226135,
+     "lower90": 0.9607206496743245,
+     "upper90": 1.1189113937627277,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.6686656671664168
+    },
+    "containment": {
+     "set": null,
+     "alpha005": null,
+     "alpha05": null,
+     "p95": {
+      "estimate": 0.975,
+      "lower": 0.9156464384449982,
+      "upper": 1,
+      "lower90": 0.9295774647887324,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p997": {
+      "estimate": 1,
+      "lower": 1,
+      "upper": 1,
+      "lower90": 1,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     }
+    },
+    "medianExtentsM": [
+     931.0313908838784,
+     10138.014522348269,
+     853.6889080236483
+    ],
+    "cost": {
+     "hpopCalls": 39,
+     "seconds": 9.902413
+    }
+   },
+   "BLS|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1347.158654317921,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 1.1465379774722182,
+     "lower": 0.9851071763517233,
+     "upper": 1.3807730597368866,
+     "lower90": 0.9877792034508837,
+     "upper90": 1.3460893720579492,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.9295352323838081
+    },
+    "containment": {
+     "set": null,
+     "alpha005": null,
+     "alpha05": null,
+     "p95": {
+      "estimate": 0.865909090909091,
+      "lower": 0.7442999708624708,
+      "upper": 0.9666666666666667,
+      "lower90": 0.7715551115551115,
+      "upper90": 0.951374018962936,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p997": {
+      "estimate": 0.95,
+      "lower": 0.8543384294169413,
+      "upper": 1,
+      "lower90": 0.8784235404974424,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     }
+    },
+    "medianExtentsM": [
+     694.8290773272214,
+     6659.985027206867,
+     636.0195607580081
+    ],
+    "cost": {
+     "hpopCalls": 3,
+     "seconds": 2.606654042
+    }
+   },
+   "SMF|primary": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1198.9019571387412,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 0.9999999980892742,
+     "lower": 0.9999999361831563,
+     "upper": 1.0000000040286667,
+     "lower90": 0.999999948728481,
+     "upper90": 1.000000001487759,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.2463768115942029
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9796837435078639,
+      "upper": 1,
+      "lower90": 0.9835428407391179,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": null,
+     "alpha05": null,
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     941.0146209600794,
+     8369.303272430996,
+     859.3785818028271
+    ],
+    "cost": {
+     "hpopCalls": 3,
+     "seconds": 0.778796917
+    }
+   },
+   "E26|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 4896.034806537621,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 4.301726101792609,
+     "lower": 2.414100598651222,
+     "upper": 6.079431810188325,
+     "lower90": 2.8535669489799456,
+     "upper90": 5.806634035322278,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 1
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha05": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     2259.5122860750366,
+     35113.20492869188,
+     1877.6006832599746
+    ],
+    "cost": {
+     "hpopCalls": 255,
+     "seconds": 64.867305791
+    }
+   },
+   "E25|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 12812.735745196012,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 10.59691485251757,
+     "lower": 6.136684642396538,
+     "upper": 16.978385602607386,
+     "lower90": 6.677187496538266,
+     "upper90": 14.53580338755956,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 1
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.8704545454545455,
+      "lower": 0.791069416272256,
+      "upper": 0.9604826145856851,
+      "lower90": 0.8039164624183007,
+      "upper90": 0.9444521391197291,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": {
+      "estimate": 0.8022727272727272,
+      "lower": 0.7118250508573088,
+      "upper": 0.9091011929247222,
+      "lower90": 0.7262084563531251,
+      "upper90": 0.8886216596343178,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha05": {
+      "estimate": 0.8022727272727272,
+      "lower": 0.7118250508573088,
+      "upper": 0.9091011929247222,
+      "lower90": 0.7262084563531251,
+      "upper90": 0.8886216596343178,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     5985.63627119241,
+     98032.58717285174,
+     5936.649946981024
+    ],
+    "cost": {
+     "hpopCalls": 39,
+     "seconds": 9.846835125
+    }
+   },
+   "E25T|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 27,
+    "finalErrorM": 21818.66472271488,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 23.044172656863775,
+     "lower": 11.582080275285806,
+     "upper": 44.7115896253183,
+     "lower90": 12.547417766945427,
+     "upper90": 41.14546126337611,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 1
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.9977272727272727,
+      "lower": 0.987471266893748,
+      "upper": 1,
+      "lower90": 0.990674901422565,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": {
+      "estimate": 0.9659090909090909,
+      "lower": 0.9358838383838384,
+      "upper": 0.9884620921305183,
+      "lower90": 0.9420709614704842,
+      "upper90": 0.9848501210812226,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha05": {
+      "estimate": 0.9659090909090909,
+      "lower": 0.9358838383838384,
+      "upper": 0.9884620921305183,
+      "lower90": 0.9420709614704842,
+      "upper90": 0.9848501210812226,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     15558.574534359512,
+     371784.8362720127,
+     11802.658039287317
+    ],
+    "cost": {
+     "hpopCalls": 39,
+     "seconds": 9.902011416
+    }
+   },
+   "EKF|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1647.0755030004889,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 1.2100997863315102,
+     "lower": 0.9668470778194311,
+     "upper": 1.5520790430460114,
+     "lower90": 0.9919898361941655,
+     "upper90": 1.4127101368396204,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.9470264867566217
+    },
+    "containment": {
+     "set": null,
+     "alpha005": null,
+     "alpha05": null,
+     "p95": {
+      "estimate": 0.9931818181818182,
+      "lower": 0.9705860662849211,
+      "upper": 1,
+      "lower90": 0.9766971117812135,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p997": {
+      "estimate": 1,
+      "lower": 1,
+      "upper": 1,
+      "lower90": 1,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     }
+    },
+    "medianExtentsM": [
+     1242.1187953971362,
+     17560.114034073347,
+     1150.1529140582606
+    ],
+    "cost": {
+     "hpopCalls": 3,
+     "seconds": 0.760653167
+    }
+   },
+   "UKF|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1648.3696442699716,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 1.2143874298422535,
+     "lower": 0.9767638652559169,
+     "upper": 1.5747252812189105,
+     "lower90": 0.9901489535427093,
+     "upper90": 1.417454670823227,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.9390304847576212
+    },
+    "containment": {
+     "set": null,
+     "alpha005": null,
+     "alpha05": null,
+     "p95": {
+      "estimate": 0.9931818181818182,
+      "lower": 0.9705860662849211,
+      "upper": 1,
+      "lower90": 0.9766971117812135,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p997": {
+      "estimate": 1,
+      "lower": 1,
+      "upper": 1,
+      "lower90": 1,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     }
+    },
+    "medianExtentsM": [
+     1242.1498825609983,
+     17560.019246025928,
+     1150.1530502637052
+    ],
+    "cost": {
+     "hpopCalls": 39,
+     "seconds": 9.785596041
+    }
+   },
+   "BLS|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 2080.0315689799477,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 1.6362335199626048,
+     "lower": 1.2119013913955807,
+     "upper": 2.1339655156679744,
+     "lower90": 1.266525187998456,
+     "upper90": 1.9808348684113057,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.9975012493753124
+    },
+    "containment": {
+     "set": null,
+     "alpha005": null,
+     "alpha05": null,
+     "p95": {
+      "estimate": 0.9590909090909091,
+      "lower": 0.8728566744252303,
+      "upper": 1,
+      "lower90": 0.895294013361699,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "p997": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9736263736263736,
+      "upper": 1,
+      "lower90": 0.978862910798122,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     }
+    },
+    "medianExtentsM": [
+     979.7046518792245,
+     12186.195038167836,
+     907.7883067980116
+    ],
+    "cost": {
+     "hpopCalls": 3,
+     "seconds": 2.332689
+    }
+   },
+   "SMF|corr": {
+    "arcs": 135,
+    "satellites": 32,
+    "failures": 5,
+    "finalErrorM": 1198.9019585319506,
+    "finalSetErrorM": 1191.1726436245253,
+    "finalRatioToSet": {
+     "estimate": 0.9999999955969522,
+     "lower": 0.9999998041800452,
+     "upper": 1.000000007675235,
+     "lower90": 0.9999998543130693,
+     "upper90": 1.0000000065457337,
+     "resamples": 2000,
+     "clusters": {
+      "rows": 32,
+      "cols": 6
+     },
+     "p": 0.3773113443278361
+    },
+    "containment": {
+     "set": {
+      "estimate": 0.9954545454545455,
+      "lower": 0.9803366277181739,
+      "upper": 1,
+      "lower90": 0.984182776801406,
+      "upper90": 1,
+      "resamples": 2000,
+      "clusters": {
+       "rows": 32,
+       "cols": 6
+      }
+     },
+     "alpha005": null,
+     "alpha05": null,
+     "p95": null,
+     "p997": null
+    },
+    "medianExtentsM": [
+     1644.9644332329801,
+     18518.218925804944,
+     1516.4972200270224
+    ],
+    "cost": {
+     "hpopCalls": 3,
+     "seconds": 0.777289917
+    }
+   }
+  }
+ },
+ "hypotheses": {
+  "H1": {
+   "statistic": {
+    "estimate": 361.01958276614545,
+    "lower": 102.70061568094913,
+    "upper": "Infinity",
+    "lower90": 102.70061568094913,
+    "upper90": "Infinity",
+    "resamples": 2000,
+    "clusters": {
+     "rows": 6,
+     "cols": 1
+    },
+    "p": 1
+   },
+   "holm": {
+    "id": "H1",
+    "p": 1,
+    "threshold": 0.0125,
+    "reject": false
+   },
+   "supported": false
+  },
+  "H2": {
+   "statistic": {
+    "estimate": 786.046164533884,
+    "lower": 234.8619112196681,
+    "upper": "Infinity",
+    "lower90": 234.8619112196681,
+    "upper90": "Infinity",
+    "resamples": 2000,
+    "clusters": {
+     "rows": 6,
+     "cols": 1
+    },
+    "p": 1
+   },
+   "holm": {
+    "id": "H2",
+    "p": 1,
+    "threshold": 0.016666666666666666,
+    "reject": false
+   },
+   "supported": false
+  },
+  "H3": {
+   "statistic": {
+    "estimate": 0,
+    "lower": 0,
+    "upper": 0,
+    "lower90": 0,
+    "upper90": 0,
+    "resamples": 2000,
+    "clusters": {
+     "rows": 6,
+     "cols": 1
+    },
+    "p": 1
+   },
+   "holm": {
+    "id": "H3",
+    "p": 1,
+    "threshold": 0.025,
+    "reject": false
+   },
+   "supported": false
+  },
+  "H4": {
+   "statistic": {
+    "estimate": 3.988723773450687,
+    "lower": 2.193524912317754,
+    "upper": 6.059578206299602,
+    "lower90": 2.6469513199390016,
+    "upper90": 5.807104361912314,
+    "resamples": 2000,
+    "clusters": {
+     "rows": 32,
+     "cols": 6
+    },
+    "p": 1
+   },
+   "holm": {
+    "id": "H4",
+    "p": 1,
+    "threshold": 0.05,
+    "reject": false
+   },
+   "supported": false
+  },
+  "H5": {
+   "statistic": {
+    "estimate": 0.9954545454545455,
+    "lower": 0.9803366277181739,
+    "upper": 1,
+    "lower90": 0.984182776801406,
+    "upper90": 1,
+    "resamples": 2000,
+    "clusters": {
+     "rows": 32,
+     "cols": 6
+    },
+    "p": 0.0009995002498750624
+   },
+   "holm": {
+    "id": "H5",
+    "p": 0.0009995002498750624,
+    "threshold": 0.01,
+    "reject": true
+   },
+   "supported": true
+  }
+ },
+ "partA": {
+  "A1-leo-nominal": {
+   "BLS": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 3.567918721452225,
+    "rmsFinalM": 3.962072707460705,
+    "finalM": 3.4927611358916346,
+    "hpopCalls": 4,
+    "seconds": 125.6869025
+   },
+   "E25": {
+    "epochs": 318,
+    "observations": 1266,
+    "failure": {
+     "ms": 1521938007128,
+     "message": "analysis/estimation run_estimation: filter-failed: prediction stretch failed"
+    },
+    "rmsArcM": 609.8027106890023,
+    "rmsFinalM": 723.7915453324813,
+    "finalM": 923.6101444943977,
+    "hpopCalls": 4134,
+    "seconds": 112.577601
+   },
+   "E25T": {
+    "epochs": 58,
+    "observations": 1266,
+    "failure": {
+     "ms": 1521831772555,
+     "message": "propagator/hpop invoke: invoke-failed: invoke-failed: Variational tolerance cannot be met at minStep."
+    },
+    "rmsArcM": 1445766.3054568353,
+    "rmsFinalM": 1445766.3054568353,
+    "finalM": 1269538.8997592647,
+    "hpopCalls": 743,
+    "seconds": 26.858092958
+   },
+   "E26": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 1297.3460065614152,
+    "rmsFinalM": 932.7391663084368,
+    "finalM": 324.76438847954955,
+    "hpopCalls": 107525,
+    "seconds": 4626.272321958
+   },
+   "EKF": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 19.160356761352276,
+    "rmsFinalM": 9.072417279462455,
+    "finalM": 2.278574645215958,
+    "hpopCalls": 1265,
+    "seconds": 32.458341666
+   },
+   "SMF": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 37.26028055932496,
+    "rmsFinalM": 35.46889154613516,
+    "finalM": 15.814535092506205,
+    "hpopCalls": 1265,
+    "seconds": 33.222557542
+   },
+   "UKF": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 19.202311234313225,
+    "rmsFinalM": 9.072531316485254,
+    "finalM": 2.27859701862496,
+    "hpopCalls": 16445,
+    "seconds": 422.732054542
+   }
+  },
+  "A2-leo-error-bias": {
+   "BLS": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 13.671044905892394,
+    "rmsFinalM": 14.016240292382822,
+    "finalM": 15.185493544382492,
+    "hpopCalls": 11,
+    "seconds": 346.766908792
+   },
+   "E25": {
+    "epochs": 313,
+    "observations": 1266,
+    "failure": {
+     "ms": 1521935601925,
+     "message": "analysis/estimation run_estimation: filter-failed: prediction stretch failed"
+    },
+    "rmsArcM": 581235.2975088075,
+    "rmsFinalM": 693478.451396193,
+    "finalM": 994031.5354672513,
+    "hpopCalls": 4069,
+    "seconds": 112.536167958
+   },
+   "E25T": {
+    "epochs": 45,
+    "observations": 1266,
+    "failure": {
+     "ms": 1521825339043,
+     "message": "propagator/hpop invoke: invoke-failed: invoke-failed: Variational tolerance cannot be met at minStep."
+    },
+    "rmsArcM": 50595.8602301069,
+    "rmsFinalM": 50595.8602301069,
+    "finalM": 48655.29478266082,
+    "hpopCalls": 574,
+    "seconds": 22.814835667
+   },
+   "E26": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 1557.3702879857644,
+    "rmsFinalM": 1113.060622088846,
+    "finalM": 1050.2251105903504,
+    "hpopCalls": 107525,
+    "seconds": 3499.157444792
+   },
+   "EKF": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 39.983486672248496,
+    "rmsFinalM": 27.500996812618745,
+    "finalM": 1.7814754649033977,
+    "hpopCalls": 1265,
+    "seconds": 33.275689209
+   },
+   "SMF": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 52.85263567140887,
+    "rmsFinalM": 44.28334520989836,
+    "finalM": 15.814533950752491,
+    "hpopCalls": 1265,
+    "seconds": 33.182619583
+   },
+   "UKF": {
+    "epochs": 1266,
+    "observations": 1266,
+    "failure": null,
+    "rmsArcM": 40.001191849026554,
+    "rmsFinalM": 27.501101782598205,
+    "finalM": 1.7814646660358766,
+    "hpopCalls": 16445,
+    "seconds": 425.292575709
+   }
+  },
+  "A3-geo-area-change": {
+   "BLS": {
+    "epochs": 720,
+    "observations": 720,
+    "failure": null,
+    "rmsArcM": 60.29757547393332,
+    "rmsFinalM": 87.68038284749949,
+    "finalM": 118.83353014023898,
+    "hpopCalls": 3,
+    "seconds": 7.82184875
+   },
+   "E25": {
+    "epochs": 246,
+    "observations": 720,
+    "failure": {
+     "ms": 1542288704999,
+     "message": "analysis/estimation run_estimation: filter-failed: prediction stretch failed"
+    },
+    "rmsArcM": 6716.514986056357,
+    "rmsFinalM": 6785.748540815261,
+    "finalM": 11469.168998399415,
+    "hpopCalls": 3211,
+    "seconds": 14.090086166
+   },
+   "E25T": {
+    "epochs": 720,
+    "observations": 720,
+    "failure": null,
+    "rmsArcM": 519087.6892128614,
+    "rmsFinalM": 843060.7064760507,
+    "finalM": 1571586.572033924,
+    "hpopCalls": 9360,
+    "seconds": 41.385030833
+   },
+   "E26": {
+    "epochs": 720,
+    "observations": 720,
+    "failure": null,
+    "rmsArcM": 2888.0313637783147,
+    "rmsFinalM": 4017.181705601373,
+    "finalM": 4400.258873905227,
+    "hpopCalls": 61200,
+    "seconds": 390.281372875
+   },
+   "EKF": {
+    "epochs": 720,
+    "observations": 720,
+    "failure": null,
+    "rmsArcM": 1651.160358772255,
+    "rmsFinalM": 397.2237981205078,
+    "finalM": 78.31648968645189,
+    "hpopCalls": 720,
+    "seconds": 3.414396
+   },
+   "SMF": {
+    "epochs": 720,
+    "observations": 720,
+    "failure": null,
+    "rmsArcM": 4580.729597679954,
+    "rmsFinalM": 4452.703679975155,
+    "finalM": 2310.327251563241,
+    "hpopCalls": 720,
+    "seconds": 3.635609667
+   },
+   "UKF": {
+    "epochs": 720,
+    "observations": 720,
+    "failure": null,
+    "rmsArcM": 1651.1898070664786,
+    "rmsFinalM": 397.5105786634891,
+    "finalM": 78.50498703035103,
+    "hpopCalls": 9360,
+    "seconds": 41.56997475
+   }
+  }
+ },
+ "enclosure": {
+  "E25T": {
+   "steps": 18,
+   "e1": {
+    "outside": 124,
+    "points": 36234,
+    "maxRadius": 1.346250010596113,
+    "stepsWithOutside": 6
+   },
+   "e2": null,
+   "byKind": {
+    "gap": {
+     "steps": 9,
+     "outside": 124,
+     "maxRadius": 1.346250010596113
+    },
+    "within": {
+     "steps": 9,
+     "outside": 0,
+     "maxRadius": 0.8286272396110196
+    }
+   },
+   "verdict": "summarizes the sampled support"
+  },
+  "E26": {
+   "steps": 18,
+   "e1": {
+    "outside": 42,
+    "points": 37530,
+    "maxRadius": 1.0536867856952539,
+    "stepsWithOutside": 2
+   },
+   "e2": {
+    "outside": 2537,
+    "survivors": 6568,
+    "maxRadius": 1.9665177198234207,
+    "medianLogVolumeRatio": -0.10020289246069014
+   },
+   "byKind": {
+    "gap": {
+     "steps": 9,
+     "outside": 42,
+     "maxRadius": 1.0536867856952539
+    },
+    "within": {
+     "steps": 9,
+     "outside": 0,
+     "maxRadius": 0.999970827071574
+    }
+   },
+   "verdict": "summarizes the sampled support"
+  },
+  "SMF": {
+   "steps": 18,
+   "e1": {
+    "outside": 6,
+    "points": 36000,
+    "maxRadius": 1.0277934523625178,
+    "stepsWithOutside": 3
+   },
+   "e2": null,
+   "byKind": {
+    "gap": {
+     "steps": 9,
+     "outside": 6,
+     "maxRadius": 1.0277934523625178
+    },
+    "within": {
+     "steps": 9,
+     "outside": 0,
+     "maxRadius": 0.9999563666686246
+    }
+   },
+   "verdict": "does not enclose (its linearized bound misses propagated points)"
+  }
+ },
+ "partD": {
+  "encounters": 10000,
+  "table": [
+   {
+    "rule": "Pc ≥ 0.00001",
+    "all": {
+     "collisions": 5020,
+     "missed": 701,
+     "nonCollisions": 4980,
+     "falseAlerts": 452
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 104,
+     "nonCollisions": 3971,
+     "falseAlerts": 386
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 597,
+     "nonCollisions": 1009,
+     "falseAlerts": 66
+    }
+   },
+   {
+    "rule": "Pc ≥ 0.0001",
+    "all": {
+     "collisions": 5020,
+     "missed": 1560,
+     "nonCollisions": 4980,
+     "falseAlerts": 169
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 809,
+     "nonCollisions": 3971,
+     "falseAlerts": 139
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 751,
+     "nonCollisions": 1009,
+     "falseAlerts": 30
+    }
+   },
+   {
+    "rule": "Pc ≥ 0.001",
+    "all": {
+     "collisions": 5020,
+     "missed": 3451,
+     "nonCollisions": 4980,
+     "falseAlerts": 16
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 2537,
+     "nonCollisions": 3971,
+     "falseAlerts": 12
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 914,
+     "nonCollisions": 1009,
+     "falseAlerts": 4
+    }
+   },
+   {
+    "rule": "Π ≥ 0.01",
+    "all": {
+     "collisions": 5020,
+     "missed": 604,
+     "nonCollisions": 4980,
+     "falseAlerts": 602
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 40,
+     "nonCollisions": 3971,
+     "falseAlerts": 508
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 564,
+     "nonCollisions": 1009,
+     "falseAlerts": 94
+    }
+   },
+   {
+    "rule": "Π ≥ 0.05",
+    "all": {
+     "collisions": 5020,
+     "missed": 866,
+     "nonCollisions": 4980,
+     "falseAlerts": 410
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 177,
+     "nonCollisions": 3971,
+     "falseAlerts": 352
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 689,
+     "nonCollisions": 1009,
+     "falseAlerts": 58
+    }
+   },
+   {
+    "rule": "Π ≥ 0.5",
+    "all": {
+     "collisions": 5020,
+     "missed": 2621,
+     "nonCollisions": 4980,
+     "falseAlerts": 116
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 1716,
+     "nonCollisions": 3971,
+     "falseAlerts": 103
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 905,
+     "nonCollisions": 1009,
+     "falseAlerts": 13
+    }
+   },
+   {
+    "rule": "N > 0",
+    "all": {
+     "collisions": 5020,
+     "missed": 4996,
+     "nonCollisions": 4980,
+     "falseAlerts": 0
+    },
+    "declared": {
+     "collisions": 4007,
+     "missed": 3984,
+     "nonCollisions": 3971,
+     "falseAlerts": 0
+    },
+    "understated": {
+     "collisions": 1013,
+     "missed": 1012,
+     "nonCollisions": 1009,
+     "falseAlerts": 0
+    }
+   }
+  ],
+  "timing": {
+   "pcMicroseconds": 14.883279100000044,
+   "possibilityMicroseconds": 22.289102899999982
+  },
+  "screeningCases": {
+   "definitions": {
+    "boundedSet": "alert when the relative ellipse at boundCoverage (chi-square 2) comes within the radius",
+    "cases": "caller-supplied pairs of RTN errors with per-object covariances; true miss synthetic, predicted = true + relative error",
+    "collision": "true miss <= hard-body radius",
+    "falseAlert": "a non-collision case with an alert",
+    "missedCollision": "a collision case without an alert",
+    "possibility": "pi = 1 - F_chi2_3(d^2) per object, joint min; alert unless N(no collision) >= necessityLevel",
+    "probabilistic": "alert when Foster Pc >= pcThreshold, relative covariance C1 + C2"
+   },
+   "kind": "screening-cases",
+   "pairs": 10000,
+   "settings": {
+    "boundCoverage": 0.9973,
+    "directions": 4,
+    "hardBodyRadiusM": 10,
+    "missDistancesM": [
+     0,
+     10,
+     50,
+     100,
+     500,
+     1000,
+     2000,
+     5000
+    ],
+    "necessityLevel": 0.9973,
+    "pcThreshold": 0.0001
+   },
+   "summary": {
+    "crossing-90": [
+     {
+      "boundedSetAlertRate": 0.9013,
+      "brier": 0.9953174184333742,
+      "cases": 40000,
+      "collision": true,
+      "meanPc": 0.002360077956499463,
+      "meanPossibilityOfCollision": 0.7312420588572467,
+      "missM": 0,
+      "pcAlertRate": 0.7192,
+      "possibilityAlertRate": 0.9618
+     },
+     {
+      "boundedSetAlertRate": 0.90025,
+      "brier": 0.9955035998552574,
+      "cases": 40000,
+      "collision": true,
+      "meanPc": 0.0022654026624736104,
+      "meanPossibilityOfCollision": 0.7280757152935243,
+      "missM": 10,
+      "pcAlertRate": 0.71655,
+      "possibilityAlertRate": 0.96195
+     },
+     {
+      "boundedSetAlertRate": 0.87875,
+      "brier": 0.000009547597898436089,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.0011579451049923526,
+      "meanPossibilityOfCollision": 0.649199514150015,
+      "missM": 50,
+      "pcAlertRate": 0.6386,
+      "possibilityAlertRate": 0.957075
+     },
+     {
+      "boundedSetAlertRate": 0.7382,
+      "brier": 0.0000019773270076036714,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.0005000559531668454,
+      "meanPossibilityOfCollision": 0.5083211320356336,
+      "missM": 100,
+      "pcAlertRate": 0.47135,
+      "possibilityAlertRate": 0.9058
+     },
+     {
+      "boundedSetAlertRate": 0.28295,
+      "brier": 1.4477726593958572e-8,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.000025845191768444885,
+      "meanPossibilityOfCollision": 0.15930225767698622,
+      "missM": 500,
+      "pcAlertRate": 0.06955,
+      "possibilityAlertRate": 0.439025
+     },
+     {
+      "boundedSetAlertRate": 0.117575,
+      "brier": 5.671522116367282e-10,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.000003534337063364135,
+      "meanPossibilityOfCollision": 0.05712113305190404,
+      "missM": 1000,
+      "pcAlertRate": 0.00825,
+      "possibilityAlertRate": 0.23385
+     },
+     {
+      "boundedSetAlertRate": 0.02055,
+      "brier": 2.1429741614411803e-11,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 2.2403484998102743e-7,
+      "meanPossibilityOfCollision": 0.008964832674562788,
+      "missM": 2000,
+      "pcAlertRate": 0.000325,
+      "possibilityAlertRate": 0.074575
+     },
+     {
+      "boundedSetAlertRate": 0.000075,
+      "brier": 7.261946641794629e-15,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 4.5964984579629983e-10,
+      "meanPossibilityOfCollision": 0.00005446258510500357,
+      "missM": 5000,
+      "pcAlertRate": 0,
+      "possibilityAlertRate": 0.000925
+     }
+    ],
+    "head-on": [
+     {
+      "boundedSetAlertRate": 0.9052,
+      "brier": 0.9757791240752338,
+      "cases": 40000,
+      "collision": true,
+      "meanPc": 0.01257376876762858,
+      "meanPossibilityOfCollision": 0.7498774153795981,
+      "missM": 0,
+      "pcAlertRate": 0.8561,
+      "possibilityAlertRate": 0.9619
+     },
+     {
+      "boundedSetAlertRate": 0.90455,
+      "brier": 0.9773855131262983,
+      "cases": 40000,
+      "collision": true,
+      "meanPc": 0.011711204613551981,
+      "meanPossibilityOfCollision": 0.7436679771204512,
+      "missM": 10,
+      "pcAlertRate": 0.853975,
+      "possibilityAlertRate": 0.961375
+     },
+     {
+      "boundedSetAlertRate": 0.854175,
+      "brier": 0.00008088450978893248,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.0034706582685888124,
+      "meanPossibilityOfCollision": 0.5954951610348717,
+      "missM": 50,
+      "pcAlertRate": 0.764675,
+      "possibilityAlertRate": 0.952825
+     },
+     {
+      "boundedSetAlertRate": 0.597,
+      "brier": 0.000008164537173608028,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.0008609910491615649,
+      "meanPossibilityOfCollision": 0.3785889613801901,
+      "missM": 100,
+      "pcAlertRate": 0.478025,
+      "possibilityAlertRate": 0.832875
+     },
+     {
+      "boundedSetAlertRate": 0.12235,
+      "brier": 1.1826559113081066e-8,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.000017402156490983448,
+      "meanPossibilityOfCollision": 0.06214876045930354,
+      "missM": 500,
+      "pcAlertRate": 0.043775,
+      "possibilityAlertRate": 0.2237
+     },
+     {
+      "boundedSetAlertRate": 0.032225,
+      "brier": 8.166467986675011e-10,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 0.0000018008324492439782,
+      "meanPossibilityOfCollision": 0.014391209505692367,
+      "missM": 1000,
+      "pcAlertRate": 0.0043,
+      "possibilityAlertRate": 0.08555
+     },
+     {
+      "boundedSetAlertRate": 0.002425,
+      "brier": 3.698721439671801e-11,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 1.449058859265011e-7,
+      "meanPossibilityOfCollision": 0.0012430723651412887,
+      "missM": 2000,
+      "pcAlertRate": 0.000525,
+      "possibilityAlertRate": 0.013725
+     },
+     {
+      "boundedSetAlertRate": 0,
+      "brier": 1.5378319489162094e-26,
+      "cases": 40000,
+      "collision": false,
+      "meanPc": 1.05148709424568e-15,
+      "meanPossibilityOfCollision": 7.620158119459597e-8,
+      "missM": 5000,
+      "pcAlertRate": 0,
+      "possibilityAlertRate": 0
+     }
+    ]
+   },
+   "version": 1
+  },
+  "reportLines": [
+   "10000 encounters (seed 20261009); hard-body radius 10 m; 5020 true collisions; 2022 with the error drawn from 9 × the declared covariance. Time per evaluation: Foster Pc 15 µs, possibility 22 µs.",
+   "",
+   "| Rule | Missed collisions (all) | False alerts (all) | Missed (declared) | False alerts (declared) | Missed (understated) | False alerts (understated) |",
+   "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+   "| Pc ≥ 0.00001 | 701/5020 (14.0 %) | 452/4980 (9.1 %) | 104/4007 (2.6 %) | 386/3971 (9.7 %) | 597/1013 (58.9 %) | 66/1009 (6.5 %) |",
+   "| Pc ≥ 0.0001 | 1560/5020 (31.1 %) | 169/4980 (3.4 %) | 809/4007 (20.2 %) | 139/3971 (3.5 %) | 751/1013 (74.1 %) | 30/1009 (3.0 %) |",
+   "| Pc ≥ 0.001 | 3451/5020 (68.7 %) | 16/4980 (0.3 %) | 2537/4007 (63.3 %) | 12/3971 (0.3 %) | 914/1013 (90.2 %) | 4/1009 (0.4 %) |",
+   "| Π ≥ 0.01 | 604/5020 (12.0 %) | 602/4980 (12.1 %) | 40/4007 (1.0 %) | 508/3971 (12.8 %) | 564/1013 (55.7 %) | 94/1009 (9.3 %) |",
+   "| Π ≥ 0.05 | 866/5020 (17.3 %) | 410/4980 (8.2 %) | 177/4007 (4.4 %) | 352/3971 (8.9 %) | 689/1013 (68.0 %) | 58/1009 (5.7 %) |",
+   "| Π ≥ 0.5 | 2621/5020 (52.2 %) | 116/4980 (2.3 %) | 1716/4007 (42.8 %) | 103/3971 (2.6 %) | 905/1013 (89.3 %) | 13/1009 (1.3 %) |",
+   "| N > 0 | 4996/5020 (99.5 %) | 0/4980 (0.0 %) | 3984/4007 (99.4 %) | 0/3971 (0.0 %) | 1012/1013 (99.9 %) | 0/1009 (0.0 %) |",
+   "",
+   "The same error draws (each object half the combined covariance) through `analysis/gp-error-model` `screening_cases` (its own geometries and miss distances; its report in `metrics.json`)."
+  ]
+ },
+ "explore": [
+  {
+   "seed": "d1",
+   "variant": "E26:k=0.5;smax=2",
+   "epochs": 77,
+   "observations": 117,
+   "failure": "propagator/hpop invoke: invoke-failed: invoke-failed: Variational tolerance cannot be met at minStep."
+  },
+  {
+   "seed": "d1",
+   "variant": "E26:k=0.5;smax=4",
+   "epochs": 73,
+   "observations": 117,
+   "failure": "propagator/hpop invoke: invoke-failed: invoke-failed: Variational tolerance cannot be met at minStep."
+  },
+  {
+   "seed": "d2",
+   "variant": "E26:k=0.5;smax=2",
+   "epochs": 42,
+   "observations": 118,
+   "failure": "propagator/hpop invoke: invoke-failed: invoke-failed: Variational tolerance cannot be met at minStep."
+  },
+  {
+   "seed": "d2",
+   "variant": "E26:k=0.5;smax=4",
+   "epochs": 33,
+   "observations": 118,
+   "failure": "propagator/hpop invoke: invoke-failed: invoke-failed: Variational tolerance cannot be met at minStep."
+  }
+ ],
+ "notes": {
+  "modelCheck": {
+   "lightTime": {
+    "seed": "d1",
+    "hours": 12,
+    "observations": 36,
+    "converged": true,
+    "weightedRms": 0.08561036399705646,
+    "medianErrorM": 3.3853015505595927,
+    "maxErrorM": 4.446366003123111
+   },
+   "noLightTime": {
+    "seed": "d1",
+    "hours": 12,
+    "observations": 36,
+    "converged": true,
+    "weightedRms": 0.08591830669957048,
+    "medianErrorM": 3.3983339795639074,
+    "maxErrorM": 4.414528387129403
+   }
+  },
+  "b5TruthShiftM": [
+   8.188702634024768,
+   2.6296754049888067,
+   3.1998477678937802,
+   4.751795541578163,
+   7.412109254156869,
+   7.442345484057465
+  ]
+ }
+}

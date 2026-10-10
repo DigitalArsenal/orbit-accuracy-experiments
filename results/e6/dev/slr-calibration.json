@@ -1,0 +1,47 @@
+{
+ "window": "dev",
+ "runs": [
+  "e6-40-slr-fit-dev-0of6-20261009T230404Z",
+  "e6-40-slr-fit-dev-1of6-20261009T230404Z",
+  "e6-40-slr-fit-dev-2of6-20261009T230404Z",
+  "e6-40-slr-fit-dev-3of6-20261009T230404Z",
+  "e6-40-slr-fit-dev-4of6-20261009T230404Z",
+  "e6-40-slr-fit-dev-5of6-20261009T230404Z"
+ ],
+ "sigmaUsedM": 1,
+ "fits": {
+  "S": 80,
+  "R": 80
+ },
+ "reducedChiSquareS": {
+  "median": 13.564676937468555,
+  "q25": 7.568470358635771,
+  "q75": 18.269195911248886
+ },
+ "reducedChiSquareR": {
+  "median": 14.742233577504594
+ },
+ "byTarget": {
+  "starlette": {
+   "fits": 32,
+   "median": 17.110501043938626
+  },
+  "stella": {
+   "fits": 32,
+   "median": 23.48197294633931
+  },
+  "larets": {
+   "fits": 32,
+   "median": 16.486400521843926
+  },
+  "westpac": {
+   "fits": 32,
+   "median": 2.6631397932618537
+  },
+  "lares": {
+   "fits": 32,
+   "median": 13.487988164679484
+  }
+ },
+ "rangeSigmaM": 3.6830255140941603
+}

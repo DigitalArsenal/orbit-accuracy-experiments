@@ -22,24 +22,24 @@ failure). **X**: not obtainable.
 
 ## Summary
 
-77 sources in eight groups. A source can carry two codes. For example,
+80 sources in eight groups (three added and two updated for E6 on 2026-10-09: C.7, C.8, C.16, C.17, F.8). A source can carry two codes. For example,
 Space-Track is both AR and L.
 
 | Group | Sources | DL | AR | S | L | P | R | U | X |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | A. Precise orbits (truth) | 18 | 7 | 4 | 5 | 6 | 0 | 0 | 1 | 2 |
 | B. Operator ephemerides and broadcast orbits | 10 | 3 | 0 | 3 | 2 | 0 | 1 | 2 | 1 |
-| C. Catalogs and observations | 15 | 0 | 1 | 3 | 7 | 5 | 0 | 1 | 1 |
+| C. Catalogs and observations | 17 | 3 | 1 | 3 | 8 | 5 | 0 | 0 | 1 |
 | D. Density and its calibration | 13 | 4 | 1 | 4 | 2 | 0 | 2 | 1 | 0 |
 | E. Space weather indices and forecasts | 7 | 4 | 0 | 2 | 0 | 0 | 0 | 1 | 0 |
-| F. EOP, gravity, tides, ephemerides | 7 | 4 | 1 | 0 | 2 | 0 | 0 | 0 | 0 |
+| F. EOP, gravity, tides, ephemerides | 8 | 5 | 1 | 0 | 2 | 0 | 0 | 0 | 0 |
 | G. Physical properties | 5 | 1 | 1 | 1 | 2 | 0 | 0 | 1 | 0 |
 | H. The HAC and HASDM themselves | 2 | 0 | 0 | 0 | 2 | 1 | 0 | 0 | 0 |
-| **All** | **77** | **23** | **8** | **18** | **23** | **6** | **3** | **7** | **4** |
+| **All** | **80** | **27** | **8** | **18** | **24** | **6** | **3** | **6** | **4** |
 
-Counted once, by the most open route: 29 are on hand (23 downloaded here,
+Counted once, by the most open route: 33 are on hand (27 downloaded here,
 6 already archived), 14 more are anonymous and scriptable, 19 need an account,
-4 are commercial only, 3 have terms that rule out product use, 6 were
+4 are commercial only, 3 have terms that rule out product use, 5 were
 unreachable from this host today, and 2 cannot be obtained.
 
 ## 1. The target: what is public about the HAC
@@ -200,8 +200,8 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | C.4 | TraCSS (Office of Space Commerce) | Screening service; GP dataset to be published | Registered operators | [Operator registration](https://space.commerce.gov/traffic-coordination-system-for-space-tracss/tracss-registration-for-spacecraft-operators/) | TraCSS User Agreement & Data Policy | Runs on the DoD SP catalog with covariance ([AMOS 2024][amos24]) | L |
 | C.5 | EU SST service portal | CA, fragmentation and re-entry services | Registered operators | [portal.eusst.eu](https://portal.eusst.eu/) | EU SST terms | European catalog products; screens against the HAC | L |
 | C.6 | Unified Data Library (UDL) | DoD data lake: observations, states, SET real-time space weather and JB2008/HASDM products | — | API returns "Invalid or missing user credentials" (verified). Government sponsorship or a commercial license | SET: real-time inputs and product files "are available via licensed access to the Unified Data Library" (JB2008 code README) | The real-time HASDM inputs | L, P |
-| C.7 | SatNOGS DB and Network | Observations: waterfalls, Doppler, decoded frames; transmitter DB | Amateur and cubesat LEO | Public REST APIs ([db](https://db.satnogs.org/api/), [network](https://network.satnogs.org/api/)) | "freely distributed under the Creative Commons Atribution-Share Alike v4.0 license" ([about][satnogs]) | Independent Doppler for OD of small LEO objects | S |
-| C.8 | Amateur optical (SeeSat-L, IOD, McCants) | Positional observations; classified-object elements | — | satobs.org answered HTTP 412 to scripted requests; the McCants page is gone (404) | — | Objects missing from public GP | U, X |
+| C.7 | SatNOGS DB and Network | Observations: metadata (station position, transmitter, the element set the station tuned with), PNG waterfalls, demodulated data, audio; transmitter DB; HDF5 waterfall artifacts | Amateur and cubesat LEO; ISS ≈ 70–250 observations a day | Network API anonymous ([network](https://network.satnogs.org/api/observations/)); an anonymous client is throttled after ≈ 100 requests (HTTP 429, `Retry-After` up to 47 min); waterfalls on Wasabi S3, anonymous; DB artifacts (HDF5 waterfalls with timestamps) need a db.satnogs.org API token. Latency: minutes after the pass | "freely distributed under the Creative Commons Atribution-Share Alike v4.0 license" ([about][satnogs]) | Independent Doppler for OD of small LEO objects; E6 reduces waterfalls to range rates (`experiments/e6-public-observations`) | DL (ISS metadata 08-31..10-09, waterfalls), L (artifacts) |
+| C.8 | Amateur optical (SeeSat-L, IOD; STVID-calibrated reports) | Positional observations (IOD, UK, RDE formats) and observers' stated station coordinates; STVID (github.com/cbassa/stvid, GPL-3.0) is the camera software several observers use | ≈ 8,000 IOD lines a quarter on ≈ 1,000 objects, mostly rocket bodies and classified payloads; few objects with public truth (2026-06..10: CryoSat-2 9 lines, Jason-3 3) | [satobs.org/seesat](https://www.satobs.org/seesat/) monthly hypermail archives, anonymous with an identifying user agent (a browser-like agent got HTTP 412 earlier); the McCants page is gone (404). Latency: hours to a day | Public list; no license stated (observations are each observer's) | Objects missing from public GP; anchors where truth exists | DL, X (McCants) |
 | C.9 | Minor Planet Center and survey streaks | Optical astrometry | Artificial-object reports are incidental | [minorplanetcenter.net](https://www.minorplanetcenter.net/) | MPC terms (not fetched) | Negligible | S |
 | C.10 | ESA DISCOS | Object physical and mission data | Full catalog | DISCOSweb redirects to the ESA Space Debris User Account sign-in | ESA terms on registration | Physical properties (G) | L (ESA SDO account) |
 | C.11 | LeoLabs | Radar observations, states, CDMs | LEO | platform.leolabs.space (OAuth sign-in) | Commercial | Independent LEO radar truth | P |
@@ -209,6 +209,8 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | C.13 | Slingshot Aerospace | Optical observations, catalog | — | slingshot.space | Commercial | — | P |
 | C.14 | COMSPOC (commercial catalog) | Commercial SSA | — | comspoc.com | Commercial | — | P |
 | C.15 | ESA public SST material | Space Environment Report, re-entry predictions | — | esa.int | ESA | Context only | S |
+| C.16 | CAMRAS Dwingeloo SatNOGS IQ archive | Raw IQ recordings (48 kHz, 16-bit complex) of the Dwingeloo 25 m telescope's SatNOGS observations, for STRF (github.com/cbassa/strf, GPL-3.0) Doppler extraction | 469 recordings 2022-01..2026-08-23, mostly cubesats (URESAT-1, FOX-1E, RSP-03); no object with public truth in 2026 | [data.camras.nl/satnogs](https://data.camras.nl/satnogs/), anonymous; ≈ 100 MB per pass | "distributed under a CC-BY 4.0 license" (archive page) | High-SNR Doppler when a covered object has truth | S |
+| C.17 | ILRS normal points (CRD v2) | Laser-ranging normal points: two-way flight times, met data, system configuration | ≈ 130 SLR targets; e.g. Starlette ≈ 800–960 passes a month (2026-06..08) | EDC (DGFI-TUM) [npt_crd_v2](https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/) monthly and daily files, anonymous HTTPS (the v1 `npt_crd` directory holds only stations still sending v1; a missing file returns an HTML page with status 200); CDDIS needs Earthdata Login. Latency: hours to a day | [ILRS terms of reference][ilrs-tor], [EDC terms][edc-terms]: free use with acknowledgement | Precise ranges for anchored fits of cooperative targets (E6 laser arm) | DL (Starlette, Stella, LARETS, WESTPAC, LARES 2026-06..08) |
 
 ### D. Density and its calibration
 
@@ -251,6 +253,7 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | F.5 | TPXO10 (OSU) | Ocean tide model | Global | Registration | "available for academic research, and other non-commercial uses and require registration"; commercial license separate ([tpxo.net][tpxo]) | Alternative to F.4 | L |
 | F.6 | JPL DE440/DE441 | Planetary ephemerides | 1550–2650 (DE440) | [ssd.jpl.nasa.gov/ftp/eph/planets/bsp](https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/), anonymous | NASA/JPL | Third-body forces | AR (DE440 embedded in HPOP) |
 | F.7 | IGS ANTEX (igs20.atx) | GNSS antenna phase-center offsets | All GNSS | files.igs.org, anonymous | IGS terms | Center-of-mass vs antenna for GNSS truth | DL |
+| F.8 | ILRS station coordinates (weekly combination) | SINEX `ilrsa.pos+eop` (station positions, XYZ eccentricities, EOP); weekly | Stations in the week's LAGEOS/Etalon solution (≈ 20) | EDC [products/pos+eop/weekly](https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/), anonymous. Latency: ≈ 1–2 weeks | [ILRS terms][ilrs-tor] | SLR station positions for range modelling | DL (2026-06-27..08-29) |
 
 ### G. Physical properties
 
@@ -334,6 +337,9 @@ All under `/opt/data/sdn-archive/hac/`, one provenance JSON per file.
 | `planet-ephemerides/` | Daily TLE and state history, 2025-10-01 to 2026-10-09; current matches, status, TLE, states | 752 | 16 MB |
 | `starlink-ephemerides/sample-20261009/` | Manifest and 25 satellite ephemerides | 26 | 52 MB |
 | `nasa-iss-oem/20261009/` | ISS OEM (txt, xml) | 2 | 3.6 MB |
+| `satnogs/` (E6) | ISS and CSS observation metadata 08-31..10-09 (API pages), ISS waterfall PNGs, transmitter lists; `provenance.jsonl` | see `results/e6/inventory.json` | ≈ 0.5–1 GB |
+| `seesat-l/` (E6) | SeeSat-L monthly archives Jun–Oct 2026 (hypermail pages) | 455 | 3.3 MB |
+| `ilrs-edc/npt_crd_v2/`, `ilrs-edc/pos+eop/` (E6) | CRD v2 monthly normal points, 5 targets × Jun–Aug 2026; ILRS weekly SINEX Jun 27–Aug 29 | 25; 10 | 13 MB; 0.4 MB |
 | `noaa-wam-ipe/sample-wrs-20260101/` | 32 hourly fixed-height nowcast files | 32 | 96 MB |
 | `zenodo-5177065-weimer-hasdm/20261009/` | HASDM, MSIS and EXTEMPLAR global-mean density (HDF5), documentation | 2 | 4.7 MB |
 | **Total** | | **9,789** | **3.9 GB** |

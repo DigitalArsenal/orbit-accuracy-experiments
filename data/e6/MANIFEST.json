@@ -1,0 +1,253 @@
+{
+ "experiment": "e6-public-observations",
+ "generated": "2026-10-10T00:20:49.350Z",
+ "files": [
+  {
+   "file": "satnogs-iss-waterfall-offsets.jsonl.gz",
+   "sha256": "c0d32c90bd06b5ca77eeeb5aeed405b6d20092fe7012294441478dda3e1cea14",
+   "bytes": 636089,
+   "terms": "SatNOGS Network: all observation data distributed under CC BY-SA 4.0 (network.satnogs.org/about); Libre Space Foundation",
+   "records": 20173,
+   "note": "one row per 5-s waterfall bin: the signal offset from the frequency the station tuned with its element set. The range rates and $RFO records also depend on that element set (Space-Track, served with each SatNOGS observation) and stay local; steps 10 rebuild them from the SatNOGS API."
+  },
+  {
+   "file": "satnogs-iss-observations.json.gz",
+   "sha256": "0156e1bcc0ee24109bf43e88a626ab5836e57c8866f1447de6935e6d4b67ceab",
+   "bytes": 607353,
+   "terms": "SatNOGS Network: all observation data distributed under CC BY-SA 4.0 (network.satnogs.org/about); Libre Space Foundation; element-set lines removed",
+   "records": 4197
+  },
+  {
+   "file": "iss/20261009T175531Z--ISS.OEM_J2K_EPH.txt.gz",
+   "sha256": "38102e79ec313cfaee23ce9ee4132ecf7c499b944024e1ecd14a25dd192cbc46",
+   "bytes": 313558,
+   "url": "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt",
+   "captured": "2026-10-09T17:55:31Z",
+   "servedSha256": "40cfb923fc4e88d65325f56cae87195aaf2ed63d03ce138323b15583a40056c2",
+   "terms": "NASA public trajectory data (ISS Trajectory Data, nasa-public-data S3); US Government work, generally not subject to copyright."
+  }
+ ],
+ "releaseAssets": [
+  {
+   "asset": "e6-satnogs-iss-waterfalls.tar",
+   "files": 889,
+   "bytes": 1486517698,
+   "list": "e6-satnogs-iss-waterfalls.json",
+   "listSha256": "26a3e44ef61494c438572ed460583a9e14a17a73fe3111714c1d64a126e18081",
+   "terms": "SatNOGS Network: all observation data distributed under CC BY-SA 4.0 (network.satnogs.org/about); Libre Space Foundation",
+   "published": false,
+   "note": "not built (disk floor): build with --tar from the listed files; CC BY-SA 4.0 allows publishing it with attribution"
+  },
+  {
+   "asset": "e6-seesat-iod-2026-06-10.json.gz",
+   "sha256": "8509daeae35656f1d68c04c7f56cbfb4758a4cf1ebdfc4af3764b231db804b9a",
+   "bytes": 342075,
+   "records": 8007,
+   "terms": "SeeSat-L public mailing-list archive (satobs.org); no license stated; observations are each observer's",
+   "published": false,
+   "note": "prepared, not published: the list states no license that grants redistribution"
+  }
+ ],
+ "ilrs": [
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260627.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260627/ilrsa.pos+eop.260627.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:14.605Z",
+   "sha256": "24124e696a489dc05253f422099960e23c41ae6a223005ea87e15c7ba0f3fd0c",
+   "bytes": 29711,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260704.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260704/ilrsa.pos+eop.260704.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:15.603Z",
+   "sha256": "c5fcd5ca191507bc9c3ab7cc19252b8933eb9976e2ab58348152685c1791f3be",
+   "bytes": 29604,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260711.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260711/ilrsa.pos+eop.260711.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:16.617Z",
+   "sha256": "f0865d756377b0f20618166e33b33bf0fb88cc7736628ce114f451d5c1ac2ff7",
+   "bytes": 29556,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260718.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260718/ilrsa.pos+eop.260718.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:17.611Z",
+   "sha256": "406450586c2201f6e13cde95dca6834c0feac2e972c6e4f3f7d3fb3444a812c8",
+   "bytes": 39381,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260725.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260725/ilrsa.pos+eop.260725.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:18.611Z",
+   "sha256": "811c757b9bcb9f049d2eb5725803e2255d92ae577c726ec003180cf8ca05c69a",
+   "bytes": 41877,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260801.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260801/ilrsa.pos+eop.260801.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:19.609Z",
+   "sha256": "021e48b437a2cb3b7549eddeac11bc79b41bc97e1abff13042349972e90e1c29",
+   "bytes": 39215,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260808.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260808/ilrsa.pos+eop.260808.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:20.611Z",
+   "sha256": "f70e143f466a5bc169a7bae875688bb528cd8d64eb8d137376e662eba5eff8c5",
+   "bytes": 36232,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260815.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260815/ilrsa.pos+eop.260815.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:21.609Z",
+   "sha256": "4e49073a4ecab90f32ce483a7ad70fc6db404713302a176acf068f23bc6f9c6d",
+   "bytes": 41494,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260822.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260822/ilrsa.pos+eop.260822.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:22.715Z",
+   "sha256": "f47240fb769b5c2b57df5cf9fce770a2f1312e9ff65d085dac47a59c39cbdb7d",
+   "bytes": 44458,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "pos+eop/ilrsa.pos+eop.260829.v90.snx.gz",
+   "url": "https://edc.dgfi.tum.de/pub/slr/products/pos+eop/weekly/2026/260829/ilrsa.pos+eop.260829.v90.snx.gz",
+   "retrieved": "2026-10-09T22:37:23.712Z",
+   "sha256": "c346668d926fed86667a7bb37f45c3044a999bcf0632ab04c487159bdeb94128",
+   "bytes": 50210,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/starlette/starlette_202606.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/starlette/2026/starlette_202606.np2",
+   "retrieved": "2026-10-09T22:48:51.277Z",
+   "sha256": "372858d8b630992e760ac0752f884bd182e1d3345f6b87d9714ccec70d2d162f",
+   "bytes": 1595627,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/starlette/starlette_202607.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/starlette/2026/starlette_202607.np2",
+   "retrieved": "2026-10-09T22:48:51.721Z",
+   "sha256": "6ae609e395ebcc8d2ae9451c8fe1f431fc4d1a6bc4e62a30eb9cd8d67b3dc5bd",
+   "bytes": 1479104,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/starlette/starlette_202608.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/starlette/2026/starlette_202608.np2",
+   "retrieved": "2026-10-09T22:48:52.812Z",
+   "sha256": "67d09e4277e67c6b27f52f1585c1dd109f76c74c83561b55c1f412a0398ee7fd",
+   "bytes": 1921608,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/stella/stella_202606.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/stella/2026/stella_202606.np2",
+   "retrieved": "2026-10-09T22:48:53.714Z",
+   "sha256": "2c40eaaee4d02286571c00f09b9ed3906894a255f8b272200e3d93e9bfed6e4d",
+   "bytes": 933938,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/stella/stella_202607.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/stella/2026/stella_202607.np2",
+   "retrieved": "2026-10-09T22:48:54.721Z",
+   "sha256": "db76955d626c9f16e9bd3855494e5e39cfec26737983712e08ab1c26621902b6",
+   "bytes": 1059221,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/stella/stella_202608.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/stella/2026/stella_202608.np2",
+   "retrieved": "2026-10-09T22:48:55.820Z",
+   "sha256": "5ea2a1ba99aab459b2a0a608f1d65f049279f279422da83545decd479f41f5b9",
+   "bytes": 1112147,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/larets/larets_202606.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/larets/2026/larets_202606.np2",
+   "retrieved": "2026-10-09T22:48:56.707Z",
+   "sha256": "62fd3cd114c87bfe3f1054ec2b4ff6f9dc6af855662b66f0bb16375f0bcab40a",
+   "bytes": 417675,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/larets/larets_202607.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/larets/2026/larets_202607.np2",
+   "retrieved": "2026-10-09T22:48:57.716Z",
+   "sha256": "53fcf38db1e536b14a8d91af1fbfc75de877ee453bf434259706934140c851de",
+   "bytes": 571309,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/larets/larets_202608.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/larets/2026/larets_202608.np2",
+   "retrieved": "2026-10-09T22:48:58.716Z",
+   "sha256": "75c705b2f1366ce5cd4f9e88a7b92c057aaff009d8cb5fb6d99b73c5140925b9",
+   "bytes": 518735,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/westpac/westpac_202606.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/westpac/2026/westpac_202606.np2",
+   "retrieved": "2026-10-09T22:48:59.708Z",
+   "sha256": "148dd20530c3f0cba37648e7c58ecb6a2ecad0ac609651af9f934166446ad0e3",
+   "bytes": 185072,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/westpac/westpac_202607.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/westpac/2026/westpac_202607.np2",
+   "retrieved": "2026-10-09T22:49:00.714Z",
+   "sha256": "54fe6a170bac624724b9f8812e32432bb7db84b3e74c652c0ad49ac70f946791",
+   "bytes": 221632,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/westpac/westpac_202608.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/westpac/2026/westpac_202608.np2",
+   "retrieved": "2026-10-09T22:49:01.711Z",
+   "sha256": "ecd54044d546de67eb6e78e453d44d677138fbee9401b4d30c63c3fc110fab7f",
+   "bytes": 214069,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/lares/lares_202606.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/lares/2026/lares_202606.np2",
+   "retrieved": "2026-10-09T22:49:02.919Z",
+   "sha256": "6415f689e782c5bec8ceee56e9c3e068a883f6946fa03bcbe3c99959f9e8cc35",
+   "bytes": 865530,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/lares/lares_202607.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/lares/2026/lares_202607.np2",
+   "retrieved": "2026-10-09T22:49:04.213Z",
+   "sha256": "40b6fcfe78fa00c0131ddf715cf47120d2f4152cd5cffe14d15bc8d725a4d092",
+   "bytes": 1424733,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  },
+  {
+   "file": "npt_crd_v2/lares/lares_202608.np2",
+   "url": "https://edc.dgfi.tum.de/pub/slr/data/npt_crd_v2/lares/2026/lares_202608.np2",
+   "retrieved": "2026-10-09T22:49:04.724Z",
+   "sha256": "63c925a72f28e2b842574c8532473b2adb2958bdbe900217819184dcd56eedcd",
+   "bytes": 1224379,
+   "terms": "ILRS data policy: free and open use with acknowledgement of the ILRS (Pearlman et al. 2002, 2019) and its stations; EDC (DGFI-TUM) anonymous HTTPS"
+  }
+ ]
+}
