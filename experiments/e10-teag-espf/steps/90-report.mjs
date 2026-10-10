@@ -162,7 +162,6 @@ metrics.runs.partD = partdIds;
 if (partdIds.length) metrics.partD = JSON.parse(fs.readFileSync(path.join(repoRoot, 'runs', partdIds[0], 'summary.json'), 'utf8'));
 
 fs.writeFileSync(path.join(outDir, 'metrics.json'), `${JSON.stringify(metrics, (k, x) => (x === Infinity ? 'Infinity' : x), 1)}\n`);
-for (const [id, m] of Object.entries(manifests)) fs.writeFileSync(path.join(repoRoot, 'results/e10/manifests', `${id}.manifest.json`), `${JSON.stringify(m, null, 1)}\n`);
 
 // ── REPORT.md ──
 const f = (x, d = 3) => (x === Infinity ? '∞' : Number.isFinite(x) ? x.toFixed(d) : '—');
@@ -245,7 +244,11 @@ for (const s of config.partB.testSeeds) {
 metrics.notes = { modelCheck, b5TruthShiftM: b5 };
 lines.push('', '## Notes', '',
   modelCheck ? `- **Measurement-model floor.** Noise-free RA/Dec from the simulator, fitted by BLS (dev seed d1, 12 h): weighted RMS ${f(modelCheck.lightTime.weightedRms, 3)} (≈ ${f(modelCheck.lightTime.weightedRms * 2, 2)}″) and a median position error of ${m(modelCheck.lightTime.medianErrorM)}, unchanged without light time (${f(modelCheck.noLightTime.weightedRms, 3)}, ${m(modelCheck.noLightTime.medianErrorM)}): a systematic of about 0.17″ between the simulated observations and the estimator's model (station framing or the float32 RA/Dec of \`$EOO\`), common to every variant. It is below 0.1σ of the 2″ noise but above BLS's metre-level formal covariance, which is why BLS's covariance regions rarely hold the truth.` : '',
+  '- **Part C and E6.** Part C covers GPS only (E2\'s at-epoch statistic is GPS-only; E2b\'s SLR statistics arrived after the freeze). E6\'s laser-anchored objects (Starlette, Stella, LARETS, WESTPAC, LARES) have no OMM-seeded sets here, so there is no containment to set beside E6\'s covariance coverage.',
   b5.length ? `- **B5 and B8 are weak.** Doubling B and Cr·A/m at 600 km (mid-2026 density) moves the truth at most ${b5.map((x) => m(x)).join(', ')} over the 12 h after the change (test seeds); B8's 20 % drag error is similarly small between passes. Both cases score like B1.` : '');
 fs.writeFileSync(path.join(outDir, 'metrics.json'), `${JSON.stringify(metrics, (k, x) => (x === Infinity ? 'Infinity' : x), 1)}\n`);
+// Every run's manifest, the dev selection run's included.
+selection.runs.forEach(readManifest);
+for (const [id, m] of Object.entries(manifests)) fs.writeFileSync(path.join(repoRoot, 'results/e10/manifests', `${id}.manifest.json`), `${JSON.stringify(m, null, 1)}\n`);
 fs.writeFileSync(path.join(outDir, 'README.md'), `${lines.join('\n')}\n`);
 console.log(lines.slice(0, 14).join('\n'));

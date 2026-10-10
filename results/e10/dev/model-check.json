@@ -1,0 +1,20 @@
+{
+ "lightTime": {
+  "seed": "d1",
+  "hours": 12,
+  "observations": 36,
+  "converged": true,
+  "weightedRms": 0.08561036399705646,
+  "medianErrorM": 3.3853015505595927,
+  "maxErrorM": 4.446366003123111
+ },
+ "noLightTime": {
+  "seed": "d1",
+  "hours": 12,
+  "observations": 36,
+  "converged": true,
+  "weightedRms": 0.08591830669957048,
+  "medianErrorM": 3.3983339795639074,
+  "maxErrorM": 4.414528387129403
+ }
+}
