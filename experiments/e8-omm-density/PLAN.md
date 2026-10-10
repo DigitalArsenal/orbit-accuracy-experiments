@@ -367,3 +367,14 @@ propagation targets in the historical windows as well, against section 3
 (historical: CHAMP, GRACE-A, GRACE-B); it was corrected and the historical
 calibration set recomputed before any use. Step 10 now writes each fit as
 it completes, so long runs can resume.
+
+## Amendment 2 (2026-10-10, order of runs)
+
+Section 5 says the selection is recorded before any test window is run.
+Steps 05 and 08 (the element sets of each window and the calibration set
+chosen from the 60 days before it) ran for the test and historical windows
+before the selection was recorded. They read no density, no precise orbit
+and no outcome, and nothing they produce depends on section 5's choices
+(the calibration set of every K is the head of each bin's one ranked list).
+Stage 1 chose K = 4; the K = 16 forecast fits, then running, were stopped
+and are not used.
