@@ -14,6 +14,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
+import { licenseSection } from '../../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { runs: { type: 'string' }, release: { type: 'string' }, products: { type: 'string' }, vimpel: { type: 'string' } } });
 const productsDir = path.resolve(values.products ?? path.join(path.dirname(config.inputs.reference), 'products'));
@@ -120,6 +121,7 @@ for (const f of [...new Set(entries.map((e) => e.family))]) {
   const list = entries.filter((e) => e.family === f);
   L.push(`| ${f} | ${list.length} | ${(list.reduce((t, e) => t + e.size, 0) / 1e6).toFixed(1)} | ${inGit.has(f) ? `\`data/e3/${f}/\`` : 'release assets'} | ${list[0].terms} |`);
 }
+L.push('', ...licenseSection(['esa-navigation-office', 'igs', 'copernicus-sentinel', 'esa-earth-observation', 'ilrs', 'ilrs-nsgf', 'iers', 'vimpel', 'celestrak', 'space-track'], 'data/e3'));
 L.push('', '## Files', '', '| File | SHA-256 | Source | Retrieved |', '| --- | --- | --- | --- |');
 for (const e of entries) L.push(`| ${e.name} | \`${e.sha256}\` | ${e.url} | ${e.retrieved} |`);
 fs.writeFileSync(path.join(dataDir, 'SOURCES.md'), `${L.join('\n')}\n`);

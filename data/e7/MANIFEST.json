@@ -1446,7 +1446,7 @@
    "asset": "SOLFSMY.TXT.gz",
    "sha256": "5b3d63a3c9c61b97a4f858af1a3f644fc50aae71d21501145deacc406df1fc34",
    "bytes": 207397,
-   "note": "Not in git until SET confirms its terms (none stated on https://spacewx.com/jb2008/).",
+   "note": "not published: No current licence grants redistribution, and the code README reserves all rights. Results that use the indices are published with SET's acknowledgement; the files are cited by URL and SHA-256.",
    "members": [
     {
      "file": "SOLFSMY.TXT.gz",
@@ -1456,13 +1456,14 @@
      "gzSha256": "5b3d63a3c9c61b97a4f858af1a3f644fc50aae71d21501145deacc406df1fc34",
      "terms": "SET JB2008 page: indices provided with a 45-day lag; no license stated on the page; real-time indices via UDL. Cite SET/Bowman et al. 2008."
     }
-   ]
+   ],
+   "published": false
   },
   {
    "asset": "DTCFILE.TXT.gz",
    "sha256": "f3bc04704dbd40581f6af0151127168c1c78e9681cb41ff7e4eb9b378305de8b",
    "bytes": 115944,
-   "note": "Not in git until SET confirms its terms (none stated on https://spacewx.com/jb2008/).",
+   "note": "not published: No current licence grants redistribution, and the code README reserves all rights. Results that use the indices are published with SET's acknowledgement; the files are cited by URL and SHA-256.",
    "members": [
     {
      "file": "DTCFILE.TXT.gz",
@@ -1472,12 +1473,13 @@
      "gzSha256": "f3bc04704dbd40581f6af0151127168c1c78e9681cb41ff7e4eb9b378305de8b",
      "terms": "SET JB2008 page: indices provided with a 45-day lag; no license stated on the page; real-time indices via UDL. Cite SET/Bowman et al. 2008."
     }
-   ]
+   ],
+   "published": false
   },
   {
    "asset": "e7-gnss-final.tar.gz",
-   "sha256": "8c41a5d294726f46fa23f140c2e2c82cdeca1e136b0bf8557fd94bc17b45485d",
-   "bytes": 281086750,
+   "sha256": "56940798b5acff105ced3c874a9c46331b60bef1cc38b04714ae561fef4c3315",
+   "bytes": 281104511,
    "members": [
     {
      "product": "ESA0OPSFIN_20242680000_01D_05M_ORB.SP3.gz",
@@ -3871,12 +3873,14 @@
      "bytes": 974747,
      "retrieved": "2026-10-09T15:50:48.098Z"
     }
-   ]
+   ],
+   "tag": "e7-inputs-20261010",
+   "contents": "README.md (licence, attribution) and MANIFEST.json (SHA-256 per file), then the files byte for byte"
   },
   {
    "asset": "e7-slr-nsgf.tar.gz",
-   "sha256": "6cba117b0b956b7429e4107cdd98bb9b8b8971353dbb3a26898649af8d6dfc56",
-   "bytes": 60270938,
+   "sha256": "6997941dfaa452d814b588d148cf210099e461f10d1c953589bd39845420069c",
+   "bytes": 60309820,
    "members": [
     {
      "product": "nsgf.orb.ajisai.251005.v000.sp3.gz",
@@ -9262,7 +9266,9 @@
      "bytes": 82080,
      "retrieved": "2026-10-01T22:59:58.186Z"
     }
-   ]
+   ],
+   "tag": "e7-inputs-20261010",
+   "contents": "README.md (licence, attribution) and MANIFEST.json (SHA-256 per file), then the files byte for byte"
   },
   {
    "asset": "e7-swarm-sp3.tar.gz",
@@ -16381,12 +16387,14 @@
      "bytes": 440043,
      "retrieved": "2026-10-01T22:58:14.932Z"
     }
-   ]
+   ],
+   "published": false,
+   "note": "not published: Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA."
   },
   {
    "asset": "e7-sentinel1-poeorb.tar.gz",
-   "sha256": "09cf2eed5553f7838ed5740d0304f14964793ab897f197b4602c387c9288c3ad",
-   "bytes": 424063779,
+   "sha256": "bac2277c3bb47f0aebc804658df3d3c29cc71218738f24918ed884c6b78bbbd9",
+   "bytes": 424110460,
    "members": [
     {
      "product": "S1A_OPER_AUX_POEORB_OPOD_20251022T070617_V20251001T225942_20251003T005942.EOF.zip",
@@ -22132,12 +22140,14 @@
      "bytes": 598544,
      "retrieved": "2026-10-01T22:44:04.868Z"
     }
-   ]
+   ],
+   "tag": "e7-inputs-20261010",
+   "contents": "README.md (licence, attribution) and MANIFEST.json (SHA-256 per file), then the files byte for byte"
   },
   {
    "asset": "e7-slr-ilrs.tar.gz",
-   "sha256": "d6be6ccc2127a1e047712b13c0dd6ff72c283c7d8842170d82ec030cdf9acbd3",
-   "bytes": 19172339,
+   "sha256": "ad62a600b46ae7762aaa294adba5c767c2f944ca11a5e6e1927436d16974e148",
+   "bytes": 19183227,
    "members": [
     {
      "product": "ilrsa.orb.etalon1.251004.v80.sp3.gz",
@@ -23355,7 +23365,9 @@
      "bytes": 244186,
      "retrieved": "2026-10-01T22:44:15.965Z"
     }
-   ]
+   ],
+   "tag": "e7-inputs-20261010",
+   "contents": "README.md (licence, attribution) and MANIFEST.json (SHA-256 per file), then the files byte for byte"
   }
  ],
  "listed": [
