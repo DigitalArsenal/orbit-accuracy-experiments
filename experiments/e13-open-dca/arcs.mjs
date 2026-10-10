@@ -84,10 +84,19 @@ export async function openArcEnv({ profile = 'full' } = {}) {
     return { ms, state };
   }
 
-  // Propagate x_a to t_b with Cd*A/m = b0 and Cr*A/m = cr: {state, phi (6x6), sens (6)}.
-  async function propagate(a, tbMs, b0, cr) {
+  // JB2008 rows of the days [fromMs, toMs] as SET published them, with a00(t) [K] (when given) added to the hourly DTC values: the temperature
+  // offset of the DCA form, entering the density exactly as JB2008's own geomagnetic term (analysis/density-calibration, 'Correction = DTC
+  // offset'). Hour h of a day takes a00 at that hour's start.
+  function rowsFor(fromMs, toMs, a00) {
+    const rows = jb2008Rows(set, fromMs, toMs);
+    if (a00) for (const row of rows) { const day0 = Date.parse(`${row.DATE}T00:00:00Z`); row.DTC_HOURLY_K = row.DTC_HOURLY_K.map((v, h) => v + a00(day0 + h * 3600e3)); }
+    return rows;
+  }
+
+  // Propagate x_a to t_b with Cd*A/m = b0 and Cr*A/m = cr: {state, phi (6x6), sens (6)}. a00: optional temperature offset function (rowsFor).
+  async function propagate(a, tbMs, b0, cr, { a00 = null } = {}) {
     const forces = { ...prof.forces, drag: true, atmosphere: 'JB2008' };
-    const rows = jb2008Rows(set, a.ms - 8 * DAY, tbMs + 2 * DAY);
+    const rows = rowsFor(a.ms - 8 * DAY, tbMs + 2 * DAY, a00);
     const response = await modules['propagator/hpop'].invoke('invoke', [
       executionFrame({ epoch: noZ(isoUs(a.ms)), state: a.state, samples: [noZ(isoUs(tbMs))], forces, coefficients: { b: b0, agom: cr, inTrack: 0 },
         parameters: [{ kind: 'DRAG_AREA_OVER_MASS' }], stm: true, integrator: { tolerance: prof.tolerance, maxStep: prof.maxStepSeconds } }),
@@ -96,6 +105,19 @@ export async function openArcEnv({ profile = 'full' } = {}) {
     const s = decodeSamples(response)[0], n = s.n;
     const phi = Array.from({ length: 6 }, (_, i) => Array.from({ length: 6 }, (_, j) => s.stm[i * n + j]));
     return { state: s.state, phi, sens: Array.from({ length: 6 }, (_, i) => s.stm[i * n + 6]), steps: s.steps };
+  }
+
+  // The states (GCRF, m and m/s) of x_a at the epochs `epochsMs` with Cd*A/m = B and Cr*A/m = cr, no state-transition output.
+  async function trajectory(a, epochsMs, B, cr, { a00 = null } = {}) {
+    const forces = { ...prof.forces, drag: true, atmosphere: 'JB2008' };
+    const last = Math.max(...epochsMs);
+    const rows = rowsFor(a.ms - 8 * DAY, last + 2 * DAY, a00);
+    const response = await modules['propagator/hpop'].invoke('invoke', [
+      executionFrame({ epoch: noZ(isoUs(a.ms)), state: a.state, samples: epochsMs.map((t) => noZ(isoUs(t))), forces, coefficients: { b: B, agom: cr, inTrack: 0 },
+        parameters: [], stm: false, integrator: { tolerance: prof.tolerance, maxStep: prof.maxStepSeconds } }),
+      kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(last) + 3), jb2008Frame(rows),
+    ]);
+    return decodeSamples(response).map((x) => x.state);
   }
 
   // The orbital energy (J/kg) and its GCRF gradient of states [{ms, state}] from analysis/density-calibration `energy`
@@ -121,13 +143,13 @@ export async function openArcEnv({ profile = 'full' } = {}) {
   // change is below `tolerance` (relative); each iteration is one propagator/hpop call with the state-transition output and one `energy`
   // call. a, b: {ms, state GCRF} (UTC); b0: starting Cd*A/m; cr: locked Cr*A/m; sigma: {posRtnM [R,T,N], velRtnMmS [R,T,N]} of each state.
   // Returns the converged B with its stated 1-sigma (the two states' covariances through the energy), and the energy mismatch left (J/kg).
-  async function energyArc(a, b, { b0, cr, sigma, inflate = 1, tolerance = 0.01, maxIterations = 5 }) {
+  async function energyArc(a, b, { b0, cr, sigma, inflate = 1, tolerance = 0.01, maxIterations = 5, a00 = null }) {
     const [Ca, Cb] = await Promise.all([stateCovariance(a, sigma, inflate), stateCovariance(b, sigma, inflate)]);
     const [obs] = await energyOf([b]);
     let B = b0, out = null, calls = 0;
     const t0 = performance.now();
     for (let it = 0; it < maxIterations; ++it) {
-      const p = await propagate(a, b.ms, B, cr);
+      const p = await propagate(a, b.ms, B, cr, { a00 });
       ++calls;
       const [pred] = await energyOf([{ ms: b.ms, state: p.state }]);
       const m = obs.energy - pred.energy;
@@ -177,5 +199,5 @@ export async function openArcEnv({ profile = 'full' } = {}) {
     return last;
   }
 
-  return { energyArc, sixDimensionalArc, energyOf, propagate, toUtcGcrf, modules, profile, destroy: async () => { for (const m of Object.values(modules)) await m.destroy(); } };
+  return { energyArc, sixDimensionalArc, energyOf, propagate, trajectory, toUtcGcrf, modules, profile, destroy: async () => { for (const m of Object.values(modules)) await m.destroy(); } };
 }

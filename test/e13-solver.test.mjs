@@ -1,0 +1,128 @@
+// Known-answer checks of E13's common-mode solver (experiments/e13-open-dca PLAN.md section 7 and Amendment R1): a synthetic fleet with a
+// known common mode, baselines, baseline steps (attitude modes), outliers and daily arcs that all start within a few hours of one another
+// (as Planet's do), solved with the production solver. Statistics only: no module is involved, so nothing is skipped.
+//
+// What the numbers show (recorded in PLAN.md Amendment R1): with the arcs' nodes at their centres the common mode is exact without noise;
+// at the realised scatter (0.088 per arc) the rms error of 12 h window means is 0.019 (4.8 % of the 0.4 storm amplitude) for 36 satellites,
+// 0.008 (2 %) at 0.04; baselines that are constant in blocks do not hold the levels of neighbouring blocks together when the arcs start
+// within an hour of one another (rms error 0.4-1.6 on the same fleet), which is why the baselines are random walks.
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { arcCenterOffsetMs, nowcast, solveCommonMode, windowMean } from '../experiments/e13-open-dca/common-mode.mjs';
+import { rng } from '../harness/stats.mjs';
+
+const H = 3600e3, DAY = 86400e3;
+const T0 = Date.parse('2025-10-01T00:00:00Z');
+const gauss = (r) => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+
+// A common mode that is piecewise linear on a grid (so the model can represent it): an AR(1) series plus a storm.
+function truthOf(gridHours, anchorMs, days, seed) {
+  const r = rng(seed), n = Math.ceil(days * 24 / gridHours) + 4, v = new Float64Array(n);
+  let x = 0;
+  for (let i = 0; i < n; ++i) { x = 0.92 * x + 0.035 * gauss(r); v[i] = x; }
+  const storm = Math.round(42 * 24 / gridHours); v[storm] += 0.4; v[storm + 1] += 0.2; v[storm - 1] += 0.1;
+  return (t) => { const x2 = (t - anchorMs) / (gridHours * H), i = Math.floor(x2); return v[i] + (v[i + 1] - v[i]) * (x2 - i); };
+}
+const meanOver = (f, lo, hi) => { let a = 0, n = 0; for (let t = lo + 30e3; t < hi; t += 60e3) { a += f(t); ++n; } return a / n; };
+
+// doves x days of 24 h arcs starting around startHour (+ up to staggerHours); noise sigma, outlier share, baseline steps
+function fleet(f, { doves, days, noise, outliers, steps, startHour = 20.75, staggerHours = 2.5, seed, prefix }) {
+  const r = rng(seed), arcs = [];
+  for (let i = 0; i < doves; ++i) {
+    let base = Math.log(0.02) + 0.2 * gauss(r);
+    const stepDay = steps && r() < 0.5 ? Math.floor(10 + r() * 70) : -1, stepSize = (r() < 0.5 ? -1 : 1) * Math.log(1.5);
+    for (let d = 0; d < days; ++d) {
+      if (d === stepDay) base += stepSize;
+      const startMs = T0 + d * DAY + (startHour + staggerHours * r()) * H, endMs = startMs + 24 * H;
+      let e = noise * gauss(r);
+      if (r() < outliers) e += (r() < 0.5 ? -1 : 1) * (0.3 + 0.5 * r());
+      arcs.push({ dove: `${prefix}${i}`, startMs, endMs, y: base + meanOver(f, startMs, endMs) + e });
+    }
+  }
+  return arcs;
+}
+
+// rms error of the 12 h window means, after removing each solution's mean over the compared windows (the level is not identified)
+function windowError(sol, f, fromDay, toDay) {
+  const est = [], tru = [];
+  for (let t = T0 + fromDay * DAY; t + 12 * H <= T0 + toDay * DAY; t += 12 * H) {
+    const e = windowMean(sol, t, t + 12 * H);
+    if (Number.isFinite(e)) { est.push(e); tru.push(meanOver(f, t, t + 12 * H)); }
+  }
+  const me = est.reduce((a, b) => a + b, 0) / est.length, mt = tru.reduce((a, b) => a + b, 0) / tru.length;
+  const err = est.map((e, i) => (e - me) - (tru[i] - mt));
+  return { rms: Math.sqrt(err.reduce((a, e) => a + e * e, 0) / err.length), n: err.length, max: Math.max(...err.map(Math.abs)) };
+}
+
+test('noise-free daily arcs: the common mode is recovered exactly (24 h nodes at the arcs\' centres; random-walk baselines and blocks of 10, 21 and 30 days)', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 92, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const anchorMs = T0 + arcCenterOffsetMs(probe);
+  const f = truthOf(24, anchorMs, 92, 3);
+  const arcs = fleet(f, { doves: 30, days: 92, noise: 0, outliers: 0, steps: false, seed: 7, prefix: 'a' });
+  const forms = [{ label: 'random walk', baseline: { kind: 'randomWalk', stepSigma: 0.02 } }, ...[10, 21, 30].map((days) => ({ label: `blocks of ${days} d`, baseline: { kind: 'blocks', days } }))];
+  for (const form of forms) {
+    const sol = solveCommonMode(arcs, { anchorMs, nodeHours: 24, baseline: form.baseline });
+    const e = windowError(sol, f, 3, 88);
+    // the first and last nodes are unsupported (held at zero), so the arcs next to them are not exactly represented: a few 1e-4
+    assert.ok(e.rms < 5e-4, `${form.label}: rms ${e.rms} over ${e.n} windows`);
+  }
+});
+
+test('realistic scatter (0.088 and 0.04 per arc, 3 % outliers, baseline steps): the common mode is within its noise and held-out satellites gain from it', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 92, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const anchorMs = T0 + arcCenterOffsetMs(probe);
+  const f = truthOf(24, anchorMs, 92, 3);
+  const amplitude = 0.4;
+  const mad = (a) => { const m = [...a].sort((x, y) => x - y)[a.length >> 1]; return 1.4826 * [...a.map((x) => Math.abs(x - m))].sort((x, y) => x - y)[a.length >> 1]; };
+  const med = (a) => [...a].sort((x, y) => x - y)[a.length >> 1];
+  for (const [noise, staggerHours, limit] of [[0.04, 2.5, 0.03], [0.088, 2.5, 0.06], [0.088, 1, 0.06]]) {
+    const calibration = fleet(f, { doves: 36, days: 92, noise, outliers: 0.03, steps: true, seed: 11, prefix: 'c', staggerHours });
+    const heldOut = fleet(f, { doves: 12, days: 92, noise, outliers: 0.03, steps: true, seed: 12, prefix: 'h', staggerHours });
+    const sol = solveCommonMode(calibration, { anchorMs, nodeHours: 24, baseline: { kind: 'randomWalk', stepSigma: 0.02 }, iterations: 60, tolerance: 1e-5 });
+    assert.ok(sol.converged, `noise ${noise}: not converged (last change ${sol.lastChange})`);
+    const e = windowError(sol, f, 3, 88);
+    assert.ok(e.rms < limit * amplitude, `noise ${noise}, stagger ${staggerHours} h: rms error ${e.rms.toFixed(4)} (${(100 * e.rms / amplitude).toFixed(1)} % of the storm amplitude ${amplitude}; limit ${100 * limit} %)`);
+    // held-out satellites: their arcs' log Cd*A/m, less a baseline from the previous 21 days' median with the common mode removed (D13) or not (D0)
+    const u0 = [], u13 = [], byDove = new Map();
+    heldOut.forEach((a) => byDove.set(a.dove, [...(byDove.get(a.dove) ?? []), a]));
+    for (const list of byDove.values()) {
+      list.sort((x, y) => x.startMs - y.startMs);
+      for (let j = 25; j < list.length - 3; ++j) {
+        const prev = list.slice(j - 21, j), sb = (a) => windowMean(sol, a.startMs, a.endMs);
+        if (!Number.isFinite(sb(list[j])) || prev.some((a) => !Number.isFinite(sb(a)))) continue;
+        u0.push(list[j].y - med(prev.map((a) => a.y)));
+        u13.push(list[j].y - sb(list[j]) - med(prev.map((a) => a.y - sb(a))));
+      }
+    }
+    const r3 = 1 - mad(u13) / mad(u0);
+    assert.ok(r3 > 0.1, `noise ${noise}: held-out spread reduced by ${(100 * r3).toFixed(1)} % (MAD ${mad(u0).toFixed(4)} -> ${mad(u13).toFixed(4)}) over ${u0.length} arcs`);
+  }
+});
+
+test('the nowcast uses no arc that ends after its cut-off, and its result does not move when later arcs change', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 92, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const f = truthOf(24, T0 + arcCenterOffsetMs(probe), 92, 3);
+  const arcs = fleet(f, { doves: 30, days: 92, noise: 0.05, outliers: 0.03, steps: true, seed: 21, prefix: 'n' });
+  const issueMs = T0 + 60 * DAY;                                   // 00:00 UTC; the cut-off is 6 h earlier
+  const opts = { latencyHours: 6, historyDays: 30, nodeHours: 24, baseline: { kind: 'randomWalk', stepSigma: 0.02 }, iterations: 40, tolerance: 1e-5 };
+  const a = nowcast(arcs, issueMs, opts);
+  assert.ok(a.latestArcEndMs <= issueMs - 6 * H, `the latest arc ends ${new Date(a.latestArcEndMs).toISOString()}`);
+  const moved = arcs.map((x) => (x.endMs > issueMs - 6 * H ? { ...x, y: x.y + 5 } : x));        // every later arc shifted by +5
+  const b = nowcast(moved, issueMs, opts);
+  assert.deepEqual(b.s, a.s);
+  assert.equal(b.usedArcs, a.usedArcs);
+  assert.ok(a.usedArcs > 0 && a.usedArcs < arcs.length);
+});
+
+test('a node that few satellites or little weight support is held at zero and the windows that touch it are not scored', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 40, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const anchorMs = T0 + arcCenterOffsetMs(probe);
+  const f = truthOf(24, anchorMs, 40, 3);
+  const arcs = fleet(f, { doves: 30, days: 40, noise: 0.088, outliers: 0, steps: false, seed: 5, prefix: 'e' });
+  const sol = solveCommonMode(arcs, { anchorMs, nodeHours: 24, baseline: { kind: 'randomWalk', stepSigma: 0.02 } });
+  assert.equal(sol.supported[0], false, 'the first node (centre of the day before the first arc) is supported');
+  assert.equal(sol.s[0], 0);
+  assert.ok(Number.isNaN(windowMean(sol, sol.nodeMs[0], sol.nodeMs[0] + 12 * H)));
+  assert.ok(sol.supported.filter(Boolean).length >= 38);
+  assert.ok(Math.max(...sol.s.map(Math.abs)) < 0.5, 'a node blew up');
+});

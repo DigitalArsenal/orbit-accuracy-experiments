@@ -5,6 +5,8 @@ sets `"frozen": true` in [`config.json`](config.json); until then the code refus
 (`windows.mjs`, `assertWindowReadable`). Part S (the live Starlink collection, section 10) is a design: it is
 frozen by a dated amendment before any Starlink validation datum is scored.
 
+Amendment R1 (end of the file, 2026-10-10) changes the solver of section 4.3 before any test-split datum was read; sections 5 and 6 are unchanged.
+
 Lane: claude-e13. Modules: `propagator/hpop`, `analysis/estimation`, `foundation/frames`, `foundation/time`,
 `data-source/eop-parser` from space-data-network-modules `d1d8ca88` (HPOP 1.2.0, wasm `1b1df5e3…`, the build E4 A6
 and E11 pin); `analysis/density-calibration` **0.3.0** from branch `task/e13-orbital-energy-20261010`
@@ -257,3 +259,47 @@ days); (e) the Swarm and GRACE-FO density comparison, which waits for the produc
 thresholds are fixed by Amendment S1 before any of this is scored.
 
 ## Amendments
+
+### Amendment R1 — the solver (2026-10-10; before any Swarm or GRACE-FO density or orbit of a test split, and any test-split arc result, was read)
+
+Written after the first dev arcs and synthetic fleets showed that the solver of section 4.3 cannot do its job on Planet's arcs. The
+hypotheses, thresholds, splits, bootstrap and decision rules of sections 5–6 are unchanged. Changes, each with the measurement behind it:
+
+1. **Planet's arcs all cover the same 24 h.** The states are dated 20:00–22:59 UTC (dev arcs to 2025-10-13: 389 of 474 start in hour 20, 76 in
+   hour 22, 8 in hour 21, 1 in hour 18; midpoints cluster at 09:05 UTC). The node grid is anchored at the circular mean time of day of the
+   arcs' midpoints (`arcCenterOffsetMs`), nodes 24 h apart. A daily arc sees the shortest wavelength of a 24 h grid with weight 1/2 when a node
+   is at its centre and 0 when nodes are at its ends. **12 h nodes stay a dev candidate but daily arcs cannot resolve them** (synthetic fleet,
+   2.5 h stagger: rms error 0.09–0.11 against 0.02 at 24 h).
+2. **Support by weight.** A node is supported when 6 satellites overlap it **and** the arcs' squared weights on it sum to at least 1.5. With the
+   satellite count alone, the first and last nodes (weight 1/8 in one arc each) were free: node errors of order 1 on a synthetic fleet, and
+   through the mean-zero constraint a shift of every other node. An unsupported node is held at zero; windows that touch it are not scored.
+3. **One mean-zero constraint, not one per block.** The mean of s over the supported nodes is zero. A per-block constraint is inconsistent with
+   the arcs that straddle a block boundary: on a noise-free fleet whose common mode the model can represent, the per-block gauge gives rms
+   errors of 8.1e-3, 4.5e-3 and 1.7e-3 (blocks of 10, 21, 30 d), the global one 5.9e-9, 4.0e-9, 3.4e-9.
+4. **Baselines are robust random walks** (`stepSigma` q per √day between a satellite's consecutive arcs; Huber loss on the increments, so an
+   attitude-mode step is allowed), replacing baselines constant in blocks, which stay in the dev table. Blocks tie neighbouring blocks'
+   levels of the common mode only through the arcs that straddle the boundary, about 0.12 per boundary for 36 satellites at the realised
+   scatter, accumulating over the boundaries. Synthetic fleet (36 satellites, 92 days, 3 % outliers, baseline steps of ln 1.5; rms error of
+   the 12 h window means of the recovered common mode, storm amplitude 0.4), scatter 0.088 per arc:
+
+   | arcs start within | blocks 10 / 21 / 30 d | random walk q = 0.005 / 0.01 / 0.02 / 0.04 |
+   | --- | --- | --- |
+   | 1 h | 1.58 / 0.89 / 1.38 | 0.022 / 0.021 / 0.019 / 0.018 |
+   | 2.5 h | 0.045 / 0.035 / 0.055 | 0.022 / 0.021 / 0.019 / 0.018 |
+   | scatter 0.04, 2.5 h | 0.020 / 0.016 / 0.027 | 0.010 / 0.009 / 0.008 / 0.012 |
+
+   Candidates for the dev selection: q ∈ {0.005, 0.01, 0.02, 0.04} and blocks of 10, 21, 30 d, each with 24 h and 12 h nodes (14).
+5. **Iteration.** The robust scale is held after 8 sweeps (so that the iteration converges on a fixed problem), at most 60 sweeps, change below
+   1e-5 (1e-6 needs about 90 sweeps and moves the synthetic rms error from 0.0215 to 0.0216). config.json: `solver.iterations` 60, `tolerance` 1e-5.
+6. **Nowcast.** At an issue time t0 the arcs that ended at least 6 h before it and began at most 30 days before that cut-off, nodes at their
+   centres; the correction after the last supported node relaxes with the selected τ. A test shows that no later arc enters (a later arc
+   shifted by 5 in ln B leaves the solution identical).
+7. **H3's baseline** is the median over the Dove's arcs of the previous 21 days (at least 8) with s̄ removed (arm D13) or not (arm D0): the
+   baseline blocks of section 6 no longer exist.
+8. **H4 covers Swarm A, B, C.** The archive holds no converted GRACE-FO precise orbit (the GFZ RSO SP3 files, declared coordinate system
+   CTS, have not been through `analysis/reference-states`). GRACE-FO enters H1 and H2 (density) only. Cr·A/m of Swarm is E5's 0.009 m²/kg
+   (an assumption of E5's).
+9. **The guard of section 7** reads, as measured (`test/e13-solver.test.mjs`): noise-free, rms error below 5e-4 (random walk and blocks); at
+   scatter 0.04 below 3 % of the storm amplitude (measured 2.0 %), at 0.088 below 6 % (measured 4.8 %); held-out satellites' spread reduced
+   by at least 10 %. At the realised scatter the 3 % of section 7 is not reachable with 36 satellites (0.088 / √36 = 1.5 % per node before the
+   deconvolution of a 24 h mean).
