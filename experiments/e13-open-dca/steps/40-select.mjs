@@ -12,7 +12,7 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
-import { DAY, H, config, configPath, modulesDir, paths } from '../common.mjs';
+import { DAY, H, config, configPath, modulesDir, paths, amendmentsSha256 } from '../common.mjs';
 import { arcCenterOffsetMs, arcsFromRows, forecastMean, nowcast, solveCommonMode, windowMean } from '../common-mode.mjs';
 import { devLevels, densityRows, loadDensityWindows, sd, spreadReduction } from '../score.mjs';
 
@@ -22,6 +22,7 @@ const sample = JSON.parse(fs.readFileSync(new URL('../planet-sample.json', impor
 const arcsFile = values.arcs ?? path.join(paths.planetArcs, `dev-${P.arc.profile}.jsonl`);
 const raw = fs.readFileSync(arcsFile, 'utf8');
 const run = startRun({ experiment: config.experiment, step: '40-select', configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 run.addInputs('planet-arcs', { [path.basename(arcsFile)]: sha256(Buffer.from(raw)) });
 const through = values.through ? Date.parse(`${values.through}T00:00:00Z`) + DAY : Date.parse(`${P.split.dev[1]}T00:00:00Z`) + DAY;
 const rows = raw.split('\n').filter(Boolean).map((l) => JSON.parse(l));

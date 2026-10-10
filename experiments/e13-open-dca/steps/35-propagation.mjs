@@ -16,7 +16,7 @@ import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { gitState, sha256 } from '../../../harness/modules.mjs';
 import { Products } from '../../e3-combined-catalog/truth.mjs';
-import { DAY, H, STORE, appendJsonl, config, configPath, energyModulesDir, isoZ, modulesDir, paths, readJson, sleep } from '../common.mjs';
+import { DAY, H, STORE, appendJsonl, config, configPath, energyModulesDir, isoZ, modulesDir, paths, readJson, sleep, amendmentsSha256 } from '../common.mjs';
 import { arcCenterOffsetMs, arcsFromRows, nowcast, sAt, solveCommonMode } from '../common-mode.mjs';
 import { openArcEnv } from '../arcs.mjs';
 import { kappaTable } from '../kappa.mjs';
@@ -33,6 +33,7 @@ const variants = values.variants.split(',');
 const [shard, shards] = values.shard.split('/').map(Number);
 const profile = values.profile ?? P.arc.profile;
 const run = startRun({ experiment: config.experiment, step: `35-propagation-${values.split}-${values.target}-${shard}of${shards}`, configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 run.addInputs('selection', { [path.basename(values.selection ?? 'selection.json')]: sha256(Buffer.from(JSON.stringify(selection))) });
 const log = (m) => console.log(`${new Date().toISOString().slice(11, 19)} ${m}`);
 

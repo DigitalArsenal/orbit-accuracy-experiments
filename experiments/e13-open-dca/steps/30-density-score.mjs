@@ -10,7 +10,7 @@ import { parseArgs } from 'node:util';
 import { pigeonholeBootstrap, quantile } from '../../../harness/stats.mjs';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
-import { DAY, H, config, configPath, modulesDir, paths, readJson } from '../common.mjs';
+import { DAY, H, config, configPath, modulesDir, paths, readJson, amendmentsSha256 } from '../common.mjs';
 import { arcCenterOffsetMs, arcsFromRows, solveCommonMode, windowMean } from '../common-mode.mjs';
 import { cellsOf, densityRows, devLevels, loadDensityWindows, perSatellite, r1FromCells, spreadReduction, stormCapture, stormDays } from '../score.mjs';
 import { assertDensityReadable } from '../windows.mjs';
@@ -21,6 +21,7 @@ const [from, to] = P.split[values.split] ?? (() => { throw new Error(`unknown sp
 assertDensityReadable(values.split);
 const selection = readJson(values.selection ?? path.join(repoRoot, 'results', 'e13', 'selection.json'));
 const run = startRun({ experiment: config.experiment, step: `30-density-score-${values.split}`, configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 const log = (m) => console.log(`[${run.id}] ${m}`);
 const sample = readJson(path.join(path.dirname(configPath), 'planet-sample.json'));
 const dayMs = (iso) => Date.parse(`${iso}T00:00:00Z`);

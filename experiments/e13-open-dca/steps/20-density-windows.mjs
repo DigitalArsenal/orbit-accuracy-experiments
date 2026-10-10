@@ -10,7 +10,7 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { startRun } from '../../../harness/provenance.mjs';
 import { gitState } from '../../../harness/modules.mjs';
-import { DAY, STORE, configPath, config, energyModulesDir, modulesDir, writeJson } from '../common.mjs';
+import { DAY, STORE, configPath, config, energyModulesDir, modulesDir, writeJson, amendmentsSha256 } from '../common.mjs';
 import { isoDay, dayStartMs, openDensityEnv, SATELLITES, windowsOfDay } from '../density-truth.mjs';
 import { assertDensityReadable } from '../windows.mjs';
 
@@ -19,6 +19,7 @@ const [from, to] = config.planet.split[values.split] ?? (() => { throw new Error
 assertDensityReadable(values.split);
 const sats = values.sats ? values.sats.split(',') : SATELLITES;
 const run = startRun({ experiment: config.experiment, step: `20-density-windows-${values.split}`, configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 const env = await openDensityEnv();
 run.addModule({ ...env.dc.provenance, checkout: energyModulesDir(), checkoutState: gitState(energyModulesDir()) });
 run.addInputs('set', env.set.sha256);

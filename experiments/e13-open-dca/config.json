@@ -182,22 +182,9 @@
         "positiveOnly": true
       },
       "minimumDovesPerNodeInterval": 6,
-      "iterations": 60,
-      "tolerance": 1e-05,
-      "note": "Amendment R1 (PLAN.md): nodes every nodeHours at the centres of the arcs; each Dove's baseline is a robust random walk (stepSigma per sqrt(day), Huber increments) or, as a dev candidate, constant per block of baselineBlockDays; the common mode has mean zero over the supported nodes; candidate sets are tried on the dev split only (results/e13/selection.json)",
-      "baselineStepSigmaCandidates": [
-        0.005,
-        0.01,
-        0.02,
-        0.04
-      ],
-      "scaleSweeps": 8,
-      "minimumNodeInfo": 1.5,
-      "nowcast": {
-        "latencyHours": 6,
-        "historyDays": 30
-      },
-      "h3BaselineDays": 21
+      "iterations": 30,
+      "tolerance": 1e-06,
+      "note": "nodes every nodeHours with linear interpolation in time; each Dove's baseline ln b is a constant per block of baselineBlockDays (Huber loss); the common mode has mean zero inside every block; candidate sets are tried on the dev split only (results/e13/selection.json)"
     },
     "correction": {
       "altitudeKm": 490,
@@ -266,8 +253,5 @@
         "alpha": 0.05
       }
     }
-  },
-  "amendments": [
-    "R1"
-  ]
+  }
 }

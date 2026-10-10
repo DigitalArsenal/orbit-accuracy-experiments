@@ -7,13 +7,14 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { quantile } from '../../../harness/stats.mjs';
-import { config, configPath, modulesDir, paths } from '../common.mjs';
+import { config, configPath, modulesDir, paths, amendmentsSha256 } from '../common.mjs';
 import { arcsOf, readPlanetSeries } from '../planet-history.mjs';
 import { openArcEnv } from '../arcs.mjs';
 
 const { values } = parseArgs({ options: { count: { type: 'string', default: '20' }, out: { type: 'string' } } });
 const P = config.planet;
 const run = startRun({ experiment: config.experiment, step: '12-cr-sensitivity', configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 const log = (m) => console.log(`[${run.id}] ${m}`);
 const rows = fs.readFileSync(path.join(paths.planetArcs, `dev-${P.arc.profile}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => !r.error && !r.nonPositive);
 const count = Number(values.count), stride = Math.floor(rows.length / count);

@@ -19,7 +19,7 @@ function assertCommittedAndUnchanged(files, what) {
 export function assertWindowReadable(name) {
   if (name === 'dev') return;
   if (config.frozen !== true) throw new Error(`the ${name} split is locked until config.json is frozen (PLAN.md)`);
-  assertCommittedAndUnchanged(['config.json', 'PLAN.md'].map((f) => path.relative(repoRoot, path.join(experimentDir, f))), `the ${name} split is locked`);
+  assertCommittedAndUnchanged(['config.json', 'PLAN.md', 'amendments.json'].map((f) => path.relative(repoRoot, path.join(experimentDir, f))), `the ${name} split is locked`);
 }
 
 // Swarm and GRACE-FO densities and orbits of a split: the freeze commit, and for a test split the committed selection.

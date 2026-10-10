@@ -9,7 +9,17 @@ import { repoRoot } from '../../harness/provenance.mjs';
 
 export const experimentDir = path.dirname(fileURLToPath(import.meta.url));
 export const configPath = path.join(experimentDir, 'config.json');
-export const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+export const amendmentsPath = path.join(experimentDir, 'amendments.json');
+// config.json is frozen and never edited (AGENTS.md); the parameter values of PLAN.md's amendments are in amendments.json and are merged over it, in order.
+const merge = (base, over) => {
+  if (over === null || typeof over !== 'object' || Array.isArray(over)) return over;
+  const out = { ...base };
+  for (const [k, v] of Object.entries(over)) out[k] = k in base && base[k] !== null && typeof base[k] === 'object' && !Array.isArray(base[k]) ? merge(base[k], v) : v;
+  return out;
+};
+const amendments = fs.existsSync(amendmentsPath) ? JSON.parse(fs.readFileSync(amendmentsPath, 'utf8')) : {};
+export const config = Object.entries(amendments).filter(([k]) => /^[RS]\d+$/.test(k)).reduce((c, [, a]) => merge(c, a.overrides ?? {}), JSON.parse(fs.readFileSync(configPath, 'utf8')));
+export const amendmentsSha256 = fs.existsSync(amendmentsPath) ? crypto.createHash('sha256').update(fs.readFileSync(amendmentsPath)).digest('hex') : null;
 
 // Derived records only (owner rule: no raw operator ephemeris on disk); outside every repository.
 export const STORE = process.env.E13_STORE ?? config.store;

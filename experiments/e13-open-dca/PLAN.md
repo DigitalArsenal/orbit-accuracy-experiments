@@ -5,8 +5,6 @@ sets `"frozen": true` in [`config.json`](config.json); until then the code refus
 (`windows.mjs`, `assertWindowReadable`). Part S (the live Starlink collection, section 10) is a design: it is
 frozen by a dated amendment before any Starlink validation datum is scored.
 
-Amendment R1 (end of the file, 2026-10-10) changes the solver of section 4.3 before any test-split datum was read; sections 5 and 6 are unchanged.
-
 Lane: claude-e13. Modules: `propagator/hpop`, `analysis/estimation`, `foundation/frames`, `foundation/time`,
 `data-source/eop-parser` from space-data-network-modules `d1d8ca88` (HPOP 1.2.0, wasm `1b1df5e3…`, the build E4 A6
 and E11 pin); `analysis/density-calibration` **0.3.0** from branch `task/e13-orbital-energy-20261010`
@@ -290,7 +288,8 @@ hypotheses, thresholds, splits, bootstrap and decision rules of sections 5–6 a
 
    Candidates for the dev selection: q ∈ {0.005, 0.01, 0.02, 0.04} and blocks of 10, 21, 30 d, each with 24 h and 12 h nodes (14).
 5. **Iteration.** The robust scale is held after 8 sweeps (so that the iteration converges on a fixed problem), at most 60 sweeps, change below
-   1e-5 (1e-6 needs about 90 sweeps and moves the synthetic rms error from 0.0215 to 0.0216). config.json: `solver.iterations` 60, `tolerance` 1e-5.
+   1e-5 (1e-6 needs about 90 sweeps and moves the synthetic rms error from 0.0215 to 0.0216). The values of this amendment are in `amendments.json`,
+   which the code merges over `config.json` (frozen, unedited): `analysis.solver.iterations` 60, `tolerance` 1e-5, and the new keys.
 6. **Nowcast.** At an issue time t0 the arcs that ended at least 6 h before it and began at most 30 days before that cut-off, nodes at their
    centres; the correction after the last supported node relaxes with the selected τ. A test shows that no later arc enters (a later arc
    shifted by 5 in ln B leaves the solution identical).
