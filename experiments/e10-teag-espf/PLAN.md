@@ -110,7 +110,7 @@ diag(1 km² ×3, (1 m/s)² ×3); one δ per seed, shared by the cases.
 | --- | --- |
 | B1 nominal | — |
 | B2 initial-state error | δ ~ N(0, 25 P₀); the filters are told P₀ |
-| B3 station bias | Arecibo RA +10″ (5σ), unmodelled |
+| B3 station bias | Arecibo RA +10″ (5σ), unmodelled (added to the simulated RA; the simulator's bias would apply to both axes) |
 | B4 manoeuvre | truth: along-track Δv = +0.5 m/s at epoch + 12 h, unmodelled |
 | B5 area change | truth: B and Cr·A/m doubled from epoch + 12 h, unmodelled |
 | B6 outliers | each observation, with probability 0.1, carries 60″ noise (30σ) in place of 2″; filters told 2″ |
@@ -137,7 +137,7 @@ at measurement 5492 is beyond the arc's 720); GEO is tracked from the same
 three stations (only Arecibo sees it). Cases: A1 LEO nominal (6 days, filters
 start at the true state); A2 LEO with the paper's perturbed initial state and
 the Arecibo bias; A3 GEO, area 4 → 6 m² (B and Cr·A/m × 1.5). One noise seed
-(t1). Compared with the paper's table (final RMS: UKF 1.05 / 1.44 / 4.30 km,
+(generator seed 1). Compared with the paper's table (final RMS: UKF 1.05 / 1.44 / 4.30 km,
 ESPF 0.97 / 0.73 / 1.09 km) only descriptively: the paper's sensor noise,
 filter settings and definition of "final RMS" are not stated.
 
@@ -163,7 +163,9 @@ initial set of a set-based filter is its r₀ = 3 bound). Each update is a
 `LINEAR` record y = M r (M the GCRF→RTN rotation of that element set's own
 state, `foundation/frames`), value M r_set, sigmas the square roots of the
 diagonal of E2's position second moment about zero (σ_R 313 m, σ_T 2788 m,
-σ_N 286 m). BLS fits the same records with the seed as a priori. Force model
+σ_N 286 m). BLS fits the same information with the seed as a priori:
+`POSITION_VECTOR` records with the 3×3 covariance Mᵀ diag(σ²) M (`fit_batch`
+takes no `LINEAR` records). Force model
 (E2's GPS degree and step, with Part B's other forces): EGM2008 12×12, Sun,
 Moon and planets (DE440), cannonball radiation pressure with Cr·A/m =
 0.02 m²/kg (E2's a priori), IERS 2010 solid tides and relativity, no drag;
@@ -184,7 +186,12 @@ three observations from one station less than 5 minutes apart, numbered in
 time order. From the variant's carried
 region at t_k (centre and shape it carries to the next step), 1,000 points
 uniform inside and 1,000 uniform on its boundary (seeded), plus the variant's
-own support points, are taken through step k + 1:
+own support points, are taken through step k + 1. The carried region is the
+ellipsoid d ≤ 1 of the carried shape (E26: σ²·MVEE of the survivors, the
+MVEE of its regenerated points; E25T: (ζσ)²Π, the MVEE of its points; SMF:
+its set). The published bounds are those of section 4 (E26, SMF: d ≤ 1 in
+the predicted and posterior shapes; E25T: d ≤ r = 3 in its predicted and
+posterior spreads, where its regenerated points sit at d = √n):
 
 - **E1 (prediction).** Each point is propagated by HPOP to t_{k+1}; the
   fraction outside the variant's published predicted bound (centre and shape)
@@ -197,9 +204,9 @@ own support points, are taken through step k + 1:
   its 2n + 1 points, so a dense cloud has no E25 update.)
 
 **Verdict rule.** A variant's bounds *enclose* admissible trajectories if
-every E1 (and, for E26, E2) fraction is 0 (d ≤ 1 + 1e-9) at every tested
-step; otherwise
-they *summarize the sampled support*. The fractions and radii are reported
+every E1 (and, for E26, E2) fraction is 0 (every point's normalized radius
+within its bound times 1 + 1e-9) at every tested step; otherwise they
+*summarize the sampled support*. The fractions and radii are reported
 either way.
 
 ### Part D — screening (descriptive, run if time allows)
@@ -231,8 +238,10 @@ observation epoch):
   posterior set, the MVEE of the survivors (d ≤ 1, declared to hold the
   state), and its α-cuts, the MVEEs of the recorded survivors with π ≥ α,
   α = 0.05 and 0.5 (declared coverage ≥ 1 − α, the possibility–probability
-  consistency N(A) ≤ P(A)). E25: d ≤ r = 3 in its posterior shape about the
-  mode (the paper's ±3σ bands). SMF: d ≤ 1.
+  consistency N(A) ≤ P(A)); an α-cut with fewer than 2n + 1 = 13 points
+  counts as not holding the truth (and is reported). E25 and E25T: d ≤ r = 3
+  in the posterior spread about the mode (the paper's ±3σ bands), and the
+  α-cuts of their recorded survivors as for E26. SMF: d ≤ 1.
 - **Size:** log det of the region's shape, and its RTN extents (half-widths
   along R, T, N of the region's projection), at each scored epoch.
 - **Mismatch detection (B4, B5; false alarms on B1 and pre-event epochs):**

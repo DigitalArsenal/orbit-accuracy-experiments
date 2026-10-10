@@ -1,6 +1,6 @@
 {
   "experiment": "e10-teag-espf",
-  "frozen": false,
+  "frozen": true,
   "plan": "PLAN.md",
   "inputs": {
     "modules": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
