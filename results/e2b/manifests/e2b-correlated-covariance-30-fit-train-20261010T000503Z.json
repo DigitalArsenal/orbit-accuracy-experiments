@@ -1,0 +1,87 @@
+{
+ "run": "e2b-correlated-covariance-30-fit-train-20261010T000503Z",
+ "experiment": "e2b-correlated-covariance",
+ "step": "30-fit-train",
+ "command": [
+  "node",
+  "experiments/e2b-correlated-covariance/steps/30-fit.mjs",
+  "--window",
+  "train",
+  "--errors",
+  "e2b-correlated-covariance-10-errors-train-GPS-20261010T000319Z,e2b-correlated-covariance-10-errors-train-LEO-POD-20261010T000319Z,e2b-correlated-covariance-10-errors-train-SLR-LEO-20261010T000319Z,e2b-correlated-covariance-10-errors-train-SLR-MEO-20261010T000319Z",
+  "--differences",
+  "e2b-correlated-covariance-15-differences-train-GPS+LEO-POD+SLR-LEO+SLR-MEO-20261010T000319Z",
+  "--fusion",
+  "e2b-correlated-covariance-40-fusion-train-GPS-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-LEO-POD-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-SLR-LEO-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-SLR-MEO-20261010T000415Z"
+ ],
+ "args": {
+  "window": "train",
+  "errors": "e2b-correlated-covariance-10-errors-train-GPS-20261010T000319Z,e2b-correlated-covariance-10-errors-train-LEO-POD-20261010T000319Z,e2b-correlated-covariance-10-errors-train-SLR-LEO-20261010T000319Z,e2b-correlated-covariance-10-errors-train-SLR-MEO-20261010T000319Z",
+  "differences": "e2b-correlated-covariance-15-differences-train-GPS+LEO-POD+SLR-LEO+SLR-MEO-20261010T000319Z",
+  "fusion": "e2b-correlated-covariance-40-fusion-train-GPS-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-LEO-POD-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-SLR-LEO-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-SLR-MEO-20261010T000415Z"
+ },
+ "started": "2026-10-10T00:05:03.764Z",
+ "finished": "2026-10-10T00:05:20.936Z",
+ "config": {
+  "path": "experiments/e2b-correlated-covariance/config.json",
+  "sha256": "72157b31d98c9d3a732ca483f130f672e1c39028751ada3bae261eac06fc92f1",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "6b1c31e42282826eb0020933f64fe6cc899815e2",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "d3cc121196c66073c487f3ded6a382fc2d013190",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   72.79248046875,
+   78.03466796875,
+   78.541015625
+  ]
+ },
+ "inputs": {
+  "run:errors": {
+   "e2b-correlated-covariance-10-errors-train-GPS-20261010T000319Z": "9ed482dda36090cb7b00a8fa15cfb61b094808800fd2a7c2e1987601e1d51cfa",
+   "e2b-correlated-covariance-10-errors-train-LEO-POD-20261010T000319Z": "334881497a4d74816578e5722e857f3214891af831985f77d8f0ad0842b3fb03",
+   "e2b-correlated-covariance-10-errors-train-SLR-LEO-20261010T000319Z": "4e9ec067c72b3896a6a67ec024693d6d2d909bd922f6ce20e46dfbfbe6bb09d7",
+   "e2b-correlated-covariance-10-errors-train-SLR-MEO-20261010T000319Z": "cf88a716ced10e9f75b232394dd7104cf68802b3fafc4f71f0b91f6e7891b111"
+  },
+  "run:differences": {
+   "e2b-correlated-covariance-15-differences-train-GPS+LEO-POD+SLR-LEO+SLR-MEO-20261010T000319Z": "3031b248eb5ad4eb9422ca1e23298d7f5238975ec916e0fbb7ab078af7516ed7"
+  },
+  "run:fusion": {
+   "e2b-correlated-covariance-40-fusion-train-GPS-20261010T000415Z": "5165ead4767a3b8173dc8a3c7ee3bc6ca6bbee4de5bd1ee137e68683a0f62a49",
+   "e2b-correlated-covariance-40-fusion-train-LEO-POD-20261010T000415Z": "4a08a4e29f3b5ba542bf33d5ff64d79900cd2978f3c1d9ab38430411f3c77670",
+   "e2b-correlated-covariance-40-fusion-train-SLR-LEO-20261010T000415Z": "676f05b41e23694b0cda0eb9e6260db6391219695f9a4481c101f0e113160cab",
+   "e2b-correlated-covariance-40-fusion-train-SLR-MEO-20261010T000415Z": "843a97d5279fb28fb3294f4f84138a28330717c3a9c68722017c8aa6fe1fe808"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T00:05:03.764Z",
+   "args": {
+    "window": "train",
+    "errors": "e2b-correlated-covariance-10-errors-train-GPS-20261010T000319Z,e2b-correlated-covariance-10-errors-train-LEO-POD-20261010T000319Z,e2b-correlated-covariance-10-errors-train-SLR-LEO-20261010T000319Z,e2b-correlated-covariance-10-errors-train-SLR-MEO-20261010T000319Z",
+    "differences": "e2b-correlated-covariance-15-differences-train-GPS+LEO-POD+SLR-LEO+SLR-MEO-20261010T000319Z",
+    "fusion": "e2b-correlated-covariance-40-fusion-train-GPS-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-LEO-POD-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-SLR-LEO-20261010T000415Z,e2b-correlated-covariance-40-fusion-train-SLR-MEO-20261010T000415Z"
+   }
+  }
+ ],
+ "outputs": {
+  "correlation-model.json": "550892a0086f32a6595576122ac3549f9b4b8c825b0a75000da6231e2daa51ab",
+  "products.json": "0cd4446ba8501ba43e35efe6b51b32239567c9a0f09b46d327f7ed0c0848937b",
+  "metrics.json": "5a967db288dea48b06d3474fdff4fcf818fd86681317271d7eb4269c16112a53"
+ }
+}

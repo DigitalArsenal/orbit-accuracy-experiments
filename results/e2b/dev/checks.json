@@ -1,0 +1,31 @@
+{
+ "window": {
+  "name": "dev",
+  "from": "2024-10-01",
+  "to": "2024-11-15"
+ },
+ "a0_1": {
+  "what": "common_epoch error = accumulate reference-mode error at the same set and precise epoch",
+  "compared": 60,
+  "worstRelativeDifference": 3.760849448830893e-10,
+  "pass": true
+ },
+ "a0_2": {
+  "what": "every target accounted for (rows = targets; missing counted)",
+  "rows": 6608,
+  "counts": {
+   "GPS": {
+    "objects": 35,
+    "objectsWithAnchors": 31,
+    "anchors": 1652,
+    "targets": 6608,
+    "missingTargets": 13,
+    "truthDefects": 0,
+    "missingSets": 0,
+    "errors": 61089,
+    "calls": 217
+   }
+  },
+  "pass": true
+ }
+}
