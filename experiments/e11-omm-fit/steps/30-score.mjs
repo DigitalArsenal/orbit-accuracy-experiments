@@ -72,9 +72,9 @@ function supgpSet(provider, norad, epoch) {
 }
 // The version's own OMM records, in fit order (converged fits only).
 function versionOmms(v) {
-  const file = path.join(root, v.dir, 'omm.fbs');
-  if (!fs.existsSync(file)) return new Map();
-  const bytes = new Uint8Array(fs.readFileSync(file));
+  if (!v.ommPath || !fs.existsSync(v.ommPath)) return new Map();
+  const all = fs.readFileSync(v.ommPath);
+  const bytes = new Uint8Array(v.ommLength ? all.subarray(v.ommOffset, v.ommOffset + v.ommLength) : all);
   const out = [];
   for (let at = 0; at + 8 <= bytes.length;) {
     const len = new DataView(bytes.buffer, bytes.byteOffset + at, 4).getUint32(0, true);

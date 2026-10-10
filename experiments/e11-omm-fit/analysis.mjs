@@ -7,14 +7,36 @@ import { rng, quantile, median } from '../../harness/stats.mjs';
 
 export const ms = (t) => Date.parse(/[zZ]$/.test(t) ? t : `${t}Z`);
 
-// Persisted versions (derived/index.jsonl) with their stats.json, in a window
-// of issue time [from, to).
+// Persisted versions in a window of issue time [from, to): the per-version
+// directories of the first capture runs (derived/index.jsonl + stats.json) and
+// the compact daily rows since (derived/<provider>/rows-YYYYMMDD.jsonl, the
+// stats inline, the OMMs in omm-YYYYMMDD.fbs at ommOffset).
 export function versions(window) {
   const [from, to] = config.windows[window].map(ms);
   const root = path.dirname(config.archives.derived);
-  const rows = fs.readFileSync(path.join(config.archives.derived, 'index.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-  return rows.filter((r) => r.created && ms(r.created) >= from && ms(r.created) < to)
-    .map((r) => ({ ...r, stats: JSON.parse(fs.readFileSync(path.join(root, r.dir, 'stats.json'), 'utf8')) }));
+  const out = [];
+  const index = path.join(config.archives.derived, 'index.jsonl');
+  if (fs.existsSync(index)) {
+    for (const r of fs.readFileSync(index, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))) {
+      if (!r.created || ms(r.created) < from || ms(r.created) >= to) continue;
+      const stats = JSON.parse(fs.readFileSync(path.join(root, r.dir, 'stats.json'), 'utf8'));
+      out.push({ ...r, stats, ommPath: path.join(root, r.dir, 'omm.fbs'), ommOffset: 0, ommLength: null });
+    }
+  }
+  for (const provider of fs.readdirSync(config.archives.derived)) {
+    const dir = path.join(config.archives.derived, provider);
+    if (!fs.statSync(dir).isDirectory()) continue;
+    for (const f of fs.readdirSync(dir).filter((n) => /^rows-\d{8}\.jsonl$/.test(n))) {
+      for (const line of fs.readFileSync(path.join(dir, f), 'utf8').split('\n')) {
+        if (!line) continue;
+        const r = JSON.parse(line);
+        if (!r.created || ms(r.created) < from || ms(r.created) >= to) continue;
+        out.push({ provider: r.provider, norad: r.norad, version: r.version, created: r.created, stats: r,
+          ommPath: r.ommFile ? path.join(root, r.ommFile) : null, ommOffset: r.ommOffset ?? 0, ommLength: r.ommLength ?? null });
+      }
+    }
+  }
+  return out;
 }
 
 // Gate-passing SupGP pairs of a window: one row per pair with the three

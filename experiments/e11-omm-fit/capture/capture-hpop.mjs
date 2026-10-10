@@ -7,6 +7,9 @@
 // checkout (--hpop) with its own modules checkout (--hpop-config). The fit
 // gives OCMs per manoeuvre-free segment, the exact residuals at every point
 // and the half-split closure.
+// The fit covers each version's first --span-hours (24 by default; E11 amendment
+// A1). Versions come every ~6.5 h, so the latest version before any time t has
+// an OCM fit around t. Every perturbation stays in the model.
 // Versions come from the name registry that capture.mjs keeps in
 // <root>/capture-state.json. They are restricted to a seeded subset of the
 // Starlink sample (--subset K, sized to the CPU budget) and each ISS OEM
@@ -15,8 +18,11 @@
 // next to the version's OMM products in derived/<provider>/<norad>/<version>/.
 // Failures leave a row in derived/hpop-failures.jsonl.
 //
-// Stop: kill "$(cat <root>/capture-hpop.pid)" or touch <root>/capture-hpop.stop
+// Shards: --shard i/n splits the subset across n workers (state, log and PID
+// files carry -<i>of<n>; shard 0 also fits the ISS OEM).
+// Stop: kill "$(cat <root>/capture-hpop[-<i>of<n>].pid)" or touch <root>/capture-hpop.stop (all shards)
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -27,16 +33,18 @@ import { gitState } from '../../../harness/modules.mjs';
 const H = 3600e3;
 
 function args() {
-  const a = { root: '/opt/data/sdn-archive/operator-ephemerides', hpop: null, hpopConfig: null, subset: 40, until: null, dryRun: 0, iss: true, maxAgeHours: 40 };
+  const a = { root: '/opt/data/sdn-archive/operator-ephemerides', hpop: null, hpopConfig: null, subset: 40, until: null, dryRun: 0, iss: true, maxAgeHours: 40, shard: '0/1',
+    maxLoad: 55, diskFloorGib: 20, spanHours: 24, rotate: true };
   const v = process.argv.slice(2);
   for (let i = 0; i < v.length; ++i) {
     const k = v[i].replace(/^--/, '').replace(/-([a-z])/g, (_, c) => c.toUpperCase());
     if (k === 'noIss') a.iss = false;
+    else if (k === 'noRotate') a.rotate = false;
     else a[k] = v[++i];
   }
   a.subset = Number(a.subset);
   a.dryRun = Number(a.dryRun) || 0;
-  a.maxAgeHours = Number(a.maxAgeHours);
+  for (const k of ['maxAgeHours', 'maxLoad', 'diskFloorGib', 'spanHours']) a[k] = Number(a[k]);
   if (!a.hpop || !a.hpopConfig) throw new Error('--hpop and --hpop-config are required');
   if (!a.dryRun && !a.until) throw new Error('--until is required');
   return a;
@@ -56,7 +64,10 @@ class Worker {
     this.a = a;
     this.root = a.root;
     this.derived = path.join(this.root, 'derived');
-    this.statePath = path.join(this.root, 'capture-hpop-state.json');
+    const [si, sn] = String(a.shard).split('/').map(Number);
+    const tag = sn > 1 ? `-${si}of${sn}` : '';
+    this.tag = tag;
+    this.statePath = path.join(this.root, `capture-hpop${tag}-state.json`);
     this.state = fs.existsSync(this.statePath) ? JSON.parse(fs.readFileSync(this.statePath, 'utf8')) : {};
     for (const k of ['done', 'validators']) this.state[k] ??= {};
     this.http = new Http((m) => this.log(m));
@@ -66,7 +77,7 @@ class Worker {
   log(m) {
     const line = `${new Date().toISOString()} ${m}`;
     if (this.a.dryRun) console.log(line);
-    else fs.appendFileSync(path.join(this.root, 'capture-hpop.log'), `${line}\n`);
+    else fs.appendFileSync(path.join(this.root, `capture-hpop${this.tag}.log`), `${line}\n`);
   }
   save() {
     if (this.a.dryRun) return;
@@ -80,10 +91,14 @@ class Worker {
     this.env = await this.lib.ephemerisFitEnv(cfg);
     this.provenance = { fitter: { file: hpopPath, sha256: sha256(fs.readFileSync(hpopPath)), git: gitState(path.dirname(path.dirname(hpopPath))), version: this.lib.VERSION ?? null },
       modules: { dir: cfg.modulesDir, git: gitState(cfg.modulesDir), loaded: this.env.provenance?.modules ?? null }, inputs: this.env.provenance?.inputs ?? null,
-      worker: sha256(fs.readFileSync(fileURLToPath(import.meta.url))) };
+      worker: sha256(fs.readFileSync(fileURLToPath(import.meta.url))), spanHours: this.a.spanHours, maxLoad: this.a.maxLoad };
     const sample = fs.readFileSync(path.join(this.root, '_capture/starlink-sample.txt'), 'utf8').split(/\s+/).filter(Boolean).map(Number);
-    this.subset = new Set(hpopSubset(sample, this.a.subset));
-    this.log(`init: fitter ${this.provenance.fitter.sha256.slice(0, 16)} at ${this.provenance.fitter.git.commit?.slice(0, 9)}; modules ${this.provenance.modules.git.commit?.slice(0, 9)}; subset ${this.subset.size}`);
+    // Shard i/n of the subset (by position in the seeded order), so n workers split it.
+    const [si, sn] = String(this.a.shard).split('/').map(Number);
+    this.shard = { i: si, n: sn };
+    this.subset = new Set(hpopSubset(sample, this.a.subset).filter((_, k) => k % sn === si));
+    this.subsetAll = new Set(hpopSubset(sample, this.a.subset));
+    this.log(`init: fitter ${this.provenance.fitter.sha256.slice(0, 16)} at ${this.provenance.fitter.git.commit?.slice(0, 9)}; modules ${this.provenance.modules.git.commit?.slice(0, 9)}; shard ${this.a.shard}; subset ${this.subset.size}`);
   }
   // The main capture's registry (read-only here).
   registry() {
@@ -91,7 +106,7 @@ class Worker {
     if (!fs.existsSync(p)) return {};
     try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return {}; }
   }
-  async fit({ provider, norad, name, url, fetched, parsed }) {
+  async fit({ provider, norad, name, url, fetched, parsed, spanHours = this.a.spanHours }) {
     const rawSha = sha256(fetched.body);
     const key = `${parsed.created ? parsed.created.replace(/[-:]/g, '').slice(0, 15) : 'nocreated'}-${rawSha.slice(0, 12)}`;
     const t0 = Date.now();
@@ -103,8 +118,9 @@ class Worker {
         object: { norad, name }, source: { provider, url, sha256: rawSha, issued: parsed.created ?? parsed.epochs[0] },
         frame: parsed.frame, timeScale: parsed.timeScale,
         states: parsed.epochs.map((e, i) => ({ epoch: e, position: parsed.states[i].slice(0, 3), velocity: parsed.states[i].length >= 6 ? parsed.states[i].slice(3, 6) : null })),
-        events: [] });
+        events: [], spanSeconds: spanHours > 0 ? spanHours * 3600 : 0 });
       row.seconds = (Date.now() - t0) / 1000;
+      row.spanHours = spanHours;
       row.timing = r.timing ?? null;
       row.splits = r.splits ?? null;
       row.skipped = r.skipped ?? null;
@@ -126,18 +142,35 @@ class Worker {
       return { failure: fail };
     }
   }
+  // Load gate (1-minute load) and disk floor, checked before every fit.
+  async throttle() {
+    while (!this.stop && (os.loadavg()[0] > this.a.maxLoad || (fs.statfsSync(this.root).bavail * fs.statfsSync(this.root).bsize) / 2 ** 30 < this.a.diskFloorGib)) {
+      await new Promise((r) => setTimeout(r, 30000));
+    }
+  }
+  // Priority: (1) every version of the pre-registered E11 subset (E11's truth),
+  // (2) other versions paired with a SupGP set, (3) rotation: the objects whose
+  // latest OCM is oldest. Versions older than maxAgeHours are skipped.
+  queue(reg) {
+    const now = Date.now();
+    const live = Object.entries(reg.names ?? {}).filter(([n, v]) => !this.state.done[n] && now - ms(v.start) < this.a.maxAgeHours * H);
+    const paired = new Set(Object.values(reg.paired ?? {}));
+    const mine = (norad) => (norad % this.shard.n) === this.shard.i;
+    const tier1 = live.filter(([, v]) => this.subset.has(v.norad)).sort((x, y) => ms(x[1].start) - ms(y[1].start));
+    if (tier1.length) return tier1;
+    const tier2 = live.filter(([n, v]) => paired.has(n) && mine(v.norad)).sort((x, y) => ms(y[1].start) - ms(x[1].start));
+    if (tier2.length) return tier2;
+    if (!this.a.rotate) return [];
+    const last = this.state.coverage ?? {};
+    return live.filter(([, v]) => mine(v.norad)).sort((x, y) => (last[x[1].norad] ?? 0) - (last[y[1].norad] ?? 0) || ms(y[1].start) - ms(x[1].start));
+  }
   async starlink(limit) {
     const reg = this.registry();
-    const now = Date.now();
-    const todo = Object.entries(reg.names ?? {})
-      .filter(([n, v]) => this.subset.has(v.norad) && !this.state.done[n] && now - ms(v.start) < this.a.maxAgeHours * H)
-      .sort((x, y) => ms(x[1].start) - ms(y[1].start));
-    // Paired versions (their SupGP set is known) first.
-    const paired = new Set(Object.values(reg.paired ?? {}));
-    todo.sort((x, y) => paired.has(y[0]) - paired.has(x[0]));
+    const todo = this.queue(reg);
     let done = 0;
     for (const [name, v] of todo) {
       if (this.stop || done >= limit) break;
+      await this.throttle();
       const r = await this.http.get('starlink', STARLINK + name);
       if (r.status !== 200 || !r.body) {
         this.log(`starlink ${name}: HTTP ${r.status} ${r.error ?? ''}`);
@@ -148,19 +181,22 @@ class Worker {
       try { parsed = readMeme(r.body.toString('utf8')); } catch (e) { this.state.done[name] = { parseError: e.message }; continue; }
       const row = await this.fit({ provider: 'starlink', norad: v.norad, name: name.split('_')[2], url: STARLINK + name, fetched: r, parsed });
       this.state.done[name] = { at: new Date().toISOString(), failed: Boolean(row.failure), seconds: row.seconds ?? row.failure?.seconds };
+      if (!row.failure) { this.state.coverage ??= {}; this.state.coverage[v.norad] = Date.now(); }
       this.save();
       ++done;
     }
     return done;
   }
   async iss() {
+    await this.throttle();
     const r = await this.http.get('iss', ISS, this.state.validators.iss ?? {});
     if (r.status !== 200 || !r.body) return 0;
     this.state.validators.iss = { etag: r.etag, lastModified: r.lastModified };
     const key = `iss:${sha256(r.body)}`;
     if (this.state.done[key]) return 0;
     const parsed = readOem(r.body.toString('utf8'));
-    const row = await this.fit({ provider: 'iss', norad: 25544, name: 'ISS', url: ISS, fetched: r, parsed });
+    // ISS OEM versions come every 2-3 days: its OCM covers the first 96 h.
+    const row = await this.fit({ provider: 'iss', norad: 25544, name: 'ISS', url: ISS, fetched: r, parsed, spanHours: 96 });
     this.state.done[key] = { at: new Date().toISOString(), failed: Boolean(row.failure), seconds: row.seconds ?? row.failure?.seconds };
     this.save();
     return 1;
@@ -174,12 +210,13 @@ class Worker {
       if (this.a.iss) await this.iss();
       return this.rows;
     }
-    fs.writeFileSync(path.join(this.root, 'capture-hpop.pid'), String(process.pid));
+    fs.writeFileSync(path.join(this.root, `capture-hpop${this.tag}.pid`), String(process.pid));
     const until = ms(this.a.until);
     let nextIss = 0;
     while (!this.stop && Date.now() < until && !fs.existsSync(path.join(this.root, 'capture-hpop.stop'))) {
+      // Only shard 0 fits the ISS OEM.
       try {
-        if (this.a.iss && Date.now() >= nextIss) { nextIss = Date.now() + 3 * H; await this.iss(); }
+        if (this.a.iss && this.shard.i === 0 && Date.now() >= nextIss) { nextIss = Date.now() + 3 * H; await this.iss(); }
         const n = await this.starlink(1);
         if (n) continue;  // keep working through the queue
       } catch (e) {
@@ -188,7 +225,7 @@ class Worker {
       for (let i = 0; i < 300 && !this.stop; ++i) await new Promise((r) => setTimeout(r, 1000));
     }
     this.log('worker exit');
-    try { if (fs.readFileSync(path.join(this.root, 'capture-hpop.pid'), 'utf8') === String(process.pid)) fs.rmSync(path.join(this.root, 'capture-hpop.pid')); } catch { /* gone */ }
+    try { if (fs.readFileSync(path.join(this.root, `capture-hpop${this.tag}.pid`), 'utf8') === String(process.pid)) fs.rmSync(path.join(this.root, `capture-hpop${this.tag}.pid`)); } catch { /* gone */ }
     await this.env?.destroy?.();
     return null;
   }

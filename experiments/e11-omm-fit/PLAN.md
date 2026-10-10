@@ -192,3 +192,28 @@ All endpoints are per group, test window only.
 5. Step 90: report.
 
 ## Amendments
+
+### A1 — 2026-10-10T13:55Z, before any test-window outcome was read: every Starlink file; HPOP truth spans
+
+Reasons:
+- The owner, 2026-10-10: "The Starlink files are already open source however the total pull every few hours is gigabytes not megabytes". The 150-object sample was a disk limit of a raw-file capture that no longer exists.
+- HPOP throughput.
+
+Changes:
+- **Capture.** Every Starlink MEME version in SpaceX's manifest is captured in memory: about 11k files per pass, serial downloads, a pool of 4 niced fit threads.
+  - Every version gets OMM-fit on CelesTrak's 12-h window length from its issue time (`span12-bstar`).
+  - A version paired with a SupGP set gets OMM-fit on CelesTrak's window and the gate.
+  - The 150-object sample keeps the full candidate grid of section 2.
+  - The derived records go to compact daily files: `derived/<provider>/rows-YYYYMMDD.jsonl`, `omm-YYYYMMDD.fbs`. Provenance labels the Starlink files open source (owner, 2026-10-10).
+- **H1.** For Starlink, H1 is computed on every gate-passing pair of every object, which is what `steps/10-fit-window.mjs` and `analysis.mjs` `pairs` read. The same statistic on the 150-object sample alone is reported alongside.
+- **Product choice (section 5).** Still made on the 150-object sample, the only objects with the full grid.
+- **Truth (section 4).** The OCM is fitted to each version's first 24 h (ISS: the first 96 h).
+  - Versions come about every 6.5 h (ISS: every 2–3 days), so the latest version before any target has an OCM fitted around it.
+  - Every perturbation of A5's model stays in.
+  - The fitter is pinned to experiments 70484b2 and modules d1d8ca88 (HPOP 1.2.0, wasm `1b1df5e3…`). That version restarts the integration where the space-weather table changes, which removes about 1 cm/day of integrator ambiguity in LEO.
+  - HPOP covers every version of the 40-object subset first, then other SupGP-paired versions, then rotates by oldest coverage.
+  - Throughput is limited: the full-span fit took more than 39 CPU-minutes per 3-day file. The products for objects without OCM truth are scored on metric (a) only.
+- **Gates.** Downloads and fits pause while the 1-minute load exceeds 55 or free disk is below 20 GiB (coordinator, 2026-10-10).
+- **Pre-freeze observation, the gate-trip rate.** About 38 % of the first full pass's pairs trip the gate, with a median miss of +64 %.
+  - Most are SupGP sets whose epochs come before our first manifest poll. CelesTrak evidently fitted a version that SpaceX's lagging manifest still listed at its run, and our registry never saw that version.
+  - Trips are excluded and counted (section 4), and the trip rate is reported per group. From the test window on, the registry holds every manifest polled hourly.
