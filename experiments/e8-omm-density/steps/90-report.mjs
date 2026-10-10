@@ -64,6 +64,11 @@ for (const [arm, { rows, variants }] of Object.entries(arms)) {
     m.byBand[band] = Object.fromEntries(config.propagation.horizonsDays.map((h) => [h, propagationSummary(rows, variants, h, (r) => r.band === band)]));
 }
 metrics.failures = prop.filter((r) => r.error).map((r) => ({ issue: r.issue, name: r.name, arm: r.arm, variant: r.variant, error: r.error }));
+// E7's LEO-POD satellites (experiments/e7-full-force-handoff/config.json regimes.LEO-POD), for comparison with
+// E7's drift from the precise state: descriptive, E8's protocol (state and B fitted on the 24 h before t0).
+const E7_LEO_POD = [39451, 39452, 39453, 39634, 62261, 66315];
+metrics.propagation.e7LeoPod = Object.fromEntries(Object.entries(arms).map(([arm, { rows, variants }]) => [arm,
+  Object.fromEntries(config.propagation.horizonsDays.map((h) => [h, propagationSummary(rows, variants, h, (r) => E7_LEO_POD.includes(r.norad))]))]));
 
 // ── Hypotheses (PLAN.md section 5) ──
 const H = config.hypotheses;
@@ -207,6 +212,10 @@ for (const arm of ['definitive', 'operational']) {
   }
   lines.push('');
 }
+lines.push('## E7\'s LEO-POD satellites (Swarm A, B, C; Sentinel-1A, 1C, 1D)', '', 'E8\'s protocol on E7\'s LEO-POD set: state and B fitted to the precise orbit over the 24 h before t0, then predicted (E7 starts from the precise state with a nominal B). Median 3D error, km [95 % CI]; ratio = median over arcs of e(variant)/e(D0).', '',
+  '| Drivers | Horizon (d) | Arcs | Variant | Median | 95th percentile | Median ratio to D0 |', '| --- | ---: | ---: | --- | --- | --- | --- |');
+for (const [arm, byH] of Object.entries(metrics.propagation.e7LeoPod)) for (const [h, s] of Object.entries(byH)) for (const v of arms[arm].variants) { const e = s?.variants?.[v]; if (e) lines.push(`| ${arm} | ${h} | ${s.arcs} | ${label[v] ?? v} | ${km(e.median)} | ${km(e.p95)} | ${e.medianRatio ? ci(e.medianRatio) : '—'} |`); }
+lines.push('');
 lines.push(`Failed or skipped arcs (rows): ${metrics.failures.length}.`, ...Object.entries(metrics.failures.reduce((a, x) => { const k = `${x.arm}/${x.variant}: ${x.error}`; a[k] = (a[k] ?? 0) + 1; return a; }, {})).map(([k, n]) => `- ${k} (${n})`).slice(0, 25), '');
 lines.push('## Identifiability (analysis fits)', '', '| Run | Window | K | Structure | Priors | Objects | Iterations | Converged | Level, K [σ] | Corr(level, mean ln B) | Tier A: median ln(B/prior) | Tier B: median ln(B/prior) |', '| --- | --- | ---: | --- | --- | ---: | ---: | --- | --- | ---: | ---: | ---: |');
 for (const r of metrics.identifiability) for (const s of r.spans) lines.push(`| ${r.run.replace('e8-omm-density-10-estimate-', '')} | ${s.span.from} | ${r.perBin} | ${r.structure} | ${r.noPriors ? 'none' : 'A, B'} | ${s.objects} | ${s.fit.iterations} | ${s.fit.converged ? 'yes' : 'no'} | ${s.fit.level.map((l) => `${f(l.meanK, 1)} [${f(l.sigmaK, 1)}]`).join(', ')} | ${f(s.fit.levelLnBCorrelation, 2)} | ${f(s.tiers.A?.medianLnBMinusPrior, 2)} | ${f(s.tiers.B?.medianLnBMinusPrior, 2)} |`);
