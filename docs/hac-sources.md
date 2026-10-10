@@ -22,7 +22,7 @@ failure). **X**: not obtainable.
 
 ## Summary
 
-77 sources in eight groups. A source can carry two codes. For example,
+79 sources in eight groups. A source can carry two codes. For example,
 Space-Track is both AR and L.
 
 | Group | Sources | DL | AR | S | L | P | R | U | X |
@@ -30,15 +30,15 @@ Space-Track is both AR and L.
 | A. Precise orbits (truth) | 18 | 7 | 4 | 5 | 6 | 0 | 0 | 1 | 2 |
 | B. Operator ephemerides and broadcast orbits | 10 | 3 | 0 | 3 | 2 | 0 | 1 | 2 | 1 |
 | C. Catalogs and observations | 15 | 0 | 1 | 3 | 7 | 5 | 0 | 1 | 1 |
-| D. Density and its calibration | 13 | 4 | 1 | 4 | 2 | 0 | 2 | 1 | 0 |
+| D. Density and its calibration | 14 | 4 | 1 | 5 | 2 | 0 | 2 | 1 | 0 |
 | E. Space weather indices and forecasts | 7 | 4 | 0 | 2 | 0 | 0 | 0 | 1 | 0 |
 | F. EOP, gravity, tides, ephemerides | 7 | 4 | 1 | 0 | 2 | 0 | 0 | 0 | 0 |
-| G. Physical properties | 5 | 1 | 1 | 1 | 2 | 0 | 0 | 1 | 0 |
+| G. Physical properties | 6 | 1 | 1 | 2 | 2 | 0 | 0 | 1 | 0 |
 | H. The HAC and HASDM themselves | 2 | 0 | 0 | 0 | 2 | 1 | 0 | 0 | 0 |
-| **All** | **77** | **23** | **8** | **18** | **23** | **6** | **3** | **7** | **4** |
+| **All** | **79** | **23** | **8** | **20** | **23** | **6** | **3** | **7** | **4** |
 
 Counted once, by the most open route: 29 are on hand (23 downloaded here,
-6 already archived), 14 more are anonymous and scriptable, 19 need an account,
+6 already archived), 16 more are anonymous and scriptable, 19 need an account,
 4 are commercial only, 3 have terms that rule out product use, 6 were
 unreachable from this host today, and 2 cannot be obtained.
 
@@ -227,6 +227,7 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | D.11 | TLE-derived densities | Method: Picone et al. 2005 ([doi:10.1029/2004JA010585][picone]); Emmert 2009 global averages ([doi:10.1029/2009JA014102][emmert]); Doornbos et al. calibration with TLEs ([doi:10.1016/j.asr.2006.12.025][doornbos]) | Any object with GP history | Rebuilt from C.1 | As C.1 | Inputs for the bulk calibration tier | S (method; Emmert's dataset not located) |
 | D.12 | NASA CCMC | Runs on Request for hosted physics models (model list not checked here); ISWA | — | [ROR](https://ccmc.gsfc.nasa.gov/tools/runs-on-request/): name and e-mail on submission; outputs public | CCMC publication policy | Physics cross-checks for storm cases | S |
 | D.13 | ESA SWE portal | Space weather products and archives | — | [swe.ssa.esa.int](https://swe.ssa.esa.int/): "register as a user" for the full range | ESA | Secondary | L (ESA SWE account) |
+| D.14 | Element-set density estimation: Gondelach and Linares 2020 ([doi:10.1029/2019SW002356][gondelach]; arXiv:1910.00695) and its code DESTOPy | Density, orbits and ballistic coefficients estimated jointly from element-set histories (UKF, a reduced-order density model); validated against CHAMP and GRACE | Any object with GP history; zero latency beyond the element sets | [github.com/pengmun/DESTOPy](https://github.com/pengmun/DESTOPy), anonymous | Code: MIT. Element sets as C.1 | The method behind E8's zero-latency calibration (decay of catalogued objects); DESTOPy is E8's external cross-check | S (E8 runs it locally, outside the product path) |
 
 ### E. Space weather indices and forecasts
 
@@ -261,6 +262,7 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | G.3 | CelesTrak SATCAT RCS | RCS values | — | celestrak.org | — | Size prior | U |
 | G.4 | IGS satellite metadata SINEX | GNSS mass, power, yaw and attitude law, PRN↔SVN | All GNSS | files.igs.org, anonymous | IGS terms | SRP modeling for GNSS truth (box-wing inputs) | DL |
 | G.5 | Operator-published geometry | Planet: fitted drag ballistic coefficient per state (B.2). Starlink: no physical data in the ephemerides. Mission documents for A.4–A.10 | Per operator | Mixed | Per source | Area/mass for calibration objects | L/S (per mission; Planet DL) |
+| G.6 | GCAT (McDowell) | Mass, dry mass, length, diameter, span and shape for catalogued objects, rocket stages included | Full catalog, updated about daily (`satcat.tsv` of 2026-10-08 used) | [planet4589.org/space/gcat](https://planet4589.org/space/gcat/) TSV, anonymous | [CC BY 4.0][gcat] | Area/mass priors: spheres and rocket bodies anchor the level of an element-set density calibration (E8) | S (a local copy used by E8) |
 
 ### H. The HAC and HASDM themselves
 
@@ -397,6 +399,8 @@ Further sources cited in the text (metadata checked against Crossref):
 - Doornbos, E. et al. 2008. Use of two-line element data for thermosphere neutral density model calibration. Adv. Space Res. 41(7), 1115–1122. doi:10.1016/j.asr.2006.12.025
 - Picone, J.M. et al. 2005. Thermospheric densities derived from spacecraft orbits: accurate processing of two-line element sets. J. Geophys. Res. Space Phys. 110(A3). doi:10.1029/2004JA010585
 - Emmert, J.T. 2009. A long-term data set of globally averaged thermospheric total mass density. J. Geophys. Res. Space Phys. 114(A6). doi:10.1029/2009JA014102
+- Gondelach, D.J. and Linares, R. 2020. Real-time thermospheric density estimation via two-line element data assimilation. Space Weather 18(2), e2019SW002356. doi:10.1029/2019SW002356; arXiv:1910.00695
+- McDowell, J.C. General Catalog of Artificial Space Objects (GCAT). <https://planet4589.org/space/gcat/>
 
 [h1]: https://ntrs.nasa.gov/citations/20260000453 "NASA Spacecraft Conjunction Assessment and Collision Avoidance Best Practices Handbook, Vol. 1, NASA-SP-20205011318/REV2-VOL1, Aug 2026"
 [h2]: https://ntrs.nasa.gov/citations/20260000457 "Best Practices Handbook, Vol. 2, Technical Appendices, Aug 2026"
@@ -426,6 +430,8 @@ Further sources cited in the text (metadata checked against Crossref):
 [dtm]: https://github.com/swami-h2020-eu/mcm/blob/main/LICENSE
 [picone]: https://doi.org/10.1029/2004JA010585
 [emmert]: https://doi.org/10.1029/2009JA014102
+[gondelach]: https://doi.org/10.1029/2019SW002356
+[gcat]: https://planet4589.org/space/gcat/
 [doornbos]: https://doi.org/10.1016/j.asr.2006.12.025
 [nws]: https://www.weather.gov/disclaimer
 [kp]: https://doi.org/10.5880/Kp.0001

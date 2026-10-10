@@ -1,0 +1,186 @@
+{
+  "experiment": "e8-omm-density",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "modules": "../../main-packages/space-data-network-modules",
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "historicalZip": "/opt/data/sdn-archive/historical/space-track-gp-history-1959-2022-11-22/Archives2.zip",
+    "satcat": "/opt/data/sdn-archive/spacetrack/satcat/2026/2026-10-09.json.gz",
+    "gcat": {
+      "path": "runs/cache/e8-gcat/20261008/satcat.tsv",
+      "url": "https://planet4589.org/space/gcat/tsv/cat/satcat.tsv",
+      "updated": "2026 Oct 8 2357:56",
+      "sha256": "b79d13f99b3c166c1befae60b4da757580431a1152190b53adad90acca3ba277"
+    },
+    "reference": [
+      "/opt/data/sdn-archive/reference-states/reference",
+      "runs/cache/e8-reference/reference"
+    ],
+    "eopC04": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now",
+    "kernel": {
+      "path": "runs/cache/de440s.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
+    "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+    "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+    "kp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "rsga": [
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz",
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA"
+    ],
+    "densities": "as experiments/e5-density-calibration/config.json inputs.densities and inputs.historical (read through E5's densities.mjs)",
+    "e5": {
+      "selection": "results/e5/selection.json",
+      "calibration": {
+        "validation": "results/e5/calibration/e5-density-calibration-10-calibrate-validation-20261009T185124Z.calibration.json.gz",
+        "test": "results/e5/calibration/e5-density-calibration-10-calibrate-test-20261009T192305Z.calibration.json.gz",
+        "historicalTest": "results/e5/calibration/e5-density-calibration-10-calibrate-historicalTest-20261009T191214Z.calibration.json.gz"
+      }
+    }
+  },
+  "windows": {
+    "validation": ["2026-04-01", "2026-04-21"],
+    "test": [["2026-01-12", "2026-01-26"], ["2026-03-15", "2026-03-28"], ["2026-06-26", "2026-07-08"]],
+    "historicalTest": [["2003-10-01", "2003-12-31"], ["2008-01-01", "2008-03-31"]]
+  },
+  "windowNote": "E5's windows. Dates are issue days (t0 = 00:00 UTC). The analysis fit of a span runs from fitLeadDays before its first issue day to scoreDays after its last.",
+  "pool": {
+    "preWindowDays": 60,
+    "objectTypes": ["ROCKET BODY", "DEBRIS"],
+    "minimumAgeDays": 365,
+    "perigeeKm": [300, 900],
+    "binKm": 50,
+    "maximumEccentricity": 0.02,
+    "maximumEccentricitySphere": 0.15,
+    "minimumSets": 45,
+    "recentDays": 30,
+    "maximumRecentGapDays": 4,
+    "maneuverAllowed": ["ORBIT_LOWERING"],
+    "maneuverOptions": {},
+    "exclude": {
+      "2026": {
+        "39452": "Swarm A", "39451": "Swarm B", "39453": "Swarm C", "43476": "GRACE-FO 1", "43477": "GRACE-FO 2",
+        "39634": "Sentinel-1A", "41456": "Sentinel-1B", "62261": "Sentinel-1C", "66315": "Sentinel-1D",
+        "41335": "Sentinel-3A", "43437": "Sentinel-3B", "36508": "CryoSat-2", "39086": "SARAL", "54754": "SWOT",
+        "44343": "COSMIC-2 FM3", "44349": "COSMIC-2 FM1", "44350": "COSMIC-2 FM4", "44351": "COSMIC-2 FM2", "44353": "COSMIC-2 FM6", "44358": "COSMIC-2 FM5",
+        "7646": "Starlette", "22824": "Stella", "27944": "LARETS", "25398": "WESTPAC"
+      },
+      "historical": { "26405": "CHAMP", "27391": "GRACE-A", "27392": "GRACE-B" }
+    },
+    "priors": { "cd": 2.2, "sphereLnBSigma": 0.10, "bodyLnBSigma": 0.35 },
+    "candidates": { "perBin": [4, 16] }
+  },
+  "decay": {
+    "nodeHours": 6,
+    "structures": { "global": [], "linear": [400, 800] },
+    "priors": { "randomWalkKPerSqrtDay": 40, "meanLevelK": 150, "altitudeDifferenceK": 100 },
+    "randomWalkNote": "E5's validation-window degree-0 correction changes by 34 K (s.d.) over one day (results/e5/calibration, validation, every calibration set)",
+    "stepSeconds": 180,
+    "stepNote": "against a 30 s step, within 0.004 % on the validation calibration set (circular to e = 0.075); the trapezoid rule on a smooth periodic integrand",
+    "maxGapDays": 3,
+    "sigmaFloorM": 2,
+    "editSigma": 4,
+    "reweightIterations": 4,
+    "iterations": 12,
+    "tolerance": { "K": 0.5, "lnB": 0.001, "a0M": 0.1 },
+    "minimumSets": 10,
+    "fitLeadDays": 30,
+    "scoreDays": 8,
+    "forecast": { "spanDays": 30, "levelDays": 27, "candidates": { "decayHours": [12, 48, null] } },
+    "decayNote": "the forecast relaxes from the fit's value at t0 to its mean over the preceding levelDays with time constant decayHours; null holds the value at t0"
+  },
+  "drivers": {
+    "operational": {
+      "setReleasedBeforeDay": true,
+      "rsgaHorizonDays": 3,
+      "dtcFromAp": { "intercept": -3.92, "sqrtApSlope": 21.78, "fit": "least squares of SET's daily-mean DTC on sqrt(GFZ daily Ap), 2025-01-01..2025-12-31 (365 days), residual 14.3 K" }
+    }
+  },
+  "density": {
+    "sampleSeconds": 30,
+    "orbitAverage": { "periodSeconds": { "swarmA": 5560, "swarmB": 5660, "swarmC": 5560, "gracefo1": 5650, "champ": 5530, "graceA": 5630 }, "minimumValidFraction": 0.9 },
+    "scoreEverySeconds": 600,
+    "leadBinsDays": [[0, 1], [1, 3], [3, 7]],
+    "heldOut": {
+      "2026": [
+        { "target": "gracefo1", "d2Calibrators": ["swarmA", "swarmB", "swarmC"] },
+        { "target": "swarmB", "d2Calibrators": ["swarmA", "swarmC", "gracefo1"] },
+        { "target": "swarmC", "d2Calibrators": ["swarmB", "gracefo1"] }
+      ],
+      "historical": [
+        { "target": "champ", "d2Calibrators": ["graceA"] },
+        { "target": "graceA", "d2Calibrators": ["champ"] }
+      ]
+    },
+    "heldOutNote": "E5's density targets and D2 calibration sets. Every target is held out of D5's calibration set."
+  },
+  "propagation": {
+    "targets": {
+      "39452": { "name": "Swarm A", "b": 0.0045, "agom": 0.009, "band": "below 600 km", "truthPrefixes": ["SW_OPER_SP3ACOM"], "toleranceSeconds": 15, "d2Calibrators": ["swarmB", "gracefo1"] },
+      "39451": { "name": "Swarm B", "b": 0.0045, "agom": 0.009, "band": "below 600 km", "truthPrefixes": ["SW_OPER_SP3BCOM"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmC", "gracefo1"] },
+      "39453": { "name": "Swarm C", "b": 0.0045, "agom": 0.009, "band": "below 600 km", "truthPrefixes": ["SW_OPER_SP3CCOM"], "toleranceSeconds": 15, "d2Calibrators": ["swarmB", "gracefo1"] },
+      "43476": { "name": "GRACE-FO 1", "b": 0.0037, "agom": 0.0087, "band": "below 600 km", "truthPrefixes": ["GFZOP_RSO_L64"], "toleranceSeconds": 30, "d2Calibrators": ["swarmA", "swarmB", "swarmC"], "nominal": "601 kg, 1.0 m2 frontal, 4 m2 mean radiation area, Cd 2.2, Cr 1.3" },
+      "44358": { "name": "COSMIC-2 FM5", "b": 0.0198, "agom": 0.021, "band": "below 600 km", "truthPrefixes": ["leoOrb"], "toleranceSeconds": 30, "maximumStatedSigmaM": 0.5, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"], "nominal": "278 kg, 2.5 m2 drag, 4.5 m2 radiation area" },
+      "44353": { "name": "COSMIC-2 FM6", "b": 0.0198, "agom": 0.021, "band": "below 600 km", "truthPrefixes": ["leoOrb"], "toleranceSeconds": 30, "maximumStatedSigmaM": 0.5, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"], "nominal": "278 kg, 2.5 m2 drag, 4.5 m2 radiation area" },
+      "39634": { "name": "Sentinel-1A", "b": 0.0126, "agom": 0.015, "band": "600 km and above", "truthPrefixes": ["S1A_OPER_AUX_POEORB"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "62261": { "name": "Sentinel-1C", "b": 0.0126, "agom": 0.015, "band": "600 km and above", "truthPrefixes": ["S1C_OPER_AUX_POEORB"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "66315": { "name": "Sentinel-1D", "b": 0.0126, "agom": 0.015, "band": "600 km and above", "truthPrefixes": ["S1D_OPER_AUX_POEORB"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "36508": { "name": "CryoSat-2", "b": 0.0092, "agom": 0.0126, "band": "600 km and above", "truthPrefixes": ["ssacs2"], "toleranceSeconds": 30, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"], "nominal": "720 kg, 3 m2 drag, 7 m2 radiation area" },
+      "39086": { "name": "SARAL", "b": 0.0134, "agom": 0.019, "band": "600 km and above", "truthPrefixes": ["ssasrl"], "toleranceSeconds": 30, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"], "nominal": "410 kg, 2.5 m2 drag, 6 m2 radiation area" },
+      "41335": { "name": "Sentinel-3A", "b": 0.0115, "agom": 0.0136, "band": "600 km and above", "truthPrefixes": ["ssas3a"], "toleranceSeconds": 30, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"], "nominal": "1150 kg, 6 m2 drag, 12 m2 radiation area" },
+      "54754": { "name": "SWOT", "b": 0.01, "agom": 0.0177, "band": "600 km and above", "truthPrefixes": ["ssaswo"], "toleranceSeconds": 30, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"], "nominal": "2200 kg, 10 m2 drag, 30 m2 radiation area" },
+      "7646": { "name": "Starlette", "b": 0.0021, "agom": 0.00108, "band": "600 km and above", "truthPrefixes": ["nsgf.orb.starlette"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "22824": { "name": "Stella", "b": 0.0021, "agom": 0.00108, "band": "600 km and above", "truthPrefixes": ["nsgf.orb.stella"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "27944": { "name": "LARETS", "b": 0.0043, "agom": 0.0022, "band": "600 km and above", "truthPrefixes": ["nsgf.orb.larets"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] },
+      "25398": { "name": "WESTPAC", "b": 0.0042, "agom": 0.0021, "band": "600 km and above", "truthPrefixes": ["nsgf.orb.westpac"], "toleranceSeconds": 15, "d2Calibrators": ["swarmA", "swarmB", "swarmC", "gracefo1"] }
+    },
+    "targetsNote": "E5's ten targets with E5's coefficients; the seven added with nominal Cd*A/m (Cd 2.2) and Cr*A/m (Cr 1.3) rounded from published mass and dimensions. B is fitted on every arc; Cr*A/m is fixed and the same for every variant.",
+    "fitSpanHours": 24,
+    "observationEverySeconds": 180,
+    "horizonsDays": [1, 3, 7],
+    "observationSigma": { "positionM": 0.1, "velocityMS": 0.0001 },
+    "fit": { "maximumIterations": 12, "correctionTolerance": 0.001, "sigmaEditThreshold": 0 },
+    "forces": { "gravity": "EGM2008", "degree": 70, "order": 70, "thirdBodies": [10, 301, 2, 4, 5], "srp": true, "drag": true, "solidTides": true, "relativity": "IERS_2010" },
+    "integrator": { "tolerance": 1e-12, "maxStep": 120 },
+    "integratorNote": "E5's integrator; E7 uses 1e-13 and 300 s. Drag errors at 1-7 days are hundreds of metres to kilometres (E5); the integration error at 1e-12 is millimetres",
+    "validationIssueDays": ["2026-04-01", "2026-04-03", "2026-04-05", "2026-04-07", "2026-04-09", "2026-04-11", "2026-04-13", "2026-04-15", "2026-04-17", "2026-04-19", "2026-04-21"],
+    "arms": {
+      "definitive": ["D0", "D2", "D5"],
+      "operational": ["D0", "D5"]
+    },
+    "testEveryDays": 2,
+    "testDaysNote": "test arcs on the first, third, ... issue day of each test span, both arms (consecutive days' 7-day arcs overlap; the bootstrap clusters by day)",
+    "validationVariants": ["D5"],
+    "seedNote": "on each arc every variant's fit starts from the first fitted variant's state and B; each variant still fits its own"
+  },
+  "regimes": {
+    "basis": "the largest 3-hour Kp (GFZ, definitive) from the issue time to the horizon (propagation) or in the 3 h before the scoring time (density)",
+    "bins": [["quiet", 0, 4], ["active", 4, 6], ["storm", 6, 10]]
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95,
+    "holmAlpha": 0.05
+  },
+  "hypotheses": {
+    "H1": { "minimumReduction": 0.25 },
+    "H4": { "margin": 1.03 },
+    "H5": { "margin": 1.02, "band": "600 km and above" }
+  },
+  "selection": {
+    "perBin": "the candidate with the smallest standard deviation of ln(orbit-mean observed / orbit-mean model) of D5a (global structure) over the validation window's held-out satellites (GRACE-FO 1, Swarm B, Swarm C)",
+    "decayHours": "with that perBin and the global structure, the candidate with the smallest pooled standard deviation of ln(observed / D5f) at leads 0-3 days (definitive drivers) over the validation issue days in validationIssueDays",
+    "structure": "with that perBin and decayHours, the structure with the smallest median 3-day 3D error of D5 (definitive arm) over the validation arcs (validationIssueDays, every target), both structures on the arcs where both have a 3-day error",
+    "ties": "global structure, smaller perBin, shorter decayHours"
+  },
+  "destopy": {
+    "repository": "https://github.com/pengmun/DESTOPy",
+    "license": "MIT",
+    "maximumObjects": 17,
+    "window": "validation",
+    "role": "external reference implementation, descriptive only; run in a scratch virtual environment, not in the product path"
+  }
+}
