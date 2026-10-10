@@ -122,7 +122,11 @@ metrics.latency = fs.existsSync(latencyFile) ? JSON.parse(fs.readFileSync(latenc
 if (values.destopy) {
   const d = readRun(values.destopy, 'density-rows.json');
   const v = [...new Set(d.rows.map((r) => r.variant))];
-  metrics.destopy = { window: d.window, variants: v, pooled: densitySummary(d.rows, v) };
+  // The run's description without per-object quantities estimated from element sets.
+  const info = d.destopy ?? {};
+  metrics.destopy = { window: d.window, variants: v, pooled: densitySummary(d.rows, v), bySatellite: Object.fromEntries([...new Set(d.rows.map((r) => r.target))].map((t) => [t, densitySummary(d.rows.filter((r) => r.target === t), v)])),
+    code: info.destopy ?? null, run: info.window ?? null, settings: info.settings ?? null,
+    objects: (info.objects ?? []).map((o) => ({ norad: o.norad, name: o.name ?? null })), changes: info.changes_vs_destopy?.code ?? null, caveats: info.caveats ?? [] };
 }
 fs.writeFileSync(path.join(outDir, 'metrics.json'), `${JSON.stringify(metrics, null, 1)}\n`);
 // Calibration sets and corrections, without per-object quantities derived from element sets.
@@ -245,8 +249,11 @@ if (metrics.latency) {
   lines.push('');
 }
 if (metrics.destopy) {
-  lines.push(`## Cross-check: DESTOPy (validation window, descriptive)`, '');
-  densityTable('Pooled', metrics.destopy.pooled, metrics.destopy.variants);
+  const X = metrics.destopy;
+  lines.push(`## Cross-check: DESTOPy (validation window, descriptive)`, '',
+    `DESTOPy ${X.code ? `(${X.code.repo}, commit \`${X.code.commit}\`, ${X.code.license})` : ''} run outside the product path with its own model and filter settings on the ${X.objects.length} objects of its ballistic-coefficient table in orbit and not held out (PLAN.md Amendment 3: ${X.objects.map((o) => o.norad).join(', ')}), hourly ${X.run ? `${X.run.filter_start_utc.slice(0, 10)} to ${X.run.filter_end_utc.slice(0, 10)} (${X.run.spin_up})` : ''}. D5a is the validation analysis fit of the selected configuration. ${(X.caveats ?? []).join(' ')}`, '');
+  densityTable('Pooled', X.pooled, X.variants);
+  for (const [t, s] of Object.entries(X.bySatellite ?? {})) densityTable(`Held out: ${t}`, s, X.variants);
 }
 fs.writeFileSync(path.join(outDir, 'REPORT.md'), `${lines.join('\n')}\n`);
 console.log(`wrote ${path.relative(repoRoot, outDir)}/REPORT.md`);
