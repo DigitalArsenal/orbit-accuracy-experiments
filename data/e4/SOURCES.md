@@ -123,6 +123,8 @@ Terms: IGS products, IGS Data Policy: CC BY 4.0. Credit: International GNSS Serv
 
 ## glonass-precise
 
+Cited, not reproduced (owner, 2026-10-10): these files are no longer in the repository (git history is not rewritten); each is listed with the URL it came from and the SHA-256 of the served bytes. A written OK from ESA/ESOC would let the ESA files go back up.
+
 Terms: ESA/ESOC Navigation Support Office products as an IGS analysis centre, IGS Data Policy: CC BY 4.0. Credit: ESA/ESOC. (https://navigation-office.esa.int/)
 
 | File | URL | Captured (UTC) | SHA-256 (served bytes) |
@@ -181,6 +183,8 @@ Terms: ESA/ESOC Navigation Support Office products, free and open with attributi
 | `20260915T125614Z--SWRAesoc24342.sp3.gz` | http://navigation-office.esa.int/products/swarm/SWRAesoc24342.sp3.gz | 2026-09-15T12:56:14.854Z | `428f65aecc1ad19cf44977fe260ce46af1c14ba63bb9253b0a20fa004b5d5ace` |
 
 ## cpf
+
+Cited, not reproduced (owner, 2026-10-10): these files are no longer in the repository (git history is not rewritten); each is listed with the URL it came from and the SHA-256 of the served bytes. A written OK from ESA/ESOC would let the ESA files go back up.
 
 Terms: ILRS consolidated prediction format files from the ESA/ESOC Navigation Support Office; ILRS data and products are openly available. Credit: ILRS, ESA/ESOC. (https://ilrs.gsfc.nasa.gov/data_and_products/data/index.html)
 
