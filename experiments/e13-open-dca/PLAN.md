@@ -324,3 +324,23 @@ A **pair** is two consecutive versions of one satellite whose start epochs are 5
 - **S4 Method A against Method B** (descriptive): for pairs of the decaying stratum with no residual jump in the new version's head fit and a gate pass, the median and robust sigma of ln(B_A / B_B).
 
 Section 10's analyses (c)–(e) (the open DCA from Starlink, held-out Starlinks, non-fleet objects, Swarm and GRACE-FO) are not frozen here; each gets its own amendment before it is scored.
+
+### Deviation D1 — test A arcs were started before the selection was committed (2026-10-10; found by the coordinator's integrity check, confirmed by the lane)
+
+- `steps/10-planet-arcs.mjs --split testA` ran from 21:09:11 to 21:21:11 UTC, before `results/e13/selection.json` existed, against the order of sections 7 and 9 (the selection is
+  committed first). `windows.mjs` then required the freeze commit for the arcs and the selection only for Swarm and GRACE-FO densities and orbits; the lane read section 5 as limiting
+  the selection lock to those.
+- The run wrote 176 arcs (start dates 2026-01-01..2026-01-04), computed from Planet states only: HPOP, frames, time, EOP C04 and SET indices; no Swarm or GRACE-FO density or orbit,
+  no truth orbit, no score.
+- No test-month Swarm or GRACE-FO density, truth orbit or score was read before the run was stopped or since, and the outputs were never opened (the lane counted lines and read the
+  run log's progress lines). The only test-month numbers read are GFZ Ap and Kp (named in section 5 before the freeze) and JB2008's d ln(rho) / dT at sample days (a model quantity).
+- Amendment S1 (4f6f286, 21:14:51 UTC) was committed after the run began; it concerns Part S (the Starlink collector and its measurements) only and changes nothing in Part R.
+- Commit c41beeb (Amendment R1, 20:53:14 UTC, before the run) had edited `config.json` (the solver's parameter values) and a sentence of this plan's preamble, against AGENTS.md. Commit
+  14365d0 (21:20:21 UTC) restored `config.json` to the bytes of the freeze commit 4221f03, removed the sentence, and moved the values to `amendments.json`, which `common.mjs` merges
+  over `config.json` and which the guard checks with the other frozen files.
+- Disposal: the run was killed at 21:21:11 UTC; its output and log were moved unopened to a quarantine folder, hashed, and deleted (2026-10-10, after the hashes were recorded here):
+  `testA-g24lean.partial.jsonl` (176 rows, 98,354 bytes, sha256 `2e25b309d2338f6c6e67c22180c1aa2d9da3b67ca0bf6b074f00b8d64e29ead2`) and `testA-g24lean.partial.log` (493 bytes, sha256
+  `9c4f13f1e910c6d21d225e235494bb683079726ea3054e4083e10d790e3d59b9`). Every test-A arc is computed from scratch after the committed selection; the partial run is not resumed.
+- The guard is closed: `assertWindowReadable` for any test split now also requires `results/e13/selection.json` committed and unchanged, which gates the arcs, the densities, the orbits
+  and the scoring alike (`test/e13-windows.test.mjs` builds repositories and checks the refusals: no selection, an uncommitted or staged one, a changed one, a changed plan, amendments
+  or configuration, a configuration that is not frozen).
