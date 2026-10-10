@@ -131,3 +131,13 @@ Mean CRPS of M4 (km), R / T / N: 0 d: 0.1171 / 0.8407 / 0.0920; 0.5 d: 0.1204 / 
 - Inputs: 1 model, 729 referenceProducts, 171 gpHistory, 5488 reference (hashes in manifest.json)
 - Started 2026-10-09T18:41:23.315Z, finished 2026-10-09T18:53:24.069Z
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

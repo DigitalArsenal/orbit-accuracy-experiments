@@ -632,3 +632,17 @@ Modules repository `095c20a622da225a06707f43f8840984fb5ea708`; this repository `
 | analysis/estimation | 0.2.0 | `f2e322784fd4876c7728376d0ba3b4b0d641bb2858a41083e73b8631c6cdebb0` |
 | analysis/maneuver-detection | 0.1.0 | `c2d71834a577c15a9b063814f59c6406306bb28aa86e818a0fc7859215232279` |
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © ESA 2026 on the data and on analysed information derived from it; "Data provided by the European Space Agency (ESA)"; product DOIs: SW_SP3xCOM_2_ doi:10.57780/esa-8579355, SW_DNSxPOD_2_ doi:10.57780/esa-ef59315, GF_DNSxACC_2_ doi:10.57780/esa-2559fd1.
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Copernicus Sentinel data 2025–2026 (files as served). Reference states and results derived from them: "Contains modified Copernicus Sentinel data 2026".
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+ESA data and the information analysed from it are marked as ESA asks: © ESA 2026; Data provided by the European Space Agency (ESA).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

@@ -20,7 +20,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
-import { licenseSection } from '../../../harness/data-licenses.mjs';
+import { CITED_ONLY, licenseSection, mayPublishFile } from '../../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { assets: { type: 'string' }, products: { type: 'string' }, reference: { type: 'string' } } });
 if (!values.assets) throw new Error('--assets DIR is required (release assets go outside the repository)');
@@ -64,8 +64,10 @@ for (const name of products) {
   const file = path.join(productsDir, index.product);
   const bytes = fs.readFileSync(file);
   if (sha256(bytes) !== index.sha256) throw new Error(`${index.product}: bytes differ from the hash its reference states record`);
-  fs.copyFileSync(file, path.join(values.assets, index.product));
+  const withheld = !mayPublishFile(index.product);
+  if (!withheld) fs.copyFileSync(file, path.join(values.assets, index.product));
   manifest.releaseAssets.push({
+    ...(withheld ? { withdrawn: CITED_ONLY } : {}),
     name: index.product, bytes: bytes.length, sha256: index.sha256, url: index.url, retrieved: retrieved(file),
     terms: TERMS[name.slice(0, 10)], role: 'truth: GPS precise orbit, converted by analysis/reference-states',
     gpsSatellites: index.objects.filter((o) => /SP3 satellite G\d/.test(o.comment ?? '')).length,

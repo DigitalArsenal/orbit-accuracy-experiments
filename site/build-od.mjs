@@ -28,6 +28,7 @@ import createFlatc from 'flatc-wasm/module';
 import { loadModule } from '../harness/modules.mjs';
 import { eopFrame } from '../harness/eop.mjs';
 import { convertIso } from '../harness/time.mjs';
+import { labelFor } from '../harness/data-licenses.mjs';
 import {
   ACW, acw, acwTable, geodeticToItrf, decodeAcw, decodeExecution, decodeOem, decodeSun, encodeAcw, encodeOem, eopFrames, executionFrame, frame, isoMicro,
   sunRequest, transformState, utcMs,
@@ -88,13 +89,13 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
   const inside = (e) => utcMs(e) >= from && utcMs(e) <= to;
   const truth = truthBlocks.map((b) => ({ ...b, states: b.states.filter((s) => inside(s.epoch)), covariances: b.covariances.filter((c) => inside(c.epoch)) }));
   write('data/od/truth.oem', Buffer.from(encodeOem(truth, { originator: 'IGS final orbits via analysis/reference-states' })),
-    `${IGS}.SP3.gz as GCRF/UTC with covariance (analysis/reference-states), 05:15-10:45 UTC`, 'IGS data policy: open, cite the IGS');
+    `${IGS}.SP3.gz as GCRF/UTC with covariance (analysis/reference-states), 05:15-10:45 UTC`, labelFor(['igs']));
 
   // Earth orientation: the IERS rows of 2026-08-01..03.
   const rows = eopRecords.filter((r) => r.mjd >= 61253 && r.mjd <= 61256).map((r) => r.row);
-  write('data/od/eop.json', rows, 'IERS EOP 20 C04 rows MJD 61253-61256 through data-source/eop-parser', 'IERS data, free with attribution');
+  write('data/od/eop.json', rows, 'IERS EOP 20 C04 rows MJD 61253-61256 through data-source/eop-parser', labelFor(['iers']));
   const eopPrw = eopFrame(eopRecords, 61253, 61256);
-  write('data/od/eop.prw', Buffer.from(eopPrw.payload), 'The same rows as a PRW EARTH_ORIENTATION frame', 'IERS data, free with attribution');
+  write('data/od/eop.prw', Buffer.from(eopPrw.payload), 'The same rows as a PRW EARTH_ORIENTATION frame', labelFor(['iers']));
   const eop = eopFrames(rows);
   const hpopInputs = (request) => [executionFrame({ ...request, kernel: true }), { ...eopPrw }, frame('kernel', 'PRW', kernelPrw)];
   const FORCES = { degree: 20, order: 20, thirdBodies: [10, 301], srp: true, massKg: 1500, areaM2: 20, cr: 1.3 };
@@ -114,7 +115,7 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
     dense.push({ norad: b.norad, objectId: b.objectId, name: b.name, states });
   }
   write('data/od/truth-dense.json', dense.map((b) => ({ norad: b.norad, objectId: b.objectId, name: b.name, epochs: b.states.map((s) => s.epoch),
-    position: b.states.flatMap((s) => s.state.slice(0, 3)) })), 'IGS final GPS orbits densified to 60 s by propagator/hpop between IGS epochs', 'IGS data policy: open, cite the IGS');
+    position: b.states.flatMap((s) => s.state.slice(0, 3)) })), 'IGS final GPS orbits densified to 60 s by propagator/hpop between IGS epochs', labelFor(['igs'], 'MIT (HPOP densification)'));
   log(`od: dense truth for ${dense.length} satellites`);
 
   // The catalog: HPOP from 23:59:42 with covariance and process noise.
@@ -132,7 +133,7 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
       states: run.map((s) => ({ epoch: s.epoch, state: [...s.position, ...s.velocity] })), covariances: run.map((s) => ({ epoch: s.epoch, matrix: s.covariance })) });
   }
   write('data/od/catalog.oem', Buffer.from(encodeOem(catalog, { originator: 'propagator/hpop prediction of IGS states' })),
-    `${catalog.length} GPS satellites: IGS state at 2026-08-01T23:59:42Z propagated by propagator/hpop (20x20, Sun, Moon, SRP) with covariance, 05:30-10:30 UTC`, 'IGS data policy: open, cite the IGS');
+    `${catalog.length} GPS satellites: IGS state at 2026-08-01T23:59:42Z propagated by propagator/hpop (20x20, Sun, Moon, SRP) with covariance, 05:30-10:30 UTC`, labelFor(['igs'], 'MIT (HPOP prediction)'));
   log(`od: catalog of ${catalog.length} (withheld ${withheld.join(', ')})`);
 
   // Time: TT - UTC from foundation/time at one epoch of the day (no leap second in it).
@@ -190,7 +191,7 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
     SUN_STATES: sun, EARTH_ORIENTATION: rows.map((r) => Object.assign(new ACW.EOPT(), r)), RANDOM_SEED: 20261009n,
     START_JULIAN_DATE_TT: jdTt(isoMicro(simFrom)), END_JULIAN_DATE_TT: jdTt(isoMicro(simTo)),
   }) }));
-  write('data/od/simulate.acw', Buffer.from(request.payload), 'analysis/observation-simulator request: dense truth in ITRF (foundation/frames), access (analysis/access), Sun (propagator/hpop DE440)', 'IGS and IERS data; MIT');
+  write('data/od/simulate.acw', Buffer.from(request.payload), 'analysis/observation-simulator request: dense truth in ITRF (foundation/frames), access (analysis/access), Sun (propagator/hpop DE440)', labelFor(['igs', 'iers', 'jpl-de440'], 'MIT'));
   // Check the request runs.
   const simulated = await simulator.invoke('simulate_observations', [request]);
   const counts = Object.fromEntries(['radar', 'optical', 'rf'].map((p) => [p, simulated.outputs.filter((o) => o.portId === p).length]));
@@ -203,6 +204,6 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
     satellites: truthBlocks.map((b) => ({ norad: b.norad, objectId: b.objectId, name: b.name })), withheld, simulation: { from: isoMicro(simFrom), to: isoMicro(simTo), seed: 20261009 },
     catalog: { epoch: truthBlocks[0].states[0].epoch, forces: FORCES, initialSigma: { positionM: 1, velocityMps: 1e-3 }, processNoisePsdM2S3: 1e-11, samples: catalogEpochs.length },
     ttMinusUtcSeconds: ttMinusUtc, counts,
-  });
+  }, 'site/build-od.mjs: the scenario description', labelFor(['igs'], 'MIT'));
   for (const m of [hpop, frames, access, simulator, time]) await m.destroy();
 }

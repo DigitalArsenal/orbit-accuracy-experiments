@@ -216,3 +216,13 @@ H1 (ρ_T of consecutive sets at the later set's epoch > 0, lower bound > 0, ever
 
 The correlation model for reuse (E7, E9): [correlation-model.json](correlation-model.json) (schema inside). Fitted products: [products.json](products.json).
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

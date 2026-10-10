@@ -63,3 +63,15 @@ mean d²/3 and 95 % coverage of our difference from SpaceX under both covariance
 Not compared: OneWeb (LTEF), SES (IESS-412) — no module reads them; Telesat
 (box centres, not states); EUMETSAT (element sets only). Space-Track, Spire,
 EDC and Vimpel are credentialed and excluded.
+
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- © Navigation Support Office at ESA/ESOC 2026.
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

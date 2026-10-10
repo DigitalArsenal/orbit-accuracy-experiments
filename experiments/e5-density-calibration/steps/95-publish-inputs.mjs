@@ -15,7 +15,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
-import { licenseSection } from '../../../harness/data-licenses.mjs';
+import { CITED_ONLY, licenseSection, mayPublishFile } from '../../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { runs: { type: 'string' }, release: { type: 'string' } } });
 const releaseDir = path.resolve(values.release);
@@ -70,6 +70,7 @@ let gitBytes = 0;
 fs.mkdirSync(releaseDir, { recursive: true });
 for (const row of files.values()) {
   if (!row.source) continue;
+  if (!mayPublishFile(row.name)) { row.location = `not published: ${CITED_ONLY}`; delete row.source; continue; }
   const bytes = fs.readFileSync(row.source);
   const already = /\.(gz|zip|ZIP)$/.test(row.name);
   const stored = already ? bytes : zlib.gzipSync(bytes, { level: 9 });

@@ -110,3 +110,13 @@ and covariance, B and AGOM, the force model, the element sets and segments
 used): `runs/<step run>/products.jsonl`, listed with their counts in
 `test/metrics.json` (`products`). They derive from Space-Track element sets
 and stay on this machine.
+
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

@@ -1457,7 +1457,8 @@
      "terms": "SET JB2008 page: indices provided with a 45-day lag; no license stated on the page; real-time indices via UDL. Cite SET/Bowman et al. 2008."
     }
    ],
-   "published": false
+   "published": false,
+   "withdrawn": "never uploaded: cited by URL and SHA-256, not reproduced (data/licenses.json)"
   },
   {
    "asset": "DTCFILE.TXT.gz",
@@ -1474,7 +1475,8 @@
      "terms": "SET JB2008 page: indices provided with a 45-day lag; no license stated on the page; real-time indices via UDL. Cite SET/Bowman et al. 2008."
     }
    ],
-   "published": false
+   "published": false,
+   "withdrawn": "never uploaded: cited by URL and SHA-256, not reproduced (data/licenses.json)"
   },
   {
    "asset": "e7-gnss-final.tar.gz",
@@ -3875,7 +3877,8 @@
     }
    ],
    "tag": "e7-inputs-20261010",
-   "contents": "README.md (licence, attribution) and MANIFEST.json (SHA-256 per file), then the files byte for byte"
+   "contents": "README.md (licence, attribution) and MANIFEST.json (SHA-256 per file), then the files byte for byte",
+   "withdrawn": "2026-10-10: cited by URL and SHA-256, not reproduced; the release asset was taken down (data/licenses.json); local copy /opt/data/sdn-archive/release-archive/e7-inputs-20261010/e7-gnss-final.tar.gz"
   },
   {
    "asset": "e7-slr-nsgf.tar.gz",
@@ -16389,7 +16392,8 @@
     }
    ],
    "published": false,
-   "note": "not published: Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA."
+   "note": "not published: Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA.",
+   "withdrawn": "never uploaded: cited by URL and SHA-256, not reproduced (data/licenses.json)"
   },
   {
    "asset": "e7-sentinel1-poeorb.tar.gz",
