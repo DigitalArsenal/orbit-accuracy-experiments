@@ -101,6 +101,16 @@ metrics.identifiability = list(values.estimates).map((id) => {
         medianLnBMinusPrior: medianOf(ratio(v)), withinTwoPriorSigma: withinTwoSigma(v) }])) };
   }) };
 });
+// ── Convergence of every D5 fit (step 10 runs given as --estimates or --corrections) ──
+metrics.convergence = [...new Set([...list(values.estimates), ...list(values.corrections)])].map((id) => {
+  const r = readRun(id, 'estimates.json');
+  const fits = r.spans.flatMap((s) => s.fits.map((f) => ({ span: s.span.from, issue: f.issue ?? null, fit: f.fit })));
+  const last = (f) => f.fit.history.at(-1) ?? {};
+  return { run: id, window: r.window, mode: r.mode, noPriors: r.noPriors, fits: fits.length, converged: fits.filter((f) => f.fit.converged).length,
+    iterations: fits.map((f) => f.fit.iterations),
+    notConverged: fits.filter((f) => !f.fit.converged).map((f) => ({ span: f.span, issue: f.issue, iterations: f.fit.iterations,
+      lastStepK: last(f).maxStepK, lastStepLnB: last(f).maxStepLnB, lastStepA0M: last(f).maxStepA0M })) };
+});
 // ── Latency, DESTOPy ──
 const latencyFile = path.join(repoRoot, 'results/e8/latency.json');
 metrics.latency = fs.existsSync(latencyFile) ? JSON.parse(fs.readFileSync(latencyFile, 'utf8')) : null;
@@ -198,8 +208,20 @@ for (const arm of ['definitive', 'operational']) {
   lines.push('');
 }
 lines.push(`Failed or skipped arcs (rows): ${metrics.failures.length}.`, ...Object.entries(metrics.failures.reduce((a, x) => { const k = `${x.arm}/${x.variant}: ${x.error}`; a[k] = (a[k] ?? 0) + 1; return a; }, {})).map(([k, n]) => `- ${k} (${n})`).slice(0, 25), '');
-lines.push('## Identifiability (analysis fits)', '', '| Run | Window | K | Structure | Priors | Objects | Level, K [σ] | Corr(level, mean ln B) | Tier A: median ln(B/prior) | Tier B: median ln(B/prior) |', '| --- | --- | ---: | --- | --- | ---: | --- | ---: | ---: | ---: |');
-for (const r of metrics.identifiability) for (const s of r.spans) lines.push(`| ${r.run.replace('e8-omm-density-10-estimate-', '')} | ${s.span.from} | ${r.perBin} | ${r.structure} | ${r.noPriors ? 'none' : 'A, B'} | ${s.objects} | ${s.fit.level.map((l) => `${f(l.meanK, 1)} [${f(l.sigmaK, 1)}]`).join(', ')} | ${f(s.fit.levelLnBCorrelation, 2)} | ${f(s.tiers.A?.medianLnBMinusPrior, 2)} | ${f(s.tiers.B?.medianLnBMinusPrior, 2)} |`);
+lines.push('## Identifiability (analysis fits)', '', '| Run | Window | K | Structure | Priors | Objects | Iterations | Converged | Level, K [σ] | Corr(level, mean ln B) | Tier A: median ln(B/prior) | Tier B: median ln(B/prior) |', '| --- | --- | ---: | --- | --- | ---: | ---: | --- | --- | ---: | ---: | ---: |');
+for (const r of metrics.identifiability) for (const s of r.spans) lines.push(`| ${r.run.replace('e8-omm-density-10-estimate-', '')} | ${s.span.from} | ${r.perBin} | ${r.structure} | ${r.noPriors ? 'none' : 'A, B'} | ${s.objects} | ${s.fit.iterations} | ${s.fit.converged ? 'yes' : 'no'} | ${s.fit.level.map((l) => `${f(l.meanK, 1)} [${f(l.sigmaK, 1)}]`).join(', ')} | ${f(s.fit.levelLnBCorrelation, 2)} | ${f(s.tiers.A?.medianLnBMinusPrior, 2)} | ${f(s.tiers.B?.medianLnBMinusPrior, 2)} |`);
+lines.push('');
+lines.push('## Convergence of the D5 fits', '', 'Converged: every step below 0.5 K, 0.001 in ln B and 0.1 m within 12 iterations (PLAN.md section 2). A fit that reaches the limit is used as it stands; its last steps are listed.', '',
+  '| Run | Window | Mode | Fits | Converged | Iterations (median, max) |', '| --- | --- | --- | ---: | ---: | --- |');
+for (const c of metrics.convergence) {
+  const it = c.iterations.slice().sort((a, b) => a - b);
+  lines.push(`| ${c.run.replace('e8-omm-density-10-estimate-', '')} | ${c.window} | ${c.mode}${c.noPriors ? ', no priors' : ''} | ${c.fits} | ${c.converged} | ${it[Math.floor((it.length - 1) / 2)]}, ${it.at(-1)} |`);
+}
+const stalled = metrics.convergence.flatMap((c) => c.notConverged.map((x) => ({ ...x, run: c.run, mode: c.mode })));
+if (stalled.length) {
+  lines.push('', '| Fit (span or issue day) | Mode | Last step: K | ln B | offset (m) |', '| --- | --- | ---: | ---: | ---: |');
+  for (const x of stalled) lines.push(`| ${x.issue ?? x.span} | ${x.mode} | ${f(x.lastStepK, 2)} | ${f(x.lastStepLnB, 5)} | ${f(x.lastStepA0M, 3)} |`);
+}
 lines.push('');
 if (metrics.latency) {
   const L = metrics.latency;
