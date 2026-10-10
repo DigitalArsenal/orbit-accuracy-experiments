@@ -60,6 +60,17 @@ provenance (URL, retrieval time, SHA-256 and size of the served bytes).
 - **Orekit 13.1.6** (`reference/OrekitTruth.java`) generates synthetic truths
   with models HPOP lacks (DTM2000 density, the EIGEN-6S field), constants set
   to HPOP's so differences are model differences.
+- **GMAT R2022a** (`reference/gmat-truth.mjs`) generates synthetic truths with
+  its own models (MSISE-86/90, Jacchia–Roberts, JGM-2/3, its SRP) and defines
+  the "GMAT defaults" whole-stack hypothesis.
+- **NAIF SPICE** (CSPICE N0067 through SpiceyPy 8.2.0; generic kernels under
+  `/opt/data/sdn-archive/hac/naif-kernels`, sha256 in its README) is the
+  reference for time scales (LSK, TT, TDB), frames (J2000, ITRF93 high-precision
+  Earth PCK, IAU_EARTH) and planetary ephemerides (DE405/421/430/440):
+  `reference/spice-validate.mjs` checks HPOP's and the frames and time modules'
+  handling against it, and defines the "SPICE stack" hypothesis. Operators
+  that publish SPK kernels are read in memory by `spk-reader.mjs` (types 9 and
+  13, checked against SPICE on synthetic kernels).
 
 ## 4. Hypothesis space
 
@@ -71,14 +82,16 @@ A hypothesis fixes every axis (`hypothesis.mjs` `AXES`):
 | timeScale (reading of its epochs) | UTC, TAI, GPS, TT |
 | eop | FINALS (IERS finals2000A as published), ZERO (no Earth orientation: UT1 = UTC, no polar motion or pole offsets) |
 | gravityModel, degree | EGM2008 or EGM96; degree = order in {2 (J2), 4 (J2–J4), 8, 12, 20, 24, 36, 48, 70} |
-| thirdBodies | none; Sun and Moon; + Venus, Mars, Jupiter (DE440s) |
+| thirdBodies | none; Sun and Moon; + Venus, Mars, Jupiter |
+| ephemeris | DE440 (DE440s), DE430, DE421, DE405; below the floor (step 03: at most 0.6 mm at GEO in a day; SPICE validation), so it is not searched axis by axis and enters through the SPICE preset |
 | solidTides, oceanTides | IERS 2010 solid tides; FES2004 30×30 ocean tides |
 | relativity | none, Schwarzschild, IERS 2010 |
-| srp, earthRadiation | cannonball with conical shadow, or none; Knocke albedo and IR |
+| srp, earthRadiation | none; cannonball with conical shadow (Cr·A/m fitted); ECOM2 D2B1 (CODE; seven coefficients fitted, on a zero cannonball; above 1500 km only); Knocke albedo and IR on the cannonball |
 | atmosphere × spaceWeather (DRAG) | NRLMSISE-00, JB2008, Jacchia–Roberts, Harris–Priester, exponential, none; inputs OBSERVED (GFZ; SET for JB2008), FORECAST (what was public at the file's creation: NOAA SWPC's 3-day RSGA forecast, then held; SET's drivers 45 days late, then held), CONSTANT (F10.7 = F10.7a = 150, Ap 15, Kp 3) |
 
 Solve-for parameters: the state at the segment's first point, Cd·A/m with
-drag, Cr·A/m with radiation pressure (Earth radiation scales with it). The
+drag, Cr·A/m with the cannonball (Earth radiation scales with it), the seven
+ECOM2 terms with ECOM2. The
 default hypothesis is HPOP's full force on the file's labels: EGM2008 70×70,
 Sun, Moon and planets, solid and ocean tides, IERS 2010 relativity,
 cannonball SRP with Earth radiation, NRLMSISE-00 on the FORECAST inputs below
@@ -103,8 +116,15 @@ integrator and output interpolation are read as residual fingerprints only).
    1 mm sigma); propagate the fit to **every** point. Closure = RMS and max 3D
    difference over the second half; fit RMS over the first half; full-span
    RMS; BIC = 3n ln(RSS/3n) + k ln 3n on the first half.
-2. **Search.** Incumbent = the default (or the classifier's proposal, section
-   6). Axes in the order frame, timeScale, eop, gravityModel, degree,
+2. **Search.** Incumbent = the default. Whole-stack presets then challenge it
+   once each (`config.presets`): **SPICE_STACK** (states written in SPICE's
+   J2000, which is the ICRF, i.e. read as GCRF; DE430), **GMAT_DEFAULT**
+   (GMAT R2022a out of the box: JGM-2 4×4 Earth, no third bodies, drag or
+   SRP, EarthMJ2000Eq output, a shipped EOP file ending 2023-04-24; in HPOP
+   terms EGM96 4×4 and no EOP, since JGM-2 and held EOP are not in HPOP) and
+   **GMAT_DEFAULT_DRAG_SRP** (the same with GMAT's default Jacchia–Roberts on
+   constant 150/150/Kp 3 and spherical SRP). A preset replaces the incumbent
+   under the rule of step 3. Then Axes in the order frame, timeScale, eop, gravityModel, degree,
    thirdBodies, solidTides, oceanTides, relativity, srp, earthRadiation, DRAG
    (largest signature first). Every admissible level of the axis challenges
    the incumbent with the other axes held.
@@ -133,9 +153,14 @@ shadow and the along-track slope change at entry and exit (radiation pressure
 and its shadow). `harness/boosting.mjs`: gradient-boosted trees (multinomial
 deviance, depth 3, 120 rounds, rate 0.1), one classifier per axis, trained on
 the synthetic training set (section 7). The classifiers propose each axis's
-three most probable levels; the tournament's first pass tests only those and
-the incumbent's. Every proposal is confirmed by closure, never accepted on
-probability.
+three most probable levels. On the synthetic validation set the tournament
+tests only those and the incumbent's (the accelerated mode, so its recovery
+rate measures the classifiers and the tournament together). On operator data
+the tournament searches every level (the classifiers were trained after the
+operator dev runs started); the proposals for each operator segment are
+computed from its recorded default fingerprint and reported with their
+agreement with the tournament. Every proposal is confirmed by closure, never
+accepted on probability.
 
 ## 7. Synthetic ground truth
 
@@ -151,9 +176,13 @@ truth's frame and scale but labelled EME2000/UTC) and digits (1 mm, 0.1 mm,
   fingerprint and the oracle fit (the generating hypothesis).
 - **Validation set** (`synthetic.sets.validate`, 36 seeds): the full
   tournament, with the classifiers' proposals.
-- **Beyond-HPOP set** (Orekit truths: DTM2000 density; EIGEN-6S field): the
-  tournament must not close them to the floor; the closest HPOP hypothesis and
-  its residual fingerprint are reported.
+- **Reference-engine set** (`synthetic.reference`): Orekit truths with
+  NRLMSISE-00 and Harris–Priester (same physics as HPOP: positive controls),
+  DTM2000 and the EIGEN-6S field (not in HPOP), a GEO control; GMAT truths
+  with Jacchia–Roberts on EGM96 (same physics up to GMAT's MJ2000Eq drag
+  axes), MSISE-90 and JGM-3 (not in HPOP) and GMAT's defaults. Full search,
+  no classifier. A truth outside HPOP's space must not close to the floor; the
+  closest hypothesis and the residual's attribution are reported.
 
 ## 8. Acceptance and endpoints
 
@@ -189,8 +218,8 @@ Operators (after the freeze):
    `screenFloorM`, or (ISS) when a listed event falls in it. The segment is
    the longest run of unflagged windows, cut to `maxSegmentDays` from its
    start; shorter than `minSegmentDays` is skipped and reported.
-3. **Dev:** the tournament (section 5). **Held-out:** the default and the
-   consensus configuration only.
+3. **Dev:** the tournament (section 5), full search. **Held-out:** the default
+   and the consensus configuration only.
 4. **Attribution** of the final residual from its fingerprint: along-track
    quadratic → density/space-weather difference; 1/rev growth with a radial
    bias → state or GM; Earth-fixed or daily terms → Earth orientation, time

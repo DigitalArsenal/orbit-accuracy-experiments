@@ -52,7 +52,7 @@
  },
  "fit": {
   "sigmaM": 0.01,
-  "maxFitPoints": 240,
+  "maxFitPoints": 180,
   "maximumIterations": 25,
   "correctionTolerance": 0.001,
   "integrator": {
@@ -67,7 +67,7 @@
    "stepsPerPeriod": 180,
    "maxStepCap": 600
   },
-  "fingerprintPoints": 600
+  "fingerprintPoints": 360
  },
  "synthetic": {
   "note": "Generator of the synthetic study (PLAN.md section 7). Each case is rebuilt from its seed; no ephemeris is stored.",
@@ -264,11 +264,11 @@
    },
    "train": {
     "from": 100000,
-    "count": 240
+    "count": 160
    },
    "validate": {
     "from": 200000,
-    "count": 36
+    "count": 24
    }
   },
   "reference": {
@@ -498,6 +498,155 @@
       "spaceWeather": "CONSTANT",
       "atmosphere": "NONE"
      }
+    },
+    {
+     "id": "gmat-jr-egm96",
+     "engine": "gmat",
+     "description": "GMAT R2022a, EGM96 36x36, Sun+Moon, spherical SRP, Jacchia-Roberts on constant inputs (same physics; GMAT evaluates J-R in MJ2000Eq axes)",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "relativity": false,
+      "srp": "SPHERICAL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EGM96",
+      "degree": 36,
+      "atmosphere": "JACCHIA_ROBERTS"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": {
+      "frame": "EME2000",
+      "timeScale": "UTC",
+      "eop": "FINALS",
+      "gravityModel": "EGM96",
+      "degree": 36,
+      "thirdBodies": "SUN_MOON",
+      "ephemeris": "DE440",
+      "solidTides": false,
+      "oceanTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "earthRadiation": false,
+      "spaceWeather": "CONSTANT",
+      "atmosphere": "JACCHIA_ROBERTS"
+     }
+    },
+    {
+     "id": "gmat-msise90",
+     "engine": "gmat",
+     "description": "GMAT R2022a, MSISE-90 density on constant inputs (not in HPOP)",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "relativity": false,
+      "srp": "SPHERICAL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EGM96",
+      "degree": 36,
+      "atmosphere": "MSISE90"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": null
+    },
+    {
+     "id": "gmat-jgm3",
+     "engine": "gmat",
+     "description": "GMAT R2022a, JGM-3 36x36 field (not in HPOP), Jacchia-Roberts constant",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "relativity": false,
+      "srp": "SPHERICAL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "JGM3",
+      "degree": 36,
+      "atmosphere": "JACCHIA_ROBERTS"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": null
+    },
+    {
+     "id": "gmat-defaults",
+     "engine": "gmat",
+     "description": "GMAT R2022a out-of-the-box force model: JGM-2 4x4, no point masses, drag or SRP, GMAT constants (JGM-2 not in HPOP)",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      7000000,
+      0,
+      1300000,
+      0,
+      7350,
+      1000
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "gravity": "JGM2",
+      "degree": 4,
+      "thirdBodies": "NONE",
+      "relativity": false,
+      "srp": "NONE",
+      "atmosphere": "NONE",
+      "constants": "GMAT"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": null
     }
    ]
   }
@@ -511,12 +660,43 @@
   "strongRatio": 2,
   "strongDeltaBic": 10,
   "dragBelowKm": 1500,
-  "note": "The ephemeris axis (DE440/430/421/405) is not searched: its effect is below the floor (GEO, 1 d: 0.11-0.59 mm; steps/03). It is tested once per segment through the SPICE_STACK preset (DE430)."
+  "note": "The ephemeris axis (DE440/430/421/405) is not searched: its effect is below the floor (GEO, 1 d: 0.11-0.59 mm; steps/03). It is tested once per segment through the SPICE_STACK preset (DE430).",
+  "pruneRatio": 10
  },
  "presets": {
+  "note": "Whole-stack hypotheses (PLAN.md section 5). SPICE_STACK: SPICE's J2000 is the ICRF, so 'EME2000' states from a SPICE-based tool are GCRF axes (reference/spice-validate.mjs); DE430. GMAT_DEFAULT*: GMAT R2022a's out-of-the-box force model (reference/gmat-truth.mjs GMAT_DEFAULTS: JGM-2 4x4, no point masses, no drag or SRP; EarthMJ2000Eq output; its shipped EOP ends 2023-04-24) in HPOP terms: JGM-2 is not in HPOP (EGM96 4x4 stands in) and the stale EOP is read as no EOP (ZERO); the _DRAG_SRP variant turns on GMAT's default Jacchia-Roberts on constant 150/150/Kp 3 and its spherical SRP.",
   "SPICE_STACK": {
    "frame": "GCRF",
    "ephemeris": "DE430"
+  },
+  "GMAT_DEFAULT": {
+   "frame": "EME2000",
+   "timeScale": "UTC",
+   "eop": "ZERO",
+   "gravityModel": "EGM96",
+   "degree": 4,
+   "thirdBodies": "NONE",
+   "solidTides": false,
+   "oceanTides": false,
+   "relativity": "NONE",
+   "srp": "NONE",
+   "earthRadiation": false,
+   "atmosphere": "NONE"
+  },
+  "GMAT_DEFAULT_DRAG_SRP": {
+   "frame": "EME2000",
+   "timeScale": "UTC",
+   "eop": "ZERO",
+   "gravityModel": "EGM96",
+   "degree": 4,
+   "thirdBodies": "NONE",
+   "solidTides": false,
+   "oceanTides": false,
+   "relativity": "NONE",
+   "srp": "CANNONBALL",
+   "earthRadiation": false,
+   "atmosphere": "JACCHIA_ROBERTS",
+   "spaceWeather": "CONSTANT"
   }
  },
  "operators": {
@@ -554,12 +734,12 @@
   },
   "providers": {
    "spacex-starlink": {
-    "dev": 6,
-    "heldout": 10
-   },
-   "planet": {
     "dev": 4,
     "heldout": 8
+   },
+   "planet": {
+    "dev": 3,
+    "heldout": 6
    },
    "nasa-iss": {
     "singleObject": true,
@@ -642,12 +822,12 @@
     }
    },
    "intelsat": {
-    "dev": 3,
-    "heldout": 6
+    "dev": 2,
+    "heldout": 4
    },
    "esa-gnss-rapid": {
-    "dev": 3,
-    "heldout": 6,
+    "dev": 2,
+    "heldout": 4,
     "date": "2026-10-08"
    }
   }

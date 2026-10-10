@@ -22,7 +22,7 @@ export const AXES = {
   solidTides: [false, true],
   oceanTides: [false, true],
   relativity: ['NONE', 'SCHWARZSCHILD', 'IERS_2010'],
-  srp: ['NONE', 'CANNONBALL'],
+  srp: ['NONE', 'CANNONBALL', 'ECOM2'],
   earthRadiation: [false, true],
   atmosphere: ['NONE', 'NRLMSISE00', 'JB2008', 'JACCHIA_ROBERTS', 'HARRIS_PRIESTER', 'EXPONENTIAL'],
   spaceWeather: ['OBSERVED', 'FORECAST', 'CONSTANT'],
@@ -51,7 +51,7 @@ export function validate(h) {
     if (!levels.includes(h[axis])) throw new Error(`hypothesis ${axis}=${h[axis]} is not one of ${levels.join(', ')}`);
   }
   if ((h.solidTides || h.oceanTides) && h.degree < 2) throw new Error('tides need a field');
-  if (h.earthRadiation && h.srp === 'NONE') throw new Error('Earth radiation rides on the cannonball coefficient (PLAN.md section 4)');
+  if (h.earthRadiation && h.srp !== 'CANNONBALL') throw new Error('Earth radiation rides on the cannonball coefficient (PLAN.md section 4)');
   return h;
 }
 
@@ -63,10 +63,13 @@ export function label(h) {
     `${h.gravityModel} ${h.degree}`,
     `${{ NONE: '-', SUN_MOON: 'SM', SUN_MOON_PLANETS: 'SMP' }[h.thirdBodies]}${h.thirdBodies === 'NONE' ? '' : `:${h.ephemeris}`}`,
     h.solidTides ? 'st' : '-', h.oceanTides ? 'ot' : '-', h.relativity,
-    h.srp === 'CANNONBALL' ? 'CB' : '-', h.earthRadiation ? 'er' : '-',
+    { NONE: '-', CANNONBALL: 'CB', ECOM2: 'ECOM2' }[h.srp], h.earthRadiation ? 'er' : '-',
     h.atmosphere === 'NONE' ? 'nodrag' : WEATHER_MODELS.has(h.atmosphere) ? `${h.atmosphere}:${h.spaceWeather}` : h.atmosphere,
   ].join(' ');
 }
+
+export const ECOM2_TERMS = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'B1_COS', 'B1_SIN'];
+const ECOM2_ALL = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'D4_COS', 'D4_SIN', 'B1_COS', 'B1_SIN', 'B3_COS', 'B3_SIN'];
 
 // The solve-for parameters a hypothesis implies (PRW DYNAMIC_PARAMETERS),
 // with their bounds: Cd*A/m with drag, Cr*A/m with radiation pressure.
@@ -74,6 +77,8 @@ export function parametersOf(h, start = {}) {
   const out = [];
   if (h.atmosphere !== 'NONE') out.push({ kind: 'DRAG_AREA_OVER_MASS', value: start.b ?? 0.01, lower: 0 });
   if (h.srp === 'CANNONBALL') out.push({ kind: 'SRP_AREA_OVER_MASS', value: start.agom ?? 0.01, lower: 0 });
+  // ECOM2 (CODE, Arnold et al. 2015) D2B1: seven terms on a zero cannonball, unbounded.
+  if (h.srp === 'ECOM2') for (const t of ECOM2_TERMS) out.push({ kind: `ECOM2_${t}`, value: start.ecom2?.[t] ?? 0, lower: null });
   return out;
 }
 
@@ -93,14 +98,15 @@ function forcesOf(h, c, weather) {
   const field = h.degree <= 2 ? { GRAVITY_CHOICE: P.prwGravitySelection.J2_ONLY }
     : { GRAVITY_CHOICE: P.prwGravitySelection[h.gravityModel], MAXIMUM_DEGREE: h.degree, HAS_MAXIMUM_DEGREE: true, MAXIMUM_ORDER: h.degree, HAS_MAXIMUM_ORDER: true };
   if (h.gravityModel === 'EGM96' && h.degree <= 2) throw new Error('the J2 selection is EGM2008\'s');
-  const drag = h.atmosphere !== 'NONE', srp = h.srp === 'CANNONBALL';
+  const drag = h.atmosphere !== 'NONE', srp = h.srp !== 'NONE';
   return table('PRWForceConfiguration', {
     ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 3.986004415e14,
     ENABLE_J2: false, ENABLE_J3: false, ENABLE_J4: false, ENABLE_HIGHER_ZONALS: false,
     ...field,
     ENABLE_THIRD_BODY: BODIES[h.thirdBodies].length > 0, THIRD_BODY_IDS: BODIES[h.thirdBodies],
     ENABLE_SRP: srp, ENABLE_DRAG: drag, INITIAL_MASS_KG: 1, AREA_M2: 1,
-    REFLECTIVITY_COEFFICIENT: srp ? c.agom : 0,
+    REFLECTIVITY_COEFFICIENT: h.srp === 'CANNONBALL' ? c.agom : 0,
+    ECOM2: h.srp === 'ECOM2' ? table('PRWEcom2', Object.fromEntries(ECOM2_ALL.map((t) => [`${t}_M_S2`, c.ecom2?.[t] ?? 0]))) : null,
     RADIATION_PRESSURE_MODEL: P.prwRadiationPressureFamily.CANNONBALL, // inert while ENABLE_SRP is false
     EARTH_RADIATION: h.earthRadiation ? P.prwEarthRadiationModel.KNOCKE : P.prwEarthRadiationModel.NONE,
     EARTH_RADIATION_RESOLUTION_DEG: 15,
@@ -150,6 +156,7 @@ export function withParameters(fixed, parameters, values) {
   parameters.forEach((p, i) => {
     if (p.kind === 'DRAG_AREA_OVER_MASS') out.b = values[i];
     else if (p.kind === 'SRP_AREA_OVER_MASS') out.agom = values[i];
+    else if (p.kind.startsWith('ECOM2_')) out.ecom2 = { ...(out.ecom2 ?? {}), [p.kind.slice(6)]: values[i] };
     else throw new Error(`unknown parameter ${p.kind}`);
   });
   return out;

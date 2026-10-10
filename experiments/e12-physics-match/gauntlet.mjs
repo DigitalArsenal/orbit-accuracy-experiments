@@ -18,7 +18,8 @@ function levels(axis, h, segment) {
   if (axis === 'gravityModel') return h.degree > 2 ? AXES.gravityModel : ['EGM2008'];
   if (axis === 'degree') return h.gravityModel === 'EGM96' ? AXES.degree.filter((d) => d > 2) : AXES.degree;
   if (axis === 'ephemeris') return h.thirdBodies === 'NONE' ? [h.ephemeris] : AXES.ephemeris;
-  if (axis === 'earthRadiation') return h.srp === 'NONE' ? [false] : AXES.earthRadiation;
+  if (axis === 'earthRadiation') return h.srp === 'CANNONBALL' ? AXES.earthRadiation : [false];
+  if (axis === 'srp') return segment.drag ? AXES.srp.filter((x) => x !== 'ECOM2') : AXES.srp;
   if (axis === 'DRAG') {
     // A static model's level carries FORECAST, which it never reads.
     if (!segment.drag) return [['NONE', 'FORECAST']];
@@ -34,7 +35,7 @@ function levels(axis, h, segment) {
 const setAxis = (h, axis, level) => {
   if (axis === 'DRAG') return { ...h, atmosphere: level[0], spaceWeather: level[1] };
   const out = { ...h, [axis]: level };
-  if (axis === 'srp' && level === 'NONE') out.earthRadiation = false;
+  if (axis === 'srp' && level !== 'CANNONBALL') out.earthRadiation = false;
   if (axis === 'gravityModel' && level === 'EGM96' && out.degree <= 2) out.degree = 4;
   return out;
 };
@@ -73,12 +74,13 @@ export async function runGauntlet(env, segment, start, settings, { proposals = n
   // stack) challenge the start once, as one hypothesis each.
   const presetScores = {};
   for (const [name, overrides] of Object.entries(presets ?? {})) {
+    if (typeof overrides !== 'object') continue; // the config's note
     const h = { ...start, ...overrides, ...(segment.label.frame === 'ITRF' ? { frame: 'ITRF' } : {}), ...(segment.drag ? {} : { atmosphere: 'NONE' }) };
     const s = await evaluate(h, best.start);
     presetScores[name] = s.error ? { error: s.error } : { label: label(h), closureRms: s.closureRms, closureMax: s.closureMax, bic: s.bic };
     if (beats(s, best)) { incumbent = h; best = s; presetScores[name].adopted = true; }
   }
-  const passes = [];
+  const passes = [], ratios = new Map();
   for (let pass = 1; pass <= g.maximumPasses; ++pass) {
     let changed = false;
     const margins = {};
@@ -88,12 +90,16 @@ export async function runGauntlet(env, segment, start, settings, { proposals = n
         const ranked = proposals[axis].filter((l) => candidates.some((c) => same(c, l)));
         candidates = [...new Map([...ranked.slice(0, g.proposalTopK), levelOf(incumbent, axis)].map((l) => [JSON.stringify(l), l])).values()];
       }
+      // After the first pass, a level that closed worse than `pruneRatio`
+      // times the incumbent of its time is not tried again.
+      if (pass > 1) candidates = candidates.filter((l) => !(ratios.get(`${axis}/${JSON.stringify(l)}`) > g.pruneRatio));
       const tried = [];
       for (const level of candidates) {
         if (same(level, levelOf(incumbent, axis))) continue;
         const h = setAxis(incumbent, axis, level);
         tried.push({ level, score: await evaluate(h, best.start) });
       }
+      for (const t of tried) ratios.set(`${axis}/${JSON.stringify(t.level)}`, t.score.error ? Infinity : t.score.closureRms / best.closureRms);
       const ok = tried.filter((t) => !t.score.error).sort((a, b) => a.score.closureRms - b.score.closureRms);
       const runnerUp = ok[0];
       if (runnerUp && beats(runnerUp.score, best)) {

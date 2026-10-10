@@ -92,9 +92,9 @@ export async function fitPositions(env, h, segment, points, settings, start = {}
     batch_options: {
       parameter_kinds: parameters.map((p) => P.prwDynamicParameter[p.kind]),
       parameter_values: parameters.map((p) => p.value),
-      // Every parameter here has a lower bound of 0 and no upper bound (an
-      // absent vector is no bound; NaN has no JSON form for flatc).
-      ...(parameters.length ? { parameter_lower_bounds: parameters.map((p) => p.lower) } : {}),
+      // Cd*A/m and Cr*A/m are bounded below at 0, ECOM2 terms are free (-1e300:
+      // NaN, the schema's "none", has no JSON form for flatc); no upper bounds.
+      ...(parameters.some((p) => p.lower === 0) ? { parameter_lower_bounds: parameters.map((p) => (p.lower === 0 ? 0 : -1e300)) } : {}),
       levenberg_marquardt: true,
       maximum_iterations: settings.maximumIterations, correction_tolerance: settings.correctionTolerance, sigma_edit_threshold: 0,
     },
@@ -148,7 +148,7 @@ export async function scoreHypothesis(env, h, segment, points, settings, { start
     boundStatus: fitted.fit.bound_status ?? null,
     fitRms: rmsOf(dFirst), closureRms: rmsOf(dSecond), closureMax: Math.max(...dSecond), fullRms: rmsOf(d),
     bic: n3 * Math.log(Math.max(rss, 1e-30) / n3) + k * Math.log(n3), k, nFirst, nSecond: second.length,
-    start: { state: fitted.state, b: fitted.coefficients.b, agom: fitted.coefficients.agom },
+    start: { state: fitted.state, b: fitted.coefficients.b, agom: fitted.coefficients.agom, ecom2: fitted.coefficients.ecom2 },
     ...(keepResiduals ? { residuals, states } : {}),
   };
 }

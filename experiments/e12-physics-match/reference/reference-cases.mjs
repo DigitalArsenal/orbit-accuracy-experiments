@@ -5,7 +5,6 @@
 // lacks). The engine's GCRF states are written as EME2000/UTC to the case's
 // digits. Synthetic only; routing and rounding.
 import path from 'node:path';
-import { repoRoot } from '../../../harness/provenance.mjs';
 import { DEFAULT, validate } from '../hypothesis.mjs';
 import { isoOf, DAY_MS } from '../environment.mjs';
 
