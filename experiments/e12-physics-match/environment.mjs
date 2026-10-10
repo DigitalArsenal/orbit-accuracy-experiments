@@ -114,7 +114,15 @@ export async function loadEnvironment({ modulesDir, config, run }) {
   };
 
   // Space weather.
-  const gfz = readGfzKp(resolve(inputs.gfzKp));
+  // A gzipped GFZ file is read through an uncompressed copy in runs/cache.
+  const gfzPath = (() => {
+    const file = resolve(inputs.gfzKp);
+    if (!file.endsWith('.gz')) return file;
+    const bytes = readMaybeGz(file), out = path.join(repoRoot, 'runs', 'cache', `gfz-${sha256(bytes).slice(0, 16)}.txt`);
+    if (!fs.existsSync(out)) { fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, bytes); }
+    return out;
+  })();
+  const gfz = readGfzKp(gfzPath);
   run?.addInputs('spaceWeather', { [path.basename(inputs.gfzKp)]: gfz.sha256 });
   const rsga = readRsga(inputs.swpcRsga.map(resolve), path.join(repoRoot, 'runs', 'cache', 'rsga'));
   run?.addInputs('swpcRsga', rsga.files);

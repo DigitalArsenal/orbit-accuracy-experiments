@@ -518,5 +518,138 @@
    "frame": "GCRF",
    "ephemeris": "DE430"
   }
+ },
+ "operators": {
+  "note": "PLAN.md section 9. Operator steps read these inputs in place of config.inputs' (published 2026-10-10, data/e12/env-20261010/SOURCES.md).",
+  "inputs": {
+   "eopFinals": "data/e12/env-20261010/finals2000A.all.gz",
+   "gfzKp": "data/e12/env-20261010/Kp_ap_Ap_SN_F107_since_1932.txt.gz",
+   "swpcRsga": [
+    "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz",
+    "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA",
+    "data/e12/env-20261010/RSGA"
+   ]
+  },
+  "seed": "e12-operators-20261010",
+  "screen": {
+   "LEO": {
+    "windowHours": 3,
+    "floorM": 0.5
+   },
+   "HIGH": {
+    "windowHours": 12,
+    "floorM": 0.5
+   },
+   "eventMarginMinutes": 30
+  },
+  "segmentDays": {
+   "LEO": {
+    "max": 1,
+    "min": 0.5
+   },
+   "HIGH": {
+    "max": 3,
+    "min": 1
+   }
+  },
+  "providers": {
+   "spacex-starlink": {
+    "dev": 6,
+    "heldout": 10
+   },
+   "planet": {
+    "dev": 4,
+    "heldout": 8
+   },
+   "nasa-iss": {
+    "singleObject": true,
+    "heldoutChunks": 3
+   },
+   "cmse-tiangong": {
+    "singleObject": true,
+    "heldoutChunks": 3
+   },
+   "ilrs-cpf": {
+    "centres": {
+     "hts": {
+      "dev": [
+       "lageos1"
+      ],
+      "heldout": [
+       "starlette",
+       "jason3"
+      ]
+     },
+     "sgf": {
+      "dev": [
+       "lageos1"
+      ],
+      "heldout": [
+       "starlette",
+       "lageos2"
+      ]
+     },
+     "dgf": {
+      "dev": [
+       "lageos1"
+      ],
+      "heldout": [
+       "starlette",
+       "lageos2"
+      ]
+     },
+     "cod": {
+      "dev": [
+       "galileo101"
+      ],
+      "heldout": [
+       "glonass127",
+       "galileo102"
+      ]
+     },
+     "esa": {
+      "dev": [
+       "galileo101"
+      ],
+      "heldout": [
+       "galileo102"
+      ]
+     },
+     "gal": {
+      "dev": [
+       "galileo101"
+      ],
+      "heldout": [
+       "galileo102"
+      ]
+     },
+     "ner": {
+      "dev": [
+       "glonass127"
+      ],
+      "heldout": [
+       "glonass128"
+      ]
+     },
+     "cne": {
+      "dev": [
+       "jason3"
+      ],
+      "heldout": [
+       "sentinel6a"
+      ]
+     }
+    }
+   },
+   "intelsat": {
+    "dev": 3,
+    "heldout": 6
+   },
+   "esa-gnss-rapid": {
+    "dev": 3,
+    "heldout": 6,
+    "date": "2026-10-08"
+   }
+  }
  }
 }

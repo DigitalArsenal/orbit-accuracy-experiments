@@ -62,7 +62,12 @@ export async function propagate(env, h, segment, start, coefficients, samples, {
 // maximum step a fixed fraction of the orbital period (LEO 30 s) up to a cap.
 export function integratorFor(settings, meanRadiusM) {
   const period = 2 * Math.PI * Math.sqrt(meanRadiusM ** 3 / 3.986004415e14);
-  return { tolerance: settings.integrator.tolerance, maxStep: Math.min(settings.integrator.maxStepCap, Math.max(settings.integrator.maxStep, period / settings.integrator.stepsPerPeriod)) };
+  // Whole multiples of 5 s, so a truth and its fit (radius from the initial
+  // state or from the published points) get the same step limit: HPOP does
+  // not stop at the daily and 3-hourly space-weather steps, so the step
+  // sequence moves a LEO day by about 1 cm (steps/01, 30 s against 10 s).
+  const step = Math.floor(Math.max(settings.integrator.maxStep, period / settings.integrator.stepsPerPeriod) / 5) * 5;
+  return { tolerance: settings.integrator.tolerance, maxStep: Math.min(settings.integrator.maxStepCap, step) };
 }
 
 // fit_batch of the state at points[0] and h's parameters to points

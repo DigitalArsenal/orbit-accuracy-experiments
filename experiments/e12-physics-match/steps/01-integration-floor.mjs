@@ -11,12 +11,12 @@ import { propagate } from '../fit.mjs';
 
 const config = JSON.parse(fs.readFileSync(path.join(repoRoot, 'experiments/e12-physics-match/config.json'), 'utf8'));
 const env = await loadEnvironment({ modulesDir: modulesRoot({ configured: config.inputs.modules, repoRoot }), config });
-const epochMs = Date.parse('2026-08-01T00:00:00Z');
+const epochMs = Date.parse(process.env.E12_EPOCH ?? '2026-08-01T00:00:00Z');
 const segment = { cutoffMs: epochMs };
 const state = [6778137, 0, 0, 0, 4790.0, 5995.0];
 const all = Array.from({ length: 1440 }, (_, k) => isoOf(epochMs + (k + 1) * 60000));
 const sub = all.filter((_, k) => k % 6 === 5);
-const h = { ...DEFAULT, spaceWeather: 'OBSERVED', degree: 36 };
+const h = { ...DEFAULT, spaceWeather: 'OBSERVED', degree: 36, ...JSON.parse(process.env.E12_H ?? '{}') };
 const c = { b: 0.012, agom: 0.008 };
 const parameters = [{ kind: 'DRAG_AREA_OVER_MASS' }, { kind: 'SRP_AREA_OVER_MASS' }];
 const diff = (a, b) => Math.max(...a.map((s, k) => Math.hypot(s.state[0] - b[k].state[0], s.state[1] - b[k].state[1], s.state[2] - b[k].state[2])));

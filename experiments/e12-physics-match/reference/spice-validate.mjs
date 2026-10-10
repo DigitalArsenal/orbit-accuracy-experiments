@@ -63,7 +63,9 @@ const record = (section, name, unit, values_, note = '') => { const s = stats(va
 for (const k of ['ttMinusUtc', 'tdbMinusUtc', 'taiMinusUtc']) {
   record('a time', `${k} module - SPICE`, 'us', rows.map((r, i) => (r[k] - spice.epochs[i][k]) * 1e6), k === 'taiMinusUtc' ? 'leap seconds' : 'text rounds to 1 us');
 }
-report.sections['a time'].leapSeconds = { module: [...new Set(rows.map((r) => r.taiMinusUtc))], spice: [...new Set(spice.epochs.map((e) => e.taiMinusUtc))] };
+
+
+report.leapSeconds = { module: [...new Set(rows.map((r) => Math.round(r.taiMinusUtc)))], spice: [...new Set(spice.epochs.map((e) => Math.round(e.taiMinusUtc)))] };
 
 // ── rotations: matrix of GCRF -> axis from the module, by rotating basis vectors ──
 const SCALE = 7e6;
@@ -80,6 +82,13 @@ function angleMas(A, B) {
   const D = mul(A, T(B));
   const v = [D[2][1] - D[1][2], D[0][2] - D[2][0], D[1][0] - D[0][1]].map((x) => x / 2);
   return Math.atan2(norm(v), (D[0][0] + D[1][1] + D[2][2] - 1) / 2) * MAS;
+}
+// Rotation vector of A * B^T in mas about the axes of the frame both map into (x, y, z).
+function rotationVectorMas(A, B) {
+  const D = mul(A, T(B));
+  const v = [D[2][1] - D[1][2], D[0][2] - D[2][0], D[1][0] - D[0][1]].map((x) => x / 2);
+  const f = Math.atan2(norm(v), (D[0][0] + D[1][1] + D[2][2] - 1) / 2) / norm(v);
+  return v.map((x) => x * f * MAS);
 }
 const metres = (mas, km) => (mas / MAS) * km * 1000;
 
@@ -102,6 +111,15 @@ const cmp = (label, modM, spiceM) => {
   record('c orientation', `${label} at 42164 km`, 'mm', a.map((x) => metres(x, 42164) * 1000));
 };
 cmp('GCRF->ITRF module vs SPICE ITRF93', gcrfToItrf, spice.epochs.map((e) => e.itrf93));
+{
+  const comps = gcrfToItrf.map((m, i) => rotationVectorMas(m, spice.epochs[i].itrf93));
+  for (const [k, axis] of ['x', 'y', 'z'].entries()) {
+    const c = comps.map((v) => v[k]); const mean = c.reduce((a, b) => a + b, 0) / c.length;
+    report.sections['c orientation'][`ITRF93 residual about Earth-fixed ${axis}`] = { unit: 'mas', mean, min: Math.min(...c), max: Math.max(...c) };
+    console.log(`ITRF93 residual (module - SPICE) about Earth-fixed ${axis}: mean ${mean.toFixed(3)} mas, range ${Math.min(...c).toFixed(3)} .. ${Math.max(...c).toFixed(3)}`);
+  }
+  report.sections['c orientation'].perEpochResidualMas = comps;
+}
 cmp('GCRF->ITRF module vs SPICE IAU_EARTH', gcrfToItrf, spice.epochs.map((e) => e.iauEarth));
 // Our EME2000 reading of SPICE's "J2000": a vector labelled EME2000 goes to GCRF by the module's bias, then to ITRF.
 const viaEme = gcrfToItrf.map((m, i) => mul(m, T(gcrfToEme[i])));
@@ -109,17 +127,18 @@ cmp('EME2000->ITRF module vs SPICE ITRF93 (J2000 read as EME2000)', viaEme, spic
 cmp('EME2000->ITRF module vs SPICE IAU_EARTH (J2000 read as EME2000)', viaEme, spice.epochs.map((e) => e.iauEarth));
 
 // ── d. planetary ephemerides ──
-const PRW_REQ_TYPE = PRW_TYPE;
 function hpopPosition(kernel, target, tdbIso) {
   const b = new fb.Builder(1024);
   const req = Object.assign(new P.PRWEphemerisRequestT(), { EPOCH: instant(tdbIso, 'TDB'), TARGET_NAIF_ID: target, CENTER_NAIF_ID: 399 });
   P.PRW.finishSizePrefixedPRWBuffer(b, Object.assign(new P.PRWT(), { EPHEMERIS_REQUEST: req }).pack(b));
-  return env.hpop.invoke('invoke', [{ portId: 'request', typeRef: PRW_REQ_TYPE, payload: b.asUint8Array().slice() }, kernel]).then((response) => {
+  return env.hpop.invoke('invoke', [{ portId: 'request', typeRef: PRW_TYPE, payload: b.asUint8Array().slice() }, kernel]).then((response) => {
     const root = P.PRW.getSizePrefixedRootAsPRW(new fb.ByteBuffer(new Uint8Array(response.outputs.find((o) => o.portId === 'response').payload))).unpack();
     const p = root.EPHEMERIS_RESULT.STATE.STATE.POSITION;
+    echo.push(Number(micros(root.EPHEMERIS_RESULT.STATE.STATE.EPOCH) - micros(tdbIso)));
     return [p.X / 1000, p.Y / 1000, p.Z / 1000]; // m -> km
   });
 }
+const echo = []; // the epoch HPOP writes back minus the epoch asked, microseconds
 const DE = ['de440s', 'de430', 'de421', 'de405'];
 const hpop = {}; const accepted = {};
 for (const de of DE) {
@@ -139,6 +158,18 @@ for (const de of DE) {
     // SPICE's own UTC -> TDB (adds the time-model difference, mostly the Sun's 30 km/s)
     record('d ephemeris', `${body} ${de} HPOP vs SPICE, SPICE's str2et`, 'm', rows.map((_, i) => norm(sub(hpop[de][key][i], spice.epochs[i].ephemeris[de][`${key}SpiceTime`])) * 1000));
   }
+}
+// The echoed epoch and the time shift the position difference implies (diff . v / |v|^2): a kernel-independent offset in HPOP's TDB handling.
+record('d ephemeris', 'HPOP echoed epoch - requested TDB epoch', 'us', echo.slice(0, rows.length), 'EPHEMERIS_RESULT epoch, de440s');
+for (const [body, key] of [['Sun', 'sun'], ['Moon', 'moon']]) {
+  const shift = (de) => rows.map((_, i) => { const d = sub(hpop[de][key][i], spice.epochs[i].ephemeris[de][key]), v = spice.epochs[i].ephemeris[de][`${key}Velocity`]; return (d[0] * v[0] + d[1] * v[1] + d[2] * v[2]) / (v[0] ** 2 + v[1] ** 2 + v[2] ** 2) * 1e6; });
+  record('d ephemeris', `${body} de440s HPOP-SPICE implied time shift`, 'us', shift('de440s'));
+  const residual = rows.map((_, i) => { const s = shift('de440s')[i] / 1e6, v = spice.epochs[i].ephemeris.de440s[`${key}Velocity`]; return norm(sub(sub(hpop.de440s[key][i], spice.epochs[i].ephemeris.de440s[key]), v.map((x) => x * s))) * 1e6; });
+  record('d ephemeris', `${body} de440s HPOP-SPICE after removing that shift`, 'um', residual);
+}
+// The kernel really is read: HPOP(de) - HPOP(de440s) against SPICE(de) - SPICE(de440s) (the time shift cancels).
+for (const de of DE.slice(1)) for (const [body, key] of [['Sun', 'sun'], ['Moon', 'moon']]) {
+  record('d kernel read', `${body} ${de}: [HPOP ${de} - HPOP de440s] - [SPICE ${de} - SPICE de440s]`, 'mm', rows.map((_, i) => norm(sub(sub(hpop[de][key][i], hpop.de440s[key][i]), sub(spice.epochs[i].ephemeris[de][key], spice.epochs[i].ephemeris.de440s[key]))) * 1e6));
 }
 for (const de of DE.slice(1)) for (const [body, key] of [['Sun', 'sun'], ['Moon', 'moon']]) {
   record('d vs de440', `${body} SPICE ${de} - de440s`, 'km', spice.epochs.map((e) => norm(sub(e.ephemeris[de][key], e.ephemeris.de440s[key]))));
@@ -167,7 +198,7 @@ for (const [orbit, radiusKm] of [['LEO 7000 km', 7000], ['GEO 42164 km', 42164]]
 // ── print and write ──
 const fmt = (x) => (x === 0 ? '0' : Math.abs(x) >= 1e-3 && Math.abs(x) < 1e5 ? x.toPrecision(4) : x.toExponential(3));
 console.log(`CSPICE ${spice.toolkit}, SpiceyPy ${spice.spiceypy}, ${epochs.length} epochs ${epochs[0]} .. ${epochs.at(-1)}`);
-console.log('leap seconds module', JSON.stringify(report.sections['a time'].leapSeconds.module), 'SPICE', JSON.stringify(report.sections['a time'].leapSeconds.spice));
+console.log('leap seconds (TAI-UTC) module', JSON.stringify(report.leapSeconds.module), 'SPICE', JSON.stringify(report.leapSeconds.spice));
 console.log('HPOP kernel acceptance', JSON.stringify(accepted));
 let last = '';
 for (const [section, name, unit, max, rms, note] of table) {

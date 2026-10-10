@@ -44,6 +44,8 @@ for name in ['de440s', 'de430', 'de421', 'de405']:
         rec.setdefault('ephemeris', {})[name] = {
             'sun': list(sp.spkpos('SUN', et_mod, 'J2000', 'NONE', 'EARTH')[0]),
             'moon': list(sp.spkpos('MOON', et_mod, 'J2000', 'NONE', 'EARTH')[0]),
+            'sunVelocity': list(sp.spkezr('SUN', et_mod, 'J2000', 'NONE', 'EARTH')[0][3:]),
+            'moonVelocity': list(sp.spkezr('MOON', et_mod, 'J2000', 'NONE', 'EARTH')[0][3:]),
             'sunSpiceTime': list(sp.spkpos('SUN', et, 'J2000', 'NONE', 'EARTH')[0]),
             'moonSpiceTime': list(sp.spkpos('MOON', et, 'J2000', 'NONE', 'EARTH')[0]),
         }
