@@ -30,7 +30,7 @@
    "reproduce": "yes",
    "credit": "Copernicus Sentinel data 2025–2026 (files as served). Reference states and results derived from them: \"Contains modified Copernicus Sentinel data 2026\".",
    "reason": "EU law grants free, worldwide reproduction and distribution; the only condition is the source notice.",
-   "usedIn": "E3, E5, E7 (LEO truth: Sentinel-1A, 1C, 1D)",
+   "usedIn": "E3, E5, E7, E8 (LEO truth: Sentinel-1A, 1C, 1D)",
    "reproducedAt": [
     "data/e3/sentinel1-poeorb/ (88 files)",
     "release e5-inputs-20261010: e5-sentinel1-poeorb.tar (prepared, not yet uploaded)",
@@ -67,7 +67,7 @@
    "reproduce": "no",
    "credit": "© ESA 2026 on the data and on analysed information derived from it; \"Data provided by the European Space Agency (ESA)\"; product DOIs: SW_SP3xCOM_2_ doi:10.57780/esa-8579355, SW_DNSxPOD_2_ doi:10.57780/esa-ef59315, GF_DNSxACC_2_ doi:10.57780/esa-2559fd1.",
    "reason": "Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA.",
-   "usedIn": "E3 (Swarm A, B, C truth), E5 (Swarm A, B, C and GRACE-FO densities; Swarm truth), E7 (Swarm truth)",
+   "usedIn": "E3 (Swarm A, B, C truth), E5 (Swarm A, B, C and GRACE-FO densities; Swarm truth), E7 (Swarm truth), E8 (Swarm B, C and GRACE-FO densities; Swarm truth)",
    "reproducedAt": [
     "taken down 2026-10-10 (local copies kept, cited by swarm-diss URL and SHA-256 in the release notes and data/e3/MANIFEST.json): release e3-inputs-20261009: 54 SW_OPER_SP3*COM assets"
    ],
@@ -381,7 +381,7 @@
    "reproduce": "yes",
    "credit": "NERC Space Geodesy Facility (ILRS analysis centre) orbits; contains British Geological Survey materials © UKRI 2026, Open Government Licence v3.0; ILRS citations as in the ILRS row.",
    "reason": "Distributed as ILRS analysis-centre products (not copyrighted); the owner's default licence is the Open Government Licence.",
-   "usedIn": "E3, E5, E7 (SLR-LEO truth: Starlette, Stella, LARETS, WESTPAC, Ajisai, LARES, LARES-2)",
+   "usedIn": "E3, E5, E7, E8 (SLR-LEO truth: Starlette, Stella, LARETS, WESTPAC, Ajisai, LARES, LARES-2)",
    "reproducedAt": [
     "data/e3/slr/ (106 nsgf files)",
     "data/e5/slr/ (184 nsgf files)",
@@ -418,7 +418,7 @@
    "reproduce": "no",
    "credit": "The JB2008 solar and geomagnetic indices are provided for scientific use courtesy of Space Environment Technologies (https://spacewx.com/jb2008/).",
    "reason": "No current licence grants redistribution, and the code README reserves all rights. Results that use the indices are published with SET's acknowledgement; the files are cited by URL and SHA-256.",
-   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants); the HPOP-against-Orekit JB2008 cases (modules)",
+   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants), E8 (JB2008 drivers, D0, D2 and D5); the HPOP-against-Orekit JB2008 cases (modules)",
    "reproducedAt": [
     "modules: propagator/hpop/tests/fixtures/orekit/jb2008-2026-06.json (indices as Orekit read them; committed before this audit)",
     "site (gh-pages): data/orekit/jb2008_indices-*.prw (labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)"
@@ -459,7 +459,7 @@
    "reproduce": "yes",
    "credit": "IERS EOP 20 C04 (IERS Earth Orientation Centre, Observatoire de Paris); finals2000A (IERS Rapid Service/Prediction Centre, U.S. Naval Observatory).",
    "reason": "USNO releases finals2000A for unlimited distribution; the IERS distributes C04 openly with no restriction.",
-   "usedIn": "V1, E1, E2, E2b, E3, E4, E5, E6, E7, E10 (Earth orientation for every frame conversion)",
+   "usedIn": "V1, E1, E2, E2b, E3, E4, E5, E6, E7, E8, E10 (Earth orientation for every frame conversion)",
    "reproducedAt": [
     "data/e1/finals2000A.all.gz, data/e1/eopc04.1962-now.gz",
     "results/e2/data/finals2000A.all.20261009T1144Z.gz",
@@ -500,7 +500,7 @@
    "reproduce": "yes",
    "credit": "Licata, R. J., Mehta, P. M., Tobiska, W. K., Bowman, B. R., Pilinski, M. D. (2021). CHAMP and GRACE-A Density Estimates with Associated HASDM and JB2008 Predictions. Zenodo, doi:10.5281/zenodo.4602380. CC BY 4.0.",
    "reason": "CC BY 4.0. Cited by DOI rather than copied: the 3.3 GB archive is public with a DOI.",
-   "usedIn": "E5 (historical test: CHAMP and GRACE-A densities, HASDM and JB2008 along track)",
+   "usedIn": "E5, E8 (historical test: CHAMP and GRACE-A densities, HASDM and JB2008 along track)",
    "obtain": "https://doi.org/10.5281/zenodo.4602380 (CHAMP_New.zip, GRACE_A_New.zip); data/e5/MANIFEST.json lists their SHA-256.",
    "notice": null,
    "reproducedAt": []
@@ -523,7 +523,7 @@
    "reproduce": "no",
    "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
    "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
-   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E10 (element sets: baselines, histories, cut-off inputs)",
+   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects)",
    "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
    "notice": null,
    "reproducedAt": [
@@ -569,7 +569,7 @@
    "reproduce": "non-commercial",
    "credit": "Kp, ap, Ap: GFZ Helmholtz Centre for Geosciences, CC BY 4.0 (Matzka et al. 2021, GFZ Data Services, doi:10.5880/Kp.0001; Space Weather, doi:10.1029/2020SW002641). Sunspot number: WDC-SILSO, Royal Observatory of Belgium, Brussels, doi:10.24414/qnza-ac80, CC BY-NC 4.0. F10.7: Dominion Radio Astrophysical Observatory and Natural Resources Canada.",
    "reason": "Reproduced unmodified, with its licence header, for the non-commercial purpose of checking the experiments. The sunspot column is CC BY-NC 4.0 and the F10.7 column rests on NRCan's non-commercial permission, so these copies must not be redistributed in a commercial product or service.",
-   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7)",
+   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7), E8 (Kp regimes; Ap for the operational temperature driver)",
    "reproducedAt": [
     "data/e5/gfz-kp/Kp_ap_Ap_SN_F107_since_1932.txt.gz",
     "data/e7/Kp_ap_Ap_SN_F107_since_1932.txt.gz"
@@ -595,7 +595,7 @@
    "reproduce": "yes",
    "credit": "NOAA Space Weather Prediction Center, Report of Solar-Geophysical Activity (U.S. Government material, not subject to copyright protection).",
    "reason": "Public-domain U.S. Government material.",
-   "usedIn": "E7 (F10.7 and Ap forecasts as issued)",
+   "usedIn": "E7, E8 (F10.7 and Ap forecasts as issued)",
    "reproducedAt": [
     "data/e7/swpc-rsga.tar.gz"
    ],
@@ -625,7 +625,7 @@
    "reproduce": "yes",
    "credit": "JPL planetary ephemeris DE440 (Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021), AJ 161:105, doi:10.3847/1538-3881/abd414), via NASA/JPL NAIF; year excerpts made by DigitalArsenal with NAIF's spksub_c.",
    "reason": "NAIF permits redistributing unmodified kernels; the excerpts carry their modifier's name as the rule requires.",
-   "usedIn": "V1, E2, E3, E5, E6, E7, E10 (Sun and Moon for HPOP)",
+   "usedIn": "V1, E2, E3, E5, E6, E7, E8, E10 (Sun and Moon for HPOP)",
    "reproducedAt": [
     "release gnss-truth-20261009: de440s.bsp (unmodified)",
     "data/e10/de440-2018.bsp, data/e10/de440-2024.bsp (excerpts)",
@@ -1027,9 +1027,10 @@
    "credit": "Data from J. McDowell, planet4589.org.",
    "reason": "Free reproduction with citation.",
    "reproducedAt": [
-    "modules: data-source/catalog-source/tests/parity.test.mjs (one row)"
+    "modules: data-source/catalog-source/tests/parity.test.mjs (one row)",
+    "data/e8/gcat-satcat-20261008.tsv.gz"
    ],
-   "usedIn": "space-data-network-modules tests only",
+   "usedIn": "E8 (area-to-mass priors of its calibration objects); space-data-network-modules tests",
    "conditions": "",
    "notice": null,
    "obtain": null
@@ -1772,6 +1773,7 @@
   "Release `gnss-truth-20261009` notes now describe the IGS terms as open use without restriction (2026-10-10). `data/e4/SOURCES.md` and E4's frozen `config.json` still say \"IGS Data Policy: CC BY 4.0\"; the config is frozen, so the correction is an amendment to E4's plan (not yet written).",
   "Credits for ESA, Copernicus and Space-Track are in the results READMEs and reports (`harness/credit-lines.mjs`; a step that regenerates a report drops the section, rerun the script).",
   "The site's `propagator/hpop` module binary compiles in the HWM14 winds data, whose terms are unconfirmed ([HWM14](#hwm14)); the binary is published by the owner's decision of 2026-10-08, and its provenance label says so. A build without HWM14 needs a module change.",
-  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation."
+  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation.",
+  "E8 (2026-10-10) reads three truth sources not assessed here, cited only until they are: IDS/CNES DORIS SSALTO POE (CryoSat-2, SARAL, SWOT, Sentinel-3A; no licence text found on ids-doris.org), GFZ ISDC Rapid Science Orbits (GRACE-FO; no licence text found on isdc.gfz.de) and UCAR COSMIC-2 leoOrb (COSMIC-2 FM5, FM6; © UCAR, doi:10.5065/T353-C093). It also ran DESTOPy (MIT, Copyright (c) 2023 Peng Mun Siew) and reproduces its changes with the licence in results/e8/destopy."
  ]
 }
