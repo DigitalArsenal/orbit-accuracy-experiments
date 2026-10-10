@@ -75,7 +75,7 @@
       "select": "SP3 satellite G",
       "strideDays": {
         "validation": 5,
-        "test": 3,
+        "test": 14,
         "dev": 4
       },
       "forces": {
@@ -140,7 +140,7 @@
       },
       "strideDays": {
         "validation": 6,
-        "test": 4,
+        "test": 14,
         "dev": 4
       },
       "forces": {
@@ -168,6 +168,12 @@
         2,
         4,
         7
+      ],
+      "arcFallbackParameters": [
+        {
+          "kind": "IN_TRACK_ACCELERATION",
+          "sigma": 1e-07
+        }
       ]
     },
     "SLR-LEO": {
@@ -189,7 +195,7 @@
       },
       "strideDays": {
         "validation": 6,
-        "test": 4,
+        "test": 14,
         "dev": 4
       },
       "forces": {
@@ -217,6 +223,12 @@
         2,
         4,
         7
+      ],
+      "arcFallbackParameters": [
+        {
+          "kind": "IN_TRACK_ACCELERATION",
+          "sigma": 5e-09
+        }
       ]
     },
     "SLR-MEO": {
@@ -236,7 +248,7 @@
       },
       "strideDays": {
         "validation": 5,
-        "test": 2,
+        "test": 10,
         "dev": 4
       },
       "forces": {
@@ -846,5 +858,8 @@
     "spanDays": 4,
     "debiasWindowDays": 30,
     "correlationForm": "exponential"
-  }
+  },
+  "staggerWindows": [
+    "test"
+  ]
 }

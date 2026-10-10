@@ -100,14 +100,15 @@ export async function hpopErrors(ctx, initial, initialMs, targets, request) {
   return { errors, d2 };
 }
 
-// Coefficients with solved-for values: Cd*A/m, Cr*A/m, or ECOM2 terms
-// (PRW DYNAMIC_PARAMETERS ECOM2_<term>).
+// Coefficients with solved-for values: Cd*A/m, Cr*A/m, ECOM2 terms (PRW
+// DYNAMIC_PARAMETERS ECOM2_<term>) or the in-track acceleration.
 export function withParameters(fixed, parameters, values) {
   const out = { ...fixed, ...(fixed.ecom2 ? { ecom2: { ...fixed.ecom2 } } : {}) };
   parameters.forEach((p, i) => {
     if (p.kind === 'DRAG_AREA_OVER_MASS') out.b = values[i];
     else if (p.kind === 'SRP_AREA_OVER_MASS') out.agom = values[i];
     else if (p.kind.startsWith('ECOM2_')) out.ecom2 = { ...(out.ecom2 ?? {}), [p.kind.slice(6)]: values[i] };
+    else if (p.kind === 'IN_TRACK_ACCELERATION') out.inTrack = values[i];
     else throw new Error(`unknown parameter ${p.kind}`);
   });
   return out;

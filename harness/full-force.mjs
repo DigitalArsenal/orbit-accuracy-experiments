@@ -30,7 +30,8 @@ function encode(arm, value, size = 1 << 16) {
 //     solidTides (bool, IERS 2010), relativity ('IERS_2010' | 'SCHWARZSCHILD' | undefined)},
 //   coefficients {b: Cd*A/m, agom: Cr*A/m (m^2/kg, cannonball), boxWing {block ('GPS_IIR' |
 //     'GPS_IIR_M' | 'GPS_IIF'), massKg} (the GNSS box-wing a priori in place of the cannonball),
-//     ecom2 {D0, Y0, B0, D2_COS, ..., B3_SIN} (m/s^2, added to the a priori)},
+//     ecom2 {D0, Y0, B0, D2_COS, ..., B3_SIN} (m/s^2, added to the a priori),
+//     inTrack (m/s^2, a constant acceleration along T of RTN)},
 //   parameters [{kind}] solved for (their values come from coefficients), stm (bool),
 //   covariance [(6 + p)^2] (SI, GCRF, over the state and the parameters) | null,
 //   integrator {tolerance, maxStep}}
@@ -49,6 +50,7 @@ export function executionFrame(request) {
     RADIATION_PRESSURE_MODEL: c.boxWing ? P.prwRadiationPressureFamily.GNSS_BOX_WING : P.prwRadiationPressureFamily.CANNONBALL,
     GNSS_BLOCK: c.boxWing ? P.prwGnssSpacecraftBlock[c.boxWing.block] : P.prwGnssSpacecraftBlock.UNSPECIFIED,
     ECOM2: c.ecom2 ? table('PRWEcom2', Object.fromEntries(ECOM2_TERMS.map((t) => [`${t}_M_S2`, c.ecom2[t] ?? 0]))) : null,
+    IN_TRACK_ACCELERATION_M_S2: c.inTrack ?? 0, HAS_IN_TRACK_ACCELERATION_M_S2: c.inTrack !== undefined,
     DRAG_COEFFICIENT: f.drag ? c.b : 0,
     ATMOSPHERE_MODEL: P.prwAtmosphereFamily[f.atmosphere ?? 'NRLMSISE00'],
     EPHEMERIS_SOURCE: 'JPL_SPK',

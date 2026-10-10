@@ -104,8 +104,12 @@ for H-epoch, per drag regime:
 
 The arc fits start B from `bstar` and fit it (a priori σ 0.02 m²/kg for
 LEO-POD, 0.002 m²/kg for the SLR-LEO spheres, whose nominal Cd·A/m is 6e-4
-to 1.2e-2). `propagator/hpop` refuses a negative Cd·A/m: a fit iteration
-that asks for one fails, and the sample counts as a failure of the variant.
+to 1.2e-2). `propagator/hpop` refuses a negative Cd·A/m (a module gap: the
+estimator's iterate is unconstrained). When a fit asks for one, or converges
+to one, the arc is fitted again with a constant in-track acceleration in
+place of B (a priori σ 1e-7 m/s² for LEO-POD, 5e-9 m/s² for SLR-LEO, about
+the drag acceleration of each regime), B held at its starting value; the
+report counts these fallbacks.
 
 ## 4. Data, the information cutoff and the methods' inputs
 
@@ -148,8 +152,11 @@ The test window lies inside E1's test window, so E1's model never saw it,
 and ends where the truth (Swarm 08-19, SLR 08-29) still covers 7 days.
 
 **Samples.** For each object and each product time t (the window's start at
-00:00 UTC plus multiples of the stride: test GPS 3 days, LEO-POD 4, SLR-LEO
-4, SLR-MEO 2; validation 5, 6, 6, 5), the OMM with the latest epoch among
+00:00 UTC plus multiples of the stride: test GPS 14 days, LEO-POD 14,
+SLR-LEO 14, SLR-MEO 10, the j-th object of a regime starting j mod stride
+days later so the samples cover every day of the window; validation 5, 6,
+6, 5, not staggered; set by the compute a 70 × 70 arc fit costs on a shared
+machine, at most 10 processes), the OMM with the latest epoch among
 the object's OMMs created at or before t, at most 1 day old. **Targets**: for
 each horizon h in {0, 6, 12, 24, 48, 72, 168} hours, the first truth state at
 or after the OMM's epoch + h, at most 15 min later; a horizon without one is
@@ -165,7 +172,11 @@ Each trajectory is SGP4's, computed by `analysis/gp-error-model`
 `accumulate` against a fixed carrier state (the module returns SGP4 minus
 the carrier in the carrier's RTN axes, which are the GCRF axes, so adding
 the carrier back is a translation), on a 60 s (LEO) or 300 s grid from the
-OMM's epoch forward past the next OMM's (the module scores forward only).
+OMM's epoch forward past the next OMM's (the module scores forward only),
+at most 4 days. The module needs consecutive blocks to overlap, so the
+history is cut where one block ends before the next begins (a longer OMM
+gap: a blind spot), and each run of at least 7 blocks is searched; a
+detection the module refuses leaves the arc whole and is counted.
 An arc with a maneuver detected inside it **splits**: it starts after the
 last such maneuver, keeps at least the sample's own OMM, and is fitted
 whatever its length. Every sample is also classed for the report, from the
@@ -200,7 +211,13 @@ precise orbits have.
   squares: exponential ρ(Δt) = exp(−Δt/τ), and exponential with a nugget
   ρ = (1 − w) exp(−Δt/τ). The form with the smaller pair-weighted squared
   error against the validation window's correlations is chosen per regime
-  (equal: exponential). `results/e7/train/correlation.json`, pinned.
+  (equal: exponential). `results/e7/train/correlation.json`, pinned. E2b
+  (`results/e2b/train/correlation-model.json`) measures a different
+  correlation: of two OMMs' errors at a common epoch (the older one
+  propagated to the newer one's), which is high in every regime because
+  SGP4's error depends on the time and orbit phase it is evaluated at. An
+  arc's pseudo-observations each sit at their own epoch, where the relevant
+  correlation is the one measured here; E2b's is reported beside it.
 - **How H-arc-GLS uses it.** `fit_batch` takes one covariance per
   observation and no covariance between observations, so a true generalized
   least squares fit across OMMs cannot be posed to it (a module gap,
@@ -333,3 +350,23 @@ statistics and counted in the operational ones.
 
 Dated changes, with their reasons; amendments after the freeze are reported
 with the results.
+
+**Before the freeze (2026-10-09), for the record.** Two validation batches
+were stopped and discarded before this version of the plan: the first ran
+on HPOP `7a81c1d5…` (modules `085dff2e`, cannonball for GPS, observed
+drivers, no information cutoff) and was stopped when the coordinator moved
+E7 to HPOP `0d1f6264…` with the GNSS box-wing and ECOM2; the second stopped
+on a maneuver-detection framing fault (blocks that did not overlap). The
+coordinator's review then added H-arc-GLS, H-arc-debiased, the maneuver
+splits, the operational statistics and the information cutoff. The test
+strides were set from the compute cost under a limit of ten processes. No
+test-window record had been read.
+
+**Before the freeze (2026-10-09): the in-track fallback.** The validation
+batch (`v3`) found that HPOP refused 14–32 % of the LEO arc fits per span
+because the estimator asked for a negative Cd·A/m, which would have made
+every LEO span ineligible. The fallback of section 3 was added, and only the
+(sample, variant) pairs that had failed so were run again with it (batch
+`v3fix`, step 20 `--patch`); since the fallback changes nothing in a fit
+that does not fail, the patched batch equals a full rerun with the fallback.
+The choices of section 5 are made on `v3` patched by `v3fix`.

@@ -16,10 +16,11 @@ import { targetAxes } from '../methods.mjs';
 import { loadE1Model } from '../e1.mjs';
 import { readGpsMetadata } from '../gnss.mjs';
 import { Engine } from '../products.mjs';
+import { loadBatch } from '../analysis.mjs';
 
 const { values, freezeCommit, window, modules, archive, reference: referenceDir, regimes } = cli({
   batch: { type: 'string' }, shard: { type: 'string', default: '0/1' }, weights: { type: 'string' }, correlation: { type: 'string' },
-  resume: { type: 'string' }, limit: { type: 'string' }, variants: { type: 'string' },
+  resume: { type: 'string' }, limit: { type: 'string' }, variants: { type: 'string' }, patch: { type: 'string' },
 });
 if (!values.batch) throw new Error('--batch is required (names the shards of one run)');
 if (!values.weights || !values.correlation) throw new Error('--weights and --correlation (the train window products) are required');
@@ -46,7 +47,20 @@ const margin = Math.max(...Object.values(config.regimes).flatMap((r) => r.arcSpa
 const { sets, files } = windowSets(archive, window, objects, margin);
 run.addInputs('gpHistory', files);
 const byObject = setsByObjectOf(sets);
-const all = schedule(window, truth, byObject);
+let all = schedule(window, truth, byObject);
+// --patch BATCH: only the (sample, variant) pairs that failed in that batch
+// of this window because HPOP refused a negative Cd*A/m (PLAN.md
+// amendments); its rows then replace those failures.
+const patchOf = new Map();
+if (values.patch) {
+  if (window.name === 'test') throw new Error('--patch is for windows before the freeze');
+  for (const r of loadBatch(window.name, values.patch).rows) {
+    const failed = Object.entries(r.failures).filter(([, m]) => /invalid-forces/.test(m)).map(([v]) => v);
+    if (failed.length) patchOf.set(r.gpId, new Set(failed));
+  }
+  all = all.filter((s) => patchOf.has(s.gpId));
+  run.manifest.patch = { batch: values.patch, samples: patchOf.size };
+}
 const mine = all.filter((_, i) => i % shards === shard);
 log(`${all.length} samples in the window; shard ${shard}/${shards}: ${mine.length}`);
 run.manifest.samples = { window: all.length, shard: mine.length };
@@ -76,6 +90,7 @@ for (const sample of mine) {
   row.seconds.maneuvers = Math.round((performance.now() - t0) / 100) / 10;
   for (const spec of table) {
     if (spec.regimes && !spec.regimes.includes(sample.regime)) continue;
+    if (values.patch && !patchOf.get(sample.gpId).has(spec.id)) continue;
     const t = performance.now();
     try {
       const r = await engine.run(sample, spec);

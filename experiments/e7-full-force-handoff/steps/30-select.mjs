@@ -17,12 +17,13 @@ import { config, configPath } from '../common.mjs';
 import { loadBatch, norm } from '../analysis.mjs';
 import { COMPONENTS, sseOf } from '../correlation.mjs';
 
-const { values } = parseArgs({ options: { batch: { type: 'string' }, weights: { type: 'string' }, correlation: { type: 'string' }, 'correlation-validation': { type: 'string' }, 'write-config': { type: 'boolean' } } });
+const { values } = parseArgs({ options: { batch: { type: 'string' }, patch: { type: 'string' }, weights: { type: 'string' }, correlation: { type: 'string' }, 'correlation-validation': { type: 'string' }, 'write-config': { type: 'boolean' } } });
 if (config.frozen) throw new Error('config.json is frozen; the choices are fixed');
-const { rows, runs } = loadBatch('validation', values.batch);
+const patches = values.patch ? values.patch.split(',') : [];
+const { rows, runs } = loadBatch('validation', values.batch, patches);
 const k72 = config.horizonsHours.indexOf(config.decision.selectionHorizonHours);
 const at = (r, v) => r.errors[v]?.[k72] ?? null;
-const selection = { batch: values.batch, runs, horizonHours: config.decision.selectionHorizonHours, bRule: {}, spanDays: {}, debiasWindowDays: {}, correlationForm: {}, detail: {} };
+const selection = { batch: values.batch, patches, runs, horizonHours: config.decision.selectionHorizonHours, bRule: {}, spanDays: {}, debiasWindowDays: {}, correlationForm: {}, detail: {} };
 
 // The candidate with the lowest median 3D error at the selection horizon on
 // the samples where every eligible candidate has one; ties to the first listed.
@@ -63,7 +64,7 @@ if (values['write-config']) {
   if (Object.values(selection.spanDays).some((d) => d === null)) throw new Error('a regime has no eligible span; amend the plan before choosing');
   const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
   const rel = (f) => path.relative(repoRoot, path.resolve(f));
-  cfg.chosen = { on: 'validation', batch: values.batch, bRule: selection.bRule, spanDays: selection.spanDays, debiasWindowDays: selection.debiasWindowDays, correlationForm: selection.correlationForm,
+  cfg.chosen = { on: 'validation', batch: values.batch, patches, bRule: selection.bRule, spanDays: selection.spanDays, debiasWindowDays: selection.debiasWindowDays, correlationForm: selection.correlationForm,
     weights: rel(values.weights), weightsSha256: sha256(fs.readFileSync(path.resolve(values.weights))),
     correlation: rel(values.correlation), correlationSha256: sha256(fs.readFileSync(path.resolve(values.correlation))),
     selection: 'results/e7/validation/selection.json' };

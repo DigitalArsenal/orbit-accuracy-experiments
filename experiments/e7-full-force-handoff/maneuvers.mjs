@@ -74,7 +74,11 @@ export class ManeuverHistory {
   }
 
   // Detected maneuvers among the sets at these indices (epoch order):
-  // {events: [{timeMs, dvInTrack, dvCrossTrack, characterization}], blocks}.
+  // {events: [{timeMs, dvInTrack, dvCrossTrack, characterization}], blocks,
+  // segments}. The module needs consecutive blocks to overlap, so the blocks
+  // are cut where one ends before the next begins (an OMM gap longer than the
+  // longest block, or a set without a trajectory), and each run of at least
+  // 2 median_sets + 1 blocks is searched on its own.
   async detect(indices) {
     const blocks = [];
     for (const i of indices) {
@@ -91,23 +95,33 @@ export class ManeuverHistory {
       b.STOP_TIME = isoMs(t.startMs + (t.n - 1) * this.step * 1000);
       b.STEP_SIZE = this.step;
       b.EPHEMERIS_DATA = Array.from(t.data);
-      blocks.push(b);
+      blocks.push({ block: b, startMs: t.startMs, stopMs: t.startMs + (t.n - 1) * this.step * 1000 });
     }
-    if (blocks.length < 2 * config.maneuvers.options.median_sets + 1) return { events: [], blocks: blocks.length };
-    const m = new OEMS.OEMT();
-    m.CREATION_DATE = isoMs(this.sets[indices.at(-1)].epochMs);
-    m.EPHEMERIS_DATA_BLOCK = blocks;
-    const builder = new flatbuffers.Builder(1 << 22);
-    OEMS.OEM.finishOEMBuffer(builder, m.pack(builder));
-    const response = await this.ctx['maneuver-detection'].invoke('detect_maneuvers', [
-      { portId: 'ephemerides', payload: Buffer.from(builder.asUint8Array()), typeRef: { schemaName: 'OEM.fbs', fileIdentifier: '$OEM', rootTypeName: 'OEM', wireFormat: 'flatbuffer' } },
-      json('options', config.maneuvers.options),
-    ]);
-    const events = response.outputs.filter((f) => f.portId === 'maneuvers').map((f) => {
-      const e = MNVS.MNV.getRootAsMNV(new flatbuffers.ByteBuffer(new Uint8Array(f.payload))).unpack();
-      return { timeMs: Date.parse(e.EVENT_START_TIME.replace(/Z?$/, 'Z')), dvInTrack: e.DELTA_VEL_U * 1000, dvCrossTrack: e.DELTA_VEL_V * 1000,
-        characterization: MNVS.maneuverCharacterization[e.CHARACTERIZATION] ?? String(e.CHARACTERIZATION) };
-    });
-    return { events, blocks: blocks.length };
+    const segments = [];
+    for (const b of blocks) {
+      const last = segments.at(-1)?.at(-1);
+      if (last && last.stopMs >= b.startMs) segments.at(-1).push(b); else segments.push([b]);
+    }
+    const minimum = 2 * config.maneuvers.options.median_sets + 1;
+    const events = [];
+    let searched = 0;
+    for (const segment of segments.filter((g) => g.length >= minimum)) {
+      searched += segment.length;
+      const m = new OEMS.OEMT();
+      m.CREATION_DATE = isoMs(segment.at(-1).startMs);
+      m.EPHEMERIS_DATA_BLOCK = segment.map((x) => x.block);
+      const builder = new flatbuffers.Builder(1 << 22);
+      OEMS.OEM.finishOEMBuffer(builder, m.pack(builder));
+      const response = await this.ctx['maneuver-detection'].invoke('detect_maneuvers', [
+        { portId: 'ephemerides', payload: Buffer.from(builder.asUint8Array()), typeRef: { schemaName: 'OEM.fbs', fileIdentifier: '$OEM', rootTypeName: 'OEM', wireFormat: 'flatbuffer' } },
+        json('options', config.maneuvers.options),
+      ]);
+      for (const f of response.outputs.filter((o) => o.portId === 'maneuvers')) {
+        const e = MNVS.MNV.getRootAsMNV(new flatbuffers.ByteBuffer(new Uint8Array(f.payload))).unpack();
+        events.push({ timeMs: Date.parse(e.EVENT_START_TIME.replace(/Z?$/, 'Z')), dvInTrack: e.DELTA_VEL_U * 1000, dvCrossTrack: e.DELTA_VEL_V * 1000,
+          characterization: MNVS.maneuverCharacterization[e.CHARACTERIZATION] ?? String(e.CHARACTERIZATION) });
+      }
+    }
+    return { events, blocks: blocks.length, searched, segments: segments.length };
   }
 }

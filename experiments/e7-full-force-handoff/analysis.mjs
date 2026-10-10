@@ -6,8 +6,33 @@ import { repoRoot } from '../../harness/provenance.mjs';
 import { rng } from '../../harness/stats.mjs';
 import { config } from './common.mjs';
 
-// Every shard of one step-20 batch: {rows, manifests}.
-export function loadBatch(window, batch) {
+// Every shard of one step-20 batch: {rows, manifests, runs}. Rows of each
+// patch batch replace the variants they carry in the rows with the same
+// sample (gpId).
+export function loadBatch(window, batch, patches = []) {
+  const base = loadOne(window, batch);
+  for (const p of patches) {
+    const patch = loadOne(window, p);
+    const byId = new Map(base.rows.map((r) => [r.gpId, r]));
+    for (const r of patch.rows) {
+      const b = byId.get(r.gpId);
+      if (!b) throw new Error(`patch ${p}: sample ${r.gpId} is not in ${batch}`);
+      for (const v of new Set([...Object.keys(r.errors), ...Object.keys(r.failures)])) {
+        if (v === 'maneuvers') continue;
+        delete b.errors[v]; delete b.failures[v]; delete b.d2[v];
+        if (r.errors[v]) b.errors[v] = r.errors[v];
+        if (r.d2?.[v]) b.d2[v] = r.d2[v];
+        if (r.failures[v]) b.failures[v] = r.failures[v];
+        b.info[v] = { ...r.info[v], patchedBy: p };
+        b.seconds[v] = r.seconds[v];
+      }
+    }
+    base.manifests.push(...patch.manifests);
+    base.runs.push(...patch.runs);
+  }
+  return base;
+}
+function loadOne(window, batch) {
   const dir = path.join(repoRoot, 'runs');
   const runs = fs.readdirSync(dir).filter((n) => n.includes(`-20-run-${window}-${batch}-s`)).sort();
   if (!runs.length) throw new Error(`no step-20 runs for ${window} batch ${batch}`);

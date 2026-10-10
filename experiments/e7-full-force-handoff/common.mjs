@@ -117,12 +117,15 @@ export function schedule(window, truthByRegime, setsByObject) {
   const samples = [];
   const lo = Date.parse(`${window.from}T00:00:00Z`), hi = Date.parse(`${window.to}T00:00:00Z`);
   const tol = config.targetToleranceSeconds * 1000;
+  const stagger = (config.staggerWindows ?? []).includes(window.name);
   for (const [name, { regime, products, objects }] of Object.entries(truthByRegime)) {
     const stride = regime.strideDays[window.name];
-    for (const norad of objects) {
+    for (const [j, norad] of objects.entries()) {
       const mine = setsByObject.get(norad) ?? [];
       const used = new Set();
-      for (let t = lo; t <= hi; t += stride * DAY_MS) {
+      // Staggered windows start object j's product times j mod stride days
+      // later, so the samples spread over every day of the window.
+      for (let t = lo + (stagger ? (j % stride) * DAY_MS : 0); t <= hi; t += stride * DAY_MS) {
         let k = -1;
         for (let i = 0; i < mine.length && mine[i].epochMs <= t; ++i) if (mine[i].createdMs <= t) k = i;
         if (k < 0 || t - mine[k].epochMs > config.sampleMaxAgeDays * DAY_MS || used.has(mine[k].gpId)) continue;

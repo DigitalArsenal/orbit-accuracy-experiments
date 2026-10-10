@@ -74,7 +74,7 @@ export class Engine {
     sample.maneuvers = {
       beforeCutoff: before.events.filter((e) => e.timeMs > sample.epochMs - maxSpan && e.timeMs <= sample.cutoffMs),
       inSpan: after.events.filter((e) => e.timeMs > sample.epochMs && e.timeMs <= sample.epochMs + horizon),
-      blocks: { beforeCutoff: before.blocks, all: after.blocks },
+      blocks: { beforeCutoff: before.blocks, all: after.blocks, searchedBeforeCutoff: before.searched, searchedAll: after.searched },
     };
     return sample.maneuvers;
   }
@@ -122,8 +122,10 @@ export class Engine {
     let from = sample.epochMs - spec.spanDays * DAY_MS;
     let split = false;
     if (spec.split) {
-      const m = await this.maneuversOf(sample);
-      const inArc = m.beforeCutoff.filter((e) => e.timeMs > from);
+      // A detection the module refuses leaves the arc whole (counted).
+      let m = null;
+      try { m = await this.maneuversOf(sample); } catch (error) { info.detection = String(error.message).slice(0, 200); }
+      const inArc = (m?.beforeCutoff ?? []).filter((e) => e.timeMs > from);
       if (inArc.length) { from = Math.max(...inArc.map((e) => e.timeMs)); split = true; }
     }
     const idx = o.sets.map((s, i) => i).filter((i) => i === sample.index || (o.sets[i].createdMs <= sample.cutoffMs && o.sets[i].epochMs > from && o.sets[i].epochMs <= sample.epochMs));
@@ -143,15 +145,32 @@ export class Engine {
       info.arc.inflation = factors;
     }
     const regime = config.regimes[name];
-    const parameters = regime.arcParameters.map((p) => ({ kind: p.kind, value: p.kind === 'DRAG_AREA_OVER_MASS' ? coeffs.bstarB : p.kind === 'SRP_AREA_OVER_MASS' ? coeffs.agom : 0 }));
-    const n = 6 + parameters.length;
-    const apriori = Array(n * n).fill(0);
-    config.fit.aprioriStateSigma.forEach((s, i) => { apriori[i * n + i] = s * s; });
-    regime.arcParameters.forEach((p, i) => { apriori[(6 + i) * n + 6 + i] = p.sigma * p.sigma; });
     const fixed = { agom: coeffs.agom, b: coeffs.bstarB, ...(coeffs.boxWing ? { boxWing: coeffs.boxWing } : {}) };
-    const r = await fitArc(this.ctx, reference, sample.epochMs, used.map((u) => ({ epoch: u.epoch, state: u.state, covariance: covarianceRtn })),
-      { parameters, apriori, forces, fixed, ...env });
-    info.fit = { status: r.status, hpopCalls: r.hpopCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare, parameters: r.fit?.estimate?.slice(6) };
+    const observations = used.map((u) => ({ epoch: u.epoch, state: u.state, covariance: covarianceRtn }));
+    const fitWith = async (list) => {
+      const parameters = list.map((p) => ({ kind: p.kind, value: p.kind === 'DRAG_AREA_OVER_MASS' ? coeffs.bstarB : p.kind === 'SRP_AREA_OVER_MASS' ? coeffs.agom : 0 }));
+      const n = 6 + parameters.length;
+      const apriori = Array(n * n).fill(0);
+      config.fit.aprioriStateSigma.forEach((x, i) => { apriori[i * n + i] = x * x; });
+      list.forEach((p, i) => { apriori[(6 + i) * n + 6 + i] = p.sigma * p.sigma; });
+      return { parameters, r: await fitArc(this.ctx, reference, sample.epochMs, observations, { parameters, apriori, forces, fixed, ...env }) };
+    };
+    // HPOP refuses a negative Cd*A/m; when a B fit asks for one, the arc is
+    // fitted again with the regime's fallback (an in-track acceleration, B
+    // held at its starting value).
+    let attempt;
+    try {
+      attempt = await fitWith(regime.arcParameters);
+      const b = attempt.parameters.findIndex((p) => p.kind === 'DRAG_AREA_OVER_MASS');
+      if (b >= 0 && attempt.r.fit?.converged && attempt.r.fit.estimate[6 + b] < 0) throw new Error('invalid-forces: the fit converged to a negative Cd*A/m');
+    } catch (error) {
+      if (!/invalid-forces/.test(error.message) || !regime.arcFallbackParameters) throw error;
+      info.fallback = String(error.message).slice(0, 120);
+      attempt = await fitWith(regime.arcFallbackParameters);
+    }
+    const { parameters, r } = attempt;
+    info.fit = { status: r.status, hpopCalls: r.hpopCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare,
+      parameterKinds: parameters.map((p) => p.kind), parameters: r.fit?.estimate?.slice(6) };
     if (!r.fit?.converged) return { failure: `fit not converged (status ${r.status})`, info };
     const fitted = withParameters(fixed, parameters, r.fit.estimate.slice(6));
     const covariance = spec.covariance ? conditioned(r.fit.covariance.map((v) => v * Math.max(1, r.fit.reducedChiSquare))) : null;
