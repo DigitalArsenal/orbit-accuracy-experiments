@@ -2,7 +2,7 @@
 // mode (by altitude), how often a Dove's baseline steps and whether the steps are synchronous across the fleet (a fleet-wide attitude schedule would
 // be absorbed by the common mode), and the correlation of the Doves' residuals with each other.
 //
-//   node steps/45-dev-diagnostics.mjs [--selection FILE] [--out FILE]
+//   node steps/45-dev-diagnostics.mjs [--selection FILE] [--out FILE]      (default out: results/e13/dev/diagnostics.json)
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -67,4 +67,7 @@ out.scatterByAltitude = Array.from({ length: 5 }, (_, b) => { const ix = order.s
 out.statedVersusRealised = { statedMedianRelativeSigma: quantile(arcs.map((a) => a.sigma), 0.5), realisedRobustSigma: sol.sigma };
 
 console.log(JSON.stringify(out, null, 1));
-if (values.out) fs.writeFileSync(values.out, `${JSON.stringify(out, null, 1)}\n`);
+const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', 'dev', 'diagnostics.json');
+fs.mkdirSync(path.dirname(outFile), { recursive: true });
+fs.writeFileSync(outFile, `${JSON.stringify(out, null, 1)}\n`);
+console.log(`wrote ${outFile}`);

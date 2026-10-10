@@ -345,7 +345,7 @@ Section 10's analyses (c)–(e) (the open DCA from Starlink, held-out Starlinks,
   and the scoring alike (`test/e13-windows.test.mjs` builds repositories and checks the refusals: no selection, an uncommitted or staged one, a changed one, a changed plan, amendments
   or configuration, a configuration that is not frozen).
 
-### Amendment R2 — a prior on the common mode, and the definitions the code fixes (2026-10-10; before the selection was committed and before any test-split arc, density, orbit or score existed; dev arcs, dev densities and dev propagation only)
+### Amendment R2 — a prior on the common mode, and the definitions the code fixes (2026-10-10; before the selection was committed; at this point no test-split arc, density, orbit or score exists (the 176 arcs of Deviation D1 were deleted unopened); dev arcs, dev densities and dev propagation only)
 
 1. **The common mode gets a random-walk prior across nodes** (`smoothSigma`: the standard deviation of the step between neighbouring supported nodes; in the unit-weight normal equations a penalty
    (sigma_arc / smoothSigma)^2 on every squared difference). Without it the daily common mode follows the noise of the arcs, which is blue (the energies of two neighbouring states enter two neighbouring
@@ -368,8 +368,14 @@ Section 10's analyses (c)–(e) (the open DCA from Starlink, held-out Starlinks,
    nearest +1 d and +3 d; the error is the 3D distance. H5: held-out Doves, every third state that has a regular arc (20-28 h) before it; Cd*A/m from that arc; the horizon states are the Dove's states one
    and three states later when every arc between is regular. H5 runs the variants D0 and D13 only (D13-def is run for H4).
 6. **The selection's second stage** (tau) uses issue times 00:00 UTC every second day from 30 days after the split's start; for each, the nowcast and the forecast over the windows from 0 to 72 h later,
-   against x' less the mean of x over the windows between the nowcast's first and last supported node (the level that the nowcast's mean-zero constraint corresponds to).
-7. **Prior art for Part S** (read as titles and metadata only, text unavailable): Liu et al. 2026, *Adv. Space Res.*, doi:10.1016/j.asr.2025.12.078 (energy analysis for manoeuvre detection and orbit
+   against x' less the mean of x over the windows between the nowcast's first and last supported node (the level that the nowcast's mean-zero constraint corresponds to). It chooses by the smallest pooled
+   **root-mean-square** of the residuals, not their standard deviation as section 4.3 says: a propagation sees the level, which the standard deviation hides. Dev arcs to 2025-11-10 (120 windows): the
+   three candidates (12 h, 48 h, held) have root-mean-squares 0.159, 0.136 and 0.089 against 0.161 without a correction, and standard deviations 0.077, 0.077 and 0.084 against 0.078: the density of the
+   next three days is about 0.14 below the previous month's mean, and the latest node holds that level.
+7. **Ties in the solver choice.** Candidates differ in section 6's standard deviation by less than their noise (dev to 2025-11-10: about the best twelve of the 46 lie within 4 %), so a candidate within 2 % of
+   the smallest sd is tied with it, and ties go in this order: 24 h nodes, the weaker smoothing (larger smoothSigma, none first), random-walk baselines, the smaller q, the smaller lag (`tieBand` in
+   `amendments.json`).
+8. **Prior art for Part S** (read as titles and metadata only, text unavailable): Liu et al. 2026, *Adv. Space Res.*, doi:10.1016/j.asr.2025.12.078 (energy analysis for manoeuvre detection and orbit
    prediction of Starlink ephemerides); Liu et al. 2026, *Adv. Space Res.*, doi:10.1016/j.asr.2026.03.062 (retrieval of manoeuvre information from SpaceX-released ephemerides); Ai-rong et al. 2025,
    *Chinese Astron. Astrophys.*, doi:10.1016/j.chinastron.2025.03.005 (research on the ephemerides SpaceX publishes); Chen et al. 2026, *J. Aerospace Eng.*, doi:10.1061/jaeeez.aseng-6846 (a neural
    network to upgrade the accuracy of Starlink ephemerides); Lin and Chen 2024, SSRN 4707240 (a bidirectional LSTM to improve Starlink orbit prediction). The novelty of Amendment S1's measurements

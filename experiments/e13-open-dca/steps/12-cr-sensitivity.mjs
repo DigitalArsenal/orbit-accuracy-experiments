@@ -37,7 +37,7 @@ const abs = (k) => out.map((o) => Math.abs(o[k]));
 const summary = { arcs: out.length, medianAbsLnChangeLow: quantile(abs('lnLow'), 0.5), maxAbsLnChangeLow: Math.max(...abs('lnLow')), medianAbsLnChangeHigh: quantile(abs('lnHigh'), 0.5), maxAbsLnChangeHigh: Math.max(...abs('lnHigh')),
   meanLnChangeHigh: out.reduce((a, o) => a + o.lnHigh, 0) / out.length, maxAbsReproduction: Math.max(...abs('fromRecord')) };
 log(`Cr*A/m x0.5: median |change in ln B| ${(100 * summary.medianAbsLnChangeLow).toFixed(2)} %, max ${(100 * summary.maxAbsLnChangeLow).toFixed(2)} %; x1.5: median ${(100 * summary.medianAbsLnChangeHigh).toFixed(2)} %, max ${(100 * summary.maxAbsLnChangeHigh).toFixed(2)} %; reproduction of the stored B: max ${(100 * summary.maxAbsReproduction).toFixed(2)} %`);
-const file = values.out ?? path.join(run.dir, 'cr-sensitivity.json');
+const file = values.out ?? path.join(repoRoot, 'results', 'e13', 'dev', 'cr-sensitivity.json');
 fs.mkdirSync(path.dirname(file), { recursive: true });
 fs.writeFileSync(file, `${JSON.stringify({ summary, arcs: out }, null, 1)}\n`);
 run.finish(summary);

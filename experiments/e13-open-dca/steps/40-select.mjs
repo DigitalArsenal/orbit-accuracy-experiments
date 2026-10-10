@@ -1,10 +1,11 @@
 // E13 step 40: the solver configuration and the forecast time constant, chosen on the development split only (PLAN.md section 4.3, Amendment R1).
 //   1  solver: the candidate (24 h or 12 h nodes x baselines of 3 block lengths or 4 random-walk step sizes) with the smallest pooled standard
 //      deviation of x' - s-bar over the dev split's 12 h windows of Swarm A, B, C and GRACE-FO 1 (hindcast: the whole dev split's calibration arcs);
-//   2  tau: with that solver, the candidate in {12 h, 48 h, held} with the smallest pooled standard deviation of the dev density residuals of the
-//      nowcast + forecast, over the windows from the issue time to 72 h later, for issue times 00:00 UTC every second day once 30 days of arcs
-//      exist (the density level of each issue is the mean of x over the nowcast's own span).
-// Ties go to 24 h nodes, the random walk, the smaller q (or the longer block), the shorter tau. Writes results/e13/selection.json.
+//   2  tau: with that solver, the candidate in {12 h, 48 h, held} with the smallest pooled root-mean-square of the dev density residuals of the
+//      nowcast + forecast (the level included: a propagation sees it), over the windows from the issue time to 72 h later, for issue times 00:00 UTC
+//      every second day once 30 days of arcs exist (the density level of each issue is the mean of x over the nowcast's own span).
+// A candidate within `tieBand` (2 %) of the smallest sd is tied with it, and ties go to 24 h nodes, then the weaker smoothing, then the random walk over blocks, then
+// the smaller q (or the longer block); tau is chosen by the smallest pooled root-mean-square (Amendment R2). Writes results/e13/selection.json.
 //
 //   node steps/40-select.mjs [--arcs FILE] [--out FILE] [--through YYYY-MM-DD]     (--through and a non-default --out are for development runs)
 import fs from 'node:fs';
@@ -63,8 +64,13 @@ for (const c of candidates) {
   }
 }
 const valid = hindcast.filter((h) => !h.error && Number.isFinite(h.sdResidual));
-const chosen = valid.reduce((best, h) => (h.sdResidual < best.sdResidual - 1e-12 ? h : best));
-log(`chosen solver: ${chosen.label}, lag ${chosen.lagHours} h`);
+const smallest = Math.min(...valid.map((h) => h.sdResidual));
+const tieBand = S.tieBand ?? 0.02;
+const tied = valid.filter((h) => h.sdResidual <= smallest * (1 + tieBand));
+const preference = (h) => [-h.nodeHours, -(h.smoothSigma ?? Infinity), h.baseline.kind === 'randomWalk' ? 0 : 1, h.baseline.kind === 'randomWalk' ? h.baseline.stepSigma : -h.baseline.days, h.lagHours];
+const before = (a, b) => { const pa = preference(a), pb = preference(b); for (let i = 0; i < pa.length; ++i) { if (pa[i] !== pb[i]) return pa[i] < pb[i]; } return false; };
+const chosen = tied.reduce((best, h) => (before(h, best) ? h : best));
+log(`smallest sd ${smallest.toFixed(4)} (${valid.find((h) => h.sdResidual === smallest).label}); ${tied.length} candidates within ${100 * tieBand} %; chosen solver: ${chosen.label}, lag ${chosen.lagHours} h`);
 
 // 2. tau
 const nowOptions = { latencyHours: S.nowcast.latencyHours, historyDays: S.nowcast.historyDays, nodeHours: chosen.nodeHours, baseline: chosen.baseline, smoothSigma: chosen.smoothSigma, lagHours: chosen.lagHours, ...solverOptions };
@@ -91,18 +97,18 @@ for (const t0 of issues) {
 }
 const tauTable = taus.map((tau) => {
   const r = tauRows[String(tau)];
-  return { tauHours: tau, windows: r.length, sdResidual: sd(r.map((x) => x.res)), rmsResidual: Math.sqrt(r.reduce((a, x) => a + x.res * x.res, 0) / r.length), sdNoCorrection: sd(r.map((x) => x.none)) };
+  return { tauHours: tau, windows: r.length, sdResidual: sd(r.map((x) => x.res)), rmsResidual: Math.sqrt(r.reduce((a, x) => a + x.res * x.res, 0) / r.length), sdNoCorrection: sd(r.map((x) => x.none)), rmsNoCorrection: Math.sqrt(r.reduce((a, x) => a + x.none * x.none, 0) / r.length) };
 });
-tauTable.forEach((t) => log(`tau ${t.tauHours ?? 'held'}: ${t.windows} windows, sd(residual) ${t.sdResidual.toFixed(4)} (no correction ${t.sdNoCorrection.toFixed(4)})`));
+tauTable.forEach((t) => log(`tau ${t.tauHours ?? 'held'}: ${t.windows} windows, rms(residual) ${t.rmsResidual.toFixed(4)}, sd ${t.sdResidual.toFixed(4)} (no correction: rms ${t.rmsNoCorrection.toFixed(4)}, sd ${t.sdNoCorrection.toFixed(4)})`));
 const order = (tau) => (tau === null ? Infinity : tau);
-const tauValid = tauTable.filter((t) => Number.isFinite(t.sdResidual));
-const tauChosen = tauValid.length ? tauValid.reduce((best, t) => (t.sdResidual < best.sdResidual - 1e-12 || (Math.abs(t.sdResidual - best.sdResidual) <= 1e-12 && order(t.tauHours) < order(best.tauHours)) ? t : best)) : { tauHours: undefined };
+const tauValid = tauTable.filter((t) => Number.isFinite(t.rmsResidual));
+const tauChosen = tauValid.length ? tauValid.reduce((best, t) => (t.rmsResidual < best.rmsResidual - 1e-12 || (Math.abs(t.rmsResidual - best.rmsResidual) <= 1e-12 && order(t.tauHours) < order(best.tauHours)) ? t : best)) : { tauHours: undefined };
 log(`chosen tau: ${tauChosen.tauHours === undefined ? '(no issue day yet: development run)' : tauChosen.tauHours ?? 'held'}`);
 
 const out = {
   experiment: config.experiment, run: run.id, decided: new Date().toISOString(), through: new Date(through - DAY).toISOString().slice(0, 10), arcsFile: path.basename(arcsFile), arcs: arcs.length,
-  rule: 'PLAN.md 4.3 and Amendment R1: the solver candidate with the smallest pooled standard deviation of x\' - s-bar over the dev windows; tau with the smallest pooled standard deviation of the nowcast+forecast residuals over 0-72 h',
-  solverCandidates: hindcast, solver: { nodeHours: chosen.nodeHours, baseline: chosen.baseline, smoothSigma: chosen.smoothSigma, label: chosen.label }, lagHours: chosen.lagHours,
+  rule: 'PLAN.md 4.3 and Amendments R1, R2: among the solver candidates within 2 % of the smallest pooled standard deviation of x\' - s-bar over the dev windows, the first in the order 24 h nodes, weaker smoothing, random walk, smaller q; tau with the smallest pooled root-mean-square of the nowcast+forecast residuals over 0-72 h',
+  tieBand, tiedCandidates: tied.map((h) => h.label), solverCandidates: hindcast, solver: { nodeHours: chosen.nodeHours, baseline: chosen.baseline, smoothSigma: chosen.smoothSigma, label: chosen.label }, lagHours: chosen.lagHours,
   tauCandidates: tauTable, tauHours: tauChosen.tauHours, issues: issues.length,
 };
 const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', 'selection.json');
