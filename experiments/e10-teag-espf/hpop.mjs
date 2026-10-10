@@ -107,12 +107,16 @@ export async function environment({ parser, kernelPath, eopPath, setPaths, kpPat
   const gfz = readGfzKp(kpPath);
   const pad = 10 * DAY_MS;  // drivers' lags and the 81-day window are read inside the module
   const encodeRows = (arm, name, rows) => encode(arm, table(name, { ROWS: rows }), 1 << 20);
+  // Drag drivers past the published rows (SET's files end before Part C's
+  // last GPS arcs) leave that frame absent; propagate() refuses a drag model
+  // without its frame, and a model without drag never needs it.
+  const optional = (build) => { try { return build(); } catch (error) { return { missing: String(error.message ?? error) }; } };
   return {
     kernel: kernelFrame(kernelBytes),
     eop: (() => { const f = eopFrame(eop.records, mjd(fromMs) - 2, mjd(toMs) + 2); return { portId: f.portId, typeRef: f.typeRef, payload: f.payload }; })(),
     eopRecords: eop.records,
-    jb2008: { portId: 'jb2008_indices', typeRef: PRW_TYPE, payload: encodeRows('JB2008_INDICES', 'PRWJB2008IndicesTable', jb2008Rows(set, fromMs - pad, toMs + DAY_MS).map((r) => table('PRWJB2008Indices', r))) },
-    spaceWeather: { portId: 'space_weather', typeRef: PRW_TYPE, payload: encodeRows('SPACE_WEATHER', 'PRWSpaceWeatherTable', spwRows(gfz, fromMs - pad, toMs + DAY_MS).map((r) => table('SPW', r))) },
+    jb2008: optional(() => ({ portId: 'jb2008_indices', typeRef: PRW_TYPE, payload: encodeRows('JB2008_INDICES', 'PRWJB2008IndicesTable', jb2008Rows(set, fromMs - pad, toMs + DAY_MS).map((r) => table('PRWJB2008Indices', r))) })),
+    spaceWeather: optional(() => ({ portId: 'space_weather', typeRef: PRW_TYPE, payload: encodeRows('SPACE_WEATHER', 'PRWSpaceWeatherTable', spwRows(gfz, fromMs - pad, toMs + DAY_MS).map((r) => table('SPW', r))) })),
     sha256: { kernel: sha256(kernelBytes), eop: eop.sha256, ...set.sha256, kp: gfz.sha256 },
   };
 }
@@ -164,7 +168,11 @@ export async function propagate(hpop, env, model, { epochIso, state, sampleIsos,
     return out;
   }
   const inputs = [execution({ epochIso, state, sampleIsos, forces: model.forces, integrator: model.integrator, stm }), env.kernel, env.eop];
-  if (model.forces.drag) inputs.push(model.forces.atmosphere === 'JB2008' ? env.jb2008 : env.spaceWeather);
+  if (model.forces.drag) {
+    const drivers = model.forces.atmosphere === 'JB2008' ? env.jb2008 : env.spaceWeather;
+    if (drivers.missing) throw new Error(`drag drivers unavailable: ${drivers.missing}`);
+    inputs.push(drivers);
+  }
   const response = await hpop.invoke('invoke', inputs);
   const frame = response.outputs.find((o) => o.portId === 'response');
   const root = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(frame.payload))).unpack();
