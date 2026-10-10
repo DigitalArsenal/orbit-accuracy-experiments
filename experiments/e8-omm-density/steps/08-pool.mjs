@@ -53,7 +53,8 @@ for (const [k, span] of spans.entries()) {
   const counts = { objects: cache.objects.size, held: 0, type: 0, age: 0, sets: 0, gap: 0, perigee: 0, eccentricity: 0 };
   const candidates = [];
   for (const o of cache.objects.values()) {
-    if (exclude.has(o.norad) || Object.hasOwn(config.propagation.targets, String(o.norad))) { ++counts.held; continue; }
+    // Held out: the window's list (PLAN.md section 3; 2026: every target).
+    if (exclude.has(o.norad)) { ++counts.held; continue; }
     const t = tierOf(o.norad);
     const sc = sats.map.get(o.norad);
     if (t.tier !== 'A' && !p.objectTypes.includes(sc?.type ?? o.type)) { ++counts.type; continue; }
@@ -64,7 +65,7 @@ for (const [k, span] of spans.entries()) {
     const last30 = sets.filter((r) => r[0] >= recent).map((r) => r[0]);
     const gaps = [...last30.slice(1).map((x, i) => x - last30[i]), S - (last30.at(-1) ?? recent), (last30[0] ?? S) - recent];
     if (Math.max(...gaps) > p.maximumRecentGapDays * DAY_MS) { ++counts.gap; continue; }
-    candidates.push({ norad: o.norad, name: o.name ?? sc?.name ?? null, type: sc?.type ?? o.type, launch, sets, ...t });
+    candidates.push({ norad: o.norad, name: o.name || sc?.name || null, type: sc?.type ?? o.type, launch, sets, ...t });
   }
   // Perigee heights of the latest sets, from the module (one set each: no integration).
   const perigee = new Map();
