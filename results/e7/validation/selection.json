@@ -1,0 +1,299 @@
+{
+ "batch": "v3",
+ "patches": [
+  "v3fix"
+ ],
+ "runs": [
+  "e7-full-force-handoff-20-run-validation-v3-s0of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s10of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s11of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s12of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s13of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s14of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s15of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s16of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s17of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s18of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s19of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s1of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s20of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s21of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s22of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s23of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s2of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s3of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s4of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s5of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s6of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s7of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s8of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3-s9of24-20261009T232550Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s0of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s1of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s2of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s3of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s4of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s5of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s6of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s7of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s8of10-20261010T021241Z",
+  "e7-full-force-handoff-20-run-validation-v3fix-s9of10-20261010T021241Z"
+ ],
+ "horizonHours": 72,
+ "bRule": {
+  "LEO-POD": "nominal",
+  "SLR-LEO": "nominal"
+ },
+ "spanDays": {
+  "GPS": 14,
+  "LEO-POD": 2,
+  "SLR-LEO": 7,
+  "SLR-MEO": 28
+ },
+ "debiasWindowDays": {
+  "GPS": 30,
+  "LEO-POD": 15,
+  "SLR-LEO": 60,
+  "SLR-MEO": 60
+ },
+ "correlationForm": {
+  "GPS": "exponential-nugget",
+  "LEO-POD": "exponential-nugget",
+  "SLR-LEO": "exponential-nugget",
+  "SLR-MEO": "exponential-nugget"
+ },
+ "detail": {
+  "GPS": {
+   "samples": 223,
+   "span": {
+    "coverage": {
+     "2": 0.7847533632286996,
+     "4": 0.968609865470852,
+     "7": 1,
+     "14": 1,
+     "28": 1
+    },
+    "eligible": [
+     4,
+     7,
+     14,
+     28
+    ],
+    "paired": 216,
+    "medianM": {
+     "4": 2290.6001992975857,
+     "7": 1801.2704901722493,
+     "14": 1430.8788268885746,
+     "28": 1512.8009051895726
+    },
+    "chosen": 14
+   },
+   "debias": {
+    "coverage": {
+     "15": 1,
+     "30": 1,
+     "60": 1
+    },
+    "eligible": [
+     15,
+     30,
+     60
+    ],
+    "paired": 223,
+    "medianM": {
+     "15": 709.6394876776764,
+     "30": 690.0957982210936,
+     "60": 701.4941056490644
+    },
+    "chosen": 30
+   },
+   "correlation": {
+    "sse": {
+     "exponential": 1334.1603559622836,
+     "exponential-nugget": 1081.7833049348405
+    },
+    "chosen": "exponential-nugget"
+   }
+  },
+  "LEO-POD": {
+   "samples": 77,
+   "bRule": {
+    "coverage": {
+     "bstar": 1,
+     "nominal": 1
+    },
+    "eligible": [
+     "bstar",
+     "nominal"
+    ],
+    "paired": 77,
+    "medianM": {
+     "bstar": 26551.26463587061,
+     "nominal": 23979.56685450235
+    },
+    "chosen": "nominal"
+   },
+   "span": {
+    "coverage": {
+     "2": 1,
+     "4": 1,
+     "7": 1
+    },
+    "eligible": [
+     2,
+     4,
+     7
+    ],
+    "paired": 77,
+    "medianM": {
+     "2": 3236.5073697025796,
+     "4": 3394.747524444521,
+     "7": 3600.663974177239
+    },
+    "chosen": 2
+   },
+   "debias": {
+    "coverage": {
+     "15": 1,
+     "30": 1,
+     "60": 1
+    },
+    "eligible": [
+     15,
+     30,
+     60
+    ],
+    "paired": 77,
+    "medianM": {
+     "15": 2178.3919375397786,
+     "30": 2202.6046207035806,
+     "60": 2220.588937596402
+    },
+    "chosen": 15
+   },
+   "correlation": {
+    "sse": {
+     "exponential": 2341.0887226036757,
+     "exponential-nugget": 2166.43230385025
+    },
+    "chosen": "exponential-nugget"
+   }
+  },
+  "SLR-LEO": {
+   "samples": 78,
+   "bRule": {
+    "coverage": {
+     "bstar": 1,
+     "nominal": 1
+    },
+    "eligible": [
+     "bstar",
+     "nominal"
+    ],
+    "paired": 78,
+    "medianM": {
+     "bstar": 18141.27858031642,
+     "nominal": 18090.19000188583
+    },
+    "chosen": "nominal"
+   },
+   "span": {
+    "coverage": {
+     "2": 1,
+     "4": 1,
+     "7": 1
+    },
+    "eligible": [
+     2,
+     4,
+     7
+    ],
+    "paired": 78,
+    "medianM": {
+     "2": 663.6994814619786,
+     "4": 432.2280761200224,
+     "7": 413.55883066368494
+    },
+    "chosen": 7
+   },
+   "debias": {
+    "coverage": {
+     "15": 1,
+     "30": 1,
+     "60": 1
+    },
+    "eligible": [
+     15,
+     30,
+     60
+    ],
+    "paired": 78,
+    "medianM": {
+     "15": 512.5229335260168,
+     "30": 515.2399286799412,
+     "60": 502.9857457570994
+    },
+    "chosen": 60
+   },
+   "correlation": {
+    "sse": {
+     "exponential": 5529.4937891626805,
+     "exponential-nugget": 972.0132078353006
+    },
+    "chosen": "exponential-nugget"
+   }
+  },
+  "SLR-MEO": {
+   "samples": 50,
+   "span": {
+    "coverage": {
+     "2": 0.88,
+     "4": 1,
+     "7": 1,
+     "14": 1,
+     "28": 1
+    },
+    "eligible": [
+     4,
+     7,
+     14,
+     28
+    ],
+    "paired": 50,
+    "medianM": {
+     "4": 447.39752098954506,
+     "7": 536.4719882965794,
+     "14": 497.1986842298072,
+     "28": 291.3736258298922
+    },
+    "chosen": 28
+   },
+   "debias": {
+    "coverage": {
+     "15": 1,
+     "30": 1,
+     "60": 1
+    },
+    "eligible": [
+     15,
+     30,
+     60
+    ],
+    "paired": 50,
+    "medianM": {
+     "15": 371.4945308122477,
+     "30": 302.15825486541365,
+     "60": 288.3980790904113
+    },
+    "chosen": 60
+   },
+   "correlation": {
+    "sse": {
+     "exponential": 453.2318657303605,
+     "exponential-nugget": 259.552699307743
+    },
+    "chosen": "exponential-nugget"
+   }
+  }
+ }
+}
