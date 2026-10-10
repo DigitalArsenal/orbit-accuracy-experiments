@@ -1,10 +1,14 @@
 # E2b — Correlated OMM errors: cross-covariance, covariance products, covariance intersection, and the literature baselines
 
-Plan. Status: **draft**; frozen by the commit that sets `"frozen": true` in
-[`config.json`](config.json), after train and validation and before any read
-of the test window; the code refuses the test window until then (E2's guard,
-`common.mjs`). This draft is committed before any window is run, so its
-hypotheses, products and decision rules precede every outcome.
+Plan. Status: **frozen** by the commit that sets `"frozen": true` in
+[`config.json`](config.json) (2026-10-09), after train and validation and
+before any read of the test window. Pinned in `config.json`: the train
+products (`fitted`: T0, S(g), the correlation model R, C2a/C2b/C5, E3's
+selection ranks; SHA-256 checked by the scoring step) and the validation
+choice (`chosen`: GPS T0, LEO-POD T0, SLR-LEO T0, SLR-MEO T0). The code
+refuses the test window unless both files are committed unchanged. Changes
+made to the draft before the freeze are listed at the end, before any
+amendment.
 
 Lane: claude-e2b. Modules: `analysis/gp-error-model` at
 space-data-network-modules `d3cc1211` (branch

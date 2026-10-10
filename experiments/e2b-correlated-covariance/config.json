@@ -1,6 +1,6 @@
 {
   "experiment": "e2b-correlated-covariance",
-  "frozen": false,
+  "frozen": true,
   "plan": "PLAN.md",
   "inputs": {
     "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
@@ -345,6 +345,51 @@
     "confidence": 0.95,
     "energySamples": 200
   },
-  "fitted": {},
-  "chosen": {}
+  "fitted": {
+    "products": {
+      "path": "results/e2b/train/products.json",
+      "sha256": "0cd4446ba8501ba43e35efe6b51b32239567c9a0f09b46d327f7ed0c0848937b"
+    },
+    "correlationModel": {
+      "path": "results/e2b/train/correlation-model.json",
+      "sha256": "550892a0086f32a6595576122ac3549f9b4b8c825b0a75000da6231e2daa51ab"
+    },
+    "fusionSelection": {
+      "GPS": {
+        "0": "latest",
+        "1": "latest",
+        "3": "second",
+        "7": "latest"
+      },
+      "LEO-POD": {
+        "0": "latest",
+        "1": "latest",
+        "3": "latest",
+        "7": "latest"
+      },
+      "SLR-LEO": {
+        "0": "third",
+        "1": "third",
+        "3": "latest",
+        "7": "latest"
+      },
+      "SLR-MEO": {
+        "0": "second",
+        "1": "second",
+        "3": "third",
+        "7": "latest"
+      }
+    }
+  },
+  "chosen": {
+    "byRegime": {
+      "GPS": "T0",
+      "LEO-POD": "T0",
+      "SLR-LEO": "T0",
+      "SLR-MEO": "T0"
+    },
+    "on": "validation",
+    "rule": "per regime, lowest mean 1-day energy score among T0, K1, K1o; overlapping 95 % intervals tie and go to the simpler (T0, K1, K1o)",
+    "report": "results/e2b/validation/README.md"
+  }
 }

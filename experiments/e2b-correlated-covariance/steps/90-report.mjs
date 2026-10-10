@@ -112,6 +112,7 @@ const index = ['# E2b results', '', 'Plan: [experiments/e2b-correlated-covarianc
   '| Window | Report | Metrics | Manifest |', '| --- | --- | --- | --- |'];
 for (const w of ['test', 'validation', 'train']) if (read(w, 'metrics.json')) index.push(`| ${w} | [README](${w}/README.md) | [metrics.json](${w}/metrics.json) | [manifest.json](${w}/manifest.json) |`);
 if (read('dev', 'checks.json')) index.push('', 'Harness checks (A0, dev window): [dev/checks.json](dev/checks.json).');
-index.push('', 'Reusable train products: [train/correlation-model.json](train/correlation-model.json) (P(a), C₁₂(g, τ), correlation matrices; schema inside) and [train/products.json](train/products.json).', '');
+index.push('', 'Reusable train products: [train/correlation-model.json](train/correlation-model.json) (P(a), C₁₂(g, τ), correlation matrices; schema inside) and [train/products.json](train/products.json).',
+  '', 'Every step\'s run manifest (command, commits, module WASM SHA-256, and the SHA-256 of every input file; no element sets) is in [manifests/](manifests/).', '');
 fs.writeFileSync(path.join(dir, 'README.md'), `${index.join('\n')}\n`);
 console.log('reports written');
