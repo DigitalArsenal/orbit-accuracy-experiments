@@ -1,0 +1,212 @@
+{
+ "generated": "2026-10-09T23:38:00.181Z",
+ "satnogs": {
+  "25544": {
+   "observations": 3619,
+   "days": [
+    "2026-08-31",
+    "2026-10-05",
+    25
+   ],
+   "stations": 316,
+   "byStatus": {
+    "failed": 465,
+    "bad": 487,
+    "good": 1776,
+    "unknown": 891
+   },
+   "byWaterfall": {
+    "unknown": 2121,
+    "without-signal": 490,
+    "with-signal": 1008
+   },
+   "byMode": {
+    "FM 437800000": 1237,
+    "SSTV 437800000": 36,
+    "AFSK 145825000": 109,
+    "FSK 437800000": 152,
+    "AFSK 437825000": 170,
+    "FM 145800000": 101,
+    "PSK 468100000": 17,
+    "SSTV 145800000": 125,
+    "FM 435400000": 1,
+    "FM 121750000": 38,
+    "SSTV 437550000": 1629,
+    "BPSK 400500000": 4
+   },
+   "byWindow": {
+    "test": 3274,
+    "dev": 345
+   },
+   "waterfallsCaptured": 1292
+  },
+  "48274": {
+   "observations": 197,
+   "days": [
+    "2026-09-20",
+    "2026-10-09",
+    19
+   ],
+   "stations": 21,
+   "byStatus": {
+    "bad": 130,
+    "unknown": 17,
+    "failed": 50
+   },
+   "byWaterfall": {
+    "without-signal": 130,
+    "unknown": 67
+   },
+   "byMode": {
+    "FMN 436510000": 106,
+    "SSTV 436510000": 12,
+    "SSTV 145985000": 28,
+    "AFSK 437550000": 10,
+    "FMN 145985000": 16,
+    "AFSK 145825000": 25
+   },
+   "byWindow": {
+    "test": 197
+   },
+   "waterfallsCaptured": 0
+  }
+ },
+ "seesat": {
+  "lines": 8007,
+  "objects": 1065,
+  "stations": {
+   "1775": 17,
+   "2000": 3,
+   "3983": 36,
+   "4800": 8,
+   "9926": 3620,
+   "9999": 9,
+   "0794": 4241,
+   "0792": 73
+  },
+  "stationsWithStatedCoordinates": [
+   "0794",
+   "2675",
+   "9926"
+  ],
+  "epochCodes": {
+   "5": 8007
+  },
+  "angleFormats": {
+   "1": 126,
+   "2": 7881
+  },
+  "sigmaDeg": {
+   "0": 73,
+   "1": 53,
+   "0.30000000000000004": 7880,
+   "null": 1
+  },
+  "operatorObjectsSince20260909": 0,
+  "byFamily": {
+   "not in the sampled catalogue days": 5645,
+   "CZ": 273,
+   "SL": 257,
+   "COSMOS": 243,
+   "QIANFAN": 216,
+   "STARLINK": 199,
+   "HULIANWANG DIGUI": 116,
+   "YAOGAN": 112,
+   "IRIDIUM": 73,
+   "HJS": 38,
+   "OBJECT A": 35,
+   "METEOR": 34,
+   "ATLAS": 32,
+   "GAOFEN": 31,
+   "BREEZE-KM R/B": 25,
+   "SJ": 21,
+   "LANDSAT": 20,
+   "ALOS": 19,
+   "CAPELLA": 18,
+   "OBJECT B": 17
+  }
+ },
+ "truth": {
+  "iss": [
+   {
+    "from": "2026-09-07T12:00:00.000Z",
+    "to": "2026-09-09T12:21:51.469Z",
+    "captured": "2026-09-09T12:21:51.469Z",
+    "window": "dev"
+   },
+   {
+    "from": "2026-09-09T12:00:00.000Z",
+    "to": "2026-09-09T22:12:54.833Z",
+    "captured": "2026-09-09T22:12:54.833Z",
+    "window": "test"
+   },
+   {
+    "from": "2026-09-11T12:00:00.000Z",
+    "to": "2026-09-11T14:56:57.692Z",
+    "captured": "2026-09-11T14:56:57.692Z",
+    "window": "test"
+   },
+   {
+    "from": "2026-09-14T12:00:00.000Z",
+    "to": "2026-09-14T15:58:57.822Z",
+    "captured": "2026-09-14T15:58:57.822Z",
+    "window": "test"
+   },
+   {
+    "from": "2026-10-07T12:00:00.000Z",
+    "to": "2026-10-09T17:55:31.000Z",
+    "captured": "2026-10-09T17:55:31Z",
+    "window": "test"
+   }
+  ],
+  "referenceObjects": 142,
+  "opticalTruthByObject": {
+   "CryoSat-2": {
+    "lines": 9,
+    "stations": 1,
+    "days": 4,
+    "first": "2026-07-30",
+    "last": "2026-08-14",
+    "truth": "IDS DORIS SSALTO POE (hac/ids-doris), ILRS CPF"
+   },
+   "Swarm B": {
+    "lines": 1,
+    "stations": 1,
+    "days": 1,
+    "first": "2026-08-01",
+    "last": "2026-08-01",
+    "truth": "ESA Swarm RD/COM SP3"
+   },
+   "Sentinel-3B": {
+    "lines": 1,
+    "stations": 1,
+    "days": 1,
+    "first": "2026-08-04",
+    "last": "2026-08-04",
+    "truth": "IDS DORIS SSALTO POE"
+   },
+   "SWOT": {
+    "lines": 6,
+    "stations": 1,
+    "days": 2,
+    "first": "2026-08-13",
+    "last": "2026-08-22",
+    "truth": "IDS DORIS SSALTO POE"
+   },
+   "Sentinel-3A": {
+    "lines": 1,
+    "stations": 1,
+    "days": 1,
+    "first": "2026-08-14",
+    "last": "2026-08-14",
+    "truth": "IDS DORIS SSALTO POE"
+   }
+  },
+  "h4": {
+   "lines": 18,
+   "threshold": 20,
+   "verdict": "not supported"
+  },
+  "observedOpticallyReferenceProducts": 1
+ }
+}
