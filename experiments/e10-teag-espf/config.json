@@ -1,0 +1,498 @@
+{
+  "experiment": "e10-teag-espf",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "modules": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+    "eopC04": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now",
+    "kernel2026": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp",
+    "kernel2018": "data/e10/de440-2018.bsp",
+    "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+    "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+    "kp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "e2Statistic": "results/e2/train/c1.json",
+    "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z"
+  },
+  "stations": {
+    "arecibo": {
+      "id": "arecibo",
+      "latDeg": 18.3442,
+      "lonDeg": -66.7528,
+      "heightM": 497
+    },
+    "kwajalein": {
+      "id": "kwajalein",
+      "latDeg": 9.3954,
+      "lonDeg": 167.4791,
+      "heightM": 10
+    },
+    "diego-garcia": {
+      "id": "diego-garcia",
+      "latDeg": -7.4119,
+      "lonDeg": 72.4522,
+      "heightM": 10
+    }
+  },
+  "forceModels": {
+    "leo-jb2008": {
+      "forces": {
+        "degree": 70,
+        "order": 70,
+        "thirdBodies": [
+          10,
+          301,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "srp": true,
+        "drag": true,
+        "atmosphere": "JB2008",
+        "solidTides": true,
+        "relativity": "IERS_2010",
+        "b": 0.022,
+        "agom": 0.013
+      },
+      "integrator": {
+        "tolerance": 1e-12,
+        "maxStep": 120
+      }
+    },
+    "paper-leo": {
+      "forces": {
+        "degree": 70,
+        "order": 70,
+        "thirdBodies": [
+          10,
+          301,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "srp": true,
+        "drag": true,
+        "atmosphere": "JB2008",
+        "solidTides": true,
+        "relativity": "IERS_2010",
+        "b": 0.02,
+        "agom": 0.013
+      },
+      "integrator": {
+        "tolerance": 1e-12,
+        "maxStep": 120
+      }
+    },
+    "paper-geo": {
+      "forces": {
+        "degree": 70,
+        "order": 70,
+        "thirdBodies": [
+          10,
+          301,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "srp": true,
+        "drag": true,
+        "atmosphere": "JB2008",
+        "solidTides": true,
+        "relativity": "IERS_2010",
+        "b": 0.008,
+        "agom": 0.0052
+      },
+      "integrator": {
+        "tolerance": 1e-12,
+        "maxStep": 120
+      }
+    },
+    "leo-msis": {
+      "forces": {
+        "degree": 70,
+        "order": 70,
+        "thirdBodies": [
+          10,
+          301,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "srp": true,
+        "drag": true,
+        "atmosphere": "NRLMSISE00",
+        "solidTides": true,
+        "relativity": "IERS_2010",
+        "b": 0.0176,
+        "agom": 0.013
+      },
+      "integrator": {
+        "tolerance": 1e-12,
+        "maxStep": 120
+      }
+    },
+    "gps": {
+      "forces": {
+        "degree": 12,
+        "order": 12,
+        "thirdBodies": [
+          10,
+          301,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "srp": true,
+        "drag": false,
+        "solidTides": true,
+        "relativity": "IERS_2010",
+        "agom": 0.02
+      },
+      "integrator": {
+        "tolerance": 1e-12,
+        "maxStep": 300
+      }
+    }
+  },
+  "partB": {
+    "state": [
+      6978137.0,
+      0.0,
+      0.0,
+      0.0,
+      6641.981,
+      3606.302
+    ],
+    "truthStepS": 20,
+    "minElevationDeg": 10,
+    "sensor": {
+      "intervalS": 60,
+      "noiseArcsec": 2,
+      "lightTime": true
+    },
+    "arcHours": 24,
+    "warmupHours": 2,
+    "p0Sigma": [
+      1000,
+      1000,
+      1000,
+      1,
+      1,
+      1
+    ],
+    "devSeeds": [
+      {
+        "id": "d1",
+        "epoch": "2026-07-01T00:00:00Z",
+        "seed": 101
+      },
+      {
+        "id": "d2",
+        "epoch": "2026-07-06T00:00:00Z",
+        "seed": 102
+      }
+    ],
+    "testSeeds": [
+      {
+        "id": "t1",
+        "epoch": "2026-06-02T00:00:00Z",
+        "seed": 1
+      },
+      {
+        "id": "t2",
+        "epoch": "2026-06-07T00:00:00Z",
+        "seed": 2
+      },
+      {
+        "id": "t3",
+        "epoch": "2026-06-12T00:00:00Z",
+        "seed": 3
+      },
+      {
+        "id": "t4",
+        "epoch": "2026-06-17T00:00:00Z",
+        "seed": 4
+      },
+      {
+        "id": "t5",
+        "epoch": "2026-06-22T00:00:00Z",
+        "seed": 5
+      },
+      {
+        "id": "t6",
+        "epoch": "2026-06-27T00:00:00Z",
+        "seed": 6
+      }
+    ],
+    "cases": {
+      "B1-nominal": {},
+      "B2-initial-error": {
+        "initialErrorScale": 5
+      },
+      "B3-station-bias": {
+        "raBiasArcsec": {
+          "arecibo": 10
+        }
+      },
+      "B4-manoeuvre": {
+        "eventHours": 12,
+        "alongTrackDeltaV": 0.5
+      },
+      "B5-area-change": {
+        "eventHours": 12,
+        "scale": 2
+      },
+      "B6-outliers": {
+        "probability": 0.1,
+        "outlierArcsec": 60,
+        "simulatorSeedOffset": 1000,
+        "drawSeedOffset": 2000
+      },
+      "B7-sparse": {
+        "intervalS": 600
+      },
+      "B8-dynamics-mismatch": {
+        "filterModel": "leo-msis"
+      }
+    },
+    "failureKm": 10
+  },
+  "partA": {
+    "leo": {
+      "epoch": "2018-03-23T08:55:03Z",
+      "state": [
+        6984457.0,
+        1612255.0,
+        13093.0,
+        -1677.0,
+        7261.0,
+        260.0
+      ],
+      "perturbedState": [
+        6984465.0,
+        1612222.0,
+        13091.0,
+        -1677.0,
+        7261.0,
+        230.0
+      ],
+      "days": 6,
+      "cadenceS": 60,
+      "biasArcsec": {
+        "arecibo": 10
+      }
+    },
+    "geo": {
+      "epoch": "2018-11-15T12:30:00Z",
+      "state": [
+        -24607677.0,
+        24704521.0,
+        -4186459.0,
+        -1795.0,
+        -3117.0,
+        202.0
+      ],
+      "minutes": 180,
+      "cadenceS": 15,
+      "areaChangeMeasurement": 92,
+      "areaChange": {
+        "b": 0.012,
+        "agom": 0.0078
+      }
+    },
+    "p0Sigma": [
+      1000,
+      1000,
+      1000,
+      30,
+      30,
+      30
+    ],
+    "seed": 1,
+    "cr": 1.3
+  },
+  "filters": {
+    "processNoisePsd": 1e-10,
+    "sigmaEdit": 3,
+    "ukf": {
+      "alpha": 1,
+      "beta": 2,
+      "kappa": 0
+    },
+    "espf2026": {
+      "pcrbTriggerCandidates": [
+        1,
+        0.5
+      ]
+    },
+    "espf2025": {},
+    "espf2025t": {
+      "regenerationScale": 2.449489742783178,
+      "decayRateCandidates": [
+        0.05,
+        0.005,
+        0
+      ]
+    },
+    "setMembership": {
+      "initialBoundScale": 3,
+      "processBoundScale": 3,
+      "measurementBoundScale": 3,
+      "criterion": 0
+    },
+    "batch": {
+      "maximumIterations": 20,
+      "correctionTolerance": 0.001,
+      "sigmaEditThreshold": 3
+    },
+    "note": "Unlisted options are the module defaults (analysis/estimation schemas/Estimation.fbs, docs/espf-spec.md section 8)."
+  },
+  "partC": {
+    "regime": "GPS",
+    "productPrefix": "ESA0OPSFIN",
+    "system": "G",
+    "forceModel": "gps",
+    "devWindow": {
+      "from": "2024-10-01",
+      "to": "2024-10-31",
+      "startDays": [
+        "2024-10-01",
+        "2024-10-15"
+      ]
+    },
+    "testWindow": {
+      "from": "2026-07-01",
+      "to": "2026-09-15",
+      "startDays": [
+        "2026-07-01",
+        "2026-07-15",
+        "2026-07-29",
+        "2026-08-12",
+        "2026-08-26",
+        "2026-09-09"
+      ]
+    },
+    "arcDays": 3,
+    "minimumUpdates": 2,
+    "lagDays": 3,
+    "failureKm": 50,
+    "statistic": {
+      "file": "results/e2/train/c1.json",
+      "path": "regimes.GPS.epoch.strata[0]",
+      "use": "second moment about zero (covariance + mean mean^T), km -> m"
+    },
+    "devKernel": "data/e10/de440-2024.bsp",
+    "correlationSensitivity": {
+      "file": "results/e2b/train/correlation-model.json",
+      "regime": "GPS",
+      "key": "consecutive|0",
+      "use": "update sigmas x sqrt((1 + rho) / (1 - rho)) per RTN axis (amendment 1)"
+    }
+  },
+  "enclosure": {
+    "case": "B1-nominal",
+    "seeds": [
+      "t1",
+      "t2",
+      "t3"
+    ],
+    "variants": [
+      "E26",
+      "E25T",
+      "SMF"
+    ],
+    "passes": [
+      2,
+      4,
+      6
+    ],
+    "withinPassObservation": 3,
+    "passGapMinutes": 5,
+    "minimumPassObservations": 3,
+    "interior": 1000,
+    "boundary": 1000,
+    "seed": 20261009,
+    "tolerance": 1e-09
+  },
+  "partD": {
+    "encounters": 10000,
+    "seed": 20261009,
+    "hardBodyRadiusM": 10,
+    "relativeSpeedMps": 10000,
+    "sigmaRangesM": {
+      "R": [
+        10,
+        500
+      ],
+      "T": [
+        50,
+        5000
+      ],
+      "N": [
+        10,
+        500
+      ]
+    },
+    "collisionFraction": 0.5,
+    "annulusM": [
+      10,
+      2000
+    ],
+    "understatedFraction": 0.2,
+    "understatedVarianceScale": 9,
+    "pcThresholds": [
+      1e-05,
+      0.0001,
+      0.001
+    ],
+    "possibilityThresholds": [
+      0.01,
+      0.05,
+      0.5
+    ]
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95,
+    "holmAlpha": 0.05
+  },
+  "selection": {
+    "pcrbTrigger": "the candidate with the fewest failures over the Part B dev runs (d1, d2, all cases), then the smallest median per-run RMS 3D position error; a candidate within 10 % of the best median is preferred in the listed order",
+    "decayRate": "the same rule for E25T",
+    "detectionThresholds": "the 99th percentile of each statistic over B1 dev epochs after the first 2 hours"
+  },
+  "exploratory": {
+    "note": "amendment 1, item 6: dev seeds only, descriptive",
+    "case": "B1-nominal",
+    "seeds": [
+      "d1",
+      "d2"
+    ],
+    "variants": [
+      "E26:k=0.5;smax=2",
+      "E26:k=0.5;smax=4"
+    ]
+  }
+}

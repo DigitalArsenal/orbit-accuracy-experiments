@@ -1,0 +1,101 @@
+{
+ "run": "e2b-correlated-covariance-01-checks-dev-20261010T000315Z",
+ "experiment": "e2b-correlated-covariance",
+ "step": "01-checks-dev",
+ "command": [
+  "node",
+  "experiments/e2b-correlated-covariance/steps/01-checks.mjs",
+  "--window",
+  "dev",
+  "--errors",
+  "e2b-correlated-covariance-10-errors-dev-GPS-20261010T000308Z"
+ ],
+ "args": {
+  "window": "dev",
+  "errors": "e2b-correlated-covariance-10-errors-dev-GPS-20261010T000308Z"
+ },
+ "started": "2026-10-10T00:03:15.833Z",
+ "finished": "2026-10-10T00:03:18.771Z",
+ "config": {
+  "path": "experiments/e2b-correlated-covariance/config.json",
+  "sha256": "72157b31d98c9d3a732ca483f130f672e1c39028751ada3bae261eac06fc92f1",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "6b1c31e42282826eb0020933f64fe6cc899815e2",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "d3cc121196c66073c487f3ded6a382fc2d013190",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.1.0",
+   "wasmSha256": "0f823d02e6236917814b681d5e46a3241b3234fe9386b9eb0a7af8f3d5d07e19",
+   "manifestSha256": "a1aec8a4d068bb8a69c6964f91b4b7724fe97d4a311d659636b3a57c19a56f86"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   83.19189453125,
+   80.1240234375,
+   79.19287109375
+  ]
+ },
+ "inputs": {
+  "run:errors": {
+   "e2b-correlated-covariance-10-errors-dev-GPS-20261010T000308Z": "39cc23a4d96bb066f6bfed91030e0ad572af75b93706d76e61fd5810b0c6adb9"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T00:03:15.833Z",
+   "args": {
+    "window": "dev",
+    "errors": "e2b-correlated-covariance-10-errors-dev-GPS-20261010T000308Z"
+   }
+  }
+ ],
+ "checks": {
+  "window": {
+   "name": "dev",
+   "from": "2024-10-01",
+   "to": "2024-11-15"
+  },
+  "a0_1": {
+   "what": "common_epoch error = accumulate reference-mode error at the same set and precise epoch",
+   "compared": 60,
+   "worstRelativeDifference": 3.760849448830893e-10,
+   "pass": true
+  },
+  "a0_2": {
+   "what": "every target accounted for (rows = targets; missing counted)",
+   "rows": 6608,
+   "counts": {
+    "GPS": {
+     "objects": 35,
+     "objectsWithAnchors": 31,
+     "anchors": 1652,
+     "targets": 6608,
+     "missingTargets": 13,
+     "truthDefects": 0,
+     "missingSets": 0,
+     "errors": 61089,
+     "calls": 217
+    }
+   },
+   "pass": true
+  }
+ }
+}

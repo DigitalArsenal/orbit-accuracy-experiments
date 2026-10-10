@@ -1,0 +1,117 @@
+{
+ "run": "e6-15-calibrate-20261009T222010Z",
+ "experiment": "e6",
+ "step": "15-calibrate",
+ "command": [
+  "node",
+  "experiments/e6-public-observations/steps/15-calibrate.mjs"
+ ],
+ "args": {},
+ "started": "2026-10-09T22:20:10.845Z",
+ "finished": "2026-10-09T22:20:11.773Z",
+ "config": {
+  "path": "experiments/e6-public-observations/config.json",
+  "sha256": "60e375f0f1471b86175e57a792ccf0c2bc5753ca8657969a3cd600721d27327d",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "b2bac1499630adf4286bbeb37832a3c71a433022",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "095c20a622da225a06707f43f8840984fb5ea708",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/association",
+   "pluginId": "com.digitalarsenal.analysis.association",
+   "version": "0.1.0",
+   "wasmSha256": "690f9e631cac9959f196d2104c08b6d17e605800f096779e50f59ebf379d4e5b",
+   "manifestSha256": "efbbe4b2048e80075879af47b053afdcbc12dcf54bddd7f38565ef89f27add25"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.241.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   52.23095703125,
+   50.51220703125,
+   44.09033203125
+  ]
+ },
+ "inputs": {
+  "truth": {
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-09T12:21:51.469Z": "b3d9930306b645ba4d9a0db7f0201f3ecd5c436f6c4b4dea966878e93ec1cc96",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-09T22:12:54.833Z": "181d5b11705e2a8145bad8c5e35135adcccfe649f2fb96a82196d97dd4196da2",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-11T14:56:57.692Z": "1963ad38489fe0541ca5ba4de3a1e6b5c2523d4265389614562a220196797005",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-14T15:58:57.822Z": "22894ad2b47e218179c3dbfd41e83cfcec40b059c15b93bcc258144580cdfced",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-10-09T17:55:31Z": "40cfb923fc4e88d65325f56cae87195aaf2ed63d03ce138323b15583a40056c2"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T22:20:10.845Z",
+   "args": {}
+  }
+ ],
+ "result": {
+  "window": "dev",
+  "segments": 24,
+  "passes": 23,
+  "measurements": 619,
+  "stations": 10,
+  "lagSeconds": 0.8218363028829004,
+  "lagSigmaSeconds": 0.04462153184052488,
+  "sigmaScaleCommonLag": 4.246199349092704,
+  "whitenedMadCommonLag": 1.9027920479056784,
+  "sigmaScaleSegmentLag": 1.9929301256739596,
+  "whitenedMadSegmentLag": 1.5806451975572586,
+  "biasHz": {
+   "median": -348.86520638659147,
+   "q05": -600.5493146041321,
+   "q95": 1388.7656910190449,
+   "absMedian": 587.7092735356102
+  },
+  "segmentDriftMps2": {
+   "median": 0.10147840342875913,
+   "q05": -0.6497751437429743,
+   "q25": 0.05861054784528119,
+   "q75": 0.49425303134100973,
+   "q95": 1.1933603210090644,
+   "robustSigma": 0.3807439767335443
+  },
+  "segmentLagSeconds": {
+   "median": 0.4363931940781317,
+   "q05": -0.4738969533474121,
+   "q25": -0.2730839278067082,
+   "q75": 1.280699467338132,
+   "q95": 53.88063429371891,
+   "robustSigma": 1.0733372595220698
+  },
+  "byLayout": {
+   "utcAxis": 18,
+   "secondsAxis": 6
+  }
+ }
+}

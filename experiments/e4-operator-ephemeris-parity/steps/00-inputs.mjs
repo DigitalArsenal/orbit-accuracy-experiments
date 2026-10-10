@@ -17,6 +17,7 @@ import { repoRoot } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { rng } from '../../../harness/stats.mjs';
 import { DAY_MS, assertFrozen, cli, config, providers } from '../common.mjs';
+import { licenseSection, mayPublish } from '../../../harness/data-licenses.mjs';
 import { readCpf, readIntelsat, readMeme, readOem, readPlanetStates, readTle, unzipMembers } from '../operators.mjs';
 
 assertFrozen();
@@ -101,6 +102,9 @@ for (const provider of providers(values.provider)) {
   console.log(`${provider}: ${files.length} files, ${(summary[provider].bytes / 1e6).toFixed(1)} MB`);
 }
 
+// Registry sources behind each provider's files (data/licenses.json).
+const REGISTRY = { 'esa-pod': ['esa-navigation-office-pod'], 'glonass-precise': ['esa-navigation-office'], cpf: ['esa-navigation-office'], 'gps-precise': ['igs'] };
+
 // ── publication ──
 if (values.publish) {
   const releaseDir = path.resolve(values['release-dir'] ?? path.join(repoRoot, 'runs', 'e4-release'));
@@ -111,10 +115,13 @@ if (values.publish) {
     '(SHA-256 of the served bytes), captured by the SDN ephemeris-provider nodes.',
     'Files here are gzip-compressed copies; larger sets are GitHub release assets',
     'listed in [MANIFEST.json](MANIFEST.json). Each provider\'s files stay under that',
-    'provider\'s terms, stated below. Element sets (Space-Track) are not published.', ''];
+    'provider\'s terms, stated below. Element sets (Space-Track) are not published.', '',
+    ...licenseSection(['spacex-starlink', 'cmsa-tiangong', 'intelsat', 'planet', 'nasa-iss-oem', 'igs', 'esa-navigation-office', 'esa-navigation-office-pod', 'ilrs', 'space-track'], 'data/e4'), ''];
   for (const provider of providers(values.provider)) {
     const record = JSON.parse(fs.readFileSync(path.join(inputs, provider, 'inputs.json'), 'utf8'));
     const terms = record.terms;
+    // The registry has the last word: ESA/ESOC files are cited, not reproduced.
+    const allowed = terms.redistribute && mayPublish(REGISTRY[provider] ?? []);
     sources.push(`## ${provider}`, '', `Terms: ${terms.text} (${terms.url})`, '');
     const bundle = [];
     const committed = [];
@@ -124,14 +131,14 @@ if (values.publish) {
       const gzName = /\.(gz|zip)$/i.test(f.file) ? f.file : `${f.file}.gz`;
       const entry = { provider, file: f.file, role: f.role, url: f.url, captured: f.captured, sha256: f.sha256, bytes: f.bytes,
         objects: f.objects, span: f.span, samples: f.samples, terms: terms.text };
-      if (terms.redistribute && gz.length <= config.publish.repositoryMaxCompressedBytes) {
+      if (allowed && gz.length <= config.publish.repositoryMaxCompressedBytes) {
         fs.mkdirSync(path.join(dataDir, provider), { recursive: true });
         fs.writeFileSync(path.join(dataDir, provider, gzName), gz);
         entry.published = { where: 'repository', path: `data/e4/${provider}/${gzName}`, compressedSha256: sha256(gz), compressedBytes: gz.length };
         committed.push(entry);
       } else {
         bundle.push(f.file);
-        entry.published = { where: terms.redistribute ? 'release-asset' : 'needs-permission', asset: `e4-${provider}.tar.gz` };
+        entry.published = { where: allowed ? 'release-asset' : 'needs-permission', asset: `e4-${provider}.tar.gz` };
       }
       manifest.files.push(entry);
     }
@@ -140,10 +147,10 @@ if (values.publish) {
       execFileSync('tar', ['-czf', asset, '-C', path.join(inputs, provider), ...bundle]);
       const bytes = fs.readFileSync(asset);
       const a = { name: path.basename(asset), bytes: bytes.length, sha256: sha256(bytes), provider, members: bundle.length, terms: terms.text, termsUrl: terms.url,
-        redistributionGranted: terms.redistribute };
-      (terms.redistribute ? manifest.assets : manifest.needsPermission).push(a);
+        redistributionGranted: allowed };
+      (allowed ? manifest.assets : manifest.needsPermission).push(a);
       sources.push(`${bundle.length} file(s) in release asset \`${a.name}\` (${(a.bytes / 1e6).toFixed(1)} MB, SHA-256 ${a.sha256})` +
-        (terms.redistribute ? '.' : ': prepared but not published, because the provider states no license that grants redistribution.'), '');
+        (allowed ? '.' : ': prepared but not published, because no license grants redistribution (data/licenses.json).'), '');
     }
     if (committed.length) {
       sources.push('| File | URL | Captured (UTC) | SHA-256 (served bytes) |', '| --- | --- | --- | --- |');

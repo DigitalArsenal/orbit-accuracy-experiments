@@ -204,7 +204,7 @@ async function setupOrekit() {
   const select = $('orekit-case');
   const byOrbit = new Map();
   for (const c of cases) {
-    select.append(new Option(`${c.orbit} ${c.forces}`, c.id));
+    select.append(new Option(`${c.orbit} ${c.forces}${c.unavailable ? ' · recorded only' : ''}`, c.id));
     const r = results.cases.find((x) => x.id === c.id);
     if (!byOrbit.has(c.orbit)) byOrbit.set(c.orbit, []);
     byOrbit.get(c.orbit).push({ label: `${c.orbit} ${c.forces}`, value: Math.max(r.worstM, 1e-5), limit: c.toleranceM, onSelect: () => { select.value = c.id; } });
@@ -220,6 +220,7 @@ async function setupOrekit() {
     event.preventDefault();
     const c = cases[Number(select.value)];
     try {
+      if (c.unavailable) { status($('orekit-status'), `${c.orbit} ${c.forces}: ${c.unavailable} Recorded: ${formatMeters(results.cases.find((r) => r.id === c.id).worstM, 3)}.`); return; }
       status($('orekit-status'), `Running ${c.orbit} ${c.forces} in this browser…`);
       const { worst, worstAt, seconds } = await runOrekitCase(await module('propagator/hpop'), c);
       const recorded = results.cases.find((r) => r.id === c.id).worstM;
@@ -296,18 +297,18 @@ function renderData() {
     ['data/orekit/', 'HPOP against Orekit', 'The reference trajectories, every case’s exact PRW request and inputs, and the recorded HPOP results.'],
     ['data/kernel/', 'Ephemeris', 'The DE440 excerpt for 2026 the propagations read for the Sun and Moon.'],
     ['data/eop/', 'Earth orientation', 'The IERS EOP 20 C04 rows over the V1 arcs.'],
-    ['data/vcm/', 'VCM', 'The sample message the round trip reads.'],
+    ['data/vcm/', 'VCM', 'The sample message the round trip reads (spacedatastandards.org survey, public sources).'],
     ['data/e1/', 'E1', 'Aggregates of E1’s checked steps; no element set and no per-sample table.'],
   ];
   const html = groups.map(([prefix, title, text]) => {
     const files = p.files.filter((f) => f.path.startsWith(prefix));
     if (!files.length) return '';
-    const sources = [...new Set(files.map((f) => f.source))], terms = [...new Set(files.map((f) => f.license))];
+    const sources = [...new Set(files.map((f) => f.source))], terms = [...new Set(files.map((f) => f.license))], credits = [...new Set(files.map((f) => f.credit).filter(Boolean))];
     const perFile = sources.length > 1;
     const table = (list) => `<div class="table-wrap"><table class="data-table compact"><thead><tr><th>File</th><th class="num">Size</th><th>SHA-256</th></tr></thead><tbody>${
       list.map((f) => `<tr><td class="file"><a href="./${esc(f.path)}" download>${esc(f.path.slice(prefix.length))}</a>${perFile ? `<span class="source">${esc(f.source)}</span>` : ''}</td><td class="num">${size(f.bytes)}</td><td class="hash" title="${f.sha256}">${f.sha256.slice(0, 12)}…</td></tr>`).join('')}</tbody></table></div>`;
     const total = files.reduce((a, f) => a + f.bytes, 0);
-    const meta = `<p class="fine">${perFile ? '' : `${esc(sources[0])}. `}Terms: ${esc(terms.join('; '))}.</p>`;
+    const meta = `<p class="fine">${perFile ? '' : `${esc(sources[0])}. `}Terms: ${esc(terms.join('; '))}.${credits.length ? ` Credit: ${esc(credits.join(' '))}` : ''}</p>`;
     // Long groups: the documents open, the bulk (arcs, requests) folded.
     let shown = files, folded = [];
     if (files.length > 8) {

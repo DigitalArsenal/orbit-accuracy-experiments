@@ -1,0 +1,79 @@
+{
+  "runs": [
+    "e10-teag-espf-10-partb-dev-20261010T010125Z"
+  ],
+  "rule": {
+    "pcrbTrigger": "the candidate with the fewest failures over the Part B dev runs (d1, d2, all cases), then the smallest median per-run RMS 3D position error; a candidate within 10 % of the best median is preferred in the listed order",
+    "decayRate": "the same rule for E25T",
+    "detectionThresholds": "the 99th percentile of each statistic over B1 dev epochs after the first 2 hours"
+  },
+  "families": {
+    "pcrbTrigger": [
+      {
+        "value": 1,
+        "variant": "E26:k=1",
+        "runs": 16,
+        "failures": 15,
+        "medianRmsM": 18364.146341214575
+      },
+      {
+        "value": 0.5,
+        "variant": "E26:k=0.5",
+        "runs": 16,
+        "failures": 7,
+        "medianRmsM": 7471.48067186718
+      }
+    ],
+    "decayRate": [
+      {
+        "value": 0.05,
+        "variant": "E25T:l=0.05",
+        "runs": 16,
+        "failures": 11,
+        "medianRmsM": 11321.804376884938
+      },
+      {
+        "value": 0.005,
+        "variant": "E25T:l=0.005",
+        "runs": 16,
+        "failures": 11,
+        "medianRmsM": 27985.927989330557
+      },
+      {
+        "value": 0,
+        "variant": "E25T:l=0",
+        "runs": 16,
+        "failures": 3,
+        "medianRmsM": 5117.181498669544
+      }
+    ]
+  },
+  "chosen": {
+    "pcrbTrigger": 0.5,
+    "pcrbTriggerVariant": "E26:k=0.5",
+    "decayRate": 0,
+    "decayRateVariant": "E25T:l=0"
+  },
+  "thresholds": {
+    "E26.qMin": {
+      "variant": "E26:k=0.5",
+      "epochs": 226,
+      "p99": 615540.3724102537
+    },
+    "E26.choquet": {
+      "variant": "E26:k=0.5",
+      "epochs": 226,
+      "p99": 1
+    },
+    "EKF.nis": {
+      "variant": "EKF",
+      "epochs": 226,
+      "p99": 680.2744298585832
+    },
+    "UKF.nis": {
+      "variant": "UKF",
+      "epochs": 226,
+      "p99": 8.911098504862636
+    }
+  }
+}

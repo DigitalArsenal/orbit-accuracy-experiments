@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+// Data licences. data/licenses.json holds one record per third-party source:
+// its terms, quoted from the provider's primary document, whether this
+// repository may reproduce its files, and the credit line. From it this file
+// renders the licence section of each data/*/SOURCES.md, the README inside
+// each release bundle, and docs/data-licenses.md:
+//
+//   node harness/data-licenses.mjs        # writes docs/data-licenses.md
+//
+// Policy (owner, 2026-10-10): "We should only reproduce data with the correct
+// license, however we need to show results on ALL data regardless of license."
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const registry = JSON.parse(fs.readFileSync(path.join(repoRoot, 'data/licenses.json'), 'utf8'));
+const sources = new Map(registry.sources.map((s) => [s.id, s]));
+const DOC = path.join(repoRoot, 'docs/data-licenses.md');
+
+export function source(id) {
+  const s = sources.get(id);
+  if (!s) throw new Error(`data/licenses.json has no source "${id}"`);
+  return s;
+}
+
+// A public product (the site) carries only sources registered as reproducible
+// ("reproduce": "yes"); the others are cited, never copied. `labelFor` is the
+// one gate: it refuses any other source and returns the file's licence and
+// credit lines from the registry, never a blanket one.
+export const isReproducible = (id) => source(id).reproduce === 'yes';
+// Publish steps ask this before they stage or commit a provider's files.
+export const mayPublish = (ids) => ids.every(isReproducible);
+// The same question by file name, for steps that stage provider files one by
+// one: the ESA/ESOC orbits, ESA's Swarm and GRACE-FO files and SET's indices
+// are cited by URL and SHA-256, never copied into a public place.
+const FILE_SOURCES = [[/^ESA0OPS(FIN|RAP|ULT)_/, 'esa-navigation-office'], [/\.cs2\.v4\.sp3|SWRAesoc/, 'esa-navigation-office-pod'],
+  [/^(SW_OPER_|GF_)/, 'esa-earth-observation'], [/^(SOLFSMY|DTCFILE)/, 'set-jb2008']];
+export const mayPublishFile = (name) => FILE_SOURCES.every(([re, id]) => !re.test(name) || isReproducible(id));
+export const CITED_ONLY = 'cited by URL and SHA-256, not reproduced (data/licenses.json)';
+export function labelFor(ids, own = null) {
+  const list = ids.map(source);
+  const refused = list.filter((s) => s.reproduce !== 'yes');
+  if (refused.length) throw new Error(`data/licenses.json: ${refused.map((s) => `${s.id} (reproduce: ${s.reproduce})`).join(', ')} may not be reproduced in a public product`);
+  const licences = [...new Set([...(own ? [own] : []), ...list.map((s) => s.licence)])];
+  return { sources: ids, license: licences.join('; '), credit: [...new Set(list.map((s) => s.credit))].join(' ') };
+}
+
+// Experiment ids as the registry's usedIn fields name them (V1, E1, E2b, …).
+const usedBy = (s, e) => !/considered, not used/.test(s.usedIn) && s.usedIn.replace(/\([^)]*\)/g, ' ').split(/[\s,;:]+/).includes(e);
+export const creditsFor = (experiment) => [...new Set(registry.sources.filter((s) => usedBy(s, experiment)).map((s) => s.credit))];
+
+const VERDICT = {
+  yes: 'Yes, with attribution',
+  'share-alike': 'Yes, with attribution, under the same licence (share-alike)',
+  'non-commercial': 'Yes, with attribution, for non-commercial use only',
+  no: 'No: cited only',
+};
+const cell = (text) => String(text ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+const anchor = (id) => `#${id}`;
+
+// The section every SOURCES.md carries. `fromDir` is the SOURCES.md directory,
+// relative to the repository root, so the link to the full terms resolves.
+export function licenseSection(ids, fromDir) {
+  const doc = path.relative(path.join(repoRoot, fromDir), DOC);
+  const lines = ['## Licences and attribution', '',
+    `Each source's terms, quoted from its primary document, are in [docs/data-licenses.md](${doc}). Files are reproduced here or as release assets only where those terms allow it; results use every source, whatever its licence.`, '',
+    '| Source | Licence or terms | Reproduced | Attribution |', '| --- | --- | --- | --- |'];
+  for (const id of ids) {
+    const s = source(id);
+    lines.push(`| [${cell(s.name)}](${doc}${anchor(id)}) | ${cell(s.licence)} | ${VERDICT[s.reproduce]} | ${cell(s.credit)} |`);
+  }
+  const notices = ids.map(source).filter((s) => s.notice);
+  if (notices.length) lines.push('', ...notices.map((s) => `**${s.name}.** ${s.notice}`));
+  return lines;
+}
+
+// The README inside a release bundle.
+export function bundleReadme(id, { asset, experiment, count, bytes, credits }) {
+  const s = source(id);
+  return [`# ${asset}`, '',
+    `${count} files (${(bytes / 1e6).toFixed(1)} MB) from ${s.provider}, byte for byte as the provider serves them, used by experiment ${experiment.toUpperCase()} of orbit-accuracy-experiments (https://github.com/DigitalArsenal/orbit-accuracy-experiments). MANIFEST.json lists each file with its SHA-256, size, source URL and retrieval time.`, '',
+    '## Licence', '', `${s.licence}.`, '', ...s.terms.map((t) => `- ${t.title}: ${t.url}`), '',
+    `> ${s.redistribution}`, '',
+    '## Attribution', '', s.credit, '',
+    ...(credits ? ['MANIFEST.json credits each file\'s creator in its `credit` field (observation, ground station, observer, URL).', ''] : []),
+    ...(/^CC /.test(s.licence) ? ['The licence\'s disclaimer of warranties applies.', ''] : []),
+    'This bundle is redistributed by DigitalArsenal under the terms above. It is not endorsed by the provider; the files are unmodified.', '',
+    '## Check', '', '```sh', 'python3 -c "import json,hashlib; m=json.load(open(\'MANIFEST.json\')); bad=[x[\'file\'] for x in m[\'members\'] if hashlib.sha256(open(x[\'file\'],\'rb\').read()).hexdigest()!=x[\'sha256\']]; print(\'bad:\', bad or \'none\')"', '```', ''].join('\n');
+}
+
+export function renderDocs() {
+  const L = ['# Data licences', '',
+    'Every third-party source the experiments read: its licence or terms, quoted from the provider\'s primary document, whether this repository may reproduce it, the attribution it asks for, and where it is used and reproduced. Generated by `node harness/data-licenses.mjs` from [data/licenses.json](../data/licenses.json); edit that file, not this one.', '',
+    `Policy (owner, 2026-10-10): "${registry.policy}"`, '',
+    '- **Reproduce** means copying a source\'s files or per-sample values into a public place: the `data/` folders, test fixtures, the site\'s downloads, GitHub release assets. Only sources marked *Yes* below are reproduced.',
+    '- **Results** (aggregates, metrics, figures, papers) use every source an experiment read, whatever its licence. A source marked *No* is cited by URL and SHA-256, with how to obtain it.',
+    `- Terms were fetched on ${registry.checked} from the URLs given (no account, no login). A provider can change its terms; the quotes are as fetched.`, '',
+    '## Summary', '', '| Source | Licence or terms | Reproduce | Attribution | Used in | Reproduced at |', '| --- | --- | --- | --- | --- | --- |'];
+  for (const s of registry.sources) {
+    L.push(`| [${cell(s.name)}](${anchor(s.id)}) | ${cell(s.licence)} | ${VERDICT[s.reproduce]} | ${cell(s.credit)} | ${cell(s.usedIn)} | ${cell(s.reproducedAt.length ? s.reproducedAt.join('; ') : 'cited only')} |`);
+  }
+  L.push('', '## Sources', '');
+  for (const s of registry.sources) {
+    L.push(`### ${s.name}`, '', `<a id="${s.id}"></a>Provider: ${s.provider}. Licence or terms: ${s.licence}.`, '');
+    for (const t of s.terms) L.push(`- [${t.title}](${t.url}) (fetched ${t.retrieved})`);
+    L.push('', `Redistribution: "${s.redistribution}"`, '', `Attribution: "${s.attributionClause}"`, '');
+    if (s.conditions) L.push(`Conditions: ${s.conditions}`, '');
+    L.push(`**Reproduce: ${VERDICT[s.reproduce]}.** ${s.reason}`, '', `Credit line: ${s.credit}`, '');
+    if (s.notice) L.push(s.notice, '');
+    L.push(`Used in: ${s.usedIn}.`, '', `Reproduced at: ${s.reproducedAt.length ? s.reproducedAt.join('; ') : 'nowhere; cited only'}.`, '');
+    if (s.obtain) L.push(`How to obtain: ${s.obtain}`, '');
+  }
+  // Credits by experiment: what results, reports and papers built on each
+  // experiment must carry (ESA, Copernicus and Space-Track require it for
+  // published analysis; the others ask for it).
+  const experiments = ['V1', 'E1', 'E2', 'E2b', 'E3', 'E4', 'E5', 'E6', 'E7', 'E10'];
+  L.push('## Credits by experiment', '', 'The credit lines that results, reports and papers built on each experiment carry, whatever is reproduced.', '');
+  for (const e of experiments) {
+    const used = registry.sources.filter((s) => usedBy(s, e));
+    if (used.length) L.push(`- **${e}**: ${used.map((s) => s.credit).join(' ')}`);
+  }
+  L.push('');
+  if (registry.bundles?.length) {
+    L.push('## Release bundles', '', 'Built by `harness/release-bundle.mjs` from the experiments\' committed manifests; each holds its files byte for byte with a MANIFEST.json (SHA-256 per file) and a README.md (licence and attribution).', '',
+      '| Tag | Asset | Files | Bytes | SHA-256 | Source |', '| --- | --- | ---: | ---: | --- | --- |');
+    for (const b of registry.bundles) L.push(`| \`${b.tag}\` | \`${b.asset}\`${b.withdrawn ? ' (withdrawn)' : ''} | ${b.members} | ${b.bytes} | \`${b.sha256}\` | [${cell(source(b.source).name)}](${anchor(b.source)})${b.withdrawn ? `; ${cell(b.withdrawn)}` : ''} |`);
+    L.push('');
+  }
+  if (registry.openItems?.length) {
+    L.push('## Open items', '', 'Reproductions made before this audit that the terms do not cover, and credits still owed. Owner decision (2026-10-10): "I do not remove them, but also don\'t include them in the public products." Nothing already published is deleted and history is not rewritten; every public product built since leaves them out.', '');
+    for (const o of registry.openItems) L.push(`- ${o}`);
+    L.push('');
+  }
+  return `${L.join('\n')}`;
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  fs.writeFileSync(DOC, renderDocs());
+  console.log(`docs/data-licenses.md: ${registry.sources.length} sources`);
+}

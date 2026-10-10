@@ -1,0 +1,78 @@
+{
+ "run": "e10-teag-espf-60-partd-20261010T085704Z",
+ "experiment": "e10-teag-espf",
+ "step": "60-partd",
+ "command": [
+  "node",
+  "experiments/e10-teag-espf/steps/60-partd.mjs"
+ ],
+ "args": {
+  "encounters": 10000
+ },
+ "started": "2026-10-10T08:57:04.300Z",
+ "finished": "2026-10-10T08:57:23.905Z",
+ "config": {
+  "path": "experiments/e10-teag-espf/config.json",
+  "sha256": "9fb797beca6c6c01e418b250e0cec1457ddabbd8d11301df617394dc01532e75",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "2df6ea64218442bc8556bf03488fa16b4a6e03de",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/conjunction-assessment",
+   "pluginId": "conjunction-assessment",
+   "version": "0.6.0",
+   "wasmSha256": "8a6d1c820fb914e6faf13962e62ea7e8dc4174c88d61d0722593b1422ce9dca1",
+   "manifestSha256": "dcb9b0ecdfa0c5a08b674aa5668907db7affb6c977721a3637b2bfc1798eef40",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  },
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.1.0",
+   "wasmSha256": "0f823d02e6236917814b681d5e46a3241b3234fe9386b9eb0a7af8f3d5d07e19",
+   "manifestSha256": "a1aec8a4d068bb8a69c6964f91b4b7724fe97d4a311d659636b3a57c19a56f86",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--teag-espf-20261009",
+   "checkoutState": {
+    "commit": "37a0801f626ccf11827ef6cda7c4d359bc867013",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   18.0986328125,
+   24.0234375,
+   31.99169921875
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-10T08:57:04.300Z",
+   "args": {
+    "encounters": 10000
+   }
+  }
+ ],
+ "encounters": 10000
+}
