@@ -82,7 +82,12 @@ export async function runSequential(ctx, variant, initial, observations, { light
     const options = T('SequentialOptions', { nonlinearPropagation: true, ukfAlpha: 1, ukfBeta: 2, ukfKappa: 0, adaptationRate: 0.05, minimumProcessScale: 0.01, maximumProcessScale: 100, maximumMeasurementScale: 100 });
     if (variant.estimator.startsWith('ESPF')) options.espf = Object.assign(new codec.api.EspfOptionsT(), variant.espf ?? {});
     if (variant.estimator === 'ELLIPSOIDAL_SET_MEMBERSHIP') options.setMembership = Object.assign(new codec.api.SetMembershipOptionsT(), variant.setMembership ?? {});
-    if (support) options.initialSupport = support;
+    // The carried support's epoch is the previous observation, the
+    // configuration epoch below. Across midnight the module returns it as
+    // (previous day, seconds past 86,400), which differs from epochOf(ms) by
+    // rounding, and the module requires an exact match: relabel it with the
+    // configuration's own epoch record (the same instant).
+    if (support) { support.epoch = T('EstimationEpoch', epochOf(previousMs)); options.initialSupport = support; }
     const config = T('EstimationConfig', {
       initialEpoch: T('EstimationEpoch', epochOf(previousMs)), initialState: state, initialCovariance: covariance,
       processNoiseSpectralDensity: [...(variant.processNoisePsd ?? [0, 0, 0]), 0, 0, 0],

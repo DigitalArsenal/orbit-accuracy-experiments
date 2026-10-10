@@ -10,7 +10,12 @@ export async function mvee(codec, est, points, n, { tolerance = 1e-7, maxIterati
   const count = points.length / n;
   if (count < n + 1) return null;
   const envelope = T('EstimationEnvelope', { teagRequest: T('TeagRequest', { dimension: n, points: [...points], mvee: true, mveeTolerance: tolerance, mveeMaxIterations: maxIterations }) });
-  const response = await est.invoke('evaluate_teag', [codec.frame('request', codec.pack(envelope))]);
+  let response;
+  try {
+    response = await est.invoke('evaluate_teag', [codec.frame('request', codec.pack(envelope))]);
+  } catch {
+    return null;  // degenerate support: the module finds no MVEE
+  }
   if (response.statusCode !== 0) return null;
   const r = codec.unpack(response.outputs.find((o) => o.portId === 'result').payload).teagResult;
   if (!r?.mveeShape?.length) return null;
