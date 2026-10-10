@@ -1,0 +1,395 @@
+{
+  "experiment": "e2b-correlated-covariance",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "inputs": {
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "modules": "../../main-packages/space-data-network-modules"
+  },
+  "modules": {
+    "analysis/gp-error-model": {
+      "commit": "d3cc1211",
+      "branch": "task/e2b-correlated-covariance-20261009",
+      "wasmSha256": "0f823d02e6236917814b681d5e46a3241b3234fe9386b9eb0a7af8f3d5d07e19"
+    }
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "duplicateEpochSeconds": 1,
+    "lagDays": 3
+  },
+  "windows": {
+    "dev": [
+      "2024-10-01",
+      "2024-11-15"
+    ],
+    "train": [
+      "2025-10-01",
+      "2026-03-31"
+    ],
+    "validation": [
+      "2026-04-01",
+      "2026-06-30"
+    ],
+    "test": [
+      "2026-07-01",
+      "2026-09-15"
+    ]
+  },
+  "regimes": {
+    "GPS": {
+      "products": [
+        "ESA0OPSFIN"
+      ],
+      "fallbackProducts": [
+        "IGS0OPSFIN"
+      ],
+      "select": "SP3 satellite G",
+      "samplingSeconds": 300,
+      "c3WindowDays": 7
+    },
+    "LEO-POD": {
+      "objects": [
+        39452,
+        39451,
+        39453,
+        39634,
+        62261,
+        66315
+      ],
+      "names": [
+        "Swarm A",
+        "Swarm B",
+        "Swarm C",
+        "Sentinel-1A",
+        "Sentinel-1C",
+        "Sentinel-1D"
+      ],
+      "products": [
+        "SW_OPER_SP3ACOM",
+        "SW_OPER_SP3BCOM",
+        "SW_OPER_SP3CCOM",
+        "S1A_OPER_AUX_POEORB",
+        "S1C_OPER_AUX_POEORB",
+        "S1D_OPER_AUX_POEORB"
+      ],
+      "samplingSeconds": 10,
+      "c3WindowDays": 3
+    },
+    "SLR-LEO": {
+      "objects": [
+        7646,
+        22824,
+        25398,
+        16908,
+        38077,
+        27944
+      ],
+      "names": [
+        "Starlette",
+        "Stella",
+        "WESTPAC",
+        "Ajisai",
+        "LARES",
+        "LARETS"
+      ],
+      "products": [
+        "nsgf.orb."
+      ],
+      "samplingSeconds": 120,
+      "c3WindowDays": 3
+    },
+    "SLR-MEO": {
+      "objects": [
+        8820,
+        22195,
+        53105,
+        19751,
+        20026
+      ],
+      "names": [
+        "LAGEOS-1",
+        "LAGEOS-2",
+        "LARES-2",
+        "ETALON-1",
+        "ETALON-2"
+      ],
+      "products": [
+        "ilrsa.orb.",
+        "nsgf.orb.lares2."
+      ],
+      "samplingSeconds": 120,
+      "c3WindowDays": 7
+    }
+  },
+  "measurement": {
+    "tausDays": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "groupDays": 7,
+    "chunkDays": 7,
+    "truthScreenKm": 10
+  },
+  "bins": {
+    "ageBinsDays": [
+      [
+        0,
+        0.125
+      ],
+      [
+        0.125,
+        0.25
+      ],
+      [
+        0.25,
+        0.5
+      ],
+      [
+        0.5,
+        0.75
+      ],
+      [
+        0.75,
+        1
+      ],
+      [
+        1,
+        1.5
+      ],
+      [
+        1.5,
+        2
+      ],
+      [
+        2,
+        2.5
+      ],
+      [
+        2.5,
+        3
+      ],
+      [
+        3,
+        3.5
+      ],
+      [
+        3.5,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        8,
+        10
+      ],
+      [
+        10,
+        14
+      ]
+    ],
+    "gapBinsDays": [
+      [
+        0,
+        0.25
+      ],
+      [
+        0.25,
+        0.5
+      ],
+      [
+        0.5,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        5,
+        7
+      ]
+    ]
+  },
+  "products": {
+    "c2": {
+      "binHalfWidthDays": 0.5
+    },
+    "k1": {
+      "trailingDays": 28,
+      "maxGapDays": 3,
+      "minimumObjectPairs": 8
+    },
+    "c1": {
+      "spanDays": 14,
+      "minimumSets": 7,
+      "earthRadiusKm": 6378.135
+    },
+    "c3": {
+      "minimumSets": 4,
+      "factors": {
+        "C3a": 0.5,
+        "C3b": 0.25
+      }
+    },
+    "t0": {
+      "minimumBinSamples": 30
+    }
+  },
+  "fusion": {
+    "candidates": 3,
+    "issueHourUtc": 0,
+    "horizonsDays": [
+      0,
+      1,
+      3,
+      7
+    ],
+    "selectionMinimumSamples": 30,
+    "ciGridStep": 0.01
+  },
+  "screening": {
+    "pairs": 500,
+    "seed": 20261009,
+    "hardBodyRadiusM": 20,
+    "pcThreshold": 0.0001,
+    "missDistancesM": [
+      0,
+      10,
+      50,
+      100,
+      500,
+      1000,
+      2000,
+      5000
+    ],
+    "directions": 4
+  },
+  "acceptance": {
+    "consistency": {
+      "meanRatio": [
+        0.8,
+        1.25
+      ],
+      "coverage95": [
+        0.93,
+        0.97
+      ],
+      "cvmCritical5": 0.461,
+      "horizonsDays": [
+        0,
+        1,
+        3
+      ]
+    },
+    "h1": {
+      "lowerAbove": 0,
+      "tauDays": 0
+    },
+    "h3": {
+      "upperBelow": 1,
+      "horizonDays": 1,
+      "against": "C5"
+    },
+    "h4": {
+      "consistent": [
+        0.8,
+        1.25
+      ],
+      "independentBelow": 0.8
+    },
+    "h6": {
+      "horizonDays": 1,
+      "naiveLowerAbove": 1.25,
+      "ciUpperBelow": 0.95
+    }
+  },
+  "choice": {
+    "candidates": [
+      "T0",
+      "K1",
+      "K1o"
+    ],
+    "horizonDays": 1,
+    "on": "validation"
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95,
+    "energySamples": 200
+  },
+  "fitted": {
+    "products": {
+      "path": "results/e2b/train/products.json",
+      "sha256": "0cd4446ba8501ba43e35efe6b51b32239567c9a0f09b46d327f7ed0c0848937b"
+    },
+    "correlationModel": {
+      "path": "results/e2b/train/correlation-model.json",
+      "sha256": "550892a0086f32a6595576122ac3549f9b4b8c825b0a75000da6231e2daa51ab"
+    },
+    "fusionSelection": {
+      "GPS": {
+        "0": "latest",
+        "1": "latest",
+        "3": "second",
+        "7": "latest"
+      },
+      "LEO-POD": {
+        "0": "latest",
+        "1": "latest",
+        "3": "latest",
+        "7": "latest"
+      },
+      "SLR-LEO": {
+        "0": "third",
+        "1": "third",
+        "3": "latest",
+        "7": "latest"
+      },
+      "SLR-MEO": {
+        "0": "second",
+        "1": "second",
+        "3": "third",
+        "7": "latest"
+      }
+    }
+  },
+  "chosen": {
+    "byRegime": {
+      "GPS": "T0",
+      "LEO-POD": "T0",
+      "SLR-LEO": "T0",
+      "SLR-MEO": "T0"
+    },
+    "on": "validation",
+    "rule": "per regime, lowest mean 1-day energy score among T0, K1, K1o; overlapping 95 % intervals tie and go to the simpler (T0, K1, K1o)",
+    "report": "results/e2b/validation/README.md"
+  }
+}
