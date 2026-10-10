@@ -450,6 +450,33 @@
       "events": "ISS: the TRAJECTORY EVENT SUMMARY rows, every event but a visiting vehicle's launch; the other files list none",
       "epochs": "MEME and OEM epochs as the file writes them, to the microsecond (BACC's 21:59:59.999999); Earth-fixed and SP3 files through step 10's conversion",
       "order": "Starlink's paired files before its second files, each in capture order"
+    },
+    "reduce": {
+      "omm": {
+        "module": "analysis/gp-error-model",
+        "version": "0.2.0",
+        "wasmSha256": "93240ca600f87f11af682e8f431aa781187180da6cac4cd55bc10ba0efdbc7ec",
+        "method": "fit_elements, E11's method (modules cc0cb5ea, task/omm-fit-20261010)",
+        "grid": [
+          6,
+          12,
+          24,
+          48,
+          0
+        ],
+        "gridRule": "hours from the first point at or after the issue time; 0: to the file's end; B* fitted",
+        "tolerance": 1e-10,
+        "maxIterations": 100
+      },
+      "frameGate": {
+        "hours": 6,
+        "maxAngleRad": 0.002,
+        "reference": "the Space-Track element set of the issue time (EPOCH and CREATION_DATE at or before it), scored by element_residuals on the file's own points; a check only"
+      },
+      "removal": "every HPOP segment converged, at least one OMM converged and the frame gate passed, for every object of the file; --delete removes the raw file from runs/cache/e4-inputs and logs it in runs/cache/e4-a6-reduced.jsonl",
+      "notReduced": {
+        "planet": "single states: no fit, nothing derived; kept and listed for the owner's decision"
+      }
     }
   }
 }

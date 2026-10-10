@@ -2,10 +2,12 @@
 // E4 step 35 (amendment A6): the ephemeris fitter (harness/ephemeris-fit.mjs)
 // on every object of every operator file. For each maneuver-free segment it
 // records the exact statistics at every point and the half-split closure.
-// The OCMs are kept local (runs/cache/e4-a6-derived, one per segment); the
-// rows go to runs/cache/e4-a6-files/<provider>/shard-<i>.jsonl (resumable),
-// and --summarize writes results/e4/a6/closure-files.json (committed:
-// statistics only, no operator state).
+// The OCMs and their statistics are kept local in E11's layout
+// (runs/cache/e4-a6-derived/<provider>/<norad>/<file>/ocm-<segment>.fbs and
+// stats.json; step 36 adds the OMMs and the gates). The rows go to
+// runs/cache/e4-a6-files/<provider>/shard-<i>.jsonl (resumable), and
+// --summarize writes results/e4/a6/closure-files.json (committed: statistics
+// only, no operator state).
 //
 // States enter as the file gives them: SpaceX MEME and CCSDS OEM on
 // EME2000 with the file's own epoch text (BACC's 21:59:59.999999 included);
@@ -21,15 +23,10 @@ import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { ephemerisFitEnv, fitEphemeris, VERSION } from '../../../harness/ephemeris-fit.mjs';
 import { assertFrozen, cli, config, configPath } from '../common.mjs';
-import { readIssEvents, readMeme, readOem, unzipMembers } from '../operators.mjs';
-import { productContext } from '../products.mjs';
-import { sp3Context } from '../sp3.mjs';
-import { OperatorFiles, catalogNames } from '../a5.mjs';
+import { derivedDir, operatorInputs } from '../a6.mjs';
 
 const { values, modules, inputs, archive } = cli({ shard: { type: 'string', default: '0/1' }, limit: { type: 'string' }, summarize: { type: 'boolean' } });
 const rowsDir = path.join(repoRoot, 'runs', 'cache', 'e4-a6-files');
-const derivedDir = path.join(repoRoot, 'runs', 'cache', 'e4-a6-derived');
-const iso = (ms) => new Date(ms).toISOString();
 const GATE_M = config.a6.gate.maxClosureM;
 
 if (values.summarize) {
@@ -69,69 +66,21 @@ const A4 = config.a4.inputs;
 const env = await ephemerisFitEnv({ modulesDir: modules, eopFinals: config.inputs.eopFinals, gfzKp: A4.gfzKp, swpcRsga: A4.swpcRsga,
   kernelPath: path.join(repoRoot, A4.kernel.path), kernelSha256: A4.kernel.sha256 });
 for (const m of env.provenance.modules) run.addModule(m);
-const record = JSON.parse(fs.readFileSync(path.join(inputs, provider, 'inputs.json'), 'utf8'));
-const readInput = (f) => {
-  const bytes = fs.readFileSync(path.join(inputs, provider, f.file));
-  if (sha256(bytes) !== f.sha256) throw new Error(`${f.file}: bytes differ from inputs.json`);
-  run.addInputs('operator', { [`${provider}/${f.file}`]: f.sha256 });
-  return bytes;
-};
-let ctx = null, sp3 = null, ops = null;
-const opsFor = async () => {
-  if (ops) return ops;
-  ctx = await productContext(modules, run);
-  ops = new OperatorFiles({ provider, inputs, readInput, ctx, sp3Ctx: async () => (sp3 ??= await sp3Context(modules, run, config.inputs.eopFinals)),
-    sinex: fs.readFileSync(config.inputs.satelliteMetadata), gpNames: ['intelsat-ecf', 'ses-i11'].includes(spec.format) ? catalogNames(provider, record.files, archive) : null });
-  return ops;
-};
-
-// Objects of one file as fitter inputs: [{object, frame, timeScale, states, events, issued}].
-async function objectsOf(f) {
-  const fmt = spec.format;
-  if (fmt === 'meme') {
-    const p = readMeme(readInput(f).toString('latin1'));
-    const norad = Number(/MEME_(\d+)_/.exec(f.file)[1]);
-    return [{ object: { norad, name: '' }, frame: 'EME2000', timeScale: 'UTC', issued: p.created, events: [],
-      states: p.epochs.map((e, k) => ({ epoch: e, position: p.states[k].slice(0, 3), velocity: p.states[k].slice(3) })) }];
-  }
-  if (fmt === 'ccsds-oem' || fmt === 'ccsds-oem-zip') {
-    const bytes = readInput(f);
-    const texts = fmt === 'ccsds-oem' ? [bytes.toString('latin1')] : unzipMembers(bytes).filter((m) => !m.name.endsWith('/')).map((m) => m.bytes.toString('latin1'));
-    return texts.map((text) => {
-      const p = readOem(text);
-      if (!['EME2000', 'J2000', 'GCRF'].includes(p.frame) || p.timeScale !== 'UTC') throw new Error(`${f.file}: ${p.frame}/${p.timeScale}`);
-      const events = provider === 'iss' ? readIssEvents(text).filter((e) => !/_Launch$/i.test(e.label)) : [];
-      return { object: { norad: spec.norad, name: p.name ?? '' }, frame: p.frame, timeScale: 'UTC', issued: p.created ?? f.captured, events,
-        states: p.epochTexts.map((e, k) => ({ epoch: e, position: p.states[k].slice(0, 3), velocity: p.states[k].slice(3) })) };
-    });
-  }
-  if (fmt === 'planet-states') return [];
-  const o = await opsFor();
-  const out = [];
-  for (const [norad, t] of await o.load(f)) {
-    const states = [];
-    for (let k = 0; k < t.epochs.length; ++k) { const s = await t.state(k); states.push({ epoch: iso(t.epochs[k]), position: s.slice(0, 3), velocity: s.slice(3) }); }
-    out.push({ object: { norad, name: '' }, frame: 'GCRF', timeScale: 'UTC', issued: iso(t.issueMs), events: [], states });
-  }
-  return out;
-}
+const ops = operatorInputs({ provider, inputs, archive, modules, run });
 
 const dir = path.join(rowsDir, provider);
 fs.mkdirSync(dir, { recursive: true });
-fs.mkdirSync(path.join(derivedDir, provider), { recursive: true });
 const outFile = path.join(dir, `shard-${shard}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l).file) : []);
 // Capture order; Starlink's paired files (role "ephemeris") before the second files.
-const files = record.files.filter((f) => f.role === 'ephemeris' || f.role === 'a5-extra')
-  .sort((a, b) => (a.role === b.role ? 0 : a.role === 'ephemeris' ? -1 : 1) || a.captured.localeCompare(b.captured) || a.file.localeCompare(b.file));
 let count = 0;
-for (const [i, f] of files.entries()) {
+for (const [i, f] of ops.files.entries()) {
   if (i % shards !== shard || done.has(f.file)) continue;
   if (values.limit && count >= Number(values.limit)) break;
   ++count;
   const started = performance.now();
   let objects;
-  try { objects = await objectsOf(f); } catch (error) {
+  try { objects = await ops.objectsOf(f); } catch (error) {
     fs.appendFileSync(outFile, `${JSON.stringify({ provider, file: f.file, sha256: f.sha256, norad: null, error: `read: ${String(error.message).slice(0, 300)}` })}\n`);
     continue;
   }
@@ -141,19 +90,24 @@ for (const [i, f] of files.entries()) {
     let row;
     try {
       const out = await fitEphemeris(env, { object: o.object, source: { provider, url: f.url ?? '', sha256: f.sha256, issued: o.issued }, frame: o.frame, timeScale: o.timeScale, states: o.states, events: o.events });
+      const dir = derivedDir(provider, o.object.norad, f.file);
+      fs.mkdirSync(dir, { recursive: true });
       const segments = out.segments.map((s) => {
-        const name = `${f.file}--${o.object.norad}--${s.index}.ocm`;
-        fs.writeFileSync(path.join(derivedDir, provider, name), s.ocm);
+        const name = `ocm-${s.index}.fbs`;
+        fs.writeFileSync(path.join(dir, name), s.ocm);
         const c = s.closure;
         return { index: s.index, reason: s.reason, regime: s.regime, perigeeAltitudeKm: s.perigeeAltitudeM / 1000,
           stats: { n: s.stats.n, span: s.stats.span, spanSeconds: s.stats.spanSeconds, rms3d: s.stats.rms3d, rmsPerCoordinate: s.stats.rmsPerCoordinate, rmsR: s.stats.rmsR, rmsT: s.stats.rmsT, rmsN: s.stats.rmsN, max3d: s.stats.max3d, maxR: s.stats.maxR, maxT: s.stats.maxT, maxN: s.stats.maxN },
           fit: { iterations: s.fit.iterations, converged: s.fit.converged, hpopCalls: s.fit.hpopCalls, fitPoints: s.fit.fitPoints, reducedChiSquare: s.fit.reducedChiSquare, parameters: s.fit.parameters },
           closure: c && !c.skipped ? { splitEpoch: c.splitEpoch, n: c.n, span: c.span, rms3d: c.rms3d, rmsPerCoordinate: c.rmsPerCoordinate, rmsR: c.rmsR, rmsT: c.rmsT, rmsN: c.rmsN, max3d: c.max3d, maxR: c.maxR, maxT: c.maxT, maxN: c.maxN,
             firstHalf: { n: c.firstHalf.n, rms3d: c.firstHalf.rms3d, max3d: c.firstHalf.max3d }, fit: { iterations: c.fit.iterations, converged: c.fit.converged, parameters: c.fit.parameters } } : c,
-          ocm: { file: path.relative(repoRoot, path.join(derivedDir, provider, name)), sha256: sha256(Buffer.from(s.ocm)) } };
+          ocm: { file: path.relative(repoRoot, path.join(dir, name)), sha256: sha256(Buffer.from(s.ocm)) } };
       });
       row = { provider, file: f.file, sha256: f.sha256, captured: f.captured, norad: o.object.norad, issued: o.issued, points: o.states.length, events: o.events,
         segments, splits: out.splits, skipped: out.skipped, seconds: (performance.now() - t0) / 1000, rssMB: process.memoryUsage().rss / 1e6 };
+      fs.writeFileSync(path.join(dir, 'stats.json'), `${JSON.stringify({ source: { provider, file: f.file, url: f.url ?? null, captured: f.captured, sha256: f.sha256, bytes: f.bytes ?? null },
+        object: o.object, issued: o.issued, frame: o.frame, timeScale: o.timeScale, points: o.states.length, span: [o.states[0].epoch, o.states.at(-1).epoch], events: o.events,
+        hpop: { fitter: VERSION, run: run.id, provenance: env.provenance, segments, splits: out.splits, skipped: out.skipped, seconds: row.seconds } }, null, 1)}\n`);
     } catch (error) {
       row = { provider, file: f.file, sha256: f.sha256, norad: o.object.norad, points: o.states.length, error: String(error.message).slice(0, 300), seconds: (performance.now() - t0) / 1000 };
     }
@@ -167,5 +121,4 @@ for (const [i, f] of files.entries()) {
 }
 run.finish({ provider, shard, shards, file: path.relative(repoRoot, outFile) });
 await env.destroy();
-if (ctx) await ctx.destroy();
-if (sp3) await sp3.destroy();
+await ops.destroy();

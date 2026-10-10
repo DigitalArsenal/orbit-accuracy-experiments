@@ -424,3 +424,18 @@ numbers.
   representation error. GNSS truth stays ESA0OPSFIN and GFZ0OPSFIN. The
   operator's own prediction enters through the OCM fitted to its full
   predicted span.
+- **Derived records only (step 36).** Each object of each file keeps:
+  - the OCMs (step 35);
+  - OMMs fitted by `analysis/gp-error-model` `fit_elements` (E11's method)
+    on E11's grid with B* fitted (6, 12, 24 and 48 h from the issue and to
+    the end), each with its exact RMS and closure;
+  - the statistics and the file's SHA-256 provenance.
+  A raw file is removed only when every object passes three gates:
+  - every HPOP segment converged;
+  - an OMM converged;
+  - the frame gate passed. The Space-Track element set of the issue time is
+    scored on the file's own points over the first 6 h, and its 3D RMS over
+    the radius must stay below 0.002 rad (a frame or time-scale error gives
+    30–40 km).
+  A file that fails stays and is listed. Planet's single states give
+  nothing to fit, so they stay for the owner's decision.
