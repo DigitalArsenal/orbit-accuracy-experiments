@@ -395,7 +395,11 @@ export class Capture {
     const inflight = new Set();
     for (const name of todo) {
       if (this.stop || this.http.disabled.has('starlink') || n >= this.a.maxPerPass) break;
-      if (this.freeGib() < this.a.diskFloorGib) { this.log(`pause: less than ${this.a.diskFloorGib} GiB free`); break; }
+      if (this.freeGib() < this.a.diskFloorGib) {
+        this.log(`pause: less than ${this.a.diskFloorGib} GiB free; the pass resumes in 5 min`);
+        this.state.next.starlink = Date.now() + 5 * 60e3;
+        break;
+      }
       while (inflight.size >= 2 * this.a.workers) await Promise.race(inflight);
       while (os.loadavg()[0] > this.a.maxLoad && !this.stop) await new Promise((r) => setTimeout(r, 30000));
       const v = this.state.names[name];
@@ -437,6 +441,7 @@ export class Capture {
       ++n;
     }
     await Promise.all(inflight);
+    if (n < todo.length && !this.stop) this.state.next.starlink = Math.min(this.state.next.starlink ?? Infinity, Date.now() + 5 * 60e3);
     this.save(true);
     const d = Object.fromEntries(Object.keys(this.counts).map((k) => [k, this.counts[k] - c0[k]]));
     this.log(`starlink pass done: ${n} versions in ${((Date.now() - t0) / 60e3).toFixed(1)} min; this pass ${JSON.stringify(d)}; load ${os.loadavg()[0].toFixed(1)}`);
