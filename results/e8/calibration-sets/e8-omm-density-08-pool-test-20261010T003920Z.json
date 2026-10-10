@@ -1,0 +1,9315 @@
+{
+ "window": "test",
+ "run": "e8-omm-density-08-pool-test-20261010T003920Z",
+ "spans": [
+  {
+   "span": {
+    "from": "2026-01-12",
+    "to": "2026-01-26"
+   },
+   "S": "2025-12-13",
+   "poolFrom": "2025-10-14",
+   "counts": {
+    "objects": 9286,
+    "held": 17,
+    "type": 1,
+    "age": 74,
+    "sets": 3015,
+    "gap": 453,
+    "perigee": 845,
+    "eccentricity": 703
+   },
+   "bins": [
+    {
+     "fromKm": 300,
+     "toKm": 350,
+     "candidates": 16,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39267,
+       "name": "DANDE",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 38,
+        "diameter": 0.46
+       },
+       "lnBPrior": {
+        "mean": -4.643750853630599,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39269,
+       "name": "POPACS 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 1.5,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -4.463742409002476,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39270,
+       "name": "POPACS 3",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 2,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -4.751424481454257,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 37363,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38770,
+       "name": "ATLAS CENTAUR R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box",
+        "mass": 45,
+        "length": 0.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.2405988576882665,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43068,
+       "name": "H-2A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone frustum",
+        "mass": 50,
+        "length": 0.5,
+        "diameter": 0.9
+       },
+       "lnBPrior": {
+        "mean": -3.521783930379743,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 55691,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26960,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 63801,
+       "name": "SZ-19 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + 2 pan",
+        "mass": 1500,
+        "length": 2.3,
+        "diameter": 2.8
+       },
+       "lnBPrior": {
+        "mean": -4.428375265165185,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43521,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 44234,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49030,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60851,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 34299,
+       "name": "COSMOS 2251 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 26441,
+       "name": "CZ-4 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 54464,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      }
+     ]
+    },
+    {
+     "fromKm": 350,
+     "toKm": 400,
+     "candidates": 44,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 12138,
+       "name": "COSMOS 1238",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 12388,
+       "name": "COSMOS 1263",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 7337,
+       "name": "COSMOS 660",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 20774,
+       "name": "COSMOS 2098",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 585,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.438424601018186,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 8744,
+       "name": "COSMOS 807",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 14483,
+       "name": "COSMOS 1508",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 23278,
+       "name": "COSMOS 2292",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 42970,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43438,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5118,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60210,
+       "name": "FIREFLY ALPHA R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 909,
+        "length": 5.8,
+        "diameter": 1.8
+       },
+       "lnBPrior": {
+        "mean": -3.7755580177846597,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28222,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58401,
+       "name": "CHOLLIMA-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 50,
+        "length": 1.8,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -3.9012735520846467,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61938,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61440,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41336,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 400,
+     "toKm": 450,
+     "candidates": 76,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 12465,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14208,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61873,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49467,
+       "name": "AVUM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 660,
+        "length": 1.7,
+        "diameter": 1.9
+       },
+       "lnBPrior": {
+        "mean": -4.328933423756166,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10114,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23608,
+       "name": "ARIANE 40+3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1820,
+        "length": 12.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -3.408932742992759,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28738,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43682,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38039,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43675,
+       "name": "H-2A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 100,
+        "length": 1,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -1.5733706511063112,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39625,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 44531,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 55846,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26103,
+       "name": "TAURUS R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 223,
+        "length": 1.6,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.118341541636962,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39211,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43264,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 450,
+     "toKm": 500,
+     "candidates": 123,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 13068,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61071,
+       "name": "QAEM 100 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 200,
+        "length": 0.5,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -6.0243901572671446,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12586,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12904,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13403,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58200,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13121,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 19046,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 59396,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28932,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60214,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36039,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 52258,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43534,
+       "name": "CZ-2C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 1,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.4043313587853024,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 53699,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29269,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 500,
+     "toKm": 550,
+     "candidates": 190,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39491,
+       "name": "COSMOS 2494 (SKRL 756)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 50,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -3.8114172229627856,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 33500,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38863,
+       "name": "CZ-2C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 1,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.4043313587853024,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13154,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26703,
+       "name": "SL-18 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 300,
+        "length": 2.5,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.058277300894312,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29110,
+       "name": "DELTA 2 DEB (DPAF)",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 186,
+        "length": 3.7,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -2.1139044311578847,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36800,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6127,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Nozzle",
+        "mass": 756,
+        "length": 4.8,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -4.039928162226115,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26474,
+       "name": "TITAN 4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4500,
+        "length": 9.9,
+        "diameter": 3.1
+       },
+       "lnBPrior": {
+        "mean": -4.295547949173282,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62086,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 50,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -3.1828085635404118,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43620,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.8
+       },
+       "lnBPrior": {
+        "mean": -3.8368743940578858,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 47304,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36597,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61572,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 52152,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60213,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone?",
+        "mass": 50,
+        "length": 0.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.345959373346092,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 550,
+     "toKm": 600,
+     "candidates": 323,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39490,
+       "name": "COSMOS 2493 (SKRL 756)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 50,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -3.8114172229627856,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 11,
+       "name": "VANGUARD 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 10,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.1419865690201565,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 45,
+       "name": "TRANSIT 2A",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 100,
+        "diameter": 0.9
+       },
+       "lnBPrior": {
+        "mean": -4.268998332209964,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 46,
+       "name": "SOLRAD 1 (GREB)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 19,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -4.805491702724533,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 29713,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58499,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 48849,
+       "name": "MINOTAUR 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 410,
+        "length": 1.3,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.881477609702455,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18959,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14148,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18215,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 17192,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15593,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18153,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15890,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16263,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1360,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.5189131801364475,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1583,
+       "name": "THOR ALTAIR R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 25,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -2.8055143323989435,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 600,
+     "toKm": 650,
+     "candidates": 492,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 41099,
+       "name": "COSMOS 2512",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 16,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -2.671982939774421,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 2826,
+       "name": "OPS 5712 (P/L 160)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -2.448839388460211,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 61570,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62237,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6180,
+       "name": "SCOUT B-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 47,
+        "length": 1,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.7732583458620144,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28897,
+       "name": "SSETI-EXPRESS DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box",
+        "mass": 1,
+        "length": 0.1,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -3.652812192786147,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49385,
+       "name": "YZ-1S DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl-cone",
+        "mass": 200,
+        "length": 2,
+        "diameter": 3
+       },
+       "lnBPrior": {
+        "mean": -2.400049224290779,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57491,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38757,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 25637,
+       "name": "DELTA 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cone",
+        "mass": 919,
+        "length": 6,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.426843473885998,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39357,
+       "name": "PAYLOAD A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box + pan?",
+        "mass": 61,
+        "length": 0.3,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -5.566461479623239,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49010,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 21398,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41791,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54641,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 22287,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 650,
+     "toKm": 700,
+     "candidates": 494,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 1738,
+       "name": "EXPLORER 30",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 57,
+        "diameter": 0.6
+       },
+       "lnBPrior": {
+        "mean": -4.517809630272752,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 44518,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1433,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 60,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.6809830697528434,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26035,
+       "name": "TAURUS DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 35,
+        "length": 0.7,
+        "diameter": 1.3
+       },
+       "lnBPrior": {
+        "mean": -2.4459863194778046,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 45722,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54030,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl+sail",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4370,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4071,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29054,
+       "name": "ASTRO F DEB (LENS COVER)",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Disk",
+        "mass": 5,
+        "length": 0.1,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -1.9788357592144756,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4579,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2422,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 136,
+        "length": 1.7,
+        "diameter": 1.7
+       },
+       "lnBPrior": {
+        "mean": -2.899040390409767,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39627,
+       "name": "CZ-2C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 1,
+        "length": 0.2,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -2.2665178316662566,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 3048,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28059,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37215,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20323,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cone",
+        "mass": 919,
+        "length": 6,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.426843473885998,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 700,
+     "toKm": 750,
+     "candidates": 611,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 5398,
+       "name": "RIGIDSPHERE 2 (LCS 4)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 38,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -3.090693274632606,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 5395,
+       "name": "OV1-20/OV1-21 AKM",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Sphere + Cone",
+        "mass": 15,
+        "length": 0.6,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -3.6528121927861474,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11112,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58074,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14453,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39094,
+       "name": "PSLV DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc Cone",
+        "mass": 100,
+        "length": 2.5,
+        "diameter": 2.5
+       },
+       "lnBPrior": {
+        "mean": -1.820230729037837,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7616,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Skirt + Nozzle",
+        "mass": 845,
+        "length": 6,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -3.9538639792452606,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14760,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 59073,
+       "name": "FREGAT R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Irr",
+        "mass": 1000,
+        "length": 1.7,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -3.957979579578948,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41858,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 21528,
+       "name": "SCOUT G-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 31,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.0206257120158893,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6061,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7434,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11574,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15596,
+       "name": "ATLAS 41E R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 75,
+        "length": 1.5,
+        "diameter": 0.7
+       },
+       "lnBPrior": {
+        "mean": -3.5120845332910293,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16864,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 750,
+     "toKm": 800,
+     "candidates": 870,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 23828,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7210,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 3522,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 154,
+        "length": 1.7,
+        "diameter": 1.6
+       },
+       "lnBPrior": {
+        "mean": -3.1037653561999585,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 8294,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 31114,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 8800,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16616,
+       "name": "ARIANE 1 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 28,
+        "length": 0.1,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -1.996854264717154,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39261,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60397,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 48158,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57831,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6276,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Truss + Sphere + Cone",
+        "mass": 115,
+        "length": 1,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -3.792574135161306,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13719,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 733,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5904,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Truss + Sphere + Cone",
+        "mass": 115,
+        "length": 1,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -3.792574135161306,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11870,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 800,
+     "toKm": 850,
+     "candidates": 728,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 35871,
+       "name": "BLITS",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 7,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -4.617893088829734,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 6660,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12457,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 9662,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41878,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 8846,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 22285,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2180,
+       "name": "SCOUT A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 22803,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7275,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5918,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7715,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 9482,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15334,
+       "name": "SL-12 R/B(2)",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2440,
+        "length": 6.3,
+        "diameter": 3.7
+       },
+       "lnBPrior": {
+        "mean": -3.8465096862905175,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28353,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5732,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 850,
+     "toKm": 900,
+     "candidates": 211,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 1271,
+       "name": "OPS 4988 (GREB 6)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 48,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.710602486934002,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 731,
+       "name": "GREB",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 29,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.206697306012585,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 730,
+       "name": "SOLRAD 7A",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 40,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.528280930140047,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 4168,
+       "name": "TEMPSAT 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 14,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -3.924745908269789,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 2872,
+       "name": "SURCAL 159",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 3,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -2.38430086732264,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 28522,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6910,
+       "name": "SCOUT A-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 37,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.1975564201749673,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6080,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13783,
+       "name": "IRAS DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Disk",
+        "mass": 44,
+        "length": 0.2,
+        "diameter": 0.6
+       },
+       "lnBPrior": {
+        "mean": -4.441269553150417,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 55837,
+       "name": "CZ-4C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl?",
+        "mass": 50,
+        "length": 2,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.0620451522986694,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10704,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Skirt + Nozzle",
+        "mass": 845,
+        "length": 6,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -3.9538639792452606,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 21689,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12551,
+       "name": "COSMOS 1249 FUEL CORE",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 53,
+        "length": 0.5,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -5.543662564658433,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 907,
+       "name": "SCOUT X-4 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2120,
+       "name": "SCOUT A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20827,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "span": {
+    "from": "2026-03-15",
+    "to": "2026-03-28"
+   },
+   "S": "2026-02-13",
+   "poolFrom": "2025-12-15",
+   "counts": {
+    "objects": 9257,
+    "held": 17,
+    "type": 1,
+    "age": 80,
+    "sets": 3053,
+    "gap": 429,
+    "perigee": 848,
+    "eccentricity": 708
+   },
+   "bins": [
+    {
+     "fromKm": 300,
+     "toKm": 350,
+     "candidates": 11,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39267,
+       "name": "DANDE",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 38,
+        "diameter": 0.46
+       },
+       "lnBPrior": {
+        "mean": -4.643750853630599,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39269,
+       "name": "POPACS 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 1.5,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -4.463742409002476,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39270,
+       "name": "POPACS 3",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 2,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -4.751424481454257,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 37363,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38770,
+       "name": "ATLAS CENTAUR R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box",
+        "mass": 45,
+        "length": 0.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.2405988576882665,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43675,
+       "name": "H-2A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 100,
+        "length": 1,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -1.5733706511063112,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 45111,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 40,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -2.9596650122262016,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60638,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 14501,
+       "name": "COSMOS 886 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 10261,
+       "name": "DELTA 1 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 61499,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      }
+     ]
+    },
+    {
+     "fromKm": 350,
+     "toKm": 400,
+     "candidates": 45,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 7337,
+       "name": "COSMOS 660",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 23278,
+       "name": "COSMOS 2292",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 20774,
+       "name": "COSMOS 2098",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 585,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.438424601018186,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 12138,
+       "name": "COSMOS 1238",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 14483,
+       "name": "COSMOS 1508",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 8744,
+       "name": "COSMOS 807",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 12388,
+       "name": "COSMOS 1263",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 42970,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60210,
+       "name": "FIREFLY ALPHA R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 909,
+        "length": 5.8,
+        "diameter": 1.8
+       },
+       "lnBPrior": {
+        "mean": -3.7755580177846597,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43438,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5118,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28222,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58401,
+       "name": "CHOLLIMA-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 50,
+        "length": 1.8,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -3.9012735520846467,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 40698,
+       "name": "AVUM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 660,
+        "length": 1.7,
+        "diameter": 1.9
+       },
+       "lnBPrior": {
+        "mean": -4.328933423756166,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61440,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28738,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 400,
+     "toKm": 450,
+     "candidates": 73,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 61873,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10114,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14208,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23608,
+       "name": "ARIANE 40+3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1820,
+        "length": 12.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -3.408932742992759,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49467,
+       "name": "AVUM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 660,
+        "length": 1.7,
+        "diameter": 1.9
+       },
+       "lnBPrior": {
+        "mean": -4.328933423756166,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12465,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 59396,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 59729,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 44531,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39211,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43264,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26103,
+       "name": "TAURUS R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 223,
+        "length": 1.6,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.118341541636962,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 55846,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39625,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 40337,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38039,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 450,
+     "toKm": 500,
+     "candidates": 107,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 19046,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13403,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12904,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58200,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12586,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13121,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38863,
+       "name": "CZ-2C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 1,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.4043313587853024,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61071,
+       "name": "QAEM 100 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 200,
+        "length": 0.5,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -6.0243901572671446,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29110,
+       "name": "DELTA 2 DEB (DPAF)",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 186,
+        "length": 3.7,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -2.1139044311578847,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13068,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36039,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54228,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 40,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -2.9596650122262016,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62078,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57959,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 52258,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 47304,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 500,
+     "toKm": 550,
+     "candidates": 196,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39491,
+       "name": "COSMOS 2494 (SKRL 756)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 50,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -3.8114172229627856,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 13154,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 33500,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36800,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26703,
+       "name": "SL-18 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 300,
+        "length": 2.5,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.058277300894312,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6127,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Nozzle",
+        "mass": 756,
+        "length": 4.8,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -4.039928162226115,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26474,
+       "name": "TITAN 4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4500,
+        "length": 9.9,
+        "diameter": 3.1
+       },
+       "lnBPrior": {
+        "mean": -4.295547949173282,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36597,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60213,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone?",
+        "mass": 50,
+        "length": 0.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.345959373346092,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 3230,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61572,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54024,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 40,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -2.9596650122262016,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62086,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 50,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -3.1828085635404118,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38341,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43462,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39771,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 550,
+     "toKm": 600,
+     "candidates": 312,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39490,
+       "name": "COSMOS 2493 (SKRL 756)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 50,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -3.8114172229627856,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 46,
+       "name": "SOLRAD 1 (GREB)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 19,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -4.805491702724533,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 11,
+       "name": "VANGUARD 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 10,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.1419865690201565,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 45,
+       "name": "TRANSIT 2A",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 100,
+        "diameter": 0.9
+       },
+       "lnBPrior": {
+        "mean": -4.268998332209964,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 58499,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29713,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 48849,
+       "name": "MINOTAUR 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 410,
+        "length": 1.3,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.881477609702455,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38347,
+       "name": "H-2A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 100,
+        "length": 1,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -1.5733706511063112,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1815,
+       "name": "SCOUT X-4 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 33398,
+       "name": "SL-24 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 2.5,
+        "diameter": 2.5
+       },
+       "lnBPrior": {
+        "mean": -1.1270835484778918,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1583,
+       "name": "THOR ALTAIR R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 25,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -2.8055143323989435,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18422,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15332,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18749,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10974,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14700,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 600,
+     "toKm": 650,
+     "candidates": 473,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 41099,
+       "name": "COSMOS 2512",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 16,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -2.671982939774421,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 2826,
+       "name": "OPS 5712 (P/L 160)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -2.448839388460211,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 61570,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62237,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62803,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 17528,
+       "name": "N-2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 950,
+        "length": 6,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.460019336124897,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49385,
+       "name": "YZ-1S DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl-cone",
+        "mass": 200,
+        "length": 2,
+        "diameter": 3
+       },
+       "lnBPrior": {
+        "mean": -2.400049224290779,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57491,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37766,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37782,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1739,
+       "name": "SCOUT X-4 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 25637,
+       "name": "DELTA 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cone",
+        "mass": 919,
+        "length": 6,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.426843473885998,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43012,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box",
+        "mass": 1,
+        "length": 0.2,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -2.2665178316662566,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2985,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 154,
+        "length": 1.7,
+        "diameter": 1.6
+       },
+       "lnBPrior": {
+        "mean": -3.1037653561999585,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23318,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23343,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 650,
+     "toKm": 700,
+     "candidates": 515,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 1738,
+       "name": "EXPLORER 30",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 57,
+        "diameter": 0.6
+       },
+       "lnBPrior": {
+        "mean": -4.517809630272752,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 45722,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 44518,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54030,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl+sail",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28480,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37215,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41791,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7228,
+       "name": "SCOUT D-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 47,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.4367861092408014,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1433,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 60,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.6809830697528434,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39203,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26035,
+       "name": "TAURUS DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 35,
+        "length": 0.7,
+        "diameter": 1.3
+       },
+       "lnBPrior": {
+        "mean": -2.4459863194778046,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4071,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20323,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cone",
+        "mass": 919,
+        "length": 6,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.426843473885998,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 40287,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 3048,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28059,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 700,
+     "toKm": 750,
+     "candidates": 612,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 5398,
+       "name": "RIGIDSPHERE 2 (LCS 4)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 38,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -3.090693274632606,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 5395,
+       "name": "OV1-20/OV1-21 AKM",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Sphere + Cone",
+        "mass": 15,
+        "length": 0.6,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -3.6528121927861474,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4332,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 154,
+        "length": 1.7,
+        "diameter": 1.6
+       },
+       "lnBPrior": {
+        "mean": -3.1037653561999585,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58074,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6061,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11112,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 27387,
+       "name": "ARIANE 5 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone + Cyl",
+        "mass": 1190,
+        "length": 3.3,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -3.5156110712726623,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15483,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12792,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15596,
+       "name": "ATLAS 41E R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 75,
+        "length": 1.5,
+        "diameter": 0.7
+       },
+       "lnBPrior": {
+        "mean": -3.5120845332910293,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 59344,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5175,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6324,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6966,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10962,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11574,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 750,
+     "toKm": 800,
+     "candidates": 851,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39261,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23828,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 48158,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13719,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16616,
+       "name": "ARIANE 1 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 28,
+        "length": 0.1,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -1.996854264717154,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28061,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12443,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16615,
+       "name": "ARIANE 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1630,
+        "length": 9,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -3.561787068444002,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5397,
+       "name": "OV1-21 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 359,
+        "length": 2.1,
+        "diameter": 0.7
+       },
+       "lnBPrior": {
+        "mean": -4.797016422776596,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16012,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7210,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11166,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12646,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 733,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 3522,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 154,
+        "length": 1.7,
+        "diameter": 1.6
+       },
+       "lnBPrior": {
+        "mean": -3.1037653561999585,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16682,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 800,
+     "toKm": 850,
+     "candidates": 730,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 35871,
+       "name": "BLITS",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 7,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -4.617893088829734,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 54236,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6257,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7364,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 9482,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5732,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11608,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 871,
+       "name": "SCOUT X-4 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 25733,
+       "name": "CZ-4B DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 1,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.4043313587853024,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6660,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 8846,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 9662,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13778,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Nozzle",
+        "mass": 845,
+        "length": 6,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -3.9538639792452606,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41878,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 17974,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23705,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 850,
+     "toKm": 900,
+     "candidates": 196,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 731,
+       "name": "GREB",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 29,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.206697306012585,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 730,
+       "name": "SOLRAD 7A",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 40,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.528280930140047,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 4168,
+       "name": "TEMPSAT 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 14,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -3.924745908269789,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 1271,
+       "name": "OPS 4988 (GREB 6)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 48,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.710602486934002,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 2872,
+       "name": "SURCAL 159",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 3,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -2.38430086732264,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 55837,
+       "name": "CZ-4C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl?",
+        "mass": 50,
+        "length": 2,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.0620451522986694,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6910,
+       "name": "SCOUT A-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 37,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.1975564201749673,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20827,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2825,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12804,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28522,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6080,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 21689,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20791,
+       "name": "CZ-4 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.2,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.2614460090574844,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2120,
+       "name": "SCOUT A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10704,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Skirt + Nozzle",
+        "mass": 845,
+        "length": 6,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -3.9538639792452606,
+        "sigma": 0.35
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "span": {
+    "from": "2026-06-26",
+    "to": "2026-07-08"
+   },
+   "S": "2026-05-27",
+   "poolFrom": "2026-03-28",
+   "counts": {
+    "objects": 9482,
+    "held": 17,
+    "type": 0,
+    "age": 87,
+    "sets": 2825,
+    "gap": 349,
+    "perigee": 906,
+    "eccentricity": 773
+   },
+   "bins": [
+    {
+     "fromKm": 300,
+     "toKm": 350,
+     "candidates": 15,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39267,
+       "name": "DANDE",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 38,
+        "diameter": 0.46
+       },
+       "lnBPrior": {
+        "mean": -4.643750853630599,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39269,
+       "name": "POPACS 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 1.5,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -4.463742409002476,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39270,
+       "name": "POPACS 3",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 2,
+        "diameter": 0.1
+       },
+       "lnBPrior": {
+        "mean": -4.751424481454257,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 54039,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20453,
+       "name": "DELTA 2 R/B(1)",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cone",
+        "mass": 919,
+        "length": 7,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.2967903456378,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 51659,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28222,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 48427,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41892,
+       "name": "PEGASUS R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 202,
+        "length": 1.4,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.1195209261350305,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 50404,
+       "name": "COSMOS 1408 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 50621,
+       "name": "COSMOS 1408 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 50058,
+       "name": "COSMOS 1408 DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 20327,
+       "name": "COSMOS 970 DEB *",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 32203,
+       "name": "FENGYUN 1C DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      },
+      {
+       "norad": 31090,
+       "name": "FENGYUN 1C DEB",
+       "type": "DEBRIS",
+       "tier": "C",
+       "gcat": {
+        "shape": "-"
+       },
+       "lnBPrior": null
+      }
+     ]
+    },
+    {
+     "fromKm": 350,
+     "toKm": 400,
+     "candidates": 42,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 20774,
+       "name": "COSMOS 2098",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 585,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.438424601018186,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 14483,
+       "name": "COSMOS 1508",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 8744,
+       "name": "COSMOS 807",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 12388,
+       "name": "COSMOS 1263",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 23278,
+       "name": "COSMOS 2292",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 7337,
+       "name": "COSMOS 660",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 12138,
+       "name": "COSMOS 1238",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 570,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -4.412449114614925,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 43438,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 42970,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60210,
+       "name": "FIREFLY ALPHA R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 909,
+        "length": 5.8,
+        "diameter": 1.8
+       },
+       "lnBPrior": {
+        "mean": -3.7755580177846597,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5118,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23608,
+       "name": "ARIANE 40+3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1820,
+        "length": 12.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -3.408932742992759,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 64093,
+       "name": "ZK-1A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 500,
+        "length": 1.5,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -4.451319889003919,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 44805,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 40698,
+       "name": "AVUM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 660,
+        "length": 1.7,
+        "diameter": 1.9
+       },
+       "lnBPrior": {
+        "mean": -4.328933423756166,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41336,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 400,
+     "toKm": 450,
+     "candidates": 75,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 14208,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10114,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12465,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49467,
+       "name": "AVUM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 660,
+        "length": 1.7,
+        "diameter": 1.9
+       },
+       "lnBPrior": {
+        "mean": -4.328933423756166,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39625,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61873,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 44531,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43682,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 63127,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13819,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57655,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 59729,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 55846,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 63359,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 50,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -3.1828085635404118,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 52913,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13771,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 450,
+     "toKm": 500,
+     "candidates": 112,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 38863,
+       "name": "CZ-2C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 1,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.4043313587853024,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12904,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13403,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58200,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61071,
+       "name": "QAEM 100 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 200,
+        "length": 0.5,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -6.0243901572671446,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29110,
+       "name": "DELTA 2 DEB (DPAF)",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 186,
+        "length": 3.7,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -2.1139044311578847,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13068,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12586,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13121,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 19046,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62078,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 53699,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36039,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28932,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 33505,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57959,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 500,
+     "toKm": 550,
+     "candidates": 199,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 39490,
+       "name": "COSMOS 2493 (SKRL 756)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 50,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -3.8114172229627856,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 39491,
+       "name": "COSMOS 2494 (SKRL 756)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 50,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -3.8114172229627856,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 26703,
+       "name": "SL-18 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 300,
+        "length": 2.5,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.058277300894312,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13154,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 33500,
+       "name": "H-2A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4000,
+        "length": 9.2,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -3.9449486155873084,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36800,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6127,
+       "name": "DELTA 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Nozzle",
+        "mass": 756,
+        "length": 4.8,
+        "diameter": 1.4
+       },
+       "lnBPrior": {
+        "mean": -4.039928162226115,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26474,
+       "name": "TITAN 4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4500,
+        "length": 9.9,
+        "diameter": 3.1
+       },
+       "lnBPrior": {
+        "mean": -4.295547949173282,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61226,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 50,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -3.1828085635404118,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43620,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.8
+       },
+       "lnBPrior": {
+        "mean": -3.8368743940578858,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 25561,
+       "name": "PEGASUS R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 202,
+        "length": 1.4,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.1195209261350305,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36597,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 60213,
+       "name": "CZ-6A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone?",
+        "mass": 50,
+        "length": 0.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.345959373346092,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62086,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 50,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -3.1828085635404118,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20666,
+       "name": "SL-6 R/B(2)",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 900,
+        "length": 3.3,
+        "diameter": 2.3
+       },
+       "lnBPrior": {
+        "mean": -3.929688659117278,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28499,
+       "name": "ARIANE 5 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone + Cyl",
+        "mass": 2850,
+        "length": 4,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.263813615475778,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 550,
+     "toKm": 600,
+     "candidates": 362,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 11,
+       "name": "VANGUARD 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 10,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.1419865690201565,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 46,
+       "name": "SOLRAD 1 (GREB)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 19,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -4.805491702724533,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 45,
+       "name": "TRANSIT 2A",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 100,
+        "diameter": 0.9
+       },
+       "lnBPrior": {
+        "mean": -4.268998332209964,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 58499,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 29713,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 48849,
+       "name": "MINOTAUR 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 410,
+        "length": 1.3,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.881477609702455,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 38347,
+       "name": "H-2A DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 100,
+        "length": 1,
+        "diameter": 4
+       },
+       "lnBPrior": {
+        "mean": -1.5733706511063112,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 63306,
+       "name": "ELECTRON KICK STAGE R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Trunc cone",
+        "mass": 50,
+        "length": 0.4,
+        "diameter": 1.2
+       },
+       "lnBPrior": {
+        "mean": -3.1828085635404118,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11672,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 17567,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1815,
+       "name": "SCOUT X-4 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 50467,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 15332,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 33398,
+       "name": "SL-24 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 2.5,
+        "diameter": 2.5
+       },
+       "lnBPrior": {
+        "mean": -1.1270835484778918,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13553,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18422,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 600,
+     "toKm": 650,
+     "candidates": 496,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 41099,
+       "name": "COSMOS 2512",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 16,
+        "diameter": 0.8
+       },
+       "lnBPrior": {
+        "mean": -2.671982939774421,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 2826,
+       "name": "OPS 5712 (P/L 160)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -2.448839388460211,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 63922,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 61570,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62237,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 62803,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 57491,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 49385,
+       "name": "YZ-1S DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl-cone",
+        "mass": 200,
+        "length": 2,
+        "diameter": 3
+       },
+       "lnBPrior": {
+        "mean": -2.400049224290779,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37766,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37782,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 17528,
+       "name": "N-2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 950,
+        "length": 6,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -3.460019336124897,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36510,
+       "name": "SL-24 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 50,
+        "length": 2.5,
+        "diameter": 2.5
+       },
+       "lnBPrior": {
+        "mean": -1.1270835484778918,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41791,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 43012,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box",
+        "mass": 1,
+        "length": 0.2,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -2.2665178316662566,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54641,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23318,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 650,
+     "toKm": 700,
+     "candidates": 563,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 1738,
+       "name": "EXPLORER 30",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 57,
+        "diameter": 0.6
+       },
+       "lnBPrior": {
+        "mean": -4.517809630272752,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 44518,
+       "name": "BREEZE-KM R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 37215,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54030,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl+sail",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 26035,
+       "name": "TAURUS DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 35,
+        "length": 0.7,
+        "diameter": 1.3
+       },
+       "lnBPrior": {
+        "mean": -2.4459863194778046,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39203,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 40287,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2422,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 136,
+        "length": 1.7,
+        "diameter": 1.7
+       },
+       "lnBPrior": {
+        "mean": -2.899040390409767,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4071,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28059,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 52896,
+       "name": "KSLV-II R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Step Cyl + cone",
+        "mass": 1250,
+        "length": 4,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -3.9607876796170545,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4370,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 22562,
+       "name": "SL-18 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 300,
+        "length": 2.5,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.058277300894312,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 32063,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 36089,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39627,
+       "name": "CZ-2C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone",
+        "mass": 1,
+        "length": 0.2,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -2.2665178316662566,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 700,
+     "toKm": 750,
+     "candidates": 674,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 5398,
+       "name": "RIGIDSPHERE 2 (LCS 4)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 38,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -3.090693274632606,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 5395,
+       "name": "OV1-20/OV1-21 AKM",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Sphere + Cone",
+        "mass": 15,
+        "length": 0.6,
+        "diameter": 0.3
+       },
+       "lnBPrior": {
+        "mean": -3.6528121927861474,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 41858,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 27387,
+       "name": "ARIANE 5 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cone + Cyl",
+        "mass": 1190,
+        "length": 3.3,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -3.5156110712726623,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 19039,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10677,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7434,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10521,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 58074,
+       "name": "CZ-2D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 4006,
+        "length": 8,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.287775247308654,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12792,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14402,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 14453,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 18586,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6324,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5707,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 11511,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 750,
+     "toKm": 800,
+     "candidates": 987,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 48158,
+       "name": "CZ-4B R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 39261,
+       "name": "CZ-4C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1000,
+        "length": 6.9,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -3.1738901180331647,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 4420,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16615,
+       "name": "ARIANE 1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1630,
+        "length": 9,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -3.561787068444002,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 31114,
+       "name": "CZ-2C R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 3800,
+        "length": 8.4,
+        "diameter": 3.3
+       },
+       "lnBPrior": {
+        "mean": -4.194368357643178,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 25160,
+       "name": "CELESTIS 02/TAURUS R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 202,
+        "length": 1.4,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.1195209261350305,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 23828,
+       "name": "PSLV R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl + Cyl",
+        "mass": 920,
+        "length": 2.7,
+        "diameter": 2.1
+       },
+       "lnBPrior": {
+        "mean": -4.21378760023761,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 733,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 3522,
+       "name": "THOR BURNER 2 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Frust",
+        "mass": 154,
+        "length": 1.7,
+        "diameter": 1.6
+       },
+       "lnBPrior": {
+        "mean": -3.1037653561999585,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16953,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 8294,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 16616,
+       "name": "ARIANE 1 DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 28,
+        "length": 0.1,
+        "diameter": 2
+       },
+       "lnBPrior": {
+        "mean": -1.996854264717154,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28061,
+       "name": "SL-19 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2370,
+        "length": 4.1,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.581841950437732,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 815,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13149,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 13719,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 800,
+     "toKm": 850,
+     "candidates": 780,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 35871,
+       "name": "BLITS",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 7,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -4.617893088829734,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 63177,
+       "name": "CZ-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 2800,
+        "length": 12.4,
+        "diameter": 3
+       },
+       "lnBPrior": {
+        "mean": -3.65998068226476,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 8846,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 5918,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6393,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7275,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 54236,
+       "name": "CZ-6A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 6000,
+        "length": 11.5,
+        "diameter": 3.4
+       },
+       "lnBPrior": {
+        "mean": -4.348629601901972,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6257,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7575,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 24298,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 7715,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28637,
+       "name": "MINOTAUR R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 410,
+        "length": 1.3,
+        "diameter": 1
+       },
+       "lnBPrior": {
+        "mean": -4.881477609702455,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6660,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 17590,
+       "name": "SL-16 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 9000,
+        "length": 11.1,
+        "diameter": 3.9
+       },
+       "lnBPrior": {
+        "mean": -4.628322284320274,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 9662,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 10515,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      }
+     ]
+    },
+    {
+     "fromKm": 850,
+     "toKm": 900,
+     "candidates": 220,
+     "rejectedForManoeuvres": 0,
+     "chosen": [
+      {
+       "norad": 731,
+       "name": "GREB",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 29,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.206697306012585,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 2872,
+       "name": "SURCAL 159",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 3,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -2.38430086732264,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 730,
+       "name": "SOLRAD 7A",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 40,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.528280930140047,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 1271,
+       "name": "OPS 4988 (GREB 6)",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 48,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -4.710602486934002,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 4168,
+       "name": "TEMPSAT 2",
+       "type": "PAYLOAD",
+       "tier": "A",
+       "gcat": {
+        "shape": "Sphere",
+        "mass": 14,
+        "diameter": 0.4
+       },
+       "lnBPrior": {
+        "mean": -3.924745908269789,
+        "sigma": 0.1
+       }
+      },
+      {
+       "norad": 55837,
+       "name": "CZ-4C DEB",
+       "type": "DEBRIS",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl?",
+        "mass": 50,
+        "length": 2,
+        "diameter": 2.9
+       },
+       "lnBPrior": {
+        "mean": -1.0620451522986694,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 12804,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 28522,
+       "name": "SL-8 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1434,
+        "length": 4.2,
+        "diameter": 2.4
+       },
+       "lnBPrior": {
+        "mean": -4.159462445141657,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 20827,
+       "name": "SL-14 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1600,
+        "length": 2.8,
+        "diameter": 2.2
+       },
+       "lnBPrior": {
+        "mean": -4.681432109634222,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2825,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1865,
+       "name": "SCOUT A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6910,
+       "name": "SCOUT A-1 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 37,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.1975564201749673,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 2120,
+       "name": "SCOUT A R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 33,
+        "length": 1.5,
+        "diameter": 0.5
+       },
+       "lnBPrior": {
+        "mean": -3.083146068997223,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 6080,
+       "name": "SL-3 R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 1440,
+        "length": 3.8,
+        "diameter": 2.6
+       },
+       "lnBPrior": {
+        "mean": -4.14075352271855,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 1245,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Cyl",
+        "mass": 600,
+        "length": 6.3,
+        "diameter": 1.5
+       },
+       "lnBPrior": {
+        "mean": -3.491544045190025,
+        "sigma": 0.35
+       }
+      },
+      {
+       "norad": 727,
+       "name": "THOR AGENA D R/B",
+       "type": "ROCKET BODY",
+       "tier": "B",
+       "gcat": {
+        "shape": "Box",
+        "mass": 5,
+        "length": 0.1,
+        "diameter": 0.2
+       },
+       "lnBPrior": {
+        "mean": -4.281420852208521,
+        "sigma": 0.35
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

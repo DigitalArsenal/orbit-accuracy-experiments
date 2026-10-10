@@ -1,0 +1,91 @@
+{
+ "run": "e8-omm-density-08-pool-historicalTest-20261010T005440Z",
+ "experiment": "e8-omm-density",
+ "step": "08-pool-historicalTest",
+ "command": [
+  "node",
+  "experiments/e8-omm-density/steps/08-pool.mjs",
+  "--window",
+  "historicalTest"
+ ],
+ "args": {
+  "window": "historicalTest"
+ },
+ "started": "2026-10-10T00:54:40.050Z",
+ "finished": "2026-10-10T00:56:34.192Z",
+ "config": {
+  "path": "experiments/e8-omm-density/config.json",
+  "sha256": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "d52630eb8971e0d02becda365bc791467fcb7e61",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "f258e625e68bc9900846931cb6846519d748848e",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/density-calibration",
+   "pluginId": "com.digitalarsenal.analysis.density-calibration",
+   "version": "0.2.0",
+   "wasmSha256": "cdc177378faaa2a69612eedfc0e3e8de116291f312eb6e5fddf81ff06351dac6",
+   "manifestSha256": "5d1b53b90da3df5db78a332298a271963d7674ae5ecc6459d12cf6e433938a79",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e8-omm-density-20261009",
+   "checkoutState": {
+    "commit": "f258e625e68bc9900846931cb6846519d748848e",
+    "dirty": false
+   }
+  },
+  {
+   "path": "analysis/maneuver-detection",
+   "pluginId": "com.digitalarsenal.analysis.maneuver-detection",
+   "version": "0.2.0",
+   "wasmSha256": "95964d982d4d62566f50be772a7576f477330c10bff799ba85959fb5d97b51a4",
+   "manifestSha256": "3821190de7a14da11a9c6e0349b71dc8dac7d0ab01b064414d9d33b38b9d2193",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e8-omm-density-20261009",
+   "checkoutState": {
+    "commit": "f258e625e68bc9900846931cb6846519d748848e",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   83.7880859375,
+   92.5986328125,
+   95.2529296875
+  ]
+ },
+ "inputs": {
+  "catalogs": {
+   "satcat": "21647e148edd6ddcf7b33b60913e10d7fd41848a5f91e84a6c3df2a30e88e575",
+   "gcat": "b79d13f99b3c166c1befae60b4da757580431a1152190b53adad90acca3ba277"
+  },
+  "elementSetCache": {
+   "historicalTest-0": "555c5092419bacec12a1f6977da334153684a05ce23d9f4dcd3718c38487bf56",
+   "historicalTest-1": "d0cb22f478e691ca24bce7df6897f243dfe8280930bc9c71cc8a25801bdd459e"
+  },
+  "elementSetFiles": {
+   "Archives2.zip": "f48e25e62d2dfdda398273a77f863b20041f85178cd0f29ebb2d8da8c1a3e6b7"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T00:54:40.050Z",
+   "args": {
+    "window": "historicalTest"
+   }
+  }
+ ]
+}

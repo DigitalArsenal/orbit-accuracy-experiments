@@ -25,7 +25,7 @@ failure). **X**: not obtainable.
 
 ## Summary
 
-80 sources in eight groups (three added and two updated for E6 on 2026-10-09: C.7, C.8, C.16, C.17, F.8). A source can carry two codes. For example,
+82 sources in eight groups (three added and two updated for E6 on 2026-10-09: C.7, C.8, C.16, C.17, F.8; two added for E8: D.14, G.6). A source can carry two codes. For example,
 Space-Track is both AR and L.
 
 | Group | Sources | DL | AR | S | L | P | R | U | X |
@@ -33,14 +33,14 @@ Space-Track is both AR and L.
 | A. Precise orbits (truth) | 18 | 7 | 4 | 5 | 6 | 0 | 0 | 1 | 2 |
 | B. Operator ephemerides and broadcast orbits | 10 | 3 | 0 | 3 | 2 | 0 | 1 | 2 | 1 |
 | C. Catalogs and observations | 17 | 3 | 1 | 3 | 8 | 5 | 0 | 0 | 1 |
-| D. Density and its calibration | 13 | 4 | 1 | 4 | 2 | 0 | 2 | 1 | 0 |
+| D. Density and its calibration | 14 | 5 | 1 | 4 | 2 | 0 | 2 | 1 | 0 |
 | E. Space weather indices and forecasts | 7 | 4 | 0 | 2 | 0 | 0 | 0 | 1 | 0 |
 | F. EOP, gravity, tides, ephemerides | 8 | 5 | 1 | 0 | 2 | 0 | 0 | 0 | 0 |
-| G. Physical properties | 5 | 1 | 1 | 1 | 2 | 0 | 0 | 1 | 0 |
+| G. Physical properties | 6 | 2 | 1 | 1 | 2 | 0 | 0 | 1 | 0 |
 | H. The HAC and HASDM themselves | 2 | 0 | 0 | 0 | 2 | 1 | 0 | 0 | 0 |
-| **All** | **80** | **27** | **8** | **18** | **24** | **6** | **3** | **6** | **4** |
+| **All** | **82** | **29** | **8** | **18** | **24** | **6** | **3** | **6** | **4** |
 
-Counted once, by the most open route: 33 are on hand (27 downloaded here,
+Counted once, by the most open route: 35 are on hand (29 downloaded here,
 6 already archived), 14 more are anonymous and scriptable, 19 need an account,
 4 are commercial only, 3 have terms that rule out product use, 5 were
 unreachable from this host today, and 2 cannot be obtained.
@@ -162,13 +162,13 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | A.1 | IGS final / rapid / ultra-rapid (ESA, CODE, JPL and other ACs; MGEX) | GNSS precise orbits and clocks | GPS, GLONASS, Galileo, BeiDou, QZSS; 1994–; final ≈ 2 weeks, rapid ≈ 1 day, ultra-rapid real time + 48 h prediction | SP3. ESA navigation office HTTP, anonymous (listing verified); CDDIS (Earthdata Login); IGN, BKG and CODE did not answer | [IGS Terms of Use 2020][igs-tou]: "made openly available for use without restriction"; users "agree to appropriately cite and attribute" | Yes, with attribution ([terms](data-licenses.md#igs)); ESA/ESOC files also carry the [© ESA/ESOC mark](data-licenses.md#esa-navigation-office) | MEO truth (E1, E3) | AR (`reference-states/`: ESA0OPSFIN, IGS0OPSFIN, IGS0OPSULT), S |
 | A.2 | ILRS analysis-center orbits (EDC, CDDIS) | SLR-derived precise orbits | LAGEOS-1/2, Etalon-1/2, LARES, LARES-2, Starlette, Stella, Larets, Ajisai, WESTPAC; weekly | SP3. [EDC](https://edc.dgfi.tum.de/pub/slr/products/orbits/) anonymous HTTPS/FTP | No license text on the [ILRS ToR][ilrs-tor] or the [EDC terms][edc-terms]; public archive; cite ILRS | Yes, with attribution ([terms](data-licenses.md#ilrs)), NSGF: yes ([terms](data-licenses.md#ilrs-nsgf)) | Physical truth (V1). The LEO spheres are ideal calibration objects (§2) | AR (`reference-states/products`: asi, bkg, cnes, dgfi, esa, gfz, ilrsa, nsgf) |
 | A.3 | ILRS CPF predictions (EDC) | Operator- and center-issued predicted ephemerides | about 130 targets, including LEO (Swarm, GRACE-FO, Jason-3, Sentinel-6A/B, CryoSat-2, SARAL, SWOT, TSX/TDX, PAZ, HY-2B–E) and spheres; 2018–; daily | CPF v2. EDC anonymous | As A.2 | Yes, with attribution ([terms](data-licenses.md#ilrs)) | Benchmark of operator-grade predictions against truth | DL (Swarm A, Sentinel-6A, CryoSat-2, Starlette, 2025-10 to 2026-10), S (others) |
-| A.4 | IDS DORIS: CNES SSALTO POE | DORIS+SLR(+GNSS) precise orbits | CryoSat-2, Jason-3, Sentinel-3A/B, Sentinel-6A/B, SARAL, SWOT, HY-2C/D; 2010–; POE-G standards since 2025; 10-day files appear a few weeks after the arc ends | SP3 (.Z). [IGN anonymous FTP](ftp://doris.ign.fr/pub/doris/products/orbits/ssa/) (verified); CDDIS (Earthdata Login) | No license text found on ids-doris.org; anonymous; cite IDS and CNES | Not assessed (not used) | LEO drag-regime truth, 700–1340 km | DL (all ten satellites, files ending on or after 2025-10-01) |
+| A.4 | IDS DORIS: CNES SSALTO POE | DORIS+SLR(+GNSS) precise orbits | CryoSat-2, Jason-3, Sentinel-3A/B, Sentinel-6A/B, SARAL, SWOT, HY-2C/D; 2010–; POE-G standards since 2025; 10-day files appear a few weeks after the arc ends | SP3 (.Z). [IGN anonymous FTP](ftp://doris.ign.fr/pub/doris/products/orbits/ssa/) (verified); CDDIS (Earthdata Login) | No license text found on ids-doris.org; anonymous; cite IDS and CNES | No: cited only (no licence text found; E8 uses the SSALTO POE of CryoSat-2, SARAL, SWOT and Sentinel-3A as truth; not yet in [data-licenses.md](data-licenses.md)) | LEO drag-regime truth, 700–1340 km | DL (all ten satellites, files ending on or after 2025-10-01) |
 | A.5 | Copernicus POD: Sentinel-1 | Precise orbit (POEORB) | S1A (to 2026-07), S1C, S1D; ≈ 20-day latency | EOF in zip. ESA STEP mirror anonymous; ASF requires Earthdata Login (HTTP 401, verified); CDSE requires an account | [Copernicus legal notice][cop]: "free, full and open access", including "(b) distribution" and "(d) adaptation, modification" | Yes, with attribution ([terms](data-licenses.md#copernicus-sentinel)) | LEO truth, 693 km SSO | DL (928 files 2025-10 to 2026-09); also partly AR (`reference-states/products`) |
 | A.6 | Copernicus POD: Sentinel-2/3/6 auxiliary orbits | Precise orbits | S2A/B/C, S3A/B, S6A/B | Copernicus Data Space Ecosystem (free account) | As A.5 | Yes, with attribution ([terms](data-licenses.md#copernicus-sentinel)) | LEO truth (S3/S6 also via A.4) | L (CDSE account) |
 | A.7 | ESA Swarm (Swarm DISC) | Reduced-dynamic (COM) and kinematic orbits; Level 2 | Swarm A, B (≈ 500 km), C; 2013–; ≈ 7-week latency (last file 2026-08-19) | SP3 in ZIP. [Swarm DISS](https://swarm-diss.eo.esa.int/) JSON listing API, anonymous | [ESA T&C][esa-tc] B.4: "authorised to duplicate data … for the performance of their work"; B.5: further distribution only to recipients who accept the T&C | No: cited only ([terms](data-licenses.md#esa-earth-observation)) | LEO drag truth near HASDM's busiest altitudes | DL (RD 2025-10 to 2026-08); partly AR |
-| A.8 | GRACE-FO | GFZ Rapid Science Orbits; JPL Level-1B GNV1B | GRACE-FO C/D, ≈ 490 km; RSO 2021–; ≈ 1 day | RSO: SP3 via [GFZ ISDC](https://isdc-data.gfz.de/grace-fo/ORBIT/), anonymous HTTPS. L1B: PO.DAAC (Earthdata Login) | No license text found on isdc.gfz.de; cite GFZ ISDC. PO.DAAC: [Earthdata guidance][edg] | Not assessed (not used) | LEO drag truth paired with D.6 accelerometer densities | DL (RSO L64/L65 2025-10 to 2026-10), L (L1B) |
+| A.8 | GRACE-FO | GFZ Rapid Science Orbits; JPL Level-1B GNV1B | GRACE-FO C/D, ≈ 490 km; RSO 2021–; ≈ 1 day | RSO: SP3 via [GFZ ISDC](https://isdc-data.gfz.de/grace-fo/ORBIT/), anonymous HTTPS. L1B: PO.DAAC (Earthdata Login) | No license text found on isdc.gfz.de; cite GFZ ISDC. PO.DAAC: [Earthdata guidance][edg] | No: cited only (no licence text found; E8 uses the GRACE-FO RSO as truth; not yet in [data-licenses.md](data-licenses.md)) | LEO drag truth paired with D.6 accelerometer densities | DL (RSO L64/L65 2025-10 to 2026-10), L (L1B) |
 | A.9 | TerraSAR-X / TanDEM-X | GFZ RSO | 514 km SSO | SP3 via GFZ ISDC `tsxtdx/ORBIT/L13`, `L20`, anonymous | As A.8 | Not assessed (not used) | LEO truth | DL (TerraSAR-X L13, partial; stopped at the 80 GiB disk floor), S (TanDEM-X L20) |
-| A.10 | COSMIC-2 (UCAR CDAAC) | NRT LEO orbits (`leoOrb`) | Six satellites, ≈ 520–550 km, 24° inclination; 2019–; ≈ 1 day | SP3 in daily tar.gz. [data.cosmic.ucar.edu](https://data.cosmic.ucar.edu/gnss-ro/cosmic2/): "there is no need for a login" | Cite "UCAR COSMIC Program (2019) COSMIC-2 Data Products, doi:10.5065/T353-C093"; © UCAR | Not assessed (not used) | Low-inclination LEO drag truth (NRT quality, roughly decimeters; not verified here) | DL (2025-10-01 to 2026-10-08) |
+| A.10 | COSMIC-2 (UCAR CDAAC) | NRT LEO orbits (`leoOrb`) | Six satellites, ≈ 520–550 km, 24° inclination; 2019–; ≈ 1 day | SP3 in daily tar.gz. [data.cosmic.ucar.edu](https://data.cosmic.ucar.edu/gnss-ro/cosmic2/): "there is no need for a login" | Cite "UCAR COSMIC Program (2019) COSMIC-2 Data Products, doi:10.5065/T353-C093"; © UCAR | No: cited only (© UCAR, citation requested; E8 uses FM5 and FM6 `leoOrb` as truth; not yet in [data-licenses.md](data-licenses.md)) | Low-inclination LEO drag truth (NRT quality, roughly decimeters; not verified here) | DL (2025-10-01 to 2026-10-08) |
 | A.11 | Spire GNSS-RO | Occultation data; POD not public | Spire constellation | NASA CSDA and GES DISC (L1B/L2 occultation; NASA-funded investigators); ESA Third Party Missions "Spire live and historical data" (project proposal) | Per program | No (program terms) | Orbits would be LEO truth, but none are released | X (orbits), L (RO data) |
 | A.12 | ICESat-2 | Geolocated photons (ATL03); no separate public POD product in NASA CMR | 2018– | NSIDC (Earthdata Login) | [Earthdata guidance][edg] | Not assessed (not acquired) | Weak (orbit only implied by geolocation) | L |
 | A.13 | Metop (EUMETSAT) | Orbit products not verified here | Metop-B/C | EUMETSAT Data Store (EO Portal account) | EUMETSAT data policy (not fetched) | Not assessed (not acquired) | LEO truth, 817 km | L |
@@ -232,6 +232,7 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | D.11 | TLE-derived densities | Method: Picone et al. 2005 ([doi:10.1029/2004JA010585][picone]); Emmert 2009 global averages ([doi:10.1029/2009JA014102][emmert]); Doornbos et al. calibration with TLEs ([doi:10.1016/j.asr.2006.12.025][doornbos]) | Any object with GP history | Rebuilt from C.1 | As C.1 | — | Inputs for the bulk calibration tier | S (method; Emmert's dataset not located) |
 | D.12 | NASA CCMC | Runs on Request for hosted physics models (model list not checked here); ISWA | — | [ROR](https://ccmc.gsfc.nasa.gov/tools/runs-on-request/): name and e-mail on submission; outputs public | CCMC publication policy | Not assessed (not acquired) | Physics cross-checks for storm cases | S |
 | D.13 | ESA SWE portal | Space weather products and archives | — | [swe.ssa.esa.int](https://swe.ssa.esa.int/): "register as a user" for the full range | ESA | Not assessed (not acquired) | Secondary | L (ESA SWE account) |
+| D.14 | Element-set density estimation: Gondelach and Linares 2020 ([doi:10.1029/2019SW002356][gondelach]; arXiv:1910.00695) and its code DESTOPy | Density, orbits and ballistic coefficients estimated jointly from element-set histories (UKF, a reduced-order density model); validated against CHAMP and GRACE | Any object with GP history; zero latency beyond the element sets | [github.com/pengmun/DESTOPy](https://github.com/pengmun/DESTOPy), anonymous | Code: MIT. Element sets as C.1 | Code: yes, with its MIT notice (E8's changes in `results/e8/destopy`); the densities it estimates derive from element sets and are cited only | The method behind E8's zero-latency calibration (decay of catalogued objects); DESTOPy is E8's external cross-check | DL (E8 ran it locally, outside the product path) |
 
 ### E. Space weather indices and forecasts
 
@@ -267,6 +268,7 @@ clause, quoted where a page states one. **HAC role**: what it does for parity.
 | G.3 | CelesTrak SATCAT RCS | RCS values | — | celestrak.org | — | No: cited only ([terms](data-licenses.md#celestrak)) | Size prior | U |
 | G.4 | IGS satellite metadata SINEX | GNSS mass, power, yaw and attitude law, PRN↔SVN | All GNSS | files.igs.org, anonymous | IGS terms | Yes, with attribution ([terms](data-licenses.md#igs)) | SRP modeling for GNSS truth (box-wing inputs) | DL |
 | G.5 | Operator-published geometry | Planet: fitted drag ballistic coefficient per state (B.2). Starlink: no physical data in the ephemerides. Mission documents for A.4–A.10 | Per operator | Mixed | Per source | Per source (Planet: non-commercial) | Area/mass for calibration objects | L/S (per mission; Planet DL) |
+| G.6 | GCAT (McDowell) | Mass, dry mass, length, diameter, span and shape for catalogued objects, rocket stages included | Full catalog, updated about daily (`satcat.tsv` of 2026-10-08 used) | [planet4589.org/space/gcat](https://planet4589.org/space/gcat/) TSV, anonymous | Free reproduction with citation (CC BY) ([GCAT][gcat]) | Yes, with attribution ([terms](data-licenses.md#gcat)) | Area/mass priors: spheres and rocket bodies anchor the level of an element-set density calibration (E8) | DL (E8; reproduced in `data/e8`) |
 
 ### H. The HAC and HASDM themselves
 
@@ -406,6 +408,8 @@ Further sources cited in the text (metadata checked against Crossref):
 - Doornbos, E. et al. 2008. Use of two-line element data for thermosphere neutral density model calibration. Adv. Space Res. 41(7), 1115–1122. doi:10.1016/j.asr.2006.12.025
 - Picone, J.M. et al. 2005. Thermospheric densities derived from spacecraft orbits: accurate processing of two-line element sets. J. Geophys. Res. Space Phys. 110(A3). doi:10.1029/2004JA010585
 - Emmert, J.T. 2009. A long-term data set of globally averaged thermospheric total mass density. J. Geophys. Res. Space Phys. 114(A6). doi:10.1029/2009JA014102
+- Gondelach, D.J. and Linares, R. 2020. Real-time thermospheric density estimation via two-line element data assimilation. Space Weather 18(2), e2019SW002356. doi:10.1029/2019SW002356; arXiv:1910.00695
+- McDowell, J.C. General Catalog of Artificial Space Objects (GCAT). <https://planet4589.org/space/gcat/>
 - Levit, C. and Marshall, W. 2011. Improved orbit predictions using two-line elements. Adv. Space Res. 47(7), 1107–1115. doi:10.1016/j.asr.2010.10.017, arXiv:1002.2277. Numerical orbits fitted to successive element sets, scored against ILRS orbits; the fit window chosen by forecast performance (E7's arc fits and their window choice).
 - Hallgarten La Casta, M.I. and Amato, D. 2024. Debiasing of two-line element sets for batch least squares pseudo-orbit determination in MEO and GEO. arXiv:2412.15793 (preprint submitted to Adv. Space Res.; arXiv metadata checked). Along-track bias removal before batch least squares, and fit windows of months (E7's H-arc-debiased and long arcs).
 
@@ -437,6 +441,8 @@ Further sources cited in the text (metadata checked against Crossref):
 [dtm]: https://github.com/swami-h2020-eu/mcm/blob/main/LICENSE
 [picone]: https://doi.org/10.1029/2004JA010585
 [emmert]: https://doi.org/10.1029/2009JA014102
+[gondelach]: https://doi.org/10.1029/2019SW002356
+[gcat]: https://planet4589.org/space/gcat/
 [doornbos]: https://doi.org/10.1016/j.asr.2006.12.025
 [nws]: https://www.weather.gov/disclaimer
 [kp]: https://doi.org/10.5880/Kp.0001

@@ -1,0 +1,99 @@
+{
+ "run": "e8-omm-density-10-estimate-forecast-test-K4-global-0of5-20261010T043639Z",
+ "experiment": "e8-omm-density",
+ "step": "10-estimate-forecast-test-K4-global-0of5",
+ "command": [
+  "node",
+  "experiments/e8-omm-density/steps/10-estimate.mjs",
+  "--window",
+  "test",
+  "--pool",
+  "e8-omm-density-08-pool-test-20261010T003920Z",
+  "--mode",
+  "forecast",
+  "--per-bin",
+  "4",
+  "--structure",
+  "global",
+  "--shard",
+  "0/5"
+ ],
+ "args": {
+  "window": "test",
+  "pool": "e8-omm-density-08-pool-test-20261010T003920Z",
+  "mode": "forecast",
+  "per-bin": "4",
+  "structure": "global",
+  "shard": "0/5",
+  "no-priors": false
+ },
+ "started": "2026-10-10T04:36:39.614Z",
+ "finished": "2026-10-10T05:20:51.933Z",
+ "config": {
+  "path": "experiments/e8-omm-density/config.json",
+  "sha256": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "95dfb436f3ebb435ffbcda3bdf39f170748be724",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "d0a7bec4d94cc1da94b1437b7f04606830041e07",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/density-calibration",
+   "pluginId": "com.digitalarsenal.analysis.density-calibration",
+   "version": "0.2.1",
+   "wasmSha256": "04740e984d4e04125849500bdbee39eba4959d6b6f214e401be751c71ff65d0c",
+   "manifestSha256": "4293f6a4ca7a2e41de5ebd93e79473cb0fe07d24072890294e90c01283660669",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e8-omm-density-20261009",
+   "checkoutState": {
+    "commit": "d0a7bec4d94cc1da94b1437b7f04606830041e07",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   69.0869140625,
+   80.490234375,
+   77.45947265625
+  ]
+ },
+ "inputs": {
+  "pool": {
+   "e8-omm-density-08-pool-test-20261010T003920Z": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8"
+  },
+  "elementSetCache": {
+   "test-0": "1b63495156dc3829b0272454213c0b4da795c2019e1e9f33b07517c50348edb3",
+   "test-1": "8f6b5811746a1225d2ff6d2cfbb29eaeb5f0040dc21f23c98f376d763b5ca56b",
+   "test-2": "208a3a91cac6d09492a00c9ff3f6e558e7d7f4f162a6bedb8ecb4107d3a7eea2"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T04:36:39.614Z",
+   "args": {
+    "window": "test",
+    "pool": "e8-omm-density-08-pool-test-20261010T003920Z",
+    "mode": "forecast",
+    "per-bin": "4",
+    "structure": "global",
+    "shard": "0/5",
+    "no-priors": false
+   }
+  }
+ ],
+ "fits": 9
+}

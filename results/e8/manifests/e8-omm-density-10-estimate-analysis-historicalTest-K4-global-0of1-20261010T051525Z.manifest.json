@@ -1,0 +1,96 @@
+{
+ "run": "e8-omm-density-10-estimate-analysis-historicalTest-K4-global-0of1-20261010T051525Z",
+ "experiment": "e8-omm-density",
+ "step": "10-estimate-analysis-historicalTest-K4-global-0of1",
+ "command": [
+  "node",
+  "experiments/e8-omm-density/steps/10-estimate.mjs",
+  "--window",
+  "historicalTest",
+  "--pool",
+  "e8-omm-density-08-pool-historicalTest-20261010T005440Z",
+  "--mode",
+  "analysis",
+  "--per-bin",
+  "4",
+  "--structure",
+  "global"
+ ],
+ "args": {
+  "window": "historicalTest",
+  "pool": "e8-omm-density-08-pool-historicalTest-20261010T005440Z",
+  "mode": "analysis",
+  "per-bin": "4",
+  "structure": "global",
+  "no-priors": false,
+  "shard": "0/1"
+ },
+ "started": "2026-10-10T05:15:25.010Z",
+ "finished": "2026-10-10T06:03:06.503Z",
+ "config": {
+  "path": "experiments/e8-omm-density/config.json",
+  "sha256": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "95dfb436f3ebb435ffbcda3bdf39f170748be724",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "d0a7bec4d94cc1da94b1437b7f04606830041e07",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/density-calibration",
+   "pluginId": "com.digitalarsenal.analysis.density-calibration",
+   "version": "0.2.1",
+   "wasmSha256": "04740e984d4e04125849500bdbee39eba4959d6b6f214e401be751c71ff65d0c",
+   "manifestSha256": "4293f6a4ca7a2e41de5ebd93e79473cb0fe07d24072890294e90c01283660669",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e8-omm-density-20261009",
+   "checkoutState": {
+    "commit": "d0a7bec4d94cc1da94b1437b7f04606830041e07",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.240.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   109.4931640625,
+   90.90380859375,
+   86.96533203125
+  ]
+ },
+ "inputs": {
+  "pool": {
+   "e8-omm-density-08-pool-historicalTest-20261010T005440Z": "e8558b95b0016ce838de67c8d6aa612a41919e9c6830633f7148b6d3aa1022c8"
+  },
+  "elementSetCache": {
+   "historicalTest-0": "555c5092419bacec12a1f6977da334153684a05ce23d9f4dcd3718c38487bf56",
+   "historicalTest-1": "d0cb22f478e691ca24bce7df6897f243dfe8280930bc9c71cc8a25801bdd459e"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T05:15:25.010Z",
+   "args": {
+    "window": "historicalTest",
+    "pool": "e8-omm-density-08-pool-historicalTest-20261010T005440Z",
+    "mode": "analysis",
+    "per-bin": "4",
+    "structure": "global",
+    "no-priors": false,
+    "shard": "0/1"
+   }
+  }
+ ],
+ "fits": 2
+}

@@ -8,7 +8,7 @@ import { config } from './common.mjs';
 // Two-way cluster ("pigeonhole") bootstrap (Owen 2007), as harness/stats.mjs
 // does it, also returning the one-sided p-value of the statistic against a
 // null value (the share of resamples at or beyond it, (k + 1) / (B + 1)).
-function boot(cells, statistic, confidence = config.statistics.confidence, { nullValue = null, side = 'greater' } = {}) {
+export function boot(cells, statistic, confidence = config.statistics.confidence, { nullValue = null, side = 'greater' } = {}) {
   const rows = [...new Set(cells.map((c) => c.row))], cols = [...new Set(cells.map((c) => c.col))];
   const random = rng(config.statistics.bootstrapSeed);
   const draws = (keys) => { const count = new Map(keys.map((k) => [k, 0])); for (let i = 0; i < keys.length; ++i) { const k = keys[Math.floor(random() * keys.length)]; count.set(k, count.get(k) + 1); } return count; };

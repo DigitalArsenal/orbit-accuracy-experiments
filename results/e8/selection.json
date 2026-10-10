@@ -1,0 +1,70 @@
+{
+ "experiment": "e8-omm-density",
+ "rule": {
+  "perBin": "the candidate with the smallest standard deviation of ln(orbit-mean observed / orbit-mean model) of D5a (global structure) over the validation window's held-out satellites (GRACE-FO 1, Swarm B, Swarm C)",
+  "decayHours": "with that perBin and the global structure, the candidate with the smallest pooled standard deviation of ln(observed / D5f) at leads 0-3 days (definitive drivers) over the validation issue days in validationIssueDays",
+  "structure": "with that perBin and decayHours, the structure with the smallest median 3-day 3D error of D5 (definitive arm) over the validation arcs (validationIssueDays, every target), both structures on the arcs where both have a 3-day error",
+  "ties": "global structure, smaller perBin, shorter decayHours"
+ },
+ "densityRun": "e8-omm-density-20-density-validation-20261010T015539Z",
+ "perBinCandidates": [
+  {
+   "perBin": 4,
+   "n": 11622,
+   "sigma": 0.10965984443062837
+  },
+  {
+   "perBin": 16,
+   "n": 11622,
+   "sigma": 0.1292440978398926
+  }
+ ],
+ "d0Sigma": 0.13719223131665975,
+ "d2aSigma": 0.051673532733114945,
+ "perBin": 4,
+ "decayCandidates": [
+  {
+   "decayHours": 12,
+   "n": 14076,
+   "sigma": 0.13779543965805563
+  },
+  {
+   "decayHours": 48,
+   "n": 14076,
+   "sigma": 0.16060148905285745
+  },
+  {
+   "decayHours": null,
+   "n": 14076,
+   "sigma": 0.21798430808850022
+  }
+ ],
+ "d0ForecastSigma": 0.13889242898006474,
+ "decayHours": 12,
+ "propagationRuns": [
+  "e8-omm-density-30-propagation-validation-0of6-20261010T021004Z",
+  "e8-omm-density-30-propagation-validation-1of6-20261010T021004Z",
+  "e8-omm-density-30-propagation-validation-2of6-20261010T021004Z",
+  "e8-omm-density-30-propagation-validation-3of6-20261010T021004Z",
+  "e8-omm-density-30-propagation-validation-4of6-20261010T021004Z",
+  "e8-omm-density-30-propagation-validation-5of6-20261010T021004Z"
+ ],
+ "pairedArcs": 163,
+ "structureCandidates": [
+  {
+   "structure": "global",
+   "variant": "D5-K4-global-T12",
+   "arcs": 163,
+   "median3dM": 113.11053291719783
+  },
+  {
+   "structure": "linear",
+   "variant": "D5-K4-linear-T12",
+   "arcs": 163,
+   "median3dM": 154.027754391369
+  }
+ ],
+ "d0Median3dM": null,
+ "structure": "global",
+ "decided": "2026-10-10T04:12:32.731Z"
+}
