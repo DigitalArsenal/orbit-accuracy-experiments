@@ -1,0 +1,95 @@
+{
+ "run": "e4-operator-ephemeris-parity-90-report-20261010T085030Z",
+ "experiment": "e4-operator-ephemeris-parity",
+ "step": "90-report",
+ "command": [
+  "node",
+  "experiments/e4-operator-ephemeris-parity/steps/90-report.mjs",
+  "--runs",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s0of8-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-gps-precise-s0of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-gps-precise-s1of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-s0of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-s1of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-cpf-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-esa-pod-s0of2-20261010T012418Z,e4-operator-ephemeris-parity-10-compare-esa-pod-s1of2-20261010T012712Z,e4-operator-ephemeris-parity-10-compare-intelsat-20261010T014401Z,e4-operator-ephemeris-parity-10-compare-ses-20261010T014431Z,e4-operator-ephemeris-parity-10-compare-iss-20261010T015434Z,e4-operator-ephemeris-parity-10-compare-css-tiangong-20261010T020319Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s1of8-20261010T020716Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s2of8-20261010T020738Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s3of8-20261010T020818Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s4of8-20261010T021431Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s5of8-20261010T022440Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s6of8-20261010T024756Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s7of8-20261010T033135Z,e4-operator-ephemeris-parity-10-compare-planet-s0of16-20261010T033654Z,e4-operator-ephemeris-parity-10-compare-planet-s1of16-20261010T033856Z,e4-operator-ephemeris-parity-10-compare-planet-s2of16-20261010T033911Z,e4-operator-ephemeris-parity-10-compare-planet-s3of16-20261010T034123Z,e4-operator-ephemeris-parity-10-compare-planet-s4of16-20261010T035629Z,e4-operator-ephemeris-parity-10-compare-planet-s5of16-20261010T043024Z,e4-operator-ephemeris-parity-10-compare-planet-s6of16-20261010T051715Z,e4-operator-ephemeris-parity-10-compare-planet-s7of16-20261010T051753Z,e4-operator-ephemeris-parity-10-compare-planet-s8of16-20261010T052242Z,e4-operator-ephemeris-parity-10-compare-planet-s9of16-20261010T052500Z,e4-operator-ephemeris-parity-10-compare-planet-s10of16-20261010T054455Z,e4-operator-ephemeris-parity-10-compare-planet-s11of16-20261010T062704Z,e4-operator-ephemeris-parity-10-compare-planet-s12of16-20261010T071629Z,e4-operator-ephemeris-parity-10-compare-planet-s13of16-20261010T071705Z,e4-operator-ephemeris-parity-10-compare-planet-s14of16-20261010T071801Z,e4-operator-ephemeris-parity-10-compare-planet-s15of16-20261010T072642Z",
+  "--truth-run",
+  "e4-operator-ephemeris-parity-05-truth-20261010T004717Z"
+ ],
+ "args": {
+  "runs": "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s0of8-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-gps-precise-s0of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-gps-precise-s1of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-s0of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-s1of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-cpf-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-esa-pod-s0of2-20261010T012418Z,e4-operator-ephemeris-parity-10-compare-esa-pod-s1of2-20261010T012712Z,e4-operator-ephemeris-parity-10-compare-intelsat-20261010T014401Z,e4-operator-ephemeris-parity-10-compare-ses-20261010T014431Z,e4-operator-ephemeris-parity-10-compare-iss-20261010T015434Z,e4-operator-ephemeris-parity-10-compare-css-tiangong-20261010T020319Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s1of8-20261010T020716Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s2of8-20261010T020738Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s3of8-20261010T020818Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s4of8-20261010T021431Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s5of8-20261010T022440Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s6of8-20261010T024756Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s7of8-20261010T033135Z,e4-operator-ephemeris-parity-10-compare-planet-s0of16-20261010T033654Z,e4-operator-ephemeris-parity-10-compare-planet-s1of16-20261010T033856Z,e4-operator-ephemeris-parity-10-compare-planet-s2of16-20261010T033911Z,e4-operator-ephemeris-parity-10-compare-planet-s3of16-20261010T034123Z,e4-operator-ephemeris-parity-10-compare-planet-s4of16-20261010T035629Z,e4-operator-ephemeris-parity-10-compare-planet-s5of16-20261010T043024Z,e4-operator-ephemeris-parity-10-compare-planet-s6of16-20261010T051715Z,e4-operator-ephemeris-parity-10-compare-planet-s7of16-20261010T051753Z,e4-operator-ephemeris-parity-10-compare-planet-s8of16-20261010T052242Z,e4-operator-ephemeris-parity-10-compare-planet-s9of16-20261010T052500Z,e4-operator-ephemeris-parity-10-compare-planet-s10of16-20261010T054455Z,e4-operator-ephemeris-parity-10-compare-planet-s11of16-20261010T062704Z,e4-operator-ephemeris-parity-10-compare-planet-s12of16-20261010T071629Z,e4-operator-ephemeris-parity-10-compare-planet-s13of16-20261010T071705Z,e4-operator-ephemeris-parity-10-compare-planet-s14of16-20261010T071801Z,e4-operator-ephemeris-parity-10-compare-planet-s15of16-20261010T072642Z",
+  "truth-run": "e4-operator-ephemeris-parity-05-truth-20261010T004717Z"
+ },
+ "started": "2026-10-10T08:50:30.250Z",
+ "finished": "2026-10-10T08:51:34.253Z",
+ "config": {
+  "path": "experiments/e4-operator-ephemeris-parity/config.json",
+  "sha256": "10489e1687f21aaa0ea411bd18f54af5040a829c136b07c132354891dde48afb",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "1512bfc8e4abaafcf59622eda3236906339307bb",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "cb9160db1cd7e48fb8c915b5daebe6f09be02056",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0+1791587374056",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   26.86279296875,
+   30.4482421875,
+   37.64794921875
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-10T08:50:30.250Z",
+   "args": {
+    "runs": "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s0of8-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-gps-precise-s0of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-gps-precise-s1of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-s0of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-glonass-precise-s1of2-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-cpf-20261010T010542Z,e4-operator-ephemeris-parity-10-compare-esa-pod-s0of2-20261010T012418Z,e4-operator-ephemeris-parity-10-compare-esa-pod-s1of2-20261010T012712Z,e4-operator-ephemeris-parity-10-compare-intelsat-20261010T014401Z,e4-operator-ephemeris-parity-10-compare-ses-20261010T014431Z,e4-operator-ephemeris-parity-10-compare-iss-20261010T015434Z,e4-operator-ephemeris-parity-10-compare-css-tiangong-20261010T020319Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s1of8-20261010T020716Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s2of8-20261010T020738Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s3of8-20261010T020818Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s4of8-20261010T021431Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s5of8-20261010T022440Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s6of8-20261010T024756Z,e4-operator-ephemeris-parity-10-compare-spacex-starlink-s7of8-20261010T033135Z,e4-operator-ephemeris-parity-10-compare-planet-s0of16-20261010T033654Z,e4-operator-ephemeris-parity-10-compare-planet-s1of16-20261010T033856Z,e4-operator-ephemeris-parity-10-compare-planet-s2of16-20261010T033911Z,e4-operator-ephemeris-parity-10-compare-planet-s3of16-20261010T034123Z,e4-operator-ephemeris-parity-10-compare-planet-s4of16-20261010T035629Z,e4-operator-ephemeris-parity-10-compare-planet-s5of16-20261010T043024Z,e4-operator-ephemeris-parity-10-compare-planet-s6of16-20261010T051715Z,e4-operator-ephemeris-parity-10-compare-planet-s7of16-20261010T051753Z,e4-operator-ephemeris-parity-10-compare-planet-s8of16-20261010T052242Z,e4-operator-ephemeris-parity-10-compare-planet-s9of16-20261010T052500Z,e4-operator-ephemeris-parity-10-compare-planet-s10of16-20261010T054455Z,e4-operator-ephemeris-parity-10-compare-planet-s11of16-20261010T062704Z,e4-operator-ephemeris-parity-10-compare-planet-s12of16-20261010T071629Z,e4-operator-ephemeris-parity-10-compare-planet-s13of16-20261010T071705Z,e4-operator-ephemeris-parity-10-compare-planet-s14of16-20261010T071801Z,e4-operator-ephemeris-parity-10-compare-planet-s15of16-20261010T072642Z",
+    "truth-run": "e4-operator-ephemeris-parity-05-truth-20261010T004717Z"
+   }
+  }
+ ],
+ "inputsRuns": [
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s0of8-20261010T010542Z",
+  "e4-operator-ephemeris-parity-10-compare-gps-precise-s0of2-20261010T010542Z",
+  "e4-operator-ephemeris-parity-10-compare-gps-precise-s1of2-20261010T010542Z",
+  "e4-operator-ephemeris-parity-10-compare-glonass-precise-s0of2-20261010T010542Z",
+  "e4-operator-ephemeris-parity-10-compare-glonass-precise-s1of2-20261010T010542Z",
+  "e4-operator-ephemeris-parity-10-compare-cpf-20261010T010542Z",
+  "e4-operator-ephemeris-parity-10-compare-esa-pod-s0of2-20261010T012418Z",
+  "e4-operator-ephemeris-parity-10-compare-esa-pod-s1of2-20261010T012712Z",
+  "e4-operator-ephemeris-parity-10-compare-intelsat-20261010T014401Z",
+  "e4-operator-ephemeris-parity-10-compare-ses-20261010T014431Z",
+  "e4-operator-ephemeris-parity-10-compare-iss-20261010T015434Z",
+  "e4-operator-ephemeris-parity-10-compare-css-tiangong-20261010T020319Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s1of8-20261010T020716Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s2of8-20261010T020738Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s3of8-20261010T020818Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s4of8-20261010T021431Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s5of8-20261010T022440Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s6of8-20261010T024756Z",
+  "e4-operator-ephemeris-parity-10-compare-spacex-starlink-s7of8-20261010T033135Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s0of16-20261010T033654Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s1of16-20261010T033856Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s2of16-20261010T033911Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s3of16-20261010T034123Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s4of16-20261010T035629Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s5of16-20261010T043024Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s6of16-20261010T051715Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s7of16-20261010T051753Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s8of16-20261010T052242Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s9of16-20261010T052500Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s10of16-20261010T054455Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s11of16-20261010T062704Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s12of16-20261010T071629Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s13of16-20261010T071705Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s14of16-20261010T071801Z",
+  "e4-operator-ephemeris-parity-10-compare-planet-s15of16-20261010T072642Z"
+ ]
+}
