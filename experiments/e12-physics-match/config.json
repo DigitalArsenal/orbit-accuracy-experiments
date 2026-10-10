@@ -1,0 +1,522 @@
+{
+ "experiment": "e12-physics-match",
+ "frozen": false,
+ "modulesBinary": {
+  "repository": "space-data-network-modules",
+  "commit": "f6ec6918bb6f359f5bda8d6a466c540a2344001c",
+  "note": "HPOP 1.2.0 (Knocke Earth radiation, FES2004 ocean tides) merged with main 34869f3d (estimation 0.3.0 fit_batch v2); task/hpop-full-force-20261009",
+  "hpopWasmSha256": "c432dd6593061f524477dd8ad6941bdf039bd059f1c9262e9c2d2911e8ad3e13",
+  "spacedatastandards": "1.243.0"
+ },
+ "inputs": {
+  "modules": "../../main-packages/space-data-network-modules",
+  "eopFinals": "/opt/data/sdn-archive/hac/iers-eop/20261009/finals.all.iau2000.txt",
+  "gfzKp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+  "swpcRsga": [
+   "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz",
+   "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA"
+  ],
+  "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+  "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+  "kernels": {
+   "DE440": {
+    "path": "runs/cache/de440s.bsp",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+    "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+   },
+   "DE430": {
+    "path": "/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de430.bsp",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp",
+    "sha256": "6e1b277c5f07135a84950604b83e56b736be696a7f3560bcddb1d4aeb944fca1"
+   },
+   "DE421": {
+    "path": "/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de421.bsp",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de421.bsp",
+    "sha256": "08b20db2ae22488650641c5a9033e5bfda4b1c4b440cfeaf20f621cfa18ecdb3"
+   },
+   "DE405": {
+    "path": "/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de405.bsp",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de405.bsp",
+    "sha256": "30a7113793ee5b6bf1e5546c6dfc21d9682d9ffabfe9b17b4bab27ba2ac75c89"
+   }
+  }
+ },
+ "constantWeather": {
+  "f107": 150,
+  "f107a": 150,
+  "ap": 15,
+  "kp": 3
+ },
+ "cutoff": {
+  "jb2008PublicLatencyDays": 45
+ },
+ "fit": {
+  "sigmaM": 0.01,
+  "maxFitPoints": 240,
+  "maximumIterations": 25,
+  "correctionTolerance": 0.001,
+  "integrator": {
+   "tolerance": 1e-13,
+   "maxStep": 30,
+   "stepsPerPeriod": 180,
+   "maxStepCap": 600
+  },
+  "truthIntegrator": {
+   "tolerance": 1e-13,
+   "maxStep": 30,
+   "stepsPerPeriod": 180,
+   "maxStepCap": 600
+  },
+  "fingerprintPoints": 600
+ },
+ "synthetic": {
+  "note": "Generator of the synthetic study (PLAN.md section 7). Each case is rebuilt from its seed; no ephemeris is stored.",
+  "epochs": [
+   "2026-02-01T00:00:00Z",
+   "2026-08-15T00:00:00Z"
+  ],
+  "regimeWeights": {
+   "LEO_LOW": 0.45,
+   "LEO_HIGH": 0.2,
+   "MEO": 0.15,
+   "GEO": 0.2
+  },
+  "regimes": {
+   "LEO_LOW": {
+    "altitudeKm": [
+     340,
+     560
+    ],
+    "eccentricity": [
+     0,
+     0.002
+    ],
+    "inclinationDeg": [
+     40,
+     98
+    ],
+    "spanDays": 1,
+    "stepSeconds": 60,
+    "drag": true,
+    "bM2Kg": [
+     0.004,
+     0.03
+    ],
+    "agomM2Kg": [
+     0.004,
+     0.03
+    ]
+   },
+   "LEO_HIGH": {
+    "altitudeKm": [
+     650,
+     1250
+    ],
+    "eccentricity": [
+     0,
+     0.002
+    ],
+    "inclinationDeg": [
+     45,
+     100
+    ],
+    "spanDays": 1.5,
+    "stepSeconds": 60,
+    "drag": true,
+    "bM2Kg": [
+     0.004,
+     0.03
+    ],
+    "agomM2Kg": [
+     0.004,
+     0.03
+    ]
+   },
+   "MEO": {
+    "altitudeKm": [
+     19000,
+     23300
+    ],
+    "eccentricity": [
+     0,
+     0.01
+    ],
+    "inclinationDeg": [
+     50,
+     65
+    ],
+    "spanDays": 2,
+    "stepSeconds": 300,
+    "drag": false,
+    "agomM2Kg": [
+     0.005,
+     0.03
+    ]
+   },
+   "GEO": {
+    "altitudeKm": [
+     35700,
+     35880
+    ],
+    "eccentricity": [
+     0,
+     0.0005
+    ],
+    "inclinationDeg": [
+     0,
+     5
+    ],
+    "spanDays": 3,
+    "stepSeconds": 600,
+    "drag": false,
+    "agomM2Kg": [
+     0.01,
+     0.04
+    ]
+   }
+  },
+  "prior": {
+   "eop": {
+    "FINALS": 0.7,
+    "ZERO": 0.3
+   },
+   "gravityModel": {
+    "EGM2008": 0.6,
+    "EGM96": 0.4
+   },
+   "degree": {
+    "2": 0.03,
+    "4": 0.07,
+    "8": 0.11,
+    "12": 0.11,
+    "20": 0.13,
+    "24": 0.1,
+    "36": 0.15,
+    "48": 0.11,
+    "70": 0.19
+   },
+   "thirdBodies": {
+    "NONE": 0.1,
+    "SUN_MOON": 0.6,
+    "SUN_MOON_PLANETS": 0.3
+   },
+   "solidTides": {
+    "true": 0.5,
+    "false": 0.5
+   },
+   "oceanTides": {
+    "true": 0.3,
+    "false": 0.7
+   },
+   "relativity": {
+    "NONE": 0.4,
+    "SCHWARZSCHILD": 0.3,
+    "IERS_2010": 0.3
+   },
+   "srp": {
+    "CANNONBALL": 0.8,
+    "NONE": 0.2
+   },
+   "earthRadiation": {
+    "true": 0.3,
+    "false": 0.7
+   },
+   "atmosphere": {
+    "NRLMSISE00": 0.3,
+    "JB2008": 0.25,
+    "JACCHIA_ROBERTS": 0.2,
+    "HARRIS_PRIESTER": 0.15,
+    "EXPONENTIAL": 0.1
+   },
+   "spaceWeather": {
+    "OBSERVED": 0.35,
+    "FORECAST": 0.35,
+    "CONSTANT": 0.3
+   },
+   "ephemeris": {
+    "DE440": 1.0
+   }
+  },
+  "publish": {
+   "frame": {
+    "EME2000": 0.5,
+    "GCRF": 0.15,
+    "TEME": 0.15,
+    "TOD": 0.1,
+    "MOD": 0.1
+   },
+   "timeScale": {
+    "UTC": 0.6,
+    "TAI": 0.13,
+    "GPS": 0.14,
+    "TT": 0.13
+   },
+   "quantumM": {
+    "0.001": 0.4,
+    "0.0001": 0.3,
+    "0.000001": 0.3
+   }
+  },
+  "sets": {
+   "smoke": {
+    "from": 900000,
+    "count": 4
+   },
+   "train": {
+    "from": 100000,
+    "count": 240
+   },
+   "validate": {
+    "from": 200000,
+    "count": 36
+   }
+  },
+  "reference": {
+   "note": "Reference-engine truths (PLAN.md section 7). hpop: the same physics as an HPOP hypothesis (positive control), null: a model HPOP lacks.",
+   "cases": [
+    {
+     "id": "orekit-nrlmsise-egm2008",
+     "engine": "orekit",
+     "description": "Orekit 13.1, EGM2008 36x36, Sun+Moon, cannonball SRP, NRLMSISE-00 on constant inputs (positive control)",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "solidTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EGM2008",
+      "degree": 36,
+      "order": 36,
+      "atmosphere": "NRLMSISE00"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": {
+      "frame": "EME2000",
+      "timeScale": "UTC",
+      "eop": "FINALS",
+      "gravityModel": "EGM2008",
+      "degree": 36,
+      "thirdBodies": "SUN_MOON",
+      "ephemeris": "DE440",
+      "solidTides": false,
+      "oceanTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "earthRadiation": false,
+      "spaceWeather": "CONSTANT",
+      "atmosphere": "NRLMSISE00"
+     }
+    },
+    {
+     "id": "orekit-dtm2000",
+     "engine": "orekit",
+     "description": "Orekit 13.1, DTM2000 density on constant inputs (not in HPOP)",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "solidTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EGM2008",
+      "degree": 36,
+      "order": 36,
+      "atmosphere": "DTM2000"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": null
+    },
+    {
+     "id": "orekit-harris-priester",
+     "engine": "orekit",
+     "description": "Orekit 13.1, Harris-Priester density",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "solidTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EGM2008",
+      "degree": 36,
+      "order": 36,
+      "atmosphere": "HARRIS_PRIESTER"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": {
+      "frame": "EME2000",
+      "timeScale": "UTC",
+      "eop": "FINALS",
+      "gravityModel": "EGM2008",
+      "degree": 36,
+      "thirdBodies": "SUN_MOON",
+      "ephemeris": "DE440",
+      "solidTides": false,
+      "oceanTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "earthRadiation": false,
+      "spaceWeather": "CONSTANT",
+      "atmosphere": "HARRIS_PRIESTER"
+     }
+    },
+    {
+     "id": "orekit-eigen6s",
+     "engine": "orekit",
+     "description": "Orekit 13.1, EIGEN-6S 70x70 field (not in HPOP), NRLMSISE-00 constant",
+     "regime": "LEO_LOW",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      6778137,
+      0,
+      0,
+      0,
+      4790.0,
+      5995.0
+     ],
+     "spanDays": 1,
+     "stepSeconds": 60,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "solidTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "agom": 0.008,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EIGEN6S",
+      "degree": 70,
+      "order": 70,
+      "atmosphere": "NRLMSISE00"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": null
+    },
+    {
+     "id": "orekit-geo",
+     "engine": "orekit",
+     "description": "Orekit 13.1, GEO, EGM2008 12x12, Sun+Moon, cannonball SRP (positive control)",
+     "regime": "GEO",
+     "epoch": "2026-06-10T00:00:00Z",
+     "state": [
+      42164137,
+      0,
+      0,
+      0,
+      3074.66,
+      0
+     ],
+     "spanDays": 3,
+     "stepSeconds": 600,
+     "quantumM": 1e-06,
+     "forces": {
+      "thirdBodies": "SUN_MOON",
+      "solidTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "agom": 0.02,
+      "b": 0.012,
+      "spaceWeather": "CONSTANT",
+      "gravity": "EGM2008",
+      "degree": 12,
+      "order": 12,
+      "atmosphere": "NONE"
+     },
+     "integrator": {
+      "tolerance": 1e-13,
+      "maxStep": 30
+     },
+     "hpop": {
+      "frame": "EME2000",
+      "timeScale": "UTC",
+      "eop": "FINALS",
+      "gravityModel": "EGM2008",
+      "degree": 12,
+      "thirdBodies": "SUN_MOON",
+      "ephemeris": "DE440",
+      "solidTides": false,
+      "oceanTides": false,
+      "relativity": "NONE",
+      "srp": "CANNONBALL",
+      "earthRadiation": false,
+      "spaceWeather": "CONSTANT",
+      "atmosphere": "NONE"
+     }
+    }
+   ]
+  }
+ },
+ "gauntlet": {
+  "floorM": 0.002,
+  "closureMargin": 0.1,
+  "bicSlack": 10,
+  "maximumPasses": 3,
+  "proposalTopK": 3,
+  "strongRatio": 2,
+  "strongDeltaBic": 10,
+  "dragBelowKm": 1500,
+  "note": "The ephemeris axis (DE440/430/421/405) is not searched: its effect is below the floor (GEO, 1 d: 0.11-0.59 mm; steps/03). It is tested once per segment through the SPICE_STACK preset (DE430)."
+ },
+ "presets": {
+  "SPICE_STACK": {
+   "frame": "GCRF",
+   "ephemeris": "DE430"
+  }
+ }
+}
