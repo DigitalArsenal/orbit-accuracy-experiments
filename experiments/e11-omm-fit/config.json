@@ -1,0 +1,199 @@
+{
+  "experiment": "e11-omm-fit",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "question": "OMM fitted by analysis/gp-error-model fit_elements to an operator ephemeris against CelesTrak's SupGP fitted to the same ephemeris, over CelesTrak's window and in prediction; Space-Track OMM as baseline",
+  "modules": {
+    "gpErrorModel": {
+      "path": "analysis/gp-error-model",
+      "version": "0.2.0",
+      "commit": "cc0cb5ea",
+      "wasmSha256": "93240ca600f87f11af682e8f431aa781187180da6cac4cd55bc10ba0efdbc7ec"
+    },
+    "hpopFitter": {
+      "experimentsCommit": "405779d",
+      "file": "harness/ephemeris-fit.mjs",
+      "modulesCommit": "f6ec6918"
+    }
+  },
+  "archives": {
+    "supgp": "/opt/data/sdn-archive/celestrak/supgp",
+    "derived": "/opt/data/sdn-archive/operator-ephemerides/derived",
+    "spacetrack": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "operatorOd": "/opt/data/operator-od"
+  },
+  "collector": {
+    "until": "2026-10-15T12:00:00Z",
+    "cycleSeconds": 10980,
+    "groups": [
+      "gps",
+      "glonass",
+      "iss",
+      "css",
+      "cpf",
+      "intelsat",
+      "ses",
+      "planet",
+      "oneweb",
+      "kuiper",
+      "iridium",
+      "telesat",
+      "orbcomm",
+      "ast",
+      "eumetsat",
+      "starlink"
+    ]
+  },
+  "capture": {
+    "until": "2026-10-22T18:00:00Z",
+    "starlinkSample": {
+      "file": "starlink-sample.txt",
+      "seed": "e11-starlink-sample-20261010",
+      "size": 150
+    },
+    "hpopSubset": {
+      "salt": "e11-hpop-subset-20261010",
+      "size": 40
+    }
+  },
+  "pairing": {
+    "starlink": {
+      "version": "latest start at or before the SupGP EPOCH",
+      "windowHours": 12
+    },
+    "iss": {
+      "version": "the OEM current when the SupGP snapshot is fetched",
+      "windowHours": 6
+    },
+    "css": {
+      "version": "as iss",
+      "windowHours": 6
+    }
+  },
+  "gate": {
+    "absoluteKm": 0.005,
+    "relative": 0.1,
+    "statistic": "per-coordinate RMS = 3D RMS / sqrt(3) over the window, every point"
+  },
+  "grid": [
+    {
+      "id": "span6-bstar",
+      "hours": 6,
+      "fitBstar": true
+    },
+    {
+      "id": "span6-bstarST",
+      "hours": 6,
+      "fitBstar": false,
+      "bstar": "spacetrack"
+    },
+    {
+      "id": "span12-bstar",
+      "hours": 12,
+      "fitBstar": true
+    },
+    {
+      "id": "span12-bstarST",
+      "hours": 12,
+      "fitBstar": false,
+      "bstar": "spacetrack"
+    },
+    {
+      "id": "span24-bstar",
+      "hours": 24,
+      "fitBstar": true
+    },
+    {
+      "id": "span24-bstarST",
+      "hours": 24,
+      "fitBstar": false,
+      "bstar": "spacetrack"
+    },
+    {
+      "id": "span48-bstar",
+      "hours": 48,
+      "fitBstar": true
+    },
+    {
+      "id": "span48-bstarST",
+      "hours": 48,
+      "fitBstar": false,
+      "bstar": "spacetrack"
+    },
+    {
+      "id": "spanend-bstar",
+      "hours": 0,
+      "fitBstar": true
+    },
+    {
+      "id": "spanend-bstarST",
+      "hours": 0,
+      "fitBstar": false,
+      "bstar": "spacetrack"
+    },
+    {
+      "id": "span24-bstar-cov",
+      "hours": 24,
+      "fitBstar": true,
+      "weighting": "covariance"
+    }
+  ],
+  "fit": {
+    "tolerance": 1e-10,
+    "maxIterations": 100,
+    "epoch": "first point of the window (issue-anchored grid); the SupGP EPOCH (CelesTrak window)"
+  },
+  "windows": {
+    "dev": [
+      "2026-10-10T00:00:00Z",
+      "2026-10-11T00:00:00Z"
+    ],
+    "validation": [
+      "2026-10-11T00:00:00Z",
+      "2026-10-12T00:00:00Z"
+    ],
+    "test": [
+      "2026-10-12T00:00:00Z",
+      "2026-10-15T12:00:00Z"
+    ],
+    "by": "version issue time (created); SupGP snapshots fetched in the window"
+  },
+  "horizons": {
+    "hours": [
+      6,
+      24,
+      72,
+      168
+    ],
+    "from": "end of CelesTrak's window",
+    "scoreWindowMinutes": 60,
+    "stepSeconds": 60,
+    "primaryHours": 24
+  },
+  "truth": {
+    "operatorOcm": "HPOP OCM of the latest later version whose span contains t and whose issue time precedes t",
+    "independent": {
+      "gnss": "IGS/ESA/GFZ finals",
+      "slr": "NSGF/ILRS orbits"
+    }
+  },
+  "selection": {
+    "criterion": "lowest median over dev objects of the 1-day prediction RMS (3D) against operator-OCM truth",
+    "validationOverrideRelative": 0.05,
+    "tieRelative": 0.01,
+    "tieBreak": "grid order",
+    "output": "results/e11/selection.json, written by step 20 and committed before step 40 reads the test window"
+  },
+  "groups": {
+    "minimumObjects": 10,
+    "minimumPairs": 20
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261010,
+    "confidence": 0.95,
+    "cluster": "object (NORAD)",
+    "statistic": "mean over objects of per-object mean log ratio",
+    "secondaryCorrection": "Holm over 6 h, 3 d, 7 d"
+  }
+}
