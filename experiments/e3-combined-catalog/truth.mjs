@@ -10,7 +10,8 @@ import { decodeOemStream, OEM_TYPE } from '../../harness/records.mjs';
 export const utcMs = (iso) => Date.parse(/[zZ]$/.test(iso) ? iso : `${iso}Z`);
 
 export class Products {
-  constructor(dir, prefixes) {
+  // maxStatedSigmaM: products whose index states a larger sigma are skipped.
+  constructor(dir, prefixes, { maxStatedSigmaM = Infinity } = {}) {
     this.dir = dir;
     this.products = [];
     this.byObject = new Map();  // norad -> [{product, start, stop, file, comment, statedSigmaM}]
@@ -19,6 +20,7 @@ export class Products {
       if (!fs.existsSync(indexFile)) continue;
       const raw = fs.readFileSync(indexFile);
       const index = JSON.parse(raw);
+      if ((index.statedSigmaM ?? 0) > maxStatedSigmaM) continue;
       this.products.push({ product, source: index.product, url: index.url, sha256: index.sha256, indexSha256: sha256(raw), statedSigmaM: index.statedSigmaM ?? null });
       for (const o of index.objects) {
         if (!this.byObject.has(o.norad)) this.byObject.set(o.norad, []);

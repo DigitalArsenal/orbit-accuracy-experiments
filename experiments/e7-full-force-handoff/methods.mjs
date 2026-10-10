@@ -74,7 +74,7 @@ export function mahalanobis(t, errorRtn, covariance, n) {
 
 // HPOP from {epoch (ISO UTC), state [m, m/s]} at initialMs to every
 // non-missing target. request: {forces, coefficients, parameters, covariance,
-// drivers, cutoffMs}. Returns {errors: [[R, T, N] m | null], d2: [number |
+// drivers, cutoffMs, integrator (default config.integrator)}. Returns {errors: [[R, T, N] m | null], d2: [number |
 // null] | null}. A target at the initial epoch takes the initial state.
 export async function hpopErrors(ctx, initial, initialMs, targets, request) {
   const later = targets.filter((t) => !t.missing && t.ms > initialMs);
@@ -82,7 +82,7 @@ export async function hpopErrors(ctx, initial, initialMs, targets, request) {
   if (later.length) {
     const samples = decodeSamples(await ctx.hpop.invoke('invoke', [
       executionFrame({ epoch: initial.epoch, state: initial.state, samples: later.map((t) => stripZ(t.epoch)), forces: request.forces,
-        coefficients: request.coefficients, parameters: request.covariance ? request.parameters : [], covariance: request.covariance ?? null, integrator: config.integrator }),
+        coefficients: request.coefficients, parameters: request.covariance ? request.parameters : [], covariance: request.covariance ?? null, integrator: request.integrator ?? config.integrator }),
       ...ctx.inputsFor(initialMs, later.at(-1).ms, request.forces, request),
     ]));
     if (samples.length !== later.length) throw new Error(`propagator/hpop returned ${samples.length} samples for ${later.length} epochs`);

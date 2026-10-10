@@ -10,9 +10,14 @@ import { PRW_TYPE } from './prw.mjs';
 
 // parse_c04 over an IERS EOP C04 file: [{mjd, row}] with each record decoded
 // to its $EOP object, plus the parser's metadata.
-export async function c04Records(parser, file) {
+export const c04Records = (parser, file) => eopRecords(parser, 'parse_c04', file);
+// parse_finals2000a over an IERS finals2000A file (observed rows, then the
+// file's predictions), in the same form.
+export const finalsRecords = (parser, file) => eopRecords(parser, 'parse_finals2000a', file);
+
+async function eopRecords(parser, method, file) {
   const body = fs.readFileSync(file);
-  const response = await parser.invoke('parse_c04', [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
+  const response = await parser.invoke(method, [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
   const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
   const meta = JSON.parse(Buffer.from(response.outputs.find((f) => f.portId === 'meta').payload));
   const records = [];

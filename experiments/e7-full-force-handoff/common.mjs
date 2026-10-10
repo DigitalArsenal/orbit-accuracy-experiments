@@ -20,7 +20,12 @@ import { estimationCodec } from '../e2-catalog-covariance/estimation-wire.mjs';
 
 export const experimentDir = path.dirname(new URL(import.meta.url).pathname);
 export const configPath = path.join(experimentDir, 'config.json');
-export const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+export let config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+// E7v2 reuses E7's helpers (methods, debias, maneuvers, correlation, e1)
+// under its own configuration, which keeps E7's keys: configure() replaces
+// the configuration they read, once, before any of them runs. E7's own steps
+// never call it.
+export function configure(next) { config = next; }
 export const DAY_MS = 86400000;
 export const HOUR_MS = 3600000;
 export const isoUtc = (ms) => new Date(ms).toISOString().replace('Z', '');

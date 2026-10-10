@@ -79,7 +79,9 @@ function wq(values, order, weights, q) {
 
 // Two-way (object x day) pigeonhole bootstrap of statistics of paired
 // samples: stats is {name: (valuesByVariant, orders, weights) -> number}.
-export function bootstrap(samples, stats, { resamples, seed, confidence }) {
+// days: false resamples objects only (each keeps all its samples); `draws`
+// returns every resample's value too.
+export function bootstrap(samples, stats, { resamples, seed, confidence, days = true, keepDraws = false }) {
   const rowsKeys = [...new Set(samples.map((s) => s.norad))], colsKeys = [...new Set(samples.map((s) => s.day))];
   const rowIndex = samples.map((s) => rowsKeys.indexOf(s.norad)), colIndex = samples.map((s) => colsKeys.indexOf(s.day));
   const nv = samples[0]?.errors.length ?? 0;
@@ -93,14 +95,15 @@ export function bootstrap(samples, stats, { resamples, seed, confidence }) {
   for (let b = 0; b < resamples; ++b) {
     rc.fill(0); cc.fill(0);
     for (let i = 0; i < rowsKeys.length; ++i) rc[Math.floor(random() * rowsKeys.length)] += 1;
-    for (let i = 0; i < colsKeys.length; ++i) cc[Math.floor(random() * colsKeys.length)] += 1;
+    if (days) for (let i = 0; i < colsKeys.length; ++i) cc[Math.floor(random() * colsKeys.length)] += 1;
+    else cc.fill(1);
     for (let i = 0; i < samples.length; ++i) w[i] = rc[rowIndex[i]] * cc[colIndex[i]];
     const r = evaluate(w);
     for (const k of Object.keys(stats)) if (Number.isFinite(r[k])) draws[k].push(r[k]);
   }
   const a = (1 - confidence) / 2;
   const q = (xs, p) => { const s = [...xs].sort((x, y) => x - y); return s.length ? s[Math.min(s.length - 1, Math.floor(p * (s.length - 1) + 0.5))] : NaN; };
-  return Object.fromEntries(Object.keys(stats).map((k) => [k, { estimate: estimate[k], lower: q(draws[k], a), upper: q(draws[k], 1 - a), resamples: draws[k].length }]));
+  return Object.fromEntries(Object.keys(stats).map((k) => [k, { estimate: estimate[k], lower: q(draws[k], a), upper: q(draws[k], 1 - a), resamples: draws[k].length, ...(keepDraws ? { draws: draws[k] } : {}) }]));
 }
 
 export const medianOf = (j) => (values, orders, w) => wq(values[j], orders[j], w, 0.5);
