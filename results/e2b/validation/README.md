@@ -828,3 +828,13 @@ Scoring samples: 1658 (5 objects). C1b: 1502 samples, two-body fallback where th
 | 7 | third alone | 437 (5) | 720 | 1603 | 2.10 [0.84, 3.44] | 0.842 | 0.078 |
 | 7 | ratios of median 3D error | | CI / SEL 1.012 [0.981, 1.104] | NAIVE / SEL 1.154 [1.035, 1.389] | GLS / SEL – (GLS failed 437) | | |
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

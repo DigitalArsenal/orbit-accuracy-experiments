@@ -110,7 +110,7 @@
         <div class="section-head">
           <p class="eyebrow">Verification · HPOP Against Orekit 13.1</p>
           <h2>Locked Down Force By Force</h2>
-          <p class="lede">63 cases on identical states, forces and constants: five orbits, ten force sets, and the IERS 2010, VCM and atmosphere additions. Each point is the largest position difference over a day of hourly samples. The reference is Orekit 13.1 with its de Sitter term evaluated in consistent frames. Pick a case and re-run it here.</p>
+          <p class="lede">63 cases on identical states, forces and constants: five orbits, ten force sets, and the IERS 2010, VCM and atmosphere additions. Each point is the largest position difference over a day of hourly samples. The reference is Orekit 13.1 with its de Sitter term evaluated in consistent frames. Pick a case and re-run it here. Four cases read space weather or JB2008 indices that are not republished here; they are listed as recorded only.</p>
         </div>
         <figure class="chart-card">
           <figcaption><strong>Largest difference from Orekit over 24 h</strong><span>m, one point per case; the hairline is the case's tolerance</span></figcaption>
@@ -128,7 +128,7 @@
         <div class="section-head">
           <p class="eyebrow">VCM Parity · analysis/vcm-adapter</p>
           <h2>A Vector Covariance Message, Round Trip</h2>
-          <p class="lede">An SP Vector Covariance Message read into a PRW request, propagated with its covariance, and written back as a VCM. The format states no units for its covariance. Four SP messages show that its mean-motion row is relative (dn/n); with that reading the sigmas the adapter recomputes match the printed ones within 1 %. The ballistic coefficient’s row is read the same way, with the as-printed reading run beside it.</p>
+          <p class="lede">A synthetic SP Vector Covariance Message (made-up identifiers, state and covariance) read into a PRW request, propagated with its covariance, and written back as a VCM. The format states no units for its covariance. Four SP messages, checked offline and not published, show that its mean-motion row is relative (dn/n); with that reading the sigmas the adapter recomputes match the printed ones within 1 %. The ballistic coefficient’s row is read the same way, with the as-printed reading run beside it.</p>
         </div>
         <div class="grid-2">
           <div class="panel">

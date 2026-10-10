@@ -424,7 +424,7 @@
    "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants); the HPOP-against-Orekit JB2008 cases (modules)",
    "reproducedAt": [
     "modules: propagator/hpop/tests/fixtures/orekit/jb2008-2026-06.json (indices as Orekit read them; committed before this audit)",
-    "site (gh-pages): data/orekit/jb2008_indices-*.prw (labelled MIT; published before this audit)"
+    "site (gh-pages): data/orekit/jb2008_indices-*.prw (labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)"
    ],
    "obtain": "https://sol.spacenvironment.net/JB2008/indices/ (SOLFSMY.TXT, DTCFILE.TXT); data/e5 and data/e7 MANIFEST.json list the SHA-256 of the copies read.",
    "notice": null
@@ -1191,7 +1191,7 @@
    "reason": "Unclear until its source is confirmed: the state and covariance look like a real ISS solution with identifiers removed.",
    "usedIn": "The site's VCM section (VCM read and propagated); space-data-network-modules tests",
    "reproducedAt": [
-    "site (gh-pages): data/vcm/sample-vcm.txt",
+    "site (gh-pages): data/vcm/sample-vcm.txt; not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)",
     "modules: analysis/vcm-adapter/tests/fixtures/sample-vcm.txt, files/orbit-products/fixtures/vcm_v2_sample.txt",
     "spacedatastandards.org: survey/legacy-messages/vcm/sample/vcm.txt"
    ],
@@ -1374,7 +1374,7 @@
    "reason": "CelesTrak grants no licence for its own products (SupGP, SOCRATES); the upstream terms decide the rest.",
    "usedIn": "E3 (capture failed on 2026-10-09: not measured); the HPOP-against-Orekit cases (CSSI space weather, via Orekit's data)",
    "reproducedAt": [
-    "site (gh-pages): data/orekit/space_weather-*.prw (CSSI space weather as Orekit read it; labelled MIT; published before this audit)",
+    "site (gh-pages): data/orekit/space_weather-*.prw (CSSI space weather as Orekit read it; labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)",
     "modules: propagator/hpop/tests/fixtures/orekit/spw-2026-08.json, analysis/od/tests/data/supgp-reference/*/celestrak_supgp_*.csv (9), data-source/celestrak-supgp/test/fixtures/*, analysis/conjunction-assessment/tests/fixtures/socrates/reference.top3.json, analysis/conjunction-assessment/docs/socrates-replay-2026-10-02.json, data-source/celestrak-parser/tests/fixtures/celestrak-socrates-minrange.csv (committed before this audit)"
    ],
    "obtain": "https://celestrak.org (SupGP, SOCRATES Plus, space-weather files), within its usage policy.",
@@ -1768,11 +1768,12 @@
   }
  ],
  "openItems": [
-  "Release `e3-inputs-20261009`: the 54 Swarm orbit assets `SW_OPER_SP3ACOM_2__*.ZIP`, `SW_OPER_SP3BCOM_2__*.ZIP`, `SW_OPER_SP3CCOM_2__*.ZIP`. ESA's terms allow onward distribution only to recipients who accept them ([ESA](#esa-earth-observation)).",
-  "`data/e4/esa-pod/`: the 9 ESA/ESOC orbit files of CryoSat-2 (`*.cs2.v4.sp3.gz`) and Swarm (`SWRAesoc*.sp3.gz`); no terms grant redistribution ([ESA/ESOC POD](#esa-navigation-office-pod)).",
-  "The site (`gh-pages`): `data/orekit/jb2008_indices-*.prw` (SET's JB2008 indices, [SET](#set-jb2008)) and `data/orekit/space_weather-*.prw` (CSSI space weather, whose sunspot column is CC BY-NC, [CelesTrak](#celestrak)), both labelled MIT; `data/vcm/sample-vcm.txt` ([VCM sample](#sds-vcm-sample), provenance to be confirmed). The site also labels `data/orekit/earth_orientation-*.prw` MIT; those rows are IERS data ([IERS](#iers)).",
-  "Release `gnss-truth-20261009` describes the IGS terms as \"CC BY 4.0\", and `data/e4/SOURCES.md` repeats it from E4's frozen config; the IGS states open use without restriction, not a Creative Commons licence ([IGS](#igs)).",
-  "Results built on ESA, Copernicus and Space-Track data carry the credits in [Credits by experiment](#credits-by-experiment) (ESA: \"© ESA\" on analysed information and \"Data provided by the European Space Agency (ESA)\" in publications; Space-Track: citation of publications of analysis).",
+  "Kept, not removed (owner, 2026-10-10): release `e3-inputs-20261009`, the 54 Swarm orbit assets `SW_OPER_SP3ACOM_2__*.ZIP`, `SW_OPER_SP3BCOM_2__*.ZIP`, `SW_OPER_SP3CCOM_2__*.ZIP`. ESA's terms allow onward distribution only to recipients who accept them ([ESA](#esa-earth-observation)). No new public product carries them.",
+  "Kept, not removed (owner, 2026-10-10): `data/e4/esa-pod/`, the 9 ESA/ESOC orbit files of CryoSat-2 (`*.cs2.v4.sp3.gz`) and Swarm (`SWRAesoc*.sp3.gz`); no terms grant redistribution ([ESA/ESOC POD](#esa-navigation-office-pod)). No new public product carries them.",
+  "The site (`gh-pages`), rebuilt 2026-10-10 through `labelFor`: no longer writes `data/orekit/jb2008_indices-*.prw` ([SET](#set-jb2008)), `data/orekit/space_weather-*.prw` ([CelesTrak](#celestrak)) or `data/vcm/sample-vcm.txt` ([VCM sample](#sds-vcm-sample)), and labels every file by its source's licence and credit (the IERS earth-orientation files by the [IERS](#iers) terms, not MIT). The four Orekit cases that read CSSI space weather or SET's indices are listed as recorded only; the VCM section reads a synthetic message (`site/synthetic-vcm.mjs`). Earlier gh-pages commits still contain the three files (history is not rewritten, owner 2026-10-10).",
+  "Release `gnss-truth-20261009`: its notes now describe the IGS terms as open use without restriction (assets untouched, 2026-10-10). `data/e4/SOURCES.md` and E4's frozen `config.json` still say \"IGS Data Policy: CC BY 4.0\"; the config is frozen, so the correction is an amendment to E4's plan (not yet written).",
+  "Credits for ESA, Copernicus and Space-Track are in the results READMEs and reports (`harness/credit-lines.mjs`; a step that regenerates a report drops the section, rerun the script). Release notes of `e3-inputs-20261009` carry no © ESA line yet.",
+  "The site's `propagator/hpop` module binary compiles in the HWM14 winds data, whose terms are unconfirmed ([HWM14](#hwm14)); the binary is published by the owner's decision of 2026-10-08, and its provenance label says so. A build without HWM14 needs a module change.",
   "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Starlink, Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, VCM sample, HWM14, CCSDS figures) and the Space-Track element sets and tables there that lack the citation."
  ]
 }

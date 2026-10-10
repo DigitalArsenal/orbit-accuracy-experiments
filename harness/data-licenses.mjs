@@ -24,6 +24,23 @@ export function source(id) {
   return s;
 }
 
+// A public product (the site) carries only sources registered as reproducible
+// ("reproduce": "yes"); the others are cited, never copied. `labelFor` is the
+// one gate: it refuses any other source and returns the file's licence and
+// credit lines from the registry, never a blanket one.
+export const isReproducible = (id) => source(id).reproduce === 'yes';
+export function labelFor(ids, own = null) {
+  const list = ids.map(source);
+  const refused = list.filter((s) => s.reproduce !== 'yes');
+  if (refused.length) throw new Error(`data/licenses.json: ${refused.map((s) => `${s.id} (reproduce: ${s.reproduce})`).join(', ')} may not be reproduced in a public product`);
+  const licences = [...new Set([...(own ? [own] : []), ...list.map((s) => s.licence)])];
+  return { sources: ids, license: licences.join('; '), credit: [...new Set(list.map((s) => s.credit))].join(' ') };
+}
+
+// Experiment ids as the registry's usedIn fields name them (V1, E1, E2b, …).
+const usedBy = (s, e) => !/considered, not used/.test(s.usedIn) && s.usedIn.replace(/\([^)]*\)/g, ' ').split(/[\s,;:]+/).includes(e);
+export const creditsFor = (experiment) => [...new Set(registry.sources.filter((s) => usedBy(s, experiment)).map((s) => s.credit))];
+
 const VERDICT = {
   yes: 'Yes, with attribution',
   'share-alike': 'Yes, with attribution, under the same licence (share-alike)',
@@ -89,10 +106,9 @@ export function renderDocs() {
   // experiment must carry (ESA, Copernicus and Space-Track require it for
   // published analysis; the others ask for it).
   const experiments = ['V1', 'E1', 'E2', 'E2b', 'E3', 'E4', 'E5', 'E6', 'E7', 'E10'];
-  const uses = (s, e) => s.usedIn.replace(/\([^)]*\)/g, ' ').split(/[\s,;:]+/).includes(e);
   L.push('## Credits by experiment', '', 'The credit lines that results, reports and papers built on each experiment carry, whatever is reproduced.', '');
   for (const e of experiments) {
-    const used = registry.sources.filter((s) => !/considered, not used/.test(s.usedIn) && uses(s, e));
+    const used = registry.sources.filter((s) => usedBy(s, e));
     if (used.length) L.push(`- **${e}**: ${used.map((s) => s.credit).join(' ')}`);
   }
   L.push('');
@@ -103,7 +119,7 @@ export function renderDocs() {
     L.push('');
   }
   if (registry.openItems?.length) {
-    L.push('## Open items', '', 'Reproductions made before this audit that the terms do not cover, and credits still owed. Removing published assets or rewriting history is the owner\'s decision; until then they are listed here.', '');
+    L.push('## Open items', '', 'Reproductions made before this audit that the terms do not cover, and credits still owed. Owner decision (2026-10-10): "I do not remove them, but also don\'t include them in the public products." Nothing already published is deleted and history is not rewritten; every public product built since leaves them out.', '');
     for (const o of registry.openItems) L.push(`- ${o}`);
     L.push('');
   }
