@@ -153,8 +153,16 @@ function execution({ epochIso, state, sampleIsos, forces: f, integrator: it, stm
 }
 
 // One propagation of one state: samples [{state [m, m/s], stm [36] | null}] in
-// sample order. The environment frames go with every request.
+// sample order. The environment frames go with every request. HPOP takes at
+// most 10,000 samples a request: longer lists go in chunks, each integrated
+// from the same epoch and state (one trajectory, sampled in parts).
+export const MAX_SAMPLES = 10000;
 export async function propagate(hpop, env, model, { epochIso, state, sampleIsos, stm = false }) {
+  if (sampleIsos.length > MAX_SAMPLES) {
+    const out = [];
+    for (let i = 0; i < sampleIsos.length; i += MAX_SAMPLES) out.push(...await propagate(hpop, env, model, { epochIso, state, sampleIsos: sampleIsos.slice(i, i + MAX_SAMPLES), stm }));
+    return out;
+  }
   const inputs = [execution({ epochIso, state, sampleIsos, forces: model.forces, integrator: model.integrator, stm }), env.kernel, env.eop];
   if (model.forces.drag) inputs.push(model.forces.atmosphere === 'JB2008' ? env.jb2008 : env.spaceWeather);
   const response = await hpop.invoke('invoke', inputs);
