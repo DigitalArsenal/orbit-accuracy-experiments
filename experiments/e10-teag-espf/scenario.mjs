@@ -17,7 +17,7 @@ import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
 import { TIM, TIMConversionRequestT, TIMInstantT, TIMT, timConversionStatus, timEpochRepresentation, timingStandard } from 'spacedatastandards.org/lib/js/TIM/main.js';
 import { sha256 } from '../../harness/modules.mjs';
 import { PRW_TYPE, instant } from '../../harness/prw.mjs';
-import { DAY_MS, iso } from './common.mjs';
+import { DAY_MS, iso, rng } from './common.mjs';
 import { propagate } from './hpop.mjs';
 
 const ACW_TYPE = { schemaName: 'ACW.fbs', fileIdentifier: '$ACW', rootTypeName: 'ACW', wireFormat: 'flatbuffer' };
@@ -174,14 +174,30 @@ export async function buildScenario(m, env, eopStream, spec) {
   const sun = [];
   for (const ms of sunGrid) sun.push({ jdTt: await ttJd(m.time, ms), itrf: await gcrfToItrf(m.frames, eop.frame, ms, await sunGcrf(m.hpop, env, ms, m.time)) });
   const windows = await accessWindows(m.access, spec.stations, samples, spec.minElevationDeg * Math.PI / 180);
-  const eoo = await simulate(m.simulator, { stations: spec.stations, samples, sun, windows, eopObjects: eop.objects, sensor: spec.sensor, seed: spec.seed, target: spec.target });
-  eoo.sort((a, b) => Date.parse(a.time) - Date.parse(b.time));
+  const inputs = { stations: spec.stations, samples, sun, windows, eopObjects: eop.objects, target: spec.target };
+  const eoo = await simulate(m.simulator, { ...inputs, sensor: spec.sensor, seed: spec.seed });
+  const order = (a, b) => Date.parse(a.time) - Date.parse(b.time) || (a.sensor < b.sensor ? -1 : a.sensor > b.sensor ? 1 : 0);
+  eoo.sort(order);
+  // Contamination (spec.contamination {probability, noiseRad, seed, drawSeed}):
+  // the same schedule simulated again with the larger noise; each
+  // observation, in time order, takes those values with the probability.
+  if (spec.contamination) {
+    const c = spec.contamination;
+    const alt = await simulate(m.simulator, { ...inputs, sensor: { ...spec.sensor, noiseRad: c.noiseRad }, seed: c.seed });
+    const byKey = new Map(alt.map((o) => [`${o.time}|${o.sensor}`, o]));
+    const draw = rng(c.drawSeed);
+    for (const o of eoo) {
+      const other = byKey.get(`${o.time}|${o.sensor}`);
+      if (!other) throw new Error(`contamination: no counterpart for ${o.time} ${o.sensor}`);
+      if (draw.next() < c.probability) Object.assign(o, { raDeg: other.raDeg, decDeg: other.decDeg, contaminated: true });
+    }
+  }
   const observations = [];
   for (const o of eoo) {
     const ms = Date.parse(o.time.endsWith('Z') ? o.time : `${o.time}Z`);
     const station = spec.stations.find((s) => `eo-${s.id}` === o.sensor);
     observations.push({ ms, station: station.id, stationGcrf: await stationGcrf(m.frames, eop.frame, station, ms),
-      values: [o.raDeg * Math.PI / 180, o.decDeg * Math.PI / 180], sigmas: [spec.sensor.noiseRad, spec.sensor.noiseRad] });
+      values: [o.raDeg * Math.PI / 180, o.decDeg * Math.PI / 180], sigmas: [spec.sensor.noiseRad, spec.sensor.noiseRad], ...(o.contaminated ? { contaminated: true } : {}) });
   }
   const truthAtObs = observations.length ? await propagateTruth(m, env, spec, observations.map((o) => o.ms)) : [];
   return { grid, truthGrid, observations, truthAtObs, windows };

@@ -85,3 +85,20 @@ export function mahalanobis2(l, n, d) {
   }
   return s;
 }
+// log det of S from its Cholesky factor.
+export const logDetOf = (l, n) => { let s = 0; for (let i = 0; i < n; ++i) s += 2 * Math.log(l[i * n + i]); return s; };
+// Quantile of chi-square with 6 degrees of freedom, P(X <= x) =
+// 1 - e^{-x/2} (1 + x/2 + x^2/8), by bisection. Statistics only.
+export function chi2Quantile6(p) {
+  const cdf = (x) => 1 - Math.exp(-x / 2) * (1 + x / 2 + (x * x) / 8);
+  let lo = 0, hi = 200;
+  for (let i = 0; i < 200; ++i) { const mid = 0.5 * (lo + hi); if (cdf(mid) < p) lo = mid; else hi = mid; }
+  return 0.5 * (lo + hi);
+}
+// Half-width along unit vector u (3) of the position projection of the
+// ellipsoid {d <= c} with 6 x 6 shape S: c sqrt(u' S_pp u).
+export function halfWidth(shape, u, c = 1) {
+  let s = 0;
+  for (let i = 0; i < 3; ++i) for (let j = 0; j < 3; ++j) s += u[i] * shape[i * 6 + j] * u[j];
+  return c * Math.sqrt(Math.max(0, s));
+}

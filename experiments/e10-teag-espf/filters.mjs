@@ -10,6 +10,13 @@ import { iso } from './common.mjs';
 import { propagate } from './hpop.mjs';
 
 const zero3 = [0, 0, 0];
+// Phi P Phi' (6 x 6, row-major).
+function carry(phi, p) {
+  const fp = new Array(36).fill(0), out = new Array(36).fill(0);
+  for (let a = 0; a < 6; ++a) for (let b = 0; b < 6; ++b) for (let k = 0; k < 6; ++k) fp[a * 6 + b] += phi[a * 6 + k] * p[k * 6 + b];
+  for (let a = 0; a < 6; ++a) for (let b = 0; b < 6; ++b) for (let k = 0; k < 6; ++k) out[a * 6 + b] += fp[a * 6 + k] * phi[b * 6 + k];
+  return out;
+}
 const ICRF = 2;  // orbpro.propagator.ReferenceFrame (the request frame is GCRF)
 // An estimation observation (RA/Dec, the station's GCRF position and velocity).
 function observationStruct(T, o, lightTime) {
@@ -23,7 +30,11 @@ function observationStruct(T, o, lightTime) {
     kind: o.kind ?? 6, valueCount: o.values.length, flags: lightTime ? 2 : 3, transmitterIndex: 0, receiverIndex: 0,
   });
 }
-const extended = (T, o, lightTime) => T('ExtendedObservation', { observation: observationStruct(T, o, lightTime), values: [...o.values], sigmas: [...o.sigmas] });
+// LINEAR records (o.kind 23) carry y = H x + offset (o.linearMatrix, value_count x 6).
+const extended = (T, o, lightTime) => T('ExtendedObservation', {
+  observation: observationStruct(T, o, lightTime), values: [...o.values], sigmas: [...o.sigmas],
+  ...(o.linearMatrix ? { linearMatrix: [...o.linearMatrix], linearOffset: [...o.linearOffset] } : {}),
+});
 
 // Answers every query of one round by HPOP; counts calls.
 async function answer(ctx, queries, stm) {
@@ -111,7 +122,11 @@ export async function runSequential(ctx, variant, initial, observations, { light
 // Weighted batch least squares of the state at the first observation's epoch
 // (fit_batch, state only), from the initial state propagated there; then the
 // fit propagated to every observation epoch.
-export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maximumIterations = 20, lightTime = true } = {}) {
+// With stmAtEpochs, each epoch also carries the fit's state covariance
+// carried by HPOP's state transition matrix, Phi P Phi'.
+// observationCovariances: value_count^2 values per observation, concatenated
+// (request axes), replacing the sigmas.
+export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maximumIterations = 20, lightTime = true, stmAtEpochs = false, observationCovariances = [] } = {}) {
   const { codec } = ctx;
   const T = codec.T;
   ctx.calls = { hpop: 0, estimation: 0 };
@@ -126,7 +141,7 @@ export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maxi
     request: T('EstimationRequest', {
       config, observations: [], extendedObservations: observations.map((o) => extended(T, o, lightTime)), propagatorPortId: 'propagator/hpop',
       propagatorCapability: 'plugin_propagate plugin_compute_stm', traceId: 'e10',
-      batchOptions: T('BatchFitOptions', { parameterKinds: [], parameterValues: [], aprioriCovariance: initial.covariance, observationCovariances: [], maximumIterations, correctionTolerance: 1e-3, sigmaEditThreshold: sigmaEdit, covarianceAxes: 0 }),
+      batchOptions: T('BatchFitOptions', { parameterKinds: [], parameterValues: [], aprioriCovariance: initial.covariance, observationCovariances: [...observationCovariances], maximumIterations, correctionTolerance: 1e-3, sigmaEditThreshold: sigmaEdit, covarianceAxes: 0 }),
     }),
     propagationAnswers: [],
   });
@@ -150,9 +165,10 @@ export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maxi
   const fit = result?.batchFit;
   let epochs = [];
   if (fit && !failure) {
-    const samples = await propagate(ctx.hpop, ctx.env, ctx.filterModel, { epochIso: iso(initial.ms), state: fit.estimate.slice(0, 6), sampleIsos: observations.map((o) => iso(o.ms)) });
+    const samples = await propagate(ctx.hpop, ctx.env, ctx.filterModel, { epochIso: iso(initial.ms), state: fit.estimate.slice(0, 6), sampleIsos: observations.map((o) => iso(o.ms)), stm: stmAtEpochs });
     ctx.calls.hpop += 1;
-    epochs = observations.map((o, k) => ({ ms: o.ms, estimate: samples[k].state }));
+    const p = fit.covariance.length === 36 ? fit.covariance : null;
+    epochs = observations.map((o, k) => ({ ms: o.ms, estimate: samples[k].state, ...(stmAtEpochs && p ? { covariance: carry(samples[k].stm, p) } : {}) }));
   }
   return { epochs, fit: fit ? { converged: fit.converged, iterations: fit.iterations, weightedRms: fit.weightedRms, estimate: fit.estimate, covariance: fit.covariance, rejected: fit.rejectedObservationIndices?.length ?? 0 } : null, calls: ctx.calls, seconds: Number(process.hrtime.bigint() - started) / 1e9, failure };
 }
