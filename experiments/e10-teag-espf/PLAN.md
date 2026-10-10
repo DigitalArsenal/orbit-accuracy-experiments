@@ -392,3 +392,36 @@ excerpt and its extraction script).
    σ_max = 2 and 4. These runs inform the report's discussion of G18 only;
    no test run, hypothesis or selection uses them. The test runs keep the
    frozen settings.
+
+## Amendment 2 (2026-10-10, during the test runs: harness fixes)
+
+Defects in the experiment's framing code, found when the paper's cases and
+the GPS arcs first ran; none changes a module, a rule or a parameter.
+
+1. **More than 10,000 samples** (`ff881ac`): HPOP takes at most 10,000
+   sample epochs per request; Part A's 6-day truth grid has 25,921. Longer
+   lists go in chunks, each integrated from the same epoch and state.
+2. **Time tags before the epoch** (`e5897a5`): the GEO arc starts in view
+   and its first reception time tag came back 1 ms before the epoch, which
+   the filters refuse. Observations tagged before an arc's epoch are dropped
+   (GEO: 720 measurements, the paper's count).
+3. **Supports carried across midnight** (`cd7edf5`): the module returns a
+   support's epoch as the previous day plus more than 86,400 s, and requires
+   the next request's configuration epoch to match it exactly; set-based
+   filters stopped at the first request after midnight (Part A's LEO arcs;
+   Part C's arcs would have too). The carried support now takes the
+   configuration's own epoch record for the same instant. Where the
+   survivors of a collapsed support have no MVEE, the set is scored absent
+   instead of the job failing.
+4. **Runs affected.** The first Part A run (`…40-parta-20261010T024352Z`)
+   hit (3) and is superseded by a full rerun at or after `cd7edf5`; only the
+   rerun is reported. Part B's arcs (00:00–24:00 UTC) carry no support
+   across midnight, start no pass before their epoch and need fewer than
+   10,000 samples: the Part B test run, started at `7ff5a92`, is unaffected
+   by (1)–(3), and none of its jobs failed on a degenerate MVEE before (3).
+   Part C ran from `515637a`, its test window split by start day across two
+   runs.
+5. **E26 diagnostic (amendment 1, item 6).** With σ_max = 2 and 4 the dev
+   B1 runs did not collapse; they diverged: the support grew until HPOP could
+   not integrate its points (all four runs stopped, after 33–77 of about 118
+   observations).
