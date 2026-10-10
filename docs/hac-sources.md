@@ -397,6 +397,8 @@ Further sources cited in the text (metadata checked against Crossref):
 - Doornbos, E. et al. 2008. Use of two-line element data for thermosphere neutral density model calibration. Adv. Space Res. 41(7), 1115–1122. doi:10.1016/j.asr.2006.12.025
 - Picone, J.M. et al. 2005. Thermospheric densities derived from spacecraft orbits: accurate processing of two-line element sets. J. Geophys. Res. Space Phys. 110(A3). doi:10.1029/2004JA010585
 - Emmert, J.T. 2009. A long-term data set of globally averaged thermospheric total mass density. J. Geophys. Res. Space Phys. 114(A6). doi:10.1029/2009JA014102
+- Levit, C. and Marshall, W. 2011. Improved orbit predictions using two-line elements. Adv. Space Res. 47(7), 1107–1115. doi:10.1016/j.asr.2010.10.017, arXiv:1002.2277. Numerical orbits fitted to successive element sets, scored against ILRS orbits; the fit window chosen by forecast performance (E7's arc fits and their window choice).
+- Hallgarten La Casta, M.I. and Amato, D. 2024. Debiasing of two-line element sets for batch least squares pseudo-orbit determination in MEO and GEO. arXiv:2412.15793 (preprint submitted to Adv. Space Res.; arXiv metadata checked). Along-track bias removal before batch least squares, and fit windows of months (E7's H-arc-debiased and long arcs).
 
 [h1]: https://ntrs.nasa.gov/citations/20260000453 "NASA Spacecraft Conjunction Assessment and Collision Avoidance Best Practices Handbook, Vol. 1, NASA-SP-20205011318/REV2-VOL1, Aug 2026"
 [h2]: https://ntrs.nasa.gov/citations/20260000457 "Best Practices Handbook, Vol. 2, Technical Appendices, Aug 2026"

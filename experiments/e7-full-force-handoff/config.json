@@ -1,0 +1,898 @@
+{
+  "experiment": "e7-full-force-handoff",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "modulesBinary": {
+    "repository": "space-data-network-modules",
+    "commit": "095c20a622da225a06707f43f8840984fb5ea708",
+    "hpopWasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
+    "spacedatastandards": "1.241.0"
+  },
+  "inputs": {
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "modules": "../../main-packages/space-data-network-modules",
+    "eopC04": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now",
+    "gnssMetadata": "/opt/data/sdn-archive/reference-states/products/igs_satellite_metadata.snx",
+    "kernel": {
+      "path": "runs/cache/de440s.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
+    "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+    "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+    "gfzKp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "e1Model": {
+      "path": "results/e1/fit/e1-gps-epoch-20-fit-20261009T172522Z/model.json",
+      "sha256": "b3426d2f377db1bc40814246ea6f927d0ba1cfa34485f96af602c19e9b4c3452"
+    },
+    "swpcRsga": [
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz",
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA"
+    ]
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "duplicateEpochSeconds": 1,
+    "creationLagDays": 3
+  },
+  "windows": {
+    "dev": [
+      "2025-10-01",
+      "2025-10-12"
+    ],
+    "train": [
+      "2025-10-15",
+      "2025-12-31"
+    ],
+    "validation": [
+      "2026-01-15",
+      "2026-03-31"
+    ],
+    "test": [
+      "2026-05-01",
+      "2026-08-10"
+    ]
+  },
+  "horizonsHours": [
+    0,
+    6,
+    12,
+    24,
+    48,
+    72,
+    168
+  ],
+  "targetToleranceSeconds": 900,
+  "binHalfWidthSeconds": 1,
+  "sampleMaxAgeDays": 1,
+  "regimes": {
+    "GPS": {
+      "truthPrefixes": [
+        "ESA0OPSFIN"
+      ],
+      "select": "SP3 satellite G",
+      "strideDays": {
+        "validation": 5,
+        "test": 14,
+        "dev": 4
+      },
+      "forces": {
+        "degree": 20,
+        "order": 20,
+        "thirdBodies": [
+          10,
+          301,
+          2,
+          4,
+          5
+        ],
+        "srp": true,
+        "drag": false,
+        "solidTides": true,
+        "relativity": "IERS_2010"
+      },
+      "radiation": "GNSS box-wing a priori (IIR, IIR-M, IIF) at the SINEX mass; cannonball for blocks without a box-wing (GPS III)",
+      "arcParameters": [
+        {
+          "kind": "ECOM2_D0",
+          "sigma": 2e-09
+        },
+        {
+          "kind": "ECOM2_B0",
+          "sigma": 2e-09
+        },
+        {
+          "kind": "ECOM2_B1_COS",
+          "sigma": 2e-09
+        },
+        {
+          "kind": "ECOM2_B1_SIN",
+          "sigma": 2e-09
+        }
+      ],
+      "e1": true,
+      "arcSpansDays": [
+        2,
+        4,
+        7,
+        14,
+        28
+      ]
+    },
+    "LEO-POD": {
+      "truthPrefixes": [
+        "S1A_OPER",
+        "S1C_OPER",
+        "S1D_OPER",
+        "SW_OPER_SP3ACOM",
+        "SW_OPER_SP3BCOM",
+        "SW_OPER_SP3CCOM"
+      ],
+      "objects": {
+        "39451": "Swarm B",
+        "39452": "Swarm A",
+        "39453": "Swarm C",
+        "39634": "Sentinel-1A",
+        "62261": "Sentinel-1C",
+        "66315": "Sentinel-1D"
+      },
+      "strideDays": {
+        "validation": 6,
+        "test": 14,
+        "dev": 4
+      },
+      "forces": {
+        "degree": 70,
+        "order": 70,
+        "thirdBodies": [
+          10,
+          301,
+          2,
+          4,
+          5
+        ],
+        "srp": true,
+        "drag": true,
+        "solidTides": true,
+        "relativity": "IERS_2010"
+      },
+      "arcParameters": [
+        {
+          "kind": "DRAG_AREA_OVER_MASS",
+          "sigma": 0.02
+        }
+      ],
+      "arcSpansDays": [
+        2,
+        4,
+        7
+      ],
+      "arcFallbackParameters": [
+        {
+          "kind": "IN_TRACK_ACCELERATION",
+          "sigma": 1e-07
+        }
+      ]
+    },
+    "SLR-LEO": {
+      "truthPrefixes": [
+        "nsgf.orb.starlette",
+        "nsgf.orb.stella",
+        "nsgf.orb.larets",
+        "nsgf.orb.westpac",
+        "nsgf.orb.ajisai",
+        "nsgf.orb.lares."
+      ],
+      "objects": {
+        "7646": "Starlette",
+        "16908": "Ajisai",
+        "22824": "Stella",
+        "25398": "WESTPAC",
+        "27944": "LARETS",
+        "38077": "LARES"
+      },
+      "strideDays": {
+        "validation": 6,
+        "test": 14,
+        "dev": 4
+      },
+      "forces": {
+        "degree": 70,
+        "order": 70,
+        "thirdBodies": [
+          10,
+          301,
+          2,
+          4,
+          5
+        ],
+        "srp": true,
+        "drag": true,
+        "solidTides": true,
+        "relativity": "IERS_2010"
+      },
+      "arcParameters": [
+        {
+          "kind": "DRAG_AREA_OVER_MASS",
+          "sigma": 0.002
+        }
+      ],
+      "arcSpansDays": [
+        2,
+        4,
+        7
+      ],
+      "arcFallbackParameters": [
+        {
+          "kind": "IN_TRACK_ACCELERATION",
+          "sigma": 5e-09
+        }
+      ]
+    },
+    "SLR-MEO": {
+      "truthPrefixes": [
+        "ilrsa.orb.lageos1",
+        "ilrsa.orb.lageos2",
+        "ilrsa.orb.etalon1",
+        "ilrsa.orb.etalon2",
+        "nsgf.orb.lares2"
+      ],
+      "objects": {
+        "8820": "LAGEOS-1",
+        "19751": "ETALON-1",
+        "20026": "ETALON-2",
+        "22195": "LAGEOS-2",
+        "53105": "LARES-2"
+      },
+      "strideDays": {
+        "validation": 5,
+        "test": 10,
+        "dev": 4
+      },
+      "forces": {
+        "degree": 30,
+        "order": 30,
+        "thirdBodies": [
+          10,
+          301,
+          2,
+          4,
+          5
+        ],
+        "srp": true,
+        "drag": false,
+        "solidTides": true,
+        "relativity": "IERS_2010"
+      },
+      "arcParameters": [],
+      "arcSpansDays": [
+        2,
+        4,
+        7,
+        14,
+        28
+      ]
+    }
+  },
+  "physical": {
+    "7646": {
+      "name": "Starlette",
+      "massKg": 47.295,
+      "diameterM": 0.24,
+      "cr": 1.2
+    },
+    "8820": {
+      "name": "LAGEOS-1",
+      "massKg": 406.965,
+      "diameterM": 0.6,
+      "cr": 1.13
+    },
+    "16908": {
+      "name": "Ajisai",
+      "massKg": 685.2,
+      "diameterM": 2.15,
+      "cr": 1.2
+    },
+    "19751": {
+      "name": "ETALON-1",
+      "massKg": 1415,
+      "diameterM": 1.294,
+      "cr": 1.2
+    },
+    "20026": {
+      "name": "ETALON-2",
+      "massKg": 1415,
+      "diameterM": 1.294,
+      "cr": 1.2
+    },
+    "22195": {
+      "name": "LAGEOS-2",
+      "massKg": 405.38,
+      "diameterM": 0.6,
+      "cr": 1.13
+    },
+    "22824": {
+      "name": "Stella",
+      "massKg": 48,
+      "diameterM": 0.24,
+      "cr": 1.2
+    },
+    "25398": {
+      "name": "WESTPAC",
+      "massKg": 23.8,
+      "diameterM": 0.24,
+      "cr": 1.2
+    },
+    "27944": {
+      "name": "LARETS",
+      "massKg": 23.28,
+      "diameterM": 0.213,
+      "cr": 1.2
+    },
+    "38077": {
+      "name": "LARES",
+      "massKg": 386.8,
+      "diameterM": 0.364,
+      "cr": 1.13
+    },
+    "39451": {
+      "name": "Swarm B",
+      "massKg": 450,
+      "dragAreaM2": 1,
+      "srpAreaM2": 4,
+      "cr": 1.3
+    },
+    "39452": {
+      "name": "Swarm A",
+      "massKg": 450,
+      "dragAreaM2": 1,
+      "srpAreaM2": 4,
+      "cr": 1.3
+    },
+    "39453": {
+      "name": "Swarm C",
+      "massKg": 450,
+      "dragAreaM2": 1,
+      "srpAreaM2": 4,
+      "cr": 1.3
+    },
+    "39634": {
+      "name": "Sentinel-1A",
+      "massKg": 2200,
+      "dragAreaM2": 15,
+      "srpAreaM2": 30,
+      "cr": 1.3
+    },
+    "53105": {
+      "name": "LARES-2",
+      "massKg": 294.8,
+      "diameterM": 0.424,
+      "cr": 1.13
+    },
+    "62261": {
+      "name": "Sentinel-1C",
+      "massKg": 2200,
+      "dragAreaM2": 15,
+      "srpAreaM2": 30,
+      "cr": 1.3
+    },
+    "66315": {
+      "name": "Sentinel-1D",
+      "massKg": 2200,
+      "dragAreaM2": 15,
+      "srpAreaM2": 30,
+      "cr": 1.3
+    },
+    "note": "Nominal, not fitted. Cd*A/m and Cr*A/m in m^2/kg from the mass, cross-section, Cd 2.2 and Cr below (ILRS mission pages for the spheres; ESA mission descriptions for Swarm and Sentinel-1; V1/E3 for GPS).",
+    "GPS": {
+      "massKg": 1500,
+      "areaM2": 20,
+      "cr": 1.3
+    },
+    "cd": 2.2
+  },
+  "bstar": {
+    "note": "Cd*A/m = 2 B* / (rho0 * R_E) = 12.741621 B* (B* in 1/earth radii, rho0 = 2.461e-8 kg/m^3 at SGP4's reference altitude, R_E = 6378.135 km); a negative B* is taken as 0.",
+    "toCdAreaOverMass": 12.741621
+  },
+  "bRules": [
+    "bstar",
+    "nominal"
+  ],
+  "cutoff": {
+    "note": "Each sample's information cutoff is its OMM's CREATION_DATE. Every input a variant reads was public by then (PLAN.md section 4).",
+    "eopLatencyDays": 1,
+    "jb2008PublicLatencyDays": 45,
+    "truthLatencyDays": {
+      "ESA0OPSFIN": 14,
+      "SW_OPER": 30,
+      "nsgf": 3,
+      "ilrsa": 7
+    },
+    "truthLatencyNote": "Sentinel-1 POEORB: the creation time in the product name. Others: the end of the product's span plus the days above (ESA final GNSS orbits are weekly, about 8 to 14 days after the week; Swarm precise orbits are taken as 30 days; NSGF daily SLR arcs 3 days; the ILRS weekly combination 7 days)."
+  },
+  "drivers": {
+    "operationalAtmosphere": "NRLMSISE00",
+    "note": "Operational (released at the cutoff): NRLMSISE-00 with GFZ's observed Kp, ap and F10.7 before the day of the newest NOAA SWPC RSGA report issued by the cutoff, that report's observed F10.7 and estimated Ap for its day, its 3-day predictions, then day 3 held. JB2008's SET drivers are public 45 days late, so JB2008 runs operationally only from drivers 45 days old (held), and as a hindcast with the observed drivers."
+  },
+  "spanEligibleCoverage": 0.9,
+  "arcMinimumSets": 3,
+  "fit": {
+    "maximumIterations": 20,
+    "correctionTolerance": 0.001,
+    "sigmaEditThreshold": 0,
+    "aprioriStateSigma": [
+      100000,
+      100000,
+      100000,
+      10,
+      10,
+      10
+    ]
+  },
+  "integrator": {
+    "tolerance": 1e-13,
+    "maxStep": 300
+  },
+  "weights": {
+    "clipRobustSigma": 5,
+    "madScale": 1.4826
+  },
+  "correlation": {
+    "lagBinsHours": [
+      [
+        0,
+        6
+      ],
+      [
+        6,
+        12
+      ],
+      [
+        12,
+        24
+      ],
+      [
+        24,
+        48
+      ],
+      [
+        48,
+        96
+      ],
+      [
+        96,
+        168
+      ]
+    ],
+    "forms": [
+      "exponential",
+      "exponential-nugget"
+    ],
+    "note": "Fitted on train per regime and RTN component; the form with the smaller pair-weighted squared error against the validation correlations is chosen per regime (equal: exponential)."
+  },
+  "debias": {
+    "windowsDays": [
+      15,
+      30,
+      60
+    ],
+    "minimumSamples": 10,
+    "minimumConstantSamples": 3,
+    "ridge": 1,
+    "maximumLatencyDays": 35,
+    "note": "Along-track time offset = constant + Moon anomaly pair (E1's features), ridge 1 on the pair, per object, from OMMs created by the cutoff whose truth was released by the cutoff, over the latest windowDays of them; 3 to 9 OMMs: constant only; fewer: no correction. The window is chosen per regime on validation by the median 3D error of S-debiased at 72 h (equal: shorter)."
+  },
+  "maneuvers": {
+    "gridSeconds": {
+      "GPS": 300,
+      "LEO-POD": 60,
+      "SLR-LEO": 60,
+      "SLR-MEO": 300
+    },
+    "blockSpanDays": {
+      "GPS": 1.5,
+      "LEO-POD": 1,
+      "SLR-LEO": 1,
+      "SLR-MEO": 3
+    },
+    "maximumBlockSpanDays": 4,
+    "contextDays": 10,
+    "options": {
+      "k": 8,
+      "floor_in_track_mps": 0.08,
+      "floor_cross_track_mps": 1,
+      "median_sets": 3,
+      "scale_window_pairs": 100,
+      "grid_step_s": 60
+    }
+  },
+  "variants": {
+    "validation": [
+      {
+        "id": "S",
+        "method": "sgp4",
+        "sets": "published"
+      },
+      {
+        "id": "S-debiased:15d",
+        "method": "sgp4",
+        "sets": "debiased",
+        "windowDays": 15
+      },
+      {
+        "id": "S-debiased:30d",
+        "method": "sgp4",
+        "sets": "debiased",
+        "windowDays": 30
+      },
+      {
+        "id": "S-debiased:60d",
+        "method": "sgp4",
+        "sets": "debiased",
+        "windowDays": 60
+      },
+      {
+        "id": "H-epoch:bstar",
+        "method": "epoch",
+        "sets": "published",
+        "bRule": "bstar"
+      },
+      {
+        "id": "H-epoch:nominal",
+        "method": "epoch",
+        "sets": "published",
+        "bRule": "nominal",
+        "regimes": [
+          "LEO-POD",
+          "SLR-LEO"
+        ]
+      },
+      {
+        "id": "H-arc:2d",
+        "method": "arc",
+        "sets": "published",
+        "spanDays": 2,
+        "bRule": "bstar",
+        "weighting": "diagonal",
+        "split": true
+      },
+      {
+        "id": "H-arc:4d",
+        "method": "arc",
+        "sets": "published",
+        "spanDays": 4,
+        "bRule": "bstar",
+        "weighting": "diagonal",
+        "split": true
+      },
+      {
+        "id": "H-arc:7d",
+        "method": "arc",
+        "sets": "published",
+        "spanDays": 7,
+        "bRule": "bstar",
+        "weighting": "diagonal",
+        "split": true
+      },
+      {
+        "id": "H-arc:14d",
+        "method": "arc",
+        "sets": "published",
+        "spanDays": 14,
+        "bRule": "bstar",
+        "weighting": "diagonal",
+        "split": true,
+        "regimes": [
+          "GPS",
+          "SLR-MEO"
+        ]
+      },
+      {
+        "id": "H-arc:28d",
+        "method": "arc",
+        "sets": "published",
+        "spanDays": 28,
+        "bRule": "bstar",
+        "weighting": "diagonal",
+        "split": true,
+        "regimes": [
+          "GPS",
+          "SLR-MEO"
+        ]
+      }
+    ],
+    "test": [
+      {
+        "id": "S",
+        "method": "sgp4",
+        "sets": "published"
+      },
+      {
+        "id": "S-E1",
+        "method": "sgp4",
+        "sets": "e1",
+        "regimes": [
+          "GPS"
+        ]
+      },
+      {
+        "id": "S-debiased",
+        "method": "sgp4",
+        "sets": "debiased"
+      },
+      {
+        "id": "H-epoch",
+        "method": "epoch",
+        "sets": "published"
+      },
+      {
+        "id": "H-epoch:other-B",
+        "method": "epoch",
+        "sets": "published",
+        "bRule": "other",
+        "regimes": [
+          "LEO-POD",
+          "SLR-LEO"
+        ]
+      },
+      {
+        "id": "H-epoch-JB2008-released",
+        "method": "epoch",
+        "sets": "published",
+        "atmosphere": "JB2008",
+        "regimes": [
+          "LEO-POD"
+        ]
+      },
+      {
+        "id": "H-epoch-JB2008-observed",
+        "method": "epoch",
+        "sets": "published",
+        "atmosphere": "JB2008",
+        "drivers": "observed",
+        "regimes": [
+          "LEO-POD"
+        ]
+      },
+      {
+        "id": "H-epoch-E1",
+        "method": "epoch",
+        "sets": "e1",
+        "regimes": [
+          "GPS"
+        ]
+      },
+      {
+        "id": "H-truth",
+        "method": "truth",
+        "sets": "published"
+      },
+      {
+        "id": "H-arc",
+        "method": "arc",
+        "sets": "published",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true
+      },
+      {
+        "id": "H-arc-GLS",
+        "method": "arc",
+        "sets": "published",
+        "weighting": "correlated",
+        "split": true,
+        "covariance": true
+      },
+      {
+        "id": "H-arc-debiased",
+        "method": "arc",
+        "sets": "debiased",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true
+      },
+      {
+        "id": "H-arc-E1",
+        "method": "arc",
+        "sets": "e1",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true,
+        "regimes": [
+          "GPS"
+        ]
+      },
+      {
+        "id": "H-arc-JB2008-observed",
+        "method": "arc",
+        "sets": "published",
+        "atmosphere": "JB2008",
+        "drivers": "observed",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true,
+        "regimes": [
+          "LEO-POD"
+        ]
+      }
+    ],
+    "dev": [
+      {
+        "id": "S",
+        "method": "sgp4",
+        "sets": "published"
+      },
+      {
+        "id": "S-E1",
+        "method": "sgp4",
+        "sets": "e1",
+        "regimes": [
+          "GPS"
+        ]
+      },
+      {
+        "id": "S-debiased",
+        "method": "sgp4",
+        "sets": "debiased"
+      },
+      {
+        "id": "H-epoch",
+        "method": "epoch",
+        "sets": "published"
+      },
+      {
+        "id": "H-epoch:other-B",
+        "method": "epoch",
+        "sets": "published",
+        "bRule": "other",
+        "regimes": [
+          "LEO-POD",
+          "SLR-LEO"
+        ]
+      },
+      {
+        "id": "H-epoch-JB2008-released",
+        "method": "epoch",
+        "sets": "published",
+        "atmosphere": "JB2008",
+        "regimes": [
+          "LEO-POD"
+        ]
+      },
+      {
+        "id": "H-epoch-JB2008-observed",
+        "method": "epoch",
+        "sets": "published",
+        "atmosphere": "JB2008",
+        "drivers": "observed",
+        "regimes": [
+          "LEO-POD"
+        ]
+      },
+      {
+        "id": "H-epoch-E1",
+        "method": "epoch",
+        "sets": "e1",
+        "regimes": [
+          "GPS"
+        ]
+      },
+      {
+        "id": "H-truth",
+        "method": "truth",
+        "sets": "published"
+      },
+      {
+        "id": "H-arc",
+        "method": "arc",
+        "sets": "published",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true
+      },
+      {
+        "id": "H-arc-GLS",
+        "method": "arc",
+        "sets": "published",
+        "weighting": "correlated",
+        "split": true,
+        "covariance": true
+      },
+      {
+        "id": "H-arc-debiased",
+        "method": "arc",
+        "sets": "debiased",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true
+      },
+      {
+        "id": "H-arc-E1",
+        "method": "arc",
+        "sets": "e1",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true,
+        "regimes": [
+          "GPS"
+        ]
+      },
+      {
+        "id": "H-arc-JB2008-observed",
+        "method": "arc",
+        "sets": "published",
+        "atmosphere": "JB2008",
+        "drivers": "observed",
+        "weighting": "diagonal",
+        "split": true,
+        "covariance": true,
+        "regimes": [
+          "LEO-POD"
+        ]
+      }
+    ]
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "bootstrapSeed": 20261009,
+    "confidence": 0.95,
+    "clipRobustSigma": 5
+  },
+  "decision": {
+    "meaningfulRatioBelow": 0.8,
+    "horizonsHours": [
+      24,
+      48,
+      72,
+      168
+    ],
+    "selectionHorizonHours": 72
+  },
+  "chosen": {
+    "on": "validation",
+    "batch": "v3",
+    "patches": [
+      "v3fix"
+    ],
+    "bRule": {
+      "LEO-POD": "nominal",
+      "SLR-LEO": "nominal"
+    },
+    "spanDays": {
+      "GPS": 14,
+      "LEO-POD": 2,
+      "SLR-LEO": 7,
+      "SLR-MEO": 28
+    },
+    "debiasWindowDays": {
+      "GPS": 30,
+      "LEO-POD": 15,
+      "SLR-LEO": 60,
+      "SLR-MEO": 60
+    },
+    "correlationForm": {
+      "GPS": "exponential-nugget",
+      "LEO-POD": "exponential-nugget",
+      "SLR-LEO": "exponential-nugget",
+      "SLR-MEO": "exponential-nugget"
+    },
+    "weights": "results/e7/train/weights.json",
+    "weightsSha256": "26f44849ffe63bfb8b2c40fc313ee4f40dc1d9c7bf0dca984fc836a0ba291b7a",
+    "correlation": "results/e7/train/correlation.json",
+    "correlationSha256": "ece473fa7c621255ed08cc782b98b8e81e2d813b309637828ba00ea9e7663673",
+    "selection": "results/e7/validation/selection.json"
+  },
+  "devChoices": {
+    "note": "Dev runs only (plumbing): stand-ins for the validation choices.",
+    "bRule": "bstar",
+    "spanDays": 4,
+    "debiasWindowDays": 30,
+    "correlationForm": "exponential"
+  },
+  "staggerWindows": [
+    "test"
+  ]
+}
