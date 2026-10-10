@@ -75,8 +75,12 @@ for (const id of (values.forecast ?? '').split(',').filter(Boolean)) {
   const r = readRun(id, 'estimates.json');
   if (r.window !== values.window || r.mode !== 'forecast') throw new Error(`${id} is not a ${values.window} forecast run`);
   run.addInputs('estimates', { [id]: runConfigHash(id) });
-  tags.push(tagOf(r));
-  for (const s of r.spans) for (const f of s.fits) fits.set(`${tagOf(r)}|${f.issue}`, f);
+  // Shards of one forecast configuration (step 10 --shard) share a tag: one variant each.
+  if (!tags.includes(tagOf(r))) tags.push(tagOf(r));
+  for (const s of r.spans) for (const f of s.fits) {
+    if (fits.has(`${tagOf(r)}|${f.issue}`)) throw new Error(`two forecast fits for ${tagOf(r)} on ${f.issue}`);
+    fits.set(`${tagOf(r)}|${f.issue}`, f);
+  }
 }
 
 const iso = (ms) => isoUtc(ms);
