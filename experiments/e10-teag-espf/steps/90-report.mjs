@@ -151,7 +151,7 @@ for (const v of [...new Set(EN.map((j) => j.variant))]) {
     steps: steps.length, e1: { outside: e1Out, points: steps.reduce((a, s) => a + s.points, 0), maxRadius: Math.max(...steps.map((s) => s.e1.maxRadius)), stepsWithOutside: steps.filter((s) => s.e1.outside > 0).length },
     e2: steps.some((s) => s.e2) ? { outside: e2Out, survivors: steps.reduce((a, s) => a + (s.e2?.survivors ?? 0), 0), maxRadius: Math.max(...steps.map((s) => s.e2?.maxRadius ?? 0)), medianLogVolumeRatio: quantile(steps.map((s) => s.e2?.logVolumeRatio).filter(Number.isFinite), 0.5) } : null,
     byKind: Object.fromEntries(['gap', 'within'].map((k) => [k, { steps: steps.filter((s) => s.kind === k).length, outside: steps.filter((s) => s.kind === k).reduce((a, s) => a + s.e1.outside, 0), maxRadius: Math.max(...steps.filter((s) => s.kind === k).map((s) => s.e1.maxRadius)) }])),
-    verdict: steps.length ? (e1Out === 0 && e2Out === 0 ? 'encloses (at every tested step)' : 'summarizes the sampled support') : 'not run',
+    verdict: !steps.length ? 'not run' : e1Out === 0 && e2Out === 0 ? 'encloses (at every tested step)' : label(v) === 'SMF' ? 'does not enclose (its linearized bound misses propagated points)' : 'summarizes the sampled support',
   };
 }
 
