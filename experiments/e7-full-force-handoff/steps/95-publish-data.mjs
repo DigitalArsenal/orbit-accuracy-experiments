@@ -7,7 +7,8 @@
 // data/e7/MANIFEST.json and the sources in data/e7/SOURCES.md. The DE440s
 // kernel is listed by URL and SHA-256 (JPL's public archive).
 //
-//   node experiments/e7-full-force-handoff/steps/95-publish-data.mjs --batches test:ID,validation:ID --assets DIR
+//   node experiments/e7-full-force-handoff/steps/95-publish-data.mjs --batches test:ID,validation:ID[+PATCH]
+//        --manifests results/e7/train/<run>.manifest.json,... --assets DIR
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -18,7 +19,7 @@ import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
 import { loadBatch } from '../analysis.mjs';
 
-const { values } = parseArgs({ options: { batches: { type: 'string' }, assets: { type: 'string' }, products: { type: 'string', default: '/opt/data/sdn-archive/reference-states/products' } } });
+const { values } = parseArgs({ options: { batches: { type: 'string' }, manifests: { type: 'string' }, assets: { type: 'string' }, products: { type: 'string', default: '/opt/data/sdn-archive/reference-states/products' } } });
 const out = path.join(repoRoot, 'data/e7');
 fs.mkdirSync(out, { recursive: true });
 const assets = path.resolve(values.assets);
@@ -26,19 +27,24 @@ fs.mkdirSync(assets, { recursive: true });
 const provenanceOf = (file) => { try { return JSON.parse(fs.readFileSync(`${file}.provenance.json`, 'utf8')); } catch { return null; } };
 
 const manifest = { experiment: config.experiment, generated: new Date().toISOString(), committed: [], releaseAssets: [], listed: [] };
-// Small files, committed.
-for (const [key, terms] of [
-  ['eopC04', 'IERS: free use with acknowledgement of the IERS Earth Orientation Centre'],
-  ['solfsmy', null], ['dtcfile', null], ['gfzKp', 'GFZ Potsdam: CC BY 4.0 (Matzka et al. 2021)'],
-  ['gnssMetadata', 'IGS: free use with acknowledgement of the IGS (IGS data and product disclaimer and terms of use)'],
+// Small files: committed, except SET's JB2008 drivers, which state no
+// license; like E5, they go with the release assets until SET's terms are
+// confirmed.
+for (const [key, terms, where] of [
+  ['eopC04', 'IERS: free use with acknowledgement of the IERS Earth Orientation Centre', 'git'],
+  ['solfsmy', null, 'asset'], ['dtcfile', null, 'asset'], ['gfzKp', 'GFZ Potsdam: CC BY 4.0 (Matzka et al. 2021)', 'git'],
+  ['gnssMetadata', 'IGS: free use with acknowledgement of the IGS (IGS data and product disclaimer and terms of use)', 'git'],
 ]) {
   const file = config.inputs[key];
   const bytes = fs.readFileSync(file);
   const p = provenanceOf(file);
   const name = `${path.basename(file)}.gz`;
-  fs.writeFileSync(path.join(out, name), zlib.gzipSync(bytes, { level: 9 }));
-  manifest.committed.push({ file: `data/e7/${name}`, source: p?.url ?? (key === 'eopC04' ? 'https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now' : null), retrieved: p?.retrieved_utc ?? fs.statSync(file).mtime.toISOString(),
-    sha256: sha256(bytes), gzSha256: sha256(fs.readFileSync(path.join(out, name))), terms: p?.terms ?? terms });
+  const target = where === 'git' ? path.join(out, name) : path.join(assets, name);
+  fs.writeFileSync(target, zlib.gzipSync(bytes, { level: 9 }));
+  const entry = { file: where === 'git' ? `data/e7/${name}` : name, source: p?.url ?? (key === 'eopC04' ? 'https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now' : key === 'gnssMetadata' ? 'https://files.igs.org/pub/station/general/igs_satellite_metadata.snx' : null),
+    retrieved: p?.retrieved_utc ?? fs.statSync(file).mtime.toISOString(), sha256: sha256(bytes), gzSha256: sha256(fs.readFileSync(target)), terms: p?.terms ?? terms };
+  if (where === 'git') manifest.committed.push(entry);
+  else manifest.releaseAssets.push({ asset: name, sha256: entry.gzSha256, bytes: fs.statSync(target).size, note: 'Not in git until SET confirms its terms (none stated on https://spacewx.com/jb2008/).', members: [entry] });
 }
 manifest.listed.push({ file: path.basename(config.inputs.kernel.path), source: config.inputs.kernel.url, sha256: config.inputs.kernel.sha256, terms: 'JPL/NAIF public archive' });
 
@@ -64,11 +70,18 @@ manifest.listed.push({ file: path.basename(config.inputs.kernel.path), source: c
     sha256: sha256(fs.readFileSync(tarFile)), terms: members[0]?.provenance?.terms ?? 'NOAA/NWS: public domain', members: members.map(({ file, sha256: h, provenance }) => ({ file, sha256: h, url: provenance?.url ?? null })) });
 }
 
-// Truth products behind every reference file a batch read.
+// Truth products behind every reference file a batch (and its patches) or a
+// listed run manifest (step 10) read.
 const products = new Map();
+const manifests = [];
 for (const spec of values.batches.split(',')) {
-  const [window, batch] = spec.split(':');
-  for (const m of loadBatch(window, batch).manifests) for (const f of Object.keys(m.inputs.reference ?? {})) {
+  const [window, batches] = spec.split(':');
+  const [batch, ...patches] = batches.split('+');
+  manifests.push(...loadBatch(window, batch, patches).manifests);
+}
+for (const f of (values.manifests ?? '').split(',').filter(Boolean)) manifests.push(JSON.parse(fs.readFileSync(path.resolve(f), 'utf8')));
+for (const m of manifests) {
+  for (const f of Object.keys(m.inputs.reference ?? {})) {
     const dir = f.split('/')[0];
     if (products.has(dir)) continue;
     const index = JSON.parse(fs.readFileSync(path.join(config.inputs.reference, dir, 'index.json'), 'utf8'));
@@ -107,8 +120,8 @@ const terms = {
 const L = ['# E7 inputs other than Space-Track', '', 'Generated by `experiments/e7-full-force-handoff/steps/95-publish-data.mjs`. Space-Track `gp_history` element sets are not published (Space-Track terms); their file SHA-256 are in each run manifest.', '',
   '## Committed here', '', '| File | Source | Retrieved | SHA-256 (uncompressed) | Terms |', '| --- | --- | --- | --- | --- |',
   ...manifest.committed.map((c) => `| \`${c.file}\` | ${c.source} | ${c.retrieved} | \`${c.sha256}\` | ${c.terms} |`), '',
-  '## Release assets (precise orbits behind every scored target)', '', '| Asset | Members | Bytes | SHA-256 | Source | Terms |', '| --- | ---: | ---: | --- | --- | --- |',
-  ...manifest.releaseAssets.map((a) => `| \`${a.asset}\` | ${a.members.length} | ${a.bytes} | \`${a.sha256}\` | ${new URL(a.members[0].url).host} (each member's URL and SHA-256 in MANIFEST.json) | ${terms[a.asset.replace(/^e7-|\.tar\.gz$/g, '')] ?? ''} |`), '',
+  '## Release assets (the precise orbits behind every scored target, and SET\'s JB2008 drivers)', '', '| Asset | Members | Bytes | SHA-256 | Source | Terms |', '| --- | ---: | ---: | --- | --- | --- |',
+  ...manifest.releaseAssets.map((a) => `| \`${a.asset}\` | ${a.members.length} | ${a.bytes} | \`${a.sha256}\` | ${a.members[0].url ? `${new URL(a.members[0].url).host} (each member's URL and SHA-256 in MANIFEST.json)` : a.members[0].source} | ${terms[a.asset.replace(/^e7-|\.tar\.gz$/g, '')] ?? `${a.members[0].terms ?? ''} ${a.note ?? ''}`} |`), '',
   '## Listed only', '', ...manifest.listed.map((l) => `- \`${l.file}\`: ${l.source}, SHA-256 \`${l.sha256}\` (${l.terms}).`), '',
   'Each product is converted to GCRF reference states by `analysis/reference-states` with IERS EOP 20 C04, as listed in the run manifests.', ''];
 fs.writeFileSync(path.join(out, 'SOURCES.md'), L.join('\n'));
