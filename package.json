@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "Orbit-accuracy experiments run through Space Data Network modules with the space-data-module-sdk harness.",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "node --test test/*.test.mjs"
   },
@@ -12,5 +14,8 @@
     "flatbuffers": "25.9.23",
     "space-data-module-sdk": "0.8.26",
     "spacedatastandards.org": "1.240.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
   }
 }
