@@ -1,0 +1,180 @@
+{
+ "run": "e6-40-slr-fit-dev-3of6-20261009T230404Z",
+ "experiment": "e6",
+ "step": "40-slr-fit-dev-3of6",
+ "command": [
+  "node",
+  "experiments/e6-public-observations/steps/40-slr-fit.mjs",
+  "--window",
+  "dev",
+  "--shard",
+  "3/6",
+  "--variants",
+  "P,S,R"
+ ],
+ "args": {
+  "window": "dev",
+  "shard": "3/6",
+  "variants": "P,S,R"
+ },
+ "started": "2026-10-09T23:04:04.904Z",
+ "finished": "2026-10-09T23:54:06.598Z",
+ "config": {
+  "path": "experiments/e6-public-observations/config.json",
+  "sha256": "65f69a745a39b2ba2f36594ece705e1b7134936347c0aa201a10a0f494d877a0",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "b2bac1499630adf4286bbeb37832a3c71a433022",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "095c20a622da225a06707f43f8840984fb5ea708",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/estimation",
+   "pluginId": "com.digitalarsenal.analysis.estimation",
+   "version": "0.2.0",
+   "wasmSha256": "f2e322784fd4876c7728376d0ba3b4b0d641bb2858a41083e73b8631c6cdebb0",
+   "manifestSha256": "f6b69c599b150d6c885c84a4f89f92e6befb695d08a809f66ef6f82d120fb3a0"
+  },
+  {
+   "path": "propagator/hpop",
+   "pluginId": "com.orbpro.hpop",
+   "version": "1.1.0",
+   "wasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
+   "manifestSha256": "50db412d6376320f98a243f74dfe1264054359dd9a937a7c2c4310b20b4c9468"
+  },
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.1.0",
+   "wasmSha256": "ccb91ff04893834ed09df658f484d5faec8b73609a0800e8d0385cfca708c4e2",
+   "manifestSha256": "7fae978bb3512b18a1226d11f3c5566ae39a8f260fcf7a711f77406c471834b0"
+  },
+  {
+   "path": "analysis/epoch-state",
+   "pluginId": "com.digitalarsenal.analysis.epoch-state",
+   "version": "0.1.0",
+   "wasmSha256": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
+   "manifestSha256": "aa9d1bf2e5d16a79a6890a8a6b3c9dfeb914fcce9e3a5a89e9145a0738115350"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.241.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   37.8603515625,
+   39.35400390625,
+   39.0244140625
+  ]
+ },
+ "inputs": {
+  "environment": {
+   "eopFinals": "0baf00f67a39ab362a3e4f07d2a1f084842178523f56bcf5a861e7ac084d411a",
+   "kernel": "e612a95953ca8211c629bdb632d4c7483cc339f0e963592bd8cae4a7d24ad7ef",
+   "spaceWeather": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e",
+   "gpErrorModel": "ba5684212fceb1cea5578286bf36dfe607426c0dccf7f57822f3fa7aca3b6046"
+  },
+  "truth": {
+   "nsgf.orb.starlette.260630.v000": "7b687861b80c8425cbe836ccac10f2c72924382310792f4361854c10a5d260aa",
+   "nsgf.orb.starlette.260704.v000": "6364b0b3926bb12de7527debdfa95d02afefd667750d24d2d134210a98ad6322",
+   "nsgf.orb.starlette.260707.v000": "d6a70c100d7e779476a058939292ac0acd38ede38cb852756746b34bbf7975c6",
+   "nsgf.orb.starlette.260708.v000": "c92e0a94da82be383ceb7e296aa3845701e8b061f9f90272f8b16167109f0dc0",
+   "nsgf.orb.starlette.260712.v000": "bcabf4572062ee4aa8a343abdbee9191d21a5e43d13c16c6757b733d368c791e",
+   "nsgf.orb.starlette.260715.v000": "802fb5b8e29cc0ced1443454714cdd8bf591b142a4ae8d3406bfb244747977a6",
+   "nsgf.orb.starlette.260716.v000": "8f50e071ddb14a1f3c799d5905f36632713454700f052ffdefe64014c97a88c9",
+   "nsgf.orb.starlette.260719.v000": "e31a67f861a1d66eb6b86f352685122478c86dad3fb658ec2d1ceba68b683c0c",
+   "nsgf.orb.stella.260630.v000": "02bb7a6d489f48d723fd250ab253513e9e57df8e140e0322f385b2914c16d570",
+   "nsgf.orb.stella.260704.v000": "c40915871557234e42795bd63ce16f1e3726bc2a29d4f2dadb5683f6aeb44ae2",
+   "nsgf.orb.stella.260707.v000": "154212db69029c037d670e8e389a257ed532e644e4ef9ba0852e7d48287817f2",
+   "nsgf.orb.stella.260708.v000": "81846a7344961bd81303f334de3f0c198361088004fcf2203a1ac33ff6c64a64",
+   "nsgf.orb.stella.260715.v000": "74f3e67004d9d0949e27d00db2d7295b386e8d6178045ba6d0e6a25fd5c09fa6",
+   "nsgf.orb.stella.260716.v000": "be74c5b3c0f229f04303c8974443e91094f7e81dcbb397ec21619f89f2470fec",
+   "nsgf.orb.stella.260719.v000": "8bdfd1b65667b58c841b66092576f264f277224b45b5d8c8a0496c0615887b03",
+   "nsgf.orb.larets.260630.v000": "fd8f030860512cdbea6ae19bf915a5f0706be1a4c6c8b08e3bf875f50aca5fac",
+   "nsgf.orb.larets.260704.v000": "4669cb63586bf4dc8af69b1dce8a624341ebc08fbb4a8100967ddadb175987fd",
+   "nsgf.orb.larets.260707.v000": "a22223f91aa9ff6cc2a95b67ba96c9c569f4685638dcb17ecfd57b4996484673",
+   "nsgf.orb.larets.260708.v000": "0601fbcabed87b7f3b51c8890244c899cea60989ee957cb1581666f412f7ad4f",
+   "nsgf.orb.larets.260715.v000": "0e1a971ad10499495fe0ee60d4e9fe63a7c203315320efd27891231189ecb1c5",
+   "nsgf.orb.larets.260716.v000": "3fbd8f7f867bd8d040b48e990c54b32ee486f780033d72b1c7e7be1d0ada734e",
+   "nsgf.orb.larets.260719.v000": "423e61d7cf3c21ac8334f9791e02d195566017e0c4b9c8c7d10e49964a29fc19",
+   "nsgf.orb.westpac.260630.v000": "a52dd43ce3d18ccd17291f0d3f8150df0257e7fd238b69d9b1ac27f18fe5c5b3",
+   "nsgf.orb.westpac.260704.v000": "4162035534f685a849ec3caa94abbf980f215b90e314d94d150b7a8c16b5a647",
+   "nsgf.orb.westpac.260707.v000": "3f4f3a72b083f3df10562a0577041db1457772d0a52c22f11e2f908748c5859e",
+   "nsgf.orb.westpac.260708.v000": "a8cdcb8482e49e1c08b9357cd6e6d53a2fdd88bf6fe6b7a052a05a3ed427695a",
+   "nsgf.orb.westpac.260711.v000": "321ab29107b2e69f00d193888249f25083923f0a7926852a9e61e81cb530bbb9",
+   "nsgf.orb.westpac.260712.v000": "c8eb0a173185249ce9d2891a2546f862551fb8f633b19089431bfbe60c5ab97a",
+   "nsgf.orb.westpac.260715.v000": "3a2a10e907c91363bfb60adc6a2a5c00d127e8859c24f3b79fff0b43e2c817a5",
+   "nsgf.orb.westpac.260716.v000": "171e74f413e6759c959567c7b51a4e6284599d4343c1a9fe5106a4f98845c013",
+   "nsgf.orb.westpac.260719.v000": "8273e2719e8533ada9f60e122820a027a3afeeb79cfaa92858499a2161155d33",
+   "nsgf.orb.lares.260630.v000": "dfe63bafe277cf9a5f31895342602a596ba3809786946c2eab25128dd0709395",
+   "nsgf.orb.lares.260704.v000": "295421e829b340f359d27e5323d68ca7d416f44e1458a2d6b2c882799d60fae4",
+   "nsgf.orb.lares.260707.v000": "8d13ff69a3ed66253a9084f786648ebea7f6e60f0d5ece29fdc726c6ff510036",
+   "nsgf.orb.lares.260708.v000": "630617d9214d837f02ee11c2f7548e777e231ad8e8f494139049320f09de9efd",
+   "nsgf.orb.lares.260715.v000": "f5ae75f6d09152f37dd44b028ebbdd0be0bb4db3ad52ec4a06f9d913ba6ff8cb",
+   "nsgf.orb.lares.260716.v000": "50197765cc9aeef692a04bce1c186bda5f5604b896bde325e50e3afe73a06a21",
+   "nsgf.orb.lares.260719.v000": "35655ca9d9f6f4414a9ae5cc2f98b0e8f026b5517bf848fbfcbc97a9818954e3"
+  },
+  "gpHistory": {
+   "2026/2026-06-28.json.gz": "8713a1d80e8cbbd3b9c48a805e15ac66cb5cab18375bb7a21b55786507aa8526",
+   "2026/2026-06-29.json.gz": "6f2dcdae568610dc647c22399780fec544586dd357725789be53495c47741459",
+   "2026/2026-06-30.json.gz": "00fc4e2927fb919019511d14370dbbea736cc69a8cbf04094d06fa2e254d6cd9",
+   "2026/2026-07-01.json.gz": "0c104e46c0c2f7c2ddfcb4844ab37e59bc7abf45b556ded7bbf81b85aa7d56e1",
+   "2026/2026-07-02.json.gz": "2a9a4203892ddffdffc4f2ba9e900aa607e62329d46b264d16aade8fbdc4c479",
+   "2026/2026-07-03.json.gz": "a996a867e1edfece0954f74aa40d5b0649865bc54489536ea6849c05ed20e724",
+   "2026/2026-07-04.json.gz": "9ca055c284b1c19350ad7d4f3e7e574d7a91e4a9109b0c85267ef3f43740569a",
+   "2026/2026-07-05.json.gz": "795e968130f446b2e57b079a5ff0a1bc05fe2df947401057295a065c55d85df0",
+   "2026/2026-07-06.json.gz": "15b89719ac8e2173ce7e66b4769c3da9f6d35785f4f2c4af484f97eb534aa474",
+   "2026/2026-07-07.json.gz": "9ca6b16e1d655069fecedd61346cb04591df18d63b052d8c6de883ce8d50e3e6",
+   "2026/2026-07-08.json.gz": "d52e3753abc24b84900cd97fde4c8c036054257104c694115436a32d3c227900",
+   "2026/2026-07-09.json.gz": "78dc6711b8a96cc91d3176ab096fda0a4e43b3488750971e491911dc9d56e434",
+   "2026/2026-07-10.json.gz": "66a521166cbd8a0c4bc61365c093c7880e149171383fc79e32b7022503601d1e",
+   "2026/2026-07-11.json.gz": "76f7f3afaa53eae1915db3e0cefbbf14acbdb843864aad5fe02ac8c7966ded56",
+   "2026/2026-07-12.json.gz": "b2174f2d47d4252db88627651ff7fa14cca2220eddc32bf8d11df7f3558efdba",
+   "2026/2026-07-13.json.gz": "fb97dfffb9c638613e3eb7d3e1aff21e65eca1ff62675f769854ddca66baf8a1",
+   "2026/2026-07-14.json.gz": "772e3cb263db0968dbd60b7562617d941fed2a2e418743bdfefb26f1ad6dc6e4",
+   "2026/2026-07-15.json.gz": "997a64b309de8cda7b5a4c6aa2dae5ca3d2e9290746a3edcebe30e6163a95632",
+   "2026/2026-07-16.json.gz": "08c8b549c0fa2e535f8ed78f83908073a2e98bc5816f7fce1d907e701b0f827e"
+  },
+  "passes": {
+   "starlette-dev.json": "bfbce29d5f2d3595c969c1a44e7bb387d827f564ab4719715301e708df9f4e3f",
+   "stella-dev.json": "cb3ccbc3c34632e783b43c50f926997162d49755fecb4f6ed64c444310b12ffe",
+   "larets-dev.json": "2fceafa078d6ea17bb9c4191d4e9c7100ff940944fa7d7a8bff8fe7c03a6dcd4",
+   "westpac-dev.json": "e3f4167c4b4e4afe46cd2080e8b2f22072c0b888ebc99bde238b61f319b16193",
+   "lares-dev.json": "2932c298ba4460128d708493229d9c1a39e07672a6bd814b13a45a531bb1c98b"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T23:04:04.904Z",
+   "args": {
+    "window": "dev",
+    "shard": "3/6",
+    "variants": "P,S,R"
+   }
+  }
+ ]
+}

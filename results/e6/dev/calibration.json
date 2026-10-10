@@ -1,0 +1,40 @@
+{
+ "window": "dev",
+ "segments": 24,
+ "passes": 23,
+ "measurements": 619,
+ "stations": 10,
+ "lagSeconds": 0.8218363028829004,
+ "lagSigmaSeconds": 0.04462153184052488,
+ "sigmaScaleCommonLag": 4.246199349092704,
+ "whitenedMadCommonLag": 1.9027920479056784,
+ "sigmaScaleSegmentLag": 1.9929301256739596,
+ "whitenedMadSegmentLag": 1.5806451975572586,
+ "biasHz": {
+  "median": -348.86520638659147,
+  "q05": -600.5493146041321,
+  "q95": 1388.7656910190449,
+  "absMedian": 587.7092735356102
+ },
+ "segmentDriftMps2": {
+  "median": 0.10147840342875913,
+  "q05": -0.6497751437429743,
+  "q25": 0.05861054784528119,
+  "q75": 0.49425303134100973,
+  "q95": 1.1933603210090644,
+  "robustSigma": 0.3807439767335443
+ },
+ "segmentLagSeconds": {
+  "median": 0.4363931940781317,
+  "q05": -0.4738969533474121,
+  "q25": -0.2730839278067082,
+  "q75": 1.280699467338132,
+  "q95": 53.88063429371891,
+  "robustSigma": 1.0733372595220698
+ },
+ "byLayout": {
+  "utcAxis": 18,
+  "secondsAxis": 6
+ },
+ "run": "e6-15-calibrate-20261009T222010Z"
+}

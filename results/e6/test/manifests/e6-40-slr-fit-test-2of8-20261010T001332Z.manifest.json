@@ -1,0 +1,238 @@
+{
+ "run": "e6-40-slr-fit-test-2of8-20261010T001332Z",
+ "experiment": "e6",
+ "step": "40-slr-fit-test-2of8",
+ "command": [
+  "node",
+  "experiments/e6-public-observations/steps/40-slr-fit.mjs",
+  "--window",
+  "test",
+  "--shard",
+  "2/8"
+ ],
+ "args": {
+  "window": "test",
+  "shard": "2/8"
+ },
+ "started": "2026-10-10T00:13:32.867Z",
+ "finished": "2026-10-10T05:01:36.676Z",
+ "config": {
+  "path": "experiments/e6-public-observations/config.json",
+  "sha256": "db875e91902299c3f82d80087c05cd0ebe0f14a4ce36077134b9a28217d65921",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "db910db8eecdc1f12a35a3022b7c944c4a27c791",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "095c20a622da225a06707f43f8840984fb5ea708",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/estimation",
+   "pluginId": "com.digitalarsenal.analysis.estimation",
+   "version": "0.2.0",
+   "wasmSha256": "f2e322784fd4876c7728376d0ba3b4b0d641bb2858a41083e73b8631c6cdebb0",
+   "manifestSha256": "f6b69c599b150d6c885c84a4f89f92e6befb695d08a809f66ef6f82d120fb3a0"
+  },
+  {
+   "path": "propagator/hpop",
+   "pluginId": "com.orbpro.hpop",
+   "version": "1.1.0",
+   "wasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
+   "manifestSha256": "50db412d6376320f98a243f74dfe1264054359dd9a937a7c2c4310b20b4c9468"
+  },
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.1.0",
+   "wasmSha256": "ccb91ff04893834ed09df658f484d5faec8b73609a0800e8d0385cfca708c4e2",
+   "manifestSha256": "7fae978bb3512b18a1226d11f3c5566ae39a8f260fcf7a711f77406c471834b0"
+  },
+  {
+   "path": "analysis/epoch-state",
+   "pluginId": "com.digitalarsenal.analysis.epoch-state",
+   "version": "0.1.0",
+   "wasmSha256": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
+   "manifestSha256": "aa9d1bf2e5d16a79a6890a8a6b3c9dfeb914fcce9e3a5a89e9145a0738115350"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.241.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   94.8896484375,
+   76.82177734375,
+   75.91162109375
+  ]
+ },
+ "inputs": {
+  "environment": {
+   "eopFinals": "0baf00f67a39ab362a3e4f07d2a1f084842178523f56bcf5a861e7ac084d411a",
+   "kernel": "e612a95953ca8211c629bdb632d4c7483cc339f0e963592bd8cae4a7d24ad7ef",
+   "spaceWeather": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e",
+   "gpErrorModel": "ba5684212fceb1cea5578286bf36dfe607426c0dccf7f57822f3fa7aca3b6046"
+  },
+  "truth": {
+   "nsgf.orb.starlette.260719.v000": "e31a67f861a1d66eb6b86f352685122478c86dad3fb658ec2d1ceba68b683c0c",
+   "nsgf.orb.starlette.260720.v000": "6b7f833ab31f4466ce068f12d14c9b79bd72942675a5c0e85d91ce84c4385e2e",
+   "nsgf.orb.starlette.260724.v000": "d019852e6bc9e6f380824cc14bb61be1112c58eceedf00fa3c1bd6a2ad7c25e4",
+   "nsgf.orb.starlette.260728.v000": "5f807a68b2a6bfdca8e33c638945b1f11f71950c8ce85ac2d35ab04e3bfd073e",
+   "nsgf.orb.starlette.260801.v000": "ad37a30d80115d3b9f15b13dba0f6b76692820b0b9d03b32496e8da5aa43bf17",
+   "nsgf.orb.starlette.260805.v000": "328c461fea55322cec4cc2c35bb3a8341e5fc0d2f3689199c1cd02353181e5f0",
+   "nsgf.orb.starlette.260806.v00": "c8e2acdcb6f4adb1e2d902b5667b55c3d77da2ac88bd7a7239df9620246c3e7c",
+   "nsgf.orb.starlette.260809.v000": "f784a79302852bfe5656c80283d07c425bb375068799df025d160954ab3fc15c",
+   "nsgf.orb.starlette.260810.v00": "9614ec811e15bfbc381c2bfbfe531a777c6087124efd900d37e57ad90a9b7cbb",
+   "nsgf.orb.starlette.260813.v000": "04c98424f7e7c02030ea7034944436f795d45f76fb7324bd09d6e75d6a56e775",
+   "nsgf.orb.starlette.260814.v00": "9d3c1156ec2bec418675798f0897ec21db80f83fc67569b651ba7c7075cf65a6",
+   "nsgf.orb.starlette.260817.v000": "d5b5c29a8b92a3aaca42631d891160378b0170e570b850781074a9165877484c",
+   "nsgf.orb.starlette.260818.v00": "1370e8ea5a81fafe8ce699e73e57e7367709b0d0a76eed23b6967f8aea9977de",
+   "nsgf.orb.starlette.260821.v000": "348548911361f38e8ad7b2eb0df550ff3c4fe9d19033512dadd68e1ae8103ec9",
+   "nsgf.orb.starlette.260825.v000": "abaf1b37520ba2221c75d4385c8f6fdf789c65cb45b1ad5f72f3112bd189f68b",
+   "nsgf.orb.starlette.260829.v000": "3308c29a036104eb949d1ca24907a82d3ff695233e418aa4143fe06add319bf3",
+   "nsgf.orb.stella.260719.v000": "8bdfd1b65667b58c841b66092576f264f277224b45b5d8c8a0496c0615887b03",
+   "nsgf.orb.stella.260720.v000": "47ec213cdd409a605e9c345b66a2ee413be37d526dc749f636b42fac45ddfd73",
+   "nsgf.orb.stella.260724.v000": "21368c7689d6ad25b44b5883885403c11656e086a9b335f6ed2933ac46e62afa",
+   "nsgf.orb.stella.260728.v000": "dc396c951e01ee8b95b8dbfc2b13c1950fb72fded39f38d3c3f1f6b0862d6df5",
+   "nsgf.orb.stella.260801.v000": "d324e654e2fe8d6c38dbc9439a193fcef2507bbd60ed2cdbe9e7f5a8fea8f60b",
+   "nsgf.orb.stella.260805.v000": "d9be39e482b7869d61371ccee7195056594afc50fb5dfc4b0b996dd529669a71",
+   "nsgf.orb.stella.260806.v00": "452cabf03c466d4d181a4d90756e05923d08f9ac45d1d762e7fd7dffd78f6746",
+   "nsgf.orb.stella.260809.v000": "bb68229ae8cb238e828a101a0cb997fb976900e0d7b7cbd4c426e115c460a431",
+   "nsgf.orb.stella.260810.v00": "482fb18633c5b9b7e5cab5a726ef5ac53dd5460dd82dde245cd678400b4d1b1d",
+   "nsgf.orb.stella.260813.v000": "caade519b19f43fbad121bd52251061e359576ae7c094d1bcd3e74af280553df",
+   "nsgf.orb.stella.260814.v00": "ef5720b724c5a25c238f946679b809ea1383c51623631a6801cee49906f01974",
+   "nsgf.orb.stella.260817.v000": "ec43e4e3934a4b768a8168af282e74662af0d973d8e9bacacbc575c1f4b2ed1d",
+   "nsgf.orb.stella.260818.v00": "f9f56668cdce533da3b19a796722327fc1820468e5d7e2de85ac29e3aa3e02e8",
+   "nsgf.orb.stella.260821.v000": "05ae1d053b98ce3ebf5d1a20381206a642786337583f627631ff1f1fe96cce71",
+   "nsgf.orb.stella.260825.v000": "fb1f99e587a1a0bb396c48eb4b3ed5c709eacf8c35cf3b1e99865b295829d3bc",
+   "nsgf.orb.stella.260829.v000": "92aeec37e215cb31fb0ac574a9e826b2412e9019b7b869a157d064b2281ac511",
+   "nsgf.orb.larets.260719.v000": "423e61d7cf3c21ac8334f9791e02d195566017e0c4b9c8c7d10e49964a29fc19",
+   "nsgf.orb.larets.260720.v000": "a1f12e0a9220a468cab6bcb1c101f924b5507df6ad7c4a6fbffccb02452773be",
+   "nsgf.orb.larets.260724.v000": "94697ecb57ed7875a47c41e483f0bc2d3c6093fb5633529cd31a9f337c40acd7",
+   "nsgf.orb.larets.260728.v000": "e61e67d496bd5da9ed5ccf2759914ba7d6bc71fad745b2251848658622cdb45d",
+   "nsgf.orb.larets.260801.v000": "4474d5fd3c8cb88f1820293350c20099b7910dda55f2b6b304ac7f851ebc8342",
+   "nsgf.orb.larets.260805.v000": "340a60474a99678fa1b3b2d42765713facf74be61bd606ea7da4bdfce3b5c047",
+   "nsgf.orb.larets.260806.v00": "a6bf67e09a5bae5c7ab9322147b1529224cabf2bf9877e20c4769460b266c76e",
+   "nsgf.orb.larets.260809.v000": "d7ffa139ab478b9b9310316fb5c4b92f3723f9d0b351793e4b01219ab5121289",
+   "nsgf.orb.larets.260810.v00": "26f0a3ecf389277983de625c8fdf540c629fffb5b6f0950d57fb2c4851e72c8a",
+   "nsgf.orb.larets.260813.v000": "b1d9bc1eed86e1545ac54d4cf03714c57a34593c60da5bec8bdcfa5385375d52",
+   "nsgf.orb.larets.260814.v00": "6177476eab90c523c31ccd7332b7d2e0e8a50f471e38dd57bd18c22d0b406013",
+   "nsgf.orb.larets.260817.v000": "1599ce493cfe24097b9f7dcfa0f15273f38523320938dded6aff9b33d747b600",
+   "nsgf.orb.larets.260818.v00": "16cab3a859c97a9233ea67add6a23bfc5e58822401916375f635100c8f08495c",
+   "nsgf.orb.larets.260821.v000": "1b86f7231cc9955540b221176766a31ba60dc3cd84b2f5f0338621cf36848a61",
+   "nsgf.orb.larets.260825.v000": "5f338e829f1a7901685e25bb59a146d526fffd9c95ecd58f056f0eef53d3134d",
+   "nsgf.orb.larets.260829.v000": "50ae43b443be6ca8707daa8cc41aad5e8819a6578f966bddd573a533873d3c55",
+   "nsgf.orb.westpac.260719.v000": "8273e2719e8533ada9f60e122820a027a3afeeb79cfaa92858499a2161155d33",
+   "nsgf.orb.westpac.260720.v000": "24a360030ab9fad46121aab3fc60320bd00bcb41f71a1d52caef58f2a8dea100",
+   "nsgf.orb.westpac.260724.v000": "2350718b8115837a6f1a887daa93f99869dc594e45a8c51b4b5e86631050cd89",
+   "nsgf.orb.westpac.260728.v000": "9aefdf0e5df70c4c0959f028c68f74900976b67b88d99449cf9273e3515af882",
+   "nsgf.orb.westpac.260801.v000": "bd6b232bcf28a1bd27ac9a3827740625e8c3014a449826d5abede880132b0bc4",
+   "nsgf.orb.westpac.260805.v000": "dba8346571353ce395e70f037cd06c740456a5420ba0654c3bcc15d4db0c32c8",
+   "nsgf.orb.westpac.260806.v00": "945dc7b496ffcc441bc210404ac48ed35093a837349d4b9c578b99dcc84b1369",
+   "nsgf.orb.westpac.260809.v000": "cfb8f77eb89b1a2ecffc9f22940a5465b183e5839133731da3202be59fb23097",
+   "nsgf.orb.westpac.260810.v00": "8c6c54bf3aa0e1d7088d0365bc7bf5f38663008c8e66c6b516d8c44e6301ecfe",
+   "nsgf.orb.westpac.260813.v000": "f5cec4d41216c592f350432d1b7ea817c4f7cc24e6e497a9f48d369097da30df",
+   "nsgf.orb.westpac.260814.v00": "6db9d3159bb8e69bda6bd8c140a05d064f323eab2509f33a04f1d7608f532704",
+   "nsgf.orb.westpac.260817.v000": "a36fd1741f3f2967df4b8efbe145466c8f3a425a86e12e1902517a20ea38f046",
+   "nsgf.orb.westpac.260818.v00": "aeae5117a9b4269450c6953d87636cb3e1f49e7e4fbadee1395a8523a6ce2475",
+   "nsgf.orb.westpac.260821.v000": "061383e408bcffd281b0cf5a603f5abe159d2cbb0d75506f93da745f607d67cc",
+   "nsgf.orb.westpac.260825.v000": "7968b5c7ad6941c391b04e32b3daf36ec494966156da8ab59bd8a686336e97fa",
+   "nsgf.orb.westpac.260829.v000": "c6a12d5b844504567db5f264b1aca0a77e46e9de5c0ce560adfcc90b927da7b6",
+   "nsgf.orb.lares.260719.v000": "35655ca9d9f6f4414a9ae5cc2f98b0e8f026b5517bf848fbfcbc97a9818954e3",
+   "nsgf.orb.lares.260720.v000": "c4ce0fa37e6b6be848872b7b3f8599222b3dfb933f017911727a7f631db4c90f",
+   "nsgf.orb.lares.260724.v000": "c4aa26fca305cb07ab512d6351421f18c8273edb4e11c6ffcffa926fc019ab84",
+   "nsgf.orb.lares.260728.v000": "5390f0f6114c5f8392335c124ceae098ad4f42a1c6e79345ba2d0f1b3b8b56fd",
+   "nsgf.orb.lares.260801.v000": "b69b4776781119093a5b05ada07867fb168a7300d0a8926c5eefecd144fae9d2",
+   "nsgf.orb.lares.260805.v000": "b6bae1b0f9e5ac6a9c32f16536b9803a1e2855bc45f6dde2fbcb75874f53a1cd",
+   "nsgf.orb.lares.260806.v00": "e45247ce30f8b165bac6618922c2f65fb7205a9ff15fc427bb446f464ca84be3",
+   "nsgf.orb.lares.260809.v000": "fd061574ac93ef68cf867f60e9f1b35369f33fc59e7b0031b3f204b17292ab6d",
+   "nsgf.orb.lares.260810.v00": "1fb97e15cb23edd28ed42a9a9a7d89113120cd721ee04a600b923070c976be5b",
+   "nsgf.orb.lares.260813.v000": "6fad54a48618a5c086eac9912f84d8f9c47379b390d7fcd1062b1ccb8c8c5a15",
+   "nsgf.orb.lares.260814.v00": "7efcb201e86ea5e5327769725c0fb502afb82dfdda3628d4018c92c4a9f93c4c",
+   "nsgf.orb.lares.260817.v000": "64729a68c05dae5d890d7da2c5e5bf376729bf4d8904585ad53717d72e9a520f",
+   "nsgf.orb.lares.260818.v00": "25bad654b961df8d8653c5d90593cddd433360cae75cb31743629842f31088e2",
+   "nsgf.orb.lares.260821.v000": "dccb9fe56bcd196887432f44761fa3b351f615c35de7a8f063fb60e65a492522",
+   "nsgf.orb.lares.260825.v000": "1162ce5361d3cc85322338f3b82b2870e91eab1e64fcaf8a2b1d4283b539da29",
+   "nsgf.orb.lares.260829.v000": "f1a819a8414f10843546fa72a7c66449e630930d98d61122a946150d01872bd7"
+  },
+  "gpHistory": {
+   "2026/2026-07-15.json.gz": "997a64b309de8cda7b5a4c6aa2dae5ca3d2e9290746a3edcebe30e6163a95632",
+   "2026/2026-07-16.json.gz": "08c8b549c0fa2e535f8ed78f83908073a2e98bc5816f7fce1d907e701b0f827e",
+   "2026/2026-07-17.json.gz": "374d70c5abfef04c59698ff9c29d593c6f3728759568b9f2cf2dcb6b925a4424",
+   "2026/2026-07-18.json.gz": "9a264365fa8874b29272ecd6cf0a59db1fd96525a55ce83de64cbbdb59e53d0c",
+   "2026/2026-07-19.json.gz": "5197902b8a7848c62f713255ceb45ffd4756e51ca048847f65113a0c552a58d6",
+   "2026/2026-07-20.json.gz": "8dee30ca71006f9cb8b3bddd8be21a2ef26103f281961856b9cfc6af1f08358e",
+   "2026/2026-07-21.json.gz": "abd027f733e19f98f11166aec9fe2f631a7fe600a22939dbbf7e640379036e23",
+   "2026/2026-07-22.json.gz": "a8cc4033d34089571dcffb8ea641bb45a244343e05af3647d6aa3e4232d45461",
+   "2026/2026-07-23.json.gz": "7cedaf11a5eb77271b4997559b4587bb413ac3e6412dbc5444e782cba7d0ea3f",
+   "2026/2026-07-24.json.gz": "d20e9c485807033abc07061de11d3d8297d242e176d6588585b6933de7527695",
+   "2026/2026-07-25.json.gz": "634762d2d9f8a826760c8f9f741f1cf10b3f4c8e0939e0a1169ba1d2829b9e87",
+   "2026/2026-07-26.json.gz": "024639ce0cb969e6ec74740d40af0336f19ae67de9a90bc4038b73db21350a0f",
+   "2026/2026-07-27.json.gz": "33519d2ffc81257ae33fd8a752d7d2d266525e49af76dcd7906ab3c7e7fc2ca3",
+   "2026/2026-07-28.json.gz": "7cd3f6e0c6d49da1259f215689623c995c6b9b59c4bf9d3264999b9996d237e8",
+   "2026/2026-07-29.json.gz": "e81fa8e50afa62f9ec339331689aed988db838330f5c547ed65bac43277d9c83",
+   "2026/2026-07-30.json.gz": "4b1d9d48de0ab2b11c93fc9cc5ca65a67582939dbf3f43a207183b6d5fc066c2",
+   "2026/2026-07-31.json.gz": "51c14d01212defc33ac9ed08fa870bfcc1c7673e408363798cf84adfc6f8e4ee",
+   "2026/2026-08-01.json.gz": "77ad740f84d13417ca70472ced34f63a6d9d5478b2ffe398eeee2254a18b0c1d",
+   "2026/2026-08-02.json.gz": "5a44ad76b6d7ea7b1a23c74d223a6e6c4ee755d69508e1fd32264b21968a973a",
+   "2026/2026-08-03.json.gz": "b49ce8b4890dfd2593d9a5e4bf0dadf382b235f7f01608658b5fbf6e0c8ca7ad",
+   "2026/2026-08-04.json.gz": "2defab873bf30d4845a762cce3ac6efec682c8292d71d8dca561246a7c69119a",
+   "2026/2026-08-05.json.gz": "10f7f63d7448bc28fe7ffb150340c2c76832989fcff41c96b654a73a23e85ef3",
+   "2026/2026-08-06.json.gz": "d382bfc4f32d1f5a1fa209717ade4a338428ff8c76b48afcdea6e5d9c7b02db2",
+   "2026/2026-08-07.json.gz": "370d5d88178f3070fad9bf9dcd98ad5fa7b7384eab589479a0d01fdd32a54c04",
+   "2026/2026-08-08.json.gz": "fa8a1da8cf263d17acea398ff3283da8766a31125b46f9225a2a03077f163210",
+   "2026/2026-08-09.json.gz": "cb6e5f8e3d1bb3ebf8b827a979c9de25f8f81784c8be1b771546ecf939b0193e",
+   "2026/2026-08-10.json.gz": "6b90d3834b3ceeb910cc4fb4d5e309d7d07347f99c2692fdba8a4f70fa5916ce",
+   "2026/2026-08-11.json.gz": "0b6f0dd4f6303b0a19768f78ac1d870f7a2251abe5b40d32a1a661142ac4a3be",
+   "2026/2026-08-12.json.gz": "f2e1744c9d4b5ab089e19115de918e4123a724e103b9b22219716e7466f3354c",
+   "2026/2026-08-13.json.gz": "a387bb5e01071692e6a17a5f2751b42d0b242e4787a667e469e828dd4d113ddc",
+   "2026/2026-08-14.json.gz": "1520bf1e72f10378f5a88e60941aff56680bee3d1406a2d6386826a1aab56429",
+   "2026/2026-08-15.json.gz": "31341cf1d4db08c53d50767392767d55e3a0b000348e33036dfed8fa81e76a1a",
+   "2026/2026-08-16.json.gz": "4bd98e01f99fa09253c208cf21166c699ea0954da52a5696be669c83631b4b69",
+   "2026/2026-08-17.json.gz": "bacca7e7a498733a0e0d101f26094ff94b40ba1ec2f5d4dd2b1c076194940e9e",
+   "2026/2026-08-18.json.gz": "77d551d753dac3aaf266541a39c1d7554cd52c02e98275182d1b05ca4cecb8c9",
+   "2026/2026-08-19.json.gz": "0a551e99d2e14ba39b219554c7bdbbc1e2cab03de904f98c8cea1d99039293d3",
+   "2026/2026-08-20.json.gz": "56597f232f33856d90aad765a7d96bce2d32efcf90d74b5128de09d847f5c709",
+   "2026/2026-08-21.json.gz": "836104a8c4b6808b5b418ec2ea714113621ebd78415bef97afcfb264f50e363d",
+   "2026/2026-08-22.json.gz": "27925941f43151dc50b29bf6fe106562ebba0bbe54fb345ccf975daa095d9802"
+  },
+  "passes": {
+   "starlette-test.json": "49188db2c7dc62f0816dc64070a5fa523fd730a2b9022fac09ce6213defbd4b2",
+   "stella-test.json": "665b9d4ab5dc5c38c1e5322cda2de1b42a54ce88ac7b2d221a5765767a7017b4",
+   "larets-test.json": "263aeb337e11d00505b15e2329fbf6342a25251df9558f55de25d585343affdd",
+   "westpac-test.json": "04cbd5f248e9cd180ccd41125228f4f6dc41a461c1a30401a1510ba0f5d0a935",
+   "lares-test.json": "a5fb6d206316d4c34a1f383f0f376c92c9bc2ad84d1bc835a0385b9524dd1453"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T00:13:32.867Z",
+   "args": {
+    "window": "test",
+    "shard": "2/8"
+   }
+  }
+ ]
+}

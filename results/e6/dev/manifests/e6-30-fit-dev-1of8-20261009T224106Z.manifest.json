@@ -1,0 +1,128 @@
+{
+ "run": "e6-30-fit-dev-1of8-20261009T224106Z",
+ "experiment": "e6",
+ "step": "30-fit-dev-1of8",
+ "command": [
+  "node",
+  "experiments/e6-public-observations/steps/30-fit.mjs",
+  "--window",
+  "dev",
+  "--shard",
+  "1/8"
+ ],
+ "args": {
+  "window": "dev",
+  "shard": "1/8"
+ },
+ "started": "2026-10-09T22:41:06.289Z",
+ "finished": "2026-10-10T00:37:29.559Z",
+ "config": {
+  "path": "experiments/e6-public-observations/config.json",
+  "sha256": "e5261dc5a37c02efebb7b014231a3afb85079a0800c96d20703fac89863bc9b0",
+  "frozen": false
+ },
+ "repository": {
+  "commit": "b2bac1499630adf4286bbeb37832a3c71a433022",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "095c20a622da225a06707f43f8840984fb5ea708",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/estimation",
+   "pluginId": "com.digitalarsenal.analysis.estimation",
+   "version": "0.2.0",
+   "wasmSha256": "f2e322784fd4876c7728376d0ba3b4b0d641bb2858a41083e73b8631c6cdebb0",
+   "manifestSha256": "f6b69c599b150d6c885c84a4f89f92e6befb695d08a809f66ef6f82d120fb3a0"
+  },
+  {
+   "path": "propagator/hpop",
+   "pluginId": "com.orbpro.hpop",
+   "version": "1.1.0",
+   "wasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
+   "manifestSha256": "50db412d6376320f98a243f74dfe1264054359dd9a937a7c2c4310b20b4c9468"
+  },
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.1.0",
+   "wasmSha256": "ccb91ff04893834ed09df658f484d5faec8b73609a0800e8d0385cfca708c4e2",
+   "manifestSha256": "7fae978bb3512b18a1226d11f3c5566ae39a8f260fcf7a711f77406c471834b0"
+  },
+  {
+   "path": "analysis/epoch-state",
+   "pluginId": "com.digitalarsenal.analysis.epoch-state",
+   "version": "0.1.0",
+   "wasmSha256": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
+   "manifestSha256": "aa9d1bf2e5d16a79a6890a8a6b3c9dfeb914fcce9e3a5a89e9145a0738115350"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.241.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   39.05029296875,
+   36.4423828125,
+   39.7060546875
+  ]
+ },
+ "inputs": {
+  "environment": {
+   "eopFinals": "0baf00f67a39ab362a3e4f07d2a1f084842178523f56bcf5a861e7ac084d411a",
+   "kernel": "e612a95953ca8211c629bdb632d4c7483cc339f0e963592bd8cae4a7d24ad7ef",
+   "spaceWeather": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e",
+   "gpErrorModel": "ba5684212fceb1cea5578286bf36dfe607426c0dccf7f57822f3fa7aca3b6046"
+  },
+  "truth": {
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-09T12:21:51.469Z": "b3d9930306b645ba4d9a0db7f0201f3ecd5c436f6c4b4dea966878e93ec1cc96",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-09T22:12:54.833Z": "181d5b11705e2a8145bad8c5e35135adcccfe649f2fb96a82196d97dd4196da2",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-11T14:56:57.692Z": "1963ad38489fe0541ca5ba4de3a1e6b5c2523d4265389614562a220196797005",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-09-14T15:58:57.822Z": "22894ad2b47e218179c3dbfd41e83cfcec40b059c15b93bcc258144580cdfced",
+   "https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.txt@2026-10-09T17:55:31Z": "40cfb923fc4e88d65325f56cae87195aaf2ed63d03ce138323b15583a40056c2"
+  },
+  "gpHistory": {
+   "2026/2026-09-01.json.gz": "921e3da9c4b258edcd47767110d9f591a3faa3facc7c1a0610c5fa28f053ba90",
+   "2026/2026-09-02.json.gz": "0b67dafe4353f4c7f74b15e16301d9ad9882ea379bc648ec6342720321a90414",
+   "2026/2026-09-03.json.gz": "cee17c9639d30592adad0538c608b5ca84e456cd2a65a920f828b61a61839878",
+   "2026/2026-09-04.json.gz": "ddd6aab55434d98ebda1678405ec6d077f365506889c1374fb434fabe9baa151",
+   "2026/2026-09-05.json.gz": "bfc01fb9db9554d7206d60f818748ac928356c6b6b224bbfd6c8af0d61ce2344",
+   "2026/2026-09-06.json.gz": "dfc767eb783de84185648c400e52daff380dbb729eb6ca0a6f7e41bc8709a7d7",
+   "2026/2026-09-07.json.gz": "5176cdcf986abf25ffcf12338190e1d315516070556e32822f6c202da1a1c702",
+   "2026/2026-09-08.json.gz": "c2a0cf6a57ca6c2a18b4044113903878b009f5ff5854d998ab7bdbe47613cc9a",
+   "2026/2026-09-09.json.gz": "933073bf5c5303108dc58ade19c8462bf4f0c51776c346c686199bf26e148f15",
+   "2026/2026-09-10.json.gz": "11bd59501df461040d10e9dfbd472e1accabe4f0873959e10365a23fdc8d4ef8"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-09T22:41:06.289Z",
+   "args": {
+    "window": "dev",
+    "shard": "1/8"
+   }
+  }
+ ],
+ "cutoffs": 4
+}
