@@ -109,7 +109,7 @@ log(`chosen tau: ${tauChosen.tauHours === undefined ? '(no issue day yet: develo
 
 const out = {
   experiment: config.experiment, run: run.id, decided: new Date().toISOString(), through: new Date(through - DAY).toISOString().slice(0, 10), arcsFile: path.basename(arcsFile), arcs: arcs.length,
-  rule: 'PLAN.md 4.3 and Amendments R1, R2: among the solver candidates within 2 % of the smallest pooled standard deviation of x\' - s-bar over the dev windows, the first in the order 24 h nodes, weaker smoothing, random walk, smaller q; tau with the smallest pooled root-mean-square of the nowcast+forecast residuals over 0-72 h',
+  rule: 'PLAN.md 4.3 and Amendments R1, R2: among the solver candidates within 2 % of the smallest pooled standard deviation of x\' - s-bar over the dev windows, the first in the order 24 h nodes, weaker smoothing, random walk, smaller q; tau with the smallest pooled root-mean-square of the density change over the next 72 h, from the 24 h before the issue time, that the nowcast + forecast common mode leaves unpredicted',
   tieBand, tiedCandidates: tied.map((h) => h.label), solverCandidates: hindcast, solver: { nodeHours: chosen.nodeHours, baseline: chosen.baseline, smoothSigma: chosen.smoothSigma, label: chosen.label }, lagHours: chosen.lagHours,
   tauCandidates: tauTable, tauHours: tauChosen.tauHours, issues: issues.length,
 };

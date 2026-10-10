@@ -1,0 +1,843 @@
+{
+ "experiment": "e13-open-dca",
+ "run": "e13-open-dca-40-select-20261010T230943Z",
+ "decided": "2026-10-10T23:11:27.115Z",
+ "through": "2025-12-31",
+ "arcsFile": "dev-g24lean.jsonl",
+ "arcs": 2705,
+ "rule": "PLAN.md 4.3 and Amendments R1, R2: among the solver candidates within 2 % of the smallest pooled standard deviation of x' - s-bar over the dev windows, the first in the order 24 h nodes, weaker smoothing, random walk, smaller q; tau with the smallest pooled root-mean-square of the density change over the next 72 h, from the 24 h before the issue time, that the nowcast + forecast common mode leaves unpredicted",
+ "tieBand": 0.02,
+ "tiedCandidates": [
+  "24 h nodes, random walk q 0.005, smoothing 0.05",
+  "24 h nodes, random walk q 0.005, smoothing 0.03",
+  "24 h nodes, random walk q 0.01, smoothing 0.03",
+  "24 h nodes, random walk q 0.02, smoothing 0.03",
+  "12 h nodes, random walk q 0.005, smoothing 0.03",
+  "12 h nodes, random walk q 0.005, smoothing 0.02",
+  "12 h nodes, random walk q 0.01, smoothing 0.02",
+  "12 h nodes, random walk q 0.02, smoothing 0.02",
+  "12 h nodes, random walk q 0.04, smoothing 0.02"
+ ],
+ "solverCandidates": [
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, random walk q 0.005, smoothing none",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.09223630723074723,
+   "R1": 0.17187555713322222,
+   "sigmaArc": 0.08772314947174346,
+   "sweeps": 29,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.1,
+   "label": "24 h nodes, random walk q 0.005, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.08033137657516647,
+   "R1": 0.27876149351244883,
+   "sigmaArc": 0.09077206748878137,
+   "sweeps": 30,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.05,
+   "label": "24 h nodes, random walk q 0.005, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.06898190459809789,
+   "R1": 0.3806603600220234,
+   "sigmaArc": 0.10264710230021251,
+   "sweeps": 28,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.03,
+   "label": "24 h nodes, random walk q 0.005, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.06770266667156398,
+   "R1": 0.3921457308809708,
+   "sigmaArc": 0.11575759748566186,
+   "sweeps": 31,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.02,
+   "label": "24 h nodes, random walk q 0.005, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.07191483626164609,
+   "R1": 0.3543276449257221,
+   "sigmaArc": 0.12576826716606423,
+   "sweeps": 33,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, random walk q 0.01, smoothing none",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.0924645838177109,
+   "R1": 0.16982602341841402,
+   "sigmaArc": 0.08290245118914277,
+   "sweeps": 47,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.1,
+   "label": "24 h nodes, random walk q 0.01, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.0815450385149623,
+   "R1": 0.2678648829704887,
+   "sigmaArc": 0.08532220426166115,
+   "sweeps": 50,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.05,
+   "label": "24 h nodes, random walk q 0.01, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.06993039347677894,
+   "R1": 0.37214455049098827,
+   "sigmaArc": 0.09867355106075086,
+   "sweeps": 56,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.03,
+   "label": "24 h nodes, random walk q 0.01, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.06809776232247744,
+   "R1": 0.38859844700095525,
+   "sigmaArc": 0.1110106406047388,
+   "sweeps": 32,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.02,
+   "label": "24 h nodes, random walk q 0.01, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.0720864164407712,
+   "R1": 0.352787148081139,
+   "sigmaArc": 0.12203502668649484,
+   "sweeps": 30,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, random walk q 0.02, smoothing none",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.09311273052935261,
+   "R1": 0.1640067733791487,
+   "sigmaArc": 0.07749264646983323,
+   "sweeps": 34,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.1,
+   "label": "24 h nodes, random walk q 0.02, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.0828178559261676,
+   "R1": 0.2564371573690223,
+   "sigmaArc": 0.08103459799279318,
+   "sweeps": 34,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.05,
+   "label": "24 h nodes, random walk q 0.02, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.07120749574778738,
+   "R1": 0.36067835416965277,
+   "sigmaArc": 0.0919081326912231,
+   "sweeps": 40,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.03,
+   "label": "24 h nodes, random walk q 0.02, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.06866380361405156,
+   "R1": 0.3835163633475872,
+   "sigmaArc": 0.10510695945423701,
+   "sweeps": 38,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.02,
+   "label": "24 h nodes, random walk q 0.02, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.0725095647631136,
+   "R1": 0.34898799914282375,
+   "sigmaArc": 0.11684951781586204,
+   "sweeps": 40,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, random walk q 0.04, smoothing none",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.09681668849960326,
+   "R1": 0.13075155943349237,
+   "sigmaArc": 0.06025665326145798,
+   "sweeps": 38,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.1,
+   "label": "24 h nodes, random walk q 0.04, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.08870415602082116,
+   "R1": 0.2035882399222635,
+   "sigmaArc": 0.06311711891048148,
+   "sweeps": 32,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.05,
+   "label": "24 h nodes, random walk q 0.04, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.07653400493365815,
+   "R1": 0.31285540261827516,
+   "sigmaArc": 0.07548475262076063,
+   "sweeps": 33,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.03,
+   "label": "24 h nodes, random walk q 0.04, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.07148522649865842,
+   "R1": 0.35818480656093654,
+   "sigmaArc": 0.09239129340007864,
+   "sweeps": 31,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.02,
+   "label": "24 h nodes, random walk q 0.04, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.07432439654281588,
+   "R1": 0.332693910604532,
+   "sigmaArc": 0.10404404913613513,
+   "sweeps": 34,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "blocks",
+    "days": 30
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, blocks of 30 d",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 0.922865487040291,
+   "R1": -7.285755254536626,
+   "sigmaArc": 0.08550141268495602,
+   "sweeps": 29,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "blocks",
+    "days": 21
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, blocks of 21 d",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 2.392231314910514,
+   "R1": -20.47814981266222,
+   "sigmaArc": 0.08039199044744634,
+   "sweeps": 34,
+   "converged": true
+  },
+  {
+   "nodeHours": 24,
+   "baseline": {
+    "kind": "blocks",
+    "days": 10
+   },
+   "smoothSigma": null,
+   "label": "24 h nodes, blocks of 10 d",
+   "lagHours": 0,
+   "windows": 716,
+   "sdX": 0.11137976668270555,
+   "sdResidual": 3.3520005881438713,
+   "R1": -29.09523801295906,
+   "sigmaArc": 0.07799021472813669,
+   "sweeps": 28,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, random walk q 0.005, smoothing none",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 42.848225924837415,
+   "R1": -380.28868786477756,
+   "sigmaArc": 0.08609783611780286,
+   "sweeps": 60,
+   "converged": false
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.1,
+   "label": "12 h nodes, random walk q 0.005, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.08685137357201274,
+   "R1": 0.2271454522617553,
+   "sigmaArc": 0.08872950921574344,
+   "sweeps": 30,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.05,
+   "label": "12 h nodes, random walk q 0.005, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.07652761383039276,
+   "R1": 0.3190123317124576,
+   "sigmaArc": 0.09462523486165256,
+   "sweeps": 29,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.03,
+   "label": "12 h nodes, random walk q 0.005, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.068601589372355,
+   "R1": 0.3895427539262174,
+   "sigmaArc": 0.10599591330392218,
+   "sweeps": 30,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.005
+   },
+   "smoothSigma": 0.02,
+   "label": "12 h nodes, random walk q 0.005, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.06820086578716733,
+   "R1": 0.39310862781468825,
+   "sigmaArc": 0.11663622494221851,
+   "sweeps": 31,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, random walk q 0.01, smoothing none",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 39.815518196990055,
+   "R1": -353.3018727687059,
+   "sigmaArc": 0.0823204423886665,
+   "sweeps": 60,
+   "converged": false
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.1,
+   "label": "12 h nodes, random walk q 0.01, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.0875441871393947,
+   "R1": 0.22098039010713155,
+   "sigmaArc": 0.08250400486884574,
+   "sweeps": 47,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.05,
+   "label": "12 h nodes, random walk q 0.01, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.0775392425090973,
+   "R1": 0.3100102653915263,
+   "sigmaArc": 0.09037357829341561,
+   "sweeps": 58,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.03,
+   "label": "12 h nodes, random walk q 0.01, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.06939647020888934,
+   "R1": 0.3824694372455528,
+   "sigmaArc": 0.10050574212762899,
+   "sweeps": 54,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.01
+   },
+   "smoothSigma": 0.02,
+   "label": "12 h nodes, random walk q 0.01, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.06843023824000434,
+   "R1": 0.39106753697167496,
+   "sigmaArc": 0.1116076789157343,
+   "sweeps": 30,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, random walk q 0.02, smoothing none",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 43.32921199449993,
+   "R1": -384.56878449478876,
+   "sigmaArc": 0.07549242429778417,
+   "sweeps": 60,
+   "converged": false
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.1,
+   "label": "12 h nodes, random walk q 0.02, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.08804294372475448,
+   "R1": 0.21654216098816315,
+   "sigmaArc": 0.07781581984079955,
+   "sweeps": 32,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.05,
+   "label": "12 h nodes, random walk q 0.02, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.07841622630006852,
+   "R1": 0.3022063483863122,
+   "sigmaArc": 0.08532787733840391,
+   "sweeps": 35,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.03,
+   "label": "12 h nodes, random walk q 0.02, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.06995469919101287,
+   "R1": 0.3775019877997966,
+   "sigmaArc": 0.09591800967489388,
+   "sweeps": 43,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.02
+   },
+   "smoothSigma": 0.02,
+   "label": "12 h nodes, random walk q 0.02, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.0685600701308211,
+   "R1": 0.3899122165301854,
+   "sigmaArc": 0.10595995912694348,
+   "sweeps": 39,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, random walk q 0.04, smoothing none",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 40.15153686103092,
+   "R1": -356.29196425428944,
+   "sigmaArc": 0.0575715331982181,
+   "sweeps": 60,
+   "converged": false
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.1,
+   "label": "12 h nodes, random walk q 0.04, smoothing 0.1",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.08897756811917894,
+   "R1": 0.20822532402922744,
+   "sigmaArc": 0.061756887719581335,
+   "sweeps": 43,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.05,
+   "label": "12 h nodes, random walk q 0.04, smoothing 0.05",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.08111464877563866,
+   "R1": 0.2781941998595615,
+   "sigmaArc": 0.06492804701207648,
+   "sweeps": 34,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.03,
+   "label": "12 h nodes, random walk q 0.04, smoothing 0.03",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.07140436371682043,
+   "R1": 0.3646020211626977,
+   "sigmaArc": 0.07952363665267784,
+   "sweeps": 59,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "randomWalk",
+    "stepSigma": 0.04
+   },
+   "smoothSigma": 0.02,
+   "label": "12 h nodes, random walk q 0.04, smoothing 0.02",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 0.06882936907541905,
+   "R1": 0.3875158363064338,
+   "sigmaArc": 0.09193438582353997,
+   "sweeps": 30,
+   "converged": true
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "blocks",
+    "days": 30
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, blocks of 30 d",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 44.647446202313674,
+   "R1": -396.29920694629135,
+   "sigmaArc": 0.08333511127555937,
+   "sweeps": 60,
+   "converged": false
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "blocks",
+    "days": 21
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, blocks of 21 d",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 38.684434044628595,
+   "R1": -343.2368214623797,
+   "sigmaArc": 0.07800167109614393,
+   "sweeps": 60,
+   "converged": false
+  },
+  {
+   "nodeHours": 12,
+   "baseline": {
+    "kind": "blocks",
+    "days": 10
+   },
+   "smoothSigma": null,
+   "label": "12 h nodes, blocks of 10 d",
+   "lagHours": 0,
+   "windows": 700,
+   "sdX": 0.11237738566226062,
+   "sdResidual": 65.17282179879562,
+   "R1": -578.946057783069,
+   "sigmaArc": 0.07554385298485218,
+   "sweeps": 60,
+   "converged": false
+  }
+ ],
+ "solver": {
+  "nodeHours": 24,
+  "baseline": {
+   "kind": "randomWalk",
+   "stepSigma": 0.005
+  },
+  "smoothSigma": 0.05,
+  "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+ },
+ "lagHours": 0,
+ "tauCandidates": [
+  {
+   "tauHours": 12,
+   "windows": 720,
+   "sdResidual": 0.11783671317292946,
+   "rmsResidual": 0.11783766597365568,
+   "sdNoCorrection": 0.11899297949698626,
+   "rmsNoCorrection": 0.1190507054280353
+  },
+  {
+   "tauHours": 48,
+   "windows": 720,
+   "sdResidual": 0.11719110459219627,
+   "rmsResidual": 0.1172152422342255,
+   "sdNoCorrection": 0.11899297949698626,
+   "rmsNoCorrection": 0.1190507054280353
+  },
+  {
+   "tauHours": null,
+   "windows": 720,
+   "sdResidual": 0.11904807469680981,
+   "rmsResidual": 0.1191047028408514,
+   "sdNoCorrection": 0.11899297949698626,
+   "rmsNoCorrection": 0.1190507054280353
+  }
+ ],
+ "tauHours": 48,
+ "issues": 30
+}

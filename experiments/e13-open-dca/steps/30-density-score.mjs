@@ -28,7 +28,8 @@ run.addInputs('gfz', { [path.basename(config.inputs.gfzHistory)]: sha256(fs.read
 const dayMs = (iso) => Date.parse(`${iso}T00:00:00Z`);
 
 const arcFile = (split) => path.join(paths.planetArcs, `${split}-${P.arc.profile}.jsonl`);
-const readRows = (split) => { const f = arcFile(split); run.addInputs('planet-arcs', { [path.basename(f)]: sha256(fs.readFileSync(f)) }); return fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)); };
+const rowCache = new Map();           // one read (and one hash) of a split's arcs per run
+const readRows = (split) => { if (!rowCache.has(split)) { const f = arcFile(split), bytes = fs.readFileSync(f); run.addInputs('planet-arcs', { [path.basename(f)]: sha256(bytes) }); rowCache.set(split, bytes.toString('utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))); } return rowCache.get(split); };
 const arcOptions = { maxRelativeSigma: S.arcUse.maximumRelativeSigma, positiveOnly: S.arcUse.positiveOnly };
 const solverOptions = { huberK: S.huberK, iterations: S.iterations, tolerance: S.tolerance, scaleSweeps: S.scaleSweeps, minDovesPerNode: S.minimumDovesPerNodeInterval, minNodeInfo: S.minimumNodeInfo };
 const solve = (arcs, splitStart) => solveCommonMode(arcs, { anchorMs: dayMs(splitStart) + arcCenterOffsetMs(arcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, smoothSigma: selection.solver.smoothSigma ?? null, ...solverOptions });
@@ -55,6 +56,10 @@ const withInterval = (rows) => pigeonholeBootstrap(cellsOf(rows), r1FromCells, {
 const h1rows = rowsOf(here.sol);
 const h1 = spreadReduction(h1rows), h1ci = withInterval(h1rows);
 const sat = perSatellite(h1rows);
+// the ratio statistics: quantiles of rho_observed / rho_JB2008 (the satellite's dev level removed) without and with the common mode
+const q = (xs, p) => quantile(xs, p);
+const ratioStats = (xs) => Object.fromEntries([0.05, 0.25, 0.5, 0.75, 0.95].map((p) => [`p${100 * p}`, Math.exp(q(xs, p))]));
+const ratios = { D0: ratioStats(h1rows.map((r) => r.xp)), D13: ratioStats(h1rows.map((r) => r.xp - r.sbar)), windows: h1rows.length };
 const shifted = rowsOf(here.sol, HY.H6.shiftDays * DAY), h6 = spreadReduction(shifted);
 const stormMap = stormDays(from, to);
 const h2 = stormCapture(h1rows, new Set(stormMap.keys()));
@@ -110,7 +115,7 @@ log(`H3: held-out Doves ${u.length} arcs: R3 ${h3 ? `${h3.estimate.toFixed(3)} [
 const out = {
   experiment: config.experiment, run: run.id, split: values.split, span: [from, to], solver: selection.solver, lagHours: selection.lagHours ?? 0, tauHours: selection.tauHours,
   arcs: { calibration: here.arcs.length, heldOut: held.length }, sigmaArc: here.sol.sigma, sweeps: here.sol.sweeps, converged: here.sol.converged,
-  H1: { ...h1, interval: h1ci, perSatellite: sat, thresholdR1: HY.H1.threshold, supported: h1ci.lower > 0 && h1.R1 >= HY.H1.threshold },
+  H1: { ...h1, interval: h1ci, perSatellite: sat, ratios, thresholdR1: HY.H1.threshold, supported: h1ci.lower > 0 && h1.R1 >= HY.H1.threshold },
   H6: { ...h6, shiftDays: HY.H6.shiftDays, passes: h6.R1 < HY.H6.maximumReduction },
   H2: { stormDays: Object.fromEntries(stormMap), windows: h2.windows, sameSignShare: h2.sameSignShare, medianCapture: h2.medianCapture, nBig: h2.nBig, list: h2.rows.map((r) => ({ key: r.key, start: new Date(r.startMs).toISOString(), xp: r.xp, sbar: r.sbar })) },
   H3: h3 ? { arcs: u.length, R3: h3.estimate, lower: h3.lower, upper: h3.upper, p: h3.p, madD0: mad(u.map((x) => x.u0)), madD13: mad(u.map((x) => x.u13)), thresholdR3: HY.H3.threshold, supported: h3.estimate >= HY.H3.threshold && h3.lower > 0 } : null,

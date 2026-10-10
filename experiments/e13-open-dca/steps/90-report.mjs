@@ -32,6 +32,7 @@ L.push('## H1 density: spread reduction against Swarm A, B, C and GRACE-FO 1', '
   `R1 = 1 - sd(x' - s) / sd(x') over ${h1.n} 12 h windows: **${ci(h1.R1, h1.interval.lower, h1.interval.upper)}** (sd ${f(h1.sdX, 4)} to ${f(h1.sdRes, 4)}); threshold ${h1.thresholdR1} with the lower bound above 0: **${h1.supported ? 'supported' : 'not supported'}**.`, '',
   '| Satellite | Windows | R1 | Slope of x\' on s | Correlation |', '| --- | ---: | ---: | ---: | ---: |',
   ...Object.entries(h1.perSatellite).map(([k, v]) => `| ${k} | ${v.n} | ${f(v.R1, 3)} | ${f(v.slope, 2)} | ${f(v.corr, 2)} |`), '',
+  ...(h1.ratios ? [`Ratio statistics (rho observed / rho JB2008, each satellite's dev level removed; quantiles 5 / 25 / 50 / 75 / 95 %): without the correction ${Object.values(h1.ratios.D0).map((v) => f(v, 3)).join(' / ')}; with it ${Object.values(h1.ratios.D13).map((v) => f(v, 3)).join(' / ')}.`, ''] : []),
   `H6 control (s shifted by ${h6.shiftDays} d): R1 ${f(h6.R1, 3)} over ${h6.n} windows; required below ${config.analysis.hypotheses.H6.maximumReduction}: **${h6.passes ? 'passes' : 'fails'}**.`, '');
 
 // H2
@@ -80,8 +81,16 @@ fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, 'REPORT.md'), `${L.join('\n')}\n`);
 fs.writeFileSync(path.join(dir, 'metrics.json'), `${JSON.stringify({ split, span: [from, to], selection: selection.solver, tauHours: selection.tauHours, density, propagation: prop, holm: holmRows, crSensitivity: cr?.summary ?? null, diagnostics: diag }, null, 1)}\n`);
 
-// the manifests behind the numbers
+// the manifests behind the numbers: the runs the result files name, and the latest finished run of every other step of the split (arcs provenance,
+// density windows, Cr sensitivity, selection)
 const runIds = new Set([density.run, ...(prop?.runs ?? []).map((r) => r.run), selection.run].filter(Boolean));
+const ran = fs.existsSync(path.join(repoRoot, 'runs')) ? fs.readdirSync(path.join(repoRoot, 'runs')).filter((n) => n.startsWith('e13-open-dca-')) : [];
+const wanted = [`10-planet-arcs-${split}`, `20-density-windows-${split}`, ...(split === 'dev' ? ['12-cr-sensitivity', '40-select'] : [])];
+for (const step of wanted) {
+  const latest = ran.filter((n) => n.startsWith(`e13-open-dca-${step}-`) && /^\d{8}T\d{6}Z$/.test(n.slice(`e13-open-dca-${step}-`.length)))
+    .filter((n) => { try { return JSON.parse(fs.readFileSync(path.join(repoRoot, 'runs', n, 'manifest.json'), 'utf8')).finished; } catch { return false; } }).sort().at(-1);
+  if (latest) runIds.add(latest);
+}
 const manifests = path.join(resultsDir, 'manifests');
 fs.mkdirSync(manifests, { recursive: true });
 let copied = 0;
