@@ -23,8 +23,10 @@
 //   cannonball SRP, Knocke Earth radiation, NRLMSISE-00 drag (drag regime),
 //   IERS 2010 solid tides, FES2004 ocean tides 30x30, IERS 2010 relativity;
 //   RK78 at relative tolerance 1e-13, at most three steps per shortest
-//   wavelength of the field at perigee (300 s at most), restarted at every
-//   3 h UTC boundary when drag is on (NRLMSISE-00's inputs change there);
+//   wavelength of the field at perigee (300 s at most); propagator/hpop
+//   restarts the integration where NRLMSISE-00's daily and 3-hourly inputs
+//   change and reads them inside each span (wasm 1b1df5e3 and later: earlier
+//   builds mix two days' inputs within a step, about 1 cm a day in LEO);
 // - the exact residuals of the fitted orbit at EVERY point of the segment
 //   (model - ephemeris, in each point's RTN axes): 3D, R, T, N RMS and max,
 //   the per-coordinate RMS (3D/sqrt 3, CelesTrak's rms.txt convention), N and
@@ -66,7 +68,6 @@ import { ommFrame, OEM_TYPE } from './records.mjs';
 import { EST_TYPE, decodeResult, estimationCodec, positionObservation, seedStruct } from '../experiments/e2-catalog-covariance/estimation-wire.mjs';
 
 const DAY_MS = 86400000;
-const BREAK_MS = 3 * 3600000;
 const R_EARTH_M = 6378137;
 const MU = 3.986004418e14;
 const mjdOf = (ms) => Math.floor(ms / DAY_MS) + 40587;
@@ -221,20 +222,6 @@ export async function segmentSetup(env, point, S = SETTINGS) {
   const maxStep = Math.min(S.integrator.maxStep, 2 * Math.PI * (rp / vp) / (3 * S.forces.degree));
   return { regime: perigeeAltitudeM < S.dragCeilingAltitudeM ? 'LEO' : 'HIGH', perigeeAltitudeM, integrator: { ...S.integrator, maxStep } };
 }
-// Request epochs with the drivers' change epochs inserted: NRLMSISE-00 reads
-// 3-hourly ap and daily F10.7, so with drag every 3 h UTC boundary inside
-// (fromMs, last] is an epoch too. propagator/hpop restarts the integration
-// at each requested epoch, so no step straddles a change of its inputs
-// (without them, integrations with different step sequences differ by
-// about a centimetre a day in LEO). Returns sorted unique ms.
-export function withBreakpoints(epochsMs, fromMs, forces) {
-  const out = new Set(epochsMs);
-  if (forces.drag && epochsMs.length) {
-    const last = Math.max(...epochsMs);
-    for (let t = Math.floor(fromMs / BREAK_MS) * BREAK_MS + BREAK_MS; t < last; t += BREAK_MS) out.add(t);
-  }
-  return [...out].sort((a, b) => a - b);
-}
 export function forcesFor(regime, S = SETTINGS) {
   return { ...S.forces, drag: regime === 'LEO' };
 }
@@ -296,15 +283,11 @@ async function fitRun(env, points, ctx) {
     result = decodeResult(bytes);
     if (result.status !== 1) break;
     const q0 = result.queries[0];
-    const targets = result.queries.map((q) => isoMs(isoByLabel.get(JSON.stringify(q.target_epoch))));
-    const epochs = withBreakpoints(targets, points[0].ms, forces);
-    const decoded = decodeSamples(await env.modules['propagator/hpop'].invoke('invoke', [
-      executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: epochs.map((ms) => noZ(iso(ms))),
+    const samples = decodeSamples(await env.modules['propagator/hpop'].invoke('invoke', [
+      executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: result.queries.map((q) => isoByLabel.get(JSON.stringify(q.target_epoch))),
         forces, coefficients: withParameters(fixed, parameters, q0.parameter_values), parameters, stm: true, integrator: ctx.integrator }),
       ...inputs,
     ]));
-    const byMs = new Map(epochs.map((ms, i) => [ms, decoded[i]]));
-    const samples = targets.map((ms) => byMs.get(ms));
     ++hpopCalls;
     result.queries.forEach((q, k) => {
       const s = samples[k], n = s.n, stm = [], sensitivity = [];
@@ -341,7 +324,7 @@ export async function propagate(env, product, epochsMs, ctx, { covariance = null
     // propagator/hpop takes at most 10000 epochs a request; it restarts the
     // integration at every epoch, so a request continued from the last
     // state of the previous one is the same integration (state only).
-    const epochs = withBreakpoints(later, self, ctx.forces);
+    const epochs = later;
     if (covariance && epochs.length > HPOP_MAX_SAMPLES) throw new Error(`propagate: ${epochs.length} epochs with a covariance (at most ${HPOP_MAX_SAMPLES})`);
     let start = { epoch: product.epoch, state: product.state };
     for (let at = 0; at < epochs.length; at += HPOP_MAX_SAMPLES) {

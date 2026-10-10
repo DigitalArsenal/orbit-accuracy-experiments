@@ -14,8 +14,7 @@
 // (its parameterSet for the span before the split, so the fitter can
 // estimate every generating parameter). propagator/hpop generates the arc
 // from Keplerian elements converted by foundation/frames, at a tighter
-// tolerance and half the step the fitter uses, with the same restarts at
-// the drivers' change epochs. The drivers are those
+// tolerance and half the step the fitter uses. The drivers are those
 // released at the arc's start, for generation and fit alike.
 //
 //   node experiments/e4-operator-ephemeris-parity/steps/30-closure-gate.mjs --modules <checkout> [--shard 0/4] [--cases 48] [--seed 20261010]
@@ -129,8 +128,8 @@ for (const c of caseList().filter((x) => x.case % shards === shard && !done.has(
   for (let t = 0; t <= c.spanS; t += c.stepS) epochs.push(c.startMs + t * 1000);
   let row;
   try {
-    // The generator: the fitter's breakpoints and request chunks, a tighter
-    // tolerance and half the fitter's step.
+    // The generator: the fitter's request chunks, a tighter tolerance and
+    // half the fitter's step.
     const setup = await segmentSetup(env, { ms: c.startMs, state });
     const integrator = { tolerance: G.generator.tolerance, maxStep: Math.min(G.generator.maxStep, setup.integrator.maxStep / 2) };
     const gen = await propagate(env, { epoch, state, fixed: c.coefficients, parameters: [] }, epochs, { forces, integrator, issuedMs: c.startMs });

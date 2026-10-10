@@ -385,8 +385,9 @@ numbers.
     released at the file's issue.
   - **Integrator.** RK78 at relative tolerance 1e-13. The step is at most
     three per shortest wavelength of the field at perigee,
-    2π(r_p/v_p)/(3·70), and at most 300 s. With drag, the integration
-    restarts at every 3 h UTC boundary, where NRLMSISE-00's inputs change.
+    2π(r_p/v_p)/(3·70), and at most 300 s. `propagator/hpop` (wasm
+    1b1df5e3) restarts the integration at every 3 h UTC boundary, where
+    NRLMSISE-00's inputs change, and reads them inside each span.
   - **Statistics.** The fitted orbit is evaluated at every point of the
     segment: model minus ephemeris in each point's RTN axes. Reported: 3D,
     R, T and N RMS and maximum, the per-coordinate RMS (3D/√3), N and span.
