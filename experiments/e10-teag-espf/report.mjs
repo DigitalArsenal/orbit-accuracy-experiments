@@ -1,7 +1,17 @@
 // E10 statistics for the report (PLAN.md sections 4 and 5): cluster
 // bootstraps with one-sided p-values (as E5's score.mjs), weighted
 // quantiles, Holm's procedure, and the per-part summaries. Statistics only.
-import { quantile, rng } from '../../harness/stats.mjs';
+import { rng } from '../../harness/stats.mjs';
+
+// Linear-interpolation quantile that keeps +Infinity (failed runs) instead of
+// returning NaN from Infinity - Infinity.
+export function quantile(xs, q) {
+  const s = xs.filter((x) => !Number.isNaN(x)).sort((a, b) => (a === b ? 0 : a < b ? -1 : 1));
+  if (!s.length) return NaN;
+  const pos = (s.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);
+  if (s[hi] === Infinity) return pos === lo || s[lo] === Infinity ? s[lo] : Infinity;
+  return s[lo] + (s[hi] - s[lo]) * (pos - lo);
+}
 import { config } from './common.mjs';
 import { runSummary } from './score.mjs';
 
