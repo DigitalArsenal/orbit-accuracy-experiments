@@ -55,13 +55,16 @@ export async function buildCase(m, env, eopStream, seedId, caseId) {
   };
 }
 
-// Variant names: E26:k=<kappa>, E25, E25T:l=<lambda_t>, EKF, UKF, BLS, SMF.
+// Variant names: E26:k=<kappa>[;smax=<sigma_max>;nmin=<N_min>], E25,
+// E25T:l=<lambda_t>, EKF, UKF, BLS, SMF (smax and nmin: the exploratory
+// dev diagnostics of amendment 1 only).
 export function variantSpec(name) {
   const [id, arg] = name.split(':');
-  const value = arg ? Number(arg.split('=')[1]) : undefined;
+  const params = Object.fromEntries((arg ?? '').split(';').filter(Boolean).map((p) => { const [k, v] = p.split('='); return [k, Number(v)]; }));
+  const value = params.k ?? params.l;
   const f = config.filters, psd = [f.processNoisePsd, f.processNoisePsd, f.processNoisePsd];
   switch (id) {
-    case 'E26': return { id, name, estimator: 'ESPF_2026', processNoisePsd: psd, espf: { pcrbTrigger: value, recordSupport: true } };
+    case 'E26': return { id, name, estimator: 'ESPF_2026', processNoisePsd: psd, espf: { pcrbTrigger: value, recordSupport: true, ...(params.smax ? { sigmaMax: params.smax } : {}), ...(params.nmin ? { minimumSurvivors: params.nmin } : {}) } };
     case 'E25': return { id, name, estimator: 'ESPF_2025', processNoisePsd: psd, espf: { recordSupport: true } };
     case 'E25T': return { id, name, estimator: 'ESPF_2025', processNoisePsd: psd, espf: { regenerationScale: f.espf2025t.regenerationScale, decayRate: value, recordSupport: true } };
     case 'EKF': return { id, name, estimator: 'EXTENDED_KALMAN_FILTER', processNoisePsd: psd, sigmaEdit: f.sigmaEdit };

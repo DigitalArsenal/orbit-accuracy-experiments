@@ -400,6 +400,13 @@
       "file": "results/e2/train/c1.json",
       "path": "regimes.GPS.epoch.strata[0]",
       "use": "second moment about zero (covariance + mean mean^T), km -> m"
+    },
+    "devKernel": "data/e10/de440-2024.bsp",
+    "correlationSensitivity": {
+      "file": "results/e2b/train/correlation-model.json",
+      "regime": "GPS",
+      "key": "consecutive|0",
+      "use": "update sigmas x sqrt((1 + rho) / (1 - rho)) per RTN axis (amendment 1)"
     }
   },
   "enclosure": {
@@ -474,5 +481,17 @@
     "pcrbTrigger": "the candidate with the fewest failures over the Part B dev runs (d1, d2, all cases), then the smallest median per-run RMS 3D position error; a candidate within 10 % of the best median is preferred in the listed order",
     "decayRate": "the same rule for E25T",
     "detectionThresholds": "the 99th percentile of each statistic over B1 dev epochs after the first 2 hours"
+  },
+  "exploratory": {
+    "note": "amendment 1, item 6: dev seeds only, descriptive",
+    "case": "B1-nominal",
+    "seeds": [
+      "d1",
+      "d2"
+    ],
+    "variants": [
+      "E26:k=0.5;smax=2",
+      "E26:k=0.5;smax=4"
+    ]
   }
 }

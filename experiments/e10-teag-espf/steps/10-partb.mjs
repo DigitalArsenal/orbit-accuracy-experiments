@@ -67,7 +67,7 @@ async function driver() {
     const scenario = path.join(cacheDir, `${seed}-${c}.json`);
     if (!fs.existsSync(scenario)) scenarioJobs.push({ name: `scenario-${seed}-${c}`, kind: 'scenario', seed, case: c, output: scenario });
     for (const v of variants) {
-      const name = `${seed}-${c}-${v.replace(/[:=]/g, '_')}`;
+      const name = `${seed}-${c}-${v.replace(/[:=;]/g, '_')}`;
       const output = path.join(jobsDir, `${name}.json`);
       if (!fs.existsSync(output)) runJobs.push({ name, kind: 'run', seed, case: c, variant: v, scenario, output });
     }

@@ -342,3 +342,53 @@ Each run writes `runs/<run-id>/` (ignored by git): per-epoch rows and
 no per-sample table derived from one is committed; the element-set files read
 are listed by SHA-256 in the manifests. Inputs: `data/e10/` (the DE440 2018
 excerpt and its extraction script).
+
+## Amendment 1 (2026-10-10, after the freeze and the dev runs, before any test run)
+
+1. **Modules.** Before any run, the modules branch merged modules main
+   `3df1afc7` (`4a53c355`): `analysis/gp-error-model` gained
+   `screening_cases`, `common_epoch` and `map_covariance`, and
+   `analysis/observation-simulator` two-way radar Doppler. The estimation,
+   conjunction-assessment and HPOP artifacts did not change; every E10 run
+   (dev included) used the merged checkout. Artifacts: estimation
+   `786d0de9`, conjunction-assessment `8a6d1c82`, HPOP `0d1f6264`,
+   observation-simulator `20edccda`, gp-error-model `0f823d02` (SHA-256
+   prefixes; full hashes in the manifests).
+2. **Part C, correlated element sets (descriptive sensitivity).** E2b
+   (landed after the freeze) measured the correlation of consecutive
+   element sets' errors against precise orbits (`results/e2b/train/
+   correlation-model.json`, GPS, consecutive sets at the newer set's epoch):
+   ρ_R 0.51, ρ_T 0.66, ρ_N 0.51. Section 3 treats the updates as independent,
+   which counts correlated sets as new information. Every Part C variant
+   also runs with the update sigmas multiplied per RTN axis by
+   √((1 + ρ)/(1 − ρ)) (1.75, 2.21, 1.77): the variance of the mean of an
+   AR(1) sequence, so that N updates carry about the information of
+   N(1 − ρ)/(1 + ρ) independent ones. Labelled *corr*; descriptive. H4 and
+   H5 stay on the primary analysis.
+3. **Part C dev kernel.** The dev window (2024) uses a DE440 excerpt for
+   2024 (`data/e10/de440-2024.bsp`), copied from DE440s by the same NAIF
+   procedure as the 2018 excerpt.
+4. **Part D.** The encounter geometry, unstated in section 3: the relative
+   velocity's direction is uniform on the sphere in the RTN axes of the
+   combined covariance; the encounter plane is perpendicular to it; Foster's
+   Pc takes the plane's 2×2 covariance and the estimated miss. As a
+   comparison asked for when E2b landed, the same draws also go to
+   `analysis/gp-error-model` `screening_cases` (each object half the
+   combined covariance and its own error draw), whose Pc, bound and
+   possibility rules are reported beside E10's.
+5. **Implementation notes.** The wire history carries no predicted state:
+   the enclosure test's predicted centre comes from the variant's own step
+   k + 1 restarted exactly from its carried support (E26: the MVEE centre of
+   the propagated support; E25T and SMF: the propagated centre). Holm's
+   procedure uses one-sided bootstrap p-values, the share of resamples at or
+   beyond the null, (k + 1)/(B + 1), as E5; the one-sided 95 % bounds are the
+   ends of the two-sided 90 % intervals.
+6. **E26 diagnostic (dev only, descriptive).** On the dev runs E26 lost its
+   support within the first passes for both κ: survivors held at the
+   N_min = 13 floor, the posterior set shrank to metres while the error grew
+   to kilometres, and with σ ≤ 1 (spec G18, the bound being unstated) nothing
+   re-expands the support. To show whether the unstated upper bound alone
+   decides this, E26 at the selected κ also runs on the dev seeds' B1 with
+   σ_max = 2 and 4. These runs inform the report's discussion of G18 only;
+   no test run, hypothesis or selection uses them. The test runs keep the
+   frozen settings.

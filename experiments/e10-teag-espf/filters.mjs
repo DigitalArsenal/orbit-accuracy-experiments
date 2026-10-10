@@ -43,6 +43,7 @@ async function answer(ctx, queries, stm) {
     const from = msOfEpoch(q.seed.epoch), to = msOfEpoch(q.targetEpoch);
     const [s] = await propagate(ctx.hpop, ctx.env, ctx.filterModel, { epochIso: iso(from), state: q.seed.state, sampleIsos: [iso(to)], stm });
     ctx.calls.hpop += 1;
+    if (ctx.answers) ctx.answers.set(q.sequence, s.state);
     out.push(ctx.codec.T('PropagationAnswer', { query: q, sample: ctx.codec.T('EstimationPropagatorSample', { epoch: q.targetEpoch, state: s.state, stm: s.stm ?? new Array(36).fill(0) }) }));
   }
   return out;
@@ -64,14 +65,17 @@ async function runRequest(ctx, method, envelope, stm) {
 //   'ESPF_2025' | 'ESPF_2026' | 'ELLIPSOIDAL_SET_MEMBERSHIP'), options {...},
 //   sigmaEdit, processNoisePsd [3]}; initial {ms, state [6], covariance [36]}.
 // Returns {epochs: [{ms, estimate, shape, nis, accepted, support}], calls, seconds, failure}.
-export async function runSequential(ctx, variant, initial, observations, { lightTime = true } = {}) {
+// keepSupportAt: observation indices whose carried support state (the
+// module's final_support after that observation) is kept as epochs[k].carried;
+// initialSupport: a support state to start from (the enclosure test).
+export async function runSequential(ctx, variant, initial, observations, { lightTime = true, keepSupportAt = new Set(), initialSupport = null } = {}) {
   const { codec } = ctx;
   const T = codec.T;
   const stm = variant.estimator === 'EXTENDED_KALMAN_FILTER' || variant.estimator === 'ELLIPSOIDAL_SET_MEMBERSHIP';
   const setBased = ['ESPF_2025', 'ESPF_2026', 'ELLIPSOIDAL_SET_MEMBERSHIP'].includes(variant.estimator);
   ctx.calls = { hpop: 0, estimation: 0 };
   const started = process.hrtime.bigint();
-  let state = [...initial.state], covariance = [...initial.covariance], support = null, previousMs = initial.ms;
+  let state = [...initial.state], covariance = [...initial.covariance], support = initialSupport, previousMs = initial.ms;
   const epochs = [];
   let failure = null;
   for (const o of observations) {
@@ -102,6 +106,7 @@ export async function runSequential(ctx, variant, initial, observations, { light
     const s = setBased ? result.supportHistory.at(-1) : null;
     epochs.push({
       ms: o.ms, estimate: h.filteredState, shape: h.filteredCovariance, nis: h.normalizedInnovationSquared,
+      ...(keepSupportAt.has(epochs.length) ? { carried: result.finalSupport } : {}),
       accepted: x ? x.accepted : !(result.rejectedObservationIndices ?? []).length,
       support: s ? {
         count: s.supportCount, survivors: s.survivorCount, medoid: s.medoidIndex, choquet: s.choquetSurprisal, information: s.information,
