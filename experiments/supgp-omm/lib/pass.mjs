@@ -81,6 +81,10 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
         continue;
       }
       const r = res.result;
+      if (!(r.supgp.n > 0)) {   // the version has no state inside [EPOCH, EPOCH + window]: nothing was scored
+        tried.push({ id: cand.id, startUtc: iso(cand.startMs), error: `the version holds no state inside the window (${r.window.from} to ${r.window.to})`, code: 'no-states-in-window' });
+        continue;
+      }
       timing.readMs += r.timing.readMs ?? 0;
       timing.scoreMs += r.timing.scoreMs ?? 0;
       timing.fitMs += r.timing.fitMs ?? 0;

@@ -11,8 +11,8 @@ export const hours = 24;
 export const hosts = ['ephemerides.planet-labs.com'];
 export const BASE = 'https://ephemerides.planet-labs.com/';
 export const noCandidateCode = 'no-planet-id';
-// 1441 states of about 106 bytes, the header, and room.
-const PREFIX = 170000;
+// 2881 states of about 106 bytes (48 h: the window and the windows twice as long that the window evidence fits), the header, and room.
+const PREFIX = 330000;
 
 export async function prepare({ http, log }) {
   const res = await http.get(`${BASE}planet_mc.tle`);

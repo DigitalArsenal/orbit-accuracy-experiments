@@ -20,7 +20,7 @@ export const PATHS = {
 
 // Politeness (owner): at most 8 concurrent requests per operator host; a host
 // that answers 403 or 429 is disabled for the run.
-export const HTTP = { perHostConcurrency: 8, timeoutMs: 120000, retries: 3, backoffMs: [1000, 3000, 9000] };
+export const HTTP = { perHostConcurrency: 8, timeoutMs: 120000, retries: 3, backoffMs: [1000, 3000, 9000], prepareAttempts: 3, prepareWaitMs: 30000 };
 
 // At most 6 worker threads (the machine is shared with another heavy lane).
 export const MAX_WORKERS = 6;

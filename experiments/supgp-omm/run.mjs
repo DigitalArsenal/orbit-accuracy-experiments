@@ -24,6 +24,20 @@ import { summarize } from './lib/summary.mjs';
 import { knownAnswers } from './known-answer.mjs';
 import { sources } from './sources/index.mjs';
 
+// A group's source preparation (listings, crosswalks, the CMSE ZIP) is tried again, after a wait, when it fails on the
+// network; never when the host has been disabled (HTTP 403 or 429).
+async function withRetries(what, attempt, disabled, log) {
+  for (let n = 1; ; ++n) {
+    try {
+      return await attempt();
+    } catch (e) {
+      if (n >= HTTP.prepareAttempts || disabled()) throw e;
+      log(`${what}: ${String(e.message ?? e).slice(0, 160)}; attempt ${n} of ${HTTP.prepareAttempts}, again in ${HTTP.prepareWaitMs / 1000} s`);
+      await new Promise((resolve) => setTimeout(resolve, HTTP.prepareWaitMs));
+    }
+  }
+}
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '../..');
 
@@ -105,7 +119,7 @@ async function main() {
       continue;
     }
     try {
-      ctx = await source.prepare?.({ http, log, registryDir: a.registry, snapshot, loadReader: (rel) => loadReader(rel, a.readerModules) });
+      ctx = await withRetries(`${group} source`, () => source.prepare?.({ http, log, registryDir: a.registry, snapshot, loadReader: (rel) => loadReader(rel, a.readerModules) }), () => (source.hosts ?? []).some((h) => http.disabled.has(h)), log);
       rows = await runGroup({ group, snapshot, source, http, pool, store, ctx, options: a, log, timing });
       sourceInfo = source.describe?.(ctx) ?? null;
     } catch (e) {
