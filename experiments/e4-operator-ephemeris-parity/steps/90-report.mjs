@@ -114,6 +114,7 @@ function reasonLabel(key, text) {
   if (/invalid-forces/.test(t)) return 'H-arc: a fit iteration proposed a negative Cr*A/m or Cd*A/m, which propagator/hpop refuses';
   if (/too few element sets/.test(t)) return `H-arc: fewer than ${config.a4.fit.minimumSets} element sets in the arc`;
   if (/not converged/.test(t)) return 'H-arc: the fit did not converge';
+  if (key === 'fullForce') return `H-epoch and H-arc: ${t.replace(/^no force table for/, 'no force-table row for the regime')}`;
   return `${key}: ${t.replace(/\d+(\.\d+)?/g, 'n')}`;
 }
 
@@ -131,7 +132,7 @@ for (const p of providers) {
   const reasons = {};
   for (const r of groups) for (const k of ['reason', 'fullForce', 'hEpochError', 'hArc', 'hArcError', 'error']) if (r.h[k]) { const t = reasonLabel(k, r.h[k]); reasons[t] = (reasons[t] ?? 0) + 1; }
   metrics.fits[p] = {
-    groups: groups.length, forceRegimes: Object.fromEntries([...new Set(groups.map((r) => r.forceRegime))].map((k) => [k, groups.filter((r) => r.forceRegime === k).length])),
+    groups: groups.length, forceRegimes: Object.fromEntries([...new Set(groups.map((r) => r.forceRegime))].map((k) => [k ?? 'none', groups.filter((r) => r.forceRegime === k).length])),
     physicalClasses: [...new Set(groups.map((r) => r.h.physicalClass).filter(Boolean))],
     arcSetsMedian: median(groups.map((r) => r.h.arc?.states).filter(Number.isFinite)),
     fitted: fits.length, converged: converged.length,
