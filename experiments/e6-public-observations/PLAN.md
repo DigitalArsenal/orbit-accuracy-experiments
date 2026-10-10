@@ -274,4 +274,37 @@ and stay local.
 
 ## 8. Amendments
 
-(none)
+### A1 (2026-10-10, after the test runs, before the report): the laser arm as frozen
+
+The laser arm ran as the frozen `config.json` states it, which §4.3 does not
+match in three places. There is no per-pass zenith-delay term: it was taken
+out before the freeze, when the unmodelled troposphere was folded into the
+dev range σ of §4.5, so the §4.3 table row for S ("per pass a zenith
+delay … prior 0 ± 5 m") and the "1.5 laser" relaxation are superseded. Each
+laser fit is one round after a ×100 down-weighted start. And
+`everyNth: 2` for L-n never skips a cutoff on the 24-hour grid (the thinning
+keys on 3-hour steps), so L-n ran at every laser cutoff. The results follow
+the config.
+
+### A2 (2026-10-10): space weather after GFZ's last day
+
+The GFZ file ends 2026-10-08. The code meant to repeat the last reported day
+for later days but centred the 81-day F10.7 mean on the unreported day; for
+2026-10-10 that left 39 days, below the 40 required, and all ten
+first-wave SatNOGS test runs stopped at their first cutoff whose HPOP
+inputs reached 2026-10-10. The harness now repeats the last day's row
+entirely (`harness/hpop-execution.mjs`, commit 613cbeb), and the stopped
+runs were resumed with it. Cutoffs computed before the fix used, for
+2026-10-09, an 81-day mean over the 40 days centred on that day instead of
+the 41 centred on 2026-10-08 (a change below 1 sfu).
+
+### A3 (2026-10-10): SatNOGS test in waves, under a shard limit
+
+A limit of eight concurrent shards for the lane (machine load) split the
+SatNOGS test: the first wave ran P and F2; the second ran P, O2, F1 and
+L-n (P again as their first guess). The report keeps one row per cutoff
+(the first wave's P). The second wave's slowest shards gave the tail of
+their remaining cutoffs to helper processes (`--cutoffs`); the four
+original second-wave runs whose cutoffs were all written by then were
+stopped, and their manifests carry no finish time. No cutoff is missing or
+counted twice.

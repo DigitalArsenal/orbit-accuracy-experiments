@@ -6,7 +6,7 @@
 // segments of [T - arcDays, T], propagated by HPOP with their covariance.
 // Per-sample rows and the products (which derive from Space-Track sets)
 // stay in runs/; results come from step 90.
-//   node experiments/e6-public-observations/steps/30-fit.mjs --window dev [--shard 0/4] [--resume <run>] [--variants P,F2]
+//   node experiments/e6-public-observations/steps/30-fit.mjs --window dev [--shard 0/4] [--resume <run>] [--variants P,F2] [--cutoffs <json list>]
 import fs from 'node:fs';
 import path from 'node:path';
 import { cli, config, guard, home, windowOf, DAY_MS, HOUR_MS } from '../common.mjs';
@@ -16,7 +16,7 @@ import { readSets } from '../../e4-operator-ephemeris-parity/products.mjs';
 import { IssTruth, issCaptures } from '../truth.mjs';
 import { anchoredAt, anchoredContext } from '../anchored.mjs';
 
-const { values, modules, nodes, archive } = cli({ window: { type: 'string' }, shard: { type: 'string' }, resume: { type: 'string' }, variants: { type: 'string' }, limit: { type: 'string' } });
+const { values, modules, nodes, archive } = cli({ window: { type: 'string' }, shard: { type: 'string' }, resume: { type: 'string' }, variants: { type: 'string' }, limit: { type: 'string' }, cutoffs: { type: 'string' } });
 const windowName = values.window ?? 'dev';
 const [shard, shards] = (values.shard ?? '0/1').split('/').map(Number);
 const modulesDir = modules();
@@ -42,7 +42,10 @@ for (const span of truth.spans) {
     }
   }
 }
-const cutoffs = [...tasks.keys()].sort((a, b) => a - b).filter((_, i) => i % shards === shard).slice(0, values.limit ? Number(values.limit) : undefined);
+// --cutoffs <file>: a JSON list of ISO cutoffs of this shard to run (part of
+// a shard's remaining work given to another process).
+const only = values.cutoffs ? new Set(JSON.parse(fs.readFileSync(values.cutoffs, 'utf8')).map((t) => Date.parse(t))) : null;
+const cutoffs = [...tasks.keys()].sort((a, b) => a - b).filter((_, i) => i % shards === shard).filter((t) => !only || only.has(t)).slice(0, values.limit ? Number(values.limit) : undefined);
 console.log(`${windowName}: ${tasks.size} cutoffs, shard ${shard}/${shards}: ${cutoffs.length}`);
 if (!cutoffs.length) { run.finish({ cutoffs: 0 }); process.exit(0); }
 

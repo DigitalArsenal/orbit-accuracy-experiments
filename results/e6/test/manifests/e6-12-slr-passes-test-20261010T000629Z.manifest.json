@@ -1,0 +1,223 @@
+{
+ "run": "e6-12-slr-passes-test-20261010T000629Z",
+ "experiment": "e6",
+ "step": "12-slr-passes-test",
+ "command": [
+  "node",
+  "experiments/e6-public-observations/steps/12-slr-passes.mjs",
+  "--window",
+  "test"
+ ],
+ "args": {
+  "window": "test"
+ },
+ "started": "2026-10-10T00:06:29.148Z",
+ "finished": "2026-10-10T00:13:31.729Z",
+ "config": {
+  "path": "experiments/e6-public-observations/config.json",
+  "sha256": "db875e91902299c3f82d80087c05cd0ebe0f14a4ce36077134b9a28217d65921",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "db910db8eecdc1f12a35a3022b7c944c4a27c791",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "095c20a622da225a06707f43f8840984fb5ea708",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "propagator/sgp4",
+   "pluginId": "com.orbpro.sgp4",
+   "version": "1.1.0",
+   "wasmSha256": "754dc90b074ae76dc7a15325dfc44c0ce3f228b0099c9e580e6d5243eb44683d",
+   "manifestSha256": "7dcae902fdebfb8a1b4784db0aa85d704ebd9dedb9f2583e05432a8866dc653f"
+  },
+  {
+   "path": "analysis/association",
+   "pluginId": "com.digitalarsenal.analysis.association",
+   "version": "0.1.0",
+   "wasmSha256": "690f9e631cac9959f196d2104c08b6d17e605800f096779e50f59ebf379d4e5b",
+   "manifestSha256": "efbbe4b2048e80075879af47b053afdcbc12dcf54bddd7f38565ef89f27add25"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.241.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   70.14501953125,
+   75.80859375,
+   77.630859375
+  ]
+ },
+ "inputs": {
+  "sinex": {
+   "ilrsa.pos+eop.260627.v90.snx.gz": "24124e696a489dc05253f422099960e23c41ae6a223005ea87e15c7ba0f3fd0c",
+   "ilrsa.pos+eop.260704.v90.snx.gz": "c5fcd5ca191507bc9c3ab7cc19252b8933eb9976e2ab58348152685c1791f3be",
+   "ilrsa.pos+eop.260711.v90.snx.gz": "f0865d756377b0f20618166e33b33bf0fb88cc7736628ce114f451d5c1ac2ff7",
+   "ilrsa.pos+eop.260718.v90.snx.gz": "406450586c2201f6e13cde95dca6834c0feac2e972c6e4f3f7d3fb3444a812c8",
+   "ilrsa.pos+eop.260725.v90.snx.gz": "811c757b9bcb9f049d2eb5725803e2255d92ae577c726ec003180cf8ca05c69a",
+   "ilrsa.pos+eop.260801.v90.snx.gz": "021e48b437a2cb3b7549eddeac11bc79b41bc97e1abff13042349972e90e1c29",
+   "ilrsa.pos+eop.260808.v90.snx.gz": "f70e143f466a5bc169a7bae875688bb528cd8d64eb8d137376e662eba5eff8c5",
+   "ilrsa.pos+eop.260815.v90.snx.gz": "4e49073a4ecab90f32ce483a7ad70fc6db404713302a176acf068f23bc6f9c6d",
+   "ilrsa.pos+eop.260822.v90.snx.gz": "f47240fb769b5c2b57df5cf9fce770a2f1312e9ff65d085dac47a59c39cbdb7d",
+   "ilrsa.pos+eop.260829.v90.snx.gz": "c346668d926fed86667a7bb37f45c3044a999bcf0632ab04c487159bdeb94128"
+  },
+  "gpHistory": {
+   "2026/2026-06-25.json.gz": "b4a6223e7e21a3d691ad0d8d06f82b6a767c9eed58ed6579130dd480486fdc0c",
+   "2026/2026-06-26.json.gz": "28629fed478670dcbfc5e78fa868ac4661988a46eed155313a158dbadcfdd497",
+   "2026/2026-06-27.json.gz": "cb0a3514e15b601cd5996c0d4e730ef9242893874bb2cf4951c0f50aebc0ab2b",
+   "2026/2026-06-28.json.gz": "8713a1d80e8cbbd3b9c48a805e15ac66cb5cab18375bb7a21b55786507aa8526",
+   "2026/2026-06-29.json.gz": "6f2dcdae568610dc647c22399780fec544586dd357725789be53495c47741459",
+   "2026/2026-06-30.json.gz": "00fc4e2927fb919019511d14370dbbea736cc69a8cbf04094d06fa2e254d6cd9",
+   "2026/2026-07-01.json.gz": "0c104e46c0c2f7c2ddfcb4844ab37e59bc7abf45b556ded7bbf81b85aa7d56e1",
+   "2026/2026-07-02.json.gz": "2a9a4203892ddffdffc4f2ba9e900aa607e62329d46b264d16aade8fbdc4c479",
+   "2026/2026-07-03.json.gz": "a996a867e1edfece0954f74aa40d5b0649865bc54489536ea6849c05ed20e724",
+   "2026/2026-07-04.json.gz": "9ca055c284b1c19350ad7d4f3e7e574d7a91e4a9109b0c85267ef3f43740569a",
+   "2026/2026-07-05.json.gz": "795e968130f446b2e57b079a5ff0a1bc05fe2df947401057295a065c55d85df0",
+   "2026/2026-07-06.json.gz": "15b89719ac8e2173ce7e66b4769c3da9f6d35785f4f2c4af484f97eb534aa474",
+   "2026/2026-07-07.json.gz": "9ca6b16e1d655069fecedd61346cb04591df18d63b052d8c6de883ce8d50e3e6",
+   "2026/2026-07-08.json.gz": "d52e3753abc24b84900cd97fde4c8c036054257104c694115436a32d3c227900",
+   "2026/2026-07-09.json.gz": "78dc6711b8a96cc91d3176ab096fda0a4e43b3488750971e491911dc9d56e434",
+   "2026/2026-07-10.json.gz": "66a521166cbd8a0c4bc61365c093c7880e149171383fc79e32b7022503601d1e",
+   "2026/2026-07-11.json.gz": "76f7f3afaa53eae1915db3e0cefbbf14acbdb843864aad5fe02ac8c7966ded56",
+   "2026/2026-07-12.json.gz": "b2174f2d47d4252db88627651ff7fa14cca2220eddc32bf8d11df7f3558efdba",
+   "2026/2026-07-13.json.gz": "fb97dfffb9c638613e3eb7d3e1aff21e65eca1ff62675f769854ddca66baf8a1",
+   "2026/2026-07-14.json.gz": "772e3cb263db0968dbd60b7562617d941fed2a2e418743bdfefb26f1ad6dc6e4",
+   "2026/2026-07-15.json.gz": "997a64b309de8cda7b5a4c6aa2dae5ca3d2e9290746a3edcebe30e6163a95632",
+   "2026/2026-07-16.json.gz": "08c8b549c0fa2e535f8ed78f83908073a2e98bc5816f7fce1d907e701b0f827e",
+   "2026/2026-07-17.json.gz": "374d70c5abfef04c59698ff9c29d593c6f3728759568b9f2cf2dcb6b925a4424",
+   "2026/2026-07-18.json.gz": "9a264365fa8874b29272ecd6cf0a59db1fd96525a55ce83de64cbbdb59e53d0c",
+   "2026/2026-07-19.json.gz": "5197902b8a7848c62f713255ceb45ffd4756e51ca048847f65113a0c552a58d6",
+   "2026/2026-07-20.json.gz": "8dee30ca71006f9cb8b3bddd8be21a2ef26103f281961856b9cfc6af1f08358e",
+   "2026/2026-07-21.json.gz": "abd027f733e19f98f11166aec9fe2f631a7fe600a22939dbbf7e640379036e23",
+   "2026/2026-07-22.json.gz": "a8cc4033d34089571dcffb8ea641bb45a244343e05af3647d6aa3e4232d45461",
+   "2026/2026-07-23.json.gz": "7cedaf11a5eb77271b4997559b4587bb413ac3e6412dbc5444e782cba7d0ea3f",
+   "2026/2026-07-24.json.gz": "d20e9c485807033abc07061de11d3d8297d242e176d6588585b6933de7527695",
+   "2026/2026-07-25.json.gz": "634762d2d9f8a826760c8f9f741f1cf10b3f4c8e0939e0a1169ba1d2829b9e87",
+   "2026/2026-07-26.json.gz": "024639ce0cb969e6ec74740d40af0336f19ae67de9a90bc4038b73db21350a0f",
+   "2026/2026-07-27.json.gz": "33519d2ffc81257ae33fd8a752d7d2d266525e49af76dcd7906ab3c7e7fc2ca3",
+   "2026/2026-07-28.json.gz": "7cd3f6e0c6d49da1259f215689623c995c6b9b59c4bf9d3264999b9996d237e8",
+   "2026/2026-07-29.json.gz": "e81fa8e50afa62f9ec339331689aed988db838330f5c547ed65bac43277d9c83",
+   "2026/2026-07-30.json.gz": "4b1d9d48de0ab2b11c93fc9cc5ca65a67582939dbf3f43a207183b6d5fc066c2",
+   "2026/2026-07-31.json.gz": "51c14d01212defc33ac9ed08fa870bfcc1c7673e408363798cf84adfc6f8e4ee",
+   "2026/2026-08-01.json.gz": "77ad740f84d13417ca70472ced34f63a6d9d5478b2ffe398eeee2254a18b0c1d",
+   "2026/2026-08-02.json.gz": "5a44ad76b6d7ea7b1a23c74d223a6e6c4ee755d69508e1fd32264b21968a973a",
+   "2026/2026-08-03.json.gz": "b49ce8b4890dfd2593d9a5e4bf0dadf382b235f7f01608658b5fbf6e0c8ca7ad",
+   "2026/2026-08-04.json.gz": "2defab873bf30d4845a762cce3ac6efec682c8292d71d8dca561246a7c69119a",
+   "2026/2026-08-05.json.gz": "10f7f63d7448bc28fe7ffb150340c2c76832989fcff41c96b654a73a23e85ef3",
+   "2026/2026-08-06.json.gz": "d382bfc4f32d1f5a1fa209717ade4a338428ff8c76b48afcdea6e5d9c7b02db2",
+   "2026/2026-08-07.json.gz": "370d5d88178f3070fad9bf9dcd98ad5fa7b7384eab589479a0d01fdd32a54c04",
+   "2026/2026-08-08.json.gz": "fa8a1da8cf263d17acea398ff3283da8766a31125b46f9225a2a03077f163210",
+   "2026/2026-08-09.json.gz": "cb6e5f8e3d1bb3ebf8b827a979c9de25f8f81784c8be1b771546ecf939b0193e",
+   "2026/2026-08-10.json.gz": "6b90d3834b3ceeb910cc4fb4d5e309d7d07347f99c2692fdba8a4f70fa5916ce",
+   "2026/2026-08-11.json.gz": "0b6f0dd4f6303b0a19768f78ac1d870f7a2251abe5b40d32a1a661142ac4a3be",
+   "2026/2026-08-12.json.gz": "f2e1744c9d4b5ab089e19115de918e4123a724e103b9b22219716e7466f3354c",
+   "2026/2026-08-13.json.gz": "a387bb5e01071692e6a17a5f2751b42d0b242e4787a667e469e828dd4d113ddc",
+   "2026/2026-08-14.json.gz": "1520bf1e72f10378f5a88e60941aff56680bee3d1406a2d6386826a1aab56429",
+   "2026/2026-08-15.json.gz": "31341cf1d4db08c53d50767392767d55e3a0b000348e33036dfed8fa81e76a1a",
+   "2026/2026-08-16.json.gz": "4bd98e01f99fa09253c208cf21166c699ea0954da52a5696be669c83631b4b69",
+   "2026/2026-08-17.json.gz": "bacca7e7a498733a0e0d101f26094ff94b40ba1ec2f5d4dd2b1c076194940e9e",
+   "2026/2026-08-18.json.gz": "77d551d753dac3aaf266541a39c1d7554cd52c02e98275182d1b05ca4cecb8c9",
+   "2026/2026-08-19.json.gz": "0a551e99d2e14ba39b219554c7bdbbc1e2cab03de904f98c8cea1d99039293d3",
+   "2026/2026-08-20.json.gz": "56597f232f33856d90aad765a7d96bce2d32efcf90d74b5128de09d847f5c709",
+   "2026/2026-08-21.json.gz": "836104a8c4b6808b5b418ec2ea714113621ebd78415bef97afcfb264f50e363d",
+   "2026/2026-08-22.json.gz": "27925941f43151dc50b29bf6fe106562ebba0bbe54fb345ccf975daa095d9802",
+   "2026/2026-08-23.json.gz": "d2b3c82052bc6ce5fe294f3e394dedbaf7c911d5958237b064de21a71479fe2b",
+   "2026/2026-08-24.json.gz": "39572e4e5adff65394a9df9d6afbc488effa76f96e12c8526006625813e51345",
+   "2026/2026-08-25.json.gz": "e8bd937b0ca7aae4373a9ea18d6ea5af345866b358931e946870a049a0f25e87",
+   "2026/2026-08-26.json.gz": "be5f0a493f457eba687ae45cf77f70e1040b176f12468798c9c80dd82cdb5549",
+   "2026/2026-08-27.json.gz": "1d54103a23e8f665d583b3ad03e0e1a5a9e41b3f7993694869eb8bb006ed427c",
+   "2026/2026-08-28.json.gz": "7a17b3dc599b9b0fe9827aa1d372e811be48778559f6dd9e77665b0309d75a57",
+   "2026/2026-08-29.json.gz": "e622f96865b999a66d824650a977448a6f346378795393db4817277108fc1cfb",
+   "2026/2026-08-30.json.gz": "8cdd9d370fc04df64e5aa805387dbbdf38fe8218bff9431ee359a595d5134deb",
+   "2026/2026-08-31.json.gz": "a4e56f4c72e181d1871399c3ab27e77611de6f09e1937cc10e41746e04c37d9e"
+  },
+  "normalPoints": {
+   "starlette/starlette_202607.np2": "6ae609e395ebcc8d2ae9451c8fe1f431fc4d1a6bc4e62a30eb9cd8d67b3dc5bd",
+   "starlette/starlette_202608.np2": "67d09e4277e67c6b27f52f1585c1dd109f76c74c83561b55c1f412a0398ee7fd",
+   "stella/stella_202607.np2": "db76955d626c9f16e9bd3855494e5e39cfec26737983712e08ab1c26621902b6",
+   "stella/stella_202608.np2": "5ea2a1ba99aab459b2a0a608f1d65f049279f279422da83545decd479f41f5b9",
+   "larets/larets_202607.np2": "53fcf38db1e536b14a8d91af1fbfc75de877ee453bf434259706934140c851de",
+   "larets/larets_202608.np2": "75c705b2f1366ce5cd4f9e88a7b92c057aaff009d8cb5fb6d99b73c5140925b9",
+   "westpac/westpac_202607.np2": "54fe6a170bac624724b9f8812e32432bb7db84b3e74c652c0ad49ac70f946791",
+   "westpac/westpac_202608.np2": "ecd54044d546de67eb6e78e453d44d677138fbee9401b4d30c63c3fc110fab7f",
+   "lares/lares_202607.np2": "40b6fcfe78fa00c0131ddf715cf47120d2f4152cd5cffe14d15bc8d725a4d092",
+   "lares/lares_202608.np2": "63c925a72f28e2b842574c8532473b2adb2958bdbe900217819184dcd56eedcd"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T00:06:29.148Z",
+   "args": {
+    "window": "test"
+   }
+  }
+ ],
+ "counts": {
+  "starlette": {
+   "files": 2,
+   "passes": 1203,
+   "points": 9053,
+   "noStation": 95,
+   "noSet": 0,
+   "notTwoWay": 0,
+   "outside": 1208,
+   "duplicate": 1
+  },
+  "stella": {
+   "files": 2,
+   "passes": 792,
+   "points": 5297,
+   "noStation": 81,
+   "noSet": 0,
+   "notTwoWay": 0,
+   "outside": 806,
+   "duplicate": 0
+  },
+  "larets": {
+   "files": 2,
+   "passes": 389,
+   "points": 2191,
+   "noStation": 45,
+   "noSet": 0,
+   "notTwoWay": 0,
+   "outside": 390,
+   "duplicate": 0
+  },
+  "westpac": {
+   "files": 2,
+   "passes": 177,
+   "points": 1023,
+   "noStation": 5,
+   "noSet": 0,
+   "notTwoWay": 0,
+   "outside": 156,
+   "duplicate": 0
+  },
+  "lares": {
+   "files": 2,
+   "passes": 858,
+   "points": 7638,
+   "noStation": 22,
+   "noSet": 0,
+   "notTwoWay": 0,
+   "outside": 735,
+   "duplicate": 0
+  }
+ }
+}

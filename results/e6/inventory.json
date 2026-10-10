@@ -1,44 +1,45 @@
 {
- "generated": "2026-10-09T23:38:00.181Z",
+ "generated": "2026-10-10T08:58:43.096Z",
  "satnogs": {
   "25544": {
-   "observations": 3619,
+   "observations": 4197,
    "days": [
     "2026-08-31",
-    "2026-10-05",
-    25
+    "2026-10-09",
+    29
    ],
-   "stations": 316,
+   "stations": 322,
    "byStatus": {
-    "failed": 465,
-    "bad": 487,
-    "good": 1776,
-    "unknown": 891
+    "failed": 523,
+    "bad": 554,
+    "good": 1999,
+    "unknown": 1118,
+    "future": 3
    },
    "byWaterfall": {
-    "unknown": 2121,
-    "without-signal": 490,
-    "with-signal": 1008
+    "unknown": 2482,
+    "without-signal": 557,
+    "with-signal": 1158
    },
    "byMode": {
-    "FM 437800000": 1237,
-    "SSTV 437800000": 36,
-    "AFSK 145825000": 109,
-    "FSK 437800000": 152,
-    "AFSK 437825000": 170,
-    "FM 145800000": 101,
+    "FM 437800000": 1450,
+    "SSTV 437800000": 50,
+    "AFSK 145825000": 125,
+    "FSK 437800000": 165,
+    "AFSK 437825000": 203,
+    "FM 145800000": 118,
     "PSK 468100000": 17,
-    "SSTV 145800000": 125,
+    "SSTV 145800000": 149,
     "FM 435400000": 1,
     "FM 121750000": 38,
-    "SSTV 437550000": 1629,
-    "BPSK 400500000": 4
+    "SSTV 437550000": 1876,
+    "BPSK 400500000": 5
    },
    "byWindow": {
-    "test": 3274,
+    "test": 3852,
     "dev": 345
    },
-   "waterfallsCaptured": 1292
+   "waterfallsCaptured": 1853
   },
   "48274": {
    "observations": 197,
