@@ -378,3 +378,20 @@ and no outcome, and nothing they produce depends on section 5's choices
 (the calibration set of every K is the head of each bin's one ranked list).
 Stage 1 chose K = 4; the K = 16 forecast fits, then running, were stopped
 and are not used.
+
+## Amendment 3 (2026-10-10, DESTOPy's objects, before any DESTOPy density is read)
+
+Section 4 runs DESTOPy "with at most 17 objects of the D5 calibration set".
+DESTOPy takes each object's ballistic coefficient from its own table
+(`Data/BCdata.txt`, 54 objects estimated by its authors) and does not run an
+object outside it. Giving it GCAT priors for calibration-set objects would
+change DESTOPy, so it runs as published: the 17 objects of its table in
+orbit in March–April 2026 and not held out (NORAD 22, 932, 1807, 2389, 4221,
+4382, 7337, 8744, 12138, 12388, 14483, 20774, 23278, 41771, 41773, 42989,
+43797), with its default model and filter settings, hourly from 2026-03-27
+(five days of spin-up) to 2026-04-29. Seven of them, the Cosmos 2-m spheres,
+are in E8's validation calibration set (four in its K = 4 set); the other
+ten are nine payloads the calibration-set rule does not admit and one
+rocket body it did not choose. The comparison is therefore DESTOPy as
+published against D5, not two estimators given the same objects. It stays
+descriptive.
