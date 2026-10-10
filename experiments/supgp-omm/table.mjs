@@ -3,10 +3,19 @@
 //   node table.mjs <run directory>
 import fs from 'node:fs';
 import path from 'node:path';
+import { summarize } from './lib/summary.mjs';
 
 const dir = process.argv[2];
 if (!dir) throw new Error('usage: node table.mjs <run directory>');
 const run = JSON.parse(fs.readFileSync(path.join(dir, 'run.json'), 'utf8'));
+// The statistics are recomputed from the rows the pass wrote (lib/summary.mjs as it stands now), so that one definition serves every run.
+for (const [g, s] of Object.entries(run.groups)) {
+  const file = path.join(dir, g, 'rows.jsonl');
+  if (!fs.existsSync(file)) continue;
+  const fresh = summarize(g, null, fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(JSON.parse));
+  delete fresh.snapshot;
+  run.groups[g] = { ...s, ...fresh };
+}
 const m = (x, d = 1) => (Number.isFinite(x) ? x.toFixed(d) : '-');
 const reasons = (u) => Object.entries(u ?? {}).map(([k, v]) => `${k} ${v}`).join(', ') || '-';
 const lines = ['| group | objects | paired (gate pass) | whole window | within 2 % | fitted | ours lower | lower by > 1 cm | lower by > 1 m | median diff (m) | max diff (m) | median / max, whole window (m) | unpaired |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |'];
@@ -46,7 +55,7 @@ for (const [g, s] of Object.entries(run.groups)) {
 }
 console.log(`\nfitted minimum RMS over each window / published RMS\n\n${fits.join('\n')}`);
 const t = run.timing;
-console.log(`\nwall ${(t.wallSeconds / 60).toFixed(1)} min; fetch ${(t.fetchMs / 1000).toFixed(0)} s over ${t.fetchRequests} requests (${(t.fetchBytes / 2 ** 20).toFixed(0)} MiB); workers busy ${(t.workerMs / 1000).toFixed(0)} s (read ${(t.readMs / 1000).toFixed(0)}, score ${(t.scoreMs / 1000).toFixed(0)}, fit ${(t.fitMs / 1000).toFixed(0)}, of which on other windows ${((t.windowFitMs ?? 0) / 1000).toFixed(0)}); ${t.workers} workers`);
+console.log(`\nwall ${(t.wallSeconds / 60).toFixed(1)} min; fetch ${(t.fetchMs / 1000).toFixed(0)} s over ${t.fetchRequests} requests (${(t.fetchBytes / 2 ** 20).toFixed(0)} MiB); workers busy ${(t.workerMs / 1000).toFixed(0)} s (read ${(t.readMs / 1000).toFixed(0)}, score ${(t.scoreMs / 1000).toFixed(0)}, fit ${(t.fitMs / 1000).toFixed(0)}, fits on the other windows ${((t.windowFitMs ?? 0) / 1000).toFixed(0)}); ${t.workers} workers`);
 
 // pairs.tsv, and E11's pairing rule (the version starting last at or before the EPOCH) against the candidate test.
 const tsv = ['group\tnorad\tname\tset epoch\tversion\twindow\twhole window\tcausal\tpublished RMS km\tCelesTrak RMS km\tours RMS km\tCelesTrak minus ours m\tours lower'];
