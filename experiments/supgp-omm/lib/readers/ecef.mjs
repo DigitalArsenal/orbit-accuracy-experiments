@@ -10,10 +10,10 @@ import { EOP } from 'spacedatastandards.org/lib/js/EOP/main.js';
 import * as OEMs from 'spacedatastandards.org/lib/js/OEM/main.js';
 import { json } from '../../../../harness/modules.mjs';
 import { NCD_TYPE, OEM_TYPE, packOem, unpackOem } from '../records.mjs';
+import { isoMicro } from '../time.mjs';
 
 const EOP_TYPE = { schemaName: 'EOP.fbs', fileIdentifier: '$EOP', rootTypeName: 'EOP', wireFormat: 'flatbuffer' };
 const DAY_MS = 86400000;
-const isoMicro = (ms) => new Date(ms).toISOString().replace(/Z$/, '000');
 
 // IERS EOP rows [{mjd, bytes}] from a finals2000A file, by data-source/eop-parser (WASM).
 export async function eopRows(parser, finalsBytes) {

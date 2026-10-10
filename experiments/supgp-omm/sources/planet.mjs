@@ -26,6 +26,7 @@ export async function prepare({ http, log }) {
   return { hwid, crosswalk: { url: `${BASE}planet_mc.tle`, lastModified: res.headers.lastModified, etag: res.headers.etag } };
 }
 
+export const describe = (ctx) => ({ crosswalk: ctx.crosswalk, satellites: ctx.hwid.size });
 export const noCandidateReason = () => 'the NORAD number is not in Planet\'s published catalog (planet_mc.tle), so no per-satellite ephemeris file can be named';
 export function candidates(ctx, row) {
   const hw = ctx.hwid.get(row.norad);

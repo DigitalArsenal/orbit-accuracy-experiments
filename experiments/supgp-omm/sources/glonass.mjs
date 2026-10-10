@@ -10,6 +10,7 @@
 import { gunzipSync } from 'node:zlib';
 import { gnssIdentities } from '../../e4-operator-ephemeris-parity/sp3.mjs';
 import { sha256 } from '../lib/http.mjs';
+import { setEpochMs } from '../lib/time.mjs';
 
 export const id = 'glonass';
 export const hours = 24;
@@ -35,7 +36,7 @@ export async function prepare({ http, log, snapshot }) {
   if (snx.status !== 200 || !snx.body) throw new Error(`IGS satellite metadata: HTTP ${snx.status} ${snx.error ?? ''}`);
   const files = new Map();
   for (const row of snapshot.rows) {
-    const epochMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000;
+    const epochMs = setEpochMs(row);
     for (const product of ['RAP', 'FIN']) {
       const f = dayFile(epochMs, product);
       if (files.has(f.name) || [...files.values()].some((x) => x.dayStartMs === f.dayStartMs && x.body)) continue;
@@ -48,8 +49,10 @@ export async function prepare({ http, log, snapshot }) {
   return { sinex: snx.body.toString('latin1'), sinexMeta: { url: SINEX_URL, lastModified: snx.headers.lastModified, etag: snx.headers.etag, sha256: sha256(snx.body) }, files };
 }
 
+export const describe = (ctx) => ({ metadata: ctx.sinexMeta, files: [...ctx.files.values()].map((f) => ({ name: f.name, status: f.status, lastModified: f.provenance?.lastModified ?? null, sha256: f.provenance?.sha256 ?? null })) });
+
 export function candidates(ctx, row) {
-  const epochMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000;
+  const epochMs = setEpochMs(row);
   const out = [];
   for (const product of ['RAP', 'FIN']) {
     const f = dayFile(epochMs, product);
@@ -63,7 +66,7 @@ export const held = (ctx, cand) => ctx.files.get(cand.id);
 
 // The slot (PRN) of the set's NORAD number on the file's day, from the IGS metadata.
 export function contextFor(ctx, cand, row) {
-  const midMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000 + 12 * 3600e3;
+  const midMs = setEpochMs(row) + 12 * 3600e3;
   const sats = gnssIdentities(ctx.sinex, midMs);
   const prn = Object.keys(sats).find((k) => k.startsWith('R') && sats[k].norad === row.norad);
   return { identities: prn ? { product: 'ESA0OPS rapid/final orbit', source: cand.url, statedSigmaM: 0.1, statedSigmaBasis: 'placeholder: the covariance is not used by this pass', satellites: { [prn]: sats[prn] } } : null, prn: prn ?? null };

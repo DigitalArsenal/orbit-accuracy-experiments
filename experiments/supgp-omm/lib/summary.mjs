@@ -23,6 +23,16 @@ export function summarize(group, snapshot, rows) {
   const strong = fitted.filter((r) => r.window.complete && r.causal !== false);
   const clean = strong.filter((r) => r.gate.clean);
   const sub = (list) => ({ pairs: list.length, oursLower: count(list, (r) => r.comparison.oursLower), diffM: spread(list.map((r) => r.comparison.supgpMinusOursM)) });
+  // The window proof: on the sets paired with a version that holds the whole window, the chosen window reproduces
+  // the published RMS better than a window half as long, three quarters, one and a half or twice as long.
+  const proven = strong.filter((r) => r.windowProof);
+  const factors = Object.keys(proven[0]?.windowProof ?? {});
+  const miss = (r, f) => Math.abs((f === '1' ? r.supgp.rmsPerCoordinateKm : r.windowProof[f]?.rmsPerCoordinateKm) / r.publishedRmsKm - 1);
+  const windowProof = proven.length ? {
+    sets: proven.length,
+    chosenBest: proven.filter((r) => factors.every((f) => !Number.isFinite(miss(r, f)) || miss(r, '1') <= miss(r, f))).length,
+    medianAbsMissPercent: { chosen: 100 * median(proven.map((r) => miss(r, '1'))), ...Object.fromEntries(factors.map((f) => [`x${f}`, 100 * median(proven.map((r) => miss(r, f)).filter(Number.isFinite))])) },
+  } : null;
   return {
     group,
     snapshot: snapshot && { stamp: snapshot.stamp, fetchedUtc: snapshot.fetchedUtc, sha256: snapshot.sha256, rows: snapshot.rows?.length },
@@ -36,6 +46,7 @@ export function summarize(group, snapshot, rows) {
     pairClasses: classes,
     completeWindow: sub(strong),                   // whole window in the version, version not newer than the snapshot
     cleanPairs: sub(clean),                        // of those, the recomputed RMS within 2 % of the published one (the version CelesTrak fitted, to all appearances)
+    windowProof,
     supgpRmsKm: spread(fitted.map((r) => r.supgp.rmsPerCoordinateKm)),
     oursRmsKm: spread(fitted.map((r) => r.ours.rms.rmsPerCoordinateKm)),
     unpaired,

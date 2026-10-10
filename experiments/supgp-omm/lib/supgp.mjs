@@ -7,8 +7,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { PATHS } from '../config.mjs';
+import { ELEMENT_FIELDS as ELEMENTS } from './records.mjs';
 
-const ELEMENTS = ['MEAN_MOTION', 'ECCENTRICITY', 'INCLINATION', 'RA_OF_ASC_NODE', 'ARG_OF_PERICENTER', 'MEAN_ANOMALY', 'BSTAR'];
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 
 export function snapshotStamps(group, root = PATHS.supgp) {

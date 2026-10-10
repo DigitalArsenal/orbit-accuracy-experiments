@@ -3,14 +3,11 @@
 // scores CelesTrak's set, fit_elements fits ours. This file frames the calls,
 // applies the gate and runs the guards; it computes no orbit quantity.
 import { json } from '../../../harness/modules.mjs';
-import { FIT, GATE } from '../config.mjs';
+import { FIT, GATE, USER_AGENT as ORIGINATOR } from '../config.mjs';
 import { OMM_TYPE, decodeOmmStream, ommFrame } from './records.mjs';
 import { Guard } from './guards.mjs';
+import { isoZ, setEpochMs } from './time.mjs';
 
-const ELEMENTS = ['MEAN_MOTION', 'ECCENTRICITY', 'INCLINATION', 'RA_OF_ASC_NODE', 'ARG_OF_PERICENTER', 'MEAN_ANOMALY', 'BSTAR'];
-export const isoZ = (ms) => new Date(ms).toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
-export const roundToSecond = (ms) => Math.round(ms / 1000) * 1000;
-export const parseUtc = (text) => Date.parse(/[zZ]$/.test(text) ? text : `${text}Z`);
 
 // The exact statistics the module reports for a set of points (all of them, no thinning).
 export const statsOf = (s) => (s && s.n ? {
@@ -22,7 +19,7 @@ export const statsOf = (s) => (s && s.n ? {
 // ephemeris has. The EPOCH is snapped to the second (CelesTrak's epochs sit on the operator's
 // state grid, with microsecond noise).
 export function windowOf({ epoch, hours, summary }) {
-  const epochMs = roundToSecond(parseUtc(epoch));
+  const epochMs = setEpochMs({ epoch });
   const toMs = epochMs + hours * 3600e3;
   const fromMs = Math.max(epochMs, summary.firstMs);
   const step = (summary.stepSeconds ?? 0) * 1000;
@@ -46,6 +43,9 @@ export function gateOf(recomputedKm, publishedKm) {
   };
 }
 
+// Windows scored beside the chosen one, to show the choice: the same start, a fraction or multiple of its length.
+export const WINDOW_PROOF_FACTORS = [0.5, 0.75, 1.5, 2];
+
 // CelesTrak's set on the window. One element set per call, so the module cannot pick another.
 export async function scoreSupgp(fitter, row, ephemeris, window, guard) {
   const set = { norad: row.norad, epoch: row.epoch, elements: row.elements };
@@ -53,11 +53,18 @@ export async function scoreSupgp(fitter, row, ephemeris, window, guard) {
   guard.supgpSetSent(row, decodeOmmStream(frame.payload));
   const setIso = `${row.epoch}Z`;
   const label = `supgp:${row.norad}:${row.epoch}`;
+  const asked = [{ from: window.from, to: window.to, label: 'window' },
+    ...WINDOW_PROOF_FACTORS.map((f) => ({ from: window.from, to: isoZ(window.fromMs + f * (window.toMs - window.fromMs)), label: `x${f}` }))];
   const res = await fitter.invokeJson('element_residuals', [frame, ephemeris, json('options', {
-    requests: [{ norad: row.norad, set: setIso, label, windows: [{ from: window.from, to: window.to, label: 'window' }] }],
+    requests: [{ norad: row.norad, set: setIso, label, windows: asked }],
   })], 'residuals');
-  guard.scoreEcho({ res, norad: row.norad, set: setIso, label, window, who: 'supgp' });
-  return statsOf(res.results[0].windows[0]);
+  guard.scoreEcho({ res, norad: row.norad, set: setIso, label, windows: asked, who: 'supgp' });
+  const answered = res.results[0].windows;
+  return {
+    stats: statsOf(answered[0]),
+    // The set's per-coordinate RMS on the other windows, for the window proof.
+    proof: Object.fromEntries(WINDOW_PROOF_FACTORS.map((f, i) => [f, { n: answered[i + 1].n, rmsPerCoordinateKm: answered[i + 1].n ? answered[i + 1].rmsPerCoordinateKm : null }])),
+  };
 }
 
 // One fit_elements call. start 'ephemeris': the module's own start (osculating-to-mean inversion, and for
@@ -67,7 +74,7 @@ async function fitOnce(fitter, row, ephemeris, window, scoredSupgp, guard, { clo
   const epoch = window.fitFromEphemerisStart ? 'first' : `${row.epoch}Z`;
   const inputs = [ephemeris];
   if (start === 'celestrak-elements') inputs.push(ommFrame([{ norad: row.norad, epoch: row.epoch, elements: row.elements }]));
-  inputs.push(json('options', { ...FIT, closure, ...(start === 'celestrak-elements' ? { initial: 'apriori' } : {}), fits: [{ norad: row.norad, from: window.from, to: window.to, epoch, fitBstar: true }] }));
+  inputs.push(json('options', { ...FIT, closure, ...(start === 'celestrak-elements' ? { initial: 'apriori' } : {}), originator: ORIGINATOR, fits: [{ norad: row.norad, from: window.from, to: window.to, epoch, fitBstar: true, ...(row.name ? { objectName: row.name } : {}), ...(row.objectId ? { objectId: row.objectId } : {}) }] }));
   const out = await fitter.invoke('fit_elements', inputs);
   const report = JSON.parse(Buffer.from(out.outputs.find((o) => o.portId === 'report').payload).toString());
   const fit = report.fits?.[0] ?? {};
@@ -113,10 +120,10 @@ export async function evaluate(fitter, { row, ephemeris, summary, hours, fit = t
   const guard = new Guard(`${row.group}/${row.norad}@${row.epoch}`);
   const window = windowOf({ epoch: row.epoch, hours, summary });
   const t0 = performance.now();
-  const supgp = await scoreSupgp(fitter, row, ephemeris, window, guard);
+  const { stats: supgp, proof } = await scoreSupgp(fitter, row, ephemeris, window, guard);
   const tScore = performance.now();
   const gate = gateOf(supgp.rmsPerCoordinateKm, row.publishedRmsKm);
-  const out = { window: { ...window }, supgp, gate, ephemeris: { frame: summary.frame, states: summary.states, firstMs: summary.firstMs, lastMs: summary.lastMs, stepSeconds: summary.stepSeconds }, ours: null, omm: null, guards: guard.checks, timing: { scoreMs: tScore - t0 } };
+  const out = { window: { ...window }, supgp, windowProof: proof, gate, ephemeris: { frame: summary.frame, states: summary.states, firstMs: summary.firstMs, lastMs: summary.lastMs, stepSeconds: summary.stepSeconds }, ours: null, omm: null, guards: guard.checks, timing: { scoreMs: tScore - t0 } };
   if (gate.pass && fit && supgp.n > 0) {
     const f = await fitOurs(fitter, row, ephemeris, window, supgp, guard, { closure });
     out.ours = f.result;

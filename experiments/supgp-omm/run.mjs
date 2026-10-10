@@ -64,7 +64,7 @@ async function main() {
   const http = new PoliteHttp({ log });
   const fitter = await loadFitter(a.fitModules);
   const run = {
-    runId: a.runId, startedUtc: new Date(wallStart).toISOString(), node: process.version, platform: `${os.platform()} ${os.arch()}`, cpus: os.availableParallelism(), loadavgAtStart: os.loadavg()[0],
+    runId: a.runId, argv: process.argv.slice(2), startedUtc: new Date(wallStart).toISOString(), node: process.version, platform: `${os.platform()} ${os.arch()}`, cpus: os.availableParallelism(), loadavgAtStart: os.loadavg()[0],
     settings: { gate: GATE, fit: FIT, http: HTTP, meme: MEME, workers: a.workers, closure: a.closure, rowsInFlight: a.rowsInFlight, limit: a.limit || null, groups: a.groups },
     checkouts: { experiments: checkout(REPO), fitModules: checkout(a.fitModules), readerModules: checkout(a.readerModules) },
     fitter: fitter.provenance,
@@ -95,6 +95,7 @@ async function main() {
     const t0 = Date.now();
     let ctx = null;
     let rows;
+    let sourceInfo = null;
     if (source.unavailable) {
       const detail = await source.probe({ http, snapshot }).catch((e) => `probe failed: ${e.message}`);
       rows = failGroup({ group, snapshot, store, options: a, code: source.code, detail: String(detail).slice(0, 1200) });
@@ -106,13 +107,15 @@ async function main() {
     try {
       ctx = await source.prepare?.({ http, log, registryDir: a.registry, snapshot, loadReader: (rel) => loadReader(rel, a.readerModules) });
       rows = await runGroup({ group, snapshot, source, http, pool, store, ctx, options: a, log, timing });
+      sourceInfo = source.describe?.(ctx) ?? null;
     } catch (e) {
       log(`${group}: source not available: ${e.message}`);
       rows = failGroup({ group, snapshot, store, options: a, code: 'source-unreachable', detail: String(e.message ?? e).slice(0, 300) });
     }
     const summary = summarize(group, snapshot, rows);
     summary.wallSeconds = (Date.now() - t0) / 1000;
-    summary.window = { hours: source.hours };
+    summary.window = { hours: source.hoursFor ? 'to the end of the file' : source.hours };
+    summary.source = sourceInfo;
     store.writeJson(`${group}/summary.json`, summary);
     run.groups[group] = summary;
     allRows[group] = rows;

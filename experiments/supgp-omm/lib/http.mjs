@@ -7,9 +7,9 @@
 // - Network errors and 5xx are retried with backoff; other 4xx are answers.
 import crypto from 'node:crypto';
 import { HTTP, USER_AGENT } from '../config.mjs';
+import { isoZ } from './time.mjs';
 
 export const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
-export const isoUtc = (ms) => new Date(ms).toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 class Semaphore {
@@ -84,7 +84,7 @@ export class PoliteHttp {
             contentRange: res.headers.get('content-range'), contentLength: res.headers.get('content-length'),
             contentType: res.headers.get('content-type'),
           } : null,
-          requestUtc: isoUtc(t0), responseUtc: isoUtc(t0 + ms),
+          requestUtc: isoZ(t0), responseUtc: isoZ(t0 + ms),
         };
         if (res && code < 500) return last;
         if (attempt < HTTP.retries) { ++stat.retries; await sleep(HTTP.backoffMs[attempt - 1] ?? 9000); }

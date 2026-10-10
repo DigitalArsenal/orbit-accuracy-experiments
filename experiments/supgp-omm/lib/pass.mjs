@@ -8,6 +8,7 @@
 // snapshot was fetched beats a later one, and then the closest RMS wins. A set no version reproduces is
 // unpaired, with the nearest miss as the reason.
 import { sha256, parseContentRange } from './http.mjs';
+import { setEpochMs } from './time.mjs';
 
 const ab = (buf) => (buf.buffer.byteLength === buf.length && buf.byteOffset === 0 ? buf.buffer : buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length));
 const iso = (ms) => (Number.isFinite(ms) ? new Date(ms).toISOString() : null);
@@ -92,7 +93,7 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
       if (r.gate.pass) {
         passing.push(entry);
         // Nothing outranks a pass on a version that holds the whole window and existed at the snapshot, unless another such version is still to come.
-        const epochMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000;
+        const epochMs = setEpochMs(row);
         const moreWhole = cands.slice(cands.indexOf(cand) + 1).some((c) => c.startMs === undefined || c.startMs <= epochMs);
         if (r.window.complete && causal !== false && r.ours?.converged && !moreWhole) break;
       }
@@ -113,7 +114,7 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
       status: 'paired',
       version: { id: best.cand.id, startUtc: iso(best.cand.startMs), stopUtc: iso(best.cand.stopMs), createdUtc: iso(best.createdMs), listedIn: best.cand.listedIn, ...best.provenance },
       causal: best.causal,
-      window: r.window, ephemeris: r.ephemeris, supgp: r.supgp, gate: r.gate, ours: r.ours, comparison: r.comparison ?? null, guards: r.guards, candidates: tried,
+      window: r.window, windowProof: r.windowProof, ephemeris: r.ephemeris, supgp: r.supgp, gate: r.gate, ours: r.ours, comparison: r.comparison ?? null, guards: r.guards, candidates: tried,
       omm: undefined, ommBuffer: best.omm, timing: r.timing,
     };
   }

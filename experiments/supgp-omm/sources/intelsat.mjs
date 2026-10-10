@@ -6,6 +6,7 @@
 // sets: their epochs and fit windows lie before the file starts.)
 // Readers (WASM): files/orbit-products normalize_ses_i11, then analysis/reference-states (ITRS to GCRS, IERS EOP).
 import { sha256 } from '../lib/http.mjs';
+import { setEpochMs } from '../lib/time.mjs';
 import { readI11, withoutTelexAnnotations } from '../lib/readers/i11.mjs';
 import { ecefToGcrf } from '../lib/readers/ecef.mjs';
 
@@ -51,7 +52,7 @@ export async function prepare({ http, log, snapshot }) {
 export const noCandidateReason = () => 'no eleven-parameter file for the satellite is listed at my.intelsat.com';
 export function candidates(ctx, row) {
   const code = codeOf(row.name);
-  const epochMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000;
+  const epochMs = setEpochMs(row);
   return [...ctx.files.values()].filter((f) => f.code === code)
     .sort((a, b) => Math.abs(a.startMs - epochMs) - Math.abs(b.startMs - epochMs))
     .map((f) => ({ id: f.id, url: f.url, startMs: f.startMs, kind: f.kind }));

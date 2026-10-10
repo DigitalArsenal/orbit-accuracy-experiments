@@ -12,6 +12,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { MEME } from '../config.mjs';
+import { setEpochMs } from '../lib/time.mjs';
+import { sha256 } from '../lib/http.mjs';
 
 export const id = 'starlink';
 export const hours = 12;
@@ -65,7 +67,14 @@ export async function prepare({ http, log, registryDir }) {
   }
   const registry = readRegistry(registryDir);
   log(`starlink registry: ${registry.sources.map((x) => `${x.file} ${x.names}`).join('; ')}; current manifest ${manifest.file} (Last-Modified ${manifest.lastModified})${manifest.unchanged ? ' unchanged' : ''}`);
-  return { registry, manifest };
+  return { registry, manifest, registryDir };
+}
+
+// What the run records about its names registry.
+export function describe(ctx) {
+  const dir = ctx.registryDir;
+  const side = (s) => { const f = path.join(dir, s.file.replace(/\.txt$/, '.json')); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {}; };
+  return { manifest: ctx.manifest, registry: ctx.registry.sources.map((s) => ({ ...s, sha256: sha256(fs.readFileSync(path.join(dir, s.file))), ...side(s) })) };
 }
 
 // Versions to try for a set, nearest the EPOCH first: those that start no later than MIN_WINDOW_HOURS
@@ -73,7 +82,7 @@ export async function prepare({ http, log, registryDir }) {
 export function candidates(ctx, row) {
   const known = ctx.registry.byNorad.get(row.norad);
   if (!known) return [];
-  const epochMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000;
+  const epochMs = setEpochMs(row);
   const endMs = epochMs + hours * 3600e3;
   return [...known.values()]
     .filter((v) => v.startMs <= endMs - MIN_WINDOW_HOURS * 3600e3 && v.startMs + MEME.spanHours * 3600e3 >= endMs)
@@ -84,7 +93,7 @@ export function candidates(ctx, row) {
 
 // First bytes of the file that hold every state up to EPOCH + 12 h (plus a margin); `extra` widens it on a retry.
 export function rangeFor(cand, row, extra = 1) {
-  const endMs = Math.round(Date.parse(`${row.epoch}Z`) / 1000) * 1000 + hours * 3600e3;
+  const endMs = setEpochMs(row) + hours * 3600e3;
   const states = Math.min(Math.ceil((endMs - cand.startMs) / (MEME.stepSeconds * 1000)) + 1, MEME.spanHours * 3600 / MEME.stepSeconds + 1) + MEME.spareStates;
   return [0, Math.ceil((MEME.headerBytes + states * MEME.bytesPerState) * extra) - 1];
 }
