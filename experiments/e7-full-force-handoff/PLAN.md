@@ -1,9 +1,12 @@
 # E7 — Full-force HPOP from an OMM, against SGP4
 
-Pre-registration. Status: **draft, not frozen**. The plan is frozen by the
-commit that sets `"frozen": true` in [`config.json`](config.json), after the
-train and validation windows have fixed the choices of section 5; that
-commit's SHA is recorded in every later run manifest. The code refuses the
+Pre-registration. Status: **frozen** by the commit that sets
+`"frozen": true` in [`config.json`](config.json), after the train and
+validation windows fixed the choices of section 5 (`config.json` `chosen`:
+B rule `nominal` for LEO-POD and SLR-LEO; arc spans GPS 14 d, LEO-POD 2 d,
+SLR-LEO 7 d, SLR-MEO 28 d; debiasing windows GPS 30 d, LEO-POD 15 d,
+SLR-LEO 60 d, SLR-MEO 60 d; correlation form exponential with a nugget in
+every regime). That commit's SHA is recorded in every later run manifest. The code refuses the
 test window until `config.json` and this file are committed with
 `"frozen": true` and unchanged in the checkout.
 
