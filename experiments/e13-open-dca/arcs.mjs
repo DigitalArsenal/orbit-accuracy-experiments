@@ -19,7 +19,8 @@
 // Phi (6x6) and S (6x1) are propagator/hpop's state-transition output for the arc. The propagation,
 // frames, time scales and energies are the modules'; this file frames requests and does least squares.
 import fs from 'node:fs';
-import { json, loadModule } from '../../harness/modules.mjs';
+import path from 'node:path';
+import { json, loadModule, sha256 } from '../../harness/modules.mjs';
 import { kernelFrame } from '../../harness/prw.mjs';
 import { c04Records, eopFrame } from '../../harness/eop.mjs';
 import { convertIso } from '../../harness/time.mjs';
@@ -70,9 +71,12 @@ export async function openArcEnv({ profile = 'full' } = {}) {
   const modules = {};
   for (const name of ['propagator/hpop', 'foundation/frames', 'foundation/time', 'data-source/eop-parser']) modules[name] = await loadModule(root, name);
   modules['analysis/density-calibration'] = await loadModule(energyModulesDir(), 'analysis/density-calibration');
-  const kernel = kernelFrame(fs.readFileSync(config.inputs.kernel.path));
+  const kernelBytes = fs.readFileSync(config.inputs.kernel.path);
+  const kernel = kernelFrame(kernelBytes);
   const eop = await c04Records(modules['data-source/eop-parser'], config.inputs.eopC04);
   const set = readSetIndices(config.inputs.solfsmy, config.inputs.dtcfile);
+  // the inputs by SHA-256, for a run manifest
+  const inputs = { set: set.sha256, eop: { [path.basename(config.inputs.eopC04)]: eop.sha256 }, kernel: { [path.basename(config.inputs.kernel.path)]: sha256(kernelBytes) } };
   const prof = PROFILES[profile];
   if (!prof) throw new Error(`unknown profile ${profile}`);
 
@@ -199,5 +203,5 @@ export async function openArcEnv({ profile = 'full' } = {}) {
     return last;
   }
 
-  return { energyArc, sixDimensionalArc, energyOf, propagate, trajectory, toUtcGcrf, modules, profile, destroy: async () => { for (const m of Object.values(modules)) await m.destroy(); } };
+  return { energyArc, sixDimensionalArc, energyOf, propagate, trajectory, toUtcGcrf, modules, profile, inputs, destroy: async () => { for (const m of Object.values(modules)) await m.destroy(); } };
 }

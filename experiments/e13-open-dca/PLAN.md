@@ -344,3 +344,33 @@ Section 10's analyses (c)–(e) (the open DCA from Starlink, held-out Starlinks,
 - The guard is closed: `assertWindowReadable` for any test split now also requires `results/e13/selection.json` committed and unchanged, which gates the arcs, the densities, the orbits
   and the scoring alike (`test/e13-windows.test.mjs` builds repositories and checks the refusals: no selection, an uncommitted or staged one, a changed one, a changed plan, amendments
   or configuration, a configuration that is not frozen).
+
+### Amendment R2 — a prior on the common mode, and the definitions the code fixes (2026-10-10; before the selection was committed and before any test-split arc, density, orbit or score existed; dev arcs, dev densities and dev propagation only)
+
+1. **The common mode gets a random-walk prior across nodes** (`smoothSigma`: the standard deviation of the step between neighbouring supported nodes; in the unit-weight normal equations a penalty
+   (sigma_arc / smoothSigma)^2 on every squared difference). Without it the daily common mode follows the noise of the arcs, which is blue (the energies of two neighbouring states enter two neighbouring
+   arcs with opposite signs; the lag-1 autocorrelation of an arc's residual is -0.15 to -0.21 on dev). Dev arcs to 2025-11-05 (938 calibration arcs, 260 windows, solver of R1 with q = 0.02, pooled
+   R1 of the density comparison of section 6): no prior 0.263; first-difference prior with penalty 4 / 8 / 16: 0.418 / 0.425 / 0.410 (sigma_arc 0.075: smoothSigma about 0.037 / 0.027 / 0.019); a
+   second-difference prior is worse (penalty 8 / 32 / 128: 0.414 / 0.380 / 0.328); q = 0.005 and 0.04 with penalty 8: 0.448 and 0.413; q = 0.1 lets the baselines absorb the common mode (R1 0.000).
+   On a synthetic fleet of 36 satellites (scatter 0.088, 3 % outliers, baseline steps) the prior lowers the rms error of the 12 h window means from 0.0193 to 0.0177 (smoothSigma 0.05) but keeps
+   only 0.83 of a 0.4 storm at 0.05 and 0.68 at 0.03: the prior trades storm amplitude for noise, which H2 reports. Candidates for the dev selection: smoothSigma in {none, 0.10, 0.05, 0.03, 0.02}
+   for the random-walk baselines (`amendments.json`: `smoothSigmaCandidates`), 40 random-walk candidates with the 6 block candidates (the blocks stay unsmoothed).
+2. **A lag of the common mode was examined and is not used.** Without the prior the density at t agrees better with the common mode read 6-12 h later (dev to 2025-10-27, 26 days: R1 0.274 at
+   0 h, 0.320 and 0.331 at 6 and 12 h later); with the prior it does not (0.425, 0.427, 0.416 at 0, 6, 12 h on the 2025-11-05 data). The lag was noise at high frequency. Planet's epochs are
+   right: E4 compares Planet's states at their epochs with SGP4 from the operator's own element sets to 0.59 km (median 3D, 1,233 states). `common-mode.mjs` keeps `withLag`; the selection is run
+   with a lag of 0 only.
+3. **H3's baseline** (Amendment R1, item 7) is taken from the held-out Dove's arcs of the same split only: an arc is scored when the previous 21 days of the split hold at least 8 of its arcs, so the first
+   8 or more days of a split are not scored, in D0 and D13 alike.
+4. **The conversion to a temperature.** kappa (`kappa.mjs`) is the area-weighted (cos latitude) mean of d ln(rho) / dT of JB2008 from `analysis/density-calibration` `evaluate` over 144 points at 490 km
+   (12 latitudes, -82.5 to 82.5 degrees every 15, by 12 longitudes every 30 degrees) at 12:00 UTC of the day; a00(t) = s(t) / kappa(day of t) is added to the hourly DTC values at the hour's start.
+5. **H4's mechanics.** Swarm A, B, C; issue time the precise orbit's sample nearest to 00:00 UTC of every second day from the split's first day (within 15 s); Cd*A/m by the energy form from the states
+   24 h before and at the issue time (`energyArc`, production profile g24lean, Cr*A/m 0.009 m2/kg, starting value 0.0045), under the variant's density; the issue state is propagated to the samples
+   nearest +1 d and +3 d; the error is the 3D distance. H5: held-out Doves, every third state that has a regular arc (20-28 h) before it; Cd*A/m from that arc; the horizon states are the Dove's states one
+   and three states later when every arc between is regular. H5 runs the variants D0 and D13 only (D13-def is run for H4).
+6. **The selection's second stage** (tau) uses issue times 00:00 UTC every second day from 30 days after the split's start; for each, the nowcast and the forecast over the windows from 0 to 72 h later,
+   against x' less the mean of x over the windows between the nowcast's first and last supported node (the level that the nowcast's mean-zero constraint corresponds to).
+7. **Prior art for Part S** (read as titles and metadata only, text unavailable): Liu et al. 2026, *Adv. Space Res.*, doi:10.1016/j.asr.2025.12.078 (energy analysis for manoeuvre detection and orbit
+   prediction of Starlink ephemerides); Liu et al. 2026, *Adv. Space Res.*, doi:10.1016/j.asr.2026.03.062 (retrieval of manoeuvre information from SpaceX-released ephemerides); Ai-rong et al. 2025,
+   *Chinese Astron. Astrophys.*, doi:10.1016/j.chinastron.2025.03.005 (research on the ephemerides SpaceX publishes); Chen et al. 2026, *J. Aerospace Eng.*, doi:10.1061/jaeeez.aseng-6846 (a neural
+   network to upgrade the accuracy of Starlink ephemerides); Lin and Chen 2024, SSRN 4707240 (a bidirectional LSTM to improve Starlink orbit prediction). The novelty of Amendment S1's measurements
+   (realised against stated covariance, planned against executed thrust) is not established by this search; they are reported either way.

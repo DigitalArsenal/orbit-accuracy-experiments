@@ -17,7 +17,7 @@ import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { gitState, sha256 } from '../../../harness/modules.mjs';
 import { Products } from '../../e3-combined-catalog/truth.mjs';
 import { DAY, H, STORE, appendJsonl, config, configPath, energyModulesDir, isoZ, modulesDir, paths, readJson, sleep, amendmentsSha256 } from '../common.mjs';
-import { arcCenterOffsetMs, arcsFromRows, nowcast, sAt, solveCommonMode } from '../common-mode.mjs';
+import { arcCenterOffsetMs, arcsFromRows, nowcast, sAt, solveCommonMode, withLag } from '../common-mode.mjs';
 import { openArcEnv } from '../arcs.mjs';
 import { kappaTable } from '../kappa.mjs';
 import { openDensityEnv } from '../density-truth.mjs';
@@ -28,13 +28,15 @@ const { values } = parseArgs({ options: { split: { type: 'string' }, target: { t
 const P = config.planet, S = config.analysis.solver;
 const [from, to] = P.split[values.split] ?? (() => { throw new Error(`unknown split ${values.split}`); })();
 assertDensityReadable(values.split);            // Swarm orbits and Planet states of a test split: the freeze and the committed selection
-const selection = readJson(values.selection ?? path.join(repoRoot, 'results', 'e13', 'selection.json'));
+const selectionPath = values.selection ?? path.join(repoRoot, 'results', 'e13', 'selection.json');
+const selectionBytes = fs.readFileSync(selectionPath);
+const selection = JSON.parse(selectionBytes.toString('utf8'));
 const variants = values.variants.split(',');
 const [shard, shards] = values.shard.split('/').map(Number);
 const profile = values.profile ?? P.arc.profile;
 const run = startRun({ experiment: config.experiment, step: `35-propagation-${values.split}-${values.target}-${shard}of${shards}`, configPath, modulesDir: modulesDir(), args: values });
 run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
-run.addInputs('selection', { [path.basename(values.selection ?? 'selection.json')]: sha256(Buffer.from(JSON.stringify(selection))) });
+run.addInputs('selection', { [path.basename(selectionPath)]: sha256(selectionBytes) });
 const log = (m) => console.log(`${new Date().toISOString().slice(11, 19)} ${m}`);
 
 // Calibration arcs of every split (history for the nowcast comes from earlier splits).
@@ -42,14 +44,17 @@ const sample = readJson(path.join(path.dirname(configPath), 'planet-sample.json'
 const arcRows = (split) => { const f = path.join(paths.planetArcs, `${split}-${P.arc.profile}.jsonl`); return fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []; };
 const arcOptions = { hwids: sample.calibration, maxRelativeSigma: S.arcUse.maximumRelativeSigma, positiveOnly: S.arcUse.positiveOnly };
 const splitArcs = arcsFromRows(arcRows(values.split), arcOptions);
-const allArcs = Object.keys(P.split).flatMap((sp) => arcsFromRows(arcRows(sp), arcOptions));
-for (const sp of Object.keys(P.split)) { const f = path.join(paths.planetArcs, `${sp}-${P.arc.profile}.jsonl`); if (fs.existsSync(f)) run.addInputs('planet-arcs', { [path.basename(f)]: sha256(fs.readFileSync(f)) }); }
+const upto = Object.entries(P.split).filter(([, [, end]]) => end <= to).map(([name]) => name);     // the splits up to this one: a run never loads a later split's arcs
+const allArcs = upto.flatMap((sp) => arcsFromRows(arcRows(sp), arcOptions));
+for (const sp of upto) { const f = path.join(paths.planetArcs, `${sp}-${P.arc.profile}.jsonl`); if (fs.existsSync(f)) run.addInputs('planet-arcs', { [path.basename(f)]: sha256(fs.readFileSync(f)) }); }
 const solverOptions = { huberK: S.huberK, iterations: S.iterations, tolerance: S.tolerance, scaleSweeps: S.scaleSweeps, minDovesPerNode: S.minimumDovesPerNodeInterval, minNodeInfo: S.minimumNodeInfo };
-const nowOptions = { latencyHours: S.nowcast.latencyHours, historyDays: S.nowcast.historyDays, nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, ...solverOptions };
+const nowOptions = { latencyHours: S.nowcast.latencyHours, historyDays: S.nowcast.historyDays, nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, smoothSigma: selection.solver.smoothSigma ?? null, lagHours: selection.lagHours ?? 0, ...solverOptions };
 const tauHours = selection.tauHours;
 
 const arcEnv = await openArcEnv({ profile });
 const densityEnv = await openDensityEnv();
+for (const [family, files] of Object.entries(arcEnv.inputs)) run.addInputs(family, files);
+run.addInputs('set', densityEnv.set.sha256);
 run.addModule({ ...densityEnv.dc.provenance, checkout: energyModulesDir(), checkoutState: gitState(energyModulesDir()) });
 const dayMs = (iso) => Date.parse(`${iso}T00:00:00Z`);
 const days = []; for (let t = dayMs(from) - 32 * DAY; t <= dayMs(to) + 5 * DAY; t += DAY) days.push(new Date(t).toISOString().slice(0, 10));
@@ -58,7 +63,7 @@ const kappaOf = (t) => { const d = new Date(t).toISOString().slice(0, 10); retur
 
 // The hindcast (whole split) and the nowcast solutions
 let hindcast = null;
-const hindcastSolution = () => (hindcast ??= solveCommonMode(splitArcs, { anchorMs: dayMs(from) + arcCenterOffsetMs(splitArcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, ...solverOptions }));
+const hindcastSolution = () => (hindcast ??= withLag(solveCommonMode(splitArcs, { anchorMs: dayMs(from) + arcCenterOffsetMs(splitArcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, smoothSigma: selection.solver.smoothSigma ?? null, ...solverOptions }), selection.lagHours ?? 0));
 const nowcasts = new Map();
 function nowcastAt(issueMs) {
   const cutoff = issueMs - S.nowcast.latencyHours * H;
@@ -150,6 +155,7 @@ for (const job of mine) {
 }
 run.afterwards?.();
 run.finish({ rows: fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).length, out: outFile });
+fs.writeFileSync(`${outFile}.meta.json`, `${JSON.stringify({ run: run.id, split: values.split, target: values.target, shard: `${shard}/${shards}`, variants, solver: selection.solver, tauHours, finished: new Date().toISOString() }, null, 1)}\n`);
 await arcEnv.destroy();
 await densityEnv.destroy();
 log('done');

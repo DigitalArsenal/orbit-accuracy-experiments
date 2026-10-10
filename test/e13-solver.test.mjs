@@ -126,3 +126,30 @@ test('a node that few satellites or little weight support is held at zero and th
   assert.ok(sol.supported.filter(Boolean).length >= 38);
   assert.ok(Math.max(...sol.s.map(Math.abs)) < 0.5, 'a node blew up');
 });
+
+test('a random-walk prior on the common mode lowers the error of a smooth common mode and keeps most of a storm', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 92, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const anchorMs = T0 + arcCenterOffsetMs(probe);
+  // a smooth truth (AR(1) with a daily correlation of 0.97) and a storm of 0.4 over three nodes
+  const r = rng(3), n = 92 + 4, v = new Float64Array(n);
+  let x = 0;
+  for (let i = 0; i < n; ++i) { x = 0.97 * x + 0.015 * gauss(r); v[i] = x; }
+  v[41] += 0.1; v[42] += 0.4; v[43] += 0.2;
+  const f = (t) => { const x2 = (t - anchorMs) / DAY, i = Math.floor(x2); return v[i] + (v[i + 1] - v[i]) * (x2 - i); };
+  const calibration = fleet(f, { doves: 36, days: 92, noise: 0.088, outliers: 0.03, steps: true, seed: 11, prefix: 'c', staggerHours: 2.5 });
+  const run = (smoothSigma) => {
+    const sol = solveCommonMode(calibration, { anchorMs, nodeHours: 24, baseline: { kind: 'randomWalk', stepSigma: 0.02 }, smoothSigma, iterations: 60, tolerance: 1e-5 });
+    assert.ok(sol.converged, `smoothSigma ${smoothSigma}: not converged`);
+    const e = windowError(sol, f, 3, 88);
+    // the storm: the largest true window mean against the recovered one, both less the mean of the compared windows
+    let peakT = -Infinity, peakE = NaN, mt = 0, me = 0, k = 0;
+    const wins = [];
+    for (let t = T0 + 3 * DAY; t + 12 * H <= T0 + 88 * DAY; t += 12 * H) { const w = windowMean(sol, t, t + 12 * H); if (Number.isFinite(w)) { wins.push([meanOver(f, t, t + 12 * H), w]); mt += wins.at(-1)[0]; me += w; ++k; } }
+    for (const [tru, est] of wins) if (tru - mt / k > peakT) { peakT = tru - mt / k; peakE = est - me / k; }
+    return { rms: e.rms, keep: peakE / peakT };
+  };
+  const none = run(null), smooth = run(0.05), tight = run(0.02);
+  assert.ok(smooth.rms < 0.97 * none.rms, `rms ${smooth.rms.toFixed(4)} with the prior against ${none.rms.toFixed(4)} without`);
+  assert.ok(smooth.keep > 0.7 && none.keep > 0.9, `storm kept: ${smooth.keep.toFixed(2)} with the prior (0.05), ${none.keep.toFixed(2)} without`);
+  assert.ok(tight.keep < smooth.keep, 'a tighter prior keeps less of the storm');
+});

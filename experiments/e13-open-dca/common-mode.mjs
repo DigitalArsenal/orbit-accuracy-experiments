@@ -156,7 +156,7 @@ function tridiagSolve(f, b) {
 // sqrt(day) between its consecutive arcs, the increments under a Huber loss so that an attitude-mode step is allowed. Same common mode
 // and the same Huber loss on the arcs' residuals as the block form; the baselines are eliminated exactly, satellite by satellite
 // (a tridiagonal solve per column), so the unknowns are again the node values.
-function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, huberK = 1.5, iterations = 30, tolerance = 1e-6, minDovesPerNode = 6, minNodeInfo = 1.5, scaleSweeps = 8 } = {}) {
+function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, smoothSigma = null, huberK = 1.5, iterations = 30, tolerance = 1e-6, minDovesPerNode = 6, minNodeInfo = 1.5, scaleSweeps = 8 } = {}) {
   if (!arcs.length) throw new Error('no arcs');
   const step = nodeHours * H;
   const nMin = Math.floor((Math.min(...arcs.map((a) => a.startMs)) - anchorMs) / step), nMax = Math.ceil((Math.max(...arcs.map((a) => a.endMs)) - anchorMs) / step);
@@ -215,6 +215,12 @@ function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, hub
         for (const [node2, x2] of X) { let d2 = 0; for (let j = 0; j < n; ++j) d2 += col[j] * x2[j]; A[node * N + node2] -= d2; }
       }
     });
+    // the common mode is a random walk across supported nodes: a step of standard deviation smoothSigma per node interval, in the units of the unit-weight
+    // normal equations a penalty (sigma / smoothSigma)^2 on every squared difference of neighbouring supported nodes
+    if (smoothSigma) {
+      const lam = (Number.isFinite(sigma) ? sigma : 0.09) ** 2 / smoothSigma ** 2;
+      for (let i = 0; i + 1 < N; ++i) if (supported[i] && supported[i + 1]) { A[i * N + i] += lam; A[(i + 1) * N + i + 1] += lam; A[i * N + i + 1] -= lam; A[(i + 1) * N + i] -= lam; }
+    }
     for (let i = 0; i < N; ++i) if (!supported[i]) { for (let k = 0; k < N; ++k) { A[i * N + k] = 0; A[k * N + i] = 0; } c[i] = 0; }
     const PAP = new Float64Array(N * N), col = new Float64Array(N);
     for (let k = 0; k < N; ++k) { for (let i = 0; i < N; ++i) col[i] = A[i * N + k]; project(col); for (let i = 0; i < N; ++i) PAP[i * N + k] = col[i]; }
@@ -246,7 +252,7 @@ function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, hub
   return {
     anchorMs, stepMs: step, nMin, nodeMs, s: Array.from(s), supported, dovesPerNode: nodeDoves.map((d) => d.size), nodeInfo: Array.from(info),
     sigma, sweeps, converged, lastChange, arcs: arcs.length, groups: doves.length, huberDownweighted: omega.reduce((n, w) => n + (w < 1 ? 1 : 0), 0),
-    residuals, omega, baseline: Object.fromEntries(doves.map((list, i) => [list[0].dove, Array.from(beta[i])])), stepSigma,
+    residuals, omega, baseline: Object.fromEntries(doves.map((list, i) => [list[0].dove, Array.from(beta[i])])), stepSigma, smoothSigma,
     firstNodeMs: nodeMs[0], lastNodeMs: nodeMs[N - 1],
   };
 }
@@ -261,6 +267,8 @@ export function solveCommonMode(arcs, options = {}) {
 
 // The mean of s over [loMs, hiMs] of a solution, NaN where a node that matters is unsupported or the window leaves the node range.
 export function windowMean(sol, loMs, hiMs) {
+  const lag = sol.lagMs ?? 0;                                   // a solution with a lag is read at the time later by that lag (see withLag)
+  loMs += lag; hiMs += lag;
   if (loMs < sol.nodeMs[0] || hiMs > sol.nodeMs.at(-1)) return NaN;
   const parts = hatWeights(loMs, hiMs, sol.anchorMs, sol.stepMs, sol.nMin, sol.nodeMs.length);
   if (parts.some((p) => !sol.supported[p.i])) return NaN;
@@ -270,6 +278,7 @@ export function windowMean(sol, loMs, hiMs) {
 // s(t) beyond the last supported node relaxes to zero with time constant tauHours (null: held); within the nodes it is the piecewise linear s.
 // The mean over [loMs, hiMs] by quadrature every quadMs (a function of a known form, not a model). NaN where an interior node is unsupported.
 export function forecastMean(sol, loMs, hiMs, tauHours, quadMs = 600e3) {
+  loMs += sol.lagMs ?? 0; hiMs += sol.lagMs ?? 0;
   const lastIdx = sol.supported.lastIndexOf(true);
   const last = sol.nodeMs[lastIdx], sLast = sol.s[lastIdx];
   let acc = 0, n = 0;
@@ -289,6 +298,7 @@ export function forecastMean(sol, loMs, hiMs, tauHours, quadMs = 600e3) {
 // s(t) of a solution: piecewise linear between its nodes (an unsupported node is 0), held before the first supported node, and after the
 // last supported node relaxing to zero with time constant tauHours (null: held). The correction a propagation applies.
 export function sAt(sol, tMs, tauHours) {
+  tMs += sol.lagMs ?? 0;
   const first = sol.supported.indexOf(true), last = sol.supported.lastIndexOf(true);
   if (first < 0) return 0;
   if (tMs <= sol.nodeMs[first]) return sol.s[first];
@@ -297,16 +307,21 @@ export function sAt(sol, tMs, tauHours) {
   return sol.s[i] + (sol.s[i + 1] - sol.s[i]) * (x - i);
 }
 
+// A solution read with a lag: the common mode that the arcs give is taken to describe the density `lagHours` before the time it is assigned to (the
+// operator's states lag the density: Amendment R2), so that its value at physical time t is the solution's at t + lagHours. windowMean, forecastMean and
+// sAt apply the lag; the solution itself is unchanged.
+export function withLag(sol, lagHours) { return { ...sol, lagMs: lagHours * H }; }
+
 // The causal nowcast at an issue time: the arcs that ended at least latencyHours before it and not earlier than historyDays before that,
 // nodes at the centres of those arcs' days. The cut-off is an assertion, not a filter alone: the solver is handed no later arc.
-export function nowcast(arcs, issueMs, { latencyHours = 6, historyDays = 30, nodeHours = 24, ...rest } = {}) {
+export function nowcast(arcs, issueMs, { latencyHours = 6, historyDays = 30, nodeHours = 24, lagHours = 0, ...rest } = {}) {
   const cutoff = issueMs - latencyHours * H;
   const used = arcs.filter((a) => a.endMs <= cutoff && a.startMs >= cutoff - historyDays * DAY);
   if (used.some((a) => a.endMs > cutoff)) throw new Error('look-ahead: an arc ends after the cut-off');
   if (!used.length) return null;
   const anchorMs = Math.floor(cutoff / DAY) * DAY + arcCenterOffsetMs(used);
   const sol = solveCommonMode(used, { anchorMs, nodeHours, ...rest });
-  return { ...sol, issueMs, cutoffMs: cutoff, usedArcs: used.length, latestArcEndMs: Math.max(...used.map((a) => a.endMs)) };
+  return { ...withLag(sol, lagHours), issueMs, cutoffMs: cutoff, usedArcs: used.length, latestArcEndMs: Math.max(...used.map((a) => a.endMs)) };
 }
 
 // The arcs of a Planet-arc JSONL (steps/10) as solver arcs: valid fits only (a positive Cd*A/m with a stated sigma below maxRelativeSigma).

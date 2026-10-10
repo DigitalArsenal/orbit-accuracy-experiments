@@ -11,8 +11,8 @@ import { pigeonholeBootstrap, quantile } from '../../../harness/stats.mjs';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { DAY, H, config, configPath, modulesDir, paths, readJson, amendmentsSha256 } from '../common.mjs';
-import { arcCenterOffsetMs, arcsFromRows, solveCommonMode, windowMean } from '../common-mode.mjs';
-import { cellsOf, densityRows, devLevels, loadDensityWindows, perSatellite, r1FromCells, spreadReduction, stormCapture, stormDays } from '../score.mjs';
+import { arcCenterOffsetMs, arcsFromRows, solveCommonMode, windowMean, withLag } from '../common-mode.mjs';
+import { boot, cellsOf, densityRows, devLevels, loadDensityWindows, perSatellite, r1FromCells, spreadReduction, stormCapture, stormDays } from '../score.mjs';
 import { assertDensityReadable } from '../windows.mjs';
 
 const { values } = parseArgs({ options: { split: { type: 'string' }, selection: { type: 'string' }, out: { type: 'string' } } });
@@ -24,13 +24,14 @@ const run = startRun({ experiment: config.experiment, step: `30-density-score-${
 run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 const log = (m) => console.log(`[${run.id}] ${m}`);
 const sample = readJson(path.join(path.dirname(configPath), 'planet-sample.json'));
+run.addInputs('gfz', { [path.basename(config.inputs.gfzHistory)]: sha256(fs.readFileSync(config.inputs.gfzHistory)) });
 const dayMs = (iso) => Date.parse(`${iso}T00:00:00Z`);
 
 const arcFile = (split) => path.join(paths.planetArcs, `${split}-${P.arc.profile}.jsonl`);
 const readRows = (split) => { const f = arcFile(split); run.addInputs('planet-arcs', { [path.basename(f)]: sha256(fs.readFileSync(f)) }); return fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)); };
 const arcOptions = { maxRelativeSigma: S.arcUse.maximumRelativeSigma, positiveOnly: S.arcUse.positiveOnly };
 const solverOptions = { huberK: S.huberK, iterations: S.iterations, tolerance: S.tolerance, scaleSweeps: S.scaleSweeps, minDovesPerNode: S.minimumDovesPerNodeInterval, minNodeInfo: S.minimumNodeInfo };
-const solve = (arcs, splitStart) => solveCommonMode(arcs, { anchorMs: dayMs(splitStart) + arcCenterOffsetMs(arcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, ...solverOptions });
+const solve = (arcs, splitStart) => solveCommonMode(arcs, { anchorMs: dayMs(splitStart) + arcCenterOffsetMs(arcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, smoothSigma: selection.solver.smoothSigma ?? null, ...solverOptions });
 
 // the solution of a split (calibration arcs) and the mean of its s-bar over the split's windows (removed as the dev level)
 function hindcastOf(split, source = 'ours') {
@@ -38,7 +39,7 @@ function hindcastOf(split, source = 'ours') {
   let arcs = arcsFromRows(rows, { ...arcOptions, hwids: sample.calibration });
   if (source === 'planet') arcs = rows.filter((r) => !r.error && sample.calibration.includes(r.hwid) && r.planetBallistic?.b > 0 && r.cdAreaOverMass > 0 && !r.nonPositive && r.sigmaB / r.cdAreaOverMass < arcOptions.maxRelativeSigma)
     .map((r) => ({ dove: r.hwid, startMs: Date.parse(r.utcA), endMs: Date.parse(r.utcB), y: -Math.log(r.planetBallistic.b), sigma: 0 }));
-  const sol = solve(arcs, P.split[split][0]);
+  const sol = withLag(solve(arcs, P.split[split][0]), selection.lagHours ?? 0);
   const times = []; for (let t = dayMs(P.split[split][0]); t < dayMs(P.split[split][1]) + DAY; t += 12 * H) times.push(t);
   const vals = times.map((t) => windowMean(sol, t, t + 12 * H)).filter(Number.isFinite);
   return { sol, arcs, rows, devMeanS: vals.reduce((a, b) => a + b, 0) / vals.length };
@@ -91,19 +92,19 @@ const mad = (xs) => 1.4826 * quantile(xs.map((x) => Math.abs(x - quantile(xs, 0.
 const h3cells = u.map((x) => ({ row: x.dove, col: x.day, u0: [x.u0], u13: [x.u13] }));
 const expand = (cells, key) => cells.flatMap((c) => Array.from({ length: c.weight }, () => c[key][0]));
 const h3stat = (cells) => 1 - mad(expand(cells, 'u13')) / mad(expand(cells, 'u0'));
-const h3 = u.length ? pigeonholeBootstrap(h3cells, h3stat, { resamples: B.resamples, seed: B.seed, confidence: B.confidence }) : null;
+const h3 = u.length ? boot(h3cells, h3stat, { nullValue: 0, side: 'greater' }) : null;     // one-sided p of R3 <= 0
 log(`H3: held-out Doves ${u.length} arcs: R3 ${h3 ? `${h3.estimate.toFixed(3)} [${h3.lower.toFixed(3)}, ${h3.upper.toFixed(3)}]` : 'n/a'} (MAD ${u.length ? mad(u.map((x) => x.u0)).toFixed(4) : '-'} -> ${u.length ? mad(u.map((x) => x.u13)).toFixed(4) : '-'})`);
 
 const out = {
-  experiment: config.experiment, run: run.id, split: values.split, span: [from, to], solver: selection.solver, tauHours: selection.tauHours,
+  experiment: config.experiment, run: run.id, split: values.split, span: [from, to], solver: selection.solver, lagHours: selection.lagHours ?? 0, tauHours: selection.tauHours,
   arcs: { calibration: here.arcs.length, heldOut: held.length }, sigmaArc: here.sol.sigma, sweeps: here.sol.sweeps, converged: here.sol.converged,
   H1: { ...h1, interval: h1ci, perSatellite: sat, thresholdR1: HY.H1.threshold, supported: h1ci.lower > 0 && h1.R1 >= HY.H1.threshold },
   H6: { ...h6, shiftDays: HY.H6.shiftDays, passes: h6.R1 < HY.H6.maximumReduction },
   H2: { stormDays: Object.fromEntries(stormMap), windows: h2.windows, sameSignShare: h2.sameSignShare, medianCapture: h2.medianCapture, nBig: h2.nBig, list: h2.rows.map((r) => ({ key: r.key, start: new Date(r.startMs).toISOString(), xp: r.xp, sbar: r.sbar })) },
-  H3: h3 ? { arcs: u.length, R3: h3.estimate, lower: h3.lower, upper: h3.upper, madD0: mad(u.map((x) => x.u0)), madD13: mad(u.map((x) => x.u13)), thresholdR3: HY.H3.threshold } : null,
+  H3: h3 ? { arcs: u.length, R3: h3.estimate, lower: h3.lower, upper: h3.upper, p: h3.p, madD0: mad(u.map((x) => x.u0)), madD13: mad(u.map((x) => x.u13)), thresholdR3: HY.H3.threshold, supported: h3.estimate >= HY.H3.threshold && h3.lower > 0 } : null,
   descriptive: { planetColumnR1: planetR1.R1, planetColumnWindows: planetR1.n, correlationOfCommonModes: corrModes },
 };
-const outFile = values.out ?? run.dir + '/density-score.json';
+const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', values.split, 'density-score.json');
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, `${JSON.stringify(out, null, 1)}\n`);
 run.finish({ H1: h1.R1, H6: h6.R1 });

@@ -2,16 +2,20 @@
 // of D13 divided by that of D0, with a two-way cluster bootstrap over objects and issue days. Supported at a horizon when the median ratio is at
 // most the threshold (0.90) and its upper bound is below 1. D13-def (the non-causal upper bound) is reported next to it.
 //
-//   node steps/50-propagation-score.mjs --rows FILE[,FILE...] [--out FILE]
+//   node steps/50-propagation-score.mjs --split dev|testA|testB --rows FILE[,FILE...] [--out FILE]      (default out: results/e13/<split>/propagation-score.json)
 import fs from 'node:fs';
 import { parseArgs } from 'node:util';
+import path from 'node:path';
+import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
 import { holm, medianRatio, propagationCells } from '../score.mjs';
 
-const { values } = parseArgs({ options: { rows: { type: 'string' }, out: { type: 'string' } } });
-const rows = values.rows.split(',').flatMap((f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)));
+const { values } = parseArgs({ options: { split: { type: 'string' }, rows: { type: 'string' }, out: { type: 'string' } } });
+const files = values.rows.split(',');
+const rows = files.flatMap((f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)));
+const runs = files.map((f) => (fs.existsSync(`${f}.meta.json`) ? JSON.parse(fs.readFileSync(`${f}.meta.json`, 'utf8')) : { file: f }));
 const HY = config.analysis.hypotheses;
-const out = { rowsFiles: values.rows.split(','), rows: rows.length, errors: rows.filter((r) => r.error).length, targets: {} };
+const out = { split: values.split, runs, rowsFiles: files.map((f) => path.basename(f)), rows: rows.length, errors: rows.filter((r) => r.error).length, targets: {} };
 const tests = [];
 for (const target of ['swarm', 'doves']) {
   const mine = rows.filter((r) => r.target === target);
@@ -33,4 +37,7 @@ for (const target of ['swarm', 'doves']) {
 }
 out.holmPartial = holm(tests);
 if (tests.length) console.log(`Holm over ${tests.map((t) => t.id).join(', ')} (H3 enters from step 30): ${out.holmPartial.map((t) => `${t.id} p ${t.p.toFixed(4)} ${t.reject ? 'rejects' : 'does not'}`).join('; ')}`);
-if (values.out) fs.writeFileSync(values.out, `${JSON.stringify(out, null, 1)}\n`);
+const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', values.split, 'propagation-score.json');
+fs.mkdirSync(path.dirname(outFile), { recursive: true });
+fs.writeFileSync(outFile, `${JSON.stringify(out, null, 1)}\n`);
+console.log(`wrote ${outFile}`);

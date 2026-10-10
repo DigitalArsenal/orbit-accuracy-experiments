@@ -18,7 +18,7 @@ if (selection.solver.baseline.kind !== 'randomWalk') throw new Error('the baseli
 const sample = readJson(path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'planet-sample.json'));
 const rows = fs.readFileSync(path.join(paths.planetArcs, `dev-${P.arc.profile}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const arcs = arcsFromRows(rows, { hwids: sample.calibration, maxRelativeSigma: S.arcUse.maximumRelativeSigma, positiveOnly: S.arcUse.positiveOnly });
-const sol = solveCommonMode(arcs, { anchorMs: Date.parse(`${P.split.dev[0]}T00:00:00Z`) + arcCenterOffsetMs(arcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline,
+const sol = solveCommonMode(arcs, { anchorMs: Date.parse(`${P.split.dev[0]}T00:00:00Z`) + arcCenterOffsetMs(arcs), nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, smoothSigma: selection.solver.smoothSigma ?? null,
   huberK: S.huberK, iterations: S.iterations, tolerance: S.tolerance, scaleSweeps: S.scaleSweeps, minDovesPerNode: S.minimumDovesPerNodeInterval, minNodeInfo: S.minimumNodeInfo });
 const q = selection.solver.baseline.stepSigma, DAY = 86400e3;
 const out = { arcs: arcs.length, doves: new Set(arcs.map((a) => a.dove)).size, solver: selection.solver, sigmaArc: sol.sigma };

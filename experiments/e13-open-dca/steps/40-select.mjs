@@ -13,7 +13,7 @@ import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { DAY, H, config, configPath, modulesDir, paths, amendmentsSha256 } from '../common.mjs';
-import { arcCenterOffsetMs, arcsFromRows, forecastMean, nowcast, solveCommonMode, windowMean } from '../common-mode.mjs';
+import { arcCenterOffsetMs, arcsFromRows, forecastMean, nowcast, solveCommonMode, windowMean, withLag } from '../common-mode.mjs';
 import { devLevels, densityRows, loadDensityWindows, sd, spreadReduction } from '../score.mjs';
 
 const { values } = parseArgs({ options: { arcs: { type: 'string' }, out: { type: 'string' }, through: { type: 'string' } } });
@@ -34,33 +34,40 @@ log(`${arcs.length} arcs of ${new Set(arcs.map((a) => a.dove)).size} calibration
 const windows = loadDensityWindows('dev'), levels = devLevels();
 const solverOptions = { huberK: S.huberK, iterations: S.iterations, tolerance: S.tolerance, scaleSweeps: S.scaleSweeps, minDovesPerNode: S.minimumDovesPerNodeInterval, minNodeInfo: S.minimumNodeInfo };
 const candidates = [];
+const smooths = S.smoothSigmaCandidates ?? [null];                                                // the prior on the common mode (Amendment R2); null: none
 for (const nodeHours of S.nodeHoursCandidates.slice().sort((a, b) => b - a)) {                  // 24 h first: ties go to it
-  for (const q of S.baselineStepSigmaCandidates.slice().sort((a, b) => a - b)) candidates.push({ nodeHours, baseline: { kind: 'randomWalk', stepSigma: q }, label: `${nodeHours} h nodes, random walk q ${q}` });
-  for (const days of S.baselineBlockDaysCandidates.slice().sort((a, b) => b - a)) candidates.push({ nodeHours, baseline: { kind: 'blocks', days }, label: `${nodeHours} h nodes, blocks of ${days} d` });
+  for (const q of S.baselineStepSigmaCandidates.slice().sort((a, b) => a - b)) for (const smoothSigma of smooths) candidates.push({ nodeHours, baseline: { kind: 'randomWalk', stepSigma: q }, smoothSigma, label: `${nodeHours} h nodes, random walk q ${q}, smoothing ${smoothSigma ?? 'none'}` });
+  for (const days of S.baselineBlockDaysCandidates.slice().sort((a, b) => b - a)) candidates.push({ nodeHours, baseline: { kind: 'blocks', days }, smoothSigma: null, label: `${nodeHours} h nodes, blocks of ${days} d` });
 }
 
-// 1. solver
+// 1. solver (and the lag with which the common mode is read: 0 unless Amendment R2 gives candidates)
 const anchorMs = devStart + arcCenterOffsetMs(arcs);
+const lags = (process.env.E13_LAGS ? process.env.E13_LAGS.split(',').map(Number) : S.lagHoursCandidates ?? [0]).slice().sort((a, b) => a - b);      // E13_LAGS: a development run only; the committed selection names the candidates it used
 const hindcast = [];
 for (const c of candidates) {
-  let entry;
-  try {
-    const sol = solveCommonMode(arcs, { anchorMs, nodeHours: c.nodeHours, baseline: c.baseline, ...solverOptions });
-    const raw0 = densityRows(windows, levels, (lo, hi) => windowMean(sol, lo, hi));
-    const devMeanS = raw0.reduce((a, r) => a + r.sbar, 0) / raw0.length;
-    const r = densityRows(windows, levels, (lo, hi) => windowMean(sol, lo, hi), devMeanS).filter((x) => x.startMs < through);
-    const spread = spreadReduction(r);
-    entry = { ...c, windows: r.length, sdX: spread.sdX, sdResidual: spread.sdRes, R1: spread.R1, sigmaArc: sol.sigma, sweeps: sol.sweeps, converged: sol.converged };
-  } catch (e) { entry = { ...c, error: String(e.message ?? e) }; }
-  hindcast.push(entry);
-  log(`solver ${c.label}: ${entry.error ? `ERROR ${entry.error}` : `sd(x'-s) ${entry.sdResidual.toFixed(4)} of sd(x') ${entry.sdX.toFixed(4)}, R1 ${entry.R1.toFixed(3)} (${entry.windows} windows, sigma_arc ${entry.sigmaArc.toFixed(3)}, ${entry.sweeps} sweeps${entry.converged ? '' : ', NOT converged'})`}`);
+  let sol = null, failure = null;
+  try { sol = solveCommonMode(arcs, { anchorMs, nodeHours: c.nodeHours, baseline: c.baseline, smoothSigma: c.smoothSigma, ...solverOptions }); } catch (e) { failure = String(e.message ?? e); }
+  for (const lagHours of lags) {
+    let entry;
+    if (failure) entry = { ...c, lagHours, error: failure };
+    else {
+      const lagged = withLag(sol, lagHours);
+      const raw0 = densityRows(windows, levels, (lo, hi) => windowMean(lagged, lo, hi));
+      const devMeanS = raw0.reduce((a, r) => a + r.sbar, 0) / raw0.length;
+      const r = densityRows(windows, levels, (lo, hi) => windowMean(lagged, lo, hi), devMeanS).filter((x) => x.startMs < through);
+      const spread = spreadReduction(r);
+      entry = { ...c, lagHours, windows: r.length, sdX: spread.sdX, sdResidual: spread.sdRes, R1: spread.R1, sigmaArc: sol.sigma, sweeps: sol.sweeps, converged: sol.converged };
+    }
+    hindcast.push(entry);
+    log(`solver ${c.label}, lag ${lagHours} h: ${entry.error ? `ERROR ${entry.error}` : `sd(x'-s) ${entry.sdResidual.toFixed(4)} of sd(x') ${entry.sdX.toFixed(4)}, R1 ${entry.R1.toFixed(3)} (${entry.windows} windows, sigma_arc ${entry.sigmaArc.toFixed(3)}, ${entry.sweeps} sweeps${entry.converged ? '' : ', NOT converged'})`}`);
+  }
 }
 const valid = hindcast.filter((h) => !h.error && Number.isFinite(h.sdResidual));
 const chosen = valid.reduce((best, h) => (h.sdResidual < best.sdResidual - 1e-12 ? h : best));
-log(`chosen solver: ${chosen.label}`);
+log(`chosen solver: ${chosen.label}, lag ${chosen.lagHours} h`);
 
 // 2. tau
-const nowOptions = { latencyHours: S.nowcast.latencyHours, historyDays: S.nowcast.historyDays, nodeHours: chosen.nodeHours, baseline: chosen.baseline, ...solverOptions };
+const nowOptions = { latencyHours: S.nowcast.latencyHours, historyDays: S.nowcast.historyDays, nodeHours: chosen.nodeHours, baseline: chosen.baseline, smoothSigma: chosen.smoothSigma, lagHours: chosen.lagHours, ...solverOptions };
 const taus = config.analysis.forecast.tauHoursCandidates;
 const issues = [];
 for (let t = devStart + S.nowcast.historyDays * DAY; t + 3 * DAY <= through; t += 2 * DAY) issues.push(t);
@@ -95,7 +102,7 @@ log(`chosen tau: ${tauChosen.tauHours === undefined ? '(no issue day yet: develo
 const out = {
   experiment: config.experiment, run: run.id, decided: new Date().toISOString(), through: new Date(through - DAY).toISOString().slice(0, 10), arcsFile: path.basename(arcsFile), arcs: arcs.length,
   rule: 'PLAN.md 4.3 and Amendment R1: the solver candidate with the smallest pooled standard deviation of x\' - s-bar over the dev windows; tau with the smallest pooled standard deviation of the nowcast+forecast residuals over 0-72 h',
-  solverCandidates: hindcast, solver: { nodeHours: chosen.nodeHours, baseline: chosen.baseline, label: chosen.label },
+  solverCandidates: hindcast, solver: { nodeHours: chosen.nodeHours, baseline: chosen.baseline, smoothSigma: chosen.smoothSigma, label: chosen.label }, lagHours: chosen.lagHours,
   tauCandidates: tauTable, tauHours: tauChosen.tauHours, issues: issues.length,
 };
 const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', 'selection.json');
