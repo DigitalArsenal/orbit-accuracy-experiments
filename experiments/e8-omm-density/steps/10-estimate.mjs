@@ -12,7 +12,11 @@
 // diagnostic). The module estimates; this file selects sets and routes them.
 //
 //   node .../10-estimate.mjs --window W --pool RUN --mode analysis|forecast --per-bin K --structure global|linear
-//        [--no-priors] [--days YYYY-MM-DD,...] [--shard k/n]
+//        [--no-priors] [--days YYYY-MM-DD,...] [--shard k/n] [--resume RUN]
+// Each fit is appended to partial.jsonl as it completes; --resume continues
+// an unfinished run (the same config bytes and modules checkout).
+import fs from 'node:fs';
+import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { startRun } from '../../../harness/provenance.mjs';
 import { callJson, config, configPath, DAY_MS, dayMs, isHistorical, isoDay, issueDays, jb2008Rows, loadModules, mjdOfMs, modulesDir, readRun, runConfigHash, windowSpans } from '../common.mjs';
@@ -20,7 +24,7 @@ import { asModuleSet, asOf, readCache } from '../omm.mjs';
 
 const { values } = parseArgs({ options: {
   window: { type: 'string' }, pool: { type: 'string' }, mode: { type: 'string' }, 'per-bin': { type: 'string' }, structure: { type: 'string' },
-  'no-priors': { type: 'boolean', default: false }, days: { type: 'string' }, shard: { type: 'string', default: '0/1' }, modules: { type: 'string' },
+  'no-priors': { type: 'boolean', default: false }, days: { type: 'string' }, shard: { type: 'string', default: '0/1' }, modules: { type: 'string' }, resume: { type: 'string' },
 } });
 const spans = windowSpans(values.window);
 if (!['analysis', 'forecast'].includes(values.mode)) throw new Error('--mode analysis|forecast');
@@ -31,7 +35,7 @@ const altitudeKm = config.decay.structures[values.structure];
 if (!altitudeKm) throw new Error(`--structure must be one of ${Object.keys(config.decay.structures)}`);
 const [shard, shards] = values.shard.split('/').map(Number);
 const tag = `${values.mode}-${values.window}-K${K}-${values.structure}${values['no-priors'] ? '-nopriors' : ''}`;
-const run = startRun({ experiment: config.experiment, step: `10-estimate-${tag}-${shard}of${shards}`, configPath, modulesDir: modulesDir(values.modules), args: values });
+const run = startRun({ experiment: config.experiment, step: `10-estimate-${tag}-${shard}of${shards}`, configPath, modulesDir: modulesDir(values.modules), args: values, resume: values.resume });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 const { loaded } = await loadModules(run, ['analysis/density-calibration'], values);
 const dc = loaded['analysis/density-calibration'];
@@ -57,6 +61,9 @@ async function fit(objects, fromMs, toMs, select) {
 }
 
 const result = { window: values.window, mode: values.mode, perBin: K, structure: values.structure, noPriors: values['no-priors'], pool: values.pool, spans: [] };
+const partialFile = path.join(run.dir, 'partial.jsonl');
+const done = new Map(fs.existsSync(partialFile) ? fs.readFileSync(partialFile, 'utf8').split('\n').filter(Boolean).map((l) => { const f = JSON.parse(l); return [`${f.span}|${f.issue}`, f.fit]; }) : []);
+const keep = (span, fitOut) => fs.appendFileSync(partialFile, `${JSON.stringify({ span, issue: fitOut.issue, fit: fitOut })}\n`);
 let job = 0;
 for (const [k, span] of spans.entries()) {
   const cache = readCache(`${values.window}-${k}`);
@@ -67,15 +74,19 @@ for (const [k, span] of spans.entries()) {
   if (values.mode === 'analysis') {
     if (job++ % shards !== shard) continue;
     const from = dayMs(span.from) - d.fitLeadDays * DAY_MS, to = dayMs(span.to) + d.scoreDays * DAY_MS;
+    if (done.has(`${k}|null`)) { entry.fits.push(done.get(`${k}|null`)); log(`${span.from}..${span.to} analysis: from the partial file`); result.spans.push(entry); continue; }
     const out = await fit(objects, from, to, (rows) => asOf(rows, from, to + 1, null));
     entry.fits.push({ issue: null, fromMjd: mjdOfMs(from), toMjd: mjdOfMs(to), ...out });
+    keep(k, entry.fits.at(-1));
     log(`${span.from}..${span.to} analysis: ${out.fit.objects} objects, ${out.fit.observations} sets used, ${out.fit.iterations} iterations, converged ${out.fit.converged}, level ${out.fit.level.map((l) => `${l.meanK.toFixed(1)}+-${l.sigmaK?.toFixed(1)}`).join(' ')} K, ${out.computeSeconds.toFixed(0)} s`);
   } else {
     for (const t0 of issueDays([span]).filter((t) => !values.days || values.days.split(',').includes(isoDay(t)))) {
       if (job++ % shards !== shard) continue;
       const from = t0 - d.forecast.spanDays * DAY_MS;
+      if (done.has(`${k}|${isoDay(t0)}`)) { entry.fits.push(done.get(`${k}|${isoDay(t0)}`)); continue; }
       const out = await fit(objects, from, t0, (rows) => asOf(rows, from, t0, t0));
       entry.fits.push({ issue: isoDay(t0), fromMjd: mjdOfMs(from), toMjd: mjdOfMs(t0), ...out });
+      keep(k, entry.fits.at(-1));
       log(`${isoDay(t0)} forecast: ${out.fit.objects} objects, ${out.fit.observations} sets used, ${out.fit.iterations} iterations, converged ${out.fit.converged}, value at t0 ${out.correction.values.at(-1).map((v) => v.toFixed(1)).join('/')} K, ${out.computeSeconds.toFixed(0)} s`);
     }
   }
