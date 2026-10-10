@@ -1415,7 +1415,7 @@
    "id": "spacex-starlink",
    "name": "SpaceX Starlink public ephemerides (MEME, with covariance)",
    "provider": "SpaceX (api.starlink.com/public-files/ephemerides)",
-   "licence": "No licence stated",
+   "licence": "Open source (owner's determination, 2026-10-10); SpaceX's terms page could not be fetched, and the manifest and ephemeris files state no licence",
    "terms": [
     {
      "title": "Starlink public ephemerides manifest",
@@ -1428,17 +1428,17 @@
      "retrieved": "2026-10-10"
     }
    ],
-   "redistribution": "(no licence or terms in the manifest or in the ephemeris files; starlink.com/legal serves no text to a client without a browser)",
-   "attributionClause": "(none stated)",
-   "reproduce": "no",
-   "credit": "SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/.",
-   "reason": "Published for space safety, but no licence grants redistribution.",
+   "redistribution": "(no licence or terms in the manifest or in the ephemeris files; starlink.com/legal serves no text to a client without a browser; the owner determined on 2026-10-10 that the files are open source)",
+   "attributionClause": "Attribution to SpaceX (owner's determination, 2026-10-10).",
+   "reproduce": "yes",
+   "credit": "SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/ (SpaceX).",
+   "reason": "Owner's determination of 2026-10-10 (SpaceX's terms page could not be fetched): reproducible with attribution to SpaceX.",
    "usedIn": "E4 (Starlink: 298 object-files scored, with covariance)",
    "reproducedAt": [
     "modules: analysis/od/tests/data/supgp-reference/starlink-live-20260714/meme/ (10 full files, 20.4 MB), analysis/od/tests/data/supgp-reference/starlink/meme/ (10 trimmed), analysis/od/src/cpp/tests/data/test_meme.txt, analysis/od/tests/fixtures/request.fit.meme, data-source/spacex-starlink-source/test/fixtures/meme/ (excerpts) and manifest copies (committed before this audit)"
    ],
    "obtain": "https://api.starlink.com/public-files/ephemerides/ (current snapshot); data/e4/MANIFEST.json lists each file E4 read with its SHA-256.",
-   "conditions": "",
+   "conditions": "Owner's determination of 2026-10-10: the Starlink files are already open source. Credit SpaceX. The owner's separate rule stands: raw operator ephemerides are never stored or published by these experiments; this only sets how the source is labelled.",
    "notice": null
   },
   {
@@ -1775,6 +1775,6 @@
   "Release `gnss-truth-20261009` notes now describe the IGS terms as open use without restriction (2026-10-10). `data/e4/SOURCES.md` and E4's frozen `config.json` still say \"IGS Data Policy: CC BY 4.0\"; the config is frozen, so the correction is an amendment to E4's plan (not yet written).",
   "Credits for ESA, Copernicus and Space-Track are in the results READMEs and reports (`harness/credit-lines.mjs`; a step that regenerates a report drops the section, rerun the script).",
   "The site's `propagator/hpop` module binary compiles in the HWM14 winds data, whose terms are unconfirmed ([HWM14](#hwm14)); the binary is published by the owner's decision of 2026-10-08, and its provenance label says so. A build without HWM14 needs a module change.",
-  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Starlink, Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation."
+  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation."
  ]
 }

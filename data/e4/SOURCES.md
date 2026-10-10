@@ -12,7 +12,7 @@ Each source's terms, quoted from its primary document, are in [docs/data-license
 
 | Source | Licence or terms | Reproduced | Attribution |
 | --- | --- | --- | --- |
-| [SpaceX Starlink public ephemerides (MEME, with covariance)](../../docs/data-licenses.md#spacex-starlink) | No licence stated | No: cited only | SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/. |
+| [SpaceX Starlink public ephemerides (MEME, with covariance)](../../docs/data-licenses.md#spacex-starlink) | Open source (owner's determination, 2026-10-10); SpaceX's terms page could not be fetched, and the manifest and ephemeris files state no licence | Yes, with attribution | SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/ (SpaceX). |
 | [China Manned Space Engineering Office: Tiangong orbit data](../../docs/data-licenses.md#cmsa-tiangong) | All rights reserved (site footer); no licence stated | No: cited only | China Manned Space Engineering Office, https://www.cmse.gov.cn/. |
 | [Intelsat public ephemerides (MyIntelsat)](../../docs/data-licenses.md#intelsat) | No licence; SES terms of use reserve all rights | No: cited only | Intelsat (SES) public ephemerides, https://my.intelsat.com/ephemeris/public. |
 | [Planet Labs public ephemerides](../../docs/data-licenses.md#planet) | CC BY-NC 4.0 | Yes, with attribution, for non-commercial use only | Planet Labs PBC orbital ephemerides, https://ephemerides.planet-labs.com/, © Planet Labs PBC, CC BY-NC 4.0. |
