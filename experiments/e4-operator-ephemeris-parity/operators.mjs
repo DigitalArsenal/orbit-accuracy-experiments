@@ -32,13 +32,15 @@ export function readMeme(text) {
 }
 
 // ── CCSDS OEM (KVN) ──  Data lines in km and km/s; one segment kept per
-// object (the segments of these files are consecutive).
+// object (the segments of these files are consecutive). `epochs` are ISO
+// text to the millisecond (A4); `epochTexts` are the file's own epoch text,
+// to its last digit (A6: BACC writes 21:59:59.999999).
 export function readOem(text) {
   const created = /CREATION_DATE\s*=\s*(\S+)/.exec(text)?.[1];
   const frame = /REF_FRAME\s*=\s*(\S+)/.exec(text)?.[1];
   const timeScale = /TIME_SYSTEM\s*=\s*(\S+)/.exec(text)?.[1];
   const name = /OBJECT_NAME\s*=\s*(.+)/.exec(text)?.[1].trim();
-  const epochs = [], states = [];
+  const epochs = [], epochTexts = [], states = [];
   let data = false;
   for (const raw of text.split(/\r?\n/)) {
     const l = raw.trim();
@@ -48,9 +50,10 @@ export function readOem(text) {
     const f = l.split(/\s+/);
     if (f.length < 7 || !/^\d{4}-\d\d-\d\dT/.test(f[0])) continue;
     epochs.push(isoOf(Date.parse(/Z$/.test(f[0]) ? f[0] : `${f[0]}Z`)));
+    epochTexts.push(f[0]);
     states.push(f.slice(1, 7).map((v) => Number(v) * 1000));
   }
-  return { created: created ? isoOf(Date.parse(`${created}Z`)) : null, frame, timeScale, name, epochs, states };
+  return { created: created ? isoOf(Date.parse(`${created}Z`)) : null, frame, timeScale, name, epochs, epochTexts, states };
 }
 
 // One stored or deflated member of a zip, by the central directory.
@@ -157,4 +160,21 @@ export function readCpf(text) {
     rows.push({ ms: (Number(f[2]) - 40587) * 86400000 + Math.round(Number(f[3]) * 1e6) / 1e3, position: f.slice(5, 8).map(Number) });
   }
   return { created, target: h1[10], norad: Number(h2[3]), frame, rows };
+}
+
+// ── ISS OEM event summary ── "COMMENT <event> <ddd:hh:mm:ss.sss> [orbit] <dv
+// m/s> <ha km> <hp km>" rows between "TRAJECTORY EVENT SUMMARY" and "End
+// sequence of events"; the day of year is on the year of the file's
+// START_TIME. Returns [{epoch (ISO UTC), label, dvMps}].
+export function readIssEvents(text) {
+  const year = Number(/START_TIME\s*=\s*(\d{4})/.exec(text)?.[1]);
+  const block = /TRAJECTORY EVENT SUMMARY([\s\S]*?)End sequence of events/.exec(text)?.[1] ?? '';
+  const out = [];
+  for (const l of block.split(/\r?\n/)) {
+    const m = /^COMMENT\s+(\S.*?)\s+(\d{3}):(\d\d):(\d\d):(\d\d(?:\.\d+)?)\s+(?:\d+\s+)?(-?[\d.]+)\s+[\d.]+\s+[\d.]+\s*$/.exec(l.trim());
+    if (!m || !year) continue;
+    const ms = Date.UTC(year, 0, 1) + (Number(m[2]) - 1) * 86400000 + Number(m[3]) * 3600000 + Number(m[4]) * 60000 + Math.round(Number(m[5]) * 1000);
+    out.push({ epoch: isoOf(ms), label: m[1].trim(), dvMps: Number(m[6]) });
+  }
+  return out;
 }

@@ -392,5 +392,64 @@
     "referenceToleranceSeconds": 1800,
     "planetReferenceToleranceHours": 6,
     "products": "runs/<id>/products.jsonl (local): per pair the GCRF state and (6 + p)^2 covariance at the reference epoch, parameters and kinds, forces, window, operator files and the refit flag"
+  },
+  "a6": {
+    "decided": "2026-10-10, amendment A6, before any A5 product was computed; replaces A5's EPH-fit, EPH-direct and windows",
+    "requirements": ["owner 2026-07-16: \"The ephemeris should be in memory only, and only as long as it takes to do the OD.\"", "owner 2026-10-10: \"we should NOT be storing the ephemeris raw, ONLY the HPOP OCM and OMM derived once we curve fit\"", "owner 2026-10-10: \"We need to make sure that the RMS for the OMM and the result for the HPOP are curve fit exactly.\"", "owner 2026-10-10: \"The fitter (OD) should be able to start with the first half of any data and reproduce the second half within 1 cm\", \"Using all the different perturbations\", \"If no maneuvers\""],
+    "fitter": "harness/ephemeris-fit.mjs SETTINGS (the algorithm agreed with the analysis/od hpop mode and E11)",
+    "gate": {
+      "seed": 20261010,
+      "cases": 48,
+      "maxClosureM": 0.01,
+      "classes": {
+        "LEO-low": {"perigeeKm": [300, 500], "ecc": [0, 0.005], "incDeg": [0, 100]},
+        "LEO": {"perigeeKm": [500, 1000], "ecc": [0, 0.01], "incDeg": [0, 100]},
+        "LEO-high": {"perigeeKm": [1000, 2400], "ecc": [0, 0.01], "incDeg": [0, 100]},
+        "HEO": {"perigeeKm": [300, 1500], "apogeeKm": [20000, 40000], "incDeg": [0, 65]},
+        "MEO": {"aKm": [25500, 29700], "ecc": [0, 0.02], "incDeg": [50, 65]},
+        "GEO": {"aKm": [42160, 42170], "ecc": [0, 0.001], "incDeg": [0, 6]}
+      },
+      "epochs": ["2026-01-15T00:00:00Z", "2026-09-20T00:00:00Z"],
+      "minimumSpanSeconds": 1800,
+      "maximumSpanSeconds": 604800,
+      "spanRule": "log-uniform from one orbital period (at least minimumSpanSeconds) to seven days",
+      "stepsSeconds": [10, 30, 60, 120, 300, 600],
+      "minimumSamplesPerOrbit": 24,
+      "maximumPoints": 20160,
+      "parameters": {
+        "dragAreaOverMass": [0.002, 0.05],
+        "srpAreaOverMass": [0.002, 0.05],
+        "inTrackMps2": 5e-09,
+        "srpAreaOverMassHigh": [0.005, 0.05],
+        "ecom2Mps2": 1e-09,
+        "rule": "drag regime: Cd*A/m and Cr*A/m log-uniform, in-track uniform in +-inTrackMps2; above: Cr*A/m log-uniform and each ECOM2 term the fitter solves for over the span before the split uniform in +-ecom2Mps2"
+      },
+      "representations": "GCRF or EME2000 tags (foundation/frames), exact or rounded to 1 mm and 1 um/s, drawn per case",
+      "generator": {
+        "tolerance": 1e-14,
+        "maxStep": 120
+      }
+    },
+    "files": {
+      "providers": [
+        "iss",
+        "css-tiangong",
+        "intelsat",
+        "ses",
+        "spacex-starlink"
+      ],
+      "validation": [
+        "gps-precise",
+        "glonass-precise",
+        "esa-pod",
+        "cpf"
+      ],
+      "notFitted": {
+        "planet": "one state per satellite per file: nothing to fit or close"
+      },
+      "events": "ISS: the TRAJECTORY EVENT SUMMARY rows, every event but a visiting vehicle's launch; the other files list none",
+      "epochs": "MEME and OEM epochs as the file writes them, to the microsecond (BACC's 21:59:59.999999); Earth-fixed and SP3 files through step 10's conversion",
+      "order": "Starlink's paired files before its second files, each in capture order"
+    }
   }
 }

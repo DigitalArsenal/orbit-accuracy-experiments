@@ -1,5 +1,5 @@
 // propagator/hpop execution requests with every force the module carries
-// (SDS 1.240.0 PRW), and the environment inputs those forces read: the JPL
+// (SDS 1.243.0 PRW), and the environment inputs those forces read: the JPL
 // kernel, IERS Earth orientation, SET's JB2008 drivers and daily space
 // weather for NRLMSISE-00. Encoding, decoding and the selection of published
 // rows only; the propagation, frames, time scales and force models are the
@@ -27,7 +27,9 @@ function encode(arm, value, size = 1 << 16) {
 
 // request: {epoch (ISO UTC), state [m, m/s] GCRF, samples [ISO UTC],
 //   forces {degree, order, thirdBodies [NAIF ids], srp, drag, atmosphere ('JB2008' | 'NRLMSISE00' | ...),
-//     solidTides (bool, IERS 2010), relativity ('IERS_2010' | 'SCHWARZSCHILD' | undefined)},
+//     solidTides (bool, IERS 2010), relativity ('IERS_2010' | 'SCHWARZSCHILD' | undefined),
+//     earthRadiation (bool, Knocke albedo and infrared on the cannonball's Cr*A/m),
+//     earthRadiationResolutionDeg (default 15), oceanTidesDegree (FES2004 degree and order, 0: none)},
 //   coefficients {b: Cd*A/m, agom: Cr*A/m (m^2/kg, cannonball), boxWing {block ('GPS_IIR' |
 //     'GPS_IIR_M' | 'GPS_IIF'), massKg} (the GNSS box-wing a priori in place of the cannonball),
 //     ecom2 {D0, Y0, B0, D2_COS, ..., B3_SIN} (m/s^2, added to the a priori),
@@ -35,7 +37,8 @@ function encode(arm, value, size = 1 << 16) {
 //   parameters [{kind}] solved for (their values come from coefficients), stm (bool),
 //   covariance [(6 + p)^2] (SI, GCRF, over the state and the parameters) | null,
 //   integrator {tolerance, maxStep}}
-// SDS 1.241.0: RADIATION_PRESSURE_MODEL, GNSS_BLOCK and ECOM2.
+// SDS 1.241.0: RADIATION_PRESSURE_MODEL, GNSS_BLOCK and ECOM2. SDS 1.243.0:
+// EARTH_RADIATION and OCEAN_TIDES, written only when the request asks for them.
 export const ECOM2_TERMS = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'D4_COS', 'D4_SIN', 'B1_COS', 'B1_SIN', 'B3_COS', 'B3_SIN'];
 export function executionFrame(request) {
   const f = request.forces, it = request.integrator, c = request.coefficients ?? {};
@@ -56,6 +59,8 @@ export function executionFrame(request) {
     EPHEMERIS_SOURCE: 'JPL_SPK',
     SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
     RELATIVITY: f.relativity ? P.prwRelativityTerms[f.relativity] : P.prwRelativityTerms.NONE,
+    ...(f.earthRadiation ? { EARTH_RADIATION: P.prwEarthRadiationModel.KNOCKE, EARTH_RADIATION_RESOLUTION_DEG: f.earthRadiationResolutionDeg ?? 15 } : {}),
+    ...(f.oceanTidesDegree ? { OCEAN_TIDES: P.prwOceanTideModel.FES2004, OCEAN_TIDE_MAXIMUM_DEGREE: f.oceanTidesDegree, OCEAN_TIDE_MAXIMUM_ORDER: f.oceanTidesDegree } : {}),
   });
   const execution = table('PRWExecutionRequest', {
     INITIAL: table('PRWResidentState', {

@@ -14,9 +14,9 @@ import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { ReferenceIndex } from '../../../harness/reference.mjs';
 import { DAY_MS, HOUR_MS, assertFrozen, cli, config, configPath } from '../common.mjs';
-import { productContext, readSets } from '../products.mjs';
+import { productContext } from '../products.mjs';
 import { sp3Context } from '../sp3.mjs';
-import { OperatorFiles, horizonIndices, iso, laterAt, laterPlanetState, splitOf, truthAt, truthAtOrAfter } from '../a5.mjs';
+import { OperatorFiles, catalogNames, horizonIndices, iso, laterAt, laterPlanetState, splitOf, truthAt, truthAtOrAfter } from '../a5.mjs';
 
 assertFrozen();
 const { values, modules, archive, inputs, truth: truthDir } = cli();
@@ -30,27 +30,6 @@ const sinex = fs.readFileSync(config.inputs.satelliteMetadata);
 const tolerance = A.referenceToleranceSeconds * 1000;
 const out = { experiment: config.experiment, amendment: 'A5', generated: new Date().toISOString(), note: 'Pairs, cutoffs, split and scoring references of E4 amendment A5; E11 and E9 use the same pairs. Operator metadata only.', providers: {} };
 
-// Catalog names (Intelsat, SES) as step 10 resolves them.
-function namesFor(provider, files) {
-  const days = files.map((f) => f.captured.slice(0, 10)).sort();
-  const named = readSets(archive, iso(Date.parse(`${days[0]}T00:00:00Z`) - config.elementSets.lookbackDays * DAY_MS).slice(0, 10), days.at(-1), null, null);
-  const latest = new Map([...named].map(([n, l]) => [n, l.sort((a, b) => a.creationDate.localeCompare(b.creationDate)).at(-1).objectName]));
-  const payload = (name) => !/\bDEB\b|R\/B/.test(name);
-  if (provider === 'ses') {
-    const key = (name) => name.replace(/\s*\(.*$/, '').toUpperCase().replace(/[\s-]+/g, '');
-    return { resolve: (name) => { const hits = [...latest].filter(([, n]) => key(n) === key(name) && payload(n)).map(([n]) => n); return hits.length === 1 ? hits[0] : null; } };
-  }
-  const rule = config.providers.intelsat.names;
-  const target = (token) => {
-    if (rule.aliases[token]) return rule.aliases[token];
-    const m = /^([a-z]+\d*[a-z]*?)-?([0-9a-z]+)?$/.exec(token);
-    if (rule.prefixes[token]) return rule.prefixes[token];
-    const [prefix, rest] = token.includes('-') ? token.split('-') : [token, ''];
-    return rule.prefixes[prefix] ? `${rule.prefixes[prefix]} ${rest.toUpperCase()}`.trim() : (m ? token.toUpperCase() : token);
-  };
-  return { resolve: (token) => { const want = target(token); const hits = [...latest].filter(([, n]) => n.replace(/\s*\(.*$/, '').trim().toUpperCase() === want && payload(n)).map(([n]) => n); return hits.length === 1 ? hits[0] : null; } };
-}
-
 for (const provider of A.pairs.providers.filter((p) => !values.provider || values.provider.split(',').includes(p))) {
   const spec = config.providers[provider];
   const readInput = (f) => {
@@ -60,7 +39,7 @@ for (const provider of A.pairs.providers.filter((p) => !values.provider || value
     return bytes;
   };
   const record = JSON.parse(fs.readFileSync(path.join(inputs, provider, 'inputs.json'), 'utf8'));
-  const gpNames = ['intelsat-ecf', 'ses-i11'].includes(spec.format) ? namesFor(provider, record.files) : null;
+  const gpNames = ['intelsat-ecf', 'ses-i11'].includes(spec.format) ? catalogNames(provider, record.files, archive) : null;
   const ops = new OperatorFiles({ provider, inputs, readInput, ctx, sp3Ctx, sinex, gpNames });
   const truthIndex = spec.truth && fs.existsSync(path.join(truthDir, 'reference')) ? new ReferenceIndex(path.join(truthDir, 'reference'), spec.truth) : null;
 

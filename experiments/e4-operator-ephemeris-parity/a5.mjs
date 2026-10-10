@@ -11,6 +11,7 @@ import { sha256 } from '../../harness/modules.mjs';
 import { toGcrf } from '../../harness/frames.mjs';
 import { convertIso } from '../../harness/time.mjs';
 import { decodeOemStream } from '../../harness/records.mjs';
+import { readSets } from './products.mjs';
 import { DAY_MS, HOUR_MS, config } from './common.mjs';
 import { readCpf, readIntelsat, readMeme, readOem, readPlanetStates, readTle, sp3Text, unzipMembers } from './operators.mjs';
 import { gnssIdentities, sp3Satellites } from './sp3.mjs';
@@ -222,6 +223,28 @@ export async function laterPlanetState(history, tc, ms, toleranceMs) {
     if (d <= toleranceMs && (!best || d < best.d)) best = { d, t };
   }
   return best ? { ms: best.t.epochs[0], state: await best.t.state(0), file: best.t.file, issueMs: best.t.issueMs } : null;
+}
+
+// Catalog names (Intelsat, SES) as step 10 resolves them: {resolve(name or
+// file token) -> catalog number | null}, from the element-set archive's names.
+export function catalogNames(provider, files, archive) {
+  const days = files.map((f) => f.captured.slice(0, 10)).sort();
+  const named = readSets(archive, iso(Date.parse(`${days[0]}T00:00:00Z`) - config.elementSets.lookbackDays * DAY_MS).slice(0, 10), days.at(-1), null, null);
+  const latest = new Map([...named].map(([n, l]) => [n, l.sort((a, b) => a.creationDate.localeCompare(b.creationDate)).at(-1).objectName]));
+  const payload = (name) => !/\bDEB\b|R\/B/.test(name);
+  if (provider === 'ses') {
+    const key = (name) => name.replace(/\s*\(.*$/, '').toUpperCase().replace(/[\s-]+/g, '');
+    return { resolve: (name) => { const hits = [...latest].filter(([, n]) => key(n) === key(name) && payload(n)).map(([n]) => n); return hits.length === 1 ? hits[0] : null; } };
+  }
+  const rule = config.providers.intelsat.names;
+  const target = (token) => {
+    if (rule.aliases[token]) return rule.aliases[token];
+    const m = /^([a-z]+\d*[a-z]*?)-?([0-9a-z]+)?$/.exec(token);
+    if (rule.prefixes[token]) return rule.prefixes[token];
+    const [prefix, rest] = token.includes('-') ? token.split('-') : [token, ''];
+    return rule.prefixes[prefix] ? `${rule.prefixes[prefix]} ${rest.toUpperCase()}`.trim() : (m ? token.toUpperCase() : token);
+  };
+  return { resolve: (token) => { const want = target(token); const hits = [...latest].filter(([, n]) => n.replace(/\s*\(.*$/, '').trim().toUpperCase() === want && payload(n)).map(([n]) => n); return hits.length === 1 ? hits[0] : null; } };
 }
 
 // Validation (NORAD divisible by 4) or test.

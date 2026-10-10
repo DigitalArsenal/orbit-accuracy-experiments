@@ -340,3 +340,86 @@ the numbers.
   grant redistribution stay held, and only aggregates are committed.
   `data/e4/SOURCES.md` gives a license line for every source, truth
   included.
+
+**A6 (2026-10-10, before any A5 product was computed). One ephemeris
+fitter, its closure gate, and derived records only.** The owner's rules:
+"The ephemeris should be in memory only, and only as long as it takes to do
+the OD" (2026-07-16); "we should NOT be storing the ephemeris raw, ONLY the
+HPOP OCM and OMM derived once we curve fit"; "We need to make sure that the
+RMS for the OMM and the result for the HPOP are curve fit exactly"; "The
+fitter (OD) should be able to start with the first half of any data and
+reproduce the second half within 1 cm", "Using all the different
+perturbations", "If no maneuvers" (2026-10-10). A6 replaces A5's EPH-fit
+(windows, observations, weights, parameters, manoeuvre handling, refit and
+product) and drops EPH-direct. A5's pairs, cutoffs, information rule,
+validation split and scoring horizons stand. `config.json` `a6` holds the
+numbers.
+
+- **Fitter.** `harness/ephemeris-fit.mjs` `fitEphemeris`, one function for
+  E4, E11's capture loop and the `analysis/od` hpop mode, which implements
+  the same rules and thresholds. It takes states in memory and returns
+  derived records only.
+  - Every state goes to GCRF on UTC (`foundation/frames`, `foundation/time`).
+  - **Segments.** The file is split into maneuver-free segments. A gap of
+    more than three median steps ends a segment, and so does an
+    operator-listed event (with 1800 s after it left out).
+  - **Residual jumps.** A segment is also split at a residual jump: a run
+    where the second difference of an RTN residual component of the
+    segment's fit exceeds 10 × 1.4826 MAD and 1e-6 m/s². Both sides are
+    refitted.
+  - **Fit.** The initial state and epoch are the segment's first point. At
+    most 720 evenly spaced points enter. Observations are positions with
+    1 m on each axis and no a priori. `analysis/estimation` 0.3.0
+    `fit_batch` runs with Levenberg–Marquardt, correction tolerance 1e-3 and
+    at most 25 iterations.
+  - **Parameters.** In the drag regime (osculating perigee altitude below
+    2500 km, where `propagator/hpop` applies drag): Cd·A/m ≥ 0, a signed
+    in-track acceleration and Cr·A/m ≥ 0. Above it: Cr·A/m ≥ 0 and ECOM2
+    Y0 and B0, plus D2, D4, B1 and B3 (cos, sin) when the fitted span is at
+    least a day. D0 is not solved for: it is collinear with the
+    cannonball's Cr·A/m.
+  - **Forces.** Every force in every regime: EGM2008 70×70; the Sun, Moon,
+    Venus, Mars and Jupiter (DE440s); cannonball SRP; Knocke Earth
+    radiation; NRLMSISE-00 drag in the drag regime; IERS 2010 solid tides;
+    FES2004 ocean tides 30×30; IERS 2010 relativity. Drivers are A4's,
+    released at the file's issue.
+  - **Integrator.** RK78 at relative tolerance 1e-13. The step is at most
+    three per shortest wavelength of the field at perigee,
+    2π(r_p/v_p)/(3·70), and at most 300 s. With drag, the integration
+    restarts at every 3 h UTC boundary, where NRLMSISE-00's inputs change.
+  - **Statistics.** The fitted orbit is evaluated at every point of the
+    segment: model minus ephemeris in each point's RTN axes. Reported: 3D,
+    R, T and N RMS and maximum, the per-coordinate RMS (3D/√3), N and span.
+  - **Half-split closure.** The same fit on the points at or before the
+    segment's mid-time, propagated to every later point, with the same
+    statistics there and the split epoch.
+  - **Output.** An OCM per segment: the GCRF state, the covariance (formal
+    × max(1, reduced χ²)), the parameters, the forces, the statistics, the
+    closure and SHA-256 provenance.
+- **Closure gate (step 30).** The gate uses 48 randomized arcs (seed in
+  `a6.gate`).
+  - **Generation.** `propagator/hpop` generates each arc with every
+    perturbation on and no maneuver, from Keplerian elements. It uses a
+    tighter tolerance and half the fitter's step, with the same restarts.
+  - **Draws.** Six orbit classes (LEO-low, LEO, LEO above 1000 km, HEO,
+    MEO, GEO); spans log-uniform from one orbit to seven days; sample
+    steps of 10–600 s; GCRF or EME2000 tags, exact or rounded to 1 mm and
+    1 µm/s; and the parameters the fitter solves for over the span before
+    the split.
+  - **Pass rule.** The fitter must keep the arc as one segment, and the
+    largest 3D closure difference must be at most 1 cm. A failing case is
+    reported with its cause; the gate is not loosened.
+- **Closure on operator files (step 35).** Every object of every operator
+  file read here goes through the fitter. Per maneuver-free segment, the
+  report gives the exact statistics and the half-split closure. A closure
+  above 1 cm is attributed to its physical source: the operator's force
+  model (drag, solar radiation, attitude), maneuvers, the file's
+  representation (digits, time tags) or the frame. Any term that would
+  shrink the closure without a physical basis is not added.
+- **Scoring (replaces A5's products).** EPH-fit is the OCM of the paired
+  file's segment that covers T_c. Truth at 6 h, 1 d, 3 d and 7 d past the
+  paired span is the OCM fitted to the newest later file version covering
+  the epoch; that OCM's own exact RMS is reported as the reference's
+  representation error. GNSS truth stays ESA0OPSFIN and GFZ0OPSFIN. The
+  operator's own prediction enters through the OCM fitted to its full
+  predicted span.

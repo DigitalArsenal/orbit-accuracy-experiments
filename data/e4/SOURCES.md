@@ -10,7 +10,7 @@ provider's terms, stated below. Element sets (Space-Track) are not published.
 
 Terms: No license stated at api.starlink.com/public-files; published by SpaceX for space safety. (https://api.starlink.com/public-files/ephemerides/MANIFEST.txt)
 
-300 file(s) in release asset `e4-spacex-starlink.tar.gz` (249.8 MB, SHA-256 dc994c4f241ff0537d94f3fa5c36bf298f0e2ed0ad54812d1a7197dc56e514d6): prepared but not published, because the provider states no license that grants redistribution.
+450 file(s) in release asset `e4-spacex-starlink.tar.gz` (374.1 MB, SHA-256 8d695cbbfda16f7a7cd977e7f7b50bc01ae54b2e91d585357923c0a7d49379ae): prepared but not published, because the provider states no license that grants redistribution.
 
 ## iss
 
@@ -27,7 +27,7 @@ Terms: NASA (JSC FOD TOPO) public data; a U.S. Government work, not subject to c
 
 Terms: No license stated on cmse.gov.cn (China Manned Space Engineering Office, BACC orbit data published for space safety). (https://www.cmse.gov.cn/gfgg/zgkjzgdcs/)
 
-7 file(s) in release asset `e4-css-tiangong.tar.gz` (0.8 MB, SHA-256 f34d3f50c4348130803044f83c89a7fe09fb18713425e5b92c9d002df80623c5): prepared but not published, because the provider states no license that grants redistribution.
+7 file(s) in release asset `e4-css-tiangong.tar.gz` (0.8 MB, SHA-256 c6868e83ad2e1768fddebfbc8504e6cb38b0c15ae37339f7375d86ed6d3e4a5c): prepared but not published, because the provider states no license that grants redistribution.
 
 ## planet
 
@@ -68,13 +68,13 @@ Terms: Copyright Planet Labs PBC; orbital ephemerides licensed under CC BY-NC 4.
 
 Terms: No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply). (https://my.intelsat.com/ephemeris/public)
 
-89 file(s) in release asset `e4-intelsat.tar.gz` (0.7 MB, SHA-256 485c526dfca29911e0c587f94d3f0502361ca2bb9eccee71c7a9335759848809): prepared but not published, because the provider states no license that grants redistribution.
+90 file(s) in release asset `e4-intelsat.tar.gz` (0.8 MB, SHA-256 50f16b664cc93e890c5c3a43cb616fa9a1e95a9642c14ed66a73f134cf538a2c): prepared but not published, because the provider states no license that grants redistribution.
 
 ## ses
 
 Terms: No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply). (https://www.ses.com/our-coverage/ephemeris)
 
-38 file(s) in release asset `e4-ses.tar.gz` (0.0 MB, SHA-256 7d7b91a3714256406a6c02587c068378c2300162617782e74e0f81cd0a7e6e1f): prepared but not published, because the provider states no license that grants redistribution.
+38 file(s) in release asset `e4-ses.tar.gz` (0.0 MB, SHA-256 b3ed99153c121af643625c8f6a85b83960636db0dd06d97aab2f2f192134038b): prepared but not published, because the provider states no license that grants redistribution.
 
 ## gps-precise
 
@@ -401,6 +401,9 @@ Terms: ILRS consolidated prediction format files from the ESA/ESOC Navigation Su
 | `20260915T173624Z--galileo234_cpf_260915_25801.esa.gz` | http://navigation-office.esa.int/products/cpf_predictions/galileo234_cpf_260915_25801.esa | 2026-09-15T17:36:24.769Z | `1975917e53f53d97cbc26da718a00342f1db13015228f8f1c9cd5799e713a1a0` |
 
 ## Truth (precise orbits, public archives, not copied here)
+
+Terms: ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS.
+Terms: GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS.
 
 | Product | URL | SHA-256 |
 | --- | --- | --- |

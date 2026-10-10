@@ -57,3 +57,37 @@ export async function rtnAxes(frames, epoch, state) {
   const m = result(await frames.invoke('transform_frame_position', [frame(request, 'request'), frame(objectState, 'object_state')])).ROTATION_DCM();
   return [m.M11(), m.M12(), m.M13(), m.M21(), m.M22(), m.M23(), m.M31(), m.M32(), m.M33()];
 }
+
+// One state's element set in another representation on the same axes
+// (STATE_REPRESENTATION_CONVERT, mu = 3.986004418e14 m^3/s^2), SDS order and
+// SI units: CARTESIAN [m, m/s], KEPLERIAN [a m, e, i, RAAN, AOP, TA rad],
+// MODIFIED_KEPLERIAN [perigee radius m, apogee radius m, i, RAAN, AOP, TA rad].
+// epoch: ISO UTC.
+export async function convertRepresentation(frames, epoch, from, elements, to) {
+  const source = new FRMStateVectorT(frmStateRepresentation[from], [...elements],
+    from === 'CARTESIAN' ? new FRMVector3T(elements[0], elements[1], elements[2]) : null,
+    from === 'CARTESIAN' ? new FRMVector3T(elements[3], elements[4], elements[5]) : null, 'GCRF', epoch, 'UTC', 3.986004418e14);
+  const request = Object.assign(new FRMFrameTransformRequestT(), {
+    OPERATION: frmOperationCode.STATE_REPRESENTATION_CONVERT,
+    SOURCE_COORDINATE_SYSTEM: system('GCRF', 'ICRF', earth(), epoch),
+    SOURCE_STATE: source, TARGET_REPRESENTATION: frmStateRepresentation[to],
+    EPOCH: epoch, EPOCH_TIME_SYSTEM: 'UTC',
+  });
+  const t = result(await frames.invoke('transform_frame_position', [frame(request, 'request')])).TARGET_STATE();
+  return Array.from({ length: t.elementsLength() }, (_, i) => t.ELEMENTS(i));
+}
+
+// A GCRF state [m, m/s] on another Earth-centred inertial axis set (the
+// inverse of toGcrf). epoch: ISO UTC.
+export async function fromGcrf(frames, axis, epoch, state) {
+  const request = Object.assign(new FRMFrameTransformRequestT(), {
+    OPERATION: frmOperationCode.STATE_TRANSFORM,
+    SOURCE_COORDINATE_SYSTEM: system('GCRF', 'ICRF', earth(), epoch),
+    TARGET_COORDINATE_SYSTEM: system(axis, axis, earth(), epoch),
+    SOURCE_STATE: stateVector(state, 'GCRF', epoch), TARGET_REPRESENTATION: frmStateRepresentation.CARTESIAN,
+    EPOCH: epoch, EPOCH_TIME_SYSTEM: 'UTC',
+  });
+  const t = result(await frames.invoke('transform_frame_position', [frame(request, 'request')])).TARGET_STATE();
+  const p = t.POSITION(), v = t.VELOCITY();
+  return [p.X(), p.Y(), p.Z(), v.X(), v.Y(), v.Z()];
+}

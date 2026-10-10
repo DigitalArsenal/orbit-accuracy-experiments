@@ -1,6 +1,6 @@
 {
  "experiment": "e4-operator-ephemeris-parity",
- "generated": "2026-10-10T07:27:38.409Z",
+ "generated": "2026-10-10T12:11:27.418Z",
  "note": "Every operator file E4 reads. SHA-256 is of the file as the operator served it.",
  "files": [
   {
@@ -5704,6 +5704,2856 @@
    }
   },
   {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_44747_STARLINK-1042_2530413_Operational_1473221580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_44747_STARLINK-1042_2530413_Operational_1473221580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "21ddb25c61e8db519a5290650da696b058a9a92a5c3a869e5842866402be890c",
+   "bytes": 1362526,
+   "span": [
+    "2026-09-10T04:13:42.000Z",
+    "2026-09-12T04:12:42.000Z"
+   ],
+   "samples": 2880,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_45187_STARLINK-1225_2530420_Operational_1473308460_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_45187_STARLINK-1225_2530420_Operational_1473308460_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "84fe0a7d3512d7f39f075f1e3bc6145fee179ca66bc1563fb37aac2771955776",
+   "bytes": 2042746,
+   "span": [
+    "2026-09-10T04:20:42.000Z",
+    "2026-09-13T04:20:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_45374_STARLINK-1300_2530418_Operational_1473308340_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_45374_STARLINK-1300_2530418_Operational_1473308340_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "cf1b56f36a9ecf5c29cbb3744d5e756c494dfb7b1e81c3bddc10361a0f613fdf",
+   "bytes": 2042671,
+   "span": [
+    "2026-09-10T04:18:42.000Z",
+    "2026-09-13T04:18:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_45379_STARLINK-1319_2530318_Operational_1473218280_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_45379_STARLINK-1319_2530318_Operational_1473218280_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "5b6695ac510c61946f10b16eb5eff23edf561c3c70b3a90e287e05474da33297",
+   "bytes": 1362508,
+   "span": [
+    "2026-09-10T03:18:42.000Z",
+    "2026-09-12T03:17:42.000Z"
+   ],
+   "samples": 2880,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_45581_STARLINK-1335_2530414_Operational_1473308100_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_45581_STARLINK-1335_2530414_Operational_1473308100_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "b62bab3307c897c29b357c7913aec261c159330c15aa5bf06c1bbd44a396294c",
+   "bytes": 2042586,
+   "span": [
+    "2026-09-10T04:14:42.000Z",
+    "2026-09-13T04:14:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_45697_STARLINK-1351_2530359_Operational_1473220740_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_45697_STARLINK-1351_2530359_Operational_1473220740_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "ae62b1169bac68a55fba9222413b0a2849bf5e0879f0fbd790d9c71d85db9e22",
+   "bytes": 1362547,
+   "span": [
+    "2026-09-10T03:59:42.000Z",
+    "2026-09-12T03:58:42.000Z"
+   ],
+   "samples": 2880,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_46074_STARLINK-1549_2530413_Operational_1473308040_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_46074_STARLINK-1549_2530413_Operational_1473308040_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "c785f38eda1c04ad139603391f827c265770f3b971509443d64c3dd4e7128728",
+   "bytes": 2042956,
+   "span": [
+    "2026-09-10T04:13:42.000Z",
+    "2026-09-13T04:13:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_46553_STARLINK-1664_2530409_Operational_1473221340_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_46553_STARLINK-1664_2530409_Operational_1473221340_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "2858e9e7b6ef5b91a6275588c665bbbefb3c4fee76e32369306de743ba813d1a",
+   "bytes": 1362663,
+   "span": [
+    "2026-09-10T04:09:42.000Z",
+    "2026-09-12T04:08:42.000Z"
+   ],
+   "samples": 2880,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_46709_STARLINK-1810_2530338_Operational_1473219480_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_46709_STARLINK-1810_2530338_Operational_1473219480_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "49389958168f5313617ab18d83eefc1bf422e5839e67e815459faf7074bdb95e",
+   "bytes": 1362500,
+   "span": [
+    "2026-09-10T03:38:42.000Z",
+    "2026-09-12T03:37:42.000Z"
+   ],
+   "samples": 2880,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_47793_STARLINK-2338_2530413_Operational_1473308040_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_47793_STARLINK-2338_2530413_Operational_1473308040_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "28c770b9c1bee53efd6aa2a29b93076dacc99b2f016bc3c461aebe9310465fae",
+   "bytes": 2042737,
+   "span": [
+    "2026-09-10T04:13:42.000Z",
+    "2026-09-13T04:13:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_47910_STARLINK-2370_2530338_Operational_1473305940_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_47910_STARLINK-2370_2530338_Operational_1473305940_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "31f22c9d2ec1d6ddfbd9c6fef0fd32672ee9a02c531e812b8d6199e7e7323630",
+   "bytes": 2043023,
+   "span": [
+    "2026-09-10T03:38:42.000Z",
+    "2026-09-13T03:38:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48124_STARLINK-2465_2530312_Operational_1473304380_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48124_STARLINK-2465_2530312_Operational_1473304380_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "593e217941da467a72ba93e81eaf3d809e84594df89b879dd0e12822b3330b71",
+   "bytes": 2042499,
+   "span": [
+    "2026-09-10T03:12:42.000Z",
+    "2026-09-13T03:12:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48126_STARLINK-2467_2530355_Operational_1473306960_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48126_STARLINK-2467_2530355_Operational_1473306960_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "1697efe651ff054601e5aeff696113d03170dc7bee2af236928928a1c2c3b386",
+   "bytes": 2042485,
+   "span": [
+    "2026-09-10T03:55:42.000Z",
+    "2026-09-13T03:55:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48368_STARLINK-2623_2530349_Operational_1473306600_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48368_STARLINK-2623_2530349_Operational_1473306600_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "6cb28b62055f5c9e45c4536305593b74d0d81db4d4ffc8425622f8619eec3276",
+   "bytes": 2042924,
+   "span": [
+    "2026-09-10T03:49:42.000Z",
+    "2026-09-13T03:49:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48410_STARLINK-2563_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48410_STARLINK-2563_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "dc28ad3d196f97653a3850ec485ada4e0dafcc174a479d2e2d2a0f907d355862",
+   "bytes": 2042742,
+   "span": [
+    "2026-09-10T03:54:42.000Z",
+    "2026-09-13T03:54:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48474_STARLINK-2697_2530325_Operational_1473305160_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48474_STARLINK-2697_2530325_Operational_1473305160_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "575dda6864dd9557c6a13ec895e92069e55ace850343b959ad51dc19371a8ffd",
+   "bytes": 2042730,
+   "span": [
+    "2026-09-10T03:25:42.000Z",
+    "2026-09-13T03:25:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48554_STARLINK-2139_2530411_Operational_1473307920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48554_STARLINK-2139_2530411_Operational_1473307920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "127f3ddb3c9d219b847bece2e77dc63f6c415df5b000addea3504718e9b2180b",
+   "bytes": 2042331,
+   "span": [
+    "2026-09-10T04:11:42.000Z",
+    "2026-09-13T04:11:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48602_STARLINK-2713_2530351_Operational_1473306720_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48602_STARLINK-2713_2530351_Operational_1473306720_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "28076b14dc081fa447181efc02c5a46fbcdc57165105e447593ecbdc2787a225",
+   "bytes": 2042356,
+   "span": [
+    "2026-09-10T03:51:42.000Z",
+    "2026-09-13T03:51:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48659_STARLINK-2717_2530403_Operational_1473307440_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48659_STARLINK-2717_2530403_Operational_1473307440_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "5ba40dd840075ec8242f05f3ea74857e1ba22da8c75d2832e833abe4c033671f",
+   "bytes": 2042454,
+   "span": [
+    "2026-09-10T04:03:42.000Z",
+    "2026-09-13T04:03:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_48678_STARLINK-2615_2530411_Operational_1473307920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_48678_STARLINK-2615_2530411_Operational_1473307920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "5432be7ce73850bf1dfdff43ed0f86a4370f48dd95af6d2c5d8f5795e2382613",
+   "bytes": 2042457,
+   "span": [
+    "2026-09-10T04:11:42.000Z",
+    "2026-09-13T04:11:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_49133_STARLINK-3077_2530403_Operational_1473307440_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_49133_STARLINK-3077_2530403_Operational_1473307440_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "d429fa49c2498d78c368c9993e16fcd96109ffbec7475f3317381ab0ef418b7b",
+   "bytes": 2041439,
+   "span": [
+    "2026-09-10T04:03:42.000Z",
+    "2026-09-13T04:03:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_49147_STARLINK-3071_2530337_Operational_1473305880_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_49147_STARLINK-3071_2530337_Operational_1473305880_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "9ae9b3ac6d4f27c2e68df1fd5b765e30735f996060e3b5e42a6a0b48becfa5fd",
+   "bytes": 2041731,
+   "span": [
+    "2026-09-10T03:37:42.000Z",
+    "2026-09-13T03:37:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_49159_STARLINK-3056_2530415_Operational_1473308160_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_49159_STARLINK-3056_2530415_Operational_1473308160_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "678cd4f8fb338253289839cde306667e700356e34538708384ab998f0b99797f",
+   "bytes": 2041331,
+   "span": [
+    "2026-09-10T04:15:42.000Z",
+    "2026-09-13T04:15:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T132858Z--MEME_49417_STARLINK-3154_2530407_Operational_1473307680_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_49417_STARLINK-3154_2530407_Operational_1473307680_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:28:58.157Z",
+   "sha256": "bdbf7b1b99c309c9c03a424541f1d3578ec32ace9416d1d3965d1cf5b7782260",
+   "bytes": 2041071,
+   "span": [
+    "2026-09-10T04:07:42.000Z",
+    "2026-09-13T04:07:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_49759_STARLINK-3204_2530412_Operational_1473307980_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_49759_STARLINK-3204_2530412_Operational_1473307980_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "e0206dd3eee1854a0e707331ee542fcfdf27c5922c28488db40a10cb3fced68a",
+   "bytes": 2041639,
+   "span": [
+    "2026-09-10T04:12:42.000Z",
+    "2026-09-13T04:12:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_49767_STARLINK-3192_2530410_Operational_1473307860_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_49767_STARLINK-3192_2530410_Operational_1473307860_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "599bc162c201ca008792e992e9a278326b3ec627f5c00462246e35a1513cc249",
+   "bytes": 2040921,
+   "span": [
+    "2026-09-10T04:10:42.000Z",
+    "2026-09-13T04:10:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_50163_STARLINK-3306_2530332_Operational_1473219120_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_50163_STARLINK-3306_2530332_Operational_1473219120_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "2338d572a20eabaa48736eb973e42f581ba59dc3913216f5cf20b37807f42ad4",
+   "bytes": 1362501,
+   "span": [
+    "2026-09-10T03:32:42.000Z",
+    "2026-09-12T03:31:42.000Z"
+   ],
+   "samples": 2880,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_51732_STARLINK-3518_2530359_Operational_1473307200_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_51732_STARLINK-3518_2530359_Operational_1473307200_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "2a1f22b9e30e43b59ca290909c93c1b78723a0b7421bbc8f9e78b0a83fb31b87",
+   "bytes": 2041612,
+   "span": [
+    "2026-09-10T03:59:42.000Z",
+    "2026-09-13T03:59:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_51749_STARLINK-3451_2530346_Operational_1473306420_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_51749_STARLINK-3451_2530346_Operational_1473306420_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "28048b7de6a18a2b94b21b0870bc2ec293792bb04ddcea4de60ffb96ae7d44b8",
+   "bytes": 2041885,
+   "span": [
+    "2026-09-10T03:46:42.000Z",
+    "2026-09-13T03:46:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_51753_STARLINK-3507_2530404_Operational_1473307500_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_51753_STARLINK-3507_2530404_Operational_1473307500_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "481103ad43536ec579f99169106c40ab436161f2f7f4aa1819a7966a26cdb786",
+   "bytes": 2040949,
+   "span": [
+    "2026-09-10T04:04:42.000Z",
+    "2026-09-13T04:04:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_51769_STARLINK-3621_2530404_Operational_1473307500_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_51769_STARLINK-3621_2530404_Operational_1473307500_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "b28b357893d32933b0ac6e383269887775c295a4d9ba0959f439260a5e0c035a",
+   "bytes": 2042962,
+   "span": [
+    "2026-09-10T04:04:42.000Z",
+    "2026-09-13T04:04:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_51868_STARLINK-3578_2530402_Operational_1473307380_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_51868_STARLINK-3578_2530402_Operational_1473307380_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "1f092695a47b0c0b68776ef8697a70064c045dc43d96070349706fec3c0d51c0",
+   "bytes": 2041697,
+   "span": [
+    "2026-09-10T04:02:42.000Z",
+    "2026-09-13T04:02:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T135902Z--MEME_52096_STARLINK-3717_2530358_Operational_1473307140_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_52096_STARLINK-3717_2530358_Operational_1473307140_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T13:59:02.116Z",
+   "sha256": "7f1528f5ebe68f71b8a0ce96340b3e4718073da4e6a9b059bbc4d7e0816d2c8d",
+   "bytes": 2041596,
+   "span": [
+    "2026-09-10T03:58:42.000Z",
+    "2026-09-13T03:58:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_52369_STARLINK-3841_2530402_Operational_1473307380_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_52369_STARLINK-3841_2530402_Operational_1473307380_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "251d8664baf4cc4b49737a856e264513a517efb7c4a7d023930da8e2c79d60a9",
+   "bytes": 2041539,
+   "span": [
+    "2026-09-10T04:02:42.000Z",
+    "2026-09-13T04:02:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_52536_STARLINK-3964_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_52536_STARLINK-3964_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "002c52e6f6652754436d55993f47812693f977ef1cc31f4f8126525e6c60413a",
+   "bytes": 2042133,
+   "span": [
+    "2026-09-10T03:54:42.000Z",
+    "2026-09-13T03:54:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_52550_STARLINK-3965_2530359_Operational_1473307200_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_52550_STARLINK-3965_2530359_Operational_1473307200_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "5156d9682f8a3b05c7e797540f6e1452ebcb4dd62cc155c86bd614f4d7813861",
+   "bytes": 2041092,
+   "span": [
+    "2026-09-10T03:59:42.000Z",
+    "2026-09-13T03:59:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_52581_STARLINK-3915_2530357_Operational_1473307080_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_52581_STARLINK-3915_2530357_Operational_1473307080_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "8da03eaf6cbd77b1bf5c4b3d28ce5abb2161b571ec2d7ef194b38cfeca383771",
+   "bytes": 2041344,
+   "span": [
+    "2026-09-10T03:57:42.000Z",
+    "2026-09-13T03:57:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_52867_STARLINK-4126_2530356_Operational_1473307020_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_52867_STARLINK-4126_2530356_Operational_1473307020_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "91969d871bef8b4a229228ecc0fbe683339d22b00f2391633ba2f1b92863f166",
+   "bytes": 2042937,
+   "span": [
+    "2026-09-10T03:56:42.000Z",
+    "2026-09-13T03:56:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_53004_STARLINK-4253_2530323_Operational_1473305040_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53004_STARLINK-4253_2530323_Operational_1473305040_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "a955213948be06d2dd838b2a6ad9945d9665d2e88a04e88d0331e38ad2c4dde0",
+   "bytes": 2041026,
+   "span": [
+    "2026-09-10T03:23:42.000Z",
+    "2026-09-13T03:23:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_53011_STARLINK-4265_2530348_Operational_1473306540_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53011_STARLINK-4265_2530348_Operational_1473306540_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "f3f79a7c08628158c4ccde98a90377defbb44fb59016bafeada0192fdf6ce3a6",
+   "bytes": 2041514,
+   "span": [
+    "2026-09-10T03:48:42.000Z",
+    "2026-09-13T03:48:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_53037_STARLINK-4153_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53037_STARLINK-4153_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "1000318f41c1e9df06f29dc78750b583f9da3ade89d4d9a09c3fdb477e916f22",
+   "bytes": 2040716,
+   "span": [
+    "2026-09-10T03:54:42.000Z",
+    "2026-09-13T03:54:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T142908Z--MEME_53055_STARLINK-4338_2530256_Operational_1473303420_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53055_STARLINK-4338_2530256_Operational_1473303420_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:29:08.104Z",
+   "sha256": "49fe8763727fb6ea6ad8aca6e7e3a2dd1105b776e2f3a30cba90574bea819088",
+   "bytes": 2040051,
+   "span": [
+    "2026-09-10T02:56:42.000Z",
+    "2026-09-13T02:56:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53152_STARLINK-4045_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53152_STARLINK-4045_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "38d601b5048cfe869bb7054bb0a62779f019fabf98a0429f3acb95a9cfee4f07",
+   "bytes": 2040466,
+   "span": [
+    "2026-09-10T03:54:42.000Z",
+    "2026-09-13T03:54:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53174_STARLINK-4205_2530349_Operational_1473306600_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53174_STARLINK-4205_2530349_Operational_1473306600_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "6695436cdfd507bcdfd16f95579ccc90c8ddfc2039b755d73b5db95f64e473c1",
+   "bytes": 2041485,
+   "span": [
+    "2026-09-10T03:49:42.000Z",
+    "2026-09-13T03:49:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53476_STARLINK-4378_2530347_Operational_1473306480_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53476_STARLINK-4378_2530347_Operational_1473306480_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "1f2ea8c0c566c9371cda299bbe10ed9362298c8ef70ede8eeacd55b92c48fb18",
+   "bytes": 2039013,
+   "span": [
+    "2026-09-10T03:47:42.000Z",
+    "2026-09-13T03:47:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53531_STARLINK-4487_2530348_Operational_1473306540_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53531_STARLINK-4487_2530348_Operational_1473306540_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "96bce5d49f69cc04a79e34b09faa7062a4061ac131c64299d0f654dd558a9484",
+   "bytes": 2042734,
+   "span": [
+    "2026-09-10T03:48:42.000Z",
+    "2026-09-13T03:48:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53536_STARLINK-4053_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53536_STARLINK-4053_2530354_Operational_1473306900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "10f81a821ca9023ce4770e6443970335e9010b79af94aa7688f7c36bac7fd528",
+   "bytes": 2042914,
+   "span": [
+    "2026-09-10T03:54:42.000Z",
+    "2026-09-13T03:54:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53552_STARLINK-4495_2530344_Operational_1473306300_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53552_STARLINK-4495_2530344_Operational_1473306300_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "25782213b179d82443e34abee06a3d33ddee4f98f67c244f669baa26a4b7776d",
+   "bytes": 2041898,
+   "span": [
+    "2026-09-10T03:44:42.000Z",
+    "2026-09-13T03:44:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T145911Z--MEME_53606_STARLINK-4590_2530349_Operational_1473306600_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53606_STARLINK-4590_2530349_Operational_1473306600_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T14:59:11.739Z",
+   "sha256": "a8c03c32e31f50f06e9b497162a1e697b9fed2afbcbc3c501a086749b97f3893",
+   "bytes": 2041031,
+   "span": [
+    "2026-09-10T03:49:42.000Z",
+    "2026-09-13T03:49:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_53932_STARLINK-4772_2530345_Operational_1473306360_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53932_STARLINK-4772_2530345_Operational_1473306360_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "550ba624f564d090b5d2248aa93388b5e5f80aff2fbe29b55f4a2b360b12db38",
+   "bytes": 2042878,
+   "span": [
+    "2026-09-10T03:45:42.000Z",
+    "2026-09-13T03:45:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_53933_STARLINK-4782_2530348_Operational_1473306540_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53933_STARLINK-4782_2530348_Operational_1473306540_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "26532a77fca27141cdb46197ef3f654ec0b7e0a5001389e5d3857db886b19950",
+   "bytes": 2042851,
+   "span": [
+    "2026-09-10T03:48:42.000Z",
+    "2026-09-13T03:48:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_53934_STARLINK-4775_2530340_Operational_1473306060_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_53934_STARLINK-4775_2530340_Operational_1473306060_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "eb59de362ea13262c83cddd86dadd4a9b740c52a6c74b0d1a5504d99ebb58ccb",
+   "bytes": 2041843,
+   "span": [
+    "2026-09-10T03:40:42.000Z",
+    "2026-09-13T03:40:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_54198_STARLINK-5246_2530340_Operational_1473306060_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_54198_STARLINK-5246_2530340_Operational_1473306060_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "ec6fa3ae40abd2ed8ca42698ce8bead31e80ab32b39f4a076b0c54a2bdd0b41f",
+   "bytes": 2042984,
+   "span": [
+    "2026-09-10T03:40:42.000Z",
+    "2026-09-13T03:40:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_54783_STARLINK-5439_2530336_Operational_1473305820_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_54783_STARLINK-5439_2530336_Operational_1473305820_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "3b016418faf3c7645fb210362fa939654ccc073d84f41664555c18991e3e0374",
+   "bytes": 2040816,
+   "span": [
+    "2026-09-10T03:36:42.000Z",
+    "2026-09-13T03:36:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_54804_STARLINK-5422_2530337_Operational_1473305880_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_54804_STARLINK-5422_2530337_Operational_1473305880_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "ffb0ab9e7df0fea15b09eccabe08ce0bcbb4dae40202eb5ea3912d4a36d5e24e",
+   "bytes": 2041250,
+   "span": [
+    "2026-09-10T03:37:42.000Z",
+    "2026-09-13T03:37:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T152917Z--MEME_55362_STARLINK-5574_2530333_Operational_1473305640_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55362_STARLINK-5574_2530333_Operational_1473305640_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:29:17.801Z",
+   "sha256": "e849aa2e6da1f004a68b0576b4fdf4e46ff99ac592add5e7756bb50f100de2b6",
+   "bytes": 2041595,
+   "span": [
+    "2026-09-10T03:33:42.000Z",
+    "2026-09-13T03:33:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55386_STARLINK-5555_2530334_Operational_1473305700_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55386_STARLINK-5555_2530334_Operational_1473305700_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "da4679899fb1543fb4f9226936f8a1ca9f8e1c2b00848e554d5be4c17f380855",
+   "bytes": 2042903,
+   "span": [
+    "2026-09-10T03:34:42.000Z",
+    "2026-09-13T03:34:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55451_STARLINK-5656_2530336_Operational_1473305820_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55451_STARLINK-5656_2530336_Operational_1473305820_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "93d9cba9ded28a65abd6ec4d2e0e64b402963f4fb1d1902e4fda86932014e105",
+   "bytes": 2041458,
+   "span": [
+    "2026-09-10T03:36:42.000Z",
+    "2026-09-13T03:36:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55484_STARLINK-5696_2530331_Operational_1473305520_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55484_STARLINK-5696_2530331_Operational_1473305520_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "4d2835e69bd6c39e99964b48d1b16fbc7462a4b4e385bf1a9759bf04b196b448",
+   "bytes": 2041142,
+   "span": [
+    "2026-09-10T03:31:42.000Z",
+    "2026-09-13T03:31:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55488_STARLINK-5706_2530332_Operational_1473305580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55488_STARLINK-5706_2530332_Operational_1473305580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "2734460f29c384c9da0b3821fb4bf1789ad56efbb9fb89d5540e15016e2fee38",
+   "bytes": 2041691,
+   "span": [
+    "2026-09-10T03:32:42.000Z",
+    "2026-09-13T03:32:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55571_STARLINK-5739_2530332_Operational_1473305580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55571_STARLINK-5739_2530332_Operational_1473305580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "ac06850b5ca0804b252e6940cc239041343041cd2653bd474c7ebd6be2d2d202",
+   "bytes": 2041331,
+   "span": [
+    "2026-09-10T03:32:42.000Z",
+    "2026-09-13T03:32:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55577_STARLINK-5752_2530325_Operational_1473305160_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55577_STARLINK-5752_2530325_Operational_1473305160_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "3d31cba8c29e193a7b29e4043cba2193736aa92ee965844a366cca97bb1f5008",
+   "bytes": 2041871,
+   "span": [
+    "2026-09-10T03:25:42.000Z",
+    "2026-09-13T03:25:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55955_STARLINK-5878_2530329_Operational_1473305400_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55955_STARLINK-5878_2530329_Operational_1473305400_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "948869432ae42470ddf4805907f3ed7fc96efb6b2e60ae0e763e49b8bd9c77c6",
+   "bytes": 2041706,
+   "span": [
+    "2026-09-10T03:29:42.000Z",
+    "2026-09-13T03:29:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_55989_STARLINK-5947_2530332_Operational_1473305580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_55989_STARLINK-5947_2530332_Operational_1473305580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "5f8c3e55d4bc51f6f7c354653c0a87d44f323aa78974ef60725b3459af929f73",
+   "bytes": 2041471,
+   "span": [
+    "2026-09-10T03:32:42.000Z",
+    "2026-09-13T03:32:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_56101_STARLINK-6095_2530329_Operational_1473305400_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56101_STARLINK-6095_2530329_Operational_1473305400_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "8bddd0731d9265fc31d87b3ad644653ae4d7d0211abc3b2e24fa410576d1b6bb",
+   "bytes": 2041905,
+   "span": [
+    "2026-09-10T03:29:42.000Z",
+    "2026-09-13T03:29:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T155922Z--MEME_56103_STARLINK-6096_2530321_Operational_1473304920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56103_STARLINK-6096_2530321_Operational_1473304920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T15:59:22.898Z",
+   "sha256": "4dd9be724b01ef9398ff42b0518b8178da09f5f877addbc313e3a1ec1830b4c9",
+   "bytes": 2041180,
+   "span": [
+    "2026-09-10T03:21:42.000Z",
+    "2026-09-13T03:21:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56117_STARLINK-6107_2530330_Operational_1473305460_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56117_STARLINK-6107_2530330_Operational_1473305460_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "c43454aa4dd1a0f276f2cf285d2762131eff6f29df163cfac65edc51f098b1d8",
+   "bytes": 2040939,
+   "span": [
+    "2026-09-10T03:30:42.000Z",
+    "2026-09-13T03:30:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56322_STARLINK-6033_2530330_Operational_1473305460_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56322_STARLINK-6033_2530330_Operational_1473305460_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "190a09c9e15e834095aee584bdd8187e265f5daf2b150de830ae509a1dd8dff0",
+   "bytes": 2042790,
+   "span": [
+    "2026-09-10T03:30:42.000Z",
+    "2026-09-13T03:30:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56338_STARLINK-5554_2530330_Operational_1473305460_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56338_STARLINK-5554_2530330_Operational_1473305460_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "26de02b0d9b900274583a61b159c2c1c3764bcd24a8b2c621594bb41da3df3d5",
+   "bytes": 2040154,
+   "span": [
+    "2026-09-10T03:30:42.000Z",
+    "2026-09-13T03:30:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56340_STARLINK-5540_2530338_Operational_1473305940_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56340_STARLINK-5540_2530338_Operational_1473305940_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "78f0599cb866f0a8a5b985b3bac8ed8c1f298108a397d390468a61599150d690",
+   "bytes": 2041701,
+   "span": [
+    "2026-09-10T03:38:42.000Z",
+    "2026-09-13T03:38:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56461_STARLINK-6037_2530325_Operational_1473305160_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56461_STARLINK-6037_2530325_Operational_1473305160_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "612d021806f9df154b596f34fa5aab6545e267987af3a295af5997c9872e056a",
+   "bytes": 2042696,
+   "span": [
+    "2026-09-10T03:25:42.000Z",
+    "2026-09-13T03:25:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56488_STARLINK-6204_2530320_Operational_1473304860_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56488_STARLINK-6204_2530320_Operational_1473304860_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "0350fa36d4e5862a52ef4c15020e8fb2eee8b75915f050f70f3c6269f551ded9",
+   "bytes": 2040741,
+   "span": [
+    "2026-09-10T03:20:42.000Z",
+    "2026-09-13T03:20:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56495_STARLINK-5529_2530333_Operational_1473305640_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56495_STARLINK-5529_2530333_Operational_1473305640_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "4629e0e3448b024761036af95b19268ed6495f960f7ac285b727e54d1c7ad783",
+   "bytes": 2040711,
+   "span": [
+    "2026-09-10T03:33:42.000Z",
+    "2026-09-13T03:33:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56528_STARLINK-6337_2530319_Operational_1473304800_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56528_STARLINK-6337_2530319_Operational_1473304800_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "b60cb562061d5b8bc1d1b42cf799eabebf55ce3b0f6c519b0d904d1084406626",
+   "bytes": 2042206,
+   "span": [
+    "2026-09-10T03:19:42.000Z",
+    "2026-09-13T03:19:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56530_STARLINK-6318_2530321_Operational_1473304920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56530_STARLINK-6318_2530321_Operational_1473304920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "2da4a07e18e91119fb03e9fec2fbfb0e0e96b5f8e627c8b670a85ece3907c225",
+   "bytes": 2042887,
+   "span": [
+    "2026-09-10T03:21:42.000Z",
+    "2026-09-13T03:21:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56768_STARLINK-6198_2530324_Operational_1473305100_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56768_STARLINK-6198_2530324_Operational_1473305100_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "bc6a26d174e3862a7b01fd2fc0e84739af8450a705a675d3554018b7a9b546c6",
+   "bytes": 2042047,
+   "span": [
+    "2026-09-10T03:24:42.000Z",
+    "2026-09-13T03:24:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56827_STARLINK-30151_2530310_Operational_1473304260_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56827_STARLINK-30151_2530310_Operational_1473304260_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "230b30462f578907b8b26da34530340ba80c68c1d4059f336e09e89392dcd818",
+   "bytes": 2041712,
+   "span": [
+    "2026-09-10T03:10:42.000Z",
+    "2026-09-13T03:10:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T162931Z--MEME_56886_STARLINK-5496_2530335_Operational_1473305760_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_56886_STARLINK-5496_2530335_Operational_1473305760_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:29:31.055Z",
+   "sha256": "faff3f9aed6216f0383493c10a8dbb521498811f90902f1c3a8d6fe2f92fb70f",
+   "bytes": 2042226,
+   "span": [
+    "2026-09-10T03:35:42.000Z",
+    "2026-09-13T03:35:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57122_STARLINK-6149_2530326_Operational_1473305220_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57122_STARLINK-6149_2530326_Operational_1473305220_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "0242bcbb1cf1facfbf06cd1e6799370bd213343d23d35d2e7c641a813dea12c6",
+   "bytes": 2040968,
+   "span": [
+    "2026-09-10T03:26:42.000Z",
+    "2026-09-13T03:26:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57129_STARLINK-6170_2530324_Operational_1473305100_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57129_STARLINK-6170_2530324_Operational_1473305100_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "0a08b2921f34ad7215c91601a4e1b1cadde2813cc3833867b538e53ce60f8815",
+   "bytes": 2041466,
+   "span": [
+    "2026-09-10T03:24:42.000Z",
+    "2026-09-13T03:24:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57143_STARLINK-5358_2530335_Operational_1473305760_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57143_STARLINK-5358_2530335_Operational_1473305760_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "9a4276e0d60f3b858c87cad0d861dc9491c7ee5bf9598b2627897a6230f48194",
+   "bytes": 2041477,
+   "span": [
+    "2026-09-10T03:35:42.000Z",
+    "2026-09-13T03:35:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57246_STARLINK-5049_2530345_Operational_1473306360_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57246_STARLINK-5049_2530345_Operational_1473306360_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "3f37979c3186ae74148d68f3f9ae113b2c476c9efce1e5e02a2a37c6f77bd566",
+   "bytes": 2041480,
+   "span": [
+    "2026-09-10T03:45:42.000Z",
+    "2026-09-13T03:45:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57301_STARLINK-30201_2530311_Operational_1473304320_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57301_STARLINK-30201_2530311_Operational_1473304320_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "0bee993db4455fcc61967bb6a94d12397ae6f21b667dd94cb6b17129925ba479",
+   "bytes": 2042027,
+   "span": [
+    "2026-09-10T03:11:42.000Z",
+    "2026-09-13T03:11:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57353_STARLINK-6324_2530320_Operational_1473304860_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57353_STARLINK-6324_2530320_Operational_1473304860_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "d5e3690de0522fe8448de8a246aa46aa0bf5a9bac6a9c43be96fa05a2cd82810",
+   "bytes": 2041394,
+   "span": [
+    "2026-09-10T03:20:42.000Z",
+    "2026-09-13T03:20:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57360_STARLINK-6348_2530316_Operational_1473304620_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57360_STARLINK-6348_2530316_Operational_1473304620_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "c48c664197efa63b9d4044e97df9604cb9a68fa738fb383ad6c9bbb5c03b3939",
+   "bytes": 2041301,
+   "span": [
+    "2026-09-10T03:16:42.000Z",
+    "2026-09-13T03:16:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57450_STARLINK-30217_2530304_Operational_1473303900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57450_STARLINK-30217_2530304_Operational_1473303900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "f21368745ed4a553627c26fec8c5a2f056efa86394d638aadd4384aede1c5797",
+   "bytes": 2041347,
+   "span": [
+    "2026-09-10T03:04:42.000Z",
+    "2026-09-13T03:04:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57475_STARLINK-30155_2530309_Operational_1473304200_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57475_STARLINK-30155_2530309_Operational_1473304200_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "0dbb8971649478eb28851b35e3c4e95288601ca02f76e9b41532ab76797b4283",
+   "bytes": 2041678,
+   "span": [
+    "2026-09-10T03:09:42.000Z",
+    "2026-09-13T03:09:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57678_STARLINK-30320_2530302_Operational_1473303780_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57678_STARLINK-30320_2530302_Operational_1473303780_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "b86cb301e3afc99bc5adcc1a972954dc56be1f7068631e9ce9fcfe9d6dda729f",
+   "bytes": 2041303,
+   "span": [
+    "2026-09-10T03:02:42.000Z",
+    "2026-09-13T03:02:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T165939Z--MEME_57704_STARLINK-30346_2530259_Operational_1473303600_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57704_STARLINK-30346_2530259_Operational_1473303600_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T16:59:39.958Z",
+   "sha256": "3521dbcc82be1d05e70de504bda316f5c1d36791ce197f4a3ab79b2682a73d04",
+   "bytes": 2040880,
+   "span": [
+    "2026-09-10T02:59:42.000Z",
+    "2026-09-13T02:59:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T172946Z--MEME_57737_STARLINK-30344_2530308_Operational_1473304140_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57737_STARLINK-30344_2530308_Operational_1473304140_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:29:46.046Z",
+   "sha256": "04cea1696e296d1df02754799763754349838920343871d63ee912d4d9846e7a",
+   "bytes": 2041183,
+   "span": [
+    "2026-09-10T03:08:42.000Z",
+    "2026-09-13T03:08:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T172946Z--MEME_57852_STARLINK-30431_2530304_Operational_1473303900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57852_STARLINK-30431_2530304_Operational_1473303900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:29:46.046Z",
+   "sha256": "45693035e46f32b88e05624854bcf5188125f5deea27cbd894909c69707eb1f0",
+   "bytes": 2041727,
+   "span": [
+    "2026-09-10T03:04:42.000Z",
+    "2026-09-13T03:04:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T172946Z--MEME_57882_STARLINK-30339_2530304_Operational_1473303900_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57882_STARLINK-30339_2530304_Operational_1473303900_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:29:46.046Z",
+   "sha256": "356d48962437879bad74503bde90e04c06a7a7ed2053d9d104a65f263672dd2e",
+   "bytes": 2041013,
+   "span": [
+    "2026-09-10T03:04:42.000Z",
+    "2026-09-13T03:04:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T172946Z--MEME_57906_STARLINK-30428_2530306_Operational_1473304020_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_57906_STARLINK-30428_2530306_Operational_1473304020_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:29:46.046Z",
+   "sha256": "80d77ac0b0282596f4ec3b77537d143952c64c405e0fdd27b74a28b1cf639f79",
+   "bytes": 2041043,
+   "span": [
+    "2026-09-10T03:06:42.000Z",
+    "2026-09-13T03:06:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T172946Z--MEME_58005_STARLINK-30530_2530258_Operational_1473303540_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58005_STARLINK-30530_2530258_Operational_1473303540_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:29:46.046Z",
+   "sha256": "fa077784922c934d219bd712f0cfa128c188509a2d438886c4e32d7fc9813bf3",
+   "bytes": 2042083,
+   "span": [
+    "2026-09-10T02:58:42.000Z",
+    "2026-09-13T02:58:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58408_STARLINK-30906_2530253_Operational_1473303240_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58408_STARLINK-30906_2530253_Operational_1473303240_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "0101591db56f8cb5171bea72667d25261a466fa79c545308781d6edf0b96c755",
+   "bytes": 2041991,
+   "span": [
+    "2026-09-10T02:53:42.000Z",
+    "2026-09-13T02:53:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58411_STARLINK-30919_2530258_Operational_1473303540_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58411_STARLINK-30919_2530258_Operational_1473303540_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "6ed9c864949084e4bc50c4f2ebd261e5e5512e1f67bfd86ab0bf0739f744fd58",
+   "bytes": 2041420,
+   "span": [
+    "2026-09-10T02:58:42.000Z",
+    "2026-09-13T02:58:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58439_STARLINK-30951_2530259_Operational_1473303600_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58439_STARLINK-30951_2530259_Operational_1473303600_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "cdbe621d39bf0c9549c9ef5492e3d8713162b6ecc53a0783a98606afaf2edaab",
+   "bytes": 2041360,
+   "span": [
+    "2026-09-10T02:59:42.000Z",
+    "2026-09-13T02:59:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58605_STARLINK-31038_2530250_Operational_1473303060_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58605_STARLINK-31038_2530250_Operational_1473303060_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "972b388a1c949c164aa9145c807aa2551701ab2f9343d45001f9c523df2299b7",
+   "bytes": 2042780,
+   "span": [
+    "2026-09-10T02:50:42.000Z",
+    "2026-09-13T02:50:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58629_STARLINK-31091_2530247_Operational_1473302880_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58629_STARLINK-31091_2530247_Operational_1473302880_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "8e6a3fbd887ac08381d936c44d5fd46d968b5dfa7eff617614f452468042dbfc",
+   "bytes": 2041494,
+   "span": [
+    "2026-09-10T02:47:42.000Z",
+    "2026-09-13T02:47:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58670_STARLINK-31083_2530252_Operational_1473303180_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58670_STARLINK-31083_2530252_Operational_1473303180_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "69f4cc66e0ce3d3ae1beb83a877c09dc8643797065cd4a9be0387853636fb9b4",
+   "bytes": 2041527,
+   "span": [
+    "2026-09-10T02:52:42.000Z",
+    "2026-09-13T02:52:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58737_STARLINK-31101_2530256_Operational_1473303420_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58737_STARLINK-31101_2530256_Operational_1473303420_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "d5169ea808d4b56bfedd807e89305127f7d90886f1bc3bb469600eaf016d312d",
+   "bytes": 2041188,
+   "span": [
+    "2026-09-10T02:56:42.000Z",
+    "2026-09-13T02:56:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58765_STARLINK-31127_2530255_Operational_1473303360_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58765_STARLINK-31127_2530255_Operational_1473303360_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "afaab3ba049503d1038d419f6efb90aff47c6d3084be096e451c596657a70de2",
+   "bytes": 2042037,
+   "span": [
+    "2026-09-10T02:55:42.000Z",
+    "2026-09-13T02:55:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T175953Z--MEME_58773_STARLINK-31073_2530251_Operational_1473303120_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58773_STARLINK-31073_2530251_Operational_1473303120_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T17:59:53.774Z",
+   "sha256": "9fc4391b5a1263647c6693227c60521c16524ae65dc5361e8d040e5ee1840da1",
+   "bytes": 2042018,
+   "span": [
+    "2026-09-10T02:51:42.000Z",
+    "2026-09-13T02:51:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T180631Z--MEME_58801_STARLINK-31170_2530252_Operational_1473303180_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58801_STARLINK-31170_2530252_Operational_1473303180_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:06:31.534Z",
+   "sha256": "614277116d0e577dafa3eb6aac88515cd2c7ac1c1f181e406e7c79f5af9456d9",
+   "bytes": 2041909,
+   "span": [
+    "2026-09-10T02:52:42.000Z",
+    "2026-09-13T02:52:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T180631Z--MEME_58844_STARLINK-31269_2530252_Operational_1473303180_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58844_STARLINK-31269_2530252_Operational_1473303180_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:06:31.534Z",
+   "sha256": "25963c86656fa30b7f5e2e8e64802b722736f7c7a2977918b95662c45d8eef4b",
+   "bytes": 2041764,
+   "span": [
+    "2026-09-10T02:52:42.000Z",
+    "2026-09-13T02:52:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T181048Z--MEME_58878_STARLINK-31300_2530247_Operational_1473302880_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58878_STARLINK-31300_2530247_Operational_1473302880_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:10:48.976Z",
+   "sha256": "4f88804d46b9d9a59b933e3f72eed4fd8ee39800b5d49ee7a2e618658e91a8df",
+   "bytes": 2041582,
+   "span": [
+    "2026-09-10T02:47:42.000Z",
+    "2026-09-13T02:47:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T181048Z--MEME_58889_STARLINK-31007_2530249_Operational_1473303000_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58889_STARLINK-31007_2530249_Operational_1473303000_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:10:48.976Z",
+   "sha256": "5db23d35927db758159cbea854ea4eb444d28b9a60ccf9f566f6789e8aa82778",
+   "bytes": 2041758,
+   "span": [
+    "2026-09-10T02:49:42.000Z",
+    "2026-09-13T02:49:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T182350Z--MEME_58975_STARLINK-31369_2530248_Operational_1473302940_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58975_STARLINK-31369_2530248_Operational_1473302940_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:23:50.620Z",
+   "sha256": "d0f2338e04312185e274297dcb5ef2c703dcf0996ba45dc6c00ee383e6c1132d",
+   "bytes": 2041749,
+   "span": [
+    "2026-09-10T02:48:42.000Z",
+    "2026-09-13T02:48:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T182350Z--MEME_58984_STARLINK-31379_2530244_Operational_1473302700_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_58984_STARLINK-31379_2530244_Operational_1473302700_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:23:50.620Z",
+   "sha256": "f1f141fb0e8ee07b1bccc7671f1fe23aa0e0a49a56ba41afc2cecd27fbf2a44e",
+   "bytes": 2041627,
+   "span": [
+    "2026-09-10T02:44:42.000Z",
+    "2026-09-13T02:44:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T182350Z--MEME_59044_STARLINK-31153_2530250_Operational_1473303060_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59044_STARLINK-31153_2530250_Operational_1473303060_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T18:23:50.620Z",
+   "sha256": "72ae6e9286494d80429eaddb3f876f98094459333a4efb4ed3ae83757244a75d",
+   "bytes": 2041273,
+   "span": [
+    "2026-09-10T02:50:42.000Z",
+    "2026-09-13T02:50:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T191019Z--MEME_59307_STARLINK-31282_2530248_Operational_1473302940_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59307_STARLINK-31282_2530248_Operational_1473302940_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:10:19.425Z",
+   "sha256": "2f00c4bdf1b9ef1bfc5b68c87319e914a0e77719856771790ef4867f98b481af",
+   "bytes": 2042202,
+   "span": [
+    "2026-09-10T02:48:42.000Z",
+    "2026-09-13T02:48:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T191019Z--MEME_59330_STARLINK-31634_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59330_STARLINK-31634_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:10:19.425Z",
+   "sha256": "99f96ffbd0ee6d68bdd2ce3c4b64569c5c144f7d7ed4500a1623ee5c7bff1882",
+   "bytes": 2041975,
+   "span": [
+    "2026-09-10T02:42:42.000Z",
+    "2026-09-13T02:42:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T191019Z--MEME_59370_STARLINK-31461_2530241_Operational_1473302520_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59370_STARLINK-31461_2530241_Operational_1473302520_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:10:19.425Z",
+   "sha256": "8f93092caa8bcd027e85cbb8a47eaa5b6244e336619ab10640c8c695a90aa4f5",
+   "bytes": 2040824,
+   "span": [
+    "2026-09-10T02:41:42.000Z",
+    "2026-09-13T02:41:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T191019Z--MEME_59489_STARLINK-31638_2530246_Operational_1473302820_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59489_STARLINK-31638_2530246_Operational_1473302820_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:10:19.425Z",
+   "sha256": "2d58e07cbc1f5aaacfb305e949031d237e32144ed9f2e7b95585695354ccaac5",
+   "bytes": 2041159,
+   "span": [
+    "2026-09-10T02:46:42.000Z",
+    "2026-09-13T02:46:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T191019Z--MEME_59511_STARLINK-31635_2530237_Operational_1473302280_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59511_STARLINK-31635_2530237_Operational_1473302280_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:10:19.425Z",
+   "sha256": "3ef5e461706603b91298d21221b1c651310875cf815ca961f094f22c4a9ceb76",
+   "bytes": 2041243,
+   "span": [
+    "2026-09-10T02:37:42.000Z",
+    "2026-09-13T02:37:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T194034Z--MEME_59568_STARLINK-31471_2530243_Operational_1473302640_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59568_STARLINK-31471_2530243_Operational_1473302640_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:40:34.113Z",
+   "sha256": "5b0949adfdc8a08ac728a6170b344f7d1c22fd98707499c8db2a9479667f93a8",
+   "bytes": 2041350,
+   "span": [
+    "2026-09-10T02:43:42.000Z",
+    "2026-09-13T02:43:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T194034Z--MEME_59577_STARLINK-31692_2530239_Operational_1473302400_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59577_STARLINK-31692_2530239_Operational_1473302400_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:40:34.113Z",
+   "sha256": "1dd98776ec9ce7ba5d41d6dc523ef600e69f97c0d94ba52971ff80b0704d50f2",
+   "bytes": 2042844,
+   "span": [
+    "2026-09-10T02:39:42.000Z",
+    "2026-09-13T02:39:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T194034Z--MEME_59631_STARLINK-31749_2530236_Operational_1473302220_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59631_STARLINK-31749_2530236_Operational_1473302220_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:40:34.113Z",
+   "sha256": "e47830a6576de9a1cbd85d62dc5133ec6cb0c43d96de79f9b834cd453d655b05",
+   "bytes": 2041750,
+   "span": [
+    "2026-09-10T02:36:42.000Z",
+    "2026-09-13T02:36:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T194034Z--MEME_59671_STARLINK-31854_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59671_STARLINK-31854_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:40:34.113Z",
+   "sha256": "53aa3d568987c3a0a4ff9c81607b58024c92709e3b5319cf537b2d2076a76683",
+   "bytes": 2041327,
+   "span": [
+    "2026-09-10T02:42:42.000Z",
+    "2026-09-13T02:42:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T194034Z--MEME_59738_STARLINK-31819_2530244_Operational_1473302700_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59738_STARLINK-31819_2530244_Operational_1473302700_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:40:34.113Z",
+   "sha256": "63751b03348eddda1b1da3ae5f7ee5a4fbbfae51db228088bde33cb4acace1e5",
+   "bytes": 2042011,
+   "span": [
+    "2026-09-10T02:44:42.000Z",
+    "2026-09-13T02:44:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T194034Z--MEME_59748_STARLINK-31640_2530238_Operational_1473302340_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59748_STARLINK-31640_2530238_Operational_1473302340_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T19:40:34.113Z",
+   "sha256": "b2bb40d549b0bab3264602e022988fbf3b1a7964ee5df4eef351db15dd5496f3",
+   "bytes": 2042030,
+   "span": [
+    "2026-09-10T02:38:42.000Z",
+    "2026-09-13T02:38:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T201048Z--MEME_59855_STARLINK-31882_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59855_STARLINK-31882_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:10:48.964Z",
+   "sha256": "01bfa904bdc21629f567fd8a32fe4870dd19cb848b506e6af01fdd81c7014035",
+   "bytes": 2040851,
+   "span": [
+    "2026-09-10T02:42:42.000Z",
+    "2026-09-13T02:42:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T201048Z--MEME_59869_STARLINK-31760_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_59869_STARLINK-31760_2530242_Operational_1473302580_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:10:48.964Z",
+   "sha256": "cc616467d96596209dc8f1ada5b8e2d8b0cc96e107fa0088818531086e06bc6c",
+   "bytes": 2040935,
+   "span": [
+    "2026-09-10T02:42:42.000Z",
+    "2026-09-13T02:42:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60122_STARLINK-11157_2530321_Operational_1473304920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60122_STARLINK-11157_2530321_Operational_1473304920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "1aff5a963c3cea540bb93425bf9621c7ed3773d4c26cb8c47b211c33eaca8ecd",
+   "bytes": 2041258,
+   "span": [
+    "2026-09-10T03:21:42.000Z",
+    "2026-09-13T03:21:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60189_STARLINK-11183_2530317_Operational_1473304680_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60189_STARLINK-11183_2530317_Operational_1473304680_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "807e79b7a25b9996dcda0a9a385656a1060f2063645e49f76f916fc22cd63edf",
+   "bytes": 2041007,
+   "span": [
+    "2026-09-10T03:17:42.000Z",
+    "2026-09-13T03:17:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60259_STARLINK-32207_2530235_Operational_1473302160_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60259_STARLINK-32207_2530235_Operational_1473302160_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "d1b1661b9f4045596a92f364bbe19156ce836ed7b3a2e458538e9a27d1a8a162",
+   "bytes": 2042184,
+   "span": [
+    "2026-09-10T02:35:42.000Z",
+    "2026-09-13T02:35:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60297_STARLINK-32034_2530232_Operational_1473301980_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60297_STARLINK-32034_2530232_Operational_1473301980_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "ebe03a48be63eb975c5558c1f9bb4966bb8e5e5a174cbecb33c22d63676ae260",
+   "bytes": 2042215,
+   "span": [
+    "2026-09-10T02:32:42.000Z",
+    "2026-09-13T02:32:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60319_STARLINK-32182_2530230_Operational_1473301860_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60319_STARLINK-32182_2530230_Operational_1473301860_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "937f34fefc16e86d6afe7b7ff3bb2fff57892abf204a1d0d95103a2fa90703a4",
+   "bytes": 2041605,
+   "span": [
+    "2026-09-10T02:30:42.000Z",
+    "2026-09-13T02:30:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60341_STARLINK-32185_2530227_Operational_1473301680_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60341_STARLINK-32185_2530227_Operational_1473301680_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "5f38ab8696a2ad68499b9d2f01a3da1f6bb0a803944e24e42f246f39c500ba73",
+   "bytes": 2040988,
+   "span": [
+    "2026-09-10T02:27:42.000Z",
+    "2026-09-13T02:27:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60350_STARLINK-32076_2530230_Operational_1473301860_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60350_STARLINK-32076_2530230_Operational_1473301860_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "e28d838c3fdd5ad4a0dbd8be9fbc1177a135e75cf5452d412c0c8663e4db02a6",
+   "bytes": 2042478,
+   "span": [
+    "2026-09-10T02:30:42.000Z",
+    "2026-09-13T02:30:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T204242Z--MEME_60368_STARLINK-32271_2530232_Operational_1473301980_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60368_STARLINK-32271_2530232_Operational_1473301980_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T20:42:42.696Z",
+   "sha256": "004e06e619cf76f3cc7a87bef601e405fd33bf507b2bc4db479b3724d29633fc",
+   "bytes": 2041882,
+   "span": [
+    "2026-09-10T02:32:42.000Z",
+    "2026-09-13T02:32:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_60439_STARLINK-32231_2530229_Operational_1473301800_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60439_STARLINK-32231_2530229_Operational_1473301800_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "fa27e9079e2eaff882741cffbdb0f214dedcfd817fb819f9e6395bd3e38fa05f",
+   "bytes": 2041443,
+   "span": [
+    "2026-09-10T02:29:42.000Z",
+    "2026-09-13T02:29:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_60596_STARLINK-31930_2530236_Operational_1473302220_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60596_STARLINK-31930_2530236_Operational_1473302220_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "5c1990efbcb7259ace79c32654843dd565c306426a34b14830c44f2145211e9e",
+   "bytes": 2041758,
+   "span": [
+    "2026-09-10T02:36:42.000Z",
+    "2026-09-13T02:36:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_60733_STARLINK-32253_2530231_Operational_1473301920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60733_STARLINK-32253_2530231_Operational_1473301920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "e277d5f837c47e972224476e7c2a03595e4f75df05ea68f4800cdef293a613d5",
+   "bytes": 2041609,
+   "span": [
+    "2026-09-10T02:31:42.000Z",
+    "2026-09-13T02:31:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_60739_STARLINK-32235_2530233_Operational_1473302040_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60739_STARLINK-32235_2530233_Operational_1473302040_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "a0f0097df64de914649a1db4f09f639b7cdc83a78be4ee884a532ab710940ca3",
+   "bytes": 2041576,
+   "span": [
+    "2026-09-10T02:33:42.000Z",
+    "2026-09-13T02:33:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_60919_STARLINK-32367_2530228_Operational_1473301740_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60919_STARLINK-32367_2530228_Operational_1473301740_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "9b5eace59e411939431a83741fc8c6c8458559c5b7ad5d7562da860e2db9befd",
+   "bytes": 2041672,
+   "span": [
+    "2026-09-10T02:28:42.000Z",
+    "2026-09-13T02:28:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_60996_STARLINK-11281_2530318_Operational_1473304740_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_60996_STARLINK-11281_2530318_Operational_1473304740_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "bad364398ec4638f9729b29250deeb204d6ab8c70726fb35e0bafb8b0fb535fa",
+   "bytes": 2041397,
+   "span": [
+    "2026-09-10T03:18:42.000Z",
+    "2026-09-13T03:18:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61070_STARLINK-32375_2530228_Operational_1473301740_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61070_STARLINK-32375_2530228_Operational_1473301740_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "86af09e3911892a9610c9b7ddd07f224fed5888d5d97dc7230135d9433d11b28",
+   "bytes": 2040880,
+   "span": [
+    "2026-09-10T02:28:42.000Z",
+    "2026-09-13T02:28:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61202_STARLINK-11309_2530314_Operational_1473304500_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61202_STARLINK-11309_2530314_Operational_1473304500_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "8d7f7c962a37c5b817d9502a585be38b79eab84a33d95a6298730ca644aa381d",
+   "bytes": 2041077,
+   "span": [
+    "2026-09-10T03:14:42.000Z",
+    "2026-09-13T03:14:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61217_STARLINK-32342_2530229_Operational_1473301800_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61217_STARLINK-32342_2530229_Operational_1473301800_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "e29abcfb10b4c405b4865602391eb0898613a6efedf614c698de3177a334da8e",
+   "bytes": 2041687,
+   "span": [
+    "2026-09-10T02:29:42.000Z",
+    "2026-09-13T02:29:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61530_STARLINK-32261_2530231_Operational_1473301920_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61530_STARLINK-32261_2530231_Operational_1473301920_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "77425730c6e75cbc365aef0e5b405d1bd5e3aa6ab3d727c386e8fcc7bf1abcaa",
+   "bytes": 2040949,
+   "span": [
+    "2026-09-10T02:31:42.000Z",
+    "2026-09-13T02:31:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61574_STARLINK-11356_2530310_Operational_1473304260_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61574_STARLINK-11356_2530310_Operational_1473304260_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "f6c55c5766a2d8b4dd452fb2c02621b94fe23f58cea285490bc1911b1db8ad76",
+   "bytes": 2041352,
+   "span": [
+    "2026-09-10T03:10:42.000Z",
+    "2026-09-13T03:10:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61587_STARLINK-32353_2530234_Operational_1473302100_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61587_STARLINK-32353_2530234_Operational_1473302100_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "d4285a48efe962c073e16f104daa227e5d91d468d64aa5ba698748c236214eea",
+   "bytes": 2040796,
+   "span": [
+    "2026-09-10T02:34:42.000Z",
+    "2026-09-13T02:34:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T211252Z--MEME_61635_STARLINK-32370_2530233_Operational_1473302040_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_61635_STARLINK-32370_2530233_Operational_1473302040_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T21:12:52.870Z",
+   "sha256": "9d4a004755acef103caa93abf4d23abbffd93e720dba887dcc61fce3211f0479",
+   "bytes": 2041818,
+   "span": [
+    "2026-09-10T02:33:42.000Z",
+    "2026-09-13T02:33:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T122849Z--MEME_100047_STARLINK-37756_2530101_Operational_1473296520_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_100047_STARLINK-37756_2530101_Operational_1473296520_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:28:49.162Z",
+   "sha256": "cf12dcada5ef086afda1c19f9f16be2f1ce79f36edc81beed9546bd56eaa44a7",
+   "bytes": 2041516,
+   "span": [
+    "2026-09-10T01:01:42.000Z",
+    "2026-09-13T01:01:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_100266_STARLINK-38242_2530044_Operational_1473295500_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_100266_STARLINK-38242_2530044_Operational_1473295500_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "e3377ac46fc15cd879369647156ddf715de37be508545826828e15957782d11e",
+   "bytes": 2040720,
+   "span": [
+    "2026-09-10T00:44:42.000Z",
+    "2026-09-13T00:44:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_100277_STARLINK-37550_2530055_Operational_1473296160_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_100277_STARLINK-37550_2530055_Operational_1473296160_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "58b79fcb443e1d0479b7ec55757d9ae5a667e07230f430b78dd89cd9e1e2803c",
+   "bytes": 2041015,
+   "span": [
+    "2026-09-10T00:55:42.000Z",
+    "2026-09-13T00:55:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_100308_STARLINK-38264_2530044_Operational_1473295500_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_100308_STARLINK-38264_2530044_Operational_1473295500_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "1d5554b03799d26b67ea8a735a7e7b0298ca281726ad8c914671ff3d9fb87818",
+   "bytes": 2040354,
+   "span": [
+    "2026-09-10T00:44:42.000Z",
+    "2026-09-13T00:44:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_100445_STARLINK-38325_2530046_Operational_1473295620_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_100445_STARLINK-38325_2530046_Operational_1473295620_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "0a14175f888820e7448c47c18841b4f26493ff1f5dc833cfed72b4937b74401c",
+   "bytes": 2039991,
+   "span": [
+    "2026-09-10T00:46:42.000Z",
+    "2026-09-13T00:46:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
+   "provider": "spacex-starlink",
+   "file": "20260910T125853Z--MEME_100520_STARLINK-38379_2530041_Operational_1473295320_UNCLASSIFIED.txt",
+   "role": "a5-extra",
+   "url": "https://api.starlink.com/public-files/ephemerides/MEME_100520_STARLINK-38379_2530041_Operational_1473295320_UNCLASSIFIED.txt",
+   "captured": "2026-09-10T12:58:53.898Z",
+   "sha256": "d0bd00df54294f14ae9869b9ff230c89dc9bf65f2c4ba2897a3975bf00e0e7e7",
+   "bytes": 2040693,
+   "span": [
+    "2026-09-10T00:41:42.000Z",
+    "2026-09-13T00:41:42.000Z"
+   ],
+   "samples": 4321,
+   "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-spacex-starlink.tar.gz"
+   }
+  },
+  {
    "provider": "iss",
    "file": "20260909T122151Z--ISS.OEM_J2K_EPH.txt",
    "role": "ephemeris",
@@ -8168,6 +11018,25 @@
    "span": [
     "2026-09-15T00:00:00.000Z",
     "2026-09-28T23:30:00.000Z"
+   ],
+   "samples": 672,
+   "terms": "No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-intelsat.tar.gz"
+   }
+  },
+  {
+   "provider": "intelsat",
+   "file": "20260910T124553Z--i_aor_e_342.00_is-37e_20260911_000000.txt",
+   "role": "a5-extra",
+   "url": "https://my.intelsat.com/Resource/Ephemeris/i_aor_e_342.00_is-37e_20260911_000000.txt",
+   "captured": "2026-09-10T12:45:53.330Z",
+   "sha256": "e53db6fd6c2cb598edf36f68c6a6f467e0a5fdd73790fe040373c6b1f8f585a6",
+   "bytes": 49271,
+   "span": [
+    "2026-09-11T00:00:00.000Z",
+    "2026-09-24T23:30:00.000Z"
    ],
    "samples": 672,
    "terms": "No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply).",
@@ -15677,10 +18546,10 @@
  "needsPermission": [
   {
    "name": "e4-spacex-starlink.tar.gz",
-   "bytes": 249804700,
-   "sha256": "dc994c4f241ff0537d94f3fa5c36bf298f0e2ed0ad54812d1a7197dc56e514d6",
+   "bytes": 374070986,
+   "sha256": "8d695cbbfda16f7a7cd977e7f7b50bc01ae54b2e91d585357923c0a7d49379ae",
    "provider": "spacex-starlink",
-   "members": 300,
+   "members": 450,
    "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
    "termsUrl": "https://api.starlink.com/public-files/ephemerides/MANIFEST.txt",
    "redistributionGranted": false
@@ -15688,7 +18557,7 @@
   {
    "name": "e4-css-tiangong.tar.gz",
    "bytes": 849415,
-   "sha256": "f34d3f50c4348130803044f83c89a7fe09fb18713425e5b92c9d002df80623c5",
+   "sha256": "c6868e83ad2e1768fddebfbc8504e6cb38b0c15ae37339f7375d86ed6d3e4a5c",
    "provider": "css-tiangong",
    "members": 7,
    "terms": "No license stated on cmse.gov.cn (China Manned Space Engineering Office, BACC orbit data published for space safety).",
@@ -15697,10 +18566,10 @@
   },
   {
    "name": "e4-intelsat.tar.gz",
-   "bytes": 747325,
-   "sha256": "485c526dfca29911e0c587f94d3f0502361ca2bb9eccee71c7a9335759848809",
+   "bytes": 759819,
+   "sha256": "50f16b664cc93e890c5c3a43cb616fa9a1e95a9642c14ed66a73f134cf538a2c",
    "provider": "intelsat",
-   "members": 89,
+   "members": 90,
    "terms": "No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply).",
    "termsUrl": "https://my.intelsat.com/ephemeris/public",
    "redistributionGranted": false
@@ -15708,7 +18577,7 @@
   {
    "name": "e4-ses.tar.gz",
    "bytes": 4006,
-   "sha256": "7d7b91a3714256406a6c02587c068378c2300162617782e74e0f81cd0a7e6e1f",
+   "sha256": "b3ed99153c121af643625c8f6a85b83960636db0dd06d97aab2f2f192134038b",
    "provider": "ses",
    "members": 38,
    "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
@@ -15721,157 +18590,183 @@
    "product": "ESA0OPSFIN_20262510000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2435/ESA0OPSFIN_20262510000_01D_05M_ORB.SP3.gz",
    "sha256": "45525c3b4f82509457c43a9b6ec362458eea5ad4e498cf7b16f3ce8605559d4b",
-   "objects": 53
+   "objects": 53,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262520000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2435/ESA0OPSFIN_20262520000_01D_05M_ORB.SP3.gz",
    "sha256": "83501dd3d477579d8aba07443be533efa20c3b07f5d17410de687b204b3a15ef",
-   "objects": 52
+   "objects": 52,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262530000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2435/ESA0OPSFIN_20262530000_01D_05M_ORB.SP3.gz",
    "sha256": "2a300e8495da64365532c7c486768b9f6e8256182c13c42b15409514c0be55ab",
-   "objects": 52
+   "objects": 52,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262540000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2435/ESA0OPSFIN_20262540000_01D_05M_ORB.SP3.gz",
    "sha256": "e1f6e4b4a88c4398805ced9bc0679fde5d4ace8cf1dc8d6fbef883a4688bf12a",
-   "objects": 51
+   "objects": 51,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262550000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2435/ESA0OPSFIN_20262550000_01D_05M_ORB.SP3.gz",
    "sha256": "d0e46c8c04a388719dd45045a37351f1ca93d7720173009bc35dfa3093bcc62a",
-   "objects": 52
+   "objects": 52,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262560000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262560000_01D_05M_ORB.SP3.gz",
    "sha256": "fae9a5ed9d9b2dbaa3473ab95ded0270aafcd9f730d1f1c2f1fc736e52243311",
-   "objects": 52
+   "objects": 52,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262570000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262570000_01D_05M_ORB.SP3.gz",
    "sha256": "1316a8a2c06367e2376227cadb0026b8948ac573ff9bf8ed8ede66cfa3bf3d4d",
-   "objects": 52
+   "objects": 52,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262580000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262580000_01D_05M_ORB.SP3.gz",
    "sha256": "d32648fb7fc6be179d8f1ad01f5e3d889175be2f2fa5d235d1ccaa84d37e2272",
-   "objects": 51
+   "objects": 51,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262590000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262590000_01D_05M_ORB.SP3.gz",
    "sha256": "9708123fb3191d89e41f04bc3f835012469e081007140ade0430fbbefc3517f6",
-   "objects": 53
+   "objects": 53,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262600000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262600000_01D_05M_ORB.SP3.gz",
    "sha256": "6789e3a97406c73439c71611959e785805ff1cb3c3e7a7658525c2ccfbcd8a24",
-   "objects": 53
+   "objects": 53,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262610000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262610000_01D_05M_ORB.SP3.gz",
    "sha256": "643082932c5f9ee952780ec9453ecf83562b5d2ef470cf0567fe4e71c609ee00",
-   "objects": 52
+   "objects": 52,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262620000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262620000_01D_05M_ORB.SP3.gz",
    "sha256": "355e95af7a9caef206287bd683b1ec459421fb226db031672594279a5fbbf728",
-   "objects": 53
+   "objects": 53,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "ESA0OPSFIN_20262630000_01D_05M_ORB.SP3.gz",
    "url": "https://navigation-office.esa.int/products/gnss-products/2437/ESA0OPSFIN_20262630000_01D_05M_ORB.SP3.gz",
    "sha256": "32e4b2e93352287953df93a068ef4f112031cb37a8d6aac597ceef7e9e689abc",
-   "objects": 53
+   "objects": 53,
+   "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262510000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262510000_01D_15M_ORB.SP3.gz",
    "sha256": "b1d2aea6ed46200754ac8538169a4aee41522c7e548d401b5c4cab2f3af65c0f",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262520000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262520000_01D_15M_ORB.SP3.gz",
    "sha256": "2e98a52410073e493baf974891e6707dd42cc2c64d4da7deaf7d5f92fbf96908",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262530000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262530000_01D_15M_ORB.SP3.gz",
    "sha256": "828eec2552af5d1b9ac091c48d6a53076e8d3c037dc1c469f8fb7525da735a39",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262540000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262540000_01D_15M_ORB.SP3.gz",
    "sha256": "6aa54c9ca666d6808dbce7ec6e8782641cd4632009265599eb3a1a36bf18de03",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262550000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262550000_01D_15M_ORB.SP3.gz",
    "sha256": "f9ccff46ff56a9963515ffca2efc52e7debf699f654c53c8216dfc2bcbb4ce31",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262560000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262560000_01D_15M_ORB.SP3.gz",
    "sha256": "4eb119ec22b455aabb6845b9e179953f05ddb18b49dcc30ebe453da4f4bc39f0",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262570000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262570000_01D_15M_ORB.SP3.gz",
    "sha256": "dfaf90a08ce19e15a8623f947a290c667d8d4f718797c2dbcb4d22da2e92b353",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262580000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262580000_01D_15M_ORB.SP3.gz",
    "sha256": "875bd4507fa4e400885c96b7297484da9320fb6d97740bc9e9c5e8812c7c2a4e",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262590000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262590000_01D_15M_ORB.SP3.gz",
    "sha256": "5b490f298a3b90917933659176341db274f6e17af37042cf13d48ba8a060e33f",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262600000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262600000_01D_15M_ORB.SP3.gz",
    "sha256": "41a52f1ad4ed16aa16f82b0e186532a518b3b177b7deac8aa67a8b4c7da69140",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262610000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262610000_01D_15M_ORB.SP3.gz",
    "sha256": "3050f99739f94f1de6e36ee5afc28b8c31fd8fe5d1994969b56a829f2a22898c",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262620000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262620000_01D_15M_ORB.SP3.gz",
    "sha256": "84864afe8c8feab08d9dcca962f0fb55affe83013b82709ef01a43e37414b4ad",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   },
   {
    "product": "GFZ0OPSFIN_20262630000_01D_15M_ORB.SP3.gz",
    "url": "https://isdc-data.gfz.de/gnss/products/final/w2437/GFZ0OPSFIN_20262630000_01D_15M_ORB.SP3.gz",
    "sha256": "788455cea83ea2634d108d6cd103204ba26ca814154785619a175dc7d566148f",
-   "objects": 28
+   "objects": 28,
+   "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
   }
  ]
 }
