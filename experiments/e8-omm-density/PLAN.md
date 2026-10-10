@@ -344,3 +344,26 @@ in `runs/`; only aggregates over objects are committed. The extra truth orbits a
 `analysis/reference-states/scripts/fetch-reference-products.mjs --products
 doris,gfz-rso,cosmic2` into `runs/cache/e8-reference` (manifests record
 every file's SHA-256).
+
+## Amendment 1 (2026-10-10, after the freeze, before any test-window run)
+
+The module build changes from `f258e625` to `1d700368`
+(`analysis/density-calibration`). In the validation calibration set, a
+rocket body at 892 km (NORAD 28522) has element sets whose mean
+semi-major axis rose 2.8 m over the fit, as radiation pressure can make it
+and drag cannot; its B ran towards zero and its ln B step alternated at the
+step limit, so the 186-object fits ran their 12 iterations without being
+declared converged although the correction had (last steps 0.04 K). Each
+object's ln B step is now damped when it reverses sign, and the level's
+correlation with ln B uses the precision-weighted mean ln B (the degenerate
+object no longer dominates it). The objective is unchanged. The validation
+fits made before (K = 4 and K = 16 analysis; the K = 4 forecasts; the K = 16
+forecasts, which were already running) stay as made on `f258e625`, so that
+each selection stage compares fits from one build; every test and
+historical fit uses `1d700368`.
+
+Two code corrections, no change to this plan: step 08 held out the 2026
+propagation targets in the historical windows as well, against section 3
+(historical: CHAMP, GRACE-A, GRACE-B); it was corrected and the historical
+calibration set recomputed before any use. Step 10 now writes each fit as
+it completes, so long runs can resume.
