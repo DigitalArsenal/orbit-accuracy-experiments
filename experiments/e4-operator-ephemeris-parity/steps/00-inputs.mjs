@@ -30,10 +30,41 @@ const compact = (iso) => iso.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
 const manifestPath = path.join(repoRoot, config.a4.inputs.operatorFiles);
 const published = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')).files : [];
 
+// Amendment A5's extra inputs (config.a5.extraInputs): each paired Starlink
+// object's second captured file, and every captured file of the paired
+// Intelsat satellites, as role "a5-extra".
+function a5Extras(provider, chosen, all) {
+  if (!config.a5?.extraInputs?.[provider]) return [];
+  const have = new Set(chosen.map((d) => d.sha256));
+  const byCapture = [...all].sort((a, b) => a.captured.localeCompare(b.captured) || a.url.localeCompare(b.url));
+  const seen = new Set();
+  const distinct = byCapture.filter((d) => !seen.has(d.sha256) && seen.add(d.sha256));
+  if (provider === 'spacex-starlink') {
+    const key = (d) => /MEME_(\d+)_/.exec(d.url)?.[1];
+    const objects = new Set(chosen.filter((d) => d.role === 'ephemeris').map(key));
+    const out = [];
+    for (const norad of objects) {
+      const second = distinct.filter((d) => key(d) === norad && !have.has(d.sha256))[0];
+      if (second) out.push({ ...second, role: 'a5-extra' });
+    }
+    return out;
+  }
+  if (provider === 'intelsat') {
+    const token = (d) => /_([a-z0-9-]+)_\d{8}_\d{6}\.txt$/.exec(d.url)?.[1];
+    const tokens = new Set(chosen.filter((d) => d.role === 'ephemeris').map(token));
+    return distinct.filter((d) => tokens.has(token(d)) && !have.has(d.sha256)).map((d) => ({ ...d, role: 'a5-extra' }));
+  }
+  return [];
+}
+
 // Which captured files a provider's comparison reads (config.providers.*.select).
 function select(provider, all) {
+  const chosen = selectE4(provider, all);
+  return [...chosen, ...a5Extras(provider, chosen, all)];
+}
+function selectE4(provider, all) {
   const p = config.providers[provider];
-  const listed = published.filter((e) => e.provider === provider);
+  const listed = published.filter((e) => e.provider === provider && e.role !== 'a5-extra');
   if (listed.length) {
     return listed.map((e) => {
       const d = all.find((x) => x.sha256 === e.sha256 && x.url === e.url && x.captured === e.captured);
@@ -171,10 +202,13 @@ if (values.publish) {
     const index = path.join(truth, 'reference', product, 'index.json');
     if (!fs.existsSync(index)) continue;
     const i = JSON.parse(fs.readFileSync(index, 'utf8'));
-    manifest.truth.push({ product: i.product, url: i.url, sha256: i.sha256, objects: i.objects.length });
+    const terms = Object.entries(config.truth.products).find(([key]) => i.product.startsWith(key))?.[1]?.terms ?? null;
+    manifest.truth.push({ product: i.product, url: i.url, sha256: i.sha256, objects: i.objects.length, terms });
   }
   if (manifest.truth.length) {
-    sources.push('## Truth (precise orbits, public archives, not copied here)', '', '| Product | URL | SHA-256 |', '| --- | --- | --- |',
+    sources.push('## Truth (precise orbits, public archives, not copied here)', '',
+      ...[...new Set(manifest.truth.map((t) => t.terms).filter(Boolean))].map((t) => `Terms: ${t}`), '',
+      '| Product | URL | SHA-256 |', '| --- | --- | --- |',
       ...manifest.truth.map((t) => `| ${t.product} | ${t.url} | \`${t.sha256}\` |`), '');
   }
   fs.mkdirSync(dataDir, { recursive: true });

@@ -327,7 +327,8 @@ export async function productContext(modules, run) {
   }
 
   return {
-    modules: m, sgp4Errors, sgp4Covariance, setProducts, rtnDifference,
+    // A5 reads the environment framing, the estimation codec and the SGP4 model too.
+    modules: m, sgp4Errors, sgp4Covariance, setProducts, rtnDifference, inputsFor, codec, sgp4Model,
     async destroy() { for (const x of Object.values(m)) await x.destroy(); },
   };
 }

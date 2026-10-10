@@ -23,6 +23,7 @@ import { EST_TYPE, decodeResult, positionObservation, seedStruct } from '../e2-c
 import { estEpoch } from '../e2-catalog-covariance/product.mjs';
 
 const DAY_MS = 86400000;
+export const ECOM2_TERMS = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'D4_COS', 'D4_SIN', 'B1_COS', 'B1_SIN', 'B3_COS', 'B3_SIN'];
 const table = (name, fields = {}) => Object.assign(new P[`${name}T`](), fields);
 const vector = (v) => table('FRMVector3', { X: v[0], Y: v[1], Z: v[2] });
 const gcrf = () => table('RFMCoordinateSystem', {
@@ -38,7 +39,8 @@ function encode(arm, value, size = 1 << 16) {
 // request: {epoch (ISO UTC), state [m, m/s] GCRF, samples [ISO UTC],
 //   forces {degree, order, thirdBodies [NAIF ids], drag, atmosphere, solidTides,
 //     oceanTidesDegree, earthRadiation, earthRadiationResolutionDeg, relativity},
-//   coefficients {b: Cd*A/m, agom: Cr*A/m}, parameters [{kind}] solved for
+//   coefficients {b: Cd*A/m, agom: Cr*A/m, inTrack?: m/s^2, ecom2?: {D0, ...}},
+//   parameters [{kind}] solved for
 //   (their values come from coefficients), stm (bool),
 //   covariance [(6 + p)^2] (SI, GCRF, over the state and the parameters) | null,
 //   noise {q [3] m^2/s^3 RTN, intervalSeconds} | null, integrator {tolerance, maxStep}}
@@ -62,6 +64,10 @@ export function executionFrame(request) {
     EARTH_RADIATION_RESOLUTION_DEG: f.earthRadiationResolutionDeg ?? 15,
     OCEAN_TIDES: f.oceanTidesDegree ? P.prwOceanTideModel.FES2004 : P.prwOceanTideModel.NONE,
     OCEAN_TIDE_MAXIMUM_DEGREE: f.oceanTidesDegree ?? 30, OCEAN_TIDE_MAXIMUM_ORDER: f.oceanTidesDegree ?? 30,
+    // A5: a constant in-track acceleration and ECOM2 terms on top of the
+    // cannonball, when the request carries them.
+    ...(c.inTrack !== undefined ? { IN_TRACK_ACCELERATION_M_S2: c.inTrack, HAS_IN_TRACK_ACCELERATION_M_S2: true } : {}),
+    ...(c.ecom2 ? { ECOM2: table('PRWEcom2', Object.fromEntries(ECOM2_TERMS.map((t) => [`${t}_M_S2`, c.ecom2[t] ?? 0]))) } : {}),
   });
   const execution = table('PRWExecutionRequest', {
     INITIAL: table('PRWResidentState', {
@@ -277,6 +283,8 @@ export function withParameters(fixed, parameters, values) {
   parameters.forEach((p, i) => {
     if (p.kind === 'DRAG_AREA_OVER_MASS') out.b = values[i];
     else if (p.kind === 'SRP_AREA_OVER_MASS') out.agom = values[i];
+    else if (p.kind === 'IN_TRACK_ACCELERATION') out.inTrack = values[i];
+    else if (p.kind.startsWith('ECOM2_')) out.ecom2 = { ...(out.ecom2 ?? {}), [p.kind.slice(6)]: values[i] };
     else throw new Error(`unknown parameter ${p.kind}`);
   });
   return out;
@@ -289,17 +297,18 @@ export async function fitArc({ estimation, hpop, codec }, inputs, reference, obs
       process_noise_spectral_density: Array(6).fill(0), state_convergence_tolerance: 0, rms_convergence_tolerance: 0, sigma_edit_threshold: 0,
       dynamic_model_correlation_time_seconds: 0, maximum_iterations: 0, reference_frame: 'ICRF', estimator: 'BATCH_WEIGHTED_LEAST_SQUARES', process_noise: 'NONE', flags: 0,
     },
-    extended_observations: observations.map((o) => ({
-      observation: { ...positionObservation(estEpoch(o.epoch), [0, 0, 0]), kind: 'POSITION_VELOCITY', value_count: 6 },
-      values: o.state, sigmas: [1, 1, 1, 1, 1, 1],
-    })),
+    // A4: full states with RTN covariances. A5 also fits positions (3
+    // values) with covariances in the request axes (settings.covarianceAxes).
+    extended_observations: observations.map((o) => (o.state.length === 3
+      ? { observation: positionObservation(estEpoch(o.epoch), [0, 0, 0]), values: o.state, sigmas: [1, 1, 1] }
+      : { observation: { ...positionObservation(estEpoch(o.epoch), [0, 0, 0]), kind: 'POSITION_VELOCITY', value_count: 6 }, values: o.state, sigmas: [1, 1, 1, 1, 1, 1] })),
     propagator_port_id: 'propagator/hpop', propagator_capability: 'plugin_propagate plugin_compute_stm',
     batch_options: {
       parameter_kinds: settings.parameters.map((p) => P.prwDynamicParameter[p.kind]),
       parameter_values: settings.parameters.map((p) => p.value),
       apriori_covariance: settings.apriori,
       observation_covariances: observations.flatMap((o) => o.covariance),
-      covariance_axes: 1,
+      covariance_axes: (settings.covarianceAxes ?? 'RTN') === 'RTN' ? 1 : 0,
       maximum_iterations: settings.fit.maximumIterations, correction_tolerance: settings.fit.correctionTolerance, sigma_edit_threshold: settings.fit.sigmaEditThreshold,
     },
   };

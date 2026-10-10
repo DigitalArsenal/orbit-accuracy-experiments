@@ -237,3 +237,106 @@ stand except as stated here; `config.json` `a4` holds the numbers.
   `data/e4/MANIFEST.json` lists. SES reads its 38 captured files.
 - **Wording.** Where this plan says TLE, read element set (OMM). The file
   `planet_mc.tle` keeps the name Planet gives it.
+
+**A5 (2026-10-10, after the A4 report, before any A5 product was
+computed). Full-force HPOP fitted to the operators' ephemerides.** The
+owner's requirement of 2026-10-10: "starlink should be fitted to the
+ephemeris and same with all operator data that has ephemeris." A5 adds two
+products and keeps every A4 product and result. `config.json` `a5` holds
+the numbers.
+
+- **Pairs and cutoffs.** A5 uses E4's object-files and cutoffs T_c, with
+  some restrictions to keep compute in bounds:
+  - Planet: the first states file captured on 2026-09-12 and on 2026-09-13
+    (three days of history before, later states after).
+  - GPS and GLONASS: the first file captured each UTC day.
+  - esa-pod is left out. Its files are definitive, issued after their
+    spans, so no file of the same object is issued before its cutoff.
+    GNSS is covered by `gps-precise` and `glonass-precise`.
+  - Every other provider: all of E4's object-files.
+  The pairs, cutoffs, validation split and scoring references are written
+  to `results/e4/a5/pairs.json`. E11's OMM fit and E9 use the same pairs.
+- **Information (the rule shared with E11).** The fit uses only the paired
+  file. T_c is the file's stated creation (MEME `created`, OEM
+  `CREATION_DATE`, CPF H1, the Intelsat file-name timestamp), else its
+  capture time. The Space-Track baseline S is the latest element set with
+  `EPOCH` ≤ T_c and `CREATION_DATE` ≤ T_c (section 2). Files issued after
+  T_c serve only as references. Extra inputs from the provider nodes:
+  - each Starlink object's second captured file, where the node holds one;
+  - every captured Intelsat file of the paired satellites.
+  They are listed in `data/e4/MANIFEST.json` like the rest and held under
+  each provider's terms. The provider nodes stopped capturing in mid
+  September, so these pairs predate E11's CelesTrak SupGP archive. A rerun
+  on E11's shared capture (from 2026-10-10), paired with SupGP by E11's
+  rules, needs seven days of data past each pair and is a later
+  amendment.
+- **EPH-direct.** The newest operator ephemeris issued by T_c, interpolated
+  within its span, scored as the operator's own product.
+- **EPH-fit.** propagator/hpop 1.2.0 with A4's full force model, fitted by
+  `analysis/estimation` `fit_batch` to the paired file's states in a window
+  around T_c. The force-table row follows the provider: LEO for Starlink, ISS, Tianhe and
+  Planet; MEO for GPS, GLONASS and Galileo (the two eccentric Galileo
+  satellites included); GEO for Intelsat and SES.
+  - Window: three candidates within the paired file, past/future hours
+    about T_c `near` 6/6, `day` 24/24 and `span` 24/72. Planet's file
+    holds one state per satellite, so its EPH-fit is that state propagated
+    with the full force model (Cd·A/m from B*), with no fit. Its covariance
+    is the stated σ on each axis (10 m and 0.01 m/s).
+  - Window choice: per provider, on the validation objects (NORAD number
+    divisible by 4), the candidate with the smallest median 3D error
+    beyond the paired file's span. Where nothing is scored beyond the
+    span, the comparison uses within-span epochs against later references
+    or truth. Ties go to the shorter window. A provider with fewer than
+    10 validation object-files takes the choice of its regime's largest
+    provider (LEO Starlink, MEO GPS, GEO Intelsat). Test results are the
+    remaining objects with the chosen window.
+  - Observations: every 600 s in LEO and every 1800 s at MEO and GEO.
+    - Starlink: position and velocity, weighted by SpaceX's 6×6 UVW (=
+      RTN) covariance at each epoch.
+    - Other providers: positions, with a stated sigma per provider
+      (`a5.observations.sigmaM`).
+  - Parameters:
+    - LEO: Cd·A/m, with its a priori from B* of E4's set at T_c and
+      σ 0.02 m²/kg, and a constant in-track acceleration (a priori 0,
+      σ 1e-6 m/s²).
+    - GNSS: ECOM2 D0, B0, B1 cos and B1 sin (a priori 0, σ 2e-9 m/s²) on
+      the nominal cannonball.
+    - GEO: Cr·A/m (nominal, σ half of it) and the in-track acceleration.
+  - Manoeuvres: not segmented. The in-track acceleration absorbs planned
+    burns and continuous thrust (the in-track fallback); the estimation
+    v2 lane (bounded coefficients, empirical accelerations) had not
+    landed. If an iteration proposes a negative Cd·A/m or Cr·A/m, which
+    propagator/hpop refuses, the arc is refitted once with that
+    coefficient fixed at its a priori, and the product records the
+    refit.
+  - Product: the state at the first observation at or after T_c (for
+    Planet's past-only windows, at the last observation), the formal
+    covariance times max(1, reduced χ²), and the parameters. These are
+    propagated with the fitted parameters.
+- **Scoring.** Differences are in the reference state's RTN axes.
+  - (a) Within the span: EPH-fit against EPH-direct at E4's horizons.
+  - (b) Beyond the span: EPH-fit at 6 h, 1 d, 3 d and 7 d after the end
+    of the paired file's span. These are the fit span of the `span`
+    window and E11's horizons, and the same epochs serve every window.
+    For Planet, the targets are those times after T_c.
+  - (c) Against truth: ESA0OPSFIN and GFZ0OPSFIN for GNSS, at E4's
+    horizons and beyond the span. Otherwise against later operator files
+    (the newest issued after T_c that covers the epoch, labelled "later
+    operator ephemeris"), or later Planet states within ±6 h of the
+    target.
+  - (d) S (SGP4 from E4's set at T_c) at every scored epoch, and A4's
+    H-arc and H-epoch at E4's horizons, from the A4 runs and paired by
+    file, object and epoch. A4's products beyond the span are not
+    recomputed.
+  - (e) EPH-fit covariance realism against truth or the reference: mean
+    d²/3 and the fraction inside the 95 % ellipsoid.
+- **Products for E9.** `runs/<id>/products.jsonl`, kept local. Per pair:
+  - the GCRF state and its (6 + p)² covariance at the reference epoch;
+  - the parameters and their kinds;
+  - the forces;
+  - the window and the operator files used;
+  - the refit flag.
+- **Data.** Results use every operator's data. Files whose terms do not
+  grant redistribution stay held, and only aggregates are committed.
+  `data/e4/SOURCES.md` gives a license line for every source, truth
+  included.

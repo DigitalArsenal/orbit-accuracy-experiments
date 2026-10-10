@@ -209,7 +209,8 @@
     "products": {
       "ESA0OPSFIN": {
         "url": "https://navigation-office.esa.int/products/gnss-products/{week}/ESA0OPSFIN_{yyyyddd}0000_01D_05M_ORB.SP3.gz",
-        "systems": ["G", "R"]
+        "systems": ["G", "R"],
+        "terms": "ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS."
       },
       "COD0MGXFIN": {
         "url": "http://ftp.aiub.unibe.ch/CODE_MGEX/CODE/{yyyy}/COD0MGXFIN_{yyyyddd}0000_01D_05M_ORB.SP3.gz",
@@ -220,7 +221,8 @@
       "GFZ0OPSFIN": {
         "url": "https://isdc-data.gfz.de/gnss/products/final/w{week}/GFZ0OPSFIN_{yyyyddd}0000_01D_15M_ORB.SP3.gz",
         "systems": ["E"],
-        "note": "GFZ's operational final orbits (GFZ ISDC), with Galileo; amendment A4"
+        "note": "GFZ's operational final orbits (GFZ ISDC), with Galileo; amendment A4",
+        "terms": "GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS."
       }
     }
   },
@@ -330,5 +332,65 @@
       "eopLatencyDays": 1,
       "note": "Released at the issue time (E7's operational rule): IERS finals2000A rows to the day before, the last one held; NRLMSISE-00 space weather from GFZ Potsdam's observed Kp, ap and F10.7 before the day of the newest NOAA SWPC RSGA issued by then, that report's values and 3-day predictions, then the third day held."
     }
+  },
+  "a5": {
+    "decided": "2026-10-10, amendment A5, after the A4 report and before any A5 product was computed",
+    "requirement": "owner 2026-10-10: \"starlink should be fitted to the ephemeris and same with all operator data that has ephemeris\"",
+    "pairs": {
+      "rule": "E4's object-files and cutoffs, restricted as below; results/e4/a5/pairs.json lists them for E11 and E9",
+      "providers": ["spacex-starlink", "iss", "css-tiangong", "planet", "intelsat", "ses", "gps-precise", "glonass-precise", "cpf"],
+      "excluded": { "esa-pod": "definitive files issued after their spans: no file of the same object is issued before its cutoff; GNSS is covered by gps-precise and glonass-precise" },
+      "planet": { "cutoffDays": ["2026-09-12", "2026-09-13"], "rule": "the first states file captured on each of these UTC days" },
+      "firstFilePerDay": ["gps-precise", "glonass-precise"]
+    },
+    "split": {
+      "validation": "objects whose NORAD number is divisible by 4",
+      "minimumValidationPairs": 10,
+      "fallbackProvider": { "LEO": "spacex-starlink", "MEO": "gps-precise", "GEO": "intelsat" }
+    },
+    "information": "the fit uses only the paired file; T_c is its stated creation (MEME created, OEM CREATION_DATE, CPF H1, Intelsat file-name timestamp), else its capture time; files issued after T_c are references only (the rule shared with E11)",
+    "extraInputs": {
+      "spacex-starlink": "the second captured file of each paired object, where the node holds one",
+      "intelsat": "every captured file of the paired satellites"
+    },
+    "windows": {
+      "default": { "near": [6, 6], "day": [24, 24], "span": [24, 72] },
+      "unit": "[past, future] hours about the cutoff, within the paired file's span",
+      "planet": "one state per satellite: EPH-fit is that state propagated with the full force model (Cd*A/m from B*), no fit, covariance from planetStateSigma",
+      "planetStateSigma": [10, 0.01],
+      "order": ["near", "day", "span"],
+      "choice": "per provider, the candidate with the smallest median 3D error beyond the paired file's span (else within it, against later references or truth) on the validation objects; ties to the shorter window"
+    },
+    "forceRow": { "spacex-starlink": "LEO", "iss": "LEO", "css-tiangong": "LEO", "planet": "LEO", "gps-precise": "MEO", "glonass-precise": "MEO", "cpf": "MEO", "intelsat": "GEO", "ses": "GEO" },
+    "samplingSeconds": { "LEO": 600, "MEO": 1800, "GEO": 1800 },
+    "observations": {
+      "spacex-starlink": "position and velocity, weighted by SpaceX's 6x6 UVW (= RTN) covariance at the epoch",
+      "others": "position only, isotropic sigma (m)",
+      "sigmaM": { "iss": 50, "css-tiangong": 50, "planet": 10, "intelsat": 100, "ses": 100, "gps-precise": 1, "glonass-precise": 1, "cpf": 1 }
+    },
+    "parameters": {
+      "LEO": [
+        { "kind": "DRAG_AREA_OVER_MASS", "apriori": "bstar", "sigma": 0.02 },
+        { "kind": "IN_TRACK_ACCELERATION", "apriori": 0, "sigma": 1e-6 }
+      ],
+      "MEO": [
+        { "kind": "ECOM2_D0", "apriori": 0, "sigma": 2e-9 },
+        { "kind": "ECOM2_B0", "apriori": 0, "sigma": 2e-9 },
+        { "kind": "ECOM2_B1_COS", "apriori": 0, "sigma": 2e-9 },
+        { "kind": "ECOM2_B1_SIN", "apriori": 0, "sigma": 2e-9 }
+      ],
+      "GEO": [
+        { "kind": "SRP_AREA_OVER_MASS", "apriori": "nominal", "relativeSigma": 0.5 },
+        { "kind": "IN_TRACK_ACCELERATION", "apriori": 0, "sigma": 1e-6 }
+      ]
+    },
+    "maneuvers": "not segmented: one constant in-track acceleration per arc (the in-track fallback; estimation v2 had not landed). An iteration proposing a negative Cd*A/m or Cr*A/m ends the fit; the arc is refitted once with that coefficient fixed at its a priori, and the product records the refit.",
+    "aprioriStateSigma": [1000, 1000, 1000, 1, 1, 1],
+    "fit": { "maximumIterations": 20, "correctionTolerance": 0.001, "sigmaEditThreshold": 0 },
+    "beyondHours": [6, 24, 72, 168],
+    "beyondFrom": "the end of the paired file's span (E11's horizons; the same epochs for every window); Planet: T_c",
+    "referenceToleranceSeconds": 1800,
+    "planetReferenceToleranceHours": 6,
+    "products": "runs/<id>/products.jsonl (local): per pair the GCRF state and (6 + p)^2 covariance at the reference epoch, parameters and kinds, forces, window, operator files and the refit flag"
   }
 }
