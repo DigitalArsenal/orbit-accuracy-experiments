@@ -1,6 +1,6 @@
 {
  "experiment": "e4-operator-ephemeris-parity",
- "generated": "2026-10-09T17:24:42.264Z",
+ "generated": "2026-10-10T07:27:38.409Z",
  "note": "Every operator file E4 reads. SHA-256 is of the file as the operator served it.",
  "files": [
   {
@@ -8177,6 +8177,538 @@
    }
   },
   {
+   "provider": "ses",
+   "file": "20260909T122613Z--A1L_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A1L_THRU.I11",
+   "captured": "2026-09-09T12:26:13.965Z",
+   "sha256": "0197b80ce9a8a581831107b4d7e47571bc3782d27a61b23d3cdab4dd460740db",
+   "bytes": 1120,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122613Z--A1M_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A1M_THRU.I11",
+   "captured": "2026-09-09T12:26:13.965Z",
+   "sha256": "2a163dc40252c0fa0235cd6325b3cede893efbe54a9ebd74c1250776016a20b0",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122613Z--A1N_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A1N_THRU.I11",
+   "captured": "2026-09-09T12:26:13.965Z",
+   "sha256": "a640715bb0061e999c1820ac496bcbca5750b5db38f12583c75c326bac6f7eb0",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122613Z--A2E_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A2E_THRU.I11",
+   "captured": "2026-09-09T12:26:13.965Z",
+   "sha256": "3d2dcb527de06c42848b1425ec1e969aef7cef3356b2033d623019cef0a8f188",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122644Z--A2F_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A2F_THRU.I11",
+   "captured": "2026-09-09T12:26:44.846Z",
+   "sha256": "fa13a93182033b2cccdfe15d8be344d0875908f8fa3e9333d46491aaf746ddab",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122650Z--A2G_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A2G_THRU.I11",
+   "captured": "2026-09-09T12:26:50.312Z",
+   "sha256": "db804f465be1dc6a3e3667c4026f26f5ff346ad5ee3d2fc49df0d883136c58c0",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122650Z--A3B_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A3B_THRU.I11",
+   "captured": "2026-09-09T12:26:50.312Z",
+   "sha256": "3c32aa037c616b0755404da46f1a5b80eb27c1fdb92e58f4edd9a31d44fb2b93",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122650Z--A4B_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A4B_THRU.I11",
+   "captured": "2026-09-09T12:26:50.312Z",
+   "sha256": "8de8aa28e361f45d5e056afe18b06d0ba24a29290ad612d938a3dc3cd484fa89",
+   "bytes": 1110,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122744Z--A5B_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/A5B_THRU.I11",
+   "captured": "2026-09-09T12:27:44.843Z",
+   "sha256": "21e50281883345dd93dbbd18f9fee7619a474d90ad8b8c10c670dd96217f06ac",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122749Z--AKR_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/AKR_THRU.I11",
+   "captured": "2026-09-09T12:27:49.777Z",
+   "sha256": "7b9d84ae81dbe0f255795332bc1f37721ad577d7eee4b9dcd7bf3c5b9e12c057",
+   "bytes": 1118,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122749Z--M03_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/M03_THRU.I11",
+   "captured": "2026-09-09T12:27:49.777Z",
+   "sha256": "dc51435c27d261a4a0b3e235016994efb343bf55994e71bc6760423d3b1f771d",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122749Z--M06_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/M06_THRU.I11",
+   "captured": "2026-09-09T12:27:49.777Z",
+   "sha256": "7c99d0df0d493fec9b2658bdaef9eda7da6aa1e26dd958a70a0aaa2c2a67400f",
+   "bytes": 1118,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122845Z--M11_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/M11_THRU.I11",
+   "captured": "2026-09-09T12:28:45.215Z",
+   "sha256": "44ae70db15456fb7be0b12db2b6ee07f323288ffcb22dc620dcaeaa3878fe145",
+   "bytes": 1120,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122850Z--M15_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/M15_THRU.I11",
+   "captured": "2026-09-09T12:28:50.168Z",
+   "sha256": "02a0e8d945aa8f7775c9d1eaefab9f2743ec629dd60284290c8f94853ee08494",
+   "bytes": 1119,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122850Z--M21_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/M21_THRU.I11",
+   "captured": "2026-09-09T12:28:50.168Z",
+   "sha256": "8453e3bed9ce5b395c0e4aa62332510a008957a64fe72018a48a9ea0d473d6a5",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122850Z--N09_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/N09_THRU.I11",
+   "captured": "2026-09-09T12:28:50.168Z",
+   "sha256": "10a54f36570c44bda24b86323ddf53093576541e19e1413b1bfa75e1958c07f4",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122945Z--N10_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/N10_THRU.I11",
+   "captured": "2026-09-09T12:29:45.458Z",
+   "sha256": "6a44748e39f7446dcad47cc0992569cfe5993b947acbd78c2b0f318d6bc75aa7",
+   "bytes": 1118,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122950Z--N11_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/N11_THRU.I11",
+   "captured": "2026-09-09T12:29:50.380Z",
+   "sha256": "71ced058b19d9a6e8381970c02570ff59ecbeb9e565a3df6950876ddadb17a3a",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122950Z--N12_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/N12_THRU.I11",
+   "captured": "2026-09-09T12:29:50.380Z",
+   "sha256": "7b4987e94694c3ecd2c62ab561de9066f614f53eb61cdd62184707bb5d499ad2",
+   "bytes": 1115,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T122950Z--S01_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S01_THRU.I11",
+   "captured": "2026-09-09T12:29:50.380Z",
+   "sha256": "935a9fb2ee002d7aa4eafd76678209a773348d06d21d58b874795d622ba26f7b",
+   "bytes": 1118,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123044Z--S02_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S02_THRU.I11",
+   "captured": "2026-09-09T12:30:44.846Z",
+   "sha256": "41b8d38a8b514a91bc8ca4916a1b9f4ca385202204b5ceb47dfa235901854b4e",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123049Z--S03_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S03_THRU.I11",
+   "captured": "2026-09-09T12:30:49.783Z",
+   "sha256": "441b01ce3ecc46b77e2b31c37aabd5c6f92bdc69b60c498281273d0e3e98eab6",
+   "bytes": 1119,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123049Z--S04_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S04_THRU.I11",
+   "captured": "2026-09-09T12:30:49.783Z",
+   "sha256": "736c97dfce1af0bae347c85c7b517659b7d82817914d8359975b849e4793ec83",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123049Z--S06_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S06_THRU.I11",
+   "captured": "2026-09-09T12:30:49.783Z",
+   "sha256": "72554525510eb92516c0f61f80e8340f2438959dcd326ed856f756e524a99995",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123144Z--S07_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S07_THRU.I11",
+   "captured": "2026-09-09T12:31:44.839Z",
+   "sha256": "fe430f59f9400ae719181f93fc752ddd7c0bb3f33b03732f979ee4dae8c44a37",
+   "bytes": 1116,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123149Z--S08_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S08_THRU.I11",
+   "captured": "2026-09-09T12:31:49.809Z",
+   "sha256": "cd2a283aae41b63be75243f7d7202001cef5427708c42e402462010efeeadb27",
+   "bytes": 1114,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123149Z--S09_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S09_THRU.I11",
+   "captured": "2026-09-09T12:31:49.809Z",
+   "sha256": "962b22e1398a7140d92eae27b6a358eff16ae8b4d233669acfd76717cf5fc191",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123149Z--S10_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S10_THRU.I11",
+   "captured": "2026-09-09T12:31:49.809Z",
+   "sha256": "aaf564e08c22d5de66b5def34230b4d4f3f41d3b22d11dbd694305af647564c9",
+   "bytes": 1117,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123244Z--S11_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S11_THRU.I11",
+   "captured": "2026-09-09T12:32:44.703Z",
+   "sha256": "f5db95697091b3a22705c0d9067680d15ecef3575f67809dfb8cbc0fcd22f989",
+   "bytes": 1119,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123249Z--S12_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S12_THRU.I11",
+   "captured": "2026-09-09T12:32:49.808Z",
+   "sha256": "eb8c3af991a54c9f01e4c87e15bbd0ef9b9bad813ce734d8c47d7eddc2e2315c",
+   "bytes": 1115,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123249Z--S14_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S14_THRU.I11",
+   "captured": "2026-09-09T12:32:49.808Z",
+   "sha256": "777d857c8c78499d14bfdcc27b24197bf6d396400f68bed0326b512c01e41c8d",
+   "bytes": 1118,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123249Z--S15_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S15_THRU.I11",
+   "captured": "2026-09-09T12:32:49.808Z",
+   "sha256": "7bd11dc54831165addcdae74dcebf8a8d7a751ef1636ebb34c2f95130e045f43",
+   "bytes": 1120,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123344Z--S18_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S18_THRU.I11",
+   "captured": "2026-09-09T12:33:44.554Z",
+   "sha256": "c1a36fcf57f6a590c53c77ac8b05f203279cf6ba771d7fcbcb2d490841e20fc3",
+   "bytes": 1119,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123349Z--S19_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S19_THRU.I11",
+   "captured": "2026-09-09T12:33:49.516Z",
+   "sha256": "ff9ab48506cae272ae157f227ffac94ad757c7fc92cc50d03016685bab49ac16",
+   "bytes": 1120,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123349Z--S20_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S20_THRU.I11",
+   "captured": "2026-09-09T12:33:49.516Z",
+   "sha256": "72b661db690280aaf8051446bdd37fffa5a8125362311c50c136dfefb8c2db87",
+   "bytes": 1119,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123349Z--S21_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S21_THRU.I11",
+   "captured": "2026-09-09T12:33:49.516Z",
+   "sha256": "d6944c5a7f23757cf68f3f6fffefc34e12556ac4e7072ec176bd878988e4d9d6",
+   "bytes": 1119,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123444Z--S22_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S22_THRU.I11",
+   "captured": "2026-09-09T12:34:44.473Z",
+   "sha256": "ef85d999f64c712201e6e3737879939bb56593ea3e945de628e12990ae31de4c",
+   "bytes": 1120,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
+   "provider": "ses",
+   "file": "20260909T123449Z--S24_THRU.I11",
+   "role": "ephemeris",
+   "url": "https://ses-satellite-orbital-data-public.s3.eu-west-1.amazonaws.com/public/ephemeris/S24_THRU.I11",
+   "captured": "2026-09-09T12:34:49.433Z",
+   "sha256": "9a55ecc27eb29be35663665648930a17eb2475eb43ae4cf23e12712a4627eec1",
+   "bytes": 1114,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "published": {
+    "where": "needs-permission",
+    "asset": "e4-ses.tar.gz"
+   }
+  },
+  {
    "provider": "gps-precise",
    "file": "20260909T122922Z--IGS0OPSULT_20262510600_02D_15M_ORB.SP3.gz",
    "role": "ephemeris",
@@ -15145,8 +15677,8 @@
  "needsPermission": [
   {
    "name": "e4-spacex-starlink.tar.gz",
-   "bytes": 249804675,
-   "sha256": "82200d92a4dcf33b8ae002636d85ba196547e387c57af8a3872a12db7efcd4df",
+   "bytes": 249804700,
+   "sha256": "dc994c4f241ff0537d94f3fa5c36bf298f0e2ed0ad54812d1a7197dc56e514d6",
    "provider": "spacex-starlink",
    "members": 300,
    "terms": "No license stated at api.starlink.com/public-files; published by SpaceX for space safety.",
@@ -15155,8 +15687,8 @@
   },
   {
    "name": "e4-css-tiangong.tar.gz",
-   "bytes": 849409,
-   "sha256": "595536486e4adb7f2fe949acaf348dbca3b0eab46b6446b1d6e064dc26ad6f05",
+   "bytes": 849415,
+   "sha256": "f34d3f50c4348130803044f83c89a7fe09fb18713425e5b92c9d002df80623c5",
    "provider": "css-tiangong",
    "members": 7,
    "terms": "No license stated on cmse.gov.cn (China Manned Space Engineering Office, BACC orbit data published for space safety).",
@@ -15165,12 +15697,22 @@
   },
   {
    "name": "e4-intelsat.tar.gz",
-   "bytes": 747339,
-   "sha256": "37b6d34e4e5584ff97b7a926b124176e1a879b143a4cd12141bbe32595001850",
+   "bytes": 747325,
+   "sha256": "485c526dfca29911e0c587f94d3f0502361ca2bb9eccee71c7a9335759848809",
    "provider": "intelsat",
    "members": 89,
    "terms": "No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply).",
    "termsUrl": "https://my.intelsat.com/ephemeris/public",
+   "redistributionGranted": false
+  },
+  {
+   "name": "e4-ses.tar.gz",
+   "bytes": 4006,
+   "sha256": "7d7b91a3714256406a6c02587c068378c2300162617782e74e0f81cd0a7e6e1f",
+   "provider": "ses",
+   "members": 38,
+   "terms": "No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply).",
+   "termsUrl": "https://www.ses.com/our-coverage/ephemeris",
    "redistributionGranted": false
   }
  ],
@@ -15252,6 +15794,84 @@
    "url": "https://navigation-office.esa.int/products/gnss-products/2437/ESA0OPSFIN_20262630000_01D_05M_ORB.SP3.gz",
    "sha256": "32e4b2e93352287953df93a068ef4f112031cb37a8d6aac597ceef7e9e689abc",
    "objects": 53
+  },
+  {
+   "product": "GFZ0OPSFIN_20262510000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262510000_01D_15M_ORB.SP3.gz",
+   "sha256": "b1d2aea6ed46200754ac8538169a4aee41522c7e548d401b5c4cab2f3af65c0f",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262520000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262520000_01D_15M_ORB.SP3.gz",
+   "sha256": "2e98a52410073e493baf974891e6707dd42cc2c64d4da7deaf7d5f92fbf96908",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262530000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262530000_01D_15M_ORB.SP3.gz",
+   "sha256": "828eec2552af5d1b9ac091c48d6a53076e8d3c037dc1c469f8fb7525da735a39",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262540000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262540000_01D_15M_ORB.SP3.gz",
+   "sha256": "6aa54c9ca666d6808dbce7ec6e8782641cd4632009265599eb3a1a36bf18de03",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262550000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262550000_01D_15M_ORB.SP3.gz",
+   "sha256": "f9ccff46ff56a9963515ffca2efc52e7debf699f654c53c8216dfc2bcbb4ce31",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262560000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262560000_01D_15M_ORB.SP3.gz",
+   "sha256": "4eb119ec22b455aabb6845b9e179953f05ddb18b49dcc30ebe453da4f4bc39f0",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262570000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262570000_01D_15M_ORB.SP3.gz",
+   "sha256": "dfaf90a08ce19e15a8623f947a290c667d8d4f718797c2dbcb4d22da2e92b353",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262580000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262580000_01D_15M_ORB.SP3.gz",
+   "sha256": "875bd4507fa4e400885c96b7297484da9320fb6d97740bc9e9c5e8812c7c2a4e",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262590000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262590000_01D_15M_ORB.SP3.gz",
+   "sha256": "5b490f298a3b90917933659176341db274f6e17af37042cf13d48ba8a060e33f",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262600000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262600000_01D_15M_ORB.SP3.gz",
+   "sha256": "41a52f1ad4ed16aa16f82b0e186532a518b3b177b7deac8aa67a8b4c7da69140",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262610000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262610000_01D_15M_ORB.SP3.gz",
+   "sha256": "3050f99739f94f1de6e36ee5afc28b8c31fd8fe5d1994969b56a829f2a22898c",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262620000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262620000_01D_15M_ORB.SP3.gz",
+   "sha256": "84864afe8c8feab08d9dcca962f0fb55affe83013b82709ef01a43e37414b4ad",
+   "objects": 28
+  },
+  {
+   "product": "GFZ0OPSFIN_20262630000_01D_15M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/final/w2437/GFZ0OPSFIN_20262630000_01D_15M_ORB.SP3.gz",
+   "sha256": "788455cea83ea2634d108d6cd103204ba26ca814154785619a175dc7d566148f",
+   "objects": 28
   }
  ]
 }

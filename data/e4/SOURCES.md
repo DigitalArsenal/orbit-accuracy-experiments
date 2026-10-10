@@ -10,7 +10,7 @@ provider's terms, stated below. Element sets (Space-Track) are not published.
 
 Terms: No license stated at api.starlink.com/public-files; published by SpaceX for space safety. (https://api.starlink.com/public-files/ephemerides/MANIFEST.txt)
 
-300 file(s) in release asset `e4-spacex-starlink.tar.gz` (249.8 MB, SHA-256 82200d92a4dcf33b8ae002636d85ba196547e387c57af8a3872a12db7efcd4df): prepared but not published, because the provider states no license that grants redistribution.
+300 file(s) in release asset `e4-spacex-starlink.tar.gz` (249.8 MB, SHA-256 dc994c4f241ff0537d94f3fa5c36bf298f0e2ed0ad54812d1a7197dc56e514d6): prepared but not published, because the provider states no license that grants redistribution.
 
 ## iss
 
@@ -27,7 +27,7 @@ Terms: NASA (JSC FOD TOPO) public data; a U.S. Government work, not subject to c
 
 Terms: No license stated on cmse.gov.cn (China Manned Space Engineering Office, BACC orbit data published for space safety). (https://www.cmse.gov.cn/gfgg/zgkjzgdcs/)
 
-7 file(s) in release asset `e4-css-tiangong.tar.gz` (0.8 MB, SHA-256 595536486e4adb7f2fe949acaf348dbca3b0eab46b6446b1d6e064dc26ad6f05): prepared but not published, because the provider states no license that grants redistribution.
+7 file(s) in release asset `e4-css-tiangong.tar.gz` (0.8 MB, SHA-256 f34d3f50c4348130803044f83c89a7fe09fb18713425e5b92c9d002df80623c5): prepared but not published, because the provider states no license that grants redistribution.
 
 ## planet
 
@@ -68,7 +68,13 @@ Terms: Copyright Planet Labs PBC; orbital ephemerides licensed under CC BY-NC 4.
 
 Terms: No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply). (https://my.intelsat.com/ephemeris/public)
 
-89 file(s) in release asset `e4-intelsat.tar.gz` (0.7 MB, SHA-256 37b6d34e4e5584ff97b7a926b124176e1a879b143a4cd12141bbe32595001850): prepared but not published, because the provider states no license that grants redistribution.
+89 file(s) in release asset `e4-intelsat.tar.gz` (0.7 MB, SHA-256 485c526dfca29911e0c587f94d3f0502361ca2bb9eccee71c7a9335759848809): prepared but not published, because the provider states no license that grants redistribution.
+
+## ses
+
+Terms: No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply). (https://www.ses.com/our-coverage/ephemeris)
+
+38 file(s) in release asset `e4-ses.tar.gz` (0.0 MB, SHA-256 7d7b91a3714256406a6c02587c068378c2300162617782e74e0f81cd0a7e6e1f): prepared but not published, because the provider states no license that grants redistribution.
 
 ## gps-precise
 
@@ -411,4 +417,17 @@ Terms: ILRS consolidated prediction format files from the ESA/ESOC Navigation Su
 | ESA0OPSFIN_20262610000_01D_05M_ORB.SP3.gz | https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262610000_01D_05M_ORB.SP3.gz | `643082932c5f9ee952780ec9453ecf83562b5d2ef470cf0567fe4e71c609ee00` |
 | ESA0OPSFIN_20262620000_01D_05M_ORB.SP3.gz | https://navigation-office.esa.int/products/gnss-products/2436/ESA0OPSFIN_20262620000_01D_05M_ORB.SP3.gz | `355e95af7a9caef206287bd683b1ec459421fb226db031672594279a5fbbf728` |
 | ESA0OPSFIN_20262630000_01D_05M_ORB.SP3.gz | https://navigation-office.esa.int/products/gnss-products/2437/ESA0OPSFIN_20262630000_01D_05M_ORB.SP3.gz | `32e4b2e93352287953df93a068ef4f112031cb37a8d6aac597ceef7e9e689abc` |
+| GFZ0OPSFIN_20262510000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262510000_01D_15M_ORB.SP3.gz | `b1d2aea6ed46200754ac8538169a4aee41522c7e548d401b5c4cab2f3af65c0f` |
+| GFZ0OPSFIN_20262520000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262520000_01D_15M_ORB.SP3.gz | `2e98a52410073e493baf974891e6707dd42cc2c64d4da7deaf7d5f92fbf96908` |
+| GFZ0OPSFIN_20262530000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262530000_01D_15M_ORB.SP3.gz | `828eec2552af5d1b9ac091c48d6a53076e8d3c037dc1c469f8fb7525da735a39` |
+| GFZ0OPSFIN_20262540000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262540000_01D_15M_ORB.SP3.gz | `6aa54c9ca666d6808dbce7ec6e8782641cd4632009265599eb3a1a36bf18de03` |
+| GFZ0OPSFIN_20262550000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2435/GFZ0OPSFIN_20262550000_01D_15M_ORB.SP3.gz | `f9ccff46ff56a9963515ffca2efc52e7debf699f654c53c8216dfc2bcbb4ce31` |
+| GFZ0OPSFIN_20262560000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262560000_01D_15M_ORB.SP3.gz | `4eb119ec22b455aabb6845b9e179953f05ddb18b49dcc30ebe453da4f4bc39f0` |
+| GFZ0OPSFIN_20262570000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262570000_01D_15M_ORB.SP3.gz | `dfaf90a08ce19e15a8623f947a290c667d8d4f718797c2dbcb4d22da2e92b353` |
+| GFZ0OPSFIN_20262580000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262580000_01D_15M_ORB.SP3.gz | `875bd4507fa4e400885c96b7297484da9320fb6d97740bc9e9c5e8812c7c2a4e` |
+| GFZ0OPSFIN_20262590000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262590000_01D_15M_ORB.SP3.gz | `5b490f298a3b90917933659176341db274f6e17af37042cf13d48ba8a060e33f` |
+| GFZ0OPSFIN_20262600000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262600000_01D_15M_ORB.SP3.gz | `41a52f1ad4ed16aa16f82b0e186532a518b3b177b7deac8aa67a8b4c7da69140` |
+| GFZ0OPSFIN_20262610000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262610000_01D_15M_ORB.SP3.gz | `3050f99739f94f1de6e36ee5afc28b8c31fd8fe5d1994969b56a829f2a22898c` |
+| GFZ0OPSFIN_20262620000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2436/GFZ0OPSFIN_20262620000_01D_15M_ORB.SP3.gz | `84864afe8c8feab08d9dcca962f0fb55affe83013b82709ef01a43e37414b4ad` |
+| GFZ0OPSFIN_20262630000_01D_15M_ORB.SP3.gz | https://isdc-data.gfz.de/gnss/products/final/w2437/GFZ0OPSFIN_20262630000_01D_15M_ORB.SP3.gz | `788455cea83ea2634d108d6cd103204ba26ca814154785619a175dc7d566148f` |
 
