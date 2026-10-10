@@ -38,7 +38,7 @@ async function child(jobFile) {
   const prepared = JSON.parse(fs.readFileSync(job.arc, 'utf8'));
   const { secondMoment } = e2SecondMoment();
   const first = prepared.rows[0].ms, last = prepared.rows.at(-1).ms;
-  const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: kernelFor(job.window), eopPath: config.inputs.eopC04, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: first - DAY_MS, toMs: last + DAY_MS });
+  const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: kernelFor(job.window), eopPath: config.inputs.eopC04, eopFinalsPath: config.inputs.eopFinals, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: first - DAY_MS, toMs: last + DAY_MS });
   const codec = await estimationCodec(modulesDir());
   const ctx = { codec, est: loaded['analysis/estimation'], hpop: loaded['propagator/hpop'], env, filterModel: config.forceModels[config.partC.forceModel] };
   for (const sensitivity of job.sensitivities) {
@@ -74,7 +74,7 @@ async function driver() {
   const lastDay = shiftDay(w.startDays.at(-1), config.partC.arcDays + 2);
   const { sets, files } = readElementSets(config.inputs.gpHistory, w.startDays[0], lastDay, { keep: (norad) => objects.has(norad), lagDays: config.partC.lagDays });
   run.addInputs('elementSetFiles', files);
-  const inputs = { kernel: kernelFor(window), eopC04: config.inputs.eopC04, statistic: repoPath(config.partC.statistic.file) };
+  const inputs = { kernel: kernelFor(window), eopC04: config.inputs.eopC04, eopFinals: config.inputs.eopFinals, statistic: repoPath(config.partC.statistic.file) };
   if (config.partC.correlationSensitivity) inputs.correlationModel = repoPath(config.partC.correlationSensitivity.file);
   run.addInputs('files', Object.fromEntries(Object.entries(inputs).map(([k, f]) => [k, sha256(fs.readFileSync(f))])));
   const { arcsFor, epochStates, prepareArc } = await import('../partc.mjs');
@@ -90,7 +90,7 @@ async function driver() {
     const m = { hpop: loaded['propagator/hpop'], frames: loaded['foundation/frames'] };
     for (const a of pending) {
       const first = setEpochMs(a.seed.epoch), last = setEpochMs(a.updates.at(-1).epoch);
-      const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: kernelFor(window), eopPath: config.inputs.eopC04, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: first - DAY_MS, toMs: last + DAY_MS });
+      const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: kernelFor(window), eopPath: config.inputs.eopC04, eopFinalsPath: config.inputs.eopFinals, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: first - DAY_MS, toMs: last + DAY_MS });
       const prepared = await prepareArc(m, env, config.forceModels[config.partC.forceModel], index, a, states);
       fs.writeFileSync(path.join(cacheDir, `${a.norad}-${a.start}.json`), JSON.stringify(prepared ?? { skipped: true, norad: a.norad, start: a.start }));
     }

@@ -12,7 +12,8 @@
     "kp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
     "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
     "reference": "/opt/data/sdn-archive/reference-states/reference",
-    "e2Statistic": "results/e2/train/c1.json"
+    "e2Statistic": "results/e2/train/c1.json",
+    "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z"
   },
   "stations": {
     "arecibo": {

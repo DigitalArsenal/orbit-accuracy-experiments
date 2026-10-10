@@ -425,3 +425,12 @@ the GPS arcs first ran; none changes a module, a rule or a parameter.
    B1 runs did not collapse; they diverged: the support grew until HPOP could
    not integrate its points (all four runs stopped, after 33–77 of about 118
    observations).
+6. **Inputs past their last rows** (`901d1df` and the next commit). SET's
+   JB2008 drivers (2026-10-09 download) end at 2026-08-25 and IERS EOP C04
+   at 2026-09-01; Part C's last GPS arcs run to 2026-09-12. GPS has no
+   drag, so its runs no longer build the JB2008 frame where its rows are
+   missing (a drag model without its drivers is refused). For the days after
+   C04's last row the Earth orientation comes from IERS finals2000A (E2's
+   pinned file, `inputs.eopFinals`); this touches only the arcs starting
+   2026-09-09 (and their truth's short HPOP steps), whose 12×12 field is
+   insensitive to the difference.

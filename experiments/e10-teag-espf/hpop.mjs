@@ -99,9 +99,33 @@ function spwRows(gfz, fromMs, toMs) {
 
 // The environment of an arc [fromMs, toMs]: kernel, EOP, JB2008 and daily
 // space-weather frames, built once and reused by every execution request.
-export async function environment({ parser, kernelPath, eopPath, setPaths, kpPath, fromMs, toMs }) {
+// IERS finals2000A (Bulletin A rapid values) through data-source/eop-parser,
+// as E2's common.mjs eopRecords: [{mjd, row}].
+async function finalsRecords(parser, file) {
+  const body = fs.readFileSync(file);
+  const response = await parser.invoke('parse_finals2000a', [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
+  const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
+  const records = [];
+  for (let at = 0; at < out.length;) {
+    const n = out.readUInt32LE(at);
+    const row = P.EOP.getRootAsEOP(new flatbuffers.ByteBuffer(new Uint8Array(out.subarray(at + 4, at + 4 + n)))).unpack();
+    records.push({ mjd: row.MJD, row });
+    at += 4 + n;
+  }
+  return { records, sha256: sha256(body) };
+}
+
+// eopFinalsPath (optional): finals2000A rows for the days after C04's last
+// row, when an arc runs past it (amendment 2).
+export async function environment({ parser, kernelPath, eopPath, eopFinalsPath, setPaths, kpPath, fromMs, toMs }) {
   const kernelBytes = fs.readFileSync(kernelPath);
   const eop = await c04Records(parser, eopPath);
+  const lastC04 = eop.records.reduce((a, r) => Math.max(a, r.mjd), -Infinity);
+  if (eopFinalsPath && Math.floor(toMs / DAY_MS) + 40587 + 2 > lastC04) {
+    const finals = await finalsRecords(parser, eopFinalsPath);
+    eop.records = [...eop.records, ...finals.records.filter((r) => r.mjd > lastC04)];
+    eop.sha256 = `${eop.sha256}+finals:${finals.sha256}`;
+  }
   const mjd = (ms) => Math.floor(ms / DAY_MS) + 40587;
   const set = readSetIndices(setPaths.solfsmy, setPaths.dtcfile);
   const gfz = readGfzKp(kpPath);
