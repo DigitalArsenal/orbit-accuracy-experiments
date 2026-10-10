@@ -18,7 +18,7 @@ const iso = (ms) => new Date(ms).toISOString();
 // Derived records of one object of one file version, E11's layout:
 // <root>/<provider>/<norad>/<version>/ocm-<segment>.fbs, omm.fbs, stats.json.
 export const derivedRoot = path.join(repoRoot, 'runs', 'cache', 'e4-a6-derived');
-export const derivedDir = (provider, norad, file) => path.join(derivedRoot, provider, String(norad), file);
+export const derivedDir = (provider, norad, file, root = derivedRoot) => path.join(root, provider, String(norad), file);
 
 // A provider's operator files (role ephemeris, then a5-extra; capture order)
 // and a reader of their objects: [{object {norad, name}, frame, timeScale,

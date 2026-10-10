@@ -17,6 +17,8 @@
 //
 //   node experiments/e4-operator-ephemeris-parity/steps/35-closure-files.mjs --modules <checkout> --provider iss [--shard 0/2] [--limit 3]
 //   node experiments/e4-operator-ephemeris-parity/steps/35-closure-files.mjs --summarize
+// --inputs, --derived and --rows point a run at other operator files (an
+// archive directory staged with an inputs.json) and keep its records apart.
 import fs from 'node:fs';
 import path from 'node:path';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
@@ -25,8 +27,9 @@ import { ephemerisFitEnv, fitEphemeris, VERSION } from '../../../harness/ephemer
 import { assertFrozen, cli, config, configPath } from '../common.mjs';
 import { derivedDir, operatorInputs } from '../a6.mjs';
 
-const { values, modules, inputs, archive } = cli({ shard: { type: 'string', default: '0/1' }, limit: { type: 'string' }, summarize: { type: 'boolean' } });
-const rowsDir = path.join(repoRoot, 'runs', 'cache', 'e4-a6-files');
+const { values, modules, inputs, archive } = cli({ shard: { type: 'string', default: '0/1' }, limit: { type: 'string' }, summarize: { type: 'boolean' }, derived: { type: 'string' }, rows: { type: 'string' } });
+const rowsDir = path.resolve(values.rows ?? path.join(repoRoot, 'runs', 'cache', 'e4-a6-files'));
+const derivedRootDir = values.derived ? path.resolve(values.derived) : undefined;
 const GATE_M = config.a6.gate.maxClosureM;
 
 if (values.summarize) {
@@ -90,7 +93,7 @@ for (const [i, f] of ops.files.entries()) {
     let row;
     try {
       const out = await fitEphemeris(env, { object: o.object, source: { provider, url: f.url ?? '', sha256: f.sha256, issued: o.issued }, frame: o.frame, timeScale: o.timeScale, states: o.states, events: o.events });
-      const dir = derivedDir(provider, o.object.norad, f.file);
+      const dir = derivedDir(provider, o.object.norad, f.file, derivedRootDir);
       fs.mkdirSync(dir, { recursive: true });
       const segments = out.segments.map((s) => {
         const name = `ocm-${s.index}.fbs`;

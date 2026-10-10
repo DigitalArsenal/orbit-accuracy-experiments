@@ -22,6 +22,8 @@
 // SHA-256 and size. A failing file is kept and listed.
 //
 //   node experiments/e4-operator-ephemeris-parity/steps/36-reduce.mjs --modules <checkout> --omm-modules <checkout with gp-error-model 0.2.0> --provider iss [--delete]
+// --inputs, --derived and --rows as for step 35 (a staged archive directory:
+// its files are links, and --delete removes the file each link names).
 import fs from 'node:fs';
 import path from 'node:path';
 import * as flatbuffers from 'flatbuffers';
@@ -33,7 +35,8 @@ import { assertFrozen, cli, config, configPath, DAY_MS, HOUR_MS } from '../commo
 import { derivedDir, operatorInputs } from '../a6.mjs';
 import { readSets, setAt } from '../products.mjs';
 
-const { values, modules, inputs, archive } = cli({ 'omm-modules': { type: 'string' }, delete: { type: 'boolean' } });
+const { values, modules, inputs, archive } = cli({ 'omm-modules': { type: 'string' }, delete: { type: 'boolean' }, derived: { type: 'string' }, rows: { type: 'string' } });
+const derivedRootDir = values.derived ? path.resolve(values.derived) : undefined;
 const R = config.a6.reduce;
 assertFrozen();
 const provider = values.provider;
@@ -50,7 +53,7 @@ const iso6 = (ms) => { let s = Math.floor(ms / 1000), us = Math.round((ms - s * 
 
 // The provider's fitted objects (step 35 rows): norads and issue times, to
 // read the element-set archive once.
-const rowsDir = path.join(repoRoot, 'runs', 'cache', 'e4-a6-files', provider);
+const rowsDir = path.join(path.resolve(values.rows ?? path.join(repoRoot, 'runs', 'cache', 'e4-a6-files')), provider);
 const rows = fs.existsSync(rowsDir) ? fs.readdirSync(rowsDir).filter((f) => f.endsWith('.jsonl')).flatMap((f) => fs.readFileSync(path.join(rowsDir, f), 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l))) : [];
 const fitted = rows.filter((r) => r.norad && !r.error);
 const norads = new Set(fitted.map((r) => r.norad));
@@ -77,7 +80,7 @@ function ephemeris(o) {
   return { portId: 'ephemeris', payload: Buffer.from(fb.asUint8Array()), typeRef: { schemaName: 'OEM.fbs', fileIdentifier: '$OEM', rootTypeName: 'OEM', wireFormat: 'flatbuffer' } };
 }
 
-const logFile = path.join(repoRoot, 'runs', 'cache', 'e4-a6-reduced.jsonl');
+const logFile = derivedRootDir ? path.join(derivedRootDir, 'reduced.jsonl') : path.join(repoRoot, 'runs', 'cache', 'e4-a6-reduced.jsonl');
 const summary = { removed: [], kept: [], notDerived: [] };
 for (const f of ops.files) {
   const raw = path.join(inputs, provider, f.file);
@@ -87,7 +90,7 @@ for (const f of ops.files) {
   if (!objects.length) { summary.kept.push({ file: f.file, reason: 'no object to fit (single states)' }); continue; }
   const verdicts = [];
   for (const o of objects) {
-    const dir = derivedDir(provider, o.object.norad, f.file);
+    const dir = derivedDir(provider, o.object.norad, f.file, derivedRootDir);
     const statsFile = path.join(dir, 'stats.json');
     if (!fs.existsSync(statsFile)) { verdicts.push({ norad: o.object.norad, pass: false, reason: 'no step 35 OCM' }); continue; }
     const stats = JSON.parse(fs.readFileSync(statsFile, 'utf8'));
@@ -134,10 +137,13 @@ for (const f of ops.files) {
   }
   const pass = verdicts.length && verdicts.every((v) => v.pass);
   if (pass && values.delete) {
-    const bytes = fs.statSync(raw).size;
-    fs.unlinkSync(raw);
-    fs.appendFileSync(logFile, `${JSON.stringify({ provider, file: f.file, sha256: f.sha256, bytes, removed: new Date().toISOString(), run: run.id,
-      derived: verdicts.map((v) => path.relative(repoRoot, derivedDir(provider, v.norad, f.file))) })}\n`);
+    // A staged archive file is a link: the file it names is the one removed.
+    const target = fs.lstatSync(raw).isSymbolicLink() ? fs.realpathSync(raw) : raw;
+    const bytes = fs.statSync(target).size;
+    fs.unlinkSync(target);
+    if (target !== raw) fs.unlinkSync(raw);
+    fs.appendFileSync(logFile, `${JSON.stringify({ provider, file: f.file, path: target, sha256: f.sha256, bytes, removed: new Date().toISOString(), run: run.id,
+      derived: verdicts.map((v) => derivedDir(provider, v.norad, f.file, derivedRootDir)) })}\n`);
     summary.removed.push(f.file);
   } else if (pass) summary.kept.push({ file: f.file, reason: 'passes; kept without --delete' });
   else if (verdicts.some((v) => v.reason === 'no step 35 OCM')) summary.notDerived.push(f.file);
