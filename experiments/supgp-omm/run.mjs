@@ -17,7 +17,8 @@ import { PoliteHttp } from './lib/http.mjs';
 import { readSnapshot } from './lib/supgp.mjs';
 import { artifactInfo, checkout, loadFitter, loadReader } from './lib/modules.mjs';
 import { Pool } from './lib/pool.mjs';
-import { Store } from './lib/persist.mjs';
+import { Store, verifyStore } from './lib/persist.mjs';
+import { decodeOmmStream } from './lib/records.mjs';
 import { Timing, failGroup, runGroup } from './lib/pass.mjs';
 import { summarize } from './lib/summary.mjs';
 import { knownAnswers } from './known-answer.mjs';
@@ -78,7 +79,7 @@ async function main() {
   await fitter.destroy();
 
   // 2. The pool.
-  const pool = new Pool({ size: a.workers, workerData: { fitModules: a.fitModules, readerModules: a.readerModules, sourceIds: a.groups.filter((g) => sources[g]), eopFile: eopFile() }, log });
+  const pool = new Pool({ size: a.workers, workerData: { fitModules: a.fitModules, readerModules: a.readerModules, sourceIds: a.groups.filter((g) => sources[g] && !sources[g].unavailable), eopFile: eopFile() }, log });
   await pool.ready;
   log(`${a.workers} workers ready`);
 
@@ -94,6 +95,14 @@ async function main() {
     const t0 = Date.now();
     let ctx = null;
     let rows;
+    if (source.unavailable) {
+      const detail = await source.probe({ http, snapshot }).catch((e) => `probe failed: ${e.message}`);
+      rows = failGroup({ group, snapshot, store, options: a, code: source.code, detail: String(detail).slice(0, 1200) });
+      run.groups[group] = { ...summarize(group, snapshot, rows), reason: { code: source.code, detail } };
+      store.writeJson(`${group}/summary.json`, run.groups[group]);
+      log(`${group}: ${source.code}: ${String(detail).slice(0, 240)}`);
+      continue;
+    }
     try {
       ctx = await source.prepare?.({ http, log, registryDir: a.registry, snapshot, loadReader: (rel) => loadReader(rel, a.readerModules) });
       rows = await runGroup({ group, snapshot, source, http, pool, store, ctx, options: a, log, timing });
@@ -118,6 +127,11 @@ async function main() {
     wallSeconds: wall, ...timing.json(), poolJobs: pool.jobs, workers: a.workers,
     hosts: Object.fromEntries([...http.stats].map(([h, s]) => [h, s])), disabledHosts: Object.fromEntries(http.disabled),
   };
+  if (a.persist) {
+    run.persistence = verifyStore(store.dir, decodeOmmStream);
+    log(`persistence: ${run.persistence.rows} rows, ${run.persistence.omms} OMMs read back, ${run.persistence.mismatches.length} mismatches`);
+    if (run.persistence.mismatches.length) failed = true;
+  }
   run.log = logLines.slice(-400);
   store.writeJson('run.json', run);
   await pool.close();

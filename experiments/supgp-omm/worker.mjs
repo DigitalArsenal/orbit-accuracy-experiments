@@ -5,6 +5,8 @@ import { parentPort, workerData } from 'node:worker_threads';
 import { loadFitter, loadReader } from './lib/modules.mjs';
 import { loadMemeReader } from './lib/readers/meme.mjs';
 import { eopRows } from './lib/readers/ecef.mjs';
+import { compileModule } from './lib/readers/hostmodule.mjs';
+import { CPF_MODULE } from './sources/cpf.mjs';
 import { labelledEphemeris, summarizeOem } from './lib/records.mjs';
 import { evaluate, windowOf } from './lib/score.mjs';
 import { sp3Context } from '../e4-operator-ephemeris-parity/sp3.mjs';
@@ -15,6 +17,7 @@ const fitter = await loadFitter(fitModules);
 const needs = new Set(sourceIds.flatMap((s) => sources[s].readers ?? []));
 const readers = {};
 if (needs.has('meme')) readers.meme = await loadMemeReader(readerModules);
+if (needs.has('cpf')) readers.cpf = await compileModule(readerModules, CPF_MODULE);
 if (needs.has('orbit-products')) readers.orbitProducts = await loadReader('files/orbit-products', readerModules);
 if (needs.has('ecef')) {
   const [referenceStates, parser] = await Promise.all([loadReader('analysis/reference-states', readerModules), loadReader('data-source/eop-parser', readerModules)]);
@@ -34,7 +37,7 @@ parentPort.on('message', async (job) => {
     const tRead = performance.now();
     const ephemeris = labelledEphemeris(read.oem, job.row.norad, read.objectName);
     const summary = summarizeOem(ephemeris.payload);
-    const hours = job.hours ?? src.hours;
+    const hours = src.hoursFor?.(summary, job.row) ?? job.hours ?? src.hours;
     // A prefix that ends before the window's end: the caller refetches a longer one.
     const window = windowOf({ epoch: job.row.epoch, hours, summary });
     const wantLastMs = Math.min(window.toMs, job.cand.stopMs ?? Infinity);

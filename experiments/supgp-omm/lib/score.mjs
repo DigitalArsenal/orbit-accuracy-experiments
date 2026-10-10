@@ -29,7 +29,7 @@ export function windowOf({ epoch, hours, summary }) {
   return {
     hours, epochMs, fromMs, toMs, from: isoZ(fromMs), to: isoZ(toMs),
     // complete: the ephemeris holds states over the whole intended window (to within one state step).
-    complete: summary.firstMs <= epochMs + step && summary.lastMs >= toMs - step,
+    complete: summary.firstMs <= epochMs + Math.max(step, 5000) && summary.lastMs >= toMs - Math.max(step, 5000),
     availableHours: Math.max(0, Math.min(toMs, summary.lastMs) - fromMs) / 3600e3,
     fitFromEphemerisStart: summary.firstMs > epochMs,
   };

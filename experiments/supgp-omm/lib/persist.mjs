@@ -43,3 +43,29 @@ export class Store {
     fs.writeFileSync(path.join(this.dir, relative), `${JSON.stringify(value, null, 1)}\n`);
   }
 }
+
+// After the write: every persisted OMM is read back from omm.fbs at its recorded offset and must be the fitted one
+// (NORAD, epoch and the seven elements, exactly), and every row must be valid JSON naming the group it is in.
+export function verifyStore(dir, decode) {
+  const out = { groups: {}, rows: 0, omms: 0, mismatches: [] };
+  for (const g of fs.readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory() && fs.existsSync(path.join(dir, d.name, 'rows.jsonl'))).map((d) => d.name)) {
+    const ommFile = path.join(dir, g, 'omm.fbs');
+    const omm = fs.existsSync(ommFile) ? fs.readFileSync(ommFile) : Buffer.alloc(0);
+    let rows = 0, omms = 0;
+    for (const line of fs.readFileSync(path.join(dir, g, 'rows.jsonl'), 'utf8').split('\n').filter(Boolean)) {
+      const r = JSON.parse(line);
+      ++rows;
+      if (r.group !== g) out.mismatches.push(`${g}: row of group ${r.group}`);
+      if (!r.omm) continue;
+      const [rec] = decode(omm.subarray(r.omm.offset, r.omm.offset + r.omm.length));
+      ++omms;
+      const e = r.ours.elements;
+      const same = rec && rec.NORAD_CAT_ID === r.norad && String(rec.EPOCH).replace(/Z$/, '') === String(r.ours.epoch).replace(/Z$/, '') && Object.entries(e).every(([k, v]) => Object.is(rec[k], v));
+      if (!same) out.mismatches.push(`${g}/${r.norad}@${r.setEpoch}: OMM at ${r.omm.offset} is not the fitted set`);
+    }
+    out.groups[g] = { rows, omms };
+    out.rows += rows;
+    out.omms += omms;
+  }
+  return out;
+}
