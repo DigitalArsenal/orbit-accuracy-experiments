@@ -12,7 +12,8 @@
 #   - 429/503: back off 60 s, at most one retry; a connection failure gets one
 #     retry on a fresh Tor circuit; nothing else is retried;
 #   - halt after 30 consecutive failures; halt on 403; stop the cycle after
-#     10 HTTP errors in 2 h (CelesTrak blocks at 50 in 2 h).
+#     10 HTTP errors in 2 h (CelesTrak blocks at 50 in 2 h);
+#   - a cycle is skipped (not the collector stopped) while free disk is below 15 GiB.
 # Tor (SOCKS 127.0.0.1:9050) is used only because CelesTrak drops direct
 # connections from this machine (owner-approved 2026-10-10, firewall reasons).
 # One circuit per cycle; a new circuit (stream isolation by SOCKS username) only
@@ -71,6 +72,8 @@ POLICY_SHA=$(shasum -a 256 "$POLICY_LIB" | cut -d' ' -f1)
 HAVE_LOCK=0
 STOP=0
 HALT=0
+SKIPPED=0
+FETCHED=0
 CIRCUIT=""
 ERR_TIMES=""
 
@@ -205,7 +208,8 @@ save() {  # group kind url tmp stamp -> provenance line
 run_cycle() {
   local g kind url tmp stamp last now wait rc avail
   avail=$(df -k "$ARCHIVE" | awk 'NR==2{print $4}')
-  if [ "$avail" -lt "$DISK_FLOOR_KB" ]; then log "disk below 15 GiB floor ($avail KB); halting"; HALT=1; return; fi
+  # Below the floor the cycle is skipped, not the collector stopped: it retries next cycle.
+  if [ "$avail" -lt "$DISK_FLOOR_KB" ]; then log "cycle $CYCLE skipped: disk below 15 GiB floor ($avail KB); retry in 10 min"; SKIPPED=1; return; fi
   new_circuit "$CYCLE"
   log "cycle $CYCLE start circuit=$CIRCUIT groups=[$GROUPS_LIST]"
   for g in $GROUPS_LIST; do
@@ -222,7 +226,7 @@ run_cycle() {
       fi
       tmp="$ARCHIVE/$g/.incoming.$kind.$$"
       fetch "$url" "$tmp"; rc=$?
-      if [ "$rc" = 0 ]; then save "$g" "$kind" "$url" "$tmp" "$stamp"
+      if [ "$rc" = 0 ]; then save "$g" "$kind" "$url" "$tmp" "$stamp"; FETCHED=$((FETCHED + 1))
       else rm -f "$tmp" "$tmp.hdr" "$tmp.err"; [ "$rc" = 2 ] && return; fi
     done
   done
@@ -237,9 +241,11 @@ while :; do
   NOW=$(date -u +%s)
   [ "$NOW" -ge "$UNTIL_S" ] && { log "test window end reached ($UNTIL)"; break; }
   if [ "$NOW" -ge "$NEXT" ]; then
-    CYCLE=$((CYCLE + 1)); START=$NOW
+    CYCLE=$((CYCLE + 1)); START=$NOW; SKIPPED=0; FETCHED=0
     run_cycle
-    NEXT=$((START + CYCLE_SEC))
+    # A cycle skipped for disk, or one whose every URL was still inside its
+    # 3-hour window, is retried in 10 minutes (the ledger still decides each URL).
+    if [ "$SKIPPED" = 1 ] || [ "$FETCHED" = 0 ]; then CYCLE=$((CYCLE - 1)); NEXT=$((START + 600)); else NEXT=$((START + CYCLE_SEC)); fi
     [ "$ONCE" = 1 ] && break
   fi
   pause 30
