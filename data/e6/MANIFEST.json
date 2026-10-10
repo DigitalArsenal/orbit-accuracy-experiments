@@ -36,7 +36,10 @@
    "listSha256": "26a3e44ef61494c438572ed460583a9e14a17a73fe3111714c1d64a126e18081",
    "terms": "SatNOGS Network: all observation data distributed under CC BY-SA 4.0 (network.satnogs.org/about); Libre Space Foundation",
    "published": false,
-   "note": "not built (disk floor): build with --tar from the listed files; CC BY-SA 4.0 allows publishing it with attribution"
+   "note": "built (README.md with the CC BY-SA 4.0 notice and MANIFEST.json with each image's observation, station, observer and SHA-256 inside); to be uploaded with the list e6-satnogs-iss-waterfalls.json as release e6-inputs-20261010",
+   "sha256": "c8a9e7db06e7488009df046e1ce7c3fc21870836755e8358a0eb12a32734a582",
+   "tarBytes": 1487657984,
+   "tag": "e6-inputs-20261010"
   },
   {
    "asset": "e6-seesat-iod-2026-06-10.json.gz",

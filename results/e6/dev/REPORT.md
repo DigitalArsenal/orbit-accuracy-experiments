@@ -206,3 +206,13 @@ Learning curve (median 3D km by segments used):
 - 1 d: 0: 1.71 [1.25, 2.93] (n 66); all: 0.013 [0.007, 0.017] (n 66)
 - 3 d: 0: 2.48 [1.52, 4.56] (n 56); all: 0.033 [0.014, 0.048] (n 56)
 - 7 d: 0: 3.70 [2.92, 4.85] (n 36); all: 0.13 [0.034, 0.20] (n 36)
+
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

@@ -3,13 +3,13 @@
 import { formatMeters } from '../../chart.js';
 import { resampled, runOrekitCase } from '../../runs.js';
 import { magnification, rtn, scene3d, toRtn, v3 } from '../scene.js';
-import { chart, inputs, num, panel, table, tiles } from '../ui.js';
+import { chart, inputs, note, num, panel, table, tiles } from '../ui.js';
 
 export default async function run(ctx) {
   const [cases, results] = await Promise.all([ctx.fetchJson('./data/orekit/cases.json'), ctx.fetchJson('./data/orekit/results.json')]);
   const p = panel(ctx.root, 'Case');
-  const first = cases.find((c) => /drag/i.test(c.forces)) ?? cases[0];
-  const form = inputs(p, [{ id: 'case', label: 'Orbit and force set', type: 'select', value: first.id, wide: true, options: cases.map((c) => [c.id, `${c.orbit} · ${c.forces}`]) }], () => one());
+  const first = cases.find((c) => /drag/i.test(c.forces) && !c.unavailable) ?? cases.find((c) => !c.unavailable);
+  const form = inputs(p, [{ id: 'case', label: 'Orbit and force set', type: 'select', value: first.id, wide: true, options: cases.map((c) => [c.id, `${c.orbit} · ${c.forces}${c.unavailable ? ' · recorded only' : ''}`]) }], () => one());
   const view = scene3d(ctx, { title: 'HPOP and Orekit, one day', caption: 'GCRF; the hourly difference magnified' });
   const figure = chart(ctx.root, 'Difference from Orekit over the day', 'Hourly 3D position difference');
   const all = panel(ctx.root, 'All 63, as recorded');
@@ -24,6 +24,12 @@ export default async function run(ctx) {
   const hpop = await ctx.module('propagator/hpop');
   async function one() {
     const c = cases[Number(form.values().case)];
+    p.querySelectorAll(':scope > p.fine.withheld').forEach((n) => n.remove());
+    if (c.unavailable) {
+      tiles(p, [['Recorded run', formatMeters(results.cases.find((x) => x.id === c.id).worstM, 3)], ['Tolerance', formatMeters(c.toleranceM)], ['In this browser', 'Not re-run']]);
+      note(p, c.unavailable).classList.add('withheld');
+      return;
+    }
     await ctx.run(`propagator/hpop: ${c.orbit} ${c.forces}`, async () => {
       const r = await runOrekitCase(hpop, c);
       const recorded = results.cases.find((x) => x.id === c.id).worstM;

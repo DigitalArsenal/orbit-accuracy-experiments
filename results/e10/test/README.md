@@ -253,3 +253,14 @@ E26 with the σ bound raised (B1, dev seeds): the support grows instead of colla
 - **Measurement-model floor.** Noise-free RA/Dec from the simulator, fitted by BLS (dev seed d1, 12 h): weighted RMS 0.086 (≈ 0.17″) and a median position error of 3.39 m, unchanged without light time (0.086, 3.40 m): a systematic of about 0.17″ between the simulated observations and the estimator's model (station framing or the float32 RA/Dec of `$EOO`), common to every variant. It is below 0.1σ of the 2″ noise but above BLS's metre-level formal covariance, which is why BLS's covariance regions rarely hold the truth.
 - **Part C and E6.** Part C covers GPS only (E2's at-epoch statistic is GPS-only; E2b's SLR statistics arrived after the freeze). E6's laser-anchored objects (Starlette, Stella, LARETS, WESTPAC, LARES) have no OMM-seeded sets here, so there is no containment to set beside E6's covariance coverage.
 - **B5 and B8 are weak.** Doubling B and Cr·A/m at 600 km (mid-2026 density) moves the truth at most 8.19 m, 2.63 m, 3.20 m, 4.75 m, 7.41 m, 7.44 m over the 12 h after the change (test seeds); B8's 20 % drag error is similarly small between passes. Both cases score like B1.
+
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

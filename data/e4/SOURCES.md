@@ -6,11 +6,28 @@ Files here are gzip-compressed copies; larger sets are GitHub release assets
 listed in [MANIFEST.json](MANIFEST.json). Each provider's files stay under that
 provider's terms, stated below. Element sets (Space-Track) are not published.
 
+## Licences and attribution
+
+Each source's terms, quoted from its primary document, are in [docs/data-licenses.md](../../docs/data-licenses.md). Files are reproduced here or as release assets only where those terms allow it; results use every source, whatever its licence.
+
+| Source | Licence or terms | Reproduced | Attribution |
+| --- | --- | --- | --- |
+| [SpaceX Starlink public ephemerides (MEME, with covariance)](../../docs/data-licenses.md#spacex-starlink) | Open source (owner's determination, 2026-10-10); SpaceX's terms page could not be fetched, and the manifest and ephemeris files state no licence | Yes, with attribution | SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/ (SpaceX). |
+| [China Manned Space Engineering Office: Tiangong orbit data](../../docs/data-licenses.md#cmsa-tiangong) | All rights reserved (site footer); no licence stated | No: cited only | China Manned Space Engineering Office, https://www.cmse.gov.cn/. |
+| [Intelsat public ephemerides (MyIntelsat)](../../docs/data-licenses.md#intelsat) | No licence; SES terms of use reserve all rights | No: cited only | Intelsat (SES) public ephemerides, https://my.intelsat.com/ephemeris/public. |
+| [Planet Labs public ephemerides](../../docs/data-licenses.md#planet) | CC BY-NC 4.0 | Yes, with attribution, for non-commercial use only | Planet Labs PBC orbital ephemerides, https://ephemerides.planet-labs.com/, © Planet Labs PBC, CC BY-NC 4.0. |
+| [NASA ISS trajectory (ISS.OEM_J2K_EPH.txt)](../../docs/data-licenses.md#nasa-iss-oem) | U.S. Government work, public domain (data.nasa.gov "us-pd") | Yes, with attribution | ISS trajectory: NASA JSC Flight Operations Directorate (TOPO), https://www.nasa.gov/spot-the-station/ (U.S. Government work). |
+| [IGS products and metadata (IGS0OPSFIN, IGS0OPSULT, satellite metadata SINEX)](../../docs/data-licenses.md#igs) | IGS Data and Product Disclaimer and Terms of Use (2020): open use without restriction, citation requested (no Creative Commons licence) | Yes, with attribution | International GNSS Service (IGS) products, courtesy of the IGS and its analysis and data centres. Johnston, G., Riddell, A., Hausler, G. (2017), The International GNSS Service, in Springer Handbook of Global Navigation Satellite Systems, pp. 967–982, doi:10.1007/978-3-319-42928-1. |
+| [ESA/ESOC GNSS orbits and ILRS predictions (ESA0OPSFIN, ESA0OPSRAP, ESA0OPSULT; .esa CPF)](../../docs/data-licenses.md#esa-navigation-office) | Navigation Support Office data terms (ownership and © marking); its GNSS orbits are also IGS analysis-centre products, offered under the IGS terms of use | No: cited only | © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1). |
+| [ESA/ESOC precise orbits of ESA Earth-observation satellites (CryoSat-2 cs2, Swarm SWRAesoc)](../../docs/data-licenses.md#esa-navigation-office-pod) | Navigation Support Office data terms; not IGS or ILRS products | No: cited only | © Navigation Support Office at ESA/ESOC 2026. |
+| [ILRS products via EDC (combined orbits ilrsa, normal points CRD v2, station SINEX, CPF predictions)](../../docs/data-licenses.md#ilrs) | ILRS: data and products not copyrighted; citation requested | Yes, with attribution | ILRS data and products (Pearlman et al. 2019, J Geod 93:2161–2180, doi:10.1007/s00190-019-01241-1), from the EUROLAS Data Center, DGFI-TUM (Noll et al. 2019, J Geod 93:2211–2225, doi:10.1007/s00190-018-1207-2). |
+| [Space-Track.org GP element sets (gp_history) and SATCAT](../../docs/data-licenses.md#space-track) | Space-Track User Agreement (2019), with USSPACECOM's blanket approval to redistribute basic SSA data (TLE/OMM, SATCAT, decay and reentry) with citation | No: cited only | Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org). |
+
 ## spacex-starlink
 
 Terms: No license stated at api.starlink.com/public-files; published by SpaceX for space safety. (https://api.starlink.com/public-files/ephemerides/MANIFEST.txt)
 
-450 file(s) in release asset `e4-spacex-starlink.tar.gz` (374.1 MB, SHA-256 8d695cbbfda16f7a7cd977e7f7b50bc01ae54b2e91d585357923c0a7d49379ae): prepared but not published, because the provider states no license that grants redistribution.
+450 file(s) in release asset `e4-spacex-starlink.tar.gz` (374.1 MB, SHA-256 b1cc6eeeac2ce139942a4092ae28fa6be45cf5d7bea1f4eccb4022f46bd8ac7b): prepared but not published, because no license grants redistribution (data/licenses.json).
 
 ## iss
 
@@ -27,7 +44,7 @@ Terms: NASA (JSC FOD TOPO) public data; a U.S. Government work, not subject to c
 
 Terms: No license stated on cmse.gov.cn (China Manned Space Engineering Office, BACC orbit data published for space safety). (https://www.cmse.gov.cn/gfgg/zgkjzgdcs/)
 
-7 file(s) in release asset `e4-css-tiangong.tar.gz` (0.8 MB, SHA-256 c6868e83ad2e1768fddebfbc8504e6cb38b0c15ae37339f7375d86ed6d3e4a5c): prepared but not published, because the provider states no license that grants redistribution.
+7 file(s) in release asset `e4-css-tiangong.tar.gz` (0.8 MB, SHA-256 92d7351bb7bbc493f3d3aa31a449a015449ee8b082be8f03893a809fe35db2fe): prepared but not published, because no license grants redistribution (data/licenses.json).
 
 ## planet
 
@@ -68,13 +85,13 @@ Terms: Copyright Planet Labs PBC; orbital ephemerides licensed under CC BY-NC 4.
 
 Terms: No license stated on my.intelsat.com/ephemeris/public (site Terms of Use apply). (https://my.intelsat.com/ephemeris/public)
 
-90 file(s) in release asset `e4-intelsat.tar.gz` (0.8 MB, SHA-256 50f16b664cc93e890c5c3a43cb616fa9a1e95a9642c14ed66a73f134cf538a2c): prepared but not published, because the provider states no license that grants redistribution.
+90 file(s) in release asset `e4-intelsat.tar.gz` (0.8 MB, SHA-256 2ce20c7bef24c5fc8abe4af6ad54523ee34608068d11eb3b151d8259abe11834): prepared but not published, because no license grants redistribution (data/licenses.json).
 
 ## ses
 
 Terms: No license stated for the ephemeris files SES publishes at ses-satellite-orbital-data-public (ses.com Terms of Use apply). (https://www.ses.com/our-coverage/ephemeris)
 
-38 file(s) in release asset `e4-ses.tar.gz` (0.0 MB, SHA-256 b3ed99153c121af643625c8f6a85b83960636db0dd06d97aab2f2f192134038b): prepared but not published, because the provider states no license that grants redistribution.
+38 file(s) in release asset `e4-ses.tar.gz` (0.0 MB, SHA-256 d1cdb513c3529af6330af1a26abab706002de0ea44c0fd7a2aa9ecf2a87849d4): prepared but not published, because no license grants redistribution (data/licenses.json).
 
 ## gps-precise
 
@@ -112,6 +129,8 @@ Terms: IGS products, IGS Data Policy: CC BY 4.0. Credit: International GNSS Serv
 
 ## glonass-precise
 
+Cited, not reproduced (owner, 2026-10-10): these files are no longer in the repository (git history is not rewritten); each is listed with the URL it came from and the SHA-256 of the served bytes. A written OK from ESA/ESOC would let the ESA files go back up.
+
 Terms: ESA/ESOC Navigation Support Office products as an IGS analysis centre, IGS Data Policy: CC BY 4.0. Credit: ESA/ESOC. (https://navigation-office.esa.int/)
 
 | File | URL | Captured (UTC) | SHA-256 (served bytes) |
@@ -146,6 +165,8 @@ Terms: ESA/ESOC Navigation Support Office products as an IGS analysis centre, IG
 
 ## esa-pod
 
+Cited, not reproduced (owner, 2026-10-10): these 16 files are no longer in the repository (git history is not rewritten); each is listed with the URL it came from and the SHA-256 of the served bytes. A written OK from ESA/ESOC would let the ESA files go back up.
+
 Terms: ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC. (https://navigation-office.esa.int/)
 
 | File | URL | Captured (UTC) | SHA-256 (served bytes) |
@@ -168,6 +189,8 @@ Terms: ESA/ESOC Navigation Support Office products, free and open with attributi
 | `20260915T125614Z--SWRAesoc24342.sp3.gz` | http://navigation-office.esa.int/products/swarm/SWRAesoc24342.sp3.gz | 2026-09-15T12:56:14.854Z | `428f65aecc1ad19cf44977fe260ce46af1c14ba63bb9253b0a20fa004b5d5ace` |
 
 ## cpf
+
+Cited, not reproduced (owner, 2026-10-10): these files are no longer in the repository (git history is not rewritten); each is listed with the URL it came from and the SHA-256 of the served bytes. A written OK from ESA/ESOC would let the ESA files go back up.
 
 Terms: ILRS consolidated prediction format files from the ESA/ESOC Navigation Support Office; ILRS data and products are openly available. Credit: ILRS, ESA/ESOC. (https://ilrs.gsfc.nasa.gov/data_and_products/data/index.html)
 
@@ -401,9 +424,6 @@ Terms: ILRS consolidated prediction format files from the ESA/ESOC Navigation Su
 | `20260915T173624Z--galileo234_cpf_260915_25801.esa.gz` | http://navigation-office.esa.int/products/cpf_predictions/galileo234_cpf_260915_25801.esa | 2026-09-15T17:36:24.769Z | `1975917e53f53d97cbc26da718a00342f1db13015228f8f1c9cd5799e713a1a0` |
 
 ## Truth (precise orbits, public archives, not copied here)
-
-Terms: ESA/ESOC Navigation Support Office final orbits, an IGS analysis-centre product: IGS Data Policy, CC BY 4.0. Credit: ESA/ESOC, IGS.
-Terms: GFZ Helmholtz Centre for Geosciences operational final orbits, an IGS analysis-centre product distributed by GFZ ISDC: IGS Data Policy, CC BY 4.0. Credit: GFZ, IGS.
 
 | Product | URL | SHA-256 |
 | --- | --- | --- |

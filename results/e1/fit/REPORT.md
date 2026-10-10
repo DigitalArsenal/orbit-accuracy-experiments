@@ -55,3 +55,13 @@ Planes (train members per plane): 6, 5, 5, 6, 5, 6. G3 train satellites: 25.
 - Inputs: 574 referenceProducts, 550 gpHistory, 14479 reference (hashes in manifest.json)
 - Started 2026-10-09T17:25:22.164Z, finished 2026-10-09T17:37:42.540Z
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

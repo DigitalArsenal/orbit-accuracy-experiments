@@ -245,3 +245,15 @@ Failed or skipped arcs: 93.
 - none: coverage: 481 fit states, 0 horizons
 - none: coverage: 41 fit states, 3 horizons
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © ESA 2026 on the data and on analysed information derived from it; "Data provided by the European Space Agency (ESA)"; product DOIs: SW_SP3xCOM_2_ doi:10.57780/esa-8579355, SW_DNSxPOD_2_ doi:10.57780/esa-ef59315, GF_DNSxACC_2_ doi:10.57780/esa-2559fd1.
+- Copernicus Sentinel data 2025–2026 (files as served). Reference states and results derived from them: "Contains modified Copernicus Sentinel data 2026".
+
+ESA data and the information analysed from it are marked as ESA asks: © ESA 2026; Data provided by the European Space Agency (ESA).
+
+Every source and its terms: [docs/data-licenses.md](../../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

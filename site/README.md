@@ -11,7 +11,7 @@ Blue Marble as its only imagery). Nothing is fetched from a third party.
 | --- | --- |
 | Live | HPOP from a V1 seed with a chosen force model, 72 h, every sample against the precise orbit; then the six V1 horizons alone, compared with `results/v1` seed by seed (they match exactly). Downloads: CSV, CZML, the PRW request and result, a run record. |
 | Results | V1's committed metrics. |
-| Verification | The 63 HPOP-against-Orekit 13.1 cases; any one re-runs here from its exact PRW request. |
+| Verification | The 63 HPOP-against-Orekit 13.1 cases; any one re-runs here from its exact PRW request, except the four that read CSSI space weather or SET's JB2008 indices (not republished), which show their recorded result. |
 | VCM | The survey's sample VCM read, propagated 24 h with its 7×7 covariance and written back, under both readings of the B row's units. |
 | Data | Every file with its SHA-256, source and terms (`provenance.json`). |
 
@@ -66,6 +66,17 @@ DE440). In the browser the pages run the simulator, `analysis/association`,
 are generated into `site/.cache/estimation` by flatc at build time) and
 `analysis/conjunction-assessment`. The conjunction's second object is
 hypothetical and says so.
+
+## Licences
+
+Every file the build writes goes through `write()`, which takes its label from
+`data/licenses.json` (`harness/data-licenses.mjs`, `labelFor`): the file's
+licence and credit are its sources' own, `provenance.json` carries them per
+file, and a source the registry does not allow us to reproduce fails the build.
+Not reproduced: CSSI space weather and SET's JB2008 indices (SET sends no CORS
+header, so a browser cannot fetch them either). The four Orekit cases that read
+them are listed as recorded only. The sample VCM stays, labelled with its
+provenance (owner, 2026-10-10: public sources).
 
 ## Build
 

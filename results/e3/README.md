@@ -248,3 +248,17 @@ Vimpel: orbits.20260907.txt 13808 rows, orbits.20260921.txt 13889 rows; crosswal
 
 Truth floor: the SLR, Sentinel-1 and Swarm products' stated per-axis sigma, median 2.9 cm, largest 498.0 cm (297 products); GNSS finals carry their SP3 accuracy codes, centimetres.
 
+<!-- credits:begin (harness/credit-lines.mjs) -->
+
+## Credits
+
+- © ESA 2026 on the data and on analysed information derived from it; "Data provided by the European Space Agency (ESA)"; product DOIs: SW_SP3xCOM_2_ doi:10.57780/esa-8579355, SW_DNSxPOD_2_ doi:10.57780/esa-ef59315, GF_DNSxACC_2_ doi:10.57780/esa-2559fd1.
+- © Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).
+- Copernicus Sentinel data 2025–2026 (files as served). Reference states and results derived from them: "Contains modified Copernicus Sentinel data 2026".
+- Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).
+
+ESA data and the information analysed from it are marked as ESA asks: © ESA 2026; Data provided by the European Space Agency (ESA).
+
+Every source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md#credits-by-experiment).
+
+<!-- credits:end -->

@@ -1,0 +1,1777 @@
+{
+ "policy": "We should only reproduce data with the correct license, however we need to show results on ALL data regardless of license.",
+ "checked": "2026-10-10",
+ "sources": [
+  {
+   "id": "copernicus-sentinel",
+   "name": "Copernicus Sentinel-1 precise orbits (AUX_POEORB)",
+   "provider": "the EU Copernicus programme (Sentinel-1 precise orbit determination), served by ESA's STEP mirror step.esa.int",
+   "licence": "Copernicus data policy: free, full and open access (Delegated Regulation (EU) No 1159/2013; Regulation (EU) 2021/696, Art. 53)",
+   "terms": [
+    {
+     "title": "Commission Delegated Regulation (EU) No 1159/2013",
+     "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32013R1159",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Legal notice on the use of Copernicus Sentinel Data and Service Information",
+     "url": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Regulation (EU) 2021/696 (the Union Space Programme)",
+     "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32021R0696",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Users shall have free, full and open access to GMES dedicated data and GMES service information under the conditions laid down in Articles 4 to 10, subject to the restrictions laid down in Articles 11 to 16. … Copernicus users may, on a free and worldwide basis, reproduce, distribute, communicate to the public, adapt, and modify all Copernicus data and Copernicus information and combine them with other data and information;",
+   "attributionClause": "1. When distributing or communicating GMES dedicated data and GMES service information to the public, users shall inform the public of the source of that data and information. … 'Contains modified Copernicus Sentinel data [Year]' for Sentinel data;",
+   "conditions": "Do not imply endorsement by the Union; say so where the data were adapted or modified (Art. 8(2) and 8(3)). No share-alike, non-commercial or recipient-acceptance condition.",
+   "reproduce": "yes",
+   "credit": "Copernicus Sentinel data 2025–2026 (files as served). Reference states and results derived from them: \"Contains modified Copernicus Sentinel data 2026\".",
+   "reason": "EU law grants free, worldwide reproduction and distribution; the only condition is the source notice.",
+   "usedIn": "E3, E5, E7 (LEO truth: Sentinel-1A, 1C, 1D)",
+   "reproducedAt": [
+    "data/e3/sentinel1-poeorb/ (88 files)",
+    "release e5-inputs-20261010: e5-sentinel1-poeorb.tar (prepared, not yet uploaded)",
+    "release e7-inputs-20261010: e7-sentinel1-poeorb.tar.gz (prepared, not yet uploaded)"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "esa-earth-observation",
+   "name": "ESA Swarm orbits and densities, and TOLEOS GRACE-FO densities",
+   "provider": "the European Space Agency (Swarm DISC; TOLEOS densities processed by TU Delft for ESA), served by swarm-diss.eo.esa.int",
+   "licence": "ESA Earth Observation Data Policy and Terms and Conditions for the Utilisation of ESA's EO Data (2023); no Swarm- or TOLEOS-specific licence",
+   "terms": [
+    {
+     "title": "Terms and Conditions for the Utilisation of ESA's Earth Observation Data, ESA-EOPG-PDGS-PR-1, issue 1.1 (2023-09-20)",
+     "url": "https://earth.esa.int/eogateway/documents/20142/1564626/Terms-and-Conditions-for-the-use-of-ESA-Data.pdf",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Updated ESA Earth Observation Data Policy, simplified version (2023-09-20)",
+     "url": "https://earth.esa.int/eogateway/documents/d/earth-online/esa-eo-data-policy",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Swarm dissemination server",
+     "url": "https://swarm-diss.eo.esa.int/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Onward distribution of data from the free dataset is permitted, if the data user accepts the ESA Terms and Conditions. … B.5. The PI may further distribute ESA EO data accessed as part of the free dataset to a new recipient only after ensuring that the recipient accepts these Terms and Conditions.",
+   "attributionClause": "C.2. The PI shall clearly mark all ESA EO data and analysed information, irrespective of the form in which it is produced, as follows: © ESA (year of reception). … Any publication resulting from a work carried out using ESA EO data shall clearly display the following statement: “Data provided by the European Space Agency (ESA)”.",
+   "conditions": "Use the data for the user's own EO research and applications (B.6 a); ESA retains all rights and title (C.1). Swarm DISS: \"The access and use of Swarm products are regulated by the ESA's Data Policy and subject to the acceptance of the specific Terms & Conditions.\"",
+   "reproduce": "no",
+   "credit": "© ESA 2026 on the data and on analysed information derived from it; \"Data provided by the European Space Agency (ESA)\"; product DOIs: SW_SP3xCOM_2_ doi:10.57780/esa-8579355, SW_DNSxPOD_2_ doi:10.57780/esa-ef59315, GF_DNSxACC_2_ doi:10.57780/esa-2559fd1.",
+   "reason": "Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA.",
+   "usedIn": "E3 (Swarm A, B, C truth), E5 (Swarm A, B, C and GRACE-FO densities; Swarm truth), E7 (Swarm truth)",
+   "reproducedAt": [
+    "taken down 2026-10-10 (local copies kept, cited by swarm-diss URL and SHA-256 in the release notes and data/e3/MANIFEST.json): release e3-inputs-20261009: 54 SW_OPER_SP3*COM assets"
+   ],
+   "obtain": "Create an EO Sign In account, accept ESA's terms, and download from https://swarm-diss.eo.esa.int/ (Swarm Level 2 POD/RD SP3, DNS POD; Multimission/GRACE-FO/DNS). The experiments' MANIFEST.json files list every file with its URL and SHA-256.",
+   "notice": null
+  },
+  {
+   "id": "esa-navigation-office",
+   "name": "ESA/ESOC GNSS orbits and ILRS predictions (ESA0OPSFIN, ESA0OPSRAP, ESA0OPSULT; .esa CPF)",
+   "provider": "ESA/ESOC's Navigation Support Office, an IGS and ILRS analysis centre (navigation-office.esa.int)",
+   "licence": "Navigation Support Office data terms (ownership and © marking); its GNSS orbits are also IGS analysis-centre products, offered under the IGS terms of use",
+   "terms": [
+    {
+     "title": "Terms and conditions for the utilisation of data and products provided by ESA's Navigation Support Office",
+     "url": "https://navigation-office.esa.int/Terms_and_Conditions.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "ESA web portal terms and conditions",
+     "url": "https://www.esa.int/Services/Terms_and_conditions",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "IGS Data and Product Disclaimer and Terms of Use (2020-08-05)",
+     "url": "https://igs.org/wp-content/uploads/2020/09/IGS-Data-and-Product-Disclaimer-and-Terms-of-Use-200805.pdf",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "These conditions apply irrespective of whether the data and products have been retrieved directly from the ESA server or via a proxy. … IGS data and products have been made openly available for use without restriction, and continue to be offered free of cost or obligation.",
+   "attributionClause": "to clearly mark all ESA data and analysed information, irrespective of the form in which it is produced), as follows: © Navigation Support Office at ESA/ESOC (year of reception).",
+   "conditions": "Acknowledge ESA's ownership of all ESA data. The Navigation Support Office's terms grant no redistribution right of their own and supplement ESA's web-portal terms, which say: \"ESA does not grant the right to resell or redistribute any information, documents, images or material from its website or to compile or create derivative works from material on its website.\" A written OK from ESA/ESOC would let the ESA GNSS finals go back up.",
+   "reproduce": "no",
+   "credit": "© Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).",
+   "reason": "Cited, not reproduced (owner, 2026-10-10): ESA's web-portal terms leave a question about redistribution even though the same files are IGS analysis-centre products offered under the IGS terms. The 709 ESA0OPSFIN assets of release gnss-truth-20261009 and e7-gnss-final.tar.gz were taken down on 2026-10-10 (local copies kept); publish steps do not add ESA files; every ESA/ESOC file in this repository came down the same day. A written confirmation from ESA/ESOC would let the ESA GNSS finals go back up.",
+   "usedIn": "E1, E2, E2b, E3, E7, E10 (GPS truth: ESA0OPSFIN); E3 (ESA0OPSULT baseline); E4 (GLONASS ESA0OPSULT, ESA0OPSRAP; Galileo CPF .esa)",
+   "reproducedAt": [
+    "taken down 2026-10-10 (local copies kept, cited by URL and SHA-256): release gnss-truth-20261009: 709 ESA0OPSFIN assets (ESA0OPSFIN-cited.tsv lists them); release e7-inputs-20261010: e7-gnss-final.tar.gz (299 files, ESA0OPSFIN and IGS0OPSFIN)",
+    "removed from main 2026-10-10 (history not rewritten; local copies kept, cited by URL and SHA-256 in data/e3/MANIFEST.json and SOURCES.md): data/e3/gnss-final-esa/ (59 files), data/e3/gnss-ultra-rapid-esa/ (42 files)",
+    "removed from main 2026-10-10 (history not rewritten; archived under /opt/data/sdn-archive/release-archive, cited by URL and SHA-256 in data/e4/MANIFEST.json and SOURCES.md): data/e4/glonass-precise/ (27 ESA0OPSULT files, fetched from navigation-office.esa.int, not IAC and not an IGS combination), data/e4/cpf/ (226 Galileo .esa CPF files, all fetched from navigation-office.esa.int/products/cpf_predictions, ESA's own server, not an ILRS data centre), data/e4/esa-pod/ (7 ESA0OPSRAP files, with the 9 of the ESA/ESOC POD row)",
+    "modules (modules cleanup lane): analysis/association/tests/fixtures/gps-20260802.json.gz (states from ESA0OPSFIN and IGS0OPSFIN)"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "esa-navigation-office-pod",
+   "name": "ESA/ESOC precise orbits of ESA Earth-observation satellites (CryoSat-2 cs2, Swarm SWRAesoc)",
+   "provider": "ESA/ESOC's Navigation Support Office (navigation-office.esa.int)",
+   "licence": "Navigation Support Office data terms; not IGS or ILRS products",
+   "terms": [
+    {
+     "title": "Terms and conditions for the utilisation of data and products provided by ESA's Navigation Support Office",
+     "url": "https://navigation-office.esa.int/Terms_and_Conditions.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "ESA web portal terms and conditions",
+     "url": "https://www.esa.int/Services/Terms_and_conditions",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "ESA does not grant the right to resell or redistribute any information, documents, images or material from its website or to compile or create derivative works from material on its website.",
+   "attributionClause": "to clearly mark all ESA data and analysed information, irrespective of the form in which it is produced), as follows: © Navigation Support Office at ESA/ESOC (year of reception).",
+   "conditions": "No open licence covers these files; the IGS terms do not apply to them.",
+   "reproduce": "no",
+   "credit": "© Navigation Support Office at ESA/ESOC 2026.",
+   "reason": "No terms grant redistribution of these orbit files.",
+   "usedIn": "E4 (esa-pod provider: CryoSat-2 and Swarm precise orbits)",
+   "reproducedAt": [
+    "removed from main 2026-10-10 (git history not rewritten; local copies kept, cited by URL and SHA-256 in data/e4/SOURCES.md and MANIFEST.json): data/e4/esa-pod/ (9 files: *.cs2.v4.sp3, SWRAesoc*)"
+   ],
+   "obtain": "https://navigation-office.esa.int/products/ (POD products), files listed with URL and SHA-256 in data/e4/MANIFEST.json.",
+   "notice": null
+  },
+  {
+   "id": "igs",
+   "name": "IGS products and metadata (IGS0OPSFIN, IGS0OPSULT, satellite metadata SINEX)",
+   "provider": "the International GNSS Service and its analysis and data centres (files via BKG and files.igs.org)",
+   "licence": "IGS Data and Product Disclaimer and Terms of Use (2020): open use without restriction, citation requested (no Creative Commons licence)",
+   "terms": [
+    {
+     "title": "IGS Data and Product Disclaimer and Terms of Use (2020-08-05)",
+     "url": "https://igs.org/wp-content/uploads/2020/09/IGS-Data-and-Product-Disclaimer-and-Terms-of-Use-200805.pdf",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "IGS: how to cite",
+     "url": "https://igs.org/about-2/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "The IGS products and station data are provided openly for the benefit of all scientific, educational, and commercial users. For 25 years, IGS data and products have been made openly available for use without restriction, and continue to be offered free of cost or obligation.",
+   "attributionClause": "By accessing data, products, and any other information from the IGS, users agree to appropriately cite and attribute these resources to providers and their sponsors, acknowledgment of IGS and its contributing organizations, and to adherence to professional and ethical standards.",
+   "conditions": "Keep the IGS warranty disclaimer with mirrored files. No share-alike, non-commercial or no-redistribution clause. (Earlier manifests call this \"CC BY 4.0\"; the IGS states no Creative Commons licence.)",
+   "reproduce": "yes",
+   "credit": "International GNSS Service (IGS) products, courtesy of the IGS and its analysis and data centres. Johnston, G., Riddell, A., Hausler, G. (2017), The International GNSS Service, in Springer Handbook of Global Navigation Satellite Systems, pp. 967–982, doi:10.1007/978-3-319-42928-1.",
+   "reason": "Open use without restriction; the only obligation is citation.",
+   "usedIn": "V1, E1, E2, E2b, E3, E7 (GPS truth: IGS0OPSFIN); E3, E4 (IGS0OPSULT); E1, E7 (satellite metadata)",
+   "reproducedAt": [
+    "release gnss-truth-20261009: 14 IGS0OPSFIN assets",
+    "data/e1/igs_satellite_metadata.snx.gz",
+    "data/e7/igs_satellite_metadata.snx.gz",
+    "data/e3/gnss-ultra-rapid-igs-node/ (7 files)",
+    "data/e4/gps-precise/ (27 IGS0OPSULT files)",
+    "site (gh-pages): data/truth/, data/od/ (reference states converted from IGS finals)",
+    "modules: analysis/association/tests/fixtures/gps-20260802.json.gz, files/orbit-products/fixtures/COD0MGXFIN_20250190000_01D_05M_ORB.3ep.sp3 and igs15000.3ep.sp3"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "satnogs",
+   "name": "SatNOGS Network observations and SatNOGS DB",
+   "provider": "Libre Space Foundation and the SatNOGS ground-station owners and observers",
+   "licence": "CC BY-SA 4.0",
+   "terms": [
+    {
+     "title": "SatNOGS Network: About",
+     "url": "https://network.satnogs.org/about/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "SatNOGS DB: About",
+     "url": "https://db.satnogs.org/about/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Creative Commons Attribution-ShareAlike 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.en",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "All observations results are public and all data are distributed freely under the Creative Commons Atribution-Share Alike license. … All data are public and freely distributed under the Creative Commons Atribution-Share Alike v4.0 license.",
+   "attributionClause": "identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated); … The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-SA Compatible License.",
+   "conditions": "Share-alike: material adapted from SatNOGS data (such as the per-bin frequency offsets) must be shared under CC BY-SA 4.0 or a compatible licence, with no added restrictions. State modifications.",
+   "reproduce": "share-alike",
+   "credit": "SatNOGS Network observations (Libre Space Foundation; the station and observer named in each record), https://network.satnogs.org/, CC BY-SA 4.0.",
+   "notice": "The SatNOGS-derived files in data/e6 (satnogs-iss-waterfall-offsets.jsonl.gz, satnogs-iss-observations.json.gz) are licensed under CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/), not under this repository's MIT licence. They are adapted from SatNOGS Network observations: the offsets are measured from the waterfall images by experiments/e6-public-observations, and the metadata omit the element-set lines. Each row names its observation and URL; the observation page names the station and observer. The licence's disclaimer of warranties applies.",
+   "reason": "CC BY-SA 4.0 allows sharing and adaptation with attribution; adaptations carry the same licence.",
+   "usedIn": "E6 (ISS Doppler: 835 passes, 18,711 range rates)",
+   "reproducedAt": [
+    "data/e6/satnogs-iss-waterfall-offsets.jsonl.gz (adapted, CC BY-SA 4.0)",
+    "data/e6/satnogs-iss-observations.json.gz (metadata without element-set lines, CC BY-SA 4.0)",
+    "release e6-inputs-20261010: e6-satnogs-iss-waterfalls.tar (889 waterfall images, prepared, not yet uploaded)",
+    "modules: data-source/satnogs-source/tests/fixtures/satnogs-transmitters.sample.json (SatNOGS DB; attribution in its PROVENANCE.md)"
+   ],
+   "obtain": null
+  },
+  {
+   "id": "seesat-l",
+   "name": "SeeSat-L amateur optical observations (IOD lines)",
+   "provider": "the SeeSat-L mailing list (archives at satobs.org); each observation is its observer's",
+   "licence": "No licence stated",
+   "terms": [
+    {
+     "title": "SeeSat-L list home, rules and guidelines",
+     "url": "http://www.satobs.org/seesat/seesatindex.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "SeeSat-L archives",
+     "url": "http://www.satobs.org/seesat/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "About these pages",
+     "url": "http://www.satobs.org/aboutthesepages.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no licence, copyright or reuse statement on the list home, its rules, the list information page, the FAQ or the archives)",
+   "attributionClause": "(none stated)",
+   "conditions": "The list's own rule: \"Do Not Post Elements Originating from Space Track\".",
+   "reproduce": "no",
+   "credit": "SeeSat-L, http://www.satobs.org/seesat/ (each post's author).",
+   "reason": "No licence grants redistribution; posts are their authors' work.",
+   "usedIn": "E6 (H4: all 8,007 IOD lines counted; too few on truth objects to fit)",
+   "obtain": "Monthly archives June to October 2026 at http://www.satobs.org/seesat/; steps/01-capture-seesat.mjs rebuilds the IOD table.",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "camras",
+   "name": "CAMRAS Dwingeloo SatNOGS IQ recordings",
+   "provider": "CAMRAS (Dwingeloo Radio Telescope)",
+   "licence": "CC BY 4.0",
+   "terms": [
+    {
+     "title": "CAMRAS data: SatNOGS recordings",
+     "url": "https://data.camras.nl/satnogs/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Creative Commons Attribution 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "These data sets are distributed under a CC-BY 4.0 license.",
+   "attributionClause": "identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);",
+   "reproduce": "yes",
+   "credit": "CAMRAS Dwingeloo Radio Telescope, https://data.camras.nl/, CC BY 4.0.",
+   "reason": "CC BY 4.0.",
+   "usedIn": "E6: considered, not used (no recording of an object with public truth in E6's windows)",
+   "conditions": "",
+   "notice": null,
+   "obtain": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "nasa-iss-oem",
+   "name": "NASA ISS trajectory (ISS.OEM_J2K_EPH.txt)",
+   "provider": "NASA JSC Flight Operations Directorate, Trajectory Operations and Planning (TOPO)",
+   "licence": "U.S. Government work, public domain (data.nasa.gov \"us-pd\")",
+   "terms": [
+    {
+     "title": "NASA Spot the Station: International Space Station Trajectory Data",
+     "url": "https://www.nasa.gov/spot-the-station/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "NASA Images and Media Usage Guidelines",
+     "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "ISS COORDS dataset (data.nasa.gov)",
+     "url": "https://data.nasa.gov/dataset/iss-coords-2022-01-10",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "NASA provides this information for use by the public.",
+   "attributionClause": "NASA should be acknowledged as the source of the material.",
+   "conditions": "No implied NASA endorsement; NASA insignia are not public domain.",
+   "reproduce": "yes",
+   "credit": "ISS trajectory: NASA JSC Flight Operations Directorate (TOPO), https://www.nasa.gov/spot-the-station/ (U.S. Government work).",
+   "reason": "Public-domain U.S. Government work offered for public use.",
+   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth)",
+   "reproducedAt": [
+    "data/e4/iss/ (4 files)",
+    "data/e6/iss/ (1 file)",
+    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "ilrs",
+   "name": "ILRS products via EDC (combined orbits ilrsa, normal points CRD v2, station SINEX, CPF predictions)",
+   "provider": "the International Laser Ranging Service, its stations and analysis centres, via the EUROLAS Data Center (EDC, DGFI-TUM)",
+   "licence": "ILRS: data and products not copyrighted; citation requested",
+   "terms": [
+    {
+     "title": "Cite the ILRS",
+     "url": "https://ilrs.gsfc.nasa.gov/about/cite.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "ILRS data centers",
+     "url": "https://ilrs.gsfc.nasa.gov/data_and_products/data_centers/index.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "The data and products are not copyrighted; however, in the event that you publish data or results using these data, we request that you",
+   "attributionClause": "Pearlman, M.R., Noll, C.E., Pavlis, E.C. et al. The ILRS: approaching 20 years and planning for the future. J Geod 93, 2161–2180 (2019). DOI: https://doi.org/10.1007/s00190-019-01241-1 … We would also request that users acknowledge the information resources of the ILRS (e.g. the ILRS data centers) with the following citation, if users access ILRS data or products from the NASA CDDIS or the EDC.",
+   "conditions": "Requests, not licence conditions: cite the ILRS and the data centre, and use \"SLR\" as a keyword. EDC adds no data terms of its own.",
+   "reproduce": "yes",
+   "credit": "ILRS data and products (Pearlman et al. 2019, J Geod 93:2161–2180, doi:10.1007/s00190-019-01241-1), from the EUROLAS Data Center, DGFI-TUM (Noll et al. 2019, J Geod 93:2211–2225, doi:10.1007/s00190-018-1207-2).",
+   "reason": "The ILRS states its data and products are not copyrighted and asks only for citation.",
+   "usedIn": "V1, E2b, E3, E7 (SLR-MEO truth: ILRS combined orbits); E6 (normal points, station coordinates); E4 (Galileo CPF predictions)",
+   "reproducedAt": [
+    "data/e3/slr/ (28 ilrsa files)",
+    "release e7-inputs-20261010: e7-slr-ilrs.tar.gz (prepared, not yet uploaded)",
+    "site (gh-pages): data/truth/ (reference states converted from ilrsa orbits)",
+    "data/e4/cpf/ (226 Galileo CPF files produced by ESA/ESOC; see the ESA/ESOC row)",
+    "modules: data-source/cpf-source/test/fixtures/lageos1_cpf_*.dgf, analysis/od/tests/data/supgp-reference/cpf/lageos1.oem_itrf_utc.kvn"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "ilrs-nsgf",
+   "name": "NERC Space Geodesy Facility SLR orbits (nsgf.orb.*), an ILRS analysis centre",
+   "provider": "the NERC Space Geodesy Facility, Herstmonceux (British Geological Survey, UKRI), via EDC",
+   "licence": "ILRS (not copyrighted, citation requested); BGS/NERC data are open under the Open Government Licence v3.0 (no statement specific to these orbit files)",
+   "terms": [
+    {
+     "title": "Cite the ILRS",
+     "url": "https://ilrs.gsfc.nasa.gov/about/cite.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "NERC Space Geodesy Facility",
+     "url": "http://sgf.rgo.ac.uk/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "BGS: Open Government Licence",
+     "url": "https://www.bgs.ac.uk/bgs-intellectual-property-rights/open-government-licence/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Open Government Licence v3.0",
+     "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "The data and products are not copyrighted; however, in the event that you publish data or results using these data, we request that you … These data are delivered under the Open Government Licence, subject to the following acknowledgement accompanying the reproduced BGS materials:",
+   "attributionClause": "‘Contains British Geological Survey materials © UKRI [year]’",
+   "conditions": "Open Government Licence: no implied official status or endorsement. NSGF publishes no statement specific to its orbit files; the ILRS and BGS/NERC positions both allow open reuse with acknowledgement.",
+   "reproduce": "yes",
+   "credit": "NERC Space Geodesy Facility (ILRS analysis centre) orbits; contains British Geological Survey materials © UKRI 2026, Open Government Licence v3.0; ILRS citations as in the ILRS row.",
+   "reason": "Distributed as ILRS analysis-centre products (not copyrighted); the owner's default licence is the Open Government Licence.",
+   "usedIn": "E3, E5, E7 (SLR-LEO truth: Starlette, Stella, LARETS, WESTPAC, Ajisai, LARES, LARES-2)",
+   "reproducedAt": [
+    "data/e3/slr/ (106 nsgf files)",
+    "data/e5/slr/ (184 nsgf files)",
+    "release e7-inputs-20261010: e7-slr-nsgf.tar.gz (prepared, not yet uploaded)"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "set-jb2008",
+   "name": "Space Environment Technologies JB2008 indices (SOLFSMY.TXT, DTCFILE.TXT)",
+   "provider": "Space Environment Technologies (SET)",
+   "licence": "No licence on the live page; the JB2008 code README reserves all rights",
+   "terms": [
+    {
+     "title": "SET: JB2008",
+     "url": "https://spacewx.com/jb2008/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "JB2008 code README (jb2008.zip)",
+     "url": "https://sol.spacenvironment.net/JB2008/downloadables/jb2008.zip",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "SET JB2008 page as archived on 2025-09-07 (Wayback Machine)",
+     "url": "https://web.archive.org/web/20250907171936id_/https://spacewx.com/jb2008/",
+     "retrieved": "2026-10-10 (archived 2025-09-07)"
+    }
+   ],
+   "redistribution": "Space weather indices are provided here with a 45-day lag between the current day-of-year (DOY). The operational, real-time space weather indices can be requested via UDL. … Copyright, 2008, Space Environment Technologies. All rights reserved.",
+   "attributionClause": "When using JB2008 indices or other data from this website in a publication or conference paper, please acknowledge use of the data as: “The JB2008 solar and geomagnetic indices are provided for scientific use courtesy of Space Environment Technologies.”",
+   "conditions": "SET's licence of 2022–2025, no longer on the page, allowed distribution without charge with acknowledgement but said: \"You may not modify, adapt, translate, reverse engineer, decompile, or disassemble the software or the data products that drive this software.\" HASDM data: \"for research purposes only\".",
+   "reproduce": "no",
+   "credit": "The JB2008 solar and geomagnetic indices are provided for scientific use courtesy of Space Environment Technologies (https://spacewx.com/jb2008/).",
+   "reason": "No current licence grants redistribution, and the code README reserves all rights. Results that use the indices are published with SET's acknowledgement; the files are cited by URL and SHA-256.",
+   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants); the HPOP-against-Orekit JB2008 cases (modules)",
+   "reproducedAt": [
+    "modules: propagator/hpop/tests/fixtures/orekit/jb2008-2026-06.json (indices as Orekit read them; committed before this audit)",
+    "site (gh-pages): data/orekit/jb2008_indices-*.prw (labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)"
+   ],
+   "obtain": "https://sol.spacenvironment.net/JB2008/indices/ (SOLFSMY.TXT, DTCFILE.TXT); data/e5 and data/e7 MANIFEST.json list the SHA-256 of the copies read.",
+   "notice": null
+  },
+  {
+   "id": "iers",
+   "name": "IERS Earth orientation (EOP 20 C04; finals2000A)",
+   "provider": "the IERS Earth Orientation Centre (Observatoire de Paris) and the IERS Rapid Service/Prediction Centre (U.S. Naval Observatory)",
+   "licence": "finals2000A: U.S. Government, \"Approved for public release: distribution unlimited\"; EOP 20 C04: no terms stated",
+   "terms": [
+    {
+     "title": "USNO Earth Orientation (maia.usno.navy.mil), as archived on 2026-08-29",
+     "url": "https://web.archive.org/web/20260829153826id_/https://maia.usno.navy.mil/",
+     "retrieved": "2026-10-10 (archived 2026-08-29; the live host did not resolve)"
+    },
+    {
+     "title": "IERS Terms of Reference",
+     "url": "https://www.iers.org/iers/en/organization/about/tor/tor",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "EOP 20 C04 readme",
+     "url": "https://hpiers.obspm.fr/eoppc/eop/eopc04/readme",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "IERS legal notice",
+     "url": "https://www.iers.org/iers/en/service/imprint",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Approved for public release: distribution unlimited. … IERS collects, archives and distributes products to satisfy the objectives of a wide range of applications, research and experimentation.",
+   "attributionClause": "(none stated; IERS products are cited by product and centre)",
+   "conditions": "EOP 20 C04 carries no licence, condition or citation request; the IERS distributes it for public use. Its header names the Earth Orientation Centre's contact, who can confirm if certainty is needed.",
+   "reproduce": "yes",
+   "credit": "IERS EOP 20 C04 (IERS Earth Orientation Centre, Observatoire de Paris); finals2000A (IERS Rapid Service/Prediction Centre, U.S. Naval Observatory).",
+   "reason": "USNO releases finals2000A for unlimited distribution; the IERS distributes C04 openly with no restriction.",
+   "usedIn": "V1, E1, E2, E2b, E3, E4, E5, E6, E7, E10 (Earth orientation for every frame conversion)",
+   "reproducedAt": [
+    "data/e1/finals2000A.all.gz, data/e1/eopc04.1962-now.gz",
+    "results/e2/data/finals2000A.all.20261009T1144Z.gz",
+    "data/e3/eop/",
+    "data/e5/eop/",
+    "data/e7/eopc04.1962-now.gz",
+    "site (gh-pages): data/eop/, data/od/, data/orekit/earth_orientation-*.prw",
+    "modules: data-source/eop-parser/tests/fixtures/*.excerpt.txt, data/space-data-loaders/fixtures/finals2000A.daily, propagator/hpop/tests/fixtures/orekit/eop-2026-06.json and eop-2026-08.json"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "zenodo-licata-hasdm",
+   "name": "Licata et al. (2021), CHAMP and GRACE-A densities with HASDM and JB2008 predictions (Zenodo 4602380)",
+   "provider": "R. J. Licata, P. M. Mehta, W. K. Tobiska, B. R. Bowman and M. D. Pilinski, on Zenodo",
+   "licence": "CC BY 4.0",
+   "terms": [
+    {
+     "title": "Zenodo record 4602380",
+     "url": "https://zenodo.org/records/4602380",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Zenodo API, record 4602380",
+     "url": "https://zenodo.org/api/records/4602380",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Creative Commons Attribution 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited.",
+   "attributionClause": "identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);",
+   "conditions": "SET's HASDM database itself is for research use only; this record is its authors' CC BY 4.0 release of HASDM values along the CHAMP and GRACE-A orbits.",
+   "reproduce": "yes",
+   "credit": "Licata, R. J., Mehta, P. M., Tobiska, W. K., Bowman, B. R., Pilinski, M. D. (2021). CHAMP and GRACE-A Density Estimates with Associated HASDM and JB2008 Predictions. Zenodo, doi:10.5281/zenodo.4602380. CC BY 4.0.",
+   "reason": "CC BY 4.0. Cited by DOI rather than copied: the 3.3 GB archive is public with a DOI.",
+   "usedIn": "E5 (historical test: CHAMP and GRACE-A densities, HASDM and JB2008 along track)",
+   "obtain": "https://doi.org/10.5281/zenodo.4602380 (CHAMP_New.zip, GRACE_A_New.zip); data/e5/MANIFEST.json lists their SHA-256.",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "space-track",
+   "name": "Space-Track.org GP element sets (gp_history) and SATCAT",
+   "provider": "USSPACECOM (18th Space Defense Squadron), via Space-Track.org",
+   "licence": "Space-Track User Agreement (2019), with USSPACECOM's blanket approval to redistribute basic SSA data (TLE/OMM, SATCAT, decay and reentry) with citation",
+   "terms": [
+    {
+     "title": "Space-Track.org documentation: User Agreement; Redistribution of Basic SSA Information",
+     "url": "https://www.space-track.org/documentation",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "USSPACECOM has provided express blanket approval for transfer/redistribution of basic SSA data and services accessed via www.Space-Track.org conditioned on appropriate citation. … The User agrees not to transfer any data or technical information received from this website, or other U.S. Government source, including the analysis of data, to any other entity without prior express approval.",
+   "attributionClause": "Publications of analysis based on USSPACECOM data also require appropriate citations.",
+   "conditions": "Basic SSA data are element sets (TLE/OMM), SATCAT and decay/reentry data; other products (SP vectors, CDMs, numeric RCS) need USSPACECOM's approval. Repository rule (README rule 4): element sets and per-sample tables derived from them stay on the archive host.",
+   "reproduce": "no",
+   "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
+   "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
+   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E10 (element sets: baselines, histories, cut-off inputs)",
+   "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
+   "notice": null,
+   "reproducedAt": [
+    "modules: analysis/conjunction-assessment/tests/fixtures/socrates/gp_*.json and decaying/gp_2026-07-06.json (element sets via CelesTrak, no citation)",
+    "modules: analysis/launch-trajectory/tests/fixtures/{crs14,crs16,paz}.json \"catalog\" blocks and iss-teme-crew13.json (per-sample states from Space-Track element sets, no citation)"
+   ]
+  },
+  {
+   "id": "gfz-kp",
+   "name": "GFZ Kp, ap and Ap, with the sunspot number and F10.7 (Kp_ap_Ap_SN_F107_since_1932.txt)",
+   "provider": "GFZ Helmholtz Centre for Geosciences (Kp, ap, Ap); WDC-SILSO, Royal Observatory of Belgium (sunspot number); Dominion Radio Astrophysical Observatory and Natural Resources Canada (F10.7)",
+   "licence": "CC BY 4.0 for Kp, ap and Ap; CC BY-NC 4.0 for the sunspot numbers; F10.7 under NRCan's terms (non-commercial reproduction)",
+   "terms": [
+    {
+     "title": "Kp_ap_Ap_SN_F107_since_1932.txt (file header)",
+     "url": "https://kp.gfz.de/app/files/Kp_ap_Ap_SN_F107_since_1932.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "GFZ: Kp index",
+     "url": "https://kp.gfz.de/en/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "WDC-SILSO: data files",
+     "url": "https://www.sidc.be/SILSO/datafiles",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Natural Resources Canada: terms and conditions",
+     "url": "https://natural-resources.canada.ca/corporate/terms-conditions",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Creative Commons Attribution-NonCommercial 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "LICENSE: CC BY 4.0, except for the sunspot numbers contained in this file, which have the CC BY-NC 4.0 license … Permission to reproduce Government of Canada works, in part or in whole, and by any means, for personal or public non-commercial purposes, or for cost-recovery purposes, is not required, unless otherwise specified in the material you wish to reproduce.",
+   "attributionClause": "Please refer to GFZ German Research Centre for Geosciences as data source. … Source: WDC-SILSO, Royal Observatory of Belgium, Brussels, DOI:",
+   "conditions": "NonCommercial (sunspot numbers): \"NonCommercial means not primarily intended for or directed towards commercial advantage or monetary compensation.\" NRCan: a reproduction \"must remain as is\". The copies here are unmodified, with the file's licence header.",
+   "reproduce": "non-commercial",
+   "credit": "Kp, ap, Ap: GFZ Helmholtz Centre for Geosciences, CC BY 4.0 (Matzka et al. 2021, GFZ Data Services, doi:10.5880/Kp.0001; Space Weather, doi:10.1029/2020SW002641). Sunspot number: WDC-SILSO, Royal Observatory of Belgium, Brussels, doi:10.24414/qnza-ac80, CC BY-NC 4.0. F10.7: Dominion Radio Astrophysical Observatory and Natural Resources Canada.",
+   "reason": "Reproduced unmodified, with its licence header, for the non-commercial purpose of checking the experiments. The sunspot column is CC BY-NC 4.0 and the F10.7 column rests on NRCan's non-commercial permission, so these copies must not be redistributed in a commercial product or service.",
+   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7)",
+   "reproducedAt": [
+    "data/e5/gfz-kp/Kp_ap_Ap_SN_F107_since_1932.txt.gz",
+    "data/e7/Kp_ap_Ap_SN_F107_since_1932.txt.gz"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "noaa-swpc",
+   "name": "NOAA SWPC Report of Solar-Geophysical Activity (RSGA)",
+   "provider": "the NOAA Space Weather Prediction Center",
+   "licence": "Public domain (NOAA/NWS data and products)",
+   "terms": [
+    {
+     "title": "NOAA/NWS: Use of NOAA/NWS Data and Products",
+     "url": "https://www.weather.gov/disclaimer",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "The information on National Weather Service (NWS) Web pages are in the public domain, unless specifically noted otherwise, and may be used without charge for any lawful purpose so long as you do not:",
+   "attributionClause": "As required by 17 U.S.C. § 403, third parties producing copyrighted works consisting predominantly of the material appearing in NWS Web pages must provide notice with such work(s) identifying the NWS material incorporated and stating that such material is not subject to copyright protection.",
+   "conditions": "Do not claim it as your own, imply NOAA/NWS endorsement, or present modified content as official.",
+   "reproduce": "yes",
+   "credit": "NOAA Space Weather Prediction Center, Report of Solar-Geophysical Activity (U.S. Government material, not subject to copyright protection).",
+   "reason": "Public-domain U.S. Government material.",
+   "usedIn": "E7 (F10.7 and Ap forecasts as issued)",
+   "reproducedAt": [
+    "data/e7/swpc-rsga.tar.gz"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "jpl-de440",
+   "name": "JPL planetary ephemeris DE440 (DE440s kernel and year excerpts)",
+   "provider": "NASA Jet Propulsion Laboratory (Solar System Dynamics), distributed by NAIF",
+   "licence": "NAIF rules for SPICE kernels: unmodified kernels may be redistributed; a modified kernel names its modifier",
+   "terms": [
+    {
+     "title": "Rules Regarding Use of SPICE (NAIF)",
+     "url": "https://naif.jpl.nasa.gov/naif/rules.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "JPL Solar System Dynamics: planetary ephemeris export",
+     "url": "https://ssd.jpl.nasa.gov/planets/eph_export.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Redistribution of SPICE kernels distributed by NAIF is permitted as long as they have not been modified. If a kernel distributed by NAIF has been modified in any way, any embedded or otherwise allied attribution of the original kernel producer must be replaced with the name and institution of whomever has made the last modification.",
+   "attributionClause": "Park et al., The JPL Planetary and Lunar Ephemerides DE440 and DE441, 2021",
+   "conditions": "The year excerpts (data/e10; the 2026 excerpt in space-data-network-modules and on the site) are modified kernels: they name their maker, DigitalArsenal (NAIF's spksub_c), and are not JPL or NAIF products.",
+   "reproduce": "yes",
+   "credit": "JPL planetary ephemeris DE440 (Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021), AJ 161:105, doi:10.3847/1538-3881/abd414), via NASA/JPL NAIF; year excerpts made by DigitalArsenal with NAIF's spksub_c.",
+   "reason": "NAIF permits redistributing unmodified kernels; the excerpts carry their modifier's name as the rule requires.",
+   "usedIn": "V1, E2, E3, E5, E6, E7, E10 (Sun and Moon for HPOP)",
+   "reproducedAt": [
+    "release gnss-truth-20261009: de440s.bsp (unmodified)",
+    "data/e10/de440-2018.bsp, data/e10/de440-2024.bsp (excerpts)",
+    "site (gh-pages): data/kernel/, data/orekit/kernel-*.prw (2026 excerpt)",
+    "modules: files/orbit-products/tests/fixtures/de440/ (2026 excerpt, CSPICE and Horizons comparisons), files/orbit-products/fixtures/*.bsp (NAIF station, InSight, MSL and LADEE kernels), propagator/cislunar/vectors/jpl-halo-authority.json, maneuver/star-search/tests/vectors/"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "egm",
+   "name": "Earth gravity models EGM2008 and EGM96",
+   "provider": "the U.S. National Geospatial-Intelligence Agency (EGM2008); NASA GSFC and NIMA (EGM96)",
+   "licence": "U.S. Government models; no restriction stated",
+   "terms": [
+    {
+     "title": "NGA: WGS 84 and Earth Gravitational Models, as archived on 2026-01-05",
+     "url": "https://web.archive.org/web/20260105104748id_/https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84",
+     "retrieved": "2026-10-10 (archived 2026-01-05; the live host did not resolve)"
+    },
+    {
+     "title": "NASA Earthdata: data use and citation guidance",
+     "url": "https://www.earthdata.nasa.gov/engage/open-data-services-software-policies/data-use-guidance",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "If not copyrighted, NASA material may be reproduced and distributed without further permission from NASA.",
+   "attributionClause": "EGM2008 Citation: The development and evaluation of the Earth Gravitational Model 2008",
+   "reproduce": "yes",
+   "credit": "EGM2008: NGA (Pavlis et al. 2012, JGR 117, B04406, doi:10.1029/2011JB008916). EGM96: NASA GSFC and NIMA (Lemoine et al. 1998, NASA/TP-1998-206861).",
+   "reason": "Published by U.S. federal agencies without restriction; the model papers are cited.",
+   "usedIn": "V1, E2, E3, E5, E6, E7, E10 (HPOP gravity field, degree and order up to 70)",
+   "reproducedAt": [
+    "site (gh-pages): modules/propagator/hpop/module.wasm (coefficients compiled in)",
+    "modules: propagator/hpop/lib/egm2008_data.h and egm96_data.h (degree and order 70)"
+   ],
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "fes2004",
+   "name": "FES2004 ocean-tide coefficients (IERS Conventions 2010)",
+   "provider": "LEGOS and CNES (Lyard et al. 2006), distributed with the IERS Conventions (2010)",
+   "licence": "No terms stated with the IERS Conventions copy; AVISO's FES2004 page is gone",
+   "terms": [
+    {
+     "title": "IERS Conventions Centre: chapter 6 tide models",
+     "url": "https://iers-conventions.obspm.fr/content/chapter6/additional_info/tidemodels/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "AVISO: FES global tide",
+     "url": "https://www.aviso.altimetry.fr/en/data/products/auxiliary-products/global-tide-fes.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no licence or terms in the IERS Conventions directory or the file header; AVISO's current page covers FES2014 and FES2022 only)",
+   "attributionClause": "(none stated; cite IERS Technical Note 36 and Lyard et al. 2006)",
+   "reproduce": "no",
+   "credit": "FES2004 (Lyard et al. 2006) as distributed with the IERS Conventions (2010), IERS Technical Note 36.",
+   "reason": "No terms found; the coefficient table is not reproduced here.",
+   "usedIn": "Not used by the experiments (downloaded for an ocean-tide model HPOP does not yet have)",
+   "conditions": "",
+   "notice": null,
+   "obtain": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "noaa-nodd",
+   "name": "NOAA Open Data Dissemination: GOES-19 ABI products, GFS and GEFS GRIB2",
+   "provider": "NOAA (NESDIS GOES-R; NCEP GFS/GEFS) via the NOAA Open Data Dissemination buckets",
+   "licence": "Open, no restrictions (NOAA NODD); NWS products public domain",
+   "terms": [
+    {
+     "title": "Registry of Open Data on AWS: NOAA GOES",
+     "url": "https://registry.opendata.aws/noaa-goes/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "NOAA/NWS: Use of NOAA/NWS Data and Products",
+     "url": "https://www.weather.gov/disclaimer",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "NOAA data disseminated through NODD are open to the public and can be used as desired.",
+   "attributionClause": "NOAA requests attribution for the use or dissemination of unaltered NOAA data.",
+   "reproduce": "yes",
+   "credit": "GOES-19 ABI and GFS/GEFS data courtesy of NOAA via NOAA Open Data Dissemination.",
+   "reason": "Open NOAA data.",
+   "reproducedAt": [
+    "modules: data-source/imager-observation-parser/tests/fixtures/goes19-m1-2026280-0600/, data-source/nwp-grib2-parser/tests/fixtures/noaa-2026100600-f024/, data-source/nwp-field-source/tests/fixtures/*.idx, data-source/imager-observation-source/tests/fixtures/*.xml"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "osm",
+   "name": "OpenStreetMap (Overpass API response)",
+   "provider": "OpenStreetMap contributors",
+   "licence": "ODbL 1.0",
+   "terms": [
+    {
+     "title": "OpenStreetMap: copyright and licence",
+     "url": "https://www.openstreetmap.org/copyright",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Open Data Commons Open Database License 1.0",
+     "url": "https://opendatacommons.org/licenses/odbl/1-0/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(ODbL 1.0: share and adapt with attribution; derivative databases used publicly stay under the ODbL)",
+   "attributionClause": "Provide credit to OpenStreetMap by displaying our attribution notice.",
+   "reproduce": "share-alike",
+   "credit": "© OpenStreetMap contributors, ODbL 1.0.",
+   "reason": "Open Database License: attribution and share-alike; the fixture keeps the ODbL notice.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/overpass-berlin.sample.json (ODbL notice in the file)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "fcc-uls",
+   "name": "FCC Universal Licensing System (3650 MHz locations)",
+   "provider": "U.S. Federal Communications Commission",
+   "licence": "Public domain (U.S. Government)",
+   "terms": [
+    {
+     "title": "FCC open data: ULS 3650 dataset metadata",
+     "url": "https://opendata.fcc.gov/api/views/euz5-46g2.json",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Public Domain U.S. Government",
+   "attributionClause": "(none required)",
+   "reproduce": "yes",
+   "credit": "Source: FCC Wireless Telecommunications Bureau, ULS 3650 MHz locations.",
+   "reason": "U.S. Government public domain.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/fcc-uls-3650-houston.sample.json"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "bakom",
+   "name": "Swiss OFCOM (BAKOM) mobile base stations",
+   "provider": "Federal Office of Communications OFCOM, via opendata.swiss",
+   "licence": "opendata.swiss \"Open use\"",
+   "terms": [
+    {
+     "title": "opendata.swiss: terms of use",
+     "url": "https://opendata.swiss/en/terms-of-use",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "You may use this dataset for commercial purposes.",
+   "attributionClause": "You are recommended to provide the source (author, title and link to the dataset).",
+   "reproduce": "yes",
+   "credit": "Source: Federal Office of Communications OFCOM (BAKOM), mobile phone base stations, opendata.swiss.",
+   "reason": "Open use.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/bakom-mobile-sites.*"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "acma-rrl",
+   "name": "ACMA Register of Radiocommunications Licences",
+   "provider": "Australian Communications and Media Authority",
+   "licence": "ACMA RRL licence (LICENCE.TXT in spectra_rrl.zip): use, reproduce, adapt and distribute derivatives",
+   "terms": [
+    {
+     "title": "ACMA RRL licence (LICENCE.TXT inside spectra_rrl.zip)",
+     "url": "https://cdn.acma.gov.au/rrl/spectra_rrl.zip",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "to develop derivative material based on the Register, and to distribute any derivatives developed by you to third parties.",
+   "attributionClause": "the following attribution must be used: \"Based on Australian Communications and Media Authority information\".",
+   "reproduce": "yes",
+   "credit": "Based on Australian Communications and Media Authority information.",
+   "reason": "The licence allows distributing copies and derivatives, with the stated attribution.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/acma-rrl.slice.zip"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "ised-tafl",
+   "name": "ISED Canada Technical and Administrative Frequency Lists (TAFL)",
+   "provider": "Innovation, Science and Economic Development Canada",
+   "licence": "ISED site terms: non-commercial reproduction (Open Government Licence – Canada not shown to apply)",
+   "terms": [
+    {
+     "title": "ISED: terms and conditions",
+     "url": "https://ised-isde.canada.ca/site/ised/en/terms-and-conditions",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Unless otherwise specified, you may not reproduce materials on this site, in whole or in part, for the purposes of commercial redistribution without prior written permission from Innovation, Science and Economic Development Canada.",
+   "attributionClause": "indicate both the complete title of the materials reproduced as well as the author (where available); and",
+   "reproduce": "non-commercial",
+   "credit": "Innovation, Science and Economic Development Canada, Technical and Administrative Frequency Lists (TAFL).",
+   "reason": "Non-commercial reproduction only, as the site terms stand; the fixture's Open Government Licence claim could not be verified.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/ised-sms-tafl.slice.zip"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "anfr",
+   "name": "ANFR Cartoradio radio installations",
+   "provider": "Agence nationale des fréquences (ANFR), via data.gouv.fr",
+   "licence": "Licence Ouverte 2.0 (Etalab)",
+   "terms": [
+    {
+     "title": "Licence Ouverte / Open Licence 2.0",
+     "url": "https://static.data.gouv.fr/resources/licence-ouverte-2-0/20260911-071954/open-licence.pdf",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "The “Reuser” is free to reuse the “Information”:",
+   "attributionClause": "An acknowledgement of the authorship of the “Information”: its source (at least,",
+   "reproduce": "yes",
+   "credit": "Agence nationale des fréquences (ANFR), data.gouv.fr, Licence Ouverte 2.0.",
+   "reason": "Open licence with attribution.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/anfr-cartoradio.slice.zip"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "geonames",
+   "name": "GeoNames gazetteer dumps",
+   "provider": "GeoNames (www.geonames.org)",
+   "licence": "CC BY 4.0",
+   "terms": [
+    {
+     "title": "GeoNames dump readme",
+     "url": "https://download.geonames.org/export/dump/readme.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Creative Commons Attribution 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "This work is licensed under a Creative Commons Attribution 4.0 License,",
+   "attributionClause": "identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);",
+   "reproduce": "yes",
+   "credit": "GeoNames (www.geonames.org), CC BY 4.0.",
+   "reason": "CC BY 4.0.",
+   "reproducedAt": [
+    "modules: data-source/geonames-source/tests/fixtures/*.slice.txt"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "mlab",
+   "name": "M-Lab statistics",
+   "provider": "Measurement Lab",
+   "licence": "CC0 (data)",
+   "terms": [
+    {
+     "title": "M-Lab: data",
+     "url": "https://www.measurementlab.net/data/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "All data collected by M-Lab tests are available to the public without restriction under a No Rights Reserved Creative Commons Zero Waiver.",
+   "attributionClause": "(a citation of the data set and date range is requested)",
+   "reproduce": "yes",
+   "credit": "The M-Lab NDT Data Set, https://measurementlab.net/tests/ndt.",
+   "reason": "CC0.",
+   "reproducedAt": [
+    "modules: data-source/mlab-starlink-connectivity/tests/fixtures/mlab-asn14593-histogram_daily_stats.sample.json"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "space-devs-ll2",
+   "name": "The Space Devs Launch Library 2",
+   "provider": "The Space Devs",
+   "licence": "Free use; forwarding the data without adding value is discouraged",
+   "terms": [
+    {
+     "title": "The Space Devs FAQ",
+     "url": "https://raw.githubusercontent.com/TheSpaceDevs/Tutorials/main/faqs/faq_TSD.md",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "You are free to use the data in any way, shape, or form, and share what you create with it. Please refrain from forwarding it without adding value.",
+   "attributionClause": "Attribution is not mandatory, but is encouraged and appreciated.",
+   "reproduce": "yes",
+   "credit": "Launch Library 2, The Space Devs (thespacedevs.com).",
+   "reason": "Free use; a recorded test slice, not a mirror.",
+   "reproducedAt": [
+    "modules: data-source/launch-schedule/tests/fixtures/ll2-upcoming-2026-09-28.json"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "telemetry-data",
+   "name": "shahar603 Telemetry-Data (SpaceX webcast telemetry)",
+   "provider": "shahar603/Telemetry-Data (values transcribed from SpaceX launch webcasts)",
+   "licence": "The Unlicense",
+   "terms": [
+    {
+     "title": "Telemetry-Data LICENSE",
+     "url": "https://raw.githubusercontent.com/shahar603/Telemetry-Data/master/LICENSE",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Anyone is free to copy, modify, publish, use, compile, sell, or",
+   "attributionClause": "(none required)",
+   "reproduce": "yes",
+   "credit": "shahar603/Telemetry-Data (Unlicense), from SpaceX launch webcasts.",
+   "reason": "Public-domain dedication.",
+   "reproducedAt": [
+    "modules: analysis/launch-trajectory/tests/fixtures/{crs14,crs16,paz}.json (\"telemetry\" arrays)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "tracss-ivv",
+   "name": "TraCSS Dataset for Conjunction Assessment Verification (The Aerospace Corporation)",
+   "provider": "The Aerospace Corporation, published by the NOAA Office of Space Commerce",
+   "licence": "CC0 1.0",
+   "terms": [
+    {
+     "title": "Office of Space Commerce: Dataset for Conjunction Assessment Verification",
+     "url": "https://space.commerce.gov/dataset-for-conjunction-assessment-verification/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "These data are available on a full and open basis, with no restrictions on use or dissemination, under the Creative Commons Universal Public Domain Dedication (CC0-1.0).",
+   "attributionClause": "(none required)",
+   "reproduce": "yes",
+   "credit": "TraCSS Dataset for Conjunction Assessment Verification (The Aerospace Corporation / NOAA Office of Space Commerce), CC0 1.0.",
+   "reason": "CC0.",
+   "reproducedAt": [
+    "modules: analysis/conjunction-assessment/tests/fixtures/aerospace-real-window/"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "gcat",
+   "name": "GCAT (Jonathan McDowell's General Catalog of Artificial Space Objects)",
+   "provider": "J. McDowell, planet4589.org",
+   "licence": "Free reproduction with citation (CC BY)",
+   "terms": [
+    {
+     "title": "GCAT",
+     "url": "https://planet4589.org/space/gcat/index.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "This data may be freely reproduced as long as you cite it.",
+   "attributionClause": "A minimal citation is \"Data from J. McDowell, planet4589.org\".",
+   "reproduce": "yes",
+   "credit": "Data from J. McDowell, planet4589.org.",
+   "reason": "Free reproduction with citation.",
+   "reproducedAt": [
+    "modules: data-source/catalog-source/tests/parity.test.mjs (one row)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "mccants",
+   "name": "Mike McCants' classified-satellite element sets",
+   "provider": "Mike McCants (mmccants.org)",
+   "licence": "No licence stated",
+   "terms": [
+    {
+     "title": "McCants: TLE files",
+     "url": "https://mmccants.org/tles/index.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no licence or reuse statement)",
+   "attributionClause": "(none stated)",
+   "reproduce": "no",
+   "credit": "Mike McCants, https://mmccants.org/tles/.",
+   "reason": "No licence grants redistribution.",
+   "reproducedAt": [
+    "modules: data-source/catalog-source/tests/mccants.test.mjs, tests/parity.test.mjs (two element sets inline)"
+   ],
+   "obtain": "https://mmccants.org/tles/classfd.zip",
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null
+  },
+  {
+   "id": "iac-glonass",
+   "name": "IAC (Roscosmos) GLONASS rapid orbit (SP3)",
+   "provider": "Information-Analytical Center, Roscosmos (glonass-iac.ru)",
+   "licence": "No reuse terms published (site copyright notice only)",
+   "terms": [
+    {
+     "title": "GLONASS IAC",
+     "url": "https://glonass-iac.ru/en/about_glonass/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no reuse terms; the site shows a copyright notice only)",
+   "attributionClause": "(none stated)",
+   "reproduce": "no",
+   "credit": "Information-Analytical Center, Roscosmos, https://glonass-iac.ru.",
+   "reason": "No terms grant redistribution.",
+   "reproducedAt": [
+    "modules: analysis/od/tests/data/glonass/iac_glonass.sp3.glo, data-source/glonass-source/test/fixtures/iac_glonass.sp3.glo (header + 3 epochs), analysis/od/tests/data/supgp-reference/glonass/R03.oem_igs20_gps.kvn"
+   ],
+   "obtain": "ftp://ftp.glonass-iac.ru/MCC/PRODUCTS/ (rapid SP3)",
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null
+  },
+  {
+   "id": "nist",
+   "name": "NIST/SEMATECH e-Handbook of Statistical Methods (chi-square table)",
+   "provider": "U.S. National Institute of Standards and Technology",
+   "licence": "Public information (U.S. Government)",
+   "terms": [
+    {
+     "title": "NIST: copyrights and disclaimers",
+     "url": "https://www.nist.gov/copyrights-disclaimers",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "information presented on NIST sites are considered public information and may be distributed or copied.",
+   "attributionClause": "Use of appropriate byline/photo/image credits is requested.",
+   "reproduce": "yes",
+   "credit": "NIST/SEMATECH e-Handbook of Statistical Methods, section 1.3.6.7.4.",
+   "reason": "U.S. Government public information.",
+   "reproducedAt": [
+    "modules: analysis/association/tests/fixtures/nist-chi-square.json"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "open-source-test-vectors",
+   "name": "Open-source test vectors (Hipparchus, GMAT, Tudat, hapsira, ERFA)",
+   "provider": "Hipparchus and NASA GMAT (Apache-2.0), Tudat (BSD-3-Clause), hapsira (MIT), ERFA (BSD-3-Clause)",
+   "licence": "Apache-2.0, BSD-3-Clause, MIT",
+   "terms": [
+    {
+     "title": "Apache License 2.0",
+     "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Tudat LICENSE",
+     "url": "https://raw.githubusercontent.com/tudat-team/tudat/develop/LICENSE",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "hapsira LICENSE",
+     "url": "https://raw.githubusercontent.com/pleiszenburg/hapsira/main/LICENSE",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "4. Redistribution. You may reproduce and distribute copies of the",
+   "attributionClause": "Redistributions of source code must retain the above copyright notice, this list of",
+   "conditions": "Keep each project's licence and copyright notice with what is copied: present for Hipparchus and ERFA; missing for the Tudat (BSD-3) and hapsira (MIT) extracts and the GMAT parameter names.",
+   "reproduce": "yes",
+   "credit": "Hipparchus, NASA GMAT (Apache-2.0); Tudat, Delft University of Technology (BSD-3-Clause); hapsira (MIT); ERFA (BSD-3-Clause).",
+   "reason": "Permissive licences; the notice must travel with the copy.",
+   "reproducedAt": [
+    "modules: analysis/estimation/tests/fixtures/hipparchus-*, analysis/parameters/fixtures/reference-parameter-roster.json, analysis/maneuver/vectors/{tudat,hapsira}-extract.json, higherpop/third_party/erfa/"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "hwm14",
+   "name": "NRL Horizontal Wind Model HWM14 (model data)",
+   "provider": "U.S. Naval Research Laboratory (Drob et al. 2015), published as supporting information of an AGU article",
+   "licence": "Conflicting: U.S. Government work (17 U.S.C. 105) per the repository; the publisher records CC BY-NC-ND 4.0 for the article and its supporting information",
+   "terms": [
+    {
+     "title": "Crossref record for doi:10.1002/2014EA000089",
+     "url": "https://api.crossref.org/works/10.1002/2014EA000089",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(Crossref licence URL for the version of record: http://creativecommons.org/licenses/by-nc-nd/4.0/)",
+   "attributionClause": "(cite Drob et al. 2015, Earth and Space Science 2, doi:10.1002/2014EA000089)",
+   "conditions": "If the CC BY-NC-ND licence applies, the files may be shared unmodified for non-commercial purposes only and may not be adapted (hwm14_data.cpp embeds them as a C array).",
+   "reproduce": "no",
+   "credit": "HWM14: Drob, D. P. et al. (2015), Earth and Space Science 2, 301–319, doi:10.1002/2014EA000089 (U.S. Naval Research Laboratory).",
+   "reason": "Unclear: the repository relies on U.S. Government authorship, but the publisher's record gives CC BY-NC-ND 4.0; confirm with NRL or AGU.",
+   "reproducedAt": [
+    "modules: third_party/hwm14/nrl/*, third_party/hwm14/hwm14_data.cpp, oracle fixtures, and module binaries that embed them"
+   ],
+   "obtain": "https://map.nrl.navy.mil/map/pub/nrl/HWM/HWM14/ (via the article's supporting information)",
+   "usedIn": "space-data-network-modules tests only",
+   "notice": null
+  },
+  {
+   "id": "sds-vcm-sample",
+   "name": "Sample Vector Covariance Message (spacedatastandards.org survey)",
+   "provider": "spacedatastandards.org survey/legacy-messages/vcm/sample/vcm.txt; an 18 SDS SP VCM (ISS solution, epoch rev 37693, 2023-01-07) with its center and satellite number replaced",
+   "licence": "Public sources (owner, 2026-10-10); spacedatastandards.org survey/legacy-messages/vcm/sample/vcm.txt, committed 2024-01-25",
+   "terms": [
+    {
+     "title": "Space-Track.org documentation: User Agreement; Redistribution of Basic SSA Information",
+     "url": "https://www.space-track.org/documentation",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(none stated in the survey; the owner states the examples come from public sources)",
+   "attributionClause": "(none stated)",
+   "reproduce": "yes",
+   "credit": "Sample VCM from the Space Data Standards survey (spacedatastandards.org, survey/legacy-messages/vcm/sample/vcm.txt, committed 2024-01-25), from public sources.",
+   "reason": "Owner decision of 2026-10-10: the VCM examples are from public sources. The file is the survey's sample (an SP VCM with its center and satellite number replaced), kept on the site with this provenance.",
+   "usedIn": "The site's VCM section (VCM read and propagated); space-data-network-modules tests",
+   "reproducedAt": [
+    "site (gh-pages): data/vcm/sample-vcm.txt",
+    "modules: analysis/vcm-adapter/tests/fixtures/sample-vcm.txt, files/orbit-products/fixtures/vcm_v2_sample.txt",
+    "spacedatastandards.org: survey/legacy-messages/vcm/sample/vcm.txt"
+   ],
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "cspoc-cdm",
+   "name": "CSpOC conjunction data message ION SCV-008 vs STARLINK-1233 (from Orekit's test resources)",
+   "provider": "Combined Space Operations Center (the CDM); redistributed in Orekit 13.1's test resources (Apache-2.0)",
+   "licence": "Orekit test resource (Apache-2.0); the underlying CDM is not basic SSA data",
+   "terms": [
+    {
+     "title": "Space-Track.org documentation: User Agreement; Redistribution of Basic SSA Information",
+     "url": "https://www.space-track.org/documentation",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(Orekit redistributes the message under Apache-2.0; Space-Track's blanket approval covers element sets, SATCAT and decay data, not CDMs)",
+   "attributionClause": "(none stated)",
+   "reproduce": "no",
+   "credit": "CDM from Orekit 13.1 test resources (ccsds/cdm/ION_SCV8_vs_STARLINK_1233.txt).",
+   "reason": "Unclear: the copy inherits Orekit's redistribution of an operational CDM whose own terms are not stated.",
+   "reproducedAt": [
+    "modules: analysis/conjunction-assessment/src/cpp/tests/fixtures/orekit/cdm/ION_SCV8_vs_STARLINK_1233.txt (excerpt)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "comreg",
+   "name": "ComReg (Ireland) SiteViewer mobile masts",
+   "provider": "Commission for Communications Regulation",
+   "licence": "Unverified (the fixture's provenance note says CC BY 4.0)",
+   "terms": [
+    {
+     "title": "ComReg SiteViewer",
+     "url": "https://siteviewer.comreg.ie/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no licence text found on the SiteViewer application; www.comreg.ie refused automated requests)",
+   "attributionClause": "(none found)",
+   "reproduce": "no",
+   "credit": "Commission for Communications Regulation (ComReg), SiteViewer.",
+   "reason": "Unverified: confirm the CC BY 4.0 note from a primary page.",
+   "reproducedAt": [
+    "modules: data-source/cell-tower-source/tests/fixtures/comreg-siteviewer.sample.pb"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "uscg-navcen",
+   "name": "USCG Navigation Center GPS almanacs (YUMA, SEM)",
+   "provider": "U.S. Coast Guard Navigation Center",
+   "licence": "U.S. Government work (presumed; the primary site did not resolve from this host)",
+   "terms": [
+    {
+     "title": "USCG NAVCEN GPS almanacs",
+     "url": "https://www.navcen.uscg.gov/gps-almanacs",
+     "retrieved": "2026-10-10 (not reachable)"
+    }
+   ],
+   "redistribution": "(U.S. Government work, 17 U.S.C. 105; no page could be fetched)",
+   "attributionClause": "(none required)",
+   "reproduce": "yes",
+   "credit": "Source: U.S. Coast Guard Navigation Center.",
+   "reason": "U.S. Government work.",
+   "reproducedAt": [
+    "modules: data-source/gps-source/test/fixtures/current_yuma.alm, current_sem.al3"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "eumetsat-tle",
+   "name": "EUMETSAT element set (one line in a test)",
+   "provider": "EUMETSAT",
+   "licence": "Not located (the licensing page is script-only)",
+   "terms": [
+    {
+     "title": "EUMETSAT data licensing",
+     "url": "https://www.eumetsat.int/eumetsat-data-licensing",
+     "retrieved": "2026-10-10 (script-only page)"
+    }
+   ],
+   "redistribution": "(not located)",
+   "attributionClause": "(not located)",
+   "reproduce": "no",
+   "credit": "EUMETSAT.",
+   "reason": "Unresolved; a single element set inline in a test.",
+   "reproducedAt": [
+    "modules: data-source/ephemeris-source/tests/parity.test.mjs (one element set)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "nrlmsise00",
+   "name": "NRLMSISE-00 model coefficients (C translation)",
+   "provider": "U.S. Naval Research Laboratory (model); D. Brodowski (C translation), copied from Basilisk",
+   "licence": "Model coefficients: U.S. Government work; the C translation states no licence",
+   "terms": [
+    {
+     "title": "NRLMSISE-00 C translation: DOCUMENTATION",
+     "url": "https://git.linta.de/~brodo/nrlmsise-00.git/plain/DOCUMENTATION",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "This package is distributed in the hope that it will be useful,",
+   "attributionClause": "(cite Picone et al. 2002, J. Geophys. Res. 107(A12), 1468)",
+   "conditions": "The repository's note that the C source is \"in the public domain\" is not in the translation's own documentation (code, outside this data audit).",
+   "reproduce": "yes",
+   "credit": "NRLMSISE-00 (Picone, J. M., Hedin, A. E., Drob, D. P., Aikin, A. C. (2002), JGR 107(A12), 1468), U.S. Naval Research Laboratory.",
+   "reason": "The coefficients are a U.S. Government model.",
+   "reproducedAt": [
+    "modules: third_party/nrlmsise00/"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "iqengine",
+   "name": "IQEngine SigMF metadata",
+   "provider": "IQEngine (metadata of recordings by several owners)",
+   "licence": "No site-wide licence; per-recording licences (CC BY, CC0, MIT, CC BY-SA, or none)",
+   "terms": [
+    {
+     "title": "IQEngine",
+     "url": "https://www.iqengine.org/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no site-wide data licence; each SigMF document states its own core:license, and several state none)",
+   "attributionClause": "(per recording)",
+   "reproduce": "no",
+   "credit": "IQEngine (https://www.iqengine.org/) and each recording's owner as named in its metadata.",
+   "reason": "Mixed: documents without a licence are all rights reserved; keep only the licensed documents, each with its licence (CC BY-SA documents share alike).",
+   "reproducedAt": [
+    "modules: data-source/sigmf-captures/tests/fixtures/iqengine-meta.sample.json (16 documents)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "celestrak",
+   "name": "CelesTrak supplemental GP (SupGP), SOCRATES and space-weather files",
+   "provider": "CelesTrak (T. S. Kelso)",
+   "licence": "No reuse licence; GP data come from Space-Track, SupGP fits from operator ephemerides, SW-All from GFZ, SILSO, NRCan and NOAA",
+   "terms": [
+    {
+     "title": "CelesTrak usage policy",
+     "url": "https://celestrak.org/usage-policy.php",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "CelesTrak: GP data formats",
+     "url": "https://celestrak.org/NORAD/documentation/gp-data-formats.php",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "our long tradition of making data freely available to all users. … trying to get fresh GP data (which we get from Space Track)",
+   "attributionClause": "(none stated)",
+   "conditions": "The usage policy governs access (query rates), not reuse. CelesTrak GP element sets are Space-Track basic SSA data (blanket approval with citation); SupGP fits inherit the operators' terms (none granted); SW-All carries SILSO's CC BY-NC sunspot numbers among its columns.",
+   "reproduce": "no",
+   "credit": "CelesTrak, https://celestrak.org (T. S. Kelso).",
+   "reason": "CelesTrak grants no licence for its own products (SupGP, SOCRATES); the upstream terms decide the rest.",
+   "usedIn": "E3 (capture failed on 2026-10-09: not measured); the HPOP-against-Orekit cases (CSSI space weather, via Orekit's data)",
+   "reproducedAt": [
+    "site (gh-pages): data/orekit/space_weather-*.prw (CSSI space weather as Orekit read it; labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)",
+    "modules: propagator/hpop/tests/fixtures/orekit/spw-2026-08.json, analysis/od/tests/data/supgp-reference/*/celestrak_supgp_*.csv (9), data-source/celestrak-supgp/test/fixtures/*, analysis/conjunction-assessment/tests/fixtures/socrates/reference.top3.json, analysis/conjunction-assessment/docs/socrates-replay-2026-10-02.json, data-source/celestrak-parser/tests/fixtures/celestrak-socrates-minrange.csv (committed before this audit)"
+   ],
+   "obtain": "https://celestrak.org (SupGP, SOCRATES Plus, space-weather files), within its usage policy.",
+   "notice": null
+  },
+  {
+   "id": "vallado-sgp4",
+   "name": "Vallado et al. (2006) SGP4 verification files (SGP4-VER.TLE, tcppver.out)",
+   "provider": "D. A. Vallado, P. Crawford, R. Hujsak and T. S. Kelso (AIAA 2006-6753), via CelesTrak; also bundled with python-sgp4 (MIT)",
+   "licence": "No licence; free use for any purpose with citation",
+   "terms": [
+    {
+     "title": "CelesTrak: Revisiting Spacetrack Report #3, FAQ",
+     "url": "https://celestrak.org/publications/AIAA/2006-6753/faq.php",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "python-sgp4 LICENSE",
+     "url": "https://raw.githubusercontent.com/brandon-rhodes/python-sgp4/master/LICENSE",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "There is no license associated with the code and you may use it for any purpose—personal or commercial—as you wish.",
+   "attributionClause": "We ask only that you include citations in your documentation and source code to show the source of the code",
+   "conditions": "The verification element sets are historical 18 SDS element sets published with the paper.",
+   "reproduce": "yes",
+   "credit": "Vallado, D. A., Crawford, P., Hujsak, R., Kelso, T. S. (2006), Revisiting Spacetrack Report #3, AIAA 2006-6753, https://celestrak.org/publications/AIAA/2006-6753/.",
+   "reason": "Published with the paper for free use, with citation.",
+   "usedIn": "The site's SGP4 verification; space-data-network-modules tests",
+   "reproducedAt": [
+    "site (gh-pages): data/tle/",
+    "modules: analysis/{od,conjunction-assessment}/src/cpp/deps/sgp4/SGP4-VER.TLE, analysis/epoch-state/tests/vallado-verification.json, analysis/gp-error-model/tests/stm-reference.json"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "spacex-starlink",
+   "name": "SpaceX Starlink public ephemerides (MEME, with covariance)",
+   "provider": "SpaceX (api.starlink.com/public-files/ephemerides)",
+   "licence": "Open source (owner's determination, 2026-10-10); SpaceX's terms page could not be fetched, and the manifest and ephemeris files state no licence",
+   "terms": [
+    {
+     "title": "Starlink public ephemerides manifest",
+     "url": "https://api.starlink.com/public-files/ephemerides/MANIFEST.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Starlink legal",
+     "url": "https://starlink.com/legal",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no licence or terms in the manifest or in the ephemeris files; starlink.com/legal serves no text to a client without a browser; the owner determined on 2026-10-10 that the files are open source)",
+   "attributionClause": "Attribution to SpaceX (owner's determination, 2026-10-10).",
+   "reproduce": "yes",
+   "credit": "SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/ (SpaceX).",
+   "reason": "Owner's determination of 2026-10-10 (SpaceX's terms page could not be fetched): reproducible with attribution to SpaceX.",
+   "usedIn": "E4 (Starlink: 298 object-files scored, with covariance)",
+   "reproducedAt": [
+    "modules: analysis/od/tests/data/supgp-reference/starlink-live-20260714/meme/ (10 full files, 20.4 MB), analysis/od/tests/data/supgp-reference/starlink/meme/ (10 trimmed), analysis/od/src/cpp/tests/data/test_meme.txt, analysis/od/tests/fixtures/request.fit.meme, data-source/spacex-starlink-source/test/fixtures/meme/ (excerpts) and manifest copies (committed before this audit)"
+   ],
+   "obtain": "https://api.starlink.com/public-files/ephemerides/ (current snapshot); data/e4/MANIFEST.json lists each file E4 read with its SHA-256.",
+   "conditions": "Owner's determination of 2026-10-10: the Starlink files are already open source. Credit SpaceX. The owner's separate rule stands: raw operator ephemerides are never stored or published by these experiments; this only sets how the source is labelled.",
+   "notice": null
+  },
+  {
+   "id": "cmsa-tiangong",
+   "name": "China Manned Space Engineering Office: Tiangong orbit data",
+   "provider": "China Manned Space Engineering Office (www.cmse.gov.cn)",
+   "licence": "All rights reserved (site footer); no licence stated",
+   "terms": [
+    {
+     "title": "China Manned Space Engineering",
+     "url": "https://www.cmse.gov.cn/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "版权所有：中国载人航天工程官方网站",
+   "attributionClause": "(none stated)",
+   "conditions": "The footer reads \"All rights reserved: China Manned Space Engineering official website; sponsor: China Manned Space Engineering Office\".",
+   "reproduce": "no",
+   "credit": "China Manned Space Engineering Office, https://www.cmse.gov.cn/.",
+   "reason": "No licence grants redistribution.",
+   "usedIn": "E4 (Tianhe: 7 files scored)",
+   "obtain": "https://www.cmse.gov.cn/ (orbit data notices); data/e4/MANIFEST.json lists each file with its SHA-256.",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "intelsat",
+   "name": "Intelsat public ephemerides (MyIntelsat)",
+   "provider": "Intelsat, now part of SES (my.intelsat.com/ephemeris/public)",
+   "licence": "No licence; SES terms of use reserve all rights",
+   "terms": [
+    {
+     "title": "MyIntelsat public ephemeris",
+     "url": "https://my.intelsat.com/ephemeris/public",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "SES terms of use",
+     "url": "https://www.ses.com/terms-of-use",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "You shall not frame or in-line (framing without a border around the framed content) this Site, meaning that you will not display the contents of this Site on another web page without SES’s express permission.",
+   "attributionClause": "(none stated)",
+   "conditions": "\"© 2026 SES S.A. All rights reserved.\"",
+   "reproduce": "no",
+   "credit": "Intelsat (SES) public ephemerides, https://my.intelsat.com/ephemeris/public.",
+   "reason": "No licence grants redistribution.",
+   "usedIn": "E4 (Intelsat: 83 of 89 files scored)",
+   "reproducedAt": [
+    "modules: data-source/intelsat-source/test/fixtures/i_aor_e_302.00_is-21_20260710_235300.sample.txt, analysis/od/tests/data/supgp-reference/intelsat/is-21.oem_ecef_utc.kvn (excerpts, committed before this audit)"
+   ],
+   "obtain": "https://my.intelsat.com/ephemeris/public; data/e4/MANIFEST.json lists each file with its SHA-256.",
+   "notice": null
+  },
+  {
+   "id": "ses",
+   "name": "SES eleven-parameter ephemerides (I11)",
+   "provider": "SES S.A.",
+   "licence": "No licence; SES terms of use reserve all rights",
+   "terms": [
+    {
+     "title": "SES terms of use",
+     "url": "https://www.ses.com/terms-of-use",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "© 2026 SES S.A. All rights reserved.",
+   "attributionClause": "(none stated)",
+   "reproduce": "no",
+   "credit": "SES S.A. eleven-parameter ephemerides.",
+   "reason": "No licence grants redistribution.",
+   "usedIn": "E4, on the unmerged A4 branch only (main does not evaluate the I11 format)",
+   "obtain": "SES and Intelsat ephemeris pages (weekly I11 sets).",
+   "conditions": "",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "planet",
+   "name": "Planet Labs public ephemerides",
+   "provider": "Planet Labs PBC (ephemerides.planet-labs.com)",
+   "licence": "CC BY-NC 4.0",
+   "terms": [
+    {
+     "title": "Planet orbital ephemerides",
+     "url": "https://ephemerides.planet-labs.com/",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Creative Commons Attribution-NonCommercial 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "licensed under CC BY-NC 4.0. … permission to redistribute these data, email orbital-neighbors [at] planet [dot] com.",
+   "attributionClause": "identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);",
+   "conditions": "\"NonCommercial means not primarily intended for or directed towards commercial advantage or monetary compensation.\" Commercial redistribution needs Planet's permission.",
+   "reproduce": "non-commercial",
+   "credit": "Planet Labs PBC orbital ephemerides, https://ephemerides.planet-labs.com/, © Planet Labs PBC, CC BY-NC 4.0.",
+   "reason": "Shared here unmodified for the non-commercial purpose of checking E4; not for commercial products or services.",
+   "usedIn": "E4 (Planet: 1,233 states of 89 objects)",
+   "reproducedAt": [
+    "data/e4/planet/ (28 files)"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "oneweb",
+   "name": "Eutelsat OneWeb ephemerides (LTEF)",
+   "provider": "Eutelsat OneWeb (ephemeris.oneweb.net)",
+   "licence": "No licence found",
+   "terms": [
+    {
+     "title": "OneWeb LTEF",
+     "url": "https://ephemeris.oneweb.net/ltef/ltef.csv",
+     "retrieved": "2026-10-10 (no terms page found)"
+    }
+   ],
+   "redistribution": "(no terms found; oneweb.net redirects to eutelsat.com)",
+   "attributionClause": "(none stated)",
+   "reproduce": "no",
+   "credit": "Eutelsat OneWeb, https://ephemeris.oneweb.net/.",
+   "reason": "No licence grants redistribution.",
+   "usedIn": "Not used on main (no LTEF reader); space-data-network-modules tests",
+   "reproducedAt": [
+    "modules: data-source/oneweb-source/test/fixtures/ltef.sample.csv (5 rows, committed before this audit)"
+   ],
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "vimpel",
+   "name": "JSC Vimpel public orbit data",
+   "provider": "JSC Vimpel (spacedata.vimpel.ru)",
+   "licence": "User agreement for registered users; no public licence",
+   "terms": [
+    {
+     "title": "JSC Vimpel space data",
+     "url": "http://spacedata.vimpel.ru/",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "Information will be available to registered users after confirming of User Agreement.",
+   "attributionClause": "Site reference is mandatory if using provided data in any publications.",
+   "reproduce": "no",
+   "credit": "JSC Vimpel, http://spacedata.vimpel.ru/.",
+   "reason": "No licence grants redistribution; the user agreement is behind registration.",
+   "usedIn": "E3 (coverage count only: none of its rows names a truth object)",
+   "obtain": "http://spacedata.vimpel.ru/ (registered users); data/e3/MANIFEST.json lists each file with its SHA-256.",
+   "conditions": "",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "or-library",
+   "name": "OR-Library assignment problems",
+   "provider": "J. E. Beasley, OR-Library (Brunel University)",
+   "licence": "No licence stated",
+   "terms": [
+    {
+     "title": "OR-Library: information",
+     "url": "https://people.brunel.ac.uk/~mastjjb/jeb/info.html",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "OR-Library: assignment problem",
+     "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/assigninfo.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(no licence, copyright or reuse statement on either page)",
+   "attributionClause": "(none stated; cite Beasley 1990)",
+   "reproduce": "no",
+   "credit": "Beasley, J. E. (1990), OR-Library: distributing test problems by electronic mail, J. Oper. Res. Soc. 41, 1069–1072.",
+   "reason": "No licence grants redistribution.",
+   "reproducedAt": [
+    "modules: analysis/association/tests/fixtures/or-library/ (assign100, assign200, assignopt, assignp800; committed before this audit)"
+   ],
+   "obtain": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/assigninfo.html",
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null
+  },
+  {
+   "id": "ccsds",
+   "name": "CCSDS Blue Book example messages",
+   "provider": "Consultative Committee for Space Data Systems",
+   "licence": "No reproduction statement in the Blue Books",
+   "terms": [
+    {
+     "title": "CCSDS 502.0-B-3, Orbit Data Messages (2023)",
+     "url": "https://ccsds.org/Pubs/502x0b3e1.pdf",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "(the Blue Book carries no copyright or reproduction statement)",
+   "attributionClause": "(cite the standard)",
+   "reproduce": "no",
+   "credit": "CCSDS Blue Books 503.0-B-2 (TDM) and 504.0-B-2 (ADM), annex examples.",
+   "reason": "Unclear: short example messages from a free standard, but no statement grants reproduction; replace with synthetic examples or confirm with CCSDS.",
+   "reproducedAt": [
+    "modules: files/ccsds-messages/fixtures/ccsds-50{3,4}.0-B-2-figure-*.txt (5 excerpts)"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "orekit",
+   "name": "Orekit test resources and reference outputs (and orekit-data)",
+   "provider": "CS GROUP and the Orekit contributors",
+   "licence": "Apache-2.0 (Orekit); files in orekit-data keep their upstream terms (IERS, CSSI/CelesTrak, SET)",
+   "terms": [
+    {
+     "title": "Orekit LICENSE",
+     "url": "https://raw.githubusercontent.com/CS-SI/Orekit/develop/LICENSE.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Orekit NOTICE",
+     "url": "https://raw.githubusercontent.com/CS-SI/Orekit/develop/NOTICE.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "Apache License 2.0",
+     "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "orekit-data README",
+     "url": "https://gitlab.orekit.org/orekit/orekit-data/-/raw/main/README.md",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "4. Redistribution. You may reproduce and distribute copies of the … Space environment data (for Jacchia-Bowman 2008 model) from 1997 to end 2026",
+   "attributionClause": "Copyright 2002-2026 CS GROUP",
+   "conditions": "Keep Orekit's LICENSE and NOTICE with copied resources. orekit-data grants nothing for third-party files: the SET and CSSI rows the HPOP cases took from it keep SET's and CelesTrak's terms.",
+   "reproduce": "yes",
+   "credit": "Orekit (CS GROUP), Apache-2.0, https://www.orekit.org.",
+   "reason": "Apache-2.0 allows redistribution with the licence and notice.",
+   "usedIn": "The site's verification (63 HPOP-against-Orekit cases) and OCM example; space-data-network-modules tests",
+   "reproducedAt": [
+    "site (gh-pages): data/orekit/orekit-reference.json, cases.json, data/ocm/ (OCM example from Orekit's test resources)",
+    "modules: propagator/hpop/tests/fixtures/orekit/orekit-reference.json, files/orbit-products/fixtures/stk_02674_*.e, analysis/*/vectors and fixtures with Orekit values (no LICENSE or NOTICE copy)"
+   ],
+   "notice": null,
+   "obtain": null
+  },
+  {
+   "id": "nyx",
+   "name": "Nyx reference outputs",
+   "provider": "Nyx Space",
+   "licence": "AGPL-3.0 for the code; its outputs are not covered",
+   "terms": [
+    {
+     "title": "Nyx LICENSE",
+     "url": "https://raw.githubusercontent.com/nyx-space/nyx/master/LICENSE",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "GNU AFFERO GENERAL PUBLIC LICENSE",
+   "attributionClause": "(credit Nyx Space)",
+   "reproduce": "yes",
+   "credit": "Nyx Space (AGPL-3.0), https://nyxspace.com.",
+   "reason": "Outputs of the repository's own runs of Nyx; the AGPL covers Nyx's code, not these outputs.",
+   "reproducedAt": [
+    "modules: propagator/hpop/tests/fixtures/nyx/nyx-reference.json"
+   ],
+   "usedIn": "space-data-network-modules tests only",
+   "conditions": "",
+   "notice": null,
+   "obtain": null
+  }
+ ],
+ "bundles": [
+  {
+   "tag": "e5-inputs-20261010",
+   "asset": "e5-sentinel1-poeorb.tar",
+   "members": 256,
+   "bytes": 153766400,
+   "sha256": "b9fc1d10f2fd0e1bff50254045294bdd809ee1141df196d6e547ed9229ef3db1",
+   "source": "copernicus-sentinel"
+  },
+  {
+   "tag": "e6-inputs-20261010",
+   "asset": "e6-satnogs-iss-waterfalls.tar",
+   "members": 889,
+   "bytes": 1487657984,
+   "sha256": "c8a9e7db06e7488009df046e1ce7c3fc21870836755e8358a0eb12a32734a582",
+   "source": "satnogs"
+  },
+  {
+   "tag": "e7-inputs-20261010",
+   "asset": "e7-gnss-final.tar.gz",
+   "members": 299,
+   "bytes": 281104511,
+   "sha256": "56940798b5acff105ced3c874a9c46331b60bef1cc38b04714ae561fef4c3315",
+   "source": "esa-navigation-office",
+   "withdrawn": "2026-10-10: taken down (ESA source, cited not reproduced); local copy /opt/data/sdn-archive/release-archive/e7-inputs-20261010/e7-gnss-final.tar.gz"
+  },
+  {
+   "tag": "e7-inputs-20261010",
+   "asset": "e7-sentinel1-poeorb.tar.gz",
+   "members": 718,
+   "bytes": 424110460,
+   "sha256": "bac2277c3bb47f0aebc804658df3d3c29cc71218738f24918ed884c6b78bbbd9",
+   "source": "copernicus-sentinel"
+  },
+  {
+   "tag": "e7-inputs-20261010",
+   "asset": "e7-slr-ilrs.tar.gz",
+   "members": 152,
+   "bytes": 19183227,
+   "sha256": "ad62a600b46ae7762aaa294adba5c767c2f944ca11a5e6e1927436d16974e148",
+   "source": "ilrs"
+  },
+  {
+   "tag": "e7-inputs-20261010",
+   "asset": "e7-slr-nsgf.tar.gz",
+   "members": 673,
+   "bytes": 60309820,
+   "sha256": "6997941dfaa452d814b588d148cf210099e461f10d1c953589bd39845420069c",
+   "source": "ilrs-nsgf"
+  }
+ ],
+ "openItems": [
+  "Taken down 2026-10-10 on the owner's instruction (local copies kept, each cited by URL and SHA-256): the 54 Swarm assets of release `e3-inputs-20261009`, the 709 ESA0OPSFIN assets of release `gnss-truth-20261009`, `e7-gnss-final.tar.gz` of release `e7-inputs-20261010`, and, on main, `data/e4/esa-pod/`, `data/e3/gnss-final-esa/`, `data/e3/gnss-ultra-rapid-esa/`, `data/e4/glonass-precise/` and `data/e4/cpf/`. Git history is not rewritten: earlier commits still contain `data/e4/esa-pod/` and the earlier gh-pages commits the three site files below.",
+  "ESA/ESOC GNSS orbits and predictions are cited, not reproduced, until ESA/ESOC confirms in writing that they may be redistributed ([ESA/ESOC](#esa-navigation-office)). Taken down on 2026-10-10 on the owner's rule (\"if there is a question, should come down\"): `data/e3/gnss-final-esa/`, `data/e3/gnss-ultra-rapid-esa/`, `data/e4/glonass-precise/` (ESA0OPSULT from ESA's server), `data/e4/cpf/` (all 226 Galileo CPFs fetched from navigation-office.esa.int) and `data/e4/esa-pod/`. Left to the modules cleanup lane: the association fixture and HWM14.",
+  "The site (`gh-pages`), rebuilt 2026-10-10 through `labelFor`: no longer writes `data/orekit/jb2008_indices-*.prw` ([SET](#set-jb2008)) or `data/orekit/space_weather-*.prw` ([CelesTrak](#celestrak)), and labels every file by its source's licence and credit (the IERS earth-orientation files by the [IERS](#iers) terms, not MIT). The four Orekit cases that read CSSI space weather or SET's indices are listed as recorded only. The sample VCM stays with its provenance ([VCM sample](#sds-vcm-sample)).",
+  "Release `gnss-truth-20261009` notes now describe the IGS terms as open use without restriction (2026-10-10). `data/e4/SOURCES.md` and E4's frozen `config.json` still say \"IGS Data Policy: CC BY 4.0\"; the config is frozen, so the correction is an amendment to E4's plan (not yet written).",
+  "Credits for ESA, Copernicus and Space-Track are in the results READMEs and reports (`harness/credit-lines.mjs`; a step that regenerates a report drops the section, rerun the script).",
+  "The site's `propagator/hpop` module binary compiles in the HWM14 winds data, whose terms are unconfirmed ([HWM14](#hwm14)); the binary is published by the owner's decision of 2026-10-08, and its provenance label says so. A build without HWM14 needs a module change.",
+  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation."
+ ]
+}

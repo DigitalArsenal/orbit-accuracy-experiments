@@ -24,3 +24,7 @@ Read [README.md](README.md) first; its five rules are binding.
   public verification vectors and the real archive. A test that needs local
   data is skipped, visibly, when the data is absent; a skip is never a pass.
 - Do not commit anything under `runs/`, element sets, or per-sample tables.
+- Reproduce third-party data (in `data/`, test fixtures, site downloads,
+  release assets) only where its terms allow it, as recorded in
+  `data/licenses.json` (rendered to `docs/data-licenses.md`). Results use every
+  dataset an experiment read, whatever its licence (owner, 2026-10-10).

@@ -439,3 +439,15 @@ numbers.
     30–40 km).
   A file that fails stays and is listed. Planet's single states give
   nothing to fit, so they stay for the owner's decision.
+- **Licences (correction, 2026-10-10).** The frozen `config.json` calls the
+  IGS terms "IGS Data Policy: CC BY 4.0". They are not a Creative Commons
+  licence. The IGS Data and Product Disclaimer and Terms of Use (2020) allow
+  open use without restriction and ask for citation.
+  - ESA/ESOC's Navigation Support Office products are cited, not
+    reproduced: ESA0OPSFIN, ESA0OPSULT and ESA0OPSRAP, the Galileo .esa
+    CPFs, and the CryoSat-2 and Swarm orbits.
+  - E4 reads that truth and those inputs from the local archive and never
+    publishes them.
+  - GFZ0OPSFIN is an IGS analysis-centre product under the IGS terms.
+  Each source's terms and credit line: `docs/data-licenses.md` (experiments
+  main 61ce815 and later), which governs where `config.json` disagrees.

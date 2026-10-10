@@ -15,6 +15,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
+import { CITED_ONLY, licenseSection, mayPublishFile } from '../../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { runs: { type: 'string' }, release: { type: 'string' } } });
 const releaseDir = path.resolve(values.release);
@@ -69,6 +70,7 @@ let gitBytes = 0;
 fs.mkdirSync(releaseDir, { recursive: true });
 for (const row of files.values()) {
   if (!row.source) continue;
+  if (!mayPublishFile(row.name)) { row.location = `not published: ${CITED_ONLY}`; delete row.source; continue; }
   const bytes = fs.readFileSync(row.source);
   const already = /\.(gz|zip|ZIP)$/.test(row.name);
   const stored = already ? bytes : zlib.gzipSync(bytes, { level: 9 });
@@ -95,6 +97,7 @@ for (const fam of families) {
   const rows = list.filter((r) => r.family === fam);
   md.push(`| ${fam} | ${rows.length} | ${(rows.reduce((a, r) => a + r.size, 0) / 1e6).toFixed(1)} | ${rows[0].location} | ${rows[0].terms} |`);
 }
+md.push('', ...licenseSection(['esa-earth-observation', 'copernicus-sentinel', 'ilrs-nsgf', 'set-jb2008', 'zenodo-licata-hasdm', 'iers', 'gfz-kp'], 'data/e5'));
 md.push('', '## Files', '', '| File | SHA-256 | Source | Retrieved |', '| --- | --- | --- | --- |');
 for (const r of list) md.push(`| ${r.name} | \`${r.sha256}\` | ${r.url ?? '—'} | ${r.retrieved} |`);
 fs.writeFileSync(path.join(dataDir, 'SOURCES.md'), `${md.join('\n')}\n`);
