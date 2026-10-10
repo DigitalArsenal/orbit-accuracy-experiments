@@ -197,5 +197,12 @@ export async function openFitter(envConfig) {
       rms3dM: r.stats.rms3d, seconds: (performance.now() - t0) / 1000, harness: lib.VERSION };
   }
 
-  return { env, fitHead, pairMismatch, reconstruct, checkRecord, synthetic, destroy: () => env.destroy(), harness: lib.VERSION };
+  // States [m, m/s, GCRF] of a trajectory made by HPOP with the fitter's force model at a known Cd*A/m and Cr*A/m (for the known-answer tests).
+  async function truthStates({ startMs, state, B, cr, epochsMs, issuedMs = startMs }) {
+    const ctx = await makeCtx({ ms: startMs, state, hasVelocity: true }, issuedMs, lib.SETTINGS, { cdAreaOverMass: B, crAreaOverMass: cr });
+    const product = { epoch: noZ(isoUs(startMs)), state, fixed: { b: B, agom: cr, inTrack: 0 }, parameters: [] };
+    return (await lib.propagate(env, product, epochsMs, ctx)).map((x) => x.state);
+  }
+
+  return { env, fitHead, pairMismatch, reconstruct, checkRecord, synthetic, truthStates, destroy: () => env.destroy(), harness: lib.VERSION };
 }

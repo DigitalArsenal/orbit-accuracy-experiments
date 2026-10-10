@@ -12,7 +12,8 @@ shift || true
 STAGES=${*:-arcs provenance density score swarm doves propagation report}
 STEPS=experiments/e13-open-dca/steps
 STORE=/opt/data/sdn-archive/e13-open-dca
-STARTED_FROM=$(git rev-parse --short HEAD)
+STARTED_FROM=${E13_STARTED_FROM:-$(git rev-parse --short HEAD)}      # the commit the arcs' code is from (a resumed run names the commit it began at)
+EXTRA35=${E13_STEP35_ARGS:-}                                           # extra arguments for step 35 (a development run: --start 2025-11-01)
 want() { for s in $STAGES; do [ "$s" = "$1" ] && return 0; done; return 1; }
 say() { echo "$(date -u +%H:%M:%S) [$SPLIT] $*"; }
 two() { for k in 0 1; do "$@" --shard $k/2 & done; wait; }
@@ -22,8 +23,8 @@ want arcs && { say "arcs"; two node $STEPS/10-planet-arcs.mjs --split $SPLIT >> 
 want provenance && { say "arcs provenance"; node $STEPS/11-arcs-provenance.mjs --split $SPLIT --started-from "$STARTED_FROM"; }
 want density && { say "density windows"; node $STEPS/20-density-windows.mjs --split $SPLIT; }
 want score && { say "density score (H1, H2, H3, H6)"; node $STEPS/30-density-score.mjs --split $SPLIT; }
-want swarm && { say "H4: Swarm propagation"; two node $STEPS/35-propagation.mjs --split $SPLIT --target swarm; }
-want doves && { say "H5: held-out Dove propagation"; two node $STEPS/35-propagation.mjs --split $SPLIT --target doves --variants D0,D13; }
+want swarm && { say "H4: Swarm propagation"; two node $STEPS/35-propagation.mjs --split $SPLIT --target swarm $EXTRA35; }
+want doves && { say "H5: held-out Dove propagation"; two node $STEPS/35-propagation.mjs --split $SPLIT --target doves --variants D0,D13 $EXTRA35; }
 want propagation && { say "propagation scores"; node $STEPS/50-propagation-score.mjs --split $SPLIT --rows "$(rows swarm),$(rows doves)"; }
 want report && { say "report"; node $STEPS/90-report.mjs --split $SPLIT; }
 say "done"

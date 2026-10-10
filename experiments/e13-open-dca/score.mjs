@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pigeonholeBootstrap, quantile, rng } from '../../harness/stats.mjs';
 import { STORE, config, readJson } from './common.mjs';
-import { windowMean, forecastMean } from './common-mode.mjs';
+import { windowMean, forecastMean, nowcast } from './common-mode.mjs';
 import { SATELLITES } from './density-truth.mjs';
 
 const H = 3600e3, DAY = 86400e3;
@@ -159,6 +159,35 @@ export function medianRatio(cells, variant, reference = 'D0') {
   return { pairs: cells.length, ...boot(cells, stat, { nullValue: 1, side: 'less' }),
     medianErrorM: { [variant]: weightedQuantile(cells.map((c) => ({ value: c.e[variant], weight: 1 })), 0.5), [reference]: weightedQuantile(cells.map((c) => ({ value: c.e[reference], weight: 1 })), 0.5) },
     shareImproved: cells.filter((c) => c.e[variant] < c.e[reference]).length / cells.length };
+}
+
+
+// The causal version of H1 (descriptive): at 00:00 UTC of each day the nowcast (the arcs that ended at least `latencyHours` before, `historyDays` back);
+// each 12 h window is read once, at the first issue whose supported nodes cover it, so that the estimate is the one a user would have had. The common
+// mode of a nowcast is relative to its own span, so x is read against the mean of x over that span as well (x'' = x less that mean, per satellite and
+// issue). Returns rows {key, day, startMs, xp, sbar} for spreadReduction, and the hours between a window's end and the issue that first covered it.
+export function causalRows(windows, allArcs, nowOptions, fromMs, toMs, firstIssueMs = fromMs) {
+  const rows = [], delays = [];
+  let covered = -Infinity;
+  for (let t0 = Math.max(fromMs, firstIssueMs); t0 <= toMs + DAY; t0 += DAY) {
+    let sol;
+    try { sol = nowcast(allArcs, t0, nowOptions); } catch { continue; }
+    if (!sol) continue;
+    const first = sol.nodeMs[sol.supported.indexOf(true)], last = sol.nodeMs[sol.supported.lastIndexOf(true)];
+    for (const [key, list] of Object.entries(windows)) {
+      const inSpan = list.filter((w) => w.x !== null && w.startMs >= first && w.startMs + 12 * H <= last);
+      if (inSpan.length < 20) continue;
+      const level = inSpan.reduce((a, w) => a + w.x, 0) / inSpan.length;
+      for (const w of list) {
+        const end = w.startMs + 12 * H;
+        if (w.x === null || end > last || end <= Math.max(covered, last - 2 * DAY) || w.startMs < fromMs || w.startMs > toMs) continue;       // only the windows this issue added (the first issue adds the last two days, not the whole history)
+        const sb = windowMean(sol, w.startMs, end);
+        if (Number.isFinite(sb)) { rows.push({ key, day: new Date(w.startMs).toISOString().slice(0, 10), startMs: w.startMs, xp: w.x - level, sbar: sb }); delays.push((t0 - end) / H); }
+      }
+    }
+    covered = last;
+  }
+  return { rows, delays };
 }
 
 export { windowMean, forecastMean };

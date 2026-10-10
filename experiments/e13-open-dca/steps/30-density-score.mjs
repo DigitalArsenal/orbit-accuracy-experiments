@@ -12,7 +12,7 @@ import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { DAY, H, config, configPath, modulesDir, paths, readJson, amendmentsSha256 } from '../common.mjs';
 import { arcCenterOffsetMs, arcsFromRows, solveCommonMode, windowMean, withLag } from '../common-mode.mjs';
-import { boot, cellsOf, densityRows, devLevels, loadDensityWindows, perSatellite, r1FromCells, spreadReduction, stormCapture, stormDays } from '../score.mjs';
+import { boot, causalRows, cellsOf, densityRows, devLevels, loadDensityWindows, perSatellite, r1FromCells, spreadReduction, stormCapture, stormDays } from '../score.mjs';
 import { assertDensityReadable } from '../windows.mjs';
 
 const { values } = parseArgs({ options: { split: { type: 'string' }, selection: { type: 'string' }, out: { type: 'string' } } });
@@ -62,6 +62,18 @@ log(`H1: R1 ${h1.R1.toFixed(3)} [${h1ci.lower.toFixed(3)}, ${h1ci.upper.toFixed(
 log(`H6 control (s-bar shifted ${HY.H6.shiftDays} d): R1 ${h6.R1.toFixed(3)} over ${h6.n} windows`);
 log(`H2: ${stormMap.size} storm days (${[...stormMap].map(([d, ap]) => `${d} Ap ${ap}`).join(', ')}): ${h2.windows} windows, same sign ${(100 * h2.sameSignShare).toFixed(0)} %, median s/x' ${h2.medianCapture.toFixed(2)} over ${h2.nBig} windows with |x'| > 0.1`);
 
+// descriptive: the causal version of H1 (the nowcast of each day, each window read once at the first issue that covers it)
+const upto = Object.entries(P.split).filter(([, [, end]]) => end <= to).map(([name]) => name);
+const allArcs = upto.flatMap((sp) => arcsFromRows(readRows(sp), { ...arcOptions, hwids: sample.calibration }));
+const nowOptions = { latencyHours: S.nowcast.latencyHours, historyDays: S.nowcast.historyDays, nodeHours: selection.solver.nodeHours, baseline: selection.solver.baseline, smoothSigma: selection.solver.smoothSigma ?? null, lagHours: selection.lagHours ?? 0, ...solverOptions };
+const firstIssue = Math.max(dayMs(from), Math.min(...allArcs.map((a) => a.startMs)) + S.nowcast.historyDays * DAY);
+const causal = causalRows(windows, allArcs, nowOptions, dayMs(from), dayMs(to), firstIssue);
+const causalSpread = spreadReduction(causal.rows);
+const causalKeys = new Set(causal.rows.map((r) => `${r.key}|${r.startMs}`));
+const hindcastSame = spreadReduction(h1rows.filter((r) => causalKeys.has(`${r.key}|${r.startMs}`)));
+const causalCi = causal.rows.length > 20 ? withInterval(causal.rows) : null;
+log(`causal H1 (descriptive): R1 ${causalSpread.R1.toFixed(3)}${causalCi ? ` [${causalCi.lower.toFixed(3)}, ${causalCi.upper.toFixed(3)}]` : ''} over ${causal.rows.length} windows read once at the first covering issue (median ${causal.delays.length ? (causal.delays.sort((a, b) => a - b)[causal.delays.length >> 1]).toFixed(0) : 'n/a'} h after the window's end); the hindcast on the same windows: ${hindcastSame.R1.toFixed(3)}`);
+
 // descriptive: Planet's own ballistic coefficient column in place of ours, and the correlation of the two common modes
 const planet = hindcastOf(values.split, 'planet');
 const planetDev = values.split === 'dev' ? planet : hindcastOf('dev', 'planet');
@@ -102,6 +114,7 @@ const out = {
   H6: { ...h6, shiftDays: HY.H6.shiftDays, passes: h6.R1 < HY.H6.maximumReduction },
   H2: { stormDays: Object.fromEntries(stormMap), windows: h2.windows, sameSignShare: h2.sameSignShare, medianCapture: h2.medianCapture, nBig: h2.nBig, list: h2.rows.map((r) => ({ key: r.key, start: new Date(r.startMs).toISOString(), xp: r.xp, sbar: r.sbar })) },
   H3: h3 ? { arcs: u.length, R3: h3.estimate, lower: h3.lower, upper: h3.upper, p: h3.p, madD0: mad(u.map((x) => x.u0)), madD13: mad(u.map((x) => x.u13)), thresholdR3: HY.H3.threshold, supported: h3.estimate >= HY.H3.threshold && h3.lower > 0 } : null,
+  causal: { windows: causal.rows.length, R1: causalSpread.R1, sdX: causalSpread.sdX, sdRes: causalSpread.sdRes, interval: causalCi, medianHoursAfterWindowEnd: causal.delays.length ? causal.delays[causal.delays.length >> 1] : null, hindcastR1OnTheSameWindows: hindcastSame.R1 },
   descriptive: { planetColumnR1: planetR1.R1, planetColumnWindows: planetR1.n, correlationOfCommonModes: corrModes },
 };
 const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', values.split, 'density-score.json');
