@@ -96,7 +96,7 @@ for (const name of REGIMES) {
         const po = c.objects.get(r.norad) ?? Array(10).fill(0);
         addTo(po, v); c.objects.set(r.norad, po);
         const pk = (pooled[`${kind}|${r.tau}`] ??= []);
-        pk.push({ object: r.norad, v });
+        pk.push({ object: r.norad, v, eo, en });
       }
     }
   }
@@ -123,6 +123,23 @@ for (const name of REGIMES) {
     }
   }
   const pooledRho = Object.fromEntries(Object.entries(pooled).map(([k, items]) => { const r = rho(items); return [k, Object.fromEntries(['R', 'T', 'N'].map((ax, i) => [ax, r[i]]))]; }));
+  // The same after removing each object's mean errors (descriptive): what is
+  // left when every object's persistent error is taken out.
+  const centeredRho = Object.fromEntries(Object.entries(pooled).map(([k, items]) => {
+    const byObject = new Map();
+    for (const it of items) { if (!byObject.has(it.object)) byObject.set(it.object, []); byObject.get(it.object).push(it); }
+    const centered = [];
+    for (const [object, list] of byObject) {
+      const mo = [0, 1, 2].map((a) => list.reduce((x, it) => x + it.eo[a], 0) / list.length);
+      const mn = [0, 1, 2].map((a) => list.reduce((x, it) => x + it.en[a], 0) / list.length);
+      for (const it of list) {
+        const o = it.eo.map((x, a) => x - mo[a]), n = it.en.map((x, a) => x - mn[a]);
+        centered.push({ object, v: [1, ...[0, 1, 2].flatMap((a) => [o[a] * n[a], o[a] ** 2, n[a] ** 2])] });
+      }
+    }
+    const r = rho(centered);
+    return [k, Object.fromEntries(['R', 'T', 'N'].map((ax, i) => [ax, r[i]]))];
+  }));
   // H1: consecutive, tau = h1.tauDays, pooled over gaps.
   const h1 = pooledRho[`consecutive|${config.acceptance.h1.tauDays}`];
   // E2's H4 again: consecutive pairs with gaps up to half a day at tau 0: Sd minus the newer sets' at-epoch second moment.
@@ -184,7 +201,7 @@ for (const name of REGIMES) {
       inSample[id][tau] = list.length ? consistency(list, config.acceptance.consistency, S) : { n: 0, notPositiveDefinite: true };
     }
   }
-  model.regimes[name] = { P: Ptable, cross, pooledRho, e2h4 };
+  model.regimes[name] = { P: Ptable, cross, pooledRho, centeredRho, e2h4 };
   products.regimes[name] = { T0, S: Sfit, R, C2, selection };
   metrics.regimes[name] = {
     samples: { pSamples: seen.size, scoring: scoring.length, rows: rows.length },

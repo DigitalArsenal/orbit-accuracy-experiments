@@ -132,7 +132,8 @@
       7
     ],
     "groupDays": 7,
-    "chunkDays": 7
+    "chunkDays": 7,
+    "truthScreenKm": 10
   },
   "bins": {
     "ageBinsDays": [

@@ -138,6 +138,7 @@ for (const name of REGIMES) {
   for (const d of regimeDiffs) {
     const t = epochMs(d.newer);
     if (t < lo || t >= hi) continue;
+    if (d.gapDays > config.products.k1.maxGapDays) { ++h4.excluded; continue; }
     const pred = differenceCovariances(prod, d.gapDays);
     const e = d.d.slice(0, 3);
     if (!pred.correlated || !isPD(pred.correlated)) { ++h4.excluded; continue; }

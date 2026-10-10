@@ -10,6 +10,7 @@ import { loadModule, modulesRoot, sha256 } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
 import { ReferenceIndex } from '../../harness/reference.mjs';
 import { readElementSets, shiftDay, epochMs } from '../../harness/gp-archive.mjs';
+import { decodeOemStream } from '../../harness/records.mjs';
 
 export const experimentDir = path.dirname(new URL(import.meta.url).pathname);
 export const configPath = path.join(experimentDir, 'config.json');
@@ -137,6 +138,38 @@ export function windowSets(archive, referenceDir, window, objects) {
   }
   for (const list of byObject.values()) list.sort((a, b) => a.ms - b.ms);
   return { byObject, files: read.files };
+}
+
+// Defective precise-orbit epochs (PLAN.md, changes to the draft): an epoch
+// whose radius departs from the mean of its neighbours' by more than
+// `limitKm` (one-sided at the ends; neighbours within three sampling
+// intervals). Smooth near-circular orbits stay within about 2 km at these
+// samplings; a corrupted record does not. Records are only read here.
+const defectCache = new Map();
+export function truthDefects(reference, norad, fromMs, toMs, limitKm = config.measurement.truthScreenKm) {
+  const out = new Set();
+  for (const span of reference.spans(norad, fromMs, toMs)) {
+    if (!defectCache.has(span.file)) {
+      const found = new Set();
+      const bytes = new Uint8Array(fs.readFileSync(path.join(reference.dir, span.file)));
+      for (const oem of decodeOemStream(bytes)) for (const block of oem.EPHEMERIS_DATA_BLOCK ?? []) {
+        const lines = (block.EPHEMERIS_DATA_LINES ?? []).map((l) => ({ t: Date.parse(l.EPOCH), epoch: l.EPOCH, r: Math.hypot(l.X, l.Y, l.Z) }))
+          .sort((a, b) => a.t - b.t).filter((l, k, all) => k === 0 || l.t - all[k - 1].t > 1);
+        const step = (span.stepSeconds ?? 60) * 1000 * 3;
+        lines.forEach((l, k) => {
+          let expected = null;
+          const a = lines[k - 1], b = lines[k + 1], c = lines[k + 2], d = lines[k - 2];
+          if (a && b && l.t - a.t <= step && b.t - l.t <= step) expected = (a.r + b.r) / 2;
+          else if (b && c && b.t - l.t <= step && c.t - b.t <= step) expected = 2 * b.r - c.r;
+          else if (a && d && l.t - a.t <= step && a.t - d.t <= step) expected = 2 * a.r - d.r;
+          if (expected !== null && Math.abs(l.r - expected) > limitKm) found.add(l.epoch);
+        });
+      }
+      defectCache.set(span.file, found);
+    }
+    for (const e of defectCache.get(span.file)) out.add(e);
+  }
+  return out;
 }
 
 // ISO 8601 UTC without a zone, millisecond precision (the module parses it).

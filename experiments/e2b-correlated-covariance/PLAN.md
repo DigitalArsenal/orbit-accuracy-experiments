@@ -118,7 +118,9 @@ marginal second moments on the same pairs, the correlation matrix
 R = D_i⁻¹ C D_j⁻¹ (D the square roots of the marginals' diagonals), the
 difference second moment Σ_d = E[(e_i − e_j)(e_i − e_j)ᵀ] and its split into
 P_i + P_j and −(C + Cᵀ). Per-axis correlations ρ_R, ρ_T, ρ_N with 95 %
-cluster-bootstrap intervals (objects). E2's H4 again: Σ_d at gaps up to half
+cluster-bootstrap intervals (objects), and the same after removing each
+object's mean errors (what is left when persistent errors are taken out).
+E2's H4 again: Σ_d at gaps up to half
 a day minus P(0), and whether it is positive definite. The model is written
 to `results/e2b/train/correlation-model.json` (schema in that file) for E7
 and the E9 capstone.
@@ -202,9 +204,10 @@ the freeze.
 **H3** compares on the samples both products cover; the ratio of mean energy
 scores with its cluster-bootstrap interval. **H4** uses the consecutive
 differences d of every regime object in the test window (no precise orbit
-needed): correlated prediction S = T0(g) + T0(0) − Ĉ − Ĉᵀ with
-Ĉ = D(g) R(g, 0) D(0) from the train correlation model (D from T0),
-independent prediction S = T0(g) + T0(0).
+needed), gaps up to 3 days: correlated prediction S(g), the train second
+moment of consecutive differences in the pair's gap bin, which on the train
+pairs equals P_old + P_new − C − Cᵀ (the identity of section 1); independent
+prediction T0(g) + T0(0).
 
 ## 8. Order of work
 
@@ -307,4 +310,26 @@ Dated, with their reasons; none followed from an outcome.
   perigee below the Earth's radius, and C1b on the others.
 - **2026-10-09, T0's bins.** Age bins with fewer than 30 samples are left out
   of T0's interpolation (`products.t0.minimumBinSamples`).
+- **2026-10-09, H4's correlated prediction.** As first written, the
+  correlated prediction was assembled from parts, T0(g) + T0(0) − Ĉ − Ĉᵀ with
+  Ĉ = D(g) R(g, 0) D(0). Where the correlations approach 1 that is a small
+  difference of large matrices, estimated separately, and it was not positive
+  definite for essentially every validation pair in LEO-POD, SLR-LEO and
+  SLR-MEO (the code then also skipped the independent prediction: a bug). It
+  is now the same quantity measured directly on the train pairs, S(g) (equal
+  to P_old + P_new − C − Cᵀ there by the identity), for gaps up to 3 days; the
+  independent prediction is unchanged and scored on the same pairs. The
+  validation H4 values of the first version had been seen (GPS: mean d²/3
+  22.4 correlated, 3.0 independent; the other regimes undefined); H4 is
+  decided on the test window only. The GLS fusion keeps its assembled joint
+  covariance and reports its failures (section 6).
+- **2026-10-09, a precise-orbit screen.** One ILRS ETALON-2 record
+  (2026-04-10 00:00 UTC) lies 1,329 km inside its neighbours' radius, so the
+  SGP4 error against it was 8,133 km and the 7-day SLR-MEO statistics were
+  meaningless; the same day's ETALON-1 file has such records too. A target
+  whose precise epoch departs in radius from the mean of its neighbours' by
+  more than 10 km (`measurement.truthScreenKm`; smooth orbits stay within
+  about 2 km at these samplings) is now counted as missing, not re-snapped.
+  Over train and validation it flags 12 epochs, all ETALON on 2026-04-10, and
+  none in GPS, LEO-POD or SLR-LEO. Steps 10 and 40 were rerun.
 

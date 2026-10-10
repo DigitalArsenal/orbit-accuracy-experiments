@@ -12,7 +12,7 @@ import path from 'node:path';
 import { json } from '../../../harness/modules.mjs';
 import { ommFrame } from '../../../harness/records.mjs';
 import { startRun } from '../../../harness/provenance.mjs';
-import { cli, config, configPath, regimeObjects, regimeReference, windowSets, isoMs, loadGp, jsonlWriter, trim, DAY_MS } from '../common.mjs';
+import { cli, config, configPath, regimeObjects, regimeReference, windowSets, isoMs, loadGp, jsonlWriter, trim, truthDefects, DAY_MS } from '../common.mjs';
 
 const { values, regimes, window, modules, archive, reference: referenceDir, objects: only } = cli();
 const run = startRun({ experiment: config.experiment, step: `40-fusion-${window.name}-${regimes.join('+')}`, configPath, modulesDir: modules, args: values });
@@ -28,7 +28,7 @@ for (const name of regimes) {
   const objects = regimeObjects(referenceDir, name).filter((n) => !only || only.has(n));
   const { byObject, files } = windowSets(archive, referenceDir, window, objects);
   run.addInputs('gpHistory', files);
-  const c = counts[name] = { objects: objects.length, issues: 0, targets: 0, missingTargets: 0, withoutCandidates: 0, calls: 0 };
+  const c = counts[name] = { objects: objects.length, issues: 0, targets: 0, missingTargets: 0, truthDefects: 0, withoutCandidates: 0, calls: 0 };
   for (const norad of objects) {
     const sets = byObject.get(norad) ?? [];
     for (let chunk = window.lo; chunk < window.hi; chunk += CHUNK * DAY_MS) {
@@ -52,9 +52,11 @@ for (const name of regimes) {
       if (!frames.length) { c.missingTargets += targets.length; continue; }
       const result = await gp.invokeJson('common_epoch', [ommFrame([...members.values()]), ...frames, json('options', { targets })], 'differences');
       ++c.calls;
+      const defects = truthDefects(reference, norad, chunk, chunkEnd + horizon);
       result.targets.forEach((r, k) => {
         const { T, h, usable } = meta[k];
         const row = { regime: name, norad, issue: isoMs(T), h, epoch: r.epoch };
+        if (!r.missing && defects.has(r.epoch)) { r.missing = 'precise-orbit epoch fails the radius screen'; ++c.truthDefects; }
         if (r.missing || !r.sets || r.sets.length !== usable.length) { row.missing = r.missing ?? 'candidate not propagated'; ++c.missingTargets; out.write(row); return; }
         row.candidates = usable.map((s, i) => [s.epoch, s.creationDate, Number(r.sets[i].ageDays.toPrecision(12)), trim(r.sets[i].rtn)]);
         out.write(row);

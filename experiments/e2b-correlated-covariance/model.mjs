@@ -105,13 +105,15 @@ export function productCovariances(products, kappa, sample) {
 }
 
 // Predicted covariance of a consecutive difference d = e_old - e_new at the
-// newer set's epoch (H4): correlated and independent.
+// newer set's epoch (H4). Correlated: the train second moment of consecutive
+// differences in the pair's gap bin, S(g), which on the train pairs equals
+// P_old + P_new - C - C' (the identity) and stays positive definite where the
+// sum of parts does not. Independent: T0(g) + T0(0).
 export function differenceCovariances(products, gap) {
   const P0 = full3(products.t0(0)), Pg = full3(products.t0(gap));
-  const C = products.crossConsecutive(gap, 0);
   const independent = lower3(Pg.map((v, i) => v + P0[i]));
-  if (!C) return { independent, correlated: null };
-  const correlated = lower3(Pg.map((v, i) => v + P0[i] - C[i] - t3(C)[i]));
+  const b = gapBin(gap);
+  const correlated = b >= 0 && products.S.lower[b] ? products.S.lower[b] : null;
   return { independent, correlated };
 }
 
