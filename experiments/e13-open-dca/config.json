@@ -1,0 +1,37 @@
+{
+  "experiment": "e13-open-dca",
+  "frozen": false,
+  "plan": "PLAN.md",
+  "store": "/opt/data/sdn-archive/e13-open-dca",
+  "inputs": {
+    "modules": "/Users/tj/software/worktrees/space-data-network-modules--e11-hpop-d1d8ca88",
+    "modulesNote": "propagator/hpop 1.2.0 with the space-weather restart (modules d1d8ca88), the build E4 A6 and E11 pin; analysis/estimation 0.3.0 fit_batch v2",
+    "kernel": { "path": "/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp", "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2" },
+    "eopFinalsGlob": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.*",
+    "gfzHistory": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "gfzNowcastDir": "/opt/data/sdn-archive/hac/gfz-kp/2026",
+    "gfzNowcastName": "Kp_ap_Ap_SN_F107_nowcast.txt",
+    "rsga": ["/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA", "/opt/data/sdn-archive/hac/noaa-swpc/2026"],
+    "spacetrack": {
+      "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation/2026",
+      "gpDaily": "/opt/data/sdn-archive/spacetrack/gp/2026"
+    }
+  },
+  "starlink": {
+    "baseUrl": "https://api.starlink.com/public-files/ephemerides/",
+    "userAgent": "sdn-e13-open-dca/1.0",
+    "minGapMs": 3200,
+    "manifestPollMinutes": 30,
+    "headHours": 8,
+    "gateRms3dM": 10,
+    "srpLock": { "norad_lt_56000_crAreaOverMass": 0.11, "norad_ge_56000_crAreaOverMass": 0.19, "note": "class assumptions from the lane's brief, not measured values" },
+    "stopAfterUtc": "2026-10-20T00:00:00Z"
+  },
+  "sample": {
+    "salt": "e13-sample-20261010",
+    "exclude": { "range": [100001, 100025], "why": "the starlink-forecast lane's 25 satellites" },
+    "decay": { "slopeMetersPerDayAtMost": -15, "windowDays": 30, "raiseStepMeters": 150, "quota": { "<300": 20, "300-350": 20, "350-400": 20, "400-450": 20, "450-500": 30, "500+": 20 } },
+    "hold": { "slopeMetersPerDayWithin": 15, "target": 190, "minimumPerStratum": 4 }
+  },
+  "compute": { "workers": 2, "maximumProcesses": 3, "pauseAboveLoad1m": 55, "pauseBelowFreeGiB": 20 }
+}
