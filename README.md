@@ -37,7 +37,7 @@ Conjunction Screening whitepaper says about the states it screens.
 | `site/` | The GitHub Pages site: the experiments run live in the browser |
 | `runs/` | Run outputs (ignored) |
 | `results/` | Committed run summaries |
-| `data/` | Operator inputs published for checking, under each provider's terms ([data/e4/SOURCES.md](data/e4/SOURCES.md), [data/e6/SOURCES.md](data/e6/SOURCES.md)) |
+| `data/` | Inputs published for checking where their terms allow it: each `data/<id>/SOURCES.md` lists them, [docs/data-licenses.md](docs/data-licenses.md) has every source's terms and attribution |
 
 ## Experiments
 
@@ -86,6 +86,11 @@ SHA-256. [site/README.md](site/README.md) has the build.
 
 ## License
 
-MIT for the code and the results ([LICENSE](LICENSE)). The data the site
-publishes stays under its sources' terms (ILRS, IGS, IERS, JPL, Orekit);
-`site/dist/provenance.json` lists each file's source and terms.
+MIT for the code and the results ([LICENSE](LICENSE)). Third-party data stays
+under its sources' terms: [docs/data-licenses.md](docs/data-licenses.md) quotes
+each source's terms, says whether this repository may reproduce it (in `data/`,
+as a release asset, on the site) and gives the attribution it asks for. Results
+use every source an experiment read, whatever its licence; a source whose terms
+do not allow redistribution is cited by URL and SHA-256 instead. The
+SatNOGS-derived files in `data/e6/` are CC BY-SA 4.0.
+`site/dist/provenance.json` lists each site file's source and terms.

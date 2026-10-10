@@ -13,6 +13,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
 import { DAY_MS, config } from './common.mjs';
+import { licenseSection } from '../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { assets: { type: 'string' } } });
 if (!values.assets) throw new Error('--assets DIR (large files for release upload) is required');
@@ -71,6 +72,7 @@ const lines = ['# E2 input data', '', 'Every input of experiment E2 that is not 
   `- Sun and Moon: JPL DE440s (\`de440s.bsp\`), ${config.inputs.kernel.url}; release asset. Terms: NASA/JPL NAIF, public.`,
   '- Space weather and JB2008 indices: none; the regimes E2 tests (GPS) have no drag.',
   '- Element sets: Space-Track `gp_history`, not redistributed (Space-Track user agreement); only aggregates are published.', '',
-  'Retrieval times are the files\' modification times on the archive host, as listed in `MANIFEST.json`.', ''];
+  'Retrieval times are the files\' modification times on the archive host, as listed in `MANIFEST.json`.', '',
+  ...licenseSection(['esa-navigation-office', 'igs', 'iers', 'jpl-de440', 'space-track'], 'results/e2/data'), ''];
 fs.writeFileSync(path.join(out, 'SOURCES.md'), lines.join('\n'));
 console.log(`${entries.length} files; ${(assetBytes / 1e6).toFixed(1)} MB of release assets in ${values.assets}`);

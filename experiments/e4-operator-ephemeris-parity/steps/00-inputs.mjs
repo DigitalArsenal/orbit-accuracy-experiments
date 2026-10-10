@@ -17,6 +17,7 @@ import { repoRoot } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { rng } from '../../../harness/stats.mjs';
 import { DAY_MS, assertFrozen, cli, config, providers } from '../common.mjs';
+import { licenseSection } from '../../../harness/data-licenses.mjs';
 import { readCpf, readIntelsat, readMeme, readOem, readPlanetStates, readTle, unzipMembers } from '../operators.mjs';
 
 assertFrozen();
@@ -111,7 +112,8 @@ if (values.publish) {
     '(SHA-256 of the served bytes), captured by the SDN ephemeris-provider nodes.',
     'Files here are gzip-compressed copies; larger sets are GitHub release assets',
     'listed in [MANIFEST.json](MANIFEST.json). Each provider\'s files stay under that',
-    'provider\'s terms, stated below. Element sets (Space-Track) are not published.', ''];
+    'provider\'s terms, stated below. Element sets (Space-Track) are not published.', '',
+    ...licenseSection(['spacex-starlink', 'cmsa-tiangong', 'intelsat', 'planet', 'nasa-iss-oem', 'igs', 'esa-navigation-office', 'esa-navigation-office-pod', 'ilrs', 'space-track'], 'data/e4'), ''];
   for (const provider of providers(values.provider)) {
     const record = JSON.parse(fs.readFileSync(path.join(inputs, provider, 'inputs.json'), 'utf8'));
     const terms = record.terms;

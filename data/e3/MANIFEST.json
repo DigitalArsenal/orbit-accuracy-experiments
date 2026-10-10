@@ -3866,7 +3866,7 @@
    "url": "http://spacedata.vimpel.ru/download.php?file=orbits.20260907.txt&path=common",
    "retrieved": "SDN vimpel node retrievals 2026-09-21..2026-10-08 (two editions)",
    "terms": "JSC Vimpel public orbit data (http://spacedata.vimpel.ru): no redistribution terms published; do not release before they are confirmed.",
-   "location": "release asset orbits.20260907.txt.gz",
+   "location": "not published (no licence); cited by URL and SHA-256",
    "storedSha256": "555122fea7bd959abcf37d2b0e886213f9c6844ec52d8c0cef34fb7dc9c5ce82"
   },
   {
@@ -3877,7 +3877,7 @@
    "url": "http://spacedata.vimpel.ru/download.php?file=orbits.20260921.txt&path=common",
    "retrieved": "SDN vimpel node retrievals 2026-09-21..2026-10-08 (two editions)",
    "terms": "JSC Vimpel public orbit data (http://spacedata.vimpel.ru): no redistribution terms published; do not release before they are confirmed.",
-   "location": "release asset orbits.20260921.txt.gz",
+   "location": "not published (no licence); cited by URL and SHA-256",
    "storedSha256": "68c2dc6799f583fbb2c7af61033e26c27966da65a020a1218063523de9d3a360"
   },
   {
@@ -3888,7 +3888,7 @@
    "url": "http://spacedata.vimpel.ru/download.php?file=datefirst.txt&path=common",
    "retrieved": "SDN vimpel node retrievals 2026-09-21..2026-10-08 (two editions)",
    "terms": "JSC Vimpel public orbit data (http://spacedata.vimpel.ru): no redistribution terms published; do not release before they are confirmed.",
-   "location": "release asset datefirst.txt.gz",
+   "location": "not published (no licence); cited by URL and SHA-256",
    "storedSha256": "a2e9c9e28429f5aaf591ee41d2708a2a7c9278da4f8f83d9435cd28c17289cb5"
   },
   {
