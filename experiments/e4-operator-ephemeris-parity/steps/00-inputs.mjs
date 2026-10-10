@@ -137,7 +137,9 @@ for (const provider of providers(values.provider)) {
   for (const d of chosen) {
     const name = `${compact(d.captured)}--${basename(d.url)}`;
     const bytes = node.file(d);
-    fs.writeFileSync(path.join(dir, name), bytes);
+    // A copy already in place with the same bytes is left alone (E11 reads these files).
+    const target = path.join(dir, name);
+    if (!fs.existsSync(target) || sha256(fs.readFileSync(target)) !== d.sha256) fs.writeFileSync(target, bytes);
     const format = d.role === 'operator-tle' ? 'tle' : p.format;
     files.push({ file: name, role: d.role, url: d.url, captured: d.captured, sha256: d.sha256, bytes: d.bytes, ncdFormat: d.format, ...describe(provider, format, bytes) });
   }
