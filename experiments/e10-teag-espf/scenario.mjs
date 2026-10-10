@@ -195,6 +195,9 @@ export async function buildScenario(m, env, eopStream, spec) {
   const observations = [];
   for (const o of eoo) {
     const ms = Date.parse(o.time.endsWith('Z') ? o.time : `${o.time}Z`);
+    // A reception time tag before the arc's initial epoch (the simulator's
+    // time tags round to the microsecond across scales) is not filterable.
+    if (ms < epochMs) continue;
     const station = spec.stations.find((s) => `eo-${s.id}` === o.sensor);
     observations.push({ ms, station: station.id, stationGcrf: await stationGcrf(m.frames, eop.frame, station, ms),
       values: [o.raDeg * Math.PI / 180, o.decDeg * Math.PI / 180], sigmas: [spec.sensor.noiseRad, spec.sensor.noiseRad], ...(o.contaminated ? { contaminated: true } : {}) });
