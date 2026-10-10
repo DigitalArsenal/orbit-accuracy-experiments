@@ -65,7 +65,7 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
     const tried = [];
     const passing = [];
     for (const cand of cands) {
-      if (http.disabled.has(new URL(cand.url).host)) { tried.push({ id: cand.id, error: 'host disabled' }); continue; }
+      if (!source.held?.(ctx, cand) && http.disabled.has(new URL(cand.url).host)) { tried.push({ id: cand.id, error: 'host disabled' }); continue; }
       let fetched = await candidateFetch(cand, row, 1);
       if (fetched.error) { tried.push({ id: cand.id, startUtc: iso(cand.startMs), error: fetched.error }); continue; }
       let res = await evaluate(cand, row, fetched);
@@ -75,7 +75,7 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
         res = await evaluate(cand, row, fetched);
       }
       if (!res.ok || res.short) {
-        tried.push({ id: cand.id, startUtc: iso(cand.startMs), error: res.short ? `file ends at ${iso(res.short.lastMs)}, before ${iso(res.short.wantLastMs)}` : res.error, guard: res.guard ?? undefined });
+        tried.push({ id: cand.id, startUtc: iso(cand.startMs), error: res.short ? `file ends at ${iso(res.short.lastMs)}, before ${iso(res.short.wantLastMs)}` : res.error, guard: res.guard ?? undefined, code: res.code ?? undefined });
         if (res.guard) return unpaired(row, 'guard', res.error, { candidates: tried });
         continue;
       }
@@ -100,7 +100,10 @@ export async function runGroup({ group, snapshot, source, http, pool, store, ctx
     if (!passing.length) {
       const near = tried.filter((t) => t.ratio !== undefined).sort((a, b) => Math.abs(a.ratio - 1) - Math.abs(b.ratio - 1))[0];
       if (!tried.length) return unpaired(row, 'not-tried', 'no candidate was tried', { candidates: tried });
-      if (!near) return unpaired(row, 'no-data', `no candidate version could be read: ${tried.map((t) => t.error).join('; ')}`, { candidates: tried });
+      if (!near) {
+        const codes = new Set(tried.map((t) => t.code ?? 'no-data'));
+        return unpaired(row, codes.size === 1 ? [...codes][0] : 'no-data', `no candidate version could be read: ${tried.map((t) => t.error).join('; ')}`, { candidates: tried });
+      }
       return unpaired(row, 'rms-not-reproduced', `${tried.length} version(s) tried; the nearest reproduces ${near.recomputedRmsKm.toFixed(4)} km against the published ${row.publishedRmsKm} km (x${near.ratio.toFixed(2)})`, { candidates: tried, nearest: near });
     }
     let best = passing[0];

@@ -10,6 +10,8 @@ export const PATHS = {
   supgp: '/opt/data/sdn-archive/celestrak/supgp',
   // Derived records go under a sibling of E11's derived/ tree.
   derived: '/opt/data/sdn-archive/operator-ephemerides/derived-supgp',
+  // IERS Earth orientation, archived daily (latest.json names the newest finals2000A).
+  eop: '/opt/data/sdn-archive/hac',
   // The fitter (gp-error-model 0.2.0, branch task/omm-fit-20261010): its built artifact, read-only.
   fitModules: '/Users/tj/software/worktrees/space-data-network-modules--omm-fit-20261010',
   // Readers: the canonical modules checkout (main).

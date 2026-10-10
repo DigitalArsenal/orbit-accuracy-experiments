@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { DEFAULT_WORKERS, FIT, GATE, HTTP, MAX_WORKERS, MEME, PATHS } from './config.mjs';
 import { PoliteHttp } from './lib/http.mjs';
 import { readSnapshot } from './lib/supgp.mjs';
-import { artifactInfo, checkout, loadFitter } from './lib/modules.mjs';
+import { artifactInfo, checkout, loadFitter, loadReader } from './lib/modules.mjs';
 import { Pool } from './lib/pool.mjs';
 import { Store } from './lib/persist.mjs';
 import { Timing, failGroup, runGroup } from './lib/pass.mjs';
@@ -46,6 +46,12 @@ function args() {
   return a;
 }
 
+// The newest archived IERS finals2000A (our own archive of space weather and Earth orientation).
+function eopFile() {
+  const latest = JSON.parse(fs.readFileSync(path.join(PATHS.eop, 'iers-eop/latest.json'), 'utf8'));
+  return path.join(PATHS.eop, latest.files['finals.all.iau2000.txt'].path);
+}
+
 const a = args();
 const wallStart = Date.now();
 const logLines = [];
@@ -72,7 +78,7 @@ async function main() {
   await fitter.destroy();
 
   // 2. The pool.
-  const pool = new Pool({ size: a.workers, workerData: { fitModules: a.fitModules, readerModules: a.readerModules, sourceIds: a.groups.filter((g) => sources[g]) }, log });
+  const pool = new Pool({ size: a.workers, workerData: { fitModules: a.fitModules, readerModules: a.readerModules, sourceIds: a.groups.filter((g) => sources[g]), eopFile: eopFile() }, log });
   await pool.ready;
   log(`${a.workers} workers ready`);
 
@@ -89,7 +95,7 @@ async function main() {
     let ctx = null;
     let rows;
     try {
-      ctx = await source.prepare?.({ http, log, registryDir: a.registry, snapshot });
+      ctx = await source.prepare?.({ http, log, registryDir: a.registry, snapshot, loadReader: (rel) => loadReader(rel, a.readerModules) });
       rows = await runGroup({ group, snapshot, source, http, pool, store, ctx, options: a, log, timing });
     } catch (e) {
       log(`${group}: source not available: ${e.message}`);

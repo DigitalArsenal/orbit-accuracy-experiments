@@ -46,19 +46,26 @@ export function readRegistry(dir) {
   return { byNorad, sources };
 }
 
-// Fetch the current manifest (names only), keep it in the registry, and return the registry.
+// Fetch the current manifest (names only), keep it in the registry unless it is the one already kept
+// (a conditional GET on the newest kept ETag), and return the registry.
 export async function prepare({ http, log, registryDir }) {
   fs.mkdirSync(registryDir, { recursive: true });
-  const res = await http.get(MANIFEST_URL);
-  if (res.status !== 200 || !res.body) throw new Error(`starlink manifest: HTTP ${res.status} ${res.error ?? ''}`);
-  const stamp = res.requestUtc.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
-  const text = res.body.toString('utf8');
-  const file = path.join(registryDir, `starlink-names-${stamp}.txt`);
-  fs.writeFileSync(file, text);
-  fs.writeFileSync(file.replace(/\.txt$/, '.json'), JSON.stringify({ url: MANIFEST_URL, requestUtc: res.requestUtc, responseUtc: res.responseUtc, etag: res.headers.etag, lastModified: res.headers.lastModified, bytes: res.body.length }, null, 1));
+  const sidecars = fs.readdirSync(registryDir).filter((n) => /^starlink-names-\d{8}T\d{6}Z\.json$/.test(n)).sort();
+  const last = sidecars.length ? JSON.parse(fs.readFileSync(path.join(registryDir, sidecars.at(-1)), 'utf8')) : null;
+  const res = await http.get(MANIFEST_URL, { headers: last?.etag ? { 'If-None-Match': last.etag } : {} });
+  let manifest = { etag: last?.etag ?? null, lastModified: last?.lastModified ?? null, file: sidecars.at(-1)?.replace(/\.json$/, '.txt') ?? null, unchanged: res.status === 304 };
+  if (res.status === 200 && res.body) {
+    const stamp = res.requestUtc.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+    const file = path.join(registryDir, `starlink-names-${stamp}.txt`);
+    fs.writeFileSync(file, res.body);
+    fs.writeFileSync(file.replace(/\.txt$/, '.json'), JSON.stringify({ url: MANIFEST_URL, requestUtc: res.requestUtc, responseUtc: res.responseUtc, etag: res.headers.etag, lastModified: res.headers.lastModified, bytes: res.body.length }, null, 1));
+    manifest = { etag: res.headers.etag, lastModified: res.headers.lastModified, file: path.basename(file), unchanged: false };
+  } else if (res.status !== 304) {
+    throw new Error(`starlink manifest: HTTP ${res.status} ${res.error ?? ''}`);
+  }
   const registry = readRegistry(registryDir);
-  log(`starlink registry: ${registry.sources.map((s) => `${s.file} ${s.names}`).join('; ')}`);
-  return { registry, manifest: { file: path.basename(file), etag: res.headers.etag, lastModified: res.headers.lastModified } };
+  log(`starlink registry: ${registry.sources.map((x) => `${x.file} ${x.names}`).join('; ')}; current manifest ${manifest.file} (Last-Modified ${manifest.lastModified})${manifest.unchanged ? ' unchanged' : ''}`);
+  return { registry, manifest };
 }
 
 // Versions to try for a set, nearest the EPOCH first: those that start no later than MIN_WINDOW_HOURS

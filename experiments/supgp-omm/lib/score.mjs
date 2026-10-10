@@ -4,7 +4,7 @@
 // applies the gate and runs the guards; it computes no orbit quantity.
 import { json } from '../../../harness/modules.mjs';
 import { FIT, GATE } from '../config.mjs';
-import { decodeOmmStream, ommFrame } from './records.mjs';
+import { OMM_TYPE, decodeOmmStream, ommFrame } from './records.mjs';
 import { Guard } from './guards.mjs';
 
 const ELEMENTS = ['MEAN_MOTION', 'ECCENTRICITY', 'INCLINATION', 'RA_OF_ASC_NODE', 'ARG_OF_PERICENTER', 'MEAN_ANOMALY', 'BSTAR'];
@@ -60,29 +60,47 @@ export async function scoreSupgp(fitter, row, ephemeris, window, guard) {
   return statsOf(res.results[0].windows[0]);
 }
 
-// Our OMM, fitted to the same points (B* fitted), then re-scored from the OMM record itself.
-export async function fitOurs(fitter, row, ephemeris, window, scoredSupgp, guard, { closure = false } = {}) {
+// One fit_elements call. start 'ephemeris': the module's own start (osculating-to-mean inversion, and for
+// inclinations under 3 degrees a set of restarts). start 'celestrak-elements': the LM starts from CelesTrak's
+// elements; only the starting point changes, the fit still minimises the RMS on the same points.
+async function fitOnce(fitter, row, ephemeris, window, scoredSupgp, guard, { closure, start }) {
   const epoch = window.fitFromEphemerisStart ? 'first' : `${row.epoch}Z`;
-  const out = await fitter.invoke('fit_elements', [ephemeris, json('options', {
-    ...FIT, closure,
-    fits: [{ norad: row.norad, from: window.from, to: window.to, epoch, fitBstar: true }],
-  })]);
+  const inputs = [ephemeris];
+  if (start === 'celestrak-elements') inputs.push(ommFrame([{ norad: row.norad, epoch: row.epoch, elements: row.elements }]));
+  inputs.push(json('options', { ...FIT, closure, ...(start === 'celestrak-elements' ? { initial: 'apriori' } : {}), fits: [{ norad: row.norad, from: window.from, to: window.to, epoch, fitBstar: true }] }));
+  const out = await fitter.invoke('fit_elements', inputs);
   const report = JSON.parse(Buffer.from(out.outputs.find((o) => o.portId === 'report').payload).toString());
   const fit = report.fits?.[0] ?? {};
   const result = {
-    converged: fit.converged === true && !fit.error, error: fit.error ?? null, iterations: fit.iterations, stop: fit.stop, stages: fit.stages,
+    start, converged: fit.converged === true && !fit.error, error: fit.error ?? null, iterations: fit.iterations, stop: fit.stop, stages: fit.stages,
     epoch: fit.epoch, epochRequest: epoch, states: fit.states, weightedRms: fit.weightedRms, conditionNumber: fit.conditionNumber,
     elements: fit.elements, equinoctial: fit.equinoctial, bstar: fit.bstar, rms: statsOf(fit.rms),
     closure: fit.closure ? { splitEpoch: fit.closure.splitEpoch, fitStates: fit.closure.fitStates, error: fit.closure.error ?? null, rms: statsOf(fit.closure.rms) } : null,
   };
-  guard.fitReport({ report, norad: row.norad, window, scoredSupgp, fit: result });
+  guard.fitReport({ report, norad: row.norad, window, scoredSupgp, fit: result, apriori: start === 'celestrak-elements' ? 1 : 0 });
+  return { result, out };
+}
+
+// Our OMM, fitted to the same points (B* fitted), then re-scored from the OMM record itself. When the module's own
+// start ends in a fit that is not lower than CelesTrak's (it can, on near-equatorial orbits, whose cost has several
+// basins) or does not converge, the fit is repeated once from CelesTrak's elements and the lower of the two is kept;
+// both attempts are recorded.
+export async function fitOurs(fitter, row, ephemeris, window, scoredSupgp, guard, { closure = false } = {}) {
+  const attempts = [await fitOnce(fitter, row, ephemeris, window, scoredSupgp, guard, { closure, start: 'ephemeris' })];
+  const lower = (a) => a.result.converged && a.result.rms.rmsPerCoordinateKm < scoredSupgp.rmsPerCoordinateKm;
+  if (!lower(attempts[0])) attempts.push(await fitOnce(fitter, row, ephemeris, window, scoredSupgp, guard, { closure, start: 'celestrak-elements' }));
+  const converged = attempts.filter((a) => a.result.converged);
+  const best = converged.length ? converged.reduce((x, y) => (y.result.rms.rmsPerCoordinateKm < x.result.rms.rmsPerCoordinateKm ? y : x)) : attempts[0];
+  const result = best.result;
+  result.attempts = attempts.map((a) => ({ start: a.result.start, converged: a.result.converged, error: a.result.error, rmsPerCoordinateKm: a.result.rms.rmsPerCoordinateKm, iterations: a.result.iterations }));
   if (!result.converged) return { result, omm: null };
-  const ommBytes = Buffer.from(out.outputs.find((o) => o.portId === 'elements').payload);
+  const ommBytes = Buffer.from(best.out.outputs.find((o) => o.portId === 'elements').payload);
   guard.fitOmm({ ommBytes, norad: row.norad, fit: result, decode: decodeOmmStream });
   // Independent scoring: the OMM record alone, through element_residuals, on the same window.
-  const rescored = await fitter.invokeJson('element_residuals', [{ portId: 'elements', payload: ommBytes, typeRef: { schemaName: 'OMM.fbs', fileIdentifier: '$OMM', rootTypeName: 'OMM', wireFormat: 'flatbuffer' } },
-    ephemeris, json('options', { requests: [{ norad: row.norad, set: result.epoch.endsWith('Z') ? result.epoch : `${result.epoch}Z`, label: 'ours', windows: [{ from: window.from, to: window.to, label: 'window' }] }] })], 'residuals');
-  guard.scoreEcho({ res: rescored, norad: row.norad, set: result.epoch.endsWith('Z') ? result.epoch : `${result.epoch}Z`, label: 'ours', window, who: 'ours' });
+  const setIso = result.epoch.endsWith('Z') ? result.epoch : `${result.epoch}Z`;
+  const rescored = await fitter.invokeJson('element_residuals', [{ portId: 'elements', payload: ommBytes, typeRef: OMM_TYPE },
+    ephemeris, json('options', { requests: [{ norad: row.norad, set: setIso, label: 'ours', windows: [{ from: window.from, to: window.to, label: 'window' }] }] })], 'residuals');
+  guard.scoreEcho({ res: rescored, norad: row.norad, set: setIso, label: 'ours', window, who: 'ours' });
   const again = statsOf(rescored.results[0].windows[0]);
   guard.oursRescored({ fit: result, again });
   result.rescored = { rmsPerCoordinateKm: again.rmsPerCoordinateKm, n: again.n };

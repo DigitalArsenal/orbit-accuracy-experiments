@@ -21,6 +21,7 @@ export function summarize(group, snapshot, rows) {
   const classes = {};
   for (const r of paired) classes[pairClass(r)] = (classes[pairClass(r)] ?? 0) + 1;
   const strong = fitted.filter((r) => r.window.complete && r.causal !== false);
+  const clean = strong.filter((r) => r.gate.clean);
   const sub = (list) => ({ pairs: list.length, oursLower: count(list, (r) => r.comparison.oursLower), diffM: spread(list.map((r) => r.comparison.supgpMinusOursM)) });
   return {
     group,
@@ -33,7 +34,8 @@ export function summarize(group, snapshot, rows) {
     oursNotLower: count(fitted, (r) => !r.comparison.oursLower),
     diffM: spread(diffsM),                         // CelesTrak's per-coordinate RMS minus ours, metres
     pairClasses: classes,
-    completeWindow: sub(strong),                   // the strongest pairs: whole window in the version, version not newer than the snapshot
+    completeWindow: sub(strong),                   // whole window in the version, version not newer than the snapshot
+    cleanPairs: sub(clean),                        // of those, the recomputed RMS within 2 % of the published one (the version CelesTrak fitted, to all appearances)
     supgpRmsKm: spread(fitted.map((r) => r.supgp.rmsPerCoordinateKm)),
     oursRmsKm: spread(fitted.map((r) => r.ours.rms.rmsPerCoordinateKm)),
     unpaired,

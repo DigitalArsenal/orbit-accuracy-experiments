@@ -48,8 +48,9 @@ export class Guard {
   }
 
   // fit_elements fitted what was asked, on the same points CelesTrak's set was scored on.
-  fitReport({ report, norad, window, scoredSupgp, fit }) {
+  fitReport({ report, norad, window, scoredSupgp, fit, apriori = 0 }) {
     this.must('fit-report', report.kind === 'element-fit' && report.fits?.length === 1 && report.fits[0].norad === norad, 'report is not exactly the one requested fit');
+    this.must('fit-report', report.counts?.aprioriSets === apriori, `${report.counts?.aprioriSets} a priori sets loaded by the module, expected ${apriori}`);
     if (!fit.converged) return;
     this.must('fit-points', fit.rms.n === scoredSupgp.n, `ours scored ${fit.rms.n} points, CelesTrak's set ${scoredSupgp.n}`);
     this.must('fit-points', fit.rms.span?.[0] === scoredSupgp.span?.[0] && fit.rms.span?.[1] === scoredSupgp.span?.[1], `ours ${fit.rms.span} vs CelesTrak's ${scoredSupgp.span}`);
