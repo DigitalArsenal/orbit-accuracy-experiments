@@ -59,13 +59,18 @@ export async function sp3Context(modules, run, eopFile) {
   }
   return {
     // An SES eleven-parameter file evaluated by files/orbit-products
-    // normalize_ses_i11: {name (as the file names the satellite), comment,
-    // rows [{ms (UTC calendar ms), position [m] Earth-fixed]}]}.
+    // normalize_ses_i11: {name (as the file names the satellite), frame,
+    // comment, rows [{ms (UTC calendar ms), position [m] Earth-fixed}]}.
     async ses(bytes) {
       const out = await reader.invoke('normalize_ses_i11', [containerFrame(bytes, 'ses-i11')]);
       const frame = out.outputs.find((o) => o.portId === 'ephemeris');
       const block = OEM.getSizePrefixedRootAsOEM(new fb.ByteBuffer(new Uint8Array(frame.payload))).unpack().EPHEMERIS_DATA_BLOCK[0];
-      const rows = block.EPHEMERIS_DATA_LINES.map((l) => ({ ms: Date.parse(/Z$/.test(l.EPOCH) ? l.EPOCH : `${l.EPOCH}Z`), position: [l.X, l.Y, l.Z].map((v) => v * 1000) }));
+      // The states come as the block's compact EPHEMERIS_DATA (STATE_VECTOR_SIZE
+      // values per state, STEP_SIZE seconds apart from START_TIME), km.
+      const n = block.STATE_VECTOR_SIZE, data = block.EPHEMERIS_DATA ?? [];
+      if (!n || !block.STEP_SIZE || data.length % n) throw new Error('normalize_ses_i11: no uniform state block');
+      const start = Date.parse(/Z$/.test(block.START_TIME) ? block.START_TIME : `${block.START_TIME}Z`);
+      const rows = Array.from({ length: data.length / n }, (_, k) => ({ ms: start + k * block.STEP_SIZE * 1000, position: [0, 1, 2].map((i) => data[k * n + i] * 1000) }));
       return { name: block.OBJECT.OBJECT_NAME, frame: block.REFERENCE_FRAME?.NAME, comment: block.COMMENT, rows };
     },
     // sp3: bytes; identities: {product, source, statedSigmaM?, statedSigmaBasis?, satellites}.
