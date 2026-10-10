@@ -13,7 +13,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
 import { DAY_MS, config } from './common.mjs';
-import { licenseSection } from '../../harness/data-licenses.mjs';
+import { CITED_ONLY, licenseSection, mayPublishFile } from '../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { assets: { type: 'string' } } });
 if (!values.assets) throw new Error('--assets DIR (large files for release upload) is required');
@@ -42,8 +42,9 @@ for (const [name, [from, to]] of Object.entries(config.windows)) {
       if (!fs.existsSync(source) || entries.some((e) => e.name === index.product)) continue;
       const bytes = fs.readFileSync(source);
       if (sha256(bytes) !== index.sha256) throw new Error(`${index.product}: bytes differ from the converted index`);
-      fs.copyFileSync(source, path.join(values.assets, index.product));
-      add({ name: index.product, kind: index.product.startsWith('IGS') ? 'precise orbit (SP3, IGS final)' : 'precise orbit (SP3, ESA final)', windows: [name], url: index.url, sha256: index.sha256, bytes: bytes.length,
+      const withheld = !mayPublishFile(index.product);
+      if (!withheld) fs.copyFileSync(source, path.join(values.assets, index.product));
+      add({ ...(withheld ? { withdrawn: CITED_ONLY } : {}), name: index.product, kind: index.product.startsWith('IGS') ? 'precise orbit (SP3, IGS final)' : 'precise orbit (SP3, ESA final)', windows: [name], url: index.url, sha256: index.sha256, bytes: bytes.length,
         retrieved: stat(source).mtime.toISOString(), location: 'release-asset', terms: index.product.startsWith('IGS') ? 'IGS products (igs.bkg.bund.de mirror), IGS data policy, free with attribution' : 'ESA/ESOC GNSS products (navigation-office.esa.int), free use with attribution; IGS data policy' });
     }
   }

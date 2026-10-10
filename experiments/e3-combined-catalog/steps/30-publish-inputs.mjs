@@ -14,7 +14,7 @@ import { parseArgs } from 'node:util';
 import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
-import { licenseSection } from '../../../harness/data-licenses.mjs';
+import { CITED_ONLY, licenseSection, mayPublishFile } from '../../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { runs: { type: 'string' }, release: { type: 'string' }, products: { type: 'string' }, vimpel: { type: 'string' } } });
 const productsDir = path.resolve(values.products ?? path.join(path.dirname(config.inputs.reference), 'products'));
@@ -95,6 +95,7 @@ fs.rmSync(dataDir, { recursive: true, force: true });
 fs.mkdirSync(dataDir, { recursive: true });
 fs.mkdirSync(releaseDir, { recursive: true });
 for (const e of entries) {
+  if (!mayPublishFile(e.name)) { e.location = `not published: ${CITED_ONLY}`; continue; }
   e.location = inGit.has(e.family) ? `data/e3/${e.family}/${e.name}` : `release asset ${e.name}`;
   const dest = inGit.has(e.family) ? path.join(dataDir, e.family, e.name) : path.join(releaseDir, e.name);
   fs.mkdirSync(path.dirname(dest), { recursive: true });

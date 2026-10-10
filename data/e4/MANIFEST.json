@@ -9380,10 +9380,10 @@
    "samples": 1461,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260909T123256Z--260814.cs2.v4.sp3.gz",
-    "compressedSha256": "2544971ee171e407d3ad78d34f6c570197ec41e37a64d7e8f86714ef2455fc0d",
-    "compressedBytes": 74454
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "2544971ee171e407d3ad78d34f6c570197ec41e37a64d7e8f86714ef2455fc0d",
+    "gzCopyBytes": 74454
    }
   },
   {
@@ -9402,10 +9402,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260909T123256Z--ESA0OPSRAP_20262510000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "57ee8e38297a16b8a2760b57a7c0cc5b1445e44127b4b37ec7cd619f61702ab7",
-    "compressedBytes": 814424
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "57ee8e38297a16b8a2760b57a7c0cc5b1445e44127b4b37ec7cd619f61702ab7",
+    "gzCopyBytes": 814424
    }
   },
   {
@@ -9424,10 +9424,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260909T123256Z--SWRAesoc24333.sp3.gz",
-    "compressedSha256": "ec91f18f13e9dedafed613e5251be09f8909a4de57479f10242cebe07a44d33c",
-    "compressedBytes": 155338
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "ec91f18f13e9dedafed613e5251be09f8909a4de57479f10242cebe07a44d33c",
+    "gzCopyBytes": 155338
    }
   },
   {
@@ -9446,10 +9446,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260910T123603Z--ESA0OPSRAP_20262520000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "dbe0fa798dfd24d0c45cb06d05e89860266da14a7d1debbd44d8c25e17659a2e",
-    "compressedBytes": 799113
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "dbe0fa798dfd24d0c45cb06d05e89860266da14a7d1debbd44d8c25e17659a2e",
+    "gzCopyBytes": 799113
    }
   },
   {
@@ -9468,10 +9468,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260910T123703Z--SWRAesoc24334.sp3.gz",
-    "compressedSha256": "a2d53609e78d838035836a6a9927be58e97263416fb459e5626b1506deec9b70",
-    "compressedBytes": 155298
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "a2d53609e78d838035836a6a9927be58e97263416fb459e5626b1506deec9b70",
+    "gzCopyBytes": 155298
    }
   },
   {
@@ -9490,10 +9490,10 @@
    "samples": 1461,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260911T123911Z--260819.cs2.v4.sp3.gz",
-    "compressedSha256": "30df3c979b52e27ae7b2dadc61d59c27465985840a8c7ba51a9509b242545c81",
-    "compressedBytes": 74341
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "30df3c979b52e27ae7b2dadc61d59c27465985840a8c7ba51a9509b242545c81",
+    "gzCopyBytes": 74341
    }
   },
   {
@@ -9512,10 +9512,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260911T124011Z--ESA0OPSRAP_20262530000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "b82d694916cb8a08e5405b1a0b0d2491b69a3f5a6f11a979ca923f3550d7d2b6",
-    "compressedBytes": 799038
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "b82d694916cb8a08e5405b1a0b0d2491b69a3f5a6f11a979ca923f3550d7d2b6",
+    "gzCopyBytes": 799038
    }
   },
   {
@@ -9534,10 +9534,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260911T124011Z--SWRAesoc24335.sp3.gz",
-    "compressedSha256": "218297d284795718de8ae72f73c97efe5b9a2b7e42b1f139dafe3abaf6fadf48",
-    "compressedBytes": 155113
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "218297d284795718de8ae72f73c97efe5b9a2b7e42b1f139dafe3abaf6fadf48",
+    "gzCopyBytes": 155113
    }
   },
   {
@@ -9556,10 +9556,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260912T124315Z--ESA0OPSRAP_20262540000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "604bfa6b1bf758c05c5a920d54f33fc9f09b31bb43a6c335086f991215bd9496",
-    "compressedBytes": 783976
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "604bfa6b1bf758c05c5a920d54f33fc9f09b31bb43a6c335086f991215bd9496",
+    "gzCopyBytes": 783976
    }
   },
   {
@@ -9578,10 +9578,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260912T124415Z--SWRAesoc24336.sp3.gz",
-    "compressedSha256": "47149e0ceb0c6063080cbb5c24bac531cfee7382cdc9a8822ae372607e3d256c",
-    "compressedBytes": 155374
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "47149e0ceb0c6063080cbb5c24bac531cfee7382cdc9a8822ae372607e3d256c",
+    "gzCopyBytes": 155374
    }
   },
   {
@@ -9600,10 +9600,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260913T124715Z--ESA0OPSRAP_20262550000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "5ea15f61e517a827f2c2cd4eebf0fdd8ffba92732b137c2410f134cc09da0af0",
-    "compressedBytes": 799059
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "5ea15f61e517a827f2c2cd4eebf0fdd8ffba92732b137c2410f134cc09da0af0",
+    "gzCopyBytes": 799059
    }
   },
   {
@@ -9622,10 +9622,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260913T124815Z--SWRAesoc24340.sp3.gz",
-    "compressedSha256": "9d6d7d9d2242dbf1cfca839c603385df3837bee2b60ecfcff40fd40781c36b04",
-    "compressedBytes": 155226
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "9d6d7d9d2242dbf1cfca839c603385df3837bee2b60ecfcff40fd40781c36b04",
+    "gzCopyBytes": 155226
    }
   },
   {
@@ -9644,10 +9644,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260914T125115Z--ESA0OPSRAP_20262560000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "5558831dd75068d70fba2ba91200ef07cff45d68f26fb94afd0c0ced336182bc",
-    "compressedBytes": 783617
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "5558831dd75068d70fba2ba91200ef07cff45d68f26fb94afd0c0ced336182bc",
+    "gzCopyBytes": 783617
    }
   },
   {
@@ -9666,10 +9666,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260914T125214Z--SWRAesoc24341.sp3.gz",
-    "compressedSha256": "5692de1bcf90ab16eb1c61d731b0e8cfdd9f9acf816846deb0fbaaa31927f4c2",
-    "compressedBytes": 155212
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "5692de1bcf90ab16eb1c61d731b0e8cfdd9f9acf816846deb0fbaaa31927f4c2",
+    "gzCopyBytes": 155212
    }
   },
   {
@@ -9688,10 +9688,10 @@
    "samples": 289,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260915T125514Z--ESA0OPSRAP_20262570000_01D_05M_ORB.SP3.gz",
-    "compressedSha256": "454e0af12ebcec38ab846a4972ab32838a19d0dff058672d75e296a567c29e64",
-    "compressedBytes": 799150
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "454e0af12ebcec38ab846a4972ab32838a19d0dff058672d75e296a567c29e64",
+    "gzCopyBytes": 799150
    }
   },
   {
@@ -9710,10 +9710,10 @@
    "samples": 2881,
    "terms": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
    "published": {
-    "where": "repository",
-    "path": "data/e4/esa-pod/20260915T125614Z--SWRAesoc24342.sp3.gz",
-    "compressedSha256": "428f65aecc1ad19cf44977fe260ce46af1c14ba63bb9253b0a20fa004b5d5ace",
-    "compressedBytes": 155555
+    "where": "not-published",
+    "reason": "Cited by URL and SHA-256, not reproduced (owner, 2026-10-10; data/licenses.json: esa-navigation-office-pod, esa-navigation-office). Taken down from main; git history is not rewritten.",
+    "gzCopySha256": "428f65aecc1ad19cf44977fe260ce46af1c14ba63bb9253b0a20fa004b5d5ace",
+    "gzCopyBytes": 155555
    }
   },
   {

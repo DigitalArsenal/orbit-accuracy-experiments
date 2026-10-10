@@ -25,7 +25,7 @@ export default async function run(ctx) {
   const state = panel(ctx.root, 'Its state, to GCRF and forward a day');
   const cov = panel(ctx.root, 'P(t) = Φ P₀ Φᵀ through HPOP');
   const view = scene3d(ctx, { title: 'The covariance HPOP carries for a day', caption: '1σ position ellipsoids along the orbit, magnified' });
-  const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From HPOP’s covariance, RTN, P₀ of the synthetic VCM');
+  const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From HPOP’s covariance, RTN, P₀ of the sample VCM');
   const asOcm = panel(ctx.root, 'The same P₀’s message, as an SDS OCM');
 
   const [text, schema] = await Promise.all([ctx.fetchText('./data/ocm/ccsds-ocm-example-2.txt'), ctx.fetchJson('./data/sds/OCM.json')]);
@@ -70,7 +70,7 @@ export default async function run(ctx) {
 
   await ctx.run('analysis/vcm-adapter and propagator/hpop: Φ and P(t)', async () => {
     const [adapter, hpop, products] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/hpop'), ctx.module('files/orbit-products')]);
-    const vcmText = await ctx.fetchText('./data/vcm/synthetic-vcm.txt');
+    const vcmText = await ctx.fetchText('./data/vcm/sample-vcm.txt');
     const read = await adapter.invoke('read', [{ portId: 'message', payload: new TextEncoder().encode(vcmText) },
       { portId: 'options', payload: new TextEncoder().encode(JSON.stringify({ ephemerisSource: 'Analytical', arcSeconds: 86400 })) }]);
     const prw = decodePrw(out(read, 'request'));

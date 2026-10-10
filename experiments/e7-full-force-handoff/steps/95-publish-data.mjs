@@ -18,7 +18,7 @@ import { sha256 } from '../../../harness/modules.mjs';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config } from '../common.mjs';
 import { loadBatch } from '../analysis.mjs';
-import { licenseSection } from '../../../harness/data-licenses.mjs';
+import { CITED_ONLY, licenseSection, mayPublishFile } from '../../../harness/data-licenses.mjs';
 
 const { values } = parseArgs({ options: { batches: { type: 'string' }, manifests: { type: 'string' }, assets: { type: 'string' }, products: { type: 'string', default: '/opt/data/sdn-archive/reference-states/products' } } });
 const out = path.join(repoRoot, 'data/e7');
@@ -100,7 +100,10 @@ for (const p of products.values()) {
   if (!byFamily.has(f)) byFamily.set(f, []);
   byFamily.get(f).push({ ...p, bytes: bytes.length, retrieved: fs.statSync(file).mtime.toISOString() });
 }
-for (const [f, members] of byFamily) {
+for (const [f, all] of byFamily) {
+  // ESA/ESOC and ESA EO files are cited in the manifest, not packed.
+  const members = all.filter((m) => mayPublishFile(m.product));
+  if (!members.length) { manifest.listed.push({ family: f, members: all.length, note: CITED_ONLY }); continue; }
   const tar = path.join(assets, `e7-${f}.tar.gz`);
   const list = path.join(assets, `e7-${f}.files`);
   fs.writeFileSync(list, members.map((m) => m.product).sort().join('\n'));

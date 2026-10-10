@@ -29,6 +29,15 @@ export function source(id) {
 // one gate: it refuses any other source and returns the file's licence and
 // credit lines from the registry, never a blanket one.
 export const isReproducible = (id) => source(id).reproduce === 'yes';
+// Publish steps ask this before they stage or commit a provider's files.
+export const mayPublish = (ids) => ids.every(isReproducible);
+// The same question by file name, for steps that stage provider files one by
+// one: the ESA/ESOC orbits, ESA's Swarm and GRACE-FO files and SET's indices
+// are cited by URL and SHA-256, never copied into a public place.
+const FILE_SOURCES = [[/^ESA0OPS(FIN|RAP|ULT)_/, 'esa-navigation-office'], [/\.cs2\.v4\.sp3|SWRAesoc/, 'esa-navigation-office-pod'],
+  [/^(SW_OPER_|GF_)/, 'esa-earth-observation'], [/^(SOLFSMY|DTCFILE)/, 'set-jb2008']];
+export const mayPublishFile = (name) => FILE_SOURCES.every(([re, id]) => !re.test(name) || isReproducible(id));
+export const CITED_ONLY = 'cited by URL and SHA-256, not reproduced (data/licenses.json)';
 export function labelFor(ids, own = null) {
   const list = ids.map(source);
   const refused = list.filter((s) => s.reproduce !== 'yes');
@@ -115,7 +124,7 @@ export function renderDocs() {
   if (registry.bundles?.length) {
     L.push('## Release bundles', '', 'Built by `harness/release-bundle.mjs` from the experiments\' committed manifests; each holds its files byte for byte with a MANIFEST.json (SHA-256 per file) and a README.md (licence and attribution).', '',
       '| Tag | Asset | Files | Bytes | SHA-256 | Source |', '| --- | --- | ---: | ---: | --- | --- |');
-    for (const b of registry.bundles) L.push(`| \`${b.tag}\` | \`${b.asset}\` | ${b.members} | ${b.bytes} | \`${b.sha256}\` | [${cell(source(b.source).name)}](${anchor(b.source)}) |`);
+    for (const b of registry.bundles) L.push(`| \`${b.tag}\` | \`${b.asset}\`${b.withdrawn ? ' (withdrawn)' : ''} | ${b.members} | ${b.bytes} | \`${b.sha256}\` | [${cell(source(b.source).name)}](${anchor(b.source)})${b.withdrawn ? `; ${cell(b.withdrawn)}` : ''} |`);
     L.push('');
   }
   if (registry.openItems?.length) {

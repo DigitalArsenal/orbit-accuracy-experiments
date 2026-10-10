@@ -110,9 +110,9 @@ function rtnSigmas(sample) {
 // with the 7×7 covariance, and the adapter writes the result back.
 export async function runVcm(adapter, hpop, text, { onStatus = () => {}, hours = 24 } = {}) {
   const json = (portId, value) => ({ portId, payload: new TextEncoder().encode(JSON.stringify(value)) });
-  // The Sun and Moon come from HPOP's analytical ephemeris, so the page
-  // fetches no kernel. The format leaves the units of the B row unstated, so
-  // both readings run.
+  // The sample's epoch is 2023; the DE440 excerpt here covers 2026, so the
+  // Sun and Moon come from HPOP's analytical ephemeris. The format leaves the
+  // units of the B row unstated, so both readings run.
   const runs = {};
   for (const rows of ['fractional', 'absolute']) {
     onStatus(`analysis/vcm-adapter read, then propagator/hpop ${hours} h with the 7×7 covariance (B row ${rows === 'fractional' ? 'as a fraction' : 'as printed'})…`);

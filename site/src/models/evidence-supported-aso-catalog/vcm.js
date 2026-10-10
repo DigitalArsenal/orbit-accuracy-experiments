@@ -1,4 +1,4 @@
-// Section 17.3: the synthetic VCM, field by field as the adapter reads it into
+// Section 17.3: the sample VCM, field by field as the adapter reads it into
 // an SDS VCM record; propagated 24 h by HPOP with its 7×7 covariance under
 // both readings of the B row; written back, and the written message read
 // again to measure what the text keeps of the covariance.
@@ -23,9 +23,9 @@ export default async function run(ctx) {
   const view = scene3d(ctx, { title: 'The two readings of the B row, after a day', caption: '1σ position ellipsoids at 24 h, true scale' });
   const figure = chart(ctx.root, 'Position sigmas along the propagation', 'HPOP’s 7×7 covariance; in-track under both readings of the B row');
   const back = panel(ctx.root, 'Written back');
-  const [text, schema] = await Promise.all([ctx.fetchText('./data/vcm/synthetic-vcm.txt'), ctx.fetchJson('./data/sds/VCM.json')]);
+  const [text, schema] = await Promise.all([ctx.fetchText('./data/vcm/sample-vcm.txt'), ctx.fetchJson('./data/sds/VCM.json')]);
   pre(message, text);
-  note(message, 'A synthetic message: made-up identifiers, orbit and covariance, written by the adapter (site/synthetic-vcm.mjs). It is not an observation of any object.');
+  note(message, 'The survey’s sample VCM, identifiers zeroed; by its orbit and revolution number an ISS solution.');
   const [adapter, hpop] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/hpop')]);
 
   await ctx.run('analysis/vcm-adapter read, propagator/hpop 24 h, analysis/vcm-adapter write', async () => {

@@ -69,7 +69,7 @@
    "reason": "Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA.",
    "usedIn": "E3 (Swarm A, B, C truth), E5 (Swarm A, B, C and GRACE-FO densities; Swarm truth), E7 (Swarm truth)",
    "reproducedAt": [
-    "release e3-inputs-20261009: 54 SW_OPER_SP3*COM assets (published before this audit; the terms do not cover it)"
+    "taken down 2026-10-10 (local copies kept, cited by swarm-diss URL and SHA-256 in the release notes and data/e3/MANIFEST.json): release e3-inputs-20261009: 54 SW_OPER_SP3*COM assets"
    ],
    "obtain": "Create an EO Sign In account, accept ESA's terms, and download from https://swarm-diss.eo.esa.int/ (Swarm Level 2 POD/RD SP3, DNS POD; Multimission/GRACE-FO/DNS). The experiments' MANIFEST.json files list every file with its URL and SHA-256.",
    "notice": null
@@ -98,18 +98,18 @@
    ],
    "redistribution": "These conditions apply irrespective of whether the data and products have been retrieved directly from the ESA server or via a proxy. … IGS data and products have been made openly available for use without restriction, and continue to be offered free of cost or obligation.",
    "attributionClause": "to clearly mark all ESA data and analysed information, irrespective of the form in which it is produced), as follows: © Navigation Support Office at ESA/ESOC (year of reception).",
-   "conditions": "Acknowledge ESA's ownership of all ESA data. The Navigation Support Office's terms grant no redistribution right of their own and supplement ESA's web-portal terms, which say: \"ESA does not grant the right to resell or redistribute any information, documents, images or material from its website or to compile or create derivative works from material on its website.\" A written confirmation from ESA/ESOC would remove the doubt.",
-   "reproduce": "yes",
+   "conditions": "Acknowledge ESA's ownership of all ESA data. The Navigation Support Office's terms grant no redistribution right of their own and supplement ESA's web-portal terms, which say: \"ESA does not grant the right to resell or redistribute any information, documents, images or material from its website or to compile or create derivative works from material on its website.\" A written OK from ESA/ESOC would let the ESA GNSS finals go back up.",
+   "reproduce": "no",
    "credit": "© Navigation Support Office at ESA/ESOC 2026; IGS analysis-centre products, courtesy of the International GNSS Service (Johnston et al. 2017, doi:10.1007/978-3-319-42928-1).",
-   "reason": "The product terms ask only for ESA's ownership to be acknowledged and the © mark, and the same files are IGS analysis-centre products, which the IGS offers \"for use without restriction\". Reproduced with both credits; the portal terms' general reservation is noted above.",
+   "reason": "Cited, not reproduced (owner, 2026-10-10): ESA's web-portal terms leave a question about redistribution even though the same files are IGS analysis-centre products offered under the IGS terms. The 709 ESA0OPSFIN assets of release gnss-truth-20261009 and e7-gnss-final.tar.gz were taken down on 2026-10-10 (local copies kept); publish steps do not add ESA files. A written confirmation from ESA/ESOC would let the ESA GNSS finals go back up.",
    "usedIn": "E1, E2, E2b, E3, E7, E10 (GPS truth: ESA0OPSFIN); E3 (ESA0OPSULT baseline); E4 (GLONASS ESA0OPSULT, ESA0OPSRAP; Galileo CPF .esa)",
    "reproducedAt": [
-    "release gnss-truth-20261009: 709 ESA0OPSFIN assets",
-    "data/e3/gnss-final-esa/ (59 files)",
-    "data/e3/gnss-ultra-rapid-esa/ (42 files)",
-    "data/e4/glonass-precise/ (27 ESA0OPSULT files)",
-    "data/e4/esa-pod/ (7 ESA0OPSRAP files)",
-    "data/e4/cpf/ (226 Galileo .esa CPF files)",
+    "taken down 2026-10-10 (local copies kept, cited by URL and SHA-256): release gnss-truth-20261009: 709 ESA0OPSFIN assets (ESA0OPSFIN-cited.tsv lists them); release e7-inputs-20261010: e7-gnss-final.tar.gz (299 files, ESA0OPSFIN and IGS0OPSFIN)",
+    "still in the repository, owner decision pending: data/e3/gnss-final-esa/ (59 files)",
+    "still in the repository, owner decision pending: data/e3/gnss-ultra-rapid-esa/ (42 files)",
+    "still in the repository, owner decision pending: data/e4/glonass-precise/ (27 ESA0OPSULT files)",
+    "still in the repository, owner decision pending: data/e4/cpf/ (226 Galileo .esa CPF files)",
+    "removed from main 2026-10-10 (history not rewritten): data/e4/esa-pod/ (7 ESA0OPSRAP files, with the 9 of the ESA/ESOC POD row)",
     "modules: analysis/association/tests/fixtures/gps-20260802.json.gz (states from ESA0OPSFIN and IGS0OPSFIN)"
    ],
    "notice": null,
@@ -140,7 +140,7 @@
    "reason": "No terms grant redistribution of these orbit files.",
    "usedIn": "E4 (esa-pod provider: CryoSat-2 and Swarm precise orbits)",
    "reproducedAt": [
-    "data/e4/esa-pod/ (9 files: *.cs2.v4.sp3, SWRAesoc*; committed before this audit; the terms do not cover it)"
+    "removed from main 2026-10-10 (git history not rewritten; local copies kept, cited by URL and SHA-256 in data/e4/SOURCES.md and MANIFEST.json): data/e4/esa-pod/ (9 files: *.cs2.v4.sp3, SWRAesoc*)"
    ],
    "obtain": "https://navigation-office.esa.int/products/ (POD products), files listed with URL and SHA-256 in data/e4/MANIFEST.json.",
    "notice": null
@@ -1176,7 +1176,7 @@
    "id": "sds-vcm-sample",
    "name": "Sample Vector Covariance Message (spacedatastandards.org survey)",
    "provider": "spacedatastandards.org survey/legacy-messages/vcm/sample/vcm.txt; an 18 SDS SP VCM (ISS solution, epoch rev 37693, 2023-01-07) with its center and satellite number replaced",
-   "licence": "Provenance not recorded; VCMs are not basic SSA data under Space-Track's blanket approval",
+   "licence": "Public sources (owner, 2026-10-10); spacedatastandards.org survey/legacy-messages/vcm/sample/vcm.txt, committed 2024-01-25",
    "terms": [
     {
      "title": "Space-Track.org documentation: User Agreement; Redistribution of Basic SSA Information",
@@ -1184,14 +1184,14 @@
      "retrieved": "2026-10-10"
     }
    ],
-   "redistribution": "(no source recorded in the survey; if the message came from Space-Track or an SSA sharing agreement, redistribution needs USSPACECOM's approval)",
+   "redistribution": "(none stated in the survey; the owner states the examples come from public sources)",
    "attributionClause": "(none stated)",
-   "reproduce": "no",
-   "credit": "Source to be confirmed (spacedatastandards.org survey sample).",
-   "reason": "Unclear until its source is confirmed: the state and covariance look like a real ISS solution with identifiers removed.",
+   "reproduce": "yes",
+   "credit": "Sample VCM from the Space Data Standards survey (spacedatastandards.org, survey/legacy-messages/vcm/sample/vcm.txt, committed 2024-01-25), from public sources.",
+   "reason": "Owner decision of 2026-10-10: the VCM examples are from public sources. The file is the survey's sample (an SP VCM with its center and satellite number replaced), kept on the site with this provenance.",
    "usedIn": "The site's VCM section (VCM read and propagated); space-data-network-modules tests",
    "reproducedAt": [
-    "site (gh-pages): data/vcm/sample-vcm.txt; not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)",
+    "site (gh-pages): data/vcm/sample-vcm.txt",
     "modules: analysis/vcm-adapter/tests/fixtures/sample-vcm.txt, files/orbit-products/fixtures/vcm_v2_sample.txt",
     "spacedatastandards.org: survey/legacy-messages/vcm/sample/vcm.txt"
    ],
@@ -1740,7 +1740,8 @@
    "members": 299,
    "bytes": 281104511,
    "sha256": "56940798b5acff105ced3c874a9c46331b60bef1cc38b04714ae561fef4c3315",
-   "source": "esa-navigation-office"
+   "source": "esa-navigation-office",
+   "withdrawn": "2026-10-10: taken down (ESA source, cited not reproduced); local copy /opt/data/sdn-archive/release-archive/e7-inputs-20261010/e7-gnss-final.tar.gz"
   },
   {
    "tag": "e7-inputs-20261010",
@@ -1768,12 +1769,12 @@
   }
  ],
  "openItems": [
-  "Kept, not removed (owner, 2026-10-10): release `e3-inputs-20261009`, the 54 Swarm orbit assets `SW_OPER_SP3ACOM_2__*.ZIP`, `SW_OPER_SP3BCOM_2__*.ZIP`, `SW_OPER_SP3CCOM_2__*.ZIP`. ESA's terms allow onward distribution only to recipients who accept them ([ESA](#esa-earth-observation)). No new public product carries them.",
-  "Kept, not removed (owner, 2026-10-10): `data/e4/esa-pod/`, the 9 ESA/ESOC orbit files of CryoSat-2 (`*.cs2.v4.sp3.gz`) and Swarm (`SWRAesoc*.sp3.gz`); no terms grant redistribution ([ESA/ESOC POD](#esa-navigation-office-pod)). No new public product carries them.",
-  "The site (`gh-pages`), rebuilt 2026-10-10 through `labelFor`: no longer writes `data/orekit/jb2008_indices-*.prw` ([SET](#set-jb2008)), `data/orekit/space_weather-*.prw` ([CelesTrak](#celestrak)) or `data/vcm/sample-vcm.txt` ([VCM sample](#sds-vcm-sample)), and labels every file by its source's licence and credit (the IERS earth-orientation files by the [IERS](#iers) terms, not MIT). The four Orekit cases that read CSSI space weather or SET's indices are listed as recorded only; the VCM section reads a synthetic message (`site/synthetic-vcm.mjs`). Earlier gh-pages commits still contain the three files (history is not rewritten, owner 2026-10-10).",
-  "Release `gnss-truth-20261009`: its notes now describe the IGS terms as open use without restriction (assets untouched, 2026-10-10). `data/e4/SOURCES.md` and E4's frozen `config.json` still say \"IGS Data Policy: CC BY 4.0\"; the config is frozen, so the correction is an amendment to E4's plan (not yet written).",
-  "Credits for ESA, Copernicus and Space-Track are in the results READMEs and reports (`harness/credit-lines.mjs`; a step that regenerates a report drops the section, rerun the script). Release notes of `e3-inputs-20261009` carry no © ESA line yet.",
+  "Taken down 2026-10-10 on the owner's instruction (local copies kept, each cited by URL and SHA-256): the 54 Swarm assets of release `e3-inputs-20261009`, the 709 ESA0OPSFIN assets of release `gnss-truth-20261009`, `e7-gnss-final.tar.gz` of release `e7-inputs-20261010`, and `data/e4/esa-pod/` on main. Git history is not rewritten: earlier commits still contain `data/e4/esa-pod/` and the earlier gh-pages commits the three site files below.",
+  "ESA/ESOC GNSS finals are cited, not reproduced, until ESA/ESOC confirms in writing that they may be redistributed ([ESA/ESOC](#esa-navigation-office)). Still in the repository and awaiting the owner's decision: `data/e3/gnss-final-esa/`, `data/e3/gnss-ultra-rapid-esa/`, `data/e4/glonass-precise/`, `data/e4/cpf/` and the association fixture in the modules.",
+  "The site (`gh-pages`), rebuilt 2026-10-10 through `labelFor`: no longer writes `data/orekit/jb2008_indices-*.prw` ([SET](#set-jb2008)) or `data/orekit/space_weather-*.prw` ([CelesTrak](#celestrak)), and labels every file by its source's licence and credit (the IERS earth-orientation files by the [IERS](#iers) terms, not MIT). The four Orekit cases that read CSSI space weather or SET's indices are listed as recorded only. The sample VCM stays with its provenance ([VCM sample](#sds-vcm-sample)).",
+  "Release `gnss-truth-20261009` notes now describe the IGS terms as open use without restriction (2026-10-10). `data/e4/SOURCES.md` and E4's frozen `config.json` still say \"IGS Data Policy: CC BY 4.0\"; the config is frozen, so the correction is an amendment to E4's plan (not yet written).",
+  "Credits for ESA, Copernicus and Space-Track are in the results READMEs and reports (`harness/credit-lines.mjs`; a step that regenerates a report drops the section, rerun the script).",
   "The site's `propagator/hpop` module binary compiles in the HWM14 winds data, whose terms are unconfirmed ([HWM14](#hwm14)); the binary is published by the owner's decision of 2026-10-08, and its provenance label says so. A build without HWM14 needs a module change.",
-  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Starlink, Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, VCM sample, HWM14, CCSDS figures) and the Space-Track element sets and tables there that lack the citation."
+  "space-data-network-modules: rows marked \"modules:\" above whose decision is *No* (Starlink, Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation."
  ]
 }

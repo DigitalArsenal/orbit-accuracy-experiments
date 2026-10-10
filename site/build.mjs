@@ -6,7 +6,7 @@
 // Everything written to dist is public: the module binaries (the owner's
 // decision of 2026-10-08), precise orbits (IGS final orbits, ILRS combined
 // SLR orbits), IERS EOP 20 C04 rows, a JPL DE440 excerpt, Orekit reference
-// trajectories, a synthetic VCM, and the committed results. No Space-Track
+// trajectories, the survey's sample VCM, and the committed results. No Space-Track
 // element set, and no per-sample table derived from one, is read.
 //
 // Every file goes through write(), which takes its label from
@@ -35,7 +35,6 @@ import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
 import { OD_MODELS, OD_SECTION } from './src/od/registry.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
-import { syntheticVcm } from './synthetic-vcm.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
@@ -202,13 +201,10 @@ write('data/kernel/de440-2026.prw', Buffer.from(kernelFrame(kernelBytes).payload
     own('MIT; the recorded differences include the cases that read CSSI space weather and SET\u2019s JB2008 indices, which are results and not republished data', creditsFor('E5').filter((c) => /JB2008/.test(c)).join(' ')));
 }
 
-// ── The synthetic VCM and E1's committed aggregates ──
-{
-  const adapter = await loadModule(modules, 'analysis/vcm-adapter');
-  const { text } = await syntheticVcm(adapter);
-  await adapter.destroy();
-  write('data/vcm/synthetic-vcm.txt', text, 'site/synthetic-vcm.mjs: a made-up orbit and covariance written by analysis/vcm-adapter', own('MIT; SYNTHETIC: made-up identifiers, state and covariance, not an observation'));
-}
+// ── The sample VCM and E1's committed aggregates ──
+// From public sources (owner, 2026-10-10); the registry carries its provenance.
+write('data/vcm/sample-vcm.txt', fs.readFileSync(path.join(modules, 'analysis/vcm-adapter/tests/fixtures/sample-vcm.txt')),
+  'spacedatastandards.org survey/legacy-messages/vcm/sample/vcm.txt, committed 2024-01-25', labelFor(['sds-vcm-sample']));
 for (const step of fs.readdirSync(path.join(repo, 'results/e1/a0')).filter((d) => d.startsWith('e1-'))) {
   write(`data/e1/a0/${step}.json`, fs.readFileSync(path.join(repo, 'results/e1/a0', step, 'metrics.json')), `results/e1/a0/${step}/metrics.json (aggregates only)`, analysed('E1'));
 }
@@ -353,7 +349,7 @@ write('provenance.json', {
   spacedatastandards: JSON.parse(fs.readFileSync(path.join(repo, 'node_modules/spacedatastandards.org/package.json'), 'utf8')).version,
   cesium: JSON.parse(fs.readFileSync(path.join(here, 'node_modules/cesium/package.json'), 'utf8')).version,
   // Sources the experiments read that this site does not reproduce (data/licenses.json).
-  notReproduced: ['celestrak', 'set-jb2008', 'sds-vcm-sample'].map((id) => ({ id, name: licenceSource(id).name, licence: licenceSource(id).licence, credit: licenceSource(id).credit })),
+  notReproduced: ['celestrak', 'set-jb2008'].map((id) => ({ id, name: licenceSource(id).name, licence: licenceSource(id).licence, credit: licenceSource(id).credit })),
   files,
 }, 'site/build.mjs', own('MIT (this repository)'));
 // Nothing under dist/data, dist/results or dist/modules may bypass write().

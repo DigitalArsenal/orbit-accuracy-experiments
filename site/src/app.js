@@ -231,7 +231,7 @@ async function setupOrekit() {
 
 // ── VCM round trip ──
 async function setupVcm() {
-  const text = await (await fetch('./data/vcm/synthetic-vcm.txt')).text();
+  const text = await (await fetch('./data/vcm/sample-vcm.txt')).text();
   $('vcm-in').textContent = text;
   lineChart($('vcm-chart'), { series: [], x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` }, empty: 'Run the round trip to plot the sigmas.' });
   $('vcm-run').addEventListener('click', () => runVcm(text).catch((e) => status($('vcm-status'), e.message, true)));
@@ -251,7 +251,7 @@ async function runVcm(text) {
   $('vcm-notes').innerHTML = [
     `${report.geopotential} ${report.zonals}Z,${report.tesserals}T; drag ${report.drag} as Jacchia-Roberts; B = ${report.ballisticCoefficientM2Kg} m²/kg, carried as a dynamic parameter.`,
     `Covariance ${report.covarianceSize}×${report.covarianceSize}, scaled by max(1, WTD RMS)² = ${report.covarianceScale.toFixed(4)}; its mean-motion row read as dn/n, the reading that reproduces the printed sigmas of four SP messages within 1 %.`,
-    `The printed sigmas do not cover the B row. Read like the mean-motion row, as a fraction of B (the adapter’s default), its sigma is ${(100 * b('fractional').sigma / b('fractional').value).toFixed(1)} % of B; read as printed in m²/kg, ${(b('absolute').sigma / b('absolute').value).toFixed(1)} times B. Against a precise orbit, an SP message for a GPS satellite (not published here) supports the first reading: its sigmas are about twice the errors over a day, where the as-printed reading’s are 7 to 20 times. Both run here.`,
+    'The printed sigmas do not cover the B row. Read like the mean-motion row, as a fraction of B (the adapter’s default), its sigma is 4 % of B; read as printed in m²/kg, five times B. Against a precise orbit, an SP message for a GPS satellite supports the first reading: its sigmas are about twice the errors over a day, where the as-printed reading’s are 7 to 20 times. Both run here.',
   ].map((n) => `<li>${n}</li>`).join('');
   const last = (rows) => runs[rows].sigmas.at(-1).s;
   lineChart($('vcm-chart'), {
@@ -297,7 +297,7 @@ function renderData() {
     ['data/orekit/', 'HPOP against Orekit', 'The reference trajectories, every case’s exact PRW request and inputs, and the recorded HPOP results.'],
     ['data/kernel/', 'Ephemeris', 'The DE440 excerpt for 2026 the propagations read for the Sun and Moon.'],
     ['data/eop/', 'Earth orientation', 'The IERS EOP 20 C04 rows over the V1 arcs.'],
-    ['data/vcm/', 'VCM', 'The synthetic message the round trip reads: made-up identifiers, state and covariance.'],
+    ['data/vcm/', 'VCM', 'The sample message the round trip reads (spacedatastandards.org survey, public sources).'],
     ['data/e1/', 'E1', 'Aggregates of E1’s checked steps; no element set and no per-sample table.'],
   ];
   const html = groups.map(([prefix, title, text]) => {
