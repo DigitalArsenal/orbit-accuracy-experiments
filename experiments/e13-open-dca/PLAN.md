@@ -303,3 +303,25 @@ hypotheses, thresholds, splits, bootstrap and decision rules of sections 5–6 a
    scatter 0.04 below 3 % of the storm amplitude (measured 2.0 %), at 0.088 below 6 % (measured 4.8 %); held-out satellites' spread reduced
    by at least 10 %. At the realised scatter the 3 % of section 7 is not reachable with 36 satellites (0.088 / √36 = 1.5 % per node before the
    deconvolution of a 24 h mean).
+
+### Amendment S1 — Part S: what is measured on SpaceX's files, and how it is scored (2026-10-10; before any aggregate of the collector's pair records was read — one pair, STARLINK-1042, was read while the collector was tested)
+
+The collector was restarted on 2026-10-10 with the pair mismatch. It polls the manifest every 30 min also while it fits, queues every version of a sampled satellite it sees, and for each version after a satellite's first
+compares the version's first state (a fresh orbit determination at its start, t1) with the previous version's own prediction for t1, in the previous state's radial / transverse / normal axes, with both files' stated
+sigmas and the Jacobi energy at t0 (the previous start) and t1 (`analysis/density-calibration` `energy`); and it reads Cd·A/m once more from the energy that separates the two start states (Method B: two trial HPOP
+propagations from the previous start state to t1 with the NRT density model, a secant step, a check). Only derived numbers are stored (`pairs/`, `pairs.jsonl` in the store). A head fit (Method A, as section 10) is run for
+the newest version of a satellite; a version with a later one queued is paired but not fitted.
+
+A **pair** is two consecutive versions of one satellite whose start epochs are 5–9 h apart. The versions come about every 7.2 h (STARLINK-1042: starts 12:19:42 and 19:29:42 UTC, created 22 min after their start).
+
+- **S1 realised against stated.** z = the mismatch / the previous version's stated sigma at t1, per axis. Statistic: the robust sigma (1.4826 × MAD) of z for the transverse position, over pairs, with the two-way cluster
+  bootstrap over satellites and UTC days of section 6. **The stated sigma overstates the realised error** if the upper bound of that robust sigma is below 0.5. Reported for all six axes, with the share of pairs beyond
+  3 sigma and the median realised / stated ratio of the 3D position.
+- **S2 planned = executed thrust.** Pairs whose previous version predicts a net energy gain over [t0, t1] of at least 100 J/kg (the file plans a raise: drag alone cannot give a gain, and 100 J/kg is several times the drag model error over 7 h) form the planned-raise set.
+  Statistic: the median of mismatch / predicted change (energy at t1 of the new state less that of the prediction, over the predicted gain; zero when the thrust is executed as planned and the drag error is small against it),
+  with the bootstrap. **Executed = planned** if the median lies within ±0.05 and its 95 % interval within ±0.10, and the robust sigma of the planned-raise set's mismatch in J/kg is at most twice that of the decaying
+  stratum's (no thrust: drag model error and orbit-determination error alone); **under-executed** if the median is below −0.05 and the upper bound below 0.
+- **S3 cadence** (descriptive): the distribution of the hours between consecutive starts and between a version's start and its creation, per satellite and over the fleet.
+- **S4 Method A against Method B** (descriptive): for pairs of the decaying stratum with no residual jump in the new version's head fit and a gate pass, the median and robust sigma of ln(B_A / B_B).
+
+Section 10's analyses (c)–(e) (the open DCA from Starlink, held-out Starlinks, non-fleet objects, Swarm and GRACE-FO) are not frozen here; each gets its own amendment before it is scored.

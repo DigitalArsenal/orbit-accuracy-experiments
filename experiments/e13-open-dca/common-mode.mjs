@@ -286,6 +286,17 @@ export function forecastMean(sol, loMs, hiMs, tauHours, quadMs = 600e3) {
   return acc / n;
 }
 
+// s(t) of a solution: piecewise linear between its nodes (an unsupported node is 0), held before the first supported node, and after the
+// last supported node relaxing to zero with time constant tauHours (null: held). The correction a propagation applies.
+export function sAt(sol, tMs, tauHours) {
+  const first = sol.supported.indexOf(true), last = sol.supported.lastIndexOf(true);
+  if (first < 0) return 0;
+  if (tMs <= sol.nodeMs[first]) return sol.s[first];
+  if (tMs > sol.nodeMs[last]) return tauHours === null ? sol.s[last] : sol.s[last] * Math.exp(-(tMs - sol.nodeMs[last]) / (tauHours * H));
+  const x = (tMs - sol.nodeMs[0]) / sol.stepMs, i = Math.min(sol.nodeMs.length - 2, Math.max(0, Math.floor(x)));
+  return sol.s[i] + (sol.s[i + 1] - sol.s[i]) * (x - i);
+}
+
 // The causal nowcast at an issue time: the arcs that ended at least latencyHours before it and not earlier than historyDays before that,
 // nodes at the centres of those arcs' days. The cut-off is an assertion, not a filter alone: the solver is handed no later arc.
 export function nowcast(arcs, issueMs, { latencyHours = 6, historyDays = 30, nodeHours = 24, ...rest } = {}) {

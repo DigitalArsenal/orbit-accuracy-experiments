@@ -6,6 +6,7 @@ import { openFitter } from './head-fit.mjs';
 const fitter = await openFitter(workerData.envConfig);
 const handlers = {
   head: (job) => fitter.fitHead(job),
+  pair: (job) => fitter.pairMismatch(job),
   synthetic: (job) => fitter.synthetic(job),
 };
 parentPort.postMessage({ ready: true, harness: fitter.harness, provenance: fitter.env.provenance });

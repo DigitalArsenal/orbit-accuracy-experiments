@@ -26,6 +26,8 @@ export const paths = {
   inputs: path.join(STORE, 'inputs'),              // per-cycle merged space-weather inputs, kept for provenance
   guards: path.join(STORE, 'guards'),
   planetArcs: path.join(STORE, 'planet-arcs'),   // one JSONL per split and profile: the drag of every satellite-day
+  pairs: path.join(STORE, 'pairs'),                // pairs/<norad>/<t1>.json: the mismatch between two consecutive versions of one satellite
+  pairIndex: path.join(STORE, 'pairs.jsonl'),
 };
 
 export const H = 3600e3;

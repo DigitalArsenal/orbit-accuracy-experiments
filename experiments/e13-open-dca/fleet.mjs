@@ -77,8 +77,12 @@ export function memeHeader(text) {
 
 const sigma = (cov, i, scale) => Math.sqrt(Math.abs(cov[i])) * scale;
 
+// How much of a file the collector keeps in memory for the next version's mismatch (a version starts 6.5-7.2 h after the one before it,
+// and up to a few versions may be skipped): states and the stated covariance's diagonal, never written to disk.
+export const RETAIN_HOURS = 40;
+
 // One file's text -> what the collector keeps in memory: the header, the first
-// `headHours` of states (m, m/s, EME2000, UTC) and a few facts of the whole file.
+// `headHours` of states (m, m/s, EME2000, UTC), the first RETAIN_HOURS for the pair mismatch and a few facts of the whole file.
 export function cutHead(text, headHours = S.headHours) {
   const header = memeHeader(text);
   const parsed = readMeme(text);
@@ -88,8 +92,19 @@ export function cutHead(text, headHours = S.headHours) {
   const steps = new Set();
   for (let i = 1; i < parsed.epochs.length; ++i) steps.add((Date.parse(parsed.epochs[i]) - Date.parse(parsed.epochs[i - 1])) / 1000);
   const cov = parsed.covariances[0];
+  const epochsMs = parsed.epochs.map((e) => Date.parse(e));
+  let nr = 0;
+  while (nr < epochsMs.length && epochsMs[nr] - epochsMs[0] <= RETAIN_HOURS * H + 1) ++nr;
+  const retained = {
+    startMs: epochsMs[0], createdMs: Date.parse(header.created), frame: parsed.frame, timeScale: parsed.timeScale,
+    epochsMs: Float64Array.from(epochsMs.slice(0, nr)),
+    states: Float64Array.from(parsed.states.slice(0, nr).flat()),                                                  // m, m/s, 6 per epoch
+    // stated sigma at every retained epoch: UVW position in m (3) then velocity in mm/s (3)
+    sigma: Float64Array.from(parsed.covariances.slice(0, nr).flatMap((c) => [0, 2, 5].map((i) => sigma(c, i, 1000)).concat([9, 14, 20].map((i) => sigma(c, i, 1e6))))),
+  };
   return {
     header,
+    retained,
     head: { frame: parsed.frame, timeScale: parsed.timeScale, epochs: parsed.epochs.slice(0, n), states: parsed.states.slice(0, n).map((s) => s.slice()) },
     file: {
       states: parsed.epochs.length, distinctStepsSeconds: [...steps].sort((a, b) => a - b),

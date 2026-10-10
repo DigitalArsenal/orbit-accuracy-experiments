@@ -10,8 +10,9 @@
 // All orbit computation is the modules'; this file frames inputs and counts.
 import crypto from 'node:crypto';
 import * as lib from './vendor/ephemeris-fit.mjs';
-import { convertRepresentation } from './vendor/frames.mjs';
-import { H, config, crAreaOverMassFor, isoZ } from './common.mjs';
+import { convertRepresentation, rtnAxes } from './vendor/frames.mjs';
+import { json, loadModule } from '../../harness/modules.mjs';
+import { H, config, crAreaOverMassFor, energyModulesDir, isoZ } from './common.mjs';
 
 const S = config.starlink;
 export const RECORD_VERSION = 1;
@@ -121,6 +122,60 @@ export async function openFitter(envConfig) {
     return true;
   }
 
+  // The mismatch between two consecutive versions of one satellite at the new version's start epoch t1 (PLAN.md section 10): the new version's
+  // first state (a fresh orbit determination) against the previous version's prediction for t1, in the previous state's radial / transverse /
+  // normal axes, with both files' stated sigmas, and the Jacobi energy of the previous version at its start and at t1 and of the new one at t1
+  // (analysis/density-calibration `energy`). Derived numbers only. `job`: {norad, satName, prev: {name, sha256, startMs, createdMs, frame, timeScale,
+  // state0, stateT1, sigmaT1}, next: {name, sha256, startMs, createdMs, frame, timeScale, state, sigma}} with states [m, m/s] and sigmas [UVW pos m x3, vel mm/s x3].
+  let energyModule = null;
+  async function pairMismatch(job) {
+    energyModule ??= await loadModule(energyModulesDir(), 'analysis/density-calibration');
+    const { prev, next } = job;
+    const isoOf = (ms) => new Date(ms).toISOString();
+    const one = async (frame, timeScale, ms, state) => (await lib.normalize(env, { frame, timeScale, states: [{ epoch: isoOf(ms), position: state.slice(0, 3), velocity: state.slice(3, 6) }] }))[0];
+    const p0 = await one(prev.frame, prev.timeScale, prev.startMs, prev.state0);
+    const p1 = await one(prev.frame, prev.timeScale, next.startMs, prev.stateT1);
+    const q1 = await one(next.frame, next.timeScale, next.startMs, next.state);
+    const R = await rtnAxes(env.modules['foundation/frames'], isoUs(p1.ms), p1.state);
+    const rot = (v) => [0, 1, 2].map((r) => R[3 * r] * v[0] + R[3 * r + 1] * v[1] + R[3 * r + 2] * v[2]);
+    const d = q1.state.map((v, k) => v - p1.state[k]);
+    const dr = rot(d.slice(0, 3)), dv = rot(d.slice(3, 6)).map((x) => x * 1e3);
+    const e = await energyModule.invokeJson('energy', [json('request', { states: [p0, p1, q1].map((p) => ({ mjd: p.ms / 86400e3 + 40587, r: p.state.slice(0, 3), v: p.state.slice(3, 6) })), degree: 36, gm: 3.986004418e14, gradient: false })], 'result');
+    if (e.refused.length) throw new Error(`energy refused ${e.refused.length} states`);
+    // Method B (PLAN.md section 10): the Cd*A/m that carries the previous version's start state (a fresh orbit determination at t0) to the new
+    // version's start energy at t1 (another), by two trial propagations with the fitter's environment (HPOP, the NRT density model, Cr*A/m locked at the
+    // class value) and a secant step on the energy mismatch (linear in Cd*A/m to the accuracy of one step), then a check at the answer. Only meaningful
+    // when no thrust acts between the two epochs: the analysis screens by the planned energy change and the head fits' jumps.
+    const cr = crAreaOverMassFor(job.norad);
+    const ctx = await makeCtx(p0, next.createdMs, lib.SETTINGS, { cdAreaOverMass: 0.03, crAreaOverMass: cr });
+    const energyOfState = async (state) => (await energyModule.invokeJson('energy', [json('request', { states: [{ mjd: p1.ms / 86400e3 + 40587, r: state.slice(0, 3), v: state.slice(3, 6) }], degree: 36, gm: 3.986004418e14, gradient: false })], 'result')).energy[0];
+    const mismatchAt = async (B) => {
+      const product = { epoch: noZ(isoUs(p0.ms)), state: p0.state, fixed: { b: B, agom: cr, inTrack: 0 }, parameters: [] };
+      const [x] = await lib.propagate(env, product, [p1.ms], ctx);
+      return e.energy[2] - await energyOfState(x.state);
+    };
+    const Ba = 0.02, Bb = 0.04, ma = await mismatchAt(Ba), mb = await mismatchAt(Bb);
+    const Bstar = Ba - ma * (Bb - Ba) / (mb - ma);
+    const methodB = { cdAreaOverMass: Bstar, trial: [{ B: Ba, mismatchJkg: ma }, { B: Bb, mismatchJkg: mb }], sensitivityJkgPerM2kg: (mb - ma) / (Bb - Ba), crAreaOverMass: cr, atmosphere: ctx.forces?.atmosphere ?? null };
+    if (Bstar > 0 && Bstar < 1) methodB.checkMismatchJkg = await mismatchAt(Bstar);
+    const so = prev.sigmaT1, sn = next.sigma;
+    const comb = (a, b) => a.map((x, k) => Math.hypot(x, b[k]));
+    const zOld = [...dr.map((x, k) => x / so[k]), ...dv.map((x, k) => x / so[3 + k])];
+    const zComb = [...dr.map((x, k) => x / comb(so.slice(0, 3), sn.slice(0, 3))[k]), ...dv.map((x, k) => x / comb(so.slice(3), sn.slice(3))[k])];
+    return {
+      kind: 'e13-pair', version: 1, norad: job.norad, satName: job.satName,
+      prev: { name: prev.name, sha256: prev.sha256, startMs: prev.startMs, createdMs: prev.createdMs }, next: { name: next.name, sha256: next.sha256, startMs: next.startMs, createdMs: next.createdMs },
+      t0: isoOf(prev.startMs), t1: isoOf(next.startMs), hoursBetween: (next.startMs - prev.startMs) / H, hoursCreatedBetween: (next.createdMs - prev.createdMs) / H,
+      mismatch: { positionRtnM: dr, position3dM: Math.hypot(...dr), velocityRtnMmS: dv },
+      statedSigma: { oldAtT1: so, newAtT1: sn },
+      z: { positionRtnOld: zOld.slice(0, 3), velocityRtnOld: zOld.slice(3), positionRtnCombined: zComb.slice(0, 3), velocityRtnCombined: zComb.slice(3) },
+      energyJkg: { oldT0: e.energy[0], oldT1: e.energy[1], newT1: e.energy[2], predictedChange: e.energy[1] - e.energy[0], mismatch: e.energy[2] - e.energy[1], realisedChange: e.energy[2] - e.energy[0] },
+      geodeticAltitudeKm: { oldT0: e.geodetic.altKm[0], oldT1: e.geodetic.altKm[1], newT1: e.geodetic.altKm[2] },
+      methodB,
+      provenance: { fitter: lib.VERSION, ...env.provenance, energyModule: energyModule.provenance },
+    };
+  }
+
   // Synthetic known-answer test: a head made by HPOP at a known Cd*A/m (and Cr*A/m), fitted by the same code.
   async function synthetic({ trueCd, trueCr, lockCr, noiseM = 0, headHours = S.headHours, label }) {
     const t0 = performance.now();
@@ -142,5 +197,5 @@ export async function openFitter(envConfig) {
       rms3dM: r.stats.rms3d, seconds: (performance.now() - t0) / 1000, harness: lib.VERSION };
   }
 
-  return { env, fitHead, reconstruct, checkRecord, synthetic, destroy: () => env.destroy(), harness: lib.VERSION };
+  return { env, fitHead, pairMismatch, reconstruct, checkRecord, synthetic, destroy: () => env.destroy(), harness: lib.VERSION };
 }
