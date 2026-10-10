@@ -1,0 +1,1519 @@
+{
+ "window": {
+  "name": "train",
+  "from": "2025-10-15",
+  "to": "2025-12-31"
+ },
+ "lagBinsHours": [
+  [
+   0,
+   6
+  ],
+  [
+   6,
+   12
+  ],
+  [
+   12,
+   24
+  ],
+  [
+   24,
+   48
+  ],
+  [
+   48,
+   96
+  ],
+  [
+   96,
+   168
+  ]
+ ],
+ "forms": [
+  "exponential",
+  "exponential-nugget"
+ ],
+ "regimes": {
+  "GPS": {
+   "empirical": {
+    "records": 2146,
+    "kept": 2102,
+    "components": {
+     "R": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 122,
+       "meanLagHours": 4.329749797358835,
+       "rho": 0.03538863949983585
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 512,
+       "meanLagHours": 11.055468422309033,
+       "rho": 0.8541176647899617
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 1282,
+       "meanLagHours": 22.064022708875015,
+       "rho": 0.7511230983349784
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 2029,
+       "meanLagHours": 40.462578659027514,
+       "rho": 0.6529158169527565
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 3845,
+       "meanLagHours": 76.18208661833552,
+       "rho": 0.45695299171932263
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 5486,
+       "meanLagHours": 135.88496628595,
+       "rho": 0.18472907594881105
+      }
+     ],
+     "T": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 122,
+       "meanLagHours": 4.329749797358835,
+       "rho": 0.9743429267811776
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 512,
+       "meanLagHours": 11.055468422309033,
+       "rho": 0.9873521285704594
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 1282,
+       "meanLagHours": 22.064022708875015,
+       "rho": 0.9815848766489196
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 2029,
+       "meanLagHours": 40.462578659027514,
+       "rho": 0.9617668331490298
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 3845,
+       "meanLagHours": 76.18208661833552,
+       "rho": 0.9170200741774037
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 5486,
+       "meanLagHours": 135.88496628595,
+       "rho": 0.8078766189891995
+      }
+     ],
+     "N": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 122,
+       "meanLagHours": 4.329749797358835,
+       "rho": -0.4690976969875079
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 512,
+       "meanLagHours": 11.055468422309033,
+       "rho": 0.7479637050769765
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 1282,
+       "meanLagHours": 22.064022708875015,
+       "rho": 0.693777470546738
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 2029,
+       "meanLagHours": 40.462578659027514,
+       "rho": 0.6140236720881249
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 3845,
+       "meanLagHours": 76.18208661833552,
+       "rho": 0.47505826569413
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 5486,
+       "meanLagHours": 135.88496628595,
+       "rho": 0.18071437836825782
+      }
+     ],
+     "dR": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 122,
+       "meanLagHours": 4.329749797358835,
+       "rho": 0.9918323611621201
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 512,
+       "meanLagHours": 11.055468422309033,
+       "rho": 0.9901695591076626
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 1282,
+       "meanLagHours": 22.064022708875015,
+       "rho": 0.9849908015546189
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 2029,
+       "meanLagHours": 40.462578659027514,
+       "rho": 0.968229615175152
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 3845,
+       "meanLagHours": 76.18208661833552,
+       "rho": 0.9254922636617787
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 5486,
+       "meanLagHours": 135.88496628595,
+       "rho": 0.8157642577311442
+      }
+     ],
+     "dT": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 122,
+       "meanLagHours": 4.329749797358835,
+       "rho": 0.08592170845562186
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 512,
+       "meanLagHours": 11.055468422309033,
+       "rho": 0.8532427884399534
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 1282,
+       "meanLagHours": 22.064022708875015,
+       "rho": 0.7521325039050972
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 2029,
+       "meanLagHours": 40.462578659027514,
+       "rho": 0.6489007611107159
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 3845,
+       "meanLagHours": 76.18208661833552,
+       "rho": 0.45270379661564136
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 5486,
+       "meanLagHours": 135.88496628595,
+       "rho": 0.17165485911418987
+      }
+     ],
+     "dN": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 122,
+       "meanLagHours": 4.329749797358835,
+       "rho": -0.44551954452314535
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 512,
+       "meanLagHours": 11.055468422309033,
+       "rho": 0.6625434522643274
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 1282,
+       "meanLagHours": 22.064022708875015,
+       "rho": 0.5492416418716116
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 2029,
+       "meanLagHours": 40.462578659027514,
+       "rho": 0.46463667112991586
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 3845,
+       "meanLagHours": 76.18208661833552,
+       "rho": 0.3244555501097485
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 5486,
+       "meanLagHours": 135.88496628595,
+       "rho": 0.1561815857684725
+      }
+     ]
+    }
+   },
+   "fits": {
+    "R": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 87.64179054116104,
+      "nugget": 0,
+      "sse": 114.3579212344388,
+      "pairs": 13276
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 95.54572093283936,
+      "nugget": 0.07,
+      "sse": 107.46356073578468,
+      "pairs": 13276
+     }
+    },
+    "T": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 696.1634876863575,
+      "nugget": 0,
+      "sse": 3.7805945640543612,
+      "pairs": 13276
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 696.1634876863575,
+      "nugget": 0,
+      "sse": 3.7805945640543612,
+      "pairs": 13276
+     }
+    },
+    "N": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 85.15521341605812,
+      "nugget": 0,
+      "sse": 282.007812710313,
+      "pairs": 13276
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 110.33447724740935,
+      "nugget": 0.19,
+      "sse": 232.23752210649985,
+      "pairs": 13276
+     }
+    },
+    "dR": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 737.4137676641876,
+      "nugget": 0,
+      "sse": 4.775100522344385,
+      "pairs": 13276
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 737.4137676641876,
+      "nugget": 0,
+      "sse": 4.775100522344385,
+      "pairs": 13276
+     }
+    },
+    "dT": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 85.15521341605812,
+      "nugget": 0,
+      "sse": 106.21650692988437,
+      "pairs": 13276
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 92.83489311193254,
+      "nugget": 0.06,
+      "sse": 101.3945107419979,
+      "pairs": 13276
+     }
+    },
+    "dN": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 62.04563614949259,
+      "nugget": 0,
+      "sse": 297.6800317890025,
+      "pairs": 13276
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 107.20406211623119,
+      "nugget": 0.37,
+      "sse": 146.3913918115701,
+      "pairs": 13276
+     }
+    }
+   }
+  },
+  "LEO-POD": {
+   "empirical": {
+    "records": 1303,
+    "kept": 1303,
+    "components": {
+     "R": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 672,
+       "meanLagHours": 3.3812080629960337,
+       "rho": 0.15862348672834478
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1366,
+       "meanLagHours": 8.558303862859917,
+       "rho": -0.27936097368233087
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2485,
+       "meanLagHours": 18.1716947262464,
+       "rho": 0.04577553759516263
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4645,
+       "meanLagHours": 36.042453194773344,
+       "rho": 0.017841722069782958
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8800,
+       "meanLagHours": 71.7326446646147,
+       "rho": 0.018221109940801585
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12650,
+       "meanLagHours": 132.02149530393032,
+       "rho": 0.03970793202283934
+      }
+     ],
+     "T": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 672,
+       "meanLagHours": 3.3812080629960337,
+       "rho": -0.012407683470039893
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1366,
+       "meanLagHours": 8.558303862859917,
+       "rho": -0.1291688596481888
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2485,
+       "meanLagHours": 18.1716947262464,
+       "rho": 0.03724946684643504
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4645,
+       "meanLagHours": 36.042453194773344,
+       "rho": 0.0366678352860608
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8800,
+       "meanLagHours": 71.7326446646147,
+       "rho": 0.013339592740348951
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12650,
+       "meanLagHours": 132.02149530393032,
+       "rho": 0.030822424109584537
+      }
+     ],
+     "N": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 672,
+       "meanLagHours": 3.3812080629960337,
+       "rho": 0.4439551834491788
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1366,
+       "meanLagHours": 8.558303862859917,
+       "rho": -0.39828362279469626
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2485,
+       "meanLagHours": 18.1716947262464,
+       "rho": 0.07759649478089833
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4645,
+       "meanLagHours": 36.042453194773344,
+       "rho": 0.020968291963374776
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8800,
+       "meanLagHours": 71.7326446646147,
+       "rho": 0.03937513484838877
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12650,
+       "meanLagHours": 132.02149530393032,
+       "rho": 0.0061405769218834515
+      }
+     ],
+     "dR": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 672,
+       "meanLagHours": 3.3812080629960337,
+       "rho": -0.019498611844100826
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1366,
+       "meanLagHours": 8.558303862859917,
+       "rho": -0.1395559801703943
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2485,
+       "meanLagHours": 18.1716947262464,
+       "rho": 0.03582517379092541
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4645,
+       "meanLagHours": 36.042453194773344,
+       "rho": 0.031419234278666934
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8800,
+       "meanLagHours": 71.7326446646147,
+       "rho": 0.010352555546995034
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12650,
+       "meanLagHours": 132.02149530393032,
+       "rho": 0.02882795031992899
+      }
+     ],
+     "dT": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 672,
+       "meanLagHours": 3.3812080629960337,
+       "rho": 0.18144383594672125
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1366,
+       "meanLagHours": 8.558303862859917,
+       "rho": -0.27760850867422915
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2485,
+       "meanLagHours": 18.1716947262464,
+       "rho": 0.04802202816510515
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4645,
+       "meanLagHours": 36.042453194773344,
+       "rho": 0.027798350848373257
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8800,
+       "meanLagHours": 71.7326446646147,
+       "rho": 0.01976738644271799
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12650,
+       "meanLagHours": 132.02149530393032,
+       "rho": 0.03944012114859439
+      }
+     ],
+     "dN": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 672,
+       "meanLagHours": 3.3812080629960337,
+       "rho": -0.11781646578877422
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1366,
+       "meanLagHours": 8.558303862859917,
+       "rho": -0.09821578817742056
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2485,
+       "meanLagHours": 18.1716947262464,
+       "rho": 0.07377696262524885
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4645,
+       "meanLagHours": 36.042453194773344,
+       "rho": 0.03461258022616659
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8800,
+       "meanLagHours": 71.7326446646147,
+       "rho": 0.026423004865250725
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12650,
+       "meanLagHours": 132.02149530393032,
+       "rho": -0.010305869327500172
+      }
+     ]
+    }
+   },
+   "fits": {
+    "R": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 163.65758153638893,
+      "pairs": 30618
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.63,
+      "sse": 147.37257685156652,
+      "pairs": 30618
+     }
+    },
+    "T": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 101.36922742703038,
+      "pairs": 30618
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.95,
+      "sse": 46.97257673242075,
+      "pairs": 30618
+     }
+    },
+    "N": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 306.2215008494047,
+      "pairs": 30618
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 306.2215008494047,
+      "pairs": 30618
+     }
+    },
+    "dR": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 104.42314493333672,
+      "pairs": 30618
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.95,
+      "sse": 47.047926535561174,
+      "pairs": 30618
+     }
+    },
+    "dT": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 162.78464104851932,
+      "pairs": 30618
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.54,
+      "sse": 150.94619967535303,
+      "pairs": 30618
+     }
+    },
+    "dN": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 136.42447186487846,
+      "pairs": 30618
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.95,
+      "sse": 51.49119369755963,
+      "pairs": 30618
+     }
+    }
+   }
+  },
+  "SLR-LEO": {
+   "empirical": {
+    "records": 1451,
+    "kept": 1451,
+    "components": {
+     "R": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 809,
+       "meanLagHours": 3.73427117154237,
+       "rho": 0.17718500966494055
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1339,
+       "meanLagHours": 9.010784677827523,
+       "rho": -0.25951647733336963
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2456,
+       "meanLagHours": 18.09250124151739,
+       "rho": 0.03146063298624317
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4729,
+       "meanLagHours": 36.05509995477081,
+       "rho": 0.0795570322888605
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8625,
+       "meanLagHours": 71.70626515810007,
+       "rho": 0.05048647185236871
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12012,
+       "meanLagHours": 131.32525975374105,
+       "rho": 0.05479050444367515
+      }
+     ],
+     "T": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 809,
+       "meanLagHours": 3.73427117154237,
+       "rho": -0.035031876902591276
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1339,
+       "meanLagHours": 9.010784677827523,
+       "rho": -0.06694180875234192
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2456,
+       "meanLagHours": 18.09250124151739,
+       "rho": 0.04535806569734755
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4729,
+       "meanLagHours": 36.05509995477081,
+       "rho": 0.009132402934092215
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8625,
+       "meanLagHours": 71.70626515810007,
+       "rho": 0.016906226693567665
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12012,
+       "meanLagHours": 131.32525975374105,
+       "rho": 0.019842441337591388
+      }
+     ],
+     "N": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 809,
+       "meanLagHours": 3.73427117154237,
+       "rho": 0.42942465951863296
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1339,
+       "meanLagHours": 9.010784677827523,
+       "rho": 0.29372770498419876
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2456,
+       "meanLagHours": 18.09250124151739,
+       "rho": 0.43636158178589785
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4729,
+       "meanLagHours": 36.05509995477081,
+       "rho": 0.44648673517065984
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8625,
+       "meanLagHours": 71.70626515810007,
+       "rho": 0.3772216404495989
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12012,
+       "meanLagHours": 131.32525975374105,
+       "rho": 0.2754128704014764
+      }
+     ],
+     "dR": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 809,
+       "meanLagHours": 3.73427117154237,
+       "rho": -0.08610390228461243
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1339,
+       "meanLagHours": 9.010784677827523,
+       "rho": -0.05260118967503925
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2456,
+       "meanLagHours": 18.09250124151739,
+       "rho": 0.051477762153158795
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4729,
+       "meanLagHours": 36.05509995477081,
+       "rho": 0.012884024485789394
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8625,
+       "meanLagHours": 71.70626515810007,
+       "rho": 0.012595195555749993
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12012,
+       "meanLagHours": 131.32525975374105,
+       "rho": 0.02699424777895142
+      }
+     ],
+     "dT": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 809,
+       "meanLagHours": 3.73427117154237,
+       "rho": 0.2259548528894013
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1339,
+       "meanLagHours": 9.010784677827523,
+       "rho": -0.14150800218571188
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2456,
+       "meanLagHours": 18.09250124151739,
+       "rho": 0.13573777848977162
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4729,
+       "meanLagHours": 36.05509995477081,
+       "rho": 0.1781747000575325
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8625,
+       "meanLagHours": 71.70626515810007,
+       "rho": 0.14039618964521353
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12012,
+       "meanLagHours": 131.32525975374105,
+       "rho": 0.1467758574050523
+      }
+     ],
+     "dN": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 809,
+       "meanLagHours": 3.73427117154237,
+       "rho": 0.2502908701819815
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 1339,
+       "meanLagHours": 9.010784677827523,
+       "rho": 0.2618296296759632
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 2456,
+       "meanLagHours": 18.09250124151739,
+       "rho": 0.3345642599658327
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 4729,
+       "meanLagHours": 36.05509995477081,
+       "rho": 0.3531052390772872
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 8625,
+       "meanLagHours": 71.70626515810007,
+       "rho": 0.2937771034176332
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 12012,
+       "meanLagHours": 131.32525975374105,
+       "rho": 0.21657262033950553
+      }
+     ]
+    }
+   },
+   "fits": {
+    "R": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 198.43429934079867,
+      "pairs": 29970
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2400,
+      "nugget": 0.95,
+      "sse": 147.07692415588062,
+      "pairs": 29970
+     }
+    },
+    "T": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 72.42138087235634,
+      "pairs": 29970
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.95,
+      "sse": 20.528785211526237,
+      "pairs": 29970
+     }
+    },
+    "N": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 69.6163487686357,
+      "nugget": 0,
+      "sse": 1243.6503643372798,
+      "pairs": 29970
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 285.2405345848846,
+      "nugget": 0.54,
+      "sse": 45.3787786194862,
+      "pairs": 29970
+     }
+    },
+    "dR": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 96.4235216879019,
+      "pairs": 29970
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0.95,
+      "sse": 28.837028664475184,
+      "pairs": 29970
+     }
+    },
+    "dT": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 660.409181692025,
+      "pairs": 29970
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 2400,
+      "nugget": 0.86,
+      "sse": 122.02345708311981,
+      "pairs": 29970
+     }
+    },
+    "dN": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 45.20757814775523,
+      "nugget": 0,
+      "sse": 1484.1281488115496,
+      "pairs": 29970
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 310.96480740408487,
+      "nugget": 0.65,
+      "sse": 27.881662722182355,
+      "pairs": 29970
+     }
+    }
+   }
+  },
+  "SLR-MEO": {
+   "empirical": {
+    "records": 377,
+    "kept": 375,
+    "components": {
+     "R": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 66,
+       "meanLagHours": 3.8733375378787884,
+       "rho": 0.08110467219208665
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 84,
+       "meanLagHours": 9.076013458994709,
+       "rho": 0.056013424723064226
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 322,
+       "meanLagHours": 19.143079762767442,
+       "rho": 0.3495052853348481
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 481,
+       "meanLagHours": 37.065021065488594,
+       "rho": 0.2349692463016764
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 972,
+       "meanLagHours": 71.78807504115218,
+       "rho": 0.09118046677277276
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 1422,
+       "meanLagHours": 130.88656589330367,
+       "rho": 0.099371571442284
+      }
+     ],
+     "T": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 66,
+       "meanLagHours": 3.8733375378787884,
+       "rho": 0.9024946792184052
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 84,
+       "meanLagHours": 9.076013458994709,
+       "rho": 0.9637461042929839
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 322,
+       "meanLagHours": 19.143079762767442,
+       "rho": 0.9313095340125694
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 481,
+       "meanLagHours": 37.065021065488594,
+       "rho": 0.8654302104318686
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 972,
+       "meanLagHours": 71.78807504115218,
+       "rho": 0.6837778242602098
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 1422,
+       "meanLagHours": 130.88656589330367,
+       "rho": 0.28282694476956466
+      }
+     ],
+     "N": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 66,
+       "meanLagHours": 3.8733375378787884,
+       "rho": -0.343728829803843
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 84,
+       "meanLagHours": 9.076013458994709,
+       "rho": 0.30990048604518833
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 322,
+       "meanLagHours": 19.143079762767442,
+       "rho": 0.3048416224013027
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 481,
+       "meanLagHours": 37.065021065488594,
+       "rho": 0.16123173439105074
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 972,
+       "meanLagHours": 71.78807504115218,
+       "rho": -0.08254725394176665
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 1422,
+       "meanLagHours": 130.88656589330367,
+       "rho": -0.021524643193272217
+      }
+     ],
+     "dR": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 66,
+       "meanLagHours": 3.8733375378787884,
+       "rho": 0.8815993686035606
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 84,
+       "meanLagHours": 9.076013458994709,
+       "rho": 0.9186165134412575
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 322,
+       "meanLagHours": 19.143079762767442,
+       "rho": 0.9369487689923551
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 481,
+       "meanLagHours": 37.065021065488594,
+       "rho": 0.8578347946751682
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 972,
+       "meanLagHours": 71.78807504115218,
+       "rho": 0.6908072163850342
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 1422,
+       "meanLagHours": 130.88656589330367,
+       "rho": 0.288969614087584
+      }
+     ],
+     "dT": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 66,
+       "meanLagHours": 3.8733375378787884,
+       "rho": 0.029897903902350753
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 84,
+       "meanLagHours": 9.076013458994709,
+       "rho": 0.12052318633121736
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 322,
+       "meanLagHours": 19.143079762767442,
+       "rho": 0.38922180152628966
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 481,
+       "meanLagHours": 37.065021065488594,
+       "rho": 0.26589865245009736
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 972,
+       "meanLagHours": 71.78807504115218,
+       "rho": 0.17162819264566023
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 1422,
+       "meanLagHours": 130.88656589330367,
+       "rho": 0.157878559161519
+      }
+     ],
+     "dN": [
+      {
+       "lo": 0,
+       "hi": 6,
+       "pairs": 66,
+       "meanLagHours": 3.8733375378787884,
+       "rho": -0.11068643592289513
+      },
+      {
+       "lo": 6,
+       "hi": 12,
+       "pairs": 84,
+       "meanLagHours": 9.076013458994709,
+       "rho": -0.10188503622846033
+      },
+      {
+       "lo": 12,
+       "hi": 24,
+       "pairs": 322,
+       "meanLagHours": 19.143079762767442,
+       "rho": 0.11445182454330677
+      },
+      {
+       "lo": 24,
+       "hi": 48,
+       "pairs": 481,
+       "meanLagHours": 37.065021065488594,
+       "rho": 0.0558206646045789
+      },
+      {
+       "lo": 48,
+       "hi": 96,
+       "pairs": 972,
+       "meanLagHours": 71.78807504115218,
+       "rho": 0.017124269042783323
+      },
+      {
+       "lo": 96,
+       "hi": 168,
+       "pairs": 1422,
+       "meanLagHours": 130.88656589330367,
+       "rho": 0.019331299445220128
+      }
+     ]
+    }
+   },
+   "fits": {
+    "R": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 16.99069882521931,
+      "nugget": 0,
+      "sse": 84.34272349988906,
+      "pairs": 3347
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 113.55630215075533,
+      "nugget": 0.73,
+      "sse": 13.73443160142013,
+      "pairs": 3347
+     }
+    },
+    "T": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 131.13277197164504,
+      "nugget": 0,
+      "sse": 29.0776676445697,
+      "pairs": 3347
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 131.13277197164504,
+      "nugget": 0,
+      "sse": 29.0776676445697,
+      "pairs": 3347
+     }
+    },
+    "N": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 76.0146936025887,
+      "pairs": 3347
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 32.004514371919775,
+      "nugget": 0.73,
+      "sse": 47.052439841273355,
+      "pairs": 3347
+     }
+    },
+    "dR": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 134.96191804568377,
+      "nugget": 0,
+      "sse": 28.661778538501,
+      "pairs": 3347
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 134.96191804568377,
+      "nugget": 0,
+      "sse": 28.661778538501,
+      "pairs": 3347
+     }
+    },
+    "dT": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 26.164427817243066,
+      "nugget": 0,
+      "sse": 121.28576072366218,
+      "pairs": 3347
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 201.93483399484683,
+      "nugget": 0.71,
+      "sse": 12.724361281173415,
+      "pairs": 3347
+     }
+    },
+    "dN": {
+     "exponential": {
+      "form": "exponential",
+      "tauHours": 2.4000000000000004,
+      "nugget": 0,
+      "sse": 14.147759495009844,
+      "pairs": 3347
+     },
+     "exponential-nugget": {
+      "form": "exponential-nugget",
+      "tauHours": 134.96191804568377,
+      "nugget": 0.95,
+      "sse": 5.455026338414446,
+      "pairs": 3347
+     }
+    }
+   }
+  }
+ }
+}
