@@ -19,8 +19,7 @@ const argv = process.argv.slice(2);
 const flag = (name) => { const i = argv.indexOf(name); return i >= 0 ? argv[i + 1] : null; };
 const log = (m) => console.log(`[sample] ${m}`);
 
-const MU_KM3_S2 = 398600.4418, RE_KM = 6378.137, DAY_MS = 86400000;
-const smaKm = (revPerDay) => { const n = revPerDay * 2 * Math.PI / 86400; return (MU_KM3_S2 / (n * n)) ** (1 / 3); };
+const RE_KM = 6378.137, DAY_MS = 86400000;     // the semi-major axis is Space-Track's own SEMIMAJOR_AXIS field (km); no orbit geometry is computed here
 const hash = (norad) => crypto.createHash('sha256').update(`${config.sample.salt}:${norad}`).digest().readUInt32BE(0);
 const median = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[s.length >> 1] : NaN; };
 
@@ -45,7 +44,7 @@ function readSeries(universe, fromIso) {
       const norad = Number(o.NORAD_CAT_ID);
       if (!universe.has(norad)) continue;
       const list = series.get(norad) ?? new Map();
-      list.set(o.GP_ID, { t: Date.parse(`${o.EPOCH}Z`) / DAY_MS, a: smaKm(Number(o.MEAN_MOTION)), e: Number(o.ECCENTRICITY), i: Number(o.INCLINATION), bstar: Number(o.BSTAR) });
+      list.set(o.GP_ID, { t: Date.parse(`${o.EPOCH}Z`) / DAY_MS, a: Number(o.SEMIMAJOR_AXIS), e: Number(o.ECCENTRICITY), i: Number(o.INCLINATION), bstar: Number(o.BSTAR) });
       series.set(norad, list);
     }
     if (++k % 40 === 0) log(`${k}/${files.length} files, ${series.size} satellites`);

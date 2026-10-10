@@ -25,6 +25,7 @@ export const paths = {
   stop: path.join(STORE, 'collector.stop'),
   inputs: path.join(STORE, 'inputs'),              // per-cycle merged space-weather inputs, kept for provenance
   guards: path.join(STORE, 'guards'),
+  planetArcs: path.join(STORE, 'planet-arcs'),   // one JSONL per split and profile: the drag of every satellite-day
 };
 
 export const H = 3600e3;
@@ -36,6 +37,9 @@ export const compactUtc = (iso) => iso.replace(/[-:]/g, '').replace(/\.\d+Z$/, '
 
 // The modules checkout is an absolute path in the configuration (the build E4 A6 and E11 pin); E13_MODULES or a flag overrides it.
 export const modulesDir = (flag) => modulesRoot({ flag: flag ?? process.env.E13_MODULES ?? config.inputs.modules, configured: config.inputs.modules, repoRoot });
+
+// The modules checkout that holds analysis/density-calibration with the orbital-energy methods (E13_ENERGY_MODULES or a flag overrides it).
+export const energyModulesDir = (flag) => modulesRoot({ flag: flag ?? process.env.E13_ENERGY_MODULES ?? config.inputs.energyModules, configured: config.inputs.energyModules, repoRoot });
 
 export function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 export function writeJson(file, value) {

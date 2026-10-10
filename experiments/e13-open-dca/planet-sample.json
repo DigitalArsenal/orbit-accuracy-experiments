@@ -1,0 +1,70 @@
+{
+ "experiment": "e13-open-dca",
+ "salt": "e13-planet-20261010",
+ "window": [
+  "2025-10-01",
+  "2026-07-31"
+ ],
+ "eligible": {
+  "minimumStates": 250,
+  "meanAltitudeKm": [
+   430,
+   520
+  ],
+  "altitudeNote": "WGS84 geodetic height from analysis/density-calibration energy, mean over the states; Swarm A/B/C fly at 440-520 km"
+ },
+ "doves": 153,
+ "eligibleCount": 68,
+ "calibration": [
+  "24ae",
+  "24d1",
+  "24da",
+  "24dc",
+  "24dd",
+  "24de",
+  "24df",
+  "24eb",
+  "24f6",
+  "24fd",
+  "2501",
+  "250a",
+  "2515",
+  "251b",
+  "251e",
+  "251f",
+  "2526",
+  "252b",
+  "252d",
+  "2534",
+  "2538",
+  "253b",
+  "253c",
+  "2545",
+  "2546",
+  "2547",
+  "2549",
+  "254a",
+  "254f",
+  "2553",
+  "255e",
+  "2563",
+  "2571",
+  "300a",
+  "300b",
+  "4001"
+ ],
+ "heldOut": [
+  "24e5",
+  "2500",
+  "2504",
+  "250b",
+  "2514",
+  "2527",
+  "2528",
+  "252e",
+  "2531",
+  "253d",
+  "256e",
+  "257a"
+ ]
+}

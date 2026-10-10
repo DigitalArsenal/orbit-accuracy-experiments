@@ -1,21 +1,63 @@
 {
   "experiment": "e13-open-dca",
-  "frozen": false,
+  "frozen": true,
   "plan": "PLAN.md",
   "store": "/opt/data/sdn-archive/e13-open-dca",
   "inputs": {
     "modules": "/Users/tj/software/worktrees/space-data-network-modules--e11-hpop-d1d8ca88",
     "modulesNote": "propagator/hpop 1.2.0 with the space-weather restart (modules d1d8ca88), the build E4 A6 and E11 pin; analysis/estimation 0.3.0 fit_batch v2",
-    "kernel": { "path": "/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp", "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2" },
+    "kernel": {
+      "path": "/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
     "eopFinalsGlob": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.*",
     "gfzHistory": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
     "gfzNowcastDir": "/opt/data/sdn-archive/hac/gfz-kp/2026",
     "gfzNowcastName": "Kp_ap_Ap_SN_F107_nowcast.txt",
-    "rsga": ["/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA", "/opt/data/sdn-archive/hac/noaa-swpc/2026"],
+    "rsga": [
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA",
+      "/opt/data/sdn-archive/hac/noaa-swpc/2026"
+    ],
     "spacetrack": {
       "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation/2026",
       "gpDaily": "/opt/data/sdn-archive/spacetrack/gp/2026"
-    }
+    },
+    "eopC04": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now",
+    "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+    "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+    "energyModules": "/Users/tj/software/worktrees/space-data-network-modules--e13-energy-20261010",
+    "energyModulesNote": "analysis/density-calibration 0.3.0 (energy, drag_work), branch task/e13-orbital-energy-20261010 of space-data-network-modules; every other module from inputs.modules",
+    "densities": {
+      "swarmA": {
+        "dir": "/opt/data/sdn-archive/hac/esa-swarm-diss/DNS_POD_Sat_A",
+        "pattern": "SW_OPER_DNSAPOD_2__",
+        "kind": "POD",
+        "norad": 39452
+      },
+      "swarmB": {
+        "dir": "/opt/data/sdn-archive/hac/esa-swarm-diss/DNS_POD_Sat_B",
+        "pattern": "SW_OPER_DNSBPOD_2__",
+        "kind": "POD",
+        "norad": 39451
+      },
+      "swarmC": {
+        "dir": "/opt/data/sdn-archive/hac/esa-swarm-diss/DNS_POD_Sat_C",
+        "pattern": "SW_OPER_DNSCPOD_2__",
+        "kind": "POD",
+        "norad": 39453
+      },
+      "gracefo1": {
+        "dir": "/opt/data/sdn-archive/hac/esa-swarm-diss/GFO_DNS",
+        "pattern": "GF_OPER_DNS1ACC_2__",
+        "kind": "ACC",
+        "norad": 43476,
+        "lastDay": "2026-04-30"
+      }
+    },
+    "densityConverter": "../e5-density-calibration/convert/cdf_densities.py",
+    "python": "/opt/data/sdn-archive/e13-open-dca/venv/bin/python",
+    "reference": "/opt/data/sdn-archive/reference-states/reference",
+    "referenceNote": "converted precise orbits as E5 and E8 read them (harness/reference.mjs); Swarm RD SP3 and GRACE-FO RSO"
   },
   "starlink": {
     "baseUrl": "https://api.starlink.com/public-files/ephemerides/",
@@ -24,14 +66,192 @@
     "manifestPollMinutes": 30,
     "headHours": 8,
     "gateRms3dM": 10,
-    "srpLock": { "norad_lt_56000_crAreaOverMass": 0.11, "norad_ge_56000_crAreaOverMass": 0.19, "note": "class assumptions from the lane's brief, not measured values" },
+    "srpLock": {
+      "norad_lt_56000_crAreaOverMass": 0.11,
+      "norad_ge_56000_crAreaOverMass": 0.19,
+      "note": "class assumptions from the lane's brief, not measured values"
+    },
     "stopAfterUtc": "2026-10-20T00:00:00Z"
   },
   "sample": {
     "salt": "e13-sample-20261010",
-    "exclude": { "range": [100001, 100025], "why": "the starlink-forecast lane's 25 satellites" },
-    "decay": { "slopeMetersPerDayAtMost": -15, "windowDays": 30, "raiseStepMeters": 150, "quota": { "<300": 20, "300-350": 20, "350-400": 20, "400-450": 20, "450-500": 30, "500+": 20 } },
-    "hold": { "slopeMetersPerDayWithin": 15, "target": 190, "minimumPerStratum": 4 }
+    "exclude": {
+      "range": [
+        100001,
+        100025
+      ],
+      "why": "the starlink-forecast lane's 25 satellites"
+    },
+    "decay": {
+      "slopeMetersPerDayAtMost": -15,
+      "windowDays": 30,
+      "raiseStepMeters": 150,
+      "quota": {
+        "<300": 20,
+        "300-350": 20,
+        "350-400": 20,
+        "400-450": 20,
+        "450-500": 30,
+        "500+": 20
+      }
+    },
+    "hold": {
+      "slopeMetersPerDayWithin": 15,
+      "target": 190,
+      "minimumPerStratum": 4
+    }
   },
-  "compute": { "workers": 2, "maximumProcesses": 3, "pauseAboveLoad1m": 55, "pauseBelowFreeGiB": 20 }
+  "compute": {
+    "workers": 2,
+    "maximumProcesses": 3,
+    "pauseAboveLoad1m": 55,
+    "pauseBelowFreeGiB": 20
+  },
+  "planet": {
+    "window": [
+      "2025-10-01",
+      "2026-07-31"
+    ],
+    "windowNote": "the days Planet's states and Swarm's densities both cover (Swarm DNS-POD ends 2026-07-31)",
+    "eligible": {
+      "minimumStates": 250,
+      "meanAltitudeKm": [
+        430,
+        520
+      ],
+      "altitudeNote": "WGS84 geodetic height from analysis/density-calibration energy, mean over the states; Swarm A/B/C fly at 440-520 km"
+    },
+    "sample": {
+      "salt": "e13-planet-20261010",
+      "calibration": 36,
+      "heldOut": 12
+    },
+    "arc": {
+      "profile": "g24lean",
+      "minHours": 20,
+      "maxHours": 28,
+      "cdAreaOverMass0": 0.02,
+      "crAreaOverMass": 0.0135,
+      "crNote": "ASSUMPTION for a 3U Dove (see planet.mjs); its effect on the fitted drag is measured on development arcs",
+      "sigma": {
+        "posRtnM": [
+          4,
+          10,
+          2
+        ],
+        "velRtnMmS": [
+          10,
+          3,
+          2.5
+        ],
+        "note": "one OEM's stated start covariance (2409, 2026-10-10); the realised scatter, not this number, sets the weights"
+      }
+    },
+    "split": {
+      "dev": [
+        "2025-10-01",
+        "2025-12-31"
+      ],
+      "testA": [
+        "2026-01-01",
+        "2026-03-31"
+      ],
+      "testB": [
+        "2026-04-01",
+        "2026-07-31"
+      ]
+    }
+  },
+  "analysis": {
+    "windowHours": 12,
+    "windowNote": "the unit of the density comparison: the mean of ln(observed / JB2008) over a 12 h UTC window of one satellite (at least 80 % of the 30 s samples valid)",
+    "minimumValidFraction": 0.8,
+    "solver": {
+      "nodeHoursCandidates": [
+        12,
+        24
+      ],
+      "baselineBlockDaysCandidates": [
+        10,
+        21,
+        30
+      ],
+      "huberK": 1.5,
+      "arcUse": {
+        "maximumRelativeSigma": 0.5,
+        "positiveOnly": true
+      },
+      "minimumDovesPerNodeInterval": 6,
+      "iterations": 30,
+      "tolerance": 1e-06,
+      "note": "nodes every nodeHours with linear interpolation in time; each Dove's baseline ln b is a constant per block of baselineBlockDays (Huber loss); the common mode has mean zero inside every block; candidate sets are tried on the dev split only (results/e13/selection.json)"
+    },
+    "correction": {
+      "altitudeKm": 490,
+      "note": "kappa = mean d ln(rho) / dT of JB2008 over a ring of points at this height (latitude, local time) from analysis/density-calibration evaluate with derivative; a00(t) [K] = s(t) / kappa"
+    },
+    "forecast": {
+      "latencyHours": 6,
+      "tauHoursCandidates": [
+        12,
+        48,
+        null
+      ],
+      "note": "after the last analysis node the correction relaxes to zero with time constant tau (None: held), tau chosen on the dev split"
+    },
+    "bootstrap": {
+      "resamples": 2000,
+      "seed": 20261010,
+      "confidence": 0.95
+    },
+    "stormApAtLeast": 50,
+    "hypotheses": {
+      "H1": {
+        "statistic": "spreadReduction",
+        "threshold": 0.25,
+        "primary": true
+      },
+      "H2": {
+        "statistic": "stormCapture",
+        "sameSignShare": 0.75,
+        "medianCapture": 0.5,
+        "descriptive": true
+      },
+      "H3": {
+        "statistic": "spreadReductionHeldOutDoves",
+        "threshold": 0.2
+      },
+      "H4": {
+        "statistic": "medianErrorRatio",
+        "horizonsDays": [
+          1,
+          3
+        ],
+        "threshold": 0.9,
+        "swarmIssueEveryDays": 2
+      },
+      "H5": {
+        "statistic": "medianErrorRatioDoves",
+        "horizonsDays": [
+          1,
+          3
+        ],
+        "threshold": 0.9,
+        "issueEveryNthState": 3
+      },
+      "H6": {
+        "statistic": "timeShiftControl",
+        "shiftDays": 7,
+        "maximumReduction": 0.05
+      },
+      "holm": {
+        "among": [
+          "H3",
+          "H4",
+          "H5"
+        ],
+        "alpha": 0.05
+      }
+    }
+  }
 }
