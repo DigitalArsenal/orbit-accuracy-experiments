@@ -1,7 +1,7 @@
 // E10 report: metrics.json and REPORT.md under results/e10/test from the test
 // runs, by PLAN.md sections 4 and 5 (and amendment 1). Statistics only; no
 // element set and no per-sample table derived from one is written.
-//   node steps/90-report.mjs --partb <run>[,<run>] [--partc <run>] [--parta <run>] [--enclosure <run>] [--partd <run>]
+//   node steps/90-report.mjs --partb <run>[,<run>] [--partc <run>] [--parta <run>] [--enclosure <run>] [--partd <run>] [--explore <run>]
 import fs from 'node:fs';
 import path from 'node:path';
 import { config } from '../common.mjs';
@@ -217,5 +217,35 @@ if (Object.keys(metrics.enclosure).length) {
   for (const [v, e] of Object.entries(metrics.enclosure)) lines.push(`| ${v} | ${e.steps} | ${e.e1.outside}/${e.e1.points} | ${f(e.e1.maxRadius, 3)} | ${e.e1.stepsWithOutside} | ${e.e2 ? `${e.e2.outside}/${e.e2.survivors}` : '—'} | ${e.e2 ? f(e.e2.maxRadius, 3) : '—'} | ${e.verdict} |`);
 }
 if (metrics.partD) lines.push('', '## Part D — screening', '', ...metrics.partD.reportLines);
+
+// ── Dev: the selection and the E26 diagnostic (amendment 1, item 6) ──
+lines.push('', '## Dev (selection and diagnostics; no test data)', '', 'Selection (`results/e10/selection.json`, dev seeds d1 and d2, all eight cases):', '', '| Candidate | Dev runs | Failures | Median RMS |', '| --- | ---: | ---: | ---: |');
+for (const table of Object.values(selection.families)) for (const r of table) lines.push(`| ${r.variant} | ${r.runs} | ${r.failures} | ${m(r.medianRmsM)} |`);
+const exploreIds = ids('explore');
+if (exploreIds.length) {
+  exploreIds.forEach(readManifest);
+  metrics.runs.explore = exploreIds;
+  const X = readJobs(exploreIds);
+  metrics.explore = X.map((j) => ({ seed: j.seed, variant: j.variant, epochs: j.rows.length, observations: j.observations, failure: j.failure?.message ?? null }));
+  lines.push('', 'E26 with the σ bound raised (B1, dev seeds): the support grows instead of collapsing until HPOP cannot integrate its points.', '', '| Seed | Variant | Epochs reached | Stopped by |', '| --- | --- | ---: | --- |');
+  for (const x of metrics.explore) lines.push(`| ${x.seed} | ${x.variant} | ${x.epochs}/${x.observations} | ${x.failure ? x.failure.replace(/^.*?: /, '').slice(0, 90) : '—'} |`);
+}
+// ── Notes ──
+const modelCheck = fs.existsSync(path.join(repoRoot, 'results/e10/dev/model-check.json')) ? JSON.parse(fs.readFileSync(path.join(repoRoot, 'results/e10/dev/model-check.json'), 'utf8')) : null;
+const b5 = [];
+for (const s of config.partB.testSeeds) {
+  const file = (c) => path.join(repoRoot, 'runs', 'cache', 'e10', 'partB', `${s.id}-${c}.json`);
+  if (!fs.existsSync(file('B1-nominal')) || !fs.existsSync(file('B5-area-change'))) continue;
+  const a = JSON.parse(fs.readFileSync(file('B1-nominal'), 'utf8')), b = JSON.parse(fs.readFileSync(file('B5-area-change'), 'utf8'));
+  const t = new Map(a.observations.map((o, k) => [o.ms, a.truthAtObs[k]]));
+  let worst = 0;
+  b.observations.forEach((o, k) => { const x = t.get(o.ms); if (x) worst = Math.max(worst, Math.hypot(x[0] - b.truthAtObs[k][0], x[1] - b.truthAtObs[k][1], x[2] - b.truthAtObs[k][2])); });
+  b5.push(worst);
+}
+metrics.notes = { modelCheck, b5TruthShiftM: b5 };
+lines.push('', '## Notes', '',
+  modelCheck ? `- **Measurement-model floor.** Noise-free RA/Dec from the simulator, fitted by BLS (dev seed d1, 12 h): weighted RMS ${f(modelCheck.lightTime.weightedRms, 3)} (≈ ${f(modelCheck.lightTime.weightedRms * 2, 2)}″) and a median position error of ${m(modelCheck.lightTime.medianErrorM)}, unchanged without light time (${f(modelCheck.noLightTime.weightedRms, 3)}, ${m(modelCheck.noLightTime.medianErrorM)}): a systematic of about 0.17″ between the simulated observations and the estimator's model (station framing or the float32 RA/Dec of \`$EOO\`), common to every variant. It is below 0.1σ of the 2″ noise but above BLS's metre-level formal covariance, which is why BLS's covariance regions rarely hold the truth.` : '',
+  b5.length ? `- **B5 and B8 are weak.** Doubling B and Cr·A/m at 600 km (mid-2026 density) moves the truth at most ${b5.map((x) => m(x)).join(', ')} over the 12 h after the change (test seeds); B8's 20 % drag error is similarly small between passes. Both cases score like B1.` : '');
+fs.writeFileSync(path.join(outDir, 'metrics.json'), `${JSON.stringify(metrics, (k, x) => (x === Infinity ? 'Infinity' : x), 1)}\n`);
 fs.writeFileSync(path.join(outDir, 'README.md'), `${lines.join('\n')}\n`);
 console.log(lines.slice(0, 14).join('\n'));
