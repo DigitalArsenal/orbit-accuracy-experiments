@@ -108,6 +108,15 @@ function samples(p, h, product, { includeFlagged = false, need = [] } = {}) {
   return out;
 }
 
+// Why a group has no full-force product, in words (counts per provider).
+function reasonLabel(key, text) {
+  const t = String(text);
+  if (/invalid-forces/.test(t)) return 'H-arc: a fit iteration proposed a negative Cr*A/m or Cd*A/m, which propagator/hpop refuses';
+  if (/too few element sets/.test(t)) return `H-arc: fewer than ${config.a4.fit.minimumSets} element sets in the arc`;
+  if (/not converged/.test(t)) return 'H-arc: the fit did not converge';
+  return `${key}: ${t.replace(/\d+(\.\d+)?/g, 'n')}`;
+}
+
 const metrics = { experiment: config.experiment, amendment: 'A4', runs: runIds, truthRun: values['truth-run'] ?? null, products: labelOf, flags: {}, providers: {}, fits: {}, hypotheses: {} };
 for (const p of providers) {
   metrics.flags[p] = { limitKm: flags[p].limitKm, medianKm: flags[p].medianKm, madKm: flags[p].madKm, rows: flags[p].rowsWithEpochDifference, flagged: flags[p].flagged };
@@ -120,7 +129,7 @@ for (const p of providers) {
   const fits = groups.map((r) => r.h.fit).filter(Boolean);
   const converged = fits.filter((f) => f.converged);
   const reasons = {};
-  for (const r of groups) for (const k of ['reason', 'fullForce', 'hEpochError', 'hArc', 'hArcError', 'error']) if (r.h[k]) { const t = `${k}: ${String(r.h[k]).replace(/\d+(\.\d+)?/g, 'n')}`; reasons[t] = (reasons[t] ?? 0) + 1; }
+  for (const r of groups) for (const k of ['reason', 'fullForce', 'hEpochError', 'hArc', 'hArcError', 'error']) if (r.h[k]) { const t = reasonLabel(k, r.h[k]); reasons[t] = (reasons[t] ?? 0) + 1; }
   metrics.fits[p] = {
     groups: groups.length, forceRegimes: Object.fromEntries([...new Set(groups.map((r) => r.forceRegime))].map((k) => [k, groups.filter((r) => r.forceRegime === k).length])),
     physicalClasses: [...new Set(groups.map((r) => r.h.physicalClass).filter(Boolean))],
