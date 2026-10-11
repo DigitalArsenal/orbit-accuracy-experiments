@@ -39,17 +39,22 @@ test('the test windows are refused until the frozen files and selection.json are
 
     // selection written, then staged: still refused
     fs.mkdirSync(path.join(root, 'results', 'e14'), { recursive: true });
-    fs.writeFileSync(path.join(root, SELECTION_FILE), '{"S3": "S3-KC"}\n');
+    fs.writeFileSync(path.join(root, SELECTION_FILE), '{"sources": {"S2": "S2-Q", "S3": "S3-KC", "S4": {"shrinkage": 0.5}}}\n');
     refuses(() => assertWindowReadable('test', options), /not committed|differs/);
     git(root, 'add', SELECTION_FILE);
     refuses(() => assertWindowReadable('test', options), /not committed|differs/);
 
-    // committed: both open
+    // committed: the long test window opens; s1:test needs S1's choice too
     git(root, 'commit', '-q', '-m', 'selection');
+    assertWindowReadable('test', options);
+    refuses(() => assertWindowReadable('s1:test', options), /names the choice for S1/);
+    fs.writeFileSync(path.join(root, SELECTION_FILE), '{"sources": {"S1": "S1-K", "S2": "S2-Q", "S3": "S3-KC", "S4": {"shrinkage": 0.5}}}\n');
+    git(root, 'add', SELECTION_FILE);
+    git(root, 'commit', '-q', '-m', 'S1 selection');
     for (const w of tests) assertWindowReadable(w, options);
 
     // the selection edited after its commit: closed until restored
-    fs.writeFileSync(path.join(root, SELECTION_FILE), '{"S3": "S3-T"}\n');
+    fs.writeFileSync(path.join(root, SELECTION_FILE), '{"sources": {}}\n');
     for (const w of tests) refuses(() => assertWindowReadable(w, options), /differs from its committed version/);
     git(root, 'checkout', '-q', '--', SELECTION_FILE);
     assertWindowReadable('test', options);

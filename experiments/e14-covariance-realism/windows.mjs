@@ -35,6 +35,11 @@ export function assertWindowReadable(name, { root = defaultRoot, dir = experimen
   assertCommittedAndUnchanged(root, frozen, `the ${name} window is locked`);
   if (!fs.existsSync(path.join(root, SELECTION_FILE))) throw new Error(`the ${name} window is locked until ${SELECTION_FILE} exists`);
   assertCommittedAndUnchanged(root, [SELECTION_FILE], `the ${name} window is locked`);
+  // Each test window needs its own sources' choices in the selection (S1's dev window ends later than the others').
+  const selection = JSON.parse(fs.readFileSync(path.join(root, SELECTION_FILE), 'utf8'));
+  const needed = name === 's1:test' ? ['S1'] : ['S2', 'S3', 'S4'];
+  const missing = needed.filter((k) => !selection?.sources?.[k]);
+  if (missing.length) throw new Error(`the ${name} window is locked until ${SELECTION_FILE} names the choice for ${missing.join(', ')}`);
 }
 
 // [lo, hi) in ms of a long window (days inclusive).

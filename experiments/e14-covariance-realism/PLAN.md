@@ -403,6 +403,7 @@ new source file `covariance_realism.cpp`), with tests and tri-runtime parity
 | `fit_calibration` | samples (stratum, RTN error, RTN covariance) and a method (`scalar-mle`, `axes-mle`, `coverage`) → factors per stratum with counts | S1, S3 factors |
 | `calibrate_covariance` | a frozen model (S1 factors, S3 T and k², or S2 terms), objects (state, epoch, reference time, native covariance if any) → calibrated 6 × 6 covariance in RTN and inertial axes, its cell, version and status | catalog products, the CA screen |
 | `dcp_covariance` | lead covariance C_δ, issue time, output epochs, sensitivities g → σ_eff, weights, P_DCP | S4 |
+| `noise_responses` | one propagation's STM at every step end of HPOP's process-noise discretization → the unit white-acceleration responses U_R, U_T, U_N at the targets | S2 (one HPOP run per anchor instead of four) |
 
 Existing methods used: `common_epoch`, `map_covariance`, `hpop_arcs`,
 `hpop_coverage` (P₀ and Q), `screening_cases`; `propagator/atmosphere`
@@ -470,6 +471,47 @@ never read; the AstroStds notes are not used.
 4. Dev: S3, S4, S2, S1 (dev-fit, dev-select); the choice.
 5. Freeze: `config.json` `"frozen": true` and `results/e14/selection.json`
    committed. Then each test window, once.
+
+## Changes to the draft before the freeze
+
+Dated, with their reasons. None follows from a test-window result (none has
+been read). Development results that informed a change are named.
+
+- **2026-10-10, the manoeuvre screen.** `detect_maneuvers` reports drag steps
+  as `ORBIT_LOWERING` (its README: the 2024-05-10/11 storm registers so).
+  Screening them would remove the storm samples the DCP is meant for, so
+  `ORBIT_LOWERING` events are not screened; every other characterization is.
+- **2026-10-10, S4 altitudes.** `propagator/atmosphere` evaluates NRLMSISE-00
+  up to 1000 km, so the LEO-H altitudes are 850 and 1000 km (objects above
+  1000 km use 1000 km; drag there is negligible).
+- **2026-10-10, S2 in practice.** One 7-day full-force run took about 31 s at
+  70 × 70 with ocean tides, 10 s at 36 × 36 without them (Swarm A). S2 uses
+  EGM2008 36 × 36, Sun and Moon, cannonball SRP, NRLMSISE-00 drag on released
+  drivers (LEO only; above LEO no drag), IERS 2010 solid tides and relativity;
+  no ocean tides or Earth radiation, which the catalog's 1.3.0 profile has.
+  B from B* and Cr·A/m 0.02 m²/kg are the catalog run's own assumptions (B
+  0.01 m²/kg where B* ≤ 0). Anchors are one per object every 6 days (was 3).
+  P₀ is S3-T's age-0 stratum: the same quantity `hpop_coverage` mode `epoch`
+  measures (the epoch state's error at the first truth epoch), from the S3
+  samples. Each anchor is one run with P₀, one dynamic parameter (Cd·A/m in
+  LEO, Cr·A/m above, σ(ln) 0.2) and its STM at every step end of HPOP's
+  noise discretization; `noise_responses` (new) gives the three unit noise
+  responses from that STM. Against HPOP's own `PROCESS_NOISE` on a Swarm A arc
+  at 1.3 days they agree within 2.1e-3 (R), 2.3e-5 (T), 4.1e-4 (N).
+- **2026-10-10, S1 regimes from E13.** E13's pair records hold no state; their
+  regime is from the newer start's geodetic altitude.
+- **2026-10-10, H6's σ_m** is the per-satellite root mean square about zero of
+  the daily ln(ρ_obs/ρ_NRLMSISE(observed drivers)) over dev-fit (the model's
+  bias included: a zero-mean consider term carries it). Density truth for
+  dev-fit is E13's converted copy of the ESA products; in the test window
+  Swarm's densities on disk end 2026-07-31 and GRACE-FO's 2026-04-30.
+- **2026-10-10, S1's selection is committed on its own.** S1's development
+  window ends 2026-10-15, after the others'. The guard opens `test` only
+  when `selection.json` names S2, S3 and S4, and `s1:test` only when it also
+  names S1 (`windows.mjs`, `test/e14-windows.test.mjs`).
+- **2026-10-10, module additions.** `pair_statistics` takes ephemeris samples
+  (Lagrange at an epoch) and a covariance as weighted terms; `noise_responses`
+  is new (section 10).
 
 ## References
 
