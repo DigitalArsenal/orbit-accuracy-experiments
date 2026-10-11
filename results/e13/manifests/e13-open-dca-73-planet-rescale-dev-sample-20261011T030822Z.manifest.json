@@ -1,0 +1,122 @@
+{
+ "run": "e13-open-dca-73-planet-rescale-dev-sample-20261011T030822Z",
+ "experiment": "e13-open-dca",
+ "step": "73-planet-rescale-dev-sample",
+ "command": [
+  "node",
+  "experiments/e13-open-dca/steps/73-planet-rescale.mjs",
+  "--split",
+  "dev",
+  "--sample",
+  "24",
+  "--trajectory-profile",
+  "g12lean",
+  "--step-seconds",
+  "300",
+  "--out",
+  "../../../../../private/tmp/claude-501/-Users-tj-software-spacedatanetwork-stack/8e63bb40-3edf-4af4-836a-b5a00536a938/scratchpad/e13/rescale-fast-validation.json"
+ ],
+ "args": {
+  "split": "dev",
+  "sample": "24",
+  "trajectory-profile": "g12lean",
+  "step-seconds": "300",
+  "out": "/private/tmp/claude-501/-Users-tj-software-spacedatanetwork-stack/8e63bb40-3edf-4af4-836a-b5a00536a938/scratchpad/e13/rescale-fast-validation.json",
+  "all": false,
+  "group": "calibration,heldOut",
+  "shard": "0/1"
+ },
+ "started": "2026-10-11T03:08:22.064Z",
+ "finished": "2026-10-11T03:10:57.348Z",
+ "config": {
+  "path": "experiments/e13-open-dca/config.json",
+  "sha256": "c8e712f00f726bd0027c790dea61f6e00b61d4b68e9c26d122bc7881d11f92fa",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "8616293070f82c38c8b2c37ae02c2ba8c051cfb4",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "d1d8ca88f7908eac43e80d15536c9804879f0a26",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/density-calibration",
+   "pluginId": "com.digitalarsenal.analysis.density-calibration",
+   "version": "0.4.0",
+   "wasmSha256": "168ee975074c6cb76c53b0bd6cc1918a152c5b1c84b501752375b1dee4317953",
+   "manifestSha256": "b14afc1df4d6c4b329faa9372da11226f908ef18672bb699a8dcc32cfa308fa0",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e13-nrlmsise-20261011",
+   "checkoutState": {
+    "commit": "c48b49c2fd18fef3ad1b2f2615c3b7d7fed2961a",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   35.59912109375,
+   36.5791015625,
+   33.75634765625
+  ]
+ },
+ "inputs": {
+  "amendments": {
+   "amendments.json": "af33fd242b07ce4bbae7ab71223ebc09f4e36a343d5605bec7e66b07b12ea9a1"
+  },
+  "planet-arcs": {
+   "dev-g24lean.jsonl": "c2cad2c41c71ca0c926621a1c29dc19308a412990554006d8034e837a0816f2c"
+  },
+  "gfz": {
+   "Kp_ap_Ap_SN_F107_since_1932.txt": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+  },
+  "set": {
+   "solfsmy": "ced35709d58d57394f2f1bfde5cb3c6dc2ec2c8baf16f1f839f135f3c03f15cc",
+   "dtcfile": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91"
+  },
+  "eop": {
+   "eopc04.1962-now": "a14854ff3fa974a6783b31ed0d6642c9d477647547949e2794308cb46dfeb2b3"
+  },
+  "kernel": {
+   "de440s.bsp": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-11T03:08:22.064Z",
+   "args": {
+    "split": "dev",
+    "sample": "24",
+    "trajectory-profile": "g12lean",
+    "step-seconds": "300",
+    "out": "/private/tmp/claude-501/-Users-tj-software-spacedatanetwork-stack/8e63bb40-3edf-4af4-836a-b5a00536a938/scratchpad/e13/rescale-fast-validation.json",
+    "all": false,
+    "group": "calibration,heldOut",
+    "shard": "0/1"
+   }
+  }
+ ],
+ "arcs": 24,
+ "allWithinStatedSigma": true,
+ "failures": [],
+ "medianAbsLnDifference": 0.00012345906603210006,
+ "p95AbsLnDifference": 0.00035445668252261477,
+ "maxAbsLnDifference": 0.0003790430368050333,
+ "shareWithin0p5Percent": 1,
+ "shareWithin1Percent": 1,
+ "medianLnBetweenReferences": -0.05769550382558794,
+ "p5LnBetweenReferences": -0.2134699379238533,
+ "p95LnBetweenReferences": 0.04616533640967867,
+ "medianSigmaLnB": 0.11319546358576155,
+ "meanLnDifference": 0.00005456002114409475
+}
