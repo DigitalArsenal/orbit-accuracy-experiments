@@ -99,3 +99,14 @@ export const note = (parent, text) => { const p = h('p', { class: 'fine', html: 
 export const pre = (parent, text, cls = 'message') => { const p = h('pre', { class: cls }, text); parent.append(p); return p; };
 // A long identifier, shortened for a label: its head and tail.
 export const short = (text, head = 6, tail = 4) => (text.length > head + tail + 1 ? `${text.slice(0, head)}…${text.slice(-tail)}` : text);
+
+// The credit line of every data file a page reads, from provenance.json
+// (each file carries its sources' own licence and credit).
+export async function credits(ctx, parent, files) {
+  const provenance = await ctx.fetchJson('./provenance.json');
+  const used = provenance.files.filter((f) => files.includes(f.path));
+  const lines = [...new Set(used.flatMap((f) => f.credits ?? [f.credit]).filter(Boolean))];
+  const p = h('p', { class: 'fine credits' }, h('strong', {}, 'Data. '), lines.join(' '));
+  parent.append(p);
+  return p;
+}

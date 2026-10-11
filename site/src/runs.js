@@ -52,11 +52,13 @@ export async function runV1Seed({ hpop, time, seed, config, metrics, cfgName, on
   });
   const v1 = decodeExecution(await hpop.invoke('invoke', [request(horizonMs), ...extra]));
   const committed = metrics.results.filter((r) => r.object === seed.object && r.seedEpoch === seed.seedUtc && r.configuration === cfgName);
-  const compared = v1.samples.map((p, k) => {
-    const c = committed.find((r) => r.hours === config.horizonsHours[k]);
-    return c ? Math.abs(errorM(p.position, at(index.get(horizonMs[k])).position) - c.errorM) : null;
-  }).filter((d) => d !== null);
-  return { forces, withKernel, s0, rows, run, dense, response, seconds, reproduced: compared.length ? Math.max(...compared) : null, compared: compared.length };
+  const horizons = v1.samples.map((p, k) => {
+    const truthAt = at(index.get(horizonMs[k])).position;
+    return { hours: config.horizonsHours[k], ms: horizonMs[k], hpop: p.position, truth: truthAt, errorM: errorM(p.position, truthAt),
+      committedM: committed.find((r) => r.hours === config.horizonsHours[k])?.errorM ?? null };
+  });
+  const compared = horizons.filter((x) => x.committedM !== null).map((x) => Math.abs(x.errorM - x.committedM));
+  return { forces, withKernel, s0, rows, run, dense, response, seconds, horizons, reproduced: compared.length ? Math.max(...compared) : null, compared: compared.length };
 }
 
 // One HPOP-against-Orekit case from its exact request: the largest position

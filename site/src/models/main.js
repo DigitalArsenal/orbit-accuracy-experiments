@@ -16,12 +16,16 @@ function status(text, error = false) {
   statusNode.classList.toggle('error', error);
 }
 
-// Module sources, at the modules commit this site was built from.
-let modulesCommit = null;
-fetchJson('./provenance.json').then((p) => { modulesCommit = p.modulesRepository?.commit ?? null; listModules(); }, () => {});
-const sourceLink = (path) => (modulesCommit && path.includes('/')
-  ? h('a', { href: `https://github.com/DigitalArsenal/space-data-network-modules/tree/${modulesCommit}/${path}`, target: '_blank', rel: 'noopener' }, h('code', {}, path))
-  : h('code', {}, path));
+// Module sources: each served module's source path and commit, from
+// provenance.json (propagator/hpop-v1 is propagator/hpop at V1's commit).
+let served = new Map();
+fetchJson('./provenance.json').then((p) => { served = new Map((p.modules ?? []).map((m) => [m.path, m])); listModules(); }, () => {});
+const sourceLink = (path) => {
+  const m = served.get(path);
+  return m?.commit && m.source.includes('/')
+    ? h('a', { href: `https://github.com/DigitalArsenal/space-data-network-modules/tree/${m.commit}/${m.source}`, target: '_blank', rel: 'noopener' }, h('code', {}, path))
+    : h('code', {}, path);
+};
 
 function listModules() {
   usedNode.replaceChildren(...[...loaded.values()].filter((m) => m.provenance).map((m) =>

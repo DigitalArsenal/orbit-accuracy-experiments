@@ -96,8 +96,8 @@ function setupLive() {
   (async () => {
     state.globe = await createGlobe($('globe'));
     isolationNote();
-    const [hpop, time] = await Promise.all([module('propagator/hpop'), module('foundation/time')]);
-    status($('status'), `Ready: propagator/hpop ${hpop.provenance.wasmSha256.slice(0, 12)}…, foundation/time ${time.provenance.wasmSha256.slice(0, 12)}…`);
+    const [hpop, time] = await Promise.all([module('propagator/hpop-v1'), module('foundation/time')]);
+    status($('status'), `Ready: V1's propagator/hpop ${hpop.provenance.wasmSha256.slice(0, 12)}…, foundation/time ${time.provenance.wasmSha256.slice(0, 12)}…`);
   })().catch((e) => { isolationNote(); status($('status'), `The modules could not load: ${e.message}`, true); });
 }
 
@@ -107,7 +107,7 @@ async function runLive() {
   const seed = state.seeds[Number($('seed').value)];
   const cfgName = $('configuration').value;
   status($('status'), `Preparing ${objectName(seed.object)}…`);
-  const [hpop, time] = await Promise.all([module('propagator/hpop'), module('foundation/time')]);
+  const [hpop, time] = await Promise.all([module('propagator/hpop-v1'), module('foundation/time')]);
   const { forces, withKernel, s0, rows, run, dense, response, seconds, reproduced, compared } = await runV1Seed({
     hpop, time, seed, config: state.config, metrics: state.metrics, cfgName, onStatus: (text) => status($('status'), text) });
   const err = (h) => rows.find((r) => Math.abs(r.hours - h) < 1e-9)?.errorM;

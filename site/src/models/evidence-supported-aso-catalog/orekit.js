@@ -1,5 +1,5 @@
-// Section 17.1: any of the 63 HPOP-against-Orekit 13.1 cases, re-run here
-// from its exact PRW request against the stored Orekit trajectory.
+// Section 7, agreement with Orekit: any of HPOP's Orekit 13.1 cases, re-run
+// here from its exact PRW request against the stored Orekit trajectory.
 import { formatMeters } from '../../chart.js';
 import { resampled, runOrekitCase } from '../../runs.js';
 import { magnification, rtn, scene3d, toRtn, v3 } from '../scene.js';
@@ -12,7 +12,7 @@ export default async function run(ctx) {
   const form = inputs(p, [{ id: 'case', label: 'Orbit and force set', type: 'select', value: first.id, wide: true, options: cases.map((c) => [c.id, `${c.orbit} · ${c.forces}${c.unavailable ? ' · recorded only' : ''}`]) }], () => one());
   const view = scene3d(ctx, { title: 'HPOP and Orekit, one day', caption: 'GCRF; the hourly difference magnified' });
   const figure = chart(ctx.root, 'Difference from Orekit over the day', 'Hourly 3D position difference');
-  const all = panel(ctx.root, 'All 63, as recorded');
+  const all = panel(ctx.root, `All ${cases.length}, as recorded`);
   const groups = new Map();
   for (const c of cases) {
     const r = results.cases.find((x) => x.id === c.id);

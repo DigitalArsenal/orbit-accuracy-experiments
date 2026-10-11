@@ -32,8 +32,8 @@ import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
-import { OD_MODELS, OD_SECTION } from './src/od/registry.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
+import { buildMeasuredAccuracy } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -47,15 +47,20 @@ const eopFile = path.resolve(values.eop ?? process.env.SDN_EOP_C04 ?? v1Config.i
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const files = [];  // every written file: {path, bytes, sha256, source, license, credit, sources}
 // Labels: from the registry (labelFor), or the repository's own work.
-const own = (license, credit = '') => ({ sources: [], license, credit });
-const analysed = (experiment) => own('MIT (this repository); results are analysed information', creditsFor(experiment).join(' '));
+const own = (license, credit = '', credits = credit ? [credit] : []) => ({ sources: [], license, credit, credits });
+const analysed = (...experiments) => {
+  const credits = [...new Set(experiments.flatMap(creditsFor))];
+  return own('MIT (this repository); results are analysed information', credits.join(' '), credits);
+};
 const write = (relative, bytes, source, label) => {
   if (!label?.license) throw new Error(`${relative}: no licence label; name its sources in data/licenses.json (labelFor) or call own()`);
   const file = path.join(dist, relative);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const buffer = Buffer.isBuffer(bytes) ? bytes : Buffer.from(typeof bytes === 'string' ? bytes : JSON.stringify(bytes));
   fs.writeFileSync(file, buffer);
-  files.push({ path: relative, bytes: buffer.length, sha256: sha256(buffer), source, license: label.license, credit: label.credit, sources: label.sources });
+  // Each credit line apart, so a page can list the lines of several files once.
+  const credits = label.credits ?? [...new Set(label.sources.map((id) => licenceSource(id).credit))];
+  files.push({ path: relative, bytes: buffer.length, sha256: sha256(buffer), source, license: label.license, credit: label.credit, credits, sources: label.sources });
   return relative;
 };
 // A plain walk: fs.cpSync carries directory modes over, which some mounted
@@ -88,18 +93,34 @@ const moduleList = ['propagator/hpop', 'foundation/time', 'analysis/vcm-adapter'
   'analysis/observation-simulator', 'analysis/access', 'analysis/association', 'analysis/estimation'];
 const moduleIndex = [];
 const modulesGit = gitState(modules);
-for (const relative of moduleList) {
-  const wasm = fs.readFileSync(path.join(modules, relative, 'dist/isomorphic/module.wasm'));
-  const manifest = fs.readFileSync(path.join(modules, relative, 'plugin-manifest.json'));
+const resultsDir = path.join(repo, 'results/v1');
+const latest = fs.readdirSync(resultsDir).filter((d) => d.startsWith('v1-')).sort().at(-1);
+const v1Manifest = JSON.parse(fs.readFileSync(path.join(resultsDir, latest, 'manifest.json'), 'utf8'));
+// A module's artifact and manifest: from the checkout, or from one commit of it.
+const moduleFile = (relative, name, commit) => (commit
+  ? execFileSync('git', ['-C', modules, 'show', `${commit}:${relative}/${name}`], { maxBuffer: 256 << 20 })
+  : fs.readFileSync(path.join(modules, relative, name)));
+function serveModule(relative, { as = relative, commit = null, wasmSha256 = null } = {}) {
+  const wasm = moduleFile(relative, 'dist/isomorphic/module.wasm', commit);
+  const manifest = moduleFile(relative, 'plugin-manifest.json', commit);
+  if (wasmSha256 && sha256(wasm) !== wasmSha256) throw new Error(`${relative} at ${commit}: SHA-256 ${sha256(wasm)}, not ${wasmSha256}`);
   const m = JSON.parse(manifest);
+  const from = commit ?? modulesGit.commit;
   // HPOP compiles in the EGM coefficients and NRLMSISE-00 (registry: reproducible) and the HWM14 winds data (registry: terms unconfirmed, not reproducible).
   const label = relative === 'propagator/hpop'
     ? own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08). Embeds HWM14 coefficients, whose terms are unconfirmed (data/licenses.json: hwm14)', creditsFor('V1').filter((c) => /^EGM2008|NRLMSISE/.test(c)).join(' '))
     : own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08)');
-  write(`modules/${relative}/module.wasm`, wasm, `space-data-network-modules ${modulesGit.commit?.slice(0, 8)} ${relative}/dist/isomorphic/module.wasm`, label);
-  write(`modules/${relative}/plugin-manifest.json`, manifest, `space-data-network-modules ${modulesGit.commit?.slice(0, 8)} ${relative}/plugin-manifest.json`, own('Module manifest, © Edgesource Corporation; published for this site (owner, 2026-10-08)'));
-  moduleIndex.push({ path: relative, pluginId: m.pluginId, version: m.version, wasmSha256: sha256(wasm), bytes: wasm.length });
+  write(`modules/${as}/module.wasm`, wasm, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/dist/isomorphic/module.wasm`, label);
+  write(`modules/${as}/plugin-manifest.json`, manifest, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/plugin-manifest.json`, own('Module manifest, © Edgesource Corporation; published for this site (owner, 2026-10-08)'));
+  moduleIndex.push({ path: as, source: relative, commit: from, pluginId: m.pluginId, version: m.version, wasmSha256: sha256(wasm), bytes: wasm.length });
 }
+for (const relative of moduleList) serveModule(relative);
+// V1 ran an earlier HPOP binary. A V1 seed reproduces its committed run only
+// with that binary, so it is served beside the current one as
+// propagator/hpop-v1, from the V1 run's own modules commit and checked
+// against the SHA-256 its manifest records.
+serveModule('propagator/hpop', { as: 'propagator/hpop-v1', commit: v1Manifest.modulesRepository.commit,
+  wasmSha256: v1Manifest.modules.find((m) => m.path === 'propagator/hpop').wasmSha256 });
 log(`modules: ${moduleIndex.map((m) => `${m.path} ${m.wasmSha256.slice(0, 12)}`).join(', ')}`);
 
 // ── V1: seeds, truth arcs, results ──
@@ -132,8 +153,6 @@ const seedIndex = seeds.map((s, i) => ({
   params: s.params, horizonsHours: v1Config.horizonsHours,
 }));
 write('data/v1/seeds.json', seedIndex, 'V1 seed selection (experiments/v1-hpop-physical-truth/seeds.mjs)', analysed('V1'));
-const resultsDir = path.join(repo, 'results/v1');
-const latest = fs.readdirSync(resultsDir).filter((d) => d.startsWith('v1-')).sort().at(-1);
 const metrics = JSON.parse(fs.readFileSync(path.join(resultsDir, latest, 'metrics.json'), 'utf8'));
 write('data/v1/metrics.json', fs.readFileSync(path.join(resultsDir, latest, 'metrics.json')), `results/v1/${latest}/metrics.json`, analysed('V1'));
 write('data/v1/manifest.json', fs.readFileSync(path.join(resultsDir, latest, 'manifest.json')), `results/v1/${latest}/manifest.json`, analysed('V1'));
@@ -246,8 +265,7 @@ const sdsVersion = JSON.parse(fs.readFileSync(path.join(repo, 'node_modules/spac
 for (const code of ['OCM', 'VCM']) write(`data/sds/${code}.json`, { schema: `${code}.fbs`, version: sdsVersion, tables: sdsSchemaFields(code) }, `spacedatastandards.org ${sdsVersion} schema/${code}/main.fbs, fields and doc comments`, own('Apache-2.0 (Space Data Standards, spacedatastandards.org)'));
 
 // Each experiment's results: results/<id>/metrics.json, or the latest run
-// directory under results/<id>/ that holds one; the models page shows each.
-const experimentResults = [];
+// directory under results/<id>/ that holds one, for download beside the data.
 for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
   const dir = path.join(repo, 'results', id);
   if (!fs.existsSync(dir)) continue;
@@ -255,9 +273,10 @@ for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
   const relative = fs.existsSync(path.join(dir, 'metrics.json')) ? 'metrics.json' : runs.length ? `${runs.at(-1)}/metrics.json` : null;
   if (!relative) continue;
   write(`results/${id}/metrics.json`, fs.readFileSync(path.join(dir, relative)), `results/${id}/${relative}`, analysed(id.toUpperCase()));
-  experimentResults.push(id);
 }
-write('data/experiments.json', { published: experimentResults }, 'site/build.mjs', own('MIT (this repository)'));
+
+// ── Measured accuracy (section 11 of the catalog paper) ──
+buildMeasuredAccuracy({ repo, referenceDir, write, analysed });
 
 // ── The orbit-determination pages' inputs (site/build-od.mjs) ──
 {
@@ -277,7 +296,8 @@ write('data/experiments.json', { published: experimentResults }, 'site/build.mjs
   const fill = (text, values) => text.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '');
   const escHtml = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   for (const m of MODELS) {
-    if (!fs.existsSync(path.join(here, 'src/models', m.paper, `${m.model}.js`))) throw new Error(`model ${m.paper}/${m.model}.js is missing`);
+    const source = m.dir === 'od' ? path.join(here, 'src/od', `${m.model}.js`) : path.join(here, 'src/models', m.paper, `${m.model}.js`);
+    if (!fs.existsSync(source)) throw new Error(`model ${path.relative(here, source)} is missing`);
     if (!ids[m.paper]) {
       const file = path.join(papersDir, `${m.paper}.md`);
       ids[m.paper] = fs.existsSync(file) ? headingIds(fs.readFileSync(file, 'utf8')) : null;
@@ -285,35 +305,19 @@ write('data/experiments.json', { published: experimentResults }, 'site/build.mjs
     }
     const sectionId = ids[m.paper] ? ids[m.paper].get(m.heading) : headingIds(`## ${m.heading}`).get(m.heading);
     if (!sectionId) throw new Error(`${m.paper} has no heading "${m.heading}"`);
+    if (manifest.some((x) => x.paper === m.paper && x.section_id === sectionId)) throw new Error(`${m.paper}: two models for section "${m.heading}"`);
     const url = `models/${m.paper}/${sectionId}.html`;
     manifest.push({ paper: m.paper, section_id: sectionId, title: m.title, url });
     fs.mkdirSync(path.join(dist, 'models', m.paper), { recursive: true });
     fs.writeFileSync(path.join(dist, url), fill(template, {
-      base: '../../', paper: m.paper, model: m.model, title: escHtml(m.title), claim: escHtml(m.claim),
+      base: '../../', paper: m.paper, model: m.model, dir: m.dir ?? '', title: escHtml(m.title), claim: escHtml(m.claim),
       paperTitle: escHtml(PAPERS[m.paper]), heading: escHtml(m.heading),
       paperUrl: `https://spacedatanetwork.org/whitepapers/${m.paper}.html#${sectionId}`,
     }));
   }
-  // "03 // Orbit Determination": pages under the catalog paper whose section
-  // ids the paper apps map (site/src/od/registry.mjs).
-  const od = [];
-  for (const m of OD_MODELS) {
-    if (!fs.existsSync(path.join(here, 'src/od', `${m.model}.js`))) throw new Error(`model od/${m.model}.js is missing`);
-    const url = `models/${OD_SECTION.paper}/${m.sectionId}.html`;
-    od.push({ paper: OD_SECTION.paper, section_id: m.sectionId, title: m.title, url, section: OD_SECTION.heading });
-    fs.mkdirSync(path.join(dist, 'models', OD_SECTION.paper), { recursive: true });
-    fs.writeFileSync(path.join(dist, url), fill(template, {
-      base: '../../', paper: OD_SECTION.paper, model: m.model, dir: 'od', title: escHtml(m.title), claim: escHtml(m.claim),
-      paperTitle: escHtml(PAPERS[OD_SECTION.paper]), heading: escHtml(OD_SECTION.heading),
-      paperUrl: `https://spacedatanetwork.org/whitepapers/${OD_SECTION.paper}.html#${m.sectionId}`,
-    }));
-  }
-  manifest.push(...od);
   write('models/index.json', JSON.stringify(manifest, null, 2), 'site/src/models/registry.mjs', own('MIT (this repository)'));
-  const list = Object.entries(PAPERS).map(([paper, name]) => `<h2>${escHtml(name)}</h2><ul>${manifest.filter((x) => x.paper === paper && !x.section)
-    .map((x) => `<li><a href="./${x.url.slice('models/'.length)}">${escHtml(x.title)}</a><span>§ ${escHtml(MODELS.find((m) => m.paper === paper && x.title === m.title).heading)}</span></li>`).join('')}</ul>`).join('')
-    + `<section class="od-section"><h2>${escHtml(OD_SECTION.heading)}</h2><p class="claim">${escHtml(OD_SECTION.subtitle)}</p><ul>${od
-      .map((x) => `<li><a href="./${x.url.slice('models/'.length)}">${escHtml(x.title)}</a><span>${escHtml(x.section_id)}</span></li>`).join('')}</ul></section>`;
+  const list = Object.entries(PAPERS).map(([paper, name]) => `<h2>${escHtml(name)}</h2><ul>${MODELS.filter((m) => m.paper === paper)
+    .map((m) => `<li><a href="./${manifest.find((x) => x.paper === paper && x.title === m.title).url.slice('models/'.length)}">${escHtml(m.title)}</a><span>§ ${escHtml(m.heading)}</span></li>`).join('')}</ul>`).join('');
   fs.writeFileSync(path.join(dist, 'models/index.html'), fill(fs.readFileSync(path.join(here, 'src/models/index.html'), 'utf8'), { list }));
   log(`models: ${manifest.length} pages`);
 }

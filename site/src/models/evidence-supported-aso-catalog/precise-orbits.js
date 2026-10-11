@@ -1,5 +1,6 @@
-// Section 17.2: a V1 seed through HPOP for 72 h in any configuration,
-// against the precise orbit, and against the committed V1 result.
+// Section 7, accuracy against precise orbits: a V1 seed through V1's HPOP
+// binary for 72 h in any configuration, against the precise orbit, and
+// against the committed V1 result.
 import { formatMeters } from '../../chart.js';
 import { runV1Seed } from '../../runs.js';
 import { chart, inputs, panel, table, tiles } from '../ui.js';
@@ -28,7 +29,7 @@ export default async function run(ctx) {
     const m = (g, h) => formatMeters(metrics.summary.find((r) => r.group === g && r.configuration === c)?.[`${h}h`]?.medianM);
     return { class: c === 'E-f' ? 'highlight' : '', cells: [c, m('SLR', 24), m('SLR', 72), m('GPS', 24)] };
   }));
-  const [hpop, time] = await Promise.all([ctx.module('propagator/hpop'), ctx.module('foundation/time')]);
+  const [hpop, time] = await Promise.all([ctx.module('propagator/hpop-v1'), ctx.module('foundation/time')]);
   async function one() {
     const v = form.values();
     const seed = seeds[Number(v.seed)];
