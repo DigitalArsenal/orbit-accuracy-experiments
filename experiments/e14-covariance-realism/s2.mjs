@@ -38,9 +38,11 @@ export async function s2Context(modules, run) {
   return {
     ...m, gfz, rsga,
     // Environment frames for a propagation over [fromMs, toMs] as released at cutoffMs (the set's creation).
-    inputsFor(fromMs, toMs, cutoffMs) {
+    // Daily space weather only with drag (propagator/hpop refuses it otherwise).
+    inputsFor(fromMs, toMs, cutoffMs, { drag = true } = {}) {
       const from = mjd(fromMs) - 2, to = mjd(toMs) + 2;
       const eopRecords = releasedEopRecords(eop.records, cutoffMs, 1, from, to);
+      if (!drag) return { frames: [kernel, eopFrame(eopRecords, from, to)], issue: null };
       const spw = releasedSpwRows(gfz, rsga, cutoffMs, fromMs - 3 * DAY_MS, toMs + 2 * DAY_MS);
       return { frames: [kernel, eopFrame(eopRecords, from, to), spaceWeatherFrame(spw.rows)], issue: spw.issue };
     },
@@ -54,7 +56,7 @@ export const bOf = (set) => (set.elements.BSTAR > 0 ? set.elements.BSTAR * BSTAR
 export async function propagate(ctx, { epoch, state, samples, b, cutoffMs, parameters = [], covariance = null, noise = null, stm = false, forces = config.s2.forces }) {
   const f = forces;
   const fromMs = Date.parse(`${epoch}Z`), toMs = Date.parse(`${samples.at(-1)}Z`);
-  const { frames } = ctx.inputsFor(Math.min(fromMs, ...samples.map((s) => Date.parse(`${s}Z`))), toMs, cutoffMs);
+  const { frames } = ctx.inputsFor(Math.min(fromMs, ...samples.map((s) => Date.parse(`${s}Z`))), toMs, cutoffMs, { drag: !!f.drag });
   const request = executionFrame({ epoch, state, samples, forces: f, integrator: config.s2.integrator, coefficients: { b, agom: AGOM },
     parameters, covariance, noise, stm });
   return decodeSamples(await ctx.hpop.invoke('invoke', [request, ...frames]));
