@@ -11,10 +11,10 @@ import { parseArgs } from 'node:util';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { config, readRuns, resultsDir, writeJson, DAY_MS, windowOf } from '../common.mjs';
 
-const { values } = parseArgs({ options: { run: { type: 'string' } } });
+const { values } = parseArgs({ options: { run: { type: 'string' }, through: { type: 'string', default: 'devFit' }, out: { type: 'string' } } });
 const S4 = config.s4;
-const lastIssue = windowOf('devFit').hi - 8 * DAY_MS;
-const rows = (await readRuns([values.run], 'forecast-errors')).filter((r) => Date.parse(`${r.day}T00:00:00Z`) < lastIssue);
+const lastIssue = windowOf(values.through).hi - 8 * DAY_MS;  // lead days end inside the window
+const rows = (await readRuns(values.run.split(','), 'forecast-errors')).filter((r) => Date.parse(`${r.day}T00:00:00Z`) < lastIssue);
 const classOf = (ap) => (ap < S4.forecastClassesAp[0] ? 0 : ap < S4.forecastClassesAp[1] ? 1 : 2);
 const altitudes = rows[0].altitudesKm;
 const out = { experiment: config.experiment, fittedOn: [rows[0].day, rows.at(-1).day], issues: rows.length, leadDays: S4.leadDays, altitudesKm: altitudes,
@@ -28,7 +28,7 @@ for (let a = 0; a < altitudes.length; ++a) for (let c = 0; c < 3; ++c) {
   const mean = Array.from({ length: K }, (_, i) => list.reduce((s, d) => s + d[i], 0) / Math.max(1, list.length));
   out.strata.push({ altitudeKm: altitudes[a], class: c, n: list.length, mean, secondMoment: C });
 }
-writeJson(path.join(resultsDir('dev'), 's4-dcp.json'), out);
-console.log(`wrote results/e14/dev/s4-dcp.json: ${rows.length} issues ${out.fittedOn.join('..')}`);
+const file = values.out ? path.resolve(values.out) : path.join(resultsDir('dev'), 's4-dcp.json');
+writeJson(file, out);
+console.log(`wrote ${path.relative(repoRoot, file)}: ${rows.length} issues ${out.fittedOn.join('..')}`);
 for (const s of out.strata.filter((x) => [420, 550, 850].includes(x.altitudeKm))) console.log(`${s.altitudeKm} km class ${s.class}: n ${s.n}, rms ${s.secondMoment.map((r, i) => Math.sqrt(r[i]).toFixed(3)).join(' ')}`);
-void repoRoot;

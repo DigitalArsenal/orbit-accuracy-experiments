@@ -14,18 +14,21 @@ import { config, configPath, moduleOf, callJson, json, resultsDir, writeJson, wi
 import { assertWindowReadable } from '../windows.mjs';
 import { errorRows, differenceRows, elementSetModel, covariancesOf, differenceModel, ageIndexOf, REGIME_INDEX } from '../s3.mjs';
 
-const { values } = parseArgs({ options: { errors: { type: 'string' }, differences: { type: 'string' }, modules: { type: 'string' } } });
-assertWindowReadable('devFit');
+const { values } = parseArgs({ options: { errors: { type: 'string' }, differences: { type: 'string' }, modules: { type: 'string' }, windows: { type: 'string', default: 'devFit' }, out: { type: 'string' } } });
+const fitWindows = values.windows.split(',');
+for (const name of fitWindows) assertWindowReadable(name);
 const modules = modulesRoot({ flag: values.modules, configured: config.inputs.modules, repoRoot });
 const run = startRun({ experiment: config.experiment, step: '20-s3-fit', configPath, modulesDir: modules, args: values });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 const gp = await moduleOf(modules, 'analysis/gp-error-model', run);
-const fit = windowOf('devFit');
-const rows = (await errorRows([values.errors])).filter((r) => Date.parse(`${r.anchor}Z`) >= fit.lo && Date.parse(`${r.target.replace(/Z$/, '')}Z`) < fit.hi);
+const spans = fitWindows.map(windowOf);
+const inFit = (from, to) => spans.some((w) => from >= w.lo && to < w.hi);
+const rows = (await errorRows(values.errors.split(','))).filter((r) => inFit(Date.parse(`${r.anchor}Z`), Date.parse(`${r.target.replace(/Z$/, '')}Z`)));
 log(`${rows.length} dev-fit samples (manoeuvre-screened)`);
 
-const T = elementSetModel(rows, { clip: true, version: 'e14-s3-T-devfit' });
-const TU = elementSetModel(rows, { clip: false, version: 'e14-s3-TU-devfit' });
+const tag = fitWindows.join('+').toLowerCase();
+const T = elementSetModel(rows, { clip: true, version: `e14-s3-T-${tag}` });
+const TU = elementSetModel(rows, { clip: false, version: `e14-s3-TU-${tag}` });
 // S3-KC: the coverage factor per regime and age bin, on the module's covariances of S3-T.
 const covs = await covariancesOf(gp, T, rows.map((r, i) => ({ id: i, regime: r.regime, ageDays: r.ageDays })));
 const samples = [];
@@ -36,15 +39,15 @@ rows.forEach((r, i) => {
 });
 const kc = await callJson(gp, 'fit_calibration', [json('samples', { samples }), json('options', { method: 'coverage', coverage: 0.95, minimumSamples: config.realism.minimumSamples, minimumObjects: config.realism.minimumObjects })]);
 const factors = kc.strata.filter((s) => s.status === 'FITTED').map((s) => { const [g, a] = s.stratum.split('|').map(Number); return { regimeIndex: g, ageIndex: a, factor: s.factor, n: s.n, before: s.before, after: s.after }; });
-const KC = { ...T, version: 'e14-s3-KC-devfit', factors, basis: `${T.basis}; times the factor that puts the dev-fit 95 % coverage at 0.95 (gp-error-model fit_calibration, coverage)` };
+const KC = { ...T, version: `e14-s3-KC-${tag}`, factors, basis: `${T.basis}; times the factor that puts the dev-fit 95 % coverage at 0.95 (gp-error-model fit_calibration, coverage)` };
 // S3-KO: S(g) from dev-fit consecutive differences.
-const diffs = (await differenceRows([values.differences])).filter((r) => { const t = Date.parse(/Z$/.test(r.created) ? r.created : `${r.created}Z`); return t >= fit.lo && t < fit.hi; });
+const diffs = (await differenceRows(values.differences.split(','))).filter((r) => { const t = Date.parse(/Z$/.test(r.created) ? r.created : `${r.created}Z`); return inFit(t, t); });
 const S = differenceModel(diffs);
 log(`S(g) from ${diffs.length} dev-fit consecutive differences`);
-const models = { experiment: config.experiment, fittedOn: 'devFit', window: config.windows.devFit, samples: rows.length,
+const models = { experiment: config.experiment, fittedOn: fitWindows.join('+'), windows: fitWindows.map((n) => config.windows[n]), samples: rows.length,
   candidates: { 'S3-T': T, 'S3-TU': TU, 'S3-KC': KC, 'S3-KO': { base: 'S3-KC', S, rule: 'objectFactor = (n mean(d\' S(g)^-1 d / 3) + 8) / (n + 8) over the object\'s consecutive differences created in the 30 days before the set (at least 2), times S3-KC' } },
   inputs: { errors: values.errors, differences: values.differences } };
-const file = path.join(resultsDir('dev'), 's3-models.json');
+const file = values.out ? path.resolve(values.out) : path.join(resultsDir('dev'), 's3-models.json');
 writeJson(file, models);
 run.write('s3-models.sha256', sha256(fs.readFileSync(file)));
 run.finish({ samples: rows.length, factors: factors.length });

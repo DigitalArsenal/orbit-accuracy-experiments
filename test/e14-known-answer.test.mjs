@@ -137,3 +137,38 @@ test('known answer: realism statistics, factors, the applied model, process nois
   assert.ok(rel(realised, predicted) < 0.03, `along-track variance ${realised} vs ${predicted}`);
   ctx.diagnostic(`DCP: weights ${dcp.weights.map((w) => w.toFixed(6)).join('/')}, sigma_eff ${dcp.sigmaEff.toFixed(5)}, along-track variance realised/predicted ${(realised / predicted).toFixed(4)}`);
 });
+
+// noise_responses against propagator/hpop's own white-acceleration process noise (PLAN.md, changes before the freeze):
+// one full-force Swarm A arc of 1.3 days, the module's unit responses from the run's STM against three HPOP runs with
+// unit noise on R, T and N. Needs the archive (an element set, the DE440s kernel, EOP, GFZ and SWPC files).
+import { s2Context, propagate, bOf, KERNEL } from '../experiments/e14-covariance-realism/s2.mjs';
+import { elementSets, DAY_MS } from '../experiments/e14-covariance-realism/common.mjs';
+import { epochStates } from '../experiments/e2-catalog-covariance/product.mjs';
+import { startRun } from '../harness/provenance.mjs';
+import { configPath } from '../experiments/e14-covariance-realism/windows.mjs';
+const archiveReady = fs.existsSync(KERNEL.path) && fs.existsSync(config.inputs.gfzKp) && fs.existsSync(config.inputs.gpHistory);
+test('noise_responses agrees with propagator/hpop process noise on a full-force LEO arc', { skip: skip || (!archiveReady && 'archive inputs absent') }, async (ctx2) => {
+  const run = startRun({ experiment: config.experiment, step: 'test-noise-responses', configPath, modulesDir: modulesDir, args: {} });
+  const ctx = await s2Context(modulesDir, run);
+  const forces = { ...config.s2.forces, degree: 20, order: 20 };
+  const { byObject } = elementSets(config.inputs.gpHistory, '2025-11-01', '2025-11-05', [39452]);
+  const set = byObject.get(39452).find((s) => s.ms >= Date.parse('2025-11-02T00:00:00Z'));
+  const [seed] = await epochStates(ctx['epoch-state'], [set]);
+  const t0 = Date.parse(`${seed.epoch}Z`), T = 1.3 * DAY_MS, n = Math.ceil(T / 600000 - 1e-9), h = T / n;
+  const iso = (ms) => new Date(ms).toISOString().replace('Z', '');
+  const grid = Array.from({ length: n }, (_, j) => iso(t0 + Math.round((j + 1) * h)));
+  const a = await propagate(ctx, { epoch: seed.epoch, state: seed.state, samples: grid, b: bOf(set), cutoffMs: set.createdMs, stm: true, covariance: Array(36).fill(0), forces });
+  const resp = await call(ctx['gp-error-model'], 'noise_responses', [json('request', { start: seed.epoch, discretizationSeconds: 600, targets: [grid.at(-1)],
+    samples: a.map((s, i) => ({ epoch: grid[i], state: s.state, stm: s.stm })) })]);
+  const worst = [];
+  for (const axis of [0, 1, 2]) {
+    const q = [0, 0, 0];
+    q[axis] = 1;
+    const u = await propagate(ctx, { epoch: seed.epoch, state: seed.state, samples: [grid.at(-1)], b: bOf(set), cutoffMs: set.createdMs, covariance: Array(36).fill(0), noise: { q, intervalSeconds: 600 }, forces });
+    const hp = u[0].covariance, mine = resp.targets[0].u[axis];
+    const rel = Math.max(...[0, 7, 14].map((k) => Math.abs(mine[k] - hp[k]) / hp[k]));
+    worst.push(rel);
+    assert.ok(rel < 1e-2, `axis ${axis}: relative ${rel}`);
+  }
+  ctx2.diagnostic(`noise_responses vs HPOP, position variances: largest relative difference R ${worst[0].toExponential(2)}, T ${worst[1].toExponential(2)}, N ${worst[2].toExponential(2)}`);
+});

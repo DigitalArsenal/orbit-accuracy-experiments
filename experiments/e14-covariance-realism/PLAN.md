@@ -155,8 +155,8 @@ stay before its 48-h join), 3 [2.5, 3.5), 5 [4.5, 5.0] (Planet).
 ## 4. Covariance models by source
 
 Every model and every factor is fitted on dev-fit, chosen on dev-select
-(section 7), refitted on the whole development window for the chosen
-candidate, frozen in `results/e14/selection.json`, and scored once on test.
+(section 7), frozen in `results/e14/selection.json` as fitted on dev-fit
+(changes before the freeze), and scored once on test.
 Each frozen model carries a calibration version (`e14-<source>-<sha256 of
 its selection entry, 12 hex>`).
 
@@ -509,6 +509,11 @@ been read). Development results that informed a change are named.
   window ends 2026-10-15, after the others'. The guard opens `test` only
   when `selection.json` names S2, S3 and S4, and `s1:test` only when it also
   names S1 (`windows.mjs`, `test/e14-windows.test.mjs`).
+- **2026-10-10, no refit on the whole development window.** Section 4 said
+  the chosen candidate is refitted on dev-fit and dev-select together. S2's
+  samples carry dev-fit's P₀ (S3-T) and lead covariance (S4), so a refit
+  would need them recomputed; for one footing every source's frozen model is
+  its dev-fit fit, and dev-select only chooses.
 - **2026-10-10, module additions.** `pair_statistics` takes ephemeris samples
   (Lagrange at an epoch) and a covariance as weighted terms; `noise_responses`
   is new (section 10).
