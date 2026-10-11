@@ -193,3 +193,21 @@ test('the latency statistic is the rms of what is left against the rms of the ch
   assert.ok(Math.abs(many.byTau['48'].lower - 0.5) < 1e-9 && Math.abs(many.byTau['48'].upper - 0.5) < 1e-9, 'every block has the ratio 0.5, so the interval is the point');
   assert.deepEqual(many.byTau['48'].byLeadDays.map((l) => l.lead), ['0-1', '1-2', '2-3']);
 });
+
+test('a robust scale per fleet (Amendment S3): the precise fleet carries its precision, one group is the frozen solver, and a mixed solve beats the unweighted one', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 60, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const anchorMs = T0 + arcCenterOffsetMs(probe);
+  const f = truthOf(24, anchorMs, 60, 3);
+  const precise = fleet(f, { doves: 24, days: 60, noise: 0.03, outliers: 0.02, steps: false, seed: 11, prefix: 'a' });
+  const noisy = fleet(f, { doves: 24, days: 60, noise: 0.2, outliers: 0.02, steps: false, seed: 12, prefix: 'b' });
+  const opts = { anchorMs, nodeHours: 24, baseline: { kind: 'randomWalk', stepSigma: 0.005 }, smoothSigma: 0.05, iterations: 60, tolerance: 1e-6 };
+  const plain = solveCommonMode([...precise, ...noisy], opts);
+  const one = solveCommonMode([...precise, ...noisy].map((a) => ({ ...a, group: 'all' })), opts);
+  assert.deepEqual(one.s, plain.s, 'one group is the solver of the frozen runs');
+  const mixed = solveCommonMode([...precise.map((a) => ({ ...a, group: 'precise' })), ...noisy.map((a) => ({ ...a, group: 'noisy' }))], opts);
+  assert.ok(mixed.groupSigma.precise < 0.06 && mixed.groupSigma.noisy > 0.15, `scales ${JSON.stringify(mixed.groupSigma)}`);
+  assert.ok(mixed.groupPrecision.precise > 15 && mixed.groupPrecision.noisy === 1, `precisions ${JSON.stringify(mixed.groupPrecision)}`);
+  const eGrouped = windowError(mixed, f, 3, 56), eUnweighted = windowError(plain, f, 3, 56);
+  assert.ok(eGrouped.rms < 0.9 * eUnweighted.rms, `grouped rms ${eGrouped.rms}, unweighted ${eUnweighted.rms}`);
+  assert.throws(() => solveCommonMode([...precise.map((a) => ({ ...a, group: 'p' })), ...noisy.map((a) => ({ ...a, group: 'n' }))], { anchorMs, nodeHours: 24, baseline: { kind: 'blocks', days: 21 } }), /random-walk/);
+});

@@ -12,13 +12,16 @@ export const PLANET_DIR = '/opt/data/sdn-archive/hac/planet-ephemerides/history'
 const J2000_TT_MS = Date.UTC(2000, 0, 1, 12, 0, 0);
 
 // {hwid -> [{epochTt (ISO text on TT), ttMs, state [m, m/s] J2000, ballisticKgPerM2}]} sorted by epoch, distinct epochs.
-export function readPlanetSeries({ dir = PLANET_DIR, fromDay = null, toDay = null } = {}) {
+export function readPlanetSeries({ dir = PLANET_DIR, extraDirs = [], fromDay = null, toDay = null } = {}) {
   const series = new Map();
-  const names = fs.readdirSync(dir).filter((n) => /^planet_\d{8}\.states$/.test(n)).sort();
-  for (const name of names) {
+  // `extraDirs` (E13's live collector, PLAN.md Amendment S3 item 4) add files of the same names; the series is the set of distinct epochs, so a day's final file
+  // simply adds what the archive's earlier copy of that day lacked.
+  const files = [dir, ...extraDirs].filter((d) => fs.existsSync(d)).flatMap((d) => fs.readdirSync(d).filter((n) => /^planet_\d{8}\.states$/.test(n)).map((n) => ({ d, n })));
+  files.sort((x, y) => x.n.localeCompare(y.n) || x.d.localeCompare(y.d));
+  for (const { d, n: name } of files) {
     const day = name.slice(7, 15);
     if ((fromDay && day < fromDay.replaceAll('-', '')) || (toDay && day > toDay.replaceAll('-', ''))) continue;
-    for (const line of fs.readFileSync(path.join(dir, name), 'utf8').split(/\r?\n/)) {
+    for (const line of fs.readFileSync(path.join(d, name), 'utf8').split(/\r?\n/)) {
       const f = line.trim().split(/\s+/);
       if (f.length < 9 || !/^[0-9a-f]{4}$/i.test(f[0])) continue;
       const hwid = f[0].toLowerCase();

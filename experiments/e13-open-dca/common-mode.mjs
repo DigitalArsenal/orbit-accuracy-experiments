@@ -173,6 +173,11 @@ function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, smo
   const project = (v) => { let mean = 0; for (const i of active) mean += v[i]; mean /= active.length; for (const i of active) v[i] -= mean; return v; };
 
   const omega = arcs.map(() => 1);
+  // Arcs of different fleets differ in scatter (PLAN.md Amendment S3): with more than one `group` each group has its own robust scale and its arcs carry the
+  // precision (sigma / sigma_group)^2 against the largest scale, which stays the unit-weight scale of the prior terms. With one group (or none) nothing here acts.
+  const groupIds = [...new Set(arcs.map((a) => a.group ?? ''))], grouped = groupIds.length > 1;
+  const groupOf = arcs.map((a) => groupIds.indexOf(a.group ?? ''));
+  let groupSigma = groupIds.map(() => NaN), precision = groupIds.map(() => 1);
   const nu = doves.map((list) => new Float64Array(list.length).fill(1));            // nu[i][j]: weight of the increment into arc j (j >= 1)
   const dt = doves.map((list) => list.map((r, j) => (j ? Math.max(1e-3, ((r.startMs + r.endMs) - (list[j - 1].startMs + list[j - 1].endMs)) / 2 / DAY) : 1)));
   let s = new Float64Array(N), sigma = NaN, converged = false, sweeps = 0, lastChange = NaN;
@@ -243,9 +248,16 @@ function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, smo
       list.forEach((r, j) => { res[r.index] = r.y - beta[i][j] - r.a.reduce((acc, p) => acc + p.w * s[p.i], 0); });
     });
     residuals = res;
-    if (it < scaleSweeps) { const med = median(res); sigma = Math.max(1e-3, 1.4826 * median(res.map((x) => Math.abs(x - med)))); }
+    if (it < scaleSweeps) {
+      if (!grouped) { const med = median(res); sigma = Math.max(1e-3, 1.4826 * median(res.map((x) => Math.abs(x - med)))); }
+      else {
+        groupSigma = groupIds.map((_, k) => { const r = res.filter((_x, j) => groupOf[j] === k), med = median(r); return Math.max(1e-3, 1.4826 * median(r.map((x) => Math.abs(x - med)))); });
+        sigma = Math.max(...groupSigma);
+        precision = groupSigma.map((x) => (sigma / x) ** 2);
+      }
+    }   // the scales are held after scaleSweeps, so that the iteration converges on a fixed problem
     lastChange = change;
-    arcs.forEach((_, j) => { omega[j] = Math.min(1, huberK * sigma / Math.max(Math.abs(res[j]), 1e-12)); });
+    arcs.forEach((_, j) => { omega[j] = grouped ? precision[groupOf[j]] * Math.min(1, huberK * groupSigma[groupOf[j]] / Math.max(Math.abs(res[j]), 1e-12)) : Math.min(1, huberK * sigma / Math.max(Math.abs(res[j]), 1e-12)); });
     doves.forEach((list, i) => { for (let j = 1; j < list.length; ++j) { const z = Math.abs(beta[i][j] - beta[i][j - 1]); nu[i][j] = Math.min(1, huberK * stepSigma * Math.sqrt(dt[i][j]) / Math.max(z, 1e-12)); } });
     if (change < tolerance) { converged = true; break; }
   }
@@ -253,6 +265,7 @@ function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, smo
     anchorMs, stepMs: step, nMin, nodeMs, s: Array.from(s), supported, dovesPerNode: nodeDoves.map((d) => d.size), nodeInfo: Array.from(info),
     sigma, sweeps, converged, lastChange, arcs: arcs.length, groups: doves.length, huberDownweighted: omega.reduce((n, w) => n + (w < 1 ? 1 : 0), 0),
     residuals, omega, baseline: Object.fromEntries(doves.map((list, i) => [list[0].dove, Array.from(beta[i])])), stepSigma, smoothSigma,
+    ...(grouped ? { groupSigma: Object.fromEntries(groupIds.map((g, k) => [g, groupSigma[k]])), groupPrecision: Object.fromEntries(groupIds.map((g, k) => [g, precision[k]])) } : {}),
     firstNodeMs: nodeMs[0], lastNodeMs: nodeMs[N - 1],
   };
 }
@@ -260,7 +273,10 @@ function solveRandomWalk(arcs, { anchorMs, nodeHours = 24, stepSigma = 0.02, smo
 // The common mode of daily arcs. baseline: {kind: 'randomWalk', stepSigma} (default) or {kind: 'blocks', days}.
 export function solveCommonMode(arcs, options = {}) {
   const { baseline = { kind: 'randomWalk', stepSigma: 0.02 }, blockDays, ...rest } = options;
-  if (baseline.kind === 'blocks' || blockDays !== undefined) return solveBlocks(arcs, { ...rest, blockDays: blockDays ?? baseline.days });
+  if (baseline.kind === 'blocks' || blockDays !== undefined) {
+    if (new Set(arcs.map((a) => a.group ?? '')).size > 1) throw new Error('arc groups (a robust scale per fleet) need the random-walk baselines');
+    return solveBlocks(arcs, { ...rest, blockDays: blockDays ?? baseline.days });
+  }
   if (baseline.kind !== 'randomWalk') throw new Error(`unknown baseline model ${baseline.kind}`);
   return solveRandomWalk(arcs, { ...rest, stepSigma: baseline.stepSigma });
 }

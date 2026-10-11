@@ -18,6 +18,7 @@ import { repoRoot } from '../../../harness/provenance.mjs';
 import { DAY, H, config, paths, readJson } from '../common.mjs';
 import { forecastMean, nowcast, solveCommonMode, windowMean } from '../common-mode.mjs';
 import { latencyStatistic } from '../score.mjs';
+import { heldOutRecords } from '../combined.mjs';
 
 const { values } = parseArgs({ options: { latencies: { type: 'string', default: '1,3,6,12,24,36' }, history: { type: 'string', default: '4' }, 'node-hours': { type: 'string', default: '6' }, 'prior-scales': { type: 'string', default: '1,0.5,2' }, bands: { type: 'string', default: 'all,0-350,350-450,450-700' }, through: { type: 'string' }, out: { type: 'string' } } });
 const S = config.analysis.solver;
@@ -87,28 +88,10 @@ for (const band of bands) {
             }
           }
         }
-        // held-out satellites: one parity calibrates, the other is predicted
-        for (const parity of [0, 1]) {
-          const calibration = arcs.filter((a) => Number(a.dove) % 2 === parity), evaluation = arcs.filter((a) => Number(a.dove) % 2 !== parity);
-          let sol2 = null;
-          try { sol2 = nowcast(calibration, t0, { latencyHours: L, historyDays, anchorMs: T0, ...common }); } catch { continue; }
-          if (!sol2) continue;
-          const bySat = new Map();
-          for (const a of evaluation) (bySat.get(a.dove) ?? bySat.set(a.dove, []).get(a.dove)).push(a);
-          const cutoff = t0 - L * H;
-          for (const list of bySat.values()) {
-            const fitPairs = list.filter((a) => a.endMs <= cutoff && a.endMs > cutoff - DAY);                      // the satellite's own pairs that were available, over the 24 h before
-            const targets = list.filter((a) => a.startMs >= t0 && a.endMs <= t0 + 3 * DAY);
-            if (fitPairs.length < 2 || !targets.length) continue;
-            const yFit = mean(fitPairs.map((a) => a.y));
-            const sFit = Object.fromEntries(taus.map((tau) => [String(tau), mean(fitPairs.map((a) => forecastMean(sol2, a.startMs, a.endMs, tau)))]));
-            for (const a of targets) {
-              const d = a.y - yFit;
-              held.push({ block, lead: ((a.startMs + a.endMs) / 2 - t0) / DAY, ref: d, errs: Object.fromEntries(taus.map((tau) => { const sb = forecastMean(sol2, a.startMs, a.endMs, tau); return [String(tau), Number.isFinite(sb) && Number.isFinite(sFit[String(tau)]) ? d - (sb - sFit[String(tau)]) : NaN]; })) });
-            }
-          }
-        }
       }
+      // held-out satellites: one parity of the NORAD number calibrates the nowcast, the other is predicted (combined.mjs)
+      for (const parity of [0, 1]) held.push(...heldOutRecords({ calibration: arcs.filter((a) => Number(a.dove) % 2 === parity), target: arcs.filter((a) => Number(a.dove) % 2 !== parity), issues, latencyHours: L, historyDays, taus,
+        anchorMs: T0, solver: common, fitHours: 24, minimumFitArcs: 2, blockMs: BLOCK, firstMs: first }));
       const entry = { ...head, latencyHours: L, hindcastTruth: latencyStatistic(own, taus), heldOutSatellites: latencyStatistic(held, taus) };
       results.push(entry);
       const line = (name, st) => st.windows ? `${name}: ${st.windows}, no correction ${st.rmsNoCorrection.toFixed(4)}; ${taus.map((t) => { const b = st.byTau[String(t)]; return `tau ${t ?? 'held'} ${b.rmsUnpredicted.toFixed(4)} (${b.ratio.toFixed(3)}${b.lower === null ? '' : ` [${b.lower.toFixed(3)}, ${b.upper.toFixed(3)}]`})`; }).join('; ')}` : `${name}: no windows`;

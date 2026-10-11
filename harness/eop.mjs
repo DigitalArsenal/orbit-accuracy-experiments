@@ -25,6 +25,21 @@ export async function c04Records(parser, file) {
   return { records, meta, sha256: sha256(body) };
 }
 
+// parse_finals2000a over an IERS finals2000A file (Rapid Service, with predictions): [{mjd, row}] as c04Records returns them. For dates after the C04 series ends.
+export async function finalsRecords(parser, file) {
+  const body = fs.readFileSync(file);
+  const response = await parser.invoke('parse_finals2000a', [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
+  const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
+  const records = [];
+  for (let at = 0; at < out.length;) {
+    const n = out.readUInt32LE(at);
+    const row = P.EOP.getRootAsEOP(new fb.ByteBuffer(new Uint8Array(out.subarray(at + 4, at + 4 + n)))).unpack();
+    records.push({ mjd: row.MJD, row });
+    at += 4 + n;
+  }
+  return { records, sha256: sha256(body) };
+}
+
 // The rows fromMjd..toMjd as one PRW EARTH_ORIENTATION frame.
 export function eopFrame(records, fromMjd, toMjd) {
   const rows = records.filter((r) => r.mjd >= fromMjd && r.mjd <= toMjd).map((r) => r.row);

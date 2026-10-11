@@ -22,10 +22,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { json, loadModule, sha256 } from '../../harness/modules.mjs';
 import { kernelFrame } from '../../harness/prw.mjs';
-import { c04Records, eopFrame } from '../../harness/eop.mjs';
+import { c04Records, eopFrame, finalsRecords } from '../../harness/eop.mjs';
 import { convertIso } from '../../harness/time.mjs';
 import { rtnAxes, toGcrf } from './vendor/frames.mjs';
-import { decodeSamples, executionFrame, jb2008Frame, jb2008Rows, readSetIndices } from './vendor/full-force.mjs';
+import { decodeSamples, executionFrame, jb2008Frame, jb2008Rows, readSetIndices, spaceWeatherFrame } from './vendor/full-force.mjs';
 import { DAY, config, energyModulesDir, modulesDir } from './common.mjs';
 
 const MU = 3.986004418e14;
@@ -66,17 +66,23 @@ function inverse(M) {
 }
 const blockRot = (R) => { const B = zeros(6, 6); for (let i = 0; i < 3; ++i) for (let j = 0; j < 3; ++j) { B[i][j] = R[3 * i + j]; B[3 + i][3 + j] = R[3 * i + j]; } return B; };
 
-export async function openArcEnv({ profile = 'full' } = {}) {
+// atmosphere: 'JB2008' (the production arcs: SET's indices) or 'NRLMSISE00' (the common reference of PLAN.md Amendment S3: HPOP's NRLMSISE-00 drag on daily
+// space weather). spaceWeather(fromMs, toMs) gives the SPW rows (CSSI layout, vendor/full-force.mjs spwRows or the released rows) of the days; it is
+// required for NRLMSISE00 and unused for JB2008, whose arcs are unchanged.
+export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spaceWeather = null, eopFinals = null } = {}) {
+  if (!['JB2008', 'NRLMSISE00'].includes(atmosphere)) throw new Error(`unknown atmosphere ${atmosphere}`);
+  if (atmosphere === 'NRLMSISE00' && typeof spaceWeather !== 'function') throw new Error('atmosphere NRLMSISE00 needs spaceWeather(fromMs, toMs)');
   const root = modulesDir();
   const modules = {};
   for (const name of ['propagator/hpop', 'foundation/frames', 'foundation/time', 'data-source/eop-parser']) modules[name] = await loadModule(root, name);
   modules['analysis/density-calibration'] = await loadModule(energyModulesDir(), 'analysis/density-calibration');
   const kernelBytes = fs.readFileSync(config.inputs.kernel.path);
   const kernel = kernelFrame(kernelBytes);
-  const eop = await c04Records(modules['data-source/eop-parser'], config.inputs.eopC04);
+  // Earth orientation: IERS C04 (the splits; it ends 2026-09-01) or, for the live period, a finals2000A file (`eopFinals`)
+  const eop = eopFinals ? await finalsRecords(modules['data-source/eop-parser'], eopFinals) : await c04Records(modules['data-source/eop-parser'], config.inputs.eopC04);
   const set = readSetIndices(config.inputs.solfsmy, config.inputs.dtcfile);
   // the inputs by SHA-256, for a run manifest
-  const inputs = { set: set.sha256, eop: { [path.basename(config.inputs.eopC04)]: eop.sha256 }, kernel: { [path.basename(config.inputs.kernel.path)]: sha256(kernelBytes) } };
+  const inputs = { set: set.sha256, eop: { [path.basename(eopFinals ?? config.inputs.eopC04)]: eop.sha256 }, kernel: { [path.basename(config.inputs.kernel.path)]: sha256(kernelBytes) } };
   const prof = PROFILES[profile];
   if (!prof) throw new Error(`unknown profile ${profile}`);
 
@@ -97,14 +103,21 @@ export async function openArcEnv({ profile = 'full' } = {}) {
     return rows;
   }
 
+  // The drivers of the days [fromMs, toMs] as the atmosphere's PRW frame: JB2008's rows (with a00(t) [K] added to the hourly DTC when given) or NRLMSISE-00's space weather.
+  function atmosphereFrame(fromMs, toMs, a00) {
+    if (atmosphere === 'JB2008') return jb2008Frame(rowsFor(fromMs, toMs, a00));
+    if (a00) throw new Error('a temperature offset is JB2008\'s; NRLMSISE-00 has none');
+    return spaceWeatherFrame(spaceWeather(fromMs, toMs));
+  }
+
   // Propagate x_a to t_b with Cd*A/m = b0 and Cr*A/m = cr: {state, phi (6x6), sens (6)}. a00: optional temperature offset function (rowsFor).
   async function propagate(a, tbMs, b0, cr, { a00 = null } = {}) {
-    const forces = { ...prof.forces, drag: true, atmosphere: 'JB2008' };
-    const rows = rowsFor(a.ms - 8 * DAY, tbMs + 2 * DAY, a00);
+    const forces = { ...prof.forces, drag: true, atmosphere };
+    const driver = atmosphereFrame(a.ms - 8 * DAY, tbMs + 2 * DAY, a00);
     const response = await modules['propagator/hpop'].invoke('invoke', [
       executionFrame({ epoch: noZ(isoUs(a.ms)), state: a.state, samples: [noZ(isoUs(tbMs))], forces, coefficients: { b: b0, agom: cr, inTrack: 0 },
         parameters: [{ kind: 'DRAG_AREA_OVER_MASS' }], stm: true, integrator: { tolerance: prof.tolerance, maxStep: prof.maxStepSeconds } }),
-      kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(tbMs) + 3), jb2008Frame(rows),
+      kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(tbMs) + 3), driver,
     ]);
     const s = decodeSamples(response)[0], n = s.n;
     const phi = Array.from({ length: 6 }, (_, i) => Array.from({ length: 6 }, (_, j) => s.stm[i * n + j]));
@@ -113,13 +126,13 @@ export async function openArcEnv({ profile = 'full' } = {}) {
 
   // The states (GCRF, m and m/s) of x_a at the epochs `epochsMs` with Cd*A/m = B and Cr*A/m = cr, no state-transition output.
   async function trajectory(a, epochsMs, B, cr, { a00 = null } = {}) {
-    const forces = { ...prof.forces, drag: true, atmosphere: 'JB2008' };
+    const forces = { ...prof.forces, drag: true, atmosphere };
     const last = Math.max(...epochsMs);
-    const rows = rowsFor(a.ms - 8 * DAY, last + 2 * DAY, a00);
+    const driver = atmosphereFrame(a.ms - 8 * DAY, last + 2 * DAY, a00);
     const response = await modules['propagator/hpop'].invoke('invoke', [
       executionFrame({ epoch: noZ(isoUs(a.ms)), state: a.state, samples: epochsMs.map((t) => noZ(isoUs(t))), forces, coefficients: { b: B, agom: cr, inTrack: 0 },
         parameters: [], stm: false, integrator: { tolerance: prof.tolerance, maxStep: prof.maxStepSeconds } }),
-      kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(last) + 3), jb2008Frame(rows),
+      kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(last) + 3), driver,
     ]);
     return decodeSamples(response).map((x) => x.state);
   }
@@ -203,5 +216,5 @@ export async function openArcEnv({ profile = 'full' } = {}) {
     return last;
   }
 
-  return { energyArc, sixDimensionalArc, energyOf, propagate, trajectory, toUtcGcrf, modules, profile, inputs, destroy: async () => { for (const m of Object.values(modules)) await m.destroy(); } };
+  return { energyArc, sixDimensionalArc, energyOf, propagate, trajectory, toUtcGcrf, modules, profile, atmosphere, rowsFor, spaceWeather, inputs, destroy: async () => { for (const m of Object.values(modules)) await m.destroy(); } };
 }
