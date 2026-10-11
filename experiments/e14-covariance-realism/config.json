@@ -14,42 +14,190 @@
     "store": "/opt/data/sdn-archive/e14-covariance-realism",
     "rsga": "/opt/data/sdn-archive/hac/noaa-swpc",
     "gfzKp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
-    "densities": ["/opt/data/sdn-archive/hac/esa-swarm-dns", "/opt/data/sdn-archive/hac/esa-gracefo-dns"]
+    "densities": [
+      "/opt/data/sdn-archive/hac/esa-swarm-dns",
+      "/opt/data/sdn-archive/hac/esa-gracefo-dns"
+    ]
   },
   "windows": {
-    "history": ["2024-01-01", "2025-09-30"],
-    "devFit": ["2025-10-01", "2026-02-15"],
-    "devSelect": ["2026-02-16", "2026-04-30"],
-    "test": ["2026-05-01", "2026-09-30"]
+    "history": [
+      "2024-01-01",
+      "2025-09-30"
+    ],
+    "devFit": [
+      "2025-10-01",
+      "2026-02-15"
+    ],
+    "devSelect": [
+      "2026-02-16",
+      "2026-04-30"
+    ],
+    "test": [
+      "2026-05-01",
+      "2026-09-30"
+    ]
   },
   "s1Windows": {
-    "devFit": ["2026-10-10T00:00:00Z", "2026-10-13T12:00:00Z"],
-    "devSelect": ["2026-10-13T12:00:00Z", "2026-10-15T00:00:00Z"],
-    "test": ["2026-10-15T00:00:00Z", "2026-10-24T00:00:00Z"]
+    "devFit": [
+      "2026-10-10T00:00:00Z",
+      "2026-10-13T12:00:00Z"
+    ],
+    "devSelect": [
+      "2026-10-13T12:00:00Z",
+      "2026-10-15T00:00:00Z"
+    ],
+    "test": [
+      "2026-10-15T00:00:00Z",
+      "2026-10-24T00:00:00Z"
+    ]
   },
-  "testWindows": ["test", "s1:test"],
-  "regimes": [
-    { "id": "LEO-L", "altitudeKm": [0, 500], "eccentricity": [0, 0.25] },
-    { "id": "LEO-M", "altitudeKm": [500, 800], "eccentricity": [0, 0.25] },
-    { "id": "LEO-H", "altitudeKm": [800, 2000], "eccentricity": [0, 0.25] },
-    { "id": "MEO", "altitudeKm": [2000, 30000], "eccentricity": [0, 0.25] },
-    { "id": "GEO", "altitudeKm": [30000, 40000], "eccentricity": [0, 0.25] },
-    { "id": "HEO", "altitudeKm": [0, 1e9], "eccentricity": [0.25, 1] }
+  "testWindows": [
+    "test",
+    "s1:test"
   ],
-  "horizonsDays": [0, 0.5, 1, 2, 3, 5, 7],
-  "s3AgeBinsDays": [[0, 0.25], [0.25, 0.75], [0.75, 1.5], [1.5, 2.5], [2.5, 4], [4, 6], [6, 8]],
+  "regimes": [
+    {
+      "id": "LEO-L",
+      "altitudeKm": [
+        0,
+        500
+      ],
+      "eccentricity": [
+        0,
+        0.25
+      ]
+    },
+    {
+      "id": "LEO-M",
+      "altitudeKm": [
+        500,
+        800
+      ],
+      "eccentricity": [
+        0,
+        0.25
+      ]
+    },
+    {
+      "id": "LEO-H",
+      "altitudeKm": [
+        800,
+        2000
+      ],
+      "eccentricity": [
+        0,
+        0.25
+      ]
+    },
+    {
+      "id": "MEO",
+      "altitudeKm": [
+        2000,
+        30000
+      ],
+      "eccentricity": [
+        0,
+        0.25
+      ]
+    },
+    {
+      "id": "GEO",
+      "altitudeKm": [
+        30000,
+        40000
+      ],
+      "eccentricity": [
+        0,
+        0.25
+      ]
+    },
+    {
+      "id": "HEO",
+      "altitudeKm": [
+        0,
+        1000000000.0
+      ],
+      "eccentricity": [
+        0.25,
+        1
+      ]
+    }
+  ],
+  "horizonsDays": [
+    0,
+    0.5,
+    1,
+    2,
+    3,
+    5,
+    7
+  ],
+  "s3AgeBinsDays": [
+    [
+      0,
+      0.25
+    ],
+    [
+      0.25,
+      0.75
+    ],
+    [
+      0.75,
+      1.5
+    ],
+    [
+      1.5,
+      2.5
+    ],
+    [
+      2.5,
+      4
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      6,
+      8
+    ]
+  ],
   "s1HorizonBinsDays": {
-    "0.25": [0.17, 0.375],
-    "0.5": [0.375, 0.75],
-    "1": [0.75, 1.5],
-    "2": [1.5, 1.95],
-    "3": [2.5, 3.5],
-    "5": [4.5, 5.0]
+    "0.25": [
+      0.17,
+      0.375
+    ],
+    "0.5": [
+      0.375,
+      0.75
+    ],
+    "1": [
+      0.75,
+      1.5
+    ],
+    "2": [
+      1.5,
+      1.95
+    ],
+    "3": [
+      2.5,
+      3.5
+    ],
+    "5": [
+      4.5,
+      5.0
+    ]
   },
   "realism": {
     "chi2Quantile95": 7.814727903251178,
-    "meanD2Over3": [0.8, 1.25],
-    "coverage95": [0.93, 0.97],
+    "meanD2Over3": [
+      0.8,
+      1.25
+    ],
+    "coverage95": [
+      0.93,
+      0.97
+    ],
     "minimumSamples": 30,
     "minimumObjects": 3,
     "bootstrapResamples": 2000,
@@ -61,10 +209,49 @@
   },
   "truth": {
     "objects": {
-      "LEO-L": [39452, 39451, 39453, 43476, 43477],
-      "LEO-M": [39634, 62261, 66315, 44349, 44350, 44351, 44353, 44358, 36508, 39086, 27944, 22824],
-      "LEO-H": [7646, 25398, 16908, 38077, 41335, 43437, 46984, 66514, 41240, 54754, 46469, 48621],
-      "MEO": ["GPS", 8820, 22195, 19751, 20026, 53105],
+      "LEO-L": [
+        39452,
+        39451,
+        39453,
+        43476,
+        43477
+      ],
+      "LEO-M": [
+        39634,
+        62261,
+        66315,
+        44349,
+        44350,
+        44351,
+        44353,
+        44358,
+        36508,
+        39086,
+        27944,
+        22824
+      ],
+      "LEO-H": [
+        7646,
+        25398,
+        16908,
+        38077,
+        41335,
+        43437,
+        46984,
+        66514,
+        41240,
+        54754,
+        46469,
+        48621
+      ],
+      "MEO": [
+        "GPS",
+        8820,
+        22195,
+        19751,
+        20026,
+        53105
+      ],
       "GEO": [],
       "HEO": []
     },
@@ -90,7 +277,10 @@
       "manifest": "MANIFEST.txt",
       "sampleSize": 100,
       "sampleSeed": 20261014,
-      "exclude": ["/opt/data/sdn-archive/e13-open-dca/sample.json", "/opt/data/sdn-archive/operator-ephemerides/_capture/starlink-sample.txt"],
+      "exclude": [
+        "/opt/data/sdn-archive/e13-open-dca/sample.json",
+        "/opt/data/sdn-archive/operator-ephemerides/_capture/starlink-sample.txt"
+      ],
       "retainDays": 2.5,
       "requestSpacingSeconds": 6,
       "manifestPollMinutes": 60
@@ -107,40 +297,131 @@
     "minimumFreeGiB": 30
   },
   "candidates": {
-    "S1": ["S1-0", "S1-K", "S1-A"],
-    "S2": ["S2-P0", "S2-Q", "S2-QC", "S2-QCD"],
-    "S3": ["S3-T", "S3-TU", "S3-KC", "S3-KO"]
+    "S1": [
+      "S1-0",
+      "S1-K",
+      "S1-A"
+    ],
+    "S2": [
+      "S2-P0",
+      "S2-Q",
+      "S2-QC",
+      "S2-QCD"
+    ],
+    "S3": [
+      "S3-T",
+      "S3-TU",
+      "S3-KC",
+      "S3-KO"
+    ]
   },
   "s2": {
-    "anchorEveryDays": 3,
+    "anchorEveryDays": 6,
     "cpuHoursCapPerWindow": 12,
-    "forces": { "degree": 70, "order": 70, "thirdBodies": [10, 301], "srp": true, "drag": true, "atmosphere": "NRLMSISE00", "solidTides": true, "relativity": "IERS_2010" },
-    "integrator": { "tolerance": 1e-12, "maxStep": 300 },
-    "processNoise": { "model": "WHITE_ACCELERATION", "axes": "RADIAL_TRANSVERSE_NORMAL", "discretizationSeconds": 600 },
+    "forces": {
+      "degree": 36,
+      "order": 36,
+      "thirdBodies": [
+        10,
+        301
+      ],
+      "srp": true,
+      "drag": true,
+      "atmosphere": "NRLMSISE00",
+      "solidTides": true,
+      "relativity": "IERS_2010"
+    },
+    "integrator": {
+      "tolerance": 1e-12,
+      "maxStep": 300
+    },
+    "processNoise": {
+      "model": "WHITE_ACCELERATION",
+      "axes": "RADIAL_TRANSVERSE_NORMAL",
+      "discretizationSeconds": 600
+    },
     "p0ClipK": 5,
     "considerBLookbackDays": 30
   },
   "s3": {
     "clipK": 5,
     "minimumBinSamples": 30,
-    "objectScale": { "lookbackDays": 30, "minimumPairs": 2, "shrinkagePairs": 8, "maxGapDays": 3 }
+    "objectScale": {
+      "lookbackDays": 30,
+      "minimumPairs": 2,
+      "shrinkagePairs": 8,
+      "maxGapDays": 3
+    }
   },
   "s4": {
     "leadDays": 7,
     "heldAfterDay": 3,
     "issueHourUtc": 22,
-    "altitudesKm": { "LEO-L": [420, 480], "LEO-M": [550, 650, 750], "LEO-H": [850, 1000, 1300] },
-    "grid": { "latitudeDeg": [-80, 80, 20], "longitudeDeg": [0, 315, 45], "hoursUtc": [0, 3, 6, 9, 12, 15, 18, 21] },
-    "forecastClassesAp": [15, 30],
-    "shrinkageCandidates": [0, 0.5, 1],
-    "fitIssues": ["2024-01-01", "2026-02-15"],
+    "altitudesKm": {
+      "LEO-L": [
+        420,
+        480
+      ],
+      "LEO-M": [
+        550,
+        650,
+        750
+      ],
+      "LEO-H": [
+        850,
+        1000
+      ]
+    },
+    "grid": {
+      "latitudeDeg": [
+        -80,
+        80,
+        20
+      ],
+      "longitudeDeg": [
+        0,
+        315,
+        45
+      ],
+      "hoursUtc": [
+        0,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21
+      ]
+    },
+    "forecastClassesAp": [
+      15,
+      30
+    ],
+    "shrinkageCandidates": [
+      0,
+      0.5,
+      1
+    ],
+    "fitIssues": [
+      "2024-01-01",
+      "2026-02-15"
+    ],
     "stormAp": 30
   },
   "screening": {
     "pairsPerCell": 500,
     "seed": 20261010,
     "hardBodyRadiusM": 20,
-    "pcThreshold": 1e-4,
-    "missesM": [0, 20, 100, 500, 1000, 2000, 5000]
+    "pcThreshold": 0.0001,
+    "missesM": [
+      0,
+      20,
+      100,
+      500,
+      1000,
+      2000,
+      5000
+    ]
   }
 }

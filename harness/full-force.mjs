@@ -34,6 +34,7 @@ function encode(arm, value, size = 1 << 16) {
 //     inTrack (m/s^2, a constant acceleration along T of RTN)},
 //   parameters [{kind}] solved for (their values come from coefficients), stm (bool),
 //   covariance [(6 + p)^2] (SI, GCRF, over the state and the parameters) | null,
+//   noise {q [3] m^2/s^3 RTN, intervalSeconds} | null (white-acceleration process noise; six-state covariance),
 //   integrator {tolerance, maxStep}}
 // SDS 1.241.0: RADIATION_PRESSURE_MODEL, GNSS_BLOCK and ECOM2.
 export const ECOM2_TERMS = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'D4_COS', 'D4_SIN', 'B1_COS', 'B1_SIN', 'B3_COS', 'B3_SIN'];
@@ -75,6 +76,11 @@ export function executionFrame(request) {
     DENSITY_TREATMENT: f.drag ? P.prwDensityTreatment.FINITE_DIFFERENCE : P.prwDensityTreatment.NEGLECTED,
     DYNAMIC_PARAMETERS: (request.parameters ?? []).map((p) => P.prwDynamicParameter[p.kind]),
     INITIAL_COVARIANCE: request.covariance ? table('PRWStateMatrix', { DIMENSION: 6 + (request.parameters ?? []).length, VALUES: request.covariance }) : null,
+    // White-acceleration process noise (E14): {q [3] m^2/s^3 on R, T, N, intervalSeconds}; needs a six-state covariance.
+    PROCESS_NOISE: request.noise ? table('PRWProcessNoise', {
+      MODEL: P.prwProcessNoiseModel.WHITE_ACCELERATION, AXES: P.prwProcessNoiseAxes.RADIAL_TRANSVERSE_NORMAL,
+      SPECTRAL_DENSITY_M2_S3: request.noise.q, DISCRETIZATION_SECONDS: request.noise.intervalSeconds,
+    }) : null,
     SAMPLE_EPOCHS: request.samples.map((s) => instant(s, 'UTC')),
   });
   return { portId: 'request', typeRef: PRW_TYPE, payload: encode('EXECUTION_REQUEST', execution) };

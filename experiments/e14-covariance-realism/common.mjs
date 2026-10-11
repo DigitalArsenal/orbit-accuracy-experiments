@@ -201,7 +201,7 @@ export const resultsDir = (...parts) => { const d = path.join(repoRoot, 'results
 export const writeJson = (file, value) => { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, `${JSON.stringify(value, null, 1)}\n`); };
 
 // Wait while the machine is loaded (PLAN.md section 12): 1-minute load average above `limit`.
-export async function waitForLoad(limit = 40, log = console.log) {
+export async function waitForLoad(limit = Number(process.env.E14_LOAD_LIMIT ?? 40), log = console.log) {
   const os = await import('node:os');
   let warned = false;
   while (os.loadavg()[0] > limit) {
