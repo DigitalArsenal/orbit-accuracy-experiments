@@ -121,10 +121,12 @@ for (const c of coverageFiles) {
   for (const n of c.counts.inAoe ?? []) k.inAoe.add(n);
   for (const n of c.counts.inSt ?? []) k.inSt.add(n);
   for (const n of c.counts.inBoth ?? []) k.inBoth.add(n);
+  // A regime whose truth is fetched only for the objects AOE carries (LEO-SL) also records its whole population.
+  if (c.truth?.population) k.population = c.truth.population;
   k.targets.push({ targetDay: c.targetDay, source: c.source, truthItems: c.truth?.items ?? null, scoredObjects: c.counts.scoredObjects, rows: c.rows, failures: c.failures });
 }
 const coverageOut = Object.fromEntries(Object.entries(coverage).map(([r, k]) => [r, {
-  truthObjects: k.truthObjects.size, aoeOnly: [...k.inAoe].filter((n) => !k.inSt.has(n)).length, stOnly: [...k.inSt].filter((n) => !k.inAoe.has(n)).length, both: k.inBoth.size, neither: [...k.truthObjects].filter((n) => !k.inAoe.has(n) && !k.inSt.has(n)).length, targets: k.targets,
+  truthObjects: k.truthObjects.size, aoeOnly: [...k.inAoe].filter((n) => !k.inSt.has(n)).length, stOnly: [...k.inSt].filter((n) => !k.inAoe.has(n)).length, both: k.inBoth.size, neither: [...k.truthObjects].filter((n) => !k.inAoe.has(n) && !k.inSt.has(n)).length, population: k.population ?? null, targets: k.targets,
 }]));
 const availability = {};
 for (const c of coverageFiles) for (const [k, v] of Object.entries(c.counts.byIssue ?? {})) {
@@ -189,6 +191,10 @@ for (const r of regimes) {
 }
 L.push('## Coverage of the scored regimes', '', '| Regime | Truth objects | Both catalogs | AOE only | ST only | Neither |', '| --- | ---: | ---: | ---: | ---: | ---: |');
 for (const [r, c] of Object.entries(coverageOut)) L.push(`| ${r} | ${c.truthObjects} | ${c.both} | ${c.aoeOnly} | ${c.stOnly} | ${c.neither} |`);
+for (const [r, c] of Object.entries(coverageOut).filter(([, c]) => c.population)) {
+  const p = c.population;
+  L.push('', `${r}: truth is fetched for the satellites AOE carries. Of the ${p.listed} satellites in SpaceX's manifest, ${p.inBoth} are in both catalogs, ${p.inAoe - p.inBoth} in AOE only, ${p.inSt - p.inBoth} in Space-Track only, ${p.listed - p.inAoe - p.inSt + p.inBoth} in neither.`);
+}
 L.push('', '## AOE snapshots', '', '| Day | Records | Site total | Complete | Unrenderable boxes | AOE-only ids | Rejected | Retrieved (UTC) |', '| --- | ---: | ---: | --- | ---: | ---: | ---: | --- |');
 for (const s of snapshots) L.push(`| ${s.day} | ${s.records} | ${s.siteTotal ?? '—'} | ${s.complete ? 'yes' : 'no'} | ${s.unrenderable} | ${s.aoeOnly} | ${s.rejected} | ${s.retrieval.firstUtc?.slice(11, 16)} to ${s.retrieval.lastUtc?.slice(11, 16)} |`);
 L.push('', '## Error by age from the set\'s epoch (median 3D)', '', '| Regime | Method | Age (d) | Median | n | Objects |', '| --- | --- | --- | ---: | ---: | ---: |');
