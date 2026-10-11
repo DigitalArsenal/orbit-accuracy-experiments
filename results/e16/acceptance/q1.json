@@ -1,0 +1,100 @@
+{
+ "run": "e16-cross-regime-epoch-05-acceptance-q1-20261011T142241Z",
+ "part": "q1",
+ "checks": {
+  "A1": {
+   "sets": 20,
+   "samples": 240,
+   "batchSamples": 240,
+   "worstRelative": 1.24534276252952e-15,
+   "pass": true
+  },
+  "A1'": {
+   "classes": {
+    "LEO-PL": {
+     "samples": 30,
+     "identical": 90,
+     "different": 0
+    },
+    "LEO-POD": {
+     "samples": 30,
+     "identical": 90,
+     "different": 0
+    },
+    "SLR-LEO": {
+     "samples": 25,
+     "identical": 71,
+     "different": 0
+    },
+    "GNSS": {
+     "samples": 30,
+     "identical": 90,
+     "different": 0
+    },
+    "IGSO/GEO": {
+     "samples": 30,
+     "identical": 88,
+     "different": 0
+    },
+    "SLR-MEO": {
+     "samples": 7,
+     "identical": 21,
+     "different": 0
+    }
+   },
+   "pass": true
+  },
+  "A2": {
+   "states": 15063,
+   "ttMinusUtcMs": [
+    69184,
+    69184
+   ],
+   "frameBiasShiftM": [
+    0.008016801803097322,
+    0.7972393706887108
+   ],
+   "pass": true
+  },
+  "A3": {
+   "classes": {
+    "LEO-PL": {
+     "samples": 40,
+     "min": 0.9975965711057805,
+     "max": 1.00177057709003
+    },
+    "LEO-POD": {
+     "samples": 40,
+     "min": 0.9989822874312585,
+     "max": 1.000954910239067
+    },
+    "SLR-LEO": {
+     "samples": 40,
+     "min": 0.9970930181876414,
+     "max": 1.0010078796331006
+    },
+    "GNSS": {
+     "samples": 40,
+     "min": 0.9994339704039752,
+     "max": 1.0003531286152354
+    },
+    "IGSO/GEO": {
+     "samples": 40,
+     "min": 0.9960333409490899,
+     "max": 1.0001671743618588
+    },
+    "SLR-MEO": {
+     "samples": 12,
+     "min": 0.9991700341136598,
+     "max": 1.0001907664238543
+    }
+   },
+   "pass": true
+  },
+  "A6": {
+   "repeatedSamples": 405,
+   "differing": 0,
+   "pass": true
+  }
+ }
+}

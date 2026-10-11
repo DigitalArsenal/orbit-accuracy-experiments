@@ -1,0 +1,67 @@
+{
+ "run": "e16-cross-regime-epoch-50-q2-train-20261011T142142Z",
+ "experiment": "e16-cross-regime-epoch",
+ "step": "50-q2-train",
+ "command": [
+  "node",
+  "experiments/e16-cross-regime-epoch/steps/50-q2-train.mjs"
+ ],
+ "args": [],
+ "started": "2026-10-11T14:21:42.534Z",
+ "finished": "2026-10-11T14:21:43.113Z",
+ "config": {
+  "path": "experiments/e16-cross-regime-epoch/config.json",
+  "sha256": "67705fab95160e837e74d6b3cb682bbe9c89026887a760b1fedf0b8613cf6a6c",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "833b2055707d945c363cd875b1b68cfbfc97dbcb",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "e1e6577acb0e54eb7f68ba909bc109b7b2a7a77d",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   43.123046875,
+   34.04541015625,
+   27.22021484375
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-11T14:21:42.534Z",
+   "args": []
+  }
+ ],
+ "sampleRuns": {
+  "train": [
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-PL-s0of4-20261011T141947Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-PL-s1of4-20261011T141947Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-PL-s2of4-20261011T141947Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-PL-s3of4-20261011T141947Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-POD-s0of3-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-POD-s1of3-20261011T141947Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-LEO-POD-s2of3-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-train-SLR-LEO-s0of1-20261011T141948Z"
+  ],
+  "validation": [
+   "e16-cross-regime-epoch-20-epoch-samples-validation-LEO-PL-s0of2-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-validation-LEO-PL-s1of2-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-validation-LEO-POD-s0of1-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-validation-SLR-LEO-s0of1-20261011T141948Z"
+  ]
+ },
+ "sha256": "605d47d337abb1e6325291807a1290c5eb5b7868fda28dd6de240ee6bafdc560"
+}

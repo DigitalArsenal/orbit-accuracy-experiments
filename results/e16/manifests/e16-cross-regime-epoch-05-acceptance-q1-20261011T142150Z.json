@@ -1,0 +1,83 @@
+{
+ "run": "e16-cross-regime-epoch-05-acceptance-q1-20261011T142150Z",
+ "experiment": "e16-cross-regime-epoch",
+ "step": "05-acceptance-q1",
+ "command": [
+  "node",
+  "experiments/e16-cross-regime-epoch/steps/05-acceptance.mjs",
+  "--part",
+  "q1"
+ ],
+ "args": {
+  "part": "q1"
+ },
+ "started": "2026-10-11T14:21:50.484Z",
+ "finished": "2026-10-11T14:22:23.777Z",
+ "config": {
+  "path": "experiments/e16-cross-regime-epoch/config.json",
+  "sha256": "67705fab95160e837e74d6b3cb682bbe9c89026887a760b1fedf0b8613cf6a6c",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "833b2055707d945c363cd875b1b68cfbfc97dbcb",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "e1e6577acb0e54eb7f68ba909bc109b7b2a7a77d",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.3.0",
+   "wasmSha256": "c697061b0ab6b44bdb2395a62fe6759e9c29ed9820562049a27edae7fc420722",
+   "manifestSha256": "f6b47b4d55b72932692eefa4c99843bb3b4167e3a520b89252924d79db753a23"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "foundation/time",
+   "pluginId": "com.digitalarsenal.foundation.time",
+   "version": "0.1.0",
+   "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+   "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   38.34375,
+   33.3193359375,
+   27.0419921875
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-11T14:21:50.484Z",
+   "args": {
+    "part": "q1"
+   }
+  }
+ ],
+ "pass": {
+  "A1": false,
+  "A1'": true,
+  "A2": true,
+  "A3": true,
+  "A6": false
+ }
+}

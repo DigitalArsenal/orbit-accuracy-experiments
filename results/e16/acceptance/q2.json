@@ -1,0 +1,26 @@
+{
+ "run": "e16-cross-regime-epoch-05-acceptance-q2-20261011T144221Z",
+ "part": "q2",
+ "checks": {
+  "A5": {
+   "e13ZeroIdentical": true,
+   "glsZeroCorrelationWorstMetres": 0,
+   "failures": [],
+   "pass": true
+  },
+  "A4": {
+   "bTrue": 0.012,
+   "bdotTruePerDay": 0.004,
+   "estimate": [
+    0.01193069876893617,
+    4.1122326887427294e-8
+   ],
+   "sigma": [
+    0.0011099875845251234,
+    1.0689251454125332e-8
+   ],
+   "failure": null,
+   "pass": true
+  }
+ }
+}
