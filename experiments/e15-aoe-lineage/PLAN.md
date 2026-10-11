@@ -28,6 +28,7 @@ Reference orbits are produced by someone other than either lineage. An operator 
 | ISS | 25544 | NASA OEM, same rule | |
 | CSS | Tiangong core and modules | CMSE weekly OEM | Chinese operator; independence from AOE checked as in L2 |
 | LEO-PL | Planet | Planet OEMs | |
+| LEO-SP | Spire LEMUR (and PlanetiQ where present) | The receiver's orbit carried in each EUMETSAT commercial radio-occultation L1B file (`data/receiver/orbit/centre_of_mass`, TOD, about 11 states per occultation; `orbit_predicted` states excluded) | Spire's own GNSS-based orbit; third-party licence: read in memory, residuals only |
 | GEO | Intelsat, SES | IESS-412 files | |
 | GNSS | GPS, GLONASS, Galileo, BeiDou | ESA rapid or final SP3; GFZ MGEX | Centimetres; the floor of this measurement |
 | LEO-POD, SLR | Sentinel-1/3/6, Swarm, GRACE-FO; SLR targets | `analysis/reference-states` products as E3 and E14 convert them | Published with a lag of days to weeks; scored when published |
@@ -101,3 +102,5 @@ Committed: `results/e15/<run-id>/` (manifest, metrics) and `results/e15/README.m
 ## Amendments
 
 Dated changes, with their reasons; amendments after the freeze are reported with the results.
+
+- **2026-10-11, before any result.** Added LEO-SP: Spire receiver orbits from EUMETSAT's commercial radio-occultation files. The account was opened the same day, and these are the only reference orbits for Spire's satellites, which both catalogs carry.
