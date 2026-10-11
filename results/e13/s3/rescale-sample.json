@@ -1,0 +1,22 @@
+{
+ "exploratory": true,
+ "amendment": "S3",
+ "split": "dev",
+ "stride": 30,
+ "summary": {
+  "arcs": 120,
+  "allWithinStatedSigma": true,
+  "failures": [],
+  "medianAbsLnDifference": 2.5994486714965154e-05,
+  "p95AbsLnDifference": 0.00010855419498366248,
+  "maxAbsLnDifference": 0.00029174365094918856,
+  "shareWithin0p5Percent": 1,
+  "shareWithin1Percent": 1,
+  "medianLnBetweenReferences": -0.0667748851069964,
+  "p5LnBetweenReferences": -0.3058516071711544,
+  "p95LnBetweenReferences": 0.08474961214029783,
+  "medianSigmaLnB": 0.13318434262055587,
+  "meanLnDifference": -8.079960371703505e-06
+ },
+ "arcsFile": "the per-arc rows (hardware ids, epochs, fits) are in the store, outside the repository: Planet's per-satellite-day fits are not published (CC BY-NC 4.0)"
+}

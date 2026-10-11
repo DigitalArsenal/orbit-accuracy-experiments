@@ -1,0 +1,55 @@
+{
+ "exploratory": true,
+ "amendment": "S3",
+ "split": "dev",
+ "solver": {
+  "nodeHours": 24,
+  "baseline": {
+   "kind": "randomWalk",
+   "stepSigma": 0.005
+  },
+  "smoothSigma": 0.05,
+  "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+ },
+ "againstJB2008": {
+  "r1": 0.38330266760551046,
+  "lower": 0.28603691371273543,
+  "upper": 0.46225041584385995,
+  "windows": 724,
+  "arcs": 2738,
+  "sdX": 0.11131646066856127,
+  "sdResidual": 0.06864856434589785
+ },
+ "againstNRLMSISE00": {
+  "r1": 0.48316993849932033,
+  "lower": 0.40575754904176103,
+  "upper": 0.5478276777548046,
+  "windows": 724,
+  "arcs": 2738,
+  "sdX": 0.14439501265370056,
+  "sdResidual": 0.07462768327020347
+ },
+ "commonModes": {
+  "windows": 181,
+  "correlation": 0.7016117330304485,
+  "sdJ": 0.09781722123844157,
+  "sdN": 0.13109260434517908,
+  "sdOfDifference": 0.09359372209924548,
+  "meanLnRatioWJoverWN": -0.07710402064571277,
+  "sdLnRatioWJoverWN": 0.10918726802641661
+ },
+ "levels": {
+  "JB2008": {
+   "swarmA": -0.08900326699622967,
+   "swarmB": -0.046728590571909895,
+   "swarmC": -0.084916610424578,
+   "gracefo1": -0.06155260894536263
+  },
+  "NRLMSISE00": {
+   "swarmA": -0.17814694178533674,
+   "swarmB": -0.1486088246472609,
+   "swarmC": -0.17412689894200337,
+   "gracefo1": -0.15775043778949085
+  }
+ }
+}

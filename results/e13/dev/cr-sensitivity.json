@@ -1,0 +1,12 @@
+{
+ "summary": {
+  "arcs": 20,
+  "medianAbsLnChangeLow": 0.00024103056368201365,
+  "maxAbsLnChangeLow": 0.000999479495880604,
+  "medianAbsLnChangeHigh": 0.00024155794832525957,
+  "maxAbsLnChangeHigh": 0.0009980678714280383,
+  "meanLnChangeHigh": 0.00021363506248854732,
+  "maxAbsReproduction": 1.9560344292189824e-07
+ },
+ "arcsFile": "the 20 arcs' rows (hardware ids, epochs, fits) are in the store, outside the repository: Planet's per-satellite-day fits are not published (CC BY-NC 4.0)"
+}

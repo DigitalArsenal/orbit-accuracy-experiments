@@ -1,0 +1,129 @@
+{
+ "readAtUtc": "2026-10-11T10:37:25.403Z",
+ "pairs": 441,
+ "consecutive": 437,
+ "satellites": 324,
+ "through": null,
+ "strata": {
+  "hold": 194,
+  "decay": 243
+ },
+ "S3": {
+  "hoursBetweenStarts": {
+   "0.05": 7.133333333333334,
+   "0.25": 7.583333333333333,
+   "0.5": 8.083333333333334,
+   "0.75": 8.166666666666666,
+   "0.95": 8.316666666666666
+  },
+  "hoursBetweenCreations": {
+   "0.05": 7.178888888888889,
+   "0.25": 7.211944444444445,
+   "0.5": 8.109166666666667,
+   "0.75": 8.180555555555555,
+   "0.95": 8.232777777777779
+  },
+  "creationLagHours": {
+   "0.05": 0.07583333333333334,
+   "0.5": 0.14194444444444446,
+   "0.95": 0.8236111111111111
+  }
+ },
+ "S1": {
+  "positionRobustSigmaZOld": {
+   "R": {
+    "estimate": 1.793332556469979,
+    "lower": 0.4681662061420049,
+    "upper": 1.9483567122386118,
+    "resamples": 2000,
+    "seed": 20261010
+   },
+   "T": {
+    "estimate": 2.520074494023186,
+    "lower": 0.33963236511108247,
+    "upper": 2.6824456156488328,
+    "resamples": 2000,
+    "seed": 20261010
+   },
+   "N": {
+    "estimate": 1.306340463770551,
+    "lower": 0.9038247088297906,
+    "upper": 1.4698008215777376,
+    "resamples": 2000,
+    "seed": 20261010
+   }
+  },
+  "velocityRobustSigmaZOld": {
+   "R": {
+    "estimate": 2.5051275161835087,
+    "lower": 0.3347418520698888,
+    "upper": 2.690745180600343,
+    "resamples": 2000,
+    "seed": 20261010
+   },
+   "T": {
+    "estimate": 1.8287323877740094,
+    "lower": 0.5532431288507826,
+    "upper": 1.9984469247690815,
+    "resamples": 2000,
+    "seed": 20261010
+   },
+   "N": {
+    "estimate": 1.3686888342569388,
+    "lower": 0.8049116977669647,
+    "upper": 1.7292808870621281,
+    "resamples": 2000,
+    "seed": 20261010
+   }
+  },
+  "beyond3Sigma": {
+   "R": 0.2517162471395881,
+   "T": 0.39588100686498856,
+   "N": 0.043478260869565216
+  },
+  "medianRealisedOverStated3d": 2.4492134564364547,
+  "overstates": false,
+  "threshold": 0.5,
+  "byStratum": {
+   "decay": {
+    "pairs": 243,
+    "robustSigmaZTransverse": 1.2967873708239426,
+    "beyond3SigmaShareTransverse": 0.2674897119341564,
+    "medianRealisedOverStated3d": 1.1235099424203374,
+    "medianPosition3dM": 459.4438213196505,
+    "medianStated3dM": 391.32736807158284
+   },
+   "hold": {
+    "pairs": 194,
+    "robustSigmaZTransverse": 1.3660686553563062,
+    "beyond3SigmaShareTransverse": 0.5567010309278351,
+    "medianRealisedOverStated3d": 3.231582082392189,
+    "medianPosition3dM": 994.2255264092378,
+    "medianStated3dM": 325.71702755858166
+   }
+  }
+ },
+ "S2": {
+  "plannedRaisePairs": 62,
+  "plannedRaiseSatellites": 62,
+  "decayPairs": 243,
+  "medianMismatchOverPredicted": {
+   "estimate": -0.5712879546158798,
+   "lower": -0.723809836685064,
+   "upper": -0.015067116441399062,
+   "resamples": 1998,
+   "seed": 20261010
+  },
+  "robustSigmaMismatchJkg": {
+   "plannedRaise": 87.42679203639551,
+   "decay": 101.60123184732869,
+   "ratio": 0.86048948862911
+  },
+  "verdict": "under-executed"
+ },
+ "S4": {
+  "pairs": 17,
+  "medianLnRatioAB": -0.10556575600153432,
+  "robustSigmaLnRatio": 0.07756920538669632
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "arcs": 2738,
+ "doves": 36,
+ "solver": {
+  "nodeHours": 24,
+  "baseline": {
+   "kind": "randomWalk",
+   "stepSigma": 0.005
+  },
+  "smoothSigma": 0.05,
+  "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+ },
+ "sigmaArc": 0.10184736289062644,
+ "steps": {
+  "threshold": "|step| > 2.5 q sqrt(dt), q = 0.005",
+  "count": 1,
+  "perDoveDay": 0.0003652300949598247,
+  "meanPerDay": 0.010869565217391304,
+  "dispersionIndex": 0.9999999999999974,
+  "daysWithMoreThan3": 0,
+  "largest": [
+   {
+    "dove": "300b",
+    "day": "2025-10-30",
+    "step": -0.9132956095333271,
+    "lnFactor": -0.9132956095333271
+   }
+  ],
+  "sign": {
+   "up": 0,
+   "down": 1
+  }
+ },
+ "residualCorrelation": {
+  "pairs": 404,
+  "meanPairwise": 0.10657879165552209
+ },
+ "scatterByAltitude": [
+  {
+   "fromKm": 426.5771671151903,
+   "toKm": 463.0999098847089,
+   "robustSigma": 0.11130907348733672,
+   "statedMedian": 0.0822146489499674,
+   "n": 547
+  },
+  {
+   "fromKm": 463.16184104185425,
+   "toKm": 476.7313039633339,
+   "robustSigma": 0.10179420408860688,
+   "statedMedian": 0.10008688655183795,
+   "n": 548
+  },
+  {
+   "fromKm": 476.7563352053186,
+   "toKm": 497.141417005298,
+   "robustSigma": 0.09672778749145008,
+   "statedMedian": 0.12175835028366616,
+   "n": 547
+  },
+  {
+   "fromKm": 497.1746707451185,
+   "toKm": 506.4466408924951,
+   "robustSigma": 0.09398080303734009,
+   "statedMedian": 0.1573108239405723,
+   "n": 548
+  },
+  {
+   "fromKm": 506.46946653597666,
+   "toKm": 540.7891416867167,
+   "robustSigma": 0.11043755595998507,
+   "statedMedian": 0.17267449082188469,
+   "n": 548
+  }
+ ],
+ "statedVersusRealised": {
+  "statedMedianRelativeSigma": 0.12317426843158337,
+  "realisedRobustSigma": 0.10184736289062644
+ }
+}

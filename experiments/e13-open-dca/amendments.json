@@ -1,0 +1,44 @@
+{
+  "note": "Parameter values of the amendments in PLAN.md. config.json is frozen and never edited; common.mjs merges these overrides over it, in order. Each entry names the amendment whose text gives the reason and the evidence.",
+  "R1": {
+    "date": "2026-10-10",
+    "overrides": {
+      "analysis": {
+        "solver": {
+          "iterations": 60,
+          "tolerance": 1e-05,
+          "baselineStepSigmaCandidates": [
+            0.005,
+            0.01,
+            0.02,
+            0.04
+          ],
+          "scaleSweeps": 8,
+          "minimumNodeInfo": 1.5,
+          "nowcast": {
+            "latencyHours": 6,
+            "historyDays": 30
+          },
+          "h3BaselineDays": 21
+        }
+      }
+    }
+  },
+  "R2": {
+    "date": "2026-10-10",
+    "overrides": {
+      "analysis": {
+        "solver": {
+          "smoothSigmaCandidates": [
+            null,
+            0.1,
+            0.05,
+            0.03,
+            0.02
+          ],
+          "tieBand": 0.02
+        }
+      }
+    }
+  }
+}

@@ -67,7 +67,7 @@
    "reproduce": "no",
    "credit": "© ESA 2026 on the data and on analysed information derived from it; \"Data provided by the European Space Agency (ESA)\"; product DOIs: SW_SP3xCOM_2_ doi:10.57780/esa-8579355, SW_DNSxPOD_2_ doi:10.57780/esa-ef59315, GF_DNSxACC_2_ doi:10.57780/esa-2559fd1.",
    "reason": "Onward distribution is allowed only to recipients who have accepted ESA's terms, which an open repository or release asset cannot ensure; per-sample values copied from the files are still ESA EO data. Results (statistics, fitted coefficients) are analysed information: published, marked © ESA.",
-   "usedIn": "E3 (Swarm A, B, C truth), E5 (Swarm A, B, C and GRACE-FO densities; Swarm truth), E7 (Swarm truth), E8 (Swarm B, C and GRACE-FO densities; Swarm truth)",
+   "usedIn": "E3 (Swarm A, B, C truth), E5 (Swarm A, B, C and GRACE-FO densities; Swarm truth), E7 (Swarm truth), E8 (Swarm B, C and GRACE-FO densities; Swarm truth), E13 (Swarm A, B, C and GRACE-FO 1 densities, Swarm precise orbits: truth)",
    "reproducedAt": [
     "taken down 2026-10-10 (local copies kept, cited by swarm-diss URL and SHA-256 in the release notes and data/e3/MANIFEST.json): release e3-inputs-20261009: 54 SW_OPER_SP3*COM assets"
    ],
@@ -451,7 +451,7 @@
    "reproduce": "no",
    "credit": "The JB2008 solar and geomagnetic indices are provided for scientific use courtesy of Space Environment Technologies (https://spacewx.com/jb2008/).",
    "reason": "No current licence grants redistribution, and the code README reserves all rights. Results that use the indices are published with SET's acknowledgement; the files are cited by URL and SHA-256.",
-   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants), E8 (JB2008 drivers, D0, D2 and D5); the HPOP-against-Orekit JB2008 cases (modules)",
+   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants), E8 (JB2008 drivers, D0, D2 and D5), E13 (JB2008 drivers, D0 and D13); the HPOP-against-Orekit JB2008 cases (modules)",
    "reproducedAt": [
     "modules: propagator/hpop/tests/fixtures/orekit/jb2008-2026-06.json (indices as Orekit read them; committed before this audit)",
     "site (gh-pages): data/orekit/jb2008_indices-*.prw (labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)"
@@ -492,7 +492,7 @@
    "reproduce": "yes",
    "credit": "IERS EOP 20 C04 (IERS Earth Orientation Centre, Observatoire de Paris); finals2000A (IERS Rapid Service/Prediction Centre, U.S. Naval Observatory).",
    "reason": "USNO releases finals2000A for unlimited distribution; the IERS distributes C04 openly with no restriction.",
-   "usedIn": "V1, E1, E2, E2b, E3, E4, E5, E6, E7, E8, E10 (Earth orientation for every frame conversion)",
+   "usedIn": "V1, E1, E2, E2b, E3, E4, E5, E6, E7, E8, E10, E13 (Earth orientation for every frame conversion)",
    "reproducedAt": [
     "data/e1/finals2000A.all.gz, data/e1/eopc04.1962-now.gz",
     "results/e2/data/finals2000A.all.20261009T1144Z.gz",
@@ -602,7 +602,7 @@
    "reproduce": "non-commercial",
    "credit": "Kp, ap, Ap: GFZ Helmholtz Centre for Geosciences, CC BY 4.0 (Matzka et al. 2021, GFZ Data Services, doi:10.5880/Kp.0001; Space Weather, doi:10.1029/2020SW002641). Sunspot number: WDC-SILSO, Royal Observatory of Belgium, Brussels, doi:10.24414/qnza-ac80, CC BY-NC 4.0. F10.7: Dominion Radio Astrophysical Observatory and Natural Resources Canada.",
    "reason": "Reproduced unmodified, with its licence header, for the non-commercial purpose of checking the experiments. The sunspot column is CC BY-NC 4.0 and the F10.7 column rests on NRCan's non-commercial permission, so these copies must not be redistributed in a commercial product or service.",
-   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7), E8 (Kp regimes; Ap for the operational temperature driver)",
+   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7), E8 (Kp regimes; Ap for the operational temperature driver), E13 (NRLMSISE-00 drivers of the Starlink pair fits)",
    "reproducedAt": [
     "data/e5/gfz-kp/Kp_ap_Ap_SN_F107_since_1932.txt.gz",
     "data/e7/Kp_ap_Ap_SN_F107_since_1932.txt.gz"
@@ -658,7 +658,7 @@
    "reproduce": "yes",
    "credit": "JPL planetary ephemeris DE440 (Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021), AJ 161:105, doi:10.3847/1538-3881/abd414), via NASA/JPL NAIF; year excerpts made by DigitalArsenal with NAIF's spksub_c.",
    "reason": "NAIF permits redistributing unmodified kernels; the excerpts carry their modifier's name as the rule requires.",
-   "usedIn": "V1, E2, E3, E5, E6, E7, E8, E10 (Sun and Moon for HPOP)",
+   "usedIn": "V1, E2, E3, E5, E6, E7, E8, E10, E13 (Sun and Moon for HPOP)",
    "reproducedAt": [
     "release gnss-truth-20261009: de440s.bsp (unmodified)",
     "data/e10/de440-2018.bsp, data/e10/de440-2024.bsp (excerpts)",
@@ -690,7 +690,7 @@
    "reproduce": "yes",
    "credit": "EGM2008: NGA (Pavlis et al. 2012, JGR 117, B04406, doi:10.1029/2011JB008916). EGM96: NASA GSFC and NIMA (Lemoine et al. 1998, NASA/TP-1998-206861).",
    "reason": "Published by U.S. federal agencies without restriction; the model papers are cited.",
-   "usedIn": "V1, E2, E3, E5, E6, E7, E10 (HPOP gravity field, degree and order up to 70)",
+   "usedIn": "V1, E2, E3, E5, E6, E7, E10, E13 (HPOP gravity field, degree and order up to 70)",
    "reproducedAt": [
     "site (gh-pages): modules/propagator/hpop/module.wasm (coefficients compiled in)",
     "modules: propagator/hpop/lib/egm2008_data.h and egm96_data.h (degree and order 70)"
@@ -1351,7 +1351,7 @@
    "reproducedAt": [
     "modules: third_party/nrlmsise00/"
    ],
-   "usedIn": "space-data-network-modules tests only",
+   "usedIn": "space-data-network-modules tests; E13 (the Starlink head fits and pair fits)",
    "notice": null,
    "obtain": null
   },
@@ -1464,7 +1464,7 @@
    "reproduce": "yes",
    "credit": "SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/ (SpaceX).",
    "reason": "Owner's determination of 2026-10-10 (SpaceX's terms page could not be fetched): reproducible with attribution to SpaceX.",
-   "usedIn": "E4 (Starlink: 298 object-files scored, with covariance)",
+   "usedIn": "E4 (Starlink: 298 object-files scored, with covariance), E13 (Starlink: the files of 324 sampled satellites read in memory; only derived fits and pair mismatches are stored)",
    "reproducedAt": [
     "modules: analysis/od/tests/data/supgp-reference/starlink-live-20260714/meme/ (10 full files, 20.4 MB), analysis/od/tests/data/supgp-reference/starlink/meme/ (10 trimmed), analysis/od/src/cpp/tests/data/test_meme.txt, analysis/od/tests/fixtures/request.fit.meme, data-source/spacex-starlink-source/test/fixtures/meme/ (excerpts) and manifest copies (committed before this audit)"
    ],
@@ -1571,7 +1571,7 @@
    "reproduce": "non-commercial",
    "credit": "Planet Labs PBC orbital ephemerides, https://ephemerides.planet-labs.com/, © Planet Labs PBC, CC BY-NC 4.0.",
    "reason": "Shared here unmodified for the non-commercial purpose of checking E4; not for commercial products or services.",
-   "usedIn": "E4 (Planet: 1,233 states of 89 objects)",
+   "usedIn": "E4 (Planet: 1,233 states of 89 objects), E13 (Planet: the daily states of the Doves of the Planet sample, October 2025 to July 2026; derived arcs only)",
    "reproducedAt": [
     "data/e4/planet/ (28 files)"
    ],

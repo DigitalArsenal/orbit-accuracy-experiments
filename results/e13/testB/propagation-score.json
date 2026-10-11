@@ -1,0 +1,318 @@
+{
+ "split": "testB",
+ "runs": [
+  {
+   "run": "e13-open-dca-35-propagation-testB-swarm-0of2-20261011T083314Z",
+   "split": "testB",
+   "target": "swarm",
+   "shard": "0/2",
+   "variants": [
+    "D0",
+    "D13",
+    "D13-def"
+   ],
+   "solver": {
+    "nodeHours": 24,
+    "baseline": {
+     "kind": "randomWalk",
+     "stepSigma": 0.005
+    },
+    "smoothSigma": 0.05,
+    "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+   },
+   "tauHours": 48,
+   "finished": "2026-10-11T09:21:01.041Z"
+  },
+  {
+   "run": "e13-open-dca-35-propagation-testB-swarm-1of2-20261011T083314Z",
+   "split": "testB",
+   "target": "swarm",
+   "shard": "1/2",
+   "variants": [
+    "D0",
+    "D13",
+    "D13-def"
+   ],
+   "solver": {
+    "nodeHours": 24,
+    "baseline": {
+     "kind": "randomWalk",
+     "stepSigma": 0.005
+    },
+    "smoothSigma": 0.05,
+    "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+   },
+   "tauHours": 48,
+   "finished": "2026-10-11T09:20:49.180Z"
+  },
+  {
+   "run": "e13-open-dca-35-propagation-testB-doves-0of2-20261011T092101Z",
+   "split": "testB",
+   "target": "doves",
+   "shard": "0/2",
+   "variants": [
+    "D0",
+    "D13"
+   ],
+   "solver": {
+    "nodeHours": 24,
+    "baseline": {
+     "kind": "randomWalk",
+     "stepSigma": 0.005
+    },
+    "smoothSigma": 0.05,
+    "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+   },
+   "tauHours": 48,
+   "finished": "2026-10-11T10:35:48.401Z"
+  },
+  {
+   "run": "e13-open-dca-35-propagation-testB-doves-1of2-20261011T092101Z",
+   "split": "testB",
+   "target": "doves",
+   "shard": "1/2",
+   "variants": [
+    "D0",
+    "D13"
+   ],
+   "solver": {
+    "nodeHours": 24,
+    "baseline": {
+     "kind": "randomWalk",
+     "stepSigma": 0.005
+    },
+    "smoothSigma": 0.05,
+    "label": "24 h nodes, random walk q 0.005, smoothing 0.05"
+   },
+   "tauHours": 48,
+   "finished": "2026-10-11T10:35:39.025Z"
+  }
+ ],
+ "rowsFiles": [
+  "testB-swarm-0of2.jsonl",
+  "testB-swarm-1of2.jsonl",
+  "testB-doves-0of2.jsonl",
+  "testB-doves-1of2.jsonl"
+ ],
+ "rows": 1471,
+ "errors": 11,
+ "targets": {
+  "swarm": {
+   "hypothesis": "H4",
+   "objects": [
+    "Swarm A",
+    "Swarm C",
+    "Swarm B"
+   ],
+   "errorRows": [
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-22T00:00:00.000Z",
+     "variant": "D0",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-22T00:00:00.000Z",
+     "variant": "D13",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-22T00:00:00.000Z",
+     "variant": "D13-def",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-30T00:00:00.000Z",
+     "variant": "D0",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-30T00:00:00.000Z",
+     "variant": "D13",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-30T00:00:00.000Z",
+     "variant": "D13-def",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-24T00:00:00.000Z",
+     "variant": "D0",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-24T00:00:00.000Z",
+     "variant": "D13",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "Swarm A",
+     "issue": "2026-07-24T00:00:00.000Z",
+     "variant": "D13-def",
+     "error": "non-positive Cd*A/m"
+    }
+   ],
+   "horizons": {
+    "1": {
+     "D13": {
+      "pairs": 180,
+      "estimate": 1.0139206438416737,
+      "lower": 0.945867438102179,
+      "upper": 1.093740625011174,
+      "resamples": 2000,
+      "seed": 20261010,
+      "p": 0.6711644177911045,
+      "medianErrorM": {
+       "D13": 145.6971582757861,
+       "D0": 153.8617780072962
+      },
+      "shareImproved": 0.4722222222222222,
+      "supported": false
+     },
+     "D13-def": {
+      "pairs": 180,
+      "estimate": 1.0003163650632605,
+      "lower": 0.8487695110047773,
+      "upper": 1.1942243492854099,
+      "resamples": 2000,
+      "seed": 20261010,
+      "p": 0.5397301349325337,
+      "medianErrorM": {
+       "D13-def": 174.13237312976318,
+       "D0": 153.8617780072962
+      },
+      "shareImproved": 0.49444444444444446,
+      "supported": false
+     }
+    },
+    "3": {
+     "D13": {
+      "pairs": 180,
+      "estimate": 0.9993694446465292,
+      "lower": 0.8913648270717622,
+      "upper": 1.1491015852958026,
+      "resamples": 2000,
+      "seed": 20261010,
+      "p": 0.48825587206396803,
+      "medianErrorM": {
+       "D13": 1093.9007725995357,
+       "D0": 1215.1154784800076
+      },
+      "shareImproved": 0.5,
+      "supported": false
+     },
+     "D13-def": {
+      "pairs": 180,
+      "estimate": 0.8294864957875437,
+      "lower": 0.7086017392862944,
+      "upper": 1.0472538463729173,
+      "resamples": 2000,
+      "seed": 20261010,
+      "p": 0.2368815592203898,
+      "medianErrorM": {
+       "D13-def": 1090.601924240862,
+       "D0": 1215.1154784800076
+      },
+      "shareImproved": 0.5444444444444444,
+      "supported": false
+     }
+    }
+   }
+  },
+  "doves": {
+   "hypothesis": "H5",
+   "objects": [
+    "24e5",
+    "2500",
+    "2504",
+    "250b",
+    "2514",
+    "2527",
+    "2528",
+    "252e",
+    "2531",
+    "253d",
+    "256e",
+    "257a"
+   ],
+   "errorRows": [
+    {
+     "id": "24e5",
+     "issue": "2026-06-26T20:45:56.184Z",
+     "variant": "D0",
+     "error": "non-positive Cd*A/m"
+    },
+    {
+     "id": "24e5",
+     "issue": "2026-06-26T20:45:56.184Z",
+     "variant": "D13",
+     "error": "non-positive Cd*A/m"
+    }
+   ],
+   "horizons": {
+    "1": {
+     "D13": {
+      "pairs": 460,
+      "estimate": 1.0039737697353277,
+      "lower": 0.9875839925751513,
+      "upper": 1.0200715379503416,
+      "resamples": 2000,
+      "seed": 20261010,
+      "p": 0.6206896551724138,
+      "medianErrorM": {
+       "D13": 946.7578500945921,
+       "D0": 932.5954036386382
+      },
+      "shareImproved": 0.4826086956521739,
+      "supported": false
+     },
+     "D13-def": {
+      "pairs": 0
+     }
+    },
+    "3": {
+     "D13": {
+      "pairs": 432,
+      "estimate": 1.0065624226658452,
+      "lower": 0.9718256344433985,
+      "upper": 1.0590253707999773,
+      "resamples": 2000,
+      "seed": 20261010,
+      "p": 0.5862068965517241,
+      "medianErrorM": {
+       "D13": 5084.762672502218,
+       "D0": 4929.805345565918
+      },
+      "shareImproved": 0.4861111111111111,
+      "supported": false
+     },
+     "D13-def": {
+      "pairs": 0
+     }
+    }
+   }
+  }
+ },
+ "holmPartial": [
+  {
+   "id": "H5",
+   "p": 0.6206896551724138,
+   "threshold": 0.025,
+   "reject": false
+  },
+  {
+   "id": "H4",
+   "p": 0.6711644177911045,
+   "threshold": 0.05,
+   "reject": false
+  }
+ ]
+}

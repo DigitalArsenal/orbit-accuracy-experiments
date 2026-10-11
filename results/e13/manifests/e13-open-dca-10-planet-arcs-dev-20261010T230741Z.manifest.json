@@ -1,0 +1,260 @@
+{
+ "run": "e13-open-dca-10-planet-arcs-dev-20261010T230741Z",
+ "experiment": "e13-open-dca",
+ "step": "10-planet-arcs-dev",
+ "command": [
+  "node",
+  "experiments/e13-open-dca/steps/11-arcs-provenance.mjs",
+  "--split",
+  "dev",
+  "--started-from",
+  "4221f03"
+ ],
+ "args": {
+  "split": "dev",
+  "started-from": "4221f03"
+ },
+ "started": "2026-10-10T23:07:41.543Z",
+ "finished": "2026-10-10T23:07:41.905Z",
+ "config": {
+  "path": "experiments/e13-open-dca/config.json",
+  "sha256": "c8e712f00f726bd0027c790dea61f6e00b61d4b68e9c26d122bc7881d11f92fa",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "3e4d33dbeb4b42e9491a765ef6f1e47addb88eae",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "d1d8ca88f7908eac43e80d15536c9804879f0a26",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "propagator/hpop",
+   "pluginId": "com.orbpro.hpop",
+   "version": "1.2.0",
+   "wasmSha256": "1b1df5e38c7060f2a06aec59e470c9db3144efc837e64ced8a2405dbd17a94d1",
+   "manifestSha256": "a19628eb15d6f482ffd76600912f3026385d14865bed52b1bbfe6a5f6e5a5ee0"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "foundation/time",
+   "pluginId": "com.digitalarsenal.foundation.time",
+   "version": "0.1.0",
+   "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+   "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0"
+  },
+  {
+   "path": "data-source/eop-parser",
+   "pluginId": "com.digitalarsenal.data-source.eop-parser",
+   "version": "0.1.0",
+   "wasmSha256": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "manifestSha256": "2818cc70258113b217eff5863b42198dae1562d86b8b3602f703d63a406985f5"
+  },
+  {
+   "path": "analysis/density-calibration",
+   "pluginId": "com.digitalarsenal.analysis.density-calibration",
+   "version": "0.3.0",
+   "wasmSha256": "b9d1bba3d83f903e350b133f28b2f00e543320f0f8e9c08a0d6d0d89bef22f84",
+   "manifestSha256": "5ca894fe948ffba1f4296996cb5a67c50c4aaebc6fb0bb4f462d6dc6798d39cc",
+   "checkout": "/Users/tj/software/worktrees/space-data-network-modules--e13-energy-20261010",
+   "checkoutState": {
+    "commit": "efd6a9c6742f04715db939c998cea2326938dcb8",
+    "dirty": false
+   }
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   12.36083984375,
+   19.30810546875,
+   23.685546875
+  ]
+ },
+ "inputs": {
+  "amendments": {
+   "amendments.json": "af33fd242b07ce4bbae7ab71223ebc09f4e36a343d5605bec7e66b07b12ea9a1"
+  },
+  "planet": {
+   "planet_20251001.states": "db4ca904b8c1dec0d7587c4005b7f928dad296dff4f3b4d4fe260fac18e1e9a6",
+   "planet_20251002.states": "9e967c650839841f9f284baca8aedb877a1a8387cd876e26fd6855870cb4d3f1",
+   "planet_20251003.states": "bacbd1bb6feb02f7f04a3a02a28947aba07ff1b2821227192ef4c3062f42e550",
+   "planet_20251004.states": "9c4f656c57b29c5d1be12335df29edaa138d19029c326e6c43f61fd886f24161",
+   "planet_20251005.states": "0c6ace4e13576ae21fd64ac0c8d0f8a1fd6433a40eddb31dfa2667cd30fe8339",
+   "planet_20251006.states": "6d25c0d262d22935620d456631922cdafb4e65215e1ac949667e7f4309d41806",
+   "planet_20251007.states": "0df33b65cc1f31c992f964c741c12bbb34ad9c63a7cb2f7a68f894943cc6deb4",
+   "planet_20251008.states": "7388f650c4bc9e3f81c61cd98f4f0e6ff3e37548722716127455033b277f0306",
+   "planet_20251009.states": "2dcf08d65d137c64e4d221b043c55da1f6d65c0cf6e1eef8673e1c5e672f47b8",
+   "planet_20251010.states": "fe27e0a23ef1c14197afe74f948d455d5ec32b216ddb2ae10d2f828509431fbf",
+   "planet_20251011.states": "e90ac04ca5bca30458f4e44a2b8aa1026268cbf099d22c0d396eebfe2d6947a0",
+   "planet_20251012.states": "53ea6e938892f95b5f36ce57ffe4b147e290e6e619ea6d96ad5edbe515e8be7c",
+   "planet_20251013.states": "0ed109cbfdd0ca438493704779c913e66abb0096b8d72034f346e3bbbea423cb",
+   "planet_20251014.states": "58338210818d4aa91af1a3988fc6107b94a4c3b7230e1c51e96c4b657f300bff",
+   "planet_20251015.states": "3a7799f4de13c899960561ac1e449fac1f5e45d37f30c3b370cefcafeddf76e5",
+   "planet_20251016.states": "4a5e0a1a5e8e73971b3c03487ff2e365a196e9f5b2ae4e0208b27f9ded71565b",
+   "planet_20251017.states": "fd06316db859299a82ba09bfedf50d96b44560f30d2dc322f6ffe9715477d949",
+   "planet_20251018.states": "cc24596d84f1ced7d58a0e9d6300c119a2471c04a016c523abb6b77192de0d03",
+   "planet_20251019.states": "852de2f99f433ae52aef6e68c0d3c77858de952e7c16d8ef9924c7b1eed979dc",
+   "planet_20251020.states": "09efe4ead5b22b4855c2e7d2bc397f1a97d4c56414830e3a17000620806e28ba",
+   "planet_20251021.states": "f74c15b11ef0d0b9662df6fc05ff787fafb08a18d5dd67d77e5899de97faadfb",
+   "planet_20251022.states": "82caab5992fdfaeb2143776e7008120ce1f0f9729fe25815baf0f9073bb4e226",
+   "planet_20251023.states": "590723ea23da9f6e99d22ea465693468b1945c4ad37bd9f3c6b57dfb4b90b02c",
+   "planet_20251024.states": "3dce8d9fa2dd0f6ea64da9de928f9ebacf9519a707f10ce858a5e45293950d44",
+   "planet_20251025.states": "9198b6a3fb7eec9b32187dcf08c7216976f4e522c8a804a4cff90b3f33566878",
+   "planet_20251026.states": "87730094f63723130f90fc4dcc481019e1090851d43121201d808e6335abdd26",
+   "planet_20251027.states": "fd9abde17da7dccfeaa1ebffce4d4e6df47642fde74ec02c1e55d50973cdc119",
+   "planet_20251028.states": "f342a48abc0adf29aa3a2a4b2b744f07259d1651fc7110402b700bc8d442f4ce",
+   "planet_20251029.states": "97098c228325010742e7745ff711b54dfd03c12cb5dcd2a0d79459b46f7cf05f",
+   "planet_20251030.states": "e432e3b11577871ecec19f13bf20b771edee0fe2dbad85799bbeb8019f340ca9",
+   "planet_20251031.states": "d881d8719c36242f468382c7e4d0d16dc80197b203866ebdd01a65e245fa8f54",
+   "planet_20251101.states": "d4692814fdec23b70a22a2738cfcb3da410394224f46e3eaa815654fb2b8bec2",
+   "planet_20251102.states": "f2e259e9a37f59b88f13b6dc9135d5511e8785a56f101771597a584fd3e29817",
+   "planet_20251103.states": "259d7b0b5d662ab74b8e0d8a5712428e5170fc6f9d9ee070a3e40894e835c632",
+   "planet_20251104.states": "4b7b67c123affd354b35c6b3f29bb36661d8f987ffa54932ecebcd6fb0ffe51a",
+   "planet_20251105.states": "f91beffa99b4b6e901fc8623bddab213dbb9beb3984c1c5f77d27bcaed4f5dba",
+   "planet_20251106.states": "92d6a8655140eec6ed2d6cbf8fae9d4012efc985eb12fe3233875f63a94f680b",
+   "planet_20251107.states": "e69b47bd99e5c217ba092d269a6161ccdd5d37ad0451172836eed842f0e6452f",
+   "planet_20251108.states": "52318c9d4144bf50d24ba72ac7502c90f462d9860cb3a447e3078dabc41ca37f",
+   "planet_20251109.states": "397934e319513b767fc13263e3570d2af09a7676c9385ceb069fa49024347ceb",
+   "planet_20251110.states": "6b8232919920c0210d58418dadc0f7d712d2e7e26a8c8b36fad9e57f0d220808",
+   "planet_20251111.states": "97684af5149821fe899310b55e6f7b96229fe0669ba75477098600b4ffbbbdbc",
+   "planet_20251112.states": "7514eeb7fed7b00aa6df046b107dfca7c7543a0eab3230ed03281afa1e966e0a",
+   "planet_20251113.states": "3dbd853ddd15c1fb0fce90d2e5b16a8c428c681bea6e4c9b70cfd5563bbb54e3",
+   "planet_20251114.states": "44be616294f93d8f31251b26e46a3e5c918763396180de882c6bd9f4128305d9",
+   "planet_20251115.states": "2f7a633f8ae1ac2f1bf0aa43f801df8eff36fc743458f49da9a06771d8c55525",
+   "planet_20251116.states": "3ed73f491f1a106666681a5c0814d1c95a6746b22c973f3b62a12d337b4ce082",
+   "planet_20251117.states": "6b5d0540cc2780eb0be8857f9d2d37710d6c9cdd3975c3b9793d6678731e4e3b",
+   "planet_20251118.states": "7e0f62e992c687df7ad4d2d3f913d438824717e9cdbe283ad673d1794f3b20b6",
+   "planet_20251119.states": "0ec414896fd7068c6a71add52431ff265b43f43756497efcd14fa0d950fbc3f4",
+   "planet_20251120.states": "cc1b65b08560294a5263e595e3b14ff2dc2687582e06bcf72a10cd45ea9cfbbd",
+   "planet_20251121.states": "b2a45f9eba2ef53a88f29518c0c539e8c5f7e8cd37d4bd0a9ee807f9a20da900",
+   "planet_20251122.states": "b6751311bae1cdba57d3751bcc04de844d7786fed51c8b7d7513b5ed0c48e0aa",
+   "planet_20251123.states": "3f596653a1a0550a61e5e206d9a65a7f8fb91d33fd474bdb84d69bc866c4bf41",
+   "planet_20251124.states": "c051dc960d1705ed987374b32b73e5affdc0dc8baaa6f69a149c1093c964606b",
+   "planet_20251125.states": "c49fc8932f6b43b6e8d3fef42741f7610144d87391b765778f8f73e21009caa4",
+   "planet_20251126.states": "1aa6b3dbc34becbd067b6b2b1e1e7ea2598feec9929e6f581570b9a795df35ad",
+   "planet_20251127.states": "3c460afd864730c2c93dd8ca7333d796cc504d0063b00a0b7cea1984da19d888",
+   "planet_20251128.states": "42112ee23f550450b19e5e0d9e8c99d4882f832fee73052d14e8ba7c3b9870fc",
+   "planet_20251129.states": "78909e3c6b512d281455a473309b9e4404281254a04fc8a9037712d9d48762e7",
+   "planet_20251130.states": "c8054e89c3179734309d5cc06e64d13200f9e32ff953b58f3468e0c7c1d3a1b6",
+   "planet_20251201.states": "94bb9cd8acb1c0401d3e8b02b0e29866e64f6e536f0650e76882b2af98bfde03",
+   "planet_20251202.states": "622aa4ea5583c5b1c70e8b3a256a666465c866915abb3af9b84bf1e8c856b4fb",
+   "planet_20251203.states": "b49ea5b1b3487e53ecce39885821f742bab1f1f75fd18f396f69ffefc472da6a",
+   "planet_20251204.states": "a518cf434897a12176205d341231f5ec0f21de131c961599eb80e21066cad9f2",
+   "planet_20251205.states": "6f9b8b09c507e0261480d72e586ecd5459ad390d046aed02512f28912ec2ced5",
+   "planet_20251206.states": "73a7b6ba2b4e348409cb0242c45df6eb3e4c671f128b615992e1c2f9bdb2ea9d",
+   "planet_20251207.states": "cf1c7b366c8b4bfb2440233b7e0bd97c983517e74d36c6859f0be3f15bfeda0a",
+   "planet_20251208.states": "58bfa8171b5f520543988f757587b108927aa23a9a8f7eda42753d01c9198ea3",
+   "planet_20251209.states": "449b463585343cc8b2b4a236485464247c4207a94094e18c0cd5c99cc08eba8f",
+   "planet_20251210.states": "50240f7703fa1eae68a8634de476d5d8edcdb1f1366cad75483bbadb31e0b006",
+   "planet_20251211.states": "d99647859fc9e7d6656b8cd0f7e94f8b5483ff2dda29bf66e3440fdd0bd4ce87",
+   "planet_20251212.states": "65bcf8506848bcd2a8098de45203ee5a06c1350fceb8fc88ebdb07bd77f4f05f",
+   "planet_20251213.states": "a2f0bab952d7105b13f0146a77422a79e1a90b47bb7ce8cfd0a5861978d75466",
+   "planet_20251214.states": "ba2307347e58fa0389490c87db0aaf31423c6119d34b9d8ca38ca2341c467b2d",
+   "planet_20251215.states": "267a7bb939ddd30cb732c0a2496b4e128e305c929bb757f22718f33b366c3d5d",
+   "planet_20251216.states": "9ff9ca4fcb91919569b9ec675886591b4047986b608bcd3f9b10bf169c7c68b1",
+   "planet_20251217.states": "5b5b17eda75ffb11ee6b98d892c995f2c54ba29c0fcc3e5359f226580b834a24",
+   "planet_20251218.states": "589ecfc410ebc307559a1857a701eaabfa0568fca815edb88f09a03376a8aa05",
+   "planet_20251219.states": "f33885b58d4ec28e73b4755673769468d0b7cbd88cb48cc3fb4c58583a43d5db",
+   "planet_20251220.states": "f4a2794e5d2838b6e5d5233ccf1d6471a865e86a4c5bda6b742f53d011052bd6",
+   "planet_20251221.states": "c57cecf71ffa9108e0193c55a24a9fa1f445c83afe04c6bfe6693188479ab900",
+   "planet_20251222.states": "42c1cde8752b4f9f6e7a740f6436f0986ddee008d7f0f6a0c35a8264127ea12c",
+   "planet_20251223.states": "e64f08406f4af1f002074585a103a70a094451f28b263a90d8398e503feb3333",
+   "planet_20251224.states": "901174967d3b8506ad5565acc51a473f473d3b1e5e8ac8c3509d9cf5e67a3130",
+   "planet_20251225.states": "01612c197fe85ce4989ba7a0b0e25da83d4e3709dfe76593a3e6163f8cdb8812",
+   "planet_20251226.states": "b863f848c8e19bdd48e897a1e8c9ac07bedc00ed8104d866f6c7c5fa817d0c5f",
+   "planet_20251227.states": "adba75909b9b639593d5760992f1c5d09e474f6da812b3a7a412d88093c44880",
+   "planet_20251228.states": "f6fa7ec90f985d0d03d025cc5c952ea3c824f14b1ebdf4d263b9153bac8dc89e",
+   "planet_20251229.states": "943445130bc3890c451adac426aac781578f5a4229cdbdbaa07cfc515668ca4d",
+   "planet_20251230.states": "ebd6decf541b318a7ac2068fdd7e1e4ccc65b1d8c49b39a3340cf572fc1ae468",
+   "planet_20251231.states": "5add10dba102f0624a5e0d8536ca2775dd1340a3cff2af80389a1f58222a2d71",
+   "planet_20260101.states": "ff7ea92526e55e04de15f8f6fad6ed251117f3dc27f62e38dc9e44940b048a56",
+   "planet_20260102.states": "8d425b50840ba3a21d8f57686e98d0ae93763a5d88413570f4b73581583397e9",
+   "planet_20260103.states": "430eb98041d96d05457b6703ed7380c7f02b8d077b50912575b5c7889bcb7324"
+  },
+  "set": {
+   "solfsmy": "ced35709d58d57394f2f1bfde5cb3c6dc2ec2c8baf16f1f839f135f3c03f15cc",
+   "dtcfile": "f6485450c363e9be8e71c37e143ac768462deca77565b727ec2e96c025ab8d91"
+  },
+  "eop": {
+   "eopc04.1962-now": "a14854ff3fa974a6783b31ed0d6642c9d477647547949e2794308cb46dfeb2b3"
+  },
+  "kernel": {
+   "de440s.bsp": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+  },
+  "code": {
+   "arcs.mjs": "942510a8b2e7e4bc88d5e82bf3a38b605df8e789866c13ab840e01c5476292f0",
+   "planet-history.mjs": "8ff34a7eb06c82e932cad45cc9a791d9e9aaf443b8f11e97d6376ccdfda2bc43",
+   "steps/10-planet-arcs.mjs": "f752ab1d5b8b9e4633091bc98c98f318dbb6a18d34cf9a9fe154b1f5274db574",
+   "vendor/frames.mjs": "bc4ad75868d6e915ce83ac1b2c6128012502f86f7cfd552017dfdcdffbd4d529",
+   "vendor/full-force.mjs": "f98e94f0d9c4ad7bd4490c6f642256c73b8421468ac821f11a5c87bcf26c9f98",
+   "common.mjs": "61c0db84872fcbeae6dd93b2f347a673b773e376b54634855db797a977a4218b"
+  },
+  "planet-arcs": {
+   "dev-g24lean.jsonl": "c2cad2c41c71ca0c926621a1c29dc19308a412990554006d8034e837a0816f2c"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T23:07:41.543Z",
+   "args": {
+    "split": "dev",
+    "started-from": "4221f03"
+   }
+  }
+ ],
+ "split": "dev",
+ "span": [
+  "2025-10-01",
+  "2025-12-31"
+ ],
+ "profile": "g24lean",
+ "arcs": 3840,
+ "errors": 0,
+ "nonPositive": 153,
+ "firstArcUtc": "2025-10-01T20:45:37.000Z",
+ "lastArcUtc": "2026-01-01T22:46:01.000Z",
+ "doves": 48,
+ "startedFromCommit": "4221f03",
+ "code": {
+  "arcs.mjs": {
+   "atStartCommit": "2a04e2e9dadefe5e3e66d157b4d97db932dd877cd260778b6afedad34041058d",
+   "now": "942510a8b2e7e4bc88d5e82bf3a38b605df8e789866c13ab840e01c5476292f0"
+  },
+  "planet-history.mjs": {
+   "atStartCommit": "8ff34a7eb06c82e932cad45cc9a791d9e9aaf443b8f11e97d6376ccdfda2bc43",
+   "now": "8ff34a7eb06c82e932cad45cc9a791d9e9aaf443b8f11e97d6376ccdfda2bc43"
+  },
+  "steps/10-planet-arcs.mjs": {
+   "atStartCommit": "f752ab1d5b8b9e4633091bc98c98f318dbb6a18d34cf9a9fe154b1f5274db574",
+   "now": "f752ab1d5b8b9e4633091bc98c98f318dbb6a18d34cf9a9fe154b1f5274db574"
+  },
+  "vendor/frames.mjs": {
+   "atStartCommit": "bc4ad75868d6e915ce83ac1b2c6128012502f86f7cfd552017dfdcdffbd4d529",
+   "now": "bc4ad75868d6e915ce83ac1b2c6128012502f86f7cfd552017dfdcdffbd4d529"
+  },
+  "vendor/full-force.mjs": {
+   "atStartCommit": "f98e94f0d9c4ad7bd4490c6f642256c73b8421468ac821f11a5c87bcf26c9f98",
+   "now": "f98e94f0d9c4ad7bd4490c6f642256c73b8421468ac821f11a5c87bcf26c9f98"
+  },
+  "common.mjs": {
+   "atStartCommit": "68f309865788395d6dd170d68d4442b141835aa1e7defe3eb7b42c11388ecc8c",
+   "now": "61c0db84872fcbeae6dd93b2f347a673b773e376b54634855db797a977a4218b"
+  }
+ }
+}

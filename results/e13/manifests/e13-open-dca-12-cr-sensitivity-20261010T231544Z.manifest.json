@@ -1,0 +1,65 @@
+{
+ "run": "e13-open-dca-12-cr-sensitivity-20261010T231544Z",
+ "experiment": "e13-open-dca",
+ "step": "12-cr-sensitivity",
+ "command": [
+  "node",
+  "experiments/e13-open-dca/steps/12-cr-sensitivity.mjs",
+  "--count",
+  "20"
+ ],
+ "args": {
+  "count": "20"
+ },
+ "started": "2026-10-10T23:15:44.284Z",
+ "finished": "2026-10-10T23:18:07.925Z",
+ "config": {
+  "path": "experiments/e13-open-dca/config.json",
+  "sha256": "c8e712f00f726bd0027c790dea61f6e00b61d4b68e9c26d122bc7881d11f92fa",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "3e4d33dbeb4b42e9491a765ef6f1e47addb88eae",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "d1d8ca88f7908eac43e80d15536c9804879f0a26",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   7.994140625,
+   10.66357421875,
+   17.12158203125
+  ]
+ },
+ "inputs": {
+  "amendments": {
+   "amendments.json": "af33fd242b07ce4bbae7ab71223ebc09f4e36a343d5605bec7e66b07b12ea9a1"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-10T23:15:44.284Z",
+   "args": {
+    "count": "20"
+   }
+  }
+ ],
+ "arcs": 20,
+ "medianAbsLnChangeLow": 0.00024103056368201365,
+ "maxAbsLnChangeLow": 0.000999479495880604,
+ "medianAbsLnChangeHigh": 0.00024155794832525957,
+ "maxAbsLnChangeHigh": 0.0009980678714280383,
+ "meanLnChangeHigh": 0.00021363506248854732,
+ "maxAbsReproduction": 1.9560344292189824e-7
+}
