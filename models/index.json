@@ -1,7 +1,7 @@
 [
   {
     "paper": "evidence-supported-aso-catalog",
-    "section_id": "2-evidence-model-and-records",
+    "section_id": "2-evidence-model",
     "title": "A solution from observations, with its covariance",
     "url": "models/evidence-supported-aso-catalog/2-evidence-model-and-records.html"
   },
@@ -73,19 +73,13 @@
   },
   {
     "paper": "evidence-supported-aso-catalog",
-    "section_id": "10-publication-and-reproduction",
-    "title": "A V1 seed, reproduced here",
-    "url": "models/evidence-supported-aso-catalog/10-publication-and-reproduction.html"
-  },
-  {
-    "paper": "evidence-supported-aso-catalog",
-    "section_id": "11-measured-accuracy",
+    "section_id": "10-measured-accuracy",
     "title": "Measured accuracy, by object class and age",
     "url": "models/evidence-supported-aso-catalog/11-measured-accuracy.html"
   },
   {
     "paper": "evidence-supported-aso-catalog",
-    "section_id": "12-what-conjunction-assessment-consumes",
+    "section_id": "11-what-conjunction-assessment-consumes",
     "title": "A conjunction from fitted covariances",
     "url": "models/evidence-supported-aso-catalog/12-what-conjunction-assessment-consumes.html"
   },
@@ -100,6 +94,12 @@
     "section_id": "self-bounded-motion",
     "title": "The bound each sample carries",
     "url": "models/fast-conjunction-assessment/self-bounded-motion.html"
+  },
+  {
+    "paper": "fast-conjunction-assessment",
+    "section_id": "spatial-grid",
+    "title": "The grid proposes the candidate pairs",
+    "url": "models/fast-conjunction-assessment/spatial-grid.html"
   },
   {
     "paper": "fast-conjunction-assessment",
@@ -122,7 +122,7 @@
   {
     "paper": "fast-conjunction-assessment",
     "section_id": "covariance-probability-on-screened-events",
-    "title": "Probability and dilution",
+    "title": "A screened pair at TCA, with its covariances",
     "url": "models/fast-conjunction-assessment/covariance-probability-on-screened-events.html"
   },
   {
@@ -130,6 +130,12 @@
     "section_id": "propagated-and-fitted-covariance",
     "title": "EKF and UKF: covariance through the pass",
     "url": "models/fast-conjunction-assessment/propagated-and-fitted-covariance.html"
+  },
+  {
+    "paper": "provenance-and-security",
+    "section_id": "3-publication-and-reproduction",
+    "title": "A V1 seed, reproduced here",
+    "url": "models/evidence-supported-aso-catalog/10-publication-and-reproduction.html"
   },
   {
     "paper": "adversarial-security",
