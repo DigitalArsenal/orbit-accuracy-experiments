@@ -3,9 +3,10 @@
 // nodes every 6 h, a random-walk baseline per satellite, a robust scale per fleet (solveCommonMode's `group`). No density truth exists for these dates (Swarm and GRACE-FO
 // densities of 2026-10-09 on arrive 49-92 days late); the scores are those of S3 item 6(a) and (b).
 //
-//   node steps/72-combined-solve.mjs [--through ISO] [--node-hours 6] [--history 4] [--latencies 1,6] [--bands all,450-700] [--prior-scale 1] [--out DIR]
+//   node steps/72-combined-solve.mjs [--through ISO] [--node-hours 12] [--history 4] [--latencies 1,6] [--bands all,450-700] [--prior-scale 1] [--out DIR]
 //
-// Written to results/e13/s3/combined-solve.json; the verdict is S3 item 7's literal rule.
+// Nodes every 12 h are the primary solve (Amendment S4), every 6 h a labelled sensitivity (--node-hours 6). Written to results/e13/s3/combined-solve-<nodeHours>h.json;
+// the verdict is S3 item 7's literal rule.
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -15,7 +16,7 @@ import { arcsFromRows, solveCommonMode } from '../common-mode.mjs';
 import { crossFleetAgreement, halves, heldOutRecords, hindcastR3 } from '../combined.mjs';
 import { latencyStatistic } from '../score.mjs';
 
-const { values } = parseArgs({ options: { through: { type: 'string' }, 'node-hours': { type: 'string', default: '6' }, history: { type: 'string', default: '4' }, latencies: { type: 'string', default: '1,6' }, bands: { type: 'string', default: 'all,450-700' },
+const { values } = parseArgs({ options: { through: { type: 'string' }, 'node-hours': { type: 'string', default: '12' }, history: { type: 'string', default: '4' }, latencies: { type: 'string', default: '1,6' }, bands: { type: 'string', default: 'all,450-700' },
   'prior-scale': { type: 'string', default: '1' }, out: { type: 'string' } } });
 const S = config.analysis.solver;
 const selection = readJson(path.join(repoRoot, 'results', 'e13', 'selection.json'));
@@ -64,10 +65,10 @@ for (const band of values.bands.split(',')) {
   console.log(`\nStarlink band ${band} km: ${starlink.length} pairs; ${new Date(first).toISOString()} to ${new Date(last).toISOString()}; ${issues.length} issue times; nodes every ${nodeHours} h, prior step ${smoothSigma.toFixed(4)}`);
 
   // the fleets' own hindcasts against each other (item 6b), and the three hindcast solves on the whole window
-  const solve = (arcs) => solveCommonMode(arcs, { anchorMs: T0, ...solver });
+  const solve = (arcs) => { try { return solveCommonMode(arcs, { anchorMs: T0, ...solver }); } catch (error) { console.log(`    (a solve of ${arcs.length} arcs failed: ${String(error.message).slice(0, 80)})`); return null; } };
   const alone = { planet: solve(planetAll), starlink: solve(starlink), both: solve(everything) };
-  const agreement = crossFleetAgreement(alone.planet, alone.starlink, first, last, 12);
-  console.log(`  own hindcasts, 12 h windows: ${agreement.windows} windows; correlation of the means ${f3(agreement.correlationOfMeans)}, of 12 h changes ${f3(agreement.correlationOfChangesOver12h)}, of 24 h changes ${f3(agreement.correlationOfChangesOver24h)}; sd Planet ${f3(agreement.sdA)}, Starlink ${f3(agreement.sdB)}; scales (both): ${JSON.stringify(Object.fromEntries(Object.entries(alone.both.groupSigma ?? {}).map(([k, v]) => [k, +v.toFixed(3)])))}`);
+  const agreement = alone.planet && alone.starlink ? crossFleetAgreement(alone.planet, alone.starlink, first, last, 12) : { windows: 0 };
+  console.log(`  own hindcasts, 12 h windows: ${agreement.windows} windows; correlation of the means ${f3(agreement.correlationOfMeans)}, of 12 h changes ${f3(agreement.correlationOfChangesOver12h)}, of 24 h changes ${f3(agreement.correlationOfChangesOver24h)}; sd Planet ${f3(agreement.sdA)}, Starlink ${f3(agreement.sdB)}; scales (both): ${JSON.stringify(Object.fromEntries(Object.entries(alone.both?.groupSigma ?? {}).map(([k, v]) => [k, +v.toFixed(3)])))}`);
 
   const scores = {};
   for (const target of ['planet', 'starlink']) {
@@ -108,12 +109,12 @@ for (const band of values.bands.split(',')) {
   const verdict = verdictOf();
   console.log(`  S3 item 7 (R3 of the combined solve at least 0.03 above the better of the others and the forecast ratio at tau 48 h, L = ${latencies[0]} h, at least 0.02 below the better of theirs, for both targets; shortfall of 0.03 for either target = does not help): ${verdict.verdict}`);
   for (const c of verdict.checks.filter(Boolean)) console.log(`    ${c.target}: R3 gain over the better of the others ${f3(c.gainR3)}, forecast ratio gain ${f3(c.gainRatio)}`);
-  results.push({ band, starlinkPairs: starlink.length, starlinkSatellites: new Set(starlink.map((a) => a.dove)).size, span: [new Date(first).toISOString(), new Date(last).toISOString()], issues: issues.length, agreement, scales: alone.both.groupSigma ?? null, scores, verdict });
+  results.push({ band, starlinkPairs: starlink.length, starlinkSatellites: new Set(starlink.map((a) => a.dove)).size, span: [new Date(first).toISOString(), new Date(last).toISOString()], issues: issues.length, agreement, scales: alone.both?.groupSigma ?? null, scores, verdict });
 }
 
 const out = { exploratory: true, amendment: 'S3', nodeHours, historyDays, latencies, taus, blockDays: BLOCK / DAY, solver: { baseline: selection.solver.baseline, smoothSigma }, planetArcs: planetAll.length, planetDoves: new Set(planetAll.map((a) => a.dove)).size,
   note: 'No density truth exists for these dates; every score is against satellites that were in no solve (S3 item 6a) or the fleets against each other (6b). The reading is S3 item 7.', results };
 const dir = values.out ?? path.join(repoRoot, 'results', 'e13', 's3');
 fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(path.join(dir, 'combined-solve.json'), `${JSON.stringify(out, null, 1)}\n`);
-console.log(`wrote ${path.join(dir, 'combined-solve.json')}`);
+fs.writeFileSync(path.join(dir, `combined-solve-${nodeHours}h.json`), `${JSON.stringify(out, null, 1)}\n`);
+console.log(`wrote ${path.join(dir, `combined-solve-${nodeHours}h.json`)}`);

@@ -26,6 +26,7 @@ export function hindcastR3(parts) {
   const cells = [];
   let sus = 0, sss = 0;                                                    // the slope of u0 on the satellite's centred s-bar, pooled: 1 where the common mode has the amplitude the satellites feel
   for (const { target, sol } of parts) {
+    if (!sol) continue;                                                      // a solve that failed (too few arcs) scores nothing
     const usable = target.map((a) => ({ ...a, sbar: windowMean(sol, a.startMs, a.endMs) })).filter((a) => Number.isFinite(a.sbar));
     for (const list of bySatellite(usable).values()) {
       const y0 = median(list.map((a) => a.y)), y1 = median(list.map((a) => a.y - a.sbar)), sMean = list.reduce((acc, a) => acc + a.sbar, 0) / list.length, yMean = list.reduce((acc, a) => acc + a.y, 0) / list.length;
