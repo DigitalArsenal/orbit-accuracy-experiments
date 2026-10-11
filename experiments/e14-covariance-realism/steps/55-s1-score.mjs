@@ -13,16 +13,15 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { modulesRoot, sha256 } from '../../../harness/modules.mjs';
-import { loadModule } from '../../../harness/modules.mjs';
 import { full3, mahalanobis } from '../../e2b-correlated-covariance/linalg.mjs';
-import { config, json, callJson, resultsDir, writeJson } from '../common.mjs';
+import { config, json, callJson, resultsDir, writeJson, moduleOf } from '../common.mjs';
 import { assertWindowReadable, s1WindowOfPair, assertPairReadable } from '../windows.mjs';
 import { table, tally } from '../realism.mjs';
 
 const { values } = parseArgs({ options: { fit: { type: 'boolean', default: false }, window: { type: 'string' }, modules: { type: 'string' } } });
 const target = values.fit ? 's1:devFit' : values.window;
 assertWindowReadable(target);
-const gp = await loadModule(modulesRoot({ flag: values.modules, configured: config.inputs.modules, repoRoot }), 'analysis/gp-error-model');
+const gp = await moduleOf(modulesRoot({ flag: values.modules, configured: config.inputs.modules, repoRoot }), 'analysis/gp-error-model');  // pinned at the freeze
 const bins = Object.entries(config.s1HorizonBinsDays).map(([name, [lo, hi]]) => ({ name, lo, hi }));
 const binOf = (days) => bins.find((b) => days >= b.lo && (days < b.hi || (b.name === '2' && days <= b.hi)) )?.name ?? null;
 const regimeOfAltitude = (km) => (km < 500 ? 'LEO-L' : km < 800 ? 'LEO-M' : 'LEO-H');
