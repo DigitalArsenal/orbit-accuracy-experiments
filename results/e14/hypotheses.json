@@ -1,0 +1,122 @@
+{
+ "experiment": "e14-covariance-realism",
+ "selection": {
+  "S1": null,
+  "S2": "S2-P0",
+  "S3": "S3-KC",
+  "S4": 1
+ },
+ "hypotheses": {
+  "H1": {
+   "source": "S3",
+   "candidate": "S3-KC",
+   "testable": 35,
+   "realistic": 2,
+   "share": 0.05714285714285714,
+   "verdict": "NOT SUPPORTED"
+  },
+  "H2": {
+   "source": "S2",
+   "candidate": "S2-P0",
+   "testable": 35,
+   "realistic": 5,
+   "share": 0.14285714285714285,
+   "verdict": "NOT SUPPORTED"
+  },
+  "H4": {
+   "S3": {
+    "chosen": {
+     "realistic": 2,
+     "medianAbsLnMeanD2Over3": 3.572712400968366
+    },
+    "base": {
+     "realistic": 1,
+     "medianAbsLnMeanD2Over3": 3.736860705748866
+    },
+    "verdict": "SUPPORTED"
+   },
+   "S2": {
+    "chosen": {
+     "realistic": 5,
+     "medianAbsLnMeanD2Over3": 4.060135765321818
+    },
+    "base": {
+     "realistic": 5,
+     "medianAbsLnMeanD2Over3": 4.060135765321818
+    },
+    "verdict": "NOT SUPPORTED"
+   }
+  },
+  "H5": {
+   "candidate": "S2-QCD:1",
+   "n": 574,
+   "objects": 29,
+   "meanD2Over3QC": 0.47992577217191085,
+   "meanD2Over3QCD": 0.47987944767596263,
+   "difference": {
+    "estimate": 0.00009652895197242994,
+    "lower": 0.000023247821534544423,
+    "upper": 0.00016706409532058186
+   },
+   "decision": "NOT SUPPORTED",
+   "subset": {
+    "n": 574,
+    "objects": 29,
+    "byReason": {
+     "predicted": 305,
+     "observedOnly": 269
+    }
+   },
+   "verdict": "NOT SUPPORTED"
+  },
+  "H6": {
+   "leads": [
+    {
+     "lead": 1,
+     "n": 267,
+     "satellites": 3,
+     "coverage95": 0.8277153558052435,
+     "supported": false
+    },
+    {
+     "lead": 2,
+     "n": 267,
+     "satellites": 3,
+     "coverage95": 0.8277153558052435,
+     "supported": false
+    },
+    {
+     "lead": 3,
+     "n": 267,
+     "satellites": 3,
+     "coverage95": 0.8614232209737828,
+     "supported": false
+    }
+   ],
+   "verdict": "NOT SUPPORTED"
+  },
+  "H3": {
+   "verdict": "PENDING",
+   "reason": "the s1:test window is locked until results/e14/selection.json names the choice for S1"
+  },
+  "H7": {
+   "dev": null,
+   "test": null,
+   "verdict": "PENDING"
+  },
+  "H8": {
+   "verdict": "SUPPORTED",
+   "summary": [
+    "# C: mean d2/3 1.0016, coverage 0.9503; 4C: mean d2/3 0.2504",
+    "# factors: scalar 9.0144 (9), coverage 8.9817 (9), axes 3.9964/0.2501/2.2380 (4/0.25/2.25)",
+    "# process noise MLE: q = 0.000e+0, 1.886e-9, 4.024e-11 (0, 2e-9, 0)",
+    "# DCP: weights 0.555556/0.333333/0.111111, sigma_eff 0.17743, along-track variance realised/predicted 1.0056",
+    "# noise_responses vs HPOP, position variances: largest relative difference R 2.07e-3, T 2.29e-5, N 3.90e-4",
+    "# tests 2",
+    "# pass 2",
+    "# fail 0",
+    "# skipped 0"
+   ]
+  }
+ }
+}
