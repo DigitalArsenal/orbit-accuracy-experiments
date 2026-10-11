@@ -1,0 +1,67 @@
+{
+ "run": "e13-open-dca-30-density-score-testA-20261011T030142Z",
+ "experiment": "e13-open-dca",
+ "step": "30-density-score-testA",
+ "command": [
+  "node",
+  "experiments/e13-open-dca/steps/30-density-score.mjs",
+  "--split",
+  "testA"
+ ],
+ "args": {
+  "split": "testA"
+ },
+ "started": "2026-10-11T03:01:42.775Z",
+ "finished": "2026-10-11T03:09:41.702Z",
+ "config": {
+  "path": "experiments/e13-open-dca/config.json",
+  "sha256": "c8e712f00f726bd0027c790dea61f6e00b61d4b68e9c26d122bc7881d11f92fa",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "8616293070f82c38c8b2c37ae02c2ba8c051cfb4",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "d1d8ca88f7908eac43e80d15536c9804879f0a26",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   40.1083984375,
+   31.13671875,
+   30.25732421875
+  ]
+ },
+ "inputs": {
+  "amendments": {
+   "amendments.json": "af33fd242b07ce4bbae7ab71223ebc09f4e36a343d5605bec7e66b07b12ea9a1"
+  },
+  "gfz": {
+   "Kp_ap_Ap_SN_F107_since_1932.txt": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+  },
+  "planet-arcs": {
+   "dev-g24lean.jsonl": "c2cad2c41c71ca0c926621a1c29dc19308a412990554006d8034e837a0816f2c",
+   "testA-g24lean.jsonl": "0be2e8814d9ed3c58f96dd30cf7190213914f488ceb7eadbc766141208de7e0a"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-11T03:01:42.775Z",
+   "args": {
+    "split": "testA"
+   }
+  }
+ ],
+ "H1": 0.24669708124436596,
+ "H6": -0.14873878430431686
+}
