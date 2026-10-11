@@ -1,6 +1,7 @@
 // GPS block and mass by NORAD number from the IGS satellite metadata SINEX
 // (Steigenberger and Montenbruck 2024): SATELLITE/IDENTIFIER (SVN, COSPAR,
 // SatCat, block) and SATELLITE/MASS (SVN, validity, kg). Reading only.
+// `systems`: the SVN letters read (GPS by default; E16 reads every GNSS).
 import fs from 'node:fs';
 import { sha256 } from '../../harness/modules.mjs';
 
@@ -10,12 +11,12 @@ const sinexTime = (t) => {
   return y === 0 ? Infinity : Date.UTC(y, 0, d) + s * 1000;
 };
 
-export function readGpsMetadata(file) {
+export function readGpsMetadata(file, { systems = ['G'] } = {}) {
   const bytes = fs.readFileSync(file);
   const lines = bytes.toString('latin1').split('\n');
   const block = (name) => {
     const a = lines.findIndex((l) => l.startsWith(`+${name}`)), b = lines.findIndex((l) => l.startsWith(`-${name}`));
-    return lines.slice(a + 1, b).filter((l) => l.startsWith(' G'));
+    return lines.slice(a + 1, b).filter((l) => systems.some((g) => l.startsWith(` ${g}`)));
   };
   const bySatcat = new Map();
   for (const l of block('SATELLITE/IDENTIFIER')) {
