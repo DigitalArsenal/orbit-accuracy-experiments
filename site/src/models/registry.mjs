@@ -1,24 +1,27 @@
 // The models: one per paper section that makes a computational or
 // quantitative claim. `heading` is the section's heading text in the paper's
 // markdown; the build slugs it as docs/build-whitepapers.mjs does and checks
-// the paper has it. `model` names site/src/<dir>/<paper>/<model>.js, or
+// the paper has it. `model` names site/src/models/<paper>/<model>.js (or
+// `source`, a paper directory, when the section moved papers), or
 // site/src/od/<model>.js with `dir: 'od'` (the orbit-determination scenario
-// of site/build-od.mjs). `modules`: what the page runs (SDN modules by path,
-// or a package).
+// of site/build-od.mjs). `url` keeps a page's address when its section moves.
+// `modules`: what the page runs (SDN modules by path, or a package).
 export const PAPERS = {
   'evidence-supported-aso-catalog': 'Evidence-Supported ASO Catalog',
   'fast-conjunction-assessment': 'Fast All-vs-All Conjunction Screening',
+  'provenance-and-security': 'Provenance and Security in Space Data Network',
   'adversarial-security': 'Persistent Adversarial Security',
 };
 
 const CATALOG = 'evidence-supported-aso-catalog';
 const SCREEN = 'fast-conjunction-assessment';
+const PROVENANCE = 'provenance-and-security';
 const SECURITY = 'adversarial-security';
 const SIMULATION = ['analysis/observation-simulator', 'foundation/frames', 'propagator/hpop'];
 
 export const MODELS = [
   // Evidence-Supported ASO Catalog
-  { paper: CATALOG, heading: '2 Evidence model and records', dir: 'od', model: 'batch-fit', title: 'A solution from observations, with its covariance',
+  { paper: CATALOG, heading: '2 Evidence model', url: 'models/evidence-supported-aso-catalog/2-evidence-model-and-records.html', dir: 'od', model: 'batch-fit', title: 'A solution from observations, with its covariance',
     claim: 'Radar, optical and RF observations of a GPS satellite, their measurement models, HPOP’s dynamics and a weighted least-squares fit: the solution and its covariance against the IGS orbit.',
     modules: [...SIMULATION, 'analysis/estimation'] },
   { paper: CATALOG, heading: 'Vimpel osculating elements', model: 'osculating-elements', title: 'Osculating elements to a J2000 state',
@@ -47,11 +50,9 @@ export const MODELS = [
     modules: ['analysis/observation-simulator', 'analysis/association'] },
   { paper: CATALOG, heading: '9 SP message interchange', model: 'vcm', title: 'VCM fields, read, propagated, written',
     claim: 'The adapter reads a VCM into a PRW request, HPOP carries its 7×7 covariance, and the adapter writes it back.', modules: ['analysis/vcm-adapter', 'propagator/hpop', 'files/orbit-products'] },
-  { paper: CATALOG, heading: '10 Publication and reproduction', model: 'baseline', title: 'A V1 seed, reproduced here',
-    claim: 'The HPOP binary the paper names, served byte for byte, reproduces V1’s committed errors exactly.', modules: ['propagator/hpop-v1', 'foundation/time'] },
-  { paper: CATALOG, heading: '11 Measured accuracy', model: 'measured-accuracy', title: 'Measured accuracy, by object class and age',
+  { paper: CATALOG, heading: '10 Measured accuracy', url: 'models/evidence-supported-aso-catalog/11-measured-accuracy.html', model: 'measured-accuracy', title: 'Measured accuracy, by object class and age',
     claim: 'Median errors against precise orbits: the catalog’s product beside the public OMM, at issue and 1, 3 and 7 days later.', modules: [] },
-  { paper: CATALOG, heading: '12 What conjunction assessment consumes', dir: 'od', model: 'conjunction', title: 'A conjunction from fitted covariances',
+  { paper: CATALOG, heading: '11 What conjunction assessment consumes', url: 'models/evidence-supported-aso-catalog/12-what-conjunction-assessment-consumes.html', dir: 'od', model: 'conjunction', title: 'A conjunction from fitted covariances',
     claim: 'The fitted orbit and its covariance carried to a close approach; the combined covariance gives the probability of collision.',
     modules: [...SIMULATION, 'analysis/estimation', 'analysis/conjunction-assessment'] },
 
@@ -60,17 +61,25 @@ export const MODELS = [
     claim: 'The module screens every pair of a catalog; the count grows with the square of its size.', modules: ['analysis/conjunction-assessment'] },
   { paper: SCREEN, heading: 'Self-bounded motion', model: 'motion-bound', title: 'The bound each sample carries',
     claim: 'An SGP4 sample stays within ½ A h² of its straight line, A = 1.05 μ / r²_min.', modules: ['analysis/conjunction-assessment'] },
+  { paper: SCREEN, heading: 'Spatial grid', model: 'spatial-grid', title: 'The grid proposes the candidate pairs',
+    claim: 'Each sample’s segment, widened by d/2 + D, is a box; only boxes that overlap in the grid can pass the test.', modules: ['analysis/conjunction-assessment'] },
   { paper: SCREEN, heading: 'Refinement', model: 'refinement', title: 'Refining a close approach',
     claim: 'The TCA and miss distance do not depend on the coarse step that found the encounter.', modules: ['analysis/conjunction-assessment'] },
   { paper: SCREEN, heading: 'Step size', model: 'step-size', title: 'Step size trades sampling for candidates',
     claim: 'The candidate test is exhaustive at any step: every step reports the same conjunctions.', modules: ['analysis/conjunction-assessment'] },
   { paper: SCREEN, heading: '7 Uncertainty and probability of collision', model: 'alfano', title: 'The Alfano maximum probability',
     claim: 'Without covariance, an event reports the largest probability any covariance size could give.', modules: ['analysis/conjunction-assessment'] },
-  { paper: SCREEN, heading: 'Covariance probability on screened events', model: 'probability', title: 'Probability and dilution',
-    claim: 'With covariance, Foster’s probability; it falls as the covariance grows past the dilution threshold.', modules: ['analysis/conjunction-assessment'] },
+  { paper: SCREEN, heading: 'Covariance probability on screened events', model: 'probability', title: 'A screened pair at TCA, with its covariances',
+    claim: 'The empirical model gives each object the covariance of its stratum at the TCA’s prediction age; Foster’s probability follows, and falls past the dilution threshold as the covariance grows.',
+    modules: ['analysis/conjunction-assessment'] },
   { paper: SCREEN, heading: 'Propagated and fitted covariance', dir: 'od', model: 'ekf-ukf', title: 'EKF and UKF: covariance through the pass',
     claim: 'Observations of a GPS satellite through an extended and an unscented Kalman filter: how each covariance shrinks, and where they differ.',
     modules: [...SIMULATION, 'analysis/estimation'] },
+
+  // Provenance and Security in Space Data Network
+  { paper: PROVENANCE, heading: '3 Publication and reproduction', source: CATALOG, url: 'models/evidence-supported-aso-catalog/10-publication-and-reproduction.html',
+    model: 'baseline', title: 'A V1 seed, reproduced here',
+    claim: 'The HPOP binary the paper names, served byte for byte, reproduces V1’s committed errors exactly.', modules: ['propagator/hpop-v1', 'foundation/time'] },
 
   // Persistent Adversarial Security
   { paper: SECURITY, heading: '2.1 Core Mechanism', model: 'one-key', title: 'One key: signatures and addresses',

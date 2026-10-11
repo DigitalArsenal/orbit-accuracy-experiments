@@ -33,7 +33,7 @@ import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator } from './build-models.mjs';
+import { buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -277,11 +277,13 @@ for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
   write(`results/${id}/metrics.json`, fs.readFileSync(path.join(dir, relative)), `results/${id}/${relative}`, analysed(id.toUpperCase()));
 }
 
-// ── Measured accuracy (section 11 of the catalog paper) ──
+// ── Measured accuracy (section 10 of the catalog paper) ──
 buildMeasuredAccuracy({ repo, referenceDir, write, analysed });
 // ── GNSS and operator-ephemeris objects (sections 5.1 and 5.2) ──
 buildGnss({ repo, referenceDir, write, analysed });
 buildOperator({ repo, write, analysed });
+// ── The screening paper's empirical covariance model (CAU1 frames) ──
+await buildUncertaintyModel({ modules, write, own, credits: [...new Set(['space-track', 'igs', 'ilrs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
 // ── The ISS reboost the detector found (section 5.5) ──
 await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopParser: () => loadModule(modules, 'data-source/eop-parser'),
   spaceTrackCredit: licenceSource('space-track').credit, servedWasmSha256: (relative) => moduleIndex.find((m) => m.path === relative)?.wasmSha256 });
@@ -304,7 +306,7 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
   const fill = (text, values) => text.replace(/\{\{(\w+)\}\}/g, (_, k) => values[k] ?? '');
   const escHtml = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   for (const m of MODELS) {
-    const source = m.dir === 'od' ? path.join(here, 'src/od', `${m.model}.js`) : path.join(here, 'src/models', m.paper, `${m.model}.js`);
+    const source = m.dir === 'od' ? path.join(here, 'src/od', `${m.model}.js`) : path.join(here, 'src/models', m.source ?? m.paper, `${m.model}.js`);
     if (!fs.existsSync(source)) throw new Error(`model ${path.relative(here, source)} is missing`);
     if (!ids[m.paper]) {
       const file = path.join(papersDir, `${m.paper}.md`);
@@ -314,11 +316,13 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
     const sectionId = ids[m.paper] ? ids[m.paper].get(m.heading) : headingIds(`## ${m.heading}`).get(m.heading);
     if (!sectionId) throw new Error(`${m.paper} has no heading "${m.heading}"`);
     if (manifest.some((x) => x.paper === m.paper && x.section_id === sectionId)) throw new Error(`${m.paper}: two models for section "${m.heading}"`);
-    const url = `models/${m.paper}/${sectionId}.html`;
+    // A page keeps its address when its section moves (registry `url`).
+    const url = m.url ?? `models/${m.paper}/${sectionId}.html`;
+    if (manifest.some((x) => x.url === url)) throw new Error(`two models at ${url}`);
     manifest.push({ paper: m.paper, section_id: sectionId, title: m.title, url });
-    fs.mkdirSync(path.join(dist, 'models', m.paper), { recursive: true });
+    fs.mkdirSync(path.dirname(path.join(dist, url)), { recursive: true });
     fs.writeFileSync(path.join(dist, url), fill(template, {
-      base: '../../', paper: m.paper, model: m.model, dir: m.dir ?? '', title: escHtml(m.title), claim: escHtml(m.claim),
+      base: '../../', paper: m.source ?? m.paper, model: m.model, dir: m.dir ?? '', title: escHtml(m.title), claim: escHtml(m.claim),
       paperTitle: escHtml(PAPERS[m.paper]), heading: escHtml(m.heading),
       paperUrl: `https://spacedatanetwork.org/whitepapers/${m.paper}.html#${sectionId}`,
     }));

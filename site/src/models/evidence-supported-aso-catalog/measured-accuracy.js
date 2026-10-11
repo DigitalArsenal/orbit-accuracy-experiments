@@ -1,4 +1,4 @@
-// Section 11, measured accuracy: the median 3D error of each product against
+// Section 10, measured accuracy: the median 3D error of each product against
 // precise orbits, by object class and age, as the experiments committed it
 // (E3's test window, E6's laser-ranged fits), drawn at one real satellite of
 // each class on its precise orbit (IGS, ILRS, Copernicus). Every number is a

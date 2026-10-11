@@ -8,9 +8,10 @@ import { catalogInputs, decodeCqr, jdOf, ommBytes, output } from './cqr.js';
 export const START_MS = Date.parse('2026-10-01T00:00:00Z');
 
 // One screen_catalog call over `objects`; continues the identical request
-// until the module marks the final chunk.
-export async function screenOnce(ca, objects, controls) {
-  const inputs = catalogInputs(objects, { startJd: jdOf(START_MS), ...controls });
+// until the module marks the final chunk. `extra`: more input frames (an
+// uncertainty_model).
+export async function screenOnce(ca, objects, controls, extra = []) {
+  const inputs = [...catalogInputs(objects, { startJd: jdOf(START_MS), ...controls }), ...extra];
   const events = [];
   for (let chunk = 0; chunk < 10000; chunk++) {
     const result = decodeCqr(output(await ca.invoke('screen_catalog', inputs), 'result')).CATALOG_RESULT;
