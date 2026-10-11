@@ -13,7 +13,7 @@ import { Fleet, clipKept, correctionOf, fleetSample, loadSamples } from '../q1li
 import { rescoreAll } from '../rescore.mjs';
 import { windowSets } from '../sets.mjs';
 
-const { window, locks } = cli();
+const { window, locks, values } = cli({ workers: { type: 'string' } });   // --workers: an operating limit (load), not a result
 if (window !== 'test') throw new Error('step 60 reads the test window');
 const run = startRun({ experiment: config.experiment, step: '60-q1-test', configPath, modulesDir: modulesRoot(), args: { window } });
 run.manifest.locks = locks;
@@ -68,7 +68,7 @@ for (const r of test.rows) {
 }
 const setsById = new Map(windowSets('test', inventory.objects.map((o) => o.norad)).sets.map((s) => [s.gpId, s]));
 log(`rescoring ${Object.values(byClass).reduce((a, x) => a + x.length, 0)} test samples`);
-const scored = await rescoreAll({ window: 'test', byClass, setsById, log });
+const scored = await rescoreAll({ window: 'test', byClass, setsById, log, ...(values.workers ? { workers: Number(values.workers) } : {}) });
 const out = [];
 for (const r of test.rows) {
   out.push({ gpId: r.gpId, norad: r.norad, cls: r.cls, group: meta.get(r.norad)?.group ?? null, epochMs: r.epochMs, inClip: kept.has(r.gpId),
