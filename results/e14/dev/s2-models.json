@@ -1,0 +1,747 @@
+{
+ "experiment": "e14-covariance-realism",
+ "fittedOn": "devFit",
+ "samples": 12617,
+ "anchors": 1881,
+ "candidates": {
+  "S2-P0": {
+   "q": {
+    "LEO-L": [
+     0,
+     0,
+     0
+    ],
+    "LEO-M": [
+     0,
+     0,
+     0
+    ],
+    "LEO-H": [
+     0,
+     0,
+     0
+    ],
+    "MEO": [
+     0,
+     0,
+     0
+    ],
+    "GEO": [
+     0,
+     0,
+     0
+    ],
+    "HEO": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "S2-Q": {
+   "q": {
+    "LEO-L": [
+     0.0000016903329378721552,
+     1.3123025469578668e-16,
+     1.276968218954979e-20
+    ],
+    "LEO-M": [
+     0.0000330064306273592,
+     1.879239013706307e-13,
+     1.7308335593514394e-17
+    ],
+    "LEO-H": [
+     0.000029788959482192753,
+     3.1622776601683796e-17,
+     3.475769198154725e-17
+    ],
+    "MEO": [
+     1.1543370049224767e-19,
+     1.3615053938558447e-9,
+     3.5510716152111417e-9
+    ],
+    "GEO": [
+     0.000005152151049873638,
+     1e-21,
+     3.6530573950017586e-8
+    ]
+   },
+   "fit": [
+    {
+     "regime": "LEO-L",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.0000016903329378721552,
+      1.3123025469578668e-16,
+      1.276968218954979e-20
+     ],
+     "negativeLogLikelihood": 32482.41953939878,
+     "negativeLogLikelihoodQ0": 240788.7477142023,
+     "objects": 5,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 679,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-M",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 2
+     },
+     "maximumLikelihoodM2S3": [
+      0.0000330064306273592,
+      1.879239013706307e-13,
+      1.7308335593514394e-17
+     ],
+     "negativeLogLikelihood": 89637.04873635968,
+     "negativeLogLikelihoodQ0": 3039016.805363502,
+     "objects": 14,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1688,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-H",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.000029788959482192753,
+      3.1622776601683796e-17,
+      3.475769198154725e-17
+     ],
+     "negativeLogLikelihood": 68347.43965036554,
+     "negativeLogLikelihoodQ0": 7468482.209647173,
+     "objects": 10,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1284,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "MEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 5
+     },
+     "maximumLikelihoodM2S3": [
+      1.1543370049224767e-19,
+      1.3615053938558447e-9,
+      3.5510716152111417e-9
+     ],
+     "negativeLogLikelihood": 201960.58689865287,
+     "negativeLogLikelihoodQ0": 218650.73837626728,
+     "objects": 37,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 4593,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "GEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 0
+     },
+     "maximumLikelihoodM2S3": [
+      0.000005152151049873638,
+      1e-21,
+      3.6530573950017586e-8
+     ],
+     "negativeLogLikelihood": 144139.02456156793,
+     "negativeLogLikelihoodQ0": 1279349.3348013547,
+     "objects": 22,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 2552,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    }
+   ]
+  },
+  "S2-QC": {
+   "q": {
+    "LEO-L": [
+     0.0000016898658379058818,
+     1e-12,
+     4.22086426345918e-17
+    ],
+    "LEO-M": [
+     0.00003291206913116799,
+     5.87273408077673e-12,
+     4.693473114249579e-17
+    ],
+    "LEO-H": [
+     0.000029788045360506946,
+     2.4121455334026997e-14,
+     4.1516636313685e-17
+    ],
+    "MEO": [
+     1e-18,
+     1.355804506658087e-9,
+     3.551620731616847e-9
+    ],
+    "GEO": [
+     0.000005151857832149688,
+     5.7911209562485815e-22,
+     3.652986284410289e-8
+    ]
+   },
+   "fit": [
+    {
+     "regime": "LEO-L",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.0000016898658379058818,
+      1e-12,
+      4.22086426345918e-17
+     ],
+     "negativeLogLikelihood": 32482.587135588547,
+     "negativeLogLikelihoodQ0": 203934.73222955634,
+     "objects": 5,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 679,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-M",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 2
+     },
+     "maximumLikelihoodM2S3": [
+      0.00003291206913116799,
+      5.87273408077673e-12,
+      4.693473114249579e-17
+     ],
+     "negativeLogLikelihood": 89637.00457718593,
+     "negativeLogLikelihoodQ0": 3018891.060115674,
+     "objects": 14,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1688,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-H",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.000029788045360506946,
+      2.4121455334026997e-14,
+      4.1516636313685e-17
+     ],
+     "negativeLogLikelihood": 68347.45266155533,
+     "negativeLogLikelihoodQ0": 7468420.555082794,
+     "objects": 10,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1284,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "MEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 4
+     },
+     "maximumLikelihoodM2S3": [
+      1e-18,
+      1.355804506658087e-9,
+      3.551620731616847e-9
+     ],
+     "negativeLogLikelihood": 201965.70415804765,
+     "negativeLogLikelihoodQ0": 217359.33691981496,
+     "objects": 37,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 4593,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "GEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 0
+     },
+     "maximumLikelihoodM2S3": [
+      0.000005151857832149688,
+      5.7911209562485815e-22,
+      3.652986284410289e-8
+     ],
+     "negativeLogLikelihood": 144138.92982271715,
+     "negativeLogLikelihoodQ0": 1239300.567551947,
+     "objects": 22,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 2552,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    }
+   ]
+  },
+  "S2-QCD:0": {
+   "q": {
+    "LEO-L": [
+     0.000001689861178283805,
+     5.673684870309731e-22,
+     2.3557686226709567e-18
+    ],
+    "LEO-M": [
+     0.00003292852377831862,
+     3.162277660168379e-19,
+     5.500778708400408e-18
+    ],
+    "LEO-H": [
+     0.000029924383624730273,
+     9.378555794392593e-12,
+     1.3532246150862287e-16
+    ],
+    "MEO": [
+     1e-18,
+     1.355804506658087e-9,
+     3.551620731616847e-9
+    ],
+    "GEO": [
+     0.000005151857832149688,
+     5.7911209562485815e-22,
+     3.652986284410289e-8
+    ]
+   },
+   "fit": [
+    {
+     "regime": "LEO-L",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.000001689861178283805,
+      5.673684870309731e-22,
+      2.3557686226709567e-18
+     ],
+     "negativeLogLikelihood": 32482.56106655807,
+     "negativeLogLikelihoodQ0": 195231.69994897503,
+     "objects": 5,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 679,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-M",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 2
+     },
+     "maximumLikelihoodM2S3": [
+      0.00003292852377831862,
+      3.162277660168379e-19,
+      5.500778708400408e-18
+     ],
+     "negativeLogLikelihood": 89637.00332588091,
+     "negativeLogLikelihoodQ0": 3015259.2811105456,
+     "objects": 14,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1688,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-H",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.000029924383624730273,
+      9.378555794392593e-12,
+      1.3532246150862287e-16
+     ],
+     "negativeLogLikelihood": 68347.46584102389,
+     "negativeLogLikelihoodQ0": 7468418.255309111,
+     "objects": 10,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1284,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "MEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 4
+     },
+     "maximumLikelihoodM2S3": [
+      1e-18,
+      1.355804506658087e-9,
+      3.551620731616847e-9
+     ],
+     "negativeLogLikelihood": 201965.70415804765,
+     "negativeLogLikelihoodQ0": 217359.33691981496,
+     "objects": 37,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 4593,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "GEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 0
+     },
+     "maximumLikelihoodM2S3": [
+      0.000005151857832149688,
+      5.7911209562485815e-22,
+      3.652986284410289e-8
+     ],
+     "negativeLogLikelihood": 144138.92982271715,
+     "negativeLogLikelihoodQ0": 1239300.567551947,
+     "objects": 22,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 2552,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    }
+   ]
+  },
+  "S2-QCD:0.5": {
+   "q": {
+    "LEO-L": [
+     0.0000016884777160988336,
+     1e-13,
+     1.5690445222546433e-17
+    ],
+    "LEO-M": [
+     0.00003284171449760378,
+     1e-18,
+     9.130319642935027e-18
+    ],
+    "LEO-H": [
+     0.00002991920403782891,
+     1e-20,
+     7.766874080204859e-19
+    ],
+    "MEO": [
+     1e-18,
+     1.355804506658087e-9,
+     3.551620731616847e-9
+    ],
+    "GEO": [
+     0.000005151857832149688,
+     5.7911209562485815e-22,
+     3.652986284410289e-8
+    ]
+   },
+   "fit": [
+    {
+     "regime": "LEO-L",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.0000016884777160988336,
+      1e-13,
+      1.5690445222546433e-17
+     ],
+     "negativeLogLikelihood": 32482.58816742101,
+     "negativeLogLikelihoodQ0": 198315.52050549575,
+     "objects": 5,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 679,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-M",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 2
+     },
+     "maximumLikelihoodM2S3": [
+      0.00003284171449760378,
+      1e-18,
+      9.130319642935027e-18
+     ],
+     "negativeLogLikelihood": 89637.0212009333,
+     "negativeLogLikelihoodQ0": 3016489.1787935263,
+     "objects": 14,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1688,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-H",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.00002991920403782891,
+      1e-20,
+      7.766874080204859e-19
+     ],
+     "negativeLogLikelihood": 68347.47702312475,
+     "negativeLogLikelihoodQ0": 7468419.414672208,
+     "objects": 10,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1284,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "MEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 4
+     },
+     "maximumLikelihoodM2S3": [
+      1e-18,
+      1.355804506658087e-9,
+      3.551620731616847e-9
+     ],
+     "negativeLogLikelihood": 201965.70415804765,
+     "negativeLogLikelihoodQ0": 217359.33691981496,
+     "objects": 37,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 4593,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "GEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 0
+     },
+     "maximumLikelihoodM2S3": [
+      0.000005151857832149688,
+      5.7911209562485815e-22,
+      3.652986284410289e-8
+     ],
+     "negativeLogLikelihood": 144138.92982271715,
+     "negativeLogLikelihoodQ0": 1239300.567551947,
+     "objects": 22,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 2552,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    }
+   ]
+  },
+  "S2-QCD:1": {
+   "q": {
+    "LEO-L": [
+     0.0000016911005697284922,
+     1e-12,
+     2.03157968299705e-17
+    ],
+    "LEO-M": [
+     0.00003282324644345706,
+     2.4449467429871703e-15,
+     3.426096286061836e-17
+    ],
+    "LEO-H": [
+     0.000029925011583541027,
+     1.1287696667655023e-12,
+     1.3711142700546565e-16
+    ],
+    "MEO": [
+     1e-18,
+     1.355804506658087e-9,
+     3.551620731616847e-9
+    ],
+    "GEO": [
+     0.000005151857832149688,
+     5.7911209562485815e-22,
+     3.652986284410289e-8
+    ]
+   },
+   "fit": [
+    {
+     "regime": "LEO-L",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.0000016911005697284922,
+      1e-12,
+      2.03157968299705e-17
+     ],
+     "negativeLogLikelihood": 32482.61619271426,
+     "negativeLogLikelihoodQ0": 201699.10186815108,
+     "objects": 5,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 679,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-M",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 2
+     },
+     "maximumLikelihoodM2S3": [
+      0.00003282324644345706,
+      2.4449467429871703e-15,
+      3.426096286061836e-17
+     ],
+     "negativeLogLikelihood": 89637.02544049831,
+     "negativeLogLikelihoodQ0": 3017721.295082153,
+     "objects": 14,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1688,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "LEO-H",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 1
+     },
+     "maximumLikelihoodM2S3": [
+      0.000029925011583541027,
+      1.1287696667655023e-12,
+      1.3711142700546565e-16
+     ],
+     "negativeLogLikelihood": 68347.46818940803,
+     "negativeLogLikelihoodQ0": 7468418.4489621,
+     "objects": 10,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 1284,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "MEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 1,
+      "p0Alone": 4
+     },
+     "maximumLikelihoodM2S3": [
+      1e-18,
+      1.355804506658087e-9,
+      3.551620731616847e-9
+     ],
+     "negativeLogLikelihood": 201965.70415804765,
+     "negativeLogLikelihoodQ0": 217359.33691981496,
+     "objects": 37,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 4593,
+     "selected": "P0 alone",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    },
+    {
+     "regime": "GEO",
+     "fitStrataCalibrated": {
+      "maximumLikelihood": 0,
+      "p0Alone": 0
+     },
+     "maximumLikelihoodM2S3": [
+      0.000005151857832149688,
+      5.7911209562485815e-22,
+      3.652986284410289e-8
+     ],
+     "negativeLogLikelihood": 144138.92982271715,
+     "negativeLogLikelihoodQ0": 1239300.567551947,
+     "objects": 22,
+     "rule": "maximum likelihood unless P0 alone passes the gate in more fit-window strata",
+     "samples": 2552,
+     "selected": "maximum likelihood",
+     "window": [
+      "2025-10-01T00:00:00",
+      "2026-02-16T00:00:00"
+     ]
+    }
+   ]
+  }
+ }
+}

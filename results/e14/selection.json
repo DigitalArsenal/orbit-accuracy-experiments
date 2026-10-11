@@ -1,0 +1,135 @@
+{
+ "experiment": "e14-covariance-realism",
+ "rule": "most REALISTIC testable dev-select cells; ties: lower mean energy score over those cells; then the simpler (PLAN.md section 4 order)",
+ "sources": {
+  "S3": {
+   "candidate": "S3-KC",
+   "models": {
+    "file": "results/e14/dev/s3-models.json",
+    "sha256": "0e678383cfbd4be24fbc16870c93b4b2e08616dbc059738f2a0caad2f545af71"
+   },
+   "calibrationVersion": "e14-s3-0e678383cfbd",
+   "model": "e14-s3-KC-devfit"
+  },
+  "S2": {
+   "candidate": "S2-P0",
+   "models": {
+    "file": "results/e14/dev/s2-models.json",
+    "sha256": "d4ffab556915b4eccff2af9a0c2349895a4459dca13c8c8f67154569a7d442d6"
+   },
+   "calibrationVersion": "e14-s2-d4ffab556915",
+   "p0": {
+    "file": "results/e14/dev/s2-p0.json",
+    "sha256": "f1644a5818352e2ee5c9da11973450ee1f7132bd4e381fa54083ef3304616933",
+    "candidate": "S3-T",
+    "ageIndex": 0
+   }
+  },
+  "S4": {
+   "shrinkage": 1,
+   "candidate": "S2-QCD:1",
+   "models": {
+    "file": "results/e14/dev/s4-dcp.json",
+    "sha256": "a616fcc38ab0c50c0be0846d889f5032a22520d37464e4b79c066b6333ef64f8"
+   },
+   "calibrationVersion": "e14-s4-a616fcc38ab0"
+  }
+ },
+ "scores": {
+  "S3": [
+   {
+    "name": "S3-T",
+    "realistic": 7,
+    "testable": 35,
+    "meanEnergyScoreM": 3319.395772691959
+   },
+   {
+    "name": "S3-TU",
+    "realistic": 3,
+    "testable": 35,
+    "meanEnergyScoreM": 6344.484880045085
+   },
+   {
+    "name": "S3-KC",
+    "realistic": 11,
+    "testable": 35,
+    "meanEnergyScoreM": 2330.085674581571
+   },
+   {
+    "name": "S3-KO",
+    "realistic": 4,
+    "testable": 35,
+    "meanEnergyScoreM": 5481.023174585496
+   }
+  ],
+  "S2": [
+   {
+    "name": "S2-P0",
+    "realistic": 6,
+    "testable": 35,
+    "meanEnergyScoreM": 4006.2172970867136
+   },
+   {
+    "name": "S2-Q",
+    "realistic": 1,
+    "testable": 35,
+    "meanEnergyScoreM": 368.3803849608782
+   },
+   {
+    "name": "S2-QC",
+    "realistic": 1,
+    "testable": 35,
+    "meanEnergyScoreM": 368.37989741639325
+   },
+   {
+    "name": "S2-QCD:0",
+    "realistic": 1,
+    "testable": 35,
+    "meanEnergyScoreM": 368.37998242193447
+   },
+   {
+    "name": "S2-QCD:0.5",
+    "realistic": 1,
+    "testable": 35,
+    "meanEnergyScoreM": 368.3795339243599
+   },
+   {
+    "name": "S2-QCD:1",
+    "realistic": 1,
+    "testable": 35,
+    "meanEnergyScoreM": 368.37943851505634
+   }
+  ],
+  "S4": [
+   {
+    "name": "S2-QCD:0",
+    "realistic": 1,
+    "testable": 21,
+    "meanEnergyScoreM": 368.37998242193447
+   },
+   {
+    "name": "S2-QCD:0.5",
+    "realistic": 1,
+    "testable": 21,
+    "meanEnergyScoreM": 368.3795339243599
+   },
+   {
+    "name": "S2-QCD:1",
+    "realistic": 1,
+    "testable": 21,
+    "meanEnergyScoreM": 368.37943851505634
+   }
+  ]
+ },
+ "inputs": {
+  "s3": {
+   "file": "results/e14/devSelect/s3-realism.json",
+   "sha256": "199c7747f1d89748f3937cd6681171a21fe1163a1a6a726e4d9e365176b79e37"
+  },
+  "s2": {
+   "file": "results/e14/devSelect/s2-realism.json",
+   "sha256": "c55ddd9f03017032ae56f79f599bd432253fa05b7f29696a97005011777565ac"
+  }
+ },
+ "note": "The chosen models are the dev-fit fits (PLAN.md, changes before the freeze); S1 is chosen when its dev-select window closes (2026-10-15)."
+}
