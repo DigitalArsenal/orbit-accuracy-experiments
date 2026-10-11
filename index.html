@@ -127,14 +127,14 @@
       <section id="vcm" class="band">
         <div class="section-head">
           <p class="eyebrow">VCM Parity · analysis/vcm-adapter</p>
-          <h2>A Vector Covariance Message, Round Trip</h2>
-          <p class="lede">An SP Vector Covariance Message read into a PRW request, propagated with its covariance, and written back as a VCM. The format states no units for its covariance. Four SP messages show that its mean-motion row is relative (dn/n); with that reading the sigmas the adapter recomputes match the printed ones within 1 %. The ballistic coefficient’s row is read the same way, with the as-printed reading run beside it.</p>
+          <h2>A Vector Covariance Message, Read and Propagated</h2>
+          <p class="lede">An SP Vector Covariance Message read into a PRW request and propagated with its covariance. The format states no units for its covariance. Four SP messages show that its mean-motion row is relative (dn/n); with that reading the sigmas the adapter recomputes match the printed ones within 1 %. The ballistic coefficient’s row is read the same way, with the as-printed reading run beside it.</p>
         </div>
         <div class="grid-2">
           <div class="panel">
             <h3>The message</h3>
             <pre class="message" id="vcm-in"></pre>
-            <button class="button primary" id="vcm-run" type="button">Read, propagate 24 h, write</button>
+            <button class="button primary" id="vcm-run" type="button">Read and propagate 24 h</button>
             <p class="status" id="vcm-status" role="status" aria-live="polite"></p>
           </div>
           <div class="panel">
@@ -147,7 +147,6 @@
           <figcaption><strong>Position sigmas along the propagation</strong><span>m, from HPOP’s 7×7 covariance with the ballistic coefficient B as a parameter; in-track under both readings of B’s row</span></figcaption>
           <div id="vcm-chart" class="chart"></div>
         </figure>
-        <div class="panel"><h3>The VCM written back</h3><pre class="message" id="vcm-out">Run the round trip to write it.</pre></div>
         <div class="downloads" id="vcm-downloads"></div>
       </section>
 
