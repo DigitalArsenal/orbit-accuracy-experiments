@@ -211,3 +211,20 @@ test('a robust scale per fleet (Amendment S3): the precise fleet carries its pre
   assert.ok(eGrouped.rms < 0.9 * eUnweighted.rms, `grouped rms ${eGrouped.rms}, unweighted ${eUnweighted.rms}`);
   assert.throws(() => solveCommonMode([...precise.map((a) => ({ ...a, group: 'p' })), ...noisy.map((a) => ({ ...a, group: 'n' }))], { anchorMs, nodeHours: 24, baseline: { kind: 'blocks', days: 21 } }), /random-walk/);
 });
+
+test('arcs with their own precision (Amendment S5): precise arcs carry their weight, and equal precisions are the unweighted solver', () => {
+  const probe = fleet(() => 0, { doves: 30, days: 60, noise: 0, outliers: 0, steps: false, seed: 1, prefix: 'p' });
+  const anchorMs = T0 + arcCenterOffsetMs(probe);
+  const f = truthOf(24, anchorMs, 60, 3);
+  // half of the satellites have arcs five times as noisy as the other half; the second half's arcs say so through their precision
+  const sharp = fleet(f, { doves: 24, days: 60, noise: 0.03, outliers: 0.02, steps: false, seed: 11, prefix: 'a' });
+  const blurred = fleet(f, { doves: 24, days: 60, noise: 0.15, outliers: 0.02, steps: false, seed: 12, prefix: 'b' });
+  const opts = { anchorMs, nodeHours: 24, baseline: { kind: 'randomWalk', stepSigma: 0.005 }, smoothSigma: 0.05, iterations: 60, tolerance: 1e-6 };
+  const plain = solveCommonMode([...sharp, ...blurred], opts);
+  const ones = solveCommonMode([...sharp, ...blurred].map((a) => ({ ...a, precision: 1 })), opts);
+  assert.deepEqual(ones.s, plain.s, 'precision 1 is the solver of the frozen runs');
+  const told = solveCommonMode([...sharp.map((a) => ({ ...a, precision: 25 })), ...blurred.map((a) => ({ ...a, precision: 1 }))], opts);
+  const eTold = windowError(told, f, 3, 56), ePlain = windowError(plain, f, 3, 56);
+  assert.ok(eTold.rms < 0.85 * ePlain.rms, `with their precisions told: rms ${eTold.rms}; without ${ePlain.rms}`);
+  assert.ok(Math.abs(told.sigma - 0.15) < 0.04, `the unit-weight scale is that of the blurred arcs in the units of the precision: ${told.sigma}`);
+});

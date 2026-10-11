@@ -3,7 +3,8 @@
 // nodes every 6 h, a random-walk baseline per satellite, a robust scale per fleet (solveCommonMode's `group`). No density truth exists for these dates (Swarm and GRACE-FO
 // densities of 2026-10-09 on arrive 49-92 days late); the scores are those of S3 item 6(a) and (b).
 //
-//   node steps/72-combined-solve.mjs [--through ISO] [--node-hours 12] [--history 4] [--latencies 1,6] [--bands all,450-700] [--prior-scale 1] [--out DIR]
+//   node steps/72-combined-solve.mjs [--through ISO] [--node-hours 12] [--history 4] [--latencies 1,6] [--bands all,450-700] [--prior-scale 1] [--legacy] [--out DIR]
+// The Starlink pairs and their precisions are those of Amendment S5 (starlink-pairs.mjs); --legacy is S3 as written (unit precision, residual at the answer below 1 J/kg), the sensitivity run.
 //
 // Nodes every 12 h are the primary solve (Amendment S4), every 6 h a labelled sensitivity (--node-hours 6). Written to results/e13/s3/combined-solve-<nodeHours>h.json;
 // the verdict is S3 item 7's literal rule.
@@ -13,11 +14,12 @@ import { parseArgs } from 'node:util';
 import { repoRoot } from '../../../harness/provenance.mjs';
 import { DAY, H, config, experimentDir, paths, readJson } from '../common.mjs';
 import { arcsFromRows, solveCommonMode } from '../common-mode.mjs';
-import { crossFleetAgreement, halves, heldOutRecords, hindcastR3 } from '../combined.mjs';
+import { commonRecords, crossFleetAgreement, halves, heldOutRecords, hindcastR3, pairedR3Difference, pairedRatioDifference } from '../combined.mjs';
 import { latencyStatistic } from '../score.mjs';
+import { loadStarlinkPairs } from '../starlink-pairs.mjs';
 
 const { values } = parseArgs({ options: { through: { type: 'string' }, 'node-hours': { type: 'string', default: '12' }, history: { type: 'string', default: '4' }, latencies: { type: 'string', default: '1,6' }, bands: { type: 'string', default: 'all,450-700' },
-  'prior-scale': { type: 'string', default: '1' }, out: { type: 'string' } } });
+  'prior-scale': { type: 'string', default: '1' }, legacy: { type: 'boolean', default: false }, out: { type: 'string' } } });
 const S = config.analysis.solver;
 const selection = readJson(path.join(repoRoot, 'results', 'e13', 'selection.json'));
 const nodeHours = Number(values['node-hours']), historyDays = Number(values.history), latencies = values.latencies.split(',').map(Number), taus = config.analysis.forecast.tauHoursCandidates;
@@ -30,17 +32,7 @@ const liveFile = path.join(paths.planetArcs, `live-${config.planet.arc.profile}.
 const planetRows = fs.existsSync(liveFile) ? fs.readFileSync(liveFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
 const planetAll = arcsFromRows(planetRows.filter((r) => Date.parse(r.utcB) <= through), { hwids: [...planetSample.calibration, ...planetSample.heldOut], maxRelativeSigma: S.arcUse.maximumRelativeSigma, positiveOnly: S.arcUse.positiveOnly })
   .map((a) => ({ ...a, group: 'planet' }));
-const starlinkAll = [];
-const seen = new Set();
-if (fs.existsSync(paths.pairs)) for (const dir of fs.readdirSync(paths.pairs)) for (const f of fs.readdirSync(path.join(paths.pairs, dir))) {
-  const p = readJson(path.join(paths.pairs, dir, f));
-  const key = `${p.norad}|${p.t1}`;
-  if (p.kind !== 'e13-pair' || seen.has(key) || !p.methodB || Date.parse(p.t1) > through) continue;
-  seen.add(key);
-  const B = p.methodB.cdAreaOverMass;
-  if (!(p.hoursBetween >= 5 && p.hoursBetween <= 9) || !sampleFile.satellites[p.norad]?.startsWith('decay') || !(B > 0.002 && B < 0.5) || !(Math.abs(p.methodB.checkMismatchJkg ?? 1e9) < 1) || !(p.energyJkg.predictedChange <= -20)) continue;
-  starlinkAll.push({ dove: String(p.norad), startMs: Date.parse(p.t0), endMs: Date.parse(p.t1), y: Math.log(B), altKm: p.geodeticAltitudeKm?.oldT0 ?? NaN, group: 'starlink' });
-}
+const { arcs: starlinkAll, counts: pairCounts } = loadStarlinkPairs({ through, legacy: values.legacy });
 console.log(`Planet: ${planetAll.length} live arcs of ${new Set(planetAll.map((a) => a.dove)).size} Doves; Starlink: ${starlinkAll.length} clean decaying-stratum pairs of ${new Set(starlinkAll.map((a) => a.dove)).size} satellites`);
 if (planetAll.length < MINIMUM.planetArcs || starlinkAll.length < MINIMUM.starlinkPairs) { console.log(`too few for the combined analysis (${MINIMUM.planetArcs} Planet arcs and ${MINIMUM.starlinkPairs} Starlink pairs needed)`); process.exit(0); }
 
@@ -76,45 +68,54 @@ for (const band of values.bands.split(',')) {
     const pieces = halves(fleets[target]).map(({ target: held, other }) => ({ held, ownOther: other, otherFleet: fleets[otherFleet] }));
     const kinds = { own: (p) => p.ownOther, other: (p) => p.otherFleet, both: (p) => [...p.ownOther, ...p.otherFleet] };
     const row = { hindcast: {}, forecast: {} };
+    const partsByKind = {};
     for (const [kind, arcsOf] of Object.entries(kinds)) {
       const parts = pieces.map((p) => ({ target: p.held, sol: solve(arcsOf(p)) }));
+      partsByKind[kind] = parts;
       row.hindcast[kind] = hindcastR3(parts);
-      row.forecast[kind] = {};
-      for (const L of latencies) {
-        const records = pieces.flatMap((p) => heldOutRecords({ calibration: arcsOf(p), target: p.held, issues, latencyHours: L, historyDays, taus, anchorMs: T0, solver, fitHours: target === 'planet' ? 30 : 24, minimumFitArcs: target === 'planet' ? 1 : 2, blockMs: BLOCK, firstMs: first }));
-        row.forecast[kind][L] = latencyStatistic(records, taus);
-      }
     }
+    // the forecast of the three solves on the same target arcs and issue times
+    const recordsByLatency = {};
+    for (const L of latencies) {
+      const byKind = {};
+      for (const [kind, arcsOf] of Object.entries(kinds)) byKind[kind] = pieces.flatMap((p) => heldOutRecords({ calibration: arcsOf(p), target: p.held, issues, latencyHours: L, historyDays, taus, anchorMs: T0, solver, fitHours: target === 'planet' ? 30 : 24, minimumFitArcs: target === 'planet' ? 1 : 2, blockMs: BLOCK, firstMs: first }));
+      recordsByLatency[L] = commonRecords(byKind, taus);
+      for (const kind of Object.keys(kinds)) (row.forecast[kind] ??= {})[L] = latencyStatistic(recordsByLatency[L][kind], taus);
+    }
+    row.forecastPaired = Object.fromEntries(latencies.map((L) => [L, recordsByLatency[L].both.length ? pairedRatioDifference(recordsByLatency[L], taus) : null]));
+    row.paired = pairedR3Difference(partsByKind);
     scores[target] = row;
     console.log(`  target ${target} (held-out half; the solve is of ${target}'s other half = own, ${otherFleet} = other, both together):`);
     for (const kind of Object.keys(kinds)) {
       const h = row.hindcast[kind];
       const fc = latencies.map((L) => { const st = row.forecast[kind][L], b = st.byTau['48']; return b ? `L=${L} h: ${st.windows} arcs, no correction ${f3(st.rmsNoCorrection)}, tau 48 h ${f3(b.rmsUnpredicted)} (${f3(b.ratio)}${interval(b)})` : `L=${L} h: no arcs`; }).join('; ');
+      if (kind === 'both' && row.paired) console.log(`    paired on the ${row.paired.n} arcs all three score: R3 own ${f3(row.paired.r3.own)}, other ${f3(row.paired.r3.other)}, both ${f3(row.paired.r3.both)}; both less the larger of the others ${f3(row.paired.difference.estimate)} [${f3(row.paired.difference.lower)}, ${f3(row.paired.difference.upper)}]`);
       console.log(`    ${kind.padEnd(5)} hindcast R3 ${h.r3 ? `${f3(h.r3.estimate)}${interval(h.r3)}` : 'n/a'} (slope of y on s-bar ${f3(h.slope)}) over ${h.n} arcs of ${h.satellites} satellites | forecast ${fc}`);
     }
   }
 
-  // S3 item 7, literally
+  // S3 item 7, literally, on the arcs and issue times every solve scores (Amendment S5: the solves are compared on the same arcs)
   const verdictOf = () => {
+    const L = latencies[0];
     const checks = ['planet', 'starlink'].map((target) => {
-      const h = scores[target].hindcast, f = scores[target].forecast, L = latencies[0];
-      if (!h.own.r3 || !h.other.r3 || !h.both.r3 || !f.own[L].byTau['48'] || !f.other[L].byTau['48'] || !f.both[L].byTau['48']) return null;
-      const bestOther = Math.max(h.own.r3.estimate, h.other.r3.estimate), gainR3 = h.both.r3.estimate - bestOther;
-      const bestRatio = Math.min(f.own[L].byTau['48'].ratio, f.other[L].byTau['48'].ratio), gainRatio = bestRatio - f.both[L].byTau['48'].ratio;
-      return { target, gainR3, gainRatio, helps: gainR3 >= 0.03 && gainRatio >= 0.02, shortfall: gainR3 <= -0.03 };
+      const p = scores[target].paired, fp = scores[target].forecastPaired?.[L]?.['48'];
+      if (!p || !fp) return null;
+      const gainR3 = p.difference.estimate, gainRatio = -fp.difference;
+      return { target, pairedArcs: p.n, gainR3, gainR3Interval: [p.difference.lower, p.difference.upper], pairedForecastRecords: fp.n, gainRatio, gainRatioInterval: fp.lower === null ? null : [-fp.upper, -fp.lower],
+        helps: gainR3 >= 0.03 && gainRatio >= 0.02, shortfall: gainR3 <= -0.03 };
     });
-    if (checks.some((c) => c === null)) return { verdict: 'not computable (a target has no score)', checks };
+    if (checks.some((c) => c === null)) return { verdict: 'not computable (a target has no score on common arcs)', checks };
     return { verdict: checks.every((c) => c.helps) ? 'the combination helps' : checks.some((c) => c.shortfall) ? 'the combination does not help' : 'unresolved', checks };
   };
   const verdict = verdictOf();
-  console.log(`  S3 item 7 (R3 of the combined solve at least 0.03 above the better of the others and the forecast ratio at tau 48 h, L = ${latencies[0]} h, at least 0.02 below the better of theirs, for both targets; shortfall of 0.03 for either target = does not help): ${verdict.verdict}`);
-  for (const c of verdict.checks.filter(Boolean)) console.log(`    ${c.target}: R3 gain over the better of the others ${f3(c.gainR3)}, forecast ratio gain ${f3(c.gainRatio)}`);
+  console.log(`  S3 item 7 (on common arcs: R3 of the combined solve at least 0.03 above the better of the others and the forecast ratio at tau 48 h, L = ${latencies[0]} h, at least 0.02 below the better of theirs, for both targets; shortfall of 0.03 for either target = does not help): ${verdict.verdict}`);
+  for (const c of verdict.checks.filter(Boolean)) console.log(`    ${c.target}: R3 gain over the better of the others ${f3(c.gainR3)} [${f3(c.gainR3Interval[0])}, ${f3(c.gainR3Interval[1])}] on ${c.pairedArcs} arcs; forecast ratio gain ${f3(c.gainRatio)}${c.gainRatioInterval ? ` [${f3(c.gainRatioInterval[0])}, ${f3(c.gainRatioInterval[1])}]` : ''} on ${c.pairedForecastRecords} records`);
   results.push({ band, starlinkPairs: starlink.length, starlinkSatellites: new Set(starlink.map((a) => a.dove)).size, span: [new Date(first).toISOString(), new Date(last).toISOString()], issues: issues.length, agreement, scales: alone.both?.groupSigma ?? null, scores, verdict });
 }
 
-const out = { exploratory: true, amendment: 'S3', nodeHours, historyDays, latencies, taus, blockDays: BLOCK / DAY, solver: { baseline: selection.solver.baseline, smoothSigma }, planetArcs: planetAll.length, planetDoves: new Set(planetAll.map((a) => a.dove)).size,
+const out = { exploratory: true, amendment: 'S3', nodeHours, historyDays, latencies, taus, blockDays: BLOCK / DAY, solver: { baseline: selection.solver.baseline, smoothSigma }, legacy: values.legacy, starlinkPairCounts: pairCounts, planetArcs: planetAll.length, planetDoves: new Set(planetAll.map((a) => a.dove)).size,
   note: 'No density truth exists for these dates; every score is against satellites that were in no solve (S3 item 6a) or the fleets against each other (6b). The reading is S3 item 7.', results };
 const dir = values.out ?? path.join(repoRoot, 'results', 'e13', 's3');
 fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(path.join(dir, `combined-solve-${nodeHours}h.json`), `${JSON.stringify(out, null, 1)}\n`);
-console.log(`wrote ${path.join(dir, `combined-solve-${nodeHours}h.json`)}`);
+fs.writeFileSync(path.join(dir, `combined-solve-${nodeHours}h${values.legacy ? '-legacy' : ''}.json`), `${JSON.stringify(out, null, 1)}\n`);
+console.log(`wrote ${path.join(dir, `combined-solve-${nodeHours}h${values.legacy ? '-legacy' : ''}.json`)}`);

@@ -71,7 +71,12 @@ for (const spacing of [12, 6]) {
       const h = r.scores[target].hindcast[kind], l0 = c.latencies[0], fc = r.scores[target].forecast[kind][l0]?.byTau?.['48'];
       L.push(`| ${target} | ${kind === 'own' ? `${target}'s other half` : kind === 'other' ? `${target === 'planet' ? 'Starlink' : 'Planet'}` : 'both'} | ${h.r3 ? `${f(h.r3.estimate)}${ci(h.r3)}` : 'n/a'} | ${f(h.slope)} | ${h.n} | ${fc ? `${f(fc.ratio)}${ci(fc)}` : 'n/a'} |`);
     }
-    L.push('', `Reading (S3 item 7, literally): **${r.verdict.verdict}**. ${r.verdict.checks.filter(Boolean).map((k) => `${k.target}: R3 gain over the better of the others ${f(k.gainR3)}, forecast ratio gain ${f(k.gainRatio)}`).join('; ')}.`, '');
+    L.push('', 'On the arcs and issue times that every solve scores (paired; the intervals are bootstrap intervals of the difference):', '', '| Target | Arcs | R3 own / other / both | Both less the larger of the others | Forecast ratio own / other / both (L = 1 h, tau 48 h) | Both less the smaller of the others |', '| --- | ---: | --- | --- | --- | --- |');
+    for (const target of ['planet', 'starlink']) {
+      const sc = r.scores[target], p = sc.paired, fp = sc.forecastPaired?.[c.latencies[0]]?.['48'];
+      L.push(`| ${target} | ${p ? p.n : 'n/a'} | ${p ? `${f(p.r3.own)} / ${f(p.r3.other)} / ${f(p.r3.both)}` : 'n/a'} | ${p ? `${f(p.difference.estimate)} [${f(p.difference.lower)}, ${f(p.difference.upper)}]` : 'n/a'} | ${fp ? `${f(fp.ratios.own)} / ${f(fp.ratios.other)} / ${f(fp.ratios.both)} (${fp.n} records)` : 'n/a'} | ${fp ? `${f(fp.difference)}${fp.lower === null ? '' : ` [${f(fp.lower)}, ${f(fp.upper)}]`}` : 'n/a'} |`);
+    }
+    L.push('', `Reading (S3 item 7, literally, on common arcs): **${r.verdict.verdict}**. ${r.verdict.checks.filter(Boolean).map((k) => `${k.target}: R3 gain over the better of the others ${f(k.gainR3)}, forecast ratio gain ${f(k.gainRatio)}`).join('; ')}.`, '');
   }
 }
 if (!any) L.push('Pending: `s3/combined-solve-12h.json` (needs about ten days of overlap between Planet\'s live arcs and the Starlink pairs; the collectors run to 2026-10-20).', '');

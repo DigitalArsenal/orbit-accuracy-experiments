@@ -196,18 +196,20 @@ export function causalRows(windows, allArcs, nowOptions, fromMs, toMs, firstIssu
 // `block` (issue times closer than the forecast horizon share windows, so blocks are 6 days), given only where at least `minimumBlocks` blocks exist.
 export function latencyStatistic(records, taus, { minimumBlocks = 6 } = {}) {
   const ok = records.filter((r) => Number.isFinite(r.ref) && taus.every((t) => Number.isFinite(r.errs[String(t)])));
-  const rms = (xs) => Math.sqrt(xs.reduce((a, x) => a + x * x, 0) / xs.length);
+  const w = (r) => r.w ?? 1;                                                  // a record may carry a weight (Amendment S5: the precision of a Starlink pair); the default is 1
+  const rms = (xs, ws) => Math.sqrt(xs.reduce((a, x, i) => a + ws[i] * x * x, 0) / ws.reduce((a, x) => a + x, 0));
   const blocks = new Set(ok.map((r) => r.block)).size;
   const ratio = (cells) => Math.sqrt(cells.reduce((a, c) => a + c.weight * c.err2, 0) / cells.reduce((a, c) => a + c.weight * c.ref2, 0));
+  const ws = ok.map(w);
   const byTau = {};
   for (const t of taus) {
     const key = String(t);
-    const cells = ok.map((r) => ({ row: r.block, col: 'all', err2: r.errs[key] ** 2, ref2: r.ref ** 2 }));
+    const cells = ok.map((r) => ({ row: r.block, col: 'all', err2: w(r) * r.errs[key] ** 2, ref2: w(r) * r.ref ** 2 }));
     const interval = blocks >= minimumBlocks ? boot(cells, ratio) : null;
-    byTau[key] = { rmsUnpredicted: rms(ok.map((r) => r.errs[key])), ratio: ratio(cells.map((c) => ({ ...c, weight: 1 }))), lower: interval?.lower ?? null, upper: interval?.upper ?? null,
-      byLeadDays: [[0, 1], [1, 2], [2, 3]].map(([lo, hi]) => { const at = ok.filter((r) => r.lead >= lo && r.lead < hi); return { lead: `${lo}-${hi}`, windows: at.length, rmsUnpredicted: rms(at.map((r) => r.errs[key])), rmsNoCorrection: rms(at.map((r) => r.ref)) }; }) };
+    byTau[key] = { rmsUnpredicted: rms(ok.map((r) => r.errs[key]), ws), ratio: ratio(cells.map((c) => ({ ...c, weight: 1 }))), lower: interval?.lower ?? null, upper: interval?.upper ?? null,
+      byLeadDays: [[0, 1], [1, 2], [2, 3]].map(([lo, hi]) => { const at = ok.filter((r) => r.lead >= lo && r.lead < hi); return { lead: `${lo}-${hi}`, windows: at.length, rmsUnpredicted: rms(at.map((r) => r.errs[key]), at.map(w)), rmsNoCorrection: rms(at.map((r) => r.ref), at.map(w)) }; }) };
   }
-  return { windows: ok.length, blocks, rmsNoCorrection: rms(ok.map((r) => r.ref)), byTau };
+  return { windows: ok.length, blocks, rmsNoCorrection: rms(ok.map((r) => r.ref), ws), byTau };
 }
 
 export { windowMean, forecastMean };

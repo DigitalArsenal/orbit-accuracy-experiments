@@ -5,7 +5,7 @@
 //   - a held-out forecast uses no arc that ends after its cut-off.
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { crossFleetAgreement, halves, heldOutRecords, hindcastR3 } from '../experiments/e13-open-dca/combined.mjs';
+import { commonRecords, crossFleetAgreement, halves, heldOutRecords, hindcastR3, pairedR3Difference, pairedRatioDifference } from '../experiments/e13-open-dca/combined.mjs';
 import { solveCommonMode } from '../experiments/e13-open-dca/common-mode.mjs';
 import { rng } from '../harness/stats.mjs';
 
@@ -81,4 +81,30 @@ test('the held-out forecast uses no arc that ends after its cut-off', () => {
   const same = base.slice(0, 20).every((r, i) => r.ref === moved[i].ref && r.errs['48'] === moved[i].errs['48']);
   assert.ok(same, 'the records of the first issue time do not move when later arcs change');
   assert.ok(planet.length > 0 && first(base).length >= 0);
+});
+
+test('the solves are compared on the same arcs: the paired R3 difference, and forecast records every solve scores', (t) => {
+  const s = commonMode(11);
+  const planet = fleet(s, { prefix: 'p', satellites: 40, spanHours: 24, noise: 0.14, seed: 1, group: 'planet', stagger: 12 });
+  const starlink = fleet(s, { prefix: '4', satellites: 30, spanHours: 7.17, noise: 0.12, seed: 2, group: 'starlink', stagger: 7 });
+  const pieces = halves(planet);
+  const byKind = {
+    own: pieces.map((p) => ({ target: p.target, sol: solveCommonMode(p.other, options) })),
+    other: pieces.map((p) => ({ target: p.target, sol: solveCommonMode(starlink, options) })),
+    both: pieces.map((p) => ({ target: p.target, sol: solveCommonMode([...p.other, ...starlink], options) })),
+  };
+  const paired = pairedR3Difference(byKind);
+  t.diagnostic(`paired on ${paired.n} arcs: R3 own ${paired.r3.own.toFixed(3)}, other ${paired.r3.other.toFixed(3)}, both ${paired.r3.both.toFixed(3)}; both less the larger ${paired.difference.estimate.toFixed(3)} [${paired.difference.lower.toFixed(3)}, ${paired.difference.upper.toFixed(3)}]`);
+  assert.ok(paired.n > 200 && paired.r3.both > paired.r3.own + 0.01, 'two fleets that see one common mode give a held-out satellite more than its own fleet\'s other half');
+  assert.ok(paired.difference.lower <= paired.difference.estimate && paired.difference.estimate <= paired.difference.upper);
+  assert.equal(pairedR3Difference({ ...byKind, own: [{ target: [], sol: null }, { target: [], sol: null }] }), null, 'a solve that failed has no paired score');
+  // forecast records common to the three solves carry the same uncorrected change
+  const issues = [T0 + 8 * DAY, T0 + 8.5 * DAY, T0 + 9 * DAY, T0 + 9.5 * DAY];
+  const run = (calibration, target) => heldOutRecords({ calibration, target, issues, latencyHours: 1, historyDays: 4, taus: [48], anchorMs: T0, solver: options, fitHours: 30, minimumFitArcs: 1, blockMs: DAY, firstMs: T0 });
+  const records = { own: pieces.flatMap((p) => run(p.other, p.target)), other: pieces.flatMap((p) => run(starlink, p.target)), both: pieces.flatMap((p) => run([...p.other, ...starlink], p.target)) };
+  const common = commonRecords(records, [48]);
+  assert.ok(common.both.length > 20 && common.own.length === common.both.length && common.other.length === common.both.length);
+  common.both.forEach((r, i) => assert.equal(r.key, common.own[i].key) && assert.equal(r.ref, common.own[i].ref));
+  const d = pairedRatioDifference(common, [48], { minimumBlocks: 2 });
+  assert.ok(Number.isFinite(d['48'].difference) && d['48'].ratios.both > 0 && d['48'].lower !== null);
 });

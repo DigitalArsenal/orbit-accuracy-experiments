@@ -10,7 +10,8 @@
 //              (what a propagation without a correction assumes) or by that mean plus the change of the nowcast + forecast s from those pairs to the pair. Both directions pooled.
 // The statistic is the root-mean-square of what is left of the change against the root-mean-square of the change (the ratio is below 1 where the correction helps).
 //
-//   node steps/70-starlink-common-mode.mjs [--latencies 1,3,6,12,24,36] [--history 4] [--node-hours 6] [--prior-scales 1,0.5,2] [--bands all,0-350,350-450,450-700] [--through ISO] [--out DIR]
+//   node steps/70-starlink-common-mode.mjs [--latencies 1,3,6,12,24,36] [--history 4] [--node-hours 6] [--prior-scales 1,0.5,2] [--bands all,0-350,350-450,450-700] [--legacy] [--through ISO] [--out DIR]
+// The pairs and their precisions are those of Amendment S5 (starlink-pairs.mjs); --legacy is S2 as written (residual at the answer below 1 J/kg, unit precision), the sensitivity run.
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -19,8 +20,9 @@ import { DAY, H, config, paths, readJson } from '../common.mjs';
 import { forecastMean, nowcast, solveCommonMode, windowMean } from '../common-mode.mjs';
 import { latencyStatistic } from '../score.mjs';
 import { heldOutRecords } from '../combined.mjs';
+import { loadStarlinkPairs } from '../starlink-pairs.mjs';
 
-const { values } = parseArgs({ options: { latencies: { type: 'string', default: '1,3,6,12,24,36' }, history: { type: 'string', default: '4' }, 'node-hours': { type: 'string', default: '6' }, 'prior-scales': { type: 'string', default: '1,0.5,2' }, bands: { type: 'string', default: 'all,0-350,350-450,450-700' }, through: { type: 'string' }, out: { type: 'string' } } });
+const { values } = parseArgs({ options: { latencies: { type: 'string', default: '1,3,6,12,24,36' }, history: { type: 'string', default: '4' }, 'node-hours': { type: 'string', default: '6' }, 'prior-scales': { type: 'string', default: '1,0.5,2' }, bands: { type: 'string', default: 'all,0-350,350-450,450-700' }, legacy: { type: 'boolean', default: false }, through: { type: 'string' }, out: { type: 'string' } } });
 const S = config.analysis.solver;
 const selection = readJson(path.join(repoRoot, 'results', 'e13', 'selection.json'));
 const nodeHours = Number(values['node-hours']), historyDays = Number(values.history);
@@ -29,20 +31,9 @@ const sampleFile = readJson(path.join(path.dirname(new URL(import.meta.url).path
 const through = values.through ? Date.parse(values.through) : Infinity;
 const win = nodeHours * H, BLOCK = 2 * DAY, MINIMUM_PAIRS = 100;
 
-// ── the pairs of the decaying strata that are a clean drag measurement (Amendment S2, item 3) ──
-const all = [];
-const seen = new Set();
-if (fs.existsSync(paths.pairs)) for (const dir of fs.readdirSync(paths.pairs)) for (const f of fs.readdirSync(path.join(paths.pairs, dir))) {
-  const p = readJson(path.join(paths.pairs, dir, f));
-  const key = `${p.norad}|${p.t1}`;
-  if (p.kind !== 'e13-pair' || seen.has(key) || !p.methodB || Date.parse(p.t1) > through) continue;
-  seen.add(key);
-  const B = p.methodB.cdAreaOverMass;
-  if (!(p.hoursBetween >= 5 && p.hoursBetween <= 9) || !sampleFile.satellites[p.norad]?.startsWith('decay') || !(B > 0.002 && B < 0.5) || !(Math.abs(p.methodB.checkMismatchJkg ?? 1e9) < 1) || !(p.energyJkg.predictedChange <= -20)) continue;
-  all.push({ dove: String(p.norad), startMs: Date.parse(p.t0), endMs: Date.parse(p.t1), y: Math.log(B), altKm: p.geodeticAltitudeKm?.oldT0 ?? NaN, availableMs: p.next?.createdMs ?? Date.parse(p.t1) });
-}
-console.log(`${all.length} clean decaying-stratum pairs of ${new Set(all.map((a) => a.dove)).size} satellites`);
-const lags = all.map((a) => (a.availableMs - a.endMs) / H).sort((a, b) => a - b);
+// ── the pairs of the decaying strata that are a clean drag measurement (Amendment S2 item 4(a); S5: the residual at the answer relative to the drag energy, and a precision per pair) ──
+const { arcs: all, counts, createdLagHours: lags } = loadStarlinkPairs({ through, legacy: values.legacy });
+console.log(`${counts.files} pairs read, ${counts.consecutive} consecutive versions (5-9 h), ${counts.decaying} of the decaying strata, ${all.length} clean (${values.legacy ? 'S2 as written: residual below 1 J/kg, unit precision' : 'S5: residual at most max(1 J/kg, 0.5 % of the drag energy), precision from the energy noise'}) of ${new Set(all.map((a) => a.dove)).size} satellites`);
 if (lags.length) console.log(`a new version is created ${lags[lags.length >> 1].toFixed(2)} h (median) after its start state, the end of its pair`);
 if (all.length < MINIMUM_PAIRS) { console.log(`too few pairs for the exploratory analysis (${MINIMUM_PAIRS} needed)`); process.exit(0); }
 
@@ -102,7 +93,7 @@ for (const band of bands) {
 }
 
 const out = { exploratory: true, amendment: 'S2', nodeHours, historyDays, blockDays: BLOCK / DAY, baseline: selection.solver.baseline, taus, pairs: all.length, satellites: new Set(all.map((a) => a.dove)).size,
-  span: [new Date(Math.min(...all.map((a) => a.startMs))).toISOString(), new Date(Math.max(...all.map((a) => a.endMs))).toISOString()], medianCreatedHoursAfterPairEnd: lags[lags.length >> 1],
+  span: [new Date(Math.min(...all.map((a) => a.startMs))).toISOString(), new Date(Math.max(...all.map((a) => a.endMs))).toISOString()], medianCreatedHoursAfterPairEnd: lags[lags.length >> 1], legacy: values.legacy, pairCounts: counts,
   note: 'No density truth exists for these dates. hindcastTruth is the same fleet\'s non-causal solution (smooth, shares the fit window\'s pairs); heldOutSatellites predicts the pairs of satellites that are in no solve. The Planet dev reference with Swarm and GRACE-FO truth is in results/e13/dev/exploratory-planet-latency.json.', results };
 const dir = values.out ?? path.join(repoRoot, 'results', 'e13', 'part-s');
 fs.mkdirSync(dir, { recursive: true });
