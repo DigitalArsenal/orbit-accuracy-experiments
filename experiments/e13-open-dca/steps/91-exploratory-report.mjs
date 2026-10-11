@@ -88,6 +88,21 @@ for (const [spacing, legacy] of [[12, false], [6, false], [12, true]]) {
 }
 if (!any) L.push('Pending: `s3/combined-solve-12h.json` (needs about ten days of overlap between Planet\'s live arcs and the Starlink pairs; the collectors run to 2026-10-20).', '');
 L.push('Real density truth (Swarm and GRACE-FO densities of 2026-10-09 on) arrives 49-92 days after the dates; the combined solve is scored against it under a further amendment.', '');
+// the manifests behind the numbers: the latest finished run of each exploratory step
+const runsDir = path.join(repoRoot, 'runs'), manifestsDir = path.join(dir, 'manifests');
+const steps = ['70-starlink-common-mode', '70-starlink-common-mode-legacy', '71-planet-latency-sweep', '72-combined-solve-12h', '72-combined-solve-6h', '72-combined-solve-12h-legacy', '73-planet-rescale-dev-sample', '73-planet-rescale-dev-all-0of1',
+  '73-planet-rescale-testA-all-0of1', '73-planet-rescale-testB-all-0of1', '74-planet-live-arcs', '75-reference-check-dev', '75-reference-check-testA', '75-reference-check-testB'];
+let copied = 0;
+if (!values.dir && fs.existsSync(runsDir)) {
+  fs.mkdirSync(manifestsDir, { recursive: true });
+  for (const step of steps) {
+    const prefix = `e13-open-dca-${step}-`;
+    const latest = fs.readdirSync(runsDir).filter((n) => n.startsWith(prefix) && /^\d{8}T\d{6}Z$/.test(n.slice(prefix.length)))
+      .filter((n) => { try { return JSON.parse(fs.readFileSync(path.join(runsDir, n, 'manifest.json'), 'utf8')).finished; } catch { return false; } }).sort().at(-1);
+    if (latest) { fs.copyFileSync(path.join(runsDir, latest, 'manifest.json'), path.join(manifestsDir, `${latest}.manifest.json`)); ++copied; }
+  }
+  console.log(`${copied} manifests of the exploratory steps copied`);
+}
 const out = values.out ?? path.join(dir, 's3', 'REPORT.md');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, `${L.join('\n')}\n`);

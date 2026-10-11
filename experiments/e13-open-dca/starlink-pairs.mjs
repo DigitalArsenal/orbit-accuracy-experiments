@@ -8,6 +8,7 @@
 // has the scatter sqrt((sigma_E / D)^2 + 0.03^2) and the precision (0.10 / that)^2, against a reference scatter of 0.10 (Planet's arcs scatter 0.10).
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { H, experimentDir, paths, readJson } from './common.mjs';
 
 export const NOISE_MODEL = { gravityMs2: 8.4, speedMs: 7600, floor: 0.03, reference: 0.10, twoStates: Math.SQRT2 };
@@ -47,4 +48,12 @@ export function loadStarlinkPairs({ through = Infinity, legacy = false } = {}) {
   }
   lags.sort((a, b) => a - b);
   return { arcs, counts, createdLagHours: lags };
+}
+
+// The pairs directory as one input for a run manifest: the number of files and the SHA-256 of their names and contents in order.
+export function pairsInput() {
+  const hash = crypto.createHash('sha256');
+  let files = 0;
+  if (fs.existsSync(paths.pairs)) for (const dir of fs.readdirSync(paths.pairs).sort()) for (const f of fs.readdirSync(path.join(paths.pairs, dir)).sort()) { hash.update(`${dir}/${f}\n`); hash.update(fs.readFileSync(path.join(paths.pairs, dir, f))); ++files; }
+  return { [`pairs (${files} files)`]: hash.digest('hex') };
 }

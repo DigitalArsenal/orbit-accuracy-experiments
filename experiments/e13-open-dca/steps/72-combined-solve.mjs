@@ -11,17 +11,21 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { repoRoot } from '../../../harness/provenance.mjs';
-import { DAY, H, config, experimentDir, paths, readJson } from '../common.mjs';
+import { repoRoot, startRun } from '../../../harness/provenance.mjs';
+import { DAY, H, amendmentsSha256, config, configPath, experimentDir, modulesDir, paths, readJson, sha256 } from '../common.mjs';
 import { arcsFromRows, solveCommonMode } from '../common-mode.mjs';
 import { commonRecords, crossFleetAgreement, halves, heldOutRecords, hindcastR3, pairedR3Difference, pairedRatioDifference } from '../combined.mjs';
 import { latencyStatistic } from '../score.mjs';
-import { loadStarlinkPairs } from '../starlink-pairs.mjs';
+import { loadStarlinkPairs, pairsInput } from '../starlink-pairs.mjs';
 
 const { values } = parseArgs({ options: { through: { type: 'string' }, 'node-hours': { type: 'string', default: '12' }, history: { type: 'string', default: '4' }, latencies: { type: 'string', default: '1,6' }, bands: { type: 'string', default: 'all,450-700' },
   'prior-scale': { type: 'string', default: '1' }, legacy: { type: 'boolean', default: false }, out: { type: 'string' } } });
 const S = config.analysis.solver;
+const run = startRun({ experiment: config.experiment, step: `72-combined-solve-${values['node-hours']}h${values.legacy ? '-legacy' : ''}`, configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
+run.addInputs('pairs', pairsInput());
 const selection = readJson(path.join(repoRoot, 'results', 'e13', 'selection.json'));
+run.addInputs('selection', { 'selection.json': sha256(fs.readFileSync(path.join(repoRoot, 'results', 'e13', 'selection.json'))) });
 const nodeHours = Number(values['node-hours']), historyDays = Number(values.history), latencies = values.latencies.split(',').map(Number), taus = config.analysis.forecast.tauHoursCandidates;
 const through = values.through ? Date.parse(values.through) : Infinity;
 const sampleFile = readJson(path.join(experimentDir, 'sample.json')), planetSample = readJson(path.join(experimentDir, 'planet-sample.json'));
@@ -29,12 +33,13 @@ const MINIMUM = { starlinkPairs: 100, planetArcs: 100 };
 
 // ── observations ──
 const liveFile = path.join(paths.planetArcs, `live-${config.planet.arc.profile}.jsonl`);
+if (fs.existsSync(liveFile)) run.addInputs('planet-arcs', { [path.basename(liveFile)]: sha256(fs.readFileSync(liveFile)) });
 const planetRows = fs.existsSync(liveFile) ? fs.readFileSync(liveFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
 const planetAll = arcsFromRows(planetRows.filter((r) => Date.parse(r.utcB) <= through), { hwids: [...planetSample.calibration, ...planetSample.heldOut], maxRelativeSigma: S.arcUse.maximumRelativeSigma, positiveOnly: S.arcUse.positiveOnly })
   .map((a) => ({ ...a, group: 'planet' }));
 const { arcs: starlinkAll, counts: pairCounts } = loadStarlinkPairs({ through, legacy: values.legacy });
 console.log(`Planet: ${planetAll.length} live arcs of ${new Set(planetAll.map((a) => a.dove)).size} Doves; Starlink: ${starlinkAll.length} clean decaying-stratum pairs of ${new Set(starlinkAll.map((a) => a.dove)).size} satellites`);
-if (planetAll.length < MINIMUM.planetArcs || starlinkAll.length < MINIMUM.starlinkPairs) { console.log(`too few for the combined analysis (${MINIMUM.planetArcs} Planet arcs and ${MINIMUM.starlinkPairs} Starlink pairs needed)`); process.exit(0); }
+if (planetAll.length < MINIMUM.planetArcs || starlinkAll.length < MINIMUM.starlinkPairs) { console.log(`too few for the combined analysis (${MINIMUM.planetArcs} Planet arcs and ${MINIMUM.starlinkPairs} Starlink pairs needed)`); run.finish({ planetArcs: planetAll.length, starlinkPairs: starlinkAll.length, tooFew: true }); process.exit(0); }
 
 // ── solver ──
 const smoothSigma = (selection.solver.smoothSigma ?? 0.05) * Math.sqrt(nodeHours / 24) * Number(values['prior-scale']);
@@ -119,3 +124,4 @@ const dir = values.out ?? path.join(repoRoot, 'results', 'e13', 's3');
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, `combined-solve-${nodeHours}h${values.legacy ? '-legacy' : ''}.json`), `${JSON.stringify(out, null, 1)}\n`);
 console.log(`wrote ${path.join(dir, `combined-solve-${nodeHours}h${values.legacy ? '-legacy' : ''}.json`)}`);
+run.finish({ bands: results.map((r) => r.band), verdicts: results.map((r) => r.verdict.verdict) });

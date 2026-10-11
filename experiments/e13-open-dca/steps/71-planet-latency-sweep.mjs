@@ -12,13 +12,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { repoRoot } from '../../../harness/provenance.mjs';
-import { DAY, H, config, paths, readJson } from '../common.mjs';
+import { repoRoot, startRun } from '../../../harness/provenance.mjs';
+import { DAY, H, amendmentsSha256, config, configPath, modulesDir, paths, readJson, sha256 } from '../common.mjs';
 import { arcCenterOffsetMs, arcsFromRows, forecastMean, nowcast, solveCommonMode, windowMean } from '../common-mode.mjs';
 import { boot, latencyStatistic, loadDensityWindows } from '../score.mjs';
 
 const { values } = parseArgs({ options: { latencies: { type: 'string', default: '-24,-12,-1,0,3,6,12,24,30' }, 'issue-hours': { type: 'string', default: '0,12' }, out: { type: 'string' } } });
 const P = config.planet, S = config.analysis.solver;
+const run = startRun({ experiment: config.experiment, step: '71-planet-latency-sweep', configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
+run.addInputs('planet-arcs', { [`dev-${P.arc.profile}.jsonl`]: sha256(fs.readFileSync(path.join(paths.planetArcs, `dev-${P.arc.profile}.jsonl`))) });
 const selection = readJson(path.join(repoRoot, 'results', 'e13', 'selection.json'));
 const sample = readJson(path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'planet-sample.json'));
 const [devFrom, devTo] = P.split.dev, devStart = Date.parse(`${devFrom}T00:00:00Z`), devEnd = Date.parse(`${devTo}T00:00:00Z`) + DAY;
@@ -126,3 +129,4 @@ const outFile = values.out ?? path.join(repoRoot, 'results', 'e13', 'dev', 'expl
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, `${JSON.stringify({ exploratory: true, amendment: 'S2', split: 'dev', truths: ['Swarm A, B, C and GRACE-FO 1 densities (dev windows)', 'the fleet\'s own non-causal hindcast of the dev split (12 h windows)'], solver: selection.solver, taus, blockDays: BLOCK / DAY, byNewestBatchAgeAtZeroLatency: byAge, byPeriodAndIssueHourAtZeroLatency: regimes, changeCorrelation, results }, null, 1)}\n`);
 console.log(`wrote ${outFile}`);
+run.finish({ results: results.length });

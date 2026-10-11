@@ -15,16 +15,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { repoRoot } from '../../../harness/provenance.mjs';
-import { DAY, H, config, paths, readJson } from '../common.mjs';
+import { repoRoot, startRun } from '../../../harness/provenance.mjs';
+import { DAY, H, amendmentsSha256, config, configPath, modulesDir, paths, readJson, sha256 } from '../common.mjs';
 import { forecastMean, nowcast, solveCommonMode, windowMean } from '../common-mode.mjs';
 import { latencyStatistic } from '../score.mjs';
 import { heldOutRecords } from '../combined.mjs';
-import { loadStarlinkPairs } from '../starlink-pairs.mjs';
+import { loadStarlinkPairs, pairsInput } from '../starlink-pairs.mjs';
 
 const { values } = parseArgs({ options: { latencies: { type: 'string', default: '1,3,6,12,24,36' }, history: { type: 'string', default: '4' }, 'node-hours': { type: 'string', default: '6' }, 'prior-scales': { type: 'string', default: '1,0.5,2' }, bands: { type: 'string', default: 'all,0-350,350-450,450-700' }, legacy: { type: 'boolean', default: false }, through: { type: 'string' }, out: { type: 'string' } } });
 const S = config.analysis.solver;
+const run = startRun({ experiment: config.experiment, step: `70-starlink-common-mode${values.legacy ? '-legacy' : ''}`, configPath, modulesDir: modulesDir(), args: values });
+run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
+run.addInputs('pairs', pairsInput());
 const selection = readJson(path.join(repoRoot, 'results', 'e13', 'selection.json'));
+run.addInputs('selection', { 'selection.json': sha256(fs.readFileSync(path.join(repoRoot, 'results', 'e13', 'selection.json'))) });
 const nodeHours = Number(values['node-hours']), historyDays = Number(values.history);
 const latencies = values.latencies.split(',').map(Number), taus = config.analysis.forecast.tauHoursCandidates;
 const sampleFile = readJson(path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'sample.json'));
@@ -35,7 +39,7 @@ const win = nodeHours * H, BLOCK = 2 * DAY, MINIMUM_PAIRS = 100;
 const { arcs: all, counts, createdLagHours: lags } = loadStarlinkPairs({ through, legacy: values.legacy });
 console.log(`${counts.files} pairs read, ${counts.consecutive} consecutive versions (5-9 h), ${counts.decaying} of the decaying strata, ${all.length} clean (${values.legacy ? 'S2 as written: residual below 1 J/kg, unit precision' : 'S5: residual at most max(1 J/kg, 0.5 % of the drag energy), precision from the energy noise'}) of ${new Set(all.map((a) => a.dove)).size} satellites`);
 if (lags.length) console.log(`a new version is created ${lags[lags.length >> 1].toFixed(2)} h (median) after its start state, the end of its pair`);
-if (all.length < MINIMUM_PAIRS) { console.log(`too few pairs for the exploratory analysis (${MINIMUM_PAIRS} needed)`); process.exit(0); }
+if (all.length < MINIMUM_PAIRS) { console.log(`too few pairs for the exploratory analysis (${MINIMUM_PAIRS} needed)`); run.finish({ pairs: all.length, tooFew: true }); process.exit(0); }
 
 const solverOptions = { huberK: S.huberK, iterations: S.iterations, tolerance: S.tolerance, scaleSweeps: S.scaleSweeps, minDovesPerNode: S.minimumDovesPerNodeInterval, minNodeInfo: S.minimumNodeInfo };
 const bands = values.bands.split(',').map((b) => (b === 'all' ? { label: 'all', lo: -Infinity, hi: Infinity } : (([lo, hi]) => ({ label: b, lo, hi }))(b.split('-').map(Number))));
@@ -99,3 +103,4 @@ const dir = values.out ?? path.join(repoRoot, 'results', 'e13', 'part-s');
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, 'exploratory-latency.json'), `${JSON.stringify(out, null, 1)}\n`);
 console.log(`wrote ${path.join(dir, 'exploratory-latency.json')}`);
+run.finish({ pairs: all.length, results: results.length });
