@@ -5,6 +5,7 @@ import { quantile, rng } from '../../harness/stats.mjs';
 import { clusterBootstrapSums, scoreSample, CHI2_3_95, chi2cdf3 } from '../e2b-correlated-covariance/stats.mjs';
 import { cramerVonMises } from '../e2-catalog-covariance/score.mjs';
 import { config } from './windows.mjs';
+import { json } from '../../harness/modules.mjs';
 
 export { CHI2_3_95 };
 const R = config.realism;
@@ -76,4 +77,42 @@ export function tally(t) {
     if (x.decision === 'REALISTIC') ++c.realistic;
   }
   return c;
+}
+
+// Probability of collision effect (PLAN.md section 8, descriptive): per cell, `pairs` pairs of samples of different
+// objects, each with its own covariance, through analysis/gp-error-model screening_cases (E2b's rules: head-on and
+// 90-degree crossing planes, synthetic true misses). Returns {regime: {horizon: summary}} for the cells of `rows`
+// ([{object, regime, horizon, errorM (RTN m), covarianceM2 (lower 6, m^2)}]).
+export async function pcEffect(gp, rows, { pairs = config.screening.pairs, seed = config.screening.seed } = {}) {
+  const S = config.screening;
+  const groups = new Map();
+  for (const r of rows.filter((x) => x.errorM && x.covarianceM2 && Number.isFinite(x.d2))) {
+    const key = `${r.regime}|${r.horizon}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(r);
+  }
+  const out = {};
+  for (const [key, list] of [...groups].sort()) {
+    const [regime, horizon] = key.split('|');
+    if (new Set(list.map((x) => x.object)).size < 2) continue;
+    const random = rng(seed ^ [...key].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7));
+    const drawn = [];
+    for (let tries = 0; drawn.length < pairs && tries < pairs * 20; ++tries) {
+      const a = list[Math.floor(random() * list.length)], b = list[Math.floor(random() * list.length)];
+      if (a.object !== b.object) drawn.push([a, b]);
+    }
+    const km = (e) => e.map((x) => x / 1e3), km2 = (c) => c.map((x) => x / 1e6);
+    const r = await gp.invoke('screening_cases', [json('cases', { pairs: drawn.map(([a, b]) => ({ e1: km(a.errorM), c1: km2(a.covarianceM2), e2: km(b.errorM), c2: km2(b.covarianceM2) })) }),
+      json('options', { hardBodyRadiusM: S.hardBodyRadiusM, pcThreshold: S.pcThreshold, missDistancesM: S.missDistancesM, directions: S.directions })]);
+    const report = JSON.parse(Buffer.from(r.outputs[0].payload).toString('utf8'));
+    const pick = (list2) => {
+      const byMiss = Object.fromEntries(list2.map((x) => [x.missM, x]));
+      const hit = list2.filter((x) => x.collision), cases = hit.reduce((a, x) => a + x.cases, 0);
+      return { pcAlertRateCollisions: hit.reduce((a, x) => a + x.pcAlertRate * x.cases, 0) / cases, meanPcZeroMiss: byMiss[0]?.meanPc,
+        pcAlertRate100m: byMiss[100]?.pcAlertRate, pcAlertRate1km: byMiss[1000]?.pcAlertRate, pcAlertRate5km: byMiss[5000]?.pcAlertRate,
+        brierCollisions: hit.reduce((a, x) => a + x.brier * x.cases, 0) / cases };
+    };
+    (out[regime] ??= {})[horizon] = { pairs: drawn.length, ...Object.fromEntries(Object.entries(report.summary).map(([g, l]) => [g, pick(l)])) };
+  }
+  return out;
 }

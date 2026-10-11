@@ -410,18 +410,20 @@
     "stormAp": 30
   },
   "screening": {
-    "pairsPerCell": 500,
+    "pairs": 500,
     "seed": 20261010,
     "hardBodyRadiusM": 20,
     "pcThreshold": 0.0001,
-    "missesM": [
+    "missDistancesM": [
       0,
-      20,
+      10,
+      50,
       100,
       500,
       1000,
       2000,
       5000
-    ]
+    ],
+    "directions": 4
   }
 }

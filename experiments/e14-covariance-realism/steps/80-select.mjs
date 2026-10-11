@@ -48,7 +48,8 @@ if (!values.s1) {
   selection.sources.S3 = { candidate: c3.chosen, models: { file: 'results/e14/dev/s3-models.json', sha256: hash('results/e14/dev/s3-models.json') },
     calibrationVersion: `e14-s3-${hash('results/e14/dev/s3-models.json').slice(0, 12)}`, model: s3models.candidates[c3.chosen].version ?? c3.chosen };
   selection.sources.S2 = { candidate: c2.chosen, models: { file: 'results/e14/dev/s2-models.json', sha256: hash('results/e14/dev/s2-models.json') },
-    calibrationVersion: `e14-s2-${hash('results/e14/dev/s2-models.json').slice(0, 12)}` };
+    calibrationVersion: `e14-s2-${hash('results/e14/dev/s2-models.json').slice(0, 12)}`,
+    p0: { file: 'results/e14/dev/s3-models-s2p0.json', sha256: hash('results/e14/dev/s3-models-s2p0.json'), candidate: 'S3-T', ageIndex: 0 } };
   selection.sources.S4 = { shrinkage, candidate: c4.chosen, models: { file: 'results/e14/dev/s4-dcp.json', sha256: hash('results/e14/dev/s4-dcp.json') },
     calibrationVersion: `e14-s4-${hash('results/e14/dev/s4-dcp.json').slice(0, 12)}` };
   selection.scores.S3 = c3.scores;

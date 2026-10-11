@@ -3,7 +3,7 @@
 // `anchorEveryDays` (the first created on or after 00:00 UTC of each such day, its epoch in the window): the HPOP
 // screen's product - analysis/epoch-state's GCRF state at the set's epoch, propagator/hpop's execution path with the
 // full force model (config.s2.forces) on the drivers released at the set's creation - with one propagation per anchor:
-//   - P0: S3-T's age-0 stratum of the anchor's regime (dev-fit), rotated to GCRF by gp-error-model hpop_arcs, which
+//   - P0: S3-T's age-0 stratum of the anchor's regime (dev-fit, results/e14/dev/s3-models-s2p0.json), rotated to GCRF by gp-error-model hpop_arcs, which
 //     also gives the targets (the truth epoch nearest epoch + tau) and their truth states;
 //   - the propagation carries P0 and one dynamic parameter (Cd*A/m in LEO, Cr*A/m above), with its STM sampled at every
 //     step end of HPOP's process-noise discretization of every target: A0 = Phi P0 Phi' at the targets, and
@@ -16,6 +16,7 @@
 //   node experiments/e14-covariance-realism/steps/40-s2-samples.mjs --window devFit [--shard 0/2] [--objects ...]
 import path from 'node:path';
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import { ommFrame } from '../../../harness/records.mjs';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { epochStates } from '../../e2-catalog-covariance/product.mjs';
@@ -31,8 +32,13 @@ const log = (...a) => console.log(`[${run.id}]`, ...a);
 const ctx = await s2Context(modules, run);
 const gp = ctx['gp-error-model'];
 const mnv = await moduleOf(modules, 'analysis/maneuver-detection', run);
-const s3 = JSON.parse(fs.readFileSync(values['s3-models'] ?? path.join(repoRoot, 'results/e14/dev/s3-models.json'), 'utf8')).candidates['S3-T'];
-const dcp = JSON.parse(fs.readFileSync(values.dcp ?? path.join(repoRoot, 'results/e14/dev/s4-dcp.json'), 'utf8'));
+// S3-T as fitted before the GRACE-FO truth was converted (the file the first dev-fit runs read; PLAN.md, changes
+// before the freeze): every S2 window uses the same P0.
+const s3File = values['s3-models'] ?? path.join(repoRoot, 'results/e14/dev/s3-models-s2p0.json');
+const dcpFile = values.dcp ?? path.join(repoRoot, 'results/e14/dev/s4-dcp.json');
+const s3 = JSON.parse(fs.readFileSync(s3File, 'utf8')).candidates['S3-T'];
+const dcp = JSON.parse(fs.readFileSync(dcpFile, 'utf8'));
+run.addInputs('models', Object.fromEntries([s3File, dcpFile].map((f) => [path.relative(repoRoot, f), createHash('sha256').update(fs.readFileSync(f)).digest('hex')])));
 // P0 per regime: S3-T's age-0 stratum (6x6 RTN second moment, km), as an hpop-covariance-model for hpop_arcs.
 const p0Model = { kind: 'hpop-covariance-model', version: 1, regimes: s3.strata.filter((s) => s.ageIndex === 0).map((s) => ({ regimeIndex: s.regimeIndex, regime: s.regime, p0: s.covariance })) };
 const truth = new Truth();

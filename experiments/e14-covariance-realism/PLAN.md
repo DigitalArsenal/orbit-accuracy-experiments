@@ -517,6 +517,18 @@ been read). Development results that informed a change are named.
 - **2026-10-10, module additions.** `pair_statistics` takes ephemeris samples
   (Lagrange at an epoch) and a covariance as weighted terms; `noise_responses`
   is new (section 10).
+- **2026-10-11, GRACE-FO truth and S2's P₀ file.** GRACE-FO 1 and 2 (GFZ RSO)
+  were converted for the development windows after S3's first fit and S2's
+  first dev-fit runs. S3 is refitted and rescored with them. S2's P₀ stays
+  the S3-T age-0 stratum of the first fit, kept as
+  `results/e14/dev/s3-models-s2p0.json` (the file those runs read, SHA-256
+  731495b6…), so every S2 window uses one P₀; LEO-L's age-0 stratum differs
+  from the refit's only by the two GRACE-FO objects. Daily space weather is
+  passed only with drag (commit 5e304f7), so dev-fit's MEO anchors, which
+  the first runs lost to that refusal, are rerun.
+- **2026-10-11, the truth's covariance in S2's d².** S2's scoring adds the
+  truth product's stated σ (isotropic) to the combined covariance, as
+  section 3 defines d² and as S3's scoring does.
 
 ## References
 
