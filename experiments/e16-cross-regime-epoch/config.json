@@ -1,0 +1,279 @@
+{
+  "experiment": "e16-cross-regime-epoch",
+  "frozen": true,
+  "plan": "PLAN.md",
+  "modulesBinary": {
+    "repository": "space-data-network-modules",
+    "commit": "e1e6577a",
+    "wasmSha256": {
+      "propagator/hpop": "9c24bf0ed74f59893282514f08891c414da6db071d4997357a8ebd6c2a8a99e3",
+      "analysis/estimation": "9882faafb755973757c1cacbda1f803c74b45bde053cdb504172864ad7ce2764",
+      "analysis/gp-error-model": "c697061b0ab6b44bdb2395a62fe6759e9c29ed9820562049a27edae7fc420722",
+      "analysis/epoch-state": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
+      "analysis/density-calibration": "168ee975074c6cb76c53b0bd6cc1918a152c5b1c84b501752375b1dee4317953",
+      "analysis/maneuver-detection": "eee3dd9088f6291794196a7a21ce5b05e7d989bf1f11ffda4d58a126c52496d0",
+      "foundation/frames": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+      "foundation/time": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+      "data-source/eop-parser": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1"
+    }
+  },
+  "inputs": {
+    "modules": "/Users/tj/software/worktrees/space-data-network-modules--e16-cross-regime-epoch-20261011",
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "referenceRoots": [
+      "/opt/data/sdn-archive/reference-states/reference",
+      "/opt/data/sdn-archive/reference-states/reference-leo-pod-2",
+      "/opt/data/sdn-archive/e14-covariance-realism/reference"
+    ],
+    "planetDir": "/opt/data/sdn-archive/hac/planet-ephemerides/history",
+    "eopC04": "/opt/data/sdn-archive/reference-states/products/eopc04.1962-now",
+    "gnssMetadata": "/opt/data/sdn-archive/reference-states/products/igs_satellite_metadata.snx",
+    "kernel": {
+      "path": "runs/cache/de440s.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
+    "solfsmy": "/opt/data/sdn-archive/hac/set-jb2008/20261009/SOLFSMY.TXT",
+    "dtcfile": "/opt/data/sdn-archive/hac/set-jb2008/20261009/DTCFILE.TXT",
+    "gfzKp": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "swpcRsga": [
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz",
+      "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA"
+    ],
+    "e13": {
+      "planetArcs": "/opt/data/sdn-archive/e13-open-dca/planet-arcs",
+      "arcProfile": "g24lean",
+      "splits": ["dev", "testA", "testB"],
+      "selection": "results/e13/selection.json",
+      "sample": "experiments/e13-open-dca/planet-sample.json"
+    },
+    "e2bCorrelation": "results/e2b/train/correlation-model.json"
+  },
+  "elementSets": {
+    "meanElementTheory": "SGP4",
+    "ephemerisType": "0",
+    "duplicateEpochSeconds": 1,
+    "creationLagDays": 3
+  },
+  "windows": {
+    "train": ["2025-10-01", "2026-01-31"],
+    "trainGnssMeo": ["2024-10-01", "2026-01-31"],
+    "validation": ["2026-02-01", "2026-03-31"],
+    "test": ["2026-04-01", "2026-07-31"]
+  },
+  "testWindows": ["test"],
+  "regimes": {
+    "LEO-PL": { "group": "LEO", "truth": "planet", "toleranceSeconds": 21600 },
+    "LEO-POD": {
+      "group": "LEO",
+      "truth": "products",
+      "prefixes": ["SW_OPER_SP3", "S1A_OPER_AUX_POEORB", "S1C_OPER_AUX_POEORB", "S1D_OPER_AUX_POEORB", "GFZOP_RSO", "leoOrb", "ssa"],
+      "objects": {
+        "39452": "Swarm A", "39451": "Swarm B", "39453": "Swarm C",
+        "39634": "Sentinel-1A", "62261": "Sentinel-1C", "66315": "Sentinel-1D",
+        "43476": "GRACE-FO 1", "43477": "GRACE-FO 2",
+        "44349": "COSMIC-2", "44350": "COSMIC-2", "44351": "COSMIC-2", "44353": "COSMIC-2", "44358": "COSMIC-2",
+        "36508": "CryoSat-2", "39086": "SARAL", "41335": "Sentinel-3A", "43437": "Sentinel-3B",
+        "46984": "Sentinel-6A", "66514": "Sentinel-6B", "41240": "Jason-3", "46469": "HY-2C", "48621": "HY-2D", "54754": "SWOT"
+      },
+      "toleranceSeconds": 900
+    },
+    "SLR-LEO": {
+      "group": "LEO",
+      "truth": "products",
+      "prefixes": ["nsgf.orb.starlette", "nsgf.orb.stella", "nsgf.orb.larets", "nsgf.orb.westpac", "nsgf.orb.ajisai", "nsgf.orb.lares."],
+      "objects": { "7646": "Starlette", "22824": "Stella", "27944": "LARETS", "25398": "WESTPAC", "16908": "Ajisai", "38077": "LARES" },
+      "toleranceSeconds": 900
+    },
+    "GNSS": {
+      "group": "MEO/GEO",
+      "truth": "products",
+      "prefixes": ["ESA0OPSFIN"],
+      "fallbackPrefixes": ["GFZ0MGXRAP"],
+      "systems": ["G", "E", "R", "C", "J"],
+      "orbitClass": "MEO",
+      "toleranceSeconds": 900
+    },
+    "IGSO/GEO": {
+      "group": "MEO/GEO",
+      "truth": "products",
+      "prefixes": ["ESA0OPSFIN"],
+      "fallbackPrefixes": ["GFZ0MGXRAP"],
+      "systems": ["C", "J"],
+      "orbitClass": "IGSO/GEO",
+      "toleranceSeconds": 900
+    },
+    "SLR-MEO": {
+      "group": "MEO/GEO",
+      "truth": "products",
+      "prefixes": ["ilrsa.orb.lageos1", "ilrsa.orb.lageos2", "ilrsa.orb.etalon1", "ilrsa.orb.etalon2", "nsgf.orb.lares2"],
+      "objects": { "8820": "LAGEOS-1", "22195": "LAGEOS-2", "19751": "ETALON-1", "20026": "ETALON-2", "53105": "LARES-2" },
+      "toleranceSeconds": 900
+    }
+  },
+  "orbitClass": {
+    "note": "From the object's OMMs in the train window (median): mean motion below 1.1 rev/day is IGSO/GEO (inclination 10 degrees or more: IGSO, else GEO); otherwise MEO.",
+    "geosynchronousBelowRevPerDay": 1.1,
+    "geoInclinationBelowDeg": 10
+  },
+  "release": {
+    "note": "When a truth state becomes usable by the fleet nowcast (PLAN.md 5.2): hours after the state's epoch, or after the product's span end where named. Planet: E13's 6 h. Others: E7's latencies; GFZ RSO 2 d, COSMIC-2 NRT 1 d, DORIS weekly arcs 10 d after the arc's end.",
+    "planetHours": 6,
+    "productDaysAfterEnd": { "ESA0OPSFIN": 14, "GFZ0MGXRAP": 2, "SW_OPER": 30, "S1": 21, "GFZOP_RSO": 2, "leoOrb": 1, "ssa": 10, "nsgf": 3, "ilrsa": 7 }
+  },
+  "scoring": {
+    "binHalfWidthSeconds": 1,
+    "descriptiveAgesDays": [1, 3],
+    "planetDayBinHalfWidthHours": 12
+  },
+  "clip": { "robustSigma": 5, "madScale": 1.4826, "maskFrom": "C0", "by": "regime class, window, age, RTN component" },
+  "q1": {
+    "groups": {
+      "LEO": {
+        "covariates": ["G", "O", "W"],
+        "families": {
+          "C1": { "harmonicOrders": [1, 2], "ridge": [0, 10, 100, 1000] },
+          "C2": { "lookbackHours": [12, 24, 48], "meanMotionBandRevPerDay": [0.05, 0.1, 0.2], "minimumContributors": 5 },
+          "C3": { "from": ["C1", "C2"] }
+        }
+      },
+      "MEO/GEO": {
+        "covariates": ["G"],
+        "families": {
+          "M3a": { "ridge": [0, 10, 100, 1000] },
+          "M3b": { "ridge": [0, 10, 100, 1000] },
+          "C1": { "harmonicOrders": [1, 2, 3], "ridge": [0, 10, 100, 1000] }
+        }
+      }
+    },
+    "previousOmmWithinDays": 3,
+    "bstarClip": [-0.001, 0.01],
+    "tieBand": 0.01,
+    "tieOrder": ["C2", "M3b", "M3a", "C1", "C3", "larger ridge", "smaller K", "shorter L", "narrower band"]
+  },
+  "tiers": {
+    "seed": "e16-20261011",
+    "O": { "folds": 5, "stratify": { "LEO": "regime class and Planet family", "MEO/GEO": "constellation and orbit class" } },
+    "P": {
+      "LEO": {
+        "Planet": ["LEO-PL"],
+        "ESA": [39452, 39451, 39453, 36508],
+        "Copernicus": [39634, 62261, 66315, 41335, 43437, 46984, 66514],
+        "US-led": [43476, 43477, 44349, 44350, 44351, 44353, 44358, 41240, 54754],
+        "Asian": [39086, 46469, 48621],
+        "Spheres": ["SLR-LEO"]
+      },
+      "MEO/GEO": { "byConstellation": ["G", "E", "R", "C", "J"], "spheres": ["SLR-MEO"] }
+    },
+    "S": {
+      "LEO": {
+        "meanMotionBandsRevPerDay": [15.2, 15.0, 14.6, 13.5],
+        "inclinationClassesDeg": [60, 80]
+      },
+      "MEO/GEO": { "planesPerConstellation": { "G": 6, "R": 3, "E": 3, "C": 3 }, "assignWithinDays": 7 }
+    },
+    "N": {
+      "LEO": { "planetFamilies": { "SuperDove": "^FLOCK ", "SkySat": "^SKYSAT", "Pelican and Tanager": "^(PELICAN|TANAGER)" } },
+      "MEO/GEO": {
+        "blocks": {
+          "G": { "IIR": ["GPS-IIR-A", "GPS-IIR-B", "GPS-IIR-M"], "IIF": ["GPS-IIF"], "III": ["GPS-IIIA"] },
+          "E": { "IOV": ["GAL-0A", "GAL-0B", "GAL-1"], "FOC": ["GAL-2"] },
+          "R": { "M": ["GLO-M", "GLO-M+", "GLO"], "K": ["GLO-K1A", "GLO-K1B", "GLO-K1+", "GLO-K2"] },
+          "C": { "BDS-2": ["BDS-2G", "BDS-2I", "BDS-2M"], "BDS-3": ["BDS-3G", "BDS-3I", "BDS-3M-CAST", "BDS-3M-SECM-A", "BDS-3M-SECM-B", "BDS-3SI-CAST", "BDS-3SI-SECM", "BDS-3SM-CAST", "BDS-3SM-SECM"] },
+          "J": { "QZS-1/2": ["QZS-1", "QZS-2A", "QZS-2G", "QZS-2I"], "QZS-3": ["QZS-3G"] }
+        }
+      }
+    },
+    "M": { "MEO/GEO": { "train": "MEO", "test": "IGSO/GEO" } }
+  },
+  "covarianceModel": {
+    "note": "PLAN.md 5.6: diagonal RTN second moment about zero of M*'s tier O held-out errors at epoch inside the C0 clip, validation window, per regime class.",
+    "realism": { "meanD2Over3": [0.8, 1.25], "coverage95": [0.93, 0.97], "chi2_3_95": 7.8147, "minimumSamples": 30, "minimumObjects": 3 }
+  },
+  "q2": {
+    "objectsMinimumMeanMotionRevPerDay": 13.9,
+    "planet": { "e13HeldOut": true, "skysat": 4, "pelicanTanager": 4, "superdoveOutsideE13": 4, "salt": "e16-q2-planet" },
+    "horizonsHours": [0, 6, 12, 24, 48, 72],
+    "primaryHorizonsHours": [24, 72],
+    "targetToleranceSeconds": 900,
+    "sampleMaxAgeDays": 1,
+    "arcMinimumSets": 3,
+    "candidates": {
+      "LEO-PL": { "spanDays": [2, 4], "bdot": [false, true] },
+      "LEO-POD": { "spanDays": [2, 4], "bdot": [false, true] },
+      "SLR-LEO": { "spanDays": [4, 7], "bdot": [false, true] }
+    },
+    "choiceHorizonHours": 72,
+    "validationStrideDays": 10,
+    "testStride": { "minimumDays": 7, "budgetCpuHours": 150 },
+    "products": ["S", "S-corr", "A", "A-GLS", "A-GLS-E2b", "A-corr", "A-JB", "A-JB-E13"],
+    "prior": {
+      "bstarToCdAreaOverMass": 12.741621,
+      "bStartWhenNonPositive": 0.01,
+      "bSigmaFloor": 0.02,
+      "bdotSigmaPerDayOfBSigma": 0.5,
+      "stateSigma": [100000, 100000, 100000, 10, 10, 10]
+    },
+    "fit": { "maximumIterations": 20, "correctionTolerance": 0.001, "sigmaEditThreshold": 0, "correlationFloor": 0.001 },
+    "integrator": { "tolerance": 1e-13, "maxStep": 300 },
+    "forces": {
+      "degree": 70, "order": 70,
+      "thirdBodies": [10, 301, 2, 4, 5],
+      "srp": true, "drag": true,
+      "earthRadiation": { "model": "KNOCKE", "resolutionDeg": 15 },
+      "oceanTides": { "model": "FES2004", "degree": 30, "order": 30 },
+      "solidTides": true,
+      "relativity": "IERS_2010",
+      "operationalAtmosphere": "NRLMSISE00"
+    },
+    "correlation": {
+      "lagBinsHours": [[0, 6], [6, 12], [12, 24], [24, 48], [48, 96], [96, 168]],
+      "forms": ["exponential", "exponential-nugget"],
+      "e2bRegime": { "LEO-PL": "LEO-POD", "LEO-POD": "LEO-POD", "SLR-LEO": "SLR-LEO" }
+    },
+    "maneuvers": {
+      "gridSeconds": 60, "blockSpanDays": 1, "maximumBlockSpanDays": 4, "contextDays": 10,
+      "options": { "k": 8, "floor_in_track_mps": 0.08, "floor_cross_track_mps": 1, "median_sets": 3, "scale_window_pairs": 100, "grid_step_s": 60 }
+    },
+    "e13": { "latencyHours": 6, "historyDays": 30, "tauFrom": "selection" }
+  },
+  "physical": {
+    "note": "Nominal Cr*A/m (m^2/kg) for Q2's solar and Earth radiation pressure; not fitted. Spheres and Swarm/Sentinel-1 as E7; others rounded from published mass and dimensions; Planet by family (SuperDove as E13).",
+    "crAreaOverMass": {
+      "39452": 0.0116, "39451": 0.0116, "39453": 0.0116,
+      "39634": 0.0177, "62261": 0.0177, "66315": 0.0177,
+      "43476": 0.0055, "43477": 0.0055,
+      "44349": 0.0185, "44350": 0.0185, "44351": 0.0185, "44353": 0.0185, "44358": 0.0185,
+      "36508": 0.0055, "39086": 0.0125, "41335": 0.014, "43437": 0.014, "54754": 0.0175,
+      "22824": 0.00113, "27944": 0.00184, "25398": 0.00228
+    },
+    "planetFamilies": { "SuperDove": 0.0135, "SkySat": 0.018, "Pelican and Tanager": 0.018 }
+  },
+  "statistics": {
+    "bootstrapResamples": 10000,
+    "bootstrapSeed": 20261011,
+    "confidence": 0.95,
+    "alpha": 0.05,
+    "multiplicity": "H1 alone; Holm over H2-H6"
+  },
+  "decisions": {
+    "H1": { "group": "LEO", "tier": "O", "reductionAtLeast": 0.2, "lowerBoundAbove": 0 },
+    "H2": { "tier": "O", "differenceAtLeast": 0.1, "lowerBoundAbove": 0 },
+    "H3": { "group": "LEO", "tier": "P", "reductionAtLeast": 0.1, "lowerBoundAbove": 0 },
+    "H4": { "ratio": "A/S", "horizonsHours": [24, 72], "upperBoundBelow": 1, "meaningfulBelow": 0.8 },
+    "H5": { "ratio": "A-JB-E13/A-JB", "horizonsHours": [24, 72], "upperBoundBelow": 1 },
+    "H6": { "group": "LEO", "tier": "O", "ageDays": 0, "rule": "covarianceModel.realism" },
+    "noHarm": { "worseBy": 0.1, "minimumSamples": 10, "harmedShareAtMost": 0.1, "smallTierObjects": 10, "smallTierHarmedAtMost": 1, "q2RatioAbove": 1.1 }
+  },
+  "acceptance": {
+    "sumRelative": 1e-9,
+    "shiftSeconds": 10,
+    "shiftRelativeTolerance": 0.01,
+    "knownAnswerSigma": 3
+  },
+  "compute": {
+    "maxWorkers": 16,
+    "pauseAboveLoad1m": 55,
+    "note": "Operating limits, not results: lane load stays under about 60 (the archive importer starves above that)."
+  }
+}
