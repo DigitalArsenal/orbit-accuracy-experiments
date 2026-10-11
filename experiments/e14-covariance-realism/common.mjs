@@ -199,6 +199,8 @@ export function jsonlWriter(file) {
   let rows = 0;
   return {
     write(row) { gz.write(`${JSON.stringify(row)}\n`); ++rows; },
+    // Everything written so far, compressed and on its way to the file (a crash then loses at most the rows after it).
+    flush() { return new Promise((resolve) => gz.flush(resolve)); },
     async close() { gz.end(); await new Promise((resolve, reject) => { out.on('finish', resolve); out.on('error', reject); }); return rows; },
   };
 }

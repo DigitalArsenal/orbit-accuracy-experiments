@@ -1,0 +1,26 @@
+{
+  "experiment": "e14-covariance-realism",
+  "note": "Changes after the freeze (commit 5c0e0b6), each with its reason and effect. None changes a frozen model, the choice, a window or a decision rule.",
+  "amendments": [
+    {
+      "date": "2026-10-11",
+      "what": "S2's Earth orientation for cutoffs after the C04 file's last row (2026-09-01): rows are known up to the earlier of the cutoff's release day and that row, which is then held (experiments/e14-covariance-realism/s2.mjs). Before, the rows between the file's end and the cutoff were missing and propagator/hpop refused the run (invalid-earth-orientation: the table did not bracket the epoch).",
+      "why": "A harness gap, not a model choice: the C04 file is about 30 days behind its download (2026-10-01), so every S2 test anchor with an epoch from 2026-09-04 on was lost. Holding the last released row is what the harness already does after the release day.",
+      "effect": "Development runs are unchanged (every dev cutoff precedes 2026-09-02, where the two rules agree). The S2 test anchors the first test runs lost are rerun with --only-anchors; no anchor is run twice.",
+      "files": [
+        "experiments/e14-covariance-realism/s2.mjs",
+        "experiments/e14-covariance-realism/steps/40-s2-samples.mjs"
+      ]
+    },
+    {
+      "date": "2026-10-11",
+      "what": "The second S2 test shard (40-s2-samples-test-s1of2-20261011T052042Z) is discarded and its objects rerun. It stopped at its 85th of 88 objects when this file was first written, uncommitted: the guard then locked the test window (as it must) and Truth.frames refused the read. Its rows were still in the gzip stream's memory, so the file holds almost none of them. Step 40 now flushes its output after each object.",
+      "why": "No sample of that shard was scored; the rerun uses the same frozen inputs and code paths (with the Earth orientation fix above).",
+      "effect": "Shard 1's 88 objects are rerun in two halves; the first shard's rows stand, with its 53 Earth-orientation losses rerun by --only-anchors.",
+      "files": [
+        "experiments/e14-covariance-realism/common.mjs",
+        "experiments/e14-covariance-realism/steps/40-s2-samples.mjs"
+      ]
+    }
+  ]
+}

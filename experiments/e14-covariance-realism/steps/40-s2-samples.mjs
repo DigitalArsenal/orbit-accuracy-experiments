@@ -23,7 +23,10 @@ import { epochStates } from '../../e2-catalog-covariance/product.mjs';
 import { cli, config, configPath, DAY_MS, Truth, truthObjects, mgexObjects, elementSets, callJson, json, jsonlWriter, waitForLoad, moduleOf } from '../common.mjs';
 import { s2Context, propagate, bOf, AGOM, stateBlock, sensitivity } from '../s2.mjs';
 
-const { values, window, objects: only, modules, archive } = cli({ shard: { type: 'string', default: '0/1' }, 's3-models': { type: 'string' }, dcp: { type: 'string' } });
+const { values, window, objects: only, modules, archive } = cli({ shard: { type: 'string', default: '0/1' }, 's3-models': { type: 'string' }, dcp: { type: 'string' },
+  // Only these anchors (norad@set epoch, comma-separated): a rerun of anchors an earlier run lost (amendments.json).
+  'only-anchors': { type: 'string' } });
+const onlyAnchors = values['only-anchors'] ? new Set(values['only-anchors'].split(',')) : null;
 if (!window.lo) throw new Error('step 40 runs on a long window');
 const [shard, shards] = values.shard.split('/').map(Number);
 await waitForLoad();
@@ -90,6 +93,7 @@ for (const norad of objects) {
     const k = anchors.findIndex((s) => Math.abs(msOf(s.epoch) - msOf(arc.epoch)) <= 1000);
     const set = anchors[k], seed = seeds[k];
     if (!set || !seed || !arc.covariance) continue;
+    if (onlyAnchors && !onlyAnchors.has(`${norad}@${set.epoch}`)) continue;
     const t0 = msOf(seed.epoch);
     const targets = arc.targets.filter((t) => msOf(t.epoch) < window.hi && msOf(t.epoch) >= t0);
     if (!targets.length) continue;
@@ -176,7 +180,8 @@ for (const norad of objects) {
   run.addInputs('reference', truth.read);
   log(`${norad}: ${anchors.length} anchors`);
   run.checkpoint();
-  await new Promise((resolve) => setImmediate(resolve));  // the module calls resolve at once: let the output file open and flush
+  await out.flush();
+  await new Promise((resolve) => setImmediate(resolve));  // the module calls resolve at once: let the output file open and write
 }
 const rows = await out.close();
 run.finish({ counts, rows, seconds: (performance.now() - started) / 1000 });

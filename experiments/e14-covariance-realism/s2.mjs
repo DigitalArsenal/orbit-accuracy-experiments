@@ -41,7 +41,10 @@ export async function s2Context(modules, run) {
     // Daily space weather only with drag (propagator/hpop refuses it otherwise).
     inputsFor(fromMs, toMs, cutoffMs, { drag = true } = {}) {
       const from = mjd(fromMs) - 2, to = mjd(toMs) + 2;
-      const eopRecords = releasedEopRecords(eop.records, cutoffMs, 1, from, to);
+      // The C04 file ends before the last test cutoffs (it is about 30 days behind): rows are known up to the earlier of
+      // the cutoff's release day and the file's last row, and that row is held after it (amendments.json, 2026-10-11).
+      const lastRowMs = (eop.records.at(-1).mjd + 1 - 40587) * DAY_MS;
+      const eopRecords = releasedEopRecords(eop.records, Math.min(cutoffMs, lastRowMs), 1, from, to);
       if (!drag) return { frames: [kernel, eopFrame(eopRecords, from, to)], issue: null };
       const spw = releasedSpwRows(gfz, rsga, cutoffMs, fromMs - 3 * DAY_MS, toMs + 2 * DAY_MS);
       return { frames: [kernel, eopFrame(eopRecords, from, to), spaceWeatherFrame(spw.rows)], issue: spw.issue };
