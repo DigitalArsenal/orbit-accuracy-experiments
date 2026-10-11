@@ -166,7 +166,7 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
   if (after) after.after(figure); else ctx.root.append(figure);
   loadCesium().catch(() => {});
 
-  let viewer = null, last = null, framing = null, chosen = null, timeSpan = null, pending = Promise.resolve();
+  let viewer = null, plot = null, last = null, framing = null, chosen = null, timeSpan = null, pending = Promise.resolve();
   const setInputs = (on) => { if (viewer) viewer.scene.screenSpaceCameraController.enableInputs = on; };
   // Render on demand, for a few frames after a change: entity primitives and
   // label glyphs that a change creates are ready a frame or two later.
@@ -181,6 +181,11 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
 
   async function create(C) {
     viewer = new C.Viewer(box, {
+      // The box sits at the world origin. CesiumJS's camera controller takes
+      // its rotate and zoom heights against the scene ellipsoid: with WGS84 the
+      // box lies inside the Earth, so a drag cannot orbit and the wheel zooms
+      // the wrong way. A unit sphere puts those heights about the box centre.
+      ellipsoid: C.Ellipsoid.UNIT_SPHERE,
       globe: false, skyBox: false, skyAtmosphere: false, baseLayer: false, scene3DOnly: true,
       animation: false, timeline: false, baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false,
       navigationHelpButton: false, fullscreenButton: false, infoBox: false, selectionIndicator: false, creditContainer: h('div'),
@@ -198,12 +203,16 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
     controller.maximumZoomDistance = BOX * 40;
     scene.light = new C.DirectionalLight({ direction: C.Cartesian3.normalize(new C.Cartesian3(-0.3, -0.5, -0.8), new C.Cartesian3()), intensity: 2.2 });
     scene.preRender.addEventListener(() => chosen?.());
+    // The plot's own primitives; the viewer's entity display keeps its points
+    // and labels in scene.primitives too, so a redraw clears only these.
+    plot = scene.primitives.add(new C.PrimitiveCollection());
     if (coarsePointer()) { setInputs(false); explore.hidden = false; }
   }
 
   function destroy() {
     if (viewer && !viewer.isDestroyed()) viewer.destroy();
     viewer = null;
+    plot = null;
     box.replaceChildren();
   }
   addEventListener('pagehide', destroy);
@@ -262,7 +271,7 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
     }
     const scene = viewer.scene, colors = palette(C);
     scene.backgroundColor = colors.bg;
-    scene.primitives.removeAll();
+    plot.removeAll();
     viewer.entities.removeAll();
     if (options.caption !== undefined) captionNode.textContent = options.caption;
     const color = (c, alpha) => {
@@ -424,7 +433,7 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
     };
 
     // 3. The box, its grid and its ticks.
-    const frameLines = scene.primitives.add(new C.PolylineCollection());
+    const frameLines = plot.add(new C.PolylineCollection());
     const corner = (sx, sy, sz) => [sx ? lim[0].hi : lim[0].lo, sy ? lim[1].hi : lim[1].lo, sz ? lim[2].hi : lim[2].lo];
     const edge = (axis, a, b) => {   // the edge along `axis` at sides a, b of the other two
       const at = (t) => { const p = [0, 0, 0]; const [j, m] = [0, 1, 2].filter((x) => x !== axis); p[axis] = t; p[j] = a ? lim[j].hi : lim[j].lo; p[m] = b ? lim[m].hi : lim[m].lo; return p; };
@@ -436,7 +445,7 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
     }
     // Grid planes: face (axis i at side 0 or 1), lines at the other axes' ticks.
     const faces = [0, 1, 2].map((i) => [0, 1].map((side) => {
-      const col = scene.primitives.add(new C.PolylineCollection());
+      const col = plot.add(new C.PolylineCollection());
       const [j, m] = [0, 1, 2].filter((x) => x !== i);
       const at = (tj, tm) => { const p = [0, 0, 0]; p[i] = side ? lim[i].hi : lim[i].lo; p[j] = tj; p[m] = tm; return world(p); };
       const material = C.Material.fromType('Color', { color: colors.grid });
@@ -455,8 +464,8 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
       const centerline = [...center]; centerline[axis] = mid[axis];
       const out = C.Cartesian3.normalize(C.Cartesian3.subtract(world(mid), world(centerline), new C.Cartesian3()), new C.Cartesian3());
       const offset = (p, f) => C.Cartesian3.add(world(p), C.Cartesian3.multiplyByScalar(out, sizeWorld * f, new C.Cartesian3()), new C.Cartesian3());
-      const marks = scene.primitives.add(new C.PolylineCollection());
-      const labels = scene.primitives.add(new C.LabelCollection({ scene }));
+      const marks = plot.add(new C.PolylineCollection());
+      const labels = plot.add(new C.LabelCollection({ scene }));
       const ends = {};
       for (const t of lim[axis].ticks) {
         const p = at(t);
@@ -498,10 +507,10 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
     };
 
     // 4. The data.
-    const lines = scene.primitives.add(new C.PolylineCollection());
-    const points = scene.primitives.add(new C.PointPrimitiveCollection());
-    const solids = scene.primitives.add(new C.PrimitiveCollection());
-    const labels = scene.primitives.add(new C.LabelCollection({ scene }));
+    const lines = plot.add(new C.PolylineCollection());
+    const points = plot.add(new C.PointPrimitiveCollection());
+    const solids = plot.add(new C.PrimitiveCollection());
+    const labels = plot.add(new C.LabelCollection({ scene }));
     const lineMaterial = (o) => {
       const c = color(o.color, o.alpha);
       return o.arrow ? C.Material.fromType('PolylineArrow', { color: c })
@@ -589,7 +598,7 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
         });
       } else if (item.kind === 'vector') {
         const from = Array.isArray(item.from[0]) && item.from[0].length === 2 && Array.isArray(item.from[0][1]) ? sampled(item.from) : new C.ConstantPositionProperty(world(item.from));
-        viewer.entities.add({ polyline: { positions: new C.PositionPropertyArray([from, sampled(item.samples, o)]), width: o.width ?? 3,
+        viewer.entities.add({ polyline: { positions: new C.PositionPropertyArray([from, sampled(item.samples, o)]), width: o.width ?? 3, arcType: C.ArcType.NONE,
           material: o.arrow === false ? color(o.color ?? 'text', o.alpha) : new C.PolylineArrowMaterialProperty(color(o.color ?? 'text', o.alpha)) } });
       } else if (item.kind === 'movingEllipsoid') {
         const radii = new C.SampledProperty(C.Cartesian3), orientation = new C.SampledProperty(C.Quaternion);
