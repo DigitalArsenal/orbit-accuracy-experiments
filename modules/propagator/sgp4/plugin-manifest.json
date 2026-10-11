@@ -1,0 +1,324 @@
+{
+  "pluginId": "com.orbpro.sgp4",
+  "name": "SGP4/SDP4 Propagator",
+  "version": "1.2.0",
+  "description": "SGP4/SDP4 analytical orbit propagator for OMM element sets, ported from OrbPro main with a canonical SDS PIV/TAB invoke surface.",
+  "pluginFamily": "propagator",
+  "capabilities": [],
+  "externalInterfaces": [],
+  "invokeSurfaces": [
+    "command"
+  ],
+  "runtimeTargets": [
+    "browser",
+    "wasi",
+    "wasmedge"
+  ],
+  "methods": [
+    {
+      "methodId": "ingest_omm",
+      "displayName": "Ingest OMM",
+      "description": "Loads OMM frames into the propagator catalog and ephemeris store. Accepts direct $OMM, size-prefixed $OMM streams, or $REC union frames carrying OMM records. Direct frames use the primary port; REC frames use records. An empty request is a no-op.",
+      "inputPorts": [
+        {
+          "portId": "omm",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.omm",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.omm",
+                  "fileIdentifier": "$OMM",
+                  "rootTypeName": "OMM"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        },
+        {
+          "portId": "records",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.rec",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.rec",
+                  "fileIdentifier": "$REC",
+                  "rootTypeName": "REC"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        }
+      ],
+      "outputPorts": [],
+      "maxBatch": 1024,
+      "drainPolicy": "drain-to-empty"
+    },
+    {
+      "methodId": "upsert_cat",
+      "displayName": "Upsert CAT",
+      "description": "Loads CAT metadata frames into the in-memory catalog index. Accepts direct $CAT, size-prefixed $CAT streams, or $REC union frames carrying CAT records. Direct frames use the primary port; REC frames use records. An empty request is a no-op.",
+      "inputPorts": [
+        {
+          "portId": "catalog",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.cat",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.cat",
+                  "fileIdentifier": "$CAT",
+                  "rootTypeName": "CAT"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        },
+        {
+          "portId": "records",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.rec",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.rec",
+                  "fileIdentifier": "$REC",
+                  "rootTypeName": "REC"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        }
+      ],
+      "outputPorts": [],
+      "maxBatch": 1024,
+      "drainPolicy": "drain-to-empty"
+    },
+    {
+      "methodId": "propagate_state",
+      "displayName": "Propagate State",
+      "description": "Propagates requested objects to requested epochs and emits FlatBuffer PropagatorState frames, in Earth-fixed (default), TEME or ICRF (GCRF) axes. Objects are named by entity handle or, identity-checked, by NORAD catalog number. OMM frames on the omm or records ports are ingested first, as ingest_omm does, so one invocation can carry its element sets.",
+      "inputPorts": [
+        {
+          "portId": "request",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.propagator.PropagatorBatchRequest",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.propagator.PropagatorBatchRequest",
+                  "fileIdentifier": "PROP",
+                  "rootTypeName": "PropagatorBatchRequest"
+                }
+              ]
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true
+        },
+        {
+          "portId": "omm",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.omm",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.omm",
+                  "fileIdentifier": "$OMM",
+                  "rootTypeName": "OMM"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        },
+        {
+          "portId": "records",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.rec",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.rec",
+                  "fileIdentifier": "$REC",
+                  "rootTypeName": "REC"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        }
+      ],
+      "outputPorts": [
+        {
+          "portId": "state",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.plugins.PropagatorState",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.plugins.PropagatorState",
+                  "fileIdentifier": "PRST",
+                  "rootTypeName": "PropagatorState"
+                }
+              ]
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true
+        }
+      ],
+      "maxBatch": 1,
+      "drainPolicy": "drain-until-yield"
+    },
+    {
+      "methodId": "propagate_ephemeris",
+      "displayName": "Propagate Ephemeris",
+      "description": "Writes one SDS $OEM per requested object (km, km/s, UTC, Earth-centred TEME or GCRF): one block over a span, or one block per element set of the object's history, each propagated from its own set alone across its neighbouring sets' epochs (the analysis/maneuver-detection input). OMM frames on the omm or records ports are ingested first, as ingest_omm does.",
+      "inputPorts": [
+        {
+          "portId": "request",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.propagator.PropagatorBatchRequest",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.propagator.PropagatorBatchRequest",
+                  "fileIdentifier": "PROP",
+                  "rootTypeName": "PropagatorBatchRequest"
+                }
+              ]
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true
+        },
+        {
+          "portId": "omm",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.omm",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.omm",
+                  "fileIdentifier": "$OMM",
+                  "rootTypeName": "OMM"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        },
+        {
+          "portId": "records",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.rec",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.sds.rec",
+                  "fileIdentifier": "$REC",
+                  "rootTypeName": "REC"
+                }
+              ]
+            }
+          ],
+          "minStreams": 0,
+          "maxStreams": 65535,
+          "required": false
+        }
+      ],
+      "outputPorts": [
+        {
+          "portId": "ephemeris",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.sds.oem",
+              "allowedTypes": [
+                {
+                  "schemaName": "OEM.fbs",
+                  "fileIdentifier": "$OEM",
+                  "rootTypeName": "OEM"
+                }
+              ]
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true
+        }
+      ],
+      "maxBatch": 1,
+      "drainPolicy": "drain-until-yield"
+    },
+    {
+      "methodId": "catalog_query",
+      "displayName": "Catalog Query",
+      "description": "Queries in-memory CAT metadata and emits matching catalog rows as FlatBuffer CatalogQueryResult frames.",
+      "inputPorts": [
+        {
+          "portId": "request",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.query.CatalogQueryRequest",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.query.CatalogQueryRequest",
+                  "fileIdentifier": "CQRQ",
+                  "rootTypeName": "CatalogQueryRequest"
+                }
+              ]
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true
+        }
+      ],
+      "outputPorts": [
+        {
+          "portId": "results",
+          "acceptedTypeSets": [
+            {
+              "setId": "orbpro.query.CatalogQueryResult",
+              "allowedTypes": [
+                {
+                  "schemaName": "orbpro.query.CatalogQueryResult",
+                  "fileIdentifier": "CQRS",
+                  "rootTypeName": "CatalogQueryResult"
+                }
+              ]
+            }
+          ],
+          "minStreams": 1,
+          "maxStreams": 65535,
+          "required": true
+        }
+      ],
+      "maxBatch": 256,
+      "drainPolicy": "drain-until-yield"
+    }
+  ]
+}
