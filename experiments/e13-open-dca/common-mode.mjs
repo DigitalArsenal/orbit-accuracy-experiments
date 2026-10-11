@@ -314,12 +314,12 @@ export function withLag(sol, lagHours) { return { ...sol, lagMs: lagHours * H };
 
 // The causal nowcast at an issue time: the arcs that ended at least latencyHours before it and not earlier than historyDays before that,
 // nodes at the centres of those arcs' days. The cut-off is an assertion, not a filter alone: the solver is handed no later arc.
-export function nowcast(arcs, issueMs, { latencyHours = 6, historyDays = 30, nodeHours = 24, lagHours = 0, ...rest } = {}) {
+export function nowcast(arcs, issueMs, { latencyHours = 6, historyDays = 30, nodeHours = 24, lagHours = 0, anchorMs: fixedAnchorMs = null, ...rest } = {}) {
   const cutoff = issueMs - latencyHours * H;
   const used = arcs.filter((a) => a.endMs <= cutoff && a.startMs >= cutoff - historyDays * DAY);
   if (used.some((a) => a.endMs > cutoff)) throw new Error('look-ahead: an arc ends after the cut-off');
   if (!used.length) return null;
-  const anchorMs = Math.floor(cutoff / DAY) * DAY + arcCenterOffsetMs(used);
+  const anchorMs = fixedAnchorMs ?? Math.floor(cutoff / DAY) * DAY + arcCenterOffsetMs(used);       // a fixed anchor for arcs that are not clustered in the day (the Starlink versions)
   const sol = solveCommonMode(used, { anchorMs, nodeHours, ...rest });
   return { ...withLag(sol, lagHours), issueMs, cutoffMs: cutoff, usedArcs: used.length, latestArcEndMs: Math.max(...used.map((a) => a.endMs)) };
 }

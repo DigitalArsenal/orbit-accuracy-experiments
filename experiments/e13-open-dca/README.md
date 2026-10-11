@@ -1,7 +1,7 @@
 # E13 — An open DCA from fleet drag
 
-[PLAN.md](PLAN.md) is the plan: Part R (the Planet × Swarm / GRACE-FO retrospective) was frozen at `4221f03`; its amendments (R1 the solver, R2 the lag and the definitions the code fixes, S1 the SpaceX measurements) and
-Deviation D1 (test A arcs started before the selection was committed, and what was done about it) are at its end. `config.json` is frozen and never edited; the amendments' parameter values are in
+[PLAN.md](PLAN.md) is the plan: Part R (the Planet × Swarm / GRACE-FO retrospective) was frozen at `4221f03`; its amendments (R1 the solver, R2 the smoothing prior and the definitions the code fixes, S1 the SpaceX
+measurements, S2 the exploratory latency question) and Deviation D1 (test A arcs started before the selection was committed, and what was done about it) are at its end. `config.json` is frozen and never edited; the amendments' parameter values are in
 [amendments.json](amendments.json), which `common.mjs` merges over it. Results: [../../results/e13/](../../results/e13/).
 
 ## Order of work (PLAN sections 7 and 9)
@@ -9,8 +9,10 @@ Deviation D1 (test A arcs started before the selection was committed, and what w
 1. `steps/07-planet-sample.mjs` the 68 eligible Doves, 36 calibration and 12 held-out; `steps/10-planet-arcs.mjs --split dev` the drag of every satellite-day through the orbital energy
    (`arcs.mjs`; `analysis/density-calibration` `energy`); `steps/11-arcs-provenance.mjs` the manifest of the arcs; `steps/12-cr-sensitivity.mjs`; `steps/20-density-windows.mjs --split dev`.
 2. `steps/40-select.mjs` the solver, the lag and the forecast time constant, on the dev split only, then `results/e13/selection.json` is committed. **A test split opens only then** (`windows.mjs`; `test/e13-windows.test.mjs`).
-3. Test A: `10-planet-arcs`, `20-density-windows`, `30-density-score` (H1, H2, H3, H6), `35-propagation` (H4 Swarm, H5 held-out Doves), `50-propagation-score`, `90-report`. Then test B, the same.
+3. Test A: `run-split.sh testA` (`10-planet-arcs`, `11-arcs-provenance`, `20-density-windows`, `30-density-score` (H1, H2, H3, H6), `35-propagation` (H4 Swarm, H5 held-out Doves), `50-propagation-score`, `90-report`). Then test B, the same.
 4. Part S: `collect.mjs` (the Starlink collector, restarted with the pair mismatch), `steps/60-pairs.mjs`.
+5. Exploratory (Amendment S2, outside H1-H6): `steps/71-planet-latency-sweep.mjs` (dev split only, with Swarm and GRACE-FO truth), `steps/70-starlink-common-mode.mjs` (the same solve on the Starlink pairs; no density truth exists
+   for those dates). Their results are labelled EXPLORATORY wherever they are shown.
 
 ## Files
 

@@ -190,4 +190,24 @@ export function causalRows(windows, allArcs, nowOptions, fromMs, toMs, firstIssu
   return { rows, delays };
 }
 
+// The exploratory latency statistic (PLAN.md Amendment S2). A record is one window of the forecast horizon: {block, lead, ref, errs}, where ref is the change of the
+// truth from the 24 h before the issue time to the window, and errs[tau] what is left of it after the nowcast + forecast with that tau. The statistic is the
+// root-mean-square of what is left against the root-mean-square of ref (the ratio is below 1 where the forecast helps). The interval is a block bootstrap over
+// `block` (issue times closer than the forecast horizon share windows, so blocks are 6 days), given only where at least `minimumBlocks` blocks exist.
+export function latencyStatistic(records, taus, { minimumBlocks = 6 } = {}) {
+  const ok = records.filter((r) => Number.isFinite(r.ref) && taus.every((t) => Number.isFinite(r.errs[String(t)])));
+  const rms = (xs) => Math.sqrt(xs.reduce((a, x) => a + x * x, 0) / xs.length);
+  const blocks = new Set(ok.map((r) => r.block)).size;
+  const ratio = (cells) => Math.sqrt(cells.reduce((a, c) => a + c.weight * c.err2, 0) / cells.reduce((a, c) => a + c.weight * c.ref2, 0));
+  const byTau = {};
+  for (const t of taus) {
+    const key = String(t);
+    const cells = ok.map((r) => ({ row: r.block, col: 'all', err2: r.errs[key] ** 2, ref2: r.ref ** 2 }));
+    const interval = blocks >= minimumBlocks ? boot(cells, ratio) : null;
+    byTau[key] = { rmsUnpredicted: rms(ok.map((r) => r.errs[key])), ratio: ratio(cells.map((c) => ({ ...c, weight: 1 }))), lower: interval?.lower ?? null, upper: interval?.upper ?? null,
+      byLeadDays: [[0, 1], [1, 2], [2, 3]].map(([lo, hi]) => { const at = ok.filter((r) => r.lead >= lo && r.lead < hi); return { lead: `${lo}-${hi}`, windows: at.length, rmsUnpredicted: rms(at.map((r) => r.errs[key])), rmsNoCorrection: rms(at.map((r) => r.ref)) }; }) };
+  }
+  return { windows: ok.length, blocks, rmsNoCorrection: rms(ok.map((r) => r.ref)), byTau };
+}
+
 export { windowMean, forecastMean };

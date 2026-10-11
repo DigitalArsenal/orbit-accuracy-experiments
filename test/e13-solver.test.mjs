@@ -153,3 +153,43 @@ test('a random-walk prior on the common mode lowers the error of a smooth common
   assert.ok(smooth.keep > 0.7 && none.keep > 0.9, `storm kept: ${smooth.keep.toFixed(2)} with the prior (0.05), ${none.keep.toFixed(2)} without`);
   assert.ok(tight.keep < smooth.keep, 'a tighter prior keeps less of the storm');
 });
+
+// Amendment S2 (exploratory): the same solver on 7 h pairs of staggered satellites, nodes every 6 h on a fixed anchor, and the latency statistic.
+function pairFleet(f, { satellites, days, seed }) {
+  const r = rng(seed), arcs = [];
+  for (let i = 0; i < satellites; ++i) {
+    const base = Math.log(0.03) + 0.3 * gauss(r), stagger = r() * 7.17 * H;
+    for (let k = 0; T0 + stagger + (k + 1) * 7.17 * H < T0 + days * DAY; ++k) {
+      const startMs = T0 + stagger + k * 7.17 * H, endMs = startMs + 7.17 * H;
+      arcs.push({ dove: `s${i}`, startMs, endMs, y: base + meanOver(f, startMs, endMs) });
+    }
+  }
+  return arcs;
+}
+
+test('7 h pairs on a fixed anchor: the 6 h common mode is recovered exactly without noise, and a nowcast uses no later pair', () => {
+  const f = truthOf(6, T0, 9, 5);
+  const arcs = pairFleet(f, { satellites: 60, days: 9, seed: 3 });
+  const opts = { nodeHours: 6, baseline: { kind: 'randomWalk', stepSigma: 0.005 }, iterations: 60, tolerance: 1e-6 };
+  const sol = solveCommonMode(arcs, { anchorMs: T0, ...opts });
+  const e = windowError(sol, f, 1, 8);
+  assert.ok(e.rms < 2e-3, `rms ${e.rms} over ${e.n} windows`);
+  const issueMs = T0 + 6 * DAY, latencyHours = 3;
+  const a = nowcast(arcs, issueMs, { latencyHours, historyDays: 4, anchorMs: T0, ...opts });
+  assert.equal((a.nodeMs[0] - T0) % (6 * H), 0, 'the nodes lie on the fixed anchor\'s grid');
+  assert.ok(a.latestArcEndMs <= issueMs - latencyHours * H && a.latestArcEndMs > issueMs - (latencyHours + 7.17) * H, `the newest pair ends ${new Date(a.latestArcEndMs).toISOString()}`);
+  const b = nowcast(arcs.map((x) => (x.endMs > issueMs - latencyHours * H ? { ...x, y: x.y + 5 } : x)), issueMs, { latencyHours, historyDays: 4, anchorMs: T0, ...opts });
+  assert.deepEqual(b.s, a.s);
+});
+
+test('the latency statistic is the rms of what is left against the rms of the change, with an interval only from six blocks', async () => {
+  const { latencyStatistic } = await import('../experiments/e13-open-dca/score.mjs');
+  const records = (blocks) => Array.from({ length: blocks * 10 }, (_, i) => { const ref = (i % 2 ? 1 : -1) * (1 + (i % 5) / 10); return { block: Math.floor(i / 10), lead: (i % 3) + 0.5, ref, errs: { 48: 0.5 * ref, null: ref } }; });
+  const few = latencyStatistic(records(4), [48, null]);
+  assert.equal(few.windows, 40);
+  assert.ok(Math.abs(few.byTau['48'].ratio - 0.5) < 1e-12 && Math.abs(few.byTau['null'].ratio - 1) < 1e-12);
+  assert.equal(few.byTau['48'].lower, null, 'four blocks give no interval');
+  const many = latencyStatistic(records(8), [48, null]);
+  assert.ok(Math.abs(many.byTau['48'].lower - 0.5) < 1e-9 && Math.abs(many.byTau['48'].upper - 0.5) < 1e-9, 'every block has the ratio 0.5, so the interval is the point');
+  assert.deepEqual(many.byTau['48'].byLeadDays.map((l) => l.lead), ['0-1', '1-2', '2-3']);
+});
