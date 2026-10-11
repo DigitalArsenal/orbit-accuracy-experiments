@@ -21,7 +21,7 @@ const SIMULATION = ['analysis/observation-simulator', 'foundation/frames', 'prop
 
 export const MODELS = [
   // Evidence-Supported ASO Catalog
-  { paper: CATALOG, heading: '2 Evidence model', url: 'models/evidence-supported-aso-catalog/2-evidence-model-and-records.html', dir: 'od', model: 'batch-fit', title: 'A solution from observations, with its covariance',
+  { paper: CATALOG, heading: '2.3 Evidence model', url: 'models/evidence-supported-aso-catalog/2-evidence-model-and-records.html', dir: 'od', model: 'batch-fit', title: 'A solution from observations, with its covariance',
     claim: 'Radar, optical and RF observations of a GPS satellite, their measurement models, HPOP’s dynamics and a weighted least-squares fit: the solution and its covariance against the IGS orbit.',
     modules: [...SIMULATION, 'analysis/estimation'] },
   { paper: CATALOG, heading: 'Vimpel osculating elements', model: 'osculating-elements', title: 'Osculating elements to a J2000 state',
