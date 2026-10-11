@@ -34,14 +34,16 @@ if (planet) {
 } else L.push('Pending: `dev/exploratory-planet-latency.json`.', '');
 
 // ── S2: Starlink version ──
-const starlink = read('part-s/exploratory-latency.json');
+const starlinkPrimary = read('part-s/exploratory-latency.json'), starlinkLegacy = read('part-s/legacy/exploratory-latency.json');
 L.push('## S2 Starlink: the same solve on the version pairs (no density truth exists for these dates)', '');
-if (starlink) {
+for (const [starlink, label] of [[starlinkPrimary, 'primary (Amendment S5: relative residual criterion, precision per pair)'], [starlinkLegacy, 'S2 as written (residual below 1 J/kg, unit precision; sensitivity)']]) if (starlink) {
+  L.push(`### ${label}`, '');
   L.push(`${starlink.pairs} clean decaying-stratum pairs of ${starlink.satellites} satellites, ${starlink.span[0].slice(0, 16)} to ${starlink.span[1].slice(0, 16)}; nodes every ${starlink.nodeHours} h, history ${starlink.historyDays} d; a new version is created ${f(starlink.medianCreatedHoursAfterPairEnd, 2)} h (median) after its start state.`, '',
     'Held-out satellites (one parity of the NORAD number calibrates the nowcast, the other is predicted at pair level) and the fleet\'s own hindcast as truth; ratio of unpredicted to uncorrected rms.', '',
     '| Band (km) | Prior scale | Latency (h) | Held-out pairs | tau 48 h | tau 12 h | held | Hindcast truth, tau 48 h |', '| --- | ---: | ---: | ---: | --- | --- | --- | --- |',
     ...starlink.results.map((r) => { const h = r.heldOutSatellites, o = r.hindcastTruth; return `| ${r.band} | ${r.priorScale} | ${r.latencyHours} | ${h.windows} | ${h.byTau['48'] ? `${f(h.byTau['48'].ratio)}${ci(h.byTau['48'])}` : 'n/a'} | ${h.byTau['12'] ? f(h.byTau['12'].ratio) : 'n/a'} | ${h.byTau['null'] ? f(h.byTau['null'].ratio) : 'n/a'} | ${o.byTau['48'] ? f(o.byTau['48'].ratio) : 'n/a'} |`; }), '');
-} else L.push('Pending: `part-s/exploratory-latency.json` (needs 100 clean decaying-stratum pairs and about a week).', '');
+}
+if (!starlinkPrimary && !starlinkLegacy) L.push('Pending: `part-s/exploratory-latency.json` (needs 100 clean decaying-stratum pairs and about a week).', '');
 
 // ── S3: the rescaling ──
 const sample = read('s3/rescale-sample.json');
@@ -58,11 +60,11 @@ else L.push('Pending: `s3/dev-reference-check.json` (needs the dev arcs rescaled
 // ── S3: the combined solve ──
 L.push('## S3 the combined solve: Planet, Starlink and both, scored on satellites that were in no solve', '');
 let any = false;
-for (const spacing of [12, 6]) {
-  const c = read(`s3/combined-solve-${spacing}h.json`);
+for (const [spacing, legacy] of [[12, false], [6, false], [12, true]]) {
+  const c = read(`s3/combined-solve-${spacing}h${legacy ? '-legacy' : ''}.json`);
   if (!c) continue;
   any = true;
-  L.push(`### Nodes every ${spacing} h${spacing === 12 ? ' (primary, Amendment S4)' : ' (sensitivity)'}`, '', `${c.planetArcs} Planet live arcs of ${c.planetDoves} Doves; prior step ${f(c.solver.smoothSigma, 4)} per node; history ${c.historyDays} d; latencies ${c.latencies.join(', ')} h.`, '');
+  L.push(`### Nodes every ${spacing} h${legacy ? ', S3 as written (unit precision, residual below 1 J/kg; sensitivity)' : spacing === 12 ? ' (primary, Amendments S4 and S5)' : ' (sensitivity)'}`, '', `${c.planetArcs} Planet live arcs of ${c.planetDoves} Doves; prior step ${f(c.solver.smoothSigma, 4)} per node; history ${c.historyDays} d; latencies ${c.latencies.join(', ')} h.`, '');
   for (const r of c.results) {
     L.push(`#### Starlink band ${r.band} km (${r.starlinkPairs} pairs of ${r.starlinkSatellites} satellites; ${r.span[0].slice(0, 10)} to ${r.span[1].slice(0, 10)}; ${r.issues} issue times)`, '',
       `The fleets' own common modes against each other (12 h windows, ${r.agreement.windows} windows): correlation of the means ${f(r.agreement.correlationOfMeans)}, of 12 h changes ${f(r.agreement.correlationOfChangesOver12h)}, of 24 h changes ${f(r.agreement.correlationOfChangesOver24h)}; robust scales in the combined solve ${JSON.stringify(Object.fromEntries(Object.entries(r.scales ?? {}).map(([k, v]) => [k, +v.toFixed(3)])))}.`, '',

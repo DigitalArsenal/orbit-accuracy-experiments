@@ -71,7 +71,9 @@ if (raise.length >= 20) {
 
 // S4 Method A against Method B on the decaying stratum, no jump and a gate pass in the head fit of the new version
 const indexByName = new Map(fs.existsSync(paths.index) ? fs.readFileSync(paths.index, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).map((r) => [r.name, r]) : []);
-const agree = decay.map((p) => ({ p, a: indexByName.get(p.next.name) })).filter(({ p, a }) => a?.gatePass && a.jumps === 0 && p.methodB?.cdAreaOverMass > 0 && p.methodB.cdAreaOverMass < 1 && Math.abs(p.methodB.checkMismatchJkg ?? 1e9) < 5);
+// (the residual at Method B's answer is held to the relative criterion of Amendment S5: at most max(1 J/kg, 0.5 % of the drag energy the pair sees))
+const agree = decay.map((p) => ({ p, a: indexByName.get(p.next.name) })).filter(({ p, a }) => a?.gatePass && a.jumps === 0 && p.methodB?.cdAreaOverMass > 0 && p.methodB.cdAreaOverMass < 1
+  && Math.abs(p.methodB.checkMismatchJkg ?? 1e9) <= Math.max(1, 0.005 * Math.abs(p.methodB.sensitivityJkgPerM2kg * p.methodB.cdAreaOverMass)));
 out.S4 = { pairs: agree.length };
 if (agree.length >= 10) {
   const l = agree.map(({ p, a }) => Math.log(a.cdAreaOverMass / p.methodB.cdAreaOverMass));
