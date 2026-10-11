@@ -1,7 +1,5 @@
 // E15's operating settings: paths, politeness, compute limits. The experiment's numbers (windows, horizons, rules,
 // statistics) are in config.json, which is frozen; nothing here decides a result.
-import path from 'node:path';
-import { repoRoot } from '../../harness/provenance.mjs';
 
 export const USER_AGENT = 'sdn-e15-aoe-lineage/1.0';
 
@@ -29,8 +27,9 @@ export const PATHS = {
   ],
   // E15's own store outside the repository: name registries, logs, the runner's state. No operator bytes.
   store: '/opt/data/sdn-archive/e15-aoe-lineage',
-  // Residual rows (derived from Space-Track and operator data): ignored by git, never committed.
-  rows: process.env.E15_ROWS ?? path.join(repoRoot, 'runs', 'e15-rows'),
+  // Residual rows (derived from Space-Track and operator data), outside every checkout so that they outlive the worktree
+  // that wrote them (the test read comes weeks later); never committed.
+  rows: process.env.E15_ROWS ?? '/opt/data/sdn-archive/e15-aoe-lineage/rows',
   secrets: '/opt/data/sdn-archive/.secrets',
 };
 

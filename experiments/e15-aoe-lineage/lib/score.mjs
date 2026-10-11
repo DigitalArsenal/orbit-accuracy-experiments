@@ -54,7 +54,8 @@ export async function scoreItems(scorer, items, { log = () => {} } = {}) {
         if (r.norad !== w.item.norad || Date.parse(r.set) !== Date.parse(`${w.set.epoch}Z`)) throw new Error(`element_residuals answered ${r.norad}@${r.set} for ${w.item.norad}@${w.set.epoch}`);
         if (r.error) { rows.push(row(w, method, null, r.error)); ++counts.failures; return; }
         const win = r.windows[0];
-        const samples = (win.samples ?? []).slice().sort((a, b) => Date.parse(`${a[0]}`) - Date.parse(`${b[0]}`));
+        const utc = (x) => Date.parse(/Z$/.test(x[0]) ? x[0] : `${x[0]}Z`);
+        const samples = (win.samples ?? []).slice().sort((a, b) => utc(a) - utc(b));
         if (!samples.length) { rows.push(row(w, method, null, win.failures ? 'SGP4 failed' : 'no reference state in the window')); ++counts.failures; return; }
         ++counts.samples;
         rows.push(row(w, method, samples[0]));

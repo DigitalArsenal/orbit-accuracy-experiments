@@ -106,7 +106,7 @@ for (const r of regimes) for (const h of horizons) {
 }
 
 // ── Descriptive: error by age from the set's epoch, coverage, AOE availability ──
-const bins = config.statistics.ageBinsDays;
+const bins = [...config.statistics.ageBinsDays, Infinity];   // and every older set
 const byAge = [];
 for (const r of regimes) for (const m of ['AOE-latest', 'ST-latest']) for (let i = 0; i + 1 < bins.length; ++i) {
   const list = samples.filter((s) => s.regime === r && s.method === m && s.ageDays >= bins[i] && s.ageDays < bins[i + 1]);
@@ -192,12 +192,16 @@ for (const [r, c] of Object.entries(coverageOut)) L.push(`| ${r} | ${c.truthObje
 L.push('', '## AOE snapshots', '', '| Day | Records | Site total | Complete | Unrenderable boxes | AOE-only ids | Rejected | Retrieved (UTC) |', '| --- | ---: | ---: | --- | ---: | ---: | ---: | --- |');
 for (const s of snapshots) L.push(`| ${s.day} | ${s.records} | ${s.siteTotal ?? '—'} | ${s.complete ? 'yes' : 'no'} | ${s.unrenderable} | ${s.aoeOnly} | ${s.rejected} | ${s.retrieval.firstUtc?.slice(11, 16)} to ${s.retrieval.lastUtc?.slice(11, 16)} |`);
 L.push('', '## Error by age from the set\'s epoch (median 3D)', '', '| Regime | Method | Age (d) | Median | n | Objects |', '| --- | --- | --- | ---: | ---: | ---: |');
-for (const x of byAge) L.push(`| ${x.regime} | ${x.method} | ${x.ageDays[0]}–${x.ageDays[1]} | ${km(x.median3dKm)} | ${x.n} | ${x.objects} |`);
+for (const x of byAge) L.push(`| ${x.regime} | ${x.method} | ${x.ageDays[0]}–${Number.isFinite(x.ageDays[1]) ? x.ageDays[1] : ''} | ${km(x.median3dKm)} | ${x.n} | ${x.objects} |`);
 L.push('');
 const report = `${L.join('\n')}\n`;
 run.write('REPORT.md', report);
 run.finish({ resamples });
 log(`${samples.length} samples, ${rows.length - samples.length} rows without a sample -> ${run.dir}/REPORT.md`);
+for (const x of ratios.filter((x) => x.a === 'AOE-latest' && x.b === 'ST-latest')) {
+  const m = (meth) => table.find((y) => y.regime === x.regime && y.h === x.h && y.method === meth);
+  log(`${label} ${x.regime} h=${x.h}: AOE ${km(m('AOE-latest')?.median3dKm.estimate)} (n ${m('AOE-latest')?.n}), ST ${km(m('ST-latest')?.median3dKm.estimate)} (n ${m('ST-latest')?.n}), AOE/ST ${ratio(x)}`);
+}
 if (!values['no-results']) {
   const out = path.resolve(values.results ?? path.join(repoRoot, 'results', 'e15'));
   fs.mkdirSync(path.join(out, run.id), { recursive: true });

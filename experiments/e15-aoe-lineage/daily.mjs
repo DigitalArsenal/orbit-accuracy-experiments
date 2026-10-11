@@ -9,7 +9,8 @@
 // window: at each issue time T, AOE-latest and ST-latest (lib/aoe.mjs, lib/st.mjs), each propagated by SGP4 to the first
 // reference state in [t, t + 15 min] (lib/score.mjs). Operator files (Starlink, Planet, CMSE, NASA, Intelsat, SES) are read
 // in memory while they can be read; the AOE snapshot of day X and Space-Track's creations through T are waited for.
-// Residual rows go to runs/e15-rows (ignored); the runner prints counts, never a statistic of the test window.
+// Residual rows go to the store (settings PATHS.rows, never committed); the runner prints counts, never a statistic of the
+// test window.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';

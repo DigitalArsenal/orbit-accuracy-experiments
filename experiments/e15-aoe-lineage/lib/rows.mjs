@@ -1,5 +1,5 @@
-// The residual-row store (runs/e15-rows, ignored by git; rows derive from Space-Track and operator data and never leave
-// this machine):
+// The residual-row store (settings PATHS.rows, outside the repository; rows derive from Space-Track and operator data and
+// never leave this machine):
 //   <rows>/<window>/<issue day>/<target day>.<truth>.jsonl   one row per (object, horizon, method)
 //   <rows>/coverage/<target day>.<truth>.json                what the truth source held for that target (counts only)
 // A (target day, truth) pair is rewritten whole, so a rerun replaces it. Test-window files are written under the row lock

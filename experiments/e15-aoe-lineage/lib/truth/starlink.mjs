@@ -63,7 +63,12 @@ export async function acquire({ http, readers, log, targetMs, wanted }) {
   const rule = config.regimes[regime].rule;
   const tolMs = config.targetToleranceSeconds * 1000;
   const reg = registry();
-  const meme = readers.meme ??= await loadMemeReader(PATHS.readerModules);
+  if (!readers.meme) {
+    readers.meme = await loadMemeReader(PATHS.readerModules);
+    const wasm = fs.readFileSync(path.join(PATHS.readerModules, readers.meme.artifact.path));
+    readers.run?.addModule({ path: 'data-source/spacex-starlink-source', wasmSha256: sha256(wasm), bytes: wasm.length });
+  }
+  const meme = readers.meme;
   const items = [];
   const coverage = { truth: id, regime, targetUtc: isoZ(targetMs), registryFiles: reg.files.length, listed: reg.byNorad.size, wanted: 0, candidates: 0, fetched: 0, publishedAfterTarget: 0, noVersionInHour: 0, readFailures: 0, httpFailures: 0, items: 0, missing: 0 };
   const jobs = [];
