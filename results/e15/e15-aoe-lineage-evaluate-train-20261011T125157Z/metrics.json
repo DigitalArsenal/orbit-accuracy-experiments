@@ -2075,6 +2075,281 @@
    "median3dKm": 6.34349261583974
   }
  ],
+ "matchedAge": [
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    0,
+    0.5
+   ],
+   "nA": 44,
+   "nB": 1616,
+   "estimate": 1.0741368773385958,
+   "lower": 0.7035591220836503,
+   "upper": 1.5543449873076043,
+   "resamples": 2000,
+   "seed": 20261011,
+   "confidence": 0.95
+  },
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    0.5,
+    1
+   ],
+   "nA": 189,
+   "nB": 915,
+   "estimate": 1.0290157412299086,
+   "lower": 0.7960654660589914,
+   "upper": 1.2561353015983165,
+   "resamples": 2000,
+   "seed": 20261012,
+   "confidence": 0.95
+  },
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    1,
+    2
+   ],
+   "nA": 230,
+   "nB": 408,
+   "estimate": 1.37407302102772,
+   "lower": 1.1037528571490496,
+   "upper": 1.7344789806178895,
+   "resamples": 2000,
+   "seed": 20261013,
+   "confidence": 0.95
+  },
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    2,
+    4
+   ],
+   "nA": 445,
+   "nB": 41,
+   "estimate": 1.8445409623113516,
+   "lower": 1.3713258197610716,
+   "upper": 3.799169696367158,
+   "resamples": 2000,
+   "seed": 20261014,
+   "confidence": 0.95
+  },
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    4,
+    8
+   ],
+   "nA": 491,
+   "nB": 1
+  },
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    8,
+    15
+   ],
+   "nA": 546,
+   "nB": 0
+  },
+  {
+   "regime": "LEO-SL",
+   "ageDays": [
+    15,
+    null
+   ],
+   "nA": 810,
+   "nB": 0
+  },
+  {
+   "regime": "CSS",
+   "ageDays": [
+    0,
+    0.5
+   ],
+   "nA": 0,
+   "nB": 3
+  },
+  {
+   "regime": "CSS",
+   "ageDays": [
+    8,
+    15
+   ],
+   "nA": 1,
+   "nB": 0
+  },
+  {
+   "regime": "CSS",
+   "ageDays": [
+    15,
+    null
+   ],
+   "nA": 2,
+   "nB": 0
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    0,
+    0.5
+   ],
+   "nA": 0,
+   "nB": 14
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    0.5,
+    1
+   ],
+   "nA": 1,
+   "nB": 18
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    1,
+    2
+   ],
+   "nA": 0,
+   "nB": 3
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    2,
+    4
+   ],
+   "nA": 0,
+   "nB": 1
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    4,
+    8
+   ],
+   "nA": 1,
+   "nB": 0
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    8,
+    15
+   ],
+   "nA": 2,
+   "nB": 0
+  },
+  {
+   "regime": "LEO-PL",
+   "ageDays": [
+    15,
+    null
+   ],
+   "nA": 32,
+   "nB": 0
+  },
+  {
+   "regime": "LEO-SP",
+   "ageDays": [
+    0,
+    0.5
+   ],
+   "nA": 0,
+   "nB": 1
+  },
+  {
+   "regime": "LEO-SP",
+   "ageDays": [
+    0.5,
+    1
+   ],
+   "nA": 0,
+   "nB": 3
+  },
+  {
+   "regime": "LEO-SP",
+   "ageDays": [
+    15,
+    null
+   ],
+   "nA": 4,
+   "nB": 0
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    0,
+    0.5
+   ],
+   "nA": 13,
+   "nB": 55,
+   "estimate": 1.3493074243638525,
+   "lower": 0.6500721391644239,
+   "upper": 2.692142960491088,
+   "resamples": 2000,
+   "seed": 20261011,
+   "confidence": 0.95
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    0.5,
+    1
+   ],
+   "nA": 3,
+   "nB": 14
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    1,
+    2
+   ],
+   "nA": 8,
+   "nB": 6
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    2,
+    4
+   ],
+   "nA": 12,
+   "nB": 1
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    4,
+    8
+   ],
+   "nA": 10,
+   "nB": 0
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    8,
+    15
+   ],
+   "nA": 23,
+   "nB": 0
+  },
+  {
+   "regime": "GEO",
+   "ageDays": [
+    15,
+    null
+   ],
+   "nA": 7,
+   "nB": 0
+  }
+ ],
  "coverage": {
   "CSS": {
    "truthObjects": 3,

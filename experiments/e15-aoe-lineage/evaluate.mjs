@@ -16,7 +16,7 @@ import { repoRoot, startRun } from '../../harness/provenance.mjs';
 import { PATHS } from './settings.mjs';
 import { config, configPath, issueDays, selectionPath } from './lib/windows.mjs';
 import { readCoverage, readRows } from './lib/rows.mjs';
-import { lineageCorrelation, meanSquareRtn, norm, pairedRatio, summarize } from './lib/stats.mjs';
+import { lineageCorrelation, meanSquareRtn, norm, pairedRatio, summarize, unpairedRatio } from './lib/stats.mjs';
 import { median } from '../../harness/stats.mjs';
 import { AoeCatalog } from './lib/aoe.mjs';
 
@@ -112,6 +112,13 @@ for (const r of regimes) for (const m of ['AOE-latest', 'ST-latest']) for (let i
   const list = samples.filter((s) => s.regime === r && s.method === m && s.ageDays >= bins[i] && s.ageDays < bins[i + 1]);
   if (list.length) byAge.push({ regime: r, method: m, ageDays: [bins[i], bins[i + 1]], n: list.length, objects: new Set(list.map((s) => s.norad)).size, median3dKm: median(list.map((s) => norm(s.rtnKm))) });
 }
+// Amendment A7 (secondary, descriptive): AOE-latest / ST-latest at matched set age, unpaired, per regime and age bin.
+const matchedAge = [];
+for (const r of regimes) for (let i = 0; i + 1 < bins.length; ++i) {
+  const pick = (m) => samples.filter((s) => s.regime === r && s.method === m && s.ageDays >= bins[i] && s.ageDays < bins[i + 1]);
+  const x = unpairedRatio(pick('AOE-latest'), pick('ST-latest'), config.statistics.bootstrapSeed + i, resamples);
+  if (x.nA || x.nB) matchedAge.push({ regime: r, ageDays: [bins[i], bins[i + 1]], ...x });
+}
 const inWindow = new Set(issueDays(window));
 const coverageFiles = readCoverage().filter((c) => Object.keys(c.counts?.byIssue ?? {}).some((k) => inWindow.has(k.split('|')[0])));
 const coverage = {};
@@ -139,7 +146,7 @@ for (const c of coverageFiles) for (const [k, v] of Object.entries(c.counts.byIs
 const aoe = new AoeCatalog(issueDays(window)[0], issueDays(window).at(-1));
 const snapshots = aoe.describe().map((s) => ({ day: s.day, complete: s.run.complete, records: s.counts.records, siteTotal: s.run.siteTotal, unrenderable: s.run.unrenderable.length, aoeOnly: s.counts.aoeOnly, rejected: s.counts.rejected, checksumMismatches: s.counts.checksumMismatches, retrieval: s.retrieval }));
 
-const metrics = { label, window, issueDays: [...inWindow], rows: rows.length, samples: samples.length, failures: rows.filter((r) => r.failure).length, selection: window === 'train' ? selection : { file: config.testRead.selection }, table, ratios, byAge, coverage: coverageOut, availability: Object.values(availability), snapshots };
+const metrics = { label, window, issueDays: [...inWindow], rows: rows.length, samples: samples.length, failures: rows.filter((r) => r.failure).length, selection: window === 'train' ? selection : { file: config.testRead.selection }, table, ratios, byAge, matchedAge, coverage: coverageOut, availability: Object.values(availability), snapshots };
 if (window === 'test') {
   const find = (r, h, a, b) => ratios.find((x) => x.regime === r && x.h === h && x.a === a && x.b === b);
   metrics.decisions = {
@@ -189,6 +196,9 @@ for (const r of regimes) {
   for (const x of rows_.filter((x) => x.method === 'AOE-latest' || x.method === 'ST-latest')) L.push(`| ${x.method} | ${x.h} d | ${x.clippedRmsRtnKm.map(km).join(' / ')} | ${x.squaredErrorShareRtn.map(pct).join(' / ')} |`);
   L.push('');
 }
+L.push('## AOE-latest / ST-latest at matched set age (amendment A7, secondary, added after the first TRAIN interim)', '', 'Unpaired samples whose set is the given age at the target (all horizons), ratio of median 3D errors with a two-way pigeonhole interval; no hypothesis is tested.', '', '| Regime | Set age (d) | Ratio [95 %] | AOE n | ST n |', '| --- | --- | --- | ---: | ---: |');
+for (const x of matchedAge) L.push(`| ${x.regime} | ${x.ageDays[0]}–${Number.isFinite(x.ageDays[1]) ? x.ageDays[1] : ''} | ${x.estimate === undefined ? '— (fewer than 10 samples)' : `${x.estimate.toFixed(3)} [${x.lower.toFixed(3)}, ${x.upper.toFixed(3)}]`} | ${x.nA} | ${x.nB} |`);
+L.push('');
 L.push('## Notes on the methods and the truth', '',
   '- AOE-latest is the newest AOE set whose `ctime` and epoch are at or before T and that one of our daily snapshots holds (PLAN.md amendments A1, A5). ST-latest is the newest Space-Track set created and with its epoch at or before T (E3).',
   '- SupGP-latest (CelesTrak supplemental GP, our collector archive, 2026-10-10 to 10-15) is reported beside both, never selected or fused. Its sets are fitted to the operators\' own ephemerides, the files the truth comes from in LEO-SL, LEO-PL, GEO and CSS, so it is not independent of the truth there.',

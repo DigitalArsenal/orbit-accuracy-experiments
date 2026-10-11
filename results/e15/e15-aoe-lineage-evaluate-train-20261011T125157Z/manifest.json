@@ -1,5 +1,5 @@
 {
- "run": "e15-aoe-lineage-evaluate-train-20261011T124915Z",
+ "run": "e15-aoe-lineage-evaluate-train-20261011T125157Z",
  "experiment": "e15-aoe-lineage",
  "step": "evaluate-train",
  "command": [
@@ -11,15 +11,15 @@
  "args": {
   "window": "train"
  },
- "started": "2026-10-11T12:49:15.271Z",
- "finished": "2026-10-11T12:49:41.697Z",
+ "started": "2026-10-11T12:51:57.984Z",
+ "finished": "2026-10-11T12:52:26.731Z",
  "config": {
   "path": "experiments/e15-aoe-lineage/config.json",
   "sha256": "19915f6eda0b624349fe3d5a25b78d901bd3cc63f00e5a7df1a5e2c8fb63ed68",
   "frozen": true
  },
  "repository": {
-  "commit": "7c9f549f2ec3d755a24ad4da04670b57be9a010e",
+  "commit": "3a630b00104a19041d5bacc8f106de96388f3288",
   "dirty": true
  },
  "modulesRepository": {
@@ -37,9 +37,9 @@
   "platform": "darwin 25.3.0 arm64",
   "cpus": 28,
   "loadAverage": [
-   22.73046875,
-   21.74267578125,
-   21.8046875
+   25.693359375,
+   23.23828125,
+   22.36181640625
   ]
  },
  "inputs": {
@@ -53,7 +53,7 @@
  },
  "invocations": [
   {
-   "started": "2026-10-11T12:49:15.271Z",
+   "started": "2026-10-11T12:51:57.984Z",
    "args": {
     "window": "train"
    }

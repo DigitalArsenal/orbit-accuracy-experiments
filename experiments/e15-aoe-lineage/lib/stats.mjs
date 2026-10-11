@@ -80,6 +80,24 @@ export function pairedRatio(byMethod, a, b, seed, resamples) {
   return { n: pairs.length, objects: new Set(pairs.map(([x]) => x.norad)).size, ...boot([...m.values()], stat, seed, resamples) };
 }
 
+// Ratio of medians a / b on unpaired samples (amendment A7): each (object, issue) cell holds its a and b values; one
+// row and column draw weights both, so the two medians are resampled together.
+export function unpairedRatio(listA, listB, seed, resamples) {
+  if (listA.length < 10 || listB.length < 10) return { nA: listA.length, nB: listB.length };
+  const m = new Map();
+  for (const [key, list] of [['a', listA], ['b', listB]]) for (const s of list) {
+    const k = `${s.norad}|${s.issue}`;
+    if (!m.has(k)) m.set(k, { row: s.norad, col: s.issue, a: [], b: [] });
+    m.get(k)[key].push(norm(s.rtnKm));
+  }
+  const stat = (cells) => {
+    const qa = weightedQuantile(cells.flatMap((c) => c.a.map((v) => [v, c.weight])).sort((x, y) => x[0] - y[0]), 0.5);
+    const qb = weightedQuantile(cells.flatMap((c) => c.b.map((v) => [v, c.weight])).sort((x, y) => x[0] - y[0]), 0.5);
+    return qa / qb;
+  };
+  return { nA: listA.length, nB: listB.length, ...boot([...m.values()], stat, seed, resamples) };
+}
+
 const pearson = (x, y) => {
   const n = x.length, mx = x.reduce((a, b) => a + b, 0) / n, my = y.reduce((a, b) => a + b, 0) / n;
   let sxy = 0, sxx = 0, syy = 0;
