@@ -173,7 +173,7 @@
     "data/e7/igs_satellite_metadata.snx.gz",
     "data/e3/gnss-ultra-rapid-igs-node/ (7 files)",
     "data/e4/gps-precise/ (27 IGS0OPSULT files)",
-    "site (gh-pages): data/truth/, data/od/ (reference states converted from IGS finals); data/accuracy/orbit-gps.json (IGS final orbit)",
+    "site (gh-pages): data/truth/, data/od/ (reference states converted from IGS finals); data/accuracy/orbit-gps.json (IGS final orbit); data/gnss/igs-26407.json (IGS final orbit, a week)",
     "modules: analysis/association/tests/fixtures/gps-20260802.json.gz, files/orbit-products/fixtures/COD0MGXFIN_20250190000_01D_05M_ORB.3ep.sp3 and igs15000.3ep.sp3"
    ],
    "notice": null,
@@ -345,7 +345,7 @@
     "data/e6/iss/ (1 file)",
     "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt",
     "site/src/data/iss/ (2 files, the trajectories of 2026-09-24 and 2026-09-25 as served, gzipped)",
-    "site (gh-pages): data/maneuver/iss-versions.json (both versions cut to [TIG − 24 h, TIG + 48 h])"
+    "site (gh-pages): data/maneuver/iss-versions.json (both versions cut to [TIG − 24 h, TIG + 48 h]); data/operator/iss-oem.json (data/e4/iss, its first 72 h)"
    ],
    "notice": null,
    "obtain": null

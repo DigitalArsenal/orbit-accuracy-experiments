@@ -88,10 +88,10 @@ export default async function run(ctx) {
   const basis = rtn(a.r, a.v), gap = toRtn(basis, v3.sub(a.r, b.r));
   const gapKm = v3.norm(v3.sub(a.r, b.r));
 
-  tiles(p, [['Planned (NASA)', `${utc(tigMs)} · ${num(iss.burn.dvMps, 3)} m/s`], ['Executed (compare_ephemerides)', `${executed.status === 'EXECUTED' ? 'executed' : executed.status.toLowerCase()} · ${num(executed.inTrackMps, 4)} m/s in-track`],
+  tiles(p, [['Planned (NASA)', `${utc(tigMs)} · ${iss.burn.dvMps.toFixed(1)} m/s`], ['Executed (compare_ephemerides)', `${executed.status === 'EXECUTED' ? 'executed' : executed.status.toLowerCase()} · ${num(executed.inTrackMps, 4)} m/s in-track`],
     ['Found by the detector', `${utc(foundMs)} · ${num(found.DELTA_VEL * 1000, 4)} m/s`], ['A day later', `${formatMeters(gapKm * 1000)} apart`]]);
   table(checks, ['', 'Time (UTC)', 'ΔV', 'Source'], [
-    ['Planned', new Date(tigMs).toISOString().slice(0, 19).replace('T', ' '), `${num(iss.burn.dvMps, 3)} m/s`, `NASA’s trajectory issued ${iss.burn.planIssued.slice(0, 16).replace('T', ' ')}`],
+    ['Planned', new Date(tigMs).toISOString().slice(0, 19).replace('T', ' '), `${iss.burn.dvMps.toFixed(1)} m/s`, `NASA’s trajectory issued ${iss.burn.planIssued.slice(0, 16).replace('T', ' ')}`],
     ['Executed', new Date(tigMs).toISOString().slice(0, 19).replace('T', ' '), `${num(executed.inTrackMps, 4)} m/s in-track, ${num(executed.crossTrackMps, 3)} cross-track; a +${formatMeters(executed.dSmaKm * 1000)} semi-major axis`,
       'compare_ephemerides, here: NASA’s plan against its next trajectory'],
     ['Found', new Date(foundMs).toISOString().slice(0, 19).replace('T', ' '), `${num(found.DELTA_VEL * 1000, 4)} m/s in-track`,
@@ -143,7 +143,7 @@ export default async function run(ctx) {
       figure.draw({ series: [{ name: 'Distance, with − without', color: 'var(--accent)', points: diff.map(([t, c]) => [hours(t), Math.max(v3.norm(c) * 1000, 1e-3)]) }],
         x: { min: hours(startMs), max: hours(stopMs), ticks: [0, 6, 12, 18, 24], format: (h) => `${h >= 0 ? '+' : '−'}${Math.abs(Number(h.toFixed(1)))} h` },
         cursor: { x: hours(stopMs), set: (h) => ctx.time.set(tigMs + h * HOUR) } });
-      return `The ${iss.burn.name.toLowerCase()} of ${new Date(tigMs).toISOString().slice(0, 10)}: planned ${num(iss.burn.dvMps, 3)} m/s, executed ${num(executed.inTrackMps, 3)} m/s, found from public element sets ${Math.round(Math.abs(foundMs - tigMs) / MIN)} min ${foundMs < tigMs ? 'before' : 'after'} the planned time; a day later the station is ${formatMeters(gapKm * 1000)} from where it would have been.`;
+      return `The ${iss.burn.name.replace(/ Reboost$/, ' reboost')} of ${new Date(tigMs).toISOString().slice(0, 10)}: planned ${iss.burn.dvMps.toFixed(1)} m/s, executed ${num(executed.inTrackMps, 3)} m/s, found from public element sets ${Math.round(Math.abs(foundMs - tigMs) / MIN)} min ${foundMs < tigMs ? 'before' : 'after'} the planned time; a day later the station is ${formatMeters(gapKm * 1000)} from where it would have been.`;
     });
   }
   ctx.time.on((ms) => figure.cursor((ms - tigMs) / HOUR));

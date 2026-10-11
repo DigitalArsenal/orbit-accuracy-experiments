@@ -33,7 +33,7 @@ import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildManeuver, buildMeasuredAccuracy } from './build-models.mjs';
+import { buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -279,6 +279,9 @@ for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
 
 // ── Measured accuracy (section 11 of the catalog paper) ──
 buildMeasuredAccuracy({ repo, referenceDir, write, analysed });
+// ── GNSS and operator-ephemeris objects (sections 5.1 and 5.2) ──
+buildGnss({ repo, referenceDir, write, analysed });
+buildOperator({ repo, write, analysed });
 // ── The ISS reboost the detector found (section 5.5) ──
 await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopParser: () => loadModule(modules, 'data-source/eop-parser'),
   spaceTrackCredit: licenceSource('space-track').credit, servedWasmSha256: (relative) => moduleIndex.find((m) => m.path === relative)?.wasmSha256 });
