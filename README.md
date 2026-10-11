@@ -82,8 +82,8 @@ and `SDN_REFERENCE_STATES` environment variables.
 [digitalarsenal.github.io/orbit-accuracy-experiments](https://digitalarsenal.github.io/orbit-accuracy-experiments/)
 runs the modules in the visitor's browser through the same SDK harness, on
 a CesiumJS globe: HPOP from any V1 seed (reproducing the committed run bit
-for bit), any of the 72 Orekit cases, and a VCM read, propagated with its
-covariance and written back. Every file it reads can be downloaded with its
+for bit), any of the 72 Orekit cases, and a VCM read and propagated with its
+covariance. Every file it reads can be downloaded with its
 SHA-256. [site/README.md](site/README.md) has the build.
 
 ## License

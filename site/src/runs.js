@@ -107,9 +107,9 @@ function rtnSigmas(sample) {
   return [sigma(u), sigma(t), sigma(w)];
 }
 
-// The VCM round trip: analysis/vcm-adapter reads the message into a PRW
-// request (under both readings of the B row), propagator/hpop propagates 24 h
-// with the 7×7 covariance, and the adapter writes the result back.
+// A VCM read and propagated: analysis/vcm-adapter reads the message into a
+// PRW request (under both readings of the B row), and propagator/hpop
+// propagates 24 h with the 7×7 covariance.
 export async function runVcm(adapter, hpop, text, { onStatus = () => {}, hours = 24 } = {}) {
   const json = (portId, value) => ({ portId, payload: new TextEncoder().encode(JSON.stringify(value)) });
   // The sample's epoch is 2023; the DE440 excerpt here covers 2026, so the
@@ -131,16 +131,5 @@ export async function runVcm(adapter, hpop, text, { onStatus = () => {}, hours =
     const sigmas = [{ hours: 0, s: report.recomputedUvwSigmasKm.slice(0, 3).map((x) => x * 1000) }, ...result.SAMPLES.map((sample, k) => ({ hours: k + 1, s: rtnSigmas(sample) }))];
     runs[rows] = { report, read, prw, request, run, result, sigmas };
   }
-  const { report } = runs.fractional;
-  const header = {
-    satelliteNumber: 0, internationalDesignator: report.internationalDesignator, commonName: 'SDN ROUND TRIP', center: 'SDN',
-    geopotential: report.geopotential, zonals: report.zonals, tesserals: report.tesserals, drag: report.drag,
-    lunarSolar: report.lunarSolar ? 'ON' : 'OFF', solarRadiationPressure: report.solarRadiationPressure ? 'ON' : 'OFF',
-    solidEarthTides: report.solidEarthTides ? 'ON' : 'OFF', inTrackThrust: report.inTrackThrust ? 'ON' : 'OFF',
-    ballisticCoefficient: report.ballisticCoefficientM2Kg, f10: report.f10, averageF10: report.averageF10, averageAp: report.averageAp,
-    taiMinusUtcS: report.taiMinusUtcS, ut1MinusUtcS: report.ut1MinusUtcS, ut1RateMsPerDay: report.ut1RateMsPerDay,
-    polarX: report.polarMotionArcsec[0], polarY: report.polarMotionArcsec[1], weightedRms: report.weightedRms, parameterRows: 'fractional',
-  };
-  const written = await adapter.invoke('write', [frameOf('result', out(runs.fractional.run, 'response')), json('header', header)]);
-  return { runs, written: new TextDecoder().decode(out(written, 'message')) };
+  return { runs };
 }
