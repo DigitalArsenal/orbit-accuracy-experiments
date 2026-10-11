@@ -13,7 +13,7 @@ measurements, S2 the exploratory latency question) and Deviation D1 (test A arcs
 4. Part S: `collect.mjs` (the Starlink collector, restarted with the pair mismatch), `steps/60-pairs.mjs`.
 5. Exploratory (Amendments S2-S4, outside H1-H6; results labelled EXPLORATORY wherever shown): `steps/71-planet-latency-sweep.mjs` (dev split only, with Swarm and GRACE-FO truth), `steps/70-starlink-common-mode.mjs` (the same solve on the Starlink
    pairs; no density truth exists for those dates). One reference for both fleets, NRLMSISE-00 (S3): `collect-planet.mjs` (Planet's final daily files from 2026-10-09, local only), `steps/73-planet-rescale.mjs` (the splits' arcs rescaled by the ratio of
-   drag works; `--sample 120` is the test against direct fits), `steps/74-planet-live-arcs.mjs` (live arcs fitted directly under NRLMSISE-00), `steps/75-dev-reference-check.mjs` (the dev split against NRLMSISE-00), `steps/72-combined-solve.mjs`
+   drag works; `--sample 120` is the test against direct fits), `steps/74-planet-live-arcs.mjs` (live arcs fitted directly under NRLMSISE-00), `steps/75-reference-check.mjs` (a split against NRLMSISE-00), `steps/72-combined-solve.mjs`
    (Planet, Starlink and both, scored on satellites that were in no solve). `analysis/density-calibration` 0.4.0 (NRLMSISE-00 in `evaluate` and `drag_work`) is in modules branch `task/e13-density-nrlmsise-20261011`; `common-reference.mjs` points the S3 steps at it.
 
 ## Files

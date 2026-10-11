@@ -52,10 +52,15 @@ if (sample) {
   const s = sample.summary;
   L.push(`${s.arcs} dev Planet arcs (every ${sample.stride}th of the valid ones), the Cd·A/m rescaled from JB2008 to NRLMSISE-00 by the ratio of the drag works of the arc's HPOP trajectory, against the direct NRLMSISE-00 energy-form fit of the same arc: |ln difference| median ${pct(s.medianAbsLnDifference, 3)}, 95th percentile ${pct(s.p95AbsLnDifference, 3)}, largest ${pct(s.maxAbsLnDifference, 3)}; ${pct(s.shareWithin0p5Percent, 0)} of the arcs within 0.5 %. **Every arc within its stated sigma of ln B (median ${pct(s.medianSigmaLnB)}): ${s.allWithinStatedSigma}.** The two references differ arc by arc by a median ${pct(s.medianLnBetweenReferences)} (5-95 %: ${pct(s.p5LnBetweenReferences)} to ${pct(s.p95LnBetweenReferences)}), so the agreement is the rescaling's.`, '');
 } else L.push('Pending: `s3/rescale-sample.json`.', '');
-const dev = read('s3/dev-reference-check.json');
-L.push('### The dev split against the common reference (descriptive)', '');
-if (dev) L.push(`R1 against Swarm and GRACE-FO, dev split, the selected solver: ${f(dev.againstJB2008.r1)} [${f(dev.againstJB2008.lower)}, ${f(dev.againstJB2008.upper)}] against JB2008 (${dev.againstJB2008.windows} windows, ${dev.againstJB2008.arcs} arcs); **${f(dev.againstNRLMSISE00.r1)} [${f(dev.againstNRLMSISE00.lower)}, ${f(dev.againstNRLMSISE00.upper)}] against NRLMSISE-00** (${dev.againstNRLMSISE00.windows} windows, ${dev.againstNRLMSISE00.arcs} rescaled arcs). The two common modes: correlation ${f(dev.commonModes.correlation)} over ${dev.commonModes.windows} windows, sd ${f(dev.commonModes.sdJ, 4)} (JB2008) and ${f(dev.commonModes.sdN, 4)} (NRLMSISE-00), sd of the difference ${f(dev.commonModes.sdOfDifference, 4)}; ln(W_J / W_N) of the arcs: mean ${f(dev.commonModes.meanLnRatioWJoverWN, 4)}, sd ${f(dev.commonModes.sdLnRatioWJoverWN, 4)}.`, '');
-else L.push('Pending: `s3/dev-reference-check.json` (needs the dev arcs rescaled: `steps/73 --split dev --all --group calibration`).', '');
+L.push('### The Planet retrospective on the common reference (descriptive)', '');
+let anyRef = false;
+for (const split of ['dev', 'testA', 'testB']) {
+  const dev = read(`s3/reference-check-${split}.json`);
+  if (!dev) continue;
+  anyRef = true;
+  L.push(`${split}: R1 against Swarm and GRACE-FO with the selected solver: ${f(dev.againstJB2008.r1)} [${f(dev.againstJB2008.lower)}, ${f(dev.againstJB2008.upper)}] against JB2008 (${dev.againstJB2008.windows} windows, ${dev.againstJB2008.arcs} arcs; H1 of the split's report); **${f(dev.againstNRLMSISE00.r1)} [${f(dev.againstNRLMSISE00.lower)}, ${f(dev.againstNRLMSISE00.upper)}] against NRLMSISE-00** (${dev.againstNRLMSISE00.windows} windows, ${dev.againstNRLMSISE00.arcs} rescaled arcs). The two common modes: correlation ${f(dev.commonModes.correlation)} over ${dev.commonModes.windows} windows, sd ${f(dev.commonModes.sdJ, 4)} (JB2008) and ${f(dev.commonModes.sdN, 4)} (NRLMSISE-00), sd of the difference ${f(dev.commonModes.sdOfDifference, 4)}; ln(W_J / W_N) of the arcs: mean ${f(dev.commonModes.meanLnRatioWJoverWN, 4)}, sd ${f(dev.commonModes.sdLnRatioWJoverWN, 4)}.`, '');
+}
+if (!anyRef) L.push('Pending: `s3/reference-check-dev.json` (needs the dev arcs rescaled: `steps/73 --split dev --all --group calibration`, then `steps/75`).', '');
 
 // ── S3: the combined solve ──
 L.push('## S3 the combined solve: Planet, Starlink and both, scored on satellites that were in no solve', '');
