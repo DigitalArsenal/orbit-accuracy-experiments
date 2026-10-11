@@ -162,3 +162,44 @@ export async function buildManeuver({ here, repo, write, loadEopParser, finalsRe
     await parser.destroy();
   }
 }
+
+// Section 5.1: one GPS satellite's IGS final orbit for a week (the truth the
+// page propagates HPOP against), and E3's medians for the GPS products.
+export const GNSS_START = '2026-08-01T23:59:42Z';   // 00:00 GPS time, on the IGS grid
+export function buildGnss({ repo, referenceDir, write, analysed }) {
+  const startMs = Date.parse(GNSS_START), norad = 26407;
+  const arc = referenceArc(referenceDir, 'IGS0OPSFIN', norad, startMs, startMs + 7 * 86400e3 + 1, 900);
+  write(`data/gnss/igs-${norad}.json`, { object: `GPS satellite, NORAD ${norad}`, norad, product: 'IGS final orbit', frame: 'GCRF', timeSystem: 'UTC', units: 'km, km/s', ...arc },
+    `IGS final orbit, ${arc.files.length} daily products (analysis/reference-states)`, labelFor(['igs']));
+  const e3Dir = path.join(repo, 'results/e3');
+  const e3Run = fs.readdirSync(e3Dir).filter((d) => fs.existsSync(path.join(e3Dir, d, 'metrics.json'))).sort().at(-1);
+  const table = JSON.parse(fs.readFileSync(path.join(e3Dir, e3Run, 'metrics.json'), 'utf8')).results.test.table;
+  const pick = (method) => Object.fromEntries([0, 1, 3, 7].map((h) => {
+    const r = table.find((x) => x.regime === 'GPS' && x.h === h && x.method === (method === 'catalog' ? (h ? 'HPOP-URA' : 'URA') : 'ST-latest'));
+    return [h, { method: r.method, n: r.n, medianKm: r.median3dKm.estimate, lowerKm: r.median3dKm.lower, upperKm: r.median3dKm.upper, shareRtn: r.squaredErrorShareRtn }];
+  }));
+  write('data/gnss/e3-gps.json', { regime: 'GPS', objects: 32, window: 'E3 test window', catalog: pick('catalog'), omm: pick('omm'), source: `results/e3/${e3Run}/metrics.json` },
+    `results/e3/${e3Run}/metrics.json, the GPS rows (aggregates only)`, analysed('E3'));
+}
+
+// Section 5.2: one NASA ISS trajectory E4 compared (public domain, as served,
+// 72 h), and E4's medians of SGP4 on the public OMM (S) and the HPOP product
+// from its epoch state (H) against the four NASA files, by horizon.
+export function buildOperator({ repo, write, analysed }) {
+  const dir = path.join(repo, 'data/e4/iss');
+  const name = fs.readdirSync(dir).filter((n) => n.endsWith('.txt.gz')).sort()[0];
+  const raw = gunzipSync(fs.readFileSync(path.join(dir, name)));
+  const v = parseNasaOem(raw.toString('utf8'));
+  const keep = v.epochs.map((t, i) => i).filter((i) => v.epochs[i] <= v.epochs[0] + 72 * 3600e3);
+  write('data/operator/iss-oem.json', { object: 'ISS', norad: 25544, frame: 'EME2000', timeSystem: 'UTC', units: 'km, km/s', file: `data/e4/iss/${name}`,
+    servedSha256: sha256(raw), created: new Date(v.created).toISOString(), epochsUnixMs: keep.map((i) => v.epochs[i]),
+    position: keep.flatMap((i) => v.states[i].slice(0, 3)), velocity: keep.flatMap((i) => v.states[i].slice(3, 6)) },
+  `NASA ISS trajectory data/e4/iss/${name} (served SHA-256 ${sha256(raw).slice(0, 12)}), its first 72 h`, labelFor(['nasa-iss-oem']));
+  const e4Dir = path.join(repo, 'results/e4');
+  const e4Run = fs.readdirSync(e4Dir).filter((d) => fs.existsSync(path.join(e4Dir, d, 'metrics.json'))).sort().at(-1);
+  const horizons = JSON.parse(fs.readFileSync(path.join(e4Dir, e4Run, 'metrics.json'), 'utf8')).providers.iss.horizons;
+  const series = (m) => Object.entries(horizons).map(([h, x]) => ({ hours: Number(h), n: x[m].primary.n, medianKm: x[m].primary.km3d.median, signedMedianRtnKm: x[m].primary.signedMedianKm,
+    medianAbsRtnKm: [x[m].primary.kmR.median, x[m].primary.kmT.median, x[m].primary.kmN.median] })).sort((a, b) => a.hours - b.hours);
+  write('data/operator/e4-iss.json', { provider: 'NASA ISS (OEM)', files: horizons['0'].S.primary.n, S: series('S'), H: series('H'), source: `results/e4/${e4Run}/metrics.json` },
+    `results/e4/${e4Run}/metrics.json, the ISS rows (aggregates only)`, analysed('E4'));
+}

@@ -20,8 +20,10 @@ Blue Marble as its only imagery). Nothing is fetched from a third party.
 `models/<paper>/<section_id>.html` runs one whitepaper section's computation
 with the same modules, and draws that section's subject in 3D. The catalog
 paper: a solution fitted to observations with its covariance (section 2),
-osculating elements, the OMM handoff and its quantization (section 4), the
-ISS reboost the maneuver detector found (section 5.5), Φ P₀ Φᵀ through HPOP
+osculating elements, the OMM handoff and its quantization (section 4), a
+GPS orbit from its analysis-centre state beside the public OMM's error
+(section 5.1), the ISS's operator ephemeris against the public products
+(section 5.2), the ISS reboost the maneuver detector found (section 5.5), Φ P₀ Φᵀ through HPOP
 (section 6), Orekit and V1 (section 7), association (section 8), VCM parity
 (section 9), a V1 seed reproduced by the binary the paper names (section 10),
 each product's measured error at a satellite of its class (section 11) and a
@@ -88,7 +90,8 @@ hypothetical and says so.
 `build-models.mjs` writes the inputs of the models that draw committed
 results: precise orbits read from `SDN_REFERENCE_STATES` (IGS, ILRS,
 Copernicus Sentinel-1) and the experiments' aggregates (E3's test table, E6's
-laser-ranged fits); and, for section 5.5, NASA's ISS trajectories before and
+laser-ranged fits, E4's ISS rows) with a GPS satellite's IGS final orbit for a
+week and one of E4's NASA ISS files (`data/e4/iss`); and, for section 5.5, NASA's ISS trajectories before and
 after the reboost of 25 September 2026 (`src/data/iss/`, as served, public
 domain), the IERS finals2000A rows of those days (`data/e1`), and the
 detector's events on the ISS's public element sets, recorded by
