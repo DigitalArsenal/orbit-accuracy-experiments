@@ -14,12 +14,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
+import { execFile } from 'node:child_process';
 import { loadModule } from '../../harness/modules.mjs';
 import { startRun } from '../../harness/provenance.mjs';
 import { COMPUTE, PATHS } from './settings.mjs';
-import { config, configPath, issueMs, issuesForTarget, isoDay, shiftDay, targetDays, DAY_MS } from './lib/windows.mjs';
+import { config, configPath, issueMs, issuesForTarget, isoDay, shiftDay, targetDays } from './lib/windows.mjs';
 import { AoeCatalog, snapshotDays } from './lib/aoe.mjs';
 import { StCatalog, stReachesMs } from './lib/st.mjs';
+import { SupgpCatalog } from './lib/supgp.mjs';
 import { scoreItems } from './lib/score.mjs';
 import { coverageOf, haveRows, writeCoverage, writeRows } from './lib/rows.mjs';
 import { Http, Readers, isoZ } from './lib/truth/common.mjs';
@@ -31,7 +33,7 @@ import { spire } from './lib/truth/spire.mjs';
 import { podTruth, slrTruth } from './lib/truth/products.mjs';
 
 const SOURCES = { starlink, planet, css: cssTruth, iss: issTruth, geo: geoTruth, 'gnss-esa': gnssEsa, 'gnss-gfz': gnssGfz, spire, pod: podTruth, slr: slrTruth };
-const { values } = parseArgs({ options: { target: { type: 'string' }, sources: { type: 'string' }, hours: { type: 'string', default: '14' }, 'no-backfill': { type: 'boolean' }, 'no-wait': { type: 'boolean' } } });
+const { values } = parseArgs({ options: { target: { type: 'string' }, sources: { type: 'string' }, hours: { type: 'string', default: '14' }, 'no-backfill': { type: 'boolean' }, 'no-wait': { type: 'boolean' }, 'no-products': { type: 'boolean' } } });
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const started = Date.now();
 const today = values.target ?? isoDay(started);
@@ -70,7 +72,7 @@ async function pollStarlink() {
 }
 
 // Scores the items of one truth source for target day X and writes the rows.
-async function scoreTarget(X, source, got, aoe, st) {
+async function scoreTarget(X, source, got, aoe, st, supgp) {
   const t = issueMs(X);
   const issues = issuesForTarget(X);
   const items = [];
@@ -85,12 +87,13 @@ async function scoreTarget(X, source, got, aoe, st) {
     const targets = [];
     for (const { h, issue, window } of issues) {
       const T = issueMs(issue);
-      const sets = { 'AOE-latest': aoe.latest(it.norad, T), 'ST-latest': st.latest(it.norad, T) };
-      const k = counts.byIssue[`${issue}|${h}`] ??= { AOE: 0, ST: 0, both: 0, aoeNotRetrievedByT: 0 };
+      const sets = { 'AOE-latest': aoe.latest(it.norad, T), 'ST-latest': st.latest(it.norad, T), 'SupGP-latest': supgp?.latest(it.norad, T) ?? null };
+      const k = counts.byIssue[`${issue}|${h}`] ??= { AOE: 0, ST: 0, both: 0, aoeNotRetrievedByT: 0, SupGP: 0 };
       if (sets['AOE-latest']) { ++k.AOE; if (!aoe.retrievedBy(sets['AOE-latest'], T)) ++k.aoeNotRetrievedByT; }
       if (sets['ST-latest']) ++k.ST;
       if (sets['AOE-latest'] && sets['ST-latest']) ++k.both;
       if (sets['AOE-latest'] || sets['ST-latest']) targets.push({ issue, h, window, T, targetMs: t, sets });
+      if (sets['SupGP-latest']) ++k.SupGP;
     }
     // Scored objects are in both catalogs (an AOE number and Space-Track sets in the window).
     if (!aoe.byNorad.has(it.norad) || !st.byNorad.has(it.norad)) { ++counts.notInBoth; continue; }
@@ -107,6 +110,26 @@ async function scoreTarget(X, source, got, aoe, st) {
   return rows.length;
 }
 
+// LEO-POD and SLR products published since the last run, converted by the modules' own script (analysis/reference-states
+// scripts/fetch-reference-products.mjs, read-only checkout) into the store: Swarm, Sentinel-1 POEORB, ILRS and NSGF SLR arcs
+// (public servers), GRACE-FO rapid science orbits and DORIS orbits (local copies with provenance). Earth orientation is
+// finals2000A's observed rows, refreshed each run. --from stays on NSGF's 4-day arc grid.
+async function convertProducts() {
+  const script = path.join(PATHS.readerModules, 'analysis/reference-states/scripts/fetch-reference-products.mjs');
+  const to = shiftDay(today, -1);
+  fs.rmSync(path.join(PATHS.store, 'products', 'finals2000A.all'), { force: true });
+  const args = [script, '--from', '2026-10-08', '--to', to, '--products', 'swarm,slr-daily,slr,sentinel1,gfz-rso,doris', '--eop', 'finals', '--out', PATHS.store, '--local-archive', '/opt/data/sdn-archive/hac'];
+  log(`products: converting LEO-POD and SLR products to ${to}`);
+  await new Promise((resolve) => {
+    execFile(process.execPath, args, { cwd: path.dirname(script), timeout: 3600e3, maxBuffer: 64 << 20 }, (error, stdout, stderr) => {
+      const lines = `${stdout}\n${stderr}`.split('\n').filter((l) => l.trim());
+      logFile.write(lines.map((l) => `  products| ${l}\n`).join(''));
+      log(`products: ${error ? `stopped (${String(error.message).split('\n')[0].slice(0, 160)})` : 'done'}, ${lines.length} lines of output`);
+      resolve();
+    });
+  });
+}
+
 // The issues the target days serve, first and last.
 function issueSpan(days) {
   const issues = days.flatMap((X) => issuesForTarget(X).map((x) => x.issue)).sort();
@@ -119,6 +142,13 @@ function aoeCatalog(days) {
   run.addInputs('aoe', Object.fromEntries(aoe.snapshots.map((s) => [`${s.day}/records.jsonl`, s.sha256.records])));
   log(`AOE snapshots ${aoe.snapshots.map((s) => s.day).join(', ') || 'none'}: ${aoe.byNorad.size} objects`);
   return aoe;
+}
+// CelesTrak SupGP from the collector archive, beside both (descriptive).
+function supgpCatalog(days) {
+  const [from, to] = issueSpan(days);
+  const supgp = new SupgpCatalog(from, to);
+  run.addInputs('supgp', Object.fromEntries(supgp.snapshots.filter((s) => s.sha256).map((s) => [`${s.group}/${s.stamp}.json`, s.sha256])));
+  return supgp;
 }
 // Space-Track sets of the objects given (the truth objects and the regime's population), as E3 reads them.
 function stCatalog(days, norads) {
@@ -167,17 +197,21 @@ try {
     }
     const st = stCatalog([today], new Set([...listed, ...Object.values(held).flatMap((got) => got.items.map((x) => x.norad))]));
     if (held.starlink) held.starlink.coverage.population = { listed: listed.length, inAoe: listed.filter((n) => aoe.byNorad.has(n)).length, inSt: listed.filter((n) => st.byNorad.has(n)).length, inBoth: listed.filter((n) => aoe.byNorad.has(n) && st.byNorad.has(n)).length };
-    for (const [s, got] of Object.entries(held)) summary.live[s] = { rows: await scoreTarget(today, SOURCES[s], got, aoe, st), truth: got.coverage.items };
+    const supgp = supgpCatalog([today]);
+    for (const [s, got] of Object.entries(held)) summary.live[s] = { rows: await scoreTarget(today, SOURCES[s], got, aoe, st, supgp), truth: got.coverage.items };
   }
 
   // ── Published products for earlier target days ──
   if (!values['no-backfill']) {
+    if (!values['no-products'] && (wanted.includes('pod') || wanted.includes('slr'))) { await gate(); await convertProducts(); }
     const stored = wanted.filter((s) => !SOURCES[s].live);
-    const days = targetDays().filter((X) => X < today && issueMs(X) < Date.now() - DAY_MS / 2);
+    // Every target day whose target time has passed (a product not yet published answers `ready: false`).
+    const days = targetDays().filter((X) => X <= today && issueMs(X) < Date.now());
     // A stored source is done once scored, except the reference products, which grow as products are published.
     const todo = days.flatMap((X) => stored.filter((s) => SOURCES[s].growing || !haveRows(X, s)).map((s) => ({ X, s })));
     if (todo.length) {
       const aoe = aoeCatalog([...new Set(todo.map((x) => x.X))]);
+      const supgp = supgpCatalog([...new Set(todo.map((x) => x.X))]);
       for (const { X, s } of todo) {
         await gate();
         let got;
@@ -185,7 +219,7 @@ try {
         if (got.ready === false) { log(`${s} ${X}: products not yet published`); continue; }
         if (got.growing && (coverageOf(X, s)?.truth?.items ?? -1) >= got.coverage.items) continue;
         const st = stCatalog([X], new Set(got.items.map((x) => x.norad)));
-        summary.backfill[`${s}:${X}`] = { rows: await scoreTarget(X, SOURCES[s], got, aoe, st), truth: got.coverage.items };
+        summary.backfill[`${s}:${X}`] = { rows: await scoreTarget(X, SOURCES[s], got, aoe, st, supgp), truth: got.coverage.items };
       }
     }
   }

@@ -30,7 +30,7 @@ export const PATHS = {
   // E15's own store outside the repository: name registries, logs, the runner's state. No operator bytes.
   store: '/opt/data/sdn-archive/e15-aoe-lineage',
   // Residual rows (derived from Space-Track and operator data): ignored by git, never committed.
-  rows: path.join(repoRoot, 'runs', 'e15-rows'),
+  rows: process.env.E15_ROWS ?? path.join(repoRoot, 'runs', 'e15-rows'),
   secrets: '/opt/data/sdn-archive/.secrets',
 };
 

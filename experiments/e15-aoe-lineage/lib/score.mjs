@@ -10,9 +10,11 @@ import { config } from './windows.mjs';
 const isoZ = (ms) => new Date(ms).toISOString();
 const DAY = 86400000;
 const BATCH = 64;   // objects per call
+// One call per method: the module merges sets of one object whose epochs lie within 1 s, so the sources never share a call.
+export const METHODS = ['AOE-latest', 'ST-latest', 'SupGP-latest'];
 
 // items: [{norad, regime, ephemeris (labelled $OEM port frame), truth: {...provenance}, targets: [{issue, h, window, T,
-// targetMs, sets: {'AOE-latest': set|null, 'ST-latest': set|null}}]}]
+// targetMs, sets: {'AOE-latest': set|null, 'ST-latest': set|null, 'SupGP-latest': set|null}}]}]
 // Returns rows: one per (object, target, method with a set), with the RTN error (km) of the first reference state in
 // [target, target + tolerance], or `failure`.
 export async function scoreItems(scorer, items, { log = () => {} } = {}) {
@@ -21,7 +23,7 @@ export async function scoreItems(scorer, items, { log = () => {} } = {}) {
   const counts = { calls: 0, requests: 0, samples: 0, failures: 0 };
   for (let i = 0; i < items.length; i += BATCH) {
     const batch = items.slice(i, i + BATCH);
-    for (const method of ['AOE-latest', 'ST-latest']) {
+    for (const method of METHODS) {
       const sets = new Map();
       const requests = [];
       const wanted = [];

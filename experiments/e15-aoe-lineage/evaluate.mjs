@@ -87,7 +87,7 @@ function combine(list) {
 
 const all = [...samples, ...combine(samples)];
 const g = group(all);
-const methods = ['AOE-latest', 'ST-latest', 'SEL', 'FUS'];
+const methods = ['AOE-latest', 'ST-latest', 'SEL', 'FUS', 'SupGP-latest'];
 const table = [];
 const ratios = [];
 let seed = config.statistics.bootstrapSeed;
@@ -99,7 +99,7 @@ for (const r of regimes) for (const h of horizons) {
     if (m === 'SEL' || m === 'FUS') { row.chosen = {}; for (const s of by[m]) row.chosen[s.chosen] = (row.chosen[s.chosen] ?? 0) + 1; }
     table.push(row);
   }
-  for (const [a, b] of [['AOE-latest', 'ST-latest'], ['SEL', 'ST-latest'], ['SEL', 'AOE-latest'], ['FUS', 'SEL']]) {
+  for (const [a, b] of [['AOE-latest', 'ST-latest'], ['SEL', 'ST-latest'], ['SEL', 'AOE-latest'], ['FUS', 'SEL'], ['SupGP-latest', 'ST-latest'], ['SupGP-latest', 'AOE-latest']]) {
     const x = pairedRatio(by, a, b, seed += 2, resamples);
     if (x.n) ratios.push({ regime: r, h, a, b, ...x });
   }
