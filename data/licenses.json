@@ -339,7 +339,7 @@
    "reproduce": "yes",
    "credit": "ISS trajectory: NASA JSC Flight Operations Directorate (TOPO), https://www.nasa.gov/spot-the-station/ (U.S. Government work).",
    "reason": "Public-domain U.S. Government work offered for public use.",
-   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth); the site’s maneuver-detection model (section 5.5)",
+   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth); the site’s maneuver-detection model (section 5.5) and its own-OMM model (section 4, data/operator/iss-oem.json)",
    "reproducedAt": [
     "data/e4/iss/ (4 files)",
     "data/e6/iss/ (1 file)",
