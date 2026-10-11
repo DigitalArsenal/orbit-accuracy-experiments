@@ -1,0 +1,67 @@
+{
+ "experiment": "e15-aoe-lineage",
+ "frozen": true,
+ "plan": "PLAN.md",
+ "note": "The numbers of PLAN.md (frozen 2026-10-11, commits e11e0cd and 083b5d2) and of its amendments A1 to A4, for the code. Paths, politeness and worker counts are in settings.mjs.",
+ "issueTimeUtc": "04:00:00",
+ "windows": {
+  "train": ["2026-10-11", "2026-10-14"],
+  "test": ["2026-10-15", "2026-10-28"]
+ },
+ "testWindows": ["test"],
+ "horizonsDays": [0, 1, 3, 7],
+ "targetToleranceSeconds": 900,
+ "sources": {
+  "AOE": {
+   "name": "SpaceMapper AOE element sets, channel KY",
+   "lineage": "SpaceMapper/Kaiyun",
+   "noradIdsBelow": 100000,
+   "availability": "the record's ctime (AOE's write time), when our snapshot of that day holds the record (amendment A1); our retrieval time is recorded"
+  },
+  "ST": {
+   "name": "Space-Track GP history (SGP4)",
+   "lineage": "SSN",
+   "meanElementTheory": "SGP4",
+   "ephemerisType": "0",
+   "duplicateEpochSeconds": 1,
+   "creationLagDays": 3,
+   "lookbackDays": 10,
+   "availability": "CREATION_DATE and EPOCH at or before T (E3 and its amendment); republished duplicates merged, usable from the later creation"
+  }
+ },
+ "regimes": {
+  "LEO-SL": { "truth": "starlink", "rule": { "maxStartAgeSeconds": 3600, "publishedAtOrBefore": true } },
+  "ISS": { "truth": "iss", "objects": [25544], "rule": { "maxStartAgeSeconds": 3600, "publishedAtOrBefore": true } },
+  "CSS": { "truth": "css", "objects": [48274, 53239, 54216] },
+  "LEO-PL": { "truth": "planet" },
+  "LEO-SP": { "truth": "spire", "excludePredicted": true },
+  "GEO": { "truth": "geo" },
+  "GNSS": { "truth": "gnss" },
+  "LEO-POD": { "truth": "reference-states" },
+  "SLR": { "truth": "reference-states" }
+ },
+ "methods": {
+  "AOE-latest": "the newest usable AOE set, by SGP4",
+  "ST-latest": "the newest usable ST set, by SGP4",
+  "SEL": { "candidates": ["AOE-latest", "ST-latest"], "minimumTrainSamples": 30, "default": "ST-latest" },
+  "FUS": { "inputs": ["AOE-latest", "ST-latest"], "weights": "1 / train mean square per RTN axis after the clip", "onlyWhere": "L2" }
+ },
+ "statistics": {
+  "clipRobustSigma": 5,
+  "madScale": 1.4826,
+  "bootstrapResamples": 2000,
+  "bootstrapSeed": 20261011,
+  "confidence": 0.95,
+  "quantiles": [0.5, 0.95],
+  "ageBinsDays": [0, 0.5, 1, 2, 4, 8, 15]
+ },
+ "decisions": {
+  "H1": { "ratio": "AOE-latest / ST-latest", "excludes": 1 },
+  "L2": { "horizonDays": 0, "axis": "T", "medianCorrelationBelow": 0.8, "minimumPairsPerObject": 3 },
+  "H2": { "selOverBestUpperBelow": 1, "fusOverSelUpperBelow": 0.95 }
+ },
+ "testRead": {
+  "notBeforeUtc": "2026-11-04T04:00:00Z",
+  "selection": "results/e15/selection.json"
+ }
+}
