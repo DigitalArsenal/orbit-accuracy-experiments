@@ -106,7 +106,9 @@ for (const p of ['S', ...products]) {
   const info = tried.map((r) => r.products[p].info?.fit).filter(Boolean);
   q2.operational[p] = { attempted: tried.length, failed: failed.length, reasons, converged: info.filter((f) => f.converged).length,
     bAtBound: info.filter((f) => f.boundStatus?.[0]).length, regularizedBlocks: info.reduce((a, f) => a + (f.regularizations ?? 0), 0),
-    bdotHeld: tried.filter((r) => r.products[p].info?.bdotHeld !== undefined).length, splits: tried.filter((r) => r.products[p].info?.arc?.split).length };
+    bdotHeld: tried.filter((r) => r.products[p].info?.bdotHeld !== undefined).length, splits: tried.filter((r) => r.products[p].info?.arc?.split).length,
+    medianB: (() => { const b = info.filter((x) => x.converged && x.parameters?.length).map((x) => x.parameters[0]).sort((a, c) => a - c); return b.length ? b[Math.floor(b.length / 2)] : null; })(),
+    medianBdotPerDay: (() => { const b = info.filter((x) => x.converged && x.parameters?.length > 1).map((x) => x.parameters[1] * 86400).sort((a, c) => a - c); return b.length ? b[Math.floor(b.length / 2)] : null; })() };
   if (p.startsWith('A')) {
     q2.realism[p] = Object.fromEntries(H.map((h, k) => {
       const d2 = q2rows.map((r) => r.products[p]?.d2?.[k]).filter((x) => Number.isFinite(x));
@@ -116,6 +118,19 @@ for (const p of ['S', ...products]) {
     }));
   }
 }
+// Q2 descriptive: per product and horizon, the 95th percentile of the 3D error over its scored samples, and the
+// median with every failure and missing prediction counted as unbounded (samples whose S has a target there).
+const q = (xs, p) => { const s = [...xs].sort((a, b) => a - b); return s.length ? s[Math.min(s.length - 1, Math.floor(p * (s.length - 1) + 0.5))] : null; };
+q2.distribution = {};
+for (const p of ['S', ...products]) {
+  q2.distribution[p] = Object.fromEntries(H.map((hh, k) => {
+    const withTarget = q2rows.filter((r) => r.products.S?.errors?.[k]);
+    const values = withTarget.map((r) => { const e = r.products[p]?.errors?.[k]; return e ? Math.hypot(e[0], e[1], e[2]) : Infinity; });
+    const scored = values.filter(Number.isFinite);
+    return [hh, { attempted: values.length, scored: scored.length, p95M: q(scored, 0.95), medianUnboundedM: q(values, 0.5) }];
+  }));
+}
+
 // Q2 no-harm (descriptive count): objects whose median 3D ratio A/S at 72 h exceeds 1.10.
 const k72 = H.indexOf(72), k24 = H.indexOf(24);
 const perObject = [...new Set(q2rows.map((r) => r.norad))].map((n) => ({ norad: n, name: nameOf(n), r: medianRatio(pairedQ2(q2rows.filter((x) => x.norad === n), ['A', 'S'], k72)) })).filter((x) => x.r);
@@ -177,8 +192,10 @@ lines.push('', `| Comparison | ${H.map((x) => `${x} h`).join(' | ')} |`, `| --- 
 for (const [k, t] of Object.entries(q2.comparisons)) lines.push(`| ${k} | ${H.map((x) => (t[x] ? `${ci(t[x], 2)} (${t[x].n})` : '—')).join(' | ')} |`);
 lines.push('', '| Class: A / S | 24 h | 72 h | A-JB-E13 / S at 72 h |', '| --- | --- | --- | --- |');
 for (const [cls, t] of Object.entries(q2.byClass)) lines.push(`| ${cls} | ${ci(t.A[24], 2)} | ${ci(t.A[72], 2)} | ${ci(t['A-JB-E13'][72], 2)} |`);
-lines.push('', '| Product | Attempted | Failed | Converged | B at its bound | B-dot held | Arcs split | Regularized blocks |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |');
-for (const [p, o] of Object.entries(q2.operational)) lines.push(`| ${p} | ${o.attempted} | ${o.failed} | ${o.converged} | ${o.bAtBound} | ${o.bdotHeld} | ${o.splits} | ${o.regularizedBlocks} |`);
+lines.push('', '| Product | Attempted | Failed | Converged | B at its bound | B-dot held | Arcs split | Regularized blocks | Median B (m²/kg) | Median B-dot (m²/kg/day) |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |');
+for (const [p, o] of Object.entries(q2.operational)) lines.push(`| ${p} | ${o.attempted} | ${o.failed} | ${o.converged} | ${o.bAtBound} | ${o.bdotHeld} | ${o.splits} | ${o.regularizedBlocks} | ${f(o.medianB, 4)} | ${o.medianBdotPerDay === null ? '—' : o.medianBdotPerDay.toExponential(2)} |`);
+lines.push('', `| Product: 95th percentile / median with failures unbounded, m | ${H.map((x) => `${x} h`).join(' | ')} |`, `| --- | ${H.map(() => '---').join(' | ')} |`);
+for (const [p, t] of Object.entries(q2.distribution)) lines.push(`| ${p} | ${H.map((x) => (t[x]?.attempted ? `${f(t[x].p95M, 0)} / ${t[x].medianUnboundedM === Infinity ? '∞' : f(t[x].medianUnboundedM, 0)} (${t[x].scored}/${t[x].attempted})` : '—')).join(' | ')} |`);
 lines.push('', `Covariance realism of the A family (the fit's covariance × max(1, reduced χ²), propagated): ${Object.entries(q2.realism).map(([p, t]) => `${p}: ${H.filter((x) => t[x]).map((x) => `${x} h ${f(t[x].meanD2Over3, 2)}/${f(t[x].coverage95, 2)}`).join(', ')}`).join('; ')} (mean d²/3 / 95 % coverage).`, '');
 lines.push(`Objects whose median ratio A/S at 72 h exceeds 1.10: ${q2.noHarm.worseThan110.length} of ${q2.noHarm.objects}${q2.noHarm.worseThan110.length ? ` (${q2.noHarm.worseThan110.map((o) => `${o.name} ${f(o.ratio, 2)}`).join(', ')})` : ''}.`, '');
 fs.writeFileSync(path.join(resultsDir, 'test', 'REPORT.md'), `${lines.join('\n')}\n`);

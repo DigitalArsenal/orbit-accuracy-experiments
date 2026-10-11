@@ -193,8 +193,9 @@ if (values.part === 'q2') {
   // The fit sees the synthetic states in place of the OMMs' epoch states (same epochs, same weights).
   const synthetic = { ...o, sets: arc, epochStates: async () => noisy, maneuversBefore: async () => [] };
   const fit = await arcProduct(synthetic, { ...sample, index: arc.length - 1 }, { spanDays: 4, bdot: true, weighting: 'diagonal', atmosphere: 'NRLMSISE00' }, { ...opts, maxSpanDays: 4 });
-  const est = fit.info?.fit?.parameters ?? [];
-  out.checks.A4 = { bTrue, bdotTruePerDay: bdotTrue * 86400, estimate: est, failure: fit.failure ?? null, note: 'pass: |B - B_true| and |B-dot - B-dot_true| within 3 formal sigma (fit.info) or failure reported' };
+  const est = fit.info?.fit?.parameters ?? [], sig = fit.info?.fit?.parameterSigmas ?? [];
+  const within = est.length === 2 && sig.length === 2 && Math.abs(est[0] - bTrue) <= A.knownAnswerSigma * sig[0] && Math.abs(est[1] - bdotTrue) <= A.knownAnswerSigma * sig[1];
+  out.checks.A4 = { bTrue, bdotTruePerDay: bdotTrue * 86400, estimate: est, sigma: sig, failure: fit.failure ?? null, pass: !fit.failure && within };
   log(`A4: B ${est[0]} (true ${bTrue}), B-dot/day ${est[1] * 86400} (true ${bdotTrue * 86400}); ${fit.failure ?? 'converged'}`);
   await ctx.destroy();
 }

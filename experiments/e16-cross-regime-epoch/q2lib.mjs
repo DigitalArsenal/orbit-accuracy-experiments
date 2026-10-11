@@ -121,7 +121,8 @@ export async function arcProduct(o, sample, spec, { W, rhoOf, agom, maxSpanDays 
   let r;
   try { r = await fitArc(ctx, reference, sample.epochMs, observations, settings); } catch (error) { info.cpuMs = cpuMs(cpu0); return { failure: `fit_batch: ${String(error.message).slice(0, 200)}`, info }; }
   info.fit = { status: r.status, rounds: r.rounds, hpopCalls: r.hpopCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare,
-    parameters: r.fit?.estimate?.slice(6), boundStatus: r.fit?.boundStatus, regularizations: r.fit?.regularizations?.length ?? 0, observations: used.length };
+    parameters: r.fit?.estimate?.slice(6), boundStatus: r.fit?.boundStatus, regularizations: r.fit?.regularizations?.length ?? 0, observations: used.length,
+    parameterSigmas: r.fit?.covariance?.length ? parameters.map((_, i) => Math.sqrt(r.fit.covariance[(6 + i) * n + 6 + i] * Math.max(1, r.fit.reducedChiSquare))) : null };
   if (!r.fit?.converged) { info.cpuMs = cpuMs(cpu0); return { failure: `fit not converged (status ${r.status})`, info }; }
   const fitted = withParameters(fixed, parameters, r.fit.estimate.slice(6));
   // A fitted B-dot that would take Cd*A/m below zero inside the 72 h prediction is held at zero for it (counted).
