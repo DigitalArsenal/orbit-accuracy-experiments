@@ -48,7 +48,7 @@ export default async function run(ctx) {
       const [ascending, descending] = await Promise.all([toState({ a, e, i, raan, argp, nu: (360 - argp) % 360, gm: MU }), toState({ a, e, i, raan, argp, nu: (540 - argp) % 360, gm: MU })]);
       await view.draw((g) => {
         const size = Math.max(...ring.map(v3.norm));
-        g.axes([0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], size * 1.18, ['X  J2000', 'Y', 'Z'], { frame: false });
+        g.earth();
         g.line([ascending.r, descending.r], { color: 'muted', dash: true, width: 1.5 });
         g.label(ascending.r, 'Ascending node', { color: 'muted', size: 11, weight: 500 });
         g.line(ring, { color: 'accent', width: 2.5, close: true });
@@ -57,8 +57,10 @@ export default async function run(ctx) {
         g.arrow(s.r, v3.add(s.r, v3.scale(v3.unit(s.v), size * 0.32)), { color: 'cyan', width: 10 });
         g.label(v3.add(s.r, v3.scale(v3.unit(s.v), size * 0.32)), `v  ${num(Math.hypot(...s.v), 5)} km/s`, { color: 'cyan' });
         g.point(s.r, { color: 'sat', size: 10, label: `r  ${num(Math.hypot(...s.r), 6)} km`, labelOptions: { above: true } });
-        g.view({ normal: v3.cross(s.r, s.v) });
-      }, { frame: 'GCRF', epochMs: Date.parse('2026-10-01T00:00:00Z'), legend: [['accent', 'Osculating ellipse'], ['sat', 'State at u', 'dot'], ['cyan', 'Velocity'], ['muted', 'Line of nodes', 'dash']] });
+        g.view({ preset: '3d' });
+      }, { axes: ['x, J2000 (km)', 'y, J2000 (km)', 'z, J2000 (km)'], aspect: 'equal',
+        caption: 'J2000 axes (km); every point is the module’s state at one true anomaly; the velocity arrow shows its direction; the Earth at 6,378 km',
+        legend: [['accent', 'Osculating ellipse'], ['sat', 'State at u', 'dot'], ['cyan', 'Velocity direction'], ['muted', 'Line of nodes', 'dash'], ['earth', 'Earth, 6,378.137 km']] });
       return 'An instantaneous conversion at the epoch: J2000 axes, μ = 398600.4418 km³/s², no propagation.';
     });
   }

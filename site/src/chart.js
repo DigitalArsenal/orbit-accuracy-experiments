@@ -68,7 +68,7 @@ function legend(container, series) {
 // max, scale: 'log' (default, y > 0, metres) | 'linear', ticks, format};
 // x: {min, max, ticks, format, scale: 'linear' (default) | 'log'}. Returns
 // nothing; re-renders on resize.
-export function lineChart(container, { series, x, y = {}, empty = 'No data yet.' }) {
+export function lineChart(container, { series, x, y = {}, empty = 'No data yet.', cursor = null }) {
   const draw = () => {
     const live = series.filter((s) => s.points.length);
     // The legend sits above the plot; the plot starts below however many
@@ -135,6 +135,29 @@ export function lineChart(container, { series, x, y = {}, empty = 'No data yet.'
     };
     hit.addEventListener('pointermove', move);
     hit.addEventListener('pointerleave', () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); });
+    // A time cursor: {x, set(x)}. Dragging on the plot sets it; the page's
+    // time state moves it (container._cursorAt).
+    if (cursor) {
+      const line = el('line', { class: 'cursor', x1: 0, x2: 0, y1: f.y1, y2: f.y0, stroke: 'var(--accent)', 'stroke-width': 1.5 }, f.svg);
+      const knob = el('circle', { class: 'cursor', cx: 0, cy: f.y1, r: 5, fill: 'var(--accent)', stroke: 'var(--surface)', 'stroke-width': 2 }, f.svg);
+      const span = [x.min, x.max];
+      const toX = (px) => {
+        const u = Math.min(1, Math.max(0, (px - f.x0) / (f.x1 - f.x0)));
+        return x.scale === 'log' ? 10 ** (Math.log10(span[0]) + u * (Math.log10(span[1]) - Math.log10(span[0]))) : span[0] + u * (span[1] - span[0]);
+      };
+      container._cursorAt = (value) => {
+        container._cursorValue = value;
+        const px = Math.min(f.x1, Math.max(f.x0, sx(value)));
+        line.setAttribute('x1', px); line.setAttribute('x2', px); knob.setAttribute('cx', px);
+      };
+      container._cursorAt(container._cursorValue ?? cursor.x ?? x.min);
+      let dragging = false;
+      const at = (event) => { const r = f.svg.getBoundingClientRect(); cursor.set(toX(((event.clientX - r.left) / r.width) * f.width)); };
+      hit.style.cursor = 'ew-resize';
+      hit.addEventListener('pointerdown', (event) => { dragging = true; hit.setPointerCapture(event.pointerId); at(event); });
+      hit.addEventListener('pointermove', (event) => { if (dragging) at(event); });
+      hit.addEventListener('pointerup', () => { dragging = false; });
+    }
   };
   draw();
   if (!container._observer) {

@@ -5,7 +5,7 @@
 // page draws the module's report: the measured lines of sight, the predicted
 // positions with their gates, and the uncorrelated tracks.
 import { chart, h, inputs, num, panel, table, tiles, note } from '../models/ui.js';
-import { covarianceAxes, magnification, scene3d, v3 } from '../models/scene.js';
+import { scene3d, v3 } from '../models/scene.js';
 import { associate, loadScenario, simulate } from './scenario.js';
 import { utcMs } from './codec.js';
 
@@ -16,7 +16,7 @@ const BIN_MS = 10 * 60e3;
 export default async function run(ctx) {
   const intro = panel(ctx.root, 'Observations and catalog');
   const controls = panel(ctx.root, 'Scan');
-  const view = scene3d(ctx, { title: 'Gates and lines of sight', caption: '' });
+  const view = scene3d(ctx, { title: 'Lines of sight and predicted positions', caption: '' });
   const scanTable = panel(ctx.root, 'Observations in this interval');
   const pChart = chart(ctx.root, 'Covariance realism: p-values of the correct associations', 'Sorted p-values against their rank: a chi-square-distributed d² puts them on the diagonal');
   const summary = panel(ctx.root, 'Against the simulation’s truth');
@@ -67,34 +67,23 @@ export default async function run(ctx) {
     if (!objectColor.has(key)) objectColor.set(key, OBJECT_COLORS[objectColor.size % OBJECT_COLORS.length]);
     return objectColor.get(key);
   };
-  const gateK = Math.sqrt(report.gate_thresholds['3']);
-  const sites = Object.fromEntries(sc.scenario.sites.map((s) => [s.id, s]));
-  const sensorSite = Object.fromEntries(sc.scenario.sensors.map((s) => [s.id, s.host]));
 
   async function draw() {
     const k = Number(form.values().bin);
     const inBin = obs.filter((o) => o.ms >= t0 + k * BIN_MS && o.ms < t0 + (k + 1) * BIN_MS)
       .sort((a, b) => a.ms - b.ms || a.sensor.localeCompare(b.sensor));
-    const mid = t0 + (k + 0.5) * BIN_MS;
     table(scanTable, ['Time', 'Sensor', 'Status', 'Object', 'd² / dof', 'p-value', 'Posterior', 'Truth'], inBin.map((o) => ({
       class: o.status === 'uct' ? 'highlight' : '',
       cells: [o.time.slice(11, 19), o.sensor, o.status === 'uct' ? `UCT (${o.reason})` : o.ambiguous ? 'associated, ambiguous' : 'associated',
         o.object ? o.object.object_name || o.object.key : '—', o.d2 !== undefined ? `${num(o.d2, 3)} / ${o.dof}` : '—', o.p_value !== undefined ? num(o.p_value, 3) : '—',
         o.posterior !== undefined ? num(o.posterior, 3) : '—', o.truth ? (withheld.has(o.truth) ? `${o.truth} (withheld)` : String(o.truth)) : 'false alarm'],
     })), { existing: scanTable.querySelector('table') ?? undefined });
-    // Gate ellipsoids: the candidates' predicted position covariance at the
-    // 3-D quantile of the gate probability, magnified.
-    const gates = [];
-    for (const o of inBin) for (const c of o.candidates.filter((c) => c.in_gate)) gates.push({ o, c, axes: covarianceAxes(c.position_covariance_km2).map((a) => v3.scale(a, gateK)) });
-    const sizes = gates.flatMap((g) => g.axes.map((a) => v3.norm(a)));
-    const mag = magnification(sizes.length ? Math.max(...sizes) : 0.1, 900);
+    // The geometry (GCRF, km): sensors, lines of sight and the catalog's
+    // predicted positions in each observation's gate.
     await view.draw((g) => {
-      for (const id of new Set(inBin.map((o) => sensorSite[o.sensor]))) g.point(g.fromFixed(sites[id].itrfKm), { color: 'text', size: 7, label: sites[id].id });
-      for (const { o, c, axes } of gates) {
-        const key = c.object.key;
-        g.ellipsoid(c.position_gcrf_km, axes.map((a) => v3.scale(a, mag.k)), { color: colorOf(key), alpha: 0.22, outline: true, frame: false });
-        g.point(c.position_gcrf_km, { color: colorOf(key), size: 6, outline: 1 });
-      }
+      g.earth();
+      for (const o of inBin) g.point(o.sensor_gcrf_km, { color: 'text', size: 7, label: o.sensor.split('-')[0] });
+      for (const o of inBin) for (const c of o.candidates.filter((c) => c.in_gate)) g.point(c.position_gcrf_km, { color: colorOf(c.object.key), size: 6, outline: 1 });
       for (const o of inBin) {
         const assigned = o.status === 'associated' ? o.candidates.find((c) => c.object.key === o.object.key) : null;
         const col = assigned ? colorOf(assigned.object.key) : 'alert';
@@ -104,18 +93,14 @@ export default async function run(ctx) {
           const reach = o.measured.range_km ?? (assigned ? v3.norm(v3.sub(assigned.position_gcrf_km, start)) : 24000);
           end = v3.add(start, v3.scale(o.line_of_sight_gcrf, reach));
         } else if (assigned) end = assigned.position_gcrf_km;
-        if (!end) { g.point(start, { color: 'alert', size: 9 }); continue; }
-        g.line([start, end], { color: col, width: o.status === 'uct' ? 2.5 : 1.5, dash: o.ambiguous || !o.line_of_sight_gcrf, alpha: 0.9, frame: false });
+        if (!end) continue;
+        g.line([start, end], { color: col, width: o.status === 'uct' ? 2.5 : 1.5, dash: o.ambiguous || !o.line_of_sight_gcrf, alpha: 0.9 });
         if (o.status === 'uct') g.point(end, { color: 'alert', size: 8, outline: 1 });
       }
-      const center = gates.length ? gates[0].c.position_gcrf_km : [0, 0, 0];
-      g.view(gates.length ? { center: [0, 0, 0], radius: Math.max(27000, v3.norm(center) * 1.05) } : {});
-    }, {
-      frame: 'GCRF', epochMs: mid,
-      caption: `${label(k)} · GCRF · gates at the ${report.options.gate_probability} probability of three dimensions, ${mag.label}`,
-      legend: [['text', 'Sensor site', 'dot'], ['accent', 'Associated line of sight (one colour per object)'], ['alert', 'Uncorrelated track'],
-        ['accent', 'Gate around a predicted position', 'solid'], ['muted', 'RF (no direction) or ambiguous', 'dash']],
-    });
+      g.view({ preset: '3d' });
+    }, { axes: ['x, GCRF (km)', 'y, GCRF (km)', 'z, GCRF (km)'], aspect: 'equal',
+      caption: `${label(k)} · GCRF (km); the sensors, each observation’s line of sight to its range (or to its object when it has no direction) and the catalog’s predicted positions; the Earth at 6,378 km`,
+      legend: [['text', 'Sensor', 'dot'], ['accent', 'Associated line of sight (one colour per object)'], ['alert', 'Uncorrelated track'], ['muted', 'RF (no direction) or ambiguous', 'dash'], ['earth', 'Earth, 6,378.137 km']] });
     return `${inBin.length} observations in ${label(k)}: ${inBin.filter((o) => o.status === 'associated').length} associated, ${inBin.filter((o) => o.status === 'uct').length} uncorrelated.`;
   }
   await ctx.run('Drawing the interval', draw);

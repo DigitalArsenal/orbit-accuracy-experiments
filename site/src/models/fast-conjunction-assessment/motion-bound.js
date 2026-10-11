@@ -5,7 +5,7 @@
 import { formatMeters } from '../../chart.js';
 import { msOf, syntheticShell } from '../codec/cqr.js';
 import { START_MS, screenOnce } from '../codec/screen.js';
-import { rtn, scene3d, v3 } from '../scene.js';
+import { scene3d, v3 } from '../scene.js';
 import { coarseGrid, destroyIndex, prepareIndex } from '../codec/index.js';
 import { chart, num, panel, table, note } from '../ui.js';
 
@@ -51,21 +51,29 @@ export default async function run(ctx) {
     const tca = enc.fine[Math.min(enc.fine.length - 1, enc.fineAt)];
     const mid = v3.scale(v3.add(p(tca[0]), p(tca[1])), 0.5);
     const D = Math.max(...enc.coarse.flatMap((step) => step.map((q) => q.boundKm)));
-    const [R, T] = rtn(p(tca[0]), vel(tca[0]));
+    // TEME, relative to the pair's midpoint at the closest approach (km).
+    const rel = (q) => v3.sub(p(q), mid);
+    const fineStart = enc.tcaMs - enc.fineAt * 2e3;
+    // A box ±L about the midpoint, clipped: the tubes cross inside it.
+    const L = Math.max(D * 8, 30), speed = Math.hypot(...vel(tca[0]));
+    const span = { startMs: enc.tcaMs - (L / speed) * 1.4e3, stopMs: enc.tcaMs + (L / speed) * 1.4e3, ms: enc.tcaMs,
+      format: (ms) => `${new Date(ms).toISOString().slice(11, 19)} UTC · ${ms < enc.tcaMs ? '−' : '+'}${(Math.abs(ms - enc.tcaMs) / 1e3).toFixed(0)} s from TCA` };
     await view.draw((g) => {
       [0, 1].forEach((i) => {
         const tone = i ? 'cyan' : 'accent';
-        g.line(enc.fine.map((step) => p(step[i])), { color: tone, width: 2, frame: false });
+        g.line(enc.fine.map((step) => rel(step[i])), { color: tone, width: 2, frame: false });
         enc.coarse.forEach((step) => {
           const q = step[i];
-          g.cylinder(v3.sub(p(q), v3.scale(vel(q), 30)), v3.add(p(q), v3.scale(vel(q), 30)), q.boundKm, { color: tone, alpha: 0.18, outline: false, frame: false });
-          g.point(p(q), { color: tone, size: 6, outline: 1, frame: false });
+          g.cylinder(v3.sub(rel(q), v3.scale(vel(q), 30)), v3.add(rel(q), v3.scale(vel(q), 30)), q.boundKm, { color: tone, alpha: 0.18, outline: false });
+          g.point(rel(q), { color: tone, size: 6, outline: 1 });
         });
+        g.moving(enc.fine.map((step, k) => [fineStart + k * 2e3, rel(step[i])]), { color: tone, size: 10, trail: false });
       });
-      g.label(p(tca[1]), `${formatMeters(enc.e.MISS_DISTANCE_M)} at closest`, { color: 'text', dy: -16 });
-      g.label(p(enc.coarse[3][0]), `D ${formatMeters(enc.coarse[3][0].boundKm * 1000)}`, { color: 'accent', size: 11 });
-      g.view({ center: mid, radius: Math.max(D * 9, 40), direction: v3.unit(v3.add(v3.scale(R, 0.8), v3.scale(T, 0.45))) });
-    }, { frame: 'TEME', epochMs: enc.tcaMs, caption: `TEME, true scale; the closest pair of a 300-object screen at ${new Date(enc.tcaMs).toISOString().slice(11, 19)} UTC`,
+      g.label(rel(tca[1]), `${formatMeters(enc.e.MISS_DISTANCE_M)} at closest`, { color: 'text', dy: -16 });
+      g.label(rel(enc.coarse[3][0]), `D ${formatMeters(enc.coarse[3][0].boundKm * 1000)}`, { color: 'accent', size: 11 });
+      g.view({ preset: '3d' });
+    }, { axes: ['Δx, TEME (km)', 'Δy, TEME (km)', 'Δz, TEME (km)'], aspect: 'equal', time: span, limits: [[-L, L], [-L, L], [-L, L]],
+      caption: `TEME, true scale, ±${num(L, 3)} km about the pair’s midpoint at the closest approach (${new Date(enc.tcaMs).toISOString().slice(11, 19)} UTC) of a 300-object screen; each 60 s sample’s straight line over ±h with radius D, and the paths at 2 s`,
       legend: [['accent', `${enc.pair[0].name}: path and 60 s tubes`], ['cyan', `${enc.pair[1].name}`]] });
   }
   await ctx.run('analysis/conjunction-assessment coarse_grid at six step sizes', async () => {

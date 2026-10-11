@@ -6,7 +6,6 @@ import { h, inputs, num, panel, note, tiles } from '../ui.js';
 import { scene3d } from '../scene.js';
 
 // Section 7's six networks: the N a bond can span.
-const NETWORKS = ['Bitcoin', 'Ethereum', 'Solana', 'SUI', 'Cosmos', 'Cardano'];
 
 const usd = (x) => `${x < 0 ? '−' : ''}$${num(Math.abs(x), 3)}`;
 
@@ -21,7 +20,7 @@ export default async function run(ctx) {
     { id: 'N', label: 'Networks N', type: 'select', value: 6, options: [2, 3, 4, 5, 6].map((n) => [n, String(n)]) },
     { id: 'M', label: 'Required M', type: 'select', value: 3, options: [1, 2, 3, 4, 5, 6].map((n) => [n, String(n)]) },
   ], () => draw());
-  const view = scene3d(ctx, { title: 'M of N networks around one key', earth: false });
+  const view = scene3d(ctx, { title: 'The bond’s payoff matrix' });
   const grid = h('div', { class: 'payoff', role: 'table', 'aria-label': 'Claimant payoff matrix' });
   panel(ctx.root, 'Claimant payoff', grid);
   note(ctx.root, 'The paper’s game, evaluated in this page; no module implements it. Not funding earns nothing: the verifier does not trust an unbonded key.');
@@ -40,22 +39,20 @@ export default async function run(ctx) {
       const separating = best(honest) === 'fund' && best(dishonest) === 'none';
       const { N } = form.values(), M = Math.min(form.values().M, N);
       tiles(p, [['Funded', `${M} of ${N} networks`], ['Survives', `${N - M} network ${N - M === 1 ? 'failure' : 'failures'}`]]);
+      // The payoff matrix as bars (US$): claimant against action.
+      const w = 0.3;
       await view.draw((g) => {
-        g.grid([0, 0, 0], [1, 0, 0], [0, 1, 0], 7, 1.4);
-        const key = [0, 0, 1];
-        g.sphere(key, 0.8, { color: 'accent', alpha: 0.85 });
-        g.label([0, 0, 0], 'Claimant’s key', { color: 'accent', size: 11, align: 'center', dy: 14 });
-        NETWORKS.slice(0, N).forEach((name, k) => {
-          const a = (2 * Math.PI * k) / N + Math.PI / 2, at = [5.6 * Math.cos(a), 5.6 * Math.sin(a), 0.6];
-          const funded = k < M;
-          g.line([key, at], { color: funded ? 'accent' : 'muted', width: funded ? 2.5 : 1.2, dash: !funded, alpha: funded ? 0.95 : 0.6 });
-          g.sphere(at, 0.5, { color: funded ? 'accent' : 'muted', alpha: funded ? 0.8 : 0.2, outline: !funded });
-          if (funded) g.box([at[0], at[1], 1.1 + 0.9], [0.5, 0.5, 1.8], { color: 'accent', alpha: 0.45 });
-          g.label(at, name, { color: funded ? 'text' : 'muted', size: 11, align: 'center', dy: 24 });
-        });
-        g.view({ center: [0, 0, 1], radius: 7, direction: [0.3, -1, 0.85] });
-      }, { caption: separating ? 'Separating: only an honest claimant funds the bond across these networks' : 'Not separating at these stakes',
-        legend: [['accent', 'Funded network'], ['muted', 'Unfunded', 'dash']] });
+        [[honest, 1], [dishonest, 2]].forEach(([row, x]) => [['fund', 1], ['none', 2]].forEach(([key, y]) => {
+          const v = row[key], chosen = best(row) === key;
+          if (Math.abs(v) > 0) g.box([x, y, v / 2], [2 * w, 2 * w, Math.abs(v)], { color: chosen ? 'accent' : 'muted', alpha: chosen ? 0.7 : 0.3, outline: true });
+          else g.disc([x, y, 0], [w, 0, 0], [0, w, 0], { color: chosen ? 'accent' : 'muted', alpha: 0.5 });
+          g.label([x, y, Math.max(v, 0)], usd(v), { color: chosen ? 'accent' : 'text', size: 11, align: 'center', above: true, dy: -8 });
+        }));
+        g.line([[0.5, 0.5, 0], [2.5, 0.5, 0], [2.5, 2.5, 0], [0.5, 2.5, 0]], { color: 'text', alpha: 0.5, width: 1, close: true, frame: false });
+        g.view({ preset: '3d' });
+      }, { axes: ['Claimant', 'Action', 'Payoff (US$)'], aspect: 'normal', ticks: [[[1, 'Honest'], [2, 'Dishonest']], [[1, 'Fund the bond'], [2, 'Do not fund']], null],
+        caption: `${separating ? 'Separating' : 'Not separating'}: each claimant’s payoff for funding the bond (${M} of ${N} networks) or not; the better choice of each is highlighted`,
+        legend: [['accent', 'The better choice', 'solid'], ['muted', 'The other', 'solid']] });
       return separating ? 'Separating: honest claimants fund and dishonest ones do not, so an unfunded key marks itself.'
         : best(dishonest) === 'fund' ? `Not separating: deception pays ${usd(dishonest.fund)} even after the expected bond loss; raise B or detection.`
           : 'Not separating: the bond costs an honest claimant more than trust returns.';

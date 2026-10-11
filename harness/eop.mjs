@@ -25,9 +25,9 @@ export async function c04Records(parser, file) {
   return { records, meta, sha256: sha256(body) };
 }
 
-// parse_finals2000a over an IERS finals2000A file (Rapid Service, with predictions): [{mjd, row}] as c04Records returns them. For dates after the C04 series ends.
+// parse_finals2000a over an IERS finals2000A file (Rapid Service, with predictions; a path or its bytes): [{mjd, row}] as c04Records returns them. For dates after the C04 series ends.
 export async function finalsRecords(parser, file) {
-  const body = fs.readFileSync(file);
+  const body = Buffer.isBuffer(file) ? file : fs.readFileSync(file);
   const response = await parser.invoke('parse_finals2000a', [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
   const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
   const records = [];

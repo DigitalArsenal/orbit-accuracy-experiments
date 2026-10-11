@@ -13,19 +13,19 @@ import { OCM } from 'spacedatastandards.org/lib/js/OCM/main.js';
 import { decodeExecution, executionFrame } from '../../../../harness/prw.mjs';
 import { formatMeters } from '../../chart.js';
 import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
-import { HOUR, decodePrw, encodePrw, frameOf, isoMicro, out, resampled } from '../../runs.js';
+import { HOUR, decodePrw, encodePrw, frameOf, isoMicro, out } from '../../runs.js';
 import { transformState } from '../codec/frames.js';
 import { flatten, readKvn, sdsField } from '../codec/kvn.js';
 import { chart, h, num, panel, table, tiles, note } from '../ui.js';
-import { magnification, rtn, rtnCovariance, scene3d, v3 } from '../scene.js';
+import { covarianceAxes, rtn, rtnCovariance, scene3d } from '../scene.js';
 
 
 export default async function run(ctx) {
   const fields = panel(ctx.root, 'A CCSDS OCM, field by field');
   const state = panel(ctx.root, 'Its state, to GCRF and forward a day');
   const cov = panel(ctx.root, 'P(t) = Φ P₀ Φᵀ through HPOP');
-  const view = scene3d(ctx, { title: 'The covariance HPOP carries for a day', caption: '1σ position ellipsoids along the orbit, magnified' });
-  const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From HPOP’s covariance, RTN, P₀ of the sample VCM');
+  const view = scene3d(ctx, { title: 'The covariance HPOP carries for a day', caption: '1σ position ellipsoid of P(t)' });
+  const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From HPOP’s covariance, RTN, P₀ of the sample VCM; drag to move the box above in time');
   const asOcm = panel(ctx.root, 'The same P₀’s message, as an SDS OCM');
 
   const [text, schema] = await Promise.all([ctx.fetchText('./data/ocm/ccsds-ocm-example-2.txt'), ctx.fetchJson('./data/sds/OCM.json')]);
@@ -76,59 +76,44 @@ export default async function run(ctx) {
     const prw = decodePrw(out(read, 'request'));
     const report = JSON.parse(new TextDecoder().decode(out(read, 'report')));
     const epochMs = Date.parse(`${report.epochUtc}Z`);
-    prw.EXECUTION_REQUEST.SAMPLE_EPOCHS = [1, 3, 6, 12, 18, 24].map((h) => Object.assign(new P.TIMInstantT(), { TIME_SYSTEM: P.timingStandard.UTC, EPOCH_FORMAT: P.timEpochRepresentation.ISO8601, ISO8601: isoMicro(epochMs + h * HOUR) }));
+    // Every hour of the day: HPOP's state, Φ and P(t).
+    const HOURS = Array.from({ length: 24 }, (_, k) => k + 1);
+    prw.EXECUTION_REQUEST.SAMPLE_EPOCHS = HOURS.map((h) => Object.assign(new P.TIMInstantT(), { TIME_SYSTEM: P.timingStandard.UTC, EPOCH_FORMAT: P.timEpochRepresentation.ISO8601, ISO8601: isoMicro(epochMs + h * HOUR) }));
     const response = await hpop.invoke('invoke', [frameOf('request', encodePrw(prw)), frameOf('earth_orientation', out(read, 'earth_orientation'))]);
     const result = decodePrw(out(response, 'response')).EXECUTION_RESULT;
     const P0 = prw.EXECUTION_REQUEST.INITIAL_COVARIANCE ?? prw.EXECUTION_REQUEST.INITIAL.COVARIANCE;
     const n = P0.DIMENSION;
     const mul = (A, B, tb = false) => Array.from({ length: n * n }, (_, q) => { const i = Math.floor(q / n), j = q % n; let s = 0; for (let k = 0; k < n; k++) s += A[i * n + k] * (tb ? B[j * n + k] : B[k * n + j]); return s; });
-    const rows = [], sig = [];
+    const block = (values) => [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => values[i * n + j]));  // m²
+    const state = (st) => ({ r: [st.POSITION.X, st.POSITION.Y, st.POSITION.Z].map((x) => x / 1000), v: [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z].map((x) => x / 1000) });
     let worst = 0;
+    const shown = [{ hours: 0, ...state(prw.EXECUTION_REQUEST.INITIAL.STATE), P: block(P0.VALUES) }];
     for (const [k, sample] of result.SAMPLES.entries()) {
       const F = sample.STM.VALUES, C = sample.COVARIANCE.VALUES;
       const R = mul(mul(F, P0.VALUES), F, true);
-      let w = 0;
-      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) w = Math.max(w, Math.abs(R[i * n + j] - C[i * n + j]) / Math.sqrt(C[i * n + i] * C[j * n + j]));
-      worst = Math.max(worst, w);
-      const st = sample.STATE.STATE;
-      const r = [st.POSITION.X, st.POSITION.Y, st.POSITION.Z], v = [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z];
-      const unit = (a) => a.map((c) => c / Math.hypot(...a));
-      const u = unit(r), wv = unit([r[1] * v[2] - r[2] * v[1], r[2] * v[0] - r[0] * v[2], r[0] * v[1] - r[1] * v[0]]);
-      const tv = [wv[1] * u[2] - wv[2] * u[1], wv[2] * u[0] - wv[0] * u[2], wv[0] * u[1] - wv[1] * u[0]];
-      const sigma = (a) => Math.sqrt(a.reduce((acc, ai, i) => acc + a.reduce((s, aj, j) => s + ai * C[i * n + j] * aj, 0), 0));
-      const hours = [1, 3, 6, 12, 18, 24][k];
-      sig.push([hours, sigma(u), sigma(tv), sigma(wv)]);
-      rows.push([`${hours} h`, formatMeters(sigma(u)), formatMeters(sigma(tv)), formatMeters(sigma(wv)), num(w, 2)]);
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) worst = Math.max(worst, Math.abs(R[i * n + j] - C[i * n + j]) / Math.sqrt(C[i * n + i] * C[j * n + j]));
+      shown.push({ hours: HOURS[k], ...state(sample.STATE.STATE), P: block(C) });
     }
-    table(cov, ['Age', 'Radial σ', 'In-track σ', 'Cross-track σ', 'max |ΦP₀Φᵀ − P| / σσ'], rows);
-    // The orbit (the same request every 2 min) and P(t)'s position block as
-    // ellipsoids where HPOP reports it.
-    const inputs = [frameOf('request', encodePrw(prw)), frameOf('earth_orientation', out(read, 'earth_orientation'))];
-    const track = await resampled(hpop, inputs, Array.from({ length: 720 }, (_, k) => (k + 1) * 120));
-    const block = (values) => [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => values[i * n + j] / 1e6));  // km²
-    const state = (st) => ({ r: [st.POSITION.X, st.POSITION.Y, st.POSITION.Z].map((x) => x / 1000), v: [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z].map((x) => x / 1000) });
-    const initial = state(prw.EXECUTION_REQUEST.INITIAL.STATE);
-    // Each P(t) in the radial, in-track and cross-track axes of its own
-    // state, nested at the 24 h state: the growth, not the travel.
-    const shown = [{ hours: 0, ...initial, P: block(P0.VALUES) }, ...result.SAMPLES.map((sample, k) => ({ hours: [1, 3, 6, 12, 18, 24][k], ...state(sample.STATE.STATE), P: block(sample.COVARIANCE.VALUES) }))]
-      .map((e) => ({ ...e, Prtn: rtnCovariance(rtn(e.r, e.v), e.P) }));
-    const end = shown.at(-1), basis = rtn(end.r, end.v);
-    const inTrack = Math.sqrt(end.Prtn[4]), across = Math.sqrt(Math.max(end.Prtn[0], end.Prtn[8]));
-    const mag = magnification(inTrack, 1600);
-    const thin = Math.max(1, 10 ** Math.round(Math.log10((0.3 * inTrack) / across)));
+    // Each P(t) in the radial, in-track and cross-track axes of its own state (m).
+    for (const e of shown) { e.Prtn = rtnCovariance(rtn(e.r, e.v), e.P); e.sigma = [0, 4, 8].map((i) => Math.sqrt(e.Prtn[i])); }
+    table(cov, ['Age', 'Radial σ', 'In-track σ', 'Cross-track σ'], shown.filter((e) => [1, 3, 6, 12, 18, 24].includes(e.hours))
+      .map((e) => [`${e.hours} h`, formatMeters(e.sigma[0]), formatMeters(e.sigma[1]), formatMeters(e.sigma[2])]));
+    note(cov, `HPOP returns Φ and P(t) together; Φ P₀ Φᵀ formed here from its Φ equals its P(t) to ${num(worst, 2)} of the sigmas.`);
+    const span = { startMs: epochMs, stopMs: epochMs + 24 * HOUR, format: (ms) => `${new Date(ms).toISOString().slice(0, 16).replace('T', ' ')} UTC · +${((ms - epochMs) / HOUR).toFixed(1)} h` };
     await view.draw((g) => {
-      g.track(track, { color: 'muted', alpha: 0.5, width: 1, subdivide: 2, frame: false });
-      shown.forEach((e, k) => {
-        const share = k / (shown.length - 1);
-        g.covariance(end.r, basis, e.Prtn, mag.k, { thin: thin, color: k === shown.length - 1 ? 'accent' : 'cyan', alpha: 0.12 + 0.2 * share, outline: k === shown.length - 1 || k === 0, frame: k === shown.length - 1 });
-        const tip = v3.add(end.r, v3.scale(basis[1], Math.sqrt(e.Prtn[4]) * mag.k));
-        if (k === shown.length - 1) g.label(tip, `${e.hours ? `${e.hours} h` : 'P₀'} · ${formatMeters(Math.sqrt(e.Prtn[4]) * 1000)}`, { color: k === shown.length - 1 ? 'accent' : 'text', size: 11, above: true });
-      });
-      g.axes(end.r, basis, inTrack * mag.k * 1.25, ['Radial', 'In-track', 'Cross-track'], { color: 'muted' });
-      g.point(end.r, { color: 'sat', size: 7 });
-      g.view({ direction: v3.unit(v3.add(v3.add(v3.scale(basis[0], 0.55), v3.scale(basis[2], 0.75)), v3.scale(basis[1], -0.3))), includeEarth: false });
-    }, { frame: 'GCRF', epochMs: epochMs + 24 * HOUR, caption: `GCRF at 24 h; 1σ ellipsoids from P₀ to 24 h, ${mag.label}${thin > 1 ? `, the shorter axes a further ×${thin}` : ''}`,
-      legend: [['accent', 'P(24 h)', 'solid'], ['cyan', 'P₀, 1, 3, 6, 12, 18 h', 'solid'], ['muted', 'HPOP, 24 h']] });
+      const end = shown.at(-1);
+      g.covariance([0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], end.Prtn, 1, { color: 'accent', alpha: 0.08, outline: true, outlineAlpha: 0.35 });
+      g.covariance([0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], shown[0].Prtn, 1, { color: 'cyan', alpha: 0.5, outline: true, frame: false });
+      g.movingEllipsoid(shown.map((e) => [epochMs + e.hours * HOUR, [0, 0, 0], covarianceAxes(e.Prtn)]), { color: 'accent', alpha: 0.45 });
+      g.point([0, 0, 0], { color: 'sat', size: 6, outline: 1 });
+      g.view({ preset: '3d' });
+    }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'normal', time: span,
+      caption: `1σ position ellipsoid of P(t), in the radial, in-track and cross-track axes of the state at each hour (m; each axis to its own scale); P₀ from the sample VCM; the outline is P(24 h)`,
+      legend: [['accent', 'P(t), at the time shown', 'solid'], ['cyan', 'P₀', 'solid'], ['muted', 'P(24 h), outline']] });
+    covChart.draw({ series: ['Radial', 'In-track', 'Cross-track'].map((name, i) => ({ name, color: ['var(--cyan)', 'var(--accent)', 'var(--series-muted)'][i], points: shown.map((e) => [e.hours, e.sigma[i]]), label: true })),
+      x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${Number(h.toFixed(1))} h` },
+      cursor: { x: 24, set: (h) => ctx.time.set(epochMs + h * HOUR) } });
+    ctx.time.on((ms) => covChart.cursor((ms - epochMs) / HOUR));
     // The VCM re-expressed by files/orbit-products as an SDS OCM record.
     const vcmFrame = read.outputs.find((o) => o.portId === 'vcm');
     const ocmBytes = out(await products.invoke('vcm_to_ocm', [{ portId: 'vcm', payload: vcmFrame.payload, typeRef: vcmFrame.typeRef }]), 'orbit');

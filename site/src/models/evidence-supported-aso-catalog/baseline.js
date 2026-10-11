@@ -56,9 +56,11 @@ export default async function run(ctx) {
       const t0 = seed.seedUnixMs;
       const truth = [[0, r.s0.position], ...r.rows.map((x) => [(x.ms - t0) / 1000, x.truth])];
       const path = [[0, r.s0.position], ...r.rows.map((x) => [(x.ms - t0) / 1000, x.hpop])];
+      const span = { startMs: t0, stopMs: r.rows.at(-1).ms, format: (ms) => `${new Date(ms).toISOString().slice(0, 16).replace('T', ' ')} UTC · +${((ms - t0) / 3600e3).toFixed(1)} h` };
       await view.draw((g) => {
+        g.earth();
         g.track(truth, { color: 'cyan', width: 2, alpha: 0.7, subdivide: 4 });
-        g.track(path, { color: 'accent', width: 1.5, alpha: 0.85, subdivide: 4, frame: false });
+        g.track(path, { color: 'accent', width: 1.5, alpha: 0.85, subdivide: 4 });
         g.point(r.s0.position, { color: 'sat', size: 9 });
         // One label per place: horizons a whole number of revolutions apart
         // fall together.
@@ -70,10 +72,11 @@ export default async function run(ctx) {
           if (place) place.names.push(`${x.hours} h`); else places.push({ at: x.hpop, names: [`${x.hours} h`] });
         }
         for (const b of places) g.label(b.at, b.names.join(' · '), { color: 'text' });
-        const n = v3.cross(r.s0.position, r.s0.velocity);
-        g.view({ normal: n });
-      }, { frame: 'GCRF', epochMs: t0, caption: `GCRF, ${objectName(seed.object)} from ${seed.seedUtc.slice(0, 16).replace('T', ' ')} UTC, 72 h; HPOP ${hpop.provenance.wasmSha256.slice(0, 12)}…, every force (E-f); each V1 horizon's error, here and as committed`,
-        legend: [['cyan', seed.group === 'SLR' ? 'ILRS precise orbit' : 'IGS precise orbit'], ['accent', 'HPOP, and each V1 horizon', 'line'], ['sat', 'Seed state', 'dot']] });
+        g.moving(r.rows.map((x) => [x.ms, x.hpop]), { color: 'accent', size: 10, trail: false });
+        g.view({ preset: '3d' });
+      }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal', time: span,
+        caption: `GCRF; ${objectName(seed.object)} from ${seed.seedUtc.slice(0, 16).replace('T', ' ')} UTC, 72 h; HPOP ${hpop.provenance.wasmSha256.slice(0, 12)}…, every force (E-f); the six V1 horizons, each checked against results/v1 below; the Earth at 6,378 km`,
+        legend: [['cyan', seed.group === 'SLR' ? 'ILRS precise orbit' : 'IGS precise orbit'], ['accent', 'HPOP, and each V1 horizon'], ['sat', 'Seed state', 'dot'], ['earth', 'Earth, 6,378.137 km']] });
       const verdict = r.reproduced === 0 ? `reproduces results/v1 exactly at all ${r.compared} horizons` : r.reproduced === null ? 'has no committed row to compare with' : `differs from results/v1 by up to ${formatMeters(r.reproduced, 3)}`;
       return `${objectName(seed.object)}, E-f: ${formatMeters(r.horizons.find((x) => x.hours === 24)?.errorM)} after a day; this browser ${verdict}.`;
     });

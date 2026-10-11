@@ -6,7 +6,7 @@
 // compared with the IGS orbit the observations were simulated from.
 import { formatMeters } from '../chart.js';
 import { chart, num, panel, table, tiles, note } from '../models/ui.js';
-import { covarianceAxes, fromRtn, magnification, rtn, rtnCovariance, scene3d, toRtn, v3 } from '../models/scene.js';
+import { covarianceAxes, rtn, rtnCovariance, scene3d, toRtn, v3 } from '../models/scene.js';
 import { FIT_EPOCH, busiest, estimate, fitInputs, hpopRun, loadScenario, simulate } from './scenario.js';
 import { isoMicro, utcMs } from './codec.js';
 
@@ -16,8 +16,9 @@ const pos3 = (P) => [P[0], P[1], P[2], P[6], P[7], P[8], P[12], P[13], P[14]];
 
 export default async function run(ctx) {
   const intro = panel(ctx.root, 'Observations and a priori');
-  const view = scene3d(ctx, { title: 'The fitted orbit and its covariance', caption: '' });
-  const errChart = chart(ctx.root, 'The fit against the IGS orbit', 'Position error of the fit carried by HPOP, and its 3σ from the fitted covariance');
+  const view = scene3d(ctx, { title: 'The fitted orbit and the observations', caption: '' });
+  const errView = scene3d(ctx, { title: 'The fit − the IGS orbit, with its covariance', caption: '' });
+  const errChart = chart(ctx.root, 'The fit against the IGS orbit', 'Position error of the fit carried by HPOP, and its 3σ from the fitted covariance; drag to move the boxes above in time');
   const resChart = chart(ctx.root, 'Residuals', 'Observed minus fitted, in units of each measurement’s σ');
   const result = panel(ctx.root, 'At the fit epoch');
 
@@ -51,14 +52,6 @@ export default async function run(ctx) {
     const sig = (() => { const C = rtnCovariance(basis, pos3(s.covariance)); return [C[0], C[4], C[8]].map((c) => Math.sqrt(c) * 1000); })();
     return { hours: (utcMs(nodes[k].epoch) - utcMs(FIT_EPOCH)) / 3600e3, e, sig, err: Math.hypot(...e), sigma3: 3 * Math.hypot(...sig), basis, s, t };
   });
-  errChart.draw({
-    series: [
-      { name: '3σ (3-D)', color: 'var(--cyan)', points: rows.map((r) => [r.hours, r.sigma3]), label: true },
-      { name: '|fit − IGS|', color: 'var(--accent)', points: rows.map((r) => [r.hours, r.err]), markers: true, label: true },
-    ],
-    x: { min: 0, max: 4, ticks: [0, 1, 2, 3, 4], format: (h) => `${h} h` },
-  });
-
   // Normalized residuals by measurement type.
   const res = { Range: [], 'Range rate': [], RA: [], Dec: [] };
   let q = 0;
@@ -92,30 +85,50 @@ export default async function run(ctx) {
     ['Worst |error| / 3σ on the arc', num(Math.max(...rows.map((r) => r.err / r.sigma3)), 3)]]);
   note(result, 'RTN axes of the IGS state. The covariance is the fit’s formal covariance under the stated noise; the catalog prediction’s own error is small here (six hours from a precise state), and the observations, not the prior, set the fit.');
 
-  // 3D: the IGS orbit, the fitted arc, the covariance along it, the observation geometry.
+  // 3D: the IGS orbit, the fitted arc and the observation geometry (GCRF,
+  // km); and the fit's error against the IGS orbit with its 3σ covariance in
+  // the radial, in-track and cross-track axes of the IGS state (m). One clock.
+  const t0 = utcMs(FIT_EPOCH);
   const dense = sc.dense.find((d) => d.norad === inputs.norad);
-  const truthTrack = dense.epochs.map((e, i) => [(utcMs(e) - utcMs(FIT_EPOCH)) / 1000, dense.position.slice(3 * i, 3 * i + 3)])
+  const truthTrack = dense.epochs.map((e, i) => [(utcMs(e) - t0) / 1000, dense.position.slice(3 * i, 3 * i + 3)])
     .filter(([t]) => t >= -60 && t <= 4 * 3600 + 60);
-  const fitTrack = arc.map((s) => [(utcMs(s.epoch) - utcMs(FIT_EPOCH)) / 1000, s.position]);
-  const biggest = Math.max(...rows.map((r) => Math.max(...r.sig))) / 1000;
-  const mag = magnification(biggest, 700);
+  const fitTrack = arc.map((s) => [(utcMs(s.epoch) - t0) / 1000, s.position]);
+  const span = { startMs: t0, stopMs: t0 + 4 * 3600e3, format: (ms) => `${new Date(ms).toISOString().slice(11, 19)} UTC · +${((ms - t0) / 3600e3).toFixed(2)} h` };
+  const sites = new Map();
+  for (const o of inputs.observations) if (!sites.has(o.sensor)) sites.set(o.sensor, o.stationPosition.map((m) => m / 1000));
   await view.draw((g) => {
+    g.earth();
     g.track(truthTrack, { color: 'cyan', width: 2, alpha: 0.8, subdivide: 2 });
     g.track(fitTrack, { color: 'accent', width: 1.5, subdivide: 8 });
-    for (const r of rows) {
-      const axes = covarianceAxes(rtnCovariance(r.basis, pos3(r.s.covariance))).map((a) => fromRtn(r.basis, v3.scale(a, 3 * mag.k)));
-      g.ellipsoid(r.s.position, axes, { color: 'accent', alpha: 0.3, outline: true, frame: false });
-    }
     for (const [i, o] of inputs.observations.entries()) {
       if (i % 2) continue;
       g.line([o.stationPosition.map((m) => m / 1000), inputs.samples[i].state.slice(0, 3).map((m) => m / 1000)], { color: SENSOR_COLORS[o.sensor], alpha: 0.25, width: 1, frame: false });
     }
-    for (const s of sc.scenario.sites) g.point(g.fromFixed(s.itrfKm), { color: 'text', size: 7, label: s.id });
+    for (const [sensor, at] of sites) g.point(at, { color: 'text', size: 7, label: sensor.split('-')[0] });
     g.point(arc[0].position, { color: 'accent', size: 9, label: 'Fit epoch', labelOptions: { above: true } });
-  }, {
-    frame: 'GCRF', epochMs: utcMs(FIT_EPOCH) + 2 * 3600e3,
-    caption: `GCRF, ${FIT_EPOCH.slice(11, 16)}–${new Date(utcMs(FIT_EPOCH) + 4 * 3600e3).toISOString().slice(11, 16)} UTC; 3σ ellipsoids ${mag.label}`,
-    legend: [['cyan', 'IGS orbit'], ['accent', 'Fit, carried by HPOP'], ['accent', '3σ position covariance', 'solid'], ['accent', 'Radar look', 'line'], ['cyan', 'Optical look'], ['muted', 'RF look']],
+    g.moving(fitTrack.map(([t, p]) => [t0 + t * 1000, p]), { color: 'accent', size: 10, trail: false, label: inputs.block.name });
+    g.view({ preset: '3d' });
+  }, { axes: ['x, GCRF (km)', 'y, GCRF (km)', 'z, GCRF (km)'], aspect: 'equal', time: span,
+    caption: `GCRF (km), ${FIT_EPOCH.slice(11, 16)}–${new Date(t0 + 4 * 3600e3).toISOString().slice(11, 16)} UTC; the IGS orbit, the fit carried by HPOP, and every other line of sight from the sensors (at their first observation); the Earth at 6,378 km`,
+    legend: [['cyan', 'IGS orbit'], ['accent', 'Fit, carried by HPOP'], ['accent', 'Radar look'], ['cyan', 'Optical look'], ['muted', 'RF look'], ['earth', 'Earth, 6,378.137 km']] });
+  await errView.draw((g) => {
+    g.point([0, 0, 0], { color: 'cyan', size: 8, label: 'IGS orbit', labelColor: 'cyan' });
+    g.ellipsoid(rows[0].e, covarianceAxes(rtnCovariance(rows[0].basis, pos3(rows[0].s.covariance))).map((a) => v3.scale(a, 3000)), { color: 'accent', alpha: 0.05, outline: true, outlineAlpha: 0.3 });
+    g.movingEllipsoid(rows.map((r) => [t0 + r.hours * 3600e3, r.e, covarianceAxes(rtnCovariance(r.basis, pos3(r.s.covariance))).map((a) => v3.scale(a, 3000))]), { color: 'accent', alpha: 0.3 });
+    g.line(rows.map((r) => r.e), { color: 'muted', width: 1, alpha: 0.6 });
+    g.moving(rows.map((r) => [t0 + r.hours * 3600e3, r.e]), { color: 'accent', size: 9, trail: 2.5, degree: 3, label: 'Fit' });
+    g.view({ preset: '3d' });
+  }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'equal', time: span,
+    caption: 'The fit carried by HPOP less the IGS orbit, with the fit’s 3σ position covariance about it, in the radial, in-track and cross-track axes of the IGS state (m, true scale); the outline is 3σ at the fit epoch',
+    legend: [['accent', 'Fit − IGS, and its 3σ covariance'], ['muted', 'The whole arc'], ['cyan', 'IGS orbit (origin)', 'dot']] });
+  errChart.draw({
+    series: [
+      { name: '3σ (3-D)', color: 'var(--cyan)', points: rows.map((r) => [r.hours, r.sigma3]), label: true },
+      { name: '|fit − IGS|', color: 'var(--accent)', points: rows.map((r) => [r.hours, r.err]), markers: true, label: true },
+    ],
+    x: { min: 0, max: 4, ticks: [0, 1, 2, 3, 4], format: (h) => `${h} h` },
+    cursor: { x: 0, set: (h) => ctx.time.set(t0 + h * 3600e3) },
   });
+  ctx.time.on((ms) => errChart.cursor((ms - t0) / 3600e3));
   ctx.status(`The fit is ${formatMeters(first.err)} from the IGS orbit at its epoch, ${num(first.err / Math.hypot(...first.sig), 2)} of its formal 3-D σ; along the arc the error stays within ${num(Math.max(...rows.map((r) => r.err / r.sigma3)), 2)} × 3σ.`);
 }

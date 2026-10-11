@@ -34,9 +34,20 @@ function listModules() {
   usedNode.parentElement.hidden = usedNode.childElementCount === 0;
 }
 
+// The page's one time state: scenes' clocks, their sliders and chart cursors
+// follow it, and any of them sets it.
+const timeListeners = new Set();
+let timeNow = null;
+const time = {
+  get: () => timeNow,
+  set(ms) { if (!Number.isFinite(ms) || ms === timeNow) return; timeNow = ms; for (const fn of timeListeners) fn(ms); },
+  on(fn) { timeListeners.add(fn); if (timeNow !== null) fn(timeNow); return () => timeListeners.delete(fn); },
+};
+
 const ctx = {
   root,
   status,
+  time,
   siteUrl, fetchBytes, fetchJson, fetchText,
   // One instance per module per page.
   async module(path) {

@@ -339,11 +339,13 @@
    "reproduce": "yes",
    "credit": "ISS trajectory: NASA JSC Flight Operations Directorate (TOPO), https://www.nasa.gov/spot-the-station/ (U.S. Government work).",
    "reason": "Public-domain U.S. Government work offered for public use.",
-   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth)",
+   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth); the site’s maneuver-detection model (section 5.5)",
    "reproducedAt": [
     "data/e4/iss/ (4 files)",
     "data/e6/iss/ (1 file)",
-    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt"
+    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt",
+    "site/src/data/iss/ (2 files, the trajectories of 2026-09-24 and 2026-09-25 as served, gzipped)",
+    "site (gh-pages): data/maneuver/iss-versions.json (both versions cut to [TIG − 24 h, TIG + 48 h])"
    ],
    "notice": null,
    "obtain": null
@@ -501,7 +503,7 @@
     "data/e3/eop/",
     "data/e5/eop/",
     "data/e7/eopc04.1962-now.gz",
-    "site (gh-pages): data/eop/, data/od/, data/orekit/earth_orientation-*.prw",
+    "site (gh-pages): data/eop/, data/od/, data/orekit/earth_orientation-*.prw; data/eop/eop-2026-09.prw (finals2000A rows)",
     "modules: data-source/eop-parser/tests/fixtures/*.excerpt.txt, data/space-data-loaders/fixtures/finals2000A.daily, propagator/hpop/tests/fixtures/orekit/eop-2026-06.json and eop-2026-08.json"
    ],
    "notice": null,
