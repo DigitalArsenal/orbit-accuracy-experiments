@@ -5,8 +5,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { VCM } from 'spacedatastandards.org/lib/js/VCM/main.js';
 import { formatMeters } from '../../chart.js';
-import { decodePrw, frameOf, out, resampled, runVcm } from '../../runs.js';
-import { rtn, rtnCovariance, scene3d, v3 } from '../scene.js';
+import { HOUR, decodePrw, out, runVcm } from '../../runs.js';
+import { covarianceAxes, rtn, rtnCovariance, scene3d } from '../scene.js';
 import { flatten } from '../codec/kvn.js';
 import { chart, num, panel, pre, table, tiles, note } from '../ui.js';
 
@@ -20,8 +20,8 @@ export default async function run(ctx) {
   const message = panel(ctx.root, 'The message');
   const fields = panel(ctx.root, 'Every field, as an SDS VCM');
   const sig = panel(ctx.root, 'Sigmas the adapter recomputes');
-  const view = scene3d(ctx, { title: 'The two readings of the B row, after a day', caption: '1σ position ellipsoids at 24 h, true scale' });
-  const figure = chart(ctx.root, 'Position sigmas along the propagation', 'HPOP’s 7×7 covariance; in-track under both readings of the B row');
+  const view = scene3d(ctx, { title: 'The two readings of the B row, over a day', caption: '1σ position ellipsoids, radial, in-track and cross-track (km)' });
+  const figure = chart(ctx.root, 'Position sigmas along the propagation', 'HPOP’s 7×7 covariance; in-track under both readings of the B row; drag to move the box above in time');
   const back = panel(ctx.root, 'Written back');
   const [text, schema] = await Promise.all([ctx.fetchText('./data/vcm/sample-vcm.txt'), ctx.fetchJson('./data/sds/VCM.json')]);
   pre(message, text);
@@ -42,35 +42,37 @@ export default async function run(ctx) {
       ['B, row as printed', '—', `${num(b('absolute').sigma / b('absolute').value, 3)} × B`],
     ]);
     const last = (rows) => runs[rows].sigmas.at(-1).s;
+    const t0 = Date.parse(`${runs.fractional.report.epochUtc}Z`);
+    ctx.time.on((ms) => figure.cursor((ms - t0) / HOUR));
     figure.draw({ series: [
       { name: 'Radial', color: 'var(--series-muted)', points: runs.fractional.sigmas.map((q) => [q.hours, q.s[0]]), width: 1.5 },
       { name: 'In-track, B as printed', color: 'var(--cyan)', points: runs.absolute.sigmas.map((q) => [q.hours, q.s[1]]), label: true, labelText: 'As printed' },
       { name: 'In-track, B as a fraction', color: 'var(--accent)', points: runs.fractional.sigmas.map((q) => [q.hours, q.s[1]]), label: true, labelText: 'Fraction' },
-    ], x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` } });
-    // Both readings' covariance at 24 h, where HPOP reports it, at true scale,
-    // with the last revolution leading there.
-    const at24 = (rows) => {
-      const sample = runs[rows].result.FINAL_SAMPLE, st = sample.STATE.STATE, n = sample.COVARIANCE.DIMENSION, P = sample.COVARIANCE.VALUES;
-      const r = [st.POSITION.X, st.POSITION.Y, st.POSITION.Z].map((x) => x / 1000), v = [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z].map((x) => x / 1000);
-      return { r, v, Prtn: rtnCovariance(rtn(r, v), [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => P[i * n + j] / 1e6))) };
-    };
-    const fraction = at24('fractional'), printed = at24('absolute');
+    ], x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` },
+    cursor: { x: 24, set: (h) => ctx.time.set(t0 + h * HOUR) } });
+    // Both readings' covariance each hour, in the radial, in-track and
+    // cross-track axes of the state then (km), from P₀ to 24 h.
     const epochMs = Date.parse(`${runs.fractional.report.epochUtc}Z`);
-    const lastRev = await resampled(hpop, [frameOf('request', runs.fractional.request), frameOf('earth_orientation', out(runs.fractional.read, 'earth_orientation'))],
-      Array.from({ length: 100 }, (_, k) => 24 * 3600 - 95 * 60 + k * 57.6));
-    const basis = rtn(fraction.r, fraction.v);
-    const longest = Math.sqrt(Math.max(printed.Prtn[4], fraction.Prtn[4])), thinnest = Math.sqrt(Math.max(fraction.Prtn[0], fraction.Prtn[8]));
-    const thin = Math.max(1, 10 ** Math.round(Math.log10((0.08 * longest) / thinnest)));
+    const ellipsoids = (rows) => {
+      const { prw, result } = runs[rows];
+      const P0 = prw.EXECUTION_REQUEST.INITIAL_COVARIANCE ?? prw.EXECUTION_REQUEST.INITIAL.COVARIANCE;
+      const one = (st, cov) => {
+        const n = cov.DIMENSION, r = [st.POSITION.X, st.POSITION.Y, st.POSITION.Z], v = [st.VELOCITY.X, st.VELOCITY.Y, st.VELOCITY.Z];
+        return covarianceAxes(rtnCovariance(rtn(r, v), [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => cov.VALUES[i * n + j] / 1e6))));
+      };
+      return [[epochMs, [0, 0, 0], one(prw.EXECUTION_REQUEST.INITIAL.STATE, P0)], ...result.SAMPLES.map((sample, k) => [epochMs + (k + 1) * HOUR, [0, 0, 0], one(sample.STATE.STATE, sample.COVARIANCE)])];
+    };
+    const fraction = ellipsoids('fractional'), printed = ellipsoids('absolute');
+    const span = { startMs: epochMs, stopMs: epochMs + 24 * HOUR, format: (ms) => `${new Date(ms).toISOString().slice(0, 16).replace('T', ' ')} UTC · +${((ms - epochMs) / HOUR).toFixed(1)} h` };
     await view.draw((g) => {
-      g.track(lastRev.slice(1), { color: 'muted', width: 1.5, alpha: 0.7, frame: false });
-      g.covariance(fraction.r, basis, printed.Prtn, 1, { thin: thin, color: 'cyan', alpha: 0.2, outline: true });
-      g.covariance(fraction.r, basis, fraction.Prtn, 1, { thin: thin, color: 'accent', alpha: 0.6, outline: true });
-      g.axes(fraction.r, basis, longest * 1.25, ['Radial', 'In-track', 'Cross-track'], { color: 'muted' });
-      g.label(v3.add(fraction.r, v3.scale(basis[1], -Math.sqrt(printed.Prtn[4]) * 0.7)), `As printed · in-track σ ${formatMeters(Math.sqrt(printed.Prtn[4]) * 1000)}`, { color: 'cyan', size: 11, above: true });
-      g.label(v3.add(fraction.r, v3.scale(basis[1], Math.sqrt(fraction.Prtn[4]))), `Fraction · ${formatMeters(Math.sqrt(fraction.Prtn[4]) * 1000)}`, { color: 'accent', size: 11 });
-      g.view({ direction: v3.unit(v3.add(v3.add(v3.scale(basis[0], 0.55), v3.scale(basis[2], 0.8)), v3.scale(basis[1], 0.2))), includeEarth: false });
-    }, { frame: 'GCRF', epochMs: epochMs + 24 * 3600e3, caption: `GCRF at 24 h; 1σ position ellipsoids, longest axis true scale${thin > 1 ? `, the shorter axes ×${thin}` : ''}`,
-      legend: [['accent', 'B row as a fraction', 'solid'], ['cyan', 'B row as printed', 'solid'], ['muted', 'The last revolution']] });
+      g.ellipsoid([0, 0, 0], printed.at(-1)[2], { color: 'cyan', alpha: 0.05, outline: true, outlineAlpha: 0.3 });
+      g.movingEllipsoid(printed, { color: 'cyan', alpha: 0.22 });
+      g.movingEllipsoid(fraction, { color: 'accent', alpha: 0.65 });
+      g.point([0, 0, 0], { color: 'sat', size: 6, outline: 1 });
+      g.view({ preset: '3d' });
+    }, { axes: ['Radial (km)', 'In-track (km)', 'Cross-track (km)'], aspect: 'normal', time: span,
+      caption: `1σ position ellipsoids of HPOP’s 7×7 covariance under both readings of the B row, each hour, in the radial, in-track and cross-track axes of the state then (km; each axis to its own scale); the outline is the reading as printed at 24 h`,
+      legend: [['accent', `B row as a fraction · in-track σ ${formatMeters(last('fractional')[1])} at 24 h`, 'solid'], ['cyan', `B row as printed · ${formatMeters(last('absolute')[1])}`, 'solid']] });
     // Read the written message again: the covariance the text keeps.
     const again = await adapter.invoke('read', [{ portId: 'message', payload: new TextEncoder().encode(written) },
       { portId: 'options', payload: new TextEncoder().encode(JSON.stringify({ ephemerisSource: 'Analytical', arcSeconds: 3600 })) }]);

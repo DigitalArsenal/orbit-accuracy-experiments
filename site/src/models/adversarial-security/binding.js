@@ -10,7 +10,7 @@ export default async function run(ctx) {
   const form = inputs(p, [{ id: 'cn', label: 'Common name', type: 'text', value: 'node.example.org', wide: true }], () => issue());
   const actions = h('div', { class: 'model-actions' });
   p.append(actions);
-  const view = scene3d(ctx, { title: 'The binding, and a forged one', earth: false });
+  const view = scene3d(ctx, { title: 'The binding, and a forged one' });
   const steps = panel(ctx.root, 'What any verifier checks');
   const certBox = panel(ctx.root, 'The certificate');
   const w = await loadWallet(ctx);
@@ -53,31 +53,31 @@ export default async function run(ctx) {
       ], { existing: steps.querySelector('table') ?? undefined });
       certBox.querySelector('pre')?.remove();
       pre(certBox, `Subject ${parsed.subjectDn}\nValid ${parsed.notBefore} to ${parsed.notAfter}\n\n${issued.pem}`);
+      // The binding as a table in the box: the wallet key signs the
+      // certificate's key; another wallet's signature; the wallet's addresses.
       await view.draw((g) => {
-        g.grid([0, 0, 0], [1, 0, 0], [0, 1, 0], 8, 2);
-        const wallet = [-4.2, 0, 2], cert = [4, 0.6, 2.2], certKey = [4, -0.4, 2.2], other = [-6, 3.2, 4.4];
-        g.box(cert, [3.2, 0.4, 4], { color: 'text', alpha: 0.12, outline: true });
-        g.label([4, 0.6, 4.2], `X.509 · ${/CN=([^,]+)/.exec(parsed.subjectDn)?.[1] ?? parsed.subjectDn}`, { color: 'text', size: 11, align: 'center', above: true });
-        g.sphere(certKey, 0.55, { color: 'cyan', alpha: 0.9 });
-        g.label(certKey, `P-256 key\n${short(hex(w, issued.certPublicKey), 6, 4)}`, { color: 'cyan', size: 11, align: 'center', dy: 30 });
-        g.sphere(wallet, 0.8, { color: 'accent', alpha: 0.9 });
-        g.label(wallet, `Wallet key, secp256k1\n${short(att.public_key_hex, 6, 4)}`, { color: 'accent', size: 11, align: 'center', dy: 34 });
-        g.arrow(wallet, [3.35, -0.4, 2.2], { color: embedded ? 'accent' : 'alert', width: 10 });
-        g.label([0, -0.2, 2.1], embedded ? 'attestation valid' : 'attestation invalid', { color: embedded ? 'accent' : 'alert', size: 11, align: 'center', above: true, dy: -12 });
+        const wallet = [0, 0, 0], certKey = [2, 0, 0];
+        g.box(certKey, [0.6, 0.5, 0.5], { color: 'text', alpha: 0.12, outline: true });
+        g.point(certKey, { color: 'cyan', size: 10, alpha: 0.9 });
+        g.label(certKey, `X.509 ${/CN=([^,]+)/.exec(parsed.subjectDn)?.[1] ?? parsed.subjectDn} · P-256 ${short(hex(w, issued.certPublicKey), 6, 4)}`, { color: 'cyan', size: 11, align: 'center', above: true, dy: -26 });
+        g.point(wallet, { color: 'accent', size: 10, alpha: 0.9 });
+        g.label(wallet, `secp256k1 ${short(att.public_key_hex, 6, 4)}`, { color: 'accent', size: 11, align: 'center', above: true, dy: -14 });
+        g.arrow(wallet, [1.7, 0, 0], { color: embedded ? 'accent' : 'alert', width: 10 });
+        g.label([1, 0, 0], embedded ? 'attestation valid' : 'attestation invalid', { color: embedded ? 'accent' : 'alert', size: 11, align: 'center', above: true, dy: -10 });
         if (swap) {
-          g.sphere(other, 0.6, { color: 'muted', alpha: 0.5 });
-          g.label(other, 'Another wallet', { color: 'muted', size: 11, align: 'center', above: true, dy: -14 });
-          g.line([other, certKey], { color: direct ? 'accent' : 'alert', width: 3, dash: true });
-          g.label([(other[0] + certKey[0]) / 2, (other[1] + certKey[1]) / 2, (other[2] + certKey[2]) / 2], direct ? 'accepted' : 'rejected', { color: direct ? 'accent' : 'alert', size: 12, align: 'center', above: true });
+          g.point([0, 1, 0], { color: 'muted', size: 10, alpha: 0.6 });
+          g.line([[0, 1, 0], certKey], { color: direct ? 'accent' : 'alert', width: 3, dash: true });
+          g.label([1, 0.5, 0], direct ? 'accepted' : 'rejected', { color: direct ? 'accent' : 'alert', size: 12, align: 'center', above: true });
         }
         [['Bitcoin', w.bitcoin.getAddress(walletPub, 0)], ['Ethereum', w.ethereum.getAddress(walletPub)]].forEach(([name, address], k) => {
-          const at = [-7 + 5.4 * k, -3.6, 0.4];
+          const at = [1 + k, 2, 0];
           g.line([wallet, at], { color: 'accent', width: 1.5, alpha: 0.6 });
-          g.sphere(at, 0.32, { color: 'accent', alpha: 0.6 });
-          g.label(at, `${name} ${short(address, 6, 4)}`, { color: 'text', size: 10, weight: 500, align: 'center', dy: 18 + 14 * k });
+          g.point(at, { color: 'accent', size: 10, alpha: 0.6 });
+          g.label(at, `${name} ${short(address, 6, 4)}`, { color: 'text', size: 10, weight: 500, align: 'center', dy: 16 });
         });
-        g.view({ center: [0, 0.2, 2], radius: 7.8, direction: [0.1, -1, 0.55] });
-      }, { caption: swap ? 'Another wallet’s signature over the same certificate key fails' : 'The wallet key signs the certificate key; the certificate carries the wallet key',
+        g.view({ preset: '3d' });
+      }, { axes: ['', '', ''], aspect: 'normal', ticks: [[[0, 'Wallet key'], [1, 'Signature'], [2, 'Certificate']], [[0, 'Binding'], [1, 'Another wallet'], [2, 'Addresses']], [[0, '']]],
+        caption: swap ? 'Another wallet’s signature over the same certificate key fails' : 'The wallet key signs the certificate key; the certificate carries the wallet key',
         legend: [['accent', 'Wallet key and its binding'], ['cyan', 'Certificate key', 'dot'], ...(swap ? [['alert', 'Forged binding', 'dash']] : [])] });
       return swap ? 'A signature from any other wallet key fails against the key the certificate names: the binding cannot be transferred.'
         : 'The certificate names its wallet key, the wallet key signs the certificate key, and the wallet key gives the addresses to watch.';

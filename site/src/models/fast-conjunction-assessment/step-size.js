@@ -6,7 +6,7 @@ import { formatMeters } from '../../chart.js';
 import { msOf, syntheticShell } from '../codec/cqr.js';
 import { coarseGrid, destroyIndex, prepareIndex } from '../codec/index.js';
 import { START_MS, screenWindowed } from '../codec/screen.js';
-import { rtn, scene3d, v3 } from '../scene.js';
+import { scene3d, v3 } from '../scene.js';
 import { chart, inputs, num, panel, table, note } from '../ui.js';
 
 const STEPS = [10, 30, 60, 120];
@@ -34,7 +34,7 @@ export default async function run(ctx) {
     { id: 'hours', label: 'Span (h)', type: 'select', value: 24, options: [[6, '6'], [24, '24'], [72, '72']] },
   ], () => sweep());
   const out = panel(ctx.root, 'One screen per step');
-  const view = scene3d(ctx, { title: 'One encounter, sampled four ways', caption: 'TEME, true scale; the module’s samples of both objects at each step' });
+  const view = scene3d(ctx, { title: 'One encounter, sampled four ways', caption: 'TEME (km), true scale' });
   const figure = chart(ctx.root, 'Candidates against step', 'Pair-steps the module proposes for refinement');
   note(ctx.root, 'Synthetic low-orbit catalog, 5 km threshold, SGP4 in the module, pair search on the CPU in the module. Δmiss is the largest miss-distance difference from the 10 s screen over the same events.');
   const ca = await ctx.module('analysis/conjunction-assessment');
@@ -57,15 +57,22 @@ export default async function run(ctx) {
       }
       fine = await coarseGrid(ca, handle, { startMs: tcaMs - 150e3, coarseStepSec: 2, steps: 151 });
     } finally { await destroyIndex(ca, handle); }
+    // TEME, relative to the pair's midpoint at the closest approach (km).
     const p = (q) => [q.x, q.y, q.z];
     const mid = v3.scale(v3.add(p(fine[75][0]), p(fine[75][1])), 0.5);
-    const [R, T, N] = rtn(p(fine[75][0]), [fine[75][0].vx, fine[75][0].vy, fine[75][0].vz]);
+    const rel = (q) => v3.sub(p(q), mid);
+    const span = { startMs: tcaMs - 150e3, stopMs: tcaMs + 150e3, ms: tcaMs, format: (ms) => `${new Date(ms).toISOString().slice(11, 19)} UTC · ${ms < tcaMs ? '−' : '+'}${(Math.abs(ms - tcaMs) / 1e3).toFixed(0)} s from TCA` };
     await view.draw((g) => {
-      [0, 1].forEach((i) => g.line(fine.map((step) => p(step[i])), { color: i ? 'cyan' : 'accent', width: 1.5, alpha: 0.55 }));
-      [...STEPS].reverse().forEach((step) => grids[step].forEach((row) => row.forEach((q) => g.point(p(q), { color: TONES[step], size: 4 + step / 24, outline: 1, frame: false }))));
-      g.point(mid, { color: 'text', size: 5, outline: 1, label: `${formatMeters(e.MISS_DISTANCE_M)} at closest`, labelOptions: { above: true } });
-      g.view({ center: mid, radius: 1100, direction: v3.unit(v3.add(v3.scale(R, 0.9), v3.scale(N, 0.35))) });
-    }, { frame: 'TEME', epochMs: tcaMs, caption: `TEME, true scale, ±150 s around the closest conjunction of the 10 s screen`,
+      [0, 1].forEach((i) => g.line(fine.map((step) => rel(step[i])), { color: i ? 'cyan' : 'accent', width: 1.5, alpha: 0.55 }));
+      [...STEPS].reverse().forEach((step) => grids[step].forEach((row) => row.forEach((q) => {
+        const at = rel(q);
+        if (Math.max(...at.map(Math.abs)) < 1300) g.point(at, { color: TONES[step], size: 4 + step / 24, outline: 1 });
+      })));
+      [0, 1].forEach((i) => g.moving(fine.map((step, k) => [tcaMs - 150e3 + k * 2e3, rel(step[i])]), { color: i ? 'cyan' : 'accent', size: 10, trail: false }));
+      g.point([0, 0, 0], { color: 'text', size: 5, outline: 1, label: `${formatMeters(e.MISS_DISTANCE_M)} at closest`, labelOptions: { above: true } });
+      g.view({ preset: '3d' });
+    }, { axes: ['Δx, TEME (km)', 'Δy, TEME (km)', 'Δz, TEME (km)'], aspect: 'equal', time: span,
+      caption: `TEME, true scale, about the pair’s midpoint at the closest conjunction of the 10 s screen, ±150 s; the module’s samples of both objects at each step`,
       legend: [...STEPS.map((step) => [TONES[step], `${step} s samples`, 'dot']), ['accent', pair[0].name], ['cyan', pair[1].name]] });
   }
 

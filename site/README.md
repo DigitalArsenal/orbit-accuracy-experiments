@@ -20,16 +20,17 @@ Blue Marble as its only imagery). Nothing is fetched from a third party.
 `models/<paper>/<section_id>.html` runs one whitepaper section's computation
 with the same modules, and draws that section's subject in 3D. The catalog
 paper: a solution fitted to observations with its covariance (section 2),
-osculating elements, the OMM handoff and its quantization (section 4),
-Φ P₀ Φᵀ through HPOP (section 6), Orekit and V1 (section 7), association
-(section 8), VCM parity (section 9), a V1 seed reproduced by the binary the
-paper names (section 10), each product's measured error at a satellite of its
-class (section 11) and a conjunction from fitted covariances (section 12).
-The screening paper: pair counts, the motion bound, refinement, step size,
-Alfano and Foster probabilities (all in `analysis/conjunction-assessment`),
-and EKF and UKF covariance. The adversarial-security paper: HD derivation,
-signatures and X.509 binding in the public `hd-wallet-wasm`; the bond, payoff
-and trust-decay formulas, which no module implements, evaluated in the page.
+osculating elements, the OMM handoff and its quantization (section 4), the
+ISS reboost the maneuver detector found (section 5.5), Φ P₀ Φᵀ through HPOP
+(section 6), Orekit and V1 (section 7), association (section 8), VCM parity
+(section 9), a V1 seed reproduced by the binary the paper names (section 10),
+each product's measured error at a satellite of its class (section 11) and a
+conjunction from fitted covariances (section 12). The screening paper: pair
+counts, the motion bound, refinement, step size, Alfano and Foster
+probabilities (all in `analysis/conjunction-assessment`), and EKF and UKF
+covariance. The adversarial-security paper: HD derivation, signatures and
+X.509 binding in the public `hd-wallet-wasm`; the bond, payoff and
+trust-decay formulas, which no module implements, evaluated in the page.
 `src/models/registry.mjs` lists them, one per section; the build checks each
 heading against the paper's markdown (`SDN_WHITEPAPERS`, default the stack's
 `space-data-network/whitepapers`) and writes `models/index.json`:
@@ -41,14 +42,23 @@ heading against the paper's markdown (`SDN_WHITEPAPERS`, default the stack's
 `section_id` is the heading id `docs/build-whitepapers.mjs` gives the
 section. Each page stands alone in an iframe, takes `?theme=light|dark` or a
 `{sdnTheme}` message, and sets `<body data-done>` when its first run ends.
-Each draws in 3D with `src/models/scene.js` (one CesiumJS widget per page,
-loaded when the model runs, no ion, the Blue Marble as the only imagery):
-orbits, covariance and error ellipsoids, error histories in radial, in-track
-and cross-track axes, encounter planes, and the key graphs of the security
-paper. Every point drawn is a module output, a published precise orbit, a
-committed result, or the page's inputs and its evaluation of the paper's
-formulas; magnifications are stated on the view, and each page lists the
-credit lines of the data it reads.
+
+Each scene is an analytic plot box, as MATLAB's `plot3` with `box on` and
+`grid on` (`src/models/scene.js`): one CesiumJS Viewer with no globe, sky or
+imagery; a box around the data, grid on the three back planes (they follow
+the view), ticks with numbers in physical units, labelled axes (x, y, z in
+km in the named frame, or radial, in-track and cross-track), a title and a
+legend. In geocentric boxes the Earth is a plain wireframe sphere of
+6,378.137 km. The camera is CesiumJS's own controller about the box centre,
+with 3D, xy, xz and yz views and a reset. A scene can fix its limits; the box
+then clips what lies outside. Anything that moves is an entity on a
+`SampledPositionProperty` (an ellipsoid on sampled radii and orientation),
+driven by the Viewer's Clock; every scene's Clock follows the page's one
+time state, which the slider under a box and the cursor of the page's chart
+set. Every point drawn is a module output, a published precise orbit or
+operator ephemeris, a committed result, or the page's inputs and its
+evaluation of the paper's formulas; each page lists the credit lines of the
+data it reads.
 
 Two HPOP binaries are served: `propagator/hpop`, the current one, and
 `propagator/hpop-v1`, the binary V1 ran (from the V1 run's modules commit,
@@ -78,8 +88,15 @@ hypothetical and says so.
 `build-models.mjs` writes the inputs of the models that draw committed
 results: precise orbits read from `SDN_REFERENCE_STATES` (IGS, ILRS,
 Copernicus Sentinel-1) and the experiments' aggregates (E3's test table, E6's
-laser-ranged fits). No element set, and no per-sample row derived from one,
-is written.
+laser-ranged fits); and, for section 5.5, NASA's ISS trajectories before and
+after the reboost of 25 September 2026 (`src/data/iss/`, as served, public
+domain), the IERS finals2000A rows of those days (`data/e1`), and the
+detector's events on the ISS's public element sets, recorded by
+`node site/run-maneuver.mjs` in `generated/iss-detection.json` (the
+modules' study host code; it needs `npm ci` in the modules checkout's
+`analysis/maneuver-detection`). The build refuses a recording made with
+another detector binary than the one it serves. No element set, and no
+per-sample row derived from one, is written.
 
 ## Licences
 
@@ -100,6 +117,7 @@ export SDN_MODULES_ROOT=…/space-data-network-modules
 export SDN_REFERENCE_STATES=…/reference-states/reference
 export SDN_EOP_C04=…/reference-states/products/eopc04.1962-now
 node site/run-orekit.mjs        # when the HPOP binary changes: site/generated/orekit-results.json
+node site/run-maneuver.mjs      # when the detector binary changes: site/generated/iss-detection.json
 node site/build.mjs             # site/dist
 node site/serve.mjs             # http://localhost:8080 with COOP/COEP
 ```

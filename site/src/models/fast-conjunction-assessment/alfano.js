@@ -4,7 +4,7 @@
 import { formatMeters } from '../../chart.js';
 import { alfanoRequest, decodeCqr, output } from '../codec/cqr.js';
 import { chart, inputs, num, panel, table, tiles } from '../ui.js';
-import { drawPlane } from '../encounter-plane.js';
+import { PLANE_AXES, drawPlane } from '../encounter-plane.js';
 import { scene3d } from '../scene.js';
 
 const MISSES = [10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
@@ -16,7 +16,7 @@ export default async function run(ctx) {
     { id: 'miss', label: 'Miss distance (m)', value: 250, min: 0.1 },
     { id: 'radius', label: 'Combined radius (m)', value: 10, min: 0.1 },
   ], () => single());
-  const view = scene3d(ctx, { title: 'The worst case, in the encounter plane', earth: false });
+  const view = scene3d(ctx, { title: 'The worst case, in the encounter plane' });
   const figure = chart(ctx.root, 'Maximum probability against miss distance', 'One line per combined radius; computed by the module');
   const box = panel(ctx.root, 'At 5 km, the screening threshold');
   const ca = await ctx.module('analysis/conjunction-assessment');
@@ -29,7 +29,7 @@ export default async function run(ctx) {
       tiles(p, [['Maximum probability', num(r.MAXIMUM_PROBABILITY, 3)], ['Worst-case σ', formatMeters(r.SIGMA_STAR_M)], ['Dilution threshold', formatMeters(r.DILUTION_THRESHOLD_M)]]);
       await view.draw((g) => drawPlane(g, { miss, radius, sigmaXi: r.SIGMA_STAR_M, sigmaZeta: r.SIGMA_STAR_M }),
         { caption: `The circular covariance of σ* = ${formatMeters(r.SIGMA_STAR_M)}, the module’s worst case, about the miss; the hard body’s tube along the relative velocity`,
-          legend: [['accent', 'Hard body and miss'], ['cyan', `σ* 1σ, 2σ, 3σ`]] });
+          axes: PLANE_AXES, aspect: 'equal', legend: [['accent', 'Hard body and miss'], ['cyan', `σ* 1σ, 2σ, 3σ`]] });
       return `Without a covariance, no σ gives more than ${num(r.MAXIMUM_PROBABILITY, 3)} for a ${formatMeters(miss)} miss and a ${formatMeters(radius)} combined radius.`;
     });
   }

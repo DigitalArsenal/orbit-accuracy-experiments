@@ -29,11 +29,11 @@ import { parseArgs } from 'node:util';
 import * as esbuild from 'esbuild';
 import { loadModule, modulesRoot, gitState } from '../harness/modules.mjs';
 import { kernelFrame } from '../harness/prw.mjs';
-import { c04Records, eopFrame } from '../harness/eop.mjs';
+import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildMeasuredAccuracy } from './build-models.mjs';
+import { buildManeuver, buildMeasuredAccuracy } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -90,7 +90,9 @@ fs.writeFileSync(path.join(dist, '.nojekyll'), '');
 const moduleList = ['propagator/hpop', 'foundation/time', 'analysis/vcm-adapter', 'analysis/epoch-state', 'foundation/orbits',
   'foundation/frames', 'files/orbit-products', 'analysis/conjunction-assessment',
   // The orbit-determination pages (site/src/od).
-  'analysis/observation-simulator', 'analysis/access', 'analysis/association', 'analysis/estimation'];
+  'analysis/observation-simulator', 'analysis/access', 'analysis/association', 'analysis/estimation',
+  // The catalog paper's section 5 pages.
+  'analysis/maneuver-detection'];
 const moduleIndex = [];
 const modulesGit = gitState(modules);
 const resultsDir = path.join(repo, 'results/v1');
@@ -277,6 +279,9 @@ for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
 
 // ── Measured accuracy (section 11 of the catalog paper) ──
 buildMeasuredAccuracy({ repo, referenceDir, write, analysed });
+// ── The ISS reboost the detector found (section 5.5) ──
+await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopParser: () => loadModule(modules, 'data-source/eop-parser'),
+  spaceTrackCredit: licenceSource('space-track').credit, servedWasmSha256: (relative) => moduleIndex.find((m) => m.path === relative)?.wasmSha256 });
 
 // ── The orbit-determination pages' inputs (site/build-od.mjs) ──
 {

@@ -8,7 +8,7 @@
 // objects are known as well as the fit knows the first.
 import { formatMeters } from '../chart.js';
 import { inputs, num, panel, table, tiles, note } from '../models/ui.js';
-import { covarianceAxes, magnification, rtn, scene3d, toRtn, v3 } from '../models/scene.js';
+import { covarianceAxes, rtn, rtnCovariance, scene3d, v3 } from '../models/scene.js';
 import { FIT_EPOCH, busiest, estimate, fitInputs, hpopRun, loadScenario, simulate } from './scenario.js';
 import { S, cqrFrame, decodeCqr, encodeOem, gcrfSystem, isoMicro, out, t, utcMs } from './codec.js';
 import * as flatbuffers from 'flatbuffers';
@@ -93,35 +93,31 @@ export default async function run(ctx) {
         + 'Both covariances come with the ephemerides (SOURCE_EPHEMERIS); the module assumes the two errors independent and reports the covariance as uncalibrated, conditional on the fit’s noise model. '
         + 'The second object is hypothetical; only its geometry is chosen here.');
 
-      // Draw the encounter: both objects, their 1σ covariances and the
-      // combined one (their sum, independent errors) centred on the primary.
+      // The encounter in the primary's radial, in-track and cross-track axes
+      // at TCA (m, true scale): both objects, their 1σ covariances, the
+      // combined one (their sum, independent errors), the hard body, the miss
+      // vector and the relative velocity's direction.
       const near = (list) => list.reduce((a, b) => (Math.abs(utcMs(b.epoch) - tcaMs) < Math.abs(utcMs(a.epoch) - tcaMs) ? b : a));
       const a = near(primary), b = near(second);
       const basis = rtn(a.position, a.velocity);
-      const Pa = pos3(a.covariance), Pb = pos3(b.covariance), Pc = Pa.map((v, i) => v + Pb[i]);
-      const rel = v3.sub(b.position, a.position);
-      const scale = magnification(Math.max(v3.norm(rel), ...covarianceAxes(Pc).map((q) => v3.norm(q))), 3000);
-      const center = a.position;
-      const place = (p) => v3.add(center, v3.scale(v3.sub(p, center), scale.k));
-      const ellipsoid = (P) => covarianceAxes(P).map((q) => v3.scale(q, scale.k));
-      const sampleTrack = (list) => list.filter((s) => Math.abs(utcMs(s.epoch) - tcaMs) <= 4 * 60e3).map((s) => place(s.position));
+      const inRtn = (P) => rtnCovariance(basis, pos3(P)).map((v) => v * 1e6);
+      const Pa = inRtn(a.covariance), Pb = inRtn(b.covariance), Pc = Pa.map((v, i) => v + Pb[i]);
+      const rel = ['X', 'Y', 'Z'].map((k) => event.RELATIVE_POSITION_RTN[k]);
+      const vRel = v3.unit(['X', 'Y', 'Z'].map((k) => event.RELATIVE_VELOCITY_RTN[k]));
+      const reach = Math.max(v3.norm(rel), ...covarianceAxes(Pc).map(v3.norm)) * 1.6;
       await view.draw((g) => {
-        g.line(sampleTrack(primary), { color: 'accent', width: 2 });
-        g.line(sampleTrack(second), { color: 'cyan', width: 2 });
-        g.ellipsoid(center, ellipsoid(Pa), { color: 'accent', alpha: 0.25, outline: true });
-        g.ellipsoid(place(b.position), ellipsoid(Pb), { color: 'cyan', alpha: 0.22, outline: true });
-        g.ellipsoid(center, ellipsoid(Pc), { color: 'text', alpha: 0.08, outline: true, outlineAlpha: 0.5 });
-        g.sphere(center, Math.max((radius / 1000) * scale.k, 1), { color: 'alert', alpha: 0.35 });
-        g.arrow(center, place(b.position), { color: 'text', width: 8 });
-        g.axes(center, basis, Math.max(v3.norm(v3.sub(place(b.position), center)), 400) * 1.6, ['Radial', 'In-track', 'Cross-track'], { color: 'muted', alpha: 0.8 });
-        g.point(center, { color: 'accent', size: 8, label: 'Primary (fit)' });
-        g.point(place(b.position), { color: 'cyan', size: 8, label: 'Secondary' });
-        g.view({ center, radius: Math.max(v3.norm(v3.sub(place(b.position), center)), ...covarianceAxes(Pc).map((q) => v3.norm(q) * scale.k)) * 2.2, direction: v3.unit(v3.add(basis[0], v3.add(v3.scale(basis[1], -0.6), v3.scale(basis[2], 0.8)))) });
-      }, {
-        frame: 'GCRF', epochMs: tcaMs,
-        caption: `At TCA, GCRF around the primary · separations and 1σ covariances ${scale.label}`,
-        legend: [['accent', 'Primary 1σ', 'solid'], ['cyan', 'Secondary 1σ', 'solid'], ['text', 'Combined 1σ (sum)', 'solid'], ['alert', 'Hard body', 'dot'], ['text', 'Miss vector']],
-      });
+        g.covariance([0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], Pa, 1, { color: 'accent', alpha: 0.25, outline: true });
+        g.covariance(rel, [[1, 0, 0], [0, 1, 0], [0, 0, 1]], Pb, 1, { color: 'cyan', alpha: 0.22, outline: true });
+        g.covariance([0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], Pc, 1, { color: 'text', alpha: 0.06, outline: true, outlineAlpha: 0.45 });
+        g.sphere([0, 0, 0], radius, { color: 'alert', alpha: 0.45 });
+        g.line([v3.sub(rel, v3.scale(vRel, reach)), v3.add(rel, v3.scale(vRel, reach))], { color: 'cyan', width: 1.5, dash: true, frame: false });
+        g.arrow([0, 0, 0], rel, { color: 'text', width: 8 });
+        g.point([0, 0, 0], { color: 'accent', size: 8, label: 'Primary (fit)', labelColor: 'accent' });
+        g.point(rel, { color: 'cyan', size: 8, label: `Secondary · miss ${formatMeters(event.MISS_DISTANCE_M)}`, labelColor: 'cyan' });
+        g.view({ preset: '3d' });
+      }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'equal',
+        caption: `At TCA ${new Date(tcaMs).toISOString().slice(11, 23)} UTC, in the primary’s radial, in-track and cross-track axes (m, true scale): 1σ covariances, the combined 1σ (their sum), the ${formatMeters(radius)} hard body, the miss vector and the relative velocity’s direction`,
+        legend: [['accent', 'Primary 1σ', 'solid'], ['cyan', 'Secondary 1σ', 'solid'], ['text', 'Combined 1σ (sum)', 'solid'], ['alert', 'Hard body', 'solid'], ['text', 'Miss vector'], ['cyan', 'Relative velocity', 'dash']] });
       return `Probability ${num(p.PROBABILITY, 3)} at a miss of ${formatMeters(event.MISS_DISTANCE_M)}, ${num(Math.sqrt(p.MAHALANOBIS_SQUARED ?? 0), 3)} combined σ in the encounter plane.`;
     });
   }

@@ -92,7 +92,8 @@ export function chart(parent, title, caption) {
   const box = h('div', { class: 'chart' });
   figure.append(box);
   parent.append(figure);
-  return { figure, draw: (options) => lineChart(box, options), caption: (text) => { figure.querySelector('figcaption span')?.remove(); figure.querySelector('figcaption').append(h('span', {}, text)); } };
+  return { figure, draw: (options) => lineChart(box, options), cursor: (x) => box._cursorAt?.(x),
+    caption: (text) => { figure.querySelector('figcaption span')?.remove(); figure.querySelector('figcaption').append(h('span', {}, text)); } };
 }
 
 export const note = (parent, text) => { const p = h('p', { class: 'fine', html: text }); parent.append(p); return p; };

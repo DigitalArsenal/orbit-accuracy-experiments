@@ -7,11 +7,11 @@ import { FRM, FRMFrameTransformRequestT, FRMStateVectorT, FRMT, FRMVector3T, RFM
 
 const FRM_TYPE = { schemaName: 'FRM.fbs', fileIdentifier: '$FRM', rootTypeName: 'FRM' };
 const EOP_TYPE = { schemaName: 'EOP.fbs', fileIdentifier: '$EOP', rootTypeName: 'EOP' };
-const AXES = { GCRF: rfmAxisType.ICRF, ITRF: rfmAxisType.BODY_FIXED, TEME: rfmAxisType.TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE };
+const AXES = { GCRF: rfmAxisType.ICRF, ITRF: rfmAxisType.BODY_FIXED, TEME: rfmAxisType.TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE, EME2000: rfmAxisType.MEAN_EQUATOR_EQUINOX_J2000 };
 const system = (name, epoch) => new RFMCoordinateSystemT(name, AXES[name], new RFMOriginT(rfmOriginKind.CELESTIAL_BODY, 399), 399, epoch, 'UTC', null);
 const encode = (finish, root) => { const b = new flatbuffers.Builder(4096); finish(b, root.pack(b)); return b.asUint8Array().slice(); };
 
-// One state from frame `from` to frame `to` (GCRF, ITRF, TEME) at a UTC ISO
+// One state from frame `from` to frame `to` (GCRF, ITRF, TEME, EME2000) at a UTC ISO
 // epoch: {r, v} in km and km/s. eopRows: EOPT objects, when the rotation
 // needs Earth orientation.
 export async function transformState(frames, { from, to, epochIso, r, v = [0, 0, 0], eopRows = [] }) {

@@ -11,7 +11,7 @@ export default async function run(ctx) {
   const form = inputs(p, [{ id: 'record', label: 'Record to sign', type: 'textarea', value: 'OMM NORAD 25544 EPOCH 2026-10-09T00:00:00Z', wide: true, rows: 2 }], () => sign());
   const actions = h('div', { class: 'model-actions' });
   p.append(actions);
-  const view = scene3d(ctx, { title: 'One key: what it signs, what it holds', earth: false });
+  const view = scene3d(ctx, { title: 'One key: what it signs, what it holds' });
   const v = panel(ctx.root, 'The verifier, with the public key only');
   const w = await loadWallet(ctx);
   let key = null, signed = null;
@@ -41,25 +41,26 @@ export default async function run(ctx) {
         ['Cosmos address', { text: w.cosmos.getAddress(pub), class: 'wrap mono' }],
       ], { existing: v.querySelector('table') ?? undefined });
       const addresses = [['Bitcoin', w.bitcoin.getAddress(pub, 0), 'Base58Check'], ['Ethereum', w.ethereum.getAddress(pub), 'Keccak-256'], ['Cosmos', w.cosmos.getAddress(pub), 'Bech32']];
+      // What one key does, as a table in the box: the record it signs, and
+      // the address each network derives from it.
       await view.draw((g) => {
-        g.grid([0, 0, 0], [1, 0, 0], [0, 1, 0], 8, 2);
-        const key = [0, 0, 1.4];
-        g.sphere(key, 0.9, { color: 'accent', alpha: 0.85 });
-        g.label([0, 0, 2.3], `Public key ${short(hex(w, pub), 6, 4)}`, { color: 'accent', align: 'center', above: true });
+        const key = [1, 1.5, 0];
+        g.line([[1, 0, 0], [1, 3, 0]], { color: 'accent', width: 4, alpha: 0.6 });
+        g.point(key, { color: 'accent', size: 13, alpha: 0.9 });
+        g.label(key, `Public key ${short(hex(w, pub), 6, 4)}`, { color: 'accent', align: 'center', above: true, dy: -18 });
+        g.box([0, 0, 0], [0.5, 0.35, 0.25], { color: tamper ? 'alert' : 'text', alpha: 0.25, outline: true });
+        g.line([[0, 0, 0], [1, 0, 0]], { color: ok ? 'accent' : 'alert', width: 3, dash: !ok });
+        g.label([0.5, 0, 0], ok ? 'signature valid' : 'signature invalid', { color: ok ? 'accent' : 'alert', size: 11, align: 'center', above: true });
         addresses.forEach(([name, address, encoding], k) => {
-          const a = (Math.PI * (200 + 70 * k)) / 180, at = [6 * Math.cos(a), 6 * Math.sin(a), 0.5];
-          g.line([key, at], { color: 'cyan', width: 2, alpha: 0.8 });
-          g.sphere(at, 0.45, { color: 'cyan', alpha: 0.85 });
-          g.label(at, `${name}\n${short(address, 6, 4)}`, { color: 'text', size: 11, align: 'center', dy: 26 });
-          g.label([0.62 * at[0] + 0.38 * key[0], 0.62 * at[1] + 0.38 * key[1], 0.62 * at[2] + 0.38 * key[2]], encoding, { color: 'muted', size: 10, weight: 500 });
+          const row = k + 1;
+          g.line([[1, row, 0], [2, row, 0], [3, row, 0]], { color: 'cyan', width: 2, alpha: 0.8 });
+          g.point([2, row, 0], { color: 'muted', size: 7, label: encoding, labelColor: 'muted', labelOptions: { above: true } });
+          g.point([3, row, 0], { color: 'cyan', size: 11, alpha: 0.85 });
+          g.label([3, row, 0], short(address, 6, 4), { color: 'text', size: 11 });
         });
-        const doc = [0, 5.5, 3.2];
-        g.box(doc, [1.7, 0.2, 2.2], { color: tamper ? 'alert' : 'text', alpha: 0.25, outline: true });
-        g.line([key, doc], { color: ok ? 'accent' : 'alert', width: 3, dash: !ok });
-        g.label(doc, tamper ? 'Record, one bit changed' : 'Signed record', { color: 'text', align: 'center', dy: -34 });
-        g.label([0, 2.75, 2.3], ok ? 'signature valid' : 'signature invalid', { color: ok ? 'accent' : 'alert', size: 11, align: 'center', above: true });
-        g.view({ center: [0, 0.3, 1.6], radius: 7.6, direction: [0.25, -1, 0.75] });
-      }, { caption: 'The verifier holds only the public key: it checks the signature and derives the addresses',
+        g.view({ preset: '3d' });
+      }, { axes: ['', '', ''], aspect: 'normal', ticks: [[[0, 'Record'], [1, 'Public key'], [2, 'Encoding'], [3, 'Address']], [[0, 'Signature'], [1, 'Bitcoin'], [2, 'Ethereum'], [3, 'Cosmos']], [[0, '']]],
+        caption: 'The verifier holds only the public key: it checks the signature and derives the addresses',
         legend: [['accent', 'Key and signature'], ['cyan', 'Addresses it derives'], ...(ok ? [] : [['alert', 'Failed check', 'dash']])] });
       return ok ? 'The signature checks, and the same public key gives the addresses whose balances bond it.'
         : 'One changed bit and the signature fails; the addresses, and their balances, still belong to the signer’s key.';

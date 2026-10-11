@@ -5,7 +5,7 @@
 // committed aggregate and every orbit a published product; the page draws.
 import { formatMeters } from '../../chart.js';
 import { credits, inputs, num, panel, table } from '../ui.js';
-import { magnification, rtn, scene3d, v3 } from '../scene.js';
+import { scene3d } from '../scene.js';
 
 const AGES = [[0, 'At issue'], [1, '1 day'], [3, '3 days'], [7, '7 days']];
 const ORBIT_FILES = ['gps', 'lageos1', 'starlette', 'sentinel-1c'].map((id) => `data/accuracy/orbit-${id}.json`);
@@ -19,7 +19,8 @@ export default async function run(ctx) {
     { id: 'orbit', label: 'Satellite', type: 'select', value: 'gps', options: classes.map((o) => [o.id, `${o.name} · ${data.rows.find((r) => r.orbit === o.id).cls}`]) },
     { id: 'age', label: 'Prediction age', type: 'select', value: 1, options: AGES.map(([d, t]) => [d, t]) },
   ], () => draw());
-  const view = scene3d(ctx, { title: 'Each product’s median error, at the satellite', caption: 'GCRF; the precise orbit; error ellipsoids at true scale' });
+  const where = scene3d(ctx, { title: 'One satellite of each class, on its precise orbit', caption: 'GCRF' });
+  const view = scene3d(ctx, { title: 'Each product’s median error, at the satellite', caption: 'Radial, in-track and cross-track of the precise state (m)' });
   const results = panel(ctx.root, 'Median 3D error against precise orbits');
   table(results, ['Class (objects)', 'Product', ...AGES.map(([, t]) => t), 'Evidence'], data.rows.map((r) => ({
     class: r.catalog ? 'highlight' : '',
@@ -27,40 +28,49 @@ export default async function run(ctx) {
   })));
   await credits(ctx, ctx.root, ['data/accuracy/measured.json', ...ORBIT_FILES]);
 
-  // The satellite at the epoch on its precise orbit, its radial, in-track and
-  // cross-track axes, and each product's median error split over those axes
-  // by its share of the squared error (the semi-axes add in quadrature to
-  // the median), all at true scale.
+  // Each product's median error at the satellite, split over the radial,
+  // in-track and cross-track axes of its precise state by its share of the
+  // squared error (the semi-axes add in quadrature to the median), in metres
+  // at true scale, with the satellite at the origin.
   async function draw() {
     const { orbit } = form.values(), age = Number(form.values().age);
     const o = byId[orbit], ageText = AGES.find(([d]) => d === age)[1];
     await ctx.run(`Drawing ${o.name}, ${ageText.toLowerCase()}`, async () => {
-      const epochMs = Date.parse(data.epoch);
-      const r = o.position.slice(0, 3), v = o.velocity.slice(0, 3), basis = rtn(r, v);
       const rows = data.rows.filter((x) => x.orbit === o.id);
       const shapes = rows.map((row) => {
         const e = row.values[age];
-        return { row, e, axes: basis.map((b, i) => v3.scale(b, e.medianKm * Math.sqrt(e.shareRtn[i]))) };
+        return { row, e, semi: [0, 1, 2].map((i) => e.medianKm * 1000 * Math.sqrt(e.shareRtn[i])) };
       });
-      const reach = Math.max(...shapes.flatMap((x) => x.axes.map(v3.norm)));
+      const reach = Math.max(...shapes.flatMap((x) => x.semi));
+      const epochMs = Date.parse(data.epoch);
+      await where.draw((g) => {
+        g.earth();
+        for (const each of Object.values(byId)) {
+          const samples = each.epochsUnixMs.map((ms, k) => [(ms - epochMs) / 1000, each.position.slice(3 * k, 3 * k + 3)]);
+          const chosen = each.id === o.id;
+          g.track(samples, { color: chosen ? 'accent' : 'muted', alpha: chosen ? 1 : 0.7, width: chosen ? 2.5 : 1.2, subdivide: each.id === 'gps' ? 8 : 2 });
+          g.point(each.position.slice(0, 3), { color: chosen ? 'accent' : 'muted', size: chosen ? 10 : 6, label: each.name, labelColor: chosen ? 'accent' : 'muted' });
+        }
+        g.view({ preset: '3d' });
+      }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal',
+        caption: `GCRF at ${data.epoch.replace('T', ' ').replace(':00Z', ' UTC')}; one revolution of each precise orbit (IGS, ILRS, Copernicus) from the satellite's state then; the Earth at 6,378 km`,
+        legend: [['accent', o.name], ['muted', 'The other classes'], ['earth', 'Earth, 6,378.137 km']] });
       await view.draw((g) => {
-        const samples = o.epochsUnixMs.map((ms, k) => [(ms - epochMs) / 1000, o.position.slice(3 * k, 3 * k + 3)]);
-        g.track(samples, { color: 'muted', alpha: 0.8, width: 1.5, subdivide: 16, frame: false });
-        g.axes(r, basis, reach * 1.3, ['Radial', 'In-track', 'Cross-track'], { color: 'muted', alpha: 0.7, frame: false });
-        shapes.forEach(({ row, e, axes }, k) => {
+        g.line([[0, -reach * 1.15, 0], [0, reach * 1.15, 0]], { color: 'muted', width: 1.5, alpha: 0.8, frame: false });
+        g.label([0, reach * 1.15, 0], 'Along the precise orbit', { color: 'muted', size: 11, weight: 500 });
+        shapes.forEach(({ row, e, semi }, k) => {
           const color = row.catalog ? 'accent' : 'cyan';
           const name = row.catalog ? row.product : 'Public OMM, SGP4';
-          const size = Math.max(...axes.map(v3.norm));
-          if (size > reach * 0.004) g.ellipsoid(r, axes, { color, alpha: row.catalog ? 0.6 : 0.25, outline: true, frame: false });
-          else g.point(r, { color, size: 9, outline: 1, frame: false });
-          const tip = v3.add(r, v3.scale(basis[1], Math.max(size, reach * 0.02) * (k % 2 ? -1 : 1)));
-          g.label(tip, `${name} · ${formatMeters(e.medianKm * 1000)}`, { color, size: 12, above: true, align: k % 2 ? 'right' : 'left' });
+          const axes = [[semi[0], 0, 0], [0, semi[1], 0], [0, 0, semi[2]]];
+          if (Math.max(...semi) > reach * 0.004) g.ellipsoid([0, 0, 0], axes, { color, alpha: row.catalog ? 0.6 : 0.25, outline: true });
+          else g.point([0, 0, 0], { color, size: 9, outline: 1 });
+          g.label([0, Math.max(semi[1], reach * 0.02) * (k % 2 ? -1 : 1), 0], `${name} · ${formatMeters(e.medianKm * 1000)}`, { color, size: 12, above: true, align: k % 2 ? 'right' : 'left' });
         });
-        g.point(r, { color: 'sat', size: 6, outline: 1, frame: false });
-        g.view({ center: r, radius: reach * 1.35, direction: v3.unit(v3.add(v3.scale(basis[0], 0.85), v3.scale(basis[2], 0.5))) });
-      }, { frame: 'GCRF', epochMs,
-        caption: `GCRF at ${data.epoch.replace('T', ' ').replace(':00Z', ' UTC')}; ${o.name} on its ${o.product}; each product's median error ${age ? `${ageText} after issue` : 'at issue'}, true scale, along radial, in-track and cross-track by its share of the squared error`,
-        legend: [['accent', 'The catalog’s product', 'solid'], ['cyan', 'Public OMM, SGP4', 'solid'], ['muted', 'Precise orbit']] });
+        g.point([0, 0, 0], { color: 'sat', size: 6, outline: 1, label: o.name, labelOptions: { dy: 16 } });
+        g.view({ preset: '3d' });
+      }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'equal',
+        caption: `${o.name} on its ${o.product}, at ${data.epoch.replace('T', ' ').replace(':00Z', ' UTC')}; each product's median error ${age ? `${ageText} after issue` : 'at issue'}, along radial, in-track and cross-track by its share of the squared error (m, true scale)`,
+        legend: [['accent', 'The catalog’s product', 'solid'], ['cyan', 'Public OMM, SGP4', 'solid'], ['muted', 'Along the precise orbit']] });
       return `${o.name}, ${ageText.toLowerCase()}: ${shapes.map(({ row, e }) => `${row.catalog ? row.product.toLowerCase() : 'the public OMM'} ${formatMeters(e.medianKm * 1000)}`).join(' against ')} (median, ${rows[0].experiment}).`;
     });
   }

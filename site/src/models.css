@@ -66,11 +66,21 @@ body.model-page { font-size: 15px; line-height: 1.5; }
 #model .data-table td .kv code { background: none; padding: 0; color: var(--text); font-size: 12px; }
 #model .data-table td .kv span { color: var(--text-2); }
 #model .data-table td.wrap { text-align: left; }
-/* The 3D view (models/scene.js). */
+/* The 3D view (models/scene.js): an analytic plot box. */
 #model .scene-card { padding: 12px 12px 10px; }
 .scene-frame { position: relative; }
-.scene { width: 100%; aspect-ratio: 4 / 3; max-height: 460px; min-height: 240px; border-radius: 12px; overflow: hidden; background: #030508; }
-:root[data-theme="light"] .scene { background: #eef0f4; }
+.scene { width: 100%; aspect-ratio: 4 / 3; max-height: 520px; min-height: 260px; border-radius: 12px; overflow: hidden; background: #05070b; }
+:root[data-theme="light"] .scene { background: #ffffff; }
+.scene-views { position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; }
+.scene-view { height: 26px; min-width: 30px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text-2); font: 600 11px/1 var(--sans); cursor: pointer; }
+.scene-view:hover, .scene-view.active { border-color: var(--accent); color: var(--text); }
+.scene-view.reset { font-size: 14px; }
+.scene-time { display: flex; align-items: center; gap: 12px; margin: 10px 2px 0; }
+.scene-time[hidden] { display: none; }
+.scene-time-range { flex: 1; min-width: 0; accent-color: var(--accent); }
+.scene-time-text { flex: none; font: 500 12px/1.2 var(--mono, ui-monospace, monospace); color: var(--text-2); white-space: nowrap; }
+.chart .cursor { pointer-events: none; }
 .scene .cesium-widget, .scene .cesium-widget canvas { width: 100%; height: 100%; display: block; }
 .scene .cesium-widget-credits { display: none; }
 .scene-button { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border-radius: 999px; border: 1px solid var(--border-strong);

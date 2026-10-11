@@ -5,7 +5,7 @@
 // wide enough for the measurement functions to curve inside it.
 import { formatMeters } from '../chart.js';
 import { chart, inputs, num, panel, table, tiles, note } from '../models/ui.js';
-import { covarianceAxes, fromRtn, magnification, rtn, rtnCovariance, scene3d, v3 } from '../models/scene.js';
+import { covarianceAxes, rtn, rtnCovariance, scene3d, v3 } from '../models/scene.js';
 import { FIT_EPOCH, busiest, estimate, fitInputs, hpopRun, loadScenario, simulate } from './scenario.js';
 import { isoMicro, utcMs } from './codec.js';
 
@@ -17,9 +17,8 @@ export default async function run(ctx) {
   const form = inputs(setup, [
     { id: 'prior', label: 'A priori covariance: the catalog’s, scaled', type: 'select', value: 1e6, options: PRIORS },
   ], () => compute());
-  const step = inputs(setup, [{ id: 'update', label: 'Show the covariance after update', type: 'range', value: 1, min: 1, max: 2, step: 1, format: (v) => `${v}` }], () => drawScene());
-  const sigmaChart = chart(ctx.root, 'Position σ after each update', '3-D, from each filter’s covariance; log scale');
-  const view = scene3d(ctx, { title: 'EKF and UKF covariance', caption: '' });
+  const view = scene3d(ctx, { title: 'EKF and UKF covariance through the pass', caption: '' });
+  const sigmaChart = chart(ctx.root, 'Position σ after each update', '3-D, from each filter’s covariance; log scale; drag to move the box above in time');
   const nisChart = chart(ctx.root, 'Normalized innovation squared', 'Per update; chi-square with the measurement’s dimension when the filter is consistent');
   const result = panel(ctx.root, 'At the last update');
 
@@ -29,7 +28,8 @@ export default async function run(ctx) {
   if (!inputsOd) return;
   const hours = (e) => (e.jdDay - 2440587.5) * 24 + e.seconds / 3600 - utcMs(FIT_EPOCH) / 3600e3;
   const sigma3d = (h) => Math.sqrt(h.filteredCovariance[0] + h.filteredCovariance[7] + h.filteredCovariance[14]);
-  const slider = step.box.querySelector('input');
+  const t0 = utcMs(FIT_EPOCH);
+  ctx.time.on((ms) => sigmaChart.cursor((ms - t0) / 3600e3));
 
   async function compute() {
     const scale = Number(form.values().prior);
@@ -57,6 +57,7 @@ export default async function run(ctx) {
         { name: 'EKF', color: 'var(--accent)', points: ekf.filterHistory.map((h) => [hours(h.epoch), sigma3d(h)]), label: true },
       ],
       x: { min: 0, max: 4, ticks: [0, 1, 2, 3, 4], format: (h) => `${h} h` },
+      cursor: { x: 0, set: (h) => ctx.time.set(t0 + h * 3600e3) },
     });
     nisChart.draw({
       series: [
@@ -76,37 +77,51 @@ export default async function run(ctx) {
     ], { existing: result.querySelector('table') ?? undefined });
     tiles(result, [['Updates', num(ekf.filterHistory.length)], ['Largest σ difference', `${num(100 * worst, 3)} % at update ${worstAt + 1}`]]);
     note(result, 'Both filters linearize the dynamics about the same nominal with HPOP’s STM; they differ in the measurement update. The unscented one passes sigma points through the range, range-rate and RA/Dec functions, so it differs from the extended one while the covariance is wide enough for those functions to curve inside it; once the data has shrunk it, the two agree.');
-    slider.max = String(ekf.filterHistory.length);
-    slider.value = String(Math.min(Math.max(1, worstAt + 1), ekf.filterHistory.length));
-    slider.dispatchEvent(new Event('input'));
-    await drawScene();
+    await drawScene(worstAt);
   }
 
-  async function drawScene() {
-    if (!runs) return;
+  // Each filter's 1σ position covariance after the update at the page's
+  // time, in the radial, in-track and cross-track axes of the EKF's state then
+  // (m); the box fits the update shown, so its scale follows the covariance
+  // down through the pass.
+  let shownK = -1, wantK = null, drawing = false;
+  const msOf = (h) => t0 + hours(h.epoch) * 3600e3;
+  const updateAt = (ms) => Math.max(0, runs.ekf.filterHistory.findLastIndex((h) => msOf(h) <= ms + 1));
+  async function drawUpdate(k) {
     const { ekf, ukf } = runs;
-    const k = Math.min(Number(slider.value), ekf.filterHistory.length) - 1;
     const he = ekf.filterHistory[k], hu = ukf.filterHistory[k];
-    const at = (h) => h.filteredState.slice(0, 3).map((v) => v / 1000);
-    const basis = rtn(at(he), he.filteredState.slice(3));
-    const axes = (h) => covarianceAxes(rtnCovariance(basis, pos3(h.filteredCovariance.map((v) => v / 1e6))));
-    const size = Math.max(...axes(he).concat(axes(hu)).map((a) => v3.norm(a)));
-    const mag = magnification(size, 1800);
-    const dense = sc.dense.find((d) => d.norad === inputsOd.norad);
-    const truthTrack = dense.epochs.map((e, i) => [(utcMs(e) - utcMs(FIT_EPOCH)) / 1000, dense.position.slice(3 * i, 3 * i + 3)]).filter(([t]) => t >= -60 && t <= 4 * 3600 + 60);
+    const basis = rtn(he.filteredState.slice(0, 3), he.filteredState.slice(3));
+    const axesOf = (h) => covarianceAxes(rtnCovariance(basis, pos3(h.filteredCovariance)));
+    const span = { startMs: msOf(ekf.filterHistory[0]), stopMs: msOf(ekf.filterHistory.at(-1)),
+      format: (ms) => `${new Date(ms).toISOString().slice(11, 19)} UTC · after update ${updateAt(ms) + 1} of ${ekf.filterHistory.length}` };
     await view.draw((g) => {
-      g.track(truthTrack, { color: 'muted', width: 1.5, alpha: 0.7, subdivide: 2, frame: false });
-      g.ellipsoid(at(he), axes(he).map((a) => fromRtn(basis, v3.scale(a, mag.k))), { color: 'accent', alpha: 0.28, outline: true });
-      g.ellipsoid(at(hu), axes(hu).map((a) => fromRtn(basis, v3.scale(a, mag.k))), { color: 'cyan', alpha: 0.22, outline: true });
-      g.point(at(he), { color: 'text', size: 7, label: `Update ${k + 1}`, labelOptions: { above: true } });
-      for (const s of sc.scenario.sites) g.point(g.fromFixed(s.itrfKm), { color: 'text', size: 6, label: s.id, frame: false });
-      g.view({ center: at(he), radius: size * mag.k * 3.5 });
-    }, {
-      frame: 'GCRF', epochMs: utcMs(FIT_EPOCH) + hours(he.epoch) * 3600e3,
-      caption: `After update ${k + 1} of ${ekf.filterHistory.length} (${new Date(utcMs(FIT_EPOCH) + hours(he.epoch) * 3600e3).toISOString().slice(11, 19)} UTC) · 1σ ellipsoids ${mag.label}`,
-      legend: [['accent', 'EKF 1σ', 'solid'], ['cyan', 'UKF 1σ', 'solid'], ['muted', 'IGS orbit']],
-    });
+      if (k > 0) g.ellipsoid([0, 0, 0], axesOf(ekf.filterHistory[k - 1]), { color: 'muted', alpha: 0.03, outline: true, outlineAlpha: 0.35, frame: false });
+      g.ellipsoid([0, 0, 0], axesOf(hu), { color: 'cyan', alpha: 0.22, outline: true });
+      g.ellipsoid([0, 0, 0], axesOf(he), { color: 'accent', alpha: 0.4, outline: true });
+      g.point([0, 0, 0], { color: 'text', size: 6, outline: 1 });
+      g.view({ preset: '3d' });
+    }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'normal', time: span,
+      caption: `After update ${k + 1} of ${ekf.filterHistory.length} (${new Date(msOf(he)).toISOString().slice(11, 19)} UTC): each filter’s 1σ position covariance in the radial, in-track and cross-track axes of the EKF’s state (m; each axis to its own scale; the box fits this update); the outline is the update before`,
+      legend: [['accent', `EKF 1σ · 3-D ${formatMeters(sigma3d(he))}`, 'solid'], ['cyan', `UKF 1σ · ${formatMeters(sigma3d(hu))}`, 'solid'], ['muted', 'The update before, outline']] });
     ctx.status(`Update ${k + 1}: EKF 3-D σ ${formatMeters(sigma3d(he))}, UKF ${formatMeters(sigma3d(hu))}.`);
+  }
+  // Draws run one at a time; a time that changes meanwhile draws its update next.
+  let idle = Promise.resolve();
+  function pump() {
+    if (drawing) return idle;
+    drawing = true;
+    idle = (async () => {
+      try { while (wantK !== null && wantK !== shownK) { const k = wantK; wantK = null; shownK = k; await drawUpdate(k); } } finally { drawing = false; }
+    })();
+    return idle;
+  }
+  ctx.time.on((ms) => { if (!runs) return; wantK = updateAt(ms); pump(); });
+  async function drawScene(worstAt) {
+    if (!runs) return;
+    shownK = -1;
+    wantK = Math.max(0, worstAt);
+    ctx.time.set(msOf(runs.ekf.filterHistory[Math.max(0, worstAt)]));
+    await pump();
   }
   const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
   await compute();
