@@ -17,6 +17,7 @@ const out = path.join(repoRoot, 'data/e13');
 function sourceOf(family, file) {
   switch (family) {
     case 'planet': case 'planet-live': return 'planet';
+    case 'pairs': return 'spacex-starlink';                 // the collector's derived pair records of SpaceX's files
     case 'set': return 'set-jb2008';
     case 'gfz': return 'gfz-kp';
     case 'eop': return 'iers';
