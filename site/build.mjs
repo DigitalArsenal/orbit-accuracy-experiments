@@ -91,8 +91,8 @@ const moduleList = ['propagator/hpop', 'foundation/time', 'analysis/vcm-adapter'
   'foundation/frames', 'files/orbit-products', 'analysis/conjunction-assessment',
   // The orbit-determination pages (site/src/od).
   'analysis/observation-simulator', 'analysis/access', 'analysis/association', 'analysis/estimation',
-  // The catalog paper's section 5 pages.
-  'analysis/maneuver-detection'];
+  // The catalog paper's section 4 and 5 pages.
+  'analysis/maneuver-detection', 'analysis/od', 'propagator/sgp4'];
 const moduleIndex = [];
 const modulesGit = gitState(modules);
 const resultsDir = path.join(repo, 'results/v1');
