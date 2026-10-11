@@ -8,7 +8,7 @@ import { COLORS, formatMeters, lineChart, stripChart } from './chart.js';
 import { downloadButton, downloadLink, toCsv } from './download.js';
 import { createGlobe } from './globe.js';
 import { fetchJson, loadModule } from './modules.js';
-import { isoMicro, out, runOrekitCase, runV1Seed, runVcm as vcmRoundTrip } from './runs.js';
+import { isoMicro, out, runOrekitCase, runV1Seed, runVcm as vcmReadPropagate } from './runs.js';
 
 const $ = (id) => document.getElementById(id);
 const GITHUB = 'https://github.com/DigitalArsenal/orbit-accuracy-experiments';
@@ -229,18 +229,18 @@ async function setupOrekit() {
   });
 }
 
-// ── VCM round trip ──
+// ── VCM read and propagated ──
 async function setupVcm() {
   const text = await (await fetch('./data/vcm/sample-vcm.txt')).text();
   $('vcm-in').textContent = text;
-  lineChart($('vcm-chart'), { series: [], x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` }, empty: 'Run the round trip to plot the sigmas.' });
+  lineChart($('vcm-chart'), { series: [], x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` }, empty: 'Read and propagate to plot the sigmas.' });
   $('vcm-run').addEventListener('click', () => runVcm(text).catch((e) => status($('vcm-status'), e.message, true)));
 }
 
 async function runVcm(text) {
   status($('vcm-status'), 'Loading analysis/vcm-adapter and propagator/hpop…');
   const [adapter, hpop] = await Promise.all([module('analysis/vcm-adapter'), module('propagator/hpop')]);
-  const { runs, written: vcmText } = await vcmRoundTrip(adapter, hpop, text, { onStatus: (t) => status($('vcm-status'), t) });
+  const { runs } = await vcmReadPropagate(adapter, hpop, text, { onStatus: (t) => status($('vcm-status'), t) });
   const { report } = runs.fractional;
   const axes = ['U radial', 'V in-track', 'W cross-track'];
   const b = (rows) => runs[rows].report.parameterSigmas.find((p) => p.name === 'B');
@@ -263,11 +263,9 @@ async function runVcm(text) {
     ],
     x: { min: 0, max: 24, ticks: [0, 6, 12, 18, 24], format: (h) => `${h} h` },
   });
-  $('vcm-out').textContent = vcmText;
-  status($('vcm-status'), `Read, propagated and written in this browser. In-track sigma ${formatMeters(runs.fractional.sigmas[0].s[1])} at epoch; after a day ${formatMeters(last('fractional')[1])} with the B row as a fraction of B, ${formatMeters(last('absolute')[1])} as printed.`);
+  status($('vcm-status'), `Read and propagated in this browser. In-track sigma ${formatMeters(runs.fractional.sigmas[0].s[1])} at epoch; after a day ${formatMeters(last('fractional')[1])} with the B row as a fraction of B, ${formatMeters(last('absolute')[1])} as printed.`);
   const box = $('vcm-downloads');
   box.innerHTML = '';
-  downloadButton(box, 'VCM written', 'sdn-round-trip.vcm.txt', () => vcmText, 'text/plain');
   downloadButton(box, 'Adapter reports', 'vcm-read-reports.json', () => JSON.stringify({ fractional: runs.fractional.report, absolute: runs.absolute.report }, null, 2), 'application/json');
   downloadButton(box, 'PRW request', 'vcm-request.prw', () => runs.fractional.request);
   downloadButton(box, 'PRW result', 'vcm-result.prw', () => out(runs.fractional.run, 'response'));
@@ -297,7 +295,7 @@ function renderData() {
     ['data/orekit/', 'HPOP against Orekit', 'The reference trajectories, every case’s exact PRW request and inputs, and the recorded HPOP results.'],
     ['data/kernel/', 'Ephemeris', 'The DE440 excerpt for 2026 the propagations read for the Sun and Moon.'],
     ['data/eop/', 'Earth orientation', 'The IERS EOP 20 C04 rows over the V1 arcs.'],
-    ['data/vcm/', 'VCM', 'The sample message the round trip reads (spacedatastandards.org survey, public sources).'],
+    ['data/vcm/', 'VCM', 'The sample message read and propagated (spacedatastandards.org survey, public sources).'],
     ['data/e1/', 'E1', 'Aggregates of E1’s checked steps; no element set and no per-sample table.'],
   ];
   const html = groups.map(([prefix, title, text]) => {

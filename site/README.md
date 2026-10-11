@@ -12,7 +12,7 @@ Blue Marble as its only imagery). Nothing is fetched from a third party.
 | Live | V1's HPOP binary from a V1 seed with a chosen force model, 72 h, every sample against the precise orbit; then the six V1 horizons alone, compared with `results/v1` seed by seed (they match exactly). Downloads: CSV, CZML, the PRW request and result, a run record. |
 | Results | V1's committed metrics. |
 | Verification | The 72 HPOP-against-Orekit 13.1 cases; any one re-runs here from its exact PRW request, except the four that read CSSI space weather or SET's JB2008 indices (not republished), which show their recorded result. |
-| VCM | The survey's sample VCM read, propagated 24 h with its 7×7 covariance and written back, under both readings of the B row's units. |
+| VCM | The survey's sample VCM read and propagated 24 h with its 7×7 covariance, under both readings of the B row's units. |
 | Data | Every file with its SHA-256, source and terms (`provenance.json`). |
 
 ## Paper models

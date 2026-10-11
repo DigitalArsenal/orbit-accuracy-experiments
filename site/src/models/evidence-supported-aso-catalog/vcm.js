@@ -1,14 +1,15 @@
-// Section 17.3: the sample VCM, field by field as the adapter reads it into
-// an SDS VCM record; propagated 24 h by HPOP with its 7×7 covariance under
-// both readings of the B row; written back, and the written message read
-// again to measure what the text keeps of the covariance.
+// Section 9, SP message interchange: the sample VCM, field by field as the
+// adapter reads it into an SDS VCM record and an HPOP request, then
+// propagated 24 h by HPOP with its 7×7 covariance under both readings of the
+// B row. It ends at the propagated state and covariance; SDN does not write a
+// VCM back.
 import * as flatbuffers from 'flatbuffers';
 import { VCM } from 'spacedatastandards.org/lib/js/VCM/main.js';
 import { formatMeters } from '../../chart.js';
 import { HOUR, decodePrw, out, runVcm } from '../../runs.js';
 import { covarianceAxes, rtn, rtnCovariance, scene3d } from '../scene.js';
 import { flatten } from '../codec/kvn.js';
-import { chart, num, panel, pre, table, tiles, note } from '../ui.js';
+import { chart, num, panel, pre, table, note } from '../ui.js';
 
 const fieldDoc = (schema, path) => {
   const name = path.split('.').at(-1).replace(/\[\d+\]$/, '');
@@ -22,14 +23,14 @@ export default async function run(ctx) {
   const sig = panel(ctx.root, 'Sigmas the adapter recomputes');
   const view = scene3d(ctx, { title: 'The two readings of the B row, over a day', caption: '1σ position ellipsoids, radial, in-track and cross-track (km)' });
   const figure = chart(ctx.root, 'Position sigmas along the propagation', 'HPOP’s 7×7 covariance; in-track under both readings of the B row; drag to move the box above in time');
-  const back = panel(ctx.root, 'Written back');
+  const end = panel(ctx.root, 'After 24 hours');
   const [text, schema] = await Promise.all([ctx.fetchText('./data/vcm/sample-vcm.txt'), ctx.fetchJson('./data/sds/VCM.json')]);
   pre(message, text);
   note(message, 'The survey’s sample VCM, identifiers zeroed; by its orbit and revolution number an ISS solution.');
   const [adapter, hpop] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/hpop')]);
 
-  await ctx.run('analysis/vcm-adapter read, propagator/hpop 24 h, analysis/vcm-adapter write', async () => {
-    const { runs, written } = await runVcm(adapter, hpop, text, { onStatus: ctx.status });
+  await ctx.run('analysis/vcm-adapter read, propagator/hpop 24 h', async () => {
+    const { runs } = await runVcm(adapter, hpop, text, { onStatus: ctx.status });
     const vcmBytes = out(runs.fractional.read, 'vcm');
     const record = VCM.getSizePrefixedRootAsVCM(new flatbuffers.ByteBuffer(vcmBytes)).unpack();
     table(fields, [`SDS VCM field (${schema.version})`, 'Value'], flatten(record).map(([k, v]) => [{ text: k, class: 'left mono wrap', title: fieldDoc(schema, k) }, { text: v, class: 'wrap mono' }]));
@@ -73,15 +74,19 @@ export default async function run(ctx) {
     }, { axes: ['Radial (km)', 'In-track (km)', 'Cross-track (km)'], aspect: 'normal', time: span,
       caption: `1σ position ellipsoids of HPOP’s 7×7 covariance under both readings of the B row, each hour, in the radial, in-track and cross-track axes of the state then (km; each axis to its own scale); the outline is the reading as printed at 24 h`,
       legend: [['accent', `B row as a fraction · in-track σ ${formatMeters(last('fractional')[1])} at 24 h`, 'solid'], ['cyan', `B row as printed · ${formatMeters(last('absolute')[1])}`, 'solid']] });
-    // Read the written message again: the covariance the text keeps.
-    const again = await adapter.invoke('read', [{ portId: 'message', payload: new TextEncoder().encode(written) },
-      { portId: 'options', payload: new TextEncoder().encode(JSON.stringify({ ephemerisSource: 'Analytical', arcSeconds: 3600 })) }]);
-    const cov = (read) => { const r = decodePrw(out(read, 'request')).EXECUTION_REQUEST; return r.INITIAL_COVARIANCE ?? r.INITIAL.COVARIANCE; };
-    const finalCov = runs.fractional.result.FINAL_SAMPLE.COVARIANCE, readBack = cov(again), n = finalCov.DIMENSION;
-    let worst = 0;
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) worst = Math.max(worst, Math.abs(readBack.VALUES[i * n + j] - finalCov.VALUES[i * n + j]) / Math.sqrt(finalCov.VALUES[i * n + i] * finalCov.VALUES[j * n + j]));
-    pre(back, written);
-    tiles(back, [['In-track σ, 24 h, fraction', formatMeters(last('fractional')[1])], ['As printed', formatMeters(last('absolute')[1])], ['Round trip, of the sigmas', num(worst, 2)]]);
-    return `Read, propagated and written here. The printed U, V, W sigmas come back within ${num(Math.max(...[0, 1, 2].map((i) => Math.abs(report.recomputedUvwSigmasKm[i] / report.statedUvwSigmasKm[i] - 1))) * 100, 2)} %; the written VCM keeps the covariance to ${num(worst, 2)} of its sigmas.`;
+    // The propagated state and covariance at 24 h, as HPOP returns them.
+    const final = (rows) => runs[rows].result.FINAL_SAMPLE;
+    const stateOf = (rows) => final(rows).STATE?.STATE ?? final(rows).STATE;
+    const frameName = stateOf('fractional').COORDINATE_SYSTEM_NAME || 'GCRF';
+    const xyz = (v) => ({ text: ['X', 'Y', 'Z'].map((k) => num(v[k] / 1000, 7)).join(', '), class: 'mono' });
+    const both = (f) => ['fractional', 'absolute'].map((rows) => f(rows));
+    table(end, ['', 'B row as a fraction', 'B row as printed'], [
+      ['Epoch (UTC)', ...both((rows) => ({ text: String(stateOf(rows).EPOCH ?? '').replace('T', ' ').slice(0, 19), class: 'mono' }))],
+      [`Position, ${frameName} (km)`, ...both((rows) => xyz(stateOf(rows).POSITION))],
+      [`Velocity, ${frameName} (km/s)`, ...both((rows) => xyz(stateOf(rows).VELOCITY))],
+      ...['Radial σ', 'In-track σ', 'Cross-track σ'].map((name, i) => [name, ...both((rows) => formatMeters(last(rows)[i]))]),
+      ['Covariance', ...both((rows) => `${final(rows).COVARIANCE.DIMENSION} × ${final(rows).COVARIANCE.DIMENSION}`)],
+    ]);
+    return `Read and propagated here. The printed U, V, W sigmas come back within ${num(Math.max(...[0, 1, 2].map((i) => Math.abs(report.recomputedUvwSigmasKm[i] / report.statedUvwSigmasKm[i] - 1))) * 100, 2)} %; after a day the in-track σ is ${formatMeters(last('fractional')[1])} with the B row as a fraction, ${formatMeters(last('absolute')[1])} as printed.`;
   });
 }
