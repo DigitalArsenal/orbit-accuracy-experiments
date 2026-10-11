@@ -125,6 +125,31 @@ const PRESETS = {
   xy: [0, -1e-4, 1], xz: [0, -1, 0], yz: [1, 0, 0],
 };
 
+// The normal of the plane through the origin that a track lies in (the
+// largest cross product of its points), for view({normal}).
+export function planeNormal(points) {
+  let best = [0, 0, 1], size = 0;
+  const step = Math.max(1, Math.floor(points.length / 24));
+  for (let i = 0; i < points.length; i += step) {
+    for (let j = i + step; j < points.length; j += step) {
+      const c = v3.cross(points[i], points[j]), n = v3.norm(c);
+      if (n > size) { size = n; best = c; }
+    }
+  }
+  return v3.unit(best);
+}
+// A view of a plane at `tilt` from its normal, turned toward MATLAB's 3-D
+// view, so an orbit opens as an ellipse instead of an edge.
+function planeView(normal, tilt = 50) {
+  const P = PRESETS['3d'];
+  let n = v3.unit(normal);
+  if (v3.dot(n, P) < 0) n = v3.scale(n, -1);
+  let w = v3.sub(P, v3.scale(n, v3.dot(P, n)));
+  if (v3.norm(w) < 1e-6) w = Math.abs(n[2]) < 0.9 ? v3.cross(n, [0, 0, 1]) : v3.cross(n, [1, 0, 0]);
+  const a = tilt * Math.PI / 180;
+  return v3.add(v3.scale(n, Math.cos(a)), v3.scale(v3.unit(w), Math.sin(a)));
+}
+
 export function scene3d(ctx, { title, caption, after = null } = {}) {
   const box = h('div', { class: 'scene', role: 'img', 'aria-label': title });
   const legend = h('ul', { class: 'scene-legend' });
@@ -321,8 +346,9 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
       // An ellipsoid that moves and grows with the clock: samples
       // [[ms, center, [three orthogonal semi-axis vectors]]].
       movingEllipsoid(samples, o = {}) { return add({ kind: 'movingEllipsoid', samples, o }, samples.flatMap((q) => corners(q[1], q[2])), o.frame); },
-      // The starting view: {preset: '3d' | 'xy' | 'xz' | 'yz', direction}.
-      view(v) { s._view = v; },
+      // The starting view: {preset: '3d' | 'xy' | 'xz' | 'yz', direction,
+      // normal (a plane to open at 50° from its normal, as planeNormal gives)}.
+      view(v) { s._view = v.normal ? { ...v, direction: planeView(v.normal, v.tilt) } : v; },
     };
     await build(s);
 
@@ -347,12 +373,14 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
       lim[i] = { lo, hi, step, ticks, format: tickFormat(step), fixed: true };
     });
     if (options.aspect !== 'normal') {
-      // Equal aspect: one scale, and each axis's limits widened about its
-      // centre so that ticks of one step fill a box with the data's proportions.
+      // Equal aspect: one scale, and each axis's limits widened about their
+      // centre so that ticks of one step fill a box with the data's
+      // proportions (about the limits' centre, which already hold the data,
+      // so that widening never adds a step on one side).
       const step = Math.max(...lim.map((l) => l.step));
       for (let i = 0; i < 3; i++) {
         if (lim[i].categorical || lim[i].fixed) continue;
-        const mid = (Math.min(...pts.map((p) => p[i])) + Math.max(...pts.map((p) => p[i]))) / 2;
+        const mid = (lim[i].lo + lim[i].hi) / 2;
         const half = Math.max(lim[i].hi - lim[i].lo, step) / 2;
         lim[i] = axisLimitsStep(mid - half, mid + half, step);
       }
@@ -656,7 +684,8 @@ export function scene3d(ctx, { title, caption, after = null } = {}) {
 
 // Limits [lo, hi] on multiples of a given step (equal-aspect boxes).
 function axisLimitsStep(min, max, step) {
-  const lo = Math.floor(min / step - 1e-9) * step, hi = Math.ceil(max / step + 1e-9) * step;
+  // Limits already on a multiple stay there.
+  const lo = Math.floor(min / step + 1e-9) * step, hi = Math.ceil(max / step - 1e-9) * step;
   const ticks = [];
   for (let k = Math.round(lo / step); k <= Math.round(hi / step); k++) ticks.push(k * step);
   return { lo, hi, step, ticks, format: tickFormat(step) };

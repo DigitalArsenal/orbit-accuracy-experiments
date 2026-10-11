@@ -5,7 +5,7 @@
 // committed aggregate and every orbit a published product; the page draws.
 import { formatMeters } from '../../chart.js';
 import { credits, inputs, num, panel, table } from '../ui.js';
-import { scene3d } from '../scene.js';
+import { planeNormal, scene3d } from '../scene.js';
 
 const AGES = [[0, 'At issue'], [1, '1 day'], [3, '3 days'], [7, '7 days']];
 const ORBIT_FILES = ['gps', 'lageos1', 'starlette', 'sentinel-1c'].map((id) => `data/accuracy/orbit-${id}.json`);
@@ -51,7 +51,7 @@ export default async function run(ctx) {
           g.track(samples, { color: chosen ? 'accent' : 'muted', alpha: chosen ? 1 : 0.7, width: chosen ? 2.5 : 1.2, subdivide: each.id === 'gps' ? 8 : 2 });
           g.point(each.position.slice(0, 3), { color: chosen ? 'accent' : 'muted', size: chosen ? 10 : 6, label: each.name, labelColor: chosen ? 'accent' : 'muted' });
         }
-        g.view({ preset: '3d' });
+        g.view({ normal: planeNormal(o.epochsUnixMs.map((_, k) => o.position.slice(3 * k, 3 * k + 3))) });
       }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal',
         caption: `GCRF at ${data.epoch.replace('T', ' ').replace(':00Z', ' UTC')}; one revolution of each precise orbit (IGS, ILRS, Copernicus) from the satellite's state then; the Earth at 6,378 km`,
         legend: [['accent', o.name], ['muted', 'The other classes'], ['earth', 'Earth, 6,378.137 km']] });

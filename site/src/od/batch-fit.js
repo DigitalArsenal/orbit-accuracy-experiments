@@ -6,7 +6,7 @@
 // compared with the IGS orbit the observations were simulated from.
 import { formatMeters } from '../chart.js';
 import { chart, num, panel, table, tiles, note } from '../models/ui.js';
-import { covarianceAxes, rtn, rtnCovariance, scene3d, toRtn, v3 } from '../models/scene.js';
+import { covarianceAxes, planeNormal, rtn, rtnCovariance, scene3d, toRtn, v3 } from '../models/scene.js';
 import { FIT_EPOCH, busiest, estimate, fitInputs, hpopRun, loadScenario, simulate } from './scenario.js';
 import { isoMicro, utcMs } from './codec.js';
 
@@ -107,7 +107,7 @@ export default async function run(ctx) {
     for (const [sensor, at] of sites) g.point(at, { color: 'text', size: 7, label: sensor.split('-')[0] });
     g.point(arc[0].position, { color: 'accent', size: 9, label: 'Fit epoch', labelOptions: { above: true } });
     g.moving(fitTrack.map(([t, p]) => [t0 + t * 1000, p]), { color: 'accent', size: 10, trail: false, label: inputs.block.name });
-    g.view({ preset: '3d' });
+    g.view({ normal: planeNormal(truthTrack.map(([, p]) => p)) });
   }, { axes: ['x, GCRF (km)', 'y, GCRF (km)', 'z, GCRF (km)'], aspect: 'equal', time: span,
     caption: `GCRF (km), ${FIT_EPOCH.slice(11, 16)}–${new Date(t0 + 4 * 3600e3).toISOString().slice(11, 16)} UTC; the IGS orbit, the fit carried by HPOP, and every other line of sight from the sensors (at their first observation); the Earth at 6,378 km`,
     legend: [['cyan', 'IGS orbit'], ['accent', 'Fit, carried by HPOP'], ['accent', 'Radar look'], ['cyan', 'Optical look'], ['muted', 'RF look'], ['earth', 'Earth, 6,378.137 km']] });

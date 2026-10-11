@@ -455,7 +455,7 @@
    "reproduce": "no",
    "credit": "The JB2008 solar and geomagnetic indices are provided for scientific use courtesy of Space Environment Technologies (https://spacewx.com/jb2008/).",
    "reason": "No current licence grants redistribution, and the code README reserves all rights. Results that use the indices are published with SET's acknowledgement; the files are cited by URL and SHA-256.",
-   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants), E8 (JB2008 drivers, D0, D2 and D5), E13 (JB2008 drivers, D0 and D13); the HPOP-against-Orekit JB2008 cases (modules)",
+   "usedIn": "E5 (JB2008 drivers, D0 and D2), E7 (JB2008 variants), E8 (JB2008 drivers, D0, D2 and D5), E13 (JB2008 drivers, D0 and D13); the HPOP-against-Orekit JB2008 cases (modules); the site's drag-regime model (section 5.4: JB2008 densities computed with the indices, not the files)",
    "reproducedAt": [
     "modules: propagator/hpop/tests/fixtures/orekit/jb2008-2026-06.json (indices as Orekit read them; committed before this audit)",
     "site (gh-pages): data/orekit/jb2008_indices-*.prw (labelled MIT; published before this audit); not in the site since the rebuild of 2026-10-10 (earlier gh-pages commits keep it)"
@@ -536,11 +536,14 @@
    "conditions": "SET's HASDM database itself is for research use only; this record is its authors' CC BY 4.0 release of HASDM values along the CHAMP and GRACE-A orbits.",
    "reproduce": "yes",
    "credit": "Licata, R. J., Mehta, P. M., Tobiska, W. K., Bowman, B. R., Pilinski, M. D. (2021). CHAMP and GRACE-A Density Estimates with Associated HASDM and JB2008 Predictions. Zenodo, doi:10.5281/zenodo.4602380. CC BY 4.0.",
-   "reason": "CC BY 4.0. Cited by DOI rather than copied: the 3.3 GB archive is public with a DOI.",
-   "usedIn": "E5, E8 (historical test: CHAMP and GRACE-A densities, HASDM and JB2008 along track)",
+   "reason": "CC BY 4.0. The experiments cite the 3.3 GB archive by DOI; the site reproduces a four-day CHAMP excerpt with the credit line.",
+   "usedIn": "E5, E8 (historical test: CHAMP and GRACE-A densities, HASDM and JB2008 along track); the site's drag-regime model (section 5.4: CHAMP, 28 October to 1 November 2003)",
    "obtain": "https://doi.org/10.5281/zenodo.4602380 (CHAMP_New.zip, GRACE_A_New.zip); data/e5/MANIFEST.json lists their SHA-256.",
    "notice": null,
-   "reproducedAt": []
+   "reproducedAt": [
+    "site/generated/champ-2003-storm.json (CHAMP 2003-10-28 to 2003-10-31 from CHAMP_New.zip: every minute, Density_New and Density_HASDM, and the geodetic samples as GCRF positions)",
+    "site (gh-pages): data/drag/champ-2003-storm.json (the same)"
+   ]
   },
   {
    "id": "space-track",

@@ -8,7 +8,7 @@ import { decodeExecution, executionFrame } from '../../../../harness/prw.mjs';
 import { formatMeters } from '../../chart.js';
 import { frameOf, isoMicro } from '../../runs.js';
 import { chart, credits, panel, tiles } from '../ui.js';
-import { rtn, scene3d, toRtn, v3 } from '../scene.js';
+import { planeNormal, rtn, scene3d, toRtn, v3 } from '../scene.js';
 
 const DAY = 86400e3, HOUR = 3600e3;
 const HORIZONS = [0, 1, 3, 7];
@@ -54,7 +54,7 @@ export default async function run(ctx) {
       g.track(rows.filter((x) => x.ms <= t0 + 12 * HOUR).map((x) => [(x.ms - t0) / 1000, x.truth.r]), { color: 'cyan', width: 2, subdivide: 8 });
       g.moving(rows.map((x) => [x.ms, x.truth.r]), { color: 'cyan', size: 9, trail: false, label: 'IGS', labelColor: 'cyan' });
       g.moving(rows.map((x) => [x.ms, x.hpop]), { color: 'accent', size: 7, trail: false });
-      g.view({ preset: '3d' });
+      g.view({ normal: planeNormal(rows.filter((x) => x.ms <= t0 + 12 * HOUR).map((x) => x.truth.r)) });
     }, { axes: ['x, GCRF (km)', 'y, GCRF (km)', 'z, GCRF (km)'], aspect: 'equal', time: span,
       caption: `GCRF (km); ${igs.object} on its IGS final orbit (one revolution drawn), and HPOP from its IGS state at ${new Date(t0).toISOString().slice(0, 16).replace('T', ' ')} UTC; the Earth at 6,378 km`,
       legend: [['cyan', 'IGS final orbit'], ['accent', 'HPOP from the analysis-centre state', 'dot'], ['earth', 'Earth, 6,378.137 km']] });

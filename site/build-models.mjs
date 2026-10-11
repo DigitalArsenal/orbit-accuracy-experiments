@@ -164,6 +164,19 @@ export async function buildManeuver({ here, repo, write, loadEopParser, finalsRe
   }
 }
 
+// Section 5.4: CHAMP through the storms of late October 2003, one of HASDM's
+// windows (site/run-drag.mjs: Licata et al.'s densities and HASDM along the
+// orbit, and the module's JB2008 with and without E5's correction calibrated
+// on GRACE-A). SET's index files are not reproduced; the densities computed
+// from them are results, credited to SET.
+export function buildDrag({ here, write, labelFor, licenceSource }) {
+  const data = JSON.parse(fs.readFileSync(path.join(here, 'generated/champ-2003-storm.json'), 'utf8'));
+  const label = labelFor(['zenodo-licata-hasdm', 'iers'], 'MIT (this repository) for the results');
+  write('data/drag/champ-2003-storm.json', data,
+    `site/run-drag.mjs (site/generated/champ-2003-storm.json): CHAMP ${data.window.join(' to ')}, Licata et al. (2021) densities and HASDM every minute, JB2008 and JB2008 + E5's correction from analysis/density-calibration, GCRF positions from foundation/frames`,
+    { ...label, credits: [licenceSource('zenodo-licata-hasdm').credit, licenceSource('set-jb2008').credit, licenceSource('iers').credit] });
+}
+
 // Section 5.1: one GPS satellite's IGS final orbit for a week (the truth the
 // page propagates HPOP against), and E3's medians for the GPS products.
 export const GNSS_START = '2026-08-01T23:59:42Z';   // 00:00 GPS time, on the IGS grid

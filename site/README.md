@@ -99,7 +99,14 @@ detector's events on the ISS's public element sets, recorded by
 modules' study host code; it needs `npm ci` in the modules checkout's
 `analysis/maneuver-detection`). The build refuses a recording made with
 another detector binary than the one it serves. No element set, and no
-per-sample row derived from one, is written.
+per-sample row derived from one, is written. For section 5.4,
+`node site/run-drag.mjs` records CHAMP through the storms of 28 October to
+1 November 2003 in `generated/champ-2003-storm.json`: its accelerometer
+densities and HASDM's from Licata et al. (2021, CC BY 4.0, the archive E5's
+config names), JB2008 with SET's indices with and without E5's correction
+calibrated on GRACE-A (`results/e5/calibration`), both from
+`analysis/density-calibration`, and the geodetic samples turned into GCRF by
+`foundation/frames` with IERS C04.
 
 ## Licences
 
@@ -109,7 +116,9 @@ licence and credit are its sources' own, `provenance.json` carries them per
 file, and a source the registry does not allow us to reproduce fails the build.
 Not reproduced: CSSI space weather and SET's JB2008 indices (SET sends no CORS
 header, so a browser cannot fetch them either). The four Orekit cases that read
-them are listed as recorded only. The sample VCM stays, labelled with its
+them are listed as recorded only; section 5.4's JB2008 densities are computed
+from SET's indices when the site is built and published as results, with SET's
+acknowledgement. The sample VCM stays, labelled with its
 provenance (owner, 2026-10-10: public sources).
 
 ## Build
@@ -121,6 +130,7 @@ export SDN_REFERENCE_STATES=…/reference-states/reference
 export SDN_EOP_C04=…/reference-states/products/eopc04.1962-now
 node site/run-orekit.mjs        # when the HPOP binary changes: site/generated/orekit-results.json
 node site/run-maneuver.mjs      # when the detector binary changes: site/generated/iss-detection.json
+node site/run-drag.mjs          # when the density module or E5's calibration changes: site/generated/champ-2003-storm.json
 node site/build.mjs             # site/dist
 node site/serve.mjs             # http://localhost:8080 with COOP/COEP
 ```
