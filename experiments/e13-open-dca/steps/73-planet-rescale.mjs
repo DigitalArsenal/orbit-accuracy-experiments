@@ -5,7 +5,7 @@
 //   node steps/73-planet-rescale.mjs --split dev --sample 120 [--out FILE]      the test of item 3: every k-th arc of the split's file, also fitted DIRECTLY under
 //                                                                                NRLMSISE-00 (the same energy-form estimator, HPOP g24lean, converged); the rescaled
 //                                                                                value must agree to within the arc's stated sigma of ln B (results/e13/s3/rescale-sample.json)
-//   node steps/73-planet-rescale.mjs --split dev|testA|testB --all [--shard k/n]  every arc of the split, one row each in <store>/planet-arcs/<split>-<profile>.msis.jsonl
+//   node steps/73-planet-rescale.mjs --split dev|testA|testB --all [--group calibration,heldOut] [--shard k/n]  every arc of the split (of the groups' Doves), one row each in <store>/planet-arcs/<split>-<profile>.msis.jsonl
 //
 // A test split stays locked (windows.mjs) exactly as for the arcs themselves. The indices are GFZ's definitive history file (the splits end 2026-07-31).
 import fs from 'node:fs';
@@ -20,7 +20,7 @@ import { COMMON_REFERENCE_MODULES, dragWorkRatio, gfzDefinitiveRows, gfzSha256, 
 import { arcsOf, readPlanetSeries } from '../planet-history.mjs';
 import { assertWindowReadable } from '../windows.mjs';
 
-const { values } = parseArgs({ options: { split: { type: 'string' }, sample: { type: 'string' }, all: { type: 'boolean', default: false }, shard: { type: 'string', default: '0/1' }, profile: { type: 'string' }, out: { type: 'string' } } });
+const { values } = parseArgs({ options: { split: { type: 'string' }, sample: { type: 'string' }, all: { type: 'boolean', default: false }, group: { type: 'string', default: 'calibration,heldOut' }, shard: { type: 'string', default: '0/1' }, profile: { type: 'string' }, out: { type: 'string' } } });
 if (!values.sample === !values.all) throw new Error('--sample N or --all');
 useCommonReferenceModules();
 const { openArcEnv } = await import('../arcs.mjs');
@@ -33,7 +33,9 @@ run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 const log = (m) => console.log(`${new Date().toISOString().slice(11, 19)} ${m}`);
 
 const arcFile = path.join(paths.planetArcs, `${values.split}-${profile}.jsonl`);
-const arcRows = fs.readFileSync(arcFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => !r.error && !r.nonPositive && r.cdAreaOverMass > 0);
+const planetSample = JSON.parse(fs.readFileSync(path.join(path.dirname(configPath), 'planet-sample.json'), 'utf8'));
+const groupHwids = new Set(values.group.split(',').flatMap((g) => planetSample[g] ?? (() => { throw new Error(`unknown group ${g}`); })()));
+const arcRows = fs.readFileSync(arcFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => !r.error && !r.nonPositive && r.cdAreaOverMass > 0 && groupHwids.has(r.hwid));
 run.addInputs('planet-arcs', { [path.basename(arcFile)]: sha256(fs.readFileSync(arcFile)) });
 run.addInputs('gfz', { 'Kp_ap_Ap_SN_F107_since_1932.txt': gfzSha256() });
 const series = readPlanetSeries({ fromDay: new Date(Date.parse(`${from}T00:00:00Z`) - 3 * DAY).toISOString().slice(0, 10), toDay: new Date(Date.parse(`${to}T00:00:00Z`) + 3 * DAY).toISOString().slice(0, 10) });
