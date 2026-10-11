@@ -1,0 +1,218 @@
+{
+ "kind": "gp-error-model-calibration",
+ "version": 1,
+ "calibrationVersion": "e14-s3-0e678383cfbd",
+ "rule": "CALIBRATED only where the E14 test cell (regime x horizon) was REALISTIC: mean d^2/3 in [0.8, 1.25] and 95 % coverage in [0.93, 0.97] with at least 30 samples from 3 objects",
+ "strata": [
+  {
+   "regimeIndex": 0,
+   "ageIndex": 0,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 0,
+   "ageIndex": 1,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 0,
+   "ageIndex": 2,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 0,
+   "ageIndex": 3,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 0,
+   "ageIndex": 4,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 0,
+   "ageIndex": 5,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 0,
+   "ageIndex": 6,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 0,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 1,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 2,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 3,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 4,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 5,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 1,
+   "ageIndex": 6,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 0,
+   "label": "CALIBRATED",
+   "reference": "orbit-accuracy-experiments E14 test 2026-05-01..2026-09-30: LEO-H 0 d, mean d2/3 0.983, 95 % coverage 0.946 (4260 samples, 10 objects)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 1,
+   "label": "CALIBRATED",
+   "reference": "orbit-accuracy-experiments E14 test 2026-05-01..2026-09-30: LEO-H 0.5 d, mean d2/3 1.219, 95 % coverage 0.936 (4266 samples, 10 objects)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 2,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 3,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 4,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 5,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 2,
+   "ageIndex": 6,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 0,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 1,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 2,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 3,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 4,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 5,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 3,
+   "ageIndex": 6,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 0,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 1,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 2,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 3,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 4,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 5,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  },
+  {
+   "regimeIndex": 4,
+   "ageIndex": 6,
+   "label": "UNCALIBRATED",
+   "reference": "test cell NOT REALISTIC (overconfident)"
+  }
+ ]
+}

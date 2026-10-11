@@ -97,5 +97,28 @@ if (fs.existsSync(s4s)) {
   for (const st of r.strata) if (st.n) lines.push(`| ${st.altitudeKm} | ${st.class} | ${st.n} | ${st.leads.map((l) => `${l.coverage95.toFixed(2)} / ${l.meanZ2.toFixed(2)}`).join(' | ')} |`);
   lines.push('');
 }
+// The hypotheses (step 85), on the test README.
+const hyp = path.join(repoRoot, 'results/e14/hypotheses.json');
+if (values.window === 'test' && fs.existsSync(hyp)) {
+  const H = JSON.parse(fs.readFileSync(hyp, 'utf8')).hypotheses;
+  const verdict = (h) => h?.verdict ?? (h && typeof h === 'object' ? Object.entries(h).map(([k, v]) => `${k}: ${v.verdict}`).join('; ') : '–');
+  lines.splice(6, 0, '## Hypotheses (PLAN.md section 9; step 85)', '', '| | Verdict | Numbers |', '| --- | --- | --- |',
+    `| H1 S3 realistic | ${verdict(H.H1)} | ${H.H1 ? `${H.H1.realistic} of ${H.H1.testable} testable cells REALISTIC (${H.H1.candidate})` : ''} |`,
+    `| H2 S2 realistic | ${verdict(H.H2)} | ${H.H2 ? `${H.H2.realistic} of ${H.H2.testable} (${H.H2.candidate})` : ''} |`,
+    `| H3 S1 realistic | ${verdict(H.H3)} | ${H.H3?.reason ?? ''} |`,
+    `| H4 calibration transfers | ${verdict(H.H4)} | ${Object.entries(H.H4 ?? {}).map(([k, v]) => `${k}: ${v.chosen.realistic} vs ${v.base.realistic} realistic, median abs ln mean d2/3 ${v.chosen.medianAbsLnMeanD2Over3?.toFixed(2)} vs ${v.base.medianAbsLnMeanD2Over3?.toFixed(2)}`).join('; ')} |`,
+    `| H5 DCP under storms | ${verdict(H.H5)} | ${H.H5?.difference ? `${H.H5.n} samples, ${H.H5.objects} objects: difference ${H.H5.difference.estimate.toExponential(2)} [${H.H5.difference.lower.toExponential(2)}, ${H.H5.difference.upper.toExponential(2)}]` : ''} |`,
+    `| H6 density error calibrated | ${verdict(H.H6)} | ${(H.H6?.leads ?? []).map((l) => `lead ${l.lead}: ${l.coverage95.toFixed(3)} (n ${l.n})`).join('; ')} |`,
+    `| H7 Starlink in-track pessimistic | ${verdict(H.H7)} | |`,
+    `| H8 known answer | ${verdict(H.H8)} | ${(H.H8?.summary ?? []).filter((l) => /pass|fail/.test(l)).join(', ')} |`, '');
+}
+const ca = path.join(dir, 'ca-pc.json');
+if (fs.existsSync(ca)) {
+  const r = JSON.parse(fs.readFileSync(ca, 'utf8'));
+  lines.push('## The CA screen with the S3 model (step 96)', '', `analysis/conjunction-assessment assess_conjunction, ${r.algorithm}, hard body 5 + 5 m, uncertainty_model ${r.model}.`, '',
+    '| Objects | TCA | Miss (m) | Pc | Source | Calibration | sigma RTN each (m) |', '| --- | --- | ---: | ---: | --- | --- | --- |');
+  for (const p of r.pairs) lines.push(`| ${p.objects.join(' x ')} | ${p.tca} | ${p.missDistanceM.toFixed(1)} | ${p.probability.toExponential(2)} | ${p.uncertaintySource} | ${p.calibration} | ${p.sigmaRtnM[0].join('/')} |`);
+  lines.push('');
+}
 fs.writeFileSync(path.join(dir, 'README.md'), `${lines.join('\n')}\n`);
 console.log(`wrote ${path.relative(repoRoot, path.join(dir, 'README.md'))}`);

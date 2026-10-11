@@ -72,9 +72,9 @@ H.H7 = { dev: dev ? h7(dev) : null, test: s1test ? h7(s1test) : null };
 H.H7.verdict = !H.H7.dev || !H.H7.test ? 'PENDING' : [...H.H7.dev, ...H.H7.test].every((x) => x.meanZT2 !== null && x.meanZT2 < 0.8) ? 'SUPPORTED' : 'NOT SUPPORTED';
 // H8: the known-answer test.
 try {
-  const log = execFileSync(process.execPath, ['--test', path.join(repoRoot, 'test/e14-known-answer.test.mjs')], { encoding: 'utf8', env: { ...process.env, SDN_MODULES_ROOT: modules } });
+  const log = execFileSync(process.execPath, ['--test', '--test-reporter=tap', path.join(repoRoot, 'test/e14-known-answer.test.mjs')], { encoding: 'utf8', env: { ...process.env, SDN_MODULES_ROOT: modules } });
   H.H8 = { verdict: /^# fail 0$/m.test(log) && /^# skipped 0$/m.test(log) ? 'SUPPORTED' : /^# fail 0$/m.test(log) ? 'INSUFFICIENT (skipped)' : 'NOT SUPPORTED',
-    summary: log.split('\n').filter((l) => /^# (tests|pass|fail|skipped)|^# (Recovered|known|noise|DCP|scalar|axes|coverage|hpop|C )/.test(l) || /^\s+# /.test(l)).slice(0, 30) };
+    summary: log.split('\n').filter((l) => /^\s*# (?!Subtest|duration_ms|suites|cancelled|todo)/.test(l)).map((l) => l.trim()).slice(0, 30) };
 } catch (e) {
   H.H8 = { verdict: 'NOT SUPPORTED', summary: String(e.stdout ?? e.message).split('\n').filter((l) => /^# (tests|pass|fail|skipped)|not ok/.test(l)) };
 }

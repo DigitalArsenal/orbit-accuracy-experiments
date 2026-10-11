@@ -1,0 +1,106 @@
+{
+ "model": "results/e14/models/s3.cau1",
+ "algorithm": "FOSTER",
+ "hardBodyRadiusM": [
+  5,
+  5
+ ],
+ "pairs": [
+  {
+   "objects": [
+    61721,
+    67298
+   ],
+   "tca": "2026-03-14T11:08:50.281Z",
+   "missDistanceM": 5.66780660197,
+   "probability": 0.000006767892,
+   "uncertaintySource": "SYNTHESIZED_COVARIANCE",
+   "calibration": "Uncalibrated",
+   "calibrationReference": "",
+   "basis": [
+    "EMPIRICAL_MODEL",
+    "EMPIRICAL_MODEL"
+   ],
+   "sigmaRtnM": [
+    [
+     270,
+     18090,
+     215
+    ],
+    [
+     270,
+     18090,
+     215
+    ]
+   ],
+   "withoutModel": {
+    "probability": 0,
+    "uncertaintySource": "MAXIMUM_PROBABILITY_ONLY"
+   }
+  },
+  {
+   "objects": [
+    47935,
+    49179
+   ],
+   "tca": "2026-03-12T04:44:40.733Z",
+   "missDistanceM": 14.290361768031,
+   "probability": 0.000044073961,
+   "uncertaintySource": "SYNTHESIZED_COVARIANCE",
+   "calibration": "Uncalibrated",
+   "calibrationReference": "",
+   "basis": [
+    "EMPIRICAL_MODEL",
+    "EMPIRICAL_MODEL"
+   ],
+   "sigmaRtnM": [
+    [
+     240,
+     2947,
+     440
+    ],
+    [
+     240,
+     2947,
+     440
+    ]
+   ],
+   "withoutModel": {
+    "probability": 0,
+    "uncertaintySource": "MAXIMUM_PROBABILITY_ONLY"
+   }
+  },
+  {
+   "objects": [
+    48282,
+    58288
+   ],
+   "tca": "2026-03-16T09:03:22.330Z",
+   "missDistanceM": 13.764736404664,
+   "probability": 0.000001268605,
+   "uncertaintySource": "SYNTHESIZED_COVARIANCE",
+   "calibration": "Uncalibrated",
+   "calibrationReference": "",
+   "basis": [
+    "EMPIRICAL_MODEL",
+    "EMPIRICAL_MODEL"
+   ],
+   "sigmaRtnM": [
+    [
+     803,
+     42027,
+     220
+    ],
+    [
+     803,
+     42027,
+     220
+    ]
+   ],
+   "withoutModel": {
+    "probability": 0,
+    "uncertaintySource": "MAXIMUM_PROBABILITY_ONLY"
+   }
+  }
+ ]
+}
