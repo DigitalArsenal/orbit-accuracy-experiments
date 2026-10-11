@@ -1,4 +1,4 @@
-// Section 10, publication and reproduction: the binaries this site serves,
+// Provenance and Security, section 3, publication and reproduction: the binaries this site serves,
 // hashed in this browser, and a V1 seed run here by the HPOP binary the paper
 // names (V1's, served as propagator/hpop-v1), its errors at the six V1
 // horizons against the committed results/v1 numbers.

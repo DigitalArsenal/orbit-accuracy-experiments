@@ -7,6 +7,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { gunzipSync } from 'node:zlib';
+import { pathToFileURL } from 'node:url';
 import { decodeOemStream } from '../harness/records.mjs';
 import { ReferenceIndex } from '../harness/reference.mjs';
 import { labelFor } from '../harness/data-licenses.mjs';
@@ -202,4 +203,27 @@ export function buildOperator({ repo, write, analysed }) {
     medianAbsRtnKm: [x[m].primary.kmR.median, x[m].primary.kmT.median, x[m].primary.kmN.median] })).sort((a, b) => a.hours - b.hours);
   write('data/operator/e4-iss.json', { provider: 'NASA ISS (OEM)', files: horizons['0'].S.primary.n, S: series('S'), H: series('H'), source: `results/e4/${e4Run}/metrics.json` },
     `results/e4/${e4Run}/metrics.json, the ISS rows (aggregates only)`, analysed('E4'));
+}
+
+// The screening paper's covariance probability: analysis/gp-error-model's
+// scaled empirical model and its calibration labels (the modules
+// repository's docs, aggregates of element sets and reference orbits) as
+// analysis/conjunction-assessment's uncertainty_model frame (CAU1, written by
+// the module's own scripts/uncertainty-model.mjs), at the model's scale and
+// at scales k of its sigmas for the dilution sweep.
+export const COVARIANCE_SCALES = Array.from({ length: 13 }, (_, i) => Number((10 ** (-1 + i / 4)).toPrecision(2)));
+export async function buildUncertaintyModel({ modules, write, own, credits }) {
+  const { uncertaintyModelFrame } = await import(pathToFileURL(path.join(modules, 'analysis/conjunction-assessment/scripts/uncertainty-model.mjs')));
+  const read = (relative) => JSON.parse(fs.readFileSync(path.join(modules, relative), 'utf8'));
+  const modelPath = 'analysis/gp-error-model/docs/model-2026-08-scaled.json', calibrationPath = 'analysis/gp-error-model/docs/calibration-2026-08.json';
+  const model = read(modelPath), calibration = read(calibrationPath);
+  const label = own('Analysed information: analysis/gp-error-model’s model and calibration (space-data-network-modules docs), framed by the module', credits.join(' '), credits);
+  const scaled = (k) => ({ ...model, strata: model.strata.map((s) => ({ ...s, covariance: s.covariance?.map((v) => v * k * k),
+    clipped: s.clipped ? { ...s.clipped, covariance: s.clipped.covariance?.map((v) => v * k * k) } : s.clipped })) });
+  COVARIANCE_SCALES.forEach((k, i) => write(`data/ca/uncertainty-model-${i}.cau1`, uncertaintyModelFrame(scaled(k), calibration, `${modelPath} (sigmas × ${k}); ${calibrationPath}`),
+    `${modelPath} with every sigma × ${k}, and ${calibrationPath}, as a CAU1 frame (analysis/conjunction-assessment scripts/uncertainty-model.mjs)`, label));
+  write('data/ca/uncertainty-model.json', { model: modelPath, calibration: calibrationPath, scales: COVARIANCE_SCALES, files: COVARIANCE_SCALES.map((k, i) => `data/ca/uncertainty-model-${i}.cau1`),
+    regimes: model.regimes.map((r) => r.id), ageBinsDays: model.ageBinsDays,
+    calibrated: calibration.strata.filter((s) => s.label === 'CALIBRATED').map((s) => ({ regime: model.regimes[s.regimeIndex].id, ageDays: model.ageBinsDays[s.ageIndex] })) },
+  'site/build-models.mjs: the frames above, indexed', label);
 }

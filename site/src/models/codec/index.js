@@ -41,3 +41,17 @@ export async function coarseGrid(ca, handle, { startMs, coarseStepSec, steps = 1
     return { x: f[q], y: f[q + 1], z: f[q + 2], boundKm: f[q + 3], vx: f[q + 4], vy: f[q + 5], vz: f[q + 6] };
   }));
 }
+
+// The candidate pair-steps search_candidates finds in the first `steps` steps
+// (the CPU grid search and the f64 tight test, in the module): [{a, b, step}]
+// with a, b object indices in the index's source order.
+export async function searchCandidates(ca, handle, { startMs, coarseStepSec, steps = 1, thresholdM = 5000 }) {
+  const window = request('WINDOW_REQUEST', new CQRWindowRequestT(INSTANCE(), handle,
+    controls({ startJd: jdOf(startMs), durationSeconds: Math.max(steps, 2) * coarseStepSec, thresholdM, coarseStepSec }), teme()));
+  const r = await ca.invoke('search_candidates', [window, blockFrame(0, steps)]);
+  const c = output(r, 'candidates');
+  if (!c) return [];
+  const view = new DataView(c.buffer, c.byteOffset, c.byteLength);
+  const count = view.getUint32(4, true);
+  return Array.from({ length: count }, (_, k) => ({ a: view.getUint32(8 + 12 * k, true), b: view.getUint32(12 + 12 * k, true), step: view.getUint32(16 + 12 * k, true) }));
+}
