@@ -34,7 +34,8 @@
    "reproducedAt": [
     "data/e3/sentinel1-poeorb/ (88 files)",
     "release e5-inputs-20261010: e5-sentinel1-poeorb.tar (prepared, not yet uploaded)",
-    "release e7-inputs-20261010: e7-sentinel1-poeorb.tar.gz (prepared, not yet uploaded)"
+    "release e7-inputs-20261010: e7-sentinel1-poeorb.tar.gz (prepared, not yet uploaded)",
+    "site (gh-pages): data/accuracy/orbit-sentinel-1c.json (AUX_POEORB)"
    ],
    "notice": null,
    "obtain": null
@@ -172,7 +173,7 @@
     "data/e7/igs_satellite_metadata.snx.gz",
     "data/e3/gnss-ultra-rapid-igs-node/ (7 files)",
     "data/e4/gps-precise/ (27 IGS0OPSULT files)",
-    "site (gh-pages): data/truth/, data/od/ (reference states converted from IGS finals)",
+    "site (gh-pages): data/truth/, data/od/ (reference states converted from IGS finals); data/accuracy/orbit-gps.json (IGS final orbit)",
     "modules: analysis/association/tests/fixtures/gps-20260802.json.gz, files/orbit-products/fixtures/COD0MGXFIN_20250190000_01D_05M_ORB.3ep.sp3 and igs15000.3ep.sp3"
    ],
    "notice": null,
@@ -374,7 +375,7 @@
    "reproducedAt": [
     "data/e3/slr/ (28 ilrsa files)",
     "release e7-inputs-20261010: e7-slr-ilrs.tar.gz (prepared, not yet uploaded)",
-    "site (gh-pages): data/truth/ (reference states converted from ilrsa orbits)",
+    "site (gh-pages): data/truth/ (reference states converted from ilrsa orbits); data/accuracy/orbit-lageos1.json (ilrsa orbit)",
     "data/e4/cpf/ (226 Galileo CPF files produced by ESA/ESOC; see the ESA/ESOC row)",
     "modules: data-source/cpf-source/test/fixtures/lageos1_cpf_*.dgf, analysis/od/tests/data/supgp-reference/cpf/lageos1.oem_itrf_utc.kvn"
    ],
@@ -418,7 +419,8 @@
    "reproducedAt": [
     "data/e3/slr/ (106 nsgf files)",
     "data/e5/slr/ (184 nsgf files)",
-    "release e7-inputs-20261010: e7-slr-nsgf.tar.gz (prepared, not yet uploaded)"
+    "release e7-inputs-20261010: e7-slr-nsgf.tar.gz (prepared, not yet uploaded)",
+    "site (gh-pages): data/accuracy/orbit-starlette.json (NERC SGF orbit)"
    ],
    "notice": null,
    "obtain": null
