@@ -2,14 +2,18 @@
 // E14 step 85: the verdicts of H1-H8 (PLAN.md section 9) from the realism files of the test windows and the choice in
 // results/e14/selection.json. H8 runs the known-answer test. Writes results/e14/hypotheses.json.
 //
-//   node experiments/e14-covariance-realism/steps/85-hypotheses.mjs
+//   node experiments/e14-covariance-realism/steps/85-hypotheses.mjs [--modules <modules checkout>]
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { repoRoot } from '../../../harness/provenance.mjs';
+import { modulesRoot } from '../../../harness/modules.mjs';
 import { config, writeJson } from '../common.mjs';
+import { parseArgs } from 'node:util';
 import { assertWindowReadable } from '../windows.mjs';
 
+const { values } = parseArgs({ options: { modules: { type: 'string' } } });
+const modules = modulesRoot({ flag: values.modules, configured: config.inputs.modules, repoRoot });
 const read = (rel) => (fs.existsSync(path.join(repoRoot, rel)) ? JSON.parse(fs.readFileSync(path.join(repoRoot, rel), 'utf8')) : null);
 const selection = read('results/e14/selection.json');
 const partly = config.realism.partlyShare;
@@ -68,8 +72,9 @@ H.H7 = { dev: dev ? h7(dev) : null, test: s1test ? h7(s1test) : null };
 H.H7.verdict = !H.H7.dev || !H.H7.test ? 'PENDING' : [...H.H7.dev, ...H.H7.test].every((x) => x.meanZT2 !== null && x.meanZT2 < 0.8) ? 'SUPPORTED' : 'NOT SUPPORTED';
 // H8: the known-answer test.
 try {
-  const log = execFileSync(process.execPath, ['--test', path.join(repoRoot, 'test/e14-known-answer.test.mjs')], { encoding: 'utf8' });
-  H.H8 = { verdict: /# fail 0/.test(log) ? 'SUPPORTED' : 'NOT SUPPORTED', summary: log.split('\n').filter((l) => /^# (tests|pass|fail|skipped)/.test(l)) };
+  const log = execFileSync(process.execPath, ['--test', path.join(repoRoot, 'test/e14-known-answer.test.mjs')], { encoding: 'utf8', env: { ...process.env, SDN_MODULES_ROOT: modules } });
+  H.H8 = { verdict: /^# fail 0$/m.test(log) && /^# skipped 0$/m.test(log) ? 'SUPPORTED' : /^# fail 0$/m.test(log) ? 'INSUFFICIENT (skipped)' : 'NOT SUPPORTED',
+    summary: log.split('\n').filter((l) => /^# (tests|pass|fail|skipped)|^# (Recovered|known|noise|DCP|scalar|axes|coverage|hpop|C )/.test(l) || /^\s+# /.test(l)).slice(0, 30) };
 } catch (e) {
   H.H8 = { verdict: 'NOT SUPPORTED', summary: String(e.stdout ?? e.message).split('\n').filter((l) => /^# (tests|pass|fail|skipped)|not ok/.test(l)) };
 }

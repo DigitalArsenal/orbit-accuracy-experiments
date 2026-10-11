@@ -523,12 +523,32 @@ been read). Development results that informed a change are named.
   the S3-T age-0 stratum of the first fit, kept as
   `results/e14/dev/s3-models-s2p0.json` (the file those runs read, SHA-256
   731495b6…), so every S2 window uses one P₀; LEO-L's age-0 stratum differs
-  from the refit's only by the two GRACE-FO objects. Daily space weather is
+  from the refit's only by the two GRACE-FO objects. Regimes the first fit
+  lacks (GEO, HEO: no truth then) take the refit's age-0 stratum; step 22
+  writes the merged file, `results/e14/dev/s2-p0.json`. Daily space weather is
   passed only with drag (commit 5e304f7), so dev-fit's MEO anchors, which
   the first runs lost to that refusal, are rerun.
 - **2026-10-11, the truth's covariance in S2's d².** S2's scoring adds the
   truth product's stated σ (isotropic) to the combined covariance, as
   section 3 defines d² and as S3's scoring does.
+- **2026-10-11, more truth, all of it before the selection.** NASA CDDIS
+  (Earthdata login) became available. GFZ's rapid MGEX orbits
+  (GFZ0MGXRAP, 5 min, 2025-10-01 to 2026-09-30, from CDDIS) add BeiDou
+  (with its GEO and IGSO satellites), Galileo, GLONASS and QZSS: the first
+  GEO-regime truth, and MEO objects outside GPS. Identities come from the IGS
+  satellite metadata SINEX, as for GPS; GPS stays the IGS/ESA finals'. A
+  satellite the SP3 header leaves at accuracy 0 (BeiDou C02 and C59 on the
+  first day) takes the largest accuracy the same file states (2^10 mm), with
+  that basis. Every MGEX satellite is an S3 truth object; S2 takes them in
+  GEO and HEO only (`truth.mgex.s2Regimes`): MEO already holds 40 S2 objects
+  and the other constellations would double S2's compute. CDDIS's DORIS
+  orbits are the same ten SSALTO satellites E14 already uses; ILRS normal
+  points would need a range model (not built). The Copernicus Data Space
+  (also offered) adds no object: Sentinel-1C/1D's precise orbits are the
+  STEP mirror's files E14 already reads, and Sentinel-3 and -6 are DORIS
+  truth objects already. Truth for the test window is converted now, not
+  after the selection: GRACE-FO's test arcs (after 2026-08-31 with IERS
+  finals2000A observed rows, where C04 ends) and MGEX's whole year.
 
 ## References
 

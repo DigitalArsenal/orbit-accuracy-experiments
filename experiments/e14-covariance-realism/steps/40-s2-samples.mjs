@@ -20,7 +20,7 @@ import { createHash } from 'node:crypto';
 import { ommFrame } from '../../../harness/records.mjs';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { epochStates } from '../../e2-catalog-covariance/product.mjs';
-import { cli, config, configPath, DAY_MS, Truth, truthObjects, elementSets, callJson, json, jsonlWriter, waitForLoad, moduleOf } from '../common.mjs';
+import { cli, config, configPath, DAY_MS, Truth, truthObjects, mgexObjects, elementSets, callJson, json, jsonlWriter, waitForLoad, moduleOf } from '../common.mjs';
 import { s2Context, propagate, bOf, AGOM, stateBlock, sensitivity } from '../s2.mjs';
 
 const { values, window, objects: only, modules, archive } = cli({ shard: { type: 'string', default: '0/1' }, 's3-models': { type: 'string' }, dcp: { type: 'string' } });
@@ -32,9 +32,9 @@ const log = (...a) => console.log(`[${run.id}]`, ...a);
 const ctx = await s2Context(modules, run);
 const gp = ctx['gp-error-model'];
 const mnv = await moduleOf(modules, 'analysis/maneuver-detection', run);
-// S3-T as fitted before the GRACE-FO truth was converted (the file the first dev-fit runs read; PLAN.md, changes
-// before the freeze): every S2 window uses the same P0.
-const s3File = values['s3-models'] ?? path.join(repoRoot, 'results/e14/dev/s3-models-s2p0.json');
+// S2's P0 (step 22): S3-T's age-0 strata as fitted before the GRACE-FO and MGEX truth (the file the first dev-fit runs
+// read), GEO and HEO from the refit (PLAN.md, changes before the freeze): every S2 window uses the same P0.
+const s3File = values['s3-models'] ?? path.join(repoRoot, 'results/e14/dev/s2-p0.json');
 const dcpFile = values.dcp ?? path.join(repoRoot, 'results/e14/dev/s4-dcp.json');
 const s3 = JSON.parse(fs.readFileSync(s3File, 'utf8')).candidates['S3-T'];
 const dcp = JSON.parse(fs.readFileSync(dcpFile, 'utf8'));
@@ -53,7 +53,8 @@ const msOf = (text) => Date.parse(/Z$/.test(text) ? text : `${text}Z`);
 const usOf = (text) => { const m = /^(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)(?:\.(\d{1,6}))?/.exec(text); return Date.parse(`${m[1]}Z`) * 1000 + Number((m[2] ?? '0').padEnd(6, '0')); };
 const isoUs = (us) => `${new Date(Math.floor(us / 1e6) * 1000).toISOString().slice(0, 19)}.${String(Math.round(us % 1e6)).padStart(6, '0')}`;
 const pos9 = (m36) => [m36[0], m36[1], m36[2], m36[6], m36[7], m36[8], m36[12], m36[13], m36[14]];
-const counts = { objects: objects.length, anchors: 0, targets: 0, failed: 0, screened: 0 };
+const counts = { objects: objects.length, anchors: 0, targets: 0, failed: 0, screened: 0, mgexSkipped: 0 };
+const mgex = mgexObjects(truth);
 const started = performance.now();
 
 // The lead covariance (shrinkage s toward the diagonal) of an altitude (nearest at or below 1000 km) and class.
@@ -92,6 +93,8 @@ for (const norad of objects) {
     const t0 = msOf(seed.epoch);
     const targets = arc.targets.filter((t) => msOf(t.epoch) < window.hi && msOf(t.epoch) >= t0);
     if (!targets.length) continue;
+    // MGEX satellites enter S2 only in config.truth.mgex.s2Regimes (PLAN.md, changes before the freeze).
+    if (mgex.has(norad) && !config.truth.mgex.s2Regimes.includes(arc.regime)) { ++counts.mgexSkipped; continue; }
     ++counts.anchors;
     const leo = arc.regime.startsWith('LEO');
     const b = bOf(set);
@@ -172,6 +175,8 @@ for (const norad of objects) {
   }
   run.addInputs('reference', truth.read);
   log(`${norad}: ${anchors.length} anchors`);
+  run.checkpoint();
+  await new Promise((resolve) => setImmediate(resolve));  // the module calls resolve at once: let the output file open and flush
 }
 const rows = await out.close();
 run.finish({ counts, rows, seconds: (performance.now() - started) / 1000 });

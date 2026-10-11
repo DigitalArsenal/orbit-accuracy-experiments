@@ -246,17 +246,34 @@
       ],
       "MEO": [
         "GPS",
+        "MGEX",
         8820,
         22195,
         19751,
         20026,
         53105
       ],
-      "GEO": [],
+      "GEO": [
+        "MGEX"
+      ],
       "HEO": []
     },
     "radiusScreenKm": 10,
-    "note": "Objects are listed by NORAD number (COSMIC-2 FM objects as the archive identifies them; Sentinel-6B 66514); GPS is every satellite the ESA/IGS products identify; the regime of each sample comes from its own element set or state (section 3), so a listed object is scored in whichever regime its orbit falls."
+    "note": "Objects are listed by NORAD number (COSMIC-2 FM objects as the archive identifies them; Sentinel-6B 66514); GPS is every satellite the ESA/IGS products identify; the regime of each sample comes from its own element set or state (section 3), so a listed object is scored in whichever regime its orbit falls. MGEX is every satellite of the MGEX product (truth.mgex).",
+    "mgex": {
+      "productPrefix": "GFZ0MGXRAP_",
+      "systems": [
+        "C",
+        "E",
+        "R",
+        "J"
+      ],
+      "s2Regimes": [
+        "GEO",
+        "HEO"
+      ],
+      "note": "GFZ's rapid MGEX orbits from NASA CDDIS (BeiDou incl. GEO and IGSO, Galileo, GLONASS, QZSS incl. GEO; GPS stays the IGS/ESA finals'): every satellite is an S3 truth object; S2 takes them only in GEO and HEO (compute; MEO already holds 40 S2 objects)."
+    }
   },
   "elementSets": {
     "meanElementTheory": "SGP4",

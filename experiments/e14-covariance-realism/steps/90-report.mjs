@@ -58,9 +58,44 @@ if (fs.existsSync(s1)) {
     if (cands.length) section(`S1 — ${operator} (stated covariance, scaled)`, selection?.sources?.S1?.byOperator?.[operator]?.candidate, cands, (n) => r.candidates[n][operator]?.table, Object.keys(config.s1HorizonBinsDays));
   }
 }
-for (const extra of ['s4-density.json', 's4-dcp-summary.json']) {
-  const f = path.join(dir, extra);
-  if (fs.existsSync(f)) lines.push(`## ${extra}`, '', '```json', JSON.stringify(JSON.parse(fs.readFileSync(f, 'utf8')), null, 1).slice(0, 4000), '```', '');
+// The probability-of-collision effect (descriptive) of the candidates scored with --pc.
+const pcLines = (title, r) => {
+  const cands = Object.entries(r.candidates).filter(([, v]) => v.pcEffect);
+  if (!cands.length) return;
+  lines.push(`## ${title}: probability-of-collision effect (descriptive)`, '',
+    'Per cell, 500 pairs of samples of different objects, each with its own covariance (gp-error-model screening_cases, E2b\'s rules: hard body 20 m, alert Pc >= 1e-4). Head-on plane: alert rate on true collisions (misses 0 and 10 m) / alert rate at a 1 km true miss.', '');
+  for (const [name, v] of cands) {
+    lines.push(`### ${name}`, '', `| Regime | ${H.map((h) => `${h} d`).join(' | ')} |`, `| --- | ${H.map(() => '---').join(' | ')} |`);
+    for (const g of REG) if (v.pcEffect[g]) lines.push(`| ${g} | ${H.map((h) => { const c = v.pcEffect[g][h]?.['head-on']; return c ? `${c.pcAlertRateCollisions.toFixed(2)} / ${c.pcAlertRate1km.toFixed(3)}` : '–'; }).join(' | ')} |`);
+    lines.push('');
+  }
+};
+if (fs.existsSync(s3)) pcLines('S3', JSON.parse(fs.readFileSync(s3, 'utf8')));
+if (fs.existsSync(s2)) {
+  const r = JSON.parse(fs.readFileSync(s2, 'utf8'));
+  pcLines('S2', r);
+  if (r.h5) {
+    lines.push('## H5: the DCP under forecast storms (LEO)', '', `${r.h5.rule}: ${r.h5.n} samples, ${r.h5.objects} objects (issue class 2: ${r.h5.byReason.predicted}; observed only: ${r.h5.byReason.observedOnly}).`, '',
+      '| Candidate | n | objects | mean d²/3 S2-QC | mean d²/3 S2-QCD | \\|ln\\| difference [95 %] | Decision |', '| --- | ---: | ---: | ---: | ---: | --- | --- |');
+    for (const [k, x] of Object.entries(r.h5.shrinkage)) lines.push(x.difference ? `| ${k} | ${x.n} | ${x.objects} | ${x.meanD2Over3QC.toPrecision(3)} | ${x.meanD2Over3QCD.toPrecision(3)} | ${x.difference.estimate.toPrecision(3)} [${x.difference.lower.toPrecision(3)}, ${x.difference.upper.toPrecision(3)}] | ${x.decision} |` : `| ${k} | ${x.n} | ${x.objects} | – | – | – | ${x.decision} |`);
+    lines.push('');
+  }
+}
+const s4d = path.join(dir, 's4-density.json');
+if (fs.existsSync(s4d)) {
+  const r = JSON.parse(fs.readFileSync(s4d, 'utf8'));
+  lines.push('## H6: the DCP\'s density error against independent densities', '', 'z = ln(ρ_obs / ρ_NRLMSISE(released drivers)) / sqrt(σ_m² + C_δ[k][k]), daily means along track (Swarm A/B/C POD, GRACE-FO 1 ACC; ESA).', '',
+    '| Lead day | n | satellites | 95 % coverage | without C_δ | mean z² | Within [0.93, 0.97] |', '| ---: | ---: | ---: | ---: | ---: | ---: | --- |');
+  for (const [k, l] of Object.entries(r.leads)) lines.push(`| ${k} | ${l.n} | ${l.satellites} | ${l.coverage95.toFixed(3)} | ${l.coverage95ModelOnly.toFixed(3)} | ${l.meanZ2.toFixed(2)} | ${l.supported === null ? 'INSUFFICIENT' : l.supported ? 'yes' : 'no'} |`);
+  lines.push('', `σ_m (dev-fit, ln ρ with observed drivers): ${Object.entries(r.sigmaModel).map(([k, v]) => `${k} ${v.rms.toFixed(3)} (bias ${v.mean.toFixed(3)}, n ${v.n})`).join('; ')}.`, '');
+}
+const s4s = path.join(dir, 's4-dcp-summary.json');
+if (fs.existsSync(s4s)) {
+  const r = JSON.parse(fs.readFileSync(s4s, 'utf8'));
+  lines.push('## S4: the lead covariance on this window\'s issues (descriptive)', '', `${r.issues} issues (${r.span?.join(' to ')}). Per altitude and forecast class: share of |δ_k| within 1.96 σ_k / mean δ_k²/σ_k², lead days 1–7.`, '',
+    '| Altitude (km) | Class | n | 1 | 2 | 3 | 4 | 5 | 6 | 7 |', '| ---: | ---: | ---: | --- | --- | --- | --- | --- | --- | --- |');
+  for (const st of r.strata) if (st.n) lines.push(`| ${st.altitudeKm} | ${st.class} | ${st.n} | ${st.leads.map((l) => `${l.coverage95.toFixed(2)} / ${l.meanZ2.toFixed(2)}`).join(' | ')} |`);
+  lines.push('');
 }
 fs.writeFileSync(path.join(dir, 'README.md'), `${lines.join('\n')}\n`);
 console.log(`wrote ${path.relative(repoRoot, path.join(dir, 'README.md'))}`);

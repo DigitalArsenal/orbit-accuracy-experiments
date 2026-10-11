@@ -143,9 +143,24 @@ export function truthObjects(truth) {
         const raw = JSON.parse(fs.readFileSync(path.join(idx.dir, p.product, 'index.json'), 'utf8'));
         for (const ob of raw.objects) if (/SP3 satellite G\d/.test(ob.comment ?? '')) out.add(ob.norad);
       }
-    } else out.add(o);
+    } else if (o === 'MGEX') for (const n of mgexObjects(truth)) out.add(n);
+    else out.add(o);
   }
   return [...out].sort((a, b) => a - b);
+}
+
+// The satellites of the MGEX product (config.truth.mgex), from its indices.
+const mgexCache = new WeakMap();
+export function mgexObjects(truth) {
+  if (!config.truth.mgex) return new Set();
+  if (mgexCache.has(truth)) return mgexCache.get(truth);
+  const out = new Set();
+  for (const idx of truth.indices) for (const p of idx.products.filter((x) => x.product.startsWith(config.truth.mgex.productPrefix))) {
+    const raw = JSON.parse(fs.readFileSync(path.join(idx.dir, p.product, 'index.json'), 'utf8'));
+    for (const ob of raw.objects) if (new RegExp(`SP3 satellite [${config.truth.mgex.systems.join('')}]\\d`).test(ob.comment ?? '')) out.add(ob.norad);
+  }
+  mgexCache.set(truth, out);
+  return out;
 }
 
 // Element sets of the objects with epochs in [fromDay - leadDays, toDay + 2], cached under runs/cache (they never

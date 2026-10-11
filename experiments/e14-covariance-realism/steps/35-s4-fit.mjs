@@ -6,13 +6,39 @@
 // Writes results/e14/dev/s4-dcp.json (the shrinkage toward the diagonal is chosen on dev-select).
 //
 //   node experiments/e14-covariance-realism/steps/35-s4-fit.mjs --run <step-30 run>
+// With --score <window> (descriptive): the issues whose lead days 1..7 lie in the window, per altitude and class and
+// lead day k, the share with |delta_k| <= 1.96 sqrt(C[k][k]) and the mean of delta_k^2 / C[k][k] under the frozen
+// lead covariance (--dcp, default results/e14/dev/s4-dcp.json). Writes results/e14/<window>/s4-dcp-summary.json.
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { repoRoot } from '../../../harness/provenance.mjs';
+import fs from 'node:fs';
 import { config, readRuns, resultsDir, writeJson, DAY_MS, windowOf } from '../common.mjs';
+import { assertWindowReadable } from '../windows.mjs';
 
-const { values } = parseArgs({ options: { run: { type: 'string' }, through: { type: 'string', default: 'devFit' }, out: { type: 'string' } } });
+const { values } = parseArgs({ options: { run: { type: 'string' }, through: { type: 'string', default: 'devFit' }, out: { type: 'string' }, score: { type: 'string' }, dcp: { type: 'string' } } });
 const S4 = config.s4;
+if (values.score) {
+  assertWindowReadable(values.score);
+  const w = windowOf(values.score);
+  const dcp = JSON.parse(fs.readFileSync(values.dcp ?? path.join(repoRoot, 'results/e14/dev/s4-dcp.json'), 'utf8'));
+  const list = (await readRuns(values.run.split(','), 'forecast-errors')).filter((r) => { const d = Date.parse(`${r.day}T00:00:00Z`); return d + DAY_MS >= w.lo && d + 8 * DAY_MS <= w.hi; });
+  const cls = (ap) => (ap < S4.forecastClassesAp[0] ? 0 : ap < S4.forecastClassesAp[1] ? 1 : 2);
+  const out = { window: values.score, issues: list.length, span: list.length ? [list[0].day, list.at(-1).day] : null, strata: [] };
+  for (const st of dcp.strata) {
+    const a = dcp.altitudesKm.indexOf(st.altitudeKm);
+    const rows = list.filter((r) => cls(r.predictedApMax) === st.class && r.delta[a].every((x) => x !== null)).map((r) => r.delta[a]);
+    out.strata.push({ altitudeKm: st.altitudeKm, class: st.class, n: rows.length, leads: Array.from({ length: S4.leadDays }, (_, k) => {
+      const v = st.secondMoment[k][k];
+      return { lead: k + 1, sigma: Math.sqrt(v), rms: rows.length ? Math.sqrt(rows.reduce((x, d) => x + d[k] ** 2, 0) / rows.length) : null,
+        coverage95: rows.length ? rows.filter((d) => Math.abs(d[k]) <= 1.96 * Math.sqrt(v)).length / rows.length : null,
+        meanZ2: rows.length ? rows.reduce((x, d) => x + d[k] ** 2 / v, 0) / rows.length : null };
+    }) });
+  }
+  writeJson(path.join(resultsDir(values.score), 's4-dcp-summary.json'), out);
+  console.log(`wrote results/e14/${values.score}/s4-dcp-summary.json: ${list.length} issues`);
+  process.exit(0);
+}
 const lastIssue = windowOf(values.through).hi - 8 * DAY_MS;  // lead days end inside the window
 const rows = (await readRuns(values.run.split(','), 'forecast-errors')).filter((r) => Date.parse(`${r.day}T00:00:00Z`) < lastIssue);
 const classOf = (ap) => (ap < S4.forecastClassesAp[0] ? 0 : ap < S4.forecastClassesAp[1] ? 1 : 2);

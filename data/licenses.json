@@ -179,6 +179,39 @@
    "obtain": null
   },
   {
+   "id": "nasa-cddis",
+   "name": "NASA CDDIS archive: IGS MGEX multi-GNSS orbits (GFZ0MGXRAP, GFZ's rapid MGEX orbits)",
+   "provider": "NASA's Crustal Dynamics Data Information System (CDDIS, an Earthdata DAAC at GSFC), archiving the IGS analysis centres' products; these orbits are GFZ's (an IGS MGEX analysis centre)",
+   "licence": "NASA's data and information policy (full and open sharing, no period of exclusive access); the products are IGS analysis-centre products under the IGS Data and Product Disclaimer and Terms of Use (open use, citation requested); no Creative Commons licence",
+   "terms": [
+    {
+     "title": "NASA Earthdata: Data and Information Guidance (NASA's Earth science data policy)",
+     "url": "https://www.earthdata.nasa.gov/engage/open-data-services-software-policies/data-information-policy",
+     "retrieved": "2026-10-11"
+    },
+    {
+     "title": "NASA Earthdata: CDDIS (publications, how to cite)",
+     "url": "https://www.earthdata.nasa.gov/centers/cddis-daac",
+     "retrieved": "2026-10-11"
+    },
+    {
+     "title": "IGS Data and Product Disclaimer and Terms of Use (2020-08-05)",
+     "url": "https://igs.org/wp-content/uploads/2020/09/IGS-Data-and-Product-Disclaimer-and-Terms-of-Use-200805.pdf",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "NASA commits to the full and open sharing of Earth science data obtained from NASA Earth observing platforms, sub-orbital platforms, and field campaigns with all users as soon as these data become available … For data products supplied from an international partner or another agency, NASA will restrict access only to the extent required by the appropriate Memorandum of Understanding (MOU). (IGS: data and products have been made openly available for use without restriction.)",
+   "attributionClause": "IGS: users agree to appropriately cite and attribute these resources to providers and their sponsors, acknowledgment of IGS and its contributing organizations. CDDIS lists Noll (2010) and Montenbruck et al. (2017) among its references.",
+   "conditions": "Downloads need an Earthdata login (E14 uses a bearer token read at run time, sent only to cddis.nasa.gov, never written to the repository). The files carry no use restriction beyond the IGS terms; keep the IGS disclaimer with mirrored files.",
+   "reproduce": "yes",
+   "credit": "GFZ rapid MGEX orbits (GFZ0MGXRAP) of the International GNSS Service's Multi-GNSS Experiment: Montenbruck, O., et al. (2017), The Multi-GNSS Experiment (MGEX) of the International GNSS Service (IGS) – achievements, prospects and challenges, Adv. Space Res. 59, 1671–1697, doi:10.1016/j.asr.2017.01.011; obtained from NASA CDDIS: Noll, C. (2010), The Crustal Dynamics Data Information System: a resource to support scientific analysis using space geodesy, Adv. Space Res. 45, 1421–1440, doi:10.1016/j.asr.2010.01.018.",
+   "reason": "NASA's policy is full and open sharing and the IGS terms allow use without restriction; the obligation is citation. E14 reproduces none of the files (results only; reference states stay in its store).",
+   "usedIn": "E14 (truth: BeiDou including GEO and IGSO, Galileo, GLONASS and QZSS orbits, 2025-10-01 to 2026-09-30)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://cddis.nasa.gov/archive/gnss/products/<GPS week>/GFZ0MGXRAP_<yyyyddd>0000_01D_05M_ORB.SP3.gz (Earthdata login)"
+  },
+  {
    "id": "satnogs",
    "name": "SatNOGS Network observations and SatNOGS DB",
    "provider": "Libre Space Foundation and the SatNOGS ground-station owners and observers",
