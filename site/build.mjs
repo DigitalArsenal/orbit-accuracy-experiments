@@ -33,7 +33,7 @@ import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-hpop-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
+import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -279,9 +279,10 @@ for (const id of ['e1', 'e2', 'e3', 'e4', 'e5']) {
 
 // ── Measured accuracy (section 10 of the catalog paper) ──
 buildMeasuredAccuracy({ repo, referenceDir, write, analysed });
-// ── GNSS and operator-ephemeris objects (sections 5.1 and 5.2) ──
+// ── GNSS and operator-ephemeris objects, the drag regime (sections 5.1, 5.2, 5.4) ──
 buildGnss({ repo, referenceDir, write, analysed });
 buildOperator({ repo, write, analysed });
+buildDrag({ here, write, labelFor, licenceSource });
 // ── The screening paper's empirical covariance model (CAU1 frames) ──
 await buildUncertaintyModel({ modules, write, own, credits: [...new Set(['space-track', 'igs', 'ilrs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
 // ── The ISS reboost the detector found (section 5.5) ──

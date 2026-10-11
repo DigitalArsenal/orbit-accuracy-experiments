@@ -6,7 +6,7 @@ import { formatMeters } from '../../chart.js';
 import { sha256Hex } from '../../modules.js';
 import { runV1Seed } from '../../runs.js';
 import { credits, h, inputs, num, panel, table, tiles } from '../ui.js';
-import { scene3d, v3 } from '../scene.js';
+import { planeNormal, scene3d, v3 } from '../scene.js';
 
 const PAPER_HPOP = '473d527175de6606ccf305c45b37218288634fa9de2dcab0d72564a190bdabd1';
 const NAMES = { lageos1: 'LAGEOS-1', lageos2: 'LAGEOS-2', etalon1: 'ETALON-1', etalon2: 'ETALON-2' };
@@ -73,7 +73,7 @@ export default async function run(ctx) {
         }
         for (const b of places) g.label(b.at, b.names.join(' · '), { color: 'text' });
         g.moving(r.rows.map((x) => [x.ms, x.hpop]), { color: 'accent', size: 10, trail: false });
-        g.view({ preset: '3d' });
+        g.view({ normal: planeNormal(truth.map(([, p]) => p)) });
       }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal', time: span,
         caption: `GCRF; ${objectName(seed.object)} from ${seed.seedUtc.slice(0, 16).replace('T', ' ')} UTC, 72 h; HPOP ${hpop.provenance.wasmSha256.slice(0, 12)}…, every force (E-f); the six V1 horizons, each checked against results/v1 below; the Earth at 6,378 km`,
         legend: [['cyan', seed.group === 'SLR' ? 'ILRS precise orbit' : 'IGS precise orbit'], ['accent', 'HPOP, and each V1 horizon'], ['sat', 'Seed state', 'dot'], ['earth', 'Earth, 6,378.137 km']] });
