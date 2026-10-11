@@ -15,7 +15,7 @@ import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { gitState } from '../../../harness/modules.mjs';
 import { quantile } from '../../../harness/stats.mjs';
-import { DAY, appendJsonl, config, configPath, amendmentsSha256, energyModulesDir, modulesDir, paths, sha256, sleep } from '../common.mjs';
+import { DAY, STORE, appendJsonl, config, configPath, amendmentsSha256, energyModulesDir, modulesDir, paths, sha256, sleep } from '../common.mjs';
 import { COMMON_REFERENCE_MODULES, dragWorkRatio, gfzDefinitiveRows, gfzSha256, useCommonReferenceModules } from '../common-reference.mjs';
 import { arcsOf, readPlanetSeries } from '../planet-history.mjs';
 import { assertWindowReadable } from '../windows.mjs';
@@ -94,10 +94,14 @@ if (values.sample) {
     medianSigmaLnB: quantile(out.map((o) => o.sigmaLnB), 0.5), meanLnDifference: out.reduce((a, o) => a + o.lnDifference, 0) / out.length,
   };
   console.log(`rescaled against direct NRLMSISE-00 fits, ${summary.arcs} arcs: all within the stated sigma: ${summary.allWithinStatedSigma}; |ln difference| median ${(100 * summary.medianAbsLnDifference).toFixed(3)} %, 95th percentile ${(100 * summary.p95AbsLnDifference).toFixed(3)} %, max ${(100 * summary.maxAbsLnDifference).toFixed(3)} %; within 0.5 % ${(100 * summary.shareWithin0p5Percent).toFixed(0)} %, within 1 % ${(100 * summary.shareWithin1Percent).toFixed(0)} %; the references differ by a median ${(100 * summary.medianLnBetweenReferences).toFixed(2)} % (5-95 %: ${(100 * summary.p5LnBetweenReferences).toFixed(2)} to ${(100 * summary.p95LnBetweenReferences).toFixed(2)} %); stated sigma median ${(100 * summary.medianSigmaLnB).toFixed(1)} %`);
+  // The per-arc rows are Planet's per-satellite-day fits (CC BY-NC 4.0): they stay in the store; the repository gets the summary.
   const file = values.out ?? path.join(repoRoot, 'results', 'e13', 's3', 'rescale-sample.json');
+  const arcsFile = path.join(STORE, 's3', `rescale-sample-${values.split}-arcs.json`);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, `${JSON.stringify({ exploratory: true, amendment: 'S3', split: values.split, stride: Math.floor(arcRows.length / Number(values.sample)), summary, arcs: out }, null, 1)}\n`);
-  log(`wrote ${file}`);
+  fs.mkdirSync(path.dirname(arcsFile), { recursive: true });
+  fs.writeFileSync(arcsFile, `${JSON.stringify(out, null, 1)}\n`);
+  fs.writeFileSync(file, `${JSON.stringify({ exploratory: true, amendment: 'S3', split: values.split, stride: Math.floor(arcRows.length / Number(values.sample)), summary, arcsFile: 'the per-arc rows (hardware ids, epochs, fits) are in the store, outside the repository: Planet\'s per-satellite-day fits are not published (CC BY-NC 4.0)' }, null, 1)}\n`);
+  log(`wrote ${file} and ${arcsFile}`);
   run.finish(summary);
 } else run.finish({ rows: out.length, out: outFile });
 await jEnv.destroy();

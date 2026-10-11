@@ -54,6 +54,7 @@ async function fetchDay(day) {
 }
 
 let cycles = 0;
+const lastTried = new Map();                                                 // day -> ms of the last request for it that did not give a final file
 for (;;) {
   const now = Date.now();
   if (fs.existsSync(files.stop) || now > untilMs) { log(fs.existsSync(files.stop) ? 'stop file' : `past ${values.until}`); break; }
@@ -63,6 +64,8 @@ for (;;) {
     if (have?.final) { counters.final++; continue; }
     const isToday = dayName(now) === day;
     if (isToday && now < t + 22 * H + 55 * 60e3) continue;                 // the current day's final file does not exist before about 22:50 UTC
+    if (!isToday && now - (lastTried.get(day) ?? 0) < 60 * 60e3) continue;   // a past day whose copy is not final is asked for once an hour
+    lastTried.set(day, now);
     const outcome = await fetchDay(day);
     counters[outcome]++;
     await sleep(3e3);

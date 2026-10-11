@@ -24,18 +24,19 @@ const wmad = (items) => {
 // one per held-out half, pooled. Returns {n, satellites, r3: {estimate, lower, upper}, mad0, mad1} (the bootstrap is the two-way cluster one over satellites and UTC days of the arcs' midpoints).
 export function hindcastR3(parts) {
   const cells = [];
+  let sus = 0, sss = 0;                                                    // the slope of u0 on the satellite's centred s-bar, pooled: 1 where the common mode has the amplitude the satellites feel
   for (const { target, sol } of parts) {
     const usable = target.map((a) => ({ ...a, sbar: windowMean(sol, a.startMs, a.endMs) })).filter((a) => Number.isFinite(a.sbar));
     for (const list of bySatellite(usable).values()) {
-      const y0 = median(list.map((a) => a.y)), y1 = median(list.map((a) => a.y - a.sbar));
-      for (const a of list) cells.push({ row: a.dove, col: new Date((a.startMs + a.endMs) / 2).toISOString().slice(0, 10), u0: a.y - y0, u1: a.y - a.sbar - y1 });
+      const y0 = median(list.map((a) => a.y)), y1 = median(list.map((a) => a.y - a.sbar)), sMean = list.reduce((acc, a) => acc + a.sbar, 0) / list.length, yMean = list.reduce((acc, a) => acc + a.y, 0) / list.length;
+      for (const a of list) { cells.push({ row: a.dove, col: new Date((a.startMs + a.endMs) / 2).toISOString().slice(0, 10), u0: a.y - y0, u1: a.y - a.sbar - y1 }); sus += (a.y - yMean) * (a.sbar - sMean); sss += (a.sbar - sMean) ** 2; }
     }
   }
   const satellites = new Set(cells.map((c) => c.row)).size;
   if (cells.length < 20) return { n: cells.length, satellites, r3: null };
   const stat = (w) => 1 - wmad(w.map((c) => ({ value: c.u1, weight: c.weight }))) / wmad(w.map((c) => ({ value: c.u0, weight: c.weight })));
   const r3 = boot(cells, stat);
-  return { n: cells.length, satellites, r3: { estimate: r3.estimate, lower: r3.lower, upper: r3.upper }, mad0: wmad(cells.map((c) => ({ value: c.u0, weight: 1 }))), mad1: wmad(cells.map((c) => ({ value: c.u1, weight: 1 }))) };
+  return { n: cells.length, satellites, slope: sss > 0 ? sus / sss : null, r3: { estimate: r3.estimate, lower: r3.lower, upper: r3.upper }, mad0: wmad(cells.map((c) => ({ value: c.u0, weight: 1 }))), mad1: wmad(cells.map((c) => ({ value: c.u1, weight: 1 }))) };
 }
 
 // The held-out forecast statistic. `calibration`: the arcs of the solve; `target`: the held-out satellites' arcs; `issues`: issue times (ms). Options: latencyHours (between an arc's

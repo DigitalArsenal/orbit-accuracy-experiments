@@ -89,7 +89,7 @@ for (const band of values.bands.split(',')) {
     for (const kind of Object.keys(kinds)) {
       const h = row.hindcast[kind];
       const fc = latencies.map((L) => { const st = row.forecast[kind][L], b = st.byTau['48']; return b ? `L=${L} h: ${st.windows} arcs, no correction ${f3(st.rmsNoCorrection)}, tau 48 h ${f3(b.rmsUnpredicted)} (${f3(b.ratio)}${interval(b)})` : `L=${L} h: no arcs`; }).join('; ');
-      console.log(`    ${kind.padEnd(5)} hindcast R3 ${h.r3 ? `${f3(h.r3.estimate)}${interval(h.r3)}` : 'n/a'} over ${h.n} arcs of ${h.satellites} satellites | forecast ${fc}`);
+      console.log(`    ${kind.padEnd(5)} hindcast R3 ${h.r3 ? `${f3(h.r3.estimate)}${interval(h.r3)}` : 'n/a'} (slope of y on s-bar ${f3(h.slope)}) over ${h.n} arcs of ${h.satellites} satellites | forecast ${fc}`);
     }
   }
 

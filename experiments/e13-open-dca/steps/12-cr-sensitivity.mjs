@@ -7,7 +7,7 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { quantile } from '../../../harness/stats.mjs';
-import { config, configPath, modulesDir, paths, amendmentsSha256 } from '../common.mjs';
+import { STORE, config, configPath, modulesDir, paths, amendmentsSha256 } from '../common.mjs';
 import { arcsOf, readPlanetSeries } from '../planet-history.mjs';
 import { openArcEnv } from '../arcs.mjs';
 
@@ -39,6 +39,10 @@ const summary = { arcs: out.length, medianAbsLnChangeLow: quantile(abs('lnLow'),
 log(`Cr*A/m x0.5: median |change in ln B| ${(100 * summary.medianAbsLnChangeLow).toFixed(2)} %, max ${(100 * summary.maxAbsLnChangeLow).toFixed(2)} %; x1.5: median ${(100 * summary.medianAbsLnChangeHigh).toFixed(2)} %, max ${(100 * summary.maxAbsLnChangeHigh).toFixed(2)} %; reproduction of the stored B: max ${(100 * summary.maxAbsReproduction).toFixed(2)} %`);
 const file = values.out ?? path.join(repoRoot, 'results', 'e13', 'dev', 'cr-sensitivity.json');
 fs.mkdirSync(path.dirname(file), { recursive: true });
-fs.writeFileSync(file, `${JSON.stringify({ summary, arcs: out }, null, 1)}\n`);
+// The 20 arcs' rows are Planet's per-satellite-day fits (CC BY-NC 4.0): they stay in the store; the repository gets the summary.
+const storeFile = path.join(STORE, 's3', 'cr-sensitivity-dev-arcs.json');
+fs.mkdirSync(path.dirname(storeFile), { recursive: true });
+fs.writeFileSync(storeFile, `${JSON.stringify({ summary, arcs: out }, null, 1)}\n`);
+fs.writeFileSync(file, `${JSON.stringify({ summary, arcsFile: 'the 20 arcs\' rows (hardware ids, epochs, fits) are in the store, outside the repository: Planet\'s per-satellite-day fits are not published (CC BY-NC 4.0)' }, null, 1)}\n`);
 run.finish(summary);
 await env.destroy();

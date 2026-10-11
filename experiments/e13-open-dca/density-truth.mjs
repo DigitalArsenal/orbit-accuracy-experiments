@@ -69,13 +69,23 @@ export async function jb2008At(env, day, indices, { correction = null, derivativ
   return r;
 }
 
+// NRLMSISE-00 densities at the points of a day's valid samples (analysis/density-calibration 0.4.0 `evaluate`, atmosphere NRLMSISE00): the common reference of
+// PLAN.md Amendment S3. `rowsFor(fromMs, toMs)`: SPW rows (CSSI layout) of the days.
+export async function nrlmsise00At(env, day, indices, rowsFor) {
+  const t0 = day.t[indices[0]];
+  const rows = rowsFor(t0 - 3 * DAY, t0 + 2 * DAY).map((r) => ({ DATE: r.DATE, F107_OBS: r.F107_OBS, F107_OBS_CENTER81: r.F107_OBS_CENTER81, AP_AVG: r.AP_AVG }));
+  return env.dc.invokeJson('evaluate', [json('request', {
+    points: { mjd: indices.map((k) => day.t[k] / DAY + 40587), latDeg: indices.map((k) => day.lat[k]), lonDeg: indices.map((k) => day.lon[k]), altKm: indices.map((k) => day.altKm[k]) },
+    atmosphere: 'NRLMSISE00', nrlmsise00: { rows } })], 'result');
+}
+
 // The 12 h windows of one UTC day: [{startMs, n, x, altKm}] (x null when fewer than the required share of the window's nominal
-// samples are valid and have a JB2008 density).
-export async function windowsOfDay(env, key, dayIso) {
+// samples are valid and have a model density). The model is JB2008 with SET's indices, or, with `reference: {rowsFor}`, NRLMSISE-00 (Amendment S3).
+export async function windowsOfDay(env, key, dayIso, { reference = null } = {}) {
   const day = productDay(key, dayIso);
   if (!day) return { windows: [], file: null };
   const valid = day.t.map((_, k) => k).filter((k) => day.valid[k]);
-  const r = valid.length ? await jb2008At(env, day, valid) : { density: [] };
+  const r = valid.length ? (reference ? await nrlmsise00At(env, day, valid, reference.rowsFor) : await jb2008At(env, day, valid)) : { density: [] };
   const model = new Map(valid.map((k, n) => [k, r.density[n]]));
   const start = dayStartMs(dayIso), nominal = WINDOW_MS / SAMPLE_MS, windows = [];
   for (let w = 0; w < DAY / WINDOW_MS; ++w) {

@@ -16,7 +16,7 @@ const out = path.join(repoRoot, 'data/e13');
 // The licence source of each input file (data/licenses.json ids; null: this repository's own runs and code).
 function sourceOf(family, file) {
   switch (family) {
-    case 'planet': return 'planet';
+    case 'planet': case 'planet-live': return 'planet';
     case 'set': return 'set-jb2008';
     case 'gfz': return 'gfz-kp';
     case 'eop': return 'iers';
