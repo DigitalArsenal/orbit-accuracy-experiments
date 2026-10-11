@@ -189,6 +189,14 @@ for (const r of regimes) {
   for (const x of rows_.filter((x) => x.method === 'AOE-latest' || x.method === 'ST-latest')) L.push(`| ${x.method} | ${x.h} d | ${x.clippedRmsRtnKm.map(km).join(' / ')} | ${x.squaredErrorShareRtn.map(pct).join(' / ')} |`);
   L.push('');
 }
+L.push('## Notes on the methods and the truth', '',
+  '- AOE-latest is the newest AOE set whose `ctime` and epoch are at or before T and that one of our daily snapshots holds (PLAN.md amendments A1, A5). ST-latest is the newest Space-Track set created and with its epoch at or before T (E3).',
+  '- SupGP-latest (CelesTrak supplemental GP, our collector archive, 2026-10-10 to 10-15) is reported beside both, never selected or fused. Its sets are fitted to the operators\' own ephemerides, the files the truth comes from in LEO-SL, LEO-PL, GEO and CSS, so it is not independent of the truth there.',
+  '- Truth: LEO-SL is the first hour of a SpaceX version published by the target; LEO-PL, CSS and GEO are the operators\' current files (GEO and CSS are operator predictions over days, not fresh orbit determinations); LEO-SP is the receiver orbit in EUMETSAT\'s RO files; GNSS, LEO-POD and SLR are precise orbits. The ISS is left out (amendment A6).',
+  '- SEL ranks the two methods by train median for each regime and horizon (at least 30 samples, else ST-latest). FUS fuses them only where L2 holds; elsewhere FUS is SEL.', '');
+L.push('## AOE availability at the issue time', '', '| Regime | Issue | Horizon | AOE-latest | ST-latest | Both | AOE-latest not yet retrieved by our snapshot at T |', '| --- | --- | ---: | ---: | ---: | ---: | ---: |');
+for (const a of Object.values(availability).sort((x, y) => x.regime.localeCompare(y.regime) || x.issue.localeCompare(y.issue) || x.h - y.h)) L.push(`| ${a.regime} | ${a.issue} | ${a.h} d | ${a.AOE} | ${a.ST} | ${a.both} | ${a.aoeNotRetrievedByT} |`);
+L.push('');
 L.push('## Coverage of the scored regimes', '', '| Regime | Truth objects | Both catalogs | AOE only | ST only | Neither |', '| --- | ---: | ---: | ---: | ---: | ---: |');
 for (const [r, c] of Object.entries(coverageOut)) L.push(`| ${r} | ${c.truthObjects} | ${c.both} | ${c.aoeOnly} | ${c.stOnly} | ${c.neither} |`);
 for (const [r, c] of Object.entries(coverageOut).filter(([, c]) => c.population)) {
