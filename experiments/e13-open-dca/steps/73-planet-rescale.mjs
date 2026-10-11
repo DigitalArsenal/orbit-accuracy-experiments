@@ -20,7 +20,7 @@ import { COMMON_REFERENCE_MODULES, dragWorkRatio, gfzDefinitiveRows, gfzSha256, 
 import { arcsOf, readPlanetSeries } from '../planet-history.mjs';
 import { assertWindowReadable } from '../windows.mjs';
 
-const { values } = parseArgs({ options: { split: { type: 'string' }, sample: { type: 'string' }, all: { type: 'boolean', default: false }, group: { type: 'string', default: 'calibration,heldOut' }, shard: { type: 'string', default: '0/1' }, profile: { type: 'string' }, out: { type: 'string' } } });
+const { values } = parseArgs({ options: { split: { type: 'string' }, sample: { type: 'string' }, all: { type: 'boolean', default: false }, group: { type: 'string', default: 'calibration,heldOut' }, 'trajectory-profile': { type: 'string' }, 'step-seconds': { type: 'string', default: '60' }, shard: { type: 'string', default: '0/1' }, profile: { type: 'string' }, out: { type: 'string' } } });
 if (!values.sample === !values.all) throw new Error('--sample N or --all');
 useCommonReferenceModules();
 const { openArcEnv } = await import('../arcs.mjs');
@@ -51,7 +51,9 @@ const outFile = path.join(paths.planetArcs, `${values.split}-${profile}.msis.jso
 const done = new Set(values.all && fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.hwid}|${r.ttA}`; }) : []);
 log(`split ${values.split}: ${arcRows.length} valid arcs, ${chosen.length} chosen${values.all ? ` (shard ${shard}/${shards}, ${chosen.filter((r) => !done.has(`${r.hwid}|${r.ttA}`)).length} left)` : ' for the sample test'}; common reference modules ${COMMON_REFERENCE_MODULES}`);
 
-const jEnv = await openArcEnv({ profile });
+// The trajectory only carries the integrals: a coarser force profile and sampling give the same ratio (Amendment S6 validates it against the direct fits); the sample test keeps the arc's own profile.
+const trajectoryProfile = values['trajectory-profile'] ?? profile, stepSeconds = Number(values['step-seconds']);
+const jEnv = await openArcEnv({ profile: trajectoryProfile });
 const nEnv = values.sample ? await openArcEnv({ profile, atmosphere: 'NRLMSISE00', spaceWeather: gfzDefinitiveRows }) : null;
 for (const [family, files] of Object.entries(jEnv.inputs)) run.addInputs(family, files);
 const energyModule = jEnv.modules['analysis/density-calibration'];
@@ -69,9 +71,9 @@ for (const r of chosen) {
     const [A, B] = await Promise.all([jEnv.toUtcGcrf(states[i]), jEnv.toUtcGcrf(states[i + 1])]);
     const cr = r.crAreaOverMass ?? P.arc.crAreaOverMass;
     const rowsN = gfzDefinitiveRows(A.ms - 8 * DAY, B.ms + 2 * DAY);
-    const w = await dragWorkRatio(jEnv, A, B.ms, r.cdAreaOverMass, cr, rowsN);
+    const w = await dragWorkRatio(jEnv, A, B.ms, r.cdAreaOverMass, cr, rowsN, { stepSeconds });
     const row = { hwid: r.hwid, ttA: r.ttA, ttB: r.ttB, utcA: r.utcA, hours: r.hours, cdAreaOverMassJ: r.cdAreaOverMass, workJ: w.workJ, workN: w.workN, lnRatio: Math.log(w.ratio), cdAreaOverMassN: r.cdAreaOverMass * w.ratio,
-      sigmaLnB: r.sigmaB / r.cdAreaOverMass, altitudeKm: r.altitudeKm, profile, crAreaOverMass: cr, atmosphere: 'NRLMSISE00', samples: w.samples };
+      sigmaLnB: r.sigmaB / r.cdAreaOverMass, altitudeKm: r.altitudeKm, profile, trajectoryProfile, stepSeconds, crAreaOverMass: cr, atmosphere: 'NRLMSISE00', samples: w.samples };
     if (values.sample) {
       const direct = await nEnv.energyArc(A, B, { b0: r.cdAreaOverMass, cr, sigma: P.arc.sigma, tolerance: 1e-5, maxIterations: 8 });
       row.directB = direct.B; row.directSigmaLnB = direct.sigmaB / direct.B; row.directIterations = direct.iterations; row.directEnergyMismatchJkg = direct.energyMismatchJkg;
