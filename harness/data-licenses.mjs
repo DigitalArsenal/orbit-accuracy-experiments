@@ -114,7 +114,7 @@ export function renderDocs() {
   // Credits by experiment: what results, reports and papers built on each
   // experiment must carry (ESA, Copernicus and Space-Track require it for
   // published analysis; the others ask for it).
-  const experiments = ['V1', 'E1', 'E2', 'E2b', 'E3', 'E4', 'E5', 'E6', 'E7', 'E10'];
+  const experiments = ['V1', 'E1', 'E2', 'E2b', 'E3', 'E4', 'E5', 'E6', 'E7', 'E10', 'E16'];
   L.push('## Credits by experiment', '', 'The credit lines that results, reports and papers built on each experiment carry, whatever is reproduced.', '');
   for (const e of experiments) {
     const used = registry.sources.filter((s) => usedBy(s, e));

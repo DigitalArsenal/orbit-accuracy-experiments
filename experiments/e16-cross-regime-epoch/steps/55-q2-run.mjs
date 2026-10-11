@@ -9,20 +9,22 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { startRun } from '../../../harness/provenance.mjs';
 import { targetAxes } from '../../e7-full-force-handoff/methods.mjs';
-import { geometry } from '../../e1-gps-epoch/geometry.mjs';
 import { DAY_MS, HOUR_MS, SELECTION_FILE, cli, config, configPath, modulesRoot, readJson, repoRoot, resultsDir, sha256, throttle, windowSpan } from '../common.mjs';
 import { truthFor } from '../truth.mjs';
 import { windowSets } from '../sets.mjs';
-import { orbitCovariates, weatherCovariates } from '../covariates.mjs';
-import { Fleet, correctionOf, fleetSample, clipKept, loadSamples } from '../q1lib.mjs';
+import { clipKept, loadSamples } from '../q1lib.mjs';
+import { makeCorrector } from '../corrector.mjs';
 import { e13Correction, q2Context } from '../env.mjs';
 import { Q2Object, arcProduct, e2bRho, rho, sgp4Product } from '../q2lib.mjs';
 
-const { values, window, locks } = cli({ shard: { type: 'string', default: '0/1' }, limit: { type: 'string' }, objectsOnly: { type: 'string' } });
+const { values, window, locks } = cli({ shard: { type: 'string', default: '0/1' }, limit: { type: 'string' }, objectsOnly: { type: 'string' }, resume: { type: 'string' } });
 if (window === 'train') throw new Error('step 55 runs validation or test');
 const test = window === 'test';
 const [shard, shards] = values.shard.split('/').map(Number);
-const run = startRun({ experiment: config.experiment, step: `55-q2-run-${window}-s${shard}of${shards}${values.limit ? '-limit' : ''}`, configPath, modulesDir: modulesRoot(), args: { window, shard: values.shard, limit: values.limit ?? null } });
+const run = startRun({ experiment: config.experiment, step: `55-q2-run-${window}-s${shard}of${shards}${values.limit ? '-limit' : ''}`, configPath, modulesDir: modulesRoot(), args: { window, shard: values.shard, limit: values.limit ?? null }, resume: values.resume });
+// Each finished sample is appended at once (a stopped run keeps its samples; --resume <run> continues it).
+const partial = path.join(run.dir, 'q2.jsonl');
+const doneKeys = new Set(fs.existsSync(partial) ? fs.readFileSync(partial, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.norad}|${r.scheduledMs}`; }) : []);
 if (locks) run.manifest.locks = locks;
 const log = (m) => console.log(`${new Date().toISOString().slice(11, 19)} [q2 ${window} ${values.shard}] ${m}`);
 const P = config.q2;
@@ -53,31 +55,13 @@ const e13 = test ? await e13Correction(ctx, run) : null;
 const e2b = test ? readJson(path.join(repoRoot, config.inputs.e2bCorrelation)) : null;
 if (e2b) run.addInputs('e2b', { 'correlation-model.json': sha256(fs.readFileSync(path.join(repoRoot, config.inputs.e2bCorrelation))) });
 
-// Q1 corrections for S-corr and A-corr (test): M* of the tier O fold that holds the object out; its covariates.
-let q1 = null;
+// Q1 corrections for S-corr and A-corr (test): M* of the tier O fold that holds the object out (corrector.mjs).
+let corrector = null;
 if (test) {
   const models = readJson(path.join(resultsDir, 'selection', 'q1-models.json')).LEO;
   const prevRows = loadSamples('validation', ['LEO-PL', 'LEO-POD', 'SLR-LEO']).rows, rows = loadSamples('test', ['LEO-PL', 'LEO-POD', 'SLR-LEO']).rows;
   const kept = new Set([...clipKept(prevRows).kept, ...clipKept(rows).kept]);
-  q1 = { models, fleetRows: [...prevRows, ...rows].filter((r) => kept.has(r.gpId) && r.errors[0]), weatherCache: new Map(),
-    spw: { gfz: ctx.gfz, rsga: ctx.rsga } };
-}
-async function correctionsFor(o, list) {
-  const fold = meta.get(o.norad).tiers.O;
-  const model = q1.models.tiers[`O:${fold}`];
-  const fleet = new Fleet(q1.fleetRows.filter((r) => meta.get(r.norad)?.tiers.O !== fold).map(fleetSample));
-  const geo = await geometry(ctx.frames, ctx['epoch-state'], list);
-  const out = new Map();
-  list.forEach((s, k) => {
-    const i = o.sets.indexOf(s);
-    const W = weatherCovariates(s, q1.spw, q1.weatherCache);
-    if (!W) return;
-    const row = { norad: o.norad, createdMs: s.createdMs, meanMotion: s.elements.MEAN_MOTION, G: geo[k], O: orbitCovariates(o.sets, i), W };
-    const spec = q1.models.spec;
-    row.fleet = spec.family === 'C2' || spec.family === 'C3' ? fleet.value(row, spec.L, spec.dn, config.q1.groups.LEO.families.C2.minimumContributors) : null;
-    out.set(s.gpId, correctionOf({ candidate: spec, standardizer: model.standardizer, fit: model.fit }, row, q1.models.scales));
-  });
-  return out;
+  corrector = makeCorrector({ ctx, models, fleetRows: [...prevRows, ...rows].filter((r) => kept.has(r.gpId) && r.errors[0]), meta, spw: { gfz: ctx.gfz, rsga: ctx.rsga } });
 }
 
 // Products of a class: validation candidates, or the test products with the selected choices.
@@ -99,7 +83,6 @@ const [from, to] = windowSpan(window, 'LEO-POD');
 const lo = Date.parse(`${from}T00:00:00Z`), hi = Date.parse(`${to}T00:00:00Z`);
 const stride = test ? selection.q2.testStrideDays : P.validationStrideDays;
 const half = config.scoring.planetDayBinHalfWidthHours * HOUR_MS;
-const rowsOut = [];
 let done = 0;
 const limit = values.limit ? Number(values.limit) : Infinity;
 for (const norad of objects) {
@@ -121,6 +104,7 @@ for (const norad of objects) {
     for (let i = 0; i < mine.length && mine[i].epochMs <= t; ++i) if (mine[i].createdMs <= t) k = i;
     if (k < 0 || t - mine[k].epochMs > P.sampleMaxAgeDays * DAY_MS) continue;
     const set = mine[k];
+    if (doneKeys.has(`${norad}|${t}`)) { ++done; continue; }
     const targets = P.horizonsHours.map((h) => {
       const at = set.epochMs + h * HOUR_MS;
       const s = cls === 'LEO-PL'
@@ -134,7 +118,7 @@ for (const norad of objects) {
     const out = { S: await sgp4Product(ctx, truth, set, targets) };
     let corrections = null;
     if (test) {
-      corrections = await correctionsFor(o, mine.filter((s) => s.createdMs <= sample.cutoffMs && s.epochMs > sample.epochMs - (maxSpanDays + 1) * DAY_MS && s.epochMs <= sample.epochMs));
+      corrections = await corrector(norad, mine, mine.filter((s) => s.createdMs <= sample.cutoffMs && s.epochMs > sample.epochMs - (maxSpanDays + 1) * DAY_MS && s.epochMs <= sample.epochMs));
       out['S-corr'] = corrections.has(set.gpId) ? await sgp4Product(ctx, truth, set, targets, corrections.get(set.gpId)) : { failure: 'no covariates for the correction' };
     }
     let a00 = null;
@@ -151,14 +135,17 @@ for (const norad of objects) {
       out[p.id] = await arcProduct(o, sample, spec, { W: weights, rhoOf, agom, maxSpanDays });
       if (p.e13 && out[p.id].info) out[p.id].info.e13 = a00.info;
     }
-    rowsOut.push({ ...sample, targets: targets.map(({ h, ms, missing }) => ({ h, ms: ms ?? null, missing: !!missing })), products: Object.fromEntries(Object.entries(out).map(([id, r]) => [id, { errors: r.errors ?? null, d2: r.d2 ?? null, failure: r.failure ?? null, info: r.info ?? null }])) });
+    const row = { ...sample, targets: targets.map(({ h, ms, missing }) => ({ h, ms: ms ?? null, missing: !!missing })), products: Object.fromEntries(Object.entries(out).map(([id, r]) => [id, { errors: r.errors ?? null, d2: r.d2 ?? null, failure: r.failure ?? null, info: r.info ?? null }])) };
+    fs.appendFileSync(partial, `${JSON.stringify(row)}\n`);
+    run.checkpoint();
     ++done;
     log(`${norad} ${new Date(t).toISOString().slice(0, 10)}: ${Object.entries(out).map(([id, r]) => `${id}${r.failure ? ' FAILED' : ''}`).join(', ')}`);
   }
   truth.dropCache();
   if (done >= limit) break;
 }
-const file = run.write('q2.jsonl.gz', zlib.gzipSync(rowsOut.map((r) => JSON.stringify(r)).join('\n')));
-run.finish({ window, shard: values.shard, samples: rowsOut.length, output: path.relative(repoRoot, file) });
-log(`done: ${rowsOut.length} samples`);
+const lines = fs.existsSync(partial) ? fs.readFileSync(partial, 'utf8').split('\n').filter(Boolean) : [];
+const file = run.write('q2.jsonl.gz', zlib.gzipSync(lines.join('\n')));
+run.finish({ window, shard: values.shard, samples: lines.length, output: path.relative(repoRoot, file) });
+log(`done: ${lines.length} samples`);
 await ctx.destroy();

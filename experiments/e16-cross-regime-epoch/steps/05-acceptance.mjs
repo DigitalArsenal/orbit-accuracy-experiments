@@ -144,7 +144,8 @@ if (values.part === 'q2') {
   const truth = await truthFor('LEO-POD', {});
   const o = new Q2Object({ ctx, norad: swarm, cls: 'LEO-POD', sets: mine, truth });
   const W = q2train.classes['LEO-POD'].weights.secondMomentRtn;
-  const k = mine.findIndex((s) => s.epochMs > Date.parse(`${config.windows.train[0]}T00:00:00Z`) + 40 * DAY_MS);
+  // The first set after day 40 of the train window with at least 5 sets in the 2 days before it (a normal arc).
+  const k = mine.findIndex((s, i) => s.epochMs > Date.parse(`${config.windows.train[0]}T00:00:00Z`) + 40 * DAY_MS && mine.filter((x) => x.epochMs > s.epochMs - 2 * DAY_MS && x.epochMs <= s.epochMs && x.createdMs <= s.createdMs).length >= 5);
   const set = mine[k];
   const horizons = config.q2.horizonsHours;
   const targets = horizons.map((h) => { const s = truth.firstAtOrAfter(swarm, set.epochMs + h * HOUR_MS, 900e3); return s ? { h, ms: s.ms, epoch: s.epoch, r: s.r, v: s.v, file: s.entry.file } : { h, missing: true }; });
@@ -158,6 +159,8 @@ if (values.part === 'q2') {
   const jb0 = await arcProduct(o, sample, { spanDays: 2, bdot: false, weighting: 'diagonal', atmosphere: 'JB2008', a00: () => 0 }, opts);
   const wls = await arcProduct(o, sample, { spanDays: 2, bdot: false, weighting: 'diagonal', atmosphere: 'NRLMSISE00' }, opts);
   const gls0 = await arcProduct(o, sample, { spanDays: 2, bdot: false, weighting: 'gls', atmosphere: 'NRLMSISE00' }, opts);
+  log(`A5 products: ${[jb, jb0, wls, gls0].map((x) => x.failure ?? 'ok').join(' | ')}`);
+  if ([jb, jb0, wls, gls0].some((x) => !x.errors)) throw new Error('an A5 product failed');
   const same = JSON.stringify(jb.errors) === JSON.stringify(jb0.errors);
   const worstGls = Math.max(...wls.errors.flatMap((e, i) => (e && gls0.errors[i] ? e.map((x, a) => Math.abs(x - gls0.errors[i][a])) : [])));
   out.checks.A5 = { e13ZeroIdentical: same, glsZeroCorrelationWorstMetres: worstGls, failures: [jb.failure, jb0.failure, wls.failure, gls0.failure].filter(Boolean), pass: same && worstGls < 1e-3 && !jb.failure && !wls.failure };
