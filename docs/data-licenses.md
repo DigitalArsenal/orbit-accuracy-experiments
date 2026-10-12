@@ -68,7 +68,6 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [Eutelsat OneWeb ephemerides (LTEF)](#oneweb) | No licence found | No: cited only | Eutelsat OneWeb, https://ephemeris.oneweb.net/. | Not used on main (no LTEF reader); space-data-network-modules tests | modules: data-source/oneweb-source/test/fixtures/ltef.sample.csv (5 rows, committed before this audit) |
 | [JSC Vimpel public orbit data](#vimpel) | User agreement for registered users; no public licence | No: cited only | JSC Vimpel, http://spacedata.vimpel.ru/. | E3 (coverage count only: none of its rows names a truth object) | cited only |
 | [SpaceMapper AOE catalog and orbital database](#spacemapper-aoe) | No licence stated | No: cited only | SpaceMapper, https://spacemapper.cn/. | E15 (AOE lineage beside Space-Track), the catalog paper section 4; modules data-source/spacemapper-aoe-source | cited only |
-| [COMSPOC Spacebook SGP4-XP element sets and SynCoPate covariance ephemerides](#comspoc-spacebook) | COMSPOC Corp. Terms of Use (effective 1 December 2021, last updated 13 May 2026) | No: cited only | COMSPOC Spacebook, https://spacebook.com/. | E17 (free full-catalog SGP4-XP and synthetic covariance against public GP) | cited only |
 | [OR-Library assignment problems](#or-library) | No licence stated | No: cited only | Beasley, J. E. (1990), OR-Library: distributing test problems by electronic mail, J. Oper. Res. Soc. 41, 1069–1072. | space-data-network-modules tests only | modules: analysis/association/tests/fixtures/or-library/ (assign100, assign200, assignopt, assignp800; committed before this audit) |
 | [CCSDS Blue Book example messages](#ccsds) | No reproduction statement in the Blue Books | No: cited only | CCSDS Blue Books 503.0-B-2 (TDM) and 504.0-B-2 (ADM), annex examples. | space-data-network-modules tests only | modules: files/ccsds-messages/fixtures/ccsds-50{3,4}.0-B-2-figure-*.txt (5 excerpts) |
 | [Orekit test resources and reference outputs (and orekit-data)](#orekit) | Apache-2.0 (Orekit); files in orekit-data keep their upstream terms (IERS, CSSI/CelesTrak, SET) | Yes, with attribution | Orekit (CS GROUP), Apache-2.0, https://www.orekit.org. | The site's verification (63 HPOP-against-Orekit cases) and OCM example; space-data-network-modules tests | site (gh-pages): data/orekit/orekit-reference.json, cases.json, data/ocm/ (OCM example from Orekit's test resources); modules: propagator/hpop/tests/fixtures/orekit/orekit-reference.json, files/orbit-products/fixtures/stk_02674_*.e, analysis/*/vectors and fixtures with Orekit values (no LICENSE or NOTICE copy) |
@@ -1222,28 +1221,6 @@ Reproduced at: nowhere; cited only.
 
 How to obtain: https://spacemapper.cn/ public pages; archived daily for local use under /opt/data/sdn-archive/hac/spacemapper-aoe
 
-### COMSPOC Spacebook SGP4-XP element sets and SynCoPate covariance ephemerides
-
-<a id="comspoc-spacebook"></a>Provider: COMSPOC Corporation (spacebook.com). Licence or terms: COMSPOC Corp. Terms of Use (effective 1 December 2021, last updated 13 May 2026).
-
-- [COMSPOC Corp. Terms of Use](https://www.comspoc.com/legal/terms-of-use) (fetched 2026-10-12)
-
-Redistribution: "You acknowledge and agree that the COMSPOC Websites and Content may not be (i) used for Your commercial use, (ii) produced or copied in any form or by any means or translated into another language without the prior written consent of COMSPOC, (iii) distributed to non-licensed users, (iv) disassembled, decompiled, reverse-engineered, copied, translated, or used to make derivative works"
-
-Attribution: "null"
-
-Conditions: The terms also exclude commercial use. Whether published aggregate accuracy results are within them is an open item.
-
-**Reproduce: No: cited only.** The terms forbid copying, redistribution and derivative works: element sets and ephemerides are computed on locally and cited, never copied into this repository.
-
-Credit line: COMSPOC Spacebook, https://spacebook.com/.
-
-Used in: E17 (free full-catalog SGP4-XP and synthetic covariance against public GP).
-
-Reproduced at: nowhere; cited only.
-
-How to obtain: https://spacebook.com/api/Entity/xp-tle (anonymous, current only) and /api/Entity/synthetic-covariance/<Spacebook id>; archived daily for local use under /opt/data/sdn-archive/hac/comspoc-spacebook
-
 ### OR-Library assignment problems
 
 <a id="or-library"></a>Provider: J. E. Beasley, OR-Library (Brunel University). Licence or terms: No licence stated.
@@ -1448,4 +1425,3 @@ Reproductions made before this audit that the terms do not cover, and credits st
 - The site's `propagator/hpop` module binary compiles in the HWM14 winds data, whose terms are unconfirmed ([HWM14](#hwm14)); the binary is published by the owner's decision of 2026-10-08, and its provenance label says so. A build without HWM14 needs a module change.
 - space-data-network-modules: rows marked "modules:" above whose decision is *No* (Intelsat, OneWeb, CelesTrak SupGP and SOCRATES, SET, IAC GLONASS, OR-Library, McCants, ComReg, IQEngine, CSpOC CDM, HWM14, CCSDS figures, ESA/ESOC GNSS finals) and the Space-Track element sets and tables there that lack the citation.
 - E8 (2026-10-10) reads three truth sources not assessed here, cited only until they are: IDS/CNES DORIS SSALTO POE (CryoSat-2, SARAL, SWOT, Sentinel-3A; no licence text found on ids-doris.org), GFZ ISDC Rapid Science Orbits (GRACE-FO; no licence text found on isdc.gfz.de) and UCAR COSMIC-2 leoOrb (COSMIC-2 FM5, FM6; © UCAR, doi:10.5065/T353-C093). It also ran DESTOPy (MIT, Copyright (c) 2023 Peng Mun Siew) and reproduces its changes with the licence in results/e8/destopy. Assessed and registered 2026-10-11 (E16): [IDS/CNES DORIS](#ids-doris) has no published licence (cited only), [GFZ ISDC RSO](#gfz-isdc-rso) is CC BY-NC 4.0, [UCAR COSMIC-2](#ucar-cosmic2) is CC BY 4.0 through UCAR's data-repository terms; E8's steps/95-sources.mjs table of unregistered sources predates this.
-- COMSPOC Spacebook (E17): the terms forbid commercial use and copying "in any form" without COMSPOC's written consent. The daily archive and the scoring stay local; publishing E17's aggregate results waits on the owner's ruling or COMSPOC's consent.
