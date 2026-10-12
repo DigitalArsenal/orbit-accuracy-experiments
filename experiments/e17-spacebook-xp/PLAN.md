@@ -1,9 +1,11 @@
 # E17 — A free full-catalog SGP4-XP product and its synthetic covariance against public GP, scored prospectively
 
-Pre-registration. Status: **draft**. The freeze is the commit that sets `"frozen": true` in [`config.json`](config.json),
-before any capture is scored. Captures run daily from 2026-10-12 (stack `deployment/spacetrack-archive/spacebook-archive.mjs`).
+Pre-registration. Status: **frozen** by the commit that sets `"frozen": true` in [`config.json`](config.json)
+(2026-10-12), before any capture is scored. [`score.mjs`](score.mjs) refuses to compare with truth unless the plan is frozen;
+its `--check` mode, run before the freeze, parsed the first capture and propagated one object in each arm. `propagator/sgp4-xp`
+0.1.0 is pinned by its WASM SHA-256 in `config.json`. Captures run daily from 2026-10-12 (stack `deployment/spacetrack-archive/spacebook-archive.mjs`).
 
-**Read before the freeze**: the first capture's counts (element sets, ephemerides, truth files) and file headers. **No
+**Read before the freeze**: the first capture's counts (29,701 XP sets; 91 SynCoPate ephemerides; 40 Starlink files and the ISS OEM) and file headers; that GP sets created before the request exist for all 41 position targets. **No
 Spacebook element set or ephemeris is compared with any truth before the freeze.**
 
 ## 1. Question

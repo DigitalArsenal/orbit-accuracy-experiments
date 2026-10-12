@@ -1,7 +1,15 @@
 {
  "experiment": "e17-spacebook-xp",
- "frozen": false,
+ "frozen": true,
  "plan": "PLAN.md",
+ "modulesBinary": {
+  "repository": "space-data-network-modules",
+  "commit": "a53c8210",
+  "wasmSha256": {
+   "propagator/sgp4-xp": "c92ac99248e835edf479b1aa307d161487fff72c1c6b7be1a315b9ad74ca80c3"
+  }
+ },
+ "scorer": "score.mjs",
  "captures": {
   "first": "2026-10-12",
   "last": "2026-10-25",
@@ -15,8 +23,37 @@
    "/opt/data/sdn-archive/reference-states/reference"
   ]
  },
- "horizonBinsHours": [[0, 6], [21, 27], [69, 75], [165, 171]],
- "bootstrap": { "resamples": 10000, "unit": "object" },
+ "horizonBinsHours": [
+  [
+   0,
+   6
+  ],
+  [
+   21,
+   27
+  ],
+  [
+   69,
+   75
+  ],
+  [
+   165,
+   171
+  ]
+ ],
+ "bootstrap": {
+  "resamples": 10000,
+  "unit": "object"
+ },
  "minimumSamplesPerClass": 20,
- "realismRule": { "meanD2Over3": [0.5, 2], "coverage95": [0.9, 0.98] }
+ "realismRule": {
+  "meanD2Over3": [
+   0.5,
+   2
+  ],
+  "coverage95": [
+   0.9,
+   0.98
+  ]
+ }
 }
