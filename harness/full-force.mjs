@@ -27,11 +27,15 @@ function encode(arm, value, size = 1 << 16) {
 
 // request: {epoch (ISO UTC), state [m, m/s] GCRF, samples [ISO UTC],
 //   forces {degree, order, thirdBodies [NAIF ids], srp, drag, atmosphere ('JB2008' | 'NRLMSISE00' | ...),
-//     solidTides (bool, IERS 2010), relativity ('IERS_2010' | 'SCHWARZSCHILD' | undefined)},
-//   coefficients {b: Cd*A/m, agom: Cr*A/m (m^2/kg, cannonball), boxWing {block ('GPS_IIR' |
+//     solidTides (bool, IERS 2010), relativity ('IERS_2010' | 'SCHWARZSCHILD' | undefined),
+//     earthRadiation {model ('KNOCKE'), resolutionDeg} | undefined (albedo and infrared on the cannonball's Cr*A/m),
+//     oceanTides {model ('FES2004'), degree, order} | undefined},
+//   coefficients {b: Cd*A/m, bdot: d(Cd*A/m)/dt (m^2/kg/s, B growing linearly from the initial epoch) | undefined,
+//     agom: Cr*A/m (m^2/kg, cannonball), boxWing {block ('GPS_IIR' |
 //     'GPS_IIR_M' | 'GPS_IIF'), massKg} (the GNSS box-wing a priori in place of the cannonball),
 //     ecom2 {D0, Y0, B0, D2_COS, ..., B3_SIN} (m/s^2, added to the a priori),
 //     inTrack (m/s^2, a constant acceleration along T of RTN)},
+// The optional forces and bdot default to absent, so a request without them encodes to the same bytes as before.
 //   parameters [{kind}] solved for (their values come from coefficients), stm (bool),
 //   covariance [(6 + p)^2] (SI, GCRF, over the state and the parameters) | null,
 //   noise {q [3] m^2/s^3 RTN, intervalSeconds} | null (white-acceleration process noise; six-state covariance),
@@ -58,6 +62,10 @@ export function executionFrame(request) {
     SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
     RELATIVITY: f.relativity ? P.prwRelativityTerms[f.relativity] : P.prwRelativityTerms.NONE,
   });
+  // Optional terms, set only when asked for: unset fields keep the schema defaults and are not written.
+  if (f.drag && c.bdot !== undefined) Object.assign(forces, { DRAG_AREA_OVER_MASS_RATE_M2_KG_S: c.bdot, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: true });
+  if (f.earthRadiation) Object.assign(forces, { EARTH_RADIATION: P.prwEarthRadiationModel[f.earthRadiation.model ?? 'KNOCKE'], EARTH_RADIATION_RESOLUTION_DEG: f.earthRadiation.resolutionDeg });
+  if (f.oceanTides) Object.assign(forces, { OCEAN_TIDES: P.prwOceanTideModel[f.oceanTides.model ?? 'FES2004'], OCEAN_TIDE_MAXIMUM_DEGREE: f.oceanTides.degree, OCEAN_TIDE_MAXIMUM_ORDER: f.oceanTides.order });
   const execution = table('PRWExecutionRequest', {
     INITIAL: table('PRWResidentState', {
       STATE: table('FRMStateVector', {
@@ -140,6 +148,15 @@ export function jb2008Rows(set, fromMs, toMs) {
     if (!set.sol.has(date) || !set.dtc.has(date)) throw new Error(`no SOLFSMY or DTCFILE row for ${date}`);
     rows.push({ DATE: date, ...set.sol.get(date), DTC_HOURLY_K: [...set.dtc.get(date)] });
   }
+  return rows;
+}
+
+// JB2008 rows with a temperature offset a00(t) [K] added to the hourly DTC values, hour h of a day taking a00 at
+// that hour's start: the DCA form of E5's D2, E8's D5 and E13's D13 (analysis/density-calibration, "Correction =
+// DTC offset"). a00 null: the rows as published.
+export function jb2008RowsWithOffset(set, fromMs, toMs, a00) {
+  const rows = jb2008Rows(set, fromMs, toMs);
+  if (a00) for (const row of rows) { const day0 = Date.parse(`${row.DATE}T00:00:00Z`); row.DTC_HOURLY_K = row.DTC_HOURLY_K.map((v, h) => v + a00(day0 + h * 3600e3)); }
   return rows;
 }
 

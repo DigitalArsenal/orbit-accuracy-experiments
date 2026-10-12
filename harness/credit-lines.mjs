@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { creditsFor, repoRoot, source } from './data-licenses.mjs';
 
 const REQUIRED = ['esa-earth-observation', 'esa-navigation-office', 'esa-navigation-office-pod', 'copernicus-sentinel', 'space-track'];
-const EXPERIMENT = { v1: 'V1', e1: 'E1', e2: 'E2', e2b: 'E2b', e3: 'E3', e4: 'E4', e5: 'E5', e6: 'E6', e7: 'E7', e10: 'E10' };
+const EXPERIMENT = { v1: 'V1', e1: 'E1', e2: 'E2', e2b: 'E2b', e3: 'E3', e4: 'E4', e5: 'E5', e6: 'E6', e7: 'E7', e10: 'E10', e16: 'E16' };
 const BEGIN = '<!-- credits:begin (harness/credit-lines.mjs) -->', END = '<!-- credits:end -->';
 
 export function creditSection(experiment, docs = 'docs/data-licenses.md') {

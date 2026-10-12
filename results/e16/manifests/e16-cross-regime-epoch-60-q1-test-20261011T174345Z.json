@@ -1,0 +1,97 @@
+{
+ "run": "e16-cross-regime-epoch-60-q1-test-20261011T174345Z",
+ "experiment": "e16-cross-regime-epoch",
+ "step": "60-q1-test",
+ "command": [
+  "node",
+  "experiments/e16-cross-regime-epoch/steps/60-q1-test.mjs",
+  "--window",
+  "test",
+  "--workers",
+  "10"
+ ],
+ "args": {
+  "window": "test"
+ },
+ "started": "2026-10-11T17:43:45.293Z",
+ "finished": "2026-10-11T17:44:31.748Z",
+ "config": {
+  "path": "experiments/e16-cross-regime-epoch/config.json",
+  "sha256": "67705fab95160e837e74d6b3cb682bbe9c89026887a760b1fedf0b8613cf6a6c",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "79f083b5639b3cb27262343527513e2c636fe599",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "e1e6577acb0e54eb7f68ba909bc109b7b2a7a77d",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   30.10302734375,
+   29.11572265625,
+   28.853515625
+  ]
+ },
+ "inputs": {
+  "selection": {
+   "selection.json": "249db4cc0ec914b4d2c5e39b34cdb31bfdfd0c82ddad48e8daca78a52ddf677e",
+   "results/e16/inventory.json": "9293650456c4b178f4ae01eedf4f64eba84f2ffdea81930dcee31c138dfc9eb1",
+   "results/e16/selection/q1.json": "250386a0a06bdefc9754b8688d288338e99f6214b7573b34a40ee0def50f19c2",
+   "results/e16/selection/q1-models.json": "5987f28ca6081bbf1810f32272c894406fdaf557e0f4532bbea9941013fa6a9d",
+   "results/e16/selection/q2-train.json": "605d47d337abb1e6325291807a1290c5eb5b7868fda28dd6de240ee6bafdc560"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-11T17:43:45.293Z",
+   "args": {
+    "window": "test"
+   }
+  }
+ ],
+ "locks": {
+  "freezeCommit": "833b2055707d945c363cd875b1b68cfbfc97dbcb",
+  "selectionCommit": "79f083b5639b3cb27262343527513e2c636fe599"
+ },
+ "sampleRuns": {
+  "test": [
+   "e16-cross-regime-epoch-20-epoch-samples-test-GNSS-s0of6-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-GNSS-s1of6-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-GNSS-s2of6-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-GNSS-s3of6-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-GNSS-s4of6-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-GNSS-s5of6-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-IGSO_GEO-s0of1-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-PL-s0of4-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-PL-s1of4-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-PL-s2of4-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-PL-s3of4-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-POD-s0of3-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-POD-s1of3-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-LEO-POD-s2of3-20261011T174259Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-SLR-LEO-s0of1-20261011T174210Z",
+   "e16-cross-regime-epoch-20-epoch-samples-test-SLR-MEO-s0of1-20261011T174030Z"
+  ],
+  "validationFleet": [
+   "e16-cross-regime-epoch-20-epoch-samples-validation-LEO-PL-s0of2-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-validation-LEO-PL-s1of2-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-validation-LEO-POD-s0of1-20261011T141948Z",
+   "e16-cross-regime-epoch-20-epoch-samples-validation-SLR-LEO-s0of1-20261011T141948Z"
+  ]
+ },
+ "samples": 31692,
+ "corrected": 31613,
+ "output": "runs/e16-cross-regime-epoch-60-q1-test-20261011T174345Z/q1-test.jsonl.gz"
+}

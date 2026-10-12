@@ -1,0 +1,70 @@
+{
+ "run": "e16-cross-regime-epoch-70-evaluate-20261011T174553Z",
+ "experiment": "e16-cross-regime-epoch",
+ "step": "70-evaluate",
+ "command": [
+  "node",
+  "experiments/e16-cross-regime-epoch/steps/70-evaluate.mjs",
+  "--window",
+  "test"
+ ],
+ "args": {
+  "window": "test"
+ },
+ "started": "2026-10-11T17:45:53.204Z",
+ "finished": "2026-10-11T17:46:44.490Z",
+ "config": {
+  "path": "experiments/e16-cross-regime-epoch/config.json",
+  "sha256": "67705fab95160e837e74d6b3cb682bbe9c89026887a760b1fedf0b8613cf6a6c",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "21e2e4817c977a187bfd345578225aeb8971d5c1",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "e1e6577acb0e54eb7f68ba909bc109b7b2a7a77d",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   37.65234375,
+   31.59716796875,
+   29.82861328125
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-11T17:45:53.204Z",
+   "args": {
+    "window": "test"
+   }
+  }
+ ],
+ "locks": {
+  "freezeCommit": "833b2055707d945c363cd875b1b68cfbfc97dbcb",
+  "selectionCommit": "79f083b5639b3cb27262343527513e2c636fe599"
+ },
+ "inputsRuns": {
+  "q1": "e16-cross-regime-epoch-60-q1-test-20261011T174345Z",
+  "q2": []
+ },
+ "hypotheses": {
+  "H1": true,
+  "H2": true,
+  "H3": false,
+  "H4": false,
+  "H5": false,
+  "H6": false
+ }
+}

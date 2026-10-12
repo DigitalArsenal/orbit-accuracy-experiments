@@ -27,7 +27,8 @@ const stripZ = (s) => s.replace(/Z$/, '');
 
 // SGP4: per target, [R, T, N] in metres (null where no single-sample bin).
 // One accumulate call per truth file, so a bin never holds a state twice.
-export async function sgp4Errors(ctx, products, set, targets) {
+// `full`: the module's whole 6-vector instead, [R, T, N] km and their rates km/s (E16).
+export async function sgp4Errors(ctx, products, set, targets, { full = false } = {}) {
   const half = config.binHalfWidthSeconds / 86400;
   const byFile = new Map();
   targets.forEach((t, k) => { if (!t.missing) { if (!byFile.has(t.file)) byFile.set(t.file, []); byFile.get(t.file).push(k); } });
@@ -40,7 +41,7 @@ export async function sgp4Errors(ctx, products, set, targets) {
     ++counts.calls;
     const byAge = new Map();
     for (const s of acc.strata) { if (s.n === 1) byAge.set(s.age, s.sum); else if (s.n > 1) ++counts.multi; }
-    ks.forEach((k, i) => { if (byAge.has(i)) out[k] = byAge.get(i).slice(0, 3).map((v) => v * 1000); else ++counts.missing; });
+    ks.forEach((k, i) => { if (byAge.has(i)) out[k] = full ? byAge.get(i).slice(0, 6) : byAge.get(i).slice(0, 3).map((v) => v * 1000); else ++counts.missing; });
   }
   return { errors: out, counts };
 }
@@ -109,6 +110,7 @@ export function withParameters(fixed, parameters, values) {
     else if (p.kind === 'SRP_AREA_OVER_MASS') out.agom = values[i];
     else if (p.kind.startsWith('ECOM2_')) out.ecom2 = { ...(out.ecom2 ?? {}), [p.kind.slice(6)]: values[i] };
     else if (p.kind === 'IN_TRACK_ACCELERATION') out.inTrack = values[i];
+    else if (p.kind === 'DRAG_AREA_OVER_MASS_RATE') out.bdot = values[i];
     else throw new Error(`unknown parameter ${p.kind}`);
   });
   return out;
@@ -118,6 +120,9 @@ export function withParameters(fixed, parameters, values) {
 // to full-state pseudo-observations [{epoch, state, covariance [36] RTN}].
 // settings: {parameters [{kind, value}], apriori, forces, fixed, drivers,
 // cutoffMs}. Adapted from E2's fitProduct with E7's full-force request.
+// Optional (E16): settings.batch, more fit_batch version-2 options (bounds,
+// regularization); settings.blocks, covariance blocks across the observations
+// (generalized least squares) in place of their own covariances.
 // Returns {status, fit, rounds, hpopCalls}; throws on a module failure.
 export async function fitArc(ctx, reference, referenceMs, observations, settings) {
   const isoByLabel = new Map(observations.map((o) => [JSON.stringify(estEpoch(o.epoch)), o.epoch]));
@@ -136,9 +141,10 @@ export async function fitArc(ctx, reference, referenceMs, observations, settings
       parameter_kinds: settings.parameters.map((p) => P.prwDynamicParameter[p.kind]),
       parameter_values: settings.parameters.map((p) => p.value),
       apriori_covariance: settings.apriori,
-      observation_covariances: observations.flatMap((o) => o.covariance),
+      ...(settings.blocks ? { covariance_blocks: settings.blocks } : { observation_covariances: observations.flatMap((o) => o.covariance) }),
       covariance_axes: 1,
       maximum_iterations: config.fit.maximumIterations, correction_tolerance: config.fit.correctionTolerance, sigma_edit_threshold: config.fit.sigmaEditThreshold,
+      ...(settings.batch ?? {}),
     },
   };
   const answers = [];

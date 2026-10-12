@@ -79,7 +79,8 @@ function wq(values, order, weights, q) {
 
 // Two-way (object x day) pigeonhole bootstrap of statistics of paired
 // samples: stats is {name: (valuesByVariant, orders, weights) -> number}.
-export function bootstrap(samples, stats, { resamples, seed, confidence }) {
+// keepDraws (E16): each statistic's finite draws are returned too.
+export function bootstrap(samples, stats, { resamples, seed, confidence, keepDraws = false }) {
   const rowsKeys = [...new Set(samples.map((s) => s.norad))], colsKeys = [...new Set(samples.map((s) => s.day))];
   const rowIndex = samples.map((s) => rowsKeys.indexOf(s.norad)), colIndex = samples.map((s) => colsKeys.indexOf(s.day));
   const nv = samples[0]?.errors.length ?? 0;
@@ -100,7 +101,7 @@ export function bootstrap(samples, stats, { resamples, seed, confidence }) {
   }
   const a = (1 - confidence) / 2;
   const q = (xs, p) => { const s = [...xs].sort((x, y) => x - y); return s.length ? s[Math.min(s.length - 1, Math.floor(p * (s.length - 1) + 0.5))] : NaN; };
-  return Object.fromEntries(Object.keys(stats).map((k) => [k, { estimate: estimate[k], lower: q(draws[k], a), upper: q(draws[k], 1 - a), resamples: draws[k].length }]));
+  return Object.fromEntries(Object.keys(stats).map((k) => [k, { estimate: estimate[k], lower: q(draws[k], a), upper: q(draws[k], 1 - a), resamples: draws[k].length, ...(keepDraws ? { draws: draws[k] } : {}) }]));
 }
 
 export const medianOf = (j) => (values, orders, w) => wq(values[j], orders[j], w, 0.5);

@@ -33,6 +33,9 @@ const RESULT = { status: 0, propagationRequests: 11, batchFit: 12, errorMessage:
 const QUERY = { sequence: 0, seed: 1, targetEpoch: 2, parameterValues: 3 };
 const FIT = ['stateDimension', 'parameterKinds', 'estimate', 'covariance', 'scaledCovariance', 'chiSquare', 'reducedChiSquare', 'weightedRms',
   'measurementCount', 'degreesOfFreedom', 'iterations', 'converged', 'whitenedResiduals', 'rejectedObservationIndices'];
+// Extension v2's BatchFitResult suffix (slots 14-19), and the fields of a
+// CovarianceRegularization; a version-1 result has none of them.
+const FIT_V2 = { measurementParameterCount: 14, considerCovariance: 15, boundStatus: 16, covarianceRtn: 17, considerCovarianceRtn: 18, regularizations: 19 };
 
 const field = (bb, table, slot) => bb.__offset(table, 4 + 2 * slot);
 const doubles = (bb, table, slot) => {
@@ -90,6 +93,27 @@ export function decodeResult(bytes) {
       else if (['measurementCount', 'degreesOfFreedom', 'iterations'].includes(name)) fit[name] = o ? bb.readUint32(t + o) : 0;
       else fit[name] = o ? bb.readFloat64(t + o) : 0;
     });
+    const mo = field(bb, t, FIT_V2.measurementParameterCount);
+    fit.measurementParameterCount = mo ? bb.readUint32(t + mo) : 0;
+    fit.considerCovariance = doubles(bb, t, FIT_V2.considerCovariance);
+    fit.boundStatus = integers(bb, t, FIT_V2.boundStatus, 1);
+    fit.covarianceRtn = doubles(bb, t, FIT_V2.covarianceRtn);
+    fit.considerCovarianceRtn = doubles(bb, t, FIT_V2.considerCovarianceRtn);
+    fit.regularizations = [];
+    const ro2 = field(bb, t, FIT_V2.regularizations);
+    if (ro2) {
+      const start = bb.__vector(t + ro2), n = bb.__vector_len(t + ro2);
+      for (let i = 0; i < n; ++i) {
+        const r = bb.__indirect(start + 4 * i);
+        const at = (slot) => field(bb, r, slot);
+        fit.regularizations.push({
+          block: at(0) ? bb.readInt32(r + at(0)) : -1, observation: at(1) ? bb.readUint32(r + at(1)) : 0,
+          dimension: at(2) ? bb.readUint32(r + at(2)) : 0, raised: at(3) ? bb.readUint32(r + at(3)) : 0,
+          minimumEigenvalue: at(4) ? bb.readFloat64(r + at(4)) : 0, frobeniusChange: at(5) ? bb.readFloat64(r + at(5)) : 0,
+          maximumCorrelationChange: at(6) ? bb.readFloat64(r + at(6)) : 0,
+        });
+      }
+    }
   }
   return { status, queries, fit };
 }

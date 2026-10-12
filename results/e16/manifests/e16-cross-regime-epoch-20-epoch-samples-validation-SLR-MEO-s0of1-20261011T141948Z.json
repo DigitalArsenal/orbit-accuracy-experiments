@@ -1,0 +1,232 @@
+{
+ "run": "e16-cross-regime-epoch-20-epoch-samples-validation-SLR-MEO-s0of1-20261011T141948Z",
+ "experiment": "e16-cross-regime-epoch",
+ "step": "20-epoch-samples-validation-SLR-MEO-s0of1",
+ "command": [
+  "node",
+  "experiments/e16-cross-regime-epoch/steps/20-epoch-samples.mjs",
+  "--window",
+  "validation",
+  "--class",
+  "SLR-MEO",
+  "--shard",
+  "0/1"
+ ],
+ "args": {
+  "window": "validation",
+  "class": "SLR-MEO",
+  "shard": "0/1",
+  "objects": null
+ },
+ "started": "2026-10-11T14:19:48.304Z",
+ "finished": "2026-10-11T14:19:53.021Z",
+ "config": {
+  "path": "experiments/e16-cross-regime-epoch/config.json",
+  "sha256": "67705fab95160e837e74d6b3cb682bbe9c89026887a760b1fedf0b8613cf6a6c",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "833b2055707d945c363cd875b1b68cfbfc97dbcb",
+  "dirty": true
+ },
+ "modulesRepository": {
+  "commit": "e1e6577acb0e54eb7f68ba909bc109b7b2a7a77d",
+  "dirty": false
+ },
+ "modules": [
+  {
+   "path": "analysis/gp-error-model",
+   "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+   "version": "0.3.0",
+   "wasmSha256": "c697061b0ab6b44bdb2395a62fe6759e9c29ed9820562049a27edae7fc420722",
+   "manifestSha256": "f6b47b4d55b72932692eefa4c99843bb3b4167e3a520b89252924d79db753a23"
+  },
+  {
+   "path": "analysis/epoch-state",
+   "pluginId": "com.digitalarsenal.analysis.epoch-state",
+   "version": "0.1.0",
+   "wasmSha256": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
+   "manifestSha256": "aa9d1bf2e5d16a79a6890a8a6b3c9dfeb914fcce9e3a5a89e9145a0738115350"
+  },
+  {
+   "path": "foundation/frames",
+   "pluginId": "com.digitalarsenal.foundation.frames",
+   "version": "0.2.0",
+   "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+   "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+  },
+  {
+   "path": "foundation/time",
+   "pluginId": "com.digitalarsenal.foundation.time",
+   "version": "0.1.0",
+   "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+   "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0"
+  }
+ ],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   24.33203125,
+   24.65869140625,
+   23.1435546875
+  ]
+ },
+ "inputs": {
+  "inventory": {
+   "inventory.json": "9293650456c4b178f4ae01eedf4f64eba84f2ffdea81930dcee31c138dfc9eb1"
+  },
+  "gpHistory": {
+   "2026/2026-02-01.json.gz": "a79a12195c49c319faca37f5421f78f96c4a76d4a59615130724af65a2c7cafe",
+   "2026/2026-02-02.json.gz": "b86101d8ca1cf52d39aa5cca4c0cc1df7218db78c9b7c01da03287331eb000e1",
+   "2026/2026-02-03.json.gz": "e43befd3bdc594121f518271a938b788f7063f86aeed2da57e311a34b41b59c6",
+   "2026/2026-02-04.json.gz": "43b01b90fe51a5b98a607239d7f87f7b9f6bc5a9a5e147563def719086d08e1d",
+   "2026/2026-02-05.json.gz": "69e28203d864b8ce50f6f6b44cbd14998f01464d7eaf68e4bd69648095cebf5d",
+   "2026/2026-02-06.json.gz": "b6e563ff8dfdf589dd4540067b52320b641a9f783743465964b59f5603aa2f07",
+   "2026/2026-02-07.json.gz": "652020ef163c9fe3f453eaf5aa2d232951be12494e0b9a1de0a79d6ba238c8cc",
+   "2026/2026-02-08.json.gz": "a54500273b4ee05aaf0327411c6ca34d2d03201361154438934244e4ed63db17",
+   "2026/2026-02-09.json.gz": "db37908dfb22223d8c98229aef8ad089babdafa11a8701aa539c24318002c9ac",
+   "2026/2026-02-10.json.gz": "f2a270d041bf13a55a2f7f688b17c6ddfd4508ac63ec03efc62fea9a29dbef16",
+   "2026/2026-02-11.json.gz": "818e84a1a8b5a2038d69351b18ceb67d6a59f4b56a3c585a86a39b8755ecc35c",
+   "2026/2026-02-12.json.gz": "c64163f9e5c323ca8c14cf3730e8dd51f84bea12dfd0797c002104018154326e",
+   "2026/2026-02-13.json.gz": "304dbadcebde608632c66df7ad10dee9f47eb5fec57110af359cd383f4e5efc0",
+   "2026/2026-02-14.json.gz": "30ff7f7a479f8b58e3b3a4a3f29dc795ff8551ce72eb1287f144d0af786d737c",
+   "2026/2026-02-15.json.gz": "5b266c9e1ce016060ab382a263c634fcafdd1a6f37cfd49ecd2cc20ccc5ba37f",
+   "2026/2026-02-16.json.gz": "22e352363a9588f3b4a95faeb6551ac7989cfeb0ea31a6e745e0ca3a3bce790f",
+   "2026/2026-02-17.json.gz": "dbe38b5222f6eacd951c003490e07acaec7b1b46a15e32cf9017a2fc4991fba2",
+   "2026/2026-02-18.json.gz": "46743556cc31529817ac8add7d80a728d3a746ce719776f97ba03d10741fb7c6",
+   "2026/2026-02-19.json.gz": "f2509c638fc22932a848c373f2b7783aae1d91a3ef68c3840b17aa2b97dd19c9",
+   "2026/2026-02-20.json.gz": "059888ea10f3be5fd363b7f27f8452295b23fa9bec846280e7660cf6be08ae6a",
+   "2026/2026-02-21.json.gz": "b83f2ba97286476929ed0d1af49b0789c5d5bb5108c135a5f7f24570008b3695",
+   "2026/2026-02-22.json.gz": "5ef6de45595b38e1fec526ccfb9430dd639f7bf9f69eb900a44fbca797fa1a8e",
+   "2026/2026-02-23.json.gz": "b7ec5a95418397d419d057d58c6db2c3d77ddba10875e8649069f7fd32cdec29",
+   "2026/2026-02-24.json.gz": "1e4ee62cff85f2fb43ea930fc17a46c139264db0843582cd15ebea3b320d9628",
+   "2026/2026-02-25.json.gz": "3aa643a9247d857081260bbc32ade857e7f7cdac20a85f9d6639dd2e2c9ab081",
+   "2026/2026-02-26.json.gz": "29186b0d524e5e08cd9df0ec56e5a52ce2b31dc5d9c4d22cc181d2490b9bd94d",
+   "2026/2026-02-27.json.gz": "20bc7b7b210faefab44f8e75b8bc3160ab7c059b12f84b468519a0888eeb778c",
+   "2026/2026-02-28.json.gz": "73350039e9376bfc037e3ff1017de7ba466c26924ed7a3e208186a63b44ed932",
+   "2026/2026-03-01.json.gz": "d1973c3b3317bbee5d508c6ce20bd2b44456210092084d809ab2418b8bd69c31",
+   "2026/2026-03-02.json.gz": "bd2738a8a86af0572a16472fb679a35de2f586c974938f95b40076045bdd958d",
+   "2026/2026-03-03.json.gz": "048dfb8f86c90319617c33eddc4329589aee7e601de8c242abdf68affb0f9bda",
+   "2026/2026-03-04.json.gz": "754601c69f7a234bb8b29d76c7513fe6d65974f8ae7989c2b068916c324b6076",
+   "2026/2026-03-05.json.gz": "d1735b1237cbe90d7124fe325fea7ad81f1f6df39d978367b01326603532506a",
+   "2026/2026-03-06.json.gz": "39caaf4f56308a3d42ee339d6ade07e58516c812e7f8b1cfd18b93877209e32d",
+   "2026/2026-03-07.json.gz": "cd9b5c775a73dc340b242576ea3696a776a373c36e178dfd4b81318abda67be3",
+   "2026/2026-03-08.json.gz": "0a33081563bf505dc0a6f053bc2893d1ea10c89a6ad4c89ea94c9fe21b70801b",
+   "2026/2026-03-09.json.gz": "679bfe52189c1702a1342bd6e46285a687b3270c8081b9725caf0527be4db5e6",
+   "2026/2026-03-10.json.gz": "affedfb53ff8ba506a338c268ecab766fe936bca681f7a912a4d27a556d51f49",
+   "2026/2026-03-11.json.gz": "d6c54bcf7f01e74f77588efd49dd2f82022d6c7e20bbe10dfbf0d3b2b822bc47",
+   "2026/2026-03-12.json.gz": "71465514b7bcd75b63f93f97c42108a129163447cdfdbea7c9689fc4145f678c",
+   "2026/2026-03-13.json.gz": "0b3495b4b2698cc51e77b06d389f7660d8adfebe40d50f23d9af451b0bce3f70",
+   "2026/2026-03-14.json.gz": "0a20d727fb2422e134f7c09e625fd482e543cd84fa58c1d71a2fb016479c88f8",
+   "2026/2026-03-15.json.gz": "7d45d0dba48a073485aaa0de2fad55460b62565efefc5e58c58e1bb5a0a9df3a",
+   "2026/2026-03-16.json.gz": "9642ad0cd6ee2be245de738f4a1b65f6a96abfef5628da5174a3d87bb418abbb",
+   "2026/2026-03-17.json.gz": "9bb27ed5a04f9e6897129d711825299af3592cb511529b23ee73ab9a79cb3da8",
+   "2026/2026-03-18.json.gz": "2d3bed1ec0f87c5742c98bf9b3c1689f78da189130e929acb1e8e2785f6d5514",
+   "2026/2026-03-19.json.gz": "751d7d2a8244ce8f3a5276e535b3b8ee0f70b5384143da900ce240b074785374",
+   "2026/2026-03-20.json.gz": "e6fd18aae07c59d11fc281cfe5de0912774786782aa54ffb1162f445b01354fd",
+   "2026/2026-03-21.json.gz": "8a89f56715661bcc205b1c10e9a99ae60adc239b9da975e0227a680967a5cd8b",
+   "2026/2026-03-22.json.gz": "936ce382f940324fe5c16e5c0be84cf71c848627da7a595ae181583cf70c398e",
+   "2026/2026-03-23.json.gz": "4cf6d536c38a99ea1c18794c47b4a9af05c6aeaf971b3a3bf94c5f631787a93e",
+   "2026/2026-03-24.json.gz": "554f68ccb842a8f5db0b32e740688df0557568df5fa8f8b281c863c78c89940c",
+   "2026/2026-03-25.json.gz": "53a24005bb6cccd8f8c489cfc1a2a3957f08decc2f57f14255b5e1ef9efd53b7",
+   "2026/2026-03-26.json.gz": "2d5a6cfffa8d587440d08b417f1ff347d9908006701abe806ccc5d01d67d179f",
+   "2026/2026-03-27.json.gz": "f761421abc46b3edb9ba4446fe537e59e524e3c2a458958402f5cca9e9516cf9",
+   "2026/2026-03-28.json.gz": "55f34b6ddb97a1a1a3593ecaa336be04447ed66dc1b4981334283ef233bc514a",
+   "2026/2026-03-29.json.gz": "2f6e95a484fbdddeb18053a4c6e9674678a26472d1533345567cc78f968560d5",
+   "2026/2026-03-30.json.gz": "85dff6dbdc6964088bac0156538289f31005effbd7c5cbee32f98dc94022202c",
+   "2026/2026-03-31.json.gz": "7c4f3eb6b9e9b8376336331ad4804df6564891fc0ecb1497075e90d381bc8789",
+   "2026/2026-04-01.json.gz": "0fc32998bc2f540b5734baea39e9f968eea7c908f1b2eee498bd05075d9c3d84",
+   "2026/2026-04-02.json.gz": "be44db33cfd42352f4f091de01388fc7ad9cd38d6be97bbc2367e557f07d0941",
+   "2026/2026-04-03.json.gz": "5b3fbde1878fcbd7850a7eaf2b66afbdc65f3c8182faa89dc41a0c95807435a9"
+  },
+  "truth": {
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260207.v80/8820.oem": "35d648022127f1bb99f2190a7f05ea6d93473be21b2d6e11653c4853db7998e2",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260214.v80/8820.oem": "3f97925037d9467d69e467f7633d031ebe3e3b5fb3b353e42e177198ccea1914",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260221.v80/8820.oem": "bfbb5e8a24fb51514f1d288cdca4317484932c6c8b86366fe6caf1cf99eed2c9",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260228.v80/8820.oem": "dd8ae06aa9abf470aa861553c69bb2b45be28d28a15882d4e7cf10cabe4cd9ea",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260307.v80/8820.oem": "b83283ec6ba207aee9b0afaca21d3e27315b9e11b00effd1013237813a0caa00",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260314.v80/8820.oem": "be76478e805f80d816befe8b6969422ea106d9d1986962dce23a0985289f0aec",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260321.v80/8820.oem": "5f41d5aba8c01c23c3c62b22d43b8d92a3399e8816f1667bfc58f6eb9a175d0c",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260328.v80/8820.oem": "c7ff94c91f24e83feef20cf9339bab52f295e1c24b4e5cf3906600fb79fe2242",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos1.260404.v80/8820.oem": "319537258f6726ad85140df50970cee2fed31552f797ae813650ef884c4c2729",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260207.v80/19751.oem": "17d31274f7d6932dc34a55231049311d213054d47f369e33ae4c2e3b7f2cbd95",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260214.v80/19751.oem": "69c84bf27f81f17450ca0d0b3181a474364c7cdb7152f178b4057b5c04f51752",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260221.v80/19751.oem": "18fe0bda5e44e1712e4c1cf5518da76849f0f1bd7a6b41c7e201563bc1132b12",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260228.v80/19751.oem": "5d4aafa00faf7ad10a1c64e9c77a78a6e37780625a3969eefdffff6404f79067",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260307.v80/19751.oem": "8a4983df17bf0b1e10cb146508b66b5925e442514a047de3f0c2cef751eb7328",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260314.v80/19751.oem": "e1ebfea5563c7983ba43e1595cbdd33de1061f9cab8f65d316448f6b56959ac7",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260321.v80/19751.oem": "c666a186742886a0f8ba3cb6aa78d53e63788fa297895d0890499727eb1f272e",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon1.260328.v80/19751.oem": "080f6d0d8fae0ddcb45b8e381dff19f40c66b80b8f559e69d66e2d82def67a7c",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260207.v80/20026.oem": "d38caabf2cfaaf40b9944e4dc62932e48449a76da40d8cb700da73b79042c20e",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260214.v80/20026.oem": "dd3c74fd5d79d5564b926f1942cf3b7dec623117f70f764fe9845097b8698115",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260221.v80/20026.oem": "0e314bb0698b79428f060d42f4f7046f304e7558bfd656ce8effd65cf8160ea6",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260228.v80/20026.oem": "ab2ec5c37d2622caa73e17f784b5cd43e03b3856d2e6ed150ac153d91f518379",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260307.v80/20026.oem": "a228bf861f501834457e0e2e2b66a35e2fbb89b3a7e602fc39cee1a1d232a8d7",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260314.v80/20026.oem": "ef90abcab1fab724c91a197312419c34b59c158a561b98d98ddc2e1845b1c90e",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260321.v80/20026.oem": "7a3c995fa6948c1f91bb280138054e26838166178810fc5a425b6082be2badef",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.etalon2.260328.v80/20026.oem": "2605e9a05e014a827d6bdb4ba63fbff5610cc5616b77dd2da02e48172972653a",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260207.v80/22195.oem": "97c644af58a0241cd52acc3f539e91b6d6147daf1646f96f5e2a6cdccffccf47",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260214.v80/22195.oem": "3baa47ed32d4b08d5a3178c4a9f71c9ec34894224ec968b4f29b08999e675fbb",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260221.v80/22195.oem": "d0562f206fe937931e2b8f5dab10d03f8d8d39b3c0ea96dbb51395a47a8ffe5c",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260228.v80/22195.oem": "a3476838ac504270a7f44ce58290def188af883a635a6563f433bf3c234603d4",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260307.v80/22195.oem": "0482c8a0dbc3f1161b24254c606ab0fd58029c274df8143579a631836e6a9cf4",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260314.v80/22195.oem": "0afa46682b459d4efec84c6f802fe5740acce1805c08ebe699cbbef053477196",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260321.v80/22195.oem": "4cfd42016a8ac305a225d6e98111b9f3040c48120788685c0f06534412afb3bc",
+   "/opt/data/sdn-archive/reference-states/reference/ilrsa.orb.lageos2.260328.v80/22195.oem": "e0bedec947273c04132362e3b8da5f315af36a0721ca5a4e4640a5c566fd0e1e",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260206.v000/53105.oem": "61e3aa6cef740d5de6262b0fef10fa549d375e04148ee52c70fa03abc4baff72",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260210.v000/53105.oem": "ccc22745de6f54341e5957c014ae366b67399b36e3da23bf96249d86b43955f4",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260214.v000/53105.oem": "5d12a144308cd19810d4f201f9ae5a51ed0d0ee3aa6c8ec95baf1b682f11bfc0",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260218.v000/53105.oem": "49600ba2b19c3773108ea5d77cba09485f3eea4b92a0c047d42562f9eda0dd1d",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260222.v000/53105.oem": "cd87da16e54c0cd1dba13f8104acf26022d2d685f85903367976003411c2df0c",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260226.v000/53105.oem": "2a856dfbb2b3ca02db645a74bb0a54ea8cb3a471bb5abf2527b142f142b6956e",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260302.v000/53105.oem": "ad2309b8418fafacc402e82ea4c6726313c543ddc6a42f528c7c5736ae26dcee",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260310.v000/53105.oem": "3756ad44711a05171bdc68f4867fd361ce5e011d91857b3eaf21218c91191aab",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260314.v000/53105.oem": "6eb4ce3e0e7d20917584783b3a6e6592cd66632f0daada2f1ae88a9f48ec59bc",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260316.v000/53105.oem": "6229c699fa17d5bc3974751db34790b81b6d100b0ec8c3a5cbc0f02cdfaaa2fe",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260318.v000/53105.oem": "87417ebec45094ad68a5e6a16bbc3b1b17f13a3cb218831b0e512a120ed0c3d2",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260320.v000/53105.oem": "09bff073dead86daaeb7d5d363c8fe6c308a3329fc0a3e6236768478c054322c",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260322.v000/53105.oem": "83eb9230a6ed0637d993a3902b636247118abc5a3ad5708cff57db2bb2930b13",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260324.v000/53105.oem": "64298d7aafbe6b6996de90dfa997bada108312c3f8623b4c527a2298bea92eb3",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260326.v000/53105.oem": "dce9e13e4f0a8f85c03d59381f437ea01fcd37b46c975f40a001508a1858a703",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260328.v000/53105.oem": "74c8464a8b93c522ac00cb76798adcb306485b007379a706aea063c3dda64ef8",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260330.v000/53105.oem": "4e6d831fd3468136fc5475da384789a2b26b7d8b8adc4ccc339618c808d962f7",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260401.v000/53105.oem": "bd8fc318aecab9f66f3d5fb6dd4dcfa1c99ec0f8db942b95ba38753c637e2375",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260403.v000/53105.oem": "9e8e6963aef6ec11d895560c7b23c61ba069f3819e1f7230b030435549c019e7",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260405.v000/53105.oem": "4f5299143438278711ed552354f8ff70179e67d7867c3c0739af81dd77fec84b",
+   "/opt/data/sdn-archive/reference-states/reference/nsgf.orb.lares2.260407.v000/53105.oem": "fabb2a1b4738f0580419c4d6d353b9badfefa68bf69af9e6b6cbde7708725e65"
+  }
+ },
+ "invocations": [
+  {
+   "started": "2026-10-11T14:19:48.304Z",
+   "args": {
+    "window": "validation",
+    "class": "SLR-MEO",
+    "shard": "0/1",
+    "objects": null
+   }
+  }
+ ],
+ "class": "SLR-MEO",
+ "window": "validation",
+ "shard": "0/1",
+ "counts": {
+  "objects": 5,
+  "sets": 388,
+  "withEpochTarget": 382,
+  "refusedEpochState": 0,
+  "refusedGeometry": 0,
+  "noWeather": 0,
+  "sgp4Missing": 0,
+  "multiSampleBins": 0
+ },
+ "samples": 382,
+ "setsCache": "runs/cache/e16/sets-validation-3419f6f715852fd3.json.gz"
+}
