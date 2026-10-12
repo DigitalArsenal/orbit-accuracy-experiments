@@ -1,0 +1,22 @@
+{
+ "experiment": "e17-spacebook-xp",
+ "frozen": false,
+ "plan": "PLAN.md",
+ "captures": {
+  "first": "2026-10-12",
+  "last": "2026-10-25",
+  "spacebook": "/opt/data/sdn-archive/hac/comspoc-spacebook",
+  "truthDaily": "/opt/data/sdn-archive/operator-ephemerides/daily",
+  "fetcher": "spacedatanetwork-stack deployment/spacetrack-archive/spacebook-archive.mjs"
+ },
+ "inputs": {
+  "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+  "referenceRoots": [
+   "/opt/data/sdn-archive/reference-states/reference"
+  ]
+ },
+ "horizonBinsHours": [[0, 6], [21, 27], [69, 75], [165, 171]],
+ "bootstrap": { "resamples": 10000, "unit": "object" },
+ "minimumSamplesPerClass": 20,
+ "realismRule": { "meanD2Over3": [0.5, 2], "coverage95": [0.9, 0.98] }
+}
