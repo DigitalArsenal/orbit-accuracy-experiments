@@ -1,0 +1,91 @@
+{
+ "run": "e16-cross-regime-epoch-70-evaluate-20261012T055120Z",
+ "experiment": "e16-cross-regime-epoch",
+ "step": "70-evaluate",
+ "command": [
+  "node",
+  "experiments/e16-cross-regime-epoch/steps/70-evaluate.mjs",
+  "--window",
+  "test"
+ ],
+ "args": {
+  "window": "test"
+ },
+ "started": "2026-10-12T05:51:20.251Z",
+ "finished": "2026-10-12T05:52:21.168Z",
+ "config": {
+  "path": "experiments/e16-cross-regime-epoch/config.json",
+  "sha256": "67705fab95160e837e74d6b3cb682bbe9c89026887a760b1fedf0b8613cf6a6c",
+  "frozen": true
+ },
+ "repository": {
+  "commit": "21e2e4817c977a187bfd345578225aeb8971d5c1",
+  "dirty": false
+ },
+ "modulesRepository": {
+  "commit": "e1e6577acb0e54eb7f68ba909bc109b7b2a7a77d",
+  "dirty": false
+ },
+ "modules": [],
+ "packages": {
+  "space-data-module-sdk": "0.8.26",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23"
+ },
+ "runtime": {
+  "node": "v25.4.0",
+  "platform": "darwin 25.3.0 arm64",
+  "cpus": 28,
+  "loadAverage": [
+   28.9052734375,
+   22.67626953125,
+   18.57763671875
+  ]
+ },
+ "inputs": {},
+ "invocations": [
+  {
+   "started": "2026-10-12T05:51:20.251Z",
+   "args": {
+    "window": "test"
+   }
+  }
+ ],
+ "locks": {
+  "freezeCommit": "833b2055707d945c363cd875b1b68cfbfc97dbcb",
+  "selectionCommit": "79f083b5639b3cb27262343527513e2c636fe599"
+ },
+ "inputsRuns": {
+  "q1": "e16-cross-regime-epoch-60-q1-test-20261011T174345Z",
+  "q2": [
+   "e16-cross-regime-epoch-55-q2-run-test-s0of20-20261011T174442Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s10of20-20261011T194333Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s11of20-20261011T194334Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s12of20-20261011T194335Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s13of20-20261011T194336Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s14of20-20261011T194337Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s15of20-20261011T194338Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s16of20-20261011T194339Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s17of20-20261011T194340Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s18of20-20261011T194341Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s19of20-20261011T194342Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s1of20-20261011T174443Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s2of20-20261011T174444Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s3of20-20261011T174445Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s4of20-20261011T174446Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s5of20-20261011T174448Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s6of20-20261011T174449Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s7of20-20261011T174450Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s8of20-20261011T174451Z",
+   "e16-cross-regime-epoch-55-q2-run-test-s9of20-20261011T174452Z"
+  ]
+ },
+ "hypotheses": {
+  "H1": true,
+  "H2": true,
+  "H3": false,
+  "H4": false,
+  "H5": false,
+  "H6": false
+ }
+}
