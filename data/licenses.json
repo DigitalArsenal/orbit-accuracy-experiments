@@ -1634,6 +1634,29 @@
    "reproducedAt": []
   },
   {
+   "id": "spacemapper-aoe",
+   "name": "SpaceMapper AOE catalog and orbital database",
+   "provider": "Beijing Kaiyun United Information Technology (spacemapper.cn)",
+   "licence": "No licence stated",
+   "terms": [
+    {
+     "title": "SpaceMapper",
+     "url": "https://spacemapper.cn/",
+     "retrieved": "2026-10-11"
+    }
+   ],
+   "redistribution": "No terms grant redistribution; the pages are public and robots.txt disallows only /_nuxt/.",
+   "attributionClause": null,
+   "reproduce": "no",
+   "credit": "SpaceMapper, https://spacemapper.cn/.",
+   "reason": "No licence grants redistribution: element sets are computed on and cited, never copied.",
+   "usedIn": "E15 (AOE lineage beside Space-Track), the catalog paper section 4; modules data-source/spacemapper-aoe-source",
+   "obtain": "https://spacemapper.cn/ public pages; archived daily for local use under /opt/data/sdn-archive/hac/spacemapper-aoe",
+   "conditions": "",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
    "id": "or-library",
    "name": "OR-Library assignment problems",
    "provider": "J. E. Beasley, OR-Library (Brunel University)",
