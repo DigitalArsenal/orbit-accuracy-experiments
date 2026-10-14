@@ -37,7 +37,7 @@ export default async function run(ctx) {
   p.append(actions);
   const view = scene3d(ctx, { title: 'One seed, two curves, six networks' });
   const out = panel(ctx.root, 'Derived addresses');
-  note(ctx.root, 'Cardano’s BIP32-Ed25519 derivation is not in hd-wallet-wasm 2.0.21; its row shows the path only. Keys never leave this page.');
+  note(ctx.root, 'Cardano’s BIP32-Ed25519 derivation is not in hd-wallet-wasm 2.1.0; its row shows the path only. Keys never leave this page.');
   const w = await loadWallet(ctx);
   button(actions, 'New random seed', () => { p.querySelector('textarea').value = w.mnemonic.generate(24); derive(); }, false);
   button(actions, 'Test mnemonic', () => { p.querySelector('textarea').value = TEST_MNEMONIC; derive(); }, false);

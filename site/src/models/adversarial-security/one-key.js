@@ -22,14 +22,15 @@ export default async function run(ctx) {
   async function sign() {
     await ctx.run('hd-wallet-wasm: signing', async () => {
       const record = new TextEncoder().encode(form.values().record);
-      signed = { record, signature: w.curves.secp256k1.sign(w.utils.sha256(record), key.privateKey()), publicKey: key.publicKey() };
+      // secp256k1.sign hashes the record with SHA-256 itself: ECDSA over one hash.
+      signed = { record, signature: w.curves.secp256k1.sign(record, key.privateKey()), publicKey: key.publicKey() };
       await verify(false);
     });
   }
   async function verify(tamper) {
     await ctx.run('hd-wallet-wasm: verifying', async () => {
       const record = tamper ? signed.record.map((b, i) => (i === 0 ? b ^ 1 : b)) : signed.record;
-      const ok = w.curves.secp256k1.verify(w.utils.sha256(record), signed.signature, signed.publicKey);
+      const ok = w.curves.secp256k1.verify(record, signed.signature, signed.publicKey);
       const pub = signed.publicKey;
       table(v, ['Field', 'Value'], [
         ['Public key', { text: hex(w, pub), class: 'wrap mono' }],

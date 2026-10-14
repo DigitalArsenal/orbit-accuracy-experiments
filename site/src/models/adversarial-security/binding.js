@@ -38,9 +38,10 @@ export default async function run(ctx) {
       const walletPub = w.utils.decodeHex(att.public_key_hex.toLowerCase());
       // The certificate key, signed by the wallet key; or by another wallet's.
       const signer = swap ? w.hdkey.fromSeed(w.mnemonic.toSeed(w.mnemonic.generate(12), '')).derivePath("m/44'/0'/0'/0/0") : issued.wallet;
-      const digest = w.utils.sha256(issued.certPublicKey);
-      const signature = w.curves.secp256k1.sign(digest, signer.privateKey());
-      const direct = w.curves.secp256k1.verify(digest, signature, walletPub);
+      // secp256k1.sign and verify hash their input with SHA-256: they take the
+      // key bytes themselves, so the signature is ECDSA over one SHA-256.
+      const signature = w.curves.secp256k1.sign(issued.certPublicKey, signer.privateKey());
+      const direct = w.curves.secp256k1.verify(issued.certPublicKey, signature, walletPub);
       const embedded = w.x509.verifyWalletAttestation(issued.pem);
       const verdict = (ok, yes, no) => h('span', { class: `verdict ${ok ? 'pass' : 'fail'}` }, ok ? yes : no);
       table(steps, ['Step', 'Result'], [
