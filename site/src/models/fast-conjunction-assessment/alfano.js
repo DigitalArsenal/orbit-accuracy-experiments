@@ -1,4 +1,4 @@
-// Alfano's maximum probability for a miss distance and combined radius,
+// Alfano's maximum probability for a spherical covariance at a miss distance and combined radius,
 // from analysis/conjunction-assessment alfano_max_probability, across miss
 // distances and radii.
 import { formatMeters } from '../../chart.js';
@@ -16,8 +16,8 @@ export default async function run(ctx) {
     { id: 'miss', label: 'Miss distance (m)', value: 250, min: 0.1 },
     { id: 'radius', label: 'Combined radius (m)', value: 10, min: 0.1 },
   ], () => single());
-  const view = scene3d(ctx, { title: 'The worst case, in the encounter plane' });
-  const figure = chart(ctx.root, 'Maximum probability against miss distance', 'One line per combined radius; computed by the module');
+  const view = scene3d(ctx, { title: 'Worst case for a spherical covariance, in the encounter plane' });
+  const figure = chart(ctx.root, 'Spherical covariance: maximum probability against miss distance', 'One line per combined radius; computed by the module. A stretched covariance can give more.');
   const box = panel(ctx.root, 'At 5 km, the screening threshold');
   const ca = await ctx.module('analysis/conjunction-assessment');
   const alfano = async (miss, radius) => decodeCqr(output(await ca.invoke('alfano_max_probability', [alfanoRequest(miss, radius)]), 'result')).ALFANO_RESULT;
@@ -26,11 +26,11 @@ export default async function run(ctx) {
     const { miss, radius } = form.values();
     await ctx.run('analysis/conjunction-assessment alfano_max_probability', async () => {
       const r = await alfano(miss, radius);
-      tiles(p, [['Maximum probability', num(r.MAXIMUM_PROBABILITY, 3)], ['Worst-case σ', formatMeters(r.SIGMA_STAR_M)], ['Dilution threshold', formatMeters(r.DILUTION_THRESHOLD_M)]]);
+      tiles(p, [['Maximum probability (spherical)', num(r.MAXIMUM_PROBABILITY, 3)], ['Maximizing σ (spherical)', formatMeters(r.SIGMA_STAR_M)], ['Dilution threshold', formatMeters(r.DILUTION_THRESHOLD_M)]]);
       await view.draw((g) => drawPlane(g, { miss, radius, sigmaXi: r.SIGMA_STAR_M, sigmaZeta: r.SIGMA_STAR_M }),
-        { caption: `The circular covariance of σ* = ${formatMeters(r.SIGMA_STAR_M)}, the module’s worst case, about the miss; the hard body’s tube along the relative velocity`,
+        { caption: `The circular encounter-plane projection of a spherical covariance at σ* = ${formatMeters(r.SIGMA_STAR_M)}, which maximizes probability within that family, about the miss; the hard body’s tube along the relative velocity`,
           axes: PLANE_AXES, aspect: 'equal', legend: [['accent', 'Hard body and miss'], ['cyan', `σ* 1σ, 2σ, 3σ`]] });
-      return `Without a covariance, no σ gives more than ${num(r.MAXIMUM_PROBABILITY, 3)} for a ${formatMeters(miss)} miss and a ${formatMeters(radius)} combined radius.`;
+      return `For a spherical covariance, no σ gives more than ${num(r.MAXIMUM_PROBABILITY, 3)} for a ${formatMeters(miss)} miss and a ${formatMeters(radius)} combined radius; a stretched covariance can give more.`;
     });
   }
 
@@ -45,7 +45,7 @@ export default async function run(ctx) {
     }
     figure.draw({ series, x: { min: 10, max: 5000, scale: 'log', ticks: [10, 100, 1000, 5000], format: (m) => formatMeters(m) },
       y: { format: (v) => (v === 1 ? "1" : `1e${Math.round(Math.log10(v))}`), value: (v) => num(v, 3) } });
-    table(box, ['Combined radius', 'Maximum probability'], rows);
+    table(box, ['Combined radius', 'Maximum probability (spherical)'], rows);
   });
   await single();
 }

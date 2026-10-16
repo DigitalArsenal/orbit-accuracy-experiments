@@ -32,7 +32,7 @@ function catalog(n, seed = 20261011) {
 export default async function run(ctx) {
   const p = panel(ctx.root, 'The screened event');
   const view = scene3d(ctx, { title: 'The pair at TCA, with their covariances', caption: 'Radial, in-track and cross-track of the primary (m)' });
-  const figure = chart(ctx.root, 'Probability against the size of the covariance', 'Foster, in the module, with every model sigma × k; the line is Alfano’s maximum');
+  const figure = chart(ctx.root, 'Probability against the size of the covariance', 'Foster, in the module, with every model sigma × k; the line is Alfano’s maximum for spherical covariance; a stretched covariance can give more');
   const strata = panel(ctx.root, 'Where the covariances came from');
   const index = await ctx.fetchJson('./data/ca/uncertainty-model.json');
   await credits(ctx, ctx.root, ['data/ca/uncertainty-model.json', ...index.files]);
@@ -55,7 +55,7 @@ export default async function run(ctx) {
     for (const [i, k] of index.scales.entries()) sweep.push([k, (await assess(frames[i])).PROBABILITY.PROBABILITY]);
     const pr = e.PROBABILITY, tcaMs = msOf(e.TCA.JULIAN_DATE);
     tiles(p, [['Pair', `${a.name} · ${b.name}`], ['TCA (UTC)', new Date(tcaMs).toISOString().slice(11, 23)], ['Miss', formatMeters(e.MISS_DISTANCE_M)],
-      ['Foster', num(pr.PROBABILITY, 3)], ['Alfano maximum', pr.HAS_MAXIMUM_PROBABILITY ? num(pr.MAXIMUM_PROBABILITY, 3) : '—'], ['Calibration', covarianceCalibration[pr.CALIBRATION] ?? '—']]);
+      ['Foster', num(pr.PROBABILITY, 3)], ['Alfano maximum (spherical)', pr.HAS_MAXIMUM_PROBABILITY ? num(pr.MAXIMUM_PROBABILITY, 3) : '—'], ['Calibration', covarianceCalibration[pr.CALIBRATION] ?? '—']]);
     const ageDays = (o) => (tcaMs - Date.parse(`${o.epoch.slice(0, 23)}Z`)) / 86400e3;
     const sig = (q) => ['X', 'Y', 'Z'].map((k) => formatMeters(q[k]));
     table(strata, ['', 'Prediction age', 'Radial σ', 'In-track σ', 'Cross-track σ', 'Basis'], [
@@ -63,7 +63,7 @@ export default async function run(ctx) {
       [b.name, `${num(ageDays(b), 3)} d`, ...sig(e.SECONDARY_SIGMA_RTN_M), cqrCovarianceBasis[e.SECONDARY_COVARIANCE_BASIS] ?? '—'],
     ]);
     figure.draw({ series: [
-      { name: 'Alfano maximum', color: 'var(--series-muted)', points: [[index.scales[0], pr.MAXIMUM_PROBABILITY], [index.scales.at(-1), pr.MAXIMUM_PROBABILITY]], dash: true },
+      { name: 'Alfano maximum (spherical)', color: 'var(--series-muted)', points: [[index.scales[0], pr.MAXIMUM_PROBABILITY], [index.scales.at(-1), pr.MAXIMUM_PROBABILITY]], dash: true },
       { name: 'Foster', color: 'var(--accent)', points: sweep.filter((q) => q[1] > 1e-14), markers: true, label: true },
       { name: 'The model as calibrated (k = 1)', color: 'var(--cyan)', points: [[1, Math.max(pr.PROBABILITY, 1e-14)]], markers: true },
     ], x: { min: index.scales[0], max: index.scales.at(-1), scale: 'log', ticks: [0.1, 1, 10, 100], format: (k) => `k ${k}` },

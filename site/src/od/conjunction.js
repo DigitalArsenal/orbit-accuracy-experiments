@@ -81,7 +81,7 @@ export default async function run(ctx) {
       tiles(result, [
         ['TCA (UTC)', new Date(tcaMs).toISOString().slice(11, 23)], ['Miss distance', formatMeters(event.MISS_DISTANCE_M)], ['Relative speed', `${num(event.RELATIVE_SPEED_M_S / 1000, 4)} km/s`],
         ['Probability (Foster)', num(p.PROBABILITY, 3)], ['Mahalanobis²', p.HAS_MAHALANOBIS_SQUARED ? num(p.MAHALANOBIS_SQUARED, 4) : '—'],
-        ['Alfano maximum', p.HAS_MAXIMUM_PROBABILITY ? num(p.MAXIMUM_PROBABILITY, 3) : '—'],
+        ['Alfano maximum (spherical)', p.HAS_MAXIMUM_PROBABILITY ? num(p.MAXIMUM_PROBABILITY, 3) : '—'],
       ]);
       const sig = (v) => ['X', 'Y', 'Z'].map((k) => formatMeters(v[k]));
       table(result, ['', 'Radial', 'In-track', 'Cross-track'], [
