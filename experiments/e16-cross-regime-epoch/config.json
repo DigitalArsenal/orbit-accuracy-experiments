@@ -6,7 +6,7 @@
     "repository": "space-data-network-modules",
     "commit": "e1e6577a",
     "wasmSha256": {
-      "propagator/hpop": "9c24bf0ed74f59893282514f08891c414da6db071d4997357a8ebd6c2a8a99e3",
+      "propagator/ffm": "9c24bf0ed74f59893282514f08891c414da6db071d4997357a8ebd6c2a8a99e3",
       "analysis/estimation": "9882faafb755973757c1cacbda1f803c74b45bde053cdb504172864ad7ce2764",
       "analysis/gp-error-model": "c697061b0ab6b44bdb2395a62fe6759e9c29ed9820562049a27edae7fc420722",
       "analysis/epoch-state": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",

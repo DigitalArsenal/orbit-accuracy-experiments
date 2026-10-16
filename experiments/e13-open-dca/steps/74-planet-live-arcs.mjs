@@ -1,6 +1,6 @@
 // E13 step 74 (EXPLORATORY, PLAN.md Amendment S3 item 4): Planet's arcs of the live period, fitted directly under the common reference, NRLMSISE-00. Planet's states come from the archive
 // and from the live collector (collect-planet.mjs: each day's final file); an arc is two consecutive states of one Dove 20-28 h apart, read through the orbital energy exactly as the
-// splits' arcs are (arcs.mjs energyArc, profile g24lean, Cr*A/m locked), but with HPOP's NRLMSISE-00 drag on the indices as released when the new state's file was published (about
+// splits' arcs are (arcs.mjs energyArc, profile g24lean, Cr*A/m locked), but with FFM's NRLMSISE-00 drag on the indices as released when the new state's file was published (about
 // 22:50 UTC of its day): GFZ's Kp/ap/F10.7 and NOAA SWPC's RSGA through harness/cutoff-environment.mjs releasedSpwRows, which is how the Starlink pairs' Method B reads them. The
 // Doves are the 48 of the splits' sample (planet-sample.json). Derived records only (planet-arcs/live-<profile>.jsonl); Planet's files are never committed.
 //
@@ -71,7 +71,7 @@ for (const j of mine) {
     const r = await env.energyArc(A, B, { b0, cr: P.arc.crAreaOverMass, sigma: P.arc.sigma, tolerance: 1e-3, maxIterations: 6 });
     if (r.B > 0) last.set(j.hwid, r.B);
     appendJsonl(outFile, { hwid: j.hwid, ttA: j.a.ttMs, ttB: j.b.ttMs, utcA: isoZ(A.ms), utcB: isoZ(B.ms), hours: j.hours, cdAreaOverMass: r.B, sigmaB: r.sigmaB, energyMismatchJkg: r.energyMismatchJkg, energySensitivity: r.energySensitivity,
-      iterations: r.iterations, hpopCalls: r.hpopCalls, seconds: r.seconds, steps: r.steps, altitudeKm: r.altitudeKm, nonPositive: !!r.nonPositive, planetBallistic: { a: j.a.ballisticKgPerM2, b: j.b.ballisticKgPerM2 },
+      iterations: r.iterations, ffmCalls: r.ffmCalls, seconds: r.seconds, steps: r.steps, altitudeKm: r.altitudeKm, nonPositive: !!r.nonPositive, planetBallistic: { a: j.a.ballisticKgPerM2, b: j.b.ballisticKgPerM2 },
       profile, atmosphere: 'NRLMSISE00', crAreaOverMass: P.arc.crAreaOverMass, startedFrom: b0, cutoffUtc: isoZ(cutoffMs), spaceWeatherIssue: issue });
   } catch (error) {
     appendJsonl(outFile, { hwid: j.hwid, ttA: j.a.ttMs, ttB: j.b.ttMs, error: String(error.message ?? error).slice(0, 300), profile, atmosphere: 'NRLMSISE00' });

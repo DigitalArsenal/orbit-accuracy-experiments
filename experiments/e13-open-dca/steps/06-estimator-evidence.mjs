@@ -26,7 +26,7 @@ for (const [profile, count] of [['g24lean', arcs.length], ['full', Number(values
   for (const [i, { a, b }] of arcs.slice(0, count).entries()) {
     const A = await env.toUtcGcrf(a), Bs = await env.toUtcGcrf(b), b0 = 1 / a.ballisticKgPerM2;
     const e = await env.energyArc(A, Bs, { b0, cr, sigma });
-    rows[i][`energy_${profile}`] = { B: e.B, sigmaB: e.sigmaB, energyMismatchJkg: e.energyMismatchJkg, hpopCalls: e.hpopCalls, seconds: e.seconds };
+    rows[i][`energy_${profile}`] = { B: e.B, sigmaB: e.sigmaB, energyMismatchJkg: e.energyMismatchJkg, ffmCalls: e.ffmCalls, seconds: e.seconds };
     if (profile === 'g24lean') {
       const s = await env.sixDimensionalArc(A, Bs, { b0, cr, sigma });
       rows[i].sixD = { B: s.B, sigmaB: s.sigmaB, chi2: s.chi2, dof: s.dof, conditionCy: s.conditionCy, mismatchRtnM: s.mismatchRtnM };

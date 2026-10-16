@@ -167,8 +167,8 @@ export function forcesOf(regimeName, spec) {
 
 // Fails fast unless the propagator is the binary the plan names.
 export function assertBinary(provenance) {
-  const want = config.modulesBinary.hpopWasmSha256;
-  if (provenance.wasmSha256 !== want) throw new Error(`propagator/hpop WASM ${provenance.wasmSha256} is not the binary config.json names (${want})`);
+  const want = config.modulesBinary.ffmWasmSha256;
+  if (provenance.wasmSha256 !== want) throw new Error(`propagator/ffm WASM ${provenance.wasmSha256} is not the binary config.json names (${want})`);
 }
 
 // Modules and the environment inputs.
@@ -178,11 +178,11 @@ export async function context(modules, run, { estimation = false, maneuvers = fa
   const kernelBytes = fs.readFileSync(kernelPath);
   if (sha256(kernelBytes) !== config.inputs.kernel.sha256) throw new Error('DE440s kernel bytes differ from the pinned SHA-256');
   run.addInputs('kernel', { [path.basename(kernelPath)]: config.inputs.kernel.sha256 });
-  const names = ['analysis/epoch-state', 'analysis/gp-error-model', 'propagator/hpop', 'data-source/eop-parser', 'foundation/frames',
+  const names = ['analysis/epoch-state', 'analysis/gp-error-model', 'propagator/ffm', 'data-source/eop-parser', 'foundation/frames',
     ...(estimation ? ['analysis/estimation'] : []), ...(maneuvers ? ['analysis/maneuver-detection'] : [])];
   const loaded = {};
   for (const name of names) { loaded[name] = await loadModule(modules, name); run.addModule(loaded[name].provenance); }
-  assertBinary(loaded['propagator/hpop'].provenance);
+  assertBinary(loaded['propagator/ffm'].provenance);
   const eop = await c04Records(loaded['data-source/eop-parser'], config.inputs.eopC04);
   run.addInputs('eop', { [path.basename(config.inputs.eopC04)]: eop.sha256 });
   const set = readSetIndices(config.inputs.solfsmy, config.inputs.dtcfile);

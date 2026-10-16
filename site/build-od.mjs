@@ -6,18 +6,18 @@
 //                   their stated covariance (analysis/reference-states output in
 //                   the SDN archive), 05:15-10:45 UTC.
 //  - truth-dense.json  The same satellites between the IGS epochs, 60 s apart:
-//                   propagator/hpop from each IGS state to the next (15 min),
+//                   propagator/ffm from each IGS state to the next (15 min),
 //                   so the trajectory meets the IGS orbit at every IGS epoch.
 //  - catalog.oem    The catalog the observations are associated with: each GPS
 //                   satellite's IGS state at 2026-08-01 23:59:42 UTC propagated
-//                   by propagator/hpop with a covariance (1 m, 1 mm/s, white
+//                   by propagator/ffm with a covariance (1 m, 1 mm/s, white
 //                   acceleration noise), sampled every 5 min, 05:29:42-10:29:42 UTC (on the IGS grid).
 //                   Two satellites are withheld, so their observations are
 //                   uncorrelated by construction.
 //  - simulate.acw   An analysis/observation-simulator request: the dense truth
 //                   rotated to ITRF by foundation/frames, three sensors at IGS
 //                   sites, their visibility from analysis/access, the Sun from
-//                   propagator/hpop's DE440 ephemeris, the IERS rows.
+//                   propagator/ffm's DE440 ephemeris, the IERS rows.
 //  - eop.json, eop.prw  IERS EOP 20 C04 rows for the day, as $EOP objects and
 //                   as a PRW EARTH_ORIENTATION frame.
 //  - scenario.json  What is where: sites, sensors, satellites, windows,
@@ -76,7 +76,7 @@ export async function generateEstimationBindings(modules, sdkSchemas, outDir) {
 const L1_HZ = 1575.42e6;
 
 export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, write, log }) {
-  const [hpop, frames, access, simulator, time] = await Promise.all(['propagator/hpop', 'foundation/frames', 'analysis/access', 'analysis/observation-simulator', 'foundation/time']
+  const [ffm, frames, access, simulator, time] = await Promise.all(['propagator/ffm', 'foundation/frames', 'analysis/access', 'analysis/observation-simulator', 'foundation/time']
     .map((m) => loadModule(modules, m)));
   const dir = path.join(referenceDir, IGS);
   const truthBlocks = [];
@@ -97,10 +97,10 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
   const eopPrw = eopFrame(eopRecords, 61253, 61256);
   write('data/od/eop.prw', Buffer.from(eopPrw.payload), 'The same rows as a PRW EARTH_ORIENTATION frame', labelFor(['iers']));
   const eop = eopFrames(rows);
-  const hpopInputs = (request) => [executionFrame({ ...request, kernel: true }), { ...eopPrw }, frame('kernel', 'PRW', kernelPrw)];
+  const ffmInputs = (request) => [executionFrame({ ...request, kernel: true }), { ...eopPrw }, frame('kernel', 'PRW', kernelPrw)];
   const FORCES = { degree: 20, order: 20, thirdBodies: [10, 301], srp: true, massKg: 1500, areaM2: 20, cr: 1.3 };
 
-  // Dense truth: HPOP from each IGS epoch to the next, every 60 s.
+  // Dense truth: FFM from each IGS epoch to the next, every 60 s.
   const dense = [];
   for (const b of truth) {
     const states = [];
@@ -108,17 +108,17 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
       const a = b.states[k], next = b.states[k + 1];
       const samples = [];
       for (let ms = utcMs(a.epoch) + MIN; ms < utcMs(next.epoch) - 1; ms += MIN) samples.push(isoMicro(ms));
-      const run = decodeExecution(await hpop.invoke('invoke', hpopInputs({ epoch: a.epoch, position: a.state.slice(0, 3), velocity: a.state.slice(3), samples, forces: FORCES })), samples);
+      const run = decodeExecution(await ffm.invoke('invoke', ffmInputs({ epoch: a.epoch, position: a.state.slice(0, 3), velocity: a.state.slice(3), samples, forces: FORCES })), samples);
       states.push({ epoch: a.epoch, state: a.state }, ...run.map((s) => ({ epoch: s.epoch, state: [...s.position, ...s.velocity] })));
     }
     states.push(b.states.at(-1));
     dense.push({ norad: b.norad, objectId: b.objectId, name: b.name, states });
   }
   write('data/od/truth-dense.json', dense.map((b) => ({ norad: b.norad, objectId: b.objectId, name: b.name, epochs: b.states.map((s) => s.epoch),
-    position: b.states.flatMap((s) => s.state.slice(0, 3)) })), 'IGS final GPS orbits densified to 60 s by propagator/hpop between IGS epochs', labelFor(['igs'], 'MIT (HPOP densification)'));
+    position: b.states.flatMap((s) => s.state.slice(0, 3)) })), 'IGS final GPS orbits densified to 60 s by propagator/ffm between IGS epochs', labelFor(['igs'], 'MIT (FFM densification)'));
   log(`od: dense truth for ${dense.length} satellites`);
 
-  // The catalog: HPOP from 23:59:42 with covariance and process noise.
+  // The catalog: FFM from 23:59:42 with covariance and process noise.
   const catalogEpochs = [];
   for (let ms = utcMs('2026-08-02T05:29:42Z'); ms <= utcMs('2026-08-02T10:29:42Z'); ms += 5 * MIN) catalogEpochs.push(isoMicro(ms));
   const sorted = [...truthBlocks];
@@ -127,13 +127,13 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
   const P0 = Array.from({ length: 36 }, (_, q) => (q % 7 ? 0 : q < 21 ? 1e-6 : 1e-12));  // 1 m, 1 mm/s (km units)
   for (const b of sorted.filter((x) => !withheld.includes(x.norad))) {
     const s0 = b.states[0];
-    const run = decodeExecution(await hpop.invoke('invoke', hpopInputs({ epoch: s0.epoch, position: s0.state.slice(0, 3), velocity: s0.state.slice(3), samples: catalogEpochs,
+    const run = decodeExecution(await ffm.invoke('invoke', ffmInputs({ epoch: s0.epoch, position: s0.state.slice(0, 3), velocity: s0.state.slice(3), samples: catalogEpochs,
       forces: FORCES, covariance: P0, noisePsd: [1e-11, 1e-11, 1e-11], noiseInterval: 60 })), catalogEpochs);
-    catalog.push({ norad: b.norad, objectId: b.objectId, name: b.name, comment: `IGS state at ${s0.epoch} UTC propagated by propagator/hpop with covariance`,
+    catalog.push({ norad: b.norad, objectId: b.objectId, name: b.name, comment: `IGS state at ${s0.epoch} UTC propagated by propagator/ffm with covariance`,
       states: run.map((s) => ({ epoch: s.epoch, state: [...s.position, ...s.velocity] })), covariances: run.map((s) => ({ epoch: s.epoch, matrix: s.covariance })) });
   }
-  write('data/od/catalog.oem', Buffer.from(encodeOem(catalog, { originator: 'propagator/hpop prediction of IGS states' })),
-    `${catalog.length} GPS satellites: IGS state at 2026-08-01T23:59:42Z propagated by propagator/hpop (20x20, Sun, Moon, SRP) with covariance, 05:30-10:30 UTC`, labelFor(['igs'], 'MIT (HPOP prediction)'));
+  write('data/od/catalog.oem', Buffer.from(encodeOem(catalog, { originator: 'propagator/ffm prediction of IGS states' })),
+    `${catalog.length} GPS satellites: IGS state at 2026-08-01T23:59:42Z propagated by propagator/ffm (20x20, Sun, Moon, SRP) with covariance, 05:30-10:30 UTC`, labelFor(['igs'], 'MIT (FFM prediction)'));
   log(`od: catalog of ${catalog.length} (withheld ${withheld.join(', ')})`);
 
   // Time: TT - UTC from foundation/time at one epoch of the day (no leap second in it).
@@ -156,11 +156,11 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
   }
   log(`od: ${targets.length} targets in ITRF`);
 
-  // The Sun, hourly, from HPOP's DE440 ephemeris, rotated to ITRF.
+  // The Sun, hourly, from FFM's DE440 ephemeris, rotated to ITRF.
   const sun = [];
   for (let ms = simFrom - 3600e3; ms <= simTo + 3600e3; ms += 3600e3) {
     const epoch = isoMicro(ms);
-    const g = decodeSun(await hpop.invoke('invoke', [sunRequest(await convertIso(time, epoch, 'UTC', 'TDB')), frame('kernel', 'PRW', kernelPrw)]));
+    const g = decodeSun(await ffm.invoke('invoke', [sunRequest(await convertIso(time, epoch, 'UTC', 'TDB')), frame('kernel', 'PRW', kernelPrw)]));
     const f = await transformState(frames, eop, { from: 'GCRF', to: 'ITRF', epoch, position: g.position, velocity: g.velocity });
     sun.push(sample(epoch, f.position, [0, 0, 0]));
   }
@@ -191,7 +191,7 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
     SUN_STATES: sun, EARTH_ORIENTATION: rows.map((r) => Object.assign(new ACW.EOPT(), r)), RANDOM_SEED: 20261009n,
     START_JULIAN_DATE_TT: jdTt(isoMicro(simFrom)), END_JULIAN_DATE_TT: jdTt(isoMicro(simTo)),
   }) }));
-  write('data/od/simulate.acw', Buffer.from(request.payload), 'analysis/observation-simulator request: dense truth in ITRF (foundation/frames), access (analysis/access), Sun (propagator/hpop DE440)', labelFor(['igs', 'iers', 'jpl-de440'], 'MIT'));
+  write('data/od/simulate.acw', Buffer.from(request.payload), 'analysis/observation-simulator request: dense truth in ITRF (foundation/frames), access (analysis/access), Sun (propagator/ffm DE440)', labelFor(['igs', 'iers', 'jpl-de440'], 'MIT'));
   // Check the request runs.
   const simulated = await simulator.invoke('simulate_observations', [request]);
   const counts = Object.fromEntries(['radar', 'optical', 'rf'].map((p) => [p, simulated.outputs.filter((o) => o.portId === p).length]));
@@ -205,5 +205,5 @@ export async function buildOd({ modules, referenceDir, eopRecords, kernelPrw, wr
     catalog: { epoch: truthBlocks[0].states[0].epoch, forces: FORCES, initialSigma: { positionM: 1, velocityMps: 1e-3 }, processNoisePsdM2S3: 1e-11, samples: catalogEpochs.length },
     ttMinusUtcSeconds: ttMinusUtc, counts,
   }, 'site/build-od.mjs: the scenario description', labelFor(['igs'], 'MIT'));
-  for (const m of [hpop, frames, access, simulator, time]) await m.destroy();
+  for (const m of [ffm, frames, access, simulator, time]) await m.destroy();
 }

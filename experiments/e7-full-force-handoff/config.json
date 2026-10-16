@@ -5,7 +5,7 @@
   "modulesBinary": {
     "repository": "space-data-network-modules",
     "commit": "095c20a622da225a06707f43f8840984fb5ea708",
-    "hpopWasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
+    "ffmWasmSha256": "0d1f626464ff42e444c265bce1a13ae84b5d7bb809bdeb83fdb92a26b591397f",
     "spacedatastandards": "1.241.0"
   },
   "inputs": {

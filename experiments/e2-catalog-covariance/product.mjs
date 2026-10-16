@@ -1,11 +1,11 @@
 // One E2 product: pseudo-observations from an object's element sets
 // (analysis/epoch-state: SGP4 at each set's epoch, in GCRF), the batch fit of
 // state and dynamic parameters (analysis/estimation fit_batch, answered by
-// propagator/hpop), and its propagation with covariance to the scoring
+// propagator/ffm), and its propagation with covariance to the scoring
 // epochs. This file routes records between the modules; it computes nothing.
 import { decodeOemStream, mpeFrame } from '../../harness/records.mjs';
 import { EST_TYPE, decodeResult, positionObservation, seedStruct } from './estimation-wire.mjs';
-import { decodeSamples, executionFrame } from './hpop.mjs';
+import { decodeSamples, executionFrame } from './ffm.mjs';
 
 // Space-Track epoch text (UTC, microseconds, no zone) -> Unix seconds,
 // keeping the microseconds that Date.parse would drop.
@@ -50,8 +50,8 @@ export function estEpoch(iso) {
 // of the observed state, the default, or 'INERTIAL' GCRF); reference: {epoch ISO, state}, the
 // product epoch and the first guess.
 // settings: {parameters [{kind, value}], apriori (n x n) | null, covarianceRtn [36], fit options, forces, integrator, fixed}.
-// Returns {fit, rounds, hpopCalls} or throws on a module failure.
-export async function fitProduct({ estimation, hpop, codec, inputs }, reference, observations, settings) {
+// Returns {fit, rounds, ffmCalls} or throws on a module failure.
+export async function fitProduct({ estimation, ffm, codec, inputs }, reference, observations, settings) {
   const isoByLabel = new Map(observations.map((o) => [JSON.stringify(estEpoch(o.epoch)), o.epoch]));
   const request = {
     config: {
@@ -63,7 +63,7 @@ export async function fitProduct({ estimation, hpop, codec, inputs }, reference,
       observation: { ...positionObservation(estEpoch(o.epoch), [0, 0, 0]), kind: 'POSITION_VELOCITY', value_count: 6 },
       values: o.state, sigmas: [1, 1, 1, 1, 1, 1],
     })),
-    propagator_port_id: 'propagator/hpop', propagator_capability: 'plugin_propagate plugin_compute_stm',
+    propagator_port_id: 'propagator/ffm', propagator_capability: 'plugin_propagate plugin_compute_stm',
     batch_options: {
       parameter_kinds: settings.parameters.map((p) => ({ DRAG_AREA_OVER_MASS: 1, DRAG_AREA_OVER_MASS_RATE: 2, SRP_AREA_OVER_MASS: 3, IN_TRACK_ACCELERATION: 4 })[p.kind]),
       parameter_values: settings.parameters.map((p) => p.value),
@@ -74,20 +74,20 @@ export async function fitProduct({ estimation, hpop, codec, inputs }, reference,
     },
   };
   const answers = [];
-  let hpopCalls = 0;
+  let ffmCalls = 0;
   for (let round = 0; ; ++round) {
     const response = await estimation.invoke('fit_batch', [{ portId: 'request', typeRef: EST_TYPE, payload: codec.encode({ request, propagation_answers: answers }) }]);
     const out = decodeResult(response.outputs.find((o) => o.portId === 'result').payload);
-    if (out.status !== 1) return { fit: out.fit, status: out.status, rounds: round, hpopCalls };
-    // One seed per round: one HPOP call with every observation epoch.
+    if (out.status !== 1) return { fit: out.fit, status: out.status, rounds: round, ffmCalls };
+    // One seed per round: one FFM call with every observation epoch.
     const q0 = out.queries[0];
     const parameters = settings.parameters.map((p, i) => ({ kind: p.kind, value: q0.parameter_values[i] }));
-    const samples = decodeSamples(await hpop.invoke('invoke', [
+    const samples = decodeSamples(await ffm.invoke('invoke', [
       executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: out.queries.map((q) => isoByLabel.get(JSON.stringify(q.target_epoch))),
         forces: settings.forces, parameters, fixed: settings.fixed, stm: true, covariance: null, noise: null, integrator: settings.integrator }),
       ...inputs,
     ]));
-    ++hpopCalls;
+    ++ffmCalls;
     out.queries.forEach((q, k) => {
       const s = samples[k], n = s.n, stm = [], sensitivity = [];
       for (let i = 0; i < 6; ++i) {
@@ -107,7 +107,7 @@ export async function fitProduct({ estimation, hpop, codec, inputs }, reference,
 // Propagates a product to the scoring epochs with its covariance; with
 // noise {q, intervalSeconds} the white-acceleration noise is added.
 // Returns [{epoch, position [m], covariance3 [9] (m^2)}].
-// propagator/hpop tests positive semidefiniteness by LDL' in km units with
+// propagator/ffm tests positive semidefiniteness by LDL' in km units with
 // an absolute tolerance of 1e-12 of the largest entry, and refuses a pivot
 // below it that still has a cross term. A fitted covariance whose velocity,
 // given the position, is known to better than that trips it. conditioned()
@@ -123,9 +123,9 @@ export function conditioned(covariance) {
   return out;
 }
 
-export async function propagateProduct({ hpop, inputs }, product, epochs, settings, { covariance, noise }) {
+export async function propagateProduct({ ffm, inputs }, product, epochs, settings, { covariance, noise }) {
   const parameters = settings.parameters.map((p, i) => ({ kind: p.kind, value: product.estimate[6 + i] }));
-  const samples = decodeSamples(await hpop.invoke('invoke', [
+  const samples = decodeSamples(await ffm.invoke('invoke', [
     executionFrame({ epoch: product.epoch, state: product.estimate.slice(0, 6), samples: epochs, forces: settings.forces, parameters, fixed: settings.fixed,
       stm: false, covariance, noise, integrator: settings.integrator }),
     ...inputs,

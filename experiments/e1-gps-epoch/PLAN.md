@@ -88,7 +88,7 @@ statistics only.
 | M3b | Hallgarten La Casta & Amato (2025) replication: one sinusoid in the Moon's mean anomaly, amplitude a sine of the right ascension of the ascending node, one parameter set for all satellites | Same |
 | M3c | Hierarchical harmonic regression (ours): along-track time offset = Sun/Moon harmonic covariates × β + a per-satellite random effect u ~ N(0, τ²), fitted by restricted maximum likelihood. An unseen satellite gets u = 0 and τ² in its predictive variance. | Same |
 | M4 | Variance model for the corrected product: per-axis RTN variance, log-linear in the covariates, fitted by minimum CRPS (Gneiting et al. 2005). A split-conformal 95 % region (Mahalanobis radius from validation scores) alongside. | Experiment fit |
-| M2 | Arc fit: EKF on a sequence of corrected element-set states as pseudo-observations, HPOP with Sun and Moon, cannonball radiation pressure and the 20×20 field; RTS smoothing reported separately as retrospective only | `analysis/estimation` + `propagator/hpop` (exploratory) |
+| M2 | Arc fit: EKF on a sequence of corrected element-set states as pseudo-observations, FFM (Full Force Model) with Sun and Moon, cannonball radiation pressure and the 20×20 field; RTS smoothing reported separately as retrospective only | `analysis/estimation` + `propagator/ffm` (exploratory) |
 
 **How a correction is applied.** A correction is an along-track time offset
 Δt. It is applied as an edit to the element set, mean anomaly + n·Δt, and
@@ -137,7 +137,7 @@ recorded in the manifest. Statistics are paired: every method is scored on
 the same element sets against the same truth.
 
 **Multiplicity.** H1, H2 and H3 are one family, tested by Holm's procedure at
-α = 0.05. Everything else is descriptive and labelled so.
+α = 0.05. Everything else is descriptive and labeled so.
 
 **Outliers.** The primary analysis applies `gp-error-model`'s 5 robust-sigma
 clip, with the mask fixed on M0's errors so that every method is scored on
@@ -222,7 +222,7 @@ commit.
 - **Heavy tails decide RMS.** In the A0 window one satellite (NORAD 35752)
   carries 99.6 % of the squared 3D error at 7 days; its errors look like a
   manoeuvre. At age 0, RMS is 3.76 km with every sample, 2.07 km under the
-  10 km rule, and the median is 1.30 km. A correction of a few kilometres
+  10 km rule, and the median is 1.30 km. A correction of a few kilometers
   cannot move a 70 km sample, so with every sample in the primary RMS, H1
   would be decided by manoeuvres rather than by the method. The options were
   (a) keep the primary as written; (b) exclude element sets in manoeuvre
@@ -267,7 +267,7 @@ are reported with the results.
   1. *Truth.* BKG no longer holds the IGS combined final orbit
      (`IGS0OPSFIN`, 15 min) for older weeks. For those days
      `analysis/reference-states` takes ESA's final orbit (`ESA0OPSFIN`,
-     5 min, an IGS analysis centre, same IGS20 frame and the same
+     5 min, an IGS analysis center, same IGS20 frame and the same
      conversion), so the truth is IGS where BKG has the day and ESA
      elsewhere. Each run's manifest lists every product. ESA's files hold
      every GNSS; only satellites whose SP3 identifier starts with G count.

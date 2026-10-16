@@ -1,7 +1,7 @@
-// Section 7, accuracy against precise orbits: a V1 seed through V1's HPOP
+// Section 7, accuracy against precise orbits: a V1 seed through the current FFM
 // binary for 72 h in any configuration, against the precise orbit, and
 // against the committed V1 result. Two plot boxes follow one clock: the
-// orbit (GCRF, km), and HPOP − truth in the radial, in-track and cross-track
+// orbit (GCRF, km), and FFM − truth in the radial, in-track and cross-track
 // axes of the truth (m); the chart's cursor and the slider set the time.
 import { formatMeters } from '../../chart.js';
 import { runV1Seed } from '../../runs.js';
@@ -26,8 +26,8 @@ export default async function run(ctx) {
     if (event.target.id === 'seed') p.querySelector('#object').value = seeds[Number(event.target.value)].object;
     one();
   });
-  const orbit = scene3d(ctx, { title: 'The orbit', caption: 'GCRF; the precise orbit and HPOP' });
-  const error = scene3d(ctx, { title: 'HPOP − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit' });
+  const orbit = scene3d(ctx, { title: 'The orbit', caption: 'GCRF; the precise orbit and FFM' });
+  const error = scene3d(ctx, { title: 'FFM − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit' });
   const figure = chart(ctx.root, '3D error against the precise orbit', 'This run, and the V1 median of its group; drag to move the boxes above in time');
   const summary = panel(ctx.root, 'V1 medians, every seed');
   table(summary, ['Configuration', 'SLR 24 h', 'SLR 72 h', 'GPS 24 h'], [...Object.keys(config.configurations), 'R-20'].map((c) => {
@@ -35,7 +35,7 @@ export default async function run(ctx) {
     return { class: c === 'E-f' ? 'highlight' : '', cells: [c, m('SLR', 24), m('SLR', 72), m('GPS', 24)] };
   }));
   await credits(ctx, ctx.root, ['data/v1/seeds.json', 'data/v1/metrics.json', ...new Set(seeds.map((s) => `data/truth/${s.object}.json`))]);
-  const [hpop, time] = await Promise.all([ctx.module('propagator/hpop-v1'), ctx.module('foundation/time')]);
+  const [ffm, time] = await Promise.all([ctx.module('propagator/ffm'), ctx.module('foundation/time')]);
 
   // The chart's cursor and the page's clock, in hours from the seed.
   let seedMs = null;
@@ -44,8 +44,8 @@ export default async function run(ctx) {
   async function one() {
     const v = form.values();
     const seed = seeds[Number(v.seed)];
-    await ctx.run(`propagator/hpop: ${objectName(seed.object)}, ${v.cfg}, 72 h`, async () => {
-      const r = await runV1Seed({ hpop, time, seed, config, metrics, cfgName: v.cfg, onStatus: ctx.status });
+    await ctx.run(`propagator/ffm: ${objectName(seed.object)}, ${v.cfg}, 72 h`, async () => {
+      const r = await runV1Seed({ ffm, time, seed, config, metrics, cfgName: v.cfg, onStatus: ctx.status });
       const at = (h) => r.rows.find((x) => Math.abs(x.hours - h) < 1e-9)?.errorM;
       tiles(p, [['1 h', formatMeters(at(1))], ['24 h', formatMeters(at(24))], ['72 h', formatMeters(at(72))], ['In this browser', `${r.seconds.toFixed(1)} s`]]);
       seedMs = seed.seedUnixMs;
@@ -56,34 +56,34 @@ export default async function run(ctx) {
       ], x: { min: 0, max: 72, ticks: [0, 24, 48, 72], format: (h) => `${Number(h.toFixed(2))} h` },
       cursor: { x: 72, set: (h) => ctx.time.set(seedMs + h * HOUR) } });
 
-      // Every truth sample: the precise state, HPOP's, and HPOP − truth in
+      // Every truth sample: the precise state, FFM's, and FFM − truth in
       // the truth's radial, in-track and cross-track axes (m).
-      const rows = r.rows.map((x, k) => ({ ms: x.ms, truth: x.truth, hpop: x.hpop, basis: rtn(x.truth, r.run.samples[k].velocity) }));
-      const ric = rows.map((x) => [x.ms, toRtn(x.basis, v3.sub(x.hpop, x.truth)).map((c) => c * 1000)]);
+      const rows = r.rows.map((x, k) => ({ ms: x.ms, truth: x.truth, ffm: x.ffm, basis: rtn(x.truth, r.run.samples[k].velocity) }));
+      const ric = rows.map((x) => [x.ms, toRtn(x.basis, v3.sub(x.ffm, x.truth)).map((c) => c * 1000)]);
       const truthTrack = [[0, r.s0.position], ...rows.map((x) => [(x.ms - seedMs) / 1000, x.truth])];
-      const hpopTrack = [[0, r.s0.position], ...rows.map((x) => [(x.ms - seedMs) / 1000, x.hpop])];
+      const ffmTrack = [[0, r.s0.position], ...rows.map((x) => [(x.ms - seedMs) / 1000, x.ffm])];
       const span = { startMs: seedMs, stopMs: rows.at(-1).ms, format: (ms) => `${utc(ms)} · +${((ms - seedMs) / HOUR).toFixed(1)} h` };
       await orbit.draw((g) => {
         g.earth();
         g.track(truthTrack, { color: 'cyan', width: 2, alpha: 0.8, subdivide: 4 });
-        g.track(hpopTrack, { color: 'accent', width: 1.2, alpha: 0.7, subdivide: 4 });
+        g.track(ffmTrack, { color: 'accent', width: 1.2, alpha: 0.7, subdivide: 4 });
         g.point(r.s0.position, { color: 'sat', size: 8, label: 'Seed', labelOptions: { above: true } });
-        g.moving(rows.map((x) => [x.ms, x.hpop]), { color: 'accent', size: 10, trail: false, label: objectName(seed.object) });
+        g.moving(rows.map((x) => [x.ms, x.ffm]), { color: 'accent', size: 10, trail: false, label: objectName(seed.object) });
         g.moving(rows.map((x) => [x.ms, x.truth]), { color: 'cyan', size: 7, trail: false });
         g.view({ preset: '3d' });
       }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal', time: span,
-        caption: `GCRF; ${objectName(seed.object)} from ${utc(seedMs)}, 72 h; ${seed.group === 'SLR' ? 'the ILRS' : 'the IGS'} precise orbit and HPOP (${v.cfg}); the Earth at 6,378 km`,
-        legend: [['cyan', seed.group === 'SLR' ? 'ILRS precise orbit' : 'IGS precise orbit'], ['accent', `HPOP, ${v.cfg}`], ['earth', 'Earth, 6,378.137 km']] });
+        caption: `GCRF; ${objectName(seed.object)} from ${utc(seedMs)}, 72 h; ${seed.group === 'SLR' ? 'the ILRS' : 'the IGS'} precise orbit and FFM (${v.cfg}); the Earth at 6,378 km`,
+        legend: [['cyan', seed.group === 'SLR' ? 'ILRS precise orbit' : 'IGS precise orbit'], ['accent', `FFM, ${v.cfg}`], ['earth', 'Earth, 6,378.137 km']] });
       await error.draw((g) => {
         g.point([0, 0, 0], { color: 'cyan', size: 8, label: 'Precise orbit', labelColor: 'cyan' });
         g.line(ric.map((q) => q[1]), { color: 'muted', width: 1, alpha: 0.5 });
-        g.moving(ric, { color: 'accent', size: 9, trail: 2.5, label: 'HPOP' });
+        g.moving(ric, { color: 'accent', size: 9, trail: 2.5, label: 'FFM' });
         g.vector([0, 0, 0], ric, { color: 'accent', width: 6 });
         g.view({ preset: '3d' });
       }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'normal', time: span,
-        caption: `HPOP − the precise orbit at each sample, in the radial, in-track and cross-track axes of the precise orbit (m); the trail up to the time shown`,
-        legend: [['accent', 'HPOP − truth, to the time shown'], ['muted', 'The whole 72 h'], ['cyan', 'The precise orbit (origin)', 'dot']] });
-      const verdict = r.reproduced === null ? '' : r.reproduced === 0 ? ` It reproduces results/v1 exactly at all ${r.compared} horizons.` : ` It reproduces results/v1 to ${formatMeters(r.reproduced, 3)}.`;
+        caption: `FFM − the precise orbit at each sample, in the radial, in-track and cross-track axes of the precise orbit (m); the trail up to the time shown`,
+        legend: [['accent', 'FFM − truth, to the time shown'], ['muted', 'The whole 72 h'], ['cyan', 'The precise orbit (origin)', 'dot']] });
+      const verdict = r.reproduced === null ? '' : r.reproduced === 0 ? ` It matches results/v1 exactly at all ${r.compared} horizons.` : ` It differs from results/v1 by up to ${formatMeters(r.reproduced, 3)}.`;
       return `${objectName(seed.object)}, ${v.cfg}: ${formatMeters(at(24))} after a day, ${formatMeters(at(72))} after three.${verdict}`;
     });
   }

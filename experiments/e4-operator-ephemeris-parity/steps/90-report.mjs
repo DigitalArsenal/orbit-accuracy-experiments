@@ -201,7 +201,7 @@ lines.push('');
 for (const p of providers) {
   const pv = metrics.providers[p];
   lines.push(`## ${p}`, '', '3D difference from the operator, km: median / 95th percentile / max (samples).', '',
-    '| Horizon (h) | S (SGP4) | H (HPOP) | H/S median ratio [95 %] |' + (p === 'planet' ? ' P (operator TLE) |' : ''), '| --- | --- | --- | --- |' + (p === 'planet' ? ' --- |' : ''));
+    '| Horizon (h) | S (SGP4) | H (FFM) | H/S median ratio [95 %] |' + (p === 'planet' ? ' P (operator TLE) |' : ''), '| --- | --- | --- | --- |' + (p === 'planet' ? ' --- |' : ''));
   for (const [h, m] of Object.entries(pv.horizons)) {
     const cell = (d) => (d?.primary?.n ? `${km(d.primary.km3d.median)} / ${km(d.primary.km3d.p95)} / ${km(d.primary.km3d.max)} (${d.primary.n})` : '–');
     lines.push(`| ${h} | ${cell(m.S)} | ${cell(m.H)} | ${m.h5 ? `${m.h5.estimate.toFixed(2)} [${m.h5.lower.toFixed(2)}, ${m.h5.upper.toFixed(2)}] ${m.h5.verdict}` : '–'} |` + (p === 'planet' ? ` ${cell(m.P)} |` : ''));

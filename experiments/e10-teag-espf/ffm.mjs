@@ -1,10 +1,10 @@
-// propagator/hpop execution requests with every force the module carries
+// propagator/ffm execution requests with every force the module carries
 // (SDS 1.240.0 PRW): EGM2008 to the configured degree in Earth-fixed axes with
 // IERS EOP, Sun, Moon and planets from a JPL DE440 excerpt, cannonball
 // radiation pressure with conical shadow, drag (JB2008 with SET's drivers, or
 // NRLMSISE-00 with GFZ's), IERS 2010 solid tides and relativity. Adapted from
 // E7's harness/full-force.mjs (task/e7-full-force-20261009, e59ac6b, not yet
-// on main) and E5's hpop.mjs. Encoding, decoding and the selection of
+// on main) and E5's ffm.mjs. Encoding, decoding and the selection of
 // published driver rows only; SI units, UTC epochs. Physical coefficients ride
 // on unit area and mass: DRAG_COEFFICIENT carries Cd*A/m and
 // REFLECTIVITY_COEFFICIENT Cr*A/m (m^2/kg), as in E2, E5 and E7.
@@ -68,7 +68,7 @@ export function readGfzKp(file) {
   return { days, sha256: sha256(bytes) };
 }
 // $SPW rows as CSSI lays them out (E5's and E7's rule): Kp x10, ap, daily Ap,
-// observed F10.7 and its 81-day centred mean over the reported days.
+// observed F10.7 and its 81-day centered mean over the reported days.
 function spwRows(gfz, fromMs, toMs) {
   const { days } = gfz;
   const filled = (t) => {
@@ -181,14 +181,14 @@ function execution({ epochIso, state, sampleIsos, forces: f, integrator: it, stm
 }
 
 // One propagation of one state: samples [{state [m, m/s], stm [36] | null}] in
-// sample order. The environment frames go with every request. HPOP takes at
+// sample order. The environment frames go with every request. FFM takes at
 // most 10,000 samples a request: longer lists go in chunks, each integrated
 // from the same epoch and state (one trajectory, sampled in parts).
 export const MAX_SAMPLES = 10000;
-export async function propagate(hpop, env, model, { epochIso, state, sampleIsos, stm = false }) {
+export async function propagate(ffm, env, model, { epochIso, state, sampleIsos, stm = false }) {
   if (sampleIsos.length > MAX_SAMPLES) {
     const out = [];
-    for (let i = 0; i < sampleIsos.length; i += MAX_SAMPLES) out.push(...await propagate(hpop, env, model, { epochIso, state, sampleIsos: sampleIsos.slice(i, i + MAX_SAMPLES), stm }));
+    for (let i = 0; i < sampleIsos.length; i += MAX_SAMPLES) out.push(...await propagate(ffm, env, model, { epochIso, state, sampleIsos: sampleIsos.slice(i, i + MAX_SAMPLES), stm }));
     return out;
   }
   const inputs = [execution({ epochIso, state, sampleIsos, forces: model.forces, integrator: model.integrator, stm }), env.kernel, env.eop];
@@ -197,10 +197,10 @@ export async function propagate(hpop, env, model, { epochIso, state, sampleIsos,
     if (drivers.missing) throw new Error(`drag drivers unavailable: ${drivers.missing}`);
     inputs.push(drivers);
   }
-  const response = await hpop.invoke('invoke', inputs);
+  const response = await ffm.invoke('invoke', inputs);
   const frame = response.outputs.find((o) => o.portId === 'response');
   const root = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(frame.payload))).unpack();
-  if (!root.EXECUTION_RESULT) throw new Error('propagator/hpop: no execution result');
+  if (!root.EXECUTION_RESULT) throw new Error('propagator/ffm: no execution result');
   return root.EXECUTION_RESULT.SAMPLES.map((s) => {
     const st = s.STATE.STATE;
     const n = s.STM?.DIMENSION ?? 6;

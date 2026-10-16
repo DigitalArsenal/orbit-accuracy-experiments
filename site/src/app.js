@@ -1,5 +1,5 @@
 // Orbit Accuracy Experiments, the page. The propagation, time-scale and VCM
-// work runs in the experiments' own modules (propagator/hpop,
+// work runs in the experiments' own modules (propagator/ffm,
 // foundation/time, analysis/vcm-adapter) through the space-data-module-sdk
 // browser harness, framed by the same harness code the experiments use in
 // Node (harness/prw.mjs, harness/time.mjs). This file moves bytes, takes
@@ -18,7 +18,7 @@ const CONFIG_TEXT = {
   'E-c': 'Zonals + Sun and Moon (JPL DE440).',
   'E-d': 'Zonals, Sun, Moon + radiation pressure with the conical shadow.',
   'E-e': '20×20 EGM2008 in ITRF with IERS Earth orientation, Sun, Moon, radiation pressure.',
-  'E-f': 'E-e + IERS 2010 solid tides and relativity: every force HPOP models.',
+  'E-f': 'E-e + IERS 2010 solid tides and relativity: every force FFM models.',
   'R-20': 'The resident catalog path: 20×20 field, no Sun or Moon.',
 };
 const OBJECT_NAMES = { lageos1: 'LAGEOS-1', lageos2: 'LAGEOS-2', etalon1: 'ETALON-1', etalon2: 'ETALON-2' };
@@ -60,7 +60,7 @@ function renderFacts() {
   const s = state.metrics.summary;
   const at = (group, cfg, h) => s.find((r) => r.group === group && r.configuration === cfg)?.[`${h}h`]?.medianM;
   const facts = [
-    [formatMeters(at('SLR', 'E-f', 24)), 'median HPOP error after a day, SLR spheres, every force (V1)'],
+    [formatMeters(at('SLR', 'E-f', 24)), 'median FFM error after a day, SLR spheres, every force (V1)'],
     [formatMeters(at('SLR', 'E-f', 72)), 'after three days'],
     [formatMeters(at('GPS', 'E-f', 24)), 'after a day, GPS, with a cannonball for the satellite'],
     [formatMeters(state.metrics.checks['V1.1'].errorM), 'two-body closure after five orbits'],
@@ -96,8 +96,8 @@ function setupLive() {
   (async () => {
     state.globe = await createGlobe($('globe'));
     isolationNote();
-    const [hpop, time] = await Promise.all([module('propagator/hpop-v1'), module('foundation/time')]);
-    status($('status'), `Ready: V1's propagator/hpop ${hpop.provenance.wasmSha256.slice(0, 12)}…, foundation/time ${time.provenance.wasmSha256.slice(0, 12)}…`);
+    const [ffm, time] = await Promise.all([module('propagator/ffm-v1'), module('foundation/time')]);
+    status($('status'), `Ready: V1's propagator/ffm ${ffm.provenance.wasmSha256.slice(0, 12)}…, foundation/time ${time.provenance.wasmSha256.slice(0, 12)}…`);
   })().catch((e) => { isolationNote(); status($('status'), `The modules could not load: ${e.message}`, true); });
 }
 
@@ -107,9 +107,9 @@ async function runLive() {
   const seed = state.seeds[Number($('seed').value)];
   const cfgName = $('configuration').value;
   status($('status'), `Preparing ${objectName(seed.object)}…`);
-  const [hpop, time] = await Promise.all([module('propagator/hpop-v1'), module('foundation/time')]);
+  const [ffm, time] = await Promise.all([module('propagator/ffm-v1'), module('foundation/time')]);
   const { forces, withKernel, s0, rows, run, dense, response, seconds, reproduced, compared } = await runV1Seed({
-    hpop, time, seed, config: state.config, metrics: state.metrics, cfgName, onStatus: (text) => status($('status'), text) });
+    ffm, time, seed, config: state.config, metrics: state.metrics, cfgName, onStatus: (text) => status($('status'), text) });
   const err = (h) => rows.find((r) => Math.abs(r.hours - h) < 1e-9)?.errorM;
   $('tiles').innerHTML = [[1, '1 h'], [24, '24 h'], [72, '72 h']].map(([h, l]) => `<div><dt>${l}</dt><dd>${formatMeters(err(h))}</dd></div>`).join('');
   const verdict = reproduced === null ? 'results/v1 has no row for this seed and configuration to compare with.'
@@ -128,19 +128,19 @@ async function runLive() {
   const period = 2 * Math.PI * Math.sqrt(Math.hypot(...s0.position) ** 3 / 398600.4418);
   await state.globe.show([
     { id: 'truth', name: 'Precise orbit', color: 'amber', epochsMs: [seed.seedUnixMs, ...rows.map((r) => r.ms)], positionsKm: [...s0.position, ...rows.flatMap((r) => r.truth)] },
-    { id: 'hpop', name: 'HPOP', color: 'cyan', epochsMs: [seed.seedUnixMs, ...rows.map((r) => r.ms)], positionsKm: [...s0.position, ...rows.flatMap((r) => r.hpop)] },
+    { id: 'ffm', name: 'FFM', color: 'cyan', epochsMs: [seed.seedUnixMs, ...rows.map((r) => r.ms)], positionsKm: [...s0.position, ...rows.flatMap((r) => r.ffm)] },
   ], { periodSeconds: period });
   const base = `${seed.object}-${seed.seedUtc.slice(0, 10)}-${cfgName}`;
   const box = $('run-downloads');
   box.innerHTML = '';
-  downloadButton(box, 'CSV', `${base}.csv`, () => toCsv(['utc', 'hours', 'truth_x_km', 'truth_y_km', 'truth_z_km', 'hpop_x_km', 'hpop_y_km', 'hpop_z_km', 'error_m'],
-    rows.map((r) => [isoMicro(r.ms), r.hours.toFixed(6), ...r.truth.map((x) => x.toFixed(6)), ...r.hpop.map((x) => x.toFixed(6)), r.errorM.toFixed(4)])), 'text/csv');
+  downloadButton(box, 'CSV', `${base}.csv`, () => toCsv(['utc', 'hours', 'truth_x_km', 'truth_y_km', 'truth_z_km', 'ffm_x_km', 'ffm_y_km', 'ffm_z_km', 'error_m'],
+    rows.map((r) => [isoMicro(r.ms), r.hours.toFixed(6), ...r.truth.map((x) => x.toFixed(6)), ...r.ffm.map((x) => x.toFixed(6)), r.errorM.toFixed(4)])), 'text/csv');
   downloadButton(box, 'CZML', `${base}.czml`, () => JSON.stringify(czml(seed, rows, s0, period)), 'application/json');
   downloadButton(box, 'PRW request', `${base}-request.prw`, () => dense.payload);
   downloadButton(box, 'PRW result', `${base}-result.prw`, () => response.outputs.find((o) => o.portId === 'response').payload);
   downloadButton(box, 'Run record', `${base}.json`, () => JSON.stringify({
     seed, configuration: cfgName, forces, integrator: state.config.integrator, samples: rows.length,
-    modules: [hpop.provenance, time.provenance], inputs: { kernel: withKernel ? 'data/kernel/de440-2026.prw' : null, earthOrientation: forces.eop ? 'data/eop/eop-v1.prw' : null },
+    modules: [ffm.provenance, time.provenance], inputs: { kernel: withKernel ? 'data/kernel/de440-2026.prw' : null, earthOrientation: forces.eop ? 'data/eop/eop-v1.prw' : null },
     browserSeconds: seconds, reproducesV1WithinM: reproduced, horizonsCompared: compared,
   }, null, 2), 'application/json');
   button.disabled = false;
@@ -156,9 +156,9 @@ function czml(seed, rows, s0, period) {
     point: { pixelSize: 8, color: { rgba } },
   });
   return [
-    { id: 'document', name: `${objectName(seed.object)}: precise orbit and HPOP`, version: '1.0', clock: { interval: `${start}/${stop}`, currentTime: start, multiplier: 600 } },
+    { id: 'document', name: `${objectName(seed.object)}: precise orbit and FFM`, version: '1.0', clock: { interval: `${start}/${stop}`, currentTime: start, multiplier: 600 } },
     track('truth', 'Precise orbit (GCRF)', [245, 165, 36, 255], (r) => r.truth),
-    track('hpop', 'HPOP', [89, 217, 255, 255], (r) => r.hpop),
+    track('ffm', 'FFM', [89, 217, 255, 255], (r) => r.ffm),
   ];
 }
 
@@ -181,8 +181,8 @@ function renderV1() {
   }</tbody>`;
   const detail = {
     'V1.1': () => `${formatMeters(checks['V1.1'].errorM, 1)} after five orbits (limit 1 m).`,
-    'V1.2': () => `${checks['V1.2'].failures.length} violations. Without tesserals the errors are hundreds of metres to kilometres, and an added force can move a seed either way inside that; with them every SLR seed improves.`,
-    'V1.3': () => `${checks['V1.3'].failures.length} of 96 GPS seeds. The criterion compared two models without the Sun and Moon, whose absence dominates GPS at a day; the resident model agrees with the execution path to metres.`,
+    'V1.2': () => `${checks['V1.2'].failures.length} violations. Without tesserals the errors are hundreds of meters to kilometers, and an added force can move a seed either way inside that; with them every SLR seed improves.`,
+    'V1.3': () => `${checks['V1.3'].failures.length} of 96 GPS seeds. The criterion compared two models without the Sun and Moon, whose absence dominates GPS at a day; the resident model agrees with the execution path to meters.`,
     'V1.4': () => `${formatMeters(checks['V1.4'].medianM)} over ${checks['V1.4'].n} seeds (limit 500 m).`,
   };
   $('v1-criteria').innerHTML = Object.entries(checks).map(([id, c]) => `<li><span class="badge ${c.pass ? 'pass' : 'fail'}">${id} ${c.pass ? 'pass' : 'fail'}</span><span>${c.description[0].toUpperCase()}${c.description.slice(1)}. ${detail[id]?.() ?? ''}</span></li>`).join('');
@@ -198,7 +198,7 @@ function renderV1() {
   box.appendChild(a);
 }
 
-// ── HPOP against Orekit ──
+// ── FFM against Orekit ──
 async function setupOrekit() {
   const [cases, results] = await Promise.all([fetchJson('./data/orekit/cases.json'), fetchJson('./data/orekit/results.json')]);
   const select = $('orekit-case');
@@ -213,16 +213,16 @@ async function setupOrekit() {
   const box = $('orekit-downloads');
   downloadLink(box, 'Orekit reference trajectories', './data/orekit/orekit-reference.json');
   downloadLink(box, 'Case index and requests', './data/orekit/cases.json');
-  downloadLink(box, 'HPOP results', './data/orekit/results.json');
+  downloadLink(box, 'FFM results', './data/orekit/results.json');
   const outside = results.cases.filter((r) => !r.pass || r.jacobiansPass === false).length;
-  status($('orekit-status'), `${cases.length} cases, ${outside ? `${outside} outside` : 'every one within'} tolerance; largest ${formatMeters(Math.max(...results.cases.map((r) => r.worstM)), 3)} (recorded with HPOP ${results.hpopWasmSha256.slice(0, 12)}…, ${results.runtime}).`, outside > 0);
+  status($('orekit-status'), `${cases.length} cases, ${outside ? `${outside} outside` : 'every one within'} tolerance; largest ${formatMeters(Math.max(...results.cases.map((r) => r.worstM)), 3)} (recorded with FFM ${results.ffmWasmSha256.slice(0, 12)}…, ${results.runtime}).`, outside > 0);
   $('orekit-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const c = cases[Number(select.value)];
     try {
       if (c.unavailable) { status($('orekit-status'), `${c.orbit} ${c.forces}: ${c.unavailable} Recorded: ${formatMeters(results.cases.find((r) => r.id === c.id).worstM, 3)}.`); return; }
       status($('orekit-status'), `Running ${c.orbit} ${c.forces} in this browser…`);
-      const { worst, worstAt, seconds } = await runOrekitCase(await module('propagator/hpop'), c);
+      const { worst, worstAt, seconds } = await runOrekitCase(await module('propagator/ffm'), c);
       const recorded = results.cases.find((r) => r.id === c.id).worstM;
       status($('orekit-status'), `${c.orbit} ${c.forces}: largest difference from Orekit ${formatMeters(worst, 3)} at ${worstAt} h (tolerance ${formatMeters(c.toleranceM)}), ${seconds.toFixed(2)} s in this browser; the recorded run had ${formatMeters(recorded, 3)}.`);
     } catch (e) { status($('orekit-status'), e.message, true); }
@@ -238,9 +238,9 @@ async function setupVcm() {
 }
 
 async function runVcm(text) {
-  status($('vcm-status'), 'Loading analysis/vcm-adapter and propagator/hpop…');
-  const [adapter, hpop] = await Promise.all([module('analysis/vcm-adapter'), module('propagator/hpop')]);
-  const { runs } = await vcmReadPropagate(adapter, hpop, text, { onStatus: (t) => status($('vcm-status'), t) });
+  status($('vcm-status'), 'Loading analysis/vcm-adapter and propagator/ffm…');
+  const [adapter, ffm] = await Promise.all([module('analysis/vcm-adapter'), module('propagator/ffm')]);
+  const { runs } = await vcmReadPropagate(adapter, ffm, text, { onStatus: (t) => status($('vcm-status'), t) });
   const { report } = runs.fractional;
   const axes = ['U radial', 'V in-track', 'W cross-track'];
   const b = (rows) => runs[rows].report.parameterSigmas.find((p) => p.name === 'B');
@@ -276,7 +276,7 @@ async function runVcm(text) {
 // ── Experiments ──
 function renderExperiments() {
   const cards = [
-    ['V1', 'Reported', 'HPOP against real orbits', 'HPOP seeded from SLR and GPS precise orbits and compared with them, force model by force model. The results above.', 'experiments/v1-hpop-physical-truth/PLAN.md', 'results/v1/README.md'],
+    ['V1', 'Reported', 'FFM against real orbits', 'FFM seeded from SLR and GPS precise orbits and compared with them, force model by force model. The results above.', 'experiments/v1-ffm-physical-truth/PLAN.md', 'results/v1/README.md'],
     ['E1', 'Plan; harness checked; truth being fetched', 'Correcting GPS element sets at epoch', 'Can a public element set be made more accurate at its epoch, with an honest uncertainty, using only what is known when it is published? Ly et al. report 65 %; the primary statistic is decided (5 robust-sigma clipped RMS) before any fit.', 'experiments/e1-gps-epoch/PLAN.md', 'results/e1/a0/REPORT.md'],
     ['E2', 'Plan in draft', 'Covariance from catalog history', 'VCM-equivalent products (state, B, BDOT, AGOM, covariance) from public catalog history and E1’s corrections, with covariance realism measured against precise orbits at 0, 1, 3 and 7 days.', 'experiments/e2-catalog-covariance/PLAN.md', 'docs/vcm-parity.md'],
   ];
@@ -292,7 +292,7 @@ function renderData() {
     ['modules/', 'Module binaries', 'The WebAssembly this page runs, byte for byte the artifacts the experiments ran.'],
     ['data/truth/', 'Precise orbits', 'GCRF positions and velocities at the epochs V1 compares: SLR spheres every 10 min, GPS every 15 min.'],
     ['data/v1/', 'V1 results', 'The committed run: seeds, per-seed errors, summary and manifest.'],
-    ['data/orekit/', 'HPOP against Orekit', 'The reference trajectories, every case’s exact PRW request and inputs, and the recorded HPOP results.'],
+    ['data/orekit/', 'FFM against Orekit', 'The reference trajectories, every case’s exact PRW request and inputs, and the recorded FFM results.'],
     ['data/kernel/', 'Ephemeris', 'The DE440 excerpt for 2026 the propagations read for the Sun and Moon.'],
     ['data/eop/', 'Earth orientation', 'The IERS EOP 20 C04 rows over the V1 arcs.'],
     ['data/vcm/', 'VCM', 'The sample message read and propagated (spacedatastandards.org survey, public sources).'],

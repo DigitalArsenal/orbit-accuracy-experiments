@@ -1,13 +1,13 @@
 // One estimator over one observation sequence through analysis/estimation
 // (run_estimation; extension v3 for ESPF and the set-membership filter;
-// fit_batch for the batch), every propagation answered by propagator/hpop at
+// fit_batch for the batch), every propagation answered by propagator/ffm at
 // full force. Sequential runs take one observation per request and carry the
 // posterior to the next request (the state and covariance, or the support
 // state), as the module's README recommends for long arcs. Framing and
 // counting only.
 import { epochOf, msOfEpoch } from './estimation-codec.mjs';
 import { iso } from './common.mjs';
-import { propagate } from './hpop.mjs';
+import { propagate } from './ffm.mjs';
 
 const zero3 = [0, 0, 0];
 // Phi P Phi' (6 x 6, row-major).
@@ -36,13 +36,13 @@ const extended = (T, o, lightTime) => T('ExtendedObservation', {
   ...(o.linearMatrix ? { linearMatrix: [...o.linearMatrix], linearOffset: [...o.linearOffset] } : {}),
 });
 
-// Answers every query of one round by HPOP; counts calls.
+// Answers every query of one round by FFM; counts calls.
 async function answer(ctx, queries, stm) {
   const out = [];
   for (const q of queries) {
     const from = msOfEpoch(q.seed.epoch), to = msOfEpoch(q.targetEpoch);
-    const [s] = await propagate(ctx.hpop, ctx.env, ctx.filterModel, { epochIso: iso(from), state: q.seed.state, sampleIsos: [iso(to)], stm });
-    ctx.calls.hpop += 1;
+    const [s] = await propagate(ctx.ffm, ctx.env, ctx.filterModel, { epochIso: iso(from), state: q.seed.state, sampleIsos: [iso(to)], stm });
+    ctx.calls.ffm += 1;
     if (ctx.answers) ctx.answers.set(q.sequence, s.state);
     out.push(ctx.codec.T('PropagationAnswer', { query: q, sample: ctx.codec.T('EstimationPropagatorSample', { epoch: q.targetEpoch, state: s.state, stm: s.stm ?? new Array(36).fill(0) }) }));
   }
@@ -73,7 +73,7 @@ export async function runSequential(ctx, variant, initial, observations, { light
   const T = codec.T;
   const stm = variant.estimator === 'EXTENDED_KALMAN_FILTER' || variant.estimator === 'ELLIPSOIDAL_SET_MEMBERSHIP';
   const setBased = ['ESPF_2025', 'ESPF_2026', 'ELLIPSOIDAL_SET_MEMBERSHIP'].includes(variant.estimator);
-  ctx.calls = { hpop: 0, estimation: 0 };
+  ctx.calls = { ffm: 0, estimation: 0 };
   const started = process.hrtime.bigint();
   let state = [...initial.state], covariance = [...initial.covariance], support = initialSupport, previousMs = initial.ms;
   const epochs = [];
@@ -97,7 +97,7 @@ export async function runSequential(ctx, variant, initial, observations, { light
       processNoise: (variant.processNoisePsd ?? [0, 0, 0]).some((v) => v > 0) ? codec.api.ProcessNoiseKind.STATE_NOISE_COMPENSATION : codec.api.ProcessNoiseKind.NONE, flags: 0,
     });
     const envelope = T('EstimationEnvelope', {
-      request: T('EstimationRequest', { config, observations: [], extendedObservations: [extended(T, o, lightTime)], propagatorPortId: 'propagator/hpop', propagatorCapability: 'plugin_propagate plugin_compute_stm', traceId: 'e10', options }),
+      request: T('EstimationRequest', { config, observations: [], extendedObservations: [extended(T, o, lightTime)], propagatorPortId: 'propagator/ffm', propagatorCapability: 'plugin_propagate plugin_compute_stm', traceId: 'e10', options }),
       propagationAnswers: [],
     });
     let result;
@@ -133,13 +133,13 @@ export async function runSequential(ctx, variant, initial, observations, { light
 // (fit_batch, state only), from the initial state propagated there; then the
 // fit propagated to every observation epoch.
 // With stmAtEpochs, each epoch also carries the fit's state covariance
-// carried by HPOP's state transition matrix, Phi P Phi'.
+// carried by FFM's state transition matrix, Phi P Phi'.
 // observationCovariances: value_count^2 values per observation, concatenated
 // (request axes), replacing the sigmas.
 export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maximumIterations = 20, lightTime = true, stmAtEpochs = false, observationCovariances = [] } = {}) {
   const { codec } = ctx;
   const T = codec.T;
-  ctx.calls = { hpop: 0, estimation: 0 };
+  ctx.calls = { ffm: 0, estimation: 0 };
   const started = process.hrtime.bigint();
   const config = T('EstimationConfig', {
     initialEpoch: T('EstimationEpoch', epochOf(initial.ms)), initialState: initial.state, initialCovariance: new Array(36).fill(0),
@@ -149,7 +149,7 @@ export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maxi
   });
   const envelope = T('EstimationEnvelope', {
     request: T('EstimationRequest', {
-      config, observations: [], extendedObservations: observations.map((o) => extended(T, o, lightTime)), propagatorPortId: 'propagator/hpop',
+      config, observations: [], extendedObservations: observations.map((o) => extended(T, o, lightTime)), propagatorPortId: 'propagator/ffm',
       propagatorCapability: 'plugin_propagate plugin_compute_stm', traceId: 'e10',
       batchOptions: T('BatchFitOptions', { parameterKinds: [], parameterValues: [], aprioriCovariance: initial.covariance, observationCovariances: [...observationCovariances], maximumIterations, correctionTolerance: 1e-3, sigmaEditThreshold: sigmaEdit, covarianceAxes: 0 }),
     }),
@@ -157,15 +157,15 @@ export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maxi
   });
   let result, failure = null;
   try {
-    // fit_batch asks one seed per iteration for every observation epoch: one HPOP call.
+    // fit_batch asks one seed per iteration for every observation epoch: one FFM call.
     for (let round = 0; ; ++round) {
       const response = await ctx.est.invoke('fit_batch', [codec.frame('request', codec.pack(envelope))]);
       ctx.calls.estimation += 1;
       result = codec.unpack(response.outputs.find((o) => o.portId === 'result').payload).result;
       if (result.status !== 1) break;
       const qs = result.propagationRequests, seed = qs[0].seed;
-      const samples = await propagate(ctx.hpop, ctx.env, ctx.filterModel, { epochIso: iso(msOfEpoch(seed.epoch)), state: seed.state, sampleIsos: qs.map((q) => iso(msOfEpoch(q.targetEpoch))), stm: true });
-      ctx.calls.hpop += 1;
+      const samples = await propagate(ctx.ffm, ctx.env, ctx.filterModel, { epochIso: iso(msOfEpoch(seed.epoch)), state: seed.state, sampleIsos: qs.map((q) => iso(msOfEpoch(q.targetEpoch))), stm: true });
+      ctx.calls.ffm += 1;
       envelope.propagationAnswers.push(...qs.map((q, k) => T('PropagationAnswer', { query: q, sample: T('EstimationPropagatorSample', { epoch: q.targetEpoch, state: samples[k].state, stm: samples[k].stm }), sensitivity: [] })));
       if (round > 60) throw new Error('fit_batch does not finish');
     }
@@ -175,8 +175,8 @@ export async function runBatch(ctx, initial, observations, { sigmaEdit = 3, maxi
   const fit = result?.batchFit;
   let epochs = [];
   if (fit && !failure) {
-    const samples = await propagate(ctx.hpop, ctx.env, ctx.filterModel, { epochIso: iso(initial.ms), state: fit.estimate.slice(0, 6), sampleIsos: observations.map((o) => iso(o.ms)), stm: stmAtEpochs });
-    ctx.calls.hpop += 1;
+    const samples = await propagate(ctx.ffm, ctx.env, ctx.filterModel, { epochIso: iso(initial.ms), state: fit.estimate.slice(0, 6), sampleIsos: observations.map((o) => iso(o.ms)), stm: stmAtEpochs });
+    ctx.calls.ffm += 1;
     const p = fit.covariance.length === 36 ? fit.covariance : null;
     epochs = observations.map((o, k) => ({ ms: o.ms, estimate: samples[k].state, ...(stmAtEpochs && p ? { covariance: carry(samples[k].stm, p) } : {}) }));
   }

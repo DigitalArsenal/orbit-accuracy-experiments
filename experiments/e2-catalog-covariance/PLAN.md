@@ -61,7 +61,7 @@ them is part of the order of work. Element sets never leave the machine.
 ## 4. Methods
 
 All orbit computation runs in modules: SGP4 (`analysis/gp-error-model`
-`accumulate` and the SGP4 module), `propagator/hpop` through PRW (SDS
+`accumulate` and the SGP4 module), `propagator/ffm` through PRW (SDS
 1.240.0: `DYNAMIC_PARAMETERS`, `PROCESS_NOISE`, `EARTH_ORIENTATION`,
 `SPACE_WEATHER`/`JB2008_INDICES`), and the estimator in `analysis/estimation`.
 This repository fits noise models and computes statistics.
@@ -94,7 +94,7 @@ axes).
 | C2a-quad | Per-axis σ²(τ) = a + bτ + cτ² fitted to 0.5-d bins to 7.5 d, diagonal (Huo, Li & Han 2016) | Run. |
 | C2b | C2a minus half the covariance of pairs under 0.5 d (the reference set's own error) | Run. |
 | C2c | C2a after mean-motion jump editing (consecutive differences beyond 5 robust σ split an object's history) and a 3-robust-σ clip (gp-error-model `clip`) | Run. |
-| C3a, C3b | Geul, Mooij & Noomen (2017) / Verhaeghe et al. (2025): TLEs in a centred window ΔtPW(a) propagated to its midpoint, pairwise differences in the mean state's RTN, factor 1/(2M) (C3a) or 1/(4M) (C3b) | Not run: no module propagates a set of element sets to a common epoch and returns their RTN differences. |
+| C3a, C3b | Geul, Mooij & Noomen (2017) / Verhaeghe et al. (2025): TLEs in a centered window ΔtPW(a) propagated to its midpoint, pairwise differences in the mean state's RTN, factor 1/(2M) (C3a) or 1/(4M) (C3b) | Not run: no module propagates a set of element sets to a common epoch and returns their RTN differences. |
 | C4 | C2a pooled by Flohrer's orbit classes | Run; for GPS (one class) identical to C2a. gp-error-model classes go by altitude and eccentricity, not inclination. |
 | C5 | C2a times k(τ)², k fitted on train so that mean d² = 3 | Run; scored held out on validation and test. |
 
@@ -103,9 +103,9 @@ variant IDs apart):
 
 | ID | Method |
 | --- | --- |
-| F2 | **Pseudo-observation fit** (after Levit & Marshall 2011): `propagator/hpop`'s state at the product epoch with AGOM (GPS; B for LEO), fitted by weighted batch least squares (`analysis/estimation` `fit_batch`, HPOP answering its queries with the STM and parameter columns) to the full GCRF state of each of the object's element sets at its own epoch (`analysis/epoch-state`) over a fit span of 3, 5 or 7 days (chosen on validation). Each pseudo-observation is weighted by the regime's at-epoch error second moment from train, a 6×6 covariance in the RTN axes of the observed state. A priori: the state at 100 km and 10 m/s (no information), AGOM 0.02 ± 0.01 m²/kg. Covariance: the formal (JᵀWJ + P₀⁻¹)⁻¹ over state and parameters, scaled by the fit's reduced χ² when it exceeds 1 (the convention of SP's VCM sigmas, docs/vcm-parity.md), propagated by HPOP with the parameters. On the dev window the reduced χ² was about 0.1: consecutive element sets agree with each other far better than with the truth, so scaling down would manufacture confidence. |
+| F2 | **Pseudo-observation fit** (after Levit & Marshall 2011): `propagator/ffm`'s state at the product epoch with AGOM (GPS; B for LEO), fitted by weighted batch least squares (`analysis/estimation` `fit_batch`, FFM (Full Force Model) answering its queries with the STM and parameter columns) to the full GCRF state of each of the object's element sets at its own epoch (`analysis/epoch-state`) over a fit span of 3, 5 or 7 days (chosen on validation). Each pseudo-observation is weighted by the regime's at-epoch error second moment from train, a 6×6 covariance in the RTN axes of the observed state. A priori: the state at 100 km and 10 m/s (no information), AGOM 0.02 ± 0.01 m²/kg. Covariance: the formal (JᵀWJ + P₀⁻¹)⁻¹ over state and parameters, scaled by the fit's reduced χ² when it exceeds 1 (the convention of SP's VCM sigmas, docs/vcm-parity.md), propagated by FFM with the parameters. On the dev window the reduced χ² was about 0.1: consecutive element sets agree with each other far better than with the truth, so scaling down would manufacture confidence. |
 | F3 | **F2 on E1-corrected element sets** (the improved element sets at epoch, M3* of E1) with E1's M4 variance as weights. GPS first; LEO when E1's corrections exist there. |
-| F4 | **Process noise**: F2/F3 with white-acceleration noise in RTN (PRW `PROCESS_NOISE`, 600 s steps). HPOP gives, at each scoring epoch, A (the product's covariance, no noise) and U (zero initial covariance, unit density on each RTN axis), so P(q) = A + qU. One density q ≥ 0 per regime and fit span (equal on R, T and N), fitted on train to minimize Σ over 1 and 3 days of (mean d²/3 − 1)². |
+| F4 | **Process noise**: F2/F3 with white-acceleration noise in RTN (PRW `PROCESS_NOISE`, 600 s steps). FFM gives, at each scoring epoch, A (the product's covariance, no noise) and U (zero initial covariance, unit density on each RTN axis), so P(q) = A + qU. One density q ≥ 0 per regime and fit span (equal on R, T and N), fitted on train to minimize Σ over 1 and 3 days of (mean d²/3 − 1)². |
 
 Products. For each object, a product time every 7 days from the window's
 start; the product epoch is the epoch of the object's last element set at
@@ -173,16 +173,16 @@ geometries of the conjunction whitepaper.
   known later than the element sets (the test uses only drivers published by
   the product epoch, forecasts thereafter).
 - Truth products have their own errors (cm for IGS, POEORB, Swarm, SLR),
-  negligible against the metres scored.
+  negligible against the meters scored.
 - Few SLR objects: their results are descriptive.
 
 ## 7. Order of work
 
-1. Release SDS 1.240.0 and pin HPOP to it (schema and HPOP are ready on
+1. Release SDS 1.240.0 and pin FFM to it (schema and FFM are ready on
    their branches).
 2. VCM adapter / equinoctial covariance in a module (vcm-parity gap 1–2), so
    products can be written as `$VCM`/`$OCM`.
-3. Confirm `analysis/estimation` can run the batch fit with HPOP's STM and
+3. Confirm `analysis/estimation` can run the batch fit with FFM's STM and
    parameter columns; otherwise extend it there.
 4. Acquire train and validation truth for every source above.
 5. Dev window (2024-10-01..11-15): H4 inputs, the C variants and F2 end to end; harness checks.
@@ -199,7 +199,7 @@ zero (LEO is not tested, Amendment 1).
 ## References
 
 - Flohrer, T., Krag, H., Klinkrad, H. (2008). Assessment and categorization
-  of TLE orbit errors for the US SSN catalogue. AMOS Technical Conference.
+  of TLE orbit errors for the US SSN catalog. AMOS Technical Conference.
 - Gneiting, T., Raftery, A. E. (2007). Strictly proper scoring rules,
   prediction, and estimation. JASA 102(477), 359–378.
 - Levit, C., Marshall, W. (2011). Improved orbit predictions using

@@ -24,7 +24,7 @@ import { eopFrames, geodeticToItrf, transformState } from './src/od/codec.js';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
 const { values } = parseArgs({ options: { modules: { type: 'string' }, from: { type: 'string' }, to: { type: 'string' } } });
-const v1Config = JSON.parse(fs.readFileSync(path.join(repo, 'experiments/v1-hpop-physical-truth/config.json'), 'utf8'));
+const v1Config = JSON.parse(fs.readFileSync(path.join(repo, 'experiments/v1-ffm-physical-truth/config.json'), 'utf8'));
 const modules = modulesRoot({ flag: values.modules, configured: v1Config.inputs.modules, repoRoot: repo });
 const from = dayMs(values.from ?? '2003-10-28'), to = dayMs(values.to ?? '2003-11-01');
 const TARGET = 'champ', CALIBRATOR = 'graceA', DEGREE = 0, STEP_MS = 60000;
@@ -69,7 +69,7 @@ const models = {
   hasdm: s.hasdm,
 };
 
-// Orbit means every 10 min, one period centred on each, over the samples
+// Orbit means every 10 min, one period centered on each, over the samples
 // valid for the observation and every model (E5 step 20's orbitMeans).
 const means = { t: [], obs: [], jb2008: [], corrected: [], hasdm: [] };
 {

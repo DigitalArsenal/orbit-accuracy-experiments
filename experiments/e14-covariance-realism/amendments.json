@@ -4,7 +4,7 @@
   "amendments": [
     {
       "date": "2026-10-11",
-      "what": "S2's Earth orientation for cutoffs after the C04 file's last row (2026-09-01): rows are known up to the earlier of the cutoff's release day and that row, which is then held (experiments/e14-covariance-realism/s2.mjs). Before, the rows between the file's end and the cutoff were missing and propagator/hpop refused the run (invalid-earth-orientation: the table did not bracket the epoch).",
+      "what": "S2's Earth orientation for cutoffs after the C04 file's last row (2026-09-01): rows are known up to the earlier of the cutoff's release day and that row, which is then held (experiments/e14-covariance-realism/s2.mjs). Before, the rows between the file's end and the cutoff were missing and propagator/ffm refused the run (invalid-earth-orientation: the table did not bracket the epoch).",
       "why": "A harness gap, not a model choice: the C04 file is about 30 days behind its download (2026-10-01), so every S2 test anchor with an epoch from 2026-09-04 on was lost. Holding the last released row is what the harness already does after the release day.",
       "effect": "Development runs are unchanged (every dev cutoff precedes 2026-09-02, where the two rules agree). The S2 test anchors the first test runs lost are rerun with --only-anchors; no anchor is run twice.",
       "files": [

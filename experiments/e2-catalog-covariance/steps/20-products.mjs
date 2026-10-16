@@ -7,9 +7,9 @@
 // or before that time. Its pseudo-observations are the full GCRF states of
 // the sets in [epoch - span, epoch] (analysis/epoch-state), weighted by the
 // regime's at-epoch error second moment from train (c1.json, 6x6 RTN). The
-// fit (analysis/estimation fit_batch, propagator/hpop answering) gives the
+// fit (analysis/estimation fit_batch, propagator/ffm answering) gives the
 // state and parameters at the epoch with the formal covariance, scaled by
-// the reduced chi-square when that exceeds 1 (PLAN.md section 4). HPOP then propagates the product to the first precise-
+// the reduced chi-square when that exceeds 1 (PLAN.md section 4). FFM then propagates the product to the first precise-
 // orbit epoch at or after each horizon twice: with that covariance and no
 // noise (A), and with zero initial covariance and unit white-acceleration
 // noise on the three RTN axes (U), so that any density q gives
@@ -93,14 +93,14 @@ for (const [name, regime] of Object.entries(config.regimes)) {
         try {
           const inputs = ctx.inputsFor(tp - (spanDays + 1) * DAY_MS, tp + Math.max(...horizonsMs) + DAY_MS);
           const reference0 = states[last];
-          const r = await fitProduct({ estimation: ctx.estimation, hpop: ctx.hpop, codec: ctx.codec, inputs }, reference0, used, settings);
-          Object.assign(row, { status: r.status, hpopCalls: r.hpopCalls, iterations: r.fit.iterations, converged: r.fit.converged,
+          const r = await fitProduct({ estimation: ctx.estimation, ffm: ctx.ffm, codec: ctx.codec, inputs }, reference0, used, settings);
+          Object.assign(row, { status: r.status, ffmCalls: r.ffmCalls, iterations: r.fit.iterations, converged: r.fit.converged,
             reducedChiSquare: r.fit.reducedChiSquare, weightedRms: r.fit.weightedRms, degreesOfFreedom: r.fit.degreesOfFreedom,
             parameters: r.fit.estimate.slice(6), parameterSigmas: regime.parameters.map((_, i) => Math.sqrt(r.fit.covariance[(6 + i) * n + 6 + i])) });
           const epochs = scoring.filter((t) => t !== null).map(iso);
           const product = { epoch: reference0.epoch, estimate: r.fit.estimate };
-          const a = await propagateProduct({ hpop: ctx.hpop, inputs }, product, epochs, settings, { covariance: conditioned(r.fit.covariance.map((v) => v * Math.max(1, r.fit.reducedChiSquare))), noise: null });
-          const u = await propagateProduct({ hpop: ctx.hpop, inputs }, product, epochs, settings,
+          const a = await propagateProduct({ ffm: ctx.ffm, inputs }, product, epochs, settings, { covariance: conditioned(r.fit.covariance.map((v) => v * Math.max(1, r.fit.reducedChiSquare))), noise: null });
+          const u = await propagateProduct({ ffm: ctx.ffm, inputs }, product, epochs, settings,
             { covariance: Array(n * n).fill(0), noise: { q: [unitQ, unitQ, unitQ], intervalSeconds: config.c4.discretizationSeconds } });
           let k = 0;
           row.horizons = scoring.map((t, h) => {

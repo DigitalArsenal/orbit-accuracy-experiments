@@ -1,5 +1,5 @@
 // A conjunction assessed from fitted covariance. The batch fit's state and
-// covariance (analysis/estimation) are carried by propagator/hpop to a close
+// covariance (analysis/estimation) are carried by propagator/ffm to a close
 // approach with a second object; analysis/conjunction-assessment finds the
 // time of closest approach and the probability of collision from the two
 // covariances. The second object is hypothetical: the fitted orbit turned
@@ -9,7 +9,7 @@
 import { formatMeters } from '../chart.js';
 import { inputs, num, panel, table, tiles, note } from '../models/ui.js';
 import { covarianceAxes, rtn, rtnCovariance, scene3d, v3 } from '../models/scene.js';
-import { FIT_EPOCH, busiest, estimate, fitInputs, hpopRun, loadScenario, simulate } from './scenario.js';
+import { FIT_EPOCH, busiest, estimate, fitInputs, ffmRun, loadScenario, simulate } from './scenario.js';
 import { S, cqrFrame, decodeCqr, encodeOem, gcrfSystem, isoMicro, out, t, utcMs } from './codec.js';
 import * as flatbuffers from 'flatbuffers';
 
@@ -41,7 +41,7 @@ export default async function run(ctx) {
   const result = panel(ctx.root, 'analysis/conjunction-assessment');
 
   let sc, primary, fitted;
-  await ctx.run('analysis/observation-simulator, foundation/frames, propagator/hpop: the observations and the nominal', async () => {
+  await ctx.run('analysis/observation-simulator, foundation/frames, propagator/ffm: the observations and the nominal', async () => {
     sc = await loadScenario(ctx);
     const sim = await simulate(ctx, sc);
     const od = await fitInputs(ctx, sc, sim, busiest(sc, sim));
@@ -51,8 +51,8 @@ export default async function run(ctx) {
   const x = fitted.fit.estimate.state.map((v) => v / 1000), P = fitted.fit.estimate.covariance.map((v) => v / 1e6);
   const tca = utcMs(TCA);
   const window = Array.from({ length: 41 }, (_, k) => isoMicro(tca + (k - 20) * 60e3));
-  await ctx.run('propagator/hpop: the fit and its covariance to the encounter', async () => {
-    primary = await hpopRun(ctx, sc, { epoch: FIT_EPOCH, position: x.slice(0, 3), velocity: x.slice(3), samples: window, covariance: P });
+  await ctx.run('propagator/ffm: the fit and its covariance to the encounter', async () => {
+    primary = await ffmRun(ctx, sc, { epoch: FIT_EPOCH, position: x.slice(0, 3), velocity: x.slice(3), samples: window, covariance: P });
   });
   if (!primary) return;
 
@@ -64,7 +64,7 @@ export default async function run(ctx) {
       const up = v3.unit(at.position), R = rotation(up, (angle * Math.PI) / 180);
       const r2 = v3.add(at.position, v3.scale(up, miss / 1000)), v2 = apply(R, at.velocity), P2 = rotateCovariance(R, at.covariance);
       const before = window.filter((_, k) => k !== 20);
-      const run2 = await hpopRun(ctx, sc, { epoch: window[20], position: r2, velocity: v2, samples: before, covariance: P2 });
+      const run2 = await ffmRun(ctx, sc, { epoch: window[20], position: r2, velocity: v2, samples: before, covariance: P2 });
       const second = [...run2.slice(0, 20), { epoch: window[20], position: r2, velocity: v2, covariance: P2 }, ...run2.slice(20)];
       const ephemeris = (name, samples) => S.OEM.getRootAsOEM(new flatbuffers.ByteBuffer(encodeOem([{ objectId: name, name, states: samples.map((s) => ({ epoch: s.epoch, state: [...s.position, ...s.velocity] })),
         covariances: samples.map((s) => ({ epoch: s.epoch, matrix: s.covariance })) }], { interpolation: 'HERMITE', degree: 3 }))).unpack();
@@ -89,7 +89,7 @@ export default async function run(ctx) {
         ['Relative velocity (m/s)', ...['X', 'Y', 'Z'].map((k) => num(Math.abs(event.RELATIVE_VELOCITY_RTN[k]) < 1e-6 ? 0 : event.RELATIVE_VELOCITY_RTN[k], 4))],
         ['Primary σ', ...sig(event.PRIMARY_SIGMA_RTN_M)], ['Secondary σ', ...sig(event.SECONDARY_SIGMA_RTN_M)],
       ], { existing: result.querySelector('table') ?? undefined });
-      note(result, `The primary is the batch fit of ${fitted.od.block.name}, its covariance carried ${num((tcaMs - utcMs(FIT_EPOCH)) / 3600e3, 3)} h by HPOP. `
+      note(result, `The primary is the batch fit of ${fitted.od.block.name}, its covariance carried ${num((tcaMs - utcMs(FIT_EPOCH)) / 3600e3, 3)} h by FFM. `
         + 'Both covariances come with the ephemerides (SOURCE_EPHEMERIS); the module assumes the two errors independent and reports the covariance as uncalibrated, conditional on the fit’s noise model. '
         + 'The second object is hypothetical; only its geometry is chosen here.');
 

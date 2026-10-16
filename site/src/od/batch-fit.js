@@ -1,13 +1,13 @@
 // A batch weighted-least-squares fit with its covariance. The simulated
 // observations of one GPS satellite (radar range and range rate, optical
 // RA/Dec, RF range rate) are fitted by analysis/estimation around the
-// catalog's prediction, with propagator/hpop's state-transition matrix; the
-// fitted state and covariance are then carried along the arc by HPOP and
+// catalog's prediction, with propagator/ffm's state-transition matrix; the
+// fitted state and covariance are then carried along the arc by FFM and
 // compared with the IGS orbit the observations were simulated from.
 import { formatMeters } from '../chart.js';
 import { chart, num, panel, table, tiles, note } from '../models/ui.js';
 import { covarianceAxes, planeNormal, rtn, rtnCovariance, scene3d, toRtn, v3 } from '../models/scene.js';
-import { FIT_EPOCH, busiest, estimate, fitInputs, hpopRun, loadScenario, simulate } from './scenario.js';
+import { FIT_EPOCH, busiest, estimate, fitInputs, ffmRun, loadScenario, simulate } from './scenario.js';
 import { isoMicro, utcMs } from './codec.js';
 
 const SENSOR_COLORS = { 'WTZR-RADAR': 'accent', 'GOLD-OPTICAL': 'cyan', 'YAR2-RF': 'muted' };
@@ -18,20 +18,20 @@ export default async function run(ctx) {
   const intro = panel(ctx.root, 'Observations and a priori');
   const view = scene3d(ctx, { title: 'The fitted orbit and the observations', caption: '' });
   const errView = scene3d(ctx, { title: 'The fit − the IGS orbit, with its covariance', caption: '' });
-  const errChart = chart(ctx.root, 'The fit against the IGS orbit', 'Position error of the fit carried by HPOP, and its 3σ from the fitted covariance; drag to move the boxes above in time');
+  const errChart = chart(ctx.root, 'The fit against the IGS orbit', 'Position error of the fit carried by FFM, and its 3σ from the fitted covariance; drag to move the boxes above in time');
   const resChart = chart(ctx.root, 'Residuals', 'Observed minus fitted, in units of each measurement’s σ');
   const result = panel(ctx.root, 'At the fit epoch');
 
   let sc, sim, inputs, fit, arc;
   await ctx.run('analysis/observation-simulator: observations of the IGS orbits', async () => { sc = await loadScenario(ctx); sim = await simulate(ctx, sc); });
-  await ctx.run('foundation/frames: site positions; propagator/hpop: the nominal and its STM', async () => { inputs = await fitInputs(ctx, sc, sim, busiest(sc, sim)); });
+  await ctx.run('foundation/frames: site positions; propagator/ffm: the nominal and its STM', async () => { inputs = await fitInputs(ctx, sc, sim, busiest(sc, sim)); });
   await ctx.run('analysis/estimation: batch weighted least squares', async () => { fit = await estimate(ctx, inputs, 'BATCH_WEIGHTED_LEAST_SQUARES', { covarianceScale: 100 }); });
   if (!fit) return;
   const truthBlock = sc.truth.find((b) => b.norad === inputs.norad);
   const nodes = truthBlock.states.filter((s) => utcMs(s.epoch) >= utcMs(FIT_EPOCH) && utcMs(s.epoch) <= utcMs(FIT_EPOCH) + 4 * 3600e3);
   const x = fit.estimate.state.map((v) => v / 1000), P = fit.estimate.covariance.map((v) => v / 1e6);
-  await ctx.run('propagator/hpop: the fitted state and covariance along the arc', async () => {
-    arc = await hpopRun(ctx, sc, { epoch: FIT_EPOCH, position: x.slice(0, 3), velocity: x.slice(3), samples: nodes.slice(1).map((s) => isoMicro(utcMs(s.epoch))), covariance: P });
+  await ctx.run('propagator/ffm: the fitted state and covariance along the arc', async () => {
+    arc = await ffmRun(ctx, sc, { epoch: FIT_EPOCH, position: x.slice(0, 3), velocity: x.slice(3), samples: nodes.slice(1).map((s) => isoMicro(utcMs(s.epoch))), covariance: P });
     arc.unshift({ epoch: FIT_EPOCH, position: x.slice(0, 3), velocity: x.slice(3), covariance: P });
   });
   if (!arc) return;
@@ -42,7 +42,7 @@ export default async function run(ctx) {
   tiles(intro, [['Satellite', name], ...Object.entries(counts).map(([k, v]) => [k, num(v)]), ['Iterations', num(fit.estimate.iterationCount)],
     ['Rejected', num(fit.estimate.rejectedCount)]]);
   note(intro, `Simulated by analysis/observation-simulator from the IGS final orbit (${sc.scenario.truthProduct}), ${sc.scenario.simulation.from.slice(11, 16)}–${sc.scenario.simulation.to.slice(11, 16)} UTC, with the noise each sensor states. `
-    + `The fit starts from the catalog’s prediction at ${FIT_EPOCH.slice(11, 19)} UTC (HPOP from the IGS state six hours earlier) with its covariance, inflated ×10 in σ as a weak prior, and linearizes about it with HPOP’s STM to every observation. Light time is off in the simulation and in the fit.`);
+    + `The fit starts from the catalog’s prediction at ${FIT_EPOCH.slice(11, 19)} UTC (FFM from the IGS state six hours earlier) with its covariance, inflated ×10 in σ as a weak prior, and linearizes about it with FFM’s STM to every observation. Light time is off in the simulation and in the fit.`);
 
   // Error and covariance at the IGS epochs.
   const rows = arc.map((s, k) => {
@@ -109,8 +109,8 @@ export default async function run(ctx) {
     g.moving(fitTrack.map(([t, p]) => [t0 + t * 1000, p]), { color: 'accent', size: 10, trail: false, label: inputs.block.name });
     g.view({ normal: planeNormal(truthTrack.map(([, p]) => p)) });
   }, { axes: ['x, GCRF (km)', 'y, GCRF (km)', 'z, GCRF (km)'], aspect: 'equal', time: span,
-    caption: `GCRF (km), ${FIT_EPOCH.slice(11, 16)}–${new Date(t0 + 4 * 3600e3).toISOString().slice(11, 16)} UTC; the IGS orbit, the fit carried by HPOP, and every other line of sight from the sensors (at their first observation); the Earth at 6,378 km`,
-    legend: [['cyan', 'IGS orbit'], ['accent', 'Fit, carried by HPOP'], ['accent', 'Radar look'], ['cyan', 'Optical look'], ['muted', 'RF look'], ['earth', 'Earth, 6,378.137 km']] });
+    caption: `GCRF (km), ${FIT_EPOCH.slice(11, 16)}–${new Date(t0 + 4 * 3600e3).toISOString().slice(11, 16)} UTC; the IGS orbit, the fit carried by FFM, and every other line of sight from the sensors (at their first observation); the Earth at 6,378 km`,
+    legend: [['cyan', 'IGS orbit'], ['accent', 'Fit, carried by FFM'], ['accent', 'Radar look'], ['cyan', 'Optical look'], ['muted', 'RF look'], ['earth', 'Earth, 6,378.137 km']] });
   await errView.draw((g) => {
     g.point([0, 0, 0], { color: 'cyan', size: 8, label: 'IGS orbit', labelColor: 'cyan' });
     g.ellipsoid(rows[0].e, covarianceAxes(rtnCovariance(rows[0].basis, pos3(rows[0].s.covariance))).map((a) => v3.scale(a, 3000)), { color: 'accent', alpha: 0.05, outline: true, outlineAlpha: 0.3 });
@@ -119,7 +119,7 @@ export default async function run(ctx) {
     g.moving(rows.map((r) => [t0 + r.hours * 3600e3, r.e]), { color: 'accent', size: 9, trail: 2.5, degree: 3, label: 'Fit' });
     g.view({ preset: '3d' });
   }, { axes: ['Radial (m)', 'In-track (m)', 'Cross-track (m)'], aspect: 'equal', time: span,
-    caption: 'The fit carried by HPOP less the IGS orbit, with the fit’s 3σ position covariance about it, in the radial, in-track and cross-track axes of the IGS state (m, true scale); the outline is 3σ at the fit epoch',
+    caption: 'The fit carried by FFM less the IGS orbit, with the fit’s 3σ position covariance about it, in the radial, in-track and cross-track axes of the IGS state (m, true scale); the outline is 3σ at the fit epoch',
     legend: [['accent', 'Fit − IGS, and its 3σ covariance'], ['muted', 'The whole arc'], ['cyan', 'IGS orbit (origin)', 'dot']] });
   errChart.draw({
     series: [

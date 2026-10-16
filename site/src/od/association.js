@@ -50,7 +50,7 @@ export default async function run(ctx) {
   ]);
   note(intro, `GPS on ${sc.scenario.day}, ${sc.scenario.simulation.from.slice(11, 16)}–${sc.scenario.simulation.to.slice(11, 16)} UTC. Truth: the IGS final orbits (${sc.scenario.truthProduct}). `
     + `Sensors at three IGS sites: ${sc.scenario.sensors.map((s) => `${s.id} (${s.models.map((m) => m[0].toLowerCase().replace(/_/g, ' ')).join(', ')})`).join('; ')}. `
-    + `Catalog: each satellite’s IGS state at ${sc.scenario.catalog.epoch.slice(0, 19)} UTC propagated by propagator/hpop with a covariance; NORAD ${[...withheld].join(' and ')} withheld. `
+    + `Catalog: each satellite’s IGS state at ${sc.scenario.catalog.epoch.slice(0, 19)} UTC propagated by propagator/ffm with a covariance; NORAD ${[...withheld].join(' and ')} withheld. `
     + 'Each observation’s gate is the chi-square quantile of its dimension; a scan’s observations are assigned jointly (Hungarian), and leaving one unassigned costs its gate.');
 
   // Scan intervals.

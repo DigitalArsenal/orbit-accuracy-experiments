@@ -1,4 +1,4 @@
-// Earth orientation rows for propagator/hpop's earth_orientation input, as
+// Earth orientation rows for propagator/ffm's earth_orientation input, as
 // data-source/eop-parser publishes them from an IERS file, carried in the
 // PRW EARTH_ORIENTATION arm (SDS 1.240.0). The parser module reads the file;
 // this file only selects whole records by their MJD and re-frames them.

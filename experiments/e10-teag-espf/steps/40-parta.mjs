@@ -10,19 +10,19 @@ import { arg, runPool } from '../jobs.mjs';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 
-const MODULES = ['propagator/hpop', 'foundation/frames', 'foundation/time', 'analysis/access', 'analysis/observation-simulator', 'analysis/estimation', 'data-source/eop-parser'];
+const MODULES = ['propagator/ffm', 'foundation/frames', 'foundation/time', 'analysis/access', 'analysis/observation-simulator', 'analysis/estimation', 'data-source/eop-parser'];
 const cacheDir = path.join(repoRoot, 'runs', 'cache', 'e10', 'partA');
 const self = new URL(import.meta.url).pathname;
 
 async function child(jobFile) {
   const job = JSON.parse(fs.readFileSync(jobFile, 'utf8'));
-  const { environment } = await import('../hpop.mjs');
+  const { environment } = await import('../ffm.mjs');
   const { eopRowStream } = await import('../scenario.mjs');
   const { buildPaperCase, paperSpan } = await import('../parta.mjs');
   const { variantSpec, runAndScore } = await import('../partb.mjs');
   const { estimationCodec } = await import('../estimation-codec.mjs');
   const { loaded } = await loadModules(null, MODULES);
-  const m = { hpop: loaded['propagator/hpop'], frames: loaded['foundation/frames'], time: loaded['foundation/time'], access: loaded['analysis/access'], simulator: loaded['analysis/observation-simulator'], est: loaded['analysis/estimation'], parser: loaded['data-source/eop-parser'] };
+  const m = { ffm: loaded['propagator/ffm'], frames: loaded['foundation/frames'], time: loaded['foundation/time'], access: loaded['analysis/access'], simulator: loaded['analysis/observation-simulator'], est: loaded['analysis/estimation'], parser: loaded['data-source/eop-parser'] };
   const { epochMs, endMs } = paperSpan(job.case);
   const env = await environment({ parser: m.parser, kernelPath: repoPath(config.inputs.kernel2018), eopPath: config.inputs.eopC04, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: epochMs, toMs: endMs });
   if (job.kind === 'scenario') {
@@ -34,11 +34,11 @@ async function child(jobFile) {
   }
   const sc = JSON.parse(fs.readFileSync(job.scenario, 'utf8'));
   const codec = await estimationCodec(modulesDir());
-  const ctx = { codec, est: m.est, hpop: m.hpop, env, filterModel: config.forceModels[sc.filterModel] };
+  const ctx = { codec, est: m.est, ffm: m.ffm, env, filterModel: config.forceModels[sc.filterModel] };
   const out = await runAndScore(ctx, sc, variantSpec(job.variant));
   fs.writeFileSync(`${job.output}.tmp`, JSON.stringify({ case: job.case, variant: job.variant, epochMs: sc.epochMs, ...out }));
   fs.renameSync(`${job.output}.tmp`, job.output);
-  console.log(`run ${job.case} ${job.variant}: ${out.rows.length} epochs, ${out.calls?.hpop} HPOP calls, ${out.seconds?.toFixed(0)} s${out.failure ? ` FAILURE ${JSON.stringify(out.failure)}` : ''}`);
+  console.log(`run ${job.case} ${job.variant}: ${out.rows.length} epochs, ${out.calls?.ffm} FFM calls, ${out.seconds?.toFixed(0)} s${out.failure ? ` FAILURE ${JSON.stringify(out.failure)}` : ''}`);
 }
 
 async function driver() {

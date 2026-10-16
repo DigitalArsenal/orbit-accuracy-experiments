@@ -3,16 +3,16 @@
 The bar for the stack's high-fidelity products: everything a Vector
 Covariance Message carries (spacedatastandards.org
 `survey/legacy-messages/vcm`) can be carried through PRW, propagated by
-`propagator/hpop`, and produced by this repository's experiments with
-covariance whose realism is measured. Status as of 2026-10-08, against
+FFM (Full Force Model), `propagator/ffm`, and produced by this repository's
+experiments with covariance whose realism is measured. Status as of 2026-10-08, against
 SDS 1.240.0 (schema on branch `task/prw-environment-20261008`, not yet
-released) and space-data-network-modules branch `task/hpop-lockdown-20261008`
-(`750b6399`). Orekit figures are the largest position difference over a day,
-from `propagator/hpop/tests/orekit_reference.test.mjs`.
+released) and space-data-network-modules commit `750b6399`. Orekit figures
+are the largest position difference over a day,
+from `propagator/ffm/tests/orekit_reference.test.mjs`.
 
-## Inputs: VCM field → PRW → HPOP
+## Inputs: VCM field → PRW → FFM
 
-| VCM line | PRW (SDS 1.240.0) | HPOP | Evidence |
+| VCM line | PRW (SDS 1.240.0) | FFM | Evidence |
 | --- | --- | --- | --- |
 | J2K POS/VEL | `INITIAL.STATE` with `MEAN_EQUATOR_EQUINOX_J2000` axes | IAU 2000 frame bias in and out (states, covariance, STM, impulses, burns) | Orekit E1: LEO 9.1 mm, GPS 0.43 mm |
 | ECI (TEME of date), EFG POS/VEL | — (redundant with J2K) | Not read; written by `analysis/vcm-adapter` | — |
@@ -37,7 +37,7 @@ from `propagator/hpop/tests/orekit_reference.test.mjs`.
 ## The adapter: `analysis/vcm-adapter`
 
 `read` turns one VCM into the PRW request above, the daily EOP rows, a
-`$VCM` record and a report; `write` turns HPOP's result back into a VCM.
+`$VCM` record and a report; `write` turns FFM's result back into a VCM.
 The equinoctial covariance is transformed to Cartesian by J P Jᵀ with J
 evaluated exactly (forward-mode dual numbers through the closed-form
 conversion), the B, BDOT, AGOM and T rows the fit solved for carried as
@@ -55,7 +55,7 @@ sigmas by factors of 2.0 and 1.7. The eccentric message (WTD RMS 0.86)
 matches only unscaled, the others (1.09 to 1.15) only scaled. Tested: the
 sample within 1 %, the private messages when `VCM_PRIVATE_DIR` names them, an
 independent finite-difference Jacobian (2.3e-7 of the sigmas), and a round
-trip VCM → HPOP → VCM → read in SP's number format (1.8e-5).
+trip VCM → FFM → VCM → read in SP's number format (1.8e-5).
 
 ## Remaining gaps
 
@@ -64,7 +64,7 @@ trip VCM → HPOP → VCM → read in SP's number format (1.8e-5).
    fractions of their values by default, like the mean-motion row
    (`parameterRows: "fractional"`; 1.5 % to 9.7 % of the value in the four
    messages, against 0.38 to 5.6 times the value as printed). One measurement
-   supports it: the GPS message, propagated a day by HPOP against ESA's final
+   supports it: the GPS message, propagated a day by FFM against ESA's final
    orbit for the satellite, has radial and in-track errors with RMS 0.46 and
    0.64 of their sigmas when its AGOM row is a fraction; as printed, the
    sigmas overstate the radial error about 20 times and the in-track error

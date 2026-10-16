@@ -16,7 +16,7 @@ Modules: space-data-network-modules branch `task/teag-espf-20261009` (from main
 branch add only receipts): `analysis/estimation` (estimators `ESPF_2025`,
 `ESPF_2026`, `ELLIPSOIDAL_SET_MEMBERSHIP`; method `evaluate_teag`; the spec
 `analysis/estimation/docs/espf-spec.md`), `analysis/conjunction-assessment`
-(`possibility_of_collision`); unchanged: `propagator/hpop` `0d1f6264`,
+(`possibility_of_collision`); unchanged: `propagator/ffm` `0d1f6264`,
 `analysis/observation-simulator`, `analysis/access`, `analysis/epoch-state`,
 `foundation/frames`, `foundation/time`, `data-source/eop-parser`. The modules
 commit is in every run manifest.
@@ -47,7 +47,7 @@ its own cases, and asks:
 4. **Mismatch and outliers.** Does the ESPF's surprisal detect an unmodelled
    manoeuvre or area change sooner than the UKF's normalized innovation, at
    what false-alarm rate, and how do the filters behave under outliers?
-5. **Cost.** HPOP calls and time per arc.
+5. **Cost.** FFM (Full Force Model) calls and time per arc.
 6. **Screening (Part D).** Possibility and necessity of collision against
    Foster's probability on synthetic encounters: missed collisions and false
    alerts.
@@ -66,7 +66,7 @@ and reproduces, descriptively, the 2025 paper's LEO and GEO cases (Part A).
 | BLS | `fit_batch`, state only, the whole arc in one fit | a priori P₀, ≤ 20 iterations, correction tolerance 1e-3, 3σ editing |
 | SMF | `ELLIPSOIDAL_SET_MEMBERSHIP` (Schweppe 1968; Bertsekas and Rhodes 1971) | initial, process and measurement bound scales 3; minimum-trace member |
 
-Every support point, sigma point and STM is propagated by `propagator/hpop` at
+Every support point, sigma point and STM is propagated by `propagator/ffm` at
 full force through the estimation module's inverted propagator port; every
 sequential filter takes one observation per request and carries its posterior
 (state and covariance, or the ESPF support state) to the next request
@@ -96,7 +96,7 @@ filters already took them), for the RTN pseudo-observations of Part C.
 
 Orbit: 600 km circular, 28.5° (GCRF [6978137, 0, 0] m, [0, 6641.981,
 3606.302] m/s at each seed's epoch); B = Cd·A/m = 0.022 m²/kg, Cr·A/m =
-0.013 m²/kg. Truth: HPOP `leo-jb2008` (EGM2008 70×70, Sun, Moon and planets
+0.013 m²/kg. Truth: FFM `leo-jb2008` (EGM2008 70×70, Sun, Moon and planets
 from DE440, cannonball radiation pressure with conical shadow, JB2008 with
 SET's drivers, IERS 2010 solid tides and relativity; RK78, tolerance 1e-12,
 maximum step 120 s). Stations Arecibo, Kwajalein, Diego Garcia (the paper's).
@@ -126,7 +126,7 @@ runs on the same observations.
 
 ### Part A — the 2025 paper's cases (descriptive)
 
-As arXiv 2508.20806 §13 states them, with full-force HPOP for truth and
+As arXiv 2508.20806 §13 states them, with full-force FFM for truth and
 filters (the paper used J2, J3, drag and third bodies), by these rules where
 it is silent: the state is GCRF; Cr = 1.3; the Part B sensor (2″, 10° mask,
 sunlit); P₀ = diag(1 km² ×3, (30 m/s)² ×3), the smallest round values that
@@ -171,7 +171,7 @@ Moon and planets (DE440), cannonball radiation pressure with Cr·A/m =
 0.02 m²/kg (E2's a priori), IERS 2010 solid tides and relativity, no drag;
 RK78, tolerance 1e-12, maximum step 300 s.
 Truth at each element-set epoch: the precise state at the last reference epoch
-at or before it, propagated by HPOP (at most 5 minutes). Baseline: the
+at or before it, propagated by FFM (at most 5 minutes). Baseline: the
 element set itself (SGP4 at its epoch) against the same truth.
 
 ILRS normal points are not in the local archive and are not fetched; SatNOGS
@@ -184,7 +184,7 @@ first observation of passes 2, 4 and 6 (across a gap) and the third
 observation of the same passes (within a pass); a pass is a run of at least
 three observations from one station less than 5 minutes apart, numbered in
 time order. From the variant's carried
-region at t_k (centre and shape it carries to the next step), 1,000 points
+region at t_k (center and shape it carries to the next step), 1,000 points
 uniform inside and 1,000 uniform on its boundary (seeded), plus the variant's
 own support points, are taken through step k + 1. The carried region is the
 ellipsoid d ≤ 1 of the carried shape (E26: σ²·MVEE of the survivors, the
@@ -193,8 +193,8 @@ its set). The published bounds are those of section 4 (E26, SMF: d ≤ 1 in
 the predicted and posterior shapes; E25T: d ≤ r = 3 in its predicted and
 posterior spreads, where its regenerated points sit at d = √n):
 
-- **E1 (prediction).** Each point is propagated by HPOP to t_{k+1}; the
-  fraction outside the variant's published predicted bound (centre and shape)
+- **E1 (prediction).** Each point is propagated by FFM to t_{k+1}; the
+  fraction outside the variant's published predicted bound (center and shape)
   and the largest normalized radius d = √((x − c)ᵀ S⁻¹ (x − c)).
 - **E2 (update, dense support; E26 only).** E26 runs step k + 1 with the
   dense cloud as its support (`initial_support`, possibility 1,
@@ -230,7 +230,7 @@ epoch after the first 2 hours; Part C: every update epoch; Part A: every
 observation epoch):
 
 - **Point error:** 3D position and velocity error of the estimate (E26 the
-  medoid, E25 the mode, SMF the centre, the others the mean) against truth:
+  medoid, E25 the mode, SMF the center, the others the mean) against truth:
   RMS, median, 95th percentile, maximum; failures (a run that stops or whose
   final position error exceeds 10 km in Part B, 50 km in Part C).
 - **Containment:** the fraction of scored epochs whose truth lies in the
@@ -251,7 +251,7 @@ observation epoch):
   the first 2 hours. Delay: from the event to the first epoch over threshold;
   false-alarm rate: the fraction of B1 test epochs over threshold.
 - **Outliers (B6):** point error and failures as above.
-- **Cost:** HPOP calls, estimation-module calls and wall time per run.
+- **Cost:** FFM calls, estimation-module calls and wall time per run.
 - **Part C** adds the error ratio to the baseline element set at the same
   epoch.
 
@@ -295,7 +295,7 @@ observations.
 `analysis/estimation` passes its end-to-end tests (`docs/espf-spec.md` §9):
 the ESPF-HJ §4 scalar closed forms exactly; the 2025 appendix's Gaussian limit
 reproduces the module's UKF (itself validated against Orekit 13.1) with
-full-force HPOP answers; idempotence, Popperian monotonicity, the α-cut
+full-force FFM answers; idempotence, Popperian monotonicity, the α-cut
 intersection and N(A) = 1 − Π(Aᶜ) exactly; the MVEE against analytic sets and
 an independent numpy implementation (1e-12); `LINEAR` with H = [I 0]
 reproducing `POSITION_VECTOR` byte for byte; SDK compliance; byte-identical
@@ -326,7 +326,7 @@ three-runtime parity script.
 ## 8. Not done here, and why
 
 - **The authors' implementation.** Not public (github.com/gaiaverseltd/espf
-  holds a README and a licence). The v3 papers' full texts are not readable
+  holds a README and a license). The v3 papers' full texts are not readable
   without the publisher's page; their abstracts are used where they settle a
   gap (spec §0).
 - **ILRS normal points and SatNOGS/optical observations** for Part C (not
@@ -349,9 +349,9 @@ excerpt and its extraction script).
    `3df1afc7` (`4a53c355`): `analysis/gp-error-model` gained
    `screening_cases`, `common_epoch` and `map_covariance`, and
    `analysis/observation-simulator` two-way radar Doppler. The estimation,
-   conjunction-assessment and HPOP artifacts did not change; every E10 run
+   conjunction-assessment and FFM artifacts did not change; every E10 run
    (dev included) used the merged checkout. Artifacts: estimation
-   `786d0de9`, conjunction-assessment `8a6d1c82`, HPOP `0d1f6264`,
+   `786d0de9`, conjunction-assessment `8a6d1c82`, FFM `0d1f6264`,
    observation-simulator `20edccda`, gp-error-model `0f823d02` (SHA-256
    prefixes; full hashes in the manifests).
 2. **Part C, correlated element sets (descriptive sensitivity).** E2b
@@ -377,16 +377,16 @@ excerpt and its extraction script).
    combined covariance and its own error draw), whose Pc, bound and
    possibility rules are reported beside E10's.
 5. **Implementation notes.** The wire history carries no predicted state:
-   the enclosure test's predicted centre comes from the variant's own step
-   k + 1 restarted exactly from its carried support (E26: the MVEE centre of
-   the propagated support; E25T and SMF: the propagated centre). Holm's
+   the enclosure test's predicted center comes from the variant's own step
+   k + 1 restarted exactly from its carried support (E26: the MVEE center of
+   the propagated support; E25T and SMF: the propagated center). Holm's
    procedure uses one-sided bootstrap p-values, the share of resamples at or
    beyond the null, (k + 1)/(B + 1), as E5; the one-sided 95 % bounds are the
    ends of the two-sided 90 % intervals.
 6. **E26 diagnostic (dev only, descriptive).** On the dev runs E26 lost its
    support within the first passes for both κ: survivors held at the
-   N_min = 13 floor, the posterior set shrank to metres while the error grew
-   to kilometres, and with σ ≤ 1 (spec G18, the bound being unstated) nothing
+   N_min = 13 floor, the posterior set shrank to meters while the error grew
+   to kilometers, and with σ ≤ 1 (spec G18, the bound being unstated) nothing
    re-expands the support. To show whether the unstated upper bound alone
    decides this, E26 at the selected κ also runs on the dev seeds' B1 with
    σ_max = 2 and 4. These runs inform the report's discussion of G18 only;
@@ -398,7 +398,7 @@ excerpt and its extraction script).
 Defects in the experiment's framing code, found when the paper's cases and
 the GPS arcs first ran; none changes a module, a rule or a parameter.
 
-1. **More than 10,000 samples** (`ff881ac`): HPOP takes at most 10,000
+1. **More than 10,000 samples** (`ff881ac`): FFM takes at most 10,000
    sample epochs per request; Part A's 6-day truth grid has 25,921. Longer
    lists go in chunks, each integrated from the same epoch and state.
 2. **Time tags before the epoch** (`e5897a5`): the GEO arc starts in view
@@ -422,7 +422,7 @@ the GPS arcs first ran; none changes a module, a rule or a parameter.
    Part C ran from `515637a`, its test window split by start day across two
    runs.
 5. **E26 diagnostic (amendment 1, item 6).** With σ_max = 2 and 4 the dev
-   B1 runs did not collapse; they diverged: the support grew until HPOP could
+   B1 runs did not collapse; they diverged: the support grew until FFM could
    not integrate its points (all four runs stopped, after 33–77 of about 118
    observations).
 6. **Inputs past their last rows** (`901d1df` and the next commit). SET's
@@ -432,5 +432,5 @@ the GPS arcs first ran; none changes a module, a rule or a parameter.
    missing (a drag model without its drivers is refused). For the days after
    C04's last row the Earth orientation comes from IERS finals2000A (E2's
    pinned file, `inputs.eopFinals`); this touches only the arcs starting
-   2026-09-09 (and their truth's short HPOP steps), whose 12×12 field is
+   2026-09-09 (and their truth's short FFM steps), whose 12×12 field is
    insensitive to the difference.

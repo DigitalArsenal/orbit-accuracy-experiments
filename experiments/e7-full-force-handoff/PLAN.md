@@ -1,4 +1,4 @@
-# E7 — Full-force HPOP from an OMM, against SGP4
+# E7 — Full-force FFM (Full Force Model) from an OMM, against SGP4
 
 Pre-registration. Status: **frozen** by the commit that sets
 `"frozen": true` in [`config.json`](config.json), after the train and
@@ -17,11 +17,11 @@ Graph task: `e7-full-force-handoff-20261009`.
 The Evidence-Supported ASO Catalog whitepaper, section 5 ("Initializing
 numerical propagation from an OMM"), hands an element set to numerical
 propagation: SGP4 at zero elapsed time gives a TEME state, the state is
-rotated to GCRF, and HPOP propagates it. Does that handoff, with **every
-force HPOP carries** (the owner's definition of HPOP; no reduced or resident
-model is called HPOP here), predict an object's position better than the
+rotated to GCRF, and FFM propagates it. Does that handoff, with **every
+force FFM carries** (the owner's definition of FFM; no reduced or resident
+model is called FFM here), predict an object's position better than the
 same OMM propagated by SGP4 over the next 0 to 7 days? If not from one
-state, does fitting HPOP to an arc of the object's OMMs (with diagonal or
+state, does fitting FFM to an arc of the object's OMMs (with diagonal or
 correlated weights, from published, debiased or E1-corrected OMMs) change
 the answer?
 
@@ -33,13 +33,13 @@ a later experiment can reuse it with another table).
 | ID | What propagates | Modules |
 | --- | --- | --- |
 | S | The latest OMM, by SGP4 (baseline) | `analysis/gp-error-model` `accumulate` |
-| H-epoch | **The handoff**: HPOP from the OMM's epoch state, B by the rule chosen on validation | `analysis/epoch-state` `derive`, `propagator/hpop` `invoke` |
-| H-arc | HPOP fitted by weighted batch least squares to the epoch states of the object's OMMs over the arc span chosen on validation (state, plus Cd·A/m in the drag regimes or four ECOM2 coefficients for GPS; state only for SLR-MEO), arcs split at maneuvers (section 4), diagonal weights | + `analysis/estimation` `fit_batch`, `analysis/maneuver-detection` |
+| H-epoch | **The handoff**: FFM from the OMM's epoch state, B by the rule chosen on validation | `analysis/epoch-state` `derive`, `propagator/ffm` `invoke` |
+| H-arc | FFM fitted by weighted batch least squares to the epoch states of the object's OMMs over the arc span chosen on validation (state, plus Cd·A/m in the drag regimes or four ECOM2 coefficients for GPS; state only for SLR-MEO), arcs split at maneuvers (section 4), diagonal weights | + `analysis/estimation` `fit_batch`, `analysis/maneuver-detection` |
 | H-arc-GLS | H-arc with the inter-OMM error correlation (section 5) in the weights | as H-arc |
 | H-arc-debiased | H-arc on OMMs whose along-track bias was removed by a model fitted to the object's own history before the cutoff (section 4) | as H-arc |
 | H-epoch-E1, H-arc-E1 | H-epoch and H-arc from E1-corrected OMMs (GPS; E1's frozen model `results/e1/fit/e1-gps-epoch-20-fit-20261009T172522Z/model.json`, M3* = M3c-K2-ridge1000) | as above |
 | S-E1, S-debiased | SGP4 from the corrected OMM (descriptive) | as S |
-| H-truth | HPOP from the precise orbit's own state at the first target: the dynamics alone (descriptive) | as H-epoch |
+| H-truth | FFM from the precise orbit's own state at the first target: the dynamics alone (descriptive) | as H-epoch |
 | H-epoch:other-B | H-epoch with the B rule not chosen (drag regimes; descriptive) | as H-epoch |
 | H-epoch-JB2008-released, H-epoch-JB2008-observed, H-arc-JB2008-observed | JB2008 instead of the operational NRLMSISE-00: with SET's drivers as public at the cutoff (45 days late, held), or with the drivers observed over the prediction (a hindcast; LEO-POD, descriptive) | as above |
 
@@ -48,10 +48,10 @@ Every orbit computation runs in a module through the
 module's RTN rotation to a difference vector and a covariance, and computes
 statistics.
 
-## 3. Force model (HPOP, full force)
+## 3. Force model (FFM, full force)
 
-`propagator/hpop` PRW execution path, `space-data-network-modules` main at
-`095c20a6`, HPOP WASM SHA-256 `0d1f6264…` (`config.json` `modulesBinary`;
+`propagator/ffm` PRW execution path, `space-data-network-modules` main at
+`095c20a6`, FFM WASM SHA-256 `0d1f6264…` (`config.json` `modulesBinary`;
 the code refuses another binary), SDS 1.241.0.
 
 | Force | GPS | LEO-POD | SLR-LEO | SLR-MEO |
@@ -87,7 +87,7 @@ ECOM2 needs fitted coefficients, so it enters only the arc fits: the state
 and four ECOM2 coefficients (D0, B0, B1 cos, B1 sin) fitted together, each
 starting at 0 with an a priori σ of 2e-9 m/s². Four, because
 `analysis/estimation` `fit_batch` solves for at most four dynamic parameters
-(HPOP carries all eleven); of the five-term reduced ECOM (D0, Y0, B0, B1
+(FFM carries all eleven); of the five-term reduced ECOM (D0, Y0, B0, B1
 cos/sin) Y0, the smallest, is dropped.
 
 **Physical coefficients** (nominal, not fitted, `config.json` `physical`):
@@ -107,7 +107,7 @@ for H-epoch, per drag regime:
 
 The arc fits start B from `bstar` and fit it (a priori σ 0.02 m²/kg for
 LEO-POD, 0.002 m²/kg for the SLR-LEO spheres, whose nominal Cd·A/m is 6e-4
-to 1.2e-2). `propagator/hpop` refuses a negative Cd·A/m (a module gap: the
+to 1.2e-2). `propagator/ffm` refuses a negative Cd·A/m (a module gap: the
 estimator's iterate is unconstrained). When a fit asks for one, or converges
 to one, the arc is fitted again with a constant in-track acceleration in
 place of B (a priori σ 1e-7 m/s² for LEO-POD, 5e-9 m/s² for SLR-LEO, about
@@ -124,7 +124,7 @@ then:
 | --- | --- |
 | OMMs | `CREATION_DATE` at or before the cutoff (arcs, debiasing history, maneuver detection) |
 | Earth orientation (IERS EOP 20 C04 through `data-source/eop-parser`) | Rows for days up to the cutoff's day minus 1 (the IERS rapid service is daily; the C04 values stand in for the rapid values released then); later days repeat the last released row |
-| NRLMSISE-00 drivers (operational) | NOAA SWPC's Report of Solar-Geophysical Activity (RSGA, issued daily at 22:00 UTC, archived at SWPC's warehouse): the newest report issued by the cutoff gives the observed F10.7 and estimated Ap of its day d and three days of predictions, day d+3 held after; days before d take GFZ Potsdam's observed Kp, ap and F10.7 (definitive values standing in for those released then). Kp of a predicted day from its Ap by the standard ap-Kp table. The 81-day centred F10.7 mean: over the released observed days in the window when at least 41 are, otherwise the last 81 released days |
+| NRLMSISE-00 drivers (operational) | NOAA SWPC's Report of Solar-Geophysical Activity (RSGA, issued daily at 22:00 UTC, archived at SWPC's warehouse): the newest report issued by the cutoff gives the observed F10.7 and estimated Ap of its day d and three days of predictions, day d+3 held after; days before d take GFZ Potsdam's observed Kp, ap and F10.7 (definitive values standing in for those released then). Kp of a predicted day from its Ap by the standard ap-Kp table. The 81-day centered F10.7 mean: over the released observed days in the window when at least 41 are, otherwise the last 81 released days |
 | JB2008 drivers (SET SOLFSMY/DTCFILE) | Public 45 days late: rows to the cutoff's day minus 45 days, the last released row (hourly DTC at its last hour) held after. JB2008 therefore runs operationally only from 45-day-old drivers (H-epoch-JB2008-released); with the observed drivers it is a hindcast |
 | Truth used by the debiasing | Released by the cutoff: Sentinel-1 POEORB at the creation time in its name; ESA final GNSS orbits 14 days after the product's span, Swarm 30 days, NSGF SLR arcs 3 days, ILRS weekly arcs 7 days (service latencies; `config.json` `cutoff`) |
 | E1's model, the train weights and correlation, the IGS SINEX, DE440s | Fixed before every window they are used on |
@@ -249,7 +249,7 @@ The choices are written into `config.json` (`chosen`) before the freeze.
 
 **Error.** Prediction minus truth at the target, in the truth state's RTN
 axes (R radial, N orbit normal, T = N × R): for SGP4 from `accumulate`, for
-the HPOP variants from the GCRF difference rotated by `foundation/frames`.
+the FFM variants from the GCRF difference rotated by `foundation/frames`.
 The 3D error is its norm.
 
 **Primary statistics** per regime × variant × horizon: median and 95th
@@ -259,7 +259,7 @@ samples scored over samples attempted (every sample of the regime with truth
 at the horizon); and the median, 95th and 99th percentiles with every
 failure and missing prediction counted as unbounded. **Covariance realism**
 of the fitted variants (H-arc family): the fit's formal covariance times
-max(1, reduced χ²), propagated by HPOP over the state and the fitted
+max(1, reduced χ²), propagated by FFM over the state and the fitted
 parameters; at each horizon, the mean of d²/3 (d² = eᵀ P⁻¹ e, the 3D
 position error under the 3 × 3 position covariance, both in RTN) and the
 share inside the 95 % ellipsoid (d² ≤ 7.815). **Secondary**: median |R|,
@@ -356,9 +356,9 @@ with the results.
 
 **Before the freeze (2026-10-09), for the record.** Two validation batches
 were stopped and discarded before this version of the plan: the first ran
-on HPOP `7a81c1d5…` (modules `085dff2e`, cannonball for GPS, observed
+on FFM `7a81c1d5…` (modules `085dff2e`, cannonball for GPS, observed
 drivers, no information cutoff) and was stopped when the coordinator moved
-E7 to HPOP `0d1f6264…` with the GNSS box-wing and ECOM2; the second stopped
+E7 to FFM `0d1f6264…` with the GNSS box-wing and ECOM2; the second stopped
 on a maneuver-detection framing fault (blocks that did not overlap). The
 coordinator's review then added H-arc-GLS, H-arc-debiased, the maneuver
 splits, the operational statistics and the information cutoff. The test
@@ -366,7 +366,7 @@ strides were set from the compute cost under a limit of ten processes. No
 test-window record had been read.
 
 **Before the freeze (2026-10-09): the in-track fallback.** The validation
-batch (`v3`) found that HPOP refused 14–32 % of the LEO arc fits per span
+batch (`v3`) found that FFM refused 14–32 % of the LEO arc fits per span
 because the estimator asked for a negative Cd·A/m, which would have made
 every LEO span ineligible. The fallback of section 3 was added, and only the
 (sample, variant) pairs that had failed so were run again with it (batch

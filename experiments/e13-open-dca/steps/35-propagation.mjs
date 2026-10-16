@@ -1,6 +1,6 @@
 // E13 step 35: the propagation endpoint (PLAN.md section 6, H4 and H5). For an issue state of an object that did not calibrate the common mode:
 // Cd*A/m is read from the arc that ends at the issue state, through the orbital energy and under the variant's density (arcs.mjs energyArc), the
-// state is propagated by propagator/hpop with that Cd*A/m and density to +1 and +3 days, and the 3D distance to the truth there is the error.
+// state is propagated by propagator/ffm with that Cd*A/m and density to +1 and +3 days, and the 3D distance to the truth there is the error.
 //   H4  Swarm A, B, C: issue 00:00 UTC every second day; arc from the precise orbit 24 h before; truth: the precise orbit (SW_OPER_SP3xCOM).
 //   H5  held-out Doves: every third state is an issue state; arc from the previous state; truth: the Dove's states one and three states later.
 // Variants: D0 JB2008 with SET's indices as published; D13 the nowcast + forecast of the common mode (arcs that ended at least 6 h before the issue

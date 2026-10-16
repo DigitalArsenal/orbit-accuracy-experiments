@@ -22,8 +22,8 @@ not taken, or shown invalid by our own evidence.
 
 | Item | Verdict | Reason; surviving claim for NARROW | Key prior art (§8) |
 | --- | --- | --- | --- |
-| V1: HPOP from precise states, force by force | FOUNDATION | Standard validation. SLR spheres 4.8 m at 24 h, 13.9 m at 72 h | IERS TN 36; ILRS, IGS |
-| HPOP against Orekit (63 cases, ≤ 15 mm in 24 h); Jacchia–Roberts port | FOUNDATION | Software verification | Orekit; GMAT; Roberts 1971 |
+| V1: FFM (Full Force Model) from precise states, force by force | FOUNDATION | Standard validation. SLR spheres 4.8 m at 24 h, 13.9 m at 72 h | IERS TN 36; ILRS, IGS |
+| FFM against Orekit (63 cases, ≤ 15 mm in 24 h); Jacchia–Roberts port | FOUNDATION | Software verification | Orekit; GMAT; Roberts 1971 |
 | VCM covariance units (dn/n; B, AGOM as fractions) | NARROW (engineering) | No public definition found; reproduces four messages' sigmas within 1 %. An interchange fact | Hejduk 2016 |
 | E1: GPS element sets corrected at epoch | NARROW | 61 % [53, 67] replicates Ly 2020 (65 %). Survives: no transfer to an unseen orbital plane (6 % [2, 10]); the single-model form of Hallgarten La Casta & Amato gives 8 %; corrected sets are worse than SGP4 at 7 d (2.65 vs 1.88 km) | Ly 2020; HLC&A 2025; Peng & Bai 2019; Acciarini 2025; Moody 2026 |
 | E2: covariance from OMM history | FOUNDATION | Published differencing and fitting methods. F2 realistic for GPS at 0–1 d only | Osweiler 2006; Flohrer 2008; Geul 2017; Thompson 2019; Racelis & Joerger 2018 |
@@ -34,7 +34,7 @@ not taken, or shown invalid by our own evidence.
 | E5: JB2008 calibrated on accelerometer densities | FOUNDATION | Model calibration with accelerometer densities is established. 0.155 → 0.056 in σ(ln ρ), 49–92 days late | Storz 2005; Doornbos 2012; Forootan 2022 |
 | E6: laser-range fits | FOUNDATION | SLR orbit determination. 7–42 m against SGP4's 0.47–0.69 km | ILRS |
 | E6: SatNOGS Doppler from PNG waterfalls; amateur optical | DROP | Invalid by our evidence (2.7–10.7× worse than SGP4); 18 optical lines, not used | — |
-| E7: OMM epoch state to HPOP; arc fits | FOUNDATION | Jankovic 2026: high-fidelity propagation from public element sets loses to SGP4 on Starlink (SGP4 wins 65–75 %). E7 confirms it on independent precise orbits in four regimes; arc fits help at short horizons, as in Levit & Marshall | Jankovic 2026; Levit & Marshall 2011; Crawford 2006 |
+| E7: OMM epoch state to FFM; arc fits | FOUNDATION | Jankovic 2026: high-fidelity propagation from public element sets loses to SGP4 on Starlink (SGP4 wins 65–75 %). E7 confirms it on independent precise orbits in four regimes; arc fits help at short horizons, as in Levit & Marshall | Jankovic 2026; Levit & Marshall 2011; Crawford 2006 |
 | E7v2: OMM history to a state near epoch | FOUNDATION | Same family; no results yet | Levit & Marshall 2011; HLC&A 2025 |
 | E8: JB2008 correction from OMM decay | FOUNDATION | Established. Gershman 2026 reports 10–20 % accuracy from public element sets; E8 cut σ by only 8.4 % [−3.9, 18.3]. Report the difference | Picone 2005; Emmert 2009; Doornbos 2008; Gondelach & Linares 2020; Gershman 2026 |
 | E10: independent ESPF implementation | NARROW (outside catalog scope) | First independent test. ESPF RMS 361× the UKF's and 0 % containment on nominal synthetic arcs; 99.5 % containment on real arcs at 4× the element set's error | Jah & Haslett 2025; Jah 2026 |
@@ -42,7 +42,7 @@ not taken, or shown invalid by our own evidence.
 | E13 (1): DCA-form correction from public operator data | NARROW | Starlink density exists (Ou 2025; Yamamoto 2026; Fitzpatrick 2026, with attitude and housekeeping data SpaceX gives NOAA, not public), as does near-real-time density from public element sets (Gershman 2026); all score density only. Survives: a DCA-form JB2008 correction (temperature offset, block-constant per-object B, forecast) from public operator states alone, scored by 1–3 day prediction of objects that did not calibrate it | Storz 2005; Ou 2025; Yamamoto 2026; Fitzpatrick 2026; Gershman 2026; Gondelach & Linares 2021; Constant 2024 |
 | E13 (2): Planet × Swarm/GRACE-FO retrospective | NARROW | Ray 2023 used Spire and some Starlink data; Gondelach & Linares 2021 assimilated GPS of 10 commercial satellites, probably Planet's (text unread). Survives: ten months of public Planet states against Swarm and GRACE-FO, with a held-out block holding the Kp 8.7 storm of 2026-01-19 | Ray 2023; Gondelach & Linares 2021; Foster 2015, 2018 |
 | E13 (3): planned = executed thrust; realised vs stated covariance | NOVEL (thrust test); NARROW (covariance) | Yamamoto 2026 assumes planned thrust is executed and calls for "a rigorous test"; maneuver retrieval exists (A. Liu 2024; T.-R. Liu 2026; Guo 2026) but no such test. Realism method: Zaidi & Hejduk 2016; Dyreby 2025's abstract notes limits of the files' uncertainty propagation | A. Liu 2024, 2026; T.-R. Liu 2026; Guo 2026; Dyreby 2025; Zaidi & Hejduk 2016; Park 2019 |
-| Starlink forecast lane | NARROW | At 24 h: SpaceX 0.18 km; fitted to the same 8 h head, HPOP 2.76 km, SGP4-XP 6.95 km, an OMM 39.6 km. Forecasts are thrust-balanced, so drag-only fits run ahead (24 of 25); stated covariance 5–10× pessimistic. Survives: the gap and its attribution to planned thrust, scored on later fresh-OD heads | Dyreby 2025; A. Liu 2026; Jankovic 2026 |
+| Starlink forecast lane | NARROW | At 24 h: SpaceX 0.18 km; fitted to the same 8 h head, FFM 2.76 km, SGP4-XP 6.95 km, an OMM 39.6 km. Forecasts are thrust-balanced, so drag-only fits run ahead (24 of 25); stated covariance 5–10× pessimistic. Survives: the gap and its attribution to planned thrust, scored on later fresh-OD heads | Dyreby 2025; A. Liu 2026; Jankovic 2026 |
 
 ## 2. Catalog paper claims
 
@@ -120,7 +120,7 @@ data. Feasibility: S under a week, M a few weeks, L a program.
 | 5 | TraCSS public SP ephemerides (C.21) and `cdm_public` (C.18) as comparison targets | First public measurement of SP accuracy by regime, and of our gap to it | Wolff 2025; Magnus & Hejduk 2024; Borowitz 2024; Canal 2026 | C.21 on release; C.18 now (login), S | Event-by-event agreement with SP-based CA |
 | 6 | Operator propagator identification used to extend operator forecasts | Removes model systematics from operator-derived products | Dyreby 2025 | Medium, M | Operator objects beyond the files' spans |
 | 7 | Planet fleet as density and attitude-mode sensor | Public B histories; attitude modes separate Cd·A from ρ | Ray, Scheeres & Alnaqbi 2021; Foster 2015, 2018; Ray 2023 | Medium, M | Indirect, through density |
-| 8 | SGP4-XP companions fitted to operator ephemerides and precise orbits | At 24 h, XP was 5.7× better than an OMM fitted to the same Starlink heads | Payne 2022; Holincheck & Cathell 2021; Conkey & Zielinski 2022 | High, S; licence purpose clause (F.9) first | Better SGP4-based screening |
+| 8 | SGP4-XP companions fitted to operator ephemerides and precise orbits | At 24 h, XP was 5.7× better than an OMM fitted to the same Starlink heads | Payne 2022; Holincheck & Cathell 2021; Conkey & Zielinski 2022 | High, S; license purpose clause (F.9) first | Better SGP4-based screening |
 
 ## 6. What must come out
 
@@ -139,8 +139,8 @@ data. Feasibility: S under a week, M a few weeks, L a program.
    statements that a result is not claimed.
 7. The Vimpel 6–11 km → 53–70 m result as a summary headline: it is
    consistency with one provider.
-8. CA paper: "HPOP" for the point-mass + EGM2008 20×20 resident model
-   (summary, §5, §6, §7, §9). HPOP means full force; rename it or rerun the
+8. CA paper: "FFM" for the point-mass + EGM2008 20×20 resident model
+   (summary, §5, §6, §7, §9). FFM means full force; rename it or rerun the
    screen with full force.
 9. CA paper development history: the patched WasmEdge note (§3), "How the
    time came down" and the first-version paragraph (§6), and the empty

@@ -38,18 +38,18 @@
     "ST": { "name": "Space-Track GP (SGP4)", "lineage": "SSN", "level": 3 },
     "URA": { "name": "ESA ultra-rapid GNSS orbits (ESA0OPSULT)", "lineage": "GNSS-network", "level": 2, "productPrefix": "ESA0OPSULT", "availableAfterStartHours": 27, "validHours": 48 },
     "URA-IGS": { "name": "IGS ultra-rapid orbits kept by the SDN gps-precise node (IGS0OPSULT)", "lineage": "GNSS-network", "level": 2, "productPrefix": "IGS0OPSULT", "availableAfterStartHours": 27, "validHours": 48, "sensitivityOnly": true },
-    "HPOP-URA": { "name": "HPOP from the ultra-rapid state at the issue time", "lineage": "GNSS-network", "level": 2, "seedFrom": "URA" }
+    "FFM-URA": { "name": "FFM from the ultra-rapid state at the issue time", "lineage": "GNSS-network", "level": 2, "seedFrom": "URA" }
   },
   "methods": {
     "ST-latest": "the newest Space-Track element set created at or before the issue time",
     "ST-stack3": "the mean of the errors of the three newest Space-Track element sets created at or before the issue time",
     "URA": "the ultra-rapid state at the target, when the newest issue available at the issue time covers it",
-    "HPOP-URA": "HPOP from the newest available ultra-rapid state at the issue time",
+    "FFM-URA": "FFM from the newest available ultra-rapid state at the issue time",
     "SEL": "evidence-weighted selection: the applicable method with the lowest train-window median 3D error for the regime and horizon",
     "FUS": "fusion across lineages: per RTN axis, inverse train-window mean-square weights over the SEL-best applicable method of each lineage"
   },
-  "selectionCandidates": ["ST-latest", "URA", "HPOP-URA"],
-  "hpop": {
+  "selectionCandidates": ["ST-latest", "URA", "FFM-URA"],
+  "ffm": {
     "integrator": { "algorithm": "RK78", "tolerance": 1e-13, "maxStep": 300 },
     "forces": { "degree": 20, "order": 20, "thirdBodies": [10, 301], "srp": true, "eop": true, "solidTides": true, "relativity": "IERS_2010" },
     "gps": { "massKg": 1500, "areaM2": 20, "cr": 1.3 }

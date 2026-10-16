@@ -2,7 +2,7 @@
 // field does to the SGP4 state. Each field is bumped by its last printed
 // digit and every variant goes through analysis/epoch-state in one call; the
 // mean-motion increment, which only shows over time, also goes a day through
-// propagator/hpop. The page only takes norms of differences.
+// propagator/ffm. The page only takes norms of differences.
 import { executionFrame, decodeExecution } from '../../../../harness/prw.mjs';
 import { formatMeters } from '../../chart.js';
 import { HOUR, isoMicro } from '../../runs.js';
@@ -28,7 +28,7 @@ export default async function run(ctx) {
   const out = panel(ctx.root, 'One increment of each field');
   const view = scene3d(ctx, { title: 'States one printed digit apart', caption: 'Radial, in-track and cross-track of the element set’s state (m)' });
   note(ctx.root, 'Encoding resolution, not total error: an OMM’s physical error is far larger. Directional fields wrap at 360°, so their differences are taken on the state, never on the angle.');
-  const [epochState, hpop] = await Promise.all([ctx.module('analysis/epoch-state'), ctx.module('propagator/hpop')]);
+  const [epochState, ffm] = await Promise.all([ctx.module('analysis/epoch-state'), ctx.module('propagator/ffm')]);
 
   async function one() {
     const c = vallado.cases.find((x) => x.satnum === Number(form.values().case));
@@ -39,7 +39,7 @@ export default async function run(ctx) {
       if (states.length !== variants.length) throw new Error(`analysis/epoch-state derived ${states.length} of ${variants.length}: ${JSON.stringify(report.failures ?? [])}`);
       const day = async (s) => {
         const epochMs = c.epochUnix * 1000, target = isoMicro(epochMs + 24 * HOUR);
-        return decodeExecution(await hpop.invoke('invoke', [executionFrame({ epoch: isoMicro(epochMs), timeScale: 'UTC', position: s.r, velocity: s.v, samples: [target], target,
+        return decodeExecution(await ffm.invoke('invoke', [executionFrame({ epoch: isoMicro(epochMs), timeScale: 'UTC', position: s.r, velocity: s.v, samples: [target], target,
           integrator: { algorithm: 'RK78', tolerance: 1e-13 }, forces: {} })])).final.position;
       };
       const nIndex = 1 + FIELDS.findIndex((f) => f.key === 'MEAN_MOTION');

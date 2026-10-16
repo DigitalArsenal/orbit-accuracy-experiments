@@ -33,7 +33,7 @@ does that take? Three kinds are tried:
 
 Each fit is an **anchored fit**: the object's element-set history in the
 arc (each set's state at its epoch as a pseudo-observation) plus the
-sparse measurements, fitted by HPOP with the full force model. Every fit
+sparse measurements, fitted by FFM (Full Force Model) with the full force model. Every fit
 is also written out as a product (state and covariance at its cutoff) so
 that the capstone experiment can score it beside the element-set-only fit
 at the same cutoffs.
@@ -111,9 +111,9 @@ are truth epochs every `scoring.everyHours`; a cutoff is T = E − τ for
 ## 4. Methods
 
 Every orbit, frame, time and measurement computation runs in modules from
-`space-data-network-modules` main `095c20a6` (HPOP binary `0d1f6264…`):
+`space-data-network-modules` main `095c20a6` (FFM binary `0d1f6264…`):
 `propagator/sgp4`, `analysis/association`, `analysis/epoch-state`,
-`analysis/estimation` (`fit_batch`), `propagator/hpop`,
+`analysis/estimation` (`fit_batch`), `propagator/ffm`,
 `analysis/gp-error-model`, `foundation/frames`, `data-source/eop-parser`.
 This repository moves records, fits the statistical nuisance terms of §4.3
 and computes statistics.
@@ -135,7 +135,7 @@ Per observation (`waterfall.mjs`, `passes.mjs`):
    track (z ≥ 5), refined by a parabola; 5-second bins (median of ≥ 5 rows,
    uncertainty = robust spread / √n, floor 5 Hz); bins off their running
    median by 4σ dropped; a step over 300 Hz starts a new segment. A track
-   centred beyond ±3 kHz or within ±100 Hz (a DC line) is refused; a
+   centered beyond ±3 kHz or within ±100 Hz (a DC line) is refused; a
    segment needs ≥ 10 bins.
 3. **Measurement.** `propagator/sgp4` propagates the station's element set
    and `analysis/association` (that prediction, the station, EOP) gives
@@ -162,13 +162,13 @@ or before T, each as a pseudo-observation of its epoch state
 from RTN to GCRF by the frames module's RTN axes): the full state (6×6) for
 the ISS; the position only (3×3) for the SLR targets, because on dev the
 regime's velocity variances (13–70 mm/s) made the full-state history
-inconsistent with HPOP (reduced χ² ≈ 590 for Starlette; 1.2 with
+inconsistent with FFM (reduced χ² ≈ 590 for Starlette; 1.2 with
 positions); the measurement segments of [T − 2 d, T]; first
 guess: the set at or before T − 2 d. Estimator: `analysis/estimation`
 `fit_batch`, batch least squares of the GCRF state and B = Cd·A/m (a priori
-±30 %), answered by `propagator/hpop`. Measurement fits start from the
+±30 %), answered by `propagator/ffm`. Measurement fits start from the
 element-set-history fit (P). The covariance is the formal one times
-max(1, reduced χ²), propagated by HPOP over state and B, without process
+max(1, reduced χ²), propagated by FFM over state and B, without process
 noise.
 
 Segment nuisance terms that `fit_batch` cannot hold (§7) are estimated
@@ -179,7 +179,7 @@ down ×3; a segment whose whitened RMS stays above 5 is edited). A
 self-check on dev geometry with range rates generated from the truth
 through association recovered the truth to 49 m after eight rounds.
 
-HPOP force model (full force, both arms): EGM2008 70×70 in Earth-fixed
+FFM force model (full force, both arms): EGM2008 70×70 in Earth-fixed
 axes with IERS EOP; Sun and Moon from DE440; cannonball radiation pressure
 with the conical shadow (AGOM fixed); NRLMSISE-00 drag on GFZ daily space
 weather (SET's JB2008 drivers end 2026-08-25), B fitted; IERS 2010 solid
@@ -191,7 +191,7 @@ Stella B 0.0021, AGOM 0.00108; LARETS 0.0043, 0.0022; WESTPAC 0.0042,
 | Arm | ID | Method |
 | --- | --- | --- |
 | both | B | Baseline: the latest set at T propagated by SGP4 (`gp-error-model accumulate` against the truth, RTN). |
-| both | P | The element-set history alone (0 segments): the OMM-only HPOP product. |
+| both | P | The element-set history alone (0 segments): the OMM-only FFM product. |
 | SatNOGS | **F2** | Primary: history + every segment; per segment a free bias, a drift (prior 0.38 m/s²) and a lag (prior 1.07 s), noise scale 1.99. |
 | SatNOGS | F1 | History + segments; bias and drift, the common lag only, noise scale 4.25 (every 3rd cutoff). |
 | SatNOGS | O2 | Segments only, as F2, without the history (≥ 6 segments; every 2nd cutoff). |
@@ -216,11 +216,11 @@ bounce instant (transmit + tof/2), modelled by the estimator as a one-way
 LASER_RANGE without light time at that instant (the two-way geometry to
 first order), the station's GCRF position and the target's elevation from
 `analysis/association` (the latest set as the prediction; the elevation
-only maps the troposphere). Target centre-of-mass offsets (≤ 13 cm) and
+only maps the troposphere). Target center-of-mass offsets (≤ 13 cm) and
 station range biases are not applied. Points below 10° elevation are
 dropped; a pass needs ≥ 3 points. The range σ is set on dev so that the
 dev fits' median reduced χ² is 1: 3.7 m (step 16; the unmodelled troposphere
-and centre-of-mass offsets are inside it). The first laser round weights the
+and center-of-mass offsets are inside it). The first laser round weights the
 ranges down ×100 (a robust start from P).
 
 ### 4.6 Products
@@ -289,14 +289,14 @@ the config.
 ### A2 (2026-10-10): space weather after GFZ's last day
 
 The GFZ file ends 2026-10-08. The code meant to repeat the last reported day
-for later days but centred the 81-day F10.7 mean on the unreported day; for
+for later days but centered the 81-day F10.7 mean on the unreported day; for
 2026-10-10 that left 39 days, below the 40 required, and all ten
-first-wave SatNOGS test runs stopped at their first cutoff whose HPOP
+first-wave SatNOGS test runs stopped at their first cutoff whose FFM
 inputs reached 2026-10-10. The harness now repeats the last day's row
-entirely (`harness/hpop-execution.mjs`, commit 613cbeb), and the stopped
+entirely (`harness/ffm-execution.mjs`, commit 613cbeb), and the stopped
 runs were resumed with it. Cutoffs computed before the fix used, for
-2026-10-09, an 81-day mean over the 40 days centred on that day instead of
-the 41 centred on 2026-10-08 (a change below 1 sfu).
+2026-10-09, an 81-day mean over the 40 days centered on that day instead of
+the 41 centered on 2026-10-08 (a change below 1 sfu).
 
 ### A3 (2026-10-10): SatNOGS test in waves, under a shard limit
 

@@ -9,7 +9,7 @@
     "eopFinals": "/opt/data/sdn-archive/reference-states/products/finals2000A.all.20261009T1144Z",
     "satelliteMetadata": "/opt/data/sdn-archive/reference-states/products/igs_satellite_metadata.snx",
     "sgp4CovarianceModel": "analysis/gp-error-model/docs/model-2026-08-scaled.json",
-    "hpopCovarianceModel": "analysis/gp-error-model/docs/hpop-covariance-model-2026-08.json"
+    "ffmCovarianceModel": "analysis/gp-error-model/docs/ffm-covariance-model-2026-08.json"
   },
   "elementSets": {
     "meanElementTheory": "SGP4",
@@ -131,7 +131,7 @@
       },
       "terms": {
         "redistribute": true,
-        "text": "ESA/ESOC Navigation Support Office products as an IGS analysis centre, IGS Data Policy: CC BY 4.0. Credit: ESA/ESOC.",
+        "text": "ESA/ESOC Navigation Support Office products as an IGS analysis center, IGS Data Policy: CC BY 4.0. Credit: ESA/ESOC.",
         "url": "https://navigation-office.esa.int/"
       }
     },
@@ -152,7 +152,7 @@
       },
       "terms": {
         "redistribute": true,
-        "text": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-centre products). Credit: ESA/ESOC.",
+        "text": "ESA/ESOC Navigation Support Office products, free and open with attribution (IGS Data Policy CC BY 4.0 for the IGS analysis-center products). Credit: ESA/ESOC.",
         "url": "https://navigation-office.esa.int/"
       }
     },
@@ -177,7 +177,7 @@
   "notCompared": {
     "eutelsat-oneweb": "LTEF: no module evaluates the format",
     "ses": "IESS-412 eleven-parameter ephemeris: no module evaluates it",
-    "telesat": "box-centre longitude and latitude, not a state ephemeris",
+    "telesat": "box-center longitude and latitude, not a state ephemeris",
     "eumetsat": "two-line element sets only; no ephemeris and no truth on hand",
     "space-track": "credentialed; excluded",
     "spire": "credentialed; excluded",

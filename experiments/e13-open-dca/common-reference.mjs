@@ -2,7 +2,7 @@
 //
 // What an arc measures is the energy the drag took out of the orbit, B * integral of 1/2 rho |v_r|^3 dt along it. Under a density model X the arc reads
 // B_X = W_obs / I_X, I_X = the integral per unit B along the trajectory; so the same arc under two models differs by B_N = B_J * I_J / I_N. `drag_work` of
-// analysis/density-calibration 0.4.0 (JB2008 and NRLMSISE-00, WASM) gives both integrals along the trajectory HPOP makes from the arc's first state with the
+// analysis/density-calibration 0.4.0 (JB2008 and NRLMSISE-00, WASM) gives both integrals along the trajectory FFM makes from the arc's first state with the
 // arc's own B (the profile, the Earth orientation and the locked Cr*A/m of the arc). Nothing is refitted. This file frames requests, selects rows and divides.
 import { json } from '../../harness/modules.mjs';
 import { DAY, config } from './common.mjs';
@@ -24,7 +24,7 @@ export const gfzSha256 = () => (gfz ??= readGfzKp(config.inputs.gfzHistory)).sha
 // The rows the module takes: PRW SPW names, only the fields NRLMSISE-00 reads.
 export const msisJsonRows = (rows) => rows.map((r) => ({ DATE: r.DATE, F107_OBS: r.F107_OBS, F107_OBS_CENTER81: r.F107_OBS_CENTER81, AP_AVG: r.AP_AVG }));
 
-// The drag works per unit B of the HPOP trajectory of state `a` (arc env `env`, JB2008) to `bMs` with Cd*A/m = BJ and Cr*A/m = cr, samples every stepSeconds,
+// The drag works per unit B of the FFM trajectory of state `a` (arc env `env`, JB2008) to `bMs` with Cd*A/m = BJ and Cr*A/m = cr, samples every stepSeconds,
 // under JB2008 (SET's rows of the env) and under NRLMSISE-00 (`rowsN`, SPW rows of the days). Returns {workJ, workN, ratio = workJ / workN, samples, refused}.
 export async function dragWorkRatio(env, a, bMs, BJ, cr, rowsN, { stepSeconds = 60 } = {}) {
   const epochs = [];

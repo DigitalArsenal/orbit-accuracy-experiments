@@ -1,7 +1,7 @@
 # site
 
 The GitHub Pages site. It runs the experiments' own modules
-(`propagator/hpop`, `foundation/time`, `analysis/vcm-adapter`) in the
+(`propagator/ffm`, `foundation/time`, `analysis/vcm-adapter`) in the
 visitor's browser through `space-data-module-sdk`'s browser harness, framed
 by the same `harness/prw.mjs` and `harness/time.mjs` the experiments use in
 Node, on a CesiumJS globe (vendored, no ion token, the Space Data Network's
@@ -9,9 +9,9 @@ Blue Marble as its only imagery). Nothing is fetched from a third party.
 
 | Section | What runs |
 | --- | --- |
-| Live | V1's HPOP binary from a V1 seed with a chosen force model, 72 h, every sample against the precise orbit; then the six V1 horizons alone, compared with `results/v1` seed by seed (they match exactly). Downloads: CSV, CZML, the PRW request and result, a run record. |
+| Live | FFM (Full Force Model) from the current modules checkout, starting at a V1 seed with a chosen force model, 72 h, every sample against the precise orbit; then the six V1 horizons alone, compared with `results/v1` seed by seed, reporting any difference. Downloads: CSV, CZML, the PRW request and result, a run record. |
 | Results | V1's committed metrics. |
-| Verification | The 72 HPOP-against-Orekit 13.1 cases; any one re-runs here from its exact PRW request, except the four that read CSSI space weather or SET's JB2008 indices (not republished), which show their recorded result. |
+| Verification | The 72 FFM-against-Orekit 13.1 cases; any one re-runs here from its exact PRW request, except the four that read CSSI space weather or SET's JB2008 indices (not republished), which show their recorded result. |
 | VCM | The survey's sample VCM read and propagated 24 h with its 7×7 covariance, under both readings of the B row's units. |
 | Data | Every file with its SHA-256, source and terms (`provenance.json`). |
 
@@ -21,11 +21,11 @@ Blue Marble as its only imagery). Nothing is fetched from a third party.
 with the same modules, and draws that section's subject in 3D. The catalog
 paper: a solution fitted to observations with its covariance (section 2),
 osculating elements, the OMM handoff and its quantization (section 4), a
-GPS orbit from its analysis-centre state beside the public OMM's error
+GPS orbit from its analysis-center state beside the public OMM's error
 (section 5.1), the ISS's operator ephemeris against the public products
-(section 5.2), the ISS reboost the maneuver detector found (section 5.5), Φ P₀ Φᵀ through HPOP
+(section 5.2), the ISS reboost the maneuver detector found (section 5.5), Φ P₀ Φᵀ through FFM
 (section 6), Orekit and V1 (section 7), association (section 8), VCM parity
-(section 9), a V1 seed reproduced by the binary the paper names (section 10),
+(section 9), a V1 seed compared with its committed results using current FFM (section 10),
 each product's measured error at a satellite of its class (section 11) and a
 conjunction from fitted covariances (section 12). The screening paper: pair
 counts, the motion bound, refinement, step size, Alfano and Foster
@@ -48,10 +48,10 @@ section. Each page stands alone in an iframe, takes `?theme=light|dark` or a
 Each scene is an analytic plot box, as MATLAB's `plot3` with `box on` and
 `grid on` (`src/models/scene.js`): one CesiumJS Viewer with no globe, sky or
 imagery; a box around the data, grid on the three back planes (they follow
-the view), ticks with numbers in physical units, labelled axes (x, y, z in
+the view), ticks with numbers in physical units, labeled axes (x, y, z in
 km in the named frame, or radial, in-track and cross-track), a title and a
 legend. In geocentric boxes the Earth is a plain wireframe sphere of
-6,378.137 km. The camera is CesiumJS's own controller about the box centre,
+6,378.137 km. The camera is CesiumJS's own controller about the box center,
 with 3D, xy, xz and yz views and a reset. A scene can fix its limits; the box
 then clips what lies outside. Anything that moves is an entity on a
 `SampledPositionProperty` (an ellipsoid on sampled radii and orientation),
@@ -62,9 +62,11 @@ operator ephemeris, a committed result, or the page's inputs and its
 evaluation of the paper's formulas; each page lists the credit lines of the
 data it reads.
 
-Two HPOP binaries are served: `propagator/hpop`, the current one, and
-`propagator/hpop-v1`, the binary V1 ran (from the V1 run's modules commit,
-checked against its SHA-256), so a V1 seed reproduces the committed run.
+The current `propagator/ffm` binary is served for every live run. V1's
+committed manifest and metrics remain historical evidence: the site compares
+the current binary's errors with that run and reports each run's provenance.
+The rename changes the module contract, so bit-for-bit historical reproduction
+is no longer promised.
 
 The conjunction module uses shared WebAssembly memory: embedded in a page
 without cross-origin isolation, those models offer to open in their own tab,
@@ -75,10 +77,10 @@ where the service worker isolates them.
 `src/od/<model>.js` (registry entries with `dir: 'od'`) run one scenario: GPS
 on 2026-08-02. `build-od.mjs` writes its inputs from the IGS final orbits
 (`analysis/reference-states` output in `SDN_REFERENCE_STATES`) with modules:
-a dense truth (`propagator/hpop` between IGS epochs), a catalog (each IGS
-state at 00:00 propagated by HPOP with covariance, two satellites withheld),
+a dense truth (`propagator/ffm` between IGS epochs), a catalog (each IGS
+state at 00:00 propagated by FFM with covariance, two satellites withheld),
 and an `analysis/observation-simulator` request (truth in ITRF from
-`foundation/frames`, visibility from `analysis/access`, the Sun from HPOP's
+`foundation/frames`, visibility from `analysis/access`, the Sun from FFM's
 DE440). In the browser the pages run the simulator, `analysis/association`,
 `analysis/estimation` (batch, EKF, UKF; bindings of its module-local schema
 are generated into `site/.cache/estimation` by flatc at build time) and
@@ -112,13 +114,13 @@ calibrated on GRACE-A (`results/e5/calibration`), both from
 
 Every file the build writes goes through `write()`, which takes its label from
 `data/licenses.json` (`harness/data-licenses.mjs`, `labelFor`): the file's
-licence and credit are its sources' own, `provenance.json` carries them per
+license and credit are its sources' own, `provenance.json` carries them per
 file, and a source the registry does not allow us to reproduce fails the build.
 Not reproduced: CSSI space weather and SET's JB2008 indices (SET sends no CORS
 header, so a browser cannot fetch them either). The four Orekit cases that read
 them are listed as recorded only; section 5.4's JB2008 densities are computed
 from SET's indices when the site is built and published as results, with SET's
-acknowledgement. The sample VCM stays, labelled with its
+acknowledgement. The sample VCM stays, labeled with its
 provenance (owner, 2026-10-10: public sources).
 
 ## Build
@@ -128,19 +130,19 @@ cd site && npm ci && cd ..
 export SDN_MODULES_ROOT=…/space-data-network-modules
 export SDN_REFERENCE_STATES=…/reference-states/reference
 export SDN_EOP_C04=…/reference-states/products/eopc04.1962-now
-node site/run-orekit.mjs        # when the HPOP binary changes: site/generated/orekit-results.json
+node site/run-orekit.mjs        # when the FFM binary changes: site/generated/orekit-results.json
 node site/run-maneuver.mjs      # when the detector binary changes: site/generated/iss-detection.json
 node site/run-drag.mjs          # when the density module or E5's calibration changes: site/generated/champ-2003-storm.json
 node site/build.mjs             # site/dist
 node site/serve.mjs             # http://localhost:8080 with COOP/COEP
 ```
 
-`build.mjs` refuses to publish Orekit results recorded with a different HPOP
+`build.mjs` refuses to publish Orekit results recorded with a different FFM
 binary than the one it publishes. It never reads a Space-Track element set.
 
 ## Cross-origin isolation
 
-HPOP and the VCM adapter are built with shared WebAssembly memory, which a
+FFM and the VCM adapter are built with shared WebAssembly memory, which a
 browser grants only to a cross-origin-isolated page. GitHub Pages cannot set
 the COOP/COEP headers, so `coi-serviceworker` (MIT) adds them: the first
 visit reloads once. `serve.mjs` sets the headers directly.

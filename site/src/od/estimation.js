@@ -44,7 +44,7 @@ export function estimationInputs({ estimator, epochMs, dayMs, state, covariance,
     const cfg = config;
     const list = observations.map((o) => observation(o, dayMs));
     const obs = b.createStructOffsetList(list, EstimationRequest.startObservationsVector);
-    const port = b.createString('propagator/hpop'), capability = b.createString('plugin_propagate plugin_compute_stm'), trace = b.createString('od-pages');
+    const port = b.createString('propagator/ffm'), capability = b.createString('plugin_propagate plugin_compute_stm'), trace = b.createString('od-pages');
     EstimationRequest.startEstimationRequest(b);
     EstimationRequest.addConfig(b, cfg.pack(b));
     EstimationRequest.addObservations(b, obs);

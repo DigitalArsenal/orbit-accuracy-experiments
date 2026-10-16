@@ -44,7 +44,7 @@
         <h1>Orbit accuracy, measured in the open.</h1>
         <p class="lede">Experiments on how accurate orbit propagation and catalog covariance are, against precise orbits. Every number here is computed by Space Data Network WebAssembly modules, and you can re-run them on this page, in your browser.</p>
         <div class="actions">
-          <a class="button primary" href="#live">Run HPOP live</a>
+          <a class="button primary" href="#live">Run FFM (Full Force Model) live</a>
           <a class="button" href="#data">Download the data</a>
         </div>
         <ul class="facts" id="facts" aria-label="Headline results"></ul>
@@ -54,14 +54,14 @@
         <div class="section-head">
           <p class="eyebrow">Live</p>
           <h2>Propagate A Real Orbit</h2>
-          <p class="lede">Pick a satellite with a precise orbit and a force model. Your browser loads <code>propagator/hpop</code>, seeds it with the precise state, propagates three days and compares every sample with the precise orbit.</p>
+          <p class="lede">Pick a satellite with a precise orbit and a force model. Your browser loads <code>propagator/ffm</code>, seeds it with the precise state, propagates three days and compares every sample with the precise orbit.</p>
         </div>
         <div class="live">
           <div class="globe-frame">
-            <div id="globe" class="globe" role="img" aria-label="Globe: the precise orbit in amber, HPOP's propagation in cyan"></div>
+            <div id="globe" class="globe" role="img" aria-label="Globe: the precise orbit in amber, FFM's propagation in cyan"></div>
             <div class="globe-legend" aria-hidden="true">
               <span><i class="key amber"></i>Precise orbit</span>
-              <span><i class="key cyan"></i>HPOP</span>
+              <span><i class="key cyan"></i>FFM</span>
             </div>
             <div class="isolation" id="isolation" hidden></div>
           </div>
@@ -90,9 +90,9 @@
 
       <section id="v1" class="band">
         <div class="section-head">
-          <p class="eyebrow">V1 · HPOP Against Real Orbits</p>
+          <p class="eyebrow">V1 · FFM Against Real Orbits</p>
           <h2>Each Force, Measured</h2>
-          <p class="lede" id="v1-lede">HPOP seeded from 16 SLR states (LAGEOS-1/2, ETALON-1/2) and 96 GPS states, propagated three days and compared with the same precise orbits, force model by force model.</p>
+          <p class="lede" id="v1-lede">FFM seeded from 16 SLR states (LAGEOS-1/2, ETALON-1/2) and 96 GPS states, propagated three days and compared with the same precise orbits, force model by force model.</p>
         </div>
         <div class="grid-2">
           <figure class="chart-card"><figcaption><strong>SLR spheres</strong><span>median 3D error, m</span></figcaption><div id="v1-chart-slr" class="chart"></div></figure>
@@ -108,7 +108,7 @@
 
       <section id="verification" class="band">
         <div class="section-head">
-          <p class="eyebrow">Verification · HPOP Against Orekit 13.1</p>
+          <p class="eyebrow">Verification · FFM Against Orekit 13.1</p>
           <h2>Locked Down Force By Force</h2>
           <p class="lede">72 cases on identical states, forces and constants: five orbits, ten force sets, and the IERS 2010, VCM and atmosphere additions. Each point is the largest position difference over a day of hourly samples. The reference is Orekit 13.1 with its de Sitter term evaluated in consistent frames. Pick a case and re-run it here. Four cases read space weather or JB2008 indices that are not republished here; they are listed as recorded only.</p>
         </div>
@@ -144,7 +144,7 @@
           </div>
         </div>
         <figure class="chart-card">
-          <figcaption><strong>Position sigmas along the propagation</strong><span>m, from HPOP’s 7×7 covariance with the ballistic coefficient B as a parameter; in-track under both readings of B’s row</span></figcaption>
+          <figcaption><strong>Position sigmas along the propagation</strong><span>m, from FFM’s 7×7 covariance with the ballistic coefficient B as a parameter; in-track under both readings of B’s row</span></figcaption>
           <div id="vcm-chart" class="chart"></div>
         </figure>
         <div class="downloads" id="vcm-downloads"></div>

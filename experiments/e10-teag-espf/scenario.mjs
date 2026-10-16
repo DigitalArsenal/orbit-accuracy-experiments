@@ -1,5 +1,5 @@
 // Synthetic tracking scenarios, every computation in a module: truth by
-// propagator/hpop (hpop.mjs), Earth-fixed states, station states and the
+// propagator/ffm (ffm.mjs), Earth-fixed states, station states and the
 // Sun's direction by foundation/frames, TT Julian dates by foundation/time,
 // visibility by analysis/access, measurements by analysis/observation-
 // simulator ($EOO RA/Dec, which estimation's predict_measurement models).
@@ -18,7 +18,7 @@ import { TIM, TIMConversionRequestT, TIMInstantT, TIMT, timConversionStatus, tim
 import { sha256 } from '../../harness/modules.mjs';
 import { PRW_TYPE, instant } from '../../harness/prw.mjs';
 import { DAY_MS, iso, rng } from './common.mjs';
-import { propagate } from './hpop.mjs';
+import { propagate } from './ffm.mjs';
 
 const ACW_TYPE = { schemaName: 'ACW.fbs', fileIdentifier: '$ACW', rootTypeName: 'ACW', wireFormat: 'flatbuffer' };
 const FRM_TYPE = { schemaName: 'FRM.fbs', fileIdentifier: '$FRM', rootTypeName: 'FRM' };
@@ -100,12 +100,12 @@ export async function tdbIso(time, ms) {
   return r.TARGET().ISO8601();
 }
 
-// ── propagator/hpop ephemeris: the Sun's GCRF position at a UTC instant ──
+// ── propagator/ffm ephemeris: the Sun's GCRF position at a UTC instant ──
 // (the geometric query takes TDB: the instant is converted by foundation/time)
-export async function sunGcrf(hpop, env, ms, time) {
+export async function sunGcrf(ffm, env, ms, time) {
   const b = new fb.Builder(512);
   P.PRW.finishSizePrefixedPRWBuffer(b, Object.assign(new P.PRWT(), { EPHEMERIS_REQUEST: new P.PRWEphemerisRequestT(instant(await tdbIso(time, ms), 'TDB'), 10, 399) }).pack(b));
-  const response = await hpop.invoke('invoke', [{ portId: 'request', typeRef: PRW_TYPE, payload: b.asUint8Array().slice() }, env.kernel]);
+  const response = await ffm.invoke('invoke', [{ portId: 'request', typeRef: PRW_TYPE, payload: b.asUint8Array().slice() }, env.kernel]);
   const root = P.PRW.getSizePrefixedRootAsPRW(new fb.ByteBuffer(new Uint8Array(response.outputs.find((o) => o.portId === 'response').payload))).unpack();
   const s = root.EPHEMERIS_RESULT.STATE.STATE;  // a PRWResidentState around the FRM state vector
   if (!/GCRF|ICRF/.test(s.COORDINATE_SYSTEM_NAME ?? '') && s.COORDINATE_SYSTEM_NAME) throw new Error(`Sun state in ${s.COORDINATE_SYSTEM_NAME}`);
@@ -172,7 +172,7 @@ export async function buildScenario(m, env, eopStream, spec) {
   for (const [k, ms] of grid.entries()) samples.push({ ms, jdTt: await ttJd(m.time, ms), itrf: await gcrfToItrf(m.frames, eop.frame, ms, truthGrid[k]) });
   const sunGrid = grid.filter((_, k) => k % Math.max(1, Math.round(600 / stepS)) === 0 || k === grid.length - 1);
   const sun = [];
-  for (const ms of sunGrid) sun.push({ jdTt: await ttJd(m.time, ms), itrf: await gcrfToItrf(m.frames, eop.frame, ms, await sunGcrf(m.hpop, env, ms, m.time)) });
+  for (const ms of sunGrid) sun.push({ jdTt: await ttJd(m.time, ms), itrf: await gcrfToItrf(m.frames, eop.frame, ms, await sunGcrf(m.ffm, env, ms, m.time)) });
   const windows = await accessWindows(m.access, spec.stations, samples, spec.minElevationDeg * Math.PI / 180);
   const inputs = { stations: spec.stations, samples, sun, windows, eopObjects: eop.objects, target: spec.target };
   const eoo = await simulate(m.simulator, { ...inputs, sensor: spec.sensor, seed: spec.seed });
@@ -222,7 +222,7 @@ export async function propagateTruth(m, env, spec, instants) {
     if (targets.length) {
       const samples = [];
       const nonzero = targets.filter((t) => t !== epochMs);
-      const prop = nonzero.length ? await propagate(m.hpop, env, model, { epochIso: iso(epochMs), state, sampleIsos: nonzero.map(iso) }) : [];
+      const prop = nonzero.length ? await propagate(m.ffm, env, model, { epochIso: iso(epochMs), state, sampleIsos: nonzero.map(iso) }) : [];
       let j = 0;
       for (const t of targets) samples.push(t === epochMs ? [...state] : prop[j++].state);
       for (let i = 0; i < segment.length; ++i) out.push(samples[i]);

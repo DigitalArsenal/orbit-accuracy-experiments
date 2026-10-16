@@ -86,13 +86,13 @@ export function setAt(sets, tc, notAfter = tc) {
 }
 
 export async function productContext(modules, run) {
-  const names = ['analysis/gp-error-model', 'analysis/epoch-state', 'propagator/hpop', 'foundation/frames', 'foundation/time'];
+  const names = ['analysis/gp-error-model', 'analysis/epoch-state', 'propagator/ffm', 'foundation/frames', 'foundation/time'];
   const m = {};
   for (const name of names) { m[name] = await loadModule(modules, name); run.addModule(m[name].provenance); }
   const read = (rel) => { const file = path.join(modules, rel); const bytes = fs.readFileSync(file); run.addInputs('models', { [rel]: sha256(bytes) }); return JSON.parse(bytes); };
   const sgp4Model = read(config.inputs.sgp4CovarianceModel);
-  const hpopModel = read(config.inputs.hpopCovarianceModel);
-  const hpopModelFrame = json('model', hpopModel);
+  const ffmModel = read(config.inputs.ffmCovarianceModel);
+  const ffmModelFrame = json('model', ffmModel);
   let generation = 0n;
 
   // S: errors of the set's SGP4 prediction against each reference state, in
@@ -119,22 +119,22 @@ export async function productContext(modules, run) {
     return { regime: s.regime, ageDays: s.ageDays, c3: [c[0], c[1], c[3], c[1], c[2], c[4], c[3], c[4], c[5]] };
   }
 
-  // H: epoch-state seed at the set's epoch, P0 and Q from hpop_arcs, HPOP
+  // H: epoch-state seed at the set's epoch, P0 and Q from ffm_arcs, FFM
   // resident propagation to each state's epoch. Returns per state
   // {state [m, m/s] GCRF, covariance [36] m^2} | null, and the arc's regime.
-  async function hpop(set, norad, states) {
+  async function ffm(set, norad, states) {
     const t0 = epochMs(set.epoch);
     const ages = states.map((s) => (Date.parse(s.epoch) - t0) / DAY_MS);
-    const plan = await m['analysis/gp-error-model'].invokeJson('hpop_arcs', [ommFrame([{ ...set, norad }]), gcrfOem(norad, states), hpopModelFrame,
+    const plan = await m['analysis/gp-error-model'].invokeJson('ffm_arcs', [ommFrame([{ ...set, norad }]), gcrfOem(norad, states), ffmModelFrame,
       json('options', { targetAgesDays: ages, targetToleranceSeconds: config.scoring.ageBinHalfWidthSeconds })], 'plan');
     const arc = plan.arcs[0];
-    if (!arc) return { reason: 'hpop_arcs: no arc', samples: states.map(() => null) };
+    if (!arc) return { reason: 'ffm_arcs: no arc', samples: states.map(() => null) };
     const response = await m['analysis/epoch-state'].invoke('derive', [mpeFrame([{ entityId: `NORAD:${norad}`, epochUnix: unixSeconds(set.epoch), ...set.elements }])]);
     const seeds = decodeOemStream(new Uint8Array(response.outputs.find((f) => f.portId === 'states').payload));
     if (!seeds.length) return { reason: 'epoch-state refused the set', regime: arc.regime, samples: states.map(() => null) };
     const l = seeds[0].EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES[0];
     const gcrf = () => new RFMCoordinateSystemT('GCRF', rfmAxisType.ICRF, new RFMOriginT(rfmOriginKind.CELESTIAL_BODY, 399), 399);
-    const identity = new PRWInstanceT('com.orbpro.hpop', 'e4', ++generation);
+    const identity = new PRWInstanceT('com.orbpro.ffm', 'e4', ++generation);
     const record = new PRWResidentStateT(identity, 1, norad, String(norad),
       new FRMStateVectorT(frmStateRepresentation.CARTESIAN, [], new FRMVector3T(l.X * 1000, l.Y * 1000, l.Z * 1000), new FRMVector3T(l.X_DOT * 1000, l.Y_DOT * 1000, l.Z_DOT * 1000), 'GCRF', l.EPOCH, 'UTC'),
       gcrf());
@@ -143,13 +143,13 @@ export async function productContext(modules, run) {
     if (arc.covariance) record.COVARIANCE = new PRWStateMatrixT(6, arc.covariance);
     if (arc.processNoise) record.PROCESS_NOISE = new PRWProcessNoiseT(prwProcessNoiseModel.WHITE_ACCELERATION, prwProcessNoiseAxes.RADIAL_TRANSVERSE_NORMAL, arc.processNoise.spectralDensityM2S3, arc.processNoise.discretizationSeconds);
     const encode = (arm, value) => { const r = new PRWT(); r[arm] = value; const b = new flatbuffers.Builder(1024); PRW.finishSizePrefixedPRWBuffer(b, r.pack(b)); return b.asUint8Array().slice(); };
-    await m['propagator/hpop'].invoke('ingest_state', [{ portId: 'state', typeRef: PRW_TYPE, payload: encode('RESIDENT_STATE', record) }]);
+    await m['propagator/ffm'].invoke('ingest_state', [{ portId: 'state', typeRef: PRW_TYPE, payload: encode('RESIDENT_STATE', record) }]);
     const byEpoch = new Map(arc.targets.map((t) => [Date.parse(t.epoch), t]));
     const samples = [];
     for (const s of states) {
       if (!byEpoch.has(Date.parse(s.epoch))) { samples.push(null); continue; }
       const request = new PRWResidentRequestT(identity, new TIMInstantT(prwTiming.UTC, timEpochRepresentation.ISO8601, 0, 0, s.epoch), [1], 0, gcrf());
-      const res = await m['propagator/hpop'].invoke('propagate_state', [{ portId: 'request', typeRef: PRW_TYPE, payload: encode('RESIDENT_REQUEST', request) }]);
+      const res = await m['propagator/ffm'].invoke('propagate_state', [{ portId: 'request', typeRef: PRW_TYPE, payload: encode('RESIDENT_REQUEST', request) }]);
       const out = PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(res.outputs[0].payload)).RESIDENT_STATE();
       const st = out.STATE(), p = st.POSITION(), v = st.VELOCITY(), c = out.COVARIANCE();
       samples.push({ state: [p.X(), p.Y(), p.Z(), v.X(), v.Y(), v.Z()], covariance: c ? Array.from({ length: c.valuesLength() }, (_, k) => c.VALUES(k)) : null });
@@ -173,7 +173,7 @@ export async function productContext(modules, run) {
   }
 
   return {
-    modules: m, sgp4Errors, sgp4Covariance, hpop, rtnDifference,
+    modules: m, sgp4Errors, sgp4Covariance, ffm, rtnDifference,
     async destroy() { for (const x of Object.values(m)) await x.destroy(); },
   };
 }

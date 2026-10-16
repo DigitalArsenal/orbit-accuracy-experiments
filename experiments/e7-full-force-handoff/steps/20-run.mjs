@@ -49,7 +49,7 @@ run.addInputs('gpHistory', files);
 const byObject = setsByObjectOf(sets);
 let all = schedule(window, truth, byObject);
 // --patch BATCH: only the (sample, variant) pairs that failed in that batch
-// of this window because HPOP refused a negative Cd*A/m (PLAN.md
+// of this window because FFM refused a negative Cd*A/m (PLAN.md
 // amendments); its rows then replace those failures.
 const patchOf = new Map();
 if (values.patch) {

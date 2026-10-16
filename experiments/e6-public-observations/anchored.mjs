@@ -11,7 +11,7 @@ import { json, loadModule, sha256 } from '../../harness/modules.mjs';
 import { mpeFrame, decodeOemStream, ommFrame } from '../../harness/records.mjs';
 import { rtnAxes } from '../../harness/frames.mjs';
 import { eopFrame } from '../../harness/eop.mjs';
-import { gfzSpaceWeather, kernelFrame } from '../../harness/hpop-execution.mjs';
+import { gfzSpaceWeather, kernelFrame } from '../../harness/ffm-execution.mjs';
 import { estimationCodec } from '../e2-catalog-covariance/estimation-wire.mjs';
 import { gcrfOem } from '../e4-operator-ephemeris-parity/products.mjs';
 import { finalsRecords } from './eop.mjs';
@@ -24,7 +24,7 @@ export const setMs = (text) => Date.parse(/[zZ]$/.test(text) ? text : `${text}Z`
 // Modules, codec and environment inputs for a run.
 export async function anchoredContext(run, modulesDir, repoRoot) {
   const m = {};
-  for (const name of ['analysis/estimation', 'propagator/hpop', 'analysis/gp-error-model', 'analysis/epoch-state', 'foundation/frames', 'data-source/eop-parser']) { m[name] = await loadModule(modulesDir, name); run.addModule(m[name].provenance); }
+  for (const name of ['analysis/estimation', 'propagator/ffm', 'analysis/gp-error-model', 'analysis/epoch-state', 'foundation/frames', 'data-source/eop-parser']) { m[name] = await loadModule(modulesDir, name); run.addModule(m[name].provenance); }
   const codec = await estimationCodec(modulesDir, path.join(repoRoot, 'node_modules/space-data-module-sdk/schemas/orbpro'));
   const finals = await finalsRecords(m['data-source/eop-parser'], config.inputs.eopFinals);
   const kernelBytes = fs.readFileSync(path.join(modulesDir, config.inputs.kernel));
@@ -99,7 +99,7 @@ export async function anchoredAt(env, arm, T, scoring, truthStates, sets, segmen
   const startMs = Date.parse(reference.epoch), endMs = Math.max(T, ...scoring.map((s) => s.E));
   const mjd = (ms) => ms / DAY_MS + 40587;
   const inputs = [kernelFrame(kernelBytes), eopFrame(finals.records, Math.floor(mjd(startMs)) - 1, Math.ceil(mjd(endMs)) + 1), sw.frame(iso(startMs - DAY_MS).slice(0, 10), iso(endMs + DAY_MS).slice(0, 10))];
-  const ctx = { estimation: m['analysis/estimation'], hpop: m['propagator/hpop'], codec, inputs };
+  const ctx = { estimation: m['analysis/estimation'], ffm: m['propagator/ffm'], codec, inputs };
   const priors = [];
   // Each set's epoch state as a pseudo-observation: its position only
   // (lanes 'position', the 3x3 block) or its full state ('state').
@@ -142,7 +142,7 @@ export async function anchoredAt(env, arm, T, scoring, truthStates, sets, segmen
         const cut = at.get(iso(T));
         row.variants[name] = {
           segments: use.length, stations: new Set(use.map((s) => s.station)).size, measurements: fit.measurementCount, converged: fit.converged, iterations: fit.iterations,
-          reducedChiSquare: fit.reducedChiSquare, parameters: product.parameters, hpopCalls: product.hpopCalls, outer: product.outer, seconds: (Date.now() - t0) / 1000, stoppedBy: product.stoppedBy,
+          reducedChiSquare: fit.reducedChiSquare, parameters: product.parameters, ffmCalls: product.ffmCalls, outer: product.outer, seconds: (Date.now() - t0) / 1000, stoppedBy: product.stoppedBy,
           nuisance: { theta: product.nuisance.map((x) => x.theta), rms: product.nuisance.map((x) => x.rms), edited: product.nuisance.filter((x) => x.edited).length },
           scoring: samples.map((s, k) => {
             const d = [0, 1, 2].map((i) => s.state[i] - truthStates[k].state[i]);

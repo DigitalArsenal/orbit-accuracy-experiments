@@ -117,7 +117,7 @@ export async function productContext(modules, run) {
   const kernelBytes = fs.readFileSync(kernelPath);
   if (sha256(kernelBytes) !== config.inputs.kernel.sha256) throw new Error('DE440s kernel bytes differ from the pinned SHA-256');
   run.addInputs('kernel', { [path.basename(kernelPath)]: config.inputs.kernel.sha256 });
-  const names = ['analysis/epoch-state', 'analysis/estimation', 'propagator/hpop', 'data-source/eop-parser'];
+  const names = ['analysis/epoch-state', 'analysis/estimation', 'propagator/ffm', 'data-source/eop-parser'];
   const loaded = {};
   for (const name of names) { loaded[name] = await loadModule(modules, name); run.addModule(loaded[name].provenance); }
   const eop = await eopRecords(loaded['data-source/eop-parser'], config.inputs.eopFinals);
@@ -125,7 +125,7 @@ export async function productContext(modules, run) {
   const kernel = kernelFrame(kernelBytes);
   const codec = await estimationCodec(modules, path.join(repoRoot, 'node_modules/space-data-module-sdk/schemas/orbpro'));
   return {
-    epochState: loaded['analysis/epoch-state'], estimation: loaded['analysis/estimation'], hpop: loaded['propagator/hpop'],
+    epochState: loaded['analysis/epoch-state'], estimation: loaded['analysis/estimation'], ffm: loaded['propagator/ffm'],
     codec, eop,
     inputsFor: (fromMs, toMs) => [kernel, eopFrame(eop.records, mjdOf(fromMs) - 2, mjdOf(toMs) + 2)],
     async destroy() { for (const m of Object.values(loaded)) await m.destroy(); },

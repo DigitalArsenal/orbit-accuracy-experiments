@@ -1,4 +1,4 @@
-// IERS finals2000A rows for propagator/hpop, read by data-source/eop-parser
+// IERS finals2000A rows for propagator/ffm, read by data-source/eop-parser
 // `parse_finals2000a`, observed rows only: the file is cut after the last row
 // whose polar motion (column 17) and UT1-UTC (column 58) are flagged I, the
 // same cut E3's reference states were converted with (truth/finals2000a.patch).

@@ -1,6 +1,6 @@
 // Section 9, SP message interchange: the sample VCM, field by field as the
-// adapter reads it into an SDS VCM record and an HPOP request, then
-// propagated 24 h by HPOP with its 7×7 covariance under both readings of the
+// adapter reads it into an SDS VCM record and an FFM request, then
+// propagated 24 h by FFM with its 7×7 covariance under both readings of the
 // B row. It ends at the propagated state and covariance; SDN does not write a
 // VCM back.
 import * as flatbuffers from 'flatbuffers';
@@ -22,15 +22,15 @@ export default async function run(ctx) {
   const fields = panel(ctx.root, 'Every field, as an SDS VCM');
   const sig = panel(ctx.root, 'Sigmas the adapter recomputes');
   const view = scene3d(ctx, { title: 'The two readings of the B row, over a day', caption: '1σ position ellipsoids, radial, in-track and cross-track (km)' });
-  const figure = chart(ctx.root, 'Position sigmas along the propagation', 'HPOP’s 7×7 covariance; in-track under both readings of the B row; drag to move the box above in time');
+  const figure = chart(ctx.root, 'Position sigmas along the propagation', 'FFM’s 7×7 covariance; in-track under both readings of the B row; drag to move the box above in time');
   const end = panel(ctx.root, 'After 24 hours');
   const [text, schema] = await Promise.all([ctx.fetchText('./data/vcm/sample-vcm.txt'), ctx.fetchJson('./data/sds/VCM.json')]);
   pre(message, text);
   note(message, 'The survey’s sample VCM, identifiers zeroed; by its orbit and revolution number an ISS solution.');
-  const [adapter, hpop] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/hpop')]);
+  const [adapter, ffm] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/ffm')]);
 
-  await ctx.run('analysis/vcm-adapter read, propagator/hpop 24 h', async () => {
-    const { runs } = await runVcm(adapter, hpop, text, { onStatus: ctx.status });
+  await ctx.run('analysis/vcm-adapter read, propagator/ffm 24 h', async () => {
+    const { runs } = await runVcm(adapter, ffm, text, { onStatus: ctx.status });
     const vcmBytes = out(runs.fractional.read, 'vcm');
     const record = VCM.getSizePrefixedRootAsVCM(new flatbuffers.ByteBuffer(vcmBytes)).unpack();
     table(fields, [`SDS VCM field (${schema.version})`, 'Value'], flatten(record).map(([k, v]) => [{ text: k, class: 'left mono wrap', title: fieldDoc(schema, k) }, { text: v, class: 'wrap mono' }]));
@@ -72,9 +72,9 @@ export default async function run(ctx) {
       g.point([0, 0, 0], { color: 'sat', size: 6, outline: 1 });
       g.view({ preset: '3d' });
     }, { axes: ['Radial (km)', 'In-track (km)', 'Cross-track (km)'], aspect: 'normal', time: span,
-      caption: `1σ position ellipsoids of HPOP’s 7×7 covariance under both readings of the B row, each hour, in the radial, in-track and cross-track axes of the state then (km; each axis to its own scale); the outline is the reading as printed at 24 h`,
+      caption: `1σ position ellipsoids of FFM’s 7×7 covariance under both readings of the B row, each hour, in the radial, in-track and cross-track axes of the state then (km; each axis to its own scale); the outline is the reading as printed at 24 h`,
       legend: [['accent', `B row as a fraction · in-track σ ${formatMeters(last('fractional')[1])} at 24 h`, 'solid'], ['cyan', `B row as printed · ${formatMeters(last('absolute')[1])}`, 'solid']] });
-    // The propagated state and covariance at 24 h, as HPOP returns them.
+    // The propagated state and covariance at 24 h, as FFM returns them.
     const final = (rows) => runs[rows].result.FINAL_SAMPLE;
     const stateOf = (rows) => final(rows).STATE?.STATE ?? final(rows).STATE;
     const frameName = stateOf('fractional').COORDINATE_SYSTEM_NAME || 'GCRF';

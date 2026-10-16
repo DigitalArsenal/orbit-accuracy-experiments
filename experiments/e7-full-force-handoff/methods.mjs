@@ -3,10 +3,10 @@
 // - SGP4 from an element set, scored by analysis/gp-error-model `accumulate`
 //   (SGP4, TEME -> GCRF, error in the truth state's RTN axes), with +-1 s age
 //   bins around each target's truth epoch.
-// - propagator/hpop with every force it carries, from an epoch state
+// - propagator/ffm with every force it carries, from an epoch state
 //   (analysis/epoch-state: SGP4 at zero elapsed time, TEME -> GCRF), from a
 //   batch fit to an arc of epoch states (analysis/estimation fit_batch,
-//   answered by propagator/hpop), or from the truth state itself; the GCRF
+//   answered by propagator/ffm), or from the truth state itself; the GCRF
 //   difference to truth, and a propagated covariance, are rotated into the
 //   truth state's RTN axes by foundation/frames' rotation.
 //
@@ -25,7 +25,7 @@ import { DAY_MS, config } from './common.mjs';
 export { epochStates, conditioned };
 const stripZ = (s) => s.replace(/Z$/, '');
 
-// SGP4: per target, [R, T, N] in metres (null where no single-sample bin).
+// SGP4: per target, [R, T, N] in meters (null where no single-sample bin).
 // One accumulate call per truth file, so a bin never holds a state twice.
 // `full`: the module's whole 6-vector instead, [R, T, N] km and their rates km/s (E16).
 export async function sgp4Errors(ctx, products, set, targets, { full = false } = {}) {
@@ -73,20 +73,20 @@ export function mahalanobis(t, errorRtn, covariance, n) {
   return errorRtn.reduce((s, e, i) => s + e * inv[i].reduce((u, v, j) => u + v * errorRtn[j], 0), 0);
 }
 
-// HPOP from {epoch (ISO UTC), state [m, m/s]} at initialMs to every
+// FFM from {epoch (ISO UTC), state [m, m/s]} at initialMs to every
 // non-missing target. request: {forces, coefficients, parameters, covariance,
 // drivers, cutoffMs}. Returns {errors: [[R, T, N] m | null], d2: [number |
 // null] | null}. A target at the initial epoch takes the initial state.
-export async function hpopErrors(ctx, initial, initialMs, targets, request) {
+export async function ffmErrors(ctx, initial, initialMs, targets, request) {
   const later = targets.filter((t) => !t.missing && t.ms > initialMs);
   const out = new Map();
   if (later.length) {
-    const samples = decodeSamples(await ctx.hpop.invoke('invoke', [
+    const samples = decodeSamples(await ctx.ffm.invoke('invoke', [
       executionFrame({ epoch: initial.epoch, state: initial.state, samples: later.map((t) => stripZ(t.epoch)), forces: request.forces,
         coefficients: request.coefficients, parameters: request.covariance ? request.parameters : [], covariance: request.covariance ?? null, integrator: config.integrator }),
       ...ctx.inputsFor(initialMs, later.at(-1).ms, request.forces, request),
     ]));
-    if (samples.length !== later.length) throw new Error(`propagator/hpop returned ${samples.length} samples for ${later.length} epochs`);
+    if (samples.length !== later.length) throw new Error(`propagator/ffm returned ${samples.length} samples for ${later.length} epochs`);
     later.forEach((t, k) => out.set(t, samples[k]));
   }
   const errors = targets.map((t) => {
@@ -123,7 +123,7 @@ export function withParameters(fixed, parameters, values) {
 // Optional (E16): settings.batch, more fit_batch version-2 options (bounds,
 // regularization); settings.blocks, covariance blocks across the observations
 // (generalized least squares) in place of their own covariances.
-// Returns {status, fit, rounds, hpopCalls}; throws on a module failure.
+// Returns {status, fit, rounds, ffmCalls}; throws on a module failure.
 export async function fitArc(ctx, reference, referenceMs, observations, settings) {
   const isoByLabel = new Map(observations.map((o) => [JSON.stringify(estEpoch(o.epoch)), o.epoch]));
   const request = {
@@ -136,7 +136,7 @@ export async function fitArc(ctx, reference, referenceMs, observations, settings
       observation: { ...positionObservation(estEpoch(o.epoch), [0, 0, 0]), kind: 'POSITION_VELOCITY', value_count: 6 },
       values: o.state, sigmas: [1, 1, 1, 1, 1, 1],
     })),
-    propagator_port_id: 'propagator/hpop', propagator_capability: 'plugin_propagate plugin_compute_stm',
+    propagator_port_id: 'propagator/ffm', propagator_capability: 'plugin_propagate plugin_compute_stm',
     batch_options: {
       parameter_kinds: settings.parameters.map((p) => P.prwDynamicParameter[p.kind]),
       parameter_values: settings.parameters.map((p) => p.value),
@@ -148,20 +148,20 @@ export async function fitArc(ctx, reference, referenceMs, observations, settings
     },
   };
   const answers = [];
-  let hpopCalls = 0;
+  let ffmCalls = 0;
   const earliestMs = Math.min(...observations.map((o) => Date.parse(`${o.epoch.slice(0, 23)}Z`)), referenceMs);
   for (let round = 0; ; ++round) {
     const response = await ctx.estimation.invoke('fit_batch', [{ portId: 'request', typeRef: EST_TYPE, payload: ctx.codec.encode({ request, propagation_answers: answers }) }]);
     const out = decodeResult(response.outputs.find((o) => o.portId === 'result').payload);
-    if (out.status !== 1) return { status: out.status, fit: out.fit, rounds: round, hpopCalls };
+    if (out.status !== 1) return { status: out.status, fit: out.fit, rounds: round, ffmCalls };
     const q0 = out.queries[0];
     const coefficients = withParameters(settings.fixed, settings.parameters, q0.parameter_values);
-    const samples = decodeSamples(await ctx.hpop.invoke('invoke', [
+    const samples = decodeSamples(await ctx.ffm.invoke('invoke', [
       executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: out.queries.map((q) => isoByLabel.get(JSON.stringify(q.target_epoch))),
         forces: settings.forces, coefficients, parameters: settings.parameters, stm: true, integrator: config.integrator }),
       ...ctx.inputsFor(earliestMs, referenceMs, settings.forces, settings),
     ]));
-    ++hpopCalls;
+    ++ffmCalls;
     out.queries.forEach((q, k) => {
       const s = samples[k], n = s.n, stm = [], sensitivity = [];
       for (let i = 0; i < 6; ++i) {

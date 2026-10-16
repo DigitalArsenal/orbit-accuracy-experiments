@@ -5,7 +5,7 @@
 import { config, rng, cholesky, mahalanobis2, msOf, iso, logDetOf, chi2Quantile6, halfWidth } from './common.mjs';
 import { buildScenario, propagateTruth } from './scenario.mjs';
 import { runSequential, runBatch } from './filters.mjs';
-import { propagate } from './hpop.mjs';
+import { propagate } from './ffm.mjs';
 import { mvee } from './teag.mjs';
 import { rtnAxes } from '../../harness/frames.mjs';
 

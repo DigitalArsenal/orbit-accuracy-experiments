@@ -3,7 +3,7 @@
 // each horizon tau the cutoff is T = E - tau. At each T (anchored.mjs): the
 // latest published set propagated by SGP4 (baseline B), and the variants of
 // config.satnogs.variants fitted to the element-set history and the SatNOGS
-// segments of [T - arcDays, T], propagated by HPOP with their covariance.
+// segments of [T - arcDays, T], propagated by FFM with their covariance.
 // Per-sample rows and the products (which derive from Space-Track sets)
 // stay in runs/; results come from step 90.
 //   node experiments/e6-public-observations/steps/30-fit.mjs --window dev [--shard 0/4] [--resume <run>] [--variants P,F2] [--cutoffs <json list>]

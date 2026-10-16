@@ -1,7 +1,7 @@
 // E13 collector. SpaceX reissues a Starlink ephemeris file about every 6.5-7.2 h and lists the new names in its manifest some time later. This
 // process polls the manifest (conditional GET, every 30 min, also while it is busy), and when a sampled satellite has a version not yet processed it
 // fetches it (serial requests at least 3.2 s apart, a User-Agent, no CelesTrak) and keeps, in memory only:
-//   - the first 8 h, fitted with HPOP (Method A of PLAN.md: drag fitted, Cr*A/m locked at the class value), for the newest version of a satellite;
+//   - the first 8 h, fitted with FFM (Method A of PLAN.md: drag fitted, Cr*A/m locked at the class value), for the newest version of a satellite;
 //   - the first 40 h and the stated covariance, until the satellite's next version arrives, whose first state is compared with this version's
 //     prediction for that epoch (the pair mismatch of PLAN.md section 10: position and velocity in the radial / transverse / normal axes, the stated
 //     sigmas, the Jacobi energy at both epochs).
@@ -212,7 +212,7 @@ async function processOne(pool, item, fullCheck) {
   return { done: Promise.all(work) };
 }
 
-// ── guard: a head made by HPOP at a known Cd*A/m must be fitted back to it before any real file is trusted ──
+// ── guard: a head made by FFM at a known Cd*A/m must be fitted back to it before any real file is trusted ──
 async function syntheticGuard(pool) {
   const cases = [{ label: 'noise-free, locked Cr*A/m = true', trueCd: 0.03, trueCr: 0.19, lockCr: 0.19, noiseM: 0 }, { label: 'noise 2 m, locked Cr*A/m = true', trueCd: 0.03, trueCr: 0.19, lockCr: 0.19, noiseM: 2 }];
   const out = await Promise.all(cases.map((c) => pool.run({ kind: 'synthetic', ...c }, { retries: 0 })));

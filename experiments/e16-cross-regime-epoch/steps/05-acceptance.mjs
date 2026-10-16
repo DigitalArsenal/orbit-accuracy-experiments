@@ -2,7 +2,7 @@
 //   --part q1: A1 (per-set accumulate sums equal one batch call, E1 A0.2) and A1' (one-state frames give the bit-identical
 //              errors of whole products), A2 (Planet: TT - UTC = 69.184 s; J2000 -> GCRF under 2 m), A3 (a 10 s mean-anomaly
 //              shift moves T by |v| 10 s within 1 %), A6 (two step-20 runs of one object are byte-identical).
-//   --part q2: A4 (known-answer arc: HPOP-made pseudo-observations with known B and B-dot, fitted back within 3 sigma),
+//   --part q2: A4 (known-answer arc: FFM-made pseudo-observations with known B and B-dot, fitted back within 3 sigma),
 //              A5 (A-JB-E13 with a00 = 0 equals A-JB to the last bit; A-GLS with zero correlation equals A).
 // Writes results/e16/acceptance/<part>.json.
 //
@@ -166,7 +166,7 @@ if (values.part === 'q2') {
   out.checks.A5 = { e13ZeroIdentical: same, glsZeroCorrelationWorstMetres: worstGls, failures: [jb.failure, jb0.failure, wls.failure, gls0.failure].filter(Boolean), pass: same && worstGls < 1e-3 && !jb.failure && !wls.failure };
   log(`A5: a00=0 identical ${same}; GLS(0) vs WLS worst ${worstGls.toExponential(2)} m`);
 
-  // A4: known answer. Truth trajectory: HPOP from the precise state at the sample epoch with known B and B-dot, sampled at
+  // A4: known answer. Truth trajectory: FFM from the precise state at the sample epoch with known B and B-dot, sampled at
   // the arc's OMM epochs; noise from the class weight in each state's RTN axes; fitted back by the A machinery.
   const random = rng(20261011);
   const gauss = () => { const u = Math.max(1e-12, random()), v = random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
@@ -177,7 +177,7 @@ if (values.part === 'q2') {
   const forces = { ...config.q2.forces, atmosphere: 'NRLMSISE00' };
   delete forces.operationalAtmosphere;
   const env = { drivers: 'released', cutoffMs: set.createdMs };
-  const traj = decodeSamples(await ctx.hpop.invoke('invoke', [
+  const traj = decodeSamples(await ctx.ffm.invoke('invoke', [
     executionFrame({ epoch: t0.epoch.replace(/Z$/, ''), state: [...t0.r, ...t0.v].map((x) => x * 1000), samples: [...arc.map((s) => iso(s.epochMs)).reverse()], forces, coefficients: { b: bTrue, bdot: bdotTrue, agom }, integrator: config.q2.integrator }),
     ...ctx.inputsFor(arc[0].epochMs, t0.ms, forces, env)]));
   // Cholesky of W (RTN, 6x6) for correlated noise.

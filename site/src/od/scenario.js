@@ -7,7 +7,7 @@
 //                                   IGS orbits from three IGS sites
 //   analysis/association            those observations against the catalog
 //   foundation/frames               the sites' GCRF positions at each observation
-//   propagator/hpop                 the nominal trajectory and its STM; covariance
+//   propagator/ffm                 the nominal trajectory and its STM; covariance
 //   analysis/estimation             batch least squares, EKF and UKF
 import {
   RDO, EOO, RFO, decodeExecution, decodeOem, decodeRecord, eopFrames, executionFrame, frame, isoMicro, jsonFrame, observationFrames, out, readJson,
@@ -47,8 +47,8 @@ export async function associate(ctx, sc, sim, options = {}) {
   return readJson(out(response, 'report'));
 }
 
-export function hpopRun(ctx, sc, request) {
-  return ctx.module('propagator/hpop').then(async (hpop) => decodeExecution(await hpop.invoke('invoke',
+export function ffmRun(ctx, sc, request) {
+  return ctx.module('propagator/ffm').then(async (ffm) => decodeExecution(await ffm.invoke('invoke',
     [executionFrame({ ...request, kernel: true, forces: request.forces ?? FORCES }), frame('earth_orientation', 'PRW', sc.eopPrw), frame('kernel', 'PRW', sc.kernel)]), request.samples));
 }
 
@@ -61,7 +61,7 @@ export function busiest(sc, sim) {
 
 // Estimation inputs for one satellite: its observations with the sites'
 // GCRF positions (foundation/frames), and the catalog state at FIT_EPOCH
-// propagated by HPOP with its STM to every observation time.
+// propagated by FFM with its STM to every observation time.
 export async function fitInputs(ctx, sc, sim, norad) {
   const frames = await ctx.module('foundation/frames');
   const site = Object.fromEntries(sc.scenario.sites.map((s) => [s.id, s]));
@@ -91,7 +91,7 @@ export async function fitInputs(ctx, sc, sim, norad) {
   const k = block.states.findIndex((s) => utcMs(s.epoch) === utcMs(FIT_EPOCH));
   const nominal = block.states[k].state, covariance = block.covariances[k].matrix;
   const samples = observations.map((o) => isoMicro(o.ms));
-  const run = await hpopRun(ctx, sc, { epoch: FIT_EPOCH, position: nominal.slice(0, 3), velocity: nominal.slice(3), samples, stm: true });
+  const run = await ffmRun(ctx, sc, { epoch: FIT_EPOCH, position: nominal.slice(0, 3), velocity: nominal.slice(3), samples, stm: true });
   return {
     norad, block, nominal, covariance, observations,
     samples: run.map((s, i) => ({ ms: observations[i].ms, state: [...s.position, ...s.velocity].map((x) => x * 1000), stm: s.stm })),

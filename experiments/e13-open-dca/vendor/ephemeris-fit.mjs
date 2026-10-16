@@ -1,15 +1,15 @@
-// VENDORED for E13 (experiments/e13-open-dca): the full-force HPOP ephemeris fitter
+// VENDORED for E13 (experiments/e13-open-dca): the full-force FFM ephemeris fitter
 // Source: orbit-accuracy-experiments task/e4-a4-full-force-20261009 at 70484b2 (E4 amendments A5/A6), not yet on main.
 // Patched by the starlink-forecast lane (lockSrp, lockDrag, upper bound on Cd*A/m, exported normalize/fitRun/residualRows); imports re-pointed at this repository.
 // Delete this directory and import harness/ephemeris-fit.mjs when E4 A5/A6 lands; keep the two in step until then.
-// The full-force HPOP orbit fitted to one operator ephemeris, in memory: no
+// The full-force FFM orbit fitted to one operator ephemeris, in memory: no
 // file is read or written for the ephemeris (owner rule, 2026-10-10: the
 // ephemeris lives in memory only as long as the fit takes; only the derived
 // OCM and its statistics are kept). E4 amendment A6 and E11's capture loop
 // call it on each operator file version.
 //
 // The algorithm is the one agreed with the operator-ephemeris OD lane (its
-// analysis/od "hpop" mode) and E11, 2026-10-10:
+// analysis/od "ffm" mode) and E11, 2026-10-10:
 // - every state to GCRF (EME2000/J2000 through the IAU 2006 frame bias), UTC;
 // - maneuver-free segments: a gap over three median steps, an operator-listed
 //   event and a residual jump (below) each end one; `spanSeconds` (> 0) keeps
@@ -19,7 +19,7 @@
 //   empty a priori; analysis/estimation 0.3.0 fit_batch with
 //   Levenberg-Marquardt, correction tolerance 1e-3, at most 25 iterations;
 // - drag regime (osculating perigee altitude below 2500 km, where
-//   propagator/hpop applies drag): Cd*A/m (lower bound 0), a signed in-track
+//   propagator/ffm applies drag): Cd*A/m (lower bound 0), a signed in-track
 //   acceleration and Cr*A/m (lower bound 0); above: Cr*A/m (lower bound 0) and
 //   ECOM2 Y0 and B0, with D2, D4, B1 and B3 (cos, sin) when the fitted span is
 //   at least a day;
@@ -27,7 +27,7 @@
 //   cannonball SRP, Knocke Earth radiation, NRLMSISE-00 drag (drag regime),
 //   IERS 2010 solid tides, FES2004 ocean tides 30x30, IERS 2010 relativity;
 //   RK78 at relative tolerance 1e-13, at most three steps per shortest
-//   wavelength of the field at perigee (300 s at most); propagator/hpop
+//   wavelength of the field at perigee (300 s at most); propagator/ffm
 //   restarts the integration where NRLMSISE-00's daily and 3-hourly inputs
 //   change and reads them inside each span (wasm 1b1df5e3 and later: earlier
 //   builds mix two days' inputs within a step, about 1 cm a day in LEO);
@@ -51,7 +51,7 @@
 //   const later = await trajectory(['2026-10-12T00:00:00Z']);
 //   await env.destroy();
 //
-// The orbit computation is the modules': propagator/hpop (SDS 1.243.0 PRW),
+// The orbit computation is the modules': propagator/ffm (SDS 1.243.0 PRW),
 // analysis/estimation, foundation/frames (EME2000/J2000 to GCRF, RTN axes,
 // element sets), foundation/time (TT to UTC) and analysis/gp-error-model
 // (SGP4 residuals). This file frames requests, rotates differences by the
@@ -101,7 +101,7 @@ export const SETTINGS = {
 };
 export const CRITERION = "sqrt(dx' N dx / (6 + p)) below the correction tolerance (analysis/estimation 0.3.0 fit_batch, Levenberg-Marquardt)";
 const UNBOUNDED = 1e300;
-const HPOP_MAX_SAMPLES = 10000;
+const FFM_MAX_SAMPLES = 10000;
 const merge = (base, over = {}) => Object.fromEntries(Object.entries(base).map(([k, v]) => [k, v && typeof v === 'object' && !Array.isArray(v) ? { ...v, ...(over[k] ?? {}) } : (over[k] ?? v)]));
 
 // ── analysis/estimation v2 result fields E2's decoder does not read ──
@@ -144,7 +144,7 @@ async function finalsRecords(parser, file) {
 // finals2000A rows to the day before, the last held; GFZ Kp/ap/F10.7 before
 // the newest NOAA SWPC RSGA's day, that report and its 3-day forecast, then held.
 export async function ephemerisFitEnv({ modulesDir, eopFinals, gfzKp, swpcRsga, kernelPath, kernelSha256, rsgaCacheDir, eopLatencyDays = 1 }) {
-  const names = ['propagator/hpop', 'analysis/estimation', 'foundation/frames', 'foundation/time', 'data-source/eop-parser', 'analysis/gp-error-model'];
+  const names = ['propagator/ffm', 'analysis/estimation', 'foundation/frames', 'foundation/time', 'data-source/eop-parser', 'analysis/gp-error-model'];
   const modules = {};
   for (const name of names) modules[name] = await loadModule(modulesDir, name);
   const kernelBytes = fs.readFileSync(kernelPath);
@@ -273,7 +273,7 @@ export async function fitRun(env, points, ctx) {
       dynamic_model_correlation_time_seconds: 0, maximum_iterations: 0, reference_frame: 'ICRF', estimator: 'BATCH_WEIGHTED_LEAST_SQUARES', process_noise: 'NONE', flags: 0,
     },
     extended_observations: observations.map((o) => ({ observation: positionObservation(estEpoch(o.epoch), [0, 0, 0]), values: o.values, sigmas: [1, 1, 1] })),
-    propagator_port_id: 'propagator/hpop', propagator_capability: 'plugin_propagate plugin_compute_stm',
+    propagator_port_id: 'propagator/ffm', propagator_capability: 'plugin_propagate plugin_compute_stm',
     batch_options: {
       parameter_kinds: parameters.map((p) => P.prwDynamicParameter[p.kind]), parameter_values: parameters.map((p) => p.value),
       observation_covariances: observations.flatMap(() => [sg, 0, 0, 0, sg, 0, 0, 0, sg]), covariance_axes: 0,
@@ -283,19 +283,19 @@ export async function fitRun(env, points, ctx) {
     },
   };
   const answers = [];
-  let hpopCalls = 0, result = null, bytes = null;
+  let ffmCalls = 0, result = null, bytes = null;
   for (let round = 0; ; ++round) {
     const response = await env.modules['analysis/estimation'].invoke('fit_batch', [{ portId: 'request', typeRef: EST_TYPE, payload: env.codec.encode({ request, propagation_answers: answers }) }]);
     bytes = response.outputs.find((o) => o.portId === 'result').payload;
     result = decodeResult(bytes);
     if (result.status !== 1) break;
     const q0 = result.queries[0];
-    const samples = decodeSamples(await env.modules['propagator/hpop'].invoke('invoke', [
+    const samples = decodeSamples(await env.modules['propagator/ffm'].invoke('invoke', [
       executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: result.queries.map((q) => isoByLabel.get(JSON.stringify(q.target_epoch))),
         forces, coefficients: withParameters(fixed, parameters, q0.parameter_values), parameters, stm: true, integrator: ctx.integrator }),
       ...inputs,
     ]));
-    ++hpopCalls;
+    ++ffmCalls;
     result.queries.forEach((q, k) => {
       const s = samples[k], n = s.n, stm = [], sensitivity = [];
       for (let i = 0; i < 6; ++i) {
@@ -312,7 +312,7 @@ export async function fitRun(env, points, ctx) {
   const n = 6 + parameters.length;
   const values = f.estimate.slice(6);
   const scale = Math.max(1, f.reducedChiSquare ?? 1);
-  const fit = { status: result.status, hpopCalls, iterations: f.iterations, converged: !!f.converged, reducedChiSquare: f.reducedChiSquare, weightedRms: f.weightedRms,
+  const fit = { status: result.status, ffmCalls, iterations: f.iterations, converged: !!f.converged, reducedChiSquare: f.reducedChiSquare, weightedRms: f.weightedRms,
     measurements: f.measurementCount, fitPoints: fitPoints.length, boundStatus: v2.boundStatus, covarianceRtn: v2.covarianceRtn,
     parameters: parameters.map((p, i) => ({ kind: p.kind, value: values[i], boundStatus: v2.boundStatus[i] ?? 0 })) };
   const product = { epoch: reference.epoch, state: f.estimate.slice(0, 6), values, parameters, n, regime,
@@ -328,20 +328,20 @@ export async function propagate(env, product, epochsMs, ctx, { covariance = null
   const out = new Map();
   if (later.some((ms) => ms < self)) throw new Error('propagate: epochs before the product epoch');
   if (later.length) {
-    // propagator/hpop takes at most 10000 epochs a request; it restarts the
+    // propagator/ffm takes at most 10000 epochs a request; it restarts the
     // integration at every epoch, so a request continued from the last
     // state of the previous one is the same integration (state only).
     const epochs = later;
-    if (covariance && epochs.length > HPOP_MAX_SAMPLES) throw new Error(`propagate: ${epochs.length} epochs with a covariance (at most ${HPOP_MAX_SAMPLES})`);
+    if (covariance && epochs.length > FFM_MAX_SAMPLES) throw new Error(`propagate: ${epochs.length} epochs with a covariance (at most ${FFM_MAX_SAMPLES})`);
     let start = { epoch: product.epoch, state: product.state };
-    for (let at = 0; at < epochs.length; at += HPOP_MAX_SAMPLES) {
-      const chunk = epochs.slice(at, at + HPOP_MAX_SAMPLES);
-      const samples = decodeSamples(await env.modules['propagator/hpop'].invoke('invoke', [
+    for (let at = 0; at < epochs.length; at += FFM_MAX_SAMPLES) {
+      const chunk = epochs.slice(at, at + FFM_MAX_SAMPLES);
+      const samples = decodeSamples(await env.modules['propagator/ffm'].invoke('invoke', [
         executionFrame({ epoch: start.epoch, state: start.state, samples: chunk.map((ms) => noZ(iso(ms))), forces: ctx.forces, coefficients: product.fixed,
           parameters: covariance ? product.parameters : [], covariance, integrator: ctx.integrator }),
         ...env.inputsFor(ctx.issuedMs, isoMs(start.epoch), chunk.at(-1), ctx.forces),
       ]));
-      if (samples.length !== chunk.length) throw new Error(`propagator/hpop returned ${samples.length} samples for ${chunk.length} epochs`);
+      if (samples.length !== chunk.length) throw new Error(`propagator/ffm returned ${samples.length} samples for ${chunk.length} epochs`);
       chunk.forEach((ms, i) => out.set(ms, samples[i]));
       start = { epoch: noZ(iso(chunk.at(-1))), state: samples.at(-1).state };
     }
@@ -449,7 +449,7 @@ export async function halfSplitClosure(env, points, ctx) {
   return {
     splitEpoch: iso(splitMs), ...statsOf(rows.slice(k), second),
     firstHalf: statsOf(rows.slice(0, k), first),
-    fit: { iterations: fit.iterations, converged: fit.converged, hpopCalls: fit.hpopCalls, fitPoints: fit.fitPoints, reducedChiSquare: fit.reducedChiSquare, parameters: fit.parameters },
+    fit: { iterations: fit.iterations, converged: fit.converged, ffmCalls: fit.ffmCalls, fitPoints: fit.fitPoints, reducedChiSquare: fit.reducedChiSquare, parameters: fit.parameters },
     rows: ctx.keepRows ? rows.slice(k) : undefined,
   };
 }
@@ -466,7 +466,7 @@ function buildOcm(input, segment, env) {
   const epochZ = `${product.epoch}Z`;
   const ocm = Object.assign(new O.OCMT(), {
     HEADER: Object.assign(new O.HeaderT(), { CCSDS_OCM_VERS: '3.0', CREATION_DATE: iso(Date.now()), ORIGINATOR: 'SDN', MESSAGE_ID: id,
-      COMMENT: [`Full-force HPOP fitted to segment ${index} of the ${input.source?.provider ?? 'operator'} ephemeris ${input.source?.url ?? ''} (SHA-256 ${input.source?.sha256 ?? 'n/a'}), issued ${iso(issuedMs)}; ${VERSION}.`] }),
+      COMMENT: [`Full-force FFM fitted to segment ${index} of the ${input.source?.provider ?? 'operator'} ephemeris ${input.source?.url ?? ''} (SHA-256 ${input.source?.sha256 ?? 'n/a'}), issued ${iso(issuedMs)}; ${VERSION}.`] }),
     METADATA: Object.assign(new O.MetadataT(), { OBJECT_NAME: input.object.name ?? '', OBJECT_DESIGNATOR: String(input.object.norad), CATALOG_NAME: 'SATCAT', TIME_SYSTEM: 'UTC',
       START_TIME: stats.span[0], STOP_TIME: stats.span[1], TIME_SPAN: stats.spanSeconds / 86400, EOP_SOURCE: 'IERS finals2000A, released at the issue time', CELESTIAL_SOURCE: 'JPL DE440s' }),
     TRAJ_TYPE: O.trajectoryType.CARTESIAN_PV, TRAJ_TYPE_DESCRIPTION: 'ESTIMATED', STATE_VECTOR_SIZE: 6,
@@ -478,7 +478,7 @@ function buildOcm(input, segment, env) {
       SOLID_TIDES_MODEL: 'IERS 2010', SOLAR_RAD_PRESSURE: 'CANNONBALL', ALBEDO: `KNOCKE ${forces.earthRadiationResolutionDeg} DEG`, RELATIVITY: 'IERS 2010',
       ATMOSPHERIC_DRAG: forces.drag ? 'NRLMSISE-00 (GFZ Kp/ap/F10.7, NOAA SWPC RSGA; released at the issue time)' : 'NONE' }),
     ORBIT_DETERMINATION: Object.assign(new O.OrbitDeterminationT(), {
-      OD_ID: id, OD_ALGORITHM: 'Batch least squares with Levenberg-Marquardt and parameter bounds', OD_METHOD: 'analysis/estimation 0.3.0 fit_batch, propagator/hpop full force', OD_EPOCH: epochZ,
+      OD_ID: id, OD_ALGORITHM: 'Batch least squares with Levenberg-Marquardt and parameter bounds', OD_METHOD: 'analysis/estimation 0.3.0 fit_batch, propagator/ffm full force', OD_EPOCH: epochZ,
       OD_OBSERVATIONS_TYPE: ['EPHEMERIS POSITION'], OD_OBSERVATIONS_USED: fit.fitPoints, OD_DATA_WEIGHTING: 'equal, 1 m per position component',
       OD_CONVERGENCE_CRITERIA: CRITERION, OD_EST_PARAMETERS: ['X', 'Y', 'Z', 'X_DOT', 'Y_DOT', 'Z_DOT', ...product.parameters.map((p) => p.kind)],
       OD_APRIORI_DATA: 'none', OD_ESTIMATOR: O.estimatorCategory.BatchLeastSquares,

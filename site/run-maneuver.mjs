@@ -23,7 +23,7 @@ import { dayList, epochMs, shiftDay } from '../harness/gp-archive.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
 const { values } = parseArgs({ options: { modules: { type: 'string' }, archive: { type: 'string' }, from: { type: 'string' }, to: { type: 'string' } } });
-const v1Config = JSON.parse(fs.readFileSync(path.join(repo, 'experiments/v1-hpop-physical-truth/config.json'), 'utf8'));
+const v1Config = JSON.parse(fs.readFileSync(path.join(repo, 'experiments/v1-ffm-physical-truth/config.json'), 'utf8'));
 const modules = modulesRoot({ flag: values.modules, configured: v1Config.inputs.modules, repoRoot: repo });
 const archive = path.resolve(values.archive ?? process.env.SDN_GP_HISTORY ?? '/opt/data/sdn-archive/spacetrack/gp_history/by-creation');
 const from = values.from ?? '2026-09-01', to = values.to ?? '2026-10-01';

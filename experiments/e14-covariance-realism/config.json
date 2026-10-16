@@ -453,7 +453,7 @@
       "wasmSha256": "4ab9c06821515fba9a082af6f057670b10efd1484d11ce1e3dfc4d366ce158e3",
       "version": "0.1.0"
     },
-    "propagator/hpop": {
+    "propagator/ffm": {
       "wasmSha256": "5b7b6ead6a44678e9cbc3fbcfb57bfaf393c3d9d37ba635ef9677a71147cfc8c",
       "version": "1.2.0"
     },

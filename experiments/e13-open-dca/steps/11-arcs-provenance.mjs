@@ -21,7 +21,7 @@ const run = startRun({ experiment: config.experiment, step: `10-planet-arcs-${va
 run.addInputs('amendments', { 'amendments.json': amendmentsSha256 });
 const log = (m) => console.log(`[${run.id}] ${m}`);
 
-for (const name of ['propagator/hpop', 'foundation/frames', 'foundation/time', 'data-source/eop-parser']) { const m = await loadModule(modulesDir(), name); run.addModule(m.provenance); await m.destroy(); }
+for (const name of ['propagator/ffm', 'foundation/frames', 'foundation/time', 'data-source/eop-parser']) { const m = await loadModule(modulesDir(), name); run.addModule(m.provenance); await m.destroy(); }
 const dc = await loadModule(energyModulesDir(), 'analysis/density-calibration');
 run.addModule({ ...dc.provenance, checkout: energyModulesDir(), checkoutState: gitState(energyModulesDir()) });
 await dc.destroy();

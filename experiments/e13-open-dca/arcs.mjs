@@ -1,12 +1,12 @@
-// One-day HPOP arcs between consecutive operator orbit-determination states: the drag of one
-// satellite-day. State a is propagated to the epoch of state b by propagator/hpop (JB2008 drag with
+// One-day FFM arcs between consecutive operator orbit-determination states: the drag of one
+// satellite-day. State a is propagated to the epoch of state b by propagator/ffm (JB2008 drag with
 // SET's indices, Cr*A/m locked), and the mismatch at b fixes Cd*A/m.
 //
 // `energyArc` (the method, PLAN.md section 4) reads the mismatch through the orbital energy alone:
 // m = C(x_b) - C(x_b(B)) with C the Jacobi integral of the EGM2008 geopotential to degree 36 that
 // analysis/density-calibration's `energy` computes (a module; no energy is computed here), and
 // dB = m / S_E with S_E = (dC/dx . S) the sensitivity of the predicted energy to Cd*A/m (the module's
-// gradient dotted with propagator/hpop's state-transition output S). The along-track phase of the arc
+// gradient dotted with propagator/ffm's state-transition output S). The along-track phase of the arc
 // does not enter, and an initial velocity error moves C of a and of its prediction alike.
 //
 // `sixDimensionalArc` fits the whole 6-D mismatch by weighted least squares over the two states' stated
@@ -16,7 +16,7 @@
 // and is kept as the evidence for that choice: its W is ill-conditioned (1.7e11 on Dove 0505) because an
 // initial along-track velocity error and drag give nearly the same end state.
 //
-// Phi (6x6) and S (6x1) are propagator/hpop's state-transition output for the arc. The propagation,
+// Phi (6x6) and S (6x1) are propagator/ffm's state-transition output for the arc. The propagation,
 // frames, time scales and energies are the modules'; this file frames requests and does least squares.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -66,7 +66,7 @@ function inverse(M) {
 }
 const blockRot = (R) => { const B = zeros(6, 6); for (let i = 0; i < 3; ++i) for (let j = 0; j < 3; ++j) { B[i][j] = R[3 * i + j]; B[3 + i][3 + j] = R[3 * i + j]; } return B; };
 
-// atmosphere: 'JB2008' (the production arcs: SET's indices) or 'NRLMSISE00' (the common reference of PLAN.md Amendment S3: HPOP's NRLMSISE-00 drag on daily
+// atmosphere: 'JB2008' (the production arcs: SET's indices) or 'NRLMSISE00' (the common reference of PLAN.md Amendment S3: FFM's NRLMSISE-00 drag on daily
 // space weather). spaceWeather(fromMs, toMs) gives the SPW rows (CSSI layout, vendor/full-force.mjs spwRows or the released rows) of the days; it is
 // required for NRLMSISE00 and unused for JB2008, whose arcs are unchanged.
 export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spaceWeather = null, eopFinals = null } = {}) {
@@ -74,7 +74,7 @@ export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spac
   if (atmosphere === 'NRLMSISE00' && typeof spaceWeather !== 'function') throw new Error('atmosphere NRLMSISE00 needs spaceWeather(fromMs, toMs)');
   const root = modulesDir();
   const modules = {};
-  for (const name of ['propagator/hpop', 'foundation/frames', 'foundation/time', 'data-source/eop-parser']) modules[name] = await loadModule(root, name);
+  for (const name of ['propagator/ffm', 'foundation/frames', 'foundation/time', 'data-source/eop-parser']) modules[name] = await loadModule(root, name);
   modules['analysis/density-calibration'] = await loadModule(energyModulesDir(), 'analysis/density-calibration');
   const kernelBytes = fs.readFileSync(config.inputs.kernel.path);
   const kernel = kernelFrame(kernelBytes);
@@ -114,7 +114,7 @@ export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spac
   async function propagate(a, tbMs, b0, cr, { a00 = null } = {}) {
     const forces = { ...prof.forces, drag: true, atmosphere };
     const driver = atmosphereFrame(a.ms - 8 * DAY, tbMs + 2 * DAY, a00);
-    const response = await modules['propagator/hpop'].invoke('invoke', [
+    const response = await modules['propagator/ffm'].invoke('invoke', [
       executionFrame({ epoch: noZ(isoUs(a.ms)), state: a.state, samples: [noZ(isoUs(tbMs))], forces, coefficients: { b: b0, agom: cr, inTrack: 0 },
         parameters: [{ kind: 'DRAG_AREA_OVER_MASS' }], stm: true, integrator: { tolerance: prof.tolerance, maxStep: prof.maxStepSeconds } }),
       kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(tbMs) + 3), driver,
@@ -129,7 +129,7 @@ export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spac
     const forces = { ...prof.forces, drag: true, atmosphere };
     const last = Math.max(...epochsMs);
     const driver = atmosphereFrame(a.ms - 8 * DAY, last + 2 * DAY, a00);
-    const response = await modules['propagator/hpop'].invoke('invoke', [
+    const response = await modules['propagator/ffm'].invoke('invoke', [
       executionFrame({ epoch: noZ(isoUs(a.ms)), state: a.state, samples: epochsMs.map((t) => noZ(isoUs(t))), forces, coefficients: { b: B, agom: cr, inTrack: 0 },
         parameters: [], stm: false, integrator: { tolerance: prof.tolerance, maxStep: prof.maxStepSeconds } }),
       kernel, eopFrame(eop.records, mjdOf(a.ms) - 3, mjdOf(last) + 3), driver,
@@ -157,7 +157,7 @@ export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spac
   const quad = (v, M) => v.reduce((s2, x, i) => s2 + x * M[i].reduce((q, c, k) => q + c * v[k], 0), 0);
 
   // The drag of one arc through the orbital energy alone (see the header): iterate B <- B + m / S_E, m = C(x_b) - C(x_b(B)), until the
-  // change is below `tolerance` (relative); each iteration is one propagator/hpop call with the state-transition output and one `energy`
+  // change is below `tolerance` (relative); each iteration is one propagator/ffm call with the state-transition output and one `energy`
   // call. a, b: {ms, state GCRF} (UTC); b0: starting Cd*A/m; cr: locked Cr*A/m; sigma: {posRtnM [R,T,N], velRtnMmS [R,T,N]} of each state.
   // Returns the converged B with its stated 1-sigma (the two states' covariances through the energy), and the energy mismatch left (J/kg).
   async function energyArc(a, b, { b0, cr, sigma, inflate = 1, tolerance = 0.01, maxIterations = 5, a00 = null }) {
@@ -175,7 +175,7 @@ export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spac
       const PhiCa = mul(mul(p.phi, Ca.gcrf), T(p.phi));
       const varM = quad(obs.gradient, Cb.gcrf) + quad(pred.gradient, PhiCa);
       const Bnew = B + m / SE;
-      out = { B: Bnew, sigmaB: Math.sqrt(varM) / Math.abs(SE), energyMismatchJkg: m, energySensitivity: SE, B0: B, iterations: it + 1, hpopCalls: calls,
+      out = { B: Bnew, sigmaB: Math.sqrt(varM) / Math.abs(SE), energyMismatchJkg: m, energySensitivity: SE, B0: B, iterations: it + 1, ffmCalls: calls,
         seconds: (performance.now() - t0) / 1000, steps: p.steps, altitudeKm: obs.geodetic.altKm };
       if (!(Bnew > 0)) { out.nonPositive = true; break; }
       if (Math.abs(Bnew - B) / B < tolerance) break;
@@ -207,7 +207,7 @@ export async function openArcEnv({ profile = 'full', atmosphere = 'JB2008', spac
       const resid = yr.map((v, i) => v - Sr[i] * dB);
       const chi2 = resid.reduce((s, r, i) => s + r * W[i].reduce((q, w, k) => q + w * resid[k], 0), 0);
       const Bnew = B + dB;
-      last = { B: Bnew, sigmaB: Math.sqrt(1 / info), dB, chi2, dof: 5, B0: B, iterations: it + 1, hpopCalls: calls, seconds: (performance.now() - t0) / 1000,
+      last = { B: Bnew, sigmaB: Math.sqrt(1 / info), dB, chi2, dof: 5, B0: B, iterations: it + 1, ffmCalls: calls, seconds: (performance.now() - t0) / 1000,
         conditionCy: norm1(Cy) * norm1(W), mismatchRtnM: yr.slice(0, 3), mismatchVelRtnMmS: yr.slice(3).map((v) => v * 1e3), sensitivityTM: Sr[1], steps: p.steps };
       if (!(Bnew > 0)) break;
       if (Math.abs(dB) / B < 0.05) break;                                   // the linearisation is good to a few per cent of dB

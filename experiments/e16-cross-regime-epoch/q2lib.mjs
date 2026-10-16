@@ -1,10 +1,10 @@
-// Q2's products for one sample (PLAN.md 6): SGP4 from the latest OMM (S), from the corrected OMM (S-corr), and HPOP
+// Q2's products for one sample (PLAN.md 6): SGP4 from the latest OMM (S), from the corrected OMM (S-corr), and FFM
 // fitted to an arc of the object's OMMs (the A family) by analysis/estimation `fit_batch` answered by
-// propagator/hpop (E7 methods.mjs fitArc, with fit_batch version 2: B bounded at 0, B-dot, covariance blocks).
+// propagator/ffm (E7 methods.mjs fitArc, with fit_batch version 2: B bounded at 0, B-dot, covariance blocks).
 // Every orbit computation is a module's; this file assembles inputs and the covariance blocks of GLS.
 import { decodeOemStream } from '../../harness/records.mjs';
 import { shiftAlongTrack } from '../e1-gps-epoch/methods.mjs';
-import { conditioned, fitArc, hpopErrors, sgp4Errors, withParameters } from '../e7-full-force-handoff/methods.mjs';
+import { conditioned, fitArc, ffmErrors, sgp4Errors, withParameters } from '../e7-full-force-handoff/methods.mjs';
 import { epochStates } from '../e2-catalog-covariance/product.mjs';
 import { ManeuverHistory } from '../e7-full-force-handoff/maneuvers.mjs';
 import { COMPONENTS, rho } from '../e7-full-force-handoff/correlation.mjs';
@@ -120,7 +120,7 @@ export async function arcProduct(o, sample, spec, { W, rhoOf, agom, maxSpanDays 
   };
   let r;
   try { r = await fitArc(ctx, reference, sample.epochMs, observations, settings); } catch (error) { info.cpuMs = cpuMs(cpu0); return { failure: `fit_batch: ${String(error.message).slice(0, 200)}`, info }; }
-  info.fit = { status: r.status, rounds: r.rounds, hpopCalls: r.hpopCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare,
+  info.fit = { status: r.status, rounds: r.rounds, ffmCalls: r.ffmCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare,
     parameters: r.fit?.estimate?.slice(6), boundStatus: r.fit?.boundStatus, regularizations: r.fit?.regularizations?.length ?? 0, observations: used.length,
     parameterSigmas: r.fit?.covariance?.length ? parameters.map((_, i) => Math.sqrt(r.fit.covariance[(6 + i) * n + 6 + i] * Math.max(1, r.fit.reducedChiSquare))) : null };
   if (!r.fit?.converged) { info.cpuMs = cpuMs(cpu0); return { failure: `fit not converged (status ${r.status})`, info }; }
@@ -129,7 +129,7 @@ export async function arcProduct(o, sample, spec, { W, rhoOf, agom, maxSpanDays 
   if (spec.bdot && fitted.b + fitted.bdot * Math.max(...P.horizonsHours) * 3600 < 0) { info.bdotHeld = fitted.bdot; fitted.bdot = 0; }
   const covariance = conditioned(r.fit.covariance.map((v) => v * Math.max(1, r.fit.reducedChiSquare)));
   try {
-    const out = await hpopErrors(ctx, { epoch: reference.epoch, state: r.fit.estimate.slice(0, 6) }, sample.epochMs, sample.targets,
+    const out = await ffmErrors(ctx, { epoch: reference.epoch, state: r.fit.estimate.slice(0, 6) }, sample.epochMs, sample.targets,
       { forces, coefficients: fitted, parameters: info.bdotHeld !== undefined ? parameters.slice(0, 1) : parameters, covariance: info.bdotHeld !== undefined ? dropLast(covariance, n) : covariance, ...env });
     info.cpuMs = cpuMs(cpu0);
     return { ...out, info };

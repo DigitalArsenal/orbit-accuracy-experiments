@@ -24,7 +24,7 @@ export function forecastCorrection(fit, tauHours, spanDays = 8) {
 }
 
 // dT (K) on the hour from fromMs to toMs at one altitude, by the module
-// (evaluate's deltaT), as a lookup add(tMs) for the hourly DTC rows of hpop.
+// (evaluate's deltaT), as a lookup add(tMs) for the hourly DTC rows of ffm.
 export async function hourlyOffsets(dc, correction, altKm, fromMs, toMs, jb2008Rows) {
   const hours = [];
   for (let t = Math.floor(fromMs / HOUR_MS) * HOUR_MS; t <= toMs; t += HOUR_MS) hours.push(t);

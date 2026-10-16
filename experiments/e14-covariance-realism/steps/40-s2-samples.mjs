@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // E14 step 40: S2 samples (PLAN.md sections 4 S2, 4 S4, 8). For every truth object, one element set every
-// `anchorEveryDays` (the first created on or after 00:00 UTC of each such day, its epoch in the window): the HPOP
-// screen's product - analysis/epoch-state's GCRF state at the set's epoch, propagator/hpop's execution path with the
+// `anchorEveryDays` (the first created on or after 00:00 UTC of each such day, its epoch in the window): the FFM
+// screen's product - analysis/epoch-state's GCRF state at the set's epoch, propagator/ffm's execution path with the
 // full force model (config.s2.forces) on the drivers released at the set's creation - with one propagation per anchor:
-//   - P0: S3-T's age-0 stratum of the anchor's regime (dev-fit, results/e14/dev/s3-models-s2p0.json), rotated to GCRF by gp-error-model hpop_arcs, which
+//   - P0: S3-T's age-0 stratum of the anchor's regime (dev-fit, results/e14/dev/s3-models-s2p0.json), rotated to GCRF by gp-error-model ffm_arcs, which
 //     also gives the targets (the truth epoch nearest epoch + tau) and their truth states;
 //   - the propagation carries P0 and one dynamic parameter (Cd*A/m in LEO, Cr*A/m above), with its STM sampled at every
-//     step end of HPOP's process-noise discretization of every target: A0 = Phi P0 Phi' at the targets, and
+//     step end of FFM's process-noise discretization of every target: A0 = Phi P0 Phi' at the targets, and
 //     gp-error-model noise_responses gives the unit white-acceleration responses U_R, U_T, U_N from that STM;
 //   - the consider term of the parameter (variance of its logarithm: Cd*A/m from the object's B* over the 30 days
 //     before the set; Cr*A/m 0.2^2) and, in LEO, the open DCP (S4: the lead covariance of the anchor's altitude and
@@ -42,8 +42,8 @@ const dcpFile = values.dcp ?? path.join(repoRoot, 'results/e14/dev/s4-dcp.json')
 const s3 = JSON.parse(fs.readFileSync(s3File, 'utf8')).candidates['S3-T'];
 const dcp = JSON.parse(fs.readFileSync(dcpFile, 'utf8'));
 run.addInputs('models', Object.fromEntries([s3File, dcpFile].map((f) => [path.relative(repoRoot, f), createHash('sha256').update(fs.readFileSync(f)).digest('hex')])));
-// P0 per regime: S3-T's age-0 stratum (6x6 RTN second moment, km), as an hpop-covariance-model for hpop_arcs.
-const p0Model = { kind: 'hpop-covariance-model', version: 1, regimes: s3.strata.filter((s) => s.ageIndex === 0).map((s) => ({ regimeIndex: s.regimeIndex, regime: s.regime, p0: s.covariance })) };
+// P0 per regime: S3-T's age-0 stratum (6x6 RTN second moment, km), as an ffm-covariance-model for ffm_arcs.
+const p0Model = { kind: 'ffm-covariance-model', version: 1, regimes: s3.strata.filter((s) => s.ageIndex === 0).map((s) => ({ regimeIndex: s.regimeIndex, regime: s.regime, p0: s.covariance })) };
 const truth = new Truth();
 const objects = truthObjects(truth).filter((n) => !only || only.has(n)).filter((_, i) => i % shards === shard);
 const { byObject, files } = elementSets(archive, window.from, window.to, objects);
@@ -84,9 +84,9 @@ for (const norad of objects) {
     { portId: 'elements', payload: Buffer.from(JSON.stringify({ objects: [{ norad, sets: history.map((s) => ({ mjd: s.ms / DAY_MS + 40587, ...s.elements })) }] })), typeRef: { schemaName: 'application/json' } },
     json('options', {})], 'report');
   const events = (mrep.objects?.[0]?.events ?? []).filter((e) => e.characterization !== 'ORBIT_LOWERING').map((e) => msOf(e.time));
-  // Targets and P0 (hpop_arcs), truth read inside the window only.
+  // Targets and P0 (ffm_arcs), truth read inside the window only.
   const frames = truth.frames(norad, window.lo, window.hi - 1);
-  const plan = await callJson(gp, 'hpop_arcs', [ommFrame(anchors), ...frames, json('model', p0Model),
+  const plan = await callJson(gp, 'ffm_arcs', [ommFrame(anchors), ...frames, json('model', p0Model),
     json('options', { regimes: config.regimes, targetAgesDays: config.horizonsDays, targetToleranceSeconds: 900 })], 'plan');
   const seeds = await epochStates(ctx['epoch-state'], anchors);
   for (const arc of plan.arcs) {
@@ -131,7 +131,7 @@ for (const norad of objects) {
     try {
       samples = await propagate(ctx, { epoch: seed.epoch, state: seed.state, samples: sampleList.map((e) => e[1]), b, cutoffMs: set.createdMs,
         parameters: [parameter], covariance: P0, stm: true, forces: { ...config.s2.forces, drag: leo } });
-    } catch (error) { ++counts.failed; log(`${norad} ${set.epoch}: HPOP ${error.message}`); continue; }
+    } catch (error) { ++counts.failed; log(`${norad} ${set.epoch}: FFM ${error.message}`); continue; }
     const at = new Map(sampleList.map((e, i) => [e[0], samples[i]]));  // keyed by microseconds
     const n7 = 7;
     // Unit noise responses from the STM.

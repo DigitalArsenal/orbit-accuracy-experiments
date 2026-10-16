@@ -7,7 +7,7 @@ this file and `config.json` (and `amendments.json`, when it exists) committed an
 step 4) after the freeze; it holds every choice the test applies.
 
 Lane: E16. Branch `task/e16-cross-regime-epoch-20261011`. Modules: `space-data-network-modules` main at `e1e6577a`
-(`propagator/hpop` 1.3.0, `analysis/estimation` 0.3.0 with `fit_batch` version 2, `analysis/gp-error-model` 0.3.0,
+(`propagator/ffm` 1.3.0, `analysis/estimation` 0.3.0 with `fit_batch` version 2, `analysis/gp-error-model` 0.3.0,
 `analysis/epoch-state` 0.1.0, `analysis/density-calibration` 0.4.0, `analysis/maneuver-detection` 0.3.0,
 `foundation/frames`, `foundation/time`, `data-source/eop-parser`). Every module's WASM SHA-256 is pinned in
 `config.json` at the freeze; the code refuses other artifacts.
@@ -20,9 +20,9 @@ and E15's train interim. **No OMM was scored against any truth by E16 before the
 ## 1. Question
 
 E1 learned an along-track correction of GPS OMMs at epoch against IGS orbits: 61 % [53, 67] less 3D RMS error on its
-own satellites, 6 % on an unseen orbital plane and −3.5 % on a new generation. E7 handed OMMs to HPOP (the full force
-model) and scored them against precise orbits (test 2026-05-01..08-10), as the ratio of HPOP's median 3D error to
-SGP4's: from the OMM's own epoch state HPOP is worse everywhere by 72 h; from an E1-corrected epoch state it is 0.32
+own satellites, 6 % on an unseen orbital plane and −3.5 % on a new generation. E7 handed OMMs to FFM (Full Force Model)
+and scored them against precise orbits (test 2026-05-01..08-10), as the ratio of FFM's median 3D error to
+SGP4's: from the OMM's own epoch state FFM is worse everywhere by 72 h; from an E1-corrected epoch state it is 0.32
 at epoch, 1.45 at 24 h and 8.0 at 7 d (a corrected position does not correct the orbital energy); fitted to an arc of
 past OMMs it holds the error flat (laser-ranged LEO spheres 0.32–0.51 to 12 h), but the arc keeps the bias the OMMs
 share (E2b: consecutive OMMs' along-track errors correlate at 0.6–1.0); fitted to an arc of E1-corrected GPS OMMs it
@@ -35,7 +35,7 @@ E16 asks two questions.
   not trained on: unseen objects, operators, planes and shells, generations, constellations and orbit classes?
   A hypothesis to test, not a claim: LEO may transfer better than GNSS, because LEO OMM error at epoch is dominated by
   drag, which objects in a shell share, rather than by a per-satellite bias.
-- **Q2, LEO arcs.** Do HPOP fits to an arc of a LEO object's OMMs, with the drag coefficient B and its rate Ḃ
+- **Q2, LEO arcs.** Do FFM fits to an arc of a LEO object's OMMs, with the drag coefficient B and its rate Ḃ
   estimated, beat SGP4 at one to three days; does E13's open density correction improve them; do generalized least
   squares with the measured inter-OMM correlation, or an arc of corrected OMMs, improve them?
 
@@ -79,7 +79,7 @@ other objects (Chen, Du and Sang 2019); the correlation of successive sets (Oswe
 2. LEO against GNSS transfer measured on the same footing, with the per-object and shared shares of the error that
    explain it.
 3. A fleet nowcast: other operators' released orbit-determination states correcting an object's OMM at its creation.
-4. Ḃ estimated inside an OMM-arc HPOP fit, with an open fleet density correction (E13), scored at one to three days
+4. Ḃ estimated inside an OMM-arc FFM fit, with an open fleet density correction (E13), scored at one to three days
    against precise orbits and operator states.
 5. Generalized least squares across an arc with the measured inter-OMM correlation.
 6. The corrected product's covariance checked against truth for unseen objects.
@@ -105,14 +105,14 @@ kept), creation up to 3 days after the epoch window (E7). Element sets and per-s
 | IGSO/GEO | BeiDou IGSO and GEO, QZSS (QZO and GEO): mean motion below 1.1 rev/day (GEO when inclined less than 10°) | as GNSS | 5 min | as GNSS |
 | SLR-MEO | LAGEOS-1, LAGEOS-2, ETALON-1, ETALON-2, LARES-2 | ILRS combined weekly arcs; NSGF (LARES-2) | 2 min | 7 d, 3 d |
 
-Truth accuracy is centimetres to decimetres for the precise orbits and 4–10 m for Planet's states (E13), against OMM
-errors of hundreds of metres to kilometres.
+Truth accuracy is centimetres to decimeters for the precise orbits and 4–10 m for Planet's states (E13), against OMM
+errors of hundreds of meters to kilometers.
 
 **Not used, and why.** SpaceX's Starlink ephemerides: no archive before 2026-10-09 (E13 and E15 collect them live
 since 2026-10-10). Commercial radio-occultation receivers through EUMETSAT (Spire, PlanetiQ): about 15 receivers a day
 (searched 2026-10-11), about 2 MB per occultation file, and E15's reader is bound to E15's live download budget; the
 operators they would add are covered by Planet (a fleet) and the precise-orbit missions (many operators). NASA's ISS
-OEM, CMSE's Tiangong OEM, Intelsat and SES files: current versions only. SpaceMapper AOE: a second catalogue, not truth.
+OEM, CMSE's Tiangong OEM, Intelsat and SES files: current versions only. SpaceMapper AOE: a second catalog, not truth.
 
 ### 3.3 Windows (by OMM epoch, UTC)
 
@@ -216,9 +216,9 @@ made the same way from C0's errors (a reference). Scored by `analysis/gp-error-m
 
 ## 6. Q2 methods: LEO arc fits
 
-### 6.1 Force model (HPOP, full force)
+### 6.1 Force model (FFM, full force)
 
-`propagator/hpop` 1.3.0 execution path: EGM2008 70 × 70 with IERS EOP 20 C04 (the largest field the module carries);
+`propagator/ffm` 1.3.0 execution path: EGM2008 70 × 70 with IERS EOP 20 C04 (the largest field the module carries);
 Sun, Moon, Venus, Mars, Jupiter (DE440s); solar radiation pressure, cannonball with nominal Cr·A/m, conical shadow;
 Earth radiation pressure (Knocke, the same Cr·A/m); drag (6.3); IERS 2010 solid tides; FES2004 ocean tides 30 × 30;
 IERS 2010 relativity. RK78, relative tolerance 1e-13, steps of at most 300 s. Nominal Cr·A/m per object in
@@ -231,7 +231,7 @@ gains the two forces E7 did not set (ocean tides, Earth radiation); their defaul
 | --- | --- | --- |
 | S | The latest OMM by SGP4 (baseline) | — |
 | S-corr | The latest OMM corrected by M* from the tier O fold that holds the object out | — |
-| A | HPOP fitted by `analysis/estimation` `fit_batch` to the epoch states of the object's OMMs created by the cutoff with epochs in [epoch − span, epoch]: state, B (Cd·A/m) and, if chosen, Ḃ; operational NRLMSISE-00 | diagonal (WLS) |
+| A | FFM fitted by `analysis/estimation` `fit_batch` to the epoch states of the object's OMMs created by the cutoff with epochs in [epoch − span, epoch]: state, B (Cd·A/m) and, if chosen, Ḃ; operational NRLMSISE-00 | diagonal (WLS) |
 | A-GLS | A with the inter-OMM correlation as one covariance block per arc (`covariance_blocks`) | correlated, own-epoch model (6.4) |
 | A-GLS-E2b | A-GLS with E2b's consecutive-OMM correlation for the position components | correlated, E2b |
 | A-corr | A on OMMs corrected as S-corr | diagonal, corrected-error moments |
@@ -297,7 +297,7 @@ share with the difference ≤ 0; H4, H5 the larger over the two horizons of the 
 whose cell fails E14's rule.
 
 **Multiplicity.** H1 is tested alone at α = 0.05. H2–H6 are one family under Holm at α = 0.05. A hypothesis is
-supported only when its own rule holds and its test rejects. Everything else is descriptive and labelled so.
+supported only when its own rule holds and its test rejects. Everything else is descriptive and labeled so.
 
 **No-harm rule.** Per tier and regime group, among held-out objects with at least 10 test samples: an object is harmed
 when its clipped RMS₃ᴅ under M* exceeds C0's by more than 10 %. The correction is fit to serve that tier only if at
@@ -318,7 +318,7 @@ On train-window data: (A1) per-sample `accumulate` errors summed over a day equa
 rotation moves a state by less than 2 m (the frame bias), and C0's median 3D error against Planet is reported beside
 E4's 0.59 km for Planet's own element sets; (A3) a 10 s
 mean-anomaly shift moves the at-epoch T error by |v|·10 s to within 1 % in every regime class; (A4) a known-answer arc:
-pseudo-observations generated by HPOP with known B and Ḃ and noise are fitted back within 3 formal sigma; (A5)
+pseudo-observations generated by FFM with known B and Ḃ and noise are fitted back within 3 formal sigma; (A5)
 A-JB-E13 with a00 ≡ 0 equals A-JB to the last bit, and A-GLS with zero correlation equals A; (A6) two runs on the same
 inputs give byte-identical sample tables. A failure stops E16 until it is explained.
 
@@ -340,7 +340,7 @@ inputs give byte-identical sample tables. A failure stops E16 until it is explai
 - **Not blind for the baseline**: SGP4's aggregate accuracy for the GNSS, LEO-POD and SLR objects in parts of this test
   window is published (section 3.3).
 
-## 10. Outputs, provenance and licences
+## 10. Outputs, provenance and licenses
 
 Runs write `runs/<run-id>/` (ignored): sample tables, `manifest.json` (harness/provenance.mjs: command, config hash,
 commits, every module's WASM SHA-256, every input's SHA-256), `metrics.json`. Committed under `results/e16/`: manifests,

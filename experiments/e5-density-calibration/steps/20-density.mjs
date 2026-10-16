@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // E5 step 20: density endpoint. For each held-out satellite, the densities of
 // each variant at its own samples, compared with its observed density as
-// orbit means (one orbital period centred on each scoring time, the same
+// orbit means (one orbital period centered on each scoring time, the same
 // valid samples on both sides): ln(observed / model).
 //   D0  JB2008 with SET's indices (analysis/density-calibration, no correction)
-//   D1  NRLMSISE-00 (propagator/hpop ATMOSPHERE_REQUEST, daily drivers as
-//       hpop's space_weather reading gives them)
+//   D1  NRLMSISE-00 (propagator/ffm ATMOSPHERE_REQUEST, daily drivers as
+//       ffm's space_weather reading gives them)
 //   D2a JB2008 + the correction of the concurrent 3-hour bin (analysis mode,
 //       what the HASDM database is), per degree
 //   D2f JB2008 + the correction forecast from each issue day (nowcast = mean
@@ -21,7 +21,7 @@ import { parseArgs } from 'node:util';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { config, configPath, callJson, DAY_MS, dayMs, gfzDays, isoDay, jb2008Rows, loadModules, maxKp, mjdOfMs, modulesDir, msOfMjd, regimeOf, setIndices, spwRows, windowSpans } from '../common.mjs';
 import { samples } from '../densities.mjs';
-import { atmosphereFrame, decodeAtmosphere } from '../hpop.mjs';
+import { atmosphereFrame, decodeAtmosphere } from '../ffm.mjs';
 import { decayed, nowcast } from '../forecast.mjs';
 
 const { values } = parseArgs({ options: { window: { type: 'string' }, calibration: { type: 'string' }, degrees: { type: 'string' }, decays: { type: 'string' }, modules: { type: 'string' } } });
@@ -33,8 +33,8 @@ const degrees = (values.degrees ?? calibration.degrees.join(',')).split(',').map
 const decays = (values.decays ?? config.calibration.candidates.decayHours.map(String).join(',')).split(',').map((x) => (x === 'null' ? null : Number(x)));
 const run = startRun({ experiment: config.experiment, step: `20-density-${values.window}`, configPath, modulesDir: modulesDir(values.modules), args: values });
 run.addInputs('calibration', { [values.calibration]: JSON.parse(fs.readFileSync(path.join(repoRoot, 'runs', values.calibration, 'manifest.json'), 'utf8')).config.sha256 });
-const { loaded } = await loadModules(run, ['analysis/density-calibration', 'propagator/hpop'], values);
-const dc = loaded['analysis/density-calibration'], hpop = loaded['propagator/hpop'];
+const { loaded } = await loadModules(run, ['analysis/density-calibration', 'propagator/ffm'], values);
+const dc = loaded['analysis/density-calibration'], ffm = loaded['propagator/ffm'];
 run.addInputs('set', setIndices().sha256);
 run.addInputs('gfz', { kp: gfzDays().sha256 });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
@@ -59,8 +59,8 @@ async function jb2008(s, correction) {
   }
   return out;
 }
-// NRLMSISE-00 densities: F10.7 of the previous day, its 81-day centred mean
-// and Ap of the day (hpop's SpaceWeatherTable reading).
+// NRLMSISE-00 densities: F10.7 of the previous day, its 81-day centered mean
+// and Ap of the day (ffm's SpaceWeatherTable reading).
 async function msis(s) {
   const spw = new Map(spwRows(isoDay(s.t[0] - 2 * DAY_MS), isoDay(s.t.at(-1) + DAY_MS)).map((r) => [r.DATE, r]));
   const out = [];
@@ -68,7 +68,7 @@ async function msis(s) {
     if (!s.valid[k]) { out.push(null); continue; }
     const today = spw.get(isoDay(s.t[k])), yesterday = spw.get(isoDay(s.t[k] - DAY_MS));
     const lon = ((s.lon[k] + 540) % 360) - 180;
-    out.push(decodeAtmosphere(await hpop.invoke('invoke', [atmosphereFrame({ epoch: new Date(s.t[k]).toISOString().slice(0, 23), altKm: s.altKm[k], latDeg: s.lat[k],
+    out.push(decodeAtmosphere(await ffm.invoke('invoke', [atmosphereFrame({ epoch: new Date(s.t[k]).toISOString().slice(0, 23), altKm: s.altKm[k], latDeg: s.lat[k],
       lonDeg: lon, f107: yesterday.F107_OBS, f107a: today.F107_OBS_CENTER81, ap: today.AP_AVG })])));
   }
   return out;

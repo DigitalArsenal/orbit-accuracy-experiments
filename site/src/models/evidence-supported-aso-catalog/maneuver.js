@@ -5,7 +5,7 @@
 //  2. NASA's plan against its next trajectory, in this browser:
 //     analysis/maneuver-detection compare_ephemerides gives the executed
 //     change, as the study takes its truth.
-//  3. Where the burn put the station: propagator/hpop from NASA's state
+//  3. Where the burn put the station: propagator/ffm from NASA's state
 //     before the burn and from its first state after it (EME2000 to GCRF by
 //     foundation/frames), one force model, a day on.
 // Two plot boxes follow one clock: the orbit (GCRF, km) with the station
@@ -32,12 +32,12 @@ export default async function run(ctx) {
   const foundMs = Date.parse(found.EVENT_START_TIME);
 
   const p = panel(ctx.root, `${iss.burn.name}, ${new Date(tigMs).toISOString().slice(0, 10)}`);
-  const orbit = scene3d(ctx, { title: 'The station with and without the burn', caption: 'GCRF; NASA’s trajectories, and HPOP with and without the burn' });
+  const orbit = scene3d(ctx, { title: 'The station with and without the burn', caption: 'GCRF; NASA’s trajectories, and FFM with and without the burn' });
   const apart = scene3d(ctx, { title: 'With the burn − without it', caption: 'Radial, in-track and cross-track of the station without the burn' });
   const figure = chart(ctx.root, 'Distance between the two', 'With the burn against without it; drag to move the boxes above in time');
   const checks = panel(ctx.root, 'Planned, executed, found');
   await credits(ctx, ctx.root, ['data/maneuver/iss-versions.json', 'data/maneuver/iss-detection.json', 'data/eop/eop-2026-09.prw', 'data/kernel/de440-2026.prw']);
-  const [detector, hpop, frames] = await Promise.all([ctx.module('analysis/maneuver-detection'), ctx.module('propagator/hpop'), ctx.module('foundation/frames')]);
+  const [detector, ffm, frames] = await Promise.all([ctx.module('analysis/maneuver-detection'), ctx.module('propagator/ffm'), ctx.module('foundation/frames')]);
 
   // NASA's plan against its next trajectory.
   const executed = await ctx.run('analysis/maneuver-detection compare_ephemerides: the plan against NASA’s next trajectory', async () => {
@@ -52,8 +52,8 @@ export default async function run(ctx) {
   });
   if (!executed) return;
 
-  // HPOP from NASA's state before the burn and from its first state after it.
-  const states = await ctx.run('foundation/frames and propagator/hpop: a day with and without the burn', async () => {
+  // FFM from NASA's state before the burn and from its first state after it.
+  const states = await ctx.run('foundation/frames and propagator/ffm: a day with and without the burn', async () => {
     const at = (v, i) => ({ ms: v.epochsUnixMs[i], r: v.position.slice(3 * i, 3 * i + 3), v: v.velocity.slice(3 * i, 3 * i + 3) });
     const before = at(plan, plan.epochsUnixMs.findLastIndex((t) => t <= tigMs - 45 * MIN));
     const after = at(post, 0);
@@ -64,7 +64,7 @@ export default async function run(ctx) {
     const propagate = async (seed, extra) => {
       const s = await toGcrf(seed);
       const times = [...new Set([...extra, ...common])].filter((t) => t > seed.ms).sort((a, b) => a - b);
-      const r = decodeExecution(await hpop.invoke('invoke', [executionFrame({ epoch: isoMicro(seed.ms), timeScale: 'UTC', position: s.r, velocity: s.v,
+      const r = decodeExecution(await ffm.invoke('invoke', [executionFrame({ epoch: isoMicro(seed.ms), timeScale: 'UTC', position: s.r, velocity: s.v,
         samples: times.map(isoMicro), target: isoMicro(times.at(-1)), integrator: { algorithm: 'RK78', tolerance: 1e-12 }, forces: FORCES, kernel: true }),
       frameOf('kernel', kernel), frameOf('earth_orientation', eop)]));
       return new Map([[seed.ms, s], ...r.samples.map((q, k) => [times[k], { r: q.position, v: q.velocity }])]);
@@ -97,7 +97,7 @@ export default async function run(ctx) {
     ['Found', new Date(foundMs).toISOString().slice(0, 19).replace('T', ' '), `${num(found.DELTA_VEL * 1000, 4)} m/s in-track`,
       `Detector C on ${num(detection.elementSets.count)} public element sets, ${detection.modules[0].path} ${detection.modules[0].version} over ${detection.modules[1].path}`],
     ['A day later', new Date(dayMs).toISOString().slice(0, 19).replace('T', ' '), `${formatMeters(gapKm * 1000)} apart: ${formatMeters(Math.abs(gap[1]) * 1000)} ${gap[1] < 0 ? 'behind' : 'ahead'}, ${formatMeters(Math.abs(gap[0]) * 1000)} ${gap[0] > 0 ? 'higher' : 'lower'}`,
-      'propagator/hpop from NASA’s states either side of the burn'],
+      'propagator/ffm from NASA’s states either side of the burn'],
   ]);
 
   async function draw() {
@@ -105,7 +105,7 @@ export default async function run(ctx) {
       const series = (map, from, to) => [...map].filter(([t]) => t >= from && t <= to).sort((x, y) => x[0] - y[0]);
       const burnAt = without.get(tigMs), foundAt = without.get(foundMs);
       // The station with the burn: as without it to the TIG, NASA across the
-      // burn, then HPOP from NASA's first state after it.
+      // burn, then FFM from NASA's first state after it.
       const withPath = [...series(without, states.before.ms, tigMs), ...across.filter(([t]) => t < after.ms), ...series(withBurn, after.ms, dayMs + HOUR)];
       const withoutPath = series(without, states.before.ms, dayMs + HOUR);
       const positionAt = (path) => new Map(path.map(([t, q]) => [t, q.r]));
@@ -128,7 +128,7 @@ export default async function run(ctx) {
         g.moving(withPath.map(([t, q]) => [t, q.r]), { color: 'accent', size: 10, trail: 2.5, trailTime: 95 * 60, label: 'ISS', labelOptions: { above: true } });
         g.view({ preset: '3d' });
       }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal', time: span,
-        caption: `GCRF; the ISS from NASA’s trajectories, then propagator/hpop (EGM2008 20×20, Sun and Moon) from NASA’s states before and after the burn; the last revolution trails each; the Earth at 6,378 km`,
+        caption: `GCRF; the ISS from NASA’s trajectories, then propagator/ffm (EGM2008 20×20, Sun and Moon) from NASA’s states before and after the burn; the last revolution trails each; the Earth at 6,378 km`,
         legend: [['cyan', 'Before the burn'], ['accent', 'With the burn'], ['muted', 'Without it', 'dash'], ['text', 'Detector’s event', 'dot'], ['earth', 'Earth, 6,378.137 km']] });
       await apart.draw((g) => {
         g.point([0, 0, 0], { color: 'muted', size: 8, label: 'Without the burn', labelColor: 'muted' });

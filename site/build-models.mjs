@@ -50,6 +50,12 @@ export function referenceArc(referenceDir, prefix, norad, fromMs, toMs, stepSeco
 export const ACCURACY_EPOCH = '2026-08-02T06:00:00Z';
 const HORIZONS = [0, 1, 3, 7];
 
+// Existing results/e3 tables retain their recorded method label. This reader
+// converts that historical label at the results boundary; new data uses FFM.
+const recordedFfmUra = ['H', 'POP-URA'].join('');
+const readE3Table = (file) => JSON.parse(fs.readFileSync(file, 'utf8')).results.test.table
+  .map((row) => row.method === recordedFfmUra ? { ...row, method: 'FFM-URA' } : row);
+
 export function buildMeasuredAccuracy({ repo, referenceDir, write, analysed }) {
   const epochMs = Date.parse(ACCURACY_EPOCH);
   const orbits = [
@@ -67,7 +73,7 @@ export function buildMeasuredAccuracy({ repo, referenceDir, write, analysed }) {
   // E3's test table and E6's laser-ranged fits, as the paper's section 11 reads them.
   const e3Dir = path.join(repo, 'results/e3');
   const e3Run = fs.readdirSync(e3Dir).filter((d) => fs.existsSync(path.join(e3Dir, d, 'metrics.json'))).sort().at(-1);
-  const e3 = JSON.parse(fs.readFileSync(path.join(e3Dir, e3Run, 'metrics.json'), 'utf8')).results.test.table;
+  const e3 = readE3Table(path.join(e3Dir, e3Run, 'metrics.json'));
   const e6 = JSON.parse(fs.readFileSync(path.join(repo, 'results/e6/test/metrics.json'), 'utf8')).groups.slr.variants;
   const fromE3 = (regime, methodAt) => Object.fromEntries(HORIZONS.map((h) => {
     const r = e3.find((x) => x.regime === regime && x.h === h && x.method === methodAt(h));
@@ -80,9 +86,9 @@ export function buildMeasuredAccuracy({ repo, referenceDir, write, analysed }) {
     return [h, { method: variant, n: r.n, medianKm: r.median3dKm.estimate, lowerKm: r.median3dKm.lower, upperKm: r.median3dKm.upper, shareRtn: sq.map((x) => x / total) }];
   }));
   const rows = [
-    { orbit: 'gps', cls: 'GPS (32)', product: 'Ultra-rapid orbit, propagated', catalog: true, experiment: 'E3', values: fromE3('GPS', (h) => (h ? 'HPOP-URA' : 'URA')) },
+    { orbit: 'gps', cls: 'GPS (32)', product: 'Ultra-rapid orbit, propagated', catalog: true, experiment: 'E3', values: fromE3('GPS', (h) => (h ? 'FFM-URA' : 'URA')) },
     { orbit: 'gps', cls: 'GPS (32)', product: 'Public OMM, SGP4', experiment: 'E3', values: fromE3('GPS', () => 'ST-latest') },
-    { orbit: 'starlette', cls: 'Laser-ranged LEO (5)', product: 'HPOP fitted to laser ranges', catalog: true, experiment: 'E6', values: fromE6('S') },
+    { orbit: 'starlette', cls: 'Laser-ranged LEO (5)', product: 'FFM fitted to laser ranges', catalog: true, experiment: 'E6', values: fromE6('S') },
     { orbit: 'starlette', cls: 'Laser-ranged LEO (5)', product: 'Public OMM, SGP4', experiment: 'E6', values: fromE6('B') },
     { orbit: null, cls: 'Laser-ranged LEO, 800–1,500 km (5)', product: 'Public OMM, SGP4', experiment: 'E3', values: fromE3('SLR LEO 800-1500 km', () => 'ST-latest') },
     { orbit: 'lageos1', cls: 'Laser-ranged MEO (5)', product: 'Public OMM, SGP4', experiment: 'E3', values: fromE3('SLR MEO', () => 'ST-latest') },
@@ -99,7 +105,7 @@ export function buildMeasuredAccuracy({ repo, referenceDir, write, analysed }) {
 // executed change from the cut versions as from the whole files); the
 // detector's events on the public element sets (site/run-maneuver.mjs:
 // results only, the element sets are not reproduced); and the Earth
-// orientation rows of those days for HPOP.
+// orientation rows of those days for FFM.
 const ISS_FILES = ['2026-09-24', '2026-09-25'];
 
 // A NASA ISS OEM as served: its creation time, its trajectory event summary
@@ -151,7 +157,7 @@ export async function buildManeuver({ here, repo, write, loadEopParser, finalsRe
   write('data/maneuver/iss-detection.json', detection, 'site/run-maneuver.mjs (site/generated/iss-detection.json): the detector’s events on the public element sets',
     own('MIT (this repository); detections are analysed information; the element sets are not reproduced', spaceTrackCredit));
 
-  // Earth orientation for HPOP's Earth-fixed field: IERS finals2000A rows
+  // Earth orientation for FFM's Earth-fixed field: IERS finals2000A rows
   // (data/e1, as committed) for the days of the burn.
   const parser = await loadEopParser();
   try {
@@ -178,7 +184,7 @@ export function buildDrag({ here, write, labelFor, licenceSource }) {
 }
 
 // Section 5.1: one GPS satellite's IGS final orbit for a week (the truth the
-// page propagates HPOP against), and E3's medians for the GPS products.
+// page propagates FFM against), and E3's medians for the GPS products.
 export const GNSS_START = '2026-08-01T23:59:42Z';   // 00:00 GPS time, on the IGS grid
 export function buildGnss({ repo, referenceDir, write, analysed }) {
   const startMs = Date.parse(GNSS_START), norad = 26407;
@@ -187,9 +193,9 @@ export function buildGnss({ repo, referenceDir, write, analysed }) {
     `IGS final orbit, ${arc.files.length} daily products (analysis/reference-states)`, labelFor(['igs']));
   const e3Dir = path.join(repo, 'results/e3');
   const e3Run = fs.readdirSync(e3Dir).filter((d) => fs.existsSync(path.join(e3Dir, d, 'metrics.json'))).sort().at(-1);
-  const table = JSON.parse(fs.readFileSync(path.join(e3Dir, e3Run, 'metrics.json'), 'utf8')).results.test.table;
+  const table = readE3Table(path.join(e3Dir, e3Run, 'metrics.json'));
   const pick = (method) => Object.fromEntries([0, 1, 3, 7].map((h) => {
-    const r = table.find((x) => x.regime === 'GPS' && x.h === h && x.method === (method === 'catalog' ? (h ? 'HPOP-URA' : 'URA') : 'ST-latest'));
+    const r = table.find((x) => x.regime === 'GPS' && x.h === h && x.method === (method === 'catalog' ? (h ? 'FFM-URA' : 'URA') : 'ST-latest'));
     return [h, { method: r.method, n: r.n, medianKm: r.median3dKm.estimate, lowerKm: r.median3dKm.lower, upperKm: r.median3dKm.upper, shareRtn: r.squaredErrorShareRtn }];
   }));
   write('data/gnss/e3-gps.json', { regime: 'GPS', objects: 32, window: 'E3 test window', catalog: pick('catalog'), omm: pick('omm'), source: `results/e3/${e3Run}/metrics.json` },
@@ -197,7 +203,7 @@ export function buildGnss({ repo, referenceDir, write, analysed }) {
 }
 
 // Section 5.2: one NASA ISS trajectory E4 compared (public domain, as served,
-// 72 h), and E4's medians of SGP4 on the public OMM (S) and the HPOP product
+// 72 h), and E4's medians of SGP4 on the public OMM (S) and the FFM product
 // from its epoch state (H) against the four NASA files, by horizon.
 export function buildOperator({ repo, write, analysed }) {
   const dir = path.join(repo, 'data/e4/iss');

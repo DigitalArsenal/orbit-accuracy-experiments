@@ -35,9 +35,9 @@ satellites propagated with each density model, 1, 3 and 7 days ahead?
 
 | ID | Density | Drivers | Where |
 | --- | --- | --- | --- |
-| D0 | JB2008 (Bowman et al. 2008) as published | SET `SOLFSMY.TXT` and `DTCFILE.TXT` (2026-10-09 copies) | `propagator/hpop` (propagation); `analysis/density-calibration` `evaluate` (densities), the same `lib/jb2008.h` |
-| D1 | NRLMSISE-00 (Picone et al. 2002), `gtd7d` | GFZ Kp/ap/Ap/F10.7 as daily `$SPW` rows: F10.7 of the previous day, its 81-day centred mean, the daily Ap | `propagator/hpop` (execution and `ATMOSPHERE_REQUEST`) |
-| D2 | JB2008 + a DCA-like correction | SET indices; the correction dT(latitude, local solar time) added to JB2008's DSTDTC | `analysis/density-calibration` (`calibrate`, `evaluate`, new); `propagator/hpop` with every hourly DTC raised by the global term |
+| D0 | JB2008 (Bowman et al. 2008) as published | SET `SOLFSMY.TXT` and `DTCFILE.TXT` (2026-10-09 copies) | `propagator/ffm` (propagation); `analysis/density-calibration` `evaluate` (densities), the same `lib/jb2008.h` |
+| D1 | NRLMSISE-00 (Picone et al. 2002), `gtd7d` | GFZ Kp/ap/Ap/F10.7 as daily `$SPW` rows: F10.7 of the previous day, its 81-day centered mean, the daily Ap | `propagator/ffm` (execution and `ATMOSPHERE_REQUEST`) |
+| D2 | JB2008 + a DCA-like correction | SET indices; the correction dT(latitude, local solar time) added to JB2008's DSTDTC | `analysis/density-calibration` (`calibrate`, `evaluate`, new); `propagator/ffm` with every hourly DTC raised by the global term |
 | D3 | HASDM (SET HASDM database, interpolated to the samples by Licata et al. 2021) | — | Historical windows only (data, Zenodo 10.5281/zenodo.4602380, CC BY 4.0) |
 | D4 | WAM-IPE | — | Not run in this plan (section 8) |
 
@@ -48,8 +48,8 @@ h the hour angle from the Sun) up to degree L, s = 0.1 (log density),
 σ_l = 150, 75, 50 K for degrees 0, 1, 2, Gauss–Newton with a 4 robust-sigma
 edit, at least 60 samples per bin. The observations are the densities of the
 calibration satellites (below) every 30 s. Inside the module, JB2008 is
-driven exactly as hpop drives it, and a constant dT is the same model as
-hpop with every DTC raised by dT (module test).
+driven exactly as ffm drives it, and a constant dT is the same model as
+ffm with every DTC raised by dT (module test).
 
 **The D2 forecast** from an issue time t0: the nowcast c_now is the mean of
 the coefficients of the bins that ended in the 12 h before t0 (latency 0);
@@ -65,7 +65,7 @@ level replaced it before the freeze; the candidate τ values did not change.
 The degree selection (analysis mode) does not depend on the forecast.
 
 **D2 in the propagation endpoint** uses the global term a00(t) only, because
-hpop's JB2008 takes one DSTDTC per instant: JB2008 with DTC(t) + a00(t). The
+ffm's JB2008 takes one DSTDTC per instant: JB2008 with DTC(t) + a00(t). The
 spatial terms are scored in the density endpoint.
 
 **Calibration satellites and leakage.** A satellite never calibrates its own
@@ -115,7 +115,7 @@ last.
 ## 4. Endpoints
 
 **Density.** For each held-out satellite, orbit means of the observed and
-model densities over one orbital period centred on each scoring time (every
+model densities over one orbital period centered on each scoring time (every
 600 s), over the same valid samples (at least 90 % of the period), and
 r = ln(observed / model). Reported per variant: the mean of r (bias) and its
 standard deviation σ (the spread a calibration exists to remove), pooled
@@ -125,7 +125,7 @@ leads 0–1, 1–3 and 3–7 days, with D0 on the same pairs.
 
 **Propagation.** For each issue day and held-out satellite with a precise
 orbit: batch least squares (`analysis/estimation` `fit_batch`, answered by
-`propagator/hpop`) of the state and B = Cd·A/m to the precise orbit every
+`propagator/ffm`) of the state and B = Cd·A/m to the precise orbit every
 180 s over the 24 h before t0 (full states, σ 0.1 m and 0.1 mm/s, Cr·A/m
 fixed per satellite in `config.json`), then propagation of the fit to t0 + 1,
 3 and 7 d with the same model and the 3D distance to the precise orbit.

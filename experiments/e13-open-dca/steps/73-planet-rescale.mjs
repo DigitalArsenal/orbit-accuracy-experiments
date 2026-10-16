@@ -1,9 +1,9 @@
 // E13 step 73 (EXPLORATORY, PLAN.md Amendment S3 item 3): the Planet arcs of a split on the common reference, NRLMSISE-00 with GFZ's indices. Nothing is refitted:
-// for each arc the HPOP trajectory of its first state with its own fitted B (JB2008, profile g24lean) is integrated for the drag work under JB2008 and under NRLMSISE-00
+// for each arc the FFM trajectory of its first state with its own fitted B (JB2008, profile g24lean) is integrated for the drag work under JB2008 and under NRLMSISE-00
 // (analysis/density-calibration 0.4.0 `drag_work`), and B_N = B_J * W_J / W_N (common-reference.mjs).
 //
 //   node steps/73-planet-rescale.mjs --split dev --sample 120 [--out FILE]      the test of item 3: every k-th arc of the split's file, also fitted DIRECTLY under
-//                                                                                NRLMSISE-00 (the same energy-form estimator, HPOP g24lean, converged); the rescaled
+//                                                                                NRLMSISE-00 (the same energy-form estimator, FFM g24lean, converged); the rescaled
 //                                                                                value must agree to within the arc's stated sigma of ln B (results/e13/s3/rescale-sample.json)
 //   node steps/73-planet-rescale.mjs --split dev|testA|testB --all [--group calibration,heldOut] [--shard k/n]  every arc of the split (of the groups' Doves), one row each in <store>/planet-arcs/<split>-<profile>.msis.jsonl
 //

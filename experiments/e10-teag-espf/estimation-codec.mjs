@@ -57,7 +57,7 @@ export async function estimationCodec(modulesDir) {
 
 // Epoch labels: {jdDay, seconds} with seconds in [0, 86400) from a UTC instant
 // (ms). The estimator treats them as labels; the propagator port reads them
-// as UTC (hpop.mjs).
+// as UTC (ffm.mjs).
 export function epochOf(ms) {
   const jd = ms / 86400000 + 2440587.5;
   const day = Math.floor(jd - 0.5) + 0.5;

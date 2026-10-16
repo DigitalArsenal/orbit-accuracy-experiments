@@ -41,7 +41,7 @@ and writes `inputs.json` (URL, capture time, SHA-256, size, provider terms).
 
 Not compared, with the reason reported: `eutelsat-oneweb` (LTEF: no module
 evaluates the format), `ses` (IESS-412 eleven-parameter model: no module
-evaluates it), `telesat` (box-centre longitude/latitude, not a state
+evaluates it), `telesat` (box-center longitude/latitude, not a state
 ephemeris), `eumetsat` (two-line elements only, no ephemeris and no truth
 on hand). `space-track`, `spire`, `cpf-edc` and `vimpel` are credentialed
 sources and are excluded entirely.
@@ -63,13 +63,13 @@ to UTC through `foundation/time`.
   the sets with `EPOCH` ≤ T_c and `CREATION_DATE` ≤ T_c. Element sets and
   anything derived from them per sample stay on this machine.
 - **Models**: `analysis/gp-error-model` `docs/model-2026-08-scaled.json`
-  (SGP4 covariance by regime and age) and `docs/hpop-covariance-model-2026-08.json`
-  (HPOP P₀ and process noise by regime), both fitted on 2026-08 data, before
+  (SGP4 covariance by regime and age) and `docs/ffm-covariance-model-2026-08.json`
+  (FFM (Full Force Model) P₀ and process noise by regime), both fitted on 2026-08 data, before
   every file used here.
 
 ### Truth (independent precise orbits)
 
-ESA final orbits `ESA0OPSFIN` (GPS and GLONASS, an IGS analysis-centre
+ESA final orbits `ESA0OPSFIN` (GPS and GLONASS, an IGS analysis-center
 final; BKG's IGS combination was unreachable at the freeze) and CODE's MGEX
 final `COD0MGXFIN` (Galileo; ESA publishes no multi-GNSS final for these
 weeks) for 2026-09-08 to 2026-09-20, downloaded by step 05 and converted by
@@ -83,12 +83,12 @@ ISS, CSS, Planet and Intelsat have no independent precise orbit on hand.
 | ID | Product | Covariance |
 | --- | --- | --- |
 | S | SGP4 from the selected element set (`analysis/gp-error-model` `accumulate`: SGP4, TEME → GCRF, error in the comparison state's RTN axes) | The regime × age stratum of `model-2026-08-scaled.json` (RTN, km²) |
-| H | The CA HPOP screen's product: `analysis/epoch-state` GCRF state at the set's epoch, propagated by `propagator/hpop`'s resident force model (point mass + EGM2008 20×20) | P(t) = Φ P₀ Φᵀ + Q from `hpop-covariance-model-2026-08.json` (P₀ rotated to GCRF by `gp-error-model` `hpop_arcs`), propagated by HPOP |
+| H | The CA FFM screen's product: `analysis/epoch-state` GCRF state at the set's epoch, propagated by `propagator/ffm`'s resident force model (point mass + EGM2008 20×20) | P(t) = Φ P₀ Φᵀ + Q from `ffm-covariance-model-2026-08.json` (P₀ rotated to GCRF by `gp-error-model` `ffm_arcs`), propagated by FFM |
 | P | Planet only: SGP4 from Planet's own published TLE (operator's element set), scored like S | none |
 
-E2's batch-fit product (C2/C4: HPOP fitted to catalog history with
+E2's batch-fit product (C2/C4: FFM fitted to catalog history with
 covariance, `analysis/estimation` `fit_batch`) is not on the modules'
-default branch at the freeze; E4 uses H, the calibrated HPOP product the
+default branch at the freeze; E4 uses H, the calibrated FFM product the
 modules already carry, and reports C2 as not run.
 
 ## 4. Comparison
@@ -160,7 +160,7 @@ never published; only the aggregates in `results/e4/` are.
 
 - Accuracy against truth for Starlink, ISS, CSS, Planet or Intelsat: only
   agreement with the operator, whose own error is unknown here.
-- A fitted product (E2's C2); E4 scores the calibrated HPOP product the
+- A fitted product (E2's C2); E4 scores the calibrated FFM product the
   modules carry today.
 - OneWeb, SES and Telesat: their formats have no module reader.
 
@@ -174,8 +174,8 @@ never falls inside a Starlink file, and H1's 72 h bound cannot be tested as
 written. H1 is reported as not decided at 72 h; the median at the last
 horizon reached (60 h) is reported beside it, with no decision attached.
 
-**A2 (2026-10-09, same point). H where the HPOP model has no P₀.** The
-2026-08 HPOP covariance model has no geostationary regime. For Intelsat, H
+**A2 (2026-10-09, same point). H where the FFM model has no P₀.** The
+2026-08 FFM covariance model has no geostationary regime. For Intelsat, H
 is the same propagated state without a covariance; its accuracy is
 reported and it enters no covariance metric.
 

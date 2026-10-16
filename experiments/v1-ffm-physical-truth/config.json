@@ -1,5 +1,5 @@
 {
-  "experiment": "v1-hpop-physical-truth",
+  "experiment": "v1-ffm-physical-truth",
   "frozen": true,
   "plan": "PLAN.md",
   "inputs": {

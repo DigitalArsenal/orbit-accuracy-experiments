@@ -48,7 +48,7 @@ if (fs.existsSync(s3)) {
 const s2 = path.join(dir, 's2-realism.json');
 if (fs.existsSync(s2)) {
   const r = JSON.parse(fs.readFileSync(s2, 'utf8'));
-  section('S2 — the HPOP screen product (epoch state, full force)', selection?.sources?.S2?.candidate, Object.entries(r.candidates).map(([k, v]) => [k, v.tally]), (n) => r.candidates[n].primary, H);
+  section('S2 — the FFM screen product (epoch state, full force)', selection?.sources?.S2?.candidate, Object.entries(r.candidates).map(([k, v]) => [k, v.tally]), (n) => r.candidates[n].primary, H);
 }
 const s1 = path.join(dir, 's1-realism.json');
 if (fs.existsSync(s1)) {

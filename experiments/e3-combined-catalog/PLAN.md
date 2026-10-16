@@ -31,7 +31,7 @@ each was checked for objects that also have a precise orbit:
 | CelesTrak GP | 3 | Republishes Space-Track GP | All 48 | Lineage check only (section 3) |
 | CelesTrak supplemental GP | 3 | Operator or CPF data | Not captured for these objects | Not scored (section 3) |
 | Vimpel orbit tables (editions 2026-09-07 and 2026-09-21, kept by the SDN vimpel node) | 2 | JSC Vimpel optical network | **None**: its 13,889 rows are high-orbit objects in Vimpel's own numbering; none of the 986 rows of its `datefirst` crosswalk names a truth object | Coverage only |
-| SDN node records: ESA ultra-rapid GNSS orbits (`ESA0OPSULT`) | 2 | GNSS ground network | 32 GPS satellites | **URA**, and **HPOP-URA** (HPOP from its state) |
+| SDN node records: ESA ultra-rapid GNSS orbits (`ESA0OPSULT`) | 2 | GNSS ground network | 32 GPS satellites | **URA**, and **FFM-URA** (FFM (Full Force Model) from its state) |
 | SDN node records: IGS ultra-rapid orbits kept by the `gps-precise` node, issues of 2026-09-08..09-14 | 2 | GNSS ground network | 32 GPS satellites | **URA-IGS**, sensitivity only |
 | SDN node records: gcat, mccants catalog nodes | — | — | No orbit records (their stores hold catalog, entity-group and provenance records) | Not used |
 | SDN node records: CPF predictions kept by the `cpf` node | 2 | ESA | Galileo only, which has no truth here | Not used |
@@ -42,11 +42,11 @@ ESA's public server; the node-kept IGS files were read from the node's
 block store and checked against the SHA-256 the node recorded.
 
 **Lineage.** The ESA ultra-rapid orbits and the ESA final orbits used as GPS
-truth come from the same analysis centre, network and software. Their
+truth come from the same analysis center, network and software. Their
 agreement at the issue time is consistency, not independent accuracy, and is
-labelled so; the forecast part (after the issue's last data) is a forecast,
+labeled so; the forecast part (after the issue's last data) is a forecast,
 but shared models can still make it look better than it is. URA-IGS (the IGS
-combination, of several centres) against the ESA truth bounds that effect
+combination, of several centers) against the ESA truth bounds that effect
 for the days it covers. Space-Track and the GNSS products share no data.
 
 ## 3. Data
@@ -70,7 +70,7 @@ reachable from this machine). Output:
 | GPS | the 32 GPS satellites in the ESA products | ESA final orbits (ESA0OPSFIN, 5 min) | IGS final quality, centimetres |
 | LEO 400–800 km | Swarm A, B, C; Sentinel-1C, 1D; LARETS | Swarm reduced-dynamic (TU Delft), Sentinel-1 POEORB, NSGF SLR arcs | per product, in each index |
 | SLR LEO 800–1500 km | Stella, Starlette, WESTPAC, Ajisai, LARES | NSGF SLR arcs (3.5 days every 4 days) | overlap RMS, in each index |
-| SLR MEO | LAGEOS-1, -2, ETALON-1, -2 (ILRS combination, weekly); LARES-2 (NSGF) | as listed | centre RMS or overlap RMS |
+| SLR MEO | LAGEOS-1, -2, ETALON-1, -2 (ILRS combination, weekly); LARES-2 (NSGF) | as listed | center RMS or overlap RMS |
 
 Coverage stops where publication stops: Swarm on 2026-08-18, Sentinel-1
 around 2026-09-17, the ILRS weekly arcs on 2026-09-19, ESA GNSS finals on
@@ -124,8 +124,8 @@ T = N×R), as V1 takes norms. That projection is the same RTN convention
 | ST-stack3 | The mean of the errors of the three latest such sets (same lineage). |
 | URA | The newest ESA ultra-rapid issue available at T (start + 27 h, by its publication times), when it covers the target (start + 48 h). In practice only h = 0 (6–12 h of prediction). |
 | URA-IGS | The same with the IGS ultra-rapid files the node kept. Sensitivity only. |
-| HPOP-URA | `propagator/hpop` from the URA state at T: 20×20 EGM2008, Sun and Moon (DE440), cannonball radiation pressure (1500 kg, 20 m², Cr 1.3, as V1), IERS 2010 solid tides and relativity, finals2000A Earth orientation, RK78 at 1e-13. h ≥ 1 day. |
-| SEL | Evidence-weighted selection: among ST-latest, URA and HPOP-URA where applicable, the method with the lowest train-window median 3D error for the regime and horizon (at least 30 train samples). |
+| FFM-URA | `propagator/ffm` from the URA state at T: 20×20 EGM2008, Sun and Moon (DE440), cannonball radiation pressure (1500 kg, 20 m², Cr 1.3, as V1), IERS 2010 solid tides and relativity, finals2000A Earth orientation, RK78 at 1e-13. h ≥ 1 day. |
+| SEL | Evidence-weighted selection: among ST-latest, URA and FFM-URA where applicable, the method with the lowest train-window median 3D error for the regime and horizon (at least 30 train samples). |
 | FUS | Fusion across independent lineages: the SEL-ranked best applicable method of each lineage (SSN; GNSS network), combined per RTN axis with weights 1/σ², σ² the train-window mean square of that axis after a 5-robust-sigma clip. Where only one lineage applies, FUS is SEL. |
 
 The baseline is ST-latest: what a catalog that republishes the newest
@@ -162,7 +162,7 @@ missing sources or failed calls).
 
 **Also reported, descriptive.** The Space-Track per-record errors by age
 from each set's own epoch (0, 1, 3, 7 days), per regime; URA-IGS beside URA.
-Every train-window number, labelled train.
+Every train-window number, labeled train.
 
 ## 6. Acceptance of the harness
 
@@ -184,8 +184,8 @@ Every train-window number, labelled train.
 - **Availability times** of ultra-rapid issues follow ESA's publication
   pattern (about start + 25.7 h, rule start + 27 h), not per-file
   timestamps.
-- **One GPS physical model**: HPOP's cannonball radiation pressure is crude
-  for GPS (V1: 29 m median at 24 h); HPOP-URA errors at 3 and 7 days
+- **One GPS physical model**: FFM's cannonball radiation pressure is crude
+  for GPS (V1: 29 m median at 24 h); FFM-URA errors at 3 and 7 days
   measure that model, not the limit of a better one.
 - **Twenty test days.** Intervals account for clustering by object and day,
   not for a different season or solar activity.

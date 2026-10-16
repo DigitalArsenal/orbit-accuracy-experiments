@@ -14,7 +14,7 @@ import { sha256 } from '../../../harness/modules.mjs';
 import { ReferenceIndex } from '../../../harness/reference.mjs';
 import { readElementSets, shiftDay, epochMs as setEpochMs } from '../../../harness/gp-archive.mjs';
 
-const MODULES = ['propagator/hpop', 'foundation/frames', 'analysis/estimation', 'analysis/epoch-state', 'data-source/eop-parser'];
+const MODULES = ['propagator/ffm', 'foundation/frames', 'analysis/estimation', 'analysis/epoch-state', 'data-source/eop-parser'];
 const self = new URL(import.meta.url).pathname;
 const kernelFor = (window) => (window === 'dev' ? repoPath(config.partC.devKernel ?? 'data/e10/de440-2024.bsp') : path.join(modulesDir(), config.inputs.kernel2026));
 
@@ -30,7 +30,7 @@ export function correlationScales() {
 
 async function child(jobFile) {
   const job = JSON.parse(fs.readFileSync(jobFile, 'utf8'));
-  const { environment } = await import('../hpop.mjs');
+  const { environment } = await import('../ffm.mjs');
   const { arcScenario, e2SecondMoment } = await import('../partc.mjs');
   const { variantSpec, runAndScore } = await import('../partb.mjs');
   const { estimationCodec } = await import('../estimation-codec.mjs');
@@ -40,7 +40,7 @@ async function child(jobFile) {
   const first = prepared.rows[0].ms, last = prepared.rows.at(-1).ms;
   const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: kernelFor(job.window), eopPath: config.inputs.eopC04, eopFinalsPath: config.inputs.eopFinals, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: first - DAY_MS, toMs: last + DAY_MS });
   const codec = await estimationCodec(modulesDir());
-  const ctx = { codec, est: loaded['analysis/estimation'], hpop: loaded['propagator/hpop'], env, filterModel: config.forceModels[config.partC.forceModel] };
+  const ctx = { codec, est: loaded['analysis/estimation'], ffm: loaded['propagator/ffm'], env, filterModel: config.forceModels[config.partC.forceModel] };
   for (const sensitivity of job.sensitivities) {
     const sc = arcScenario(prepared, secondMoment, { sigmaScale: sensitivity === 'corr' ? correlationScales() : [1, 1, 1] });
     for (const v of job.variants) {
@@ -49,7 +49,7 @@ async function child(jobFile) {
       const out = await runAndScore(ctx, sc, variantSpec(v));
       fs.writeFileSync(`${output}.tmp`, JSON.stringify({ norad: sc.norad, start: sc.start, epochMs: sc.epochMs, variant: v, sensitivity, setErrors: sc.setErrors, seedError: sc.seedError, ...out }));
       fs.renameSync(`${output}.tmp`, output);
-      console.log(`${job.name} ${v} ${sensitivity}: ${out.rows.length} updates, ${out.calls?.hpop} HPOP calls, ${out.seconds?.toFixed(1)} s${out.failure ? ` FAILURE ${JSON.stringify(out.failure)}` : ''}`);
+      console.log(`${job.name} ${v} ${sensitivity}: ${out.rows.length} updates, ${out.calls?.ffm} FFM calls, ${out.seconds?.toFixed(1)} s${out.failure ? ` FAILURE ${JSON.stringify(out.failure)}` : ''}`);
     }
   }
 }
@@ -86,8 +86,8 @@ async function driver() {
     for (const a of pending) for (const s of [a.seed, ...a.updates]) unique.set(s.gpId, s);
     const list = [...unique.values()];
     const states = new Map((await epochStates(loaded['analysis/epoch-state'], list)).map((s, i) => [list[i].gpId, s?.state ?? null]));
-    const { environment } = await import('../hpop.mjs');
-    const m = { hpop: loaded['propagator/hpop'], frames: loaded['foundation/frames'] };
+    const { environment } = await import('../ffm.mjs');
+    const m = { ffm: loaded['propagator/ffm'], frames: loaded['foundation/frames'] };
     for (const a of pending) {
       const first = setEpochMs(a.seed.epoch), last = setEpochMs(a.updates.at(-1).epoch);
       const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: kernelFor(window), eopPath: config.inputs.eopC04, eopFinalsPath: config.inputs.eopFinals, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: first - DAY_MS, toMs: last + DAY_MS });

@@ -4,8 +4,8 @@
   "plan": "PLAN.md",
   "store": "/opt/data/sdn-archive/e13-open-dca",
   "inputs": {
-    "modules": "/Users/tj/software/worktrees/space-data-network-modules--e11-hpop-d1d8ca88",
-    "modulesNote": "propagator/hpop 1.2.0 with the space-weather restart (modules d1d8ca88), the build E4 A6 and E11 pin; analysis/estimation 0.3.0 fit_batch v2",
+    "modules": "/Users/tj/software/worktrees/space-data-network-modules--e11-ffm-d1d8ca88",
+    "modulesNote": "propagator/ffm 1.2.0 with the space-weather restart (modules d1d8ca88), the build E4 A6 and E11 pin; analysis/estimation 0.3.0 fit_batch v2",
     "kernel": {
       "path": "/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp",
       "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"

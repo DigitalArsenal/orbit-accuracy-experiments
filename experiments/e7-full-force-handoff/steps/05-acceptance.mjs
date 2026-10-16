@@ -5,7 +5,7 @@
 //       T = N x R (accumulate's convention), every dev target, to 1e-12.
 //  A0.2 every SGP4 target of a dev batch fell in a single-sample bin.
 //  A0.3 H-truth is zero at its seed; SGP4 and H-epoch at the 0 h target
-//       (both SGP4 at zero elapsed time, then minutes of SGP4 or HPOP): reported.
+//       (both SGP4 at zero elapsed time, then minutes of SGP4 or FFM): reported.
 //  A0.4 the carrier construction of maneuvers.mjs: the SGP4 GCRF state it
 //       recovers at its first grid epoch (the millisecond after the OMM's
 //       epoch, a fraction of a millisecond later) equals analysis/epoch-state's
@@ -22,7 +22,7 @@ import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { median } from '../../../harness/stats.mjs';
 import { decodeOemStream } from '../../../harness/records.mjs';
 import { cli, config, configPath, context, coefficients, forcesOf, regimeTruth, schedule, setsByObjectOf, windowSets } from '../common.mjs';
-import { epochStates, hpopErrors, targetAxes } from '../methods.mjs';
+import { epochStates, ffmErrors, targetAxes } from '../methods.mjs';
 import { ManeuverHistory } from '../maneuvers.mjs';
 import { readGpsMetadata } from '../gnss.mjs';
 import { loadBatch, norm } from '../analysis.mjs';
@@ -91,8 +91,8 @@ for (const s of samples.filter((x) => x.regime === 'GPS' && !x.targets.at(-1).mi
   const set = byObject.get(s.norad)[s.index];
   const [state] = await epochStates(ctx['epoch-state'], [set]);
   const request = { forces: forcesOf('GPS', {}), coefficients: coefficients('GPS', s.norad, set, 'bstar', gnss), cutoffMs: s.cutoffMs };
-  const a = await hpopErrors(ctx, state, s.epochMs, s.targets, { ...request, drivers: 'released' });
-  const b = await hpopErrors(ctx, state, s.epochMs, s.targets, { ...request, drivers: 'observed' });
+  const a = await ffmErrors(ctx, state, s.epochMs, s.targets, { ...request, drivers: 'released' });
+  const b = await ffmErrors(ctx, state, s.epochMs, s.targets, { ...request, drivers: 'observed' });
   const d = norm([0, 1, 2].map((k) => a.errors.at(-1)[k] - b.errors.at(-1)[k]));
   a05.samples.push({ norad: s.norad, epoch: s.epoch, differenceAt7dM: d });
   a05.pass &&= d < 1;

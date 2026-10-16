@@ -12,7 +12,7 @@ equal to E5's); one forecast fit for 2026-04-05; and two propagation arcs of
 D0. They led to three changes to the module (points above 2500 km add no
 drag; convergence tolerances; scales and edits held after four iterations),
 to the 180 s integration step (from 60 s, on cost; its accuracy is stated
-below), to E5's integrator for HPOP and to choosing τ on the density
+below), to E5's integrator for FFM (Full Force Model) and to choosing τ on the density
 forecast (both on cost), none to a candidate set. The choices of section 5
 are made by its rules on runs made after the freeze.
 
@@ -20,7 +20,7 @@ Lane: claude-e8. Modules: `analysis/density-calibration` 0.2.0 (`decay`,
 `calibrate_decay`, node corrections) and `analysis/maneuver-detection` 0.2.0
 (element-set input), and `analysis/reference-states`' DORIS, GFZ and
 COSMIC-2 products, at space-data-network-modules `f258e625` (branch
-`task/e8-omm-density-20261009`, from main `095c20a6`); `propagator/hpop`
+`task/e8-omm-density-20261009`, from main `095c20a6`); `propagator/ffm`
 unchanged from main.
 
 ## 1. Question
@@ -48,14 +48,14 @@ element data assimilation", arXiv:1910.00695).
 Can a correction to JB2008 estimated from the OMM histories of many LEO
 objects, available with no latency, (a) match or beat E5's accelerometer
 calibration on density against held-out satellites, and (b) improve 1-, 3-
-and 7-day full-force HPOP propagation of held-out precise-orbit satellites
+and 7-day full-force FFM propagation of held-out precise-orbit satellites
 across altitudes; and (c) what latency does it have?
 
 ## 2. Variants
 
 | ID | Density | Correction from | Where |
 | --- | --- | --- | --- |
-| D0 | JB2008 (Bowman et al. 2008) as published | — | `propagator/hpop` (propagation); `analysis/density-calibration` `evaluate` (densities), the same `lib/jb2008.h` |
+| D0 | JB2008 (Bowman et al. 2008) as published | — | `propagator/ffm` (propagation); `analysis/density-calibration` `evaluate` (densities), the same `lib/jb2008.h` |
 | D2 | E5's stand-in: JB2008 + E5's selected correction (degree 0, forecast τ = 12 h), E5's published calibration bins | Swarm and GRACE-FO densities (E5) | `results/e5/calibration/*.json.gz`; evaluated as E5 does |
 | D3 | HASDM (historical windows; Licata et al. 2021's interpolation) | — | Zenodo 10.5281/zenodo.4602380 |
 | D5 | JB2008 + dT(t[, h]) estimated from orbital decay | the OMM histories of the calibration set (below) | `analysis/density-calibration` `calibrate_decay` (new) |
@@ -97,7 +97,7 @@ mean over the 27 days before t0; for t ≥ t0, c̄ + (c_now − c̄) exp(−(t �
 τ ∈ {12 h, 48 h, ∞} (E5's form; ∞ holds the nowcast). Before t0 (an arc's fit
 span) D5 is the forecast fit itself.
 
-**D5 in `propagator/hpop`:** JB2008 with every hourly DTC raised by dT(t,
+**D5 in `propagator/ffm`:** JB2008 with every hourly DTC raised by dT(t,
 h_s), h_s the target's mean geodetic altitude over the day after its latest
 element set before t0 (`decay`, one day). Exact for the global structure; for
 the linear structure dT varies by under 2 K over a near-circular target's
@@ -115,7 +115,7 @@ altitude range. D2 enters as in E5 (a00(t) added to every DTC).
     (RSGA) issued at 22:00 UTC on D−1, as SET's F10 on D−1 times the RSGA's
     predicted over observed Penticton flux; held after D+2.
   - S10, M10, Y10: the value of D−1 held (no public forecast).
-  - The 81-day centred values: recomputed for every day from the daily
+  - The 81-day centered values: recomputed for every day from the daily
     values as known at t0 (released, then forecast or held).
   - DTC: the released hourly values before t0; for D, D+1, D+2 the daily
     value −3.92 + 21.78 √Ap from the RSGA's predicted Ap (least squares of
@@ -191,7 +191,7 @@ its surface); tier C, none (the module's weak start prior).
 ## 4. Endpoints
 
 **(a) Density** (E5's protocol): for each held-out satellite, orbit means of
-the observed and model densities over one orbital period centred on each
+the observed and model densities over one orbital period centered on each
 scoring time (every 600 s; the same valid samples, at least 90 %), r =
 ln(observed / model); per variant the bias (exp of the mean of r, − 1) and
 the spread σ(r), pooled, per satellite and per regime. Analysis mode: D0, D2a,
@@ -201,18 +201,18 @@ definitive drivers (E5's protocol) the same three.
 
 **(b) Propagation** (E5's protocol, full force): for each issue day and
 target, batch least squares (`analysis/estimation` `fit_batch`, answered by
-`propagator/hpop`) of the state and B = Cd·A/m to the precise orbit every
+`propagator/ffm`) of the state and B = Cd·A/m to the precise orbit every
 180 s over the 24 h before t0 (σ 0.1 m and 0.1 mm/s; Cr·A/m fixed per target,
 `config.json`), propagated with the same model to t0 + 1, 3 and 7 d; the 3D
 distance to the precise orbit there. The precise-orbit state nearest each
 time within 15 s (E5's targets) or 30 s (the added ones, whose products sit
 18–23 s off whole minutes); COSMIC-2 products stating more than 0.5 m are
-not used. HPOP with every force it carries in LEO: EGM2008 70 × 70, Sun,
+not used. FFM with every force it carries in LEO: EGM2008 70 × 70, Sun,
 Moon, Venus, Mars and Jupiter (DE440s), cannonball radiation pressure with
 conical shadow, drag by the variant, IERS 2010 solid tides and relativity,
 IERS EOP 20 C04; RK78, relative tolerance 1e-12, steps of at most 120 s
 (E5's integrator; its error is millimetres against drag errors of hundreds
-of metres or more).
+of meters or more).
 Two driver arms: **definitive** (D0, D2, D5: E5's protocol) and
 **operational** (D0, D5), on every second issue day of each test span (the
 first, third, …: consecutive days' 7-day arcs overlap, and the intervals
@@ -279,7 +279,7 @@ untrimmed; failed fits and missing truth are counted and listed.
 `analysis/density-calibration` 0.2.0 and `analysis/maneuver-detection` 0.2.0
 pass their end-to-end tests (module READMEs): Vallado's SGP4 verification
 states at epoch (2e-8 km); the Spacetrack Report No. 3 mean semi-major axis
-(1e-6 km); the drag decay against `propagator/hpop`'s numerical integration
+(1e-6 km); the drag decay against `propagator/ffm`'s numerical integration
 (circular 400 km within 0.4 %, e = 0.05 within 1.6 %, the response to a
 60 K correction within 0.03 %); recovery of a known correction and B from
 synthetic histories with the level degeneracy shown; node corrections against

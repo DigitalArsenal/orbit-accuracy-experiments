@@ -17,7 +17,7 @@ function status(text, error = false) {
 }
 
 // Module sources: each served module's source path and commit, from
-// provenance.json (propagator/hpop-v1 is propagator/hpop at V1's commit).
+// provenance.json; live models use the modules from the current checkout.
 let served = new Map();
 fetchJson('./provenance.json').then((p) => { served = new Map((p.modules ?? []).map((m) => [m.path, m])); listModules(); }, () => {});
 const sourceLink = (path) => {

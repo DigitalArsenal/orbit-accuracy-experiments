@@ -1,4 +1,4 @@
-// End-to-end known answer for the collector's pair record (experiments/e13-open-dca PLAN.md Amendment S1): two "versions" of a satellite made by HPOP from the
+// End-to-end known answer for the collector's pair record (experiments/e13-open-dca PLAN.md Amendment S1): two "versions" of a satellite made by FFM (Full Force Model) from the
 // same start state, the previous one at Cd*A/m 0.030 (the operator's model) and the new one's state at 7 h at 0.036 (what happened). The record must give back
 // the energy that separates them and read Cd*A/m = 0.036 from the previous start state and the new state (Method B), with the real modules, the real EOP, space
 // weather and kernel of the archive. Skipped, and reported as skipped, without them.

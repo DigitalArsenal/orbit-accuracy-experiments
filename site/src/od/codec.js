@@ -1,5 +1,5 @@
 // Record framing for the orbit-determination pages (SDS 1.240.0): $PRW for
-// propagator/hpop, $FRM for foundation/frames, $ACW for analysis/access and
+// propagator/ffm, $FRM for foundation/frames, $ACW for analysis/access and
 // analysis/observation-simulator, $OEM, $EOP and the observation records for
 // analysis/association, $CQR for analysis/conjunction-assessment. Encoding,
 // decoding and unit scaling (km <-> m) only: every orbit, frame, measurement
@@ -68,7 +68,7 @@ export function decodeFrameTransform(bytes) {
   const s = r.TARGET_STATE;
   return { position: ['X', 'Y', 'Z'].map((k) => s.POSITION[k] / 1000), velocity: ['X', 'Y', 'Z'].map((k) => s.VELOCITY[k] / 1000) };
 }
-// foundation/frames LLA_TO_PCPF on WGS-84: geodetic degrees and metres to
+// foundation/frames LLA_TO_PCPF on WGS-84: geodetic degrees and meters to
 // Earth-fixed km.
 export async function geodeticToItrf(frames, { lat, lon, alt }) {
   const request = t('FRMFrameTransformRequest', { OPERATION: S.frmOperationCode.LLA_TO_PCPF, POSITION: vector([lat * Math.PI / 180, lon * Math.PI / 180, alt]),
@@ -84,7 +84,7 @@ export async function transformState(frames, eop, request) {
   return decodeFrameTransform(response.outputs[0].payload);
 }
 
-// ── propagator/hpop ──
+// ── propagator/ffm ──
 // request: {epoch (ISO UTC), position [km], velocity [km/s] (GCRF), samples [ISO UTC],
 //   forces {degree, order, thirdBodies, srp, massKg, areaM2, cr}, stm (bool),
 //   covariance [36] (km, km/s) | null, noisePsd [3] m^2/s^3 RTN | null,
@@ -121,15 +121,15 @@ export function executionFrame(request) {
   return frame('request', 'PRW', finish(t('PRW', { EXECUTION_REQUEST: execution }), '$PRW', { sizePrefixed: true, size: 1 << 18 }));
 }
 
-// Samples in request order: {epoch (the requested UTC text; HPOP reports
+// Samples in request order: {epoch (the requested UTC text; FFM reports
 // its own scale, TT), position [km], velocity [km/s], stm [36] | null (SI,
 // row-major, from the initial epoch), covariance [36] (km, km/s) | null}.
 export function decodeExecution(response, requested) {
   const bytes = out(response, 'response');
   const root = S.PRW.getSizePrefixedRootAsPRW(bb(bytes)).unpack();
-  if (!root.EXECUTION_RESULT) throw new Error('propagator/hpop: no execution result');
+  if (!root.EXECUTION_RESULT) throw new Error('propagator/ffm: no execution result');
   const samples = root.EXECUTION_RESULT.SAMPLES;
-  if (samples.length !== requested.length) throw new Error(`propagator/hpop: ${samples.length} samples for ${requested.length} requested`);
+  if (samples.length !== requested.length) throw new Error(`propagator/ffm: ${samples.length} samples for ${requested.length} requested`);
   const scale = [1e-3, 1e-3, 1e-3, 1e-3, 1e-3, 1e-3];
   return samples.map((s, i) => {
     const st = s.STATE.STATE;
@@ -144,7 +144,7 @@ export function decodeExecution(response, requested) {
   });
 }
 
-// The Sun (NAIF 10) relative to the Earth, GCRF km, from HPOP's ephemeris
+// The Sun (NAIF 10) relative to the Earth, GCRF km, from FFM's ephemeris
 // at a TDB instant.
 export function sunRequest(tdb) {
   return frame('request', 'PRW', finish(t('PRW', { EPHEMERIS_REQUEST: t('PRWEphemerisRequest', { EPOCH: instant(tdb, 'TDB'), TARGET_NAIF_ID: 10, CENTER_NAIF_ID: 399 }) }), '$PRW', { sizePrefixed: true }));

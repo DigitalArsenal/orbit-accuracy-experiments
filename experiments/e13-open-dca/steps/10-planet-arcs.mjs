@@ -55,7 +55,7 @@ for (const j of mine) {
     const r = await env.energyArc(A, B, { b0, cr: P.arc.crAreaOverMass, sigma: P.arc.sigma });
     if (r.B > 0) last.set(j.hwid, r.B);
     appendJsonl(outFile, { hwid: j.hwid, ttA: j.a.ttMs, ttB: j.b.ttMs, utcA: isoZ(A.ms), utcB: isoZ(B.ms), hours: j.hours, cdAreaOverMass: r.B, sigmaB: r.sigmaB, energyMismatchJkg: r.energyMismatchJkg,
-      energySensitivity: r.energySensitivity, iterations: r.iterations, hpopCalls: r.hpopCalls, seconds: r.seconds, steps: r.steps, altitudeKm: r.altitudeKm, nonPositive: !!r.nonPositive,
+      energySensitivity: r.energySensitivity, iterations: r.iterations, ffmCalls: r.ffmCalls, seconds: r.seconds, steps: r.steps, altitudeKm: r.altitudeKm, nonPositive: !!r.nonPositive,
       planetBallistic: { a: j.a.ballisticKgPerM2, b: j.b.ballisticKgPerM2 }, profile, crAreaOverMass: P.arc.crAreaOverMass, startedFrom: b0 });
   } catch (error) {
     appendJsonl(outFile, { hwid: j.hwid, ttA: j.a.ttMs, ttB: j.b.ttMs, error: String(error.message ?? error).slice(0, 300), profile });

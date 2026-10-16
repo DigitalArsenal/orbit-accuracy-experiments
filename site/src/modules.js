@@ -31,7 +31,7 @@ export async function fetchText(url) {
 }
 
 // relative: the module's path in space-data-network-modules, e.g.
-// 'propagator/hpop'; its artifact and manifest are under ./modules/. The
+// 'propagator/ffm'; its artifact and manifest are under ./modules/. The
 // invoke surface is the one the manifest advertises (direct when offered).
 export async function loadModule(relative) {
   const [wasm, manifest] = await Promise.all([fetchBytes(`./modules/${relative}/module.wasm`), fetchJson(`./modules/${relative}/plugin-manifest.json`)]);

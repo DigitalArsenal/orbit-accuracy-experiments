@@ -6,7 +6,7 @@
 // orbit computation is a module's (methods.mjs); this file assembles inputs.
 import { decodeOemStream } from '../../harness/records.mjs';
 import { DAY_MS, config, coefficients, forcesOf } from './common.mjs';
-import { conditioned, epochStates, fitArc, hpopErrors, sgp4Errors, withParameters } from './methods.mjs';
+import { conditioned, epochStates, fitArc, ffmErrors, sgp4Errors, withParameters } from './methods.mjs';
 import { correctSets } from './e1.mjs';
 import { ObjectHistory } from './debias.mjs';
 import { ManeuverHistory } from './maneuvers.mjs';
@@ -108,12 +108,12 @@ export class Engine {
       let state = source.states[sample.index];
       if (spec.sets === 'debiased') state = (await epochStates(this.ctx['epoch-state'], [await setOf(sample.index)]))[0];
       if (!state) return { failure: 'analysis/epoch-state refused the set', info };
-      return { ...(await hpopErrors(this.ctx, state, sample.epochMs, sample.targets, { forces, coefficients: coeffs, ...env })), info };
+      return { ...(await ffmErrors(this.ctx, state, sample.epochMs, sample.targets, { forces, coefficients: coeffs, ...env })), info };
     }
     if (spec.method === 'truth') {
       const t0 = sample.targets[0];
       if (t0.missing) return { failure: 'no truth state at 0 h', info };
-      return { ...(await hpopErrors(this.ctx, { epoch: t0.epoch.replace(/Z$/, ''), state: [...t0.r, ...t0.v].map((x) => x * 1000) }, t0.ms, sample.targets, { forces, coefficients: coeffs, ...env })), info };
+      return { ...(await ffmErrors(this.ctx, { epoch: t0.epoch.replace(/Z$/, ''), state: [...t0.r, ...t0.v].map((x) => x * 1000) }, t0.ms, sample.targets, { forces, coefficients: coeffs, ...env })), info };
     }
     if (spec.method !== 'arc') throw new Error(`unknown method ${spec.method}`);
 
@@ -155,7 +155,7 @@ export class Engine {
       list.forEach((p, i) => { apriori[(6 + i) * n + 6 + i] = p.sigma * p.sigma; });
       return { parameters, r: await fitArc(this.ctx, reference, sample.epochMs, observations, { parameters, apriori, forces, fixed, ...env }) };
     };
-    // HPOP refuses a negative Cd*A/m; when a B fit asks for one, the arc is
+    // FFM refuses a negative Cd*A/m; when a B fit asks for one, the arc is
     // fitted again with the regime's fallback (an in-track acceleration, B
     // held at its starting value).
     let attempt;
@@ -169,12 +169,12 @@ export class Engine {
       attempt = await fitWith(regime.arcFallbackParameters);
     }
     const { parameters, r } = attempt;
-    info.fit = { status: r.status, hpopCalls: r.hpopCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare,
+    info.fit = { status: r.status, ffmCalls: r.ffmCalls, iterations: r.fit?.iterations, converged: r.fit?.converged, reducedChiSquare: r.fit?.reducedChiSquare,
       parameterKinds: parameters.map((p) => p.kind), parameters: r.fit?.estimate?.slice(6) };
     if (!r.fit?.converged) return { failure: `fit not converged (status ${r.status})`, info };
     const fitted = withParameters(fixed, parameters, r.fit.estimate.slice(6));
     const covariance = spec.covariance ? conditioned(r.fit.covariance.map((v) => v * Math.max(1, r.fit.reducedChiSquare))) : null;
-    return { ...(await hpopErrors(this.ctx, { epoch: reference.epoch, state: r.fit.estimate.slice(0, 6) }, sample.epochMs, sample.targets,
+    return { ...(await ffmErrors(this.ctx, { epoch: reference.epoch, state: r.fit.estimate.slice(0, 6) }, sample.epochMs, sample.targets,
       { forces, coefficients: fitted, parameters, covariance, ...env })), info };
   }
 }

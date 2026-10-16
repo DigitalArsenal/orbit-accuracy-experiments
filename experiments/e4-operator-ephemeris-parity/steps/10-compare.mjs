@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // E4 step 10: one provider's comparison (PLAN.md section 4). For each
 // operator file and object: the operator's GCRF states at the horizons, the
-// element set at the cut-off, product S (SGP4) and H (HPOP resident with
+// element set at the cut-off, product S (SGP4) and H (FFM resident with
 // covariance), their RTN differences from the operator, and, where truth
 // exists, every one of them against truth. Rows go to runs/<id>/rows.jsonl.gz
 // (derived from element sets: never committed).
@@ -210,7 +210,7 @@ function truthStates(norad, epochs) {
 
 const rowsFile = path.join(run.dir, 'rows.jsonl');
 fs.writeFileSync(rowsFile, '');
-const counts = { cases: all.length, skipped: all.filter((c) => c.skipped).map((c) => ({ file: c.file, token: c.token, hwid: c.hwid, reason: c.skipped })), compared: 0, withoutSet: 0, hpopUnavailable: {} };
+const counts = { cases: all.length, skipped: all.filter((c) => c.skipped).map((c) => ({ file: c.file, token: c.token, hwid: c.hwid, reason: c.skipped })), compared: 0, withoutSet: 0, ffmUnavailable: {} };
 let done = 0;
 for (const c of list) {
   const set = setAt(sets.get(c.norad), Date.parse(c.tc), c.notAfter ? Date.parse(c.notAfter) : Date.parse(c.tc));
@@ -218,8 +218,8 @@ for (const c of list) {
   if (!set) { ++counts.withoutSet; fs.appendFileSync(rowsFile, `${JSON.stringify({ ...row, skipped: 'no element set at the cut-off' })}\n`); continue; }
   Object.assign(row, { setEpoch: set.epoch, setCreated: set.creationDate, setAgeAtCutoffDays: (Date.parse(c.tc) - epochMs(set.epoch)) / DAY_MS });
   const S = await ctx.sgp4Errors(set, c.norad, c.states);
-  const H = await ctx.hpop(set, c.norad, c.states);
-  if (H.reason) counts.hpopUnavailable[H.reason] = (counts.hpopUnavailable[H.reason] ?? 0) + 1;
+  const H = await ctx.ffm(set, c.norad, c.states);
+  if (H.reason) counts.ffmUnavailable[H.reason] = (counts.ffmUnavailable[H.reason] ?? 0) + 1;
   const P = c.operatorTle ? await ctx.sgp4Errors(c.operatorTle, c.norad, c.states) : null;
   const truth = truthStates(c.norad, c.states.map((s) => Date.parse(s.epoch)));
   const truthList = c.states.filter((s) => truth.has(Date.parse(s.epoch))).map((s) => ({ epoch: s.epoch, state: truth.get(Date.parse(s.epoch)) }));
@@ -261,6 +261,6 @@ fs.writeFileSync(`${rowsFile}.gz`, zlib.gzipSync(fs.readFileSync(rowsFile)));
 fs.rmSync(rowsFile);
 run.write('counts.json', counts);
 run.finish({ provider, counts: { cases: counts.cases, compared: counts.compared, withoutSet: counts.withoutSet, skipped: counts.skipped.length } });
-log(`compared ${counts.compared}; without element set ${counts.withoutSet}; skipped ${counts.skipped.length}; HPOP unavailable ${JSON.stringify(counts.hpopUnavailable)}`);
+log(`compared ${counts.compared}; without element set ${counts.withoutSet}; skipped ${counts.skipped.length}; FFM unavailable ${JSON.stringify(counts.ffmUnavailable)}`);
 await ctx.destroy();
 if (sp3) await sp3.destroy();

@@ -1,6 +1,6 @@
 // E6's anchored orbit fit (PLAN.md §4.3): analysis/estimation `fit_batch`
 // (batch least squares of the GCRF state and the drag parameter B), answered
-// by propagator/hpop with the full force model, on the object's element-set
+// by propagator/ffm with the full force model, on the object's element-set
 // history (each set's epoch state as a full-state pseudo-observation with
 // the GP error model's at-epoch covariance) and sparse public measurements
 // (SatNOGS range rates; ILRS laser ranges; optical RA/Dec).
@@ -18,7 +18,7 @@
 // measurement prediction is a module's.
 import { EST_TYPE, decodeResult, seedStruct } from '../e2-catalog-covariance/estimation-wire.mjs';
 import { estEpoch } from '../e2-catalog-covariance/product.mjs';
-import { decodeSamples, executionFrame } from '../../harness/hpop-execution.mjs';
+import { decodeSamples, executionFrame } from '../../harness/ffm-execution.mjs';
 
 export { conditioned } from '../e2-catalog-covariance/product.mjs';
 
@@ -37,7 +37,7 @@ function observation(epoch, o, flags) {
 // One fit_batch solution. obs [{epoch ISO, kind, values, covariance (value_count^2, GCRF for PV), station, stationVelocity, media}],
 // reference {epoch ISO, state, parameters?} (first guess, at or before every observation).
 async function solve(ctx, obs, reference, settings) {
-  const { estimation, hpop, codec, inputs } = ctx;
+  const { estimation, ffm, codec, inputs } = ctx;
   const isoByLabel = new Map(obs.map((o) => [JSON.stringify(estEpoch(o.epoch)), o.epoch]));
   const request = {
     config: {
@@ -47,7 +47,7 @@ async function solve(ctx, obs, reference, settings) {
     },
     extended_observations: obs.map((o) => ({ observation: observation(estEpoch(o.epoch), o, settings.flags?.[o.kind] ?? 3), values: o.values, sigmas: o.values.map(() => 1) })),
     ...(settings.errorModels ? { error_models: settings.errorModels } : {}),
-    propagator_port_id: 'propagator/hpop', propagator_capability: 'plugin_propagate plugin_compute_stm',
+    propagator_port_id: 'propagator/ffm', propagator_capability: 'plugin_propagate plugin_compute_stm',
     batch_options: {
       parameter_kinds: settings.parameters.map((p) => ({ DRAG_AREA_OVER_MASS: 1, DRAG_AREA_OVER_MASS_RATE: 2, SRP_AREA_OVER_MASS: 3, IN_TRACK_ACCELERATION: 4 })[p.kind]),
       parameter_values: reference.parameters ?? settings.parameters.map((p) => p.value),
@@ -58,20 +58,20 @@ async function solve(ctx, obs, reference, settings) {
     },
   };
   const answers = [];
-  let hpopCalls = 0;
+  let ffmCalls = 0;
   for (let round = 0; ; ++round) {
     const response = await estimation.invoke('fit_batch', [{ portId: 'request', typeRef: EST_TYPE, payload: codec.encode({ request, propagation_answers: answers }) }]);
     const out = decodeResult(response.outputs.find((o) => o.portId === 'result').payload);
-    if (out.status !== 1) return { fit: out.fit, status: out.status, hpopCalls };
+    if (out.status !== 1) return { fit: out.fit, status: out.status, ffmCalls };
     const q0 = out.queries[0];
     const parameters = settings.parameters.map((p, i) => ({ kind: p.kind, value: q0.parameter_values[i] }));
     // One sample per distinct epoch (two stations may share an instant).
     const epochs = [...new Set(out.queries.map((q) => isoByLabel.get(JSON.stringify(q.target_epoch))))];
-    const unique = decodeSamples(await hpop.invoke('invoke', [
+    const unique = decodeSamples(await ffm.invoke('invoke', [
       executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: epochs, forces: settings.forces, parameters, fixed: settings.fixed, stm: true, covariance: null, noise: null, integrator: settings.integrator }),
       ...inputs,
     ]));
-    ++hpopCalls;
+    ++ffmCalls;
     const byEpoch = new Map(epochs.map((e, i) => [e, unique[i]]));
     out.queries.forEach((q) => {
       const s = byEpoch.get(isoByLabel.get(JSON.stringify(q.target_epoch))), n = s.n, stm = [], sensitivity = [];
@@ -118,7 +118,7 @@ export async function fitOrbit(ctx, segments, priors, reference, settings, optio
   const status = segments.map(() => ({ rms: null, edited: false }));
   const correction = (p) => (segments[p.si].nuisance ? segments[p.si].nuisance.basis(p).reduce((a, phi, i) => a + phi * theta[p.si][i], 0) : 0);
   let guess = { ...reference };
-  let result = null, hpopCalls = 0, lastChange = Infinity, rounds = 0;
+  let result = null, ffmCalls = 0, lastChange = Infinity, rounds = 0;
   // Rounds: the nuisance iterations; without nuisance terms, one round, or
   // two when the first one is weighted down (a robust start).
   const hasNuisance = segments.some((s) => s.nuisance);
@@ -139,8 +139,8 @@ export async function fitOrbit(ctx, segments, priors, reference, settings, optio
       if (result) { result.stoppedBy = e.message.slice(0, 200); break; }
       throw e;
     }
-    hpopCalls += out.hpopCalls;
-    if (!out.fit || !out.fit.estimate?.length) return { failed: `fit_batch status ${out.status}`, hpopCalls };
+    ffmCalls += out.ffmCalls;
+    if (!out.fit || !out.fit.estimate?.length) return { failed: `fit_batch status ${out.status}`, ffmCalls };
     result = { ...out, obs };
     guess = { epoch: reference.epoch, state: out.fit.estimate.slice(0, 6), parameters: out.fit.estimate.slice(6) };
     rounds = outer + 1;
@@ -176,17 +176,17 @@ export async function fitOrbit(ctx, segments, priors, reference, settings, optio
   }
   return {
     fit: result.fit, status: result.status, epoch: reference.epoch, state: result.fit.estimate.slice(0, 6), parameters: result.fit.estimate.slice(6),
-    nuisance: segments.map((s, i) => ({ key: s.key, theta: theta[i], ...status[i] })), hpopCalls, lastChange, outer: rounds, stoppedBy: result.stoppedBy ?? null,
+    nuisance: segments.map((s, i) => ({ key: s.key, theta: theta[i], ...status[i] })), ffmCalls, lastChange, outer: rounds, stoppedBy: result.stoppedBy ?? null,
     measurementsUsed: points.length,
   };
 }
 
 // The fitted product at sample epochs (ISO UTC, ascending, at or after its
-// epoch) with its covariance over state and parameters propagated by HPOP:
+// epoch) with its covariance over state and parameters propagated by FFM:
 // [{epoch, state [m, m/s], covariance [n*n], n}].
 export async function propagateFit(ctx, product, samples, settings, covariance) {
   const parameters = settings.parameters.map((p, i) => ({ kind: p.kind, value: product.parameters[i] }));
-  return decodeSamples(await ctx.hpop.invoke('invoke', [
+  return decodeSamples(await ctx.ffm.invoke('invoke', [
     executionFrame({ epoch: product.epoch, state: product.state, samples, forces: settings.forces, parameters, fixed: settings.fixed,
       stm: false, covariance, noise: settings.processNoise ?? null, integrator: settings.integrator }),
     ...ctx.inputs,

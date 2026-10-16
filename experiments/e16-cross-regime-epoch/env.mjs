@@ -18,7 +18,7 @@ const mjd = (ms) => Math.floor(ms / DAY_MS) + 40587;
 const dayIso = (ms) => new Date(ms).toISOString().slice(0, 10);
 
 export async function q2Context(run) {
-  const names = ['propagator/hpop', 'analysis/estimation', 'analysis/gp-error-model', 'analysis/epoch-state', 'analysis/maneuver-detection', 'foundation/frames', 'foundation/time', 'data-source/eop-parser', 'analysis/density-calibration'];
+  const names = ['propagator/ffm', 'analysis/estimation', 'analysis/gp-error-model', 'analysis/epoch-state', 'analysis/maneuver-detection', 'foundation/frames', 'foundation/time', 'data-source/eop-parser', 'analysis/density-calibration'];
   const loaded = {};
   for (const n of names) loaded[n] = await loadPinned(n, run);
   const kernelPath = path.join(repoRoot, config.inputs.kernel.path);
@@ -40,7 +40,7 @@ export async function q2Context(run) {
     ...ctx,
     'gp-error-model': loaded['analysis/gp-error-model'], 'epoch-state': loaded['analysis/epoch-state'], 'maneuver-detection': loaded['analysis/maneuver-detection'],
     codec, set, gfz, rsga,
-    // E7's contract (methods.mjs fitArc and hpopErrors call it): the environment frames for a propagation over
+    // E7's contract (methods.mjs fitArc and ffmErrors call it): the environment frames for a propagation over
     // [fromMs, toMs]. env: {drivers: 'released' | 'published', cutoffMs, a00 (K, JB2008 only) | null}.
     inputsFor(fromMs, toMs, forces, env) {
       const from = mjd(fromMs) - 2, to = mjd(toMs) + 2;

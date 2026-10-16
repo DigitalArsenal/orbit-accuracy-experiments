@@ -10,7 +10,7 @@ with their reasons.
 
 Lane: claude-e14 (branch `task/covariance-realism-20261010`). Modules:
 `space-data-network-modules` branch `task/covariance-models-20261010`
-(section 10); `propagator/hpop` 1.2.0 through its execution path until
+(section 10); `propagator/ffm` 1.2.0 through its execution path until
 1.3.0 (resident full force) lands.
 
 Owner, 2026-10-10: "Let's do covariance first since we need that to do PoC"
@@ -37,7 +37,7 @@ every cell of
 | ID | Products | Covariance |
 | --- | --- | --- |
 | S1 | Operator ephemerides that carry covariance: SpaceX Starlink MEME files (UVW covariance per state), Planet `<hwid>_oem.txt` (CCSDS OEM with covariance) | The operator's, scaled by factors fitted per horizon |
-| S2 | Our HPOP products: full-force HPOP from an element set's epoch state, the CA screen's HPOP product | Epoch covariance P₀ through HPOP's STM, consider terms (Cd·A/m, density forecast), white-acceleration process noise Q per regime |
+| S2 | Our FFM (Full Force Model) products: full-force FFM from an element set's epoch state, the CA screen's FFM product | Epoch covariance P₀ through FFM's STM, consider terms (Cd·A/m, density forecast), white-acceleration process noise Q per regime |
 | S3 | Objects with element sets only (most debris) | E2b's measured-error model (T0) per regime and age, with calibration factors by regime and age |
 | S4 | The density-forecast consider term (an open Dynamic Consider Parameter, DCP) in LEO | NOAA SWPC issued forecasts against GFZ observed drivers → density error by lead (NRLMSISE-00) → B·ρ consider variance → along-track growth; enters S2 |
 
@@ -77,10 +77,10 @@ read). Marks: **R** read in full, **A** abstract only, **M** metadata only.
 | Horwood, Aristoff, Singh, Poore & Hejduk 2014, *Beyond covariance realism* (SPIE 9092, doi:10.1117/12.2054268); Poore et al. 2016, *Covariance and uncertainty realism in SST* (working-group report, DTIC AD1020892) | Realism metrics (d², its χ² tests, uncertainty realism beyond Gaussian) | M |
 | Vallado & Seago 2009, *Covariance realism* (AAS 09-304) | Survey of covariance realism practice | M |
 | Osweiler 2006 (AFIT thesis); Flohrer, Krag & Klinkrad 2008 (AMOS); Geul, Mooij & Noomen 2017 (ASR, doi:10.1016/j.asr.2017.02.038); Thompson et al. 2019 (AMOS) | Element-set covariance from differences of element sets (scored in E2/E2b: overconfident) | as in E2b: Thompson R, others M |
-| Canal, Cano, Martínez & Hernández 2026 (Acta Astronaut., doi:10.1016/j.actaastro.2026.01.063) | Covariance estimation and fusion for ephemeris-only catalogues, applied to the SP catalogue | M |
+| Canal, Cano, Martínez & Hernández 2026 (Acta Astronaut., doi:10.1016/j.actaastro.2026.01.063) | Covariance estimation and fusion for ephemeris-only catalogues, applied to the SP catalog | M |
 | Palmer 2024, stochastic drag model for uncertainty realism of LEO predictions (JAS, doi:10.1007/s40295-024-00441-y) | Drag noise model for realism | M |
 | Dyreby, Caldas & Soares 2025 (arXiv:2510.11242) | Quality of SpaceX's published Starlink ephemerides against numerical propagation | A |
-| E2, E2b, E6 (this repository) | E2: OMM-difference covariance 100–300× overconfident on GPS; E2b: measured-error T0 consistent only in SLR-LEO at some horizons, heavy tails; E6: laser-range fits' formal covariance 16–21× overconfident, OMM-history HPOP fits realistic (0.68–0.83) | R |
+| E2, E2b, E6 (this repository) | E2: OMM-difference covariance 100–300× overconfident on GPS; E2b: measured-error T0 consistent only in SLR-LEO at some horizons, heavy tails; E6: laser-range fits' formal covariance 16–21× overconfident, OMM-history FFM fits realistic (0.68–0.83) | R |
 | E13 (branch `task/e13-open-dca-20261010`) | SpaceX stated vs realised start mismatch: first sample 5–10× pessimistic at 6.5 h | R |
 
 **What is known.** Realism testing by d² against χ²₃ per propagation bin,
@@ -99,7 +99,7 @@ Gondelach). LeoLabs' realism was checked against itself.
    consider variance is fitted on a development window and scored once on a
    later window.
 2. *Every public source, one footing.* Operator ephemerides (two operators,
-   fleet scale), element sets, HPOP products and the DCP, all scored against
+   fleet scale), element sets, FFM products and the DCP, all scored against
    independent precise orbits (or fresh operator orbit determinations for
    operator files), in one regime × horizon table with one rule.
 3. *An open DCP.* The density-forecast consider term derived only from
@@ -126,7 +126,7 @@ interval (objects resampled; 2000 resamples; seed 20261010), the 95 %
 coverage (share of d² ≤ 7.8147, the χ²₃ 0.95 quantile) with its interval,
 the CvM W² of F_χ²₃(d²) with the design effect (E2's statistics), per-axis
 mean and RMS of z = e/σ (the bias Halpin et al. test per axis), the energy
-score in metres (Gneiting & Raftery 2007; 200 draws; sharpness, Carpenter's
+score in meters (Gneiting & Raftery 2007; 200 draws; sharpness, Carpenter's
 point), the log score, the median predicted σ per axis, and the share of
 samples removed by the manoeuvre screen (section 8).
 
@@ -144,7 +144,7 @@ sets, WGS-84 for states): LEO-L below 500 km, LEO-M 500–800 km, LEO-H
 with e < 0.25 are counted and not scored.
 
 **Horizons.** τ ∈ {0, 0.5, 1, 2, 3, 5, 7} days from the product's reference
-time: the element set's epoch (S3), the element set's epoch for the HPOP
+time: the element set's epoch (S3), the element set's epoch for the FFM
 product's epoch state (S2), the older file's first state (S1). For S2 and S3
 the target is the first truth epoch at or after reference + τ, within the
 truth's sampling interval (E2b's rule). For S1 the target is the newer
@@ -182,11 +182,11 @@ its selection entry, 12 hex>`).
   operator's product. Pairs whose older file does not cover the newer start
   are not pairs.
 
-### S2 — HPOP products
+### S2 — FFM products
 
-The catalog's HPOP screen product: the GCRF state at an element set's epoch
+The catalog's FFM screen product: the GCRF state at an element set's epoch
 (`analysis/epoch-state`, as the CA paper's screen), propagated by
-`propagator/hpop` 1.2.0's execution path with the full force model (EGM2008
+`propagator/ffm` 1.2.0's execution path with the full force model (EGM2008
 70 × 70, Sun and Moon from DE440, SRP cannonball with conical shadow,
 NRLMSISE-00 drag on the space weather public at the element set's creation,
 IERS 2010 solid tides, relativity; `harness/cutoff-environment.mjs` for the
@@ -194,14 +194,14 @@ drivers as issued). B (Cd·A/m) from the element set's B*, Cr·A/m from the
 object class, as E7.
 
 - P(t) = Φ P₀ Φᵀ + Φ_c P_c Φ_cᵀ + Q(q) (+ P_DCP(t) in LEO, S4).
-- P₀: per regime, the second moment about zero of the HPOP state's error
+- P₀: per regime, the second moment about zero of the FFM state's error
   against truth at its first truth epoch after the set's epoch, dev-fit,
-  clipped at 5 robust σ (`gp-error-model hpop_coverage` mode `epoch`).
+  clipped at 5 robust σ (`gp-error-model ffm_coverage` mode `epoch`).
 - Consider: B with σ_B/B from dev-fit (the spread of the object's B* over the
   30 days before the set, Hejduk's frontal-area DCP in spirit; LEO only),
-  through HPOP's B sensitivity columns.
+  through FFM's B sensitivity columns.
 - Q: white-acceleration spectral densities (q_R, q_T, q_N) per regime by
-  maximum likelihood on dev-fit (`hpop_coverage` mode `fit`, discretization
+  maximum likelihood on dev-fit (`ffm_coverage` mode `fit`, discretization
   600 s), with P₀, consider and DCP in place.
 - **Candidates.** S2-P0 (P₀ only), S2-Q (P₀ + Q), S2-QC (P₀ + consider B +
   Q), S2-QCD (S2-QC + DCP, LEO; elsewhere S2-QC).
@@ -212,11 +212,11 @@ SGP4 from the element set (as the CA screen uses it), with a synthesized
 covariance.
 
 - **T(regime, age)**: E2b's T0 product re-measured on E14's regimes: per
-  regime and age bin (bins centred on the horizons: [0, 0.25), [0.25,
+  regime and age bin (bins centered on the horizons: [0, 0.25), [0.25,
   0.75), [0.75, 1.5), [1.5, 2.5), [2.5, 4), [4, 6), [6, 8) days), the 6 × 6
   RTN second moment about zero of SGP4 errors against truth on dev-fit
   (manoeuvre-screened), clipped at 5 robust σ per component (the
-  `gp-error-model` rule), interpolated linearly in age between bin centres.
+  `gp-error-model` rule), interpolated linearly in age between bin centers.
 - **Candidates.** S3-T: T. S3-TU: the unclipped second moment. S3-KC:
   k²(regime, age)·T with k² such that the dev-fit 95 % coverage is 0.95.
   S3-KO: κ_obj²·S3-KC, κ_obj² the object's own mean of dᵀS(g)⁻¹d/3 over its
@@ -231,7 +231,7 @@ covariance.
 1. **Forecast errors.** For each RSGA issue (22:00 UTC, day d): predicted
    F10.7 and Ap for days d+1..d+3; for days d+4..d+7 the day-3 values held
    (what a chain without a longer forecast does). Observed: GFZ's F10.7 and
-   ap/Ap. The 81-day centred F10.7 mean is held at the issue's last observed
+   ap/Ap. The 81-day centered F10.7 mean is held at the issue's last observed
    value.
 2. **Density error by lead.** δ_k = ln ρ(forecast drivers) − ln ρ(observed
    drivers), NRLMSISE-00 (`propagator/atmosphere`), averaged over a fixed
@@ -247,7 +247,7 @@ covariance.
    effective constant density error over [t_i, t] has variance
    σ_eff²(t) = wᵀ C_δ w with w_k(t) = 2 ∫_{day k ∩ [t_i, t]} (t − s) ds / (t − t_i)²
    (at three days: 5/9, 3/9, 1/9, Hejduk's weights). The consider covariance
-   is P_DCP(t) = σ_eff²(t) g(t) g(t)ᵀ, g(t) = B ∂x(t)/∂B from HPOP's
+   is P_DCP(t) = σ_eff²(t) g(t) g(t)ᵀ, g(t) = B ∂x(t)/∂B from FFM's
    sensitivity columns, from the issue time (the DCP applies only forward
    of the present, Hejduk 2019).
 5. **Published fields.** σ_eff at each output epoch and g (the CDM's DCP
@@ -385,7 +385,7 @@ modules on synthetic data with known answers:
    factors within 2 %, and the coverage-matched factor within 3 %.
 3. `calibrate_covariance` returns k²T rotated to GCRF; rotating back gives
    k²T to 1e-12 relative, and a cell's version and status are carried.
-4. The process-noise MLE (`hpop_coverage fit`) recovers a known q from
+4. The process-noise MLE (`ffm_coverage fit`) recovers a known q from
    errors simulated as A + qU (A and U known) within 10 %.
 5. `dcp_covariance`: w at 3 days is (5/9, 3/9, 1/9) to 1e-12; for errors
    simulated with a known lead covariance, the realised along-track
@@ -403,11 +403,11 @@ new source file `covariance_realism.cpp`), with tests and tri-runtime parity
 | `fit_calibration` | samples (stratum, RTN error, RTN covariance) and a method (`scalar-mle`, `axes-mle`, `coverage`) → factors per stratum with counts | S1, S3 factors |
 | `calibrate_covariance` | a frozen model (S1 factors, S3 T and k², or S2 terms), objects (state, epoch, reference time, native covariance if any) → calibrated 6 × 6 covariance in RTN and inertial axes, its cell, version and status | catalog products, the CA screen |
 | `dcp_covariance` | lead covariance C_δ, issue time, output epochs, sensitivities g → σ_eff, weights, P_DCP | S4 |
-| `noise_responses` | one propagation's STM at every step end of HPOP's process-noise discretization → the unit white-acceleration responses U_R, U_T, U_N at the targets | S2 (one HPOP run per anchor instead of four) |
+| `noise_responses` | one propagation's STM at every step end of FFM's process-noise discretization → the unit white-acceleration responses U_R, U_T, U_N at the targets | S2 (one FFM run per anchor instead of four) |
 
-Existing methods used: `common_epoch`, `map_covariance`, `hpop_arcs`,
-`hpop_coverage` (P₀ and Q), `screening_cases`; `propagator/atmosphere`
-NRLMSISE-00; `propagator/hpop` 1.2.0; `analysis/epoch-state`;
+Existing methods used: `common_epoch`, `map_covariance`, `ffm_arcs`,
+`ffm_coverage` (P₀ and Q), `screening_cases`; `propagator/atmosphere`
+NRLMSISE-00; `propagator/ffm` 1.2.0; `analysis/epoch-state`;
 `analysis/maneuver-detection`; `foundation/frames`. JavaScript here only
 moves records, converts units at the boundaries, dispatches, and computes
 statistics on module outputs.
@@ -427,7 +427,7 @@ statistics on module outputs.
   `Uncalibrated`), and, in LEO, the DCP's σ_eff and sensitivity vectors as
   user-defined parameters.
 
-## 12. Compute, data and licences
+## 12. Compute, data and licenses
 
 At most three processes of this experiment at once (the S1 collector is one;
 it is network-bound). Before each heavy step the load average is read; above
@@ -491,12 +491,12 @@ been read). Development results that informed a change are named.
   no ocean tides or Earth radiation, which the catalog's 1.3.0 profile has.
   B from B* and Cr·A/m 0.02 m²/kg are the catalog run's own assumptions (B
   0.01 m²/kg where B* ≤ 0). Anchors are one per object every 6 days (was 3).
-  P₀ is S3-T's age-0 stratum: the same quantity `hpop_coverage` mode `epoch`
+  P₀ is S3-T's age-0 stratum: the same quantity `ffm_coverage` mode `epoch`
   measures (the epoch state's error at the first truth epoch), from the S3
   samples. Each anchor is one run with P₀, one dynamic parameter (Cd·A/m in
-  LEO, Cr·A/m above, σ(ln) 0.2) and its STM at every step end of HPOP's
+  LEO, Cr·A/m above, σ(ln) 0.2) and its STM at every step end of FFM's
   noise discretization; `noise_responses` (new) gives the three unit noise
-  responses from that STM. Against HPOP's own `PROCESS_NOISE` on a Swarm A arc
+  responses from that STM. Against FFM's own `PROCESS_NOISE` on a Swarm A arc
   at 1.3 days they agree within 2.1e-3 (R), 2.3e-5 (T), 4.1e-4 (N).
 - **2026-10-10, S1 regimes from E13.** E13's pair records hold no state; their
   regime is from the newer start's geodetic altitude.

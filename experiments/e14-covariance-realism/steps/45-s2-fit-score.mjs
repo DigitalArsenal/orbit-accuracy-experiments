@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // E14 step 45: S2's candidates (PLAN.md section 4): S2-P0 (A0 only), S2-Q (A0 + Q), S2-QC (A0 + the parameter's
 // consider term + Q), S2-QCD (S2-QC + the DCP in LEO, shrinkage 0, 0.5 or 1). Q per regime and candidate by maximum
-// likelihood on dev-fit (gp-error-model hpop_coverage mode fit: P = base + sum q_k U_k). Scoring: gp-error-model
+// likelihood on dev-fit (gp-error-model ffm_coverage mode fit: P = base + sum q_k U_k). Scoring: gp-error-model
 // pair_statistics with the covariance as weighted terms and the truth's stated sigma (isotropic) as its covariance:
 // d^2 against the combined covariance (PLAN.md section 3); the cell statistics here.
 //   --fit --runs <step-40 dev-fit runs>          writes results/e14/dev/s2-models.json
@@ -49,14 +49,14 @@ if (values.fit) {
   }
   const list = [...arcs.values()];
   const regimeIndex = new Map(config.regimes.map((x, i) => [x.id, i]));
-  const plan = { kind: 'hpop-arc-plan', version: 1, arcs: list.map((a, i) => ({ arc: i, norad: a.norad, regimeIndex: regimeIndex.get(a.regime), regime: a.regime,
+  const plan = { kind: 'ffm-arc-plan', version: 1, arcs: list.map((a, i) => ({ arc: i, norad: a.norad, regimeIndex: regimeIndex.get(a.regime), regime: a.regime,
     targets: a.rows.map((r) => ({ epoch: r.epoch, nominalDays: r.tau, ageDays: r.ageDays, truth: r.truth.map((x) => x / 1000) })) })) };
-  const model0 = { kind: 'hpop-covariance-model', version: 1, regimes: config.regimes.map((x, i) => ({ regimeIndex: i, regime: x.id, p0: Array(21).fill(0).map((_, k) => ([0, 2, 5, 9, 14, 20].includes(k) ? 1e-6 : 0)) })) };
+  const model0 = { kind: 'ffm-covariance-model', version: 1, regimes: config.regimes.map((x, i) => ({ regimeIndex: i, regime: x.id, p0: Array(21).fill(0).map((_, k) => ([0, 2, 5, 9, 14, 20].includes(k) ? 1e-6 : 0)) })) };
   const models = { experiment: config.experiment, fittedOn: windowName, samples: fitRows.length, anchors: list.length, candidates: {} };
   for (const cand of candidates) {
     if (cand === 'S2-P0') { models.candidates[cand] = { q: Object.fromEntries(config.regimes.map((x) => [x.id, [0, 0, 0]])) }; continue; }
     const predictions = { arcs: list.map((a, i) => ({ arc: i, samples: a.rows.map((r) => ({ state: r.state, a: gauss(baseOf(r, cand)), u: r.U.map(gauss) })) })) };
-    const fit = await callJson(gp, 'hpop_coverage', [json('plan', plan), json('predictions', predictions), json('model', model0),
+    const fit = await callJson(gp, 'ffm_coverage', [json('plan', plan), json('predictions', predictions), json('model', model0),
       json('options', { mode: 'fit', window: [`${new Date(w.lo).toISOString().slice(0, 19)}`, `${new Date(w.hi).toISOString().slice(0, 19)}`], regimes: config.regimes,
         ageBinsDays: config.s3AgeBinsDays, discretizationSeconds: config.s2.processNoise.discretizationSeconds })]);
     const q = {};

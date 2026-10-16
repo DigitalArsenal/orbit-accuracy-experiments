@@ -3,13 +3,13 @@
 //   node steps/06-visibility.mjs <scenario: partB | leo | geo> [hours]
 import path from 'node:path';
 import { config, loadModules, modulesDir, msOf, repoPath } from '../common.mjs';
-import { environment } from '../hpop.mjs';
+import { environment } from '../ffm.mjs';
 import { buildScenario, eopRowStream } from '../scenario.mjs';
 
 const which = process.argv[2] ?? 'partB';
 const root = modulesDir();
-const { loaded } = await loadModules(null, ['propagator/hpop', 'foundation/frames', 'foundation/time', 'analysis/access', 'analysis/observation-simulator', 'data-source/eop-parser']);
-const m = { hpop: loaded['propagator/hpop'], frames: loaded['foundation/frames'], time: loaded['foundation/time'], access: loaded['analysis/access'], simulator: loaded['analysis/observation-simulator'], parser: loaded['data-source/eop-parser'] };
+const { loaded } = await loadModules(null, ['propagator/ffm', 'foundation/frames', 'foundation/time', 'analysis/access', 'analysis/observation-simulator', 'data-source/eop-parser']);
+const m = { ffm: loaded['propagator/ffm'], frames: loaded['foundation/frames'], time: loaded['foundation/time'], access: loaded['analysis/access'], simulator: loaded['analysis/observation-simulator'], parser: loaded['data-source/eop-parser'] };
 const arcsec = Math.PI / 180 / 3600;
 const scenarios = {
   partB: () => ({ epoch: config.partB.devSeeds[0].epoch, state: config.partB.state, model: config.forceModels['leo-jb2008'], kernel: path.join(root, config.inputs.kernel2026), cadence: config.partB.sensor.intervalS, hours: 24 }),

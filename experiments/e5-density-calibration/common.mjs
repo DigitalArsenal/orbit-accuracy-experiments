@@ -40,7 +40,7 @@ export function issueDays(spans) {
   return out;
 }
 
-// Modules: hpop, eop-parser and density-calibration from the modules
+// Modules: ffm, eop-parser and density-calibration from the modules
 // checkout; estimation (fit_batch) from its own checkout when configured.
 export const modulesDir = (flag) => modulesRoot({ flag, configured: config.inputs.modules, repoRoot });
 export async function loadModules(run, names, { modules: flag } = {}) {
@@ -97,7 +97,7 @@ export function jb2008Rows(from, to, add = null) {
 
 // ── Daily space weather for NRLMSISE-00 from GFZ's Kp/ap/Ap/F10.7 file ──
 // $SPW rows as CSSI lays them out: Kp x10, ap, daily Ap, observed F10.7 and
-// its 81-day centred mean (the mean of the observed daily values centred on
+// its 81-day centered mean (the mean of the observed daily values centered on
 // the day, as CSSI's F10.7_OBS_CENTER81, over the days GFZ reports: at
 // least 75 of the 81). A day GFZ reports without F10.7 (-1) takes the mean of
 // the nearest reported days before and after it.

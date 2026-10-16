@@ -1,15 +1,15 @@
-// propagator/hpop execution requests for E8: every force the module carries
+// propagator/ffm execution requests for E8: every force the module carries
 // in LEO (config.propagation.forces: EGM2008 70 x 70, Sun, Moon, Venus, Mars
 // and Jupiter from DE440s, cannonball radiation pressure, drag, IERS 2010
 // solid tides and relativity), Cd*A/m as a dynamic parameter or fixed, and
 // the JB2008 drivers. E5's encoder (experiments/e5-density-calibration/
-// hpop.mjs) with the gravity selection, third bodies and relativity of a full
+// ffm.mjs) with the gravity selection, third bodies and relativity of a full
 // force model; E5's decoders and driver frame are reused. Encoding only; SI.
 import * as flatbuffers from 'flatbuffers';
 import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
 import { PRW_TYPE, instant } from '../../harness/prw.mjs';
 
-export { decodeSamples, jb2008Frame } from '../e5-density-calibration/hpop.mjs';
+export { decodeSamples, jb2008Frame } from '../e5-density-calibration/ffm.mjs';
 
 const table = (name, fields = {}) => Object.assign(new P[`${name}T`](), fields);
 const vector = (v) => table('FRMVector3', { X: v[0], Y: v[1], Z: v[2] });

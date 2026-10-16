@@ -1,4 +1,4 @@
-// $PRW framing for propagator/hpop's `invoke` method (SDS 1.240.0 PRW
+// $PRW framing for propagator/ffm's `invoke` method (SDS 1.240.0 PRW
 // execution request and result, Earth orientation and space weather arms).
 // Encoding and unit scaling only (km <-> m); the propagation, frames and time
 // scales are the module's.
@@ -83,11 +83,11 @@ export function kernelFrame(bytes) {
   return { portId: 'kernel', typeRef: PRW_TYPE, payload: encode('NATIVE_INPUT', table('PRWNativeInput', { DESCRIPTOR: descriptor, CONTENT: Array.from(bytes) })) };
 }
 
-// Resident catalog (propagator/hpop `ingest_state` / `propagate_state`), which
+// Resident catalog (propagator/ffm `ingest_state` / `propagate_state`), which
 // uses the module's fixed resident force model and integrator.
 // states: [{handle, norad, epoch (ISO UTC), position [km], velocity [km/s]}]
 export function residentIngestFrames(instanceId, generation, states) {
-  const identity = table('PRWInstance', { MODULE_ID: 'com.orbpro.hpop', INSTANCE_ID: instanceId, GENERATION: BigInt(generation) });
+  const identity = table('PRWInstance', { MODULE_ID: 'com.orbpro.ffm', INSTANCE_ID: instanceId, GENERATION: BigInt(generation) });
   return {
     identity,
     frames: states.map((s) => {
@@ -120,7 +120,7 @@ export function decodeResident(response) {
 export function decodeExecution(response) {
   const frame = response.outputs.find((o) => o.portId === 'response');
   const root = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(frame.payload))).unpack();
-  if (!root.EXECUTION_RESULT) throw new Error('propagator/hpop: no execution result');
+  if (!root.EXECUTION_RESULT) throw new Error('propagator/ffm: no execution result');
   const state = (s) => ({
     epoch: s.STATE.STATE.EPOCH, timeScale: s.STATE.STATE.EPOCH_TIME_SYSTEM,
     position: ['X', 'Y', 'Z'].map((k) => s.STATE.STATE.POSITION[k] / 1000),

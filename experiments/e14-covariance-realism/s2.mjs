@@ -1,5 +1,5 @@
-// S2 (HPOP products, PLAN.md section 4): the CA screen's HPOP product - analysis/epoch-state's GCRF state at an
-// element set's epoch, propagated by propagator/hpop 1.2.0's execution path with the full force model on the drivers
+// S2 (FFM products, PLAN.md section 4): the CA screen's FFM product - analysis/epoch-state's GCRF state at an
+// element set's epoch, propagated by propagator/ffm 1.2.0's execution path with the full force model on the drivers
 // released at the set's creation - and the environment frames it reads. Encoding, decoding and selection of
 // published rows only; every number is a module's.
 import fs from 'node:fs';
@@ -14,7 +14,7 @@ import { config, DAY_MS, moduleOf } from './common.mjs';
 
 export const KERNEL = { path: '/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de440s.bsp', sha256: 'c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2' };
 export const EOP_C04 = '/opt/data/sdn-archive/reference-states/products/eopc04.1962-now';
-// The catalog HPOP run's assumptions (propagator/hpop 1.3.0 catalog.mjs): Cd*A/m from B* (2 B* / rho0, rho0 =
+// The catalog FFM run's assumptions (propagator/ffm 1.3.0 catalog.mjs): Cd*A/m from B* (2 B* / rho0, rho0 =
 // 2.461e-5 XKMPER kg/m^2/ER), 0.01 m^2/kg where B* <= 0; Cr*A/m 0.02 m^2/kg for every object.
 export const BSTAR_TO_B = 12.741621;
 export const B_NONPOSITIVE = 0.01;
@@ -25,7 +25,7 @@ export async function s2Context(modules, run) {
   if (sha256(kernelBytes) !== KERNEL.sha256) throw new Error('DE440s kernel bytes differ from the pinned SHA-256');
   run.addInputs('kernel', { 'de440s.bsp': KERNEL.sha256 });
   const m = {};
-  for (const name of ['analysis/epoch-state', 'analysis/gp-error-model', 'propagator/hpop', 'data-source/eop-parser']) m[name.split('/')[1]] = await moduleOf(modules, name, run);
+  for (const name of ['analysis/epoch-state', 'analysis/gp-error-model', 'propagator/ffm', 'data-source/eop-parser']) m[name.split('/')[1]] = await moduleOf(modules, name, run);
   const eop = await c04Records(m['eop-parser'], EOP_C04);
   run.addInputs('eop', { [path.basename(EOP_C04)]: eop.sha256 });
   const gfz = readGfzKp(config.inputs.gfzKp);
@@ -38,7 +38,7 @@ export async function s2Context(modules, run) {
   return {
     ...m, gfz, rsga,
     // Environment frames for a propagation over [fromMs, toMs] as released at cutoffMs (the set's creation).
-    // Daily space weather only with drag (propagator/hpop refuses it otherwise).
+    // Daily space weather only with drag (propagator/ffm refuses it otherwise).
     inputsFor(fromMs, toMs, cutoffMs, { drag = true } = {}) {
       const from = mjd(fromMs) - 2, to = mjd(toMs) + 2;
       // The C04 file ends before the last test cutoffs (it is about 30 days behind): rows are known up to the earlier of
@@ -62,10 +62,10 @@ export async function propagate(ctx, { epoch, state, samples, b, cutoffMs, param
   const { frames } = ctx.inputsFor(Math.min(fromMs, ...samples.map((s) => Date.parse(`${s}Z`))), toMs, cutoffMs, { drag: !!f.drag });
   const request = executionFrame({ epoch, state, samples, forces: f, integrator: config.s2.integrator, coefficients: { b, agom: AGOM },
     parameters, covariance, noise, stm });
-  return decodeSamples(await ctx.hpop.invoke('invoke', [request, ...frames]));
+  return decodeSamples(await ctx.ffm.invoke('invoke', [request, ...frames]));
 }
 
-// Row-major n x n -> the 6x6 state block; and its position block in hpop_coverage's order (xx, xy, xz, yy, yz, zz).
+// Row-major n x n -> the 6x6 state block; and its position block in ffm_coverage's order (xx, xy, xz, yy, yz, zz).
 export const stateBlock = (values, n) => Array.from({ length: 36 }, (_, k) => values[n * Math.floor(k / 6) + (k % 6)]);
 export const positionBlock = (m6) => [m6[0], m6[1], m6[2], m6[7], m6[8], m6[14]];
 // The STM's state block and the sensitivity column of parameter j (rows 0..5) from a row-major (6 + p)^2 STM.

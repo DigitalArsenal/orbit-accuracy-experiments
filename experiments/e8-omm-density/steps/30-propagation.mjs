@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // E8 step 30: propagation endpoint (PLAN.md section 4b; E5's protocol with
-// every force HPOP carries in LEO). For each issue day t0 and target: fit the
+// every force FFM carries in LEO). For each issue day t0 and target: fit the
 // state and Cd*A/m (B) to the precise orbit every 180 s over the 24 h before
-// t0 (analysis/estimation fit_batch answered by propagator/hpop with the
+// t0 (analysis/estimation fit_batch answered by propagator/ffm with the
 // variant's density), propagate the fit to t0 + 1, 3 and 7 days with the same
 // model, and take the 3D distance to the precise orbit there.
 //   definitive arm  SET's indices as published:
@@ -31,7 +31,7 @@ import { EST_TYPE, estimationCodec, decodeResult, positionObservation, seedStruc
 import { a00Series } from '../../e5-density-calibration/forecast.mjs';
 import { callJson, config, configPath, DAY_MS, gfzDays, inRepo, isoDay, isoUtc, issueDays, jb2008Rows, loadModules, maxKp, modulesDir, readRun, regimeOf,
   runConfigHash, setIndices, windowSpans, dayMs } from '../common.mjs';
-import { decodeSamples, executionFrame, jb2008Frame } from '../hpop.mjs';
+import { decodeSamples, executionFrame, jb2008Frame } from '../ffm.mjs';
 import { forecastCorrection, hourlyOffsets } from '../correction.mjs';
 import { operationalJb2008Rows, rsga } from '../drivers.mjs';
 import { asModuleSet, asOf, readCache } from '../omm.mjs';
@@ -49,8 +49,8 @@ const arms = values.arms.split(','), wanted = values.variants.split(',');
 const [shard, shards] = values.shard.split('/').map(Number);
 const run = startRun({ experiment: config.experiment, step: `30-propagation-${values.window}-${shard}of${shards}`, configPath, modulesDir: modulesDir(values.modules), args: values, resume: values.resume });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
-const { root, loaded } = await loadModules(run, ['analysis/estimation', 'propagator/hpop', 'data-source/eop-parser', 'analysis/density-calibration'], values);
-const { 'analysis/estimation': estimation, 'propagator/hpop': hpop, 'data-source/eop-parser': parser, 'analysis/density-calibration': dc } = loaded;
+const { root, loaded } = await loadModules(run, ['analysis/estimation', 'propagator/ffm', 'data-source/eop-parser', 'analysis/density-calibration'], values);
+const { 'analysis/estimation': estimation, 'propagator/ffm': ffm, 'data-source/eop-parser': parser, 'analysis/density-calibration': dc } = loaded;
 const kernelBytes = fs.readFileSync(inRepo(config.inputs.kernel.path));
 if (sha256(kernelBytes) !== config.inputs.kernel.sha256) throw new Error('the planetary kernel is not the configured one');
 run.addInputs('kernel', { [path.basename(config.inputs.kernel.path)]: config.inputs.kernel.sha256 });
@@ -107,7 +107,7 @@ async function arc(target, t0s, obs, horizons, env, seed = null) {
       dynamic_model_correlation_time_seconds: 0, maximum_iterations: 0, reference_frame: 'ICRF', estimator: 'BATCH_WEIGHTED_LEAST_SQUARES', process_noise: 'NONE', flags: 0,
     },
     extended_observations: obs.map((o) => ({ observation: { ...positionObservation(estEpoch(o.ms), [0, 0, 0]), kind: 'POSITION_VELOCITY', value_count: 6 }, values: stateM(o), sigmas: [1, 1, 1, 1, 1, 1] })),
-    propagator_port_id: 'propagator/hpop', propagator_capability: 'plugin_propagate plugin_compute_stm',
+    propagator_port_id: 'propagator/ffm', propagator_capability: 'plugin_propagate plugin_compute_stm',
     batch_options: { parameter_kinds: [1], parameter_values: [seed?.b ?? target.b], observation_covariances: obs.flatMap(() => cov), covariance_axes: 0,
       maximum_iterations: p.fit.maximumIterations, correction_tolerance: p.fit.correctionTolerance, sigma_edit_threshold: p.fit.sigmaEditThreshold },
   };
@@ -118,7 +118,7 @@ async function arc(target, t0s, obs, horizons, env, seed = null) {
     const out = decodeResult(response.outputs.find((o) => o.portId === 'result').payload);
     if (out.status !== 1) { fit = out.fit; break; }
     const q0 = out.queries[0];
-    const samples = decodeSamples(await hpop.invoke('invoke', [
+    const samples = decodeSamples(await ffm.invoke('invoke', [
       executionFrame({ epoch: reference.epoch, state: q0.seed.state, samples: out.queries.map((q) => isoByLabel.get(JSON.stringify(q.target_epoch))),
         forces: forces('JB2008'), parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: q0.parameter_values[0] }], fixed: { agom: target.agom }, stm: true, integrator: p.integrator }),
       kernel, ...env,
@@ -131,7 +131,7 @@ async function arc(target, t0s, obs, horizons, env, seed = null) {
     if (round > p.fit.maximumIterations + 2) throw new Error('fit_batch kept asking for propagation');
   }
   if (!fit || !fit.converged) return { error: `fit did not converge (${fit?.iterations ?? 0} iterations)`, b: fit?.estimate?.[6] ?? null };
-  const predicted = decodeSamples(await hpop.invoke('invoke', [
+  const predicted = decodeSamples(await ffm.invoke('invoke', [
     executionFrame({ epoch: reference.epoch, state: fit.estimate.slice(0, 6), samples: horizons.map((h) => iso(h.truth.ms)), forces: forces('JB2008'),
       parameters: [], fixed: { b: fit.estimate[6], agom: target.agom }, stm: false, integrator: p.integrator }),
     kernel, ...env,

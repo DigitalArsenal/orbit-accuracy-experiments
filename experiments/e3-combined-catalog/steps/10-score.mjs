@@ -7,12 +7,12 @@
 //   with +-binHalfWidthSeconds age bins around each wanted reference epoch.
 // - URA / URA-IGS: ultra-rapid states (analysis/reference-states output) at
 //   the same reference epochs.
-// - HPOP-URA: propagator/hpop from the ultra-rapid state at the issue time.
+// - FFM-URA: propagator/ffm from the ultra-rapid state at the issue time.
 // The harness subtracts GCRF positions and projects the difference on the
 // reference state's R, T, N unit vectors (bookkeeping, as V1 takes norms).
 //
 //   node experiments/e3-combined-catalog/steps/10-score.mjs --window train|test
-//        [--modules DIR] [--archive DIR] [--reference DIR] [--days N] [--no-hpop]
+//        [--modules DIR] [--archive DIR] [--reference DIR] [--days N] [--no-ffm]
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -28,7 +28,7 @@ import { Products } from '../truth.mjs';
 import { finalsRecords } from '../eop-finals.mjs';
 
 const DAY = 86400000;
-const { values, window, issueTimes, modules, archive, reference: referenceDir } = cli({ 'no-hpop': { type: 'boolean' } });
+const { values, window, issueTimes, modules, archive, reference: referenceDir } = cli({ 'no-ffm': { type: 'boolean' } });
 const run = startRun({ experiment: config.experiment, step: `10-score-${window.name}`, configPath, modulesDir: modules, args: values });
 const log = (...a) => console.log(`[${run.id}]`, ...a);
 const iso = (ms) => new Date(ms).toISOString();
@@ -170,13 +170,13 @@ const rtn = (predicted, ref) => {
   return [dot(d, R), dot(d, Tt), dot(d, N)];
 };
 
-// ── HPOP from the ultra-rapid state ──
-let hpop = null, time = null, kernel = null, eop = null;
-const hpopNeeded = !values['no-hpop'];
-if (hpopNeeded) {
-  hpop = await loadModule(modules, 'propagator/hpop');
+// ── FFM from the ultra-rapid state ──
+let ffm = null, time = null, kernel = null, eop = null;
+const ffmNeeded = !values['no-ffm'];
+if (ffmNeeded) {
+  ffm = await loadModule(modules, 'propagator/ffm');
   time = await loadModule(modules, 'foundation/time');
-  run.addModule(hpop.provenance);
+  run.addModule(ffm.provenance);
   run.addModule(time.provenance);
   const kernelBytes = fs.readFileSync(path.join(modules, config.inputs.kernel));
   run.addInputs('kernel', { [config.inputs.kernel]: sha256(kernelBytes) });
@@ -223,8 +223,8 @@ for (const t of targets) {
 }
 log(`direct samples: ${samples.length}`);
 
-const hpopCounts = { seeds: 0, failures: 0, noSeed: 0 };
-if (hpopNeeded) {
+const ffmCounts = { seeds: 0, failures: 0, noSeed: 0 };
+if (ffmNeeded) {
   const u = ultras.URA;
   const gpsKeys = [...byKey.entries()].filter(([, ts]) => ts[0].regime === 'GPS');
   let k = 0;
@@ -234,26 +234,26 @@ if (hpopNeeded) {
     const entry = issue && u.products.entries(t0.norad).find((e) => e.product === issue.product);
     const seed = entry && u.products.stateAt(entry, t0.T);
     const later = ts.filter((t) => t.h > 0);
-    if (!seed || !later.length) { ++hpopCounts.noSeed; continue; }
-    ++hpopCounts.seeds;
+    if (!seed || !later.length) { ++ffmCounts.noSeed; continue; }
+    ++ffmCounts.seeds;
     try {
       const epoch = await tdb(isoUtc(seed.ms));
       const sampleEpochs = [];
       for (const t of later) sampleEpochs.push(await tdb(isoUtc(t.state.ms)));
       const mjd = Math.floor(seed.ms / DAY) + 40587;
-      const out = decodeExecution(await hpop.invoke('invoke', [executionFrame({
+      const out = decodeExecution(await ffm.invoke('invoke', [executionFrame({
         epoch, timeScale: 'TDB', position: seed.r, velocity: seed.v, samples: sampleEpochs, target: sampleEpochs.at(-1),
-        integrator: config.hpop.integrator, forces: { ...config.hpop.forces, ...config.hpop.gps }, kernel: true,
+        integrator: config.ffm.integrator, forces: { ...config.ffm.forces, ...config.ffm.gps }, kernel: true,
       }), kernel, eopFrame(eop.records, mjd - 1, mjd + Math.max(...config.horizonsDays) + 2)]));
-      out.samples.forEach((p, i) => push(later[i], 'HPOP-URA', rtn(p.position, later[i].state), { product: issue.product }));
+      out.samples.forEach((p, i) => push(later[i], 'FFM-URA', rtn(p.position, later[i].state), { product: issue.product }));
     } catch (error) {
-      ++hpopCounts.failures;
-      for (const t of later) samples.push({ regime: t.regime, norad: t.norad, T: iso(t.T), h: t.h, method: 'HPOP-URA', failure: String(error.message).slice(0, 200) });
+      ++ffmCounts.failures;
+      for (const t of later) samples.push({ regime: t.regime, norad: t.norad, T: iso(t.T), h: t.h, method: 'FFM-URA', failure: String(error.message).slice(0, 200) });
     }
-    if (++k % 50 === 0) process.stderr.write(`\rHPOP ${k}/${gpsKeys.length}`);
+    if (++k % 50 === 0) process.stderr.write(`\rFFM ${k}/${gpsKeys.length}`);
   }
   process.stderr.write('\n');
-  log(`HPOP-URA: ${hpopCounts.seeds} seeds, ${hpopCounts.failures} failed, ${hpopCounts.noSeed} without a seed`);
+  log(`FFM-URA: ${ffmCounts.seeds} seeds, ${ffmCounts.failures} failed, ${ffmCounts.noSeed} without a seed`);
 }
 
 // Per-record ST errors by age from the set's epoch.
@@ -269,10 +269,10 @@ run.write('records.jsonl.gz', zlib.gzipSync(recordSamples.map((s) => JSON.string
 const objectsByRegime = Object.fromEntries(Object.keys(config.regimes).map((r) => [r, objects.filter((n) => regimeOf.get(n) === r)]));
 run.write('metrics.json', {
   window, issueTimes: issueTimes.length, objectsByRegime,
-  counts: { ...counts, targets: targets.length, targetsWithoutReference: targets.filter((t) => !t.state).length, elementSets: sets.length, duplicates, samples: samples.length, recordSamples: recordSamples.length, hpop: hpopCounts },
+  counts: { ...counts, targets: targets.length, targetsWithoutReference: targets.filter((t) => !t.state).length, elementSets: sets.length, duplicates, samples: samples.length, recordSamples: recordSamples.length, ffm: ffmCounts },
   statedSigmaM: Object.fromEntries([...truth.products, ...gpsTruth.products].filter((p) => p.statedSigmaM !== null).map((p) => [p.product, p.statedSigmaM])),
 });
 run.finish({ timeConversions: tdbCache.size });
 log(`${samples.length} samples, ${recordSamples.length} per-record samples -> ${run.dir}`);
 await gpModel.destroy();
-if (hpop) { await hpop.destroy(); await time.destroy(); }
+if (ffm) { await ffm.destroy(); await time.destroy(); }

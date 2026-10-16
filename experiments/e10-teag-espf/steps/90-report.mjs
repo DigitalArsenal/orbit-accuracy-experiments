@@ -51,7 +51,7 @@ for (const v of ORDER) {
       rmsVelMps: quantile(runs.map((x) => x.s.rmsVel).filter(Number.isFinite), 0.5),
       containment: { set: contain('inSet'), alpha005: contain('inAlpha0.05'), alpha05: contain('inAlpha0.5'), p95: contain('in95'), p997: contain('in997') },
       size: { medianLogDet: quantile(runs.map((x) => x.r.medianLogDet).filter(Number.isFinite), 0.5), medianExtentsM: [0, 1, 2].map((i) => quantile(runs.map((x) => x.r.medianExtentsM[i]).filter(Number.isFinite), 0.5)) },
-      cost: { hpopCalls: quantile(runs.map((x) => x.s.hpop), 0.5), seconds: quantile(runs.map((x) => x.s.seconds), 0.5) },
+      cost: { ffmCalls: quantile(runs.map((x) => x.s.ffm), 0.5), seconds: quantile(runs.map((x) => x.s.seconds), 0.5) },
     };
   }
   metrics.partB.variants[v] = perCase;
@@ -105,7 +105,7 @@ for (const sensitivity of ['primary', 'corr']) {
       finalRatioToSet: boot(finalRatio, wmedian, { nullValue: 1, side: 'less' }),
       containment: { set: contain('inSet'), alpha005: contain('inAlpha0.05'), alpha05: contain('inAlpha0.5'), p95: contain('in95'), p997: contain('in997') },
       medianExtentsM: [0, 1, 2].map((i) => quantile(jobs.flatMap((j) => j.rows.map((r) => r.extents?.[i])).filter(Number.isFinite), 0.5)),
-      cost: { hpopCalls: quantile(s.map((x) => x.s.hpop), 0.5), seconds: quantile(s.map((x) => x.s.seconds), 0.5) },
+      cost: { ffmCalls: quantile(s.map((x) => x.s.ffm), 0.5), seconds: quantile(s.map((x) => x.s.seconds), 0.5) },
     };
   }
 }
@@ -135,7 +135,7 @@ metrics.partA = {};
 for (const j of A) {
   const tail = j.case.startsWith('A3') ? 3600e3 : 86400e3, end = j.rows.at(-1)?.ms ?? 0;
   const rms = (rows) => (rows.length ? Math.sqrt(rows.reduce((a, r) => a + r.pos * r.pos, 0) / rows.length) : null);
-  (metrics.partA[j.case] ??= {})[j.id] = { epochs: j.rows.length, observations: j.observations, failure: j.failure, rmsArcM: rms(j.rows), rmsFinalM: rms(j.rows.filter((r) => r.ms >= end - tail)), finalM: j.rows.at(-1)?.pos ?? null, hpopCalls: j.calls?.hpop, seconds: j.seconds };
+  (metrics.partA[j.case] ??= {})[j.id] = { epochs: j.rows.length, observations: j.observations, failure: j.failure, rmsArcM: rms(j.rows), rmsFinalM: rms(j.rows.filter((r) => r.ms >= end - tail)), finalM: j.rows.at(-1)?.pos ?? null, ffmCalls: j.calls?.ffm, seconds: j.seconds };
 }
 
 // ── Enclosure ──
@@ -178,12 +178,12 @@ for (const [id, h] of Object.entries(metrics.hypotheses)) {
 }
 lines.push('', '## Part B — synthetic cases (6 test seeds per case)', '', 'Per-run RMS 3D position error after the first 2 hours: median over seeds [95 % cluster-bootstrap CI]; failures: run stopped or final error > 10 km.', '');
 for (const c of CASES) {
-  lines.push(`### ${c}`, '', '| Variant | Runs | Failures | RMS pos [95 % CI] | p95 (median run) | Max | Set / α 0.05 / α 0.5 | Cov 95 % / 99.7 % | RTN extents (median) | HPOP calls | Seconds |', '| --- | ---: | ---: | --- | ---: | ---: | --- | --- | --- | ---: | ---: |');
+  lines.push(`### ${c}`, '', '| Variant | Runs | Failures | RMS pos [95 % CI] | p95 (median run) | Max | Set / α 0.05 / α 0.5 | Cov 95 % / 99.7 % | RTN extents (median) | FFM calls | Seconds |', '| --- | ---: | ---: | --- | ---: | ---: | --- | --- | --- | ---: | ---: |');
   for (const v of ORDER) {
     const e = metrics.partB.variants[v]?.[c];
     if (!e) continue;
     const cont = e.containment;
-    lines.push(`| ${v} | ${e.runs} | ${e.failures} | ${m(e.rmsPosM.estimate)} [${m(e.rmsPosM.lower)}, ${m(e.rmsPosM.upper)}] | ${m(e.p95PosM)} | ${m(e.maxPosM)} | ${cont.set ? `${f(100 * cont.set.estimate, 0)} / ${cont.alpha005 ? f(100 * cont.alpha005.estimate, 0) : '—'} / ${cont.alpha05 ? f(100 * cont.alpha05.estimate, 0) : '—'} %` : '—'} | ${cont.p95 ? `${f(100 * cont.p95.estimate, 0)} / ${f(100 * cont.p997.estimate, 0)} %` : '—'} | ${e.size.medianExtentsM.map((x) => m(x)).join(' / ')} | ${f(e.cost.hpopCalls, 0)} | ${f(e.cost.seconds, 0)} |`);
+    lines.push(`| ${v} | ${e.runs} | ${e.failures} | ${m(e.rmsPosM.estimate)} [${m(e.rmsPosM.lower)}, ${m(e.rmsPosM.upper)}] | ${m(e.p95PosM)} | ${m(e.maxPosM)} | ${cont.set ? `${f(100 * cont.set.estimate, 0)} / ${cont.alpha005 ? f(100 * cont.alpha005.estimate, 0) : '—'} / ${cont.alpha05 ? f(100 * cont.alpha05.estimate, 0) : '—'} %` : '—'} | ${cont.p95 ? `${f(100 * cont.p95.estimate, 0)} / ${f(100 * cont.p997.estimate, 0)} %` : '—'} | ${e.size.medianExtentsM.map((x) => m(x)).join(' / ')} | ${f(e.cost.ffmCalls, 0)} | ${f(e.cost.seconds, 0)} |`);
   }
   lines.push('');
 }
@@ -206,13 +206,13 @@ if (Object.keys(metrics.partA).length) {
   const paper = { 'A1-leo-nominal': 'UKF 1.05 km, ESPF 0.97 km', 'A2-leo-error-bias': 'UKF 1.44 km, ESPF 0.73 km', 'A3-geo-area-change': 'UKF 4.30 km, ESPF 1.09 km' };
   lines.push('', '## Part A — the 2025 paper\'s cases (descriptive)', '', 'RMS 3D position error over the arc and over its final day (LEO) or hour (GEO); the paper\'s "final RMS" for comparison only (its noise, settings and scoring are not stated).', '');
   for (const [c, byV] of Object.entries(metrics.partA)) {
-    lines.push(`### ${c} (paper: ${paper[c]})`, '', '| Variant | Epochs | RMS arc | RMS final | Final | HPOP calls | Seconds |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: |');
-    for (const v of ORDER) { const e = byV[v]; if (e) lines.push(`| ${v} | ${e.epochs}/${e.observations} | ${m(e.rmsArcM)} | ${m(e.rmsFinalM)} | ${m(e.finalM)} | ${f(e.hpopCalls, 0)} | ${f(e.seconds, 0)} |`); }
+    lines.push(`### ${c} (paper: ${paper[c]})`, '', '| Variant | Epochs | RMS arc | RMS final | Final | FFM calls | Seconds |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: |');
+    for (const v of ORDER) { const e = byV[v]; if (e) lines.push(`| ${v} | ${e.epochs}/${e.observations} | ${m(e.rmsArcM)} | ${m(e.rmsFinalM)} | ${m(e.finalM)} | ${f(e.ffmCalls, 0)} | ${f(e.seconds, 0)} |`); }
     lines.push('');
   }
 }
 if (Object.keys(metrics.enclosure).length) {
-  lines.push('', '## Enclosure', '', 'E1: dense points of the carried region propagated by HPOP, outside the published predicted bound; E2 (E26): the dense support\'s survivors outside the reference posterior set. Radii in units of the bound.', '', '| Variant | Steps | E1 outside / points | E1 max radius | Steps with points outside | E2 outside / survivors | E2 max radius | Verdict |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |');
+  lines.push('', '## Enclosure', '', 'E1: dense points of the carried region propagated by FFM, outside the published predicted bound; E2 (E26): the dense support\'s survivors outside the reference posterior set. Radii in units of the bound.', '', '| Variant | Steps | E1 outside / points | E1 max radius | Steps with points outside | E2 outside / survivors | E2 max radius | Verdict |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |');
   for (const [v, e] of Object.entries(metrics.enclosure)) lines.push(`| ${v} | ${e.steps} | ${e.e1.outside}/${e.e1.points} | ${f(e.e1.maxRadius, 3)} | ${e.e1.stepsWithOutside} | ${e.e2 ? `${e.e2.outside}/${e.e2.survivors}` : '—'} | ${e.e2 ? f(e.e2.maxRadius, 3) : '—'} | ${e.verdict} |`);
 }
 if (metrics.partD) lines.push('', '## Part D — screening', '', ...metrics.partD.reportLines);
@@ -226,7 +226,7 @@ if (exploreIds.length) {
   metrics.runs.explore = exploreIds;
   const X = readJobs(exploreIds);
   metrics.explore = X.map((j) => ({ seed: j.seed, variant: j.variant, epochs: j.rows.length, observations: j.observations, failure: j.failure?.message ?? null }));
-  lines.push('', 'E26 with the σ bound raised (B1, dev seeds): the support grows instead of collapsing until HPOP cannot integrate its points.', '', '| Seed | Variant | Epochs reached | Stopped by |', '| --- | --- | ---: | --- |');
+  lines.push('', 'E26 with the σ bound raised (B1, dev seeds): the support grows instead of collapsing until FFM cannot integrate its points.', '', '| Seed | Variant | Epochs reached | Stopped by |', '| --- | --- | ---: | --- |');
   for (const x of metrics.explore) lines.push(`| ${x.seed} | ${x.variant} | ${x.epochs}/${x.observations} | ${x.failure ? x.failure.replace(/^.*?: /, '').slice(0, 90) : '—'} |`);
 }
 // ── Notes ──

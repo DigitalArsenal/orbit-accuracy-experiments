@@ -1,6 +1,6 @@
 // E14's known-answer test (experiments/e14-covariance-realism PLAN.md section 9a): synthetic errors with a known
 // covariance, run through the real modules (analysis/gp-error-model pair_statistics, fit_calibration,
-// calibrate_covariance, hpop_coverage, dcp_covariance) and E14's statistics; the known answers are set here.
+// calibrate_covariance, ffm_coverage, dcp_covariance) and E14's statistics; the known answers are set here.
 // Needs a modules checkout with gp-error-model 0.3.0 (SDN_MODULES_ROOT); skipped, visibly, without one.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -92,9 +92,9 @@ test('known answer: realism statistics, factors, the applied model, process nois
   const back = (i, j) => [0, 1, 2].reduce((a, m) => a + A[i][m] * [0, 1, 2].reduce((b, n) => b + I[6 * m + n] * A[j][n], 0), 0);
   [[0, 0, C[0]], [1, 0, C[3]], [1, 1, C[4]], [2, 1, C[7]], [2, 2, C[8]]].forEach(([i, j, x]) => assert.ok(rel(back(i, j), x) < 1e-12, `back ${i}${j}: ${back(i, j)} vs ${x}`));
 
-  // 4. Process noise: errors simulated as A + q U (A and U known, q = 2e-9 m^2/s^3 on T only); hpop_coverage's MLE.
+  // 4. Process noise: errors simulated as A + q U (A and U known, q = 2e-9 m^2/s^3 on T only); ffm_coverage's MLE.
   const qTrue = [0, 2e-9, 0];
-  // Position blocks in hpop_coverage's order (xx, xy, xz, yy, yz, zz), m^2; U per unit q (m^2/s^3).
+  // Position blocks in ffm_coverage's order (xx, xy, xz, yy, yz, zz), m^2; U per unit q (m^2/s^3).
   const Ablk = [100, 0, 0, 400, 0, 64], U = [[1e9, 0, 0, 2e9, 0, 1e8], [5e9, 0, 0, 9e11, 0, 1e8], [1e8, 0, 0, 1e8, 0, 2e10]];
   const full = (p) => [p[0], p[1], p[2], p[1], p[3], p[4], p[2], p[4], p[5]];
   const total = Ablk.map((x, k) => x + qTrue[0] * U[0][k] + qTrue[1] * U[1][k] + qTrue[2] * U[2][k]);
@@ -107,8 +107,8 @@ test('known answer: realism statistics, factors, the applied model, process nois
     predictions.push({ arc: k, samples: [{ state: [truth[0] * 1e3 + e[0], e[1], e[2], 0, 7500, 0], a: Ablk, u: U }] });
   }
   const regimes = [{ id: 'R', altitudeKm: [0, 2000], eccentricity: [0, 0.25] }];
-  const fit = await call(gp, 'hpop_coverage', [json('plan', { kind: 'hpop-arc-plan', version: 1, arcs }), json('predictions', { arcs: predictions }),
-    json('model', { kind: 'hpop-covariance-model', version: 1, regimes: [{ regimeIndex: 0, regime: 'R', p0: Array(21).fill(0).map((_, i) => ([0, 2, 5, 9, 14, 20].includes(i) ? 1e-6 : 0)) }] }),
+  const fit = await call(gp, 'ffm_coverage', [json('plan', { kind: 'ffm-arc-plan', version: 1, arcs }), json('predictions', { arcs: predictions }),
+    json('model', { kind: 'ffm-covariance-model', version: 1, regimes: [{ regimeIndex: 0, regime: 'R', p0: Array(21).fill(0).map((_, i) => ([0, 2, 5, 9, 14, 20].includes(i) ? 1e-6 : 0)) }] }),
     json('options', { mode: 'fit', window: ['2026-01-01T00:00:00', '2026-01-03T00:00:00'], regimes })]);
   const ml = fit.regimes[0].processNoise.fit.maximumLikelihoodM2S3;
   assert.ok(rel(ml[1], qTrue[1]) < 0.10, `q_T ${ml[1]} vs ${qTrue[1]}`);
@@ -138,8 +138,8 @@ test('known answer: realism statistics, factors, the applied model, process nois
   ctx.diagnostic(`DCP: weights ${dcp.weights.map((w) => w.toFixed(6)).join('/')}, sigma_eff ${dcp.sigmaEff.toFixed(5)}, along-track variance realised/predicted ${(realised / predicted).toFixed(4)}`);
 });
 
-// noise_responses against propagator/hpop's own white-acceleration process noise (PLAN.md, changes before the freeze):
-// one full-force Swarm A arc of 1.3 days, the module's unit responses from the run's STM against three HPOP runs with
+// noise_responses against propagator/ffm's own white-acceleration process noise (PLAN.md, changes before the freeze):
+// one full-force Swarm A arc of 1.3 days, the module's unit responses from the run's STM against three FFM runs with
 // unit noise on R, T and N. Needs the archive (an element set, the DE440s kernel, EOP, GFZ and SWPC files).
 import { s2Context, propagate, bOf, KERNEL } from '../experiments/e14-covariance-realism/s2.mjs';
 import { elementSets, DAY_MS } from '../experiments/e14-covariance-realism/common.mjs';
@@ -147,7 +147,7 @@ import { epochStates } from '../experiments/e2-catalog-covariance/product.mjs';
 import { startRun } from '../harness/provenance.mjs';
 import { configPath } from '../experiments/e14-covariance-realism/windows.mjs';
 const archiveReady = fs.existsSync(KERNEL.path) && fs.existsSync(config.inputs.gfzKp) && fs.existsSync(config.inputs.gpHistory);
-test('noise_responses agrees with propagator/hpop process noise on a full-force LEO arc', { skip: skip || (!archiveReady && 'archive inputs absent') }, async (ctx2) => {
+test('noise_responses agrees with propagator/ffm process noise on a full-force LEO arc', { skip: skip || (!archiveReady && 'archive inputs absent') }, async (ctx2) => {
   const run = startRun({ experiment: config.experiment, step: 'test-noise-responses', configPath, modulesDir: modulesDir, args: {} });
   const ctx = await s2Context(modulesDir, run);
   const forces = { ...config.s2.forces, degree: 20, order: 20 };
@@ -170,5 +170,5 @@ test('noise_responses agrees with propagator/hpop process noise on a full-force 
     worst.push(rel);
     assert.ok(rel < 1e-2, `axis ${axis}: relative ${rel}`);
   }
-  ctx2.diagnostic(`noise_responses vs HPOP, position variances: largest relative difference R ${worst[0].toExponential(2)}, T ${worst[1].toExponential(2)}, N ${worst[2].toExponential(2)}`);
+  ctx2.diagnostic(`noise_responses vs FFM, position variances: largest relative difference R ${worst[0].toExponential(2)}, T ${worst[1].toExponential(2)}, N ${worst[2].toExponential(2)}`);
 });

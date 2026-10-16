@@ -3,8 +3,8 @@
 //  1. A CCSDS OCM example, keyword by keyword, with the SDS OCM field each
 //     lands in (spacedatastandards.org schema).
 //  2. Its Earth-fixed state to GCRF through foundation/frames with the IERS
-//     rows of its day, then 24 h of propagator/hpop.
-//  3. An initial covariance through HPOP: the module returns Φ and P(t); Φ P₀ Φᵀ
+//     rows of its day, then 24 h of propagator/ffm.
+//  3. An initial covariance through FFM: the module returns Φ and P(t); Φ P₀ Φᵀ
 //     formed from them reproduces P(t). P₀ is the sample VCM's, which
 //     files/orbit-products also re-expresses as an SDS OCM.
 import * as flatbuffers from 'flatbuffers';
@@ -23,9 +23,9 @@ import { covarianceAxes, rtn, rtnCovariance, scene3d } from '../scene.js';
 export default async function run(ctx) {
   const fields = panel(ctx.root, 'A CCSDS OCM, field by field');
   const state = panel(ctx.root, 'Its state, to GCRF and forward a day');
-  const cov = panel(ctx.root, 'P(t) = Φ P₀ Φᵀ through HPOP');
-  const view = scene3d(ctx, { title: 'The covariance HPOP carries for a day', caption: '1σ position ellipsoid of P(t)' });
-  const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From HPOP’s covariance, RTN, P₀ of the sample VCM; drag to move the box above in time');
+  const cov = panel(ctx.root, 'P(t) = Φ P₀ Φᵀ through FFM');
+  const view = scene3d(ctx, { title: 'The covariance FFM carries for a day', caption: '1σ position ellipsoid of P(t)' });
+  const covChart = chart(ctx.root, 'Position sigmas along the propagation', 'From FFM’s covariance, RTN, P₀ of the sample VCM; drag to move the box above in time');
   const asOcm = panel(ctx.root, 'The same P₀’s message, as an SDS OCM');
 
   const [text, schema] = await Promise.all([ctx.fetchText('./data/ocm/ccsds-ocm-example-2.txt'), ctx.fetchJson('./data/sds/OCM.json')]);
@@ -43,7 +43,7 @@ export default async function run(ctx) {
     note(fields, `The CCSDS 502.0-B-3 example message (OSPREY 5), as Orekit 13.1 ships it. ${mapped} of ${rows.length} entries have an SDS field; hover a path for its schema documentation.`);
   });
 
-  await ctx.run('foundation/frames: EFG to GCRF; propagator/hpop: 24 h', async () => {
+  await ctx.run('foundation/frames: EFG to GCRF; propagator/ffm: 24 h', async () => {
     const meta = Object.fromEntries(kvn.rows.map((r) => [r.key, r.value]));
     const line = kvn.data.find((d) => d.block === 'TRAJ').values;
     // The message's clock is UT1; its own UT1 − UTC gives the UTC instant.
@@ -53,33 +53,33 @@ export default async function run(ctx) {
     const eopRows = (await ctx.fetchJson('./data/eop/eop-1998-12.json')).map((row) => Object.assign(new EOPT(), row));
     const frames = await ctx.module('foundation/frames');
     const { r: r0, v: v0 } = await transformState(frames, { from: 'ITRF', to: 'GCRF', epochIso: utcIso, r: [x, y, z], v: [vx, vy, vz], eopRows });
-    const hpop = await ctx.module('propagator/hpop');
+    const ffm = await ctx.module('propagator/ffm');
     const epochMs = Date.parse(`${utcIso}Z`);
     const samples = Array.from({ length: 24 }, (_, k) => isoMicro(epochMs + (k + 1) * HOUR));
     const eop = await ctx.fetchBytes('./data/eop/eop-1998-12.prw');
-    const run = decodeExecution(await hpop.invoke('invoke', [executionFrame({ epoch: utcIso, timeScale: 'UTC', position: r0, velocity: v0, samples, target: samples.at(-1),
+    const run = decodeExecution(await ffm.invoke('invoke', [executionFrame({ epoch: utcIso, timeScale: 'UTC', position: r0, velocity: v0, samples, target: samples.at(-1),
       integrator: { algorithm: 'RK78', tolerance: 1e-12 }, forces: { degree: 20, order: 20 } }), frameOf('earth_orientation', eop)]));
     const radius = (p) => Math.hypot(...p);
     table(state, ['', 'X', 'Y', 'Z'], [
       ['EFG (km)', num(x, 7), num(y, 7), num(z, 7)], ['GCRF (km)', num(r0[0], 9), num(r0[1], 9), num(r0[2], 9)],
       ['GCRF (km/s)', num(v0[0], 7), num(v0[1], 7), num(v0[2], 7)], ['+24 h, GCRF (km)', ...run.final.position.map((v) => num(v, 9))],
     ]);
-    tiles(state, [['Epoch (UTC)', utcIso.slice(0, 23)], ['|r| at epoch', `${num(radius(r0), 7)} km`], ['|r| EFG', `${num(Math.hypot(x, y, z), 7)} km`], ['HPOP steps', num(run.final.steps)]]);
-    note(state, `Rotation preserves |r|: EFG and GCRF radii differ by ${formatMeters(Math.abs(radius(r0) - Math.hypot(x, y, z)) * 1000, 3)}. HPOP: EGM2008 20×20 in Earth-fixed axes with the same IERS rows, no Sun, Moon, drag or radiation pressure.`);
+    tiles(state, [['Epoch (UTC)', utcIso.slice(0, 23)], ['|r| at epoch', `${num(radius(r0), 7)} km`], ['|r| EFG', `${num(Math.hypot(x, y, z), 7)} km`], ['FFM steps', num(run.final.steps)]]);
+    note(state, `Rotation preserves |r|: EFG and GCRF radii differ by ${formatMeters(Math.abs(radius(r0) - Math.hypot(x, y, z)) * 1000, 3)}. FFM: EGM2008 20×20 in Earth-fixed axes with the same IERS rows, no Sun, Moon, drag or radiation pressure.`);
   });
 
-  await ctx.run('analysis/vcm-adapter and propagator/hpop: Φ and P(t)', async () => {
-    const [adapter, hpop, products] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/hpop'), ctx.module('files/orbit-products')]);
+  await ctx.run('analysis/vcm-adapter and propagator/ffm: Φ and P(t)', async () => {
+    const [adapter, ffm, products] = await Promise.all([ctx.module('analysis/vcm-adapter'), ctx.module('propagator/ffm'), ctx.module('files/orbit-products')]);
     const vcmText = await ctx.fetchText('./data/vcm/sample-vcm.txt');
     const read = await adapter.invoke('read', [{ portId: 'message', payload: new TextEncoder().encode(vcmText) },
       { portId: 'options', payload: new TextEncoder().encode(JSON.stringify({ ephemerisSource: 'Analytical', arcSeconds: 86400 })) }]);
     const prw = decodePrw(out(read, 'request'));
     const report = JSON.parse(new TextDecoder().decode(out(read, 'report')));
     const epochMs = Date.parse(`${report.epochUtc}Z`);
-    // Every hour of the day: HPOP's state, Φ and P(t).
+    // Every hour of the day: FFM's state, Φ and P(t).
     const HOURS = Array.from({ length: 24 }, (_, k) => k + 1);
     prw.EXECUTION_REQUEST.SAMPLE_EPOCHS = HOURS.map((h) => Object.assign(new P.TIMInstantT(), { TIME_SYSTEM: P.timingStandard.UTC, EPOCH_FORMAT: P.timEpochRepresentation.ISO8601, ISO8601: isoMicro(epochMs + h * HOUR) }));
-    const response = await hpop.invoke('invoke', [frameOf('request', encodePrw(prw)), frameOf('earth_orientation', out(read, 'earth_orientation'))]);
+    const response = await ffm.invoke('invoke', [frameOf('request', encodePrw(prw)), frameOf('earth_orientation', out(read, 'earth_orientation'))]);
     const result = decodePrw(out(response, 'response')).EXECUTION_RESULT;
     const P0 = prw.EXECUTION_REQUEST.INITIAL_COVARIANCE ?? prw.EXECUTION_REQUEST.INITIAL.COVARIANCE;
     const n = P0.DIMENSION;
@@ -98,7 +98,7 @@ export default async function run(ctx) {
     for (const e of shown) { e.Prtn = rtnCovariance(rtn(e.r, e.v), e.P); e.sigma = [0, 4, 8].map((i) => Math.sqrt(e.Prtn[i])); }
     table(cov, ['Age', 'Radial σ', 'In-track σ', 'Cross-track σ'], shown.filter((e) => [1, 3, 6, 12, 18, 24].includes(e.hours))
       .map((e) => [`${e.hours} h`, formatMeters(e.sigma[0]), formatMeters(e.sigma[1]), formatMeters(e.sigma[2])]));
-    note(cov, `HPOP returns Φ and P(t) together; Φ P₀ Φᵀ formed here from its Φ equals its P(t) to ${num(worst, 2)} of the sigmas.`);
+    note(cov, `FFM returns Φ and P(t) together; Φ P₀ Φᵀ formed here from its Φ equals its P(t) to ${num(worst, 2)} of the sigmas.`);
     const span = { startMs: epochMs, stopMs: epochMs + 24 * HOUR, format: (ms) => `${new Date(ms).toISOString().slice(0, 16).replace('T', ' ')} UTC · +${((ms - epochMs) / HOUR).toFixed(1)} h` };
     await view.draw((g) => {
       const end = shown.at(-1);
@@ -120,7 +120,7 @@ export default async function run(ctx) {
     let ocm;
     try { ocm = OCM.getSizePrefixedRootAsOCM(new flatbuffers.ByteBuffer(ocmBytes)).unpack(); } catch { ocm = OCM.getRootAsOCM(new flatbuffers.ByteBuffer(ocmBytes)).unpack(); }
     table(asOcm, ['SDS OCM field', 'Value'], flatten(ocm).map(([k, v]) => [{ text: k, class: 'left mono wrap' }, { text: v, class: 'wrap mono' }]));
-    note(asOcm, 'Fields at their schema defaults are not listed. The VCM’s equinoctial covariance travels as user-defined parameters; HPOP takes the adapter’s Cartesian form.');
-    return `HPOP’s covariance equals Φ P₀ Φᵀ formed from its own Φ to ${num(worst, 2)} of the sigmas; with no process noise declared, Q = 0.`;
+    note(asOcm, 'Fields at their schema defaults are not listed. The VCM’s equinoctial covariance travels as user-defined parameters; FFM takes the adapter’s Cartesian form.');
+    return `FFM’s covariance equals Φ P₀ Φᵀ formed from its own Φ to ${num(worst, 2)} of the sigmas; with no process noise declared, Q = 0.`;
   });
 }

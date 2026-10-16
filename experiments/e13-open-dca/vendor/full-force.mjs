@@ -2,7 +2,7 @@
 // Source: orbit-accuracy-experiments task/e4-a4-full-force-20261009 at 70484b2 (E4 amendments A5/A6), not yet on main.
 // Unchanged from the source.
 // Delete this directory and import harness/full-force.mjs when E4 A5/A6 lands; keep the two in step until then.
-// propagator/hpop execution requests with every force the module carries
+// propagator/ffm execution requests with every force the module carries
 // (SDS 1.243.0 PRW), and the environment inputs those forces read: the JPL
 // kernel, IERS Earth orientation, SET's JB2008 drivers and daily space
 // weather for NRLMSISE-00. Encoding, decoding and the selection of published
@@ -94,7 +94,7 @@ export function executionFrame(request) {
 export function decodeSamples(response) {
   const frame = response.outputs.find((o) => o.portId === 'response');
   const root = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(frame.payload))).unpack();
-  if (!root.EXECUTION_RESULT) throw new Error('propagator/hpop: no execution result');
+  if (!root.EXECUTION_RESULT) throw new Error('propagator/ffm: no execution result');
   return root.EXECUTION_RESULT.SAMPLES.map((s) => {
     const st = s.STATE.STATE;
     return {
@@ -161,7 +161,7 @@ export function readGfzKp(file) {
 }
 
 // $SPW rows (CSSI layout) for the days [from, to] (ms) from GFZ's file, as
-// E5 frames them: Kp x10, ap, daily Ap, observed F10.7 and its 81-day centred
+// E5 frames them: Kp x10, ap, daily Ap, observed F10.7 and its 81-day centered
 // mean over the reported days (at least 75 of 81); a day without F10.7 takes
 // the mean of the nearest reported days before and after it.
 export function spwRows(gfz, fromMs, toMs) {

@@ -2,7 +2,7 @@
 // later element sets as RTN pseudo-observations, scored against precise
 // orbits. Record routing and statistics only: SGP4 at each set's epoch
 // (analysis/epoch-state), the precise states (analysis/reference-states'
-// output), their short propagation (propagator/hpop), the RTN axes
+// output), their short propagation (propagator/ffm), the RTN axes
 // (foundation/frames) and the filters are the modules'. Element sets and
 // everything derived from them stay under runs/ (ignored by git).
 import fs from 'node:fs';
@@ -10,7 +10,7 @@ import { config, repoPath, iso, DAY_MS } from './common.mjs';
 import { epochMs as setEpochMs } from '../../harness/gp-archive.mjs';
 import { decodeOemStream, mpeFrame } from '../../harness/records.mjs';
 import { rtnAxes } from '../../harness/frames.mjs';
-import { propagate } from './hpop.mjs';
+import { propagate } from './ffm.mjs';
 
 export const LINEAR = 23, POSITION_VECTOR = 7;
 
@@ -98,14 +98,14 @@ export function referenceLines(index, norad, fromMs, toMs) {
   return [...lines].sort((a, b) => a[0] - b[0]);
 }
 
-// The truth at ms: the last precise state at or before it, propagated by HPOP
+// The truth at ms: the last precise state at or before it, propagated by FFM
 // (at most maxGapS); null when there is none.
-export async function truthAt(hpop, env, model, lines, ms, maxGapS = 330) {
+export async function truthAt(ffm, env, model, lines, ms, maxGapS = 330) {
   let k = -1;
   for (let i = 0; i < lines.length && lines[i][0] <= ms; ++i) k = i;
   if (k < 0 || ms - lines[k][0] > maxGapS * 1000) return null;
   if (lines[k][0] === ms) return [...lines[k][1]];
-  const [sample] = await propagate(hpop, env, model, { epochIso: iso(lines[k][0]), state: lines[k][1], sampleIsos: [iso(ms)] });
+  const [sample] = await propagate(ffm, env, model, { epochIso: iso(lines[k][0]), state: lines[k][1], sampleIsos: [iso(ms)] });
   return sample.state;
 }
 
@@ -119,7 +119,7 @@ export async function prepareArc(m, env, model, index, arc, states) {
   for (const [k, set] of sets.entries()) {
     const state = states.get(set.gpId);
     if (!state) { if (k === 0) return null; continue; }
-    const truth = await truthAt(m.hpop, env, model, lines, epochs[k]);
+    const truth = await truthAt(m.ffm, env, model, lines, epochs[k]);
     if (!truth) { if (k === 0) return null; continue; }
     const rotation = await rtnAxes(m.frames, iso(epochs[k]), state);
     rows.push({ ms: epochs[k], gpId: set.gpId, state, truth, rotation, setError: Math.hypot(state[0] - truth[0], state[1] - truth[1], state[2] - truth[2]) });

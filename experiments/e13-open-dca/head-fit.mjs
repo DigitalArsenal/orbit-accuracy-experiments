@@ -1,11 +1,11 @@
-// Method A of E13: one full-force HPOP fit of the first hours (the head) of a
+// Method A of E13: one full-force FFM fit of the first hours (the head) of a
 // SpaceX ephemeris file, drag fitted and Cr*A/m locked at the class value. It
 // is the starlink-forecast lane's truth-head fit, kept as one function with
 // its guards:
 //   - the record names the fit it came from (`fitId`), and `checkRecord`
 //     recomputes that id and the residual statistics from the stored fit, so
 //     an analysis that reads a record can never score numbers from another fit;
-//   - `synthetic` makes a head with HPOP at a known Cd*A/m and the same fit
+//   - `synthetic` makes a head with FFM at a known Cd*A/m and the same fit
 //     must give it back.
 // All orbit computation is the modules'; this file frames inputs and counts.
 import crypto from 'node:crypto';
@@ -41,8 +41,8 @@ export async function openFitter(envConfig) {
     return { S: settings, regime: setup.regime, integrator: setup.integrator, forces: lib.forcesFor(setup.regime, settings), issuedMs, apriori, keepRows: false, perigeeAltitudeM: setup.perigeeAltitudeM };
   }
 
-  // One HPOP fit of `points` under `form`: {product, fit, ctx, stats (every point), rows}.
-  async function hpopFit(points, form, issuedMs) {
+  // One FFM fit of `points` under `form`: {product, fit, ctx, stats (every point), rows}.
+  async function ffmFit(points, form, issuedMs) {
     const settings = settingsFor(form);
     const ctx = await makeCtx(points[0], issuedMs, settings, form.apriori);
     const { product, fit } = await lib.fitRun(env, points, ctx);
@@ -63,7 +63,7 @@ export async function openFitter(envConfig) {
     const crLabel = job.crLabel ?? `ASSUMPTION: Starlink class value for NORAD ${norad < 56000 ? '<' : '>='} 56000`;
     for (const name of ['drag', 'dragThrust']) {
       const form = FORMS[name](cr);
-      const r = await hpopFit(points, form, issuedMs);
+      const r = await ffmFit(points, form, issuedMs);
       const jumps = lib.residualJumps(r.rows, points, lib.SETTINGS.jumps).map((j) => ({ atHours: (j.fromMs - points[0].ms) / H, toHours: (j.toMs - points[0].ms) / H, peakMps2: j.peakMps2, component: j.component, samples: j.samples }));
       const byHour = [];
       for (let h = 0; h * H < points.at(-1).ms - points[0].ms; ++h) {
@@ -75,7 +75,7 @@ export async function openFitter(envConfig) {
       fits[name] = {
         form: name, fitId: fitId({ fileSha256: file.sha256, form: name, headHours: S.headHours, issuedMs, harness: lib.VERSION, crAreaOverMass: form.apriori.crAreaOverMass }),
         fit: { epoch: r.product.epoch, state: r.product.state, parameters: r.fit.parameters, fixed: r.product.fixed, iterations: r.fit.iterations, converged: r.fit.converged,
-          boundStatus: r.fit.boundStatus, reducedChiSquare: r.fit.reducedChiSquare, weightedRms: r.fit.weightedRms, fitPoints: r.fit.fitPoints, hpopCalls: r.fit.hpopCalls },
+          boundStatus: r.fit.boundStatus, reducedChiSquare: r.fit.reducedChiSquare, weightedRms: r.fit.weightedRms, fitPoints: r.fit.fitPoints, ffmCalls: r.fit.ffmCalls },
         dragCdAreaOverMass: dragOf(r.fit),
         srp: { crAreaOverMass: form.apriori.crAreaOverMass, locked: true, label: crLabel },
         residuals: resid(r.stats), byHour, gate, jumps,
@@ -143,7 +143,7 @@ export async function openFitter(envConfig) {
     const e = await energyModule.invokeJson('energy', [json('request', { states: [p0, p1, q1].map((p) => ({ mjd: p.ms / 86400e3 + 40587, r: p.state.slice(0, 3), v: p.state.slice(3, 6) })), degree: 36, gm: 3.986004418e14, gradient: false })], 'result');
     if (e.refused.length) throw new Error(`energy refused ${e.refused.length} states`);
     // Method B (PLAN.md section 10): the Cd*A/m that carries the previous version's start state (a fresh orbit determination at t0) to the new
-    // version's start energy at t1 (another), by two trial propagations with the fitter's environment (HPOP, the NRT density model, Cr*A/m locked at the
+    // version's start energy at t1 (another), by two trial propagations with the fitter's environment (FFM, the NRT density model, Cr*A/m locked at the
     // class value) and a secant step on the energy mismatch (linear in Cd*A/m to the accuracy of one step), then a check at the answer. Only meaningful
     // when no thrust acts between the two epochs: the analysis screens by the planned energy change and the head fits' jumps.
     const cr = crAreaOverMassFor(job.norad);
@@ -176,7 +176,7 @@ export async function openFitter(envConfig) {
     };
   }
 
-  // Synthetic known-answer test: a head made by HPOP at a known Cd*A/m (and Cr*A/m), fitted by the same code.
+  // Synthetic known-answer test: a head made by FFM at a known Cd*A/m (and Cr*A/m), fitted by the same code.
   async function synthetic({ trueCd, trueCr, lockCr, noiseM = 0, headHours = S.headHours, label }) {
     const t0 = performance.now();
     const startMs = Date.parse('2026-10-09T09:48:42Z');
@@ -191,13 +191,13 @@ export async function openFitter(envConfig) {
     const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-300)) * Math.cos(2 * Math.PI * rnd());
     const points = epochs.map((ms, k) => ({ ms, state: noiseM ? truth[k].map((v, j) => (j < 3 ? v + noiseM * gauss() : v)) : truth[k], hasVelocity: true }));
     const form = { id: 'drag', fit: { inTrack: false, lockSrp: true }, apriori: { cdAreaOverMass: 0.01, crAreaOverMass: lockCr } };
-    const r = await hpopFit(points, form, startMs);
+    const r = await ffmFit(points, form, startMs);
     const fitted = dragOf(r.fit);
     return { label, trueCd, trueCr, lockCr, noiseM, headHours, fittedCd: fitted, relativeError: (fitted - trueCd) / trueCd, converged: r.fit.converged, iterations: r.fit.iterations,
       rms3dM: r.stats.rms3d, seconds: (performance.now() - t0) / 1000, harness: lib.VERSION };
   }
 
-  // States [m, m/s, GCRF] of a trajectory made by HPOP with the fitter's force model at a known Cd*A/m and Cr*A/m (for the known-answer tests).
+  // States [m, m/s, GCRF] of a trajectory made by FFM with the fitter's force model at a known Cd*A/m and Cr*A/m (for the known-answer tests).
   async function truthStates({ startMs, state, B, cr, epochsMs, issuedMs = startMs }) {
     const ctx = await makeCtx({ ms: startMs, state, hasVelocity: true }, issuedMs, lib.SETTINGS, { cdAreaOverMass: B, crAreaOverMass: cr });
     const product = { epoch: noZ(isoUs(startMs)), state, fixed: { b: B, agom: cr, inTrack: 0 }, parameters: [] };

@@ -79,7 +79,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const s2test = test('results/e14/test/s2-realism.json')?.candidates?.[s2sel.candidate]?.primary ?? null;
   const status = (t, regime, h) => { const c = t?.[regime]?.[h]; return c ? { decision: c.decision, meanD2Over3: c.meanD2Over3?.estimate ?? null, coverage95: c.coverage95?.estimate ?? null, n: c.n, objects: c.objects } : null; };
   writeJson(path.join(out, 's2-terms.json'), { kind: 'e14-s2-terms', candidate: s2sel.candidate, calibrationVersion: s2sel.calibrationVersion,
-    product: 'analysis/epoch-state GCRF state at an element set\'s epoch, propagated by propagator/hpop (config.s2.forces) with P0, the parameter\'s consider term and white-acceleration noise as the candidate names',
+    product: 'analysis/epoch-state GCRF state at an element set\'s epoch, propagated by propagator/ffm (config.s2.forces) with P0, the parameter\'s consider term and white-acceleration noise as the candidate names',
     p0: p0.candidates['S3-T'].strata.map((s) => ({ regime: s.regime, covarianceRtnKm: s.covariance, n: s.n })),
     processNoiseM2S3: s2models.candidates[s2sel.candidate]?.q ?? {},
     terms: { 'S2-P0': ['A0 = Phi P0 Phi^T'], 'S2-Q': ['A0', 'sum_k q_k U_k'], 'S2-QC': ['A0', 'consider (sigma ln parameter)', 'Q'], 'S2-QCD': ['S2-QC', 'DCP (S4)'] }[s2sel.candidate.split(':')[0]],

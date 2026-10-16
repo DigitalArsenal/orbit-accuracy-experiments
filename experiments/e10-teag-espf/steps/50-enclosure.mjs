@@ -2,11 +2,11 @@
 // E25T and SMF. At each tested step k -> j = k + 1 the variant's carried
 // region after observation k is sampled densely (uniform inside and on its
 // boundary, plus its own support points) and taken through step j:
-//   E1: every point propagated by HPOP, against the published predicted bound;
+//   E1: every point propagated by FFM, against the published predicted bound;
 //   E2 (E26): the step run with the dense cloud as support, its survivors
 //       against the reference step's posterior set.
 // The reference step is the variant's own step j, restarted exactly from its
-// carried support; its HPOP answers give the predicted centre. Sampling and
+// carried support; its FFM answers give the predicted center. Sampling and
 // containment statistics only.
 //   node steps/50-enclosure.mjs [--seeds t1,t2,t3] [--variants E26:k=..,E25T:l=..,SMF] [--workers 6] [--resume <run-id>]
 //        (dev checks: --seeds d1 [--interior N --boundary N])
@@ -18,7 +18,7 @@ import { arg, runPool } from '../jobs.mjs';
 import { startRun, repoRoot } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 
-const MODULES = ['propagator/hpop', 'analysis/estimation', 'data-source/eop-parser'];
+const MODULES = ['propagator/ffm', 'analysis/estimation', 'data-source/eop-parser'];
 const self = new URL(import.meta.url).pathname;
 
 // Passes: runs of at least `minimum` observations from one station less than
@@ -52,7 +52,7 @@ const radius = (bound, x) => Math.sqrt(mahalanobis2(bound.l, 6, x.map((v, i) => 
 
 async function child(jobFile) {
   const job = JSON.parse(fs.readFileSync(jobFile, 'utf8'));
-  const { environment, propagate } = await import('../hpop.mjs');
+  const { environment, propagate } = await import('../ffm.mjs');
   const { variantSpec } = await import('../partb.mjs');
   const { runSequential } = await import('../filters.mjs');
   const { mvee } = await import('../teag.mjs');
@@ -61,7 +61,7 @@ async function child(jobFile) {
   const sc = JSON.parse(fs.readFileSync(job.scenario, 'utf8'));
   const env = await environment({ parser: loaded['data-source/eop-parser'], kernelPath: path.join(modulesDir(), config.inputs.kernel2026), eopPath: config.inputs.eopC04, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: sc.epochMs, toMs: sc.endMs });
   const codec = await estimationCodec(modulesDir());
-  const ctx = { codec, est: loaded['analysis/estimation'], hpop: loaded['propagator/hpop'], env, filterModel: config.forceModels[sc.filterModel] };
+  const ctx = { codec, est: loaded['analysis/estimation'], ffm: loaded['propagator/ffm'], env, filterModel: config.forceModels[sc.filterModel] };
   const variant = variantSpec(job.variant), e = config.enclosure;
   const bound = variant.id === 'E25T' ? 3 : 1;
   const P = passes(sc.observations, { gapMinutes: e.passGapMinutes, minimum: e.minimumPassObservations });
@@ -86,7 +86,7 @@ async function child(jobFile) {
       done = k + 1;
     }
     const carried = support;
-    // The reference step j from the carried support, its HPOP answers kept.
+    // The reference step j from the carried support, its FFM answers kept.
     ctx.answers = new Map();
     const ref = await runSequential(ctx, variant, cursor, [o[step.j]], { keepSupportAt: new Set([0]), initialSupport: carried });
     const refAnswers = ctx.answers;
@@ -96,7 +96,7 @@ async function child(jobFile) {
     let predictedCenter = ordered[0];
     if (variant.id === 'E26') predictedCenter = (await mvee(codec, ctx.est, ordered.flat(), 6)).center;
     const predicted = { center: predictedCenter, l: cholesky(refEpoch.support.predicted, 6) };
-    // Dense samples of the carried region (centre and shape it carries), its
+    // Dense samples of the carried region (center and shape it carries), its
     // own support points included.
     const g = rng(e.seed + 1000 * Number(job.seed.slice(1)) + step.j);
     const dense = samples([...carried.estimate], [...carried.shape], job.interior ?? e.interior, job.boundary ?? e.boundary, g);
@@ -119,7 +119,7 @@ async function child(jobFile) {
       e2 = { survivors: radii.length, outside: radii.filter((r) => r > 1 + e.tolerance).length, maxRadius: Math.max(...radii), logVolumeRatio: denseSet ? denseSet.logVolume - refSet.logVolume : null, referenceSurvivors: refEpoch.support.survivors };
     } else {
       propagated = [];
-      for (const x of dense) propagated.push((await propagate(ctx.hpop, env, ctx.filterModel, { epochIso: fromIso, state: x, sampleIsos: [toIso] }))[0].state);
+      for (const x of dense) propagated.push((await propagate(ctx.ffm, env, ctx.filterModel, { epochIso: fromIso, state: x, sampleIsos: [toIso] }))[0].state);
     }
     const radii = propagated.map((x) => radius(predicted, x) / bound);
     results.push({ ...step, k, dtSeconds: (o[step.j].ms - o[k].ms) / 1000, points: dense.length,

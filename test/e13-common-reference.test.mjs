@@ -1,7 +1,7 @@
-// End-to-end known answers for the common reference (experiments/e13-open-dca PLAN.md Amendment S3): the real modules (propagator/hpop, analysis/density-calibration
+// End-to-end known answers for the common reference (experiments/e13-open-dca PLAN.md Amendment S3): the real modules (propagator/ffm, analysis/density-calibration
 // 0.4.0 `energy` and `drag_work` with NRLMSISE-00, foundation/frames), the real EOP, SET indices and GFZ indices. Skipped, and reported as skipped, without them.
 //
-//  1. An arc made by HPOP under NRLMSISE-00 at a known Cd*A/m is read back through the orbital energy under NRLMSISE-00 (the direct fit of the live Planet arcs).
+//  1. An arc made by FFM (Full Force Model) under NRLMSISE-00 at a known Cd*A/m is read back through the orbital energy under NRLMSISE-00 (the direct fit of the live Planet arcs).
 //  2. The same arc made under JB2008 (what the splits' arcs are), read under JB2008 and then rescaled by the ratio of the drag works of its trajectory under
 //     JB2008 and NRLMSISE-00, agrees with the direct NRLMSISE-00 reading of the same end state to 0.2 %, while the two references differ by far more: the
 //     rescaling, not a coincidence of two similar models, carries the agreement.

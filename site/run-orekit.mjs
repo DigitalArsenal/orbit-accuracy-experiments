@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Runs propagator/hpop's 63 Orekit 13.1 reference cases through the
+// Runs propagator/ffm's 63 Orekit 13.1 reference cases through the
 // space-data-module-sdk harness, exactly as the module's own
 // tests/orekit_reference.test.mjs does, and records the largest position
 // difference of each in site/generated/orekit-results.json. build.mjs
@@ -19,21 +19,21 @@ import { loadModule, modulesRoot, gitState } from '../harness/modules.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
 const { values } = parseArgs({ options: { modules: { type: 'string' }, from: { type: 'string' }, to: { type: 'string' } } });
-const v1Config = JSON.parse(fs.readFileSync(path.join(repo, 'experiments/v1-hpop-physical-truth/config.json'), 'utf8'));
+const v1Config = JSON.parse(fs.readFileSync(path.join(repo, 'experiments/v1-ffm-physical-truth/config.json'), 'utf8'));
 const modules = modulesRoot({ flag: values.modules, configured: v1Config.inputs.modules, repoRoot: repo });
-const cases = await import(pathToFileURL(path.join(modules, 'propagator/hpop/tests/lib/orekitCases.mjs')));
+const cases = await import(pathToFileURL(path.join(modules, 'propagator/ffm/tests/lib/orekitCases.mjs')));
 const out = path.join(here, 'generated/orekit-results.json');
 
-const hpop = await loadModule(modules, 'propagator/hpop');
+const ffm = await loadModule(modules, 'propagator/ffm');
 const sdk = JSON.parse(fs.readFileSync(path.join(repo, 'node_modules/space-data-module-sdk/package.json'), 'utf8')).version;
 let results = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, 'utf8')) : null;
-if (results?.hpopWasmSha256 !== hpop.provenance.wasmSha256) results = { cases: [] };
+if (results?.ffmWasmSha256 !== ffm.provenance.wasmSha256) results = { cases: [] };
 Object.assign(results, {
-  hpopWasmSha256: hpop.provenance.wasmSha256,
+  ffmWasmSha256: ffm.provenance.wasmSha256,
   runtime: `Node ${process.version}, space-data-module-sdk ${sdk}`,
   modulesCommit: gitState(modules).commit,
   generated: new Date().toISOString(),
-  reference: 'propagator/hpop tests/fixtures/orekit/orekit-reference.json (Orekit 13.1, OrekitReference.java)',
+  reference: 'propagator/ffm tests/fixtures/orekit/orekit-reference.json (Orekit 13.1, OrekitReference.java)',
   metric: 'largest 3D position difference over the hourly samples of a 24 h arc, m',
 });
 
@@ -42,7 +42,7 @@ const from = Number(values.from ?? 0), to = Math.min(Number(values.to ?? all.len
 for (let id = from; id <= to; ++id) {
   const c = all[id];
   const started = performance.now();
-  const response = await hpop.invoke('invoke', cases.requestInputs(c));
+  const response = await ffm.invoke('invoke', cases.requestInputs(c));
   const seconds = (performance.now() - started) / 1000;
   const { worst, worstAt } = cases.score(c, response);
   const toleranceM = cases.toleranceFor(c);
@@ -58,5 +58,5 @@ fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, `${JSON.stringify(results, null, 2)}\n`);
 const failed = results.cases.filter((r) => !r.pass || r.jacobiansPass === false);
 console.log(`${results.cases.length}/${all.length} cases recorded in ${path.relative(repo, out)}; ${failed.length} outside tolerance`);
-await hpop.destroy();
+await ffm.destroy();
 if (failed.length) process.exitCode = 1;

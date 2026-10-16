@@ -39,6 +39,6 @@ export function runSummary(job, { warmupHours = config.partB.warmupHours, failur
     failed: stopped || !final || final.pos > failureKm * 1000, stopped,
     epochs: rows.length, rmsPos: pos.length ? rms(pos) : NaN, medianPos: pos.length ? median(pos) : NaN,
     p95Pos: pos.length ? quantile(pos, 0.95) : NaN, maxPos: pos.length ? Math.max(...pos) : NaN, rmsVel: vel.length ? rms(vel) : NaN,
-    finalPos: final?.pos ?? NaN, hpop: job.calls?.hpop ?? 0, estimation: job.calls?.estimation ?? 0, seconds: job.seconds ?? 0,
+    finalPos: final?.pos ?? NaN, ffm: job.calls?.ffm ?? 0, estimation: job.calls?.estimation ?? 0, seconds: job.seconds ?? 0,
   };
 }

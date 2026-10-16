@@ -5,13 +5,13 @@
 //   node steps/07-model-check.mjs [nolight]
 const path = await import('node:path');
 const { config, loadModules, modulesDir, msOf } = await import('../common.mjs');
-const { environment } = await import('../hpop.mjs');
+const { environment } = await import('../ffm.mjs');
 const { buildScenario, eopRowStream } = await import('../scenario.mjs');
 const { runBatch } = await import('../filters.mjs');
 const { estimationCodec } = await import('../estimation-codec.mjs');
 const lightTime = process.argv[2] !== 'nolight';
-const { loaded } = await loadModules(null, ['propagator/hpop', 'foundation/frames', 'foundation/time', 'analysis/access', 'analysis/observation-simulator', 'analysis/estimation', 'data-source/eop-parser']);
-const m = { hpop: loaded['propagator/hpop'], frames: loaded['foundation/frames'], time: loaded['foundation/time'], access: loaded['analysis/access'], simulator: loaded['analysis/observation-simulator'], est: loaded['analysis/estimation'], parser: loaded['data-source/eop-parser'] };
+const { loaded } = await loadModules(null, ['propagator/ffm', 'foundation/frames', 'foundation/time', 'analysis/access', 'analysis/observation-simulator', 'analysis/estimation', 'data-source/eop-parser']);
+const m = { ffm: loaded['propagator/ffm'], frames: loaded['foundation/frames'], time: loaded['foundation/time'], access: loaded['analysis/access'], simulator: loaded['analysis/observation-simulator'], est: loaded['analysis/estimation'], parser: loaded['data-source/eop-parser'] };
 const epochMs = msOf(config.partB.devSeeds[0].epoch), endMs = epochMs + 12 * 3600e3;
 const env = await environment({ parser: m.parser, kernelPath: path.join(modulesDir(), config.inputs.kernel2026), eopPath: config.inputs.eopC04, setPaths: config.inputs, kpPath: config.inputs.kp, fromMs: epochMs, toMs: endMs });
 const sc = await buildScenario(m, env, await eopRowStream(m.parser, config.inputs.eopC04), {
@@ -20,7 +20,7 @@ const sc = await buildScenario(m, env, await eopRowStream(m.parser, config.input
 });
 for (const o of sc.observations) o.sigmas = [2 * Math.PI / 180 / 3600, 2 * Math.PI / 180 / 3600];
 const codec = await estimationCodec(modulesDir());
-const ctx = { codec, est: m.est, hpop: m.hpop, env, filterModel: config.forceModels['leo-jb2008'] };
+const ctx = { codec, est: m.est, ffm: m.ffm, env, filterModel: config.forceModels['leo-jb2008'] };
 const initial = { ms: epochMs, state: config.partB.state.map((x, i) => x + [50, -40, 30, 0.05, -0.04, 0.03][i]), covariance: Array.from({ length: 36 }, (_, i) => (i % 7 === 0 ? (i < 21 ? 1e6 : 1) : 0)) };
 const r = await runBatch(ctx, initial, sc.observations, { sigmaEdit: 0, maximumIterations: 20, lightTime });
 const errs = r.epochs.map((e, k) => Math.hypot(...e.estimate.slice(0, 3).map((x, i) => x - sc.truthAtObs[k][i])));

@@ -1,5 +1,5 @@
 // The site's three live computations, shared by the main page and the paper
-// models: a V1 seed through HPOP, an Orekit case re-run, and the VCM round
+// models: a V1 seed through FFM, an Orekit case re-run, and the VCM round
 // trip. The modules compute; this file frames their records and takes norms
 // of differences.
 import * as flatbuffers from 'flatbuffers';
@@ -20,7 +20,7 @@ export const truthFor = (object) => { if (!truthCache.has(object)) truthCache.se
 
 // A V1 seed propagated 72 h with configuration cfgName, every truth sample
 // compared; then the six V1 horizons alone, compared with results/v1.
-export async function runV1Seed({ hpop, time, seed, config, metrics, cfgName, onStatus = () => {} }) {
+export async function runV1Seed({ ffm, time, seed, config, metrics, cfgName, onStatus = () => {} }) {
   const forces = config.configurations[cfgName];
   const truth = await truthFor(seed.object);
   const withKernel = (forces.thirdBodies ?? []).length > 0 || forces.srp;
@@ -40,33 +40,33 @@ export async function runV1Seed({ hpop, time, seed, config, metrics, cfgName, on
     samples: samples.map((ms) => tdb.get(ms)), target: tdb.get(samples.at(-1)),
     integrator: config.integrator, forces: { ...forces, ...(forces.srp ? seed.params : {}) }, kernel: withKernel,
   });
-  onStatus(`propagator/hpop: ${cfgName}, 72 h, ${sampleMs.length} samples…`);
+  onStatus(`propagator/ffm: ${cfgName}, 72 h, ${sampleMs.length} samples…`);
   const dense = request(sampleMs);
   const started = performance.now();
-  const response = await hpop.invoke('invoke', [dense, ...extra]);
+  const response = await ffm.invoke('invoke', [dense, ...extra]);
   const seconds = (performance.now() - started) / 1000;
   const run = decodeExecution(response);
   const rows = run.samples.map((p, k) => {
     const truthAt = at(index.get(sampleMs[k]));
-    return { ms: sampleMs[k], hours: (sampleMs[k] - seed.seedUnixMs) / HOUR, truth: truthAt.position, hpop: p.position, errorM: errorM(p.position, truthAt.position) };
+    return { ms: sampleMs[k], hours: (sampleMs[k] - seed.seedUnixMs) / HOUR, truth: truthAt.position, ffm: p.position, errorM: errorM(p.position, truthAt.position) };
   });
-  const v1 = decodeExecution(await hpop.invoke('invoke', [request(horizonMs), ...extra]));
+  const v1 = decodeExecution(await ffm.invoke('invoke', [request(horizonMs), ...extra]));
   const committed = metrics.results.filter((r) => r.object === seed.object && r.seedEpoch === seed.seedUtc && r.configuration === cfgName);
   const horizons = v1.samples.map((p, k) => {
     const truthAt = at(index.get(horizonMs[k])).position;
-    return { hours: config.horizonsHours[k], ms: horizonMs[k], hpop: p.position, truth: truthAt, errorM: errorM(p.position, truthAt),
+    return { hours: config.horizonsHours[k], ms: horizonMs[k], ffm: p.position, truth: truthAt, errorM: errorM(p.position, truthAt),
       committedM: committed.find((r) => r.hours === config.horizonsHours[k])?.errorM ?? null };
   });
   const compared = horizons.filter((x) => x.committedM !== null).map((x) => Math.abs(x.errorM - x.committedM));
   return { forces, withKernel, s0, rows, run, dense, response, seconds, horizons, reproduced: compared.length ? Math.max(...compared) : null, compared: compared.length };
 }
 
-// One HPOP-against-Orekit case from its exact request: the largest position
+// One FFM-against-Orekit case from its exact request: the largest position
 // difference over the reference samples (m) and where it falls (h).
-export async function runOrekitCase(hpop, c) {
+export async function runOrekitCase(ffm, c) {
   const inputs = await Promise.all(c.inputs.map(async (i) => frameOf(i.portId, await fetchBytes(`./${i.file}`))));
   const started = performance.now();
-  const run = decodeExecution(await hpop.invoke('invoke', inputs));
+  const run = decodeExecution(await ffm.invoke('invoke', inputs));
   let worst = 0, worstAt = 0;
   const differences = run.samples.map((p, k) => {
     const [t, x, y, z] = c.samples[k + 1];
@@ -79,7 +79,7 @@ export async function runOrekitCase(hpop, c) {
 
 // A run's own request again, sampled `offsetsSec` after its initial epoch and
 // without covariance: the path between the samples it reports, to draw.
-export async function resampled(hpop, inputs, offsetsSec) {
+export async function resampled(ffm, inputs, offsetsSec) {
   const prw = decodePrw(inputs.find((f) => f.portId === 'request').payload);
   const request = prw.EXECUTION_REQUEST, initial = request.INITIAL.STATE;
   const base = Date.parse(`${initial.EPOCH}Z`);
@@ -92,7 +92,7 @@ export async function resampled(hpop, inputs, offsetsSec) {
   if ('INITIAL_COVARIANCE' in request) request.INITIAL_COVARIANCE = null;
   const frames = inputs.map((f) => (f.portId === 'request' ? frameOf('request', encodePrw(prw)) : f));
   return [[0, [initial.POSITION.X / 1000, initial.POSITION.Y / 1000, initial.POSITION.Z / 1000]],
-    ...decodeExecution(await hpop.invoke('invoke', frames)).samples.map((q, k) => [offsetsSec[k], q.position])];
+    ...decodeExecution(await ffm.invoke('invoke', frames)).samples.map((q, k) => [offsetsSec[k], q.position])];
 }
 
 // RTN position sigmas (m) from a propagated covariance sample.
@@ -108,16 +108,16 @@ function rtnSigmas(sample) {
 }
 
 // A VCM read and propagated: analysis/vcm-adapter reads the message into a
-// PRW request (under both readings of the B row), and propagator/hpop
+// PRW request (under both readings of the B row), and propagator/ffm
 // propagates 24 h with the 7×7 covariance.
-export async function runVcm(adapter, hpop, text, { onStatus = () => {}, hours = 24 } = {}) {
+export async function runVcm(adapter, ffm, text, { onStatus = () => {}, hours = 24 } = {}) {
   const json = (portId, value) => ({ portId, payload: new TextEncoder().encode(JSON.stringify(value)) });
   // The sample's epoch is 2023; the DE440 excerpt here covers 2026, so the
-  // Sun and Moon come from HPOP's analytical ephemeris. The format leaves the
+  // Sun and Moon come from FFM's analytical ephemeris. The format leaves the
   // units of the B row unstated, so both readings run.
   const runs = {};
   for (const rows of ['fractional', 'absolute']) {
-    onStatus(`analysis/vcm-adapter read, then propagator/hpop ${hours} h with the 7×7 covariance (B row ${rows === 'fractional' ? 'as a fraction' : 'as printed'})…`);
+    onStatus(`analysis/vcm-adapter read, then propagator/ffm ${hours} h with the 7×7 covariance (B row ${rows === 'fractional' ? 'as a fraction' : 'as printed'})…`);
     const read = await adapter.invoke('read', [{ portId: 'message', payload: new TextEncoder().encode(text) }, json('options', { ephemerisSource: 'Analytical', arcSeconds: hours * 3600, parameterRows: rows })]);
     const report = JSON.parse(new TextDecoder().decode(out(read, 'report')));
     const prw = decodePrw(out(read, 'request'));
@@ -126,7 +126,7 @@ export async function runVcm(adapter, hpop, text, { onStatus = () => {}, hours =
       TIME_SYSTEM: P.timingStandard.UTC, EPOCH_FORMAT: P.timEpochRepresentation.ISO8601, ISO8601: isoMicro(epochMs + (k + 1) * HOUR),
     }));
     const request = encodePrw(prw);
-    const run = await hpop.invoke('invoke', [frameOf('request', request), frameOf('earth_orientation', out(read, 'earth_orientation'))]);
+    const run = await ffm.invoke('invoke', [frameOf('request', request), frameOf('earth_orientation', out(read, 'earth_orientation'))]);
     const result = decodePrw(out(run, 'response')).EXECUTION_RESULT;
     const sigmas = [{ hours: 0, s: report.recomputedUvwSigmasKm.slice(0, 3).map((x) => x * 1000) }, ...result.SAMPLES.map((sample, k) => ({ hours: k + 1, s: rtnSigmas(sample) }))];
     runs[rows] = { report, read, prw, request, run, result, sigmas };

@@ -1,11 +1,11 @@
-# V1 — HPOP against real orbits
+# V1 — FFM (Full Force Model) against real orbits
 
 Verification plan, written before the first run. Status: **frozen at the
 commit that adds it**. A deviation is recorded under Amendments.
 
 ## 1. Why
 
-Parts of `propagator/hpop` were ported from TudatPy and Basilisk: its
+Parts of `propagator/ffm` were ported from TudatPy and Basilisk: its
 integrators and force models (`lib/integrators.*`, `lib/force_models.*`, "Phase
 11: Astrodynamics Framework (Basilisk + TudatPy Port)"). Their existing
 evidence is uneven:
@@ -17,7 +17,7 @@ evidence is uneven:
 | `tests/zonal_crossvalidation.*` | Three independent zonal implementations | Strong, zonals only |
 | `tests/de440_force.*` | DE440 third-body forces evaluated independently | Strong, one force at a time |
 | `tests/drag_atmosphere.test.mjs` | NRLMSISE-00 canonical table, US76 | Strong, density only |
-| `analysis/gp-error-model/docs/hpop-calibration-2026-08.md` | Reference orbits, resident model | Real orbits, but one fixed force model |
+| `analysis/gp-error-model/docs/ffm-calibration-2026-08.md` | Reference orbits, resident model | Real orbits, but one fixed force model |
 
 Nothing tests the assembled force model against a real orbit force by force.
 V1 does that, using only our modules. The real orbits are the authority, so
@@ -27,10 +27,10 @@ the result does not depend on Tudat being right. tudat-wasm is not used.
 
 Every computation runs in a module: `analysis/reference-states` output for the
 precise orbits (GCRF, UTC), `foundation/time` for UTC → TDB, and
-`propagator/hpop` for propagation. The harness subtracts two GCRF positions
+`propagator/ffm` for propagation. The harness subtracts two GCRF positions
 and takes the norm.
 
-**Seeds and horizons.** HPOP is seeded with a precise-orbit state (position
+**Seeds and horizons.** FFM is seeded with a precise-orbit state (position
 and velocity) and propagated to later epochs of the same precise orbit, at 1,
 6, 12, 24, 48 and 72 hours.
 
@@ -39,7 +39,7 @@ and velocity) and propagated to later epochs of the same precise orbit, at 1,
 | LAGEOS-1, LAGEOS-2, ETALON-1, ETALON-2 | ILRS combined weekly arcs (2 min), weeks ending 2026-08-08 and 2026-08-15 | Each arc's first epoch, and 72 h later |
 | GPS (all in the products) | IGS final orbits (15 min), 2026-08-02 to 2026-08-15 | 2026-08-02, 08-06 and 08-10, at the first epoch of the day |
 
-**Force configurations.** HPOP offers two paths, and neither carries tesseral
+**Force configurations.** FFM offers two paths, and neither carries tesseral
 gravity together with third bodies (the execution profile refuses tesserals
 without Earth orientation data; the resident model has no Sun or Moon). Both
 are run:
@@ -71,8 +71,8 @@ Fixed now, before any run:
    μ = 398600.4418 km³/s²): the position returns to the start within 1 m.
 2. **Each force helps (V1.2).** For every SLR seed: E-b < E-a and E-c < E-b
    at 24 h, and E-d < E-c at 72 h. Radiation pressure on these spheres is
-   about 4e-9 m/s²: tens of metres in a day, under the periodic errors of the
-   missing tesserals, but over a hundred metres by 72 h. For every GPS seed:
+   about 4e-9 m/s²: tens of meters in a day, under the periodic errors of the
+   missing tesserals, but over a hundred meters by 72 h. For every GPS seed:
    E-b < E-a and E-c < E-b at 24 h.
 3. **Tesserals help (V1.3).** At 24 h, R-20 < E-b for every GPS seed. GPS
    orbits are in 2:1 resonance with the Earth's rotation, so a missing or
@@ -80,7 +80,7 @@ Fixed now, before any run:
 4. **Magnitude (V1.4).** With the most complete execution model, E-d, the
    median 24 h error over SLR seeds is below 500 m. This is generous: what E-d
    still lacks (tesserals, tides, relativity) is periodic at LAGEOS and
-   ETALON altitude, of order a hundred metres.
+   ETALON altitude, of order a hundred meters.
 
 Every criterion is reported pass or fail with its numbers. A failure is a
 finding about the module, reported to its owners, not a reason to change the
@@ -88,7 +88,7 @@ criteria.
 
 ## 4. What V1 does not show
 
-- Accuracy of a configuration that combines tesserals with third bodies; HPOP
+- Accuracy of a configuration that combines tesserals with third bodies; FFM
   has none.
 - Drag: none of these orbits is low enough. Drag is covered by
   `tests/drag_atmosphere.test.mjs` against published tables, not by a real
@@ -97,14 +97,14 @@ criteria.
 
 ## Amendments
 
-Recorded after the first run, `v1-hpop-physical-truth-run-20261008T155943Z`
-(`--quick`, HPOP artifact `a7375613…`). The criteria above are unchanged.
+Recorded after the first run, `v1-ffm-physical-truth-run-20261008T155943Z`
+(`--quick`, FFM artifact `a7375613…`). The criteria above are unchanged.
 
 **A1. The module changed; V1 is rerun on the new artifact.** The first run
 found that E-b equalled E-a to the metre: `SPHERICAL_HARMONICS` without the J
-flags evaluated the point mass alone. That and three other HPOP faults were
-fixed in the HPOP lockdown of 2026-10-08, against Orekit 13.1 (see
-`propagator/hpop/tests/orekit_reference.test.mjs`): the field's column
+flags evaluated the point mass alone. That and three other FFM faults were
+fixed in the FFM lockdown of 2026-10-08, against Orekit 13.1 (see
+`propagator/ffm/tests/orekit_reference.test.mjs`): the field's column
 recursion and the sign of its tesseral y term, and a clock on single
 Julian-date doubles. `SPHERICAL_HARMONICS` with degree 20 and order 0 is now
 the EGM2008 zonal field to degree 20 in Earth-fixed axes. Each run's manifest
@@ -112,14 +112,14 @@ records the artifact it used.
 
 **A2. The radiation-pressure premise in criterion 2 was wrong.** The
 acceleration is right (about 4e-9 m/s^2 on LAGEOS), but its effect is not
-"over a hundred metres by 72 h". Most of it is periodic, with an amplitude
+"over a hundred meters by 72 h". Most of it is periodic, with an amplitude
 of order a/n^2, about 2 cm at LAGEOS; the secular part changes the
 eccentricity by about 1e-7 a day, about a metre. E-d and E-c therefore differ
-by metres while the configurations without tesserals are tens of kilometres
+by meters while the configurations without tesserals are tens of kilometers
 off, so "E-d < E-c at 72 h" cannot be resolved here and decides nothing. It
 is still evaluated and reported.
 
-**A3. A configuration with every modelled force, descriptive only.** HPOP's
+**A3. A configuration with every modelled force, descriptive only.** FFM's
 execution path now takes Earth orientation data (its `earth_orientation`
 input), so it can carry tesserals together with the Sun, Moon and radiation
 pressure, which section 2 said it could not. E-e adds it:
@@ -133,7 +133,7 @@ by `data-source/eop-parser`. E-e enters no criterion; it is reported beside
 the others.
 
 **A4 (2026-10-08, after the SDS 1.240.0 additions). The IERS 2010 forces,
-descriptive only.** HPOP now carries the IERS 2010 solid Earth tides (section
+descriptive only.** FFM now carries the IERS 2010 solid Earth tides (section
 6.2, steps 1 and 2) and the relativistic terms of eq. 10.12 (Schwarzschild,
 Lense-Thirring and de Sitter), both checked against Orekit 13.1. E-f is E-e
 with both:
