@@ -17,7 +17,7 @@ function sourceFiles(relative = '.') {
   return fs.readdirSync(path.join(repo, relative), { withFileTypes: true }).flatMap((entry) => {
     const name = path.posix.join(relative, entry.name);
     if (entry.name === '.git' || entry.name === 'node_modules'
-      || ['results', 'site/dist', 'site/generated'].includes(name)) return [];
+      || ['results', 'site/dist', 'site/generated', 'site/.cache'].includes(name)) return [];
     // Do not follow links out of this worktree.
     if (entry.isSymbolicLink()) return [];
     return entry.isDirectory() ? sourceFiles(name) : [name];
