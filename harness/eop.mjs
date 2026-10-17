@@ -5,16 +5,27 @@
 import fs from 'node:fs';
 import * as fb from 'flatbuffers';
 import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
+import { decodeIngestRequest, encodeHttpResponse } from 'space-data-module-sdk/runtime-contracts';
 import { sha256 } from './modules.mjs';
 import { PRW_TYPE } from './prw.mjs';
+
+// The parser accepts the SDK's typed HTTP response envelope. The original
+// IERS bytes stay in BODY; the module owns all parsing and validation.
+function sourceResponse(body) {
+  return {
+    portId: 'response',
+    payload: encodeHttpResponse({ status: 200, body }),
+    typeRef: { schemaName: 'HttpResponse.fbs', fileIdentifier: 'HRSP', rootTypeName: 'HttpResponse', wireFormat: 'flatbuffer' },
+  };
+}
 
 // parse_c04 over an IERS EOP C04 file: [{mjd, row}] with each record decoded
 // to its $EOP object, plus the parser's metadata.
 export async function c04Records(parser, file) {
   const body = fs.readFileSync(file);
-  const response = await parser.invoke('parse_c04', [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
+  const response = await parser.invoke('parse_c04', [sourceResponse(body)]);
   const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
-  const meta = JSON.parse(Buffer.from(response.outputs.find((f) => f.portId === 'meta').payload));
+  const meta = decodeIngestRequest(response.outputs.find((f) => f.portId === 'meta').payload);
   const records = [];
   for (let at = 0; at < out.length;) {
     const n = out.readUInt32LE(at);
@@ -28,7 +39,7 @@ export async function c04Records(parser, file) {
 // parse_finals2000a over an IERS finals2000A file (Rapid Service, with predictions; a path or its bytes): [{mjd, row}] as c04Records returns them. For dates after the C04 series ends.
 export async function finalsRecords(parser, file) {
   const body = Buffer.isBuffer(file) ? file : fs.readFileSync(file);
-  const response = await parser.invoke('parse_finals2000a', [{ portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } }]);
+  const response = await parser.invoke('parse_finals2000a', [sourceResponse(body)]);
   const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
   const records = [];
   for (let at = 0; at < out.length;) {

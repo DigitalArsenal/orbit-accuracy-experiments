@@ -10,17 +10,17 @@
   ],
   "variant": "C (the default: D1 and D2 combined)",
   "provider": "propagator/sgp4, as the study answers the query port",
-  "generated": "2026-10-11T12:36:44.055Z",
+  "generated": "2026-10-17T07:56:31.778Z",
   "runtime": "Node v25.4.0",
   "modulesRepository": {
-    "commit": "d4a0b1155f64ac088694f9758c32e3b691952674",
+    "commit": "5cc2d3b68edcc89fcab61ab6168fa83f0ed32b86",
     "dirty": false
   },
   "modules": [
     {
       "path": "analysis/maneuver-detection",
-      "version": "0.3.0",
-      "wasmSha256": "eee3dd9088f6291794196a7a21ce5b05e7d989bf1f11ffda4d58a126c52496d0"
+      "version": "0.7.0",
+      "wasmSha256": "2bd948d1c3edd195b5e3d0fa694852fa501cb47600e44345ec04d57777ccf66a"
     },
     {
       "path": "propagator/sgp4",
@@ -33,8 +33,8 @@
     "first": "2026-08-21T18:59:13.199136",
     "last": "2026-10-11T04:13:59.875680",
     "source": "Space-Track gp_history, the SDN archive (not reproduced)",
-    "files": 299,
-    "filesSha256": "8ab949a7298bc2058561b9e4de73986c0aacdfe721e89fdcb456ac3195c300e9"
+    "files": 309,
+    "filesSha256": "6695b8d797877d720cb909ef5fdb69db3f8b0f3315e56f7bdfedf00f654d12a9"
   },
   "events": [
     {
@@ -44,10 +44,10 @@
       "EVENT_START_TIME": "2026-09-25T15:39:59.287Z",
       "EVENT_END_TIME": "2026-09-25T15:39:59.287Z",
       "DELTA_VEL": 0.001096474037825605,
-      "DELTA_VEL_U": 0.001096474037825605,
-      "DELTA_VEL_V": 0,
+      "DELTA_VEL_V": 0.001096474037825605,
+      "DELTA_VEL_W": 0,
       "CHARACTERIZATION": 4,
-      "ALGORITHM": "com.digitalarsenal.analysis.maneuver-detection 0.3.0 C: D1 and D2 combined",
+      "ALGORITHM": "com.digitalarsenal.analysis.maneuver-detection 0.7.0 C: D1 and D2 combined",
       "MNVR_ACCELS": []
     }
   ]
