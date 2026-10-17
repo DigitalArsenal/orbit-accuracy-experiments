@@ -8,203 +8,203 @@
       "worstAtHours": 24,
       "toleranceM": 0.001,
       "pass": true,
-      "seconds": 0.018
+      "seconds": 0.02
     },
     {
       "id": 1,
       "orbit": "LEO400",
       "forces": "F1-J2",
-      "worstM": 0.018058775679633234,
+      "worstM": 0.018065421171767047,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.021
+      "seconds": 0.02
     },
     {
       "id": 2,
       "orbit": "LEO400",
       "forces": "F2-zonal20",
-      "worstM": 0.018065862699792764,
+      "worstM": 0.018053847082007305,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.027
+      "seconds": 0.026
     },
     {
       "id": 3,
       "orbit": "LEO400",
       "forces": "Z1-zonal20-sun-moon",
-      "worstM": 0.018156535740855434,
+      "worstM": 0.018081732251339914,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.045
+      "seconds": 0.047
     },
     {
       "id": 4,
       "orbit": "LEO400",
       "forces": "Z2-zonal20-sun-moon-srp",
-      "worstM": 0.018810901114378182,
+      "worstM": 0.018860715762137797,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.055
+      "seconds": 0.06
     },
     {
       "id": 5,
       "orbit": "LEO400",
       "forces": "Z3-zonal20-sun-moon-srp-drag",
-      "worstM": 0.02154781452086171,
+      "worstM": 0.021645478596858145,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.146
+      "seconds": 0.149
     },
     {
       "id": 6,
       "orbit": "LEO400",
       "forces": "F3-field20x20",
-      "worstM": 0.01811274186927014,
+      "worstM": 0.01821440531773162,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.051
+      "seconds": 0.049
     },
     {
       "id": 7,
       "orbit": "LEO400",
       "forces": "F4-field-sun-moon",
-      "worstM": 0.018169850405994347,
+      "worstM": 0.018161721064460627,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.065
+      "seconds": 0.068
     },
     {
       "id": 8,
       "orbit": "LEO400",
       "forces": "F5-field-sun-moon-srp",
-      "worstM": 0.018690958701176583,
+      "worstM": 0.018754492013345066,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.082
+      "seconds": 0.087
     },
     {
       "id": 9,
       "orbit": "LEO400",
       "forces": "F6-field-sun-moon-srp-drag",
-      "worstM": 0.021726644142353,
+      "worstM": 0.021656500802447208,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.175
+      "seconds": 0.177
     },
     {
       "id": 10,
       "orbit": "LEO400",
       "forces": "R1-field-sun-moon-schwarzschild",
-      "worstM": 0.018130149976157483,
+      "worstM": 0.01816459723488105,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.078
+      "seconds": 0.079
     },
     {
       "id": 11,
       "orbit": "LEO400",
       "forces": "R2-field-sun-moon-relativity-iers2010",
-      "worstM": 0.018257209171506975,
+      "worstM": 0.01809376672215192,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.084
+      "seconds": 0.085
     },
     {
       "id": 12,
       "orbit": "LEO400",
       "forces": "T1-field-sun-moon-solid-tides",
-      "worstM": 0.01814607154350264,
+      "worstM": 0.018114790902797856,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.145
+      "seconds": 0.142
     },
     {
       "id": 13,
       "orbit": "LEO400",
       "forces": "I1-field-sun-moon-in-track",
-      "worstM": 0.018163410303211003,
+      "worstM": 0.018179494472963346,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.065
+      "seconds": 0.068
     },
     {
       "id": 14,
       "orbit": "LEO400",
       "forces": "B1-field-sun-moon-srp-drag-bdot",
-      "worstM": 0.021132808188622027,
+      "worstM": 0.02117723563264562,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.174
+      "seconds": 0.177
     },
     {
       "id": 15,
       "orbit": "LEO400",
       "forces": "W1-field-sun-moon-srp-drag-cssi",
-      "worstM": 0.021503062757164498,
+      "worstM": 0.021479749541868372,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.174
+      "seconds": 0.178
     },
     {
       "id": 16,
       "orbit": "LEO400",
       "forces": "E1-field-sun-moon-eme2000",
-      "worstM": 0.018101800362080846,
+      "worstM": 0.018128607852443492,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.065
+      "seconds": 0.068
     },
     {
       "id": 17,
       "orbit": "LEO400",
       "forces": "G1-egm96-36x36-sun-moon",
-      "worstM": 0.017215145898562233,
+      "worstM": 0.017309625137079777,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.133
+      "seconds": 0.138
     },
     {
       "id": 18,
       "orbit": "LEO400",
       "forces": "G2-egm2008-36z24t-sun-moon",
-      "worstM": 0.018187215487344064,
+      "worstM": 0.01822254230001454,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.109
+      "seconds": 0.11
     },
     {
       "id": 19,
       "orbit": "LEO400",
       "forces": "C1-field-sun-moon-srp-drag-intrack-bdot-jacobians",
-      "worstM": 0.0059487221939611735,
+      "worstM": 0.0059224491041758665,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 1.559,
-      "stmRelative": 0.000011645075501744101,
+      "seconds": 1.58,
+      "stmRelative": 0.000011646691517555434,
       "parameterRelative": {
-        "DRAG_AREA_OVER_MASS": 0.000005011540389270336,
-        "DRAG_AREA_OVER_MASS_RATE": 0.000003709044727515105,
-        "SRP_AREA_OVER_MASS": 0.0001406165181749034,
-        "IN_TRACK_ACCELERATION": 0.000005069236220155836
+        "DRAG_AREA_OVER_MASS": 0.000005012133388455204,
+        "DRAG_AREA_OVER_MASS_RATE": 0.000003708957159337455,
+        "SRP_AREA_OVER_MASS": 0.00014052275879043334,
+        "IN_TRACK_ACCELERATION": 0.000005069693911462355
       },
       "jacobiansPass": true
     },
@@ -212,11 +212,11 @@
       "id": 20,
       "orbit": "LEO400",
       "forces": "J1-field-sun-moon-srp-drag-jb2008",
-      "worstM": 0.025022275929181808,
+      "worstM": 0.025855702188580517,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.253
+      "seconds": 0.255
     },
     {
       "id": 21,
@@ -226,103 +226,103 @@
       "worstAtHours": 24,
       "toleranceM": 0.001,
       "pass": true,
-      "seconds": 0.001
+      "seconds": 0.003
     },
     {
       "id": 22,
       "orbit": "SSO700",
       "forces": "F1-J2",
-      "worstM": 0.014499386758272082,
+      "worstM": 0.014458667441939986,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.016
+      "seconds": 0.015
     },
     {
       "id": 23,
       "orbit": "SSO700",
       "forces": "F2-zonal20",
-      "worstM": 0.01454845116772984,
+      "worstM": 0.0144841239087,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.024
+      "seconds": 0.023
     },
     {
       "id": 24,
       "orbit": "SSO700",
       "forces": "Z1-zonal20-sun-moon",
-      "worstM": 0.014466331952695819,
+      "worstM": 0.014595130077823896,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.038
+      "seconds": 0.04
     },
     {
       "id": 25,
       "orbit": "SSO700",
       "forces": "Z2-zonal20-sun-moon-srp",
-      "worstM": 0.013800850479976553,
+      "worstM": 0.013887015572636377,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.051
+      "seconds": 0.061
     },
     {
       "id": 26,
       "orbit": "SSO700",
       "forces": "Z3-zonal20-sun-moon-srp-drag",
-      "worstM": 0.01413437906136503,
+      "worstM": 0.014142935189414087,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.137
+      "seconds": 0.141
     },
     {
       "id": 27,
       "orbit": "SSO700",
       "forces": "F3-field20x20",
-      "worstM": 0.014480437941190192,
+      "worstM": 0.014505282763828262,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.048
+      "seconds": 0.046
     },
     {
       "id": 28,
       "orbit": "SSO700",
       "forces": "F4-field-sun-moon",
-      "worstM": 0.014633392214634597,
+      "worstM": 0.014476714251589032,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.061
+      "seconds": 0.062
     },
     {
       "id": 29,
       "orbit": "SSO700",
       "forces": "F5-field-sun-moon-srp",
-      "worstM": 0.0140172003556535,
+      "worstM": 0.014092690378378325,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.079
+      "seconds": 0.083
     },
     {
       "id": 30,
       "orbit": "SSO700",
       "forces": "F6-field-sun-moon-srp-drag",
-      "worstM": 0.014225133171,
+      "worstM": 0.01425949411748984,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.164
+      "seconds": 0.166
     },
     {
       "id": 31,
       "orbit": "SSO700",
       "forces": "W1-field-sun-moon-srp-drag-cssi",
-      "worstM": 0.014415740763126603,
+      "worstM": 0.014464626442266855,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
@@ -332,11 +332,11 @@
       "id": 32,
       "orbit": "SSO700",
       "forces": "J1-field-sun-moon-srp-drag-jb2008",
-      "worstM": 0.016929295444838437,
+      "worstM": 0.016833824439192145,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.248
+      "seconds": 0.25
     },
     {
       "id": 33,
@@ -346,13 +346,13 @@
       "worstAtHours": 22,
       "toleranceM": 0.001,
       "pass": true,
-      "seconds": 0
+      "seconds": 0.001
     },
     {
       "id": 34,
       "orbit": "GPS",
       "forces": "F1-J2",
-      "worstM": 0.00019630307375735205,
+      "worstM": 0.0001966910453150265,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -362,7 +362,7 @@
       "id": 35,
       "orbit": "GPS",
       "forces": "F2-zonal20",
-      "worstM": 0.00019697670733557755,
+      "worstM": 0.00019735583930695268,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -372,27 +372,27 @@
       "id": 36,
       "orbit": "GPS",
       "forces": "Z1-zonal20-sun-moon",
-      "worstM": 0.00015184409598332225,
+      "worstM": 0.0001508361658914456,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.013
+      "seconds": 0.014
     },
     {
       "id": 37,
       "orbit": "GPS",
       "forces": "Z2-zonal20-sun-moon-srp",
-      "worstM": 0.00015310758140198337,
+      "worstM": 0.0001527517890548918,
       "worstAtHours": 22,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.014
+      "seconds": 0.015
     },
     {
       "id": 38,
       "orbit": "GPS",
       "forces": "F3-field20x20",
-      "worstM": 0.00019432312411179939,
+      "worstM": 0.0001937124724434225,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -402,27 +402,27 @@
       "id": 39,
       "orbit": "GPS",
       "forces": "F4-field-sun-moon",
-      "worstM": 0.00015173508171742326,
+      "worstM": 0.0001517641871523478,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.019
+      "seconds": 0.018
     },
     {
       "id": 40,
       "orbit": "GPS",
       "forces": "F5-field-sun-moon-srp",
-      "worstM": 0.0001536345167763252,
+      "worstM": 0.00015416703909421604,
       "worstAtHours": 22,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.02
+      "seconds": 0.021
     },
     {
       "id": 41,
       "orbit": "GPS",
       "forces": "R1-field-sun-moon-schwarzschild",
-      "worstM": 0.00015307435887892655,
+      "worstM": 0.00015259858911644878,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -432,7 +432,7 @@
       "id": 42,
       "orbit": "GPS",
       "forces": "R2-field-sun-moon-relativity-iers2010",
-      "worstM": 0.00015846681715430948,
+      "worstM": 0.00015858567828678062,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -442,27 +442,27 @@
       "id": 43,
       "orbit": "GPS",
       "forces": "T1-field-sun-moon-solid-tides",
-      "worstM": 0.00015067040163986483,
+      "worstM": 0.0001508758730530708,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.038
+      "seconds": 0.037
     },
     {
       "id": 44,
       "orbit": "GPS",
       "forces": "E1-field-sun-moon-eme2000",
-      "worstM": 0.00015140385857984883,
+      "worstM": 0.00015180866003476528,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.019
+      "seconds": 0.02
     },
     {
       "id": 45,
       "orbit": "GPS",
       "forces": "G1-egm96-70x70-sun-moon",
-      "worstM": 0.0001524921459551944,
+      "worstM": 0.00015246713914605196,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -472,15 +472,15 @@
       "id": 46,
       "orbit": "GPS",
       "forces": "C1-field-sun-moon-srp-intrack-jacobians",
-      "worstM": 0.00015382700505611258,
+      "worstM": 0.00015311791349970928,
       "worstAtHours": 22,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.077,
-      "stmRelative": 1.7819970208121297e-11,
+      "seconds": 0.079,
+      "stmRelative": 1.8010040755838745e-11,
       "parameterRelative": {
-        "SRP_AREA_OVER_MASS": 5.480056885335e-10,
-        "IN_TRACK_ACCELERATION": 6.1142127135314405e-12
+        "SRP_AREA_OVER_MASS": 5.382957585437122e-10,
+        "IN_TRACK_ACCELERATION": 6.087616974784343e-12
       },
       "jacobiansPass": true
     },
@@ -492,13 +492,13 @@
       "worstAtHours": 17,
       "toleranceM": 0.001,
       "pass": true,
-      "seconds": 0
+      "seconds": 0.001
     },
     {
       "id": 48,
       "orbit": "GEO",
       "forces": "F1-J2",
-      "worstM": 0.00003556394183239371,
+      "worstM": 0.0000355118928051411,
       "worstAtHours": 16,
       "toleranceM": 0.05,
       "pass": true,
@@ -508,8 +508,8 @@
       "id": 49,
       "orbit": "GEO",
       "forces": "F2-zonal20",
-      "worstM": 0.000033520069792098076,
-      "worstAtHours": 15,
+      "worstM": 0.00003355828779398618,
+      "worstAtHours": 17,
       "toleranceM": 0.05,
       "pass": true,
       "seconds": 0.007
@@ -518,27 +518,27 @@
       "id": 50,
       "orbit": "GEO",
       "forces": "Z1-zonal20-sun-moon",
-      "worstM": 0.00006316457985958039,
+      "worstM": 0.00006359479338203946,
       "worstAtHours": 21,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.012
+      "seconds": 0.013
     },
     {
       "id": 51,
       "orbit": "GEO",
       "forces": "Z2-zonal20-sun-moon-srp",
-      "worstM": 0.000059761830770857976,
+      "worstM": 0.00006033464756120216,
       "worstAtHours": 22,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.014
+      "seconds": 0.016
     },
     {
       "id": 52,
       "orbit": "GEO",
       "forces": "F3-field20x20",
-      "worstM": 0.000038927991769009035,
+      "worstM": 0.00003878860074542419,
       "worstAtHours": 16,
       "toleranceM": 0.05,
       "pass": true,
@@ -548,7 +548,7 @@
       "id": 53,
       "orbit": "GEO",
       "forces": "F4-field-sun-moon",
-      "worstM": 0.00006584103236003712,
+      "worstM": 0.000066675859598257,
       "worstAtHours": 21,
       "toleranceM": 0.05,
       "pass": true,
@@ -558,11 +558,11 @@
       "id": 54,
       "orbit": "GEO",
       "forces": "F5-field-sun-moon-srp",
-      "worstM": 0.000059691523729345945,
+      "worstM": 0.00006077088139015164,
       "worstAtHours": 21,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.021
+      "seconds": 0.023
     },
     {
       "id": 55,
@@ -578,7 +578,7 @@
       "id": 56,
       "orbit": "MOLNIYA",
       "forces": "F1-J2",
-      "worstM": 0.011014453544270473,
+      "worstM": 0.01099317388007818,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
@@ -588,7 +588,7 @@
       "id": 57,
       "orbit": "MOLNIYA",
       "forces": "F2-zonal20",
-      "worstM": 0.010961008207028096,
+      "worstM": 0.011206074017490315,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
@@ -598,37 +598,37 @@
       "id": 58,
       "orbit": "MOLNIYA",
       "forces": "Z1-zonal20-sun-moon",
-      "worstM": 0.010863014388624085,
+      "worstM": 0.010676514468598717,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.015
+      "seconds": 0.016
     },
     {
       "id": 59,
       "orbit": "MOLNIYA",
       "forces": "Z2-zonal20-sun-moon-srp",
-      "worstM": 0.009899795250633487,
+      "worstM": 0.009933519385792294,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.018
+      "seconds": 0.02
     },
     {
       "id": 60,
       "orbit": "MOLNIYA",
       "forces": "F3-field20x20",
-      "worstM": 0.010961059791787206,
+      "worstM": 0.01109178956562156,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.017
+      "seconds": 0.016
     },
     {
       "id": 61,
       "orbit": "MOLNIYA",
       "forces": "F4-field-sun-moon",
-      "worstM": 0.011034350307034351,
+      "worstM": 0.010773769218707636,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
@@ -638,37 +638,37 @@
       "id": 62,
       "orbit": "MOLNIYA",
       "forces": "F5-field-sun-moon-srp",
-      "worstM": 0.01052694939119755,
+      "worstM": 0.010263264843793385,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.027
+      "seconds": 0.028
     },
     {
       "id": 63,
       "orbit": "LEO400",
       "forces": "A1-field-sun-moon-srp-knocke",
-      "worstM": 0.01889717778602209,
+      "worstM": 0.018874733455214524,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.141
+      "seconds": 0.14
     },
     {
       "id": 64,
       "orbit": "SSO700",
       "forces": "A1-field-sun-moon-srp-knocke",
-      "worstM": 0.014816666285307853,
+      "worstM": 0.014573197568897606,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.122
+      "seconds": 0.125
     },
     {
       "id": 65,
       "orbit": "GPS",
       "forces": "A1-field-sun-moon-srp-knocke",
-      "worstM": 0.00015217050996183126,
+      "worstM": 0.0001517436516347024,
       "worstAtHours": 22,
       "toleranceM": 0.1,
       "pass": true,
@@ -678,27 +678,27 @@
       "id": 66,
       "orbit": "LEO400",
       "forces": "O1-field-sun-moon-ocean-tides30",
-      "worstM": 0.018091322825213266,
+      "worstM": 0.01811494929933071,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.188
+      "seconds": 0.186
     },
     {
       "id": 67,
       "orbit": "SSO700",
       "forces": "O1-field-sun-moon-ocean-tides30",
-      "worstM": 0.014578696652601586,
+      "worstM": 0.014480427319173551,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.178
+      "seconds": 0.174
     },
     {
       "id": 68,
       "orbit": "GPS",
       "forces": "O1-field-sun-moon-ocean-tides30",
-      "worstM": 0.00015235812888291092,
+      "worstM": 0.00015165982133045024,
       "worstAtHours": 22,
       "toleranceM": 0.05,
       "pass": true,
@@ -708,26 +708,26 @@
       "id": 69,
       "orbit": "LEO400",
       "forces": "O2-field-sun-moon-ocean-tides50",
-      "worstM": 0.01815306697903897,
+      "worstM": 0.0182153040021908,
       "worstAtHours": 24,
       "toleranceM": 0.05,
       "pass": true,
-      "seconds": 0.354
+      "seconds": 0.352
     },
     {
       "id": 70,
       "orbit": "LEO400",
       "forces": "C2-field-sun-moon-srp-drag-tides-knocke-ocean-jacobians",
-      "worstM": 0.005847025361321545,
+      "worstM": 0.005861106134137196,
       "worstAtHours": 24,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 3.28,
-      "stmRelative": 0.000017807742414171166,
+      "seconds": 3.283,
+      "stmRelative": 0.000017805670379440687,
       "parameterRelative": {
-        "DRAG_AREA_OVER_MASS": 0.000007541360207977066,
-        "DRAG_AREA_OVER_MASS_RATE": 0.000005512878603562723,
-        "SRP_AREA_OVER_MASS": 0.000026884935868827017
+        "DRAG_AREA_OVER_MASS": 0.000007542496875082892,
+        "DRAG_AREA_OVER_MASS_RATE": 0.000005512883851915549,
+        "SRP_AREA_OVER_MASS": 0.000026574937099157705
       },
       "jacobiansPass": true
     },
@@ -735,22 +735,22 @@
       "id": 71,
       "orbit": "GPS",
       "forces": "C2-field-sun-moon-srp-knocke-ocean-jacobians",
-      "worstM": 0.00015395689993649264,
+      "worstM": 0.00015292179511514854,
       "worstAtHours": 22,
       "toleranceM": 0.1,
       "pass": true,
-      "seconds": 0.23,
-      "stmRelative": 1.5581873159353542e-11,
+      "seconds": 0.232,
+      "stmRelative": 1.5555253772910364e-11,
       "parameterRelative": {
-        "SRP_AREA_OVER_MASS": 8.882612176372907e-9
+        "SRP_AREA_OVER_MASS": 8.886581624218521e-9
       },
       "jacobiansPass": true
     }
   ],
-  "hpopWasmSha256": "9c24bf0ed74f59893282514f08891c414da6db071d4997357a8ebd6c2a8a99e3",
-  "runtime": "Node v25.4.0, space-data-module-sdk 0.8.26",
-  "modulesCommit": "d4a0b1155f64ac088694f9758c32e3b691952674",
-  "generated": "2026-10-11T12:11:07.576Z",
-  "reference": "propagator/hpop tests/fixtures/orekit/orekit-reference.json (Orekit 13.1, OrekitReference.java)",
+  "ffmWasmSha256": "b50b338f1011e00ca6ea50af03d5bdac7c03aa0ee73baaa4511604b201792bf3",
+  "runtime": "Node v25.4.0, space-data-module-sdk 0.9.7",
+  "modulesCommit": "5cc2d3b68edcc89fcab61ab6168fa83f0ed32b86",
+  "generated": "2026-10-17T07:56:07.487Z",
+  "reference": "propagator/ffm tests/fixtures/orekit/orekit-reference.json (Orekit 13.1, OrekitReference.java)",
   "metric": "largest 3D position difference over the hourly samples of a 24 h arc, m"
 }
