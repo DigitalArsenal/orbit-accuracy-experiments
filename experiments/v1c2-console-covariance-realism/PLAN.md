@@ -112,3 +112,16 @@ P0 still comes from the SGP4-mode age at the requested sim start. Report both
 timestamp controls and the covariance-branch nominal discrepancy; do not
 attribute a residual to the covariance branch unless the timestamp-normalized
 state-only resident passes. No complete diagnostic arc had yet been recorded.
+
+## Amendment A4 — 2026-10-22, execution scheduling only
+
+Nine completed sequential pilot arcs take roughly one minute per LEO arc.
+Use at most six independent WASM workers, each single-threaded, for the final
+recorded run. The coordinator reads and hashes inputs once, assigns independent
+arcs, serializes checkpoints, and does not assign new arcs while one-minute
+load is at or above 0.75 times CPU count. Record worker count and load; this is
+not a speed measurement. Numerical calls, ordering within each arc, inputs,
+sampling, covariances, statistics and thresholds stay unchanged. Preserve the
+sequential pilot locally and require its completed arcs to reproduce exactly
+before accepting the final run. This replaces the initial one-worker execution
+choice, not the one-thread speed results of frozen V1c.
