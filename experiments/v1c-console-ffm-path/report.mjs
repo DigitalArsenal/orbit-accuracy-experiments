@@ -91,6 +91,9 @@ export function publishRecorded(id, config, v1, e3) {
   for (const kind of ['source', 'build', 'kernel']) for (const [file, hash] of Object.entries(manifest.inputs[kind] ?? {}))
     manifest.replayInputs[file] = save(file, `replay/inputs/${hash}-${path.basename(file)}`, hash);
   for (const mod of manifest.modules) mod.replayPath = save(path.join(manifest.modulesRoot, mod.path, 'dist/isomorphic/module.wasm'), `replay/wasm/${mod.path}/module.wasm`, mod.wasmSha256);
+  manifest.inputs.v1Indexes = Object.fromEntries(fs.readdirSync(v1.inputs.reference).filter(n => n.startsWith(v1.gps.productPrefix)).sort().map(n => {
+    const file = path.join(n, 'index.json'); return [file, sha256(fs.readFileSync(path.join(v1.inputs.reference, file)))];
+  }));
   manifest.reportRepository = gitState(repoRoot);
   // Early invocation metadata predates the explicit per-invocation repository field.
   // The preserved task history supplies the last committed candidate before startup.
@@ -136,7 +139,7 @@ export async function checkRecorded(config, v1, e3) {
   }
   let files = 0;
   for (const [kind, entries] of Object.entries(manifest.inputs)) for (const [file, hash] of Object.entries(entries)) {
-    const actual = manifest.replayInputs?.[file] ? path.join(runDir, manifest.replayInputs[file]) : kind === 'v1Reference' ? path.join(v1.inputs.reference, file) : kind === 'e3Reference' ? path.join(e3.inputs.reference, file) : kind === 'gpHistory' ? path.join(e3.inputs.gpHistory, file) : file;
+    const actual = manifest.replayInputs?.[file] ? path.join(runDir, manifest.replayInputs[file]) : ['v1Reference', 'v1Indexes'].includes(kind) ? path.join(v1.inputs.reference, file) : kind === 'e3Reference' ? path.join(e3.inputs.reference, file) : kind === 'gpHistory' ? path.join(e3.inputs.gpHistory, file) : file;
     assert.equal(sha256(fs.readFileSync(actual)), hash, `input changed: ${kind}/${file}`); ++files;
   }
   for (const p of manifest.e3ProductIndexes) assert.equal(sha256(fs.readFileSync(path.join(e3.inputs.reference, p.product, 'index.json'))), p.sha256, 'truth index changed');
