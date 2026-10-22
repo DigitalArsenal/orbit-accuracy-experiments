@@ -82,3 +82,18 @@ resident_dynamics.cpp). Request covariance only at the six scored horizons;
 intermediate requests cannot affect it. Replay the catalog coverage trajectory
 at the registered 300-second cadence. This avoids repeated, discarded STM work
 and preserves the same P0, force model, target covariances and scored samples.
+
+## Amendment A2 — 2026-10-22, after the first diagnostic horizon
+
+The first Starlette 1-hour diagnostic differed from recorded Fast coverage by
+0.124510245 m when the resident seed carried P0, missing the registered 0.1 m
+control. No complete arc or result table had been produced. Source inspection
+shows covariance requests run a seed-to-target variational RK integration;
+state-only resident requests use the Fast coverage implementation. Add a paired
+resident with identical state, configuration, environment and coefficients but
+without P0, at the original 300 s cadence. Its position must agree with recorded
+coverage within the unchanged 0.1 m threshold. Report the covariance-resident
+nominal discrepancy separately, including the count exceeding 0.1 m. Attribute
+that discrepancy to the covariance-enabled branch only when the paired
+state-only control passes. The covariance scores still use recorded V1c Fast
+positions; no trajectory, covariance, threshold or sample is replaced.

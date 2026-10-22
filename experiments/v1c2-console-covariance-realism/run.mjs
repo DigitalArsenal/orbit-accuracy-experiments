@@ -15,7 +15,7 @@ import { finalsRecords, eopFrame } from '../../harness/eop.mjs';
 import { ommFrame } from '../../harness/records.mjs';
 import { readGfzKp, spwRows, spaceWeatherFrame } from '../../harness/full-force.mjs';
 import { startRun, repoRoot } from '../../harness/provenance.mjs';
-import { moduleFactory, bindings, coverage, sgp4Client, distance } from '../v1c-console-ffm-path/modules.mjs';
+import { moduleFactory, bindings, coverage, resident, sgp4Client, distance } from '../v1c-console-ffm-path/modules.mjs';
 import { covarianceResident, score, validMatrix } from './modules.mjs';
 import { checkRecorded, publish } from './report.mjs';
 const dir = path.dirname(new URL(import.meta.url).pathname), configPath = path.join(dir, 'config.json');
@@ -128,8 +128,10 @@ for (const prior of oldArcs) {
     assert.equal(catalog.profile, 'FFM-1');
     const seed = { ...fixedSeed, state: catalog.transform(ms, fixedSeed.state, true) };
     // Resident and coverage are separate module instances, exactly as in the console.
-    const residentHost = supported(cov[0]) ? await makeFfm() : null;
+    const residentHost = supported(cov[0]) ? await makeFfm() : null, stateHost = await makeFfm();
     try {
+      const cdAm = stateHost.instance.exports.plugin_drag_area_over_mass_from_bstar(set.elements.BSTAR, .01);
+      const stateStep = await resident(stateHost, b, { drag: true, frame: configuration }, env, seed, .02, cdAm);
       const step = residentHost ? await covarianceResident(residentHost, b, configuration, env, seed, cov[0].covarianceInertial, set.elements.BSTAR) : null;
       if (step) { const zero = await step(ms); arc.zeroTimeCovarianceRelative = relative(zero.covariance, cov[0].covarianceInertial); assert(arc.zeroTimeCovarianceRelative <= config.zeroTimeCovarianceRelative, `zero-time covariance relative difference ${arc.zeroTimeCovarianceRelative}`); }
       const ticks = new Set(targets.map(t => t.ms));
@@ -137,24 +139,26 @@ for (const prior of oldArcs) {
       const at = new Map(targets.map((t, i) => [t.ms, { ...t, covariance: cov[i + 1] }]));
       arc.samples = [];
       for (const tms of [...ticks].sort((a, z) => a - z)) {
-        const covered = catalog.step(tms), t = at.get(tms); if (!t) continue;
-        const resident = step ? await step(tms) : null;
+        const covered = catalog.step(tms), stateOnly = await stateStep(tms), t = at.get(tms); if (!t) continue;
+        const propagated = step ? await step(tms) : null;
         const sgpState = await sgp4.at(tms), oldSgp = prior.methods.SGP4.samples.find(s => s.hours === t.hours), oldFfm = prior.methods['Console FFM-1'].samples.find(s => s.hours === t.hours);
         const sample = { hours: t.hours, elapsedHours: (tms - ms) / 3600000, sgp4ErrorDifferenceM: Math.abs(distance(sgpState, t.state) - oldSgp.errorM),
           SGP4: { status: t.covariance.status, d2: null }, 'FFM-1': { status: cov[0].status, d2: null } };
         assert(sample.sgp4ErrorDifferenceM <= config.pathAgreementM, `SGP4 replay mismatch ${prior.key}`);
         const coverageState = catalog.transform(tms, [...covered, 0, 0, 0], true);
-        assert(distance(coverageState, oldFfm.position) <= config.pathAgreementM, 'coverage replay mismatch');
+        sample.coverageReplayDifferenceM = distance(coverageState, oldFfm.position);
+        assert(sample.coverageReplayDifferenceM <= config.pathAgreementM, 'coverage replay mismatch');
+        sample.residentCoverageDifferenceM = distance(stateOnly, oldFfm.position);
+        assert(sample.residentCoverageDifferenceM <= config.pathAgreementM, 'state-only resident replay mismatch');
         if (supported(t.covariance)) Object.assign(sample.SGP4, await score(gp, codec, sgpState, t.covariance.covarianceInertial, t.state));
-        if (resident) {
-          validMatrix(resident.covariance, config.covarianceSymmetryRelative);
-          sample.residentCoverageDifferenceM = distance(resident.state, oldFfm.position);
-          assert(sample.residentCoverageDifferenceM <= config.pathAgreementM, `FFM replay mismatch ${prior.key} ${t.hours}h: ${sample.residentCoverageDifferenceM} m`);
-          Object.assign(sample['FFM-1'], await score(gp, codec, [...oldFfm.position, ...resident.state.slice(3)], resident.covariance, t.state));
+        if (propagated) {
+          validMatrix(propagated.covariance, config.covarianceSymmetryRelative);
+          sample.covarianceResidentCoverageDifferenceM = distance(propagated.state, oldFfm.position);
+          Object.assign(sample['FFM-1'], await score(gp, codec, [...oldFfm.position, ...propagated.state.slice(3)], propagated.covariance, t.state));
         }
         arc.samples.push(sample);
       }
-    } finally { await residentHost?.destroy(); }
+    } finally { await residentHost?.destroy(); await stateHost.destroy(); }
     run.addInputs('e3Reference', { ...truth.read, ...gpsTruth.read });
     for (const [file, hash] of Object.entries(run.manifest.inputs.e3Reference)) assert.equal(hash, parent.inputs.e3Reference[file]);
     keep(arc);

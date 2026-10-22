@@ -28,7 +28,10 @@ export function summarize(arcs, config, v1, e3) {
     arcs: arcs.length, skipped: arcs.filter(a => a.skipped).length, samples: samples.length,
     missingHorizons: arcs.reduce((n, a) => n + a.missingHorizons.length, 0),
     maxSgp4ErrorDifferenceM: Math.max(...samples.map(s => s.sgp4ErrorDifferenceM)),
+    maxCoverageReplayDifferenceM: Math.max(...samples.map(s => s.coverageReplayDifferenceM)),
     maxResidentCoverageDifferenceM: Math.max(0, ...samples.map(s => s.residentCoverageDifferenceM ?? 0)),
+    maxCovarianceResidentCoverageDifferenceM: Math.max(0, ...samples.map(s => s.covarianceResidentCoverageDifferenceM ?? 0)),
+    covarianceResidentControlMisses: samples.filter(s => s.covarianceResidentCoverageDifferenceM > config.pathAgreementM).length,
     maxZeroTimeCovarianceRelative: Math.max(0, ...arcs.map(a => a.zeroTimeCovarianceRelative ?? 0)),
   } };
 }
@@ -46,7 +49,8 @@ export function render(m, manifest) {
     lines.push('');
   }
   lines.push('## Integrity and limits', '', `${m.integrity.arcs} object/issue pairs; ${m.integrity.skipped} skipped; ${m.integrity.samples} paired truth samples; ${m.integrity.missingHorizons} absent horizons. Non-positive-definite or unavailable covariance counts are retained in metrics. FFM status labels describe P0, not a calibration verdict on its transported covariance.`, '',
-    `Maximum SGP4 error difference from V1c: ${f(m.integrity.maxSgp4ErrorDifferenceM)} m. Maximum resident/recorded coverage position difference: ${f(m.integrity.maxResidentCoverageDifferenceM)} m (registered tolerance 0.1 m). Maximum zero-time covariance relative difference: ${m.integrity.maxZeroTimeCovarianceRelative.toExponential(3)}.`, '',
+    `Maximum SGP4 error difference from V1c: ${f(m.integrity.maxSgp4ErrorDifferenceM)} m; replayed coverage difference ${f(m.integrity.maxCoverageReplayDifferenceM)} m; state-only resident/recorded coverage difference ${f(m.integrity.maxResidentCoverageDifferenceM)} m (registered tolerance 0.1 m). Maximum zero-time covariance relative difference: ${m.integrity.maxZeroTimeCovarianceRelative.toExponential(3)}.`, '',
+    `Covariance-resident nominal position versus recorded Fast coverage: maximum ${f(m.integrity.maxCovarianceResidentCoverageDifferenceM)} m; ${m.integrity.covarianceResidentControlMisses} samples MISS the original 0.1 m control. Amendment A2 adds the identical resident seed without P0: its state-only Fast control passes the original tolerance. Attaching P0 selects the module’s seed-to-target variational RK branch (ResidentDynamics::covariance), instead of the Fast nominal path. All FFM scores use the unchanged recorded Fast positions; the covariance branch discrepancy is reported, not substituted into those errors.`, '',
     `Modules built from \`${manifest.modulesRepository.commit}\`; ${manifest.runtime.node}, ${manifest.runtime.platform}; ${manifest.runtime.cpus} logical CPUs, one sequential worker. Load at start/end: ${manifest.runtime.loadAverage.map(f).join('/')} / ${manifest.loadEnd.map(f).join('/')}. This is a covariance test; the frozen V1c CPU benchmark is not rerun.`, '',
     'The history prior compares OMMs with later OMMs, which may share errors; EMPIRICAL does not assert truth calibration. This retrospective E3 window overlaps the population model’s existing validation domain and is not new independent validation of its fit. No maneuver exclusions were introduced. Linear STM transport without process noise does not model force error, maneuvers or nonlinear uncertainty growth.', '',
     'Inputs and credits: Space-Track / USSPACECOM / 18th Space Defense Squadron; ILRS; IGS (Johnston et al. 2017); © Navigation Support Office at ESA/ESOC 2026; © ESA 2026, SW_SP3xCOM_2_; Contains modified Copernicus Sentinel data 2026. Weather: GFZ historical drivers (CC BY 4.0, Matzka et al. 2021, doi:10.1029/2020SW002641; F10.7 DRAO/Natural Resources Canada), NOAA SWPC public-domain forecast fills for absent centered-average dates, exactly as V1c. No CelesTrak/CSSI weather. [Data terms](../../docs/data-licenses.md). Raw OMM, states and individual scores remain local.', '',
@@ -85,6 +89,7 @@ export function checkRecorded(config, v1, e3) {
   assert.deepEqual(m, read(path.join(output, 'metrics.json')));
   assert.equal(render(m, manifest), fs.readFileSync(path.join(output, 'README.md'), 'utf8'));
   assert(m.integrity.maxSgp4ErrorDifferenceM <= config.pathAgreementM, 'SGP4/V1c mismatch');
+  assert(m.integrity.maxCoverageReplayDifferenceM <= config.pathAgreementM, 'coverage/V1c mismatch');
   assert(m.integrity.maxResidentCoverageDifferenceM <= config.pathAgreementM, 'FFM/V1c mismatch');
   assert(m.integrity.maxZeroTimeCovarianceRelative <= config.zeroTimeCovarianceRelative);
   let count = 0;
