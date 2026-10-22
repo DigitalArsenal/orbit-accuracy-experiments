@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { median, quantile } from '../../harness/stats.mjs';
-import { sha256 } from '../../harness/modules.mjs';
+import { sha256, gitState } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
 import { distance } from './modules.mjs';
 const read = p => JSON.parse(fs.readFileSync(p));
@@ -73,6 +73,32 @@ export function render(m, manifest) {
     'Verification: `node experiments/v1c-console-ffm-path/run.mjs --check` re-derives these tables from the recorded local run and checks V1, paired controls, completeness and provenance. Unit tests and Docker are not run. This benchmark does not deploy or change the console or modules.', '');
   return lines.join('\n');
 }
+// Preserve only local replay materials; publication still contains aggregates and hashes.
+export function publishRecorded(id, config, v1, e3) {
+  assert(/^[a-z0-9-]+$/i.test(id));
+  const runDir = path.join(repoRoot, 'runs', id), manifest = read(path.join(runDir, 'manifest.json'));
+  assert(manifest.finished, 'cannot publish an unfinished run');
+  const raw = fs.readFileSync(path.join(runDir, 'arcs.jsonl'));
+  assert.equal(sha256(raw), manifest.rawSha256);
+  const save = (file, relative, hash) => {
+    const target = path.join(runDir, relative);
+    if (!fs.existsSync(target)) { fs.mkdirSync(path.dirname(target), { recursive: true }); fs.copyFileSync(file, target); }
+    assert.equal(sha256(fs.readFileSync(target)), hash, 'replay material differs');
+    return relative;
+  };
+  manifest.replayInputs ??= {};
+  for (const kind of ['source', 'build', 'kernel']) for (const [file, hash] of Object.entries(manifest.inputs[kind] ?? {}))
+    manifest.replayInputs[file] = save(file, `replay/inputs/${hash}-${path.basename(file)}`, hash);
+  for (const mod of manifest.modules) mod.replayPath = save(path.join(manifest.modulesRoot, mod.path, 'dist/isomorphic/module.wasm'), `replay/wasm/${mod.path}/module.wasm`, mod.wasmSha256);
+  manifest.reportRepository = gitState(repoRoot);
+  const arcs = raw.toString().trim().split('\n').map(JSON.parse), m = summarize(arcs, config, v1, e3);
+  fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+  fs.writeFileSync(path.join(runDir, 'metrics.json'), JSON.stringify(m, null, 2) + '\n');
+  const out = path.join(repoRoot, 'results/v1c'); fs.mkdirSync(out, { recursive: true });
+  fs.writeFileSync(path.join(out, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+  fs.writeFileSync(path.join(out, 'metrics.json'), JSON.stringify(m, null, 2) + '\n');
+  fs.writeFileSync(path.join(out, 'README.md'), render(m, manifest));
+}
 export async function checkRecorded(config, v1, e3) {
   const out = path.join(repoRoot, 'results/v1c'), manifest = read(path.join(out, 'manifest.json'));
   const runDir = process.env.SDN_V1C_RUN_DIR ?? path.join(repoRoot, 'runs', manifest.run);
@@ -102,9 +128,9 @@ export async function checkRecorded(config, v1, e3) {
   }
   let files = 0;
   for (const [kind, entries] of Object.entries(manifest.inputs)) for (const [file, hash] of Object.entries(entries)) {
-    const actual = kind === 'v1Reference' ? path.join(v1.inputs.reference, file) : kind === 'e3Reference' ? path.join(e3.inputs.reference, file) : kind === 'gpHistory' ? path.join(e3.inputs.gpHistory, file) : file;
+    const actual = manifest.replayInputs?.[file] ? path.join(runDir, manifest.replayInputs[file]) : kind === 'v1Reference' ? path.join(v1.inputs.reference, file) : kind === 'e3Reference' ? path.join(e3.inputs.reference, file) : kind === 'gpHistory' ? path.join(e3.inputs.gpHistory, file) : file;
     assert.equal(sha256(fs.readFileSync(actual)), hash, `input changed: ${kind}/${file}`); ++files;
   }
-  for (const mod of manifest.modules) assert.equal(sha256(fs.readFileSync(path.join(manifest.modulesRoot, mod.path, 'dist/isomorphic/module.wasm'))), mod.wasmSha256, `WASM changed: ${mod.path}`);
+  for (const mod of manifest.modules) assert.equal(sha256(fs.readFileSync(mod.replayPath ? path.join(runDir, mod.replayPath) : path.join(manifest.modulesRoot, mod.path, 'dist/isomorphic/module.wasm'))), mod.wasmSha256, `WASM changed: ${mod.path}`);
   console.log(`V1C-E2E PASS: four tables re-derived; ${arcs.length} arcs; ${files} input hashes; all six horizons and four E3 classes.`);
 }

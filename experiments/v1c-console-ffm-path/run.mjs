@@ -18,12 +18,13 @@ import { readGfzKp, spwRows, spaceWeatherFrame } from '../../harness/full-force.
 import { convertIso } from '../../harness/time.mjs';
 import { startRun, repoRoot } from '../../harness/provenance.mjs';
 import { moduleFactory, bindings, coverage, resident, sgp4Client, distance } from './modules.mjs';
-import { summarize, render, checkRecorded } from './report.mjs';
+import { summarize, render, checkRecorded, publishRecorded } from './report.mjs';
 const dir = path.dirname(new URL(import.meta.url).pathname), configPath = path.join(dir, 'config.json');
 const config = JSON.parse(fs.readFileSync(configPath));
 const v1 = JSON.parse(fs.readFileSync(path.join(repoRoot, config.v1Config)));
 const e3 = JSON.parse(fs.readFileSync(path.join(repoRoot, config.e3Config)));
-const { values } = parseArgs({ options: { check: { type: 'boolean' }, modules: { type: 'string' }, resume: { type: 'string' }, 'stop-after': { type: 'string' } } });
+const { values } = parseArgs({ options: { check: { type: 'boolean' }, report: { type: 'string' }, modules: { type: 'string' }, resume: { type: 'string' }, 'stop-after': { type: 'string' } } });
+if (values.report) { publishRecorded(values.report, config, v1, e3); process.exit(0); }
 if (values.check) { await checkRecorded(config, v1, e3); process.exit(0); }
 assert(config.frozen && v1.frozen && e3.frozen, 'test window is locked');
 for (const file of ['PLAN.md', 'config.json']) {
@@ -174,4 +175,5 @@ const output = path.join(repoRoot, 'results/v1c'); fs.mkdirSync(output, { recurs
 fs.writeFileSync(path.join(output, 'metrics.json'), JSON.stringify(metrics, null, 2) + '\n');
 fs.writeFileSync(path.join(output, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 fs.writeFileSync(path.join(output, 'README.md'), render(metrics, manifest));
+publishRecorded(run.id, config, v1, e3);
 console.log(`Recorded ${run.id}; tables generated. Run --check for the E2E.`);
