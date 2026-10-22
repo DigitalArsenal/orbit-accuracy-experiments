@@ -1,7 +1,19 @@
 // Typed transport only; dynamics, covariance propagation and scoring are WASM.
 import assert from 'node:assert/strict';
 import * as fb from 'flatbuffers';
+import { TIM, TIMT, TIMInstantT, TIMConversionRequestT, timingStandard, timEpochRepresentation, timConversionStatus } from 'spacedatastandards.org/lib/js/TIM/main.js';
 import { jd } from '../v1c-console-ffm-path/modules.mjs';
+
+export async function catalogSeedEpoch(time, ms) {
+  const source = Object.assign(new TIMInstantT(), { TIME_SYSTEM: timingStandard.UTC, EPOCH_FORMAT: timEpochRepresentation.JULIAN_DATE, JULIAN_DATE: jd(ms) });
+  const request = Object.assign(new TIMConversionRequestT(), { SOURCE: source, TARGET_TIME_SYSTEM: timingStandard.UTC, TARGET_EPOCH_FORMAT: timEpochRepresentation.ISO8601 });
+  const message = Object.assign(new TIMT(), { CONVERSION_REQUEST: request });
+  const builder = new fb.Builder(512); TIM.finishTIMBuffer(builder, message.pack(builder));
+  const response = await time.invoke('convert_time', [{ portId: 'request', typeRef: { schemaName: 'TIM.fbs', fileIdentifier: '$TIM', rootTypeName: 'TIM' }, payload: builder.asUint8Array() }]);
+  const result = TIM.getRootAsTIM(new fb.ByteBuffer(new Uint8Array(response.outputs[0].payload))).CONVERSION_RESULT();
+  assert.equal(result.STATUS(), timConversionStatus.OK);
+  return result.TARGET().ISO8601();
+}
 
 export function validMatrix(p, tolerance) {
   assert.equal(p.length, 36); assert(p.every(Number.isFinite));

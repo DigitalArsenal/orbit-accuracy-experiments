@@ -97,3 +97,18 @@ nominal discrepancy separately, including the count exceeding 0.1 m. Attribute
 that discrepancy to the covariance-enabled branch only when the paired
 state-only control passes. The covariance scores still use recorded V1c Fast
 positions; no trajectory, covariance, threshold or sample is replaced.
+
+## Amendment A3 — 2026-10-22, after the paired state-only diagnostic
+
+The state-only resident also failed the 0.1 m check, so A2's conditional branch
+attribution is **not established**. The catalog converts its UTC Julian-date
+seed to an ISO string internally; the harness resident instead received the
+unrounded wall-clock ISO timestamp. Normalize the resident seed's timestamp
+from the same catalog Julian date through foundation/time (no JavaScript time
+scale conversion), and repeat both controls. Retain a second state-only
+resident with the original ISO timestamp to measure the timestamp effect in
+the same run. Keep the 0.1 m criterion and all V1c scored positions unchanged.
+P0 still comes from the SGP4-mode age at the requested sim start. Report both
+timestamp controls and the covariance-branch nominal discrepancy; do not
+attribute a residual to the covariance branch unless the timestamp-normalized
+state-only resident passes. No complete diagnostic arc had yet been recorded.
