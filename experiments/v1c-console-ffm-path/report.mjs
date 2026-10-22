@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { median, quantile } from '../../harness/stats.mjs';
 import { sha256, gitState } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
@@ -56,7 +57,7 @@ export function render(m, manifest) {
     'V1 seeds, truth inputs and statistics are imported unchanged. Position errors are meters. Every propagation and frame transform ran in freshly built WASM. See the frozen [plan](../../experiments/v1c-console-ffm-path/PLAN.md), [metrics](metrics.json) and [manifest](manifest.json).', '',
     '## 1. E-f coverage against the published V1 medians', '', '| Group | h | Published | Coverage | Resident, catalog coefficient | Resident, V1 coefficient | Execution, V1 coefficient | Tolerance | Direct match |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |'];
   for (const r of m.validation) lines.push(`| ${r.group} | ${r.hours} | ${f(r.publishedM)} | ${f(r.coverageM)} | ${f(r.catalogResidentM)} | ${f(r.physicalResidentM)} | ${f(r.executionM)} | ${f(r.toleranceM)} | ${r.directPass ? 'PASS' : 'MISS'} |`);
-  lines.push('', 'The catalog entry fixes Cr·A/m at 0.02 m²/kg when seeding, overriding the physical coefficient in the E-f request. The two resident controls change only that coefficient. A direct miss stays a miss; the measured-cause acceptance requires both physical-coefficient controls to reproduce V1 and the catalog-coefficient resident to agree with coverage within 0.1 m at every sample.', '',
+  lines.push('', `Paired coefficient controls explain ${m.validation.filter(v => v.measuredCoefficientCause).length} of ${m.validation.length} published-median comparisons; ${m.validation.filter(v => v.directPass).length} match directly.`, '', 'The catalog entry fixes Cr·A/m at 0.02 m²/kg when seeding, overriding the physical coefficient in the E-f request. The two resident controls change only that coefficient. A direct miss stays a miss; the measured-cause acceptance requires both physical-coefficient controls to reproduce V1 and the catalog-coefficient resident to agree with coverage within 0.1 m at every sample.', '',
     '## 2. FFM-1 coverage beside resident (precise V1 seeds)', '', '| Group | h | Coverage median (p95), n | Resident median (p95), n |', '| --- | ---: | ---: | ---: |');
   const cell = (suite, group, method, h) => { const r = m.tables.find(t => t.suite === suite && t.group === group && t.method === method && t.hours === h); return r ? `${f(r.medianM)} (${f(r.p95M)}), ${r.n}` : '—'; };
   for (const g of ['SLR', 'GPS']) for (const h of [1, 6, 12, 24, 48, 72]) lines.push(`| ${g} | ${h} | ${cell('V1', g, 'FFM-1 coverage', h)} | ${cell('V1', g, 'FFM-1 resident', h)} |`);
@@ -91,6 +92,13 @@ export function publishRecorded(id, config, v1, e3) {
     manifest.replayInputs[file] = save(file, `replay/inputs/${hash}-${path.basename(file)}`, hash);
   for (const mod of manifest.modules) mod.replayPath = save(path.join(manifest.modulesRoot, mod.path, 'dist/isomorphic/module.wasm'), `replay/wasm/${mod.path}/module.wasm`, mod.wasmSha256);
   manifest.reportRepository = gitState(repoRoot);
+  // Early invocation metadata predates the explicit per-invocation repository field.
+  // The preserved task history supplies the last committed candidate before startup.
+  for (const invocation of manifest.invocations) if (!invocation.repository) invocation.repository = {
+    commit: execFileSync('git', ['log', '-1', `--before=${invocation.started}`, '--format=%H', '--', 'experiments/v1c-console-ffm-path'], { cwd: repoRoot, encoding: 'utf8' }).trim(),
+    evidence: 'preserved task commit history at invocation start',
+  };
+  manifest.generatedModuleChanges = execFileSync('git', ['diff', '--name-only'], { cwd: manifest.modulesRoot, encoding: 'utf8' }).trim().split('\n').filter(Boolean);
   const arcs = raw.toString().trim().split('\n').map(JSON.parse), m = summarize(arcs, config, v1, e3);
   fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
   fs.writeFileSync(path.join(runDir, 'metrics.json'), JSON.stringify(m, null, 2) + '\n');
@@ -131,6 +139,7 @@ export async function checkRecorded(config, v1, e3) {
     const actual = manifest.replayInputs?.[file] ? path.join(runDir, manifest.replayInputs[file]) : kind === 'v1Reference' ? path.join(v1.inputs.reference, file) : kind === 'e3Reference' ? path.join(e3.inputs.reference, file) : kind === 'gpHistory' ? path.join(e3.inputs.gpHistory, file) : file;
     assert.equal(sha256(fs.readFileSync(actual)), hash, `input changed: ${kind}/${file}`); ++files;
   }
+  for (const p of manifest.e3ProductIndexes) assert.equal(sha256(fs.readFileSync(path.join(e3.inputs.reference, p.product, 'index.json'))), p.sha256, 'truth index changed');
   for (const mod of manifest.modules) assert.equal(sha256(fs.readFileSync(mod.replayPath ? path.join(runDir, mod.replayPath) : path.join(manifest.modulesRoot, mod.path, 'dist/isomorphic/module.wasm'))), mod.wasmSha256, `WASM changed: ${mod.path}`);
   console.log(`V1C-E2E PASS: four tables re-derived; ${arcs.length} arcs; ${files} input hashes; all six horizons and four E3 classes.`);
 }

@@ -11,7 +11,7 @@ import { selectSeeds, utcMs } from '../v1-ffm-physical-truth/seeds.mjs';
 import { Products } from '../e3-combined-catalog/truth.mjs';
 import { observedFinals } from '../e3-combined-catalog/eop-finals.mjs';
 import { readElementSets, epochMs, dayList, shiftDay } from '../../harness/gp-archive.mjs';
-import { loadModule, sha256 } from '../../harness/modules.mjs';
+import { loadModule, sha256, gitState } from '../../harness/modules.mjs';
 import { c04Records, finalsRecords, eopFrame } from '../../harness/eop.mjs';
 import { executionFrame, decodeExecution } from '../../harness/prw.mjs';
 import { readGfzKp, spwRows, spaceWeatherFrame } from '../../harness/full-force.mjs';
@@ -34,6 +34,7 @@ for (const file of ['PLAN.md', 'config.json']) {
 assert(fs.statfsSync(repoRoot).bavail * fs.statfsSync(repoRoot).bsize >= 20 * 1024 ** 3, 'disk guard: need 20 GiB');
 const modules = path.resolve(values.modules ?? process.env.SDN_MODULES_ROOT ?? path.join(repoRoot, '../space-data-network-modules--ffm-console-path-v1-benchmark-20261022'));
 const run = startRun({ experiment: config.experiment, step: 'run', configPath, modulesDir: modules, args: values, resume: values.resume });
+run.manifest.invocations.at(-1).repository = gitState(repoRoot);
 const input = (kind, file) => { const bytes = fs.readFileSync(file); run.addInputs(kind, { [file]: sha256(bytes) }); return bytes; };
 for (const f of [config.v1Config, config.e3Config, 'experiments/v1-ffm-physical-truth/seeds.mjs', 'harness/stats.mjs', 'results/v1/README.md', 'experiments/v1c-console-ffm-path/PLAN.md']) input('source', path.join(repoRoot, f));
 run.manifest.cpuModel = os.cpus()[0].model;
