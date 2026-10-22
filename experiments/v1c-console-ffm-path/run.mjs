@@ -68,6 +68,7 @@ async function quiet() { while (os.loadavg()[0] >= limit) { console.log(`Waiting
 const cpuNow = () => process.threadCpuUsage();
 const cpuSeconds = before => { const c = process.threadCpuUsage(before); return (c.user + c.system) / 1e6; };
 async function propagate(seed, targets, configuration, env, mode, crAm, fixed = false, bstar = 0, timed = false) {
+  env = env.filter(f => configuration.drag || f.portId !== 'space_weather');
   await quiet();
   const host = await makeFfm(); let client;
   const loadStart = os.loadavg(), wallStart = performance.now(); let cpu = 0, peakLoad = loadStart[0];
@@ -122,7 +123,7 @@ for (const s of seeds) {
   for (const t of s.targets) sampleEpochs.push(await convertIso(time, t.truth.epoch, 'UTC', 'TDB'));
   const host = await makeFfm();
   try {
-    const response = await host.invoke({ methodId: 'invoke', inputs: [executionFrame({ epoch, timeScale: 'TDB', position: s.seed.position, velocity: s.seed.velocity, target: sampleEpochs.at(-1), samples: sampleEpochs, kernel: true, integrator: v1.integrator, forces: { ...v1.configurations['E-f'], ...s.params } }), ...env] });
+    const response = await host.invoke({ methodId: 'invoke', inputs: [executionFrame({ epoch, timeScale: 'TDB', position: s.seed.position, velocity: s.seed.velocity, target: sampleEpochs.at(-1), samples: sampleEpochs, kernel: true, integrator: v1.integrator, forces: { ...v1.configurations['E-f'], ...s.params } }), ...env.filter(f => f.portId !== 'space_weather')] });
     assert.equal(response.statusCode, 0, response.errorMessage);
     methods['E-f execution physical coefficient'] = { samples: decodeExecution(response).samples.map((p, i) => ({ hours: targets[i].hours, errorM: distance(p.position.map(x => x * 1000), targets[i].state) })) };
   } finally { await host.destroy(); }
