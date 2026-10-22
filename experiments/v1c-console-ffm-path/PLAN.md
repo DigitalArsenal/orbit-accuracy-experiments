@@ -74,3 +74,14 @@ the cause, reported explicitly. Missing data/evidence is not a pass.
 ## Amendments
 
 None at registration.
+
+### A1 — 2026-10-22, before any benchmark run
+
+The GFZ archive ends before the centered 81-day windows for late September
+end. Use its 2026-10-09 historical file and NOAA's archived 2026-10-09 45-day
+F10.7 forecast to fill only absent flux dates for those averages, then call the
+existing harness spwRows. Daily flux, Ap and Kp at all propagation epochs remain
+GFZ observations. This is the same licensed observed/forecast source choice as
+the landed space-weather module; record both hashes and the forecast dates.
+SGP4-alone errors use its ICRF output against GCRF truth; console seeds use its
+ECEF output as the actual console does (including that interface's frame choice).
