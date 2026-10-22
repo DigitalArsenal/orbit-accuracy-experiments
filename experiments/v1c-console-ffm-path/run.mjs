@@ -100,6 +100,7 @@ const ffmConfig = seed => ({ name: 'FFM-1', drag: true, frame: b.frame('configur
 const seeds = selectSeeds(v1, v1.inputs.reference, { onInput: (file, hash) => run.addInputs('v1Reference', { [file]: hash }), log: console.log });
 run.manifest.v1Seeds = { SLR: seeds.filter(s => s.group === 'SLR').length, GPS: seeds.filter(s => s.group === 'GPS').length };
 assert.deepEqual(run.manifest.v1Seeds, { SLR: 16, GPS: 96 });
+run.checkpoint();
 console.log(`${run.id}: ${seeds.length} V1 seeds; ${os.cpus().length} CPUs; load ${os.loadavg()}`);
 for (const s of seeds) {
   const key = `V1:${s.norad}:${s.seed.epoch}`; if (has(key)) continue;
@@ -107,6 +108,10 @@ for (const s of seeds) {
   const targets = s.targets.map(t => ({ hours: t.hours, ms: utcMs(t.truth.epoch), state: [...t.truth.position, ...t.truth.velocity].map(x => x * 1000) }));
   const env = environment(seed.ms, targets.at(-1).ms, c04.records);
   const ef = { name: 'E-f', drag: false, frame: executionFrame({ epoch: seed.epoch, position: s.seed.position, velocity: s.seed.velocity, target: seed.epoch, kernel: true, integrator: v1.integrator, forces: { ...v1.configurations['E-f'], ...s.params } }) };
+  // Resident configuration INITIAL is a placeholder; physical mass remains in FORCES.
+  const efRequest = b.catalog.prw.PRW.getSizePrefixedRootAsPRW(new fb.ByteBuffer(ef.frame.payload)).unpack().EXECUTION_REQUEST;
+  efRequest.INITIAL.HAS_MASS_KG = false; efRequest.INITIAL.MASS_KG = 0;
+  ef.frame = b.frame('configuration', 'EXECUTION_REQUEST', efRequest);
   const physical = s.params.cr * s.params.areaM2 / s.params.massKg;
   const methods = {};
   methods['E-f coverage'] = await propagate(seed, targets, ef, env, 'coverage', .02);
