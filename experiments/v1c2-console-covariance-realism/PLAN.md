@@ -73,3 +73,12 @@ worktrees. No Docker, unit tests, production deployment or paper edits.
 both tables and shares from the recorded local run, checks the registration,
 input/module hashes, paired completeness, labels and integrity controls. Run
 the graph gauntlet on the exact candidate before landing by merge.
+
+## Amendment A1 — 2026-10-22, before any covariance scores
+
+Source inspection at modules 6b1132cb shows that resident covariance propagation
+starts from the original seed on every request (ResidentDynamics::covariance,
+resident_dynamics.cpp). Request covariance only at the six scored horizons;
+intermediate requests cannot affect it. Replay the catalog coverage trajectory
+at the registered 300-second cadence. This avoids repeated, discarded STM work
+and preserves the same P0, force model, target covariances and scored samples.

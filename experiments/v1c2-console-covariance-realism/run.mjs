@@ -136,11 +136,14 @@ for (const prior of oldArcs) {
       const at = new Map(targets.map((t, i) => [t.ms, { ...t, covariance: cov[i + 1] }]));
       arc.samples = [];
       for (const tms of [...ticks].sort((a, z) => a - z)) {
-        const resident = step ? await step(tms) : null, t = at.get(tms); if (!t) continue;
+        const covered = catalog.step(tms), t = at.get(tms); if (!t) continue;
+        const resident = step ? await step(tms) : null;
         const sgpState = await sgp4.at(tms), oldSgp = prior.methods.SGP4.samples.find(s => s.hours === t.hours), oldFfm = prior.methods['Console FFM-1'].samples.find(s => s.hours === t.hours);
         const sample = { hours: t.hours, elapsedHours: (tms - ms) / 3600000, sgp4ErrorDifferenceM: Math.abs(distance(sgpState, t.state) - oldSgp.errorM),
           SGP4: { status: t.covariance.status, d2: null }, 'FFM-1': { status: cov[0].status, d2: null } };
         assert(sample.sgp4ErrorDifferenceM <= config.pathAgreementM, `SGP4 replay mismatch ${prior.key}`);
+        const coverageState = catalog.transform(tms, [...covered, 0, 0, 0], true);
+        assert(distance(coverageState, oldFfm.position) <= config.pathAgreementM, 'coverage replay mismatch');
         if (supported(t.covariance)) Object.assign(sample.SGP4, await score(gp, codec, sgpState, t.covariance.covarianceInertial, t.state));
         if (resident) {
           validMatrix(resident.covariance, config.covarianceSymmetryRelative);
