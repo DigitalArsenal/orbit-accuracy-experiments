@@ -63,7 +63,7 @@ for (const match of forecast.matchAll(/(\d{2})([A-Za-z]{3})(\d{2})\s+(\d{3})/g))
   if (!(gfz.days.get(date)?.f107obs > 0)) { gfz.days.set(date, { ...(gfz.days.get(date) ?? {}), f107obs: +match[4], f107adj: +match[4] }); forecastDates.push(date); }
 }
 run.manifest.weather = { source: 'GFZ CC BY 4.0 historical daily drivers; NOAA SWPC public-domain forecast flux fills absent centered-average dates', forecastDates };
-const environment = (first, last, records) => [kernel, eopFrame(records, Math.floor(first / 86400000) + 40586, Math.floor(last / 86400000) + 40589), spaceWeatherFrame(spwRows(gfz, first - 86400000, last + 86400000))];
+const environment = (first, last, records) => [kernel, eopFrame(records, Math.floor(first / 86400000) + 40586, Math.floor(last / 86400000) + 40589), spaceWeatherFrame(spwRows(gfz, first - 86400000, last + 2 * 86400000))];
 const limit = os.cpus().length * config.maxLoadPerCpu;
 async function quiet() { while (os.loadavg()[0] >= limit) { console.log(`Waiting: load ${os.loadavg()[0].toFixed(2)} >= ${limit}`); await sleep(15000); } }
 const cpuNow = () => process.threadCpuUsage();
@@ -86,7 +86,9 @@ async function propagate(seed, targets, configuration, env, mode, crAm, fixed = 
     const targetAt = new Map(targets.map(t => [t.ms, t]));
     for (const ms of [...ticks].sort((a, z) => a - z)) {
       peakLoad = Math.max(peakLoad, os.loadavg()[0]);
-      const before = cpuNow(); const actual = await step(ms); cpu += cpuSeconds(before);
+      const before = cpuNow(); let actual;
+      try { actual = await step(ms); } catch (error) { throw new Error(`${configuration.name} ${mode} seed ${seed.epoch}, query ${new Date(ms).toISOString()}: ${error.message}`, { cause: error }); }
+      cpu += cpuSeconds(before);
       const t = targetAt.get(ms);
       if (t) {
         const truth = mode === 'coverage' ? client.transform(ms, t.state) : t.state;
