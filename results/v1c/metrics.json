@@ -1,0 +1,1364 @@
+{
+  "tables": [
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f coverage",
+      "hours": 1,
+      "n": 16,
+      "medianM": 0.5480817014310765,
+      "p95M": 0.6469133914815295,
+      "maxM": 0.7219560285460007
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f coverage",
+      "hours": 6,
+      "n": 16,
+      "medianM": 10.450807008352724,
+      "p95M": 30.208853679691394,
+      "maxM": 31.502556279456254
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f coverage",
+      "hours": 12,
+      "n": 16,
+      "medianM": 23.743895664197765,
+      "p95M": 119.67134508669484,
+      "maxM": 123.79469329120145
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f coverage",
+      "hours": 24,
+      "n": 16,
+      "medianM": 37.31480514657176,
+      "p95M": 221.99372847498626,
+      "maxM": 234.97471755712584
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f coverage",
+      "hours": 48,
+      "n": 16,
+      "medianM": 114.08088528819957,
+      "p95M": 334.2604063284995,
+      "maxM": 345.5499312024626
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f coverage",
+      "hours": 72,
+      "n": 16,
+      "medianM": 144.56329205384964,
+      "p95M": 242.10850648569834,
+      "maxM": 289.6274830372918
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f execution physical coefficient",
+      "hours": 1,
+      "n": 16,
+      "medianM": 0.11108660327185788,
+      "p95M": 0.16507903814657596,
+      "maxM": 0.16930333367280515
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f execution physical coefficient",
+      "hours": 6,
+      "n": 16,
+      "medianM": 1.296033797277065,
+      "p95M": 2.8686853686598113,
+      "maxM": 3.01735255178595
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f execution physical coefficient",
+      "hours": 12,
+      "n": 16,
+      "medianM": 2.3016551386020763,
+      "p95M": 4.746494269896788,
+      "maxM": 4.940234616481042
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f execution physical coefficient",
+      "hours": 24,
+      "n": 16,
+      "medianM": 4.76442197040264,
+      "p95M": 9.69302001394656,
+      "maxM": 10.064867592592769
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f execution physical coefficient",
+      "hours": 48,
+      "n": 16,
+      "medianM": 9.68083176978541,
+      "p95M": 19.515966927704742,
+      "maxM": 19.726002022993217
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f execution physical coefficient",
+      "hours": 72,
+      "n": 16,
+      "medianM": 13.95453528978992,
+      "p95M": 29.64833094353767,
+      "maxM": 30.622027988972597
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident catalog coefficient",
+      "hours": 1,
+      "n": 16,
+      "medianM": 0.5480934992529127,
+      "p95M": 0.6469001673555592,
+      "maxM": 0.721762937480932
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident catalog coefficient",
+      "hours": 6,
+      "n": 16,
+      "medianM": 10.450827799743577,
+      "p95M": 30.208882571236146,
+      "maxM": 31.502498853352616
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident catalog coefficient",
+      "hours": 12,
+      "n": 16,
+      "medianM": 23.74384167535542,
+      "p95M": 119.67131512639486,
+      "maxM": 123.79475352576884
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident catalog coefficient",
+      "hours": 24,
+      "n": 16,
+      "medianM": 37.31478155329925,
+      "p95M": 221.99369876482166,
+      "maxM": 234.97477771249243
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident catalog coefficient",
+      "hours": 48,
+      "n": 16,
+      "medianM": 114.08095785098266,
+      "p95M": 334.2604629463472,
+      "maxM": 345.54999236242287
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident catalog coefficient",
+      "hours": 72,
+      "n": 16,
+      "medianM": 144.5633384625432,
+      "p95M": 242.10855095446763,
+      "maxM": 289.62753461221365
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident physical coefficient",
+      "hours": 1,
+      "n": 16,
+      "medianM": 0.0907284484447913,
+      "p95M": 0.13935001441168432,
+      "maxM": 0.14814460168292642
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident physical coefficient",
+      "hours": 6,
+      "n": 16,
+      "medianM": 1.2960868119750777,
+      "p95M": 2.867948941308277,
+      "maxM": 3.016055083277925
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident physical coefficient",
+      "hours": 12,
+      "n": 16,
+      "medianM": 2.3014776386231617,
+      "p95M": 4.747016110216529,
+      "maxM": 4.939002218558457
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident physical coefficient",
+      "hours": 24,
+      "n": 16,
+      "medianM": 4.760746913837126,
+      "p95M": 9.694797287359854,
+      "maxM": 10.066109331921517
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident physical coefficient",
+      "hours": 48,
+      "n": 16,
+      "medianM": 9.669927982607526,
+      "p95M": 19.515541553077743,
+      "maxM": 19.727523243707893
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "E-f resident physical coefficient",
+      "hours": 72,
+      "n": 16,
+      "medianM": 13.931033079982772,
+      "p95M": 29.648633218236206,
+      "maxM": 30.62080271822562
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 coverage",
+      "hours": 1,
+      "n": 16,
+      "medianM": 0.549611319992543,
+      "p95M": 0.6460380438198516,
+      "maxM": 0.6895109149190368
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 coverage",
+      "hours": 6,
+      "n": 16,
+      "medianM": 10.73924596858016,
+      "p95M": 30.32136191250334,
+      "maxM": 31.322598936612355
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 coverage",
+      "hours": 12,
+      "n": 16,
+      "medianM": 23.425697734913022,
+      "p95M": 119.47309977381127,
+      "maxM": 124.1065802699819
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 coverage",
+      "hours": 24,
+      "n": 16,
+      "medianM": 36.0845501652913,
+      "p95M": 221.5944588635094,
+      "maxM": 235.55427389749894
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 coverage",
+      "hours": 48,
+      "n": 16,
+      "medianM": 117.43703260735512,
+      "p95M": 335.491341987553,
+      "maxM": 346.93578955273375
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 coverage",
+      "hours": 72,
+      "n": 16,
+      "medianM": 147.54057611499866,
+      "p95M": 243.6412206474895,
+      "maxM": 291.17765006289926
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 resident",
+      "hours": 1,
+      "n": 16,
+      "medianM": 0.5496242049563826,
+      "p95M": 0.6461627889955531,
+      "maxM": 0.6893238113674566
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 resident",
+      "hours": 6,
+      "n": 16,
+      "medianM": 10.73926773807306,
+      "p95M": 30.321390850382535,
+      "maxM": 31.3225416354741
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 resident",
+      "hours": 12,
+      "n": 16,
+      "medianM": 23.425730762253714,
+      "p95M": 119.4730695028629,
+      "maxM": 124.10664071472165
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 resident",
+      "hours": 24,
+      "n": 16,
+      "medianM": 36.08452658316932,
+      "p95M": 221.59442942242245,
+      "maxM": 235.55433375963955
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 resident",
+      "hours": 48,
+      "n": 16,
+      "medianM": 117.43709294913751,
+      "p95M": 335.49139788896554,
+      "maxM": 346.9358427111372
+    },
+    {
+      "suite": "V1",
+      "group": "SLR",
+      "method": "FFM-1 resident",
+      "hours": 72,
+      "n": 16,
+      "medianM": 147.5406303879968,
+      "p95M": 243.6412650137171,
+      "maxM": 291.177687751089
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f coverage",
+      "hours": 1,
+      "n": 96,
+      "medianM": 0.3014468487162638,
+      "p95M": 0.6514776841530239,
+      "maxM": 0.7034870906958287
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f coverage",
+      "hours": 6,
+      "n": 96,
+      "medianM": 4.439749496478459,
+      "p95M": 11.363161951098508,
+      "maxM": 14.667794162037227
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f coverage",
+      "hours": 12,
+      "n": 96,
+      "medianM": 10.275559999681647,
+      "p95M": 28.30933642016795,
+      "maxM": 42.107068566356205
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f coverage",
+      "hours": 24,
+      "n": 96,
+      "medianM": 20.561989372866417,
+      "p95M": 56.761281790246386,
+      "maxM": 85.04115500678346
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f coverage",
+      "hours": 48,
+      "n": 96,
+      "medianM": 46.903133808815866,
+      "p95M": 123.72573674171115,
+      "maxM": 44687.91630634078
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f coverage",
+      "hours": 72,
+      "n": 96,
+      "medianM": 77.17089851928247,
+      "p95M": 185.10464824424835,
+      "maxM": 90429.17148151743
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f execution physical coefficient",
+      "hours": 1,
+      "n": 96,
+      "medianM": 0.29715247291247904,
+      "p95M": 0.6411332040520767,
+      "maxM": 0.7214371443033673
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f execution physical coefficient",
+      "hours": 6,
+      "n": 96,
+      "medianM": 6.3549731703667485,
+      "p95M": 14.277338803353857,
+      "maxM": 18.217802560555736
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f execution physical coefficient",
+      "hours": 12,
+      "n": 96,
+      "medianM": 14.629512543780475,
+      "p95M": 45.913364183560816,
+      "maxM": 58.11491841372556
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f execution physical coefficient",
+      "hours": 24,
+      "n": 96,
+      "medianM": 28.533397281395445,
+      "p95M": 93.06716515790527,
+      "maxM": 117.11388674531962
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f execution physical coefficient",
+      "hours": 48,
+      "n": 96,
+      "medianM": 58.89618651421018,
+      "p95M": 194.46569918741932,
+      "maxM": 44691.59319461857
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f execution physical coefficient",
+      "hours": 72,
+      "n": 96,
+      "medianM": 91.0869007854849,
+      "p95M": 296.5586025932543,
+      "maxM": 90434.18024949738
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident catalog coefficient",
+      "hours": 1,
+      "n": 96,
+      "medianM": 0.29982119655140915,
+      "p95M": 0.641832128729402,
+      "maxM": 0.6937918654722226
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident catalog coefficient",
+      "hours": 6,
+      "n": 96,
+      "medianM": 4.425489861561255,
+      "p95M": 11.37656775789063,
+      "maxM": 14.681047743665415
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident catalog coefficient",
+      "hours": 12,
+      "n": 96,
+      "medianM": 10.28841636097178,
+      "p95M": 28.294827578617042,
+      "maxM": 42.09248637934464
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident catalog coefficient",
+      "hours": 24,
+      "n": 96,
+      "medianM": 20.575310105808732,
+      "p95M": 56.74676467742225,
+      "maxM": 85.02657344649273
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident catalog coefficient",
+      "hours": 48,
+      "n": 96,
+      "medianM": 46.90362238616338,
+      "p95M": 123.71840722593518,
+      "maxM": 44687.90180529543
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident catalog coefficient",
+      "hours": 72,
+      "n": 96,
+      "medianM": 77.17169425504073,
+      "p95M": 185.09731279289065,
+      "maxM": 90429.15696085618
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident physical coefficient",
+      "hours": 1,
+      "n": 96,
+      "medianM": 0.3043882099877752,
+      "p95M": 0.6412907440403263,
+      "maxM": 0.7359408677168304
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident physical coefficient",
+      "hours": 6,
+      "n": 96,
+      "medianM": 6.357524150795824,
+      "p95M": 14.272176074518766,
+      "maxM": 18.207392763554996
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident physical coefficient",
+      "hours": 12,
+      "n": 96,
+      "medianM": 14.62848917561211,
+      "p95M": 45.92084996102945,
+      "maxM": 58.10243697034687
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident physical coefficient",
+      "hours": 24,
+      "n": 96,
+      "medianM": 28.53564657157196,
+      "p95M": 93.07511022599923,
+      "maxM": 117.10330937116912
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident physical coefficient",
+      "hours": 48,
+      "n": 96,
+      "medianM": 58.88512932679906,
+      "p95M": 194.46085192755896,
+      "maxM": 44691.57825371584
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "E-f resident physical coefficient",
+      "hours": 72,
+      "n": 96,
+      "medianM": 91.08849665699347,
+      "p95M": 296.5710950894573,
+      "maxM": 90434.16760345455
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 coverage",
+      "hours": 1,
+      "n": 96,
+      "medianM": 0.301610690661515,
+      "p95M": 0.6509608170925081,
+      "maxM": 0.7024864997862207
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 coverage",
+      "hours": 6,
+      "n": 96,
+      "medianM": 4.44421595316512,
+      "p95M": 11.290253378831952,
+      "maxM": 14.51028611775334
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 coverage",
+      "hours": 12,
+      "n": 96,
+      "medianM": 10.287467039963188,
+      "p95M": 28.698968013043995,
+      "maxM": 42.53651582266115
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 coverage",
+      "hours": 24,
+      "n": 96,
+      "medianM": 19.972089084629232,
+      "p95M": 57.543731623166586,
+      "maxM": 85.8976070538607
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 coverage",
+      "hours": 48,
+      "n": 96,
+      "medianM": 47.057127974649454,
+      "p95M": 125.20004180931504,
+      "maxM": 44689.33088935888
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 coverage",
+      "hours": 72,
+      "n": 96,
+      "medianM": 78.06762890535332,
+      "p95M": 187.4858305386293,
+      "maxM": 90431.23994087816
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 resident",
+      "hours": 1,
+      "n": 96,
+      "medianM": 0.29990137384684556,
+      "p95M": 0.6412826914320522,
+      "maxM": 0.6927552118840935
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 resident",
+      "hours": 6,
+      "n": 96,
+      "medianM": 4.458201787762068,
+      "p95M": 11.283743695946832,
+      "maxM": 14.523535584829638
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 resident",
+      "hours": 12,
+      "n": 96,
+      "medianM": 10.286686673377625,
+      "p95M": 28.684456154288483,
+      "maxM": 42.521934282602594
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 resident",
+      "hours": 24,
+      "n": 96,
+      "medianM": 19.98532242412488,
+      "p95M": 57.52921172028392,
+      "maxM": 85.88302663203416
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 resident",
+      "hours": 48,
+      "n": 96,
+      "medianM": 47.04399296393292,
+      "p95M": 125.19271339600047,
+      "maxM": 44689.31638600484
+    },
+    {
+      "suite": "V1",
+      "group": "GPS",
+      "method": "FFM-1 resident",
+      "hours": 72,
+      "n": 96,
+      "medianM": 78.06827428008516,
+      "p95M": 187.47849273495194,
+      "maxM": 90431.22541258526
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "Console FFM-1",
+      "hours": 1,
+      "n": 636,
+      "medianM": 1565.798408076175,
+      "p95M": 10150.362475327405,
+      "maxM": 878551.6310250018
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "Console FFM-1",
+      "hours": 6,
+      "n": 636,
+      "medianM": 1542.954698980557,
+      "p95M": 10188.782776087293,
+      "maxM": 1169416.4694352993
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "Console FFM-1",
+      "hours": 12,
+      "n": 636,
+      "medianM": 1676.585744354606,
+      "p95M": 10016.10807095126,
+      "maxM": 886563.6332519253
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "Console FFM-1",
+      "hours": 24,
+      "n": 640,
+      "medianM": 2106.9428020204223,
+      "p95M": 26648.084895679982,
+      "maxM": 922718.174565993
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "Console FFM-1",
+      "hours": 48,
+      "n": 640,
+      "medianM": 3461.803205703879,
+      "p95M": 45348.11117788255,
+      "maxM": 995160.3096842538
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "Console FFM-1",
+      "hours": 72,
+      "n": 640,
+      "medianM": 4940.709144857808,
+      "p95M": 78372.3687347439,
+      "maxM": 1067780.572687443
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "SGP4",
+      "hours": 1,
+      "n": 636,
+      "medianM": 1574.719899318898,
+      "p95M": 10210.255553290572,
+      "maxM": 878571.5139631487
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "SGP4",
+      "hours": 6,
+      "n": 636,
+      "medianM": 1421.5318678739236,
+      "p95M": 10333.102131808217,
+      "maxM": 1170481.467171757
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "SGP4",
+      "hours": 12,
+      "n": 636,
+      "medianM": 1564.8413659510222,
+      "p95M": 10797.603692038556,
+      "maxM": 886418.6528657714
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "SGP4",
+      "hours": 24,
+      "n": 640,
+      "medianM": 1613.7131018694358,
+      "p95M": 26576.054216713535,
+      "maxM": 922436.7467006897
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "SGP4",
+      "hours": 48,
+      "n": 640,
+      "medianM": 1655.6459128548709,
+      "p95M": 47810.95151616461,
+      "maxM": 994812.989945119
+    },
+    {
+      "suite": "E3",
+      "group": "GPS",
+      "method": "SGP4",
+      "hours": 72,
+      "n": 640,
+      "medianM": 1681.2717476492082,
+      "p95M": 82490.75258239575,
+      "maxM": 1067524.3421425617
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "Console FFM-1",
+      "hours": 1,
+      "n": 48,
+      "medianM": 592.3761732440382,
+      "p95M": 1268.083117857731,
+      "maxM": 1531.4321832477776
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "Console FFM-1",
+      "hours": 6,
+      "n": 46,
+      "medianM": 1740.9461198207262,
+      "p95M": 3545.826445190806,
+      "maxM": 4204.778421809119
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "Console FFM-1",
+      "hours": 12,
+      "n": 46,
+      "medianM": 3128.15418267295,
+      "p95M": 6286.943676268294,
+      "maxM": 7180.264086024815
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "Console FFM-1",
+      "hours": 24,
+      "n": 46,
+      "medianM": 6450.297665435931,
+      "p95M": 12336.569781156253,
+      "maxM": 16057.3498534924
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "Console FFM-1",
+      "hours": 48,
+      "n": 44,
+      "medianM": 12924.895789132019,
+      "p95M": 23895.696548527325,
+      "maxM": 31966.502149220563
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "Console FFM-1",
+      "hours": 72,
+      "n": 42,
+      "medianM": 19485.177020883595,
+      "p95M": 36053.6062478186,
+      "maxM": 49170.714500587055
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "SGP4",
+      "hours": 1,
+      "n": 48,
+      "medianM": 563.3290132815417,
+      "p95M": 1099.5760977851237,
+      "maxM": 1497.0354596367763
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "SGP4",
+      "hours": 6,
+      "n": 46,
+      "medianM": 342.7062798991006,
+      "p95M": 711.0206029676751,
+      "maxM": 845.0896403878629
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "SGP4",
+      "hours": 12,
+      "n": 46,
+      "medianM": 313.20033796307445,
+      "p95M": 854.2476274214566,
+      "maxM": 1045.0911980050798
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "SGP4",
+      "hours": 24,
+      "n": 46,
+      "medianM": 614.0868940620978,
+      "p95M": 1302.0830949696797,
+      "maxM": 1970.6639338348643
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "SGP4",
+      "hours": 48,
+      "n": 44,
+      "medianM": 687.4758559140157,
+      "p95M": 2066.9443204170734,
+      "maxM": 2604.9657168263248
+    },
+    {
+      "suite": "E3",
+      "group": "LEO 400-800 km",
+      "method": "SGP4",
+      "hours": 72,
+      "n": 42,
+      "medianM": 775.3927744291236,
+      "p95M": 2830.9760501262745,
+      "maxM": 4384.387004521618
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "Console FFM-1",
+      "hours": 1,
+      "n": 99,
+      "medianM": 466.3711222513797,
+      "p95M": 1193.4437164564476,
+      "maxM": 1850.9944042198995
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "Console FFM-1",
+      "hours": 6,
+      "n": 98,
+      "medianM": 1045.6486523291096,
+      "p95M": 5299.163650563211,
+      "maxM": 10343.920169737494
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "Console FFM-1",
+      "hours": 12,
+      "n": 98,
+      "medianM": 1874.0916188629794,
+      "p95M": 12093.499190753915,
+      "maxM": 22868.650884118786
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "Console FFM-1",
+      "hours": 24,
+      "n": 100,
+      "medianM": 3881.717832947098,
+      "p95M": 23703.00842279396,
+      "maxM": 45264.768363807954
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "Console FFM-1",
+      "hours": 48,
+      "n": 100,
+      "medianM": 7582.2154277565405,
+      "p95M": 46281.53321041572,
+      "maxM": 87911.09432409873
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "Console FFM-1",
+      "hours": 72,
+      "n": 100,
+      "medianM": 11587.323486537589,
+      "p95M": 68781.9720755653,
+      "maxM": 129665.25365710535
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "SGP4",
+      "hours": 1,
+      "n": 99,
+      "medianM": 400.3437136929862,
+      "p95M": 958.2606339929829,
+      "maxM": 1189.8559671714202
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "SGP4",
+      "hours": 6,
+      "n": 98,
+      "medianM": 285.8305302586342,
+      "p95M": 583.4898279495549,
+      "maxM": 740.725816818905
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "SGP4",
+      "hours": 12,
+      "n": 98,
+      "medianM": 379.8888372902726,
+      "p95M": 809.0501303544651,
+      "maxM": 948.393472253591
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "SGP4",
+      "hours": 24,
+      "n": 100,
+      "medianM": 326.70828917975894,
+      "p95M": 775.2955647801564,
+      "maxM": 957.6336521162305
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "SGP4",
+      "hours": 48,
+      "n": 100,
+      "medianM": 318.5817157081197,
+      "p95M": 774.1955821758579,
+      "maxM": 1042.1912176167473
+    },
+    {
+      "suite": "E3",
+      "group": "SLR LEO 800-1500 km",
+      "method": "SGP4",
+      "hours": 72,
+      "n": 100,
+      "medianM": 326.7111072354556,
+      "p95M": 843.0493718099023,
+      "maxM": 1051.0328020320544
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "Console FFM-1",
+      "hours": 1,
+      "n": 59,
+      "medianM": 400.63557566640645,
+      "p95M": 1600.3156324358304,
+      "maxM": 1712.2942520081249
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "Console FFM-1",
+      "hours": 6,
+      "n": 59,
+      "medianM": 564.5490125749652,
+      "p95M": 1550.5874652170749,
+      "maxM": 1962.284754065802
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "Console FFM-1",
+      "hours": 12,
+      "n": 59,
+      "medianM": 604.8926480444972,
+      "p95M": 1757.8479004186215,
+      "maxM": 2392.396344840034
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "Console FFM-1",
+      "hours": 24,
+      "n": 56,
+      "medianM": 871.8401065694591,
+      "p95M": 2645.674001867599,
+      "maxM": 3487.4538963405885
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "Console FFM-1",
+      "hours": 48,
+      "n": 53,
+      "medianM": 1675.7656722227478,
+      "p95M": 5521.542705274888,
+      "maxM": 7007.243554577346
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "Console FFM-1",
+      "hours": 72,
+      "n": 50,
+      "medianM": 2701.3964801026004,
+      "p95M": 8850.661237062004,
+      "maxM": 10002.504274357176
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "SGP4",
+      "hours": 1,
+      "n": 59,
+      "medianM": 371.5634340191283,
+      "p95M": 1603.189113325839,
+      "maxM": 1703.9484078878897
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "SGP4",
+      "hours": 6,
+      "n": 59,
+      "medianM": 350.81348396379104,
+      "p95M": 1520.116603188322,
+      "maxM": 1960.419298584972
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "SGP4",
+      "hours": 12,
+      "n": 59,
+      "medianM": 502.6015220701012,
+      "p95M": 1587.7807071606408,
+      "maxM": 1771.7508344366458
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "SGP4",
+      "hours": 24,
+      "n": 56,
+      "medianM": 442.51237829740023,
+      "p95M": 1473.4461473965043,
+      "maxM": 1656.4721425014343
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "SGP4",
+      "hours": 48,
+      "n": 53,
+      "medianM": 412.98599719257913,
+      "p95M": 1367.5667616740452,
+      "maxM": 1495.7069397369962
+    },
+    {
+      "suite": "E3",
+      "group": "SLR MEO",
+      "method": "SGP4",
+      "hours": 72,
+      "n": 50,
+      "medianM": 397.212736201451,
+      "p95M": 1253.9550477675537,
+      "maxM": 1356.3165071299663
+    }
+  ],
+  "paths": [
+    {
+      "group": "SLR",
+      "model": "E-f",
+      "n": 96,
+      "medianM": 0.00008613458016064705,
+      "maxM": 0.0004343610460096056
+    },
+    {
+      "group": "SLR",
+      "model": "FFM-1",
+      "n": 96,
+      "medianM": 0.00007513640064934072,
+      "maxM": 0.000434399823588922
+    },
+    {
+      "group": "GPS",
+      "model": "E-f",
+      "n": 576,
+      "medianM": 0.01450734250239247,
+      "maxM": 0.01494268654326797
+    },
+    {
+      "group": "GPS",
+      "model": "FFM-1",
+      "n": 576,
+      "medianM": 0.014507040703766585,
+      "maxM": 0.014942696661367844
+    }
+  ],
+  "validation": [
+    {
+      "group": "SLR",
+      "hours": 24,
+      "publishedM": 4.78,
+      "coverageM": 37.31480514657176,
+      "physicalResidentM": 4.760746913837126,
+      "catalogResidentM": 37.31478155329925,
+      "executionM": 4.76442197040264,
+      "toleranceM": 0.5,
+      "directPass": false,
+      "measuredCoefficientCause": true
+    },
+    {
+      "group": "SLR",
+      "hours": 72,
+      "publishedM": 13.9,
+      "coverageM": 144.56329205384964,
+      "physicalResidentM": 13.931033079982772,
+      "catalogResidentM": 144.5633384625432,
+      "executionM": 13.95453528978992,
+      "toleranceM": 0.6950000000000001,
+      "directPass": false,
+      "measuredCoefficientCause": true
+    },
+    {
+      "group": "GPS",
+      "hours": 24,
+      "publishedM": 28.5,
+      "coverageM": 20.561989372866417,
+      "physicalResidentM": 28.53564657157196,
+      "catalogResidentM": 20.575310105808732,
+      "executionM": 28.533397281395445,
+      "toleranceM": 1.425,
+      "directPass": false,
+      "measuredCoefficientCause": true
+    },
+    {
+      "group": "GPS",
+      "hours": 72,
+      "publishedM": 91.1,
+      "coverageM": 77.17089851928247,
+      "physicalResidentM": 91.08849665699347,
+      "catalogResidentM": 77.17169425504073,
+      "executionM": 91.0869007854849,
+      "toleranceM": 4.555,
+      "directPass": false,
+      "measuredCoefficientCause": true
+    }
+  ],
+  "speed": [
+    {
+      "group": "SLR",
+      "mode": "coverage",
+      "arcs": 16,
+      "cpuSeconds": 5.610675000000015,
+      "objectDays": 48,
+      "cpuSecondsPerObjectDay": 0.11688906250000031,
+      "peakLoad": 9.1708984375,
+      "admissible": true,
+      "wallSeconds": 5.683850584000007
+    },
+    {
+      "group": "SLR",
+      "mode": "resident",
+      "arcs": 16,
+      "cpuSeconds": 5.620487,
+      "objectDays": 48,
+      "cpuSecondsPerObjectDay": 0.11709347916666667,
+      "peakLoad": 9.1708984375,
+      "admissible": true,
+      "wallSeconds": 5.694204125999999
+    },
+    {
+      "group": "GPS",
+      "mode": "coverage",
+      "arcs": 96,
+      "cpuSeconds": 21.052108000000082,
+      "objectDays": 288,
+      "cpuSecondsPerObjectDay": 0.0730975972222225,
+      "peakLoad": 14.85888671875,
+      "admissible": true,
+      "wallSeconds": 21.551636954999914
+    },
+    {
+      "group": "GPS",
+      "mode": "resident",
+      "arcs": 96,
+      "cpuSeconds": 21.02669399999992,
+      "objectDays": 288,
+      "cpuSecondsPerObjectDay": 0.07300935416666639,
+      "peakLoad": 14.85888671875,
+      "admissible": true,
+      "wallSeconds": 21.510746669999897
+    },
+    {
+      "group": "All V1",
+      "mode": "coverage",
+      "arcs": 112,
+      "cpuSeconds": 26.66278300000008,
+      "objectDays": 336,
+      "cpuSecondsPerObjectDay": 0.07935352083333357,
+      "peakLoad": 14.85888671875,
+      "admissible": true,
+      "wallSeconds": 27.235487538999926
+    },
+    {
+      "group": "All V1",
+      "mode": "resident",
+      "arcs": 112,
+      "cpuSeconds": 26.647180999999925,
+      "objectDays": 336,
+      "cpuSecondsPerObjectDay": 0.07930708630952359,
+      "peakLoad": 14.85888671875,
+      "admissible": true,
+      "wallSeconds": 27.204950795999896
+    }
+  ],
+  "coverage": {
+    "V1": {
+      "arcs": 112,
+      "skipped": 0,
+      "missingHorizons": 0
+    },
+    "E3": {
+      "arcs": 960,
+      "skipped": 113,
+      "missingHorizons": 729
+    }
+  }
+}
