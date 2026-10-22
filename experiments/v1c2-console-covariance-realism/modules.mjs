@@ -21,7 +21,9 @@ export async function covarianceResident(h, b, configuration, environment, seed,
   return async ms => {
     const response = await h.invoke({ methodId: 'propagate_state', inputs: [frame('request', 'RESIDENT_REQUEST', table('PRWResidentRequest', {
       INSTANCE: instance, ENTITY_HANDLES: [1], TARGET_COORDINATE_SYSTEM: c.gcrf(),
-      TARGET_EPOCH: table('TIMInstant', { TIME_SYSTEM: c.prw.timingStandard.UTC, EPOCH_FORMAT: c.prw.timEpochRepresentation.JULIAN_DATE, JULIAN_DATE: jd(ms) }),
+      // The zero-time check must reuse the exact seed epoch representation;
+      // UTC Julian-date rounding otherwise introduces a tiny propagation span.
+      TARGET_EPOCH: ms === seed.ms ? c.instant(seed.epoch) : table('TIMInstant', { TIME_SYSTEM: c.prw.timingStandard.UTC, EPOCH_FORMAT: c.prw.timEpochRepresentation.JULIAN_DATE, JULIAN_DATE: jd(ms) }),
     }))] });
     assert.equal(response.statusCode, 0, response.errorMessage);
     const s = c.prw.PRW.getSizePrefixedRootAsPRW(new fb.ByteBuffer(new Uint8Array(response.outputs[0].payload))).unpack().RESIDENT_STATE;

@@ -92,6 +92,7 @@ run.manifest.e3IssueDays = days.length;
 
 const history = readCreationDays(e3.inputs.gpHistory, shiftDay(days[0], -config.archiveLookbackDays), days.at(-1), { keep: n => objects.includes(n), theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType });
 run.addInputs('history', history.files);
+console.log(`${run.id}: inputs ready; ${oldArcs.length} object/issue pairs; one sequential worker`);
 // Inherited input bytes must match the published V1c manifest before scoring.
 for (const kind of ['gpHistory', 'eop', 'weather']) for (const [file, hash] of Object.entries(run.manifest.inputs[kind] ?? {})) assert.equal(hash, parent.inputs[kind][file], `V1c input differs: ${file}`);
 assert.equal(Object.values(run.manifest.inputs.kernel)[0], Object.values(parent.inputs.kernel)[0]);
@@ -130,7 +131,7 @@ for (const prior of oldArcs) {
     const residentHost = supported(cov[0]) ? await makeFfm() : null;
     try {
       const step = residentHost ? await covarianceResident(residentHost, b, configuration, env, seed, cov[0].covarianceInertial, set.elements.BSTAR) : null;
-      if (step) { const zero = await step(ms); arc.zeroTimeCovarianceRelative = relative(zero.covariance, cov[0].covarianceInertial); assert(arc.zeroTimeCovarianceRelative <= config.zeroTimeCovarianceRelative); }
+      if (step) { const zero = await step(ms); arc.zeroTimeCovarianceRelative = relative(zero.covariance, cov[0].covarianceInertial); assert(arc.zeroTimeCovarianceRelative <= config.zeroTimeCovarianceRelative, `zero-time covariance relative difference ${arc.zeroTimeCovarianceRelative}`); }
       const ticks = new Set(targets.map(t => t.ms));
       for (let t = ms + v1c.coverageStepSeconds * 1000; t < targets.at(-1).ms; t += v1c.coverageStepSeconds * 1000) ticks.add(t);
       const at = new Map(targets.map((t, i) => [t.ms, { ...t, covariance: cov[i + 1] }]));
