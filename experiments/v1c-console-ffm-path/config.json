@@ -1,0 +1,11 @@
+{
+  "experiment": "v1c-console-ffm-path",
+  "frozen": true,
+  "v1Config": "experiments/v1-ffm-physical-truth/config.json",
+  "e3Config": "experiments/e3-combined-catalog/config.json",
+  "tolerance": { "absoluteM": 0.5, "relative": 0.05, "pathAgreementM": 0.1 },
+  "published": { "SLR": { "24": 4.78, "72": 13.9 }, "GPS": { "24": 28.5, "72": 91.1 } },
+  "coverageStepSeconds": 300,
+  "maxLoadPerCpu": 0.75,
+  "weather": "/opt/data/sdn-archive/hac/gfz-kp"
+}
