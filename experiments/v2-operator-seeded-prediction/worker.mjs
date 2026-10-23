@@ -8,26 +8,29 @@ process.on('message',async message=>{
   try {
     if(message.kind==='init') {
       const fetcher=new Fetcher();wasm=await openWasm(moduleRoot(),fetcher);
-      send({ready:true,provenance:wasm.provenance,weatherBytes:fetcher.bytes,weatherRequests:fetcher.requests});return;
+      const used=process.cpuUsage(cpuStart);send({ready:true,provenance:wasm.provenance,weatherBytes:fetcher.bytes,weatherRequests:fetcher.requests,initCpuSeconds:(used.user+used.system)/1e6});return;
     }
     if(message.kind==='close'){await wasm?.destroy();process.exit(0);}
-    const {norad,source,issueMs,mechanics}=message;
+    const {norad,source,issueMs,mechanics,commissioning}=message;
     let arc=cut(Buffer.from(message.bytes));message.bytes=null;
     if(arc.points[0].ms%60000!==42000)throw new Error('unregistered source epoch grid; amendment required');
     if(Date.parse(arc.createdUtc)>issueMs||Date.parse(source.retrievedUtc)>issueMs)throw new Error('future source at issue');
     const points=await wasm.normalize(arc.points);arc.points=null;
     const epochs=config.horizonsHours.flatMap(h=>Array.from({length:15},(_,i)=>issueMs+h*H+42000+i*60000));
     // Refuse missing causal drivers before spending CPU on a fit.
-    wasm.assertCoverage(points[0].ms,epochs.at(-1));
+    wasm.assertCoverage(points[0].ms,points.at(-1).ms);
+    const availableEpochs=[],unavailableEpochs=[];
+    for(const epoch of epochs){try{wasm.assertCoverage(points[0].ms,epoch);availableEpochs.push(epoch);}catch(e){if(!commissioning||!e.message.startsWith('weather-coverage-guard:'))throw e;unavailableEpochs.push(epoch);}}
+    if(!availableEpochs.length)throw new Error('no covered commissioning prediction epoch');
     const dca=dcaAt(Math.min(issueMs,Date.parse(source.retrievedUtc)));
-    const record={version:1,norad,issueUtc:iso(issueMs),source:{...source,createdUtc:arc.createdUtc,startUtc:arc.startUtc,stopUtc:arc.stopUtc},fitWindow:{start:iso(points[0].ms),end:iso(points.at(-1).ms),points:points.length,joinExcluded:true},arms:{},mechanics:null};
+    const record={version:1,norad,issueUtc:iso(issueMs),source:{...source,createdUtc:arc.createdUtc,startUtc:arc.startUtc,stopUtc:arc.stopUtc},fitWindow:{start:iso(points[0].ms),end:iso(points.at(-1).ms),points:points.length,joinExcluded:true},commissioning,forecastCoverage:{requested:epochs.length,available:availableEpochs.length,unavailableEpochsUtc:unavailableEpochs.map(iso),reason:unavailableEpochs.length?'weather-coverage-guard':null},arms:{},mechanics:null};
     for(const arm of [1,2,3]) {
       if(arm===2&&!dca){record.arms[arm]={status:'UNAVAILABLE',reason:'no causal Dove DCL'};continue;}
       console.error(`object=${norad} arm=${arm} fit-start`);
       const fitted=await wasm.fit(points,norad,arm,arm===2?dca:null);
       console.error(`object=${norad} arm=${arm} fit-complete CPU=${fitted.cpuSeconds}`);
       fitted.fitId=sha256(JSON.stringify({source:source.sha256,arm,issueMs,config:config.experiment,product:fitted.product,dca:fitted.dca}));
-      const prediction=await wasm.predict(fitted,epochs,arm===2?dca:null);
+      const prediction=await wasm.predict(fitted,availableEpochs,arm===2?dca:null);
       record.arms[arm]={status:fitted.fit.converged?'FITTED':'NONCONVERGED',...fitted,prediction};
     }
     // Arm 4 and 5 call the landed typed OD bridge only when present.

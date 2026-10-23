@@ -97,3 +97,11 @@ WASM weather forecast contract covers all registered horizons, or the owner
 registers another weather policy. Never pad rows or fetch future observations
 to make the check pass. The successful arm-1 fit/replay consumed 275.859966 CPU
 seconds, but its forecast failed; no complete fitted-object record survived.
+
+The explicit `--limit 1` commissioning cycle may retain covered predictions
+and label every uncovered requested epoch; it still fits the full pre-join
+48 h arc and exercises all five six-hour trimming switches. This is not a
+prospective cycle or qualification of all horizons. Full 500-object operation
+refuses the first uncovered horizon before fitting. CPU receipts include the
+parent, worker initialization, successful fits/predictions and failed work;
+load pauses invalidate speed-up timings without discarding the measured cost.
