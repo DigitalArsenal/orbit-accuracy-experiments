@@ -19,7 +19,7 @@ export function manifest() {
   const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
   return {
     experiment: config.experiment,
-    commands: ['node experiments/sdn-gp-starlink-ffm-match/population.mjs', 'node experiments/sdn-gp-starlink-ffm-match/truth.mjs --workers N', 'node experiments/sdn-gp-starlink-ffm-match/baselines.mjs', 'node experiments/sdn-gp-starlink-ffm-match/bench.mjs', 'node experiments/sdn-gp-starlink-ffm-match/inventory.mjs', 'node experiments/sdn-gp-starlink-ffm-match/tables.mjs'],
+    commands: ['node experiments/sdn-gp-starlink-ffm-match/population.mjs', 'node experiments/sdn-gp-starlink-ffm-match/truth.mjs --workers N', 'node experiments/sdn-gp-starlink-ffm-match/baselines.mjs', 'node experiments/sdn-gp-starlink-ffm-match/bench.mjs', 'node experiments/sdn-gp-starlink-ffm-match/comspoc.mjs', 'node experiments/sdn-gp-starlink-ffm-match/covariance.mjs', 'node experiments/sdn-gp-starlink-ffm-match/fitlength.mjs --limit 100', 'node experiments/sdn-gp-starlink-ffm-match/inventory.mjs', 'node experiments/sdn-gp-starlink-ffm-match/tables.mjs', 'node experiments/sdn-gp-starlink-ffm-match/manifest.mjs', 'node experiments/sdn-gp-starlink-ffm-match/run.mjs --check'],
     planSha256: sha256(fs.readFileSync(path.join(dir, 'PLAN.md'))), configSha256: sha256(fs.readFileSync(path.join(dir, 'config.json'))),
     repository: { commit: git(root, 'rev-parse', 'HEAD') }, modules: { commit: git(modules, 'rev-parse', 'HEAD'), artifacts: ['propagator/sgp4-xp', 'analysis/gp-error-model', 'analysis/od', 'propagator/ffm'].map(wasm) },
     packages: { ...pkg.dependencies, lockfileSha256: sha256(fs.readFileSync(path.join(dir, 'package-lock.json'))), spacedatastandardsInstalled: sdsVersion },
