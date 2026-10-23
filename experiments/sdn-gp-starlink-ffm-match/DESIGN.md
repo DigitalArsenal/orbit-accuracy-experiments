@@ -906,3 +906,198 @@ additive; 3.3 gives the stacked prediction.
 Every row beats best-case XP if the predictions hold; COMSPOC's XP sets (15.7 km at matched age) are beaten by
 construction. The LEO rows rest on one falsifiable account, the tesseral aliasing of 2d.4, which section 4 tests
 first and without new code.
+
+---
+
+## 4. Measurement plan
+
+Every measurement uses this experiment's windows and statistics (fit RMS; held-out day 1 to 3 median, mean and 90th
+percentile; RIC split; paired ratio against best-case XP on the windows both fitted) and is registered by the
+experiment lane as a dated amendment of `PLAN.md` before any of its test windows is read. Arms are the task's: 1
+SGP4, 2 SGP4-XP, 3 SDN-GP variants, 4 theory plus residual series, 5 analytic STM against FFM's STM, 6 anything else.
+Truths: **F** the FFM-propagated Starlink set; **N** the first hours of SpaceX files issued after the fit (fresh
+orbit determination); **S** SpaceX's forecast inside its span (before the 48 h join); **P** precise orbits (ESA GNSS,
+ILRS and NSGF laser ranging, NASA ISS OEM, GFZ MGEX GEO and IGSO); **L** lunar and cislunar NAIF SPKs; **H**
+heliocentric NAIF SPKs (L and H are to fetch, per the inventory).
+
+| Id | Term | Arm | Truth | What is measured | Prediction it tests |
+| --- | --- | --- | --- | --- | --- |
+| M1 | 2d (no new code) | 6 | F | FFM-1 re-propagation of the G1 start states with EGM2008 truncated to zonals only, without (2,2), and without the 15th order; the along-track difference series | amplitudes and periods of 2d.3 and 2d.5 (454 m at 11.8 h for (2,2) on the 550 km shell; 0.79 km at 6.1 d for 15:1) |
+| M2 | 2d, 2e (no new code) | 6 | F, P | best-case XP refitted over 21.7 h instead of 24 h (a zero of j_2 for the J22 period) | the J22 share of the day-3 error falls (2e.4); the m = 1 and 15:1 shares stay |
+| M3 | 2e (no new code where XP's fit allows a fixed BTERM) | 6 | P (laser-ranged LEO) | XP or SDN-GP with B fixed at each sphere's physical C_D A/m | day 3 from 9.40 km to about 1.3 km (2e.5) |
+| M4 | 2d | 3 | F, P | SDN-GP "+tesseral" against best-case XP | LEO in-track fit floor to the 2d.4 remainder; day 3 as in 3.3 |
+| M5 | 2e | 3 | N | 48 h stitched fresh-OD arcs against 24 h single-file fits, scored on files issued after the last stitched file | next-day error below the 24 h fit's (G1: 1.33 → 0.82 km from 24 → 48 h) |
+| M6 | 2a | 3 | F | SDN-GP "+DCA" (reference path, then kernel) with the truth's environment | removal of the drag-model part (0.40 to 0.65 km on the first day after long fits, 2e.2) |
+| M7 | 2a kernel | 6 | (density) | kernel ⟨ρ⟩ and ⟨ρ e^{iu}⟩ against the reference path over the population and dates across a solar cycle | within 1 % (2a.7) |
+| M8 | 2a horizon chain, late binding | 3 | P, N | windows straddling the end of the `$SPW` rows, by tier; the same set propagated under the fit-time and a newer environment (4); control: s shifted by 7 days (E13's H6 rule) must not help | error ordered by tier; newer environment helps; control does not |
+| M9 | 2b | 6 | N | in-track error on storm days regressed on (1 - κ) B ∬δρ and on B ∬δρ | names closed or open loop (2b.3) |
+| M10 | 2b, 2c | 3 | S | signed B_eff and τ terms against best-case XP inside SpaceX's span | day 1 from 2.738 km toward the F arm's 1.502 km |
+| M11 | 2b station keeping | 3 | N | 3 to 7 day leads with and without the prior (6) | bounded along-track error for satellites holding a shell |
+| M12 | 2c | 3 | F, N | the 19 lowering or decaying Starlinks (B_eff above 0.5 m²/kg), rule fixed before the windows | day 3 from 25.4 km toward 10 km |
+| M13 | 2f STM | 5 | F | Φ and Ψ against FFM-1's STM; P(t) = Φ P₀ Φᵀ against FFM's propagated covariance after 1 to 3 days | relative STM error and covariance error per RIC axis |
+| M14 | 2f realism | 5 | F, then P and N | mean d²/3 and 95 % coverage by age bin, two-stage calibration on held-out windows only | [0.8, 1.25] and [0.93, 0.97], from 3.40 (ours) and 24.9 (SynCoPate) |
+| M15 | 2g | 4 | F, S, P | bytes per object-day against RMS at 1, 10 and 100 m; the same for SPK type 2 and SDS `$PPE` | about 100 times fewer bytes than a time Chebyshev (2g.2) |
+| M16 | 2i.1 | 3 | P (GNSS, IGSO, GEO) | ECOM against cannonball AGOM | GNSS and IGSO day 3 down by 2 to 3 times |
+| M17 | 2i.2 | 6 | P (GEO, IGSO) | windows cut at detected mean-motion change-points, scored per segment | the GEO 90th percentile falls toward the median |
+| M18 | 2i.3 | 6 | P, N | storm-scenario envelope coverage on the storm days of the `$SPW` record | coverage at least the nominal level on storm days |
+| M19 | 2h.1 | 3 | L | lunar orbits (LRO, Danuri, KPLO): fit and held-out days; bytes against the SPK | XP has no lunar mode: baseline is the SPK's bytes and a two-body-plus-zonal fit |
+| M20 | 2h.2 | 3, 4 | L | CAPSTONE and Artemis I: Richardson base, then the fitted Sundman-phase series; bytes against meters | the series reaches 1 to 10 m in 0.5 to 2 KB per segment |
+| M21 | 2h.3, 2h.4 | 3, 4 | H | cruise segments and planet-centered orbiters: fit and held-out days; hand-off continuity at segment boundaries | continuity to the fit tolerance; bytes against the SPK |
+
+M1 to M3 need no side-B code and come first: they decide whether the central finding (2d.4) holds before any term is
+built. Physics in every arm runs in the WASM modules; the experiment's JavaScript only orchestrates and computes
+statistics.
+
+---
+
+## 5. References
+
+- Abramowitz, M., Stegun, I. A. (1964). Handbook of Mathematical Functions. NBS AMS 55 (table 25.4).
+- Acton, C. H. (1996). Ancillary data services of NASA's Navigation and Ancillary Information Facility. Planetary
+  and Space Science 44(1), 65–70. Acton, C., Bachman, N., Semenov, B., Wright, E. (2018). A look towards the future
+  in the handling of space science mission geometry. Planetary and Space Science 150, 9–12. NAIF, SPK Required Reading.
+- Allan, R. R. (1967). Resonance effects due to the longitude dependence of the gravitational field of a rotating
+  primary. Planetary and Space Science 15, 53–76.
+- Archinal, B. A., et al. (2018). Report of the IAU Working Group on Cartographic Coordinates and Rotational Elements:
+  2015. Celestial Mechanics and Dynamical Astronomy 130, 22.
+- Arnold, D., et al. (2015). CODE's new solar radiation pressure model for GNSS orbit determination. Journal of
+  Geodesy 89, 775–791.
+- Beutler, G., et al. (1994). Extended orbit modeling techniques at the CODE processing center of the International
+  GPS Service for Geodynamics (IGS): theory and initial results. Manuscripta Geodaetica 19, 367–386.
+- Bowman, B. R., et al. (2008). A new empirical thermospheric density model JB2008 using new solar and geomagnetic
+  indices. AIAA 2008-6438.
+- Boyd, J. P. (2001). Chebyshev and Fourier Spectral Methods, 2nd ed. Dover.
+- Bretagnon, P., Francou, G. (1988). Planetary theories in rectangular and spherical variables: VSOP87 solutions.
+  Astronomy and Astrophysics 202, 309–315.
+- Broucke, R. A., Cefola, P. J. (1972). On the equinoctial orbit elements. Celestial Mechanics 5, 303–310.
+- Brouwer, D. (1959). Solution of the problem of artificial satellite theory without drag. Astronomical Journal 64,
+  378–397.
+- Casali, S. J., Barker, W. N. (2002). Dynamic calibration atmosphere (DCA) tool for the high accuracy satellite drag
+  model (HASDM). AIAA 2002-4888.
+- CCSDS (2023). Orbit Data Messages. CCSDS 502.0-B-3, Blue Book.
+- CelesTrak. Supplemental GP element sets (SupGP), documentation (celestrak.org).
+- Clenshaw, C. W. (1955). A note on the summation of Chebyshev series. Mathematical Tables and Other Aids to
+  Computation 9, 118–120.
+- Colombo, O. L. (1989). The dynamics of Global Positioning System orbits and the determination of precise
+  ephemerides. Journal of Geophysical Research 94(B7), 9167–9182.
+- COMSPOC Corporation. Spacebook product documentation: SGP4-XP element sets and SynCoPate ephemerides (published
+  descriptions only; the sets were scored locally in G1, never used as an input).
+- Danielson, D. A., Sagovac, C. P., Neta, B., Early, L. W. (1995). Semianalytic satellite theory. Naval Postgraduate
+  School, NPS-MA-95-002.
+- Doornbos, E., Klinkrad, H., Visser, P. (2008). Use of two-line element data for thermosphere neutral density model
+  calibration. Advances in Space Research 41(7), 1115–1122.
+- Drob, D. P., et al. (2015). An update to the Horizontal Wind Model (HWM): the quiet time thermosphere. Earth and
+  Space Science 2, 301–319.
+- Edmonds, A. R. (1957). Angular Momentum in Quantum Mechanics. Princeton University Press.
+- Elipe, A., Lara, M. (2003). Frozen orbits about the Moon. Journal of Guidance, Control, and Dynamics 26(2),
+  238–243.
+- Ely, T. A. (2005). Stable constellations of frozen elliptical inclined lunar orbits. Journal of the Astronautical
+  Sciences 53(3), 301–316.
+- Emmert, J. T., Warren, H. P., Segerman, A. M., Byers, J. M., Picone, J. M. (2017). Propagation of atmospheric
+  density errors to satellite orbits. Advances in Space Research 59(1), 147–165.
+- Farquhar, R. W., Kamel, A. A. (1973). Quasi-periodic orbits about the translunar libration point. Celestial
+  Mechanics 7, 458–473.
+- Gim, D.-W., Alfriend, K. T. (2003). State transition matrix of relative motion for the perturbed noncircular
+  reference orbit. Journal of Guidance, Control, and Dynamics 26(6), 956–971.
+- Gómez, G., Jorba, À., Masdemont, J., Simó, C. (2001). Dynamics and Mission Design Near Libration Points.
+  World Scientific.
+- Gondelach, D. J., Linares, R. (2020). Real-time thermospheric density estimation via two-line element data
+  assimilation. Space Weather 18, e2019SW002356.
+- Gooding, R. H. (1971). A recurrence relation for inclination functions. Celestial Mechanics 4, 91–98.
+- Hathaway, D. H. (2015). The solar cycle. Living Reviews in Solar Physics 12, 4. Hathaway, D. H., Wilson, R. M.,
+  Reichmann, E. J. (1994). The shape of the sunspot cycle. Solar Physics 151, 177–190.
+- Hoots, F. R., France, R. G. (1987). An analytic satellite theory using gravity and a dynamic atmosphere.
+  Celestial Mechanics 40, 1–18.
+- Hoots, F. R., Roehrich, R. L. (1980). Models for propagation of NORAD element sets. Spacetrack Report No. 3.
+- Hoots, F. R., Schumacher, P. W., Glover, R. A. (2004). History of analytical orbit modeling in the U.S. space
+  surveillance system. Journal of Guidance, Control, and Dynamics 27(2), 174–185.
+- Horwood, J. T., Poore, A. B. (2014). Gauss von Mises distribution for improved uncertainty realism in space
+  situational awareness. SIAM/ASA Journal on Uncertainty Quantification 2, 276–304.
+- Hujsak, R. S. (1979). A restricted four body solution for resonating satellites without drag. Project Space Track
+  Report No. 1.
+- Jorba, À., Masdemont, J. (1999). Dynamics in the center manifold of the collinear points of the restricted three
+  body problem. Physica D 132, 189–213.
+- Junkins, J. L., Akella, M. R., Alfriend, K. T. (1996). Non-Gaussian error propagation in orbital mechanics.
+  Journal of the Astronautical Sciences 44(4), 541–563.
+- Kaula, W. M. (1966). Theory of Satellite Geodesy. Blaisdell.
+- Kelso, T. S. (2007). Validation of SGP4 and IS-GPS-200D against GPS precision ephemerides. AAS 07-127.
+- King-Hele, D. G. (1964). Theory of Satellite Orbits in an Atmosphere. Butterworths. King-Hele, D. G. (1987).
+  Satellite Orbits in an Atmosphere: Theory and Applications. Blackie.
+- Koenig, A. W., Guffanti, T., D'Amico, S. (2017). New state transition matrices for spacecraft relative motion in
+  perturbed orbits. Journal of Guidance, Control, and Dynamics 40(7), 1749–1768.
+- Konopliv, A. S., et al. (2013). The JPL lunar gravity field to spherical harmonic degree 660 from the GRAIL Primary
+  Mission. Journal of Geophysical Research: Planets 118, 1415–1434.
+- Konopliv, A. S., Park, R. S., Folkner, W. M. (2016). An improved JPL Mars gravity field and orientation from Mars
+  orbiter and lander tracking data. Icarus 274, 253–260.
+- Kozai, Y. (1959). The motion of a close earth satellite. Astronomical Journal 64, 367–377. Kozai, Y. (1962).
+  Secular perturbations of asteroids with high inclination and eccentricity. Astronomical Journal 67, 591–598.
+- Lane, M. H., Cranford, K. H. (1969). An improved analytical drag theory for the artificial satellite problem.
+  AIAA 69-925. Lane, M. H., Hoots, F. R. (1979). General perturbations theories derived from the 1965 Lane drag
+  theory. Project Space Track Report No. 2.
+- Laskar, J. (1990). The chaotic motion of the solar system: a numerical estimate of the size of the chaotic zones.
+  Icarus 88, 266–291.
+- Lee, D. E. (2019). Gateway destination orbit model: a continuous 15 year NRHO reference trajectory. NASA white
+  paper.
+- Lemoine, F. G., et al. (2013). High-degree gravity models from GRAIL primary mission data. Journal of Geophysical
+  Research: Planets 118, 1676–1698.
+- Lidov, M. L. (1962). The evolution of orbits of artificial satellites of planets under the action of gravitational
+  perturbations of external bodies. Planetary and Space Science 9, 719–759.
+- Liu, J. J. F. (1974). Satellite motion about an oblate Earth. AIAA Journal 12(11), 1511–1516. Liu, J. J. F.,
+  Alford, R. L. (1980). Semianalytic theory for a close-Earth artificial satellite. Journal of Guidance and Control
+  3(4), 304–311.
+- Lyddane, R. H. (1963). Small eccentricities or inclinations in the Brouwer theory of the artificial satellite.
+  Astronomical Journal 68, 555–558.
+- Maisonobe, L., Pommier, V., Parraud, P. (2010). Orekit: an open source library for operational flight dynamics
+  applications. 4th International Conference on Astrodynamics Tools and Techniques.
+- Marcos, F. A., Kendra, M. J., Griffin, J. M., Bass, J. N., Larson, D. R., Liu, J. J. F. (1998). Precision low Earth
+  orbit determination using atmospheric density calibration. Journal of the Astronautical Sciences 46(4).
+- Matzka, J., et al. (2021). The geomagnetic Kp index and derived indices of geomagnetic activity. Space Weather 19,
+  e2020SW002641.
+- McClain, W. D. (1977). A recursively formulated first-order semianalytic artificial satellite theory based on the
+  generalized method of averaging. Computer Sciences Corporation, CSC/TR-77/6010.
+- Moe, K., Moe, M. M. (2005). Gas–surface interactions and satellite drag coefficients. Planetary and Space Science
+  53, 793–801.
+- Murray, C. D., Dermott, S. F. (1999). Solar System Dynamics. Cambridge University Press.
+- Newhall, X X (1989). Numerical representation of planetary ephemerides. Celestial Mechanics 45, 305–310.
+- NOAA Space Weather Prediction Center. 3-day forecast and 45-day Ap and F10.7 forecast products.
+- Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021). The JPL planetary and lunar ephemerides DE440 and
+  DE441. Astronomical Journal 161, 105.
+- Pavlis, N. K., Holmes, S. A., Kenyon, S. C., Factor, J. K. (2012). The development and evaluation of the Earth
+  Gravitational Model 2008 (EGM2008). Journal of Geophysical Research 117, B04406.
+- Peale, S. J. (1969). Generalized Cassini's laws. Astronomical Journal 74, 483–489.
+- Picone, J. M., Hedin, A. E., Drob, D. P., Aikin, A. C. (2002). NRLMSISE-00 empirical model of the atmosphere.
+  Journal of Geophysical Research 107(A12), 1468. Picone, J. M., Emmert, J. T., Lean, J. L. (2005). Thermospheric
+  densities derived from spacecraft orbits: accurate processing of two-line element sets. Journal of Geophysical
+  Research 110, A03301.
+- Richardson, D. L. (1980). Analytic construction of periodic orbits about the collinear points. Celestial
+  Mechanics 22, 241–253.
+- Russell, C. T., McPherron, R. L. (1973). Semiannual variation of geomagnetic activity. Journal of Geophysical
+  Research 78(1), 92–108.
+- Setty, S. J., Cefola, P. J., Montenbruck, O., Fiedler, H. (2016). Application of semi-analytical satellite theory
+  orbit propagator to orbit determination for space object catalog maintenance. Advances in Space Research 57(10),
+  2218–2233.
+- Solomon, D. (1991). The NAVSPASUR satellite motion model. Naval Research Laboratory.
+- Springer, T. A., Beutler, G., Rothacher, M. (1999). A new solar radiation pressure model for GPS satellites.
+  GPS Solutions 2(3), 50–62.
+- Stiefel, E. L., Scheifele, G. (1971). Linear and Regular Celestial Mechanics. Springer.
+- Storz, M. F., Bowman, B. R., Branson, J. I., Casali, S. J., Tobiska, W. K. (2005). High accuracy satellite drag model
+  (HASDM). Advances in Space Research 36(12), 2497–2505.
+- Sundman, K. F. (1912). Mémoire sur le problème des trois corps. Acta Mathematica 36, 105–179.
+- Szebehely, V. (1967). Theory of Orbits: The Restricted Problem of Three Bodies. Academic Press.
+- Tapley, B. D., Schutz, B. E., Born, G. H. (2004). Statistical Orbit Determination. Elsevier.
+- Tapping, K. F. (2013). The 10.7 cm solar radio flux (F10.7). Space Weather 11, 394–406.
+- Tobiska, W. K., et al. (2021). The SET HASDM density database. Space Weather 19, e2020SW002682.
+- Trefethen, L. N., Weideman, J. A. C. (2014). The exponentially convergent trapezoidal rule. SIAM Review 56(3),
+  385–458.
+- Urban, S. E., Seidelmann, P. K., eds. (2012). Explanatory Supplement to the Astronomical Almanac, 3rd ed.
+  University Science Books (chapter 8, Standish and Williams: orbital ephemerides and approximate planetary
+  elements).
+- US Space Force. Astrodynamics Standards: Sgp4Prop release notes 8.0 and later (the public SGP4-XP description).
+- Vallado, D. A., Crawford, P., Hujsak, R., Kelso, T. S. (2006). Revisiting Spacetrack Report #3. AIAA 2006-6753.
+  Vallado, D. A., Crawford, P. (2008). SGP4 orbit determination. AIAA 2008-6770.
+- Walker, M. J. H., Ireland, B., Owens, J. (1985). A set of modified equinoctial orbit elements. Celestial Mechanics
+  36, 409–419.
+- Wu, S. C., Yunck, T. P., Thornton, C. L. (1991). Reduced-dynamic technique for precise orbit determination of low
+  earth satellites. Journal of Guidance, Control, and Dynamics 14(1), 24–30.
+- Zimovan, E. M., Howell, K. C., Davis, D. C. (2017). Near rectilinear halo orbits and their application in
+  cis-lunar space. 3rd IAA Conference on Dynamics and Control of Space Systems.
