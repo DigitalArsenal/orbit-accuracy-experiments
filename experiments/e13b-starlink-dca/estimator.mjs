@@ -91,6 +91,7 @@ export function fitShell(coast,thrust=[],options={}){
   const supported=support.map(x=>x.size>=C.minimumSatellites);
   const solution={status:converged?'CONVERGED':'NOT_CONVERGED',anchorMs:anchor,nodeMs:s.map((_,i)=>anchor+i*DAY),s,supported,support:support.map(x=>x.size),baseline:Object.fromEntries([...beta].map(([id,v])=>[id,v.map(Math.exp)])),sigma,coastArcs:rows.length,calibrationSatellites:byId.size,sweeps,lastChange:change,prior:{B:C.bPrior,logBSigma:C.logBPriorSigma,kappa:C.kappaPrior,kappaSigma:C.kappaPriorSigma},kappa:{}};
   for(const id of byId.keys()){
+    if(!converged){solution.kappa[id]={value:C.kappaPrior,identified:false,reason:'coast solve did not converge',segments:0};continue;}
     const segments=thrust.filter(a=>a.id===id&&keep(a.id)).map(a=>{
       const w=weights(a.startMs,a.endMs,anchor,n);if(w.some(([k])=>!supported[k]))return null;
       const day=Math.min(n-1,Math.max(0,Math.floor(((a.startMs+a.endMs)/2-anchor)/DAY)));
@@ -113,7 +114,7 @@ export function nowcast(coast,thrust,issueMs){
   return {...solution,issueMs,cutoffMs:cutoff,latestArcEndMs:used.length?Math.max(...used.map(a=>a.endMs)):null};
 }
 export function forecast(solution,ms){
-  if(!solution.nodeMs)return null;
+  if(solution.status!=='CONVERGED'||!solution.nodeMs)return null;
   const k=solution.supported.lastIndexOf(true),last=solution.nodeMs[k];
   if(ms>=last)return solution.s[k]*Math.exp(-(ms-last)/(C.forecastTauHours*3600000));
   const i=Math.floor((ms-solution.anchorMs)/DAY);if(i<0||i>=k||!solution.supported[i]||!solution.supported[i+1])return null;
