@@ -21,6 +21,9 @@ export async function collect({ root, run, modules, phase, split, config, e3, v1
   const readInput = (kind, file) => { const bytes = fs.readFileSync(file); (run.inputs[kind] ??= {})[file] = sha256(bytes); return bytes; };
   const truth = new Products(e3.inputs.reference, e3.truthPrefixes);
   const gpsTruth = new Products(e3.inputs.reference, [e3.regimes.GPS.truthPrefix]);
+  const indexes = [...truth.products, ...gpsTruth.products].map(p => ({ product: p.product, sha256: p.indexSha256 }));
+  if (baseline) assert.deepEqual(indexes, baseline.manifest.e3ProductIndexes, 'frozen truth product index changed');
+  for (const p of indexes) readInput('referenceIndex', path.join(e3.inputs.reference, p.product, 'index.json'));
   const regime = new Map();
   for (const [name, spec] of Object.entries(e3.regimes)) if (spec.objects) for (const n of Object.keys(spec.objects)) regime.set(+n, name);
   for (const n of truth.objects()) if (!regime.has(n) && truth.entries(n).some(e => e.product.startsWith(e3.regimes.GPS.truthPrefix) && e.comment.includes(`SP3 satellite ${e3.regimes.GPS.sp3System}`))) regime.set(n, 'GPS');
@@ -30,9 +33,15 @@ export async function collect({ root, run, modules, phase, split, config, e3, v1
   const keep = n => objects.includes(n);
   const { sets, files } = readElementSets(e3.inputs.gpHistory, shiftDay(days[0], -10), days.at(-1), { keep, lagDays: e3.elementSets.creationLagDays,
     theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType, duplicateEpochSeconds: e3.elementSets.duplicateEpochSeconds });
-  for (const [f, hash] of Object.entries(files)) (run.inputs.gpHistory ??= {})[path.join(e3.inputs.gpHistory, f)] = hash;
+  for (const [f, hash] of Object.entries(files)) {
+    if (baseline) assert.equal(hash, baseline.manifest.inputs.gpHistory[f], `frozen OMM input changed: ${f}`);
+    (run.inputs.gpHistory ??= {})[path.join(e3.inputs.gpHistory, f)] = hash;
+  }
   const history = readCreationDays(e3.inputs.gpHistory, shiftDay(days[0], -45), days.at(-1), { keep, theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType });
-  for (const [f, hash] of Object.entries(history.files)) (run.inputs.history ??= {})[path.join(e3.inputs.gpHistory, f)] = hash;
+  for (const [f, hash] of Object.entries(history.files)) {
+    if (baseline) assert.equal(hash, baseline.manifest.inputs.history[f], `frozen history changed: ${f}`);
+    (run.inputs.history ??= {})[path.join(e3.inputs.gpHistory, f)] = hash;
+  }
   let environment;
   if (phase === 'ffm') {
     const b = await bindings(modules), parser = await loadModule(modules, 'data-source/eop-parser');
@@ -67,7 +76,10 @@ export async function collect({ root, run, modules, phase, split, config, e3, v1
       const t = ref(n).firstAtOrAfter(n, requested, e3.targetToleranceSeconds * 1000);
       return t ? { hours, ms: t.ms, state: [...t.r, ...t.v].map(x => x * 1000) } : null;
     }).filter(Boolean);
-    for (const [f, hash] of Object.entries({ ...truth.read, ...gpsTruth.read })) (run.inputs.reference ??= {})[path.join(e3.inputs.reference, f)] = hash;
+    for (const [f, hash] of Object.entries({ ...truth.read, ...gpsTruth.read })) {
+      if (baseline) assert.equal(hash, baseline.manifest.inputs.e3Reference[f], `frozen truth changed: ${f}`);
+      (run.inputs.reference ??= {})[path.join(e3.inputs.reference, f)] = hash;
+    }
     truth.dropCache(); gpsTruth.dropCache();
     const missingHorizons = horizons.filter(h => !targets.some(t => t.hours === h));
     if (baseline) { assert(set); assert.deepEqual(targets.map(t => t.hours), prior.samples.map(s => s.hours)); assert.deepEqual(missingHorizons, prior.missingHorizons); }

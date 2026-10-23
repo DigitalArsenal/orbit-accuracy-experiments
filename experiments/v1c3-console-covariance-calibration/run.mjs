@@ -100,7 +100,7 @@ try {
     const raw = input('baseline', path.join(baselineDir, 'arcs.jsonl')); assert.equal(sha256(raw), baselineManifest.rawSha256);
     const prior = input('baseline', path.join(baselineDir, 'v1c-arcs.jsonl')); assert.equal(sha256(prior), baselineManifest.v1c.rawSha256);
     run.write('baseline-arcs.jsonl', raw); run.write('coverage-arcs.jsonl', prior);
-    const baseline = { arcs: readArcs(path.join(runDir, 'baseline-arcs.jsonl')), coverage: readArcs(path.join(runDir, 'coverage-arcs.jsonl')).filter(a => a.suite === 'E3') };
+    const baseline = { manifest: baselineManifest, arcs: readArcs(path.join(runDir, 'baseline-arcs.jsonl')), coverage: readArcs(path.join(runDir, 'coverage-arcs.jsonl')).filter(a => a.suite === 'E3') };
     const sgpSelection = read(path.join(output, 'sgp-selection.json')), ffmSelection = read(path.join(output, 'ffm-selection.json'));
     const sgp = await collectPhase('sgp', 'test', { baseline });
     const sgpResult = await doEval(sgp, 'SGP4', 'test', sgpSelection.models);
