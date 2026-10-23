@@ -114,8 +114,14 @@ export async function check(root, config, configs) {
     if (['implementation', 'frozenSource'].includes(kind)) assert.equal(sha256(fs.readFileSync(path.join(root, path.relative(manifest.repositoryRoot, file)))), hash, `candidate source changed: ${file}`);
   }
   const selections = { SGP4: read(path.join(output, 'sgp-selection.json')), 'FFM-1': read(path.join(output, 'ffm-selection.json')) };
-  const gp = await loadModule(manifest.modulesRoot, 'analysis/gp-error-model');
-  const codec = await import(pathToFileURL(path.join(manifest.modulesRoot, 'analysis/gp-error-model/scripts/erm-codec.mjs')));
+  // The landed experiment remains checkable after its dependency worktree is removed.
+  const modules = path.join(runDir, 'replay-runtime');
+  for (const [file, relative] of Object.entries(manifest.replayInputs)) if (file.startsWith(manifest.modulesRoot + '/')) {
+    const dest = path.join(modules, path.relative(manifest.modulesRoot, file));
+    fs.mkdirSync(path.dirname(dest), { recursive: true }); fs.copyFileSync(path.join(runDir, relative), dest);
+  }
+  const gp = await loadModule(modules, 'analysis/gp-error-model');
+  const codec = await import(pathToFileURL(path.join(modules, 'analysis/gp-error-model/scripts/erm-codec.mjs')));
   try {
     for (const mode of ['SGP4', 'FFM-1']) {
       const phase = mode === 'SGP4' ? 'sgp' : 'ffm', order = mode === 'SGP4' ? sgpCandidates : methods;
@@ -144,7 +150,7 @@ export async function check(root, config, configs) {
         if (fitted.model) assert.deepEqual(Buffer.from(codec.frame('model', 'model', fitted.model).payload), fs.readFileSync(path.join(output, `${phase}-selection-${candidate}.erm`)));
       }
     }
-    const result = await controls({ runDir, modules: manifest.modulesRoot, gp, codec, selection: selections.SGP4 });
+    const result = await controls({ runDir, modules, gp, codec, selection: selections.SGP4 });
     console.log(`Recorded covariance controls PASS: identity ${result.maxIdentityRelative}, sum ${result.maxSumScoreRelative}; native/headless gp-error-model parity.`);
   } finally { await gp.destroy(); }
   const replay = readArcs(path.join(runDir, 'test-SGP4-N-none-scores.jsonl'));
