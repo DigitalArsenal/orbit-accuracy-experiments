@@ -21,7 +21,8 @@ import { withT, ms, iso, DAY } from './lib/windows.mjs';
 
 const HEAD_BYTES = 262144, STRIDE = 10, HOURS = 3;
 const DAILY = path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/starlink');
-const rowsFile = path.join(store, 'rows/newer.jsonl');
+const truthRoot = args.truth ? path.join(store, args.truth, 'truth') : path.join(store, 'truth'); // --truth refit30: the refitted truth
+const rowsFile = path.join(store, args.truth ? `rows/newer-${args.truth}.jsonl` : 'rows/newer.jsonl');
 const after = args.after ? Date.parse(args.after) : 0;
 
 frozen();
@@ -32,7 +33,7 @@ const frames = await openModule(modules, 'foundation/frames');
 const comspoc = readSets(zlib.gunzipSync(fs.readFileSync(path.join(config.archive, 'hac/comspoc-spacebook/2026/2026-10-23/xp-tle.txt.gz'))).toString('utf8'));
 const done = new Map((fs.existsSync(rowsFile) ? fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []).map((r) => [`${r.norad}|${r.newerCreatedUtc}`, r]));
 const names = await manifest();
-const metas = fs.readdirSync(path.join(store, 'truth')).filter((n) => /^\d+\.json$/.test(n)).map((n) => read(path.join(store, 'truth', n)))
+const metas = fs.readdirSync(truthRoot).filter((n) => /^\d+\.json$/.test(n)).map((n) => read(path.join(truthRoot, n)))
   .sort((a, c) => (a.population === 'daily' ? 0 : 1) - (c.population === 'daily' ? 0 : 1) || a.norad - c.norad)
   .filter((m) => !args['daily-only'] || m.population === 'daily');
 const toEme = async (iso8601, state) => transformState(frames, 'GCRF', 'EME2000', iso8601, state);
@@ -61,7 +62,7 @@ for (const meta of metas) {
   for (const s of ffm.samples) ffmEme.push(await toEme(iso(s.ms), s.state.map((x) => x / 1000)));
   arms.ffm = await compareStates(b, ffmEme.map((x) => ({ r: x.slice(0, 3), v: x.slice(3) })), truth);
   // SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth
-  const flat = new Float64Array(fs.readFileSync(path.join(store, 'truth', `${meta.norad}.f64`)).buffer.slice(0));
+  const flat = new Float64Array(fs.readFileSync(path.join(truthRoot, `${meta.norad}.f64`)).buffer.slice(0));
   const object = withT({ source: 'starlink-ffm', id: `STARLINK (${meta.norad})`, norad: meta.norad, name: `STARLINK-${meta.norad}`, objectId: '', originator: 'G1 FFM-1', creation: '', frame: 'GCRF', timeSystem: 'UTC',
     lines: Array.from({ length: 1441 }, (_, i) => ({ epoch: iso(truthStart + i * 60000), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] })) });
   const sets = await fitElementSets(b, object, truthStart, config.windows.fitHours * 3600);

@@ -11,7 +11,8 @@ import { ms, withT } from './windows.mjs';
 
 export const ARCHIVE = process.env.SDN_ARCHIVE ?? '/opt/data/sdn-archive';
 const referenceRoot = path.join(ARCHIVE, 'reference-states/reference');
-const referenceDir = (name) => path.join(referenceRoot, name);
+export const referenceDir = (name) => path.join(referenceRoot, name);
+export const referenceRootDir = referenceRoot;
 
 // ---- CCSDS OEM text (NASA ISS) ----
 export function parseOemKvn(text) {
@@ -67,12 +68,12 @@ export const memeHeader = (text) => ({
 });
 
 // ---- reference states ($OEM, size-prefixed, GCRF, UTC) ----
-function readReference(file) {
+export function readReference(file) {
   const oem = OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(new Uint8Array(fs.readFileSync(file)))).unpack();
   const block = oem.EPHEMERIS_DATA_BLOCK[0];
   return { norad: block.OBJECT.NORAD_CAT_ID, name: block.OBJECT.OBJECT_NAME, objectId: block.OBJECT.OBJECT_ID, lines: blockLines(block) };
 }
-function chain(files) { // consecutive files of one object as one series (they overlap at their ends)
+export function chain(files) { // consecutive files of one object as one series (they overlap at their ends)
   const byEpoch = new Map();
   let head = null;
   for (const file of files) {

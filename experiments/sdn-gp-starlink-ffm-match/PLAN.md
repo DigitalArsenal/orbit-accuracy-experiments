@@ -180,3 +180,10 @@ fit RMS, and the SGP4 / SGP4-XP errors on the new truth); (b) the fit RMS agains
 the cap; B_eff at the zero bound, between 0 and 0.5, above 0.5 m2/kg); (c) the headline row of the Starlink truth restricted to
 the converged fits with 0 < B_eff <= 0.5 m2/kg ("clean"). The zero bound is a contract of the T1a module (net thrust is not
 representable); it is reported there, not worked around here.
+
+A6 addendum (same box, after the first refits were read): only 9 of the 56 cap-limited fits are same-day files that can be
+refitted on the registered bytes; SpaceX's server had replaced the file of 43 of the 47 seats. For those seats the registered cap
+(12) and the higher cap (30) are both run on the file served now (SHA-256 identical between the two runs) and the two truths are
+compared. The fits of the registered run are not replaced. Also added in this box: `newer.mjs` (held out against the first hours
+of newer SpaceX files, with the refitted truth scored beside the registered one, `--truth refit30`) and `comspoc-precise.mjs`
+(COMSPOC XP sets of GNSS and laser-ranged objects, waiting for products dated after the set epochs).
