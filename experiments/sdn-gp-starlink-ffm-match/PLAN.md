@@ -169,3 +169,14 @@ remaining 12.85 h scored as day 1 with a 40 percent coverage rule. Not scored, r
 the burn (cislunar), LRO (lunar-centred), Psyche, Lucy and Juno (heliocentric; JPL navigation kernels are SPK type 1, which
 files/orbit-products 0.1.4 cannot read). A GEO search of the archive found no operator ephemerides (operator-capture holds
 Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not as ephemerides).
+
+### A6 - 2026-10-23, second box, before the refit was read: truth quality
+
+Coordinator, second box: say whether the 52 fits at the B_eff = 0 bound and the 56 fits that hit the iteration limit bias the
+FFM-Starlink truth. The registered tables keep the registered 12-iteration truth. Added: (a) the 56 fits that stopped at 12
+iterations (all 56 were at the cap, none stalled) are refitted on the same SpaceX file (SHA-256 checked) with a cap of 30, same
+method and settings, and the new truth is compared with the registered one (position difference at 24, 48, 72 and 96 h, B_eff,
+fit RMS, and the SGP4 / SGP4-XP errors on the new truth); (b) the fit RMS against SpaceX over 0-48 h by group (converged or at
+the cap; B_eff at the zero bound, between 0 and 0.5, above 0.5 m2/kg); (c) the headline row of the Starlink truth restricted to
+the converged fits with 0 < B_eff <= 0.5 m2/kg ("clean"). The zero bound is a contract of the T1a module (net thrust is not
+representable); it is reported there, not worked around here.

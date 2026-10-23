@@ -78,14 +78,18 @@ async function memeOf(norad) {
 }
 
 // ---- one satellite ----
-async function satellite(task, context, baselines, modules) {
+// opts (the refit of fits that hit the iteration limit): { fit, rowsDir, truthDir, expectSha } - defaults are the registered run.
+export async function satellite(task, context, baselines, modules, opts = {}) {
   const { norad } = task;
+  const fitSettings = opts.fit ?? config.fit;
+  const outRows = opts.rowsDir ?? rowsDir, outTruth = opts.truthDir ?? truthDir;
   const meme = await memeOf(norad);
+  if (opts.expectSha && sha256(meme.bytes) !== opts.expectSha) throw new Error('the SpaceX file has changed since the registered fit');
   const text = meme.bytes.toString('utf8');
   const header = memeHeader(text);
   if (!header.start) throw new Error('no ephemeris_start in the MEME header');
   const states = parseMeme(text);
-  const fit = await operatorFit(modules, context, { memeBytes: meme.bytes, name: meme.name, norad, epoch: header.start, fit: config.fit });
+  const fit = await operatorFit(modules, context, { memeBytes: meme.bytes, name: meme.name, norad, epoch: header.start, fit: fitSettings });
   if (!fit.ok) throw new Error(`fit_ffm: ${fit.error}`);
   const longest = fit.segments.map((s) => ({ ...s, used: s.record.ORBIT_DETERMINATION.OD_OBSERVATIONS_USED })).sort((a, b) => b.used - a.used)[0];
   if (!longest || longest.used * config.fit.sampleSeconds < config.fit.minimumSegmentHours * 3600) throw new Error(`no fitted segment of ${config.fit.minimumSegmentHours} h (${fit.segments.length} segments, ${fit.events} events)`);
@@ -99,8 +103,8 @@ async function satellite(task, context, baselines, modules) {
   // the truth trajectory, derived, local: km and km/s
   const flat = new Float64Array(ffm.samples.length * 6);
   ffm.samples.forEach((s, i) => s.state.forEach((x, j) => { flat[i * 6 + j] = x / 1000; }));
-  fs.mkdirSync(truthDir, { recursive: true });
-  fs.writeFileSync(path.join(truthDir, `${norad}.f64`), Buffer.from(flat.buffer));
+  fs.mkdirSync(outTruth, { recursive: true });
+  fs.writeFileSync(path.join(outTruth, `${norad}.f64`), Buffer.from(flat.buffer));
   const truthObject = withT({
     source: 'starlink-ffm', id: `STARLINK (${norad})`, norad, name: `STARLINK-${norad}`, objectId: '', originator: 'G1 FFM-1', creation: '', frame: 'GCRF', timeSystem: 'UTC',
     lines: ffm.samples.map((s, i) => ({ epoch: new Date(s.ms).toISOString(), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] })),
@@ -112,15 +116,15 @@ async function satellite(task, context, baselines, modules) {
   const spacexObject = withT({ source: 'starlink-spacex', id: `STARLINK (${norad})`, norad, name: `STARLINK-${norad}`, objectId: '', originator: 'SpaceX', creation: header.created ?? '', frame: 'EME2000', timeSystem: 'UTC', lines: inSpan });
   const spacexRow = inSpan.length > 100 ? await scoreWindow(baselines, spacexObject, ms(inSpan[0].epoch), { fitSeconds: config.windows.fitHours * 3600, leadDays: config.windows.spacexInSpanLeadDays, minCoverage: config.windows.minimumCoverage }) : null;
   const meta = {
-    norad, population: task.population, stratum: task.stratum, tercile: task.tercile, origin: meme.origin, memeSha256: sha256(meme.bytes), memeStartUtc: header.start, memeCreatedUtc: header.created,
+    norad, population: task.population, stratum: task.stratum, tercile: task.tercile, origin: meme.origin, memeSha256: sha256(meme.bytes), memeName: meme.name, memeStartUtc: header.start, memeCreatedUtc: header.created,
     fit: { segments: fit.segments.length, events: fit.events, usedSamples: longest.used, rmsKm: Number(u.FIT_RMS_KM), maxKm: Number(u.FIT_MAXIMUM_KM), iterations: Number(u.FIT_ITERATIONS), convergence: longest.record.ORBIT_DETERMINATION.OD_CONVERGENCE_CRITERIA,
       bEffM2Kg: bEff, bEffAtZeroBound: bEff === 0, kappaGivenPrior: u.KAPPA_GIVEN_B_PRIOR ?? null, crAm, cpuSeconds: fit.cpuSeconds, wallSeconds: fit.wallSeconds },
     truth: { epochUtc: new Date(t0).toISOString(), hours: config.truth.hours, cadenceSeconds: config.truth.cadenceSeconds, file: `truth/${norad}.f64`, sha256: sha256(Buffer.from(flat.buffer)), stateGcrfKm: longest.record.STATE_DATA, densityCorrection: config.truth.densityCorrection, ffmCpuSeconds: ffm.cpuSeconds },
     modules: { odWasmSha256: fit.wasmSha256, ffmWasmSha256: ffm.wasmSha256, environmentSha256: context.provenance.environmentSha256 },
     ffm: ffmRow, spacex: spacexRow,
   };
-  write(path.join(truthDir, `${norad}.json`), meta);
-  write(path.join(rowsDir, `${norad}.json`), { norad, population: task.population, stratum: task.stratum, tercile: task.tercile, fit: meta.fit, ffm: ffmRow, spacex: spacexRow });
+  write(path.join(outTruth, `${norad}.json`), meta);
+  write(path.join(outRows, `${norad}.json`), { norad, population: task.population, stratum: task.stratum, tercile: task.tercile, fit: meta.fit, ffm: ffmRow, spacex: spacexRow });
 }
 
 async function worker(id) {
