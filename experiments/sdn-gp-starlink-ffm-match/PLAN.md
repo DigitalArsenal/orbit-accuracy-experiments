@@ -108,3 +108,24 @@ per object. Bytes are the size-prefixed $OMM record the module returns for the s
 the module-call time of one `propagate` per propagated state (V8 on a loaded machine) and the fit
 time per object. The SDN-GP column stays empty until side B lands the module. No COMSPOC or
 Spacebook data (sets, SynCoPate, API) is fetched or used (owner ruling 2026-10-12).
+
+### A2 - 2026-10-23, after the first fits, before any table was read
+
+1. Start states. The coordinator's same-day local capture of 40 SpaceX files
+   (operator-ephemerides/daily/2026-10-23/starlink, 48 h, 60 s) is processed first: all 40 are members of the
+   registered population, none is a registered seat. The registered seats follow round-robin over the strata, with
+   the registered two spares per cell on failure. A fit costs 60-70 CPU seconds on a machine at load 80-100, so the
+   truth set is what completed inside the 2-hour box; the report states the stratum coverage.
+2. Weather. The space-weather module's rows end where its Kp forecast ends (2026-10-25). The truth runs 96 h, so days
+   after the last row are appended from NOAA SWPC's 45-day forecast (daily Ap and F10.7; Kp, the 81-day average and
+   the provenance held from the last module row). The extension is recorded in the environment file and the
+   manifest. Density correction stays s = 0 (no $DCL is published).
+3. RTN split. The held-out radial / in-track / cross-track split is taken on at most one state per 5 minutes; the 3D
+   RMS of every day uses all states.
+4. ISS. The NASA OEM of 2026-10-07 to 2026-10-22 (local copy) and the same-day file of 2026-10-23.
+5. COMSPOC arm (owner "yes", 2026-10-23, relayed by the coordinator; it supersedes the last sentence of A1). The
+   COMSPOC Spacebook XP sets and SynCoPate trajectories captured locally at 2026-10-23 20:09Z are scored: the sets are
+   propagated through the black-box module and compared with same-day truth, the SynCoPate covariance is scored
+   against the same truth. They are never fitted to, never an input or a prior, never copied into the repository; only
+   aggregates are committed, labelled "COMSPOC Spacebook XP (local scoring only)". Terms: no commercial use, no
+   redistribution, no derivative works.
