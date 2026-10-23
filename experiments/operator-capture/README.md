@@ -37,8 +37,9 @@ Control and evidence under `/opt/data/sdn-archive/operator-capture/`:
 
 One worker issues requests serially, at least 100 ms apart. No automatic full
 file fallback: range requests must answer 206 and the requested Content-Range.
-Variable-width files use increasingly short ranges, with at most 127 bytes
-of discarded tail. No raw ephemeris is ever written, even temporarily.
+Variable-width files use one 256 KiB prefix (about nine hours in the observed
+format); only the first eight hours enter physics, and the tail is discarded.
+No raw ephemeris is ever written, even temporarily.
 Network/HTTP failure gets one retry after 30 seconds, then halts; 403/429
 halts immediately. Superseded 404 files are counted as missing. A cycle
 enumerates every listed Starlink file and reports every failure. Cycles start

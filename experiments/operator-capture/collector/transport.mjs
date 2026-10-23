@@ -43,28 +43,18 @@ export class Fetcher {
     return {names, sha256: sha(r.bytes), bytes: r.bytes.length, retrievedUtc: r.retrievedUtc};
   }
   async head(name) {
-    const url=base+name, first=await this.get(url,[0,4095]);
+    const url=base+name, first=await this.get(url,[0,262143]);
     const lines=first.bytes.toString().split(/\n/);
     const created=/^created:(.+) UTC\r?$/.exec(lines[0])?.[1];
     const header=/^ephemeris_start:(.+) UTC ephemeris_stop:(.+) UTC step_size:(\d+)\r?$/.exec(lines[1]);
     if(!created||!header||lines[3].trim()!=='UVW')throw new Error('unrecognized MEME header');
-    const step=Number(header[3]), headerBytes=Buffer.byteLength(lines.slice(0,4).join('\n')+'\n');
+    const step=Number(header[3]);
     if(step!==60)throw new Error(`unregistered native step ${step}`);
-    // Four variable-width lines per epoch. Approach the boundary from below,
-    // then use 128-byte tail ranges. At most 127 bytes after the final record
-    // can be transferred; no additional state is retained (PLAN amendment A1).
+    // A single bounded prefix avoids the many latency-dominated tail requests
+    // of A1. Only the first 481 records are decoded or retained (amendment A2).
     const count=8*3600/step+1;
-    let buffer=first.bytes,rest=first,complete=0,allLines=lines;
-    while(complete<count){
-      allLines=buffer.toString().split('\n');complete=Math.floor((allLines.length-5)/4);
-      if(complete>=count)break;
-      const lengths=Array.from({length:complete},(_,i)=>Buffer.byteLength(allLines.slice(4+4*i,8+4*i).join('\n')+'\n'));
-      const additional=Math.max(128,Math.floor((count-complete-1)*Math.min(...lengths)*0.95));
-      if(buffer.length+additional>512*1024)throw new Error('head byte budget exceeded');
-      rest=await this.get(url,[buffer.length,buffer.length+additional-1]);
-      if(first.etag!==rest.etag)throw new Error('file changed between byte ranges');
-      buffer=Buffer.concat([buffer,rest.bytes]);
-    }
+    const buffer=first.bytes,rest=first,allLines=lines;
+    if(Math.floor((allLines.length-5)/4)<count)throw new Error('eight hours exceed the fixed prefix budget');
     const headText=allLines.slice(0,4+count*4).join('\n')+'\n',total=buffer.length;
     const tokens=headText.split('\n').slice(4).join(' ').trim().split(/\s+/);
     if(tokens.length!==count*28)throw new Error('head record count mismatch');

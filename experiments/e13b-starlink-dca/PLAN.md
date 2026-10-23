@@ -146,3 +146,15 @@ Only the registered 481 native one-minute states enter the in-memory physics,
 and only the registered derived products are stored. Each record reports
 the exact byte range, transferred-byte hash, head hash and tail byte count.
 No endpoint, threshold, window or estimator changes.
+
+## Amendment A2 — bounded prefix transport (2026-10-23, during mechanics)
+
+A1's small tail ranges took approximately 2 seconds per satellite in the
+first partial cycle, making a full fleet cycle several hours. Replace them
+with one 256 KiB prefix per file, still HTTP 206 only, about nine hours of
+the observed 72-hour file. Only the first eight hours (481 one-minute states)
+are decoded and used; all excess bytes are discarded in memory. Refuse a file
+whose first eight hours exceed this cap. Retain the exact range and tail-byte
+count. This spends about 15% more bytes to remove most HTTP request overhead.
+The partial A1 cycle remains identified; verify a complete A2 cycle. No
+measurement grid, estimator, scoring window or hypothesis changes.
