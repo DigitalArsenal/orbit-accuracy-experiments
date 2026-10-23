@@ -111,7 +111,7 @@ export async function collect({ root, run, modules, phase, split, config, e3, v1
       // of load per additional lane so one lane can progress on a busy host.
       const dispatchBelow = config.dispatchLoadBelow - laneIndex;
       while (next < pairs.length) {
-        while (os.loadavg()[0] >= dispatchBelow) { console.log(`Load ${os.loadavg()[0]}: lane ${laneIndex} waiting below ${dispatchBelow}`); await sleep(15000); }
+        while (next < pairs.length && os.loadavg()[0] >= dispatchBelow) { console.log(`Load ${os.loadavg()[0]}: lane ${laneIndex} waiting below ${dispatchBelow}`); await sleep(15000); }
         assert(fs.statfsSync(root).bavail * fs.statfsSync(root).bsize >= 20 * 1024 ** 3, 'disk guard');
         run.peakDispatchLoad = Math.max(run.peakDispatchLoad ?? 0, os.loadavg()[0]);
         if (next >= pairs.length) break;
