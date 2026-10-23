@@ -35,7 +35,8 @@ Control and evidence under `/opt/data/sdn-archive/operator-capture/`:
   have explicit units, theory and E13's zero-EOP diagnostic convention;
   source metadata reports exact ranges, hashes and discarded tail bytes.
 
-One worker issues requests serially, at least 100 ms apart. No automatic full
+One physics worker consumes at most four prefetched heads; HTTP request starts
+are globally at least 100 ms apart, with at most four requests in flight. No automatic full
 file fallback: range requests must answer 206 and the requested Content-Range.
 Variable-width files use one 256 KiB prefix (about nine hours in the observed
 format); only the first eight hours enter physics, and the tail is discarded.

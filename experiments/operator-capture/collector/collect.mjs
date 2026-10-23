@@ -58,18 +58,24 @@ async function main(){
       if(stop())break;
       const cycleDir=path.join(root,'cycles',id);fs.mkdirSync(cycleDir,{recursive:true});
       const fetcher=new Fetcher(),summary={id,startedUtc:iso(),status:'running',files:0,samples:0,truthStates:0,failures:0,storedBytes:0};
-      let failure;
+      let failure;const pending=[];
       try{
         const reg=subsets(process.env.OPERATOR_SUBSETS??path.resolve(new URL('../SUBSETS.md',import.meta.url).pathname));
         summary.subsetSha256=reg.sha256;summary.subsetMode=reg.mode;
         const weather=await physics.weather(fetcher);summary.weather={sha256:weather.sha256,sources:weather.sources,rows:weather.rows.length};
         const manifest=await fetcher.manifest();summary.listed=manifest.names.length;summary.manifestSha256=manifest.sha256;
         write(path.join(cycleDir,'summary.json'),summary);
+        let queued=0;
+        const queue=()=>{const name=manifest.names[queued++];pending.push(fetcher.head(name).then(head=>({head}),error=>({error})));};
+        while(queued<Math.min(4,manifest.names.length))queue();
         for(const name of manifest.names){
           if(stop()){summary.status='interrupted';break;}
           const s=fs.statfsSync(root);if(s.bavail*s.bsize<25*2**30)throw new Error('disk below 25 GiB; cycle interrupted');
           try{
-            const head=await fetcher.head(name),derived=await physics.derive(head,weather.rows);
+            const fetched=await pending.shift();
+            if(fetched.error)throw fetched.error;
+            if(queued<manifest.names.length)queue();
+            const head=fetched.head,derived=await physics.derive(head,weather.rows);
             const truth=selectTruth(reg,head.source.norad,derived.native,derived.samples);
             const samples=derived.samples.map((p,i)=>({ms:p.ms,energyJkg:p.energyJkg,altitudeKm:p.altitudeKm,meanElements:p.meanElements,
               cumulativeDragWorkB1Jkg:derived.work.CUMULATIVE_DRAG_WORK_J_KG[i*10]}));
@@ -81,6 +87,8 @@ async function main(){
           }catch(error){
             summary.failures++;append(path.join(cycleDir,'failures.jsonl'),{name,at:iso(),error:error.message});
             if(error.fatal)throw error;
+            // A superseded file still frees its bounded prefetch slot.
+            if(queued<manifest.names.length&&pending.length<4)queue();
           }
           const cpu=process.cpuUsage(cpu0),cpuSeconds=(cpu.user+cpu.system)/1e6,elapsed=(Date.now()-started)/1000;
           await sleep(Math.max(0,Math.min(30000,(cpuSeconds/0.5-elapsed)*1000)));
@@ -88,6 +96,7 @@ async function main(){
         }
         if(summary.status==='running')summary.status=summary.files===summary.listed?'complete':'partial';
       }catch(error){failure=error;summary.status='failed';summary.error=error.message;}
+      fetcher.cancel();await Promise.all(pending);
       const cpu=process.cpuUsage(cpu0);
       Object.assign(summary,{endedUtc:iso(),wallSeconds:(Date.now()-started)/1000,cpuSeconds:(cpu.user+cpu.system)/1e6,bytes:fetcher.bytes,requests:fetcher.requests,modules:physics.provenance,registration});
       write(path.join(cycleDir,'summary.json'),summary);append(path.join(root,'cycles.jsonl'),summary);log('cycle-end',summary);

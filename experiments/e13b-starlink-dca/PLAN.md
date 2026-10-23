@@ -158,3 +158,14 @@ whose first eight hours exceed this cap. Retain the exact range and tail-byte
 count. This spends about 15% more bytes to remove most HTTP request overhead.
 The partial A1 cycle remains identified; verify a complete A2 cycle. No
 measurement grid, estimator, scoring window or hypothesis changes.
+
+## Amendment A3 — bounded I/O prefetch (2026-10-23, during mechanics)
+
+The one-request prefix still spent most of the cycle waiting on network I/O
+(400 files in 208 seconds, only 43.4 CPU seconds). Permit at most four heads
+prefetched in memory, with request starts at least 100 ms apart, feeding the
+same single serial WASM worker and unchanged 50% CPU-duty limiter. This bounds
+raw buffers to four 256 KiB heads and shortens the fleet's acquisition span.
+On stop/fatal failure, cancel and account for outstanding transfers. Verify
+one full cycle with this scheduler. Physics, outputs and all scientific
+registration choices remain unchanged.

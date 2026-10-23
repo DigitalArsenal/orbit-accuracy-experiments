@@ -4,15 +4,17 @@ import { setTimeout as sleep } from 'node:timers/promises';
 export const base = 'https://api.starlink.com/public-files/ephemerides/';
 export const sha = b => createHash('sha256').update(b).digest('hex');
 export class Fetcher {
-  bytes = 0; requests = 0; last = 0;
+  bytes = 0; requests = 0; next = 0; controller = new AbortController();
+  cancel(){this.controller.abort();}
   async get(url, range = null) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      await sleep(Math.max(0, this.last + 100 - Date.now()));
+      const start=Math.max(Date.now(),this.next);this.next=start+100;
+      await sleep(Math.max(0,start-Date.now()));
+      if(this.controller.signal.aborted)throw Object.assign(new Error('fetcher stopped'),{fatal:true});
       let response;
       try {
         this.requests++;
-        response = await fetch(url, { headers: { 'User-Agent': 'sdn-operator-capture/1.0', 'Accept-Encoding': 'identity', ...(range ? {Range: `bytes=${range[0]}-${range[1]}`} : {}) }, signal: AbortSignal.timeout(60000) });
-        this.last = Date.now();
+        response = await fetch(url, { headers: { 'User-Agent': 'sdn-operator-capture/1.0', 'Accept-Encoding': 'identity', ...(range ? {Range: `bytes=${range[0]}-${range[1]}`} : {}) }, signal: AbortSignal.any([AbortSignal.timeout(60000),this.controller.signal]) });
         if (response.status !== (range ? 206 : 200)) {
           await response.body?.cancel();
           throw Object.assign(new Error(`HTTP ${response.status}${range ? ' (206 required; full body refused)' : ''}`), {fatal: [403,429].includes(response.status), gone: response.status === 404});
@@ -30,6 +32,7 @@ export class Fetcher {
         if (range && length !== range[1]-range[0]+1) throw new Error('short range body');
         return {bytes: Buffer.concat(chunks), retrievedUtc: new Date().toISOString(), etag: response.headers.get('etag'), contentRange};
       } catch (error) {
+        if(this.controller.signal.aborted)throw Object.assign(new Error('fetcher stopped'),{fatal:true});
         if (error.fatal || error.gone) throw error;
         if (attempt) throw Object.assign(new Error(`source unavailable twice: ${error.message}`), {fatal: true});
         await sleep(30000);
