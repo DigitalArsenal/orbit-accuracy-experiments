@@ -16,9 +16,10 @@ const REGIMES = [
   { id: 'leo-slr', label: 'LEO, laser-ranged (ILRS NSGF)' },
   { id: 'meo-gnss', label: 'MEO, GPS / GLONASS / Galileo (ESA final)' },
   { id: 'meo-slr', label: 'MEO, laser-ranged (LAGEOS, Etalon, LARES-2)' },
+  { id: 'igso-gnss', label: 'IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid)' },
+  { id: 'geo-gnss', label: 'GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid)' },
 ];
 const MISSING = [
-  { id: 'geo', label: 'GEO', reason: 'no truth in the archive (no BeiDou GEO, no operator ephemerides)' },
   { id: 'heo', label: 'HEO', reason: 'no truth in the archive' },
   { id: 'cislunar', label: 'Cislunar, lunar, interplanetary', reason: 'no spacecraft kernels in the archive (planetary ephemerides only); SGP4 does not apply' },
 ];
@@ -37,7 +38,7 @@ export function collect() {
       if (r.spacex) windows.push({ regime: 'leo-starlink-spacex', ...r.spacex, meta });
     }
   }
-  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')]]) {
+  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')]]) {
     for (const w of readJsonl(path.join(store, 'rows', `${source}.jsonl`))) windows.push({ regime: map(w), ...w, meta: {} });
   }
   return windows;
@@ -174,7 +175,7 @@ export function markdown(t) {
     `- **RIC check.** Over all held-out days of all windows the three components recombine to the module\'s own 3D RMS to ${f(t.ricConsistency.xp.min, 4)} to ${f(t.ricConsistency.xp.max, 4)} for SGP4-XP (the thinning to one state per 5 minutes) and ${f(t.ricConsistency.sgp4.min, 4)} to ${f(t.ricConsistency.sgp4.max, 4)} for SGP4.`,
     '- **Environment.** Earth orientation: the local IERS daily finals of 2026-10-13. Space weather: the `data-source/space-weather` rows (GFZ, NOAA SWPC) through 2026-10-25, then NOAA SWPC 45-day daily Ap and F10.7 for the eight days after (Kp and the 81-day average held), because the module\'s rows end where its Kp forecast ends and the truth runs 96 h. Planetary kernel DE440s. Density correction s = 0 (no $DCL is published yet). Hashes are in `manifest.json`.',
     '- **COMSPOC XP (local scoring only).** Their published SGP4-XP sets, propagated through the black-box module and compared with the same-day truth; their set epochs are 1 to 5 days older than the truth, so their errors are at those ages, not at the 24 h of the fitted arms. Never fitted to, never an input; aggregates only.',
-    '- **Not measured here.** SDN-GP (not landed), GEO / HEO / cislunar / interplanetary truth (none in the archive), the theory-term ranking (phase 3).', '');
+    '- **Not measured here.** SDN-GP (not landed), HEO / cislunar / interplanetary truth (none in the archive); GEO operator ephemerides (SES, Intelsat) are not stored, the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
   L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. A `-` is not scored (COMSPOC needs same-day truth for its set, so it appears only on the rows for the objects it was scored on). For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
   L.push('| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |');

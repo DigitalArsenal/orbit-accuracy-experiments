@@ -12,7 +12,7 @@ import { windowStarts } from './lib/windows.mjs';
 
 const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low,mgex-geo,mgex-igso').split(','));
 const P = config.precise;
-const A4 = { year: 2025, firstDay: 274, days: 20, strideSeconds: 172800 }; // amendment A4: GFZ MGEX GEO and IGSO windows
+const A4 = sources.MGEX_A4; // amendment A4: GFZ MGEX GEO and IGSO windows
 const FIT = config.windows.fitHours * 3600;
 
 const plans = {

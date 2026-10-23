@@ -51,12 +51,13 @@ const modules = modulesRoot();
 const b = await openBaselines(modules);
 const picks = [];
 const read = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []);
-for (const source of ['gnss', 'iss', 'slr-low', 'slr-high']) { const rows = read(path.join(store, 'rows', `${source}.jsonl`)); if (rows.length) picks.push({ source, row: rows[Math.floor(rows.length / 2)] }); }
+for (const source of ['gnss', 'iss', 'slr-low', 'slr-high', 'mgex-geo']) { const rows = read(path.join(store, 'rows', `${source}.jsonl`)); if (rows.length) picks.push({ source, row: rows[Math.floor(rows.length / 2)] }); }
 let replayed = 0;
 const same = (a, c) => Math.abs(a - c) <= 1e-9 * Math.max(1, Math.abs(c));
 for (const { source, row } of picks.slice(0, replay)) {
   const object = source === 'gnss' ? sources.gnss(config.precise.gnss).find((o) => o.id === row.id)
     : source === 'iss' ? sources.iss().find((o) => o.id === row.id)
+    : source === 'mgex-geo' ? sources.mgex({ klass: 'geo', ...sources.MGEX_A4 }).find((o) => o.id === row.id)
     : source === 'slr-low' ? config.precise.slrLow.targets.flatMap((t) => sources.slrLow({ target: t, arcs: config.precise.slrLow.arcs })).find((o) => o.id === row.id)
     : config.precise.slrHigh.targets.flatMap((t) => sources.slrHigh({ target: t, weeks: config.precise.slrHigh.weeks })).find((o) => o.id === row.id);
   if (!object) fail(`replay: object ${row.id} not found`);

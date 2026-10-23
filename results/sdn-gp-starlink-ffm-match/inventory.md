@@ -1,6 +1,6 @@
 | Regime | Source | Product | Count | Span | Use | Note |
 | --- | --- | --- | --: | --- | --- | --- |
-| MEO | ESA/ESOC final GNSS orbits (GPS, GLONASS, Galileo) | daily SP3 as GCRF states, 5 min, 77 satellites a day | 715 | 2024-09-24 to 2026-09-23 | truth: arm 1-2 windows | No BeiDou in these products (no GEO or IGSO satellites). |
+| MEO | ESA/ESOC final GNSS orbits (GPS, GLONASS, Galileo) | daily SP3 as GCRF states, 5 min, 77 satellites a day | 715 | 2024-09-24 to 2026-09-23 | truth: arm 1-2 windows | No BeiDou or QZSS in these products; the GFZ MGEX set below carries them. |
 | MEO | IGS final combination | daily SP3 as GCRF states, 15 min | 14 | 2026-08-02 to 2026-08-15 | truth | Spare; the ESA products cover the same constellations at 5 min. |
 | MEO (5,850-19,100 km) | ILRS combined weekly orbit, lageos1 | weekly GCRF states, 2 or 15 min | 46 | 2025-10-04 to 2026-08-29 | truth: arm 1-2 windows |  |
 | MEO (5,850-19,100 km) | ILRS combined weekly orbit, lageos2 | weekly GCRF states, 2 or 15 min | 47 | 2025-10-04 to 2026-08-29 | truth: arm 1-2 windows |  |
@@ -27,8 +27,10 @@
 | LEO | SpaceX Starlink forecasts, sample of 2026-10-09 | MEME, 60 s, 72 h | 50 | 2026-10-09 | start states (stale) |  |
 | LEO | Operator-derived OMM/OCM fits (E11) | derived records | 143 | 2026-10-10 to 2026-10-12 | derived element sets, not truth |  |
 | All regimes (scoring only) | COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z) | 29674 SGP4-XP sets (of 29689); 91 SynCoPate objects, 12 days at 180 s with 6x6 covariance | 29674 | set epochs 2026-08-15 to 2026-10-22, median 2026-10-20 | scoring only: never fitted to, never an input, aggregates only | Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later. |
-| GEO | operator ephemerides (SES, Intelsat) | none stored locally | 0 |  | none | Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept. |
-| GEO / IGSO | precise orbits (BeiDou, QZSS) | none | 0 |  | none | The ESA and IGS finals here carry GPS, GLONASS and Galileo only. |
+| GEO / IGSO / MEO | GFZ multi-GNSS rapid orbits GFZ0MGXRAP (MGEX), in the E14 reference set | daily GCRF states, 5 min, 100 satellites a day: BeiDou and QZSS satellites by name suffix: 9 GEO (G), 12 IGSO (I) | 363 | 2025-10-01 to 2026-09-30 | truth: GEO and IGSO windows (amendment A4) | Found after registration; the first inventory looked under reference-states only. |
+| LEO (about 490 km) | GFZ rapid science orbit L64 | 5-hour to 14-hour arcs | 731 | 2025-09-30 to 2026-09-30 | truth, not yet scored here |  |
+| LEO (about 490 km) | GFZ rapid science orbit L65 | 5-hour to 14-hour arcs | 731 | 2025-09-30 to 2026-09-30 | truth, not yet scored here |  |
+| GEO | operator ephemerides (SES, Intelsat) | none stored locally | 0 |  | none | Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept. Precise GEO truth exists (GFZ MGEX, above). |
 | MEO | OneWeb, Kuiper operator ephemerides | none stored locally | 0 |  | none | Same as GEO. |
 | HEO | operator or precise orbits (Molniya, Tundra, TESS, IBEX) | none | 0 |  | none |  |
 | Cislunar / lunar / interplanetary (bodies) | NAIF planetary ephemeris de440s.bsp | SPK, planets and Moon | 1 | 1849-12-26 to 2150-01-22 | truth for solar-system-bodies, not for SGP4 | Spans from the archive README. |

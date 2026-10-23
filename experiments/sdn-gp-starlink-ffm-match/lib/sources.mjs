@@ -127,6 +127,8 @@ export function slrLow({ target, arcs = 8, first = 0 }) {
 }
 
 // ---- GFZ multi-GNSS rapid orbits in E14's reference set: GEO (names ending G) and IGSO (names ending I) satellites ----
+// Amendment A4: 20 consecutive days from 2025-10-01, fit windows every 48 h.
+export const MGEX_A4 = Object.freeze({ year: 2025, firstDay: 274, days: 20, strideSeconds: 172800 });
 const mgexRoot = path.join(ARCHIVE, 'e14-covariance-realism/reference');
 export function mgex({ klass, year = 2025, firstDay = 274, days = 20 }) {
   const directories = Array.from({ length: days }, (_, k) => `GFZ0MGXRAP_${year}${String(firstDay + k).padStart(3, '0')}0000_01D_05M_ORB`).filter((d) => fs.existsSync(path.join(mgexRoot, d)));

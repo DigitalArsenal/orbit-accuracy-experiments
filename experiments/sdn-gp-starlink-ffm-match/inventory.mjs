@@ -5,6 +5,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { config, frozen, results, write } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
+import { OEM, flatbuffers } from './lib/sds.mjs';
 
 const A = config.archive;
 const ref = path.join(A, 'reference-states/reference');
@@ -18,13 +19,14 @@ function group(prefix, dateOf) {
   return { count: list.length, span: span(list.map(dateOf)) };
 }
 const rows = [];
+const readName = (file) => OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(new Uint8Array(fs.readFileSync(file)))).unpack().EPHEMERIS_DATA_BLOCK[0].OBJECT.OBJECT_NAME;
 const add = (regime, source, product, count, spanText, usable, note) => rows.push({ regime, source, product, count, span: spanText, usable, note });
 
 const esa = group('ESA0OPSFIN_', (n) => { const m = /_(\d{4})(\d{3})0000_/.exec(n); return m && day(Number(m[1]), Number(m[2])); });
 const firstEsa = names.find((n) => n.startsWith('ESA0OPSFIN_'));
 const esaObjects = firstEsa ? fs.readdirSync(path.join(ref, firstEsa)).filter((f) => f.endsWith('.oem')).length : 0;
 const igs = group('IGS0OPSFIN_', (n) => { const m = /_(\d{4})(\d{3})0000_/.exec(n); return m && day(Number(m[1]), Number(m[2])); });
-add('MEO', 'ESA/ESOC final GNSS orbits (GPS, GLONASS, Galileo)', `daily SP3 as GCRF states, 5 min, ${esaObjects} satellites a day`, esa.count, esa.span, 'truth: arm 1-2 windows', 'No BeiDou in these products (no GEO or IGSO satellites).');
+add('MEO', 'ESA/ESOC final GNSS orbits (GPS, GLONASS, Galileo)', `daily SP3 as GCRF states, 5 min, ${esaObjects} satellites a day`, esa.count, esa.span, 'truth: arm 1-2 windows', 'No BeiDou or QZSS in these products; the GFZ MGEX set below carries them.');
 add('MEO', 'IGS final combination', 'daily SP3 as GCRF states, 15 min', igs.count, igs.span, 'truth', 'Spare; the ESA products cover the same constellations at 5 min.');
 for (const t of ['lageos1', 'lageos2', 'etalon1', 'etalon2']) {
   const g = group(`ilrsa.orb.${t}.`, (n) => yymmdd(n.split('.')[3]));
@@ -70,9 +72,31 @@ if (fs.existsSync(comspoc)) {
   add('All regimes (scoring only)', 'COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z)', `${c.xp} SGP4-XP sets (of ${c.sets}); ${c.syncopateObjects} SynCoPate objects, 12 days at 180 s with 6x6 covariance`, c.xp, `set epochs ${c.epochMin.slice(0, 10)} to ${c.epochMax.slice(0, 10)}, median ${c.epochMedian.slice(0, 10)}`, 'scoring only: never fitted to, never an input, aggregates only', 'Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later.');
 }
 
+// E14's reference set: GFZ multi-GNSS rapid orbits (GEO, IGSO, MEO) and GFZ rapid science orbits of LEO satellites
+const e14 = path.join(A, 'e14-covariance-realism/reference');
+if (fs.existsSync(e14)) {
+  const list = fs.readdirSync(e14);
+  const mgexDays = list.filter((n) => n.startsWith('GFZ0MGXRAP_'));
+  if (mgexDays.length) {
+    const doy = (n) => { const m = /_(\d{4})(\d{3})0000_/.exec(n); return m && day(Number(m[1]), Number(m[2])); };
+    const firstDir = path.join(e14, mgexDays[0]);
+    const classes = { G: 0, I: 0, M: 0 };
+    for (const f of fs.readdirSync(firstDir).filter((x) => x.endsWith('.oem'))) {
+      const name = readName(path.join(firstDir, f));
+      const c = /(\d)([GIM])$/.exec(name)?.[2];
+      if (c && /^(C|J)/.test(name)) classes[c] += 1;
+    }
+    const total = fs.readdirSync(firstDir).filter((x) => x.endsWith('.oem')).length;
+    add('GEO / IGSO / MEO', 'GFZ multi-GNSS rapid orbits GFZ0MGXRAP (MGEX), in the E14 reference set', `daily GCRF states, 5 min, ${total} satellites a day: BeiDou and QZSS satellites by name suffix: ${classes.G} GEO (G), ${classes.I} IGSO (I)`, mgexDays.length, span(mgexDays.map(doy)), 'truth: GEO and IGSO windows (amendment A4)', 'Found after registration; the first inventory looked under reference-states only.');
+  }
+  for (const id of ['L64', 'L65']) {
+    const g = list.filter((n) => n.startsWith(`GFZOP_RSO_${id}_G_`));
+    if (g.length) add('LEO (about 490 km)', `GFZ rapid science orbit ${id}`, '5-hour to 14-hour arcs', g.length, span(g.map((n) => { const m = /_(\d{4})(\d\d)(\d\d)_/.exec(n.replace(`GFZOP_RSO_${id}_G_`, '_')); return m && `${m[1]}-${m[2]}-${m[3]}`; })), 'truth, not yet scored here', '');
+  }
+}
+
 // what does not exist
-add('GEO', 'operator ephemerides (SES, Intelsat)', 'none stored locally', 0, null, 'none', 'Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept.');
-add('GEO / IGSO', 'precise orbits (BeiDou, QZSS)', 'none', 0, null, 'none', 'The ESA and IGS finals here carry GPS, GLONASS and Galileo only.');
+add('GEO', 'operator ephemerides (SES, Intelsat)', 'none stored locally', 0, null, 'none', 'Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept. Precise GEO truth exists (GFZ MGEX, above).');
 add('MEO', 'OneWeb, Kuiper operator ephemerides', 'none stored locally', 0, null, 'none', 'Same as GEO.');
 add('HEO', 'operator or precise orbits (Molniya, Tundra, TESS, IBEX)', 'none', 0, null, 'none', '');
 
