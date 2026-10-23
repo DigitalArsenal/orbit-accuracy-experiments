@@ -1,5 +1,5 @@
 {
-  "note": "microseconds per propagated state: one propagator/sgp4-xp propagate call over 1441 states (one day, 60 s), median of repeats; includes the harness call overhead and output decoding",
+  "note": "microseconds per propagated state: one propagator/sgp4-xp propagate call over 5761 states (four days, 60 s), median of repeats; includes the harness call overhead and output decoding",
   "modules": [
     {
       "path": "propagator/sgp4-xp",
@@ -20,9 +20,9 @@
     {
       "regime": "LEO (ISS)",
       "theory": "SGP4",
-      "usPerState": 256.717036780014,
-      "usPerStateMin": 192.28970020818903,
-      "states": 1441,
+      "usPerState": 257.22274067002263,
+      "usPerStateMin": 248.23546988370086,
+      "states": 5761,
       "repeats": 7,
       "elementBytes": 304,
       "parameters": 7
@@ -30,9 +30,9 @@
     {
       "regime": "LEO (ISS)",
       "theory": "SGP4-XP",
-      "usPerState": 266.45000624566245,
-      "usPerStateMin": 221.63512005551678,
-      "states": 1441,
+      "usPerState": 289.870211942371,
+      "usPerStateMin": 238.13819215413977,
+      "states": 5761,
       "repeats": 7,
       "elementBytes": 312,
       "parameters": 8
@@ -40,9 +40,9 @@
     {
       "regime": "MEO (GPS)",
       "theory": "SGP4",
-      "usPerState": 270.8346342817491,
-      "usPerStateMin": 234.6591776544065,
-      "states": 1441,
+      "usPerState": 288.2992464849853,
+      "usPerStateMin": 274.44129335184874,
+      "states": 5761,
       "repeats": 7,
       "elementBytes": 304,
       "parameters": 7
@@ -50,11 +50,31 @@
     {
       "regime": "MEO (GPS)",
       "theory": "SGP4-XP",
-      "usPerState": 303.6529895905613,
-      "usPerStateMin": 231.1478140180423,
-      "states": 1441,
+      "usPerState": 328.68258548863116,
+      "usPerStateMin": 249.7484377712194,
+      "states": 5761,
       "repeats": 7,
       "elementBytes": 312,
+      "parameters": 8
+    },
+    {
+      "regime": "GEO (BeiDou-2 GEO)",
+      "theory": "SGP4",
+      "usPerState": 330.95003037667095,
+      "usPerStateMin": 300.6299975698662,
+      "states": 5761,
+      "repeats": 7,
+      "elementBytes": 304,
+      "parameters": 7
+    },
+    {
+      "regime": "GEO (BeiDou-2 GEO)",
+      "theory": "SGP4-XP",
+      "usPerState": 288.6923928137477,
+      "usPerStateMin": 256.5688536712361,
+      "states": 5761,
+      "repeats": 7,
+      "elementBytes": 320,
       "parameters": 8
     }
   ]
