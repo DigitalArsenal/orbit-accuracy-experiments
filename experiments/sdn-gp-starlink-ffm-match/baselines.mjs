@@ -4,13 +4,12 @@
 //   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs [--source gnss,iss,slr-high,slr-low]
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, frozen, store } from './common.mjs';
+import { config, frozen, store, args } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import * as sources from './lib/sources.mjs';
 import { windowStarts } from './lib/windows.mjs';
 
-const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low').split(','));
 const P = config.precise;
 const FIT = config.windows.fitHours * 3600;

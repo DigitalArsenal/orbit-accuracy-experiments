@@ -10,14 +10,13 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { spawn } from 'node:child_process';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { config, frozen, store, write, read, sha256, iso, freeGiB } from './common.mjs';
+import { config, frozen, store, write, read, sha256, freeGiB, args } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { loadEnvironment, operatorFit, propagate } from './lib/ffm.mjs';
 import { parseMeme, memeHeader } from './lib/sources.mjs';
 import { withT, ms } from './lib/windows.mjs';
 
-const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const STARLINK_ROOT = 'https://api.starlink.com/public-files/ephemerides';
 const DAILY = path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/starlink');
 const rowsDir = path.join(store, 'rows/starlink');

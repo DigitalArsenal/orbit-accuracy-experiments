@@ -78,6 +78,7 @@ export function build() {
   const regimes = [];
   const statsOf = (r, ws, cs) => ({
     ...r, windows: ws.length, objects: new Set(ws.map((w) => w.id)).size, xp: armStats(ws, 'xp'), sgp4: armStats(ws, 'sgp4'), paired: paired(ws),
+    terms: ws.some((w) => w.xp?.ok) ? { bterm: quantile(ws.filter((w) => w.xp?.ok).map((w) => w.xp.bterm), 0.5), agom: quantile(ws.filter((w) => w.xp?.ok).map((w) => w.xp.agom), 0.5), agomShare: ws.filter((w) => w.xp?.ok).filter((w) => w.xp.agom !== 0).length / ws.filter((w) => w.xp?.ok).length, bstar: quantile(ws.filter((w) => w.sgp4?.ok).map((w) => w.sgp4.bstar), 0.5) } : null,
     comspoc: cs?.length ? { objects: cs.length, ageDays: spread(cs.map((c) => c.ageDays)), days: Object.fromEntries([0, ...DAYS].map((k) => [k, { ...spread(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].rmsKm)), ric: [0, 1, 2].map((i) => comp(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].ric), i)) }])) } : null,
   });
   for (const r of REGIMES) {
@@ -111,6 +112,8 @@ export function build() {
   const truthSet = {
     fitted: fitted.length, seatsFitted: fitted.filter((f) => f.population === 'seat').length, dailyFitted: fitted.filter((f) => f.population === 'daily').length, failed: failed.length, failureReasons: reasons,
     byStratum: Object.fromEntries([...new Set(fitted.map((f) => f.stratum))].sort().map((s) => [s, fitted.filter((f) => f.stratum === s).length])),
+    seatsAllocated: fs.existsSync(path.join(results, 'population.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'population.json'))).seatsByStratum : null,
+    seatsFittedByStratum: Object.fromEntries([...new Set(fitted.filter((f) => f.population === 'seat').map((f) => f.stratum))].sort().map((s) => [s, fitted.filter((f) => f.population === 'seat' && f.stratum === s).length])),
     fitVsSpaceXKm: spread(fitted.map((f) => f.fit.rmsKm)), bEffZeroBound: fitted.filter((f) => f.fit.bEffAtZeroBound).length,
     notConverged: fitted.filter((f) => f.fit.convergence !== 'converged').length, withManeuverEvents: fitted.filter((f) => f.fit.events > 0).length,
     fitCpuSecondsMedian: quantile(fitted.map((f) => f.fit.cpuSeconds), 0.5),
@@ -128,6 +131,7 @@ export function build() {
 }
 
 // ---- markdown ----
+const fx = (x) => (Number.isFinite(x) ? x.toExponential(2) : '');
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));
 const arms = (r, k) => [r.xp.days[k]?.median, r.comspoc?.days?.[k]?.median, r.sgp4.days[k]?.median];
 const cell = (vals) => `pending / ${vals.map((v) => (Number.isFinite(v) ? f(v) : '-')).join(' / ')}`;
@@ -191,7 +195,10 @@ export function markdown(t) {
   }
   L.push('', '## 4. Cost per object', '', '| Regime | Arm | Parameters | Element bytes | Record bytes as returned | Fit time, median ms |', '| --- | --- | --: | --: | --: | --: |');
   for (const r of t.regimes) for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) L.push(`| ${r.label} | ${name} | ${a.parameters ?? ''} | ${a.elementBytes ?? ''} | ${a.recordBytes ?? ''} | ${f(a.fitMsMedian, 0)} |`);
+  L.push('', 'Element bytes are the size-prefixed `$OMM` record holding only the mean elements and the drag (and solar) terms of the set; the record as returned carries the fit statistics too. A two-line text set (the format COMSPOC publishes its XP sets in) is 138 characters.');
   if (t.bench) { L.push('', 'One propagated state, microseconds (one `propagate` call over 1441 states, median of repeats, harness overhead included):', '', '| Regime | Theory | us per state | Element bytes |', '| --- | --- | --: | --: |', ...t.bench.map((x) => `| ${x.regime} | ${x.theory} | ${f(x.usPerState, 0)} | ${x.elementBytes} |`)); }
+  L.push('', 'Fitted terms (medians over windows): the two extra terms of SGP4-XP against the single B* of SGP4. AGOM is the solar-radiation term; a zero median means the fit left it at zero in most windows.', '', '| Regime | XP BTERM | XP AGOM | XP windows with AGOM != 0 | SGP4 B* |', '| --- | --: | --: | --: | --: |');
+  for (const r of t.regimes) if (r.terms) L.push(`| ${r.label} | ${fx(r.terms.bterm)} | ${fx(r.terms.agom)} | ${r.terms.agomShare === null ? '' : `${Math.round(100 * r.terms.agomShare)} %`} | ${fx(r.terms.bstar)} |`);
   L.push('', '## 5. Covariance realism against the FFM truth of the same-day Starlinks', '', 'd^2 is the position Mahalanobis distance of the error against each source\'s own covariance (gp-error-model `pair_statistics`); a realistic covariance has mean d^2/3 in [0.8, 1.25] and 95 % coverage in [0.93, 0.97] (the V1c2 rule). Age is in days since the source\'s own epoch: ScenarioEpoch for SynCoPate, the fit epoch for ours.', '', '| Covariance | Age (days) | Objects | Samples | Mean d^2/3 | 95 % coverage | Median object error, km |', '| --- | --- | --: | --: | --: | --: | --: |');
   const names = { 'comspoc-syncopate': 'COMSPOC SynCoPate (local scoring only), with the XP trajectory', 's3kc-sgp4': 'Ours: E14 S3-KC population covariance on SGP4 fitted to the truth', 'sdn-gp': 'SDN-GP' };
   for (const r of t.realism) {
@@ -204,7 +211,8 @@ export function markdown(t) {
   for (const s of t.byShell) L.push(`| ${s.cell} | ${s.windows} | ${f(s.bEffMedian, 4)} | ${s.bEffAtZeroBound} | ${f(s.xp.fit)} / ${f(s.xp.day1)} / ${f(s.xp.day3)} | ${f(s.sgp4.fit)} / ${f(s.sgp4.day1)} / ${f(s.sgp4.day3)} |`);
   const ts = t.truthSet;
   L.push('', '## 7. The Starlink truth set', '', `Fitted ${ts.fitted} satellites (${ts.seatsFitted} registered seats, ${ts.dailyFitted} from the same-day local capture); ${ts.failed} failures. fit_ffm against SpaceX over 0-48 h: RMS median ${f(ts.fitVsSpaceXKm.median)} km, mean ${f(ts.fitVsSpaceXKm.mean)}, 90th percentile ${f(ts.fitVsSpaceXKm.p90)}. B_eff at the zero bound: ${ts.bEffZeroBound}; not converged: ${ts.notConverged}; with detected maneuver events: ${ts.withManeuverEvents}. Median fit CPU ${f(ts.fitCpuSecondsMedian, 0)} s.`, '');
-  L.push('By stratum: ' + Object.entries(ts.byStratum).map(([k, v]) => `${k}: ${v}`).join(', ') + '.', '');
+  L.push('Fitted by stratum, all populations: ' + Object.entries(ts.byStratum).map(([k, v]) => `${k}: ${v}`).join(', ') + '.', '');
+  if (ts.seatsAllocated) L.push('Registered seats fitted / allocated by stratum: ' + Object.keys(ts.seatsAllocated).sort().map((k) => `${k}: ${ts.seatsFittedByStratum[k] ?? 0} / ${ts.seatsAllocated[k]}`).join(', ') + '. The seats were drawn round-robin over the strata and drag terciles, so a partial run covers every stratum before it deepens any.', '');
   if (Object.keys(ts.failureReasons).length) L.push('Failures: ' + Object.entries(ts.failureReasons).map(([k, v]) => `${v} x ${k}`).join('; ') + '.', '');
   L.push('Truth inventory by regime: [inventory.md](inventory.md).', '');
   L.push('## Reproduce, resume, extend', '',

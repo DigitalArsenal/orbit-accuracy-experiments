@@ -11,7 +11,7 @@ import { DAY, iso, ms, slice } from './windows.mjs';
 
 const OEM_FRAME = { EME2000: 'EME2000', GCRF: 'GCRF', ITRF: 'ITRF2000', TEME: 'TEMEOFDATE' };
 // pair_statistics needs a covariance on the predicted state; only its error vector in RTN is used here.
-const PLACEHOLDER_COVARIANCE = [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6];
+export const PLACEHOLDER_COVARIANCE = [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6];
 const RTN_STRIDE_SECONDS = 300; // RTN of the held-out days is taken on at most one state per five minutes
 
 export async function openBaselines(modules) {

@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { config, frozen, store } from './common.mjs';
+import { config, frozen, store, args } from './common.mjs';
 import { modulesRoot, openModule } from './lib/modules.mjs';
 import { openBaselines } from './lib/baselines.mjs';
 import { loadEnvironment, propagate } from './lib/ffm.mjs';
@@ -18,7 +18,6 @@ import { transformState } from './lib/frames.mjs';
 import { frame, oemBytes, ommFrame, readOem, blockLines, readOmm } from './lib/sds.mjs';
 import { DAY, iso, ms, quantile } from './lib/windows.mjs';
 
-const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const CHI2_95_3DOF = 7.814727903251179; // the rule of V1c2: 95 % ellipsoid of three degrees of freedom
 const SYN = path.join(config.archive, 'hac/comspoc-spacebook/2026/2026-10-23/syncopate');
 const STRIDE = 10; // one sample in ten of the 180 s grid: 30 min

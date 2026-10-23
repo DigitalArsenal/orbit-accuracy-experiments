@@ -10,8 +10,9 @@ export const config = JSON.parse(fs.readFileSync(path.join(dir, 'config.json')))
 export const store = process.env.G1_STORE ?? config.store;
 export const results = path.join(root, 'results/sdn-gp-starlink-ffm-match');
 export const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
-export const iso = (ms) => new Date(ms).toISOString();
 export const DAY = 86400000;
+// --name value / --flag arguments of a step
+export const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 export const read = (file) => JSON.parse(fs.readFileSync(file));
 export function write(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true });

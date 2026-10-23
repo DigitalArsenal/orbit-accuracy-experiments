@@ -10,14 +10,13 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { config, frozen, store } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
-import { openBaselines } from './lib/baselines.mjs';
+import { openBaselines, PLACEHOLDER_COVARIANCE } from './lib/baselines.mjs';
 import { frame, oemBytes, ommBytes, ommFrame, readOem, blockLines } from './lib/sds.mjs';
 import { parseMeme, parseOemKvn } from './lib/sources.mjs';
 import { DAY, ms, iso, withT } from './lib/windows.mjs';
 
 const COMSPOC = path.join(config.archive, 'hac/comspoc-spacebook/2026/2026-10-23');
 const DAILY = path.join(config.archive, 'operator-ephemerides/daily/2026-10-23');
-const PLACEHOLDER = [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6];
 
 const exponent = (f) => (f[0] === '-' ? -1 : 1) * (Number(f.slice(1, 6)) * 1e-5) * 10 ** ((f[6] === '-' ? -1 : 1) * Number(f[7]));
 function setOf(l1, l2) { // a two-line set (type 4) as the fields of an $OMM; host-side text parsing only
@@ -53,7 +52,7 @@ async function score({ regime, id, norad, frameName, truthLines, t0, spanDays })
   const grid = oemBytes({ block: { frame: frameName, object: { name: id, norad }, lines: chosen.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), start: chosen[0].epoch, stop: chosen.at(-1).epoch } });
   const prop = await b.xp.call('propagate', [ommFrame('omm', ommBytes({ theory: 'SGP4XP', ...s })), frame('grid', 'OEM', grid)]);
   const predicted = blockLines(readOem(prop.ephemeris).EPHEMERIS_DATA_BLOCK[0]);
-  const pairs = predicted.map((p, i) => ({ id: String(i), predicted: { position: p.r, velocity: p.v, covariance: PLACEHOLDER, covarianceAxes: 'INERTIAL' }, truth: { position: chosen[i].r, velocity: chosen[i].v } }));
+  const pairs = predicted.map((p, i) => ({ id: String(i), predicted: { position: p.r, velocity: p.v, covariance: PLACEHOLDER_COVARIANCE, covarianceAxes: 'INERTIAL' }, truth: { position: chosen[i].r, velocity: chosen[i].v } }));
   const stats = b.erm.decode((await b.gem.call('pair_statistics', [b.erm.frame('pairs', 'pairs', { axesFrom: 'truth', pairs })])).statistics).pairs;
   const days = {};
   stats.forEach((st, i) => { const k = Math.floor((ms(chosen[i].epoch) - t0 - 1) / DAY); (days[k] ??= []).push(st.errorRtn); });
