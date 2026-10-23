@@ -13,7 +13,7 @@ import {sha} from './transport.mjs';
 const table=(s,n,v)=>Object.assign(new s[n+'T'](),v);
 const type=code=>({schemaName:code+'.fbs',fileIdentifier:'$'+code,rootTypeName:code,wireFormat:'flatbuffer'});
 function encode(s,code,value){const b=new fb.Builder(16384);s[code]['finish'+code+'Buffer'](b,value.pack(b));return b.asUint8Array();}
-function decode(s,code,bytes){return s[code]['getRootAs'+code](new fb.ByteBuffer(bytes)).unpack();}
+function decode(s,code,bytes){const prefixed=Buffer.from(bytes).subarray(8,12).toString()==='$'+code;return s[code][(prefixed?'getSizePrefixedRootAs':'getRootAs')+code](new fb.ByteBuffer(bytes)).unpack();}
 const frame=(s,code,portId,value)=>({portId,typeRef:type(code),payload:encode(s,code,value)});
 export async function openPhysics(root){
   const modules={},provenance=[];
@@ -46,7 +46,7 @@ export async function openPhysics(root){
     const a=(await invoke('foundation/orbits','ocm_state_to_keplerian',[frame(O,'OCM','vector_state',ocm)]))[0];
     const out=(await invoke('foundation/orbits','ocm_keplerian_osculating_to_mean',[{...a,portId:'keplerian_state'},frame(G,'GRV','gravity_context',gravity)]))[0];
     const v=decode(O,'OCM',out.payload);
-    if(v.ORB_AVERAGING!=='BROUWER'||v.STATE_DATA.length!==6||!v.STATE_DATA.every(Number.isFinite))throw new Error('invalid mean elements');
+    if(v.ORB_AVERAGING!=='BROUWER'||v.STATE_DATA.length!==6||!v.STATE_DATA.every(Number.isFinite))throw new Error(`invalid mean elements: averaging=${v.ORB_AVERAGING}, row=${JSON.stringify(v.STATE_DATA)}`);
     return v.STATE_DATA;
   }
   async function weather(fetcher){

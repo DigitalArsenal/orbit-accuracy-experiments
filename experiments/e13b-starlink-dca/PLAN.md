@@ -136,3 +136,13 @@ Starlink-only corrections are publishable without Planet's NonCommercial
 tag under the owner's 2026-10-10 licence ruling. Planet-derived per-sample
 rows stay local; only aggregate mechanics evidence is committed. Publication
 of a DCL product requires the later scoring run and a separate modules task.
+
+## Amendment A1 — variable-width transport (2026-10-23, before first cycle)
+
+The live MEME header probe showed variable-width records. Range requests
+approach the end from below and use 128-byte tail requests; at most 127 bytes
+after the eight-hour record may be transferred and immediately discarded.
+Only the registered 481 native one-minute states enter the in-memory physics,
+and only the registered derived products are stored. Each record reports
+the exact byte range, transferred-byte hash, head hash and tail byte count.
+No endpoint, threshold, window or estimator changes.

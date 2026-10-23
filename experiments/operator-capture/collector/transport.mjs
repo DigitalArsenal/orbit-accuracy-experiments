@@ -50,16 +50,23 @@ export class Fetcher {
     if(!created||!header||lines[3].trim()!=='UVW')throw new Error('unrecognized MEME header');
     const step=Number(header[3]), headerBytes=Buffer.byteLength(lines.slice(0,4).join('\n')+'\n');
     if(step!==60)throw new Error(`unregistered native step ${step}`);
-    // MEME has four fixed-width lines per epoch. Confirm that premise before
-    // computing the exact final byte; no read-ahead beyond the eight-hour head.
-    const recordBytes=Buffer.byteLength(lines.slice(4,8).join('\n')+'\n');
-    for(let k=8;k+4<lines.length;k+=4)if(Buffer.byteLength(lines.slice(k,k+4).join('\n')+'\n')!==recordBytes)throw new Error('MEME record width changed');
-    const count=8*3600/step+1,total=headerBytes+recordBytes*count;
-    if(total<=4096||total>512*1024)throw new Error('head byte budget invalid');
-    const rest=await this.get(url,[4096,total-1]);
-    if(first.etag!==rest.etag)throw new Error('file changed between byte ranges');
-    const buffer=Buffer.concat([first.bytes,rest.bytes]);
-    const tokens=buffer.toString().split('\n').slice(4).join(' ').trim().split(/\s+/);
+    // Four variable-width lines per epoch. Approach the boundary from below,
+    // then use 128-byte tail ranges. At most 127 bytes after the final record
+    // can be transferred; no additional state is retained (PLAN amendment A1).
+    const count=8*3600/step+1;
+    let buffer=first.bytes,rest=first,complete=0,allLines=lines;
+    while(complete<count){
+      allLines=buffer.toString().split('\n');complete=Math.floor((allLines.length-5)/4);
+      if(complete>=count)break;
+      const lengths=Array.from({length:complete},(_,i)=>Buffer.byteLength(allLines.slice(4+4*i,8+4*i).join('\n')+'\n'));
+      const additional=Math.max(128,Math.floor((count-complete-1)*Math.min(...lengths)*0.95));
+      if(buffer.length+additional>512*1024)throw new Error('head byte budget exceeded');
+      rest=await this.get(url,[buffer.length,buffer.length+additional-1]);
+      if(first.etag!==rest.etag)throw new Error('file changed between byte ranges');
+      buffer=Buffer.concat([buffer,rest.bytes]);
+    }
+    const headText=allLines.slice(0,4+count*4).join('\n')+'\n',total=buffer.length;
+    const tokens=headText.split('\n').slice(4).join(' ').trim().split(/\s+/);
     if(tokens.length!==count*28)throw new Error('head record count mismatch');
     const points=[];
     for(let k=0;k<tokens.length;k+=28){
@@ -72,6 +79,6 @@ export class Fetcher {
     }
     const start=Date.parse(header[1].replace(' ','T')+'Z');
     if(points.some((p,i)=>p.ms!==start+i*step*1000))throw new Error('head grid incomplete');
-    return {points, source:{name,url,norad:Number(name.split('_')[1]),createdUtc:created.replace(' ','T')+'Z',startUtc:new Date(start).toISOString(),retrievedUtc:rest.retrievedUtc,range:[0,total-1],bytes:total,sha256:sha(buffer),etag:rest.etag,rawPersisted:false}};
+    return {points, source:{name,url,norad:Number(name.split('_')[1]),createdUtc:created.replace(' ','T')+'Z',startUtc:new Date(start).toISOString(),retrievedUtc:rest.retrievedUtc,range:[0,total-1],bytes:total,tailBytes:total-Buffer.byteLength(headText),sha256:sha(buffer),headSha256:sha(headText),etag:rest.etag,rawPersisted:false}};
   }
 }
