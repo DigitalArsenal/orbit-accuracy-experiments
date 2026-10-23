@@ -26,7 +26,7 @@ const bar = message => console.log(`  ok ${message}`);
 export async function check({ root, runDir, config, configs, registration, output }) {
   const e3 = configs.e3, manifest = read(path.join(runDir, 'manifest.json')), committed = read(path.join(output, 'manifest.json'));
   assert(manifest.finished && manifest.selectionFreeze && manifest.testStarted, 'the run did not finish');
-  const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+  const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 }).trim();
   let hashes = 0;
   // 1. frozen plan and configuration, manifest hashes, committed manifest
   assert.equal(manifest.configSha256, sha256(fs.readFileSync(path.join(root, 'experiments/v1c4-console-covariance-calibration/config.json'))));
@@ -57,7 +57,7 @@ export async function check({ root, runDir, config, configs, registration, outpu
     for (const [phase, mode] of [['sgp', SGP4], ['ffm', FFM]]) {
       const relative = `results/v1c4/${phase}-selection.json`, freeze = manifest.selectionFreeze[phase];
       assert.equal(sha256(fs.readFileSync(path.join(root, relative))), freeze.sha256);
-      assert.equal(sha256(execFileSync('git', ['show', `${freeze.commit}:${relative}`], { cwd: root })), freeze.sha256);
+      assert.equal(sha256(execFileSync('git', ['show', `${freeze.commit}:${relative}`], { cwd: root, maxBuffer: 1 << 28 })), freeze.sha256);
       assert(Date.parse(freeze.verifiedAt) <= Date.parse(manifest.testStarted), 'test read before the selection was pushed');
       assert.equal(sel[mode].trainingRawSha256, manifest.files[`train-${phase}.jsonl`]);
       assert.equal(sel[mode].eventsSha256, manifest.files['events-train.jsonl']);

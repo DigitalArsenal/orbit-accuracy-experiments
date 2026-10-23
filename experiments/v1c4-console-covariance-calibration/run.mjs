@@ -27,7 +27,7 @@ const runId = values.run ?? 'v1c4-console-covariance-calibration-20261023';
 const runDir = process.env.SDN_V1C4_RUN_DIR ?? path.join(root, 'runs', runId);
 const output = path.join(root, 'results/v1c4');
 const runtime = path.join(runDir, 'runtime');
-const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 }).trim();
 const branch = 'refs/heads/task/console-covariance-calibration-v1c4-20261023';
 
 if (values.check) {
@@ -58,7 +58,7 @@ run.inputs.frozenSource = Object.fromEntries(['experiments/v1c3-console-covarian
 run.invoke(values.stage);
 const requirePushed = relative => {
   const bytes = fs.readFileSync(path.join(root, relative));
-  assert.equal(execFileSync('git', ['show', `HEAD:${relative}`], { cwd: root }).toString(), bytes.toString(), 'commit the selection first');
+  assert.equal(execFileSync('git', ['show', `HEAD:${relative}`], { cwd: root, maxBuffer: 1 << 28 }).toString(), bytes.toString(), 'commit the selection first');
   const sha = git(['rev-parse', 'HEAD']), remote = git(['ls-remote', 'origin', branch]).split(/\s/)[0];
   assert.equal(remote, sha, 'push the selection and every model before proceeding');
   return { commit: sha, sha256: sha256(bytes), verifiedAt: new Date().toISOString() };
@@ -116,7 +116,7 @@ try {
     for (const phase of ['sgp', 'ffm']) {
       const relative = `results/v1c4/${phase}-selection.json`, frozen = run.manifest.selectionFreeze[phase];
       assert.equal(sha256(fs.readFileSync(path.join(root, relative))), frozen.sha256, 'selection changed after test unlock');
-      assert.equal(sha256(execFileSync('git', ['show', `${frozen.commit}:${relative}`], { cwd: root })), frozen.sha256);
+      assert.equal(sha256(execFileSync('git', ['show', `${frozen.commit}:${relative}`], { cwd: root, maxBuffer: 1 << 28 })), frozen.sha256);
     }
     run.manifest.testStarted ??= new Date().toISOString(); run.checkpoint();
     await runTest({ root, run, runDir, runtime, config, configs, e3, gp, codec, output, registration, universe, noteSets, noteTruth, elementSets, pairsOf, jobOf, groupBy, collect, environmentOf, eventFlags, loadFlags });
