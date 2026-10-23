@@ -1,0 +1,12 @@
+{
+  "name": "g1-sdn-gp-starlink-ffm-match",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dependencies of the G1 experiment: the SDK and SDS versions the landed modules (od 0.3.0, ffm 2.0.0, sgp4-xp 0.1.1, gp-error-model 0.10.0) are built against.",
+  "dependencies": {
+    "flatbuffers": "25.9.23",
+    "space-data-module-sdk": "0.9.10",
+    "spacedatastandards.org": "1.261.0"
+  }
+}

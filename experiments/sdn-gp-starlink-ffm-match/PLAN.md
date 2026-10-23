@@ -95,3 +95,16 @@ that visibly and does not pass.
 ## Amendments
 
 None at registration.
+
+### A1 - 2026-10-23, before any test window is read: the headline table
+
+Owner (relayed by the coordinator), about COMSPOC's full-catalog XP sets: "yes, I want to beat
+them". "Beat" is measured in every regime: SDN-GP must beat SGP4-XP at its best, which is
+SGP4-XP fitted to the same precise truth on the same windows (arm 2). COMSPOC fits XP to its own
+trajectories derived from public element sets, so on expectation it cannot beat XP fitted to
+precise truth. The first table of the report has one row per regime: SDN-GP, best-case XP and
+SGP4, scored on held-out day 1-3 RMS with the RIC split, fit RMS, and bytes and microseconds
+per object. Bytes are the size-prefixed $OMM record the module returns for the set; microseconds are
+the module-call time of one `propagate` per propagated state (V8 on a loaded machine) and the fit
+time per object. The SDN-GP column stays empty until side B lands the module. No COMSPOC or
+Spacebook data (sets, SynCoPate, API) is fetched or used (owner ruling 2026-10-12).
