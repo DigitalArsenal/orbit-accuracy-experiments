@@ -64,6 +64,12 @@ add('LEO', 'SpaceX Starlink forecasts, sample of 2026-10-09', 'MEME, 60 s, 72 h'
 const derived = path.join(A, 'operator-ephemerides/derived/index.jsonl');
 if (fs.existsSync(derived)) add('LEO', 'Operator-derived OMM/OCM fits (E11)', 'derived records', fs.readFileSync(derived, 'utf8').split('\n').filter(Boolean).length, '2026-10-10 to 2026-10-12', 'derived element sets, not truth', '');
 
+const comspoc = path.join(config.store, 'rows/comspoc-catalog.json');
+if (fs.existsSync(comspoc)) {
+  const c = JSON.parse(fs.readFileSync(comspoc, 'utf8'));
+  add('All regimes (scoring only)', 'COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z)', `${c.xp} SGP4-XP sets (of ${c.sets}); ${c.syncopateObjects} SynCoPate objects, 12 days at 180 s with 6x6 covariance`, c.xp, `set epochs ${c.epochMin.slice(0, 10)} to ${c.epochMax.slice(0, 10)}, median ${c.epochMedian.slice(0, 10)}`, 'scoring only: never fitted to, never an input, aggregates only', 'Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later.');
+}
+
 // what does not exist
 add('GEO', 'operator ephemerides (SES, Intelsat)', 'none stored locally', 0, null, 'none', 'Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept.');
 add('GEO / IGSO', 'precise orbits (BeiDou, QZSS)', 'none', 0, null, 'none', 'The ESA and IGS finals here carry GPS, GLONASS and Galileo only.');

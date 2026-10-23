@@ -11,12 +11,13 @@ import * as sources from './lib/sources.mjs';
 import { windowStarts } from './lib/windows.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
-const wanted = new Set((args.source ?? 'iss,gnss,slr-high,slr-low').split(','));
+const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low').split(','));
 const P = config.precise;
 const FIT = config.windows.fitHours * 3600;
 
 const plans = {
   iss: () => [{ objects: sources.iss(), stride: P.iss.stride_s }],
+  'iss-daily': () => [{ objects: sources.iss({ file: path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/iss-oem.txt.gz') }), stride: 10 * 365 * 86400 }],
   gnss: () => [{ objects: sources.gnss(P.gnss), stride: P.gnss.strideSeconds }],
   'slr-high': () => P.slrHigh.targets.map((target) => ({ objects: sources.slrHigh({ target, weeks: P.slrHigh.weeks }), stride: P.slrHigh.strideSeconds })),
   'slr-low': () => P.slrLow.targets.map((target) => ({ objects: sources.slrLow({ target, arcs: P.slrLow.arcs }), stride: P.slrLow.strideSeconds })),

@@ -26,6 +26,7 @@
 | LEO | SpaceX Starlink forecasts, same-day local capture 2026-10-23 | MEME gz, 60 s, 48 h, EME2000 | 40 | 2026-10-23 12:06Z start, 48 h | start states for the FFM truth and in-span scoring | Raw operator files: read in memory, never copied. |
 | LEO | SpaceX Starlink forecasts, sample of 2026-10-09 | MEME, 60 s, 72 h | 50 | 2026-10-09 | start states (stale) |  |
 | LEO | Operator-derived OMM/OCM fits (E11) | derived records | 143 | 2026-10-10 to 2026-10-12 | derived element sets, not truth |  |
+| All regimes (scoring only) | COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z) | 29674 SGP4-XP sets (of 29689); 91 SynCoPate objects, 12 days at 180 s with 6x6 covariance | 29674 | set epochs 2026-08-15 to 2026-10-22, median 2026-10-20 | scoring only: never fitted to, never an input, aggregates only | Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later. |
 | GEO | operator ephemerides (SES, Intelsat) | none stored locally | 0 |  | none | Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept. |
 | GEO / IGSO | precise orbits (BeiDou, QZSS) | none | 0 |  | none | The ESA and IGS finals here carry GPS, GLONASS and Galileo only. |
 | MEO | OneWeb, Kuiper operator ephemerides | none stored locally | 0 |  | none | Same as GEO. |

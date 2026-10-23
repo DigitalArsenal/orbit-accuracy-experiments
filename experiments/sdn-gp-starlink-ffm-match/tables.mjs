@@ -8,8 +8,11 @@ import { quantile, mean } from './lib/windows.mjs';
 
 const REGIMES = [
   { id: 'leo-starlink-ffm', label: 'LEO, Starlink, FFM-propagated truth' },
+  { id: 'leo-starlink-ffm-drag', label: 'LEO, Starlink, FFM truth, B_eff above zero (drag acts)' },
+  { id: 'leo-starlink-ffm-b0', label: 'LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable)' },
   { id: 'leo-starlink-spacex', label: 'LEO, Starlink, SpaceX forecast (inside the span, day 1)' },
-  { id: 'leo-iss', label: 'LEO, ISS (NASA OEM)' },
+  { id: 'leo-iss', label: 'LEO, ISS (NASA OEM of 2026-10-07)' },
+  { id: 'leo-iss-daily', label: 'LEO, ISS (NASA OEM of 2026-10-21, one window from its start)' },
   { id: 'leo-slr', label: 'LEO, laser-ranged (ILRS NSGF)' },
   { id: 'meo-gnss', label: 'MEO, GPS / GLONASS / Galileo (ESA final)' },
   { id: 'meo-slr', label: 'MEO, laser-ranged (LAGEOS, Etalon, LARES-2)' },
@@ -30,11 +33,11 @@ export function collect() {
     for (const f of fs.readdirSync(dir).filter((n) => /^\d+\.json$/.test(n)).sort()) {
       const r = JSON.parse(fs.readFileSync(path.join(dir, f)));
       const meta = { norad: r.norad, population: r.population, stratum: r.stratum, tercile: r.tercile, bEff: r.fit?.bEffM2Kg, bEffAtZeroBound: r.fit?.bEffAtZeroBound };
-      if (r.ffm) windows.push({ regime: 'leo-starlink-ffm', ...r.ffm, meta });
+      if (r.ffm) { windows.push({ regime: 'leo-starlink-ffm', ...r.ffm, meta }); windows.push({ regime: meta.bEffAtZeroBound ? 'leo-starlink-ffm-b0' : 'leo-starlink-ffm-drag', ...r.ffm, meta }); }
       if (r.spacex) windows.push({ regime: 'leo-starlink-spacex', ...r.spacex, meta });
     }
   }
-  for (const [source, map] of [['iss', () => 'leo-iss'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')]]) {
+  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')]]) {
     for (const w of readJsonl(path.join(store, 'rows', `${source}.jsonl`))) windows.push({ regime: map(w), ...w, meta: {} });
   }
   return windows;
@@ -72,14 +75,20 @@ export function build() {
   const windows = collect();
   const comspoc = readJsonl(path.join(store, 'rows/comspoc.jsonl'));
   const bench = fs.existsSync(path.join(results, 'bench.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'bench.json'))) : null;
-  const regimes = REGIMES.map((r) => {
+  const regimes = [];
+  const statsOf = (r, ws, cs) => ({
+    ...r, windows: ws.length, objects: new Set(ws.map((w) => w.id)).size, xp: armStats(ws, 'xp'), sgp4: armStats(ws, 'sgp4'), paired: paired(ws),
+    comspoc: cs?.length ? { objects: cs.length, ageDays: spread(cs.map((c) => c.ageDays)), days: Object.fromEntries([0, ...DAYS].map((k) => [k, { ...spread(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].rmsKm)), ric: [0, 1, 2].map((i) => comp(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].ric), i)) }])) } : null,
+  });
+  for (const r of REGIMES) {
     const ws = windows.filter((w) => w.regime === r.id);
     const cs = comspoc.filter((c) => c.regime === r.id);
-    return {
-      ...r, windows: ws.length, objects: new Set(ws.map((w) => w.id)).size, xp: armStats(ws, 'xp'), sgp4: armStats(ws, 'sgp4'), paired: paired(ws),
-      comspoc: cs.length ? { objects: cs.length, ageDays: spread(cs.map((c) => c.ageDays)), days: Object.fromEntries([0, ...DAYS].map((k) => [k, { ...spread(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].rmsKm)), ric: [0, 1, 2].map((i) => comp(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].ric), i)) }])) } : null,
-    };
-  });
+    regimes.push(statsOf(r, ws, cs.length ? null : null));
+    if (cs.length) { // the same objects, so the COMSPOC arm is compared like with like
+      const ids = new Set(cs.map((c) => c.norad));
+      regimes.push(statsOf({ id: `${r.id}-aligned`, label: `${r.label}, the ${ids.size} object(s) scored for COMSPOC` }, ws.filter((w) => ids.has(w.norad)), cs));
+    }
+  }
   // Starlink FFM by shell stratum and drag tercile
   const shells = {};
   for (const w of windows.filter((x) => x.regime === 'leo-starlink-ffm')) {

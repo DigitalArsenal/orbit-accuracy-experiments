@@ -237,6 +237,15 @@
       "note": ""
     },
     {
+      "regime": "All regimes (scoring only)",
+      "source": "COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z)",
+      "product": "29674 SGP4-XP sets (of 29689); 91 SynCoPate objects, 12 days at 180 s with 6x6 covariance",
+      "count": 29674,
+      "span": "set epochs 2026-08-15 to 2026-10-22, median 2026-10-20",
+      "usable": "scoring only: never fitted to, never an input, aggregates only",
+      "note": "Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later."
+    },
+    {
       "regime": "GEO",
       "source": "operator ephemerides (SES, Intelsat)",
       "product": "none stored locally",

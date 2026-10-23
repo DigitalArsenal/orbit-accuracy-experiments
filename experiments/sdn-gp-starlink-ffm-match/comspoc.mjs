@@ -37,7 +37,8 @@ const b = await openBaselines(modules);
 const lines = zlib.gunzipSync(fs.readFileSync(path.join(COMSPOC, 'xp-tle.txt.gz'))).toString('utf8').split('\n');
 const sets = new Map();
 for (let i = 0; i + 1 < lines.length; i += 1) if (lines[i].startsWith('1 ') && lines[i + 1].startsWith('2 ')) sets.set(Number(lines[i].slice(2, 7)), [lines[i], lines[i + 1]]);
-const catalog = { sets: sets.size, xp: [...sets.values()].filter(([l1]) => l1[62] === '4').length };
+const xpEpochs = [...sets.values()].filter(([l1]) => l1[62] === '4').map(([l1, l2]) => setOf(l1, l2).epochMs).sort((a, c) => a - c);
+const catalog = { sets: sets.size, xp: xpEpochs.length, epochMin: iso(xpEpochs[0]), epochMedian: iso(xpEpochs[Math.floor(xpEpochs.length / 2)]), epochMax: iso(xpEpochs.at(-1)), syncopateObjects: fs.readdirSync(path.join(COMSPOC, 'syncopate')).length };
 
 async function score({ regime, id, norad, frameName, truthLines, t0, spanDays }) {
   const set = sets.get(norad);
@@ -85,7 +86,7 @@ for (const norad of dailyIds) {
 }
 const issText = zlib.gunzipSync(fs.readFileSync(path.join(DAILY, 'iss-oem.txt.gz'))).toString('utf8');
 const iss = parseOemKvn(issText).blocks.flatMap((bl) => bl.lines);
-const issRow = await score({ regime: 'leo-iss', id: 'ISS', norad: 25544, frameName: 'EME2000', truthLines: iss, t0: ms(iss[0].epoch), spanDays: 4 });
+const issRow = await score({ regime: 'leo-iss-daily', id: 'ISS', norad: 25544, frameName: 'EME2000', truthLines: iss, t0: ms(iss[0].epoch), spanDays: 4 });
 if (issRow) rows.push(issRow);
 fs.mkdirSync(path.join(store, 'rows'), { recursive: true });
 fs.writeFileSync(path.join(store, 'rows/comspoc.jsonl'), rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
