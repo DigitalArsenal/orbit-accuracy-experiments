@@ -7,6 +7,7 @@ import { sha256, loadModule } from '../../harness/modules.mjs';
 import { summarize, checkRecorded } from '../v1c2-console-covariance-realism/report.mjs';
 import { readArcs, recordedTables } from './evaluate.mjs';
 import { select, sgpCandidates, methods, fit, stratum } from './calibration.mjs';
+import { controls } from './controls.mjs';
 const read = p => JSON.parse(fs.readFileSync(p));
 const count = cells => cells.filter(c => c.decision === 'REALISTIC').length;
 const f = n => Number.isFinite(n) ? n.toPrecision(5) : '—';
@@ -126,6 +127,8 @@ export async function check(root, config, configs) {
         if (fitted.model) assert.deepEqual(Buffer.from(codec.frame('model', 'model', fitted.model).payload), fs.readFileSync(path.join(output, `${phase}-selection-${candidate}.erm`)));
       }
     }
+    const result = await controls({ runDir, modules: manifest.modulesRoot, gp, codec, selection: selections.SGP4 });
+    console.log(`Recorded covariance controls PASS: identity ${result.maxIdentityRelative}, sum ${result.maxSumScoreRelative}; native/headless gp-error-model parity.`);
   } finally { await gp.destroy(); }
   const replay = readArcs(path.join(runDir, 'test-SGP4-N-none-scores.jsonl'));
   const old = readArcs(path.join(runDir, 'baseline-arcs.jsonl'));
