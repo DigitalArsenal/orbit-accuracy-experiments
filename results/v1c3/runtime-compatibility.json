@@ -25,19 +25,9 @@
     "propagator/ffm/build-driver.mjs removes -fno-exceptions and adds -fwasm-exceptions and -wasm-use-legacy-eh=false.",
     "propagator/ffm/build.mjs links libc++abi-ww-wasmexcept.a and libunwind-ww-wasmexcept.a and declares standardWasmExceptions:true."
   ],
-  "calibrationRuns": 0,
-  "selectedConfiguration": null,
-  "modelRecord": null,
-  "skipped": [
-    "training and test candidate evaluation",
-    "GPS tail diagnosis",
-    "declared V1c3 E2E (runner not yet implemented)",
-    "headless numerical parity",
-    "gauntlet",
-    "landing",
-    "deployment"
-  ],
   "ownerWaiver": "Docker only, owner 2026-10-22; no native AOT waiver claimed.",
   "defectOwner": "ffm-memory-measured-sizing-20261022",
-  "resumeDecision": "Coordinator 2026-10-23 ~01:10Z: native AOT is required for node flow artifacts; this experiment preserves exact V1c2 execution and artifacts."
+  "resumeDecision": "Coordinator 2026-10-23 ~01:10Z: native AOT is required for node flow artifacts; this experiment preserves exact V1c2 execution and artifacts.",
+  "calibrationRunsAtProbe": 0,
+  "remainingRuntimeLimitation": "Frozen FFM native AOT fails; gp-error-model native/browser parity is checked by the experiment E2E. No Docker."
 }
