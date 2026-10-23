@@ -76,6 +76,14 @@ function deriveMetrics(root, runDir, test, configs) {
 export function publish(root, runDir, manifest, test, configs) {
   const output = path.join(root, 'results/v1c3');
   const { metrics, selections } = deriveMetrics(root, runDir, test, configs);
+  const localTails = {};
+  for (const [label, mode, candidate] of [['SGP4 uncalibrated', 'SGP4', 'N-none'], ['SGP4 selected', 'SGP4', selections.SGP4.selected], ['FFM-1 selected', 'FFM-1', selections['FFM-1'].selected]]) {
+    localTails[label] = readArcs(path.join(runDir, `test-${mode}-${candidate}-scores.jsonl`)).filter(a => a.group === 'GPS')
+      .flatMap(a => (a.samples ?? []).map(s => ({ key: a.key, object: a.norad, ...s })))
+      .filter(s => Number.isFinite(s.score?.d2Predicted)).sort((a, b) => b.score.d2Predicted - a.score.d2Predicted);
+  }
+  fs.writeFileSync(path.join(runDir, 'gps-tail-ranking-local.json'), JSON.stringify(localTails) + '\n');
+  manifest.files['gps-tail-ranking-local.json'] = sha256(fs.readFileSync(path.join(runDir, 'gps-tail-ranking-local.json')));
   fs.writeFileSync(path.join(output, 'metrics.json'), JSON.stringify(metrics, null, 2) + '\n');
   fs.writeFileSync(path.join(output, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
   fs.writeFileSync(path.join(output, 'README.md'), render(metrics, manifest, selections));
