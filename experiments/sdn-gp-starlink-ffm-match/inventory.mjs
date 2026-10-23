@@ -62,7 +62,7 @@ add('LEO', 'SpaceX Starlink forecasts, prospective capture (E13b collector)', 'd
 const daily = path.join(A, 'operator-ephemerides/daily/2026-10-23/starlink');
 if (fs.existsSync(daily)) add('LEO', 'SpaceX Starlink forecasts, same-day local capture 2026-10-23', 'MEME gz, 60 s, 48 h, EME2000', fs.readdirSync(daily).length, '2026-10-23 12:06Z start, 48 h', 'start states for the FFM truth and in-span scoring', 'Raw operator files: read in memory, never copied.');
 const sample = path.join(A, 'hac/starlink-ephemerides/sample-20261009');
-add('LEO', 'SpaceX Starlink forecasts, sample of 2026-10-09', 'MEME, 60 s, 72 h', fs.readdirSync(sample).filter((n) => n.startsWith('MEME_')).length, '2026-10-09', 'start states (stale)', '');
+add('LEO', 'SpaceX Starlink forecasts, sample of 2026-10-09', 'MEME, 60 s, 72 h', fs.readdirSync(sample).filter((n) => n.startsWith('MEME_') && n.endsWith('.txt')).length, '2026-10-09', 'start states (stale)', '');
 const derived = path.join(A, 'operator-ephemerides/derived/index.jsonl');
 if (fs.existsSync(derived)) add('LEO', 'Operator-derived OMM/OCM fits (E11)', 'derived records', fs.readFileSync(derived, 'utf8').split('\n').filter(Boolean).length, '2026-10-10 to 2026-10-12', 'derived element sets, not truth', '');
 

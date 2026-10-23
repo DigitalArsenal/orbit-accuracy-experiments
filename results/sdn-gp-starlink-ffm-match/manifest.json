@@ -5,13 +5,18 @@
     "node experiments/sdn-gp-starlink-ffm-match/truth.mjs --workers N",
     "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/bench.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/comspoc.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/covariance.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fitlength.mjs --limit 100",
     "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
-    "node experiments/sdn-gp-starlink-ffm-match/tables.mjs"
+    "node experiments/sdn-gp-starlink-ffm-match/tables.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "fb274342e7b66b8f7119caa8958566b6839a9a32a6cb744d1d154c1ea222d388",
+  "planSha256": "49354d0a113fbdf08030946780ab845936a9624f7ab0abde0b8abec8307f4a86",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "9aec7b7c589d82f7025d4c50781bb886f2a5f415"
+    "commit": "d08fcbd3a460b104b35e536693e8a902c9655923"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -93,8 +98,8 @@
     "createdUtc": "2026-10-23T20:25:21.154Z"
   },
   "truthSet": {
-    "satellites": 82,
-    "setSha256": "ea0b244c47858bb0f7aed007a6c22eb518247dc9e47964af9d7f41eae1122893"
+    "satellites": 239,
+    "setSha256": "77505e1c4dd00aad80328485720a580b7dcc06f196ed4b434d7adef3cbf305c5"
   },
   "comspoc": {
     "label": "COMSPOC Spacebook XP (local scoring only)",

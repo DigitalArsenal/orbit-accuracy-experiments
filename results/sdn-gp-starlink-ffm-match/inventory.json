@@ -222,7 +222,7 @@
       "regime": "LEO",
       "source": "SpaceX Starlink forecasts, sample of 2026-10-09",
       "product": "MEME, 60 s, 72 h",
-      "count": 50,
+      "count": 25,
       "span": "2026-10-09",
       "usable": "start states (stale)",
       "note": ""
