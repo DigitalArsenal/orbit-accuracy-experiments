@@ -20,13 +20,14 @@ function launch() {
   child.stderr.on('data',b=>log(`worker ${b.toString().trim()}`));
   let pending;
   child.on('message',message=>{if(!pending)return;const p=pending;pending=null;message.error?p.reject(Object.assign(new Error(message.error.message),message.error)):p.resolve(message);});
+  child.on('error',error=>{if(pending){pending.reject(error);pending=null;}});
   child.on('exit',(code,signal)=>{if(pending){pending.reject(new Error(`worker exited ${code}/${signal}`));pending=null;}});
   watchdog=setInterval(()=>{if(!child?.pid)return;const high=os.loadavg()[0]>=config.compute.maxLoad1m;
     if(high&&!paused){child.kill('SIGSTOP');paused=true;log(`paused owned worker PID ${child.pid}: load ${os.loadavg()[0]}`);}
     else if(!high&&paused){child.kill('SIGCONT');paused=false;log(`resumed owned worker PID ${child.pid}`);}},5000);
   return message=>new Promise((resolve,reject)=>{if(pending)return reject(new Error('one worker request at a time'));pending={resolve,reject};child.send(message);});
 }
-async function shutdownWorker(){clearInterval(watchdog);if(child){if(paused)child.kill('SIGCONT');child.send({kind:'close'});const owned=child;await Promise.race([new Promise(r=>owned.once('exit',r)),sleep(5000)]);if(owned.exitCode===null&&owned.signalCode===null)owned.kill('SIGTERM');child=null;paused=false;}}
+async function shutdownWorker(){clearInterval(watchdog);if(child){if(paused&&child.exitCode===null&&child.signalCode===null)child.kill('SIGCONT');if(child.connected)child.send({kind:'close'});const owned=child;await Promise.race([new Promise(r=>owned.once('exit',r)),sleep(5000)]);if(owned.exitCode===null&&owned.signalCode===null)owned.kill('SIGTERM');child=null;paused=false;}}
 try {
   do {
     await quiet(log);const started=Date.now(),id=iso(started).replace(/[:.]/g,'-'),fetcher=new Fetcher();

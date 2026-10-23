@@ -32,6 +32,6 @@ export async function quiet(log = console.log) {
 }
 export const moduleRoot = () => process.env.SDN_MODULES_ROOT ?? path.resolve(root,'../space-data-network-modules--experiments-v2-operator-seeded-prediction-20261023');
 export function sourceHashes() {
-  const names=fs.readdirSync(dir).filter(n=>/\.(mjs|json|md)$/.test(n));
+  const names=['common.mjs','inputs.mjs','wasm.mjs','worker.mjs','collect.mjs','PLAN.md','config.json','../../harness/modules.mjs','../../harness/eop.mjs','../../harness/prw.mjs','../../harness/full-force.mjs','../../harness/frames.mjs','../e4-operator-ephemeris-parity/operators.mjs','../e5-density-calibration/estimation-wire.mjs'];
   return Object.fromEntries(names.sort().map(n=>[n,sha256(fs.readFileSync(path.join(dir,n)))]));
 }
