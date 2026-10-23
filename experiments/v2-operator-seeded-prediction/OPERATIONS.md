@@ -74,3 +74,8 @@ is also pending. No same-source truth or unregistered replacement baseline.
 The coordinator launches headline scoring only after the registered window
 fills, earliest 2026-11-14 08:00Z. The current `--check` validates commissioning
 mechanics only; it does not claim a prospective accuracy result.
+
+File handoff verified at 2026-10-23 12:54Z: the running E13b capture reports
+`subsetMode: registered` and SUBSETS SHA-256
+`b6f50a5d457cdf7f169f8311b0b1aa9a4083418e68a4ef0332a84454b15e2eb4`,
+identical to this task's registration. No collector code was changed by V2.
