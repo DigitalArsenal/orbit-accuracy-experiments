@@ -45,14 +45,14 @@ try {
         if(stopping()||Date.now()-started>=config.compute.maximumCycleHours*H)break;
         await quiet(log);cycle.loadPeak=Math.max(cycle.loadPeak,os.loadavg()[0]);
         const name=manifest.names.get(norad);if(!name){cycle.missing++;continue;}
-        cycle.attempted++;
+        cycle.attempted++;write(statusFile,{state:'fitting',...cycle,currentNorad:norad});
         try {
           const source=await fetcher.arc(name);const {bytes,...metadata}=source;
           if(Date.parse(source.retrievedUtc)>issueMs){cycle.failed++;log(`missed issue cutoff for ${norad}`);continue;}
           const {record}=await request({kind:'fit',norad,source:{...metadata,name},bytes,issueMs,mechanics:cycle.fitted===0});
           const relative=`records/${id}/${norad}.json.gz`,compressed=zlib.gzipSync(Buffer.from(JSON.stringify(record)),{level:6});
           fs.mkdirSync(path.dirname(path.join(store,relative)),{recursive:true});fs.writeFileSync(path.join(store,relative),compressed,{flag:'wx'});
-          cycle.records.push({norad,path:relative,sha256:sha256(compressed),bytes:compressed.length,fitCpuSeconds:Object.values(record.arms).reduce((n,a)=>n+(a.cpuSeconds??0),0),predictionCpuSeconds:Object.values(record.arms).reduce((n,a)=>n+(a.prediction?.cpuSeconds??0),0),arms:Object.fromEntries(Object.entries(record.arms).map(([k,a])=>[k,a.status]))});cycle.fitted++;
+          cycle.records.push({norad,path:relative,sha256:sha256(compressed),bytes:compressed.length,totalCpuSeconds:record.totalCpuSeconds,fitCpuSeconds:Object.values(record.arms).reduce((n,a)=>n+(a.cpuSeconds??0),0),predictionCpuSeconds:Object.values(record.arms).reduce((n,a)=>n+(a.prediction?.cpuSeconds??0),0),arms:Object.fromEntries(Object.entries(record.arms).map(([k,a])=>[k,a.status]))});cycle.fitted++;
           log(`cycle=${id} fitted=${cycle.fitted}/${limit} norad=${norad} bytes=${compressed.length}`);
         }catch(e){cycle.failed++;log(`norad=${norad} FAILED ${e.message}`);if(e.fatal||/RMS mismatch|future source|unknown fitter|invalid FFM|complete estimate/.test(e.message))throw e;}
         write(statusFile,{state:'running',...cycle});
@@ -60,7 +60,7 @@ try {
       cycle.completed=cycle.attempted+cycle.missing===limit;
     }finally {
       await shutdownWorker();cycle.finishedUtc=iso(Date.now());cycle.wallSeconds=(Date.now()-started)/1000;cycle.bandwidthBytes=fetcher.bytes+cycle.weatherBytes;
-      cycle.storageBytes=cycle.records.reduce((n,r)=>n+r.bytes,0);cycle.computeCpuSeconds=cycle.records.reduce((n,r)=>n+r.fitCpuSeconds+r.predictionCpuSeconds,0);
+      cycle.storageBytes=cycle.records.reduce((n,r)=>n+r.bytes,0);cycle.computeCpuSeconds=cycle.records.reduce((n,r)=>n+(r.totalCpuSeconds??r.fitCpuSeconds+r.predictionCpuSeconds),0);
       cycle.loadEnd=os.loadavg()[0];write(path.join(store,'cycles',id+'.json'),cycle);write(statusFile,{state:cycle.completed?'cycle-complete':'cycle-incomplete',...cycle});append(path.join(store,'cycles.jsonl'),{id,completed:cycle.completed,fitted:cycle.fitted,failed:cycle.failed,missing:cycle.missing,bandwidthBytes:cycle.bandwidthBytes,storageBytes:cycle.storageBytes,computeCpuSeconds:cycle.computeCpuSeconds,wallSeconds:cycle.wallSeconds});
     }
     if(once||stopping())break;

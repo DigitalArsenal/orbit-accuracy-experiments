@@ -10,7 +10,7 @@ process.on('message',async message=>{
       send({ready:true,provenance:wasm.provenance,weatherBytes:fetcher.bytes,weatherRequests:fetcher.requests});return;
     }
     if(message.kind==='close'){await wasm?.destroy();process.exit(0);}
-    const {norad,source,issueMs,mechanics}=message;
+    const {norad,source,issueMs,mechanics}=message;const cpuStart=process.cpuUsage();
     let arc=cut(Buffer.from(message.bytes));message.bytes=null;
     if(Date.parse(arc.createdUtc)>issueMs||Date.parse(source.retrievedUtc)>issueMs)throw new Error('future source at issue');
     const points=await wasm.normalize(arc.points);arc.points=null;
@@ -19,7 +19,9 @@ process.on('message',async message=>{
     const record={version:1,norad,issueUtc:iso(issueMs),source:{...source,createdUtc:arc.createdUtc,startUtc:arc.startUtc,stopUtc:arc.stopUtc},fitWindow:{start:iso(points[0].ms),end:iso(points.at(-1).ms),points:points.length,joinExcluded:true},arms:{},mechanics:null};
     for(const arm of [1,2,3]) {
       if(arm===2&&!dca){record.arms[arm]={status:'UNAVAILABLE',reason:'no causal Dove DCL'};continue;}
+      console.error(`object=${norad} arm=${arm} fit-start`);
       const fitted=await wasm.fit(points,norad,arm,arm===2?dca:null);
+      console.error(`object=${norad} arm=${arm} fit-complete CPU=${fitted.cpuSeconds}`);
       fitted.fitId=sha256(JSON.stringify({source:source.sha256,arm,issueMs,config:config.experiment,product:fitted.product,dca:fitted.dca}));
       const prediction=await wasm.predict(fitted,epochs,arm===2?dca:null);
       record.arms[arm]={status:fitted.fit.converged?'FITTED':'NONCONVERGED',...fitted,prediction};
@@ -45,6 +47,6 @@ process.on('message',async message=>{
       const [repeatComparison]=await wasm.pairStatistics([{predicted:repeat.samples[0],truth:full.samples[0].state}]);
       record.mechanics={horizonHours:6,fullCpuSeconds:full.cpuSeconds,repeatCpuSeconds:repeat.cpuSeconds,repeatComparison,ablations,accuracyDecision:'NOT SCORED: prospective truth/window unavailable'};
     }
-    send({record});
+    const cpuUsed=process.cpuUsage(cpuStart);record.totalCpuSeconds=(cpuUsed.user+cpuUsed.system)/1e6;send({record});
   }catch(error){send({error:{message:error.message,stack:error.stack,fatal:!!error.fatal}});}
 });
