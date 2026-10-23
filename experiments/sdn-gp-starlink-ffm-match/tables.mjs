@@ -8,7 +8,8 @@ import { quantile, mean } from './lib/windows.mjs';
 
 const REGIMES = [
   { id: 'leo-starlink-ffm', label: 'LEO, Starlink, FFM-propagated truth' },
-  { id: 'leo-starlink-ffm-drag', label: 'LEO, Starlink, FFM truth, B_eff above zero (drag acts)' },
+  { id: 'leo-starlink-ffm-drag', label: 'LEO, Starlink, FFM truth, B_eff between 0 and 0.5 m2/kg (drag acts)' },
+  { id: 'leo-starlink-ffm-decay', label: 'LEO, Starlink, FFM truth, B_eff above 0.5 m2/kg (more than ten times a physical value: lowering or decaying objects)' },
   { id: 'leo-starlink-ffm-b0', label: 'LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable)' },
   { id: 'leo-starlink-spacex', label: 'LEO, Starlink, SpaceX forecast (inside the span, day 1)' },
   { id: 'leo-iss', label: 'LEO, ISS (NASA OEM of 2026-10-07)' },
@@ -34,7 +35,7 @@ export function collect() {
     for (const f of fs.readdirSync(dir).filter((n) => /^\d+\.json$/.test(n)).sort()) {
       const r = JSON.parse(fs.readFileSync(path.join(dir, f)));
       const meta = { norad: r.norad, population: r.population, stratum: r.stratum, tercile: r.tercile, bEff: r.fit?.bEffM2Kg, bEffAtZeroBound: r.fit?.bEffAtZeroBound };
-      if (r.ffm) { windows.push({ regime: 'leo-starlink-ffm', ...r.ffm, meta }); windows.push({ regime: meta.bEffAtZeroBound ? 'leo-starlink-ffm-b0' : 'leo-starlink-ffm-drag', ...r.ffm, meta }); }
+      if (r.ffm) { windows.push({ regime: 'leo-starlink-ffm', ...r.ffm, meta }); windows.push({ regime: meta.bEffAtZeroBound ? 'leo-starlink-ffm-b0' : meta.bEff > 0.5 ? 'leo-starlink-ffm-decay' : 'leo-starlink-ffm-drag', ...r.ffm, meta }); }
       if (r.spacex) windows.push({ regime: 'leo-starlink-spacex', ...r.spacex, meta });
     }
   }
@@ -124,9 +125,9 @@ export function build() {
   const ricConsistency = Object.fromEntries(Object.entries(ratios).map(([arm, list]) => [arm, { n: list.length, min: quantile(list, 0), median: quantile(list, 0.5), max: quantile(list, 1) }]));
   const fl = readJsonl(path.join(store, 'rows/fitlength.jsonl'));
   const fitLength = [24, 48, 72].map((h) => {
-    const ok = fl.filter((r) => r.fits?.[h]?.xp && r.fits?.[h]?.sgp4 && Number.isFinite(r.fits[h].xp.errorKm) && Number.isFinite(r.fits[h].sgp4.errorKm));
+    const ok = fl.filter((r) => r.fits?.[h]?.xp && r.fits?.[h]?.sgp4 && [r.fits[h].xp.errorKm, r.fits[h].sgp4.errorKm, r.fits[h].xp.day1Km, r.fits[h].sgp4.day1Km].every(Number.isFinite));
     const med = (arm, key) => quantile(ok.map((r) => r.fits[h][arm][key]), 0.5);
-    return { fitHours: h, satellites: ok.length, xp: { fitRmsKm: med('xp', 'fitRmsKm'), errorKm: med('xp', 'errorKm') }, sgp4: { fitRmsKm: med('sgp4', 'fitRmsKm'), errorKm: med('sgp4', 'errorKm') } };
+    return { fitHours: h, satellites: ok.length, xp: { fitRmsKm: med('xp', 'fitRmsKm'), errorKm: med('xp', 'errorKm'), day1Km: med('xp', 'day1Km') }, sgp4: { fitRmsKm: med('sgp4', 'fitRmsKm'), errorKm: med('sgp4', 'errorKm'), day1Km: med('sgp4', 'day1Km') } };
   });
   const covRows = readJsonl(path.join(store, 'rows/covariance.jsonl'));
   const realism = ['comspoc-syncopate', 's3kc-sgp4'].map((source) => {
@@ -144,7 +145,7 @@ const arms = (r, k) => [r.xp.days[k]?.median, r.comspoc?.days?.[k]?.median, r.sg
 const cell = (vals) => `pending / ${vals.map((v) => (Number.isFinite(v) ? f(v) : '-')).join(' / ')}`;
 
 function findings(t) {
-  const main = t.regimes.filter((r) => !r.id.includes('-aligned') && !r.id.includes('-drag') && !r.id.includes('-b0') && r.xp.fitted);
+  const main = t.regimes.filter((r) => !/-(aligned|drag|b0|decay)$/.test(r.id) && r.xp.fitted);
   const get = (id) => t.regimes.find((r) => r.id === id);
   const out = [];
   const share = (a) => { const c = a.days[3]?.ric; return c && c.every(Number.isFinite) ? (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2) : null; };
@@ -161,6 +162,7 @@ function findings(t) {
   if (d3.length) out.push(`- Held-out day 3, median XP / median SGP4: ${d3.map(([l, v]) => `${l} ${f(v, 2)}`).join('; ')}.`);
   const alignedFfm = get('leo-starlink-ffm-aligned');
   if (alignedFfm?.comspoc?.days?.[1]?.n) out.push(`- COMSPOC XP sets, scored on the ${alignedFfm.comspoc.objects} same-day Starlinks at an age of ${f(alignedFfm.comspoc.ageDays.median, 1)} days (median) at the start of the truth: median 3D error ${f(alignedFfm.comspoc.days[1].median, 1)} / ${f(alignedFfm.comspoc.days[2]?.median, 1)} / ${f(alignedFfm.comspoc.days[3]?.median, 1)} km on days 1 / 2 / 3, against ${f(alignedFfm.xp.days[1].median, 1)} / ${f(alignedFfm.xp.days[2].median, 1)} / ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.`);
+  if (alignedFfm?.comspoc?.days?.[0]?.n && alignedFfm.xp.days[3]?.n) out.push(`- At a matched age (the set\'s epoch plus about 3 to 4 days) the COMSPOC XP error is ${f(alignedFfm.comspoc.days[0].median, 1)} km (its first truth day, median age at the start ${f(alignedFfm.comspoc.ageDays.median, 1)} days) against ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth (held-out day 3, age 3 to 4 days from the fit epoch) and ${f(alignedFfm.sgp4.days[3].median, 1)} km for SGP4, on the same ${alignedFfm.comspoc.objects} Starlinks.`);
   const syn = t.realism.find((r) => r.source === 'comspoc-syncopate')?.all, ours = t.realism.find((r) => r.source === 's3kc-sgp4')?.all;
   if (syn && ours) out.push(`- Covariance realism against the FFM truth (target mean d^2/3 in [0.8, 1.25], coverage in [0.93, 0.97]): SynCoPate ${f(syn.meanD2Over3, 1)} and ${f(syn.coverage95, 2)}; ours (E14 S3-KC on SGP4) ${f(ours.meanD2Over3, 1)} and ${f(ours.coverage95, 2)}. Both are overconfident against this truth.`);
   return out;
@@ -181,7 +183,7 @@ export function markdown(t) {
     '- **Not measured here.** SDN-GP (not landed), HEO / cislunar / interplanetary truth (none in the archive); GEO operator ephemerides (SES, Intelsat) are not stored, the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
   L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. `-` is not scored. A COMSPOC value marked `*` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
-  const isExtra = (r) => /-(aligned|drag|b0)$/.test(r.id);
+  const isExtra = (r) => /-(aligned|drag|b0|decay)$/.test(r.id);
   const header = ['| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'];
   const comspocOf = (r) => (r.comspoc ? { c: r.comspoc, mark: '' } : t.regimes.find((x) => x.id === `${r.id}-aligned`)?.comspoc ? { c: t.regimes.find((x) => x.id === `${r.id}-aligned`).comspoc, mark: '*' } : { c: null, mark: '' });
   const cellOf = (xpv, csv, sgv, mark) => `pending / ${[xpv, csv, sgv].map((v, k) => (Number.isFinite(v) ? f(v) + (k === 1 ? mark : '') : '-')).join(' / ')}`;
@@ -233,8 +235,8 @@ export function markdown(t) {
   if (Object.keys(ts.failureReasons).length) L.push('Failures: ' + Object.entries(ts.failureReasons).map(([k, v]) => `${v} x ${k}`).join('; ') + '.', '');
   L.push('Truth inventory by regime: [inventory.md](inventory.md).', '');
   if (t.fitLength.some((x) => x.satellites)) {
-    L.push('## 8. Fit length on the FFM truth (arm 6, amendment A3)', '', 'Each fitted Starlink fitted over 24, 48 and 72 h and scored on one interval, 72 to 96 h after the truth start (day 3, day 2 and day 1 of the three fits). Medians over the same satellites, km.', '', '| Fit length | Satellites | XP fit RMS | XP error, 72-96 h | SGP4 fit RMS | SGP4 error, 72-96 h | XP / SGP4 |', '| --- | --: | --: | --: | --: | --: | --: |');
-    for (const x of t.fitLength) if (x.satellites) L.push(`| ${x.fitHours} h | ${x.satellites} | ${f(x.xp.fitRmsKm)} | ${f(x.xp.errorKm)} | ${f(x.sgp4.fitRmsKm)} | ${f(x.sgp4.errorKm)} | ${f(x.xp.errorKm / x.sgp4.errorKm, 2)} |`);
+    L.push('## 8. Fit length on the FFM truth (arm 6, amendment A3)', '', 'Each fitted Starlink fitted over 24, 48 and 72 h, scored on (a) one common interval, 72 to 96 h after the truth start (the lead behind the fit end is then 48, 24 and 0 h), and (b) the first day after each fit (a fixed lead of 0 to 24 h). Medians over the same satellites, km.', '', '| Fit length | Satellites | XP fit RMS | XP error, 72-96 h | XP error, first day after the fit | SGP4 fit RMS | SGP4 error, 72-96 h | SGP4 error, first day after the fit |', '| --- | --: | --: | --: | --: | --: | --: | --: |');
+    for (const x of t.fitLength) if (x.satellites) L.push(`| ${x.fitHours} h | ${x.satellites} | ${f(x.xp.fitRmsKm)} | ${f(x.xp.errorKm)} | ${f(x.xp.day1Km)} | ${f(x.sgp4.fitRmsKm)} | ${f(x.sgp4.errorKm)} | ${f(x.sgp4.day1Km)} |`);
     L.push('');
   }
   L.push('## Reproduce, resume, extend', '',

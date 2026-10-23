@@ -1,5 +1,5 @@
 // Arm 6 (A3): fit-length sensitivity on the FFM truth. Each fitted Starlink is fitted over 24, 48 and 72 h by SGP4 and
-// SGP4-XP and scored on the same interval, 72 to 96 h after the truth start. Output: <store>/rows/fitlength.jsonl.
+// SGP4-XP and scored on the same interval, 72 to 96 h after the truth start, and on the first day after each fit (a fixed lead). Output: <store>/rows/fitlength.jsonl.
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, store, args } from './common.mjs';
@@ -25,8 +25,8 @@ for (const name of fs.readdirSync(dir).filter((x) => /^\d+\.json$/.test(x)).sort
   const fits = {};
   for (const hours of [24, 48, 72]) {
     const k = (config.truth.hours - hours) / 24;
-    const row = await scoreWindow(b, object, t0, { fitSeconds: hours * 3600, leadDays: [k], minCoverage: config.windows.minimumCoverage });
-    const pick = (a) => (a?.ok ? { fitRmsKm: a.fitRmsKm, errorKm: a.days[k]?.rmsKm ?? null, ric: a.days[k]?.ric ?? null } : null);
+    const row = await scoreWindow(b, object, t0, { fitSeconds: hours * 3600, leadDays: [...new Set([1, k])], minCoverage: config.windows.minimumCoverage });
+    const pick = (a) => (a?.ok ? { fitRmsKm: a.fitRmsKm, errorKm: a.days[k]?.rmsKm ?? null, day1Km: a.days[1]?.rmsKm ?? null } : null);
     fits[hours] = { xp: pick(row?.xp), sgp4: pick(row?.sgp4) };
   }
   fs.appendFileSync(file, `${JSON.stringify({ norad: meta.norad, stratum: meta.stratum, bEffAtZeroBound: meta.fit.bEffAtZeroBound, fits })}\n`);
