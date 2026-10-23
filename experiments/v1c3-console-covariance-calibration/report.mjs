@@ -60,7 +60,7 @@ export function render(metrics, manifest, selections) {
     'E2E: `node experiments/v1c3-console-covariance-calibration/run.mjs --check`.', '');
   return out.join('\n');
 }
-export function publish(root, runDir, manifest, test, configs) {
+function deriveMetrics(root, runDir, test, configs) {
   const output = path.join(root, 'results/v1c3');
   const selections = { SGP4: read(path.join(output, 'sgp-selection.json')), 'FFM-1': read(path.join(output, 'ffm-selection.json')) };
   const baseline = summarize(readArcs(path.join(runDir, 'baseline-arcs.jsonl')), configs.v1c2, configs.v1, configs.e3);
@@ -71,6 +71,11 @@ export function publish(root, runDir, manifest, test, configs) {
     const arcs = readArcs(path.join(runDir, `${split}-${phase}.jsonl`));
     metrics.counts[`${split}-${phase}`] = { arcs: arcs.length, skipped: arcs.filter(a => a.skipped).length, samples: arcs.reduce((n, a) => n + (a.samples?.length ?? 0), 0), missingHorizons: arcs.reduce((n, a) => n + a.missingHorizons.length, 0) };
   }
+  return { metrics, selections };
+}
+export function publish(root, runDir, manifest, test, configs) {
+  const output = path.join(root, 'results/v1c3');
+  const { metrics, selections } = deriveMetrics(root, runDir, test, configs);
   fs.writeFileSync(path.join(output, 'metrics.json'), JSON.stringify(metrics, null, 2) + '\n');
   fs.writeFileSync(path.join(output, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
   fs.writeFileSync(path.join(output, 'README.md'), render(metrics, manifest, selections));
@@ -140,6 +145,7 @@ export async function check(root, config, configs) {
     const expected = old.find(b => b.key === a.key).samples.find(b => b.hours === s.hours).SGP4.d2, actual = s.score?.d2Predicted ?? null;
     if (expected === null) assert.equal(actual, null); else assert(Math.abs(actual - expected) <= config.baselineAbsoluteTolerance + config.baselineRelativeTolerance * Math.abs(expected), `baseline replay: ${a.key}`);
   }
+  assert.deepEqual(deriveMetrics(root, runDir, metrics.test, configs).metrics, metrics, 'diagnostics/counts changed');
   assert.equal(render(metrics, manifest, selections), fs.readFileSync(path.join(output, 'README.md'), 'utf8'));
   console.log(`V1C3-E2E PASS: ${hashes} hashes, disjoint training/test, frozen baseline exact, 12 SGP4 + 4 FFM candidates; selections and MODEL fits re-derived in WASM.`);
 }

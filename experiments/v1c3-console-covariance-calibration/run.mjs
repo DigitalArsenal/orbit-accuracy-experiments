@@ -57,9 +57,15 @@ for (const name of fs.readdirSync(dir).filter(f => /\.(mjs|json|md)$/.test(f))) 
 for (const f of ['experiments/v1c2-console-covariance-realism/report.mjs', 'experiments/v1c2-console-covariance-realism/modules.mjs',
   'experiments/v1c-console-ffm-path/modules.mjs', 'experiments/e14-covariance-realism/realism.mjs', 'harness/stats.mjs',
   'experiments/e2b-correlated-covariance/stats.mjs', 'experiments/e2-catalog-covariance/score.mjs',
-  'experiments/e3-combined-catalog/config.json', 'experiments/e3-combined-catalog/truth.mjs']) input('frozenSource', path.join(root, f));
+  'experiments/e2b-correlated-covariance/linalg.mjs', 'experiments/e14-covariance-realism/windows.mjs', 'experiments/e14-covariance-realism/config.json',
+  'experiments/v1c2-console-covariance-realism/config.json', 'experiments/v1-ffm-physical-truth/config.json',
+  'harness/gp-archive.mjs', 'harness/records.mjs', 'harness/eop.mjs', 'harness/full-force.mjs', 'harness/modules.mjs', 'harness/provenance.mjs',
+  'experiments/e3-combined-catalog/eop-finals.mjs', 'experiments/e3-combined-catalog/config.json', 'experiments/e3-combined-catalog/truth.mjs']) input('frozenSource', path.join(root, f));
 input('model', path.join(modules, 'analysis/gp-error-model/data/e14-s3-kc.erm'));
 input('codec', path.join(modules, 'analysis/gp-error-model/scripts/erm-codec.mjs'));
+for (const f of ['propagator/ffm/catalog.mjs', 'propagator/ffm/catalog-configuration.mjs']) input('codec', path.join(modules, f));
+for (const p of baselineManifest.modules) input('build', path.join(modules, p.path, 'plugin-manifest.json'));
+for (const f of ['package.json', 'package-lock.json']) input('frozenSource', path.join(root, f));
 const requirePushed = relative => {
   const bytes = fs.readFileSync(path.join(root, relative));
   assert.equal(execFileSync('git', ['show', `HEAD:${relative}`], { cwd: root }).toString(), bytes.toString(), 'commit selection first');
@@ -110,7 +116,7 @@ try {
     const ffmResult = await doEval(ffm, 'FFM-1', 'test', ffmSelection.models);
     // Preserve exact source/artifact bytes before clean landed worktrees are removed.
     manifest.replayInputs = {};
-    for (const kind of ['implementation', 'frozenSource', 'artifacts', 'model', 'codec', 'kernel']) for (const [file, hash] of Object.entries(run.inputs[kind] ?? {})) {
+    for (const kind of ['implementation', 'frozenSource', 'artifacts', 'model', 'codec', 'build', 'kernel']) for (const [file, hash] of Object.entries(run.inputs[kind] ?? {})) {
       const relative = `replay/${hash}-${path.basename(file)}`, target = path.join(runDir, relative);
       fs.mkdirSync(path.dirname(target), { recursive: true }); fs.copyFileSync(file, target);
       assert.equal(sha256(fs.readFileSync(target)), hash); manifest.replayInputs[file] = relative;
