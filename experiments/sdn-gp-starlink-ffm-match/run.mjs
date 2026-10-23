@@ -8,7 +8,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { config, frozen, store, results, root } from './common.mjs';
+import { config, frozen, store, results, sha256 } from './common.mjs';
+import { features, select } from './population.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { build } from './tables.mjs';
@@ -33,6 +34,15 @@ for (const a of committed.modules.artifacts) {
   if (!same || same.wasmSha256 !== a.wasmSha256) fail(`module artifact ${a.path} differs from the manifest`);
 }
 ok(`module artifacts match the manifest (${committed.modules.artifacts.length})`);
+
+// the registered population is re-derived from the capture's derived products and must hash to the committed queue
+const cycleDir = path.join(config.archive, 'operator-capture/cycles', config.cycle);
+if (fs.existsSync(cycleDir)) {
+  const { queue } = select(features(cycleDir));
+  const hash = sha256(JSON.stringify(queue.map((q) => [q.norad, q.stratum, q.tercile, q.rank])));
+  if (hash !== JSON.parse(fs.readFileSync(path.join(results, 'population.json'), 'utf8')).queueSha256) fail('the population drawn from the capture differs from population.json');
+  ok(`population of ${queue.filter((q) => q.seat).length} seats re-derived from the capture cycle`);
+}
 
 const tables = JSON.parse(fs.readFileSync(path.join(results, 'tables.json'), 'utf8'));
 if (JSON.stringify(tables) !== JSON.stringify(JSON.parse(JSON.stringify(build())))) fail('tables.json is not reproduced by the recorded rows');
