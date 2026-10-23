@@ -1,0 +1,56 @@
+{
+  "cycle": "cycles/2026-10-23T13-18-53-379Z.json",
+  "cycleSha256": "085776354110a75dd27f9a98a93a796d35e20a7a6a497f3f102776d57849043d",
+  "configSha256": "f31b90bc1fb441f5ac48d42301bea880c70ba030e768b8ae27d7b0d1c684be02",
+  "modules": [
+    {
+      "path": "propagator/ffm",
+      "pluginId": "com.orbpro.ffm",
+      "version": "2.0.0",
+      "wasmSha256": "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611",
+      "manifestSha256": "18e55509ff30ffa8154219290737901ce8fd6c1696b275e9b5f2adf0049f973d"
+    },
+    {
+      "path": "analysis/estimation",
+      "pluginId": "com.digitalarsenal.analysis.estimation",
+      "version": "0.4.1",
+      "wasmSha256": "40aba72864d1aae9345726db3e438bf3cb251cf3089b802a5fd675cc53716ac1",
+      "manifestSha256": "1234fab5fa0321891894192063276562d79c917afc93e328ccc79e0612beaa8d"
+    },
+    {
+      "path": "foundation/frames",
+      "pluginId": "com.digitalarsenal.foundation.frames",
+      "version": "0.2.0",
+      "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+      "manifestSha256": "69b24d1c4d22f6a80bf2ce3627712cacb90f248b30f10d814f2fd6ab130d7ce1"
+    },
+    {
+      "path": "foundation/time",
+      "pluginId": "com.digitalarsenal.foundation.time",
+      "version": "0.1.0",
+      "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+      "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0"
+    },
+    {
+      "path": "data-source/eop-parser",
+      "pluginId": "com.digitalarsenal.data-source.eop-parser",
+      "version": "0.2.0",
+      "wasmSha256": "e5513f3b0bdaabb07f200511cee737413601639d30207f27c9bce1fae8c48452",
+      "manifestSha256": "5dfd0f1c7064eee8596a5737b54ec7e0c7316f36063a42b1b50e61fae6ab7502"
+    },
+    {
+      "path": "analysis/gp-error-model",
+      "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+      "version": "0.10.0",
+      "wasmSha256": "e9fa64b2c25d12a3ad81e365155003241f69e7c6476294cca04945c4d9b64abe",
+      "manifestSha256": "b23f1ca5938fec12be64af96d696dfe6cdbcfa88ab2d17ca474d4b7389ed34a4"
+    },
+    {
+      "path": "data-source/space-weather",
+      "pluginId": "com.digitalarsenal.data-source.space-weather",
+      "version": "0.2.0",
+      "wasmSha256": "80fff2cfc5dd74eecc83068c00f1dc78f428989cba56db073e836564522613ed",
+      "manifestSha256": "8bc7d8c5e78729080ee19396f0f096a1161b488a0ec2d28fa9688422077f8e16"
+    }
+  ]
+}
