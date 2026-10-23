@@ -1,0 +1,48 @@
+// Step 4 (precise orbits): SGP4 and SGP4-XP fitted to windows of GNSS, laser-ranged and ISS ephemerides, scored on
+// held-out days 1-3 with the radial / in-track / cross-track split. One JSON line per window under
+// <store>/rows/<source>.jsonl (statistics only). Re-running skips windows already present.
+//   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs [--source gnss,iss,slr-high,slr-low]
+import fs from 'node:fs';
+import path from 'node:path';
+import { config, frozen, store } from './common.mjs';
+import { modulesRoot } from './lib/modules.mjs';
+import { openBaselines, scoreWindow } from './lib/baselines.mjs';
+import * as sources from './lib/sources.mjs';
+import { windowStarts } from './lib/windows.mjs';
+
+const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
+const wanted = new Set((args.source ?? 'iss,gnss,slr-high,slr-low').split(','));
+const P = config.precise;
+const FIT = config.windows.fitHours * 3600;
+
+const plans = {
+  iss: () => [{ objects: sources.iss(), stride: P.iss.stride_s }],
+  gnss: () => [{ objects: sources.gnss(P.gnss), stride: P.gnss.strideSeconds }],
+  'slr-high': () => P.slrHigh.targets.map((target) => ({ objects: sources.slrHigh({ target, weeks: P.slrHigh.weeks }), stride: P.slrHigh.strideSeconds })),
+  'slr-low': () => P.slrLow.targets.map((target) => ({ objects: sources.slrLow({ target, arcs: P.slrLow.arcs }), stride: P.slrLow.strideSeconds })),
+};
+
+frozen();
+const modules = modulesRoot();
+const b = await openBaselines(modules);
+fs.mkdirSync(path.join(store, 'rows'), { recursive: true });
+for (const source of wanted) {
+  const file = path.join(store, 'rows', `${source}.jsonl`);
+  const done = new Set(fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.id}|${r.startUtc}`; }) : []);
+  let n = 0;
+  for (const { objects, stride } of plans[source]()) {
+    for (const object of objects) {
+      for (const start of windowStarts(object, { fitSeconds: FIT, strideSeconds: stride, minLeadDays: 1 })) {
+        if (done.has(`${object.id}|${new Date(start).toISOString()}`)) continue;
+        const row = await scoreWindow(b, object, start, { fitSeconds: FIT, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
+        if (!row) continue;
+        fs.appendFileSync(file, `${JSON.stringify(row)}\n`);
+        n += 1;
+        if (n % 10 === 0) console.error(`${source}: ${n} windows`);
+      }
+    }
+  }
+  console.error(`${source}: ${n} new windows`);
+}
+await b.close();
+process.exit(0);

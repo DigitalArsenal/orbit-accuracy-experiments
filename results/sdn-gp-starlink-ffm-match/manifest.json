@@ -1,0 +1,100 @@
+{
+  "experiment": "sdn-gp-starlink-ffm-match",
+  "commands": [
+    "node experiments/sdn-gp-starlink-ffm-match/population.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/truth.mjs --workers N",
+    "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/bench.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/tables.mjs"
+  ],
+  "planSha256": "bfdbf143c962775c0b8041084c05f24724678262982da013725851fe8436e7a6",
+  "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
+  "repository": {
+    "commit": "cd5d7fae5a8637f0d65237fd967965494a6627b9"
+  },
+  "modules": {
+    "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
+    "artifacts": [
+      {
+        "path": "propagator/sgp4-xp",
+        "version": "0.1.1",
+        "wasmSha256": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb"
+      },
+      {
+        "path": "analysis/gp-error-model",
+        "version": "0.10.0",
+        "wasmSha256": "e9fa64b2c25d12a3ad81e365155003241f69e7c6476294cca04945c4d9b64abe"
+      },
+      {
+        "path": "analysis/od",
+        "version": "0.3.0",
+        "wasmSha256": "970fe6cfe00715b307bedbc677f00a07b2f0a04d22700b47b7c99f01544d58a7"
+      },
+      {
+        "path": "propagator/ffm",
+        "version": "2.0.0",
+        "wasmSha256": "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      }
+    ]
+  },
+  "packages": {
+    "esbuild": "^0.25.12",
+    "flatbuffers": "25.9.23",
+    "space-data-module-sdk": "0.9.10",
+    "spacedatastandards.org": "1.261.0",
+    "lockfileSha256": "3bd051cbdbfd45edee852ae5390eac6f9d9b11afff45178b31d78ffc8ecfa837",
+    "spacedatastandardsInstalled": "1.261.0"
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "environment": {
+    "environmentSha256": "a26b37e4be834361edd3a2b91bb45951e97a8073340c3e1bef9f1c6f124bb848",
+    "weatherSources": [
+      {
+        "url": "https://kp.gfz.de/fileadmin/files_for_gfz_cms/Kp_ap_Ap_SN_F107_since_1932.txt",
+        "sha256": "4e3d3f89e3a9c21766f3948c79064bddfe94c66603ea9818a34c59cc1e28cadc"
+      },
+      {
+        "url": "https://kp.gfz.de/fileadmin/files_for_gfz_cms/Kp_ap_Ap_SN_F107_nowcast.txt",
+        "sha256": "0700a56a54c046ed3b40e7e7af61dbda7c0e2ba7218cb59dd2fc9ece870c1793"
+      },
+      {
+        "url": "https://services.swpc.noaa.gov/text/45-day-forecast.txt",
+        "sha256": "ef9fcd9112540e1cbce481294fad7cb205c21cfad91f1fb4acebb9373a895aa4"
+      },
+      {
+        "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json",
+        "sha256": "09eff43d10a9868f4e34c0c1ea00a26511c9e3a6f25854b689a9e9ab419d3862"
+      }
+    ],
+    "weatherExtension": {
+      "source": "https://services.swpc.noaa.gov/text/45-day-forecast.txt",
+      "sha256": "ef9fcd9112540e1cbce481294fad7cb205c21cfad91f1fb4acebb9373a895aa4",
+      "daysAdded": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02"
+      ],
+      "held": "Kp, F10.7 81-day average and provenance of the last module row"
+    },
+    "kernel": {
+      "path": "hac/naif-kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
+    "createdUtc": "2026-10-23T20:25:21.154Z"
+  },
+  "truthSet": {
+    "satellites": 17,
+    "setSha256": "42d2dd37795ec1d4fd6a8c81b2150b8569f95fa4be2810f10baf84b24e1faf63"
+  },
+  "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
+}
