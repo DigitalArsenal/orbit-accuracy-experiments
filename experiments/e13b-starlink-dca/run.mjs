@@ -47,7 +47,7 @@ for(const [shell,arcs]of shells){
   if(sol.s){assert(sol.s.every(Number.isFinite));assert(Math.abs(sol.s.reduce((a,b)=>a+b,0))<1e-8);assert(Object.values(sol.baseline).flat().every(x=>Number.isFinite(x)&&x>0));assert(Object.values(sol.kappa).every(x=>Number.isFinite(x.value)&&x.value>=0));
     const last=sol.nodeMs[sol.supported.lastIndexOf(true)],v=forecast(sol,last+48*3600000);if(sol.status==='CONVERGED')assert(Number.isFinite(v));else assert.equal(v,null);}
   fs.writeFileSync(path.join(store,`mechanics-${cycle.id}-${shell.replace(':','-')}.json`),JSON.stringify(sol)+'\n');
-  firstCycle.push({shell,status:sol.status,coastArcs:sol.coastArcs??0,calibrationSatellites:sol.calibrationSatellites??0,nodes:sol.s?.length??0,sweeps:sol.sweeps??0,lastChange:sol.lastChange??null,identifiedKappas:Object.values(sol.kappa??{}).filter(k=>k.identified).length,priorOnlyKappas:Object.values(sol.kappa??{}).filter(k=>!k.identified).length});
+  firstCycle.push({shell,status:sol.status,reason:sol.reason??null,coastArcs:sol.coastArcs??0,calibrationSatellites:sol.calibrationSatellites??0,nodes:sol.s?.length??0,sweeps:sol.sweeps??0,lastChange:sol.lastChange??null,identifiedKappas:Object.values(sol.kappa??{}).filter(k=>k.identified).length,priorOnlyKappas:Object.values(sol.kappa??{}).filter(k=>!k.identified).length});
 }
 assert(firstCycle.some(s=>s.status==='CONVERGED'),'no first-cycle shell converged');
 const planetPath='/opt/data/sdn-archive/e13-open-dca/planet-arcs/dev-g24lean.msis.jsonl';

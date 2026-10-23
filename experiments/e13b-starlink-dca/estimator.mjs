@@ -51,7 +51,7 @@ export function fitShell(coast,thrust=[],options={}){
   if(new Set(coast.map(a=>a.shell).filter(Boolean)).size>1)throw new Error('fitShell requires one registered shell');
   const keep=id=>options.calibrationIds?options.calibrationIds.includes(id):!heldOut(id);
   const calibration=coast.filter(a=>keep(a.id)&&Number.isFinite(a.y));
-  if(!calibration.length)return {status:'UNAVAILABLE',reason:'no calibration coast arcs'};
+  if(!calibration.length)return {status:'UNAVAILABLE',reason:'no calibration coast arcs',coastArcs:0,calibrationSatellites:0};
   const anchor=Math.floor(calibration.reduce((v,a)=>Math.min(v,a.startMs),Infinity)/DAY)*DAY;
   const last=calibration.reduce((v,a)=>Math.max(v,a.endMs),-Infinity),n=Math.ceil((last-anchor)/DAY)+1;
   if(n>64)throw new Error('fit must be bounded to at most 63 days');
@@ -60,7 +60,7 @@ export function fitShell(coast,thrust=[],options={}){
   for(const r of rows){if(!byId.has(r.id))byId.set(r.id,[]);byId.get(r.id).push(r);}
   const support=Array.from({length:n},()=>new Set());for(const r of rows)for(const [k,w]of r.w)if(w>0)support[k].add(r.id);
   const active=support.map((s,k)=>s.size>=C.minimumSatellites?k:-1).filter(k=>k>=0);
-  if(!active.length)return {status:'UNAVAILABLE',reason:'fewer than six calibration satellites per node',coastArcs:rows.length};
+  if(!active.length)return {status:'UNAVAILABLE',reason:'fewer than six calibration satellites per node',coastArcs:rows.length,calibrationSatellites:byId.size};
   const index=new Map(active.map((k,i)=>[k,i])),prior=Math.log(C.bPrior),beta=new Map();
   for(const id of byId.keys())beta.set(id,Array(n).fill(prior));
   let s=Array(n).fill(0),sigma=0.09,change=Infinity,converged=false,sweeps=0;

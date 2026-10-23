@@ -2,14 +2,14 @@
   "status": "PASS",
   "kind": "mechanics-only; no hypothesis tests",
   "command": "/opt/homebrew/Cellar/node/25.4.0/bin/node /Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-e13b-starlink-dca-20261023/experiments/e13b-starlink-dca/run.mjs --check --record",
-  "startedUtc": "2026-10-23T13:31:30.903Z",
-  "endedUtc": "2026-10-23T13:31:37.089Z",
-  "componentCommit": "b54fd5ea67a302dba981ab91de67a7a10ecab887",
+  "startedUtc": "2026-10-23T13:32:14.645Z",
+  "endedUtc": "2026-10-23T13:32:19.508Z",
+  "componentCommit": "cb329dc29edea9b29f00299f835a2344d9239a1c",
   "configSha256": "ee686d847f035ca2290159d20a2549a9ad5d61581af99c1bc6e1e46d4fd05f13",
   "planSha256": "4ed880502d459f6ff092541744e518442bd13a35fae9cd147aed01889a6ece92",
   "sourceHashes": {
-    "run.mjs": "419b2fceedf0588cad8c26c6d941b09068a8811767aec8f810fc043028f8193c",
-    "estimator.mjs": "c1f8152d62dc6a18430cfd0ebfdcaac1b48403d1b9ea4b18d5f6da0bc76b628a"
+    "run.mjs": "515895c4bc93e15a25a989546332d5efb971cb01bc9b6d59ef1e2c6e054277fc",
+    "estimator.mjs": "a2c0b2560c4259695d5a016a2360990eb06b6002cef72de896b00e58f075b27e"
   },
   "reference": {
     "source": "Basilisk clMeanOscMap public case via modules foundation/orbits",
@@ -86,6 +86,7 @@
     {
       "shell": "9:14",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 7796,
       "calibrationSatellites": 199,
       "nodes": 2,
@@ -97,6 +98,7 @@
     {
       "shell": "9:10",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 139234,
       "calibrationSatellites": 3513,
       "nodes": 2,
@@ -108,6 +110,7 @@
     {
       "shell": "9:19",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 43520,
       "calibrationSatellites": 1198,
       "nodes": 2,
@@ -119,6 +122,7 @@
     {
       "shell": "7:19",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 857,
       "calibrationSatellites": 19,
       "nodes": 2,
@@ -130,6 +134,7 @@
     {
       "shell": "6:19",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 459,
       "calibrationSatellites": 10,
       "nodes": 2,
@@ -141,6 +146,7 @@
     {
       "shell": "9:13",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 5420,
       "calibrationSatellites": 151,
       "nodes": 2,
@@ -152,6 +158,7 @@
     {
       "shell": "7:14",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 2765,
       "calibrationSatellites": 66,
       "nodes": 2,
@@ -163,6 +170,7 @@
     {
       "shell": "6:6",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 825,
       "calibrationSatellites": 20,
       "nodes": 2,
@@ -174,8 +182,9 @@
     {
       "shell": "7:6",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 124,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 3,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -185,6 +194,7 @@
     {
       "shell": "6:14",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 566,
       "calibrationSatellites": 16,
       "nodes": 2,
@@ -196,6 +206,7 @@
     {
       "shell": "7:10",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 13506,
       "calibrationSatellites": 294,
       "nodes": 2,
@@ -207,6 +218,7 @@
     {
       "shell": "8:10",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 5846,
       "calibrationSatellites": 129,
       "nodes": 2,
@@ -218,8 +230,9 @@
     {
       "shell": "4:10",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 239,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 5,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -229,6 +242,7 @@
     {
       "shell": "6:10",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 2064,
       "calibrationSatellites": 43,
       "nodes": 2,
@@ -240,6 +254,7 @@
     {
       "shell": "5:10",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 720,
       "calibrationSatellites": 15,
       "nodes": 2,
@@ -251,6 +266,7 @@
     {
       "shell": "10:10",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 1770,
       "calibrationSatellites": 51,
       "nodes": 2,
@@ -262,8 +278,9 @@
     {
       "shell": "11:19",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 106,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 3,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -273,6 +290,7 @@
     {
       "shell": "11:14",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 2999,
       "calibrationSatellites": 103,
       "nodes": 2,
@@ -284,6 +302,7 @@
     {
       "shell": "10:14",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 1491,
       "calibrationSatellites": 42,
       "nodes": 2,
@@ -295,8 +314,9 @@
     {
       "shell": "8:14",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 48,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 1,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -306,8 +326,9 @@
     {
       "shell": "11:10",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 54,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 2,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -317,8 +338,9 @@
     {
       "shell": "10:19",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 90,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 2,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -328,6 +350,7 @@
     {
       "shell": "5:19",
       "status": "UNAVAILABLE",
+      "reason": "no calibration coast arcs",
       "coastArcs": 0,
       "calibrationSatellites": 0,
       "nodes": 0,
@@ -339,6 +362,7 @@
     {
       "shell": "8:19",
       "status": "UNAVAILABLE",
+      "reason": "no calibration coast arcs",
       "coastArcs": 0,
       "calibrationSatellites": 0,
       "nodes": 0,
@@ -350,8 +374,9 @@
     {
       "shell": "3:19",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 48,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 1,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -361,6 +386,7 @@
     {
       "shell": "9:8",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 95740,
       "calibrationSatellites": 2565,
       "nodes": 2,
@@ -372,6 +398,7 @@
     {
       "shell": "10:13",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 1560,
       "calibrationSatellites": 42,
       "nodes": 2,
@@ -383,6 +410,7 @@
     {
       "shell": "11:13",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 2856,
       "calibrationSatellites": 95,
       "nodes": 2,
@@ -394,6 +422,7 @@
     {
       "shell": "8:8",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 476,
       "calibrationSatellites": 10,
       "nodes": 2,
@@ -405,6 +434,7 @@
     {
       "shell": "5:8",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 336,
       "calibrationSatellites": 7,
       "nodes": 2,
@@ -416,8 +446,9 @@
     {
       "shell": "8:13",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 180,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 4,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -427,6 +458,7 @@
     {
       "shell": "7:8",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 11277,
       "calibrationSatellites": 248,
       "nodes": 2,
@@ -438,6 +470,7 @@
     {
       "shell": "6:8",
       "status": "CONVERGED",
+      "reason": null,
       "coastArcs": 384,
       "calibrationSatellites": 8,
       "nodes": 2,
@@ -449,8 +482,9 @@
     {
       "shell": "4:8",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 48,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 1,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -460,8 +494,9 @@
     {
       "shell": "10:8",
       "status": "UNAVAILABLE",
+      "reason": "fewer than six calibration satellites per node",
       "coastArcs": 175,
-      "calibrationSatellites": 0,
+      "calibrationSatellites": 4,
       "nodes": 0,
       "sweeps": 0,
       "lastChange": null,
@@ -490,7 +525,7 @@
     },
     "kappa": "unidentified; prior-only (no thrust segments)"
   },
-  "cpuSeconds": 6.59001,
+  "cpuSeconds": 6.259692,
   "skipped": [
     "Hypothesis tests and head-to-head: prospective window incomplete",
     "Position propagation and independent density scoring: coordinator scoring run",
