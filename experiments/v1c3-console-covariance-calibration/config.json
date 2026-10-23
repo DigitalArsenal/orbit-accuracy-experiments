@@ -1,0 +1,17 @@
+{
+  "experiment": "v1c3-console-covariance-calibration",
+  "frozen": true,
+  "train": ["2026-08-03", "2026-08-24"],
+  "trainingTargetBefore": "2026-08-28T00:00:00Z",
+  "bases": ["N", "F", "P"],
+  "methods": ["none", "scalar-mle", "coverage", "axes-mle"],
+  "minimumSamples": 30,
+  "minimumObjects": 3,
+  "coverage": 0.95,
+  "workers": 4,
+  "dispatchLoadBelow": 20,
+  "maximumLoad": 21,
+  "baselineRelativeTolerance": 1e-8,
+  "baselineAbsoluteTolerance": 1e-10,
+  "seedFactorHorizonHours": 1
+}
