@@ -755,17 +755,20 @@ records.
 **2h.1 Moon-centered orbits (low, frozen, elliptical).**
 
 - Central body: μ_M = 4,902.80 km³/s² (DE440, Park et al. 2021), reference radius 1,738.0 km, lunar gravity from
-  GRAIL (GL0660B, Konopliv et al. 2013; GRGM660PRIM, Lemoine et al. 2013), J2 ≈ 2.03e-4, C22 ≈ 2.24e-5, J3 ≈ 8.5e-6.
+  GRAIL (GL0660B, Konopliv et al. 2013; GRGM660PRIM, Lemoine et al. 2013), J2 ≈ 2.03e-4, C22 ≈ 2.24e-5, J3 ≈ 8.5e-6
+  (unnormalized).
 - Because the Moon rotates once per 27.32 days, the tesseral angles m(Ω - θ_M) are long-period for every lunar
   orbit, so the degree 2 to 8 zonals and tesserals all enter the averaged rates (single averaging over the mean
   anomaly only, with the Moon-fixed node angle kept as a slow variable), not the short-periodic output. Orbits below
   about 100 km altitude are dominated by mascons and need degree 50 and more; they are out of SDN-GP's scope and are
   labeled so (FFM handles them).
 - Third bodies: Earth (μ_E/μ_M = 81.30) and Sun, with XP's averaged quadrupole and octupole formulas (`SPEC.md` 5)
-  and the Earth as the body. Above about 3,000 km altitude Earth's quadrupole drives the Kozai–Lidov exchange of
-  eccentricity and inclination (Kozai 1962; Lidov 1962) that sets lunar frozen orbits (Elipe & Lara 2003; Ely 2005);
-  the averaged rates carry it directly. Orbits with periods above about 1.5 days use XP's long-period mode
-  (instantaneous geometry, 95-minute class, `SPEC.md` 5 and 9) with the Moon as center.
+  and the Earth as the body. For high lunar orbits Earth's quadrupole drives the Kozai–Lidov exchange of eccentricity
+  and inclination (Kozai 1962; Lidov 1962) that, with the lunar zonals, sets the frozen orbits (Elipe & Lara 2003;
+  Ely 2005);
+  the averaged rates carry it directly. Orbits whose period is not short against the Earth's half-month forcing
+  (default threshold 1.5 days, set by measurement) use XP's long-period mode (instantaneous geometry, 95-minute class,
+  `SPEC.md` 5 and 9) with the Moon as center.
 - Frame: the lunar principal-axis frame for the gravity field, the IAU mean-Earth orientation for output (Archinal
   et al. 2018), the pole precessing by Cassini's laws (Peale 1969); SRP with Earth and Moon shadows.
 - Truth: NAIF SPKs of LRO, Danuri and KPLO (inventory: to fetch). Parameters: XP's 8. Cost: the tesseral rates add
@@ -825,11 +828,11 @@ influence with a hysteresis band, or an operator maneuver epoch. MEAN_ELEMENT_TH
 **2i.1 ECOM-type SRP for GNSS, IGSO and GEO.** In MEO and above, SRP is the leading unmodeled force (in-track
 share 87 to 90 % at day 3 in G1's GNSS, IGSO and GEO rows). The empirical CODE orbit model (ECOM) writes it in the
 Sun-oriented D (to the Sun), Y (along the solar-panel axis), B (completing) frame as D₀, Y₀, B₀ plus once-per-
-revolution B_c, B_s terms (Beutler et al. 1994; Springer, Beutler & Rothacher 1999; ECOM2, Arnold et al. 2015). Over
-one orbit the D, Y, B directions are fixed in inertial space (the Sun moves 2° per GNSS revolution), so the
-averaged rates are XP's closed-form sunlit-arc integrals (`SPEC.md` 4) with the constant D₀ replaced by the three
-constant components, and the once-per-revolution terms by 2c's formulas in the B direction. The Y-bias Y₀ is the
-classical cause of along-track drift in GPS predictions. Expected: the GNSS day 3 from 0.187 km and IGSO from 0.556
+revolution B_c, B_s terms (Beutler et al. 1994; Springer, Beutler & Rothacher 1999; ECOM2, Arnold et al. 2015). D
+is fixed over a revolution (the Sun moves about 0.5° per GPS revolution); Y and B turn about D with the nominal
+yaw-steering attitude. In the argument of latitude measured from the Sun's projection on the orbit plane the five
+terms are trigonometric polynomials, so their orbit averages over the sunlit arc are closed form, like XP's SRP
+integrals (`SPEC.md` 4). The Y-bias Y₀ is the classical cause of along-track drift in GPS predictions. Expected: the GNSS day 3 from 0.187 km and IGSO from 0.556
 km by a factor of 2 to 3 (to measure). Parameters: 5 (+20 bytes; AGOM becomes D₀). Cost: about 0.5 µs per rate
 evaluation.
 
@@ -848,3 +851,58 @@ re-propagation: a cheap upper envelope of the along-track uncertainty for the da
 radiation pressure (a constant radial force that only shifts the fitted mean motion, about 40 m over four days for an
 AGOM of 0.19 m²/kg) and thermospheric winds (1 to 3 % of drag, absent from the FFM truth) are below the floors above.
 They enter only if the measurements of section 4 leave a residual their size.
+
+---
+
+## 3. Ranked build order for side B
+
+**3.1 Gain and cost per term.** Gains are predicted day-3 reductions of the median 3D error against best-case XP
+(design estimates from sections 2a to 2i; the measurements of section 4 replace them). Cost is added µs per object-day
+at the console cadence (1,440 states at 60 s plus about 40 rate evaluations in LEO; the SGP4XP baseline is about
+1,970 µs per object-day: 1,440 × 1.12 + 361). Bytes are added to the element set. Gains overlap, so they are not
+additive; 3.3 gives the stacked prediction.
+
+| Term | Where it acts | Predicted day-3 gain (m) | Cost (µs per object-day) | Bytes | m per µs | m per byte |
+| --- | --- | --: | --: | --: | --: | --: |
+| 2e priors, signed B_eff, 48 h stitched arcs, colored weights | laser-ranged LEO; Starlink | 8,100 (laser-ranged LEO, prior alone); 500 at day 1 (Starlink, 24 → 48 h) | 0 (fit time only) | 1 | unbounded | 8,100 |
+| 2b κ with the B prior | SpaceX-forecast arm; covariance | 1,240 at day 1 (with 2c) | 0 | 4 | unbounded | 310 |
+| 2a DCA drag, shared kernel, horizon chain, late binding | all LEO | 2,000 to 3,000 (FFM Starlink, after 2d) | +27 gross (J70's quadrature removed: net ≤ 0) | 12 | ≈ 90 (gross) | ≈ 210 |
+| 2c τ₀ and 1/rev, with the selection rule | lowering or decaying LEO (8 % of Starlinks) | ≈ 15,000 on that subset | +2 | 12 | ≈ 7,500 (subset) | ≈ 1,250 (subset) |
+| 2d m-daily (even l ≤ 6) and the resonance band (15:1) | all LEO, laser-ranged high | 3,900 to 7,000 (FFM Starlink); ≈ 8,000 (laser-ranged LEO); ≈ 200 (laser-ranged high) | +156 | 0 | 25 to 50 | unbounded |
+| 2i.1 ECOM SRP | GNSS, IGSO, GEO | 100 (GNSS), 300 (IGSO), 300 (GEO) | +4 to +30 | 16 | 10 to 30 | 6 to 19 |
+| 2g residual series | inside a truth span | from km to 10 m inside the span | +144 | 154 per day | ≈ 19 (SpaceX span, day 1) | ≈ 18 |
+| 2f STM and calibrated covariance | every regime | realism (d²/3 3.40 → 1), not meters | +0.3 per covariance state | 112 | | |
+| 2h regimes | Moon, libration points, Sun, planets | new coverage (no XP baseline); bytes against SPK | | | | |
+
+**3.2 Build order.** By absolute gain across regimes first, cost efficiency second, and dependency:
+
+1. **2d, m-daily set and the generalized resonance band.** The largest predicted gain in every LEO and laser-ranged
+   regime, zero bytes, +8 % per state; and the precondition for the rest, because until the floor is gone every
+   fitted drag parameter carries gravity (2d.4). The 15:1 term is what makes long arcs pay at days 2 and 3: with a 48 h
+   fit the omitted gravity still predicts 2.96 km at day 3, 3.29 km of it from the 15:1 term alone.
+2. **2e fit rules.** Free at propagation; the prior alone is the largest relative gain anywhere (laser-ranged LEO).
+3. **2a DCA drag.** Reference path first (it is the FFM truth's density), then the shared kernel to the 1 % rule,
+   with the horizon chain and late binding; net cost at or below J70's.
+4. **2c and 2b.** τ terms with the selection rule fixed before test windows; κ with the B prior; the station-keeping
+   prior for long horizons.
+5. **2i.1 and 2i.2.** ECOM SRP and maneuver segments for GNSS, IGSO and GEO.
+6. **2f.** The analytic STM and the two-stage calibrated covariance (needed for screening; scored in arm 5).
+7. **2g.** The residual series (arm 4).
+8. **2h.** Moon-centered first (XP's machinery with new constants and tesseral rates), then heliocentric cruise, then
+   libration-point orbits (the most new mathematics), then planet-centered.
+
+**3.3 Headline: predicted SDN-GP against best-case XP, held-out day 3 (median, km).**
+
+| Regime | Best-case XP (G1) | SDN-GP predicted | Terms carrying it |
+| --- | --: | --: | --- |
+| LEO, Starlink, FFM-propagated truth | 9.867 | 0.5 to 2 | 2d, 2a, 2e |
+| LEO, ISS (NASA OEM) | 16.5 (7.10 for the 2026-10-21 file) | 3 to 10 | 2d, 2a, 2e (the OEM is itself NASA's forecast) |
+| LEO, laser-ranged | 9.399 | 0.5 to 1.5 | 2d, 2e |
+| MEO, GNSS | 0.187 | 0.07 to 0.1 | 2i.1, 2d |
+| MEO, laser-ranged high | 0.271 | 0.05 to 0.1 | 2d |
+| IGSO | 0.556 | 0.2 to 0.3 | 2i.1, 2i.2 |
+| GEO | 0.805 | 0.3 to 0.5 | 2i.1, 2i.2 |
+
+Every row beats best-case XP if the predictions hold; COMSPOC's XP sets (15.7 km at matched age) are beaten by
+construction. The LEO rows rest on one falsifiable account, the tesseral aliasing of 2d.4, which section 4 tests
+first and without new code.
