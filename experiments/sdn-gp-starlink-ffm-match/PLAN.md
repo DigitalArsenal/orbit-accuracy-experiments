@@ -145,3 +145,7 @@ holds the GFZ multi-GNSS rapid orbits (GFZ0MGXRAP, 5 min, GCRF states made by an
 (names ending I) orbits: the GEO truth the first inventory called missing. Added to arms 1-2: every GEO object and every
 IGSO object of the first day's file, 20 consecutive days from 2025-10-01, fit 24 h every 48 h, the same statistics and
 fitters. The registered sources are unchanged. The numbers are code constants of baselines.mjs (config.json stays frozen).
+
+A3 addendum (same day, after the first rows): the common interval confounds the fit length with the lead behind the
+fit end (48, 24 and 0 h). The first day after each fit is scored too, so a fixed lead tells the two apart. The
+subset is the first 100 satellites in NORAD order (a cost limit: six fits each).
