@@ -125,3 +125,17 @@ export function slrLow({ target, arcs = 8, first = 0 }) {
     return withT({ source: 'slr-low', id: `${ref.name || target} arc ${d.split('.')[3]} (${ref.norad})`, norad: ref.norad, name: ref.name || target, objectId: ref.objectId, originator: 'ILRS NSGF analysis-centre arc', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: ref.lines });
   });
 }
+
+// ---- GFZ multi-GNSS rapid orbits in E14's reference set: GEO (names ending G) and IGSO (names ending I) satellites ----
+const mgexRoot = path.join(ARCHIVE, 'e14-covariance-realism/reference');
+export function mgex({ klass, year = 2025, firstDay = 274, days = 20 }) {
+  const directories = Array.from({ length: days }, (_, k) => `GFZ0MGXRAP_${year}${String(firstDay + k).padStart(3, '0')}0000_01D_05M_ORB`).filter((d) => fs.existsSync(path.join(mgexRoot, d)));
+  if (!directories.length) return [];
+  const first = path.join(mgexRoot, directories[0]);
+  const wanted = klass === 'geo' ? /\dG$/ : /\dI$/;
+  const chosen = fs.readdirSync(first).filter((f) => f.endsWith('.oem')).map((f) => ({ norad: Number(f.replace('.oem', '')), name: readReference(path.join(first, f)).name })).filter((o) => wanted.test(o.name));
+  return chosen.map((o) => {
+    const series = chain(directories.map((d) => path.join(mgexRoot, d, `${o.norad}.oem`)).filter((f) => fs.existsSync(f)));
+    return withT({ source: `mgex-${klass}`, id: `${series.name} (${o.norad})`, norad: o.norad, name: series.name, objectId: series.objectId, originator: 'GFZ MGEX rapid orbits (GFZ0MGXRAP)', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: series.lines });
+  });
+}

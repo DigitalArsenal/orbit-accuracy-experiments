@@ -121,13 +121,19 @@ export function build() {
   const ratios = { xp: [], sgp4: [] };
   for (const w of windows) for (const arm of ['xp', 'sgp4']) for (const d of Object.values(w[arm]?.days ?? {})) if (d.ric?.every(Number.isFinite) && d.rmsKm > 0) ratios[arm].push(Math.hypot(...d.ric) / d.rmsKm);
   const ricConsistency = Object.fromEntries(Object.entries(ratios).map(([arm, list]) => [arm, { n: list.length, min: quantile(list, 0), median: quantile(list, 0.5), max: quantile(list, 1) }]));
+  const fl = readJsonl(path.join(store, 'rows/fitlength.jsonl'));
+  const fitLength = [24, 48, 72].map((h) => {
+    const ok = fl.filter((r) => r.fits?.[h]?.xp && r.fits?.[h]?.sgp4 && Number.isFinite(r.fits[h].xp.errorKm) && Number.isFinite(r.fits[h].sgp4.errorKm));
+    const med = (arm, key) => quantile(ok.map((r) => r.fits[h][arm][key]), 0.5);
+    return { fitHours: h, satellites: ok.length, xp: { fitRmsKm: med('xp', 'fitRmsKm'), errorKm: med('xp', 'errorKm') }, sgp4: { fitRmsKm: med('sgp4', 'fitRmsKm'), errorKm: med('sgp4', 'errorKm') } };
+  });
   const covRows = readJsonl(path.join(store, 'rows/covariance.jsonl'));
   const realism = ['comspoc-syncopate', 's3kc-sgp4'].map((source) => {
     const rows = covRows.filter((c) => c.source === source && c.n);
     const pool = (list) => ({ objects: new Set(list.map((c) => c.norad)).size, samples: list.reduce((a, c) => a + c.n, 0), meanD2Over3: list.reduce((a, c) => a + c.sumD2, 0) / (3 * Math.max(1, list.reduce((a, c) => a + c.n, 0))), coverage95: list.reduce((a, c) => a + c.within95, 0) / Math.max(1, list.reduce((a, c) => a + c.n, 0)), medianObjectError: quantile(list.map((c) => c.errorKmMedian), 0.5) });
     return { source, refused: covRows.filter((c) => c.source === source && c.refused).length, all: rows.length ? pool(rows) : null, byAgeDay: [...new Set(rows.map((c) => c.ageDay))].sort((a, b) => a - b).map((d) => ({ ageDay: d, ...pool(rows.filter((c) => c.ageDay === d)) })) };
   });
-  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, missing: MISSING, byShell, truthSet, bench: bench?.rows ?? null };
+  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, missing: MISSING, byShell, truthSet, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -215,8 +221,13 @@ export function markdown(t) {
   if (ts.seatsAllocated) L.push('Registered seats fitted / allocated by stratum: ' + Object.keys(ts.seatsAllocated).sort().map((k) => `${k}: ${ts.seatsFittedByStratum[k] ?? 0} / ${ts.seatsAllocated[k]}`).join(', ') + '. The seats were drawn round-robin over the strata and drag terciles, so a partial run covers every stratum before it deepens any.', '');
   if (Object.keys(ts.failureReasons).length) L.push('Failures: ' + Object.entries(ts.failureReasons).map(([k, v]) => `${v} x ${k}`).join('; ') + '.', '');
   L.push('Truth inventory by regime: [inventory.md](inventory.md).', '');
+  if (t.fitLength.some((x) => x.satellites)) {
+    L.push('## 8. Fit length on the FFM truth (arm 6, amendment A3)', '', 'Each fitted Starlink fitted over 24, 48 and 72 h and scored on one interval, 72 to 96 h after the truth start (day 3, day 2 and day 1 of the three fits). Medians over the same satellites, km.', '', '| Fit length | Satellites | XP fit RMS | XP error, 72-96 h | SGP4 fit RMS | SGP4 error, 72-96 h | XP / SGP4 |', '| --- | --: | --: | --: | --: | --: | --: |');
+    for (const x of t.fitLength) if (x.satellites) L.push(`| ${x.fitHours} h | ${x.satellites} | ${f(x.xp.fitRmsKm)} | ${f(x.xp.errorKm)} | ${f(x.sgp4.fitRmsKm)} | ${f(x.sgp4.errorKm)} | ${f(x.xp.errorKm / x.sgp4.errorKm, 2)} |`);
+    L.push('');
+  }
   L.push('## Reproduce, resume, extend', '',
-    '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. A modules checkout with the four built artifacts is named by `SDN_MODULES_ROOT` and needs a `node_modules` linked to the experiment\'s.',
+    '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. A modules checkout with the four built artifacts is named by `SDN_MODULES_ROOT` and needs a `node_modules` linked to the experiment\'s.',
     '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',
     '- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
     '- Newer-file truth: the first hours of files created after these fits arrive with the next collector cycles; `comspoc.mjs` and the Starlink truth step score against them when they exist. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later.', '');

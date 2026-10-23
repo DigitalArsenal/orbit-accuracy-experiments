@@ -10,14 +10,17 @@ import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import * as sources from './lib/sources.mjs';
 import { windowStarts } from './lib/windows.mjs';
 
-const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low').split(','));
+const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low,mgex-geo,mgex-igso').split(','));
 const P = config.precise;
+const A4 = { year: 2025, firstDay: 274, days: 20, strideSeconds: 172800 }; // amendment A4: GFZ MGEX GEO and IGSO windows
 const FIT = config.windows.fitHours * 3600;
 
 const plans = {
   iss: () => [{ objects: sources.iss(), stride: P.iss.stride_s }],
   'iss-daily': () => [{ objects: sources.iss({ file: path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/iss-oem.txt.gz') }), stride: 10 * 365 * 86400 }],
   gnss: () => [{ objects: sources.gnss(P.gnss), stride: P.gnss.strideSeconds }],
+  'mgex-geo': () => [{ objects: sources.mgex({ klass: 'geo', ...A4 }), stride: A4.strideSeconds }],
+  'mgex-igso': () => [{ objects: sources.mgex({ klass: 'igso', ...A4 }), stride: A4.strideSeconds }],
   'slr-high': () => P.slrHigh.targets.map((target) => ({ objects: sources.slrHigh({ target, weeks: P.slrHigh.weeks }), stride: P.slrHigh.strideSeconds })),
   'slr-low': () => P.slrLow.targets.map((target) => ({ objects: sources.slrLow({ target, arcs: P.slrLow.arcs }), stride: P.slrLow.strideSeconds })),
 };

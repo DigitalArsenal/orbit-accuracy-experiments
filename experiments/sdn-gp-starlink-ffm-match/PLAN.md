@@ -136,3 +136,12 @@ Spacebook data (sets, SynCoPate, API) is fetched or used (owner ruling 2026-10-1
 theory, the FFM truth of every fitted Starlink is also fitted over 24, 48 and 72 h and scored on one common interval,
 72 to 96 h after the truth start (day 3 of the 24 h fit, day 2 of the 48 h fit, day 1 of the 72 h fit). Same fitters,
 same statistics; descriptive; reported beside the registered tables, which keep the 24 h fit.
+
+### A4 - 2026-10-23, before any GEO window was read: a second precise-orbit set found in the archive
+
+The inventory looked only under reference-states. E14's reference set, /opt/data/sdn-archive/e14-covariance-realism/reference,
+holds the GFZ multi-GNSS rapid orbits (GFZ0MGXRAP, 5 min, GCRF states made by analysis/reference-states, 363 days from
+2025-10-01) with the BeiDou-2 and QZSS-2 satellites in geostationary (names ending G) and inclined geosynchronous
+(names ending I) orbits: the GEO truth the first inventory called missing. Added to arms 1-2: every GEO object and every
+IGSO object of the first day's file, 20 consecutive days from 2025-10-01, fit 24 h every 48 h, the same statistics and
+fitters. The registered sources are unchanged. The numbers are code constants of baselines.mjs (config.json stays frozen).
