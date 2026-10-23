@@ -103,6 +103,11 @@ try {
     saveSelection('ffm-selection', await doEval(arcs, 'FFM-1', 'train'));
   } else {
     manifest.selectionFreeze ??= { sgp: requirePushed('results/v1c3/sgp-selection.json'), ffm: requirePushed('results/v1c3/ffm-selection.json') };
+    for (const phase of ['sgp', 'ffm']) {
+      const relative = `results/v1c3/${phase}-selection.json`, frozen = manifest.selectionFreeze[phase];
+      assert.equal(sha256(fs.readFileSync(path.join(root, relative))), frozen.sha256, 'selection changed after test unlock');
+      assert.equal(sha256(execFileSync('git', ['show', `${frozen.commit}:${relative}`], { cwd: root })), frozen.sha256);
+    }
     manifest.testStarted ??= new Date().toISOString(); run.checkpoint();
     const baselineDir = values['baseline-run'] ?? process.env.SDN_V1C2_RUN_DIR ?? path.join(root, 'runs', baselineManifest.run);
     const raw = input('baseline', path.join(baselineDir, 'arcs.jsonl')); assert.equal(sha256(raw), baselineManifest.rawSha256);
