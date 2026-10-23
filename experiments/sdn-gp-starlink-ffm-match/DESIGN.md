@@ -573,3 +573,113 @@ for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
   coefficients (within the 4 KiB budget).
 - Parameters per object: none (field constants). Bytes: 0.
 - Fitting: nothing new; the terms change the residual floor that every other parameter is fitted against.
+
+### 2e. Fit span, priors and multi-arc fitting
+
+**2e.1 Leverage.** Over an arc of length T the drag's quadratic signature (1) has the Legendre coefficient
+
+    c_2,D = n |ȧ_D| T² / 8                                                                       (11)
+
+(627 m at 24 h, 2,507 m at 48 h and 5,641 m at 72 h for a Starlink at 53 m/day), and any residual with projection
+c_2,res on P_2 biases the drag by δB/B = c_2,res / c_2,D. For the J22 term of (9): 23 % at 24 h, 2.1 % at 48 h,
+0.65 % at 72 h. A white floor σ_f with N_eff independent samples adds σ(c_2) = √(5/N_eff) σ_f; for the correlated
+floor of 2d, N_eff is the arc length over the residual's correlation time, not the sample count.
+
+**2e.2 The G1 fit-length study read through (9) and (11).** J22 aliasing alone predicts, for the common interval
+72 to 96 h, 7.81 / 0.49 / 0.09 km for 24 / 48 / 72 h fits (measured: 8.83 / 1.58 / 0.77 km), and for the first day
+after each fit 1.04 / 0.37 / 0.34 km (measured: 1.33 / 0.82 / 0.77 km). Long fits suppress the aliasing as
+predicted; what is left at 48 to 72 h, about 0.7 km on the first day, is not aliasing: it is the drag-model mismatch
+and the other unmodeled terms, the target of 2a and of the rest of 2d.
+
+**2e.3 Rules.**
+
+- **Longest clean arc.** Fit 48 h where the truth allows it; never fit across the 48 h join of a SpaceX file.
+- **Stitched fresh-OD arcs (Starlink).** SpaceX reissues each file about every 8 h, and the first hours of each file
+  are its freshest orbit determination (G1's truth rule). The first 8 h of each of the last six files form a 48 h arc
+  of near-OD states with none of the forecast tail; fit one epoch state and B_eff (and τ_0 if selected) to it. A
+  detected maneuver cuts the arc into segments.
+- **Priors on B.** Minimize Σ ‖r_k‖²_W + (B - B̂)²/σ_B². Sources of B̂, in order: the physical value for passive
+  spheres (laser-ranged targets: known mass and diameter; C_D from gas–surface interaction models, Moe & Moe 2005);
+  the object's own previous fits, smoothed as a random walk with variance q Δt between fits (a scalar Kalman smoother
+  over the B history, robust to the attitude-mode jumps of a Starlink by a Student-t innovation); the shell value of
+  E13b. The posterior closes the aliasing path: with σ_B/B = 5 % on a sphere, the 23 % aliasing bias cannot enter.
+- **Colored-noise weights.** W is the inverse of the floor's covariance (the residual autocorrelation of the theory
+  on the population), not the identity, which down-weights the periodic floor and is the same matrix that scales the
+  fit covariance in 2f.5.
+
+**2e.4 Alias-free spans (a diagnostic with no new code).** j_2(πC) vanishes at C = 1.835, 2.895, 3.923, 4.939, which
+for the 53° shell's J22 period are T = 21.7, 34.2, 46.4 and 58.4 h. If 2d.4 is right, XP fitted over 21.7 h loses
+most of the J22 contribution that it carries at 24 h (|5 j_2| = 0.436 at 24 h, 0 at 21.7 h), while the m = 1 terms
+stay (|5 j_2| = 1.46 at 21.7 h): the cleanest test of the aliasing account, runnable on the existing harness today.
+
+**2e.5 Expected gain, cost, parameters.**
+
+- Laser-ranged LEO spheres: with B fixed near its physical value the quadratic path is closed; the J22 term then
+  enters only through the mean motion (|3 j_1(πC)| = 0.46 at 24 h, linear growth): predicted day 3 from 9.40 km to
+  about 1 km with the prior alone, and to the residual floor with 2d. The largest relative gain in any regime.
+- Starlink: 48 h stitched arcs give the measured 24 → 48 h improvement (next-day 1.33 → 0.82 km; 72–96 h interval
+  8.83 → 1.58 km) without fitting the forecast tail; the B history prior adds to it on short arcs.
+- Cost: fit time only (the fit's Jacobian gains one prior row); 0 µs at propagation. Parameters: a 1-byte prior
+  source code. Fitting: as above.
+
+### 2f. Analytic STM and covariance realism
+
+**2f.1 Variational equations of the averaged system.** With y the mean elements and p the fitted parameters
+(B_eff, AGOM, τ_0, τ_c, τ_s as selected), the mean-element state transition and sensitivity matrices
+
+    Φ(t, t₀) = ∂y(t)/∂y(t₀),   Ψ(t, t₀) = ∂y(t)/∂p:     Φ̇ = A Φ,   Ψ̇ = A Ψ + ∂f/∂p,   A = ∂f/∂y
+
+are integrated with the same Runge–Kutta step on the same grid as the state (the discrete variational equations of
+the step), so the STM is consistent with the propagated state, checkpointed with it, and independent of request
+order. A has closed form for the zonal and third-body rates (polynomials in the elements, `SPEC.md` 2 and 5); for drag
+it is differentiated under the quadrature or the kernel sums of (3). This is the DSST approach to partials (Danielson
+et al. 1995; Setty et al. 2016) carried to the new terms.
+
+**2f.2 The secular closed form (console path).** For output at frame rate the dominant block has a closed form. With
+δn, δa related by δn = -(3/2)(n/a) δa, J2 secular rates Ω̇, ω̇, Ṁ of `SPEC.md` 2, and the drag decay ṅ_D:
+
+    δλ(t) = δλ₀ + (1 + ∂Ṁ/∂n + …) δn₀ t + (1/2) (∂ṅ_D/∂B_eff) δB_eff t² + (∂(Ṁ+ω̇+Ω̇)/∂(e, i)) (δe₀, δi₀) t
+    δΩ(t) = δΩ₀ + (∂Ω̇/∂a δa₀ + ∂Ω̇/∂i δi₀ + ∂Ω̇/∂e δe₀) t,    ∂Ω̇/∂a = -(7/2) Ω̇/a,   ∂Ω̇/∂i = -Ω̇ tan i
+
+and similarly for ω and the eccentricity vector (a J2 rotation of the e-vector at rate ω̇): a 7 × 7 (6 + B_eff) STM
+with about 15 non-zero entries, the structure used in J2 and drag relative-motion STMs (Gim & Alfriend 2003; Koenig,
+Guffanti & D'Amico 2017). The full variational path of 2f.1 is used for fitting and for long horizons.
+
+**2f.3 Output map.** The osculating Cartesian state is x = h(y, t): the short-periodic map of `SPEC.md` 8 (J2,
+Sun/Moon, m-daily of 2d) then Kepler. H = ∂x/∂y = (∂x/∂y_osc)(I + ∂η/∂y), η the short-periodic corrections, with
+∂η/∂y to first order in J2 (Gim & Alfriend 2003). The Cartesian STM is Φ_x(t, t₀) = H(t) Φ(t, t₀) H(t₀)⁻¹.
+
+**2f.4 Covariance with physical process noise.** The covariance is carried in mean equinoctial elements, where it
+stays Gaussian far longer than in Cartesian coordinates (Junkins, Akella & Alfriend 1996; Horwood & Poore 2014):
+
+    P_y(t) = Φ P_y₀ Φᵀ + Ψ P_p Ψᵀ + Φ P_yp Ψᵀ + Ψ P_py Φᵀ + Q(t),     P_x(t) = H P_y Hᵀ
+
+Q's dominant entry is the along-track variance from density errors. A fractional density error δ(t) modeled as a
+first-order Gauss–Markov process with variance σ_δ² and time constant τ, entering the decay through ȧ_D, gives
+s(t) = -(3/2) n ȧ_D ∫₀ᵗ (t - t′) δ(t′) dt′ and in closed form
+
+    σ_s²(t) = (9/4) n² ȧ_D² σ_δ² [ (2/3) τ t³ - τ² t² + 2 τ⁴ (1 - e^{-t/τ} (1 + t/τ)) ]                      (12)
+
+which is (3/4) n |ȧ_D| σ_δ t² for t ≪ τ (a persistent bias, as in (1)) and (3/2) n |ȧ_D| σ_δ √(2τt³/3) for t ≫ τ: the
+t² to t^(3/2) transition of Emmert et al. (2017). For closed-loop drag makeup ȧ_D carries the factor (1 - κ) of 2b.3,
+for open-loop thrust it does not. (σ_δ, τ) are set per weather tier of 2a.3 (observed with DCA: E13's residual scatter
+0.0916 in ln ρ; 3-day forecast; 45-day forecast; climatology). The column ∂x/∂s of the sensitivity matrix is exported
+with each state, so a consumer can apply a revised s(t) or a storm scenario to a screening without re-propagating:
+δx(t) = (∂x/∂s) δs, the linear form of the late binding of 2a.5.
+
+**2f.5 Calibration (covariance realism).** Three scale terms, fitted in two stages on held-out windows only:
+
+1. On the FFM truth (density error zero by construction, same environment): the fit covariance P_y₀ = σ̂² (JᵀWJ)⁻¹
+   with W the colored-noise weight of 2e.3 (the white-noise assumption is what makes formal covariances
+   overconfident: it counts N correlated residuals as N independent ones), plus a constant theory-floor term Q_f
+   (radial, in-track, cross-track variances of the theory's own residual).
+2. On independent truth (newer-file SpaceX states, laser ranging, the ISS OEM, GNSS): (σ_δ, τ) per weather tier and
+   the closed-loop or open-loop choice of 2b.3.
+
+Target: mean d²/3 in [0.8, 1.25] and 95 % coverage in [0.93, 0.97] (the V1c2 rule), from 3.40 (our E14 S3-KC on SGP4)
+and 24.9 (SynCoPate) today. Consider-parameter theory for unestimated biases follows Tapley, Schutz & Born (2004).
+
+**2f.6 Cost, parameters.** Secular closed form: about 0.3 µs per output state for P_x (a 7 × 7 congruence and the H
+product). Full variational: 7 to 8 times a rate evaluation per node, at fit time and for long horizons only.
+Parameters: the mean-element covariance of (y, B_eff) as 28 float32 (112 bytes), 144 bytes with two more parameters;
+(σ_δ, τ) and Q_f are population values per weather tier and regime, published once, not per object.
