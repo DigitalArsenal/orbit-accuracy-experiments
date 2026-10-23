@@ -18,11 +18,11 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 
 | Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| LEO, Starlink, FFM-propagated truth | 61 / 61 / 61 | pending / 0.483 / - / 0.478 | pending / 1.631 / - / 2.261 | pending / 5.569 / - / 7.588 | pending / 10.9 / - / 16.6 | 99.8 % / 99.9 % | 312 / 304 | 266 / 257 |
+| LEO, Starlink, FFM-propagated truth | 64 / 64 / 64 | pending / 0.485 / - / 0.482 | pending / 1.626 / - / 2.251 | pending / 5.332 / - / 7.560 | pending / 10.7 / - / 16.2 | 99.8 % / 99.9 % | 312 / 304 | 266 / 257 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | 40 / 40 / 40 | pending / 0.468 / 15.7 / 0.454 | pending / 1.224 / 21.3 / 1.978 | pending / 4.877 / 28.0 / 6.522 | pending / 10.3 / 33.6 / 14.6 | 99.8 % / 99.9 % | 312 / 304 | 266 / 257 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | 47 / 47 / 47 | pending / 0.478 / - / 0.476 | pending / 1.738 / - / 2.331 | pending / 6.044 / - / 8.053 | pending / 12.2 / - / 16.6 | 99.9 % / 99.9 % | 312 / 304 | 266 / 257 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | 50 / 50 / 50 | pending / 0.479 / - / 0.478 | pending / 1.700 / - / 2.286 | pending / 5.817 / - / 7.792 | pending / 12.1 / - / 16.2 | 99.9 % / 99.9 % | 312 / 304 | 266 / 257 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | 14 / 14 / 14 | pending / 0.491 / - / 0.486 | pending / 1.020 / - / 2.198 | pending / 2.772 / - / 7.399 | pending / 5.509 / - / 15.7 | 99 % / 99.9 % | 312 / 304 | 266 / 257 |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | 61 / 61 / 61 | pending / 0.519 / - / 0.496 | pending / 2.307 / - / 3.343 | pending / - / - / - | pending / - / - / - |  /  | 312 / 304 | 266 / 257 |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | 64 / 64 / 64 | pending / 0.522 / - / 0.497 | pending / 2.309 / - / 3.365 | pending / - / - / - | pending / - / - / - |  /  | 312 / 304 | 266 / 257 |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | 40 / 40 / 40 | pending / 0.490 / 15.7 / 0.474 | pending / 1.689 / 21.2 / 2.653 | pending / - / - / - | pending / - / - / - |  /  | 312 / 304 | 266 / 257 |
 | LEO, ISS (NASA OEM of 2026-10-07) | 14 / 14 / 14 | pending / 0.455 / - / 0.460 | pending / 2.124 / - / 2.047 | pending / 7.795 / - / 7.747 | pending / 16.5 / - / 16.3 | 99.9 % / 99.9 % | 312 / 304 | 266 / 257 |
 | LEO, ISS (NASA OEM of 2026-10-21, one window from its start) | 1 / 1 / 1 | pending / 0.441 / - / 0.441 | pending / 1.618 / - / 1.610 | pending / 4.096 / - / 4.074 | pending / 7.100 / - / 6.998 | 99 % / 99 % | 320 / 304 | 266 / 257 |
@@ -41,7 +41,7 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 ### What the table says (generated from the numbers above)
 
 - The in-track component carries 99.4 to 99.9 % of the day-3 squared error of SGP4-XP in the LEO regimes and 89.3 to 97.1 % in MEO: the terms that can buy accuracy are the along-track ones (drag and thrust, secular rate, time variation of density).
-- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio 0.99 to 1.05, about 0.48 km, a floor set by what the mean-element theory leaves out), in GNSS XP fits 5.4 times tighter (0.022 against 0.122 km).
+- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio 0.99 to 1.05, about 0.49 km, a floor set by what the mean-element theory leaves out), in GNSS XP fits 5.4 times tighter (0.022 against 0.122 km).
 - Held-out day 3, median XP / median SGP4: LEO, Starlink, FFM-propagated truth 0.66; LEO, ISS (NASA OEM of 2026-10-07) 1.01; LEO, ISS (NASA OEM of 2026-10-21, one window from its start) 1.01; LEO, laser-ranged (ILRS NSGF) 1.02; MEO, GPS / GLONASS / Galileo (ESA final) 0.12; MEO, laser-ranged (LAGEOS, Etalon, LARES-2) 0.25.
 - COMSPOC XP sets, scored on the 40 same-day Starlinks at an age of 3.2 days (median) at the start of the truth: median 3D error 21.3 / 28.0 / 33.6 km on days 1 / 2 / 3, against 1.2 / 4.9 / 10.3 km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.
 - Covariance realism against the FFM truth (target mean d^2/3 in [0.8, 1.25], coverage in [0.93, 0.97]): SynCoPate 26.1 and 0.70; ours (E14 S3-KC on SGP4) 3.4 and 0.64. Both are overconfident against this truth.
@@ -50,16 +50,16 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 
 | Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |
 | --- | --- | --: | --- | --- | --- | --- |
-| LEO, Starlink, FFM-propagated truth | SGP4-XP | 61 | 0.483 / 0.525 / 0.680 | 1.631 / 2.422 / 3.409 | 5.569 / 5.887 / 11.2 | 10.9 / 11.4 / 23.2 |
-| LEO, Starlink, FFM-propagated truth | SGP4 | 61 | 0.478 / 0.524 / 0.689 | 2.261 / 2.797 / 4.360 | 7.588 / 8.372 / 13.8 | 16.6 / 20.1 / 32.6 |
+| LEO, Starlink, FFM-propagated truth | SGP4-XP | 64 | 0.485 / 0.531 / 0.675 | 1.626 / 2.696 / 3.862 | 5.332 / 6.440 / 11.5 | 10.7 / 12.6 / 24.0 |
+| LEO, Starlink, FFM-propagated truth | SGP4 | 64 | 0.482 / 0.535 / 0.690 | 2.251 / 2.999 / 5.495 | 7.560 / 8.445 / 14.5 | 16.2 / 19.6 / 31.9 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | SGP4-XP | 40 | 0.468 / 0.492 / 0.612 | 1.224 / 2.197 / 3.310 | 4.877 / 5.677 / 11.3 | 10.3 / 11.4 / 24.4 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | SGP4 | 40 | 0.454 / 0.493 / 0.644 | 1.978 / 2.581 / 3.945 | 6.522 / 7.793 / 13.7 | 14.6 / 18.0 / 30.0 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4-XP | 47 | 0.478 / 0.524 / 0.682 | 1.738 / 2.758 / 5.504 | 6.044 / 6.477 / 12.1 | 12.2 / 12.3 / 23.6 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4 | 47 | 0.476 / 0.528 / 0.720 | 2.331 / 2.898 / 5.584 | 8.053 / 8.329 / 14.2 | 16.6 / 20.5 / 35.6 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4-XP | 50 | 0.479 / 0.531 / 0.680 | 1.700 / 3.087 / 7.803 | 5.817 / 7.149 / 13.4 | 12.1 / 13.7 / 24.4 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4 | 50 | 0.478 / 0.542 / 0.763 | 2.286 / 3.151 / 7.483 | 7.792 / 8.425 / 15.0 | 16.2 / 19.9 / 33.3 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | SGP4-XP | 14 | 0.491 / 0.530 / 0.645 | 1.020 / 1.297 / 2.314 | 2.772 / 3.907 / 8.188 | 5.509 / 8.461 / 18.2 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | SGP4 | 14 | 0.486 / 0.509 / 0.625 | 2.198 / 2.456 / 3.736 | 7.399 / 8.516 / 13.6 | 15.7 / 18.8 / 30.0 |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4-XP | 61 | 0.519 / 0.609 / 0.814 | 2.307 / 12.3 / 12.4 |  |  |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4 | 61 | 0.496 / 0.584 / 0.767 | 3.343 / 12.7 / 10.5 |  |  |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4-XP | 64 | 0.522 / 0.615 / 0.829 | 2.309 / 12.0 / 13.9 |  |  |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4 | 64 | 0.497 / 0.590 / 0.766 | 3.365 / 12.4 / 10.5 |  |  |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | SGP4-XP | 40 | 0.490 / 0.586 / 0.789 | 1.689 / 14.2 / 9.848 |  |  |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | SGP4 | 40 | 0.474 / 0.555 / 0.624 | 2.653 / 14.9 / 10.4 |  |  |
 | LEO, ISS (NASA OEM of 2026-10-07) | SGP4-XP | 14 | 0.455 / 0.455 / 0.463 | 2.124 / 1.997 / 2.575 | 7.795 / 7.195 / 9.290 | 16.5 / 15.5 / 20.2 |
@@ -79,11 +79,11 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 
 | Regime | Windows | Fit | Day 1 | Day 2 | Day 3 |
 | --- | --: | --- | --- | --- | --- |
-| LEO, Starlink, FFM-propagated truth | 61 | 1.01 (44 %) | 0.72 (61 %) | 0.73 (64 %) | 0.66 (62 %) |
+| LEO, Starlink, FFM-propagated truth | 64 | 1.01 (45 %) | 0.72 (61 %) | 0.71 (64 %) | 0.66 (63 %) |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | 40 | 1.03 (45 %) | 0.62 (63 %) | 0.75 (65 %) | 0.71 (63 %) |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | 47 | 1.00 (47 %) | 0.75 (55 %) | 0.75 (60 %) | 0.73 (57 %) |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | 50 | 1.00 (48 %) | 0.74 (56 %) | 0.75 (60 %) | 0.75 (58 %) |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | 14 | 1.01 (36 %) | 0.46 (79 %) | 0.37 (79 %) | 0.35 (79 %) |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | 61 | 1.05 (39 %) | 0.69 (62 %) |  |  |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | 64 | 1.05 (39 %) | 0.69 (63 %) |  |  |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | 40 | 1.03 (38 %) | 0.64 (63 %) |  |  |
 | LEO, ISS (NASA OEM of 2026-10-07) | 14 | 0.99 (79 %) | 1.04 (21 %) | 1.01 (31 %) | 1.01 (17 %) |
 | LEO, ISS (NASA OEM of 2026-10-21, one window from its start) | 1 | 1.00 (0 %) | 1.00 (0 %) | 1.01 (0 %) | 1.01 (0 %) |
@@ -96,17 +96,17 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 
 | Regime | Arm | Fit R / I / C | Day 1 R / I / C | Day 3 R / I / C |
 | --- | --- | --- | --- | --- |
-| LEO, Starlink, FFM-propagated truth | SGP4-XP | 0.114 / 0.440 / 0.161 | 0.134 / 1.606 / 0.204 | 0.188 / 10.9 / 0.398 |
-| LEO, Starlink, FFM-propagated truth | SGP4 | 0.120 / 0.437 / 0.158 | 0.140 / 2.249 / 0.195 | 0.238 / 16.6 / 0.371 |
+| LEO, Starlink, FFM-propagated truth | SGP4-XP | 0.114 / 0.441 / 0.159 | 0.132 / 1.605 / 0.203 | 0.186 / 10.7 / 0.396 |
+| LEO, Starlink, FFM-propagated truth | SGP4 | 0.120 / 0.438 / 0.158 | 0.140 / 2.240 / 0.194 | 0.237 / 16.2 / 0.370 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | SGP4-XP | 0.112 / 0.417 / 0.161 | 0.121 / 1.199 / 0.206 | 0.166 / 10.3 / 0.398 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | SGP4 | 0.118 / 0.407 / 0.157 | 0.138 / 1.914 / 0.191 | 0.238 / 14.6 / 0.365 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | COMSPOC XP (local scoring only) | | 0.202 / 21.3 / 0.359 | 0.335 / 33.6 / 0.606 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4-XP | 0.113 / 0.433 / 0.159 | 0.127 / 1.720 / 0.204 | 0.183 / 12.2 / 0.398 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4 | 0.120 / 0.436 / 0.158 | 0.139 / 2.319 / 0.194 | 0.227 / 16.6 / 0.368 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4-XP | 0.113 / 0.438 / 0.158 | 0.127 / 1.675 / 0.203 | 0.182 / 12.1 / 0.396 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4 | 0.120 / 0.437 / 0.156 | 0.138 / 2.276 / 0.194 | 0.223 / 16.2 / 0.367 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | SGP4-XP | 0.123 / 0.446 / 0.163 | 0.141 / 0.993 / 0.203 | 0.202 / 5.489 / 0.391 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | SGP4 | 0.123 / 0.442 / 0.161 | 0.147 / 2.182 / 0.198 | 0.252 / 15.7 / 0.399 |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4-XP | 0.116 / 0.474 / 0.161 | 0.147 / 2.292 / 0.205 |  |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4 | 0.119 / 0.454 / 0.159 | 0.148 / 3.332 / 0.194 |  |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4-XP | 0.117 / 0.485 / 0.159 | 0.148 / 2.292 / 0.205 |  |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4 | 0.120 / 0.461 / 0.158 | 0.148 / 3.355 / 0.194 |  |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | SGP4-XP | 0.112 / 0.446 / 0.162 | 0.134 / 1.671 / 0.207 |  |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | SGP4 | 0.118 / 0.436 / 0.158 | 0.143 / 2.641 / 0.193 |  |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | COMSPOC XP (local scoring only) | | 0.225 / 21.2 / 0.358 |  |
@@ -128,16 +128,16 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 
 | Regime | Arm | Parameters | Element bytes | Record bytes as returned | Fit time, median ms |
 | --- | --- | --: | --: | --: | --: |
-| LEO, Starlink, FFM-propagated truth | SGP4-XP | 8 | 312 | 2272 | 3047 |
-| LEO, Starlink, FFM-propagated truth | SGP4 | 7 | 304 | 648 | 1186 |
+| LEO, Starlink, FFM-propagated truth | SGP4-XP | 8 | 312 | 2272 | 3147 |
+| LEO, Starlink, FFM-propagated truth | SGP4 | 7 | 304 | 648 | 1207 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | SGP4-XP | 8 | 312 | 2272 | 1546 |
 | LEO, Starlink, FFM-propagated truth, the 40 object(s) scored for COMSPOC | SGP4 | 7 | 304 | 648 | 673 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4-XP | 8 | 312 | 2272 | 3046 |
-| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4 | 7 | 304 | 648 | 1008 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4-XP | 8 | 312 | 2272 | 3138 |
+| LEO, Starlink, FFM truth, B_eff above zero (drag acts) | SGP4 | 7 | 304 | 648 | 1207 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | SGP4-XP | 8 | 312 | 2272 | 3147 |
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | SGP4 | 7 | 304 | 648 | 1270 |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4-XP | 8 | 312 | 2024 | 1273 |
-| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4 | 7 | 304 | 648 | 536 |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4-XP | 8 | 312 | 2024 | 1558 |
+| LEO, Starlink, SpaceX forecast (inside the span, day 1) | SGP4 | 7 | 304 | 648 | 569 |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | SGP4-XP | 8 | 312 | 2024 | 984 |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | SGP4 | 7 | 304 | 648 | 330 |
 | LEO, ISS (NASA OEM of 2026-10-07) | SGP4-XP | 8 | 312 | 2280 | 542 |
@@ -208,8 +208,10 @@ Stratum `altA-incB`: mean-altitude band A (0: under 420 km, 1: 420-475, 2: 475-5
 | alt1-inc1/t2 | 8 | 0.0194 | 0 | 0.460 / 1.770 / 13.1 | 0.454 / 2.678 / 20.3 |
 | alt1-inc2/t0 | 2 | 0.0060 | 1 | 0.580 / 1.551 / 10.1 | 0.579 / 1.675 / 11.5 |
 | alt1-inc2/t1 | 1 | 0.0603 | 0 | 0.618 / 2.740 / 18.8 | 0.620 / 2.936 / 20.7 |
+| alt1-inc2/t2 | 1 | 1.7450 | 0 | 0.627 / 21.8 / 91.9 | 0.964 / 18.1 / 10.7 |
 | alt1-inc3/t0 | 1 | 0.0040 | 0 | 0.644 / 2.622 / 19.4 | 0.641 / 2.611 / 19.3 |
-| alt1-inc3/t2 | 2 | 0.0024 | 1 | 0.613 / 2.091 / 15.0 | 0.615 / 2.115 / 15.2 |
+| alt1-inc3/t1 | 1 | 0.0284 | 0 | 0.662 / 1.542 / 9.999 | 0.661 / 1.671 / 11.0 |
+| alt1-inc3/t2 | 3 | 0.0049 | 1 | 0.635 / 1.412 / 6.369 | 0.639 / 1.601 / 8.075 |
 | alt2-inc0/t0 | 2 | 0.0088 | 1 | 0.482 / 1.714 / 12.0 | 0.478 / 1.895 / 13.6 |
 | alt2-inc0/t1 | 5 | 0.0132 | 1 | 0.457 / 2.165 / 16.4 | 0.452 / 2.495 / 19.6 |
 | alt2-inc0/t2 | 3 | 0.0000 | 2 | 0.490 / 0.566 / 1.166 | 0.428 / 3.675 / 29.6 |
@@ -219,9 +221,9 @@ Stratum `altA-incB`: mean-altitude band A (0: under 420 km, 1: 420-475, 2: 475-5
 
 ## 7. The Starlink truth set
 
-Fitted 61 satellites (21 registered seats, 40 from the same-day local capture); 0 failures. fit_ffm against SpaceX over 0-48 h: RMS median 0.272 km, mean 1.692, 90th percentile 2.028. B_eff at the zero bound: 14; not converged: 15; with detected maneuver events: 0. Median fit CPU 78.3 s.
+Fitted 64 satellites (24 registered seats, 40 from the same-day local capture); 0 failures. fit_ffm against SpaceX over 0-48 h: RMS median 0.275 km, mean 1.658, 90th percentile 2.156. B_eff at the zero bound: 14; not converged: 16; with detected maneuver events: 0. Median fit CPU 78.4 s.
 
-By stratum: alt0-inc0: 3, alt0-inc1: 4, alt0-inc2: 3, alt0-inc3: 3, alt1-inc0: 3, alt1-inc1: 25, alt1-inc2: 3, alt1-inc3: 3, alt2-inc0: 10, alt2-inc2: 1, alt3-inc1: 2, alt3-inc2: 1.
+By stratum: alt0-inc0: 3, alt0-inc1: 4, alt0-inc2: 3, alt0-inc3: 3, alt1-inc0: 3, alt1-inc1: 25, alt1-inc2: 4, alt1-inc3: 5, alt2-inc0: 10, alt2-inc2: 1, alt3-inc1: 2, alt3-inc2: 1.
 
 Truth inventory by regime: [inventory.md](inventory.md).
 

@@ -7,13 +7,14 @@
 // Without the local records the check says so and exits 2: a skip is never a pass.
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import zlib from 'node:zlib';
 import { config, frozen, store, results, root } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { build } from './tables.mjs';
 import { manifest } from './manifest.mjs';
 import * as sources from './lib/sources.mjs';
+import { parseMeme } from './lib/sources.mjs';
 import { windowStarts, withT, ms } from './lib/windows.mjs';
 
 const args = process.argv.slice(2);
@@ -79,6 +80,20 @@ if (metas.length) {
   const again = await scoreWindow(b, object, t0, { fitSeconds: config.windows.fitHours * 3600, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
   const rec = JSON.parse(fs.readFileSync(path.join(store, 'rows/starlink', `${meta.norad}.json`))).ffm;
   for (const arm of ['xp', 'sgp4']) if (rec[arm].ok && !same(again[arm].fitRmsKm, rec[arm].fitRmsKm)) fail(`replay STARLINK ${meta.norad}: ${arm} fit RMS differs`);
+  replayed += 1;
+}
+// replay the in-span SpaceX window of one same-day Starlink from the local capture (read in memory)
+const dailyDir = path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/starlink');
+const dailyRows = fs.existsSync(path.join(store, 'rows/starlink')) ? fs.readdirSync(path.join(store, 'rows/starlink')).filter((n) => /^\d+\.json$/.test(n)).map((n) => JSON.parse(fs.readFileSync(path.join(store, 'rows/starlink', n)))).filter((r) => r.population === 'daily' && r.spacex) : [];
+if (dailyRows.length && fs.existsSync(dailyDir)) {
+  const rec = dailyRows[Math.floor(dailyRows.length / 2)];
+  const text = zlib.gunzipSync(fs.readFileSync(path.join(dailyDir, `${rec.norad}.txt.gz`))).toString('utf8');
+  const states = parseMeme(text);
+  const start = ms(states[0].epoch);
+  const inSpan = states.filter((x) => ms(x.epoch) < start + 48 * 3600e3 - 1000);
+  const object = withT({ source: 'starlink-spacex', id: `STARLINK (${rec.norad})`, norad: rec.norad, name: `STARLINK-${rec.norad}`, objectId: '', originator: 'SpaceX', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: inSpan });
+  const again = await scoreWindow(b, object, ms(inSpan[0].epoch), { fitSeconds: config.windows.fitHours * 3600, leadDays: config.windows.spacexInSpanLeadDays, minCoverage: config.windows.minimumCoverage });
+  for (const arm of ['xp', 'sgp4']) if (!same(again[arm].fitRmsKm, rec.spacex[arm].fitRmsKm) || !same(again[arm].days[1].rmsKm, rec.spacex[arm].days[1].rmsKm)) fail(`replay SpaceX ${rec.norad}: ${arm} differs`);
   replayed += 1;
 }
 await b.close();
