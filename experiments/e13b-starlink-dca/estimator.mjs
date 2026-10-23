@@ -48,10 +48,11 @@ function tridiagonal(diag,off,rhs){
   const x=r.slice();x[x.length-1]/=d.at(-1);for(let i=x.length-2;i>=0;i--)x[i]=(r[i]-off[i]*x[i+1])/d[i];return x;
 }
 export function fitShell(coast,thrust=[],options={}){
-  const calibration=coast.filter(a=>!heldOut(a.id)&&Number.isFinite(a.y));
+  const keep=id=>options.calibrationIds?options.calibrationIds.includes(id):!heldOut(id);
+  const calibration=coast.filter(a=>keep(a.id)&&Number.isFinite(a.y));
   if(!calibration.length)return {status:'UNAVAILABLE',reason:'no calibration coast arcs'};
-  const anchor=Math.floor(Math.min(...calibration.map(a=>a.startMs))/DAY)*DAY;
-  const last=Math.max(...calibration.map(a=>a.endMs)),n=Math.ceil((last-anchor)/DAY)+1;
+  const anchor=Math.floor(calibration.reduce((v,a)=>Math.min(v,a.startMs),Infinity)/DAY)*DAY;
+  const last=calibration.reduce((v,a)=>Math.max(v,a.endMs),-Infinity),n=Math.ceil((last-anchor)/DAY)+1;
   if(n>64)throw new Error('fit must be bounded to at most 63 days');
   const byId=new Map();
   const rows=calibration.map(a=>({...a,w:weights(a.startMs,a.endMs,anchor,n),day:Math.floor(((a.startMs+a.endMs)/2-anchor)/DAY),omega:1}));
@@ -89,7 +90,7 @@ export function fitShell(coast,thrust=[],options={}){
   const supported=support.map(x=>x.size>=C.minimumSatellites);
   const solution={status:converged?'CONVERGED':'NOT_CONVERGED',anchorMs:anchor,nodeMs:s.map((_,i)=>anchor+i*DAY),s,supported,support:support.map(x=>x.size),baseline:Object.fromEntries([...beta].map(([id,v])=>[id,v.map(Math.exp)])),sigma,coastArcs:rows.length,calibrationSatellites:byId.size,sweeps,lastChange:change,prior:{B:C.bPrior,logBSigma:C.logBPriorSigma,kappa:C.kappaPrior,kappaSigma:C.kappaPriorSigma},kappa:{}};
   for(const id of byId.keys()){
-    const segments=thrust.filter(a=>a.id===id&&!heldOut(a.id)).map(a=>{
+    const segments=thrust.filter(a=>a.id===id&&keep(a.id)).map(a=>{
       const w=weights(a.startMs,a.endMs,anchor,n);if(w.some(([k])=>!supported[k]))return null;
       const day=Math.min(n-1,Math.max(0,Math.floor(((a.startMs+a.endMs)/2-anchor)/DAY)));
       const x=solution.baseline[id][day]*Math.exp(w.reduce((v,[k,q])=>v+q*s[k],0))*a.work;
