@@ -86,7 +86,7 @@ export async function openWasm(modulesRoot,fetcher) {
       return {cpuSeconds:cpuSec(before),wallSeconds:(performance.now()-start)/1000,samples:samples.map(s=>({ms:s.ms,state:s.state,covariance:covariance6(s)}))};
     }
     const provenance={runtime:{node:process.version,platform:process.platform,arch:process.arch,logicalCpus:os.cpus().length,packageLockSha256:sha256(fs.readFileSync(path.join(root,'package-lock.json')))},modules:Object.values(modules).map(m=>m.provenance),source:gitState(modulesRoot),environment:env.provenance};
-    return {modules,provenance,execute,fit,predict,pairStatistics,normalize:points=>normalize(modules['foundation/frames'],points),destroy:async()=>{for(const m of Object.values(modules))await m.destroy();}};
+    return {modules,provenance,execute,fit,predict,pairStatistics,assertCoverage:env.assertCoverage,normalize:points=>normalize(modules['foundation/frames'],points),destroy:async()=>{for(const m of Object.values(modules))await m.destroy();}};
   }catch(e){for(const m of Object.values(modules))await m.destroy();throw e;}
 }
 

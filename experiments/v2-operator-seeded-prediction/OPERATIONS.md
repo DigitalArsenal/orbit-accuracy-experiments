@@ -87,3 +87,13 @@ cycle, then runs every eight hours. This leaves 30 minutes between the 7.5 h
 cycle deadline and each registered issue. The status is `scheduled` while
 waiting; it is not reported as a completed 500-object cycle. Starting after
 the registered first cycle requires the PLAN's coverage amendment/extension.
+
+Commissioning blocker, 2026-10-23: space-weather 0.2.0 emits at most day+4,
+and the fetched complete rows ended October 25 (43 rows). The seven-day V2
+forecast needs October 31 in commissioning. FFM correctly refuses uncovered
+weather days. The harness now checks every required date before fitting and
+stops on this guard. Do not start the prospective collector until a causal
+WASM weather forecast contract covers all registered horizons, or the owner
+registers another weather policy. Never pad rows or fetch future observations
+to make the check pass. The successful arm-1 fit/replay consumed 275.859966 CPU
+seconds, but its forecast failed; no complete fitted-object record survived.

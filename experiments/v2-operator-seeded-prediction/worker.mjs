@@ -17,6 +17,8 @@ process.on('message',async message=>{
     if(Date.parse(arc.createdUtc)>issueMs||Date.parse(source.retrievedUtc)>issueMs)throw new Error('future source at issue');
     const points=await wasm.normalize(arc.points);arc.points=null;
     const epochs=config.horizonsHours.flatMap(h=>Array.from({length:15},(_,i)=>issueMs+h*H+42000+i*60000));
+    // Refuse missing causal drivers before spending CPU on a fit.
+    wasm.assertCoverage(points[0].ms,epochs.at(-1));
     const dca=dcaAt(Math.min(issueMs,Date.parse(source.retrievedUtc)));
     const record={version:1,norad,issueUtc:iso(issueMs),source:{...source,createdUtc:arc.createdUtc,startUtc:arc.startUtc,stopUtc:arc.stopUtc},fitWindow:{start:iso(points[0].ms),end:iso(points.at(-1).ms),points:points.length,joinExcluded:true},arms:{},mechanics:null};
     for(const arm of [1,2,3]) {

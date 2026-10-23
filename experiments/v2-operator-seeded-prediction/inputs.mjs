@@ -73,6 +73,13 @@ export async function environment(modules, moduleRoot, fetcher) {
   const eopFile=path.join(eopRoot,day,'finals.all.iau2000.txt'),eop=await finalsRecords(modules['data-source/eop-parser'],eopFile);
   const kernelFile='/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp',kernelBytes=fs.readFileSync(kernelFile);
   const kernel=kernelFrame(kernelBytes);
-  return { provenance:{weather:sources,weatherRows:rows.length,weatherSha256:sha256(bytes),weatherPath,eop:{path:eopFile,sha256:sha256(fs.readFileSync(eopFile)),archiveDay:day},kernel:{path:kernelFile,sha256:sha256(kernelBytes)}},
-    inputs(from,to){const lo=Math.floor(from/86400000)+40585,hi=Math.ceil(to/86400000)+40589;return [kernel,eopFrame(eop.records,lo,hi),spaceWeatherFrame(rows.filter(r=>Date.parse(r.DATE)>=from-3*86400000&&Date.parse(r.DATE)<=to+3*86400000))];} };
+  const weatherDays=new Set(rows.map(r=>r.DATE)),dates=[...weatherDays].sort();
+  function assertCoverage(from,to) {
+    for(let day=Math.floor(from/86400000)-1;day<=Math.floor(to/86400000);day++) {
+      const date=iso(day*86400000).slice(0,10);
+      if(!weatherDays.has(date))throw Object.assign(new Error(`weather-coverage-guard: missing ${date}; module emitted ${dates[0]} through ${dates.at(-1)}; requested through ${iso(to)}. An upstream forecast contract or registered policy is required.`),{fatal:true});
+    }
+  }
+  return {assertCoverage, provenance:{weather:sources,weatherRows:rows.length,weatherFirstDate:dates[0],weatherLastDate:dates.at(-1),weatherSha256:sha256(bytes),weatherPath,eop:{path:eopFile,sha256:sha256(fs.readFileSync(eopFile)),archiveDay:day},kernel:{path:kernelFile,sha256:sha256(kernelBytes)}},
+    inputs(from,to){assertCoverage(from,to);const lo=Math.floor(from/86400000)+40585,hi=Math.ceil(to/86400000)+40589;return [kernel,eopFrame(eop.records,lo,hi),spaceWeatherFrame(rows.filter(r=>Date.parse(r.DATE)>=from-3*86400000&&Date.parse(r.DATE)<=to+3*86400000))];} };
 }
