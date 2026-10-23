@@ -149,3 +149,23 @@ fitters. The registered sources are unchanged. The numbers are code constants of
 A3 addendum (same day, after the first rows): the common interval confounds the fit length with the lead behind the
 fit end (48, 24 and 0 h). The first day after each fit is scored too, so a fixed lead tells the two apart. The
 subset is the first 100 satellites in NORAD order (a cost limit: six fits each).
+
+### A5 - 2026-10-23, second box, before any SPK window was read: spacecraft truth from NAIF
+
+Coordinator, second box: fetch spacecraft SPKs from NAIF (paced, into hac/naif-kernels), build windows, score SGP4 and
+SGP4-XP where they apply, record the rest as awaiting SDN-GP. NAIF does not host TESS, CAPSTONE, Artemis I or Danuri;
+it does host, and the fetcher (`fetch-kernels.mjs`, the archive's provenance convention, 5 s apart) stored:
+THEMIS A, D, E (Earth-orbiting, highly elliptical, 2013-02-08 to 2013-02-24), Chandra (highly elliptical, 64 h), Artemis II
+(Orion, JSC best-estimated trajectory, 2026-04-02 to 04-10), LRO (lunar-centred, 2026-03-15 to 06-14), Psyche, Lucy and
+Juno (heliocentric), and TDRSS (type 10, derived from two-line elements: not truth, not used). Substitutions are therefore
+THEMIS and Chandra for TESS (HEO), Artemis II for Artemis I, and no Danuri or CAPSTONE.
+
+States come from files/orbit-products `read_container` (SPK types 8, 9, 13), epochs from TDB to UTC by foundation/time
+`convert_time`, one call each; the J2000 axes are labelled EME2000. Windows (HEO only, where Earth-centred SGP4 and
+SGP4-XP apply): THEMIS A, D, E and Chandra (2018-03-01 to 2018-04-30, after the last leap second in the file's span), fit 24 h
+(the registered length) and 72 h (the fit-length result), held-out days 1-3, one window every 48 h; Artemis II's first
+segment (the high-Earth-orbit checkout before the translunar burn, 20.85 h) as one short arc: fit 8 h, held-out the
+remaining 12.85 h scored as day 1 with a 40 percent coverage rule. Not scored, recorded as awaiting SDN-GP: Artemis II after
+the burn (cislunar), LRO (lunar-centred), Psyche, Lucy and Juno (heliocentric; JPL navigation kernels are SPK type 1, which
+files/orbit-products 0.1.4 cannot read). A GEO search of the archive found no operator ephemerides (operator-capture holds
+Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not as ephemerides).

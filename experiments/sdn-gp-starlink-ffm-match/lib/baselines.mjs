@@ -112,7 +112,8 @@ export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, mi
   const stopFit = startMs + fitSeconds * 1000;
   const lines = slice(object, startMs, stopFit + Math.max(...leadDays) * DAY);
   if (lines.length < 20) return null;
-  const stepSeconds = (ms(lines[1].epoch) - ms(lines[0].epoch)) / 1000;
+  const gaps = lines.slice(1, 60).map((l, i) => ms(l.epoch) - ms(lines[i].epoch)).sort((a, c) => a - c); // median spacing: some kernels sample irregularly
+  const stepSeconds = gaps[Math.floor(gaps.length / 2)] / 1000;
   const minStatesPerDay = Math.floor((minCoverage * 86400) / stepSeconds);
   const [xp, sgp4] = [await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay), await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay)];
   return { source: object.source, id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4 };
