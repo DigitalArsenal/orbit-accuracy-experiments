@@ -675,3 +675,8 @@ Frozen V2 registration. Collector interface: read the JSON fenced block; capture
   ]
 }
 ```
+
+V2 amendment A1 (2026-10-23, before scoring): source states are at :42 seconds.
+V2 predicts at each target +42,+102,...,+882 seconds; capture the first
+eligible source state in the unchanged 900-second window. Target epochs and
+subset identities above are unchanged.

@@ -143,3 +143,13 @@ experiment artifacts are not node-flow publications and require no AOT gate.
 ## Amendments
 
 None at initial registration.
+
+### A1 — 2026-10-23, before any completed commissioning fit or truth score
+
+The first fetched file starts at 2026-10-23T04:14:42Z and its 60 s cadence
+keeps a :42 second offset. Whole-minute predictions cannot join those states.
+Predict at target+42 s, +102 s, ..., +882 s (15 candidates per horizon),
+inside the unchanged 900 s allowance; require the fetched source grid to
+match :42, otherwise refuse and report a new required amendment. Capture
+target epochs, subset, horizons and eligibility rules do not change. The
+initial commissioning attempt was stopped before producing a fit record.
