@@ -242,3 +242,238 @@ theory that carries them.
 | Calibrated covariance | no | no | no | no | no | yes (2f) |
 | Residual series per object | no | no | no | no | no | yes (2g) |
 | Non-Earth centers | no | no | no | no | no | Moon, libration, Sun, planets (2h) |
+
+---
+
+## 2. SDN-GP terms
+
+### 2.0 Framework, notation and the cost baseline
+
+**State.** The six mean equinoctial elements of `SPEC.md` 1.5, y = (n, a_f, a_g, χ, ψ, λ), with a_f + i a_g =
+e e^{i(ω+Ω)} and ψ + i χ = tan(i/2) e^{iΩ}. SDN-GP integrates
+
+    ẏ = f_zonal + f_3body + f_res + f_SRP + f_drag + f_thrust + f_emp
+
+with XP's third-order Runge–Kutta step, epoch-anchored grid, fallbacks and cubic Hermite output unchanged
+(`SPEC.md` 9), so the module reuses side B's integrator, checkpoints and batch entry. New terms enter in one of two
+places only: the averaged rate function (evaluated at the RK stages and nodes), or the output-time correction chain
+of `SPEC.md` 8 (added after the Hermite step, beside the Sun/Moon and J2 short-periodics).
+
+**Gauss equations.** A perturbing acceleration with radial, transverse and normal components (R, T, N) changes the
+elements as in Walker, Ireland & Owens (1985), with true longitude L = Ω + ω + ν, w = 1 + a_f cos L + a_g sin L,
+s² = 1 + χ² + ψ² and p the semi-latus rectum:
+
+    ȧ   = (2a²/h) [ e sin ν R + (p/r) T ]                 ṅ = -(3/2)(n/a) ȧ
+    ȧ_f = √(p/μ) [ R sin L + ((w+1) cos L + a_f) T/w - (ψ sin L - χ cos L) a_g N/w ]
+    ȧ_g = √(p/μ) [ -R cos L + ((w+1) sin L + a_g) T/w + (ψ sin L - χ cos L) a_f N/w ]
+    ψ̇   = √(p/μ) s² N cos L / (2w)                        χ̇ = √(p/μ) s² N sin L / (2w)
+
+and the averaged rate of any term is ⟨ẏ⟩ = (1/2π) ∮ ẏ dM = (1/2π) ∮ ẏ (1 - e cos E) dE. For near-circular orbits
+(e → 0, u = ω + ν the argument of latitude) the leading forms used for the size estimates below are
+ȧ = 2T/n, ṅ = -3T/a, and d(a_f + i a_g)/dt = (1/(na)) ⟨(2T + i R)... ⟩ written out where used.
+
+**The along-track lever.** Every LEO term below is judged by what it does to the mean motion, because a mean-motion
+error δn grows into an along-track error s(t) = a ∫ δn dt. A fractional error δ in the drag acceleration held for a
+time t gives
+
+    s(t) = (3/4) n |ȧ_D| δ t²                                   (1)
+
+with ȧ_D the drag decay rate of the semi-major axis. For a Starlink at 550 km (n = 1.095e-3 rad/s, B = 0.0078 m²/kg,
+ρ ≈ 1.5e-12 kg/m³) ȧ_D = -ρ B √(μa) ≈ -53 m/day, so δ = 10 % for three days is 3.0 km.
+
+**Cost baseline (side B, 2026-10-23, owner Mac, single thread).** SGP4XP: 1.12 µs per object for a 60 s output
+step, 361 µs per object for a 1-day jump (about 10 nodes of 4 rate evaluations each, so about 9 µs per rate
+evaluation with drag and SRP), 3.26 KiB per object. A term's cost is quoted as added µs per rate evaluation (×40
+per object-day in LEO) and added µs per output state; bytes are the added fields of the element set at 4 bytes each
+(float32; the SDS `$OMM` record of G1 holds XP's set in 312 bytes).
+
+### 2a. DCA drag in place of Jacchia-70
+
+**2a.1 Force.** Drag on a body with ballistic coefficient B = C_D A/m:
+
+    a_D = -(1/2) B ρ |v_r| v_r,    v_r = v - ω_E × r - w(r, t)
+
+    ρ(r, t) = ρ_MSIS(r, t; F10.7(t - 1 d), F̄81(t), ap(t), ap history) · exp(s(t))
+
+with NRLMSISE-00 (Picone et al. 2002), the open-DCA fleet common mode s(t) published as SDS `$DCL` (E13, E13b), and
+the space weather from SDS `$SPW` (GFZ Kp, ap and Ap, Matzka et al. 2021; NOAA SWPC; never SET JB2008 indices or the
+CSSI file). w is the neutral wind (default 0; HWM14, Drob et al. 2015, as an option): co-rotation alone is what the
+FFM truth uses, and XP's co-rotation probe (`SPEC.md` 3.2) shows the same quadratic |v_r| v_r law.
+
+**2a.2 Orbit average, reference path.** ⟨f_drag⟩ is the Gauss-equation average of a_D over the mean orbit. Two rules:
+
+- eccentric orbits (z = ae/H ≥ 3, H the local density scale height): XP's 13-point Gauss–Legendre rule on the
+  perigee band [-ν_c, ν_c] of `SPEC.md` 3.4 (Abramowitz & Stegun 1964, table 25.4), unchanged;
+- near-circular orbits (z < 3, all Starlink and most of LEO): the K-point trapezoid rule in eccentric anomaly,
+  E_k = 2πk/K, weights (1 - e cos E_k)/K, which converges geometrically for a smooth periodic integrand where
+  Gauss–Legendre over a full period does not (Trefethen & Weideman 2014); K = 8 to 12, set by the 2a.7 measurement.
+
+At each node the point's geodetic height and latitude, local solar time and v_r are formed and ρ evaluated. This
+path is exact to the FFM truth's density model and serves as the check of 2a.4.
+
+**2a.3 Weather beyond the data (the horizon chain).** The `$SPW` rows end about two days ahead and FFM refuses arcs
+past them; SDN-GP never refuses. Each input x ∈ {F10.7, F̄81, ap} takes, in order of availability, the observed
+value, the NOAA SWPC 3-day forecast, the SWPC 45-day forecast (daily Ap and F10.7), then a climatology:
+
+- F10.7_clim(t) = (1 AU / r_☉(t))² · Φ(t - t₀), Φ the solar-cycle shape of Hathaway, Wilson & Reichmann (1994),
+  Φ(τ) = A τ³ / (exp(τ²/b²) - c), refitted each month to the observed cycle (Hathaway 2015) and mapped to F10.7 by
+  the sunspot-number relation of Tapping (2013); F̄81 is its running mean;
+- ap_clim(t) = the cycle-phase median of the GFZ record, modulated by the semiannual (Russell & McPherron 1973) term;
+- s(t) beyond the last `$DCL` row relaxes to its trailing 27-day mean s̄ with the time constant chosen in E13:
+
+      s(t) = s̄ + (s(t₁) - s̄) exp(-(t - t₁)/τ_s),    τ_s = 48 h.
+
+Each hand-off is blended over one day with a raised-cosine weight, so the density has no step (a density step is a
+kink in the along-track error). Every evaluation carries its tier (observed, 3-day, 45-day, climatology); the tier
+selects the density-error variance of the covariance (2f.4).
+
+**2a.4 The catalog-shared density kernel (the fast path).** The atmosphere at time t is the same for every object,
+so it is expanded once per kernel time and every object's orbit average becomes a short sum. On each sphere of
+geocentric radius r_k (k = 1 … K_r, 100 to 1,500 km altitude, about 60 spheres, finer below 400 km) and at kernel
+times t_j (3-hourly where ap is observed, daily beyond), in the solar-fixed frame (pole the Earth's rotation axis,
+longitude φ_s the hour angle from the subsolar meridian):
+
+    ρ(r_k, θ, φ_s, t_j) / ρ̄_k(t_j) = 1 + Σ_{l=1..L} Σ_{m=-l..l} c_klm(t_j) Y_lm(θ, φ_s)        (2)
+
+projected exactly by a Gauss–Legendre grid in latitude and a uniform grid in φ_s ((L+1)(2L+1) density calls per
+sphere). Expanding ρ on spheres of constant geocentric radius puts the Earth's oblateness (the geodetic height of a
+circular orbit varies by about 21 km between equator and pole) into the latitude structure, so a circular orbit lies
+on one sphere.
+
+Orbit average, circular orbit with pole p̂ (in the solar-fixed frame) and node direction: rotate (2) into the orbit
+frame with the Wigner matrices D^l(α, β, γ) (Euler angles of the orbit frame: the node's hour angle, the inclination,
+0; Edmonds 1957); along the orbit (colatitude π/2 in that frame) Y_lk(π/2, u) = N_lk P_l^k(0) e^{iku}, so the k-th
+Fourier coefficient of the density along the orbit is
+
+    ρ̂_k = ρ̄(r) [ δ_k0 + Σ_l Σ_m c_lm D^l_mk N_lk P_l^k(0) ],      P_l^k(0) = 0 when l + k is odd.     (3)
+
+For k = 0 this is the addition theorem: the great-circle mean of Y_lm is P_l(0) Y_lm(p̂). ρ̂_0 drives ȧ and λ̇,
+ρ̂_{±1} drive the eccentricity vector, ρ̂_{±2} the 2/rev terms (kept for the residual budget only). The eccentricity
+enters as King-Hele's (1964) radial factor: with r = a(1 - e cos E) and the local scale height H(a) from the radial
+grid, exp(z cos E) = I_0(z) + 2 Σ_k I_k(z) cos kE (z = ae/H), so the averaged rates are products of the Bessel series
+and (3), truncated at k ≤ 2 for z < 0.5 (Starlink: e ≈ 1e-4 to 2e-3, z < 0.25); for z ≥ 3 the reference path 2a.2
+is used. Co-rotation enters exactly through |v_r|²: for a circular orbit |v_r|² = v² (1 - 2 (ω_E r/v) cos i cos²(·) …),
+whose orbit average gives King-Hele's factor F = (1 - (r ω_E/v) cos i)² (0.92 for the 53° shell, an 8 % effect on ȧ)
+and the cross-track component that drives di/dt; winds, when on, add the HWM14 zonal mean as King-Hele's
+atmospheric rotation factor Λ in place of 1.
+
+Interpolation: cubic in r between four spheres, linear in t between kernel times; the solar-fixed frame keeps the
+diurnal bulge fixed, and NRLMSISE-00's universal-time (longitude) terms enter through the 3-hourly kernel times.
+
+**2a.5 Late binding of the environment.** The fit constrains the decay over the arc, i.e. the product B ⟨ρ⟩_arc, not
+B alone. The element set therefore stores B and ⟨ρ⟩_arc,E (the arc-mean density under the environment E used at fit
+time, named by its `$SPW` and `$DCL` record identifiers). At propagation under a newer environment E′,
+
+    B′ = B · ⟨ρ⟩_arc,E / ⟨ρ⟩_arc,E′                                   (4)
+
+keeps the fitted decay over the arc and applies the newer density after it. So an old element set improves when a
+newer nowcast is published, without a refit; with no environment reachable E′ is the climatology of 2a.3 and the
+result is deterministic. This is the step HANDE (1.4) did not take: its density was the index history at fit time.
+
+**2a.6 Expected gain.**
+
+- FFM-propagated Starlink: the truth's density is NRLMSISE-00 with s = 0 under the same GFZ/SWPC rows and the same
+  SWPC 45-day extension (G1 environment), so 2a removes the density-model mismatch entirely (up to the kernel error).
+  G1 bounds that mismatch: with no drag in the truth (52 windows at B_eff = 0) best-case XP still reaches 3.77 km on
+  day 3, against 9.82 km where drag acts; after the aliasing term of 2d is removed, the remaining drag-related part is
+  what 2a targets. Long fits isolate it: with 72 h fits (where aliasing is suppressed, 2e) XP's next-day error is
+  0.769 km, which is the one-day growth of the drag-model mismatch and the residual floor. Expected: the 72 h-fit
+  next-day error from 0.77 km to the floor of 2d (≈ 0.2 to 0.3 km), and day 3 of the 24 h fit by the same factor once
+  2d is in.
+- Precise truth (ISS, laser-ranged LEO): the truth's atmosphere is the real one; 2a replaces a date-only flux by the
+  observed weather and the DCA. E13 measured the DCA itself in FFM at 3 days: median error ratio 0.74 (Swarm,
+  D13-def against JB2008 with SET indices). Against XP's date-only J70 the expected gain is larger, and is the
+  measurement of 2a.7.
+
+**2a.7 Cost, parameters, fitting.**
+
+- Kernel build: 60 spheres × (L+1)(2L+1) = 91 calls (L = 6) = 5,460 NRLMSISE-00 calls per kernel time, about 27 ms at
+  about 5 µs per call (to be measured in WASM); at 3-hourly times about 0.22 s per catalog-day, shared by the
+  ~15,000 objects with perigee below 1,500 km: about 15 µs per object-day.
+- Per rate evaluation: radial interpolation of 49 coefficients on four spheres, the e^{imα} phases (the d^l(i)
+  matrices are cached per object at each node, i being nearly constant), and the k ≤ 2 sums of (3): about 600 flops,
+  ≈ 0.3 µs, against about 65 µs for the 13-point reference path with direct NRLMSISE-00 calls. Shared memory: 60 × 49
+  × 8 bytes = 23.5 KiB per kernel time (2.2 MiB for four days at 3-hourly, daily beyond), none per object.
+- Parameters per object: B (as XP's BTERM, now signed, 2b) and ⟨ρ⟩_arc (4 bytes) plus an 8-byte environment
+  identifier: +12 bytes.
+- Fitting: B (or B_eff) by the same Levenberg–Marquardt as XP's fit, with the environment fixed during the fit.
+- Acceptance of the fast path: the kernel's ⟨ρ⟩ within 1 % of the reference path (one tenth of the DCA's own 9 %
+  scatter, E13) over the G1 population and a solar-cycle range of dates.
+
+### 2b. Starlink drag-makeup thrust, T = κ·D
+
+**2b.1 Model.** The drag-makeup thrust of the operator model is proportional to the drag and opposite to it:
+
+    a_T = -κ a_D   ⇒   a_D + a_T = -(1/2)(1 - κ) B ρ |v_r| v_r,    B_eff = (1 - κ) B             (5)
+
+so in the averaged rates 2b is 2a with B replaced by B_eff, and B_eff tracks the density, storms included. If the
+thrust is along the inertial velocity instead of v_r, the difference is the co-rotation angle (r ω_E cos i / v ≈
+2.3° at 53°) in the cross-track component, a small inclination-rate term carried for completeness.
+
+**2b.2 Identifiability.** One arc observes only the product B_eff (the decay), so κ is not identified by a single
+ballistic arc (E13b: "absolute density and B are not independently identified, continuous thrust is confounded
+without coasts"). With a prior B ~ N(B̂, σ_B²) — from E13b's shell estimates, from the satellite's own coast arcs,
+or from its physical class — the posterior is κ = 1 - B_eff/B̂ with
+
+    σ_κ² = (B_eff/B̂²)² σ_B² + σ_Beff² / B̂².
+
+B_eff is fitted signed: κ > 1 (net thrust, orbit raising or more than full makeup) is a negative B_eff. G1's ballistic
+truth fitter puts 52 of 239 Starlinks at the B_eff = 0 bound for exactly this reason.
+
+**2b.3 Why κ is carried at all.** The dynamics need only B_eff, but κ decides the covariance. If the operator closes
+the loop on the actual drag (T = κ D_actual), a fractional density error δ enters the net force as (1 - κ) B ρ δ; if
+the thrust is planned on a forecast density (T = κ D_forecast, open loop), it enters as B ρ δ. For κ = 0.9 the two
+differ by a factor of 10 in the in-track sigma of (1) and (2f.4). Which one SpaceX flies is measurable (2b.6), and it
+is the most likely single cause of the Starlink covariance's scale error.
+
+**2b.4 Beyond the operator's span: the station-keeping prior.** Starlinks hold their shell. Beyond the forecast
+span (or over long horizons) the mean semi-major axis is modeled as relaxing to the shell's target a*:
+
+    ȧ = -(a - a*)/τ_c,   equivalently κ(t) = 1 + (a - a*) / (τ_c ȧ_D(t)),                           (6)
+
+with a* from the satellite's own history (the median of its fitted mean a over the last weeks) and τ_c fitted on the
+population. The along-track error then stays bounded by the operator's deadband instead of growing as t², which is
+the right long-horizon prior for a controlled orbit and the wrong one for a decaying or lowering one (2c).
+
+**2b.5 Expected gain.** On the FFM truth arm: none beyond a signed B_eff, because that truth is itself ballistic with
+κ folded into B_eff. On the SpaceX-forecast arm (inside the span), whose day-1 error for best-case XP is 2.738 km
+against 1.502 km on the FFM truth: 2b with 2c targets that 1.24 km difference, which is the thrust pattern the operator
+plans that a ballistic B cannot carry. On the covariance: 2b.3 selects the process-noise scale (2f).
+
+**2b.6 Cost, parameters, fitting.** Rates: none beyond 2a (B_eff replaces B). Parameters: κ and the prior source
+(+4 bytes); a* and τ_c are population values. Fitting: B_eff free, κ from the prior after the fit. Measurement:
+newer-file truth (the first hours of SpaceX files issued after the fit) during density excursions (storm days in the
+`$SPW` rows): regress the in-track error on (1 - κ) B ∫∫ δρ and on B ∫∫ δρ; the better predictor names the loop.
+
+### 2c. Empirical along-track terms (constant and once per revolution)
+
+**2c.1 Model.** In-track carries 99.4 to 99.9 % of the day-3 squared error in LEO (G1), so the empirical terms are
+transverse:
+
+    T_emp(u, t) = [τ_0 + τ_c cos u + τ_s sin u] g(t),   g = 1 on the fit arc, g = exp(-(t - t_e)/τ_e) after it,
+
+with t_e the end of the arc and τ_e the persistence time (a first-order Gauss–Markov prior on the empirical force,
+fitted on the population; default 1 day). The averaged rates (near-circular, from the Gauss equations of 2.0):
+
+    ȧ = 2 τ_0 g / n,      ṅ = -3 τ_0 g / a,      d(a_f + i a_g)/dt = e^{iΩ} (τ_c + i τ_s) g / (n a),       (7)
+
+so τ_0 produces the along-track quadratic s(t) = -(3/2) τ_0 t² (on the arc) and the 1/rev pair rotates the
+eccentricity vector at a fixed orbit-frame direction atan2(τ_s, τ_c), the classical once-per-revolution empirical
+acceleration of precise orbit determination (Colombo 1989; reduced-dynamic orbits, Wu, Yunck & Thornton 1991).
+
+**2c.2 Identifiability.** τ_0 and B_eff produce the same t² signature except through the density's variation over the
+arc: their correlation is ⟨ρ⟩/√⟨ρ²⟩, above 0.99 for a 10 % density variation. So exactly one of the two is free per
+object: B_eff for objects in drag makeup or ballistic flight, τ_0 (with B at its prior) for objects whose fitted B_eff
+is outside the physical range — G1's 19 Starlinks with B_eff above 0.5 m²/kg, ten times a physical value, which are
+lowering or decaying under thrust, and whose day-3 XP error is 25.4 km. τ_c and τ_s are separable (a linear drift of
+the 1/rev radial and in-track amplitude) and absorb once-per-revolution forces no term models (shadow asymmetries,
+thermal re-radiation).
+
+**2c.3 Expected gain.** On the 19 lowering or decaying Starlinks, a constant tangential thrust is the right model and a
+density-proportional one is not: expected from 25.4 km at day 3 to the level of the drag-acts subset (9.8 km for XP)
+or below. On the rest: small once 2a and 2d are in (it is the safety valve for force mismatches, and the carrier of the
+SpaceX-forecast thrust pattern with 2b).
+
+**2c.4 Cost, parameters, fitting.** Rates: three closed-form terms, < 0.05 µs per rate evaluation. Parameters: τ_0,
+τ_c, τ_s (+12 bytes); τ_e is a population value. Fitting: linear in the parameters, added to the Levenberg–Marquardt
+vector; τ_0 only when the B_eff test of 2c.2 selects it (the selection rule is fixed before the test windows are read).
