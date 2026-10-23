@@ -13,6 +13,7 @@ if(git('status','--porcelain','--','experiments/operator-capture/collector','exp
 const commit=git('rev-parse','HEAD'),remote=git('ls-remote','origin','refs/heads/task/experiments-e13b-starlink-dca-20261023').split(/\s+/)[0];
 if(remote!==commit)throw new Error('push exact collector candidate before install');
 fs.mkdirSync(root,{recursive:true});const stat=fs.statfsSync(root);if(stat.bavail*stat.bsize<25*2**30)throw new Error('disk below 25 GiB');
+if(fs.existsSync(path.join(root,'collector.pid')))throw new Error('collector.pid exists; verify and stop the exact collector before installing');
 const release=path.join(root,'_collector','releases',commit);
 if(fs.existsSync(release))throw new Error('release already exists; inspect and run its documented start command');
 fs.mkdirSync(release,{recursive:true});

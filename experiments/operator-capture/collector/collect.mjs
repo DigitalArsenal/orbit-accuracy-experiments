@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import os from 'node:os';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {gzipSync} from 'node:zlib';
 import {Fetcher,sha} from './transport.mjs';
@@ -34,7 +33,6 @@ async function main(){
   const pidFile=path.join(root,'collector.pid'),stopFile=path.join(root,'collector.stop'),logFile=path.join(root,'collector.log');
   const log=(event,extra={})=>append(logFile,{at:iso(),pid:process.pid,event,...extra});
   if(fs.existsSync(stopFile))throw new Error('collector.stop exists; owner must remove it before restart');
-  fs.writeFileSync(pidFile,String(process.pid)+'\n',{flag:'wx'});
   let stopping=false;
   process.on('SIGTERM',()=>{stopping=true;});process.on('SIGINT',()=>{stopping=true;});
   const stop=()=>stopping||fs.existsSync(stopFile);
@@ -43,17 +41,19 @@ async function main(){
   const registration=JSON.parse(fs.readFileSync(new URL('./registration.json',import.meta.url)));
   const config=JSON.parse(fs.readFileSync(new URL('./config.json',import.meta.url)));
   if(!config.frozen||sha(fs.readFileSync(new URL('./config.json',import.meta.url)))!==registration.configSha256)throw new Error('frozen registration mismatch');
+  for(const [name,digest]of Object.entries(registration.sourceHashes))if(sha(fs.readFileSync(new URL(name,import.meta.url)))!==digest)throw new Error('installed source mismatch');
+  fs.writeFileSync(pidFile,String(process.pid)+'\n',{flag:'wx'});
   let physics;
   try{
     physics=await openPhysics(moduleRoot);
-    for(const m of physics.provenance)if(registration.modules.find(x=>x.name===m.name)?.wasmSha256!==m.wasmSha256)throw new Error('pinned artifact mismatch');
+    for(const m of physics.provenance){const pin=registration.modules.find(x=>x.name===m.name);if(pin?.wasmSha256!==m.wasmSha256||pin?.manifestSha256!==m.manifestSha256)throw new Error('pinned artifact mismatch');}
     log('start',{registration,modules:physics.provenance,cycleHours:8,cpuDuty:0.5});
     while(!stop()&&Date.now()<Date.parse('2026-12-02T00:00:00Z')){
       const started=Date.now(),cpu0=process.cpuUsage(),id=iso().replace(/[:.]/g,'-');
       while(!stop()){
         const stat=fs.statfsSync(root),freeGiB=stat.bavail*stat.bsize/2**30;
-        if(freeGiB>=25&&os.loadavg()[0]<os.availableParallelism()*0.75)break;
-        log('paused',{freeGiB,load:os.loadavg()[0]});await sleep(30000);
+        if(freeGiB>=25)break;
+        log('paused',{freeGiB});await sleep(30000);
       }
       if(stop())break;
       const cycleDir=path.join(root,'cycles',id);fs.mkdirSync(cycleDir,{recursive:true});

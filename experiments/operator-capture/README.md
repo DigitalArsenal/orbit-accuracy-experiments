@@ -47,8 +47,8 @@ eight hours apart, with no overlap or catch-up burst. Capture ends December 2.
 
 CPU accounting enforces a 50% one-core duty target through sleeps after each
 satellite; WebAssembly invocations are serial. The collector pauses at cycle
-start above 75% of available-core load or below 25 GiB free and interrupts a
-cycle if free space falls below that floor. Disk/PID/log conventions follow
+start below 25 GiB free and interrupts a cycle if free space falls below that
+floor. Disk/PID/log conventions follow
 the local SupGP collector; no CelesTrak source or proxy is used.
 
 Weather is obtained only through `data-source/space-weather` plan/parse:
