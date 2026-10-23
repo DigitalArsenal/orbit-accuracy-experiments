@@ -1,5 +1,6 @@
 // Typed transport. Fitting, propagation, frames, covariance and RTN are WASM.
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
@@ -83,7 +84,7 @@ export async function openWasm(modulesRoot,fetcher) {
       const samples=await execute(fitted.product,epochs,{dca,forces,covariance:fitted.product.covariance});
       return {cpuSeconds:cpuSec(before),wallSeconds:(performance.now()-start)/1000,samples:samples.map(s=>({ms:s.ms,state:s.state,covariance:covariance6(s)}))};
     }
-    const provenance={modules:Object.values(modules).map(m=>m.provenance),source:gitState(modulesRoot),environment:env.provenance};
+    const provenance={runtime:{node:process.version,platform:process.platform,arch:process.arch,logicalCpus:os.cpus().length,packageLockSha256:sha256(fs.readFileSync(path.join(root,'package-lock.json')))},modules:Object.values(modules).map(m=>m.provenance),source:gitState(modulesRoot),environment:env.provenance};
     return {modules,provenance,execute,fit,predict,pairStatistics,normalize:points=>normalize(modules['foundation/frames'],points),destroy:async()=>{for(const m of Object.values(modules))await m.destroy();}};
   }catch(e){for(const m of Object.values(modules))await m.destroy();throw e;}
 }

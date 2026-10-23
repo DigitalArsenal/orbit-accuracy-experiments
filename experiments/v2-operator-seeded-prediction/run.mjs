@@ -21,6 +21,8 @@ function report(m,c) {return `# V2 collector commissioning\n\nGenerated from cyc
 if(process.argv.includes('--check')) {
   const manifest=read(path.join(output,'manifest.json')),cycle=read(path.join(store,manifest.cycle));
   assert.equal(sha256(fs.readFileSync(path.join(store,manifest.cycle))),manifest.cycleSha256);
+  assert.equal(sha256(fs.readFileSync(path.join(dir,'config.json'))),manifest.configSha256);
+  const env=cycle.provenance.environment;assert.equal(sha256(fs.readFileSync(env.weatherPath)),env.weatherSha256);for(const input of [env.eop,env.kernel])assert.equal(sha256(fs.readFileSync(input.path)),input.sha256);
   assert(config.frozen&&cycle.completed&&cycle.fitted>0&&cycle.failed===0);
   for(const [name,hash] of Object.entries(cycle.sources))assert.equal(sha256(fs.readFileSync(path.join(dir,name))),hash,`collector source changed: ${name}`);
   for(const m of cycle.provenance.modules)assert.equal(sha256(fs.readFileSync(path.join(moduleRoot(),m.path,'dist/isomorphic/module.wasm'))),m.wasmSha256,`WASM changed: ${m.path}`);

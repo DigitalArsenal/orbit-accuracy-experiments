@@ -44,7 +44,7 @@ export function cut(bytes) {
 }
 export async function normalize(frames, points) {const out=[];for(const p of points)out.push({...p,state:await toGcrf(frames,'MEAN_EQUATOR_EQUINOX_J2000',iso(p.ms),p.state)});return out;}
 export function dcaAt(issueMs, source='dove') {
-  const candidates=lines(config.dca.file).filter(r=>Date.parse(r.publishedUtc)<=issueMs&&(!r.calibration||r.calibration===source));
+  const candidates=lines(config.dca.file).filter(r=>Date.parse(r.publishedUtc)<=issueMs&&r.calibration===source);
   candidates.sort((a,b)=>Date.parse(b.publishedUtc)-Date.parse(a.publishedUtc)||a.path.localeCompare(b.path));
   const r=candidates[0];if(!r)return null;
   if(!/host-02|e13/i.test(r.source))throw new Error('unregistered DCA source');

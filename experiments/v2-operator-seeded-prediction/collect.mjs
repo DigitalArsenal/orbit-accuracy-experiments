@@ -12,7 +12,8 @@ if(fs.existsSync(pidFile)){const pid=+fs.readFileSync(pidFile,'utf8');try{proces
 fs.writeFileSync(pidFile,String(process.pid),{flag:'wx'});
 const once=process.argv.includes('--once'),limitArg=process.argv.indexOf('--limit'),limit=limitArg>=0?+process.argv[limitArg+1]:500;
 if(!Number.isInteger(limit)||limit<1||limit>500)throw new Error('--limit must be 1..500');
-let child=null,paused=false,stop=false,watchdog;
+let child=null,paused=false,stop=false,watchdog,deadline=Infinity;
+const runtimeSources=sourceHashes();write(statusFile,{state:'starting',pid:process.pid,startedUtc:iso(Date.now())});
 process.on('SIGTERM',()=>{stop=true;});process.on('SIGINT',()=>{stop=true;});
 const stopping=()=>stop||fs.existsSync(path.join(store,'collector.stop'));
 function launch() {
@@ -22,10 +23,11 @@ function launch() {
   child.on('message',message=>{if(!pending)return;const p=pending;pending=null;message.error?p.reject(Object.assign(new Error(message.error.message),message.error)):p.resolve(message);});
   child.on('error',error=>{if(pending){pending.reject(error);pending=null;}});
   child.on('exit',(code,signal)=>{if(pending){pending.reject(new Error(`worker exited ${code}/${signal}`));pending=null;}});
-  watchdog=setInterval(()=>{if(!child?.pid)return;const high=os.loadavg()[0]>=config.compute.maxLoad1m;
+  watchdog=setInterval(()=>{if(!child?.pid)return;const high=os.loadavg()[0]>=config.compute.maxLoad1m&&pending?.kind==='fit';
+    if(Date.now()>=deadline&&pending){if(paused){child.kill('SIGCONT');paused=false;}child.kill('SIGTERM');return;}
     if(high&&!paused){child.kill('SIGSTOP');paused=true;log(`paused owned worker PID ${child.pid}: load ${os.loadavg()[0]}`);}
     else if(!high&&paused){child.kill('SIGCONT');paused=false;log(`resumed owned worker PID ${child.pid}`);}},5000);
-  return message=>new Promise((resolve,reject)=>{if(pending)return reject(new Error('one worker request at a time'));pending={resolve,reject};child.send(message);});
+  return message=>new Promise((resolve,reject)=>{if(pending)return reject(new Error('one worker request at a time'));pending={resolve,reject,kind:message.kind};child.send(message);});
 }
 async function shutdownWorker(){clearInterval(watchdog);if(child){if(paused&&child.exitCode===null&&child.signalCode===null)child.kill('SIGCONT');if(child.connected)child.send({kind:'close'});const owned=child;await Promise.race([new Promise(r=>owned.once('exit',r)),sleep(5000)]);if(owned.exitCode===null&&owned.signalCode===null)owned.kill('SIGTERM');child=null;paused=false;}}
 try {
@@ -37,8 +39,8 @@ try {
     const commissioning=started<Date.parse(config.window.issueStartUtc)-8*H||limit<500;
     const issueMs=commissioning?(Math.floor(started/(8*H))+2)*8*H:nextIssue;
     if(!issueMs){log('registered issue window complete; stopping collection');break;}
-    const manifest=await fetcher.manifest(),request=launch(),ready=await request({kind:'init'});
-    const cycle={id,pid:process.pid,workerPid:child.pid,startedUtc:iso(started),issueUtc:iso(issueMs),commissioning,requested:500,cycleLimit:limit,attempted:0,fitted:0,failed:0,missing:0,completed:false,records:[],manifestSha256:manifest.sha256,provenance:ready.provenance,sources:sourceHashes(),weatherBytes:ready.weatherBytes,loadStart:os.loadavg()[0],loadPeak:os.loadavg()[0],pauseSeconds:0};
+    deadline=started+config.compute.maximumCycleHours*H;const manifest=await fetcher.manifest(),request=launch(),ready=await request({kind:'init'});
+    const cycle={id,pid:process.pid,workerPid:child.pid,startedUtc:iso(started),issueUtc:iso(issueMs),commissioning,requested:500,cycleLimit:limit,attempted:0,fitted:0,failed:0,missing:0,completed:false,records:[],manifestSha256:manifest.sha256,provenance:ready.provenance,sources:runtimeSources,weatherBytes:ready.weatherBytes,loadStart:os.loadavg()[0],loadPeak:os.loadavg()[0],pauseSeconds:0};
     write(statusFile,{state:'running',...cycle});
     const norads=config.strata.flatMap(s=>s.norads).sort((a,b)=>a-b).slice(0,limit);
     try {
