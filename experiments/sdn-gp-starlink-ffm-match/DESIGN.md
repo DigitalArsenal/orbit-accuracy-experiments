@@ -270,7 +270,8 @@ s² = 1 + χ² + ψ² and p the semi-latus rectum:
 
 and the averaged rate of any term is ⟨ẏ⟩ = (1/2π) ∮ ẏ dM = (1/2π) ∮ ẏ (1 - e cos E) dE. For near-circular orbits
 (e → 0, u = ω + ν the argument of latitude) the leading forms used for the size estimates below are
-ȧ = 2T/n, ṅ = -3T/a, and d(a_f + i a_g)/dt = (1/(na)) ⟨(2T + i R)... ⟩ written out where used.
+
+    ȧ = 2⟨T⟩/n,    ṅ = -3⟨T⟩/a,    d(a_f + i a_g)/dt = (1/(na)) ⟨e^{iL} (2T - iR)⟩.
 
 **The along-track lever.** Every LEO term below is judged by what it does to the mean motion, because a mean-motion
 error δn grows into an along-track error s(t) = a ∫ δn dt. A fractional error δ in the drag acceleration held for a
@@ -352,10 +353,11 @@ For k = 0 this is the addition theorem: the great-circle mean of Y_lm is P_l(0) 
 enters as King-Hele's (1964) radial factor: with r = a(1 - e cos E) and the local scale height H(a) from the radial
 grid, exp(z cos E) = I_0(z) + 2 Σ_k I_k(z) cos kE (z = ae/H), so the averaged rates are products of the Bessel series
 and (3), truncated at k ≤ 2 for z < 0.5 (Starlink: e ≈ 1e-4 to 2e-3, z < 0.25); for z ≥ 3 the reference path 2a.2
-is used. Co-rotation enters exactly through |v_r|²: for a circular orbit |v_r|² = v² (1 - 2 (ω_E r/v) cos i cos²(·) …),
-whose orbit average gives King-Hele's factor F = (1 - (r ω_E/v) cos i)² (0.92 for the 53° shell, an 8 % effect on ȧ)
-and the cross-track component that drives di/dt; winds, when on, add the HWM14 zonal mean as King-Hele's
-atmospheric rotation factor Λ in place of 1.
+is used. Co-rotation enters exactly through v_r: for a circular orbit
+|v_r|² = v² [1 - 2 (ω_E r/v) cos i + (ω_E r/v)² cos² φ] (φ the latitude), so the transverse drag carries
+King-Hele's factor F ≈ (1 - (r ω_E/v) cos i)² (0.92 for the 53° shell, an 8 % effect on ȧ) and the cross-track
+component of v_r drives di/dt (King-Hele 1987); winds, when on, add the HWM14 zonal mean as King-Hele's atmospheric
+rotation factor Λ in place of 1.
 
 Interpolation: cubic in r between four spheres, linear in t between kernel times; the solar-fixed frame keeps the
 diurnal bulge fixed, and NRLMSISE-00's universal-time (longitude) terms enter through the 3-hourly kernel times.
@@ -477,3 +479,97 @@ SpaceX-forecast thrust pattern with 2b).
 **2c.4 Cost, parameters, fitting.** Rates: three closed-form terms, < 0.05 µs per rate evaluation. Parameters: τ_0,
 τ_c, τ_s (+12 bytes); τ_e is a population value. Fitting: linear in the parameters, added to the Levenberg–Marquardt
 vector; τ_0 only when the B_eff test of 2c.2 selects it (the selection rule is fixed before the test windows are read).
+
+### 2d. Tesseral m-daily short-periodics and shallow resonances (the LEO floor)
+
+**2d.1 The terms.** With Kaula's (1966) disturbing function
+
+    R = (μ/a) Σ_l Σ_m (R_E/a)^l Σ_p F_lmp(i) Σ_q G_lpq(e) S_lmpq,
+    S_lmpq = [C_lm cos ψ + S_lm sin ψ] (l - m even),  [-S_lm cos ψ + C_lm sin ψ] (l - m odd),
+    ψ_lmpq = (l - 2p) ω + (l - 2p + q) M + m (Ω - θ_G),
+
+the terms split by j = l - 2p + q, the multiple of the mean anomaly:
+
+- **m-daily** (j = 0, l even, p = l/2, q = 0): ψ = m(Ω - θ_G), period 2π / (m |θ̇_G - Ω̇|), about one m-th of a
+  day, amplitude O(e⁰). (Odd l reach j = 0 only with q = ±1, so those are O(e).)
+- **short-periodic** (j ≥ 1, far from commensurability): periods below one revolution, tens of meters in LEO.
+- **resonant** (j ≥ 1 with |ψ̇| ≪ n): integrated in the averaged rates, as XP does for its four classes.
+
+**2d.2 First-order m-daily solution.** The slow elements are frozen over the term's period and ψ̇_m = m(Ω̇ - θ̇_G).
+Because ∂R/∂M = 0 the semi-major axis does not oscillate (Δa = 0). In the along-track angle u + Ω cos i, the
+∂R/∂e parts cancel between ω and M at e → 0, and the ∂R/∂i parts cancel between ω and Ω cos i, leaving the ∂R/∂a
+part of Lagrange's equations:
+
+    Δs_T = 2(l + 1) a (n/ψ̇_m) (R_E/a)^l F_{l,m,l/2}(i) J_lm sin(ψ - ψ_lm),     J_lm = √(C_lm² + S_lm²)        (8)
+    Δi   = -m (n/ψ̇_m) (R_E/a)^l F_{l,m,l/2}(i) J_lm cos(ψ - ψ_lm) / sin i
+    ΔΩ   =    (n/ψ̇_m) (R_E/a)^l F′_{l,m,l/2}(i) J_lm sin(ψ - ψ_lm) / sin i,      Δe = O(e)
+
+added at output time to λ, χ and ψ (equinoctial form as in Danielson et al. 1995, which also gives the O(e) and
+j ≠ 0 terms when they are wanted). Coefficients: EGM2008 (Pavlis et al. 2012), the FFM truth's field. The inclination
+functions come from Gooding's recurrence and are cached per object at each node.
+
+**2d.3 Size: the J22 term explains the measured LEO floor.** With l = m = 2, F_221 = (3/2) sin² i, G_210 = 1 and
+J22 = 1.815e-6, the along-track amplitude of (8) is A = 6 a (n/ψ̇_2) (R_E/a)² (3/2) sin² i J22:
+
+| Orbit | a (km) | i (°) | n/ψ̇_2 | A (m) | A/√2 (m) | G1 in-track fit RMS, best-case XP (m) |
+| --- | --: | --: | --: | --: | --: | --: |
+| Starlink, 550 km shell | 6928 | 53.0 | 7.51 | 460 | 325 | 441 (all Starlinks) |
+| ISS | 6795 | 51.6 | 7.73 | 465 | 329 | 402 |
+| Stella (laser-ranged LEO) | 7180 | 98.6 | 7.11 | 643 | 455 | 388 (median of seven targets) |
+| LARES | 7820 | 69.5 | 6.26 | 467 | 330 | |
+| Ajisai | 7870 | 50.0 | 6.20 | 307 | 217 | |
+| LAGEOS-1, LARES-2 | 12270 | 109.8, 70.2 | 3.18 | 153 | 108 | 118 (laser-ranged high) |
+| LAGEOS-2 | 12163 | 52.7 | 3.23 | 112 | 79 | |
+
+The single J22 term is the size of the measured fit floor in every LEO and MEO laser-ranged regime, and its
+sin² i law shows in G1 section 6: Starlink strata at 85° and above fit at 0.63 to 0.69 km, those below 48° at 0.46
+to 0.51 km (predicted with a 0.30 km remainder in quadrature: 0.58 and 0.38 km).
+
+**2d.4 Why a 0.4 km floor becomes a 10 km day-3 error: aliasing into the drag.** An unmodeled along-track term
+A cos(ω_m t + φ) on a fit arc of length T (C = ω_m T / 2π cycles), with the arc mapped to x ∈ [-1, 1], projects on
+the drag's quadratic signature with the Legendre coefficient
+
+    c_2 = -5 A j_2(πC) cos φ′                                                                     (9)
+
+(from e^{ikx} = Σ_l (2l + 1) i^l j_l(k) P_l(x), j_l the spherical Bessel functions), and the fitted drag carries it
+forward as c_2 P_2(1 + 2L/T) at a lead L past the arc. For the J22 term of the 53° shell (period 11.82 h) and G1's
+24 h fit, C = 2.03 and |5 j_2(πC)| = 0.436. With A = 0.46 km and the median phase:
+
+| | Day 1 | Day 2 | Day 3 |
+| --- | --: | --: | --: |
+| Predicted by (9), J22 alone (km) | 1.04 | 3.56 | 7.81 |
+| Measured, best-case XP, FFM-propagated Starlink (km) | 1.502 | 4.733 | 9.867 |
+| Measured, best-case XP, laser-ranged LEO (km) | 0.970 | 3.174 | 9.399 |
+
+One gravity term the theory omits predicts about 80 % of the measured error on every held-out day. The fitted
+parameters corroborate it: XP's BTERM on the laser-ranged spheres is 0.14 m²/kg (median) and its AGOM 0.126 m²/kg,
+about 50 to 100 times the physical C_D A/m and C_R A/m of LARES, Starlette and Ajisai (spheres of known mass and
+diameter): the fitted drag carries something that is not drag. The m = 1 terms (period about 24 h) alias even harder
+at 24 h (|5 j_2(π · 1.02)| = 1.53), so their smaller amplitudes still matter; the 2d.6 measurement sizes them.
+
+**2d.5 Shallow resonance: the main Starlink shells sit near 15:1.** The 530 to 570 km shells (mean motions about 15.0
+to 15.1 rev/day) are within about 0.2 rev/day of fifteen revolutions per nodal day, ψ̇ = (Ṁ + ω̇) - 15(θ̇_G - Ω̇) ≈ -0.17
+rev/day for the 53° shell (period about 6 days), a band XP does not cover (its classes stop at 3.6 rev/day). The j = 1,
+m = 15 terms (odd l from 15) give
+
+    Δa = 2 j a (n/ψ̇) Σ_l (R_E/a)^l F̄ Ḡ J̄_l,15 sin ψ,      Δλ = 3 j (n/ψ̇)² Σ_l (R_E/a)^l F̄ Ḡ J̄_l,15 cos ψ       (10)
+
+(normalized F̄, Ḡ, J̄; Kaula 1966; Allan 1967). With n/ψ̇ ≈ 90 the along-track factor 3(n/ψ̇)² is about 24,000, so a
+lumped 15th-order coefficient of 1e-8 gives Δa ≈ 12 m and Δλ ≈ 2.4e-4 rad, 1.7 km along-track, with a period longer
+than the G1 window: over four days it is a drift that a 24 h fit cannot separate from drag. The size depends on
+EGM2008's 15th-order coefficients at each shell's inclination and is a prediction to measure (2d.6, section 4), not an
+assumption. SDN-GP generalizes XP's four classes to every (j, m) with |ψ̇| < ε n (ε = 0.02, l ≤ 40
+for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
+
+**2d.6 Expected gain, cost, parameters.**
+
+- Gain: the LEO in-track fit floor from 0.44 km to about 0.30 km with J22 alone (more with the even l ≤ 6 set), and
+  the day-3 error by removal of the aliasing of (9): predicted on the FFM-propagated Starlink from 9.87 km to about
+  6 km with J22 alone and lower with the m = 1 and 15:1 terms; the laser-ranged high fit floor from 0.125 km to about
+  0.06 km.
+- Cost: m-daily set (l even ≤ 6, all m: 12 terms) at output time: one cos/sin of (Ω - θ_G), multiples by
+  recurrence, 12 cached coefficients: about 0.1 µs per state (+9 % of 1.12 µs). Shallow resonance in the rates:
+  8 to 16 terms with cached F̄: about 0.3 µs per rate evaluation (+3 %). Memory: about 240 bytes per object of cached
+  coefficients (within the 4 KiB budget).
+- Parameters per object: none (field constants). Bytes: 0.
+- Fitting: nothing new; the terms change the residual floor that every other parameter is fitted against.
