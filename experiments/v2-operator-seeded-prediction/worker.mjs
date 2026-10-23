@@ -4,13 +4,14 @@ import {config,H,iso,moduleRoot,sha256} from './common.mjs';
 let wasm;
 const send=value=>process.send(value);
 process.on('message',async message=>{
+  const cpuStart=process.cpuUsage();
   try {
     if(message.kind==='init') {
       const fetcher=new Fetcher();wasm=await openWasm(moduleRoot(),fetcher);
       send({ready:true,provenance:wasm.provenance,weatherBytes:fetcher.bytes,weatherRequests:fetcher.requests});return;
     }
     if(message.kind==='close'){await wasm?.destroy();process.exit(0);}
-    const {norad,source,issueMs,mechanics}=message;const cpuStart=process.cpuUsage();
+    const {norad,source,issueMs,mechanics}=message;
     let arc=cut(Buffer.from(message.bytes));message.bytes=null;
     if(arc.points[0].ms%60000!==42000)throw new Error('unregistered source epoch grid; amendment required');
     if(Date.parse(arc.createdUtc)>issueMs||Date.parse(source.retrievedUtc)>issueMs)throw new Error('future source at issue');
@@ -49,5 +50,5 @@ process.on('message',async message=>{
       record.mechanics={horizonHours:6,fullCpuSeconds:full.cpuSeconds,repeatCpuSeconds:repeat.cpuSeconds,repeatComparison,ablations,accuracyDecision:'NOT SCORED: prospective truth/window unavailable'};
     }
     const cpuUsed=process.cpuUsage(cpuStart);record.totalCpuSeconds=(cpuUsed.user+cpuUsed.system)/1e6;send({record});
-  }catch(error){send({error:{message:error.message,stack:error.stack,fatal:!!error.fatal}});}
+  }catch(error){const used=process.cpuUsage(cpuStart);send({error:{message:error.message,stack:error.stack,fatal:!!error.fatal,cpuSeconds:(used.user+used.system)/1e6}});}
 });

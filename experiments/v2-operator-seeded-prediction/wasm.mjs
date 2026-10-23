@@ -8,7 +8,9 @@ import * as fb from 'flatbuffers';
 import { loadModule, gitState } from '../../harness/modules.mjs';
 import { EST_TYPE, estimationCodec, decodeResult, positionObservation, seedStruct } from '../e5-density-calibration/estimation-wire.mjs';
 import { config, root, iso, H, sha256, quiet } from './common.mjs';
-import { environment, normalize, dcaAt } from './inputs.mjs';
+import { environment, normalize } from './inputs.mjs';
+import { createBrowserModuleHarness } from 'space-data-module-sdk/host/browser-module';
+import { FILT } from 'spacedatastandards.org/lib/js/FIL/FIL.js';
 
 const estEpoch=ms=>{const day=Math.floor(ms/86400000);return {jd_day:day+2440587.5,seconds:(ms-day*86400000)/1000};};
 const cpu=()=>process.threadCpuUsage();
@@ -71,8 +73,8 @@ export async function openWasm(modulesRoot,fetcher) {
       // The estimator, not JS, computes/scales covariance.
       product.covariance=f.scaledCovariance?.length?f.scaledCovariance:f.covariance;
       assert.equal(product.covariance.length,(6+parameters.length)**2);
-      const replay=await execute(product,points.map(p=>p.ms),{dca});
-      const residuals=await pairStatistics(replay.map((predicted,i)=>({predicted,truth:points[i].state})));
+      const replay=await execute(product,points.map(p=>p.ms),{dca,covariance:product.covariance});
+      const residuals=await pairStatistics(replay.map((sample,i)=>({predicted:{...sample,covariance:covariance6(sample)},truth:points[i].state})));
       const rms3d=Math.sqrt(residuals.reduce((s,r)=>s+r.errorRtn.reduce((v,x)=>v+x*x,0),0)/points.length);
       const rmsPerCoordinate=rms3d/Math.sqrt(3);
       assert(Math.abs(rmsPerCoordinate-f.weightedRms)<=Math.max(1e-5,1e-5*f.weightedRms),`fit RMS mismatch: ${rmsPerCoordinate} vs ${f.weightedRms}`);
@@ -102,12 +104,27 @@ export function reducedForces(term) {
   return f;
 }
 
-// Never emulate kappa x drag with an unrelated constant-thrust solve.
-// The landed OD method's typed bridge is selected by its explicit contract.
-export async function operatorFit(moduleRoot,inputs) {
-  const bridge=path.join(moduleRoot,'analysis/od/operator-fit.mjs');
-  if(!fs.existsSync(bridge))return {status:'UNAVAILABLE',reason:'operator-fit method/typed bridge not landed'};
-  const api=await import(pathToFileURL(bridge));
-  assert.equal(typeof api.fitOperator,'function','operator-fit bridge must export fitOperator');
-  return api.fitOperator(inputs);
+// Typed seam for the sibling's actual fit_ffm interface. This is deliberately
+// opt-in until its landed artifact and output adapter are registered; the
+// current pinned module revision has no fit_ffm method. No JS fit fallback.
+export async function operatorFit(moduleRoot,{memeBytes,name,configuration,environmentInputs,densityCorrection,norad,invokeOnly=false}) {
+  const base=path.join(moduleRoot,'analysis/od');
+  const manifest=JSON.parse(fs.readFileSync(path.join(base,'plugin-manifest.json')));
+  if(!manifest.methods?.some(m=>m.methodId==='fit_ffm'))return {status:'UNAVAILABLE',reason:'analysis/od fit_ffm is not in the pinned module revision'};
+  if(!invokeOnly)return {status:'UNAVAILABLE',reason:'fit_ffm landed artifact must be registered with its Fast-path prediction adapter before arm 4 is enabled'};
+  assert(memeBytes&&configuration&&environmentInputs&&densityCorrection,'fit_ffm needs MEME, full-force configuration, environment and causal DCL');
+  const builder=new fb.Builder(memeBytes.length+256);
+  builder.finish(Object.assign(new FILT(),{NAME:name,CONTENT:memeBytes}).pack(builder),'$FIL');
+  const hostOptions={config:{fitWindowSeconds:48*3600,sampleSeconds:600,maxIterations:config.fit.maxIterations,
+    ballisticSeed:config.fit.initialCdAreaOverMass,ballisticPrior:0,
+    srpAreaOverMass:norad<56000?config.srpLock.before56000:config.srpLock.from56000,dataSource:'V2 frozen SpaceX subset'}};
+  // A seed is not a physical prior. Kappa remains unidentifiable without one.
+  const harness=await createBrowserModuleHarness({wasmSource:fs.readFileSync(path.join(base,'dist/isomorphic/module.wasm')),manifest,surface:'direct',hostOptions});
+  try {
+    const result=await harness.invoke({methodId:'fit_ffm',inputs:[{portId:'meme',payload:builder.asUint8Array(),typeRef:{schemaName:'FIL.fbs',fileIdentifier:'$FIL',rootTypeName:'FIL',wireFormat:'flatbuffer'}},
+      {...configuration,portId:'configuration'},...environmentInputs,densityCorrection]});
+    assert.equal(result.statusCode,0,result.errorMessage);
+    assert(result.outputs.some(f=>f.portId==='ocm'),'fit_ffm returned no fitted OCM');
+    return result; // Typed OCM/OMM/OBD/MNV products; no host dynamics or raw arcs.
+  }finally{await harness.destroy();}
 }

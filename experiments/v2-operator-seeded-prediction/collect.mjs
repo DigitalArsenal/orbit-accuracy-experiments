@@ -40,7 +40,7 @@ try {
     const issueMs=commissioning?(Math.floor(started/(8*H))+2)*8*H:nextIssue;
     if(!issueMs){log('registered issue window complete; stopping collection');break;}
     deadline=started+config.compute.maximumCycleHours*H;const manifest=await fetcher.manifest(),request=launch(),ready=await request({kind:'init'});
-    const cycle={id,pid:process.pid,workerPid:child.pid,startedUtc:iso(started),issueUtc:iso(issueMs),commissioning,requested:500,cycleLimit:limit,attempted:0,fitted:0,failed:0,missing:0,completed:false,records:[],manifestSha256:manifest.sha256,provenance:ready.provenance,sources:runtimeSources,weatherBytes:ready.weatherBytes,loadStart:os.loadavg()[0],loadPeak:os.loadavg()[0],pauseSeconds:0};
+    const cycle={id,pid:process.pid,workerPid:child.pid,startedUtc:iso(started),issueUtc:iso(issueMs),commissioning,requested:500,cycleLimit:limit,attempted:0,fitted:0,failed:0,failedCpuSeconds:0,missing:0,completed:false,records:[],manifestSha256:manifest.sha256,provenance:ready.provenance,sources:runtimeSources,weatherBytes:ready.weatherBytes,loadStart:os.loadavg()[0],loadPeak:os.loadavg()[0],pauseSeconds:0};
     write(statusFile,{state:'running',...cycle});
     const norads=config.strata.flatMap(s=>s.norads).sort((a,b)=>a-b).slice(0,limit);
     try {
@@ -57,13 +57,13 @@ try {
           fs.mkdirSync(path.dirname(path.join(store,relative)),{recursive:true});fs.writeFileSync(path.join(store,relative),compressed,{flag:'wx'});
           cycle.records.push({norad,path:relative,sha256:sha256(compressed),bytes:compressed.length,totalCpuSeconds:record.totalCpuSeconds,fitCpuSeconds:Object.values(record.arms).reduce((n,a)=>n+(a.cpuSeconds??0),0),predictionCpuSeconds:Object.values(record.arms).reduce((n,a)=>n+(a.prediction?.cpuSeconds??0),0),arms:Object.fromEntries(Object.entries(record.arms).map(([k,a])=>[k,a.status]))});cycle.fitted++;
           log(`cycle=${id} fitted=${cycle.fitted}/${limit} norad=${norad} bytes=${compressed.length}`);
-        }catch(e){cycle.failed++;log(`norad=${norad} FAILED ${e.message}`);if(e.fatal||/RMS mismatch|future source|unknown fitter|invalid FFM|complete estimate/.test(e.message))throw e;}
+        }catch(e){cycle.failed++;cycle.failedCpuSeconds+=e.cpuSeconds??0;log(`norad=${norad} FAILED ${e.message}`);if(e.fatal||/RMS mismatch|future source|unknown fitter|invalid FFM|complete estimate/.test(e.message))throw e;}
         write(statusFile,{state:'running',...cycle});
       }
       cycle.completed=cycle.attempted+cycle.missing===limit;
     }finally {
       await shutdownWorker();cycle.finishedUtc=iso(Date.now());cycle.wallSeconds=(Date.now()-started)/1000;cycle.bandwidthBytes=fetcher.bytes+cycle.weatherBytes;
-      cycle.storageBytes=cycle.records.reduce((n,r)=>n+r.bytes,0);cycle.computeCpuSeconds=cycle.records.reduce((n,r)=>n+(r.totalCpuSeconds??r.fitCpuSeconds+r.predictionCpuSeconds),0);
+      cycle.storageBytes=cycle.records.reduce((n,r)=>n+r.bytes,0);cycle.computeCpuSeconds=cycle.failedCpuSeconds+cycle.records.reduce((n,r)=>n+(r.totalCpuSeconds??r.fitCpuSeconds+r.predictionCpuSeconds),0);
       cycle.loadEnd=os.loadavg()[0];write(path.join(store,'cycles',id+'.json'),cycle);write(statusFile,{state:cycle.completed?'cycle-complete':'cycle-incomplete',...cycle});append(path.join(store,'cycles.jsonl'),{id,completed:cycle.completed,fitted:cycle.fitted,failed:cycle.failed,missing:cycle.missing,bandwidthBytes:cycle.bandwidthBytes,storageBytes:cycle.storageBytes,computeCpuSeconds:cycle.computeCpuSeconds,wallSeconds:cycle.wallSeconds});
     }
     if(once||stopping())break;
