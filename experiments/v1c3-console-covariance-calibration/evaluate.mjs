@@ -49,4 +49,5 @@ export function recordedTables(runDir, mode, split, configs) {
     const arcs = fs.readFileSync(path.join(runDir, `${split}-${mode}-${candidate}-scores.jsonl`), 'utf8').trim().split('\n').map(JSON.parse);
     return [candidate, tables(arcs, mode, configs)];
   }));
+}
 export const readArcs = file => fs.readFileSync(file, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse);
