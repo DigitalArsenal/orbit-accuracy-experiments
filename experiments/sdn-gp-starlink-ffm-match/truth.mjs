@@ -138,7 +138,11 @@ async function worker(id) {
     if (freeGiB() < MIN_FREE_GIB) { console.error(`worker ${id}: disk under ${MIN_FREE_GIB} GiB free, stopping`); break; }
     if (fs.existsSync(path.join(store, 'truth.stop'))) { console.error(`worker ${id}: stop file`); break; }
     if (fs.existsSync(path.join(rowsDir, `${task.norad}.json`))) continue;
-    try { fs.mkdirSync(path.join(claimDir, String(task.norad))); } catch { continue; }
+    const claim = path.join(claimDir, String(task.norad));
+    try { fs.mkdirSync(claim); } catch { // a claim older than 30 minutes with no row is a worker that was stopped: take it over
+      if (Date.now() - fs.statSync(claim).mtimeMs < 30 * 60e3) continue;
+      fs.utimesSync(claim, new Date(), new Date());
+    }
     if (limit-- <= 0) break;
     for (const candidate of [task.norad, ...task.replacements]) {
       const started = Date.now();

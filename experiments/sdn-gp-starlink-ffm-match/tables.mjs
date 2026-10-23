@@ -115,13 +115,16 @@ export function build() {
     notConverged: fitted.filter((f) => f.fit.convergence !== 'converged').length, withManeuverEvents: fitted.filter((f) => f.fit.events > 0).length,
     fitCpuSecondsMedian: quantile(fitted.map((f) => f.fit.cpuSeconds), 0.5),
   };
+  const ratios = { xp: [], sgp4: [] };
+  for (const w of windows) for (const arm of ['xp', 'sgp4']) for (const d of Object.values(w[arm]?.days ?? {})) if (d.ric?.every(Number.isFinite) && d.rmsKm > 0) ratios[arm].push(Math.hypot(...d.ric) / d.rmsKm);
+  const ricConsistency = Object.fromEntries(Object.entries(ratios).map(([arm, list]) => [arm, { n: list.length, min: quantile(list, 0), median: quantile(list, 0.5), max: quantile(list, 1) }]));
   const covRows = readJsonl(path.join(store, 'rows/covariance.jsonl'));
   const realism = ['comspoc-syncopate', 's3kc-sgp4'].map((source) => {
     const rows = covRows.filter((c) => c.source === source && c.n);
     const pool = (list) => ({ objects: new Set(list.map((c) => c.norad)).size, samples: list.reduce((a, c) => a + c.n, 0), meanD2Over3: list.reduce((a, c) => a + c.sumD2, 0) / (3 * Math.max(1, list.reduce((a, c) => a + c.n, 0))), coverage95: list.reduce((a, c) => a + c.within95, 0) / Math.max(1, list.reduce((a, c) => a + c.n, 0)), medianObjectError: quantile(list.map((c) => c.errorKmMedian), 0.5) });
     return { source, refused: covRows.filter((c) => c.source === source && c.refused).length, all: rows.length ? pool(rows) : null, byAgeDay: [...new Set(rows.map((c) => c.ageDay))].sort((a, b) => a - b).map((d) => ({ ageDay: d, ...pool(rows.filter((c) => c.ageDay === d)) })) };
   });
-  return { generatedFrom: 'recorded window rows (statistics only)', realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, missing: MISSING, byShell, truthSet, bench: bench?.rows ?? null };
+  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, missing: MISSING, byShell, truthSet, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -136,6 +139,8 @@ export function markdown(t) {
     '- **Truth.** Starlink: the satellite\'s SpaceX forecast is fitted over 0-48 h (never across the 48 h join) by `analysis/od fit_ffm` (FFM-1, NRLMSISE-00 drag with s = 0 because no $DCL is published yet, kappa x drag folded into B_eff, Cr*A/m locked), then FFM-1 propagates the fitted state for 96 h at 60 s. That trajectory is the truth of the `FFM-propagated truth` row; the `SpaceX forecast` row scores the same fits against SpaceX\'s own states inside its span. Precise orbits: ESA final GNSS, ILRS combined weekly and NSGF arcs, NASA ISS OEM, windows as in the sgp4-xp measurement.',
     '- **Windows.** 24 h fit from the first state; SGP4 by `fit_elements` (six mean elements and B*), SGP4-XP by `propagator/sgp4-xp fit` (those and BTERM, AGOM). One window per Starlink; the other sources use the strides of `config.json`.',
     '- **RIC.** SGP4: `element_residuals` (RTN of the truth). SGP4-XP: the module\'s own fit split for the fit, and the fitted set propagated by the module and compared by `pair_statistics` for the held-out days (at most one state per 5 minutes). Components are the median over windows of each window\'s component RMS, so they do not sum exactly to the 3D median.',
+    `- **RIC check.** Over all held-out days of all windows the three components recombine to the module\'s own 3D RMS to ${f(t.ricConsistency.xp.min, 4)} to ${f(t.ricConsistency.xp.max, 4)} for SGP4-XP (the thinning to one state per 5 minutes) and ${f(t.ricConsistency.sgp4.min, 4)} to ${f(t.ricConsistency.sgp4.max, 4)} for SGP4.`,
+    '- **Environment.** Earth orientation: the local IERS daily finals of 2026-10-13. Space weather: the `data-source/space-weather` rows (GFZ, NOAA SWPC) through 2026-10-25, then NOAA SWPC 45-day daily Ap and F10.7 for the eight days after (Kp and the 81-day average held), because the module\'s rows end where its Kp forecast ends and the truth runs 96 h. Planetary kernel DE440s. Density correction s = 0 (no $DCL is published yet). Hashes are in `manifest.json`.',
     '- **COMSPOC XP (local scoring only).** Their published SGP4-XP sets, propagated through the black-box module and compared with the same-day truth; their set epochs are 1 to 5 days older than the truth, so their errors are at those ages, not at the 24 h of the fitted arms. Never fitted to, never an input; aggregates only.',
     '- **Not measured here.** SDN-GP (not landed), GEO / HEO / cislunar / interplanetary truth (none in the archive), the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
@@ -179,6 +184,11 @@ export function markdown(t) {
   L.push('By stratum: ' + Object.entries(ts.byStratum).map(([k, v]) => `${k}: ${v}`).join(', ') + '.', '');
   if (Object.keys(ts.failureReasons).length) L.push('Failures: ' + Object.entries(ts.failureReasons).map(([k, v]) => `${v} x ${k}`).join('; ') + '.', '');
   L.push('Truth inventory by regime: [inventory.md](inventory.md).', '');
+  L.push('## Reproduce, resume, extend', '',
+    '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. A modules checkout with the four built artifacts is named by `SDN_MODULES_ROOT` and needs a `node_modules` linked to the experiment\'s.',
+    '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',
+    '- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
+    '- Newer-file truth: the first hours of files created after these fits arrive with the next collector cycles; `comspoc.mjs` and the Starlink truth step score against them when they exist. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later.', '');
   return L.join('\n');
 }
 
