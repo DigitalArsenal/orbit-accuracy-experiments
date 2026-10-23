@@ -11,7 +11,7 @@
   "planSha256": "fb274342e7b66b8f7119caa8958566b6839a9a32a6cb744d1d154c1ea222d388",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "ac19f090ab60c2c88ff8beaa4926ace4c8d28985"
+    "commit": "3beb2e7d3f3d4e5ad1aae271a4b9a20d024204c4"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -93,8 +93,15 @@
     "createdUtc": "2026-10-23T20:25:21.154Z"
   },
   "truthSet": {
-    "satellites": 52,
-    "setSha256": "11b014d05c54a70df51dd86e7eafff6b279c77a967da681531d369cd5d76c02a"
+    "satellites": 61,
+    "setSha256": "6537dafc9b59acbc7c174b4cac4571bbd8285d3d80028860e89ecb1a65d5ebc6"
+  },
+  "comspoc": {
+    "label": "COMSPOC Spacebook XP (local scoring only)",
+    "startedUtc": "2026-10-23T20:09:27Z",
+    "terms": "COMSPOC Spacebook terms of use: no commercial use, no redistribution, no derivative works; local computation only",
+    "xpTleSha256": "120e2aa649d238d70e49552427267be496143c71568372ee8bf54d23b3a966bf",
+    "syncopateObjects": 91
   },
   "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
 }

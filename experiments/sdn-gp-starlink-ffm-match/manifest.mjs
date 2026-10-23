@@ -26,6 +26,7 @@ export function manifest() {
     runtime: { node: process.version, platform: process.platform, arch: process.arch },
     environment: envJson && { environmentSha256: sha256(fs.readFileSync(env)), weatherSources: envJson.weatherSources, weatherExtension: envJson.weatherExtension, kernel: envJson.kernel, createdUtc: envJson.createdUtc },
     truthSet: { satellites: truth.length, setSha256: sha256(JSON.stringify(truth)) },
+    comspoc: (() => { const f = path.join(config.archive, 'hac/comspoc-spacebook/2026/2026-10-23/run.json'); if (!fs.existsSync(f)) return null; const r = JSON.parse(fs.readFileSync(f, 'utf8')); return { label: 'COMSPOC Spacebook XP (local scoring only)', startedUtc: r.started_utc, terms: r.terms, xpTleSha256: r.files.find((x) => x.file.endsWith('xp-tle.txt.gz'))?.sha256, syncopateObjects: fs.readdirSync(path.join(path.dirname(f), 'syncopate')).filter((n) => n.endsWith('.e.gz')).length }; })(),
     populationQueueSha256: fs.existsSync(path.join(results, 'population.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'population.json'))).queueSha256 : null,
   };
 }

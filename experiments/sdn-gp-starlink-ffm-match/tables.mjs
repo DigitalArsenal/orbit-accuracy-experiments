@@ -131,6 +131,28 @@ export function build() {
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));
 const arms = (r, k) => [r.xp.days[k]?.median, r.comspoc?.days?.[k]?.median, r.sgp4.days[k]?.median];
 const cell = (vals) => `pending / ${vals.map((v) => (Number.isFinite(v) ? f(v) : '-')).join(' / ')}`;
+
+function findings(t) {
+  const main = t.regimes.filter((r) => !r.id.includes('-aligned') && !r.id.includes('-drag') && !r.id.includes('-b0') && r.xp.fitted);
+  const get = (id) => t.regimes.find((r) => r.id === id);
+  const out = [];
+  const share = (a) => { const c = a.days[3]?.ric; return c && c.every(Number.isFinite) ? (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2) : null; };
+  const shares = main.map((r) => [r, share(r.xp)]).filter(([, v]) => v !== null);
+  const leo = shares.filter(([r]) => r.id.startsWith('leo')), meo = shares.filter(([r]) => r.id.startsWith('meo'));
+  if (leo.length && meo.length) out.push(`- The in-track component carries ${f(Math.min(...leo.map(([, v]) => v)), 1)} to ${f(Math.max(...leo.map(([, v]) => v)), 1)} % of the day-3 squared error of SGP4-XP in the LEO regimes and ${f(Math.min(...meo.map(([, v]) => v)), 1)} to ${f(Math.max(...meo.map(([, v]) => v)), 1)} % in MEO: the terms that can buy accuracy are the along-track ones (drag and thrust, secular rate, time variation of density).`);
+  const fitRatio = main.map((r) => r.paired.days[0]?.medianRatio).filter(Number.isFinite);
+  const leoFit = main.filter((r) => r.id.startsWith('leo')).map((r) => r.paired.days[0]?.medianRatio).filter(Number.isFinite);
+  const gnss = get('meo-gnss');
+  if (leoFit.length && gnss?.paired.days[0]) out.push(`- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio ${f(Math.min(...leoFit), 2)} to ${f(Math.max(...leoFit), 2)}, about ${f(get('leo-starlink-ffm')?.xp.fit.median, 2)} km, a floor set by what the mean-element theory leaves out), in GNSS XP fits ${f(1 / gnss.paired.days[0].medianRatio, 1)} times tighter (${f(gnss.xp.fit.median, 3)} against ${f(gnss.sgp4.fit.median, 3)} km).`);
+  const d3 = main.map((r) => [r.label, r.paired.days[3]?.medianRatio]).filter(([, v]) => Number.isFinite(v));
+  if (d3.length) out.push(`- Held-out day 3, median XP / median SGP4: ${d3.map(([l, v]) => `${l} ${f(v, 2)}`).join('; ')}.`);
+  const alignedFfm = get('leo-starlink-ffm-aligned');
+  if (alignedFfm?.comspoc?.days?.[1]?.n) out.push(`- COMSPOC XP sets, scored on the ${alignedFfm.comspoc.objects} same-day Starlinks at an age of ${f(alignedFfm.comspoc.ageDays.median, 1)} days (median) at the start of the truth: median 3D error ${f(alignedFfm.comspoc.days[1].median, 1)} / ${f(alignedFfm.comspoc.days[2]?.median, 1)} / ${f(alignedFfm.comspoc.days[3]?.median, 1)} km on days 1 / 2 / 3, against ${f(alignedFfm.xp.days[1].median, 1)} / ${f(alignedFfm.xp.days[2].median, 1)} / ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.`);
+  const syn = t.realism.find((r) => r.source === 'comspoc-syncopate')?.all, ours = t.realism.find((r) => r.source === 's3kc-sgp4')?.all;
+  if (syn && ours) out.push(`- Covariance realism against the FFM truth (target mean d^2/3 in [0.8, 1.25], coverage in [0.93, 0.97]): SynCoPate ${f(syn.meanD2Over3, 1)} and ${f(syn.coverage95, 2)}; ours (E14 S3-KC on SGP4) ${f(ours.meanD2Over3, 1)} and ${f(ours.coverage95, 2)}. Both are overconfident against this truth.`);
+  return out;
+}
+
 export function markdown(t) {
   const L = [];
   L.push('# G1: SDN-GP against FFM-propagated Starlink and precise orbits (baselines)', '');
@@ -153,6 +175,7 @@ export function markdown(t) {
   }
   for (const m of t.missing) L.push(`| ${m.label} | none | pending / - / - / - | - | - | - | | | |`);
   L.push('', ...t.missing.map((m) => `- ${m.label}: ${m.reason}.`), '');
+  L.push('### What the table says (generated from the numbers above)', '', ...findings(t), '');
   L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
   for (const r of t.regimes) for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) {
     const s = (x) => (x?.n ? `${f(x.median)} / ${f(x.mean)} / ${f(x.p90)}` : '');
