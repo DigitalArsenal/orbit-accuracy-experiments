@@ -1,0 +1,501 @@
+{
+  "status": "PASS",
+  "kind": "mechanics-only; no hypothesis tests",
+  "command": "/opt/homebrew/Cellar/node/25.4.0/bin/node /Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-e13b-starlink-dca-20261023/experiments/e13b-starlink-dca/run.mjs --check --record",
+  "startedUtc": "2026-10-23T13:31:30.903Z",
+  "endedUtc": "2026-10-23T13:31:37.089Z",
+  "componentCommit": "b54fd5ea67a302dba981ab91de67a7a10ecab887",
+  "configSha256": "ee686d847f035ca2290159d20a2549a9ad5d61581af99c1bc6e1e46d4fd05f13",
+  "planSha256": "4ed880502d459f6ff092541744e518442bd13a35fae9cd147aed01889a6ece92",
+  "sourceHashes": {
+    "run.mjs": "419b2fceedf0588cad8c26c6d941b09068a8811767aec8f810fc043028f8193c",
+    "estimator.mjs": "c1f8152d62dc6a18430cfd0ebfdcaac1b48403d1b9ea4b18d5f6da0bc76b628a"
+  },
+  "reference": {
+    "source": "Basilisk clMeanOscMap public case via modules foundation/orbits",
+    "status": "PASS",
+    "errors": [
+      0.00009749376988565928,
+      4.0576772053491084e-8,
+      8.64987903526071e-8,
+      9.65951869602577e-7,
+      6.122613811498923e-7,
+      0.0000013183040650233124
+    ],
+    "tolerances": [
+      0.0002,
+      1e-7,
+      0.000005,
+      0.000005,
+      0.000005,
+      0.000005
+    ]
+  },
+  "capture": {
+    "id": "2026-10-23T13-01-35-253Z",
+    "status": "complete",
+    "listed": 11143,
+    "files": 11143,
+    "failures": 0,
+    "samples": 546007,
+    "truthStates": 0,
+    "bytes": 2927388968,
+    "requests": 11148,
+    "cpuSeconds": 513.204282,
+    "wallSeconds": 1779.513,
+    "storedBytes": 59046447,
+    "inputDigest": "e495a1b97fcbe073696d21416e218c2ae9823ac022100d638e7ee3f5db78ec7a",
+    "registration": {
+      "componentCommit": "850b4d1ca58277a58f58edbf5ecb41285389d89e",
+      "planCommit": "da079c9f9954152778ecf520c8531929b2d9372f",
+      "modulesCommit": "500b2e9299539e3c79354379b8a231c3aa9643e9",
+      "modules": [
+        {
+          "name": "foundation/frames",
+          "wasmSha256": "eb73a4990818a2f9f820f478bae8065007846b8ef550fbd437d8099975582cec",
+          "manifestSha256": "a631f086d5076d42d197911e4244e3ca3cf6e9b9e6ef8068b61e0d4e2efe7e75"
+        },
+        {
+          "name": "foundation/orbits",
+          "wasmSha256": "b7be60e88ff2ce792aae2a8b0a57705519f4fa268042aa7d339c08df0a2c9030",
+          "manifestSha256": "c2ddab73bdf2c93561aa6cf5e7533688ba42e5e9db5fb00b6aa27a622ae113e6"
+        },
+        {
+          "name": "analysis/density-calibration",
+          "wasmSha256": "14a2d54ac5f1deb63044624207ea356e47e0dcd810a2fda5d86edfd454c559f9",
+          "manifestSha256": "51c40360a5a3bb8ed0d36d00d9ed5ed786aa34311e526e07d3c5a7cec3798484"
+        },
+        {
+          "name": "data-source/space-weather",
+          "wasmSha256": "80fff2cfc5dd74eecc83068c00f1dc78f428989cba56db073e836564522613ed",
+          "manifestSha256": "88de137f12543043a28dd1368c3e494cbbc3dfa5cad7dd483378c9e8b2fa7d17"
+        }
+      ],
+      "planSha256": "4ed880502d459f6ff092541744e518442bd13a35fae9cd147aed01889a6ece92",
+      "configSha256": "ee686d847f035ca2290159d20a2549a9ad5d61581af99c1bc6e1e46d4fd05f13",
+      "sourceHashes": {
+        "collect.mjs": "7f87459f5eaeb49cfbeb5f64e093016abb8770de0ee0a5bcbbdb44ae86786d75",
+        "install.mjs": "0b66b141e1f449ec409a6c75f1389c6bd39bf2787cf4ec9fe4678e51663987c7",
+        "physics.mjs": "db1a185d7446729d7ba5bed5846a1f48bb6d088687aab3db9dd1dacec0060e13",
+        "transport.mjs": "0738fd0ad1ad3d55edb1be9607e5285b7794c465b2bdd06aac6b52179ab8c63c",
+        "verify-reference.mjs": "78dc70be0cc4440f8196c2c25516c9534344018927d19ffbc14d393b76e85727"
+      }
+    }
+  },
+  "firstCycle": [
+    {
+      "shell": "9:14",
+      "status": "CONVERGED",
+      "coastArcs": 7796,
+      "calibrationSatellites": 199,
+      "nodes": 2,
+      "sweeps": 19,
+      "lastChange": 8.498121067054831e-7,
+      "identifiedKappas": 11,
+      "priorOnlyKappas": 188
+    },
+    {
+      "shell": "9:10",
+      "status": "CONVERGED",
+      "coastArcs": 139234,
+      "calibrationSatellites": 3513,
+      "nodes": 2,
+      "sweeps": 22,
+      "lastChange": 7.161802900376713e-7,
+      "identifiedKappas": 1061,
+      "priorOnlyKappas": 2452
+    },
+    {
+      "shell": "9:19",
+      "status": "CONVERGED",
+      "coastArcs": 43520,
+      "calibrationSatellites": 1198,
+      "nodes": 2,
+      "sweeps": 15,
+      "lastChange": 4.5417834071415086e-7,
+      "identifiedKappas": 212,
+      "priorOnlyKappas": 986
+    },
+    {
+      "shell": "7:19",
+      "status": "CONVERGED",
+      "coastArcs": 857,
+      "calibrationSatellites": 19,
+      "nodes": 2,
+      "sweeps": 13,
+      "lastChange": 3.669728405597539e-7,
+      "identifiedKappas": 17,
+      "priorOnlyKappas": 2
+    },
+    {
+      "shell": "6:19",
+      "status": "CONVERGED",
+      "coastArcs": 459,
+      "calibrationSatellites": 10,
+      "nodes": 2,
+      "sweeps": 18,
+      "lastChange": 9.835613927929032e-7,
+      "identifiedKappas": 6,
+      "priorOnlyKappas": 4
+    },
+    {
+      "shell": "9:13",
+      "status": "CONVERGED",
+      "coastArcs": 5420,
+      "calibrationSatellites": 151,
+      "nodes": 2,
+      "sweeps": 20,
+      "lastChange": 9.058639371256616e-7,
+      "identifiedKappas": 80,
+      "priorOnlyKappas": 71
+    },
+    {
+      "shell": "7:14",
+      "status": "CONVERGED",
+      "coastArcs": 2765,
+      "calibrationSatellites": 66,
+      "nodes": 2,
+      "sweeps": 10,
+      "lastChange": 1.941843104091845e-7,
+      "identifiedKappas": 62,
+      "priorOnlyKappas": 4
+    },
+    {
+      "shell": "6:6",
+      "status": "CONVERGED",
+      "coastArcs": 825,
+      "calibrationSatellites": 20,
+      "nodes": 2,
+      "sweeps": 11,
+      "lastChange": 2.5062406905362877e-7,
+      "identifiedKappas": 20,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "7:6",
+      "status": "UNAVAILABLE",
+      "coastArcs": 124,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "6:14",
+      "status": "CONVERGED",
+      "coastArcs": 566,
+      "calibrationSatellites": 16,
+      "nodes": 2,
+      "sweeps": 10,
+      "lastChange": 4.928096162259976e-7,
+      "identifiedKappas": 16,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "7:10",
+      "status": "CONVERGED",
+      "coastArcs": 13506,
+      "calibrationSatellites": 294,
+      "nodes": 2,
+      "sweeps": 28,
+      "lastChange": 8.260640413995657e-7,
+      "identifiedKappas": 159,
+      "priorOnlyKappas": 135
+    },
+    {
+      "shell": "8:10",
+      "status": "CONVERGED",
+      "coastArcs": 5846,
+      "calibrationSatellites": 129,
+      "nodes": 2,
+      "sweeps": 33,
+      "lastChange": 9.890476435278628e-7,
+      "identifiedKappas": 1,
+      "priorOnlyKappas": 128
+    },
+    {
+      "shell": "4:10",
+      "status": "UNAVAILABLE",
+      "coastArcs": 239,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "6:10",
+      "status": "CONVERGED",
+      "coastArcs": 2064,
+      "calibrationSatellites": 43,
+      "nodes": 2,
+      "sweeps": 33,
+      "lastChange": 8.919083705396375e-7,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 43
+    },
+    {
+      "shell": "5:10",
+      "status": "CONVERGED",
+      "coastArcs": 720,
+      "calibrationSatellites": 15,
+      "nodes": 2,
+      "sweeps": 26,
+      "lastChange": 9.256597822589197e-7,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 15
+    },
+    {
+      "shell": "10:10",
+      "status": "CONVERGED",
+      "coastArcs": 1770,
+      "calibrationSatellites": 51,
+      "nodes": 2,
+      "sweeps": 41,
+      "lastChange": 8.182156772118532e-7,
+      "identifiedKappas": 6,
+      "priorOnlyKappas": 45
+    },
+    {
+      "shell": "11:19",
+      "status": "UNAVAILABLE",
+      "coastArcs": 106,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "11:14",
+      "status": "CONVERGED",
+      "coastArcs": 2999,
+      "calibrationSatellites": 103,
+      "nodes": 2,
+      "sweeps": 66,
+      "lastChange": 8.4335327721341e-7,
+      "identifiedKappas": 8,
+      "priorOnlyKappas": 95
+    },
+    {
+      "shell": "10:14",
+      "status": "CONVERGED",
+      "coastArcs": 1491,
+      "calibrationSatellites": 42,
+      "nodes": 2,
+      "sweeps": 24,
+      "lastChange": 8.306855239226252e-7,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 42
+    },
+    {
+      "shell": "8:14",
+      "status": "UNAVAILABLE",
+      "coastArcs": 48,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "11:10",
+      "status": "UNAVAILABLE",
+      "coastArcs": 54,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "10:19",
+      "status": "UNAVAILABLE",
+      "coastArcs": 90,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "5:19",
+      "status": "UNAVAILABLE",
+      "coastArcs": 0,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "8:19",
+      "status": "UNAVAILABLE",
+      "coastArcs": 0,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "3:19",
+      "status": "UNAVAILABLE",
+      "coastArcs": 48,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "9:8",
+      "status": "CONVERGED",
+      "coastArcs": 95740,
+      "calibrationSatellites": 2565,
+      "nodes": 2,
+      "sweeps": 23,
+      "lastChange": 6.95207309747703e-7,
+      "identifiedKappas": 775,
+      "priorOnlyKappas": 1790
+    },
+    {
+      "shell": "10:13",
+      "status": "CONVERGED",
+      "coastArcs": 1560,
+      "calibrationSatellites": 42,
+      "nodes": 2,
+      "sweeps": 15,
+      "lastChange": 3.81725882014905e-7,
+      "identifiedKappas": 7,
+      "priorOnlyKappas": 35
+    },
+    {
+      "shell": "11:13",
+      "status": "CONVERGED",
+      "coastArcs": 2856,
+      "calibrationSatellites": 95,
+      "nodes": 2,
+      "sweeps": 86,
+      "lastChange": 9.267060720047349e-7,
+      "identifiedKappas": 47,
+      "priorOnlyKappas": 48
+    },
+    {
+      "shell": "8:8",
+      "status": "CONVERGED",
+      "coastArcs": 476,
+      "calibrationSatellites": 10,
+      "nodes": 2,
+      "sweeps": 26,
+      "lastChange": 8.541470761791459e-7,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 10
+    },
+    {
+      "shell": "5:8",
+      "status": "CONVERGED",
+      "coastArcs": 336,
+      "calibrationSatellites": 7,
+      "nodes": 2,
+      "sweeps": 21,
+      "lastChange": 9.552767622003633e-7,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 7
+    },
+    {
+      "shell": "8:13",
+      "status": "UNAVAILABLE",
+      "coastArcs": 180,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "7:8",
+      "status": "CONVERGED",
+      "coastArcs": 11277,
+      "calibrationSatellites": 248,
+      "nodes": 2,
+      "sweeps": 26,
+      "lastChange": 8.212073275629117e-7,
+      "identifiedKappas": 168,
+      "priorOnlyKappas": 80
+    },
+    {
+      "shell": "6:8",
+      "status": "CONVERGED",
+      "coastArcs": 384,
+      "calibrationSatellites": 8,
+      "nodes": 2,
+      "sweeps": 20,
+      "lastChange": 9.780828030721278e-7,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 8
+    },
+    {
+      "shell": "4:8",
+      "status": "UNAVAILABLE",
+      "coastArcs": 48,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    },
+    {
+      "shell": "10:8",
+      "status": "UNAVAILABLE",
+      "coastArcs": 175,
+      "calibrationSatellites": 0,
+      "nodes": 0,
+      "sweeps": 0,
+      "lastChange": null,
+      "identifiedKappas": 0,
+      "priorOnlyKappas": 0
+    }
+  ],
+  "planet": {
+    "inputPath": "/opt/data/sdn-archive/e13-open-dca/planet-arcs/dev-g24lean.msis.jsonl",
+    "inputSha256": "3e4c5859181ecee7381e24e6cd2c7118845658ed5a17b338981c0d209b15e9d0",
+    "window": [
+      "2025-10-01",
+      "2025-10-31"
+    ],
+    "status": "CONVERGED",
+    "coastArcs": 862,
+    "calibrationSatellites": 30,
+    "sweeps": 59,
+    "lastChange": 9.581112028200778e-7,
+    "residualLogScale": 0.10126137278319837,
+    "legacyComparison": {
+      "pairedArcs": 805,
+      "centeredRmsLogDifference": 0.019429890745411342,
+      "tolerance": 0.05,
+      "referenceSourceSha256": "de7791a0993e1fdee0890ea8d001d35b86514da88cacea4e504f8a3e12e98077"
+    },
+    "kappa": "unidentified; prior-only (no thrust segments)"
+  },
+  "cpuSeconds": 6.59001,
+  "skipped": [
+    "Hypothesis tests and head-to-head: prospective window incomplete",
+    "Position propagation and independent density scoring: coordinator scoring run",
+    "Docker parity: owner waiver 2026-10-22",
+    "Node-flow AOT: not a node-flow artifact; pinned experimental SDK harness"
+  ],
+  "scoringNotBefore": "2026-12-01T00:00:00Z"
+}
