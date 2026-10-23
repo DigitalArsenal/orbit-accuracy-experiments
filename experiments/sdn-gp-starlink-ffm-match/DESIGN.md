@@ -566,11 +566,24 @@ m = 15 terms (odd l from 15) give
 
     Δa = 2 j a (n/ψ̇) Σ_l (R_E/a)^l F̄ Ḡ J̄_l,15 sin ψ,      Δλ = 3 j (n/ψ̇)² Σ_l (R_E/a)^l F̄ Ḡ J̄_l,15 cos ψ       (10)
 
-(normalized F̄, Ḡ, J̄; Kaula 1966; Allan 1967). With n/ψ̇ ≈ 90 the along-track factor 3(n/ψ̇)² is about 24,000, so a
-lumped 15th-order coefficient of 1e-8 gives Δa ≈ 12 m and Δλ ≈ 2.4e-4 rad, 1.7 km along-track, with a period longer
-than the G1 window: over four days it is a drift that a 24 h fit cannot separate from drag. The size depends on
-EGM2008's 15th-order coefficients at each shell's inclination and is a prediction to measure (2d.6, section 4), not an
-assumption. SDN-GP generalizes XP's four classes to every (j, m) with |ψ̇| < ε n (ε = 0.02, l ≤ 40
+(normalized F̄, Ḡ, J̄; Kaula 1966; Allan 1967); every odd l from 15 to 69 has the same angle ψ, so the terms add as
+one lumped complex coefficient Σ. From the EGM2008 coefficients (design estimate, J2 secular rates in ψ̇):
+
+| Shell | ψ̇ (rev/day) | Period (d) | |Σ| | Δa (m) | Along-track amplitude (km) |
+| --- | --: | --: | --: | --: | --: |
+| 550 km, 53.05° | -0.164 | 6.1 | 4.5e-9 | 5.7 | 0.79 |
+| 540 km, 53.2° | -0.132 | 7.6 | 4.6e-9 | 7.3 | 1.26 |
+| 530 km, 43° | -0.127 | 7.9 | 1.5e-9 | 2.5 | 0.44 |
+| 570 km, 70° | -0.167 | 6.0 | 8.7e-10 | 1.1 | 0.15 |
+| 560 km, 97.6° | +0.003 | 330 | 3.2e-9 | | exact resonance (below) |
+| ISS, 417 km, 51.6° | +0.264 | 3.8 | 6.3e-9 | 5.0 | 0.44 |
+
+For the 53° shells the period is longer than the G1 window: the 24 h fit absorbs the term completely (2 m of fit
+residual) and the prediction then drifts away from it, 2.4 km at day 3 for the 550 km shell (the 2d.4 model). The
+97.6° shell sits on the resonance, where (10) becomes a constant transverse force τ = j n² a |Σ| sin ψ₀ ≤ 2.7e-8
+m/s², about 10 % of the drag at moderate solar activity, which the fitted B_eff absorbs for days and which biases κ
+and any B prior over months. The periods are sensitive to the mean motion (ψ̇ changes by 0.015 rev/day per km of
+altitude), so each object's term is evaluated from its own elements. SDN-GP generalizes XP's four classes to every (j, m) with |ψ̇| < ε n (ε = 0.02, l ≤ 40
 for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
 
 **2d.6 Expected gain, cost, parameters.**
