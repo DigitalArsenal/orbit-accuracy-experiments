@@ -2,6 +2,7 @@
 // Rules are V1c3's (which are V1c2's and E3's): the latest public OMM created and dated at or before the issue time,
 // its 31-day history, the first reference state at or after each target within 900 s, nothing excluded on truth.
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import { Products } from '../e3-combined-catalog/truth.mjs';
 import { readElementSets, readCreationDays, epochMs, dayList, shiftDay } from '../../harness/gp-archive.mjs';
 import { horizons } from '../v1c3-console-covariance-calibration/calibration.mjs';
@@ -22,17 +23,17 @@ export function truthFor({ e3, config, roots }) {
   for (const [group, objects] of Object.entries(config.extraObjects)) for (const n of Object.keys(objects)) { regime.set(+n, group); extra.add(+n); }
   const ref = n => extra.has(n) ? leo : regime.get(n) === 'GPS' ? gps : main;
   const objects = [...regime.keys()].filter(n => ref(n).entries(n).length).sort((a, b) => a - b);
-  const indexes = [main, gps, leo].flatMap(p => p.products.map(x => ({ product: x.product, sha256: x.indexSha256 })));
   const dropCache = () => { main.dropCache(); gps.dropCache(); leo.dropCache(); };
-  const reads = () => ({ ...main.read, ...gps.read, ...leo.read });
-  return { regime, ref, objects, indexes, dropCache, reads, readers: { main, gps, leo }, roots };
+  // Every OEM file whose states were used, by absolute path, with its SHA-256.
+  const reads = () => Object.fromEntries([main, gps, leo].flatMap(p => Object.entries(p.read).map(([f, h]) => [path.join(p.dir, f), h])));
+  return { regime, ref, objects, dropCache, reads, readers: { main, gps, leo }, roots };
 }
 
-// Element sets of the kept objects for a list of issue days: `sets` (epoch in the window's 10 days before the first issue day
+// Element sets of the kept objects for a list of issue days: `sets` (epoch from `epochLookbackDays` before the first issue day
 // to its last day, de-duplicated as E3 does, with creation dates for causality) and `history` (every set created from 45 days
 // before the first issue day, for object_covariance's 31-day history).
-export function elementSets({ e3, days, keep }) {
-  const { sets, files } = readElementSets(e3.inputs.gpHistory, shiftDay(days[0], -10), days.at(-1), { keep, lagDays: e3.elementSets.creationLagDays,
+export function elementSets({ e3, days, keep, epochLookbackDays = 10 }) {
+  const { sets, files } = readElementSets(e3.inputs.gpHistory, shiftDay(days[0], -epochLookbackDays), days.at(-1), { keep, lagDays: e3.elementSets.creationLagDays,
     theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType, duplicateEpochSeconds: e3.elementSets.duplicateEpochSeconds });
   const history = readCreationDays(e3.inputs.gpHistory, shiftDay(days[0], -45), days.at(-1), { keep, theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType });
   return { sets, history: history.sets, files, historyFiles: history.files };
