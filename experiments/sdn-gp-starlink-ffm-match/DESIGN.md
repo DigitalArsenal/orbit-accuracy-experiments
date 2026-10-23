@@ -582,7 +582,7 @@ For the 53° shells the period is longer than the G1 window: the 24 h fit absorb
 residual) and the prediction then drifts away from it, 2.4 km at day 3 for the 550 km shell (the 2d.4 model). The
 97.6° shell sits on the resonance, where (10) becomes a constant transverse force τ = j n² a |Σ| sin ψ₀ ≤ 2.7e-8
 m/s², about 10 % of the drag at moderate solar activity, which the fitted B_eff absorbs for days and which biases κ
-and any B prior over months. The periods are sensitive to the mean motion (ψ̇ changes by 0.015 rev/day per km of
+and any B prior over months. The periods are sensitive to the mean motion (ψ̇ changes by about 0.003 rev/day per km of
 altitude), so each object's term is evaluated from its own elements. SDN-GP generalizes XP's four classes to every (j, m) with |ψ̇| < ε n (ε = 0.02, l ≤ 40
 for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
 
@@ -710,3 +710,141 @@ and 24.9 (SynCoPate) today. Consider-parameter theory for unestimated biases fol
 product). Full variational: 7 to 8 times a rate evaluation per node, at fit time and for long horizons only.
 Parameters: the mean-element covariance of (y, B_eff) as 28 float32 (112 bytes), 144 bytes with two more parameters;
 (σ_δ, τ) and Q_f are population values per weather tier and regime, published once, not per object.
+
+### 2g. Theory plus a per-object residual series: bytes against meters
+
+**2g.1 Model.** After the theory fit, the residual ε(t) = x_truth(t) - x_SDN-GP(t) in radial, in-track and
+cross-track axes is small and smooth: slow drag-model mismatch plus periodic remnants at 1/rev, 2/rev and the
+m-daily frequencies. It is stored per segment [t_a, t_b] in a product basis, Chebyshev in time and Fourier in the
+theory's own mean argument of latitude u(t):
+
+    ε_c(t) = Σ_{j=0..J} Σ_{k=0..K} T_j(τ) [α_cjk cos k u(t) + β_cjk sin k u(t)],   τ = (2t - t_a - t_b)/(t_b - t_a)    (13)
+
+for c ∈ {R, I, C}, with K = 2 in-track and K = 1 radial and cross-track, evaluated by Clenshaw's recurrence
+(Clenshaw 1955). A plain time Chebyshev must resolve the orbital frequency itself (a LEO SPK record spans a fraction
+of a revolution); the Fourier factor moves the orbital frequency into the basis, so the Chebyshev degree only has to
+follow the slow envelope (Boyd 2001 for the convergence of both factors).
+
+**2g.2 Bytes.** One LEO object-day with J = 6: (5 + 3 + 3) × 7 = 77 coefficients; quantized to int16 against a
+per-segment, per-component scale (the scale set by the target accuracy), 154 bytes plus 12 bytes of scales. A time
+Chebyshev of the full position at the same tolerance (SPK type 2: about 60 records of degree 10 to 12 per LEO day,
+three components, 8-byte coefficients) is 15 to 19 KB per object-day, so the expected ratio is about 100. The bytes
+against meters curve (1, 10 and 100 m; G1 task arm 4) is the measurement; J and K are chosen per target by the
+coefficient-decay rule (stop when the next degree's coefficients fall below the quantization step).
+
+**2g.3 Beyond the segment.** The residual is not extrapolated except for its k = 0, j ≤ 2 part, faded out with the
+persistence time τ_e of 2c; past that the element set is the theory alone, so a stale set degrades instead of ending.
+
+**2g.4 Use.** Inside an operator's forecast span (SpaceX files) theory plus residual reproduces the forecast,
+planned thrust included, at the target tolerance: the compact form to measure against the SDS `$PPE` compact copies
+of the forecasts. For precise-orbit objects (GNSS, laser-ranged) it gives sub-meter replay at a few hundred bytes per
+day.
+
+**2g.5 Cost, parameters, fitting.** Evaluation: three Clenshaw sums of degree J with cos/sin of k u from one sincos
+and the double-angle relation: about 0.1 µs per state. Fitting: linear least squares on the residual (the basis is
+linear), no iteration. Parameters: 77 per object-day (154 to 166 bytes per object-day at the 10 m target, fewer at
+100 m).
+
+### 2h. Regime extensions
+
+All regimes use the same integrator, grid, checkpoint and output chain; a regime changes the central body's
+constants, the rate terms and the frame. Small bodies (asteroids, comets) keep their own SDS small-body schema with
+osculating heliocentric elements (owner ruling 2026-10-13); SDN-GP can propagate them, but they are not `$OMM`
+records.
+
+**2h.1 Moon-centered orbits (low, frozen, elliptical).**
+
+- Central body: μ_M = 4,902.80 km³/s² (DE440, Park et al. 2021), reference radius 1,738.0 km, lunar gravity from
+  GRAIL (GL0660B, Konopliv et al. 2013; GRGM660PRIM, Lemoine et al. 2013), J2 ≈ 2.03e-4, C22 ≈ 2.24e-5, J3 ≈ 8.5e-6.
+- Because the Moon rotates once per 27.32 days, the tesseral angles m(Ω - θ_M) are long-period for every lunar
+  orbit, so the degree 2 to 8 zonals and tesserals all enter the averaged rates (single averaging over the mean
+  anomaly only, with the Moon-fixed node angle kept as a slow variable), not the short-periodic output. Orbits below
+  about 100 km altitude are dominated by mascons and need degree 50 and more; they are out of SDN-GP's scope and are
+  labeled so (FFM handles them).
+- Third bodies: Earth (μ_E/μ_M = 81.30) and Sun, with XP's averaged quadrupole and octupole formulas (`SPEC.md` 5)
+  and the Earth as the body. Above about 3,000 km altitude Earth's quadrupole drives the Kozai–Lidov exchange of
+  eccentricity and inclination (Kozai 1962; Lidov 1962) that sets lunar frozen orbits (Elipe & Lara 2003; Ely 2005);
+  the averaged rates carry it directly. Orbits with periods above about 1.5 days use XP's long-period mode
+  (instantaneous geometry, 95-minute class, `SPEC.md` 5 and 9) with the Moon as center.
+- Frame: the lunar principal-axis frame for the gravity field, the IAU mean-Earth orientation for output (Archinal
+  et al. 2018), the pole precessing by Cassini's laws (Peale 1969); SRP with Earth and Moon shadows.
+- Truth: NAIF SPKs of LRO, Danuri and KPLO (inventory: to fetch). Parameters: XP's 8. Cost: the tesseral rates add
+  about 30 % to a rate evaluation.
+
+**2h.2 Earth–Moon libration-point orbits (halo, NRHO, Lyapunov, DRO).**
+
+- Frame: the synodic frame of the Earth–Moon system, pulsating with the instantaneous Earth–Moon distance so that
+  the Moon's eccentricity is a small periodic forcing (Szebehely 1967), origin at the libration point.
+- Base: Richardson's (1980) third-order halo solution about L1 or L2 (γ the distance of the point from the Moon):
+
+      x = a21 A_x² + a22 A_z² - A_x cos τ₁ + (a23 A_x² - a24 A_z²) cos 2τ₁ + (a31 A_x³ - a32 A_x A_z²) cos 3τ₁
+      y = k A_x sin τ₁ + (b21 A_x² - b22 A_z²) sin 2τ₁ + (b31 A_x³ - b32 A_x A_z²) sin 3τ₁
+      z = δ_m A_z cos τ₁ + δ_m d21 A_x A_z (cos 2τ₁ - 3) + δ_m (d32 A_z A_x² - d31 A_z³) cos 3τ₁
+      τ₁ = λ ω t + φ,   ω = 1 + s1 A_x² + s2 A_z²,   l1 A_x² + l2 A_z² + Δ = 0
+
+  with Richardson's coefficients (functions of the mass ratio and γ) and δ_m = ±1 for northern and southern families.
+- Fitted quasi-periodic form: for the real ephemeris, X(t) = Σ_{|k|≤K} Σ_{|l|≤L} c_kl exp(i(k θ₁ + l θ₂)) per
+  synodic coordinate, θ₁ the orbit's phase and θ₂ the forcing phases (the Moon's mean anomaly ℓ and the solar argument
+  2D), with frequencies refined by Laskar's frequency analysis (Laskar 1990) and amplitudes by linear least squares.
+  For the 9:2 NRHO (the Gateway orbit, Lee 2019; Zimovan, Howell & Davis 2017) θ₁ locks to 2/9 of the synodic month.
+- Regularized phase: the perilune passage of an NRHO (about 3,000 km from the Moon) is sharp, so the series is
+  written in a Sundman anomaly s with dt/ds = c r_M^α (r_M the distance to the Moon, α = 1 or 3/2; Sundman 1912;
+  Stiefel & Scheifele 1971), and t(s) is itself a short Fourier series. The perilune passage spreads over many
+  harmonics of t but few of s.
+- Stability: L1 and L2 halos are unstable with e-folding times of days, NRHOs nearly stable; the element set is a
+  segment between station-keeping epochs (2h.5), never an extrapolation across one.
+- Parameters: 3 coordinates × (2K + 1)(2L + 1) coefficients, K ≈ 20 to 40 in s, L ≤ 2: about 0.5 to 2 KB per segment
+  of weeks; the bytes against SPK at 1, 10 and 100 m are the measurement. Truth: CAPSTONE and Artemis I SPKs.
+
+**2h.3 Heliocentric cruise.**
+
+- Mean elements about the Sun (ICRF, TDB) with an SRP-reduced central parameter μ_eff = μ_☉ (1 - β),
+  β = P₁AU (1 AU)² AGOM / μ_☉ = 7.69e-4 · AGOM (AGOM in m²/kg), the classical lightness number of radial SRP.
+- Planetary perturbations far from the planets: linear element rates (the JPL approximate-element idea per craft,
+  Standish & Williams in Urban & Seidelmann 2012) plus, for months-long segments, the Laplace–Lagrange secular
+  terms of the (e, ϖ) and (i, Ω) vectors (Murray & Dermott 1999, chapter 7), then the residual series of 2g.
+- Thrust arcs (electric propulsion) are segments with a constant RTN acceleration (2c's τ terms in three axes).
+- Hand-off to a planet-centered segment inside the planet's Laplace sphere of influence r_SOI = a_p (m_p/M_☉)^(2/5).
+- Truth: NAIF cruise SPKs (inventory: to fetch); planetary positions from DE440.
+
+**2h.4 Planet-centered orbits.** XP's zonal machinery through J5 (`SPEC.md` 2) with the body's μ, R, J_n and IAU
+pole (Archinal et al. 2018): Mars (MRO120D; Konopliv et al. 2016), Venus, Jupiter and Saturn (large J2 and J4, so the
+J2² terms XP already carries matter more); the Sun as third body; for Mars, the areostationary resonance as XP's
+1-day class with Mars's rotation angle, and an optional exponential atmosphere for low orbiters, labeled as such.
+
+**2h.5 Segments and hand-offs in one element-set form.** An object's trajectory is a sequence of segments
+S_k = (t_k, t_k+1, CENTER_NAME, REF_FRAME, MEAN_ELEMENT_THEORY, elements, covariance), each an SDS `$OMM` record
+(CCSDS 502.0-B-3 keyword names). At a boundary the osculating states of S_k and S_k+1 agree by construction: the
+fit carries the continuity constraint x_k(t_k+1) = x_k+1(t_k+1) in a common frame (center offsets from DE440), and
+the covariance maps across as P_k+1 = J P_k Jᵀ, J = ∂y_k+1/∂y_k through Cartesian. Hand-off criteria: the sphere of
+influence with a hysteresis band, or an operator maneuver epoch. MEAN_ELEMENT_THEORY names the theory and regime
+(SDN-GP, never SGP4-XP); the synodic frame has no CCSDS name (open question 5).
+
+### 2i. Further terms judged high value
+
+**2i.1 ECOM-type SRP for GNSS, IGSO and GEO.** In MEO and above, SRP is the leading unmodeled force (in-track
+share 87 to 90 % at day 3 in G1's GNSS, IGSO and GEO rows). The empirical CODE orbit model (ECOM) writes it in the
+Sun-oriented D (to the Sun), Y (along the solar-panel axis), B (completing) frame as D₀, Y₀, B₀ plus once-per-
+revolution B_c, B_s terms (Beutler et al. 1994; Springer, Beutler & Rothacher 1999; ECOM2, Arnold et al. 2015). Over
+one orbit the D, Y, B directions are fixed in inertial space (the Sun moves 2° per GNSS revolution), so the
+averaged rates are XP's closed-form sunlit-arc integrals (`SPEC.md` 4) with the constant D₀ replaced by the three
+constant components, and the once-per-revolution terms by 2c's formulas in the B direction. The Y-bias Y₀ is the
+classical cause of along-track drift in GPS predictions. Expected: the GNSS day 3 from 0.187 km and IGSO from 0.556
+km by a factor of 2 to 3 (to measure). Parameters: 5 (+20 bytes; AGOM becomes D₀). Cost: about 0.5 µs per rate
+evaluation.
+
+**2i.2 Maneuver-aware segments in GEO and IGSO.** Station keeping (east–west every one to two weeks) inside a G1
+window is a step in the in-track rate that no smooth theory represents. Detect it from the fit residual
+(a change-point in the mean motion), cut the window into segments (2h.5), and score the segments separately.
+Expected: the GEO day-3 tail (90th percentile 2.48 km against a 0.805 km median) shrinks. Parameters: none beyond a
+segment boundary. This is fitting practice, not a rate term.
+
+**2i.3 Space-weather scenario envelopes for conjunction screening.** Because density enters only through
+B_eff exp(s(t)) and the STM carries ∂x/∂s (2f.4), a screening can evaluate a storm scenario (s raised by the
+historical storm response for the forecast Ap) for every object at the cost of one sensitivity product, not a
+re-propagation: a cheap upper envelope of the along-track uncertainty for the days when density forecasts fail.
+
+**2i.4 Higher-order and secondary terms checked and set aside.** J2² short-periodics (about 10 m in LEO), Earth
+radiation pressure (a constant radial force that only shifts the fitted mean motion, about 40 m over four days for an
+AGOM of 0.19 m²/kg) and thermospheric winds (1 to 3 % of drag, absent from the FFM truth) are below the floors above.
+They enter only if the measurements of section 4 leave a residual their size.
