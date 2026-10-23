@@ -1,0 +1,1523 @@
+{
+  "tables": [
+    {
+      "mode": "SGP4",
+      "group": "GPS",
+      "hours": 1,
+      "available": 636,
+      "statuses": {
+        "EMPIRICAL": 506,
+        "POPULATION": 125,
+        "OUTSIDE": 5
+      },
+      "n": 631,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 1044.540534467815,
+        "lower": 2.987585501783257,
+        "upper": 3058.961559039745
+      },
+      "coverage95": {
+        "estimate": 0.8478605388272583,
+        "lower": 0.7867214215009899,
+        "upper": 0.9062114492564045
+      },
+      "medianD2": 2.5374876768292345,
+      "cvm": {
+        "w2": 2.1581975842219996,
+        "designEffect": 10.863168178746054,
+        "critical": 5.007920530401932,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "GPS",
+      "hours": 6,
+      "available": 636,
+      "statuses": {
+        "EMPIRICAL": 552,
+        "POPULATION": 78,
+        "OUTSIDE": 6
+      },
+      "n": 630,
+      "objects": 32,
+      "notPositiveDefinite": 6,
+      "meanD2Over3": {
+        "estimate": 1920.2993856503583,
+        "lower": 2.8768140843238292,
+        "upper": 5712.635876358187
+      },
+      "coverage95": {
+        "estimate": 0.8698412698412699,
+        "lower": 0.8048204275594966,
+        "upper": 0.9290220820189274
+      },
+      "medianD2": 2.263904927111031,
+      "cvm": {
+        "w2": 1.7211705117506955,
+        "designEffect": 11.485209899497706,
+        "critical": 5.294681763668443,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "GPS",
+      "hours": 12,
+      "available": 636,
+      "statuses": {
+        "EMPIRICAL": 583,
+        "OUTSIDE": 8,
+        "POPULATION": 45
+      },
+      "n": 628,
+      "objects": 32,
+      "notPositiveDefinite": 8,
+      "meanD2Over3": {
+        "estimate": 932.0529074348009,
+        "lower": 4.654137537486844,
+        "upper": 2728.4434024400493
+      },
+      "coverage95": {
+        "estimate": 0.8439490445859873,
+        "lower": 0.7826711047194903,
+        "upper": 0.9040209677419354
+      },
+      "medianD2": 2.5663062478505676,
+      "cvm": {
+        "w2": 2.110170827292506,
+        "designEffect": 12.050364813701817,
+        "critical": 5.555218179116538,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "GPS",
+      "hours": 24,
+      "available": 640,
+      "statuses": {
+        "EMPIRICAL": 587,
+        "OUTSIDE": 9,
+        "POPULATION": 44
+      },
+      "n": 631,
+      "objects": 32,
+      "notPositiveDefinite": 9,
+      "meanD2Over3": {
+        "estimate": 980.4429160052424,
+        "lower": 6.555625121993802,
+        "upper": 2861.3476588191415
+      },
+      "coverage95": {
+        "estimate": 0.8367670364500792,
+        "lower": 0.7758257344080686,
+        "upper": 0.8977724668743177
+      },
+      "medianD2": 2.6345159394710036,
+      "cvm": {
+        "w2": 2.2574741101003126,
+        "designEffect": 11.471637583311523,
+        "critical": 5.288424925906613,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "GPS",
+      "hours": 48,
+      "available": 640,
+      "statuses": {
+        "EMPIRICAL": 589,
+        "OUTSIDE": 13,
+        "POPULATION": 38
+      },
+      "n": 627,
+      "objects": 32,
+      "notPositiveDefinite": 13,
+      "meanD2Over3": {
+        "estimate": 998.4947202762386,
+        "lower": 13.340609955476918,
+        "upper": 2909.0803428335885
+      },
+      "coverage95": {
+        "estimate": 0.8692185007974481,
+        "lower": 0.8086782378200171,
+        "upper": 0.9233348547086566
+      },
+      "medianD2": 2.5321967935682173,
+      "cvm": {
+        "w2": 1.1880729131984293,
+        "designEffect": 9.252826935348043,
+        "critical": 4.265553217195448,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "GPS",
+      "hours": 72,
+      "available": 640,
+      "statuses": {
+        "EMPIRICAL": 586,
+        "OUTSIDE": 19,
+        "POPULATION": 35
+      },
+      "n": 621,
+      "objects": 32,
+      "notPositiveDefinite": 19,
+      "meanD2Over3": {
+        "estimate": 963.2052371071114,
+        "lower": 20.461381036575045,
+        "upper": 2806.409667671626
+      },
+      "coverage95": {
+        "estimate": 0.8969404186795491,
+        "lower": 0.8383958823529413,
+        "upper": 0.9461215303074685
+      },
+      "medianD2": 2.226892184132625,
+      "cvm": {
+        "w2": 0.3463739674405445,
+        "designEffect": 7.208821105100222,
+        "critical": 3.3232665294512027,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "LEO 400-800 km",
+      "hours": 1,
+      "available": 48,
+      "statuses": {
+        "EMPIRICAL": 48
+      },
+      "n": 48,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.887528472010662,
+        "lower": 5.2165508698728145,
+        "upper": 8.421113933413139
+      },
+      "coverage95": {
+        "estimate": 0.20833333333333334,
+        "lower": 0,
+        "upper": 0.35714285714285715
+      },
+      "medianD2": 20.377907584058505,
+      "cvm": {
+        "w2": 10.910468879376344,
+        "designEffect": 1.0362652663698964,
+        "critical": 0.47771828779652226,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "LEO 400-800 km",
+      "hours": 6,
+      "available": 46,
+      "statuses": {
+        "EMPIRICAL": 46
+      },
+      "n": 46,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 3.774024263287357,
+        "lower": 1.6598361952313843,
+        "upper": 5.256421859106655
+      },
+      "coverage95": {
+        "estimate": 0.391304347826087,
+        "lower": 0.2,
+        "upper": 0.7692307692307693
+      },
+      "medianD2": 10.068571722127905,
+      "cvm": {
+        "w2": 6.869675586588433,
+        "designEffect": 1.6811182013652077,
+        "critical": 0.7749954908293608,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "LEO 400-800 km",
+      "hours": 12,
+      "available": 46,
+      "statuses": {
+        "EMPIRICAL": 46
+      },
+      "n": 46,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 4.265718767529249,
+        "lower": 3.281110831863634,
+        "upper": 4.921394824987554
+      },
+      "coverage95": {
+        "estimate": 0.30434782608695654,
+        "lower": 0.23076923076923078,
+        "upper": 0.46153846153846156
+      },
+      "medianD2": 11.604801743774937,
+      "cvm": {
+        "w2": 7.502774202285083,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "LEO 400-800 km",
+      "hours": 24,
+      "available": 46,
+      "statuses": {
+        "EMPIRICAL": 46
+      },
+      "n": 46,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 2.7003792431340554,
+        "lower": 2.0187390973453234,
+        "upper": 3.37476868899215
+      },
+      "coverage95": {
+        "estimate": 0.6086956521739131,
+        "lower": 0.5,
+        "upper": 0.7692307692307693
+      },
+      "medianD2": 6.707829208239013,
+      "cvm": {
+        "w2": 5.846867126094635,
+        "designEffect": 1.8410918339950986,
+        "critical": 0.8487433354717405,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "LEO 400-800 km",
+      "hours": 48,
+      "available": 44,
+      "statuses": {
+        "EMPIRICAL": 44
+      },
+      "n": 44,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 1.311721433243097,
+        "lower": 1.165980144352684,
+        "upper": 1.413736678549431
+      },
+      "coverage95": {
+        "estimate": 0.8863636363636364,
+        "lower": 0.8333333333333334,
+        "upper": 0.9166666666666666
+      },
+      "medianD2": 3.294170183063461,
+      "cvm": {
+        "w2": 0.9677784897286961,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "LEO 400-800 km",
+      "hours": 72,
+      "available": 42,
+      "statuses": {
+        "EMPIRICAL": 42
+      },
+      "n": 42,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 0.8983207709062556,
+        "lower": 0.875325723946836,
+        "upper": 0.9586202298928951
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 2.12606220886185,
+      "cvm": {
+        "w2": 0.21897200701260447,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (coverage)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 1,
+      "available": 99,
+      "statuses": {
+        "EMPIRICAL": 99
+      },
+      "n": 99,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 4.067118154511963,
+        "lower": 3.0504665663125667,
+        "upper": 5.80075789928321
+      },
+      "coverage95": {
+        "estimate": 0.42424242424242425,
+        "lower": 0.31,
+        "upper": 0.5151515151515151
+      },
+      "medianD2": 9.099183004793838,
+      "cvm": {
+        "w2": 15.56137865807746,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 6,
+      "available": 98,
+      "statuses": {
+        "EMPIRICAL": 98
+      },
+      "n": 98,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 2.595809294661271,
+        "lower": 1.3723241622714812,
+        "upper": 4.514999940985584
+      },
+      "coverage95": {
+        "estimate": 0.7448979591836735,
+        "lower": 0.47959183673469385,
+        "upper": 0.9270833333333334
+      },
+      "medianD2": 4.755204221114488,
+      "cvm": {
+        "w2": 6.245652678406902,
+        "designEffect": 3.176533084703908,
+        "critical": 1.4643817520485016,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 12,
+      "available": 98,
+      "statuses": {
+        "EMPIRICAL": 98
+      },
+      "n": 98,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 2.797804721597217,
+        "lower": 2.2521639569412035,
+        "upper": 3.4300619141444275
+      },
+      "coverage95": {
+        "estimate": 0.5306122448979592,
+        "lower": 0.3979591836734694,
+        "upper": 0.64
+      },
+      "medianD2": 7.522195842034531,
+      "cvm": {
+        "w2": 15.479442637834177,
+        "designEffect": 1.1395103710657932,
+        "critical": 0.5253142810613307,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 24,
+      "available": 100,
+      "statuses": {
+        "EMPIRICAL": 100
+      },
+      "n": 100,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 2.3685518100395333,
+        "lower": 1.8597154823295625,
+        "upper": 3.127543349389873
+      },
+      "coverage95": {
+        "estimate": 0.67,
+        "lower": 0.51,
+        "upper": 0.79
+      },
+      "medianD2": 5.46226672646802,
+      "cvm": {
+        "w2": 6.399502935356277,
+        "designEffect": 1.0331323351937383,
+        "critical": 0.47627400652431334,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 48,
+      "available": 100,
+      "statuses": {
+        "EMPIRICAL": 100
+      },
+      "n": 100,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 0.9997003427867043,
+        "lower": 0.7836116424845647,
+        "upper": 1.4077121007670466
+      },
+      "coverage95": {
+        "estimate": 0.92,
+        "lower": 0.83,
+        "upper": 0.99
+      },
+      "medianD2": 2.374381396933533,
+      "cvm": {
+        "w2": 0.1793698691942661,
+        "designEffect": 3.7046932696947112,
+        "critical": 1.707863597329262,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (coverage)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 72,
+      "available": 100,
+      "statuses": {
+        "EMPIRICAL": 100
+      },
+      "n": 100,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 0.5660768878782064,
+        "lower": 0.3513112727258201,
+        "upper": 0.938731684198339
+      },
+      "coverage95": {
+        "estimate": 0.97,
+        "lower": 0.91,
+        "upper": 1
+      },
+      "medianD2": 1.1660905782424011,
+      "cvm": {
+        "w2": 5.083774882000158,
+        "designEffect": 4.593416687060033,
+        "critical": 2.1175650927346754,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR MEO",
+      "hours": 1,
+      "available": 59,
+      "statuses": {
+        "EMPIRICAL": 38,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 55,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.33030713480501234,
+        "lower": 0.05509196330426627,
+        "upper": 0.637277903017383
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.28785593483222605,
+      "cvm": {
+        "w2": 6.117055668619174,
+        "designEffect": 5.878392807947941,
+        "critical": 2.709939084464001,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR MEO",
+      "hours": 6,
+      "available": 59,
+      "statuses": {
+        "EMPIRICAL": 39,
+        "POPULATION": 14,
+        "OUTSIDE": 6
+      },
+      "n": 53,
+      "objects": 4,
+      "notPositiveDefinite": 6,
+      "meanD2Over3": {
+        "estimate": 0.3814991715649156,
+        "lower": 0.026694346644529812,
+        "upper": 0.7464233473441184
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.2748217127474098,
+      "cvm": {
+        "w2": 5.018907199778138,
+        "designEffect": 7.3811142096387865,
+        "critical": 3.4026936506434806,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR MEO",
+      "hours": 12,
+      "available": 59,
+      "statuses": {
+        "EMPIRICAL": 39,
+        "POPULATION": 14,
+        "OUTSIDE": 6
+      },
+      "n": 53,
+      "objects": 4,
+      "notPositiveDefinite": 6,
+      "meanD2Over3": {
+        "estimate": 0.32468161353627395,
+        "lower": 0.05019573234969177,
+        "upper": 0.6097246439992633
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.32196946608563703,
+      "cvm": {
+        "w2": 5.903717363540987,
+        "designEffect": 5.064570036369331,
+        "critical": 2.334766786766262,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR MEO",
+      "hours": 24,
+      "available": 56,
+      "statuses": {
+        "EMPIRICAL": 36,
+        "POPULATION": 14,
+        "OUTSIDE": 6
+      },
+      "n": 50,
+      "objects": 4,
+      "notPositiveDefinite": 6,
+      "meanD2Over3": {
+        "estimate": 0.3051312434243556,
+        "lower": 0.04684632921518853,
+        "upper": 0.5849399004842865
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.24537804161069554,
+      "cvm": {
+        "w2": 5.9040576058106415,
+        "designEffect": 4.49686639074586,
+        "critical": 2.0730554061338418,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR MEO",
+      "hours": 48,
+      "available": 53,
+      "statuses": {
+        "EMPIRICAL": 33,
+        "OUTSIDE": 8,
+        "POPULATION": 12
+      },
+      "n": 45,
+      "objects": 4,
+      "notPositiveDefinite": 8,
+      "meanD2Over3": {
+        "estimate": 0.2570854830549017,
+        "lower": 0.05209817498676386,
+        "upper": 0.47139039603522764
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.2511783482423047,
+      "cvm": {
+        "w2": 6.4288448736153665,
+        "designEffect": 2.6617428888026535,
+        "critical": 1.2270634717380233,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "SGP4",
+      "group": "SLR MEO",
+      "hours": 72,
+      "available": 50,
+      "statuses": {
+        "EMPIRICAL": 30,
+        "OUTSIDE": 9,
+        "POPULATION": 11
+      },
+      "n": 41,
+      "objects": 4,
+      "notPositiveDefinite": 9,
+      "meanD2Over3": {
+        "estimate": 0.19446824006348595,
+        "lower": 0.04719478340673839,
+        "upper": 0.3491053695530708
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.21613750636242843,
+      "cvm": {
+        "w2": 7.495298561375309,
+        "designEffect": 1.2592784810867623,
+        "critical": 0.5805273797809974,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "GPS",
+      "hours": 1,
+      "available": 636,
+      "statuses": {
+        "EMPIRICAL": 503,
+        "POPULATION": 128,
+        "OUTSIDE": 5
+      },
+      "n": 631,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 1045.454394245027,
+        "lower": 3.0935377475463803,
+        "upper": 3045.132554314263
+      },
+      "coverage95": {
+        "estimate": 0.8478605388272583,
+        "lower": 0.7877274922002674,
+        "upper": 0.9055177857160825
+      },
+      "medianD2": 2.32941038396367,
+      "cvm": {
+        "w2": 1.954680486607777,
+        "designEffect": 11.257896517169128,
+        "critical": 5.189890294414968,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "GPS",
+      "hours": 6,
+      "available": 636,
+      "statuses": {
+        "EMPIRICAL": 503,
+        "POPULATION": 128,
+        "OUTSIDE": 5
+      },
+      "n": 631,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 1416.63128386271,
+        "lower": 2.489999078546359,
+        "upper": 4167.545942153168
+      },
+      "coverage95": {
+        "estimate": 0.8399366085578447,
+        "lower": 0.7767145135566188,
+        "upper": 0.8998410796878071
+      },
+      "medianD2": 2.4641080866446683,
+      "cvm": {
+        "w2": 1.5938847157253648,
+        "designEffect": 8.70769059758636,
+        "critical": 4.014245365487312,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "GPS",
+      "hours": 12,
+      "available": 636,
+      "statuses": {
+        "EMPIRICAL": 503,
+        "POPULATION": 128,
+        "OUTSIDE": 5
+      },
+      "n": 631,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 563.010264697113,
+        "lower": 2.923009303854145,
+        "upper": 1627.695207072292
+      },
+      "coverage95": {
+        "estimate": 0.9112519809825673,
+        "lower": 0.8619569288389514,
+        "upper": 0.9539718957203135
+      },
+      "medianD2": 1.9413488139703532,
+      "cvm": {
+        "w2": 2.589622425591232,
+        "designEffect": 9.335719421096,
+        "critical": 4.3037666531252565,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "GPS",
+      "hours": 24,
+      "available": 640,
+      "statuses": {
+        "EMPIRICAL": 505,
+        "POPULATION": 130,
+        "OUTSIDE": 5
+      },
+      "n": 635,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 313.1688577200826,
+        "lower": 2.70362138480722,
+        "upper": 897.9641927641896
+      },
+      "coverage95": {
+        "estimate": 0.9212598425196851,
+        "lower": 0.8688783570300158,
+        "upper": 0.965625
+      },
+      "medianD2": 1.7378700714089979,
+      "cvm": {
+        "w2": 6.139225869089628,
+        "designEffect": 7.849318634023259,
+        "critical": 3.6185358902847224,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "GPS",
+      "hours": 48,
+      "available": 640,
+      "statuses": {
+        "EMPIRICAL": 505,
+        "POPULATION": 130,
+        "OUTSIDE": 5
+      },
+      "n": 635,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 149.08444777107994,
+        "lower": 2.3640906172837037,
+        "upper": 425.13586150088526
+      },
+      "coverage95": {
+        "estimate": 0.9228346456692913,
+        "lower": 0.866349447181829,
+        "upper": 0.9701738532403558
+      },
+      "medianD2": 1.6701577682934234,
+      "cvm": {
+        "w2": 8.23509280673866,
+        "designEffect": 6.704230395691044,
+        "critical": 3.0906502124135717,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "GPS",
+      "hours": 72,
+      "available": 640,
+      "statuses": {
+        "EMPIRICAL": 505,
+        "POPULATION": 130,
+        "OUTSIDE": 5
+      },
+      "n": 635,
+      "objects": 32,
+      "notPositiveDefinite": 5,
+      "meanD2Over3": {
+        "estimate": 107.10637286545527,
+        "lower": 2.247535014614491,
+        "upper": 305.98044661002285
+      },
+      "coverage95": {
+        "estimate": 0.9133858267716536,
+        "lower": 0.85062893081761,
+        "upper": 0.9653543307086614
+      },
+      "medianD2": 1.6338117329076196,
+      "cvm": {
+        "w2": 8.016212357666756,
+        "designEffect": 6.793440313240047,
+        "critical": 3.131775984403662,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "LEO 400-800 km",
+      "hours": 1,
+      "available": 48,
+      "statuses": {
+        "EMPIRICAL": 48
+      },
+      "n": 48,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 5.418819128289447,
+        "lower": 3.4386662049753856,
+        "upper": 7.645962331733735
+      },
+      "coverage95": {
+        "estimate": 0.3333333333333333,
+        "lower": 0.25,
+        "upper": 0.42857142857142855
+      },
+      "medianD2": 12.153568485746735,
+      "cvm": {
+        "w2": 8.728934219317118,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "LEO 400-800 km",
+      "hours": 6,
+      "available": 46,
+      "statuses": {
+        "EMPIRICAL": 46
+      },
+      "n": 46,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.167515655975197,
+        "lower": 4.197478668352653,
+        "upper": 8.356744370779436
+      },
+      "coverage95": {
+        "estimate": 0.21739130434782608,
+        "lower": 0.05,
+        "upper": 0.38461538461538464
+      },
+      "medianD2": 17.14080682612169,
+      "cvm": {
+        "w2": 10.946666877132259,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "LEO 400-800 km",
+      "hours": 12,
+      "available": 46,
+      "statuses": {
+        "EMPIRICAL": 46
+      },
+      "n": 46,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.361392102837125,
+        "lower": 3.9057003882075816,
+        "upper": 9.109729682031446
+      },
+      "coverage95": {
+        "estimate": 0.17391304347826086,
+        "lower": 0.15,
+        "upper": 0.23076923076923078
+      },
+      "medianD2": 14.506434813303553,
+      "cvm": {
+        "w2": 12.398675110272334,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "LEO 400-800 km",
+      "hours": 24,
+      "available": 46,
+      "statuses": {
+        "EMPIRICAL": 46
+      },
+      "n": 46,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.668960318494928,
+        "lower": 4.701324201147951,
+        "upper": 8.547367531066767
+      },
+      "coverage95": {
+        "estimate": 0.1956521739130435,
+        "lower": 0.1,
+        "upper": 0.3076923076923077
+      },
+      "medianD2": 17.292012207104367,
+      "cvm": {
+        "w2": 11.177686498398733,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "LEO 400-800 km",
+      "hours": 48,
+      "available": 44,
+      "statuses": {
+        "EMPIRICAL": 44
+      },
+      "n": 44,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.801554896989761,
+        "lower": 4.392217910756012,
+        "upper": 9.227649864524427
+      },
+      "coverage95": {
+        "estimate": 0.18181818181818182,
+        "lower": 0.05,
+        "upper": 0.3333333333333333
+      },
+      "medianD2": 18.1335377050462,
+      "cvm": {
+        "w2": 10.841366776594617,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "LEO 400-800 km",
+      "hours": 72,
+      "available": 42,
+      "statuses": {
+        "EMPIRICAL": 42
+      },
+      "n": 42,
+      "objects": 3,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.817697518567535,
+        "lower": 4.432375849632142,
+        "upper": 8.70688899037098
+      },
+      "coverage95": {
+        "estimate": 0.19047619047619047,
+        "lower": 0.18181818181818182,
+        "upper": 0.2
+      },
+      "medianD2": 17.098232511706144,
+      "cvm": {
+        "w2": 10.580172052536968,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 1,
+      "available": 99,
+      "statuses": {
+        "EMPIRICAL": 99
+      },
+      "n": 99,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 4.464531046536989,
+        "lower": 3.0775666583551,
+        "upper": 6.448587837733734
+      },
+      "coverage95": {
+        "estimate": 0.36363636363636365,
+        "lower": 0.20202020202020202,
+        "upper": 0.5102040816326531
+      },
+      "medianD2": 12.068494149952294,
+      "cvm": {
+        "w2": 16.561485865313205,
+        "designEffect": 1.7480887500613558,
+        "critical": 0.8058689137782851,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 6,
+      "available": 98,
+      "statuses": {
+        "EMPIRICAL": 98
+      },
+      "n": 98,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 4.901603865422476,
+        "lower": 2.7444665281133283,
+        "upper": 7.573533693541436
+      },
+      "coverage95": {
+        "estimate": 0.35714285714285715,
+        "lower": 0.19387755102040816,
+        "upper": 0.49024999999999863
+      },
+      "medianD2": 10.063135425033018,
+      "cvm": {
+        "w2": 15.479608206329743,
+        "designEffect": 1.44110958086328,
+        "critical": 0.6643515167779721,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 12,
+      "available": 98,
+      "statuses": {
+        "EMPIRICAL": 98
+      },
+      "n": 98,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 5.37903096274155,
+        "lower": 3.3706895760157507,
+        "upper": 7.9683088384481655
+      },
+      "coverage95": {
+        "estimate": 0.336734693877551,
+        "lower": 0.21,
+        "upper": 0.4490051020408162
+      },
+      "medianD2": 11.755008712563036,
+      "cvm": {
+        "w2": 20.00372427343571,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 24,
+      "available": 100,
+      "statuses": {
+        "EMPIRICAL": 100
+      },
+      "n": 100,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 5.546070048590953,
+        "lower": 3.298975448282626,
+        "upper": 9.02428515780459
+      },
+      "coverage95": {
+        "estimate": 0.36,
+        "lower": 0.26,
+        "upper": 0.44
+      },
+      "medianD2": 11.78216164186281,
+      "cvm": {
+        "w2": 17.086542414580332,
+        "designEffect": 1.133882175037715,
+        "critical": 0.5227196826923867,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 48,
+      "available": 100,
+      "statuses": {
+        "EMPIRICAL": 100
+      },
+      "n": 100,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 6.109775432008791,
+        "lower": 3.1008847250514933,
+        "upper": 10.694596363584646
+      },
+      "coverage95": {
+        "estimate": 0.33,
+        "lower": 0.2,
+        "upper": 0.46
+      },
+      "medianD2": 11.648623177030151,
+      "cvm": {
+        "w2": 18.462441014047503,
+        "designEffect": 1.238193255082713,
+        "critical": 0.5708070905931307,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR LEO 800-1500 km",
+      "hours": 72,
+      "available": 100,
+      "statuses": {
+        "EMPIRICAL": 100
+      },
+      "n": 100,
+      "objects": 5,
+      "notPositiveDefinite": 0,
+      "meanD2Over3": {
+        "estimate": 7.962605286918927,
+        "lower": 3.5167041565848707,
+        "upper": 15.334553747471281
+      },
+      "coverage95": {
+        "estimate": 0.4,
+        "lower": 0.33,
+        "upper": 0.5
+      },
+      "medianD2": 10.804685068964641,
+      "cvm": {
+        "w2": 17.3056828252345,
+        "designEffect": 1,
+        "critical": 0.461,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (overconfident)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR MEO",
+      "hours": 1,
+      "available": 59,
+      "statuses": {
+        "EMPIRICAL": 38,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 55,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.5706083493880701,
+        "lower": 0.27398305613710455,
+        "upper": 0.9390542379854208
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 1.3490301060341048,
+      "cvm": {
+        "w2": 1.8565080531746372,
+        "designEffect": 5.309382339000935,
+        "critical": 2.447625258279431,
+        "pass": true
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR MEO",
+      "hours": 6,
+      "available": 59,
+      "statuses": {
+        "EMPIRICAL": 38,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 55,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.38972408376565054,
+        "lower": 0.03924613249842677,
+        "upper": 0.780641798640631
+      },
+      "coverage95": {
+        "estimate": 0.9818181818181818,
+        "lower": 0.9423076923076923,
+        "upper": 1
+      },
+      "medianD2": 0.45399229261820095,
+      "cvm": {
+        "w2": 5.324948528659592,
+        "designEffect": 7.908391166126089,
+        "critical": 3.6457683275841273,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR MEO",
+      "hours": 12,
+      "available": 59,
+      "statuses": {
+        "EMPIRICAL": 38,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 55,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.2939500891373577,
+        "lower": 0.1264374173629698,
+        "upper": 0.48079114611648266
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.5616208577278387,
+      "cvm": {
+        "w2": 6.938518515962599,
+        "designEffect": 2.3598686059843184,
+        "critical": 1.0878994273587708,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR MEO",
+      "hours": 24,
+      "available": 56,
+      "statuses": {
+        "EMPIRICAL": 35,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 52,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.2282013245716387,
+        "lower": 0.05478152038418615,
+        "upper": 0.4305244294570001
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.29394620293912344,
+      "cvm": {
+        "w2": 8.434907553339844,
+        "designEffect": 2.344545321489627,
+        "critical": 1.080835393206718,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR MEO",
+      "hours": 48,
+      "available": 53,
+      "statuses": {
+        "EMPIRICAL": 32,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 49,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.3010065169504183,
+        "lower": 0.18096884519976006,
+        "upper": 0.4623468531092135
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.5798873741488342,
+      "cvm": {
+        "w2": 6.206532110981602,
+        "designEffect": 1.1400179110721516,
+        "critical": 0.5255482570042619,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    },
+    {
+      "mode": "FFM-1",
+      "group": "SLR MEO",
+      "hours": 72,
+      "available": 50,
+      "statuses": {
+        "EMPIRICAL": 29,
+        "POPULATION": 17,
+        "OUTSIDE": 4
+      },
+      "n": 46,
+      "objects": 4,
+      "notPositiveDefinite": 4,
+      "meanD2Over3": {
+        "estimate": 0.2793655846019091,
+        "lower": 0.08012956102837147,
+        "upper": 0.538372415247508
+      },
+      "coverage95": {
+        "estimate": 1,
+        "lower": 1,
+        "upper": 1
+      },
+      "medianD2": 0.38870275691845807,
+      "cvm": {
+        "w2": 6.354108267273868,
+        "designEffect": 3.025596923061297,
+        "critical": 1.3948001815312578,
+        "pass": false
+      },
+      "decision": "NOT REALISTIC (pessimistic)"
+    }
+  ],
+  "shares": [
+    {
+      "mode": "SGP4",
+      "cells": 24,
+      "testable": 24,
+      "realistic": 0,
+      "shareAll": 0,
+      "shareTestable": 0
+    },
+    {
+      "mode": "FFM-1",
+      "cells": 24,
+      "testable": 24,
+      "realistic": 0,
+      "shareAll": 0,
+      "shareTestable": 0
+    }
+  ],
+  "integrity": {
+    "arcs": 960,
+    "skipped": 113,
+    "samples": 5031,
+    "missingHorizons": 729,
+    "maxSgp4ErrorDifferenceM": 0,
+    "maxCoverageReplayDifferenceM": 0,
+    "maxResidentCoverageDifferenceM": 0.0011968848992038946,
+    "maxIsoSeedCoverageDifferenceM": 0.12916342135647244,
+    "maxCovarianceResidentCoverageDifferenceM": 0.4260856356205113,
+    "covarianceResidentControlMisses": 44,
+    "maxZeroTimeCovarianceRelative": 2.2485160490971936e-16
+  }
+}
