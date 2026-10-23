@@ -1,0 +1,10 @@
+{
+  "rule": "Four workers; no new dispatch at load >=20; requested machine load ceiling 21. External workloads are not controlled by this lane.",
+  "observations": [
+    {
+      "time": "2026-10-23T01:26:42.934728+00:00",
+      "load1": 24.27880859375,
+      "status": "DISPATCH_PAUSED; machine-wide load exceeded 21 while other lanes were active; no external process was stopped."
+    }
+  ]
+}
