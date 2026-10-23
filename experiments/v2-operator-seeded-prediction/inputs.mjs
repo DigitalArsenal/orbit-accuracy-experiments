@@ -66,12 +66,13 @@ export async function environment(modules, moduleRoot, fetcher) {
   }
   const weather=await modules['data-source/space-weather'].invoke('parse_weather',responses);
   const bytes=Buffer.from(weather.outputs.find(f=>f.portId==='records').payload),rows=[];
+  const weatherPath=path.join(store,'environment',sha256(bytes)+'.spw');fs.mkdirSync(path.dirname(weatherPath),{recursive:true});if(!fs.existsSync(weatherPath))fs.writeFileSync(weatherPath,bytes,{flag:'wx'});
   for(let at=0;at<bytes.length;){const n=bytes.readUInt32LE(at);if(n<8||at+4+n>bytes.length)throw new Error('SPW framing');rows.push(SPW.getSizePrefixedRootAsSPW(new fb.ByteBuffer(bytes.subarray(at,at+4+n))).unpack());at+=4+n;}
   const eopRoot='/opt/data/sdn-archive/hac/iers-eop/2026';
   const day=fs.readdirSync(eopRoot).filter(d=>/^2026-/.test(d)&&fs.existsSync(path.join(eopRoot,d,'finals.all.iau2000.txt'))).sort().at(-1);
   const eopFile=path.join(eopRoot,day,'finals.all.iau2000.txt'),eop=await finalsRecords(modules['data-source/eop-parser'],eopFile);
   const kernelFile='/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp',kernelBytes=fs.readFileSync(kernelFile);
   const kernel=kernelFrame(kernelBytes);
-  return { provenance:{weather:sources,weatherRows:rows.length,weatherSha256:sha256(bytes),eop:{path:eopFile,sha256:sha256(fs.readFileSync(eopFile)),archiveDay:day},kernel:{path:kernelFile,sha256:sha256(kernelBytes)}},
+  return { provenance:{weather:sources,weatherRows:rows.length,weatherSha256:sha256(bytes),weatherPath,eop:{path:eopFile,sha256:sha256(fs.readFileSync(eopFile)),archiveDay:day},kernel:{path:kernelFile,sha256:sha256(kernelBytes)}},
     inputs(from,to){const lo=Math.floor(from/86400000)+40585,hi=Math.ceil(to/86400000)+40589;return [kernel,eopFrame(eop.records,lo,hi),spaceWeatherFrame(rows.filter(r=>Date.parse(r.DATE)>=from-3*86400000&&Date.parse(r.DATE)<=to+3*86400000))];} };
 }
