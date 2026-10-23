@@ -5,6 +5,23 @@
       "time": "2026-10-23T01:26:42.934728+00:00",
       "load1": 24.27880859375,
       "status": "DISPATCH_PAUSED; machine-wide load exceeded 21 while other lanes were active; no external process was stopped."
+    },
+    {
+      "time": "2026-10-23T02:25:48.281010+00:00",
+      "load1": 19.4990234375,
+      "status": "Own experiment PID paused with SIGSTOP to leave headroom for other lanes."
+    },
+    {
+      "time": "2026-10-23T02:27:23.485818+00:00",
+      "load1": 16.67529296875,
+      "status": "Same experiment PID resumed with SIGCONT; checkpoints and numerical inputs unchanged."
     }
-  ]
+  ],
+  "resume": "2026-10-23 ~02:20Z coordinator: disk guard clear; resume checkpointed FFM training.",
+  "watchdog": {
+    "scope": "Only this lane's verified experiment PID; execution timing only, no numerical or selection changes.",
+    "pauseAtLoad": 19,
+    "resumeBelowLoad": 17,
+    "log": "runs/v1c3-provision/load-watch-train-ffm.log"
+  }
 }
