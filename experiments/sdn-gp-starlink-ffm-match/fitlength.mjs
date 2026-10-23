@@ -2,7 +2,7 @@
 // SGP4-XP and scored on the same interval, 72 to 96 h after the truth start. Output: <store>/rows/fitlength.jsonl.
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, frozen, store } from './common.mjs';
+import { config, frozen, store, args } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { withT, ms } from './lib/windows.mjs';
@@ -13,9 +13,11 @@ const dir = path.join(store, 'truth');
 const file = path.join(store, 'rows/fitlength.jsonl');
 const done = new Set(fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).norad) : []);
 let n = 0;
+const limit = args.limit ? Number(args.limit) : Infinity;
 for (const name of fs.readdirSync(dir).filter((x) => /^\d+\.json$/.test(x)).sort()) {
   const meta = JSON.parse(fs.readFileSync(path.join(dir, name)));
   if (done.has(meta.norad)) continue;
+  if (done.size + n >= limit) break;
   const flat = new Float64Array(fs.readFileSync(path.join(dir, `${meta.norad}.f64`)).buffer.slice(0));
   const t0 = ms(meta.truth.epochUtc);
   const object = withT({ source: 'starlink-ffm', id: `STARLINK (${meta.norad})`, norad: meta.norad, name: `STARLINK-${meta.norad}`, objectId: '', originator: 'G1 FFM-1', creation: '', frame: 'GCRF', timeSystem: 'UTC',

@@ -150,11 +150,13 @@ function findings(t) {
   const share = (a) => { const c = a.days[3]?.ric; return c && c.every(Number.isFinite) ? (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2) : null; };
   const shares = main.map((r) => [r, share(r.xp)]).filter(([, v]) => v !== null);
   const leo = shares.filter(([r]) => r.id.startsWith('leo')), meo = shares.filter(([r]) => r.id.startsWith('meo'));
-  if (leo.length && meo.length) out.push(`- The in-track component carries ${f(Math.min(...leo.map(([, v]) => v)), 1)} to ${f(Math.max(...leo.map(([, v]) => v)), 1)} % of the day-3 squared error of SGP4-XP in the LEO regimes and ${f(Math.min(...meo.map(([, v]) => v)), 1)} to ${f(Math.max(...meo.map(([, v]) => v)), 1)} % in MEO: the terms that can buy accuracy are the along-track ones (drag and thrust, secular rate, time variation of density).`);
+  const geo = shares.filter(([r]) => /^(igso|geo)/.test(r.id));
+  const range = (list) => `${f(Math.min(...list.map(([, v]) => v)), 1)} to ${f(Math.max(...list.map(([, v]) => v)), 1)} %`;
+  if (leo.length && meo.length) out.push(`- The in-track component carries ${range(leo)} of the day-3 squared error of SGP4-XP in the LEO regimes, ${range(meo)} in MEO${geo.length ? ` and ${range(geo)} in IGSO and GEO` : ''}: the terms that can buy accuracy are the along-track ones (drag and thrust, secular rate, time variation of density).`);
   const fitRatio = main.map((r) => r.paired.days[0]?.medianRatio).filter(Number.isFinite);
   const leoFit = main.filter((r) => r.id.startsWith('leo')).map((r) => r.paired.days[0]?.medianRatio).filter(Number.isFinite);
-  const gnss = get('meo-gnss');
-  if (leoFit.length && gnss?.paired.days[0]) out.push(`- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio ${f(Math.min(...leoFit), 2)} to ${f(Math.max(...leoFit), 2)}, about ${f(get('leo-starlink-ffm')?.xp.fit.median, 2)} km, a floor set by what the mean-element theory leaves out), in GNSS XP fits ${f(1 / gnss.paired.days[0].medianRatio, 1)} times tighter (${f(gnss.xp.fit.median, 3)} against ${f(gnss.sgp4.fit.median, 3)} km).`);
+  const tight = main.filter((r) => r.paired.days[0] && r.paired.days[0].medianRatio < 0.5);
+  if (leoFit.length && tight.length) out.push(`- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio ${f(Math.min(...leoFit), 2)} to ${f(Math.max(...leoFit), 2)}, about ${f(get('leo-starlink-ffm')?.xp.fit.median, 2)} km, a floor set by what the mean-element theory leaves out); where the orbit is high XP fits much tighter than SGP4: ${tight.map((r) => `${r.label} ${f(1 / r.paired.days[0].medianRatio, 1)} times (${f(r.xp.fit.median, 3)} against ${f(r.sgp4.fit.median, 3)} km)`).join('; ')}.`);
   const d3 = main.map((r) => [r.label, r.paired.days[3]?.medianRatio]).filter(([, v]) => Number.isFinite(v));
   if (d3.length) out.push(`- Held-out day 3, median XP / median SGP4: ${d3.map(([l, v]) => `${l} ${f(v, 2)}`).join('; ')}.`);
   const alignedFfm = get('leo-starlink-ffm-aligned');
