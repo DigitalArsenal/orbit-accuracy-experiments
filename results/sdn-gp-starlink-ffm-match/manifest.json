@@ -8,10 +8,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/tables.mjs"
   ],
-  "planSha256": "bfdbf143c962775c0b8041084c05f24724678262982da013725851fe8436e7a6",
+  "planSha256": "fb274342e7b66b8f7119caa8958566b6839a9a32a6cb744d1d154c1ea222d388",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "cd5d7fae5a8637f0d65237fd967965494a6627b9"
+    "commit": "6a90959603dc08ad3ecd75bb7c0f3a72f07c8194"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -93,8 +93,8 @@
     "createdUtc": "2026-10-23T20:25:21.154Z"
   },
   "truthSet": {
-    "satellites": 17,
-    "setSha256": "42d2dd37795ec1d4fd6a8c81b2150b8569f95fa4be2810f10baf84b24e1faf63"
+    "satellites": 42,
+    "setSha256": "8fe4ce8b7a51df988f58c75f9e0818ee30452513eeee264c519e78cd711c3aac"
   },
   "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
 }
