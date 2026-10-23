@@ -129,3 +129,10 @@ Spacebook data (sets, SynCoPate, API) is fetched or used (owner ruling 2026-10-1
    against the same truth. They are never fitted to, never an input or a prior, never copied into the repository; only
    aggregates are committed, labelled "COMSPOC Spacebook XP (local scoring only)". Terms: no commercial use, no
    redistribution, no derivative works.
+
+### A3 - 2026-10-23, before the run, after the baselines were read: fit-length sensitivity (task arm 6)
+
+"Best-case XP" is XP fitted to the same truth on the same windows. To say how much a longer fit would help either
+theory, the FFM truth of every fitted Starlink is also fitted over 24, 48 and 72 h and scored on one common interval,
+72 to 96 h after the truth start (day 3 of the 24 h fit, day 2 of the 48 h fit, day 1 of the 72 h fit). Same fitters,
+same statistics; descriptive; reported beside the registered tables, which keep the 24 h fit.
