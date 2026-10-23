@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, results, write, sha256 } from './common.mjs';
 import { quantile, mean } from './lib/windows.mjs';
+import { source as licenceSource } from '../../harness/data-licenses.mjs';
 
 const REGIMES = [
   { id: 'leo-starlink-ffm', label: 'LEO, Starlink, FFM-propagated truth' },
@@ -239,6 +240,8 @@ export function markdown(t) {
     for (const x of t.fitLength) if (x.satellites) L.push(`| ${x.fitHours} h | ${x.satellites} | ${f(x.xp.fitRmsKm)} | ${f(x.xp.errorKm)} | ${f(x.xp.day1Km)} | ${f(x.sgp4.fitRmsKm)} | ${f(x.sgp4.errorKm)} | ${f(x.sgp4.day1Km)} |`);
     L.push('');
   }
+  const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'ilrs', 'ilrs-nsgf', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'nrlmsise00', 'egm', 'fes2004'];
+  L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenceSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
   L.push('## Reproduce, resume, extend', '',
     '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. A modules checkout with the four built artifacts is named by `SDN_MODULES_ROOT` and needs a `node_modules` linked to the experiment\'s.',
     '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',
