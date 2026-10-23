@@ -1,0 +1,12 @@
+{
+  "experiment": "v1c2-console-covariance-realism",
+  "frozen": true,
+  "v1cConfig": "experiments/v1c-console-ffm-path/config.json",
+  "v1cManifest": "results/v1c/manifest.json",
+  "historyDays": 31,
+  "archiveLookbackDays": 45,
+  "pathAgreementM": 0.1,
+  "covarianceSymmetryRelative": 1e-10,
+  "zeroTimeCovarianceRelative": 1e-8,
+  "realism": { "minimumSamples": 30, "minimumObjects": 3, "meanD2Over3": [0.8, 1.25], "coverage95": [0.93, 0.97], "chi2Quantile95": 7.814727903251179, "bootstrapResamples": 2000, "bootstrapSeed": 20261017, "confidence": 0.95 }
+}
