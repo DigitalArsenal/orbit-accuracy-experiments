@@ -10,7 +10,6 @@ import { EST_TYPE, estimationCodec, decodeResult, positionObservation, seedStruc
 import { config, root, iso, H, sha256, quiet } from './common.mjs';
 import { environment, normalize } from './inputs.mjs';
 import { createBrowserModuleHarness } from 'space-data-module-sdk/host/browser-module';
-import { FILT } from 'spacedatastandards.org/lib/js/FIL/FIL.js';
 
 const estEpoch=ms=>{const day=Math.floor(ms/86400000);return {jd_day:day+2440587.5,seconds:(ms-day*86400000)/1000};};
 const cpu=()=>process.threadCpuUsage();
@@ -113,6 +112,7 @@ export async function operatorFit(moduleRoot,{memeBytes,name,configuration,envir
   if(!manifest.methods?.some(m=>m.methodId==='fit_ffm'))return {status:'UNAVAILABLE',reason:'analysis/od fit_ffm is not in the pinned module revision'};
   if(!invokeOnly)return {status:'UNAVAILABLE',reason:'fit_ffm landed artifact must be registered with its Fast-path prediction adapter before arm 4 is enabled'};
   assert(memeBytes&&configuration&&environmentInputs&&densityCorrection,'fit_ffm needs MEME, full-force configuration, environment and causal DCL');
+  const {FILT}=await import(pathToFileURL(path.join(base,'node_modules/spacedatastandards.org/lib/js/FIL/FIL.js')));
   const builder=new fb.Builder(memeBytes.length+256);
   builder.finish(Object.assign(new FILT(),{NAME:name,CONTENT:memeBytes}).pack(builder),'$FIL');
   const hostOptions={config:{fitWindowSeconds:48*3600,sampleSeconds:600,maxIterations:config.fit.maxIterations,

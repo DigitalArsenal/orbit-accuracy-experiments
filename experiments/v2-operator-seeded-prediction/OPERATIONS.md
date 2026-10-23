@@ -42,8 +42,7 @@ Run the full collector from a retained, committed runtime checkout so the
 task worktree can be removed after landing:
 
 ```
-nohup nice -n 10 node experiments/v2-operator-seeded-prediction/collect.mjs \
-  >> /opt/data/sdn-archive/v2-operator-seeded/collector.console.log 2>&1 &
+node experiments/v2-operator-seeded-prediction/start.mjs
 ```
 
 PID: `collector.pid`; log: `collector.log`; current state:
@@ -59,11 +58,15 @@ Only causal rows enter. The primary is host-02's live Dove lane; E13 recorded
 Dove series is the registered fallback. No credentials, SSH or node writes.
 An absent DCA is an unavailable arm, never a zero correction disguised as data.
 
-Arm 4 needs the sibling's landed operator-fit contract. The adapter currently
-looks for `analysis/od/operator-fit.mjs` exporting `fitOperator`; that is an
-integration seam, **not a claim that this API has landed**. The lane has not
-published a signature yet. Reconcile this seam against its published method
-and pin before enabling arm 4. Arm 5 additionally needs E13b Starlink DCA.
+Arm 4 is wired to the sibling's actual `analysis/od` method `fit_ffm`:
+MEME in `$FIL`, full-force `$PRW` configuration, kernel/EOP/weather and the
+causal `$DCL`; configuration sets 48 h exclusive, 600 s, fixed SRP and the
+registered iteration/drag seed. It estimates B_eff=(1-kappa)B; the seed is
+never silently treated as a physical prior. The current pinned module lacks
+that method. Enabling it requires a landed artifact plus the Fast-path typed
+OCM prediction adapter; `operatorFit(..., {invokeOnly:true,...})` is the real
+method invocation seam, not a claim of an enabled arm. Arm 5 also needs E13b
+Starlink DCA. No unlanded sibling artifact is loaded.
 The current OD SGP4 interface fixes a 11520-second fit window, so its 48-hour
 baseline remains explicitly unavailable. Causal CelesTrak baseline capture
 is also pending. No same-source truth or unregistered replacement baseline.
