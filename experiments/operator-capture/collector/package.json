@@ -1,0 +1,5 @@
+{
+  "name": "sdn-operator-capture", "version": "1.0.0", "private": true,
+  "type": "module", "engines": {"node": ">=22"},
+  "dependencies": {"flatbuffers": "25.9.23", "space-data-module-sdk": "0.9.7", "spacedatastandards.org": "1.259.0"}
+}
