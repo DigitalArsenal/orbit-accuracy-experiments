@@ -508,22 +508,23 @@ added at output time to λ, χ and ψ (equinoctial form as in Danielson et al. 1
 j ≠ 0 terms when they are wanted). Coefficients: EGM2008 (Pavlis et al. 2012), the FFM truth's field. The inclination
 functions come from Gooding's recurrence and are cached per object at each node.
 
-**2d.3 Size: the J22 term explains the measured LEO floor.** With l = m = 2, F_221 = (3/2) sin² i, G_210 = 1 and
-J22 = 1.815e-6, the along-track amplitude of (8) is A = 6 a (n/ψ̇_2) (R_E/a)² (3/2) sin² i J22:
+**2d.3 Size: the m-daily terms are the measured floor.** With l = m = 2, F_221 = (3/2) sin² i and G_210 = 1, the
+along-track amplitude of (8) is A_22 = 6 a (n/ψ̇_2) (R_E/a)² (3/2) sin² i J22 (J22 = 1.815e-6). The full set (even
+l ≤ 8, all m) was evaluated from the EGM2008 coefficients of the FFM module (`propagator/ffm/lib/egm2008_data.h`)
+with Kaula's inclination functions in exact arithmetic (a design estimate, not module code):
 
-| Orbit | a (km) | i (°) | n/ψ̇_2 | A (m) | A/√2 (m) | G1 in-track fit RMS, best-case XP (m) |
-| --- | --: | --: | --: | --: | --: | --: |
-| Starlink, 550 km shell | 6928 | 53.0 | 7.51 | 460 | 325 | 441 (all Starlinks) |
-| ISS | 6795 | 51.6 | 7.73 | 465 | 329 | 402 |
-| Stella (laser-ranged LEO) | 7180 | 98.6 | 7.11 | 643 | 455 | 388 (median of seven targets) |
-| LARES | 7820 | 69.5 | 6.26 | 467 | 330 | |
-| Ajisai | 7870 | 50.0 | 6.20 | 307 | 217 | |
-| LAGEOS-1, LARES-2 | 12270 | 109.8, 70.2 | 3.18 | 153 | 108 | 118 (laser-ranged high) |
-| LAGEOS-2 | 12163 | 52.7 | 3.23 | 112 | 79 | |
+| Orbit | a (km) | i (°) | A_22 (m) | next largest (l, m): A (m) | RMS of the set (m) | G1 in-track fit RMS, best-case XP (m) |
+| --- | --: | --: | --: | --- | --: | --: |
+| Starlink 550 km | 6928 | 53.05 | 454 | (4,3) 180, (4,2) 170, (4,1) 106 | 384 | 441 (all Starlinks) |
+| Starlink 530 km | 6908 | 43.0 | 332 | (4,2) 224, (4,1) 176 | 332 | |
+| Starlink 570 km | 6948 | 70.0 | 627 | (4,1) 327 | 519 | |
+| Starlink 560 km | 6938 | 97.6 | 707 | (4,1) 179 | 535 | |
+| ISS | 6795 | 51.64 | 459 | (4,2) 198, (4,3) 191 | 394 | 402 |
+| Stella (laser-ranged LEO) | 7180 | 98.6 | 646 | (4,1) 171 | 487 | 388 (median of seven targets) |
+| LAGEOS-1 | 12270 | 109.84 | 153 | (4,1) 26 | 110 | 118 (laser-ranged high) |
 
-The single J22 term is the size of the measured fit floor in every LEO and MEO laser-ranged regime, and its
-sin² i law shows in G1 section 6: Starlink strata at 85° and above fit at 0.63 to 0.69 km, those below 48° at 0.46
-to 0.51 km (predicted with a 0.30 km remainder in quadrature: 0.58 and 0.38 km).
+The m-daily set is the size of the measured fit floor in every LEO and laser-ranged regime, and its sin² i law shows
+in G1 section 6: Starlink strata at 85° and above fit at 0.63 to 0.69 km (3D), those below 48° at 0.46 to 0.51 km.
 
 **2d.4 Why a 0.4 km floor becomes a 10 km day-3 error: aliasing into the drag.** An unmodeled along-track term
 A cos(ω_m t + φ) on a fit arc of length T (C = ω_m T / 2π cycles), with the arc mapped to x ∈ [-1, 1], projects on
@@ -533,19 +534,30 @@ the drag's quadratic signature with the Legendre coefficient
 
 (from e^{ikx} = Σ_l (2l + 1) i^l j_l(k) P_l(x), j_l the spherical Bessel functions), and the fitted drag carries it
 forward as c_2 P_2(1 + 2L/T) at a lead L past the arc. For the J22 term of the 53° shell (period 11.82 h) and G1's
-24 h fit, C = 2.03 and |5 j_2(πC)| = 0.436. With A = 0.46 km and the median phase:
+24 h fit, C = 2.03 and |5 j_2(πC)| = 0.436; for the m = 1 terms (period about 24 h) |5 j_2(π · 1.02)| = 1.53, so even
+small m = 1 amplitudes alias hard. Where drag has no lever (above about 1,500 km the density cannot produce a
+quadratic of this size) the quadratic path is closed and the term aliases only into the mean motion, through
+3 j_1(πC) (0.46 at 24 h), growing linearly.
 
-| | Day 1 | Day 2 | Day 3 |
-| --- | --: | --: | --: |
-| Predicted by (9), J22 alone (km) | 1.04 | 3.56 | 7.81 |
-| Measured, best-case XP, FFM-propagated Starlink (km) | 1.502 | 4.733 | 9.867 |
-| Measured, best-case XP, laser-ranged LEO (km) | 0.970 | 3.174 | 9.399 |
+Predicted errors: least squares of {1, t, t²} (drag lever) or {1, t} (no drag lever) over the arc against the sum of
+the 2d.3 terms (and the 15:1 term of 2d.5 for Starlink), phases uniform, 4,000 draws, median of each held-out day's
+RMS (a design estimate):
 
-One gravity term the theory omits predicts about 80 % of the measured error on every held-out day. The fitted
-parameters corroborate it: XP's BTERM on the laser-ranged spheres is 0.14 m²/kg (median) and its AGOM 0.126 m²/kg,
-about 50 to 100 times the physical C_D A/m and C_R A/m of LARES, Starlette and Ajisai (spheres of known mass and
-diameter): the fitted drag carries something that is not drag. The m = 1 terms (period about 24 h) alias even harder
-at 24 h (|5 j_2(π · 1.02)| = 1.53), so their smaller amplitudes still matter; the 2d.6 measurement sizes them.
+| Regime (fit 24 h) | Model of the omitted gravity | Fit | Day 1 | Day 2 | Day 3 |
+| --- | --- | --: | --: | --: | --: |
+| Starlink 550 km, drag lever | m-daily l ≤ 6 and 15:1 | 0.35 | 1.08 | 3.59 | 7.88 |
+| measured, best-case XP, FFM-propagated Starlink | | 0.483 | 1.502 | 4.733 | 9.867 |
+| Stella, drag lever | m-daily l ≤ 6 | 0.45 | 1.36 | 4.56 | 10.03 |
+| measured, best-case XP, laser-ranged LEO | | 0.409 | 0.970 | 3.174 | 9.399 |
+| LAGEOS-1, no drag lever | m-daily | 0.11 | 0.14 | 0.22 | 0.31 |
+| measured, best-case XP, laser-ranged high | | 0.125 | 0.146 | 0.190 | 0.271 |
+
+The omitted tesseral gravity alone accounts for about 80 % of best-case XP's error on every held-out day of the FFM
+truth, for all of it on laser-ranged LEO, and for all of it on laser-ranged high orbits. The fitted parameters
+corroborate it: XP's BTERM on the laser-ranged LEO spheres is 0.14 m²/kg (median) and its AGOM 0.126 m²/kg, about
+50 to 100 times the physical C_D A/m and C_R A/m of LARES, Starlette and Ajisai (spheres of known mass and diameter):
+the fitted drag is carrying gravity. This is the central finding of this design: in LEO the binding term is not the
+atmosphere but the tesseral field that SGP4 and XP both omit, and its damage is done through the drag fit.
 
 **2d.5 Shallow resonance: the main Starlink shells sit near 15:1.** The 530 to 570 km shells (mean motions about 15.0
 to 15.1 rev/day) are within about 0.2 rev/day of fifteen revolutions per nodal day, ψ̇ = (Ṁ + ω̇) - 15(θ̇_G - Ω̇) ≈ -0.17
@@ -563,10 +575,10 @@ for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
 
 **2d.6 Expected gain, cost, parameters.**
 
-- Gain: the LEO in-track fit floor from 0.44 km to about 0.30 km with J22 alone (more with the even l ≤ 6 set), and
-  the day-3 error by removal of the aliasing of (9): predicted on the FFM-propagated Starlink from 9.87 km to about
-  6 km with J22 alone and lower with the m = 1 and 15:1 terms; the laser-ranged high fit floor from 0.125 km to about
-  0.06 km.
+- Gain: the LEO in-track fit floor from 0.44 km to the remainder of the 2d.4 table (about 0.25 km), and the aliasing
+  path closed. Predicted day 3 on the FFM-propagated Starlink: from 9.87 km to the drag-model part that remains
+  (about 2 to 4 km before 2a, section 3); laser-ranged LEO from 9.40 km to about 1 to 2 km; laser-ranged high from
+  0.271 km to well below 0.1 km (the m-daily set is all of its predicted error).
 - Cost: m-daily set (l even ≤ 6, all m: 12 terms) at output time: one cos/sin of (Ω - θ_G), multiples by
   recurrence, 12 cached coefficients: about 0.1 µs per state (+9 % of 1.12 µs). Shallow resonance in the rates:
   8 to 16 terms with cached F̄: about 0.3 µs per rate evaluation (+3 %). Memory: about 240 bytes per object of cached
@@ -585,11 +597,12 @@ c_2,res on P_2 biases the drag by δB/B = c_2,res / c_2,D. For the J22 term of (
 0.65 % at 72 h. A white floor σ_f with N_eff independent samples adds σ(c_2) = √(5/N_eff) σ_f; for the correlated
 floor of 2d, N_eff is the arc length over the residual's correlation time, not the sample count.
 
-**2e.2 The G1 fit-length study read through (9) and (11).** J22 aliasing alone predicts, for the common interval
-72 to 96 h, 7.81 / 0.49 / 0.09 km for 24 / 48 / 72 h fits (measured: 8.83 / 1.58 / 0.77 km), and for the first day
-after each fit 1.04 / 0.37 / 0.34 km (measured: 1.33 / 0.82 / 0.77 km). Long fits suppress the aliasing as
-predicted; what is left at 48 to 72 h, about 0.7 km on the first day, is not aliasing: it is the drag-model mismatch
-and the other unmodeled terms, the target of 2a and of the rest of 2d.
+**2e.2 The G1 fit-length study read through (9) and (11).** The omitted gravity of 2d.4 (m-daily l ≤ 6 and 15:1,
+drag lever) predicts, for the common interval 72 to 96 h, 7.88 / 1.26 / 0.66 km for 24 / 48 / 72 h fits (measured:
+8.83 / 1.58 / 0.77 km), and for the first day after each fit 1.08 / 0.50 / 0.66 km (measured: 1.33 / 0.82 / 0.77 km).
+Long fits suppress the m-daily aliasing as predicted; at 72 h what is left is mostly the 15:1 drift, which a longer
+arc resolves no better. The part no gravity term explains, √(measured² - predicted²), is 0.40 to 0.65 km on the
+first day after a 48 to 72 h fit: the drag-model mismatch, the target of 2a.
 
 **2e.3 Rules.**
 
@@ -614,9 +627,10 @@ stay (|5 j_2| = 1.46 at 21.7 h): the cleanest test of the aliasing account, runn
 
 **2e.5 Expected gain, cost, parameters.**
 
-- Laser-ranged LEO spheres: with B fixed near its physical value the quadratic path is closed; the J22 term then
-  enters only through the mean motion (|3 j_1(πC)| = 0.46 at 24 h, linear growth): predicted day 3 from 9.40 km to
-  about 1 km with the prior alone, and to the residual floor with 2d. The largest relative gain in any regime.
+- Laser-ranged LEO spheres: with B fixed near its physical value the quadratic path is closed and the m-daily set
+  enters only through the mean motion (linear growth): predicted for Stella, days 1 / 2 / 3, from 1.36 / 4.56 / 10.03
+  km (drag lever) to 0.62 / 0.92 / 1.27 km with the prior alone, and to the residual floor with 2d. The largest
+  relative gain in any regime, at no cost.
 - Starlink: 48 h stitched arcs give the measured 24 → 48 h improvement (next-day 1.33 → 0.82 km; 72–96 h interval
   8.83 → 1.58 km) without fitting the forecast tail; the B history prior adds to it on short arcs.
 - Cost: fit time only (the fit's Jacobian gains one prior row); 0 µs at propagation. Parameters: a 1-byte prior
