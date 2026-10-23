@@ -9,7 +9,7 @@ import { sha256, loadModule } from '../../harness/modules.mjs';
 import { dayList } from '../../harness/gp-archive.mjs';
 import { candidatesOf, claimed, selectCv, scoreArcs, cellsOf, fitRows, foldOf, foldStartMs, fit, SGP4, FFM } from './cv.mjs';
 import { compactCell, scoresJsonl } from './train.mjs';
-import { views, summaryOf, flagSummary, POOLED } from './test.mjs';
+import { views, summaryOf, flagSummary, POOLED, EXTREME_D2_OVER_3 } from './test.mjs';
 import { custodyOf, availableSets, detectorInput } from './events.mjs';
 import { makeDetector } from './maneuvers.mjs';
 import { truthFor, elementSets, issueMs, groupBy } from './universe.mjs';
@@ -60,7 +60,16 @@ export function render(metrics, manifest, sel, config) {
   lines.push('## Event rule', '', `Custody gap (longest recent gap or age >= max(3 days, 3 x median cadence)) or a maneuver-detection event within 7 days; computed from each object's own element sets before the issue time. Test: ${metrics.flags.flagged} of ${metrics.flags.pairs} pairs flagged. Training flag share: SGP4 ${f5(sel[SGP4].flagShare)}, FFM-1 ${f5(sel[FFM].flagShare)} (cap ${config.selection.flagShareCap}).`, '',
     '| Class | Pairs | Flagged | By custody gap | By detector | Detector refusals |', '| --- | ---: | ---: | ---: | ---: | ---: |');
   for (const [g, x] of Object.entries(metrics.flags.byClass)) lines.push(`| ${g} | ${x.pairs} | ${x.flagged} | ${x.custody} | ${x.detector} | ${x.detectorErrors} |`);
-  lines.push('', '### Effect on GPS', '', '| Candidate | Share of GPS d² in flagged arcs | GPS cells realistic, all samples | GPS cells realistic, unflagged samples |', '| --- | ---: | ---: | ---: |');
+  lines.push('', '### Effect on GPS', '', 'Selected candidate, GPS, all samples against unflagged samples (mean and median of d²/3; 95 % coverage):', '',
+    '| Mode | h | n all / unflagged | Mean d²/3 all | Mean d²/3 unflagged | Median d²/3 all | Median d²/3 unflagged | Coverage all | Coverage unflagged |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |');
+  for (const m of MODES) {
+    const c = pick(m), all = c.cells.all.filter(x => x.group === 'GPS'), un = c.cells.unflagged.filter(x => x.group === 'GPS');
+    for (const a of all) {
+      const u = un.find(x => x.hours === a.hours);
+      lines.push(`| ${m} | ${a.hours} | ${a.n} / ${u.n} | ${f5(a.mean?.[0])} | ${f5(u.mean?.[0])} | ${f5(a.medianD2 / 3)} | ${f5(u.medianD2 / 3)} | ${f5(a.coverage?.[0])} | ${f5(u.coverage?.[0])} |`);
+    }
+  }
+  lines.push('', '| Candidate | Share of GPS d² in flagged arcs | GPS cells realistic, all samples | GPS cells realistic, unflagged samples |', '| --- | ---: | ---: | ---: |');
   for (const [label, g] of Object.entries(metrics.gps)) {
     const m = label.startsWith('FFM') ? FFM : SGP4, name = label.includes('uncalibrated') ? 'N-none/ALL' : metrics.selected[m], c = mode(m)[name];
     const gpsReal = view => c.cells[view].filter(x => x.group === 'GPS' && x.decision === 'REALISTIC').length;
@@ -72,6 +81,10 @@ export function render(metrics, manifest, sel, config) {
     for (const o of g[view].objects.slice(0, 5)) lines.push(`| ${o.object} | ${o.n} | ${f5(o.contribution)} | ${f5(o.meanD2Over3)} | ${f5(o.medianD2Over3)} | ${f5(o.maxD2Over3)} |`);
     lines.push('');
   }
+  lines.push('## Extreme samples', '', `Selected candidates, samples with d²/3 above ${EXTREME_D2_OVER_3} (all arcs, no exclusions, object aggregates only). A truth epoch reached from several issue times with one error (truth epochs fewer than samples) points at the truth product or the element-set association rather than at prediction error; this experiment does not investigate it.`, '',
+    '| Mode | Class | Object | Samples | In flagged arcs | Truth epochs | Max d²/3 | Max position error (km) |', '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |');
+  for (const m of MODES) for (const x of metrics.extremes[m]) lines.push(`| ${m} | ${x.group} | ${x.object} | ${x.samples} | ${x.flagged} | ${x.truthEpochs} | ${f5(x.maxD2Over3)} | ${f5(x.maxErrorKm)} |`);
+  lines.push('');
   lines.push('## What the console may label realistic', '', 'Cells REALISTIC on the test for the selected candidate on its claimed population; nothing else.', '');
   for (const m of MODES) {
     const c = pick(m), horizons = [...new Set(c.cells[c.claimedView].map(x => x.hours))];
@@ -82,7 +95,7 @@ export function render(metrics, manifest, sel, config) {
   const cs = metrics.counts;
   lines.push('## Integrity and limits', '',
     `Run ${manifest.run}; ${manifest.workers} bounded single-threaded workers; peak dispatch load ${manifest.peakDispatchLoad}. Test arcs ${cs.sgp.arcs} (${cs.sgp.skipped} skipped, ${cs.sgp.samples} samples, ${cs.sgp.missingHorizons} absent horizons); FFM-1 arcs ${cs.ffm.arcs} (${cs.ffm.skipped} skipped, ${cs.ffm.samples} samples). No truth exclusions.`, '',
-    'Cell success does not certify an object. The selected configurations are aggregate MODELs. The event rule flags lapsed custody and detected burns, not the first sample after an unobserved burn. FFM uses the selected SGP4 candidate as seed and no process noise. The E14 population prior has an older fit and a broader published validation window; it is not independent of this test. FFM-1 environment uses observed drivers of the arc days, as V1c3 did. Native WasmEdge 0.16.4 accepted gp-error-model and rejects the frozen FFM artifact (ffm-memory-measured-sizing-20261022); Docker waived by owner ruling 2026-10-22. No unit suites, speed rerun, production SSH or deployment.', '',
+    'Cell success does not certify an object. The selected configurations are aggregate MODELs. The event rule flags lapsed custody and detected burns, not the first sample after an unobserved burn. LEO 400-800 km includes the five COSMIC-2 satellites with archived orbits (UCAR near-real-time orbits), added because the archive held no other LEO truth after 2026-09-26 than LARETS and Sentinel-1 (to 2026-10-03). FFM uses the selected SGP4 candidate as seed and no process noise; as registered, the seed factors (four class factors at the 1-hour stratum) are fitted on all SGP4 training weeks, so FFM-1 cross-validation folds F5-F7 share them; the test is unaffected. The E14 population prior has an older fit and a broader published validation window; it is not independent of this test. FFM-1 environment uses observed drivers of the arc days, as V1c3 did. Native WasmEdge 0.16.4 accepted gp-error-model and rejects the frozen FFM artifact (ffm-memory-measured-sizing-20261022); Docker waived by owner ruling 2026-10-22. No unit suites, speed rerun, production SSH or deployment.', '',
     'Sources: Space-Track / USSPACECOM / 18th Space Defense Squadron; ILRS; IGS (Johnston et al. 2017); © ESA/ESOC 2026; modified Copernicus Sentinel data 2026; UCAR COSMIC Program, 2019: COSMIC-2 Data Products, doi:10.5065/T353-C093 (CC BY 4.0). GFZ weather CC BY 4.0 (Matzka et al. 2021; F10.7 DRAO/Natural Resources Canada); NOAA SWPC public-domain forecast fills. [Data terms](../../docs/data-licenses.md). No raw OMM or truth is redistributed.', '',
     'E2E: `node experiments/v1c4-console-covariance-calibration/run.mjs --check`.', '');
   return lines.join('\n');

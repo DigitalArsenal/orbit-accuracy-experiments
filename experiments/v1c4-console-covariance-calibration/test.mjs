@@ -31,6 +31,7 @@ export function countsOf(arcs) {
 }
 
 export const referenceScores = 'test-SGP4-V1c3-F-coverage-scores.jsonl';
+export const EXTREME_D2_OVER_3 = 1e4;
 
 // Everything the README and metrics.json report, from the recorded arcs, flags and scores (shared by the test stage and --check).
 export function deriveMetrics({ config, configs, registration, sgpSel, ffmSel, sgpArcs, ffmArcs, flagRecords, scoredBy, refScored }) {
@@ -46,6 +47,20 @@ export function deriveMetrics({ config, configs, registration, sgpSel, ffmSel, s
   for (const [label, mode, name] of [['SGP4 uncalibrated N-none', SGP4, 'N-none/ALL'], ['SGP4 selected', SGP4, sgpSel.selected], ['FFM-1 selected', FFM, ffmSel.selected]]) {
     const scored = scoredBy[mode][name];
     metrics.gps[label] = { all: diagnostics(scored), unflagged: diagnostics(scored.filter(a => !flags.get(a.key))), flaggedMassShare: massShare(scored, flags) };
+  }
+  // Extreme samples of the selected candidates, by class and object: the tails the realism rule is sensitive to (no exclusions).
+  metrics.extremes = {};
+  for (const [mode, name] of [[SGP4, sgpSel.selected], [FFM, ffmSel.selected]]) {
+    const rows = new Map();
+    for (const a of scoredBy[mode][name]) for (const sample of a.samples) {
+      const d2 = sample.score?.d2Predicted;
+      if (!(d2 / 3 > EXTREME_D2_OVER_3)) continue;
+      const key = `${a.group}|${a.norad}`, r = rows.get(key) ?? { group: a.group, object: a.norad, samples: 0, flagged: 0, maxD2Over3: 0, maxErrorKm: 0, epochs: new Set() };
+      r.samples++; if (flags.get(a.key)) r.flagged++;
+      r.maxD2Over3 = Math.max(r.maxD2Over3, d2 / 3); r.maxErrorKm = Math.max(r.maxErrorKm, Math.hypot(...sample.score.errorRtn) / 1000); r.epochs.add(sample.ms);
+      rows.set(key, r);
+    }
+    metrics.extremes[mode] = [...rows.values()].map(({ epochs, ...r }) => ({ ...r, truthEpochs: epochs.size })).sort((x, y) => y.maxD2Over3 - x.maxD2Over3);
   }
   return metrics;
 }
