@@ -20,7 +20,9 @@ const MODES = [SGP4, FFM];
 const nameOf = mode => mode === SGP4 ? 'sgp' : 'ffm';
 
 // ── the committed manifest keeps a count and a tree hash for the long input lists; the run's own manifest has every hash ──
-export function summarizeInputs(inputs, root, runDir) {
+// `where` = the repository root and run directory the paths were recorded under (manifest.repositoryRoot, manifest.runDirectory).
+export function summarizeInputs(inputs, where) {
+  const { root, runDir } = where;
   const norm = p => p.startsWith(runDir + '/') ? `<run>/${p.slice(runDir.length + 1)}` : p.startsWith(root + '/') ? `<repo>/${p.slice(root.length + 1)}` : p;
   return Object.fromEntries(Object.entries(inputs).map(([kind, files]) => {
     const lines = Object.entries(files).map(([f, h]) => `${norm(f)} ${h}`).sort();
@@ -106,7 +108,7 @@ export function modelRecord({ metrics, sgpSel, ffmSel, manifest, config }) {
 
 export function publish({ root, runDir, run, config, configs, output, metrics, sgpSel, ffmSel, flags, flagRecords }) {
   const manifest = run.manifest, sel = { [SGP4]: sgpSel, [FFM]: ffmSel };
-  const committed = { ...manifest, inputs: summarizeInputs(manifest.inputs, root, runDir), repositoryRoot: undefined };
+  const committed = { ...manifest, inputs: summarizeInputs(manifest.inputs, { root: manifest.repositoryRoot, runDir: manifest.runDirectory }), repositoryRoot: undefined, runDirectory: undefined };
   fs.writeFileSync(path.join(output, 'metrics.json'), JSON.stringify(metrics, null, 2) + '\n');
   fs.writeFileSync(path.join(output, 'manifest.json'), JSON.stringify(committed, null, 2) + '\n');
   fs.writeFileSync(path.join(output, 'MODEL.json'), JSON.stringify(modelRecord({ metrics, sgpSel, ffmSel, manifest, config }), null, 2) + '\n');

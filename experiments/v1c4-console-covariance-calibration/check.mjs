@@ -35,12 +35,13 @@ export async function check({ root, runDir, config, configs, registration, outpu
     assert.equal(git(['show', `${registration}:${name}`]), fs.readFileSync(path.join(root, name), 'utf8').trim(), 'frozen registration changed');
   }
   for (const [name, hash] of Object.entries(manifest.files)) { assert.equal(sha256(fs.readFileSync(path.join(runDir, name))), hash, name); hashes++; }
+  // Paths were recorded under the checkout and run directory of the run; here they map to this checkout and this run directory.
+  const here = file => file.startsWith(manifest.runDirectory + '/') ? path.join(runDir, file.slice(manifest.runDirectory.length + 1)) : file.startsWith(manifest.repositoryRoot + '/') ? path.join(root, path.relative(manifest.repositoryRoot, file)) : file;
   for (const [kind, files] of Object.entries(manifest.inputs)) for (const [file, hash] of Object.entries(files)) {
-    assert.equal(sha256(fs.readFileSync(file)), hash, `input changed: ${file}`); hashes++;
-    if (['implementation', 'frozenSource'].includes(kind)) assert.equal(sha256(fs.readFileSync(path.join(root, path.relative(manifest.repositoryRoot, file)))), hash, `source changed: ${file}`);
+    assert.equal(sha256(fs.readFileSync(here(file))), hash, `input changed: ${file}`); hashes++;
   }
-  assert.deepEqual(committed.inputs, summarizeInputs(manifest.inputs, root, runDir), 'committed input summary differs from the run manifest');
-  assert.deepEqual(committed, roundTrip({ ...manifest, inputs: committed.inputs, repositoryRoot: undefined }));
+  assert.deepEqual(committed.inputs, summarizeInputs(manifest.inputs, { root: manifest.repositoryRoot, runDir: manifest.runDirectory }), 'committed input summary differs from the run manifest');
+  assert.deepEqual(committed, roundTrip({ ...manifest, inputs: committed.inputs, repositoryRoot: undefined, runDirectory: undefined }));
   bar(`${hashes} recorded hashes; committed manifest equals the run's`);
   const runtime = path.join(runDir, 'runtime');
   for (const [file, hash] of Object.entries(config.runtime.files)) assert.equal(sha256(fs.readFileSync(path.join(runtime, file))), hash, `runtime file differs from its pin: ${file}`);
@@ -120,48 +121,68 @@ export async function check({ root, runDir, config, configs, registration, outpu
     assert.deepEqual(roundTrip(replayRef), refScored);
     assert.equal(render(metrics, committed, sel, config), fs.readFileSync(path.join(output, 'README.md'), 'utf8'), 'README differs');
     assert.deepEqual(read(path.join(output, 'MODEL.json')), roundTrip(modelRecord({ metrics, sgpSel: sel[SGP4], ffmSel: sel[FFM], manifest, config })));
+    for (const m of MODES) for (const r of sel[m].ranking) {
+      const t = metrics.modes[m][r.name];
+      console.log(`    ${m} ${r.name}${r.name === sel[m].selected ? ' (selected)' : ''}: cross-validation ${Object.entries(r.realisticByFold).map(([id, n]) => `${id} ${n}`).join(' ')}; test claimed ${t.realistic.claimed}/24, all ${t.realistic.all}, unflagged ${t.realistic.unflagged}, flagged ${t.realistic.flaggedPooled}/6`);
+    }
     bar(`test: ${MODES.map(m => `${m} ${sel[m].selected} ${metrics.modes[m][sel[m].selected].realistic.claimed}/24`).join(', ')}; metrics, README and MODEL re-derived; selected candidates replayed in WASM`);
     // 6. V1c3: its published test cells from its recorded run, and the provisioning replay of its training arcs
-    const v1c3Dir = process.env.SDN_V1C3_RUN_DIR ?? path.join(root, 'runs/v1c3-console-covariance-calibration-20261023');
-    assert(fs.existsSync(path.join(v1c3Dir, 'test-sgp.jsonl')), `V1c3's recorded run is required (SDN_V1C3_RUN_DIR): ${v1c3Dir}`);
-    const published = read(path.join(root, 'results/v1c3/metrics.json')).test;
-    for (const [mode, cand, expected] of [[SGP4, 'F-coverage', 4], [FFM, 'coverage', 3]]) {
-      const cells = recordedTables(v1c3Dir, mode, 'test', configs)[cand];
-      assert.deepEqual(cells, published[mode][cand]); assert.equal(count(cells), expected);
-    }
-    const theirs = new Map(jsonl(path.join(v1c3Dir, 'train-sgp.jsonl')).map(a => [a.key.replace('E3:', ''), a]));
-    let replayed = 0;
-    for (const a of training[SGP4]) {
-      const b = theirs.get(a.key.replace('V4:', '')); if (!b || a.key.split(':').at(-1) > '2026-08-20') continue;
-      assert.deepEqual([a.group, a.ms, a.missingHorizons, a.skipped, a.samples], [b.group, b.ms, b.missingHorizons, b.skipped, b.samples], `provisioning replay differs: ${a.key}`); replayed++;
-    }
-    assert(replayed > 800, 'too few overlapping arcs');
+    const replayed = checkV1c3({ root, configs, training: training[SGP4] });
     bar(`V1c3's published test cells reproduced (F-coverage 4/24, FFM-1 coverage 3/24); ${replayed} SGP4 training arcs equal V1c3's recorded arcs`);
     // 7. the event rule re-derived for the registered sample of pairs
-    const eventRecords = [...jsonl(path.join(runDir, 'events-train.jsonl')), ...flagRecordsTest];
-    const sample = [...eventRecords].sort((a, b) => sha256(a.key).localeCompare(sha256(b.key))).slice(0, config.events.verificationSample);
-    const detector = await makeDetector(runtime);
-    for (const [window, daysList, records] of [['train', dayList(config.windows.folds[0].from, config.windows.folds.at(-1).to), sample.filter(r => flagsTrain.has(r.key))], ['test', dayList(...config.windows.test), sample.filter(r => flagsTest.has(r.key))]]) {
-      if (!records.length) continue;
-      const objects = new Set(records.map(r => r.norad));
-      const loaded = elementSets({ e3, days: daysList, keep: n => objects.has(n), epochLookbackDays: config.events.lookbackDays + 5, withHistory: false });
-      const byObject = new Map(); for (const s of loaded.sets) { if (!byObject.has(s.norad)) byObject.set(s.norad, []); byObject.get(s.norad).push(s); }
-      for (const r of records) {
-        const available = availableSets(byObject.get(r.norad) ?? [], r.ms, config.events.lookbackDays), custody = custodyOf(available, r.ms, config.events);
-        assert.deepEqual(roundTrip(custody), r.custody, `custody ${r.key}`);
-        if (available.length >= config.events.detector.minimumSets) {
-          const events = (await detector.events(detectorInput(available))).map(e => e.time);
-          assert.deepEqual(events, r.detector.events, `detector ${r.key}`);
-        } else assert.equal(r.detector.skipped, 'fewer than the minimum sets');
-      }
-    }
-    bar(`event rule: ${sample.length} pairs re-derived from the archive`);
+    const sampled = await checkEvents({ root, runDir, runtime, config, e3, flagsTrain, flagRecordsTest });
+    bar(`event rule: ${sampled} pairs re-derived from the archive`);
     // 8. inherited controls on the recorded training arcs
     const withModel = Object.entries(sel[SGP4].models).find(([, m]) => m.model);
     const result = await controls({ runDir, modules: runtime, gp, codec, selection: { selected: withModel[0], models: sel[SGP4].models } });
     bar(`covariance controls: identity ${result.maxIdentityRelative}, sum ${result.maxSumScoreRelative}, zero-time ${result.maxZeroTimeRelative}; native/headless gp-error-model parity`);
     console.log(`V1C4-E2E PASS: ${hashes} hashes, ${MODES.map(m => `${m} ${sel[m].selected} ${metrics.modes[m][sel[m].selected].realistic.claimed}/24 on the fresh test`).join(', ')}; cross-validation, selections, fits, test cells, V1c3 reproduction and event flags re-derived.`);
   } finally { await gp.destroy(); }
+}
+
+// V1c3's published test cells (4/24 and 3/24) from its recorded run; and V1c4's SGP4 arcs for V1c3's training pairs equal V1c3's.
+export function checkV1c3({ root, configs, training }) {
+  const v1c3Dir = process.env.SDN_V1C3_RUN_DIR ?? path.join(root, 'runs/v1c3-console-covariance-calibration-20261023');
+  assert(fs.existsSync(path.join(v1c3Dir, 'test-sgp.jsonl')), `V1c3's recorded run is required (SDN_V1C3_RUN_DIR): ${v1c3Dir}`);
+  const published = read(path.join(root, 'results/v1c3/metrics.json')).test;
+  for (const [mode, cand, expected] of [[SGP4, 'F-coverage', 4], [FFM, 'coverage', 3]]) {
+    const cells = recordedTables(v1c3Dir, mode, 'test', configs)[cand];
+    assert.deepEqual(cells, published[mode][cand]); assert.equal(count(cells), expected);
+  }
+  const theirs = new Map(jsonl(path.join(v1c3Dir, 'train-sgp.jsonl')).map(a => [a.key.replace('E3:', ''), a]));
+  let replayed = 0;
+  for (const a of training) {
+    const b = theirs.get(a.key.replace('V4:', '')); if (!b || a.key.split(':').at(-1) > '2026-08-20') continue;
+    assert.deepEqual([a.group, a.ms, a.missingHorizons, a.skipped, a.samples], [b.group, b.ms, b.missingHorizons, b.skipped, b.samples], `provisioning replay differs: ${a.key}`); replayed++;
+  }
+  assert(replayed > 800, 'too few overlapping arcs');
+  return replayed;
+}
+
+// The event rule for the registered sample (the pairs with the smallest SHA-256 of their key): custody numbers and detector events.
+export async function checkEvents({ root, runDir, runtime, config, e3, flagsTrain, flagRecordsTest }) {
+  const trainRecords = jsonl(path.join(runDir, 'events-train.jsonl'));
+  const eventRecords = [...trainRecords, ...flagRecordsTest];
+  const sample = [...eventRecords].sort((a, b) => sha256(a.key).localeCompare(sha256(b.key))).slice(0, config.events.verificationSample);
+  const detector = await makeDetector(runtime);
+  const testKeys = new Set(flagRecordsTest.map(r => r.key));
+  for (const [daysList, records] of [[dayList(config.windows.folds[0].from, config.windows.folds.at(-1).to), sample.filter(r => flagsTrain.has(r.key))], [dayList(...config.windows.test), sample.filter(r => testKeys.has(r.key))]]) {
+    if (!records.length) continue;
+    const objects = new Set(records.map(r => r.norad));
+    const loaded = elementSets({ e3, days: daysList, keep: n => objects.has(n), epochLookbackDays: config.events.lookbackDays + 5, withHistory: false });
+    const byObject = new Map(); for (const s of loaded.sets) { if (!byObject.has(s.norad)) byObject.set(s.norad, []); byObject.get(s.norad).push(s); }
+    for (const r of records) {
+      const available = availableSets(byObject.get(r.norad) ?? [], r.ms, config.events.lookbackDays), custody = custodyOf(available, r.ms, config.events);
+      assert.deepEqual(roundTrip(custody), r.custody, `custody ${r.key}`);
+      if (available.length >= config.events.detector.minimumSets) {
+        const events = (await detector.events(detectorInput(available))).map(e => e.time);
+        assert.deepEqual(events, r.detector.events, `detector ${r.key}`);
+        assert.deepEqual(events.filter(t => t > r.ms - config.events.windowDays * 86400000 && t <= r.ms), r.detector.recent);
+      } else assert.equal(r.detector.skipped, 'fewer than the minimum sets');
+      assert.equal(Boolean(custody.flag || r.detector.recent.length), r.flagged);
+    }
+  }
+  return sample.length;
 }
 const MODES = [SGP4, FFM];
 const nameOf = mode => mode === SGP4 ? 'sgp' : 'ffm';

@@ -45,7 +45,7 @@ for (const file of ['PLAN.md', 'config.json']) {
 const provenance = read(path.join(runtime, 'PROVENANCE.json'));
 for (const [file, hash] of Object.entries({ ...config.runtime.files })) assert.equal(sha256(fs.readFileSync(path.join(runtime, file))), hash, `runtime file differs from its pin: ${file}`);
 const run = new Run({ root, dir: runDir, config, registration, runtimeProvenance: { runtimeProvenanceSha256: sha256(fs.readFileSync(path.join(runtime, 'PROVENANCE.json'))), modulesCommit: provenance.modulesCommit, truthToolsCommit: provenance.truthToolsCommit, sds: provenance.sds } });
-run.manifest.repositoryRoot = root;
+run.manifest.repositoryRoot = root; run.manifest.runDirectory = runDir;
 // What produced the numbers: this experiment's code, the V1c3/V1c2/E14/E3 sources it imports, and the pinned runtime (config.runtime).
 run.inputs.implementation = Object.fromEntries(['universe', 'collect', 'events', 'event-worker', 'maneuvers', 'environment', 'cv', 'train', 'run-state', 'provision'].map(n => path.join(dir, `${n}.mjs`)).map(f => [f, sha256(fs.readFileSync(f))]));
 run.inputs.frozenSource = Object.fromEntries(['experiments/v1c3-console-covariance-calibration/calibration.mjs', 'experiments/v1c3-console-covariance-calibration/evaluate.mjs', 'experiments/v1c3-console-covariance-calibration/controls.mjs',
@@ -119,6 +119,10 @@ try {
       assert.equal(sha256(execFileSync('git', ['show', `${frozen.commit}:${relative}`], { cwd: root, maxBuffer: 1 << 28 })), frozen.sha256);
     }
     run.manifest.testStarted ??= new Date().toISOString(); run.checkpoint();
+    // The refreshed truth: the converter script, its log, the EOP file it read, and the pinned arguments (config.truth.fetch).
+    run.input('truthRefresh', path.join(root, config.truth.fetch.script));
+    run.input('truthRefresh', path.join(runDir, 'truth/fetch.log'));
+    assert.equal(sha256(run.input('truthRefresh', config.truth.fetch.eopFile)), config.truth.fetch.eopFileSha256);
     await runTest({ root, run, runDir, runtime, config, configs, e3, gp, codec, output, registration, universe, noteSets, noteTruth, elementSets, pairsOf, jobOf, groupBy, collect, environmentOf, eventFlags, loadFlags });
   }
 } finally { await gp.destroy(); run.checkpoint(); }
