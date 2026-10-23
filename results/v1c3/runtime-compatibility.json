@@ -1,5 +1,5 @@
 {
-  "status": "BLOCKED_BEFORE_CALIBRATION",
+  "status": "KNOWN_ARTIFACT_DEFECT_NOT_EXPERIMENT_BLOCKER",
   "registrationCommit": "5e1be5ef06815647e8e8a10c96a58a536b353105",
   "runtime": "WasmEdge 0.16.4, Darwin arm64",
   "command": "/private/tmp/srccov-tools/spacedatanetwork prewarm-aot --cache-dir /private/tmp/covcal-aot-cache --flow /Users/tj/software/worktrees/space-data-network-modules--console-covariance-calibration-20261023/analysis/gp-error-model/dist/isomorphic/module.wasm --flow /Users/tj/software/worktrees/space-data-network-modules--console-covariance-calibration-20261023/propagator/ffm/dist/isomorphic/module.wasm",
@@ -37,5 +37,7 @@
     "landing",
     "deployment"
   ],
-  "ownerWaiver": "Docker only, 2026-10-22; no native AOT waiver received."
+  "ownerWaiver": "Docker only, owner 2026-10-22; no native AOT waiver claimed.",
+  "defectOwner": "ffm-memory-measured-sizing-20261022",
+  "resumeDecision": "Coordinator 2026-10-23 ~01:10Z: native AOT is required for node flow artifacts; this experiment preserves exact V1c2 execution and artifacts."
 }
