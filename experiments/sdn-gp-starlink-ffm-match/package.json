@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Dependencies of the G1 experiment: the SDK and SDS versions the landed modules (od 0.3.0, ffm 2.0.0, sgp4-xp 0.1.1, gp-error-model 0.10.0) are built against.",
   "dependencies": {
+    "esbuild": "^0.25.12",
     "flatbuffers": "25.9.23",
     "space-data-module-sdk": "0.9.10",
     "spacedatastandards.org": "1.261.0"

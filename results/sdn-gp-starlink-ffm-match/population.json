@@ -1,0 +1,1035 @@
+{
+  "cycle": "2026-10-23T13-01-35-253Z",
+  "cycleSubsetSha256": "b6f50a5d457cdf7f169f8311b0b1aa9a4083418e68a4ef0332a84454b15e2eb4",
+  "candidates": 11132,
+  "salt": "g1-20261023",
+  "seatsTotal": 199,
+  "seatsByStratum": {
+    "alt0-inc1": 15,
+    "alt1-inc1": 48,
+    "alt2-inc1": 4,
+    "alt3-inc3": 1,
+    "alt3-inc2": 12,
+    "alt2-inc2": 6,
+    "alt0-inc2": 7,
+    "alt1-inc2": 14,
+    "alt3-inc1": 4,
+    "alt1-inc3": 27,
+    "alt2-inc3": 1,
+    "alt0-inc3": 4,
+    "alt2-inc0": 40,
+    "alt0-inc0": 13,
+    "alt1-inc0": 3,
+    "alt3-inc0": 1
+  },
+  "edges": {
+    "altitudeBandsKm": [
+      420,
+      475,
+      520
+    ],
+    "inclinationGroupsDeg": [
+      48,
+      60,
+      85
+    ]
+  },
+  "seats": [
+    {
+      "norad": 63753,
+      "stratum": "alt0-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 64073,
+      "stratum": "alt0-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 62555,
+      "stratum": "alt0-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 63672,
+      "stratum": "alt0-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 63186,
+      "stratum": "alt0-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 63115,
+      "stratum": "alt0-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 62590,
+      "stratum": "alt0-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 62277,
+      "stratum": "alt0-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 63113,
+      "stratum": "alt0-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 63064,
+      "stratum": "alt0-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 62885,
+      "stratum": "alt0-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 100866,
+      "stratum": "alt0-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 63055,
+      "stratum": "alt0-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 48120,
+      "stratum": "alt0-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 47788,
+      "stratum": "alt0-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 61212,
+      "stratum": "alt0-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 60063,
+      "stratum": "alt0-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 45061,
+      "stratum": "alt0-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 44949,
+      "stratum": "alt0-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 60999,
+      "stratum": "alt0-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 61885,
+      "stratum": "alt0-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 61579,
+      "stratum": "alt0-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 60728,
+      "stratum": "alt0-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 59422,
+      "stratum": "alt0-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 60729,
+      "stratum": "alt0-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 45237,
+      "stratum": "alt0-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 45383,
+      "stratum": "alt0-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 62223,
+      "stratum": "alt0-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 100758,
+      "stratum": "alt0-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 100763,
+      "stratum": "alt0-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 100536,
+      "stratum": "alt0-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 100514,
+      "stratum": "alt0-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 101016,
+      "stratum": "alt0-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 101017,
+      "stratum": "alt0-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 101011,
+      "stratum": "alt0-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 100105,
+      "stratum": "alt0-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 100118,
+      "stratum": "alt0-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 53201,
+      "stratum": "alt0-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 53208,
+      "stratum": "alt0-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 62920,
+      "stratum": "alt1-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 57408,
+      "stratum": "alt1-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 59730,
+      "stratum": "alt1-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 49745,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 52586,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 50204,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 65630,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 69191,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 52362,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 60198,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 69833,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 47919,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 58160,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 69242,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 67856,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 60590,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 54761,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 65746,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 65207,
+      "stratum": "alt1-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 52578,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 62858,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 51714,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 69469,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 64743,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 53156,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 57678,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 53003,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 51727,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 68092,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 65509,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 67868,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 68564,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 53799,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 50818,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 100051,
+      "stratum": "alt1-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 60098,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 58552,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 65830,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 66228,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 48662,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 50199,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 47873,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 64770,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 68066,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 52350,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 59008,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 54157,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 64757,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 54096,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 52856,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 66363,
+      "stratum": "alt1-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 100637,
+      "stratum": "alt1-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 64299,
+      "stratum": "alt1-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 64345,
+      "stratum": "alt1-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 100450,
+      "stratum": "alt1-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 64430,
+      "stratum": "alt1-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 100025,
+      "stratum": "alt1-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 100011,
+      "stratum": "alt1-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 62184,
+      "stratum": "alt1-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 56478,
+      "stratum": "alt1-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 56483,
+      "stratum": "alt1-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 63931,
+      "stratum": "alt1-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 64714,
+      "stratum": "alt1-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 64038,
+      "stratum": "alt1-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 53214,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 65387,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 100261,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 67732,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 67742,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 69992,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 100260,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 65196,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 65402,
+      "stratum": "alt1-inc3",
+      "tercile": 0
+    },
+    {
+      "norad": 67724,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 68618,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 100181,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 68780,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 69335,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 69551,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 67649,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 53207,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 65536,
+      "stratum": "alt1-inc3",
+      "tercile": 1
+    },
+    {
+      "norad": 68306,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 67552,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 67706,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 69143,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 68304,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 68382,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 68122,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 67813,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 67560,
+      "stratum": "alt1-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 59613,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 59803,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 55570,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 59034,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 57256,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 56391,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 56422,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 56527,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 63328,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 62160,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 57777,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 56426,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 67934,
+      "stratum": "alt2-inc0",
+      "tercile": 0
+    },
+    {
+      "norad": 58408,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 56555,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 55460,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 63571,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 57892,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 68008,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 59651,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 56021,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 56136,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 58132,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 67361,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 67349,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 63595,
+      "stratum": "alt2-inc0",
+      "tercile": 1
+    },
+    {
+      "norad": 58873,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 58246,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 63465,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 63562,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 57106,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 59897,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 57105,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 57133,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 62925,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 57072,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 59870,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 62604,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 63405,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 57050,
+      "stratum": "alt2-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 53529,
+      "stratum": "alt2-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 53913,
+      "stratum": "alt2-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 51121,
+      "stratum": "alt2-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 52833,
+      "stratum": "alt2-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 49179,
+      "stratum": "alt2-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 67211,
+      "stratum": "alt2-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 49151,
+      "stratum": "alt2-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 49171,
+      "stratum": "alt2-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 64713,
+      "stratum": "alt2-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 56787,
+      "stratum": "alt2-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 53660,
+      "stratum": "alt2-inc3",
+      "tercile": 2
+    },
+    {
+      "norad": 57603,
+      "stratum": "alt3-inc0",
+      "tercile": 2
+    },
+    {
+      "norad": 53847,
+      "stratum": "alt3-inc1",
+      "tercile": 0
+    },
+    {
+      "norad": 53553,
+      "stratum": "alt3-inc1",
+      "tercile": 1
+    },
+    {
+      "norad": 51886,
+      "stratum": "alt3-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 52129,
+      "stratum": "alt3-inc1",
+      "tercile": 2
+    },
+    {
+      "norad": 55399,
+      "stratum": "alt3-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 55648,
+      "stratum": "alt3-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 56809,
+      "stratum": "alt3-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 56810,
+      "stratum": "alt3-inc2",
+      "tercile": 0
+    },
+    {
+      "norad": 55948,
+      "stratum": "alt3-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 56460,
+      "stratum": "alt3-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 66839,
+      "stratum": "alt3-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 55439,
+      "stratum": "alt3-inc2",
+      "tercile": 1
+    },
+    {
+      "norad": 67193,
+      "stratum": "alt3-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 67028,
+      "stratum": "alt3-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 67014,
+      "stratum": "alt3-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 49178,
+      "stratum": "alt3-inc2",
+      "tercile": 2
+    },
+    {
+      "norad": 65436,
+      "stratum": "alt3-inc3",
+      "tercile": 2
+    }
+  ],
+  "queueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
+}
