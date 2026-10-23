@@ -15,9 +15,9 @@ import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { loadEnvironment, operatorFit, propagate } from './lib/ffm.mjs';
 import { parseMeme, memeHeader } from './lib/sources.mjs';
+import { polite, manifest, STARLINK_ROOT } from './lib/spacex.mjs';
 import { withT, ms } from './lib/windows.mjs';
 
-const STARLINK_ROOT = 'https://api.starlink.com/public-files/ephemerides';
 const DAILY = path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/starlink');
 const rowsDir = path.join(store, 'rows/starlink');
 const truthDir = path.join(store, 'truth');
@@ -51,28 +51,11 @@ function tasks() {
 }
 
 // ---- the MEME text of one satellite, in memory ----
-let manifestCache = null;
-async function polite(url) {
-  const lock = path.join(store, 'fetch.lock');
-  for (;;) {
-    let last = 0;
-    try { last = fs.statSync(lock).mtimeMs; } catch { /* first request */ }
-    const wait = last + config.fit.requestSpacingSeconds * 1000 - Date.now();
-    if (wait <= 0) break;
-    await sleep(wait + Math.random() * 400);
-  }
-  fs.writeFileSync(lock, String(Date.now()));
-  const response = await fetch(url, { signal: AbortSignal.timeout(180000) });
-  if (response.status === 403 || response.status === 429) throw new Error(`HTTP ${response.status} from ${new URL(url).host}: stop`);
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return Buffer.from(await response.arrayBuffer());
-}
 async function memeOf(norad) {
   const local = path.join(DAILY, `${norad}.txt.gz`);
   if (fs.existsSync(local)) return { bytes: zlib.gunzipSync(fs.readFileSync(local)), name: `MEME_${norad}_local.txt`, origin: 'daily-capture-2026-10-23' };
   if (args['no-fetch']) throw new Error('not in the local capture and fetching is off');
-  manifestCache ??= (await polite(`${STARLINK_ROOT}/MANIFEST.txt`)).toString('utf8').split('\n').filter(Boolean);
-  const file = manifestCache.find((f) => f.startsWith(`MEME_${norad}_`));
+  const file = (await manifest()).find((f) => f.startsWith(`MEME_${norad}_`));
   if (!file) throw new Error('not in the SpaceX manifest');
   return { bytes: await polite(`${STARLINK_ROOT}/${file}`), name: file, origin: 'spacex-fetch' };
 }

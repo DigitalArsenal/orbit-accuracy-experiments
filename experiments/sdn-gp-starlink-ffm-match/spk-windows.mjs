@@ -9,15 +9,10 @@ import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { openContainers } from './lib/containers.mjs';
 import { openTime } from './lib/timeconv.mjs';
-import { KERNELS, spkObject } from './lib/spk-sources.mjs';
+import { KERNELS, A5, spkObject } from './lib/spk-sources.mjs';
 import { windowStarts, ms, iso } from './lib/windows.mjs';
 
-const A5 = Object.freeze({
-  fitHours: [24, 72], strideSeconds: 172800,
-  themis: { span: ['2013-02-08T00:00:00Z', '2013-02-24T00:00:00Z'], objects: [['A', -650], ['D', -653], ['E', -654]] },
-  chandra: { span: ['2018-03-01T00:00:00Z', '2018-04-30T00:00:00Z'] },
-  artemis2: { span: ['2026-04-02T01:58:21Z', '2026-04-02T22:49:21Z'], fitHours: 8, minCoverage: 0.4 },
-});
+
 const wanted = new Set((args.source ?? 'heo-themis,heo-chandra,heo-artemis2').split(','));
 const FILES = (dir) => ({
   themis: (letter) => path.join(dir, `themis/THEMIS_${letter}_2013_039_055.bsp`),

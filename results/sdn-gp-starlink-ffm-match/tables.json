@@ -2,13 +2,13 @@
   "generatedFrom": "recorded window rows (statistics only)",
   "ricConsistency": {
     "xp": {
-      "n": 2803,
-      "min": 0.9926619342343379,
-      "median": 0.9992484246677308,
-      "max": 1.0028458420415876
+      "n": 3470,
+      "min": 0.9499339749467228,
+      "median": 0.9991981339469378,
+      "max": 1.0261397146777682
     },
     "sgp4": {
-      "n": 2742,
+      "n": 3426,
       "min": 0.9999999999999979,
       "median": 1,
       "max": 1.0000000000000018
@@ -521,6 +521,152 @@
           }
         }
       }
+    },
+    {
+      "id": "leo-starlink-ffm-clean",
+      "label": "LEO, Starlink, FFM truth, clean: fit converged and B_eff between 0 and 0.5 m2/kg",
+      "windows": 132,
+      "objects": 132,
+      "xp": {
+        "attempted": 132,
+        "fitted": 132,
+        "fit": {
+          "n": 132,
+          "median": 0.47876443,
+          "mean": 0.5073670674848483,
+          "p90": 0.6326306542000001
+        },
+        "fitRic": [
+          0.11302607349999999,
+          0.435365419,
+          0.1530180215
+        ],
+        "fitMsMedian": 1607.312979499984,
+        "elementBytes": 312,
+        "recordBytes": 2272,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 132,
+            "median": 1.4559638000000001,
+            "mean": 1.7474042194621207,
+            "p90": 2.9726610030000007,
+            "ric": [
+              0.12727699890705435,
+              1.4372708569794284,
+              0.19484825930518795
+            ]
+          },
+          "2": {
+            "n": 132,
+            "median": 4.674527360000001,
+            "mean": 5.2577617815984885,
+            "p90": 10.15251617,
+            "ric": [
+              0.148433471378893,
+              4.655610746037034,
+              0.2868548435965234
+            ]
+          },
+          "3": {
+            "n": 132,
+            "median": 9.816876485,
+            "mean": 11.189590809856057,
+            "p90": 22.12590135,
+            "ric": [
+              0.18097174821791362,
+              9.796485596105665,
+              0.3884740538021193
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 132,
+        "fitted": 132,
+        "fit": {
+          "n": 132,
+          "median": 0.475899093864771,
+          "mean": 0.5034482998626164,
+          "p90": 0.6339111342280946
+        },
+        "fitRic": [
+          0.11725572509456869,
+          0.43292377646469804,
+          0.15353847372290924
+        ],
+        "fitMsMedian": 662.7601670000586,
+        "elementBytes": 304,
+        "recordBytes": 648,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 132,
+            "median": 1.8598449205083334,
+            "mean": 2.0946524243444373,
+            "p90": 3.6456615107562174,
+            "ric": [
+              0.1366679434975253,
+              1.8437724237406954,
+              0.1903108016702098
+            ]
+          },
+          "2": {
+            "n": 132,
+            "median": 6.1425795124745495,
+            "mean": 6.704102815685134,
+            "p90": 12.493891443772094,
+            "ric": [
+              0.1758063261829228,
+              6.135246207520387,
+              0.270802604581975
+            ]
+          },
+          "3": {
+            "n": 132,
+            "median": 13.746135866601152,
+            "mean": 14.80636416285333,
+            "p90": 26.632028082975626,
+            "ric": [
+              0.21889033827046533,
+              13.738994604291193,
+              0.36688209732299903
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 132,
+        "days": {
+          "0": {
+            "n": 132,
+            "medianRatio": 1.0060208900839875,
+            "xpCloser": 0.44696969696969696
+          },
+          "1": {
+            "n": 132,
+            "medianRatio": 0.7828415068080277,
+            "xpCloser": 0.696969696969697
+          },
+          "2": {
+            "n": 132,
+            "medianRatio": 0.7610039642965661,
+            "xpCloser": 0.696969696969697
+          },
+          "3": {
+            "n": 132,
+            "medianRatio": 0.7141553510213707,
+            "xpCloser": 0.6742424242424242
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.0081933,
+        "agom": 0,
+        "agomShare": 0.3181818181818182,
+        "bstar": 0.00018955387463696872
+      },
+      "comspoc": null
     },
     {
       "id": "leo-starlink-ffm-drag",
@@ -2511,18 +2657,478 @@
         "bstar": 0
       },
       "comspoc": null
-    }
-  ],
-  "missing": [
-    {
-      "id": "heo",
-      "label": "HEO",
-      "reason": "no precise ephemeris of a highly elliptical orbit in the archive; to fetch next: JPL Horizons or NAIF vectors of TESS, IBEX and Cluster"
     },
     {
+      "id": "heo-gp",
+      "label": "HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit",
+      "windows": 50,
+      "objects": 4,
+      "xp": {
+        "attempted": 50,
+        "fitted": 48,
+        "fit": {
+          "n": 48,
+          "median": 0.1027074895,
+          "mean": 0.17509536661874994,
+          "p90": 0.3151452210000002
+        },
+        "fitRic": [
+          0.0637669733,
+          0.0659342374,
+          0.0417096698
+        ],
+        "fitMsMedian": 538.3043335000038,
+        "elementBytes": 320,
+        "recordBytes": 2384,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 48,
+            "median": 0.609961067,
+            "mean": 1.3646895261395837,
+            "p90": 2.3343205300000007,
+            "ric": [
+              0.2778278024315548,
+              0.5338779518443424,
+              0.07878021321436074
+            ]
+          },
+          "2": {
+            "n": 48,
+            "median": 1.43584768,
+            "mean": 3.4419572208541678,
+            "p90": 9.698695641000004,
+            "ric": [
+              0.85151550661888,
+              0.9456698438649258,
+              0.11871037601464443
+            ]
+          },
+          "3": {
+            "n": 48,
+            "median": 2.7305095899999996,
+            "mean": 5.521179027833334,
+            "p90": 10.43322858,
+            "ric": [
+              1.67324656990976,
+              2.065254112950562,
+              0.1746799752859125
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 50,
+        "fitted": 50,
+        "fit": {
+          "n": 50,
+          "median": 8.271267647816812,
+          "mean": 7.048919364435435,
+          "p90": 10.43267352081174
+        },
+        "fitRic": [
+          4.713665162816192,
+          5.051170983117761,
+          1.3954497406843736
+        ],
+        "fitMsMedian": 172.14604200000758,
+        "elementBytes": 288,
+        "recordBytes": 616,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 50,
+            "median": 60.95928845224915,
+            "mean": 87.03866354777148,
+            "p90": 180.00366304685727,
+            "ric": [
+              36.598992641000066,
+              43.81575414966554,
+              2.0883621951295868
+            ]
+          },
+          "2": {
+            "n": 50,
+            "median": 142.76773347615665,
+            "mean": 258.43789438027363,
+            "p90": 601.9076767037324,
+            "ric": [
+              89.68428505175018,
+              115.80163385224593,
+              3.982926545935303
+            ]
+          },
+          "3": {
+            "n": 50,
+            "median": 222.1929997474629,
+            "mean": 474.0221131242531,
+            "p90": 1207.2926593590207,
+            "ric": [
+              118.89942309046826,
+              182.0467049069353,
+              5.601657185846866
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 48,
+        "days": {
+          "0": {
+            "n": 48,
+            "medianRatio": 0.012417381938681369,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 48,
+            "medianRatio": 0.01000603980930317,
+            "xpCloser": 1
+          },
+          "2": {
+            "n": 48,
+            "medianRatio": 0.010057228233855782,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 48,
+            "medianRatio": 0.012288909160519931,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.000017968500000000003,
+        "agom": 0.0036961500000000005,
+        "agomShare": 0.75,
+        "bstar": 0
+      },
+      "comspoc": null
+    },
+    {
+      "id": "heo-gp-72h",
+      "label": "HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit",
+      "windows": 46,
+      "objects": 4,
+      "xp": {
+        "attempted": 46,
+        "fitted": 42,
+        "fit": {
+          "n": 42,
+          "median": 0.257690535,
+          "mean": 0.586431366047619,
+          "p90": 0.9449287713999999
+        },
+        "fitRic": [
+          0.1452650905,
+          0.20242578049999999,
+          0.0670405001
+        ],
+        "fitMsMedian": 1429.5501250000088,
+        "elementBytes": 312,
+        "recordBytes": 2368,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 42,
+            "median": 0.627743902,
+            "mean": 1.6487353244047622,
+            "p90": 2.8965375169999996,
+            "ric": [
+              0.41251540022776734,
+              0.43413304426361043,
+              0.11692159058718643
+            ]
+          },
+          "2": {
+            "n": 42,
+            "median": 2.030975885,
+            "mean": 3.683753938380951,
+            "p90": 11.112727834999998,
+            "ric": [
+              0.8902328558526129,
+              1.4589779650968393,
+              0.16225198394841317
+            ]
+          },
+          "3": {
+            "n": 42,
+            "median": 2.69906207,
+            "mean": 4.875171511095237,
+            "p90": 11.038477659999998,
+            "ric": [
+              1.7251357899582391,
+              2.088124221575119,
+              0.20888464643549998
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 46,
+        "fitted": 46,
+        "fit": {
+          "n": 46,
+          "median": 11.681465036326674,
+          "mean": 12.04868102664196,
+          "p90": 15.740267244195678
+        },
+        "fitRic": [
+          7.47186561129871,
+          8.559971885578841,
+          1.9141041560748409
+        ],
+        "fitMsMedian": 447.904666500006,
+        "elementBytes": 304,
+        "recordBytes": 640,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 46,
+            "median": 35.21785385181737,
+            "mean": 44.67798676381885,
+            "p90": 98.17725376913316,
+            "ric": [
+              14.26554564338813,
+              17.959682471168016,
+              4.926209125325512
+            ]
+          },
+          "2": {
+            "n": 46,
+            "median": 50.811745552556395,
+            "mean": 105.32318597126728,
+            "p90": 243.18648414499808,
+            "ric": [
+              19.279558379825694,
+              40.857956357583284,
+              5.915846633660985
+            ]
+          },
+          "3": {
+            "n": 46,
+            "median": 57.211708814721966,
+            "mean": 163.84576304002886,
+            "p90": 409.8543039785184,
+            "ric": [
+              22.264801050942637,
+              46.757715950043305,
+              6.201955118562829
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 42,
+        "days": {
+          "0": {
+            "n": 42,
+            "medianRatio": 0.022059778820434046,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 42,
+            "medianRatio": 0.017824592737572684,
+            "xpCloser": 1
+          },
+          "2": {
+            "n": 42,
+            "medianRatio": 0.042527720444195526,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 42,
+            "medianRatio": 0.04717674276677899,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.000109183,
+        "agom": 0.00201635,
+        "agomShare": 0.6190476190476191,
+        "bstar": 0.10422723676960917
+      },
+      "comspoc": null
+    },
+    {
+      "id": "heo-artemis2",
+      "label": "HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1)",
+      "windows": 1,
+      "objects": 1,
+      "xp": {
+        "attempted": 1,
+        "fitted": 1,
+        "fit": {
+          "n": 1,
+          "median": 15.8894434,
+          "mean": 15.8894434,
+          "p90": 15.8894434
+        },
+        "fitRic": [
+          10.7846744,
+          11.6648615,
+          0.310190512
+        ],
+        "fitMsMedian": 694.0178750000196,
+        "elementBytes": 296,
+        "recordBytes": 2008,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 1,
+            "median": 136.687229,
+            "mean": 136.687229,
+            "p90": 136.687229,
+            "ric": [
+              29.08168280545471,
+              122.47286227853473,
+              52.75012253204982
+            ]
+          },
+          "2": {
+            "n": 0,
+            "median": null,
+            "mean": null,
+            "p90": null,
+            "ric": [
+              null,
+              null,
+              null
+            ]
+          },
+          "3": {
+            "n": 0,
+            "median": null,
+            "mean": null,
+            "p90": null,
+            "ric": [
+              null,
+              null,
+              null
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 1,
+        "fitted": 0,
+        "fit": {
+          "n": 0,
+          "median": null,
+          "mean": null,
+          "p90": null
+        },
+        "fitRic": [
+          null,
+          null,
+          null
+        ],
+        "fitMsMedian": null,
+        "elementBytes": null,
+        "recordBytes": null,
+        "parameters": null,
+        "days": {
+          "1": {
+            "n": 0,
+            "median": null,
+            "mean": null,
+            "p90": null,
+            "ric": [
+              null,
+              null,
+              null
+            ]
+          },
+          "2": {
+            "n": 0,
+            "median": null,
+            "mean": null,
+            "p90": null,
+            "ric": [
+              null,
+              null,
+              null
+            ]
+          },
+          "3": {
+            "n": 0,
+            "median": null,
+            "mean": null,
+            "p90": null,
+            "ric": [
+              null,
+              null,
+              null
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 0,
+        "days": {
+          "0": null,
+          "1": null,
+          "2": null,
+          "3": null
+        }
+      },
+      "terms": {
+        "bterm": 0,
+        "agom": 0,
+        "agomShare": 0,
+        "bstar": null
+      },
+      "comspoc": null
+    }
+  ],
+  "awaiting": [
+    {
       "id": "cislunar",
-      "label": "Cislunar, lunar, interplanetary",
-      "reason": "no spacecraft kernels in the archive (planetary ephemerides only); SGP4 does not apply; to fetch next: NAIF SPKs of LRO, CAPSTONE, Danuri and Artemis I, Horizons vectors of cruise arcs, JPL SBDB elements for small bodies"
+      "label": "Cislunar, Earth-centred (Artemis II after the translunar burn)",
+      "mission": "artemis2",
+      "reason": "the Moon dominates after the burn; SPK type 13, readable",
+      "kernel": {
+        "file": "art002_rec_260402_260410_jsc_bet_revf.bsp",
+        "span": "2026-04-02T01:58:21.398Z to 2026-04-10T23:53:24.644Z",
+        "types": [
+          13
+        ],
+        "centers": [
+          "Earth"
+        ]
+      }
+    },
+    {
+      "id": "lunar",
+      "label": "Lunar-centred (LRO)",
+      "mission": "lro",
+      "reason": "Moon-centred; SPK type 13, readable",
+      "kernel": {
+        "file": "lrorg_2026074_2026166_v01.bsp",
+        "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
+        "types": [
+          13
+        ],
+        "centers": [
+          "Moon"
+        ]
+      }
+    },
+    {
+      "id": "interplanetary",
+      "label": "Interplanetary, Sun-centred (Psyche, Lucy, Juno)",
+      "mission": "psyche",
+      "reason": "SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap",
+      "kernel": {
+        "file": "psyche_sc-eph_260531-270301_261020_v1.bsp",
+        "span": "2026-05-31T23:58:50.816Z to 2027-03-01T12:00:00.001Z",
+        "types": [
+          1
+        ],
+        "centers": [
+          "Sun"
+        ]
+      }
     }
   ],
   "byShell": [
@@ -3273,6 +3879,193 @@
       "ffm": 2,
       "spacex": 7
     }
+  },
+  "truthQuality": {
+    "groups": [
+      {
+        "name": "at the 12-iteration cap; B_eff 0 to 0.5",
+        "n": 36,
+        "fitRmsKm": {
+          "median": 0.318715939101317,
+          "p90": 0.9348973832818743,
+          "max": 19.51149622899805
+        },
+        "bEffMedian": 0.018392468304014087,
+        "xpDay3": 9.830688795,
+        "sgp4Day3": 16.363015099324194
+      },
+      {
+        "name": "at the 12-iteration cap; B_eff above 0.5",
+        "n": 9,
+        "fitRmsKm": {
+          "median": 11.436300797421358,
+          "p90": 19.11375109151446,
+          "max": 21.092055679366503
+        },
+        "bEffMedian": 1.7449568998347622,
+        "xpDay3": 28.0299771,
+        "sgp4Day3": 19.159418272099476
+      },
+      {
+        "name": "at the 12-iteration cap; B_eff at zero",
+        "n": 11,
+        "fitRmsKm": {
+          "median": 0.5521220974961512,
+          "p90": 0.9066478325782069,
+          "max": 165.46643420875583
+        },
+        "bEffMedian": 0,
+        "xpDay3": 3.84113414,
+        "sgp4Day3": 16.468214859878113
+      },
+      {
+        "name": "converged; B_eff 0 to 0.5",
+        "n": 132,
+        "fitRmsKm": {
+          "median": 0.26824092206128036,
+          "p90": 0.7277489859365202,
+          "max": 11.652718478596059
+        },
+        "bEffMedian": 0.01202871226629356,
+        "xpDay3": 9.816876485,
+        "sgp4Day3": 13.746135866601152
+      },
+      {
+        "name": "converged; B_eff above 0.5",
+        "n": 10,
+        "fitRmsKm": {
+          "median": 2.4448454243010875,
+          "p90": 8.162362372140946,
+          "max": 13.233644754666617
+        },
+        "bEffMedian": 1.623204489593971,
+        "xpDay3": 17.86233005,
+        "sgp4Day3": 45.8264001241901
+      },
+      {
+        "name": "converged; B_eff at zero",
+        "n": 41,
+        "fitRmsKm": {
+          "median": 0.5833859689258727,
+          "p90": 1.3078408038332512,
+          "max": 31.977554849748447
+        },
+        "bEffMedian": 0,
+        "xpDay3": 3.70375589,
+        "sgp4Day3": 14.519993229796153
+      }
+    ],
+    "refit": {
+      "n": 8,
+      "skippedBecauseTheFileChanged": 43,
+      "converged": 8,
+      "iterationsMedian": 16,
+      "gapKm": [
+        {
+          "hours": 24,
+          "median": 2.1379980780142267e-7,
+          "max": 4.350222553312023
+        },
+        {
+          "hours": 48,
+          "median": 4.015408530602013e-7,
+          "max": 1.1589535128455297
+        },
+        {
+          "hours": 72,
+          "median": 7.838650200277189e-7,
+          "max": 19.94030904553661
+        },
+        {
+          "hours": 96,
+          "median": 0.0000013635800482017247,
+          "max": 53.68307150207412
+        }
+      ],
+      "bEffRelativeChangeMedian": 3.447748780509334e-8,
+      "rmsBefore": 0.27873798910421704,
+      "rmsAfter": 0.2787379885880597,
+      "xpDay3Before": 14.641827900000001,
+      "xpDay3After": 14.65396475,
+      "leavingTheBound": 0,
+      "enteringTheBound": 0
+    }
+  },
+  "newer": {
+    "satellites": 22,
+    "horizonHours": {
+      "min": 5.783333333333333,
+      "median": 6.6,
+      "max": 7.15
+    },
+    "newestFileStart": "2026-10-23T18:39:42Z",
+    "arms": [
+      {
+        "arm": "spacexOld",
+        "n": 22,
+        "median": 0.044220808950736844,
+        "p90": 0.34453004587406544,
+        "inTrackShare": 0.9854969368926156
+      },
+      {
+        "arm": "ffm",
+        "n": 22,
+        "median": 0.15994117686197618,
+        "p90": 1.2294933739325529,
+        "inTrackShare": 0.9682505496604334
+      },
+      {
+        "arm": "xp",
+        "n": 22,
+        "median": 0.5557047796899581,
+        "p90": 1.3890959780497203,
+        "inTrackShare": 0.9071922342915455
+      },
+      {
+        "arm": "sgp4",
+        "n": 22,
+        "median": 0.5603689991382419,
+        "p90": 1.3708280352264481,
+        "inTrackShare": 0.8912177779813524
+      },
+      {
+        "arm": "comspoc",
+        "n": 22,
+        "median": 35.92228047282546,
+        "p90": 3833.1394521132765,
+        "inTrackShare": 0.9979105345198727
+      }
+    ],
+    "ffmByGroup": [
+      {
+        "group": "clean",
+        "n": 11,
+        "median": 0.11880586380457746,
+        "p90": 0.29226916210723614,
+        "spacexOldMedian": 0.04181124741907235
+      },
+      {
+        "group": "bound",
+        "n": 4,
+        "median": 0.1940216811899767,
+        "p90": 0.2735342322033446,
+        "spacexOldMedian": 0.05827356849635652
+      },
+      {
+        "group": "decay",
+        "n": 2,
+        "median": 9.400764302709469,
+        "p90": 16.00917509623494,
+        "spacexOldMedian": 1.0510276114909212
+      },
+      {
+        "group": "capped",
+        "n": 5,
+        "median": 0.08573799500806562,
+        "p90": 8.846870082490051,
+        "spacexOldMedian": 0.04060131042019005
+      }
+    ]
   },
   "bench": [
     {

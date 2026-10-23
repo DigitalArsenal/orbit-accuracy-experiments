@@ -204,8 +204,8 @@
       "regime": "LEO",
       "source": "SpaceX Starlink forecasts, prospective capture (E13b collector)",
       "product": "derived products only: Brouwer mean elements, energy, drag work at 10 min over the first 8 h; no states, no raw files",
-      "count": 11143,
-      "span": "5 cycles logged, 1 complete: 2026-10-23T13:01:35.254Z to 2026-10-23T13:01:35.254Z",
+      "count": 22286,
+      "span": "6 cycles logged, 2 complete: 2026-10-23T13:01:35.254Z to 2026-10-23T21:01:35.255Z",
       "usable": "selection of the population only",
       "note": "The truth states of V2 start 2026-10-24 08:00Z."
     },
@@ -279,7 +279,7 @@
       "count": 0,
       "span": null,
       "usable": "none",
-      "note": "Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept. Precise GEO truth exists (GFZ MGEX, above)."
+      "note": "operator-capture holds Starlink only. Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept; SES, Intelsat, OneWeb and Kuiper exist locally only as CelesTrak SupGP element sets and our OMM fits of them (no ephemerides). Precise GEO truth exists (GFZ MGEX, above)."
     },
     {
       "regime": "MEO",
@@ -291,13 +291,103 @@
       "note": "Same as GEO."
     },
     {
+      "regime": "Cislunar and HEO",
+      "source": "NAIF artemis2 EM2_FODNAVBET_revF_PUBLIC.oem",
+      "product": "CCSDS OEM of the same trajectory; SPK type n/a,  segments, 6.3 MB",
+      "count": 1,
+      "span": "same as the SPK",
+      "usable": "cross-check text of the SPK",
+      "note": "Fetched 2026-10-23 from ARTEMIS/kernels/spk/EM2_FODNAVBET_revF_PUBLIC.oem."
+    },
+    {
+      "regime": "Cislunar and HEO",
+      "source": "NAIF artemis2 art002_rec_260402_260410_jsc_bet_revf.bsp",
+      "product": "Orion, Earth-centred J2000 throughout; SPK type 13, 6 segments, 5.7 MB",
+      "count": 6,
+      "span": "2026-04-02T01:58:21.398Z to 2026-04-10T23:53:24.644Z",
+      "usable": "first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: awaiting SDN-GP",
+      "note": "Fetched 2026-10-23 from ARTEMIS/kernels/spk/art002_rec_260402_260410_jsc_bet_revf.bsp."
+    },
+    {
       "regime": "HEO",
-      "source": "operator or precise orbits (Molniya, Tundra, TESS, IBEX)",
-      "product": "none",
-      "count": 0,
-      "span": null,
-      "usable": "none",
-      "note": ""
+      "source": "NAIF chandra chandra_merged.bsp",
+      "product": "Earth-centred, highly elliptical, 64 h period; SPK type 9, 1523 segments, 67.7 MB",
+      "count": 1523,
+      "span": "1999-08-07T07:29:59.999Z to 2019-09-02T11:59:59.998Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from CHANDRA/kernels/spk/chandra_merged.bsp."
+    },
+    {
+      "regime": "Interplanetary",
+      "source": "NAIF juno spk_merge_110805_171017_130515.bsp",
+      "product": "Jupiter system and cruise, SPK types 1, 2, 3; SPK type 1, 118 segments, 7.8 MB",
+      "count": 118,
+      "span": "2011-08-05T17:18:05.999Z to 2017-10-16T23:58:50.816Z",
+      "usable": "awaiting SDN-GP; type 1 and 2 not readable",
+      "note": "Fetched 2026-10-23 from JUNO/kernels/spk/spk_merge_110805_171017_130515.bsp."
+    },
+    {
+      "regime": "Lunar",
+      "source": "NAIF lro lrorg_2026074_2026166_v01.bsp",
+      "product": "lunar-centred (Moon), J2000; SPK type 13, 92 segments, 7.6 MB",
+      "count": 92,
+      "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
+      "usable": "awaiting SDN-GP",
+      "note": "Fetched 2026-10-23 from pds/data/lro-l-spice-6-v1.0/lrosp_1000/data/spk/lrorg_2026074_2026166_v01.bsp."
+    },
+    {
+      "regime": "Interplanetary",
+      "source": "NAIF lucy lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp",
+      "product": "Sun-centred, SPK type 1, predicted trajectory; SPK type 1, 18 segments, 0.8 MB",
+      "count": 18,
+      "span": "2026-10-15T23:59:59.998Z to 2033-03-13T16:41:00.001Z",
+      "usable": "awaiting SDN-GP; type 1 not readable",
+      "note": "Fetched 2026-10-23 from LUCY/kernels/spk/lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp."
+    },
+    {
+      "regime": "Interplanetary",
+      "source": "NAIF psyche psyche_sc-eph_260531-270301_261020_v1.bsp",
+      "product": "Sun-centred, SPK type 1 (modified difference arrays); SPK type 1, 70 segments, 16.4 MB",
+      "count": 70,
+      "span": "2026-05-31T23:58:50.816Z to 2027-03-01T12:00:00.001Z",
+      "usable": "awaiting SDN-GP; type 1 is not readable by files/orbit-products 0.1.4",
+      "note": "Fetched 2026-10-23 from PSYCHE/kernels/spk/psyche_sc-eph_260531-270301_261020_v1.bsp."
+    },
+    {
+      "regime": "GEO",
+      "source": "NAIF tdrss TDRSS.bsp",
+      "product": "SPK type 10, generated from two-line elements; SPK type 10, 10 segments, 8.5 MB",
+      "count": 10,
+      "span": "2014-09-25T11:32:49.566Z to 2026-02-11T07:05:12.877Z",
+      "usable": "not truth: element-derived",
+      "note": "Fetched 2026-10-23 from TDRSS/kernels/spk/TDRSS.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF themis THEMIS_A_2013_039_055.bsp",
+      "product": "Earth-centred, highly elliptical (THEMIS A, D, E); SPK type 13, 3 segments, 1.3 MB",
+      "count": 3,
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from THEMIS/kernels/spk/THEMIS_A_2013_039_055.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF themis THEMIS_D_2013_039_055.bsp",
+      "product": "Earth-centred, highly elliptical (THEMIS A, D, E); SPK type 13, 3 segments, 1.3 MB",
+      "count": 3,
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from THEMIS/kernels/spk/THEMIS_D_2013_039_055.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF themis THEMIS_E_2013_039_055.bsp",
+      "product": "Earth-centred, highly elliptical (THEMIS A, D, E); SPK type 13, 3 segments, 1.3 MB",
+      "count": 3,
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from THEMIS/kernels/spk/THEMIS_E_2013_039_055.bsp."
     },
     {
       "regime": "Cislunar / lunar / interplanetary (bodies)",
@@ -336,13 +426,13 @@
       "note": "Spans from the archive README."
     },
     {
-      "regime": "Cislunar / lunar / interplanetary (spacecraft)",
-      "source": "NAIF spacecraft SPK (LRO, CAPSTONE, Artemis, Danuri, cruise arcs)",
-      "product": "none in the archive",
+      "regime": "Cislunar / HEO",
+      "source": "TESS, CAPSTONE, Artemis I, Danuri",
+      "product": "not hosted by NAIF",
       "count": 0,
       "span": null,
       "usable": "none",
-      "note": "The archive holds planetary kernels only. To fetch next: LRO, CAPSTONE, Danuri and Artemis I kernels from NAIF, JPL Horizons vectors for cruise arcs."
+      "note": "NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); JPL Horizons has them. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I."
     },
     {
       "regime": "Cislunar / L2",

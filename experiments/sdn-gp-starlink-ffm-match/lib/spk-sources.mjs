@@ -6,6 +6,14 @@ import { openContainers, readSpk } from './containers.mjs';
 import { openTime, convertAll } from './timeconv.mjs';
 import { withT } from './windows.mjs';
 
+// Amendment A5: the windows of the highly elliptical orbits.
+export const A5 = Object.freeze({
+  fitHours: [24, 72], strideSeconds: 172800,
+  themis: { span: ['2013-02-08T00:00:00Z', '2013-02-24T00:00:00Z'], objects: [['A', -650], ['D', -653], ['E', -654]] },
+  chandra: { span: ['2018-03-01T00:00:00Z', '2018-04-30T00:00:00Z'] },
+  artemis2: { span: ['2026-04-02T01:58:21Z', '2026-04-02T22:49:21Z'], fitHours: 8, minCoverage: 0.4 },
+});
+
 export const KERNELS = (archive) => path.join(archive, 'hac/naif-kernels/spk/missions');
 
 const parseTdb = (text) => { // 'YYYY-MM-DDTHH:MM:SS.ffffff' -> { wholeMs (to the second), micro }

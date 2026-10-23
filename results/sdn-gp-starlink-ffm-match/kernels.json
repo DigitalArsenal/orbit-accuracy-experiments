@@ -1,0 +1,262 @@
+{
+  "note": "metadata of the NAIF kernels fetched for amendment A5; the kernels stay in the archive",
+  "rows": [
+    {
+      "mission": "artemis2",
+      "file": "EM2_FODNAVBET_revF_PUBLIC.oem",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/ARTEMIS/kernels/spk/EM2_FODNAVBET_revF_PUBLIC.oem",
+      "retrievedUtc": "2026-10-23T21:34:55Z",
+      "bytes": 6264091,
+      "sha256": "d8ed8a5a16d40d69da32a54d83a19970e47f4e8bd6e547210b01b1c78e002ff3",
+      "regime": "Cislunar and HEO",
+      "geometry": "CCSDS OEM of the same trajectory",
+      "segments": null,
+      "targets": [
+        -24
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [],
+      "span": "same as the SPK",
+      "use": "cross-check text of the SPK"
+    },
+    {
+      "mission": "artemis2",
+      "file": "art002_rec_260402_260410_jsc_bet_revf.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/ARTEMIS/kernels/spk/art002_rec_260402_260410_jsc_bet_revf.bsp",
+      "retrievedUtc": "2026-10-23T21:34:51Z",
+      "bytes": 5693440,
+      "sha256": "b8b3ebc4d703c3a73c9651b9da36114c3ef0b2c75f92873dd4970f32367aa7be",
+      "regime": "Cislunar and HEO",
+      "geometry": "Orion, Earth-centred J2000 throughout",
+      "segments": 6,
+      "targets": [
+        -24
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [
+        13
+      ],
+      "span": "2026-04-02T01:58:21.398Z to 2026-04-10T23:53:24.644Z",
+      "use": "first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: awaiting SDN-GP"
+    },
+    {
+      "mission": "chandra",
+      "file": "chandra_merged.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/CHANDRA/kernels/spk/chandra_merged.bsp",
+      "retrievedUtc": "2026-10-23T21:35:29Z",
+      "bytes": 67708928,
+      "sha256": "570e1fee3d3d6bba48fb85c366db1e51cb9080794e7b26dc178bf6396f7954cc",
+      "regime": "HEO",
+      "geometry": "Earth-centred, highly elliptical, 64 h period",
+      "segments": 1523,
+      "targets": [
+        -151
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [
+        9
+      ],
+      "span": "1999-08-07T07:29:59.999Z to 2019-09-02T11:59:59.998Z",
+      "use": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits"
+    },
+    {
+      "mission": "juno",
+      "file": "spk_merge_110805_171017_130515.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/JUNO/kernels/spk/spk_merge_110805_171017_130515.bsp",
+      "retrievedUtc": "2026-10-23T21:35:16Z",
+      "bytes": 7779328,
+      "sha256": "f595b0abdfd7e8b723c1127a72d35fc6c8eb261e4f4e0fbc4aeea1abc82a407c",
+      "regime": "Interplanetary",
+      "geometry": "Jupiter system and cruise, SPK types 1, 2, 3",
+      "segments": 118,
+      "targets": [
+        -61
+      ],
+      "centers": [
+        "Earth",
+        "Sun",
+        5
+      ],
+      "types": [
+        1
+      ],
+      "span": "2011-08-05T17:18:05.999Z to 2017-10-16T23:58:50.816Z",
+      "use": "awaiting SDN-GP; type 1 and 2 not readable"
+    },
+    {
+      "mission": "lro",
+      "file": "lrorg_2026074_2026166_v01.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/pds/data/lro-l-spice-6-v1.0/lrosp_1000/data/spk/lrorg_2026074_2026166_v01.bsp",
+      "retrievedUtc": "2026-10-23T21:35:01Z",
+      "bytes": 7557120,
+      "sha256": "5e17414e03c794e9dc29e4f4fde64d1d2d9fd106d87f26404188888495de28b1",
+      "regime": "Lunar",
+      "geometry": "lunar-centred (Moon), J2000",
+      "segments": 92,
+      "targets": [
+        -85
+      ],
+      "centers": [
+        "Moon"
+      ],
+      "types": [
+        13
+      ],
+      "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
+      "use": "awaiting SDN-GP"
+    },
+    {
+      "mission": "lucy",
+      "file": "lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/LUCY/kernels/spk/lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp",
+      "retrievedUtc": "2026-10-23T21:35:10Z",
+      "bytes": 821248,
+      "sha256": "b45c99793bfd5fdc32e922b1e1b7f96b877b65bca4f287d3fcf4c4faea55f22d",
+      "regime": "Interplanetary",
+      "geometry": "Sun-centred, SPK type 1, predicted trajectory",
+      "segments": 18,
+      "targets": [
+        -49
+      ],
+      "centers": [
+        "Sun",
+        20000617,
+        "Earth",
+        20021900,
+        20011351,
+        920015094,
+        920003548
+      ],
+      "types": [
+        1
+      ],
+      "span": "2026-10-15T23:59:59.998Z to 2033-03-13T16:41:00.001Z",
+      "use": "awaiting SDN-GP; type 1 not readable"
+    },
+    {
+      "mission": "psyche",
+      "file": "psyche_sc-eph_260531-270301_261020_v1.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/PSYCHE/kernels/spk/psyche_sc-eph_260531-270301_261020_v1.bsp",
+      "retrievedUtc": "2026-10-23T21:35:06Z",
+      "bytes": 16357376,
+      "sha256": "98e55a6dfa6410750713205140adad8c63a5a605ae539d73e545d2ba26a14428",
+      "regime": "Interplanetary",
+      "geometry": "Sun-centred, SPK type 1 (modified difference arrays)",
+      "segments": 70,
+      "targets": [
+        -255
+      ],
+      "centers": [
+        "Sun"
+      ],
+      "types": [
+        1
+      ],
+      "span": "2026-05-31T23:58:50.816Z to 2027-03-01T12:00:00.001Z",
+      "use": "awaiting SDN-GP; type 1 is not readable by files/orbit-products 0.1.4"
+    },
+    {
+      "mission": "tdrss",
+      "file": "TDRSS.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/TDRSS/kernels/spk/TDRSS.bsp",
+      "retrievedUtc": "2026-10-23T21:34:31Z",
+      "bytes": 8469504,
+      "sha256": "769f828561b98aa04ab4114f5dac9ea6507b569e9119e358f259e33bb90a6970",
+      "regime": "GEO",
+      "geometry": "SPK type 10, generated from two-line elements",
+      "segments": 10,
+      "targets": [
+        -124,
+        -128,
+        -132,
+        -136,
+        -137,
+        -138,
+        -139,
+        -141,
+        -220,
+        -221
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [
+        10
+      ],
+      "span": "2014-09-25T11:32:49.566Z to 2026-02-11T07:05:12.877Z",
+      "use": "not truth: element-derived"
+    },
+    {
+      "mission": "themis",
+      "file": "THEMIS_A_2013_039_055.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/THEMIS/kernels/spk/THEMIS_A_2013_039_055.bsp",
+      "retrievedUtc": "2026-10-23T21:34:35Z",
+      "bytes": 1338368,
+      "sha256": "b754902de448c97c7f9dd60f21e2327d9fc5e9fd95431c61ec00ad8d11220d5b",
+      "regime": "HEO",
+      "geometry": "Earth-centred, highly elliptical (THEMIS A, D, E)",
+      "segments": 3,
+      "targets": [
+        -650
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [
+        13
+      ],
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "use": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits"
+    },
+    {
+      "mission": "themis",
+      "file": "THEMIS_D_2013_039_055.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/THEMIS/kernels/spk/THEMIS_D_2013_039_055.bsp",
+      "retrievedUtc": "2026-10-23T21:34:40Z",
+      "bytes": 1338368,
+      "sha256": "c5994b43ed417251ce9c675e3b6a3b196aa67e12b188bb234d76d2d6a8445fd1",
+      "regime": "HEO",
+      "geometry": "Earth-centred, highly elliptical (THEMIS A, D, E)",
+      "segments": 3,
+      "targets": [
+        -653
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [
+        13
+      ],
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "use": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits"
+    },
+    {
+      "mission": "themis",
+      "file": "THEMIS_E_2013_039_055.bsp",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/THEMIS/kernels/spk/THEMIS_E_2013_039_055.bsp",
+      "retrievedUtc": "2026-10-23T21:34:45Z",
+      "bytes": 1338368,
+      "sha256": "57e523cf72a67dbe50e08cf593ef877e1b67117e0deef95c322d50f504c7faa6",
+      "regime": "HEO",
+      "geometry": "Earth-centred, highly elliptical (THEMIS A, D, E)",
+      "segments": 3,
+      "targets": [
+        -654
+      ],
+      "centers": [
+        "Earth"
+      ],
+      "types": [
+        13
+      ],
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "use": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits"
+    }
+  ]
+}

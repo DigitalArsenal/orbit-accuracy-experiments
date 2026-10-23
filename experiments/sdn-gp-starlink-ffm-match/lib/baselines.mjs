@@ -118,3 +118,31 @@ export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, mi
   const [xp, sgp4] = [await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay), await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay)];
   return { source: object.source, id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4 };
 }
+
+/** The two fitted element sets of a window as the modules return them ($OMM payloads), for propagation to other epochs. */
+export async function fitElementSets(b, object, startMs, fitSeconds) {
+  const stopFit = startMs + fitSeconds * 1000;
+  const lines = slice(object, startMs, stopFit);
+  const out = { xp: null, sgp4: null };
+  try { out.xp = (await b.xp.call('fit', [frame('ephemeris', 'OEM', block(object, lines, { useableStart: lines[0].epoch, useableStop: iso(stopFit) }))])).elements; } catch { /* reported as null */ }
+  try {
+    out.sgp4 = (await b.gem.call('fit_elements', [frame('ephemeris', 'OEM', block(object, lines, {})),
+      b.erm.frame('options', 'fitOptions', { from: iso(startMs), to: iso(stopFit), epoch: 'first', fitBstar: true, closure: false })])).elements;
+  } catch { /* reported as null */ }
+  return out;
+}
+
+/** A set ($OMM payload) propagated by propagator/sgp4-xp to the given epochs (ms) in the named axes ('EME2000', 'GCRF'): [{r, v}] in km, km/s. */
+export async function propagateSet(b, payload, epochsMs, axes = 'EME2000') {
+  const grid = oemBytes({ block: { frame: axes, object: { name: 'grid', norad: 0 }, lines: epochsMs.map((t) => ({ epoch: iso(t), r: [0, 0, 0], v: [0, 0, 0] })), start: iso(epochsMs[0]), stop: iso(epochsMs.at(-1)) } });
+  const prop = await b.xp.call('propagate', [ommFrame('omm', payload), frame('grid', 'OEM', grid)]);
+  return blockLines(readOem(prop.ephemeris).EPHEMERIS_DATA_BLOCK[0]);
+}
+
+/** Radial / in-track / cross-track RMS (km) of predicted states against truth states (same axes, same epochs), by pair_statistics. */
+export async function compareStates(b, predicted, truth) {
+  const pairs = predicted.map((p, i) => ({ id: String(i), predicted: { position: p.r, velocity: p.v, covariance: PLACEHOLDER_COVARIANCE, covarianceAxes: 'INERTIAL' }, truth: { position: truth[i].r, velocity: truth[i].v } }));
+  const stats = b.erm.decode((await b.gem.call('pair_statistics', [b.erm.frame('pairs', 'pairs', { axesFrom: 'truth', pairs })])).statistics).pairs;
+  const ric = [0, 1, 2].map((c) => rms(stats.map((s) => s.errorRtn[c])));
+  return { n: stats.length, rmsKm: Math.hypot(...ric), ric, inTrackMeanKm: stats.reduce((s, x) => s + x.errorRtn[1], 0) / stats.length };
+}

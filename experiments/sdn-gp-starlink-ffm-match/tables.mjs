@@ -3,12 +3,13 @@
 //   node experiments/sdn-gp-starlink-ffm-match/tables.mjs [--check]   (--check recomputes and compares with the committed tables.json)
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, store, results, write, sha256 } from './common.mjs';
+import { config, store, results, write, sha256, read } from './common.mjs';
 import { quantile, mean } from './lib/windows.mjs';
 import { source as licenceSource } from '../../harness/data-licenses.mjs';
 
 const REGIMES = [
   { id: 'leo-starlink-ffm', label: 'LEO, Starlink, FFM-propagated truth' },
+  { id: 'leo-starlink-ffm-clean', label: 'LEO, Starlink, FFM truth, clean: fit converged and B_eff between 0 and 0.5 m2/kg' },
   { id: 'leo-starlink-ffm-drag', label: 'LEO, Starlink, FFM truth, B_eff between 0 and 0.5 m2/kg (drag acts)' },
   { id: 'leo-starlink-ffm-decay', label: 'LEO, Starlink, FFM truth, B_eff above 0.5 m2/kg (more than ten times a physical value: lowering or decaying objects)' },
   { id: 'leo-starlink-ffm-b0', label: 'LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable)' },
@@ -20,12 +21,21 @@ const REGIMES = [
   { id: 'meo-slr', label: 'MEO, laser-ranged (LAGEOS, Etalon, LARES-2)' },
   { id: 'igso-gnss', label: 'IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid)' },
   { id: 'geo-gnss', label: 'GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid)' },
+  { id: 'heo-gp', label: 'HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit' },
+  { id: 'heo-gp-72h', label: 'HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit' },
+  { id: 'heo-artemis2', label: 'HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1)' },
 ];
-const MISSING = [
-  { id: 'heo', label: 'HEO', reason: 'no precise ephemeris of a highly elliptical orbit in the archive; to fetch next: JPL Horizons or NAIF vectors of TESS, IBEX and Cluster' },
-  { id: 'cislunar', label: 'Cislunar, lunar, interplanetary', reason: 'no spacecraft kernels in the archive (planetary ephemerides only); SGP4 does not apply; to fetch next: NAIF SPKs of LRO, CAPSTONE, Danuri and Artemis I, Horizons vectors of cruise arcs, JPL SBDB elements for small bodies' },
+const AWAITING = [ // regimes with truth in the archive that Earth-centred SGP4 and SGP4-XP do not describe: awaiting SDN-GP
+  { id: 'cislunar', label: 'Cislunar, Earth-centred (Artemis II after the translunar burn)', mission: 'artemis2', reason: 'the Moon dominates after the burn; SPK type 13, readable' },
+  { id: 'lunar', label: 'Lunar-centred (LRO)', mission: 'lro', reason: 'Moon-centred; SPK type 13, readable' },
+  { id: 'interplanetary', label: 'Interplanetary, Sun-centred (Psyche, Lucy, Juno)', mission: 'psyche', reason: 'SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap' },
 ];
 const DAYS = [1, 2, 3];
+const kernelOf = (mission) => { // metadata of the NAIF kernel (results/kernels.json, written by inventory.mjs)
+  const file = path.join(results, 'kernels.json');
+  const k = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')).rows.find((r) => r.mission === mission && r.file.endsWith('.bsp')) : null;
+  return k ? { file: k.file, span: k.span, types: k.types, centers: k.centers } : null;
+};
 
 const readJsonl = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []);
 
@@ -36,11 +46,11 @@ export function collect() {
     for (const f of fs.readdirSync(dir).filter((n) => /^\d+\.json$/.test(n)).sort()) {
       const r = JSON.parse(fs.readFileSync(path.join(dir, f)));
       const meta = { norad: r.norad, population: r.population, stratum: r.stratum, tercile: r.tercile, bEff: r.fit?.bEffM2Kg, bEffAtZeroBound: r.fit?.bEffAtZeroBound };
-      if (r.ffm) { windows.push({ regime: 'leo-starlink-ffm', ...r.ffm, meta }); windows.push({ regime: meta.bEffAtZeroBound ? 'leo-starlink-ffm-b0' : meta.bEff > 0.5 ? 'leo-starlink-ffm-decay' : 'leo-starlink-ffm-drag', ...r.ffm, meta }); }
+      if (r.ffm) { windows.push({ regime: 'leo-starlink-ffm', ...r.ffm, meta }); windows.push({ regime: meta.bEffAtZeroBound ? 'leo-starlink-ffm-b0' : meta.bEff > 0.5 ? 'leo-starlink-ffm-decay' : 'leo-starlink-ffm-drag', ...r.ffm, meta }); if (r.fit?.convergence === 'converged' && !meta.bEffAtZeroBound && meta.bEff <= 0.5) windows.push({ regime: 'leo-starlink-ffm-clean', ...r.ffm, meta }); }
       if (r.spacex) windows.push({ regime: 'leo-starlink-spacex', ...r.spacex, meta });
     }
   }
-  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')]]) {
+  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')], ['heo-themis', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-chandra', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-artemis2', () => 'heo-artemis2']]) {
     for (const w of readJsonl(path.join(store, 'rows', `${source}.jsonl`))) windows.push({ regime: map(w), ...w, meta: {} });
   }
   return windows;
@@ -137,7 +147,59 @@ export function build() {
     const pool = (list) => ({ objects: new Set(list.map((c) => c.norad)).size, samples: list.reduce((a, c) => a + c.n, 0), meanD2Over3: list.reduce((a, c) => a + c.sumD2, 0) / (3 * Math.max(1, list.reduce((a, c) => a + c.n, 0))), coverage95: list.reduce((a, c) => a + c.within95, 0) / Math.max(1, list.reduce((a, c) => a + c.n, 0)), medianObjectError: quantile(list.map((c) => c.errorKmMedian), 0.5) });
     return { source, refused: covRows.filter((c) => c.source === source && c.refused).length, all: rows.length ? pool(rows) : null, byAgeDay: [...new Set(rows.map((c) => c.ageDay))].sort((a, b) => a - b).map((d) => ({ ageDay: d, ...pool(rows.filter((c) => c.ageDay === d)) })) };
   });
-  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, missing: MISSING, byShell, truthSet, bench: bench?.rows ?? null };
+
+  // truth quality (amendment A6): the fits by convergence and B_eff group, and the refit of the iteration-limit fits
+  const groupName = (r) => `${r.fit.convergence === 'converged' ? 'converged' : 'at the 12-iteration cap'}; ${r.fit.bEffAtZeroBound ? 'B_eff at zero' : r.fit.bEffM2Kg > 0.5 ? 'B_eff above 0.5' : 'B_eff 0 to 0.5'}`;
+  const byGroup = {};
+  for (const r of fitted) (byGroup[groupName(r)] ??= []).push(r);
+  const truthQuality = {
+    groups: Object.entries(byGroup).sort(([a], [b]) => (a < b ? -1 : 1)).map(([name, list]) => ({
+      name, n: list.length, fitRmsKm: { median: quantile(list.map((r) => r.fit.rmsKm), 0.5), p90: quantile(list.map((r) => r.fit.rmsKm), 0.9), max: quantile(list.map((r) => r.fit.rmsKm), 1) },
+      bEffMedian: quantile(list.map((r) => r.fit.bEffM2Kg), 0.5), xpDay3: quantile(list.map((r) => r.ffm?.xp?.days?.[3]?.rmsKm), 0.5), sgp4Day3: quantile(list.map((r) => r.ffm?.sgp4?.days?.[3]?.rmsKm), 0.5),
+    })),
+    refit: null,
+  };
+  const refitDir = path.join(store, 'refit30');
+  if (fs.existsSync(path.join(refitDir, 'truth'))) {
+    const out = [];
+    for (const n of fs.readdirSync(path.join(refitDir, 'truth')).filter((x) => /^\d+\.json$/.test(x)).sort()) {
+      const after = read(path.join(refitDir, 'truth', n)), before = read(path.join(store, 'truth', n));
+      if (before.truth.epochUtc !== after.truth.epochUtc) continue;
+      const a = new Float64Array(fs.readFileSync(path.join(store, 'truth', n.replace('.json', '.f64'))).buffer.slice(0));
+      const c = new Float64Array(fs.readFileSync(path.join(refitDir, 'truth', n.replace('.json', '.f64'))).buffer.slice(0));
+      const gap = (h) => { const i = h * 60 * 6; return Math.hypot(a[i] - c[i], a[i + 1] - c[i + 1], a[i + 2] - c[i + 2]); };
+      const rowBefore = read(path.join(store, 'rows/starlink', n)), rowAfter = read(path.join(refitDir, 'rows/starlink', n));
+      out.push({ converged: after.fit.convergence === 'converged', iterations: after.fit.iterations, bBefore: before.fit.bEffM2Kg, bAfter: after.fit.bEffM2Kg, rmsBefore: before.fit.rmsKm, rmsAfter: after.fit.rmsKm,
+        gapKm: [24, 48, 72, 96].map(gap), xpDay3Before: rowBefore.ffm?.xp?.days?.[3]?.rmsKm, xpDay3After: rowAfter.ffm?.xp?.days?.[3]?.rmsKm, boundBefore: before.fit.bEffAtZeroBound, boundAfter: after.fit.bEffAtZeroBound });
+    }
+    const skipped = readJsonl(path.join(refitDir, 'skipped.jsonl')).length;
+    truthQuality.refit = out.length ? {
+      n: out.length, skippedBecauseTheFileChanged: skipped, converged: out.filter((x) => x.converged).length, iterationsMedian: quantile(out.map((x) => x.iterations), 0.5),
+      gapKm: [24, 48, 72, 96].map((h, i) => ({ hours: h, median: quantile(out.map((x) => x.gapKm[i]), 0.5), max: quantile(out.map((x) => x.gapKm[i]), 1) })),
+      bEffRelativeChangeMedian: quantile(out.map((x) => Math.abs(x.bAfter - x.bBefore) / Math.max(1e-3, x.bBefore)), 0.5),
+      rmsBefore: quantile(out.map((x) => x.rmsBefore), 0.5), rmsAfter: quantile(out.map((x) => x.rmsAfter), 0.5),
+      xpDay3Before: quantile(out.map((x) => x.xpDay3Before), 0.5), xpDay3After: quantile(out.map((x) => x.xpDay3After), 0.5),
+      leavingTheBound: out.filter((x) => x.boundBefore && !x.boundAfter).length, enteringTheBound: out.filter((x) => !x.boundBefore && x.boundAfter).length,
+    } : null;
+  }
+
+  // held out against the first hours of newer SpaceX files (newer.mjs)
+  const newerRows = readJsonl(path.join(store, 'rows/newer.jsonl'));
+  const newer = newerRows.length ? {
+    satellites: newerRows.length, horizonHours: { min: quantile(newerRows.map((r) => r.horizonHours), 0), median: quantile(newerRows.map((r) => r.horizonHours), 0.5), max: quantile(newerRows.map((r) => r.horizonHours), 1) },
+    newestFileStart: newerRows.map((r) => r.newerStartUtc).sort().at(-1),
+    arms: ['spacexOld', 'ffm', 'xp', 'sgp4', 'comspoc'].map((arm) => {
+      const list = newerRows.filter((r) => r.arms[arm]);
+      return { arm, n: list.length, median: quantile(list.map((r) => r.arms[arm].rmsKm), 0.5), p90: quantile(list.map((r) => r.arms[arm].rmsKm), 0.9), inTrackShare: quantile(list.map((r) => (r.arms[arm].ric[1] ** 2) / (r.arms[arm].ric.reduce((a, x) => a + x * x, 0) || 1)), 0.5) };
+    }),
+    ffmByGroup: ['clean', 'bound', 'decay', 'capped'].map((g) => {
+      const pick = (r) => (r.bEffAtZeroBound ? 'bound' : r.bEff > 0.5 ? 'decay' : r.converged ? 'clean' : 'capped');
+      const list = newerRows.filter((r) => pick(r) === g);
+      return { group: g, n: list.length, median: quantile(list.map((r) => r.arms.ffm.rmsKm), 0.5), p90: quantile(list.map((r) => r.arms.ffm.rmsKm), 0.9), spacexOldMedian: quantile(list.filter((r) => r.arms.spacexOld).map((r) => r.arms.spacexOld.rmsKm), 0.5) };
+    }),
+  } : null;
+
+  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission) })), byShell, truthSet, truthQuality, newer, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -147,7 +209,7 @@ const arms = (r, k) => [r.xp.days[k]?.median, r.comspoc?.days?.[k]?.median, r.sg
 const cell = (vals) => `pending / ${vals.map((v) => (Number.isFinite(v) ? f(v) : '-')).join(' / ')}`;
 
 function findings(t) {
-  const main = t.regimes.filter((r) => !/-(aligned|drag|b0|decay)$/.test(r.id) && r.xp.fitted);
+  const main = t.regimes.filter((r) => !/-(aligned|drag|b0|decay|clean|72h)$/.test(r.id) && r.id !== 'heo-artemis2' && r.xp.fitted);
   const get = (id) => t.regimes.find((r) => r.id === id);
   const out = [];
   const share = (a) => { const c = a.days[3]?.ric; return c && c.every(Number.isFinite) ? (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2) : null; };
@@ -185,20 +247,23 @@ export function markdown(t) {
     '- **Not measured here.** SDN-GP (not landed), HEO / cislunar / interplanetary truth (none in the archive); GEO operator ephemerides (SES, Intelsat) are not stored, the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
   L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. `-` is not scored. A COMSPOC value marked `*` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
-  const isExtra = (r) => /-(aligned|drag|b0|decay)$/.test(r.id);
+  const isExtra = (r) => /-(aligned|drag|b0|decay|clean|72h)$/.test(r.id) || r.id === 'heo-artemis2';
   const header = ['| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'];
   const comspocOf = (r) => (r.comspoc ? { c: r.comspoc, mark: '' } : t.regimes.find((x) => x.id === `${r.id}-aligned`)?.comspoc ? { c: t.regimes.find((x) => x.id === `${r.id}-aligned`).comspoc, mark: '*' } : { c: null, mark: '' });
   const cellOf = (xpv, csv, sgv, mark) => `pending / ${[xpv, csv, sgv].map((v, k) => (Number.isFinite(v) ? f(v) + (k === 1 ? mark : '') : '-')).join(' / ')}`;
   const row = (r) => {
-    const key = /^(geo|igso)/.test(r.id) ? 'GEO' : r.id.startsWith('meo') ? 'MEO' : 'LEO';
+    const key = /^(geo|igso|heo)/.test(r.id) ? 'GEO' : r.id.startsWith('meo') ? 'MEO' : 'LEO';
     const b = t.bench ? { xp: t.bench.find((x) => x.theory === 'SGP4-XP' && x.regime.startsWith(key)), sg: t.bench.find((x) => x.theory === 'SGP4' && x.regime.startsWith(key)) } : null;
     const share = (a) => { const c = a.days[3]?.ric; if (!(c && c.every(Number.isFinite))) return ''; const q = (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2); return `${q >= 99.5 ? q.toFixed(1) : Math.round(q)} %`; };
     const { c, mark } = comspocOf(r);
     const day = (k) => cellOf(r.xp.days[k]?.median, c?.days?.[k]?.median, r.sgp4.days[k]?.median, mark);
     return `| ${r.label} | ${r.xp.fitted} / ${r.sgp4.fitted} / ${r.windows} | ${cellOf(r.xp.fit.median, c?.days?.[0]?.median, r.sgp4.fit.median, mark)} | ${day(1)} | ${day(2)} | ${day(3)} | ${share(r.xp)} / ${share(r.sgp4)} | ${r.xp.elementBytes ?? ''} / ${r.sgp4.elementBytes ?? ''} | ${b ? `${f(b.xp?.usPerState, 0)} / ${f(b.sg?.usPerState, 0)}` : ''} |`;
   };
-  L.push(...header, ...t.regimes.filter((r) => !isExtra(r)).map(row), ...t.missing.map((m) => `| ${m.label} | none | pending / - / - / - | - | - | - | | | |`));
-  L.push('', ...t.missing.map((m) => `- ${m.label}: ${m.reason}.`), '');
+  const spanOf = (a) => (a.kernel ? `${a.kernel.span.slice(0, 10)} to ${a.kernel.span.split(' to ')[1].slice(0, 10)}` : 'none');
+  L.push(...header, ...t.regimes.filter((r) => !isExtra(r)).map(row), ...t.awaiting.map((a) => `| ${a.label} | truth ${spanOf(a)} | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |`));
+  L.push('', ...t.awaiting.map((a) => `- ${a.label}: awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (${a.reason}); kernel ${a.kernel?.file ?? 'none'}.`),
+    '- GEO operator ephemerides: none are stored locally (operator-capture holds Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not ephemerides); the GEO row is the GFZ MGEX BeiDou-2 and QZSS-3 orbits.',
+    '- NAIF does not host TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); THEMIS and Chandra stand in for TESS (HEO) and Artemis II for Artemis I.', '');
   L.push('### 1b. The same objects the COMSPOC sets were scored on, and the Starlink B_eff split', '', ...header, ...t.regimes.filter(isExtra).map(row), '');
   L.push('### What the table says (generated from the numbers above)', '', ...findings(t), '');
   L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
@@ -241,6 +306,33 @@ export function markdown(t) {
     for (const x of t.fitLength) if (x.satellites) L.push(`| ${x.fitHours} h | ${x.satellites} | ${f(x.xp.fitRmsKm)} | ${f(x.xp.errorKm)} | ${f(x.xp.day1Km)} | ${f(x.sgp4.fitRmsKm)} | ${f(x.sgp4.errorKm)} | ${f(x.sgp4.day1Km)} |`);
     L.push('');
   }
+
+  const tq = t.truthQuality;
+  L.push('## 9. Does the zero bound or the iteration cap bias the FFM-Starlink truth? (amendment A6)', '',
+    'Fit RMS is the fit of FFM-1 to SpaceX\'s own forecast over 0-48 h, the measure of how well the truth reproduces the operator. The XP and SGP4 columns are the median day-3 errors against that truth (km).', '',
+    '| Group | Fits | B_eff median (m2/kg) | Fit RMS vs SpaceX: median / 90th / max (km) | XP day 3 | SGP4 day 3 |', '| --- | --: | --: | --- | --: | --: |',
+    ...tq.groups.map((g) => `| ${g.name} | ${g.n} | ${f(g.bEffMedian, 4)} | ${f(g.fitRmsKm.median)} / ${f(g.fitRmsKm.p90)} / ${f(g.fitRmsKm.max)} | ${f(g.xpDay3)} | ${f(g.sgp4Day3)} |`), '');
+  if (tq.refit) {
+    const r = tq.refit;
+    L.push(`Refit of the fits that stopped at the registered 12 iterations, on the same SpaceX file (SHA-256 checked) with a cap of 30: ${r.n} refitted (${r.skippedBecauseTheFileChanged} seat files had changed on SpaceX\'s server since the registered fit and could not be refitted on the same bytes); ${r.converged} of ${r.n} converge within 30 (median ${r.iterationsMedian} iterations). The truth moves by (median / maximum, km): ${r.gapKm.map((g) => `${f(g.median)} / ${f(g.max)} at ${g.hours} h`).join(', ')}. B_eff changes by a median ${f(100 * r.bEffRelativeChangeMedian, 1)} %; the fit RMS against SpaceX goes from ${f(r.rmsBefore)} to ${f(r.rmsAfter)} km (median); the median XP day-3 error against the truth goes from ${f(r.xpDay3Before)} to ${f(r.xpDay3After)} km. ${r.leavingTheBound} left the zero bound and ${r.enteringTheBound} entered it.`, '');
+  }
+  const pooled = t.regimes.find((r) => r.id === 'leo-starlink-ffm'), clean = t.regimes.find((r) => r.id === 'leo-starlink-ffm-clean'), bound = t.regimes.find((r) => r.id === 'leo-starlink-ffm-b0'), decay = t.regimes.find((r) => r.id === 'leo-starlink-ffm-decay');
+  if (pooled && clean && bound && decay) {
+    const d = (r, k) => r.xp.days[k];
+    L.push(`Effect on the tables (SGP4-XP, day 1 / day 3, median and 90th percentile, km): all ${pooled.windows} truths ${f(d(pooled, 1).median)} / ${f(d(pooled, 3).median)} and ${f(d(pooled, 1).p90)} / ${f(d(pooled, 3).p90)}; the ${clean.windows} clean ones ${f(d(clean, 1).median)} / ${f(d(clean, 3).median)} and ${f(d(clean, 1).p90)} / ${f(d(clean, 3).p90)}; the ${bound.windows} at the zero bound ${f(d(bound, 1).median)} / ${f(d(bound, 3).median)}; the ${decay.windows} above 0.5 m2/kg ${f(d(decay, 1).median)} / ${f(d(decay, 3).median)}. The two limits pull in opposite directions (drag-free truths are easy, decaying ones are hard), so the pooled median moves little while the spread does.`, '');
+  }
+  L.push('How to read it, in numbers: the registered rows keep the 12-iteration truth. The `clean` row of section 1b (converged, B_eff between 0 and 0.5) is the population on which the tables are least affected by the two limits; compare its day-1 and day-3 medians with the pooled Starlink row. The zero bound is a contract of the T1a module (`analysis/od fit_ffm`, B_eff >= 0): a satellite whose forecast contains net thrust beyond its drag gets a drag-free trajectory, so its truth is easy to match (lower XP and SGP4 errors) and does not follow the operator; those 52 fits are reported apart, not corrected here.', '');
+  const nw = t.newer;
+  if (nw) {
+    L.push('## 10. Held out against the first hours of newer SpaceX files', '',
+      `${nw.satellites} fitted Starlinks, each scored against the first three hours (every ten minutes) of the file SpaceX served after the file of the registered fit; the newest of them starts ${nw.newestFileStart.slice(0, 16)}Z. The horizon from the start of the registered fit to those hours is ${f(nw.horizonHours.min, 1)} to ${f(nw.horizonHours.max, 1)} h (median ${f(nw.horizonHours.median, 1)} h), so these are early looks; the scoring is re-run with \`newer.mjs\` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h). Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).`, '',
+      '| Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |', '| --- | --: | --: | --: | --: |',
+      ...nw.arms.map((a) => `| ${a.arm === 'comspoc' ? 'COMSPOC Spacebook XP (local scoring only)' : a.arm === 'spacexOld' ? 'SpaceX earlier forecast' : a.arm === 'ffm' ? 'FFM-1 from the registered fit' : a.arm === 'xp' ? 'SGP4-XP fitted to the FFM truth' : 'SGP4 fitted to the FFM truth'} | ${a.n} | ${f(a.median)} | ${f(a.p90)} | ${a.n ? f(a.inTrackShare, 2) : ''} |`), '',
+      'FFM-1 against the newer file by truth-quality group (median / 90th percentile, km; SpaceX\'s earlier forecast median beside it):', '',
+      '| Group | Satellites | FFM-1 | SpaceX earlier forecast |', '| --- | --: | --- | --: |',
+      ...nw.ffmByGroup.filter((g) => g.n).map((g) => `| ${g.group} | ${g.n} | ${f(g.median)} / ${f(g.p90)} | ${f(g.spacexOldMedian)} |`), '');
+  } else L.push('## 10. Held out against the first hours of newer SpaceX files', '', 'No newer file scored yet; run `newer.mjs` (re-run after 2026-10-24 08:00Z for the registered prospective files).', '');
+
   const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'ilrs', 'ilrs-nsgf', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'nrlmsise00', 'egm', 'fes2004'];
   L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenceSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
   L.push('## Reproduce, resume, extend', '',

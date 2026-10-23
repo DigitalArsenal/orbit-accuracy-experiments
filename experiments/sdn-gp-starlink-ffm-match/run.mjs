@@ -10,6 +10,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { config, frozen, store, results, sha256 } from './common.mjs';
 import { features, select } from './population.mjs';
+import { KERNELS, A5, spkObject } from './lib/spk-sources.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { build } from './tables.mjs';
@@ -91,6 +92,19 @@ if (metas.length) {
   const again = await scoreWindow(b, object, t0, { fitSeconds: config.windows.fitHours * 3600, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
   const rec = JSON.parse(fs.readFileSync(path.join(store, 'rows/starlink', `${meta.norad}.json`))).ffm;
   for (const arm of ['xp', 'sgp4']) if (rec[arm].ok && !same(again[arm].fitRmsKm, rec[arm].fitRmsKm)) fail(`replay STARLINK ${meta.norad}: ${arm} fit RMS differs`);
+  replayed += 1;
+}
+// replay one HEO window from the NAIF kernel (states by files/orbit-products, epochs by foundation/time)
+const heoRows = read(path.join(store, 'rows', 'heo-themis.jsonl'));
+if (heoRows.length) {
+  const row = heoRows[Math.floor(heoRows.length / 2)];
+  const letter = /THEMIS-(\w)/.exec(row.id)[1];
+  const object = await spkObject(modules, { file: path.join(KERNELS(config.archive), `themis/THEMIS_${letter}_2013_039_055.bsp`), source: 'heo-themis', id: row.id, name: `THEMIS-${letter}`, norad: row.norad, fromUtc: A5.themis.span[0], toUtc: A5.themis.span[1] });
+  const again = await scoreWindow(b, object, ms(row.startUtc), { fitSeconds: row.fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
+  for (const arm of ['xp', 'sgp4']) {
+    if (Boolean(again[arm].ok) !== Boolean(row[arm].ok)) fail(`replay ${row.id}: ${arm} ok differs`);
+    if (row[arm].ok && !same(again[arm].fitRmsKm, row[arm].fitRmsKm)) fail(`replay ${row.id}: ${arm} fit RMS differs`);
+  }
   replayed += 1;
 }
 // replay the in-span SpaceX window of one same-day Starlink from the local capture (read in memory)

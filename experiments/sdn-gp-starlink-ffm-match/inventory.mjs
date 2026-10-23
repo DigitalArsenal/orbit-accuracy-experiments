@@ -96,16 +96,52 @@ if (fs.existsSync(e14)) {
 }
 
 // what does not exist
-add('GEO', 'operator ephemerides (SES, Intelsat)', 'none stored locally', 0, null, 'none', 'Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept. Precise GEO truth exists (GFZ MGEX, above).');
+add('GEO', 'operator ephemerides (SES, Intelsat)', 'none stored locally', 0, null, 'none', 'operator-capture holds Starlink only. Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept; SES, Intelsat, OneWeb and Kuiper exist locally only as CelesTrak SupGP element sets and our OMM fits of them (no ephemerides). Precise GEO truth exists (GFZ MGEX, above).');
 add('MEO', 'OneWeb, Kuiper operator ephemerides', 'none stored locally', 0, null, 'none', 'Same as GEO.');
-add('HEO', 'operator or precise orbits (Molniya, Tundra, TESS, IBEX)', 'none', 0, null, 'none', '');
+
+// NAIF spacecraft kernels fetched in the second box (amendment A5): metadata from the DAF summaries and the provenance rows
+const missions = path.join(A, 'hac/naif-kernels/spk/missions');
+const KERNEL_USE = {
+  themis: ['HEO', 'Earth-centred, highly elliptical (THEMIS A, D, E)', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
+  chandra: ['HEO', 'Earth-centred, highly elliptical, 64 h period', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
+  artemis2: ['Cislunar and HEO', 'Orion, Earth-centred J2000 throughout', 'first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: awaiting SDN-GP'],
+  lro: ['Lunar', 'lunar-centred (Moon), J2000', 'awaiting SDN-GP'],
+  psyche: ['Interplanetary', 'Sun-centred, SPK type 1 (modified difference arrays)', 'awaiting SDN-GP; type 1 is not readable by files/orbit-products 0.1.4'],
+  lucy: ['Interplanetary', 'Sun-centred, SPK type 1, predicted trajectory', 'awaiting SDN-GP; type 1 not readable'],
+  juno: ['Interplanetary', 'Jupiter system and cruise, SPK types 1, 2, 3', 'awaiting SDN-GP; type 1 and 2 not readable'],
+  tdrss: ['GEO', 'SPK type 10, generated from two-line elements', 'not truth: element-derived'],
+};
+const kernelRows = [];
+if (fs.existsSync(missions)) {
+  const { spkSegments, describeSegment } = await import('./lib/spk.mjs');
+  for (const mission of fs.readdirSync(missions).sort()) {
+    for (const f of fs.readdirSync(path.join(missions, mission)).filter((n) => n.endsWith('.bsp') || n.endsWith('.oem'))) {
+      const file = path.join(missions, mission, f);
+      const provenance = JSON.parse(fs.readFileSync(`${file}.provenance.json`, 'utf8'));
+      const [regime, geometry, use] = KERNEL_USE[mission] ?? ['', '', ''];
+      let segments = [], span = null;
+      if (f.endsWith('.bsp')) {
+        segments = spkSegments(file).map(describeSegment);
+        const own = segments.filter((x) => x.target < 0 || mission === 'juno' && x.target === -61); // spacecraft targets (negative NAIF ids)
+        const pool = own.length ? own : segments;
+        span = `${pool.map((x) => x.start).sort()[0]} to ${pool.map((x) => x.stop).sort().at(-1)}`;
+        kernelRows.push({ mission, file: f, url: provenance.url, retrievedUtc: provenance.retrieved_utc, bytes: provenance.bytes, sha256: provenance.sha256, regime, geometry, segments: segments.length,
+          targets: [...new Set(pool.map((x) => x.target))], centers: [...new Set(pool.map((x) => x.center))], types: [...new Set(pool.map((x) => x.type))], span, use });
+      } else {
+        kernelRows.push({ mission, file: f, url: provenance.url, retrievedUtc: provenance.retrieved_utc, bytes: provenance.bytes, sha256: provenance.sha256, regime, geometry: 'CCSDS OEM of the same trajectory', segments: null, targets: [-24], centers: ['Earth'], types: [], span: 'same as the SPK', use: 'cross-check text of the SPK' });
+      }
+    }
+  }
+  for (const k of kernelRows) add(k.regime, `NAIF ${k.mission} ${k.file}`, `${k.geometry}; SPK type ${k.types.join('/') || 'n/a'}, ${k.segments ?? ''} segments, ${(k.bytes / 1e6).toFixed(1)} MB`, k.segments ?? 1, k.span, k.use, `Fetched ${k.retrievedUtc.slice(0, 10)} from ${k.url.replace('https://naif.jpl.nasa.gov/pub/naif/', '')}.`);
+  write(path.join(results, 'kernels.json'), { note: 'metadata of the NAIF kernels fetched for amendment A5; the kernels stay in the archive', rows: kernelRows });
+}
 
 // NAIF
 const naif = path.join(A, 'hac/naif-kernels/spk/planets');
 for (const [file, spanText] of [['de440s.bsp', '1849-12-26 to 2150-01-22'], ['de430.bsp', '1549-12-31 to 2650-01-25'], ['de421.bsp', '1899-07-29 to 2053-10-09'], ['de405.bsp', '1950-01-01 to 2049-12-31']]) {
   if (fs.existsSync(path.join(naif, file))) add('Cislunar / lunar / interplanetary (bodies)', `NAIF planetary ephemeris ${file}`, 'SPK, planets and Moon', 1, spanText, 'truth for solar-system-bodies, not for SGP4', 'Spans from the archive README.');
 }
-add('Cislunar / lunar / interplanetary (spacecraft)', 'NAIF spacecraft SPK (LRO, CAPSTONE, Artemis, Danuri, cruise arcs)', 'none in the archive', 0, null, 'none', 'The archive holds planetary kernels only. To fetch next: LRO, CAPSTONE, Danuri and Artemis I kernels from NAIF, JPL Horizons vectors for cruise arcs.');
+add('Cislunar / HEO', 'TESS, CAPSTONE, Artemis I, Danuri', 'not hosted by NAIF', 0, null, 'none', 'NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); JPL Horizons has them. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I.');
 let modules = null;
 try { modules = modulesRoot(); } catch { /* checkout absent */ }
 if (modules) {
