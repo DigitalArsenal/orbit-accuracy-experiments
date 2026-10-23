@@ -1,0 +1,23 @@
+{
+  "kind": "v1c3-console-calibration-application",
+  "registration": "5e1be5ef06815647e8e8a10c96a58a536b353105",
+  "population": {
+    "source": "analysis/gp-error-model/data/e14-s3-kc.erm",
+    "sha256": "b0ae93c2a92813a1c9b5c2cf5ba786030fd2dc35218e8b167b7af72c0d07c076"
+  },
+  "SGP4": {
+    "candidate": "F-coverage",
+    "base": "F",
+    "factors": "sgp-selection-F-coverage.erm"
+  },
+  "FFM-1": {
+    "candidate": "coverage",
+    "seed": "F-coverage",
+    "seedFactorsHorizonHours": 1,
+    "processNoise": null,
+    "factors": "ffm-selection-coverage.erm"
+  },
+  "application": "Construct N (object_covariance), F (EMPIRICAL plus age-zero population floor) or P (population at actual age); apply SGP4 MODEL via calibrate_covariance per term. Transport each selected calibrated issue term by FFM resident STM, then apply FFM MODEL per term. pair_statistics adds terms in WASM. Explicit E3 regime and nominal horizon select each stratum.",
+  "selectedOn": "August training only; see selectionFreeze in manifest.json",
+  "deployment": "Follow-up modules and SpaceAware-UI task; no adoption in this experiment."
+}
