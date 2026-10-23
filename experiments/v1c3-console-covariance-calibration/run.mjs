@@ -37,6 +37,8 @@ const manifest = fs.existsSync(manifestFile) ? read(manifestFile) : { run: runId
   workers: config.workers, threads: 1, inputs: {}, modules: {}, files: {}, invocations: [] };
 assert.equal(manifest.configSha256, sha256(fs.readFileSync(path.join(dir, 'config.json'))));
 manifest.invocations.push({ stage: values.stage, started: new Date().toISOString(), repository: gitState(root) });
+manifest.repositoryRoot = root;
+manifest.packages = Object.fromEntries(['space-data-module-sdk', 'spacedatastandards.org', 'flatbuffers'].map(name => [name, read(path.join(root, 'node_modules', name, 'package.json')).version]));
 const run = { dir: runDir, inputs: manifest.inputs, modules: manifest.modules, files: manifest.files,
   peakDispatchLoad: manifest.peakDispatchLoad ?? 0,
   checkpoint() { manifest.peakDispatchLoad = this.peakDispatchLoad; fs.writeFileSync(manifestFile, JSON.stringify(manifest, null, 2) + '\n'); },
@@ -106,6 +108,13 @@ try {
     const sgpResult = await doEval(sgp, 'SGP4', 'test', sgpSelection.models);
     const ffm = await collectPhase('ffm', 'test', { baseline, selection: { selected: sgpSelection.selected, model: sgpSelection.models[sgpSelection.selected].model } });
     const ffmResult = await doEval(ffm, 'FFM-1', 'test', ffmSelection.models);
+    // Preserve exact source/artifact bytes before clean landed worktrees are removed.
+    manifest.replayInputs = {};
+    for (const kind of ['implementation', 'frozenSource', 'artifacts', 'model', 'codec', 'kernel']) for (const [file, hash] of Object.entries(run.inputs[kind] ?? {})) {
+      const relative = `replay/${hash}-${path.basename(file)}`, target = path.join(runDir, relative);
+      fs.mkdirSync(path.dirname(target), { recursive: true }); fs.copyFileSync(file, target);
+      assert.equal(sha256(fs.readFileSync(target)), hash); manifest.replayInputs[file] = relative;
+    }
     manifest.finished = new Date().toISOString(); run.checkpoint();
     publish(root, runDir, manifest, { SGP4: sgpResult.tables, 'FFM-1': ffmResult.tables }, configs);
   }

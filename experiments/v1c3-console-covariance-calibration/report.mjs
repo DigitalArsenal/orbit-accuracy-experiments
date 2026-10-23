@@ -95,7 +95,11 @@ export async function check(root, config, configs) {
   assert.deepEqual(metrics.baseline, baseline);
   let hashes = 0;
   for (const [name, hash] of Object.entries(manifest.files)) { assert.equal(sha256(fs.readFileSync(path.join(runDir, name))), hash, name); hashes++; }
-  for (const files of Object.values(manifest.inputs)) for (const [file, hash] of Object.entries(files)) { assert.equal(sha256(fs.readFileSync(file)), hash, file); hashes++; }
+  for (const [kind, files] of Object.entries(manifest.inputs)) for (const [file, hash] of Object.entries(files)) {
+    const local = manifest.replayInputs[file] ? path.join(runDir, manifest.replayInputs[file]) : file;
+    assert.equal(sha256(fs.readFileSync(local)), hash, file); hashes++;
+    if (['implementation', 'frozenSource'].includes(kind)) assert.equal(sha256(fs.readFileSync(path.join(root, path.relative(manifest.repositoryRoot, file)))), hash, `candidate source changed: ${file}`);
+  }
   const selections = { SGP4: read(path.join(output, 'sgp-selection.json')), 'FFM-1': read(path.join(output, 'ffm-selection.json')) };
   const gp = await loadModule(manifest.modulesRoot, 'analysis/gp-error-model');
   const codec = await import(pathToFileURL(path.join(manifest.modulesRoot, 'analysis/gp-error-model/scripts/erm-codec.mjs')));
