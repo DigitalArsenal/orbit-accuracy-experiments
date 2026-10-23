@@ -1,0 +1,41 @@
+{
+  "status": "BLOCKED_BEFORE_CALIBRATION",
+  "registrationCommit": "5e1be5ef06815647e8e8a10c96a58a536b353105",
+  "runtime": "WasmEdge 0.16.4, Darwin arm64",
+  "command": "/private/tmp/srccov-tools/spacedatanetwork prewarm-aot --cache-dir /private/tmp/covcal-aot-cache --flow /Users/tj/software/worktrees/space-data-network-modules--console-covariance-calibration-20261023/analysis/gp-error-model/dist/isomorphic/module.wasm --flow /Users/tj/software/worktrees/space-data-network-modules--console-covariance-calibration-20261023/propagator/ffm/dist/isomorphic/module.wasm",
+  "exitCode": 1,
+  "nodeBinarySha256": "1752fdfd5676ee7e89719fe5e48d92340d915bff30b5fb898a2538e210fad1a4",
+  "logPath": "/Users/tj/software/worktrees/orbit-accuracy-experiments--console-covariance-calibration-20261023/runs/v1c3-provision/prewarm-aot.log",
+  "logSha256": "6e46f81a5f506b570f2b9ed29f9aae6d06bdbbb1f4ee99b5b6452e4c614c24f8",
+  "artifactOrigin": "Unchanged, hash-verified V1c2 replay artifacts; built at modules 6b1132cb3d548c838931fc6b7d425ab315069a7f.",
+  "dependencySourceHead": "f1c7b8942b7a9ded85566f240cbaaeffca1293db",
+  "artifacts": [
+    {
+      "module": "analysis/gp-error-model",
+      "sha256": "f3d06fd4840686a893753fa8fdd19d30b39caa745d23cc2dd867d462886f2778",
+      "aot": "PASS"
+    },
+    {
+      "module": "propagator/ffm",
+      "sha256": "b8efb44320d3cea37a155cb2edd07004d0bca567a8b9cc347ba21dbab576f7a7",
+      "aot": "FAIL: Not implemented instructions in AOT/JIT"
+    }
+  ],
+  "sourceEvidence": [
+    "propagator/ffm/build-driver.mjs removes -fno-exceptions and adds -fwasm-exceptions and -wasm-use-legacy-eh=false.",
+    "propagator/ffm/build.mjs links libc++abi-ww-wasmexcept.a and libunwind-ww-wasmexcept.a and declares standardWasmExceptions:true."
+  ],
+  "calibrationRuns": 0,
+  "selectedConfiguration": null,
+  "modelRecord": null,
+  "skipped": [
+    "training and test candidate evaluation",
+    "GPS tail diagnosis",
+    "declared V1c3 E2E (runner not yet implemented)",
+    "headless numerical parity",
+    "gauntlet",
+    "landing",
+    "deployment"
+  ],
+  "ownerWaiver": "Docker only, 2026-10-22; no native AOT waiver received."
+}
