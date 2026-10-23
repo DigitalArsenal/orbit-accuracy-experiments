@@ -51,10 +51,13 @@ The analytic theories that did go further (HANDE with a dynamic atmosphere in 19
 terms since the late 1970s) never became an exchange format, so no consumer base pulled them into the public data
 stream. Improving a general-perturbations theory also needs three things the public never had together: precise
 truth for the whole catalog (only operators and science missions have it, and few publish), a dynamic density that
-anyone may use (HASDM output is controlled and JB2008's driving indices are commercial), and the operator's own
+anyone may use (HASDM output is controlled and JB2008's driving indices come from a commercial provider), and the operator's own
 maneuver plans (constellations thrust continuously, which ballistic theories cannot represent). COMSPOC's XP sets
 show the consequence: they are fitted to orbits built from public element-set histories, so their truth is itself
-limited by SGP4, and G1 measures them at 15.7 km at an age where XP fitted to precise truth is at 10.3 km. SDN has
+limited by SGP4, and G1 measures them at 15.7 km at an age where XP fitted to precise truth is at 10.3 km. There is
+also a technical reason the gap went unnoticed: SGP4 and XP both omit the tesseral m-daily field in LEO, whose
+0.3 to 0.7 km along-track signature is absorbed by the fitted drag and comes back as most of the day-3 error (2d.4).
+In such a theory the obvious upgrade, a better atmosphere, buys little until the gravity floor is removed. SDN has
 all three inputs in the open: operator ephemerides for about 90 % of the active catalog, FFM-1 to turn them into
 dynamically consistent truth, and an open DCA (E13, E13b) with open space weather (GFZ, NOAA SWPC). SDN-GP is the
 theory that carries them.
@@ -87,8 +90,9 @@ theory that carries them.
   date (`SPEC.md` 3.1), so real solar and geomagnetic variation is absent and the fitted B absorbs it. There is no
   thrust term: drag makeup and net thrust can only be absorbed by B (G1's own truth fitter, which is ballistic too,
   puts 52 of 239 Starlinks at B_eff = 0). No tesseral terms outside the four resonance classes (the LEO fit floor of
-  0.44 km in-track is shared with SGP4, G1 section 3), no covariance output, Earth-centered only (the release notes
-  list a lunar potential and lunar shadow as planned).
+  0.44 km in-track is shared with SGP4, G1 section 3; 2d shows it is the m-daily field and the source of most of the
+  day-3 error), no covariance output, Earth-centered only (the release notes list a lunar potential and lunar shadow
+  as planned).
 - **What SDN-GP adds.** It keeps XP's integrator, grid, checkpoints and output chain unchanged (so side B's SGP4XP
   path is reused), and replaces or adds rate terms: real density with late-bound weather (2a), thrust (2b), empirical
   along-track terms (2c), tesseral m-daily and shallow-resonance terms (2d), fitting rules (2e), an analytic STM with
@@ -115,7 +119,7 @@ theory that carries them.
   orbits and HASDM instead. Its atmosphere is Jacchia with indices only (no calibration), and its density input is
   the index history at fit time.
 - **What SDN-GP adds.** The closest ancestor of term 2a. SDN-GP uses a calibrated density (NRLMSISE-00 × exp s(t))
-  and binds the density at propagation time, not at fit time (section 2a.6), so an old element set improves when a
+  and binds the density at propagation time, not at fit time (section 2a.5), so an old element set improves when a
   newer density nowcast is published.
 
 ### 1.5 Brouwer–Lyddane and Kozai
@@ -284,8 +288,8 @@ with ȧ_D the drag decay rate of the semi-major axis. For a Starlink at 550 km (
 
 **Cost baseline (side B, 2026-10-23, owner Mac, single thread).** SGP4XP: 1.12 µs per object for a 60 s output
 step, 361 µs per object for a 1-day jump (about 10 nodes of 4 rate evaluations each, so about 9 µs per rate
-evaluation with drag and SRP), 3.26 KiB per object. A term's cost is quoted as added µs per rate evaluation (×40
-per object-day in LEO) and added µs per output state; bytes are the added fields of the element set at 4 bytes each
+evaluation with drag and SRP), 3.26 KiB per object. A term's cost is quoted as added µs per rate evaluation (×30
+per object-day in LEO: about 7.5 steps of 4 evaluations) and added µs per output state; bytes are the added fields of the element set at 4 bytes each
 (float32; the SDS `$OMM` record of G1 holds XP's set in 312 bytes).
 
 ### 2a. DCA drag in place of Jacchia-70
@@ -353,8 +357,8 @@ For k = 0 this is the addition theorem: the great-circle mean of Y_lm is P_l(0) 
 enters as King-Hele's (1964) radial factor: with r = a(1 - e cos E) and the local scale height H(a) from the radial
 grid, exp(z cos E) = I_0(z) + 2 Σ_k I_k(z) cos kE (z = ae/H), so the averaged rates are products of the Bessel series
 and (3), truncated at k ≤ 2 for z < 0.5 (Starlink: e ≈ 1e-4 to 2e-3, z < 0.25); for z ≥ 3 the reference path 2a.2
-is used. Co-rotation enters exactly through v_r: for a circular orbit
-|v_r|² = v² [1 - 2 (ω_E r/v) cos i + (ω_E r/v)² cos² φ] (φ the latitude), so the transverse drag carries
+is used. Co-rotation enters exactly through v_r: for a circular orbit the squared relative speed is
+v² [1 - 2 (ω_E r/v) cos i + (ω_E r/v)² cos² φ] (φ the latitude), so the transverse drag carries
 King-Hele's factor F ≈ (1 - (r ω_E/v) cos i)² (0.92 for the 53° shell, an 8 % effect on ȧ) and the cross-track
 component of v_r drives di/dt (King-Hele 1987); winds, when on, add the HWM14 zonal mean as King-Hele's atmospheric
 rotation factor Λ in place of 1.
@@ -376,16 +380,13 @@ result is deterministic. This is the step HANDE (1.4) did not take: its density 
 
 - FFM-propagated Starlink: the truth's density is NRLMSISE-00 with s = 0 under the same GFZ/SWPC rows and the same
   SWPC 45-day extension (G1 environment), so 2a removes the density-model mismatch entirely (up to the kernel error).
-  G1 bounds that mismatch: with no drag in the truth (52 windows at B_eff = 0) best-case XP still reaches 3.77 km on
-  day 3, against 9.82 km where drag acts; after the aliasing term of 2d is removed, the remaining drag-related part is
-  what 2a targets. Long fits isolate it: with 72 h fits (where aliasing is suppressed, 2e) XP's next-day error is
-  0.769 km, which is the one-day growth of the drag-model mismatch and the residual floor. Expected: the 72 h-fit
-  next-day error from 0.77 km to the floor of 2d (≈ 0.2 to 0.3 km), and day 3 of the 24 h fit by the same factor once
-  2d is in.
+  G1 bounds that mismatch: the part of the first-day error after 48 to 72 h fits that no gravity term explains is 0.40
+  to 0.65 km (2e.2). Grown over three days by (1), that is the 2 to 4 km drag-model remainder left after 2d. Expected:
+  with 2d in, day 3 of the 24 h fit from that remainder to under 1 km.
 - Precise truth (ISS, laser-ranged LEO): the truth's atmosphere is the real one; 2a replaces a date-only flux by the
   observed weather and the DCA. E13 measured the DCA itself in FFM at 3 days: median error ratio 0.74 (Swarm,
-  D13-def against JB2008 with SET indices). Against XP's date-only J70 the expected gain is larger, and is the
-  measurement of 2a.7.
+  D13-def against JB2008 with SET indices). Against XP's date-only J70 the expected gain is larger; it is measured
+  by M6 and M8 (section 4).
 
 **2a.7 Cost, parameters, fitting.**
 
@@ -409,8 +410,8 @@ result is deterministic. This is the step HANDE (1.4) did not take: its density 
     a_T = -κ a_D   ⇒   a_D + a_T = -(1/2)(1 - κ) B ρ |v_r| v_r,    B_eff = (1 - κ) B             (5)
 
 so in the averaged rates 2b is 2a with B replaced by B_eff, and B_eff tracks the density, storms included. If the
-thrust is along the inertial velocity instead of v_r, the difference is the co-rotation angle (r ω_E cos i / v ≈
-2.3° at 53°) in the cross-track component, a small inclination-rate term carried for completeness.
+thrust is along the inertial velocity instead of v_r, the difference is the angle between v and v_r, at most
+(r ω_E/v) sin i ≈ 3° at 53°, in the cross-track direction: a small inclination-rate term carried for completeness.
 
 **2b.2 Identifiability.** One arc observes only the product B_eff (the decay), so κ is not identified by a single
 ballistic arc (E13b: "absolute density and B are not independently identified, continuous thrust is confounded
@@ -425,7 +426,7 @@ truth fitter puts 52 of 239 Starlinks at the B_eff = 0 bound for exactly this re
 **2b.3 Why κ is carried at all.** The dynamics need only B_eff, but κ decides the covariance. If the operator closes
 the loop on the actual drag (T = κ D_actual), a fractional density error δ enters the net force as (1 - κ) B ρ δ; if
 the thrust is planned on a forecast density (T = κ D_forecast, open loop), it enters as B ρ δ. For κ = 0.9 the two
-differ by a factor of 10 in the in-track sigma of (1) and (2f.4). Which one SpaceX flies is measurable (2b.6), and it
+differ by a factor of 10 in the in-track sigma of (1) and (12). Which one SpaceX flies is measurable (2b.6), and it
 is the most likely single cause of the Starlink covariance's scale error.
 
 **2b.4 Beyond the operator's span: the station-keeping prior.** Starlinks hold their shell. Beyond the forecast
@@ -552,9 +553,11 @@ RMS (a design estimate):
 | LAGEOS-1, no drag lever | m-daily | 0.11 | 0.14 | 0.22 | 0.31 |
 | measured, best-case XP, laser-ranged high | | 0.125 | 0.146 | 0.190 | 0.271 |
 
-The omitted tesseral gravity alone accounts for about 80 % of best-case XP's error on every held-out day of the FFM
-truth, for all of it on laser-ranged LEO, and for all of it on laser-ranged high orbits. The fitted parameters
-corroborate it: XP's BTERM on the laser-ranged LEO spheres is 0.14 m²/kg (median) and its AGOM 0.126 m²/kg, about
+The omitted tesseral gravity alone accounts for 70 to 80 % of best-case XP's error on the held-out days of the FFM
+truth, and for all of it on laser-ranged LEO (Stella, the largest of the seven targets, slightly over-predicts the
+median) and on laser-ranged high orbits. Two facts corroborate it. On the 52 Starlink truths with no drag at all
+(B_eff = 0), best-case XP still reaches 3.77 km on day 3: an error that cannot come from the atmosphere. And the
+fitted parameters: XP's BTERM on the laser-ranged LEO spheres is 0.14 m²/kg (median) and its AGOM 0.126 m²/kg, about
 50 to 100 times the physical C_D A/m and C_R A/m of LARES, Starlette and Ajisai (spheres of known mass and diameter):
 the fitted drag is carrying gravity. This is the central finding of this design: in LEO the binding term is not the
 atmosphere but the tesseral field that SGP4 and XP both omit, and its damage is done through the drag fit.
@@ -569,7 +572,7 @@ m = 15 terms (odd l from 15) give
 (normalized F̄, Ḡ, J̄; Kaula 1966; Allan 1967); every odd l from 15 to 69 has the same angle ψ, so the terms add as
 one lumped complex coefficient Σ. From the EGM2008 coefficients (design estimate, J2 secular rates in ψ̇):
 
-| Shell | ψ̇ (rev/day) | Period (d) | |Σ| | Δa (m) | Along-track amplitude (km) |
+| Shell | ψ̇ (rev/day) | Period (d) | ‖Σ‖ | Δa (m) | Along-track amplitude (km) |
 | --- | --: | --: | --: | --: | --: |
 | 550 km, 53.05° | -0.164 | 6.1 | 4.5e-9 | 5.7 | 0.79 |
 | 540 km, 53.2° | -0.132 | 7.6 | 4.6e-9 | 7.3 | 1.26 |
@@ -580,15 +583,16 @@ one lumped complex coefficient Σ. From the EGM2008 coefficients (design estimat
 
 For the 53° shells the period is longer than the G1 window: the 24 h fit absorbs the term completely (2 m of fit
 residual) and the prediction then drifts away from it, 2.4 km at day 3 for the 550 km shell (the 2d.4 model). The
-97.6° shell sits on the resonance, where (10) becomes a constant transverse force τ = j n² a |Σ| sin ψ₀ ≤ 2.7e-8
+97.6° shell sits on the resonance, where (10) becomes a constant transverse force τ = j n² a ‖Σ‖ sin ψ₀ ≤ 2.7e-8
 m/s², about 10 % of the drag at moderate solar activity, which the fitted B_eff absorbs for days and which biases κ
 and any B prior over months. The periods are sensitive to the mean motion (ψ̇ changes by about 0.003 rev/day per km of
-altitude), so each object's term is evaluated from its own elements. SDN-GP generalizes XP's four classes to every (j, m) with |ψ̇| < ε n (ε = 0.02, l ≤ 40
-for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
+altitude), so each object's term is evaluated from its own elements. SDN-GP generalizes XP's four classes to every
+(j, m) with |ψ̇| < ε n (ε = 0.02, l ≤ 40 for LEO, l ≤ 8 above 2 rev/day), integrated in the averaged rates.
 
 **2d.6 Expected gain, cost, parameters.**
 
-- Gain: the LEO in-track fit floor from 0.44 km to the remainder of the 2d.4 table (about 0.25 km), and the aliasing
+- Gain: the LEO in-track fit floor from 0.44 km to the remainder the m-daily set leaves (about 0.2 km,
+  √(0.441² - 0.384²)), and the aliasing
   path closed. Predicted day 3 on the FFM-propagated Starlink: from 9.87 km to the drag-model part that remains
   (about 2 to 4 km before 2a, section 3); laser-ranged LEO from 9.40 km to about 1 to 2 km; laser-ranged high from
   0.271 km to well below 0.1 km (the m-daily set is all of its predicted error).
@@ -694,7 +698,7 @@ for open-loop thrust it does not. (σ_δ, τ) are set per weather tier of 2a.3 (
 with each state, so a consumer can apply a revised s(t) or a storm scenario to a screening without re-propagating:
 δx(t) = (∂x/∂s) δs, the linear form of the late binding of 2a.5.
 
-**2f.5 Calibration (covariance realism).** Three scale terms, fitted in two stages on held-out windows only:
+**2f.5 Calibration (covariance realism).** The scale terms are fitted in two stages, on held-out windows only:
 
 1. On the FFM truth (density error zero by construction, same environment): the fit covariance P_y₀ = σ̂² (JᵀWJ)⁻¹
    with W the colored-noise weight of 2e.3 (the white-noise assumption is what makes formal covariances
@@ -765,13 +769,12 @@ records.
 - Third bodies: Earth (μ_E/μ_M = 81.30) and Sun, with XP's averaged quadrupole and octupole formulas (`SPEC.md` 5)
   and the Earth as the body. For high lunar orbits Earth's quadrupole drives the Kozai–Lidov exchange of eccentricity
   and inclination (Kozai 1962; Lidov 1962) that, with the lunar zonals, sets the frozen orbits (Elipe & Lara 2003;
-  Ely 2005);
-  the averaged rates carry it directly. Orbits whose period is not short against the Earth's half-month forcing
+  Ely 2005); the averaged rates carry it directly. Orbits whose period is not short against the Earth's half-month forcing
   (default threshold 1.5 days, set by measurement) use XP's long-period mode (instantaneous geometry, 95-minute class,
   `SPEC.md` 5 and 9) with the Moon as center.
 - Frame: the lunar principal-axis frame for the gravity field, the IAU mean-Earth orientation for output (Archinal
   et al. 2018), the pole precessing by Cassini's laws (Peale 1969); SRP with Earth and Moon shadows.
-- Truth: NAIF SPKs of LRO, Danuri and KPLO (inventory: to fetch). Parameters: XP's 8. Cost: the tesseral rates add
+- Truth: NAIF SPKs of LRO and Danuri (KPLO) (inventory: to fetch). Parameters: XP's 8. Cost: the tesseral rates add
   about 30 % to a rate evaluation.
 
 **2h.2 Earth–Moon libration-point orbits (halo, NRHO, Lyapunov, DRO).**
@@ -858,7 +861,7 @@ They enter only if the measurements of section 4 leave a residual their size.
 
 **3.1 Gain and cost per term.** Gains are predicted day-3 reductions of the median 3D error against best-case XP
 (design estimates from sections 2a to 2i; the measurements of section 4 replace them). Cost is added µs per object-day
-at the console cadence (1,440 states at 60 s plus about 40 rate evaluations in LEO; the SGP4XP baseline is about
+at the console cadence (1,440 states at 60 s plus about 30 rate evaluations in LEO; the SGP4XP baseline is about
 1,970 µs per object-day: 1,440 × 1.12 + 361). Bytes are added to the element set. Gains overlap, so they are not
 additive; 3.3 gives the stacked prediction.
 
@@ -866,9 +869,9 @@ additive; 3.3 gives the stacked prediction.
 | --- | --- | --: | --: | --: | --: | --: |
 | 2e priors, signed B_eff, 48 h stitched arcs, colored weights | laser-ranged LEO; Starlink | 8,100 (laser-ranged LEO, prior alone); 500 at day 1 (Starlink, 24 → 48 h) | 0 (fit time only) | 1 | unbounded | 8,100 |
 | 2b κ with the B prior | SpaceX-forecast arm; covariance | 1,240 at day 1 (with 2c) | 0 | 4 | unbounded | 310 |
-| 2a DCA drag, shared kernel, horizon chain, late binding | all LEO | 2,000 to 3,000 (FFM Starlink, after 2d) | +27 gross (J70's quadrature removed: net ≤ 0) | 12 | ≈ 90 (gross) | ≈ 210 |
+| 2a DCA drag, shared kernel, horizon chain, late binding | all LEO | 2,000 to 3,000 (FFM Starlink, after 2d) | +24 gross (J70's quadrature removed: net ≤ 0) | 12 | ≈ 100 (gross) | ≈ 210 |
 | 2c τ₀ and 1/rev, with the selection rule | lowering or decaying LEO (8 % of Starlinks) | ≈ 15,000 on that subset | +2 | 12 | ≈ 7,500 (subset) | ≈ 1,250 (subset) |
-| 2d m-daily (even l ≤ 6) and the resonance band (15:1) | all LEO, laser-ranged high | 3,900 to 7,000 (FFM Starlink); ≈ 8,000 (laser-ranged LEO); ≈ 200 (laser-ranged high) | +156 | 0 | 25 to 50 | unbounded |
+| 2d m-daily (even l ≤ 6) and the resonance band (15:1) | all LEO, laser-ranged high | 3,900 to 7,000 (FFM Starlink); ≈ 8,000 (laser-ranged LEO); ≈ 200 (laser-ranged high) | +153 | 0 | 25 to 46 | unbounded |
 | 2i.1 ECOM SRP | GNSS, IGSO, GEO | 100 (GNSS), 300 (IGSO), 300 (GEO) | +4 to +30 | 16 | 10 to 30 | 6 to 19 |
 | 2g residual series | inside a truth span | from km to 10 m inside the span | +144 | 154 per day | ≈ 19 (SpaceX span, day 1) | ≈ 18 |
 | 2f STM and calibrated covariance | every regime | realism (d²/3 3.40 → 1), not meters | +0.3 per covariance state | 112 | | |
@@ -940,7 +943,7 @@ heliocentric NAIF SPKs (L and H are to fetch, per the inventory).
 | M16 | 2i.1 | 3 | P (GNSS, IGSO, GEO) | ECOM against cannonball AGOM | GNSS and IGSO day 3 down by 2 to 3 times |
 | M17 | 2i.2 | 6 | P (GEO, IGSO) | windows cut at detected mean-motion change-points, scored per segment | the GEO 90th percentile falls toward the median |
 | M18 | 2i.3 | 6 | P, N | storm-scenario envelope coverage on the storm days of the `$SPW` record | coverage at least the nominal level on storm days |
-| M19 | 2h.1 | 3 | L | lunar orbits (LRO, Danuri, KPLO): fit and held-out days; bytes against the SPK | XP has no lunar mode: baseline is the SPK's bytes and a two-body-plus-zonal fit |
+| M19 | 2h.1 | 3 | L | lunar orbits (LRO, Danuri): fit and held-out days; bytes against the SPK | XP has no lunar mode: baseline is the SPK's bytes and a two-body-plus-zonal fit |
 | M20 | 2h.2 | 3, 4 | L | CAPSTONE and Artemis I: Richardson base, then the fitted Sundman-phase series; bytes against meters | the series reaches 1 to 10 m in 0.5 to 2 KB per segment |
 | M21 | 2h.3, 2h.4 | 3, 4 | H | cruise segments and planet-centered orbiters: fit and held-out days; hand-off continuity at segment boundaries | continuity to the fit tolerance; bytes against the SPK |
 
