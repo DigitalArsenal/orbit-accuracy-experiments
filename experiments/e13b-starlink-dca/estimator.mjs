@@ -48,6 +48,7 @@ function tridiagonal(diag,off,rhs){
   const x=r.slice();x[x.length-1]/=d.at(-1);for(let i=x.length-2;i>=0;i--)x[i]=(r[i]-off[i]*x[i+1])/d[i];return x;
 }
 export function fitShell(coast,thrust=[],options={}){
+  if(new Set(coast.map(a=>a.shell).filter(Boolean)).size>1)throw new Error('fitShell requires one registered shell');
   const keep=id=>options.calibrationIds?options.calibrationIds.includes(id):!heldOut(id);
   const calibration=coast.filter(a=>keep(a.id)&&Number.isFinite(a.y));
   if(!calibration.length)return {status:'UNAVAILABLE',reason:'no calibration coast arcs'};
@@ -114,9 +115,24 @@ export function nowcast(coast,thrust,issueMs){
 export function forecast(solution,ms){
   if(!solution.nodeMs)return null;
   const k=solution.supported.lastIndexOf(true),last=solution.nodeMs[k];
-  if(ms>last)return solution.s[k]*Math.exp(-(ms-last)/(C.forecastTauHours*3600000));
+  if(ms>=last)return solution.s[k]*Math.exp(-(ms-last)/(C.forecastTauHours*3600000));
   const i=Math.floor((ms-solution.anchorMs)/DAY);if(i<0||i>=k||!solution.supported[i]||!solution.supported[i+1])return null;
   const t=(ms-solution.nodeMs[i])/DAY;return solution.s[i]*(1-t)+solution.s[i+1]*t;
+}
+// Accept successive capture cycles in any order. First acquisition fixes the
+// shell; a repeated file version contributes once. Keep the assignments when
+// reporting shell migration rather than silently regrouping the satellites.
+export function fitFleet(records,{issueMs=null}={}){
+  const ordered=records.filter(r=>issueMs===null||Date.parse(r.source.retrievedUtc)<=issueMs).slice().sort((a,b)=>Date.parse(a.source.retrievedUtc)-Date.parse(b.source.retrievedUtc)||a.source.name.localeCompare(b.source.name));
+  const assignments=new Map(),seen=new Set(),groups=new Map();let migrated=0,duplicates=0;
+  for(const r of ordered){
+    if(seen.has(r.source.name)){duplicates++;continue;}seen.add(r.source.name);
+    const id=String(r.source.norad),observed=shellOf(r);if(!assignments.has(id))assignments.set(id,observed);
+    const shell=assignments.get(id);if(observed!==shell)migrated++;
+    if(!groups.has(shell))groups.set(shell,{coast:[],thrust:[]});const a=arcsOf(r,shell);
+    groups.get(shell).coast.push(...a.coast);groups.get(shell).thrust.push(...a.thrust);
+  }
+  return {assignments:Object.fromEntries(assignments),migratedRecords:migrated,duplicateVersions:duplicates,shells:Object.fromEntries([...groups].map(([shell,a])=>[shell,issueMs===null?fitShell(a.coast,a.thrust):nowcast(a.coast,a.thrust,issueMs)]))};
 }
 export function scoringAllowed(now=Date.now()){
   if(!config.frozen||now<Date.parse(config.window.truthEnd))throw new Error(`Hypothesis scoring locked until ${config.window.truthEnd} and coverage/reference availability checks`);
