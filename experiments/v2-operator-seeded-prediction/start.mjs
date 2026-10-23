@@ -28,6 +28,7 @@ for(const name of names) {
   artifacts.push({name,sha256:hash});
 }
 write(path.join(install,'installation.json'),{source,moduleCommit,artifacts,installedUtc:new Date().toISOString()});
+if(process.argv.includes('--install-only')){console.log(JSON.stringify({install,source,moduleCommit,status:'installed-not-started'}));process.exit(0);}
 if(fs.existsSync(path.join(store,'collector.stop')))throw new Error('collector.stop is present; remove it explicitly before restarting');
 const firstCycleUtc=new Date(Math.max(Date.parse(config.window.issueStartUtc)-8*H,Math.ceil(Date.now()/(8*H))*8*H)).toISOString();
 const log=fs.openSync(path.join(store,'collector.console.log'),'a');

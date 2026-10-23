@@ -105,3 +105,10 @@ prospective cycle or qualification of all horizons. Full 500-object operation
 refuses the first uncovered horizon before fitting. CPU receipts include the
 parent, worker initialization, successful fits/predictions and failed work;
 load pauses invalidate speed-up timings without discarding the measured cost.
+
+To retain the exact committed source, dependencies and hashed WASM artifacts
+without starting a known-blocked prospective run, use
+`node experiments/v2-operator-seeded-prediction/start.mjs --install-only`.
+The installation receipt is `runtime/<component-SHA>/installation.json`.
+Commissioning E2E can then run in that retained checkout with
+`SDN_MODULES_ROOT=<installation>/modules`; the task worktree is disposable.
