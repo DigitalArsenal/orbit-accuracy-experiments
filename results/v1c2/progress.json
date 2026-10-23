@@ -1,0 +1,16 @@
+{
+  "status": "INCOMPLETE: collection running; not final results",
+  "run": "v1c2-console-covariance-realism-run-20261022T233324Z",
+  "updated": "2026-10-23T00:00:06.295284+00:00",
+  "expectedPairs": 960,
+  "recordedPairs": 363,
+  "recordedSamples": 1906,
+  "pilot": {
+    "sha256": "691d7644daae28ba1a92f98be682d9b2b101047e9640478a8bc3429fb287ea94",
+    "arcs": 9,
+    "matched": 9
+  },
+  "sourceCommit": "9ebbbfbb47f9377412afcea97ff8c6e1d74be833",
+  "modulesCommit": "6b1132cb3d548c838931fc6b7d425ab315069a7f",
+  "checkpointSha256": "290b0408be6b58ff4ffe416a91595811dbae2cd07859a7fd300c460d9dae4a2c"
+}
