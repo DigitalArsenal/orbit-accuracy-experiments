@@ -11,7 +11,7 @@
   "planSha256": "fb274342e7b66b8f7119caa8958566b6839a9a32a6cb744d1d154c1ea222d388",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "c4cf609f586bae1fe799a2c6a0d9cf3f413c6b14"
+    "commit": "9aec7b7c589d82f7025d4c50781bb886f2a5f415"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -93,8 +93,8 @@
     "createdUtc": "2026-10-23T20:25:21.154Z"
   },
   "truthSet": {
-    "satellites": 64,
-    "setSha256": "1ab65e4867c2cbba92b9eb0f7770317b3f01d7cca1ff3fe96b551db80e18ecae"
+    "satellites": 82,
+    "setSha256": "ea0b244c47858bb0f7aed007a6c22eb518247dc9e47964af9d7f41eae1122893"
   },
   "comspoc": {
     "label": "COMSPOC Spacebook XP (local scoring only)",
