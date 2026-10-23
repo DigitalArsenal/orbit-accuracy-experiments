@@ -84,6 +84,36 @@ export function paired(ws) {
   return out;
 }
 
+
+// The same satellites fitted twice (beforeDir, afterDir each hold truth/<norad>.{json,f64} and rows/starlink/<norad>.json): how far the truth moves.
+function refitCompare(beforeDir, afterDir, { onlyCapped }) {
+  if (!fs.existsSync(path.join(afterDir, 'truth')) || !fs.existsSync(path.join(beforeDir, 'truth'))) return null;
+  const out = [];
+  for (const n of fs.readdirSync(path.join(afterDir, 'truth')).filter((x) => /^\d+\.json$/.test(x)).sort()) {
+    if (!fs.existsSync(path.join(beforeDir, 'truth', n))) continue;
+    const after = read(path.join(afterDir, 'truth', n)), before = read(path.join(beforeDir, 'truth', n));
+    if (before.truth.epochUtc !== after.truth.epochUtc || (onlyCapped && before.fit.convergence === 'converged')) continue;
+    const a = new Float64Array(fs.readFileSync(path.join(beforeDir, 'truth', n.replace('.json', '.f64'))).buffer.slice(0));
+    const c = new Float64Array(fs.readFileSync(path.join(afterDir, 'truth', n.replace('.json', '.f64'))).buffer.slice(0));
+    const gap = (h) => { const i = h * 60 * 6; return Math.hypot(a[i] - c[i], a[i + 1] - c[i + 1], a[i + 2] - c[i + 2]); };
+    const rowBefore = read(path.join(beforeDir, 'rows/starlink', n)), rowAfter = read(path.join(afterDir, 'rows/starlink', n));
+    out.push({ norad: before.norad, converged: after.fit.convergence === 'converged', iterations: after.fit.iterations, bBefore: before.fit.bEffM2Kg, bAfter: after.fit.bEffM2Kg, rmsBefore: before.fit.rmsKm, rmsAfter: after.fit.rmsKm,
+      gapKm: [24, 48, 72, 96].map(gap), xpDay3Before: rowBefore.ffm?.xp?.days?.[3]?.rmsKm, xpDay3After: rowAfter.ffm?.xp?.days?.[3]?.rmsKm, boundBefore: before.fit.bEffAtZeroBound, boundAfter: after.fit.bEffAtZeroBound });
+  }
+  if (!out.length) return null;
+  const good = out.filter((x) => x.rmsBefore < 2); // fits that reproduce SpaceX to 2 km (the others are the high-B_eff group, poor with either cap)
+  return {
+    n: out.length, converged: out.filter((x) => x.converged).length, iterationsMedian: quantile(out.map((x) => x.iterations), 0.5),
+    gapKm: [24, 48, 72, 96].map((h, i) => ({ hours: h, median: quantile(out.map((x) => x.gapKm[i]), 0.5), max: quantile(out.map((x) => x.gapKm[i]), 1), maxWhereFitIsGood: quantile(good.map((x) => x.gapKm[i]), 1) })),
+    moved: out.filter((x) => x.gapKm[3] > 0.1).map((x) => ({ norad: x.norad, rmsBefore: x.rmsBefore, gap96: x.gapKm[3] })),
+    fitsWithRmsUnder2Km: good.length,
+    bEffRelativeChangeMedian: quantile(out.map((x) => Math.abs(x.bAfter - x.bBefore) / Math.max(1e-3, x.bBefore)), 0.5),
+    rmsBefore: quantile(out.map((x) => x.rmsBefore), 0.5), rmsAfter: quantile(out.map((x) => x.rmsAfter), 0.5),
+    xpDay3Before: quantile(out.map((x) => x.xpDay3Before), 0.5), xpDay3After: quantile(out.map((x) => x.xpDay3After), 0.5),
+    leavingTheBound: out.filter((x) => x.boundBefore && !x.boundAfter).length, enteringTheBound: out.filter((x) => !x.boundBefore && x.boundAfter).length,
+  };
+}
+
 export function build() {
   const windows = collect();
   const comspoc = readJsonl(path.join(store, 'rows/comspoc.jsonl'));
@@ -159,29 +189,9 @@ export function build() {
     })),
     refit: null,
   };
-  const refitDir = path.join(store, 'refit30');
-  if (fs.existsSync(path.join(refitDir, 'truth'))) {
-    const out = [];
-    for (const n of fs.readdirSync(path.join(refitDir, 'truth')).filter((x) => /^\d+\.json$/.test(x)).sort()) {
-      const after = read(path.join(refitDir, 'truth', n)), before = read(path.join(store, 'truth', n));
-      if (before.truth.epochUtc !== after.truth.epochUtc) continue;
-      const a = new Float64Array(fs.readFileSync(path.join(store, 'truth', n.replace('.json', '.f64'))).buffer.slice(0));
-      const c = new Float64Array(fs.readFileSync(path.join(refitDir, 'truth', n.replace('.json', '.f64'))).buffer.slice(0));
-      const gap = (h) => { const i = h * 60 * 6; return Math.hypot(a[i] - c[i], a[i + 1] - c[i + 1], a[i + 2] - c[i + 2]); };
-      const rowBefore = read(path.join(store, 'rows/starlink', n)), rowAfter = read(path.join(refitDir, 'rows/starlink', n));
-      out.push({ converged: after.fit.convergence === 'converged', iterations: after.fit.iterations, bBefore: before.fit.bEffM2Kg, bAfter: after.fit.bEffM2Kg, rmsBefore: before.fit.rmsKm, rmsAfter: after.fit.rmsKm,
-        gapKm: [24, 48, 72, 96].map(gap), xpDay3Before: rowBefore.ffm?.xp?.days?.[3]?.rmsKm, xpDay3After: rowAfter.ffm?.xp?.days?.[3]?.rmsKm, boundBefore: before.fit.bEffAtZeroBound, boundAfter: after.fit.bEffAtZeroBound });
-    }
-    const skipped = readJsonl(path.join(refitDir, 'skipped.jsonl')).length;
-    truthQuality.refit = out.length ? {
-      n: out.length, skippedBecauseTheFileChanged: skipped, converged: out.filter((x) => x.converged).length, iterationsMedian: quantile(out.map((x) => x.iterations), 0.5),
-      gapKm: [24, 48, 72, 96].map((h, i) => ({ hours: h, median: quantile(out.map((x) => x.gapKm[i]), 0.5), max: quantile(out.map((x) => x.gapKm[i]), 1) })),
-      bEffRelativeChangeMedian: quantile(out.map((x) => Math.abs(x.bAfter - x.bBefore) / Math.max(1e-3, x.bBefore)), 0.5),
-      rmsBefore: quantile(out.map((x) => x.rmsBefore), 0.5), rmsAfter: quantile(out.map((x) => x.rmsAfter), 0.5),
-      xpDay3Before: quantile(out.map((x) => x.xpDay3Before), 0.5), xpDay3After: quantile(out.map((x) => x.xpDay3After), 0.5),
-      leavingTheBound: out.filter((x) => x.boundBefore && !x.boundAfter).length, enteringTheBound: out.filter((x) => !x.boundBefore && x.boundAfter).length,
-    } : null;
-  }
+  truthQuality.refit = refitCompare(store, path.join(store, 'refit30'), { onlyCapped: false });
+  truthQuality.refitPair = refitCompare(path.join(store, 'refitpair/cap12'), path.join(store, 'refitpair/cap30'), { onlyCapped: true });
+  if (truthQuality.refit) truthQuality.refit.skippedBecauseTheFileChanged = readJsonl(path.join(store, 'refit30', 'skipped.jsonl')).length;
 
   // held out against the first hours of newer SpaceX files (newer.mjs)
   const newerRows = readJsonl(path.join(store, 'rows/newer.jsonl'));
@@ -200,6 +210,8 @@ export function build() {
   } : null;
 
 
+  const packDir = path.join(store, 'pack');
+  const packs = fs.existsSync(packDir) ? fs.readdirSync(packDir).filter((n) => n.endsWith('.json')).sort().map((n) => read(path.join(packDir, n))).map((m) => ({ name: m.name, states: m.states, center: m.center, startUtc: m.startUtc, stopUtc: m.stopUtc, sha256: m.sha256 })) : [];
   // COMSPOC XP sets of the GPS and laser-ranged objects: scored once precise products after the set epoch exist (comspoc-precise.mjs)
   const preciseStatusFile = path.join(store, 'rows/comspoc-precise-status.json');
   const preciseRows = readJsonl(path.join(store, 'rows/comspoc-precise.jsonl')).filter((r) => r.days && Object.keys(r.days).length);
@@ -208,7 +220,7 @@ export function build() {
     byKind: ['gnss', 'laser-ranged'].map((kind) => ({ kind, n: preciseRows.filter((r) => r.kind === kind).length, days: [0, 1, 2, 3].map((k) => quantile(preciseRows.filter((r) => r.kind === kind && r.days[k]).map((r) => r.days[k].rmsKm), 0.5)) })),
   } : null;
 
-  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission) })), byShell, truthSet, truthQuality, newer, comspocPrecise, bench: bench?.rows ?? null };
+  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission) })), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -241,6 +253,16 @@ function findings(t) {
   return out;
 }
 
+
+function refitSentence(tq) {
+  const parts = [tq.refit, tq.refitPair].filter(Boolean);
+  if (!parts.length) return '';
+  const n = parts.reduce((a, r) => a + r.n, 0), good = parts.reduce((a, r) => a + r.fitsWithRmsUnder2Km, 0);
+  const maxGood = Math.max(...parts.map((r) => r.gapKm[3].maxWhereFitIsGood));
+  const median = Math.max(...parts.map((r) => r.gapKm[3].median));
+  return `; refitted with a cap of 30 on ${n} of them (${parts.map((r) => `${r.converged} of ${r.n} converge`).join(' and ')}, about ${f(Math.max(...parts.map((r) => r.iterationsMedian)), 0)} iterations), the truth moves by a median of at most ${f(median)} km at 96 h and, for the ${good} fits that reproduce SpaceX to 2 km, by at most ${f(maxGood)} km`;
+}
+
 export function markdown(t) {
   const L = [];
   L.push('# G1: SDN-GP against FFM-propagated Starlink and precise orbits (baselines)', '');
@@ -271,6 +293,7 @@ export function markdown(t) {
   const spanOf = (a) => (a.kernel ? `${a.kernel.span.slice(0, 10)} to ${a.kernel.span.split(' to ')[1].slice(0, 10)}` : 'none');
   L.push(...header, ...t.regimes.filter((r) => !isExtra(r)).map(row), ...t.awaiting.map((a) => `| ${a.label} | truth ${spanOf(a)} | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |`));
   L.push('', ...t.awaiting.map((a) => `- ${a.label}: awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (${a.reason}); kernel ${a.kernel?.file ?? 'none'}.`),
+    ...(t.packs.length ? [`- Truth packs for these regimes, ready for SDN-GP (local, derived from the public kernels by files/orbit-products and foundation/time; [unix ms, x, y, z, vx, vy, vz] per state in km and km/s, J2000 axes, UTC): ${t.packs.map((k) => `${k.name}, ${k.states} states, ${k.center}-centred, ${k.startUtc.slice(0, 10)} to ${k.stopUtc.slice(0, 10)}`).join('; ')}. The heliocentric kernels wait for a type-1 reader.`] : []),
     '- GEO operator ephemerides: none are stored locally (operator-capture holds Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not ephemerides); the GEO row is the GFZ MGEX BeiDou-2 and QZSS-3 orbits.',
     '- NAIF does not host TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); THEMIS and Chandra stand in for TESS (HEO) and Artemis II for Artemis I.', '');
   L.push('### 1b. The same objects the COMSPOC sets were scored on, and the Starlink B_eff split', '', ...header, ...t.regimes.filter(isExtra).map(row), '');
@@ -321,10 +344,9 @@ export function markdown(t) {
     'Fit RMS is the fit of FFM-1 to SpaceX\'s own forecast over 0-48 h, the measure of how well the truth reproduces the operator. The XP and SGP4 columns are the median day-3 errors against that truth (km).', '',
     '| Group | Fits | B_eff median (m2/kg) | Fit RMS vs SpaceX: median / 90th / max (km) | XP day 3 | SGP4 day 3 |', '| --- | --: | --: | --- | --: | --: |',
     ...tq.groups.map((g) => `| ${g.name} | ${g.n} | ${f(g.bEffMedian, 4)} | ${f(g.fitRmsKm.median)} / ${f(g.fitRmsKm.p90)} / ${f(g.fitRmsKm.max)} | ${f(g.xpDay3)} | ${f(g.sgp4Day3)} |`), '');
-  if (tq.refit) {
-    const r = tq.refit;
-    L.push(`Refit of the fits that stopped at the registered 12 iterations, on the same SpaceX file (SHA-256 checked) with a cap of 30: ${r.n} refitted (${r.skippedBecauseTheFileChanged} seat files had changed on SpaceX\'s server since the registered fit and could not be refitted on the same bytes); ${r.converged} of ${r.n} converge within 30 (median ${r.iterationsMedian} iterations). The truth moves by (median / maximum, km): ${r.gapKm.map((g) => `${f(g.median)} / ${f(g.max)} at ${g.hours} h`).join(', ')}. B_eff changes by a median ${f(100 * r.bEffRelativeChangeMedian, 1)} %; the fit RMS against SpaceX goes from ${f(r.rmsBefore)} to ${f(r.rmsAfter)} km (median); the median XP day-3 error against the truth goes from ${f(r.xpDay3Before)} to ${f(r.xpDay3After)} km. ${r.leavingTheBound} left the zero bound and ${r.enteringTheBound} entered it.`, '');
-  }
+  const refitText = (r, what) => `${what}: ${r.n} satellites; ${r.converged} of ${r.n} converge within 30 iterations (median ${r.iterationsMedian}). The truth moves by (median / maximum, km): ${r.gapKm.map((g) => `${f(g.median)} / ${f(g.max)} at ${g.hours} h`).join(', ')}. ${r.moved.length ? `Moved by more than 0.1 km at 96 h: ${r.moved.map((x) => `${x.norad} (fit RMS ${f(x.rmsBefore, 1)} km, moved ${f(x.gap96, 1)} km)`).join(', ')}. ` : 'None moves by more than 0.1 km at 96 h. '}B_eff changes by a median ${f(100 * r.bEffRelativeChangeMedian, 1)} %; the fit RMS against SpaceX goes from ${f(r.rmsBefore)} to ${f(r.rmsAfter)} km (median); the median XP day-3 error against the truth goes from ${f(r.xpDay3Before)} to ${f(r.xpDay3After)} km; ${r.leavingTheBound} left the zero bound and ${r.enteringTheBound} entered it.`;
+  if (tq.refit) L.push(refitText(tq.refit, `Refit of the fits that stopped at the registered 12 iterations, on the same SpaceX file (SHA-256 checked), cap 30 (${tq.refit.skippedBecauseTheFileChanged} seat files had changed on SpaceX's server and are in the next paragraph)`), '');
+  if (tq.refitPair) L.push(refitText(tq.refitPair, 'Seats whose file had changed: cap 12 and cap 30 both run on the file served now, only the pairs where the cap-12 fit did not converge'), '');
   const pooled = t.regimes.find((r) => r.id === 'leo-starlink-ffm'), clean = t.regimes.find((r) => r.id === 'leo-starlink-ffm-clean'), bound = t.regimes.find((r) => r.id === 'leo-starlink-ffm-b0'), decay = t.regimes.find((r) => r.id === 'leo-starlink-ffm-decay');
   if (pooled && clean && bound && decay) {
     const d = (r, k) => r.xp.days[k];
@@ -347,6 +369,17 @@ export function markdown(t) {
   if (cp) {
     L.push('### COMSPOC XP sets of the GPS and laser-ranged objects: waiting for precise products', '',
       `${cp.xpSets} COMSPOC XP sets are in the local capture of ${cp.capturedUtc}; ${cp.objectsWithPreciseProducts} of those objects have precise-orbit products in the archive (${cp.gnss} GNSS, ${cp.laserRanged} laser-ranged). The newest product days are ESA ${cp.newestProductDay.esa}, ILRS combined ${cp.newestProductDay.ilrsa}, ILRS NSGF ${cp.newestProductDay.nsgf}; the sets' epochs are 2026-08 to 2026-10-22, so ${cp.scored} are scored and ${cp.pending} wait for products dated after their epoch. Re-run \`comspoc-precise.mjs\` after the archive's reference states are extended (local scoring only, as before).`, '');
+  }
+
+
+  {
+    const ts2 = t.truthSet, tq2 = t.truthQuality;
+    const g = (name) => tq2.groups.find((x) => x.name === name);
+    const decayMedian = [g('converged; B_eff above 0.5'), g('at the 12-iteration cap; B_eff above 0.5')].filter(Boolean);
+    L.push('## 11. Notes for the modules (found here, not changed here)', '',
+      `- \`analysis/od fit_ffm\` (T1a): (a) B_eff >= 0 leaves ${ts2.bEffZeroBound} of ${ts2.fitted} fits at the zero bound (orbit raising and other net thrust cannot be represented; their truth is a drag-free trajectory); (b) ${ts2.notConverged} of ${ts2.fitted} fits stop at the 12-iteration default${refitSentence(tq2)}, so the stopping rule or the default cap is too strict; (c) ${decayMedian.reduce((a, x) => a + x.n, 0)} objects need B_eff above 0.5 m2/kg, more than ten times a physical value (continuous lowering or decay, no discrete event detected): they fit SpaceX to a median of 2 to 11 km and are 2 km (median) from a newer file's first hours; a single B_eff cannot represent them.`,
+      '- `data-source/space-weather` rows end where the Kp forecast ends (about two days ahead) and `propagator/ffm` refuses any arc past them (`space-weather-out-of-range`); this experiment appended NOAA SWPC 45-day Ap and F10.7 itself (amendment A2).',
+      '- `files/orbit-products` 0.1.4 reads SPK types 8, 9 and 13 only: the JPL navigation kernels of Psyche, Lucy and Juno are type 1 (`unsupported-variant`), the Juno merge also holds type 2 (`unsupported-spk-materialization`), TDRSS is type 10 (generated from two-line elements). Its epochs are TDB, so every caller needs `foundation/time` (done here, one call per epoch).', '');
   }
 
   const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'ilrs', 'ilrs-nsgf', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'nrlmsise00', 'egm', 'fes2004'];
