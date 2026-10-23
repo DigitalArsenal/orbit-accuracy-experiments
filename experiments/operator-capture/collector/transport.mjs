@@ -20,16 +20,20 @@ export class Fetcher {
           throw Object.assign(new Error(`HTTP ${response.status}${range ? ' (206 required; full body refused)' : ''}`), {fatal: [403,429].includes(response.status), gone: response.status === 404});
         }
         const contentRange = response.headers.get('content-range');
-        if (range && !contentRange?.startsWith(`bytes ${range[0]}-${range[1]}/`)) {
+        const parsedRange=contentRange&&/^bytes (\d+)-(\d+)\/(\d+)$/.exec(contentRange);
+        // RFC byte ranges end at EOF when the requested end exceeds file size.
+        // Some public products contain only about eight hours, not 72 hours.
+        if (range && (!parsedRange||+parsedRange[1]!==range[0]||+parsedRange[2]!==Math.min(range[1],+parsedRange[3]-1))) {
           await response.body?.cancel(); throw Object.assign(new Error('range contract changed'), {fatal: true});
         }
+        const expectedLength=range?+parsedRange[2]-range[0]+1:null;
         const chunks = []; let length = 0;
         for await (const chunk of response.body) {
           length += chunk.length; this.bytes += chunk.length;
           if (length > (range ? range[1]-range[0]+1 : 32*1024*1024)) throw Object.assign(new Error('response byte budget exceeded'), {fatal: true});
           chunks.push(chunk);
         }
-        if (range && length !== range[1]-range[0]+1) throw new Error('short range body');
+        if (range && length !== expectedLength) throw new Error('short range body');
         return {bytes: Buffer.concat(chunks), retrievedUtc: new Date().toISOString(), etag: response.headers.get('etag'), contentRange};
       } catch (error) {
         if(this.controller.signal.aborted)throw Object.assign(new Error('fetcher stopped'),{fatal:true});
