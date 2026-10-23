@@ -111,7 +111,7 @@ export function nowcast(coast,thrust,issueMs){
   const cutoff=issueMs-C.latencyHours*3600000,start=issueMs-C.historyDays*DAY;
   const eligible=a=>a.acquiredMs<=issueMs&&a.endMs<=cutoff&&a.startMs>=start;
   const used=coast.filter(eligible),solution=fitShell(used,thrust.filter(eligible));
-  return {...solution,issueMs,cutoffMs:cutoff,latestArcEndMs:used.length?Math.max(...used.map(a=>a.endMs)):null};
+  return {...solution,issueMs,cutoffMs:cutoff,latestArcEndMs:used.length?used.reduce((latest,a)=>Math.max(latest,a.endMs),-Infinity):null};
 }
 export function forecast(solution,ms){
   if(solution.status!=='CONVERGED'||!solution.nodeMs)return null;
