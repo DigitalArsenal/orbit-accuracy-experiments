@@ -79,3 +79,11 @@ File handoff verified at 2026-10-23 12:54Z: the running E13b capture reports
 `subsetMode: registered` and SUBSETS SHA-256
 `b6f50a5d457cdf7f169f8311b0b1aa9a4083418e68a4ef0332a84454b15e2eb4`,
 identical to this task's registration. No collector code was changed by V2.
+
+`start.mjs` starts a retained process immediately and records its PID/log.
+After the verified commissioning cycle, it waits until 2026-10-24 00:00Z
+(or the next UTC 00/08/16 boundary if later) before the first prospective
+cycle, then runs every eight hours. This leaves 30 minutes between the 7.5 h
+cycle deadline and each registered issue. The status is `scheduled` while
+waiting; it is not reported as a completed 500-object cycle. Starting after
+the registered first cycle requires the PLAN's coverage amendment/extension.

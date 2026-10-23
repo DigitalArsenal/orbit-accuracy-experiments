@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync,spawn} from 'node:child_process';
-import {root,store,moduleRoot,sha256,write,quiet} from './common.mjs';
+import {root,store,moduleRoot,sha256,write,quiet,config,H} from './common.mjs';
 const git=(cwd,...args)=>execFileSync('git',args,{cwd,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
 fs.mkdirSync(store,{recursive:true});await quiet();
 const source=git(root,'rev-parse','HEAD'),modules=moduleRoot(),moduleCommit=git(modules,'rev-parse','HEAD');
@@ -29,7 +29,8 @@ for(const name of names) {
 }
 write(path.join(install,'installation.json'),{source,moduleCommit,artifacts,installedUtc:new Date().toISOString()});
 if(fs.existsSync(path.join(store,'collector.stop')))throw new Error('collector.stop is present; remove it explicitly before restarting');
+const firstCycleUtc=new Date(Math.max(Date.parse(config.window.issueStartUtc)-8*H,Math.ceil(Date.now()/(8*H))*8*H)).toISOString();
 const log=fs.openSync(path.join(store,'collector.console.log'),'a');
-const child=spawn('/usr/bin/nice',['-n','10',process.execPath,'experiments/v2-operator-seeded-prediction/collect.mjs'],{cwd:experimentRoot,env:{...process.env,SDN_MODULES_ROOT:modulesRoot,V2_STORE:store,UV_THREADPOOL_SIZE:'1'},stdio:['ignore',log,log],detached:true});
+const child=spawn('/usr/bin/nice',['-n','10',process.execPath,'experiments/v2-operator-seeded-prediction/launch.mjs',firstCycleUtc],{cwd:experimentRoot,env:{...process.env,SDN_MODULES_ROOT:modulesRoot,V2_STORE:store,UV_THREADPOOL_SIZE:'1'},stdio:['ignore',log,log],detached:true});
 child.unref();fs.closeSync(log);
-console.log(JSON.stringify({pid:child.pid,install,log:path.join(store,'collector.log'),pidFile:path.join(store,'collector.pid')}));
+console.log(JSON.stringify({pid:child.pid,firstCycleUtc,install,log:path.join(store,'collector.log'),pidFile:path.join(store,'collector.pid')}));
