@@ -31,7 +31,7 @@ const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).t
 const branch = 'refs/heads/task/console-covariance-calibration-v1c4-20261023';
 
 if (values.check) {
-  const { check } = await import('./report.mjs');
+  const { check } = await import('./check.mjs');
   await check({ root, runDir, config, configs, registration, output });
   process.exit(0);
 }
@@ -45,6 +45,16 @@ for (const file of ['PLAN.md', 'config.json']) {
 const provenance = read(path.join(runtime, 'PROVENANCE.json'));
 for (const [file, hash] of Object.entries({ ...config.runtime.files })) assert.equal(sha256(fs.readFileSync(path.join(runtime, file))), hash, `runtime file differs from its pin: ${file}`);
 const run = new Run({ root, dir: runDir, config, registration, runtimeProvenance: { runtimeProvenanceSha256: sha256(fs.readFileSync(path.join(runtime, 'PROVENANCE.json'))), modulesCommit: provenance.modulesCommit, truthToolsCommit: provenance.truthToolsCommit, sds: provenance.sds } });
+run.manifest.repositoryRoot = root;
+// What produced the numbers: this experiment's code, the V1c3/V1c2/E14/E3 sources it imports, and the pinned runtime (config.runtime).
+run.inputs.implementation = Object.fromEntries(['universe', 'collect', 'events', 'event-worker', 'maneuvers', 'environment', 'cv', 'train', 'run-state', 'provision'].map(n => path.join(dir, `${n}.mjs`)).map(f => [f, sha256(fs.readFileSync(f))]));
+run.inputs.frozenSource = Object.fromEntries(['experiments/v1c3-console-covariance-calibration/calibration.mjs', 'experiments/v1c3-console-covariance-calibration/evaluate.mjs', 'experiments/v1c3-console-covariance-calibration/controls.mjs',
+  'experiments/v1c3-console-covariance-calibration/worker.mjs', 'experiments/v1c3-console-covariance-calibration/report.mjs', 'experiments/v1c3-console-covariance-calibration/config.json',
+  'experiments/v1c2-console-covariance-realism/report.mjs', 'experiments/v1c2-console-covariance-realism/modules.mjs', 'experiments/v1c2-console-covariance-realism/config.json', 'experiments/v1c-console-ffm-path/modules.mjs',
+  'experiments/e14-covariance-realism/realism.mjs', 'experiments/e14-covariance-realism/windows.mjs', 'experiments/e14-covariance-realism/config.json', 'harness/stats.mjs', 'experiments/e2b-correlated-covariance/stats.mjs',
+  'experiments/e2-catalog-covariance/score.mjs', 'experiments/e2b-correlated-covariance/linalg.mjs', 'experiments/v1-ffm-physical-truth/config.json', 'harness/gp-archive.mjs', 'harness/records.mjs', 'harness/eop.mjs', 'harness/full-force.mjs',
+  'harness/modules.mjs', 'harness/provenance.mjs', 'experiments/e3-combined-catalog/eop-finals.mjs', 'experiments/e3-combined-catalog/config.json', 'experiments/e3-combined-catalog/truth.mjs', 'package.json', 'package-lock.json']
+  .map(f => path.join(root, f)).map(f => [f, sha256(fs.readFileSync(f))]));
 run.invoke(values.stage);
 const requirePushed = relative => {
   const bytes = fs.readFileSync(path.join(root, relative));

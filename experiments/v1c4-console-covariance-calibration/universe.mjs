@@ -32,9 +32,10 @@ export function truthFor({ e3, config, roots }) {
 // Element sets of the kept objects for a list of issue days: `sets` (epoch from `epochLookbackDays` before the first issue day
 // to its last day, de-duplicated as E3 does, with creation dates for causality) and `history` (every set created from 45 days
 // before the first issue day, for object_covariance's 31-day history).
-export function elementSets({ e3, days, keep, epochLookbackDays = 10 }) {
+export function elementSets({ e3, days, keep, epochLookbackDays = 10, withHistory = true }) {
   const { sets, files } = readElementSets(e3.inputs.gpHistory, shiftDay(days[0], -epochLookbackDays), days.at(-1), { keep, lagDays: e3.elementSets.creationLagDays,
     theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType, duplicateEpochSeconds: e3.elementSets.duplicateEpochSeconds });
+  if (!withHistory) return { sets, history: [], files, historyFiles: {} };
   const history = readCreationDays(e3.inputs.gpHistory, shiftDay(days[0], -45), days.at(-1), { keep, theory: e3.elementSets.meanElementTheory, ephemerisType: e3.elementSets.ephemerisType });
   return { sets, history: history.sets, files, historyFiles: history.files };
 }
