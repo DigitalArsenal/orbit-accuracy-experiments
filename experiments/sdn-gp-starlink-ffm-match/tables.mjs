@@ -177,18 +177,25 @@ export function markdown(t) {
     `- **RIC check.** Over all held-out days of all windows the three components recombine to the module\'s own 3D RMS to ${f(t.ricConsistency.xp.min, 4)} to ${f(t.ricConsistency.xp.max, 4)} for SGP4-XP (the thinning to one state per 5 minutes) and ${f(t.ricConsistency.sgp4.min, 4)} to ${f(t.ricConsistency.sgp4.max, 4)} for SGP4.`,
     '- **Environment.** Earth orientation: the local IERS daily finals of 2026-10-13. Space weather: the `data-source/space-weather` rows (GFZ, NOAA SWPC) through 2026-10-25, then NOAA SWPC 45-day daily Ap and F10.7 for the eight days after (Kp and the 81-day average held), because the module\'s rows end where its Kp forecast ends and the truth runs 96 h. Planetary kernel DE440s. Density correction s = 0 (no $DCL is published yet). Hashes are in `manifest.json`.',
     '- **COMSPOC XP (local scoring only).** Their published SGP4-XP sets, propagated through the black-box module and compared with the same-day truth; their set epochs are 1 to 5 days older than the truth, so their errors are at those ages, not at the 24 h of the fitted arms. Never fitted to, never an input; aggregates only.',
+    '- **Plan.** `experiments/sdn-gp-starlink-ffm-match/PLAN.md`, frozen by its first commit, with amendments A1 (headline table), A2 (start states, weather extension, the COMSPOC scoring arm), A3 (fit length) and A4 (GEO and IGSO windows from the GFZ MGEX set found after registration).',
     '- **Not measured here.** SDN-GP (not landed), HEO / cislunar / interplanetary truth (none in the archive); GEO operator ephemerides (SES, Intelsat) are not stored, the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
-  L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. A `-` is not scored (COMSPOC needs same-day truth for its set, so it appears only on the rows for the objects it was scored on). For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
-  L.push('| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |');
-  for (const r of t.regimes) {
+  L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. `-` is not scored. A COMSPOC value marked `*` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
+  const isExtra = (r) => /-(aligned|drag|b0)$/.test(r.id);
+  const header = ['| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'];
+  const comspocOf = (r) => (r.comspoc ? { c: r.comspoc, mark: '' } : t.regimes.find((x) => x.id === `${r.id}-aligned`)?.comspoc ? { c: t.regimes.find((x) => x.id === `${r.id}-aligned`).comspoc, mark: '*' } : { c: null, mark: '' });
+  const cellOf = (xpv, csv, sgv, mark) => `pending / ${[xpv, csv, sgv].map((v, k) => (Number.isFinite(v) ? f(v) + (k === 1 ? mark : '') : '-')).join(' / ')}`;
+  const row = (r) => {
     const key = /^(geo|igso)/.test(r.id) ? 'GEO' : r.id.startsWith('meo') ? 'MEO' : 'LEO';
     const b = t.bench ? { xp: t.bench.find((x) => x.theory === 'SGP4-XP' && x.regime.startsWith(key)), sg: t.bench.find((x) => x.theory === 'SGP4' && x.regime.startsWith(key)) } : null;
     const share = (a) => { const c = a.days[3]?.ric; if (!(c && c.every(Number.isFinite))) return ''; const q = (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2); return `${q >= 99.5 ? q.toFixed(1) : Math.round(q)} %`; };
-    L.push(`| ${r.label} | ${r.xp.fitted} / ${r.sgp4.fitted} / ${r.windows} | ${cell([r.xp.fit.median, r.comspoc?.days?.[0]?.median, r.sgp4.fit.median])} | ${cell(arms(r, 1))} | ${cell(arms(r, 2))} | ${cell(arms(r, 3))} | ${share(r.xp)} / ${share(r.sgp4)} | ${r.xp.elementBytes ?? ''} / ${r.sgp4.elementBytes ?? ''} | ${b ? `${f(b.xp?.usPerState, 0)} / ${f(b.sg?.usPerState, 0)}` : ''} |`);
-  }
-  for (const m of t.missing) L.push(`| ${m.label} | none | pending / - / - / - | - | - | - | | | |`);
+    const { c, mark } = comspocOf(r);
+    const day = (k) => cellOf(r.xp.days[k]?.median, c?.days?.[k]?.median, r.sgp4.days[k]?.median, mark);
+    return `| ${r.label} | ${r.xp.fitted} / ${r.sgp4.fitted} / ${r.windows} | ${cellOf(r.xp.fit.median, c?.days?.[0]?.median, r.sgp4.fit.median, mark)} | ${day(1)} | ${day(2)} | ${day(3)} | ${share(r.xp)} / ${share(r.sgp4)} | ${r.xp.elementBytes ?? ''} / ${r.sgp4.elementBytes ?? ''} | ${b ? `${f(b.xp?.usPerState, 0)} / ${f(b.sg?.usPerState, 0)}` : ''} |`;
+  };
+  L.push(...header, ...t.regimes.filter((r) => !isExtra(r)).map(row), ...t.missing.map((m) => `| ${m.label} | none | pending / - / - / - | - | - | - | | | |`));
   L.push('', ...t.missing.map((m) => `- ${m.label}: ${m.reason}.`), '');
+  L.push('### 1b. The same objects the COMSPOC sets were scored on, and the Starlink B_eff split', '', ...header, ...t.regimes.filter(isExtra).map(row), '');
   L.push('### What the table says (generated from the numbers above)', '', ...findings(t), '');
   L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
   for (const r of t.regimes) for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) {

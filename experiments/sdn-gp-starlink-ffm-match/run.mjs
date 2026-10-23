@@ -2,7 +2,7 @@
 // 1. the plan and config are frozen and committed unchanged;
 // 2. the committed manifest matches the module artifacts that would run (WASM SHA-256);
 // 3. tables.json is re-derived from the recorded window rows (statistics only) and must equal the committed file;
-// 4. N windows (default 4, spread over the sources) are replayed through the modules and must reproduce their recorded
+// 4. N windows (default 5 precise-orbit windows, one per source, plus a Starlink FFM truth and an in-span SpaceX window) are replayed through the modules and must reproduce their recorded
 //    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records.
 // Without the local records the check says so and exits 2: a skip is never a pass.
 import fs from 'node:fs';
@@ -18,7 +18,7 @@ import { parseMeme } from './lib/sources.mjs';
 import { windowStarts, withT, ms } from './lib/windows.mjs';
 
 const args = process.argv.slice(2);
-const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 4;
+const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 5;
 const fail = (message) => { console.error(`FAIL: ${message}`); process.exit(1); };
 const ok = (message) => console.log(`ok: ${message}`);
 
