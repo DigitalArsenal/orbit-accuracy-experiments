@@ -15,6 +15,11 @@
       "time": "2026-10-23T02:27:23.485818+00:00",
       "load1": 16.67529296875,
       "status": "Same experiment PID resumed with SIGCONT; checkpoints and numerical inputs unchanged."
+    },
+    {
+      "time": "2026-10-23T02:44Z",
+      "status": "Saved 468 training arcs before stopping own PID to resume with adaptive dispatch; unfinished arcs rerun from unchanged inputs. Shared load exceeded 21 while own process was stopped.",
+      "maximumWatchLoad": 36.8359375
     }
   ],
   "resume": "2026-10-23 ~02:20Z coordinator: disk guard clear; resume checkpointed FFM training.",
@@ -23,5 +28,6 @@
     "pauseAtLoad": 19,
     "resumeBelowLoad": 17,
     "log": "runs/v1c3-provision/load-watch-train-ffm.log"
-  }
+  },
+  "adaptiveDispatch": "Operational scheduling only: lane 0/1/2/3 requires load below 20/19/18/17 respectively. Still at most four single-thread workers; frozen config and numerical execution unchanged."
 }

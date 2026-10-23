@@ -106,9 +106,12 @@ export async function collect({ root, run, modules, phase, split, config, e3, v1
   }
   try {
     for (let i = 0; i < config.workers; i++) { const w = makeWorker(); pool.push(w); await w.ready; }
-    async function lane(w) {
+    async function lane(w, laneIndex) {
+      // The registration permits at most four workers. Reserve another unit
+      // of load per additional lane so one lane can progress on a busy host.
+      const dispatchBelow = config.dispatchLoadBelow - laneIndex;
       while (next < pairs.length) {
-        while (os.loadavg()[0] >= config.dispatchLoadBelow) { console.log(`Load ${os.loadavg()[0]}: waiting before dispatch`); await sleep(15000); }
+        while (os.loadavg()[0] >= dispatchBelow) { console.log(`Load ${os.loadavg()[0]}: lane ${laneIndex} waiting below ${dispatchBelow}`); await sleep(15000); }
         assert(fs.statfsSync(root).bavail * fs.statfsSync(root).bsize >= 20 * 1024 ** 3, 'disk guard');
         run.peakDispatchLoad = Math.max(run.peakDispatchLoad ?? 0, os.loadavg()[0]);
         if (next >= pairs.length) break;
