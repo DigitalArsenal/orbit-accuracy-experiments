@@ -571,3 +571,24 @@ never dropped. COMSPOC data are not involved. No raw operator, ISS or unlicensed
 measured numbers only: the re-score identity counts and the HEO default-span change; M22 (excess over the control, by magnitude and axis, days 1 / 2 / 3, against the no-maneuver rows); M23 (A against B by duration);
 M28 (criteria against error by level, the hand-off lead, the reentry epoch error); M24 and M25 as measured, or what is missing. E2E: `run.mjs --check` with an events replay (one M22 case, one M23 case, one M28 node on the pinned
 build against the stored rows).
+
+### A10b - 2026-10-24, before any row of build 35cd83a2b714 was read and before any events row of it was scored: corrections found by the interface probes
+
+The interface probes of A10 were run: one satellite through `maneuver` (the first of M22's list, NORAD 44949), one decay cell through `reentry` (c-B0.005-low, the longest circular decay), the ISS windows through `detect_maneuvers`.
+Their rows were read to learn the calls and the outputs and then deleted; the run recomputes the same cases, so the numbers of that satellite and that cell come out again as they were (deterministic). The Earth rows of the re-score
+were not read before this entry. What the probes changed:
+
+1. Environment ports. The build's own manifest (dist/plugin-manifest.json, the copy made with the wasm) declares no environment port for `maneuver` (inputs omm, maneuvers, grid) or `detect_maneuvers` (ephemeris); the package's newer
+manifest at side B's later HEAD adds them and is not this build. The weather table is therefore not passed to either (A10 2 said it was for `maneuver`); `reentry` takes it, as planned. A `$MNV` is sent as a plain record: a size-prefixed one is refused as not verifiable.
+2. The round trip of the map. On the first satellite a zero delta-v through `maneuver` leaves the day-3 RMS 0.18 km above the control (day 2 0.03 km, day 1 0.005 km), and so do impulses of 1 mm/s on any axis. A zero delta-v is accepted. A case `map0`
+(the map applied with a zero delta-v at t_b, scored against the control's truth) is added to M22 for every satellite and reported beside the impulses, as the floor of the map.
+3. Finite-burn tolerance. FFM-1 answered "Finite-burn tolerance cannot be met at minStep" for 5 of the 30 burn arcs of that satellite at the registered tolerance (1e-13). The burn stage retries at 1e-12, 1e-11 and 1e-10 until FFM-1
+accepts it, and the tolerance used is recorded in the truth index; the post-burn stage keeps the registered tolerance. The first M23 truth files were made before this correction, were deleted and made again.
+4. ISS step. The files hold a state every 240 s (A10 5 said every fifth at 300 s): every state is used, none dropped; a 72 h window holds about 1,080 states; 26 windows (13 per file).
+5. M25. The rows of the previous build show what USER_DEFINED_SDNGP_MANEUVER_BEFORE_SECONDS is: the distance from the arc's start to the start of the segment (a 72 h arc whose listed maneuver lies 45.5 h after its start carries 172,800 s: the
+segment starts 48 h in); it is not an epoch. The epoch error of A10 6 is replaced by the lag: the segment's start (arc start plus the parameter) minus the last listed maneuver inside the fit span (positive: the segment starts after
+it). Reported per body: the treatment (whole arc, segment, refusal) of the windows with a listed maneuver in the fit span, only in the held-out days, and none; the lag (median, minimum, maximum); the segments that start after and before the last
+maneuver; the day-3 medians by treatment. The detection and false-alarm counts of A10 6 are the first rows of that table.
+6. M28. The hand-off state's reference frame is read from the RDM (TEME in the probe) and converted by foundation/frames before FFM-1 runs it; a `reentry` refusal (the last node of the probe cell was refused as "reentry-not-reached", with a fit RMS
+of 12.8 km) is a row, not a gap. The node scan begins at the first sample with two periods of history and drops the nodes with less than 6 h of truth, as A10 said.
+7. Jobs. The events jobs are sources m22, m23, m28 and m24 of `sdngp-run.mjs`; they run with --only and do not rewrite complete.json, which the 65 jobs of the re-score wrote.
