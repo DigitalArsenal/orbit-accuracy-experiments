@@ -301,7 +301,60 @@ function m31(resultsDir) {
   return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
 }
 
-export function eventsStudy(dir, resultsDir) { return dir ? { build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir) } : null; }
+
+// ---- M31 and M32 (amendment A12b) ----
+const armDays = (rs, pick) => Object.fromEntries([1, 2, 3].map((k) => { const v = rs.map((r) => pick(r)?.days?.[k]?.rmsKm).filter(Number.isFinite); return [k, { n: v.length, median: q(v, 0.5), p90: q(v, 0.9) }]; }));
+const bEffOf = (a) => (a?.ok ? a.bEff : null);
+
+/** M31 on the captured batch: per fit length the three arms by day, and the SDN-AP B_eff against its 24 h value. */
+function m31captured(dir) {
+  const rows = rowsOf(dir, 'm31');
+  if (!rows.length) return null;
+  const hours = [...new Set(rows.map((r) => r.hours))].sort((a, c) => a - c);
+  const by24 = new Map(rows.filter((r) => r.hours === 24 && r.sdngp?.ok).map((r) => [r.norad, r.sdngp.bEff]));
+  return {
+    satellites: new Set(rows.map((r) => r.norad)).size,
+    hours: hours.map((h) => {
+      const rs = rows.filter((r) => r.hours === h), sd = rs.filter((r) => r.sdngp?.ok);
+      const ratio = sd.filter((r) => by24.has(r.norad) && by24.get(r.norad) > 0).map((r) => r.sdngp.bEff / by24.get(r.norad));
+      return { hours: h, windows: rs.length, sdnap: armDays(rs, (r) => r.sdngp), xp: armDays(rs, (r) => r.xp), sgp4: armDays(rs, (r) => r.sgp4),
+        fitRms: q(sd.map((r) => r.sdngp.fitRmsKm), 0.5), bEff: { n: sd.length, median: q(sd.map((r) => r.sdngp.bEff), 0.5), min: q(sd.map((r) => r.sdngp.bEff), 0), max: q(sd.map((r) => r.sdngp.bEff), 1) },
+        bEffRatio24: { n: ratio.length, median: q(ratio, 0.5), p10: q(ratio, 0.1), p90: q(ratio, 0.9) }, bEffSigma: q(sd.map((r) => r.sdngp.bEffSigma), 0.5),
+        refused: count([...rs.filter((r) => r.sdngp && !r.sdngp.ok).map((r) => `sdn-ap ${nameOf(r.sdngp.error)}`), ...rs.filter((r) => r.xp && !r.xp.ok).map((r) => `xp ${nameOf(r.xp.error)}`), ...rs.filter((r) => r.sgp4 && !r.sgp4.ok).map((r) => `sgp4 ${nameOf(r.sgp4.error)}`)]) };
+    }),
+  };
+}
+
+/** M32 on the synthetic batches, pooled by separation sigma: the arms by fit length and day, the paired joint minus per-object, and the B_eff error. */
+function m32(dir) {
+  const rows = rowsOf(dir, 'm32');
+  if (!rows.length) return null;
+  const groups = [...new Set(rows.filter((r) => r.sigmaMS !== undefined).map((r) => r.sigmaMS))].sort((a, c) => c - a);
+  return groups.map((sigma) => {
+    const g = rows.filter((r) => r.sigmaMS === sigma);
+    const objects = g.filter((r) => r.kind === 'object'), priors = g.filter((r) => r.kind === 'object-prior'), joints = g.filter((r) => r.kind === 'batch-joint'), sets = g.filter((r) => r.kind === 'launch-set');
+    const hours = [...new Set(objects.map((r) => r.hours))].sort((a, c) => a - c);
+    const jointScored = (h) => joints.filter((r) => r.hours === h && r.ok).flatMap((r) => r.scored.filter((x) => x.days).map((x) => ({ batch: r.batch, k: x.k, days: x.days, bEff: x.bEff, name: x.name })));
+    return { sigmaMS: sigma, batches: [...new Set(g.map((r) => r.batch))].sort(), objects: new Set(objects.map((r) => `${r.batch}-${r.k}`)).size,
+      launchSet: { ok: sets.filter((r) => r.ok).length, windows: sets.length, refused: count(sets.filter((r) => !r.ok).map((r) => nameOf(r.error))), days: armDays(sets.filter((r) => r.ok), (r) => r) },
+      hours: hours.map((h) => {
+        const o = objects.filter((r) => r.hours === h), p = priors.filter((r) => r.hours === h), j = joints.filter((r) => r.hours === h), js = jointScored(h);
+        const perKey = new Map(o.filter((r) => r.sdngp?.ok).map((r) => [`${r.batch}-${r.k}`, r]));
+        const jointKey = js.map((x) => ({ ...x, key: `${x.batch}-${x.k}` }));
+        const paired = [1, 2, 3].map((k) => { const d = jointKey.filter((x) => perKey.get(x.key)?.sdngp.days?.[k] && x.days[k]).map((x) => x.days[k].rmsKm - perKey.get(x.key).sdngp.days[k].rmsKm); return { day: k, n: d.length, medianDiff: q(d, 0.5), jointBetter: d.filter((x) => x < 0).length }; });
+        const rel = (v, truth) => Math.abs(v / truth - 1);
+        const bErr = (list) => q(list.filter((x) => Number.isFinite(x)), 0.5);
+        return { hours: h, objectsWindows: o.length, sdnap: armDays(o, (r) => r.sdngp), xp: armDays(o, (r) => r.xp), sgp4: armDays(o, (r) => r.sgp4), prior: armDays(p, (r) => r.sdngp),
+          joint: { calls: j.length, ok: j.filter((r) => r.ok).length, refused: count(j.filter((r) => !r.ok).map((r) => nameOf(r.error))), objects: js.length, days: Object.fromEntries([1, 2, 3].map((k) => { const v = js.map((x) => x.days[k]?.rmsKm).filter(Number.isFinite); return [k, { n: v.length, median: q(v, 0.5), p90: q(v, 0.9) }]; })),
+            namesMatch: js.filter((x) => x.name && /^BATCH-/.test(x.name)).length, setsPerCall: q(j.filter((r) => r.ok).map((r) => r.sets), 0.5) },
+          paired, perObjectRefused: count(o.filter((r) => r.sdngp && !r.sdngp.ok).map((r) => nameOf(r.sdngp.error))),
+          bEffError: { sdnap: bErr(o.filter((r) => r.sdngp?.ok).map((r) => rel(r.sdngp.bEff, r.trueBEff))), prior: bErr(p.filter((r) => r.sdngp?.ok).map((r) => rel(r.sdngp.bEff, r.trueBEff))),
+            joint: bErr(j.filter((r) => r.ok).flatMap((r) => r.scored.filter((x) => x.days).map((x) => { const t = o.find((y) => y.batch === r.batch && y.k === x.k)?.trueBEff; return t ? rel(x.bEff, t) : NaN; }))) } };
+      }) };
+  });
+}
+
+export function eventsStudy(dir, resultsDir) { return dir ? { build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) } : null; }
 
 // ---- markdown (section 16) ----
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));

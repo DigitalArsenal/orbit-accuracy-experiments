@@ -85,6 +85,16 @@ export function bovBytes({ epochUtc, efg, timeFromLaunch = 0 }) {
   return b.asUint8Array();
 }
 
+/** A $LAM with an INSERTION orbit: osculating elements at `epochUtc` (a in m, angles in degrees; the argument of latitude is the angle from the node to the position) in `frame` (TEME, GCRF, ICRF, EME2000 or J2000). */
+export function lamBytes({ epochUtc, aM, eccentricity = 0, inclinationDeg, raanDeg, argPeriapsisDeg = 0, argLatitudeDeg, frame = 'GCRF', message = 'G1 A12' }) {
+  const insertion = Object.assign(new LAM.lamInsertionOrbitT(), { EPOCH: epochUtc, TIME_FROM_LAUNCH_S: 0, REF_FRAME: frame, SEMI_MAJOR_AXIS_M: aM, ECCENTRICITY: eccentricity, INCLINATION_DEG: inclinationDeg, RAAN_DEG: raanDeg,
+    ARGUMENT_OF_PERIAPSIS_DEG: argPeriapsisDeg, ARGUMENT_OF_LATITUDE_DEG: argLatitudeDeg, PERIAPSIS_ALTITUDE_M: aM * (1 - eccentricity) - 6378137, APOAPSIS_ALTITUDE_M: aM * (1 + eccentricity) - 6378137 });
+  const t = Object.assign(new LAM.LAMT(), { MESSAGE_ID: message, ORIGINATOR: 'G1', TIME_SYSTEM: 'UTC', REF_FRAME: frame, ORBIT_INSERTION_EPOCH: epochUtc, INSERTION: insertion });
+  const b = new flatbuffers.Builder(1024);
+  LAM.LAM.finishLAMBuffer(b, t.pack(b));
+  return b.asUint8Array();
+}
+
 /** `launch_set`: the first set of a burnout vector (or a $LAM bytes) with an optional prior $OMM: { ok, omm (bytes), unpacked } or { ok: false, error }. */
 export async function launchSet(sdngp, { burnout, launch, prior }) {
   const inputs = [];

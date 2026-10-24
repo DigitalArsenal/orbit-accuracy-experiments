@@ -155,12 +155,12 @@ export async function sdngpPredict(b, object, startMs, fitSeconds, epochsMs, axe
   try { return await sdngpStates(b, fit.omm, ms(fit.unpacked.EPOCH), epochsMs, axes); } catch (error) { return { error: String(error.message).slice(0, 200) }; }
 }
 
-export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, { loweringLimit, defaultSpan = false } = {}) {
+export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, { loweringLimit, defaultSpan = false, prior } = {}) {
   const bytes = sdngpOem(object, lines, stopFit, { defaultSpan });
   if (loweringLimit !== undefined) b.sdngp.setLoweringLimit(loweringLimit); // amendment A9d: the 2c.2 rule on (0.5 m2/kg) or off (Infinity) for the fits that follow
   const t0 = performance.now();
   let fit;
-  try { fit = await b.sdngp.fit(bytes, { weatherTable: b.weatherTable }); } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
+  try { fit = await b.sdngp.fit(bytes, { weatherTable: b.weatherTable, prior }); } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
   const fitMs = performance.now() - t0;
   if (!fit.ok) return { ok: false, error: fit.error };
   const epochMs = ms(fit.unpacked.EPOCH);
@@ -206,6 +206,29 @@ export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, min
     module: b.sdngp.provenance.wasmSha256.slice(0, 12), spanHours, spanSource,
     ...(segment ? { regime, maneuverBeforeSeconds: p.SDNGP_MANEUVER_BEFORE_SECONDS === undefined ? null : Number(p.SDNGP_MANEUVER_BEFORE_SECONDS) } : {}),
   };
+}
+
+/** The held-out days of a given SDN-AP set ($OMM bytes and its unpacked record; amendment A12b: a launch set, a batch-joint set): { days } as the fit rows score them (3D RMS, radial / in-track / cross-track, n),
+ * or { error }. `lines` are the truth lines after the fit end, in the object's axes. */
+export async function sdngpHeldOut(b, object, lines, stopFit, leadDays, minStatesPerDay, { omm, unpacked }) {
+  const epochMs = ms(unpacked.EPOCH);
+  const axes = object.frame === 'EME2000' ? 'EME2000' : 'GCRF';
+  const thinned = (list) => { const step = list.length > 1 ? (ms(list[1].epoch) - ms(list[0].epoch)) / 1000 : 60; const every = Math.max(1, Math.round(RTN_STRIDE_SECONDS / step)); return list.filter((_, i) => i % every === 0); };
+  const held = lines.filter((l) => ms(l.epoch) > stopFit);
+  if (!held.length) return { days: {} };
+  try {
+    const chosen = thinned(held);
+    const series = await rtnSeries(b, await sdngpStates(b, omm, epochMs, chosen.map((l) => ms(l.epoch)), axes), chosen);
+    const byDay = {};
+    series.forEach((e, i) => { const k = dayOf(ms(chosen[i].epoch), stopFit, leadDays); if (k) (byDay[k] ??= []).push(e); });
+    const stepSeconds = held.length > 1 ? (ms(held[1].epoch) - ms(held[0].epoch)) / 1000 : 60;
+    const days = {};
+    for (const [k, e] of Object.entries(byDay)) {
+      const ric = [0, 1, 2].map((c) => rms(e.map((v) => v[c])));
+      if (e.length * Math.max(1, Math.round(RTN_STRIDE_SECONDS / stepSeconds)) >= minStatesPerDay) days[k] = { rmsKm: Math.hypot(...ric), n: e.length, ric };
+    }
+    return { days };
+  } catch (error) { return { error: `ric: ${String(error.message).slice(0, 160)}` }; }
 }
 
 /** One fit window scored by both baselines. Returns null when the ephemeris cannot supply the fit interval. */

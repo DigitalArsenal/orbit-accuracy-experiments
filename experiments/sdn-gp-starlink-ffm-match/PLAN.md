@@ -778,3 +778,34 @@ dropped; a rerun after a failure repeats only the failed jobs. No raw operator, 
 
 8. Report: the identity counts and the sources that differ; the four detector measurements beside 35cd83a2b714; M22, M23, M25 and M28 beside it; M29 and M30; M31 and M32 as registered in A12b; what is missing. E2E: `run.mjs --check` with the replays
 of A10 and A11 (an impulse, a finite burn, a decay node, an ISS window, two archive windows, a planted-impulse arc, a reentry prediction and a lowering reentry) on the pinned new build against its stored rows.
+
+### A12b - 2026-10-24, before any row of M31 or M32 was generated or scored: per-object fits of the captured batch, and synthetic FFM-1 batches with a known parent state for `launch_set` and `launch_batch`
+
+Probes, run before this registration (structure only; nothing of their numbers is used except the three checks stated). (a) `launch_set` accepts a $LAM INSERTION orbit (osculating elements in GCRF at the set's epoch; a circular orbit of 6,630 km at 70 degrees)
+and its set reproduces the parent state at that epoch to 2 m and 1 mm/s, which checks the frame label, the units and the argument of latitude (for a circular orbit it is the mean argument of latitude, so no anomaly conversion is made in JavaScript);
+a $BOV is read in km and km/s in Earth-fixed axes (a burnout vector in m was refused), which this experiment cannot make without Earth-orientation rows for foundation/frames, so burnout vectors are not used. (b) `launch_batch` reads TEME $OEM blocks only (a block in
+GCRF was refused), takes the parent state as 'launch' or 'burnout' (refused without), and returns one set per input block in input order, each carrying the block's object name and NORAD ID, at the parent's epoch, with B_EFF, KAPPA, TAU0, TAUC,
+TAUS and ARC_END_MIN; the probe batch was three FFM-1 objects of 7 h and no accuracy was read. (c) FFM-1 ignores an impulse planted at the start epoch of its arc (a 0.5 m/s in-track impulse there left every sample unchanged to the meter,
+while the same impulse 60 s after the start moved the samples by 259 m at 10 min and 6.87 km at 1 h), so the separations below are planted 60 s after the start epoch.
+
+1. Why two parts. The captured batch holds each satellite's states from 08:48 to 09:22 UTC on 2026-10-24, 8 h after separation, and no parent state: `launch_batch` cannot be fitted to it (the joint model puts every object at the parent's position at the release epoch), and
+`launch_set` cannot be initialized from the launch provider's insertion orbit. The accuracy of the first set and of the batch-joint fit is therefore measured on synthetic batches whose parent state is known and whose truth is FFM-1; the captured batch gets the
+per-object fits of the same lengths, and the scoring on newer files registered in A11c stays for 2026-10-25 to 2026-10-28.
+
+2. Part 1, M31 on the captured batch (rows m31: 27 satellites x 3 fit lengths). From the first state of each satellite's file (the start of its registered-form FFM-1 trajectory, 96 h at 60 s), fits of 6, 12 and 24 h by SDN-AP (`fit_sdnap`, declared span, the saved space-weather
+table), SGP4 and SGP4-XP, held-out days 1 to 3 after the fit end inside the trajectory, scored as the G1 rows. Reported per fit length: the median and 90th percentile of the 3D RMS by day and arm; the SDN-AP fit RMS; the SDN-AP B_eff (median, range), its
+median sigma, and the 6 h and 12 h values over the 24 h value (median, 10th and 90th percentiles), which is the DESIGN's "B_eff identifiable from 6 h".
+
+3. Part 2, M31 and M32 on synthetic batches (rows m32). Four batches of 27 objects (the size of the captured one) with seeds 11, 12, 21 and 22. Parent: circular, a = 6,630 km (about 250 km altitude, the captured batch's regime), inclination 70 degrees, node and
+argument of latitude uniform in [0, 360) degrees (one decimal) from the seed (mulberry32), epoch EPOCH0 = 2026-10-24T00:00:00Z. Object k: separation delta-v in FFM-1's RTN axes (U radial, V in-track, W along r x v) at EPOCH0 + 60 s, each axis N(0, sigma^2) with
+sigma = 1.0 m/s for batches 11 and 12 (the module's stated prior) and 0.25 m/s for 21 and 22 (a quarter of it, outside the prior); Cd A/m the 27 fitted B_eff of the captured batch (0.0136 to 0.0152 m2/kg), shuffled by the seed; Cr A/m 0.19 as the captured fits. Truth:
+FFM-1 (propagator/ffm, full force as the registered truths: the registered integrator, tolerance 1e-13 and maximum step 120 s, the saved environment) from the parent state at EPOCH0 with the object's impulse, samples every 60 s from EPOCH0 + 1 h (the first file's
+start) to EPOCH0 + 98 h, GCRF; `m32-truth.mjs` makes them, independent of the build. The parent state given to the module is exact (a $LAM, GCRF osculating elements at EPOCH0, which is 60 s before the separation): the best case for the joint fit; a real
+parent carries the provider's sigmas. For each fit length L = 6, 12 and 24 h (fit interval: first file start to start + L; days 1 to 3 after the fit end, scored as the G1 rows): (A) per-object SDN-AP, `fit_sdnap` with the declared span and the saved table; (B) the
+same with the `launch_set` set as `prior`; (C) `launch_set` alone (independent of L): the parent's set for every object, days 1 to 3 after the first file's start; (D) `launch_batch` on the 27 TEME blocks of the L hours with the $LAM as 'launch' and the saved table, one set per object
+(matched to its object by the block's name, which the set carries), days 1 to 3 after the fit end; (E) per-object SGP4-XP and SGP4. Reported per separation sigma (the two batches of each pooled, 54 objects): the median and 90th percentile of the 3D RMS by arm, fit length and day;
+the paired difference (D - A) per object and day (median; the number of objects where D is lower); the median relative B_eff error of A, B and D (|B_est / B_true - 1|); `launch_set` alone (C); the refusals by name. Nothing is thresholded. Side B's own figures for its batch
+(2.12 / 10.4 / 26.0 km against 1.08 / 5.2 / 12.8 km) are not used in any choice here.
+
+4. Jobs. Sources m31 (3 shards) and m32 (4 shards) in `sdngp-run.mjs` (`--only m31,m32`); the truths first (`m32-truth.mjs`). A batch whose truth FFM-1 cannot integrate is reported by name. The association with catalog sets (the `catalog` port) and the thrust-onset test
+(M33) need the later catalog assignment and files of an orbit raise, which the captured batch has not reached; they are not run here.

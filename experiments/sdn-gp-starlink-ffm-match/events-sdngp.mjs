@@ -14,7 +14,7 @@ import { scoreSatellite } from './lib/events-score.mjs';
 
 frozen();
 const source = args.source;
-if (!['m22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p'].includes(source)) throw new Error('--source m22|m23|m28|m24|m24c|m24a|m29|m30|m24p');
+if (!['m22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p', 'm31', 'm32'].includes(source)) throw new Error('--source m22|m23|m28|m24|m24c|m24a|m29|m30|m24p|m31|m32');
 const b = await openBaselines(modulesRoot(), { sdngp: true });
 const sink = sdngpSink(b, source, args.shard);
 const limit = args.limit ? Number(args.limit) : Infinity;
@@ -34,6 +34,10 @@ if (source === 'm22' || source === 'm23') {
   await (await import('./lib/events-m28.mjs')).scoreCells({ b, sink, shard: args.shard, limit });
 } else if (source === 'm24p') {
   await (await import('./lib/events-plant.mjs')).scorePlanted({ b, sink });
+} else if (source === 'm31') {
+  await (await import('./lib/events-m31.mjs')).scoreCaptured({ b, sink });
+} else if (source === 'm32') {
+  await (await import('./lib/events-m32.mjs')).scoreBatches({ b, sink });
 } else if (source === 'm30') {
   await (await import('./lib/events-m30.mjs')).scoreLowering({ b, sink });
 } else if (source === 'm29') {
