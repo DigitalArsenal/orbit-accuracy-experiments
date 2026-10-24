@@ -30,7 +30,7 @@ export const blockLines = (block) => block.EPHEMERIS_DATA_LINES.map((l) => ({ ep
 const rfm = (name) => new RFM.RFMT(RFM.RFMUnion.CelestialFrameWrapper, new RFM.CelestialFrameWrapperT(RFM.CelestialFrame[name]));
 
 /** A size-prefixed $OEM of one block: { frame, center ('EARTH' by default), timeSystem, object: {name, id, norad}, lines: [{epoch, r, v}], start, stop, useableStart, useableStop }. */
-export function oemBytes({ originator = 'G1', creation = '', block }) {
+export function oemBytes({ originator = 'G1', creation = '', block, sizePrefixed = true }) {
   const t = new OEM.OEMT();
   t.CCSDS_OEM_VERS = 2.0;
   t.CREATION_DATE = creation;
@@ -40,6 +40,7 @@ export function oemBytes({ originator = 'G1', creation = '', block }) {
   Object.assign(b.OBJECT, { OBJECT_NAME: block.object?.name ?? '', OBJECT_ID: block.object?.id ?? '', NORAD_CAT_ID: block.object?.norad ?? 0 });
   b.CENTER_NAME = block.center ?? 'EARTH';
   b.REFERENCE_FRAME = rfm(block.frame ?? 'GCRF');
+  if (block.frameName) b.REFERENCE_FRAME.NAME = block.frameName; // some readers (sdn-gp-propagator) identify the frame by this string, not by the enumeration
   b.TIME_SYSTEM = TIM.timingStandard[block.timeSystem ?? 'UTC'];
   b.START_TIME = block.start ?? null;
   b.STOP_TIME = block.stop ?? null;
@@ -54,7 +55,7 @@ export function oemBytes({ originator = 'G1', creation = '', block }) {
   });
   t.EPHEMERIS_DATA_BLOCK = [b];
   const builder = new flatbuffers.Builder(1 << 16);
-  OEM.OEM.finishSizePrefixedOEMBuffer(builder, t.pack(builder));
+  if (sizePrefixed) OEM.OEM.finishSizePrefixedOEMBuffer(builder, t.pack(builder)); else OEM.OEM.finishOEMBuffer(builder, t.pack(builder));
   return builder.asUint8Array();
 }
 

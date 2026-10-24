@@ -5,7 +5,11 @@
 // JavaScript here builds records, calls modules and does counting; every orbit and frame computation is a module's.
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import fs from 'node:fs';
 import { openModule } from './modules.mjs';
+import { openSdngp } from './sdngp.mjs';
+import { transformState } from './frames.mjs';
+import { store } from '../common.mjs';
 import { frame, oemBytes, ommBytes, ommFrame, readOmm, readOem, blockLines, paramsOf } from './sds.mjs';
 import { DAY, iso, ms, slice } from './windows.mjs';
 
@@ -14,11 +18,18 @@ const OEM_FRAME = { EME2000: 'EME2000', GCRF: 'GCRF', ITRF: 'ITRF2000', TEME: 'T
 export const PLACEHOLDER_COVARIANCE = [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6, 0, 0, 0, 0, 0, 0, 1e-6];
 const RTN_STRIDE_SECONDS = 300; // RTN of the held-out days is taken on at most one state per five minutes
 
-export async function openBaselines(modules) {
+export async function openBaselines(modules, { sdngp = false } = {}) {
   const erm = await import(pathToFileURL(path.join(modules, 'analysis/gp-error-model/scripts/erm-codec.mjs')));
   const xp = await openModule(modules, 'propagator/sgp4-xp');
   const gem = await openModule(modules, 'analysis/gp-error-model', { fresh: true });
-  return { erm, xp, gem, provenance: [xp.provenance, gem.provenance], close: () => xp.destroy() };
+  const out = { erm, xp, gem, provenance: [xp.provenance, gem.provenance], close: async () => { await xp.destroy(); await out.sdngp?.destroy(); await out.frames?.destroy(); } };
+  if (sdngp) { // the SDN-GP third fitter (amendment A9): the side-B module, the frames module for the held-out epochs and the run's saved space-weather table
+    out.sdngp = await openSdngp({ store });
+    out.frames = await openModule(modules, 'foundation/frames');
+    out.weatherTable = Buffer.from(JSON.parse(fs.readFileSync(path.join(store, 'environment/environment.json'), 'utf8')).inputs.space_weather, 'base64');
+    out.provenance.push(out.sdngp.provenance);
+  }
+  return out;
 }
 
 const block = (object, lines, extra) => oemBytes({
@@ -107,17 +118,71 @@ export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minS
   };
 }
 
+const FIT_FRAME = { EME2000: 'GCRF', GCRF: 'GCRF', ICRF: 'GCRF', TEME: 'TEMEOFDATE' }; // fit_sdngp reads TEME, GCRF and Earth-fixed; EME2000 and GCRF differ by the 20 mas frame bias (0.7 m at LEO)
+
+export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay) {
+  const bytes = oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
+    lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false });
+  const t0 = performance.now();
+  let fit;
+  try { fit = await b.sdngp.fit(bytes, { weatherTable: b.weatherTable }); } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
+  const fitMs = performance.now() - t0;
+  if (!fit.ok) return { ok: false, error: fit.error };
+  const epochMs = ms(fit.unpacked.EPOCH);
+  const axes = object.frame === 'EME2000' ? 'EME2000' : 'GCRF';
+  const ricOf = async (chosen) => { // predicted TEME states (module) -> the truth's axes (foundation/frames) -> pair_statistics RTN
+    const states = await b.sdngp.states(fit.omm, chosen.map((l) => (ms(l.epoch) - epochMs) / 60000));
+    if (states.some((x) => x.status !== 0)) throw new Error(`sdngp propagate status ${states.find((x) => x.status !== 0).status}`);
+    const predicted = [];
+    for (let i = 0; i < chosen.length; i += 1) {
+      const t = await transformState(b.frames, 'TEME', axes, iso(ms(chosen[i].epoch)), [...states[i].r, ...states[i].v]);
+      predicted.push({ r: t.slice(0, 3), v: t.slice(3, 6) });
+    }
+    return rtnSeries(b, predicted, chosen);
+  };
+  const thinned = (list) => { const step = list.length > 1 ? (ms(list[1].epoch) - ms(list[0].epoch)) / 1000 : 60; const every = Math.max(1, Math.round(RTN_STRIDE_SECONDS / step)); return list.filter((_, i) => i % every === 0); };
+  let fitRic = null, days = {}, usPerState = null;
+  try {
+    const fitLines = thinned(lines.filter((l) => ms(l.epoch) <= stopFit));
+    const fitSeries = await ricOf(fitLines);
+    fitRic = [0, 1, 2].map((c) => rms(fitSeries.map((e) => e[c])));
+    const held = lines.filter((l) => ms(l.epoch) > stopFit);
+    if (held.length) {
+      const chosen = thinned(held);
+      const t1 = performance.now();
+      const series = await ricOf(chosen);
+      usPerState = ((performance.now() - t1) * 1000) / chosen.length;
+      const byDay = {};
+      series.forEach((e, i) => { const k = dayOf(ms(chosen[i].epoch), stopFit, leadDays); if (k) (byDay[k] ??= []).push(e); });
+      const stepSeconds = held.length > 1 ? (ms(held[1].epoch) - ms(held[0].epoch)) / 1000 : 60;
+      for (const [k, e] of Object.entries(byDay)) {
+        const ric = [0, 1, 2].map((c) => rms(e.map((v) => v[c])));
+        if (e.length * Math.max(1, Math.round(RTN_STRIDE_SECONDS / stepSeconds)) >= minStatesPerDay) days[k] = { rmsKm: Math.hypot(...ric), n: e.length, ric };
+      }
+    }
+  } catch (error) { return { ok: false, error: `ric: ${String(error.message).slice(0, 160)}`, fitRmsKm: fit.fitRmsKm }; }
+  const p = fit.params;
+  return {
+    ok: true, converged: true, iterations: fit.iterations, fitRmsKm: fit.fitRmsKm, fitStates: fit.statesFitted, fitRic, days,
+    recordBytes: fit.omm.length, parameters: p.SDNGP_TAU0 !== undefined && Number(p.SDNGP_TAU0) !== 0 ? 9 : 10, fitMs, usPerState,
+    bEff: Number(p.SDNGP_B_EFF), bEffSigma: Number(p.SDNGP_B_EFF_SIGMA), kappa: p.SDNGP_KAPPA === undefined ? null : Number(p.SDNGP_KAPPA), tau0: Number(p.SDNGP_TAU0), tauc: Number(p.SDNGP_TAUC), taus: Number(p.SDNGP_TAUS),
+    agom: fit.unpacked.MEAN_MOTION_DDOT, meanMotion: fit.unpacked.MEAN_MOTION, inclination: fit.unpacked.INCLINATION, eccentricity: fit.unpacked.ECCENTRICITY, heldOutRmsKm: fit.heldOutRmsKm,
+    module: b.sdngp.provenance.wasmSha256.slice(0, 12),
+  };
+}
+
 /** One fit window scored by both baselines. Returns null when the ephemeris cannot supply the fit interval. */
-export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, minCoverage = 0.9, fixedBstar, arms = 'both' }) {
+export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, minCoverage = 0.9, fixedBstar, arms = 'both', sdngp = false }) {
   const stopFit = startMs + fitSeconds * 1000;
   const lines = slice(object, startMs, stopFit + Math.max(...leadDays) * DAY);
   if (lines.length < 20) return null;
   const gaps = lines.slice(1, 60).map((l, i) => ms(l.epoch) - ms(lines[i].epoch)).sort((a, c) => a - c); // median spacing: some kernels sample irregularly
   const stepSeconds = gaps[Math.floor(gaps.length / 2)] / 1000;
   const minStatesPerDay = Math.floor((minCoverage * 86400) / stepSeconds);
-  const xp = arms === 'sgp4' ? null : await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay);
-  const sgp4 = arms === 'xp' ? null : await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, fixedBstar);
-  return { source: object.source, id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4 };
+  const xp = arms === 'sgp4' || arms === 'sdngp' ? null : await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay);
+  const sgp4 = arms === 'xp' || arms === 'sdngp' ? null : await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, fixedBstar);
+  const sdngpResult = sdngp || arms === 'sdngp' ? await fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay) : undefined;
+  return { source: object.source, id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4, ...(sdngpResult === undefined ? {} : { sdngp: sdngpResult }) };
 }
 
 /** The two fitted element sets of a window as the modules return them ($OMM payloads), for propagation to other epochs. */

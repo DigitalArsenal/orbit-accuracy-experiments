@@ -15,6 +15,11 @@ const PACKS = [
   { name: 'capstone-nrho', mission: 'capstone', center: 'moon', centerName: 'Moon', note: 'CAPSTONE, mission navigation merged by JPL, Moon-centred (the Gateway near rectilinear halo orbit), 5 min, 2025-07-15 to 2026-07-15' },
   { name: 'artemis1-cislunar', mission: 'artemis1', center: 'earth', centerName: 'Earth', note: 'Artemis I (Orion) as-flown post-TLI trajectory from NASA/JSC navigation, Earth-centred, 1 min, 2022-11-16 to 2022-12-11' },
   { name: 'artemis1-lunar', mission: 'artemis1', center: 'moon', centerName: 'Moon', note: 'Artemis I (Orion) as-flown post-TLI trajectory, Moon-centred (distant retrograde orbit), 1 min, 2022-11-16 to 2022-12-11' },
+  { name: 'psyche-cruise', mission: 'psyche', center: 'sun', centerName: 'Sun', note: 'Psyche, JPL navigation reconstructions, Sun-centred, 60 min, 2025-08-13 to 2026-07-12 (solar-electric thrust arcs and the Mars gravity assist of May 2026 inside)' },
+  { name: 'lucy-cruise-rec', mission: 'lucy-rec', center: 'sun', centerName: 'Sun', note: 'Lucy, navigation solution fitted through 2025-09-08, Sun-centred, 60 min, 2024-12-20 to 2025-09-07 (Donaldjohanson encounter of 2025-04-20 inside)' },
+  { name: 'lucy-cruise-ref', mission: 'lucy-ref', center: 'sun', centerName: 'Sun', note: 'Lucy, flight-project reference trajectory (a planning prediction, not reconstructed data), Sun-centred, 60 min, 2025-09-09 to 2027-03-01' },
+  { name: 'juno-cruise', mission: 'juno-cruise', center: 'sun', centerName: 'Sun', note: 'Juno, JPL navigation reconstruction, Sun-centred, 60 min, 2012-10-01 to 2013-09-30 (after the deep space maneuvers, before the Earth flyby)' },
+  { name: 'juno-jupiter', mission: 'juno-jupiter', center: 'jupiter', centerName: 'Jupiter', note: 'Juno, JPL navigation reconstruction, Jupiter-centred, 30 min, 2024-09-01 to 2026-08-23 (33 day orbits)' },
 ];
 const MONTHS = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
 

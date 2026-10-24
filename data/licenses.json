@@ -1961,8 +1961,8 @@
   },
   {
    "id": "jpl-horizons",
-   "name": "JPL Horizons On-Line Ephemeris System: vector tables of CAPSTONE, Artemis I (Orion) and Danuri (KPLO)",
-   "provider": "NASA Jet Propulsion Laboratory, Solar System Dynamics Group (Horizons API); the spacecraft trajectories are the mission navigation teams' (CAPSTONE: NASA/Advanced Space; Artemis I: NASA/JSC; Danuri: KARI), merged by JPL",
+   "name": "JPL Horizons On-Line Ephemeris System: vector tables of CAPSTONE, Artemis I (Orion), Danuri (KPLO), Psyche, Lucy and Juno",
+   "provider": "NASA Jet Propulsion Laboratory, Solar System Dynamics Group (Horizons API); the spacecraft trajectories are the mission navigation teams' (CAPSTONE: NASA/Advanced Space; Artemis I: NASA/JSC; Danuri: KARI; Psyche, Lucy and Juno: NASA/JPL navigation), merged by JPL",
    "license": "Public NASA/JPL data service: no access restriction; JPL and NASA content is not copyrighted unless noted (JPL copyrights page); acknowledgment of Horizons and its citation (Giorgini et al. 1996) requested",
    "terms": [
     {
@@ -1980,12 +1980,12 @@
    "attributionClause": "Giorgini, J. D., et al. (1996), JPL's On-Line Solar System Data Service, Bulletin of the American Astronomical Society 28(3), 1158. Acknowledge the JPL Horizons system and the mission.",
    "conditions": "Used through the documented API, one request at a time, 6 s apart. G1 keeps the responses as served in its archive (hac/jpl-horizons/) with a provenance row each and publishes results only (coordinator, 2026-10-24).",
    "reproduce": "yes",
-   "credit": "State vectors of CAPSTONE, Artemis I and Danuri from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.",
+   "credit": "State vectors of CAPSTONE, Artemis I, Danuri, Psyche, Lucy and Juno from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.",
    "reason": "Public NASA/JPL data; the experiment reproduces none of the files.",
-   "usedIn": "G1 (truth for the lunar and cislunar windows prepared for SDN-GP: Danuri, CAPSTONE, Artemis I)",
+   "usedIn": "G1 (truth for the lunar, cislunar and heliocentric windows prepared for SDN-GP: Danuri, CAPSTONE, Artemis I, Psyche, Lucy, Juno)",
    "reproducedAt": [],
    "notice": null,
-   "obtain": "https://ssd.jpl.nasa.gov/api/horizons.api?COMMAND='-155'&EPHEM_TYPE='VECTORS'&CENTER='500@301'&REF_PLANE='FRAME'&VEC_TABLE='2'&TIME_TYPE='TDB' (also -1176 CAPSTONE, -1023 Artemis I)"
+   "obtain": "https://ssd.jpl.nasa.gov/api/horizons.api?COMMAND='-155'&EPHEM_TYPE='VECTORS'&CENTER='500@301'&REF_PLANE='FRAME'&VEC_TABLE='2'&TIME_TYPE='TDB' (also -1176 CAPSTONE, -1023 Artemis I, -255 Psyche, -49 Lucy, -61 Juno)"
   },
   {
    "id": "stsci-mast-tess",

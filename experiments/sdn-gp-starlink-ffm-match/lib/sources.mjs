@@ -190,3 +190,44 @@ export function gnssClass(name) {
   if (/^BDS-\d?M/.test(type) || /^[GRE]\d/.test(name)) return 'meo';
   return 'other';
 }
+
+// ---- ILRS orbits from CDDIS (amendment A9): reference states made by slr-convert.mjs under <store>/slr-ref/reference ----
+// nsgf.orb.<sat>.<yymmdd>.v000: NSGF daily rapid orbits of the LEO spheres, the arc of file F is F-4 to F-1; ilrsa.orb.<sat>.<yymmdd>.v80: ILRS combined weekly orbits.
+export const slrRefRoot = () => path.join(store, 'slr-ref/reference');
+const slrDirs = (prefix) => (fs.existsSync(slrRefRoot()) ? fs.readdirSync(slrRefRoot()).filter((d) => d.startsWith(prefix)).sort() : []);
+const yymmddMs = (s) => Date.UTC(2000 + Number(s.slice(0, 2)), Number(s.slice(2, 4)) - 1, Number(s.slice(4, 6)));
+
+/** The NSGF rapid arcs of one LEO sphere, every `every` days from the first file (non-overlapping 4-day arcs), each arc its own object. */
+export function slrLowCurrent({ target, every = 4 }) {
+  const dirs = slrDirs(`nsgf.orb.${target}.`);
+  if (!dirs.length) return [];
+  const first = yymmddMs(dirs[0].split('.')[3]);
+  return dirs.filter((d) => ((yymmddMs(d.split('.')[3]) - first) / 86400000) % every === 0).map((d) => {
+    const file = fs.readdirSync(path.join(slrRefRoot(), d)).find((f) => f.endsWith('.oem'));
+    const ref = readReference(path.join(slrRefRoot(), d, file));
+    return withT({ source: 'slr-low-current', id: `${ref.name || target} arc ${d.split('.')[3]} (${ref.norad})`, norad: ref.norad, name: ref.name || target, objectId: ref.objectId, originator: 'ILRS NSGF rapid orbit (CDDIS copy)', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: ref.lines });
+  });
+}
+
+/** The ILRS combined weekly orbits of one MEO target: one object per run of consecutive weeks (a week the product omits ends the run), so no window crosses a hole. */
+export function slrHighCurrent({ target }) {
+  const dirs = slrDirs(`ilrsa.orb.${target}.`);
+  const files = dirs.map((d) => path.join(slrRefRoot(), d, fs.readdirSync(path.join(slrRefRoot(), d)).find((f) => f.endsWith('.oem')))).filter(Boolean);
+  if (!files.length) return [];
+  const runs = [];
+  for (const file of files) {
+    const ref = readReference(file);
+    const last = runs.at(-1);
+    if (last && ms(ref.lines[0].epoch) - ms(last.at(-1).lines.at(-1).epoch) <= 3600e3) last.push({ file, lines: ref.lines }); else runs.push([{ file, lines: ref.lines }]);
+  }
+  return runs.map((run) => {
+    const series = chain(run.map((x) => x.file));
+    return withT({ source: 'slr-high-current', id: `${series.name || target} (${series.norad}) from ${series.lines[0].epoch.slice(0, 10)}`, norad: series.norad, name: series.name || target, objectId: series.objectId, originator: 'ILRS combination (ilrsa), CDDIS copy', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: series.lines });
+  });
+}
+
+/** One sphere's NSGF rapid orbits for the COMSPOC scoring: every daily file chained, the latest file winning where arcs overlap. */
+export function slrLowSeries({ norad }) {
+  const files = slrDirs('nsgf.orb.').map((d) => path.join(slrRefRoot(), d, `${norad}.oem`)).filter((f) => fs.existsSync(f));
+  return files.length ? chain(files) : null;
+}

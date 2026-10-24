@@ -128,6 +128,48 @@
       "note": "Danuri (KPLO), KARI trajectory solutions merged by JPL, Moon-centred, 1 min, 2026-08-15 to 2026-10-18"
     },
     {
+      "name": "juno-cruise",
+      "regime": "heliocentric-cruise",
+      "center": "Sun",
+      "axes": "ICRF equatorial axes as served (taken as the J2000 axes of the NAIF packs; the 20 mas frame bias, 37 m at the Moon, is not applied)",
+      "frameLabel": "ICRF",
+      "source": "JPL Horizons API vector tables",
+      "states": 8737,
+      "startUtc": "2012-09-30T23:58:52.817Z",
+      "stopUtc": "2013-09-29T23:58:52.817Z",
+      "sha256": "f208a5be7ca27d98b08a23312dfec4b94ac64cda5dd5ca8291cd658f518efc2e",
+      "sourceFiles": [
+        {
+          "file": "juno-cruise_sun_20121001T0000_20130930T0000_60m.txt",
+          "sha256": "b27e4b25ad5a6b6f3848a8376eb22637103baed09099fa024d8b31483f223d66"
+        }
+      ],
+      "note": "Juno, JPL navigation reconstruction, Sun-centred, 60 min, 2012-10-01 to 2013-09-30 (after the deep space maneuvers, before the Earth flyby)"
+    },
+    {
+      "name": "juno-jupiter",
+      "regime": "planet-centred",
+      "center": "Jupiter",
+      "axes": "ICRF equatorial axes as served (taken as the J2000 axes of the NAIF packs; the 20 mas frame bias, 37 m at the Moon, is not applied)",
+      "frameLabel": "ICRF",
+      "source": "JPL Horizons API vector tables",
+      "states": 34609,
+      "startUtc": "2024-08-31T23:58:50.817Z",
+      "stopUtc": "2026-08-22T23:58:50.817Z",
+      "sha256": "72affa10ff6c7ccb63765c5b49b119a5d2617936ab6e6e6087d8a630f92e91a8",
+      "sourceFiles": [
+        {
+          "file": "juno-jupiter_jupiter_20240901T0000_20251006T0000_30m.txt",
+          "sha256": "8a9567e15ac20e4476a8aa2356f5c41858aef42a073a8b463906b62fab7e46be"
+        },
+        {
+          "file": "juno-jupiter_jupiter_20251006T0030_20260823T0000_30m.txt",
+          "sha256": "bef258cc9b885d51c8a1a70860a3489c421feb56b626f01319716cfdf086b911"
+        }
+      ],
+      "note": "Juno, JPL navigation reconstruction, Jupiter-centred, 30 min, 2024-09-01 to 2026-08-23 (33 day orbits)"
+    },
+    {
       "name": "lro-lunar",
       "regime": "lunar",
       "center": "Moon",
@@ -140,6 +182,67 @@
       "sha256": "d62175d07d7679838f9e155d49a3504c25eb67b3fbd7b181eefa1f2ab4ba558f",
       "sourceFiles": null,
       "note": "LRO reconstructed ephemeris, Moon-centred"
+    },
+    {
+      "name": "lucy-cruise-rec",
+      "regime": "heliocentric-cruise",
+      "center": "Sun",
+      "axes": "ICRF equatorial axes as served (taken as the J2000 axes of the NAIF packs; the 20 mas frame bias, 37 m at the Moon, is not applied)",
+      "frameLabel": "ICRF",
+      "source": "JPL Horizons API vector tables",
+      "states": 6265,
+      "startUtc": "2024-12-19T23:58:50.816Z",
+      "stopUtc": "2025-09-06T23:58:50.817Z",
+      "sha256": "a27670b624de16074343b0b1a9fe3f73d150634d947b789d165a106507a8f722",
+      "sourceFiles": [
+        {
+          "file": "lucy-rec_sun_20241220T0000_20250907T0000_60m.txt",
+          "sha256": "40a6de7af338f25f91f3575a84a03a34c92d7f5b34751ad916097a9ee717c651"
+        }
+      ],
+      "note": "Lucy, navigation solution fitted through 2025-09-08, Sun-centred, 60 min, 2024-12-20 to 2025-09-07 (Donaldjohanson encounter of 2025-04-20 inside)"
+    },
+    {
+      "name": "lucy-cruise-ref",
+      "regime": "heliocentric-cruise",
+      "center": "Sun",
+      "axes": "ICRF equatorial axes as served (taken as the J2000 axes of the NAIF packs; the 20 mas frame bias, 37 m at the Moon, is not applied)",
+      "frameLabel": "ICRF",
+      "source": "JPL Horizons API vector tables",
+      "states": 12913,
+      "startUtc": "2025-09-08T23:58:50.817Z",
+      "stopUtc": "2027-02-28T23:58:50.814Z",
+      "sha256": "fbe1971fe196ef8cf533e9fea7bccc23446ee7be8e12ab9d03053d81ae0ed526",
+      "sourceFiles": [
+        {
+          "file": "lucy-ref_sun_20250909T0000_20261014T0000_60m.txt",
+          "sha256": "c33fa55c01f8994515973574f382dbd81951feaac9afede904f37eb7e66b47b9"
+        },
+        {
+          "file": "lucy-ref_sun_20261014T0100_20270301T0000_60m.txt",
+          "sha256": "75b3f68655e4656738f9232ffc6dd8107d8430f557f54c1f2ad83ec28881eed7"
+        }
+      ],
+      "note": "Lucy, flight-project reference trajectory (a planning prediction, not reconstructed data), Sun-centred, 60 min, 2025-09-09 to 2027-03-01"
+    },
+    {
+      "name": "psyche-cruise",
+      "regime": "heliocentric-cruise",
+      "center": "Sun",
+      "axes": "ICRF equatorial axes as served (taken as the J2000 axes of the NAIF packs; the 20 mas frame bias, 37 m at the Moon, is not applied)",
+      "frameLabel": "ICRF",
+      "source": "JPL Horizons API vector tables",
+      "states": 7993,
+      "startUtc": "2025-08-12T23:58:50.817Z",
+      "stopUtc": "2026-07-11T23:58:50.816Z",
+      "sha256": "b985056fefc9932ec3a03f7971ba71e6e35b998fb8c8f3038350a9603581cfbd",
+      "sourceFiles": [
+        {
+          "file": "psyche_sun_20250813T0000_20260712T0000_60m.txt",
+          "sha256": "d77bbdbdcc8e49f30e8f5572c4c108b874eb30837325e1cc31a5fe5d87945bd1"
+        }
+      ],
+      "note": "Psyche, JPL navigation reconstructions, Sun-centred, 60 min, 2025-08-13 to 2026-07-12 (solar-electric thrust arcs and the Mars gravity assist of May 2026 inside)"
     }
   ],
   "windows": {
@@ -390,6 +493,131 @@
         }
       }
     },
+    "juno-cruise": {
+      "rule": {
+        "fitHours": [
+          720
+        ],
+        "strideHours": 360,
+        "leadDays": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "byFit": {
+        "720": {
+          "stepSeconds": 3600,
+          "count": 22,
+          "startsUtc": [
+            "2012-09-30T23:58:52.817Z",
+            "2012-10-15T23:58:52.817Z",
+            "2012-10-30T23:58:52.817Z",
+            "2012-11-14T23:58:52.817Z",
+            "2012-11-29T23:58:52.817Z",
+            "2012-12-14T23:58:52.817Z",
+            "2012-12-29T23:58:52.817Z",
+            "2013-01-13T23:58:52.817Z",
+            "2013-01-28T23:58:52.817Z",
+            "2013-02-12T23:58:52.817Z",
+            "2013-02-27T23:58:52.817Z",
+            "2013-03-14T23:58:52.817Z",
+            "2013-03-29T23:58:52.817Z",
+            "2013-04-13T23:58:52.817Z",
+            "2013-04-28T23:58:52.817Z",
+            "2013-05-13T23:58:52.817Z",
+            "2013-05-28T23:58:52.817Z",
+            "2013-06-12T23:58:52.817Z",
+            "2013-06-27T23:58:52.817Z",
+            "2013-07-12T23:58:52.817Z",
+            "2013-07-27T23:58:52.817Z",
+            "2013-08-11T23:58:52.817Z"
+          ]
+        }
+      }
+    },
+    "juno-jupiter": {
+      "rule": {
+        "fitHours": [
+          1584
+        ],
+        "strideHours": 792,
+        "leadDays": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33
+        ]
+      },
+      "byFit": {
+        "1584": {
+          "stepSeconds": 1800,
+          "count": 19,
+          "startsUtc": [
+            "2024-08-31T23:58:50.817Z",
+            "2024-10-03T23:58:50.817Z",
+            "2024-11-05T23:58:50.817Z",
+            "2024-12-08T23:58:50.817Z",
+            "2025-01-10T23:58:50.817Z",
+            "2025-02-12T23:58:50.817Z",
+            "2025-03-17T23:58:50.817Z",
+            "2025-04-19T23:58:50.817Z",
+            "2025-05-22T23:58:50.817Z",
+            "2025-06-24T23:58:50.817Z",
+            "2025-07-27T23:58:50.817Z",
+            "2025-08-29T23:58:50.817Z",
+            "2025-10-01T23:58:50.817Z",
+            "2025-11-03T23:58:50.817Z",
+            "2025-12-06T23:58:50.817Z",
+            "2026-01-08T23:58:50.817Z",
+            "2026-02-10T23:58:50.817Z",
+            "2026-03-15T23:58:50.817Z",
+            "2026-04-17T23:58:50.817Z"
+          ]
+        }
+      }
+    },
     "lro-lunar": {
       "rule": {
         "fitHours": [
@@ -504,6 +732,173 @@
           ]
         }
       }
+    },
+    "lucy-cruise-rec": {
+      "rule": {
+        "fitHours": [
+          720
+        ],
+        "strideHours": 360,
+        "leadDays": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "byFit": {
+        "720": {
+          "stepSeconds": 3600,
+          "count": 15,
+          "startsUtc": [
+            "2024-12-19T23:58:50.816Z",
+            "2025-01-03T23:58:50.816Z",
+            "2025-01-18T23:58:50.816Z",
+            "2025-02-02T23:58:50.816Z",
+            "2025-02-17T23:58:50.816Z",
+            "2025-03-04T23:58:50.816Z",
+            "2025-03-19T23:58:50.816Z",
+            "2025-04-03T23:58:50.816Z",
+            "2025-04-18T23:58:50.816Z",
+            "2025-05-03T23:58:50.816Z",
+            "2025-05-18T23:58:50.816Z",
+            "2025-06-02T23:58:50.816Z",
+            "2025-06-17T23:58:50.816Z",
+            "2025-07-02T23:58:50.816Z",
+            "2025-07-17T23:58:50.816Z"
+          ]
+        }
+      }
+    },
+    "lucy-cruise-ref": {
+      "rule": {
+        "fitHours": [
+          720
+        ],
+        "strideHours": 360,
+        "leadDays": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "byFit": {
+        "720": {
+          "stepSeconds": 3600,
+          "count": 33,
+          "startsUtc": [
+            "2025-09-08T23:58:50.817Z",
+            "2025-09-23T23:58:50.817Z",
+            "2025-10-08T23:58:50.817Z",
+            "2025-10-23T23:58:50.817Z",
+            "2025-11-07T23:58:50.817Z",
+            "2025-11-22T23:58:50.817Z",
+            "2025-12-07T23:58:50.817Z",
+            "2025-12-22T23:58:50.817Z",
+            "2026-01-06T23:58:50.817Z",
+            "2026-01-21T23:58:50.817Z",
+            "2026-02-05T23:58:50.817Z",
+            "2026-02-20T23:58:50.817Z",
+            "2026-03-07T23:58:50.817Z",
+            "2026-03-22T23:58:50.817Z",
+            "2026-04-06T23:58:50.817Z",
+            "2026-04-21T23:58:50.817Z",
+            "2026-05-06T23:58:50.817Z",
+            "2026-05-21T23:58:50.817Z",
+            "2026-06-05T23:58:50.817Z",
+            "2026-06-20T23:58:50.817Z",
+            "2026-07-05T23:58:50.817Z",
+            "2026-07-20T23:58:50.817Z",
+            "2026-08-04T23:58:50.817Z",
+            "2026-08-19T23:58:50.817Z",
+            "2026-09-03T23:58:50.817Z",
+            "2026-09-18T23:58:50.817Z",
+            "2026-10-03T23:58:50.817Z",
+            "2026-10-18T23:58:50.817Z",
+            "2026-11-02T23:58:50.817Z",
+            "2026-11-17T23:58:50.817Z",
+            "2026-12-02T23:58:50.817Z",
+            "2026-12-17T23:58:50.817Z",
+            "2027-01-01T23:58:50.817Z"
+          ]
+        }
+      }
+    },
+    "psyche-cruise": {
+      "rule": {
+        "fitHours": [
+          720
+        ],
+        "strideHours": 360,
+        "leadDays": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "byFit": {
+        "720": {
+          "stepSeconds": 3600,
+          "count": 20,
+          "startsUtc": [
+            "2025-08-12T23:58:50.817Z",
+            "2025-08-27T23:58:50.817Z",
+            "2025-09-11T23:58:50.817Z",
+            "2025-09-26T23:58:50.817Z",
+            "2025-10-11T23:58:50.817Z",
+            "2025-10-26T23:58:50.817Z",
+            "2025-11-10T23:58:50.817Z",
+            "2025-11-25T23:58:50.817Z",
+            "2025-12-10T23:58:50.817Z",
+            "2025-12-25T23:58:50.817Z",
+            "2026-01-09T23:58:50.817Z",
+            "2026-01-24T23:58:50.817Z",
+            "2026-02-08T23:58:50.817Z",
+            "2026-02-23T23:58:50.817Z",
+            "2026-03-10T23:58:50.817Z",
+            "2026-03-25T23:58:50.817Z",
+            "2026-04-09T23:58:50.817Z",
+            "2026-04-24T23:58:50.817Z",
+            "2026-05-09T23:58:50.817Z",
+            "2026-05-24T23:58:50.817Z"
+          ]
+        }
+      }
     }
   },
   "heliocentric": {
@@ -528,6 +923,6 @@
       14,
       15
     ],
-    "packs": "none yet: SPK type 1 (Psyche, Lucy, Juno) is not readable by files/orbit-products 0.1.4"
+    "packs": "psyche-cruise, lucy-cruise-rec, lucy-cruise-ref (a planning prediction), juno-cruise (JPL Horizons vector tables, amendment A9; the NAIF kernels of these missions are SPK type 1, unreadable by files/orbit-products 0.1.4)"
   }
 }

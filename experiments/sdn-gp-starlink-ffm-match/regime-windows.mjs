@@ -7,8 +7,7 @@
 // The scorer is score-pack.mjs. Rules (PLAN A8): Moon-centred (LRO, Danuri): fits of 24 h and 72 h every 48 h, held-out days 1 to 3;
 // Earth-centred cislunar transfers (Artemis I, Artemis II): fit 24 h every 48 h, held-out days 1 to 3; libration and distant-retrograde
 // segments (CAPSTONE, Artemis I around the Moon): fit 14 d, held-out days 1 to 7, a window every 7 d (every 4 d for the 25 d of Artemis I);
-// heliocentric cruise: fit 30 d, held-out 15 d (no pack yet: the Psyche, Lucy and Juno kernels are SPK type 1, which files/orbit-products
-// 0.1.4 does not read, and Horizons for them is not approved). A window needs 90 % of its states in the fit span and in every held-out day.
+// heliocentric cruise (Psyche, Lucy, Juno): fit 30 d, held-out days 1 to 15, a window every 15 d; Jupiter-centred Juno: fit 66 d (two orbits), held-out days 1 to 33 (amendment A9; from Horizons, the NAIF kernels are SPK type 1). A window needs 90 % of its states in the fit span and in every held-out day.
 import fs from 'node:fs';
 import path from 'node:path';
 import { results, write, args, frozen } from './common.mjs';
@@ -24,8 +23,14 @@ export const RULES = {
   'artemis1-cislunar': { regime: 'cislunar-transfer', fitHours: [24], strideHours: 48, leadDays: [1, 2, 3] },
   'capstone-nrho': { regime: 'cislunar-libration', fitHours: [336], strideHours: 168, leadDays: [1, 2, 3, 4, 5, 6, 7] },
   'artemis1-lunar': { regime: 'cislunar-libration', fitHours: [336], strideHours: 96, leadDays: [1, 2, 3, 4, 5, 6, 7] },
+  // amendment A9: heliocentric cruise (fit 30 d, held-out days 1 to 15) and Jupiter-centred orbits (fit two 33 day orbits, held-out 33 days)
+  'psyche-cruise': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
+  'lucy-cruise-rec': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
+  'lucy-cruise-ref': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
+  'juno-cruise': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
+  'juno-jupiter': { regime: 'planet-centred', fitHours: [1584], strideHours: 792, leadDays: Array.from({ length: 33 }, (_, i) => i + 1) },
 };
-export const HELIOCENTRIC = { regime: 'heliocentric-cruise', fitHours: [720], leadDays: Array.from({ length: 15 }, (_, i) => i + 1), packs: 'none yet: SPK type 1 (Psyche, Lucy, Juno) is not readable by files/orbit-products 0.1.4' };
+export const HELIOCENTRIC = { regime: 'heliocentric-cruise', fitHours: [720], leadDays: Array.from({ length: 15 }, (_, i) => i + 1), packs: 'psyche-cruise, lucy-cruise-rec, lucy-cruise-ref (a planning prediction), juno-cruise (JPL Horizons vector tables, amendment A9; the NAIF kernels of these missions are SPK type 1, unreadable by files/orbit-products 0.1.4)' };
 const frameLabel = (meta) => (/ICRF/.test(meta.axes ?? '') ? 'ICRF' : 'J2000');
 
 /** Window starts (ms) of one pack for one fit length by the pack's rule; only windows with 90 % of the states in every span. */

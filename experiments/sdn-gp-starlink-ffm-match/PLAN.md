@@ -360,3 +360,31 @@ those four stay pending. Conversion: the converter's SP3 -> reference-state path
 with the Bulletin A rows of A8c extended to 2026-10-25) called by `slr-convert.mjs` with the CDDIS URLs as the recorded source. Our SLR rows: the 4-day NSGF arcs of the LEO
 spheres as the registered slr-low rows (one arc per object per 4 days, fit 24 h, held-out days 1 to 3), and the newest four combined weeks for the MEO targets, scored
 as section 1. COMSPOC's laser-ranged sets: propagated by the black-box module and compared with the NSGF rapid orbits after each set's epoch, by day since the epoch, local scoring only.
+
+### A9b - 2026-10-24, before any current SLR row, COMSPOC laser-ranged score or SDN-GP row was read: rules of the three
+
+Correction to A9: the ILRS combined weekly orbits of LAGEOS-1/2 and Etalon-1/2 on CDDIS end 2026-10-03T23:58 (the files of week 261003; those of
+260926 hold a header and no positions and are skipped), not 2026-10-10. The COMSPOC sets of those four objects (epochs 2026-10-19 and 20) stay pending.
+
+Our current SLR rows (`baselines.mjs --source slr-low-current,slr-high-current`, regimes `leo-slr-current` for the six spheres under 2000 km and
+`meo-slr-current` for LARES-2, LAGEOS and Etalon). NSGF: of each sphere's daily files (261012 onward) every fourth (261012, 261016, 261020, 261024) is
+one object, its own 4- to 7-day arc, not chained; windows as the registered `slr-low` rule (fit 24 h from the arc's first state, stride 24 h,
+held-out days 1 to 3, 90 % per day). Combined weekly orbits: each run of consecutive weeks is one object (260912 and 260919 chain, 2026-09-06 to 09-19;
+261003 stands alone, 09-27 to 10-03), windows as the registered `slr-high` rule (stride 3 d, fit 24 h, held-out days 1 to 3).
+
+COMSPOC laser-ranged sets (`comspoc-precise.mjs`): the truth of a sphere is all of its NSGF daily files chained in date order, the later file winning at an
+epoch both hold (the stated sigma of a file, 0.08 to 0.27 m, is its own overlap RMS with the next day's arc: three orders under the errors scored). The
+set is propagated by the black-box module, compared in GCRF at the NSGF epochs thinned to 5 minutes, by 24 h days since the set's epoch (day 0 is the first 24 h;
+a day needs half of its epochs), as for the GNSS sets. Local scoring only, labeled so.
+
+SDN-GP arm (side B's `sdn-gp-propagator` used as built, none of its source read). The windows of the XP and SGP4 arms (start, fit length, held-out days,
+coverage rule, truth, axes) are fitted by `fit_sdngp`: the truth's states as a plain $OEM that names its frame, the run's saved space-weather table on
+`space_weather_table`, no $DCL and no prior (B_eff free). The fitted set is propagated to the held-out epochs by the module's batch entry
+`sdngp_propagate_minutes_soa` (the invoke surface's `propagate` stops one day after the epoch), the TEME states are taken to the truth's axes by
+`foundation/frames` and scored by `pair_statistics` like XP (the RIC at one state per 5 minutes). A window whose fit fails is attempted, not fitted.
+Side B rebuilds `dist/` in place, so a run first copies the wasm to `<store>/sdngp-snapshot/<SHA-256 prefix>/` and every worker uses that copy; rows are kept per
+build (`rows/sdngp/<prefix>/<source>.jsonl`, never merged across builds) with the build's SHA-256, the source commit and the count of uncommitted files.
+Sources: the Starlink FFM truths (every fitted satellite, the window of the baselines), SpaceX's forecast (files in the local capture or unchanged on the server), ISS
+(both files), ESA final GNSS, GFZ MGEX GEO and IGSO (2025), GFZ rapid GNSS, ILRS (registered and current), HEO (THEMIS, Chandra, TESS, Artemis II), and the newer-file
+pass (SDN-GP fitted to the first 24 h of the FFM truth). The tables show the newest build that ran every source, and the Starlink FFM-truth row for every
+build run, so the effect of each new term of side B is visible. Lunar, cislunar and heliocentric packs stay awaiting: the module's theory is Earth-centred.

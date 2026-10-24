@@ -20,6 +20,12 @@ const DAY = 86400000;
 export const MISSIONS = [
   { id: 'danuri', command: '-155', name: 'Danuri (KPLO)', centers: [['moon', '500@301']], start: '2026-08-15T00:00:00', stop: '2026-10-18T00:00:00', stepMinutes: 1, chunkDays: 20 },
   { id: 'capstone', command: '-1176', name: 'CAPSTONE', centers: [['moon', '500@301']], start: '2025-07-15T00:00:00', stop: '2026-07-15T00:00:00', stepMinutes: 5, chunkDays: 60 },
+  // amendment A9 (coordinator approval of 2026-10-24): heliocentric cruise and Jupiter-centred orbits
+  { id: 'psyche', command: '-255', name: 'Psyche', centers: [['sun', '500@10']], start: '2025-08-13T00:00:00', stop: '2026-07-12T00:00:00', stepMinutes: 60, chunkDays: 400 },
+  { id: 'lucy-rec', command: '-49', name: 'Lucy (fit through 2025-09-08)', centers: [['sun', '500@10']], start: '2024-12-20T00:00:00', stop: '2025-09-07T00:00:00', stepMinutes: 60, chunkDays: 400 },
+  { id: 'lucy-ref', command: '-49', name: 'Lucy (reference trajectory, planning prediction)', centers: [['sun', '500@10']], start: '2025-09-09T00:00:00', stop: '2027-03-01T00:00:00', stepMinutes: 60, chunkDays: 400 },
+  { id: 'juno-cruise', command: '-61', name: 'Juno (heliocentric cruise)', centers: [['sun', '500@10']], start: '2012-10-01T00:00:00', stop: '2013-09-30T00:00:00', stepMinutes: 60, chunkDays: 400 },
+  { id: 'juno-jupiter', command: '-61', name: 'Juno (Jupiter-centred orbits)', centers: [['jupiter', '500@599']], start: '2024-09-01T00:00:00', stop: '2026-08-23T00:00:00', stepMinutes: 30, chunkDays: 400 },
   { id: 'artemis1', command: '-1023', name: 'Artemis I (Orion)', centers: [['earth', '500@399'], ['moon', '500@301']], start: '2022-11-16T08:50:00', stop: '2022-12-11T17:15:00', stepMinutes: 1, chunkDays: 30 },
 ];
 
