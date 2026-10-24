@@ -28,6 +28,7 @@
     "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs, starlink-lowering.mjs, fitlength.mjs --arm sdngp, span-windows.mjs --arm sdngp)",
     "node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs (SGP4 and XP of the COMSPOC-aligned fit-span windows; the SDN-GP arm runs inside sdngp-run.mjs)",
     "node experiments/sdn-gp-starlink-ffm-match/lunar-maneuvers.mjs",
+    "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/segment-windows.mjs --shard k/8 (inside sdngp-run.mjs: the cislunar and heliocentric packs through the segment fits)",
     "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/lunar-windows.mjs --shard k/8 (inside sdngp-run.mjs; the default-span rows are baselines.mjs, spk-windows.mjs and span-windows.mjs with --arm sdngp --span default)",
     "node experiments/sdn-gp-starlink-ffm-match/horizons-packs.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs",
@@ -37,10 +38,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "3291d3fef8ea20e8572abc4ee2ad3a9db78176b8f16bb9d5bcf6156d7695fae7",
+  "planSha256": "743c5777fed8f6f59cd0301ac03b1a686c242da37d7de7df2036d4275f2465f5",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "82a5b96f2859d2fe4aab38a33d203ce32be4de4a"
+    "commit": "b68d8990b2dfde5e660510da0347369a9b0e28c7"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -264,7 +265,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "7ea0ea272bbf",
+    "headlineBuild": "54b069014557",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -304,6 +305,22 @@
         "sourceCommit": "b663c8cb9e3cc3d5378f80779d754d7533efc6d9",
         "sourceUncommittedFiles": 3,
         "firstUseUtc": "2026-10-24T08:10:30.044Z",
+        "complete": true
+      },
+      {
+        "build": "ee5dccaa17a8",
+        "wasmSha256": "ee5dccaa17a8fb9be3e63e5e64b8a99f02dc789422cc39a00497bbef28f3587e",
+        "sourceCommit": "e241cef6b4db4c139ffc4e4d4ab603ca62986831",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T13:08:14.256Z",
+        "complete": true
+      },
+      {
+        "build": "54b069014557",
+        "wasmSha256": "54b06901455764fcb02fdb3db2d9d80cc7a745e3d862eb00a4b9ef498ef330bc",
+        "sourceCommit": "3617e4d57f517e4ef1e2385415072180bfe3a988",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T14:50:56.044Z",
         "complete": true
       }
     ]

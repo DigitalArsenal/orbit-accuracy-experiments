@@ -29,7 +29,7 @@
       "bytes": 5693440,
       "sha256": "b8b3ebc4d703c3a73c9651b9da36114c3ef0b2c75f92873dd4970f32367aa7be",
       "regime": "Cislunar and HEO",
-      "geometry": "Orion, Earth-centred J2000 throughout",
+      "geometry": "Orion, Earth-centered J2000 throughout",
       "segments": 6,
       "targets": [
         -24
@@ -41,7 +41,7 @@
         13
       ],
       "span": "2026-04-02T01:58:21.398Z to 2026-04-10T23:53:24.644Z",
-      "use": "first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: awaiting SDN-GP"
+      "use": "first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: scored as segment sets (section 15)"
     },
     {
       "mission": "chandra",
@@ -51,7 +51,7 @@
       "bytes": 67708928,
       "sha256": "570e1fee3d3d6bba48fb85c366db1e51cb9080794e7b26dc178bf6396f7954cc",
       "regime": "HEO",
-      "geometry": "Earth-centred, highly elliptical, 64 h period",
+      "geometry": "Earth-centered, highly elliptical, 64 h period",
       "segments": 1523,
       "targets": [
         -151
@@ -87,7 +87,7 @@
         1
       ],
       "span": "2011-08-05T17:18:05.999Z to 2017-10-16T23:58:50.816Z",
-      "use": "awaiting SDN-GP; type 1 and 2 not readable"
+      "use": "scored from the JPL Horizons vector tables (section 15); type 1 and 2 not readable"
     },
     {
       "mission": "lro",
@@ -97,7 +97,7 @@
       "bytes": 7557120,
       "sha256": "5e17414e03c794e9dc29e4f4fde64d1d2d9fd106d87f26404188888495de28b1",
       "regime": "Lunar",
-      "geometry": "lunar-centred (Moon), J2000",
+      "geometry": "lunar-centered (Moon), J2000",
       "segments": 92,
       "targets": [
         -85
@@ -109,7 +109,7 @@
         13
       ],
       "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
-      "use": "awaiting SDN-GP"
+      "use": "scored: the Moon-centered SDN-GP (section 14)"
     },
     {
       "mission": "lucy",
@@ -119,7 +119,7 @@
       "bytes": 821248,
       "sha256": "b45c99793bfd5fdc32e922b1e1b7f96b877b65bca4f287d3fcf4c4faea55f22d",
       "regime": "Interplanetary",
-      "geometry": "Sun-centred, SPK type 1, predicted trajectory",
+      "geometry": "Sun-centered, SPK type 1, predicted trajectory",
       "segments": 18,
       "targets": [
         -49
@@ -137,7 +137,7 @@
         1
       ],
       "span": "2026-10-15T23:59:59.998Z to 2033-03-13T16:41:00.001Z",
-      "use": "awaiting SDN-GP; type 1 not readable"
+      "use": "scored from the JPL Horizons vector tables (section 15); type 1 not readable"
     },
     {
       "mission": "psyche",
@@ -147,7 +147,7 @@
       "bytes": 16357376,
       "sha256": "98e55a6dfa6410750713205140adad8c63a5a605ae539d73e545d2ba26a14428",
       "regime": "Interplanetary",
-      "geometry": "Sun-centred, SPK type 1 (modified difference arrays)",
+      "geometry": "Sun-centered, SPK type 1 (modified difference arrays)",
       "segments": 70,
       "targets": [
         -255
@@ -159,7 +159,7 @@
         1
       ],
       "span": "2026-05-31T23:58:50.816Z to 2027-03-01T12:00:00.001Z",
-      "use": "awaiting SDN-GP; type 1 is not readable by files/orbit-products 0.1.4"
+      "use": "scored from the JPL Horizons vector tables (section 15); type 1 is not readable by files/orbit-products 0.1.4"
     },
     {
       "mission": "tdrss",
@@ -200,7 +200,7 @@
       "bytes": 1338368,
       "sha256": "b754902de448c97c7f9dd60f21e2327d9fc5e9fd95431c61ec00ad8d11220d5b",
       "regime": "HEO",
-      "geometry": "Earth-centred, highly elliptical (THEMIS A, D, E)",
+      "geometry": "Earth-centered, highly elliptical (THEMIS A, D, E)",
       "segments": 3,
       "targets": [
         -650
@@ -222,7 +222,7 @@
       "bytes": 1338368,
       "sha256": "c5994b43ed417251ce9c675e3b6a3b196aa67e12b188bb234d76d2d6a8445fd1",
       "regime": "HEO",
-      "geometry": "Earth-centred, highly elliptical (THEMIS A, D, E)",
+      "geometry": "Earth-centered, highly elliptical (THEMIS A, D, E)",
       "segments": 3,
       "targets": [
         -653
@@ -244,7 +244,7 @@
       "bytes": 1338368,
       "sha256": "57e523cf72a67dbe50e08cf593ef877e1b67117e0deef95c322d50f504c7faa6",
       "regime": "HEO",
-      "geometry": "Earth-centred, highly elliptical (THEMIS A, D, E)",
+      "geometry": "Earth-centered, highly elliptical (THEMIS A, D, E)",
       "segments": 3,
       "targets": [
         -654

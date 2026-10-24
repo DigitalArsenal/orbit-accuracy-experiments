@@ -35,13 +35,13 @@ export async function packWindow(b, loaded, pack, startMs, fitHours, { thin = 1 
   const prop = await b.sdngp.propagateGrid(fit.omm, grid);
   if (!prop.ok) return { ...base, sdngp: { ok: false, error: `propagate: ${prop.error}`, errorName: `propagate:${nameOf(prop.error)}`, fitRmsKm: fit.fitRmsKm, treatment: 'failed' } };
   const predicted = prop.blocks[0];
-  const scored = await scorePack(b, { pack, startMs, fitHours, leadDays: rule.leadDays, predicted, predictedCenter: prop.centre, loaded });
+  const scored = await scorePack(b, { pack, startMs, fitHours, leadDays: rule.leadDays, predicted, predictedCenter: prop.center, loaded });
   const spanMatch = /span ([\d.]+) h/.exec(fit.comment ?? ''), fromMatch = /states fitted from ([\d.]+) h/.exec(fit.comment ?? '');
   const carried = fit.params.SDNGP_MANEUVER_BEFORE_SECONDS;
   return { ...base, sdngp: {
     ok: true, fitRmsKm: fit.fitRmsKm, fitMaxKm: fit.fitMaxKm, heldOutRmsKm: fit.heldOutRmsKm, iterations: fit.iterations, fitStates: fit.statesFitted, spanHours: spanMatch ? Number(spanMatch[1]) : fromMatch ? fitHours - Number(fromMatch[1]) : null, // a segment's comment says where in the arc the segment starts: its length is the rest of the fit span
     regime, treatment: carried === undefined ? 'whole' : 'segment', maneuverBeforeSeconds: carried === undefined ? null : Number(carried), arcEndSeconds: fit.params.SDNGP_ARC_END_SECONDS === undefined ? null : Number(fit.params.SDNGP_ARC_END_SECONDS),
-    days: Object.fromEntries(Object.entries(scored.byDay).filter(([, d]) => d).map(([k, d]) => [k, { rmsKm: d.rmsKm, n: d.n, ric: d.ric }])),
+    days: Object.fromEntries(Object.entries(scored.byDay).filter(([, d]) => d).map(([k, d]) => [k, { rmsKm: d.rmsKm, n: d.n, ric: d.ric, directKm: d.directKm }])),
     requested: held.length, returned: predicted.length, matched: scored.matched, unmatched: scored.unmatched, centerCheck: scored.centerCheck, recordBytes: fit.omm.length,
     module: b.sdngp.provenance.wasmSha256.slice(0, 12), params: fit.params, comment: fit.comment,
   } };

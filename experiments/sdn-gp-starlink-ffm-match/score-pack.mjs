@@ -1,9 +1,9 @@
-// Amendment A8: score SDN-GP's predicted states for one window of a truth pack (regime-windows.mjs), in the pack's centre and axes.
+// Amendment A8: score SDN-GP's predicted states for one window of a truth pack (regime-windows.mjs), in the pack's center and axes.
 //   node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack danuri-lunar --start 2026-09-01T00:00:00Z --fit-hours 24 \
 //        --predicted <states.oem> [--lead-days 1,2,3] [--out result.json]
 // `--predicted` is a size-prefixed $OEM (one or more blocks) with states at the pack's epochs after the fit span. Predicted and truth states are
 // paired by epoch (within 5 ms); the radial / in-track / cross-track errors are gp-error-model `pair_statistics` on the truth's own axes (any
-// inertial centre), reported per held-out day (day k is (fit end + (k-1) d, fit end + k d]) as the 3D RMS and the three component RMS in km.
+// inertial center), reported per held-out day (day k is (fit end + (k-1) d, fit end + k d]) as the 3D RMS and the three component RMS in km.
 // Nothing is computed here but counting and square roots of module outputs.
 import fs from 'node:fs';
 import { args, frozen } from './common.mjs';
@@ -43,10 +43,12 @@ export async function scorePack(b, { pack, startMs, fitHours, leadDays, predicte
     if (!pairs.length) { byDay[k] = null; continue; }
     const series = await rtnSeries(b, pairs.map(([p]) => p), pairs.map(([, l]) => l));
     const ric = [0, 1, 2].map((c) => rms(series.map((e) => e[c])));
-    byDay[k] = { n: pairs.length, rmsKm: Math.hypot(...ric), ric };
+    // the same day without the module: the root mean square of the plain 3D difference of each pair (the norm of an error vector does not depend on the axes it is written in), a check on the scoring chain
+    const directKm = Math.sqrt(pairs.reduce((a, [p, l]) => a + (p.r[0] - l.r[0]) ** 2 + (p.r[1] - l.r[1]) ** 2 + (p.r[2] - l.r[2]) ** 2, 0) / pairs.length);
+    byDay[k] = { n: pairs.length, rmsKm: Math.hypot(...ric), ric, directKm };
   }
-  const centerCheck = predictedCenter && meta.center && predictedCenter.toUpperCase() !== meta.center.toUpperCase() ? `predicted centre ${predictedCenter} differs from the pack's ${meta.center}` : 'ok';
-  return { pack, centre: meta.center, axes: meta.axes, startUtc: new Date(startMs).toISOString(), fitHours, byDay, matched, unmatched, centerCheck };
+  const centerCheck = predictedCenter && meta.center && predictedCenter.toUpperCase() !== meta.center.toUpperCase() ? `predicted center ${predictedCenter} differs from the pack's ${meta.center}` : 'ok';
+  return { pack, center: meta.center, axes: meta.axes, startUtc: new Date(startMs).toISOString(), fitHours, byDay, matched, unmatched, centerCheck };
 }
 
 if (process.argv[1] === new URL(import.meta.url).pathname) {

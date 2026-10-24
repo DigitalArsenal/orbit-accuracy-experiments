@@ -18,7 +18,7 @@
           "sha256": "444aade78f5ab0d96fed9d9ab67e32559cb0366ea687b7ff37db1a4ebc9f95e7"
         }
       ],
-      "note": "Artemis I (Orion) as-flown post-TLI trajectory from NASA/JSC navigation, Earth-centred, 1 min, 2022-11-16 to 2022-12-11"
+      "note": "Artemis I (Orion) as-flown post-TLI trajectory from NASA/JSC navigation, Earth-centered, 1 min, 2022-11-16 to 2022-12-11"
     },
     {
       "name": "artemis1-lunar",
@@ -37,7 +37,7 @@
           "sha256": "95aeea49ffe66c4c057c5ca4ec61fd7ed8f9139f00aed51a75df67c2d3e6635a"
         }
       ],
-      "note": "Artemis I (Orion) as-flown post-TLI trajectory, Moon-centred (distant retrograde orbit), 1 min, 2022-11-16 to 2022-12-11"
+      "note": "Artemis I (Orion) as-flown post-TLI trajectory, Moon-centered (distant retrograde orbit), 1 min, 2022-11-16 to 2022-12-11"
     },
     {
       "name": "artemis2-cislunar",
@@ -51,7 +51,7 @@
       "stopUtc": "2026-04-10T23:52:53.647999Z",
       "sha256": "be021c0bc3e9214504931fe3f1de5b2fa07ed6334a2cd2a0ee50059e45a9cb6b",
       "sourceFiles": null,
-      "note": "Orion best-estimated trajectory after the translunar burn; Earth-centred axes, lunar flyby inside"
+      "note": "Orion best-estimated trajectory after the translunar burn; Earth-centered axes, lunar flyby inside"
     },
     {
       "name": "capstone-nrho",
@@ -94,7 +94,7 @@
           "sha256": "e74e2e8ec26061041e64befca81638843aaa3a0f67f722e514485586df5f2a16"
         }
       ],
-      "note": "CAPSTONE, mission navigation merged by JPL, Moon-centred (the Gateway near rectilinear halo orbit), 5 min, 2025-07-15 to 2026-07-15"
+      "note": "CAPSTONE, mission navigation merged by JPL, Moon-centered (the Gateway near rectilinear halo orbit), 5 min, 2025-07-15 to 2026-07-15"
     },
     {
       "name": "danuri-lunar",
@@ -125,7 +125,7 @@
           "sha256": "07fbd93b2ad5f1788c28d82c09d683ca80fef8f329fda58227445a91fa6dbea9"
         }
       ],
-      "note": "Danuri (KPLO), KARI trajectory solutions merged by JPL, Moon-centred, 1 min, 2026-08-15 to 2026-10-18"
+      "note": "Danuri (KPLO), KARI trajectory solutions merged by JPL, Moon-centered, 1 min, 2026-08-15 to 2026-10-18"
     },
     {
       "name": "juno-cruise",
@@ -144,11 +144,11 @@
           "sha256": "b27e4b25ad5a6b6f3848a8376eb22637103baed09099fa024d8b31483f223d66"
         }
       ],
-      "note": "Juno, JPL navigation reconstruction, Sun-centred, 60 min, 2012-10-01 to 2013-09-30 (after the deep space maneuvers, before the Earth flyby)"
+      "note": "Juno, JPL navigation reconstruction, Sun-centered, 60 min, 2012-10-01 to 2013-09-30 (after the deep space maneuvers, before the Earth flyby)"
     },
     {
       "name": "juno-jupiter",
-      "regime": "planet-centred",
+      "regime": "planet-centered",
       "center": "Jupiter",
       "axes": "ICRF equatorial axes as served (taken as the J2000 axes of the NAIF packs; the 20 mas frame bias, 37 m at the Moon, is not applied)",
       "frameLabel": "ICRF",
@@ -167,7 +167,7 @@
           "sha256": "bef258cc9b885d51c8a1a70860a3489c421feb56b626f01319716cfdf086b911"
         }
       ],
-      "note": "Juno, JPL navigation reconstruction, Jupiter-centred, 30 min, 2024-09-01 to 2026-08-23 (33 day orbits)"
+      "note": "Juno, JPL navigation reconstruction, Jupiter-centered, 30 min, 2024-09-01 to 2026-08-23 (33 day orbits)"
     },
     {
       "name": "lro-lunar",
@@ -181,7 +181,7 @@
       "stopUtc": "2026-06-14T23:59:00.000000Z",
       "sha256": "d62175d07d7679838f9e155d49a3504c25eb67b3fbd7b181eefa1f2ab4ba558f",
       "sourceFiles": null,
-      "note": "LRO reconstructed ephemeris, Moon-centred"
+      "note": "LRO reconstructed ephemeris, Moon-centered"
     },
     {
       "name": "lucy-cruise-rec",
@@ -200,7 +200,7 @@
           "sha256": "40a6de7af338f25f91f3575a84a03a34c92d7f5b34751ad916097a9ee717c651"
         }
       ],
-      "note": "Lucy, navigation solution fitted through 2025-09-08, Sun-centred, 60 min, 2024-12-20 to 2025-09-07 (Donaldjohanson encounter of 2025-04-20 inside)"
+      "note": "Lucy, navigation solution fitted through 2025-09-08, Sun-centered, 60 min, 2024-12-20 to 2025-09-07 (Donaldjohanson encounter of 2025-04-20 inside)"
     },
     {
       "name": "lucy-cruise-ref",
@@ -223,7 +223,7 @@
           "sha256": "75b3f68655e4656738f9232ffc6dd8107d8430f557f54c1f2ad83ec28881eed7"
         }
       ],
-      "note": "Lucy, flight-project reference trajectory (a planning prediction, not reconstructed data), Sun-centred, 60 min, 2025-09-09 to 2027-03-01"
+      "note": "Lucy, flight-project reference trajectory (a planning prediction, not reconstructed data), Sun-centered, 60 min, 2025-09-09 to 2027-03-01"
     },
     {
       "name": "psyche-cruise",
@@ -242,7 +242,7 @@
           "sha256": "d77bbdbdcc8e49f30e8f5572c4c108b874eb30837325e1cc31a5fe5d87945bd1"
         }
       ],
-      "note": "Psyche, JPL navigation reconstructions, Sun-centred, 60 min, 2025-08-13 to 2026-07-12 (solar-electric thrust arcs and the Mars gravity assist of May 2026 inside)"
+      "note": "Psyche, JPL navigation reconstructions, Sun-centered, 60 min, 2025-08-13 to 2026-07-12 (solar-electric thrust arcs and the Mars gravity assist of May 2026 inside)"
     }
   ],
   "windows": {

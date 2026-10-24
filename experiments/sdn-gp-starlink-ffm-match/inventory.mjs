@@ -34,7 +34,7 @@ for (const t of ['lageos1', 'lageos2', 'etalon1', 'etalon2']) {
 }
 for (const t of ['starlette', 'stella', 'ajisai', 'larets', 'westpac', 'lares', 'lares2']) {
   const g = group(`nsgf.orb.${t}.`, (n) => yymmdd(n.split('.')[3]));
-  add(t === 'lares2' ? 'MEO (5,900 km)' : 'LEO', `ILRS NSGF analysis-centre arc, ${t}`, '4-day GCRF arcs, 3 min', g.count, g.span, 'truth: arm 1-2 windows', t === 'lares2' ? 'LARES-2 orbits near 5,900 km although the harness files it with the low targets.' : '');
+  add(t === 'lares2' ? 'MEO (5,900 km)' : 'LEO', `ILRS NSGF analysis-center arc, ${t}`, '4-day GCRF arcs, 3 min', g.count, g.span, 'truth: arm 1-2 windows', t === 'lares2' ? 'LARES-2 orbits near 5,900 km although the harness files it with the low targets.' : '');
 }
 for (const s of ['A', 'B', 'C']) {
   const g = group(`SW_OPER_SP3${s}COM_2__`, (n) => { const m = /_(\d{4})(\d\d)(\d\d)T/.exec(n); return m && `${m[1]}-${m[2]}-${m[3]}`; });
@@ -102,13 +102,13 @@ add('MEO', 'OneWeb, Kuiper operator ephemerides', 'none stored locally', 0, null
 // NAIF spacecraft kernels fetched in the second box (amendment A5): metadata from the DAF summaries and the provenance rows
 const missions = path.join(A, 'hac/naif-kernels/spk/missions');
 const KERNEL_USE = {
-  themis: ['HEO', 'Earth-centred, highly elliptical (THEMIS A, D, E)', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
-  chandra: ['HEO', 'Earth-centred, highly elliptical, 64 h period', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
-  artemis2: ['Cislunar and HEO', 'Orion, Earth-centred J2000 throughout', 'first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: awaiting SDN-GP'],
-  lro: ['Lunar', 'lunar-centred (Moon), J2000', 'awaiting SDN-GP'],
-  psyche: ['Interplanetary', 'Sun-centred, SPK type 1 (modified difference arrays)', 'awaiting SDN-GP; type 1 is not readable by files/orbit-products 0.1.4'],
-  lucy: ['Interplanetary', 'Sun-centred, SPK type 1, predicted trajectory', 'awaiting SDN-GP; type 1 not readable'],
-  juno: ['Interplanetary', 'Jupiter system and cruise, SPK types 1, 2, 3', 'awaiting SDN-GP; type 1 and 2 not readable'],
+  themis: ['HEO', 'Earth-centered, highly elliptical (THEMIS A, D, E)', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
+  chandra: ['HEO', 'Earth-centered, highly elliptical, 64 h period', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
+  artemis2: ['Cislunar and HEO', 'Orion, Earth-centered J2000 throughout', 'first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: scored as segment sets (section 15)'],
+  lro: ['Lunar', 'lunar-centered (Moon), J2000', 'scored: the Moon-centered SDN-GP (section 14)'],
+  psyche: ['Interplanetary', 'Sun-centered, SPK type 1 (modified difference arrays)', 'scored from the JPL Horizons vector tables (section 15); type 1 is not readable by files/orbit-products 0.1.4'],
+  lucy: ['Interplanetary', 'Sun-centered, SPK type 1, predicted trajectory', 'scored from the JPL Horizons vector tables (section 15); type 1 not readable'],
+  juno: ['Interplanetary', 'Jupiter system and cruise, SPK types 1, 2, 3', 'scored from the JPL Horizons vector tables (section 15); type 1 and 2 not readable'],
   tdrss: ['GEO', 'SPK type 10, generated from two-line elements', 'not truth: element-derived'],
 };
 const kernelRows = [];
@@ -145,19 +145,19 @@ for (const [file, spanText] of [['de440s.bsp', '1849-12-26 to 2150-01-22'], ['de
 const sizeOf = (dir, filter) => { let n = 0, bytes = 0; for (const f of fs.existsSync(dir) ? fs.readdirSync(dir).filter(filter) : []) { n += 1; bytes += fs.statSync(path.join(dir, f)).size; } return { n, bytes }; };
 const hz = path.join(A, 'hac/jpl-horizons');
 for (const [mission, name, regime, centers] of [['danuri', 'Danuri (KPLO)', 'Lunar', ['moon']], ['capstone', 'CAPSTONE', 'Cislunar (NRHO)', ['moon']], ['artemis1', 'Artemis I (Orion)', 'Cislunar and distant retrograde', ['earth', 'moon']],
-  ['psyche', 'Psyche (cruise)', 'Interplanetary (Sun-centred)', ['sun']], ['lucy-rec', 'Lucy (reconstruction through 2025-09-08)', 'Interplanetary (Sun-centred)', ['sun']], ['lucy-ref', 'Lucy (flight project reference trajectory, a planning prediction)', 'Interplanetary (Sun-centred)', ['sun']],
-  ['juno-cruise', 'Juno (cruise, 2012-10 to 2013-09)', 'Interplanetary (Sun-centred)', ['sun']], ['juno-jupiter', 'Juno (Jupiter orbits)', 'Interplanetary (Jupiter-centred)', ['jupiter']]]) {
+  ['psyche', 'Psyche (cruise)', 'Interplanetary (Sun-centered)', ['sun']], ['lucy-rec', 'Lucy (reconstruction through 2025-09-08)', 'Interplanetary (Sun-centered)', ['sun']], ['lucy-ref', 'Lucy (flight project reference trajectory, a planning prediction)', 'Interplanetary (Sun-centered)', ['sun']],
+  ['juno-cruise', 'Juno (cruise, 2012-10 to 2013-09)', 'Interplanetary (Sun-centered)', ['sun']], ['juno-jupiter', 'Juno (Jupiter orbits)', 'Interplanetary (Jupiter-centered)', ['jupiter']]]) {
   for (const center of centers) {
     const dir = path.join(hz, mission, center);
     const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.txt')).sort() : [];
     if (!files.length) continue;
     const prov = files.map((f) => JSON.parse(fs.readFileSync(path.join(dir, `${f}.provenance.json`), 'utf8')));
     const stamp = (f) => { const m = /_(\d{8})T(\d{4})_(\d{8})T(\d{4})_/.exec(f); return m ? [`${m[1].slice(0, 4)}-${m[1].slice(4, 6)}-${m[1].slice(6, 8)}`, `${m[3].slice(0, 4)}-${m[3].slice(4, 6)}-${m[3].slice(6, 8)}`] : [null, null]; };
-    add(regime, `JPL Horizons API vector tables, ${name}, ${center}-centred`, `ICRF equatorial axes, TDB, km and km/s; ${prov[0].targetSource ?? ''}; ${files.length} responses`, prov.reduce((a, r) => a + (r.rows ?? 0), 0), `${stamp(files[0])[0]} to ${stamp(files.at(-1))[1]}`, 'truth for the windows prepared for SDN-GP', 'Public NASA/JPL data (registry id jpl-horizons); stored as served, results only.');
+    add(regime, `JPL Horizons API vector tables, ${name}, ${center}-centered`, `ICRF equatorial axes, TDB, km and km/s; ${prov[0].targetSource ?? ''}; ${files.length} responses`, prov.reduce((a, r) => a + (r.rows ?? 0), 0), `${stamp(files[0])[0]} to ${stamp(files.at(-1))[1]}`, 'truth for the windows prepared for SDN-GP', 'Public NASA/JPL data (registry id jpl-horizons); stored as served, results only.');
   }
 }
 const tess = sizeOf(path.join(A, 'hac/mast-tess/models'), (f) => f.endsWith('.bsp'));
-if (tess.n) add('HEO (13.7 day)', 'STScI MAST: TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp)', `SPK type 9 (Lagrange, degree 7), Earth-centred J2000, 60 s; ${(tess.bytes / 1e6).toFixed(0)} MB`, tess.n, '2026-06-29 to 2026-09-17 (doy 194 to 260 of 2026)', 'truth: SGP4 and SGP4-XP windows (24 h and 72 h fits)', 'Public NASA mission data (registry id stsci-mast-tess); MAST holds no definitive file after 2026-09-17.');
+if (tess.n) add('HEO (13.7 day)', 'STScI MAST: TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp)', `SPK type 9 (Lagrange, degree 7), Earth-centered J2000, 60 s; ${(tess.bytes / 1e6).toFixed(0)} MB`, tess.n, '2026-06-29 to 2026-09-17 (doy 194 to 260 of 2026)', 'truth: SGP4 and SGP4-XP windows (24 h and 72 h fits)', 'Public NASA mission data (registry id stsci-mast-tess); MAST holds no definitive file after 2026-09-17.');
 const gfzDir = path.join(A, 'hac/gfz-gnss-rapid/cddis/gnss/products');
 if (fs.existsSync(gfzDir)) {
   const files = fs.readdirSync(gfzDir).flatMap((w) => fs.readdirSync(path.join(gfzDir, w)).filter((f) => f.endsWith('.SP3.gz')).map((f) => ({ f, w })));

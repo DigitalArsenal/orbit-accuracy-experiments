@@ -66,21 +66,21 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       const builder = new flatbuffers.Builder(512);
       OMM.OMM.finishSizePrefixedOMMBuffer(builder, minimalT.pack(builder));
       const minimal = builder.asUint8Array();
-      const num = (re) => { const mm = re.exec(comment); return mm ? Number(mm[1]) : null; }; // the Earth and the Moon-centred comments word their statistics alike but not identically
+      const num = (re) => { const mm = re.exec(comment); return mm ? Number(mm[1]) : null; }; // the Earth and the Moon-centered comments word their statistics alike but not identically
       return {
         ok: true, omm, obd, unpacked, comment, minimal,
         statesFitted: num(/(\d+) states fitted/), statesHeldOut: num(/(\d+) held out/), fitRmsKm: num(/fit RMS ([\d.]+) km/), fitMaxKm: num(/max ([\d.]+) km/), heldOutRmsKm: num(/held-out RMS ([\d.]+) km/), iterations: num(/(\d+) iterations/),
         params: Object.fromEntries((unpacked.USER_DEFINED_PARAMETERS ?? []).map((p) => [p.PARAM_NAME, p.PARAM_VALUE])),
       };
     },
-    /** A fitted set (any centre) propagated by the invoke surface on a grid $OEM template (amendment A9f; the Moon-centred sets are reached only this way): { ok, blocks: [[{epoch, r, v}]], centre, error }. */
+    /** A fitted set (any center) propagated by the invoke surface on a grid $OEM template (amendment A9f; the Moon-centered sets are reached only this way): { ok, blocks: [[{epoch, r, v}]], center, error }. */
     async propagateGrid(omm, grid) {
       const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'omm', typeRef: T('OMM'), payload: omm }, { portId: 'grid', typeRef: T('OEM'), payload: grid }] });
       if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 160)}` };
       const bytes = new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload);
       const prefixed = String.fromCharCode(...bytes.slice(8, 12)) === '$OEM';
       const oem = (prefixed ? OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(bytes)) : OEM.OEM.getRootAsOEM(new flatbuffers.ByteBuffer(bytes))).unpack();
-      return { ok: true, blocks: oem.EPHEMERIS_DATA_BLOCK.map((blk) => blockLines(blk)), centre: oem.EPHEMERIS_DATA_BLOCK[0]?.CENTER_NAME ?? null };
+      return { ok: true, blocks: oem.EPHEMERIS_DATA_BLOCK.map((blk) => blockLines(blk)), center: oem.EPHEMERIS_DATA_BLOCK[0]?.CENTER_NAME ?? null };
     },
     /** TEME states (km, km/s) of a fitted set at the given minutes after its epoch: the set is ingested (replacing the store) and the batch entry is called once per time. */
     async states(omm, minutes) {

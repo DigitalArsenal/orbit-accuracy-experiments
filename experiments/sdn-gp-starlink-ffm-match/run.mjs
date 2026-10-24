@@ -35,6 +35,7 @@ import { windowStarts, withT, ms } from './lib/windows.mjs';
 import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
 import { spanObject } from './span-windows.mjs';
 import { lunarWindow } from './lunar-windows.mjs';
+import { packWindow } from './lib/pack-window.mjs';
 
 const args = process.argv.slice(2);
 const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 9;
@@ -154,12 +155,14 @@ if (heoRows.length) {
   replayed += 1;
 }
 // replay one TESS window from the MAST definitive ephemeris files
+let tessObject = null; // kept for the SDN-GP replay below (amendment A9h: TESS is a segment set in the headline build)
 const tessRows = read(path.join(store, 'rows', 'heo-tess.jsonl'));
 if (tessRows.length) {
   const row = tessRows.filter((r) => r.fitSeconds === 86400)[Math.floor(tessRows.filter((r) => r.fitSeconds === 86400).length / 2)];
   const dir = path.join(config.archive, 'hac/mast-tess/models');
   const names = fs.readdirSync(dir).filter((f) => /^TESS_EPH_DEF_\d{7}_\d+\.bsp$/.test(f)).sort();
   const object = await spkObjectSeries(modules, { files: names.map((f) => path.join(dir, f)), source: 'heo-tess', id: 'TESS (-95)', name: 'TESS', norad: A8.tess.norad, fromUtc: A8.tess.span[0], toUtc: A8.tess.span[1], stride: A8.tess.stride });
+  tessObject = object;
   const again = await scoreWindow(b, object, ms(row.startUtc), { fitSeconds: row.fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
   for (const arm of ['xp', 'sgp4']) {
     if (Boolean(again[arm].ok) !== Boolean(row[arm].ok)) fail(`replay ${row.id}: ${arm} ok differs`);
@@ -236,12 +239,24 @@ if (headline) {
   }
   const defaultRow = [...recorded.values()].filter((r) => r.source === 'iss+default' && r.sdngp.ok && r.sdngp.spanHours > 24.5)[0]; // a default-span window (A9f) where the module extended the span
   if (defaultRow) await check(sources.iss()[0], ms(defaultRow.startUtc), defaultRow.fitSeconds, config.windows.leadDays, { defaultSpan: true });
-  const lunarRows = [...recorded.values()].filter((r) => r.source === 'lro-lunar' && r.fitHours === 24 && r.sdngp.ok); // a Moon-centred window (A9f)
+  // a TESS window (the build fits it as a segment set, A9h) and a CAPSTONE and a Psyche window, each replayed with the pinned module and compared in fit RMS, every held-out day and the state accounting
+  if (tessObject) { const row = [...recorded.values()].filter((r) => r.source === 'heo-tess' && r.fitSeconds === 86400 && r.sdngp.ok)[0]; if (row) await check(tessObject, ms(row.startUtc), row.fitSeconds, config.windows.leadDays); }
+  for (const pack of ['capstone-nrho', 'psyche-cruise']) {
+    const rows = [...recorded.values()].filter((r) => r.source === pack && r.sdngp.ok);
+    if (!rows.length) continue;
+    const row = rows[Math.floor(rows.length / 2)];
+    const again = (await packWindow(bs, readPack(pack), pack, ms(row.startUtc), row.fitHours, { thin: 1 })).sdngp;
+    if (!again.ok || !same(again.fitRmsKm, row.sdngp.fitRmsKm)) fail(`segment replay ${pack} ${row.startUtc}: fit RMS ${again.fitRmsKm} vs ${row.sdngp.fitRmsKm}`);
+    for (const k of Object.keys(row.sdngp.days)) if (!same(again.days[k].rmsKm, row.sdngp.days[k].rmsKm)) fail(`segment replay ${pack} ${row.startUtc}: day ${k} differs`);
+    if (again.matched !== row.sdngp.matched || again.unmatched !== row.sdngp.unmatched || again.treatment !== row.sdngp.treatment) fail(`segment replay ${pack} ${row.startUtc}: state accounting or treatment differs`);
+    sdReplayed += 1;
+  }
+  const lunarRows = [...recorded.values()].filter((r) => r.source === 'lro-lunar' && r.fitHours === 24 && r.sdngp.ok); // a Moon-centered window (A9f)
   if (lunarRows.length) {
     const row = lunarRows[Math.floor(lunarRows.length / 2)];
     const again = (await lunarWindow(bs, readPack('lro-lunar'), 'lro-lunar', ms(row.startUtc), row.fitHours)).sdngp;
-    if (!again.ok || !same(again.fitRmsKm, row.sdngp.fitRmsKm)) fail(`Moon-centred replay ${row.startUtc}: fit RMS ${again.fitRmsKm} vs ${row.sdngp.fitRmsKm}`);
-    for (const k of Object.keys(row.sdngp.days)) if (!same(again.days[k].rmsKm, row.sdngp.days[k].rmsKm)) fail(`Moon-centred replay ${row.startUtc}: day ${k} differs`);
+    if (!again.ok || !same(again.fitRmsKm, row.sdngp.fitRmsKm)) fail(`Moon-centered replay ${row.startUtc}: fit RMS ${again.fitRmsKm} vs ${row.sdngp.fitRmsKm}`);
+    for (const k of Object.keys(row.sdngp.days)) if (!same(again.days[k].rmsKm, row.sdngp.days[k].rmsKm)) fail(`Moon-centered replay ${row.startUtc}: day ${k} differs`);
     sdReplayed += 1;
   }
   const spanRows = read(path.join(store, 'rows', 'span-slr.jsonl')); // a COMSPOC-aligned fit-span window (A9e): SGP4 and XP here, SDN-GP below
