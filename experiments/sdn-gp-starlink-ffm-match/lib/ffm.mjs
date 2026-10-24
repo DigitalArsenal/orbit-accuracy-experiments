@@ -90,17 +90,21 @@ export async function operatorFit(modules, context, { memeBytes, name, norad, ep
   } finally { await harness.destroy(); }
 }
 
-/** FFM-1 states at the given epochs (ms) from a GCRF state [m, m/s] at `epoch` (ISO). Returns [{ms, state}] in m and m/s. */
-export async function propagate(modules, context, { epoch, state, cdAm, crAm, epochs, integrator }) {
+/** FFM-1 states at the given epochs (ms) from a GCRF state [m, m/s] at `epoch` (ISO). Returns [{ms, state}] in m and m/s.
+ *  `forces` overrides fields of the module's force configuration (the registered truths use none), for example the gravity
+ *  truncation of the M1 measurements: { MAXIMUM_ORDER: 0 } keeps the zonals only. */
+export async function propagate(modules, context, { epoch, state, cdAm, crAm, epochs, integrator, forces = {} }) {
   const c = context.catalog;
-  const request = c.fullForceRequest({ epoch, state, target: iso(epochs.at(-1)), cdAm, crAm, integrator: { ...c.CATALOG_INTEGRATOR, ...integrator } });
+  // FFM refuses a space-weather input when drag is off ("space weather applies to drag"); such arcs are given none.
+  const inputs = forces.ENABLE_DRAG === false ? context.inputs.filter((i) => i.portId !== 'space_weather') : context.inputs;
+  const request = c.fullForceRequest({ epoch, state, target: iso(epochs.at(-1)), cdAm, crAm, integrator: { ...c.CATALOG_INTEGRATOR, ...integrator }, forces });
   request.SAMPLE_EPOCHS = epochs.map((t) => c.instant(iso(t)));
   const dir = path.join(modules, 'propagator/ffm');
   const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'plugin-manifest.json')));
   const harness = await createBrowserModuleHarness({ wasmSource: fs.readFileSync(path.join(dir, 'dist/isomorphic/module.wasm')), manifest, surface: 'direct' });
   const cpu0 = process.cpuUsage();
   try {
-    const response = await harness.invoke({ methodId: 'invoke', inputs: [{ portId: 'request', typeRef: c.TYPE, payload: c.encode('EXECUTION_REQUEST', request) }, ...context.inputs] });
+    const response = await harness.invoke({ methodId: 'invoke', inputs: [{ portId: 'request', typeRef: c.TYPE, payload: c.encode('EXECUTION_REQUEST', request) }, ...inputs] });
     if (response.statusCode !== 0) throw new Error(`propagator/ffm invoke: ${response.errorCode}: ${response.errorMessage}`);
     const result = c.prw.PRW.getSizePrefixedRootAsPRW(new fb.ByteBuffer(new Uint8Array(response.outputs.find((f) => f.portId === 'response').payload))).unpack().EXECUTION_RESULT;
     if (!result?.SAMPLES || result.SAMPLES.length !== epochs.length) throw new Error('FFM did not return all epochs');

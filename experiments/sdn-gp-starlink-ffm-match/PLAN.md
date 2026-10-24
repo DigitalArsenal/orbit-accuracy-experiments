@@ -216,3 +216,40 @@ sphere has none); and for `tess2`, `tess6` and `order14` against `full`: the alo
 LEO spheres) needs a fixed-BTERM option that `propagator/sgp4-xp fit` does not have and the spheres' masses and areas are not in
 the archive; it is replaced by the BTERM-against-true-B_eff comparison above, which tests the same claim (the fitted drag carries
 gravity) on truths whose B is known exactly.
+
+### A7b - 2026-10-24, before any window of A7 was read: corrections to A7, added arms, and the decision rules
+
+Corrections. (1) The ISS source of A7 named the 2026-10-21 daily file but the header values of the registered file. M1 to M3 use
+the registered ISS source of A1 (`hac/nasa-iss-oem/20261009`, created 2026-10-07, EME2000, 4 min): the 12 daily windows that
+section 3 of A1 registers (start 2026-10-07T12:00 + k days, k = 0 to 11, four days of states after each), start state turned
+EME2000 -> GCRF by `foundation/frames`, Cd*A/m = 0.95 x 1273.21 / 470200 = 2.5727e-3 m2/kg and Cr*A/m = 0 (SOLAR_RAD_AREA = 0.00),
+both from that header. (2) LAGEOS-1 and LAGEOS-2 are not re-dated. FFM refuses a space-weather input when drag is off, so a
+drag-off arc is given none and needs no weather rows; the registered Earth orientation begins 2026-07-15, so the weekly ILRS
+orbits used are the six that begin after it (the orbits dated 260725, 260801, 260808, 260815, 260822 and 260829 in the archive,
+first state of each, 12 windows in all), Cr*A/m = 7.9e-4 m2/kg, drag off.
+
+Added arms (cheap, registered here so that no window selects them). (a) `order15` (MAXIMUM_ORDER 15): `order15` minus `order14` is
+the m = 15 terms alone, the 15:1 resonance of the 53 degree shell. (b) `full-nodrag` and `zonal-nodrag` (drag off, no weather
+input, SRP as in the truth) for the Starlinks and the ISS: a truth with no drag at all, so any BTERM the fit returns is the
+gravity (and the small SRP) it absorbed. The laser-ranged LEO spheres' physical drag is not in the archive; these two arms and
+LAGEOS (drag off in every variant) are the test of the claim that the fitted drag carries tesseral gravity. (c) SGP4 with B*
+fixed at the true value, 0, on every drag-free truth (`full-nodrag`, `zonal-nodrag`, and LAGEOS `full` and `zonal`): the
+`fit_elements` options `fitBstar: false, bstar: 0` of gp-error-model, 24 h fit, same held-out days. This is the M3 test (B fixed
+at the physical value) for SGP4 in place of XP, whose `fit` has no such option. (d) Long arcs for the 15:1 term: the Starlinks'
+`full`, `order14` and `order15` propagated for 10 days (to the last space-weather row, 2026-11-02), difference series scanned for
+a period of 2 to 12 days.
+
+Reporting. Starlink results are grouped by the stratum's inclination digit (inc0 below 48 degrees, inc1 48 to 60, inc2 60 to 85,
+inc3 85 and above) and by the SGP4 fit's mean motion; the predicted floors of DESIGN 2d.3 are compared with the group that
+matches them: inc1 with mean motion 15.0 to 15.2 rev/day for the 550 km shell (53.05 degrees), the ISS windows, and LAGEOS-1 (and
+LAGEOS-2, reported beside it). The tesseral share of a floor is sqrt(floor(full)^2 - floor(zonal)^2) per window, in-track
+component of the 24 h XP fit, then the median over windows. Medians and 90th percentiles over windows, as in the tables.
+
+Decision rules, fixed here. The finding of DESIGN 2d.4 is supported when all three hold. (1) Floor: the median tesseral share
+of the XP in-track fit RMS is within 25 % of the predicted 384 m (inc1, 15.0 to 15.2 rev/day), 394 m (ISS) and 110 m (LAGEOS-1)
+in the ISS and LAGEOS-1 groups and in the Starlink group (or, if that group has fewer than 6 windows, the whole inc1 stratum with
+the prediction scaled by the 2d.3 sin^2 i law only in the text, not in the test). (2) Absorption: on the drag-free truths the
+median |BTERM| of XP on `full-nodrag` is at least three times that on `zonal-nodrag`, and SGP4 with B* fixed at 0 has a lower
+median day-3 error than SGP4 with B* fitted on `full-nodrag` and on LAGEOS `full`. (3) Fit length: the quadrature difference of
+XP's median day-3 error on `tess2` and on `zonal` is at least 25 % lower for the 21.7 h fit than for the 24 h fit in the inc1 and
+ISS groups. A rule that fails is reported as failed, with the numbers.
