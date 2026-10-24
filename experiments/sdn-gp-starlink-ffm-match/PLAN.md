@@ -496,3 +496,78 @@ arc 20.6 / 37.9 / 67.2, after it found its first scorer had dropped states with 
 proper name in a credit line (GFZ Helmholtz Center, IERS Earth Orientation Center) or a verbatim provider quotation in the registry is rewritten, in a commit of its own that changes spelling only.
 
 5. Report: per regime, days 1 / 2 / 3 (cruise 1 / 3 / 7 / 15), against the rows of ee5dccaa17a8; E2E (`run.mjs --check`) with a segment-window replay added.
+
+### A10 - 2026-10-24, before any row of build 35cd83a2b714 or of the event measurements (M22, M23, M28, M24, M25) was read: the seventh build, maneuvers, the reentry hand-off, ISS and lunar maneuver detection
+
+Coordinator, 2026-10-24: side B fixed the four findings of A9h (segment COMMENTs give the length and the start in the arc; Earth fits above 100 km RMS are refused as fit-implausible; for e > 0.5 the span
+defaults to 24 h and extends only on a 30 % better tail, never past a 36 h period; the Earth moves are intended: SRP shares amendment 3's shadow sequence) and added the methods `maneuver`,
+`detect_maneuvers`, `reentry` and `launch_set`. Dist 35cd83a2b714 (the coordinator names side B's head c4646ff; the store snapshot records the HEAD of side B's tree at the copy, 9c1d5ee, a later commit; the wasm
+is identified by its hash). Only the module's manifest and README are used for the interface, none of its source or tests. Disclosure: the log of side B's tree shows a later commit (c5d23da, work in progress)
+whose subject line carries its own events figures, and the README paragraph on DESIGN 5 lists figures from side B's own osculating (Cowell) integration; both were seen before this registration and no choice below
+uses a figure of either. The truths of M22, M23 and M28 are FFM-1 (propagator/ffm), not side B's integration, as the coordinator asked. Interface probes (one `maneuver` impulse, one finite burn, one `reentry`, one
+`detect_maneuvers` call, on one satellite and one decay, to learn the call and the outputs) are run before the run; their rows are discarded and the run starts from empty row files.
+
+1. Re-score. Every job of `sdngp-run.mjs` runs again on build 35cd83a2b714 with the rules of A9b to A9h (65 jobs, a store snapshot copy, rows in rows/sdngp/35cd83a2b714/). The coordinator expects the HEO default-span
+rows to change and everything else to match 54b069014557. Reported as counts: the windows both builds ran; how many are identical to the last digit (fit RMS and every held-out day), registered 24 h rows and
+default-span rows separately; the sources that differ with the median and largest change of the day-1 / 2 / 3 error; the fit-implausible refusals (new, by source and name); the HEO default-span rows (span, errors) beside
+those of 54b069014557. The cislunar and heliocentric packs and the Moon-centered windows are re-scored as in A9h.
+
+2. M22, the impulse map (DESIGN 5.5). Satellites: the registered Starlink truths in ascending NORAD order, positions 0, 5, 10, ... (239 registered: 48). Truth start t0 is the registered truth's epoch, the fit end
+t_b = t0 + 24 h. For every satellite and case FFM-1 runs from the registered truth state at t_b - 60 s (sample 1439 of the registered file) with the satellite's registered ballistic and SRP terms (meta.fit.bEffM2Kg,
+meta.fit.crAm), the saved environment (the rows the registered truths used), the registered integrator (tolerance 1e-13, maximum step 120 s) and no other change. Cases: impulses of 1 mm/s, 10 mm/s, 100 mm/s,
+1 m/s and 10 m/s along each of U (radial), V (in-track, W x U) and W (along r x v) in FFM-1's RTN axes at t_b, planted as the typed request's IMPULSES (15), and the control (none): 16 per satellite. Samples every 300 s
+from t_b + 300 s to t_b + 72 h (864). The control must reproduce the registered truth: the largest position difference over its 864 samples is reported.
+SDN-GP: the fit of the G1 rows (the first 24 h of the registered truth at 60 s, declared span, the saved space-weather table, `fit_sdngp`), then `maneuver` with one $MNV (EVENT_START_TIME t_b, DELTA_VEL_U / V / W in km/s,
+no duration) and the same space-weather table; the post-burn set's TEME states at the 864 epochs by the batch entry, into GCRF by foundation/frames, as for the rows. The control is the fit itself. Score as the G1 rows:
+`pair_statistics` radial / in-track / cross-track (RTN of the truth), days (t_b + (k-1) d, t_b + k d], k = 1, 2, 3, 3D RMS. Second statistic, the response error, which removes the fit error common to both: the RMS over the
+day of |(x_SDN,case - x_SDN,control) - (x_FFM,case - x_FFM,control)| in GCRF. Reported per axis and magnitude: the median and maximum over satellites of the day-1 / 2 / 3 RMS; the excess over the control's RMS of the
+same satellite (case - control, km): median, 90th percentile, maximum; the response error (median, maximum); the no-maneuver rows of this build (day 1 / 2 / 3 medians of the same satellites) beside the control's; the
+counts refused by name. Nothing is thresholded; the coordinator's comparison is "against the no-maneuver rows".
+
+3. M23, finite burns. Satellites: positions 0, 10, 20, ... (24, a subset of M22's; the control is shared). Burns of 1, 5, 15, 30 and 60 min along each of U, V and W with total delta-v 0.1 and 1 m/s (30 cases). Truth
+in two stages, because FFM-1 integrates each sample of a burn arc from the arc's initial state: stage 1 from the sample at t_b - 60 s, a constant acceleration of delta-v / D with its direction fixed in the RTN axes
+(typed FINITE_BURNS, THRUST_LAW ACCELERATION, RTN_AXES, a specific impulse so large that the mass is constant), from t_b to t_e = t_b + D, one sample at t_e; stage 2 from that state without burn to t_b + 72 h with
+samples at t_b + k 300 s for every k with t_b + k 300 s >= t_e. SDN-GP arms: (A) `maneuver` with the finite burn ($MNV EVENT_START_TIME t_b, EVENT_END_TIME t_e, the total delta-v): the module's own map with the
+sinc(dL/2) loss; (B) `maneuver` with a centroid impulse ($MNV EVENT_START_TIME t_b + D/2, no duration, the same delta-v): without the loss. Scored as M22 on the samples at or after t_e (states inside the burn are not scored),
+days measured from t_b. Reported per duration, axis and delta-v: the excess over the control of A and of B (median, maximum over satellites), the ratio B / A of the excesses, and sinc(dL/2) with dL = n D from the fit's
+mean motion (printed beside them, not used).
+
+4. M28, the hand-off. Cells (12): circular orbits at 300 km altitude, B (Cd A / m) 0.005, 0.02 and 0.05 m2/kg x solar level low (F10.7 70, Ap 4, Kp 1.0), moderate (150, 12, 2.7) and high (230, 27, 4.0), constant
+daily rows with the 81-day F10.7 averages equal to F10.7 (the three solar levels are the coordinator's); and elliptical orbits with a 250 km perigee, e = 0.05 with B 0.02 and 0.05 and e = 0.15 with B 0.05, all at the
+moderate level (left out for their length: e = 0.05 with B 0.005, 759 days; e = 0.15 with B 0.02, 1,027 days, and with B 0.005, over 1,200 days; the calibration with FFM-1 alone, run before this registration, found 3.9 to
+191 days for the circular cells, 66 and 181 days for e = 0.05 with B 0.05 and 0.02, 407 days for e = 0.15 with B 0.05, and fixes only the choice of cells). Inclination 53 deg, RAAN, argument of perigee and anomaly 0
+(the state at perigee), epoch 2025-10-24T00:00Z, Cr A / m 0.02 m2/kg, FFM-1 full force as the registered truths (NRLMSISE-00 drag under the synthetic weather), one Earth-orientation row, the registered integrator, samples
+every 300 s, chunks of 10 days restarted from the last sample, to FFM-1's own stop (it refuses to integrate below 100 km geodetic altitude and names the epoch: T100, the first integration state below 100 km) or the cap.
+Nodes: per cell and level of 250, 230, 210, 200, 190, 180, 170, 160, 150, 140, 130 and 120 km, the first sample at which the revolution-mean perigee height (the mean over the previous nodal period of the osculating
+a (1 - e) minus 6378.137 km, osculating elements by foundation/orbits) is below the level; a node with less than 6 h of truth before it is dropped and counted. Truth quantities at a node: h_p, e (period means), the change
+of the period-mean a over the last period (da_rev, km), eps1 = 2 |da_rev| / H with H the NRLMSISE-00 density scale height of FFM-1's ATMOSPHERE_REQUEST (equator, local solar time 14 h, altitude h_p, the cell's F10.7 and Ap,
+H = 2 km / ln(rho(h_p - 1 km) / rho(h_p + 1 km))); the module's own H(h_p) is not exposed, so eps1 is an equivalent), and the module's criteria (README, 18) on them: C1 eps1 > 0.05, C2 h_p < 180 km, C3
+|da e_rev| / (a e) > 0.01 with e > 0.01. SDN-GP at a node: `fit_sdngp` on the truth up to the node (GCRF, 300 s states, from 120 h before the node or the start, USEABLE_STOP the node, no declared start: the module
+chooses its span) with the cell's synthetic space-weather table; the set's TEME states at 300 s steps to node + 12 h or T100, into GCRF, scored on the truth by `pair_statistics` in blocks (0, 3 h], (3, 6], (6, 9], (9, 12]
+after the node: 3D RMS and radial / in-track / cross-track. `reentry` on the same set with the same table: REENTRY_EPOCH (the module integrates to 80 km; FFM-1 stops at 100 km, so the module's epoch is expected later than T100
+by the descent between the altitudes; reported, not corrected), REENTRY_EPOCH_UNC, the window, ORBIT_LIFETIME and the epoch of the hand-off INITIAL_STATE; the hand-off state, when it is a TEME state, is also run by
+FFM-1 (the cell's true B, the cell's weather) to its own stop, which isolates the hand-off state's error from the set's B_eff. Reported: per cell T100 (days), capped or not, nodes fitted, refused (by name) and dropped; by
+level, pooled over the cells, the median, minimum and maximum of eps1, h_p, e, da_rev, the fit RMS and the four block errors, and the share of nodes with C1, C2 and C3 tripped on the truth; per cell, the first level at which each
+criterion trips on the truth, the first level at which the block-1 error exceeds 1 km and 10 km, and the level and lead before T100 of the module's hand-off (the epoch of INITIAL_STATE), counting the cells where a criterion
+precedes the error; REENTRY_EPOCH - T100 (hours, signed) and whether T100 lies in the window, by lead before T100 (over 48 h, 12 to 48 h, under 12 h).
+
+5. M24, ISS. The operator-ephemeris archive holds two NASA ISS OEM captures (2026-10-12 and 2026-10-23, 15 days each); the first carries an event table of docking, departure and launch events, all with delta-v 0.0, the second
+carries none: no reboost. Their states (J2000 in the file, every fifth, 300 s) go to TEME by foundation/frames and `detect_maneuvers` runs on 72 h windows every 24 h inside each file, with the saved weather table. With no
+reboost in the files every detection is a false alarm; reported: windows run, detections (epoch, delta-v, Lambda), and false alarms per object-year over the 30 object-days (with the 95 % upper bound for none, 3 / 0.082 per year).
+Detections of real reboosts and the errors of delta-v and epoch against the event table (TIG, DV, HA, HP) need an archive of past OEM headers, which the local archive does not hold; fetching the public NASA archive needs the
+coordinator's approval and a registry entry, and is asked for in the report. No raw ISS states are committed.
+
+6. M25, LRO and Danuri against the maneuver list. From the rows of this build for the 148 Moon-centered windows (A9h 2) and the committed truth-side list of A9f (`lunar-maneuvers.json`, unchanged): per window the
+module's treatment (whole arc, segment, refused by name) against whether the list has a maneuver between the window's fit start and the end of its third held-out day. Reported per body: the detection rate (windows with a
+listed maneuver treated as segment or refused), the false-alarm rate (windows without one treated so), the median and largest epoch error of a segment against the nearest listed epoch (the set's epoch minus
+USER_DEFINED_SDNGP_MANEUVER_BEFORE_SECONDS, the README's meaning of the parameter, read as it stands), and the medians of the held-out days by treatment. Reading the parameter as an epoch is an interpretation; if most
+detections are further than a day from every listed epoch, the epoch error is reported as not an epoch.
+
+7. Rows and runs. Truths of M22, M23 and M28 are generated once, independent of the build, and cached under <store>/events/ (FFM-1 only, no SDN-GP row read to build them). The SDN-GP scoring of each is a job of
+`sdngp-run.mjs` (sources m22, m23, m28, m24) with rows per build in rows/sdngp/<build>/m22.s*.jsonl and so on; a run that selects them with --only does not rewrite complete.json. Failures are rows with the refusal by name,
+never dropped. COMSPOC data are not involved. No raw operator, ISS or unlicensed states are committed; the committed results are aggregates.
+
+8. Spelling and report. American spelling in all generated text; the repository's US-spelling checker runs in report mode over the claimed files at the end and spelling changes are committed on their own. Report in 12 lines or fewer,
+measured numbers only: the re-score identity counts and the HEO default-span change; M22 (excess over the control, by magnitude and axis, days 1 / 2 / 3, against the no-maneuver rows); M23 (A against B by duration);
+M28 (criteria against error by level, the hand-off lead, the reentry epoch error); M24 and M25 as measured, or what is missing. E2E: `run.mjs --check` with an events replay (one M22 case, one M23 case, one M28 node on the pinned
+build against the stored rows).
