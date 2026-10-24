@@ -13,16 +13,6 @@
   "sdngpHeadlineBuild": "4e9c7690638b",
   "sdngpBuilds": [
     {
-      "build": "2eca1c8006a1",
-      "wasmSha256": "2eca1c8006a17dea59eab5393561c27e2ba371d0e00dd51de86821dfaee9fd49",
-      "sourceCommit": "05d527863e4e0c64c9f31f3159f4deef7ad05f30",
-      "sourceDirtyFiles": 6,
-      "firstUseUtc": "2026-10-24T04:28:38.733Z",
-      "builtSeenUtc": "2026-10-24T04:21:15.288Z",
-      "complete": false,
-      "starlink": null
-    },
-    {
       "build": "4e9c7690638b",
       "wasmSha256": "4e9c7690638bbd7c4a7c9a0f44be82287782e1236e0a65e77042fbb57eb60202",
       "sourceCommit": "39b059398049ce5933813af693d4e627d29e7797",
@@ -71,14 +61,14 @@
         "day1Km": 2.1844353375356627
       },
       "sdngp": {
-        "satellites": 12,
-        "fitRmsKm": 0.244512,
-        "errorKm": 2.367736355599588,
-        "day1Km": 0.5288946898809175,
+        "satellites": 100,
+        "fitRmsKm": 0.23710350000000002,
+        "errorKm": 2.9608720387426937,
+        "day1Km": 0.5797051962104817,
         "xpOnTheSame": {
-          "fitRmsKm": 0.6061045805,
-          "errorKm": 9.723804085000001,
-          "day1Km": 1.27922506
+          "fitRmsKm": 0.4796858855,
+          "errorKm": 8.831271115,
+          "day1Km": 1.3303675300000002
         }
       }
     },
@@ -96,14 +86,14 @@
         "day1Km": 0.8586381776171376
       },
       "sdngp": {
-        "satellites": 12,
-        "fitRmsKm": 0.28496200000000005,
-        "errorKm": 0.4890760988881979,
-        "day1Km": 0.3683508452265445,
+        "satellites": 100,
+        "fitRmsKm": 0.2603945,
+        "errorKm": 0.4997495471679387,
+        "day1Km": 0.35444709867237534,
         "xpOnTheSame": {
-          "fitRmsKm": 0.644747924,
-          "errorKm": 1.75936724,
-          "day1Km": 0.902116138
+          "fitRmsKm": 0.5061652525,
+          "errorKm": 1.5818044649999998,
+          "day1Km": 0.818746846
         }
       }
     },
@@ -121,14 +111,14 @@
         "day1Km": 0.7630305476537997
       },
       "sdngp": {
-        "satellites": 12,
-        "fitRmsKm": 0.29704600000000003,
-        "errorKm": 0.37171641659718874,
-        "day1Km": 0.37171641659718874,
+        "satellites": 100,
+        "fitRmsKm": 0.2718005,
+        "errorKm": 0.37173428293645217,
+        "day1Km": 0.37173428293645217,
         "xpOnTheSame": {
-          "fitRmsKm": 0.6637777794999999,
-          "errorKm": 0.754213904,
-          "day1Km": 0.754213904
+          "fitRmsKm": 0.550155999,
+          "errorKm": 0.7693827555,
+          "day1Km": 0.7693827555
         }
       }
     }

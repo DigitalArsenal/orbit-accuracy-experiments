@@ -22,6 +22,11 @@
     "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source gnss-rapid,mgex-geo-rapid,mgex-igso-rapid",
     "node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs --source heo-tess",
     "node experiments/sdn-gp-starlink-ffm-match/comspoc-precise.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-slr.mjs --from 2026-10-08 --to 2026-10-24 --weeks 260912,260919,260926,261003",
+    "node experiments/sdn-gp-starlink-ffm-match/slr-convert.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source slr-low-current,slr-high-current",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs)",
+    "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --arm sdngp --shard k/3",
     "node experiments/sdn-gp-starlink-ffm-match/horizons-packs.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack <pack> --start <ISO> --fit-hours <h> --predicted <states.oem>",
@@ -30,10 +35,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "708843d2c48cc99c2e783ca6ed9e19a144b34c483a5edf0c650ee6a903b93feb",
+  "planSha256": "933045565ffd10895dfef4dbe4115e21efd8581ab4976b0af964871d5a139859",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "eafabfe3a4f946a86dafde006e7db7a155d7af30"
+    "commit": "f2d21c3bf83746f67ae32e017179f2a1c202fb06"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -232,10 +237,10 @@
   ],
   "a8Sources": {
     "jplHorizons": {
-      "files": 16,
-      "setSha256": "6c96ab012055cf06117831793d7d36cc939030601f6dcd8e648f5fb050f42223",
+      "files": 28,
+      "setSha256": "5830c03cecad89c2e8df2609a603de1a77e85e1254f345e49442bf8ace025818",
       "firstRetrievedUtc": "2026-10-24T03:23:32.532Z",
-      "lastRetrievedUtc": "2026-10-24T03:25:17.826Z"
+      "lastRetrievedUtc": "2026-10-24T04:05:32.803Z"
     },
     "mastTess": {
       "files": 21,
@@ -248,7 +253,26 @@
       "setSha256": "8a537ec867a84ad1bd0017b7be9ec8859faa38236159dabf0e7ccbecafe25f0d",
       "firstRetrievedUtc": "2026-10-24T03:31:52.893Z",
       "lastRetrievedUtc": "2026-10-24T03:33:08.245Z"
+    },
+    "ilrsCddis": {
+      "files": 106,
+      "setSha256": "313d0cabbde68cfa3af61a92bf12f2eb3a6f4b5626b2c5e0d65b59d5948fe891",
+      "firstRetrievedUtc": "2026-10-24T04:08:46.465Z",
+      "lastRetrievedUtc": "2026-10-24T04:14:21.335Z"
     }
+  },
+  "sdngp": {
+    "headlineBuild": "4e9c7690638b",
+    "builds": [
+      {
+        "build": "4e9c7690638b",
+        "wasmSha256": "4e9c7690638bbd7c4a7c9a0f44be82287782e1236e0a65e77042fbb57eb60202",
+        "sourceCommit": "39b059398049ce5933813af693d4e627d29e7797",
+        "sourceUncommittedFiles": 1,
+        "firstUseUtc": "2026-10-24T04:28:54.951Z",
+        "complete": true
+      }
+    ]
   },
   "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
 }

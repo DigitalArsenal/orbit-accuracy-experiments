@@ -276,7 +276,6 @@ Starlink, FFM-propagated truth, the windows each build fitted (median 3D km; fit
 
 | Build (wasm SHA-256 prefix) | Side-B source commit | Uncommitted files | Build first seen (UTC) | Complete | Starlink windows fitted | Fit RMS | Day 1 | Day 2 | Day 3 |
 | --- | --- | --: | --- | --- | --: | --: | --: | --: | --: |
-| 2eca1c8006a1 | 05d52786 | 6 | 2026-10-24T04:21 | no | 0 |  |  |  |  |
 | 4e9c7690638b | 39b05939 | 1 | 2026-10-24T04:28 | yes | 239 | 0.236 | 0.655 | 1.786 | 3.744 |
 
 ## 3. Radial / in-track / cross-track split (km, median of per-window component RMS)
@@ -624,9 +623,9 @@ SDN-GP on the same satellites (amendment A9c; the XP columns here are the median
 
 | Fit length | Satellites | SDN-GP fit RMS | SDN-GP error, 72-96 h | SDN-GP error, first day after the fit | XP fit RMS | XP error, 72-96 h | XP error, first day after the fit |
 | --- | --: | --: | --: | --: | --: | --: | --: |
-| 24 h | 12 | 0.245 | 2.368 | 0.529 | 0.606 | 9.724 | 1.279 |
-| 48 h | 12 | 0.285 | 0.489 | 0.368 | 0.645 | 1.759 | 0.902 |
-| 72 h | 12 | 0.297 | 0.372 | 0.372 | 0.664 | 0.754 | 0.754 |
+| 24 h | 100 | 0.237 | 2.961 | 0.580 | 0.480 | 8.831 | 1.330 |
+| 48 h | 100 | 0.260 | 0.500 | 0.354 | 0.506 | 1.582 | 0.819 |
+| 72 h | 100 | 0.272 | 0.372 | 0.372 | 0.550 | 0.769 | 0.769 |
 
 ## 9. Does the zero bound or the iteration cap bias the FFM-Starlink truth? (amendment A6)
 
