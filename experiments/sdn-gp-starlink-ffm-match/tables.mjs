@@ -195,19 +195,23 @@ export function build() {
 
   // held out against the first hours of newer SpaceX files (newer.mjs)
   const newerRows = readJsonl(path.join(store, 'rows/newer.jsonl'));
-  const newer = newerRows.length ? {
-    satellites: newerRows.length, horizonHours: { min: quantile(newerRows.map((r) => r.horizonHours), 0), median: quantile(newerRows.map((r) => r.horizonHours), 0.5), max: quantile(newerRows.map((r) => r.horizonHours), 1) },
-    newestFileStart: newerRows.map((r) => r.newerStartUtc).sort().at(-1),
+  const summarizeNewer = (rows) => ({
+    rows: rows.length, satellites: new Set(rows.map((r) => r.norad)).size,
+    horizonHours: { min: quantile(rows.map((r) => r.horizonHours), 0), median: quantile(rows.map((r) => r.horizonHours), 0.5), max: quantile(rows.map((r) => r.horizonHours), 1) },
+    newestFileStart: rows.map((r) => r.newerStartUtc).sort().at(-1),
     arms: ['spacexOld', 'ffm', 'xp', 'sgp4', 'comspoc'].map((arm) => {
-      const list = newerRows.filter((r) => r.arms[arm]);
+      const list = rows.filter((r) => r.arms[arm]);
       return { arm, n: list.length, median: quantile(list.map((r) => r.arms[arm].rmsKm), 0.5), p90: quantile(list.map((r) => r.arms[arm].rmsKm), 0.9), inTrackShare: quantile(list.map((r) => (r.arms[arm].ric[1] ** 2) / (r.arms[arm].ric.reduce((a, x) => a + x * x, 0) || 1)), 0.5) };
     }),
     ffmByGroup: ['clean', 'bound', 'decay', 'capped'].map((g) => {
       const pick = (r) => (r.bEffAtZeroBound ? 'bound' : r.bEff > 0.5 ? 'decay' : r.converged ? 'clean' : 'capped');
-      const list = newerRows.filter((r) => pick(r) === g);
+      const list = rows.filter((r) => pick(r) === g);
       return { group: g, n: list.length, median: quantile(list.map((r) => r.arms.ffm.rmsKm), 0.5), p90: quantile(list.map((r) => r.arms.ffm.rmsKm), 0.9), spacexOldMedian: quantile(list.filter((r) => r.arms.spacexOld).map((r) => r.arms.spacexOld.rmsKm), 0.5) };
     }),
-  } : null;
+  });
+  // one block per 8 h of horizon (the files SpaceX serves are a few hours apart, so a re-run adds a later horizon)
+  const newerBin = (r) => Math.floor(r.horizonHours / 8) * 8;
+  const newer = newerRows.length ? { ...summarizeNewer(newerRows), bins: [...new Set(newerRows.map(newerBin))].sort((a, c) => a - c).map((lo) => ({ lo, hi: lo + 8, ...summarizeNewer(newerRows.filter((r) => newerBin(r) === lo)) })) } : null;
 
 
   const packDir = path.join(store, 'pack');
@@ -367,13 +371,17 @@ export function markdown(t) {
   L.push('How to read it, in numbers: the registered rows keep the 12-iteration truth. The `clean` row of section 1b (converged, B_eff between 0 and 0.5) is the population on which the tables are least affected by the two limits; compare its day-1 and day-3 medians with the pooled Starlink row. The zero bound is a contract of the T1a module (`analysis/od fit_ffm`, B_eff >= 0): a satellite whose forecast contains net thrust beyond its drag gets a drag-free trajectory, so its truth is easy to match (lower XP and SGP4 errors) and does not follow the operator; those 52 fits are reported apart, not corrected here.', '');
   const nw = t.newer;
   if (nw) {
+    const armName = (a) => (a === 'comspoc' ? 'COMSPOC Spacebook XP (local scoring only)' : a === 'spacexOld' ? 'SpaceX earlier forecast' : a === 'ffm' ? 'FFM-1 from the registered fit' : a === 'xp' ? 'SGP4-XP fitted to the FFM truth' : 'SGP4 fitted to the FFM truth');
     L.push('## 10. Held out against the first hours of newer SpaceX files', '',
-      `${nw.satellites} fitted Starlinks, each scored against the first three hours (every ten minutes) of the file SpaceX served after the file of the registered fit; the newest of them starts ${nw.newestFileStart.slice(0, 16)}Z. The horizon from the start of the registered fit to those hours is ${f(nw.horizonHours.min, 1)} to ${f(nw.horizonHours.max, 1)} h (median ${f(nw.horizonHours.median, 1)} h), so these are early looks; the scoring is re-run with \`newer.mjs\` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h). Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).`, '',
-      '| Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |', '| --- | --: | --: | --: | --: |',
-      ...nw.arms.map((a) => `| ${a.arm === 'comspoc' ? 'COMSPOC Spacebook XP (local scoring only)' : a.arm === 'spacexOld' ? 'SpaceX earlier forecast' : a.arm === 'ffm' ? 'FFM-1 from the registered fit' : a.arm === 'xp' ? 'SGP4-XP fitted to the FFM truth' : 'SGP4 fitted to the FFM truth'} | ${a.n} | ${f(a.median)} | ${f(a.p90)} | ${a.n ? f(a.inTrackShare, 2) : ''} |`), '',
-      'FFM-1 against the newer file by truth-quality group (median / 90th percentile, km; SpaceX\'s earlier forecast median beside it):', '',
-      '| Group | Satellites | FFM-1 | SpaceX earlier forecast |', '| --- | --: | --- | --: |',
-      ...nw.ffmByGroup.filter((g) => g.n).map((g) => `| ${g.group} | ${g.n} | ${f(g.median)} / ${f(g.p90)} | ${f(g.spacexOldMedian)} |`), '');
+      `${nw.satellites} fitted Starlinks (${nw.rows} scorings), each scored against the first three hours (every ten minutes) of a file SpaceX served after the file of the registered fit; the newest starts ${nw.newestFileStart.slice(0, 16)}Z. The horizon from the start of the registered fit to those hours is ${f(nw.horizonHours.min, 1)} to ${f(nw.horizonHours.max, 1)} h; the scoring is re-run with \`newer.mjs\` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h), and each pass is reported at its own horizon. Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).`, '');
+    for (const bin of nw.bins) {
+      L.push(`### Horizon ${bin.lo} to ${bin.hi} h (${bin.satellites} Starlinks, median ${f(bin.horizonHours.median, 1)} h)`, '',
+        '| Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |', '| --- | --: | --: | --: | --: |',
+        ...bin.arms.map((a) => `| ${armName(a.arm)} | ${a.n} | ${f(a.median)} | ${f(a.p90)} | ${a.n ? f(a.inTrackShare, 2) : ''} |`), '',
+        'FFM-1 against the newer file by truth-quality group (median / 90th percentile, km; SpaceX\'s earlier forecast median beside it):', '',
+        '| Group | Satellites | FFM-1 | SpaceX earlier forecast |', '| --- | --: | --- | --: |',
+        ...bin.ffmByGroup.filter((g) => g.n).map((g) => `| ${g.group} | ${g.n} | ${f(g.median)} / ${f(g.p90)} | ${f(g.spacexOldMedian)} |`), '');
+    }
   } else L.push('## 10. Held out against the first hours of newer SpaceX files', '', 'No newer file scored yet; run `newer.mjs` (re-run after 2026-10-24 08:00Z for the registered prospective files).', '');
 
 

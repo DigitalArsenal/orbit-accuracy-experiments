@@ -4,7 +4,7 @@
 // truth, in EME2000. Scored against that truth: FFM-1 from the registered fit (a module call at those epochs), SGP4 and SGP4-XP
 // fitted to the first 24 h of that FFM truth, SpaceX's own earlier forecast where the epochs coincide, and, for the same-day
 // objects, COMSPOC's XP set (local scoring only). Output: <store>/rows/newer.jsonl, statistics only. Re-run as newer files arrive.
-//   node experiments/sdn-gp-starlink-ffm-match/newer.mjs [--limit N] [--daily-only] [--after 2026-10-24T08:00:00Z]
+//   node experiments/sdn-gp-starlink-ffm-match/newer.mjs [--limit N] [--daily-only] [--after 2026-10-24T08:00:00Z] [--shard k/n]
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -35,7 +35,8 @@ const done = new Map((fs.existsSync(rowsFile) ? fs.readFileSync(rowsFile, 'utf8'
 const names = await manifest();
 const metas = fs.readdirSync(truthRoot).filter((n) => /^\d+\.json$/.test(n)).map((n) => read(path.join(truthRoot, n)))
   .sort((a, c) => (a.population === 'daily' ? 0 : 1) - (c.population === 'daily' ? 0 : 1) || a.norad - c.norad)
-  .filter((m) => !args['daily-only'] || m.population === 'daily');
+  .filter((m) => !args['daily-only'] || m.population === 'daily')
+  .filter((m, i) => !args.shard || i % Number(args.shard.split('/')[1]) === Number(args.shard.split('/')[0])); // --shard k/n: every n-th satellite, so several processes can share the paced fetcher
 const toEme = async (iso8601, state) => transformState(frames, 'GCRF', 'EME2000', iso8601, state);
 let scored = 0, none = 0, tried = 0;
 const limit = args.limit ? Number(args.limit) : Infinity;

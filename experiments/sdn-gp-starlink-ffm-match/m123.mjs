@@ -97,7 +97,31 @@ async function differences(baselines, a, b, every, period) {
   const inTrack = series.map((e) => e[1] * 1000);
   const rms = (c) => Math.sqrt(series.reduce((s, e) => s + (e[c] * 1000) ** 2, 0) / series.length);
   const fit = quadraticPlusSinusoid(t, inTrack, period);
-  return { n: series.length, rtnRmsM: [rms(0), rms(1), rms(2)], inTrackEndM: inTrack.at(-1), inTrackMaxAbsM: Math.max(...inTrack.map(Math.abs)), sinusoid: fit ? { periodDays: fit.period, amplitudeM: fit.amplitude, rmsResidualM: fit.rmsResidual, rmsQuadraticResidualM: fit.rmsQuadraticResidual } : null };
+  const atDaysM = Object.fromEntries([1, 2, 3, 4, 5, 7, 10].map((d) => [d, inTrack[Math.round((d * DAY) / step)]]).filter(([, v]) => Number.isFinite(v)));
+  return { n: series.length, atDaysM, rtnRmsM: [rms(0), rms(1), rms(2)], inTrackEndM: inTrack.at(-1), inTrackMaxAbsM: Math.max(...inTrack.map(Math.abs)), sinusoid: fit ? { periodDays: fit.period, amplitudeM: fit.amplitude, rmsResidualM: fit.rmsResidual, rmsQuadraticResidualM: fit.rmsQuadraticResidual } : null };
+}
+
+/** The 10-day arcs of full, order14 and order15 and the difference series of the 15th order (A7b d). */
+async function longArcs(w, ctx) {
+  const { modules, context, baselines } = ctx;
+  const t0Iso = iso(w.t0), state = w.state.map((x) => x * 1000), out = {}, lt = {};
+  const longEpochs = grid(w.t0, LONG_DAYS * 86400, 300);
+  for (const name of LONG_VARIANTS) {
+    try { lt[name] = kmLines((await propagate(modules, context, { epoch: t0Iso, state, cdAm: w.cdAm, crAm: w.crAm, epochs: longEpochs, integrator: config.truth.integrator, forces: { ...VARIANTS[name], ...w.baseForces } })).samples); } catch (error) { out[name] = { error: String(error.message).slice(0, 200) }; }
+  }
+  for (const [a, b] of LONG_PAIRS) {
+    if (!lt[a] || !lt[b]) continue;
+    try { out[`${a}-${b}`] = await differences(baselines, lt[a], lt[b], 1, { minPeriod: 2, maxPeriod: 12, steps: 100 }); } catch (error) { out[`${a}-${b}`] = { error: String(error.message).slice(0, 200) }; }
+  }
+  return out;
+}
+
+/** --long-only: recompute only the long arcs of the rows already written (adds the raw differences at whole days). */
+async function relong(w, ctx) {
+  const file = path.join(OUT, w.family, `${w.id}.json`);
+  const row = read(file);
+  row.long = await longArcs(w, ctx);
+  write(file, row);
 }
 
 /** opts.variants / opts.fits restrict the work (the E2E replays two variants at 24 h); opts.write false returns the row without writing it. */
@@ -140,17 +164,7 @@ export async function processWindow(w, ctx, opts = {}) {
     if (!traj[a] || !traj[b]) continue;
     try { row.pairs[`${a}-${b}`] = await differences(baselines, traj[a], traj[b], 5, { minPeriod: 8 / 24, maxPeriod: 16 / 24, steps: 160 }); } catch (error) { row.pairs[`${a}-${b}`] = { error: String(error.message).slice(0, 200) }; }
   }
-  if (w.long && opts.long !== false) { // the 15:1 term over 10 days (A7b d)
-    const longEpochs = grid(w.t0, LONG_DAYS * 86400, 300);
-    const lt = {};
-    for (const name of LONG_VARIANTS) {
-      try { lt[name] = kmLines((await propagate(modules, context, { epoch: t0Iso, state, cdAm: w.cdAm, crAm: w.crAm, epochs: longEpochs, integrator: config.truth.integrator, forces: { ...VARIANTS[name], ...w.baseForces } })).samples); } catch (error) { row.long[name] = { error: String(error.message).slice(0, 200) }; }
-    }
-    for (const [a, b] of LONG_PAIRS) {
-      if (!lt[a] || !lt[b]) continue;
-      try { row.long[`${a}-${b}`] = await differences(baselines, lt[a], lt[b], 1, { minPeriod: 2, maxPeriod: 12, steps: 100 }); } catch (error) { row.long[`${a}-${b}`] = { error: String(error.message).slice(0, 200) }; }
-    }
-  }
+  if (w.long && opts.long !== false) row.long = await longArcs(w, ctx); // the 15:1 term over 10 days (A7b d)
   if (opts.write !== false) write(path.join(OUT, w.family, `${w.id}.json`), row);
   return row;
 }
@@ -172,15 +186,16 @@ async function worker(id) {
   for (const w of tasks) {
     if (freeGiB() < MIN_FREE_GIB) { console.error(`worker ${id}: disk under ${MIN_FREE_GIB} GiB free, stopping`); break; }
     if (fs.existsSync(path.join(OUT, 'stop'))) break;
-    if (fs.existsSync(path.join(OUT, w.family, `${w.id}.json`))) continue;
-    const claim = path.join(claimDir, `${w.family}-${w.id}`);
+    const rowFile = path.join(OUT, w.family, `${w.id}.json`);
+    if (args['long-only'] ? !w.long || !fs.existsSync(rowFile) || read(rowFile).long?.['order15-order14']?.atDaysM : fs.existsSync(rowFile)) continue;
+    const claim = path.join(claimDir, `${args['long-only'] ? 'long-' : ''}${w.family}-${w.id}`);
     try { fs.mkdirSync(claim); } catch {
       if (Date.now() - fs.statSync(claim).mtimeMs < 30 * 60e3) continue;
       fs.utimesSync(claim, new Date(), new Date());
     }
     if (limit-- <= 0) break;
     const started = Date.now();
-    try { await processWindow(w, { modules, context, baselines }); console.error(`worker ${id}: ${w.family} ${w.id} ok in ${((Date.now() - started) / 1000).toFixed(0)} s`); } catch (error) { console.error(`worker ${id}: ${w.family} ${w.id} FAILED ${String(error.message).slice(0, 300)}`); }
+    try { await (args['long-only'] ? relong(w, { modules, context, baselines }) : processWindow(w, { modules, context, baselines })); console.error(`worker ${id}: ${w.family} ${w.id} ok in ${((Date.now() - started) / 1000).toFixed(0)} s`); } catch (error) { console.error(`worker ${id}: ${w.family} ${w.id} FAILED ${String(error.message).slice(0, 300)}`); }
   }
   await baselines.close();
   await frames.destroy();

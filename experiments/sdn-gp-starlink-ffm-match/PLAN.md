@@ -263,3 +263,12 @@ BTERM from 23 h, so a 21.7 h fit differs from a 24 h fit in two ways at once: th
 fit lengths are 21.7 h, 24 h and 34.2 h for SGP4 and SGP4-XP, and the M-run truths are 120 h long (the 34.2 h fit plus three
 held-out days is 106.2 h). The decision rules of A7b are unchanged and are evaluated on 21.7 h against 24 h as written; 34.2 h
 is reported beside them. The Starlink windows, the ISS windows and the LAGEOS windows of A7 and A7b are unchanged.
+
+### A7d - 2026-10-24, after 40 of the 156 windows were read: raw differences of the long arcs
+
+On the first Starlink windows the sinusoid scanned over 2 to 12 days for the 15th-order difference returned periods at the end of the
+scan and amplitudes of several kilometres, which is a quadratic-like drift and not a 6-day oscillation, so the fit is not
+informative for the satellites at the resonance. The long arcs (A7b d) are therefore also reported by the raw in-track
+difference at 1, 2, 3, 4, 5, 7 and 10 days from the start (median of the absolute value over a group). The rows written before this
+addition get the new numbers from a second pass of `m123.mjs --long-only`, which recomputes only the long arcs of every Starlink
+window; nothing else about the windows, arms or rules changes.

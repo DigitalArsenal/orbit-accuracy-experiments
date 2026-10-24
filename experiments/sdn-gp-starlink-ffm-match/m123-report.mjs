@@ -80,7 +80,7 @@ function summarize(g, rs) {
   }
   out.long = {};
   for (const key of ['order15-order14', 'full-order14']) {
-    out.long[key] = { amplitudeM: stat(rs, (r) => r.long?.[key]?.sinusoid?.amplitudeM), periodD: stat(rs, (r) => r.long?.[key]?.sinusoid?.periodDays), maxAbsM: stat(rs, (r) => r.long?.[key]?.inTrackMaxAbsM), endM: stat(rs, (r) => r.long?.[key]?.inTrackEndM) };
+    out.long[key] = { absDay: Object.fromEntries([1, 2, 3, 4, 7, 10].map((d) => [d, stat(rs, (r) => Math.abs(r.long?.[key]?.atDaysM?.[d]))])), amplitudeM: stat(rs, (r) => r.long?.[key]?.sinusoid?.amplitudeM), periodD: stat(rs, (r) => r.long?.[key]?.sinusoid?.periodDays), maxAbsM: stat(rs, (r) => r.long?.[key]?.inTrackMaxAbsM), endM: stat(rs, (r) => r.long?.[key]?.inTrackEndM) };
   }
   out.fitLength = {};
   for (const l of ['h21_7', 'h24', 'h34_2']) {
@@ -90,7 +90,7 @@ function summarize(g, rs) {
       for (const v of ['full', 'tess2', 'zonal', 'full-nodrag', 'zonal-nodrag']) {
         out.fitLength[l][x][v] = { day1: stat(rs, (r) => dayKm(arm(r, v, l, x), 1)), day3: stat(rs, (r) => dayKm(arm(r, v, l, x), 3)), bterm: x === 'xp' ? { nonZero: rs.filter((r) => finite(arm(r, v, l, x)?.bterm)).length ? rs.filter((r) => arm(r, v, l, x)?.bterm > 0).length / rs.filter((r) => finite(arm(r, v, l, x)?.bterm)).length : NaN, median: med(rs.map((r) => arm(r, v, l, x)?.bterm)) } : null };
       }
-      out.fitLength[l][x].j22Day3 = stat(rs, (r) => quad(dayKm(arm(r, 'tess2', l, x), 3), dayKm(arm(r, 'zonal', l, x), 3)));
+      out.fitLength[l][x].j22Day3 = { median: quad(out.fitLength[l][x].tess2.day3.median, out.fitLength[l][x].zonal.day3.median) }; // the quadrature difference of the group medians (A7b rule 3)
       out.fitLength[l][x].fullDay3 = stat(rs, (r) => dayKm(arm(r, 'full', l, x), 3));
     }
   }
@@ -98,7 +98,8 @@ function summarize(g, rs) {
   for (const v of ['full', 'zonal', 'full-nodrag', 'zonal-nodrag']) {
     out.absorption[v] = {
       xpBterm: { median: med(rs.map((r) => arm(r, v, 'h24', 'xp')?.bterm)), absMedian: med(rs.map((r) => Math.abs(arm(r, v, 'h24', 'xp')?.bterm))), nonZero: rs.filter((r) => arm(r, v, 'h24', 'xp')?.bterm > 0).length, n: rs.filter((r) => arm(r, v, 'h24', 'xp')).length },
-      xpAgom: { absMedian: med(rs.map((r) => Math.abs(arm(r, v, 'h24', 'xp')?.agom))) },
+      xpAgom: { absMedian: med(rs.map((r) => Math.abs(arm(r, v, 'h24', 'xp')?.agom))), nonZero: rs.filter((r) => arm(r, v, 'h24', 'xp')?.agom > 0).length },
+      xpNeither: rs.filter((r) => arm(r, v, 'h24', 'xp') && !(arm(r, v, 'h24', 'xp').bterm > 0) && !(arm(r, v, 'h24', 'xp').agom > 0)).length,
       sgp4Bstar: { absMedian: med(rs.map((r) => Math.abs(arm(r, v, 'h24', 'sgp4')?.bstar))), median: med(rs.map((r) => arm(r, v, 'h24', 'sgp4')?.bstar)) },
       sgp4FittedDay3: stat(rs, (r) => dayKm(arm(r, v, 'h24', 'sgp4'), 3)),
       sgp4FixedDay3: stat(rs, (r) => dayKm(sgp4Fixed(r, v), 3)),
@@ -109,6 +110,10 @@ function summarize(g, rs) {
   out.btermOverTrueB = {
     full: med(rs.map((r) => (r.bEff > 0 ? arm(r, 'full', 'h24', 'xp')?.bterm / r.bEff : NaN))),
     zonal: med(rs.map((r) => (r.bEff > 0 ? arm(r, 'zonal', 'h24', 'xp')?.bterm / r.bEff : NaN))),
+    changeAbs: med(rs.map((r) => (r.bEff > 0 ? Math.abs(arm(r, 'full', 'h24', 'xp')?.bterm - arm(r, 'zonal', 'h24', 'xp')?.bterm) / r.bEff : NaN))),
+    fullAtZero: rs.filter((r) => r.bEff > 0 && arm(r, 'full', 'h24', 'xp')?.bterm === 0).length,
+    fullAboveDouble: rs.filter((r) => r.bEff > 0 && arm(r, 'full', 'h24', 'xp')?.bterm > 2 * r.bEff).length,
+    n: rs.filter((r) => r.bEff > 0 && arm(r, 'full', 'h24', 'xp') && arm(r, 'zonal', 'h24', 'xp')).length,
   };
   return out;
 }
@@ -122,7 +127,11 @@ export function build() {
   const failed = rows.flatMap((r) => Object.entries(r.variants).filter(([, v]) => v.error).map(([k, v]) => ({ family: r.family, id: r.id, variant: k, error: v.error })));
   const get = (g) => summaries.find((s) => s.group === g);
   const rules = decide(get, groups);
-  return { generated: 'from <store>/m123', windows: rows.length, counts: Object.fromEntries(ORDER.map((g) => [g, groups[g].length])), determinism, failed: failed.length, failedList: failed.slice(0, 10), summaries, rules };
+  const bterm = Object.fromEntries(['h21_7', 'h24', 'h34_2'].map((l) => {
+    const fits = rows.flatMap((r) => Object.keys(r.variants ?? {}).map((v) => arm(r, v, l, 'xp'))).filter(Boolean);
+    return [l, { fits: fits.length, bterm: fits.filter((x) => x.bterm > 0).length, agom: fits.filter((x) => x.agom > 0).length }];
+  }));
+  return { generated: 'from <store>/m123', xpDragTerms: bterm, windows: rows.length, counts: Object.fromEntries(ORDER.map((g) => [g, groups[g].length])), determinism, failed: failed.length, failedList: failed.slice(0, 10), summaries, rules };
 }
 
 // The decision rules of A7b.
@@ -149,7 +158,7 @@ function decide(get, groups) {
   });
   out.push({ rule: '2 absorption', xpBterm: r2a, sgp4FixedBstar: r2b, pass: r2a.every((x) => x.pass) && r2b.every((x) => x.pass) });
   // (3) fit length: the J22 (tess2 minus zonal) share of the XP day-3 error falls by at least 25 % at 21.7 h
-  const r3 = [starGroup === 'starlink-550km' ? 'starlink-inc1' : 'starlink-inc1', 'iss'].map((g) => {
+  const r3 = ['starlink-inc1', 'iss'].map((g) => {
     const s = get(g);
     const a = s?.fitLength.h24.xp.j22Day3.median, b = s?.fitLength.h21_7.xp.j22Day3.median;
     return { group: g, h24: a, h21_7: b, h34_2: s?.fitLength.h34_2.xp.j22Day3.median, change: b / a - 1, pass: finite(a) && finite(b) && b <= 0.75 * a };
@@ -190,27 +199,48 @@ export function markdown(t) {
   L.push('| Group | A_22 predicted (m) | tess2 - zonal: amplitude (m) / period (h) | tess6 - zonal | full - zonal | residual after the fit, full - zonal (m) |', '| --- | --: | --- | --- | --- | --: |');
   for (const g of groups) { const x = s(g), a = PREDICTED[g]?.a22; const c = (k) => `${f(x.pairs[k].amplitudeM.median)} / ${f(x.pairs[k].periodH.median, 2)}`; L.push(`| ${LABEL[g]} | ${a ?? '-'} | ${c('tess2-zonal')} | ${c('tess6-zonal')} | ${c('full-zonal')} | ${f(x.pairs['full-zonal'].residualM.median)} |`); }
   L.push('', '### 11d. The 15th order (the 15:1 resonance of the 53 degree shell), 10-day arcs', '');
-  L.push('In-track difference of \`order15\` against \`order14\` (the m = 15 terms alone) and of \`full\` against \`order14\`, one state per 5 minutes, quadratic plus one sinusoid scanned from 2 to 12 days. DESIGN.md 2d.5 predicts 0.79 km at 6.1 days on the 550 km shell.', '');
-  L.push('| Group | order15 - order14: amplitude (m) / period (d) | largest \\|difference\\| in 10 days (m) | full - order14: amplitude (m) / period (d) |', '| --- | --- | --: | --- |');
-  for (const g of groups.filter((q) => q.startsWith('starlink'))) { const x = s(g); const c = (k) => `${f(x.long[k].amplitudeM.median)} / ${f(x.long[k].periodD.median, 1)}`; L.push(`| ${LABEL[g]} | ${c('order15-order14')} | ${f(x.long['order15-order14'].maxAbsM.median)} | ${c('full-order14')} |`); }
-
-  L.push('', '### 11e. Fit length (M2): the J22 share of the XP day-3 error', '');
-  L.push('J22 share = sqrt(D3(tess2)^2 - D3(zonal)^2) per window, then the median, km. XP returns BTERM = 0 for spans of 22 h or less, so 21.7 h closes the drag path as well; 34.2 h is the second zero of j_2 for the J22 period with the drag path open. Last columns: XP day-3 error of the full field, km.', '');
-  L.push('| Group | J22 share 21.7 h | 24 h | 34.2 h | full-field day 3: 21.7 h | 24 h | 34.2 h | SGP4 full-field day 3: 21.7 h | 24 h | 34.2 h |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |');
-  for (const g of groups) { const x = s(g); const j = (l) => f(x.fitLength[l].xp.j22Day3.median, 2), d = (l) => f(x.fitLength[l].xp.fullDay3.median, 2), q = (l) => f(x.fitLength[l].sgp4.fullDay3.median, 2); L.push(`| ${LABEL[g]} | ${j('h21_7')} | ${j('h24')} | ${j('h34_2')} | ${d('h21_7')} | ${d('h24')} | ${d('h34_2')} | ${q('h21_7')} | ${q('h24')} | ${q('h34_2')} |`); }
-
+  L.push('In-track difference of `order15` against `order14` (the m = 15 terms alone) and of `full` against `order14`, one state per 5 minutes from the same start state. Columns: the median absolute difference at 1, 2, 3, 4, 7 and 10 days (m), then a quadratic plus one sinusoid scanned from 2 to 12 days (amplitude m / period d; a period at the end of the scan means no clear period in 10 days). DESIGN.md 2d.5 predicts 0.79 km at 6.1 days on the 550 km shell.', '');
+  L.push('| Group | Windows | order15 - order14 at 1 / 2 / 3 / 4 / 7 / 10 days (m) | sinusoid | full - order14 at 3 / 10 days (m) |', '| --- | --: | --- | --- | --- |');
+  for (const g of groups.filter((q) => q.startsWith('starlink'))) {
+    const x = s(g), a = x.long['order15-order14'], b = x.long['full-order14'];
+    L.push(`| ${LABEL[g]} | ${a.absDay[1].n} | ${[1, 2, 3, 4, 7, 10].map((d) => f(a.absDay[d].median)).join(' / ')} | ${f(a.amplitudeM.median)} / ${f(a.periodD.median, 1)} | ${f(b.absDay[3].median)} / ${f(b.absDay[10].median)} |`);
+  }
+  L.push('', '### 11e. Fit length (M2): day 3 at 21.7, 24 and 34.2 h', '');
+  L.push('Median 3D RMS of held-out day 3 (km), cells read 21.7 h / 24 h / 34.2 h. J22 share = sqrt(tess2^2 - zonal^2) of the group medians. SGP4-XP returns BTERM = 0 for fit spans of 22 h or less, so 21.7 h closes the drag path as well as the J22 alias (a zero of j_2 for the J22 period); 34.2 h is the second zero of j_2 with the drag path open.', '');
+  const trio = (x, arm_, v) => ['h21_7', 'h24', 'h34_2'].map((l) => f(x.fitLength[l][arm_][v].day3.median, 2)).join(' / ');
+  const trioJ = (x, arm_) => ['h21_7', 'h24', 'h34_2'].map((l) => f(x.fitLength[l][arm_].j22Day3.median, 2)).join(' / ');
+  for (const [armName, title] of [['xp', 'SGP4-XP'], ['sgp4', 'SGP4']]) {
+    L.push(`${title}:`, '', '| Group | zonal | tess2 | full | J22 share | full-nodrag | zonal-nodrag |', '| --- | --- | --- | --- | --- | --- | --- |');
+    for (const g of groups) { const x = s(g); L.push(`| ${LABEL[g]} | ${trio(x, armName, 'zonal')} | ${trio(x, armName, 'tess2')} | ${trio(x, armName, 'full')} | ${trioJ(x, armName)} | ${g.startsWith('lageos') ? '-' : trio(x, armName, 'full-nodrag')} | ${g.startsWith('lageos') ? '-' : trio(x, armName, 'zonal-nodrag')} |`); }
+    L.push('');
+  }
+  L.push(`SGP4-XP fits (all windows and variants) with BTERM above 0: ${['h21_7', 'h24', 'h34_2'].map((l) => `${{ h21_7: '21.7', h24: '24', h34_2: '34.2' }[l]} h ${t.xpDragTerms[l].bterm} of ${t.xpDragTerms[l].fits}`).join(', ')}; with AGOM above 0: ${['h21_7', 'h24', 'h34_2'].map((l) => `${t.xpDragTerms[l].agom}`).join(', ')}.`);
   L.push('', '### 11f. Where the tesseral gravity goes (M3)', '');
   L.push('Drag-free truths (\`full-nodrag\`, \`zonal-nodrag\`; LAGEOS in every variant): any BTERM or B* the fit returns is absorbed gravity (and the small SRP). Median of the absolute fitted value over windows, 24 h fit. SGP4 with B* fixed at its true value, 0, is the M3 test in place of XP, whose `fit` has no fixed-B option; day 3 in km.', '');
-  L.push('| Group | Truth | XP BTERM (m2/kg), fits with BTERM > 0 | SGP4 B* fitted | SGP4 day 3, B* fitted | SGP4 day 3, B* fixed at 0 | SGP4 fit RMS (m), fitted / fixed |', '| --- | --- | --- | --: | --: | --: | --- |');
+  L.push('| Group | Truth | XP BTERM (m2/kg), fits with BTERM > 0 | XP AGOM (m2/kg), fits with AGOM > 0 | XP fits with neither | SGP4 B* fitted | SGP4 day 3, B* fitted | SGP4 day 3, B* fixed at 0 | SGP4 fit RMS (m), fitted / fixed |', '| --- | --- | --- | --- | --: | --: | --: | --: | --- |');
   for (const g of groups) {
     const x = s(g);
     for (const v of g.startsWith('lageos') ? ['full', 'zonal'] : ['full-nodrag', 'zonal-nodrag']) {
       const a = x.absorption[v];
-      L.push(`| ${LABEL[g]} | ${v} | ${a.xpBterm.absMedian === undefined || !finite(a.xpBterm.absMedian) ? '-' : a.xpBterm.absMedian.toExponential(2)}, ${a.xpBterm.nonZero} of ${a.xpBterm.n} | ${finite(a.sgp4Bstar.absMedian) ? a.sgp4Bstar.absMedian.toExponential(2) : '-'} | ${f(a.sgp4FittedDay3.median, 2)} | ${f(a.sgp4FixedDay3.median, 2)} | ${f(a.sgp4FittedFitM.median)} / ${f(a.sgp4FixedFitM.median)} |`);
+      L.push(`| ${LABEL[g]} | ${v} | ${a.xpBterm.absMedian === undefined || !finite(a.xpBterm.absMedian) ? '-' : a.xpBterm.absMedian.toExponential(2)}, ${a.xpBterm.nonZero} of ${a.xpBterm.n} | ${finite(a.xpAgom.absMedian) ? a.xpAgom.absMedian.toExponential(2) : '-'}, ${a.xpAgom.nonZero} of ${a.xpBterm.n} | ${a.xpNeither} of ${a.xpBterm.n} | ${finite(a.sgp4Bstar.absMedian) ? a.sgp4Bstar.absMedian.toExponential(2) : '-'} | ${f(a.sgp4FittedDay3.median, 2)} | ${f(a.sgp4FixedDay3.median, 2)} | ${f(a.sgp4FittedFitM.median)} / ${f(a.sgp4FixedFitM.median)} |`);
     }
   }
-  L.push('', 'With the true drag on (Starlink, B_eff from the operator fit), XP BTERM over the true B_eff, median over windows: ' + ['starlink', 'starlink-inc0', 'starlink-inc1', 'starlink-inc2', 'starlink-inc3'].filter((g) => s(g)).map((g) => `${LABEL[g]} full ${f(s(g).btermOverTrueB.full, 2)}, zonal ${f(s(g).btermOverTrueB.zonal, 2)}`).join('; ') + '.', '');
-  L.push('### 11g. Decision rules of A7b', '');
+  L.push('', 'With the true drag on (Starlink, B_eff from the operator fit), the 24 h XP BTERM over the true B_eff, median over windows, with the field full and zonal; the median absolute change of BTERM when the tesseral terms are removed, in units of B_eff; and the fits whose BTERM is 0 or above twice B_eff with the full field:', '');
+  L.push('| Group | Windows | full | zonal | change | full at 0 | full above 2 B_eff |', '| --- | --: | --: | --: | --: | --: | --: |');
+  for (const g of ['starlink', 'starlink-inc0', 'starlink-inc1', 'starlink-inc2', 'starlink-inc3'].filter((q) => s(q))) { const b = s(g).btermOverTrueB; L.push(`| ${LABEL[g]} | ${b.n} | ${f(b.full, 2)} | ${f(b.zonal, 2)} | ${f(b.changeAbs, 2)} | ${b.fullAtZero} | ${b.fullAboveDouble} |`); }
+  L.push('');
+  const star = s('starlink-550km')?.windows >= 6 ? 'starlink-550km' : 'starlink-inc1';
+  const have = [star, 'iss', 'lageos1'].filter((g) => s(g));
+  if (have.length) {
+    L.push('### 11g. What it means for the fit', '');
+    const d3 = (g, v, l = 'h24', a = 'xp') => s(g).fitLength[l][a][v].day3.median;
+    L.push(`- **The floor is gravity.** In-track fit RMS of best-case XP with the full field against the zonal field only: ${have.map((g) => `${LABEL[g]} ${f(s(g).floor.xp.full.median)} against ${f(s(g).floor.xp.zonal.median)} m`).join('; ')}. The rest of the force model is the same in both, so the difference is the tesseral and sectorial terms and nothing else.`);
+    L.push(`- **Day 3 is gravity.** The held-out day-3 error of the same fits, full field against zonal only: ${have.map((g) => `${LABEL[g]} XP ${f(d3(g, 'full'), 2)} against ${f(d3(g, 'zonal'), 2)} km, SGP4 ${f(d3(g, 'full', 'h24', 'sgp4'), 2)} against ${f(d3(g, 'zonal', 'h24', 'sgp4'), 2)} km`).join('; ')}. The zonal-only values are the ceiling for a theory that carries the m-daily terms and fits the same 24 h.`);
+    L.push(`- **J22 alone.** Degree-2 tesserals only (\`tess2\`), XP day 3 at 24 h: ${have.map((g) => `${LABEL[g]} ${f(d3(g, 'tess2'), 2)} km`).join('; ')}.`);
+    L.push(`- **A longer fit, no new physics.** XP day 3 at 24 h against 34.2 h (full field): ${have.map((g) => `${LABEL[g]} ${f(d3(g, 'full', 'h24'), 2)} against ${f(d3(g, 'full', 'h34_2'), 2)} km`).join('; ')}; SGP4: ${have.map((g) => `${LABEL[g]} ${f(d3(g, 'full', 'h24', 'sgp4'), 2)} against ${f(d3(g, 'full', 'h34_2', 'sgp4'), 2)} km`).join('; ')}. At 21.7 h XP has no drag term, so the same change is large only where the truth has no drag (\`full-nodrag\`) and is a loss where it has.`);
+    L.push('');
+  }
+  L.push('### 11h. Decision rules of A7b', '');
   for (const r of t.rules) {
     if (r.rule === '1 floor') L.push(`- **Rule 1, floor (${r.pass ? 'holds' : 'fails'}).** Tesseral share of the XP in-track fit RMS against the predicted floor: ${r.detail.map((d) => `${LABEL[d.group]} ${f(d.measuredM)} m against ${d.predictedM} m (${f(d.ratio, 2)}, ${d.windows} windows, ${d.pass ? 'within' : 'outside'} 25 %)`).join('; ')}.`);
     if (r.rule === '2 absorption') L.push(`- **Rule 2, absorption (${r.pass ? 'holds' : 'fails'}).** Median |BTERM| of XP on the drag-free truths, full against zonal: ${r.xpBterm.map((d) => `${LABEL[d.group]} ${finite(d.fullNoDrag) ? d.fullNoDrag.toExponential(2) : '-'} against ${finite(d.zonalNoDrag) ? d.zonalNoDrag.toExponential(2) : '-'} (${d.pass ? 'at least 3 times' : 'less than 3 times'})`).join('; ')}. SGP4 day 3 with B* fixed at 0 against B* fitted: ${r.sgp4FixedBstar.map((d) => `${LABEL[d.group]} ${d.variant} ${f(d.fixedDay3Km, 2)} against ${f(d.fittedDay3Km, 2)} km (${d.pass ? 'lower' : 'not lower'})`).join('; ')}.`);
