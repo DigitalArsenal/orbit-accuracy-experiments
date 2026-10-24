@@ -608,3 +608,53 @@ The E2E replay ran in an instance that had fitted before and returned another La
 table, 8,395.94; after a `fit_sdngp` given the same table, 8,395.94. The first rows (13 of 26 ISS windows and 59 of 96 FFM-1 windows with a detection) are kept as `m24-noenv` and `m24c-noenv` and reported as "no environment loaded". M24 and M24c are
 scored again with `load_environment` called with the saved weather table at the start of the job, as A10 5 and A10c said; those are the rows of M24 and M24c. M22 and M23 call `maneuver` after the satellite's own `fit_sdngp` in the same instance, so
 the environment in force was the saved table, and the replay reproduced them; M28's `reentry` is given the table as an input. No other rule changes.
+
+### A11 - 2026-10-24, before any row of the ISS archive windows was read: the name SDN-AP, the fetch of NASA's archive, M24 on its headers
+
+Coordinator, 2026-10-24: approved the fetch of NASA's public ISS OEM archive for M24 and asked for A11 on build 35cd83a2b714: M24 on the archive, M29 (real reentries), and M30 and M31 as far as the interfaces of the
+build cover them. M26 and M27 wait for side B's recalibrated detector, M32 and M33 for the batch-joint fit and the slope test; side B's next dist is scored on every source when the coordinator sends it. M29 to M31 are
+registered in amendments of their own before any of their rows is read; this one holds the name, the fetch and M24.
+
+Name. Owner, 2026-10-24, verbatim: "Also we should call it SDN-AP for advanced propagator". From this amendment on the theory is SDN-AP in everything written here (generated results text, README, new amendments); the frozen
+text of A1 to A10d keeps SDN-GP, DESIGN.md is not edited here (its owner renames it), and the paths rows/sdngp/<build>/, the experiment directory and the graph task id keep their names (they are keys of the `run.mjs --check`
+replay). Side B renames the module itself: the package becomes sdn-ap-propagator, `fit_sdngp` becomes `fit_sdnap`, USER_DEFINED_SDNGP_* becomes USER_DEFINED_SDNAP_*. Its next dist is scored on the new names: `lib/sdngp.mjs`
+chooses the method and export names by what the build carries (`fit_sdnap` in its embedded manifest, `sdnap_*` among its exports; the other methods keep their names), finds the package under either name (SDNAP_MODULE_ROOT
+overrides) and reads the SDNAP_* parameters back under the historical SDNGP_* keys, so one row schema serves every build. This was written from the coordinator's description and tested on 35cd83a2b714, whose names it keeps (the
+fit RMS of a probe satellite is equal to the digit); it is untested on a renamed dist until one arrives, and the amendment that scores that dist says what it found.
+
+The fetch. NASA public data (a U.S. Government work), https://nasa-public-data.s3.amazonaws.com/iss-coords/, used for local results. The bucket's listing (ListObjectsV2, 15 pages of 1,000 keys, 15,000 keys) names 748 dated
+folders with an OEM text file, ISS.OEM_J2K_EPH.txt, from 2020-09-10 to 2026-10-21 (109 to 150 a year in 2021 to 2025, 89 in 2026 so far; gaps of more than 20 days only between 2020-09 and 2021-01). The sightings files of the folders were not fetched. One request at a time,
+2 s apart, no credentials; each file's size was checked against the listing; 539 MB as served, under <archive>/hac/nasa-iss-oem-archive/<date>/ with a provenance record beside each file (URL, retrieval time 2026-10-24,
+SHA-256, size, terms); nothing of it is in git. The first pass of the fetch read the listing with a pattern that skipped the entries carrying checksum fields (the last 3,620 keys) and so fetched 568 files; the listing was
+re-read field by field and the 180 files it had missed were fetched. The registry entry nasa-iss-oem (data/licenses.json, docs/data-licenses.md) now covers the archive. The headers' burn list and the window list (no state
+vectors) are committed (results/sdn-gp-starlink-ffm-match/iss-burns.json).
+
+Headers and burns. The comment lines TRAJECTORY EVENT SUMMARY give, per event, a name, TIG (GMT day of the year), the delta-v (m/s) and HA and HP (km) of the trajectory in the file. A burn is an event whose delta-v is above zero
+(reboosts, deboosts, debris-avoidance maneuvers, visiting-vehicle reboosts; docking, undocking, launch and relocation events carry 0.0). The 748 files list 99 distinct burns (TIGs within 12 h taken as one; 0.1 to 2.8 m/s,
+53 of them above 1.0 m/s; 1 in 2020, 14 in 2021, 18 in 2022, 19 in 2023, 20 in 2024, 16 in 2025, 11 in 2026); 60 files list no event. TIG, delta-v, HA and HP are NASA's planned values of the trajectory in the file. A later
+file's revision of a burn is a revision of the plan, not a measurement of the executed burn, and nothing below measures what the station did.
+
+Truth (my choice). The file's own ephemeris: one continuous numerical trajectory in which NASA applied the burns of its header at their TIG. Checked on one burn (the reboost of 2021-03-12, 0.3 m/s), a file made before it and one
+made after it both show the orbit-averaged osculating semi-major axis rising across TIG (foundation/orbits; by about 0.7 km against the 0.5 km of 2 dv / n). Files are not stitched: the seam of two files is a prediction error of
+kilometers and would act as a burn, so the option of joining the files' leading parts was not taken. A window's truth is the TIG and delta-v of the header of the file it is cut from.
+
+Windows (72 h, every state of the file inside it, 240 s steps; TEME by foundation/frames at each state's epoch; UTC; one $OEM block). Burn windows, for each distinct burn: pre, the latest-created file listing it whose states start
+at least 24 h before TIG and end at least 24 h after (for a burn planned at short notice, when no file has that: 6 h and 12 h, flagged short), cut TIG +- 36 h and shifted to stay inside the file; post, the earliest-created file made at
+least an hour after TIG that starts 12 h before it (3 h, short). That gives 99 pre windows (5 short, 6 holding another burn) and 6 post windows (4 short); no burn is left out. Burn-free windows: the leading 72 h of every file whose header
+lists no burn from one hour before the window to one hour after it: 651 windows covering 4.37 object-years of distinct time (1,598 days; the files overlap).
+
+Detector. `detect_maneuvers` of build 35cd83a2b714, one call per window, with the daily space weather of the years loaded by `load_environment` (A10d). The saved environment holds 51 daily rows (2026-09-13 to 2026-11-02) and the
+data-source/space-weather module refuses a past day, so the rows before 2026-09-13 are made from the GFZ file Kp_ap_Ap_SN_F107_since_1932.txt of the local archive (CC BY 4.0) with the module's row semantics read off its own rows
+(Kp x 10 rounded, ap and Ap, F10.7 observed and adjusted, the centered mean of the observed flux over 40 days either side as F107_OBS_CENTER81, the mean over the 80 days before and the day as F107_OBS_LAST81), checked against the
+module's rows on the 26 days where they overlap (569 of 572 fields equal; the three differences are on the file's last day, whose values were preliminary); 9 days without F10.7 in the file are left out (the module keeps the values
+in force for a day no row covers). The table is 2,703 rows, 2019-06-01 to 2026-11-02 (lib/spw-history.mjs, cached in the store with its provenance). The module's fourth source, NOAA's three-hour Kp forecast, was fetched once on
+2026-10-24 (public domain) to run its parser; the table holds none of it.
+
+Scoring (no threshold is set). A window yields at most one detection (the module's output). In a burn window a detection with an epoch within 92 min (one orbit) of TIG is a hit; its epoch error is the detected epoch less TIG;
+its delta-v is compared as |delta-v| over the planned delta-v (the header gives a scalar) and as the share of the in-track (V) component. A detection elsewhere in a burn window is counted as detection elsewhere, no detection as a miss.
+Reported for pre and post windows separately: hits, detections elsewhere, misses, the median [10th, 90th percentile] of the epoch error and of the delta-v ratio, the median |delta-v| error, the V share, the Lambda, and the hits by
+planned delta-v (0.1 to 0.3, 0.4 to 0.6, 0.7 to 1.0, above 1.0 m/s). Burn-free windows: windows with a detection, and false alarms per object-year, the distinct detection epochs (detections within 6 h of the previous one merged
+across windows) over the distinct time covered. DESIGN 5.5 quotes the modules' detector (22 of 25 held out, one false alarm per object-year); analysis/maneuver-detection is not in the modules checkout of this task, so that figure is
+quoted, not reproduced. Rows: source m24a (rows/sdngp/<build>/m24a.s*.jsonl, a job of `sdngp-run.mjs`, four shards); no state vector is committed.
+
+Spelling and report as in A10: American spelling in all generated text; the report states what the planned values are.
