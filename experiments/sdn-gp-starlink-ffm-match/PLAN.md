@@ -892,7 +892,10 @@ the probability of at least the observed number when the outages are independent
 2. The outages that cannot be scored, by reason: after the last day of the orbit product (the window of the outage plus 6 h ends after the last window of its satellite), before its first day, a day without states of the satellite (a skipped window that touches the outage has a gap), no states, and QZSS outages of a satellite without an orbit series.
 The detections per object-day (distinct detections over the covered time).
 
-Both are descriptive; nothing is thresholded; the same rules score every build. `m27` rows are unchanged.
+3. The pooled off-notice rate (added the same day, after the satellite-specific tail was printed for the first time: the one scoreable GPS outage, of a satellite with no other detection in its series, has a satellite-specific rate of 0 and a tail of 0). For each scoreable outage the rate of the same placements pooled over all the satellites of its system that have an orbit series
+(the placements of that outage's width, each counted against the distinct detections of its own satellite): the pooled rate, the expected number of detected outages under it (the sum over the scoreable outages) and the exact tail, reported beside the satellite-specific numbers for the forecast and the actual rule. The delta-v of the detections inside the forecast windows of the scoreable outages (median) is reported with them.
+
+Both are descriptive; nothing is thresholded; the same rules score every build. `m27` rows are unchanged. The M27 rows of builds 04f7c2d1d50f and 61d4ec4e6a12 are identical row for row (9,443 of 9,443 windows: the same errors, skips and detections), so the two builds' tables agree; the wasm files differ.
 
 
 ### A15 - 2026-10-24, before any row of build b9bc708baa50 was read: the tenth build (a required $PCF configuration port on SDS 1.264.0, one merged `fit`, the burn epoch and delta-v from the profiled likelihood)
