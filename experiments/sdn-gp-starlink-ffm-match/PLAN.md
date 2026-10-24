@@ -187,3 +187,32 @@ refitted on the registered bytes; SpaceX's server had replaced the file of 43 of
 compared. The fits of the registered run are not replaced. Also added in this box: `newer.mjs` (held out against the first hours
 of newer SpaceX files, with the refitted truth scored beside the registered one, `--truth refit30`) and `comspoc-precise.mjs`
 (COMSPOC XP sets of GNSS and laser-ranged objects, waiting for products dated after the set epochs).
+
+### A7 - 2026-10-24, third box, before any window of it was read: M1 to M3 of DESIGN.md section 4 (the LEO fit floor)
+
+Coordinator: test the design finding that the floor of the SGP4 and SGP4-XP fits in LEO is mostly omitted tesseral m-daily
+gravity (J22 alone 454 m along-track on the 550 km shell), absorbed by the fitted drag, using FFM with full gravity against
+zonal-only gravity on the same windows. Predictions fixed here, from DESIGN.md 2d.3 and 2e: the in-track fit floor of best-case XP
+is about the RMS of the omitted m-daily set, 384 m (Starlink 550 km), 394 m (ISS), 110 m (LAGEOS-1); with zonal-only gravity the
+floor falls to the remainder (about 0.2 km for Starlink); the fitted drag term carries gravity (BTERM far above the true B_eff);
+a 21.7 h fit (a zero of j_2 for the J22 period) lowers the J22 share of the day-3 error.
+
+Truths: FFM-1 (`propagator/ffm`, the registered environment, integrator, B_eff and Cr*A/m) re-propagated for 96 h at 60 s from
+the registered start states, with the gravity of the field changed only by FFM's own truncation options:
+`full` EGM2008 70x70; `zonal` order 0 (all zonals to degree 70); `tess2` zonals plus the tesseral and sectorial terms of degree
+2 (the (2,1) and (2,2) terms; MAXIMUM_TESSERAL_DEGREE 2); `tess6` the same to degree 6 (the l <= 6 set of the design estimate);
+`order14` order 14 (removes m >= 15, the 15:1 band). A single coefficient such as (2,2) cannot be removed by FFM's options; the
+difference `tess2` minus `zonal` isolates degree 2. Populations: the 132 clean Starlinks (converged, 0 < B_eff <= 0.5 m2/kg) at
+their registered start states; the ISS from the NASA OEM of 2026-10-21 (state at the file start and every 24 h for eight
+windows; Cd*A/m = 0.95 x 1273.21 / 470200 m2/kg and no radiation, from the OEM's header); LAGEOS-1 and LAGEOS-2 from the first
+state of eight weekly ILRS orbits each, re-dated to 2026-10-14 so that the registered Earth orientation covers them (drag
+off, Cr*A/m = 7.9e-4 m2/kg; an orbit of LAGEOS' size and inclination, not LAGEOS on its date).
+
+Statistics on every truth, by the same code as the registered tables: SGP4 and SGP4-XP fitted over 24 h and, for M2, over
+21.7 h; fit RMS, its radial / in-track / cross-track split, held-out days 1-3; the fitted BTERM against the true B_eff (the
+sphere has none); and for `tess2`, `tess6` and `order14` against `full`: the along-track difference series by
+`pair_statistics`, its quadratic trend removed, and the amplitude and period of the best sinusoid between 8 and 16 h
+(JavaScript least squares on module outputs). M3 as written (B fixed at each sphere's physical C_D A/m on the laser-ranged
+LEO spheres) needs a fixed-BTERM option that `propagator/sgp4-xp fit` does not have and the spheres' masses and areas are not in
+the archive; it is replaced by the BTERM-against-true-B_eff comparison above, which tests the same claim (the fitted drag carries
+gravity) on truths whose B is known exactly.
