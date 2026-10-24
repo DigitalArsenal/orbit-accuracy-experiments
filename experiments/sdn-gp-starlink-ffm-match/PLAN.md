@@ -301,3 +301,27 @@ CAPSTONE, Artemis I; heliocentric: the cruise kernels) a truth pack and a window
 state counts, hashes), with a scorer (`score-pack.mjs`) that takes SDN-GP's predicted states for a window as a $OEM and returns the
 radial / in-track / cross-track RMS by held-out day in that pack's centre and axes. Fit spans per regime follow DESIGN 2h:
 Moon-centred 24 h and 72 h, NRHO and DRO segments of 14 days with 7 held-out days, cruise 30 days with 15.
+
+### A8b - 2026-10-24, before the GNSS or TESS data were read: routes taken, products, and the scoring rules
+
+Routes. GFZ's file server (isdc-data.gfz.de, named on the GFZ ISDC GNSS products page) did not answer from this machine for over
+20 minutes (DNS resolves; TCP connect times out on 80, 443 and 21; ping 100 % loss), while the ISDC web site (isdc.gfz.de) did. The
+approved product, GFZ's rapid orbits, was therefore taken from NASA CDDIS, where it is published under the same names
+(gnss/products/<GPS week>/GFZ0OPSRAP_ and GFZ0MGXRAP_ ...), with the owner's Earthdata token read at run time (E14's route; the token is
+sent to cddis.nasa.gov only and never printed or stored). `fetch-gnss-rapid.mjs` tries GFZ's server first on every run and falls back;
+each file's provenance row says which route it came from. Licences: GFZ0OPSRAP (GPS, GLONASS, Galileo) is the "GFZ rapid product series for the
+IGS", doi:10.5880/GFZ.1.1.2020.003, CC BY 4.0 (DataCite record, fetched 2026-10-24); GFZ0MGXRAP (adds BeiDou and QZSS) is an IGS MGEX product under
+the IGS terms, as registered for E14. TESS: STScI MAST, https://archive.stsci.edu/missions/tess/models/ (TESS_EPH_DEF_*.bsp, the
+mission's definitive ephemeris; MAST data-use policy: public domain, acknowledgement of the mission and STScI). archive.stsci.edu's chain ends at
+the emSign Root CA G1, which Node's bundle lacks; that root, exported from the macOS system roots (SHA-256 40:F6:AF:03:46:A9:9A:A1...), is handed to Node as an extra
+trusted root; certificate verification stays on.
+
+Products and conversion. Days 2026-10-11 to 2026-10-22 (the newest rapid day published; doy 284 to 295) of both products. Reference states by
+`analysis/reference-states` (`scripts/fetch-reference-products.mjs --products mgex --eop finals`, IERS finals2000A observed rows):
+GFZ0OPSRAP for systems G, R, E and GFZ0MGXRAP for C and J, written outside the shared reference-states directories, under `<store>/gnss-rapid/`.
+Our GNSS rows: the A1 rule (two satellites per constellation, evenly from the first day's files) for G, E, R and the BeiDou MEO satellites; all BeiDou GEO, BeiDou
+IGSO and QZSS satellites as in A4; 24 h fit, windows every 48 h from 2026-10-11, scored as section 1 (`baselines.mjs --source gnss-rapid,mgex-geo-rapid,mgex-igso-rapid`).
+COMSPOC GNSS sets (local scoring only): every XP set of a GNSS object, propagated through the black-box module and compared with the rapid orbit in GCRF,
+by day since the set's epoch, as `comspoc-precise.mjs` does for the other products; sets whose epoch the rapid days do not follow stay pending.
+TESS: the definitive ephemeris files for doy 194 to 260 of 2026 (the newest MAST holds), as an Earth-centred highly elliptical orbit scored by SGP4 and
+SGP4-XP like THEMIS and Chandra (windows of A5: fit 24 h and 72 h, stride 48 h, held-out days 1 to 3).
