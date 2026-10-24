@@ -280,6 +280,45 @@ if (headline) {
       lines: Array.from({ length: flat.length / 6 }, (_, i) => ({ epoch: new Date(t0 + i * config.truth.cadenceSeconds * 1000).toISOString(), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] })) });
     await check(object, t0, config.windows.fitHours * 3600, config.windows.leadDays);
   }
+  // amendment A10: an impulse (M22), a finite burn (M23), a decay node (M28) and an ISS window (M24) replayed with the pinned module build and the cached FFM-1 truths
+  {
+    const { scoreSatellite } = await import('./lib/events-score.mjs');
+    const { satellites } = await import('./lib/events.mjs');
+    const collector = () => { const out = []; return { out, has: () => false, append: (r) => out.push(r) }; };
+    const sameDays = (a, c, label) => { for (const k of Object.keys(c ?? {})) if (!a?.[k] || !same(a[k].rmsKm, c[k].rmsKm)) fail(`${label}: day ${k} differs`); };
+    for (const [kind, caseId] of [['m22', 'imp-V-1'], ['m23', 'burn-V-15m-1']]) {
+      const rec = buildRows(headline.dir, kind).find((r) => r.source === kind && r.case.id === caseId && (kind === 'm22' ? r.days : r.arms?.A?.ok));
+      if (!rec) continue;
+      const sink = collector();
+      await scoreSatellite({ b: bs, sink, kind, meta: satellites(kind).find((m) => m.norad === rec.norad), only: [caseId] });
+      const again = sink.out[0];
+      if (!again) fail(`events replay ${kind} ${rec.id}: no row`);
+      if (kind === 'm22') { sameDays(again.days, rec.days, `events replay ${rec.id}`); for (const k of Object.keys(rec.response)) if (!same(again.response[k], rec.response[k])) fail(`events replay ${rec.id}: response day ${k} differs`); }
+      else for (const arm of ['A', 'B']) { sameDays(again.arms[arm].days, rec.arms[arm].days, `events replay ${rec.id} arm ${arm}`); }
+      sdReplayed += 1;
+    }
+    const rec28 = buildRows(headline.dir, 'm28').find((r) => r.source === 'm28' && r.cell.id === 'c-B0.05-high' && r.level === 180 && r.fit?.ok);
+    if (rec28) {
+      const { scoreCell, CELLS } = await import('./lib/events-m28.mjs');
+      const { openOrbits } = await import('./lib/orbits.mjs');
+      const orbits = await openOrbits(modules), sink = collector(), evContext = await loadEnvironment(modules, { archive: config.archive, store });
+      await scoreCell(bs, sink, modules, evContext, orbits, CELLS.find((c) => c.id === rec28.cell.id), [rec28.level]);
+      await orbits.destroy();
+      const again = sink.out[0];
+      if (!again || !same(again.truth.hpKm, rec28.truth.hpKm) || !same(again.truth.eps1, rec28.truth.eps1) || !same(again.fit.fitRmsKm, rec28.fit.fitRmsKm) || !same(again.blocks[0].rmsKm, rec28.blocks[0].rmsKm)) fail(`events replay M28 ${rec28.id}: node statistics differ`);
+      if (again.reentry?.epoch !== rec28.reentry?.epoch) fail(`events replay M28 ${rec28.id}: reentry epoch ${again.reentry?.epoch} vs ${rec28.reentry?.epoch}`);
+      sdReplayed += 1;
+    }
+    const rec24 = buildRows(headline.dir, 'm24').find((r) => r.source === 'm24' && r.ok && r.detections.length);
+    if (rec24) {
+      const { scoreIss } = await import('./lib/events-m24.mjs');
+      const sink = collector();
+      await scoreIss({ b: bs, sink, only: [{ file: rec24.file, startUtc: rec24.startUtc }] });
+      const again = sink.out[0];
+      if (!again?.ok || JSON.stringify(again.detections) !== JSON.stringify(rec24.detections)) fail(`events replay M24 ${rec24.file} ${rec24.startUtc}: detections differ`);
+      sdReplayed += 1;
+    }
+  }
   await bs.close();
   ok(`${sdReplayed} SDN-GP windows replayed with the pinned module build ${headline.build} reproduce their recorded statistics`);
   replayed += sdReplayed;

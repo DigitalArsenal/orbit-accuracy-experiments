@@ -7,6 +7,7 @@ import { config, store, results, write, sha256, read } from './common.mjs';
 import { quantile, mean } from './lib/windows.mjs';
 import { source as licenseSource } from '../../harness/data-licenses.mjs';
 import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
+import { eventsStudy, eventsMarkdown } from './lib/events-tables.mjs';
 
 // SDN-GP (amendment A9b): rows are kept per build of the module; the tables use the newest build that ran every source (complete.json)
 const SD_BUILDS = sdngpBuilds();
@@ -361,6 +362,7 @@ export function build() {
   const completeBuilds = SD_BUILDS.filter((x) => x.complete), previous = completeBuilds.at(-2) ?? null;
   const treatmentOf = (sd) => (!sd?.ok ? (sd?.treatment === 'failed' ? 'failed' : sd?.error ? 'refused' : 'none') : sd.params?.SDNGP_MANEUVER_BEFORE_SECONDS !== undefined ? 'segment' : 'whole'); // the same for the rows of builds that did not write the field
   const nameOf = (sd) => (sd?.errorName ?? String(sd?.error ?? '').split(':')[0].trim()) || null; // a failure after the fit is named propagate:<name of the module's refusal>
+  const numericCore = (sd) => JSON.stringify([sd?.ok, sd?.fitRmsKm, Object.fromEntries(Object.entries(sd?.days ?? {}).map(([k, d]) => [k, [d.rmsKm, d.n]]))]); // the numbers of a row: the scoring-check fields added since (directKm) are not part of it
   const manFile = path.join(results, 'lunar-maneuvers.json');
   const maneuvers = fs.existsSync(manFile) ? JSON.parse(fs.readFileSync(manFile, 'utf8')) : null;
   const dayMedian = (list, k) => quantile(list.filter((w) => w.sdngp?.ok && w.sdngp.days?.[k]).map((w) => w.sdngp.days[k].rmsKm), 0.5);
@@ -380,7 +382,7 @@ export function build() {
     const refusals = {}; for (const w of rows.filter((x) => x.treatment === 'refused')) refusals[nameOf(w.sdngp)] = (refusals[nameOf(w.sdngp)] ?? 0) + 1;
     const vsPrevious = [24, 72].map((h) => {
       const list = rows.filter((w) => w.fitHours === h), before = list.map((w) => ({ ...w, sdngp: prevLunar.get(rowKey(w)) })).filter((w) => w.sdngp);
-      const same = list.filter((w) => prevLunar.has(rowKey(w)) && JSON.stringify([w.sdngp?.ok, w.sdngp?.fitRmsKm, w.sdngp?.days]) === JSON.stringify([prevLunar.get(rowKey(w)).ok, prevLunar.get(rowKey(w)).fitRmsKm, prevLunar.get(rowKey(w)).days])).length;
+      const same = list.filter((w) => prevLunar.has(rowKey(w)) && numericCore(w.sdngp) === numericCore(prevLunar.get(rowKey(w)))).length;
       return { fitHours: h, windows: list.length, inPreviousBuild: before.length, identical: same, now: lunarGroup(list), before: lunarGroup(before) };
     });
     return { pack, events: maneuvers.packs[pack].events.length, threshold: maneuvers.packs[pack].stepStatistic, refusals,
@@ -436,6 +438,24 @@ export function build() {
     };
     return { previousBuild: previous.build, registered: compare(false), defaultSpan: compare(true) };
   })() : null;
+  // amendment A10: the Moon-centered, cislunar and heliocentric windows of this build against the previous complete build, window by window, on the numbers of the rows (fit RMS, every day's RMS and count)
+  const packIdentity = SD_HEADLINE && previous ? Object.keys(PACK_REGIME).map((pack) => {
+    const pick = (b) => new Map(buildRows(b.dir).filter((r) => r.source === pack && r.sdngp).map((r) => [rowKey(r), r.sdngp]));
+    const now = pick(SD_HEADLINE), before = pick(previous);
+    let both = 0, identical = 0, treatmentChanged = 0, maxDay = 0; const differing = [];
+    for (const [k, v] of now) {
+      if (!before.has(k)) continue;
+      both += 1;
+      const w = before.get(k);
+      if (numericCore(v) === numericCore(w)) identical += 1;
+      else {
+        differing.push(k.split('|')[2]);
+        if (treatmentOf(v) !== treatmentOf(w)) treatmentChanged += 1;
+        for (const d of Object.keys(v.days ?? {})) if (w.days?.[d] && Number.isFinite(v.days[d].rmsKm)) maxDay = Math.max(maxDay, Math.abs(v.days[d].rmsKm - w.days[d].rmsKm));
+      }
+    }
+    return { pack, windowsNow: now.size, windowsInBoth: both, identical, differing: both - identical, treatmentChanged, maxDayDifferenceKm: maxDay };
+  }) : null;
   // HEO TESS, the one Earth source the build moved to the segment side: SDN-GP rows of the previous complete build against this one (registered and default-span windows)
   const tessVsPrevious = SD_HEADLINE && previous ? ['heo-tess', 'heo-tess+default'].map((source) => [24, 72].map((h) => {
     const sel = (b) => buildRows(b.dir).filter((r) => r.sdngp && r.source === source && r.fitSeconds === h * 3600);
@@ -443,6 +463,17 @@ export function build() {
     return { source, fitHours: h, previousBuild: previous.build, before: group(sel(previous)), now: group(sel(SD_HEADLINE)) };
   })).flat().filter((x) => x.now.windows || x.before.windows) : null;
 
+  // amendment A10: the HEO sources (the e > 0.5 span rule changed) and the fit-implausible refusals, this build against the previous complete build
+  const heoVsPrevious = SD_HEADLINE && previous ? ['heo-themis', 'heo-chandra'].flatMap((base) => ['', '+default'].flatMap((suffix) => [24, 72].map((h) => {
+    const source = base + suffix, sel = (b) => buildRows(b.dir).filter((r) => r.sdngp && r.source === source && r.fitSeconds === h * 3600);
+    const group = (rows) => ({ windows: rows.length, fitted: rows.filter((r) => r.sdngp.ok).length, fitRms: quantile(rows.filter((r) => r.sdngp.ok).map((r) => r.sdngp.fitRmsKm), 0.5), spanHours: quantile(rows.filter((r) => r.sdngp.ok && Number.isFinite(r.sdngp.spanHours)).map((r) => r.sdngp.spanHours), 0.5),
+      days: Object.fromEntries([1, 2, 3].map((k) => [k, quantile(rows.filter((r) => r.sdngp.ok && r.sdngp.days?.[k]).map((r) => r.sdngp.days[k].rmsKm), 0.5)])) });
+    const key = (b) => new Map(sel(b).map((r) => [rowKey(r), r.sdngp]));
+    const now = key(SD_HEADLINE), before = key(previous);
+    return { source, fitHours: h, before: group(sel(previous)), now: group(sel(SD_HEADLINE)), identical: [...now].filter(([k, v]) => before.has(k) && numericCore(v) === numericCore(before.get(k))).length, inBoth: [...now].filter(([k]) => before.has(k)).length };
+  }))).filter((x) => x.now.windows || x.before.windows) : null;
+  const implausible = (b) => { const out = {}; for (const r of buildRows(b.dir)) if (r.sdngp && !r.sdngp.ok && /fit-implausible/.test(String(r.sdngp.error ?? ''))) out[r.source] = (out[r.source] ?? 0) + 1; return out; };
+  const fitImplausible = SD_HEADLINE ? { now: implausible(SD_HEADLINE), before: previous ? implausible(previous) : null } : null;
   // amendment A9d: the Starlinks with B_eff above 0.5 m2/kg, fitted as the build ships (the rows of the headline), with the 2c.2 rule and with free B_eff
   const decayWs = windows.filter((w) => w.regime === 'leo-starlink-ffm-decay');
   const lowRows = SD_HEADLINE ? buildRows(SD_HEADLINE.dir, 'lowering').filter((r) => r.sdngp) : [];
@@ -461,7 +492,7 @@ export function build() {
   const sdngpCheck = chk.length ? { windows: chk.length, ratio: [0, 0.5, 1].map((q) => quantile(chk, q)) } : null;
   // SpaceX forecast files that could not be reproduced for SDN-GP because the server's copy had changed since the registered fit
   const spacexSkipped = SD_HEADLINE ? new Set(fs.readdirSync(SD_HEADLINE.dir).filter((n) => n.startsWith('starlink-skipped.')).flatMap((n) => readJsonl(path.join(SD_HEADLINE.dir, n))).filter((x) => /changed on the server/.test(x.reason)).map((x) => x.norad)).size : 0;
-  return { generatedFrom: 'recorded window rows (statistics only)', earthIdentity, tessVsPrevious, defaultStudy, spanDefault, lunarStudy, segmentStudy, spanStudy, lowering, sdngpCheck, sdngpSpacexSkipped: spacexSkipped, bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.filter((a) => !windows.some((w) => a.packs.includes(w.source) && w.sdngp)).map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
+  return { generatedFrom: 'recorded window rows (statistics only)', earthIdentity, packIdentity, heoVsPrevious, fitImplausible, tessVsPrevious, defaultStudy, spanDefault, lunarStudy, segmentStudy, eventsStudy: SD_HEADLINE ? eventsStudy(SD_HEADLINE.dir, results) : null, spanStudy, lowering, sdngpCheck, sdngpSpacexSkipped: spacexSkipped, bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.filter((a) => !windows.some((w) => a.packs.includes(w.source) && w.sdngp)).map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -534,6 +565,26 @@ function findings(t) {
   }
   const syn = t.realism.find((r) => r.source === 'comspoc-syncopate')?.all, ours = t.realism.find((r) => r.source === 's3kc-sgp4')?.all;
   if (syn && ours) out.push(`- Covariance realism against the FFM truth (target mean d^2/3 in [0.8, 1.25], coverage in [0.93, 0.97]): SynCoPate ${f(syn.meanD2Over3, 1)} and ${f(syn.coverage95, 2)}; ours (E14 S3-KC on SGP4) ${f(ours.meanD2Over3, 1)} and ${f(ours.coverage95, 2)}. Both are overconfident against this truth.`);
+  const ev = t.eventsStudy;
+  if (ev?.m22) { // amendment A10, section 16
+    const c = (id) => ev.m22.cases.find((x) => x.id === id), z = c('map0'), v1 = c('imp-V-1'), v10 = c('imp-V-10');
+    out.push(`- Impulse map (section 16b; ${ev.m22.satellites} Starlinks, FFM-1 impulses planted at the fit end, days 1 / 2 / 3 against FFM-1): the control (no impulse) has a median RMS of ${[1, 2, 3].map((k) => f(ev.m22.control[k])).join(' / ')} km against ${[1, 2, 3].map((k) => f(ev.m22.noManeuverRows[k])).join(' / ')} km for the no-maneuver rows of the same satellites; the map applied with a zero delta-v leaves the day 3 RMS ${f(z.excess[3].p90)} km above the control at the 90th percentile and ${f(z.excess[3].max)} km at most; the response error (the maneuvered less the unmaneuvered SDN-GP trajectory, against the same difference of FFM-1; median) is ${[1, 2, 3].map((k) => f(v1.response[k].median)).join(' / ')} km for 1 m/s along V and ${[1, 2, 3].map((k) => f(v10.response[k].median)).join(' / ')} km for 10 m/s along V (the day 3 displacement is about 800 km and 7,400 km).`);
+  }
+  if (ev?.m23) {
+    const bv = (d) => ev.m23.cases.find((x) => x.id === 'burn-V-' + d + 'm-1');
+    const pair = (d, k, field) => f(bv(d).B[field][k].median) + ' and ' + f(bv(d).A[field][k].median);
+    out.push('- Finite burns (section 16b; ' + ev.m23.satellites + ' Starlinks, 1 m/s along V): excess over the control on day 1 for a centroid impulse (no loss) and for the module\'s map with sinc(dL/2), km: ' + [15, 30, 60].map((d) => d + ' min ' + pair(d, 1, 'excess')).join('; ') + '; response error on day 3, median: ' + [15, 30, 60].map((d) => d + ' min ' + pair(d, 3, 'response')).join('; ') + ' km.');
+  }
+  if (ev?.m28) {
+    const p = ev.m28.precedence, n = (o, k) => o[k] ?? 0;
+    out.push(`- Hand-off (section 16b; ${ev.m28.cells.filter((x) => x.nodes).length} decays, ${ev.m28.rows} nodes): a criterion trips on the truth at a higher level than the one where the 0 to 3 h error first exceeds 1 km in ${n(p.any.error1km, 'before')} cells, at the same node in ${n(p.any.error1km, 'same')} and after it in ${n(p.any.error1km, 'after')} (10 km: ${n(p.any.error10km, 'before')} / ${n(p.any.error10km, 'same')} / ${n(p.any.error10km, 'after')}); the module's REENTRY_EPOCH (80 km) less FFM-1's stop at 100 km has a median of ${ev.m28.reentry.map((r) => `${f(r.errorHours.median, 2)} h (${r.lead})`).join(', ')}, T100 inside the module's window at ${ev.m28.reentry.reduce((a, r) => a + r.inWindow, 0)} of ${ev.m28.reentry.reduce((a, r) => a + r.windowKnown, 0)} nodes; \`reentry\` was refused at ${Object.values(ev.m28.reentryRefusals).reduce((a, v) => a + v, 0)} of ${ev.m28.rows} nodes (${Object.keys(ev.m28.reentryRefusals).join(', ') || 'none'}).`);
+  }
+  if (ev?.m24) {
+    out.push(`- \`detect_maneuvers\` on burn-free arcs (section 16b): ${ev.m24.windowsWithDetection} of ${ev.m24.windows} ISS windows (NASA OEM files with no reboost)${ev.m24c ? ` and ${ev.m24c.windowsWithDetection} of ${ev.m24c.windows} windows of burn-free FFM-1 Starlink arcs` : ''} reported a burn (Lambda median ${f(ev.m24.lambda.median, 0)}${ev.m24c ? ` and ${f(ev.m24c.lambda.median, 0)}` : ''} against the threshold 20; delta-v median ${f(ev.m24.dvMS.median, 3)} m/s${ev.m24c ? ` and ${f(ev.m24c.dvMS.median, 3)} m/s` : ''}).`);
+  }
+  if (ev?.m25) {
+    out.push(`- Moon-centered windows against the truth-side maneuver list (section 16b): ${ev.m25.map((b) => `${b.pack === 'lro-lunar' ? 'LRO' : 'Danuri'}: with a listed maneuver in the fit span ${b.inFitSpan.windows} windows (whole ${b.inFitSpan.whole}, segment ${b.inFitSpan.segment}, refused ${b.inFitSpan.refused}), none in the fit span ${b.heldOutOnly.windows + b.none.windows} (segment ${b.heldOutOnly.segment + b.none.segment}, refused ${b.heldOutOnly.refused + b.none.refused}); segment starts ${b.segmentStartsAfterLast} after and ${b.segmentStartsBeforeLast} before the last listed maneuver`).join('; ')}.`);
+  }
   return out;
 }
 
@@ -811,12 +862,24 @@ export function markdown(t) {
       `Every held-out state is scored (the accounting of each pack: held-out pack states of the fitted windows, states requested of the module, states it returned, states paired with a truth state, states left unpaired): ${S.filter((x) => x.fitted).map((x) => `${x.pack} ${x.accounting.heldOutTotal} / ${x.accounting.requested} / ${x.accounting.returned} / ${x.accounting.matched} / ${x.accounting.unmatched} (${x.accounting.windowsWithShortfall} windows with a shortfall)`).join('; ')}.`,
       `Scoring check without the module: the day RMS from \`pair_statistics\` against the root mean square of the plain 3D difference of the same pairs agree to a relative difference of at most ${S.filter((x) => x.scorerCheck.days).map((x) => `${fx(x.scorerCheck.maxRelativeDifference)} (${x.pack}, ${x.scorerCheck.days} pack-days)`).join(', ')}.`, '');
   }
+  if (t.earthIdentity && t.packIdentity && SD_HEADLINE) {
+    const fmt = (c) => `${c.identical} of ${c.windowsInBoth}`;
+    L.push('## 16. Build ' + SD_HEADLINE.build + ' against the previous complete build, and the maneuver, hand-off and detection measurements (amendment A10)', '',
+      `### 16a. Re-score of build ${SD_HEADLINE.build} against ${t.earthIdentity.previousBuild}`, '',
+      `Earth windows, window by window, identical to the last digit (fit RMS and every held-out day): registered rows ${fmt(t.earthIdentity.registered)}; default-span rows ${fmt(t.earthIdentity.defaultSpan)}${Object.keys(t.earthIdentity.defaultSpan.differing).length ? `; the sources that differ: ${Object.entries(t.earthIdentity.defaultSpan.differing).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}. Moon-centered, cislunar and heliocentric windows: ${t.packIdentity.map((x) => `${x.pack} ${fmt(x)}`).join(', ')}${t.packIdentity.some((x) => x.differing) ? ` (the differing windows: ${t.packIdentity.filter((x) => x.differing).map((x) => `${x.pack} ${x.differing}, treatment changed ${x.treatmentChanged}`).join('; ')})` : ''}.`, '',
+      'HEO sources, medians over the windows of the build (fit span in hours, 3D RMS in km by held-out day), previous -> now:', '',
+      '| Source | Fit | Windows (identical) | Fitted | Fit span | Day 1 | Day 2 | Day 3 |', '| --- | --: | --: | --: | --: | --: | --: | --: |',
+      ...(t.heoVsPrevious ?? []).map((x) => `| ${x.source} | ${x.fitHours} h | ${x.now.windows} (${x.identical} of ${x.inBoth}) | ${x.before.fitted} -> ${x.now.fitted} | ${f(x.before.spanHours, 1)} -> ${f(x.now.spanHours, 1)} | ${[1, 2, 3].map((k) => `${f(x.before.days[k])} -> ${f(x.now.days[k])}`).join(' | ')} |`), '',
+      `Fits refused as fit-implausible (an Earth fit above 100 km RMS), by source: ${t.fitImplausible && Object.keys(t.fitImplausible.now).length ? Object.entries(t.fitImplausible.now).map(([k, v]) => `${k} ${v}`).join(', ') : 'none'}${t.fitImplausible?.before ? `; the previous build: ${Object.keys(t.fitImplausible.before).length ? Object.entries(t.fitImplausible.before).map(([k, v]) => `${k} ${v}`).join(', ') : 'none'}` : ''}.`, '');
+  }
+  L.push(...eventsMarkdown(t.eventsStudy));
   const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'gfz-rapid-gnss', 'ilrs', 'ilrs-nsgf', 'ilrs-cddis', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'jpl-horizons', 'stsci-mast-tess', 'nrlmsise00', 'egm', 'fes2004'];
   L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenseSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
   L.push('## Reproduce, resume, extend', '',
     '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `m123.mjs --workers N` with `m123-report.mjs` (section 12), `fetch-horizons.mjs`, `fetch-mast-tess.mjs` (needs `NODE_EXTRA_CA_CERTS`, see its header), `fetch-gnss-rapid.mjs`, `fetch-slr.mjs` (needs the Earthdata token in the environment file `lib/cddis.mjs` names, never printed) with `gnss-rapid-convert.mjs` and `slr-convert.mjs` (the public sources approved on 2026-10-24, stored in the archive with provenance rows), `sdngp-run.mjs`, `span-windows.mjs` (the SGP4 and XP rows of section 1c), `horizons-packs.mjs`, `regime-windows.mjs` and `score-pack.mjs` (section 13), `watch-newer.mjs` (waits for the next SpaceX batch, runs `newer.mjs`, regenerates the tables, commits nothing), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment\'s.',
     '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',
     '- SDN-GP: `lib/sdngp.mjs` runs side B\'s `sdn-gp-propagator` (a copy of its built wasm, named by SHA-256 prefix, in `<store>/sdngp-snapshot/`), `lib/baselines.mjs` `fitSdngp` is the third fitter beside `fitXp` and `fitSgp4`, and `sdngp-run.mjs` runs it over every source on one build (`baselines.mjs --arm sdngp`, `spk-windows.mjs --arm sdngp`, `starlink-sdngp.mjs`, `starlink-lowering.mjs`, `fitlength.mjs --arm sdngp`, `span-windows.mjs --arm sdngp`; `newer.mjs` carries the arm when a complete build exists), rows in `<store>/rows/sdngp/<build>/`; a new build of the module is one more `sdngp-run.mjs`, and section 2a lists the builds. The last row of section 5 stays `pending`. For the regimes awaiting SDN-GP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the center. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
+    '- Maneuvers, hand-off and detection (amendment A10): `events-truth.mjs --kind m22,m23,m28 --shard k/n` makes the FFM-1 truths (impulses and finite burns planted in its typed request; synthetic decays to its stop at 100 km) under `<store>/events/`, independent of the build; `sdngp-run.mjs --pin <build> --only m22,m23,m28,m24` scores them with that build of the module (rows `m22`, `m23`, `m28`, `m24` in `rows/sdngp/<build>/`); `lib/sdngp-events.mjs` is the module\'s `maneuver`, `detect_maneuvers` and `reentry` surfaces, `lib/ffm-events.mjs` and `lib/decay.mjs` are FFM-1\'s.',
     '- Newer-file truth: `newer.mjs` scores against the first hours of any SpaceX file created after the registered fit (section 10); re-run it after 2026-10-24 08:00Z for the registered prospective files, and `comspoc.mjs` against the same-day truth files. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later (ESA finals lag about two weeks); `inventory.mjs` shows the newest product dates.', '');
   return L.join('\n');
 }
