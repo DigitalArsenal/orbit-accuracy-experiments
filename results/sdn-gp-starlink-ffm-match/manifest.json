@@ -11,17 +11,19 @@
     "node experiments/sdn-gp-starlink-ffm-match/fetch-kernels.mjs get <path> --dest spk/missions/<mission> (11 files, 5 s apart)",
     "node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/refit.mjs --cap 30 --workers 10",
-    "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --limit 100",
+    "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --shard k/4 (re-run as newer files arrive)",
     "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --truth refit30 --daily-only",
+    "node experiments/sdn-gp-starlink-ffm-match/m123.mjs --workers 10",
+    "node experiments/sdn-gp-starlink-ffm-match/m123-report.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/tables.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "f8c5ae1263d35d22c7c9d2b5de504fff1c7e41765d5a89f778db8406c558efb2",
+  "planSha256": "14e2d8ef9d014d8f0886ae61ca74f6d30443887d8cbc0096d30446db5cc50bb5",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "765103115322fe5ececa933fc506e9c3de466c07"
+    "commit": "2d9bfe0956c359ae76ab6fb01dc1766b36dcbd66"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",

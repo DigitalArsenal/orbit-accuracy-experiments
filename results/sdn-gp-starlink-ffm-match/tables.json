@@ -4055,6 +4055,7 @@
     }
   },
   "newer": {
+    "rows": 239,
     "satellites": 239,
     "horizonHours": {
       "min": 5.416666666666667,
@@ -4127,6 +4128,166 @@
         "median": 0.3293636821504271,
         "p90": 1.0407237943759946,
         "spacexOldMedian": 0.028917708192974966
+      }
+    ],
+    "bins": [
+      {
+        "lo": 0,
+        "hi": 8,
+        "rows": 124,
+        "satellites": 124,
+        "horizonHours": {
+          "min": 5.416666666666667,
+          "median": 7.083333333333333,
+          "max": 7.966666666666667
+        },
+        "newestFileStart": "2026-10-23T19:04:42Z",
+        "arms": [
+          {
+            "arm": "spacexOld",
+            "n": 40,
+            "median": 0.03924935630320136,
+            "p90": 0.1220744062020174,
+            "inTrackShare": 0.9862058378118443
+          },
+          {
+            "arm": "ffm",
+            "n": 124,
+            "median": 0.2253500039020299,
+            "p90": 1.55261814496418,
+            "inTrackShare": 0.9790188865866256
+          },
+          {
+            "arm": "xp",
+            "n": 124,
+            "median": 0.6041679717931798,
+            "p90": 1.5947234535056183,
+            "inTrackShare": 0.9017139366425748
+          },
+          {
+            "arm": "sgp4",
+            "n": 124,
+            "median": 0.601768901094859,
+            "p90": 1.4352378439038787,
+            "inTrackShare": 0.8868392404908405
+          },
+          {
+            "arm": "comspoc",
+            "n": 40,
+            "median": 14.33058708328694,
+            "p90": 1450.482426688579,
+            "inTrackShare": 0.9986532326376705
+          }
+        ],
+        "ffmByGroup": [
+          {
+            "group": "clean",
+            "n": 63,
+            "median": 0.13497860800752656,
+            "p90": 0.8041450608270637,
+            "spacexOldMedian": 0.035965828641126574
+          },
+          {
+            "group": "bound",
+            "n": 25,
+            "median": 0.3914438185006346,
+            "p90": 0.9007112213976496,
+            "spacexOldMedian": 0.06496977649648705
+          },
+          {
+            "group": "decay",
+            "n": 15,
+            "median": 1.9906386306809973,
+            "p90": 11.719611012788121,
+            "spacexOldMedian": 0.03789740218621267
+          },
+          {
+            "group": "capped",
+            "n": 21,
+            "median": 0.20673139725455755,
+            "p90": 1.0457616753048347,
+            "spacexOldMedian": 0.028917708192974966
+          }
+        ]
+      },
+      {
+        "lo": 8,
+        "hi": 16,
+        "rows": 115,
+        "satellites": 115,
+        "horizonHours": {
+          "min": 8,
+          "median": 10.45,
+          "max": 12.25
+        },
+        "newestFileStart": "2026-10-23T21:10:42Z",
+        "arms": [
+          {
+            "arm": "spacexOld",
+            "n": 0,
+            "median": null,
+            "p90": null,
+            "inTrackShare": null
+          },
+          {
+            "arm": "ffm",
+            "n": 115,
+            "median": 0.490878090018589,
+            "p90": 1.6604707377835184,
+            "inTrackShare": 0.992464532069763
+          },
+          {
+            "arm": "xp",
+            "n": 115,
+            "median": 0.7761896878805808,
+            "p90": 1.8054240891733295,
+            "inTrackShare": 0.9306153020913576
+          },
+          {
+            "arm": "sgp4",
+            "n": 115,
+            "median": 0.785153993275436,
+            "p90": 1.93115264482362,
+            "inTrackShare": 0.9301444614164608
+          },
+          {
+            "arm": "comspoc",
+            "n": 0,
+            "median": null,
+            "p90": null,
+            "inTrackShare": null
+          }
+        ],
+        "ffmByGroup": [
+          {
+            "group": "clean",
+            "n": 69,
+            "median": 0.39419860850547317,
+            "p90": 1.0490922626671155,
+            "spacexOldMedian": null
+          },
+          {
+            "group": "bound",
+            "n": 27,
+            "median": 0.9659554230815339,
+            "p90": 2.141746784978996,
+            "spacexOldMedian": null
+          },
+          {
+            "group": "decay",
+            "n": 4,
+            "median": 8.531350177299009,
+            "p90": 27.140849276389417,
+            "spacexOldMedian": null
+          },
+          {
+            "group": "capped",
+            "n": 15,
+            "median": 0.38019974937260675,
+            "p90": 0.7094472066991615,
+            "spacexOldMedian": null
+          }
+        ]
       }
     ]
   },
