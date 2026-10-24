@@ -17093,6 +17093,267 @@
         "lambdaMedian": 118.99
       }
     },
+    "m24a": {
+      "files": 727,
+      "filesInArchive": 748,
+      "clusters": 99,
+      "notScored": [],
+      "pre": {
+        "windows": 98,
+        "refused": 1,
+        "hits": 2,
+        "wrongEpoch": 96,
+        "none": 0,
+        "multi": 6,
+        "epochErrorMin": {
+          "median": 2.4950666666666668,
+          "p10": 0.8723466666666667,
+          "p90": 4.1177866666666665,
+          "maxAbs": 4.523466666666667
+        },
+        "dvRatio": {
+          "median": 1.1216164388714593,
+          "p10": 0.9332436561857063,
+          "p90": 1.3099892215572124
+        },
+        "dvAbsErrorMS": 0.11126382226573633,
+        "vShare": 0.8291359633368807,
+        "lambda": {
+          "median": 2900717.185
+        },
+        "bins": [
+          {
+            "name": "0.1 to 0.3 m/s",
+            "windows": 15,
+            "hits": 0
+          },
+          {
+            "name": "0.4 to 0.6 m/s",
+            "windows": 14,
+            "hits": 1
+          },
+          {
+            "name": "0.7 to 1.0 m/s",
+            "windows": 20,
+            "hits": 1
+          },
+          {
+            "name": "above 1.0 m/s",
+            "windows": 49,
+            "hits": 0
+          }
+        ]
+      },
+      "post": {
+        "windows": 6,
+        "refused": 0,
+        "hits": 1,
+        "wrongEpoch": 5,
+        "none": 0,
+        "multi": 1,
+        "epochErrorMin": {
+          "median": 1.7333333333333334,
+          "p10": 1.7333333333333334,
+          "p90": 1.7333333333333334,
+          "maxAbs": 1.7333333333333334
+        },
+        "dvRatio": {
+          "median": 1.0984137733478607,
+          "p10": 1.0984137733478607,
+          "p90": 1.0984137733478607
+        },
+        "dvAbsErrorMS": 0.029524132004358217,
+        "vShare": 0.7689290166037337,
+        "lambda": {
+          "median": 166728307.73000002
+        },
+        "bins": [
+          {
+            "name": "0.1 to 0.3 m/s",
+            "windows": 1,
+            "hits": 1
+          },
+          {
+            "name": "0.4 to 0.6 m/s",
+            "windows": 3,
+            "hits": 0
+          },
+          {
+            "name": "0.7 to 1.0 m/s",
+            "windows": 1,
+            "hits": 0
+          },
+          {
+            "name": "above 1.0 m/s",
+            "windows": 1,
+            "hits": 0
+          }
+        ]
+      },
+      "free": {
+        "windows": 651,
+        "refused": 0,
+        "windowsWithDetection": 342,
+        "detections": 342,
+        "distinctEpochs": 335,
+        "coverageYears": 4.374322301886075,
+        "falseAlarmsPerObjectYear": 76.58329150907747,
+        "dvMS": {
+          "n": 342,
+          "min": 0.008446348357559216,
+          "median": 0.05657450381157596,
+          "p90": 0.10772404709930146,
+          "max": 0.8513795622422732
+        },
+        "lambda": {
+          "n": 342,
+          "min": 20.4,
+          "median": 382.07,
+          "p90": 8204.863000000014,
+          "max": 388053.45
+        }
+      }
+    },
+    "m24p": {
+      "arcs": 288,
+      "refused": 0,
+      "satellites": 48,
+      "arcHours": 60,
+      "cases": [
+        {
+          "id": "ctl",
+          "axis": null,
+          "dvMS": null,
+          "arcs": 48,
+          "hits": 2,
+          "elsewhere": 22,
+          "none": 24,
+          "epochErrorMin": {
+            "median": -15,
+            "p10": -39,
+            "p90": 9
+          },
+          "dvRatio": {
+            "median": null,
+            "p10": null,
+            "p90": null
+          },
+          "axisShare": null,
+          "firstTenth": 5,
+          "detections": 24
+        },
+        {
+          "id": "imp-V-0.1",
+          "axis": "V",
+          "dvMS": 0.1,
+          "arcs": 48,
+          "hits": 13,
+          "elsewhere": 20,
+          "none": 15,
+          "epochErrorMin": {
+            "median": 15,
+            "p10": -25,
+            "p90": 25
+          },
+          "dvRatio": {
+            "median": 1.4373705264114651,
+            "p10": 0.8279943713596444,
+            "p90": 2.0420285157425866
+          },
+          "axisShare": 0.06248452218632738,
+          "firstTenth": 11,
+          "detections": 33
+        },
+        {
+          "id": "imp-V-1",
+          "axis": "V",
+          "dvMS": 1,
+          "arcs": 48,
+          "hits": 25,
+          "elsewhere": 23,
+          "none": 0,
+          "epochErrorMin": {
+            "median": 0,
+            "p10": -10,
+            "p90": 20
+          },
+          "dvRatio": {
+            "median": 1.2581616768387172,
+            "p10": 0.9886397502026384,
+            "p90": 1.8065438823683881
+          },
+          "axisShare": 0.6086569275460635,
+          "firstTenth": 18,
+          "detections": 48
+        },
+        {
+          "id": "imp-V-10",
+          "axis": "V",
+          "dvMS": 10,
+          "arcs": 48,
+          "hits": 8,
+          "elsewhere": 40,
+          "none": 0,
+          "epochErrorMin": {
+            "median": -10,
+            "p10": -32.99999999999999,
+            "p90": 25
+          },
+          "dvRatio": {
+            "median": 1.6808221245276,
+            "p10": 0.7974312194255229,
+            "p90": 2.170679258784819
+          },
+          "axisShare": 0.1700708165380189,
+          "firstTenth": 39,
+          "detections": 48
+        },
+        {
+          "id": "imp-U-1",
+          "axis": "U",
+          "dvMS": 1,
+          "arcs": 48,
+          "hits": 45,
+          "elsewhere": 3,
+          "none": 0,
+          "epochErrorMin": {
+            "median": 0,
+            "p10": -5,
+            "p90": 5
+          },
+          "dvRatio": {
+            "median": 0.9782461012089881,
+            "p10": 0.6145687536003728,
+            "p90": 1.050457871518852
+          },
+          "axisShare": 0.9999385710519186,
+          "firstTenth": 3,
+          "detections": 48
+        },
+        {
+          "id": "imp-W-1",
+          "axis": "W",
+          "dvMS": 1,
+          "arcs": 48,
+          "hits": 46,
+          "elsewhere": 2,
+          "none": 0,
+          "epochErrorMin": {
+            "median": 0,
+            "p10": 0,
+            "p90": 0
+          },
+          "dvRatio": {
+            "median": 0.42979779346926084,
+            "p10": 0.3889671890656765,
+            "p90": 1.0141542960539314
+          },
+          "axisShare": 0.999709742161181,
+          "firstTenth": 2,
+          "detections": 48
+        }
+      ]
+    },
     "m25": [
       {
         "pack": "lro-lunar",
@@ -17166,7 +17427,1389 @@
           "segment": 3.1644208391544573
         }
       }
-    ]
+    ],
+    "m29": {
+      "build": "35cd83a2b714",
+      "C": {
+        "objects": 15,
+        "objectsWithoutSets": 0,
+        "predictions": 373,
+        "skipped": 0,
+        "scored": 263,
+        "fitRefused": {
+          "fit-implausible": 52
+        },
+        "reentryRefused": {
+          "reentry-not-reached": 57,
+          "no-drag": 1
+        },
+        "failedSetsMedian": 0,
+        "all": {
+          "n": 263,
+          "objects": 13,
+          "errMedian": 4.251188888888889,
+          "absMedian": 12.945932222222222,
+          "absP90": 280.6254563333333,
+          "absOverTau": 0.14016907971994108,
+          "sigmaOverTau": 0.13202483158367342,
+          "sigmaMedian": 21.701493893024008,
+          "within1": 0.5551330798479087,
+          "within2": 0.6425855513307985,
+          "inWindow": 0.5551330798479087,
+          "ruleShare": 0.5665399239543726,
+          "equalCoverageK": 1.094186376862232,
+          "kWindowOverRule": 0.5613545490346799
+        },
+        "starlink": {
+          "n": 138,
+          "objects": 7,
+          "errMedian": 76.20292791666667,
+          "absMedian": 94.37081166666667,
+          "absP90": 328.0313289722222,
+          "absOverTau": 0.5736079551328507,
+          "sigmaOverTau": 0.14652740034422576,
+          "sigmaMedian": 23.893933307438385,
+          "within1": 0.2898550724637681,
+          "within2": 0.37681159420289856,
+          "inWindow": 0.2898550724637681,
+          "ruleShare": 0.3188405797101449,
+          "equalCoverageK": 1.2826746438422592,
+          "kWindowOverRule": 0.5871963683829298
+        },
+        "other": {
+          "n": 125,
+          "objects": 6,
+          "errMedian": -0.7159380555555556,
+          "absMedian": 7.558261944444444,
+          "absP90": 24.78297566666668,
+          "absOverTau": 0.04039862808942221,
+          "sigmaOverTau": 0.11581071219167664,
+          "sigmaMedian": 19.876182309614737,
+          "within1": 0.848,
+          "within2": 0.936,
+          "inWindow": 0.848,
+          "ruleShare": 0.84,
+          "equalCoverageK": 0.9533141598599322,
+          "kWindowOverRule": 0.5282407200523113
+        },
+        "starlinkObjects": 7,
+        "bins": [
+          {
+            "name": "over 7 d",
+            "attempted": 181,
+            "fitRefused": {
+              "fit-implausible": 16
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 26
+            },
+            "n": 139,
+            "objects": 13,
+            "errMedian": 2.634462777777778,
+            "absMedian": 23.463185833333334,
+            "absP90": 311.05281522222225,
+            "absOverTau": 0.0895494128864591,
+            "sigmaOverTau": 0.09614837869229648,
+            "sigmaMedian": 25.3787412577598,
+            "within1": 0.5035971223021583,
+            "within2": 0.5755395683453237,
+            "inWindow": 0.5035971223021583,
+            "ruleShare": 0.5971223021582733,
+            "equalCoverageK": 2.546922153996763,
+            "kWindowOverRule": 1.1487316356547772
+          },
+          {
+            "name": "3 to 7 d",
+            "attempted": 92,
+            "fitRefused": {
+              "fit-implausible": 13
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 16
+            },
+            "n": 63,
+            "objects": 11,
+            "errMedian": 10.309335833333334,
+            "absMedian": 10.865037777777777,
+            "absP90": 252.20697244444443,
+            "absOverTau": 0.08835187878484385,
+            "sigmaOverTau": 0.16330924293094387,
+            "sigmaMedian": 18.46494697196263,
+            "within1": 0.5555555555555556,
+            "within2": 0.6190476190476191,
+            "inWindow": 0.5555555555555556,
+            "ruleShare": 0.6031746031746031,
+            "equalCoverageK": 1.5141687718284431,
+            "kWindowOverRule": 0.9495224495029924
+          },
+          {
+            "name": "1 to 3 d",
+            "attempted": 50,
+            "fitRefused": {
+              "fit-implausible": 6
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 8
+            },
+            "n": 36,
+            "objects": 11,
+            "errMedian": 10.407404722222221,
+            "absMedian": 10.407404722222221,
+            "absP90": 133.5841088888889,
+            "absOverTau": 0.20953811691713892,
+            "sigmaOverTau": 0.286193972384883,
+            "sigmaMedian": 13.048149862660505,
+            "within1": 0.5555555555555556,
+            "within2": 0.7222222222222222,
+            "inWindow": 0.5555555555555556,
+            "ruleShare": 0.5,
+            "equalCoverageK": 0.9102290758141016,
+            "kWindowOverRule": 0.9495053863272194
+          },
+          {
+            "name": "12 to 24 h",
+            "attempted": 21,
+            "fitRefused": {
+              "fit-implausible": 5
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 5,
+              "no-drag": 1
+            },
+            "n": 10,
+            "objects": 7,
+            "errMedian": 1.0014094444444444,
+            "absMedian": 4.710820138888889,
+            "absP90": 10.261483027777773,
+            "absOverTau": 0.24480655280387315,
+            "sigmaOverTau": 0.4908544163862889,
+            "sigmaMedian": 9.195302761822447,
+            "within1": 0.9,
+            "within2": 0.9,
+            "inWindow": 0.9,
+            "ruleShare": 0.4,
+            "equalCoverageK": 0.467660261195791,
+            "kWindowOverRule": 1.1362990967810176
+          },
+          {
+            "name": "6 to 12 h",
+            "attempted": 12,
+            "fitRefused": {
+              "fit-implausible": 5
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 1
+            },
+            "n": 6,
+            "objects": 6,
+            "errMedian": 1.3193856944444444,
+            "absMedian": 1.3193856944444444,
+            "absP90": 11.117737083333333,
+            "absOverTau": 0.1285688486639126,
+            "sigmaOverTau": 0.8427060335747696,
+            "sigmaMedian": 8.145944947985923,
+            "within1": 0.6666666666666666,
+            "within2": 1,
+            "inWindow": 0.6666666666666666,
+            "ruleShare": 0.6666666666666666,
+            "equalCoverageK": 0.5396614077300563,
+            "kWindowOverRule": 1.8134067968083833
+          },
+          {
+            "name": "3 to 6 h",
+            "attempted": 8,
+            "fitRefused": {
+              "fit-implausible": 4
+            },
+            "reentryRefused": {},
+            "n": 4,
+            "objects": 4,
+            "errMedian": 0.10464541666666666,
+            "absMedian": 2.3928200000000004,
+            "absP90": 8.176307305555557,
+            "absOverTau": 0.5232930497940023,
+            "sigmaOverTau": 1.2813811129877455,
+            "sigmaMedian": 6.812322938610778,
+            "within1": 0.75,
+            "within2": 1,
+            "inWindow": 0.75,
+            "ruleShare": 0.5,
+            "equalCoverageK": 0.3842070418092757,
+            "kWindowOverRule": 2.22842948718926
+          },
+          {
+            "name": "under 3 h",
+            "attempted": 9,
+            "fitRefused": {
+              "fit-implausible": 3
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 1
+            },
+            "n": 5,
+            "objects": 4,
+            "errMedian": -0.8626286111111111,
+            "absMedian": 0.8626286111111111,
+            "absP90": 4.112880611111111,
+            "absOverTau": 0.635127910620046,
+            "sigmaOverTau": 3.64921207216524,
+            "sigmaMedian": 6.223951375443282,
+            "within1": 1,
+            "within2": 1,
+            "inWindow": 1,
+            "ruleShare": 0,
+            "equalCoverageK": 0.11506999905421031,
+            "kWindowOverRule": 7.2259508139888675
+          }
+        ],
+        "comparatorRows": 6
+      },
+      "T": {
+        "objects": 34,
+        "objectsWithoutSets": 0,
+        "predictions": 1051,
+        "skipped": 0,
+        "scored": 829,
+        "fitRefused": {
+          "fit-implausible": 3
+        },
+        "reentryRefused": {
+          "reentry-not-reached": 219
+        },
+        "failedSetsMedian": 0,
+        "all": {
+          "n": 829,
+          "objects": 34,
+          "errMedian": 7.947503333333334,
+          "absMedian": 14.677259444444445,
+          "absP90": 62.5006260555556,
+          "absOverTau": 0.1195859861707456,
+          "sigmaOverTau": 0.1224655467032987,
+          "sigmaMedian": 18.63854358223424,
+          "within1": 0.5681544028950543,
+          "within2": 0.8636911942098915,
+          "inWindow": 0.5681544028950543,
+          "ruleShare": 0.7189384800965019,
+          "equalCoverageK": 1.3604827010311578,
+          "kWindowOverRule": 0.8120394424700613
+        },
+        "starlink": {
+          "n": 751,
+          "objects": 30,
+          "errMedian": 7.404101666666667,
+          "absMedian": 15.791069166666666,
+          "absP90": 69.103945,
+          "absOverTau": 0.12946099006655312,
+          "sigmaOverTau": 0.12379168070400305,
+          "sigmaMedian": 18.535348759274797,
+          "within1": 0.5486018641810919,
+          "within2": 0.8521970705725699,
+          "inWindow": 0.5486018641810919,
+          "ruleShare": 0.7003994673768309,
+          "equalCoverageK": 1.3677554164668513,
+          "kWindowOverRule": 0.8198718677764518
+        },
+        "other": {
+          "n": 78,
+          "objects": 4,
+          "errMedian": 8.2094875,
+          "absMedian": 9.360190833333334,
+          "absP90": 31.952219583333335,
+          "absOverTau": 0.06971805550042598,
+          "sigmaOverTau": 0.11431740118180936,
+          "sigmaMedian": 19.980817769986675,
+          "within1": 0.7564102564102564,
+          "within2": 0.9743589743589743,
+          "inWindow": 0.7564102564102564,
+          "ruleShare": 0.8974358974358975,
+          "equalCoverageK": 1.2010718778592206,
+          "kWindowOverRule": 0.666757760235771
+        },
+        "starlinkObjects": 30,
+        "bins": [
+          {
+            "name": "over 7 d",
+            "attempted": 496,
+            "fitRefused": {
+              "fit-implausible": 2
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 100
+            },
+            "n": 394,
+            "objects": 34,
+            "errMedian": 5.672271805555555,
+            "absMedian": 23.394358750000002,
+            "absP90": 124.64842591666665,
+            "absOverTau": 0.09644017080654702,
+            "sigmaOverTau": 0.09317815854291435,
+            "sigmaMedian": 22.889910211724015,
+            "within1": 0.5101522842639594,
+            "within2": 0.7639593908629442,
+            "inWindow": 0.5101522842639594,
+            "ruleShare": 0.766497461928934,
+            "equalCoverageK": 2.048101380764125,
+            "kWindowOverRule": 0.9906990398331823
+          },
+          {
+            "name": "3 to 7 d",
+            "attempted": 292,
+            "fitRefused": {},
+            "reentryRefused": {
+              "reentry-not-reached": 63
+            },
+            "n": 229,
+            "objects": 31,
+            "errMedian": 12.216075555555555,
+            "absMedian": 13.245690555555555,
+            "absP90": 33.371186333333334,
+            "absOverTau": 0.11317705713301905,
+            "sigmaOverTau": 0.14455629225249642,
+            "sigmaMedian": 17.349870828911534,
+            "within1": 0.6069868995633187,
+            "within2": 0.9519650655021834,
+            "inWindow": 0.6069868995633187,
+            "ruleShare": 0.8253275109170306,
+            "equalCoverageK": 1.5841286876831309,
+            "kWindowOverRule": 1.0446735665156484
+          },
+          {
+            "name": "1 to 3 d",
+            "attempted": 162,
+            "fitRefused": {
+              "fit-implausible": 1
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 35
+            },
+            "n": 126,
+            "objects": 31,
+            "errMedian": 9.07370875,
+            "absMedian": 9.383984861111111,
+            "absP90": 25.086142638888887,
+            "absOverTau": 0.22456301639326276,
+            "sigmaOverTau": 0.2607912728928759,
+            "sigmaMedian": 12.30601452212412,
+            "within1": 0.5476190476190477,
+            "within2": 0.9285714285714286,
+            "inWindow": 0.5476190476190477,
+            "ruleShare": 0.5317460317460317,
+            "equalCoverageK": 0.9347870159853169,
+            "kWindowOverRule": 0.9943119741357322
+          },
+          {
+            "name": "12 to 24 h",
+            "attempted": 50,
+            "fitRefused": {},
+            "reentryRefused": {
+              "reentry-not-reached": 10
+            },
+            "n": 40,
+            "objects": 25,
+            "errMedian": 1.983821388888889,
+            "absMedian": 3.5313391666666667,
+            "absP90": 13.15848925,
+            "absOverTau": 0.1947271313257325,
+            "sigmaOverTau": 0.5021506676931877,
+            "sigmaMedian": 8.587836944088757,
+            "within1": 0.8,
+            "within2": 1,
+            "inWindow": 0.8,
+            "ruleShare": 0.575,
+            "equalCoverageK": 0.46676556906877203,
+            "kWindowOverRule": 1.0543652586236227
+          },
+          {
+            "name": "6 to 12 h",
+            "attempted": 29,
+            "fitRefused": {},
+            "reentryRefused": {
+              "reentry-not-reached": 7
+            },
+            "n": 22,
+            "objects": 19,
+            "errMedian": -0.6741856944444444,
+            "absMedian": 1.30042875,
+            "absP90": 9.273116833333336,
+            "absOverTau": 0.14327353358880712,
+            "sigmaOverTau": 0.8780443865885789,
+            "sigmaMedian": 7.141091374497314,
+            "within1": 0.8181818181818182,
+            "within2": 1,
+            "inWindow": 0.8181818181818182,
+            "ruleShare": 0.5909090909090909,
+            "equalCoverageK": 0.23694773285144413,
+            "kWindowOverRule": 1.0478253021038877
+          },
+          {
+            "name": "3 to 6 h",
+            "attempted": 9,
+            "fitRefused": {},
+            "reentryRefused": {
+              "reentry-not-reached": 2
+            },
+            "n": 7,
+            "objects": 7,
+            "errMedian": 1.0861225,
+            "absMedian": 1.0861225,
+            "absP90": 11.919592722222223,
+            "absOverTau": 0.2631992359628434,
+            "sigmaOverTau": 1.5300104582488634,
+            "sigmaMedian": 6.7413651357313835,
+            "within1": 0.7142857142857143,
+            "within2": 1,
+            "inWindow": 0.7142857142857143,
+            "ruleShare": 0.2857142857142857,
+            "equalCoverageK": 0.10997901809916319,
+            "kWindowOverRule": 0.711150717073979
+          },
+          {
+            "name": "under 3 h",
+            "attempted": 13,
+            "fitRefused": {},
+            "reentryRefused": {
+              "reentry-not-reached": 2
+            },
+            "n": 11,
+            "objects": 11,
+            "errMedian": 1.494021111111111,
+            "absMedian": 1.494021111111111,
+            "absP90": 11.670905277777777,
+            "absOverTau": 0.5864801628121197,
+            "sigmaOverTau": 3.4276826076334665,
+            "sigmaMedian": 6.672590622224656,
+            "within1": 0.6363636363636364,
+            "within2": 1,
+            "inWindow": 0.6363636363636364,
+            "ruleShare": 0,
+            "equalCoverageK": 0.07322817215271511,
+            "kWindowOverRule": 0.8330038506378357
+          }
+        ],
+        "comparatorRows": 162
+      },
+      "aerospace": {
+        "objects": 14,
+        "answered": 6,
+        "refused": {
+          "fit-implausible": 7,
+          "reentry-not-reached": 1
+        },
+        "aerospaceAbsMedian": 0.30473194444444446,
+        "sdnapAbsMedian": 1.970400138888889,
+        "sdnapCloser": 2,
+        "aerospaceInside": 12,
+        "sdnapIn1": 5,
+        "sdnapIn2": 6,
+        "halfWidthOverTau": 0.3622548748018531,
+        "sdnapSigmaOverTau": 3.158184763854619,
+        "objectsDetail": [
+          {
+            "norad": "55840",
+            "name": "DRAGON ENDURANCE 2 DEB",
+            "tauHours": 1.1868008333333333,
+            "aerospaceErr": 0.296675,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": -0.7159380555555556,
+              "sigma": 6.221761201355985,
+              "in1": true,
+              "in2": true
+            }
+          },
+          {
+            "norad": "51077",
+            "name": "USA 321",
+            "tauHours": 1.2524691666666667,
+            "aerospaceErr": 0.197975,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
+            "norad": "51122",
+            "name": "STARLINK-3373",
+            "tauHours": 1.4377047222222221,
+            "aerospaceErr": 0.017858333333333334,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "reentry-not-reached"
+            }
+          },
+          {
+            "norad": "55482",
+            "name": "STARLINK-5693",
+            "tauHours": 1.5934602777777778,
+            "aerospaceErr": 0.2570527777777778,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": -4.786254722222222,
+              "sigma": 5.814874482182443,
+              "in1": true,
+              "in2": true
+            }
+          },
+          {
+            "norad": "53597",
+            "name": "STARLINK-4682",
+            "tauHours": 2.032805,
+            "aerospaceErr": 1.2961888888888888,
+            "aerospaceHalf": 1,
+            "aerospaceIn": false,
+            "sdnap": {
+              "err": 0.8379808333333333,
+              "sigma": 6.48300349362878,
+              "in1": true,
+              "in2": true
+            }
+          },
+          {
+            "norad": "47853",
+            "name": "ISS DEB (EP BATTERY)",
+            "tauHours": 2.759847777777778,
+            "aerospaceErr": 0.5996027777777778,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": -3.1028194444444446,
+              "sigma": 8.630536597898727,
+              "in1": true,
+              "in2": true
+            }
+          },
+          {
+            "norad": "47607",
+            "name": "STARLINK-2025",
+            "tauHours": 2.761127222222222,
+            "aerospaceErr": 0.08498888888888889,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
+            "norad": "44867",
+            "name": "CZ-3B R/B",
+            "tauHours": 3.4957030555555555,
+            "aerospaceErr": -1.649475,
+            "aerospaceHalf": 1,
+            "aerospaceIn": false,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
+            "norad": "55977",
+            "name": "KZ-1A R/B",
+            "tauHours": 4.073742222222222,
+            "aerospaceErr": 0.24778333333333333,
+            "aerospaceHalf": 2,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
+            "norad": "45079",
+            "name": "STARLINK-1149",
+            "tauHours": 4.443040555555555,
+            "aerospaceErr": 0.04649166666666667,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
+            "norad": "29093",
+            "name": "CZ-4B R/B",
+            "tauHours": 4.603899444444444,
+            "aerospaceErr": -0.2819861111111111,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": 9.786771388888889,
+              "sigma": 7.699556654696847,
+              "in1": false,
+              "in2": true
+            }
+          },
+          {
+            "norad": "47801",
+            "name": "STARLINK-2382",
+            "tauHours": 11.832407222222223,
+            "aerospaceErr": 0.3147638888888889,
+            "aerospaceHalf": 3,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
+            "norad": "45265",
+            "name": "ISS DEB (ICS-EF)",
+            "tauHours": 11.841261388888888,
+            "aerospaceErr": 0.3127888888888889,
+            "aerospaceHalf": 3,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": -0.21693777777777778,
+              "sigma": 9.751133749638548,
+              "in1": true,
+              "in2": true
+            }
+          },
+          {
+            "norad": "40108",
+            "name": "FALCON 9 R/B",
+            "tauHours": 23.68417611111111,
+            "aerospaceErr": -3.8544972222222222,
+            "aerospaceHalf": 4,
+            "aerospaceIn": true,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          }
+        ]
+      },
+      "tip": {
+        "predictionsWithTip": 197,
+        "byBin": [
+          {
+            "name": "over 7 d",
+            "answered": 394,
+            "withTip": 0,
+            "tipAbsMedian": null,
+            "sdnapAbsMedian": null,
+            "tipInside": null,
+            "sdnapIn2": null,
+            "sdnapCloser": 0
+          },
+          {
+            "name": "3 to 7 d",
+            "answered": 229,
+            "withTip": 11,
+            "tipAbsMedian": 4.4,
+            "sdnapAbsMedian": 6.536823888888889,
+            "tipInside": 0.8181818181818182,
+            "sdnapIn2": 1,
+            "sdnapCloser": 5
+          },
+          {
+            "name": "1 to 3 d",
+            "answered": 126,
+            "withTip": 80,
+            "tipAbsMedian": 9.7,
+            "sdnapAbsMedian": 7.536607222222222,
+            "tipInside": 0.7,
+            "sdnapIn2": 0.9375,
+            "sdnapCloser": 37
+          },
+          {
+            "name": "12 to 24 h",
+            "answered": 40,
+            "withTip": 34,
+            "tipAbsMedian": 3.5833333333333335,
+            "sdnapAbsMedian": 3.5313391666666667,
+            "tipInside": 0.8823529411764706,
+            "sdnapIn2": 1,
+            "sdnapCloser": 13
+          },
+          {
+            "name": "6 to 12 h",
+            "answered": 22,
+            "withTip": 20,
+            "tipAbsMedian": 1.3666666666666667,
+            "sdnapAbsMedian": 1.5423915277777778,
+            "tipInside": 0.75,
+            "sdnapIn2": 1,
+            "sdnapCloser": 10
+          },
+          {
+            "name": "3 to 6 h",
+            "answered": 7,
+            "withTip": 7,
+            "tipAbsMedian": 0.4166666666666667,
+            "sdnapAbsMedian": 1.0861225,
+            "tipInside": 0.5714285714285714,
+            "sdnapIn2": 1,
+            "sdnapCloser": 2
+          },
+          {
+            "name": "under 3 h",
+            "answered": 11,
+            "withTip": 10,
+            "tipAbsMedian": 0.8583333333333334,
+            "sdnapAbsMedian": 1.3440616666666667,
+            "tipInside": 0.7,
+            "sdnapIn2": 1,
+            "sdnapCloser": 3
+          }
+        ]
+      }
+    },
+    "m30": {
+      "satellites": 19,
+      "issuedFirst": "2026-10-24T17:58:02.984Z",
+      "issuedLast": "2026-10-24T18:03:43.312Z",
+      "snapshot": "2026-10-24.json.gz",
+      "objectsWithTip": 0,
+      "objectsWithDecay": 0,
+      "variants": [
+        {
+          "variant": "default",
+          "rows": 19,
+          "fitOk": 19,
+          "reentryOk": 16,
+          "refused": {
+            "reentry-not-reached": 3
+          },
+          "lifetimeDays": {
+            "n": 16,
+            "min": 4.861282583465369,
+            "median": 12.527907724414234,
+            "p90": 17.4108320111488,
+            "max": 26.4053451411661
+          },
+          "sigmaHours": {
+            "n": 16,
+            "min": 12.547936524574736,
+            "median": 23.365855251506062,
+            "p90": 28.25855057012959,
+            "max": 35.56943046548601
+          },
+          "bEff": {
+            "n": 19,
+            "min": 0.5170544774122845,
+            "median": 1.5902950894746397,
+            "p90": 9.506455139074866,
+            "max": 12.832978595614815
+          },
+          "scored": 0,
+          "errHours": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "p90": null,
+            "max": null
+          },
+          "within1": null,
+          "within2": null
+        },
+        {
+          "variant": "rule",
+          "rows": 19,
+          "fitOk": 19,
+          "reentryOk": 0,
+          "refused": {
+            "no-drag": 19
+          },
+          "lifetimeDays": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "p90": null,
+            "max": null
+          },
+          "sigmaHours": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "p90": null,
+            "max": null
+          },
+          "bEff": {
+            "n": 19,
+            "min": 0,
+            "median": 0,
+            "p90": 0,
+            "max": 0
+          },
+          "scored": 0,
+          "errHours": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "p90": null,
+            "max": null
+          },
+          "within1": null,
+          "within2": null
+        },
+        {
+          "variant": "free",
+          "rows": 19,
+          "fitOk": 19,
+          "reentryOk": 16,
+          "refused": {
+            "reentry-not-reached": 3
+          },
+          "lifetimeDays": {
+            "n": 16,
+            "min": 4.861282583465369,
+            "median": 12.527907724414234,
+            "p90": 17.4108320111488,
+            "max": 26.4053451411661
+          },
+          "sigmaHours": {
+            "n": 16,
+            "min": 12.547936524574736,
+            "median": 23.365855251506062,
+            "p90": 28.25855057012959,
+            "max": 35.56943046548601
+          },
+          "bEff": {
+            "n": 19,
+            "min": 0.5170544774122845,
+            "median": 1.5902950894746397,
+            "p90": 9.506455139074866,
+            "max": 12.832978595614815
+          },
+          "scored": 0,
+          "errHours": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "p90": null,
+            "max": null
+          },
+          "within1": null,
+          "within2": null
+        }
+      ],
+      "predictions": [
+        {
+          "norad": 67211,
+          "bEffFfm": 13.550191924340323,
+          "issuedUtc": "2026-10-24T18:00:34.432Z",
+          "epoch": "2026-10-28T06:13:56.815403",
+          "uncHours": 12.547936524574736,
+          "windowStart": "2026-10-27T17:41:04.243915",
+          "windowEnd": "2026-10-28T18:46:49.386892",
+          "lifetimeDays": 4.861282583465369,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 67028,
+          "bEffFfm": 11.239779057309734,
+          "issuedUtc": "2026-10-24T18:00:30.762Z",
+          "epoch": "2026-10-29T09:32:02.362797",
+          "uncHours": 14.576184144799035,
+          "windowStart": "2026-10-28T18:57:28.099876",
+          "windowEnd": "2026-10-30T00:06:36.625719",
+          "lifetimeDays": 5.998846789415363,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 67014,
+          "bEffFfm": 9.698720682230917,
+          "issuedUtc": "2026-10-24T18:00:25.123Z",
+          "epoch": "2026-11-01T17:21:32.825265",
+          "uncHours": 19.508835590961226,
+          "windowStart": "2026-10-31T21:51:01.017137",
+          "windowEnd": "2026-11-02T12:52:04.633392",
+          "lifetimeDays": 9.32281047871195,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 48120,
+          "bEffFfm": 0.5628393689737656,
+          "issuedUtc": "2026-10-24T17:58:10.217Z",
+          "epoch": "2026-11-02T20:08:55.044777",
+          "uncHours": 20.80848296647079,
+          "windowStart": "2026-11-01T23:20:24.506098",
+          "windowEnd": "2026-11-03T16:57:25.583456",
+          "lifetimeDays": 10.34112320121462,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 48370,
+          "bEffFfm": 1.5595094064240733,
+          "issuedUtc": "2026-10-24T17:58:25.873Z",
+          "epoch": "2026-11-03T06:53:51.236465",
+          "uncHours": 21.389857399358114,
+          "windowStart": "2026-11-02T09:30:27.749827",
+          "windowEnd": "2026-11-04T04:17:14.723103",
+          "lifetimeDays": 10.81677357019824,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 47788,
+          "bEffFfm": 0.5443859172669203,
+          "issuedUtc": "2026-10-24T17:58:02.984Z",
+          "epoch": "2026-11-04T14:49:28.739178",
+          "uncHours": 22.912223062577773,
+          "windowStart": "2026-11-03T15:54:44.736153",
+          "windowEnd": "2026-11-05T13:44:12.742203",
+          "lifetimeDays": 12.122068740486759,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 53660,
+          "bEffFfm": 2.1392063876550105,
+          "issuedUtc": "2026-10-24T17:59:19.843Z",
+          "epoch": "2026-11-04T18:31:49.095866",
+          "uncHours": 23.09440366651593,
+          "windowStart": "2026-11-03T19:26:09.242667",
+          "windowEnd": "2026-11-05T17:37:28.949065",
+          "lifetimeDays": 12.28410990696765,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 56483,
+          "bEffFfm": 1.6868995727638687,
+          "issuedUtc": "2026-10-24T17:59:55.735Z",
+          "epoch": "2026-11-04T23:20:26.746124",
+          "uncHours": 23.331685070335855,
+          "windowStart": "2026-11-04T00:00:32.679871",
+          "windowEnd": "2026-11-05T22:40:20.812377",
+          "lifetimeDays": 12.497045673844893,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 49179,
+          "bEffFfm": 4.094705746869963,
+          "issuedUtc": "2026-10-24T17:59:01.338Z",
+          "epoch": "2026-11-05T00:41:59.731641",
+          "uncHours": 23.40207282444011,
+          "windowStart": "2026-11-04T01:17:52.269473",
+          "windowEnd": "2026-11-06T00:06:07.193809",
+          "lifetimeDays": 12.56062189065593,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 51121,
+          "bEffFfm": 1.8845864949354758,
+          "issuedUtc": "2026-10-24T17:59:09.974Z",
+          "epoch": "2026-11-05T01:19:19.708175",
+          "uncHours": 23.400025432676266,
+          "windowStart": "2026-11-04T01:55:19.616617",
+          "windowEnd": "2026-11-06T00:43:19.799732",
+          "lifetimeDays": 12.558769774983578,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 49151,
+          "bEffFfm": 3.0244621101568914,
+          "issuedUtc": "2026-10-24T17:58:43.728Z",
+          "epoch": "2026-11-06T04:18:05.688931",
+          "uncHours": 24.60840551581527,
+          "windowStart": "2026-11-05T03:41:35.429074",
+          "windowEnd": "2026-11-07T04:54:35.948788",
+          "lifetimeDays": 13.679440840775905,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 56787,
+          "bEffFfm": 1.438990932067208,
+          "issuedUtc": "2026-10-24T18:00:02.965Z",
+          "epoch": "2026-11-06T19:38:50.268956",
+          "uncHours": 25.30005882976259,
+          "windowStart": "2026-11-05T18:20:50.057169",
+          "windowEnd": "2026-11-07T20:56:50.480743",
+          "lifetimeDays": 14.345929042174754,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 49178,
+          "bEffFfm": 2.9020943028484303,
+          "issuedUtc": "2026-10-24T17:58:52.095Z",
+          "epoch": "2026-11-07T13:49:22.553559",
+          "uncHours": 26.05562540944255,
+          "windowStart": "2026-11-06T11:46:02.302085",
+          "windowEnd": "2026-11-08T15:52:42.805033",
+          "lifetimeDays": 15.09491381100213,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 53913,
+          "bEffFfm": 1.349085404976966,
+          "issuedUtc": "2026-10-24T17:59:28.809Z",
+          "epoch": "2026-11-09T05:32:42.272477",
+          "uncHours": 27.649321284815187,
+          "windowStart": "2026-11-08T01:53:44.715852",
+          "windowEnd": "2026-11-10T09:11:39.829102",
+          "lifetimeDays": 16.7465309303367,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 55920,
+          "bEffFfm": 1.0775452587185514,
+          "issuedUtc": "2026-10-24T17:59:38.462Z",
+          "epoch": "2026-11-10T13:10:53.498953",
+          "uncHours": 28.86777985544399,
+          "windowStart": "2026-11-09T08:18:49.491474",
+          "windowEnd": "2026-11-11T18:02:57.506433",
+          "lifetimeDays": 18.075133091960893,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        },
+        {
+          "norad": 64713,
+          "bEffFfm": 0.5521936646452059,
+          "issuedUtc": "2026-10-24T18:00:11.005Z",
+          "epoch": "2026-11-18T19:41:23.819813",
+          "uncHours": 35.56943046548601,
+          "windowStart": "2026-11-17T08:07:13.870137",
+          "windowEnd": "2026-11-20T07:15:33.769489",
+          "lifetimeDays": 26.4053451411661,
+          "tipMessages": 0,
+          "decayMessage": null,
+          "lastTipDecayUtc": null
+        }
+      ]
+    },
+    "m31": {
+      "generatedFrom": "derived values of the 27 satellites of the batch first seen in the capture cycle of 2026-10-24T05:01Z (raw files not kept)",
+      "satellites": 27,
+      "firstId": 799501701,
+      "lastId": 799501727,
+      "captured": 27,
+      "failed": 0,
+      "ids": [
+        799501701,
+        799501702,
+        799501703,
+        799501704,
+        799501705,
+        799501706,
+        799501707,
+        799501708,
+        799501709,
+        799501710,
+        799501711,
+        799501712,
+        799501713,
+        799501714,
+        799501715,
+        799501716,
+        799501717,
+        799501718,
+        799501719,
+        799501720,
+        799501721,
+        799501722,
+        799501723,
+        799501724,
+        799501725,
+        799501726,
+        799501727
+      ],
+      "processed": {
+        "first": "2026-10-24T17:58:32.247Z",
+        "last": "2026-10-24T18:18:19.131Z"
+      },
+      "fileStart": {
+        "min": "2026-10-24T08:48:42.000Z",
+        "max": "2026-10-24T09:22:42.000Z"
+      },
+      "fileCreated": {
+        "min": "2026-10-24T09:01:24.000Z",
+        "max": "2026-10-24T09:31:18.000Z"
+      },
+      "fitRmsKm": {
+        "n": 27,
+        "min": 0.5658268854500277,
+        "median": 0.6361966892296786,
+        "p90": 0.7070346925436894,
+        "max": 0.7213600208753902
+      },
+      "bEff": {
+        "n": 27,
+        "min": 0.013625660779465623,
+        "median": 0.014459109362917565,
+        "p90": 0.015062242186012454,
+        "max": 0.015170909148836877
+      },
+      "bEffZeroBound": 0,
+      "notConverged": 2,
+      "xpDays": {
+        "1": {
+          "n": 27,
+          "min": 6.74078186,
+          "median": 7.66455071,
+          "p90": 8.321872074,
+          "max": 8.50215708
+        },
+        "2": {
+          "n": 27,
+          "min": 18.9062129,
+          "median": 21.3171182,
+          "p90": 23.94477892,
+          "max": 24.5340014
+        },
+        "3": {
+          "n": 27,
+          "min": 18.8932045,
+          "median": 22.5521931,
+          "p90": 26.6495968,
+          "max": 27.5831986
+        }
+      },
+      "sgp4Days": {
+        "1": {
+          "n": 27,
+          "min": 7.419282604081801,
+          "median": 8.2013299675342,
+          "p90": 9.129955134021843,
+          "max": 9.314731808500127
+        },
+        "2": {
+          "n": 27,
+          "min": 22.350881061105202,
+          "median": 24.94741847778466,
+          "p90": 28.071396811856296,
+          "max": 28.69440722117068
+        },
+        "3": {
+          "n": 27,
+          "min": 28.112867149748727,
+          "median": 33.210758755543196,
+          "p90": 38.61319649196537,
+          "max": 39.70633031427097
+        }
+      },
+      "xpFailed": 0,
+      "sgp4Failed": 0
+    },
+    "m31captured": null,
+    "m32": null,
+    "previous": {
+      "build": "54b069014557",
+      "m22": null,
+      "m23": null,
+      "m28": null,
+      "m24": null,
+      "m24c": null,
+      "m24a": null,
+      "m24p": null,
+      "m25": [
+        {
+          "pack": "lro-lunar",
+          "windows": 87,
+          "maneuversListed": 2,
+          "inFitSpan": {
+            "windows": 2,
+            "whole": 1,
+            "segment": 1,
+            "refused": 0
+          },
+          "heldOutOnly": {
+            "windows": 8,
+            "whole": 7,
+            "segment": 1,
+            "refused": 0
+          },
+          "none": {
+            "windows": 77,
+            "whole": 74,
+            "segment": 3,
+            "refused": 0
+          },
+          "lagHours": {
+            "n": 1,
+            "min": 2.4999997222222223,
+            "median": 2.4999997222222223,
+            "p90": 2.4999997222222223,
+            "max": 2.4999997222222223
+          },
+          "segmentStartsAfterLast": 1,
+          "segmentStartsBeforeLast": 0,
+          "day3": {
+            "whole": 2.1406350804565624,
+            "segment": 1.9740878067166459
+          }
+        },
+        {
+          "pack": "danuri-lunar",
+          "windows": 61,
+          "maneuversListed": 10,
+          "inFitSpan": {
+            "windows": 14,
+            "whole": 7,
+            "segment": 6,
+            "refused": 1
+          },
+          "heldOutOnly": {
+            "windows": 23,
+            "whole": 21,
+            "segment": 2,
+            "refused": 0
+          },
+          "none": {
+            "windows": 24,
+            "whole": 24,
+            "segment": 0,
+            "refused": 0
+          },
+          "lagHours": {
+            "n": 6,
+            "min": -27,
+            "median": 5.333333333333333,
+            "p90": 10.333333333333332,
+            "max": 10.75
+          },
+          "segmentStartsAfterLast": 5,
+          "segmentStartsBeforeLast": 1,
+          "day3": {
+            "whole": 3.7200257357901636,
+            "segment": 3.1644208391544573
+          }
+        }
+      ],
+      "m29": null,
+      "m30": null,
+      "m31": {
+        "generatedFrom": "derived values of the 27 satellites of the batch first seen in the capture cycle of 2026-10-24T05:01Z (raw files not kept)",
+        "satellites": 27,
+        "firstId": 799501701,
+        "lastId": 799501727,
+        "captured": 27,
+        "failed": 0,
+        "ids": [
+          799501701,
+          799501702,
+          799501703,
+          799501704,
+          799501705,
+          799501706,
+          799501707,
+          799501708,
+          799501709,
+          799501710,
+          799501711,
+          799501712,
+          799501713,
+          799501714,
+          799501715,
+          799501716,
+          799501717,
+          799501718,
+          799501719,
+          799501720,
+          799501721,
+          799501722,
+          799501723,
+          799501724,
+          799501725,
+          799501726,
+          799501727
+        ],
+        "processed": {
+          "first": "2026-10-24T17:58:32.247Z",
+          "last": "2026-10-24T18:18:19.131Z"
+        },
+        "fileStart": {
+          "min": "2026-10-24T08:48:42.000Z",
+          "max": "2026-10-24T09:22:42.000Z"
+        },
+        "fileCreated": {
+          "min": "2026-10-24T09:01:24.000Z",
+          "max": "2026-10-24T09:31:18.000Z"
+        },
+        "fitRmsKm": {
+          "n": 27,
+          "min": 0.5658268854500277,
+          "median": 0.6361966892296786,
+          "p90": 0.7070346925436894,
+          "max": 0.7213600208753902
+        },
+        "bEff": {
+          "n": 27,
+          "min": 0.013625660779465623,
+          "median": 0.014459109362917565,
+          "p90": 0.015062242186012454,
+          "max": 0.015170909148836877
+        },
+        "bEffZeroBound": 0,
+        "notConverged": 2,
+        "xpDays": {
+          "1": {
+            "n": 27,
+            "min": 6.74078186,
+            "median": 7.66455071,
+            "p90": 8.321872074,
+            "max": 8.50215708
+          },
+          "2": {
+            "n": 27,
+            "min": 18.9062129,
+            "median": 21.3171182,
+            "p90": 23.94477892,
+            "max": 24.5340014
+          },
+          "3": {
+            "n": 27,
+            "min": 18.8932045,
+            "median": 22.5521931,
+            "p90": 26.6495968,
+            "max": 27.5831986
+          }
+        },
+        "sgp4Days": {
+          "1": {
+            "n": 27,
+            "min": 7.419282604081801,
+            "median": 8.2013299675342,
+            "p90": 9.129955134021843,
+            "max": 9.314731808500127
+          },
+          "2": {
+            "n": 27,
+            "min": 22.350881061105202,
+            "median": 24.94741847778466,
+            "p90": 28.071396811856296,
+            "max": 28.69440722117068
+          },
+          "3": {
+            "n": 27,
+            "min": 28.112867149748727,
+            "median": 33.210758755543196,
+            "p90": 38.61319649196537,
+            "max": 39.70633031427097
+          }
+        },
+        "xpFailed": 0,
+        "sgp4Failed": 0
+      },
+      "m31captured": null,
+      "m32": null
+    }
   },
   "spanStudy": [
     {
@@ -19807,6 +21450,25 @@
           "3": 0.9776109907807488
         }
       }
+    },
+    {
+      "build": "04f7c2d1d50f",
+      "wasmSha256": "04f7c2d1d50fdae0a1af6e16fcbc46aead774b6ce4ce00984f55d6ad96f38e80",
+      "sourceCommit": "65c1c6cae7cc0ac4a7ba65ba891f5c001dfdf4f8",
+      "sourceDirtyFiles": 0,
+      "firstUseUtc": "2026-10-24T18:21:26.725Z",
+      "builtSeenUtc": "2026-10-24T18:11:18.849Z",
+      "complete": false,
+      "starlink": {
+        "fitted": 239,
+        "onCommonSet": true,
+        "fit": 0.069058,
+        "days": {
+          "1": 0.16385887727321755,
+          "2": 0.4327529114332743,
+          "3": 0.9775728785415342
+        }
+      }
     }
   ],
   "ricConsistency": {
@@ -21863,7 +23525,7 @@
     },
     {
       "id": "leo-starlink-spacex-sdngp",
-      "label": "LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 windows SDN-GP ran on",
+      "label": "LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 windows SDN-AP ran on",
       "windows": 40,
       "objects": 40,
       "xp": {
@@ -26959,7 +28621,7 @@
     {
       "id": "moon-lro-fit24",
       "pack": true,
-      "label": "Moon-centered, LRO (NAIF reconstruction, about 90 km), 24 h fit (the Moon-centered SDN-GP only: section 14)",
+      "label": "Moon-centered, LRO (NAIF reconstruction, about 90 km), 24 h fit (the Moon-centered SDN-AP only: section 14)",
       "windows": 44,
       "objects": 1,
       "xp": {

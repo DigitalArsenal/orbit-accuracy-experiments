@@ -16,8 +16,8 @@ const LEAD = config.windows.leadDays;
 const lamOf = (index) => lamBytes({ epochUtc: index.parent.epochUtc ?? EPOCH0, aM: index.parent.aKm * 1000, eccentricity: index.parent.e, inclinationDeg: index.parent.iDeg, raanDeg: index.parent.raanDeg, argPeriapsisDeg: 0, argLatitudeDeg: index.parent.argLatitudeDeg, frame: 'GCRF' });
 const minStates = (stepS = 60) => Math.floor((config.windows.minimumCoverage * 86400) / stepS);
 
-/** `only`: batch ids to score (default all four). */
-export async function scoreBatches({ b, sink, only = null }) {
+/** `only`: batch ids to score (default all four); `hours`: fit lengths (default 6, 12, 24); `ks`: object numbers for the per-object arms (default all); `joint`: whether to run the batch-joint fit (default yes); `perObject`: whether to run the per-object arms (default yes). */
+export async function scoreBatches({ b, sink, only = null, hours: hoursOnly = null, ks = null, joint: runJoint = true, perObject = true }) {
   for (const batch of BATCHES) {
     if (only && !only.includes(batch.id)) continue;
     const indexFile = path.join(M32_DIR, batch.id, 'index.json');
@@ -29,6 +29,7 @@ export async function scoreBatches({ b, sink, only = null }) {
     // launch_set alone: the parent's set, the same for every object of the batch, days 1 to 3 after the first file's start (no fit)
     const ls = await launchSet(b.sdngp, { launch: lam });
     for (const o of objects) {
+      if (!perObject || (ks && !ks.includes(o.k))) continue;
       if (!sink.mine()) continue;
       const key = `m32|${o.object.id}|${iso(first)}|0`;
       if (sink.has(key)) continue;
@@ -41,13 +42,17 @@ export async function scoreBatches({ b, sink, only = null }) {
     // `launch_batch` reads TEME ephemerides: the first 24 h of every object, converted once (foundation/frames), cut per fit length below
     let teme = null;
     const temeBlocks = async (stopFit) => {
-      teme ??= await Promise.all(objects.map(async (o) => { const lines = []; for (const l of slice(o.object, first, first + Math.max(...M32_FIT_HOURS) * 3600e3)) { const t = await transformState(b.frames, 'GCRF', 'TEME', l.epoch, [...l.r, ...l.v]); lines.push({ epoch: l.epoch, ms: ms(l.epoch), r: t.slice(0, 3), v: t.slice(3, 6) }); } return lines; }));
+      if (!teme) { // one call at a time: the module's harness is not asked for overlapping calls
+        teme = [];
+        for (const o of objects) { const lines = []; for (const l of slice(o.object, first, first + Math.max(...M32_FIT_HOURS) * 3600e3)) { const t = await transformState(b.frames, 'GCRF', 'TEME', l.epoch, [...l.r, ...l.v]); lines.push({ epoch: l.epoch, ms: ms(l.epoch), r: t.slice(0, 3), v: t.slice(3, 6) }); } teme.push(lines); }
+      }
       return teme.map((all, i) => { const lines = all.filter((l) => l.ms <= stopFit); return oemBytes({ originator: 'G1 A12b', block: { frame: 'TEMEOFDATE', frameName: 'TEME', timeSystem: 'UTC', object: { name: objects[i].object.name, id: '', norad: objects[i].object.norad }, lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: lines.at(-1).epoch }, sizePrefixed: false }); });
     };
-    for (const hours of M32_FIT_HOURS) {
+    for (const hours of M32_FIT_HOURS.filter((h) => !hoursOnly || hoursOnly.includes(h))) {
       const stopFit = first + hours * 3600e3;
       // per object: SDN-AP, SGP4, SGP4-XP (the G1 windows at this fit length), and SDN-AP with the launch set as prior
       for (const o of objects) {
+        if (!perObject || (ks && !ks.includes(o.k))) continue;
         if (!sink.mine()) continue;
         const base = { batch: batch.id, k: o.k, hours, sigmaMS: index.sigmaMS, trueBEff: o.record.cdAm, trueDvMS: o.record.dvMS };
         if (!sink.has(`m32|${o.object.id}|${iso(first)}|${hours * 3600}`)) {
@@ -63,7 +68,7 @@ export async function scoreBatches({ b, sink, only = null }) {
       }
       // the batch-joint fit
       const jointKey = `m32|${batch.id}+joint|${iso(first)}|${hours * 3600}`;
-      if (sink.mine() && !sink.has(jointKey)) {
+      if (runJoint && sink.mine() && !sink.has(jointKey)) {
         const t = performance.now();
         const joint = await launchBatch(b.sdngp, { oems: await temeBlocks(stopFit), launch: lam, weatherTable: b.weatherTable });
         const row = { source: 'm32', id: `${batch.id}+joint`, batch: batch.id, kind: 'batch-joint', startUtc: iso(first), fitSeconds: hours * 3600, hours, sigmaMS: index.sigmaMS, objects: objects.length, ms: performance.now() - t, build: b.sdngp.provenance.wasmSha256.slice(0, 12) };

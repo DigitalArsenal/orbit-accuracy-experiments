@@ -355,6 +355,35 @@ if (headline) {
       if (!again?.reentry?.ok || !same(again.fit.fitRmsKm, rec29.fit.fitRmsKm) || again.reentry.epoch !== rec29.reentry.epoch || again.states !== rec29.states) fail(`events replay M29 ${rec29.id}: fit or reentry epoch differs`);
       sdReplayed += 1;
     }
+    // amendment A12b: a captured-batch window (M31), a per-object fit with the launch set as prior and a batch-joint fit (M32), on the pinned build
+    const rec31 = buildRows(headline.dir, 'm31').find((r) => r.source === 'm31' && r.hours === 6 && r.sdngp?.ok);
+    if (rec31) {
+      const { scoreCaptured } = await import('./lib/events-m31.mjs');
+      const sink = collector();
+      await scoreCaptured({ b: bs, sink, only: [rec31.norad] });
+      const again = sink.out.find((r) => r.hours === 6);
+      if (!again?.sdngp?.ok || !same(again.sdngp.fitRmsKm, rec31.sdngp.fitRmsKm) || !same(again.sdngp.days[1].rmsKm, rec31.sdngp.days[1].rmsKm)) fail(`events replay M31 ${rec31.id}: fit or day 1 differs`);
+      sdReplayed += 1;
+    }
+    const rec32 = buildRows(headline.dir, 'm32').find((r) => r.source === 'm32' && r.kind === 'object-prior' && r.fitSeconds === 6 * 3600 && r.sdngp?.ok);
+    if (rec32) {
+      const { scoreBatches } = await import('./lib/events-m32.mjs');
+      const sink = collector();
+      await scoreBatches({ b: bs, sink, only: [rec32.batch], hours: [6], ks: [rec32.k], joint: false });
+      const again = sink.out.find((r) => r.kind === 'object-prior');
+      if (!again?.sdngp?.ok || !same(again.sdngp.fitRmsKm, rec32.sdngp.fitRmsKm) || !same(again.sdngp.days[1].rmsKm, rec32.sdngp.days[1].rmsKm)) fail(`events replay M32 ${rec32.id}: fit or day 1 differs`);
+      sdReplayed += 1;
+    }
+    const rec32j = buildRows(headline.dir, 'm32').find((r) => r.source === 'm32' && r.kind === 'batch-joint' && r.hours === 6 && r.ok);
+    if (rec32j) {
+      const { scoreBatches } = await import('./lib/events-m32.mjs');
+      const sink = collector();
+      await scoreBatches({ b: bs, sink, only: [rec32j.batch], hours: [6], perObject: false });
+      const again = sink.out.find((r) => r.kind === 'batch-joint');
+      const first = rec32j.scored.find((x) => x.days), second = again?.scored.find((x) => x.k === first?.k);
+      if (!again?.ok || !second?.days || !same(second.days[1].rmsKm, first.days[1].rmsKm) || !same(second.bEff, first.bEff)) fail(`events replay M32 joint ${rec32j.id}: day 1 or B_eff differs`);
+      sdReplayed += 1;
+    }
     const rec30 = buildRows(headline.dir, 'm30').find((r) => r.source === 'm30' && r.variant === 'free' && r.reentry?.ok);
     if (rec30) {
       const { scoreLowering } = await import('./lib/events-m30.mjs');

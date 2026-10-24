@@ -152,7 +152,7 @@ function m24a(dir, resultsDir) {
   const spans = free.map((r) => [Date.parse(r.startUtc), Date.parse(r.stopUtc)]).sort((a, b) => a[0] - b[0]);
   let covered = 0, end = -Infinity; for (const [a, b] of spans) { if (b > end) { covered += b - Math.max(a, end); end = b; } }
   const years = covered / (365.25 * 86400e3);
-  return { files: new Set(rows.map((r) => r.file)).size, clusters: burns?.clusters?.length ?? null, notScored: burns?.notScored ?? null, pre: burnGroup('burn-pre'), post: burnGroup('burn-post'),
+  return { files: new Set(rows.map((r) => r.file)).size, filesInArchive: burns?.files?.count ?? null, clusters: burns?.clusters?.length ?? null, notScored: burns?.notScored ?? null, pre: burnGroup('burn-pre'), post: burnGroup('burn-post'),
     free: { windows: free.length, refused: rows.filter((r) => r.kind === 'free' && !r.ok).length, windowsWithDetection: free.filter((r) => r.detections.length).length, detections: det.length, distinctEpochs: distinct.length, coverageYears: years, falseAlarmsPerObjectYear: distinct.length / years,
       dvMS: stats(det.map((d) => d.mag)), lambda: stats(det.map((d) => d.lambda)) } };
 }
@@ -354,7 +354,10 @@ function m32(dir) {
   });
 }
 
-export function eventsStudy(dir, resultsDir) { return dir ? { build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) } : null; }
+const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
+
+/** The events measurements of a build (and, when given, of the previous complete build, for the tables that stand the two side by side). */
+export function eventsStudy(dir, resultsDir, previousDir = null) { return dir ? { ...studyOf(dir, resultsDir), previous: previousDir ? studyOf(previousDir, resultsDir) : null } : null; }
 
 // ---- markdown (section 16) ----
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));
@@ -391,7 +394,7 @@ export function eventsMarkdown(e) {
       '| Cell | T100 (days) | Nodes (fitted) | C1 | C2 | C3 | Any | Error over 1 km | Error over 10 km | Hand-off lead before T100 at the first node (h) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |',
       ...m.cells.filter((c) => c.nodes).map((c) => `| ${c.cell.id} | ${c.stopUtc ? f((Date.parse(c.stopUtc) - Date.parse('2025-10-24T00:00:00Z')) / 86400000, 1) : 'capped'} | ${c.nodes} (${c.fitted}) | ${['C1', 'C2', 'C3', 'any'].map((k) => c.firstLevel[k] ?? 'never').join(' | ')} | ${c.firstLevel.error1km ?? 'never'} | ${c.firstLevel.error10km ?? 'never'} | ${c.handoffLeadHours[0] ? f(c.handoffLeadHours[0].leadHours, 1) : ''} |`), '',
       'The module\'s reentry epoch (at 80 km) against FFM-1\'s stop at 100 km, by lead time before T100 (signed hours, REENTRY_EPOCH - T100; the descent between the two altitudes is not removed):', '',
-      '| Lead | Nodes | Error median | |Error| median | |Error| max | |Error| / lead (median) | Uncertainty (median, h) | T100 inside the window | FFM-1 from the hand-off state, error median (h) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
+      '| Lead | Nodes | Error median | Absolute error, median | Absolute error, max | Absolute error over lead (median) | Uncertainty (median, h) | T100 inside the window | FFM-1 from the hand-off state, error median (h) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
       ...m.reentry.map((r) => `| ${r.lead} | ${r.nodes} | ${f(r.errorHours.median, 2)} | ${f(r.absErrorHours.median, 2)} | ${f(r.absErrorHours.max, 2)} | ${f(r.relativeToLead.median, 4)} | ${f(r.uncHours.median, 2)} | ${r.inWindow} of ${r.windowKnown} | ${f(r.handoffFfmErrorHours.median, 2)} |`), '',
       `Fits refused: ${m.fitRefused}. \`reentry\` refused: ${Object.keys(m.reentryRefusals).length ? Object.entries(m.reentryRefusals).map(([k, v]) => `${k} ${v}`).join(', ') : 'none'}. Cells not completed: ${m.cells.filter((c) => !c.nodes).map((c) => c.cell.id).join(', ') || 'none'}.`, '');
   }
@@ -405,8 +408,8 @@ export function eventsMarkdown(e) {
     const m = e.m24a;
     const row = (name, g) => `| ${name} | ${g.windows} | ${g.hits} | ${g.wrongEpoch} | ${g.none} | ${f(g.epochErrorMin.median, 1)} [${f(g.epochErrorMin.p10, 1)}, ${f(g.epochErrorMin.p90, 1)}] | ${f(g.dvRatio.median, 2)} [${f(g.dvRatio.p10, 2)}, ${f(g.dvRatio.p90, 2)}] | ${f(g.dvAbsErrorMS, 2)} | ${f(g.vShare, 2)} |`;
     L.push('#### M24 on NASA\'s ISS archive (amendment A11)', '',
-      `${m.files} OEM files of the archive (NASA JSC FOD TOPO; dated folders 2020 to 2026, fetched 2026-10-24), ${m.clusters} distinct planned burns (header events with a delta-v above zero, TIGs within 12 h taken as one burn)${m.notScored?.length ? `, ${m.notScored.length} not scored (no file with 12 h of states before the burn and 24 h after)` : ''}. TIG and delta-v are the headers' planned values, not measurements of the executed burns. Each window is 72 h, every state (TEME by foundation/frames), \`detect_maneuvers\` with the daily space weather of the years loaded (\`load_environment\`). A detection within ${HIT_MIN} min (one orbit) of TIG is a hit; the epoch error is the detected epoch less TIG, the delta-v ratio the detected |delta-v| over the planned one (median [10th, 90th percentile] over the hits):`, '',
-      '| Window | Windows | Hits | Detection elsewhere | No detection | Epoch error (min) | |Delta-v| / planned | |Delta-v| error (m/s) | V share of delta-v |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
+      `${m.filesInArchive ?? m.files} OEM files in the archive (NASA JSC FOD TOPO; dated folders 2020 to 2026, fetched 2026-10-24; ${m.files} give a window), ${m.clusters} distinct planned burns (header events with a delta-v above zero, TIGs within 12 h taken as one burn)${m.notScored?.length ? `, ${m.notScored.length} not scored (no file with 12 h of states before the burn and 24 h after)` : ''}. TIG and delta-v are the headers' planned values, not measurements of the executed burns. Each window is 72 h, every state (TEME by foundation/frames), \`detect_maneuvers\` with the daily space weather of the years loaded (\`load_environment\`). A detection within ${HIT_MIN} min (one orbit) of TIG is a hit; the epoch error is the detected epoch less TIG, the delta-v ratio the detected |delta-v| over the planned one (median [10th, 90th percentile] over the hits):`, '',
+      '| Window | Windows | Hits | Detection elsewhere | No detection | Epoch error (min) | Absolute delta-v over planned | Absolute delta-v error (m/s) | V share of delta-v |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
       row('pre-burn file (burn still to come)', m.pre), row('post-burn file (burn behind its start)', m.post), '',
       'Hits by planned delta-v (pre-burn files / post-burn files):', '', '| Planned delta-v | Pre: windows | Pre: hits | Post: windows | Post: hits |', '| --- | --: | --: | --: | --: |',
       ...m.pre.bins.map((b, i) => `| ${b.name} | ${b.windows} | ${b.hits} | ${m.post.bins[i].windows} | ${m.post.bins[i].hits} |`), '',
@@ -416,8 +419,23 @@ export function eventsMarkdown(e) {
     const m = e.m24p;
     L.push('#### M24, pipeline check: impulses planted in FFM-1 arcs (amendment A11e)', '',
       `${m.satellites} registered Starlink truths, arcs of ${m.arcHours} h: the registered truth for the first 24 h (every fifth state), then the first 36 h after t_b of an M22 case (the control, or the impulse FFM-1 planted at t_b), every 300 s, TEME by foundation/frames, \`detect_maneuvers\` with the saved weather loaded. The burn is at 24 h and its size and axis are exact. A detection within ${HIT_MIN} min of t_b is a hit; the delta-v ratio and the planted-axis share are medians over the hits:`, '',
-      '| Planted at 24 h | Arcs | Hits | Detection elsewhere | No detection | Epoch error (min), median [10th, 90th] | |Delta-v| / planted | Planted-axis share of delta-v | Detections in the first tenth of the arc |', '| --- | --: | --: | --: | --: | --- | --: | --: | --: |',
-      ...m.cases.map((c) => `| ${c.axis ? `${AX[c.axis]} ${c.dvMS} m/s` : 'none (control)'} | ${c.arcs} | ${c.hits} | ${c.elsewhere} | ${c.none} | ${c.hits ? `${f(c.epochErrorMin.median, 1)} [${f(c.epochErrorMin.p10, 1)}, ${f(c.epochErrorMin.p90, 1)}]` : ''} | ${f(c.dvRatio.median, 2)} | ${f(c.axisShare, 2)} | ${c.firstTenth} of ${c.detections} |`), '');
+      '| Planted at 24 h | Arcs | Hits | Detection elsewhere | No detection | Epoch error (min), median [10th, 90th] | Absolute delta-v over planted | Planted-axis share of delta-v | Detections in the first tenth of the arc |', '| --- | --: | --: | --: | --: | --- | --: | --: | --: |',
+      ...m.cases.map((c) => `| ${c.axis ? `${AX[c.axis]} ${c.dvMS} m/s` : 'none (control)'} | ${c.arcs} | ${c.hits} | ${c.elsewhere} | ${c.none} | ${c.hits && c.axis ? `${f(c.epochErrorMin.median, 1)} [${f(c.epochErrorMin.p10, 1)}, ${f(c.epochErrorMin.p90, 1)}]` : ''} | ${f(c.dvRatio.median, 2)} | ${f(c.axisShare, 2)} | ${c.firstTenth} of ${c.detections} |`), '');
+  }
+  if (e.previous && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
+    const p = e.previous, cur = e;
+    const cells = [
+      ['ISS, NASA files without a reboost (M24): windows with a detection', (x) => (x.m24 ? `${x.m24.windowsWithDetection} of ${x.m24.windows}` : '')],
+      ['Burn-free FFM-1 Starlink arcs (M24c): windows with a detection', (x) => (x.m24c ? `${x.m24c.windowsWithDetection} of ${x.m24c.windows}` : '')],
+      ['Burn-free FFM-1 Starlink arcs: false alarms per object-year', (x) => (x.m24c ? f(x.m24c.falseAlarmsPerObjectYear, 1) : '')],
+      ['ISS archive, burn-free windows with a detection', (x) => (x.m24a ? `${x.m24a.free.windowsWithDetection} of ${x.m24a.free.windows}` : '')],
+      ['ISS archive, burn-free: false alarms per object-year', (x) => (x.m24a ? f(x.m24a.free.falseAlarmsPerObjectYear, 1) : '')],
+      ['ISS archive, pre-burn windows: hits / detection elsewhere / none', (x) => (x.m24a ? `${x.m24a.pre.hits} / ${x.m24a.pre.wrongEpoch} / ${x.m24a.pre.none} of ${x.m24a.pre.windows}` : '')],
+      ['ISS archive, pre-burn hits: epoch error (min), median; absolute delta-v over planned, median', (x) => (x.m24a && x.m24a.pre.hits ? `${f(x.m24a.pre.epochErrorMin.median, 1)}; ${f(x.m24a.pre.dvRatio.median, 2)}` : '')],
+      ['ISS archive, post-burn windows: hits / elsewhere / none', (x) => (x.m24a ? `${x.m24a.post.hits} / ${x.m24a.post.wrongEpoch} / ${x.m24a.post.none} of ${x.m24a.post.windows}` : '')],
+      ...PLANTED_CASES.map((id) => [`Planted arcs, ${id === 'ctl' ? 'control: detections (of 48)' : `${id}: hits within ${HIT_MIN} min (of 48)`}`, (x) => { const c = x.m24p?.cases.find((y) => y.id === id); return c ? (id === 'ctl' ? `${c.detections}` : `${c.hits}`) : ''; }]),
+    ];
+    L.push(`#### The detector, build ${p.build} beside build ${cur.build}`, '', `| Measurement | ${p.build} | ${cur.build} |`, '| --- | --: | --: |', ...cells.map(([label, fn]) => `| ${label} | ${fn(p)} | ${fn(cur)} |`), '');
   }
   if (e.m25) {
     L.push('#### M25. LRO and Danuri against the truth-side maneuver list', '',
@@ -425,11 +443,33 @@ export function eventsMarkdown(e) {
       '| Body | Windows | Listed maneuvers | In the fit span: whole / segment / refused | Held-out days only: whole / segment / refused | None: whole / segment / refused | Lag (h): median [min, max] | Segment after / before the last maneuver | Day 3 median: whole / segment |', '| --- | --: | --: | --- | --- | --- | --- | --- | --- |',
       ...e.m25.map((b) => `| ${b.pack === 'lro-lunar' ? 'LRO' : 'Danuri'} | ${b.windows} | ${b.maneuversListed} | ${b.inFitSpan.whole} / ${b.inFitSpan.segment} / ${b.inFitSpan.refused} | ${b.heldOutOnly.whole} / ${b.heldOutOnly.segment} / ${b.heldOutOnly.refused} | ${b.none.whole} / ${b.none.segment} / ${b.none.refused} | ${f(b.lagHours.median, 1)} [${f(b.lagHours.min, 1)}, ${f(b.lagHours.max, 1)}] | ${b.segmentStartsAfterLast} / ${b.segmentStartsBeforeLast} | ${f(b.day3.whole)} / ${f(b.day3.segment)} |`), '');
   }
+  if (e.previous) { // the previous complete build beside this one (amendment A12): previous -> now
+    const p = e.previous, arrow = (a, c, d = 3) => `${f(a, d)} -> ${f(c, d)}`;
+    if (p.m22 && e.m22) {
+      const prev = new Map(p.m22.cases.map((c) => [c.id, c]));
+      L.push(`#### M22, M23, M28 and M25, build ${p.build} -> build ${e.build}`, '', `M22, the impulse map (median over satellites; excess over the control of the same satellite, day 3, km; response error, day 3, km; the control's own day 1 / 2 / 3 median RMS ${DAYS.map((k) => arrow(p.m22.control[k], e.m22.control[k])).join(', ')} km):`, '',
+        '| Case | Scored | Excess day 1 | Excess day 3 | Response day 3 |', '| --- | --: | --: | --: | --: |',
+        ...e.m22.cases.map((c) => { const o = prev.get(c.id); return `| ${c.kind === 'map0' ? 'zero delta-v through the map' : `${AX[c.axis]} ${c.dvMS} m/s`} | ${o ? `${o.scored} -> ` : ''}${c.scored} | ${o ? arrow(o.excess[1].median, c.excess[1].median) : f(c.excess[1].median)} | ${o ? arrow(o.excess[3].median, c.excess[3].median) : f(c.excess[3].median)} | ${o ? arrow(o.response[3].median, c.response[3].median) : f(c.response[3].median)} |`; }), '');
+    }
+    if (p.m23 && e.m23) {
+      const prev = new Map(p.m23.cases.map((c) => [c.id, c]));
+      L.push('M23, finite burns along V with 1 m/s (arm A: the module\'s finite-burn map; arm B: the centroid impulse; excess over the control, day 3, median km; response error, day 3 of arm A):', '',
+        '| Duration | Excess day 3, arm A | Excess day 3, arm B | Response day 3, arm A |', '| --: | --: | --: | --: |',
+        ...e.m23.cases.filter((c) => c.axis === 'V' && c.dvMS === 1).map((c) => { const o = prev.get(c.id); return `| ${c.durationMin} min | ${o ? arrow(o.A.excess[3].median, c.A.excess[3].median) : f(c.A.excess[3].median)} | ${o ? arrow(o.B.excess[3].median, c.B.excess[3].median) : f(c.B.excess[3].median)} | ${o ? arrow(o.A.response[3].median, c.A.response[3].median) : f(c.A.response[3].median)} |`; }), '');
+    }
+    if (p.m28 && e.m28) {
+      const n = (o, k) => o?.[k] ?? 0, pp = p.m28.precedence.any, np = e.m28.precedence.any;
+      L.push(`M28, the hand-off: a criterion trips at a higher level than the one where the 0 to 3 h error first exceeds 1 km in ${n(pp.error1km, 'before')} -> ${n(np.error1km, 'before')} cells, at the same node in ${n(pp.error1km, 'same')} -> ${n(np.error1km, 'same')} and after it in ${n(pp.error1km, 'after')} -> ${n(np.error1km, 'after')}; fits refused ${p.m28.fitRefused} -> ${e.m28.fitRefused}; \`reentry\` refused ${Object.values(p.m28.reentryRefusals).reduce((a, v) => a + v, 0)} -> ${Object.values(e.m28.reentryRefusals).reduce((a, v) => a + v, 0)} of ${e.m28.rows} nodes. REENTRY_EPOCH less FFM-1's stop at 100 km (median hours; absolute error median; T100 inside the window):`, '',
+        '| Lead | Nodes | Error median | Absolute error median | Uncertainty median (h) | T100 inside the window |', '| --- | --: | --: | --: | --: | --: |',
+        ...e.m28.reentry.map((r, i) => { const o = p.m28.reentry[i]; return `| ${r.lead} | ${o.nodes} -> ${r.nodes} | ${arrow(o.errorHours.median, r.errorHours.median, 2)} | ${arrow(o.absErrorHours.median, r.absErrorHours.median, 2)} | ${arrow(o.uncHours.median, r.uncHours.median, 2)} | ${o.inWindow} of ${o.windowKnown} -> ${r.inWindow} of ${r.windowKnown} |`; }), '');
+    }
+    if (p.m25 && e.m25) L.push(`M25, the Moon-centered windows in the fit span of a listed maneuver (whole / segment / refused): ${e.m25.map((b) => { const o = p.m25.find((x) => x.pack === b.pack); return `${b.pack === 'lro-lunar' ? 'LRO' : 'Danuri'} ${o ? `${o.inFitSpan.whole} / ${o.inFitSpan.segment} / ${o.inFitSpan.refused} -> ` : ''}${b.inFitSpan.whole} / ${b.inFitSpan.segment} / ${b.inFitSpan.refused}`; }).join('; ')}; windows with no listed maneuver in the fit span treated as a segment or refused: ${e.m25.map((b) => { const o = p.m25.find((x) => x.pack === b.pack); const cnt = (x) => x.heldOutOnly.segment + x.heldOutOnly.refused + x.none.segment + x.none.refused; return `${b.pack === 'lro-lunar' ? 'LRO' : 'Danuri'} ${o ? `${cnt(o)} -> ` : ''}${cnt(b)}`; }).join('; ')}.`, '');
+  }
   if (e.m29 || e.m30 || e.m31) L.push('### 16c. Real reentries, controlled deorbits and first sets (amendment A11)', '');
   if (e.m29) {
     const m = e.m29, pc = (x) => (x === null || x === undefined || !Number.isFinite(x) ? '' : `${Math.round(x * 100)} %`);
     const named = (o) => (Object.keys(o).length ? Object.entries(o).map(([k, v]) => `${k} ${v}`).join(', ') : 'none');
-    const accuracy = (g) => ['| Time to go | Predictions | Answered (objects) | Median error (h) | Median |error| (h) | 90th percentile |error| (h) | Median |error| / time to go |', '| --- | --: | --: | --: | --: | --: | --: |',
+    const accuracy = (g) => ['| Time to go | Predictions | Answered (objects) | Median error (h) | Median absolute error (h) | 90th percentile absolute error (h) | Median absolute error over time to go |', '| --- | --: | --: | --: | --: | --: | --: |',
       ...g.bins.map((b) => `| ${b.name} | ${b.attempted} | ${b.n}${b.n ? ` (${b.objects})` : ''} | ${f(b.errMedian, 2)} | ${f(b.absMedian, 2)} | ${f(b.absP90, 2)} | ${f(b.absOverTau, 3)} |`),
       `| all | ${g.predictions} | ${g.all.n} (${g.all.objects}) | ${f(g.all.errMedian, 2)} | ${f(g.all.absMedian, 2)} | ${f(g.all.absP90, 2)} | ${f(g.all.absOverTau, 3)} |`];
     const coverage = (g) => ['| Time to go | Answered | Median sigma (h) | Median sigma / time to go | Within 1 sigma (68 %) | Within 2 sigma (95 %) | Inside the module\'s window | Within the 20 % rule | Equal-coverage k | k sigma over the rule\'s window (median) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |',
@@ -437,7 +477,7 @@ export function eventsMarkdown(e) {
       `| all | ${g.all.n} | ${f(g.all.sigmaMedian, 2)} | ${f(g.all.sigmaOverTau, 3)} | ${pc(g.all.within1)} | ${pc(g.all.within2)} | ${pc(g.all.inWindow)} | ${pc(g.all.ruleShare)} | ${f(g.all.equalCoverageK, 2)} | ${f(g.all.kWindowOverRule, 2)} |`];
     const refusals = (g) => { const bins = g.bins.filter((b) => b.attempted > b.n).map((b) => `${b.name}: ${b.attempted - b.n} of ${b.attempted} (${named({ ...b.fitRefused, ...b.reentryRefused })})`); return `Not answered: fit refused ${named(g.fitRefused)}; \`reentry\` refused ${named(g.reentryRefused)}${bins.length ? `; by time to go, ${bins.join('; ')}` : ''}${g.skipped ? `; ${g.skipped} predictions skipped (fewer than 48 pseudo-observation states or fewer than two element sets: ${g.objectsWithoutSets} objects)` : ''}.`; };
     L.push('#### M29. Real reentries', '',
-      `Build ${m.build}. Predictions at element-set epochs from 14 days before the reentry (4 h apart or more): the pseudo-observations of the object's element-set history up to the epoch (the last 120 h; the SGP4 module propagates each set over the interval it speaks for, 300 s states) go to \`fit_sdnap\` (the module chooses the span) and the set to \`reentry\` with the daily space weather of the years. Time to go is the true one (truth less the prediction epoch); the error is REENTRY_EPOCH less the truth and sigma is REENTRY_EPOCH_UNC (68.27 %). The 20 % rule is |error| <= 0.2 (REENTRY_EPOCH less the epoch); the equal-coverage k is the multiple of sigma that covers the same share of the predictions in the bin as the rule does, and k sigma over the rule's window is below 1 where the module's window is narrower at equal coverage.`, '');
+      `Build ${m.build}. Predictions at element-set epochs from 14 days before the reentry (4 h apart or more): the pseudo-observations of the object's element-set history up to the epoch (the last 120 h; the SGP4 module propagates each set over the interval it speaks for, 300 s states) go to \`fit_sdnap\` (the module chooses the span) and the set to \`reentry\` with the daily space weather of the years. Time to go is the true one (truth less the prediction epoch); the error is REENTRY_EPOCH less the truth and sigma is REENTRY_EPOCH_UNC (68.27 %). The 20 % rule is |error| <= 0.2 (REENTRY_EPOCH less the epoch); the equal-coverage k is the multiple of sigma that covers the same share of the predictions in the bin as the rule does, and k sigma over the rule's window is below 1 where the module's window is narrower at equal coverage. The space weather is the observed daily values of the years (GFZ Kp, ap, Ap and F10.7 up to 2026-09-12, the saved table after it), which include the days after each prediction epoch: a forecast issued at the epoch would be less exact, so the comparison with Aerospace and with the TIP messages, which use forecasts, favors SDN-AP in that one respect.`, '');
     if (m.C.predictions) L.push(`**Sample C: ${m.C.objects} objects with an observed reentry in the CORDS spreadsheet** (${m.C.starlinkObjects} Starlinks, ${m.C.objects - m.C.starlinkObjects} other objects; truth: the observed time, minute precision), ${m.C.predictions} predictions.`, '', ...accuracy(m.C), '', ...coverage(m.C), '', refusals(m.C), '');
     if (m.T.predictions) L.push(`**Sample T: ${m.T.objects} objects with a Space-Track decay message and a last TIP message before the archive's last snapshot** (${m.T.starlinkObjects} Starlinks; truth: that message's DECAY_EPOCH, a window of about a minute: Space-Track's settled time, not an observation), ${m.T.predictions} predictions.`, '', ...accuracy(m.T), '', ...coverage(m.T), '', refusals(m.T), '');
     if (m.C.starlink && m.C.other) L.push(`By kind (all times to go): sample C Starlinks ${m.C.starlink.n} answered, within 1 sigma ${pc(m.C.starlink.within1)}, 2 sigma ${pc(m.C.starlink.within2)}, median |error| ${f(m.C.starlink.absMedian, 2)} h; other objects ${m.C.other.n}, ${pc(m.C.other.within1)}, ${pc(m.C.other.within2)}, ${f(m.C.other.absMedian, 2)} h${m.T.starlink && m.T.other ? `; sample T Starlinks ${m.T.starlink.n}, ${pc(m.T.starlink.within1)}, ${pc(m.T.starlink.within2)}, ${f(m.T.starlink.absMedian, 2)} h; other objects ${m.T.other.n}, ${pc(m.T.other.within1)}, ${pc(m.T.other.within2)}, ${f(m.T.other.absMedian, 2)} h` : ''}.`, '');
@@ -446,7 +486,7 @@ export function eventsMarkdown(e) {
       '| Object | Time to go (h) | Aerospace error (h) | Aerospace plus or minus (h) | SDN-AP error (h) | SDN-AP sigma (h) |', '| --- | --: | --: | --: | --: | --: |',
       ...a.objectsDetail.map((x) => `| ${x.norad} | ${f(x.tauHours, 1)} | ${f(x.aerospaceErr, 2)} | ${f(x.aerospaceHalf, 2)} | ${x.sdnap.err !== undefined ? f(x.sdnap.err, 2) : `refused (${x.sdnap.refused})`} | ${x.sdnap.err !== undefined ? f(x.sdnap.sigma, 2) : ''} |`), '');
     if (m.tip.predictionsWithTip) L.push(`**Against Space-Track's TIP message in force at the same epoch** (sample T; the latest message before the epoch, ${m.tip.predictionsWithTip} predictions have one; the truth is the last message, so the comparison is exact only in the sense of that series):`, '',
-      '| Time to go | Answered | With a TIP message | TIP median |error| (h) | SDN-AP median |error| on the same (h) | Truth inside the TIP window | Truth inside SDN-AP 2 sigma | SDN-AP closer |', '| --- | --: | --: | --: | --: | --: | --: | --: |',
+      '| Time to go | Answered | With a TIP message | TIP median absolute error (h) | SDN-AP median absolute error on the same (h) | Truth inside the TIP window | Truth inside SDN-AP 2 sigma | SDN-AP closer |', '| --- | --: | --: | --: | --: | --: | --: | --: |',
       ...m.tip.byBin.filter((b) => b.withTip).map((b) => `| ${b.name} | ${b.answered} | ${b.withTip} | ${f(b.tipAbsMedian, 2)} | ${f(b.sdnapAbsMedian, 2)} | ${pc(b.tipInside)} | ${pc(b.sdnapIn2)} | ${b.sdnapCloser} of ${b.withTip} |`), '');
   }
   if (e.m30) {
@@ -464,6 +504,37 @@ export function eventsMarkdown(e) {
     L.push('#### M31. First sets of a new batch', '',
       `The method is covered by the build (\`launch_set\` makes the set from the insertion orbit; \`fit_sdnap\` takes an early ephemeris with that set as \`prior\`). The data are not held: the capture cycles keep derived products only, so the cycle of 2026-10-24T05:01Z, in which the new batch appeared (${m.satellites} satellites, provisional ids ${m.firstId} to ${m.lastId}), holds no first state, and the server serves each satellite's current file only. The clock was started with the current files (created ${m.fileCreated.min.slice(0, 16)} to ${m.fileCreated.max.slice(0, 16)} UTC, processed ${m.processed.first.slice(0, 16)} to ${m.processed.last.slice(0, 16)} UTC, one request at a time, kept in memory only): ${m.captured} of ${m.satellites} processed as the registered Starlinks are (fit by analysis/od, FFM-1 for 96 h, derived values kept). The fits of 6, 12 and 24 h with the \`launch_set\` set as prior and their scoring on newer files (days 1 to 3 after the fit end) are registered in A11c for 2026-10-25 to 2026-10-28 and are not run.`, '',
       `The states of the captured files start ${m.fileStart.min.slice(0, 16)} to ${m.fileStart.max.slice(0, 16)} UTC. Fit of the first 24 h against SpaceX's states: RMS median ${f(m.fitRmsKm.median, 2)} km (90th percentile ${f(m.fitRmsKm.p90, 2)}); B_eff median ${f(m.bEff.median, 4)} m2/kg; at the zero bound: ${m.bEffZeroBound}. Held-out RMS against the FFM-1 truth, days 1 / 2 / 3, median (km): SGP4-XP ${[1, 2, 3].map((k) => f(m.xpDays[k].median, 1)).join(' / ')}; SGP4 ${[1, 2, 3].map((k) => f(m.sgp4Days[k].median, 1)).join(' / ')}. What M31 needs from the capture: the first state (only) of every new id kept at first sight, with the file's hash.`, '');
+  }
+  if (e.previous) {
+    const p = e.previous, arrow = (a, c, d = 3) => `${f(a, d)} -> ${f(c, d)}`;
+    if (p.m29 && e.m29) {
+      const row = (name, a, c) => (a?.scored || c?.scored ? `${name}: answered ${a?.scored ?? 0} of ${a?.predictions ?? 0} -> ${c?.scored ?? 0} of ${c?.predictions ?? 0}, within 1 sigma ${a?.scored ? Math.round(a.all.within1 * 100) : ''} % -> ${c?.scored ? Math.round(c.all.within1 * 100) : ''} %, within 2 sigma ${a?.scored ? Math.round(a.all.within2 * 100) : ''} % -> ${c?.scored ? Math.round(c.all.within2 * 100) : ''} %, median absolute error ${a?.scored ? f(a.all.absMedian, 1) : ''} -> ${c?.scored ? f(c.all.absMedian, 1) : ''} h` : '');
+      L.push(`M29, build ${p.build} -> build ${e.build}: ${[row('sample C', p.m29.C, e.m29.C), row('sample T', p.m29.T, e.m29.T)].filter(Boolean).join('; ')}.`, '');
+    }
+    if (p.m30 && e.m30) {
+      const pv = p.m30.variants.find((v) => v.variant === 'default'), nv = e.m30.variants.find((v) => v.variant === 'default'), pr = p.m30.variants.find((v) => v.variant === 'rule'), nr = e.m30.variants.find((v) => v.variant === 'rule');
+      L.push(`M30, build ${p.build} -> build ${e.build}: \`reentry\` answered ${pv.reentryOk} -> ${nv.reentryOk} of ${nv.rows} at the shipped setting (predicted lifetime median ${arrow(pv.lifetimeDays.median, nv.lifetimeDays.median, 1)} days), and ${pr.reentryOk} -> ${nr.reentryOk} at the rule setting (${Object.keys(nr.refused).join(', ') || 'none refused'}); both builds' predictions are frozen in the rows with their issue times.`, '');
+    }
+  }
+  if (e.m31captured) {
+    const m = e.m31captured, cell = (a, k) => (a[k].n ? `${f(a[k].median)} (${f(a[k].p90)})` : '');
+    L.push('**M31 on the captured batch: per-object fits of the first 6, 12 and 24 h** (amendment A12b; ' + m.satellites + ' satellites; held-out days 1 to 3 after the fit end inside each file\'s own planned states as FFM-1 carries them, not newer files; median and 90th percentile of the 3D RMS, km):', '',
+      '| Fit length | Arm | Day 1 | Day 2 | Day 3 |', '| --: | --- | --: | --: | --: |',
+      ...m.hours.flatMap((h) => [['SDN-AP', h.sdnap], ['SGP4-XP', h.xp], ['SGP4', h.sgp4]].map(([name, a]) => `| ${h.hours} h | ${name} | ${[1, 2, 3].map((k) => cell(a, k)).join(' | ')} |`)), '',
+      '| Fit length | SDN-AP fit RMS (km, median) | B_eff (m2/kg): median [min, max] | Median sigma of B_eff | B_eff over its 24 h value: median [10th, 90th percentile] | Refused |', '| --: | --: | --- | --: | --- | --- |',
+      ...m.hours.map((h) => `| ${h.hours} h | ${f(h.fitRms)} | ${f(h.bEff.median, 4)} [${f(h.bEff.min, 4)}, ${f(h.bEff.max, 4)}] | ${f(h.bEffSigma, 4)} | ${f(h.bEffRatio24.median, 2)} [${f(h.bEffRatio24.p10, 2)}, ${f(h.bEffRatio24.p90, 2)}] | ${Object.keys(h.refused).length ? Object.entries(h.refused).map(([k, v]) => `${k} ${v}`).join(', ') : 'none'} |`), '');
+  }
+  if (e.m32 && e.m32.length) {
+    const cell = (a, k) => (a[k].n ? `${f(a[k].median)} (${f(a[k].p90)})` : '');
+    L.push('#### M31 and M32 on synthetic FFM-1 batches with a known parent state (amendment A12b)', '',
+      'Batches of 27 objects released from one circular parent orbit (6,630 km, 70 degrees), each with its own separation delta-v and ballistic coefficient; FFM-1 truth; the parent state given to the module is exact. Arms: SDN-AP per object (A), SDN-AP per object with the `launch_set` set as prior (B), `launch_set` alone (C), the batch-joint fit `launch_batch` (D), SGP4-XP and SGP4 per object (E). Median and 90th percentile of the 3D RMS (km) over the objects of the group, days 1 to 3 after the fit end (C: after the first file\'s start):', '');
+    for (const g of e.m32) {
+      L.push(`**Separation sigma ${g.sigmaMS} m/s per axis** (batches ${g.batches.join(', ')}; ${g.objects} objects): \`launch_set\` alone, ${g.launchSet.ok} of ${g.launchSet.windows} answered, days 1 / 2 / 3: ${[1, 2, 3].map((k) => cell(g.launchSet.days, k)).join(' / ')}.`, '',
+        '| Fit length | Arm | Day 1 | Day 2 | Day 3 |', '| --: | --- | --: | --: | --: |',
+        ...g.hours.flatMap((h) => [['A SDN-AP per object', h.sdnap], ['B SDN-AP with launch_set prior', h.prior], ['D launch_batch (joint)', h.joint.days], ['E SGP4-XP', h.xp], ['E SGP4', h.sgp4]].map(([name, a]) => `| ${h.hours} h | ${name} | ${[1, 2, 3].map((k) => cell(a, k)).join(' | ')} |`)), '',
+        '| Fit length | Joint minus per-object (D - A), median km: day 1 / 2 / 3 | Objects where D is lower: day 1 / 2 / 3 | Relative B_eff error, median: A / B / D | Joint calls answered | Names matched |', '| --: | --- | --- | --- | --- | --: |',
+        ...g.hours.map((h) => `| ${h.hours} h | ${h.paired.map((x) => f(x.medianDiff)).join(' / ')} | ${h.paired.map((x) => `${x.jointBetter} of ${x.n}`).join(' / ')} | ${f(h.bEffError.sdnap, 3)} / ${f(h.bEffError.prior, 3)} / ${f(h.bEffError.joint, 3)} | ${h.joint.ok} of ${h.joint.calls}${Object.keys(h.joint.refused).length ? ` (${Object.entries(h.joint.refused).map(([k, v]) => `${k} ${v}`).join(', ')})` : ''} | ${h.joint.namesMatch} of ${h.joint.objects} |`), '');
+    }
   }
   return L;
 }
