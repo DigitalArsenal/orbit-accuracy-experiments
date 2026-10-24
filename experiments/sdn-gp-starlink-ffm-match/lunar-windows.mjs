@@ -36,7 +36,7 @@ export async function lunarWindow(b, loaded, pack, startMs, fitHours) {
   return { ...base, sdngp: {
     ok: true, fitRmsKm: fit.fitRmsKm, fitMaxKm: fit.fitMaxKm, heldOutRmsKm: fit.heldOutRmsKm, iterations: fit.iterations, fitStates: fit.statesFitted, spanHours: spanMatch ? Number(spanMatch[1]) : null,
     days: Object.fromEntries(Object.entries(scored.byDay).filter(([, d]) => d).map(([k, d]) => [k, { rmsKm: d.rmsKm, n: d.n, ric: d.ric }])),
-    matched: scored.matched, unmatched: scored.unmatched, centerCheck: scored.centerCheck, recordBytes: fit.omm.length, elementBytes: fit.minimal.length,
+    matched: scored.matched, unmatched: scored.unmatched, centerCheck: scored.centerCheck, recordBytes: fit.omm.length,
     module: b.sdngp.provenance.wasmSha256.slice(0, 12), params: fit.params, comment: fit.comment,
   } };
 }

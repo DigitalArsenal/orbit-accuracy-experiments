@@ -27,6 +27,8 @@
     "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source slr-low-current,slr-high-current",
     "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs, starlink-lowering.mjs, fitlength.mjs --arm sdngp, span-windows.mjs --arm sdngp)",
     "node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs (SGP4 and XP of the COMSPOC-aligned fit-span windows; the SDN-GP arm runs inside sdngp-run.mjs)",
+    "node experiments/sdn-gp-starlink-ffm-match/lunar-maneuvers.mjs",
+    "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/lunar-windows.mjs --shard k/8 (inside sdngp-run.mjs; the default-span rows are baselines.mjs, spk-windows.mjs and span-windows.mjs with --arm sdngp --span default)",
     "node experiments/sdn-gp-starlink-ffm-match/horizons-packs.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack <pack> --start <ISO> --fit-hours <h> --predicted <states.oem>",
@@ -35,10 +37,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "2e1427411450a5f4ac51b6f313df88d28fa52a7358fd1f8e0ff3a2f168502de9",
+  "planSha256": "3291d3fef8ea20e8572abc4ee2ad3a9db78176b8f16bb9d5bcf6156d7695fae7",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "c4cfd1245b5984f163aa03be40094974016c63fa"
+    "commit": "82a5b96f2859d2fe4aab38a33d203ce32be4de4a"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -262,7 +264,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "9da7fad24c9d",
+    "headlineBuild": "7ea0ea272bbf",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -294,6 +296,14 @@
         "sourceCommit": "1102cd6e3b2c71a4e1899f27abfcfc4904f62444",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T06:32:14.780Z",
+        "complete": true
+      },
+      {
+        "build": "7ea0ea272bbf",
+        "wasmSha256": "7ea0ea272bbf75d9a5d98f41be73f44d849553271716c367dfa294d9d754b9db",
+        "sourceCommit": "b663c8cb9e3cc3d5378f80779d754d7533efc6d9",
+        "sourceUncommittedFiles": 3,
+        "firstUseUtc": "2026-10-24T08:10:30.044Z",
         "complete": true
       }
     ]

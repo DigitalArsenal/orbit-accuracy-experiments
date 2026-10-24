@@ -34,6 +34,7 @@ import { parseMeme } from './lib/sources.mjs';
 import { windowStarts, withT, ms } from './lib/windows.mjs';
 import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
 import { spanObject } from './span-windows.mjs';
+import { lunarWindow } from './lunar-windows.mjs';
 
 const args = process.argv.slice(2);
 const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 9;
@@ -216,10 +217,11 @@ if (headline) {
   const bs = await openBaselines(modules, { sdngp: true });
   const recorded = new Map(buildRows(headline.dir).filter((r) => r.sdngp).map((r) => [rowKey(r), r]));
   let sdReplayed = 0;
-  const check = async (object, startMs, fitSeconds, leadDays) => {
-    const rec = recorded.get(rowKey({ source: object.source, id: object.id, startUtc: new Date(startMs).toISOString(), fitSeconds }))?.sdngp;
+  const check = async (object, startMs, fitSeconds, leadDays, { defaultSpan = false } = {}) => {
+    const rec = recorded.get(rowKey({ source: object.source + (defaultSpan ? '+default' : ''), id: object.id, startUtc: new Date(startMs).toISOString(), fitSeconds }))?.sdngp;
     if (!rec) fail(`SDN-GP replay: no recorded row for ${object.id} ${new Date(startMs).toISOString()} in build ${headline.build}`);
-    const again = (await scoreWindow(bs, object, startMs, { fitSeconds, leadDays, minCoverage: config.windows.minimumCoverage, arms: 'sdngp' })).sdngp;
+    const again = (await scoreWindow(bs, object, startMs, { fitSeconds, leadDays, minCoverage: config.windows.minimumCoverage, arms: 'sdngp', defaultSpan })).sdngp;
+    if (defaultSpan && rec.ok && Math.abs(again.spanHours - rec.spanHours) > 1e-9) fail(`SDN-GP replay ${object.id}: the span the module chose differs (${again.spanHours} vs ${rec.spanHours})`);
     if (Boolean(again.ok) !== Boolean(rec.ok)) fail(`SDN-GP replay ${object.id}: ok differs`);
     if (rec.ok && !same(again.fitRmsKm, rec.fitRmsKm)) fail(`SDN-GP replay ${object.id}: fit RMS ${again.fitRmsKm} vs ${rec.fitRmsKm}`);
     for (const k of Object.keys(rec.days ?? {})) if (!same(again.days[k].rmsKm, rec.days[k].rmsKm)) fail(`SDN-GP replay ${object.id}: day ${k} differs`);
@@ -231,6 +233,16 @@ if (headline) {
     const row = rows[Math.floor(rows.length / 2)];
     const object = objectOf(source, row);
     if (object) await check(object, ms(row.startUtc), row.fitSeconds, config.windows.leadDays);
+  }
+  const defaultRow = [...recorded.values()].filter((r) => r.source === 'iss+default' && r.sdngp.ok && r.sdngp.spanHours > 24.5)[0]; // a default-span window (A9f) where the module extended the span
+  if (defaultRow) await check(sources.iss()[0], ms(defaultRow.startUtc), defaultRow.fitSeconds, config.windows.leadDays, { defaultSpan: true });
+  const lunarRows = [...recorded.values()].filter((r) => r.source === 'lro-lunar' && r.fitHours === 24 && r.sdngp.ok); // a Moon-centred window (A9f)
+  if (lunarRows.length) {
+    const row = lunarRows[Math.floor(lunarRows.length / 2)];
+    const again = (await lunarWindow(bs, readPack('lro-lunar'), 'lro-lunar', ms(row.startUtc), row.fitHours)).sdngp;
+    if (!again.ok || !same(again.fitRmsKm, row.sdngp.fitRmsKm)) fail(`Moon-centred replay ${row.startUtc}: fit RMS ${again.fitRmsKm} vs ${row.sdngp.fitRmsKm}`);
+    for (const k of Object.keys(row.sdngp.days)) if (!same(again.days[k].rmsKm, row.sdngp.days[k].rmsKm)) fail(`Moon-centred replay ${row.startUtc}: day ${k} differs`);
+    sdReplayed += 1;
   }
   const spanRows = read(path.join(store, 'rows', 'span-slr.jsonl')); // a COMSPOC-aligned fit-span window (A9e): SGP4 and XP here, SDN-GP below
   const spanRow = spanRows.filter((r) => r.spanHours === 72)[0] ?? spanRows[0];

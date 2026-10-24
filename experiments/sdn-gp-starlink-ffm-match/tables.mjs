@@ -35,6 +35,10 @@ const REGIMES = [
   { id: 'meo-gnss-rapid', label: 'MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22)' },
   { id: 'igso-gnss-rapid', label: 'IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22)' },
   { id: 'geo-gnss-rapid', label: 'GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22)' },
+  { id: 'moon-lro-fit24', label: 'Moon-centred, LRO (NAIF reconstruction, about 90 km), 24 h fit (the Moon-centred SDN-GP only: section 14)' },
+  { id: 'moon-lro-fit72', label: 'Moon-centred, LRO (NAIF reconstruction, about 90 km), 72 h fit' },
+  { id: 'moon-danuri-fit24', label: 'Moon-centred, Danuri (JPL Horizons, 130 km, perilune 60 km), 24 h fit' },
+  { id: 'moon-danuri-fit72', label: 'Moon-centred, Danuri (JPL Horizons, 130 km, perilune 60 km), 72 h fit' },
   { id: 'heo-artemis2', label: 'HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1)' },
 ];
 const AWAITING = [ // regimes with truth in the archive that Earth-centred SGP4 and SGP4-XP do not describe: awaiting SDN-GP
@@ -75,6 +79,12 @@ export function collect() {
   if (SD_HEADLINE) { // the SDN-GP fits of the same windows (rows of the headline build)
     const byKey = new Map(buildRows(SD_HEADLINE.dir).filter((r) => r.sdngp && r.source && r.startUtc).map((r) => [rowKey(r), r.sdngp]));
     for (const w of windows) { const sd = byKey.get(rowKey(w)); if (sd) w.sdngp = sd; }
+    const rows = buildRows(SD_HEADLINE.dir);
+    // the module's default fit span on the same windows (amendment A9f): rows labeled <source>+default
+    const dKey = new Map(rows.filter((r) => r.sdngp && /\+default$/.test(r.source ?? '') && !/^span-/.test(r.source)).map((r) => [rowKey({ ...r, source: r.source.replace(/\+default$/, '') }), r.sdngp]));
+    for (const w of windows) { const d = dKey.get(rowKey(w)); if (d) w.sdngpDefault = d; }
+    // the Moon-centred windows (amendment A9f)
+    for (const r of rows.filter((x) => x.sdngp && /^(lro|danuri)-lunar$/.test(x.source ?? ''))) windows.push({ regime: `moon-${r.source.split('-')[0]}-fit${r.fitHours}`, ...r, meta: {} });
   }
   return windows;
 }
@@ -162,6 +172,7 @@ export function build() {
     const ws = windows.filter((w) => w.regime === r.id);
     const cs = comspoc.filter((c) => c.regime === r.id);
     regimes.push(statsOf(r, ws, cs.length ? null : null));
+    if (r.id.startsWith('moon-')) regimes.at(-1).sdngp.elementBytes = null; // the minimal-record size is defined for the Earth-centred set's parameters
     const ran = ws.filter((w) => w.sdngp); // SDN-GP ran on a strict subset (SpaceX files that had changed on the server are skipped): the same windows for all arms in the next row
     if (ran.length && ran.length < ws.length) regimes.push(statsOf({ id: `${r.id}-sdngp`, label: `${r.label}, the ${ran.length} windows SDN-GP ran on` }, ran, null));
     if (cs.length) { // the same objects, so the COMSPOC arm is compared like with like
@@ -309,6 +320,56 @@ export function build() {
     return { build: x.build, wasmSha256: x.wasmSha256, sourceCommit: x.sourceCommit, sourceDirtyFiles: x.sourceDirtyFiles, firstUseUtc: x.firstUseUtc, builtSeenUtc: x.builtSeenUtc, complete: Boolean(x.complete),
       starlink: rows.length ? { fitted: rows.length, onCommonSet: substantial.includes(x), fit: quantile(rows.map((r) => r.sdngp.fitRmsKm), 0.5), days: Object.fromEntries(DAYS.map((k) => [k, quantile(rows.map((r) => r.sdngp.days?.[k]?.rmsKm), 0.5)])) } : null };
   });
+  // amendment A9f: the module's default fit span (48 h, extended to 72 and 120 h while the fit RMS holds) on the same windows as the registered fits, SDN-GP only
+  const defaultStudy = REGIMES.map((r) => {
+    const ws = windows.filter((w) => w.regime === r.id && w.sdngpDefault);
+    if (!ws.length) return null;
+    const asDefault = ws.map((w) => ({ ...w, sdngp: w.sdngpDefault }));
+    const longer = (w) => w.sdngpDefault.ok && w.sdngpDefault.spanHours > w.fitSeconds / 3600 + 0.5; // the module used more than the registered fit's span
+    return { id: r.id, label: r.label, windows: ws.length,
+      bySpan: Object.fromEntries([24, 48, 72, 120].map((h) => [h, ws.filter((w) => w.sdngpDefault.ok && Math.round(w.sdngpDefault.spanHours) === h).length])), longer: ws.filter(longer).length,
+      registered: armStats(ws, 'sdngp'), default: armStats(asDefault, 'sdngp'),
+      onLonger: { registered: armStats(ws.filter(longer), 'sdngp'), default: armStats(asDefault.filter(longer), 'sdngp') } };
+  }).filter(Boolean);
+  // the COMSPOC-aligned windows with the module's rule (A9e windows, A9f rows): one extra row per group
+  const spanDefaultRows = SD_HEADLINE ? buildRows(SD_HEADLINE.dir).filter((r) => r.sdngp && /^span-(slr|gnss)\+default$/.test(r.source ?? '')) : [];
+  const spanDefault = spanDefaultRows.length ? spanGroups.map(([group, label]) => {
+    const ws = spanDefaultRows.filter((r) => r.group === group);
+    if (!ws.length) return null;
+    const cs = preciseRows.filter((r) => new Set(ws.map((w) => w.norad)).has(r.norad));
+    const csDay = (k) => quantile(cs.filter((r) => r.days[k - 1]).map((r) => r.days[k - 1].rmsKm), 0.5);
+    return { group, label, windows: ws.length, bySpan: Object.fromEntries([24, 48, 72, 120].map((h) => [h, ws.filter((w) => w.sdngp.ok && Math.round(w.sdngp.spanHours) === h).length])), sdngp: armStats(ws, 'sdngp'), comspoc: { 1: csDay(1), 2: csDay(2), 3: csDay(3) } };
+  }).filter(Boolean) : null;
+  // amendment A9f: the Moon-centred windows with the maneuver check (lunar-maneuvers.mjs, from the truth alone)
+  const manFile = path.join(results, 'lunar-maneuvers.json');
+  const maneuvers = fs.existsSync(manFile) ? JSON.parse(fs.readFileSync(manFile, 'utf8')) : null;
+  const lunarStudy = maneuvers && windows.some((w) => /^moon-/.test(w.regime)) ? ['lro-lunar', 'danuri-lunar'].map((pack) => {
+    const events = maneuvers.packs[pack].events.map((e) => ({ ...e, ms: Date.parse(e.epochUtc) }));
+    const rows = windows.filter((w) => w.source === pack).map((w) => {
+      const start = Date.parse(w.startUtc), fitEnd = start + w.fitHours * 3600e3, end = fitEnd + 3 * 86400e3;
+      return { ...w, inFit: events.filter((e) => e.ms >= start && e.ms <= fitEnd), inHeld: events.filter((e) => e.ms > fitEnd && e.ms <= end) };
+    });
+    const med = (list, k) => quantile(list.filter((w) => w.sdngp?.ok && w.sdngp.days?.[k]).map((w) => w.sdngp.days[k].rmsKm), 0.5);
+    const group = (list) => ({ windows: list.length, fitted: list.filter((w) => w.sdngp?.ok).length, fitRms: quantile(list.filter((w) => w.sdngp?.ok).map((w) => w.sdngp.fitRmsKm), 0.5), days: Object.fromEntries([1, 2, 3].map((k) => [k, { median: med(list, k), max: quantile(list.filter((w) => w.sdngp?.ok && w.sdngp.days?.[k]).map((w) => w.sdngp.days[k].rmsKm), 1), n: list.filter((w) => w.sdngp?.ok && w.sdngp.days?.[k]).length }])) });
+    const worst = rows.filter((w) => w.sdngp?.ok && w.sdngp.days?.[3]).sort((a, c) => c.sdngp.days[3].rmsKm - a.sdngp.days[3].rmsKm).slice(0, 5)
+      .map((w) => ({ startUtc: w.startUtc, fitHours: w.fitHours, fitRmsKm: w.sdngp.fitRmsKm, days: Object.fromEntries([1, 2, 3].map((k) => [k, w.sdngp.days[k]?.rmsKm ?? null])), maneuversInFit: w.inFit.map((e) => ({ epochUtc: e.epochUtc, deltaVCmPerS: e.deltaVCmPerS })), maneuversInHeldOut: w.inHeld.map((e) => ({ epochUtc: e.epochUtc, deltaVCmPerS: e.deltaVCmPerS })) }));
+    const ranked = rows.filter((w) => w.sdngp?.ok && w.sdngp.days?.[3]).sort((a, c) => c.sdngp.days[3].rmsKm - a.sdngp.days[3].rmsKm);
+    const worstTenth = ranked.slice(0, Math.max(1, Math.round(ranked.length / 10)));
+    return { pack, events: maneuvers.packs[pack].events.length, threshold: maneuvers.packs[pack].stepStatistic,
+      byFit: [24, 72].map((h) => ({ fitHours: h, ...group(rows.filter((w) => w.fitHours === h)) })),
+      withManeuver: group(rows.filter((w) => w.inFit.length || w.inHeld.length)), withManeuverInFit: group(rows.filter((w) => w.inFit.length)), withManeuverInHeldOut: group(rows.filter((w) => w.inHeld.length && !w.inFit.length)), withoutManeuver: group(rows.filter((w) => !w.inFit.length && !w.inHeld.length)),
+      worst, worstTenth: { windows: worstTenth.length, withManeuver: worstTenth.filter((w) => w.inFit.length || w.inHeld.length).length }, allWindowsWithManeuver: rows.filter((w) => w.inFit.length || w.inHeld.length).length, allWindows: rows.length };
+  }) : null;
+  // the registered 24 h rows of this build against the previous complete build, window by window (amendment A9f)
+  const completeBuilds = SD_BUILDS.filter((x) => x.complete), previous = completeBuilds.at(-2);
+  const earthIdentity = SD_HEADLINE && previous ? (() => {
+    const pick = (b) => new Map(buildRows(b.dir).filter((r) => r.sdngp && r.source && r.startUtc && !/\+default$/.test(r.source) && !/^(lro|danuri)-lunar$/.test(r.source) && !/^starlink-ffm-(rule|free)$/.test(r.source)).map((r) => [rowKey(r), JSON.stringify([r.sdngp.ok, r.sdngp.fitRmsKm, r.sdngp.days])]));
+    const now = pick(SD_HEADLINE), before = pick(previous);
+    let both = 0, identical = 0; const differing = {};
+    for (const [k, v] of now) { if (!before.has(k)) continue; both += 1; if (before.get(k) === v) identical += 1; else { const src = k.split('|')[0]; differing[src] = (differing[src] ?? 0) + 1; } }
+    return { previousBuild: previous.build, windowsInBoth: both, identical, differing };
+  })() : null;
+
   // amendment A9d: the Starlinks with B_eff above 0.5 m2/kg, fitted as the build ships (the rows of the headline), with the 2c.2 rule and with free B_eff
   const decayWs = windows.filter((w) => w.regime === 'leo-starlink-ffm-decay');
   const lowRows = SD_HEADLINE ? buildRows(SD_HEADLINE.dir, 'lowering').filter((r) => r.sdngp) : [];
@@ -327,7 +388,7 @@ export function build() {
   const sdngpCheck = chk.length ? { windows: chk.length, ratio: [0, 0.5, 1].map((q) => quantile(chk, q)) } : null;
   // SpaceX forecast files that could not be reproduced for SDN-GP because the server's copy had changed since the registered fit
   const spacexSkipped = SD_HEADLINE ? new Set(fs.readdirSync(SD_HEADLINE.dir).filter((n) => n.startsWith('starlink-skipped.')).flatMap((n) => readJsonl(path.join(SD_HEADLINE.dir, n))).filter((x) => /changed on the server/.test(x.reason)).map((x) => x.norad)).size : 0;
-  return { generatedFrom: 'recorded window rows (statistics only)', spanStudy, lowering, sdngpCheck, sdngpSpacexSkipped: spacexSkipped, bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
+  return { generatedFrom: 'recorded window rows (statistics only)', earthIdentity, defaultStudy, spanDefault, lunarStudy, spanStudy, lowering, sdngpCheck, sdngpSpacexSkipped: spacexSkipped, bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.filter((a) => !(a.id === 'lunar' && lunarStudy)).map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -411,7 +472,7 @@ export function markdown(t) {
     '- **Environment.** Earth orientation: the local IERS daily finals of 2026-10-13. Space weather: the `data-source/space-weather` rows (GFZ, NOAA SWPC) through 2026-10-25, then NOAA SWPC 45-day daily Ap and F10.7 for the eight days after (Kp and the 81-day average held), because the module\'s rows end where its Kp forecast ends and the truth runs 96 h. Planetary kernel DE440s. Density correction s = 0 (no $DCL is published yet). Hashes are in `manifest.json`.',
     '- **COMSPOC XP (local scoring only).** Their published SGP4-XP sets, propagated through the black-box module and compared with the same-day truth; their set epochs are 1 to 5 days older than the truth, so their errors are at those ages, not at the 24 h of the fitted arms. Never fitted to, never an input; aggregates only.',
     '- **Plan.** `experiments/sdn-gp-starlink-ffm-match/PLAN.md`, frozen by its first commit, with amendments A1 (headline table), A2 (start states, weather extension, the COMSPOC scoring arm), A3 (fit length), A4 (GEO and IGSO windows from the GFZ MGEX set found after registration), A5 (spacecraft truth from NAIF: highly elliptical orbits scored, cislunar, lunar and heliocentric awaiting SDN-GP) A6 (truth quality: the iteration cap and the zero bound) A7 to A7d (the LEO fit floor against zonal-only gravity, DESIGN.md M1 to M3: section 12) A8 to A8c (current GNSS truth from the GFZ rapid orbits, TESS from MAST, CAPSTONE, Artemis I and Danuri from JPL Horizons, windows prepared for SDN-GP: section 1 and section 13) and A9 to A9e (Psyche, Lucy and Juno from Horizons, current laser-ranging truth from the ILRS products on CDDIS, the SDN-GP arm and its rules, its fit-length arm, the lowering variants and the fit span against COMSPOC).',
-    '- **Not measured here.** SDN-GP on the lunar, cislunar and heliocentric truth (the module\'s theory is Earth-centred; the packs and windows are prepared, section 13); SDN-GP\'s covariance (section 5); the NAIF kernels of Psyche, Lucy and Juno are SPK type 1, unreadable by `files/orbit-products` 0.1.4, so that truth comes from JPL Horizons vector tables; GEO operator ephemerides (SES, Intelsat) are not stored; the theory-term ranking (phase 3).', '');
+    '- **Not measured here.** SDN-GP on ' + (t.lunarStudy ? 'the cislunar and heliocentric truth (the lunar windows are scored in section 14; the other packs and windows are prepared, section 13)' : 'the lunar, cislunar and heliocentric truth (the module\'s theory is Earth-centred; the packs and windows are prepared, section 13)') + '; SDN-GP\'s covariance (section 5); the NAIF kernels of Psyche, Lucy and Juno are SPK type 1, unreadable by `files/orbit-products` 0.1.4, so that truth comes from JPL Horizons vector tables; GEO operator ephemerides (SES, Intelsat) are not stored; the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
   L.push(`Cells read \`SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4\`. SDN-GP is side B's module \`sdn-gp-propagator\` as built${SD_HEADLINE ? ` (build ${SD_HEADLINE.build}: source commit ${SD_HEADLINE.sourceCommit?.slice(0, 8)}, ${SD_HEADLINE.sourceDirtyFiles} uncommitted file(s); the newest build that ran every source, see section 2a)` : ''}, fitted by \`fit_sdngp\` to the same truth on the same windows; \`pending\` where it has not run. Best-case XP is \`propagator/sgp4-xp fit\` fitted to the same truth on the same windows. \`-\` is not scored. A COMSPOC value marked \`*\` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. A COMSPOC value marked \`†\` (the GFZ rapid-orbit and laser-ranged regimes) is by days since the epoch of the set itself, day 1 being the first 24 h after it, against the rapid orbit; XP and SGP4 are by days since the end of their 24 h fit, so the ages are not the same (no COMSPOC fit span is known). For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.`, '');
   const isExtra = (r) => /-(aligned|drag|b0|decay|clean|72h|sdngp)$/.test(r.id) || r.id === 'heo-artemis2';
@@ -421,7 +482,7 @@ export function markdown(t) {
   const sdState = (r) => (r.sdngp.fitted > 0 ? '-' : r.sdngp.attempted > 0 ? 'not fitted' : 'pending'); // '-' where SDN-GP ran but has no value for the cell
   const row = (r) => {
     const key = /^(geo|igso|heo)/.test(r.id) ? 'GEO' : r.id.startsWith('meo') ? 'MEO' : 'LEO';
-    const b = t.bench ? { xp: t.bench.find((x) => x.theory === 'SGP4-XP' && x.regime.startsWith(key)), sg: t.bench.find((x) => x.theory === 'SGP4' && x.regime.startsWith(key)) } : null;
+    const b = t.bench && !r.id.startsWith('moon-') ? { xp: t.bench.find((x) => x.theory === 'SGP4-XP' && x.regime.startsWith(key)), sg: t.bench.find((x) => x.theory === 'SGP4' && x.regime.startsWith(key)) } : null;
     const share = (a) => { const c = a.days[3]?.ric; if (!(c && c.every(Number.isFinite))) return ''; const q = (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2); return `${q >= 99.5 ? q.toFixed(1) : Math.round(q)} %`; };
     const { c, mark } = comspocOf(r);
     const day = (k) => cellOf(r.sdngp.days[k]?.median, r.xp.days[k]?.median, c?.days?.[k]?.median, r.sgp4.days[k]?.median, mark, sdState(r));
@@ -443,6 +504,10 @@ export function markdown(t) {
       const day = (k) => cellOf(sp.sdngp.days[k]?.median, sp.xp.days[k]?.median, csv(k), sp.sgp4.days[k]?.median, '', sp.sdngp.fitted > 0 ? '-' : 'pending');
       L.push(`| ${g.label} | ${sp.hours} h | ${sp.sdngp.fitted} / ${sp.xp.fitted} / ${sp.sgp4.fitted} / ${sp.windows} | ${cellOf(sp.sdngp.fit.median, sp.xp.fit.median, undefined, sp.sgp4.fit.median, '', sp.sdngp.fitted > 0 ? '-' : 'pending')} | ${day(1)} | ${day(2)} | ${day(3)} |`);
     }
+    for (const g of t.spanDefault ?? []) { // the module's own span rule on the same group (SDN-GP only)
+      const day = (k) => cellOf(g.sdngp.days[k]?.median, undefined, g.comspoc[k], undefined, '', g.sdngp.fitted > 0 ? '-' : 'pending');
+      L.push(`| ${g.label} | module's rule (24 / 48 / 72 / 120 h chosen: ${[24, 48, 72, 120].map((h) => g.bySpan[h]).join(' / ')}) | ${g.sdngp.fitted} / - / - / ${g.windows} | ${cellOf(g.sdngp.fit.median, undefined, undefined, undefined, '', '-')} | ${day(1)} | ${day(2)} | ${day(3)} |`);
+    }
     L.push('');
   }
 
@@ -455,11 +520,12 @@ export function markdown(t) {
   L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', 'Each day is over the windows that have enough states in it (90 %): in the arcs of the laser-ranging orbits only the first window of an arc has day 3, so the day columns are over different window sets; n is the count behind a day. The paired tables below compare arms window by window.', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
   for (const r of t.regimes) for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) {
     if (name === 'SDN-GP' && !a.attempted) continue;
+    if (name !== 'SDN-GP' && r.id.startsWith('moon-')) continue; // SGP4 and SGP4-XP describe Earth-centred orbits
     const s = (x, withN) => (x?.n ? `${f(x.median)} / ${f(x.mean)} / ${f(x.p90)}${withN ? ` (n ${x.n})` : ''}` : '');
     L.push(`| ${r.label} | ${name} | ${a.fitted} | ${s(a.fit)} | ${s(a.days[1], true)} | ${s(a.days[2], true)} | ${s(a.days[3], true)} |`);
   }
   L.push('', '### Paired, windows both fitters fitted: median XP / median SGP4 (share of windows where XP is closer)', '', '| Regime | Windows | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --: | --- | --- | --- | --- |');
-  for (const r of t.regimes) { const p = (k) => (r.paired.days[k] ? `${f(r.paired.days[k].medianRatio, 2)} (${Math.round(100 * r.paired.days[k].xpCloser)} %, n ${r.paired.days[k].n})` : ''); L.push(`| ${r.label} | ${r.paired.windows} | ${p(0)} | ${p(1)} | ${p(2)} | ${p(3)} |`); }
+  for (const r of t.regimes.filter((x) => !x.id.startsWith('moon-'))) { const p = (k) => (r.paired.days[k] ? `${f(r.paired.days[k].medianRatio, 2)} (${Math.round(100 * r.paired.days[k].xpCloser)} %, n ${r.paired.days[k].n})` : ''); L.push(`| ${r.label} | ${r.paired.windows} | ${p(0)} | ${p(1)} | ${p(2)} | ${p(3)} |`); }
   if (t.regimes.some((r) => r.sdngp.fitted)) {
     L.push('', '### Paired, windows SDN-GP and the other fitter both fitted: median SDN-GP / median other (share of windows where SDN-GP is closer)', '', '| Regime | Against | Windows | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
     for (const r of t.regimes) if (r.sdngp.fitted) for (const [name, key] of [['SGP4-XP', 'xp'], ['SGP4', 'sgp4']]) { const q = r.pairedSdngp[key]; const p = (k) => (q.days[k] ? `${f(q.days[k].medianRatio, 2)} (${Math.round(100 * q.days[k].closer)} %, n ${q.days[k].n})` : ''); L.push(`| ${r.label} | ${name} | ${q.windows} | ${p(0)} | ${p(1)} | ${p(2)} | ${p(3)} |`); }
@@ -467,7 +533,8 @@ export function markdown(t) {
   if (t.sdngpBuilds.length) {
     L.push('', '### 2a. Builds of the SDN-GP module that were run (side B rebuilds `dist/` in place; every row is tied to a build)', '', 'Starlink, FFM-propagated truth, the windows each build fitted (median 3D km; fit RMS, then held-out days 1 / 2 / 3). `complete` marks the build that ran every source of section 1; the tables above use the newest complete one. The source commit is side B\'s; uncommitted files are counted because a build is made from the working tree.', '',
       '| Build (wasm SHA-256 prefix) | Side-B source commit | Uncommitted files | Build first seen (UTC) | Complete | Starlink windows fitted | Fit RMS | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --: | --: | --: | --: | --: |',
-      ...t.sdngpBuilds.map((x) => `| ${x.build} | ${x.sourceCommit?.slice(0, 8) ?? ''} | ${x.sourceDirtyFiles ?? ''} | ${(x.builtSeenUtc ?? x.firstUseUtc)?.slice(0, 16) ?? ''} | ${x.complete ? 'yes' : 'no'} | ${x.starlink?.fitted ?? 0}${x.starlink && !x.starlink.onCommonSet ? ' (partial run)' : ''} | ${f(x.starlink?.fit)} | ${f(x.starlink?.days[1])} | ${f(x.starlink?.days[2])} | ${f(x.starlink?.days[3])} |`));
+      ...t.sdngpBuilds.map((x) => `| ${x.build} | ${x.sourceCommit?.slice(0, 8) ?? ''} | ${x.sourceDirtyFiles ?? ''} | ${(x.builtSeenUtc ?? x.firstUseUtc)?.slice(0, 16) ?? ''} | ${x.complete ? 'yes' : 'no'} | ${x.starlink?.fitted ?? 0}${x.starlink && !x.starlink.onCommonSet ? ' (partial run)' : ''} | ${f(x.starlink?.fit)} | ${f(x.starlink?.days[1])} | ${f(x.starlink?.days[2])} | ${f(x.starlink?.days[3])} |`),
+      ...(t.earthIdentity ? ['', `The registered windows of the headline build against build ${t.earthIdentity.previousBuild}, window by window: ${t.earthIdentity.identical} of the ${t.earthIdentity.windowsInBoth} windows both ran are identical to the last digit (fit RMS and every held-out day)${Object.keys(t.earthIdentity.differing).length ? `; the others, by source: ${Object.entries(t.earthIdentity.differing).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}.`] : []));
   }
   if (t.lowering) {
     const lw = t.lowering;
@@ -478,21 +545,30 @@ export function markdown(t) {
       `| SGP4-XP | ${lw.xp.fitted} of ${lw.windows} | | ${f(lw.xp.fit.median)} | ${f(lw.xp.days[1]?.median)} | ${f(lw.xp.days[2]?.median)} | ${f(lw.xp.days[3]?.median)} | |`,
       `| SGP4 | ${lw.sgp4.fitted} of ${lw.windows} | | ${f(lw.sgp4.fit.median)} | ${f(lw.sgp4.days[1]?.median)} | ${f(lw.sgp4.days[2]?.median)} | ${f(lw.sgp4.days[3]?.median)} | |`);
   }
+  if (t.defaultStudy?.length) {
+    L.push('', '### 2c. The module\'s default fit span against the registered fit, same windows (amendment A9f)', '',
+      'The block holds the truth from 120 h before the fit end and declares only the end of the fit; the module chooses the span (its rule: the latest 48 h, extended to 72 and then 120 h while the fit RMS holds; the whole interval when the truth is shorter). Held-out days as before. SDN-GP only: medians in km over the windows both ran, day 1 / 2 / 3 as `registered fit -> default span`; the last two columns are days 1 and 3 on the windows where the module used more than the registered span (where an arc ends before day 3 the cell is empty).', '',
+      '| Regime | Windows | Span chosen: 24 / 48 / 72 / 120 h | Day 1 | Day 2 | Day 3 | Windows with a longer span: day 1 | day 3 |', '| --- | --: | --- | --- | --- | --- | --- | --- |');
+    for (const d of t.defaultStudy) {
+      const pair = (k) => `${f(d.registered.days[k]?.median)} -> ${f(d.default.days[k]?.median)}`;
+      L.push(`| ${d.label} | ${d.windows} | ${[24, 48, 72, 120].map((h) => d.bySpan[h]).join(' / ')} | ${pair(1)} | ${pair(2)} | ${pair(3)} | ${d.longer ? `${d.longer}: ${f(d.onLonger.registered.days[1]?.median)} -> ${f(d.onLonger.default.days[1]?.median)}` : '0'} | ${d.longer ? `${f(d.onLonger.registered.days[3]?.median)} -> ${f(d.onLonger.default.days[3]?.median)}` : ''} |`);
+    }
+  }
   L.push('', '## 3. Radial / in-track / cross-track split (km, median of per-window component RMS)', '', '| Regime | Arm | Fit R / I / C | Day 1 R / I / C | Day 3 R / I / C |', '| --- | --- | --- | --- | --- |');
   const ric = (c) => (c && c.some(Number.isFinite) ? c.map((v) => f(v)).join(' / ') : '');
   for (const r of t.regimes) {
-    for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) if (name !== 'SDN-GP' || a.fitted) L.push(`| ${r.label} | ${name} | ${ric(a.fitRic)} | ${ric(a.days[1]?.ric)} | ${ric(a.days[3]?.ric)} |`);
+    for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) if ((name !== 'SDN-GP' || a.fitted) && (name === 'SDN-GP' || !r.id.startsWith('moon-'))) L.push(`| ${r.label} | ${name} | ${ric(a.fitRic)} | ${ric(a.days[1]?.ric)} | ${ric(a.days[3]?.ric)} |`);
     if (r.comspoc) L.push(`| ${r.label} | COMSPOC XP (local scoring only) | | ${ric(r.comspoc.days[1]?.ric)} | ${ric(r.comspoc.days[3]?.ric)} |`);
   }
   L.push('', '## 4. Cost per object', '', '| Regime | Arm | Parameters | Element bytes | Record bytes as returned | Fit time, median ms |', '| --- | --- | --: | --: | --: | --: |');
-  for (const r of t.regimes) for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) if (name !== 'SDN-GP' || a.fitted) L.push(`| ${r.label} | ${name} | ${a.parameters ?? ''} | ${a.elementBytes ?? ''} | ${a.recordBytes ?? ''} | ${f(a.fitMsMedian, 0)} |`);
+  for (const r of t.regimes) for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) if ((name !== 'SDN-GP' || a.fitted) && (name === 'SDN-GP' || !r.id.startsWith('moon-'))) L.push(`| ${r.label} | ${name} | ${a.parameters ?? ''} | ${a.elementBytes ?? ''} | ${a.recordBytes ?? ''} | ${f(a.fitMsMedian, 0)} |`);
   L.push('', 'Element bytes are the size-prefixed `$OMM` record holding only the mean elements and the drag (and solar) terms of the set; the record as returned carries the fit statistics too. A two-line text set (the format COMSPOC publishes its XP sets in) is 138 characters.');
   if (t.bench) { L.push('', 'One propagated state, microseconds (one `propagate` call over 5761 states, four days at 60 s, median of repeats, harness overhead included):', '', '| Regime | Theory | us per state | Element bytes |', '| --- | --- | --: | --: |', ...t.bench.map((x) => `| ${x.regime} | ${x.theory} | ${f(x.usPerState, 0)} | ${x.elementBytes} |`)); }
   L.push('', 'Fitted terms (medians over windows): the two extra terms of SGP4-XP against the single B* of SGP4. AGOM is the solar-radiation term; a zero median means the fit left it at zero in most windows.', '', '| Regime | XP BTERM | XP AGOM | XP windows with AGOM != 0 | SGP4 B* |', '| --- | --: | --: | --: | --: |');
   for (const r of t.regimes) if (r.terms) L.push(`| ${r.label} | ${fx(r.terms.bterm)} | ${fx(r.terms.agom)} | ${r.terms.agomShare === null ? '' : `${Math.round(100 * r.terms.agomShare)} %`} | ${fx(r.terms.bstar)} |`);
-  if (t.regimes.some((r) => r.sdngpTerms)) {
+  if (t.regimes.some((r) => r.sdngpTerms && Number.isFinite(r.sdngpTerms.bEff))) {
     L.push('', 'SDN-GP fitted terms (medians over windows): the signed effective ballistic term B_eff (m2/kg) and its standard deviation from the fit\'s normal matrix, the two time-variation terms of the density model (tau_c, tau_s), and the solar-radiation term AGOM.', '', '| Regime | B_eff | sigma(B_eff) | tau_c | tau_s | AGOM |', '| --- | --: | --: | --: | --: | --: |');
-    for (const r of t.regimes) if (r.sdngpTerms) L.push(`| ${r.label} | ${fx(r.sdngpTerms.bEff)} | ${fx(r.sdngpTerms.bEffSigma)} | ${fx(r.sdngpTerms.tauc)} | ${fx(r.sdngpTerms.taus)} | ${fx(r.sdngpTerms.agom)} |`);
+    for (const r of t.regimes) if (r.sdngpTerms && Number.isFinite(r.sdngpTerms.bEff)) L.push(`| ${r.label} | ${fx(r.sdngpTerms.bEff)} | ${fx(r.sdngpTerms.bEffSigma)} | ${fx(r.sdngpTerms.tauc)} | ${fx(r.sdngpTerms.taus)} | ${fx(r.sdngpTerms.agom)} |`);
   }
   L.push('', '## 5. Covariance realism against the FFM truth of the same-day Starlinks', '', 'd^2 is the position Mahalanobis distance of the error against each source\'s own covariance (gp-error-model `pair_statistics`); a realistic covariance has mean d^2/3 in [0.8, 1.25] and 95 % coverage in [0.93, 0.97] (the V1c2 rule). Age is in days since the source\'s own epoch: ScenarioEpoch for SynCoPate, the fit epoch for ours.', '', '| Covariance | Age (days) | Objects | Samples | Mean d^2/3 | 95 % coverage | Median object error, km |', '| --- | --- | --: | --: | --: | --: | --: |');
   const names = { 'comspoc-syncopate': 'COMSPOC SynCoPate (local scoring only), with the XP trajectory', 's3kc-sgp4': 'Ours: E14 S3-KC population covariance on SGP4 fitted to the truth', 'sdn-gp': 'SDN-GP' };
@@ -598,6 +674,20 @@ export function markdown(t) {
       '| Pack | Regime | Centre, axes | Source | States (step) | Span | Windows by fit length (held-out days) |', '| --- | --- | --- | --- | --- | --- | --- |',
       ...t.regimeWindows.packs.map((p) => `| ${p.name} | ${p.regime ?? ''} | ${p.center}, ${p.frame} | ${p.source ?? ''} | ${p.states} (${p.windows[0]?.stepSeconds ?? ''} s) | ${p.startUtc.slice(0, 10)} to ${p.stopUtc.slice(0, 10)} | ${p.windows.map((w) => `${w.fitHours} h: ${w.count}`).join('; ')}${p.rule ? ` (days ${p.rule.leadDays[0]} to ${p.rule.leadDays.at(-1)}, every ${p.rule.strideHours} h)` : ''} |`), '',
       `Heliocentric cruise (fit 30 d, held-out days 1 to 15, every 15 d) and Jupiter-centred orbits (fit 66 d, held-out days 1 to 33, every 33 d): ${t.regimeWindows.heliocentric.packs}.`, '');
+  }
+  if (t.lunarStudy) {
+    const bodyName = { 'lro-lunar': 'LRO', 'danuri-lunar': 'Danuri' };
+    L.push('## 14. The Moon-centred SDN-GP on the LRO and Danuri windows (amendment A9f)', '',
+      `The build\'s Moon-centred path (\`fit_sdngp\` and \`propagate\` for CENTER_NAME MOON: GRGM660PRIM averaged to degree 50 with short-periodics to degree 8, the DE440 lunar orientation; no solar pressure, no maneuver segments) on every window of the LRO pack (NAIF reconstruction) and the Danuri pack (JPL Horizons) listed in section 13: fits of 24 h and 72 h every 48 h, held-out days 1 to 3, scored by \`score-pack.mjs\` (gp-error-model \`pair_statistics\` in the Moon-centred axes of the pack; the radial / in-track / cross-track split is in \`tables.json\`). Medians in km; SGP4 and SGP4-XP describe Earth-centred orbits and have no row here.`, '',
+      '| Body | Fit | Windows fitted / listed | Fit RMS | Day 1 median (max) | Day 2 median (max) | Day 3 median (max) |', '| --- | --: | --: | --: | --- | --- | --- |',
+      ...t.lunarStudy.flatMap((b) => b.byFit.map((g) => `| ${bodyName[b.pack]} | ${g.fitHours} h | ${g.fitted} / ${g.windows} | ${f(g.fitRms)} | ${[1, 2, 3].map((k) => `${f(g.days[k].median)} (${f(g.days[k].max)})`).join(' | ')} |`)), '',
+      `Maneuvers in the truth (\`lunar-maneuvers.mjs\`, from the truth alone: the osculating semi-major axis from \`foundation/orbits\` averaged over one period, a step of more than the median plus six robust sigmas between consecutive periods marks a maneuver; the list is in \`lunar-maneuvers.json\`): ${t.lunarStudy.map((b) => `${bodyName[b.pack]} ${b.events} (threshold ${f(b.threshold.thresholdKm * 1000, 1)} m of orbit-averaged semi-major axis)`).join('; ')}. A window contains a maneuver when one falls between its start and the end of its third held-out day.`, '',
+      '| Body | Windows | Fitted | Fit RMS | Day 1 | Day 2 | Day 3 |', '| --- | --: | --: | --: | --: | --: | --: |',
+      ...t.lunarStudy.flatMap((b) => [['no maneuver', b.withoutManeuver], ['a maneuver in the fit span', b.withManeuverInFit], ['a maneuver only in the held-out days', b.withManeuverInHeldOut]].map(([name, g]) => `| ${bodyName[b.pack]}, ${name} | ${g.windows} | ${g.fitted} | ${f(g.fitRms)} | ${[1, 2, 3].map((k) => f(g.days[k].median)).join(' | ')} |`)), '',
+      `Of the ${t.lunarStudy.map((b) => `${b.allWindows} ${bodyName[b.pack]}`).join(' and ')} windows, ${t.lunarStudy.map((b) => `${b.allWindowsWithManeuver} (${bodyName[b.pack]})`).join(' and ')} contain a maneuver; of the worst tenth by day-3 error, ${t.lunarStudy.map((b) => `${b.worstTenth.withManeuver} of ${b.worstTenth.windows} (${bodyName[b.pack]})`).join(' and ')} do.`, '',
+      'The five worst windows of each body by day-3 error:', '',
+      '| Body | Start (UTC) | Fit | Fit RMS | Day 1 / 2 / 3 | Maneuvers in the fit span | Maneuvers in the held-out days |', '| --- | --- | --: | --: | --- | --- | --- |',
+      ...t.lunarStudy.flatMap((b) => b.worst.map((w) => `| ${bodyName[b.pack]} | ${w.startUtc.slice(0, 16)} | ${w.fitHours} h | ${f(w.fitRmsKm)} | ${[1, 2, 3].map((k) => f(w.days[k])).join(' / ')} | ${w.maneuversInFit.map((e) => `${e.epochUtc.slice(0, 16)} (${f(e.deltaVCmPerS, 2)} cm/s)`).join('; ') || '-'} | ${w.maneuversInHeldOut.map((e) => `${e.epochUtc.slice(0, 16)} (${f(e.deltaVCmPerS, 2)} cm/s)`).join('; ') || '-'} |`)), '');
   }
   const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'gfz-rapid-gnss', 'ilrs', 'ilrs-nsgf', 'ilrs-cddis', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'jpl-horizons', 'stsci-mast-tess', 'nrlmsise00', 'egm', 'fes2004'];
   L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenceSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
