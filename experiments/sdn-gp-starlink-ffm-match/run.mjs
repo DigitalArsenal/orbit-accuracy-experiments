@@ -2,6 +2,8 @@
 // 1. the plan and config are frozen and committed unchanged;
 // 2. the committed manifest matches the module artifacts that would run (WASM SHA-256);
 // 3. tables.json is re-derived from the recorded window rows (statistics only) and must equal the committed file;
+// 3b. m123.json (DESIGN.md M1 to M3, amendments A7 to A7c) is re-derived from its recorded rows, and two of those windows (LAGEOS-1 and the ISS) are
+//    replayed through FFM-1 under full and zonal-only gravity and the SGP4 and SGP4-XP fits, and must reproduce their recorded numbers;
 // 4. N windows (default 5 precise-orbit windows, one per source, plus a Starlink FFM truth and an in-span SpaceX window) are replayed through the modules and must reproduce their recorded
 //    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records.
 // Without the local records the check says so and exits 2: a skip is never a pass.
@@ -14,6 +16,10 @@ import { KERNELS, A5, spkObject } from './lib/spk-sources.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { build } from './tables.mjs';
+import { build as buildM123 } from './m123-report.mjs';
+import { allWindows, processWindow } from './m123.mjs';
+import { loadEnvironment } from './lib/ffm.mjs';
+import { openModule } from './lib/modules.mjs';
 import { manifest } from './manifest.mjs';
 import * as sources from './lib/sources.mjs';
 import { parseMeme } from './lib/sources.mjs';
@@ -48,6 +54,13 @@ if (fs.existsSync(cycleDir)) {
 const tables = JSON.parse(fs.readFileSync(path.join(results, 'tables.json'), 'utf8'));
 if (JSON.stringify(tables) !== JSON.stringify(JSON.parse(JSON.stringify(build())))) fail('tables.json is not reproduced by the recorded rows');
 ok('tables.json reproduced from the recorded rows');
+
+const m123Dir = path.join(store, 'm123');
+if (fs.existsSync(m123Dir)) {
+  const recordedM123 = JSON.parse(fs.readFileSync(path.join(results, 'm123.json'), 'utf8'));
+  if (JSON.stringify(recordedM123) !== JSON.stringify(JSON.parse(JSON.stringify(buildM123())))) fail('m123.json is not reproduced by the recorded rows');
+  ok(`m123.json reproduced from ${recordedM123.windows} recorded windows`);
+}
 
 // no raw records in the committed results
 const patterns = [/^1 \d{5}U .{8}\s+\d{5}\.\d+/m, /ephemeris_start:/, /ephemeris_source:/, /CCSDS_OEM_VERS/, /spacetrack|space-track\.org\/basicspacedata/i];
@@ -120,6 +133,26 @@ if (dailyRows.length && fs.existsSync(dailyDir)) {
   const again = await scoreWindow(b, object, ms(inSpan[0].epoch), { fitSeconds: config.windows.fitHours * 3600, leadDays: config.windows.spacexInSpanLeadDays, minCoverage: config.windows.minimumCoverage });
   for (const arm of ['xp', 'sgp4']) if (!same(again[arm].fitRmsKm, rec.spacex[arm].fitRmsKm) || !same(again[arm].days[1].rmsKm, rec.spacex[arm].days[1].rmsKm)) fail(`replay SpaceX ${rec.norad}: ${arm} differs`);
   replayed += 1;
+}
+// replay two M1 to M3 windows: FFM-1 under full and zonal gravity, then the 24 h fits
+if (fs.existsSync(m123Dir)) {
+  const context = await loadEnvironment(modules, { archive: config.archive, store });
+  const frames = await openModule(modules, 'foundation/frames');
+  const windows = await allWindows(frames);
+  for (const family of ['lageos1', 'iss']) {
+    const files = fs.readdirSync(path.join(m123Dir, family)).filter((n) => n.endsWith('.json')).sort();
+    const recorded = JSON.parse(fs.readFileSync(path.join(m123Dir, family, files[Math.floor(files.length / 2)])));
+    const w = windows.find((x) => x.family === family && x.id === recorded.id);
+    if (!w) fail(`replay M1 to M3: window ${family} ${recorded.id} not found`);
+    const again = await processWindow(w, { modules, context, baselines: b }, { variants: ['full', 'zonal'], fits: ['h24'], pairs: false, long: false, write: false });
+    for (const v of ['full', 'zonal']) for (const arm of ['xp', 'sgp4']) {
+      const a = again.variants[v].h24[arm], c = recorded.variants[v].h24[arm];
+      if (!same(a.fitRmsKm, c.fitRmsKm)) fail(`replay ${family} ${recorded.id} ${v}: ${arm} fit RMS ${a.fitRmsKm} vs ${c.fitRmsKm}`);
+      for (const k of Object.keys(c.days)) if (!same(a.days[k].rmsKm, c.days[k].rmsKm)) fail(`replay ${family} ${recorded.id} ${v}: ${arm} day ${k} differs`);
+    }
+    replayed += 1;
+  }
+  await frames.destroy();
 }
 await b.close();
 ok(`${replayed} windows replayed through the modules reproduce their recorded statistics`);

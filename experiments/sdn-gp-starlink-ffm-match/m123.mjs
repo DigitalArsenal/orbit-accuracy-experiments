@@ -100,14 +100,17 @@ async function differences(baselines, a, b, every, period) {
   return { n: series.length, rtnRmsM: [rms(0), rms(1), rms(2)], inTrackEndM: inTrack.at(-1), inTrackMaxAbsM: Math.max(...inTrack.map(Math.abs)), sinusoid: fit ? { periodDays: fit.period, amplitudeM: fit.amplitude, rmsResidualM: fit.rmsResidual, rmsQuadraticResidualM: fit.rmsQuadraticResidual } : null };
 }
 
-async function processWindow(w, ctx) {
+/** opts.variants / opts.fits restrict the work (the E2E replays two variants at 24 h); opts.write false returns the row without writing it. */
+export async function processWindow(w, ctx, opts = {}) {
   const { modules, context, baselines } = ctx;
+  const wanted = opts.variants ?? w.variants;
+  const fitList = opts.fits ? FITS.filter(([label]) => opts.fits.includes(label)) : FITS;
   const t0Iso = iso(w.t0);
   const epochs = grid(w.t0, M_HOURS * 3600, config.truth.cadenceSeconds);
   const state = w.state.map((x) => x * 1000);
   const row = { family: w.family, id: w.id, norad: w.norad, name: w.name, stratum: w.stratum ?? null, population: w.population ?? null, startUtc: t0Iso, startStateGcrfKm: w.state, cdAm: w.cdAm, crAm: w.crAm, bEff: w.bEff, baseForces: w.baseForces, variants: {}, pairs: {}, long: {} };
   const traj = {};
-  for (const name of w.variants) {
+  for (const name of wanted) {
     const forces = { ...VARIANTS[name], ...w.baseForces };
     try {
       const ffm = await propagate(modules, context, { epoch: t0Iso, state, cdAm: w.cdAm, crAm: w.crAm, epochs, integrator: config.truth.integrator, forces });
@@ -116,7 +119,7 @@ async function processWindow(w, ctx) {
       traj[name] = lines;
       const object = withT({ source: `m123-${w.family}`, id: `${w.name} ${name}`, norad: w.norad, name: w.name, objectId: '', originator: 'G1 M1 FFM-1', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines });
       const entry = { ffmCpuSeconds: ffm.cpuSeconds };
-      for (const [label, seconds] of FITS) {
+      for (const [label, seconds] of fitList) {
         const scored = await scoreWindow(baselines, object, w.t0, { fitSeconds: seconds, leadDays: LEAD_DAYS, minCoverage: config.windows.minimumCoverage });
         entry[label] = scored ? { xp: scored.xp, sgp4: scored.sgp4 } : null;
       }
@@ -130,14 +133,14 @@ async function processWindow(w, ctx) {
   if (w.registered && traj.full) { // the full-gravity re-propagation reproduces the registered truth
     const f = new Float64Array(new Uint8Array(fs.readFileSync(w.registered)).buffer);
     let worst = 0;
-    traj.full.forEach((l, i) => { [...l.r, ...l.v].forEach((x, j) => { worst = Math.max(worst, Math.abs(x - f[i * 6 + j])); }); });
+    traj.full.slice(0, f.length / 6).forEach((l, i) => { [...l.r, ...l.v].forEach((x, j) => { worst = Math.max(worst, Math.abs(x - f[i * 6 + j])); }); });
     row.registeredMaxAbsKm = worst;
   }
-  for (const [a, b] of PAIRS) {
+  for (const [a, b] of opts.pairs === false ? [] : PAIRS) {
     if (!traj[a] || !traj[b]) continue;
     try { row.pairs[`${a}-${b}`] = await differences(baselines, traj[a], traj[b], 5, { minPeriod: 8 / 24, maxPeriod: 16 / 24, steps: 160 }); } catch (error) { row.pairs[`${a}-${b}`] = { error: String(error.message).slice(0, 200) }; }
   }
-  if (w.long) { // the 15:1 term over 10 days (A7b d)
+  if (w.long && opts.long !== false) { // the 15:1 term over 10 days (A7b d)
     const longEpochs = grid(w.t0, LONG_DAYS * 86400, 300);
     const lt = {};
     for (const name of LONG_VARIANTS) {
@@ -148,8 +151,12 @@ async function processWindow(w, ctx) {
       try { row.long[`${a}-${b}`] = await differences(baselines, lt[a], lt[b], 1, { minPeriod: 2, maxPeriod: 12, steps: 100 }); } catch (error) { row.long[`${a}-${b}`] = { error: String(error.message).slice(0, 200) }; }
     }
   }
-  write(path.join(OUT, w.family, `${w.id}.json`), row);
+  if (opts.write !== false) write(path.join(OUT, w.family, `${w.id}.json`), row);
+  return row;
 }
+
+/** Every window of the step, LAGEOS first, then the ISS, then the Starlinks. */
+export async function allWindows(frames) { return [...lageosWindows(), ...(await issWindows(frames)), ...starlinkWindows()]; }
 
 async function worker(id) {
   frozen();
@@ -159,7 +166,7 @@ async function worker(id) {
   const frames = await openModule(modules, 'foundation/frames');
   const wanted = args.family ? new Set(args.family.split(',')) : null;
   const only = args.only ? new Set(args.only.split(',')) : null;
-  const tasks = [...lageosWindows(), ...(await issWindows(frames)), ...starlinkWindows()].filter((w) => (!wanted || wanted.has(w.family)) && (!only || only.has(w.id)));
+  const tasks = (await allWindows(frames)).filter((w) => (!wanted || wanted.has(w.family)) && (!only || only.has(w.id)));
   fs.mkdirSync(claimDir, { recursive: true });
   let limit = args.limit ? Number(args.limit) : Infinity;
   for (const w of tasks) {
