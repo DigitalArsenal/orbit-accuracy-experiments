@@ -118,9 +118,9 @@ export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minS
   };
 }
 
-const FIT_FRAME = { EME2000: 'GCRF', GCRF: 'GCRF', ICRF: 'GCRF', TEME: 'TEMEOFDATE' }; // fit_sdngp reads TEME, GCRF and Earth-fixed; EME2000 and GCRF differ by the 20 mas frame bias (0.7 m at LEO)
+const FIT_FRAME = { EME2000: 'EME2000', GCRF: 'GCRF', ICRF: 'GCRF', TEME: 'TEMEOFDATE' }; // the frame is declared as it is (builds from 2d906c4d90fd read EME2000; earlier builds were given GCRF for it, 23 mas apart: 0.2 m at LEO)
 
-const sdngpOem = (object, lines, stopFit) => oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
+const sdngpOem = (object, lines, stopFit) => oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : object.frame === 'EME2000' ? 'EME2000' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
   lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false });
 
 /** The states of a fitted SDN-GP set (TEME, by the module) at the given epochs (ms), in the named axes ('EME2000' or 'GCRF', by foundation/frames): [{r, v}] in km, km/s. */
@@ -145,8 +145,9 @@ export async function sdngpPredict(b, object, startMs, fitSeconds, epochsMs, axe
   try { return await sdngpStates(b, fit.omm, ms(fit.unpacked.EPOCH), epochsMs, axes); } catch (error) { return { error: String(error.message).slice(0, 200) }; }
 }
 
-export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay) {
+export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, { loweringLimit } = {}) {
   const bytes = sdngpOem(object, lines, stopFit);
+  if (loweringLimit !== undefined) b.sdngp.setLoweringLimit(loweringLimit); // amendment A9d: the 2c.2 rule on (0.5 m2/kg) or off (Infinity) for the fits that follow
   const t0 = performance.now();
   let fit;
   try { fit = await b.sdngp.fit(bytes, { weatherTable: b.weatherTable }); } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
@@ -180,14 +181,14 @@ export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, min
   return {
     ok: true, converged: true, iterations: fit.iterations, fitRmsKm: fit.fitRmsKm, fitStates: fit.statesFitted, fitRic, days,
     elementBytes: fit.minimal.length, recordBytes: fit.omm.length, parameters: 10, fitMs, usPerState, // six elements, signed B_eff, AGOM, tauc, taus (tau0 replaces B_eff above 0.5 m2/kg)
-    bEff: Number(p.SDNGP_B_EFF), bEffSigma: Number(p.SDNGP_B_EFF_SIGMA), kappa: p.SDNGP_KAPPA === undefined ? null : Number(p.SDNGP_KAPPA), tau0: Number(p.SDNGP_TAU0), tauc: Number(p.SDNGP_TAUC), taus: Number(p.SDNGP_TAUS),
+    lowering: Number(p.SDNGP_LOWERING ?? 0), bEff: Number(p.SDNGP_B_EFF), bEffSigma: Number(p.SDNGP_B_EFF_SIGMA), kappa: p.SDNGP_KAPPA === undefined ? null : Number(p.SDNGP_KAPPA), tau0: Number(p.SDNGP_TAU0), tauc: Number(p.SDNGP_TAUC), taus: Number(p.SDNGP_TAUS),
     agom: fit.unpacked.MEAN_MOTION_DDOT, meanMotion: fit.unpacked.MEAN_MOTION, inclination: fit.unpacked.INCLINATION, eccentricity: fit.unpacked.ECCENTRICITY, heldOutRmsKm: fit.heldOutRmsKm,
     module: b.sdngp.provenance.wasmSha256.slice(0, 12),
   };
 }
 
 /** One fit window scored by both baselines. Returns null when the ephemeris cannot supply the fit interval. */
-export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, minCoverage = 0.9, fixedBstar, arms = 'both', sdngp = false }) {
+export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, minCoverage = 0.9, fixedBstar, arms = 'both', sdngp = false, loweringLimit }) {
   const stopFit = startMs + fitSeconds * 1000;
   const lines = slice(object, startMs, stopFit + Math.max(...leadDays) * DAY);
   if (lines.length < 20) return null;
@@ -196,7 +197,7 @@ export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, mi
   const minStatesPerDay = Math.floor((minCoverage * 86400) / stepSeconds);
   const xp = arms === 'sgp4' || arms === 'sdngp' ? null : await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay);
   const sgp4 = arms === 'xp' || arms === 'sdngp' ? null : await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, fixedBstar);
-  const sdngpResult = sdngp || arms === 'sdngp' ? await fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay) : undefined;
+  const sdngpResult = sdngp || arms === 'sdngp' ? await fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, { loweringLimit }) : undefined;
   return { source: object.source, id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4, ...(sdngpResult === undefined ? {} : { sdngp: sdngpResult }) };
 }
 

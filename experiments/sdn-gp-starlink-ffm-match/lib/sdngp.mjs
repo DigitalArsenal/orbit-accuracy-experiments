@@ -88,6 +88,11 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       }
       return out;
     },
+    /** The build's DESIGN 2c.2 switch (export sdngp_fit_diagnostic, amendment A9d): fits after this call replace a B_eff above `limit` (m2/kg; Infinity: never, B_eff free) by tau0 held after the arc. Returns the previous limit in m2/kg x 1000, or null when the build has no such export. */
+    setLoweringLimit(limit) {
+      if (typeof x.sdngp_fit_diagnostic !== 'function') return null;
+      return x.sdngp_fit_diagnostic(limit === Infinity ? 2000000 : Math.round(limit * 1000), -1);
+    },
     destroy: async () => { await h.destroy?.(); },
     raw: { x, h },
   };
