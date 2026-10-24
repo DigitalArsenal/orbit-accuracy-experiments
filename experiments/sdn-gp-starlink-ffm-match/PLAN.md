@@ -335,3 +335,28 @@ converter keeps observed rows only, which would stop the GNSS truth at 2026-10-1
 MJD 61334 to 61336 are flagged observed (recorded in the seeded copy's provenance file). The effect on a GNSS position is under 0.15 m
 (UT1-UTC 0.08 ms and polar motion 0.4 mas at three days), below the rapid orbit's own uncertainty and 3 orders below the XP errors scored. Rapid days
 2026-10-20 to 2026-10-22 are labeled "predicted EOP" wherever they are reported.
+
+### A9 - 2026-10-24, before the data of it were read: heliocentric packs, current SLR truth, the licence registry, the SDN-GP arms
+
+Coordinator, 2026-10-24: (1) JPL Horizons for Psyche, Lucy and Juno approved (public NASA/JPL ephemerides, paced, archive only, provenance rows):
+build the heliocentric packs from them; no type-1 SPK reader. (2) ILRS products approved from CDDIS with the existing Earthdata token (never
+printed or stored), for SLR truth after 2026-10-10: score COMSPOC's laser-ranged sets and our SLR rows. (3) the licence registry is merged by this
+task after the coordinator extended its claim to data/licenses.json and docs/data-licenses.md. (4) the newer-SpaceX watcher keeps running and is stopped by its own PID when
+its pass is done. (5) the SDN-GP arms are added as side B delivers (`fit_sdngp`: kappa and tau now; term (d) next).
+
+Horizons, heliocentric (`fetch-horizons.mjs`, as A8): vector tables, Sun-centred (500@10), ICRF equatorial axes, TDB, 60 min, from the "data
+through" parts of the object notes of 2026-10-24. psyche (-255): 2025-08-13 to 2026-07-12 (JPL navigation reconstructions; the Mars flyby of
+May 2026 and solar-electric thrust arcs are inside). lucy-rec (-49): 2024-12-20 to 2025-09-07 (fit through 2025-09-08: Donaldjohanson encounter, MEF-1 and
+TCM-16 inside); lucy-ref (-49): 2025-09-09 to 2027-03-01 (the flight project's reference trajectory, a planning prediction, labelled so: a
+long ballistic arc with MEF-2 on 2026-03-02). juno-cruise (-61): 2012-10-01 to 2013-09-30 (heliocentric cruise between the deep space maneuvers and the Earth
+flyby of 2013-10-09). juno-jupiter (-61): Jupiter-centred (500@599) 2024-09-01 to 2026-08-23 at 30 min (33 day orbits after the Io flybys; the reconstruction runs
+to 2026-08-24). Windows (PLAN A8 rules extended): heliocentric packs fit 30 d, held-out days 1 to 15, one window every 15 d; Jupiter-centred fit 66 d (two orbits),
+held-out days 1 to 33, every 33 d. Packs are written like those of A8 (`horizons-packs.mjs`) and listed by `regime-windows.mjs`.
+
+ILRS from CDDIS (`fetch-slr.mjs`): the NSGF rapid orbits (slr/products/orbits/rapid/<sat>/<yyyy>/<yymmdd>/nsgf.orb.<sat>.<yymmdd>.v000.sp3.gz, daily, to 2026-10-24) of Ajisai,
+Starlette, Stella, LARETS, WESTPAC, LARES and LARES-2 for 2026-10-08 to 2026-10-24, and the ILRS combined weekly orbits of LAGEOS-1/2 and Etalon-1/2 (orbits/TRF/<sat>/<yyyy>/<yymmdd>/ilrsa.orb.<sat>.<yymmdd>.v80.sp3.gz),
+newest weeks (the CDDIS readme of October 2026 gives the layout). The weekly products end 2026-10-10, before the epochs of COMSPOC's LAGEOS and Etalon sets (2026-10-14 to 10-20), so
+those four stay pending. Conversion: the converter's SP3 -> reference-state path (files/orbit-products read_container, analysis/reference-states reference_states, IERS finals
+with the Bulletin A rows of A8c extended to 2026-10-25) called by `slr-convert.mjs` with the CDDIS URLs as the recorded source. Our SLR rows: the 4-day NSGF arcs of the LEO
+spheres as the registered slr-low rows (one arc per object per 4 days, fit 24 h, held-out days 1 to 3), and the newest four combined weeks for the MEO targets, scored
+as section 1. COMSPOC's laser-ranged sets: propagated by the black-box module and compared with the NSGF rapid orbits after each set's epoch, by day since the epoch, local scoring only.
