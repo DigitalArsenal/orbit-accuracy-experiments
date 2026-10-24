@@ -6,6 +6,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { flatbuffers, OMM } from './sds.mjs';
+import { pcfBytes, PCF_TYPE } from './pcf.mjs';
 
 const require = createRequire(import.meta.url);
 const standards = path.dirname(require.resolve('spacedatastandards.org/package.json'));
@@ -38,7 +39,13 @@ const port = (r, id) => r.outputs.filter((o) => o.portId === id).map((o) => new 
 const env = (inputs, weatherTable) => { if (weatherTable) inputs.push({ portId: 'space_weather_table', typeRef: T('PRW'), payload: weatherTable }); return inputs; };
 
 /** The environment in force, as a weather port, for a method of a build that declares one for it (an earlier build gets it from `load_environment`). */
+/** The $PCF `configuration` port, for a method of a build that declares one (b9bc708baa50 on: required; THEORY SDNAP; fields unset take the documented defaults; amendment A15). */
+const configure = (sdngp, methodId, inputs) => {
+  if (sdngp.declares(methodId, 'configuration') && !inputs.some((x) => x.portId === 'configuration')) inputs.push({ portId: 'configuration', typeRef: PCF_TYPE, payload: pcfBytes({ theory: 'SDNAP' }) });
+  return inputs;
+};
 const forceEnvironment = (sdngp, methodId, inputs, weatherTable) => {
+  configure(sdngp, methodId, inputs);
   const table = weatherTable ?? sdngp.environmentTable;
   if (table && sdngp.declares(methodId, 'space_weather_table')) inputs.push({ portId: 'space_weather_table', typeRef: T('PRW'), payload: table });
   return inputs;
@@ -61,7 +68,7 @@ export async function detectManeuvers(sdngp, { oem, weatherTable }) {
 
 /** `reentry`: one Earth set with the weather: { ok, rdm: unpacked $RDM } or { ok: false, error }. */
 export async function reentry(sdngp, { omm, weatherTable }) {
-  const r = await sdngp.raw.h.invoke({ methodId: 'reentry', inputs: env([{ portId: 'omm', typeRef: T('OMM'), payload: omm }], weatherTable) });
+  const r = await sdngp.raw.h.invoke({ methodId: 'reentry', inputs: configure(sdngp, 'reentry', env([{ portId: 'omm', typeRef: T('OMM'), payload: omm }], weatherTable)) });
   if (r.statusCode !== 0) return fail(r);
   return { ok: true, rdm: rootOf(RDM.RDM, 'RDM', port(r, 'reentry')[0]).unpack() };
 }
@@ -101,6 +108,7 @@ export async function launchSet(sdngp, { burnout, launch, prior }) {
   if (burnout) inputs.push({ portId: 'burnout', typeRef: T('BOV'), payload: burnout });
   if (launch) inputs.push({ portId: 'launch', typeRef: T('LAM'), payload: launch });
   if (prior) inputs.push({ portId: 'prior', typeRef: T('OMM'), payload: prior });
+  configure(sdngp, 'launch_set', inputs);
   const r = await sdngp.raw.h.invoke({ methodId: 'launch_set', inputs });
   if (r.statusCode !== 0) return fail(r);
   const omm = port(r, 'elements')[0];

@@ -9,6 +9,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createStandaloneHarness } from 'space-data-module-sdk/testing/isomorphic';
 import { OMM, OEM, flatbuffers, blockLines } from './sds.mjs';
+import { pcfBytes, PCF_TYPE } from './pcf.mjs';
 import { sha256 } from '../common.mjs';
 
 // Side B's package: sdn-gp-propagator until the owner's rename of 2026-10-24 (SDN-AP, "advanced propagator"), sdn-ap-propagator after it; the first of the two with a built wasm is used, SDNAP_MODULE_ROOT (or the earlier
@@ -46,14 +47,15 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
   const x = h.instance.exports;
   // The owner's rename (SDN-AP): a build that carries `fit_sdnap` and `sdnap_*` exports is called by those names, an earlier one by `fit_sdngp` and `sdngp_*`; the parameters it writes
   // (SDNAP_*) are read back as SDNGP_* so that the row schema, which keeps the historical keys, is the same for every build. The other methods keep their names.
-  const renamed = Buffer.from(await h.readManifest()).toString('latin1').includes('fit_sdnap');
-  const fitMethod = renamed ? 'fit_sdnap' : 'fit_sdngp';
-  const E = (name) => x[`${typeof x.sdnap_alloc === 'function' ? 'sdnap' : 'sdngp'}_${name}`];
-  const historicalName = (n) => String(n).replace(/^SDNAP_/, 'SDNGP_');
   // The methods and ports the build declares (the JSON manifest beside its snapshot, when it was taken with one): an earlier build's `maneuver` and `detect_maneuvers` have no environment port.
   const manifestFile = path.join(snap.dir, 'plugin-manifest.json');
   const declared = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile, 'utf8')).methods ?? [] : [];
   const declares = (methodId, portId) => (portId === undefined ? declared.some((m) => m.methodId === methodId) : declared.find((m) => m.methodId === methodId)?.inputPorts?.some((q) => q.portId === portId) ?? false);
+  const renamed = Buffer.from(await h.readManifest()).toString('latin1').includes('fit_sdnap');
+  const merged = declares('fit', 'configuration'); // from build b9bc708baa50 (amendment A15): one `fit` with a required $PCF `configuration` port, THEORY selecting SGP4XP or SDNAP; the build has no fit_sdnap
+  const fitMethod = merged ? 'fit' : renamed ? 'fit_sdnap' : 'fit_sdngp';
+  const E = (name) => x[`${typeof x.sdnap_alloc === 'function' ? 'sdnap' : 'sdngp'}_${name}`];
+  const historicalName = (n) => String(n).replace(/^SDNAP_/, 'SDNGP_');
   const mem = () => h.memory.buffer;
   let scratch = null;
   const reserve = (n) => {
@@ -67,6 +69,7 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
     /** Fit an SDN-AP set to one plain (not size-prefixed) $OEM block: { ok, omm (bytes), obd (bytes), unpacked, comment, fitRmsKm, heldOutRmsKm, iterations, params } or { ok: false, error }. */
     async fit(oem, { weatherTable, densityCorrection, prior } = {}) {
       const inputs = [{ portId: 'ephemeris', typeRef: T('OEM'), payload: oem }];
+      if (merged) inputs.push({ portId: 'configuration', typeRef: PCF_TYPE, payload: pcfBytes({ theory: 'SDNAP' }) });
       if (weatherTable) inputs.push({ portId: 'space_weather_table', typeRef: T('PRW'), payload: weatherTable });
       if (densityCorrection) inputs.push({ portId: 'density_correction', typeRef: T('DCL'), payload: densityCorrection });
       if (prior) inputs.push({ portId: 'prior', typeRef: T('OMM'), payload: prior });
@@ -92,7 +95,7 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
     },
     /** A fitted set (any center) propagated by the invoke surface on a grid $OEM template (amendment A9f; the Moon-centered sets are reached only this way): { ok, blocks: [[{epoch, r, v}]], center, error }. */
     async propagateGrid(omm, grid) {
-      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'omm', typeRef: T('OMM'), payload: omm }, { portId: 'grid', typeRef: T('OEM'), payload: grid }] });
+      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'omm', typeRef: T('OMM'), payload: omm }, { portId: 'grid', typeRef: T('OEM'), payload: grid }, ...(declares('propagate', 'configuration') ? [{ portId: 'configuration', typeRef: PCF_TYPE, payload: pcfBytes({ theory: 'SDNAP' }) }] : [])] });
       if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 160)}` };
       const bytes = new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload);
       const prefixed = String.fromCharCode(...bytes.slice(8, 12)) === '$OEM';

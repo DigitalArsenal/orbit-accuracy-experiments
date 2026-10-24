@@ -251,13 +251,15 @@ function m27(dir, resultsDir) {
       const dvWindows = outages.map((o) => o.f);
       const otherWindows = ev.other.filter((o) => o.svn === svn).map((o) => [t(o.start), t(o.stop)]);
       const falseAlarms = distinct.filter((d) => !inAny(d.ms, dvWindows, M27_TOL_H));
-      const chance = union.reduce((s2, [u, v]) => s2 + Math.max(0, Math.min(v, ...[v]) - u), 0) ? (() => { // the share of the covered time inside a forecast window (+-6 h): the hit probability of a detection at a random epoch
+      const chance = (() => { // the share of the covered time inside a forecast window (+-6 h): the hit probability of a detection at a random epoch
         let inside = 0, total = 0;
         for (const [u, v] of union) { total += v - u; for (const [a, b] of dvWindows) inside += Math.max(0, Math.min(v, b + M27_TOL_H * H) - Math.max(u, a - M27_TOL_H * H)); }
         return total ? inside / total : 0;
-      })() : 0;
+      })();
+      const DAY_MS = 86400e3, BOUNDARY = 86382e3; // the daily files begin at 23:59:42 UTC (GPS time 00:00:00)
+      const nearBoundary = (ms) => { const x = (((ms % DAY_MS) - BOUNDARY) % DAY_MS + DAY_MS) % DAY_MS; return Math.min(x, DAY_MS - x) <= 2 * H; };
       return { norad, name: rs[0].name, svn, windows: rs.length, answered: ok.length, skipped: rs.filter((r) => r.skipped).length, refused: rs.filter((r) => r.ok === false).length, withDetection: ok.filter((r) => r.detections.length).length, years, distinct: distinct.length,
-        falseAlarms: falseAlarms.length, falseAlarmsInOtherOutage: falseAlarms.filter((d) => inAny(d.ms, otherWindows, M27_TOL_H)).length, outages: outages.length, scoreable: scoreable.length, events: eventRows, chance, dvMS: distinct.map((d) => d.mag), lambda: distinct.map((d) => d.lambda) };
+        falseAlarms: falseAlarms.length, falseAlarmsInOtherOutage: falseAlarms.filter((d) => inAny(d.ms, otherWindows, M27_TOL_H)).length, falseAlarmsNearBoundary: falseAlarms.filter((d) => nearBoundary(d.ms)).length, outages: outages.length, scoreable: scoreable.length, events: eventRows, chance, dvMS: distinct.map((d) => d.mag), lambda: distinct.map((d) => d.lambda) };
     });
     const eventsAll = perSat.flatMap((p) => p.events);
     const years = perSat.reduce((s2, p) => s2 + p.years, 0);
@@ -266,7 +268,7 @@ function m27(dir, resultsDir) {
       outagesInNotices: ev.deltaV.length, outagesWithoutOrbit: ev.deltaV.filter((e) => !perSat.some((p) => p.svn === e.svn)).length, scoreable: eventsAll.length, hitForecast: eventsAll.filter((e) => e.hitForecast).length, withActual: eventsAll.filter((e) => e.hitActual !== null).length, hitActual: eventsAll.filter((e) => e.hitActual === true).length,
       offsetHours: { median: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.5), p10: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.1), p90: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.9) },
       forecastHours: q(eventsAll.map((e) => e.forecastHours), 0.5), actualHours: q(eventsAll.filter((e) => e.actualHours !== null).map((e) => e.actualHours), 0.5),
-      objectYears: years, distinctDetections: perSat.reduce((s2, p) => s2 + p.distinct, 0), falseAlarms: perSat.reduce((s2, p) => s2 + p.falseAlarms, 0), falseAlarmsInOtherOutage: perSat.reduce((s2, p) => s2 + p.falseAlarmsInOtherOutage, 0),
+      objectYears: years, distinctDetections: perSat.reduce((s2, p) => s2 + p.distinct, 0), falseAlarms: perSat.reduce((s2, p) => s2 + p.falseAlarms, 0), falseAlarmsInOtherOutage: perSat.reduce((s2, p) => s2 + p.falseAlarmsInOtherOutage, 0), falseAlarmsNearBoundary: perSat.reduce((s2, p) => s2 + p.falseAlarmsNearBoundary, 0),
       chanceHit: q(perSat.filter((p) => p.outages).map((p) => p.chance), 0.5), dvMS: stats(perSat.flatMap((p) => p.dvMS)), perSatellite: perSat.map(({ dvMS, lambda, events, ...rest }) => ({ ...rest, hits: events.filter((e) => e.hitForecast).length })) };
   }).filter((g) => g.windows);
 }
@@ -504,6 +506,18 @@ export function eventsMarkdown(e) {
       'The same 99 planned burns of the pre-burn files, windows cut around each burn on the same states, weather and rules. The stretches before and after the burn hold no planned burn (a detection in them is a false alarm); the other two hold the burn. Position is the place of the detection in the window (0 start, 1 end); offset is the detected epoch less TIG for the detections not within 92 min of it:', '',
       `| Build | Window | Scored | Windows with a detection | Hits / elsewhere / none | Position, median [10th, 90th] | Offset from TIG (h), median [10th, 90th] | Absolute delta-v, median (m/s) | Hits: epoch error (min), median [10th, 90th] | Hits: delta-v over planned, median [10th, 90th] |`, '| --- | --- | --- | --: | --- | --- | --- | --: | --- | --- |',
       ...e.history.filter((x) => x.m24b).flatMap((x) => part(x.m24b, x.build)), ...part(e.m24b, e.build), '');
+  }
+  if (e.m27) {
+    const builds = [...e.history.filter((x) => x.m27), e];
+    const rate = (x, y) => (y ? f(x / y, 1) : '');
+    const row = (b, g) => `| ${b.build} | ${g.name} | ${g.satellites} | ${g.answered} of ${g.windows} (${g.skipped} skipped${Object.keys(g.refused).length ? `, refused ${Object.entries(g.refused).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}) | ${g.windowsWithDetection} | ${g.outagesInNotices} / ${g.outagesInNotices - g.outagesWithoutOrbit} / ${g.scoreable} | ${g.hitForecast} of ${g.scoreable} | ${g.hitActual} of ${g.withActual} | ${g.offsetHours.median !== null ? `${f(g.offsetHours.median, 1)} [${f(g.offsetHours.p10, 1)}, ${f(g.offsetHours.p90, 1)}]` : ''} | ${Math.round(g.chanceHit * 100)} % | ${g.distinctDetections} | ${g.falseAlarms} (${rate(g.falseAlarms, g.objectYears)} per object-year over ${f(g.objectYears, 2)}) | ${g.falseAlarmsInOtherOutage} / ${g.falseAlarmsNearBoundary} | ${f(g.dvMS.median, 3)} / ${f(g.dvMS.max, 3)} |`;
+    L.push('#### M27. GPS and QZSS station keeping against the NANUs and NAQUs (amendment A14)', '',
+      'The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits, 2026-001 to 2026-266) and the QZSS satellites (GFZ multi-GNSS rapid orbits, 2026-004 to 2026-273), against the forecast delta-V outages of the GPS NANUs (97 of 2026) and the QZSS NAQUs (261 of 2026). An outage is detected when a distinct detection (merged within 6 h) lies inside its forecast window plus or minus 6 h; the actual interval is the summary notice\'s. The chance level is the share of a satellite\'s covered time inside its forecast windows plus or minus 6 h, the hit probability of a detection at a random epoch (median over the satellites with outages). False alarms are distinct detections outside every forecast window plus or minus 6 h of their satellite; the last two columns count those inside another outage notice\'s window and within 2 h of a daily-file boundary. BeiDou is not scored: its notices were not reachable (see section 1).', '',
+      '| Build | System | Satellites | Windows answered | Windows with a detection | Outages: notices / with orbits / scoreable | Detected, forecast window | Detected, actual interval | Offset from the actual start (h), median [10th, 90th] | Chance level | Distinct detections | False alarms | In another outage / near a file boundary | Delta-v (m/s), median / maximum |', '| --- | --- | --: | --- | --: | --- | --- | --- | --- | --: | --: | --- | --- | --- |',
+      ...builds.flatMap((b) => b.m27.map((g) => row(b, g))), '');
+    const g = (e.m27.find((x) => x.system === 'qzss')?.perSatellite ?? []).concat(e.m27.find((x) => x.system === 'gps')?.perSatellite.filter((x) => x.outages) ?? []);
+    if (g.length) L.push(`Per satellite with outages in the notices (build ${e.build}):`, '', '| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Distinct detections | False alarms | Chance level |', '| --- | --: | --: | --: | --: | --: | --: | --: |',
+      ...g.map((x) => `| ${x.name} | ${f(x.years, 2)} | ${x.outages} | ${x.scoreable} | ${x.hits} | ${x.distinct} | ${x.falseAlarms} | ${Math.round(x.chance * 100)} % |`), '');
   }
   if (e.previous && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
     const builds = [...e.history.filter((x) => x.m24 || x.m24c || x.m24a), e];
