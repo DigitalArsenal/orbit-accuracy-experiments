@@ -231,3 +231,15 @@ export function slrLowSeries({ norad }) {
   const files = slrDirs('nsgf.orb.').map((d) => path.join(slrRefRoot(), d, `${norad}.oem`)).filter((f) => fs.existsSync(f));
   return files.length ? chain(files) : null;
 }
+
+// ---- the truth series of the COMSPOC-aligned fit-span windows (amendment A9e) ----
+/** One satellite's GFZ rapid orbits (OPS or MGX product), every day chained: an object, or null when neither product holds the satellite. */
+export function gnssRapidSeries({ norad, source }) {
+  for (const prefix of ['GFZ0OPSRAP_', 'GFZ0MGXRAP_']) if (rapidOem(prefix, norad).length) return rapidObject(prefix, norad, source);
+  return null;
+}
+/** One sphere's NSGF rapid orbits from CDDIS, every daily file chained, the later file winning where arcs overlap: an object, or null. */
+export function slrSeriesObject({ norad, source }) {
+  const s = slrLowSeries({ norad });
+  return s ? withT({ source, id: `${s.name} (${norad})`, norad, name: s.name, objectId: s.objectId, originator: 'ILRS NSGF rapid orbit (CDDIS copy), daily files chained', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: s.lines }) : null;
+}

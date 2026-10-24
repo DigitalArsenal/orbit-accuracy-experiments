@@ -33,6 +33,7 @@ import * as sources from './lib/sources.mjs';
 import { parseMeme } from './lib/sources.mjs';
 import { windowStarts, withT, ms } from './lib/windows.mjs';
 import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
+import { spanObject } from './span-windows.mjs';
 
 const args = process.argv.slice(2);
 const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 9;
@@ -230,6 +231,19 @@ if (headline) {
     const row = rows[Math.floor(rows.length / 2)];
     const object = objectOf(source, row);
     if (object) await check(object, ms(row.startUtc), row.fitSeconds, config.windows.leadDays);
+  }
+  const spanRows = read(path.join(store, 'rows', 'span-slr.jsonl')); // a COMSPOC-aligned fit-span window (A9e): SGP4 and XP here, SDN-GP below
+  const spanRow = spanRows.filter((r) => r.spanHours === 72)[0] ?? spanRows[0];
+  if (spanRow) {
+    const object = spanObject({ kind: 'laser-ranged', norad: spanRow.norad });
+    const again = await scoreWindow(b, object, ms(spanRow.startUtc), { fitSeconds: spanRow.fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
+    for (const arm of ['xp', 'sgp4']) {
+      if (Boolean(again[arm].ok) !== Boolean(spanRow[arm].ok)) fail(`replay span ${spanRow.id}: ${arm} ok differs`);
+      if (spanRow[arm].ok && !same(again[arm].fitRmsKm, spanRow[arm].fitRmsKm)) fail(`replay span ${spanRow.id}: ${arm} fit RMS differs`);
+      for (const k of Object.keys(spanRow[arm].days ?? {})) if (!same(again[arm].days[k].rmsKm, spanRow[arm].days[k].rmsKm)) fail(`replay span ${spanRow.id}: ${arm} day ${k} differs`);
+    }
+    replayed += 1;
+    await check(object, ms(spanRow.startUtc), spanRow.fitSeconds, config.windows.leadDays);
   }
   if (metas.length) { // a Starlink FFM truth
     const meta = JSON.parse(fs.readFileSync(path.join(truthDir, metas[Math.floor(metas.length / 3)])));

@@ -14,7 +14,7 @@ const snap = snapshot(store, args.pin ?? null);
 const build = snap.wasmSha256.slice(0, 12);
 const logDir = path.join(store, 'sdngp-run', build);
 fs.mkdirSync(logDir, { recursive: true });
-const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering'];
+const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss'];
 const only = args.only ? new Set(args.only.split(',')) : null;
 const shards = (name, script, extra, n) => Array.from({ length: n }, (_, k) => ({ source: name, name: `${name}.s${k}of${n}`, script, argv: [...extra, ...(n > 1 ? ['--shard', `${k}/${n}`] : [])] }));
 const baselines = (source, n = 1) => shards(source, 'baselines.mjs', ['--arm', 'sdngp', '--source', source], n);
@@ -23,6 +23,7 @@ const jobs = [
   ...shards('starlink', 'starlink-sdngp.mjs', [], 4),
   ...shards('fitlength', 'fitlength.mjs', ['--arm', 'sdngp'], 4), // amendment A9c
   ...shards('lowering', 'starlink-lowering.mjs', [], 1), // amendment A9d: the lowering Starlinks, rule and free B_eff
+  ...shards('span-gnss', 'span-windows.mjs', ['--arm', 'sdngp', '--source', 'span-gnss'], 2), ...shards('span-slr', 'span-windows.mjs', ['--arm', 'sdngp', '--source', 'span-slr'], 1), // amendment A9e: the fit span against COMSPOC
   ...baselines('slr-low', 2), ...baselines('mgex-igso', 2), ...baselines('mgex-geo', 2), ...baselines('gnss', 2),
   ...spk('heo-tess'), ...spk('heo-chandra'), ...spk('heo-themis'),
   ...baselines('slr-low-current'), ...baselines('slr-high'), ...baselines('gnss-rapid'), ...baselines('slr-high-current'), ...baselines('mgex-igso-rapid'),

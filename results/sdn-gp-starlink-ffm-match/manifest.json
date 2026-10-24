@@ -25,8 +25,8 @@
     "node experiments/sdn-gp-starlink-ffm-match/fetch-slr.mjs --from 2026-10-08 --to 2026-10-24 --weeks 260912,260919,260926,261003",
     "node experiments/sdn-gp-starlink-ffm-match/slr-convert.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source slr-low-current,slr-high-current",
-    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs)",
-    "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --arm sdngp --shard k/3",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs, starlink-lowering.mjs, fitlength.mjs --arm sdngp, span-windows.mjs --arm sdngp)",
+    "node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs (SGP4 and XP of the COMSPOC-aligned fit-span windows; the SDN-GP arm runs inside sdngp-run.mjs)",
     "node experiments/sdn-gp-starlink-ffm-match/horizons-packs.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack <pack> --start <ISO> --fit-hours <h> --predicted <states.oem>",
@@ -35,10 +35,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "d98b2416d375076c084e4950ced2af1a98821afcf5c50ff4f1caa6c46fd0ef98",
+  "planSha256": "2e1427411450a5f4ac51b6f313df88d28fa52a7358fd1f8e0ff3a2f168502de9",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "dbcaf936d4361e34659747447fa1eecbf0fcd763"
+    "commit": "c4cfd1245b5984f163aa03be40094974016c63fa"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -262,7 +262,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "aebde849f2f2",
+    "headlineBuild": "9da7fad24c9d",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -286,6 +286,14 @@
         "sourceCommit": "cb93d1e8bacd75bf5b2386f8051346ac26a09b40",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T05:32:18.223Z",
+        "complete": true
+      },
+      {
+        "build": "9da7fad24c9d",
+        "wasmSha256": "9da7fad24c9d01e4dd199e6212ba999700d7f7a497765ca224a651b10a3e74d9",
+        "sourceCommit": "1102cd6e3b2c71a4e1899f27abfcfc4904f62444",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T06:32:14.780Z",
         "complete": true
       }
     ]
