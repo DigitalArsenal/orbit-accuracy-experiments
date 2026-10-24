@@ -809,3 +809,14 @@ the paired difference (D - A) per object and day (median; the number of objects 
 
 4. Jobs. Sources m31 (3 shards) and m32 (4 shards) in `sdngp-run.mjs` (`--only m31,m32`); the truths first (`m32-truth.mjs`). A batch whose truth FFM-1 cannot integrate is reported by name. The association with catalog sets (the `catalog` port) and the thrust-onset test
 (M33) need the later catalog assignment and files of an orbit raise, which the captured batch has not reached; they are not run here.
+
+### A12c - 2026-10-24, after the rows of M24 on the archive, M24c and the planted arcs of build 04f7c2d1d50f were read, before any row of this diagnostic was scored: where the new detector reports the burns of the ISS archive
+
+Observations that prompt it (read from the rows of 04f7c2d1d50f, nothing else of the build). The planted impulses of A11e are found (48 of 48 arcs at 1 m/s along each axis, epoch error 0.2 min median, |delta-v| over planted 1.00; 40 of 48 at 10 m/s, 0 of 48 at 0.1 m/s;
+the control reports a burn in 1 of 48 arcs), the burn-free FFM-1 Starlink arcs report a burn in 5 of 96 windows (64 of 96 before) and the burn-free ISS windows (leading 72 h of the files) in 8 of 651 (342 before). In the pre-burn ISS windows, 93 of 98 detections lie
+away from the planned TIG: at 32 h before it (the median), 5 % into the 72 h window, with |delta-v| 7 times the planned value and Lambda about 2.5e8. Depth into the file does not explain it (the pre-burn windows start a median 18 h after the file's start, 54 of 99 within
+24 h, as the burn-free ones at 0 h). Three readings can be separated by the detector itself on the same states, with the same weather and the same rules: (a) the detection belongs to the stretch before the burn (some feature of those files, or the search's first
+allowed epoch); (b) it belongs to the burn being in the window; (c) it moves when the burn is nearer the window's start. Registered diagnostic, for each of the 99 distinct planned burns (the file of its pre-burn window, A11): m24b-before, the states from max(file start, TIG - 36 h) to TIG - 2 h
+(no planned burn of any cluster inside or within an hour of it; skipped, with the reason, when it holds fewer than 48 states); m24b-across, the states from max(file start, TIG - 12 h) to min(file stop, TIG + 36 h) (a window of 48 h with the burn at 12 h; skipped when it holds a second cluster's burn). Reported: for
+before-windows, the windows with a detection, its position in the window and |delta-v|; for across-windows the hits within 92 min of TIG, the detections elsewhere (their offset from TIG) and none, and the |delta-v| over the planned value of the hits. Both builds (35cd83a2b714 and 04f7c2d1d50f) run it. The rows are m24b
+(`events-sdngp.mjs --source m24b`, one shard). This is a diagnostic of the pre-burn windows, not a new measurement against the design's M24; the numbers of A12 item 2 stand as measured.

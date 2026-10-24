@@ -39,3 +39,41 @@ export async function scoreArchive({ b, sink, only = null, windows = archiveWind
     else sink.append({ ...row, ok: true, detections: r.maneuvers.map((m) => ({ epoch: m.EVENT_START_TIME, dvMS: [m.DELTA_VEL_U, m.DELTA_VEL_V, m.DELTA_VEL_W].map((x) => x * 1000), algorithm: m.ALGORITHM ?? null })) });
   }
 }
+
+/**
+ * Amendment A12c, diagnostic of the pre-burn windows: for each planned burn with a pre-burn window, the stretch before the burn (max(file start, TIG - 36 h) to TIG - 2 h) and the 48 h across it
+ * (max(file start, TIG - 12 h) to min(file stop, TIG + 36 h)), the same detector with the same weather; a sub-window that holds fewer than 48 states or another cluster's burn is skipped with the reason.
+ */
+export async function scoreSub({ b, sink, only = null }) {
+  const headers = archiveHeaders(), byDate = new Map(headers.map((f) => [f.date, f]));
+  const windows = { ...issWindows(headers) };
+  windows.windows = windows.windows.map((w) => ({ ...w, file: byDate.get(w.date).file }));
+  const { payload } = spaceWeatherHistory(b.weatherTable);
+  const env = await loadEnvironment(b.sdngp, payload);
+  if (!env.ok) throw new Error(`load_environment: ${env.error}`);
+  const H = 3600e3;
+  let cache = null;
+  for (const w of windows.windows.filter((x) => x.kind === 'burn-pre')) {
+    for (const kind of ['sub-before', 'sub-across']) {
+      if (!sink.mine()) continue;
+      const id = `ISS ${kind} ${w.date} c${w.cluster}`;
+      if (only && !only.some((o) => o.id === id)) continue;
+      const fileHeader = byDate.get(w.date);
+      const a = Math.max(fileHeader.header.startMs, kind === 'sub-before' ? w.tigMs - 36 * H : w.tigMs - 12 * H), z = kind === 'sub-before' ? w.tigMs - 2 * H : Math.min(fileHeader.header.stopMs, w.tigMs + 36 * H);
+      const startUtc = iso(a);
+      const row = { source: 'm24b', id, kind, cluster: w.cluster, file: w.date, startUtc, stopUtc: iso(z), fitSeconds: Math.round((z - a) / 1000), tigUtc: iso(w.tigMs), plannedDvMS: w.dvMS, build: b.sdngp.provenance.wasmSha256.slice(0, 12) };
+      if (sink.has(`m24b|${id}|${startUtc}|${row.fitSeconds}`)) continue;
+      const others = windows.clusters.filter((c) => c.id !== w.cluster && Date.parse(c.tigUtc) >= a - H && Date.parse(c.tigUtc) <= z + H);
+      if (others.length) { sink.append({ ...row, skipped: `another planned burn (cluster ${others[0].id}) in or within an hour of the window` }); continue; }
+      if (!cache || cache.file !== w.file) cache = { file: w.file, parsed: parseIssOem(fs.readFileSync(w.file, 'utf8')) };
+      const states = cache.parsed.states.filter((s) => s.ms >= a && s.ms <= z);
+      if (states.length < 48) { sink.append({ ...row, skipped: `${states.length} states (fewer than 48)` }); continue; }
+      const lines = [];
+      for (const s of states) { const t = await transformState(b.frames, 'EME2000', 'TEME', iso(s.ms), [...s.r, ...s.v]); lines.push({ epoch: iso(s.ms), r: t.slice(0, 3), v: t.slice(3, 6) }); }
+      const bytes = oemBytes({ originator: 'NASA/JSC/FOD/TOPO', block: { frame: 'TEMEOFDATE', frameName: 'TEME', timeSystem: 'UTC', object: { name: 'ISS', id: '1998-067A', norad: 25544 }, lines, start: lines[0].epoch, stop: lines.at(-1).epoch }, sizePrefixed: false });
+      const r = await detectManeuvers(b.sdngp, { oem: bytes });
+      if (!r.ok) sink.append({ ...row, states: lines.length, ok: false, error: r.error });
+      else sink.append({ ...row, states: lines.length, ok: true, detections: r.maneuvers.map((m) => ({ epoch: m.EVENT_START_TIME, dvMS: [m.DELTA_VEL_U, m.DELTA_VEL_V, m.DELTA_VEL_W].map((x) => x * 1000), algorithm: m.ALGORITHM ?? null })) });
+    }
+  }
+}

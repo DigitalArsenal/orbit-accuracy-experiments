@@ -136,7 +136,7 @@ COMSPOC does not state the span its XP sets were fitted over, so the 24 h fits o
 - `detect_maneuvers` on burn-free arcs (section 16b): 17 of 26 ISS windows (NASA OEM files with no reboost) and 64 of 96 windows of burn-free FFM-1 Starlink arcs reported a burn (Lambda median 927 and 722 against the threshold 20; delta-v median 0.049 m/s and 0.060 m/s).
 - `detect_maneuvers` on NASA's ISS archive (section 16b; the headers' planned burns are planned values, not measurements; build 35cd83a2b714): of 98 pre-burn windows 2 report a burn within 92 min of the planned TIG (96 elsewhere, 0 none; epoch error of the hits 2.5 min, |delta-v| over the planned value 1.12) and 1 of 6 post-burn windows; 342 of 651 burn-free windows report one, 76.6 false alarms per object-year over 4.37 object-years; burn-free FFM-1 Starlink arcs: 64 of 96 windows.
 - Impulses planted in FFM-1 arcs at 24 h of 60 h (section 16b, amendment A11e; 288 arcs, build 35cd83a2b714): hits within 92 min of 48 arcs: radial 1 m/s 45, cross-track 1 m/s 46, in-track 0.1 / 1 / 10 m/s 13 / 25 / 8; the control reports a burn in 24 arcs.
-- Real reentries (section 16c; build 35cd83a2b714; time to go is the truth less the prediction epoch, sigma is REENTRY_EPOCH_UNC): CORDS observed reentries: 263 of 373 predictions answered on 15 objects, within 1 sigma 56 %, within 2 sigma 64 %, median |error| 12.9 h; Space-Track last-TIP reentries: 829 of 1051 predictions answered on 34 objects, within 1 sigma 57 %, within 2 sigma 86 %, median |error| 14.7 h; against Aerospace's prediction at its own element-set epoch (14 objects) the observed time lies inside Aerospace's stated window for 12 and inside SDN-AP's 2 sigma for 6 of 6.
+- Real reentries (section 16c; build 35cd83a2b714; time to go is the truth less the prediction epoch, sigma is REENTRY_EPOCH_UNC): CORDS observed reentries: 297 of 441 predictions answered on 17 objects, within 1 sigma 60 %, within 2 sigma 68 %, median |error| 12.0 h; Space-Track last-TIP reentries: 1090 of 1368 predictions answered on 41 objects, within 1 sigma 55 %, within 2 sigma 83 %, median |error| 15.6 h; against Aerospace's prediction at its own element-set epoch (17 objects) the observed time lies inside Aerospace's stated window for 14 and inside SDN-AP's 2 sigma for 8 of 8.
 - Controlled deorbits (section 16c; 19 lowering Starlinks, build 35cd83a2b714): `reentry` on the 24 h fit answered for 16 (reentry-not-reached 3; predicted lifetime median 12.5 days, 4.9 to 26.4); the rule setting (B_eff replaced by tau0) is refused for 19 of 19 (no-drag); the free-B_eff setting gives the same epochs as the shipped one; as of the archive's newest snapshot 0 have a TIP message and 0 a decay message, so none is scored yet.
 - Moon-centered windows against the truth-side maneuver list (section 16b): LRO: with a listed maneuver in the fit span 2 windows (whole 1, segment 1, refused 0), none in the fit span 85 (segment 4, refused 0); segment starts 1 after and 0 before the last listed maneuver; Danuri: with a listed maneuver in the fit span 14 windows (whole 7, segment 6, refused 1), none in the fit span 47 (segment 2, refused 0); segment starts 5 after and 1 before the last listed maneuver.
 
@@ -1451,73 +1451,76 @@ The module's treatment of each Moon-centered window (the whole arc, a segment, a
 | LRO | 87 | 2 | 1 / 1 / 0 | 7 / 1 / 0 | 74 / 3 / 0 | 2.5 [2.5, 2.5] | 1 / 0 | 2.141 / 1.974 |
 | Danuri | 61 | 10 | 7 / 6 / 1 | 21 / 2 / 0 | 24 / 0 / 0 | 5.3 [-27.0, 10.8] | 5 / 1 | 3.720 / 3.164 |
 
+M25, the Moon-centered windows in the fit span of a listed maneuver (whole / segment / refused): LRO 1 / 1 / 0 -> 1 / 1 / 0; Danuri 7 / 6 / 1 -> 7 / 6 / 1; windows with no listed maneuver in the fit span treated as a segment or refused: LRO 4 -> 4; Danuri 2 -> 2.
+
 ### 16c. Real reentries, controlled deorbits and first sets (amendment A11)
 
 #### M29. Real reentries
 
-Build 35cd83a2b714. Predictions at element-set epochs from 14 days before the reentry (4 h apart or more): the pseudo-observations of the object's element-set history up to the epoch (the last 120 h; the SGP4 module propagates each set over the interval it speaks for, 300 s states) go to `fit_sdnap` (the module chooses the span) and the set to `reentry` with the daily space weather of the years. Time to go is the true one (truth less the prediction epoch); the error is REENTRY_EPOCH less the truth and sigma is REENTRY_EPOCH_UNC (68.27 %). The 20 % rule is |error| <= 0.2 (REENTRY_EPOCH less the epoch); the equal-coverage k is the multiple of sigma that covers the same share of the predictions in the bin as the rule does, and k sigma over the rule's window is below 1 where the module's window is narrower at equal coverage.
+Build 35cd83a2b714. Predictions at element-set epochs from 14 days before the reentry (4 h apart or more): the pseudo-observations of the object's element-set history up to the epoch (the last 120 h; the SGP4 module propagates each set over the interval it speaks for, 300 s states) go to `fit_sdnap` (the module chooses the span) and the set to `reentry` with the daily space weather of the years. Time to go is the true one (truth less the prediction epoch); the error is REENTRY_EPOCH less the truth and sigma is REENTRY_EPOCH_UNC (68.27 %). The 20 % rule is |error| <= 0.2 (REENTRY_EPOCH less the epoch); the equal-coverage k is the multiple of sigma that covers the same share of the predictions in the bin as the rule does, and k sigma over the rule's window is below 1 where the module's window is narrower at equal coverage. The space weather is the observed daily values of the years (GFZ Kp, ap, Ap and F10.7 up to 2026-09-12, the saved table after it), which include the days after each prediction epoch: a forecast issued at the epoch would be less exact, so the comparison with Aerospace and with the TIP messages, which use forecasts, favors SDN-AP in that one respect.
 
-**Sample C: 15 objects with an observed reentry in the CORDS spreadsheet** (7 Starlinks, 8 other objects; truth: the observed time, minute precision), 373 predictions.
+**Sample C: 17 objects with an observed reentry in the CORDS spreadsheet** (7 Starlinks, 10 other objects; truth: the observed time, minute precision), 441 predictions.
 
 | Time to go | Predictions | Answered (objects) | Median error (h) | Median absolute error (h) | 90th percentile absolute error (h) | Median absolute error over time to go |
 | --- | --: | --: | --: | --: | --: | --: |
-| over 7 d | 181 | 139 (13) | 2.63 | 23.5 | 311 | 0.090 |
-| 3 to 7 d | 92 | 63 (11) | 10.3 | 10.9 | 252 | 0.088 |
-| 1 to 3 d | 50 | 36 (11) | 10.4 | 10.4 | 134 | 0.210 |
-| 12 to 24 h | 21 | 10 (7) | 1.00 | 4.71 | 10.3 | 0.245 |
+| over 7 d | 201 | 150 (14) | 2.96 | 22.2 | 309 | 0.089 |
+| 3 to 7 d | 117 | 73 (13) | 9.78 | 10.2 | 251 | 0.075 |
+| 1 to 3 d | 64 | 42 (13) | 8.88 | 9.04 | 126 | 0.198 |
+| 12 to 24 h | 27 | 15 (9) | -0.07 | 3.53 | 8.65 | 0.159 |
 | 6 to 12 h | 12 | 6 (6) | 1.32 | 1.32 | 11.1 | 0.129 |
-| 3 to 6 h | 8 | 4 (4) | 0.10 | 2.39 | 8.18 | 0.523 |
-| under 3 h | 9 | 5 (4) | -0.86 | 0.86 | 4.11 | 0.635 |
-| all | 373 | 263 (13) | 4.25 | 12.9 | 281 | 0.140 |
+| 3 to 6 h | 10 | 5 (5) | -0.16 | 2.01 | 7.64 | 0.385 |
+| under 3 h | 10 | 6 (5) | -0.79 | 0.85 | 3.94 | 0.619 |
+| all | 441 | 297 (14) | 2.58 | 12.0 | 272 | 0.111 |
 
 | Time to go | Answered | Median sigma (h) | Median sigma / time to go | Within 1 sigma (68 %) | Within 2 sigma (95 %) | Inside the module's window | Within the 20 % rule | Equal-coverage k | k sigma over the rule's window (median) |
 | --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| over 7 d | 139 | 25.4 | 0.096 | 50 % | 58 % | 50 % | 60 % | 2.55 | 1.15 |
-| 3 to 7 d | 63 | 18.5 | 0.163 | 56 % | 62 % | 56 % | 60 % | 1.51 | 0.95 |
-| 1 to 3 d | 36 | 13.0 | 0.286 | 56 % | 72 % | 56 % | 50 % | 0.91 | 0.95 |
-| 12 to 24 h | 10 | 9.20 | 0.491 | 90 % | 90 % | 90 % | 40 % | 0.47 | 1.14 |
+| over 7 d | 150 | 25.0 | 0.097 | 52 % | 61 % | 52 % | 63 % | 2.54 | 1.15 |
+| 3 to 7 d | 73 | 18.1 | 0.158 | 62 % | 67 % | 62 % | 66 % | 1.50 | 0.94 |
+| 1 to 3 d | 42 | 12.9 | 0.284 | 62 % | 76 % | 62 % | 57 % | 0.91 | 0.99 |
+| 12 to 24 h | 15 | 8.61 | 0.496 | 93 % | 93 % | 93 % | 60 % | 0.43 | 1.07 |
 | 6 to 12 h | 6 | 8.15 | 0.843 | 67 % | 100 % | 67 % | 67 % | 0.54 | 1.81 |
-| 3 to 6 h | 4 | 6.81 | 1.281 | 75 % | 100 % | 75 % | 50 % | 0.38 | 2.23 |
-| under 3 h | 5 | 6.22 | 3.649 | 100 % | 100 % | 100 % | 0 % | 0.12 | 7.23 |
-| all | 263 | 21.7 | 0.132 | 56 % | 64 % | 56 % | 57 % | 1.09 | 0.56 |
+| 3 to 6 h | 5 | 6.77 | 1.250 | 80 % | 100 % | 80 % | 40 % | 0.21 | 1.26 |
+| under 3 h | 6 | 6.26 | 3.897 | 100 % | 100 % | 100 % | 0 % | 0.06 | 2.52 |
+| all | 297 | 21.1 | 0.134 | 60 % | 68 % | 60 % | 61 % | 1.10 | 0.58 |
 
-Not answered: fit refused fit-implausible 52; `reentry` refused reentry-not-reached 57, no-drag 1; by time to go, over 7 d: 42 of 181 (fit-implausible 16, reentry-not-reached 26); 3 to 7 d: 29 of 92 (fit-implausible 13, reentry-not-reached 16); 1 to 3 d: 14 of 50 (fit-implausible 6, reentry-not-reached 8); 12 to 24 h: 11 of 21 (fit-implausible 5, reentry-not-reached 5, no-drag 1); 6 to 12 h: 6 of 12 (fit-implausible 5, reentry-not-reached 1); 3 to 6 h: 4 of 8 (fit-implausible 4); under 3 h: 4 of 9 (fit-implausible 3, reentry-not-reached 1).
+Not answered: fit refused fit-implausible 79; `reentry` refused reentry-not-reached 64, no-drag 1; by time to go, over 7 d: 51 of 201 (fit-implausible 23, reentry-not-reached 28); 3 to 7 d: 44 of 117 (fit-implausible 24, reentry-not-reached 20); 1 to 3 d: 22 of 64 (fit-implausible 13, reentry-not-reached 9); 12 to 24 h: 12 of 27 (fit-implausible 6, reentry-not-reached 5, no-drag 1); 6 to 12 h: 6 of 12 (fit-implausible 5, reentry-not-reached 1); 3 to 6 h: 5 of 10 (fit-implausible 5); under 3 h: 4 of 10 (fit-implausible 3, reentry-not-reached 1).
 
-**Sample T: 34 objects with a Space-Track decay message and a last TIP message before the archive's last snapshot** (30 Starlinks; truth: that message's DECAY_EPOCH, a window of about a minute: Space-Track's settled time, not an observation), 1051 predictions.
+**Sample T: 41 objects with a Space-Track decay message and a last TIP message before the archive's last snapshot** (35 Starlinks; truth: that message's DECAY_EPOCH, a window of about a minute: Space-Track's settled time, not an observation), 1368 predictions.
 
 | Time to go | Predictions | Answered (objects) | Median error (h) | Median absolute error (h) | 90th percentile absolute error (h) | Median absolute error over time to go |
 | --- | --: | --: | --: | --: | --: | --: |
-| over 7 d | 496 | 394 (34) | 5.67 | 23.4 | 125 | 0.096 |
-| 3 to 7 d | 292 | 229 (31) | 12.2 | 13.2 | 33.4 | 0.113 |
-| 1 to 3 d | 162 | 126 (31) | 9.07 | 9.38 | 25.1 | 0.225 |
-| 12 to 24 h | 50 | 40 (25) | 1.98 | 3.53 | 13.2 | 0.195 |
-| 6 to 12 h | 29 | 22 (19) | -0.67 | 1.30 | 9.27 | 0.143 |
-| 3 to 6 h | 9 | 7 (7) | 1.09 | 1.09 | 11.9 | 0.263 |
-| under 3 h | 13 | 11 (11) | 1.49 | 1.49 | 11.7 | 0.586 |
-| all | 1051 | 829 (34) | 7.95 | 14.7 | 62.5 | 0.120 |
+| over 7 d | 649 | 527 (41) | 3.62 | 21.7 | 120 | 0.093 |
+| 3 to 7 d | 388 | 305 (41) | 11.0 | 14.2 | 37.3 | 0.122 |
+| 1 to 3 d | 208 | 160 (41) | 9.23 | 10.9 | 29.8 | 0.252 |
+| 12 to 24 h | 60 | 47 (31) | 1.98 | 3.55 | 13.3 | 0.197 |
+| 6 to 12 h | 37 | 29 (25) | -0.44 | 1.57 | 9.92 | 0.150 |
+| 3 to 6 h | 11 | 9 (9) | 1.09 | 1.83 | 11.7 | 0.570 |
+| under 3 h | 15 | 13 (13) | 1.49 | 1.49 | 12.0 | 0.586 |
+| all | 1368 | 1090 (41) | 6.81 | 15.6 | 86.5 | 0.122 |
 
 | Time to go | Answered | Median sigma (h) | Median sigma / time to go | Within 1 sigma (68 %) | Within 2 sigma (95 %) | Inside the module's window | Within the 20 % rule | Equal-coverage k | k sigma over the rule's window (median) |
 | --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| over 7 d | 394 | 22.9 | 0.093 | 51 % | 76 % | 51 % | 77 % | 2.05 | 0.99 |
-| 3 to 7 d | 229 | 17.3 | 0.145 | 61 % | 95 % | 61 % | 83 % | 1.58 | 1.04 |
-| 1 to 3 d | 126 | 12.3 | 0.261 | 55 % | 93 % | 55 % | 53 % | 0.93 | 0.99 |
-| 12 to 24 h | 40 | 8.59 | 0.502 | 80 % | 100 % | 80 % | 57 % | 0.47 | 1.05 |
-| 6 to 12 h | 22 | 7.14 | 0.878 | 82 % | 100 % | 82 % | 59 % | 0.24 | 1.05 |
-| 3 to 6 h | 7 | 6.74 | 1.530 | 71 % | 100 % | 71 % | 29 % | 0.11 | 0.71 |
-| under 3 h | 11 | 6.67 | 3.428 | 64 % | 100 % | 64 % | 0 % | 0.07 | 0.83 |
-| all | 829 | 18.6 | 0.122 | 57 % | 86 % | 57 % | 72 % | 1.36 | 0.81 |
+| over 7 d | 527 | 22.9 | 0.093 | 52 % | 75 % | 52 % | 75 % | 1.98 | 0.96 |
+| 3 to 7 d | 305 | 17.3 | 0.146 | 57 % | 89 % | 57 % | 77 % | 1.51 | 1.00 |
+| 1 to 3 d | 160 | 12.4 | 0.264 | 50 % | 86 % | 50 % | 49 % | 0.94 | 0.96 |
+| 12 to 24 h | 47 | 8.60 | 0.501 | 74 % | 98 % | 74 % | 55 % | 0.47 | 1.08 |
+| 6 to 12 h | 29 | 7.20 | 0.872 | 76 % | 97 % | 76 % | 55 % | 0.24 | 1.01 |
+| 3 to 6 h | 9 | 6.81 | 1.530 | 67 % | 100 % | 67 % | 22 % | 0.12 | 0.74 |
+| under 3 h | 13 | 6.67 | 3.428 | 62 % | 100 % | 62 % | 8 % | 0.07 | 0.82 |
+| all | 1090 | 18.8 | 0.121 | 55 % | 83 % | 55 % | 69 % | 1.36 | 0.80 |
 
-Not answered: fit refused fit-implausible 3; `reentry` refused reentry-not-reached 219; by time to go, over 7 d: 102 of 496 (fit-implausible 2, reentry-not-reached 100); 3 to 7 d: 63 of 292 (reentry-not-reached 63); 1 to 3 d: 36 of 162 (fit-implausible 1, reentry-not-reached 35); 12 to 24 h: 10 of 50 (reentry-not-reached 10); 6 to 12 h: 7 of 29 (reentry-not-reached 7); 3 to 6 h: 2 of 9 (reentry-not-reached 2); under 3 h: 2 of 13 (reentry-not-reached 2).
+Not answered: fit refused fit-implausible 5; `reentry` refused reentry-not-reached 273; by time to go, over 7 d: 122 of 649 (fit-implausible 2, reentry-not-reached 120); 3 to 7 d: 83 of 388 (reentry-not-reached 83); 1 to 3 d: 48 of 208 (fit-implausible 1, reentry-not-reached 47); 12 to 24 h: 13 of 60 (fit-implausible 1, reentry-not-reached 12); 6 to 12 h: 8 of 37 (fit-implausible 1, reentry-not-reached 7); 3 to 6 h: 2 of 11 (reentry-not-reached 2); under 3 h: 2 of 15 (reentry-not-reached 2).
 
-By kind (all times to go): sample C Starlinks 138 answered, within 1 sigma 29 %, 2 sigma 38 %, median |error| 94.4 h; other objects 125, 85 %, 94 %, 7.56 h; sample T Starlinks 751, 55 %, 85 %, 15.8 h; other objects 78, 76 %, 97 %, 9.36 h.
+By kind (all times to go): sample C Starlinks 156 answered, within 1 sigma 37 %, 2 sigma 45 %, median |error| 76.2 h; other objects 141, 84 %, 94 %, 7.91 h; sample T Starlinks 926, 50 %, 80 %, 17.5 h; other objects 164, 85 %, 99 %, 8.44 h.
 
-**Against Aerospace's prediction at its own element-set epoch** (sample C; 14 objects, SDN-AP answered 6, refused: fit-implausible 7, reentry-not-reached 1): the observed time lies inside Aerospace's stated window for 12 of 14 and inside SDN-AP's 1 sigma and 2 sigma for 5 and 6 of 6; median |error| 0.30 h (Aerospace) against 1.97 h (SDN-AP), SDN-AP closer for 2 of 6; median window half-width over time to go 0.362 (Aerospace) against 3.158 (SDN-AP sigma). Aerospace's values are the spreadsheet's (a prediction and its stated plus or minus); the table gives errors and widths only:
+**Against Aerospace's prediction at its own element-set epoch** (sample C; 17 objects, SDN-AP answered 8, refused: fit-implausible 8, reentry-not-reached 1): the observed time lies inside Aerospace's stated window for 14 of 17 and inside SDN-AP's 1 sigma and 2 sigma for 7 and 8 of 8; median |error| 0.46 h (Aerospace) against 1.36 h (SDN-AP), SDN-AP closer for 4 of 8; median window half-width over time to go 0.362 (Aerospace) against 3.158 (SDN-AP sigma). Aerospace's values are the spreadsheet's (a prediction and its stated plus or minus); the table gives errors and widths only:
 
 | Object | Time to go (h) | Aerospace error (h) | Aerospace plus or minus (h) | SDN-AP error (h) | SDN-AP sigma (h) |
 | --- | --: | --: | --: | --: | --: |
 | 55840 | 1.2 | 0.30 | 1.00 | -0.72 | 6.22 |
 | 51077 | 1.3 | 0.20 | 1.00 | refused (fit-implausible) |  |
 | 51122 | 1.4 | 0.02 | 1.00 | refused (reentry-not-reached) |  |
+| 62878 | 1.5 | 0.97 | 1.00 | -0.35 | 6.30 |
 | 55482 | 1.6 | 0.26 | 1.00 | -4.79 | 5.81 |
 | 53597 | 2.0 | 1.30 | 1.00 | 0.84 | 6.48 |
 | 47853 | 2.8 | 0.60 | 1.00 | -3.10 | 8.63 |
@@ -1525,21 +1528,23 @@ By kind (all times to go): sample C Starlinks 138 answered, within 1 sigma 29 %,
 | 44867 | 3.5 | -1.65 | 1.00 | refused (fit-implausible) |  |
 | 55977 | 4.1 | 0.25 | 2.00 | refused (fit-implausible) |  |
 | 45079 | 4.4 | 0.05 | 1.00 | refused (fit-implausible) |  |
+| 54231 | 4.6 | -1.55 | 1.00 | refused (fit-implausible) |  |
 | 29093 | 4.6 | -0.28 | 1.00 | 9.79 | 7.70 |
 | 47801 | 11.8 | 0.31 | 3.00 | refused (fit-implausible) |  |
 | 45265 | 11.8 | 0.31 | 3.00 | -0.22 | 9.75 |
+| 57478 | 12.8 | 2.14 | 3.00 | -1.88 | 7.34 |
 | 40108 | 23.7 | -3.85 | 4.00 | refused (fit-implausible) |  |
 
-**Against Space-Track's TIP message in force at the same epoch** (sample T; the latest message before the epoch, 197 predictions have one; the truth is the last message, so the comparison is exact only in the sense of that series):
+**Against Space-Track's TIP message in force at the same epoch** (sample T; the latest message before the epoch, 254 predictions have one; the truth is the last message, so the comparison is exact only in the sense of that series):
 
 | Time to go | Answered | With a TIP message | TIP median absolute error (h) | SDN-AP median absolute error on the same (h) | Truth inside the TIP window | Truth inside SDN-AP 2 sigma | SDN-AP closer |
 | --- | --: | --: | --: | --: | --: | --: | --: |
-| 3 to 7 d | 229 | 11 | 4.40 | 6.54 | 82 % | 100 % | 5 of 11 |
-| 1 to 3 d | 126 | 80 | 9.70 | 7.54 | 70 % | 94 % | 37 of 80 |
-| 12 to 24 h | 40 | 34 | 3.58 | 3.53 | 88 % | 100 % | 13 of 34 |
-| 6 to 12 h | 22 | 20 | 1.37 | 1.54 | 75 % | 100 % | 10 of 20 |
-| 3 to 6 h | 7 | 7 | 0.42 | 1.09 | 57 % | 100 % | 2 of 7 |
-| under 3 h | 11 | 10 | 0.86 | 1.34 | 70 % | 100 % | 3 of 10 |
+| 3 to 7 d | 305 | 17 | 4.40 | 6.62 | 88 % | 100 % | 7 of 17 |
+| 1 to 3 d | 160 | 104 | 9.70 | 8.62 | 66 % | 92 % | 49 of 104 |
+| 12 to 24 h | 47 | 41 | 3.47 | 3.55 | 88 % | 98 % | 15 of 41 |
+| 6 to 12 h | 29 | 26 | 1.51 | 1.61 | 77 % | 100 % | 13 of 26 |
+| 3 to 6 h | 9 | 9 | 1.10 | 1.83 | 56 % | 100 % | 2 of 9 |
+| under 3 h | 13 | 12 | 0.86 | 1.34 | 67 % | 100 % | 4 of 12 |
 
 #### M30. Controlled deorbits (what build 35cd83a2b714 covers)
 
@@ -1607,5 +1612,6 @@ Every other source and its terms: [docs/data-licenses.md](../../docs/data-licens
 - Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.
 - SDN-AP: `lib/sdngp.mjs` runs side B's `sdn-gp-propagator` (a copy of its built wasm, named by SHA-256 prefix, in `<store>/sdngp-snapshot/`), `lib/baselines.mjs` `fitSdngp` is the third fitter beside `fitXp` and `fitSgp4`, and `sdngp-run.mjs` runs it over every source on one build (`baselines.mjs --arm sdngp`, `spk-windows.mjs --arm sdngp`, `starlink-sdngp.mjs`, `starlink-lowering.mjs`, `fitlength.mjs --arm sdngp`, `span-windows.mjs --arm sdngp`; `newer.mjs` carries the arm when a complete build exists), rows in `<store>/rows/sdngp/<build>/`; a new build of the module is one more `sdngp-run.mjs`, and section 2a lists the builds. The last row of section 5 stays `pending`. For the regimes awaiting SDN-AP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the center. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.
 - Maneuvers, hand-off and detection (amendment A10): `events-truth.mjs --kind m22,m23,m28 --shard k/n` makes the FFM-1 truths (impulses and finite burns planted in its typed request; synthetic decays to its stop at 100 km) under `<store>/events/`, independent of the build; `sdngp-run.mjs --pin <build> --only m22,m23,m28,m24` scores them with that build of the module (rows `m22`, `m23`, `m28`, `m24` in `rows/sdngp/<build>/`); `lib/sdngp-events.mjs` is the module's `maneuver`, `detect_maneuvers` and `reentry` surfaces, `lib/ffm-events.mjs` and `lib/decay.mjs` are FFM-1's.
+- NASA ISS archive, reentries and first sets (amendments A11 to A12b): `fetch-iss-oem.mjs` fetches NASA's public ISS OEM archive (748 files, 2 s apart, nothing committed) and `iss-burns.mjs` writes `iss-burns.json` from the headers alone; `m29-extract.mjs` and `m29-extract-cords.mjs` cut the element-set histories of the reentered objects from the local Space-Track archive and the CORDS spreadsheet (kept in the archive, never committed); `m30-truth.mjs` writes `m30-truth.json` (re-run it, then `tables.mjs`, as TIP and decay messages arrive: the frozen reentry predictions of the lowering Starlinks are then scored); `m31-capture.mjs` processes the current files of a new batch into derived trajectories (`--summary` writes `m31-capture.json`); `m32-truth.mjs` makes the synthetic batches' FFM-1 truths; `sdngp-run.mjs --pin <build> --only m24a,m24p,m29,m30,m31,m32` scores them with a build of the module.
 - Newer-file truth: `newer.mjs` scores against the first hours of any SpaceX file created after the registered fit (section 10); re-run it after 2026-10-24 08:00Z for the registered prospective files, and `comspoc.mjs` against the same-day truth files. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later (ESA finals lag about two weeks); `inventory.mjs` shows the newest product dates.
 

@@ -14,7 +14,7 @@ const snap = snapshot(store, args.pin ?? null);
 const build = snap.wasmSha256.slice(0, 12);
 const logDir = path.join(store, 'sdngp-run', build);
 fs.mkdirSync(logDir, { recursive: true });
-const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'segment', 'default', 'm22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p', 'm31', 'm32'];
+const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'segment', 'default', 'm22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p', 'm31', 'm32', 'm24b'];
 const only = args.only ? new Set(args.only.split(',')) : null;
 const wanted = (j) => !only || only.has(j.source) || [...only].some((o) => j.source.startsWith(`${o}:`)); // --only default selects every default-span job
 const shards = (name, script, extra, n) => Array.from({ length: n }, (_, k) => ({ source: name, name: `${name}.s${k}of${n}`, script, argv: [...extra, ...(n > 1 ? ['--shard', `${k}/${n}`] : [])] }));
@@ -33,6 +33,7 @@ const jobs = [
   ...shards('m24a', 'events-sdngp.mjs', ['--source', 'm24a'], 4), ...shards('m29', 'events-sdngp.mjs', ['--source', 'm29'], 6), ...shards('m30', 'events-sdngp.mjs', ['--source', 'm30'], 1), ...shards('m24p', 'events-sdngp.mjs', ['--source', 'm24p'], 4),
   // amendment A12b: the per-object fits of the captured batch (M31) and the synthetic FFM-1 batches (M31 and M32; run m32-truth.mjs first: the truths are independent of the build)
   ...shards('m31', 'events-sdngp.mjs', ['--source', 'm31'], 3), ...shards('m32', 'events-sdngp.mjs', ['--source', 'm32'], 4),
+  ...shards('m24b', 'events-sdngp.mjs', ['--source', 'm24b'], 2), // amendment A12c: the diagnostic of the pre-burn windows
   ...['iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current'].flatMap((src) => shards(`default:${src}`, 'baselines.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', src], src === 'slr-low' || src === 'mgex-igso' ? 2 : 1)),
   ...shards('default:heo', 'spk-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'heo-themis,heo-chandra,heo-tess'], 1),
   ...shards('default:span-gnss', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-gnss'], 1), ...shards('default:span-slr', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-slr'], 1),

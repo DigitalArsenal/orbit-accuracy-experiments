@@ -17431,165 +17431,165 @@
     "m29": {
       "build": "35cd83a2b714",
       "C": {
-        "objects": 15,
+        "objects": 17,
         "objectsWithoutSets": 0,
-        "predictions": 373,
+        "predictions": 441,
         "skipped": 0,
-        "scored": 263,
+        "scored": 297,
         "fitRefused": {
-          "fit-implausible": 52
+          "fit-implausible": 79
         },
         "reentryRefused": {
-          "reentry-not-reached": 57,
+          "reentry-not-reached": 64,
           "no-drag": 1
         },
         "failedSetsMedian": 0,
         "all": {
-          "n": 263,
-          "objects": 13,
-          "errMedian": 4.251188888888889,
-          "absMedian": 12.945932222222222,
-          "absP90": 280.6254563333333,
-          "absOverTau": 0.14016907971994108,
-          "sigmaOverTau": 0.13202483158367342,
-          "sigmaMedian": 21.701493893024008,
-          "within1": 0.5551330798479087,
-          "within2": 0.6425855513307985,
-          "inWindow": 0.5551330798479087,
-          "ruleShare": 0.5665399239543726,
-          "equalCoverageK": 1.094186376862232,
-          "kWindowOverRule": 0.5613545490346799
+          "n": 297,
+          "objects": 14,
+          "errMedian": 2.578898888888889,
+          "absMedian": 11.961471111111111,
+          "absP90": 272.14280644444455,
+          "absOverTau": 0.11076655347549677,
+          "sigmaOverTau": 0.1343963846117923,
+          "sigmaMedian": 21.116467508931752,
+          "within1": 0.5959595959595959,
+          "within2": 0.6835016835016835,
+          "inWindow": 0.5959595959595959,
+          "ruleShare": 0.6094276094276094,
+          "equalCoverageK": 1.0964474820890986,
+          "kWindowOverRule": 0.5779081590093758
         },
         "starlink": {
-          "n": 138,
+          "n": 156,
           "objects": 7,
-          "errMedian": 76.20292791666667,
-          "absMedian": 94.37081166666667,
-          "absP90": 328.0313289722222,
-          "absOverTau": 0.5736079551328507,
-          "sigmaOverTau": 0.14652740034422576,
-          "sigmaMedian": 23.893933307438385,
-          "within1": 0.2898550724637681,
-          "within2": 0.37681159420289856,
-          "inWindow": 0.2898550724637681,
-          "ruleShare": 0.3188405797101449,
-          "equalCoverageK": 1.2826746438422592,
-          "kWindowOverRule": 0.5871963683829298
+          "errMedian": 21.788771805555555,
+          "absMedian": 76.17827194444445,
+          "absP90": 313.75327638888893,
+          "absOverTau": 0.43286131503613506,
+          "sigmaOverTau": 0.1517649788062568,
+          "sigmaMedian": 23.11234552571101,
+          "within1": 0.3717948717948718,
+          "within2": 0.44871794871794873,
+          "inWindow": 0.3717948717948718,
+          "ruleShare": 0.391025641025641,
+          "equalCoverageK": 1.2013248848214064,
+          "kWindowOverRule": 0.5912834425352489
         },
         "other": {
-          "n": 125,
-          "objects": 6,
-          "errMedian": -0.7159380555555556,
-          "absMedian": 7.558261944444444,
-          "absP90": 24.78297566666668,
-          "absOverTau": 0.04039862808942221,
-          "sigmaOverTau": 0.11581071219167664,
-          "sigmaMedian": 19.876182309614737,
-          "within1": 0.848,
-          "within2": 0.936,
-          "inWindow": 0.848,
-          "ruleShare": 0.84,
-          "equalCoverageK": 0.9533141598599322,
-          "kWindowOverRule": 0.5282407200523113
+          "n": 141,
+          "objects": 7,
+          "errMedian": -0.1119711111111111,
+          "absMedian": 7.9102525,
+          "absP90": 25.535544722222223,
+          "absOverTau": 0.04778132020383964,
+          "sigmaOverTau": 0.11872366843759684,
+          "sigmaMedian": 19.87281186621424,
+          "within1": 0.8439716312056738,
+          "within2": 0.9432624113475178,
+          "inWindow": 0.8439716312056738,
+          "ruleShare": 0.851063829787234,
+          "equalCoverageK": 1.070129666540075,
+          "kWindowOverRule": 0.6081810388343237
         },
         "starlinkObjects": 7,
         "bins": [
           {
             "name": "over 7 d",
-            "attempted": 181,
+            "attempted": 201,
             "fitRefused": {
-              "fit-implausible": 16
+              "fit-implausible": 23
             },
             "reentryRefused": {
-              "reentry-not-reached": 26
+              "reentry-not-reached": 28
             },
-            "n": 139,
-            "objects": 13,
-            "errMedian": 2.634462777777778,
-            "absMedian": 23.463185833333334,
-            "absP90": 311.05281522222225,
-            "absOverTau": 0.0895494128864591,
-            "sigmaOverTau": 0.09614837869229648,
-            "sigmaMedian": 25.3787412577598,
-            "within1": 0.5035971223021583,
-            "within2": 0.5755395683453237,
-            "inWindow": 0.5035971223021583,
-            "ruleShare": 0.5971223021582733,
-            "equalCoverageK": 2.546922153996763,
-            "kWindowOverRule": 1.1487316356547772
+            "n": 150,
+            "objects": 14,
+            "errMedian": 2.9598379166666664,
+            "absMedian": 22.152044583333335,
+            "absP90": 308.9201910277778,
+            "absOverTau": 0.08937417908082043,
+            "sigmaOverTau": 0.0966005944720492,
+            "sigmaMedian": 25.03759188596561,
+            "within1": 0.52,
+            "within2": 0.6066666666666667,
+            "inWindow": 0.52,
+            "ruleShare": 0.6266666666666667,
+            "equalCoverageK": 2.5442223025485804,
+            "kWindowOverRule": 1.1508385525213152
           },
           {
             "name": "3 to 7 d",
-            "attempted": 92,
+            "attempted": 117,
+            "fitRefused": {
+              "fit-implausible": 24
+            },
+            "reentryRefused": {
+              "reentry-not-reached": 20
+            },
+            "n": 73,
+            "objects": 13,
+            "errMedian": 9.777047222222222,
+            "absMedian": 10.177059166666666,
+            "absP90": 251.04956205555555,
+            "absOverTau": 0.07498207425260862,
+            "sigmaOverTau": 0.15828317322927304,
+            "sigmaMedian": 18.11670301774554,
+            "within1": 0.6164383561643836,
+            "within2": 0.6712328767123288,
+            "inWindow": 0.6164383561643836,
+            "ruleShare": 0.6575342465753424,
+            "equalCoverageK": 1.5024187795819746,
+            "kWindowOverRule": 0.9422160278606836
+          },
+          {
+            "name": "1 to 3 d",
+            "attempted": 64,
             "fitRefused": {
               "fit-implausible": 13
             },
             "reentryRefused": {
-              "reentry-not-reached": 16
+              "reentry-not-reached": 9
             },
-            "n": 63,
-            "objects": 11,
-            "errMedian": 10.309335833333334,
-            "absMedian": 10.865037777777777,
-            "absP90": 252.20697244444443,
-            "absOverTau": 0.08835187878484385,
-            "sigmaOverTau": 0.16330924293094387,
-            "sigmaMedian": 18.46494697196263,
-            "within1": 0.5555555555555556,
-            "within2": 0.6190476190476191,
-            "inWindow": 0.5555555555555556,
-            "ruleShare": 0.6031746031746031,
-            "equalCoverageK": 1.5141687718284431,
-            "kWindowOverRule": 0.9495224495029924
-          },
-          {
-            "name": "1 to 3 d",
-            "attempted": 50,
-            "fitRefused": {
-              "fit-implausible": 6
-            },
-            "reentryRefused": {
-              "reentry-not-reached": 8
-            },
-            "n": 36,
-            "objects": 11,
-            "errMedian": 10.407404722222221,
-            "absMedian": 10.407404722222221,
-            "absP90": 133.5841088888889,
-            "absOverTau": 0.20953811691713892,
-            "sigmaOverTau": 0.286193972384883,
-            "sigmaMedian": 13.048149862660505,
-            "within1": 0.5555555555555556,
-            "within2": 0.7222222222222222,
-            "inWindow": 0.5555555555555556,
-            "ruleShare": 0.5,
-            "equalCoverageK": 0.9102290758141016,
-            "kWindowOverRule": 0.9495053863272194
+            "n": 42,
+            "objects": 13,
+            "errMedian": 8.87918513888889,
+            "absMedian": 9.036317222222223,
+            "absP90": 126.46820547222222,
+            "absOverTau": 0.19784847578986647,
+            "sigmaOverTau": 0.2840400882653339,
+            "sigmaMedian": 12.928496811407099,
+            "within1": 0.6190476190476191,
+            "within2": 0.7619047619047619,
+            "inWindow": 0.6190476190476191,
+            "ruleShare": 0.5714285714285714,
+            "equalCoverageK": 0.908065421445067,
+            "kWindowOverRule": 0.9898639274218786
           },
           {
             "name": "12 to 24 h",
-            "attempted": 21,
+            "attempted": 27,
             "fitRefused": {
-              "fit-implausible": 5
+              "fit-implausible": 6
             },
             "reentryRefused": {
               "reentry-not-reached": 5,
               "no-drag": 1
             },
-            "n": 10,
-            "objects": 7,
-            "errMedian": 1.0014094444444444,
-            "absMedian": 4.710820138888889,
-            "absP90": 10.261483027777773,
-            "absOverTau": 0.24480655280387315,
-            "sigmaOverTau": 0.4908544163862889,
-            "sigmaMedian": 9.195302761822447,
-            "within1": 0.9,
-            "within2": 0.9,
-            "inWindow": 0.9,
-            "ruleShare": 0.4,
-            "equalCoverageK": 0.467660261195791,
-            "kWindowOverRule": 1.1362990967810176
+            "n": 15,
+            "objects": 9,
+            "errMedian": -0.06800305555555555,
+            "absMedian": 3.5255502777777776,
+            "absP90": 8.652197611111111,
+            "absOverTau": 0.1591631432184511,
+            "sigmaOverTau": 0.49619407106378355,
+            "sigmaMedian": 8.609756131911638,
+            "within1": 0.9333333333333333,
+            "within2": 0.9333333333333333,
+            "inWindow": 0.9333333333333333,
+            "ruleShare": 0.6,
+            "equalCoverageK": 0.429974968775899,
+            "kWindowOverRule": 1.0719161083672981
           },
           {
             "name": "6 to 12 h",
@@ -17617,291 +17617,295 @@
           },
           {
             "name": "3 to 6 h",
-            "attempted": 8,
+            "attempted": 10,
             "fitRefused": {
-              "fit-implausible": 4
+              "fit-implausible": 5
             },
             "reentryRefused": {},
-            "n": 4,
-            "objects": 4,
-            "errMedian": 0.10464541666666666,
-            "absMedian": 2.3928200000000004,
-            "absP90": 8.176307305555557,
-            "absOverTau": 0.5232930497940023,
-            "sigmaOverTau": 1.2813811129877455,
-            "sigmaMedian": 6.812322938610778,
-            "within1": 0.75,
+            "n": 5,
+            "objects": 5,
+            "errMedian": -0.15779138888888888,
+            "absMedian": 2.010946666666667,
+            "absP90": 7.639485944444445,
+            "absOverTau": 0.3851012566658154,
+            "sigmaOverTau": 1.2496403939004748,
+            "sigmaMedian": 6.774722027373821,
+            "within1": 0.8,
             "within2": 1,
-            "inWindow": 0.75,
-            "ruleShare": 0.5,
-            "equalCoverageK": 0.3842070418092757,
-            "kWindowOverRule": 2.22842948718926
+            "inWindow": 0.8,
+            "ruleShare": 0.4,
+            "equalCoverageK": 0.20633749317923433,
+            "kWindowOverRule": 1.2586476292875355
           },
           {
             "name": "under 3 h",
-            "attempted": 9,
+            "attempted": 10,
             "fitRefused": {
               "fit-implausible": 3
             },
             "reentryRefused": {
               "reentry-not-reached": 1
             },
-            "n": 5,
-            "objects": 4,
-            "errMedian": -0.8626286111111111,
-            "absMedian": 0.8626286111111111,
-            "absP90": 4.112880611111111,
-            "absOverTau": 0.635127910620046,
-            "sigmaOverTau": 3.64921207216524,
-            "sigmaMedian": 6.223951375443282,
+            "n": 6,
+            "objects": 5,
+            "errMedian": -0.7892833333333333,
+            "absMedian": 0.8503047222222222,
+            "absP90": 3.9445370833333335,
+            "absOverTau": 0.6191891460948664,
+            "sigmaOverTau": 3.897208972150187,
+            "sigmaMedian": 6.263606801350024,
             "within1": 1,
             "within2": 1,
             "inWindow": 1,
             "ruleShare": 0,
-            "equalCoverageK": 0.11506999905421031,
-            "kWindowOverRule": 7.2259508139888675
+            "equalCoverageK": 0.056166507033660266,
+            "kWindowOverRule": 2.522214716056726
           }
         ],
-        "comparatorRows": 6
+        "comparatorRows": 8
       },
       "T": {
-        "objects": 34,
+        "objects": 41,
         "objectsWithoutSets": 0,
-        "predictions": 1051,
+        "predictions": 1368,
         "skipped": 0,
-        "scored": 829,
+        "scored": 1090,
         "fitRefused": {
-          "fit-implausible": 3
+          "fit-implausible": 5
         },
         "reentryRefused": {
-          "reentry-not-reached": 219
+          "reentry-not-reached": 273
         },
         "failedSetsMedian": 0,
         "all": {
-          "n": 829,
-          "objects": 34,
-          "errMedian": 7.947503333333334,
-          "absMedian": 14.677259444444445,
-          "absP90": 62.5006260555556,
-          "absOverTau": 0.1195859861707456,
-          "sigmaOverTau": 0.1224655467032987,
-          "sigmaMedian": 18.63854358223424,
-          "within1": 0.5681544028950543,
-          "within2": 0.8636911942098915,
-          "inWindow": 0.5681544028950543,
-          "ruleShare": 0.7189384800965019,
-          "equalCoverageK": 1.3604827010311578,
-          "kWindowOverRule": 0.8120394424700613
+          "n": 1090,
+          "objects": 41,
+          "errMedian": 6.808430555555555,
+          "absMedian": 15.615396805555555,
+          "absP90": 86.4965988888889,
+          "absOverTau": 0.12152425527836429,
+          "sigmaOverTau": 0.12054700596199246,
+          "sigmaMedian": 18.81929617891612,
+          "within1": 0.5504587155963303,
+          "within2": 0.8275229357798165,
+          "inWindow": 0.5504587155963303,
+          "ruleShare": 0.691743119266055,
+          "equalCoverageK": 1.3559980925514683,
+          "kWindowOverRule": 0.7997996657330818
         },
         "starlink": {
-          "n": 751,
-          "objects": 30,
-          "errMedian": 7.404101666666667,
-          "absMedian": 15.791069166666666,
-          "absP90": 69.103945,
-          "absOverTau": 0.12946099006655312,
-          "sigmaOverTau": 0.12379168070400305,
-          "sigmaMedian": 18.535348759274797,
-          "within1": 0.5486018641810919,
-          "within2": 0.8521970705725699,
-          "inWindow": 0.5486018641810919,
-          "ruleShare": 0.7003994673768309,
-          "equalCoverageK": 1.3677554164668513,
-          "kWindowOverRule": 0.8198718677764518
+          "n": 926,
+          "objects": 35,
+          "errMedian": 6.808430555555555,
+          "absMedian": 17.47703597222222,
+          "absP90": 99.27116527777778,
+          "absOverTau": 0.14167276459652434,
+          "sigmaOverTau": 0.12189211711942441,
+          "sigmaMedian": 18.766753548680633,
+          "within1": 0.4978401727861771,
+          "within2": 0.7991360691144709,
+          "inWindow": 0.4978401727861771,
+          "ruleShare": 0.6511879049676026,
+          "equalCoverageK": 1.3701361415696716,
+          "kWindowOverRule": 0.8085938249394864
         },
         "other": {
-          "n": 78,
-          "objects": 4,
-          "errMedian": 8.2094875,
-          "absMedian": 9.360190833333334,
-          "absP90": 31.952219583333335,
-          "absOverTau": 0.06971805550042598,
-          "sigmaOverTau": 0.11431740118180936,
-          "sigmaMedian": 19.980817769986675,
-          "within1": 0.7564102564102564,
-          "within2": 0.9743589743589743,
-          "inWindow": 0.7564102564102564,
-          "ruleShare": 0.8974358974358975,
-          "equalCoverageK": 1.2010718778592206,
-          "kWindowOverRule": 0.666757760235771
+          "n": 164,
+          "objects": 6,
+          "errMedian": 6.796613333333333,
+          "absMedian": 8.43504375,
+          "absP90": 21.53395636111113,
+          "absOverTau": 0.0615888964828671,
+          "sigmaOverTau": 0.11660332004305318,
+          "sigmaMedian": 19.343126563241526,
+          "within1": 0.8475609756097561,
+          "within2": 0.9878048780487805,
+          "inWindow": 0.8475609756097561,
+          "ruleShare": 0.9207317073170732,
+          "equalCoverageK": 1.188895819136424,
+          "kWindowOverRule": 0.6920953016019
         },
-        "starlinkObjects": 30,
+        "starlinkObjects": 35,
         "bins": [
           {
             "name": "over 7 d",
-            "attempted": 496,
+            "attempted": 649,
             "fitRefused": {
               "fit-implausible": 2
             },
             "reentryRefused": {
-              "reentry-not-reached": 100
+              "reentry-not-reached": 120
             },
-            "n": 394,
-            "objects": 34,
-            "errMedian": 5.672271805555555,
-            "absMedian": 23.394358750000002,
-            "absP90": 124.64842591666665,
-            "absOverTau": 0.09644017080654702,
-            "sigmaOverTau": 0.09317815854291435,
-            "sigmaMedian": 22.889910211724015,
-            "within1": 0.5101522842639594,
-            "within2": 0.7639593908629442,
-            "inWindow": 0.5101522842639594,
-            "ruleShare": 0.766497461928934,
-            "equalCoverageK": 2.048101380764125,
-            "kWindowOverRule": 0.9906990398331823
+            "n": 527,
+            "objects": 41,
+            "errMedian": 3.6248119444444447,
+            "absMedian": 21.735067222222224,
+            "absP90": 120.3534241666667,
+            "absOverTau": 0.0932937834051061,
+            "sigmaOverTau": 0.09313571591845483,
+            "sigmaMedian": 22.935523020612955,
+            "within1": 0.523719165085389,
+            "within2": 0.7533206831119544,
+            "inWindow": 0.523719165085389,
+            "ruleShare": 0.7514231499051234,
+            "equalCoverageK": 1.977461200412449,
+            "kWindowOverRule": 0.9582899988331571
           },
           {
             "name": "3 to 7 d",
-            "attempted": 292,
+            "attempted": 388,
             "fitRefused": {},
             "reentryRefused": {
-              "reentry-not-reached": 63
+              "reentry-not-reached": 83
             },
-            "n": 229,
-            "objects": 31,
-            "errMedian": 12.216075555555555,
-            "absMedian": 13.245690555555555,
-            "absP90": 33.371186333333334,
-            "absOverTau": 0.11317705713301905,
-            "sigmaOverTau": 0.14455629225249642,
-            "sigmaMedian": 17.349870828911534,
-            "within1": 0.6069868995633187,
-            "within2": 0.9519650655021834,
-            "inWindow": 0.6069868995633187,
-            "ruleShare": 0.8253275109170306,
-            "equalCoverageK": 1.5841286876831309,
-            "kWindowOverRule": 1.0446735665156484
+            "n": 305,
+            "objects": 41,
+            "errMedian": 11.011509722222222,
+            "absMedian": 14.217762222222222,
+            "absP90": 37.25928005555556,
+            "absOverTau": 0.1216666145706504,
+            "sigmaOverTau": 0.14570353194897143,
+            "sigmaMedian": 17.345128473535826,
+            "within1": 0.5672131147540984,
+            "within2": 0.8885245901639345,
+            "inWindow": 0.5672131147540984,
+            "ruleShare": 0.7704918032786885,
+            "equalCoverageK": 1.5141445064167023,
+            "kWindowOverRule": 0.9989134469080392
           },
           {
             "name": "1 to 3 d",
-            "attempted": 162,
+            "attempted": 208,
             "fitRefused": {
               "fit-implausible": 1
             },
             "reentryRefused": {
-              "reentry-not-reached": 35
+              "reentry-not-reached": 47
             },
-            "n": 126,
-            "objects": 31,
-            "errMedian": 9.07370875,
-            "absMedian": 9.383984861111111,
-            "absP90": 25.086142638888887,
-            "absOverTau": 0.22456301639326276,
-            "sigmaOverTau": 0.2607912728928759,
-            "sigmaMedian": 12.30601452212412,
-            "within1": 0.5476190476190477,
-            "within2": 0.9285714285714286,
-            "inWindow": 0.5476190476190477,
-            "ruleShare": 0.5317460317460317,
-            "equalCoverageK": 0.9347870159853169,
-            "kWindowOverRule": 0.9943119741357322
+            "n": 160,
+            "objects": 41,
+            "errMedian": 9.233188055555555,
+            "absMedian": 10.917710972222222,
+            "absP90": 29.79236336111111,
+            "absOverTau": 0.2520911790795154,
+            "sigmaOverTau": 0.2638487902926352,
+            "sigmaMedian": 12.411665169906424,
+            "within1": 0.5,
+            "within2": 0.8625,
+            "inWindow": 0.5,
+            "ruleShare": 0.4875,
+            "equalCoverageK": 0.935321171598737,
+            "kWindowOverRule": 0.96148438676569
           },
           {
             "name": "12 to 24 h",
-            "attempted": 50,
-            "fitRefused": {},
-            "reentryRefused": {
-              "reentry-not-reached": 10
+            "attempted": 60,
+            "fitRefused": {
+              "fit-implausible": 1
             },
-            "n": 40,
-            "objects": 25,
-            "errMedian": 1.983821388888889,
-            "absMedian": 3.5313391666666667,
-            "absP90": 13.15848925,
-            "absOverTau": 0.1947271313257325,
-            "sigmaOverTau": 0.5021506676931877,
-            "sigmaMedian": 8.587836944088757,
-            "within1": 0.8,
-            "within2": 1,
-            "inWindow": 0.8,
-            "ruleShare": 0.575,
-            "equalCoverageK": 0.46676556906877203,
-            "kWindowOverRule": 1.0543652586236227
+            "reentryRefused": {
+              "reentry-not-reached": 12
+            },
+            "n": 47,
+            "objects": 31,
+            "errMedian": 1.9827088888888889,
+            "absMedian": 3.548871666666667,
+            "absP90": 13.316021999999998,
+            "absOverTau": 0.19681583645152448,
+            "sigmaOverTau": 0.5008086847004047,
+            "sigmaMedian": 8.597837992817736,
+            "within1": 0.7446808510638298,
+            "within2": 0.9787234042553191,
+            "inWindow": 0.7446808510638298,
+            "ruleShare": 0.5531914893617021,
+            "equalCoverageK": 0.46858873665642264,
+            "kWindowOverRule": 1.0793083565248947
           },
           {
             "name": "6 to 12 h",
-            "attempted": 29,
-            "fitRefused": {},
+            "attempted": 37,
+            "fitRefused": {
+              "fit-implausible": 1
+            },
             "reentryRefused": {
               "reentry-not-reached": 7
             },
-            "n": 22,
-            "objects": 19,
-            "errMedian": -0.6741856944444444,
-            "absMedian": 1.30042875,
-            "absP90": 9.273116833333336,
-            "absOverTau": 0.14327353358880712,
-            "sigmaOverTau": 0.8780443865885789,
-            "sigmaMedian": 7.141091374497314,
-            "within1": 0.8181818181818182,
-            "within2": 1,
-            "inWindow": 0.8181818181818182,
-            "ruleShare": 0.5909090909090909,
-            "equalCoverageK": 0.23694773285144413,
-            "kWindowOverRule": 1.0478253021038877
+            "n": 29,
+            "objects": 25,
+            "errMedian": -0.4368447222222222,
+            "absMedian": 1.5749752777777777,
+            "absP90": 9.916006,
+            "absOverTau": 0.15000718022070764,
+            "sigmaOverTau": 0.8724930230518214,
+            "sigmaMedian": 7.197310183505633,
+            "within1": 0.7586206896551724,
+            "within2": 0.9655172413793104,
+            "inWindow": 0.7586206896551724,
+            "ruleShare": 0.5517241379310345,
+            "equalCoverageK": 0.24053788328030504,
+            "kWindowOverRule": 1.0051372344244354
           },
           {
             "name": "3 to 6 h",
-            "attempted": 9,
+            "attempted": 11,
             "fitRefused": {},
             "reentryRefused": {
               "reentry-not-reached": 2
             },
-            "n": 7,
-            "objects": 7,
+            "n": 9,
+            "objects": 9,
             "errMedian": 1.0861225,
-            "absMedian": 1.0861225,
-            "absP90": 11.919592722222223,
-            "absOverTau": 0.2631992359628434,
+            "absMedian": 1.8260122222222221,
+            "absP90": 11.736460944444444,
+            "absOverTau": 0.5696254973119829,
             "sigmaOverTau": 1.5300104582488634,
-            "sigmaMedian": 6.7413651357313835,
-            "within1": 0.7142857142857143,
+            "sigmaMedian": 6.807856316977682,
+            "within1": 0.6666666666666666,
             "within2": 1,
-            "inWindow": 0.7142857142857143,
-            "ruleShare": 0.2857142857142857,
-            "equalCoverageK": 0.10997901809916319,
-            "kWindowOverRule": 0.711150717073979
+            "inWindow": 0.6666666666666666,
+            "ruleShare": 0.2222222222222222,
+            "equalCoverageK": 0.11502144898617067,
+            "kWindowOverRule": 0.7437562849638294
           },
           {
             "name": "under 3 h",
-            "attempted": 13,
+            "attempted": 15,
             "fitRefused": {},
             "reentryRefused": {
               "reentry-not-reached": 2
             },
-            "n": 11,
-            "objects": 11,
+            "n": 13,
+            "objects": 13,
             "errMedian": 1.494021111111111,
             "absMedian": 1.494021111111111,
-            "absP90": 11.670905277777777,
+            "absP90": 12.032780833333334,
             "absOverTau": 0.5864801628121197,
             "sigmaOverTau": 3.4276826076334665,
             "sigmaMedian": 6.672590622224656,
-            "within1": 0.6363636363636364,
+            "within1": 0.6153846153846154,
             "within2": 1,
-            "inWindow": 0.6363636363636364,
-            "ruleShare": 0,
-            "equalCoverageK": 0.07322817215271511,
-            "kWindowOverRule": 0.8330038506378357
+            "inWindow": 0.6153846153846154,
+            "ruleShare": 0.07692307692307693,
+            "equalCoverageK": 0.07168190100632613,
+            "kWindowOverRule": 0.8154143112405389
           }
         ],
-        "comparatorRows": 162
+        "comparatorRows": 209
       },
       "aerospace": {
-        "objects": 14,
-        "answered": 6,
+        "objects": 17,
+        "answered": 8,
         "refused": {
-          "fit-implausible": 7,
+          "fit-implausible": 8,
           "reentry-not-reached": 1
         },
-        "aerospaceAbsMedian": 0.30473194444444446,
-        "sdnapAbsMedian": 1.970400138888889,
-        "sdnapCloser": 2,
-        "aerospaceInside": 12,
-        "sdnapIn1": 5,
-        "sdnapIn2": 6,
-        "halfWidthOverTau": 0.3622548748018531,
+        "aerospaceAbsMedian": 0.45619583333333336,
+        "sdnapAbsMedian": 1.3592766666666667,
+        "sdnapCloser": 4,
+        "aerospaceInside": 14,
+        "sdnapIn1": 7,
+        "sdnapIn2": 8,
+        "halfWidthOverTau": 0.3621709249583856,
         "sdnapSigmaOverTau": 3.158184763854619,
         "objectsDetail": [
           {
@@ -17938,6 +17942,20 @@
             "aerospaceIn": true,
             "sdnap": {
               "refused": "reentry-not-reached"
+            }
+          },
+          {
+            "norad": "62878",
+            "name": "FALCON 9 R/B",
+            "tauHours": 1.520615,
+            "aerospaceErr": 0.969575,
+            "aerospaceHalf": 1,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": -0.35403222222222225,
+              "sigma": 6.303262227256766,
+              "in1": true,
+              "in2": true
             }
           },
           {
@@ -18027,6 +18045,17 @@
             }
           },
           {
+            "norad": "54231",
+            "name": "CZ-3B R/B",
+            "tauHours": 4.59131,
+            "aerospaceErr": -1.5506166666666668,
+            "aerospaceHalf": 1,
+            "aerospaceIn": false,
+            "sdnap": {
+              "refused": "fit-implausible"
+            }
+          },
+          {
             "norad": "29093",
             "name": "CZ-4B R/B",
             "tauHours": 4.603899444444444,
@@ -18066,6 +18095,20 @@
             }
           },
           {
+            "norad": "57478",
+            "name": "STARLINK-30167",
+            "tauHours": 12.76428638888889,
+            "aerospaceErr": 2.1424055555555555,
+            "aerospaceHalf": 3,
+            "aerospaceIn": true,
+            "sdnap": {
+              "err": -1.8805725,
+              "sigma": 7.341540570381546,
+              "in1": true,
+              "in2": true
+            }
+          },
+          {
             "norad": "40108",
             "name": "FALCON 9 R/B",
             "tauHours": 23.68417611111111,
@@ -18079,11 +18122,11 @@
         ]
       },
       "tip": {
-        "predictionsWithTip": 197,
+        "predictionsWithTip": 254,
         "byBin": [
           {
             "name": "over 7 d",
-            "answered": 394,
+            "answered": 527,
             "withTip": 0,
             "tipAbsMedian": null,
             "sdnapAbsMedian": null,
@@ -18093,63 +18136,63 @@
           },
           {
             "name": "3 to 7 d",
-            "answered": 229,
-            "withTip": 11,
+            "answered": 305,
+            "withTip": 17,
             "tipAbsMedian": 4.4,
-            "sdnapAbsMedian": 6.536823888888889,
-            "tipInside": 0.8181818181818182,
+            "sdnapAbsMedian": 6.616188055555556,
+            "tipInside": 0.8823529411764706,
             "sdnapIn2": 1,
-            "sdnapCloser": 5
+            "sdnapCloser": 7
           },
           {
             "name": "1 to 3 d",
-            "answered": 126,
-            "withTip": 80,
+            "answered": 160,
+            "withTip": 104,
             "tipAbsMedian": 9.7,
-            "sdnapAbsMedian": 7.536607222222222,
-            "tipInside": 0.7,
-            "sdnapIn2": 0.9375,
-            "sdnapCloser": 37
+            "sdnapAbsMedian": 8.620265,
+            "tipInside": 0.6634615384615384,
+            "sdnapIn2": 0.9230769230769231,
+            "sdnapCloser": 49
           },
           {
             "name": "12 to 24 h",
-            "answered": 40,
-            "withTip": 34,
-            "tipAbsMedian": 3.5833333333333335,
-            "sdnapAbsMedian": 3.5313391666666667,
-            "tipInside": 0.8823529411764706,
+            "answered": 47,
+            "withTip": 41,
+            "tipAbsMedian": 3.466666666666667,
+            "sdnapAbsMedian": 3.548871666666667,
+            "tipInside": 0.8780487804878049,
+            "sdnapIn2": 0.975609756097561,
+            "sdnapCloser": 15
+          },
+          {
+            "name": "6 to 12 h",
+            "answered": 29,
+            "withTip": 26,
+            "tipAbsMedian": 1.5083333333333333,
+            "sdnapAbsMedian": 1.6083695833333334,
+            "tipInside": 0.7692307692307693,
             "sdnapIn2": 1,
             "sdnapCloser": 13
           },
           {
-            "name": "6 to 12 h",
-            "answered": 22,
-            "withTip": 20,
-            "tipAbsMedian": 1.3666666666666667,
-            "sdnapAbsMedian": 1.5423915277777778,
-            "tipInside": 0.75,
-            "sdnapIn2": 1,
-            "sdnapCloser": 10
-          },
-          {
             "name": "3 to 6 h",
-            "answered": 7,
-            "withTip": 7,
-            "tipAbsMedian": 0.4166666666666667,
-            "sdnapAbsMedian": 1.0861225,
-            "tipInside": 0.5714285714285714,
+            "answered": 9,
+            "withTip": 9,
+            "tipAbsMedian": 1.1,
+            "sdnapAbsMedian": 1.8260122222222221,
+            "tipInside": 0.5555555555555556,
             "sdnapIn2": 1,
             "sdnapCloser": 2
           },
           {
             "name": "under 3 h",
-            "answered": 11,
-            "withTip": 10,
+            "answered": 13,
+            "withTip": 12,
             "tipAbsMedian": 0.8583333333333334,
             "sdnapAbsMedian": 1.3440616666666667,
-            "tipInside": 0.7,
+            "tipInside": 0.6666666666666666,
             "sdnapIn2": 1,
-            "sdnapCloser": 3
+            "sdnapCloser": 4
           }
         ]
       }
