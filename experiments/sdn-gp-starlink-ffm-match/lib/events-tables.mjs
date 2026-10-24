@@ -218,6 +218,59 @@ function m24b(dir) {
   });
 }
 
+
+// ---- M27 (amendment A14): the detector against the forecast delta-V outages of the GPS NANUs and the QZSS NAQUs ----
+const M27_TOL_H = 6, M27_MERGE_H = 6;
+function m27(dir, resultsDir) {
+  const rows = rowsOf(dir, 'm27');
+  const file = path.join(resultsDir, 'gnss-notice-events.json');
+  if (!rows.length || !fs.existsSync(file)) return null;
+  const notices = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const t = (iso) => Date.parse(iso), H = 3600e3;
+  const lam = (d) => Number(/Lambda ([\d.e+]+)/.exec(d.algorithm ?? '')?.[1]);
+  return ['gps', 'qzss'].map((system) => {
+    const srows = rows.filter((r) => r.system === system), ev = notices[system];
+    const sats = [...new Set(srows.map((r) => r.norad))].sort((a, c) => a - c);
+    const perSat = sats.map((norad) => {
+      const rs = srows.filter((r) => r.norad === norad).sort((a, c) => (a.startUtc < c.startUtc ? -1 : 1)), ok = rs.filter((r) => r.ok);
+      const svn = rs[0].svn;
+      // the union of the answered windows (contiguous stretches), the distinct detections (merged within 6 h)
+      const spans = ok.map((r) => [t(r.startUtc), t(r.stopUtc)]).sort((a, c) => a[0] - c[0]);
+      const union = []; for (const sp of spans) { const last = union.at(-1); if (last && sp[0] <= last[1]) last[1] = Math.max(last[1], sp[1]); else union.push([...sp]); }
+      const dets = ok.flatMap((r) => r.detections.map((d) => ({ ms: t(`${d.epoch.replace(/Z?$/, 'Z')}`), mag: Math.hypot(...d.dvMS), lambda: lam(d), vShare: Math.abs(d.dvMS[1]) / Math.hypot(...d.dvMS) }))).sort((a, c) => a.ms - c.ms);
+      const distinct = []; for (const d of dets) if (!distinct.length || d.ms - distinct.at(-1).ms > M27_MERGE_H * H) distinct.push(d);
+      const covered = (a, b) => union.some(([u, v]) => u <= a && v >= b);
+      const years = union.reduce((s2, [u, v]) => s2 + (v - u), 0) / (365.25 * 86400e3);
+      const outages = ev.deltaV.filter((e) => e.svn === svn).map((e) => ({ f: [t(e.forecast.start), t(e.forecast.stop)], a: e.actual ? [t(e.actual.start), t(e.actual.stop)] : null, number: e.number }));
+      const inAny = (ms, list, tol) => list.some(([a, b]) => ms >= a - tol * H && ms <= b + tol * H);
+      const scoreable = outages.filter((o) => covered(o.f[0] - M27_TOL_H * H, o.f[1] + M27_TOL_H * H));
+      const eventRows = scoreable.map((o) => {
+        const hitF = distinct.filter((d) => inAny(d.ms, [o.f], M27_TOL_H)), hitA = o.a ? distinct.filter((d) => inAny(d.ms, [o.a], M27_TOL_H)) : [];
+        return { number: o.number, forecastHours: (o.f[1] - o.f[0]) / H, actualHours: o.a ? (o.a[1] - o.a[0]) / H : null, hitForecast: hitF.length > 0, hitActual: o.a ? hitA.length > 0 : null, offsetHours: hitA.length ? (hitA[0].ms - o.a[0]) / H : null, mag: hitF[0]?.mag ?? null };
+      });
+      const dvWindows = outages.map((o) => o.f);
+      const otherWindows = ev.other.filter((o) => o.svn === svn).map((o) => [t(o.start), t(o.stop)]);
+      const falseAlarms = distinct.filter((d) => !inAny(d.ms, dvWindows, M27_TOL_H));
+      const chance = union.reduce((s2, [u, v]) => s2 + Math.max(0, Math.min(v, ...[v]) - u), 0) ? (() => { // the share of the covered time inside a forecast window (+-6 h): the hit probability of a detection at a random epoch
+        let inside = 0, total = 0;
+        for (const [u, v] of union) { total += v - u; for (const [a, b] of dvWindows) inside += Math.max(0, Math.min(v, b + M27_TOL_H * H) - Math.max(u, a - M27_TOL_H * H)); }
+        return total ? inside / total : 0;
+      })() : 0;
+      return { norad, name: rs[0].name, svn, windows: rs.length, answered: ok.length, skipped: rs.filter((r) => r.skipped).length, refused: rs.filter((r) => r.ok === false).length, withDetection: ok.filter((r) => r.detections.length).length, years, distinct: distinct.length,
+        falseAlarms: falseAlarms.length, falseAlarmsInOtherOutage: falseAlarms.filter((d) => inAny(d.ms, otherWindows, M27_TOL_H)).length, outages: outages.length, scoreable: scoreable.length, events: eventRows, chance, dvMS: distinct.map((d) => d.mag), lambda: distinct.map((d) => d.lambda) };
+    });
+    const eventsAll = perSat.flatMap((p) => p.events);
+    const years = perSat.reduce((s2, p) => s2 + p.years, 0);
+    const refused = count(srows.filter((r) => r.ok === false).map((r) => nameOf(r.error)));
+    return { system, name: system === 'gps' ? 'GPS' : 'QZSS', satellites: sats.length, windows: srows.length, answered: srows.filter((r) => r.ok).length, skipped: srows.filter((r) => r.skipped).length, refused, windowsWithDetection: srows.filter((r) => r.ok && r.detections.length).length,
+      outagesInNotices: ev.deltaV.length, outagesWithoutOrbit: ev.deltaV.filter((e) => !perSat.some((p) => p.svn === e.svn)).length, scoreable: eventsAll.length, hitForecast: eventsAll.filter((e) => e.hitForecast).length, withActual: eventsAll.filter((e) => e.hitActual !== null).length, hitActual: eventsAll.filter((e) => e.hitActual === true).length,
+      offsetHours: { median: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.5), p10: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.1), p90: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.9) },
+      forecastHours: q(eventsAll.map((e) => e.forecastHours), 0.5), actualHours: q(eventsAll.filter((e) => e.actualHours !== null).map((e) => e.actualHours), 0.5),
+      objectYears: years, distinctDetections: perSat.reduce((s2, p) => s2 + p.distinct, 0), falseAlarms: perSat.reduce((s2, p) => s2 + p.falseAlarms, 0), falseAlarmsInOtherOutage: perSat.reduce((s2, p) => s2 + p.falseAlarmsInOtherOutage, 0),
+      chanceHit: q(perSat.filter((p) => p.outages).map((p) => p.chance), 0.5), dvMS: stats(perSat.flatMap((p) => p.dvMS)), perSatellite: perSat.map(({ dvMS, lambda, events, ...rest }) => ({ ...rest, hits: events.filter((e) => e.hitForecast).length })) };
+  }).filter((g) => g.windows);
+}
+
 /** The detector on FFM-1 arcs with a planted impulse (amendment A11e): the pipeline check of M24 on the archive. */
 function m24p(dir) {
   const rows = rowsOf(dir, 'm24p');
@@ -372,7 +425,7 @@ function m32(dir) {
   });
 }
 
-const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m24b: m24b(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
+const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m24b: m24b(dir), m27: m27(dir, resultsDir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
 
 /** The events measurements of a build and, when given, of the earlier complete builds (oldest first; `previous` is the last of them), for the tables that stand the builds side by side. */
 export function eventsStudy(dir, resultsDir, earlierDirs = []) {

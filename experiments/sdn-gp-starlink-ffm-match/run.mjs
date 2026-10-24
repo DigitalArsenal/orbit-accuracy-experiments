@@ -355,6 +355,17 @@ if (headline) {
       if (!again?.reentry?.ok || !same(again.fit.fitRmsKm, rec29.fit.fitRmsKm) || again.reentry.epoch !== rec29.reentry.epoch || again.states !== rec29.states) fail(`events replay M29 ${rec29.id}: fit or reentry epoch differs`);
       sdReplayed += 1;
     }
+    // amendment A14: a GPS window and a QZSS window against the pinned build (M27)
+    for (const system of ['gps', 'qzss']) {
+      const rec27 = buildRows(headline.dir, 'm27').find((r) => r.source === 'm27' && r.system === system && r.ok && r.detections.length);
+      if (!rec27) continue;
+      const { scoreGnss } = await import('./lib/events-gnss.mjs');
+      const sink = collector();
+      await scoreGnss({ b: bs, sink, only: [{ system, norad: rec27.norad }], at: [rec27.startUtc] });
+      const again = sink.out.find((r) => r.startUtc === rec27.startUtc);
+      if (!again?.ok || JSON.stringify(again.detections) !== JSON.stringify(rec27.detections)) fail(`events replay M27 ${rec27.id} ${rec27.startUtc}: detections differ`);
+      sdReplayed += 1;
+    }
     // amendment A12b: a captured-batch window (M31), a per-object fit with the launch set as prior and a batch-joint fit (M32), on the pinned build
     const rec31 = buildRows(headline.dir, 'm31').find((r) => r.source === 'm31' && r.hours === 6 && r.sdngp?.ok);
     if (rec31) {

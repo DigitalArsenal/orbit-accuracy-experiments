@@ -31,6 +31,8 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [Licata et al. (2021), CHAMP and GRACE-A densities with HASDM and JB2008 predictions (Zenodo 4602380)](#zenodo-licata-hasdm) | CC BY 4.0 | Yes, with attribution | Licata, R. J., Mehta, P. M., Tobiska, W. K., Bowman, B. R., Pilinski, M. D. (2021). CHAMP and GRACE-A Density Estimates with Associated HASDM and JB2008 Predictions. Zenodo, doi:10.5281/zenodo.4602380. CC BY 4.0. | E5, E8 (historical test: CHAMP and GRACE-A densities, HASDM and JB2008 along track) | cited only |
 | [Space-Track.org GP element sets (gp_history) and SATCAT](#space-track) | Space-Track User Agreement (2019), with USSPACECOM's blanket approval to redistribute basic SSA data (TLE/OMM, SATCAT, decay and reentry) with citation | No: cited only | Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org). | E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts) | modules: analysis/conjunction-assessment/tests/fixtures/socrates/gp_*.json and decaying/gp_2026-07-06.json (element sets via CelesTrak, no citation); modules: analysis/launch-trajectory/tests/fixtures/{crs14,crs16,paz}.json "catalog" blocks and iss-teme-crew13.json (per-sample states from Space-Track element sets, no citation) |
 | [Aerospace Corporation CORDS reentry history (Reentry_History_Spreadsheet_05-22-26.csv)](#aerospace-cords) | No license stated on the file; published as the public Aerospace Corporation CORDS reentry database (the words of the closed-modules provider that reads it). aerospace.org answers a scripted client's request for its pages with a bot challenge (HTTP 403), so the site's own terms page could not be read | No: cited only | Reentry history: The Aerospace Corporation, Center for Orbital and Reentry Debris Studies (CORDS), https://aerospace.org/reentries (public spreadsheet of observed reentries and Aerospace's predictions). | G1 (M29: the observed reentry times, Aerospace's predictions and stated uncertainties of the objects whose element-set history the local archive holds, scored beside the SDN-AP reentry windows) | cited only |
+| [GPS Notice Advisory to Navstar Users (NANU), 2026 archive files (nanu/2026/2026NNN.nnu)](#navcen-gps-nanu) | No license or copyright statement on the pages or in the files. NANUs are works of the U.S. Government (issued by U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard), which are not subject to copyright in the United States (17 U.S.C. 105); the sources carry no explicit grant | No: cited only | GPS Notice Advisory to Navstar Users (NANU): U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center, https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof. | G1 (M27: the forecast delta-V outages of GPS satellites in 2026 against the maneuver detector) | cited only |
+| [QZSS Notice Advisory to QZSS Users (NAQU) messages, 2026 (the NAQU page of the QZSS operational information site)](#qzss-naqu) | Terms of Use of the QZSS website (based on the Government of Japan Standard Terms of Use): content may be freely used, copied, publicly transmitted, translated or modified, commercial use permitted, on condition of a source citation (and a statement that the content was edited, where it was); numerical data and data in simple tables are not subject to copyright | Yes, with attribution | QZSS NAQU messages: Source: Quasi-Zenith Satellite System website, Cabinet Office, Government of Japan (https://sys.qzss.go.jp/dod/en/naqu.html), accessed 2026-10-24. Created by editing the NAQU messages (Quasi-Zenith Satellite System website): the forecast delta-V outage windows only. | G1 (M27: the forecast delta-V outages of QZSS satellites in 2026 against the maneuver detector) | cited only |
 | [GFZ Kp, ap and Ap, with the sunspot number and F10.7 (Kp_ap_Ap_SN_F107_since_1932.txt)](#gfz-kp) | CC BY 4.0 for Kp, ap and Ap; CC BY-NC 4.0 for the sunspot numbers; F10.7 under NRCan's terms (non-commercial reproduction) | Yes, with attribution, for non-commercial use only | Kp, ap, Ap: GFZ Helmholtz Centre for Geosciences, CC BY 4.0 (Matzka et al. 2021, GFZ Data Services, doi:10.5880/Kp.0001; Space Weather, doi:10.1029/2020SW002641). Sunspot number: WDC-SILSO, Royal Observatory of Belgium, Brussels, doi:10.24414/qnza-ac80, CC BY-NC 4.0. F10.7: Dominion Radio Astrophysical Observatory and Natural Resources Canada. | E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7), E8 (Kp regimes; Ap for the operational temperature driver), E13 (NRLMSISE-00 drivers of the Starlink pair fits); E16 (space-weather covariates and NRLMSISE-00 drivers as released) | data/e5/gfz-kp/Kp_ap_Ap_SN_F107_since_1932.txt.gz; data/e7/Kp_ap_Ap_SN_F107_since_1932.txt.gz |
 | [NOAA SWPC Report of Solar-Geophysical Activity (RSGA)](#noaa-swpc) | Public domain (NOAA/NWS data and products) | Yes, with attribution | NOAA Space Weather Prediction Center, Report of Solar-Geophysical Activity (U.S. Government material, not subject to copyright protection). | E7, E8 (F10.7 and Ap forecasts as issued); E16 (RSGA reports: drivers released at the cutoff) | data/e7/swpc-rsga.tar.gz |
 | [JPL planetary ephemeris DE440 (DE440s kernel and year excerpts)](#jpl-de440) | NAIF rules for SPICE kernels: unmodified kernels may be redistributed; a modified kernel names its modifier | Yes, with attribution | JPL planetary ephemeris DE440 (Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021), AJ 161:105, doi:10.3847/1538-3881/abd414), via NASA/JPL NAIF; year excerpts made by DigitalArsenal with NAIF's spksub_c. | V1, E2, E3, E5, E6, E7, E8, E10, E13 (Sun and Moon for FFM); E16 (FFM third bodies) | release gnss-truth-20261009: de440s.bsp (unmodified); data/e10/de440-2018.bsp, data/e10/de440-2024.bsp (excerpts); site (gh-pages): data/kernel/, data/orekit/kernel-*.prw (2026 excerpt); modules: files/orbit-products/tests/fixtures/de440/ (2026 excerpt, CSPICE and Horizons comparisons), files/orbit-products/fixtures/*.bsp (NAIF station, InSight, MSL and LADEE kernels), propagator/cislunar/vectors/jpl-halo-authority.json, maneuver/star-search/tests/vectors/ |
@@ -473,6 +475,55 @@ Used in: G1 (M29: the observed reentry times, Aerospace's predictions and stated
 Reproduced at: nowhere; cited only.
 
 How to obtain: https://aerospace.org/sites/default/files/2026-05/Reentry_History_Spreadsheet_05-22-26.csv (anonymous, a plain GET; the listing page needs a browser)
+
+### GPS Notice Advisory to Navstar Users (NANU), 2026 archive files (nanu/2026/2026NNN.nnu)
+
+<a id="navcen-gps-nanu"></a>Provider: U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center (NAVCEN). License or terms: No license or copyright statement on the pages or in the files. NANUs are works of the U.S. Government (issued by U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard), which are not subject to copyright in the United States (17 U.S.C. 105); the sources carry no explicit grant.
+
+- [Programmatically Accessing NANUs, Almanacs, and Ops Advisories (NAVCEN instructions for scripted access, PDF)](https://navcen.uscg.gov/sites/default/files/pdf/gps/Programmatically_Accessing_Archives.pdf) (fetched 2026-10-24)
+- [NAVCEN: GPS NANUs, Almanacs, OPS Advisories and SOFs (the page that links the archive)](https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof) (fetched 2026-10-24)
+- [NAVCEN robots.txt (does not disallow /sites/default/files/gps/)](https://navcen.uscg.gov/robots.txt) (fetched 2026-10-24)
+
+Redistribution: "(no explicit statement; a U.S. Government work, not subject to copyright in the United States)"
+
+Attribution: "None stated; credited below."
+
+Conditions: Used for local results only: the forecast delta-V outages of the GPS satellites (satellite, start and stop times) scored against detections; no NANU text is copied into this repository. Fetched one request at a time, 5 s apart, by the scripted access NAVCEN documents; no credentials.
+
+**Reproduce: No: cited only.** No explicit license statement; used for results only.
+
+Credit line: GPS Notice Advisory to Navstar Users (NANU): U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center, https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof.
+
+Used in: G1 (M27: the forecast delta-V outages of GPS satellites in 2026 against the maneuver detector).
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://navcen.uscg.gov/sites/default/files/gps/nanu/YYYY/YYYYNNN.nnu (anonymous GET; NNN from 001 up, HTTP 404 beyond the last)
+
+### QZSS Notice Advisory to QZSS Users (NAQU) messages, 2026 (the NAQU page of the QZSS operational information site)
+
+<a id="qzss-naqu"></a>Provider: Quasi-Zenith Satellite System, Cabinet Office, Government of Japan (National Space Policy Secretariat). License or terms: Terms of Use of the QZSS website (based on the Government of Japan Standard Terms of Use): content may be freely used, copied, publicly transmitted, translated or modified, commercial use permitted, on condition of a source citation (and a statement that the content was edited, where it was); numerical data and data in simple tables are not subject to copyright.
+
+- [Terms of Use of the Quasi-Zenith Satellite System (QZSS) Website](https://qzss.go.jp/en/policy/rule.html) (fetched 2026-10-24)
+- [NAQU Message (the page read: the calendar of NAQUs with each message's text)](https://sys.qzss.go.jp/dod/en/naqu.html) (fetched 2026-10-24)
+- [NAQU format](https://sys.qzss.go.jp/dod/en/naqu/format.html) (fetched 2026-10-24)
+- [Application Programming Interface (not used: it states that the APIs shall only be used for not-for-profit tools and services)](https://sys.qzss.go.jp/dod/en/api.html) (fetched 2026-10-24)
+
+Redistribution: "Allowed under the Terms of Use, with a source citation; content edited for use must say so and must not be presented as created by the QZSS website"
+
+Attribution: "Source: Quasi-Zenith Satellite System website (URL of the relevant page); for edited content, "Created by editing the NAQU messages (Quasi-Zenith Satellite System website) (URL of the relevant page)"."
+
+Conditions: The NAQU web page is read, not the Web API (whose page limits the API to not-for-profit tools and services). Used for local results only: the forecast delta-V outages (satellite, start and stop times), scored against detections.
+
+**Reproduce: Yes, with attribution.** null
+
+Credit line: QZSS NAQU messages: Source: Quasi-Zenith Satellite System website, Cabinet Office, Government of Japan (https://sys.qzss.go.jp/dod/en/naqu.html), accessed 2026-10-24. Created by editing the NAQU messages (Quasi-Zenith Satellite System website): the forecast delta-V outage windows only.
+
+Used in: G1 (M27: the forecast delta-V outages of QZSS satellites in 2026 against the maneuver detector).
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://sys.qzss.go.jp/dod/en/naqu.html (anonymous GET; the page holds the year's NAQUs, each message in a hidden field)
 
 ### GFZ Kp, ap and Ap, with the sunspot number and F10.7 (Kp_ap_Ap_SN_F107_since_1932.txt)
 

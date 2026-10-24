@@ -606,6 +606,77 @@
    "reproducedAt": []
   },
   {
+   "id": "navcen-gps-nanu",
+   "name": "GPS Notice Advisory to Navstar Users (NANU), 2026 archive files (nanu/2026/2026NNN.nnu)",
+   "provider": "U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center (NAVCEN)",
+   "license": "No license or copyright statement on the pages or in the files. NANUs are works of the U.S. Government (issued by U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard), which are not subject to copyright in the United States (17 U.S.C. 105); the sources carry no explicit grant",
+   "terms": [
+    {
+     "title": "Programmatically Accessing NANUs, Almanacs, and Ops Advisories (NAVCEN instructions for scripted access, PDF)",
+     "url": "https://navcen.uscg.gov/sites/default/files/pdf/gps/Programmatically_Accessing_Archives.pdf",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAVCEN: GPS NANUs, Almanacs, OPS Advisories and SOFs (the page that links the archive)",
+     "url": "https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAVCEN robots.txt (does not disallow /sites/default/files/gps/)",
+     "url": "https://navcen.uscg.gov/robots.txt",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "(no explicit statement; a U.S. Government work, not subject to copyright in the United States)",
+   "attributionClause": "None stated; credited below.",
+   "conditions": "Used for local results only: the forecast delta-V outages of the GPS satellites (satellite, start and stop times) scored against detections; no NANU text is copied into this repository. Fetched one request at a time, 5 s apart, by the scripted access NAVCEN documents; no credentials.",
+   "reproduce": "no",
+   "credit": "GPS Notice Advisory to Navstar Users (NANU): U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center, https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof.",
+   "reason": "No explicit license statement; used for results only.",
+   "usedIn": "G1 (M27: the forecast delta-V outages of GPS satellites in 2026 against the maneuver detector)",
+   "obtain": "https://navcen.uscg.gov/sites/default/files/gps/nanu/YYYY/YYYYNNN.nnu (anonymous GET; NNN from 001 up, HTTP 404 beyond the last)",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "qzss-naqu",
+   "name": "QZSS Notice Advisory to QZSS Users (NAQU) messages, 2026 (the NAQU page of the QZSS operational information site)",
+   "provider": "Quasi-Zenith Satellite System, Cabinet Office, Government of Japan (National Space Policy Secretariat)",
+   "license": "Terms of Use of the QZSS website (based on the Government of Japan Standard Terms of Use): content may be freely used, copied, publicly transmitted, translated or modified, commercial use permitted, on condition of a source citation (and a statement that the content was edited, where it was); numerical data and data in simple tables are not subject to copyright",
+   "terms": [
+    {
+     "title": "Terms of Use of the Quasi-Zenith Satellite System (QZSS) Website",
+     "url": "https://qzss.go.jp/en/policy/rule.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAQU Message (the page read: the calendar of NAQUs with each message's text)",
+     "url": "https://sys.qzss.go.jp/dod/en/naqu.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAQU format",
+     "url": "https://sys.qzss.go.jp/dod/en/naqu/format.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Application Programming Interface (not used: it states that the APIs shall only be used for not-for-profit tools and services)",
+     "url": "https://sys.qzss.go.jp/dod/en/api.html",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "Allowed under the Terms of Use, with a source citation; content edited for use must say so and must not be presented as created by the QZSS website",
+   "attributionClause": "Source: Quasi-Zenith Satellite System website (URL of the relevant page); for edited content, \"Created by editing the NAQU messages (Quasi-Zenith Satellite System website) (URL of the relevant page)\".",
+   "conditions": "The NAQU web page is read, not the Web API (whose page limits the API to not-for-profit tools and services). Used for local results only: the forecast delta-V outages (satellite, start and stop times), scored against detections.",
+   "reproduce": "yes",
+   "credit": "QZSS NAQU messages: Source: Quasi-Zenith Satellite System website, Cabinet Office, Government of Japan (https://sys.qzss.go.jp/dod/en/naqu.html), accessed 2026-10-24. Created by editing the NAQU messages (Quasi-Zenith Satellite System website): the forecast delta-V outage windows only.",
+   "reason": null,
+   "usedIn": "G1 (M27: the forecast delta-V outages of QZSS satellites in 2026 against the maneuver detector)",
+   "obtain": "https://sys.qzss.go.jp/dod/en/naqu.html (anonymous GET; the page holds the year's NAQUs, each message in a hidden field)",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
    "id": "gfz-kp",
    "name": "GFZ Kp, ap and Ap, with the sunspot number and F10.7 (Kp_ap_Ap_SN_F107_since_1932.txt)",
    "provider": "GFZ Helmholtz Centre for Geosciences (Kp, ap, Ap); WDC-SILSO, Royal Observatory of Belgium (sunspot number); Dominion Radio Astrophysical Observatory and Natural Resources Canada (F10.7)",
