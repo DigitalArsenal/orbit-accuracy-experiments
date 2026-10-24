@@ -200,6 +200,24 @@ function m24c(dir) {
 }
 
 
+
+/** The diagnostic of the ISS pre-burn windows (amendments A12c and A12d): the stretch before the burn, 48 h across it, the stretch after it and a tight window. */
+function m24b(dir) {
+  const rows = rowsOf(dir, 'm24b');
+  if (!rows.length) return null;
+  const lam = (d) => Number(/Lambda ([\d.e+]+)/.exec(d.algorithm ?? '')?.[1]);
+  const t = (iso) => Date.parse(`${String(iso).replace(/Z?$/, 'Z')}`);
+  return ['sub-before', 'sub-across', 'sub-after', 'sub-tight', 'sub-p6', 'sub-p8', 'sub-p24'].map((kind) => {
+    const rs = rows.filter((r) => r.kind === kind), ok = rs.filter((r) => r.ok), det = ok.filter((r) => r.detections.length);
+    const off = (r) => (t(r.detections[0].epoch) - t(r.tigUtc)) / 3600e3, pos = (r) => (t(r.detections[0].epoch) - t(r.startUtc)) / (t(r.stopUtc) - t(r.startUtc)), mag = (r) => Math.hypot(...r.detections[0].dvMS);
+    const hits = det.filter((r) => Math.abs(off(r)) <= HIT_MIN / 60), elsewhere = det.filter((r) => Math.abs(off(r)) > HIT_MIN / 60);
+    return { kind, windows: rs.length, skipped: count(rs.filter((r) => r.skipped).map((r) => String(r.skipped).replace(/\d+ states/, 'few states').replace(/cluster \d+/, 'cluster'))), scored: ok.length, refused: rs.filter((r) => r.ok === false).length,
+      withDetection: det.length, hits: hits.length, elsewhere: elsewhere.length, none: ok.length - det.length, offsetHours: { median: q(elsewhere.map(off), 0.5), p10: q(elsewhere.map(off), 0.1), p90: q(elsewhere.map(off), 0.9) },
+      position: { median: q(det.map(pos), 0.5), p10: q(det.map(pos), 0.1), p90: q(det.map(pos), 0.9) }, dvMS: q(det.map(mag), 0.5), lambda: q(det.map((r) => lam(r.detections[0])), 0.5), hitDvOverPlanned: q(hits.map((r) => mag(r) / r.plannedDvMS), 0.5), hitDvOverPlannedSpread: { p10: q(hits.map((r) => mag(r) / r.plannedDvMS), 0.1), p90: q(hits.map((r) => mag(r) / r.plannedDvMS), 0.9) },
+      hitEpochErrorMin: { median: q(hits.map((r) => off(r) * 60), 0.5), p10: q(hits.map((r) => off(r) * 60), 0.1), p90: q(hits.map((r) => off(r) * 60), 0.9) }, hitVShare: q(hits.map((r) => Math.abs(r.detections[0].dvMS[1]) / mag(r)), 0.5) };
+  });
+}
+
 /** The detector on FFM-1 arcs with a planted impulse (amendment A11e): the pipeline check of M24 on the archive. */
 function m24p(dir) {
   const rows = rowsOf(dir, 'm24p');
@@ -354,7 +372,7 @@ function m32(dir) {
   });
 }
 
-const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
+const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m24b: m24b(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
 
 /** The events measurements of a build (and, when given, of the previous complete build, for the tables that stand the two side by side). */
 export function eventsStudy(dir, resultsDir, previousDir = null) { return dir ? { ...studyOf(dir, resultsDir), previous: previousDir ? studyOf(previousDir, resultsDir) : null } : null; }
@@ -421,6 +439,14 @@ export function eventsMarkdown(e) {
       `${m.satellites} registered Starlink truths, arcs of ${m.arcHours} h: the registered truth for the first 24 h (every fifth state), then the first 36 h after t_b of an M22 case (the control, or the impulse FFM-1 planted at t_b), every 300 s, TEME by foundation/frames, \`detect_maneuvers\` with the saved weather loaded. The burn is at 24 h and its size and axis are exact. A detection within ${HIT_MIN} min of t_b is a hit; the delta-v ratio and the planted-axis share are medians over the hits:`, '',
       '| Planted at 24 h | Arcs | Hits | Detection elsewhere | No detection | Epoch error (min), median [10th, 90th] | Absolute delta-v over planted | Planted-axis share of delta-v | Detections in the first tenth of the arc |', '| --- | --: | --: | --: | --: | --- | --: | --: | --: |',
       ...m.cases.map((c) => `| ${c.axis ? `${AX[c.axis]} ${c.dvMS} m/s` : 'none (control)'} | ${c.arcs} | ${c.hits} | ${c.elsewhere} | ${c.none} | ${c.hits && c.axis ? `${f(c.epochErrorMin.median, 1)} [${f(c.epochErrorMin.p10, 1)}, ${f(c.epochErrorMin.p90, 1)}]` : ''} | ${f(c.dvRatio.median, 2)} | ${f(c.axisShare, 2)} | ${c.firstTenth} of ${c.detections} |`), '');
+  }
+  if (e.m24b) {
+    const name = { 'sub-before': 'the stretch before the burn (TIG - 36 h to TIG - 2 h; no burn in it)', 'sub-across': '48 h across the burn (TIG - 12 h to TIG + 36 h)', 'sub-after': 'the stretch after the burn (TIG + 2 h to TIG + 38 h; no burn in it)', 'sub-tight': 'a tight window (TIG - 4 h to TIG + 24 h)', 'sub-p6': 'TIG - 6 h to TIG + 24 h', 'sub-p8': 'TIG - 8 h to TIG + 24 h', 'sub-p24': 'TIG - 24 h to TIG + 24 h' };
+    const part = (b, label) => b.map((x) => `| ${label} | ${name[x.kind]} | ${x.scored} of ${x.windows} (${Object.keys(x.skipped).length ? Object.entries(x.skipped).map(([k, v]) => `${v} skipped: ${k}`).join('; ') : 'none skipped'}) | ${x.withDetection} | ${x.kind === 'sub-before' || x.kind === 'sub-after' ? 'not applicable' : `${x.hits} / ${x.elsewhere} / ${x.none}`} | ${x.withDetection ? `${f(x.position.median, 2)} [${f(x.position.p10, 2)}, ${f(x.position.p90, 2)}]` : ''} | ${x.elsewhere ? `${f(x.offsetHours.median, 1)} [${f(x.offsetHours.p10, 1)}, ${f(x.offsetHours.p90, 1)}]` : ''} | ${x.withDetection ? f(x.dvMS, 2) : ''} | ${x.hits ? `${f(x.hitEpochErrorMin.median, 1)} [${f(x.hitEpochErrorMin.p10, 1)}, ${f(x.hitEpochErrorMin.p90, 1)}]` : ''} | ${x.hits ? `${f(x.hitDvOverPlanned, 2)} [${f(x.hitDvOverPlannedSpread.p10, 2)}, ${f(x.hitDvOverPlannedSpread.p90, 2)}]` : ''} |`);
+    L.push('#### The ISS pre-burn windows, diagnostic (amendments A12c and A12d)', '',
+      'The same 99 planned burns of the pre-burn files, windows cut around each burn on the same states, weather and rules. The stretches before and after the burn hold no planned burn (a detection in them is a false alarm); the other two hold the burn. Position is the place of the detection in the window (0 start, 1 end); offset is the detected epoch less TIG for the detections not within 92 min of it:', '',
+      `| Build | Window | Scored | Windows with a detection | Hits / elsewhere / none | Position, median [10th, 90th] | Offset from TIG (h), median [10th, 90th] | Absolute delta-v, median (m/s) | Hits: epoch error (min), median [10th, 90th] | Hits: delta-v over planned, median [10th, 90th] |`, '| --- | --- | --- | --: | --- | --- | --- | --: | --- | --- |',
+      ...(e.previous?.m24b ? part(e.previous.m24b, e.previous.build) : []), ...part(e.m24b, e.build), '');
   }
   if (e.previous && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
     const p = e.previous, cur = e;

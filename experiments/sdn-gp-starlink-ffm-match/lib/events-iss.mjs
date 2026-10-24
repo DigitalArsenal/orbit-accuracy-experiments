@@ -42,7 +42,7 @@ export async function scoreArchive({ b, sink, only = null, windows = archiveWind
 
 /**
  * Amendments A12c and A12d, diagnostic of the pre-burn windows: for each planned burn with a pre-burn window, the stretch before the burn (TIG - 36 h to TIG - 2 h), the 48 h across it (TIG - 12 h to TIG + 36 h),
- * the stretch after it (TIG + 2 h to TIG + 38 h) and a tight window (TIG - 4 h to TIG + 24 h), clipped to the file, with the same detector and weather; a sub-window that holds fewer than 48 states or another cluster's burn is skipped with the reason.
+ * the stretch after it (TIG + 2 h to TIG + 38 h), a tight window (TIG - 4 h to TIG + 24 h) and, from A13, windows of TIG - 6 h, - 8 h and - 24 h to TIG + 24 h, clipped to the file, with the same detector and weather; a sub-window that holds fewer than 48 states or another cluster's burn is skipped with the reason.
  */
 export async function scoreSub({ b, sink, only = null }) {
   const headers = archiveHeaders(), byDate = new Map(headers.map((f) => [f.date, f]));
@@ -54,12 +54,12 @@ export async function scoreSub({ b, sink, only = null }) {
   const H = 3600e3;
   let cache = null;
   for (const w of windows.windows.filter((x) => x.kind === 'burn-pre')) {
-    for (const kind of ['sub-before', 'sub-across', 'sub-after', 'sub-tight']) {
+    for (const kind of ['sub-before', 'sub-across', 'sub-after', 'sub-tight', 'sub-p6', 'sub-p8', 'sub-p24']) {
       if (!sink.mine()) continue;
       const id = `ISS ${kind} ${w.date} c${w.cluster}`;
       if (only && !only.some((o) => o.id === id)) continue;
       const fileHeader = byDate.get(w.date);
-      const span = { 'sub-before': [-36, -2], 'sub-across': [-12, 36], 'sub-after': [2, 38], 'sub-tight': [-4, 24] }[kind]; // hours from TIG
+      const span = { 'sub-before': [-36, -2], 'sub-across': [-12, 36], 'sub-after': [2, 38], 'sub-tight': [-4, 24], 'sub-p6': [-6, 24], 'sub-p8': [-8, 24], 'sub-p24': [-24, 24] }[kind]; // hours from TIG
       const a = Math.max(fileHeader.header.startMs, w.tigMs + span[0] * H), z = Math.min(fileHeader.header.stopMs, w.tigMs + span[1] * H);
       const startUtc = iso(a);
       const row = { source: 'm24b', id, kind, cluster: w.cluster, file: w.date, startUtc, stopUtc: iso(z), fitSeconds: Math.round((z - a) / 1000), tigUtc: iso(w.tigMs), plannedDvMS: w.dvMS, build: b.sdngp.provenance.wasmSha256.slice(0, 12) };
