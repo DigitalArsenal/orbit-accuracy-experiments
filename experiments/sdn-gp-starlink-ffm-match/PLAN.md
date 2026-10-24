@@ -458,3 +458,41 @@ extension is now validated on a held-out tail of the latest 24 h). Moon-centred:
 segments a fit span at a detected maneuver or refuses it by name (`maneuver-suspected`), so the report gives the medians for windows the module fitted without a
 segment, with a segment, and the count refused by name, beside A9f's maneuver list. Cislunar and heliocentric are not exposed by the module's methods in this build
 and are not scored.
+
+### A9h - 2026-10-24, before any row of build 54b069014557 was read: the sixth build (segment fits through the methods), the cislunar and heliocentric packs, the lunar rows by treatment
+
+Coordinator, 2026-10-24: side B's dist 54b069014557 (head 7a42ae8; the store snapshot records the HEAD of its tree at the time of the copy) routes blocks to segment fits in `fit_sdngp`: Sun-centered
+blocks, Moon-centered blocks whose first state's apocenter lies beyond 10,000 km (or an open orbit) and Earth-centered blocks whose apocenter lies beyond 250,000 km, in ICRF or J2000 axes and
+UTC; `propagate` writes such a set on a grid whose CENTER_NAME is absent or the set's own (else grid-center-mismatch). Only the module's manifest and README are used for it; none of its source or tests.
+The build is run, named and replayed as in A9b: copied to the store snapshot by `sdngp-run.mjs`, every job on that copy, rows per build. Interface probes (one window each of TESS, CAPSTONE and Psyche, to learn
+the call and the output) are fitted before the run; their rows are discarded and the run starts from empty row files.
+
+1. Earth windows. Every job of `sdngp-run.mjs` runs again with the rules of A9b to A9g. The expectation, stated by the coordinator in advance: identical to the previous complete build
+(ee5dccaa17a8) except HEO TESS, whose apocenter (about 375,000 km) puts it on the segment side. Reported as counts: the windows both builds ran, how many are identical to the last digit (fit RMS and
+every held-out day), for the registered 24 h rows and for the default-span rows separately, and the sources that differ. TESS keeps its windows (24 h and 72 h fits, held-out days 1 to 3, at most one
+state per 5 minutes, as XP and SGP4 were scored) and its truth; the held-out states come from `propagate` on a grid block naming the set's own center (EARTH) in ICRF axes, one explicit epoch per scored
+state; the fit RMS is the module's own (the COMMENT of the set); a segment set is not propagated backward, so it has no fit-span radial / in-track / cross-track split. The truth is in J2000 axes
+and the module answers in ICRF: the 23 mas between them (43 m at 375,000 km) are not applied, as for LRO in A9f.
+
+2. Lunar windows. All 148 LRO and Danuri windows through `lunar-windows.mjs` as in A9g (the grid names MOON). The rows are sorted by what the module did: the whole arc (no
+USER_DEFINED_SDNGP_MANEUVER_BEFORE_SECONDS), a segment (that parameter present: the set's epoch was carried past a maneuver) or a refusal (by name). Medians, maxima and counts for each class,
+beside the truth-side maneuver list of A9f (`lunar-maneuvers.json`, unchanged), and the rows of the previous complete build window by window.
+
+3. Cislunar and heliocentric packs (175 new windows of the 323 listed in A8 and A9), through `segment-windows.mjs`. Per window: the pack's states of the fit span and of the held-out days as one $OEM
+block, CENTER_NAME the pack's center (EARTH, MOON, SUN or JUPITER), the pack's axes declared (ICRF for the Horizons packs, J2000 for the NAIF packs), UTC, USEABLE_START_TIME the first state and
+USEABLE_STOP_TIME the end of the fit; `fit_sdngp` with no environment and no prior; `propagate` on a grid block naming the set's own center (EARTH and GCRF axes for a set the module fits on its standard
+Earth path), ICRF axes for a segment set, one explicit epoch per pack state of the held-out days: every state, none thinned, none dropped. The packs carry 1 ms time-stamp jitter from the TDB to UTC
+conversion, so predicted and truth states are paired by epoch within 5 ms (`score-pack.mjs`), and a row records the held-out states of the pack and the states requested, returned, matched and
+unmatched; a window with any shortfall is counted and named in the tables. Score: `score-pack.mjs` (gp-error-model `pair_statistics` in the pack's axes), held-out day k = (fit end + (k-1) d, fit end + k d]:
+3D RMS and the radial / in-track / cross-track split. Packs and rules (A8, A9): artemis2-cislunar (Earth, J2000, 3 windows, 24 h fits, days 1 to 3); artemis1-cislunar (Earth, ICRF, 11 windows, 24 h
+fits, days 1 to 3); artemis1-lunar (Moon, ICRF, 2 windows, 336 h fits, days 1 to 7); capstone-nrho (Moon, ICRF, 50 windows, 336 h fits, days 1 to 7); psyche-cruise (Sun, 20 windows), lucy-cruise-rec (Sun, 15),
+lucy-cruise-ref (Sun, 33) and juno-cruise (Sun, 22): 720 h fits, days 1 to 15; juno-jupiter (Jupiter, ICRF, 19 windows, 1,584 h fits, days 1 to 33): the module documents no Jupiter-centered path, all 19
+windows are attempted and the refusal is reported by name. Reported per pack: windows fitted and refused (by name); medians and maxima by held-out day (Artemis 1 / 2 / 3, CAPSTONE 1 to 7, cruise 1 / 3 / 7 / 15);
+the fit RMS; the windows by the module's treatment (whole arc; on a segment: USER_DEFINED_SDNGP_MANEUVER_BEFORE_SECONDS present, which the module sets for a maneuver and for a sphere-of-influence
+passage; refused); the five worst windows of each pack by the last held-out day with their start epochs. The module's own documented CAPSTONE figures (segmented 1.9 / 9.8 / 48.4 km at days 1 / 3 / 7, whole
+arc 20.6 / 37.9 / 67.2, after it found its first scorer had dropped states with 1 ms jitter) are not an input to any choice; this scorer's numbers stand on their own and are compared with them afterward.
+
+4. Spelling. American spelling in all generated text (tables, README, inventory, commit messages); the repository's US-spelling checker is run in report mode over the claimed files and every hit that is not a
+proper name in a credit line (GFZ Helmholtz Centre, IERS Earth Orientation Centre) or a verbatim provider quotation in the registry is rewritten, in a commit of its own that changes spelling only.
+
+5. Report: per regime, days 1 / 2 / 3 (cruise 1 / 3 / 7 / 15), against the rows of ee5dccaa17a8; E2E (`run.mjs --check`) with a segment-window replay added.
