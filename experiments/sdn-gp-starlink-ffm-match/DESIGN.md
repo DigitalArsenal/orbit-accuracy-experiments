@@ -824,7 +824,7 @@ S_k = (t_k, t_k+1, CENTER_NAME, REF_FRAME, MEAN_ELEMENT_THEORY, elements, covari
 fit carries the continuity constraint x_k(t_k+1) = x_k+1(t_k+1) in a common frame (center offsets from DE440), and
 the covariance maps across as P_k+1 = J P_k Jᵀ, J = ∂y_k+1/∂y_k through Cartesian. Hand-off criteria: the sphere of
 influence with a hysteresis band, or an operator maneuver epoch. MEAN_ELEMENT_THEORY names the theory and regime
-(SDN-GP, never SGP4-XP); the synodic frame has no CCSDS name (open question 5).
+(SDN-GP, never SGP4-XP); the synodic frame has no CCSDS name, which is a question for the SDS schema owner.
 
 ### 2i. Further terms judged high value
 
@@ -953,12 +953,315 @@ statistics.
 
 ---
 
-## 5. References
+## 5. Maneuvers, reentry and launch
+
+Owner, 2026-10-24, verbatim: "we also need this propagator to do launch, reentry, and maneuvers". All three are
+boundaries of the segment form of 2h.5: a maneuver is a boundary between two segments about the same center, a reentry
+is the hand-off from SDN-GP to osculating integration and then a terminal event, and a launch is the start of the first
+segment. One operator serves all three, the inverse of SDN-GP's output map: y = h⁻¹(x, t), the mean equinoctial
+elements whose output state (2f.3) is the osculating state x. It is solved by the fixed-point iteration
+y_{k+1} = y_k + H⁻¹ (x - h(y_k)), starting from the osculating elements (the classical osculating-to-mean iteration,
+Walter 1967). It converges in two or three steps, because ‖∂η/∂y‖ is of order J2. Cost: about three output-map
+evaluations, ≈ 5 µs.
+
+### 5.1 Maneuvers
+
+**5.1.1 Impulsive Δv between segments.** For an impulse Δv = (Δv_U, Δv_V, Δv_W) in the UVW axes of the pre-maneuver
+state at epoch t_b (the `$MNV` convention: U radial, V in-track, W cross-track along r × v), the position is continuous
+and the velocity jumps. The post-maneuver mean elements are exact through the inverse map:
+
+    y⁺ = h⁻¹( x⁻(t_b) + (0, Δv), t_b ),      x⁻(t_b) = h(y⁻(t_b), t_b)                                  (14)
+
+To first order (Gauss equations of 2.0 at the impulse point, mean equal to osculating to O(J2)), for near-circular
+orbits:
+
+    Δa = 2 Δv_V / n,    Δ(a_f + i a_g) = e^{iL} (2Δv_V - iΔv_U) / (na),    Δ(ψ + iχ) = e^{iL} Δv_W / (2na),
+    Δλ = -2 Δv_U / (na)
+
+The last one holds because the true longitude L cannot jump while λ ≈ L - 2(a_f sin L - a_g cos L) can. The
+general-eccentricity forms are the Gauss equations of 2.0, with the rates replaced by increments. Two corollaries
+matter for detection (5.1.4): a radial impulse leaves a unchanged (to first order in e), and a cross-track impulse
+moves only χ and ψ. The
+covariance crosses the boundary as
+
+    P⁺ = J P⁻ Jᵀ + G Q_Δv Gᵀ,    J = ∂y⁺/∂y⁻,    G = ∂y⁺/∂Δv
+
+where Q_Δv is the execution error of the burn: a fixed part plus magnitude-proportional and pointing parts (Gates 1963).
+
+**5.1.2 Finite burns.** A burn of constant acceleration a_T = (a_U, a_V, a_W) in UVW lasts Δt_b and spans a true
+longitude ΔL = n Δt_b around its centroid L_c. Integrating the near-circular Gauss rates over it gives
+
+    Δa = 2 a_V Δt_b / n,    Δ(a_f + i a_g) = e^{iL_c} (2a_V - i a_U) Δt_b sinc(ΔL/2) / (na),
+    Δ(ψ + iχ) = e^{iL_c} a_W Δt_b sinc(ΔL/2) / (2na),      sinc x = sin x / x                            (15)
+
+So the impulsive map (14) at the centroid is exact in a and in λ to first order, and it overstates the
+eccentricity-vector and plane changes by 1/sinc(ΔL/2). That is the arc loss of the impulsive approximation (Robbins
+1966): 1.1 % for an 8-minute LEO burn (ΔL = 30°), 10 % for ΔL = 90°. Burns longer than about a quarter revolution, and
+continuous low thrust (Starlink orbit raising and drag makeup, electric-propulsion cruise), stay inside a segment as
+the thrust rate terms of 2b and 2c. When the thrust runs only on part of each revolution (a duty cycle), the averaged
+rates are closed-form arc integrals like XP's sunlit-arc SRP (`SPEC.md` 4). For transfer budgets, Edelbaum's (1961)
+averaged circle-to-circle solution is the same averaged system with an optimal steering law.
+
+**5.1.3 `$MNV` records and planned maneuvers.** Each boundary is written as an SDS `$MNV` (schema 0.0.4):
+
+- STATUS: DETECTED by 5.1.4; PLANNED from an operator forecast (a NASA ISS OEM header row: TIG, DV, HA, HP; a SpaceX
+  file); EXECUTED or CONFIRMED once the post-boundary fit agrees.
+- EVENT_START_TIME and EVENT_END_TIME (t_b, or the burn interval); DELTA_VEL_U/V/W and DELTA_VEL; MANEUVER_UNC and the
+  6 × 6 COV of the post-maneuver state.
+- PRE_EVENT and POST_EVENT (`mnvOrbitalState`: SMA, ECCENTRICITY, INCLINATION, RAAN, PERIOD, APOGEE, PERIGEE,
+  BALLISTIC_COEFF, SIGMA_U/V/W, and ID_ELSET naming the two `$OMM` segments).
+- MNVR_ACCEL_TIMES and MNVR_ACCELS (UVW, km/s²) for finite burns.
+- CHARACTERIZATION from the Δv direction (IN_PLANE, OUT_OF_PLANE, COMBINED, ORBIT_RAISING, ORBIT_LOWERING, DEORBIT,
+  …); STATE_MODEL "SDN-GP" with STATE_MODEL_VERSION; ALGORITHM naming the test of 5.1.4.
+
+A PLANNED record lets SDN-GP propagate across a burn before it happens: apply (14) at TIG with the planned Δv (an ISS
+reboost is along V), then confirm against the files issued after it. The element-set sequence carries the boundary:
+the pre-maneuver set's USEABLE_STOP_TIME is t_b, and side B's sets already carry
+USER_DEFINED_SDNGP_MANEUVER_BEFORE_SECONDS.
+
+**5.1.4 Detection from fit residuals: generalizing the lunar v2 rule.** Two rules exist today.
+
+- **Lunar v2** (side B, build ee5dccaa17a8) is a split-half variance test. Each half of the fit arc is fitted on its
+  own. When the whole arc's RMS exceeds 3 times the cleaner half's plus 0.05 km, the set is refitted on the longest
+  latest segment (3/4 to 1/4 of the arc, at least 6 h) within max(2 ×, +0.05 km) of the cleaner half; otherwise the
+  block is refused as `maneuver-suspected`. On the 2.9 cm/s LRO maneuver of 04-27 it took day 3 from 5.68 to 1.32 km
+  and from 10.42 to 1.05 km.
+- **A9f's truth-side check** averages the osculating semi-major axis over one period. It takes the step S between
+  consecutive periods and flags |S| > median + 6 × 1.4826 × MAD. Its thresholds are 19.8 m (LRO) and 9.5 m (Danuri), an
+  indicative n|Δa|/2 of 8.9 and 4.1 mm/s.
+
+Both look at one scalar, the arc RMS or a. By 5.1.1 an a-only test is blind to radial and pure plane-change burns, and a
+variance test gives neither the Δv nor its epoch. The generalization is a structured generalized likelihood ratio on
+all six mean elements (Willsky & Jones 1976):
+
+- Innovations: for each truth state x_k, e_k = h⁻¹(x_k, t_k) - y(t_k), with y the fitted SDN-GP mean trajectory. Using
+  the theory's own inverse removes the short-period motion the theory models, rather than averaging it over a
+  period, so e_k is the theory's residual noise.
+- A burn at t_b adds the signature e_k = M_k Δv for t_k > t_b, with M_k = Φ(t_k, t_b) G(t_b): a step in
+  (a, a_f, a_g, χ, ψ) and a ramp in λ through Φ_λa = -(3/2)(n/a)(t - t_b).
+- With W the robust inverse covariance of e (per element, from the MAD of maneuver-free arcs):
+
+      F(t_b) = Σ_{t_k > t_b} M_kᵀ W M_k,    g(t_b) = Σ_{t_k > t_b} M_kᵀ W e_k,
+      Δv̂ = F⁻¹ g,    Λ(t_b) = gᵀ F⁻¹ g  ~ χ²₃ without a maneuver                                         (16)
+
+  A burn is declared when max over t_b of Λ exceeds χ²₃ at 1 - α. α is set for one false alarm per object-year: about
+  5,500 candidate epochs a year in LEO gives α ≈ 1.8e-4, a threshold of about 20, recalibrated on maneuver-free arcs
+  because e is not white. Δv̂ fills DELTA_VEL_U/V/W, F⁻¹ its covariance, and the arg max with the zero of the λ ramp
+  fills the epoch to a fraction of a period.
+- Joint segment fit: in place of lunar v2's "keep the latest segment", fit (y₀, Δv, t_b) over the whole arc with the
+  position continuous at t_b. The early segment then still informs B_eff and the post-maneuver state, instead of being
+  discarded.
+- Low thrust: the same test with a slope signature (a ramp in a, a quadratic in λ; ∂y/∂τ₀ of 2c from t_b on) finds the
+  start and end of thrust arcs.
+- Live streams (SpaceX files every 8 h, new element sets): Page's (1954) CUSUM on the increments of Λ.
+
+A9f's rule is the a-row of (16) with a one-period box window and a robust threshold; lunar v2 is (16) collapsed to a
+non-directional energy test with one split. The smallest Δv detected at k sigma with N_p periods either side, from
+(14), is
+
+    Δv_V,min = (n/2) k σ_ā √(2/N_p),   Δv_U,min = n a k σ_e √(2/N_p),   Δv_W,min = n a k σ_i √(2/N_p)          (17)
+
+where σ_ā, σ_e and σ_i are the per-period noise of the innovations. Prior art in the same family uses element-set
+histories or single elements: Lemmens & Krag (2014), Kelecy & Jah (2010), Patera (2008), and the modules'
+`analysis/maneuver-detection` (D1 crossing-time vis-viva step, D2 robust GLR on orbit-averaged a with a plane test;
+held-out ISS 22 of 25). (16) carries the GLR to the full mean-element state of a theory that removes its own short
+periods.
+
+**5.1.5 Truth, cost, value.**
+
+- Truth:
+  - ISS reboosts in NASA OEMs: each header's TRAJECTORY EVENT SUMMARY lists TIG, DV, HA and HP; the public archive
+    has about 740 dated files since 2020-09, and the pre- and post-TIG files confirm execution.
+  - Starlink maneuvers: consecutive SpaceX files, and the shared operator capture's fleet-wide Brouwer mean elements
+    every 10 minutes (derived products only).
+  - LRO and Danuri: the A9f list.
+  - GEO and IGSO station keeping: GFZ MGEX BeiDou and QZSS orbits against QZSS NAQU and BeiDou notices.
+  - GNSS MEO: GPS NANUs.
+- Cost: a boundary is one (14), ≈ 5 µs (10 µs with the covariance); a finite burn adds a closed-form rate term while it
+  burns. Detection is 288 inverse maps per object-day at 5 minutes (≈ 1.5 ms) plus a negligible scan; on the capture's
+  10-minute Brouwer mean elements it is the scan alone, at a higher noise floor (Brouwer leaves the m-daily terms in). Bytes: an `$MNV` record (several hundred bytes) and one more `$OMM`
+  segment (648 bytes, G1 section 4).
+- Value: measured on the Moon, day 3 from 5.68 to 1.32 km on a window with a 2.9 cm/s maneuver (side B). In the G1
+  windows, 10 of 87 LRO and 37 of 61 Danuri windows contain a maneuver. On Earth every maneuvering object is affected,
+  and Starlinks maneuver routinely (SpaceX's semiannual constellation reports to the FCC). A maneuver inside a fit arc
+  otherwise corrupts both the state and B_eff, and a missed one invalidates every screening that uses the set.
+
+### 5.2 Reentry
+
+**5.2.1 Where mean-element averaging breaks down.** Averaging needs the elements to change little over one RK step
+(two periods) relative to the scales the rates depend on. Three criteria, evaluated at every node:
+
+    C1  ε₁ = 4π |ȧ| / (n H(h_p)) > 0.05        decay over one step against the density scale height
+    C2  h_p < h_hand (default 180 km)           perigee height
+    C3  |Δ(ae)_rev| / (ae) > 0.01, e > 0.01     eccentricity collapsing per revolution                       (18)
+
+Here H is the local scale height of the 2a.4 kernel and h_p the perigee height. For C3 the per-revolution changes are
+King-Hele's (1964, 1987), with z = ae/H, F his rotation factor and ρ_p the perigee density:
+
+    Δa_rev    = -2π F B ρ_p a² e^{-z} [I₀(z) + 2e I₁(z) + …]
+    Δ(ae)_rev = -2π F B ρ_p a² e^{-z} [I₁(z) + (e/2)(I₀(z) + I₂(z)) + …]
+
+The circular limit (z → 0) is -2π B ρ a² per revolution: ȧ_D = -ρ B √(μa) of 2.0 times one period 2π/n. With B = 0.01
+m²/kg and moderate-activity NRLMSISE-00 densities, C1 trips near 200 km (ε₁ ≈ 0.05; 0.008 at 250 km, 0.12 at 180 km).
+A remaining lifetime there of about H/|ȧ| ≈ 2 days leaves the last one to three days to the integrator; the
+thresholds are set by M28. Eccentric decays (GTO) stay averaged longer, but C3 and the lunisolar perigee oscillation
+(XP's third-body rates) decide when.
+
+**5.2.2 Hand-off to osculating integration.** At the first node where C1, C2 or C3 trips, SDN-GP emits the osculating
+state x_h = h(y(t_h)) and its covariance H P_y Hᵀ (2f.3). FFM-1 (Cowell, RK78) integrates from there with the same
+environment: NRLMSISE-00 × exp(s(t)) under the same `$SPW` and `$DCL` records and the horizon chain of 2a.3, the same
+fitted B_eff (C_D A/m) and AGOM (C_R A/m), co-rotation, EGM2008 and DE440 third bodies. The density model is identical
+on both sides of the boundary, so the hand-off adds no model step. It is one-way: a set is never handed back. A
+controlled deorbit (an operator lowering burn) is a maneuver segment of 5.1, with τ₀ of 2c for the lowering phase and
+the operator's own ephemeris inside its span.
+
+**5.2.3 The reentry window.** Reentry is the crossing of the reentry altitude h_r (80 km by default, near the
+conventional 78 km breakup altitude; the value used is written to the RDM). For near-circular decay the lifetime is
+L ≈ H/|ȧ| (King-Hele 1987). A fractional error δB in B_eff and a density error δ(t) along the remaining life move it,
+to first order, by
+
+    δL = -L δB/B - ∫₀ᴸ δ(t) dt                                                                              (19)
+
+uniformly in time, because each unit of time decays the orbit in proportion to the density. With δ(t) Gauss–Markov
+(σ_δ, τ) as in 2f.4, and σ_δ(t) following the weather tier at lead t (observed with DCA, then the 3-day and 45-day
+forecasts, then climatology; 2a.3), the 1-sigma window is
+
+    σ_L² / L² = (σ_B/B)² + (1/L²) ∬₀ᴸ σ_δ(t₁) σ_δ(t₂) e^{-|t₁-t₂|/τ} dt₁ dt₂
+              = (σ_B/B)² + σ_δ² (2τ/L) [1 - (τ/L)(1 - e^{-L/τ})]        (constant σ_δ)                    (20)
+
+which tends to (σ_B/B)² + σ_δ² for L ≪ τ (the error persists) and to (σ_B/B)² + σ_δ² 2τ/L for L ≫ τ (it averages
+down). Example: σ_B/B = 5 % (a fitted B_eff after 2d and 2e), σ_δ = 15 % and τ = 2 days give 9.9 % at 10 days to go
+and 14.7 % at 1 day. The comparison is Aerospace's stated uncertainty, ±20 % of the time to go (the "20 % rule" of the
+CORDS reentry records), consistent with the residual-lifetime errors of published reentry statistics (Pardini &
+Anselmo 2019). Nonlinear windows, needed in the last day and in storms, use the unscented transform (Julier &
+Uhlmann 2004) over (x_h, B_eff, s level): 17 FFM-1 runs per issue, with the storm scenarios of 2i.3 as extra members. The along-track
+footprint is ±v_g σ_L about the nominal point; at 7.8 km/s a one-hour 1-sigma is more than half an orbit, so early
+windows are ground-track swaths, not points.
+
+**5.2.4 Output: CCSDS RDM as SDS `$RDM`.** One RDM per issue (CCSDS 508.1-B-1 keywords in the SDS `$RDM`):
+
+- Epochs and windows: NOMINAL_REENTRY_EPOCH (the SDS REENTRY_EPOCH), REENTRY_WINDOW_START and _END, ORBIT_LIFETIME,
+  ORBIT_LIFETIME_WINDOW_START and _END with ORBIT_LIFETIME_CONFIDENCE_LEVEL, REENTRY_ALTITUDE.
+- Models: ATMOSPHERIC_MODEL "NRLMSISE-00 × exp(s(t))" with the `$DCL` identifier; SOLAR_FLUX_PREDICTION naming the
+  `$SPW` record and the forecast tiers; GRAVITY_MODEL; N_BODY_PERTURBATIONS.
+- Drag: DRAG_PARAMETERS_SOURCE (the SDN-GP fit span), DRAG_PARAMETERS_ALTITUDE (the arc's mean perigee height), and
+  BALLISTIC_COEFF in kg/m², which is m/(C_D A) = 1/B_eff: the inverse of SDN-GP's convention.
+- Uncertainty: REENTRY_UNCERTAINTY_METHOD ("linear (20)" or "unscented, 17 FFM-1 runs"); COVARIANCE of the hand-off
+  state with COV_REF_FRAME.
+- History and disposition: PREVIOUS_MESSAGE_ID and PREVIOUS_MESSAGE_EPOCH, so a sequence of issues shows its
+  convergence; CONTROLLED_REENTRY and INTRACK_THRUST for operator deorbits.
+- Impact: NOMINAL_IMPACT_LAT, _LON and _ALT, IMPACT_WINDOW_START and _END, and the along- and cross-track
+  uncertainties from σ_L and P_x.
+
+**5.2.5 Truth, cost, value.**
+
+- Truth: past decays only, scored as results.
+  - The Aerospace Corporation CORDS reentry history, already parsed by the closed modules'
+    `aerospace-reentry-provider`: observed reentry date, the element-set epoch used, Aerospace's prediction and its
+    20 % window.
+  - Space-Track decay and TIP records held locally (results only, never committed).
+  - The decaying object's public element-set history before each prediction epoch, as pseudo-observations (the E8
+    approach).
+  - For controlled deorbits, SpaceX's own files.
+- Cost: the criteria are three comparisons per node. Below the hand-off FFM-1 costs 0.75 to 2.7 s per object-day
+  (full force, measured 2026-10-10), so a nominal is 2 to 8 s, an unscented window 35 to 140 s, and the daily reentry
+  population needs CPU-minutes. Bytes: 1 to 2 KB per RDM.
+- Value: public-safety and screening relevance per object, at a population of a few objects a day. (20) predicts a
+  1-sigma half-width of 10 to 15 % of the time to go against the rule's 20 %; M29 measures both widths and their
+  coverage.
+
+### 5.3 Launch
+
+**5.3.1 Initialization.** Two inputs.
+
+- **An insertion state.** The SDS `$LAM` INSERTION (`lamInsertionOrbit`: osculating a, e, i, Ω, ω and the argument of
+  latitude u at EPOCH in REF_FRAME, with 1-sigma uncertainties of RAAN, u, periapsis altitude and apoapsis altitude),
+  or an SDS `$BOV` burnout vector (Earth-fixed position and velocity at EPOCH, rotated to inertial with the EOP of the
+  epoch).
+- **An ascent or early-orbit ephemeris** as SDS `$OEM` (an operator's first file).
+
+The first set is y₀ = h⁻¹(x_ins, t_ins), as in (14). Its covariance comes from the `$LAM` sigmas through the element
+Jacobian; for near-circular insertion:
+
+    σ_a = √(σ_hp² + σ_ha²) / 2,   σ_e = √(σ_hp² + σ_ha²) / (2a),   σ_λ ≈ σ_u,   σ_Ω = RAAN sigma           (21)
+
+`$LAM` has no inclination or semi-major-axis sigma (a gap for the SDS schema owner), so σ_i takes a vehicle-class
+default. B_eff and AGOM start from priors: the payload's published mass and area, the batch's earlier fits, or E13b's
+shell values.
+(SDS `$LCH` is the module-licensing challenge message, not a launch record; `$LAM`, `$BOV` and `$OEM` are the launch
+inputs.)
+
+**5.3.2 The first fitted set.** Early arcs are short, and the insertion orbit is low, so drag is strong: by (11), at
+300 km (|ȧ| ≈ 1.5 km/day) a 6 h arc already carries a 1.2 km drag signature, against a floor of tens of meters once
+2d is in. So B_eff is identifiable from about 6 h. The fit uses the stitched-arc and prior rules of 2e.3 from the
+first file on. Orbit raising starts within days: the slope test of 5.1.4 marks the thrust onset, after which τ₀ of 2c
+is free and B_eff is held at its prior (the 2c.2 rule).
+
+**5.3.3 Deployment sequences with small separation Δv.** A batch is released from a common parent state x₀ at t₀
+(staggered epochs t₀,k for a dispenser sequence), each object k with a separation impulse Δv_k of cm/s to m/s. By
+(14), y_k(t₀) = y₀ + G Δv_k, so the relative motion is Clohessy & Wiltshire's (1960) plus differential drag:
+
+    s_k(t) = (4 Δv_V,k / n) sin n(t - t₀) - 3 Δv_V,k (t - t₀) + (2 Δv_U,k / n)(cos n(t - t₀) - 1)
+             + (3/4) n |ȧ| (ΔB_k / B)(t - t₀)²                                                            (22)
+
+(along-track; the object with the larger B moves ahead; the cross-track part oscillates with amplitude Δv_W,k / n). The batch-joint fit estimates one parent
+state, three Δv_k and one B_k per object, with a hierarchical prior B_k ~ N(B̄, σ_B,batch²) (Stein shrinkage: James &
+Stein 1961; Efron & Morris 1975) and a separation prior ‖Δv_k‖ ~ σ_sep. Its normal matrix is an arrowhead (the parent
+block coupled to N object blocks), solved by Schur complement in O(N), at about N single fits. Every object then shares
+the parent's information, and (22) orders the objects by along-track rate. That ordering solves the early
+association, which object is which before the catalog assigns numbers, by an assignment on predicted against observed
+along-track positions (Kuhn 1955).
+
+**5.3.4 Truth, cost, value.**
+
+- Truth: operator early-orbit ephemerides, chiefly the first SpaceX files of each new batch, which the shared capture
+  sees as new satellites in its manifest (derived products only), scored on newer files; Planet's early ephemerides
+  (CC BY-NC, local aggregates only); Artemis II after translunar injection (the Horizons pack of section 13 of the
+  results).
+- Cost: initialization ≈ 5 µs. A first fit is one normal fit (seconds). A batch-joint fit is about N fits. Bytes: the
+  first `$OMM` (648 bytes) with its covariance (112 bytes).
+- Value: the first days after a launch, when screening has the least information and a batch of tens of objects shares
+  one orbit.
+
+### 5.4 Ranked by value per cost
+
+| Item | Population | Value (measured or predicted) | Cost | New mathematics |
+| --- | --- | --- | --- | --- |
+| 5.1 maneuver map, detection (16), `$MNV`, segments | every maneuvering object (Starlink fleet, ISS, GEO station keeping, lunar orbiters) | measured: LRO day 3 5.68 → 1.32 km with one segment; 37 of 61 Danuri windows hold a maneuver | ≈ 5 µs per boundary, ≈ 1.5 ms per object-day of detection | small (the inverse map, a GLR) |
+| 5.2 reentry hand-off, window (20), `$RDM` | a few objects a day | predicted: a 1-sigma window of 10 to 15 % of the time to go against the 20 % rule | criteria free; 35 to 140 s of FFM-1 per issue | moderate (criteria, window, sampling) |
+| 5.3 launch initialization, batch-joint fit, association | each launch; tens of objects per batch | first-day screening coverage before catalog sets exist (to measure) | seconds per object; N fits per batch | largest (batch model, association) |
+
+Order: 5.1, then 5.2, then 5.3. 5.1 is cheap, touches the most objects and is half built (lunar v2, the modules'
+detector). 5.2 reuses FFM-1, the DCA and the weather chain, and adds only the criteria, the window and the RDM writer.
+5.3 needs the most new modeling for the fewest events, though each event matters most in its first days.
+
+### 5.5 Measurement plan (continuing section 4's ids)
+
+| Id | Item | Truth | What is measured | Prediction it tests |
+| --- | --- | --- | --- | --- |
+| M22 | 5.1.1 impulse map | FFM-1 with synthetic impulses (1 mm/s to 10 m/s, U, V and W) on G1 start states | SDN-GP two-segment sets against FFM, days 1 to 3 | no-maneuver accuracy (G1: 0.164 / 0.978 km days 1 / 3) for Δv ≤ 1 m/s |
+| M23 | 5.1.2 finite burns | FFM-1 with 1 to 60 minute burns | centroid impulse with and without sinc(ΔL/2) | the arc loss of (15) |
+| M24 | 5.1.4 on the ISS | NASA ISS OEM archive 2020 to 2026 (header TIG and DV; pre and post files) | detections, false alarms per object-year, Δv and epoch errors | at least the modules' detector (22 of 25 held out) at one false alarm per object-year |
+| M25 | 5.1.4 on the Moon | LRO and Danuri packs | (16) against lunar v2 and A9f's list (2 and 10 events) | all listed events, plus radial and plane burns the a-step misses |
+| M26 | 5.1.4 on Starlink | the capture's 10-minute mean elements; consecutive SpaceX files | events per satellite-day, Δv distribution, agreement with file-to-file differences | false alarms at the calibrated rate on quiet satellites |
+| M27 | 5.1.4 in GEO, IGSO, MEO | GFZ MGEX BeiDou and QZSS; QZSS NAQU and BeiDou notices; GPS NANUs | detection against the notices | the GEO station-keeping trims below the modules' detector floors (it found 4 of 11) |
+| M28 | 5.2.1 hand-off criteria | synthetic FFM-1 decays, 300 to 80 km, B 0.005 to 0.05 m²/kg, three solar levels | SDN-GP against FFM per node against ε₁, h_p, e | thresholds of (18) where one more SDN-GP step costs a tenth of the window's sigma |
+| M29 | 5.2.3 windows | CORDS observed reentries; Space-Track decay and TIP (local, results only); the objects' element-set histories as pseudo-observations | error over time to go, 1- and 2-sigma coverage, against Aerospace's prediction at the same element-set epoch | a narrower window than the 20 % rule at equal coverage |
+| M30 | 5.2.2 controlled deorbits | Starlink deorbits in SpaceX files | theory plus residual inside the span, τ₀ lowering beyond | below G1's lowering rows at day 3 (SDN-GP 6.5 km with free B_eff, SGP4-XP 25.4 km) |
+| M31 | 5.3.1–5.3.2 first sets | first SpaceX files of new batches | initialized from the first state, fitted on 6, 12 and 24 h; scored on newer files, days 1 to 3 | B_eff identifiable from 6 h (11) |
+| M32 | 5.3.3 batch-joint fit and association | the same batches; the later catalog assignment (results only) | joint against per-object fits; share of objects associated correctly | joint fit better on days 1 to 3; association from the ordering by along-track rate |
+| M33 | 5.1.4 slope test at orbit raising | new batches' files | thrust-onset epoch against the files | onset within one period |
+
+---
+
+## 6. References
 
 - Abramowitz, M., Stegun, I. A. (1964). Handbook of Mathematical Functions. NBS AMS 55 (table 25.4).
 - Acton, C. H. (1996). Ancillary data services of NASA's Navigation and Ancillary Information Facility. Planetary
   and Space Science 44(1), 65–70. Acton, C., Bachman, N., Semenov, B., Wright, E. (2018). A look towards the future
   in the handling of space science mission geometry. Planetary and Space Science 150, 9–12. NAIF, SPK Required Reading.
+- Aerospace Corporation. CORDS reentry database and reentry history (aerospace.org/reentries): observed reentry dates,
+  predictions and the stated 20 % uncertainty.
 - Allan, R. R. (1967). Resonance effects due to the longitude dependence of the gravitational field of a rotating
   primary. Planetary and Space Science 15, 53–76.
 - Archinal, B. A., et al. (2018). Report of the IAU Working Group on Cartographic Coordinates and Rotational Elements:
@@ -978,9 +1281,12 @@ statistics.
 - Casali, S. J., Barker, W. N. (2002). Dynamic calibration atmosphere (DCA) tool for the high accuracy satellite drag
   model (HASDM). AIAA 2002-4888.
 - CCSDS (2023). Orbit Data Messages. CCSDS 502.0-B-3, Blue Book.
+- CCSDS. Re-entry Data Message. CCSDS 508.1-B-1, Blue Book.
 - CelesTrak. Supplemental GP element sets (SupGP), documentation (celestrak.org).
 - Clenshaw, C. W. (1955). A note on the summation of Chebyshev series. Mathematical Tables and Other Aids to
   Computation 9, 118–120.
+- Clohessy, W. H., Wiltshire, R. S. (1960). Terminal guidance system for satellite rendezvous. Journal of the
+  Aerospace Sciences 27(9), 653–658.
 - Colombo, O. L. (1989). The dynamics of Global Positioning System orbits and the determination of precise
   ephemerides. Journal of Geophysical Research 94(B7), 9167–9182.
 - COMSPOC Corporation. Spacebook product documentation: SGP4-XP element sets and SynCoPate ephemerides (published
@@ -991,7 +1297,10 @@ statistics.
   calibration. Advances in Space Research 41(7), 1115–1122.
 - Drob, D. P., et al. (2015). An update to the Horizontal Wind Model (HWM): the quiet time thermosphere. Earth and
   Space Science 2, 301–319.
+- Edelbaum, T. N. (1961). Propulsion requirements for controllable satellites. ARS Journal 31(8), 1079–1089.
 - Edmonds, A. R. (1957). Angular Momentum in Quantum Mechanics. Princeton University Press.
+- Efron, B., Morris, C. (1975). Data analysis using Stein's estimator and its generalizations. Journal of the
+  American Statistical Association 70, 311–319.
 - Elipe, A., Lara, M. (2003). Frozen orbits about the Moon. Journal of Guidance, Control, and Dynamics 26(2),
   238–243.
 - Ely, T. A. (2005). Stable constellations of frozen elliptical inclined lunar orbits. Journal of the Astronautical
@@ -1000,13 +1309,16 @@ statistics.
   density errors to satellite orbits. Advances in Space Research 59(1), 147–165.
 - Farquhar, R. W., Kamel, A. A. (1973). Quasi-periodic orbits about the translunar libration point. Celestial
   Mechanics 7, 458–473.
+- Gates, C. R. (1963). A simplified model of midcourse maneuver execution errors. JPL Technical Report 32-504.
 - Gim, D.-W., Alfriend, K. T. (2003). State transition matrix of relative motion for the perturbed noncircular
   reference orbit. Journal of Guidance, Control, and Dynamics 26(6), 956–971.
-- Gómez, G., Jorba, À., Masdemont, J., Simó, C. (2001). Dynamics and Mission Design Near Libration Points.
-  World Scientific.
+- GNSS operator notices: GPS NANUs (U.S. Coast Guard Navigation Center), QZSS NAQUs (Cabinet Office, Japan), BeiDou
+  notices (China Satellite Navigation Office).
 - Gondelach, D. J., Linares, R. (2020). Real-time thermospheric density estimation via two-line element data
   assimilation. Space Weather 18, e2019SW002356.
 - Gooding, R. H. (1971). A recurrence relation for inclination functions. Celestial Mechanics 4, 91–98.
+- Gómez, G., Jorba, À., Masdemont, J., Simó, C. (2001). Dynamics and Mission Design Near Libration Points.
+  World Scientific.
 - Hathaway, D. H. (2015). The solar cycle. Living Reviews in Solar Physics 12, 4. Hathaway, D. H., Wilson, R. M.,
   Reichmann, E. J. (1994). The shape of the sunspot cycle. Solar Physics 151, 177–190.
 - Hoots, F. R., France, R. G. (1987). An analytic satellite theory using gravity and a dynamic atmosphere.
@@ -1018,11 +1330,17 @@ statistics.
   situational awareness. SIAM/ASA Journal on Uncertainty Quantification 2, 276–304.
 - Hujsak, R. S. (1979). A restricted four body solution for resonating satellites without drag. Project Space Track
   Report No. 1.
+- James, W., Stein, C. (1961). Estimation with quadratic loss. Proceedings of the Fourth Berkeley Symposium on
+  Mathematical Statistics and Probability 1, 361–379.
 - Jorba, À., Masdemont, J. (1999). Dynamics in the center manifold of the collinear points of the restricted three
   body problem. Physica D 132, 189–213.
+- Julier, S. J., Uhlmann, J. K. (2004). Unscented filtering and nonlinear estimation. Proceedings of the IEEE 92(3),
+  401–422.
 - Junkins, J. L., Akella, M. R., Alfriend, K. T. (1996). Non-Gaussian error propagation in orbital mechanics.
   Journal of the Astronautical Sciences 44(4), 541–563.
 - Kaula, W. M. (1966). Theory of Satellite Geodesy. Blaisdell.
+- Kelecy, T., Jah, M. (2010). Detection and orbit determination of a satellite executing low thrust maneuvers.
+  Acta Astronautica 66, 798–809.
 - Kelso, T. S. (2007). Validation of SGP4 and IS-GPS-200D against GPS precision ephemerides. AAS 07-127.
 - King-Hele, D. G. (1964). Theory of Satellite Orbits in an Atmosphere. Butterworths. King-Hele, D. G. (1987).
   Satellite Orbits in an Atmosphere: Theory and Applications. Blackie.
@@ -1034,6 +1352,7 @@ statistics.
   orbiter and lander tracking data. Icarus 274, 253–260.
 - Kozai, Y. (1959). The motion of a close earth satellite. Astronomical Journal 64, 367–377. Kozai, Y. (1962).
   Secular perturbations of asteroids with high inclination and eccentricity. Astronomical Journal 67, 591–598.
+- Kuhn, H. W. (1955). The Hungarian method for the assignment problem. Naval Research Logistics Quarterly 2, 83–97.
 - Lane, M. H., Cranford, K. H. (1969). An improved analytical drag theory for the artificial satellite problem.
   AIAA 69-925. Lane, M. H., Hoots, F. R. (1979). General perturbations theories derived from the 1965 Lane drag
   theory. Project Space Track Report No. 2.
@@ -1041,6 +1360,8 @@ statistics.
   Icarus 88, 266–291.
 - Lee, D. E. (2019). Gateway destination orbit model: a continuous 15 year NRHO reference trajectory. NASA white
   paper.
+- Lemmens, S., Krag, H. (2014). Two-line-elements-based maneuver detection methods for satellites in low Earth
+  orbit. Journal of Guidance, Control, and Dynamics 37(3), 860–868.
 - Lemoine, F. G., et al. (2013). High-degree gravity models from GRAIL primary mission data. Journal of Geophysical
   Research: Planets 118, 1676–1698.
 - Lidov, M. L. (1962). The evolution of orbits of artificial satellites of planets under the action of gravitational
@@ -1061,10 +1382,16 @@ statistics.
 - Moe, K., Moe, M. M. (2005). Gas–surface interactions and satellite drag coefficients. Planetary and Space Science
   53, 793–801.
 - Murray, C. D., Dermott, S. F. (1999). Solar System Dynamics. Cambridge University Press.
+- NASA Johnson Space Center, Flight Operations Directorate (TOPO). ISS trajectory data (OEM, with the trajectory
+  event summary of planned maneuvers); public archive of dated files since 2020-09.
 - Newhall, X X (1989). Numerical representation of planetary ephemerides. Celestial Mechanics 45, 305–310.
 - NOAA Space Weather Prediction Center. 3-day forecast and 45-day Ap and F10.7 forecast products.
+- Page, E. S. (1954). Continuous inspection schemes. Biometrika 41, 100–115.
+- Pardini, C., Anselmo, L. (2019). Uncontrolled re-entries of spacecraft and rocket bodies: a statistical overview
+  over the last decade. Journal of Space Safety Engineering 6(1), 30–47.
 - Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021). The JPL planetary and lunar ephemerides DE440 and
   DE441. Astronomical Journal 161, 105.
+- Patera, R. P. (2008). Space event detection method. Journal of Spacecraft and Rockets 45(3), 554–559.
 - Pavlis, N. K., Holmes, S. A., Kenyon, S. C., Factor, J. K. (2012). The development and evaluation of the Earth
   Gravitational Model 2008 (EGM2008). Journal of Geophysical Research 117, B04406.
 - Peale, S. J. (1969). Generalized Cassini's laws. Astronomical Journal 74, 483–489.
@@ -1074,12 +1401,14 @@ statistics.
   Research 110, A03301.
 - Richardson, D. L. (1980). Analytic construction of periodic orbits about the collinear points. Celestial
   Mechanics 22, 241–253.
+- Robbins, H. M. (1966). An analytical study of the impulsive approximation. AIAA Journal 4(8), 1417–1423.
 - Russell, C. T., McPherron, R. L. (1973). Semiannual variation of geomagnetic activity. Journal of Geophysical
   Research 78(1), 92–108.
 - Setty, S. J., Cefola, P. J., Montenbruck, O., Fiedler, H. (2016). Application of semi-analytical satellite theory
   orbit propagator to orbit determination for space object catalog maintenance. Advances in Space Research 57(10),
   2218–2233.
 - Solomon, D. (1991). The NAVSPASUR satellite motion model. Naval Research Laboratory.
+- SpaceX. Semiannual Starlink constellation status reports to the U.S. Federal Communications Commission.
 - Springer, T. A., Beutler, G., Rothacher, M. (1999). A new solar radiation pressure model for GPS satellites.
   GPS Solutions 2(3), 50–62.
 - Stiefel, E. L., Scheifele, G. (1971). Linear and Regular Celestial Mechanics. Springer.
@@ -1100,6 +1429,10 @@ statistics.
   Vallado, D. A., Crawford, P. (2008). SGP4 orbit determination. AIAA 2008-6770.
 - Walker, M. J. H., Ireland, B., Owens, J. (1985). A set of modified equinoctial orbit elements. Celestial Mechanics
   36, 409–419.
+- Walter, H. G. (1967). Conversion of osculating orbital elements into mean elements. Astronomical Journal 72,
+  994–997.
+- Willsky, A. S., Jones, H. L. (1976). A generalized likelihood ratio approach to the detection and estimation of
+  jumps in linear systems. IEEE Transactions on Automatic Control 21(1), 108–112.
 - Wu, S. C., Yunck, T. P., Thornton, C. L. (1991). Reduced-dynamic technique for precise orbit determination of low
   earth satellites. Journal of Guidance, Control, and Dynamics 14(1), 24–30.
 - Zimovan, E. M., Howell, K. C., Davis, D. C. (2017). Near rectilinear halo orbits and their application in
