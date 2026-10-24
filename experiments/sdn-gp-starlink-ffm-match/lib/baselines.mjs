@@ -75,17 +75,17 @@ export async function fitXp(b, object, lines, startMs, stopFit, leadDays, minSta
     ok: true, converged: p.FIT_CONVERGED === 'true', iterations: Number(p.FIT_ITERATIONS), fitRmsKm: Number(p.FIT_RMS_KM), fitStates: Number(p.FIT_STATES),
     fitRic: [Number(p.FIT_RADIAL_RMS_KM), Number(p.FIT_ALONG_TRACK_RMS_KM), Number(p.FIT_CROSS_TRACK_RMS_KM)], days,
     elementBytes: ommBytes(record(omm, 'SGP4XP', object.norad)).length, recordBytes: out.elements.length, parameters: 8,
-    fitMs, usPerState, bterm: omm.BSTAR, agom: omm.MEAN_MOTION_DDOT, meanMotion: omm.MEAN_MOTION,
+    fitMs, usPerState, bterm: omm.BSTAR, agom: omm.MEAN_MOTION_DDOT, meanMotion: omm.MEAN_MOTION, inclination: omm.INCLINATION, eccentricity: omm.ECCENTRICITY,
   };
 }
 
-export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay) {
+export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, fixedBstar) {
   const bytes = block(object, lines, {});
   const ephemeris = frame('ephemeris', 'OEM', bytes);
   const t0 = performance.now();
   let fit, report, f;
   try {
-    fit = await b.gem.call('fit_elements', [ephemeris, b.erm.frame('options', 'fitOptions', { from: iso(startMs), to: iso(stopFit), epoch: 'first', fitBstar: true, closure: false })]);
+    fit = await b.gem.call('fit_elements', [ephemeris, b.erm.frame('options', 'fitOptions', { from: iso(startMs), to: iso(stopFit), epoch: 'first', ...(fixedBstar === undefined ? { fitBstar: true } : { fitBstar: false, bstar: fixedBstar }), closure: false })]);
     report = b.erm.decode(fit.report);
     f = report.fits?.[0];
   } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
@@ -103,19 +103,20 @@ export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minS
   const omm = readOmm(fit.elements);
   return {
     ok: true, converged: true, iterations: f.iterations, fitRmsKm: f.rms.rms3dKm, fitStates: f.rms.n, fitRic: f.rms.rmsRtnKm, days,
-    elementBytes: ommBytes(record(omm, 'SGP4', object.norad)).length, recordBytes: fit.elements.length, parameters: 7, fitMs, bstar: omm.BSTAR, meanMotion: omm.MEAN_MOTION,
+    elementBytes: ommBytes(record(omm, 'SGP4', object.norad)).length, recordBytes: fit.elements.length, parameters: 7, fitMs, bstar: omm.BSTAR, meanMotion: omm.MEAN_MOTION, inclination: omm.INCLINATION, eccentricity: omm.ECCENTRICITY,
   };
 }
 
 /** One fit window scored by both baselines. Returns null when the ephemeris cannot supply the fit interval. */
-export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, minCoverage = 0.9 }) {
+export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, minCoverage = 0.9, fixedBstar, arms = 'both' }) {
   const stopFit = startMs + fitSeconds * 1000;
   const lines = slice(object, startMs, stopFit + Math.max(...leadDays) * DAY);
   if (lines.length < 20) return null;
   const gaps = lines.slice(1, 60).map((l, i) => ms(l.epoch) - ms(lines[i].epoch)).sort((a, c) => a - c); // median spacing: some kernels sample irregularly
   const stepSeconds = gaps[Math.floor(gaps.length / 2)] / 1000;
   const minStatesPerDay = Math.floor((minCoverage * 86400) / stepSeconds);
-  const [xp, sgp4] = [await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay), await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay)];
+  const xp = arms === 'sgp4' ? null : await fitXp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay);
+  const sgp4 = arms === 'xp' ? null : await fitSgp4(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay, fixedBstar);
   return { source: object.source, id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4 };
 }
 
@@ -139,10 +140,15 @@ export async function propagateSet(b, payload, epochsMs, axes = 'EME2000') {
   return blockLines(readOem(prop.ephemeris).EPHEMERIS_DATA_BLOCK[0]);
 }
 
+/** The radial / in-track / cross-track error (km) of each predicted state against its truth state ([{r, v}], same axes and epochs), by pair_statistics. */
+export async function rtnSeries(b, predicted, truth) {
+  const pairs = predicted.map((p, i) => ({ id: String(i), predicted: { position: p.r, velocity: p.v, covariance: PLACEHOLDER_COVARIANCE, covarianceAxes: 'INERTIAL' }, truth: { position: truth[i].r, velocity: truth[i].v } }));
+  return b.erm.decode((await b.gem.call('pair_statistics', [b.erm.frame('pairs', 'pairs', { axesFrom: 'truth', pairs })])).statistics).pairs.map((s) => s.errorRtn);
+}
+
 /** Radial / in-track / cross-track RMS (km) of predicted states against truth states (same axes, same epochs), by pair_statistics. */
 export async function compareStates(b, predicted, truth) {
-  const pairs = predicted.map((p, i) => ({ id: String(i), predicted: { position: p.r, velocity: p.v, covariance: PLACEHOLDER_COVARIANCE, covarianceAxes: 'INERTIAL' }, truth: { position: truth[i].r, velocity: truth[i].v } }));
-  const stats = b.erm.decode((await b.gem.call('pair_statistics', [b.erm.frame('pairs', 'pairs', { axesFrom: 'truth', pairs })])).statistics).pairs;
-  const ric = [0, 1, 2].map((c) => rms(stats.map((s) => s.errorRtn[c])));
-  return { n: stats.length, rmsKm: Math.hypot(...ric), ric, inTrackMeanKm: stats.reduce((s, x) => s + x.errorRtn[1], 0) / stats.length };
+  const series = await rtnSeries(b, predicted, truth);
+  const ric = [0, 1, 2].map((c) => rms(series.map((e) => e[c])));
+  return { n: series.length, rmsKm: Math.hypot(...ric), ric, inTrackMeanKm: series.reduce((s, x) => s + x[1], 0) / series.length };
 }
