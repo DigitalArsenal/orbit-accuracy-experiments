@@ -737,7 +737,7 @@ How to read it, in numbers: the registered rows keep the 12-iteration truth. The
 
 ## 10. Held out against the first hours of newer SpaceX files
 
-239 fitted Starlinks (239 scorings), each scored against the first three hours (every ten minutes) of a file SpaceX served after the file of the registered fit; the newest starts 2026-10-23T21:10Z. The horizon from the start of the registered fit to those hours is 5.4 to 12.3 h; the scoring is re-run with `newer.mjs` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h), and each pass is reported at its own horizon. Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4, SGP4-XP and SDN-GP (the newest build that ran every source, section 2a; `newer.mjs` uses it when one exists) fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).
+239 fitted Starlinks (478 scorings), each scored against the first three hours (every ten minutes) of a file SpaceX served after the file of the registered fit; the newest starts 2026-10-24T12:05Z. The horizon from the start of the registered fit to those hours is 5.4 to 24.9 h; the scoring is re-run with `newer.mjs` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h), and each pass is reported at its own horizon. Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4, SGP4-XP and SDN-GP (the newest build that ran every source, section 2a; `newer.mjs` uses it when one exists) fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).
 
 ### Horizon 0 to 8 h (124 Starlinks, median 7.1 h)
 
@@ -778,6 +778,46 @@ FFM-1 against the newer file by truth-quality group (median / 90th percentile, k
 | bound | 27 | 0.966 / 2.142 |  |
 | decay | 4 | 8.531 / 27.1 |  |
 | capped | 15 | 0.380 / 0.709 |  |
+
+### Horizon 16 to 24 h (180 Starlinks, median 23.9 h)
+
+| Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |
+| --- | --: | --: | --: | --: |
+| SpaceX earlier forecast | 32 | 0.195 | 1.034 | 1.00 |
+| FFM-1 from the registered fit | 180 | 0.566 | 4.218 | 1.00 |
+| SDN-GP fitted to the FFM truth | 180 | 0.568 | 4.194 | 0.98 |
+| SGP4-XP fitted to the FFM truth | 180 | 0.878 | 6.070 | 0.95 |
+| SGP4 fitted to the FFM truth | 180 | 0.852 | 6.053 | 0.94 |
+| COMSPOC Spacebook XP (local scoring only) | 32 | 18.0 | 1236 | 1.00 |
+
+FFM-1 against the newer file by truth-quality group (median / 90th percentile, km; SpaceX's earlier forecast median beside it):
+
+| Group | Satellites | FFM-1 | SpaceX earlier forecast |
+| --- | --: | --- | --: |
+| clean | 104 | 0.455 / 2.664 | 0.158 |
+| bound | 37 | 0.715 / 2.226 | 0.194 |
+| decay | 13 | 3.778 / 10.3 | 0.375 |
+| capped | 26 | 0.520 / 11.1 | 0.378 |
+
+### Horizon 24 to 32 h (59 Starlinks, median 24.0 h)
+
+| Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |
+| --- | --: | --: | --: | --: |
+| SpaceX earlier forecast | 8 | 0.141 | 1.155 | 0.99 |
+| FFM-1 from the registered fit | 59 | 0.811 | 9.776 | 1.00 |
+| SDN-GP fitted to the FFM truth | 59 | 0.821 | 9.698 | 0.98 |
+| SGP4-XP fitted to the FFM truth | 59 | 0.977 | 9.202 | 0.96 |
+| SGP4 fitted to the FFM truth | 59 | 0.955 | 9.219 | 0.95 |
+| COMSPOC Spacebook XP (local scoring only) | 8 | 32.3 | 6163 | 1.00 |
+
+FFM-1 against the newer file by truth-quality group (median / 90th percentile, km; SpaceX's earlier forecast median beside it):
+
+| Group | Satellites | FFM-1 | SpaceX earlier forecast |
+| --- | --: | --- | --: |
+| clean | 28 | 0.567 / 2.064 | 0.125 |
+| bound | 15 | 0.828 / 10.2 | 0.165 |
+| decay | 6 | 1.343 / 11.3 | 0.079 |
+| capped | 10 | 1.262 / 5.154 | 0.737 |
 
 ### COMSPOC XP sets of the GNSS and laser-ranged objects against precise orbits (local scoring only)
 
