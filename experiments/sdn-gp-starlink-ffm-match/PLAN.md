@@ -127,7 +127,7 @@ Spacebook data (sets, SynCoPate, API) is fetched or used (owner ruling 2026-10-1
    COMSPOC Spacebook XP sets and SynCoPate trajectories captured locally at 2026-10-23 20:09Z are scored: the sets are
    propagated through the black-box module and compared with same-day truth, the SynCoPate covariance is scored
    against the same truth. They are never fitted to, never an input or a prior, never copied into the repository; only
-   aggregates are committed, labelled "COMSPOC Spacebook XP (local scoring only)". Terms: no commercial use, no
+   aggregates are committed, labeled "COMSPOC Spacebook XP (local scoring only)". Terms: no commercial use, no
    redistribution, no derivative works.
 
 ### A3 - 2026-10-23, before the run, after the baselines were read: fit-length sensitivity (task arm 6)
@@ -156,17 +156,17 @@ Coordinator, second box: fetch spacecraft SPKs from NAIF (paced, into hac/naif-k
 SGP4-XP where they apply, record the rest as awaiting SDN-GP. NAIF does not host TESS, CAPSTONE, Artemis I or Danuri;
 it does host, and the fetcher (`fetch-kernels.mjs`, the archive's provenance convention, 5 s apart) stored:
 THEMIS A, D, E (Earth-orbiting, highly elliptical, 2013-02-08 to 2013-02-24), Chandra (highly elliptical, 64 h), Artemis II
-(Orion, JSC best-estimated trajectory, 2026-04-02 to 04-10), LRO (lunar-centred, 2026-03-15 to 06-14), Psyche, Lucy and
+(Orion, JSC best-estimated trajectory, 2026-04-02 to 04-10), LRO (lunar-centered, 2026-03-15 to 06-14), Psyche, Lucy and
 Juno (heliocentric), and TDRSS (type 10, derived from two-line elements: not truth, not used). Substitutions are therefore
 THEMIS and Chandra for TESS (HEO), Artemis II for Artemis I, and no Danuri or CAPSTONE.
 
 States come from files/orbit-products `read_container` (SPK types 8, 9, 13), epochs from TDB to UTC by foundation/time
-`convert_time`, one call each; the J2000 axes are labelled EME2000. Windows (HEO only, where Earth-centred SGP4 and
+`convert_time`, one call each; the J2000 axes are labeled EME2000. Windows (HEO only, where Earth-centered SGP4 and
 SGP4-XP apply): THEMIS A, D, E and Chandra (2018-03-01 to 2018-04-30, after the last leap second in the file's span), fit 24 h
 (the registered length) and 72 h (the fit-length result), held-out days 1-3, one window every 48 h; Artemis II's first
 segment (the high-Earth-orbit checkout before the translunar burn, 20.85 h) as one short arc: fit 8 h, held-out the
 remaining 12.85 h scored as day 1 with a 40 percent coverage rule. Not scored, recorded as awaiting SDN-GP: Artemis II after
-the burn (cislunar), LRO (lunar-centred), Psyche, Lucy and Juno (heliocentric; JPL navigation kernels are SPK type 1, which
+the burn (cislunar), LRO (lunar-centered), Psyche, Lucy and Juno (heliocentric; JPL navigation kernels are SPK type 1, which
 files/orbit-products 0.1.4 cannot read). A GEO search of the archive found no operator ephemerides (operator-capture holds
 Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not as ephemerides).
 
@@ -267,7 +267,7 @@ is reported beside them. The Starlink windows, the ISS windows and the LAGEOS wi
 ### A7d - 2026-10-24, after 40 of the 156 windows were read: raw differences of the long arcs
 
 On the first Starlink windows the sinusoid scanned over 2 to 12 days for the 15th-order difference returned periods at the end of the
-scan and amplitudes of several kilometres, which is a quadratic-like drift and not a 6-day oscillation, so the fit is not
+scan and amplitudes of several kilometers, which is a quadratic-like drift and not a 6-day oscillation, so the fit is not
 informative for the satellites at the resonance. The long arcs (A7b d) are therefore also reported by the raw in-track
 difference at 1, 2, 3, 4, 5, 7 and 10 days from the start (median of the absolute value over a group). The rows written before this
 addition get the new numbers from a second pass of `m123.mjs --long-only`, which recomputes only the long arcs of every Starlink
@@ -275,20 +275,20 @@ window; nothing else about the windows, arms or rules changes.
 
 ### A8 - 2026-10-24, before any of its data was read: current GNSS truth, the missing-regime spacecraft, windows prepared for SDN-GP
 
-Coordinator, 2026-10-24: approved, all public data, paced, stored in the archive with source, licence and attribution recorded, never
+Coordinator, 2026-10-24: approved, all public data, paced, stored in the archive with source, license and attribution recorded, never
 republished, nothing to the console: (1) GFZ rapid GNSS orbits (CC BY 4.0) as current GNSS truth, so that COMSPOC's GPS sets and
 our GNSS rows can be scored now; (2) JPL Horizons for CAPSTONE, Artemis I and Danuri and STScI MAST for TESS, as ephemeris truth for
 the missing regimes. Then, in order: the fetches and the GNSS and COMSPOC-GPS scoring; the newer-SpaceX pass when the 08:00Z files
 appear; lunar, cislunar and heliocentric windows prepared for SDN-GP.
 
 Horizons (`fetch-horizons.mjs`): the documented API, one request at a time, 6 s apart; vector tables (geometric states, ICRF
-axes, km and km/s, TDB), each response stored as served under `hac/jpl-horizons/<mission>/<centre>/` with a provenance row.
-Spans lie inside the "data through" part of each trajectory (object notes of 2026-10-23): Danuri (-155) Moon-centred
-2026-08-15 to 2026-10-18 at 1 min; CAPSTONE (-1176) Moon-centred 2025-07-15 to 2026-07-15 at 5 min; Artemis I (-1023) Earth- and
-Moon-centred 2022-11-16 08:50 to 2022-12-11 17:15 at 1 min. Epochs are turned TDB -> UTC by `foundation/time`; the ICRF axes are taken
+axes, km and km/s, TDB), each response stored as served under `hac/jpl-horizons/<mission>/<center>/` with a provenance row.
+Spans lie inside the "data through" part of each trajectory (object notes of 2026-10-23): Danuri (-155) Moon-centered
+2026-08-15 to 2026-10-18 at 1 min; CAPSTONE (-1176) Moon-centered 2025-07-15 to 2026-07-15 at 5 min; Artemis I (-1023) Earth- and
+Moon-centered 2022-11-16 08:50 to 2022-12-11 17:15 at 1 min. Epochs are turned TDB -> UTC by `foundation/time`; the ICRF axes are taken
 as the J2000 axes of the NAIF packs (the frame bias, about 20 mas or 37 m at lunar distance, is not applied and is recorded).
 Truth packs go to `<store>/pack/` in the format of the existing packs. They are scored by SGP4 or SGP4-XP only where those
-theories apply (TESS, Earth-centred and highly elliptical); the Moon-centred and Earth-Moon packs wait for SDN-GP.
+theories apply (TESS, Earth-centered and highly elliptical); the Moon-centered and Earth-Moon packs wait for SDN-GP.
 
 GNSS truth: the GFZ rapid orbits (GFZ0MGXRAP, GPS, GLONASS, Galileo, BeiDou, QZSS, 5 min) for the newest days published, converted
 to GCRF $OEM by `analysis/reference-states` like the ESA finals. Our GNSS rows: two satellites per constellation chosen by the rule
@@ -299,8 +299,8 @@ compared with the rapid orbits for the days after each set's epoch, by day since
 Windows prepared for SDN-GP (`regime-windows.mjs`): for every regime that awaits SDN-GP (lunar: LRO, Danuri; cislunar: Artemis II,
 CAPSTONE, Artemis I; heliocentric: the cruise kernels) a truth pack and a window list (fit start, fit span, three held-out days,
 state counts, hashes), with a scorer (`score-pack.mjs`) that takes SDN-GP's predicted states for a window as a $OEM and returns the
-radial / in-track / cross-track RMS by held-out day in that pack's centre and axes. Fit spans per regime follow DESIGN 2h:
-Moon-centred 24 h and 72 h, NRHO and DRO segments of 14 days with 7 held-out days, cruise 30 days with 15.
+radial / in-track / cross-track RMS by held-out day in that pack's center and axes. Fit spans per regime follow DESIGN 2h:
+Moon-centered 24 h and 72 h, NRHO and DRO segments of 14 days with 7 held-out days, cruise 30 days with 15.
 
 ### A8b - 2026-10-24, before the GNSS or TESS data were read: routes taken, products, and the scoring rules
 
@@ -309,10 +309,10 @@ Routes. GFZ's file server (isdc-data.gfz.de, named on the GFZ ISDC GNSS products
 approved product, GFZ's rapid orbits, was therefore taken from NASA CDDIS, where it is published under the same names
 (gnss/products/<GPS week>/GFZ0OPSRAP_ and GFZ0MGXRAP_ ...), with the owner's Earthdata token read at run time (E14's route; the token is
 sent to cddis.nasa.gov only and never printed or stored). `fetch-gnss-rapid.mjs` tries GFZ's server first on every run and falls back;
-each file's provenance row says which route it came from. Licences: GFZ0OPSRAP (GPS, GLONASS, Galileo) is the "GFZ rapid product series for the
+each file's provenance row says which route it came from. Licenses: GFZ0OPSRAP (GPS, GLONASS, Galileo) is the "GFZ rapid product series for the
 IGS", doi:10.5880/GFZ.1.1.2020.003, CC BY 4.0 (DataCite record, fetched 2026-10-24); GFZ0MGXRAP (adds BeiDou and QZSS) is an IGS MGEX product under
 the IGS terms, as registered for E14. TESS: STScI MAST, https://archive.stsci.edu/missions/tess/models/ (TESS_EPH_DEF_*.bsp, the
-mission's definitive ephemeris; MAST data-use policy: public domain, acknowledgement of the mission and STScI). archive.stsci.edu's chain ends at
+mission's definitive ephemeris; MAST data-use policy: public domain, acknowledgment of the mission and STScI). archive.stsci.edu's chain ends at
 the emSign Root CA G1, which Node's bundle lacks; that root, exported from the macOS system roots (SHA-256 40:F6:AF:03:46:A9:9A:A1...), is handed to Node as an extra
 trusted root; certificate verification stays on.
 
@@ -323,7 +323,7 @@ Our GNSS rows: the A1 rule (two satellites per constellation, evenly from the fi
 IGSO and QZSS satellites as in A4; 24 h fit, windows every 48 h from 2026-10-11, scored as section 1 (`baselines.mjs --source gnss-rapid,mgex-geo-rapid,mgex-igso-rapid`).
 COMSPOC GNSS sets (local scoring only): every XP set of a GNSS object, propagated through the black-box module and compared with the rapid orbit in GCRF,
 by day since the set's epoch, as `comspoc-precise.mjs` does for the other products; sets whose epoch the rapid days do not follow stay pending.
-TESS: the definitive ephemeris files for doy 194 to 260 of 2026 (the newest MAST holds), as an Earth-centred highly elliptical orbit scored by SGP4 and
+TESS: the definitive ephemeris files for doy 194 to 260 of 2026 (the newest MAST holds), as an Earth-centered highly elliptical orbit scored by SGP4 and
 SGP4-XP like THEMIS and Chandra (windows of A5: fit 24 h and 72 h, stride 48 h, held-out days 1 to 3).
 
 ### A8c - 2026-10-24, before the rapid orbits were converted: the Earth orientation of the last rapid days
@@ -336,21 +336,21 @@ MJD 61334 to 61336 are flagged observed (recorded in the seeded copy's provenanc
 (UT1-UTC 0.08 ms and polar motion 0.4 mas at three days), below the rapid orbit's own uncertainty and 3 orders below the XP errors scored. Rapid days
 2026-10-20 to 2026-10-22 are labeled "predicted EOP" wherever they are reported.
 
-### A9 - 2026-10-24, before the data of it were read: heliocentric packs, current SLR truth, the licence registry, the SDN-GP arms
+### A9 - 2026-10-24, before the data of it were read: heliocentric packs, current SLR truth, the license registry, the SDN-GP arms
 
 Coordinator, 2026-10-24: (1) JPL Horizons for Psyche, Lucy and Juno approved (public NASA/JPL ephemerides, paced, archive only, provenance rows):
 build the heliocentric packs from them; no type-1 SPK reader. (2) ILRS products approved from CDDIS with the existing Earthdata token (never
-printed or stored), for SLR truth after 2026-10-10: score COMSPOC's laser-ranged sets and our SLR rows. (3) the licence registry is merged by this
+printed or stored), for SLR truth after 2026-10-10: score COMSPOC's laser-ranged sets and our SLR rows. (3) the license registry is merged by this
 task after the coordinator extended its claim to data/licenses.json and docs/data-licenses.md. (4) the newer-SpaceX watcher keeps running and is stopped by its own PID when
 its pass is done. (5) the SDN-GP arms are added as side B delivers (`fit_sdngp`: kappa and tau now; term (d) next).
 
-Horizons, heliocentric (`fetch-horizons.mjs`, as A8): vector tables, Sun-centred (500@10), ICRF equatorial axes, TDB, 60 min, from the "data
+Horizons, heliocentric (`fetch-horizons.mjs`, as A8): vector tables, Sun-centered (500@10), ICRF equatorial axes, TDB, 60 min, from the "data
 through" parts of the object notes of 2026-10-24. psyche (-255): 2025-08-13 to 2026-07-12 (JPL navigation reconstructions; the Mars flyby of
 May 2026 and solar-electric thrust arcs are inside). lucy-rec (-49): 2024-12-20 to 2025-09-07 (fit through 2025-09-08: Donaldjohanson encounter, MEF-1 and
-TCM-16 inside); lucy-ref (-49): 2025-09-09 to 2027-03-01 (the flight project's reference trajectory, a planning prediction, labelled so: a
+TCM-16 inside); lucy-ref (-49): 2025-09-09 to 2027-03-01 (the flight project's reference trajectory, a planning prediction, labeled so: a
 long ballistic arc with MEF-2 on 2026-03-02). juno-cruise (-61): 2012-10-01 to 2013-09-30 (heliocentric cruise between the deep space maneuvers and the Earth
-flyby of 2013-10-09). juno-jupiter (-61): Jupiter-centred (500@599) 2024-09-01 to 2026-08-23 at 30 min (33 day orbits after the Io flybys; the reconstruction runs
-to 2026-08-24). Windows (PLAN A8 rules extended): heliocentric packs fit 30 d, held-out days 1 to 15, one window every 15 d; Jupiter-centred fit 66 d (two orbits),
+flyby of 2013-10-09). juno-jupiter (-61): Jupiter-centered (500@599) 2024-09-01 to 2026-08-23 at 30 min (33 day orbits after the Io flybys; the reconstruction runs
+to 2026-08-24). Windows (PLAN A8 rules extended): heliocentric packs fit 30 d, held-out days 1 to 15, one window every 15 d; Jupiter-centered fit 66 d (two orbits),
 held-out days 1 to 33, every 33 d. Packs are written like those of A8 (`horizons-packs.mjs`) and listed by `regime-windows.mjs`.
 
 ILRS from CDDIS (`fetch-slr.mjs`): the NSGF rapid orbits (slr/products/orbits/rapid/<sat>/<yyyy>/<yymmdd>/nsgf.orb.<sat>.<yymmdd>.v000.sp3.gz, daily, to 2026-10-24) of Ajisai,
@@ -387,7 +387,7 @@ build (`rows/sdngp/<prefix>/<source>.jsonl`, never merged across builds) with th
 Sources: the Starlink FFM truths (every fitted satellite, the window of the baselines), SpaceX's forecast (files in the local capture or unchanged on the server), ISS
 (both files), ESA final GNSS, GFZ MGEX GEO and IGSO (2025), GFZ rapid GNSS, ILRS (registered and current), HEO (THEMIS, Chandra, TESS, Artemis II), and the newer-file
 pass (SDN-GP fitted to the first 24 h of the FFM truth). The tables show the newest build that ran every source, and the Starlink FFM-truth row for every
-build run, so the effect of each new term of side B is visible. Lunar, cislunar and heliocentric packs stay awaiting: the module's theory is Earth-centred.
+build run, so the effect of each new term of side B is visible. Lunar, cislunar and heliocentric packs stay awaiting: the module's theory is Earth-centered.
 
 ### A9c - 2026-10-24, before any fit-length row of SDN-GP was read: arm 6 (A3) for SDN-GP
 
@@ -425,9 +425,9 @@ a window the truth cannot supply is not scored, and the table gives the count pe
 span. Groups: LEO spheres, LARES-2, GNSS MEO, IGSO and GEO. Runner `span-windows.mjs` (sources `span-slr` and `span-gnss`; SDN-GP rows per build as before); the headline table
 keeps the registered 24 h windows, and a new section of the README shows the spans.
 
-### A9f - 2026-10-24, before any row of build 7ea0ea272bbf was read: the fourth build, its default fit span, and the Moon-centred windows
+### A9f - 2026-10-24, before any row of build 7ea0ea272bbf was read: the fourth build, its default fit span, and the Moon-centered windows
 
-Coordinator, 2026-10-24: side B's build 7ea0ea272bbf (side B head b663c8c; wasm built 03:41 EDT, three uncommitted files in its tree when copied; Moon-centred SDN-GP with GRGM660PRIM to
+Coordinator, 2026-10-24: side B's build 7ea0ea272bbf (side B head b663c8c; wasm built 03:41 EDT, three uncommitted files in its tree when copied; Moon-centered SDN-GP with GRGM660PRIM to
 degree 100 and the DE440 lunar orientation, and a fit-span rule: the latest 48 h by default, extended to 72 and 120 h while the fit RMS holds) is run with the rules of A9b to A9e.
 
 Earth windows. (1) Every window of A9b to A9e runs again with the explicit 24 h interval (and the explicit spans of A9c and A9e); the rows are compared with build 9da7fad24c9d window by
@@ -438,10 +438,10 @@ through the three held-out days and only USEABLE_STOP_TIME declared, so the modu
 (FFM and SpaceX; the truth starts at the fit start), the lowering rows and the fit-length rows have no states before the fit start and are not repeated. The COMSPOC-aligned windows of
 A9e get a "default" row per group beside 24, 48, 72 and 120 h (fit end at the set's epoch, truth from 120 h before it).
 
-Moon-centred windows. Every window of the LRO pack (NAIF reconstruction, 87: 44 of 24 h and 43 of 72 h) and the Danuri pack (JPL Horizons, 61: 31 and 30) listed in A8 is fitted by
+Moon-centered windows. Every window of the LRO pack (NAIF reconstruction, 87: 44 of 24 h and 43 of 72 h) and the Danuri pack (JPL Horizons, 61: 31 and 30) listed in A8 is fitted by
 `fit_sdngp` as a $OEM block with CENTER_NAME MOON, the pack's axes declared (J2000 for LRO, ICRF for Danuri) with UTC, the fit span as the useable interval, the three days after it
 in the block (held out, scored by the module's own COMMENT as well), no environment and no prior. The set is propagated by `propagate` on a grid block (CENTER_NAME MOON, ICRF axes,
-explicit EPOCHs: every fifth pack epoch of the three held-out days) and scored by `score-pack.mjs` (gp-error-model `pair_statistics` in the pack's Moon-centred axes, radial / in-track / cross-track
+explicit EPOCHs: every fifth pack epoch of the three held-out days) and scored by `score-pack.mjs` (gp-error-model `pair_statistics` in the pack's Moon-centered axes, radial / in-track / cross-track
 by day). The LRO pack is in J2000 axes and the module answers in ICRF: the 23 mas between them is 0.2 m at 1,830 km and is not applied. Reported: fit RMS (the module's), the days 1 to 3
 medians and maxima by fit length, the five worst windows of each body by day-3 error with their start epochs, and the maneuver check below.
 
@@ -454,7 +454,7 @@ both are given). The list of epochs and delta-a is committed (derived from publi
 ### A9g - 2026-10-24, before any row of build ee5dccaa17a8 was read: the fifth build (lunar v2, the validated span rule)
 Side B head e241cef, module build ee5dccaa17a8 (copied to the store snapshot by `sdngp-run.mjs`), run by the coordinator after the lane stopped on the account's
 weekly limit. Same windows, scoring and arms as A9f. Earth windows: every job of `sdngp-run.mjs` (24 h registered fits and the module's default span, whose
-extension is now validated on a held-out tail of the latest 24 h). Moon-centred: every LRO and Danuri window of A9f through `lunar-windows.mjs`; the module now
+extension is now validated on a held-out tail of the latest 24 h). Moon-centered: every LRO and Danuri window of A9f through `lunar-windows.mjs`; the module now
 segments a fit span at a detected maneuver or refuses it by name (`maneuver-suspected`), so the report gives the medians for windows the module fitted without a
 segment, with a segment, and the count refused by name, beside A9f's maneuver list. Cislunar and heliocentric are not exposed by the module's methods in this build
 and are not scored.
@@ -493,6 +493,6 @@ passage; refused); the five worst windows of each pack by the last held-out day 
 arc 20.6 / 37.9 / 67.2, after it found its first scorer had dropped states with 1 ms jitter) are not an input to any choice; this scorer's numbers stand on their own and are compared with them afterward.
 
 4. Spelling. American spelling in all generated text (tables, README, inventory, commit messages); the repository's US-spelling checker is run in report mode over the claimed files and every hit that is not a
-proper name in a credit line (GFZ Helmholtz Centre, IERS Earth Orientation Centre) or a verbatim provider quotation in the registry is rewritten, in a commit of its own that changes spelling only.
+proper name in a credit line (GFZ Helmholtz Center, IERS Earth Orientation Center) or a verbatim provider quotation in the registry is rewritten, in a commit of its own that changes spelling only.
 
 5. Report: per regime, days 1 / 2 / 3 (cruise 1 / 3 / 7 / 15), against the rows of ee5dccaa17a8; E2E (`run.mjs --check`) with a segment-window replay added.
