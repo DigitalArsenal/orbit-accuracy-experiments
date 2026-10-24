@@ -396,3 +396,16 @@ is repeated for SDN-GP on the satellites of the registered `fitlength.jsonl`, on
 `rows/sdngp/<build>/fitlength.s<k>.jsonl`), and section 8 of the tables puts SDN-GP beside XP and SGP4. Reason: side B's fit E2E reports that tau_c and tau_s are
 not identified on a one-day arc, so what a longer arc buys is a design question the Starlink truth can answer. The rule of A9b for builds applies (a build's rows
 are never mixed with another's).
+
+### A9d - 2026-10-24, before any row of build 2d906c4d90fd was read: the second build, the lowering variants, declared frames
+
+Coordinator, 2026-10-24: side B's build 2d906c4d90fd (side B commit 4229929, clean tree; term (d), m-daily tesserals to degree 12 and the shallow resonance, the density-kernel
+fixes, declared-frame reading with refusal, grid propagate) runs every source of A9b and the fit-length rows of A9c with the rules of A9b, and three things are added.
+(1) The truth's frame is declared as it is, EME2000 for the ISS, NAIF, MAST and SpaceX states, which the build now reads; the earlier build was given GCRF for these, 23 mas
+apart (0.2 m at LEO, 3.5 m at HEO), under every number in the tables. (2) The 19 Starlinks whose FFM fit has B_eff above 0.5 m2/kg are fitted in two named variants besides the
+build's default: "rule" (DESIGN 2c.2: a B_eff above 0.5 m2/kg is replaced by tau0, held after the arc) and "free" (B_eff free). Each is set through the build's diagnostic export
+`sdngp_fit_diagnostic(limit x 1000, -1)` before the fit, so the result does not depend on the build's default. That export is in neither the manifest nor the README: its declaration
+and the comment above it in `src/fit_oem.inc` were read to call it (nothing of the fit's algorithm). Rows `rows/sdngp/<build>/lowering.s<k>.jsonl`; the tables show default, rule
+and free beside XP and SGP4 for the 19. (3) The module's own held-out RMS (the COMMENT of its set) is compared with the pair_statistics RMS over the same states, as a check on
+the scoring chain. When side B's next build changes the default of the rule (free B_eff), the run repeats on it and the lowering table is scored again. The newer-file pass uses the
+newest complete build, as A9b says.
