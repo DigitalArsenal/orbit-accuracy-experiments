@@ -450,3 +450,11 @@ osculating semi-major axis is averaged over one orbital period (N = round(T / 30
 previous one; |S| above median(|S|) + 6 x 1.4826 x MAD(|S|) marks a maneuver, clusters less than two periods apart merge, the epoch is the cluster's peak and the indicative delta-v is
 n |delta a| / 2 (n = 2 pi / T). A window contains a maneuver when an epoch falls between its start and the end of its third held-out day (inside the fit span or inside the held-out days:
 both are given). The list of epochs and delta-a is committed (derived from public truth; no states).
+
+### A9g - 2026-10-24, before any row of build ee5dccaa17a8 was read: the fifth build (lunar v2, the validated span rule)
+Side B head e241cef, module build ee5dccaa17a8 (copied to the store snapshot by `sdngp-run.mjs`), run by the coordinator after the lane stopped on the account's
+weekly limit. Same windows, scoring and arms as A9f. Earth windows: every job of `sdngp-run.mjs` (24 h registered fits and the module's default span, whose
+extension is now validated on a held-out tail of the latest 24 h). Moon-centred: every LRO and Danuri window of A9f through `lunar-windows.mjs`; the module now
+segments a fit span at a detected maneuver or refuses it by name (`maneuver-suspected`), so the report gives the medians for windows the module fitted without a
+segment, with a segment, and the count refused by name, beside A9f's maneuver list. Cislunar and heliocentric are not exposed by the module's methods in this build
+and are not scored.
