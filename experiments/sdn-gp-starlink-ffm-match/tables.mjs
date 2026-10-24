@@ -596,6 +596,19 @@ function findings(t) {
     const pl = (id) => ev.m24p.cases.find((x) => x.id === id), pp = (id) => ev.previous?.m24p?.cases.find((x) => x.id === id);
     out.push(`- Impulses planted in FFM-1 arcs at 24 h of 60 h (section 16b, amendment A11e; ${ev.m24p.arcs} arcs, build ${ev.build}): hits within 92 min of 48 arcs: radial 1 m/s ${pl('imp-U-1').hits}, cross-track 1 m/s ${pl('imp-W-1').hits}, in-track 0.1 / 1 / 10 m/s ${pl('imp-V-0.1').hits} / ${pl('imp-V-1').hits} / ${pl('imp-V-10').hits}; the control reports a burn in ${pl('ctl').detections} arcs.${ev.previous?.m24p ? ` Build ${ev.previous.build}: ${pp('imp-U-1').hits}, ${pp('imp-W-1').hits}, ${pp('imp-V-0.1').hits} / ${pp('imp-V-1').hits} / ${pp('imp-V-10').hits}; control ${pp('ctl').detections}.` : ''}`);
   }
+  if (ev?.m27?.length) { // amendments A14 and A14b, section 16b: the public GPS NANUs and QZSS NAQUs
+    const gps = ev.m27.find((x) => x.system === 'gps'), qz = ev.m27.find((x) => x.system === 'qzss');
+    const why = (g) => Object.entries(g.unscoreable).map(([k, v]) => `${v} ${k}`).join(', ');
+    const pct = (x) => (x < 0.001 ? 'under 0.1 %' : `${f(x * 100, 1)} %`);
+    const same = ev.history.filter((x) => x.m27 && JSON.stringify(x.m27) === JSON.stringify(ev.m27)).map((x) => x.build);
+    const parts = [];
+    if (gps) parts.push(`GPS (${gps.satellites} satellites, ESA final orbits): of ${gps.outagesInNotices} delta-V outages in the 2026 NANUs ${gps.scoreable} is scoreable (${why(gps)}); ${gps.hitForecast ? `it is detected${gps.offsetHours.median !== null ? `, ${f(gps.offsetHours.median, 1)} h after the start of the actual interval, delta-v ${f(gps.hitDvMS.median, 3)} m/s` : ''} (a window of that width without a notice holds a detection in ${pct(gps.offNotice.pooledForecast.tail)} of the placements, pooled over the GPS satellites)` : 'it is not detected'}; elsewhere the detector reports ${gps.falseAlarms} distinct burns over ${f(gps.objectYears, 1)} object-years (${f(gps.falseAlarms / gps.objectYears, 1)} per object-year, delta-v median ${f(gps.dvMS.median, 3)} m/s)`);
+    if (qz) {
+      const geo = qz.perSatellite.find((x) => /QZS-2G/.test(x.name));
+      parts.push(`QZSS (${qz.satellites} satellites, GFZ rapid orbits): of ${qz.outagesInNotices} outages ${qz.scoreable} are scoreable (${why(qz)}${qz.outagesWithoutOrbit ? `, ${qz.outagesWithoutOrbit} of a satellite without an orbit series` : ''}); ${qz.hitForecast} of ${qz.scoreable} have a detection inside the forecast window plus or minus 6 h and ${qz.hitActual} of ${qz.withActual} inside the actual interval, but the detector reports a burn every ${f(1 / qz.perObjectDay, 1)} days (${f(qz.falseAlarms / qz.objectYears, 0)} false alarms per object-year, delta-v median ${f(qz.dvMS.median * 1000, 1)} mm/s), so a window without a notice holds one almost as often: ${f(qz.offNotice.pooledForecast.expected, 1)} of ${qz.offNotice.pooledForecast.outages} outages are expected detected at the pooled off-notice rate (probability of ${qz.hitForecast} or more ${f(qz.offNotice.pooledForecast.tail, 2)})${geo ? `; the geostationary satellite ${geo.hits} of ${geo.scoreable} against ${f(geo.offNotice.forecast.expected, 1)} expected` : ''}`);
+    }
+    out.push(`- The detector against the public station-keeping notices (section 16b, amendments A14 and A14b; build ${ev.build}; BeiDou is not scored, its notices did not answer${same.length ? `; the tables of build ${same.join(' and ')} are identical` : ''}): ${parts.join('. ')}.`);
+  }
   if (ev?.m29?.C?.scored || ev?.m29?.T?.scored) {
     const m = ev.m29, pc = (x) => (x === null || x === undefined ? '' : `${Math.round(x * 100)} %`);
     const part = (n, g) => (g.scored ? `${n}: ${g.scored} of ${g.predictions} predictions answered on ${g.objects} objects, within 1 sigma ${pc(g.all.within1)}, within 2 sigma ${pc(g.all.within2)}, median |error| ${f(g.all.absMedian, 1)} h` : '');

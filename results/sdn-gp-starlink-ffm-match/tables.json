@@ -17798,6 +17798,1793 @@
         "hitVShare": 0.9966210705804844
       }
     ],
+    "m27": [
+      {
+        "system": "gps",
+        "name": "GPS",
+        "satellites": 34,
+        "windows": 8371,
+        "answered": 7923,
+        "skipped": 448,
+        "refused": {},
+        "windowsWithDetection": 41,
+        "outagesInNotices": 24,
+        "outagesWithoutOrbit": 0,
+        "scoreable": 1,
+        "hitForecast": 1,
+        "withActual": 1,
+        "hitActual": 1,
+        "offsetHours": {
+          "median": 2.0490466666666665,
+          "p10": 2.0490466666666665,
+          "p90": 2.0490466666666665
+        },
+        "forecastHours": 12,
+        "actualHours": 4.416666666666667,
+        "objectYears": 22.171115674195754,
+        "distinctDetections": 39,
+        "falseAlarms": 38,
+        "falseAlarmsInOtherOutage": 0,
+        "falseAlarmsNearBoundary": 1,
+        "chanceHit": 0.0007769607843137254,
+        "dvMS": {
+          "n": 39,
+          "min": 0.0032277108913420253,
+          "median": 0.004535678471790732,
+          "p90": 0.006367958904633054,
+          "max": 0.16205430832555182
+        },
+        "offNotice": {
+          "forecast": {
+            "outages": 1,
+            "undefinedRate": 0,
+            "expected": 0,
+            "observed": 1,
+            "tail": 0,
+            "placementsMedian": 6048,
+            "rateMedian": 0
+          },
+          "actual": {
+            "outages": 1,
+            "undefinedRate": 0,
+            "expected": 0,
+            "observed": 1,
+            "tail": 0,
+            "placementsMedian": 6072,
+            "rateMedian": 0
+          },
+          "pooledForecast": {
+            "outages": 1,
+            "expected": 0.004558938329430133,
+            "observed": 1,
+            "tail": 0.004558938329430133,
+            "placementsMedian": 192150,
+            "rateMedian": 0.004558938329430133
+          },
+          "pooledActual": {
+            "outages": 1,
+            "expected": 0.003116718784842686,
+            "observed": 1,
+            "tail": 0.003116718784842686,
+            "placementsMedian": 192831,
+            "rateMedian": 0.003116718784842686
+          }
+        },
+        "unscoreable": {
+          "a day without states of the satellite": 16,
+          "after the last day of the product": 5,
+          "no states": 2
+        },
+        "perObjectDay": 0.004816003951592987,
+        "hitDvMS": {
+          "n": 1,
+          "min": 0.16205430832555182,
+          "median": 0.16205430832555182,
+          "p90": 0.16205430832555182,
+          "max": 0.16205430832555182
+        },
+        "perSatellite": [
+          {
+            "norad": 24876,
+            "name": "G043 GPS-IIR-A",
+            "svn": 43,
+            "windows": 111,
+            "answered": 111,
+            "skipped": 0,
+            "refused": 0,
+            "withDetection": 5,
+            "years": 0.30937713894592744,
+            "distinct": 5,
+            "falseAlarms": 5,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0.04424778761061947,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 26360,
+            "name": "G051 GPS-IIR-A",
+            "svn": 51,
+            "windows": 5,
+            "answered": 5,
+            "skipped": 0,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.019164955509924708,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 26407,
+            "name": "G044 GPS-IIR-A",
+            "svn": 44,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0006527777777777777,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 27663,
+            "name": "G056 GPS-IIR-A",
+            "svn": 56,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 28190,
+            "name": "G059 GPS-IIR-B",
+            "svn": 59,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.001428921568627451,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 28474,
+            "name": "G061 GPS-IIR-B",
+            "svn": 61,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0011838235294117647,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 28874,
+            "name": "G053 GPS-IIR-M",
+            "svn": 53,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 29486,
+            "name": "G052 GPS-IIR-M",
+            "svn": 52,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0011429738562091503,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 29601,
+            "name": "G058 GPS-IIR-M",
+            "svn": 58,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 2,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1,
+              "after the last day of the product": 1
+            },
+            "chance": 0.0007769607843137254,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 32260,
+            "name": "G055 GPS-IIR-M",
+            "svn": 55,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "after the last day of the product": 1
+            },
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 32384,
+            "name": "G057 GPS-IIR-M",
+            "svn": 57,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 32711,
+            "name": "G048 GPS-IIR-M",
+            "svn": 48,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0007753267973856209,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 35752,
+            "name": "G050 GPS-IIR-M",
+            "svn": 50,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "no states": 1
+            },
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 36585,
+            "name": "G062 GPS-IIF",
+            "svn": 62,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 3,
+            "years": 0.6981519507186859,
+            "distinct": 3,
+            "falseAlarms": 3,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "after the last day of the product": 1
+            },
+            "chance": 0,
+            "perObjectDay": 0.011764705882352941,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 38833,
+            "name": "G065 GPS-IIF",
+            "svn": 65,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 2,
+            "years": 0.7008898015058179,
+            "distinct": 2,
+            "falseAlarms": 2,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 1,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "no states": 1
+            },
+            "chance": 0.00272705078125,
+            "perObjectDay": 0.0078125,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 39166,
+            "name": "G066 GPS-IIF",
+            "svn": 66,
+            "windows": 264,
+            "answered": 250,
+            "skipped": 14,
+            "refused": 0,
+            "withDetection": 13,
+            "years": 0.7008898015058179,
+            "distinct": 13,
+            "falseAlarms": 13,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0.05078125,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 39533,
+            "name": "G064 GPS-IIF",
+            "svn": 64,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 39741,
+            "name": "G067 GPS-IIF",
+            "svn": 67,
+            "windows": 264,
+            "answered": 250,
+            "skipped": 14,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6954140999315537,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 40105,
+            "name": "G068 GPS-IIF",
+            "svn": 68,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0010220588235294117,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 40294,
+            "name": "G069 GPS-IIF",
+            "svn": 69,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.001959967320261438,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 40534,
+            "name": "G071 GPS-IIF",
+            "svn": 71,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0008842592592592592,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 40730,
+            "name": "G072 GPS-IIF",
+            "svn": 72,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "after the last day of the product": 1
+            },
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 41019,
+            "name": "G073 GPS-IIF",
+            "svn": 73,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 41328,
+            "name": "G070 GPS-IIF",
+            "svn": 70,
+            "windows": 264,
+            "answered": 250,
+            "skipped": 14,
+            "refused": 0,
+            "withDetection": 3,
+            "years": 0.7008898015058179,
+            "distinct": 1,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 1,
+            "unscoreable": {},
+            "chance": 0.00390625,
+            "perObjectDay": 0.00390625,
+            "hits": 1,
+            "offNotice": {
+              "forecast": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 1,
+                "tail": 0,
+                "placementsMedian": 6048,
+                "rateMedian": 0
+              },
+              "actual": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 1,
+                "tail": 0,
+                "placementsMedian": 6072,
+                "rateMedian": 0
+              }
+            }
+          },
+          {
+            "norad": 43873,
+            "name": "G074 GPS-IIIA",
+            "svn": 74,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 44506,
+            "name": "G075 GPS-IIIA",
+            "svn": 75,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "after the last day of the product": 1
+            },
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 45854,
+            "name": "G076 GPS-IIIA",
+            "svn": 76,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0005302287581699346,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 46826,
+            "name": "G077 GPS-IIIA",
+            "svn": 77,
+            "windows": 264,
+            "answered": 252,
+            "skipped": 12,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.7008898015058179,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 0,
+            "scoreable": 0,
+            "unscoreable": {},
+            "chance": 0,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 48859,
+            "name": "G078 GPS-IIIA",
+            "svn": 78,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.000041666666666666665,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 55268,
+            "name": "G079 GPS-IIIA",
+            "svn": 79,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.00147140522875817,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 62339,
+            "name": "G080 GPS-IIIA",
+            "svn": 80,
+            "windows": 264,
+            "answered": 246,
+            "skipped": 18,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6954140999315537,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0004913057742782153,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 64202,
+            "name": "G081 GPS-IIIA",
+            "svn": 81,
+            "windows": 264,
+            "answered": 249,
+            "skipped": 15,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.6981519507186859,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0015939542483660132,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 67588,
+            "name": "G082 GPS-IIIA",
+            "svn": 82,
+            "windows": 213,
+            "answered": 197,
+            "skipped": 16,
+            "refused": 0,
+            "withDetection": 15,
+            "years": 0.5585215605749486,
+            "distinct": 15,
+            "falseAlarms": 15,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.0007649101307189543,
+            "perObjectDay": 0.0735294117647059,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 68791,
+            "name": "G083 GPS-IIIA",
+            "svn": 83,
+            "windows": 122,
+            "answered": 104,
+            "skipped": 18,
+            "refused": 0,
+            "withDetection": 0,
+            "years": 0.3066392881587953,
+            "distinct": 0,
+            "falseAlarms": 0,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 1,
+            "scoreable": 0,
+            "unscoreable": {
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.00474516369047619,
+            "perObjectDay": 0,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          }
+        ]
+      },
+      {
+        "system": "qzss",
+        "name": "QZSS",
+        "satellites": 4,
+        "windows": 1072,
+        "answered": 989,
+        "skipped": 83,
+        "refused": {},
+        "windowsWithDetection": 789,
+        "outagesInNotices": 33,
+        "outagesWithoutOrbit": 14,
+        "scoreable": 13,
+        "hitForecast": 13,
+        "withActual": 13,
+        "hitActual": 11,
+        "offsetHours": {
+          "median": 28.606385555555555,
+          "p10": 20.787986666666665,
+          "p90": 38.99724611111111
+        },
+        "forecastHours": 96,
+        "actualHours": 23.366666666666667,
+        "objectYears": 2.86652977412731,
+        "distinctDetections": 773,
+        "falseAlarms": 725,
+        "falseAlarmsInOtherOutage": 11,
+        "falseAlarmsNearBoundary": 65,
+        "chanceHit": 0.017156663553051343,
+        "dvMS": {
+          "n": 773,
+          "min": 0.0006907051380210954,
+          "median": 0.0024713338163329505,
+          "p90": 0.003767353886229889,
+          "max": 0.011125232189475956
+        },
+        "offNotice": {
+          "forecast": {
+            "outages": 13,
+            "undefinedRate": 0,
+            "expected": 12.823743897971847,
+            "observed": 13,
+            "tail": 0.8285488947199234,
+            "placementsMedian": 3513,
+            "rateMedian": 1
+          },
+          "actual": {
+            "outages": 13,
+            "undefinedRate": 0,
+            "expected": 11.962027927703364,
+            "observed": 11,
+            "tail": 0.9260119334063897,
+            "placementsMedian": 4593,
+            "rateMedian": 0.9116046157195733
+          },
+          "pooledForecast": {
+            "outages": 13,
+            "expected": 11.895755005802021,
+            "observed": 13,
+            "tail": 0.31503566832738994,
+            "placementsMedian": 20617,
+            "rateMedian": 0.920065964980356
+          },
+          "pooledActual": {
+            "outages": 13,
+            "expected": 10.359095772422696,
+            "observed": 11,
+            "tail": 0.489678016805436,
+            "placementsMedian": 22616,
+            "rateMedian": 0.7805535903784931
+          }
+        },
+        "unscoreable": {
+          "after the last day of the product": 3,
+          "a day without states of the satellite": 2,
+          "no states": 1
+        },
+        "perObjectDay": 0.7382999044890163,
+        "hitDvMS": {
+          "n": 13,
+          "min": 0.0007781037621019699,
+          "median": 0.002460592983443729,
+          "p90": 0.0041212914217168255,
+          "max": 0.008586892147207318
+        },
+        "perSatellite": [
+          {
+            "norad": 42738,
+            "name": "J002 QZS-2I",
+            "svn": 2,
+            "windows": 268,
+            "answered": 257,
+            "skipped": 11,
+            "refused": 0,
+            "withDetection": 146,
+            "years": 0.7255304585900069,
+            "distinct": 146,
+            "falseAlarms": 145,
+            "falseAlarmsInOtherOutage": 1,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 2,
+            "scoreable": 0,
+            "unscoreable": {
+              "after the last day of the product": 1,
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.007702568134171908,
+            "perObjectDay": 0.5509433962264151,
+            "hits": 0,
+            "offNotice": {
+              "forecast": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              },
+              "actual": {
+                "outages": 0,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 0,
+                "tail": null,
+                "placementsMedian": null,
+                "rateMedian": null
+              }
+            }
+          },
+          {
+            "norad": 42917,
+            "name": "J003 QZS-2G",
+            "svn": 3,
+            "windows": 268,
+            "answered": 235,
+            "skipped": 33,
+            "refused": 0,
+            "withDetection": 235,
+            "years": 0.7255304585900069,
+            "distinct": 224,
+            "falseAlarms": 182,
+            "falseAlarmsInOtherOutage": 3,
+            "falseAlarmsNearBoundary": 0,
+            "outages": 14,
+            "scoreable": 11,
+            "unscoreable": {
+              "after the last day of the product": 2,
+              "a day without states of the satellite": 1
+            },
+            "chance": 0.2,
+            "perObjectDay": 0.8452830188679246,
+            "hits": 11,
+            "offNotice": {
+              "forecast": {
+                "outages": 11,
+                "undefinedRate": 0,
+                "expected": 11,
+                "observed": 11,
+                "tail": 1,
+                "placementsMedian": 3513,
+                "rateMedian": 1
+              },
+              "actual": {
+                "outages": 11,
+                "undefinedRate": 0,
+                "expected": 10.317709706724962,
+                "observed": 10,
+                "tail": 0.8554618946322816,
+                "placementsMedian": 4503,
+                "rateMedian": 0.9298245614035088
+              }
+            }
+          },
+          {
+            "norad": 42965,
+            "name": "J004 QZS-2I",
+            "svn": 4,
+            "windows": 268,
+            "answered": 260,
+            "skipped": 8,
+            "refused": 0,
+            "withDetection": 190,
+            "years": 0.7337440109514032,
+            "distinct": 189,
+            "falseAlarms": 187,
+            "falseAlarmsInOtherOutage": 3,
+            "falseAlarmsNearBoundary": 30,
+            "outages": 1,
+            "scoreable": 1,
+            "unscoreable": {},
+            "chance": 0.013059701492537313,
+            "perObjectDay": 0.7052238805970149,
+            "hits": 1,
+            "offNotice": {
+              "forecast": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0.8574517631403858,
+                "observed": 1,
+                "tail": 0.8574517631403858,
+                "placementsMedian": 6012,
+                "rateMedian": 0.8574517631403858
+              },
+              "actual": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0.741784793814433,
+                "observed": 0,
+                "tail": 1,
+                "placementsMedian": 6208,
+                "rateMedian": 0.741784793814433
+              }
+            }
+          },
+          {
+            "norad": 49336,
+            "name": "J005 QZS-2A",
+            "svn": 5,
+            "windows": 268,
+            "answered": 237,
+            "skipped": 31,
+            "refused": 0,
+            "withDetection": 218,
+            "years": 0.6817248459958932,
+            "distinct": 214,
+            "falseAlarms": 211,
+            "falseAlarmsInOtherOutage": 4,
+            "falseAlarmsNearBoundary": 35,
+            "outages": 2,
+            "scoreable": 1,
+            "unscoreable": {
+              "no states": 1
+            },
+            "chance": 0.021253625613565374,
+            "perObjectDay": 0.8594377510040161,
+            "hits": 1,
+            "offNotice": {
+              "forecast": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0.9662921348314607,
+                "observed": 1,
+                "tail": 0.9662921348314607,
+                "placementsMedian": 5429,
+                "rateMedian": 0.9662921348314607
+              },
+              "actual": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0.902533427163969,
+                "observed": 1,
+                "tail": 0.902533427163969,
+                "placementsMedian": 5684,
+                "rateMedian": 0.902533427163969
+              }
+            }
+          }
+        ]
+      }
+    ],
     "m25": [
       {
         "pack": "lro-lunar",
@@ -28910,6 +30697,1793 @@
           "hitVShare": 0.996613973235632
         }
       ],
+      "m27": [
+        {
+          "system": "gps",
+          "name": "GPS",
+          "satellites": 34,
+          "windows": 8371,
+          "answered": 7923,
+          "skipped": 448,
+          "refused": {},
+          "windowsWithDetection": 41,
+          "outagesInNotices": 24,
+          "outagesWithoutOrbit": 0,
+          "scoreable": 1,
+          "hitForecast": 1,
+          "withActual": 1,
+          "hitActual": 1,
+          "offsetHours": {
+            "median": 2.0490466666666665,
+            "p10": 2.0490466666666665,
+            "p90": 2.0490466666666665
+          },
+          "forecastHours": 12,
+          "actualHours": 4.416666666666667,
+          "objectYears": 22.171115674195754,
+          "distinctDetections": 39,
+          "falseAlarms": 38,
+          "falseAlarmsInOtherOutage": 0,
+          "falseAlarmsNearBoundary": 1,
+          "chanceHit": 0.0007769607843137254,
+          "dvMS": {
+            "n": 39,
+            "min": 0.0032277108913420253,
+            "median": 0.004535678471790732,
+            "p90": 0.006367958904633054,
+            "max": 0.16205430832555182
+          },
+          "offNotice": {
+            "forecast": {
+              "outages": 1,
+              "undefinedRate": 0,
+              "expected": 0,
+              "observed": 1,
+              "tail": 0,
+              "placementsMedian": 6048,
+              "rateMedian": 0
+            },
+            "actual": {
+              "outages": 1,
+              "undefinedRate": 0,
+              "expected": 0,
+              "observed": 1,
+              "tail": 0,
+              "placementsMedian": 6072,
+              "rateMedian": 0
+            },
+            "pooledForecast": {
+              "outages": 1,
+              "expected": 0.004558938329430133,
+              "observed": 1,
+              "tail": 0.004558938329430133,
+              "placementsMedian": 192150,
+              "rateMedian": 0.004558938329430133
+            },
+            "pooledActual": {
+              "outages": 1,
+              "expected": 0.003116718784842686,
+              "observed": 1,
+              "tail": 0.003116718784842686,
+              "placementsMedian": 192831,
+              "rateMedian": 0.003116718784842686
+            }
+          },
+          "unscoreable": {
+            "a day without states of the satellite": 16,
+            "after the last day of the product": 5,
+            "no states": 2
+          },
+          "perObjectDay": 0.004816003951592987,
+          "hitDvMS": {
+            "n": 1,
+            "min": 0.16205430832555182,
+            "median": 0.16205430832555182,
+            "p90": 0.16205430832555182,
+            "max": 0.16205430832555182
+          },
+          "perSatellite": [
+            {
+              "norad": 24876,
+              "name": "G043 GPS-IIR-A",
+              "svn": 43,
+              "windows": 111,
+              "answered": 111,
+              "skipped": 0,
+              "refused": 0,
+              "withDetection": 5,
+              "years": 0.30937713894592744,
+              "distinct": 5,
+              "falseAlarms": 5,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0.04424778761061947,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 26360,
+              "name": "G051 GPS-IIR-A",
+              "svn": 51,
+              "windows": 5,
+              "answered": 5,
+              "skipped": 0,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.019164955509924708,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 26407,
+              "name": "G044 GPS-IIR-A",
+              "svn": 44,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0006527777777777777,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 27663,
+              "name": "G056 GPS-IIR-A",
+              "svn": 56,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 28190,
+              "name": "G059 GPS-IIR-B",
+              "svn": 59,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.001428921568627451,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 28474,
+              "name": "G061 GPS-IIR-B",
+              "svn": 61,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0011838235294117647,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 28874,
+              "name": "G053 GPS-IIR-M",
+              "svn": 53,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 29486,
+              "name": "G052 GPS-IIR-M",
+              "svn": 52,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0011429738562091503,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 29601,
+              "name": "G058 GPS-IIR-M",
+              "svn": 58,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 2,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1,
+                "after the last day of the product": 1
+              },
+              "chance": 0.0007769607843137254,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 32260,
+              "name": "G055 GPS-IIR-M",
+              "svn": 55,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "after the last day of the product": 1
+              },
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 32384,
+              "name": "G057 GPS-IIR-M",
+              "svn": 57,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 32711,
+              "name": "G048 GPS-IIR-M",
+              "svn": 48,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0007753267973856209,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 35752,
+              "name": "G050 GPS-IIR-M",
+              "svn": 50,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "no states": 1
+              },
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 36585,
+              "name": "G062 GPS-IIF",
+              "svn": 62,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 3,
+              "years": 0.6981519507186859,
+              "distinct": 3,
+              "falseAlarms": 3,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "after the last day of the product": 1
+              },
+              "chance": 0,
+              "perObjectDay": 0.011764705882352941,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 38833,
+              "name": "G065 GPS-IIF",
+              "svn": 65,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 2,
+              "years": 0.7008898015058179,
+              "distinct": 2,
+              "falseAlarms": 2,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 1,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "no states": 1
+              },
+              "chance": 0.00272705078125,
+              "perObjectDay": 0.0078125,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 39166,
+              "name": "G066 GPS-IIF",
+              "svn": 66,
+              "windows": 264,
+              "answered": 250,
+              "skipped": 14,
+              "refused": 0,
+              "withDetection": 13,
+              "years": 0.7008898015058179,
+              "distinct": 13,
+              "falseAlarms": 13,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0.05078125,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 39533,
+              "name": "G064 GPS-IIF",
+              "svn": 64,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 39741,
+              "name": "G067 GPS-IIF",
+              "svn": 67,
+              "windows": 264,
+              "answered": 250,
+              "skipped": 14,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6954140999315537,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 40105,
+              "name": "G068 GPS-IIF",
+              "svn": 68,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0010220588235294117,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 40294,
+              "name": "G069 GPS-IIF",
+              "svn": 69,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.001959967320261438,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 40534,
+              "name": "G071 GPS-IIF",
+              "svn": 71,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0008842592592592592,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 40730,
+              "name": "G072 GPS-IIF",
+              "svn": 72,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "after the last day of the product": 1
+              },
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 41019,
+              "name": "G073 GPS-IIF",
+              "svn": 73,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 41328,
+              "name": "G070 GPS-IIF",
+              "svn": 70,
+              "windows": 264,
+              "answered": 250,
+              "skipped": 14,
+              "refused": 0,
+              "withDetection": 3,
+              "years": 0.7008898015058179,
+              "distinct": 1,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 1,
+              "unscoreable": {},
+              "chance": 0.00390625,
+              "perObjectDay": 0.00390625,
+              "hits": 1,
+              "offNotice": {
+                "forecast": {
+                  "outages": 1,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 1,
+                  "tail": 0,
+                  "placementsMedian": 6048,
+                  "rateMedian": 0
+                },
+                "actual": {
+                  "outages": 1,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 1,
+                  "tail": 0,
+                  "placementsMedian": 6072,
+                  "rateMedian": 0
+                }
+              }
+            },
+            {
+              "norad": 43873,
+              "name": "G074 GPS-IIIA",
+              "svn": 74,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 44506,
+              "name": "G075 GPS-IIIA",
+              "svn": 75,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "after the last day of the product": 1
+              },
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 45854,
+              "name": "G076 GPS-IIIA",
+              "svn": 76,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0005302287581699346,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 46826,
+              "name": "G077 GPS-IIIA",
+              "svn": 77,
+              "windows": 264,
+              "answered": 252,
+              "skipped": 12,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.7008898015058179,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 0,
+              "scoreable": 0,
+              "unscoreable": {},
+              "chance": 0,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 48859,
+              "name": "G078 GPS-IIIA",
+              "svn": 78,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.000041666666666666665,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 55268,
+              "name": "G079 GPS-IIIA",
+              "svn": 79,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.00147140522875817,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 62339,
+              "name": "G080 GPS-IIIA",
+              "svn": 80,
+              "windows": 264,
+              "answered": 246,
+              "skipped": 18,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6954140999315537,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0004913057742782153,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 64202,
+              "name": "G081 GPS-IIIA",
+              "svn": 81,
+              "windows": 264,
+              "answered": 249,
+              "skipped": 15,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.6981519507186859,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0015939542483660132,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 67588,
+              "name": "G082 GPS-IIIA",
+              "svn": 82,
+              "windows": 213,
+              "answered": 197,
+              "skipped": 16,
+              "refused": 0,
+              "withDetection": 15,
+              "years": 0.5585215605749486,
+              "distinct": 15,
+              "falseAlarms": 15,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.0007649101307189543,
+              "perObjectDay": 0.0735294117647059,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 68791,
+              "name": "G083 GPS-IIIA",
+              "svn": 83,
+              "windows": 122,
+              "answered": 104,
+              "skipped": 18,
+              "refused": 0,
+              "withDetection": 0,
+              "years": 0.3066392881587953,
+              "distinct": 0,
+              "falseAlarms": 0,
+              "falseAlarmsInOtherOutage": 0,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 1,
+              "scoreable": 0,
+              "unscoreable": {
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.00474516369047619,
+              "perObjectDay": 0,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            }
+          ]
+        },
+        {
+          "system": "qzss",
+          "name": "QZSS",
+          "satellites": 4,
+          "windows": 1072,
+          "answered": 989,
+          "skipped": 83,
+          "refused": {},
+          "windowsWithDetection": 789,
+          "outagesInNotices": 33,
+          "outagesWithoutOrbit": 14,
+          "scoreable": 13,
+          "hitForecast": 13,
+          "withActual": 13,
+          "hitActual": 11,
+          "offsetHours": {
+            "median": 28.606385555555555,
+            "p10": 20.787986666666665,
+            "p90": 38.99724611111111
+          },
+          "forecastHours": 96,
+          "actualHours": 23.366666666666667,
+          "objectYears": 2.86652977412731,
+          "distinctDetections": 773,
+          "falseAlarms": 725,
+          "falseAlarmsInOtherOutage": 11,
+          "falseAlarmsNearBoundary": 65,
+          "chanceHit": 0.017156663553051343,
+          "dvMS": {
+            "n": 773,
+            "min": 0.0006907051380210954,
+            "median": 0.0024713338163329505,
+            "p90": 0.003767353886229889,
+            "max": 0.011125232189475956
+          },
+          "offNotice": {
+            "forecast": {
+              "outages": 13,
+              "undefinedRate": 0,
+              "expected": 12.823743897971847,
+              "observed": 13,
+              "tail": 0.8285488947199234,
+              "placementsMedian": 3513,
+              "rateMedian": 1
+            },
+            "actual": {
+              "outages": 13,
+              "undefinedRate": 0,
+              "expected": 11.962027927703364,
+              "observed": 11,
+              "tail": 0.9260119334063897,
+              "placementsMedian": 4593,
+              "rateMedian": 0.9116046157195733
+            },
+            "pooledForecast": {
+              "outages": 13,
+              "expected": 11.895755005802021,
+              "observed": 13,
+              "tail": 0.31503566832738994,
+              "placementsMedian": 20617,
+              "rateMedian": 0.920065964980356
+            },
+            "pooledActual": {
+              "outages": 13,
+              "expected": 10.359095772422696,
+              "observed": 11,
+              "tail": 0.489678016805436,
+              "placementsMedian": 22616,
+              "rateMedian": 0.7805535903784931
+            }
+          },
+          "unscoreable": {
+            "after the last day of the product": 3,
+            "a day without states of the satellite": 2,
+            "no states": 1
+          },
+          "perObjectDay": 0.7382999044890163,
+          "hitDvMS": {
+            "n": 13,
+            "min": 0.0007781037621019699,
+            "median": 0.002460592983443729,
+            "p90": 0.0041212914217168255,
+            "max": 0.008586892147207318
+          },
+          "perSatellite": [
+            {
+              "norad": 42738,
+              "name": "J002 QZS-2I",
+              "svn": 2,
+              "windows": 268,
+              "answered": 257,
+              "skipped": 11,
+              "refused": 0,
+              "withDetection": 146,
+              "years": 0.7255304585900069,
+              "distinct": 146,
+              "falseAlarms": 145,
+              "falseAlarmsInOtherOutage": 1,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 2,
+              "scoreable": 0,
+              "unscoreable": {
+                "after the last day of the product": 1,
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.007702568134171908,
+              "perObjectDay": 0.5509433962264151,
+              "hits": 0,
+              "offNotice": {
+                "forecast": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                },
+                "actual": {
+                  "outages": 0,
+                  "undefinedRate": 0,
+                  "expected": 0,
+                  "observed": 0,
+                  "tail": null,
+                  "placementsMedian": null,
+                  "rateMedian": null
+                }
+              }
+            },
+            {
+              "norad": 42917,
+              "name": "J003 QZS-2G",
+              "svn": 3,
+              "windows": 268,
+              "answered": 235,
+              "skipped": 33,
+              "refused": 0,
+              "withDetection": 235,
+              "years": 0.7255304585900069,
+              "distinct": 224,
+              "falseAlarms": 182,
+              "falseAlarmsInOtherOutage": 3,
+              "falseAlarmsNearBoundary": 0,
+              "outages": 14,
+              "scoreable": 11,
+              "unscoreable": {
+                "after the last day of the product": 2,
+                "a day without states of the satellite": 1
+              },
+              "chance": 0.2,
+              "perObjectDay": 0.8452830188679246,
+              "hits": 11,
+              "offNotice": {
+                "forecast": {
+                  "outages": 11,
+                  "undefinedRate": 0,
+                  "expected": 11,
+                  "observed": 11,
+                  "tail": 1,
+                  "placementsMedian": 3513,
+                  "rateMedian": 1
+                },
+                "actual": {
+                  "outages": 11,
+                  "undefinedRate": 0,
+                  "expected": 10.317709706724962,
+                  "observed": 10,
+                  "tail": 0.8554618946322816,
+                  "placementsMedian": 4503,
+                  "rateMedian": 0.9298245614035088
+                }
+              }
+            },
+            {
+              "norad": 42965,
+              "name": "J004 QZS-2I",
+              "svn": 4,
+              "windows": 268,
+              "answered": 260,
+              "skipped": 8,
+              "refused": 0,
+              "withDetection": 190,
+              "years": 0.7337440109514032,
+              "distinct": 189,
+              "falseAlarms": 187,
+              "falseAlarmsInOtherOutage": 3,
+              "falseAlarmsNearBoundary": 30,
+              "outages": 1,
+              "scoreable": 1,
+              "unscoreable": {},
+              "chance": 0.013059701492537313,
+              "perObjectDay": 0.7052238805970149,
+              "hits": 1,
+              "offNotice": {
+                "forecast": {
+                  "outages": 1,
+                  "undefinedRate": 0,
+                  "expected": 0.8574517631403858,
+                  "observed": 1,
+                  "tail": 0.8574517631403858,
+                  "placementsMedian": 6012,
+                  "rateMedian": 0.8574517631403858
+                },
+                "actual": {
+                  "outages": 1,
+                  "undefinedRate": 0,
+                  "expected": 0.741784793814433,
+                  "observed": 0,
+                  "tail": 1,
+                  "placementsMedian": 6208,
+                  "rateMedian": 0.741784793814433
+                }
+              }
+            },
+            {
+              "norad": 49336,
+              "name": "J005 QZS-2A",
+              "svn": 5,
+              "windows": 268,
+              "answered": 237,
+              "skipped": 31,
+              "refused": 0,
+              "withDetection": 218,
+              "years": 0.6817248459958932,
+              "distinct": 214,
+              "falseAlarms": 211,
+              "falseAlarmsInOtherOutage": 4,
+              "falseAlarmsNearBoundary": 35,
+              "outages": 2,
+              "scoreable": 1,
+              "unscoreable": {
+                "no states": 1
+              },
+              "chance": 0.021253625613565374,
+              "perObjectDay": 0.8594377510040161,
+              "hits": 1,
+              "offNotice": {
+                "forecast": {
+                  "outages": 1,
+                  "undefinedRate": 0,
+                  "expected": 0.9662921348314607,
+                  "observed": 1,
+                  "tail": 0.9662921348314607,
+                  "placementsMedian": 5429,
+                  "rateMedian": 0.9662921348314607
+                },
+                "actual": {
+                  "outages": 1,
+                  "undefinedRate": 0,
+                  "expected": 0.902533427163969,
+                  "observed": 1,
+                  "tail": 0.902533427163969,
+                  "placementsMedian": 5684,
+                  "rateMedian": 0.902533427163969
+                }
+              }
+            }
+          ]
+        }
+      ],
       "m25": [
         {
           "pack": "lro-lunar",
@@ -40004,6 +43578,7 @@
             "hitVShare": 0.9885206829372081
           }
         ],
+        "m27": null,
         "m25": [
           {
             "pack": "lro-lunar",
@@ -50103,6 +53678,1793 @@
             "hitVShare": 0.996613973235632
           }
         ],
+        "m27": [
+          {
+            "system": "gps",
+            "name": "GPS",
+            "satellites": 34,
+            "windows": 8371,
+            "answered": 7923,
+            "skipped": 448,
+            "refused": {},
+            "windowsWithDetection": 41,
+            "outagesInNotices": 24,
+            "outagesWithoutOrbit": 0,
+            "scoreable": 1,
+            "hitForecast": 1,
+            "withActual": 1,
+            "hitActual": 1,
+            "offsetHours": {
+              "median": 2.0490466666666665,
+              "p10": 2.0490466666666665,
+              "p90": 2.0490466666666665
+            },
+            "forecastHours": 12,
+            "actualHours": 4.416666666666667,
+            "objectYears": 22.171115674195754,
+            "distinctDetections": 39,
+            "falseAlarms": 38,
+            "falseAlarmsInOtherOutage": 0,
+            "falseAlarmsNearBoundary": 1,
+            "chanceHit": 0.0007769607843137254,
+            "dvMS": {
+              "n": 39,
+              "min": 0.0032277108913420253,
+              "median": 0.004535678471790732,
+              "p90": 0.006367958904633054,
+              "max": 0.16205430832555182
+            },
+            "offNotice": {
+              "forecast": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 1,
+                "tail": 0,
+                "placementsMedian": 6048,
+                "rateMedian": 0
+              },
+              "actual": {
+                "outages": 1,
+                "undefinedRate": 0,
+                "expected": 0,
+                "observed": 1,
+                "tail": 0,
+                "placementsMedian": 6072,
+                "rateMedian": 0
+              },
+              "pooledForecast": {
+                "outages": 1,
+                "expected": 0.004558938329430133,
+                "observed": 1,
+                "tail": 0.004558938329430133,
+                "placementsMedian": 192150,
+                "rateMedian": 0.004558938329430133
+              },
+              "pooledActual": {
+                "outages": 1,
+                "expected": 0.003116718784842686,
+                "observed": 1,
+                "tail": 0.003116718784842686,
+                "placementsMedian": 192831,
+                "rateMedian": 0.003116718784842686
+              }
+            },
+            "unscoreable": {
+              "a day without states of the satellite": 16,
+              "after the last day of the product": 5,
+              "no states": 2
+            },
+            "perObjectDay": 0.004816003951592987,
+            "hitDvMS": {
+              "n": 1,
+              "min": 0.16205430832555182,
+              "median": 0.16205430832555182,
+              "p90": 0.16205430832555182,
+              "max": 0.16205430832555182
+            },
+            "perSatellite": [
+              {
+                "norad": 24876,
+                "name": "G043 GPS-IIR-A",
+                "svn": 43,
+                "windows": 111,
+                "answered": 111,
+                "skipped": 0,
+                "refused": 0,
+                "withDetection": 5,
+                "years": 0.30937713894592744,
+                "distinct": 5,
+                "falseAlarms": 5,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0.04424778761061947,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 26360,
+                "name": "G051 GPS-IIR-A",
+                "svn": 51,
+                "windows": 5,
+                "answered": 5,
+                "skipped": 0,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.019164955509924708,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 26407,
+                "name": "G044 GPS-IIR-A",
+                "svn": 44,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0006527777777777777,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 27663,
+                "name": "G056 GPS-IIR-A",
+                "svn": 56,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 28190,
+                "name": "G059 GPS-IIR-B",
+                "svn": 59,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.001428921568627451,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 28474,
+                "name": "G061 GPS-IIR-B",
+                "svn": 61,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0011838235294117647,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 28874,
+                "name": "G053 GPS-IIR-M",
+                "svn": 53,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 29486,
+                "name": "G052 GPS-IIR-M",
+                "svn": 52,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0011429738562091503,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 29601,
+                "name": "G058 GPS-IIR-M",
+                "svn": 58,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 2,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1,
+                  "after the last day of the product": 1
+                },
+                "chance": 0.0007769607843137254,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 32260,
+                "name": "G055 GPS-IIR-M",
+                "svn": 55,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "after the last day of the product": 1
+                },
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 32384,
+                "name": "G057 GPS-IIR-M",
+                "svn": 57,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 32711,
+                "name": "G048 GPS-IIR-M",
+                "svn": 48,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0007753267973856209,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 35752,
+                "name": "G050 GPS-IIR-M",
+                "svn": 50,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "no states": 1
+                },
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 36585,
+                "name": "G062 GPS-IIF",
+                "svn": 62,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 3,
+                "years": 0.6981519507186859,
+                "distinct": 3,
+                "falseAlarms": 3,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "after the last day of the product": 1
+                },
+                "chance": 0,
+                "perObjectDay": 0.011764705882352941,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 38833,
+                "name": "G065 GPS-IIF",
+                "svn": 65,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 2,
+                "years": 0.7008898015058179,
+                "distinct": 2,
+                "falseAlarms": 2,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 1,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "no states": 1
+                },
+                "chance": 0.00272705078125,
+                "perObjectDay": 0.0078125,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 39166,
+                "name": "G066 GPS-IIF",
+                "svn": 66,
+                "windows": 264,
+                "answered": 250,
+                "skipped": 14,
+                "refused": 0,
+                "withDetection": 13,
+                "years": 0.7008898015058179,
+                "distinct": 13,
+                "falseAlarms": 13,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0.05078125,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 39533,
+                "name": "G064 GPS-IIF",
+                "svn": 64,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 39741,
+                "name": "G067 GPS-IIF",
+                "svn": 67,
+                "windows": 264,
+                "answered": 250,
+                "skipped": 14,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6954140999315537,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 40105,
+                "name": "G068 GPS-IIF",
+                "svn": 68,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0010220588235294117,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 40294,
+                "name": "G069 GPS-IIF",
+                "svn": 69,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.001959967320261438,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 40534,
+                "name": "G071 GPS-IIF",
+                "svn": 71,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0008842592592592592,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 40730,
+                "name": "G072 GPS-IIF",
+                "svn": 72,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "after the last day of the product": 1
+                },
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 41019,
+                "name": "G073 GPS-IIF",
+                "svn": 73,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 41328,
+                "name": "G070 GPS-IIF",
+                "svn": 70,
+                "windows": 264,
+                "answered": 250,
+                "skipped": 14,
+                "refused": 0,
+                "withDetection": 3,
+                "years": 0.7008898015058179,
+                "distinct": 1,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 1,
+                "unscoreable": {},
+                "chance": 0.00390625,
+                "perObjectDay": 0.00390625,
+                "hits": 1,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 1,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 1,
+                    "tail": 0,
+                    "placementsMedian": 6048,
+                    "rateMedian": 0
+                  },
+                  "actual": {
+                    "outages": 1,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 1,
+                    "tail": 0,
+                    "placementsMedian": 6072,
+                    "rateMedian": 0
+                  }
+                }
+              },
+              {
+                "norad": 43873,
+                "name": "G074 GPS-IIIA",
+                "svn": 74,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 44506,
+                "name": "G075 GPS-IIIA",
+                "svn": 75,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "after the last day of the product": 1
+                },
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 45854,
+                "name": "G076 GPS-IIIA",
+                "svn": 76,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0005302287581699346,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 46826,
+                "name": "G077 GPS-IIIA",
+                "svn": 77,
+                "windows": 264,
+                "answered": 252,
+                "skipped": 12,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.7008898015058179,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 0,
+                "scoreable": 0,
+                "unscoreable": {},
+                "chance": 0,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 48859,
+                "name": "G078 GPS-IIIA",
+                "svn": 78,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.000041666666666666665,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 55268,
+                "name": "G079 GPS-IIIA",
+                "svn": 79,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.00147140522875817,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 62339,
+                "name": "G080 GPS-IIIA",
+                "svn": 80,
+                "windows": 264,
+                "answered": 246,
+                "skipped": 18,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6954140999315537,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0004913057742782153,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 64202,
+                "name": "G081 GPS-IIIA",
+                "svn": 81,
+                "windows": 264,
+                "answered": 249,
+                "skipped": 15,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.6981519507186859,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0015939542483660132,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 67588,
+                "name": "G082 GPS-IIIA",
+                "svn": 82,
+                "windows": 213,
+                "answered": 197,
+                "skipped": 16,
+                "refused": 0,
+                "withDetection": 15,
+                "years": 0.5585215605749486,
+                "distinct": 15,
+                "falseAlarms": 15,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.0007649101307189543,
+                "perObjectDay": 0.0735294117647059,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 68791,
+                "name": "G083 GPS-IIIA",
+                "svn": 83,
+                "windows": 122,
+                "answered": 104,
+                "skipped": 18,
+                "refused": 0,
+                "withDetection": 0,
+                "years": 0.3066392881587953,
+                "distinct": 0,
+                "falseAlarms": 0,
+                "falseAlarmsInOtherOutage": 0,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 1,
+                "scoreable": 0,
+                "unscoreable": {
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.00474516369047619,
+                "perObjectDay": 0,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "system": "qzss",
+            "name": "QZSS",
+            "satellites": 4,
+            "windows": 1072,
+            "answered": 989,
+            "skipped": 83,
+            "refused": {},
+            "windowsWithDetection": 789,
+            "outagesInNotices": 33,
+            "outagesWithoutOrbit": 14,
+            "scoreable": 13,
+            "hitForecast": 13,
+            "withActual": 13,
+            "hitActual": 11,
+            "offsetHours": {
+              "median": 28.606385555555555,
+              "p10": 20.787986666666665,
+              "p90": 38.99724611111111
+            },
+            "forecastHours": 96,
+            "actualHours": 23.366666666666667,
+            "objectYears": 2.86652977412731,
+            "distinctDetections": 773,
+            "falseAlarms": 725,
+            "falseAlarmsInOtherOutage": 11,
+            "falseAlarmsNearBoundary": 65,
+            "chanceHit": 0.017156663553051343,
+            "dvMS": {
+              "n": 773,
+              "min": 0.0006907051380210954,
+              "median": 0.0024713338163329505,
+              "p90": 0.003767353886229889,
+              "max": 0.011125232189475956
+            },
+            "offNotice": {
+              "forecast": {
+                "outages": 13,
+                "undefinedRate": 0,
+                "expected": 12.823743897971847,
+                "observed": 13,
+                "tail": 0.8285488947199234,
+                "placementsMedian": 3513,
+                "rateMedian": 1
+              },
+              "actual": {
+                "outages": 13,
+                "undefinedRate": 0,
+                "expected": 11.962027927703364,
+                "observed": 11,
+                "tail": 0.9260119334063897,
+                "placementsMedian": 4593,
+                "rateMedian": 0.9116046157195733
+              },
+              "pooledForecast": {
+                "outages": 13,
+                "expected": 11.895755005802021,
+                "observed": 13,
+                "tail": 0.31503566832738994,
+                "placementsMedian": 20617,
+                "rateMedian": 0.920065964980356
+              },
+              "pooledActual": {
+                "outages": 13,
+                "expected": 10.359095772422696,
+                "observed": 11,
+                "tail": 0.489678016805436,
+                "placementsMedian": 22616,
+                "rateMedian": 0.7805535903784931
+              }
+            },
+            "unscoreable": {
+              "after the last day of the product": 3,
+              "a day without states of the satellite": 2,
+              "no states": 1
+            },
+            "perObjectDay": 0.7382999044890163,
+            "hitDvMS": {
+              "n": 13,
+              "min": 0.0007781037621019699,
+              "median": 0.002460592983443729,
+              "p90": 0.0041212914217168255,
+              "max": 0.008586892147207318
+            },
+            "perSatellite": [
+              {
+                "norad": 42738,
+                "name": "J002 QZS-2I",
+                "svn": 2,
+                "windows": 268,
+                "answered": 257,
+                "skipped": 11,
+                "refused": 0,
+                "withDetection": 146,
+                "years": 0.7255304585900069,
+                "distinct": 146,
+                "falseAlarms": 145,
+                "falseAlarmsInOtherOutage": 1,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 2,
+                "scoreable": 0,
+                "unscoreable": {
+                  "after the last day of the product": 1,
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.007702568134171908,
+                "perObjectDay": 0.5509433962264151,
+                "hits": 0,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  },
+                  "actual": {
+                    "outages": 0,
+                    "undefinedRate": 0,
+                    "expected": 0,
+                    "observed": 0,
+                    "tail": null,
+                    "placementsMedian": null,
+                    "rateMedian": null
+                  }
+                }
+              },
+              {
+                "norad": 42917,
+                "name": "J003 QZS-2G",
+                "svn": 3,
+                "windows": 268,
+                "answered": 235,
+                "skipped": 33,
+                "refused": 0,
+                "withDetection": 235,
+                "years": 0.7255304585900069,
+                "distinct": 224,
+                "falseAlarms": 182,
+                "falseAlarmsInOtherOutage": 3,
+                "falseAlarmsNearBoundary": 0,
+                "outages": 14,
+                "scoreable": 11,
+                "unscoreable": {
+                  "after the last day of the product": 2,
+                  "a day without states of the satellite": 1
+                },
+                "chance": 0.2,
+                "perObjectDay": 0.8452830188679246,
+                "hits": 11,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 11,
+                    "undefinedRate": 0,
+                    "expected": 11,
+                    "observed": 11,
+                    "tail": 1,
+                    "placementsMedian": 3513,
+                    "rateMedian": 1
+                  },
+                  "actual": {
+                    "outages": 11,
+                    "undefinedRate": 0,
+                    "expected": 10.317709706724962,
+                    "observed": 10,
+                    "tail": 0.8554618946322816,
+                    "placementsMedian": 4503,
+                    "rateMedian": 0.9298245614035088
+                  }
+                }
+              },
+              {
+                "norad": 42965,
+                "name": "J004 QZS-2I",
+                "svn": 4,
+                "windows": 268,
+                "answered": 260,
+                "skipped": 8,
+                "refused": 0,
+                "withDetection": 190,
+                "years": 0.7337440109514032,
+                "distinct": 189,
+                "falseAlarms": 187,
+                "falseAlarmsInOtherOutage": 3,
+                "falseAlarmsNearBoundary": 30,
+                "outages": 1,
+                "scoreable": 1,
+                "unscoreable": {},
+                "chance": 0.013059701492537313,
+                "perObjectDay": 0.7052238805970149,
+                "hits": 1,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 1,
+                    "undefinedRate": 0,
+                    "expected": 0.8574517631403858,
+                    "observed": 1,
+                    "tail": 0.8574517631403858,
+                    "placementsMedian": 6012,
+                    "rateMedian": 0.8574517631403858
+                  },
+                  "actual": {
+                    "outages": 1,
+                    "undefinedRate": 0,
+                    "expected": 0.741784793814433,
+                    "observed": 0,
+                    "tail": 1,
+                    "placementsMedian": 6208,
+                    "rateMedian": 0.741784793814433
+                  }
+                }
+              },
+              {
+                "norad": 49336,
+                "name": "J005 QZS-2A",
+                "svn": 5,
+                "windows": 268,
+                "answered": 237,
+                "skipped": 31,
+                "refused": 0,
+                "withDetection": 218,
+                "years": 0.6817248459958932,
+                "distinct": 214,
+                "falseAlarms": 211,
+                "falseAlarmsInOtherOutage": 4,
+                "falseAlarmsNearBoundary": 35,
+                "outages": 2,
+                "scoreable": 1,
+                "unscoreable": {
+                  "no states": 1
+                },
+                "chance": 0.021253625613565374,
+                "perObjectDay": 0.8594377510040161,
+                "hits": 1,
+                "offNotice": {
+                  "forecast": {
+                    "outages": 1,
+                    "undefinedRate": 0,
+                    "expected": 0.9662921348314607,
+                    "observed": 1,
+                    "tail": 0.9662921348314607,
+                    "placementsMedian": 5429,
+                    "rateMedian": 0.9662921348314607
+                  },
+                  "actual": {
+                    "outages": 1,
+                    "undefinedRate": 0,
+                    "expected": 0.902533427163969,
+                    "observed": 1,
+                    "tail": 0.902533427163969,
+                    "placementsMedian": 5684,
+                    "rateMedian": 0.902533427163969
+                  }
+                }
+              }
+            ]
+          }
+        ],
         "m25": [
           {
             "pack": "lro-lunar",
@@ -55074,6 +60436,16 @@
           "3": 0.9933459656113687
         }
       }
+    },
+    {
+      "build": "b9bc708baa50",
+      "wasmSha256": "b9bc708baa502800fe372ae9904f9951a72e72d6ed014afb431cad884f874fa5",
+      "sourceCommit": "610930cbf2f1aeefb2525fecfbd98f1b96bb1ac6",
+      "sourceDirtyFiles": 8,
+      "firstUseUtc": "2026-10-24T23:08:22.808Z",
+      "builtSeenUtc": "2026-10-24T23:05:04.321Z",
+      "complete": false,
+      "starlink": null
     }
   ],
   "ricConsistency": {

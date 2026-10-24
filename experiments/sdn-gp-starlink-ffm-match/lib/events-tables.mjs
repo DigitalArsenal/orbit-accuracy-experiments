@@ -244,11 +244,34 @@ function m27(dir, resultsDir) {
       const outages = ev.deltaV.filter((e) => e.svn === svn).map((e) => ({ f: [t(e.forecast.start), t(e.forecast.stop)], a: e.actual ? [t(e.actual.start), t(e.actual.stop)] : null, number: e.number }));
       const inAny = (ms, list, tol) => list.some(([a, b]) => ms >= a - tol * H && ms <= b + tol * H);
       const scoreable = outages.filter((o) => covered(o.f[0] - M27_TOL_H * H, o.f[1] + M27_TOL_H * H));
+      const dvWindows = outages.map((o) => o.f);
+      // amendment A14b: the off-notice window rate. The same window (the interval plus or minus 6 h) at every whole hour of the answered span where it lies inside the answered windows and overlaps no forecast window (+-6 h) of this satellite: the share that holds a distinct detection.
+      const hasDetection = (a, b) => { let lo = 0, hi = distinct.length; while (lo < hi) { const mid = (lo + hi) >> 1; if (distinct[mid].ms < a) lo = mid + 1; else hi = mid; } return lo < distinct.length && distinct[lo].ms <= b; };
+      const offNotice = (width) => {
+        let n = 0, hit = 0;
+        for (const [u, v] of union) for (let st = Math.ceil(u / H) * H; st + width <= v; st += H) {
+          if (dvWindows.some(([a, b]) => st < b + M27_TOL_H * H && st + width > a - M27_TOL_H * H)) continue;
+          n++; if (hasDetection(st, st + width)) hit++;
+        }
+        return { n, hit, rate: n ? hit / n : null };
+      };
       const eventRows = scoreable.map((o) => {
         const hitF = distinct.filter((d) => inAny(d.ms, [o.f], M27_TOL_H)), hitA = o.a ? distinct.filter((d) => inAny(d.ms, [o.a], M27_TOL_H)) : [];
-        return { number: o.number, forecastHours: (o.f[1] - o.f[0]) / H, actualHours: o.a ? (o.a[1] - o.a[0]) / H : null, hitForecast: hitF.length > 0, hitActual: o.a ? hitA.length > 0 : null, offsetHours: hitA.length ? (hitA[0].ms - o.a[0]) / H : null, mag: hitF[0]?.mag ?? null };
+        const nullF = offNotice(o.f[1] - o.f[0] + 2 * M27_TOL_H * H), nullA = o.a ? offNotice(o.a[1] - o.a[0] + 2 * M27_TOL_H * H) : { n: 0, rate: null };
+        return { number: o.number, forecastHours: (o.f[1] - o.f[0]) / H, actualHours: o.a ? (o.a[1] - o.a[0]) / H : null, hitForecast: hitF.length > 0, hitActual: o.a ? hitA.length > 0 : null, offsetHours: hitA.length ? (hitA[0].ms - o.a[0]) / H : null, mag: hitF[0]?.mag ?? null,
+          nullForecast: nullF, nullActual: nullA, widthForecast: o.f[1] - o.f[0] + 2 * M27_TOL_H * H, widthActual: o.a ? o.a[1] - o.a[0] + 2 * M27_TOL_H * H : null };
       });
-      const dvWindows = outages.map((o) => o.f);
+      // the outages that cannot be scored, by reason (amendment A14b)
+      const firstStart = rs.length ? t(rs[0].startUtc) : null, lastStop = rs.length ? Math.max(...rs.map((r) => t(r.stopUtc))) : null;
+      const reasonOf = (o) => {
+        const a = o.f[0] - M27_TOL_H * H, b = o.f[1] + M27_TOL_H * H;
+        if (a < firstStart) return 'before the first day of the product';
+        if (b > lastStop) return 'after the last day of the product';
+        const touching = rs.filter((r) => t(r.stopUtc) > a && t(r.startUtc) < b);
+        if (touching.some((r) => /a gap of/.test(r.skipped ?? ''))) return 'a day without states of the satellite';
+        return 'no states';
+      };
+      const unscoreable = count(outages.filter((o) => !scoreable.includes(o)).map(reasonOf));
       const otherWindows = ev.other.filter((o) => o.svn === svn).map((o) => [t(o.start), t(o.stop)]);
       const falseAlarms = distinct.filter((d) => !inAny(d.ms, dvWindows, M27_TOL_H));
       const chance = (() => { // the share of the covered time inside a forecast window (+-6 h): the hit probability of a detection at a random epoch
@@ -259,17 +282,29 @@ function m27(dir, resultsDir) {
       const DAY_MS = 86400e3, BOUNDARY = 86382e3; // the daily files begin at 23:59:42 UTC (GPS time 00:00:00)
       const nearBoundary = (ms) => { const x = (((ms % DAY_MS) - BOUNDARY) % DAY_MS + DAY_MS) % DAY_MS; return Math.min(x, DAY_MS - x) <= 2 * H; };
       return { norad, name: rs[0].name, svn, windows: rs.length, answered: ok.length, skipped: rs.filter((r) => r.skipped).length, refused: rs.filter((r) => r.ok === false).length, withDetection: ok.filter((r) => r.detections.length).length, years, distinct: distinct.length,
-        falseAlarms: falseAlarms.length, falseAlarmsInOtherOutage: falseAlarms.filter((d) => inAny(d.ms, otherWindows, M27_TOL_H)).length, falseAlarmsNearBoundary: falseAlarms.filter((d) => nearBoundary(d.ms)).length, outages: outages.length, scoreable: scoreable.length, events: eventRows, chance, dvMS: distinct.map((d) => d.mag), lambda: distinct.map((d) => d.lambda) };
+        falseAlarms: falseAlarms.length, falseAlarmsInOtherOutage: falseAlarms.filter((d) => inAny(d.ms, otherWindows, M27_TOL_H)).length, falseAlarmsNearBoundary: falseAlarms.filter((d) => nearBoundary(d.ms)).length, outages: outages.length, scoreable: scoreable.length, unscoreable, events: eventRows, placements: offNotice, chance, dvMS: distinct.map((d) => d.mag), lambda: distinct.map((d) => d.lambda), perObjectDay: years ? distinct.length / (years * 365.25) : null };
     });
     const eventsAll = perSat.flatMap((p) => p.events);
     const years = perSat.reduce((s2, p) => s2 + p.years, 0);
+    // the expected number of detected outages under the off-notice rates, and the probability of at least the observed number (exact, independent outages)
+    const poissonBinomialTail = (ps, k) => { let dist = [1]; for (const pr of ps) { const next = new Array(dist.length + 1).fill(0); dist.forEach((w, i) => { next[i] += w * (1 - pr); next[i + 1] += w * pr; }); dist = next; } return dist.slice(k).reduce((x, y) => x + y, 0); };
+    const nullTest = (events, hitKey, nullKey) => { const used = events.filter((e) => e[nullKey].rate !== null && e[hitKey] !== null); const ps = used.map((e) => e[nullKey].rate), obs = used.filter((e) => e[hitKey]).length; return { outages: used.length, undefinedRate: events.filter((e) => e[hitKey] !== null).length - used.length, expected: ps.reduce((x, y) => x + y, 0), observed: obs, tail: used.length ? poissonBinomialTail(ps, obs) : null, placementsMedian: q(used.map((e) => e[nullKey].n), 0.5), rateMedian: q(ps, 0.5) }; };
+    // the same placements pooled over all the satellites of the system with an orbit series (amendment A14b item 3)
+    const pooledCache = new Map();
+    const pooledRate = (width) => { const key = Math.round(width / H); if (!pooledCache.has(key)) { let n = 0, hit = 0; for (const p of perSat) { const r = p.placements(width); n += r.n; hit += r.hit; } pooledCache.set(key, { n, rate: n ? hit / n : null }); } return pooledCache.get(key); };
+    const pooledTest = (events, hitKey, widthKey) => { const used = events.filter((e) => e[hitKey] !== null && e[widthKey] !== null).map((e) => ({ hit: e[hitKey], ...pooledRate(e[widthKey]) })).filter((x) => x.rate !== null); const ps = used.map((x) => x.rate), obs = used.filter((x) => x.hit).length; return { outages: used.length, expected: ps.reduce((x, y) => x + y, 0), observed: obs, tail: used.length ? poissonBinomialTail(ps, obs) : null, placementsMedian: q(used.map((x) => x.n), 0.5), rateMedian: q(ps, 0.5) }; };
+    const offNoticeSystem = { forecast: nullTest(eventsAll, 'hitForecast', 'nullForecast'), actual: nullTest(eventsAll, 'hitActual', 'nullActual'), pooledForecast: pooledTest(eventsAll, 'hitForecast', 'widthForecast'), pooledActual: pooledTest(eventsAll, 'hitActual', 'widthActual') };
+    const unscoreable = perSat.reduce((acc, p) => { for (const [k, v] of Object.entries(p.unscoreable)) acc[k] = (acc[k] ?? 0) + v; return acc; }, {});
+    const perSatNull = (p) => ({ forecast: nullTest(p.events, 'hitForecast', 'nullForecast'), actual: nullTest(p.events, 'hitActual', 'nullActual') });
     const refused = count(srows.filter((r) => r.ok === false).map((r) => nameOf(r.error)));
     return { system, name: system === 'gps' ? 'GPS' : 'QZSS', satellites: sats.length, windows: srows.length, answered: srows.filter((r) => r.ok).length, skipped: srows.filter((r) => r.skipped).length, refused, windowsWithDetection: srows.filter((r) => r.ok && r.detections.length).length,
       outagesInNotices: ev.deltaV.length, outagesWithoutOrbit: ev.deltaV.filter((e) => !perSat.some((p) => p.svn === e.svn)).length, scoreable: eventsAll.length, hitForecast: eventsAll.filter((e) => e.hitForecast).length, withActual: eventsAll.filter((e) => e.hitActual !== null).length, hitActual: eventsAll.filter((e) => e.hitActual === true).length,
       offsetHours: { median: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.5), p10: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.1), p90: q(eventsAll.filter((e) => e.offsetHours !== null).map((e) => e.offsetHours), 0.9) },
       forecastHours: q(eventsAll.map((e) => e.forecastHours), 0.5), actualHours: q(eventsAll.filter((e) => e.actualHours !== null).map((e) => e.actualHours), 0.5),
       objectYears: years, distinctDetections: perSat.reduce((s2, p) => s2 + p.distinct, 0), falseAlarms: perSat.reduce((s2, p) => s2 + p.falseAlarms, 0), falseAlarmsInOtherOutage: perSat.reduce((s2, p) => s2 + p.falseAlarmsInOtherOutage, 0), falseAlarmsNearBoundary: perSat.reduce((s2, p) => s2 + p.falseAlarmsNearBoundary, 0),
-      chanceHit: q(perSat.filter((p) => p.outages).map((p) => p.chance), 0.5), dvMS: stats(perSat.flatMap((p) => p.dvMS)), perSatellite: perSat.map(({ dvMS, lambda, events, ...rest }) => ({ ...rest, hits: events.filter((e) => e.hitForecast).length })) };
+      chanceHit: q(perSat.filter((p) => p.outages).map((p) => p.chance), 0.5), dvMS: stats(perSat.flatMap((p) => p.dvMS)), offNotice: offNoticeSystem, unscoreable, perObjectDay: years ? perSat.reduce((s2, p) => s2 + p.distinct, 0) / (years * 365.25) : null,
+      hitDvMS: stats(eventsAll.filter((e) => e.mag !== null).map((e) => e.mag)),
+      perSatellite: perSat.map(({ dvMS, lambda, events, placements, ...rest }) => ({ ...rest, hits: events.filter((e) => e.hitForecast).length, offNotice: perSatNull({ events }) })) };
   }).filter((g) => g.windows);
 }
 
@@ -444,7 +479,8 @@ export function eventsMarkdown(e) {
   if (!e) return [];
   const L = [];
   L.push('### 16b. Maneuvers, the reentry hand-off, ISS and lunar maneuver detection', '',
-    `Build ${e.build}. The truths of M22, M23 and M28 are FFM-1 (propagator/ffm), not the module's own Cowell integration: impulses and finite burns planted in its typed request, synthetic decays integrated to its own stop at 100 km geodetic altitude.`, '');
+    `Build ${e.build}. The truths of M22, M23 and M28 are FFM-1 (propagator/ffm), not the module's own Cowell integration: impulses and finite burns planted in its typed request, synthetic decays integrated to its own stop at 100 km geodetic altitude.`, '',
+    'Not run: M26 (the Starlink detector against the files\' own states: the raw files are not kept), M33 (the thrust-onset test needs files of an orbit raise, which the captured batch has not begun) and the BeiDou part of M27 (the BeiDou orbit notices of the CSNO test and assessment center did not answer from this host; the BeiDou site\'s advisories are upgrade and maintenance outages, not orbit notices).', '');
   if (e.m22) {
     const m = e.m22;
     L.push('#### M22. The impulse map', '',
@@ -510,14 +546,21 @@ export function eventsMarkdown(e) {
   if (e.m27) {
     const builds = [...e.history.filter((x) => x.m27), e];
     const rate = (x, y) => (y ? f(x / y, 1) : '');
-    const row = (b, g) => `| ${b.build} | ${g.name} | ${g.satellites} | ${g.answered} of ${g.windows} (${g.skipped} skipped${Object.keys(g.refused).length ? `, refused ${Object.entries(g.refused).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}) | ${g.windowsWithDetection} | ${g.outagesInNotices} / ${g.outagesInNotices - g.outagesWithoutOrbit} / ${g.scoreable} | ${g.hitForecast} of ${g.scoreable} | ${g.hitActual} of ${g.withActual} | ${g.offsetHours.median !== null ? `${f(g.offsetHours.median, 1)} [${f(g.offsetHours.p10, 1)}, ${f(g.offsetHours.p90, 1)}]` : ''} | ${Math.round(g.chanceHit * 100)} % | ${g.distinctDetections} | ${g.falseAlarms} (${rate(g.falseAlarms, g.objectYears)} per object-year over ${f(g.objectYears, 2)}) | ${g.falseAlarmsInOtherOutage} / ${g.falseAlarmsNearBoundary} | ${f(g.dvMS.median, 3)} / ${f(g.dvMS.max, 3)} |`;
-    L.push('#### M27. GPS and QZSS station keeping against the NANUs and NAQUs (amendment A14)', '',
-      'The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits, 2026-001 to 2026-266) and the QZSS satellites (GFZ multi-GNSS rapid orbits, 2026-004 to 2026-273), against the forecast delta-V outages of the GPS NANUs (97 of 2026) and the QZSS NAQUs (261 of 2026). An outage is detected when a distinct detection (merged within 6 h) lies inside its forecast window plus or minus 6 h; the actual interval is the summary notice\'s. The chance level is the share of a satellite\'s covered time inside its forecast windows plus or minus 6 h, the hit probability of a detection at a random epoch (median over the satellites with outages). False alarms are distinct detections outside every forecast window plus or minus 6 h of their satellite; the last two columns count those inside another outage notice\'s window and within 2 h of a daily-file boundary. BeiDou is not scored: its notices were not reachable (see section 1).', '',
-      '| Build | System | Satellites | Windows answered | Windows with a detection | Outages: notices / with orbits / scoreable | Detected, forecast window | Detected, actual interval | Offset from the actual start (h), median [10th, 90th] | Chance level | Distinct detections | False alarms | In another outage / near a file boundary | Delta-v (m/s), median / maximum |', '| --- | --- | --: | --- | --: | --- | --- | --- | --- | --: | --: | --- | --- | --- |',
-      ...builds.flatMap((b) => b.m27.map((g) => row(b, g))), '');
+    const pv = (x) => (x === null || x === undefined ? '' : x < 0.001 ? '< 0.001' : f(x, 3));
+    const nullCell = (t) => (t.outages ? `${f(t.expected, t.expected < 1 ? 3 : 1)} of ${t.outages}, observed ${t.observed}, P(at least) ${pv(t.tail)}` : '');
+    const scoring = (b, g) => `| ${b.build} | ${g.name} | ${g.satellites} | ${g.answered} of ${g.windows} (${g.skipped} skipped${Object.keys(g.refused).length ? `, refused ${Object.entries(g.refused).map(([k, v]) => `${k} ${v}`).join(', ')}` : ''}) | ${g.outagesInNotices} / ${g.outagesInNotices - g.outagesWithoutOrbit} / ${g.scoreable} | ${g.hitForecast} of ${g.scoreable} | ${nullCell(g.offNotice.forecast)} | ${nullCell(g.offNotice.pooledForecast)} | ${g.hitActual} of ${g.withActual} | ${nullCell(g.offNotice.actual)} | ${nullCell(g.offNotice.pooledActual)} | ${g.offsetHours.median !== null ? `${f(g.offsetHours.median, 1)} [${f(g.offsetHours.p10, 1)}, ${f(g.offsetHours.p90, 1)}]` : ''} | ${g.hitDvMS.n ? `${f(g.hitDvMS.median, 3)} / ${f(g.hitDvMS.max, 3)}` : ''} |`;
+    const detections = (b, g) => `| ${b.build} | ${g.name} | ${g.windowsWithDetection} of ${g.answered} | ${g.distinctDetections} (${f(g.perObjectDay, 2)} per object-day) | ${g.falseAlarms} (${rate(g.falseAlarms, g.objectYears)} per object-year over ${f(g.objectYears, 2)}) | ${g.falseAlarmsInOtherOutage} / ${g.falseAlarmsNearBoundary} | ${f(g.dvMS.median, 3)} / ${f(g.dvMS.max, 3)} | ${Math.round(g.chanceHit * 100)} % |`;
+    L.push('#### M27. GPS and QZSS station keeping against the NANUs and NAQUs (amendments A14 and A14b)', '',
+      'The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits, 2026-001 to 2026-266) and the QZSS satellites (GFZ multi-GNSS rapid orbits, 2026-004 to 2026-273), against the forecast delta-V outages of the GPS NANUs (97 of 2026) and the QZSS NAQUs (261 of 2026). An outage is detected when a distinct detection (merged within 6 h) lies inside its forecast window plus or minus 6 h; the actual interval is the summary notice\'s. The baseline of a detection (A14b) is the off-notice window rate: the same window placed at every whole hour of the satellite\'s answered span where it overlaps no announced outage (plus or minus 6 h), the share of placements that hold a distinct detection; the cell gives the number of outages expected detected under those rates (the satellite\'s own, and the same placements pooled over the system\'s satellites), the number observed, and the probability of at least that many (independent outages, exact). False alarms are distinct detections outside every forecast window plus or minus 6 h of their satellite; the last two columns count those inside another outage notice\'s window and within 2 h of a daily-file boundary. The chance level is the share of a satellite\'s covered time inside its forecast windows plus or minus 6 h, the hit probability of one detection at a random epoch (A14; median over the satellites with outages). BeiDou is not scored: its notices were not reachable (see section 1).', '',
+      '| Build | System | Satellites | Windows answered | Outages: notices / with orbits / scoreable | Detected, forecast window | Expected under the satellite\'s own off-notice rate | Expected under the pooled rate | Detected, actual interval | Own rate | Pooled rate | Offset from the actual start (h), median [10th, 90th] | Delta-v of the detections inside forecast windows (m/s), median / maximum |', '| --- | --- | --: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+      ...builds.flatMap((b) => b.m27.map((g) => scoring(b, g))), '',
+      '| Build | System | Windows with a detection | Distinct detections | False alarms | In another outage / near a file boundary | Delta-v (m/s), median / maximum | Chance level (A14) |', '| --- | --- | --- | --- | --- | --- | --- | --: |',
+      ...builds.flatMap((b) => b.m27.map((g) => detections(b, g))), '');
+    const reasons = e.m27.filter((x) => Object.keys(x.unscoreable).length || x.outagesWithoutOrbit);
+    if (reasons.length) L.push(`Outages that cannot be scored (build ${e.build}; they depend on the orbit product, not on the build): ${reasons.map((x) => `${x.name}: ${[...(x.outagesWithoutOrbit ? [`${x.outagesWithoutOrbit} of a satellite without an orbit series`] : []), ...Object.entries(x.unscoreable).map(([k, v]) => `${v} ${k}`)].join(', ')}`).join('; ')}.`, '');
     const g = (e.m27.find((x) => x.system === 'qzss')?.perSatellite ?? []).concat(e.m27.find((x) => x.system === 'gps')?.perSatellite.filter((x) => x.outages) ?? []);
-    if (g.length) L.push(`Per satellite with outages in the notices (build ${e.build}):`, '', '| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Distinct detections | False alarms | Chance level |', '| --- | --: | --: | --: | --: | --: | --: | --: |',
-      ...g.map((x) => `| ${x.name} | ${f(x.years, 2)} | ${x.outages} | ${x.scoreable} | ${x.hits} | ${x.distinct} | ${x.falseAlarms} | ${Math.round(x.chance * 100)} % |`), '');
+    if (g.length) L.push(`Per satellite with outages in the notices (build ${e.build}):`, '', '| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Expected under the off-notice rate | Distinct detections (per object-day) | False alarms | Chance level (A14) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
+      ...g.map((x) => `| ${x.name} | ${f(x.years, 2)} | ${x.outages} | ${x.scoreable} | ${x.hits} | ${x.offNotice.forecast.outages ? f(x.offNotice.forecast.expected, 1) : ''} | ${x.distinct} (${f(x.perObjectDay, 2)}) | ${x.falseAlarms} | ${Math.round(x.chance * 100)} % |`), '');
   }
   if (e.previous && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
     const builds = [...e.history.filter((x) => x.m24 || x.m24c || x.m24a), e];

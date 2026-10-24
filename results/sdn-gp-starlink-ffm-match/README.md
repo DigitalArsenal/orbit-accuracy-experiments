@@ -136,6 +136,7 @@ COMSPOC does not state the span its XP sets were fitted over, so the 24 h fits o
 - `detect_maneuvers` on burn-free arcs (section 16b): 1 of 26 ISS windows (NASA OEM files with no reboost) and 4 of 96 windows of burn-free FFM-1 Starlink arcs reported a burn (Lambda median 61.4 and 988058229 against the threshold 20; delta-v median 0.018 m/s and 0.103 m/s).
 - `detect_maneuvers` on NASA's ISS archive (section 16b; the headers' planned burns are planned values, not measurements; build 61d4ec4e6a12): of 97 pre-burn windows 5 report a burn within 92 min of the planned TIG (92 elsewhere, 0 none; epoch error of the hits -0.8 min, |delta-v| over the planned value 1.08) and 1 of 6 post-burn windows; 8 of 650 burn-free windows report one, 1.6 false alarms per object-year over 4.37 object-years; burn-free FFM-1 Starlink arcs: 4 of 96 windows. Build 04f7c2d1d50f: 5 of 98 pre-burn hits, 8 of 651 burn-free windows (1.6 per object-year), 5 of 96 Starlink arcs.
 - Impulses planted in FFM-1 arcs at 24 h of 60 h (section 16b, amendment A11e; 287 arcs, build 61d4ec4e6a12): hits within 92 min of 48 arcs: radial 1 m/s 48, cross-track 1 m/s 48, in-track 0.1 / 1 / 10 m/s 0 / 48 / 40; the control reports a burn in 1 arcs. Build 04f7c2d1d50f: 48, 48, 0 / 48 / 40; control 1.
+- The detector against the public station-keeping notices (section 16b, amendments A14 and A14b; build 61d4ec4e6a12; BeiDou is not scored, its notices did not answer; the tables of build 04f7c2d1d50f are identical): GPS (34 satellites, ESA final orbits): of 24 delta-V outages in the 2026 NANUs 1 is scoreable (16 a day without states of the satellite, 5 after the last day of the product, 2 no states); it is detected, 2.0 h after the start of the actual interval, delta-v 0.162 m/s (a window of that width without a notice holds a detection in 0.5 % of the placements, pooled over the GPS satellites); elsewhere the detector reports 38 distinct burns over 22.2 object-years (1.7 per object-year, delta-v median 0.005 m/s). QZSS (4 satellites, GFZ rapid orbits): of 33 outages 13 are scoreable (3 after the last day of the product, 2 a day without states of the satellite, 1 no states, 14 of a satellite without an orbit series); 13 of 13 have a detection inside the forecast window plus or minus 6 h and 11 of 13 inside the actual interval, but the detector reports a burn every 1.4 days (253 false alarms per object-year, delta-v median 2.5 mm/s), so a window without a notice holds one almost as often: 11.9 of 13 outages are expected detected at the pooled off-notice rate (probability of 13 or more 0.32); the geostationary satellite 11 of 11 against 11.0 expected.
 - Real reentries (section 16c; build 61d4ec4e6a12; time to go is the truth less the prediction epoch, sigma is REENTRY_EPOCH_UNC): CORDS observed reentries: 362 of 441 predictions answered on 17 objects, within 1 sigma 60 %, within 2 sigma 69 %, median |error| 11.4 h; Space-Track last-TIP reentries: 1357 of 1368 predictions answered on 41 objects, within 1 sigma 56 %, within 2 sigma 83 %, median |error| 15.4 h; against Aerospace's prediction at its own element-set epoch (17 objects) the observed time lies inside Aerospace's stated window for 14 and inside SDN-AP's 2 sigma for 9 of 9.
 - Controlled deorbits (section 16c; 19 lowering Starlinks, build 61d4ec4e6a12): `reentry` on the 24 h fit answered for 17 (reentry-not-reached 2; predicted lifetime median 12.5 days, 6.0 to 26.4); the rule setting (B_eff replaced by tau0) is refused for 19 of 19 (no-drag); the free-B_eff setting gives the same epochs as the shipped one; as of the archive's newest snapshot 0 have a TIP message and 0 a decay message, so none is scored yet.
 - First fits of the captured batch (section 16c; 27 satellites, held-out days 1 / 2 / 3 inside the file, median km): SDN-AP 6 h 1.5 / 6.1 / 15.3; 12 h 1.4 / 6.9 / 16.6; 24 h 0.4 / 0.9 / 0.8; SGP4-XP 6 h 122 / 604 / 1516; 12 h 154 / 687 / 1654; 24 h 7.7 / 21.3 / 22.6; the SDN-AP B_eff at 6 h over its 24 h value has a median of 1.01 (10th to 90th percentile 1.01 to 1.01).
@@ -372,6 +373,7 @@ Starlink, FFM-propagated truth, the windows each build fitted (median 3D km; fit
 | 35cd83a2b714 | 9c1d5ee3 | 0 | 2026-10-24T16:06 | yes | 239 | 0.069 | 0.164 | 0.433 | 0.978 |
 | 04f7c2d1d50f | 65c1c6ca | 0 | 2026-10-24T18:11 | yes | 239 | 0.069 | 0.164 | 0.433 | 0.978 |
 | 61d4ec4e6a12 | f0ea4b4e | 1 | 2026-10-24T19:27 | yes | 239 | 0.069 | 0.171 | 0.458 | 0.993 |
+| b9bc708baa50 | 610930cb | 8 | 2026-10-24T23:05 | no | 0 |  |  |  |  |
 
 The headline build against build 04f7c2d1d50f, window by window: of the registered windows both ran, 85 of 1242 are identical to the last digit (fit RMS and every held-out day); the others, by source: gnss-rapid 48, gnss 60, heo-chandra 57, heo-themis 39, iss 15, mgex-geo-rapid 5, mgex-geo 84, mgex-igso-rapid 29, mgex-igso 120, slr-high-current 24, slr-high 36, slr-low-current 71, slr-low 139, span-gnss 123, span-slr 28, starlink-ffm 239, starlink-spacex 40; of the default-span windows, 80 of 849; the others, by source: gnss+default 60, gnss-rapid+default 48, heo-chandra+default 57, heo-themis+default 39, iss+default 15, mgex-geo+default 88, mgex-geo-rapid+default 5, mgex-igso+default 120, mgex-igso-rapid+default 29, slr-high+default 36, slr-high-current+default 24, slr-low+default 139, slr-low-current+default 71, span-gnss+default 31, span-slr+default 7.
 
@@ -1298,6 +1300,8 @@ Fits refused as fit-implausible (an Earth fit above 100 km RMS), by source: arte
 
 Build 61d4ec4e6a12. The truths of M22, M23 and M28 are FFM-1 (propagator/ffm), not the module's own Cowell integration: impulses and finite burns planted in its typed request, synthetic decays integrated to its own stop at 100 km geodetic altitude.
 
+Not run: M26 (the Starlink detector against the files' own states: the raw files are not kept), M33 (the thrust-onset test needs files of an orbit raise, which the captured batch has not begun) and the BeiDou part of M27 (the BeiDou orbit notices of the CSNO test and assessment center did not answer from this host; the BeiDou site's advisories are upgrade and maintenance outages, not orbit notices).
+
 #### M22. The impulse map
 
 48 registered Starlink truths (every fifth in NORAD order). Each is fitted as in the G1 rows (first 24 h), `maneuver` applies one impulse of the stated size at the fit end t_b, and days 1 to 3 after t_b are scored against FFM-1 restarted 60 s before t_b with the same impulse planted. The control restarts FFM-1 without an impulse and reproduces the registered truth to 0.062 m (median) and 0.145 m (largest) over the 864 samples; its day 1 / 2 / 3 median RMS is 0.155 / 0.435 / 0.973 km against 0.154 / 0.433 / 0.971 km for the no-maneuver rows of this build for the same satellites (largest difference per satellite and day 0.0065 km over 48).
@@ -1472,6 +1476,58 @@ The same 99 planned burns of the pre-burn files, windows cut around each burn on
 | 61d4ec4e6a12 | TIG - 6 h to TIG + 24 h | 95 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 95 | 94 / 1 / 0 | 0.20 [0.17, 0.21] | 13.8 [13.8, 13.8] | 1.10 | 5.8 [-58.2, 10.2] | 1.04 [0.98, 1.43] |
 | 61d4ec4e6a12 | TIG - 8 h to TIG + 24 h | 94 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 94 | 51 / 43 / 0 | 0.21 [0.17, 0.26] | -1.9 [-3.5, -1.6] | 1.65 | 8.7 [-83.2, 10.7] | 1.03 [0.99, 2.06] |
 | 61d4ec4e6a12 | TIG - 24 h to TIG + 24 h | 92 of 99 (6 skipped: another planned burn (cluster) in or within an hour of the window) | 92 | 9 / 83 / 0 | 0.09 [0.06, 0.31] | -19.8 [-21.4, -19.6] | 3.75 | 7.2 [-0.3, 12.6] | 1.05 [0.99, 1.07] |
+
+#### M27. GPS and QZSS station keeping against the NANUs and NAQUs (amendments A14 and A14b)
+
+The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits, 2026-001 to 2026-266) and the QZSS satellites (GFZ multi-GNSS rapid orbits, 2026-004 to 2026-273), against the forecast delta-V outages of the GPS NANUs (97 of 2026) and the QZSS NAQUs (261 of 2026). An outage is detected when a distinct detection (merged within 6 h) lies inside its forecast window plus or minus 6 h; the actual interval is the summary notice's. The baseline of a detection (A14b) is the off-notice window rate: the same window placed at every whole hour of the satellite's answered span where it overlaps no announced outage (plus or minus 6 h), the share of placements that hold a distinct detection; the cell gives the number of outages expected detected under those rates (the satellite's own, and the same placements pooled over the system's satellites), the number observed, and the probability of at least that many (independent outages, exact). False alarms are distinct detections outside every forecast window plus or minus 6 h of their satellite; the last two columns count those inside another outage notice's window and within 2 h of a daily-file boundary. The chance level is the share of a satellite's covered time inside its forecast windows plus or minus 6 h, the hit probability of one detection at a random epoch (A14; median over the satellites with outages). BeiDou is not scored: its notices were not reachable (see section 1).
+
+| Build | System | Satellites | Windows answered | Outages: notices / with orbits / scoreable | Detected, forecast window | Expected under the satellite's own off-notice rate | Expected under the pooled rate | Detected, actual interval | Own rate | Pooled rate | Offset from the actual start (h), median [10th, 90th] | Delta-v of the detections inside forecast windows (m/s), median / maximum |
+| --- | --- | --: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 04f7c2d1d50f | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.005 of 1, observed 1, P(at least) 0.005 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.003 of 1, observed 1, P(at least) 0.003 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
+| 04f7c2d1d50f | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.829 | 11.9 of 13, observed 13, P(at least) 0.315 | 11 of 13 | 12.0 of 13, observed 11, P(at least) 0.926 | 10.4 of 13, observed 11, P(at least) 0.490 | 28.6 [20.8, 39.0] | 0.002 / 0.009 |
+| 61d4ec4e6a12 | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.005 of 1, observed 1, P(at least) 0.005 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.003 of 1, observed 1, P(at least) 0.003 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
+| 61d4ec4e6a12 | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.829 | 11.9 of 13, observed 13, P(at least) 0.315 | 11 of 13 | 12.0 of 13, observed 11, P(at least) 0.926 | 10.4 of 13, observed 11, P(at least) 0.490 | 28.6 [20.8, 39.0] | 0.002 / 0.009 |
+
+| Build | System | Windows with a detection | Distinct detections | False alarms | In another outage / near a file boundary | Delta-v (m/s), median / maximum | Chance level (A14) |
+| --- | --- | --- | --- | --- | --- | --- | --: |
+| 04f7c2d1d50f | GPS | 41 of 7923 | 39 (0.00 per object-day) | 38 (1.7 per object-year over 22.2) | 0 / 1 | 0.005 / 0.162 | 0 % |
+| 04f7c2d1d50f | QZSS | 789 of 989 | 773 (0.74 per object-day) | 725 (253 per object-year over 2.87) | 11 / 65 | 0.002 / 0.011 | 2 % |
+| 61d4ec4e6a12 | GPS | 41 of 7923 | 39 (0.00 per object-day) | 38 (1.7 per object-year over 22.2) | 0 / 1 | 0.005 / 0.162 | 0 % |
+| 61d4ec4e6a12 | QZSS | 789 of 989 | 773 (0.74 per object-day) | 725 (253 per object-year over 2.87) | 11 / 65 | 0.002 / 0.011 | 2 % |
+
+Outages that cannot be scored (build 61d4ec4e6a12; they depend on the orbit product, not on the build): GPS: 16 a day without states of the satellite, 5 after the last day of the product, 2 no states; QZSS: 14 of a satellite without an orbit series, 3 after the last day of the product, 2 a day without states of the satellite, 1 no states.
+
+Per satellite with outages in the notices (build 61d4ec4e6a12):
+
+| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Expected under the off-notice rate | Distinct detections (per object-day) | False alarms | Chance level (A14) |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: |
+| J002 QZS-2I | 0.73 | 2 | 0 | 0 |  | 146 (0.55) | 145 | 1 % |
+| J003 QZS-2G | 0.73 | 14 | 11 | 11 | 11.0 | 224 (0.85) | 182 | 20 % |
+| J004 QZS-2I | 0.73 | 1 | 1 | 1 | 0.9 | 189 (0.71) | 187 | 1 % |
+| J005 QZS-2A | 0.68 | 2 | 1 | 1 | 1.0 | 214 (0.86) | 211 | 2 % |
+| G044 GPS-IIR-A | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G059 GPS-IIR-B | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G061 GPS-IIR-B | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G052 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G058 GPS-IIR-M | 0.70 | 2 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G055 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G048 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G050 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G062 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 3 (0.01) | 3 | 0 % |
+| G065 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 2 (0.01) | 2 | 0 % |
+| G068 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G069 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G071 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G072 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G070 GPS-IIF | 0.70 | 1 | 1 | 1 | 0.0 | 1 (0.00) | 0 | 0 % |
+| G075 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G076 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G078 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G079 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G080 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G081 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G082 GPS-IIIA | 0.56 | 1 | 0 | 0 |  | 15 (0.07) | 15 | 0 % |
+| G083 GPS-IIIA | 0.31 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
 
 #### The detector across builds
 

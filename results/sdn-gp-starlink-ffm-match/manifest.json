@@ -46,12 +46,15 @@
     "node experiments/sdn-gp-starlink-ffm-match/m30-truth.mjs (re-run as TIP and decay messages arrive)",
     "node experiments/sdn-gp-starlink-ffm-match/m31-capture.mjs --workers k/n; node experiments/sdn-gp-starlink-ffm-match/m31-capture.mjs --summary",
     "node experiments/sdn-gp-starlink-ffm-match/m32-truth.mjs",
-    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m31,m32"
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m31,m32",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-gnss-notices.mjs (GPS NANUs of 2026 and the QZSS NAQU page, 5 s apart)",
+    "node experiments/sdn-gp-starlink-ffm-match/m27-events.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27"
   ],
-  "planSha256": "de7f92d82c275fd72056130511755c587469838f00f45a603ac5336f36e04d4c",
+  "planSha256": "8f03aacce7bcc4884de7b41b9d2e3a210835b632007028c0333135f203a497ec",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "77cb01370e62e49c4309f1a63e30e2d7396d9e35"
+    "commit": "8bfda237ae2cdaf60a437362e0c3efab6e3795d5"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -97,8 +100,9 @@
     "esbuild": "^0.25.12",
     "flatbuffers": "25.9.23",
     "space-data-module-sdk": "0.9.10",
+    "spacedatastandards-1264": "npm:spacedatastandards.org@1.264.0",
     "spacedatastandards.org": "1.261.0",
-    "lockfileSha256": "3bd051cbdbfd45edee852ae5390eac6f9d9b11afff45178b31d78ffc8ecfa837",
+    "lockfileSha256": "e3e083980fb5c61e0ae615c83bcc4890e683d8b457435d4239abff011504c992",
     "spacedatastandardsInstalled": "1.261.0"
   },
   "runtime": {
@@ -377,6 +381,14 @@
         "sourceUncommittedFiles": 1,
         "firstUseUtc": "2026-10-24T19:28:48.751Z",
         "complete": true
+      },
+      {
+        "build": "b9bc708baa50",
+        "wasmSha256": "b9bc708baa502800fe372ae9904f9951a72e72d6ed014afb431cad884f874fa5",
+        "sourceCommit": "610930cbf2f1aeefb2525fecfbd98f1b96bb1ac6",
+        "sourceUncommittedFiles": 8,
+        "firstUseUtc": "2026-10-24T23:08:22.808Z",
+        "complete": false
       }
     ]
   },
@@ -421,15 +433,27 @@
           "last": "2026/2026-10-24.json.gz"
         },
         "gpHistory": {
-          "files": 1935,
+          "files": 1938,
           "first": "2022/2022-11-20.json.gz",
-          "last": "2026/2026-10-24T181700Z--2026-10-24T193200Z.json.gz"
+          "last": "2026/2026-10-24T220201Z--2026-10-24T231701Z.json.gz"
         }
       }
     },
     "m31": {
       "satellites": 27,
       "setSha256": "1a714ef219d3a312a028101243f4a1ea93f8c8e14ba23a2535d2f5e0dff87791"
+    },
+    "notices": {
+      "gpsNanu": {
+        "files": 97,
+        "setSha256": "4b80e056e3e14b239c2f47e2f73f68053e561fc8a92b480d6dc8ca4204b5cbe5"
+      },
+      "qzssNaqu": {
+        "files": 3,
+        "setSha256": "f05352a182aa5c0856e64de15556d55f0a372665e712b8cc8e8162cbb0dd4b6a"
+      },
+      "eventsSha256": "fb51d84807e93794fb2349f5c071def069c0ad67f79b34149208f5c100cff298",
+      "beidou": "not reachable (hac/gnss-notices/beidou-attempts.json)"
     },
     "m32": {
       "batches": 4,
