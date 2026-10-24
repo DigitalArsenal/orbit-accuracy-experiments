@@ -11,7 +11,7 @@
 //     position is under 0.15 m (UT1 0.08 ms and polar motion 0.4 mas at three days); the copy and its change are recorded in its provenance file.
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { config, frozen, store, args, sha256 } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 
@@ -42,8 +42,14 @@ const modules = modulesRoot();
 const script = path.join(modules, 'analysis/reference-states/scripts/fetch-reference-products.mjs');
 for (const [prefix, systems] of [['GFZ0OPSRAP_', 'G,R,E'], ['GFZ0MGXRAP_', 'C,J']]) {
   const argv = [script, '--from', args.from, '--to', args.to, '--products', 'mgex', '--mgex-product', prefix, '--mgex-systems', systems, '--eop', 'finals', '--local-archive', path.join(archive, 'hac/gfz-gnss-rapid'), '--out', out];
+  const day = (d) => { const t = Date.parse(`${d}T00:00:00Z`); return `${prefix}${new Date(t).getUTCFullYear()}${String(Math.round((t - Date.UTC(new Date(t).getUTCFullYear(), 0, 1)) / 86400000) + 1).padStart(3, '0')}0000_01D_05M_ORB`; };
+  const wanted = []; for (let t = Date.parse(`${args.from}T00:00:00Z`); t <= Date.parse(`${args.to}T00:00:00Z`); t += 86400000) wanted.push(day(new Date(t).toISOString().slice(0, 10)));
+  if (wanted.every((d) => fs.existsSync(path.join(out, 'reference', d, 'index.json')))) { console.error(`${prefix}: all ${wanted.length} days converted already`); continue; }
   console.error(`${prefix} systems ${systems}`);
-  execFileSync(process.execPath, argv, { cwd: modules, stdio: ['ignore', 'inherit', 'inherit'], timeout: 3600000 });
+  // the converter ends with `await reference?.destroy()` on a name it never declares: a ReferenceError after the last file is written (modules script, reported)
+  const r = spawnSync(process.execPath, argv, { cwd: modules, encoding: 'utf8', maxBuffer: 1 << 28, timeout: 3600000 });
+  process.stderr.write(r.stdout ?? ''); process.stderr.write((r.stderr ?? '').split('\n').filter((l) => !/^\s+at |reference is not defined|^$|^Node\.js|^await reference|^\^$|^file:\/\//.test(l)).join('\n'));
+  if (r.status !== 0 && !/ReferenceError: reference is not defined/.test(r.stderr ?? '')) throw new Error(`converter failed (${r.status})`);
 }
 const days = fs.readdirSync(path.join(out, 'reference')).filter((d) => d.startsWith('GFZ0'));
 console.error(`${days.length} reference-state directories under ${path.join(out, 'reference')}`);

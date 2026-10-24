@@ -8,6 +8,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { OEM, flatbuffers, blockLines } from './sds.mjs';
 import { ms, withT } from './windows.mjs';
+import { store } from '../common.mjs';
 
 export const ARCHIVE = process.env.SDN_ARCHIVE ?? '/opt/data/sdn-archive';
 const referenceRoot = path.join(ARCHIVE, 'reference-states/reference');
@@ -141,4 +142,42 @@ export function mgex({ klass, year = 2025, firstDay = 274, days = 20 }) {
     const series = chain(directories.map((d) => path.join(mgexRoot, d, `${o.norad}.oem`)).filter((f) => fs.existsSync(f)));
     return withT({ source: `mgex-${klass}`, id: `${series.name} (${o.norad})`, norad: o.norad, name: series.name, objectId: series.objectId, originator: 'GFZ MGEX rapid orbits (GFZ0MGXRAP)', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: series.lines });
   });
+}
+
+// ---- GFZ rapid orbits (amendment A8b): reference states made by gnss-rapid-convert.mjs under <store>/gnss-rapid/reference ----
+// GFZ0OPSRAP_ (GPS, GLONASS, Galileo) and GFZ0MGXRAP_ (BeiDou, QZSS), one directory per day, 2026-10-11 to 2026-10-22.
+// The days from 2026-10-20 use Bulletin A predicted Earth orientation (A8c).
+export const GNSS_RAPID = Object.freeze({ strideSeconds: 172800, predictedEopFromUtc: '2026-10-20T00:00:00Z' });
+export const rapidRoot = () => path.join(store, 'gnss-rapid/reference');
+export const rapidDirs = (prefix) => (fs.existsSync(rapidRoot()) ? fs.readdirSync(rapidRoot()).filter((d) => d.startsWith(prefix) && /ORB$/.test(d)).sort() : []);
+const typeOf = (name) => name.split(/\s+/)[1] ?? '';
+const rapidOem = (prefix, norad) => rapidDirs(prefix).map((d) => path.join(rapidRoot(), d, `${norad}.oem`)).filter((f) => fs.existsSync(f));
+const rapidObject = (prefix, norad, source) => {
+  const series = chain(rapidOem(prefix, norad));
+  return withT({ source, id: `${series.name} (${norad})`, norad, name: series.name, objectId: series.objectId, originator: `GFZ rapid orbits (${prefix.replace('_', '')}), CDDIS copy`, creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: series.lines });
+};
+const rapidFirstDay = (prefix) => {
+  const dirs = rapidDirs(prefix);
+  if (!dirs.length) return [];
+  const first = path.join(rapidRoot(), dirs[0]);
+  return fs.readdirSync(first).filter((f) => f.endsWith('.oem')).map((f) => { const norad = Number(f.replace('.oem', '')); const ref = readReference(path.join(first, f)); return { norad, name: ref.name, key: /^([A-Z])\d/.exec(ref.name)?.[1], type: typeOf(ref.name) }; });
+};
+
+/** Two satellites per constellation, evenly from the first day's files in listing order (the rule of A1): G, R, E from GFZ0OPSRAP_, BeiDou MEO from GFZ0MGXRAP_. */
+export function gnssRapid({ perConstellation = 2 } = {}) {
+  const chosen = [];
+  const pickFrom = (prefix, key, filter = () => true) => {
+    const list = rapidFirstDay(prefix).filter((o) => o.key === key && filter(o));
+    const take = Math.min(perConstellation, list.length);
+    for (let k = 0; k < take; k += 1) chosen.push([prefix, list[Math.floor(((k + 0.5) * list.length) / take)].norad]);
+  };
+  for (const key of ['G', 'E', 'R']) pickFrom('GFZ0OPSRAP_', key);
+  pickFrom('GFZ0MGXRAP_', 'C', (o) => /^BDS-\d?M/.test(o.type));
+  return chosen.map(([prefix, norad]) => rapidObject(prefix, norad, 'gnss-rapid'));
+}
+
+/** All BeiDou and QZSS GEO (type ...G) or IGSO (type ...I) satellites of the first MGX day (A4's classes), whole series. */
+export function mgexRapid({ klass }) {
+  const wanted = klass === 'geo' ? /^(BDS-\d?|QZS-\d+)G\b/ : /^(BDS-\d?|QZS-\d+)I\b/;
+  return rapidFirstDay('GFZ0MGXRAP_').filter((o) => wanted.test(o.type)).map((o) => rapidObject('GFZ0MGXRAP_', o.norad, `mgex-${klass}-rapid`));
 }

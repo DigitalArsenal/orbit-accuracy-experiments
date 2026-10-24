@@ -21,6 +21,9 @@ const plans = {
   gnss: () => [{ objects: sources.gnss(P.gnss), stride: P.gnss.strideSeconds }],
   'mgex-geo': () => [{ objects: sources.mgex({ klass: 'geo', ...A4 }), stride: A4.strideSeconds }],
   'mgex-igso': () => [{ objects: sources.mgex({ klass: 'igso', ...A4 }), stride: A4.strideSeconds }],
+  'gnss-rapid': () => [{ objects: sources.gnssRapid(), stride: sources.GNSS_RAPID.strideSeconds }], // amendment A8b: GFZ rapid orbits, current truth
+  'mgex-geo-rapid': () => [{ objects: sources.mgexRapid({ klass: 'geo' }), stride: sources.GNSS_RAPID.strideSeconds }],
+  'mgex-igso-rapid': () => [{ objects: sources.mgexRapid({ klass: 'igso' }), stride: sources.GNSS_RAPID.strideSeconds }],
   'slr-high': () => P.slrHigh.targets.map((target) => ({ objects: sources.slrHigh({ target, weeks: P.slrHigh.weeks }), stride: P.slrHigh.strideSeconds })),
   'slr-low': () => P.slrLow.targets.map((target) => ({ objects: sources.slrLow({ target, arcs: P.slrLow.arcs }), stride: P.slrLow.strideSeconds })),
 };
