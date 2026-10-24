@@ -59,9 +59,16 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       const obd = new Uint8Array(r.outputs.find((o) => o.portId === 'determination').payload);
       const unpacked = OMM.OMM.getRootAsOMM(new flatbuffers.ByteBuffer(omm)).unpack();
       const comment = unpacked.COMMENT ?? '';
+      // the set's own bytes: the record without comment and without the fit statistics among the user-defined parameters (size-prefixed, as the XP and SGP4 element bytes)
+      const minimalT = OMM.OMM.getRootAsOMM(new flatbuffers.ByteBuffer(omm)).unpack();
+      minimalT.COMMENT = null;
+      minimalT.USER_DEFINED_PARAMETERS = minimalT.USER_DEFINED_PARAMETERS.filter((q) => ['THEORY', 'SDNGP_B_EFF', 'SDNGP_TAU0', 'SDNGP_TAUC', 'SDNGP_TAUS'].includes(q.PARAM_NAME));
+      const builder = new flatbuffers.Builder(512);
+      OMM.OMM.finishSizePrefixedOMMBuffer(builder, minimalT.pack(builder));
+      const minimal = builder.asUint8Array();
       const m = /(\d+) states fitted, (\d+) held out; fit RMS ([\d.]+) km, max ([\d.]+) km(?:; held-out RMS ([\d.]+) km)?; (\d+) iterations/.exec(comment);
       return {
-        ok: true, omm, obd, unpacked, comment,
+        ok: true, omm, obd, unpacked, comment, minimal,
         statesFitted: m ? Number(m[1]) : null, statesHeldOut: m ? Number(m[2]) : null, fitRmsKm: m ? Number(m[3]) : null, fitMaxKm: m ? Number(m[4]) : null, heldOutRmsKm: m && m[5] ? Number(m[5]) : null, iterations: m ? Number(m[6]) : null,
         params: Object.fromEntries((unpacked.USER_DEFINED_PARAMETERS ?? []).map((p) => [p.PARAM_NAME, p.PARAM_VALUE])),
       };

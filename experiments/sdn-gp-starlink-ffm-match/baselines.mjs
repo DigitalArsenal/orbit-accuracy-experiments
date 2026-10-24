@@ -2,14 +2,17 @@
 // held-out days 1-3 with the radial / in-track / cross-track split. One JSON line per window under
 // <store>/rows/<source>.jsonl (statistics only). Re-running skips windows already present.
 //   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs [--source gnss,iss,slr-high,slr-low]
+//   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --arm sdngp [--shard k/n] --source ...   (amendment A9b: the SDN-GP fitter on the same windows; rows per build of the module)
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, store, args } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import * as sources from './lib/sources.mjs';
-import { windowStarts } from './lib/windows.mjs';
+import { windowStarts, iso } from './lib/windows.mjs';
+import { sdngpSink, rowKey } from './lib/sdngp-rows.mjs';
 
+const ARM = args.arm ?? 'both'; // 'both': SGP4 and SGP4-XP; 'sdngp': the SDN-GP fitter alone, rows under rows/sdngp/<build>/
 const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low,mgex-geo,mgex-igso').split(','));
 const P = config.precise;
 const A4 = sources.MGEX_A4; // amendment A4: GFZ MGEX GEO and IGSO windows
@@ -26,29 +29,35 @@ const plans = {
   'mgex-igso-rapid': () => [{ objects: sources.mgexRapid({ klass: 'igso' }), stride: sources.GNSS_RAPID.strideSeconds }],
   'slr-high': () => P.slrHigh.targets.map((target) => ({ objects: sources.slrHigh({ target, weeks: P.slrHigh.weeks }), stride: P.slrHigh.strideSeconds })),
   'slr-low': () => P.slrLow.targets.map((target) => ({ objects: sources.slrLow({ target, arcs: P.slrLow.arcs }), stride: P.slrLow.strideSeconds })),
+  // amendment A9b: the ILRS orbits fetched from CDDIS (slr-convert.mjs), the arcs and weeks of 2026-09 and 2026-10
+  'slr-low-current': () => P.slrLow.targets.map((target) => ({ objects: sources.slrLowCurrent({ target }), stride: P.slrLow.strideSeconds })),
+  'slr-high-current': () => P.slrHigh.targets.map((target) => ({ objects: sources.slrHighCurrent({ target }), stride: P.slrHigh.strideSeconds })),
 };
 
 frozen();
 const modules = modulesRoot();
-const b = await openBaselines(modules);
+const b = await openBaselines(modules, { sdngp: ARM === 'sdngp' });
 fs.mkdirSync(path.join(store, 'rows'), { recursive: true });
 for (const source of wanted) {
+  const sink = ARM === 'sdngp' ? sdngpSink(b, source, args.shard) : null;
   const file = path.join(store, 'rows', `${source}.jsonl`);
-  const done = new Set(fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.id}|${r.startUtc}`; }) : []);
+  const done = new Set(!sink && fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.id}|${r.startUtc}`; }) : []);
   let n = 0;
   for (const { objects, stride } of plans[source]()) {
     for (const object of objects) {
       for (const start of windowStarts(object, { fitSeconds: FIT, strideSeconds: stride, minLeadDays: 1 })) {
-        if (done.has(`${object.id}|${new Date(start).toISOString()}`)) continue;
-        const row = await scoreWindow(b, object, start, { fitSeconds: FIT, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
+        if (sink) {
+          if (!sink.mine() || sink.has(rowKey({ source: object.source, id: object.id, startUtc: iso(start), fitSeconds: FIT }))) continue;
+        } else if (done.has(`${object.id}|${new Date(start).toISOString()}`)) continue;
+        const row = await scoreWindow(b, object, start, { fitSeconds: FIT, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage, arms: ARM === 'sdngp' ? 'sdngp' : 'both' });
         if (!row) continue;
-        fs.appendFileSync(file, `${JSON.stringify(row)}\n`);
+        if (sink) { const { xp, sgp4, ...rest } = row; sink.append(rest); } else fs.appendFileSync(file, `${JSON.stringify(row)}\n`);
         n += 1;
         if (n % 10 === 0) console.error(`${source}: ${n} windows`);
       }
     }
   }
-  console.error(`${source}: ${n} new windows`);
+  console.error(`${source}: ${n} new windows${sink ? ` (build ${sink.build}, shard ${args.shard ?? '0/1'})` : ''}`);
 }
 await b.close();
 process.exit(0);

@@ -19,6 +19,8 @@ const REGIMES = [
   { id: 'leo-slr', label: 'LEO, laser-ranged (ILRS NSGF)' },
   { id: 'meo-gnss', label: 'MEO, GPS / GLONASS / Galileo (ESA final)' },
   { id: 'meo-slr', label: 'MEO, laser-ranged (LAGEOS, Etalon, LARES-2)' },
+  { id: 'leo-slr-current', label: 'LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS)' },
+  { id: 'meo-slr-current', label: 'MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS)' },
   { id: 'igso-gnss', label: 'IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid)' },
   { id: 'geo-gnss', label: 'GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid)' },
   { id: 'heo-gp', label: 'HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit' },
@@ -62,7 +64,7 @@ export function collect() {
       if (r.spacex) windows.push({ regime: 'leo-starlink-spacex', ...r.spacex, meta });
     }
   }
-  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')], ['heo-themis', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-chandra', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-artemis2', () => 'heo-artemis2'], ['heo-tess', (w) => (w.fitSeconds === 86400 ? 'heo-tess' : 'heo-tess-72h')], ['gnss-rapid', () => 'meo-gnss-rapid'], ['mgex-igso-rapid', () => 'igso-gnss-rapid'], ['mgex-geo-rapid', () => 'geo-gnss-rapid']]) {
+  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')], ['slr-low-current', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr-current' : 'leo-slr-current')], ['slr-high-current', () => 'meo-slr-current'], ['heo-themis', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-chandra', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-artemis2', () => 'heo-artemis2'], ['heo-tess', (w) => (w.fitSeconds === 86400 ? 'heo-tess' : 'heo-tess-72h')], ['gnss-rapid', () => 'meo-gnss-rapid'], ['mgex-igso-rapid', () => 'igso-gnss-rapid'], ['mgex-geo-rapid', () => 'geo-gnss-rapid']]) {
     for (const w of readJsonl(path.join(store, 'rows', `${source}.jsonl`))) windows.push({ regime: map(w), ...w, meta: {} });
   }
   return windows;
@@ -241,13 +243,14 @@ export function build() {
     ...JSON.parse(fs.readFileSync(preciseStatusFile, 'utf8')),
     byKind: ['gnss', 'laser-ranged'].map((kind) => ({ kind, n: preciseRows.filter((r) => r.kind === kind).length, days: [0, 1, 2, 3].map((k) => quantile(preciseRows.filter((r) => r.kind === kind && r.days[k]).map((r) => r.days[k].rmsKm), 0.5)) })),
     gnssByDay: [0, 1, 2, 3].map((k) => { const rs = preciseRows.filter((r) => r.kind === 'gnss' && r.days[k]); return { k, n: rs.length, median: quantile(rs.map((r) => r.days[k].rmsKm), 0.5), p90: quantile(rs.map((r) => r.days[k].rmsKm), 0.9), ric: [0, 1, 2].map((i) => comp(rs.map((r) => r.days[k].ric), i)) }; }),
+    slrByDay: [0, 1, 2, 3].map((k) => { const rs = preciseRows.filter((r) => r.kind === 'laser-ranged' && r.days[k]); return { k, n: rs.length, median: quantile(rs.map((r) => r.days[k].rmsKm), 0.5), max: quantile(rs.map((r) => r.days[k].rmsKm), 1), ric: [0, 1, 2].map((i) => comp(rs.map((r) => r.days[k].ric), i)) }; }),
     gnssOutliers: preciseRows.filter((r) => r.kind === 'gnss' && r.days[0]?.rmsKm > 5).map((r) => ({ norad: r.norad, setEpochUtc: r.setEpochUtc, day0Km: r.days[0].rmsKm })),
     gnssEpochs: (() => { const e = preciseRows.filter((r) => r.kind === 'gnss').map((r) => r.setEpochUtc.slice(0, 10)).sort(); return { first: e[0], last: e.at(-1) }; })(),
   } : null;
 
   // COMSPOC XP sets scored against the GFZ rapid orbits: by days since the set's epoch (day 1 = the first 24 h after it), attached to the rapid-orbit regime of the same class
-  for (const [id, klass] of [['meo-gnss-rapid', 'meo'], ['igso-gnss-rapid', 'igso'], ['geo-gnss-rapid', 'geo']]) {
-    const rs = preciseRows.filter((r) => r.kind === 'gnss' && r.gnssClass === klass);
+  for (const [id, kind, klass] of [['meo-gnss-rapid', 'gnss', 'meo'], ['igso-gnss-rapid', 'gnss', 'igso'], ['geo-gnss-rapid', 'gnss', 'geo'], ['leo-slr-current', 'laser-ranged', 'leo'], ['meo-slr-current', 'laser-ranged', 'meo']]) {
+    const rs = preciseRows.filter((r) => r.kind === kind && (kind === 'gnss' ? r.gnssClass : r.slrClass) === klass);
     const regime = regimes.find((x) => x.id === id);
     if (!regime || !rs.length) continue;
     const day = (k) => ({ ...spread(rs.filter((r) => r.days[k]).map((r) => r.days[k].rmsKm)), ric: [0, 1, 2].map((i) => comp(rs.filter((r) => r.days[k]).map((r) => r.days[k].ric), i)) });
@@ -419,7 +422,14 @@ export function markdown(t) {
   if (cp) {
     const gnssN = cp.byKind.find((k) => k.kind === 'gnss')?.n ?? 0, slrN = cp.byKind.find((k) => k.kind === 'laser-ranged')?.n ?? 0;
     L.push('### COMSPOC XP sets of the GNSS and laser-ranged objects against precise orbits (local scoring only)', '',
-      `${cp.xpSets} COMSPOC XP sets are in the local capture of ${cp.capturedUtc}; ${cp.objectsWithPreciseProducts} of those objects have precise-orbit products in the archive (${cp.gnss} GNSS, ${cp.laserRanged} laser-ranged). **GNSS:** ${gnssN} sets (epochs ${cp.gnssEpochs?.first} to ${cp.gnssEpochs?.last}) are scored against the GFZ rapid orbits of 2026-10-11 to ${cp.newestProductDay.gfzRapid ?? '-'} (amendment A8; the days from ${cp.eopPredictedFromUtc?.slice(0, 10) ?? '-'} use Bulletin A predicted Earth orientation, under 0.15 m). **Laser-ranged:** the newest ILRS products are dated ${cp.newestProductDay.ilrsa} (combined) and ${cp.newestProductDay.nsgf} (NSGF), before the sets' epochs, so ${slrN ? '' : 'all '}${cp.laserRanged} laser-ranged sets wait${cp.pendingGnss?.length ? `, as do ${cp.pendingGnss.length} GNSS set(s) (${cp.pendingGnss.map((g) => `NORAD ${g.norad}, epoch ${g.setEpochUtc.slice(0, 10)}, ${g.inRapidProducts ? 'in the rapid products but no state after the epoch' : 'not in the rapid products'}`).join('; ')})` : ''}; re-run \`comspoc-precise.mjs\` as products appear. The ESA final orbits end ${cp.newestProductDay.esa} for the same reason.`, '');
+      `${cp.xpSets} COMSPOC XP sets are in the local capture of ${cp.capturedUtc}; ${cp.objectsWithPreciseProducts} of those objects have precise-orbit products in the archive (${cp.gnss} GNSS, ${cp.laserRanged} laser-ranged). **GNSS:** ${gnssN} sets (epochs ${cp.gnssEpochs?.first} to ${cp.gnssEpochs?.last}) are scored against the GFZ rapid orbits of 2026-10-11 to ${cp.newestProductDay.gfzRapid ?? '-'} (amendment A8; the days from ${cp.eopPredictedFromUtc?.slice(0, 10) ?? '-'} use Bulletin A predicted Earth orientation, under 0.15 m). **Laser-ranged:** ${slrN} of the ${cp.laserRanged} sets are scored against the NSGF rapid orbits of the LEO spheres fetched from NASA CDDIS (daily files to ${cp.newestProductDay.nsgfCurrent ?? '-'}; amendments A9 and A9b)${cp.pendingLaserRanged?.length ? `; ${cp.pendingLaserRanged.length} wait (NORAD ${cp.pendingLaserRanged.map((g) => `${g.norad}, epoch ${g.setEpochUtc.slice(0, 10)}`).join('; ')}) because the newest ILRS combined weekly orbits on CDDIS end 2026-10-03` : ''}.${cp.pendingGnss?.length ? ` ${cp.pendingGnss.length} GNSS set(s) wait (${cp.pendingGnss.map((g) => `NORAD ${g.norad}, epoch ${g.setEpochUtc.slice(0, 10)}, ${g.inRapidProducts ? 'in the rapid products but no state after the epoch' : 'not in the rapid products'}`).join('; ')}).` : ''} Re-run \`comspoc-precise.mjs\` as products appear. The ESA final orbits end ${cp.newestProductDay.esa}.`, '');
+    const slrRows = (cp.slrByDay ?? []).filter((d) => d.n);
+    if (slrRows.length) {
+      L.push('Laser-ranged: error of COMSPOC\'s XP set against the NSGF rapid orbit, by days since the set\'s own epoch (median over the sets that have the day; km):', '',
+        '| Days after the epoch | Sets | Median 3D | Maximum | Median radial / in-track / cross-track |', '| --- | --: | --: | --: | --- |',
+        ...slrRows.map((d) => `| ${d.k} to ${d.k + 1} | ${d.n} | ${f(d.median, 3)} | ${f(d.max, 3)} | ${d.ric.map((v) => f(v, 3)).join(' / ')} |`), '',
+        `The error does not grow over the days after the epoch and is almost all in-track: a set that sits off the orbit by a near-constant amount, not one that drifts. That is the form of the fit floor of section 12 (the tesseral in-track variation a mean-element set cannot follow); the best-case XP fit RMS of the LEO sphere row of section 1 is ${f(t.regimes.find((x) => x.id === 'leo-slr-current')?.xp.fit.median)} km.`, '');
+    }
     if (cp.gnssByDay) {
       L.push('GNSS: error of COMSPOC\'s XP set against the rapid orbit, by days since the set\'s own epoch (median over the sets that have the day; km):', '',
         '| Days after the epoch | Sets | Median 3D | 90th percentile | Median radial / in-track / cross-track |', '| --- | --: | --: | --: | --- |',

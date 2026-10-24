@@ -120,9 +120,33 @@ export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minS
 
 const FIT_FRAME = { EME2000: 'GCRF', GCRF: 'GCRF', ICRF: 'GCRF', TEME: 'TEMEOFDATE' }; // fit_sdngp reads TEME, GCRF and Earth-fixed; EME2000 and GCRF differ by the 20 mas frame bias (0.7 m at LEO)
 
+const sdngpOem = (object, lines, stopFit) => oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
+  lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false });
+
+/** The states of a fitted SDN-GP set (TEME, by the module) at the given epochs (ms), in the named axes ('EME2000' or 'GCRF', by foundation/frames): [{r, v}] in km, km/s. */
+async function sdngpStates(b, omm, epochMs, epochsMs, axes) {
+  const states = await b.sdngp.states(omm, epochsMs.map((t) => (t - epochMs) / 60000));
+  if (states.some((x) => x.status !== 0)) throw new Error(`sdngp propagate status ${states.find((x) => x.status !== 0).status}`);
+  const out = [];
+  for (let i = 0; i < epochsMs.length; i += 1) {
+    const t = await transformState(b.frames, 'TEME', axes, iso(epochsMs[i]), [...states[i].r, ...states[i].v]);
+    out.push({ r: t.slice(0, 3), v: t.slice(3, 6) });
+  }
+  return out;
+}
+
+/** SDN-GP fitted to the first `fitSeconds` of an ephemeris from `startMs` and propagated to `epochsMs` in the named axes: [{r, v}], or { error }. */
+export async function sdngpPredict(b, object, startMs, fitSeconds, epochsMs, axes = 'GCRF') {
+  const stopFit = startMs + fitSeconds * 1000;
+  const lines = slice(object, startMs, stopFit);
+  let fit;
+  try { fit = await b.sdngp.fit(sdngpOem(object, lines, stopFit), { weatherTable: b.weatherTable }); } catch (error) { return { error: String(error.message).slice(0, 200) }; }
+  if (!fit.ok) return { error: fit.error };
+  try { return await sdngpStates(b, fit.omm, ms(fit.unpacked.EPOCH), epochsMs, axes); } catch (error) { return { error: String(error.message).slice(0, 200) }; }
+}
+
 export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, minStatesPerDay) {
-  const bytes = oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
-    lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false });
+  const bytes = sdngpOem(object, lines, stopFit);
   const t0 = performance.now();
   let fit;
   try { fit = await b.sdngp.fit(bytes, { weatherTable: b.weatherTable }); } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
@@ -130,16 +154,7 @@ export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, min
   if (!fit.ok) return { ok: false, error: fit.error };
   const epochMs = ms(fit.unpacked.EPOCH);
   const axes = object.frame === 'EME2000' ? 'EME2000' : 'GCRF';
-  const ricOf = async (chosen) => { // predicted TEME states (module) -> the truth's axes (foundation/frames) -> pair_statistics RTN
-    const states = await b.sdngp.states(fit.omm, chosen.map((l) => (ms(l.epoch) - epochMs) / 60000));
-    if (states.some((x) => x.status !== 0)) throw new Error(`sdngp propagate status ${states.find((x) => x.status !== 0).status}`);
-    const predicted = [];
-    for (let i = 0; i < chosen.length; i += 1) {
-      const t = await transformState(b.frames, 'TEME', axes, iso(ms(chosen[i].epoch)), [...states[i].r, ...states[i].v]);
-      predicted.push({ r: t.slice(0, 3), v: t.slice(3, 6) });
-    }
-    return rtnSeries(b, predicted, chosen);
-  };
+  const ricOf = async (chosen) => rtnSeries(b, await sdngpStates(b, fit.omm, epochMs, chosen.map((l) => ms(l.epoch)), axes), chosen); // predicted states (module) -> the truth's axes (foundation/frames) -> pair_statistics RTN
   const thinned = (list) => { const step = list.length > 1 ? (ms(list[1].epoch) - ms(list[0].epoch)) / 1000 : 60; const every = Math.max(1, Math.round(RTN_STRIDE_SECONDS / step)); return list.filter((_, i) => i % every === 0); };
   let fitRic = null, days = {}, usPerState = null;
   try {
@@ -164,7 +179,7 @@ export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, min
   const p = fit.params;
   return {
     ok: true, converged: true, iterations: fit.iterations, fitRmsKm: fit.fitRmsKm, fitStates: fit.statesFitted, fitRic, days,
-    recordBytes: fit.omm.length, parameters: p.SDNGP_TAU0 !== undefined && Number(p.SDNGP_TAU0) !== 0 ? 9 : 10, fitMs, usPerState,
+    elementBytes: fit.minimal.length, recordBytes: fit.omm.length, parameters: 10, fitMs, usPerState, // six elements, signed B_eff, AGOM, tauc, taus (tau0 replaces B_eff above 0.5 m2/kg)
     bEff: Number(p.SDNGP_B_EFF), bEffSigma: Number(p.SDNGP_B_EFF_SIGMA), kappa: p.SDNGP_KAPPA === undefined ? null : Number(p.SDNGP_KAPPA), tau0: Number(p.SDNGP_TAU0), tauc: Number(p.SDNGP_TAUC), taus: Number(p.SDNGP_TAUS),
     agom: fit.unpacked.MEAN_MOTION_DDOT, meanMotion: fit.unpacked.MEAN_MOTION, inclination: fit.unpacked.INCLINATION, eccentricity: fit.unpacked.ECCENTRICITY, heldOutRmsKm: fit.heldOutRmsKm,
     module: b.sdngp.provenance.wasmSha256.slice(0, 12),

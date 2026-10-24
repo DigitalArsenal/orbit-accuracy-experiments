@@ -26,6 +26,8 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | LEO, laser-ranged (ILRS NSGF) | 98 / 98 / 98 | pending / 0.409 / - / 0.415 | pending / 0.970 / - / 1.219 | pending / 3.174 / - / 4.160 | pending / 9.399 / - / 9.193 | 99.9 % / 99.9 % | 312 / 304 | 290 / 257 |
 | MEO, GPS / GLONASS / Galileo (ESA final) | 60 / 47 / 60 | pending / 0.022 / - / 0.122 | pending / 0.064 / - / 0.319 | pending / 0.129 / - / 0.787 | pending / 0.187 / - / 1.566 | 89 % / 97 % | 320 / 304 | 329 / 288 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | 77 / 77 / 77 | pending / 0.125 / - / 0.127 | pending / 0.146 / - / 0.211 | pending / 0.190 / - / 0.516 | pending / 0.271 / - / 1.075 | 97 % / 99 % | 320 / 304 | 329 / 288 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | 51 / 51 / 51 | pending / 0.406 / - / 0.417 | pending / 0.900 / 0.482† / 1.407 | pending / 2.179 / 0.492† / 4.623 | pending / 4.850 / 0.485† / 8.509 | 99.8 % / 99.9 % | 320 / 304 | 290 / 257 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | 44 / 44 / 44 | pending / 0.118 / - / 0.119 | pending / 0.145 / 1.628† / 0.333 | pending / 0.197 / 1.605† / 1.211 | pending / 0.216 / 1.577† / 2.799 | 93 % / 99.9 % | 312 / 304 | 329 / 288 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | 120 / 114 / 120 | pending / 0.109 / - / 0.758 | pending / 0.246 / - / 1.804 | pending / 0.392 / - / 3.641 | pending / 0.556 / - / 5.630 | 87 % / 95 % | 320 / 288 | 289 / 331 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | 84 / 83 / 90 | pending / 0.146 / - / 0.931 | pending / 0.317 / - / 4.692 | pending / 0.547 / - / 17.5 | pending / 0.805 / - / 35.5 | 90 % / 99 % | 320 / 304 | 289 / 331 |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 50 / 50 / 50 | pending / 0.109 / - / 8.271 | pending / 0.616 / - / 61.0 | pending / 1.505 / - / 143 | pending / 3.131 / - / 222 | 63 % / 70 % | 320 / 288 | 289 / 331 |
@@ -35,12 +37,12 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) | 5 / 5 / 5 | pending / 0.090 / - / 0.835 | pending / 0.313 / - / 2.115 | pending / 0.633 / - / 4.381 | pending / 1.164 / - / 7.762 | 90 % / 69 % | 312 / 288 | 289 / 331 |
 | Cislunar, Earth-centred transfers (Artemis I, Artemis II) and Earth-Moon libration or distant-retrograde orbits (CAPSTONE, Artemis I) | truth artemis2 2026-04-02 to 2026-04-10, 3 windows; artemis1 2022-11-16 to 2022-12-11, 11 windows; capstone 2025-07-14 to 2026-07-14, 50 windows; artemis1 2022-11-16 to 2022-12-11, 2 windows | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
 | Lunar-centred (LRO, Danuri) | truth lro 2026-03-15 to 2026-06-14, 87 windows; danuri 2026-08-14 to 2026-10-17, 61 windows | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
-| Interplanetary, Sun-centred (Psyche, Lucy, Juno) | truth 2026-05-31 to 2027-03-01 | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
+| Interplanetary: Sun-centred cruise (Psyche, Lucy, Juno) and Jupiter-centred orbits (Juno) | truth psyche 2025-08-12 to 2026-07-11, 20 windows; lucy 2024-12-19 to 2025-09-06, 15 windows; lucy 2025-09-08 to 2027-02-28, 33 windows; juno 2012-09-30 to 2013-09-29, 22 windows; juno 2024-08-31 to 2026-08-22, 19 windows | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
 
 - Cislunar, Earth-centred transfers (Artemis I, Artemis II) and Earth-Moon libration or distant-retrograde orbits (CAPSTONE, Artemis I): awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (the Moon dominates; NAIF SPK type 13 and JPL Horizons vector tables, readable); 4 truth pack(s) and 66 windows prepared (section 13).
 - Lunar-centred (LRO, Danuri): awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (Moon-centred; NAIF SPK type 13 and JPL Horizons vector tables, readable); 2 truth pack(s) and 148 windows prepared (section 13).
-- Interplanetary, Sun-centred (Psyche, Lucy, Juno): awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap; Horizons for these three is not in the approval); no truth pack yet.
-- Truth packs for these regimes, ready for SDN-GP (local; derived from public NAIF kernels by files/orbit-products and foundation/time, and from JPL Horizons vector tables; [unix ms, x, y, z, vx, vy, vz] per state in km and km/s, inertial axes, UTC): artemis1-cislunar, 36506 states, Earth-centred, 2022-11-16 to 2022-12-11; artemis1-lunar, 36506 states, Moon-centred, 2022-11-16 to 2022-12-11; artemis2-cislunar, 12047 states, Earth-centred, 2026-04-02 to 2026-04-10; capstone-nrho, 105121 states, Moon-centred, 2025-07-14 to 2026-07-14; danuri-lunar, 92161 states, Moon-centred, 2026-08-14 to 2026-10-17; lro-lunar, 132478 states, Moon-centred, 2026-03-15 to 2026-06-14. The heliocentric kernels wait for a type-1 reader.
+- Interplanetary: Sun-centred cruise (Psyche, Lucy, Juno) and Jupiter-centred orbits (Juno): awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (Sun- or Jupiter-centred; JPL Horizons vector tables (the NAIF kernels of these missions are SPK type 1, unreadable by files/orbit-products 0.1.4)); 5 truth pack(s) and 109 windows prepared (section 13).
+- Truth packs for these regimes, ready for SDN-GP (local; derived from public NAIF kernels by files/orbit-products and foundation/time, and from JPL Horizons vector tables; [unix ms, x, y, z, vx, vy, vz] per state in km and km/s, inertial axes, UTC): artemis1-cislunar, 36506 states, Earth-centred, 2022-11-16 to 2022-12-11; artemis1-lunar, 36506 states, Moon-centred, 2022-11-16 to 2022-12-11; artemis2-cislunar, 12047 states, Earth-centred, 2026-04-02 to 2026-04-10; capstone-nrho, 105121 states, Moon-centred, 2025-07-14 to 2026-07-14; danuri-lunar, 92161 states, Moon-centred, 2026-08-14 to 2026-10-17; juno-cruise, 8737 states, Sun-centred, 2012-09-30 to 2013-09-29; juno-jupiter, 34609 states, Jupiter-centred, 2024-08-31 to 2026-08-22; lro-lunar, 132478 states, Moon-centred, 2026-03-15 to 2026-06-14; lucy-cruise-rec, 6265 states, Sun-centred, 2024-12-19 to 2025-09-06; lucy-cruise-ref, 12913 states, Sun-centred, 2025-09-08 to 2027-02-28; psyche-cruise, 7993 states, Sun-centred, 2025-08-12 to 2026-07-11.
 - GEO operator ephemerides: none are stored locally (operator-capture holds Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not ephemerides); the GEO rows are the GFZ MGEX BeiDou-2 and QZSS-3 orbits of 2025 and, for October 2026, the one GEO satellite in the GFZ rapid MGEX file (QZS-2G).
 - NAIF does not host TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23). With the approvals of 2026-10-24 TESS comes from STScI MAST (definitive ephemeris SPK) and CAPSTONE, Artemis I and Danuri from JPL Horizons (amendments A8 to A8c); THEMIS, Chandra and Artemis II stay as further HEO and cislunar truth.
 
@@ -75,8 +77,8 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 ### What the table says (generated from the numbers above)
 
 - The in-track component carries 99.4 to 99.9 % of the day-3 squared error of SGP4-XP in the LEO regimes, 88.4 to 97.1 % in MEO and 86.6 to 90.9 % in IGSO and GEO: the terms that can buy accuracy are the along-track ones (drag and thrust, secular rate, time variation of density).
-- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio 0.99 to 1.07, about 0.48 km, a common floor, which points at short-period terms that both theories leave out); where the orbit is high XP fits much tighter than SGP4: MEO, GPS / GLONASS / Galileo (ESA final) 5.4 times (0.022 against 0.122 km); IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 6.5 times (0.109 against 0.758 km); GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 6.3 times (0.146 against 0.931 km); HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 76.1 times (0.109 against 8.271 km); HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 24 h fit 124 times (0.207 against 25.7 km); MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 5.4 times (0.021 against 0.116 km); IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22) 6.9 times (0.103 against 0.717 km); GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 9.3 times (0.090 against 0.835 km).
-- Held-out day 3, median XP / median SGP4: LEO, Starlink, FFM-propagated truth 0.68; LEO, ISS (NASA OEM of 2026-10-07) 1.01; LEO, ISS (NASA OEM of 2026-10-21, one window from its start) 1.01; LEO, laser-ranged (ILRS NSGF) 1.02; MEO, GPS / GLONASS / Galileo (ESA final) 0.12; MEO, laser-ranged (LAGEOS, Etalon, LARES-2) 0.25; IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 0.10; GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 0.02; HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 0.01; HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 24 h fit 0.00; MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 0.05; IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22) 0.15; GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 0.15.
+- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio 0.97 to 1.07, about 0.48 km, a common floor, which points at short-period terms that both theories leave out); where the orbit is high XP fits much tighter than SGP4: MEO, GPS / GLONASS / Galileo (ESA final) 5.4 times (0.022 against 0.122 km); IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 6.5 times (0.109 against 0.758 km); GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 6.3 times (0.146 against 0.931 km); HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 76.1 times (0.109 against 8.271 km); HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 24 h fit 124 times (0.207 against 25.7 km); MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 5.4 times (0.021 against 0.116 km); IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22) 6.9 times (0.103 against 0.717 km); GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 9.3 times (0.090 against 0.835 km).
+- Held-out day 3, median XP / median SGP4: LEO, Starlink, FFM-propagated truth 0.68; LEO, ISS (NASA OEM of 2026-10-07) 1.01; LEO, ISS (NASA OEM of 2026-10-21, one window from its start) 1.01; LEO, laser-ranged (ILRS NSGF) 1.02; MEO, GPS / GLONASS / Galileo (ESA final) 0.12; MEO, laser-ranged (LAGEOS, Etalon, LARES-2) 0.25; LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) 0.57; MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) 0.08; IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 0.10; GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 0.02; HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 0.01; HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 24 h fit 0.00; MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 0.05; IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22) 0.15; GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22) 0.15.
 - COMSPOC XP sets, scored on the 40 same-day Starlinks at an age of 3.2 days (median) at the start of the truth: median 3D error 21.3 / 28.0 / 33.6 km on days 1 / 2 / 3, against 1.2 / 4.9 / 10.3 km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.
 - At a matched age (the set's epoch plus about 3 to 4 days) the COMSPOC XP error is 15.7 km (its first truth day, median age at the start 3.2 days) against 10.3 km for XP fitted to the truth (held-out day 3, age 3 to 4 days from the fit epoch) and 14.6 km for SGP4, on the same 40 Starlinks.
 - The LEO fit floor is tesseral gravity (section 12, FFM-1 re-propagated with the same force model and the field cut to zonals): the in-track fit RMS of SGP4-XP falls from 401 to 8 m on the 53 degree Starlink shell (predicted floor 384 m), 406 to 9 m on the ISS (394 m) and 119 to 2 m on LAGEOS-1 (110 m), and the held-out day-3 error from 8.1 to 0.6 km, 11.6 to 0.6 km and 0.36 to 0.03 km.
@@ -114,6 +116,10 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | MEO, GPS / GLONASS / Galileo (ESA final) | SGP4 | 47 | 0.122 / 0.130 / 0.182 | 0.319 / 0.433 / 0.824 | 0.787 / 1.222 / 2.406 | 1.566 / 2.519 / 4.415 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | SGP4-XP | 77 | 0.125 / 0.099 / 0.133 | 0.146 / 0.143 / 0.218 | 0.190 / 0.216 / 0.374 | 0.271 / 0.300 / 0.581 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | SGP4 | 77 | 0.127 / 0.121 / 0.132 | 0.211 / 0.237 / 0.387 | 0.516 / 0.606 / 1.195 | 1.075 / 1.333 / 2.563 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | SGP4-XP | 51 | 0.406 / 0.439 / 0.547 | 0.900 / 1.038 / 1.966 | 2.179 / 2.730 / 5.889 | 4.850 / 5.398 / 10.0 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | SGP4 | 51 | 0.417 / 0.445 / 0.537 | 1.407 / 1.371 / 2.072 | 4.623 / 4.315 / 7.801 | 8.509 / 8.813 / 16.7 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | SGP4-XP | 44 | 0.118 / 0.093 / 0.128 | 0.145 / 0.150 / 0.252 | 0.197 / 0.231 / 0.432 | 0.216 / 0.308 / 0.613 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | SGP4 | 44 | 0.119 / 0.118 / 0.130 | 0.333 / 0.346 / 0.532 | 1.211 / 1.160 / 1.852 | 2.799 / 2.446 / 4.076 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4-XP | 120 | 0.109 / 0.113 / 0.178 | 0.246 / 0.261 / 0.404 | 0.392 / 1.609 / 0.746 | 0.556 / 2.750 / 1.112 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4 | 114 | 0.758 / 0.765 / 1.083 | 1.804 / 3.844 / 13.4 | 3.641 / 12.7 / 47.9 | 5.630 / 25.7 / 104 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4-XP | 84 | 0.146 / 0.136 / 0.202 | 0.317 / 0.374 / 0.678 | 0.547 / 1.599 / 1.485 | 0.805 / 3.093 / 2.478 |
@@ -153,6 +159,8 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | LEO, laser-ranged (ILRS NSGF) | 98 | 0.99 (71 %) | 0.80 (62 %) | 0.76 (57 %) | 1.02 (67 %) |
 | MEO, GPS / GLONASS / Galileo (ESA final) | 47 | 0.18 (100 %) | 0.20 (100 %) | 0.17 (98 %) | 0.12 (100 %) |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | 77 | 0.99 (60 %) | 0.69 (68 %) | 0.37 (79 %) | 0.25 (83 %) |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | 51 | 0.97 (67 %) | 0.64 (71 %) | 0.47 (63 %) | 0.57 (50 %) |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | 44 | 0.99 (61 %) | 0.44 (82 %) | 0.16 (98 %) | 0.08 (100 %) |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | 114 | 0.15 (100 %) | 0.14 (100 %) | 0.11 (100 %) | 0.10 (100 %) |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | 83 | 0.16 (100 %) | 0.07 (100 %) | 0.03 (97 %) | 0.02 (97 %) |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 50 | 0.01 (100 %) | 0.01 (100 %) | 0.01 (100 %) | 0.01 (100 %) |
@@ -199,6 +207,12 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | MEO, GPS / GLONASS / Galileo (ESA final) | SGP4 | 0.076 / 0.082 / 0.020 | 0.117 / 0.279 / 0.046 | 0.265 / 1.553 / 0.111 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | SGP4-XP | 0.023 / 0.118 / 0.033 | 0.025 / 0.140 / 0.034 | 0.027 / 0.265 / 0.036 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | SGP4 | 0.025 / 0.118 / 0.033 | 0.027 / 0.193 / 0.037 | 0.038 / 1.007 / 0.065 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | SGP4-XP | 0.090 / 0.386 / 0.129 | 0.103 / 0.876 / 0.129 | 0.131 / 4.833 / 0.145 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | SGP4 | 0.091 / 0.386 / 0.129 | 0.097 / 1.382 / 0.131 | 0.131 / 8.506 / 0.191 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | COMSPOC XP (local scoring only) | | 0.096 / 0.453 / 0.141 | 0.095 / 0.462 / 0.122 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | SGP4-XP | 0.023 / 0.110 / 0.033 | 0.027 / 0.139 / 0.034 | 0.045 / 0.215 / 0.036 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | SGP4 | 0.024 / 0.109 / 0.033 | 0.029 / 0.327 / 0.037 | 0.054 / 2.787 / 0.064 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | COMSPOC XP (local scoring only) | | 0.700 / 1.469 / 0.036 | 0.711 / 1.408 / 0.034 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4-XP | 0.034 / 0.101 / 0.025 | 0.079 / 0.233 / 0.030 | 0.195 / 0.517 / 0.058 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4 | 0.540 / 0.520 / 0.067 | 0.682 / 1.683 / 0.149 | 1.248 / 5.460 / 0.380 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4-XP | 0.043 / 0.138 / 0.019 | 0.103 / 0.294 / 0.019 | 0.249 / 0.770 / 0.028 |
@@ -253,6 +267,10 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | MEO, GPS / GLONASS / Galileo (ESA final) | SGP4 | 7 | 304 | 656 | 224 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | SGP4-XP | 8 | 320 | 2336 | 595 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | SGP4 | 7 | 304 | 648 | 246 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | SGP4-XP | 8 | 320 | 2320 | 374 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | SGP4 | 7 | 304 | 648 | 117 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | SGP4-XP | 8 | 312 | 2344 | 494 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | SGP4 | 7 | 304 | 656 | 203 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4-XP | 8 | 320 | 2344 | 412 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4 | 7 | 288 | 640 | 132 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4-XP | 8 | 320 | 2344 | 499 |
@@ -305,6 +323,8 @@ Fitted terms (medians over windows): the two extra terms of SGP4-XP against the 
 | LEO, laser-ranged (ILRS NSGF) | 1.40e-1 | 1.26e-1 | 69 % | 7.44e-4 |
 | MEO, GPS / GLONASS / Galileo (ESA final) | 1.31e-5 | 2.42e-2 | 100 % | 5.09e+1 |
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | 2.09e-5 | 5.73e-3 | 88 % | -4.93e-1 |
+| LEO, laser-ranged spheres (ILRS NSGF rapid orbits of 2026-10-08 to 10-23, via CDDIS) | 3.95e-1 | 2.08e-1 | 73 % | 7.82e-4 |
+| MEO, laser-ranged (LARES-2 NSGF rapid orbits of 2026-10; LAGEOS and Etalon ILRS combined weekly orbits of 2026-09, via CDDIS) | 0.00e+0 | 2.16e-2 | 86 % | -2.19e+0 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | 4.82e-5 | 3.71e-2 | 100 % | 0.00e+0 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | 7.24e-9 | 3.51e-2 | 100 % | 0.00e+0 |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 2.18e-5 | 3.51e-3 | 74 % | 0.00e+0 |
@@ -470,7 +490,18 @@ FFM-1 against the newer file by truth-quality group (median / 90th percentile, k
 
 ### COMSPOC XP sets of the GNSS and laser-ranged objects against precise orbits (local scoring only)
 
-91 COMSPOC XP sets are in the local capture of 2026-10-23T20:09Z; 43 of those objects have precise-orbit products in the archive (32 GNSS, 11 laser-ranged). **GNSS:** 31 sets (epochs 2026-10-14 to 2026-10-20) are scored against the GFZ rapid orbits of 2026-10-11 to 2026-10-22 (amendment A8; the days from 2026-10-20 use Bulletin A predicted Earth orientation, under 0.15 m). **Laser-ranged:** the newest ILRS products are dated 2026-08-29 (combined) and 2026-08-29 (NSGF), before the sets' epochs, so all 11 laser-ranged sets wait, as do 1 GNSS set(s) (NORAD 62339, epoch 2026-10-17, not in the rapid products); re-run `comspoc-precise.mjs` as products appear. The ESA final orbits end 2026-09-23 for the same reason.
+91 COMSPOC XP sets are in the local capture of 2026-10-23T20:09Z; 43 of those objects have precise-orbit products in the archive (32 GNSS, 11 laser-ranged). **GNSS:** 31 sets (epochs 2026-10-14 to 2026-10-20) are scored against the GFZ rapid orbits of 2026-10-11 to 2026-10-22 (amendment A8; the days from 2026-10-20 use Bulletin A predicted Earth orientation, under 0.15 m). **Laser-ranged:** 7 of the 11 sets are scored against the NSGF rapid orbits of the LEO spheres fetched from NASA CDDIS (daily files to 2026-10-24; amendments A9 and A9b); 4 wait (NORAD 19751, epoch 2026-10-19; 20026, epoch 2026-10-19; 22195, epoch 2026-10-20; 8820, epoch 2026-10-20) because the newest ILRS combined weekly orbits on CDDIS end 2026-10-03. 1 GNSS set(s) wait (NORAD 62339, epoch 2026-10-17, not in the rapid products). Re-run `comspoc-precise.mjs` as products appear. The ESA final orbits end 2026-09-23.
+
+Laser-ranged: error of COMSPOC's XP set against the NSGF rapid orbit, by days since the set's own epoch (median over the sets that have the day; km):
+
+| Days after the epoch | Sets | Median 3D | Maximum | Median radial / in-track / cross-track |
+| --- | --: | --: | --: | --- |
+| 0 to 1 | 7 | 0.531 | 1.628 | 0.097 / 0.505 / 0.140 |
+| 1 to 2 | 7 | 0.562 | 1.605 | 0.096 / 0.538 / 0.131 |
+| 2 to 3 | 7 | 0.558 | 1.577 | 0.100 / 0.534 / 0.116 |
+| 3 to 4 | 5 | 0.467 | 1.584 | 0.076 / 0.449 / 0.109 |
+
+The error does not grow over the days after the epoch and is almost all in-track: a set that sits off the orbit by a near-constant amount, not one that drifts. That is the form of the fit floor of section 12 (the tesseral in-track variation a mean-element set cannot follow); the best-case XP fit RMS of the LEO sphere row of section 1 is 0.406 km.
 
 GNSS: error of COMSPOC's XP set against the rapid orbit, by days since the set's own epoch (median over the sets that have the day; km):
 
@@ -675,9 +706,14 @@ Truth packs (local: `<store>/pack/`, states in km and km/s, inertial axes of the
 | artemis2-cislunar | cislunar-transfer | Earth, J2000 | NAIF SPK art002_rec_260402_260410_jsc_bet_revf.bsp | 12047 (60 s) | 2026-04-02 to 2026-04-10 | 24 h: 3 (days 1 to 3, every 48 h) |
 | capstone-nrho | cislunar-libration | Moon, ICRF | JPL Horizons API vector tables | 105121 (300 s) | 2025-07-14 to 2026-07-14 | 336 h: 50 (days 1 to 7, every 168 h) |
 | danuri-lunar | lunar | Moon, ICRF | JPL Horizons API vector tables | 92161 (60 s) | 2026-08-14 to 2026-10-17 | 24 h: 31; 72 h: 30 (days 1 to 3, every 48 h) |
+| juno-cruise | heliocentric-cruise | Sun, ICRF | JPL Horizons API vector tables | 8737 (3600 s) | 2012-09-30 to 2013-09-29 | 720 h: 22 (days 1 to 15, every 360 h) |
+| juno-jupiter | planet-centred | Jupiter, ICRF | JPL Horizons API vector tables | 34609 (1800 s) | 2024-08-31 to 2026-08-22 | 1584 h: 19 (days 1 to 33, every 792 h) |
 | lro-lunar | lunar | Moon, J2000 | NAIF SPK lrorg_2026074_2026166_v01.bsp | 132478 (60 s) | 2026-03-15 to 2026-06-14 | 24 h: 44; 72 h: 43 (days 1 to 3, every 48 h) |
+| lucy-cruise-rec | heliocentric-cruise | Sun, ICRF | JPL Horizons API vector tables | 6265 (3600 s) | 2024-12-19 to 2025-09-06 | 720 h: 15 (days 1 to 15, every 360 h) |
+| lucy-cruise-ref | heliocentric-cruise | Sun, ICRF | JPL Horizons API vector tables | 12913 (3600 s) | 2025-09-08 to 2027-02-28 | 720 h: 33 (days 1 to 15, every 360 h) |
+| psyche-cruise | heliocentric-cruise | Sun, ICRF | JPL Horizons API vector tables | 7993 (3600 s) | 2025-08-12 to 2026-07-11 | 720 h: 20 (days 1 to 15, every 360 h) |
 
-Heliocentric cruise (fit 30 d, held-out 15 d): none yet: SPK type 1 (Psyche, Lucy, Juno) is not readable by files/orbit-products 0.1.4.
+Heliocentric cruise (fit 30 d, held-out days 1 to 15, every 15 d) and Jupiter-centred orbits (fit 66 d, held-out days 1 to 33, every 33 d): psyche-cruise, lucy-cruise-rec, lucy-cruise-ref (a planning prediction), juno-cruise (JPL Horizons vector tables, amendment A9; the NAIF kernels of these missions are SPK type 1, unreadable by files/orbit-products 0.1.4).
 
 ## Credits and terms
 
@@ -693,7 +729,7 @@ Heliocentric cruise (fit 30 d, held-out 15 d): none yet: SPK type 1 (Psyche, Luc
 - NOAA Space Weather Prediction Center, Report of Solar-Geophysical Activity (U.S. Government material, not subject to copyright protection).
 - IERS EOP 20 C04 (IERS Earth Orientation Centre, Observatoire de Paris); finals2000A (IERS Rapid Service/Prediction Centre, U.S. Naval Observatory).
 - JPL planetary ephemeris DE440 (Park, R. S., Folkner, W. M., Williams, J. G., Boggs, D. H. (2021), AJ 161:105, doi:10.3847/1538-3881/abd414), via NASA/JPL NAIF; year excerpts made by DigitalArsenal with NAIF's spksub_c.
-- State vectors of CAPSTONE, Artemis I and Danuri from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.
+- State vectors of CAPSTONE, Artemis I, Danuri, Psyche, Lucy and Juno from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.
 - TESS spacecraft ephemeris: this paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555.
 - NRLMSISE-00 (Picone, J. M., Hedin, A. E., Drob, D. P., Aikin, A. C. (2002), JGR 107(A12), 1468), U.S. Naval Research Laboratory.
 - EGM2008: NGA (Pavlis et al. 2012, JGR 117, B04406, doi:10.1029/2011JB008916). EGM96: NASA GSFC and NIMA (Lemoine et al. 1998, NASA/TP-1998-206861).
