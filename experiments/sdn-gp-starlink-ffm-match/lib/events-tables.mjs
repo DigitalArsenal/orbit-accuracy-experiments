@@ -374,8 +374,12 @@ function m32(dir) {
 
 const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m24b: m24b(dir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
 
-/** The events measurements of a build (and, when given, of the previous complete build, for the tables that stand the two side by side). */
-export function eventsStudy(dir, resultsDir, previousDir = null) { return dir ? { ...studyOf(dir, resultsDir), previous: previousDir ? studyOf(previousDir, resultsDir) : null } : null; }
+/** The events measurements of a build and, when given, of the earlier complete builds (oldest first; `previous` is the last of them), for the tables that stand the builds side by side. */
+export function eventsStudy(dir, resultsDir, earlierDirs = []) {
+  if (!dir) return null;
+  const history = earlierDirs.map((d) => studyOf(d, resultsDir)).filter((x) => x.m24 || x.m24c || x.m24a || x.m22);
+  return { ...studyOf(dir, resultsDir), previous: history.at(-1) ?? null, history };
+}
 
 // ---- markdown (section 16) ----
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));
@@ -446,22 +450,23 @@ export function eventsMarkdown(e) {
     L.push('#### The ISS pre-burn windows, diagnostic (amendments A12c and A12d)', '',
       'The same 99 planned burns of the pre-burn files, windows cut around each burn on the same states, weather and rules. The stretches before and after the burn hold no planned burn (a detection in them is a false alarm); the other two hold the burn. Position is the place of the detection in the window (0 start, 1 end); offset is the detected epoch less TIG for the detections not within 92 min of it:', '',
       `| Build | Window | Scored | Windows with a detection | Hits / elsewhere / none | Position, median [10th, 90th] | Offset from TIG (h), median [10th, 90th] | Absolute delta-v, median (m/s) | Hits: epoch error (min), median [10th, 90th] | Hits: delta-v over planned, median [10th, 90th] |`, '| --- | --- | --- | --: | --- | --- | --- | --: | --- | --- |',
-      ...(e.previous?.m24b ? part(e.previous.m24b, e.previous.build) : []), ...part(e.m24b, e.build), '');
+      ...e.history.filter((x) => x.m24b).flatMap((x) => part(x.m24b, x.build)), ...part(e.m24b, e.build), '');
   }
   if (e.previous && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
-    const p = e.previous, cur = e;
+    const builds = [...e.history.filter((x) => x.m24 || x.m24c || x.m24a), e];
     const cells = [
       ['ISS, NASA files without a reboost (M24): windows with a detection', (x) => (x.m24 ? `${x.m24.windowsWithDetection} of ${x.m24.windows}` : '')],
       ['Burn-free FFM-1 Starlink arcs (M24c): windows with a detection', (x) => (x.m24c ? `${x.m24c.windowsWithDetection} of ${x.m24c.windows}` : '')],
       ['Burn-free FFM-1 Starlink arcs: false alarms per object-year', (x) => (x.m24c ? f(x.m24c.falseAlarmsPerObjectYear, 1) : '')],
       ['ISS archive, burn-free windows with a detection', (x) => (x.m24a ? `${x.m24a.free.windowsWithDetection} of ${x.m24a.free.windows}` : '')],
       ['ISS archive, burn-free: false alarms per object-year', (x) => (x.m24a ? f(x.m24a.free.falseAlarmsPerObjectYear, 1) : '')],
-      ['ISS archive, pre-burn windows: hits / detection elsewhere / none', (x) => (x.m24a ? `${x.m24a.pre.hits} / ${x.m24a.pre.wrongEpoch} / ${x.m24a.pre.none} of ${x.m24a.pre.windows}` : '')],
-      ['ISS archive, pre-burn hits: epoch error (min), median; absolute delta-v over planned, median', (x) => (x.m24a && x.m24a.pre.hits ? `${f(x.m24a.pre.epochErrorMin.median, 1)}; ${f(x.m24a.pre.dvRatio.median, 2)}` : '')],
-      ['ISS archive, post-burn windows: hits / elsewhere / none', (x) => (x.m24a ? `${x.m24a.post.hits} / ${x.m24a.post.wrongEpoch} / ${x.m24a.post.none} of ${x.m24a.post.windows}` : '')],
+      ['ISS archive, 72 h pre-burn windows: hits / detection elsewhere / none', (x) => (x.m24a ? `${x.m24a.pre.hits} / ${x.m24a.pre.wrongEpoch} / ${x.m24a.pre.none} of ${x.m24a.pre.windows}` : '')],
+      ['ISS archive, 72 h pre-burn hits: epoch error (min), median; absolute delta-v over planned, median', (x) => (x.m24a && x.m24a.pre.hits ? `${f(x.m24a.pre.epochErrorMin.median, 1)}; ${f(x.m24a.pre.dvRatio.median, 2)}` : '')],
+      ['ISS archive, 72 h post-burn windows: hits / elsewhere / none', (x) => (x.m24a ? `${x.m24a.post.hits} / ${x.m24a.post.wrongEpoch} / ${x.m24a.post.none} of ${x.m24a.post.windows}` : '')],
+      ...['sub-tight', 'sub-p6', 'sub-p8', 'sub-across', 'sub-p24'].map((kind) => [`ISS archive diagnostic, ${{ 'sub-tight': 'TIG - 4 h to TIG + 24 h', 'sub-p6': 'TIG - 6 h to TIG + 24 h', 'sub-p8': 'TIG - 8 h to TIG + 24 h', 'sub-across': 'TIG - 12 h to TIG + 36 h', 'sub-p24': 'TIG - 24 h to TIG + 24 h' }[kind]}: hits of the windows scored`, (x) => { const k = x.m24b?.find((y) => y.kind === kind); return k && k.scored ? `${k.hits} of ${k.scored}` : ''; }]),
       ...PLANTED_CASES.map((id) => [`Planted arcs, ${id === 'ctl' ? 'control: detections (of 48)' : `${id}: hits within ${HIT_MIN} min (of 48)`}`, (x) => { const c = x.m24p?.cases.find((y) => y.id === id); return c ? (id === 'ctl' ? `${c.detections}` : `${c.hits}`) : ''; }]),
     ];
-    L.push(`#### The detector, build ${p.build} beside build ${cur.build}`, '', `| Measurement | ${p.build} | ${cur.build} |`, '| --- | --: | --: |', ...cells.map(([label, fn]) => `| ${label} | ${fn(p)} | ${fn(cur)} |`), '');
+    L.push(`#### The detector across builds`, '', `| Measurement | ${builds.map((x) => x.build).join(' | ')} |`, `| --- | ${builds.map(() => '--:').join(' | ')} |`, ...cells.map(([label, fn]) => `| ${label} | ${builds.map(fn).join(' | ')} |`), '');
   }
   if (e.m25) {
     L.push('#### M25. LRO and Danuri against the truth-side maneuver list', '',
