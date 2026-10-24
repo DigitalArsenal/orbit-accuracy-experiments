@@ -592,3 +592,10 @@ maneuver; the day-3 medians by treatment. The detection and false-alarm counts o
 6. M28. The hand-off state's reference frame is read from the RDM (TEME in the probe) and converted by foundation/frames before FFM-1 runs it; a `reentry` refusal (the last node of the probe cell was refused as "reentry-not-reached", with a fit RMS
 of 12.8 km) is a row, not a gap. The node scan begins at the first sample with two periods of history and drops the nodes with less than 6 h of truth, as A10 said.
 7. Jobs. The events jobs are sources m22, m23, m28 and m24 of `sdngp-run.mjs`; they run with --only and do not rewrite complete.json, which the 65 jobs of the re-score wrote.
+
+### A10c - 2026-10-24, before any row of the burn-free control of M24 was scored: the detector on burn-free FFM-1 arcs
+
+The M24 rows of A10 5 were read once the M28 and M24 jobs finished (and before the M22 and M23 rows were scored): 13 of the 26 ISS windows reported a burn on files that hold none. To separate the detector from the data, the same `detect_maneuvers`
+runs on arcs that are burn-free by construction: the 48 registered Starlink truths of M22 (one FFM-1 integration from one state), 72 h windows starting at 0 h and at 24 h of the 96 h truth, every fifth state (300 s), TEME by foundation/frames, the call as
+for the ISS windows (96 windows, 4 distinct days per satellite, 192 object-days). Reported: windows run, windows with a detection, the detections (delta-v and Lambda) and the distinct detection epochs per object-year over the 192 object-days. Source `m24c`,
+rows `m24c.s*.jsonl` in rows/sdngp/<build>/, a job of `sdngp-run.mjs` run with --only. Nothing else in A10 changes.
