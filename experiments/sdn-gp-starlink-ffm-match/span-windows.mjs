@@ -14,6 +14,8 @@ import { ms, iso, slice } from './lib/windows.mjs';
 
 export const SPANS_H = [24, 48, 72, 120];
 const ARM = args.arm ?? 'both';
+const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: the fit ends at the set's epoch, the truth is given from 120 h before it, the module's span rule chooses; SDN-GP only
+if (DEFAULT_SPAN && ARM !== 'sdngp') throw new Error('--span default needs --arm sdngp');
 const wanted = new Set((args.source ?? 'span-slr,span-gnss').split(','));
 
 /** The scored COMSPOC precise-orbit rows (epoch, kind, class), as comspoc-precise.mjs recorded them. */
@@ -37,18 +39,19 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   fs.mkdirSync(path.join(store, 'rows'), { recursive: true });
   for (const source of wanted) {
     const kind = source === 'span-gnss' ? 'gnss' : 'laser-ranged';
-    const sink = ARM === 'sdngp' ? sdngpSink(b, source, args.shard) : null;
+    const sink = ARM === 'sdngp' ? sdngpSink(b, DEFAULT_SPAN ? `${source}+default` : source, args.shard) : null;
     const file = path.join(store, 'rows', `${source}.jsonl`);
     const done = new Set(!sink && fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.id}|${r.startUtc}|${r.fitSeconds}`; }) : []);
     let n = 0, skipped = 0;
     for (const set of comspocSets().filter((s) => s.kind === kind).sort((a, c) => a.norad - c.norad)) {
       const object = spanObject(set);
       if (!object) continue;
-      for (const hours of SPANS_H) {
-        const startMs = set.epochMs - hours * 3600e3, fitSeconds = hours * 3600;
+      for (const hours of DEFAULT_SPAN ? ['default'] : SPANS_H) {
+        const geometry = hours === 'default' ? 24 : hours; // a default window ends at the epoch like the others; 24 h is the least the truth must supply
+        const startMs = set.epochMs - geometry * 3600e3, fitSeconds = geometry * 3600;
         if (startMs < object.t[0] || !spanCovered(object, startMs, set.epochMs)) { skipped += 1; continue; }
-        if (sink) { if (!sink.mine() || sink.has(rowKey({ source: object.source, id: object.id, startUtc: iso(startMs), fitSeconds }))) continue; } else if (done.has(`${object.id}|${iso(startMs)}|${fitSeconds}`)) continue;
-        const row = await scoreWindow(b, object, startMs, { fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage, arms: ARM === 'sdngp' ? 'sdngp' : 'both' });
+        if (sink) { if (!sink.mine() || sink.has(rowKey({ source: object.source + (DEFAULT_SPAN ? '+default' : ''), id: object.id, startUtc: iso(startMs), fitSeconds }))) continue; } else if (done.has(`${object.id}|${iso(startMs)}|${fitSeconds}`)) continue;
+        const row = await scoreWindow(b, object, startMs, { fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage, arms: ARM === 'sdngp' ? 'sdngp' : 'both', defaultSpan: DEFAULT_SPAN });
         if (!row) continue;
         const tagged = { ...row, group: set.group, norad: set.norad, spanHours: hours };
         if (sink) { const { xp, sgp4, ...rest } = tagged; sink.append(rest); } else fs.appendFileSync(file, `${JSON.stringify(tagged)}\n`);

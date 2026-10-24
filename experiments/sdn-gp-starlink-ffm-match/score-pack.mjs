@@ -18,8 +18,8 @@ const H = 3600000;
 const rms = (v) => Math.sqrt(v.reduce((s, x) => s + x * x, 0) / v.length);
 
 /** { byDay, matched, unmatched, centerCheck } for predicted lines against a pack window. */
-export async function scorePack(b, { pack, startMs, fitHours, leadDays, predicted, predictedCenter }) {
-  const { meta, object } = readPack(pack);
+export async function scorePack(b, { pack, startMs, fitHours, leadDays, predicted, predictedCenter, loaded }) {
+  const { meta, object } = loaded ?? readPack(pack); // `loaded`: the pack read once by a caller that scores many windows
   const fitEnd = startMs + fitHours * H;
   const nearest = (t) => { // truth index with |t_i - t| <= 5 ms, else -1
     let lo = 0, hi = object.t.length - 1;

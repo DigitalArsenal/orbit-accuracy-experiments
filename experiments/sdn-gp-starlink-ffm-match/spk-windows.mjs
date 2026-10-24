@@ -16,6 +16,8 @@ import { sdngpSink, rowKey } from './lib/sdngp-rows.mjs';
 
 
 const ARM = args.arm ?? 'both';
+const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: see baselines.mjs
+if (DEFAULT_SPAN && ARM !== 'sdngp') throw new Error('--span default needs --arm sdngp');
 const wanted = new Set((args.source ?? 'heo-themis,heo-chandra,heo-artemis2,heo-tess').split(','));
 const FILES = (dir) => ({
   themis: (letter) => path.join(dir, `themis/THEMIS_${letter}_2013_039_055.bsp`),
@@ -30,7 +32,7 @@ const files = FILES(KERNELS(config.archive));
 fs.mkdirSync(path.join(store, 'rows'), { recursive: true });
 
 async function run(source, objects, fits, { leadDays = [1, 2, 3], minCoverage = config.windows.minimumCoverage, stride = A5.strideSeconds } = {}) {
-  const sink = ARM === 'sdngp' ? sdngpSink(b, source, args.shard) : null;
+  const sink = ARM === 'sdngp' ? sdngpSink(b, DEFAULT_SPAN ? `${source}+default` : source, args.shard) : null;
   const file = path.join(store, 'rows', `${source}.jsonl`);
   const done = new Set(!sink && fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.id}|${r.startUtc}|${r.fitSeconds}`; }) : []);
   let n = 0;
@@ -38,8 +40,8 @@ async function run(source, objects, fits, { leadDays = [1, 2, 3], minCoverage = 
     for (const hours of fits) {
       const fitSeconds = hours * 3600;
       for (const start of windowStarts(object, { fitSeconds, strideSeconds: stride, minLeadDays: leadDays.length ? 1 : 0.4 })) {
-        if (sink) { if (!sink.mine() || sink.has(rowKey({ source: object.source, id: object.id, startUtc: iso(start), fitSeconds }))) continue; } else if (done.has(`${object.id}|${iso(start)}|${fitSeconds}`)) continue;
-        const row = await scoreWindow(b, object, start, { fitSeconds, leadDays, minCoverage, arms: ARM === 'sdngp' ? 'sdngp' : 'both' });
+        if (sink) { if (!sink.mine() || sink.has(rowKey({ source: object.source + (DEFAULT_SPAN ? '+default' : ''), id: object.id, startUtc: iso(start), fitSeconds }))) continue; } else if (done.has(`${object.id}|${iso(start)}|${fitSeconds}`)) continue;
+        const row = await scoreWindow(b, object, start, { fitSeconds, leadDays, minCoverage, arms: ARM === 'sdngp' ? 'sdngp' : 'both', defaultSpan: DEFAULT_SPAN });
         if (!row) continue;
         if (sink) { const { xp, sgp4, ...rest } = row; sink.append(rest); } else fs.appendFileSync(file, `${JSON.stringify(row)}\n`);
         n += 1;

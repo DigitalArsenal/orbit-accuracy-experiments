@@ -1,0 +1,97 @@
+{
+  "generatedFrom": "the lunar truth packs (derived from public NAIF and JPL Horizons data); epochs and steps only, no states",
+  "method": "amendment A9f",
+  "gmMoonKm3S2": 4902.800118,
+  "packs": {
+    "lro-lunar": {
+      "samples": 26496,
+      "sampleSeconds": 300,
+      "semiMajorAxisMedianKm": 1827.5035652838892,
+      "periodSeconds": 7010.43753164327,
+      "orbitSamples": 23,
+      "stepStatistic": {
+        "medianAbsKm": 0.0031876591560831002,
+        "madSigmaKm": 0.0027705915938815904,
+        "thresholdKm": 0.01981120871937264,
+        "k": 6
+      },
+      "events": [
+        {
+          "epochUtc": "2026-04-07T10:46:59.999Z",
+          "deltaAKm": 0.01999744781028312,
+          "deltaVCmPerS": 0.8961471355783499
+        },
+        {
+          "epochUtc": "2026-04-27T21:31:59.999Z",
+          "deltaAKm": 0.06555964036488149,
+          "deltaVCmPerS": 2.9379291037491413
+        }
+      ]
+    },
+    "danuri-lunar": {
+      "samples": 18433,
+      "sampleSeconds": 300,
+      "semiMajorAxisMedianKm": 1868.0002316277105,
+      "periodSeconds": 7244.745987992259,
+      "orbitSamples": 24,
+      "stepStatistic": {
+        "medianAbsKm": 0.001624229484150419,
+        "madSigmaKm": 0.0013101516029275216,
+        "thresholdKm": 0.00948513910171555,
+        "k": 6
+      },
+      "events": [
+        {
+          "epochUtc": "2026-08-19T02:58:50.817Z",
+          "deltaAKm": 0.010291823690522506,
+          "deltaVCmPerS": 0.446291943869067
+        },
+        {
+          "epochUtc": "2026-08-28T08:18:50.817Z",
+          "deltaAKm": 0.06254868081305176,
+          "deltaVCmPerS": 2.71234459371947
+        },
+        {
+          "epochUtc": "2026-08-30T14:03:50.817Z",
+          "deltaAKm": -0.06217264426709335,
+          "deltaVCmPerS": 2.696038243542083
+        },
+        {
+          "epochUtc": "2026-09-15T07:08:50.817Z",
+          "deltaAKm": 0.010048672556877136,
+          "deltaVCmPerS": 0.4357480018669814
+        },
+        {
+          "epochUtc": "2026-09-15T19:08:50.817Z",
+          "deltaAKm": 0.00958241258445014,
+          "deltaVCmPerS": 0.4155292266819377
+        },
+        {
+          "epochUtc": "2026-09-20T22:03:50.817Z",
+          "deltaAKm": 0.014427983202040195,
+          "deltaVCmPerS": 0.625651280373018
+        },
+        {
+          "epochUtc": "2026-09-28T00:38:50.817Z",
+          "deltaAKm": 0.013911182837091474,
+          "deltaVCmPerS": 0.6032408848589943
+        },
+        {
+          "epochUtc": "2026-09-29T08:58:50.817Z",
+          "deltaAKm": -0.00959144936246048,
+          "deltaVCmPerS": 0.41592109515402026
+        },
+        {
+          "epochUtc": "2026-10-05T13:13:50.817Z",
+          "deltaAKm": 0.010769172261007043,
+          "deltaVCmPerS": 0.4669915621127068
+        },
+        {
+          "epochUtc": "2026-10-11T22:33:50.817Z",
+          "deltaAKm": 0.01814203321328023,
+          "deltaVCmPerS": 0.7867063711893952
+        }
+      ]
+    }
+  }
+}

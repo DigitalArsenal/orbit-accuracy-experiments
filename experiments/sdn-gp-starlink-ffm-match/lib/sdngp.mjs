@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createStandaloneHarness } from 'space-data-module-sdk/testing/isomorphic';
-import { OMM, OEM, flatbuffers } from './sds.mjs';
+import { OMM, OEM, flatbuffers, blockLines } from './sds.mjs';
 import { sha256 } from '../common.mjs';
 
 export const SDNGP_SOURCE = process.env.SDNGP_MODULE_ROOT ?? '/Users/tj/software/worktrees/space-data-network-closed-modules--modules-sdn-gp-propagator-20261023/packages/sdn-gp-propagator';
@@ -66,12 +66,21 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       const builder = new flatbuffers.Builder(512);
       OMM.OMM.finishSizePrefixedOMMBuffer(builder, minimalT.pack(builder));
       const minimal = builder.asUint8Array();
-      const m = /(\d+) states fitted, (\d+) held out; fit RMS ([\d.]+) km, max ([\d.]+) km(?:; held-out RMS ([\d.]+) km)?; (\d+) iterations/.exec(comment);
+      const num = (re) => { const mm = re.exec(comment); return mm ? Number(mm[1]) : null; }; // the Earth and the Moon-centred comments word their statistics alike but not identically
       return {
         ok: true, omm, obd, unpacked, comment, minimal,
-        statesFitted: m ? Number(m[1]) : null, statesHeldOut: m ? Number(m[2]) : null, fitRmsKm: m ? Number(m[3]) : null, fitMaxKm: m ? Number(m[4]) : null, heldOutRmsKm: m && m[5] ? Number(m[5]) : null, iterations: m ? Number(m[6]) : null,
+        statesFitted: num(/(\d+) states fitted/), statesHeldOut: num(/(\d+) held out/), fitRmsKm: num(/fit RMS ([\d.]+) km/), fitMaxKm: num(/max ([\d.]+) km/), heldOutRmsKm: num(/held-out RMS ([\d.]+) km/), iterations: num(/(\d+) iterations/),
         params: Object.fromEntries((unpacked.USER_DEFINED_PARAMETERS ?? []).map((p) => [p.PARAM_NAME, p.PARAM_VALUE])),
       };
+    },
+    /** A fitted set (any centre) propagated by the invoke surface on a grid $OEM template (amendment A9f; the Moon-centred sets are reached only this way): { ok, blocks: [[{epoch, r, v}]], centre, error }. */
+    async propagateGrid(omm, grid) {
+      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'omm', typeRef: T('OMM'), payload: omm }, { portId: 'grid', typeRef: T('OEM'), payload: grid }] });
+      if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 160)}` };
+      const bytes = new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload);
+      const prefixed = String.fromCharCode(...bytes.slice(8, 12)) === '$OEM';
+      const oem = (prefixed ? OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(bytes)) : OEM.OEM.getRootAsOEM(new flatbuffers.ByteBuffer(bytes))).unpack();
+      return { ok: true, blocks: oem.EPHEMERIS_DATA_BLOCK.map((blk) => blockLines(blk)), centre: oem.EPHEMERIS_DATA_BLOCK[0]?.CENTER_NAME ?? null };
     },
     /** TEME states (km, km/s) of a fitted set at the given minutes after its epoch: the set is ingested (replacing the store) and the batch entry is called once per time. */
     async states(omm, minutes) {

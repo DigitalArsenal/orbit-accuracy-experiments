@@ -14,8 +14,9 @@ const snap = snapshot(store, args.pin ?? null);
 const build = snap.wasmSha256.slice(0, 12);
 const logDir = path.join(store, 'sdngp-run', build);
 fs.mkdirSync(logDir, { recursive: true });
-const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss'];
+const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'default'];
 const only = args.only ? new Set(args.only.split(',')) : null;
+const wanted = (j) => !only || only.has(j.source) || [...only].some((o) => j.source.startsWith(`${o}:`)); // --only default selects every default-span job
 const shards = (name, script, extra, n) => Array.from({ length: n }, (_, k) => ({ source: name, name: `${name}.s${k}of${n}`, script, argv: [...extra, ...(n > 1 ? ['--shard', `${k}/${n}`] : [])] }));
 const baselines = (source, n = 1) => shards(source, 'baselines.mjs', ['--arm', 'sdngp', '--source', source], n);
 const spk = (source) => shards(source, 'spk-windows.mjs', ['--arm', 'sdngp', '--source', source], 1);
@@ -23,12 +24,17 @@ const jobs = [
   ...shards('starlink', 'starlink-sdngp.mjs', [], 4),
   ...shards('fitlength', 'fitlength.mjs', ['--arm', 'sdngp'], 4), // amendment A9c
   ...shards('lowering', 'starlink-lowering.mjs', [], 1), // amendment A9d: the lowering Starlinks, rule and free B_eff
+  // amendment A9f: the Moon-centred windows, and the default-span rows (the module chooses the fit span; sources with truth before the fit start)
+  ...shards('lunar', 'lunar-windows.mjs', [], 8),
+  ...['iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current'].flatMap((src) => shards(`default:${src}`, 'baselines.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', src], src === 'slr-low' || src === 'mgex-igso' ? 2 : 1)),
+  ...shards('default:heo', 'spk-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'heo-themis,heo-chandra,heo-tess'], 1),
+  ...shards('default:span-gnss', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-gnss'], 1), ...shards('default:span-slr', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-slr'], 1),
   ...shards('span-gnss', 'span-windows.mjs', ['--arm', 'sdngp', '--source', 'span-gnss'], 2), ...shards('span-slr', 'span-windows.mjs', ['--arm', 'sdngp', '--source', 'span-slr'], 1), // amendment A9e: the fit span against COMSPOC
   ...baselines('slr-low', 2), ...baselines('mgex-igso', 2), ...baselines('mgex-geo', 2), ...baselines('gnss', 2),
   ...spk('heo-tess'), ...spk('heo-chandra'), ...spk('heo-themis'),
   ...baselines('slr-low-current'), ...baselines('slr-high'), ...baselines('gnss-rapid'), ...baselines('slr-high-current'), ...baselines('mgex-igso-rapid'),
   ...baselines('iss'), ...baselines('mgex-geo-rapid'), ...baselines('iss-daily'), ...spk('heo-artemis2'),
-].filter((j) => !only || only.has(j.source));
+].filter(wanted);
 
 console.error(`SDN-GP arm on build ${build} (${snap.sourceCommit?.slice(0, 8)}, ${snap.sourceDirtyFiles} uncommitted files): ${jobs.length} jobs, ${args.workers ?? 8} at a time; logs ${logDir}`);
 const queue = [...jobs], results = [];
