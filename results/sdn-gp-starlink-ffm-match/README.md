@@ -28,7 +28,7 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | 77 / 77 / 77 | pending / 0.125 / - / 0.127 | pending / 0.146 / - / 0.211 | pending / 0.190 / - / 0.516 | pending / 0.271 / - / 1.075 | 97 % / 99 % | 320 / 304 | 329 / 288 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | 120 / 114 / 120 | pending / 0.109 / - / 0.758 | pending / 0.246 / - / 1.804 | pending / 0.392 / - / 3.641 | pending / 0.556 / - / 5.630 | 87 % / 95 % | 320 / 288 | 289 / 331 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | 84 / 83 / 90 | pending / 0.146 / - / 0.931 | pending / 0.317 / - / 4.692 | pending / 0.547 / - / 17.5 | pending / 0.805 / - / 35.5 | 90 % / 99 % | 320 / 304 | 289 / 331 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 48 / 50 / 50 | pending / 0.103 / - / 8.271 | pending / 0.610 / - / 61.0 | pending / 1.436 / - / 143 | pending / 2.731 / - / 222 | 60 % / 70 % | 320 / 288 | 289 / 331 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 50 / 50 / 50 | pending / 0.109 / - / 8.271 | pending / 0.616 / - / 61.0 | pending / 1.505 / - / 143 | pending / 3.131 / - / 222 | 63 % / 70 % | 320 / 288 | 289 / 331 |
 | Cislunar, Earth-centred (Artemis II after the translunar burn) | truth 2026-04-02 to 2026-04-10 | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
 | Lunar-centred (LRO) | truth 2026-03-15 to 2026-06-15 | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
 | Interplanetary, Sun-centred (Psyche, Lucy, Juno) | truth 2026-05-31 to 2027-03-01 | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |
@@ -51,13 +51,26 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | LEO, Starlink, FFM truth, B_eff at the zero bound (net thrust not representable) | 52 / 52 / 52 | pending / 0.485 / - / 0.479 | pending / 1.018 / - / 1.881 | pending / 2.222 / - / 6.522 | pending / 3.768 / - / 14.5 | 99 % / 99.9 % | 312 / 304 | 290 / 257 |
 | LEO, Starlink, SpaceX forecast (inside the span, day 1), the 40 object(s) scored for COMSPOC | 40 / 40 / 40 | pending / 0.490 / 15.7 / 0.474 | pending / 1.689 / 21.2 / 2.653 | pending / - / - / - | pending / - / - / - |  /  | 312 / 304 | 290 / 257 |
 | LEO, ISS (NASA OEM of 2026-10-21, one window from its start), the 1 object(s) scored for COMSPOC | 1 / 1 / 1 | pending / 0.441 / 0.931 / 0.441 | pending / 1.618 / 1.914 / 1.610 | pending / 4.096 / 4.211 / 4.074 | pending / 7.100 / 8.243 / 6.998 | 99 % / 99 % | 320 / 304 | 290 / 257 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | 42 / 46 / 46 | pending / 0.258 / - / 11.7 | pending / 0.628 / - / 35.2 | pending / 2.031 / - / 50.8 | pending / 2.699 / - / 57.2 | 59 % / 80 % | 312 / 304 | 289 / 331 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | 46 / 46 / 46 | pending / 0.273 / - / 11.7 | pending / 0.821 / - / 35.2 | pending / 2.031 / - / 50.8 | pending / 2.613 / - / 57.2 | 58 % / 80 % | 312 / 304 | 289 / 331 |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | 1 / 0 / 1 | pending / 15.9 / - / - | pending / 137 / - / - | pending / - / - / - | pending / - / - / - |  /  | 296 /  | 289 / 331 |
+
+### HEO by object (median km: fit / day 1 / day 3)
+
+| Object | Fit length | Windows | SGP4-XP | SGP4 |
+| --- | --: | --: | --- | --- |
+| Chandra (-151) | 24 h | 29 | 0.092 / 0.555 / 2.604 (29 fitted) | 4.114 / 50.1 / 92.2 (29 fitted) |
+| Chandra (-151) | 72 h | 28 | 0.289 / 1.124 / 2.551 (28 fitted) | 12.3 / 54.6 / 109 (28 fitted) |
+| THEMIS-A (-650) | 24 h | 7 | 0.124 / 0.571 / 2.830 (7 fitted) | 9.528 / 146 / 858 (7 fitted) |
+| THEMIS-A (-650) | 72 h | 6 | 0.239 / 0.756 / 3.108 (6 fitted) | 11.4 / 12.7 / 24.3 (6 fitted) |
+| THEMIS-D (-653) | 24 h | 7 | 0.146 / 0.771 / 3.207 (7 fitted) | 8.997 / 89.8 / 450 (7 fitted) |
+| THEMIS-D (-653) | 72 h | 6 | 0.302 / 0.500 / 2.268 (6 fitted) | 11.5 / 12.6 / 23.0 (6 fitted) |
+| THEMIS-E (-654) | 24 h | 7 | 0.114 / 1.070 / 3.212 (7 fitted) | 10.1 / 128 / 787 (7 fitted) |
+| THEMIS-E (-654) | 72 h | 6 | 0.265 / 0.890 / 3.301 (6 fitted) | 11.9 / 13.2 / 18.4 (6 fitted) |
 
 ### What the table says (generated from the numbers above)
 
 - The in-track component carries 99.4 to 99.9 % of the day-3 squared error of SGP4-XP in the LEO regimes, 89.3 to 97.1 % in MEO and 86.6 to 90.4 % in IGSO and GEO: the terms that can buy accuracy are the along-track ones (drag and thrust, secular rate, time variation of density).
-- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio 0.99 to 1.07, about 0.48 km, a common floor, which points at short-period terms that both theories leave out); where the orbit is high XP fits much tighter than SGP4: MEO, GPS / GLONASS / Galileo (ESA final) 5.4 times (0.022 against 0.122 km); IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 6.5 times (0.109 against 0.758 km); GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 6.3 times (0.146 against 0.931 km); HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 80.5 times (0.103 against 8.271 km).
+- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio 0.99 to 1.07, about 0.48 km, a common floor, which points at short-period terms that both theories leave out); where the orbit is high XP fits much tighter than SGP4: MEO, GPS / GLONASS / Galileo (ESA final) 5.4 times (0.022 against 0.122 km); IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 6.5 times (0.109 against 0.758 km); GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 6.3 times (0.146 against 0.931 km); HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 76.1 times (0.109 against 8.271 km).
 - Held-out day 3, median XP / median SGP4: LEO, Starlink, FFM-propagated truth 0.68; LEO, ISS (NASA OEM of 2026-10-07) 1.01; LEO, ISS (NASA OEM of 2026-10-21, one window from its start) 1.01; LEO, laser-ranged (ILRS NSGF) 1.02; MEO, GPS / GLONASS / Galileo (ESA final) 0.12; MEO, laser-ranged (LAGEOS, Etalon, LARES-2) 0.25; IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) 0.10; GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) 0.02; HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit 0.01.
 - COMSPOC XP sets, scored on the 40 same-day Starlinks at an age of 3.2 days (median) at the start of the truth: median 3D error 21.3 / 28.0 / 33.6 km on days 1 / 2 / 3, against 1.2 / 4.9 / 10.3 km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.
 - At a matched age (the set's epoch plus about 3 to 4 days) the COMSPOC XP error is 15.7 km (its first truth day, median age at the start 3.2 days) against 10.3 km for XP fitted to the truth (held-out day 3, age 3 to 4 days from the fit epoch) and 14.6 km for SGP4, on the same 40 Starlinks.
@@ -99,9 +112,9 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4 | 114 | 0.758 / 0.765 / 1.083 | 1.804 / 3.844 / 13.4 | 3.641 / 12.7 / 47.9 | 5.630 / 25.7 / 104 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4-XP | 84 | 0.146 / 0.136 / 0.202 | 0.317 / 0.374 / 0.678 | 0.547 / 1.599 / 1.485 | 0.805 / 3.093 / 2.478 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4 | 83 | 0.931 / 0.897 / 1.278 | 4.692 / 7.924 / 19.2 | 17.5 / 27.7 / 69.7 | 35.5 / 58.6 / 148 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4-XP | 48 | 0.103 / 0.175 / 0.315 | 0.610 / 1.365 / 2.334 | 1.436 / 3.442 / 9.699 | 2.731 / 5.521 / 10.4 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4-XP | 50 | 0.109 / 0.310 / 0.354 | 0.616 / 1.935 / 2.857 | 1.505 / 5.451 / 9.986 | 3.131 / 10.2 / 11.4 |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4 | 50 | 8.271 / 7.049 / 10.4 | 61.0 / 87.0 / 180 | 143 / 258 / 602 | 222 / 474 / 1207 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4-XP | 42 | 0.258 / 0.586 / 0.945 | 0.628 / 1.649 / 2.897 | 2.031 / 3.684 / 11.1 | 2.699 / 4.875 / 11.0 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4-XP | 46 | 0.273 / 0.769 / 1.153 | 0.821 / 1.812 / 3.517 | 2.031 / 3.659 / 10.2 | 2.613 / 5.329 / 12.8 |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4 | 46 | 11.7 / 12.0 / 15.7 | 35.2 / 44.7 / 98.2 | 50.8 / 105 / 243 | 57.2 / 164 / 410 |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4-XP | 1 | 15.9 / 15.9 / 15.9 | 137 / 137 / 137 |  |  |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4 | 0 |  |  |  |  |
@@ -126,8 +139,8 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | 77 | 0.99 (60 %) | 0.69 (68 %) | 0.37 (79 %) | 0.25 (83 %) |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | 114 | 0.15 (100 %) | 0.14 (100 %) | 0.11 (100 %) | 0.10 (100 %) |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | 83 | 0.16 (100 %) | 0.07 (100 %) | 0.03 (97 %) | 0.02 (97 %) |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 48 | 0.01 (100 %) | 0.01 (100 %) | 0.01 (100 %) | 0.01 (100 %) |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | 42 | 0.02 (100 %) | 0.02 (100 %) | 0.04 (100 %) | 0.05 (100 %) |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 50 | 0.01 (100 %) | 0.01 (100 %) | 0.01 (100 %) | 0.01 (100 %) |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | 46 | 0.02 (100 %) | 0.02 (100 %) | 0.04 (100 %) | 0.05 (100 %) |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | 0 |  |  |  |  |
 
 ## 3. Radial / in-track / cross-track split (km, median of per-window component RMS)
@@ -169,9 +182,9 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4 | 0.540 / 0.520 / 0.067 | 0.682 / 1.683 / 0.149 | 1.248 / 5.460 / 0.380 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4-XP | 0.043 / 0.138 / 0.019 | 0.103 / 0.294 / 0.019 | 0.249 / 0.770 / 0.028 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4 | 0.633 / 0.634 / 0.126 | 1.061 / 4.481 / 0.489 | 2.964 / 35.3 / 1.424 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4-XP | 0.064 / 0.066 / 0.042 | 0.278 / 0.534 / 0.079 | 1.673 / 2.065 / 0.175 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4-XP | 0.064 / 0.069 / 0.043 | 0.285 / 0.557 / 0.080 | 1.775 / 2.305 / 0.192 |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4 | 4.714 / 5.051 / 1.395 | 36.6 / 43.8 / 2.088 | 119 / 182 / 5.602 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4-XP | 0.145 / 0.202 / 0.067 | 0.413 / 0.434 / 0.117 | 1.725 / 2.088 / 0.209 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4-XP | 0.157 / 0.218 / 0.069 | 0.440 / 0.521 / 0.127 | 1.743 / 2.087 / 0.253 |
 | HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4 | 7.472 / 8.560 / 1.914 | 14.3 / 18.0 / 4.926 | 22.3 / 46.8 / 6.202 |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4-XP | 10.8 / 11.7 / 0.310 | 29.1 / 122 / 52.8 |  |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4 |  |  |  |
@@ -212,11 +225,11 @@ Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | SGP4 | 7 | 288 | 640 | 132 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4-XP | 8 | 320 | 2344 | 499 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | SGP4 | 7 | 304 | 656 | 526 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4-XP | 8 | 320 | 2384 | 538 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4 | 7 | 288 | 616 | 172 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4-XP | 8 | 312 | 2368 | 1430 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4 | 7 | 304 | 640 | 448 |
-| HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4-XP | 8 | 296 | 2008 | 694 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4-XP | 8 | 320 | 2384 | 523 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | SGP4 | 7 | 288 | 616 | 158 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4-XP | 8 | 312 | 2364 | 859 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | SGP4 | 7 | 304 | 640 | 335 |
+| HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4-XP | 8 | 296 | 2008 | 266 |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | SGP4 |  |  |  |  |
 
 Element bytes are the size-prefixed `$OMM` record holding only the mean elements and the drag (and solar) terms of the set; the record as returned carries the fit statistics too. A two-line text set (the format COMSPOC publishes its XP sets in) is 138 characters.
@@ -252,8 +265,8 @@ Fitted terms (medians over windows): the two extra terms of SGP4-XP against the 
 | MEO, laser-ranged (LAGEOS, Etalon, LARES-2) | 2.09e-5 | 5.73e-3 | 88 % | -4.93e-1 |
 | IGSO, BeiDou-2 and QZSS-2 (GFZ MGEX rapid) | 4.82e-5 | 3.71e-2 | 100 % | 0.00e+0 |
 | GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid) | 7.24e-9 | 3.51e-2 | 100 % | 0.00e+0 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 1.80e-5 | 3.70e-3 | 75 % | 0.00e+0 |
-| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | 1.09e-4 | 2.02e-3 | 62 % | 1.04e-1 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit | 2.18e-5 | 3.51e-3 | 74 % | 0.00e+0 |
+| HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit | 8.19e-5 | 2.95e-3 | 70 % | 1.04e-1 |
 | HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1) | 0.00e+0 | 0.00e+0 | 0 % |  |
 
 ## 5. Covariance realism against the FFM truth of the same-day Starlinks
@@ -360,30 +373,32 @@ Fit RMS is the fit of FFM-1 to SpaceX's own forecast over 0-48 h, the measure of
 
 Refit of the fits that stopped at the registered 12 iterations, on the same SpaceX file (SHA-256 checked), cap 30 (47 seat files had changed on SpaceX's server and are in the next paragraph): 9 satellites; 8 of 9 converge within 30 iterations (median 16). The truth moves by (median / maximum, km): 0.000 / 4.350 at 24 h, 0.000 / 1.159 at 48 h, 0.000 / 19.9 at 72 h, 0.000 / 53.7 at 96 h. Moved by more than 0.1 km at 96 h: 48129 (fit RMS 21.1 km, moved 53.7 km). B_eff changes by a median 0.0 %; the fit RMS against SpaceX goes from 0.277 to 0.277 km (median); the median XP day-3 error against the truth goes from 12.9 to 12.9 km; 0 left the zero bound and 0 entered it.
 
+Seats whose file had changed: cap 12 and cap 30 both run on the file served now, only the pairs where the cap-12 fit did not converge: 7 satellites; 5 of 7 converge within 30 iterations (median 16). The truth moves by (median / maximum, km): 0.000 / 58.2 at 24 h, 0.000 / 123 at 48 h, 0.000 / 251 at 72 h, 0.000 / 326 at 96 h. Moved by more than 0.1 km at 96 h: 101011 (fit RMS 290 km, moved 326 km), 67211 (fit RMS 26.6 km, moved 57.8 km). B_eff changes by a median 0.0 %; the fit RMS against SpaceX goes from 1.776 to 1.776 km (median); the median XP day-3 error against the truth goes from 12.8 to 12.8 km; 0 left the zero bound and 0 entered it.
+
 Effect on the tables (SGP4-XP, day 1 / day 3, median and 90th percentile, km): all 239 truths 1.502 / 9.867 and 4.059 / 23.2; the 132 clean ones 1.456 / 9.817 and 2.973 / 22.1; the 52 at the zero bound 1.018 / 3.768; the 19 above 0.5 m2/kg 13.3 / 25.4. The two limits pull in opposite directions (drag-free truths are easy, decaying ones are hard), so the pooled median moves little while the spread does.
 
 How to read it, in numbers: the registered rows keep the 12-iteration truth. The `clean` row of section 1b (converged, B_eff between 0 and 0.5) is the population on which the tables are least affected by the two limits; compare its day-1 and day-3 medians with the pooled Starlink row. The zero bound is a contract of the T1a module (`analysis/od fit_ffm`, B_eff >= 0): a satellite whose forecast contains net thrust beyond its drag gets a drag-free trajectory, so its truth is easy to match (lower XP and SGP4 errors) and does not follow the operator; those 52 fits are reported apart, not corrected here.
 
 ## 10. Held out against the first hours of newer SpaceX files
 
-100 fitted Starlinks, each scored against the first three hours (every ten minutes) of the file SpaceX served after the file of the registered fit; the newest of them starts 2026-10-23T18:56Z. The horizon from the start of the registered fit to those hours is 5.4 to 7.8 h (median 6.8 h), so these are early looks; the scoring is re-run with `newer.mjs` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h). Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).
+239 fitted Starlinks, each scored against the first three hours (every ten minutes) of the file SpaceX served after the file of the registered fit; the newest of them starts 2026-10-23T21:10Z. The horizon from the start of the registered fit to those hours is 5.4 to 12.3 h (median 7.9 h), so these are early looks; the scoring is re-run with `newer.mjs` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h). Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).
 
 | Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |
 | --- | --: | --: | --: | --: |
 | SpaceX earlier forecast | 40 | 0.039 | 0.122 | 0.99 |
-| FFM-1 from the registered fit | 100 | 0.192 | 1.748 | 0.98 |
-| SGP4-XP fitted to the FFM truth | 100 | 0.561 | 1.642 | 0.90 |
-| SGP4 fitted to the FFM truth | 100 | 0.579 | 1.505 | 0.89 |
+| FFM-1 from the registered fit | 239 | 0.380 | 1.603 | 0.99 |
+| SGP4-XP fitted to the FFM truth | 239 | 0.710 | 1.648 | 0.91 |
+| SGP4 fitted to the FFM truth | 239 | 0.697 | 1.739 | 0.92 |
 | COMSPOC Spacebook XP (local scoring only) | 40 | 14.3 | 1450 | 1.00 |
 
 FFM-1 against the newer file by truth-quality group (median / 90th percentile, km; SpaceX's earlier forecast median beside it):
 
 | Group | Satellites | FFM-1 | SpaceX earlier forecast |
 | --- | --: | --- | --: |
-| clean | 52 | 0.123 / 0.407 | 0.036 |
-| bound | 17 | 0.272 / 0.651 | 0.065 |
-| decay | 15 | 1.991 / 11.7 | 0.038 |
-| capped | 16 | 0.096 / 0.845 | 0.029 |
+| clean | 132 | 0.200 / 0.967 | 0.036 |
+| bound | 52 | 0.597 / 1.419 | 0.065 |
+| decay | 19 | 2.485 / 16.3 | 0.038 |
+| capped | 36 | 0.329 / 1.041 | 0.029 |
 
 ### COMSPOC XP sets of the GPS and laser-ranged objects: waiting for precise products
 
@@ -391,7 +406,7 @@ FFM-1 against the newer file by truth-quality group (median / 90th percentile, k
 
 ## 11. Notes for the modules (found here, not changed here)
 
-- `analysis/od fit_ffm` (T1a): (a) B_eff >= 0 leaves 52 of 239 fits at the zero bound (orbit raising and other net thrust cannot be represented; their truth is a drag-free trajectory); (b) 56 of 239 fits stop at the 12-iteration default; refitted with a cap of 30 on 9 of them (8 of 9 converge, about 16.0 iterations), the truth moves by a median of at most 0.000 km at 96 h and, for the 7 fits that reproduce SpaceX to 2 km, by at most 0.000 km, so the stopping rule or the default cap is too strict; (c) 19 objects need B_eff above 0.5 m2/kg, more than ten times a physical value (continuous lowering or decay, no discrete event detected): they fit SpaceX to a median of 2 to 11 km and are 2 km (median) from a newer file's first hours; a single B_eff cannot represent them.
+- `analysis/od fit_ffm` (T1a): (a) B_eff >= 0 leaves 52 of 239 fits at the zero bound (orbit raising and other net thrust cannot be represented; their truth is a drag-free trajectory); (b) 56 of 239 fits stop at the 12-iteration default; refitted with a cap of 30 on 16 of them (8 of 9 converge and 5 of 7 converge, about 16.0 iterations), the truth moves by a median of at most 0.000 km at 96 h and, for the 11 fits that reproduce SpaceX to 2 km, by at most 0.000 km, so the stopping rule or the default cap is too strict; (c) 19 objects need B_eff above 0.5 m2/kg, more than ten times a physical value (continuous lowering or decay, no discrete event detected): they fit SpaceX to a median of 2 to 11 km and are 2 km (median) from a newer file's first hours; a single B_eff cannot represent them.
 - `data-source/space-weather` rows end where the Kp forecast ends (about two days ahead) and `propagator/ffm` refuses any arc past them (`space-weather-out-of-range`); this experiment appended NOAA SWPC 45-day Ap and F10.7 itself (amendment A2).
 - `files/orbit-products` 0.1.4 reads SPK types 8, 9 and 13 only: the JPL navigation kernels of Psyche, Lucy and Juno are type 1 (`unsupported-variant`), the Juno merge also holds type 2 (`unsupported-spk-materialization`), TDRSS is type 10 (generated from two-line elements). Its epochs are TDB, so every caller needs `foundation/time` (done here, one call per epoch).
 
@@ -418,6 +433,6 @@ Every other source and its terms: [docs/data-licenses.md](../../docs/data-licens
 
 - Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment's.
 - Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.
-- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.
+- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. For the regimes awaiting SDN-GP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the centre. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.
 - Newer-file truth: `newer.mjs` scores against the first hours of any SpaceX file created after the registered fit (section 10); re-run it after 2026-10-24 08:00Z for the registered prospective files, and `comspoc.mjs` against the same-day truth files. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later (ESA finals lag about two weeks); `inventory.mjs` shows the newest product dates.
 

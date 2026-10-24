@@ -212,6 +212,12 @@ export function build() {
 
   const packDir = path.join(store, 'pack');
   const packs = fs.existsSync(packDir) ? fs.readdirSync(packDir).filter((n) => n.endsWith('.json')).sort().map((n) => read(path.join(packDir, n))).map((m) => ({ name: m.name, states: m.states, center: m.center, startUtc: m.startUtc, stopUtc: m.stopUtc, sha256: m.sha256 })) : [];
+
+  const heoByObject = [...new Set(windows.filter((w) => w.regime.startsWith('heo-gp')).map((w) => w.id))].sort().flatMap((id) => [86400, 259200].map((fit) => {
+    const ws = windows.filter((w) => w.id === id && w.regime.startsWith('heo-gp') && w.fitSeconds === fit);
+    return ws.length ? { id, fitHours: fit / 3600, windows: ws.length, xp: armStats(ws, 'xp'), sgp4: armStats(ws, 'sgp4') } : null;
+  })).filter(Boolean);
+
   // COMSPOC XP sets of the GPS and laser-ranged objects: scored once precise products after the set epoch exist (comspoc-precise.mjs)
   const preciseStatusFile = path.join(store, 'rows/comspoc-precise-status.json');
   const preciseRows = readJsonl(path.join(store, 'rows/comspoc-precise.jsonl')).filter((r) => r.days && Object.keys(r.days).length);
@@ -220,7 +226,7 @@ export function build() {
     byKind: ['gnss', 'laser-ranged'].map((kind) => ({ kind, n: preciseRows.filter((r) => r.kind === kind).length, days: [0, 1, 2, 3].map((k) => quantile(preciseRows.filter((r) => r.kind === kind && r.days[k]).map((r) => r.days[k].rmsKm), 0.5)) })),
   } : null;
 
-  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission) })), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, bench: bench?.rows ?? null };
+  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission) })), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -297,6 +303,12 @@ export function markdown(t) {
     '- GEO operator ephemerides: none are stored locally (operator-capture holds Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not ephemerides); the GEO row is the GFZ MGEX BeiDou-2 and QZSS-3 orbits.',
     '- NAIF does not host TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); THEMIS and Chandra stand in for TESS (HEO) and Artemis II for Artemis I.', '');
   L.push('### 1b. The same objects the COMSPOC sets were scored on, and the Starlink B_eff split', '', ...header, ...t.regimes.filter(isExtra).map(row), '');
+
+  if (t.heoByObject.length) {
+    L.push('### HEO by object (median km: fit / day 1 / day 3)', '', '| Object | Fit length | Windows | SGP4-XP | SGP4 |', '| --- | --: | --: | --- | --- |',
+      ...t.heoByObject.map((o) => `| ${o.id} | ${o.fitHours} h | ${o.windows} | ${f(o.xp.fit.median)} / ${f(o.xp.days[1]?.median)} / ${f(o.xp.days[3]?.median)} (${o.xp.fitted} fitted) | ${f(o.sgp4.fit.median)} / ${f(o.sgp4.days[1]?.median)} / ${f(o.sgp4.days[3]?.median)} (${o.sgp4.fitted} fitted) |`), '');
+  }
+
   L.push('### What the table says (generated from the numbers above)', '', ...findings(t), '');
   L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
   for (const r of t.regimes) for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) {
@@ -387,7 +399,7 @@ export function markdown(t) {
   L.push('## Reproduce, resume, extend', '',
     '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment\'s.',
     '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',
-    '- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
+    '- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. For the regimes awaiting SDN-GP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the centre. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
     '- Newer-file truth: `newer.mjs` scores against the first hours of any SpaceX file created after the registered fit (section 10); re-run it after 2026-10-24 08:00Z for the registered prospective files, and `comspoc.mjs` against the same-day truth files. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later (ESA finals lag about two weeks); `inventory.mjs` shows the newest product dates.', '');
   return L.join('\n');
 }

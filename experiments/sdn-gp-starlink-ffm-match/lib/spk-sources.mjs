@@ -63,7 +63,9 @@ export async function spkObject(modules, { file, source, id, name, norad, fromUt
     const utc = await convertAll(time, rows.map((x) => x.tdb));
     const lines = rows.map((x, i) => ({ epoch: utc[i], r: x.r, v: x.v })).filter((l) => Date.parse(l.epoch) >= Date.parse(fromUtc) && Date.parse(l.epoch) <= Date.parse(toUtc));
     lines.sort((a, b) => Date.parse(a.epoch) - Date.parse(b.epoch));
-    const unique = lines.filter((l, i) => i === 0 || l.epoch !== lines[i - 1].epoch);
+    // segments of one kernel can share their boundary epoch to within a microsecond: keep one state per half second
+    const unique = [];
+    for (const l of lines) if (!unique.length || Date.parse(l.epoch) - Date.parse(unique.at(-1).epoch) >= 500) unique.push(l);
     return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: unique });
   } finally {
     if (own.containers) await containers.destroy();
