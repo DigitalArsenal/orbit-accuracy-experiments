@@ -286,7 +286,7 @@ if (headline) {
   {
     const { scoreSatellite } = await import('./lib/events-score.mjs');
     const { satellites } = await import('./lib/events.mjs');
-    const collector = () => { const out = []; return { out, has: () => false, append: (r) => out.push(r) }; };
+    const collector = () => { const out = []; return { out, has: () => false, mine: () => true, append: (r) => out.push(r) }; };
     const sameDays = (a, c, label) => { for (const k of Object.keys(c ?? {})) if (!a?.[k] || !same(a[k].rmsKm, c[k].rmsKm)) fail(`${label}: day ${k} differs`); };
     for (const [kind, caseId] of [['m22', 'imp-V-1'], ['m23', 'burn-V-15m-1']]) {
       const rec = buildRows(headline.dir, kind).find((r) => r.source === kind && r.case.id === caseId && (kind === 'm22' ? r.days : r.arms?.A?.ok));

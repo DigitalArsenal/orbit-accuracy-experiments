@@ -526,9 +526,17 @@ export function eventsMarkdown(e) {
       `Not covered: the residual series (theory plus the operator's Chebyshev residual inside its span) and a burn model with its stop epoch are not methods of the build (its methods are ingest_omm, propagate, fit, fit_sdnap, load_environment, maneuver, detect_maneuvers, reentry and launch_set). Covered and shown in section 2b: the lowering Starlinks' held-out errors for the three settings. Covered here: \`reentry\` on the set fitted to the first 24 h of each of the ${m.satellites} Starlinks with B_eff above 0.5 m2/kg, issued ${m.issuedFirst.slice(0, 16)} to ${m.issuedLast.slice(0, 16)} UTC, to be scored against Space-Track's TIP and decay messages as they arrive. As of the archive's newest snapshot (${m.snapshot ?? 'none'}) ${m.objectsWithTip} of the ${m.satellites} have a TIP message and ${m.objectsWithDecay} a decay message.`, '',
       '| Setting | Fits | `reentry` answered | Refused | Predicted lifetime (days), median [min, max] | Sigma (h), median | Scored | Within 1 / 2 sigma |', '| --- | --: | --: | --- | --- | --: | --: | --- |',
       ...m.variants.map((v) => `| ${lab[v.variant]} | ${v.fitOk} | ${v.reentryOk} | ${Object.keys(v.refused).length ? Object.entries(v.refused).map(([k, c]) => `${k} ${c}`).join(', ') : 'none'} | ${v.reentryOk ? `${f(v.lifetimeDays.median, 1)} [${f(v.lifetimeDays.min, 1)}, ${f(v.lifetimeDays.max, 1)}]` : ''} | ${f(v.sigmaHours.median, 1)} | ${v.scored} | ${v.scored ? `${pc(v.within1)} / ${pc(v.within2)}` : ''} |`), '',
-      'The predictions (the shipped setting; the free setting gives the same epochs), frozen in this table when it was committed:', '',
-      '| Object | B_eff (FFM-1 fit, m2/kg) | Issued (UTC) | Predicted reentry (UTC) | Sigma (h) | Window | Lifetime (days) | Space-Track TIP / decay |', '| --- | --: | --- | --- | --: | --- | --: | --- |',
-      ...m.predictions.map((x) => `| ${x.norad} | ${f(x.bEffFfm, 2)} | ${x.issuedUtc.slice(0, 16)} | ${x.epoch.slice(0, 16)} | ${f(x.uncHours, 1)} | ${x.windowStart.slice(0, 16)} to ${x.windowEnd.slice(0, 16)} | ${f(x.lifetimeDays, 1)} | ${x.decayMessage && x.lastTipDecayUtc ? `decayed ${x.lastTipDecayUtc.slice(0, 16)}; error ${f((Date.parse(`${x.epoch.replace(/Z?$/, 'Z')}`) - Date.parse(x.lastTipDecayUtc)) / 3600e3, 1)} h` : x.tipMessages ? `${x.tipMessages} TIP messages, last ${x.lastTipDecayUtc.slice(0, 16)}` : 'none yet'} |`), '');
+      'The predictions of every build (the shipped setting; the free setting gives the same epochs), frozen in this table when it was committed; a dash is a refusal by name (above) or a build that issued none:', '',
+      ...(() => {
+        const builds = [...e.history.filter((x) => x.m30), e];
+        const status = (x) => (x.decayMessage && x.lastTipDecayUtc ? `decayed ${x.lastTipDecayUtc.slice(0, 16)}` : x.tipMessages ? `${x.tipMessages} TIP messages, last ${x.lastTipDecayUtc.slice(0, 16)}` : 'none yet');
+        const byBuild = builds.map((b) => new Map(b.m30.predictions.map((x) => [x.norad, x])));
+        const objects = [...new Set(byBuild.flatMap((mp) => [...mp.keys()]))].sort((a, c) => Math.min(...byBuild.map((mp) => mp.get(a)?.epoch ?? '9')) < Math.min(...byBuild.map((mp) => mp.get(c)?.epoch ?? '9')) ? -1 : 1);
+        const first = (n) => byBuild.map((mp) => mp.get(n)).find(Boolean);
+        return [`| Object | B_eff (FFM-1 fit, m2/kg) | ${builds.map((b) => `${b.build}: predicted reentry (UTC), sigma (h)`).join(' | ')} | Space-Track TIP / decay |`, `| --- | --: | ${builds.map(() => '---').join(' | ')} | --- |`,
+          ...objects.map((n) => `| ${n} | ${f(first(n).bEffFfm, 2)} | ${byBuild.map((mp) => { const x = mp.get(n); return x ? `${x.epoch.slice(0, 16)}, ${f(x.uncHours, 1)}` : '-'; }).join(' | ')} | ${status(first(n))} |`),
+          '', `Issued (UTC): ${builds.map((b) => `${b.build} ${b.m30.issuedFirst.slice(0, 16)} to ${b.m30.issuedLast.slice(0, 16)}`).join('; ')}.`, ''];
+      })());
   }
   if (e.m31) {
     const m = e.m31;
