@@ -706,3 +706,10 @@ after the fit end, are a later step: they cannot be run before 2026-10-25 to 202
 (only) of every new id kept at first sight, with the file's hash.
 
 Spelling and report as in A10: American spelling in all generated text.
+
+### A11d - 2026-10-24, before any row of M29 was read: the pseudo-observations by set, one set per call
+
+The first M29 run stopped before any row was read: the SGP4 module's `propagate_ephemeris` with `element_set_blocks` refuses the whole request when one set cannot be propagated across its neighbours' epochs ("SGP4 fails for NORAD 40108
+at 2025-04-30T03:03:17Z"). A11b is amended in that one respect. Each set is propagated alone, in a fresh module, by `propagate_ephemeris` over the interval (epoch of the set before, its own epoch], at most 48 h back (the first set: 6 h),
+every 300 s, TEME; a set the module cannot propagate gives no states, is dropped and is counted in the row of every prediction whose history holds it (failedSets). The pseudo-observation series up to t_k, the 120 h, the 48-state floor and
+everything else in A11b stand. The partial rows of the first run (10) were moved aside unread and the job started again from empty row files.
