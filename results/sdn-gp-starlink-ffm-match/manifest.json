@@ -36,12 +36,14 @@
     "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/tables.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
-    "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
+    "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check",
+    "node experiments/sdn-gp-starlink-ffm-match/events-truth.mjs --kind m22,m23,m28 --shard k/n",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m22,m23,m28,m24"
   ],
-  "planSha256": "743c5777fed8f6f59cd0301ac03b1a686c242da37d7de7df2036d4275f2465f5",
+  "planSha256": "0f9a1b1d9d95ac62ef201d88e6fd65eaae583e92b4975d411e82d28011911de4",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "f9dc94829627ecb51f00e1b81287ca55b1413de7"
+    "commit": "4c133e5c9489c9b9d73382692337ed1070f48e46"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -140,6 +142,27 @@
   "truthSet": {
     "satellites": 239,
     "setSha256": "77505e1c4dd00aad80328485720a580b7dcc06f196ed4b434d7adef3cbf305c5"
+  },
+  "events": {
+    "m22": {
+      "files": 48,
+      "setSha256": "430c7d3887e3bacafb70b4d3e1283333431c3e7ec792ed3779b119e9991d6ace",
+      "ffmWasmSha256": [
+        "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      ]
+    },
+    "m23": {
+      "files": 24,
+      "setSha256": "8a1127fdf9e3ee3fc07201bb4c4ab03a99739b09334650a9afb352a138d6564c",
+      "ffmWasmSha256": [
+        "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      ]
+    },
+    "m28": {
+      "files": 12,
+      "setSha256": "2942bca6e9bd4229521281f38defae4683541fd7436a6cca7aa09f4ac743770a",
+      "ffmWasmSha256": []
+    }
   },
   "comspoc": {
     "label": "COMSPOC Spacebook XP (local scoring only)",
@@ -265,7 +288,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "54b069014557",
+    "headlineBuild": "35cd83a2b714",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -321,6 +344,14 @@
         "sourceCommit": "3617e4d57f517e4ef1e2385415072180bfe3a988",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T14:50:56.044Z",
+        "complete": true
+      },
+      {
+        "build": "35cd83a2b714",
+        "wasmSha256": "35cd83a2b714670aba39a407ac87b7ff0da689a519e4b0a06bf4299c9673a80e",
+        "sourceCommit": "9c1d5ee3562bfc49c280e2e4074f896d0f21f4ea",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T16:13:45.758Z",
         "complete": true
       }
     ]
