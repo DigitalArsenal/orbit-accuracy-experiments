@@ -409,3 +409,18 @@ and the comment above it in `src/fit_oem.inc` were read to call it (nothing of t
 and free beside XP and SGP4 for the 19. (3) The module's own held-out RMS (the COMMENT of its set) is compared with the pair_statistics RMS over the same states, as a check on
 the scoring chain. When side B's next build changes the default of the rule (free B_eff), the run repeats on it and the lowering table is scored again. The newer-file pass uses the
 newest complete build, as A9b says.
+
+### A9e - 2026-10-24, before any row of build 9da7fad24c9d or of the fit-span windows was read: the third build, and the fit span against COMSPOC
+
+Coordinator, 2026-10-24: side B's build 9da7fad24c9d (side B head 1102cd6, clean tree; odd-degree q = +-1 tesserals, zonals J6 to J20, GNSS solar pressure carried by the tau terms,
+48 h as the module's default fit span) re-scores every window of A9b to A9d with the rules of A9b. The 24 h fit of the registered windows is kept: every block declares its
+interval through USEABLE_START_TIME, so the module's new default of 48 h does not apply to them, and a different span is a separate measurement (below).
+
+Fit span against COMSPOC (local scoring only). COMSPOC does not state how long a span its XP sets were fitted over, so a 24 h fit of ours is not a fair partner for them. For every
+COMSPOC XP set of a laser-ranged object (the 6 LEO spheres and LARES-2) and of a GNSS satellite (the GFZ rapid orbits of A8b) that `comspoc-precise.mjs` scored, SDN-GP, SGP4-XP and
+SGP4 are each fitted to the truth over F = 24, 48, 72 and 120 h ending at the epoch of that set and scored on the three 24 h days after it (day k of the tables is days k-1 to k
+since the epoch, the days COMSPOC's set is scored on). Only the set's epoch is used, to place the window; nothing of the set enters a fit. Truth: the NSGF daily files chained, the
+later file winning (A9b), for the spheres; the GFZ rapid orbits for GNSS. A window needs 90 % of its fit span and of each held-out day in the truth (the scorer's rule);
+a window the truth cannot supply is not scored, and the table gives the count per span; the COMSPOC value beside a row is the median over the sets whose window exists at that
+span. Groups: LEO spheres, LARES-2, GNSS MEO, IGSO and GEO. Runner `span-windows.mjs` (sources `span-slr` and `span-gnss`; SDN-GP rows per build as before); the headline table
+keeps the registered 24 h windows, and a new section of the README shows the spans.
