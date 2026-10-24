@@ -69,7 +69,7 @@ if (fs.existsSync(derived)) add('LEO', 'Operator-derived OMM/OCM fits (E11)', 'd
 const comspoc = path.join(config.store, 'rows/comspoc-catalog.json');
 if (fs.existsSync(comspoc)) {
   const c = JSON.parse(fs.readFileSync(comspoc, 'utf8'));
-  add('All regimes (scoring only)', 'COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z)', `${c.xp} SGP4-XP sets (of ${c.sets}); ${c.syncopateObjects} SynCoPate objects, 12 days at 180 s with 6x6 covariance`, c.xp, `set epochs ${c.epochMin.slice(0, 10)} to ${c.epochMax.slice(0, 10)}, median ${c.epochMedian.slice(0, 10)}`, 'scoring only: never fitted to, never an input, aggregates only', 'Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later.');
+  add('All regimes (scoring only)', 'COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z)', `${c.xp} SGP4-XP sets (of ${c.sets}); ${c.syncopateObjects} SynCoPate objects, 12 days at 180 s with 6x6 covariance`, c.xp, `set epochs ${c.epochMin.slice(0, 10)} to ${c.epochMax.slice(0, 10)}, median ${c.epochMedian.slice(0, 10)}`, 'scoring only: never fitted to, never an input, aggregates only', 'Terms: no commercial use, no redistribution, no derivative works. The GNSS and the six LEO-sphere laser-ranged sets are scored against the GFZ rapid and ILRS NSGF products; LAGEOS and Etalon sets wait for combined orbits after 2026-10-03.');
 }
 
 // E14's reference set: GFZ multi-GNSS rapid orbits (GEO, IGSO, MEO) and GFZ rapid science orbits of LEO satellites
@@ -144,7 +144,9 @@ for (const [file, spanText] of [['de440s.bsp', '1849-12-26 to 2150-01-22'], ['de
 // A8 (coordinator approvals of 2026-10-24): JPL Horizons vector tables, MAST TESS ephemeris, GFZ rapid GNSS orbits; files as served with provenance rows
 const sizeOf = (dir, filter) => { let n = 0, bytes = 0; for (const f of fs.existsSync(dir) ? fs.readdirSync(dir).filter(filter) : []) { n += 1; bytes += fs.statSync(path.join(dir, f)).size; } return { n, bytes }; };
 const hz = path.join(A, 'hac/jpl-horizons');
-for (const [mission, name, regime, centers] of [['danuri', 'Danuri (KPLO)', 'Lunar', ['moon']], ['capstone', 'CAPSTONE', 'Cislunar (NRHO)', ['moon']], ['artemis1', 'Artemis I (Orion)', 'Cislunar and distant retrograde', ['earth', 'moon']]]) {
+for (const [mission, name, regime, centers] of [['danuri', 'Danuri (KPLO)', 'Lunar', ['moon']], ['capstone', 'CAPSTONE', 'Cislunar (NRHO)', ['moon']], ['artemis1', 'Artemis I (Orion)', 'Cislunar and distant retrograde', ['earth', 'moon']],
+  ['psyche', 'Psyche (cruise)', 'Interplanetary (Sun-centred)', ['sun']], ['lucy-rec', 'Lucy (reconstruction through 2025-09-08)', 'Interplanetary (Sun-centred)', ['sun']], ['lucy-ref', 'Lucy (flight project reference trajectory, a planning prediction)', 'Interplanetary (Sun-centred)', ['sun']],
+  ['juno-cruise', 'Juno (cruise, 2012-10 to 2013-09)', 'Interplanetary (Sun-centred)', ['sun']], ['juno-jupiter', 'Juno (Jupiter orbits)', 'Interplanetary (Jupiter-centred)', ['jupiter']]]) {
   for (const center of centers) {
     const dir = path.join(hz, mission, center);
     const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.txt')).sort() : [];
@@ -163,6 +165,19 @@ if (fs.existsSync(gfzDir)) {
   for (const prefix of ['GFZ0OPSRAP_', 'GFZ0MGXRAP_']) {
     const list = files.filter((x) => x.f.startsWith(prefix));
     if (list.length) add('MEO / IGSO / GEO', `GFZ rapid GNSS orbits ${prefix.replace('_', '')} (${prefix === 'GFZ0OPSRAP_' ? 'GPS, GLONASS, Galileo; CC BY 4.0' : 'BeiDou, QZSS; IGS MGEX terms'})`, 'daily SP3, 5 min, from NASA CDDIS (GFZ file server unreachable 2026-10-24)', list.length, span(list.map(dayOf)), 'truth: arm 1-2 windows and the COMSPOC GNSS scoring', 'Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c).');
+  }
+}
+// ILRS orbit products fetched from CDDIS (amendments A9 and A9b): NSGF rapid orbits of the LEO spheres, combined weekly orbits of LAGEOS and Etalon
+const ilrs = path.join(A, 'hac/ilrs-cddis/cddis/slr/products/orbits');
+if (fs.existsSync(ilrs)) {
+  const dayDirs = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((d) => /^\d{6}$/.test(d)).sort() : []);
+  for (const sat of fs.existsSync(path.join(ilrs, 'rapid')) ? fs.readdirSync(path.join(ilrs, 'rapid')).sort() : []) {
+    const days = dayDirs(path.join(ilrs, 'rapid', sat, '2026'));
+    if (days.length) add(sat === 'lares2' ? 'MEO (5,900 km)' : 'LEO', `ILRS NSGF rapid orbit, ${sat}, via NASA CDDIS`, 'daily SP3-c, 4- to 7-day arcs, 3 min, ITRF', days.length, `${yymmdd(days[0])} to ${yymmdd(days.at(-1))} (file dates)`, 'truth: current SLR rows and the COMSPOC laser-ranged scoring', 'Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows.');
+  }
+  for (const sat of fs.existsSync(path.join(ilrs, 'TRF')) ? fs.readdirSync(path.join(ilrs, 'TRF')).sort() : []) {
+    const weeks = dayDirs(path.join(ilrs, 'TRF', sat, '2026'));
+    if (weeks.length) add('MEO (5,850-19,100 km)', `ILRS combined weekly orbit, ${sat}, via NASA CDDIS`, 'weekly SP3-c, 2 or 15 min', weeks.length, `${yymmdd(weeks[0])} to ${yymmdd(weeks.at(-1))} (file dates)`, 'truth: current MEO SLR rows (positions end 2026-10-03)', 'The files of week 260926 hold no positions and are skipped by the converter.');
   }
 }
 add('Cislunar / HEO', 'TESS, CAPSTONE, Artemis I, Danuri', 'not hosted by NAIF', 0, null, 'none', 'NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); with the approvals of 2026-10-24 they come from STScI MAST (TESS) and JPL Horizons (the other three), listed above. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I.');

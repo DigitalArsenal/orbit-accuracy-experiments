@@ -6,6 +6,11 @@ import path from 'node:path';
 import { config, store, results, write, sha256, read } from './common.mjs';
 import { quantile, mean } from './lib/windows.mjs';
 import { source as licenceSource } from '../../harness/data-licenses.mjs';
+import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
+
+// SDN-GP (amendment A9b): rows are kept per build of the module; the tables use the newest build that ran every source (complete.json)
+const SD_BUILDS = sdngpBuilds();
+const SD_HEADLINE = SD_BUILDS.filter((x) => x.complete).at(-1) ?? null;
 
 const REGIMES = [
   { id: 'leo-starlink-ffm', label: 'LEO, Starlink, FFM-propagated truth' },
@@ -67,6 +72,10 @@ export function collect() {
   for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')], ['slr-low-current', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr-current' : 'leo-slr-current')], ['slr-high-current', () => 'meo-slr-current'], ['heo-themis', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-chandra', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-artemis2', () => 'heo-artemis2'], ['heo-tess', (w) => (w.fitSeconds === 86400 ? 'heo-tess' : 'heo-tess-72h')], ['gnss-rapid', () => 'meo-gnss-rapid'], ['mgex-igso-rapid', () => 'igso-gnss-rapid'], ['mgex-geo-rapid', () => 'geo-gnss-rapid']]) {
     for (const w of readJsonl(path.join(store, 'rows', `${source}.jsonl`))) windows.push({ regime: map(w), ...w, meta: {} });
   }
+  if (SD_HEADLINE) { // the SDN-GP fits of the same windows (rows of the headline build)
+    const byKey = new Map(buildRows(SD_HEADLINE.dir).filter((r) => r.sdngp && r.source && r.startUtc).map((r) => [rowKey(r), r.sdngp]));
+    for (const w of windows) { const sd = byKey.get(rowKey(w)); if (sd) w.sdngp = sd; }
+  }
   return windows;
 }
 
@@ -75,7 +84,7 @@ const comp = (list, i) => quantile(list.map((v) => v?.[i]).filter(Number.isFinit
 export function armStats(ws, arm) {
   const ok = ws.filter((w) => w[arm]?.ok);
   const out = {
-    attempted: ws.length, fitted: ok.length,
+    attempted: arm === 'sdngp' ? ws.filter((w) => w.sdngp).length : ws.length, fitted: ok.length,
     fit: spread(ok.map((w) => w[arm].fitRmsKm)),
     fitRic: [0, 1, 2].map((i) => comp(ok.map((w) => w[arm].fitRic), i)),
     fitMsMedian: quantile(ok.map((w) => w[arm].fitMs), 0.5),
@@ -98,6 +107,16 @@ export function paired(ws) {
   return out;
 }
 
+/** Windows two arms both fitted: ratio of the arms' medians by day (0 is the fit) and the share of windows where `a` is closer. */
+export function pairedArms(ws, a, b) {
+  const both = ws.filter((w) => w[a]?.ok && w[b]?.ok);
+  const out = { windows: both.length, days: {} };
+  for (const k of [0, ...DAYS]) {
+    const pairs = both.map((w) => (k === 0 ? [w[a].fitRmsKm, w[b].fitRmsKm] : [w[a].days?.[k]?.rmsKm, w[b].days?.[k]?.rmsKm])).filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
+    out.days[k] = pairs.length ? { n: pairs.length, medianRatio: quantile(pairs.map(([x]) => x), 0.5) / quantile(pairs.map(([, y]) => y), 0.5), closer: pairs.filter(([x, y]) => x < y).length / pairs.length } : null;
+  }
+  return out;
+}
 
 // The same satellites fitted twice (beforeDir, afterDir each hold truth/<norad>.{json,f64} and rows/starlink/<norad>.json): how far the truth moves.
 function refitCompare(beforeDir, afterDir, { onlyCapped }) {
@@ -134,7 +153,8 @@ export function build() {
   const bench = fs.existsSync(path.join(results, 'bench.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'bench.json'))) : null;
   const regimes = [];
   const statsOf = (r, ws, cs) => ({
-    ...r, windows: ws.length, objects: new Set(ws.map((w) => w.id)).size, xp: armStats(ws, 'xp'), sgp4: armStats(ws, 'sgp4'), paired: paired(ws),
+    ...r, windows: ws.length, objects: new Set(ws.map((w) => w.id)).size, xp: armStats(ws, 'xp'), sgp4: armStats(ws, 'sgp4'), sdngp: armStats(ws, 'sdngp'), paired: paired(ws), pairedSdngp: { xp: pairedArms(ws, 'sdngp', 'xp'), sgp4: pairedArms(ws, 'sdngp', 'sgp4') },
+    sdngpTerms: ws.some((w) => w.sdngp?.ok) ? Object.fromEntries(['bEff', 'bEffSigma', 'tauc', 'taus', 'agom'].map((k) => [k, quantile(ws.filter((w) => w.sdngp?.ok).map((w) => w.sdngp[k]), 0.5)])) : null,
     terms: ws.some((w) => w.xp?.ok) ? { bterm: quantile(ws.filter((w) => w.xp?.ok).map((w) => w.xp.bterm), 0.5), agom: quantile(ws.filter((w) => w.xp?.ok).map((w) => w.xp.agom), 0.5), agomShare: ws.filter((w) => w.xp?.ok).filter((w) => w.xp.agom !== 0).length / ws.filter((w) => w.xp?.ok).length, bstar: quantile(ws.filter((w) => w.sgp4?.ok).map((w) => w.sgp4.bstar), 0.5) } : null,
     comspoc: cs?.length ? { objects: cs.length, ageDays: spread(cs.map((c) => c.ageDays)), days: Object.fromEntries([0, ...DAYS].map((k) => [k, { ...spread(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].rmsKm)), ric: [0, 1, 2].map((i) => comp(cs.filter((c) => c.days?.[k]).map((c) => c.days[k].ric), i)) }])) } : null,
   });
@@ -142,6 +162,8 @@ export function build() {
     const ws = windows.filter((w) => w.regime === r.id);
     const cs = comspoc.filter((c) => c.regime === r.id);
     regimes.push(statsOf(r, ws, cs.length ? null : null));
+    const ran = ws.filter((w) => w.sdngp); // SDN-GP ran on a strict subset (SpaceX files that had changed on the server are skipped): the same windows for all arms in the next row
+    if (ran.length && ran.length < ws.length) regimes.push(statsOf({ id: `${r.id}-sdngp`, label: `${r.label}, the ${ran.length} windows SDN-GP ran on` }, ran, null));
     if (cs.length) { // the same objects, so the COMSPOC arm is compared like with like
       const ids = new Set(cs.map((c) => c.norad));
       regimes.push(statsOf({ id: `${r.id}-aligned`, label: `${r.label}, the ${ids.size} object(s) scored for COMSPOC` }, ws.filter((w) => ids.has(w.norad)), cs));
@@ -158,6 +180,9 @@ export function build() {
     xp: { fit: quantile(ws.filter((w) => w.xp?.ok).map((w) => w.xp.fitRmsKm), 0.5), day1: quantile(ws.filter((w) => w.xp?.days?.[1]).map((w) => w.xp.days[1].rmsKm), 0.5), day3: quantile(ws.filter((w) => w.xp?.days?.[3]).map((w) => w.xp.days[3].rmsKm), 0.5) },
     sgp4: { fit: quantile(ws.filter((w) => w.sgp4?.ok).map((w) => w.sgp4.fitRmsKm), 0.5), day1: quantile(ws.filter((w) => w.sgp4?.days?.[1]).map((w) => w.sgp4.days[1].rmsKm), 0.5), day3: quantile(ws.filter((w) => w.sgp4?.days?.[3]).map((w) => w.sgp4.days[3].rmsKm), 0.5) },
   }));
+  // does SDN-GP recover the drag term the FFM fit found? (Starlink, B_eff between 0 and 0.5 m2/kg, both fits' B_eff in m2/kg; SDN-GP's density is NRLMSISE-00 as FFM's)
+  const bWs = windows.filter((w) => w.regime === 'leo-starlink-ffm-drag' && w.sdngp?.ok && w.meta.bEff > 0.001);
+  const bEffRecovery = bWs.length ? { n: bWs.length, ratioQuantiles: [0.1, 0.5, 0.9].map((q) => quantile(bWs.map((w) => w.sdngp.bEff / w.meta.bEff), q)), ffmMedian: quantile(bWs.map((w) => w.meta.bEff), 0.5), sdngpMedian: quantile(bWs.map((w) => w.sdngp.bEff), 0.5) } : null;
   // accounting of the Starlink truth set
   const dir = path.join(store, 'rows/starlink');
   const names = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
@@ -183,7 +208,11 @@ export function build() {
   const fitLength = [24, 48, 72].map((h) => {
     const ok = fl.filter((r) => r.fits?.[h]?.xp && r.fits?.[h]?.sgp4 && [r.fits[h].xp.errorKm, r.fits[h].sgp4.errorKm, r.fits[h].xp.day1Km, r.fits[h].sgp4.day1Km].every(Number.isFinite));
     const med = (arm, key) => quantile(ok.map((r) => r.fits[h][arm][key]), 0.5);
-    return { fitHours: h, satellites: ok.length, xp: { fitRmsKm: med('xp', 'fitRmsKm'), errorKm: med('xp', 'errorKm'), day1Km: med('xp', 'day1Km') }, sgp4: { fitRmsKm: med('sgp4', 'fitRmsKm'), errorKm: med('sgp4', 'errorKm'), day1Km: med('sgp4', 'day1Km') } };
+    const sdFits = new Map((SD_HEADLINE ? buildRows(SD_HEADLINE.dir, 'fitlength') : []).map((r) => [r.norad, r.fits])); // amendment A9c: SDN-GP on the same satellites
+    const okSd = ok.filter((r) => { const q = sdFits.get(r.norad)?.[h]?.sdngp; return q && [q.fitRmsKm, q.errorKm, q.day1Km].every(Number.isFinite); });
+    const medSd = (key) => quantile(okSd.map((r) => sdFits.get(r.norad)[h].sdngp[key]), 0.5);
+    return { fitHours: h, satellites: ok.length, xp: { fitRmsKm: med('xp', 'fitRmsKm'), errorKm: med('xp', 'errorKm'), day1Km: med('xp', 'day1Km') }, sgp4: { fitRmsKm: med('sgp4', 'fitRmsKm'), errorKm: med('sgp4', 'errorKm'), day1Km: med('sgp4', 'day1Km') },
+      sdngp: okSd.length ? { satellites: okSd.length, fitRmsKm: medSd('fitRmsKm'), errorKm: medSd('errorKm'), day1Km: medSd('day1Km'), xpOnTheSame: { fitRmsKm: quantile(okSd.map((r) => r.fits[h].xp.fitRmsKm), 0.5), errorKm: quantile(okSd.map((r) => r.fits[h].xp.errorKm), 0.5), day1Km: quantile(okSd.map((r) => r.fits[h].xp.day1Km), 0.5) } } : null };
   });
   const covRows = readJsonl(path.join(store, 'rows/covariance.jsonl'));
   const realism = ['comspoc-syncopate', 's3kc-sgp4'].map((source) => {
@@ -213,8 +242,8 @@ export function build() {
     rows: rows.length, satellites: new Set(rows.map((r) => r.norad)).size,
     horizonHours: { min: quantile(rows.map((r) => r.horizonHours), 0), median: quantile(rows.map((r) => r.horizonHours), 0.5), max: quantile(rows.map((r) => r.horizonHours), 1) },
     newestFileStart: rows.map((r) => r.newerStartUtc).sort().at(-1),
-    arms: ['spacexOld', 'ffm', 'xp', 'sgp4', 'comspoc'].map((arm) => {
-      const list = rows.filter((r) => r.arms[arm]);
+    arms: ['spacexOld', 'ffm', 'sdngp', 'xp', 'sgp4', 'comspoc'].map((arm) => {
+      const list = rows.filter((r) => r.arms[arm] && r.arms[arm].ok !== false);
       return { arm, n: list.length, median: quantile(list.map((r) => r.arms[arm].rmsKm), 0.5), p90: quantile(list.map((r) => r.arms[arm].rmsKm), 0.9), inTrackShare: quantile(list.map((r) => (r.arms[arm].ric[1] ** 2) / (r.arms[arm].ric.reduce((a, x) => a + x * x, 0) || 1)), 0.5) };
     }),
     ffmByGroup: ['clean', 'bound', 'decay', 'capped'].map((g) => {
@@ -257,7 +286,16 @@ export function build() {
     regime.comspoc = { alignment: 'epoch', objects: rs.length, days: { 1: day(0), 2: day(1), 3: day(2) } };
   }
 
-  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
+  // the builds of the SDN-GP module that were run: Starlink FFM-truth windows, on the satellites every substantial build fitted
+  const starlinkOf = (x) => buildRows(x.dir, 'starlink').filter((r) => r.source === 'starlink-ffm' && r.sdngp?.ok);
+  const substantial = SD_BUILDS.filter((x) => starlinkOf(x).length >= 100);
+  const common = substantial.length ? substantial.map((x) => new Set(starlinkOf(x).map((r) => r.norad))).reduce((a, c) => new Set([...a].filter((n) => c.has(n)))) : new Set();
+  const sdngpBuildInfo = SD_BUILDS.map((x) => {
+    const rows = starlinkOf(x).filter((r) => (substantial.includes(x) ? common.has(r.norad) : true));
+    return { build: x.build, wasmSha256: x.wasmSha256, sourceCommit: x.sourceCommit, sourceDirtyFiles: x.sourceDirtyFiles, firstUseUtc: x.firstUseUtc, builtSeenUtc: x.builtSeenUtc, complete: Boolean(x.complete),
+      starlink: rows.length ? { fitted: rows.length, onCommonSet: substantial.includes(x), fit: quantile(rows.map((r) => r.sdngp.fitRmsKm), 0.5), days: Object.fromEntries(DAYS.map((k) => [k, quantile(rows.map((r) => r.sdngp.days?.[k]?.rmsKm), 0.5)])) } : null };
+  });
+  return { generatedFrom: 'recorded window rows (statistics only)', bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -267,7 +305,7 @@ const arms = (r, k) => [r.xp.days[k]?.median, r.comspoc?.days?.[k]?.median, r.sg
 const cell = (vals) => `pending / ${vals.map((v) => (Number.isFinite(v) ? f(v) : '-')).join(' / ')}`;
 
 function findings(t) {
-  const main = t.regimes.filter((r) => !/-(aligned|drag|b0|decay|clean|72h)$/.test(r.id) && r.id !== 'heo-artemis2' && r.xp.fitted);
+  const main = t.regimes.filter((r) => !/-(aligned|drag|b0|decay|clean|72h|sdngp)$/.test(r.id) && r.id !== 'heo-artemis2' && r.xp.fitted);
   const get = (id) => t.regimes.find((r) => r.id === id);
   const out = [];
   const share = (a) => { const c = a.days[3]?.ric; return c && c.every(Number.isFinite) ? (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2) : null; };
@@ -282,6 +320,22 @@ function findings(t) {
   if (leoFit.length && tight.length) out.push(`- The fit itself: in LEO XP and SGP4 fit alike (median RMS ratio ${f(Math.min(...leoFit), 2)} to ${f(Math.max(...leoFit), 2)}, about ${f(get('leo-starlink-ffm')?.xp.fit.median, 2)} km, a common floor, which points at short-period terms that both theories leave out); where the orbit is high XP fits much tighter than SGP4: ${tight.map((r) => `${r.label} ${f(1 / r.paired.days[0].medianRatio, 1)} times (${f(r.xp.fit.median, 3)} against ${f(r.sgp4.fit.median, 3)} km)`).join('; ')}.`);
   const d3 = main.map((r) => [r.label, r.paired.days[3]?.medianRatio]).filter(([, v]) => Number.isFinite(v));
   if (d3.length) out.push(`- Held-out day 3, median XP / median SGP4: ${d3.map(([l, v]) => `${l} ${f(v, 2)}`).join('; ')}.`);
+  const sdMain = main.filter((r) => r.sdngp.fitted);
+  if (sdMain.length) {
+    const dayRows = (k) => sdMain.map((r) => [r.label, r.sdngp.days[k]?.median, r.xp.days[k]?.median]).filter(([, a, c]) => Number.isFinite(a) && Number.isFinite(c));
+    const d3s = dayRows(3), d1s = dayRows(1);
+    if (d3s.length) out.push(`- SDN-GP (side B's module, build ${t.sdngpHeadlineBuild ?? 'n/a'}) against best-case SGP4-XP on the same windows, held-out day 3, median km, SDN-GP / XP (ratio): ${d3s.map(([l, a, c]) => `${l} ${f(a)} / ${f(c)} (${f(a / c, 2)})`).join('; ')}.`);
+    if (d1s.length) out.push(`- The same on held-out day 1: ${d1s.map(([l, a, c]) => `${l} ${f(a)} / ${f(c)} (${f(a / c, 2)})`).join('; ')}.`);
+    const fitRows = sdMain.map((r) => [r.label, r.sdngp.fit.median, r.xp.fit.median]).filter(([, a, c]) => Number.isFinite(a) && Number.isFinite(c));
+    if (fitRows.length) out.push(`- Fit RMS over the 24 h fit, SDN-GP / XP (ratio): ${fitRows.map(([l, a, c]) => `${l} ${f(a)} / ${f(c)} (${f(a / c, 2)})`).join('; ')}.`);
+    const sdShares = sdMain.map((r) => [r, share(r.sdngp)]).filter(([, v]) => v !== null);
+    if (sdShares.length) out.push(`- The in-track share of the day-3 squared error of SDN-GP: ${sdShares.map(([r, v]) => `${r.label} ${f(v, 1)} %`).join('; ')}.`);
+  }
+  if (t.bEffRecovery) out.push(`- SDN-GP\'s signed B_eff against the FFM fit\'s B_eff on the ${t.bEffRecovery.n} Starlinks with B_eff between 0 and 0.5 m2/kg: the ratio has a median of ${f(t.bEffRecovery.ratioQuantiles[1], 2)} (10th to 90th percentile ${f(t.bEffRecovery.ratioQuantiles[0], 2)} to ${f(t.bEffRecovery.ratioQuantiles[2], 2)}); medians ${fx(t.bEffRecovery.sdngpMedian)} against ${fx(t.bEffRecovery.ffmMedian)} m2/kg. Both fits use NRLMSISE-00 density, so the drag term is the same physical quantity.`);
+  for (const [id, text] of [['leo-starlink-ffm-decay', 'B_eff above 0.5 m2/kg (more than ten times a physical value; rule 2c.2 frees tau0 and holds B at its prior, and no prior is given here)'], ['leo-starlink-ffm-b0', 'B_eff at the zero bound']]) {
+    const r = get(id);
+    if (r?.sdngp.fitted && r.xp.days[3]?.median) out.push(`- Starlinks with ${text}: ${r.sdngp.fitted} SDN-GP fits, day 1 / day 3 median ${f(r.sdngp.days[1]?.median)} / ${f(r.sdngp.days[3]?.median)} km against ${f(r.xp.days[1]?.median)} / ${f(r.xp.days[3]?.median)} km for SGP4-XP and ${f(r.sgp4.days[1]?.median)} / ${f(r.sgp4.days[3]?.median)} km for SGP4.`);
+  }
   const alignedFfm = get('leo-starlink-ffm-aligned');
   if (alignedFfm?.comspoc?.days?.[1]?.n) out.push(`- COMSPOC XP sets, scored on the ${alignedFfm.comspoc.objects} same-day Starlinks at an age of ${f(alignedFfm.comspoc.ageDays.median, 1)} days (median) at the start of the truth: median 3D error ${f(alignedFfm.comspoc.days[1].median, 1)} / ${f(alignedFfm.comspoc.days[2]?.median, 1)} / ${f(alignedFfm.comspoc.days[3]?.median, 1)} km on days 1 / 2 / 3, against ${f(alignedFfm.xp.days[1].median, 1)} / ${f(alignedFfm.xp.days[2].median, 1)} / ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.`);
   if (alignedFfm?.comspoc?.days?.[0]?.n && alignedFfm.xp.days[3]?.n) out.push(`- At a matched age (the set\'s epoch plus about 3 to 4 days) the COMSPOC XP error is ${f(alignedFfm.comspoc.days[0].median, 1)} km (its first truth day, median age at the start ${f(alignedFfm.comspoc.ageDays.median, 1)} days) against ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth (held-out day 3, age 3 to 4 days from the fit epoch) and ${f(alignedFfm.sgp4.days[3].median, 1)} km for SGP4, on the same ${alignedFfm.comspoc.objects} Starlinks.`);
@@ -311,27 +365,29 @@ export function markdown(t) {
   L.push('# G1: SDN-GP against FFM-propagated Starlink and precise orbits (baselines)', '');
   L.push('Generated by `experiments/sdn-gp-starlink-ffm-match/tables.mjs` from recorded window rows. Position errors are 3D RMS in km unless a column says otherwise; every cell is a median over windows. Fit interval 24 h; held-out day k is (24 h + (k-1) d, 24 h + k d].', '');
   L.push('## Method in brief', '',
-    '- **Truth.** Starlink: the satellite\'s SpaceX forecast is fitted over 0-48 h (never across the 48 h join) by `analysis/od fit_ffm` (FFM-1, NRLMSISE-00 drag with s = 0 because no $DCL is published yet, kappa x drag folded into B_eff, Cr*A/m locked), then FFM-1 propagates the fitted state for 96 h at 60 s. That trajectory is the truth of the `FFM-propagated truth` row; the `SpaceX forecast` row fits the same two theories to SpaceX\'s own states (24 h) and scores day 1 inside its span, strictly before the 48 h join. Precise orbits: ESA final GNSS, GFZ MGEX rapid GEO and IGSO satellites, ILRS combined weekly and NSGF arcs, NASA ISS OEM, windows as in the sgp4-xp measurement.',
+    '- **Truth.** Starlink: the satellite\'s SpaceX forecast is fitted over 0-48 h (never across the 48 h join) by `analysis/od fit_ffm` (FFM-1, NRLMSISE-00 drag with s = 0 because no $DCL is published yet, kappa x drag folded into B_eff, Cr*A/m locked), then FFM-1 propagates the fitted state for 96 h at 60 s. That trajectory is the truth of the `FFM-propagated truth` row; the `SpaceX forecast` row fits the same two theories to SpaceX\'s own states (24 h) and scores day 1 inside its span, strictly before the 48 h join. Precise orbits: ESA final GNSS, GFZ MGEX rapid GEO and IGSO satellites (2025), GFZ rapid GNSS orbits of 2026-10-11 to 10-22, ILRS combined weekly and NSGF arcs (the archive\'s and, for September and October 2026, those fetched from NASA CDDIS), NASA ISS OEM, windows as in the sgp4-xp measurement.',
     '- **Windows.** 24 h fit from the first state; SGP4 by `fit_elements` (six mean elements and B*), SGP4-XP by `propagator/sgp4-xp fit` (those and BTERM, AGOM). One window per Starlink; the other sources use the strides of `config.json`.',
+    `- **SDN-GP.** Side B\'s module \`sdn-gp-propagator\` (theory 16), used as built and by its published surfaces only: \`fit_sdngp\` fits the six elements, a signed effective ballistic term B_eff, AGOM and the two density time-variation terms to the same 24 h of truth (the truth as a plain $OEM naming its frame; the run\'s saved space-weather table; no density correction and no prior), and the batch entry \`sdngp_propagate_minutes_soa\` propagates the fitted set to the held-out epochs (TEME), which \`foundation/frames\` takes to the truth\'s axes before the same \`pair_statistics\` scoring as XP. The module is rebuilt in place by its author, so every row belongs to a build named by the SHA-256 of its wasm (section 2a)${SD_HEADLINE ? `; the cells above are build ${SD_HEADLINE.build}` : ''}.`,
     '- **RIC.** SGP4: `element_residuals` (RTN of the truth). SGP4-XP: the module\'s own fit split for the fit, and the fitted set propagated by the module and compared by `pair_statistics` for the held-out days (at most one state per 5 minutes). Components are the median over windows of each window\'s component RMS, so they do not sum exactly to the 3D median.',
     `- **RIC check.** Over all held-out days of all windows the three components recombine to the module\'s own 3D RMS to ${f(t.ricConsistency.xp.min, 4)} to ${f(t.ricConsistency.xp.max, 4)} for SGP4-XP (the thinning to one state per 5 minutes) and ${f(t.ricConsistency.sgp4.min, 4)} to ${f(t.ricConsistency.sgp4.max, 4)} for SGP4.`,
     '- **Environment.** Earth orientation: the local IERS daily finals of 2026-10-13. Space weather: the `data-source/space-weather` rows (GFZ, NOAA SWPC) through 2026-10-25, then NOAA SWPC 45-day daily Ap and F10.7 for the eight days after (Kp and the 81-day average held), because the module\'s rows end where its Kp forecast ends and the truth runs 96 h. Planetary kernel DE440s. Density correction s = 0 (no $DCL is published yet). Hashes are in `manifest.json`.',
     '- **COMSPOC XP (local scoring only).** Their published SGP4-XP sets, propagated through the black-box module and compared with the same-day truth; their set epochs are 1 to 5 days older than the truth, so their errors are at those ages, not at the 24 h of the fitted arms. Never fitted to, never an input; aggregates only.',
-    '- **Plan.** `experiments/sdn-gp-starlink-ffm-match/PLAN.md`, frozen by its first commit, with amendments A1 (headline table), A2 (start states, weather extension, the COMSPOC scoring arm), A3 (fit length), A4 (GEO and IGSO windows from the GFZ MGEX set found after registration), A5 (spacecraft truth from NAIF: highly elliptical orbits scored, cislunar, lunar and heliocentric awaiting SDN-GP) A6 (truth quality: the iteration cap and the zero bound) A7 to A7d (the LEO fit floor against zonal-only gravity, DESIGN.md M1 to M3: section 12) and A8 to A8c (current GNSS truth from the GFZ rapid orbits, TESS from MAST, CAPSTONE, Artemis I and Danuri from JPL Horizons, windows prepared for SDN-GP: section 1 and section 13).',
-    '- **Not measured here.** SDN-GP (not landed); interplanetary truth (the Psyche, Lucy and Juno kernels are SPK type 1, unreadable by `files/orbit-products` 0.1.4); GEO operator ephemerides (SES, Intelsat) are not stored; the theory-term ranking (phase 3). Lunar and cislunar truth is prepared for SDN-GP (section 13), not scored.', '');
+    '- **Plan.** `experiments/sdn-gp-starlink-ffm-match/PLAN.md`, frozen by its first commit, with amendments A1 (headline table), A2 (start states, weather extension, the COMSPOC scoring arm), A3 (fit length), A4 (GEO and IGSO windows from the GFZ MGEX set found after registration), A5 (spacecraft truth from NAIF: highly elliptical orbits scored, cislunar, lunar and heliocentric awaiting SDN-GP) A6 (truth quality: the iteration cap and the zero bound) A7 to A7d (the LEO fit floor against zonal-only gravity, DESIGN.md M1 to M3: section 12) A8 to A8c (current GNSS truth from the GFZ rapid orbits, TESS from MAST, CAPSTONE, Artemis I and Danuri from JPL Horizons, windows prepared for SDN-GP: section 1 and section 13) and A9 and A9b (Psyche, Lucy and Juno from Horizons, current laser-ranging truth from the ILRS products on CDDIS, the SDN-GP arm and its rules).',
+    '- **Not measured here.** SDN-GP on the lunar, cislunar and heliocentric truth (the module\'s theory is Earth-centred; the packs and windows are prepared, section 13); SDN-GP\'s covariance (section 5); the NAIF kernels of Psyche, Lucy and Juno are SPK type 1, unreadable by `files/orbit-products` 0.1.4, so that truth comes from JPL Horizons vector tables; GEO operator ephemerides (SES, Intelsat) are not stored; the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
-  L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. `-` is not scored. A COMSPOC value marked `*` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. A COMSPOC value marked `†` (the GFZ rapid-orbit regimes) is by days since the epoch of the set itself, day 1 being the first 24 h after it, against the rapid orbit; XP and SGP4 are by days since the end of their 24 h fit, so the ages are not the same (no COMSPOC fit span is known). For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
-  const isExtra = (r) => /-(aligned|drag|b0|decay|clean|72h)$/.test(r.id) || r.id === 'heo-artemis2';
-  const header = ['| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'];
+  L.push(`Cells read \`SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4\`. SDN-GP is side B's module \`sdn-gp-propagator\` as built${SD_HEADLINE ? ` (build ${SD_HEADLINE.build}: source commit ${SD_HEADLINE.sourceCommit?.slice(0, 8)}, ${SD_HEADLINE.sourceDirtyFiles} uncommitted file(s); the newest build that ran every source, see section 2a)` : ''}, fitted by \`fit_sdngp\` to the same truth on the same windows; \`pending\` where it has not run. Best-case XP is \`propagator/sgp4-xp fit\` fitted to the same truth on the same windows. \`-\` is not scored. A COMSPOC value marked \`*\` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. A COMSPOC value marked \`†\` (the GFZ rapid-orbit and laser-ranged regimes) is by days since the epoch of the set itself, day 1 being the first 24 h after it, against the rapid orbit; XP and SGP4 are by days since the end of their 24 h fit, so the ages are not the same (no COMSPOC fit span is known). For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.`, '');
+  const isExtra = (r) => /-(aligned|drag|b0|decay|clean|72h|sdngp)$/.test(r.id) || r.id === 'heo-artemis2';
+  const header = ['| Regime | Windows (SDN-GP fitted / XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (SDN-GP / XP / SGP4) | Bytes per object (SDN-GP / XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'];
   const comspocOf = (r) => (r.comspoc ? { c: r.comspoc, mark: r.comspoc.alignment === 'epoch' ? '†' : '' } : t.regimes.find((x) => x.id === `${r.id}-aligned`)?.comspoc ? { c: t.regimes.find((x) => x.id === `${r.id}-aligned`).comspoc, mark: '*' } : { c: null, mark: '' });
-  const cellOf = (xpv, csv, sgv, mark) => `pending / ${[xpv, csv, sgv].map((v, k) => (Number.isFinite(v) ? f(v) + (k === 1 ? mark : '') : '-')).join(' / ')}`;
+  const cellOf = (sdv, xpv, csv, sgv, mark, state = 'pending') => `${Number.isFinite(sdv) ? f(sdv) : state} / ${[xpv, csv, sgv].map((v, k) => (Number.isFinite(v) ? f(v) + (k === 1 ? mark : '') : '-')).join(' / ')}`;
+  const sdState = (r) => (r.sdngp.fitted > 0 ? '-' : r.sdngp.attempted > 0 ? 'not fitted' : 'pending'); // '-' where SDN-GP ran but has no value for the cell
   const row = (r) => {
     const key = /^(geo|igso|heo)/.test(r.id) ? 'GEO' : r.id.startsWith('meo') ? 'MEO' : 'LEO';
     const b = t.bench ? { xp: t.bench.find((x) => x.theory === 'SGP4-XP' && x.regime.startsWith(key)), sg: t.bench.find((x) => x.theory === 'SGP4' && x.regime.startsWith(key)) } : null;
     const share = (a) => { const c = a.days[3]?.ric; if (!(c && c.every(Number.isFinite))) return ''; const q = (100 * c[1] ** 2) / (c[0] ** 2 + c[1] ** 2 + c[2] ** 2); return `${q >= 99.5 ? q.toFixed(1) : Math.round(q)} %`; };
     const { c, mark } = comspocOf(r);
-    const day = (k) => cellOf(r.xp.days[k]?.median, c?.days?.[k]?.median, r.sgp4.days[k]?.median, mark);
-    return `| ${r.label} | ${r.xp.fitted} / ${r.sgp4.fitted} / ${r.windows} | ${cellOf(r.xp.fit.median, c?.days?.[0]?.median, r.sgp4.fit.median, mark)} | ${day(1)} | ${day(2)} | ${day(3)} | ${share(r.xp)} / ${share(r.sgp4)} | ${r.xp.elementBytes ?? ''} / ${r.sgp4.elementBytes ?? ''} | ${b ? `${f(b.xp?.usPerState, 0)} / ${f(b.sg?.usPerState, 0)}` : ''} |`;
+    const day = (k) => cellOf(r.sdngp.days[k]?.median, r.xp.days[k]?.median, c?.days?.[k]?.median, r.sgp4.days[k]?.median, mark, sdState(r));
+    return `| ${r.label} | ${r.sdngp.attempted ? r.sdngp.fitted : 'pending'} / ${r.xp.fitted} / ${r.sgp4.fitted} / ${r.windows} | ${cellOf(r.sdngp.fit.median, r.xp.fit.median, c?.days?.[0]?.median, r.sgp4.fit.median, mark, sdState(r))} | ${day(1)} | ${day(2)} | ${day(3)} | ${r.sdngp.fitted ? share(r.sdngp) : '-'} / ${share(r.xp)} / ${share(r.sgp4)} | ${r.sdngp.elementBytes ?? '-'} / ${r.xp.elementBytes ?? ''} / ${r.sgp4.elementBytes ?? ''} | ${b ? `${f(b.xp?.usPerState, 0)} / ${f(b.sg?.usPerState, 0)}` : ''} |`;
   };
   const spanOf = (a) => (a.prepared?.length ? a.prepared.map((p) => `${p.name.split('-')[0]} ${p.startUtc.slice(0, 10)} to ${p.stopUtc.slice(0, 10)}, ${p.windows.reduce((n, w) => n + w.count, 0)} windows`).join('; ') : a.kernel ? `${a.kernel.span.slice(0, 10)} to ${a.kernel.span.split(' to ')[1].slice(0, 10)}` : 'none');
   L.push(...header, ...t.regimes.filter((r) => !isExtra(r)).map(row), ...t.awaiting.map((a) => `| ${a.label} | truth ${spanOf(a)} | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |`));
@@ -347,25 +403,39 @@ export function markdown(t) {
   }
 
   L.push('### What the table says (generated from the numbers above)', '', ...findings(t), '');
-  L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
-  for (const r of t.regimes) for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) {
-    const s = (x) => (x?.n ? `${f(x.median)} / ${f(x.mean)} / ${f(x.p90)}` : '');
-    L.push(`| ${r.label} | ${name} | ${a.fitted} | ${s(a.fit)} | ${s(a.days[1])} | ${s(a.days[2])} | ${s(a.days[3])} |`);
+  L.push('## 2. Held-out error by day: median, mean and 90th percentile (3D, km)', '', 'Each day is over the windows that have enough states in it (90 %): in the arcs of the laser-ranging orbits only the first window of an arc has day 3, so the day columns are over different window sets; n is the count behind a day. The paired tables below compare arms window by window.', '', '| Regime | Arm | n | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
+  for (const r of t.regimes) for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) {
+    if (name === 'SDN-GP' && !a.attempted) continue;
+    const s = (x, withN) => (x?.n ? `${f(x.median)} / ${f(x.mean)} / ${f(x.p90)}${withN ? ` (n ${x.n})` : ''}` : '');
+    L.push(`| ${r.label} | ${name} | ${a.fitted} | ${s(a.fit)} | ${s(a.days[1], true)} | ${s(a.days[2], true)} | ${s(a.days[3], true)} |`);
   }
   L.push('', '### Paired, windows both fitters fitted: median XP / median SGP4 (share of windows where XP is closer)', '', '| Regime | Windows | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --: | --- | --- | --- | --- |');
-  for (const r of t.regimes) { const p = (k) => (r.paired.days[k] ? `${f(r.paired.days[k].medianRatio, 2)} (${Math.round(100 * r.paired.days[k].xpCloser)} %)` : ''); L.push(`| ${r.label} | ${r.paired.windows} | ${p(0)} | ${p(1)} | ${p(2)} | ${p(3)} |`); }
+  for (const r of t.regimes) { const p = (k) => (r.paired.days[k] ? `${f(r.paired.days[k].medianRatio, 2)} (${Math.round(100 * r.paired.days[k].xpCloser)} %, n ${r.paired.days[k].n})` : ''); L.push(`| ${r.label} | ${r.paired.windows} | ${p(0)} | ${p(1)} | ${p(2)} | ${p(3)} |`); }
+  if (t.regimes.some((r) => r.sdngp.fitted)) {
+    L.push('', '### Paired, windows SDN-GP and the other fitter both fitted: median SDN-GP / median other (share of windows where SDN-GP is closer)', '', '| Regime | Against | Windows | Fit | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --- | --- |');
+    for (const r of t.regimes) if (r.sdngp.fitted) for (const [name, key] of [['SGP4-XP', 'xp'], ['SGP4', 'sgp4']]) { const q = r.pairedSdngp[key]; const p = (k) => (q.days[k] ? `${f(q.days[k].medianRatio, 2)} (${Math.round(100 * q.days[k].closer)} %, n ${q.days[k].n})` : ''); L.push(`| ${r.label} | ${name} | ${q.windows} | ${p(0)} | ${p(1)} | ${p(2)} | ${p(3)} |`); }
+  }
+  if (t.sdngpBuilds.length) {
+    L.push('', '### 2a. Builds of the SDN-GP module that were run (side B rebuilds `dist/` in place; every row is tied to a build)', '', 'Starlink, FFM-propagated truth, the windows each build fitted (median 3D km; fit RMS, then held-out days 1 / 2 / 3). `complete` marks the build that ran every source of section 1; the tables above use the newest complete one. The source commit is side B\'s; uncommitted files are counted because a build is made from the working tree.', '',
+      '| Build (wasm SHA-256 prefix) | Side-B source commit | Uncommitted files | Build first seen (UTC) | Complete | Starlink windows fitted | Fit RMS | Day 1 | Day 2 | Day 3 |', '| --- | --- | --: | --- | --- | --: | --: | --: | --: | --: |',
+      ...t.sdngpBuilds.map((x) => `| ${x.build} | ${x.sourceCommit?.slice(0, 8) ?? ''} | ${x.sourceDirtyFiles ?? ''} | ${(x.builtSeenUtc ?? x.firstUseUtc)?.slice(0, 16) ?? ''} | ${x.complete ? 'yes' : 'no'} | ${x.starlink?.fitted ?? 0}${x.starlink && !x.starlink.onCommonSet ? ' (partial run)' : ''} | ${f(x.starlink?.fit)} | ${f(x.starlink?.days[1])} | ${f(x.starlink?.days[2])} | ${f(x.starlink?.days[3])} |`));
+  }
   L.push('', '## 3. Radial / in-track / cross-track split (km, median of per-window component RMS)', '', '| Regime | Arm | Fit R / I / C | Day 1 R / I / C | Day 3 R / I / C |', '| --- | --- | --- | --- | --- |');
   const ric = (c) => (c && c.some(Number.isFinite) ? c.map((v) => f(v)).join(' / ') : '');
   for (const r of t.regimes) {
-    for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) L.push(`| ${r.label} | ${name} | ${ric(a.fitRic)} | ${ric(a.days[1]?.ric)} | ${ric(a.days[3]?.ric)} |`);
+    for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) if (name !== 'SDN-GP' || a.fitted) L.push(`| ${r.label} | ${name} | ${ric(a.fitRic)} | ${ric(a.days[1]?.ric)} | ${ric(a.days[3]?.ric)} |`);
     if (r.comspoc) L.push(`| ${r.label} | COMSPOC XP (local scoring only) | | ${ric(r.comspoc.days[1]?.ric)} | ${ric(r.comspoc.days[3]?.ric)} |`);
   }
   L.push('', '## 4. Cost per object', '', '| Regime | Arm | Parameters | Element bytes | Record bytes as returned | Fit time, median ms |', '| --- | --- | --: | --: | --: | --: |');
-  for (const r of t.regimes) for (const [name, a] of [['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) L.push(`| ${r.label} | ${name} | ${a.parameters ?? ''} | ${a.elementBytes ?? ''} | ${a.recordBytes ?? ''} | ${f(a.fitMsMedian, 0)} |`);
+  for (const r of t.regimes) for (const [name, a] of [['SDN-GP', r.sdngp], ['SGP4-XP', r.xp], ['SGP4', r.sgp4]]) if (name !== 'SDN-GP' || a.fitted) L.push(`| ${r.label} | ${name} | ${a.parameters ?? ''} | ${a.elementBytes ?? ''} | ${a.recordBytes ?? ''} | ${f(a.fitMsMedian, 0)} |`);
   L.push('', 'Element bytes are the size-prefixed `$OMM` record holding only the mean elements and the drag (and solar) terms of the set; the record as returned carries the fit statistics too. A two-line text set (the format COMSPOC publishes its XP sets in) is 138 characters.');
   if (t.bench) { L.push('', 'One propagated state, microseconds (one `propagate` call over 5761 states, four days at 60 s, median of repeats, harness overhead included):', '', '| Regime | Theory | us per state | Element bytes |', '| --- | --- | --: | --: |', ...t.bench.map((x) => `| ${x.regime} | ${x.theory} | ${f(x.usPerState, 0)} | ${x.elementBytes} |`)); }
   L.push('', 'Fitted terms (medians over windows): the two extra terms of SGP4-XP against the single B* of SGP4. AGOM is the solar-radiation term; a zero median means the fit left it at zero in most windows.', '', '| Regime | XP BTERM | XP AGOM | XP windows with AGOM != 0 | SGP4 B* |', '| --- | --: | --: | --: | --: |');
   for (const r of t.regimes) if (r.terms) L.push(`| ${r.label} | ${fx(r.terms.bterm)} | ${fx(r.terms.agom)} | ${r.terms.agomShare === null ? '' : `${Math.round(100 * r.terms.agomShare)} %`} | ${fx(r.terms.bstar)} |`);
+  if (t.regimes.some((r) => r.sdngpTerms)) {
+    L.push('', 'SDN-GP fitted terms (medians over windows): the signed effective ballistic term B_eff (m2/kg) and its standard deviation from the fit\'s normal matrix, the two time-variation terms of the density model (tau_c, tau_s), and the solar-radiation term AGOM.', '', '| Regime | B_eff | sigma(B_eff) | tau_c | tau_s | AGOM |', '| --- | --: | --: | --: | --: | --: |');
+    for (const r of t.regimes) if (r.sdngpTerms) L.push(`| ${r.label} | ${fx(r.sdngpTerms.bEff)} | ${fx(r.sdngpTerms.bEffSigma)} | ${fx(r.sdngpTerms.tauc)} | ${fx(r.sdngpTerms.taus)} | ${fx(r.sdngpTerms.agom)} |`);
+  }
   L.push('', '## 5. Covariance realism against the FFM truth of the same-day Starlinks', '', 'd^2 is the position Mahalanobis distance of the error against each source\'s own covariance (gp-error-model `pair_statistics`); a realistic covariance has mean d^2/3 in [0.8, 1.25] and 95 % coverage in [0.93, 0.97] (the V1c2 rule). Age is in days since the source\'s own epoch: ScenarioEpoch for SynCoPate, the fit epoch for ours.', '', '| Covariance | Age (days) | Objects | Samples | Mean d^2/3 | 95 % coverage | Median object error, km |', '| --- | --- | --: | --: | --: | --: | --: |');
   const names = { 'comspoc-syncopate': 'COMSPOC SynCoPate (local scoring only), with the XP trajectory', 's3kc-sgp4': 'Ours: E14 S3-KC population covariance on SGP4 fitted to the truth', 'sdn-gp': 'SDN-GP' };
   for (const r of t.realism) {
@@ -385,6 +455,10 @@ export function markdown(t) {
   if (t.fitLength.some((x) => x.satellites)) {
     L.push('## 8. Fit length on the FFM truth (arm 6, amendment A3)', '', 'Each fitted Starlink fitted over 24, 48 and 72 h, scored on (a) one common interval, 72 to 96 h after the truth start (the lead behind the fit end is then 48, 24 and 0 h), and (b) the first day after each fit (a fixed lead of 0 to 24 h). Medians over the same satellites, km.', '', '| Fit length | Satellites | XP fit RMS | XP error, 72-96 h | XP error, first day after the fit | SGP4 fit RMS | SGP4 error, 72-96 h | SGP4 error, first day after the fit |', '| --- | --: | --: | --: | --: | --: | --: | --: |');
     for (const x of t.fitLength) if (x.satellites) L.push(`| ${x.fitHours} h | ${x.satellites} | ${f(x.xp.fitRmsKm)} | ${f(x.xp.errorKm)} | ${f(x.xp.day1Km)} | ${f(x.sgp4.fitRmsKm)} | ${f(x.sgp4.errorKm)} | ${f(x.sgp4.day1Km)} |`);
+    if (t.fitLength.some((x) => x.sdngp)) {
+      L.push('', 'SDN-GP on the same satellites (amendment A9c; the XP columns here are the medians over exactly the satellites SDN-GP fitted):', '', '| Fit length | Satellites | SDN-GP fit RMS | SDN-GP error, 72-96 h | SDN-GP error, first day after the fit | XP fit RMS | XP error, 72-96 h | XP error, first day after the fit |', '| --- | --: | --: | --: | --: | --: | --: | --: |');
+      for (const x of t.fitLength) if (x.sdngp) L.push(`| ${x.fitHours} h | ${x.sdngp.satellites} | ${f(x.sdngp.fitRmsKm)} | ${f(x.sdngp.errorKm)} | ${f(x.sdngp.day1Km)} | ${f(x.sdngp.xpOnTheSame.fitRmsKm)} | ${f(x.sdngp.xpOnTheSame.errorKm)} | ${f(x.sdngp.xpOnTheSame.day1Km)} |`);
+    }
     L.push('');
   }
 
@@ -404,9 +478,9 @@ export function markdown(t) {
   L.push('How to read it, in numbers: the registered rows keep the 12-iteration truth. The `clean` row of section 1b (converged, B_eff between 0 and 0.5) is the population on which the tables are least affected by the two limits; compare its day-1 and day-3 medians with the pooled Starlink row. The zero bound is a contract of the T1a module (`analysis/od fit_ffm`, B_eff >= 0): a satellite whose forecast contains net thrust beyond its drag gets a drag-free trajectory, so its truth is easy to match (lower XP and SGP4 errors) and does not follow the operator; those 52 fits are reported apart, not corrected here.', '');
   const nw = t.newer;
   if (nw) {
-    const armName = (a) => (a === 'comspoc' ? 'COMSPOC Spacebook XP (local scoring only)' : a === 'spacexOld' ? 'SpaceX earlier forecast' : a === 'ffm' ? 'FFM-1 from the registered fit' : a === 'xp' ? 'SGP4-XP fitted to the FFM truth' : 'SGP4 fitted to the FFM truth');
+    const armName = (a) => (a === 'comspoc' ? 'COMSPOC Spacebook XP (local scoring only)' : a === 'spacexOld' ? 'SpaceX earlier forecast' : a === 'ffm' ? 'FFM-1 from the registered fit' : a === 'sdngp' ? 'SDN-GP fitted to the FFM truth' : a === 'xp' ? 'SGP4-XP fitted to the FFM truth' : 'SGP4 fitted to the FFM truth');
     L.push('## 10. Held out against the first hours of newer SpaceX files', '',
-      `${nw.satellites} fitted Starlinks (${nw.rows} scorings), each scored against the first three hours (every ten minutes) of a file SpaceX served after the file of the registered fit; the newest starts ${nw.newestFileStart.slice(0, 16)}Z. The horizon from the start of the registered fit to those hours is ${f(nw.horizonHours.min, 1)} to ${f(nw.horizonHours.max, 1)} h; the scoring is re-run with \`newer.mjs\` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h), and each pass is reported at its own horizon. Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4 and SGP4-XP fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).`, '');
+      `${nw.satellites} fitted Starlinks (${nw.rows} scorings), each scored against the first three hours (every ten minutes) of a file SpaceX served after the file of the registered fit; the newest starts ${nw.newestFileStart.slice(0, 16)}Z. The horizon from the start of the registered fit to those hours is ${f(nw.horizonHours.min, 1)} to ${f(nw.horizonHours.max, 1)} h; the scoring is re-run with \`newer.mjs\` as files arrive (the registered V2 prospective files start 2026-10-24 08:00Z, a horizon of about 20 h), and each pass is reported at its own horizon. Arms: SpaceX's own earlier forecast (where its epochs coincide with the newer file's), FFM-1 from the registered fit, SGP4, SGP4-XP and SDN-GP (the newest build that ran every source, section 2a; \`newer.mjs\` uses it when one exists) fitted to the first 24 h of the FFM truth, and COMSPOC's XP set (same-day objects, local scoring only).`, '');
     for (const bin of nw.bins) {
       L.push(`### Horizon ${bin.lo} to ${bin.hi} h (${bin.satellites} Starlinks, median ${f(bin.horizonHours.median, 1)} h)`, '',
         '| Arm | Satellites | Median 3D RMS (km) | 90th percentile | In-track share of the squared error (median) |', '| --- | --: | --: | --: | --: |',
@@ -446,7 +520,16 @@ export function markdown(t) {
     L.push('## 11. Notes for the modules (found here, not changed here)', '',
       `- \`analysis/od fit_ffm\` (T1a): (a) B_eff >= 0 leaves ${ts2.bEffZeroBound} of ${ts2.fitted} fits at the zero bound (orbit raising and other net thrust cannot be represented; their truth is a drag-free trajectory); (b) ${ts2.notConverged} of ${ts2.fitted} fits stop at the 12-iteration default${refitSentence(tq2)}, so the stopping rule or the default cap is too strict; (c) ${decayMedian.reduce((a, x) => a + x.n, 0)} objects need B_eff above 0.5 m2/kg, more than ten times a physical value (continuous lowering or decay, no discrete event detected): they fit SpaceX to a median of 2 to 11 km and are 2 km (median) from a newer file's first hours; a single B_eff cannot represent them.`,
       '- `data-source/space-weather` rows end where the Kp forecast ends (about two days ahead) and `propagator/ffm` refuses any arc past them (`space-weather-out-of-range`); this experiment appended NOAA SWPC 45-day Ap and F10.7 itself (amendment A2).',
-      '- `files/orbit-products` 0.1.4 reads SPK types 8, 9 and 13 only: the JPL navigation kernels of Psyche, Lucy and Juno are type 1 (`unsupported-variant`), the Juno merge also holds type 2 (`unsupported-spk-materialization`), TDRSS is type 10 (generated from two-line elements). Its epochs are TDB, so every caller needs `foundation/time` (done here, one call per epoch).', '');
+      '- `files/orbit-products` 0.1.4 reads SPK types 8, 9 and 13 only: the JPL navigation kernels of Psyche, Lucy and Juno are type 1 (`unsupported-variant`), the Juno merge also holds type 2 (`unsupported-spk-materialization`), TDRSS is type 10 (generated from two-line elements). Its epochs are TDB, so every caller needs `foundation/time` (done here, one call per epoch).',
+      ...(SD_HEADLINE ? [
+        '- `sdn-gp-propagator` (side B), found by using it: (a) the invoke surface\'s `propagate` stops one day after the set\'s epoch, so the held-out days were scored through the batch entry `sdngp_propagate_minutes_soa` after `ingest_omm`; (b) `fit_sdngp` and `ingest_omm` read plain (not size-prefixed) buffers, and take the frame of an $OEM from the string `REFERENCE_FRAME.NAME`: a block that names GCRF only through the enumeration is read as TEME, silently, and the fit then reports a good RMS in the wrong frame (30 to 40 km errors against the truth); (c) the build is rebuilt in place from a working tree, so a result is only reproducible with the copy of the wasm it ran (section 2a).',
+        ...(() => { const r = (id) => t.regimes.find((x) => x.id === id); const dec = r('leo-starlink-ffm-decay'), gnss = r('meo-gnss-rapid'), fails = t.regimes.filter((x) => !/-(aligned|drag|b0|decay|clean|72h|sdngp)$/.test(x.id) && x.sdngp.attempted && x.sdngp.attempted > x.sdngp.fitted).map((x) => `${x.label}: ${x.sdngp.attempted - x.sdngp.fitted} of ${x.sdngp.attempted}`);
+          return [
+            ...(dec?.sdngp.fitted && dec.xp.days[3]?.median ? [`- \`fit_sdngp\` rule 2c.2 (B_eff above 0.5 m2/kg: tau0 free, B at its prior) with no prior given: the ${dec.sdngp.fitted} Starlinks with such a B_eff fit well (median fit RMS ${f(dec.sdngp.fit.median)} km) and then leave the truth fast (day 1 / day 3 median ${f(dec.sdngp.days[1]?.median, 1)} / ${f(dec.sdngp.days[3]?.median, 0)} km, against ${f(dec.xp.days[1]?.median, 1)} / ${f(dec.xp.days[3]?.median, 1)} km for SGP4-XP).`] : []),
+            ...(gnss?.sdngp.fitted && gnss.xp.days[3]?.median ? [`- GNSS MEO (GFZ rapid), held-out day 3 median: SDN-GP ${f(gnss.sdngp.days[3]?.median)} km, SGP4-XP ${f(gnss.xp.days[3]?.median)} km (fit RMS ${f(gnss.sdngp.fit.median)} against ${f(gnss.xp.fit.median)} km): SDN-GP is ${gnss.sdngp.days[3]?.median > gnss.xp.days[3]?.median ? 'behind' : 'ahead of'} XP in extrapolation at this altitude${gnss.sdngp.fit.median < gnss.xp.fit.median ? ' although it fits tighter' : ''}.`] : []),
+            ...(fails.length ? [`- \`fit_sdngp\` fits that did not converge or were refused, by regime: ${fails.join('; ')}.`] : []),
+          ]; })(),
+      ] : []), '');
   }
 
   const m123File = path.join(results, 'm123.md');
@@ -461,9 +544,9 @@ export function markdown(t) {
   const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'gfz-rapid-gnss', 'ilrs', 'ilrs-nsgf', 'ilrs-cddis', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'jpl-horizons', 'stsci-mast-tess', 'nrlmsise00', 'egm', 'fes2004'];
   L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenceSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
   L.push('## Reproduce, resume, extend', '',
-    '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `m123.mjs --workers N` with `m123-report.mjs` (section 12), `fetch-horizons.mjs`, `fetch-mast-tess.mjs` (needs `NODE_EXTRA_CA_CERTS`, see its header), `fetch-gnss-rapid.mjs` and `gnss-rapid-convert.mjs` (the public sources approved on 2026-10-24, stored in the archive with provenance rows), `horizons-packs.mjs`, `regime-windows.mjs` and `score-pack.mjs` (section 13), `watch-newer.mjs` (waits for the next SpaceX batch, runs `newer.mjs`, regenerates the tables, commits nothing), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment\'s.',
+    '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `m123.mjs --workers N` with `m123-report.mjs` (section 12), `fetch-horizons.mjs`, `fetch-mast-tess.mjs` (needs `NODE_EXTRA_CA_CERTS`, see its header), `fetch-gnss-rapid.mjs`, `fetch-slr.mjs` (needs the Earthdata token in the environment file `lib/cddis.mjs` names, never printed) with `gnss-rapid-convert.mjs` and `slr-convert.mjs` (the public sources approved on 2026-10-24, stored in the archive with provenance rows), `sdngp-run.mjs`, `horizons-packs.mjs`, `regime-windows.mjs` and `score-pack.mjs` (section 13), `watch-newer.mjs` (waits for the next SpaceX batch, runs `newer.mjs`, regenerates the tables, commits nothing), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment\'s.',
     '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',
-    '- SDN-GP: when the module lands, `lib/baselines.mjs` gets a third fitter beside `fitXp` and `fitSgp4`, and the `pending` cells of section 1 and the last row of section 5 fill from it. For the regimes awaiting SDN-GP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the centre. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
+    '- SDN-GP: `lib/sdngp.mjs` runs side B\'s `sdn-gp-propagator` (a copy of its built wasm, named by SHA-256 prefix, in `<store>/sdngp-snapshot/`), `lib/baselines.mjs` `fitSdngp` is the third fitter beside `fitXp` and `fitSgp4`, and `sdngp-run.mjs` runs it over every source on one build (`baselines.mjs --arm sdngp`, `spk-windows.mjs --arm sdngp`, `starlink-sdngp.mjs`, `newer.mjs --arm sdngp`), rows in `<store>/rows/sdngp/<build>/`; a new build of the module is one more `sdngp-run.mjs`, and section 2a lists the builds. The last row of section 5 stays `pending`. For the regimes awaiting SDN-GP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the centre. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.',
     '- Newer-file truth: `newer.mjs` scores against the first hours of any SpaceX file created after the registered fit (section 10); re-run it after 2026-10-24 08:00Z for the registered prospective files, and `comspoc.mjs` against the same-day truth files. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later (ESA finals lag about two weeks); `inventory.mjs` shows the newest product dates.', '');
   return L.join('\n');
 }

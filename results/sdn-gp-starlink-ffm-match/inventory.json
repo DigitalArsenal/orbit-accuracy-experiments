@@ -243,7 +243,7 @@
       "count": 29674,
       "span": "set epochs 2026-08-15 to 2026-10-22, median 2026-10-20",
       "usable": "scoring only: never fitted to, never an input, aggregates only",
-      "note": "Terms: no commercial use, no redistribution, no derivative works. GPS and laser-ranged objects wait for the products of 2026-10-23 and later."
+      "note": "Terms: no commercial use, no redistribution, no derivative works. The GNSS and the six LEO-sphere laser-ranged sets are scored against the GFZ rapid and ILRS NSGF products; LAGEOS and Etalon sets wait for combined orbits after 2026-10-03."
     },
     {
       "regime": "GEO / IGSO / MEO",
@@ -462,6 +462,51 @@
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
+      "regime": "Interplanetary (Sun-centred)",
+      "source": "JPL Horizons API vector tables, Psyche (cruise), sun-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; psyche_merged; 1 responses",
+      "count": 7993,
+      "span": "2025-08-13 to 2026-07-12",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centred)",
+      "source": "JPL Horizons API vector tables, Lucy (reconstruction through 2025-09-08), sun-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Lucy_merged_DE430; 1 responses",
+      "count": 6265,
+      "span": "2024-12-20 to 2025-09-07",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centred)",
+      "source": "JPL Horizons API vector tables, Lucy (flight project reference trajectory, a planning prediction), sun-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Lucy_merged_DE430; 2 responses",
+      "count": 12913,
+      "span": "2025-09-09 to 2027-03-01",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centred)",
+      "source": "JPL Horizons API vector tables, Juno (cruise, 2012-10 to 2013-09), sun-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Juno_merged; 1 responses",
+      "count": 8737,
+      "span": "2012-10-01 to 2013-09-30",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Jupiter-centred)",
+      "source": "JPL Horizons API vector tables, Juno (Jupiter orbits), jupiter-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Juno_merged; 2 responses",
+      "count": 34609,
+      "span": "2024-09-01 to 2026-08-23",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
       "regime": "HEO (13.7 day)",
       "source": "STScI MAST: TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp)",
       "product": "SPK type 9 (Lagrange, degree 7), Earth-centred J2000, 60 s; 23 MB",
@@ -487,6 +532,105 @@
       "span": "2026-10-11 to 2026-10-22",
       "usable": "truth: arm 1-2 windows and the COMSPOC GNSS scoring",
       "note": "Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c)."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, ajisai, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, lares, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "MEO (5,900 km)",
+      "source": "ILRS NSGF rapid orbit, lares2, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, larets, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, starlette, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, stella, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, westpac, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 12,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, etalon1, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, etalon2, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, lageos1, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, lageos2, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
     },
     {
       "regime": "Cislunar / HEO",

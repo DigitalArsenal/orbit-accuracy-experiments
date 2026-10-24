@@ -1,4 +1,4 @@
-// E2E for G1: node experiments/sdn-gp-starlink-ffm-match/run.mjs --check [--replay N]
+// E2E for G1: node experiments/sdn-gp-starlink-ffm-match/run.mjs --check [--replay N]   (N replays of SGP4 / SGP4-XP windows, default 9: one per precise-orbit source)
 // 1. the plan and config are frozen and committed unchanged;
 // 2. the committed manifest matches the module artifacts that would run (WASM SHA-256);
 // 3. tables.json is re-derived from the recorded window rows (statistics only) and must equal the committed file;
@@ -6,8 +6,10 @@
 //    replayed through FFM-1 under full and zonal-only gravity and the SGP4 and SGP4-XP fits, and must reproduce their recorded numbers;
 // 3c. the windows prepared for SDN-GP (regime-windows.json) are re-derived from the local truth packs, and the pack scorer returns a known
 //    offset (1 km added to a Danuri window's held-out states comes back as 1 km RMS on each day);
-// 4. N windows (default 5 precise-orbit windows, one per source, plus a Starlink FFM truth and an in-span SpaceX window) are replayed through the modules and must reproduce their recorded
-//    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records.
+// 4. N windows (default 9 precise-orbit windows, one per source, plus a Starlink FFM truth and an in-span SpaceX window) are replayed through the modules and must reproduce their recorded
+//    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records;
+// 4b. SDN-GP (amendment A9b): windows of the headline build (ISS, GNSS, a current SLR arc and a Starlink FFM truth) are fitted again by the pinned copy of the
+//    module (<store>/sdngp-snapshot/<build>) and must reproduce their recorded fit RMS and held-out days.
 // Without the local records the check says so and exits 2: a skip is never a pass.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -30,9 +32,10 @@ import { manifest } from './manifest.mjs';
 import * as sources from './lib/sources.mjs';
 import { parseMeme } from './lib/sources.mjs';
 import { windowStarts, withT, ms } from './lib/windows.mjs';
+import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
 
 const args = process.argv.slice(2);
-const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 5;
+const replay = args.includes('--replay') ? Number(args[args.indexOf('--replay') + 1]) : 9;
 const fail = (message) => { console.error(`FAIL: ${message}`); process.exit(1); };
 const ok = (message) => console.log(`ok: ${message}`);
 
@@ -98,17 +101,20 @@ const modules = modulesRoot();
 const b = await openBaselines(modules);
 const picks = [];
 const read = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []);
-for (const source of ['gnss', 'iss', 'slr-low', 'slr-high', 'mgex-geo', 'gnss-rapid', 'mgex-igso-rapid']) { const rows = read(path.join(store, 'rows', `${source}.jsonl`)); if (rows.length) picks.push({ source, row: rows[Math.floor(rows.length / 2)] }); }
+for (const source of ['gnss', 'iss', 'slr-low', 'slr-high', 'mgex-geo', 'gnss-rapid', 'mgex-igso-rapid', 'slr-low-current', 'slr-high-current']) { const rows = read(path.join(store, 'rows', `${source}.jsonl`)); if (rows.length) picks.push({ source, row: rows[Math.floor(rows.length / 2)] }); }
 let replayed = 0;
 const same = (a, c) => Math.abs(a - c) <= 1e-9 * Math.max(1, Math.abs(c));
+const objectOf = (source, row) => (source === 'gnss' ? sources.gnss(config.precise.gnss).find((o) => o.id === row.id)
+  : source === 'iss' ? sources.iss().find((o) => o.id === row.id)
+  : source === 'mgex-geo' ? sources.mgex({ klass: 'geo', ...sources.MGEX_A4 }).find((o) => o.id === row.id)
+  : source === 'gnss-rapid' ? sources.gnssRapid().find((o) => o.id === row.id)
+  : source === 'mgex-igso-rapid' ? sources.mgexRapid({ klass: 'igso' }).find((o) => o.id === row.id)
+  : source === 'slr-low' ? config.precise.slrLow.targets.flatMap((t) => sources.slrLow({ target: t, arcs: config.precise.slrLow.arcs })).find((o) => o.id === row.id)
+  : source === 'slr-low-current' ? config.precise.slrLow.targets.flatMap((t) => sources.slrLowCurrent({ target: t })).find((o) => o.id === row.id)
+  : source === 'slr-high-current' ? config.precise.slrHigh.targets.flatMap((t) => sources.slrHighCurrent({ target: t })).find((o) => o.id === row.id)
+  : config.precise.slrHigh.targets.flatMap((t) => sources.slrHigh({ target: t, weeks: config.precise.slrHigh.weeks })).find((o) => o.id === row.id));
 for (const { source, row } of picks.slice(0, replay)) {
-  const object = source === 'gnss' ? sources.gnss(config.precise.gnss).find((o) => o.id === row.id)
-    : source === 'iss' ? sources.iss().find((o) => o.id === row.id)
-    : source === 'mgex-geo' ? sources.mgex({ klass: 'geo', ...sources.MGEX_A4 }).find((o) => o.id === row.id)
-    : source === 'gnss-rapid' ? sources.gnssRapid().find((o) => o.id === row.id)
-    : source === 'mgex-igso-rapid' ? sources.mgexRapid({ klass: 'igso' }).find((o) => o.id === row.id)
-    : source === 'slr-low' ? config.precise.slrLow.targets.flatMap((t) => sources.slrLow({ target: t, arcs: config.precise.slrLow.arcs })).find((o) => o.id === row.id)
-    : config.precise.slrHigh.targets.flatMap((t) => sources.slrHigh({ target: t, weeks: config.precise.slrHigh.weeks })).find((o) => o.id === row.id);
+  const object = objectOf(source, row);
   if (!object) fail(`replay: object ${row.id} not found`);
   const again = await scoreWindow(b, object, ms(row.startUtc), { fitSeconds: row.fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
   for (const arm of ['xp', 'sgp4']) {
@@ -201,6 +207,41 @@ if (fs.existsSync(m123Dir)) {
     replayed += 1;
   }
   await frames.destroy();
+}
+// replay SDN-GP windows of the headline build with the pinned copy of the module
+const headline = sdngpBuilds().filter((x) => x.complete).at(-1);
+if (headline) {
+  process.env.SDNGP_SNAPSHOT = headline.build;
+  const bs = await openBaselines(modules, { sdngp: true });
+  const recorded = new Map(buildRows(headline.dir).filter((r) => r.sdngp).map((r) => [rowKey(r), r]));
+  let sdReplayed = 0;
+  const check = async (object, startMs, fitSeconds, leadDays) => {
+    const rec = recorded.get(rowKey({ source: object.source, id: object.id, startUtc: new Date(startMs).toISOString(), fitSeconds }))?.sdngp;
+    if (!rec) fail(`SDN-GP replay: no recorded row for ${object.id} ${new Date(startMs).toISOString()} in build ${headline.build}`);
+    const again = (await scoreWindow(bs, object, startMs, { fitSeconds, leadDays, minCoverage: config.windows.minimumCoverage, arms: 'sdngp' })).sdngp;
+    if (Boolean(again.ok) !== Boolean(rec.ok)) fail(`SDN-GP replay ${object.id}: ok differs`);
+    if (rec.ok && !same(again.fitRmsKm, rec.fitRmsKm)) fail(`SDN-GP replay ${object.id}: fit RMS ${again.fitRmsKm} vs ${rec.fitRmsKm}`);
+    for (const k of Object.keys(rec.days ?? {})) if (!same(again.days[k].rmsKm, rec.days[k].rmsKm)) fail(`SDN-GP replay ${object.id}: day ${k} differs`);
+    sdReplayed += 1;
+  };
+  for (const source of ['iss', 'gnss', 'slr-low-current']) {
+    const rows = read(path.join(store, 'rows', `${source}.jsonl`));
+    if (!rows.length) continue;
+    const row = rows[Math.floor(rows.length / 2)];
+    const object = objectOf(source, row);
+    if (object) await check(object, ms(row.startUtc), row.fitSeconds, config.windows.leadDays);
+  }
+  if (metas.length) { // a Starlink FFM truth
+    const meta = JSON.parse(fs.readFileSync(path.join(truthDir, metas[Math.floor(metas.length / 3)])));
+    const flat = new Float64Array(fs.readFileSync(path.join(truthDir, `${meta.norad}.f64`)).buffer.slice(0));
+    const t0 = ms(meta.truth.epochUtc);
+    const object = withT({ source: 'starlink-ffm', id: `STARLINK (${meta.norad})`, norad: meta.norad, name: `STARLINK-${meta.norad}`, objectId: '', originator: 'G1 FFM-1', creation: '', frame: 'GCRF', timeSystem: 'UTC',
+      lines: Array.from({ length: flat.length / 6 }, (_, i) => ({ epoch: new Date(t0 + i * config.truth.cadenceSeconds * 1000).toISOString(), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] })) });
+    await check(object, t0, config.windows.fitHours * 3600, config.windows.leadDays);
+  }
+  await bs.close();
+  ok(`${sdReplayed} SDN-GP windows replayed with the pinned module build ${headline.build} reproduce their recorded statistics`);
+  replayed += sdReplayed;
 }
 await b.close();
 ok(`${replayed} windows replayed through the modules reproduce their recorded statistics`);

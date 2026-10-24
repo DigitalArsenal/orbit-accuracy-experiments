@@ -34,8 +34,9 @@ export function builds() {
   return fs.readdirSync(sdngpRoot()).filter((d) => fs.existsSync(path.join(sdngpRoot(), d, 'build.json'))).map((d) => {
     const dir = path.join(sdngpRoot(), d);
     const complete = path.join(dir, 'complete.json');
-    return { ...JSON.parse(fs.readFileSync(path.join(dir, 'build.json'), 'utf8')), dir, complete: fs.existsSync(complete) ? JSON.parse(fs.readFileSync(complete, 'utf8')) : null };
-  }).sort((a, c) => (a.firstUseUtc < c.firstUseUtc ? -1 : 1));
+    const snap = path.join(store, 'sdngp-snapshot', d, 'snapshot.json'); // when this wasm was first copied: the order of the builds
+    return { ...JSON.parse(fs.readFileSync(path.join(dir, 'build.json'), 'utf8')), dir, builtSeenUtc: fs.existsSync(snap) ? JSON.parse(fs.readFileSync(snap, 'utf8')).createdUtc : null, complete: fs.existsSync(complete) ? JSON.parse(fs.readFileSync(complete, 'utf8')) : null };
+  }).sort((a, c) => ((a.builtSeenUtc ?? a.firstUseUtc) < (c.builtSeenUtc ?? c.firstUseUtc) ? -1 : 1));
 }
 
 /** All rows of one build as a map key -> row, and the rows of one source if named. */

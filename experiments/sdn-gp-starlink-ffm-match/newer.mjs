@@ -5,12 +5,15 @@
 // fitted to the first 24 h of that FFM truth, SpaceX's own earlier forecast where the epochs coincide, and, for the same-day
 // objects, COMSPOC's XP set (local scoring only). Output: <store>/rows/newer.jsonl, statistics only. Re-run as newer files arrive.
 //   node experiments/sdn-gp-starlink-ffm-match/newer.mjs [--limit N] [--daily-only] [--after 2026-10-24T08:00:00Z] [--shard k/n]
+// Amendment A9b: when a build of the SDN-GP module has run every source (rows/sdngp/<build>/complete.json), the newest such build is fitted to the same first 24 h of the
+// FFM truth and scored on the same newer file (arms.sdngp, with the build in the row); --no-sdngp leaves it out.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { config, frozen, store, args, read } from './common.mjs';
 import { modulesRoot, openModule } from './lib/modules.mjs';
-import { openBaselines, fitElementSets, propagateSet, compareStates } from './lib/baselines.mjs';
+import { openBaselines, fitElementSets, propagateSet, compareStates, sdngpPredict } from './lib/baselines.mjs';
+import { builds as sdngpBuilds } from './lib/sdngp-rows.mjs';
 import { loadEnvironment, propagate } from './lib/ffm.mjs';
 import { transformState } from './lib/frames.mjs';
 import { polite, manifest, STARLINK_ROOT } from './lib/spacex.mjs';
@@ -22,13 +25,16 @@ import { withT, ms, iso, DAY } from './lib/windows.mjs';
 const HEAD_BYTES = 262144, STRIDE = 10, HOURS = 3;
 const DAILY = path.join(config.archive, 'operator-ephemerides/daily/2026-10-23/starlink');
 const truthRoot = args.truth ? path.join(store, args.truth, 'truth') : path.join(store, 'truth'); // --truth refit30: the refitted truth
-const rowsFile = path.join(store, args.truth ? `rows/newer-${args.truth}.jsonl` : 'rows/newer.jsonl');
+const rowsFile = path.join(store, args.rows ?? (args.truth ? `rows/newer-${args.truth}.jsonl` : 'rows/newer.jsonl')); // --rows: another file under the store (a trial run leaves the recorded rows alone)
+const SDNGP_BUILD = args['no-sdngp'] ? null : sdngpBuilds().filter((x) => x.complete).at(-1)?.build ?? null;
+if (SDNGP_BUILD) process.env.SDNGP_SNAPSHOT ??= SDNGP_BUILD;
 const after = args.after ? Date.parse(args.after) : 0;
 
 frozen();
 const modules = modulesRoot();
 const context = await loadEnvironment(modules, { archive: config.archive, store });
-const b = await openBaselines(modules);
+let b, sdngpOn = Boolean(SDNGP_BUILD);
+try { b = await openBaselines(modules, { sdngp: sdngpOn }); } catch (error) { console.error(`SDN-GP arm off: ${String(error.message).slice(0, 160)}`); sdngpOn = false; b = await openBaselines(modules); }
 const frames = await openModule(modules, 'foundation/frames');
 const comspoc = readSets(zlib.gunzipSync(fs.readFileSync(path.join(config.archive, 'hac/comspoc-spacebook/2026/2026-10-23/xp-tle.txt.gz'))).toString('utf8'));
 const done = new Map((fs.existsSync(rowsFile) ? fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []).map((r) => [`${r.norad}|${r.newerCreatedUtc}`, r]));
@@ -68,6 +74,12 @@ for (const meta of metas) {
     lines: Array.from({ length: 1441 }, (_, i) => ({ epoch: iso(truthStart + i * 60000), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] })) });
   const sets = await fitElementSets(b, object, truthStart, config.windows.fitHours * 3600);
   for (const [name, payload] of [['xp', sets.xp], ['sgp4', sets.sgp4]]) if (payload) arms[name] = await compareStates(b, await propagateSet(b, payload, epochs, 'EME2000'), truth);
+  if (sdngpOn) { // SDN-GP fitted to the same first 24 h, taken to EME2000 at the newer file's epochs
+    try {
+      const predicted = await sdngpPredict(b, object, truthStart, config.windows.fitHours * 3600, epochs, 'EME2000');
+      arms.sdngp = predicted.error ? { ok: false, error: predicted.error, build: SDNGP_BUILD } : { ok: true, build: SDNGP_BUILD, ...(await compareStates(b, predicted, truth)) };
+    } catch (error) { arms.sdngp = { ok: false, error: String(error.message).slice(0, 200), build: SDNGP_BUILD }; }
+  }
   // SpaceX's own earlier forecast where the same epoch strings occur (local capture only)
   const original = path.join(DAILY, `${meta.norad}.txt.gz`);
   if (fs.existsSync(original)) {
@@ -84,7 +96,7 @@ for (const meta of metas) {
     newerStartUtc: `${h.start}Z`, newerCreatedUtc: created, horizonHours: horizonH, epochs: truth.length, arms };
   fs.appendFileSync(rowsFile, `${JSON.stringify(row)}\n`);
   scored += 1;
-  console.error(`${meta.norad}: horizon ${horizonH.toFixed(1)} h, ffm ${arms.ffm.rmsKm.toFixed(2)} km, xp ${arms.xp?.rmsKm?.toFixed(2)}, sgp4 ${arms.sgp4?.rmsKm?.toFixed(2)}${arms.comspoc ? `, comspoc ${arms.comspoc.rmsKm.toFixed(1)}` : ''}`);
+  console.error(`${meta.norad}: horizon ${horizonH.toFixed(1)} h, ffm ${arms.ffm.rmsKm.toFixed(2)} km, xp ${arms.xp?.rmsKm?.toFixed(2)}, sgp4 ${arms.sgp4?.rmsKm?.toFixed(2)}${arms.sdngp?.ok ? `, sdngp ${arms.sdngp.rmsKm.toFixed(2)}` : ''}${arms.comspoc ? `, comspoc ${arms.comspoc.rmsKm.toFixed(1)}` : ''}`);
 }
 console.log(`${scored} scored, ${none} with no newer file yet, ${tried} tried`);
 await b.close();
