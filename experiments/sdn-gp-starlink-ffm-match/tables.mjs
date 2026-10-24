@@ -31,9 +31,9 @@ const REGIMES = [
   { id: 'heo-artemis2', label: 'HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1)' },
 ];
 const AWAITING = [ // regimes with truth in the archive that Earth-centred SGP4 and SGP4-XP do not describe: awaiting SDN-GP
-  { id: 'cislunar', label: 'Cislunar, Earth-centred (Artemis II after the translunar burn)', mission: 'artemis2', reason: 'the Moon dominates after the burn; SPK type 13, readable' },
-  { id: 'lunar', label: 'Lunar-centred (LRO)', mission: 'lro', reason: 'Moon-centred; SPK type 13, readable' },
-  { id: 'interplanetary', label: 'Interplanetary, Sun-centred (Psyche, Lucy, Juno)', mission: 'psyche', reason: 'SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap' },
+  { id: 'cislunar', label: 'Cislunar, Earth-centred transfers (Artemis I, Artemis II) and Earth-Moon libration or distant-retrograde orbits (CAPSTONE, Artemis I)', mission: 'artemis2', packs: ['artemis2-cislunar', 'artemis1-cislunar', 'capstone-nrho', 'artemis1-lunar'], reason: 'the Moon dominates; NAIF SPK type 13 and JPL Horizons vector tables, readable' },
+  { id: 'lunar', label: 'Lunar-centred (LRO, Danuri)', mission: 'lro', packs: ['lro-lunar', 'danuri-lunar'], reason: 'Moon-centred; NAIF SPK type 13 and JPL Horizons vector tables, readable' },
+  { id: 'interplanetary', label: 'Interplanetary, Sun-centred (Psyche, Lucy, Juno)', mission: 'psyche', packs: [], reason: 'SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap; Horizons for these three is not in the approval' },
 ];
 const DAYS = [1, 2, 3];
 const kernelOf = (mission) => { // metadata of the NAIF kernel (results/kernels.json, written by inventory.mjs)
@@ -43,6 +43,13 @@ const kernelOf = (mission) => { // metadata of the NAIF kernel (results/kernels.
 };
 
 const readJsonl = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []);
+
+const regimeWindowsFile = () => { const f = path.join(results, 'regime-windows.json'); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+const preparedOf = (names) => { // the truth packs and windows prepared for SDN-GP (regime-windows.mjs)
+  const rw = regimeWindowsFile();
+  return (names ?? []).map((n) => { const p = rw?.packs.find((x) => x.name === n); const w = rw?.windows[n]; return p ? { name: n, center: p.center, source: p.source, startUtc: p.startUtc, stopUtc: p.stopUtc, states: p.states, windows: w ? Object.entries(w.byFit).map(([fit, x]) => ({ fitHours: Number(fit), count: x.count })) : [] } : null; }).filter(Boolean);
+};
+const windowsSummary = () => { const rw = regimeWindowsFile(); return rw ? { packs: rw.packs.map((p) => ({ name: p.name, regime: p.regime, center: p.center, frame: p.frameLabel, source: p.source, states: p.states, startUtc: p.startUtc, stopUtc: p.stopUtc, sha256: p.sha256, windows: rw.windows[p.name] ? Object.entries(rw.windows[p.name].byFit).map(([fit, x]) => ({ fitHours: Number(fit), stepSeconds: x.stepSeconds, count: x.count })) : [], rule: rw.windows[p.name]?.rule ?? null })), heliocentric: rw.heliocentric } : null; };
 
 export function collect() {
   const windows = [];
@@ -233,9 +240,21 @@ export function build() {
   const comspocPrecise = fs.existsSync(preciseStatusFile) ? {
     ...JSON.parse(fs.readFileSync(preciseStatusFile, 'utf8')),
     byKind: ['gnss', 'laser-ranged'].map((kind) => ({ kind, n: preciseRows.filter((r) => r.kind === kind).length, days: [0, 1, 2, 3].map((k) => quantile(preciseRows.filter((r) => r.kind === kind && r.days[k]).map((r) => r.days[k].rmsKm), 0.5)) })),
+    gnssByDay: [0, 1, 2, 3].map((k) => { const rs = preciseRows.filter((r) => r.kind === 'gnss' && r.days[k]); return { k, n: rs.length, median: quantile(rs.map((r) => r.days[k].rmsKm), 0.5), p90: quantile(rs.map((r) => r.days[k].rmsKm), 0.9), ric: [0, 1, 2].map((i) => comp(rs.map((r) => r.days[k].ric), i)) }; }),
+    gnssOutliers: preciseRows.filter((r) => r.kind === 'gnss' && r.days[0]?.rmsKm > 5).map((r) => ({ norad: r.norad, setEpochUtc: r.setEpochUtc, day0Km: r.days[0].rmsKm })),
+    gnssEpochs: (() => { const e = preciseRows.filter((r) => r.kind === 'gnss').map((r) => r.setEpochUtc.slice(0, 10)).sort(); return { first: e[0], last: e.at(-1) }; })(),
   } : null;
 
-  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission) })), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
+  // COMSPOC XP sets scored against the GFZ rapid orbits: by days since the set's epoch (day 1 = the first 24 h after it), attached to the rapid-orbit regime of the same class
+  for (const [id, klass] of [['meo-gnss-rapid', 'meo'], ['igso-gnss-rapid', 'igso'], ['geo-gnss-rapid', 'geo']]) {
+    const rs = preciseRows.filter((r) => r.kind === 'gnss' && r.gnssClass === klass);
+    const regime = regimes.find((x) => x.id === id);
+    if (!regime || !rs.length) continue;
+    const day = (k) => ({ ...spread(rs.filter((r) => r.days[k]).map((r) => r.days[k].rmsKm)), ric: [0, 1, 2].map((i) => comp(rs.filter((r) => r.days[k]).map((r) => r.days[k].ric), i)) });
+    regime.comspoc = { alignment: 'epoch', objects: rs.length, days: { 1: day(0), 2: day(1), 3: day(2) } };
+  }
+
+  return { generatedFrom: 'recorded window rows (statistics only)', ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -264,10 +283,10 @@ function findings(t) {
   if (alignedFfm?.comspoc?.days?.[1]?.n) out.push(`- COMSPOC XP sets, scored on the ${alignedFfm.comspoc.objects} same-day Starlinks at an age of ${f(alignedFfm.comspoc.ageDays.median, 1)} days (median) at the start of the truth: median 3D error ${f(alignedFfm.comspoc.days[1].median, 1)} / ${f(alignedFfm.comspoc.days[2]?.median, 1)} / ${f(alignedFfm.comspoc.days[3]?.median, 1)} km on days 1 / 2 / 3, against ${f(alignedFfm.xp.days[1].median, 1)} / ${f(alignedFfm.xp.days[2].median, 1)} / ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth. The ages differ, so this is a scoreboard, not a like-for-like comparison.`);
   if (alignedFfm?.comspoc?.days?.[0]?.n && alignedFfm.xp.days[3]?.n) out.push(`- At a matched age (the set\'s epoch plus about 3 to 4 days) the COMSPOC XP error is ${f(alignedFfm.comspoc.days[0].median, 1)} km (its first truth day, median age at the start ${f(alignedFfm.comspoc.ageDays.median, 1)} days) against ${f(alignedFfm.xp.days[3].median, 1)} km for XP fitted to the truth (held-out day 3, age 3 to 4 days from the fit epoch) and ${f(alignedFfm.sgp4.days[3].median, 1)} km for SGP4, on the same ${alignedFfm.comspoc.objects} Starlinks.`);
   const m123File = path.join(results, 'm123.json');
-  if (fs.existsSync(m123File)) { // section 11: the fit floor against zonal-only gravity
+  if (fs.existsSync(m123File)) { // section 12: the fit floor against zonal-only gravity
     const m = JSON.parse(fs.readFileSync(m123File, 'utf8')), g = (n) => m.summaries.find((x) => x.group === n);
     const a = g('starlink-inc1'), i = g('iss'), l = g('lageos1');
-    if (a && i && l) out.push(`- The LEO fit floor is tesseral gravity (section 11, FFM-1 re-propagated with the same force model and the field cut to zonals): the in-track fit RMS of SGP4-XP falls from ${f(a.floor.xp.full.median, 0)} to ${f(a.floor.xp.zonal.median, 0)} m on the 53 degree Starlink shell (predicted floor 384 m), ${f(i.floor.xp.full.median, 0)} to ${f(i.floor.xp.zonal.median, 0)} m on the ISS (394 m) and ${f(l.floor.xp.full.median, 0)} to ${f(l.floor.xp.zonal.median, 0)} m on LAGEOS-1 (110 m), and the held-out day-3 error from ${f(a.days.xp.full[3].median, 1)} to ${f(a.days.xp.zonal[3].median, 1)} km, ${f(i.days.xp.full[3].median, 1)} to ${f(i.days.xp.zonal[3].median, 1)} km and ${f(l.days.xp.full[3].median, 2)} to ${f(l.days.xp.zonal[3].median, 2)} km.`);
+    if (a && i && l) out.push(`- The LEO fit floor is tesseral gravity (section 12, FFM-1 re-propagated with the same force model and the field cut to zonals): the in-track fit RMS of SGP4-XP falls from ${f(a.floor.xp.full.median, 0)} to ${f(a.floor.xp.zonal.median, 0)} m on the 53 degree Starlink shell (predicted floor 384 m), ${f(i.floor.xp.full.median, 0)} to ${f(i.floor.xp.zonal.median, 0)} m on the ISS (394 m) and ${f(l.floor.xp.full.median, 0)} to ${f(l.floor.xp.zonal.median, 0)} m on LAGEOS-1 (110 m), and the held-out day-3 error from ${f(a.days.xp.full[3].median, 1)} to ${f(a.days.xp.zonal[3].median, 1)} km, ${f(i.days.xp.full[3].median, 1)} to ${f(i.days.xp.zonal[3].median, 1)} km and ${f(l.days.xp.full[3].median, 2)} to ${f(l.days.xp.zonal[3].median, 2)} km.`);
   }
   const syn = t.realism.find((r) => r.source === 'comspoc-syncopate')?.all, ours = t.realism.find((r) => r.source === 's3kc-sgp4')?.all;
   if (syn && ours) out.push(`- Covariance realism against the FFM truth (target mean d^2/3 in [0.8, 1.25], coverage in [0.93, 0.97]): SynCoPate ${f(syn.meanD2Over3, 1)} and ${f(syn.coverage95, 2)}; ours (E14 S3-KC on SGP4) ${f(ours.meanD2Over3, 1)} and ${f(ours.coverage95, 2)}. Both are overconfident against this truth.`);
@@ -295,13 +314,13 @@ export function markdown(t) {
     `- **RIC check.** Over all held-out days of all windows the three components recombine to the module\'s own 3D RMS to ${f(t.ricConsistency.xp.min, 4)} to ${f(t.ricConsistency.xp.max, 4)} for SGP4-XP (the thinning to one state per 5 minutes) and ${f(t.ricConsistency.sgp4.min, 4)} to ${f(t.ricConsistency.sgp4.max, 4)} for SGP4.`,
     '- **Environment.** Earth orientation: the local IERS daily finals of 2026-10-13. Space weather: the `data-source/space-weather` rows (GFZ, NOAA SWPC) through 2026-10-25, then NOAA SWPC 45-day daily Ap and F10.7 for the eight days after (Kp and the 81-day average held), because the module\'s rows end where its Kp forecast ends and the truth runs 96 h. Planetary kernel DE440s. Density correction s = 0 (no $DCL is published yet). Hashes are in `manifest.json`.',
     '- **COMSPOC XP (local scoring only).** Their published SGP4-XP sets, propagated through the black-box module and compared with the same-day truth; their set epochs are 1 to 5 days older than the truth, so their errors are at those ages, not at the 24 h of the fitted arms. Never fitted to, never an input; aggregates only.',
-    '- **Plan.** `experiments/sdn-gp-starlink-ffm-match/PLAN.md`, frozen by its first commit, with amendments A1 (headline table), A2 (start states, weather extension, the COMSPOC scoring arm), A3 (fit length), A4 (GEO and IGSO windows from the GFZ MGEX set found after registration), A5 (spacecraft truth from NAIF: highly elliptical orbits scored, cislunar, lunar and heliocentric awaiting SDN-GP) A6 (truth quality: the iteration cap and the zero bound) and A7 to A7d (the LEO fit floor against zonal-only gravity, DESIGN.md M1 to M3: section 11).',
+    '- **Plan.** `experiments/sdn-gp-starlink-ffm-match/PLAN.md`, frozen by its first commit, with amendments A1 (headline table), A2 (start states, weather extension, the COMSPOC scoring arm), A3 (fit length), A4 (GEO and IGSO windows from the GFZ MGEX set found after registration), A5 (spacecraft truth from NAIF: highly elliptical orbits scored, cislunar, lunar and heliocentric awaiting SDN-GP) A6 (truth quality: the iteration cap and the zero bound) and A7 to A7d (the LEO fit floor against zonal-only gravity, DESIGN.md M1 to M3: section 12).',
     '- **Not measured here.** SDN-GP (not landed), HEO / cislunar / interplanetary truth (none in the archive); GEO operator ephemerides (SES, Intelsat) are not stored, the theory-term ranking (phase 3).', '');
   L.push('## 1. Headline: SDN-GP, best-case SGP4-XP, COMSPOC XP and SGP4, one row per regime', '');
-  L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. `-` is not scored. A COMSPOC value marked `*` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
+  L.push('Cells read `SDN-GP / best-case XP / COMSPOC XP (local scoring only) / SGP4`. SDN-GP is `pending` until the module lands. Best-case XP is `propagator/sgp4-xp fit` fitted to the same truth on the same windows. `-` is not scored. A COMSPOC value marked `*` is its median over the objects it could be scored on (same-day truth only); section 1b gives XP and SGP4 on exactly those objects. A COMSPOC value marked `†` (the GFZ rapid-orbit regimes) is by days since the epoch of the set itself, day 1 being the first 24 h after it, against the rapid orbit; XP and SGP4 are by days since the end of their 24 h fit, so the ages are not the same (no COMSPOC fit span is known). For COMSPOC the Fit RMS cell is its error over the first 24 h of the truth: nothing is fitted to it.', '');
   const isExtra = (r) => /-(aligned|drag|b0|decay|clean|72h)$/.test(r.id) || r.id === 'heo-artemis2';
   const header = ['| Regime | Windows (XP fitted / SGP4 fitted / attempted) | Fit RMS | Day 1 | Day 2 | Day 3 | Day 3 in-track share (XP / SGP4) | Bytes per object (XP / SGP4) | us per state (XP / SGP4) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'];
-  const comspocOf = (r) => (r.comspoc ? { c: r.comspoc, mark: '' } : t.regimes.find((x) => x.id === `${r.id}-aligned`)?.comspoc ? { c: t.regimes.find((x) => x.id === `${r.id}-aligned`).comspoc, mark: '*' } : { c: null, mark: '' });
+  const comspocOf = (r) => (r.comspoc ? { c: r.comspoc, mark: r.comspoc.alignment === 'epoch' ? '†' : '' } : t.regimes.find((x) => x.id === `${r.id}-aligned`)?.comspoc ? { c: t.regimes.find((x) => x.id === `${r.id}-aligned`).comspoc, mark: '*' } : { c: null, mark: '' });
   const cellOf = (xpv, csv, sgv, mark) => `pending / ${[xpv, csv, sgv].map((v, k) => (Number.isFinite(v) ? f(v) + (k === 1 ? mark : '') : '-')).join(' / ')}`;
   const row = (r) => {
     const key = /^(geo|igso|heo)/.test(r.id) ? 'GEO' : r.id.startsWith('meo') ? 'MEO' : 'LEO';
@@ -311,12 +330,12 @@ export function markdown(t) {
     const day = (k) => cellOf(r.xp.days[k]?.median, c?.days?.[k]?.median, r.sgp4.days[k]?.median, mark);
     return `| ${r.label} | ${r.xp.fitted} / ${r.sgp4.fitted} / ${r.windows} | ${cellOf(r.xp.fit.median, c?.days?.[0]?.median, r.sgp4.fit.median, mark)} | ${day(1)} | ${day(2)} | ${day(3)} | ${share(r.xp)} / ${share(r.sgp4)} | ${r.xp.elementBytes ?? ''} / ${r.sgp4.elementBytes ?? ''} | ${b ? `${f(b.xp?.usPerState, 0)} / ${f(b.sg?.usPerState, 0)}` : ''} |`;
   };
-  const spanOf = (a) => (a.kernel ? `${a.kernel.span.slice(0, 10)} to ${a.kernel.span.split(' to ')[1].slice(0, 10)}` : 'none');
+  const spanOf = (a) => (a.prepared?.length ? a.prepared.map((p) => `${p.name.split('-')[0]} ${p.startUtc.slice(0, 10)} to ${p.stopUtc.slice(0, 10)}, ${p.windows.reduce((n, w) => n + w.count, 0)} windows`).join('; ') : a.kernel ? `${a.kernel.span.slice(0, 10)} to ${a.kernel.span.split(' to ')[1].slice(0, 10)}` : 'none');
   L.push(...header, ...t.regimes.filter((r) => !isExtra(r)).map(row), ...t.awaiting.map((a) => `| ${a.label} | truth ${spanOf(a)} | pending / awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | awaiting SDN-GP | | | |`));
-  L.push('', ...t.awaiting.map((a) => `- ${a.label}: awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (${a.reason}); kernel ${a.kernel?.file ?? 'none'}.`),
-    ...(t.packs.length ? [`- Truth packs for these regimes, ready for SDN-GP (local, derived from the public kernels by files/orbit-products and foundation/time; [unix ms, x, y, z, vx, vy, vz] per state in km and km/s, J2000 axes, UTC): ${t.packs.map((k) => `${k.name}, ${k.states} states, ${k.center}-centred, ${k.startUtc.slice(0, 10)} to ${k.stopUtc.slice(0, 10)}`).join('; ')}. The heliocentric kernels wait for a type-1 reader.`] : []),
-    '- GEO operator ephemerides: none are stored locally (operator-capture holds Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not ephemerides); the GEO row is the GFZ MGEX BeiDou-2 and QZSS-3 orbits.',
-    '- NAIF does not host TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); THEMIS and Chandra stand in for TESS (HEO) and Artemis II for Artemis I.', '');
+  L.push('', ...t.awaiting.map((a) => `- ${a.label}: awaiting SDN-GP, SGP4 and SGP4-XP do not describe it (${a.reason}); ${a.prepared?.length ? `${a.prepared.length} truth pack(s) and ${a.prepared.reduce((n, p) => n + p.windows.reduce((m, w) => m + w.count, 0), 0)} windows prepared (section 13)` : 'no truth pack yet'}.`),
+    ...(t.regimeWindows ? [`- Truth packs for these regimes, ready for SDN-GP (local; derived from public NAIF kernels by files/orbit-products and foundation/time, and from JPL Horizons vector tables; [unix ms, x, y, z, vx, vy, vz] per state in km and km/s, inertial axes, UTC): ${t.regimeWindows.packs.map((k) => `${k.name}, ${k.states} states, ${k.center}-centred, ${k.startUtc.slice(0, 10)} to ${k.stopUtc.slice(0, 10)}`).join('; ')}. The heliocentric kernels wait for a type-1 reader.`] : []),
+    '- GEO operator ephemerides: none are stored locally (operator-capture holds Starlink only; SES, Intelsat, OneWeb and Kuiper exist as CelesTrak SupGP element sets, not ephemerides); the GEO rows are the GFZ MGEX BeiDou-2 and QZSS-3 orbits of 2025 and, for October 2026, the one GEO satellite in the GFZ rapid MGEX file (QZS-2G).',
+    '- NAIF does not host TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23). With the approvals of 2026-10-24 TESS comes from STScI MAST (definitive ephemeris SPK) and CAPSTONE, Artemis I and Danuri from JPL Horizons (amendments A8 to A8c); THEMIS, Chandra and Artemis II stay as further HEO and cislunar truth.', '');
   L.push('### 1b. The same objects the COMSPOC sets were scored on, and the Starlink B_eff split', '', ...header, ...t.regimes.filter(isExtra).map(row), '');
 
   if (t.heoByObject.length) {
@@ -398,8 +417,15 @@ export function markdown(t) {
 
   const cp = t.comspocPrecise;
   if (cp) {
-    L.push('### COMSPOC XP sets of the GPS and laser-ranged objects: waiting for precise products', '',
-      `${cp.xpSets} COMSPOC XP sets are in the local capture of ${cp.capturedUtc}; ${cp.objectsWithPreciseProducts} of those objects have precise-orbit products in the archive (${cp.gnss} GNSS, ${cp.laserRanged} laser-ranged). The newest product days are ESA ${cp.newestProductDay.esa}, ILRS combined ${cp.newestProductDay.ilrsa}, ILRS NSGF ${cp.newestProductDay.nsgf}; the sets' epochs are 2026-08 to 2026-10-22, so ${cp.scored} are scored and ${cp.pending} wait for products dated after their epoch. Re-run \`comspoc-precise.mjs\` after the archive's reference states are extended (local scoring only, as before).`, '');
+    const gnssN = cp.byKind.find((k) => k.kind === 'gnss')?.n ?? 0, slrN = cp.byKind.find((k) => k.kind === 'laser-ranged')?.n ?? 0;
+    L.push('### COMSPOC XP sets of the GNSS and laser-ranged objects against precise orbits (local scoring only)', '',
+      `${cp.xpSets} COMSPOC XP sets are in the local capture of ${cp.capturedUtc}; ${cp.objectsWithPreciseProducts} of those objects have precise-orbit products in the archive (${cp.gnss} GNSS, ${cp.laserRanged} laser-ranged). **GNSS:** ${gnssN} sets (epochs ${cp.gnssEpochs?.first} to ${cp.gnssEpochs?.last}) are scored against the GFZ rapid orbits of 2026-10-11 to ${cp.newestProductDay.gfzRapid ?? '-'} (amendment A8; the days from ${cp.eopPredictedFromUtc?.slice(0, 10) ?? '-'} use Bulletin A predicted Earth orientation, under 0.15 m). **Laser-ranged:** the newest ILRS products are dated ${cp.newestProductDay.ilrsa} (combined) and ${cp.newestProductDay.nsgf} (NSGF), before the sets' epochs, so ${slrN ? '' : 'all '}${cp.laserRanged} laser-ranged sets wait${cp.pendingGnss?.length ? `, as do ${cp.pendingGnss.length} GNSS set(s) (${cp.pendingGnss.map((g) => `NORAD ${g.norad}, epoch ${g.setEpochUtc.slice(0, 10)}, ${g.inRapidProducts ? 'in the rapid products but no state after the epoch' : 'not in the rapid products'}`).join('; ')})` : ''}; re-run \`comspoc-precise.mjs\` as products appear. The ESA final orbits end ${cp.newestProductDay.esa} for the same reason.`, '');
+    if (cp.gnssByDay) {
+      L.push('GNSS: error of COMSPOC\'s XP set against the rapid orbit, by days since the set\'s own epoch (median over the sets that have the day; km):', '',
+        '| Days after the epoch | Sets | Median 3D | 90th percentile | Median radial / in-track / cross-track |', '| --- | --: | --: | --: | --- |',
+        ...cp.gnssByDay.filter((d) => d.n).map((d) => `| ${d.k} to ${d.k + 1} | ${d.n} | ${f(d.median, 3)} | ${f(d.p90, 3)} | ${d.ric.map((v) => f(v, 3)).join(' / ')} |`), '',
+        `${cp.gnssOutliers?.length ? `${cp.gnssOutliers.length} set(s) are far from the rapid orbit on every day (${cp.gnssOutliers.map((o) => `NORAD ${o.norad}, epoch ${o.setEpochUtc.slice(0, 10)}, ${f(o.day0Km, 0)} km in the first day`).join('; ')}): the set describes another orbit than the product does (a satellite being repositioned, or a stale set). The medians are over all sets and are not moved by it. ` : ''}The median error does not rise over the first three days after the epoch; the best-case XP of the headline rows is fitted to the 24 h of the rapid orbit just before the days it is scored on, so the two are not like for like.`, '');
+    }
   }
 
 
@@ -414,9 +440,18 @@ export function markdown(t) {
   }
 
   const m123File = path.join(results, 'm123.md');
-  if (fs.existsSync(m123File)) L.push(fs.readFileSync(m123File, 'utf8').trimEnd(), ''); // section 11, written by m123-report.mjs
-  const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'ilrs', 'ilrs-nsgf', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'nrlmsise00', 'egm', 'fes2004'];
-  L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenceSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
+  if (fs.existsSync(m123File)) L.push(fs.readFileSync(m123File, 'utf8').trimEnd(), ''); // section 12, written by m123-report.mjs
+  if (t.regimeWindows) {
+    L.push('## 13. Windows prepared for SDN-GP: lunar, cislunar and heliocentric truth (amendment A8)', '',
+      'Truth packs (local: `<store>/pack/`, states in km and km/s, inertial axes of the source, UTC) and the window lists (`regime-windows.json`: window starts and counts, no states) for the regimes SGP4 and SGP4-XP do not describe, so that they score as soon as side B\'s regime extensions exist. A window needs 90 % of its states in the fit span and in each held-out day. `regime-windows.mjs --export <pack> --start <ISO> --fit-hours <h> --out <file.oem>` writes a window\'s fit span as a $OEM (centre and frame named) for SDN-GP to fit; `score-pack.mjs --pack <pack> --start <ISO> --fit-hours <h> --predicted <states.oem>` scores SDN-GP\'s predicted states against the held-out days of that window (radial / in-track / cross-track RMS by day, in the pack\'s centre, through gp-error-model `pair_statistics`).', '',
+      '| Pack | Regime | Centre, axes | Source | States (step) | Span | Windows by fit length (held-out days) |', '| --- | --- | --- | --- | --- | --- | --- |',
+      ...t.regimeWindows.packs.map((p) => `| ${p.name} | ${p.regime ?? ''} | ${p.center}, ${p.frame} | ${p.source ?? ''} | ${p.states} (${p.windows[0]?.stepSeconds ?? ''} s) | ${p.startUtc.slice(0, 10)} to ${p.stopUtc.slice(0, 10)} | ${p.windows.map((w) => `${w.fitHours} h: ${w.count}`).join('; ')}${p.rule ? ` (days ${p.rule.leadDays[0]} to ${p.rule.leadDays.at(-1)}, every ${p.rule.strideHours} h)` : ''} |`), '',
+      `Heliocentric cruise (fit 30 d, held-out 15 d): ${t.regimeWindows.heliocentric.packs}.`, '');
+  }
+  const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'gfz-rapid-gnss', 'ilrs', 'ilrs-nsgf', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'jpl-horizons', 'stsci-mast-tess', 'nrlmsise00', 'egm', 'fes2004'];
+  const local = new Map(JSON.parse(fs.readFileSync(new URL('./licence-entries.json', import.meta.url), 'utf8')).sources.map((x) => [x.id, x])); // A8 sources, until the registry (outside this task's paths) takes them
+  const sourceOf = (id) => local.get(id) ?? licenceSource(id);
+  L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${sourceOf(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');
   L.push('## Reproduce, resume, extend', '',
     '- Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `m123.mjs --workers N` with `m123-report.mjs` (section 11), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment\'s.',
     '- Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.',

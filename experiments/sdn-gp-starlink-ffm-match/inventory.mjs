@@ -141,7 +141,31 @@ const naif = path.join(A, 'hac/naif-kernels/spk/planets');
 for (const [file, spanText] of [['de440s.bsp', '1849-12-26 to 2150-01-22'], ['de430.bsp', '1549-12-31 to 2650-01-25'], ['de421.bsp', '1899-07-29 to 2053-10-09'], ['de405.bsp', '1950-01-01 to 2049-12-31']]) {
   if (fs.existsSync(path.join(naif, file))) add('Cislunar / lunar / interplanetary (bodies)', `NAIF planetary ephemeris ${file}`, 'SPK, planets and Moon', 1, spanText, 'truth for solar-system-bodies, not for SGP4', 'Spans from the archive README.');
 }
-add('Cislunar / HEO', 'TESS, CAPSTONE, Artemis I, Danuri', 'not hosted by NAIF', 0, null, 'none', 'NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); JPL Horizons has them. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I.');
+// A8 (coordinator approvals of 2026-10-24): JPL Horizons vector tables, MAST TESS ephemeris, GFZ rapid GNSS orbits; files as served with provenance rows
+const sizeOf = (dir, filter) => { let n = 0, bytes = 0; for (const f of fs.existsSync(dir) ? fs.readdirSync(dir).filter(filter) : []) { n += 1; bytes += fs.statSync(path.join(dir, f)).size; } return { n, bytes }; };
+const hz = path.join(A, 'hac/jpl-horizons');
+for (const [mission, name, regime, centers] of [['danuri', 'Danuri (KPLO)', 'Lunar', ['moon']], ['capstone', 'CAPSTONE', 'Cislunar (NRHO)', ['moon']], ['artemis1', 'Artemis I (Orion)', 'Cislunar and distant retrograde', ['earth', 'moon']]]) {
+  for (const center of centers) {
+    const dir = path.join(hz, mission, center);
+    const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.txt')).sort() : [];
+    if (!files.length) continue;
+    const prov = files.map((f) => JSON.parse(fs.readFileSync(path.join(dir, `${f}.provenance.json`), 'utf8')));
+    const stamp = (f) => { const m = /_(\d{8})T(\d{4})_(\d{8})T(\d{4})_/.exec(f); return m ? [`${m[1].slice(0, 4)}-${m[1].slice(4, 6)}-${m[1].slice(6, 8)}`, `${m[3].slice(0, 4)}-${m[3].slice(4, 6)}-${m[3].slice(6, 8)}`] : [null, null]; };
+    add(regime, `JPL Horizons API vector tables, ${name}, ${center}-centred`, `ICRF equatorial axes, TDB, km and km/s; ${prov[0].targetSource ?? ''}; ${files.length} responses`, prov.reduce((a, r) => a + (r.rows ?? 0), 0), `${stamp(files[0])[0]} to ${stamp(files.at(-1))[1]}`, 'truth for the windows prepared for SDN-GP', 'Public NASA/JPL data (registry id jpl-horizons); stored as served, results only.');
+  }
+}
+const tess = sizeOf(path.join(A, 'hac/mast-tess/models'), (f) => f.endsWith('.bsp'));
+if (tess.n) add('HEO (13.7 day)', 'STScI MAST: TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp)', `SPK type 9 (Lagrange, degree 7), Earth-centred J2000, 60 s; ${(tess.bytes / 1e6).toFixed(0)} MB`, tess.n, '2026-06-29 to 2026-09-17 (doy 194 to 260 of 2026)', 'truth: SGP4 and SGP4-XP windows (24 h and 72 h fits)', 'Public NASA mission data (registry id stsci-mast-tess); MAST holds no definitive file after 2026-09-17.');
+const gfzDir = path.join(A, 'hac/gfz-gnss-rapid/cddis/gnss/products');
+if (fs.existsSync(gfzDir)) {
+  const files = fs.readdirSync(gfzDir).flatMap((w) => fs.readdirSync(path.join(gfzDir, w)).filter((f) => f.endsWith('.SP3.gz')).map((f) => ({ f, w })));
+  const dayOf = ({ f }) => { const m = /_(\d{4})(\d{3})0000_/.exec(f); return m && day(Number(m[1]), Number(m[2])); };
+  for (const prefix of ['GFZ0OPSRAP_', 'GFZ0MGXRAP_']) {
+    const list = files.filter((x) => x.f.startsWith(prefix));
+    if (list.length) add('MEO / IGSO / GEO', `GFZ rapid GNSS orbits ${prefix.replace('_', '')} (${prefix === 'GFZ0OPSRAP_' ? 'GPS, GLONASS, Galileo; CC BY 4.0' : 'BeiDou, QZSS; IGS MGEX terms'})`, 'daily SP3, 5 min, from NASA CDDIS (GFZ file server unreachable 2026-10-24)', list.length, span(list.map(dayOf)), 'truth: arm 1-2 windows and the COMSPOC GNSS scoring', 'Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c).');
+  }
+}
+add('Cislunar / HEO', 'TESS, CAPSTONE, Artemis I, Danuri', 'not hosted by NAIF', 0, null, 'none', 'NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); with the approvals of 2026-10-24 they come from STScI MAST (TESS) and JPL Horizons (the other three), listed above. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I.');
 let modules = null;
 try { modules = modulesRoot(); } catch { /* checkout absent */ }
 if (modules) {

@@ -1,0 +1,99 @@
+{
+ "note": "Registry records (data/licenses.json format) for the sources fetched under amendment A8. data/licenses.json is outside this task's declared paths (the workspace guard refused the commit), so they are kept here for the registry's owner to merge; tables.mjs reads the credit lines from this file.",
+ "sources": [
+  {
+   "id": "gfz-rapid-gnss",
+   "name": "GFZ rapid product series for the IGS: rapid GNSS orbits (GFZ0OPSRAP: GPS, GLONASS, Galileo, 5 min SP3)",
+   "provider": "GFZ German Research Centre for Geosciences, Potsdam (Section 1.1 Space Geodetic Techniques), published by GFZ Data Services and the GFZ ISDC; the same files are in the NASA CDDIS archive of IGS analysis-center products",
+   "license": "Creative Commons Attribution 4.0 International (CC BY 4.0), as stated in the DataCite record of doi:10.5880/GFZ.1.1.2020.003; the IGS Data and Product Disclaimer and Terms of Use also apply to the IGS products",
+   "terms": [
+    {
+     "title": "GFZ rapid product series for the IGS (DataCite record, doi:10.5880/GFZ.1.1.2020.003; rights: CC BY 4.0)",
+     "url": "https://api.datacite.org/dois/10.5880/gfz.1.1.2020.003",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "GFZ ISDC: GNSS Products (product lines, references, contact)",
+     "url": "https://isdc.gfz.de/gnss-products",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Creative Commons Attribution 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "CC BY 4.0: share and adapt for any purpose, including commercially, with attribution, a link to the licence and an indication of changes.",
+   "attributionClause": "Maennel, B., Brandt, A., Nischan, T., Brack, A., Sakic, P., Bradke, M. (2020): GFZ rapid product series for the IGS. GFZ Data Services. https://doi.org/10.5880/GFZ.1.1.2020.003",
+   "conditions": "GFZ's file server (isdc-data.gfz.de) did not answer from the G1 machine on 2026-10-24, so the files were taken from NASA CDDIS (gnss/products/<GPS week>/) with an Earthdata token read at run time; the bytes are GFZ's. The G1 experiment keeps them in its archive and publishes results only (coordinator, 2026-10-24).",
+   "reproduce": "yes",
+   "credit": "GFZ rapid orbits for the IGS (GFZ0OPSRAP): Maennel, B., Brandt, A., Nischan, T., Brack, A., Sakic, P., Bradke, M. (2020), GFZ rapid product series for the IGS, GFZ Data Services, doi:10.5880/GFZ.1.1.2020.003, CC BY 4.0; obtained from NASA CDDIS (Noll 2010, doi:10.1016/j.asr.2010.01.018).",
+   "reason": "CC BY 4.0 allows reproduction with attribution; the experiment reproduces none of the files.",
+   "usedIn": "G1 (current GNSS truth, 2026-10-11 to 2026-10-22: GPS, GLONASS and Galileo windows, and the scoring of COMSPOC's GNSS sets)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://isdc-data.gfz.de/gnss/products/rapid/w<GPS week>/ or https://cddis.nasa.gov/archive/gnss/products/<GPS week>/GFZ0OPSRAP_<yyyyddd>0000_01D_05M_ORB.SP3.gz (Earthdata login)"
+  },
+  {
+   "id": "jpl-horizons",
+   "name": "JPL Horizons On-Line Ephemeris System: vector tables of CAPSTONE, Artemis I (Orion) and Danuri (KPLO)",
+   "provider": "NASA Jet Propulsion Laboratory, Solar System Dynamics Group (Horizons API); the spacecraft trajectories are the mission navigation teams' (CAPSTONE: NASA/Advanced Space; Artemis I: NASA/JSC; Danuri: KARI), merged by JPL",
+   "license": "Public NASA/JPL data service: no access restriction; JPL and NASA content is not copyrighted unless noted (JPL copyrights page); acknowledgment of Horizons and its citation (Giorgini et al. 1996) requested",
+   "terms": [
+    {
+     "title": "Horizons API documentation (parameters, time systems, binary SPK limited to small bodies)",
+     "url": "https://ssd-api.jpl.nasa.gov/doc/horizons.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "JPL copyrights",
+     "url": "https://www.jpl.nasa.gov/copyrights",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "JPL: unless otherwise noted, JPL and NASA content is in the public domain; trajectory notes and mission descriptions in the object data are NASA/JPL text.",
+   "attributionClause": "Giorgini, J. D., et al. (1996), JPL's On-Line Solar System Data Service, Bulletin of the American Astronomical Society 28(3), 1158. Acknowledge the JPL Horizons system and the mission.",
+   "conditions": "Used through the documented API, one request at a time, 6 s apart. G1 keeps the responses as served in its archive (hac/jpl-horizons/) with a provenance row each and publishes results only (coordinator, 2026-10-24).",
+   "reproduce": "yes",
+   "credit": "State vectors of CAPSTONE, Artemis I and Danuri from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.",
+   "reason": "Public NASA/JPL data; the experiment reproduces none of the files.",
+   "usedIn": "G1 (truth for the lunar and cislunar windows prepared for SDN-GP: Danuri, CAPSTONE, Artemis I)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://ssd.jpl.nasa.gov/api/horizons.api?COMMAND='-155'&EPHEM_TYPE='VECTORS'&CENTER='500@301'&REF_PLANE='FRAME'&VEC_TABLE='2'&TIME_TYPE='TDB' (also -1176 CAPSTONE, -1023 Artemis I)"
+  },
+  {
+   "id": "stsci-mast-tess",
+   "name": "TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp), STScI MAST",
+   "provider": "Space Telescope Science Institute, Mikulski Archive for Space Telescopes (MAST), for the NASA TESS mission",
+   "license": "MAST Data Use Policy: most data hosted at MAST are in the public domain and carry no restriction on use; the originating mission and STScI are acknowledged in scholarly publications",
+   "terms": [
+    {
+     "title": "MAST Data Use Policy",
+     "url": "https://archive.stsci.edu/publishing/data-use",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "MAST mission acknowledgements (TESS)",
+     "url": "https://archive.stsci.edu/publishing/mission-acknowledgements",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "TESS bulk downloads (engineering and model files)",
+     "url": "https://archive.stsci.edu/tess/bulk_downloads.html",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "Most data hosted at MAST are in the public domain (see: open data), and therefore do not have restrictions on use.",
+   "attributionClause": "This paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555.",
+   "conditions": "Files from https://archive.stsci.edu/missions/tess/models/, one request at a time, 6 s apart. archive.stsci.edu's certificate chain ends at the emSign Root CA G1, absent from Node's bundle; the root from the macOS system store is added as an extra trusted root and verification stays on. G1 keeps the files in its archive (hac/mast-tess/) and publishes results only (coordinator, 2026-10-24).",
+   "reproduce": "yes",
+   "credit": "TESS spacecraft ephemeris: this paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555.",
+   "reason": "Public-domain NASA mission data; the experiment reproduces none of the files.",
+   "usedIn": "G1 (TESS highly elliptical orbit windows, 2026-06-29 to 2026-09-17)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://archive.stsci.edu/missions/tess/models/TESS_EPH_DEF_<yyyyddd>_21.bsp"
+  }
+ ]
+}

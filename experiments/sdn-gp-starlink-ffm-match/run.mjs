@@ -4,6 +4,8 @@
 // 3. tables.json is re-derived from the recorded window rows (statistics only) and must equal the committed file;
 // 3b. m123.json (DESIGN.md M1 to M3, amendments A7 to A7c) is re-derived from its recorded rows, and two of those windows (LAGEOS-1 and the ISS) are
 //    replayed through FFM-1 under full and zonal-only gravity and the SGP4 and SGP4-XP fits, and must reproduce their recorded numbers;
+// 3c. the windows prepared for SDN-GP (regime-windows.json) are re-derived from the local truth packs, and the pack scorer returns a known
+//    offset (1 km added to a Danuri window's held-out states comes back as 1 km RMS on each day);
 // 4. N windows (default 5 precise-orbit windows, one per source, plus a Starlink FFM truth and an in-span SpaceX window) are replayed through the modules and must reproduce their recorded
 //    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records.
 // Without the local records the check says so and exits 2: a skip is never a pass.
@@ -18,6 +20,10 @@ import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { build } from './tables.mjs';
 import { build as buildM123 } from './m123-report.mjs';
 import { allWindows, processWindow } from './m123.mjs';
+import { listPacks, readPack } from './lib/packs.mjs';
+import { RULES, windowsOf } from './regime-windows.mjs';
+import { scorePack } from './score-pack.mjs';
+import { spkObjectSeries, A8 } from './lib/spk-sources.mjs';
 import { loadEnvironment } from './lib/ffm.mjs';
 import { openModule } from './lib/modules.mjs';
 import { manifest } from './manifest.mjs';
@@ -55,6 +61,23 @@ const tables = JSON.parse(fs.readFileSync(path.join(results, 'tables.json'), 'ut
 if (JSON.stringify(tables) !== JSON.stringify(JSON.parse(JSON.stringify(build())))) fail('tables.json is not reproduced by the recorded rows');
 ok('tables.json reproduced from the recorded rows');
 
+if (fs.existsSync(path.join(store, 'pack')) && fs.existsSync(path.join(results, 'regime-windows.json'))) {
+  const rw = JSON.parse(fs.readFileSync(path.join(results, 'regime-windows.json'), 'utf8'));
+  let windowsChecked = 0;
+  for (const name of listPacks()) {
+    const rule = RULES[name]; if (!rule) continue;
+    const { meta, object } = readPack(name);
+    const recorded = rw.packs.find((p) => p.name === name);
+    if (!recorded || recorded.sha256 !== meta.sha256) fail(`truth pack ${name} differs from regime-windows.json`);
+    for (const fit of rule.fitHours) {
+      const again = windowsOf(object, rule, fit).starts.map((x) => new Date(x.startMs).toISOString());
+      if (JSON.stringify(again) !== JSON.stringify(rw.windows[name].byFit[fit].startsUtc)) fail(`windows of ${name} (fit ${fit} h) differ from regime-windows.json`);
+      windowsChecked += again.length;
+    }
+  }
+  ok(`regime-windows.json reproduced from the local truth packs (${windowsChecked} windows)`);
+}
+
 const m123Dir = path.join(store, 'm123');
 if (fs.existsSync(m123Dir)) {
   const recordedM123 = JSON.parse(fs.readFileSync(path.join(results, 'm123.json'), 'utf8'));
@@ -75,13 +98,15 @@ const modules = modulesRoot();
 const b = await openBaselines(modules);
 const picks = [];
 const read = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []);
-for (const source of ['gnss', 'iss', 'slr-low', 'slr-high', 'mgex-geo']) { const rows = read(path.join(store, 'rows', `${source}.jsonl`)); if (rows.length) picks.push({ source, row: rows[Math.floor(rows.length / 2)] }); }
+for (const source of ['gnss', 'iss', 'slr-low', 'slr-high', 'mgex-geo', 'gnss-rapid', 'mgex-igso-rapid']) { const rows = read(path.join(store, 'rows', `${source}.jsonl`)); if (rows.length) picks.push({ source, row: rows[Math.floor(rows.length / 2)] }); }
 let replayed = 0;
 const same = (a, c) => Math.abs(a - c) <= 1e-9 * Math.max(1, Math.abs(c));
 for (const { source, row } of picks.slice(0, replay)) {
   const object = source === 'gnss' ? sources.gnss(config.precise.gnss).find((o) => o.id === row.id)
     : source === 'iss' ? sources.iss().find((o) => o.id === row.id)
     : source === 'mgex-geo' ? sources.mgex({ klass: 'geo', ...sources.MGEX_A4 }).find((o) => o.id === row.id)
+    : source === 'gnss-rapid' ? sources.gnssRapid().find((o) => o.id === row.id)
+    : source === 'mgex-igso-rapid' ? sources.mgexRapid({ klass: 'igso' }).find((o) => o.id === row.id)
     : source === 'slr-low' ? config.precise.slrLow.targets.flatMap((t) => sources.slrLow({ target: t, arcs: config.precise.slrLow.arcs })).find((o) => o.id === row.id)
     : config.precise.slrHigh.targets.flatMap((t) => sources.slrHigh({ target: t, weeks: config.precise.slrHigh.weeks })).find((o) => o.id === row.id);
   if (!object) fail(`replay: object ${row.id} not found`);
@@ -118,6 +143,29 @@ if (heoRows.length) {
     if (Boolean(again[arm].ok) !== Boolean(row[arm].ok)) fail(`replay ${row.id}: ${arm} ok differs`);
     if (row[arm].ok && !same(again[arm].fitRmsKm, row[arm].fitRmsKm)) fail(`replay ${row.id}: ${arm} fit RMS differs`);
   }
+  replayed += 1;
+}
+// replay one TESS window from the MAST definitive ephemeris files
+const tessRows = read(path.join(store, 'rows', 'heo-tess.jsonl'));
+if (tessRows.length) {
+  const row = tessRows.filter((r) => r.fitSeconds === 86400)[Math.floor(tessRows.filter((r) => r.fitSeconds === 86400).length / 2)];
+  const dir = path.join(config.archive, 'hac/mast-tess/models');
+  const names = fs.readdirSync(dir).filter((f) => /^TESS_EPH_DEF_\d{7}_\d+\.bsp$/.test(f)).sort();
+  const object = await spkObjectSeries(modules, { files: names.map((f) => path.join(dir, f)), source: 'heo-tess', id: 'TESS (-95)', name: 'TESS', norad: A8.tess.norad, fromUtc: A8.tess.span[0], toUtc: A8.tess.span[1], stride: A8.tess.stride });
+  const again = await scoreWindow(b, object, ms(row.startUtc), { fitSeconds: row.fitSeconds, leadDays: config.windows.leadDays, minCoverage: config.windows.minimumCoverage });
+  for (const arm of ['xp', 'sgp4']) {
+    if (Boolean(again[arm].ok) !== Boolean(row[arm].ok)) fail(`replay ${row.id}: ${arm} ok differs`);
+    if (row[arm].ok && !same(again[arm].fitRmsKm, row[arm].fitRmsKm)) fail(`replay ${row.id}: ${arm} fit RMS differs`);
+  }
+  replayed += 1;
+}
+// the pack scorer returns a known offset
+if (fs.existsSync(path.join(store, 'pack/danuri-lunar.json'))) {
+  const { object } = readPack('danuri-lunar');
+  const start = ms('2026-09-01T00:00:00Z'), fitEnd = start + 24 * 3600e3;
+  const predicted = object.lines.filter((l, i) => object.t[i] > fitEnd && object.t[i] <= fitEnd + 3 * 86400e3).map((l) => ({ epoch: l.epoch, r: [l.r[0] + 1, l.r[1], l.r[2]], v: l.v }));
+  const r = await scorePack(b, { pack: 'danuri-lunar', startMs: start, fitHours: 24, leadDays: [1, 2, 3], predicted, predictedCenter: 'Moon' });
+  for (const k of [1, 2, 3]) if (!r.byDay[k] || Math.abs(r.byDay[k].rmsKm - 1) > 1e-6) fail(`pack scorer: a 1 km offset came back as ${r.byDay[k]?.rmsKm} km on day ${k}`);
   replayed += 1;
 }
 // replay the in-span SpaceX window of one same-day Starlink from the local capture (read in memory)

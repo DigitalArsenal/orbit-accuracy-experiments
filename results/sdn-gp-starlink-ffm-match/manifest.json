@@ -15,15 +15,25 @@
     "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --truth refit30 --daily-only",
     "node experiments/sdn-gp-starlink-ffm-match/m123.mjs --workers 10",
     "node experiments/sdn-gp-starlink-ffm-match/m123-report.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-horizons.mjs",
+    "NODE_EXTRA_CA_CERTS=<archive>/hac/.ca/emsign-root-ca-g1.pem node experiments/sdn-gp-starlink-ffm-match/fetch-mast-tess.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-gnss-rapid.mjs --from 2026-10-11 --to 2026-10-22",
+    "node experiments/sdn-gp-starlink-ffm-match/gnss-rapid-convert.mjs --from 2026-10-11 --to 2026-10-22",
+    "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source gnss-rapid,mgex-geo-rapid,mgex-igso-rapid",
+    "node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs --source heo-tess",
+    "node experiments/sdn-gp-starlink-ffm-match/comspoc-precise.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/horizons-packs.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack <pack> --start <ISO> --fit-hours <h> --predicted <states.oem>",
     "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/tables.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "14e2d8ef9d014d8f0886ae61ca74f6d30443887d8cbc0096d30446db5cc50bb5",
+  "planSha256": "708843d2c48cc99c2e783ca6ed9e19a144b34c483a5edf0c650ee6a903b93feb",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "5eace76a5496f39adf8e9b1a86e2be89905f90d3"
+    "commit": "69ec73f504beba689ececdf64617a193959215a6"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -220,5 +230,25 @@
       "retrievedUtc": "2026-10-23T21:34:45Z"
     }
   ],
+  "a8Sources": {
+    "jplHorizons": {
+      "files": 16,
+      "setSha256": "6c96ab012055cf06117831793d7d36cc939030601f6dcd8e648f5fb050f42223",
+      "firstRetrievedUtc": "2026-10-24T03:23:32.532Z",
+      "lastRetrievedUtc": "2026-10-24T03:25:17.826Z"
+    },
+    "mastTess": {
+      "files": 21,
+      "setSha256": "e4d1ceaafad4b828c6813160de3df8754023a5a62b03c7ca77dd6f60fdfbed5c",
+      "firstRetrievedUtc": "2026-10-24T03:26:35.762Z",
+      "lastRetrievedUtc": "2026-10-24T03:28:40.288Z"
+    },
+    "gfzGnssRapid": {
+      "files": 24,
+      "setSha256": "8a537ec867a84ad1bd0017b7be9ec8859faa38236159dabf0e7ccbecafe25f0d",
+      "firstRetrievedUtc": "2026-10-24T03:31:52.893Z",
+      "lastRetrievedUtc": "2026-10-24T03:33:08.245Z"
+    }
+  },
   "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
 }

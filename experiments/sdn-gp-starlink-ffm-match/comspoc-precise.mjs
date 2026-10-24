@@ -11,7 +11,7 @@ import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, propagateSet, compareStates } from './lib/baselines.mjs';
 import { readSets, setOf } from './lib/tle.mjs';
 import { ommBytes } from './lib/sds.mjs';
-import { readReference, chain, referenceDir, referenceRootDir } from './lib/sources.mjs';
+import { readReference, chain, referenceDir, referenceRootDir, rapidRoot, rapidDirs, GNSS_RAPID, gnssClass } from './lib/sources.mjs';
 import { ms, iso, DAY, quantile } from './lib/windows.mjs';
 
 frozen();
@@ -32,16 +32,25 @@ const esaNewest = dirs.filter((d) => family.esa.match.test(d)).sort().at(-1);
 const esaObjects = new Set(fs.readdirSync(referenceDir(esaNewest)).filter((f) => f.endsWith('.oem')).map((f) => Number(f.replace('.oem', ''))));
 const slrObjects = new Set();
 for (const d of dirs.filter((x) => family.ilrsa.match.test(x) || family.nsgf.match.test(x))) { const f = fs.readdirSync(referenceDir(d)).find((x) => x.endsWith('.oem')); if (f) slrObjects.add(readReference(path.join(referenceDir(d), f)).norad); }
-const candidates = objects.filter((n) => esaObjects.has(n) || slrObjects.has(n));
+// GFZ rapid orbits (amendment A8b, current GNSS truth): one reference-state directory per product and day
+const rapid = [...rapidDirs('GFZ0OPSRAP_'), ...rapidDirs('GFZ0MGXRAP_')];
+const rapidDay = (d) => { const m = /_(\d{4})(\d{3})0000/.exec(d); return Date.UTC(Number(m[1]), 0, Number(m[2])); };
+const rapidObjects = new Set(rapid.flatMap((d) => fs.readdirSync(path.join(rapidRoot(), d)).filter((f) => f.endsWith('.oem')).map((f) => Number(f.replace('.oem', '')))));
+status.newestProductDay.gfzRapid = rapid.length ? new Date(Math.max(...rapid.map(rapidDay))).toISOString().slice(0, 10) : null;
+status.eopPredictedFromUtc = GNSS_RAPID.predictedEopFromUtc;
+const isGnss = (n) => esaObjects.has(n) || rapidObjects.has(n);
+const candidates = objects.filter((n) => isGnss(n) || slrObjects.has(n));
 status.objectsWithPreciseProducts = candidates.length;
-status.gnss = candidates.filter((n) => esaObjects.has(n)).length;
+status.gnss = candidates.filter(isGnss).length;
 status.laserRanged = candidates.filter((n) => slrObjects.has(n)).length;
 const b = await openBaselines(modulesRoot());
 const rows = [];
 for (const norad of candidates) {
   const s = setOf(...sets.get(norad));
   const files = [];
-  for (const d of dirs) {
+  if (rapidObjects.has(norad)) { // GNSS objects: the rapid orbits of the days that follow the set's epoch
+    for (const d of rapid) if (rapidDay(d) + 2 * DAY >= s.epochMs && fs.existsSync(path.join(rapidRoot(), d, `${norad}.oem`))) files.push(path.join(rapidRoot(), d, `${norad}.oem`));
+  } else for (const d of dirs) {
     const f = Object.values(family).find((x) => x.match.test(d)); if (!f) continue;
     const day = f.date(f.match.exec(d));
     if (day + 8 * DAY < s.epochMs) continue; // products that end before the set's epoch cannot be after it
@@ -49,8 +58,8 @@ for (const norad of candidates) {
     if (file && fs.existsSync(file)) files.push(file);
   }
   const series = files.length ? chain(files) : null;
-  const after = series ? series.lines.filter((l) => ms(l.epoch) > s.epochMs && (esaObjects.has(norad) || series.norad === norad)) : [];
-  if (!series || after.length < 100 || series.norad !== norad && !esaObjects.has(norad)) { rows.push({ norad, pending: 'no precise product after the set epoch', setEpochUtc: iso(s.epochMs) }); continue; }
+  const after = series ? series.lines.filter((l) => ms(l.epoch) > s.epochMs && (isGnss(norad) || series.norad === norad)) : [];
+  if (!series || after.length < 100 || series.norad !== norad && !isGnss(norad)) { rows.push({ norad, pending: 'no precise product after the set epoch', setEpochUtc: iso(s.epochMs) }); continue; }
   const stepSeconds = (ms(after[1].epoch) - ms(after[0].epoch)) / 1000, thin = Math.max(1, Math.round(300 / stepSeconds));
   const chosen = after.filter((_, i) => i % thin === 0);
   const predicted = await propagateSet(b, ommBytes({ theory: 'SGP4XP', ...s }), chosen.map((l) => ms(l.epoch)), 'GCRF');
@@ -59,11 +68,12 @@ for (const norad of candidates) {
     const idx = chosen.map((l, i) => i).filter((i) => ms(chosen[i].epoch) > s.epochMs + k * DAY && ms(chosen[i].epoch) <= s.epochMs + (k + 1) * DAY);
     if (idx.length >= 0.5 * (86400 / (stepSeconds * thin))) days[k] = await compareStates(b, idx.map((i) => predicted[i]), idx.map((i) => chosen[i]));
   }
-  rows.push({ norad, setEpochUtc: iso(s.epochMs), kind: esaObjects.has(norad) ? 'gnss' : 'laser-ranged', days });
+  rows.push({ norad, setEpochUtc: iso(s.epochMs), kind: isGnss(norad) ? 'gnss' : 'laser-ranged', ...(rapidObjects.has(norad) ? { gnssClass: gnssClass(series.name) } : {}), days });
 }
 fs.writeFileSync(path.join(store, 'rows/comspoc-precise.jsonl'), rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
 status.scored = rows.filter((r) => r.days && Object.keys(r.days).length).length;
 status.pending = rows.length - status.scored;
+status.pendingGnss = rows.filter((r) => r.pending && isGnss(r.norad)).map((r) => ({ norad: r.norad, setEpochUtc: r.setEpochUtc, inRapidProducts: rapidObjects.has(r.norad) }));
 write(path.join(store, 'rows/comspoc-precise-status.json'), status);
 console.log(JSON.stringify(status));
 await b.close();

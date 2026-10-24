@@ -181,3 +181,12 @@ export function mgexRapid({ klass }) {
   const wanted = klass === 'geo' ? /^(BDS-\d?|QZS-\d+)G\b/ : /^(BDS-\d?|QZS-\d+)I\b/;
   return rapidFirstDay('GFZ0MGXRAP_').filter((o) => wanted.test(o.type)).map((o) => rapidObject('GFZ0MGXRAP_', o.norad, `mgex-${klass}-rapid`));
 }
+
+/** The orbit class of a GNSS satellite from its reference-state name ("C201 BDS-3M-CAST", "J003 QZS-2G", "G044 GPS-IIR-A"): meo, igso, geo or other. */
+export function gnssClass(name) {
+  const type = typeOf(name);
+  if (/^(BDS-\d?|QZS-\d+)G\b/.test(type)) return 'geo';
+  if (/^(BDS-\d?|QZS-\d+)I\b/.test(type)) return 'igso';
+  if (/^BDS-\d?M/.test(type) || /^[GRE]\d/.test(name)) return 'meo';
+  return 'other';
+}

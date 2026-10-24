@@ -171,10 +171,10 @@ export function markdown(t) {
   const L = [];
   const s = (g) => t.summaries.find((x) => x.group === g);
   const groups = ORDER.filter((g) => s(g));
-  L.push('## 11. The LEO fit floor against zonal-only gravity (DESIGN.md M1 to M3)', '');
+  L.push('## 12. The LEO fit floor against zonal-only gravity (DESIGN.md M1 to M3)', '');
   L.push(`Plan amendments A7 to A7d. Each window is one start state: ${t.counts.starlink} clean Starlink truths (converged, 0 < B_eff <= 0.5 m2/kg) at their registered start states, ${t.counts.iss} ISS windows (the registered NASA OEM, state turned EME2000 to GCRF), ${t.counts.lageos1 + t.counts.lageos2} LAGEOS-1 and LAGEOS-2 windows (first state of the weekly ILRS orbits of 2026-07-19 to 2026-08-23, drag off). FFM-1 propagates it for 120 h at 60 s under EGM2008 70x70 (\`full\`) and under FFM's own truncations: \`zonal\` (order 0, the zonals to degree 70), \`tess2\` and \`tess6\` (zonals plus the tesseral and sectorial terms to degree 2 or 6), \`order14\` and \`order15\` (orders up to 14 and 15; their difference is the 15th order alone), and, for Starlink and the ISS, \`full-nodrag\` and \`zonal-nodrag\` (drag off). Everything else in the force model (third bodies, solid and ocean tides, relativity, Earth radiation, SRP, and drag where it is on) is the same in every variant, so a difference between two variants is the gravity terms that were dropped. Every variant is fitted by SGP4 and SGP4-XP over 24 h, 21.7 h and 34.2 h and scored on the three held-out days as in section 1; the difference series between variants are taken by \`pair_statistics\` and summarized by a quadratic plus one least-squares sinusoid. ${t.determinism.windows ? `The \`full\` re-propagation reproduces the registered truth to ${t.determinism.maxAbsKm.toExponential(1)} km (largest difference over ${t.determinism.windows} Starlinks).` : ''} ${t.failed ? `${t.failed} variant runs failed and are left out.` : ''}`, '');
 
-  L.push('### 11a. The fit floor (24 h fit, in-track component of the fit RMS, metres)', '');
+  L.push('### 12a. The fit floor (24 h fit, in-track component of the fit RMS, metres)', '');
   L.push('Medians over windows. Tesseral share = median over windows of sqrt(full^2 - zonal^2). Predicted = RMS of the m-daily set of DESIGN.md 2d.3 (a design estimate at the orbit it names).', '');
   L.push('| Group | Windows | XP full | XP zonal | XP tesseral share | Predicted | Share / predicted | SGP4 full | SGP4 zonal | SGP4 share |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |');
   for (const g of groups) {
@@ -185,7 +185,7 @@ export function markdown(t) {
   L.push('| Group | 3D full | 3D zonal | in-track tess2 | in-track tess6 | in-track order14 | in-track order15 |', '| --- | --: | --: | --: | --: | --: | --: |');
   for (const g of groups) { const x = s(g); L.push(`| ${LABEL[g]} | ${f(x.floor.xp.fit3dFull.median)} | ${f(x.floor.xp.fit3dZonal.median)} | ${f(x.floor.xp.tess2.median)} | ${f(x.floor.xp.tess6.median)} | ${f(x.floor.xp.order14.median)} | ${f(x.floor.xp.order15.median)} |`); }
 
-  L.push('', '### 11b. Day 1 to 3 with and without the tesseral terms (24 h fit, 3D RMS of the held-out day, km)', '');
+  L.push('', '### 12b. Day 1 to 3 with and without the tesseral terms (24 h fit, 3D RMS of the held-out day, km)', '');
   L.push('Cells read day 1 / day 2 / day 3, median over windows. Share = how much of the day-3 error the tesseral terms carry: in quadrature, sqrt(full^2 - zonal^2) / full, and linearly, 1 - zonal / full (per window, then the median).', '');
   L.push('| Group | XP full | XP zonal | XP share (quadrature / linear) | SGP4 full | SGP4 zonal | SGP4 share (quadrature / linear) |', '| --- | --- | --- | --- | --- | --- | --- |');
   const dayCell = (x, v) => [1, 2, 3].map((k) => f(x[v][k].median, 2)).join(' / ');
@@ -194,18 +194,18 @@ export function markdown(t) {
   L.push('| Group | tess2 | tess6 | order14 | order15 |', '| --- | --- | --- | --- | --- |');
   for (const g of groups) { const x = s(g); L.push(`| ${LABEL[g]} | ${dayCell(x.days.xp, 'tess2')} | ${dayCell(x.days.xp, 'tess6')} | ${dayCell(x.days.xp, 'order14')} | ${dayCell(x.days.xp, 'order15')} |`); }
 
-  L.push('', '### 11c. The along-track difference series (M1)', '');
+  L.push('', '### 12c. The along-track difference series (M1)', '');
   L.push('In-track difference between two FFM-1 propagations of the same start state over 120 h, one state per 5 minutes; quadratic trend removed jointly with a sinusoid whose period is scanned from 8 to 16 h. `tess2 - zonal` is the degree-2 tesseral terms alone (J22 and J21); `tess6 - zonal` the terms to degree 6; `full - zonal` all of them. A_22 is the amplitude DESIGN.md 2d.3 predicts for J22.', '');
   L.push('| Group | A_22 predicted (m) | tess2 - zonal: amplitude (m) / period (h) | tess6 - zonal | full - zonal | residual after the fit, full - zonal (m) |', '| --- | --: | --- | --- | --- | --: |');
   for (const g of groups) { const x = s(g), a = PREDICTED[g]?.a22; const c = (k) => `${f(x.pairs[k].amplitudeM.median)} / ${f(x.pairs[k].periodH.median, 2)}`; L.push(`| ${LABEL[g]} | ${a ?? '-'} | ${c('tess2-zonal')} | ${c('tess6-zonal')} | ${c('full-zonal')} | ${f(x.pairs['full-zonal'].residualM.median)} |`); }
-  L.push('', '### 11d. The 15th order (the 15:1 resonance of the 53 degree shell), 10-day arcs', '');
+  L.push('', '### 12d. The 15th order (the 15:1 resonance of the 53 degree shell), 10-day arcs', '');
   L.push('In-track difference of `order15` against `order14` (the m = 15 terms alone) and of `full` against `order14`, one state per 5 minutes from the same start state. Columns: the median absolute difference at 1, 2, 3, 4, 7 and 10 days (m), then a quadratic plus one sinusoid scanned from 2 to 12 days (amplitude m / period d; a period at the end of the scan means no clear period in 10 days). DESIGN.md 2d.5 predicts 0.79 km at 6.1 days on the 550 km shell.', '');
   L.push('| Group | Windows | order15 - order14 at 1 / 2 / 3 / 4 / 7 / 10 days (m) | sinusoid | full - order14 at 3 / 10 days (m) |', '| --- | --: | --- | --- | --- |');
   for (const g of groups.filter((q) => q.startsWith('starlink'))) {
     const x = s(g), a = x.long['order15-order14'], b = x.long['full-order14'];
     L.push(`| ${LABEL[g]} | ${a.absDay[1].n} | ${[1, 2, 3, 4, 7, 10].map((d) => f(a.absDay[d].median)).join(' / ')} | ${f(a.amplitudeM.median)} / ${f(a.periodD.median, 1)} | ${f(b.absDay[3].median)} / ${f(b.absDay[10].median)} |`);
   }
-  L.push('', '### 11e. Fit length (M2): day 3 at 21.7, 24 and 34.2 h', '');
+  L.push('', '### 12e. Fit length (M2): day 3 at 21.7, 24 and 34.2 h', '');
   L.push('Median 3D RMS of held-out day 3 (km), cells read 21.7 h / 24 h / 34.2 h. J22 share = sqrt(tess2^2 - zonal^2) of the group medians. SGP4-XP returns BTERM = 0 for fit spans of 22 h or less, so 21.7 h closes the drag path as well as the J22 alias (a zero of j_2 for the J22 period); 34.2 h is the second zero of j_2 with the drag path open.', '');
   const trio = (x, arm_, v) => ['h21_7', 'h24', 'h34_2'].map((l) => f(x.fitLength[l][arm_][v].day3.median, 2)).join(' / ');
   const trioJ = (x, arm_) => ['h21_7', 'h24', 'h34_2'].map((l) => f(x.fitLength[l][arm_].j22Day3.median, 2)).join(' / ');
@@ -215,7 +215,7 @@ export function markdown(t) {
     L.push('');
   }
   L.push(`SGP4-XP fits (all windows and variants) with BTERM above 0: ${['h21_7', 'h24', 'h34_2'].map((l) => `${{ h21_7: '21.7', h24: '24', h34_2: '34.2' }[l]} h ${t.xpDragTerms[l].bterm} of ${t.xpDragTerms[l].fits}`).join(', ')}; with AGOM above 0: ${['h21_7', 'h24', 'h34_2'].map((l) => `${t.xpDragTerms[l].agom}`).join(', ')}.`);
-  L.push('', '### 11f. Where the tesseral gravity goes (M3)', '');
+  L.push('', '### 12f. Where the tesseral gravity goes (M3)', '');
   L.push('Drag-free truths (\`full-nodrag\`, \`zonal-nodrag\`; LAGEOS in every variant): any BTERM or B* the fit returns is absorbed gravity (and the small SRP). Median of the absolute fitted value over windows, 24 h fit. SGP4 with B* fixed at its true value, 0, is the M3 test in place of XP, whose `fit` has no fixed-B option; day 3 in km.', '');
   L.push('| Group | Truth | XP BTERM (m2/kg), fits with BTERM > 0 | XP AGOM (m2/kg), fits with AGOM > 0 | XP fits with neither | SGP4 B* fitted | SGP4 day 3, B* fitted | SGP4 day 3, B* fixed at 0 | SGP4 fit RMS (m), fitted / fixed |', '| --- | --- | --- | --- | --: | --: | --: | --: | --- |');
   for (const g of groups) {
@@ -232,7 +232,7 @@ export function markdown(t) {
   const star = s('starlink-550km')?.windows >= 6 ? 'starlink-550km' : 'starlink-inc1';
   const have = [star, 'iss', 'lageos1'].filter((g) => s(g));
   if (have.length) {
-    L.push('### 11g. What it means for the fit', '');
+    L.push('### 12g. What it means for the fit', '');
     const d3 = (g, v, l = 'h24', a = 'xp') => s(g).fitLength[l][a][v].day3.median;
     L.push(`- **The floor is gravity.** In-track fit RMS of best-case XP with the full field against the zonal field only: ${have.map((g) => `${LABEL[g]} ${f(s(g).floor.xp.full.median)} against ${f(s(g).floor.xp.zonal.median)} m`).join('; ')}. The rest of the force model is the same in both, so the difference is the tesseral and sectorial terms and nothing else.`);
     L.push(`- **Day 3 is gravity.** The held-out day-3 error of the same fits, full field against zonal only: ${have.map((g) => `${LABEL[g]} XP ${f(d3(g, 'full'), 2)} against ${f(d3(g, 'zonal'), 2)} km, SGP4 ${f(d3(g, 'full', 'h24', 'sgp4'), 2)} against ${f(d3(g, 'zonal', 'h24', 'sgp4'), 2)} km`).join('; ')}. The zonal-only values are the ceiling for a theory that carries the m-daily terms and fits the same 24 h.`);
@@ -240,7 +240,7 @@ export function markdown(t) {
     L.push(`- **A longer fit, no new physics.** XP day 3 at 24 h against 34.2 h (full field): ${have.map((g) => `${LABEL[g]} ${f(d3(g, 'full', 'h24'), 2)} against ${f(d3(g, 'full', 'h34_2'), 2)} km`).join('; ')}; SGP4: ${have.map((g) => `${LABEL[g]} ${f(d3(g, 'full', 'h24', 'sgp4'), 2)} against ${f(d3(g, 'full', 'h34_2', 'sgp4'), 2)} km`).join('; ')}. At 21.7 h XP has no drag term, so the same change is large only where the truth has no drag (\`full-nodrag\`) and is a loss where it has.`);
     L.push('');
   }
-  L.push('### 11h. Decision rules of A7b', '');
+  L.push('### 12h. Decision rules of A7b', '');
   for (const r of t.rules) {
     if (r.rule === '1 floor') L.push(`- **Rule 1, floor (${r.pass ? 'holds' : 'fails'}).** Tesseral share of the XP in-track fit RMS against the predicted floor: ${r.detail.map((d) => `${LABEL[d.group]} ${f(d.measuredM)} m against ${d.predictedM} m (${f(d.ratio, 2)}, ${d.windows} windows, ${d.pass ? 'within' : 'outside'} 25 %)`).join('; ')}.`);
     if (r.rule === '2 absorption') L.push(`- **Rule 2, absorption (${r.pass ? 'holds' : 'fails'}).** Median |BTERM| of XP on the drag-free truths, full against zonal: ${r.xpBterm.map((d) => `${LABEL[d.group]} ${finite(d.fullNoDrag) ? d.fullNoDrag.toExponential(2) : '-'} against ${finite(d.zonalNoDrag) ? d.zonalNoDrag.toExponential(2) : '-'} (${d.pass ? 'at least 3 times' : 'less than 3 times'})`).join('; ')}. SGP4 day 3 with B* fixed at 0 against B* fitted: ${r.sgp4FixedBstar.map((d) => `${LABEL[d.group]} ${d.variant} ${f(d.fixedDay3Km, 2)} against ${f(d.fittedDay3Km, 2)} km (${d.pass ? 'lower' : 'not lower'})`).join('; ')}.`);

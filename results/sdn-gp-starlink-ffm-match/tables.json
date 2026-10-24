@@ -2,13 +2,13 @@
   "generatedFrom": "recorded window rows (statistics only)",
   "ricConsistency": {
     "xp": {
-      "n": 3488,
-      "min": 0.9499339749467228,
-      "median": 0.9992049114890759,
-      "max": 1.0261397146777682
+      "n": 3922,
+      "min": 0.8643417528378099,
+      "median": 0.9992638077252662,
+      "max": 1.2256682613098404
     },
     "sgp4": {
-      "n": 3426,
+      "n": 3845,
       "min": 0.9999999999999979,
       "median": 1,
       "max": 1.0000000000000018
@@ -2951,6 +2951,774 @@
       "comspoc": null
     },
     {
+      "id": "heo-tess",
+      "label": "HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 24 h fit",
+      "windows": 39,
+      "objects": 1,
+      "xp": {
+        "attempted": 39,
+        "fitted": 39,
+        "fit": {
+          "n": 39,
+          "median": 0.206864061,
+          "mean": 0.22959127207692312,
+          "p90": 0.35824176440000005
+        },
+        "fitRic": [
+          0.106630146,
+          0.0985481167,
+          0.0926896072
+        ],
+        "fitMsMedian": 490.37008400000013,
+        "elementBytes": 320,
+        "recordBytes": 2264,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 38,
+            "median": 0.682425183,
+            "mean": 0.819202653631579,
+            "p90": 1.4180566500000005,
+            "ric": [
+              0.3539078276024062,
+              0.45298823750784956,
+              0.2471875893880699
+            ]
+          },
+          "2": {
+            "n": 38,
+            "median": 1.8925639699999999,
+            "mean": 1.9841181366578953,
+            "p90": 3.2360185800000005,
+            "ric": [
+              1.2324403272459126,
+              1.0845608254906367,
+              0.541878885086372
+            ]
+          },
+          "3": {
+            "n": 37,
+            "median": 3.63707985,
+            "mean": 3.8056801764864865,
+            "p90": 5.343134965999999,
+            "ric": [
+              2.717960400194388,
+              1.9054166043186647,
+              1.0296050455482308
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 39,
+        "fitted": 39,
+        "fit": {
+          "n": 39,
+          "median": 25.691354060202183,
+          "mean": 50.30646616779662,
+          "p90": 102.36181773883632
+        },
+        "fitRic": [
+          22.610353715314186,
+          7.100313998464255,
+          3.1483965608600766
+        ],
+        "fitMsMedian": 174.6516670000001,
+        "elementBytes": 288,
+        "recordBytes": 624,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 38,
+            "median": 398.79302329768274,
+            "mean": 802.0800116677253,
+            "p90": 2148.588397597348,
+            "ric": [
+              378.64279458090266,
+              121.85569312985993,
+              50.13650184664612
+            ]
+          },
+          "2": {
+            "n": 38,
+            "median": 1449.5404441239602,
+            "mean": 2901.9987196394068,
+            "p90": 7720.6104172960895,
+            "ric": [
+              1313.4868660706088,
+              701.4725801941147,
+              194.16837598716694
+            ]
+          },
+          "3": {
+            "n": 37,
+            "median": 3573.0217312892923,
+            "mean": 6401.276889404407,
+            "p90": 16163.229363227909,
+            "ric": [
+              2317.8460554769376,
+              1916.5899197465437,
+              348.3073184541433
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 39,
+        "days": {
+          "0": {
+            "n": 39,
+            "medianRatio": 0.008051894054134258,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 38,
+            "medianRatio": 0.0017112264837456732,
+            "xpCloser": 1
+          },
+          "2": {
+            "n": 38,
+            "medianRatio": 0.0013056303310969594,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 37,
+            "medianRatio": 0.0010179282757084135,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.0011002000000000002,
+        "agom": 0.00032792000000000005,
+        "agomShare": 0.8974358974358975,
+        "bstar": 0
+      },
+      "comspoc": null
+    },
+    {
+      "id": "heo-tess-72h",
+      "label": "HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 72 h fit",
+      "windows": 38,
+      "objects": 1,
+      "xp": {
+        "attempted": 38,
+        "fitted": 38,
+        "fit": {
+          "n": 38,
+          "median": 0.319172299,
+          "mean": 0.4454481667947368,
+          "p90": 0.7427644099000007
+        },
+        "fitRic": [
+          0.2036147965,
+          0.173930859,
+          0.1412902075
+        ],
+        "fitMsMedian": 681.3409790000005,
+        "elementBytes": 320,
+        "recordBytes": 2264,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 36,
+            "median": 1.1078382100000002,
+            "mean": 1.2463369186944446,
+            "p90": 2.44275171,
+            "ric": [
+              0.5805409738292073,
+              0.5318797078384898,
+              0.3416536539248729
+            ]
+          },
+          "2": {
+            "n": 36,
+            "median": 1.91538805,
+            "mean": 2.2950944788055554,
+            "p90": 3.95326298,
+            "ric": [
+              1.427474039062945,
+              0.9737053009787906,
+              0.6284235999010406
+            ]
+          },
+          "3": {
+            "n": 35,
+            "median": 3.79486714,
+            "mean": 4.267114125657143,
+            "p90": 7.961135572,
+            "ric": [
+              3.1282676719256184,
+              1.6077093323670086,
+              0.9427927182223541
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 38,
+        "fitted": 38,
+        "fit": {
+          "n": 38,
+          "median": 198.19789607138227,
+          "mean": 305.66866346437337,
+          "p90": 665.7001278465661
+        },
+        "fitRic": [
+          164.92353651371053,
+          79.33354602932704,
+          32.01571549158144
+        ],
+        "fitMsMedian": 287.70358300000225,
+        "elementBytes": 288,
+        "recordBytes": 624,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 36,
+            "median": 1097.6249330057965,
+            "mean": 1562.9323678739759,
+            "p90": 3175.580106390139,
+            "ric": [
+              849.829956852193,
+              527.8512853653498,
+              136.88743956137984
+            ]
+          },
+          "2": {
+            "n": 36,
+            "median": 3176.6912129529965,
+            "mean": 3874.4998462325157,
+            "p90": 7440.11143100011,
+            "ric": [
+              1906.2906829837284,
+              1536.9419567012383,
+              287.37868754100407
+            ]
+          },
+          "3": {
+            "n": 35,
+            "median": 6279.575108392734,
+            "mean": 7071.44870264273,
+            "p90": 12740.593218831262,
+            "ric": [
+              2992.228701077243,
+              4504.846185683596,
+              496.4990176714699
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 38,
+        "days": {
+          "0": {
+            "n": 38,
+            "medianRatio": 0.0016103717815705168,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 36,
+            "medianRatio": 0.0010093048879331076,
+            "xpCloser": 1
+          },
+          "2": {
+            "n": 36,
+            "medianRatio": 0.0006029506557609321,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 35,
+            "medianRatio": 0.0006043190939667416,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.0016973500000000002,
+        "agom": 0.0048653,
+        "agomShare": 0.9736842105263158,
+        "bstar": 0
+      },
+      "comspoc": null
+    },
+    {
+      "id": "meo-gnss-rapid",
+      "label": "MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22)",
+      "windows": 48,
+      "objects": 8,
+      "xp": {
+        "attempted": 48,
+        "fitted": 48,
+        "fit": {
+          "n": 48,
+          "median": 0.02122238795,
+          "mean": 0.02217470121875,
+          "p90": 0.028142783220000002
+        },
+        "fitRic": [
+          0.006582587175,
+          0.012236837149999999,
+          0.0148755129
+        ],
+        "fitMsMedian": 264.70002050000085,
+        "elementBytes": 320,
+        "recordBytes": 2392,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 47,
+            "median": 0.0493122663,
+            "mean": 0.05455949571489361,
+            "p90": 0.07985359921999999,
+            "ric": [
+              0.012726787454618093,
+              0.04477709381902984,
+              0.016868397837693287
+            ]
+          },
+          "2": {
+            "n": 40,
+            "median": 0.0812554085,
+            "mean": 0.0960276420875,
+            "p90": 0.15813143200000002,
+            "ric": [
+              0.023435290803174906,
+              0.07549759996409718,
+              0.02193766420025539
+            ]
+          },
+          "3": {
+            "n": 39,
+            "median": 0.117864681,
+            "mean": 0.1382836766025641,
+            "p90": 0.22618781820000008,
+            "ric": [
+              0.02923101537150848,
+              0.11102802234439217,
+              0.027625190622331645
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 48,
+        "fitted": 44,
+        "fit": {
+          "n": 44,
+          "median": 0.11627708096996764,
+          "mean": 0.11982656667693009,
+          "p90": 0.1544464770204767
+        },
+        "fitRic": [
+          0.07258998138959766,
+          0.08350288893926933,
+          0.017268869494087555
+        ],
+        "fitMsMedian": 90.3718329999997,
+        "elementBytes": 304,
+        "recordBytes": 656,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 43,
+            "median": 0.37177230759217095,
+            "mean": 0.4151905294007011,
+            "p90": 0.7167361581602493,
+            "ric": [
+              0.09823846770500423,
+              0.3567309427914174,
+              0.041173824772091104
+            ]
+          },
+          "2": {
+            "n": 37,
+            "median": 1.2742778659927032,
+            "mean": 1.3246259119924637,
+            "p90": 2.6705768583873026,
+            "ric": [
+              0.17485030998203202,
+              1.2646223211116319,
+              0.07931238992279509
+            ]
+          },
+          "3": {
+            "n": 37,
+            "median": 2.7332275553886602,
+            "mean": 2.80655489475089,
+            "p90": 6.032321831572378,
+            "ric": [
+              0.22092500353740116,
+              2.7175726098225557,
+              0.11580541194284122
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 44,
+        "days": {
+          "0": {
+            "n": 44,
+            "medianRatio": 0.18500669023120894,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 43,
+            "medianRatio": 0.13036556841443625,
+            "xpCloser": 0.9767441860465116
+          },
+          "2": {
+            "n": 37,
+            "medianRatio": 0.06384735493825636,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 37,
+            "medianRatio": 0.04543073106195978,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.000022846500000000002,
+        "agom": 0.022895000000000006,
+        "agomShare": 1,
+        "bstar": 89.88427289866905
+      },
+      "comspoc": {
+        "alignment": "epoch",
+        "objects": 31,
+        "days": {
+          "1": {
+            "n": 31,
+            "median": 0.4258703827816307,
+            "mean": 976.0884787132221,
+            "p90": 0.6571988458257946,
+            "ric": [
+              0.1375958715175379,
+              0.3955489176733081,
+              0.04936438607173499
+            ]
+          },
+          "2": {
+            "n": 31,
+            "median": 0.3409896852979353,
+            "mean": 971.971545236116,
+            "p90": 0.6377553576005761,
+            "ric": [
+              0.09676273417575383,
+              0.31888142404014586,
+              0.045786596175044623
+            ]
+          },
+          "3": {
+            "n": 31,
+            "median": 0.27318472163905433,
+            "mean": 968.9403498418574,
+            "p90": 0.7339349853962106,
+            "ric": [
+              0.06680797209756095,
+              0.2630289641754357,
+              0.04345109275177068
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "igso-gnss-rapid",
+      "label": "IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22)",
+      "windows": 30,
+      "objects": 5,
+      "xp": {
+        "attempted": 30,
+        "fitted": 29,
+        "fit": {
+          "n": 29,
+          "median": 0.103387441,
+          "mean": 0.0992143478448276,
+          "p90": 0.1527364806
+        },
+        "fitRic": [
+          0.0243038226,
+          0.0952915744,
+          0.0219794012
+        ],
+        "fitMsMedian": 294.5817919999972,
+        "elementBytes": 320,
+        "recordBytes": 2360,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 28,
+            "median": 0.193233936,
+            "mean": 0.24163506782142855,
+            "p90": 0.45606132520000003,
+            "ric": [
+              0.0649734558004393,
+              0.17974709809660955,
+              0.024023930582851318
+            ]
+          },
+          "2": {
+            "n": 23,
+            "median": 0.380858774,
+            "mean": 0.44515260721739125,
+            "p90": 0.8856943266000001,
+            "ric": [
+              0.1052853964407984,
+              0.34616697302147614,
+              0.03348314995878501
+            ]
+          },
+          "3": {
+            "n": 23,
+            "median": 0.551562976,
+            "mean": 20.582681123913048,
+            "p90": 1.2931800520000003,
+            "ric": [
+              0.1501910762157038,
+              0.502044715401601,
+              0.05119792632605967
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 30,
+        "fitted": 27,
+        "fit": {
+          "n": 27,
+          "median": 0.7174284795116929,
+          "mean": 0.6926065097966364,
+          "p90": 1.1233313997119843
+        },
+        "fitRic": [
+          0.5570830742997892,
+          0.5088936297226654,
+          0.054068706727172115
+        ],
+        "fitMsMedian": 90.49762499999633,
+        "elementBytes": 288,
+        "recordBytes": 640,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 26,
+            "median": 1.5055670991898804,
+            "mean": 3.4266991780361566,
+            "p90": 8.202848771439799,
+            "ric": [
+              0.6904191401502231,
+              1.309734751013726,
+              0.11379097326158531
+            ]
+          },
+          "2": {
+            "n": 21,
+            "median": 2.3171120105189,
+            "mean": 9.314629172606251,
+            "p90": 23.15175643840466,
+            "ric": [
+              0.7453019038753835,
+              2.1379027084689346,
+              0.17465612560802168
+            ]
+          },
+          "3": {
+            "n": 21,
+            "median": 3.644282468838437,
+            "mean": 41.337141922887945,
+            "p90": 71.49900179216502,
+            "ric": [
+              1.008864679392534,
+              3.519870736643107,
+              0.20613598765427824
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 27,
+        "days": {
+          "0": {
+            "n": 27,
+            "medianRatio": 0.1441083591640649,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 26,
+            "medianRatio": 0.1283462796868873,
+            "xpCloser": 1
+          },
+          "2": {
+            "n": 21,
+            "medianRatio": 0.1643678735732372,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 21,
+            "medianRatio": 0.15135022620126448,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0.000026792000000000007,
+        "agom": 0.030216000000000007,
+        "agomShare": 1,
+        "bstar": 0
+      },
+      "comspoc": null
+    },
+    {
+      "id": "geo-gnss-rapid",
+      "label": "GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22)",
+      "windows": 5,
+      "objects": 1,
+      "xp": {
+        "attempted": 5,
+        "fitted": 5,
+        "fit": {
+          "n": 5,
+          "median": 0.0902553799,
+          "mean": 0.10262534116,
+          "p90": 0.156520845
+        },
+        "fitRic": [
+          0.0323757093,
+          0.0822171039,
+          0.0225719128
+        ],
+        "fitMsMedian": 255.7017080000005,
+        "elementBytes": 312,
+        "recordBytes": 2344,
+        "parameters": 8,
+        "days": {
+          "1": {
+            "n": 5,
+            "median": 0.312813646,
+            "mean": 0.34238138500000004,
+            "p90": 0.5496554734000001,
+            "ric": [
+              0.08720144511561895,
+              0.29922372142912174,
+              0.026710476588290247
+            ]
+          },
+          "2": {
+            "n": 5,
+            "median": 0.633174021,
+            "mean": 0.6666191562,
+            "p90": 1.0620914544,
+            "ric": [
+              0.18006268877695703,
+              0.6059474777693421,
+              0.033340967946144086
+            ]
+          },
+          "3": {
+            "n": 4,
+            "median": 1.1639648734999999,
+            "mean": 1.10791871425,
+            "p90": 1.621562054,
+            "ric": [
+              0.3632253835364426,
+              1.1047156626072727,
+              0.03376894022558159
+            ]
+          }
+        }
+      },
+      "sgp4": {
+        "attempted": 5,
+        "fitted": 5,
+        "fit": {
+          "n": 5,
+          "median": 0.8353354063280715,
+          "mean": 0.8886025700576617,
+          "p90": 1.2081543004292064
+        },
+        "fitRic": [
+          0.5456478817965836,
+          0.44758897383204543,
+          0.4025595506062183
+        ],
+        "fitMsMedian": 533.7171249999992,
+        "elementBytes": 288,
+        "recordBytes": 640,
+        "parameters": 7,
+        "days": {
+          "1": {
+            "n": 5,
+            "median": 2.115039970399518,
+            "mean": 2.2831404427973516,
+            "p90": 3.0621923194689082,
+            "ric": [
+              0.641886034245654,
+              1.4592803120678135,
+              1.3211120005556674
+            ]
+          },
+          "2": {
+            "n": 5,
+            "median": 4.380564706412676,
+            "mean": 5.639960793412345,
+            "p90": 9.74135157247623,
+            "ric": [
+              0.6674054162402151,
+              3.7195031330972443,
+              2.4734490726852405
+            ]
+          },
+          "3": {
+            "n": 4,
+            "median": 7.761896672700585,
+            "mean": 11.940116902624888,
+            "p90": 23.039855885901865,
+            "ric": [
+              0.6393685886246153,
+              5.914829271542099,
+              3.908971905523747
+            ]
+          }
+        }
+      },
+      "paired": {
+        "windows": 5,
+        "days": {
+          "0": {
+            "n": 5,
+            "medianRatio": 0.10804687460422682,
+            "xpCloser": 1
+          },
+          "1": {
+            "n": 5,
+            "medianRatio": 0.14789963801058165,
+            "xpCloser": 1
+          },
+          "2": {
+            "n": 5,
+            "medianRatio": 0.1445416432436442,
+            "xpCloser": 1
+          },
+          "3": {
+            "n": 4,
+            "medianRatio": 0.14995882096624502,
+            "xpCloser": 1
+          }
+        }
+      },
+      "terms": {
+        "bterm": 0,
+        "agom": 0.04109700000000001,
+        "agomShare": 1,
+        "bstar": 0
+      },
+      "comspoc": null
+    },
+    {
       "id": "heo-artemis2",
       "label": "HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1)",
       "windows": 1,
@@ -3084,9 +3852,15 @@
   "awaiting": [
     {
       "id": "cislunar",
-      "label": "Cislunar, Earth-centred (Artemis II after the translunar burn)",
+      "label": "Cislunar, Earth-centred transfers (Artemis I, Artemis II) and Earth-Moon libration or distant-retrograde orbits (CAPSTONE, Artemis I)",
       "mission": "artemis2",
-      "reason": "the Moon dominates after the burn; SPK type 13, readable",
+      "packs": [
+        "artemis2-cislunar",
+        "artemis1-cislunar",
+        "capstone-nrho",
+        "artemis1-lunar"
+      ],
+      "reason": "the Moon dominates; NAIF SPK type 13 and JPL Horizons vector tables, readable",
       "kernel": {
         "file": "art002_rec_260402_260410_jsc_bet_revf.bsp",
         "span": "2026-04-02T01:58:21.398Z to 2026-04-10T23:53:24.644Z",
@@ -3096,13 +3870,75 @@
         "centers": [
           "Earth"
         ]
-      }
+      },
+      "prepared": [
+        {
+          "name": "artemis2-cislunar",
+          "center": "Earth",
+          "source": "NAIF SPK art002_rec_260402_260410_jsc_bet_revf.bsp",
+          "startUtc": "2026-04-02T22:50:10.735999Z",
+          "stopUtc": "2026-04-10T23:52:53.647999Z",
+          "states": 12047,
+          "windows": [
+            {
+              "fitHours": 24,
+              "count": 3
+            }
+          ]
+        },
+        {
+          "name": "artemis1-cislunar",
+          "center": "Earth",
+          "source": "JPL Horizons API vector tables",
+          "startUtc": "2022-11-16T08:48:50.817Z",
+          "stopUtc": "2022-12-11T17:13:50.816Z",
+          "states": 36506,
+          "windows": [
+            {
+              "fitHours": 24,
+              "count": 11
+            }
+          ]
+        },
+        {
+          "name": "capstone-nrho",
+          "center": "Moon",
+          "source": "JPL Horizons API vector tables",
+          "startUtc": "2025-07-14T23:58:50.816Z",
+          "stopUtc": "2026-07-14T23:58:50.816Z",
+          "states": 105121,
+          "windows": [
+            {
+              "fitHours": 336,
+              "count": 50
+            }
+          ]
+        },
+        {
+          "name": "artemis1-lunar",
+          "center": "Moon",
+          "source": "JPL Horizons API vector tables",
+          "startUtc": "2022-11-16T08:48:50.817Z",
+          "stopUtc": "2022-12-11T17:13:50.816Z",
+          "states": 36506,
+          "windows": [
+            {
+              "fitHours": 336,
+              "count": 2
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "lunar",
-      "label": "Lunar-centred (LRO)",
+      "label": "Lunar-centred (LRO, Danuri)",
       "mission": "lro",
-      "reason": "Moon-centred; SPK type 13, readable",
+      "packs": [
+        "lro-lunar",
+        "danuri-lunar"
+      ],
+      "reason": "Moon-centred; NAIF SPK type 13 and JPL Horizons vector tables, readable",
       "kernel": {
         "file": "lrorg_2026074_2026166_v01.bsp",
         "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
@@ -3112,13 +3948,52 @@
         "centers": [
           "Moon"
         ]
-      }
+      },
+      "prepared": [
+        {
+          "name": "lro-lunar",
+          "center": "Moon",
+          "source": "NAIF SPK lrorg_2026074_2026166_v01.bsp",
+          "startUtc": "2026-03-15T00:01:59.999999Z",
+          "stopUtc": "2026-06-14T23:59:00.000000Z",
+          "states": 132478,
+          "windows": [
+            {
+              "fitHours": 24,
+              "count": 44
+            },
+            {
+              "fitHours": 72,
+              "count": 43
+            }
+          ]
+        },
+        {
+          "name": "danuri-lunar",
+          "center": "Moon",
+          "source": "JPL Horizons API vector tables",
+          "startUtc": "2026-08-14T23:58:50.817Z",
+          "stopUtc": "2026-10-17T23:58:50.817Z",
+          "states": 92161,
+          "windows": [
+            {
+              "fitHours": 24,
+              "count": 31
+            },
+            {
+              "fitHours": 72,
+              "count": 30
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "interplanetary",
       "label": "Interplanetary, Sun-centred (Psyche, Lucy, Juno)",
       "mission": "psyche",
-      "reason": "SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap",
+      "packs": [],
+      "reason": "SPK type 1 (modified difference arrays): not readable by files/orbit-products 0.1.4, a reader gap; Horizons for these three is not in the approval",
       "kernel": {
         "file": "psyche_sc-eph_260531-270301_261020_v1.bsp",
         "span": "2026-05-31T23:58:50.816Z to 2027-03-01T12:00:00.001Z",
@@ -3128,9 +4003,232 @@
         "centers": [
           "Sun"
         ]
-      }
+      },
+      "prepared": []
     }
   ],
+  "regimeWindows": {
+    "packs": [
+      {
+        "name": "artemis1-cislunar",
+        "regime": "cislunar-transfer",
+        "center": "Earth",
+        "frame": "ICRF",
+        "source": "JPL Horizons API vector tables",
+        "states": 36506,
+        "startUtc": "2022-11-16T08:48:50.817Z",
+        "stopUtc": "2022-12-11T17:13:50.816Z",
+        "sha256": "8827462e4ccd28445a085fadd5aa25f427da5c4abf69458053bef6c94d8382b9",
+        "windows": [
+          {
+            "fitHours": 24,
+            "stepSeconds": 60,
+            "count": 11
+          }
+        ],
+        "rule": {
+          "fitHours": [
+            24
+          ],
+          "strideHours": 48,
+          "leadDays": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "name": "artemis1-lunar",
+        "regime": "cislunar-libration",
+        "center": "Moon",
+        "frame": "ICRF",
+        "source": "JPL Horizons API vector tables",
+        "states": 36506,
+        "startUtc": "2022-11-16T08:48:50.817Z",
+        "stopUtc": "2022-12-11T17:13:50.816Z",
+        "sha256": "64ec786afaaf904dc53d6112cdb68ca6b2f102ff52130d90e16c291b99a23e82",
+        "windows": [
+          {
+            "fitHours": 336,
+            "stepSeconds": 60,
+            "count": 2
+          }
+        ],
+        "rule": {
+          "fitHours": [
+            336
+          ],
+          "strideHours": 96,
+          "leadDays": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      {
+        "name": "artemis2-cislunar",
+        "regime": "cislunar-transfer",
+        "center": "Earth",
+        "frame": "J2000",
+        "source": "NAIF SPK art002_rec_260402_260410_jsc_bet_revf.bsp",
+        "states": 12047,
+        "startUtc": "2026-04-02T22:50:10.735999Z",
+        "stopUtc": "2026-04-10T23:52:53.647999Z",
+        "sha256": "be021c0bc3e9214504931fe3f1de5b2fa07ed6334a2cd2a0ee50059e45a9cb6b",
+        "windows": [
+          {
+            "fitHours": 24,
+            "stepSeconds": 60,
+            "count": 3
+          }
+        ],
+        "rule": {
+          "fitHours": [
+            24
+          ],
+          "strideHours": 48,
+          "leadDays": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "name": "capstone-nrho",
+        "regime": "cislunar-libration",
+        "center": "Moon",
+        "frame": "ICRF",
+        "source": "JPL Horizons API vector tables",
+        "states": 105121,
+        "startUtc": "2025-07-14T23:58:50.816Z",
+        "stopUtc": "2026-07-14T23:58:50.816Z",
+        "sha256": "58324f2471efaad3952dbcaace808bd49a8c2eae74adb25f479a556a3cac153f",
+        "windows": [
+          {
+            "fitHours": 336,
+            "stepSeconds": 300,
+            "count": 50
+          }
+        ],
+        "rule": {
+          "fitHours": [
+            336
+          ],
+          "strideHours": 168,
+          "leadDays": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      {
+        "name": "danuri-lunar",
+        "regime": "lunar",
+        "center": "Moon",
+        "frame": "ICRF",
+        "source": "JPL Horizons API vector tables",
+        "states": 92161,
+        "startUtc": "2026-08-14T23:58:50.817Z",
+        "stopUtc": "2026-10-17T23:58:50.817Z",
+        "sha256": "7f78156e42a1cc5700b2a691fb3887e9d522219ebcf9c1e04103e683af9e961a",
+        "windows": [
+          {
+            "fitHours": 24,
+            "stepSeconds": 60,
+            "count": 31
+          },
+          {
+            "fitHours": 72,
+            "stepSeconds": 60,
+            "count": 30
+          }
+        ],
+        "rule": {
+          "fitHours": [
+            24,
+            72
+          ],
+          "strideHours": 48,
+          "leadDays": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "name": "lro-lunar",
+        "regime": "lunar",
+        "center": "Moon",
+        "frame": "J2000",
+        "source": "NAIF SPK lrorg_2026074_2026166_v01.bsp",
+        "states": 132478,
+        "startUtc": "2026-03-15T00:01:59.999999Z",
+        "stopUtc": "2026-06-14T23:59:00.000000Z",
+        "sha256": "d62175d07d7679838f9e155d49a3504c25eb67b3fbd7b181eefa1f2ab4ba558f",
+        "windows": [
+          {
+            "fitHours": 24,
+            "stepSeconds": 60,
+            "count": 44
+          },
+          {
+            "fitHours": 72,
+            "stepSeconds": 60,
+            "count": 43
+          }
+        ],
+        "rule": {
+          "fitHours": [
+            24,
+            72
+          ],
+          "strideHours": 48,
+          "leadDays": [
+            1,
+            2,
+            3
+          ]
+        }
+      }
+    ],
+    "heliocentric": {
+      "regime": "heliocentric-cruise",
+      "fitHours": [
+        720
+      ],
+      "leadDays": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "packs": "none yet: SPK type 1 (Psyche, Lucy, Juno) is not readable by files/orbit-products 0.1.4"
+    }
+  },
   "byShell": [
     {
       "cell": "alt0-inc0/t0",
@@ -4297,22 +5395,31 @@
     "newestProductDay": {
       "esa": "2026-09-23",
       "ilrsa": "2026-08-29",
-      "nsgf": "2026-08-29"
+      "nsgf": "2026-08-29",
+      "gfzRapid": "2026-10-22"
     },
+    "eopPredictedFromUtc": "2026-10-20T00:00:00Z",
     "objectsWithPreciseProducts": 43,
     "gnss": 32,
     "laserRanged": 11,
-    "scored": 0,
-    "pending": 43,
+    "scored": 31,
+    "pending": 12,
+    "pendingGnss": [
+      {
+        "norad": 62339,
+        "setEpochUtc": "2026-10-17T23:51:57.093Z",
+        "inRapidProducts": false
+      }
+    ],
     "byKind": [
       {
         "kind": "gnss",
-        "n": 0,
+        "n": 31,
         "days": [
-          null,
-          null,
-          null,
-          null
+          0.4258703827816307,
+          0.3409896852979353,
+          0.27318472163905433,
+          0.7286868110448341
         ]
       },
       {
@@ -4325,9 +5432,82 @@
           null
         ]
       }
-    ]
+    ],
+    "gnssByDay": [
+      {
+        "k": 0,
+        "n": 31,
+        "median": 0.4258703827816307,
+        "p90": 0.6571988458257946,
+        "ric": [
+          0.1375958715175379,
+          0.3955489176733081,
+          0.04936438607173499
+        ]
+      },
+      {
+        "k": 1,
+        "n": 31,
+        "median": 0.3409896852979353,
+        "p90": 0.6377553576005761,
+        "ric": [
+          0.09676273417575383,
+          0.31888142404014586,
+          0.045786596175044623
+        ]
+      },
+      {
+        "k": 2,
+        "n": 31,
+        "median": 0.27318472163905433,
+        "p90": 0.7339349853962106,
+        "ric": [
+          0.06680797209756095,
+          0.2630289641754357,
+          0.04345109275177068
+        ]
+      },
+      {
+        "k": 3,
+        "n": 7,
+        "median": 0.7286868110448341,
+        "p90": 11994.298998372318,
+        "ric": [
+          0.11373149758996903,
+          0.707472995225789,
+          0.06617209172253573
+        ]
+      }
+    ],
+    "gnssOutliers": [
+      {
+        "norad": 68791,
+        "setEpochUtc": "2026-10-14T20:10:00.000Z",
+        "day0Km": 30243.848397498165
+      }
+    ],
+    "gnssEpochs": {
+      "first": "2026-10-14",
+      "last": "2026-10-20"
+    }
   },
   "packs": [
+    {
+      "name": "artemis1-cislunar",
+      "states": 36506,
+      "center": "Earth",
+      "startUtc": "2022-11-16T08:48:50.817Z",
+      "stopUtc": "2022-12-11T17:13:50.816Z",
+      "sha256": "8827462e4ccd28445a085fadd5aa25f427da5c4abf69458053bef6c94d8382b9"
+    },
+    {
+      "name": "artemis1-lunar",
+      "states": 36506,
+      "center": "Moon",
+      "startUtc": "2022-11-16T08:48:50.817Z",
+      "stopUtc": "2022-12-11T17:13:50.816Z",
+      "sha256": "64ec786afaaf904dc53d6112cdb68ca6b2f102ff52130d90e16c291b99a23e82"
+    },
     {
       "name": "artemis2-cislunar",
       "states": 12047,
@@ -4335,6 +5515,22 @@
       "startUtc": "2026-04-02T22:50:10.735999Z",
       "stopUtc": "2026-04-10T23:52:53.647999Z",
       "sha256": "be021c0bc3e9214504931fe3f1de5b2fa07ed6334a2cd2a0ee50059e45a9cb6b"
+    },
+    {
+      "name": "capstone-nrho",
+      "states": 105121,
+      "center": "Moon",
+      "startUtc": "2025-07-14T23:58:50.816Z",
+      "stopUtc": "2026-07-14T23:58:50.816Z",
+      "sha256": "58324f2471efaad3952dbcaace808bd49a8c2eae74adb25f479a556a3cac153f"
+    },
+    {
+      "name": "danuri-lunar",
+      "states": 92161,
+      "center": "Moon",
+      "startUtc": "2026-08-14T23:58:50.817Z",
+      "stopUtc": "2026-10-17T23:58:50.817Z",
+      "sha256": "7f78156e42a1cc5700b2a691fb3887e9d522219ebcf9c1e04103e683af9e961a"
     },
     {
       "name": "lro-lunar",

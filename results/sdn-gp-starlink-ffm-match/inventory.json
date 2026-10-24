@@ -426,13 +426,76 @@
       "note": "Spans from the archive README."
     },
     {
+      "regime": "Lunar",
+      "source": "JPL Horizons API vector tables, Danuri (KPLO), moon-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; KPLO_merged; 4 responses",
+      "count": 92161,
+      "span": "2026-08-15 to 2026-10-18",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Cislunar (NRHO)",
+      "source": "JPL Horizons API vector tables, CAPSTONE, moon-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; CAPSTONE_merged; 7 responses",
+      "count": 105121,
+      "span": "2025-07-15 to 2026-07-15",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Cislunar and distant retrograde",
+      "source": "JPL Horizons API vector tables, Artemis I (Orion), earth-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Artemis-I_ASF; 1 responses",
+      "count": 36506,
+      "span": "2022-11-16 to 2022-12-11",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Cislunar and distant retrograde",
+      "source": "JPL Horizons API vector tables, Artemis I (Orion), moon-centred",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Artemis-I_ASF; 1 responses",
+      "count": 36506,
+      "span": "2022-11-16 to 2022-12-11",
+      "usable": "truth for the windows prepared for SDN-GP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "HEO (13.7 day)",
+      "source": "STScI MAST: TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp)",
+      "product": "SPK type 9 (Lagrange, degree 7), Earth-centred J2000, 60 s; 23 MB",
+      "count": 20,
+      "span": "2026-06-29 to 2026-09-17 (doy 194 to 260 of 2026)",
+      "usable": "truth: SGP4 and SGP4-XP windows (24 h and 72 h fits)",
+      "note": "Public NASA mission data (registry id stsci-mast-tess); MAST holds no definitive file after 2026-09-17."
+    },
+    {
+      "regime": "MEO / IGSO / GEO",
+      "source": "GFZ rapid GNSS orbits GFZ0OPSRAP (GPS, GLONASS, Galileo; CC BY 4.0)",
+      "product": "daily SP3, 5 min, from NASA CDDIS (GFZ file server unreachable 2026-10-24)",
+      "count": 12,
+      "span": "2026-10-11 to 2026-10-22",
+      "usable": "truth: arm 1-2 windows and the COMSPOC GNSS scoring",
+      "note": "Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c)."
+    },
+    {
+      "regime": "MEO / IGSO / GEO",
+      "source": "GFZ rapid GNSS orbits GFZ0MGXRAP (BeiDou, QZSS; IGS MGEX terms)",
+      "product": "daily SP3, 5 min, from NASA CDDIS (GFZ file server unreachable 2026-10-24)",
+      "count": 12,
+      "span": "2026-10-11 to 2026-10-22",
+      "usable": "truth: arm 1-2 windows and the COMSPOC GNSS scoring",
+      "note": "Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c)."
+    },
+    {
       "regime": "Cislunar / HEO",
       "source": "TESS, CAPSTONE, Artemis I, Danuri",
       "product": "not hosted by NAIF",
       "count": 0,
       "span": null,
       "usable": "none",
-      "note": "NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); JPL Horizons has them. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I."
+      "note": "NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); with the approvals of 2026-10-24 they come from STScI MAST (TESS) and JPL Horizons (the other three), listed above. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I."
     },
     {
       "regime": "Cislunar / L2",
