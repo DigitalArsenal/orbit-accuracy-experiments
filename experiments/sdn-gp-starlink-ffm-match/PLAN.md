@@ -876,6 +876,25 @@ the detectors' floors (the modules' detector found 4 of 11). The daily solutions
 
 4. E2E. `run.mjs --check` replays one GPS and one QZSS window on the pinned build against the stored rows. American spelling in all generated text.
 
+### A14b - 2026-10-24, after the counts of M27 on builds 61d4ec4e6a12 and 04f7c2d1d50f were seen, before any M27 row of build b9bc708baa50 was read: the off-notice window rate, and the outages that cannot be scored by reason
+
+What was seen first. The M27 jobs of A14 finished on both builds (9,443 windows each; all 24 jobs exit 0). I read the aggregates of build 61d4ec4e6a12 (the counts only: windows answered, windows with a detection, outages by scoreability, hits, offsets, false alarms, the per-satellite lines) and listed the rows around the first six GPS
+outages. GPS: of the 24 delta-V outages, 5 lie after the last day of the orbit product (2026-09-23), 16 fall on a day for which the product holds no states of the satellite (the windows that cross that day are skipped for a gap of 86,400 s: the product omits a satellite on the day it maneuvers), 2 on days with no states for several days and 1 (SVN 70,
+2026-07-01) is scoreable and detected. QZSS: the detector reports a distinct burn about every 1.2 days on the geostationary J003 and every 1.3 to 1.9 days on J002, J004 and J005 (764 distinct detections in 2.81 object-years), so every scoreable outage (13) has a detection near it. The chance level fixed in A14 (the share of covered time inside a
+forecast window plus or minus 6 h) is the hit probability of ONE detection at a random epoch; with a detection about every day it does not describe the chance that a window of that width contains one. The A14 definitions are unchanged and its chance level stays in the tables with its definition.
+
+Added, before any statistic below was computed from the rows:
+
+1. The off-notice window rate. For each scoreable outage and each rule (the forecast window plus or minus 6 h; the actual interval plus or minus 6 h) the null is the same window placed at every whole hour of the satellite's answered span where it lies inside the answered windows and overlaps no forecast window plus or minus 6 h of any outage
+of that satellite: the share of those placements that contain at least one distinct detection (the distinct detections of A14, merged within 6 h). Reported per system and for the geostationary satellite: the number of off-notice placements behind the rate (median over the outages), the expected number of detected outages (the sum of the rates), the observed number, and
+the probability of at least the observed number when the outages are independent trials with those rates (exact, the Poisson-binomial tail). Where an outage has no off-notice placement, its rate is not defined and the outage is left out of the sum and of the observed count, and is counted in the table.
+
+2. The outages that cannot be scored, by reason: after the last day of the orbit product (the window of the outage plus 6 h ends after the last window of its satellite), before its first day, a day without states of the satellite (a skipped window that touches the outage has a gap), no states, and QZSS outages of a satellite without an orbit series.
+The detections per object-day (distinct detections over the covered time).
+
+Both are descriptive; nothing is thresholded; the same rules score every build. `m27` rows are unchanged.
+
+
 ### A15 - 2026-10-24, before any row of build b9bc708baa50 was read: the tenth build (a required $PCF configuration port on SDS 1.264.0, one merged `fit`, the burn epoch and delta-v from the profiled likelihood)
 
 Coordinator, 2026-10-24: side B's newest dist is b9bc708baa50 (1,440,877 bytes; closed-modules 610930c, package sdn-ap-propagator). Its adapter changes: a required $PCF `configuration` port on SDS 1.264.0; `fit` and `fit_sdnap` merged into one `fit`, THEORY selecting SGP4XP or SDNAP;
