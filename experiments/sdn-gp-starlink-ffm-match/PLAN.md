@@ -599,3 +599,12 @@ The M24 rows of A10 5 were read once the M28 and M24 jobs finished (and before t
 runs on arcs that are burn-free by construction: the 48 registered Starlink truths of M22 (one FFM-1 integration from one state), 72 h windows starting at 0 h and at 24 h of the 96 h truth, every fifth state (300 s), TEME by foundation/frames, the call as
 for the ISS windows (96 windows, 4 distinct days per satellite, 192 object-days). Reported: windows run, windows with a detection, the detections (delta-v and Lambda) and the distinct detection epochs per object-year over the 192 object-days. Source `m24c`,
 rows `m24c.s*.jsonl` in rows/sdngp/<build>/, a job of `sdngp-run.mjs` run with --only. Nothing else in A10 changes.
+
+### A10d - 2026-10-24, after the E2E replay of one ISS window differed from its recorded row, before any row of the corrected M24 and M24c was scored: the environment of the detector
+
+A10b 1 said the weather table is not passed to `detect_maneuvers` because the build's manifest declares no port for it. The build has the method `load_environment` (its manifest: "Replaces the SDN-GP environment with SDS records as FFM reads
+them"), and an instance keeps the environment it holds between calls. The M24 and M24c jobs never fit, so their instances held none and the detector ran on the module's default environment, while A10 5 said "with the saved weather table".
+The E2E replay ran in an instance that had fitted before and returned another Lambda for the same ISS window. A test on that window (2026-10-08T12:00Z, file of 2026-10-12) in three instances: fresh, Lambda 2,007.03; after `load_environment` with the saved
+table, 8,395.94; after a `fit_sdngp` given the same table, 8,395.94. The first rows (13 of 26 ISS windows and 59 of 96 FFM-1 windows with a detection) are kept as `m24-noenv` and `m24c-noenv` and reported as "no environment loaded". M24 and M24c are
+scored again with `load_environment` called with the saved weather table at the start of the job, as A10 5 and A10c said; those are the rows of M24 and M24c. M22 and M23 call `maneuver` after the satellite's own `fit_sdngp` in the same instance, so
+the environment in force was the saved table, and the replay reproduced them; M28's `reentry` is given the table as an input. No other rule changes.
