@@ -1,5 +1,5 @@
 // Truth packs for the regimes awaiting SDN-GP whose kernels the modules can read (SPK types 8, 9, 13): Artemis II after the
-// translunar burn (Earth-centred, cislunar) and LRO (Moon-centred). States by files/orbit-products, epochs by foundation/time.
+// translunar burn (Earth-centered, cislunar) and LRO (Moon-centered). States by files/orbit-products, epochs by foundation/time.
 // Local output under <store>/pack/: <name>.f64 holds [unix ms, x, y, z, vx, vy, vz] per state (km, km/s, J2000 axes, UTC), <name>.json the
 // description. Derived from public NAIF kernels; nothing is committed except the counts in results/.../kernels.json.
 import fs from 'node:fs';
@@ -15,8 +15,8 @@ const modules = modulesRoot();
 const containers = await openContainers(modules), time = await openTime(modules);
 const K = KERNELS(config.archive);
 const packs = [
-  { name: 'artemis2-cislunar', file: path.join(K, 'artemis2/art002_rec_260402_260410_jsc_bet_revf.bsp'), center: 'Earth', from: '2026-04-02T22:50:00Z', to: '2026-04-10T23:53:00Z', note: 'Orion best-estimated trajectory after the translunar burn; Earth-centred axes, lunar flyby inside' },
-  { name: 'lro-lunar', file: path.join(K, 'lro/lrorg_2026074_2026166_v01.bsp'), center: 'Moon', from: '2026-03-15T00:01:10Z', to: '2026-06-14T23:59:00Z', note: 'LRO reconstructed ephemeris, Moon-centred' },
+  { name: 'artemis2-cislunar', file: path.join(K, 'artemis2/art002_rec_260402_260410_jsc_bet_revf.bsp'), center: 'Earth', from: '2026-04-02T22:50:00Z', to: '2026-04-10T23:53:00Z', note: 'Orion best-estimated trajectory after the translunar burn; Earth-centered axes, lunar flyby inside' },
+  { name: 'lro-lunar', file: path.join(K, 'lro/lrorg_2026074_2026166_v01.bsp'), center: 'Moon', from: '2026-03-15T00:01:10Z', to: '2026-06-14T23:59:00Z', note: 'LRO reconstructed ephemeris, Moon-centered' },
 ];
 fs.mkdirSync(path.join(store, 'pack'), { recursive: true });
 for (const p of packs) {

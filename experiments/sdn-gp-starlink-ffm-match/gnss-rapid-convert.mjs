@@ -5,7 +5,7 @@
 // <archive>/hac/gfz-gnss-rapid/cddis/gnss/products/<week>/, takes the satellite identities from the IGS satellite metadata SINEX and the Earth
 // rotation from IERS finals2000A rows that bracket each file. Both inputs are seeded from the archive's own copies (no network):
 //   - the SINEX of hac/igs-metadata/20261009;
-//   - the newest hac/iers-eop finals file. The IERS data centre has refused the archive's requests since 2026-10-22 (HTTP 400, "Request
+//   - the newest hac/iers-eop finals file. The IERS data center has refused the archive's requests since 2026-10-22 (HTTP 400, "Request
 //     Rejected"), so the newest observed row is MJD 61333 (2026-10-20). The converter keeps observed rows only; for the last three rapid days the
 //     Bulletin A prediction rows of that file are flagged observed in the seeded copy (column 17 and 58 P -> I, MJD up to 61336). The effect on a GNSS
 //     position is under 0.15 m (UT1 0.08 ms and polar motion 0.4 mas at three days); the copy and its change are recorded in its provenance file.
@@ -34,7 +34,7 @@ const seeded = lines.map((l) => {
   return l;
 }).join('\n');
 fs.writeFileSync(path.join(products, 'finals2000A.all'), seeded, 'latin1');
-fs.writeFileSync(path.join(products, 'finals2000A.all.provenance.json'), JSON.stringify({ source: finalsSource, sourceSha256: sha256(fs.readFileSync(finalsSource)), change: `rows with MJD 61334 to ${LAST_MJD}: polar motion and UT1-UTC flags P -> I (${relabeled} rows)`, reason: 'IERS data centre refused requests from 2026-10-22; Bulletin A predictions stand in for the last rapid days; effect under 0.15 m at GNSS altitude', createdUtc: new Date().toISOString() }, null, 2) + '\n');
+fs.writeFileSync(path.join(products, 'finals2000A.all.provenance.json'), JSON.stringify({ source: finalsSource, sourceSha256: sha256(fs.readFileSync(finalsSource)), change: `rows with MJD 61334 to ${LAST_MJD}: polar motion and UT1-UTC flags P -> I (${relabeled} rows)`, reason: 'IERS data center refused requests from 2026-10-22; Bulletin A predictions stand in for the last rapid days; effect under 0.15 m at GNSS altitude', createdUtc: new Date().toISOString() }, null, 2) + '\n');
 const snxSource = path.join(archive, 'hac/igs-metadata/20261009/igs_satellite_metadata.snx');
 fs.copyFileSync(snxSource, path.join(products, 'igs_satellite_metadata.snx'));
 

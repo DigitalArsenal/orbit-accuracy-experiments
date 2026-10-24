@@ -1,6 +1,6 @@
 // Amendment A9: ILRS orbit products from CDDIS (fetch-slr.mjs) -> GCRF reference states ($OEM per satellite), under <store>/slr-ref/reference/<product>/.
 //   node experiments/sdn-gp-starlink-ffm-match/slr-convert.mjs
-// NSGF daily rapid orbits (4-day arcs; the arc of file F ends the day before F) take their stated sigma from the overlap with the neighbouring
+// NSGF daily rapid orbits (4-day arcs; the arc of file F ends the day before F) take their stated sigma from the overlap with the neighboring
 // day's arc, as the modules' converter does for its EDC copies; the ILRS combined weekly orbits state none, so a sigma of 0.02 m is assumed and
 // said so in the record (G1 scores positions only). The Earth rotation is IERS finals2000A with the Bulletin A rows flagged observed up to MJD 61340
 // (2026-10-27, A8c extended): under 0.1 m for these orbits. Epoch conversion, frames and velocities are the modules'. The recorded source of every
@@ -42,7 +42,7 @@ const seeded = fs.readFileSync(finalsSource, 'latin1').split('\n').map((l) => {
 }).join('\n');
 const finalsFile = path.join(OUT, 'products/finals2000A.all');
 fs.writeFileSync(finalsFile, seeded, 'latin1');
-fs.writeFileSync(`${finalsFile}.provenance.json`, JSON.stringify({ source: finalsSource, sourceSha256: sha256(fs.readFileSync(finalsSource)), change: `MJD 61334 to ${LAST_MJD}: polar motion and UT1-UTC flags P -> I (${relabeled} rows)`, reason: 'IERS data centre refused requests from 2026-10-22; Bulletin A predictions stand in for the last days (A8c, extended to MJD 61340 by A9); under 0.1 m for these orbits', createdUtc: new Date().toISOString() }, null, 2) + '\n');
+fs.writeFileSync(`${finalsFile}.provenance.json`, JSON.stringify({ source: finalsSource, sourceSha256: sha256(fs.readFileSync(finalsSource)), change: `MJD 61334 to ${LAST_MJD}: polar motion and UT1-UTC flags P -> I (${relabeled} rows)`, reason: 'IERS data center refused requests from 2026-10-22; Bulletin A predictions stand in for the last days (A8c, extended to MJD 61340 by A9); under 0.1 m for these orbits', createdUtc: new Date().toISOString() }, null, 2) + '\n');
 
 const conv = await openConverter(modulesRoot(), { finalsFile });
 const readGz = (file) => zlib.gunzipSync(fs.readFileSync(file)).toString('latin1');
@@ -63,14 +63,14 @@ for (const [sat, identity] of Object.entries(RAPID)) {
     const gz = fs.readFileSync(file), text = zlib.gunzipSync(gz).toString('latin1');
     if (!text.startsWith('#cV')) { console.error(`${sat} ${d}: not SP3-c`); failed += 1; continue; }
     // sigma: the overlap with the next day's arc, else with the previous day's
-    const neighbour = [days.find((x) => dayMs(x) === dayMs(d) + 86400000), days.find((x) => dayMs(x) === dayMs(d) - 86400000)].filter((x) => x && fs.existsSync(fileOf(x)))[0];
-    if (!neighbour) { console.error(`${sat} ${d}: no neighbouring arc to state a sigma`); failed += 1; continue; }
-    const { sigma, epochs } = overlapRms(sp3Positions(text), sp3Positions(readGz(fileOf(neighbour))));
-    if (epochs < 100) { console.error(`${sat} ${d}: overlap with ${neighbour} too short (${epochs} epochs)`); failed += 1; continue; }
+    const neighbor = [days.find((x) => dayMs(x) === dayMs(d) + 86400000), days.find((x) => dayMs(x) === dayMs(d) - 86400000)].filter((x) => x && fs.existsSync(fileOf(x)))[0];
+    if (!neighbor) { console.error(`${sat} ${d}: no neighboring arc to state a sigma`); failed += 1; continue; }
+    const { sigma, epochs } = overlapRms(sp3Positions(text), sp3Positions(readGz(fileOf(neighbor))));
+    if (epochs < 100) { console.error(`${sat} ${d}: overlap with ${neighbor} too short (${epochs} epochs)`); failed += 1; continue; }
     const id = text.match(/^\+\s+1\s+(\S{3})/m)?.[1];
     const name = path.basename(file);
     const url = `${URL_BASE}rapid/${sat}/2026/${d}/${name}`;
-    const basis = `the per-axis RMS (${sigma.toFixed(4)} m) of this arc's overlap with the ${neighbour > d ? 'next' : 'previous'} day's arc (${epochs} epochs)`;
+    const basis = `the per-axis RMS (${sigma.toFixed(4)} m) of this arc's overlap with the ${neighbor > d ? 'next' : 'previous'} day's arc (${epochs} epochs)`;
     const product = `${name} (SHA-256 ${sha256(zlib.gunzipSync(gz))}, coordinate system "ECF" read as ITRF per the file's comment)`;
     const out = await conv.convert(Buffer.from(text.replace(/^(#cV.{43})  ECF/, '$1ITRF ')), { product, source: url, statedSigmaM: sigma, statedSigmaBasis: basis, satellites: { [id]: identity } });
     if (out.error) { console.error(`${sat} ${d}: ${out.error}`); failed += 1; continue; }
@@ -89,7 +89,7 @@ for (const [sat, identity] of Object.entries(WEEKLY)) {
     const id = text.match(/^\+\s+1\s+(\S{3})/m)?.[1];
     const name = path.basename(file);
     const url = `${URL_BASE}TRF/${sat}/2026/${week}/${name}`;
-    const basis = `assumed ${ASSUMED_SIGMA_M} m per axis: the combined weekly orbit states no uncertainty and no analysis-centre spread was computed here; G1 scores positions only`;
+    const basis = `assumed ${ASSUMED_SIGMA_M} m per axis: the combined weekly orbit states no uncertainty and no analysis-center spread was computed here; G1 scores positions only`;
     const product = `${name} (SHA-256 ${sha256(zlib.gunzipSync(gz))}, comment prefix "%/*" read as "/*")`;
     const out = await conv.convert(Buffer.from(text), { product, source: url, statedSigmaM: ASSUMED_SIGMA_M, statedSigmaBasis: basis, satellites: { [id]: identity } });
     if (out.error) { console.error(`${sat} ${week}: ${out.error}`); failed += 1; continue; }

@@ -11,7 +11,7 @@ const root = path.join(store, 'm123');
 const load = () => fs.readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== 'claims')
   .flatMap((d) => fs.readdirSync(path.join(root, d.name)).filter((f) => f.endsWith('.json')).map((f) => JSON.parse(fs.readFileSync(path.join(root, d.name, f)))));
 
-// DESIGN.md 2d.3 (design estimates at the orbits it names): A_22 and the RMS of the m-daily set, metres.
+// DESIGN.md 2d.3 (design estimates at the orbits it names): A_22 and the RMS of the m-daily set, meters.
 const PREDICTED = {
   'starlink-550km': { label: 'Starlink 550 km shell (53 deg, 15.0 to 15.2 rev/day)', a22: 454, set: 384 },
   'starlink-inc0': { label: 'Starlink below 48 deg (43 deg shell)', a22: 332, set: 332 },
@@ -174,7 +174,7 @@ export function markdown(t) {
   L.push('## 12. The LEO fit floor against zonal-only gravity (DESIGN.md M1 to M3)', '');
   L.push(`Plan amendments A7 to A7d. Each window is one start state: ${t.counts.starlink} clean Starlink truths (converged, 0 < B_eff <= 0.5 m2/kg) at their registered start states, ${t.counts.iss} ISS windows (the registered NASA OEM, state turned EME2000 to GCRF), ${t.counts.lageos1 + t.counts.lageos2} LAGEOS-1 and LAGEOS-2 windows (first state of the weekly ILRS orbits of 2026-07-19 to 2026-08-23, drag off). FFM-1 propagates it for 120 h at 60 s under EGM2008 70x70 (\`full\`) and under FFM's own truncations: \`zonal\` (order 0, the zonals to degree 70), \`tess2\` and \`tess6\` (zonals plus the tesseral and sectorial terms to degree 2 or 6), \`order14\` and \`order15\` (orders up to 14 and 15; their difference is the 15th order alone), and, for Starlink and the ISS, \`full-nodrag\` and \`zonal-nodrag\` (drag off). Everything else in the force model (third bodies, solid and ocean tides, relativity, Earth radiation, SRP, and drag where it is on) is the same in every variant, so a difference between two variants is the gravity terms that were dropped. Every variant is fitted by SGP4 and SGP4-XP over 24 h, 21.7 h and 34.2 h and scored on the three held-out days as in section 1; the difference series between variants are taken by \`pair_statistics\` and summarized by a quadratic plus one least-squares sinusoid. ${t.determinism.windows ? `The \`full\` re-propagation reproduces the registered truth to ${t.determinism.maxAbsKm.toExponential(1)} km (largest difference over ${t.determinism.windows} Starlinks).` : ''} ${t.failed ? `${t.failed} variant runs failed and are left out.` : ''}`, '');
 
-  L.push('### 12a. The fit floor (24 h fit, in-track component of the fit RMS, metres)', '');
+  L.push('### 12a. The fit floor (24 h fit, in-track component of the fit RMS, meters)', '');
   L.push('Medians over windows. Tesseral share = median over windows of sqrt(full^2 - zonal^2). Predicted = RMS of the m-daily set of DESIGN.md 2d.3 (a design estimate at the orbit it names).', '');
   L.push('| Group | Windows | XP full | XP zonal | XP tesseral share | Predicted | Share / predicted | SGP4 full | SGP4 zonal | SGP4 share |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |');
   for (const g of groups) {

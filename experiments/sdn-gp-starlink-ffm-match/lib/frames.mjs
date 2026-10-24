@@ -1,6 +1,6 @@
 // foundation/frames `transform_frame_position` state transforms ($FRM requests). Encoding and decoding only: the rotations,
 // their epochs and the state transforms are the module's. After repository harness/frames.mjs, generalized to any
-// Earth-centred axis pair.
+// Earth-centered axis pair.
 import * as fb from 'flatbuffers';
 import { createRequire } from 'node:module';
 import path from 'node:path';

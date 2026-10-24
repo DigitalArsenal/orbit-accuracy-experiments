@@ -1,4 +1,4 @@
-// Metadata of a NAIF SPK (DAF) file: the segment descriptors (target, centre, frame, type, span). Reads the file record and
+// Metadata of a NAIF SPK (DAF) file: the segment descriptors (target, center, frame, type, span). Reads the file record and
 // the summary records only (NAIF DAF Required Reading); no state is evaluated here, the states come from
 // files/orbit-products `read_container` (a module).
 import fs from 'node:fs';

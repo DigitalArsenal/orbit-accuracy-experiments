@@ -14,7 +14,7 @@ export const A5 = Object.freeze({
   artemis2: { span: ['2026-04-02T01:58:21Z', '2026-04-02T22:49:21Z'], fitHours: 8, minCoverage: 0.4 },
 });
 
-// Amendment A8b: TESS, Earth-centred highly elliptical (13.7 day), MAST definitive ephemeris files (doy 194 to 260 of 2026).
+// Amendment A8b: TESS, Earth-centered highly elliptical (13.7 day), MAST definitive ephemeris files (doy 194 to 260 of 2026).
 export const A8 = Object.freeze({ tess: { span: ['2026-06-29T13:02:00Z', '2026-09-17T13:00:00Z'], norad: 43435, stride: 5 } });
 
 export const KERNELS = (archive) => path.join(archive, 'hac/naif-kernels/spk/missions');

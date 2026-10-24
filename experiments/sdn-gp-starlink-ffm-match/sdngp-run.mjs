@@ -24,7 +24,7 @@ const jobs = [
   ...shards('starlink', 'starlink-sdngp.mjs', [], 4),
   ...shards('fitlength', 'fitlength.mjs', ['--arm', 'sdngp'], 4), // amendment A9c
   ...shards('lowering', 'starlink-lowering.mjs', [], 1), // amendment A9d: the lowering Starlinks, rule and free B_eff
-  // amendment A9f: the Moon-centred windows, and the default-span rows (the module chooses the fit span; sources with truth before the fit start)
+  // amendment A9f: the Moon-centered windows, and the default-span rows (the module chooses the fit span; sources with truth before the fit start)
   ...shards('lunar', 'lunar-windows.mjs', [], 8),
   ...shards('segment', 'segment-windows.mjs', [], 8), // amendment A9h: the cislunar and heliocentric packs through the segment fits
   ...['iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current'].flatMap((src) => shards(`default:${src}`, 'baselines.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', src], src === 'slr-low' || src === 'mgex-igso' ? 2 : 1)),

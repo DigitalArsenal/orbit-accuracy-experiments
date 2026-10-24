@@ -118,13 +118,13 @@ export function slrHigh({ target, weeks = 4, first = 0 }) {
   return [withT({ source: 'slr-high', id: `${series.name || target} (${series.norad})`, norad: series.norad, name: series.name || target, objectId: series.objectId, originator: 'ILRS combination (ilrsa)', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: series.lines })];
 }
 
-/** ILRS analysis-centre 4-day arcs (NSGF) of the low laser-ranged satellites; each arc is its own object. */
+/** ILRS analysis-center 4-day arcs (NSGF) of the low laser-ranged satellites; each arc is its own object. */
 export function slrLow({ target, arcs = 8, first = 0 }) {
   const prefix = `nsgf.orb.${target}.`;
   const directories = fs.readdirSync(referenceRoot).filter((d) => d.startsWith(prefix)).sort().slice(first, first + arcs);
   return directories.map((d) => {
     const ref = readReference(path.join(referenceDir(d), fs.readdirSync(referenceDir(d)).filter((f) => f.endsWith('.oem'))[0]));
-    return withT({ source: 'slr-low', id: `${ref.name || target} arc ${d.split('.')[3]} (${ref.norad})`, norad: ref.norad, name: ref.name || target, objectId: ref.objectId, originator: 'ILRS NSGF analysis-centre arc', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: ref.lines });
+    return withT({ source: 'slr-low', id: `${ref.name || target} arc ${d.split('.')[3]} (${ref.norad})`, norad: ref.norad, name: ref.name || target, objectId: ref.objectId, originator: 'ILRS NSGF analysis-center arc', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines: ref.lines });
   });
 }
 

@@ -12,7 +12,7 @@ import { pacedGet, storeWithProvenance, ARCHIVE_HAC } from './lib/paced.mjs';
 const ROOT = 'https://archive.stsci.edu/missions/tess/models/';
 const DEST = path.join(ARCHIVE_HAC, 'mast-tess/models');
 const TERMS = 'STScI MAST Data Use Policy (https://archive.stsci.edu/publishing/data-use, fetched 2026-10-24): most data hosted at MAST are in the public domain and carry no restriction on use; the originating mission and STScI are to be acknowledged in scholarly publications';
-const ATTRIBUTION = 'This paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555. (MAST mission acknowledgements, https://archive.stsci.edu/publishing/mission-acknowledgements)';
+const ATTRIBUTION = 'This paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555. (MAST mission acknowledgments, https://archive.stsci.edu/publishing/mission-acknowledgements)';
 
 if (!/emsign-root-ca-g1\.pem$/.test(process.env.NODE_EXTRA_CA_CERTS ?? '')) { console.error('set NODE_EXTRA_CA_CERTS to the emSign root file (see the header)'); process.exit(2); }
 const from = Number(args.from ?? 2026194), to = Number(args.to ?? 2026260);

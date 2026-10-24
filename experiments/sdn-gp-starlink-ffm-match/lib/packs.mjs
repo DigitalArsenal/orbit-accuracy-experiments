@@ -1,5 +1,5 @@
 // Truth packs for the regimes SDN-GP will cover: <store>/pack/<name>.f64 holds [unix ms UTC, x, y, z, vx, vy, vz] per state
-// (km, km/s, inertial axes of the source, the pack's centre), <name>.json describes it. Derived from public sources; local only.
+// (km, km/s, inertial axes of the source, the pack's center), <name>.json describes it. Derived from public sources; local only.
 // JavaScript here reads, slices and writes arrays; every orbit, frame and time computation is a module's.
 import fs from 'node:fs';
 import path from 'node:path';

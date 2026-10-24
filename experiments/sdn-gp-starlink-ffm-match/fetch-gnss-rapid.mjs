@@ -17,7 +17,7 @@ const DEST = path.join(ARCHIVE_HAC, 'gfz-gnss-rapid/cddis/gnss/products');
 const GFZ = 'https://isdc-data.gfz.de/gnss/products/rapid';
 const TERMS = {
   GFZ0OPSRAP_: 'Creative Commons Attribution 4.0 International (GFZ Data Services, DataCite record of doi:10.5880/GFZ.1.1.2020.003, fetched 2026-10-24); the IGS Data and Product Disclaimer and Terms of Use also apply',
-  GFZ0MGXRAP_: 'IGS Multi-GNSS Experiment analysis-centre product: open use, citation requested (IGS Data and Product Disclaimer and Terms of Use, 2020-08-05); NASA CDDIS copy under NASA open data policy',
+  GFZ0MGXRAP_: 'IGS Multi-GNSS Experiment analysis-center product: open use, citation requested (IGS Data and Product Disclaimer and Terms of Use, 2020-08-05); NASA CDDIS copy under NASA open data policy',
 };
 const ATTRIBUTION = {
   GFZ0OPSRAP_: 'Maennel, B., Brandt, A., Nischan, T., Brack, A., Sakic, P., Bradke, M. (2020): GFZ rapid product series for the IGS. GFZ Data Services. https://doi.org/10.5880/GFZ.1.1.2020.003 (CC BY 4.0)',

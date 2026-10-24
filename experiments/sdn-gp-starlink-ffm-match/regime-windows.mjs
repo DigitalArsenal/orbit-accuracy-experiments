@@ -4,10 +4,10 @@
 // no states), and can export one window's fit span as a $OEM for SDN-GP to fit:
 //   node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs                      # list windows, write the results file
 //   node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs --export <pack> --start <ISO> --fit-hours <h> --out <file.oem>
-// The scorer is score-pack.mjs. Rules (PLAN A8): Moon-centred (LRO, Danuri): fits of 24 h and 72 h every 48 h, held-out days 1 to 3;
-// Earth-centred cislunar transfers (Artemis I, Artemis II): fit 24 h every 48 h, held-out days 1 to 3; libration and distant-retrograde
+// The scorer is score-pack.mjs. Rules (PLAN A8): Moon-centered (LRO, Danuri): fits of 24 h and 72 h every 48 h, held-out days 1 to 3;
+// Earth-centered cislunar transfers (Artemis I, Artemis II): fit 24 h every 48 h, held-out days 1 to 3; libration and distant-retrograde
 // segments (CAPSTONE, Artemis I around the Moon): fit 14 d, held-out days 1 to 7, a window every 7 d (every 4 d for the 25 d of Artemis I);
-// heliocentric cruise (Psyche, Lucy, Juno): fit 30 d, held-out days 1 to 15, a window every 15 d; Jupiter-centred Juno: fit 66 d (two orbits), held-out days 1 to 33 (amendment A9; from Horizons, the NAIF kernels are SPK type 1). A window needs 90 % of its states in the fit span and in every held-out day.
+// heliocentric cruise (Psyche, Lucy, Juno): fit 30 d, held-out days 1 to 15, a window every 15 d; Jupiter-centered Juno: fit 66 d (two orbits), held-out days 1 to 33 (amendment A9; from Horizons, the NAIF kernels are SPK type 1). A window needs 90 % of its states in the fit span and in every held-out day.
 import fs from 'node:fs';
 import path from 'node:path';
 import { results, write, args, frozen } from './common.mjs';
@@ -23,12 +23,12 @@ export const RULES = {
   'artemis1-cislunar': { regime: 'cislunar-transfer', fitHours: [24], strideHours: 48, leadDays: [1, 2, 3] },
   'capstone-nrho': { regime: 'cislunar-libration', fitHours: [336], strideHours: 168, leadDays: [1, 2, 3, 4, 5, 6, 7] },
   'artemis1-lunar': { regime: 'cislunar-libration', fitHours: [336], strideHours: 96, leadDays: [1, 2, 3, 4, 5, 6, 7] },
-  // amendment A9: heliocentric cruise (fit 30 d, held-out days 1 to 15) and Jupiter-centred orbits (fit two 33 day orbits, held-out 33 days)
+  // amendment A9: heliocentric cruise (fit 30 d, held-out days 1 to 15) and Jupiter-centered orbits (fit two 33 day orbits, held-out 33 days)
   'psyche-cruise': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
   'lucy-cruise-rec': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
   'lucy-cruise-ref': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
   'juno-cruise': { regime: 'heliocentric-cruise', fitHours: [720], strideHours: 360, leadDays: Array.from({ length: 15 }, (_, i) => i + 1) },
-  'juno-jupiter': { regime: 'planet-centred', fitHours: [1584], strideHours: 792, leadDays: Array.from({ length: 33 }, (_, i) => i + 1) },
+  'juno-jupiter': { regime: 'planet-centered', fitHours: [1584], strideHours: 792, leadDays: Array.from({ length: 33 }, (_, i) => i + 1) },
 };
 export const HELIOCENTRIC = { regime: 'heliocentric-cruise', fitHours: [720], leadDays: Array.from({ length: 15 }, (_, i) => i + 1), packs: 'psyche-cruise, lucy-cruise-rec, lucy-cruise-ref (a planning prediction), juno-cruise (JPL Horizons vector tables, amendment A9; the NAIF kernels of these missions are SPK type 1, unreadable by files/orbit-products 0.1.4)' };
 const frameLabel = (meta) => (/ICRF/.test(meta.axes ?? '') ? 'ICRF' : 'J2000');
@@ -59,7 +59,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
     const lines = slice(object, start, stop);
     const bytes = oemBytes({ originator: 'G1 truth pack', block: { frame: frameLabel(meta), center: meta.center.toUpperCase(), timeSystem: 'UTC', object: { name: meta.name, id: '', norad: 0 }, lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: lines.at(-1).epoch } });
     fs.writeFileSync(args.out, bytes);
-    console.error(`${args.export}: ${lines.length} states ${lines[0].epoch} to ${lines.at(-1).epoch}, centre ${meta.center}, frame ${frameLabel(meta)}, written to ${args.out}`);
+    console.error(`${args.export}: ${lines.length} states ${lines[0].epoch} to ${lines.at(-1).epoch}, center ${meta.center}, frame ${frameLabel(meta)}, written to ${args.out}`);
     process.exit(0);
   }
   const packs = [], windows = {};

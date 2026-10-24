@@ -1,4 +1,4 @@
-// Amendment A5: SGP4 and SGP4-XP on the Earth-centred highly elliptical orbits in the NAIF kernels (THEMIS A, D, E; Chandra;
+// Amendment A5: SGP4 and SGP4-XP on the Earth-centered highly elliptical orbits in the NAIF kernels (THEMIS A, D, E; Chandra;
 // the high-Earth-orbit checkout of Artemis II), with the radial / in-track / cross-track split. States from
 // files/orbit-products, epochs from foundation/time. One JSON line per window under <store>/rows/<source>.jsonl.
 //   node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs [--source heo-themis,heo-chandra,heo-artemis2,heo-tess]
