@@ -429,7 +429,7 @@ export function build() {
   }) : null;
   // the registered rows and the default-span rows of this build against the previous complete build, window by window (amendment A9f; A9h adds the default-span count)
   const earthIdentity = SD_HEADLINE && previous ? (() => {
-    const pick = (b, wantDefault) => new Map(buildRows(b.dir).filter((r) => r.sdngp && r.source && r.startUtc && !PACK_SOURCES.has(r.source) && !/^starlink-ffm-(rule|free)$/.test(r.source) && (wantDefault ? /\+default$/.test(r.source) : !/\+default$/.test(r.source))).map((r) => [rowKey(r), { s: JSON.stringify([r.sdngp.ok, r.sdngp.fitRmsKm, r.sdngp.days]), ok: r.sdngp.ok, fit: r.sdngp.fitRmsKm, days: r.sdngp.days }]));
+    const pick = (b, wantDefault) => new Map(buildRows(b.dir).filter((r) => r.sdngp && r.source && r.startUtc && !PACK_SOURCES.has(r.source) && !/^m3[12]$/.test(r.source) && !/^starlink-ffm-(rule|free)$/.test(r.source) && (wantDefault ? /\+default$/.test(r.source) : !/\+default$/.test(r.source))).map((r) => [rowKey(r), { s: JSON.stringify([r.sdngp.ok, r.sdngp.fitRmsKm, r.sdngp.days]), ok: r.sdngp.ok, fit: r.sdngp.fitRmsKm, days: r.sdngp.days }]));
     const compare = (wantDefault) => {
       const now = pick(SD_HEADLINE, wantDefault), before = pick(previous, wantDefault);
       let both = 0, identical = 0; const differing = {}, largest = [];

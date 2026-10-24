@@ -26,7 +26,7 @@
     "node experiments/sdn-gp-starlink-ffm-match/slr-convert.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source slr-low-current,slr-high-current",
     "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs, starlink-lowering.mjs, fitlength.mjs --arm sdngp, span-windows.mjs --arm sdngp)",
-    "node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs (SGP4 and XP of the COMSPOC-aligned fit-span windows; the SDN-GP arm runs inside sdngp-run.mjs)",
+    "node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs (SGP4 and XP of the COMSPOC-aligned fit-span windows; the SDN-AP arm runs inside sdngp-run.mjs)",
     "node experiments/sdn-gp-starlink-ffm-match/lunar-maneuvers.mjs",
     "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/segment-windows.mjs --shard k/8 (inside sdngp-run.mjs: the cislunar and heliocentric packs through the segment fits)",
     "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/lunar-windows.mjs --shard k/8 (inside sdngp-run.mjs; the default-span rows are baselines.mjs, spk-windows.mjs and span-windows.mjs with --arm sdngp --span default)",
@@ -38,12 +38,20 @@
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check",
     "node experiments/sdn-gp-starlink-ffm-match/events-truth.mjs --kind m22,m23,m28 --shard k/n",
-    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m22,m23,m28,m24"
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m22,m23,m28,m24",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-iss-oem.mjs (NASA ISS OEM archive, 748 files, 2 s apart)",
+    "node experiments/sdn-gp-starlink-ffm-match/iss-burns.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m24a,m24p,m29,m30",
+    "node experiments/sdn-gp-starlink-ffm-match/m29-extract.mjs; node experiments/sdn-gp-starlink-ffm-match/m29-extract-cords.mjs [--shard k/n | --merge]",
+    "node experiments/sdn-gp-starlink-ffm-match/m30-truth.mjs (re-run as TIP and decay messages arrive)",
+    "node experiments/sdn-gp-starlink-ffm-match/m31-capture.mjs --workers k/n; node experiments/sdn-gp-starlink-ffm-match/m31-capture.mjs --summary",
+    "node experiments/sdn-gp-starlink-ffm-match/m32-truth.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m31,m32"
   ],
-  "planSha256": "0f9a1b1d9d95ac62ef201d88e6fd65eaae583e92b4975d411e82d28011911de4",
+  "planSha256": "de7f92d82c275fd72056130511755c587469838f00f45a603ac5336f36e04d4c",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "4c133e5c9489c9b9d73382692337ed1070f48e46"
+    "commit": "5e803b914ad7233afbc0830c4bd6421283e8855f"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -288,7 +296,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "35cd83a2b714",
+    "headlineBuild": "61d4ec4e6a12",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -353,8 +361,83 @@
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T16:13:45.758Z",
         "complete": true
+      },
+      {
+        "build": "04f7c2d1d50f",
+        "wasmSha256": "04f7c2d1d50fdae0a1af6e16fcbc46aead774b6ce4ce00984f55d6ad96f38e80",
+        "sourceCommit": "65c1c6cae7cc0ac4a7ba65ba891f5c001dfdf4f8",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T18:21:26.725Z",
+        "complete": true
+      },
+      {
+        "build": "61d4ec4e6a12",
+        "wasmSha256": "61d4ec4e6a12407ef0badc1e6ec61252fa0acc42f9f2360947cc270f29e4f5eb",
+        "sourceCommit": "f0ea4b4e44fc4a1bc207689d06d723248759ca5d",
+        "sourceUncommittedFiles": 1,
+        "firstUseUtc": "2026-10-24T19:28:48.751Z",
+        "complete": true
       }
     ]
+  },
+  "a11": {
+    "issArchive": {
+      "files": 763,
+      "setSha256": "d21aa4f17a555ca68d3d0be762eb0e7dbb97375eee0eeb4179c3e03263639b53",
+      "firstRetrievedUtc": "2026-10-24T17:18:54.387Z",
+      "lastRetrievedUtc": "2026-10-24T17:50:00.878Z"
+    },
+    "cords": {
+      "file": "Reentry_History_Spreadsheet_05-22-26.csv",
+      "bytes": 391875,
+      "sha256": "d6fabdbd279f1d3590638edd8738865fb6f6934548b76b0a1bd00d58162f5f24"
+    },
+    "spaceWeatherHistory": {
+      "rows": 2703,
+      "first": "2019-06-01",
+      "last": "2026-11-02",
+      "gfzRows": 2652,
+      "droppedDays": 9,
+      "gfzFileSha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e",
+      "check": {
+        "rows": 26,
+        "fieldsEqual": 569,
+        "fieldsCompared": 572
+      }
+    },
+    "m29": {
+      "objects": 58,
+      "setCounts": 8184,
+      "setSha256": "ef5411148e8e653c1c520119333e3f1062a8c7f3a40cb5d18b90a322940a3634",
+      "space-track": {
+        "tip": {
+          "files": 14,
+          "first": "2026/2026-10-11.json.gz",
+          "last": "2026/2026-10-24.json.gz"
+        },
+        "decay": {
+          "files": 14,
+          "first": "2026/2026-10-11.json.gz",
+          "last": "2026/2026-10-24.json.gz"
+        },
+        "gpHistory": {
+          "files": 1935,
+          "first": "2022/2022-11-20.json.gz",
+          "last": "2026/2026-10-24T181700Z--2026-10-24T193200Z.json.gz"
+        }
+      }
+    },
+    "m31": {
+      "satellites": 27,
+      "setSha256": "1a714ef219d3a312a028101243f4a1ea93f8c8e14ba23a2535d2f5e0dff87791"
+    },
+    "m32": {
+      "batches": 4,
+      "setSha256": "985615ccf7f114c266385c14232fef442d6d8b6deb305bc881a91c5f8a8a6b58",
+      "ffmWasmSha256": [
+        "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      ]
+    }
   },
   "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
 }
