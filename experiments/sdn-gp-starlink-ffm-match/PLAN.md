@@ -713,3 +713,13 @@ The first M29 run stopped before any row was read: the SGP4 module's `propagate_
 at 2025-04-30T03:03:17Z"). A11b is amended in that one respect. Each set is propagated alone, in a fresh module, by `propagate_ephemeris` over the interval (epoch of the set before, its own epoch], at most 48 h back (the first set: 6 h),
 every 300 s, TEME; a set the module cannot propagate gives no states, is dropped and is counted in the row of every prediction whose history holds it (failedSets). The pseudo-observation series up to t_k, the 120 h, the 48-state floor and
 everything else in A11b stand. The partial rows of the first run (10) were moved aside unread and the job started again from empty row files.
+
+### A11e - 2026-10-24, after the rows of M24 on the archive were read, before any row of this check was scored: the detector on planted burns, the pipeline check
+
+The rows of M24 on the archive were read once the job finished: in the pre-burn windows 2 of 98 detections lie within 92 min of TIG and 96 elsewhere, 97 % of them in the first tenth of the 72 h window; in the burn-free windows 342 of 651 report a
+burn (A11). Before the misses are put down to the detector or to NASA's ephemerides, the same chain (the conversion to TEME by foundation/frames, the environment loaded by `load_environment`, `detect_maneuvers`) is run on arcs whose burn is
+known exactly. A first look, made before this registration, ran six cases on the first 8 satellites of M22's list and printed the detected epoch and delta-v (in-track 1 m/s: 3 of 8 within 92 min of the burn; radial 1 m/s: 7 of 8; cross-track
+1 m/s: 6 of 8 within 92 min, some with 0.4 of the delta-v; burn-free: 3 of 8 reported a burn); those 8 satellites are in the sample below. Registered: the 48 satellites of M22; an arc of 60 h, the registered truth from its start to t_b (24 h, every fifth
+state) followed by the first 36 h after t_b (every 300 s) of an M22 case, so that the burn is at 24 h of the arc; cases: the control (no burn), in-track (V) impulses of 0.1, 1 and 10 m/s, radial (U) and cross-track (W) impulses of 1 m/s. A detection
+within 92 min of t_b is a hit. Reported per case: hits, detections elsewhere, no detection, the median [10th, 90th percentile] of the epoch error of the hits, the median |delta-v| over the planted delta-v and the V share of the hits, and the share of
+detections in the first tenth of the arc. Rows: source m24p (rows/sdngp/<build>/m24p.s*.jsonl, four shards). This is a check of the pipeline, not one of M22 to M33.
