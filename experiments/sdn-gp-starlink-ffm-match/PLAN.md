@@ -325,3 +325,13 @@ COMSPOC GNSS sets (local scoring only): every XP set of a GNSS object, propagate
 by day since the set's epoch, as `comspoc-precise.mjs` does for the other products; sets whose epoch the rapid days do not follow stay pending.
 TESS: the definitive ephemeris files for doy 194 to 260 of 2026 (the newest MAST holds), as an Earth-centred highly elliptical orbit scored by SGP4 and
 SGP4-XP like THEMIS and Chandra (windows of A5: fit 24 h and 72 h, stride 48 h, held-out days 1 to 3).
+
+### A8c - 2026-10-24, before the rapid orbits were converted: the Earth orientation of the last rapid days
+
+The archive's IERS collector has stored nothing since 2026-10-21: datacenter.iers.org answers its finals requests with HTTP 400 ("Request
+Rejected"; the same for the data/9 and products/eop URLs and for a plain client), so the newest observed finals row is MJD 61333 (2026-10-20). The
+converter keeps observed rows only, which would stop the GNSS truth at 2026-10-19, before 27 of the 32 COMSPOC GNSS set epochs (2026-10-19 and 20).
+`gnss-rapid-convert.mjs` therefore seeds the converter with the archive's newest finals file in which the Bulletin A prediction rows of
+MJD 61334 to 61336 are flagged observed (recorded in the seeded copy's provenance file). The effect on a GNSS position is under 0.15 m
+(UT1-UTC 0.08 ms and polar motion 0.4 mas at three days), below the rapid orbit's own uncertainty and 3 orders below the XP errors scored. Rapid days
+2026-10-20 to 2026-10-22 are labeled "predicted EOP" wherever they are reported.

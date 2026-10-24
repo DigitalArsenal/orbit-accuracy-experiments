@@ -23,6 +23,11 @@ const REGIMES = [
   { id: 'geo-gnss', label: 'GEO, BeiDou-2 and QZSS-3 (GFZ MGEX rapid)' },
   { id: 'heo-gp', label: 'HEO, THEMIS A, D, E and Chandra (NAIF SPK), 24 h fit' },
   { id: 'heo-gp-72h', label: 'HEO, THEMIS A, D, E and Chandra (NAIF SPK), 72 h fit' },
+  { id: 'heo-tess', label: 'HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 24 h fit' },
+  { id: 'heo-tess-72h', label: 'HEO, TESS (13.7 day orbit; MAST definitive ephemeris), 72 h fit' },
+  { id: 'meo-gnss-rapid', label: 'MEO, GPS / GLONASS / Galileo / BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22)' },
+  { id: 'igso-gnss-rapid', label: 'IGSO, BeiDou and QZSS (GFZ rapid, 2026-10-11 to 2026-10-22)' },
+  { id: 'geo-gnss-rapid', label: 'GEO, BeiDou (GFZ rapid, 2026-10-11 to 2026-10-22)' },
   { id: 'heo-artemis2', label: 'HEO, Artemis II high-Earth-orbit checkout (one short arc: 8 h fit, 12.85 h held out as day 1)' },
 ];
 const AWAITING = [ // regimes with truth in the archive that Earth-centred SGP4 and SGP4-XP do not describe: awaiting SDN-GP
@@ -50,7 +55,7 @@ export function collect() {
       if (r.spacex) windows.push({ regime: 'leo-starlink-spacex', ...r.spacex, meta });
     }
   }
-  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')], ['heo-themis', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-chandra', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-artemis2', () => 'heo-artemis2']]) {
+  for (const [source, map] of [['iss', () => 'leo-iss'], ['iss-daily', () => 'leo-iss-daily'], ['gnss', () => 'meo-gnss'], ['slr-high', () => 'meo-slr'], ['mgex-geo', () => 'geo-gnss'], ['mgex-igso', () => 'igso-gnss'], ['slr-low', (w) => (/LARES-?2/i.test(w.id) ? 'meo-slr' : 'leo-slr')], ['heo-themis', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-chandra', (w) => (w.fitSeconds === 86400 ? 'heo-gp' : 'heo-gp-72h')], ['heo-artemis2', () => 'heo-artemis2'], ['heo-tess', (w) => (w.fitSeconds === 86400 ? 'heo-tess' : 'heo-tess-72h')], ['gnss-rapid', () => 'meo-gnss-rapid'], ['mgex-igso-rapid', () => 'igso-gnss-rapid'], ['mgex-geo-rapid', () => 'geo-gnss-rapid']]) {
     for (const w of readJsonl(path.join(store, 'rows', `${source}.jsonl`))) windows.push({ regime: map(w), ...w, meta: {} });
   }
   return windows;

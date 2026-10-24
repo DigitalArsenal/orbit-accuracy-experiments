@@ -1,7 +1,7 @@
 // Amendment A5: SGP4 and SGP4-XP on the Earth-centred highly elliptical orbits in the NAIF kernels (THEMIS A, D, E; Chandra;
 // the high-Earth-orbit checkout of Artemis II), with the radial / in-track / cross-track split. States from
 // files/orbit-products, epochs from foundation/time. One JSON line per window under <store>/rows/<source>.jsonl.
-//   node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs [--source heo-themis,heo-chandra,heo-artemis2]
+//   node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs [--source heo-themis,heo-chandra,heo-artemis2,heo-tess]
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, store, args } from './common.mjs';
@@ -9,11 +9,11 @@ import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { openContainers } from './lib/containers.mjs';
 import { openTime } from './lib/timeconv.mjs';
-import { KERNELS, A5, spkObject } from './lib/spk-sources.mjs';
+import { KERNELS, A5, A8, spkObject, spkObjectSeries } from './lib/spk-sources.mjs';
 import { windowStarts, ms, iso } from './lib/windows.mjs';
 
 
-const wanted = new Set((args.source ?? 'heo-themis,heo-chandra,heo-artemis2').split(','));
+const wanted = new Set((args.source ?? 'heo-themis,heo-chandra,heo-artemis2,heo-tess').split(','));
 const FILES = (dir) => ({
   themis: (letter) => path.join(dir, `themis/THEMIS_${letter}_2013_039_055.bsp`),
   chandra: path.join(dir, 'chandra/chandra_merged.bsp'),
@@ -53,6 +53,13 @@ if (wanted.has('heo-themis')) {
 if (wanted.has('heo-chandra')) {
   const chandra = await spkObject(modules, { file: files.chandra, source: 'heo-chandra', id: 'Chandra (-151)', name: 'CHANDRA', norad: 99151, fromUtc: A5.chandra.span[0], toUtc: A5.chandra.span[1], containers, time });
   await run('heo-chandra', [chandra], A5.fitHours);
+}
+if (wanted.has('heo-tess')) { // amendment A8b: TESS from the MAST definitive ephemeris files
+  const dir = path.join(config.archive, 'hac/mast-tess/models');
+  const names = fs.readdirSync(dir).filter((f) => /^TESS_EPH_DEF_\d{7}_\d+\.bsp$/.test(f)).sort();
+  const tess = await spkObjectSeries(modules, { files: names.map((f) => path.join(dir, f)), source: 'heo-tess', id: 'TESS (-95)', name: 'TESS', norad: A8.tess.norad, fromUtc: A8.tess.span[0], toUtc: A8.tess.span[1], stride: A8.tess.stride, containers, time });
+  console.error(`heo-tess: ${tess.lines.length} states ${tess.lines[0].epoch} to ${tess.lines.at(-1).epoch} from ${names.length} files`);
+  await run('heo-tess', [tess], A5.fitHours);
 }
 if (wanted.has('heo-artemis2')) {
   const orion = await spkObject(modules, { file: files.artemis2, source: 'heo-artemis2', id: 'Artemis II HEO checkout (-24)', name: 'ARTEMIS-II', norad: 99024, fromUtc: A5.artemis2.span[0], toUtc: A5.artemis2.span[1], containers, time });

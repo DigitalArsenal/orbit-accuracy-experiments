@@ -14,6 +14,9 @@ export const A5 = Object.freeze({
   artemis2: { span: ['2026-04-02T01:58:21Z', '2026-04-02T22:49:21Z'], fitHours: 8, minCoverage: 0.4 },
 });
 
+// Amendment A8b: TESS, Earth-centred highly elliptical (13.7 day), MAST definitive ephemeris files (doy 194 to 260 of 2026).
+export const A8 = Object.freeze({ tess: { span: ['2026-06-29T13:02:00Z', '2026-09-17T13:00:00Z'], norad: 43435, stride: 5 } });
+
 export const KERNELS = (archive) => path.join(archive, 'hac/naif-kernels/spk/missions');
 
 const parseTdb = (text) => { // 'YYYY-MM-DDTHH:MM:SS.ffffff' -> { wholeMs (to the second), micro }
@@ -64,6 +67,44 @@ export async function spkObject(modules, { file, source, id, name, norad, fromUt
     const lines = rows.map((x, i) => ({ epoch: utc[i], r: x.r, v: x.v })).filter((l) => Date.parse(l.epoch) >= Date.parse(fromUtc) && Date.parse(l.epoch) <= Date.parse(toUtc));
     lines.sort((a, b) => Date.parse(a.epoch) - Date.parse(b.epoch));
     // segments of one kernel can share their boundary epoch to within a microsecond: keep one state per half second
+    const unique = [];
+    for (const l of lines) if (!unique.length || Date.parse(l.epoch) - Date.parse(unique.at(-1).epoch) >= 500) unique.push(l);
+    return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: unique });
+  } finally {
+    if (own.containers) await containers.destroy();
+    if (own.time) await time.destroy();
+  }
+}
+
+/**
+ * One ephemeris object from several overlapping SPK files of one target (TESS's definitive ephemeris is a file every few days):
+ * the states of every file, every `stride`-th state of each segment, later files overriding earlier ones where they overlap
+ * (the newer solution), epochs to UTC by foundation/time. Files are given oldest first.
+ */
+export async function spkObjectSeries(modules, { files, source, id, name, norad, fromUtc, toUtc, stride = 1, containers, time }) {
+  const own = { containers: !containers, time: !time };
+  containers ??= await openContainers(modules);
+  time ??= await openTime(modules);
+  try {
+    const byKey = new Map(); // second of the TDB epoch (rounded to the second) -> row; a later file overwrites
+    for (const file of files) {
+      const read = await readSpk(containers, file);
+      if (read.error) throw new Error(`${path.basename(file)}: ${read.error}`);
+      for (const block of read.oem.EPHEMERIS_DATA_BLOCK) {
+        const lines = block.EPHEMERIS_DATA?.length ? null : block.EPHEMERIS_DATA_LINES ?? [];
+        const rows = lines ? lines.map((l) => ({ tdb: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] })) : tdbStates({ EPHEMERIS_DATA_BLOCK: [block] }, Date.parse(fromUtc), Date.parse(toUtc));
+        rows.forEach((row, i) => {
+          if (i % stride) return;
+          const t = parseTdb(row.tdb).second;
+          if (t + 70000 + 60000 < Date.parse(fromUtc) || t - 70000 - 60000 > Date.parse(toUtc)) return;
+          byKey.set(Math.round(t / 1000), row);
+        });
+      }
+    }
+    const rows = [...byKey.entries()].sort((a, b) => a[0] - b[0]).map(([, row]) => row);
+    const utc = await convertAll(time, rows.map((x) => x.tdb));
+    const lines = rows.map((x, i) => ({ epoch: utc[i], r: x.r, v: x.v })).filter((l) => Date.parse(l.epoch) >= Date.parse(fromUtc) && Date.parse(l.epoch) <= Date.parse(toUtc));
+    lines.sort((a, b) => Date.parse(a.epoch) - Date.parse(b.epoch));
     const unique = [];
     for (const l of lines) if (!unique.length || Date.parse(l.epoch) - Date.parse(unique.at(-1).epoch) >= 500) unique.push(l);
     return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: unique });
