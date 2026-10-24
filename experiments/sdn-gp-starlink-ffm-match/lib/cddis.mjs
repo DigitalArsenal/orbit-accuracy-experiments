@@ -57,3 +57,10 @@ export async function cddisList(dir) {
   const r = await cddisGet(`https://${HOST}/archive/${dir.replace(/^\/|\/$/g, '')}/*?list`);
   return r.bytes ? r.bytes.toString('utf8').split('\n').map((l) => l.trim().split(/\s+/)[0]).filter(Boolean) : [];
 }
+
+/** Entries (sub-directories and files, as named) of a CDDIS archive directory from its HTML index. */
+export async function cddisEntries(dir) {
+  const r = await cddisGet(`https://${HOST}/archive/${dir.replace(/^\/|\/$/g, '')}/`);
+  if (!r.bytes) return [];
+  return [...r.bytes.toString('utf8').matchAll(/<a [^>]*href="([^"\/?][^"]*)"/g)].map((m) => m[1]).filter((h) => h !== '..' && !h.startsWith('http'));
+}
