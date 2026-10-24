@@ -424,3 +424,29 @@ later file winning (A9b), for the spheres; the GFZ rapid orbits for GNSS. A wind
 a window the truth cannot supply is not scored, and the table gives the count per span; the COMSPOC value beside a row is the median over the sets whose window exists at that
 span. Groups: LEO spheres, LARES-2, GNSS MEO, IGSO and GEO. Runner `span-windows.mjs` (sources `span-slr` and `span-gnss`; SDN-GP rows per build as before); the headline table
 keeps the registered 24 h windows, and a new section of the README shows the spans.
+
+### A9f - 2026-10-24, before any row of build 7ea0ea272bbf was read: the fourth build, its default fit span, and the Moon-centred windows
+
+Coordinator, 2026-10-24: side B's build 7ea0ea272bbf (side B head b663c8c; wasm built 03:41 EDT, three uncommitted files in its tree when copied; Moon-centred SDN-GP with GRGM660PRIM to
+degree 100 and the DE440 lunar orientation, and a fit-span rule: the latest 48 h by default, extended to 72 and 120 h while the fit RMS holds) is run with the rules of A9b to A9e.
+
+Earth windows. (1) Every window of A9b to A9e runs again with the explicit 24 h interval (and the explicit spans of A9c and A9e); the rows are compared with build 9da7fad24c9d window by
+window, and the table says how many are identical to the last digit and which sources differ, so that "the span rule changed nothing at 24 h" is a count. (2) Default-span rows: for every
+source whose truth has states before the fit start, the same windows are fitted again with the block holding the truth from 120 h before the fit end (or the start of the truth)
+through the three held-out days and only USEABLE_STOP_TIME declared, so the module chooses the span itself; the chosen span is recorded from the set's COMMENT, the rows are labeled
+`<source>+default`, and they are scored on the same held-out days. A window that starts at the start of its truth gets the whole interval, which is its 24 h row. Starlink windows
+(FFM and SpaceX; the truth starts at the fit start), the lowering rows and the fit-length rows have no states before the fit start and are not repeated. The COMSPOC-aligned windows of
+A9e get a "default" row per group beside 24, 48, 72 and 120 h (fit end at the set's epoch, truth from 120 h before it).
+
+Moon-centred windows. Every window of the LRO pack (NAIF reconstruction, 87: 44 of 24 h and 43 of 72 h) and the Danuri pack (JPL Horizons, 61: 31 and 30) listed in A8 is fitted by
+`fit_sdngp` as a $OEM block with CENTER_NAME MOON, the pack's axes declared (J2000 for LRO, ICRF for Danuri) with UTC, the fit span as the useable interval, the three days after it
+in the block (held out, scored by the module's own COMMENT as well), no environment and no prior. The set is propagated by `propagate` on a grid block (CENTER_NAME MOON, ICRF axes,
+explicit EPOCHs: every fifth pack epoch of the three held-out days) and scored by `score-pack.mjs` (gp-error-model `pair_statistics` in the pack's Moon-centred axes, radial / in-track / cross-track
+by day). The LRO pack is in J2000 axes and the module answers in ICRF: the 23 mas between them is 0.2 m at 1,830 km and is not applied. Reported: fit RMS (the module's), the days 1 to 3
+medians and maxima by fit length, the five worst windows of each body by day-3 error with their start epochs, and the maneuver check below.
+
+Maneuver check (the truth alone, fixed before any scoring): each pack's states at 5 min go through `foundation/orbits cartesian_to_keplerian` with GM 4902.800118 km3/s2 (DE440); the
+osculating semi-major axis is averaged over one orbital period (N = round(T / 300 s) samples, T from the median axis); the step S(t) is the mean over the next period minus the mean over the
+previous one; |S| above median(|S|) + 6 x 1.4826 x MAD(|S|) marks a maneuver, clusters less than two periods apart merge, the epoch is the cluster's peak and the indicative delta-v is
+n |delta a| / 2 (n = 2 pi / T). A window contains a maneuver when an epoch falls between its start and the end of its third held-out day (inside the fit span or inside the held-out days:
+both are given). The list of epochs and delta-a is committed (derived from public truth; no states).
