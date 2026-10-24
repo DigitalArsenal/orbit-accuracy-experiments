@@ -658,3 +658,51 @@ across windows) over the distinct time covered. DESIGN 5.5 quotes the modules' d
 quoted, not reproduced. Rows: source m24a (rows/sdngp/<build>/m24a.s*.jsonl, a job of `sdngp-run.mjs`, four shards); no state vector is committed.
 
 Spelling and report as in A10: American spelling in all generated text; the report states what the planned values are.
+
+### A11b - 2026-10-24, before any row of M29 was read: real reentries
+
+Inputs (DESIGN 5.2.5 and 5.5, M29), what the local archive holds and what it does not.
+Held and used. (1) Space-Track decay and TIP messages: the archiver's daily snapshots (each the last 7 days) of 2026-10-11 to 2026-10-24. They list 50 objects with a TIP series; 41 of them (35 Starlinks, PEGASUS R/B, PSLV R/B,
+YAOGAN-35 02B, COSMOS 2572, SDX01 and SDX02) have a last message before the last snapshot (2026-10-24T12:00Z) and a decay message: sample T. The window of the last message is 1 min for 32 of them, 2 min for 5, 25, 31 and 60 min for four.
+(2) The GP element-set histories of the local gp_history (creation dates 2022-11-20 to 2026-10-24), cut for the objects of both samples by `m29-extract.mjs` and `m29-extract-cords.mjs` (read from files; the sets stay in the archive).
+(3) The CORDS reentry history spreadsheet (the file the closed-modules `aerospace-reentry-provider` reads), fetched once on 2026-10-24 (HTTP 200, 391,875 bytes, SHA-256 d6fabdbd279f1d3590638edd8738865fb6f6934548b76b0a1bd00d58162f5f24; registry
+entry aerospace-cords): 3,313 rows, one per object, 103 with an observed reentry time; each row gives the epoch of the element set Aerospace's prediction used, the prediction and its stated uncertainty (the 20 % rule, +- hours). Of the 103,
+17 have an observed time of day (not midnight), an Aerospace element set after 2022-11-27 (the local history starts 2022-11-20) and a time to go at that element set from -3 h to 14 d: sample C (7 Starlinks and 10 others; reentries
+from 2023-03-18 to 2025-11-08).
+Not held, named. The CORDS listing page: https://aerospace.org/reentries answers a script with a bot challenge (HTTP 403); it was not read and no way around the challenge was tried. Any spreadsheet newer than 2026-05-22 (its link is on that
+page), so Aerospace's predictions for the 2026-10 reentries are missing. Space-Track decay and TIP before 2026-10-04: the archiver's queries are fixed at the last 7 days, so older reentries and the TIP comparator for them need a backfill
+option in the archiver (outside this claim). This experiment makes no request to Space-Track.
+
+Truth. Sample C: the observed reentry time of the spreadsheet (a sighting or a recovery; minute precision). Sample T: the DECAY_EPOCH of the object's last TIP message, Space-Track's settled reentry time, not an observation.
+
+Predictions. For every object and every element-set epoch t_k from 14 days before the reentry (and not before the sixth day of the local history) to 30 min before it, at least 4 h apart, and for sample C also the epoch of the set Aerospace used:
+the pseudo-observations of the element-set history up to t_k are the states of the SGP4 module's `propagate_ephemeris` with `element_set_blocks` (one block per set), taking from each set the interval (epoch of the set before, its own epoch],
+every 300 s, TEME, for the last 120 h before t_k (at least 48 states); `fit_sdngp` (UTC stop t_k, no declared start: the module chooses its span) and then `reentry` on the set, both with the daily space weather of the years (2019-06 to 2026-11,
+lib/spw-history.mjs). One prediction is a REENTRY_EPOCH (the module integrates to 80 km) with REENTRY_EPOCH_UNC (hours, 68.27 %).
+
+Scoring (no threshold is set). Time to go tau = T* - t_k; error = REENTRY_EPOCH - T* (hours); sigma = REENTRY_EPOCH_UNC; the 2-sigma window is twice that. Bins of tau: over 7 d, 3 to 7 d, 1 to 3 d, 12 to 24 h, 6 to 12 h, 3 to 6 h, under 3 h.
+Reported per sample and bin: predictions and objects; the median error, the median and the 90th percentile of |error| (hours) and the median of |error| / tau; the share of predictions within sigma and within 2 sigma (nominal 68 % and 95 %); the median
+sigma / tau. The 20 % rule: the share with |error| <= 0.2 (REENTRY_EPOCH - t_k), and the equal-coverage comparison: the multiple k of sigma whose share in the bin equals the rule's share, and the median of k sigma / (0.2 (REENTRY_EPOCH - t_k)),
+below 1 for a window narrower than the rule's at equal coverage (the prediction M29 tests). Comparators: Aerospace at its own element-set epoch (sample C): its error, whether T* lies inside its stated +-, beside SDN-AP's error and sigma coverage at the
+same epoch; Space-Track's TIP at the same t_k (sample T): the latest message before t_k, its error and whether T* lies inside DECAY_EPOCH +- WINDOW. Fits and reentries that are refused are counted by name per bin.
+Rows: m29 (rows/sdngp/<build>/m29.s*.jsonl, six shards); the committed results hold times, errors and window widths only: no element set, no TIP message and no spreadsheet row.
+
+### A11c - 2026-10-24, before any row of M30 or M31 was read: what the interfaces of build 35cd83a2b714 cover
+
+M30, controlled deorbits (DESIGN 5.2.2 and 5.5: theory plus residual inside the operator's span, tau0 lowering beyond it; below G1's lowering rows at day 3). Not covered by the build. Its methods are ingest_omm, propagate, fit, fit_sdngp,
+load_environment, maneuver, detect_maneuvers, reentry and launch_set: there is no residual series (2g) and `reentry` knows no lowering burns beyond what the fit's tau0 rule (2c.2) puts in the set. What is covered and run: (a) the lowering rows of A9d
+(the 19 Starlinks with B_eff above 0.5 m2/kg; the build's default, "rule" and "free"), reported at days 1, 2 and 3 beside SGP4-XP; (b) `reentry` on the set fitted to the first 24 h of each of the 19 in the three variants, the prediction
+frozen now (rows m30, dated), to be scored against the TIP and decay messages the archiver collects in the coming days (none of the 19 has a TIP message in the snapshot of 2026-10-24): the error of REENTRY_EPOCH against the last TIP
+message's DECAY_EPOCH and the share inside sigma and 2 sigma, by variant. What M30 needs: the residual-series method (2g) with the Chebyshev residual of the operator's span, a lowering-burn model with its stop epoch in `fit_sdnap`, and the
+decay and TIP truth of those objects.
+
+M31, first sets (DESIGN 5.3.1, 5.3.2 and 5.5: first SpaceX files of new batches, initialized from the first state, fitted on 6, 12 and 24 h, scored on newer files at days 1 to 3; B_eff identifiable from 6 h). The method is covered:
+`launch_set` makes the first set from a $LAM insertion orbit (osculating a, e, i, RAAN, argument of latitude; B_eff and AGOM priors) and `fit_sdngp` takes an early $OEM with the set as `prior`. The data are not: the capture cycles keep derived
+products of each file (10-minute mean elements, energy, altitude; the raw file is not persisted), so the cycle of 2026-10-24T05:01Z, in which a new batch first appeared (27 satellites with provisional ids 799501701 to 799501727, first file created
+01:02Z), holds no first state; the SpaceX server serves only a satellite's current file; and raw operator ephemerides are not stored by these experiments (registry note on spacex-starlink). What is done now to start the clock: the 27 current files
+are fetched into memory, one request at a time, and processed as the registered Starlinks are (`satellite()` of truth.mjs: the fit by analysis/od, FFM-1 for 96 h; the derived trajectory and the fit under <store>/m31/, never the file); they are
+the "first available files" of the batch (about 16 h after the first one). The fits of 6, 12 and 24 h (with the `launch_set` set as prior), and their scoring on the first three hours (every ten minutes) of the files served about 24, 48 and 72 h
+after the fit end, are a later step: they cannot be run before 2026-10-25 to 2026-10-28, and this amendment registers them (rows m31) without running them. What M31 needs from the build side: nothing beyond what it has; from the capture: the first state
+(only) of every new id kept at first sight, with the file's hash.
+
+Spelling and report as in A10: American spelling in all generated text.
