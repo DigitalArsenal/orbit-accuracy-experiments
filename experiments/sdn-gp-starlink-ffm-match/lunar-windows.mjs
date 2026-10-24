@@ -8,38 +8,14 @@ import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines } from './lib/baselines.mjs';
 import { readPack } from './lib/packs.mjs';
 import { RULES, windowsOf } from './regime-windows.mjs';
-import { scorePack } from './score-pack.mjs';
+import { packWindow } from './lib/pack-window.mjs';
 import { sdngpSink, rowKey } from './lib/sdngp-rows.mjs';
-import { oemBytes } from './lib/sds.mjs';
-import { DAY, iso, ms, slice } from './lib/windows.mjs';
+import { iso } from './lib/windows.mjs';
 
-const H = 3600000;
-const AXES = { 'lro-lunar': 'J2000', 'danuri-lunar': 'ICRF' }; // the declared axes of the pack (regime-windows.mjs frameLabel)
 const THIN = 5; // held-out epochs: every fifth pack epoch (5 min at 60 s)
 
-/** One lunar window through the module: { row } as the sink stores it. */
-export async function lunarWindow(b, loaded, pack, startMs, fitHours) {
-  const rule = RULES[pack], { meta, object } = loaded;
-  const stop = startMs + fitHours * H;
-  const lines = slice(object, startMs, stop + rule.leadDays.at(-1) * DAY);
-  const frame = AXES[pack];
-  const block = (extra) => ({ frame, frameName: frame, center: 'MOON', timeSystem: 'UTC', object: { name: meta.name, id: '', norad: 0 }, ...extra });
-  const base = { source: pack, id: pack, norad: 0, startUtc: iso(startMs), fitSeconds: fitHours * 3600, fitHours, states: lines.length };
-  const fit = await b.sdngp.fit(oemBytes({ originator: 'G1 truth pack', block: block({ lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stop) }), sizePrefixed: false }));
-  if (!fit.ok) return { ...base, sdngp: { ok: false, error: fit.error } };
-  const held = slice(object, stop + 1, stop + rule.leadDays.at(-1) * DAY).filter((_, i) => i % THIN === 0);
-  const grid = oemBytes({ originator: 'G1', block: { ...block({ lines: held.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), start: held[0].epoch, stop: held.at(-1).epoch }), frame: 'ICRF', frameName: 'ICRF', center: 'MOON' }, sizePrefixed: false }); // the template names the set's own centre (build ee5dccaa17a8 and later refuse a mismatch as grid-center-mismatch)
-  const prop = await b.sdngp.propagateGrid(fit.omm, grid);
-  if (!prop.ok) return { ...base, sdngp: { ok: false, error: `propagate: ${prop.error}`, fitRmsKm: fit.fitRmsKm } };
-  const scored = await scorePack(b, { pack, startMs, fitHours, leadDays: rule.leadDays, predicted: prop.blocks[0], predictedCenter: prop.centre, loaded });
-  const spanMatch = /span ([\d.]+) h/.exec(fit.comment ?? '');
-  return { ...base, sdngp: {
-    ok: true, fitRmsKm: fit.fitRmsKm, fitMaxKm: fit.fitMaxKm, heldOutRmsKm: fit.heldOutRmsKm, iterations: fit.iterations, fitStates: fit.statesFitted, spanHours: spanMatch ? Number(spanMatch[1]) : null,
-    days: Object.fromEntries(Object.entries(scored.byDay).filter(([, d]) => d).map(([k, d]) => [k, { rmsKm: d.rmsKm, n: d.n, ric: d.ric }])),
-    matched: scored.matched, unmatched: scored.unmatched, centerCheck: scored.centerCheck, recordBytes: fit.omm.length,
-    module: b.sdngp.provenance.wasmSha256.slice(0, 12), params: fit.params, comment: fit.comment,
-  } };
-}
+/** One lunar window through the module (the shared pack-window path, every fifth held-out pack epoch as A9f registered it): the row as the sink stores it. */
+export const lunarWindow = (b, loaded, pack, startMs, fitHours) => packWindow(b, loaded, pack, startMs, fitHours, { thin: THIN });
 
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   frozen();

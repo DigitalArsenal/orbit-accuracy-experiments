@@ -14,7 +14,7 @@ const snap = snapshot(store, args.pin ?? null);
 const build = snap.wasmSha256.slice(0, 12);
 const logDir = path.join(store, 'sdngp-run', build);
 fs.mkdirSync(logDir, { recursive: true });
-const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'default'];
+const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'segment', 'default'];
 const only = args.only ? new Set(args.only.split(',')) : null;
 const wanted = (j) => !only || only.has(j.source) || [...only].some((o) => j.source.startsWith(`${o}:`)); // --only default selects every default-span job
 const shards = (name, script, extra, n) => Array.from({ length: n }, (_, k) => ({ source: name, name: `${name}.s${k}of${n}`, script, argv: [...extra, ...(n > 1 ? ['--shard', `${k}/${n}`] : [])] }));
@@ -26,6 +26,7 @@ const jobs = [
   ...shards('lowering', 'starlink-lowering.mjs', [], 1), // amendment A9d: the lowering Starlinks, rule and free B_eff
   // amendment A9f: the Moon-centred windows, and the default-span rows (the module chooses the fit span; sources with truth before the fit start)
   ...shards('lunar', 'lunar-windows.mjs', [], 8),
+  ...shards('segment', 'segment-windows.mjs', [], 8), // amendment A9h: the cislunar and heliocentric packs through the segment fits
   ...['iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current'].flatMap((src) => shards(`default:${src}`, 'baselines.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', src], src === 'slr-low' || src === 'mgex-igso' ? 2 : 1)),
   ...shards('default:heo', 'spk-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'heo-themis,heo-chandra,heo-tess'], 1),
   ...shards('default:span-gnss', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-gnss'], 1), ...shards('default:span-slr', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-slr'], 1),

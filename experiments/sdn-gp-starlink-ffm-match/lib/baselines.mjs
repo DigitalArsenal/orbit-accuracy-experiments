@@ -135,6 +135,16 @@ async function sdngpStates(b, omm, epochMs, epochsMs, axes) {
   return out;
 }
 
+/** The states of a segment set (SDN-GP regime CISLUNAR or HELIO, amendment A9h) at the given pack epochs, by `propagate` on a grid block that names the set's own center, in the ICRF axes the module answers in: [{r, v}] in km, km/s. */
+async function sdngpGridStates(b, fit, object, chosen) {
+  const grid = oemBytes({ originator: 'G1', block: { frame: 'ICRF', frameName: 'ICRF', center: fit.unpacked.CENTER_NAME ?? 'EARTH', timeSystem: 'UTC', object: { name: object.name, id: '', norad: object.norad },
+    lines: chosen.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), start: chosen[0].epoch, stop: chosen.at(-1).epoch }, sizePrefixed: false });
+  const prop = await b.sdngp.propagateGrid(fit.omm, grid);
+  if (!prop.ok) throw new Error(`propagate: ${prop.error}`);
+  if (prop.blocks[0].length !== chosen.length) throw new Error(`propagate returned ${prop.blocks[0].length} of ${chosen.length} states`);
+  return prop.blocks[0].map((x) => ({ r: x.r, v: x.v }));
+}
+
 /** SDN-GP fitted to the first `fitSeconds` of an ephemeris from `startMs` and propagated to `epochsMs` in the named axes: [{r, v}], or { error }. */
 export async function sdngpPredict(b, object, startMs, fitSeconds, epochsMs, axes = 'GCRF') {
   const stopFit = startMs + fitSeconds * 1000;
@@ -156,15 +166,22 @@ export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, min
   const epochMs = ms(fit.unpacked.EPOCH);
   const axes = object.frame === 'EME2000' ? 'EME2000' : 'GCRF';
   const spanMatch = /span ([\d.]+) h \(([^)]*)\)/.exec(fit.comment ?? '');
-  const spanHours = spanMatch ? Number(spanMatch[1]) : (stopFit - startMs) / 3600e3, spanSource = spanMatch ? spanMatch[2] : null;
-  const ricOf = async (chosen) => rtnSeries(b, await sdngpStates(b, fit.omm, epochMs, chosen.map((l) => ms(l.epoch)), axes), chosen); // predicted states (module) -> the truth's axes (foundation/frames) -> pair_statistics RTN
+  const fromMatch = /states fitted from ([\d.]+) h/.exec(fit.comment ?? ''); // a segment set's comment names where in the arc its segment starts (the epoch carried past a maneuver); the arc runs from the block's first state to the fit end
+  const spanHours = spanMatch ? Number(spanMatch[1]) : fromMatch ? (stopFit - ms(lines[0].epoch)) / 3600e3 - Number(fromMatch[1]) : (stopFit - startMs) / 3600e3, spanSource = spanMatch ? spanMatch[2] : fromMatch ? 'segment' : null;
+  const regime = fit.params.SDNGP_REGIME ?? null;
+  const segment = regime === 'CISLUNAR' || regime === 'HELIO'; // amendment A9h: a far block the build fits as a segment set; the batch entry refuses it, so its states come from `propagate` on a grid
+  const ricOf = segment
+    ? async (chosen) => rtnSeries(b, await sdngpGridStates(b, fit, object, chosen), chosen)
+    : async (chosen) => rtnSeries(b, await sdngpStates(b, fit.omm, epochMs, chosen.map((l) => ms(l.epoch)), axes), chosen); // predicted states (module) -> the truth's axes (foundation/frames) -> pair_statistics RTN
   const thinned = (list) => { const step = list.length > 1 ? (ms(list[1].epoch) - ms(list[0].epoch)) / 1000 : 60; const every = Math.max(1, Math.round(RTN_STRIDE_SECONDS / step)); return list.filter((_, i) => i % every === 0); };
   let fitRic = null, days = {}, usPerState = null;
   try {
-    const fitFrom = defaultSpan ? stopFit - spanHours * 3600e3 - 1 : -Infinity; // the span the module's rule chose; a declared span is every state up to the fit end, as before
-    const fitLines = thinned(lines.filter((l) => ms(l.epoch) <= stopFit && ms(l.epoch) >= fitFrom));
-    const fitSeries = await ricOf(fitLines);
-    fitRic = [0, 1, 2].map((c) => rms(fitSeries.map((e) => e[c])));
+    if (!segment) { // a segment set is not propagated backward in time: no fit-span split for it
+      const fitFrom = defaultSpan ? stopFit - spanHours * 3600e3 - 1 : -Infinity; // the span the module's rule chose; a declared span is every state up to the fit end, as before
+      const fitLines = thinned(lines.filter((l) => ms(l.epoch) <= stopFit && ms(l.epoch) >= fitFrom));
+      const fitSeries = await ricOf(fitLines);
+      fitRic = [0, 1, 2].map((c) => rms(fitSeries.map((e) => e[c])));
+    }
     const held = lines.filter((l) => ms(l.epoch) > stopFit);
     if (held.length) {
       const chosen = thinned(held);
@@ -187,6 +204,7 @@ export async function fitSdngp(b, object, lines, startMs, stopFit, leadDays, min
     lowering: Number(p.SDNGP_LOWERING ?? 0), bEff: Number(p.SDNGP_B_EFF), bEffSigma: Number(p.SDNGP_B_EFF_SIGMA), kappa: p.SDNGP_KAPPA === undefined ? null : Number(p.SDNGP_KAPPA), tau0: Number(p.SDNGP_TAU0), tauc: Number(p.SDNGP_TAUC), taus: Number(p.SDNGP_TAUS),
     agom: fit.unpacked.MEAN_MOTION_DDOT, meanMotion: fit.unpacked.MEAN_MOTION, inclination: fit.unpacked.INCLINATION, eccentricity: fit.unpacked.ECCENTRICITY, heldOutRmsKm: fit.heldOutRmsKm,
     module: b.sdngp.provenance.wasmSha256.slice(0, 12), spanHours, spanSource,
+    ...(segment ? { regime, maneuverBeforeSeconds: p.SDNGP_MANEUVER_BEFORE_SECONDS === undefined ? null : Number(p.SDNGP_MANEUVER_BEFORE_SECONDS) } : {}),
   };
 }
 
