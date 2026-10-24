@@ -1,7 +1,7 @@
 // Amendment A9e: the fit span against COMSPOC (local scoring only). For every COMSPOC XP set of a laser-ranged object (6 LEO spheres, LARES-2) or a GNSS satellite
-// that comspoc-precise.mjs scored, SGP4, SGP4-XP (default) or SDN-GP (--arm sdngp) are fitted to the precise-orbit truth over F = 24, 48, 72 and 120 h ending at the epoch of that
+// that comspoc-precise.mjs scored, SGP4, SGP4-XP (default) or SDN-AP (--arm sdngp) are fitted to the precise-orbit truth over F = 24, 48, 72 and 120 h ending at the epoch of that
 // set and scored on the three 24 h days after it. Only the set's epoch places the window; nothing of the set enters a fit. A window needs 90 % of its fit span in the truth
-// (and, as scoreWindow requires, 90 % of each held-out day it reports). Rows: <store>/rows/span-slr.jsonl and span-gnss.jsonl (SGP4, XP), rows/sdngp/<build>/span-*.s<k>.jsonl (SDN-GP).
+// (and, as scoreWindow requires, 90 % of each held-out day it reports). Rows: <store>/rows/span-slr.jsonl and span-gnss.jsonl (SGP4, XP), rows/sdngp/<build>/span-*.s<k>.jsonl (SDN-AP).
 //   node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs [--arm sdngp] [--shard k/n] [--source span-slr,span-gnss]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,7 +14,7 @@ import { ms, iso, slice } from './lib/windows.mjs';
 
 export const SPANS_H = [24, 48, 72, 120];
 const ARM = args.arm ?? 'both';
-const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: the fit ends at the set's epoch, the truth is given from 120 h before it, the module's span rule chooses; SDN-GP only
+const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: the fit ends at the set's epoch, the truth is given from 120 h before it, the module's span rule chooses; SDN-AP only
 if (DEFAULT_SPAN && ARM !== 'sdngp') throw new Error('--span default needs --arm sdngp');
 const wanted = new Set((args.source ?? 'span-slr,span-gnss').split(','));
 

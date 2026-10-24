@@ -1,4 +1,4 @@
-// The maneuver, detection and reentry methods of the SDN-GP module (build 35cd83a2b714 on; amendment A10) through their published surfaces: typed $MNV in, $OMM / $MNV / $RDM out.
+// The maneuver, detection and reentry methods of the SDN-AP module (build 35cd83a2b714 on; amendment A10) through their published surfaces: typed $MNV in, $OMM / $MNV / $RDM out.
 // JavaScript here encodes and decodes records and counts; every number comes out of the module.
 import path from 'node:path';
 import { createRequire } from 'node:module';

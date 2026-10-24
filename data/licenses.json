@@ -313,7 +313,7 @@
   },
   {
    "id": "nasa-iss-oem",
-   "name": "NASA ISS trajectory (ISS.OEM_J2K_EPH.txt)",
+   "name": "NASA ISS trajectory (ISS.OEM_J2K_EPH.txt: the current file and the dated archive of 2020 to 2026)",
    "provider": "NASA JSC Flight Operations Directorate, Trajectory Operations and Planning (TOPO)",
    "license": "U.S. Government work, public domain (data.nasa.gov \"us-pd\")",
    "terms": [
@@ -331,6 +331,11 @@
      "title": "ISS COORDS dataset (data.nasa.gov)",
      "url": "https://data.nasa.gov/dataset/iss-coords-2022-01-10",
      "retrieved": "2026-10-10"
+    },
+    {
+     "title": "NASA public data bucket, ISS trajectory archive (anonymous listing and downloads of iss-coords/<date>/.../ISS.OEM_J2K_EPH.txt)",
+     "url": "https://nasa-public-data.s3.amazonaws.com/iss-coords/",
+     "retrieved": "2026-10-24"
     }
    ],
    "redistribution": "NASA provides this information for use by the public.",
@@ -339,14 +344,15 @@
    "reproduce": "yes",
    "credit": "ISS trajectory: NASA JSC Flight Operations Directorate (TOPO), https://www.nasa.gov/spot-the-station/ (U.S. Government work).",
    "reason": "Public-domain U.S. Government work offered for public use.",
-   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth)",
+   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth); G1 (M24: the dated archive of 2020 to 2026, the event tables of the headers and the ephemerides around each burn)",
    "reproducedAt": [
     "data/e4/iss/ (4 files)",
     "data/e6/iss/ (1 file)",
-    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt"
+    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt",
+    "results/sdn-gp-starlink-ffm-match/: the burn list (event name, TIG, delta-v, HA and HP of the header event tables) and per-burn detection statistics; no state vectors"
    ],
    "notice": null,
-   "obtain": null
+   "obtain": "https://nasa-public-data.s3.amazonaws.com/iss-coords/<yyyy-mm-dd>/ISS_OEM/ISS.OEM_J2K_EPH.txt (the 2020 folders: .../ISS.OEM_J2K_EPH/ISS.OEM_J2K_EPH.txt); the keys are listed with ?list-type=2&prefix=iss-coords/ (anonymous, no login)"
   },
   {
    "id": "ilrs",
@@ -558,13 +564,46 @@
    "reproduce": "no",
    "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
    "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
-   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08)",
+   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts)",
    "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
    "notice": null,
    "reproducedAt": [
     "modules: analysis/conjunction-assessment/tests/fixtures/socrates/gp_*.json and decaying/gp_2026-07-06.json (element sets via CelesTrak, no citation)",
     "modules: analysis/launch-trajectory/tests/fixtures/{crs14,crs16,paz}.json \"catalog\" blocks and iss-teme-crew13.json (per-sample states from Space-Track element sets, no citation)"
    ]
+  },
+  {
+   "id": "aerospace-cords",
+   "name": "Aerospace Corporation CORDS reentry history (Reentry_History_Spreadsheet_05-22-26.csv)",
+   "provider": "The Aerospace Corporation, Center for Orbital and Reentry Debris Studies (CORDS)",
+   "license": "No license stated on the file; published as the public Aerospace Corporation CORDS reentry database (the words of the closed-modules provider that reads it). aerospace.org answers a scripted client's request for its pages with a bot challenge (HTTP 403), so the site's own terms page could not be read",
+   "terms": [
+    {
+     "title": "CORDS reentry history spreadsheet (CSV), fetched as served",
+     "url": "https://aerospace.org/sites/default/files/2026-05/Reentry_History_Spreadsheet_05-22-26.csv",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Aerospace CORDS reentries page (a bot challenge for a script: not read)",
+     "url": "https://aerospace.org/reentries",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "aerospace.org robots.txt (does not disallow /reentries)",
+     "url": "https://aerospace.org/robots.txt",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "(no license, copyright or reuse statement could be read; the closed-modules aerospace-reentry-provider states its terms as \"Public Aerospace Corporation CORDS reentry database; cite Aerospace Corporation CORDS.\")",
+   "attributionClause": "Cite Aerospace Corporation CORDS (the provider's terms line).",
+   "conditions": "Used for local results only: the observed reentry times, Aerospace's predictions and their stated uncertainties of the objects scored; no row of the spreadsheet is copied into this repository. Cited by URL and SHA-256 d6fabdbd279f1d3590638edd8738865fb6f6934548b76b0a1bd00d58162f5f24 (391,875 bytes, retrieved 2026-10-24).",
+   "reproduce": "no",
+   "credit": "Reentry history: The Aerospace Corporation, Center for Orbital and Reentry Debris Studies (CORDS), https://aerospace.org/reentries (public spreadsheet of observed reentries and Aerospace's predictions).",
+   "reason": "No license grants redistribution; cited by URL and SHA-256, results only.",
+   "usedIn": "G1 (M29: the observed reentry times, Aerospace's predictions and stated uncertainties of the objects whose element-set history the local archive holds, scored beside the SDN-AP reentry windows)",
+   "obtain": "https://aerospace.org/sites/default/files/2026-05/Reentry_History_Spreadsheet_05-22-26.csv (anonymous, a plain GET; the listing page needs a browser)",
+   "notice": null,
+   "reproducedAt": []
   },
   {
    "id": "gfz-kp",
@@ -1982,7 +2021,7 @@
    "reproduce": "yes",
    "credit": "State vectors of CAPSTONE, Artemis I, Danuri, Psyche, Lucy and Juno from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.",
    "reason": "Public NASA/JPL data; the experiment reproduces none of the files.",
-   "usedIn": "G1 (truth for the lunar, cislunar and heliocentric windows prepared for SDN-GP: Danuri, CAPSTONE, Artemis I, Psyche, Lucy, Juno)",
+   "usedIn": "G1 (truth for the lunar, cislunar and heliocentric windows prepared for SDN-AP: Danuri, CAPSTONE, Artemis I, Psyche, Lucy, Juno)",
    "reproducedAt": [],
    "notice": null,
    "obtain": "https://ssd.jpl.nasa.gov/api/horizons.api?COMMAND='-155'&EPHEM_TYPE='VECTORS'&CENTER='500@301'&REF_PLANE='FRAME'&VEC_TABLE='2'&TIME_TYPE='TDB' (also -1176 CAPSTONE, -1023 Artemis I, -255 Psyche, -49 Lucy, -61 Juno)"

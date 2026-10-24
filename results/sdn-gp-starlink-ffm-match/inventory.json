@@ -332,7 +332,7 @@
       "product": "lunar-centered (Moon), J2000; SPK type 13, 92 segments, 7.6 MB",
       "count": 92,
       "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
-      "usable": "scored: the Moon-centered SDN-GP (section 14)",
+      "usable": "scored: the Moon-centered SDN-AP (section 14)",
       "note": "Fetched 2026-10-23 from pds/data/lro-l-spice-6-v1.0/lrosp_1000/data/spk/lrorg_2026074_2026166_v01.bsp."
     },
     {
@@ -431,7 +431,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; KPLO_merged; 4 responses",
       "count": 92161,
       "span": "2026-08-15 to 2026-10-18",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -440,7 +440,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; CAPSTONE_merged; 7 responses",
       "count": 105121,
       "span": "2025-07-15 to 2026-07-15",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -449,7 +449,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; Artemis-I_ASF; 1 responses",
       "count": 36506,
       "span": "2022-11-16 to 2022-12-11",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -458,7 +458,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; Artemis-I_ASF; 1 responses",
       "count": 36506,
       "span": "2022-11-16 to 2022-12-11",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -467,7 +467,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; psyche_merged; 1 responses",
       "count": 7993,
       "span": "2025-08-13 to 2026-07-12",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -476,7 +476,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; Lucy_merged_DE430; 1 responses",
       "count": 6265,
       "span": "2024-12-20 to 2025-09-07",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -485,7 +485,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; Lucy_merged_DE430; 2 responses",
       "count": 12913,
       "span": "2025-09-09 to 2027-03-01",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -494,7 +494,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; Juno_merged; 1 responses",
       "count": 8737,
       "span": "2012-10-01 to 2013-09-30",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {
@@ -503,7 +503,7 @@
       "product": "ICRF equatorial axes, TDB, km and km/s; Juno_merged; 2 responses",
       "count": 34609,
       "span": "2024-09-01 to 2026-08-23",
-      "usable": "truth for the windows prepared for SDN-GP",
+      "usable": "truth for the windows prepared for SDN-AP",
       "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
     },
     {

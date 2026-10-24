@@ -4,11 +4,11 @@
 // 3. tables.json is re-derived from the recorded window rows (statistics only) and must equal the committed file;
 // 3b. m123.json (DESIGN.md M1 to M3, amendments A7 to A7c) is re-derived from its recorded rows, and two of those windows (LAGEOS-1 and the ISS) are
 //    replayed through FFM-1 under full and zonal-only gravity and the SGP4 and SGP4-XP fits, and must reproduce their recorded numbers;
-// 3c. the windows prepared for SDN-GP (regime-windows.json) are re-derived from the local truth packs, and the pack scorer returns a known
+// 3c. the windows prepared for SDN-AP (regime-windows.json) are re-derived from the local truth packs, and the pack scorer returns a known
 //    offset (1 km added to a Danuri window's held-out states comes back as 1 km RMS on each day);
 // 4. N windows (default 9 precise-orbit windows, one per source, plus a Starlink FFM truth and an in-span SpaceX window) are replayed through the modules and must reproduce their recorded
 //    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records;
-// 4b. SDN-GP (amendment A9b): windows of the headline build (ISS, GNSS, a current SLR arc and a Starlink FFM truth) are fitted again by the pinned copy of the
+// 4b. SDN-AP (amendment A9b): windows of the headline build (ISS, GNSS, a current SLR arc and a Starlink FFM truth) are fitted again by the pinned copy of the
 //    module (<store>/sdngp-snapshot/<build>) and must reproduce their recorded fit RMS and held-out days.
 // Without the local records the check says so and exits 2: a skip is never a pass.
 import fs from 'node:fs';
@@ -155,7 +155,7 @@ if (heoRows.length) {
   replayed += 1;
 }
 // replay one TESS window from the MAST definitive ephemeris files
-let tessObject = null; // kept for the SDN-GP replay below (amendment A9h: TESS is a segment set in the headline build)
+let tessObject = null; // kept for the SDN-AP replay below (amendment A9h: TESS is a segment set in the headline build)
 const tessRows = read(path.join(store, 'rows', 'heo-tess.jsonl'));
 if (tessRows.length) {
   const row = tessRows.filter((r) => r.fitSeconds === 86400)[Math.floor(tessRows.filter((r) => r.fitSeconds === 86400).length / 2)];
@@ -213,7 +213,7 @@ if (fs.existsSync(m123Dir)) {
   }
   await frames.destroy();
 }
-// replay SDN-GP windows of the headline build with the pinned copy of the module
+// replay SDN-AP windows of the headline build with the pinned copy of the module
 const headline = sdngpBuilds().filter((x) => x.complete).at(-1);
 if (headline) {
   process.env.SDNGP_SNAPSHOT = headline.build;
@@ -222,12 +222,12 @@ if (headline) {
   let sdReplayed = 0;
   const check = async (object, startMs, fitSeconds, leadDays, { defaultSpan = false } = {}) => {
     const rec = recorded.get(rowKey({ source: object.source + (defaultSpan ? '+default' : ''), id: object.id, startUtc: new Date(startMs).toISOString(), fitSeconds }))?.sdngp;
-    if (!rec) fail(`SDN-GP replay: no recorded row for ${object.id} ${new Date(startMs).toISOString()} in build ${headline.build}`);
+    if (!rec) fail(`SDN-AP replay: no recorded row for ${object.id} ${new Date(startMs).toISOString()} in build ${headline.build}`);
     const again = (await scoreWindow(bs, object, startMs, { fitSeconds, leadDays, minCoverage: config.windows.minimumCoverage, arms: 'sdngp', defaultSpan })).sdngp;
-    if (defaultSpan && rec.ok && Math.abs(again.spanHours - rec.spanHours) > 1e-9) fail(`SDN-GP replay ${object.id}: the span the module chose differs (${again.spanHours} vs ${rec.spanHours})`);
-    if (Boolean(again.ok) !== Boolean(rec.ok)) fail(`SDN-GP replay ${object.id}: ok differs`);
-    if (rec.ok && !same(again.fitRmsKm, rec.fitRmsKm)) fail(`SDN-GP replay ${object.id}: fit RMS ${again.fitRmsKm} vs ${rec.fitRmsKm}`);
-    for (const k of Object.keys(rec.days ?? {})) if (!same(again.days[k].rmsKm, rec.days[k].rmsKm)) fail(`SDN-GP replay ${object.id}: day ${k} differs`);
+    if (defaultSpan && rec.ok && Math.abs(again.spanHours - rec.spanHours) > 1e-9) fail(`SDN-AP replay ${object.id}: the span the module chose differs (${again.spanHours} vs ${rec.spanHours})`);
+    if (Boolean(again.ok) !== Boolean(rec.ok)) fail(`SDN-AP replay ${object.id}: ok differs`);
+    if (rec.ok && !same(again.fitRmsKm, rec.fitRmsKm)) fail(`SDN-AP replay ${object.id}: fit RMS ${again.fitRmsKm} vs ${rec.fitRmsKm}`);
+    for (const k of Object.keys(rec.days ?? {})) if (!same(again.days[k].rmsKm, rec.days[k].rmsKm)) fail(`SDN-AP replay ${object.id}: day ${k} differs`);
     sdReplayed += 1;
   };
   for (const source of ['iss', 'gnss', 'slr-low-current']) {
@@ -259,7 +259,7 @@ if (headline) {
     for (const k of Object.keys(row.sdngp.days)) if (!same(again.days[k].rmsKm, row.sdngp.days[k].rmsKm)) fail(`Moon-centered replay ${row.startUtc}: day ${k} differs`);
     sdReplayed += 1;
   }
-  const spanRows = read(path.join(store, 'rows', 'span-slr.jsonl')); // a COMSPOC-aligned fit-span window (A9e): SGP4 and XP here, SDN-GP below
+  const spanRows = read(path.join(store, 'rows', 'span-slr.jsonl')); // a COMSPOC-aligned fit-span window (A9e): SGP4 and XP here, SDN-AP below
   const spanRow = spanRows.filter((r) => r.spanHours === 72)[0] ?? spanRows[0];
   if (spanRow) {
     const object = spanObject({ kind: 'laser-ranged', norad: spanRow.norad });
@@ -320,7 +320,7 @@ if (headline) {
     }
   }
   await bs.close();
-  ok(`${sdReplayed} SDN-GP windows replayed with the pinned module build ${headline.build} reproduce their recorded statistics`);
+  ok(`${sdReplayed} SDN-AP windows replayed with the pinned module build ${headline.build} reproduce their recorded statistics`);
   replayed += sdReplayed;
 }
 await b.close();

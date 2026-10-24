@@ -119,6 +119,43 @@ function m24(dir) {
     falseAlarmsPerObjectYear: new Set(det.map((d) => String(d.epoch).slice(0, 16))).size / (29 / 365.25), noEnvironment: noEnvironment(dir, 'm24-noenv', 'm24') };
 }
 
+const HIT_MIN = 92; // one orbit
+const DV_BINS = [['0.1 to 0.3 m/s', 0, 0.35], ['0.4 to 0.6 m/s', 0.35, 0.65], ['0.7 to 1.0 m/s', 0.65, 1.05], ['above 1.0 m/s', 1.05, Infinity]];
+
+/** M24 on NASA's archive (amendment A11): burn windows (pre and post files) and burn-free windows, scored against the headers' planned TIG and delta-v. */
+function m24a(dir, resultsDir) {
+  const rows = rowsOf(dir, 'm24a');
+  if (!rows.length) return null;
+  const file = path.join(resultsDir, 'iss-burns.json');
+  const burns = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
+  const ok = rows.filter((r) => r.ok);
+  const lam = (d) => Number(/Lambda ([\d.]+)/.exec(d.algorithm ?? '')?.[1]);
+  const burnGroup = (kind) => {
+    const rs = ok.filter((r) => r.kind === kind && r.plannedDvMS !== undefined);
+    const scored = rs.map((r) => {
+      const tig = Date.parse(r.tigUtc), d = r.detections[0] ?? null;
+      const errMin = d ? (Date.parse(`${d.epoch.replace(/Z?$/, 'Z')}`) - tig) / 60000 : null;
+      const mag = d ? Math.hypot(...d.dvMS) : null;
+      return { r, d, errMin, hit: d !== null && Math.abs(errMin) <= HIT_MIN, mag, ratio: d ? mag / r.plannedDvMS : null, vShare: d ? Math.abs(d.dvMS[1]) / mag : null, planned: r.plannedDvMS, multi: (r.otherBurns ?? []).length > 0 };
+    });
+    const hits = scored.filter((x) => x.hit);
+    const bins = DV_BINS.map(([name, lo, hi]) => { const b = scored.filter((x) => x.planned >= lo && x.planned < hi); return { name, windows: b.length, hits: b.filter((x) => x.hit).length }; });
+    return { windows: rs.length, refused: rows.filter((r) => r.kind === kind && !r.ok).length, hits: hits.length, wrongEpoch: scored.filter((x) => x.d && !x.hit).length, none: scored.filter((x) => !x.d).length, multi: scored.filter((x) => x.multi).length,
+      epochErrorMin: { median: q(hits.map((x) => x.errMin), 0.5), p10: q(hits.map((x) => x.errMin), 0.1), p90: q(hits.map((x) => x.errMin), 0.9), maxAbs: q(hits.map((x) => Math.abs(x.errMin)), 1) },
+      dvRatio: { median: q(hits.map((x) => x.ratio), 0.5), p10: q(hits.map((x) => x.ratio), 0.1), p90: q(hits.map((x) => x.ratio), 0.9) }, dvAbsErrorMS: q(hits.map((x) => Math.abs(x.mag - x.planned)), 0.5), vShare: q(hits.map((x) => x.vShare), 0.5),
+      lambda: { median: q(scored.filter((x) => x.d).map((x) => lam(x.d)), 0.5) }, bins };
+  };
+  const free = ok.filter((r) => r.kind === 'free');
+  const det = free.flatMap((r) => r.detections.map((d) => ({ ms: Date.parse(`${d.epoch.replace(/Z?$/, 'Z')}`), mag: Math.hypot(...d.dvMS), lambda: lam(d) }))).sort((a, b) => a.ms - b.ms);
+  const distinct = []; for (const d of det) if (!distinct.length || d.ms - distinct.at(-1).ms > 6 * 3600e3) distinct.push(d);
+  const spans = free.map((r) => [Date.parse(r.startUtc), Date.parse(r.stopUtc)]).sort((a, b) => a[0] - b[0]);
+  let covered = 0, end = -Infinity; for (const [a, b] of spans) { if (b > end) { covered += b - Math.max(a, end); end = b; } }
+  const years = covered / (365.25 * 86400e3);
+  return { files: new Set(rows.map((r) => r.file)).size, clusters: burns?.clusters?.length ?? null, notScored: burns?.notScored ?? null, pre: burnGroup('burn-pre'), post: burnGroup('burn-post'),
+    free: { windows: free.length, refused: rows.filter((r) => r.kind === 'free' && !r.ok).length, windowsWithDetection: free.filter((r) => r.detections.length).length, detections: det.length, distinctEpochs: distinct.length, coverageYears: years, falseAlarmsPerObjectYear: distinct.length / years,
+      dvMS: stats(det.map((d) => d.mag)), lambda: stats(det.map((d) => d.lambda)) } };
+}
+
 /**
  * M25: the module's treatment of each Moon-centered window against the truth-side maneuver list (lunar-maneuvers.json, amendment A9f). A segment starts at the arc start plus
  * USER_DEFINED_SDNGP_MANEUVER_BEFORE_SECONDS (the rows of the previous build show it: a 72 h arc with a listed maneuver 45.5 h after its start has 172,800 s); the lag is that start minus the
@@ -161,7 +198,7 @@ function m24c(dir) {
     dvMS: stats(det.map((d) => Math.hypot(...d.dvMS))), lambda: stats(det.map(lambda)), objectDays, falseAlarmsPerObjectYear: distinct / (objectDays / 365.25), noEnvironment: noEnvironment(dir, 'm24c-noenv', 'm24c') };
 }
 
-export function eventsStudy(dir, resultsDir) { return dir ? { build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m25: m25(dir, resultsDir) } : null; }
+export function eventsStudy(dir, resultsDir) { return dir ? { build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m25: m25(dir, resultsDir) } : null; }
 
 // ---- markdown (section 16) ----
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));
@@ -176,7 +213,7 @@ export function eventsMarkdown(e) {
     const m = e.m22;
     L.push('#### M22. The impulse map', '',
       `${m.satellites} registered Starlink truths (every fifth in NORAD order). Each is fitted as in the G1 rows (first 24 h), \`maneuver\` applies one impulse of the stated size at the fit end t_b, and days 1 to 3 after t_b are scored against FFM-1 restarted 60 s before t_b with the same impulse planted. The control restarts FFM-1 without an impulse and reproduces the registered truth to ${f(m.controlMedianDifferenceM, 3)} m (median) and ${f(m.controlMaxDifferenceM, 3)} m (largest) over the 864 samples; its day 1 / 2 / 3 median RMS is ${DAYS.map((k) => f(m.control[k])).join(' / ')} km against ${DAYS.map((k) => f(m.noManeuverRows[k])).join(' / ')} km for the no-maneuver rows of this build for the same satellites (largest difference per satellite and day ${f(m.controlVsRows.maxAbsDifferenceKm, 4)} km over ${m.controlVsRows.satellites}).`, '',
-      'Median 3D RMS by day (km), the excess over the control of the same satellite (median; 90th percentile) and the response error (RMS over the day of the difference between the maneuvered and unmaneuvered SDN-GP trajectories, less the same difference of FFM-1: median; maximum):', '',
+      'Median 3D RMS by day (km), the excess over the control of the same satellite (median; 90th percentile) and the response error (RMS over the day of the difference between the maneuvered and unmaneuvered SDN-AP trajectories, less the same difference of FFM-1: median; maximum):', '',
       '| Case | Satellites | Day 1 | Day 2 | Day 3 | Excess day 1 | Excess day 2 | Excess day 3 | Response day 1 | Response day 3 |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |',
       ...m.cases.map((c) => `| ${c.kind === 'map0' ? 'zero delta-v through the map' : `${AX[c.axis]} ${c.dvMS} m/s`} | ${c.scored} of ${c.satellites} | ${DAYS.map((k) => f(c.rms[k].median)).join(' | ')} | ${[1, 2, 3].map((k) => `${f(c.excess[k].median)} (${f(c.excess[k].p90)})`).join(' | ')} | ${f(c.response[1].median)} (${f(c.response[1].max)}) | ${f(c.response[3].median)} (${f(c.response[3].max)}) |`), '',
       ...(m.cases.some((c) => Object.keys(c.failures).length) ? [`Refusals and failures by name: ${m.cases.filter((c) => Object.keys(c.failures).length).map((c) => `${c.id} ${Object.entries(c.failures).map(([k, v]) => `${k} ${v}`).join(', ')}`).join('; ')}.`, ''] : []));
@@ -191,7 +228,7 @@ export function eventsMarkdown(e) {
   if (e.m28) {
     const m = e.m28;
     L.push('#### M28. The hand-off criteria and the reentry epoch', '',
-      `${m.cells.filter((c) => c.nodes).length} synthetic decays integrated by FFM-1 to its stop at 100 km (T100), ${m.rows} nodes in all (the first sample at which the revolution-mean perigee height falls below a level of the ladder), the SDN-GP set fitted on the truth up to the node (the module chooses its span), scored on the next 12 h in four 3 h blocks, and \`reentry\` on the same set. eps1 is 2 |da_rev| / H with H FFM-1's NRLMSISE-00 density scale height at the perigee; the module's own H is not exposed. By level, pooled over the cells (median of the nodes; block errors are the median 3D RMS in km):`, '',
+      `${m.cells.filter((c) => c.nodes).length} synthetic decays integrated by FFM-1 to its stop at 100 km (T100), ${m.rows} nodes in all (the first sample at which the revolution-mean perigee height falls below a level of the ladder), the SDN-AP set fitted on the truth up to the node (the module chooses its span), scored on the next 12 h in four 3 h blocks, and \`reentry\` on the same set. eps1 is 2 |da_rev| / H with H FFM-1's NRLMSISE-00 density scale height at the perigee; the module's own H is not exposed. By level, pooled over the cells (median of the nodes; block errors are the median 3D RMS in km):`, '',
       '| Level (km) | Nodes (fitted) | h_p | e | da_rev (km) | eps1 | C1 / C2 / C3 tripped | Fit RMS | Block 1 | Block 2 | Block 3 | Block 4 |', '| --: | --: | --: | --: | --: | --: | --- | --: | --: | --: | --: | --: |',
       ...m.byLevel.map((g) => `| ${g.level} | ${g.nodes} (${g.fitted}) | ${f(g.hp.median, 1)} | ${f(g.e.median, 4)} | ${f(g.daRevKm.median)} | ${f(g.eps1.median, 4)} | ${['C1', 'C2', 'C3'].map((c) => `${Math.round(g.share[c] * 100)} %`).join(' / ')} | ${f(g.fitRms.median)} | ${g.blocks.map((x) => `${f(x.median)}${x.failed ? ` (${x.failed} failed)` : ''}`).join(' | ')} |`), '',
       'By cell: T100, the first level at which each criterion trips on the truth, and the first level at which the block-1 error exceeds 1 km and 10 km (a criterion is useful when its level is above the error\'s):', '',
@@ -207,6 +244,17 @@ export function eventsMarkdown(e) {
     L.push('#### M24. The ISS ephemerides through `detect_maneuvers`', '',
       `The two distinct NASA OEM files in the archive (created 2026-10-07 and 2026-10-21; 15 days each, 29 object-days together) hold no reboost: the event table of the first lists docking, departure and launch events with delta-v 0.0, the second carries none. ${m.windows} windows of 72 h (every 24 h, every 240 s state, TEME by foundation/frames): ${m.ok} answered, ${m.refused.length} refused (${m.refused.join(', ') || 'none'}); ${m.windowsWithDetection} windows reported a burn (${m.detections} detections at ${m.distinctEpochs} distinct epochs; delta-v median ${f(m.dvMS.median, 3)} m/s, maximum ${f(m.dvMS.max, 3)} m/s; Lambda median ${f(m.lambda.median, 0)}). Every detection is a false alarm: ${f(m.falseAlarmsPerObjectYear, 1)} per object-year over the distinct epochs. The detector ran with the saved space-weather table loaded (\`load_environment\`, amendment A10d)${m.noEnvironment ? `; in an instance with no environment loaded the same windows gave ${m.noEnvironment.windowsWithDetection} of ${m.noEnvironment.windows} with a detection (Lambda median ${f(m.noEnvironment.lambdaMedian, 0)})` : ''}. Detection of real reboosts and the errors of delta-v and epoch need the NASA archive of past OEM headers (TIG, DV, HA, HP), which the local archive does not hold.`, '');
     if (e.m24c) { const c = e.m24c; L.push(`Control on burn-free FFM-1 arcs (A10c): ${c.windows} windows of 72 h on ${c.satellites} registered Starlink truths (one integration from one state, 300 s states): ${c.windowsWithDetection} windows reported a burn (${c.detections} detections at ${c.distinctEpochs} distinct epochs${c.detections ? `; delta-v median ${f(c.dvMS.median, 3)} m/s, maximum ${f(c.dvMS.max, 3)} m/s; Lambda median ${f(c.lambda.median, 0)}` : ''}), ${f(c.falseAlarmsPerObjectYear, 1)} per object-year over ${c.objectDays} object-days; refused: ${c.refused.length ? c.refused.join(', ') : 'none'}${c.noEnvironment ? `; with no environment loaded: ${c.noEnvironment.windowsWithDetection} of ${c.noEnvironment.windows} (Lambda median ${f(c.noEnvironment.lambdaMedian, 0)})` : ''}.`, ''); }
+  }
+  if (e.m24a) {
+    const m = e.m24a;
+    const row = (name, g) => `| ${name} | ${g.windows} | ${g.hits} | ${g.wrongEpoch} | ${g.none} | ${f(g.epochErrorMin.median, 1)} [${f(g.epochErrorMin.p10, 1)}, ${f(g.epochErrorMin.p90, 1)}] | ${f(g.dvRatio.median, 2)} [${f(g.dvRatio.p10, 2)}, ${f(g.dvRatio.p90, 2)}] | ${f(g.dvAbsErrorMS, 2)} | ${f(g.vShare, 2)} |`;
+    L.push('#### M24 on NASA\'s ISS archive (amendment A11)', '',
+      `${m.files} OEM files of the archive (NASA JSC FOD TOPO; dated folders 2020 to 2026, fetched 2026-10-24), ${m.clusters} distinct planned burns (header events with a delta-v above zero, TIGs within 12 h taken as one burn)${m.notScored?.length ? `, ${m.notScored.length} not scored (no file with 12 h of states before the burn and 24 h after)` : ''}. TIG and delta-v are the headers' planned values, not measurements of the executed burns. Each window is 72 h, every state (TEME by foundation/frames), \`detect_maneuvers\` with the daily space weather of the years loaded (\`load_environment\`). A detection within ${HIT_MIN} min (one orbit) of TIG is a hit; the epoch error is the detected epoch less TIG, the delta-v ratio the detected |delta-v| over the planned one (median [10th, 90th percentile] over the hits):`, '',
+      '| Window | Windows | Hits | Detection elsewhere | No detection | Epoch error (min) | |Delta-v| / planned | |Delta-v| error (m/s) | V share of delta-v |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
+      row('pre-burn file (burn still to come)', m.pre), row('post-burn file (burn behind its start)', m.post), '',
+      'Hits by planned delta-v (pre-burn files / post-burn files):', '', '| Planned delta-v | Pre: windows | Pre: hits | Post: windows | Post: hits |', '| --- | --: | --: | --: | --: |',
+      ...m.pre.bins.map((b, i) => `| ${b.name} | ${b.windows} | ${b.hits} | ${m.post.bins[i].windows} | ${m.post.bins[i].hits} |`), '',
+      `Burn-free windows (the leading 72 h of every file whose header lists no burn in or within an hour of it): ${m.free.windows} windows (${m.free.refused} refused) covering ${f(m.free.coverageYears, 2)} object-years; ${m.free.windowsWithDetection} windows reported a burn (${m.free.detections} detections, ${m.free.distinctEpochs} distinct epochs merged within 6 h; delta-v median ${f(m.free.dvMS.median, 3)} m/s, maximum ${f(m.free.dvMS.max, 3)} m/s; Lambda median ${f(m.free.lambda.median, 0)}): ${f(m.free.falseAlarmsPerObjectYear, 1)} false alarms per object-year.`, '');
   }
   if (e.m25) {
     L.push('#### M25. LRO and Danuri against the truth-side maneuver list', '',

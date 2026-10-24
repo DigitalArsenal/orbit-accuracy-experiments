@@ -1,0 +1,158 @@
+{
+  "generatedFrom": "Space-Track TIP and decay snapshots of the local archive (results only: times), as of the newest snapshot",
+  "newestSnapshot": "2026-10-24.json.gz",
+  "objects": [
+    {
+      "norad": 47788,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 48120,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 48129,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 48370,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 48662,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 49151,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 49178,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 49179,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 51121,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 53660,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 53913,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 55920,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 56478,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 56483,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 56787,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 64713,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 67014,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 67028,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    },
+    {
+      "norad": 67211,
+      "tipMessages": 0,
+      "lastTipMsgUtc": null,
+      "lastTipDecayUtc": null,
+      "lastTipWindowMin": null,
+      "decayMessage": null
+    }
+  ]
+}

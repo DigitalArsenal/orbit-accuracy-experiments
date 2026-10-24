@@ -1,4 +1,4 @@
-// Where the SDN-GP arm keeps its rows (amendment A9b): one directory per build of the module, <store>/rows/sdngp/<wasm SHA-256 prefix>/, with
+// Where the SDN-AP arm keeps its rows (amendment A9b): one directory per build of the module, <store>/rows/sdngp/<wasm SHA-256 prefix>/, with
 // build.json (hash, side-B source commit, uncommitted files, first use) and one file per source and shard, <source>.s<k>.jsonl. Rows of different
 // builds are never merged. A sink hands a shard its windows (every n-th of a fixed enumeration), remembers the windows already scored, and appends.
 import fs from 'node:fs';

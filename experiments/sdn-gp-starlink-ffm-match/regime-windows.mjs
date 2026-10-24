@@ -1,7 +1,7 @@
-// Amendment A8: windows prepared for SDN-GP in the regimes SGP4 and SGP4-XP do not describe (lunar, cislunar, heliocentric), so that
+// Amendment A8: windows prepared for SDN-AP in the regimes SGP4 and SGP4-XP do not describe (lunar, cislunar, heliocentric), so that
 // they score as soon as side B's regime extensions exist. For every truth pack under <store>/pack/ (lib/packs.mjs) this step lists the fit
 // windows by the rule of its regime (below), writes results/.../regime-windows.json (pack descriptions, window starts and counts, hashes:
-// no states), and can export one window's fit span as a $OEM for SDN-GP to fit:
+// no states), and can export one window's fit span as a $OEM for SDN-AP to fit:
 //   node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs                      # list windows, write the results file
 //   node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs --export <pack> --start <ISO> --fit-hours <h> --out <file.oem>
 // The scorer is score-pack.mjs. Rules (PLAN A8): Moon-centered (LRO, Danuri): fits of 24 h and 72 h every 48 h, held-out days 1 to 3;

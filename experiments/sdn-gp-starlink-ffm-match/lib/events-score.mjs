@@ -1,4 +1,4 @@
-// Amendment A10: the scoring of M22 (impulse map) and M23 (finite burns) for one satellite on one build (b = opened baselines with the SDN-GP module), against the FFM-1 truths of events-truth.mjs.
+// Amendment A10: the scoring of M22 (impulse map) and M23 (finite burns) for one satellite on one build (b = opened baselines with the SDN-AP module), against the FFM-1 truths of events-truth.mjs.
 // `sink` takes the rows (append, has); `only` limits the cases (a replay).
 import { read } from '../common.mjs';
 import { rtnSeries } from './baselines.mjs';
@@ -13,7 +13,7 @@ const rms = (v) => (v.length ? Math.sqrt(v.reduce((s, x) => s + x * x, 0) / v.le
 const dayOfK = (k) => Math.ceil((k + 1) / (86400 / STEP_S)); // k is 0-based: k = 0 is t_b + 300 s
 
 /** The G1 fit of the first 24 h of a registered truth: { fit, object, lines }. */
-async function g1Fit(b, meta, flat) {
+export async function g1Fit(b, meta, flat) {
   const t0 = t0Of(meta), stopFit = tbOf(meta), n = FIT_HOURS * 60;
   const lines = Array.from({ length: n + 1 }, (_, i) => ({ epoch: iso(t0 + i * 60000), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] }));
   const bytes = oemBytes({ originator: 'G1 FFM-1', block: { frame: 'GCRF', frameName: 'GCRF', timeSystem: 'UTC', object: { name: `STARLINK-${meta.norad}`, id: '', norad: meta.norad }, lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false });

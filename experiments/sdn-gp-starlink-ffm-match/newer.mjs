@@ -5,7 +5,7 @@
 // fitted to the first 24 h of that FFM truth, SpaceX's own earlier forecast where the epochs coincide, and, for the same-day
 // objects, COMSPOC's XP set (local scoring only). Output: <store>/rows/newer.jsonl, statistics only. Re-run as newer files arrive.
 //   node experiments/sdn-gp-starlink-ffm-match/newer.mjs [--limit N] [--daily-only] [--after 2026-10-24T08:00:00Z] [--shard k/n]
-// Amendment A9b: when a build of the SDN-GP module has run every source (rows/sdngp/<build>/complete.json), the newest such build is fitted to the same first 24 h of the
+// Amendment A9b: when a build of the SDN-AP module has run every source (rows/sdngp/<build>/complete.json), the newest such build is fitted to the same first 24 h of the
 // FFM truth and scored on the same newer file (arms.sdngp, with the build in the row); --no-sdngp leaves it out.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -34,7 +34,7 @@ frozen();
 const modules = modulesRoot();
 const context = await loadEnvironment(modules, { archive: config.archive, store });
 let b, sdngpOn = Boolean(SDNGP_BUILD);
-try { b = await openBaselines(modules, { sdngp: sdngpOn }); } catch (error) { console.error(`SDN-GP arm off: ${String(error.message).slice(0, 160)}`); sdngpOn = false; b = await openBaselines(modules); }
+try { b = await openBaselines(modules, { sdngp: sdngpOn }); } catch (error) { console.error(`SDN-AP arm off: ${String(error.message).slice(0, 160)}`); sdngpOn = false; b = await openBaselines(modules); }
 const frames = await openModule(modules, 'foundation/frames');
 const comspoc = readSets(zlib.gunzipSync(fs.readFileSync(path.join(config.archive, 'hac/comspoc-spacebook/2026/2026-10-23/xp-tle.txt.gz'))).toString('utf8'));
 const done = new Map((fs.existsSync(rowsFile) ? fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map(JSON.parse) : []).map((r) => [`${r.norad}|${r.newerCreatedUtc}`, r]));
@@ -74,7 +74,7 @@ for (const meta of metas) {
     lines: Array.from({ length: 1441 }, (_, i) => ({ epoch: iso(truthStart + i * 60000), r: [flat[i * 6], flat[i * 6 + 1], flat[i * 6 + 2]], v: [flat[i * 6 + 3], flat[i * 6 + 4], flat[i * 6 + 5]] })) });
   const sets = await fitElementSets(b, object, truthStart, config.windows.fitHours * 3600);
   for (const [name, payload] of [['xp', sets.xp], ['sgp4', sets.sgp4]]) if (payload) arms[name] = await compareStates(b, await propagateSet(b, payload, epochs, 'EME2000'), truth);
-  if (sdngpOn) { // SDN-GP fitted to the same first 24 h, taken to EME2000 at the newer file's epochs
+  if (sdngpOn) { // SDN-AP fitted to the same first 24 h, taken to EME2000 at the newer file's epochs
     try {
       const predicted = await sdngpPredict(b, object, truthStart, config.windows.fitHours * 3600, epochs, 'EME2000');
       arms.sdngp = predicted.error ? { ok: false, error: predicted.error, build: SDNGP_BUILD } : { ok: true, build: SDNGP_BUILD, ...(await compareStates(b, predicted, truth)) };

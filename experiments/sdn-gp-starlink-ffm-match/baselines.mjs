@@ -2,7 +2,7 @@
 // held-out days 1-3 with the radial / in-track / cross-track split. One JSON line per window under
 // <store>/rows/<source>.jsonl (statistics only). Re-running skips windows already present.
 //   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs [--source gnss,iss,slr-high,slr-low]
-//   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --arm sdngp [--span default] [--shard k/n] --source ...   (amendment A9b: the SDN-GP fitter on the same windows; rows per build of the module)
+//   node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --arm sdngp [--span default] [--shard k/n] --source ...   (amendment A9b: the SDN-AP fitter on the same windows; rows per build of the module)
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, store, args } from './common.mjs';
@@ -13,8 +13,8 @@ import { windowStarts, iso } from './lib/windows.mjs';
 import { sdngpSink, rowKey } from './lib/sdngp-rows.mjs';
 
 const ARM = args.arm ?? 'both';
-const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: only the end of the fit is declared (truth from 120 h before it); the module's span rule chooses; SDN-GP only
-if (DEFAULT_SPAN && ARM !== 'sdngp') throw new Error('--span default needs --arm sdngp'); // 'both': SGP4 and SGP4-XP; 'sdngp': the SDN-GP fitter alone, rows under rows/sdngp/<build>/
+const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: only the end of the fit is declared (truth from 120 h before it); the module's span rule chooses; SDN-AP only
+if (DEFAULT_SPAN && ARM !== 'sdngp') throw new Error('--span default needs --arm sdngp'); // 'both': SGP4 and SGP4-XP; 'sdngp': the SDN-AP fitter alone, rows under rows/sdngp/<build>/
 const wanted = new Set((args.source ?? 'iss,iss-daily,gnss,slr-high,slr-low,mgex-geo,mgex-igso').split(','));
 const P = config.precise;
 const A4 = sources.MGEX_A4; // amendment A4: GFZ MGEX GEO and IGSO windows

@@ -1,4 +1,4 @@
-// Amendment A9d: the Starlinks whose FFM fit has B_eff above 0.5 m2/kg (19 of 239: lowering or decaying objects), fitted by SDN-GP in two named variants besides the build's
+// Amendment A9d: the Starlinks whose FFM fit has B_eff above 0.5 m2/kg (19 of 239: lowering or decaying objects), fitted by SDN-AP in two named variants besides the build's
 // default (rows of starlink-sdngp.mjs): "rule" = DESIGN 2c.2 on (a B_eff above 0.5 m2/kg is replaced by tau0 held after the arc) and "free" = B_eff free, each set through the
 // build's diagnostic export before the fit, so the result does not depend on the default of the build. Same window as the baselines (24 h fit from the truth start, held-out days 1 to 3).
 //   node experiments/sdn-gp-starlink-ffm-match/starlink-lowering.mjs [--shard k/n]

@@ -1,4 +1,4 @@
-// SDN-GP (theory 16) of side B's module `sdn-gp-propagator` as a third fitter beside SGP4 and SGP4-XP (amendment A9). The module is used as built, through its
+// SDN-AP (theory 16) of side B's module `sdn-gp-propagator` as a third fitter beside SGP4 and SGP4-XP (amendment A9). The module is used as built, through its
 // published surfaces: `fit_sdngp` on the invoke surface (typed $OEM with the fit interval, the space-weather table as FFM reads it, an optional open-DCA $DCL
 // and B prior), `ingest_omm` for the fitted set, and the batch entry `sdngp_propagate_minutes_soa` (the one the module's own tests use) to get states at the
 // held-out epochs, because the invoke surface's `propagate` stops one day after the set's epoch. Side B rebuilds `dist/` in place, so every run first copies the
@@ -11,14 +11,18 @@ import { createStandaloneHarness } from 'space-data-module-sdk/testing/isomorphi
 import { OMM, OEM, flatbuffers, blockLines } from './sds.mjs';
 import { sha256 } from '../common.mjs';
 
-export const SDNGP_SOURCE = process.env.SDNGP_MODULE_ROOT ?? '/Users/tj/software/worktrees/space-data-network-closed-modules--modules-sdn-gp-propagator-20261023/packages/sdn-gp-propagator';
+// Side B's package: sdn-gp-propagator until the owner's rename of 2026-10-24 (SDN-AP, "advanced propagator"), sdn-ap-propagator after it; the first of the two with a built wasm is used, SDNAP_MODULE_ROOT (or the earlier
+// SDNGP_MODULE_ROOT) names another place.
+const PACKAGES = '/Users/tj/software/worktrees/space-data-network-closed-modules--modules-sdn-gp-propagator-20261023/packages';
+export const SDNGP_SOURCE = process.env.SDNAP_MODULE_ROOT ?? process.env.SDNGP_MODULE_ROOT
+  ?? ['sdn-ap-propagator', 'sdn-gp-propagator'].map((n) => path.join(PACKAGES, n)).find((d) => fs.existsSync(path.join(d, 'dist/isomorphic/module.wasm'))) ?? path.join(PACKAGES, 'sdn-gp-propagator');
 const T = (name) => ({ schemaName: `${name}.fbs`, fileIdentifier: `$${name}`, rootTypeName: name, wireFormat: 'flatbuffer' });
 
 /** Copy the built module into the store (once per build) and describe it; with `hash` (a prefix) the snapshot already taken is used, so that all workers of a run run the same build. */
 export function snapshot(store, pin = null) {
   if (pin) {
     const dir = fs.readdirSync(path.join(store, 'sdngp-snapshot')).filter((d) => d.startsWith(pin)).map((d) => path.join(store, 'sdngp-snapshot', d))[0];
-    if (!dir) throw new Error(`no SDN-GP snapshot ${pin} in ${store}`);
+    if (!dir) throw new Error(`no SDN-AP snapshot ${pin} in ${store}`);
     return { dir, wasmPath: path.join(dir, 'module.wasm'), ...JSON.parse(fs.readFileSync(path.join(dir, 'snapshot.json'), 'utf8')) };
   }
   const wasm = fs.readFileSync(path.join(SDNGP_SOURCE, 'dist/isomorphic/module.wasm'));
@@ -38,22 +42,28 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
   const snap = snapshot(store, pin);
   const h = await createStandaloneHarness('browser', snap.wasmPath, { surface: 'direct' });
   const x = h.instance.exports;
+  // The owner's rename (SDN-AP): a build that carries `fit_sdnap` and `sdnap_*` exports is called by those names, an earlier one by `fit_sdngp` and `sdngp_*`; the parameters it writes
+  // (SDNAP_*) are read back as SDNGP_* so that the row schema, which keeps the historical keys, is the same for every build. The other methods keep their names.
+  const renamed = Buffer.from(await h.readManifest()).toString('latin1').includes('fit_sdnap');
+  const fitMethod = renamed ? 'fit_sdnap' : 'fit_sdngp';
+  const E = (name) => x[`${typeof x.sdnap_alloc === 'function' ? 'sdnap' : 'sdngp'}_${name}`];
+  const historicalName = (n) => String(n).replace(/^SDNAP_/, 'SDNGP_');
   const mem = () => h.memory.buffer;
   let scratch = null;
   const reserve = (n) => {
     if (scratch && scratch.n >= n) return;
-    if (scratch) { x.sdngp_free(scratch.minutes); x.sdngp_free(scratch.out); x.sdngp_free(scratch.status); }
-    scratch = { n, minutes: x.sdngp_alloc(8 * n), out: x.sdngp_alloc(48 * n), status: x.sdngp_alloc(4 * n) };
+    if (scratch) { E('free')(scratch.minutes); E('free')(scratch.out); E('free')(scratch.status); }
+    scratch = { n, minutes: E('alloc')(8 * n), out: E('alloc')(48 * n), status: E('alloc')(4 * n) };
   };
   return {
     provenance: { module: 'sdn-gp-propagator', wasmSha256: snap.wasmSha256, sourceCommit: snap.sourceCommit, sourceDirtyFiles: snap.sourceDirtyFiles },
-    /** Fit an SDN-GP set to one plain (not size-prefixed) $OEM block: { ok, omm (bytes), obd (bytes), unpacked, comment, fitRmsKm, heldOutRmsKm, iterations, params } or { ok: false, error }. */
+    /** Fit an SDN-AP set to one plain (not size-prefixed) $OEM block: { ok, omm (bytes), obd (bytes), unpacked, comment, fitRmsKm, heldOutRmsKm, iterations, params } or { ok: false, error }. */
     async fit(oem, { weatherTable, densityCorrection, prior } = {}) {
       const inputs = [{ portId: 'ephemeris', typeRef: T('OEM'), payload: oem }];
       if (weatherTable) inputs.push({ portId: 'space_weather_table', typeRef: T('PRW'), payload: weatherTable });
       if (densityCorrection) inputs.push({ portId: 'density_correction', typeRef: T('DCL'), payload: densityCorrection });
       if (prior) inputs.push({ portId: 'prior', typeRef: T('OMM'), payload: prior });
-      const r = await h.invoke({ methodId: 'fit_sdngp', inputs });
+      const r = await h.invoke({ methodId: fitMethod, inputs });
       if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 160)}` };
       const omm = new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload);
       const obd = new Uint8Array(r.outputs.find((o) => o.portId === 'determination').payload);
@@ -62,7 +72,7 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       // the set's own bytes: the record without comment and without the fit statistics among the user-defined parameters (size-prefixed, as the XP and SGP4 element bytes)
       const minimalT = OMM.OMM.getRootAsOMM(new flatbuffers.ByteBuffer(omm)).unpack();
       minimalT.COMMENT = null;
-      minimalT.USER_DEFINED_PARAMETERS = minimalT.USER_DEFINED_PARAMETERS.filter((q) => ['THEORY', 'SDNGP_B_EFF', 'SDNGP_TAU0', 'SDNGP_TAUC', 'SDNGP_TAUS'].includes(q.PARAM_NAME));
+      minimalT.USER_DEFINED_PARAMETERS = minimalT.USER_DEFINED_PARAMETERS.filter((q) => ['THEORY', 'SDNGP_B_EFF', 'SDNGP_TAU0', 'SDNGP_TAUC', 'SDNGP_TAUS'].includes(historicalName(q.PARAM_NAME)));
       const builder = new flatbuffers.Builder(512);
       OMM.OMM.finishSizePrefixedOMMBuffer(builder, minimalT.pack(builder));
       const minimal = builder.asUint8Array();
@@ -70,7 +80,7 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       return {
         ok: true, omm, obd, unpacked, comment, minimal,
         statesFitted: num(/(\d+) states fitted/), statesHeldOut: num(/(\d+) held out/), fitRmsKm: num(/fit RMS ([\d.]+) km/), fitMaxKm: num(/max ([\d.]+) km/), heldOutRmsKm: num(/held-out RMS ([\d.]+) km/), iterations: num(/(\d+) iterations/),
-        params: Object.fromEntries((unpacked.USER_DEFINED_PARAMETERS ?? []).map((p) => [p.PARAM_NAME, p.PARAM_VALUE])),
+        params: Object.fromEntries((unpacked.USER_DEFINED_PARAMETERS ?? []).map((p) => [historicalName(p.PARAM_NAME), p.PARAM_VALUE])),
       };
     },
     /** A fitted set (any center) propagated by the invoke surface on a grid $OEM template (amendment A9f; the Moon-centered sets are reached only this way): { ok, blocks: [[{epoch, r, v}]], center, error }. */
@@ -91,7 +101,7 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
       const out = [];
       for (const m of minutes) {
         new Float64Array(mem(), scratch.minutes, 1)[0] = m;
-        const status = x.sdngp_propagate_minutes_soa(scratch.minutes, index, 1, scratch.out, scratch.status);
+        const status = E('propagate_minutes_soa')(scratch.minutes, index, 1, scratch.out, scratch.status);
         const v = new Float64Array(mem(), scratch.out, 6);
         out.push({ status, r: [v[0], v[1], v[2]], v: [v[3], v[4], v[5]] });
       }
@@ -99,8 +109,8 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
     },
     /** The build's DESIGN 2c.2 switch (export sdngp_fit_diagnostic, amendment A9d): fits after this call replace a B_eff above `limit` (m2/kg; Infinity: never, B_eff free) by tau0 held after the arc. Returns the previous limit in m2/kg x 1000, or null when the build has no such export. */
     setLoweringLimit(limit) {
-      if (typeof x.sdngp_fit_diagnostic !== 'function') return null;
-      return x.sdngp_fit_diagnostic(limit === Infinity ? 2000000 : Math.round(limit * 1000), -1);
+      if (typeof E('fit_diagnostic') !== 'function') return null;
+      return E('fit_diagnostic')(limit === Infinity ? 2000000 : Math.round(limit * 1000), -1);
     },
     destroy: async () => { await h.destroy?.(); },
     raw: { x, h },

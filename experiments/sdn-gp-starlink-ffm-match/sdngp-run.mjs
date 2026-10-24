@@ -1,4 +1,4 @@
-// Amendment A9b: the SDN-GP arm over every source of section 1, on ONE build of the module. The build is copied to <store>/sdngp-snapshot/ first (or named with --pin)
+// Amendment A9b: the SDN-AP arm over every source of section 1, on ONE build of the module. The build is copied to <store>/sdngp-snapshot/ first (or named with --pin)
 // and every job runs that copy (SDNGP_SNAPSHOT), because side B rebuilds dist/ in place. Jobs are the sharded runners of baselines.mjs, spk-windows.mjs and starlink-sdngp.mjs;
 // their rows land in rows/sdngp/<build>/. When every job exits 0 the build gets complete.json, which the tables use to pick the headline build.
 //   node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs [--workers 8] [--pin 2eca1c8006a1] [--only starlink,gnss]
@@ -14,7 +14,7 @@ const snap = snapshot(store, args.pin ?? null);
 const build = snap.wasmSha256.slice(0, 12);
 const logDir = path.join(store, 'sdngp-run', build);
 fs.mkdirSync(logDir, { recursive: true });
-const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'segment', 'default', 'm22', 'm23', 'm28', 'm24', 'm24c'];
+const SOURCES = ['starlink', 'iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current', 'heo-themis', 'heo-chandra', 'heo-tess', 'heo-artemis2', 'fitlength', 'lowering', 'span-slr', 'span-gnss', 'lunar', 'segment', 'default', 'm22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p'];
 const only = args.only ? new Set(args.only.split(',')) : null;
 const wanted = (j) => !only || only.has(j.source) || [...only].some((o) => j.source.startsWith(`${o}:`)); // --only default selects every default-span job
 const shards = (name, script, extra, n) => Array.from({ length: n }, (_, k) => ({ source: name, name: `${name}.s${k}of${n}`, script, argv: [...extra, ...(n > 1 ? ['--shard', `${k}/${n}`] : [])] }));
@@ -29,6 +29,8 @@ const jobs = [
   ...shards('segment', 'segment-windows.mjs', [], 8), // amendment A9h: the cislunar and heliocentric packs through the segment fits
   // amendment A10: the maneuver, hand-off and detection measurements against the FFM-1 truths of events-truth.mjs (run it first: the truths are independent of the build)
   ...shards('m22', 'events-sdngp.mjs', ['--source', 'm22'], 4), ...shards('m23', 'events-sdngp.mjs', ['--source', 'm23'], 4), ...shards('m28', 'events-sdngp.mjs', ['--source', 'm28'], 6), ...shards('m24', 'events-sdngp.mjs', ['--source', 'm24'], 1), ...shards('m24c', 'events-sdngp.mjs', ['--source', 'm24c'], 4),
+  // amendment A11: the ISS archive windows (M24) and the real reentries (M29); their inputs (the archive files, the extracted element-set histories) do not depend on the build
+  ...shards('m24a', 'events-sdngp.mjs', ['--source', 'm24a'], 4), ...shards('m29', 'events-sdngp.mjs', ['--source', 'm29'], 6), ...shards('m30', 'events-sdngp.mjs', ['--source', 'm30'], 1), ...shards('m24p', 'events-sdngp.mjs', ['--source', 'm24p'], 4),
   ...['iss', 'iss-daily', 'gnss', 'mgex-geo', 'mgex-igso', 'gnss-rapid', 'mgex-geo-rapid', 'mgex-igso-rapid', 'slr-low', 'slr-high', 'slr-low-current', 'slr-high-current'].flatMap((src) => shards(`default:${src}`, 'baselines.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', src], src === 'slr-low' || src === 'mgex-igso' ? 2 : 1)),
   ...shards('default:heo', 'spk-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'heo-themis,heo-chandra,heo-tess'], 1),
   ...shards('default:span-gnss', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-gnss'], 1), ...shards('default:span-slr', 'span-windows.mjs', ['--arm', 'sdngp', '--span', 'default', '--source', 'span-slr'], 1),
@@ -39,7 +41,7 @@ const jobs = [
   ...baselines('iss'), ...baselines('mgex-geo-rapid'), ...baselines('iss-daily'), ...spk('heo-artemis2'),
 ].filter(wanted);
 
-console.error(`SDN-GP arm on build ${build} (${snap.sourceCommit?.slice(0, 8)}, ${snap.sourceDirtyFiles} uncommitted files): ${jobs.length} jobs, ${args.workers ?? 8} at a time; logs ${logDir}`);
+console.error(`SDN-AP arm on build ${build} (${snap.sourceCommit?.slice(0, 8)}, ${snap.sourceDirtyFiles} uncommitted files): ${jobs.length} jobs, ${args.workers ?? 8} at a time; logs ${logDir}`);
 const queue = [...jobs], results = [];
 const next = () => new Promise((resolve) => {
   const job = queue.shift();

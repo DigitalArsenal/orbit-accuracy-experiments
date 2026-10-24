@@ -2,7 +2,7 @@
 // the high-Earth-orbit checkout of Artemis II), with the radial / in-track / cross-track split. States from
 // files/orbit-products, epochs from foundation/time. One JSON line per window under <store>/rows/<source>.jsonl.
 //   node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs [--source heo-themis,heo-chandra,heo-artemis2,heo-tess]
-//   node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs --arm sdngp [--shard k/n] --source ...   (amendment A9b: the SDN-GP fitter on the same windows; rows per build of the module)
+//   node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs --arm sdngp [--shard k/n] --source ...   (amendment A9b: the SDN-AP fitter on the same windows; rows per build of the module)
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, store, args } from './common.mjs';

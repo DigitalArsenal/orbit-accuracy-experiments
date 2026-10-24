@@ -1,4 +1,4 @@
-// Amendment A9f: the Moon-centered SDN-GP on the LRO and Danuri windows of A8 (fits of 24 h and 72 h every 48 h, held-out days 1 to 3), rows per build of the module.
+// Amendment A9f: the Moon-centered SDN-AP on the LRO and Danuri windows of A8 (fits of 24 h and 72 h every 48 h, held-out days 1 to 3), rows per build of the module.
 // Per window: the pack's states of the fit span and the three days after it as a $OEM block (CENTER_NAME MOON, the pack's axes declared, UTC), the fit span as the useable interval,
 // `fit_sdngp` (no environment, no prior); the set is propagated by `propagate` on a grid block (CENTER_NAME MOON, ICRF axes, explicit EPOCHs: every fifth pack epoch of the held-out
 // days; the template names MOON, the set's own center) and scored by score-pack.mjs (gp-error-model pair_statistics in the pack's Moon-centered axes). Rows: rows/sdngp/<build>/lunar.s<k>.jsonl.

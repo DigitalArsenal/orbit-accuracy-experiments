@@ -23,7 +23,7 @@ export async function openBaselines(modules, { sdngp = false } = {}) {
   const xp = await openModule(modules, 'propagator/sgp4-xp');
   const gem = await openModule(modules, 'analysis/gp-error-model', { fresh: true });
   const out = { erm, xp, gem, provenance: [xp.provenance, gem.provenance], close: async () => { await xp.destroy(); await out.sdngp?.destroy(); await out.frames?.destroy(); } };
-  if (sdngp) { // the SDN-GP third fitter (amendment A9): the side-B module, the frames module for the held-out epochs and the run's saved space-weather table
+  if (sdngp) { // the SDN-AP third fitter (amendment A9): the side-B module, the frames module for the held-out epochs and the run's saved space-weather table
     out.sdngp = await openSdngp({ store });
     out.frames = await openModule(modules, 'foundation/frames');
     out.weatherTable = Buffer.from(JSON.parse(fs.readFileSync(path.join(store, 'environment/environment.json'), 'utf8')).inputs.space_weather, 'base64');
@@ -123,7 +123,7 @@ const FIT_FRAME = { EME2000: 'EME2000', GCRF: 'GCRF', ICRF: 'GCRF', TEME: 'TEMEO
 const sdngpOem = (object, lines, stopFit, { defaultSpan = false } = {}) => oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : object.frame === 'EME2000' ? 'EME2000' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
   lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: defaultSpan ? undefined : lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false }); // defaultSpan (A9f): only the end of the fit is declared, the module chooses the span
 
-/** The states of a fitted SDN-GP set (TEME, by the module) at the given epochs (ms), in the named axes ('EME2000' or 'GCRF', by foundation/frames): [{r, v}] in km, km/s. */
+/** The states of a fitted SDN-AP set (TEME, by the module) at the given epochs (ms), in the named axes ('EME2000' or 'GCRF', by foundation/frames): [{r, v}] in km, km/s. */
 async function sdngpStates(b, omm, epochMs, epochsMs, axes) {
   const states = await b.sdngp.states(omm, epochsMs.map((t) => (t - epochMs) / 60000));
   if (states.some((x) => x.status !== 0)) throw new Error(`sdngp propagate status ${states.find((x) => x.status !== 0).status}`);
@@ -135,7 +135,7 @@ async function sdngpStates(b, omm, epochMs, epochsMs, axes) {
   return out;
 }
 
-/** The states of a segment set (SDN-GP regime CISLUNAR or HELIO, amendment A9h) at the given pack epochs, by `propagate` on a grid block that names the set's own center, in the ICRF axes the module answers in: [{r, v}] in km, km/s. */
+/** The states of a segment set (SDN-AP regime CISLUNAR or HELIO, amendment A9h) at the given pack epochs, by `propagate` on a grid block that names the set's own center, in the ICRF axes the module answers in: [{r, v}] in km, km/s. */
 async function sdngpGridStates(b, fit, object, chosen) {
   const grid = oemBytes({ originator: 'G1', block: { frame: 'ICRF', frameName: 'ICRF', center: fit.unpacked.CENTER_NAME ?? 'EARTH', timeSystem: 'UTC', object: { name: object.name, id: '', norad: object.norad },
     lines: chosen.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), start: chosen[0].epoch, stop: chosen.at(-1).epoch }, sizePrefixed: false });
@@ -145,7 +145,7 @@ async function sdngpGridStates(b, fit, object, chosen) {
   return prop.blocks[0].map((x) => ({ r: x.r, v: x.v }));
 }
 
-/** SDN-GP fitted to the first `fitSeconds` of an ephemeris from `startMs` and propagated to `epochsMs` in the named axes: [{r, v}], or { error }. */
+/** SDN-AP fitted to the first `fitSeconds` of an ephemeris from `startMs` and propagated to `epochsMs` in the named axes: [{r, v}], or { error }. */
 export async function sdngpPredict(b, object, startMs, fitSeconds, epochsMs, axes = 'GCRF') {
   const stopFit = startMs + fitSeconds * 1000;
   const lines = slice(object, startMs, stopFit);

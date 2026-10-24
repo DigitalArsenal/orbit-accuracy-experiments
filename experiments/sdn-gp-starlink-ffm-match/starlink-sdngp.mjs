@@ -1,4 +1,4 @@
-// Amendment A9b: the SDN-GP fitter on the Starlink windows of truth.mjs, rows per build of the module (lib/sdngp-rows.mjs).
+// Amendment A9b: the SDN-AP fitter on the Starlink windows of truth.mjs, rows per build of the module (lib/sdngp-rows.mjs).
 //   FFM-propagated truth: every fitted satellite, 24 h fit from the truth start, held-out days 1 to 3 (the window of the baselines).
 //   SpaceX forecast: the satellite's own states inside the 48 h forecast, 24 h fit, day 1 before the join; the file is the local capture or, for the
 //   registered seats, the file the server holds now when its SHA-256 is that of the file the truth was fitted to (a changed file is skipped and counted).

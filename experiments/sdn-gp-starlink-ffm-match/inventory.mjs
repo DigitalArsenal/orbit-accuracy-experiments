@@ -105,7 +105,7 @@ const KERNEL_USE = {
   themis: ['HEO', 'Earth-centered, highly elliptical (THEMIS A, D, E)', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
   chandra: ['HEO', 'Earth-centered, highly elliptical, 64 h period', 'scored: SGP4 and SGP4-XP, 24 h and 72 h fits'],
   artemis2: ['Cislunar and HEO', 'Orion, Earth-centered J2000 throughout', 'first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: scored as segment sets (section 15)'],
-  lro: ['Lunar', 'lunar-centered (Moon), J2000', 'scored: the Moon-centered SDN-GP (section 14)'],
+  lro: ['Lunar', 'lunar-centered (Moon), J2000', 'scored: the Moon-centered SDN-AP (section 14)'],
   psyche: ['Interplanetary', 'Sun-centered, SPK type 1 (modified difference arrays)', 'scored from the JPL Horizons vector tables (section 15); type 1 is not readable by files/orbit-products 0.1.4'],
   lucy: ['Interplanetary', 'Sun-centered, SPK type 1, predicted trajectory', 'scored from the JPL Horizons vector tables (section 15); type 1 not readable'],
   juno: ['Interplanetary', 'Jupiter system and cruise, SPK types 1, 2, 3', 'scored from the JPL Horizons vector tables (section 15); type 1 and 2 not readable'],
@@ -153,7 +153,7 @@ for (const [mission, name, regime, centers] of [['danuri', 'Danuri (KPLO)', 'Lun
     if (!files.length) continue;
     const prov = files.map((f) => JSON.parse(fs.readFileSync(path.join(dir, `${f}.provenance.json`), 'utf8')));
     const stamp = (f) => { const m = /_(\d{8})T(\d{4})_(\d{8})T(\d{4})_/.exec(f); return m ? [`${m[1].slice(0, 4)}-${m[1].slice(4, 6)}-${m[1].slice(6, 8)}`, `${m[3].slice(0, 4)}-${m[3].slice(4, 6)}-${m[3].slice(6, 8)}`] : [null, null]; };
-    add(regime, `JPL Horizons API vector tables, ${name}, ${center}-centered`, `ICRF equatorial axes, TDB, km and km/s; ${prov[0].targetSource ?? ''}; ${files.length} responses`, prov.reduce((a, r) => a + (r.rows ?? 0), 0), `${stamp(files[0])[0]} to ${stamp(files.at(-1))[1]}`, 'truth for the windows prepared for SDN-GP', 'Public NASA/JPL data (registry id jpl-horizons); stored as served, results only.');
+    add(regime, `JPL Horizons API vector tables, ${name}, ${center}-centered`, `ICRF equatorial axes, TDB, km and km/s; ${prov[0].targetSource ?? ''}; ${files.length} responses`, prov.reduce((a, r) => a + (r.rows ?? 0), 0), `${stamp(files[0])[0]} to ${stamp(files.at(-1))[1]}`, 'truth for the windows prepared for SDN-AP', 'Public NASA/JPL data (registry id jpl-horizons); stored as served, results only.');
   }
 }
 const tess = sizeOf(path.join(A, 'hac/mast-tess/models'), (f) => f.endsWith('.bsp'));

@@ -1,6 +1,6 @@
 // Arm 6 (A3): fit-length sensitivity on the FFM truth. Each fitted Starlink is fitted over 24, 48 and 72 h by SGP4 and
 // SGP4-XP and scored on the same interval, 72 to 96 h after the truth start, and on the first day after each fit (a fixed lead). Output: <store>/rows/fitlength.jsonl.
-// --arm sdngp [--shard k/n] (amendment A9c): the same fits by SDN-GP, on the satellites of the registered fitlength.jsonl; rows in rows/sdngp/<build>/fitlength.s<k>.jsonl.
+// --arm sdngp [--shard k/n] (amendment A9c): the same fits by SDN-AP, on the satellites of the registered fitlength.jsonl; rows in rows/sdngp/<build>/fitlength.s<k>.jsonl.
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, store, args } from './common.mjs';

@@ -1,4 +1,4 @@
-// Amendment A10: the FFM-1 truths of M22 (impulses), M23 (finite burns) and M28 (decays), cached under <store>/events/, independent of any build of the module. FFM-1 only; no SDN-GP row is read.
+// Amendment A10: the FFM-1 truths of M22 (impulses), M23 (finite burns) and M28 (decays), cached under <store>/events/, independent of any build of the module. FFM-1 only; no SDN-AP row is read.
 //   node experiments/sdn-gp-starlink-ffm-match/events-truth.mjs [--kind m22,m23,m28] [--shard k/n] [--limit N]
 import { config, frozen, store, args } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';

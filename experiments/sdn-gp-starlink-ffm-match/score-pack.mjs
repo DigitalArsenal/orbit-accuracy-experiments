@@ -1,4 +1,4 @@
-// Amendment A8: score SDN-GP's predicted states for one window of a truth pack (regime-windows.mjs), in the pack's center and axes.
+// Amendment A8: score SDN-AP's predicted states for one window of a truth pack (regime-windows.mjs), in the pack's center and axes.
 //   node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack danuri-lunar --start 2026-09-01T00:00:00Z --fit-hours 24 \
 //        --predicted <states.oem> [--lead-days 1,2,3] [--out result.json]
 // `--predicted` is a size-prefixed $OEM (one or more blocks) with states at the pack's epochs after the fit span. Predicted and truth states are

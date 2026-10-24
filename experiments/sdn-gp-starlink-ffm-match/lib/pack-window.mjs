@@ -1,4 +1,4 @@
-// One window of a truth pack through the SDN-GP module's methods only (amendments A9f and A9h). The pack's states of the fit span and of the held-out days go in as one $OEM block (CENTER_NAME
+// One window of a truth pack through the SDN-AP module's methods only (amendments A9f and A9h). The pack's states of the fit span and of the held-out days go in as one $OEM block (CENTER_NAME
 // the pack's center, the pack's axes declared, UTC, the fit span as the useable interval) to `fit_sdngp`, with no environment and no prior; the set is propagated by `propagate` on a grid block that
 // names the set's own center (ICRF axes for the Moon-centered and segment sets, GCRF axes for a set the module fits on its standard Earth path), one explicit epoch per scored pack state; the
 // states are scored by score-pack.mjs (gp-error-model pair_statistics in the pack's axes, radial / in-track / cross-track by held-out day). `thin` keeps every thin-th held-out state (the lunar

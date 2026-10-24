@@ -1,4 +1,4 @@
-// Truth packs for the regimes awaiting SDN-GP whose kernels the modules can read (SPK types 8, 9, 13): Artemis II after the
+// Truth packs for the regimes awaiting SDN-AP whose kernels the modules can read (SPK types 8, 9, 13): Artemis II after the
 // translunar burn (Earth-centered, cislunar) and LRO (Moon-centered). States by files/orbit-products, epochs by foundation/time.
 // Local output under <store>/pack/: <name>.f64 holds [unix ms, x, y, z, vx, vy, vz] per state (km, km/s, J2000 axes, UTC), <name>.json the
 // description. Derived from public NAIF kernels; nothing is committed except the counts in results/.../kernels.json.

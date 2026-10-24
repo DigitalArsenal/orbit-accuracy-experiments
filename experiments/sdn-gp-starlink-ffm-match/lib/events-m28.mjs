@@ -1,5 +1,5 @@
-// Amendment A10, M28 (DESIGN 5.5): synthetic decays by FFM-1 (lib/decay.mjs), nodes along each decay, the SDN-GP fit at a node scored against the truth after it, the module's `reentry` against FFM-1's
-// own stop. FFM-1 integrates, the SDN-GP module fits, propagates and hands off; this file picks nodes, calls both and counts.
+// Amendment A10, M28 (DESIGN 5.5): synthetic decays by FFM-1 (lib/decay.mjs), nodes along each decay, the SDN-AP fit at a node scored against the truth after it, the module's `reentry` against FFM-1's
+// own stop. FFM-1 integrates, the SDN-AP module fits, propagates and hands off; this file picks nodes, calls both and counts.
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, read, sha256 } from '../common.mjs';
@@ -114,7 +114,7 @@ export async function scoreCell(b, sink, modules, context0, orbits, cell, only =
     const eps1 = (2 * Math.abs(rev.daRev)) / H;
     const truth = { hpKm: rev.hp, e: rev.e, daRevKm: rev.daRev, scaleHeightKm: H, eps1, C1: eps1 > 0.05, C2: rev.hp < 180, C3: Math.abs(rev.dAeRev) / rev.ae > 0.01 && rev.e > 0.01, leadHours: stopMs ? (stopMs - tNode) / 3600e3 : null };
     const row = { ...base, id: key, level: lv, nodeUtc: iso(tNode), node: i, truth };
-    // SDN-GP fitted on the truth up to the node (the module chooses its span)
+    // SDN-AP fitted on the truth up to the node (the module chooses its span)
     const j0 = Math.max(0, i - 1440);
     const lines = Array.from({ length: i - j0 + 1 }, (_, q) => { const j = j0 + q; return { epoch: iso(t0 + j * STEP_S * 1000), r: [flat[j * 6], flat[j * 6 + 1], flat[j * 6 + 2]], v: [flat[j * 6 + 3], flat[j * 6 + 4], flat[j * 6 + 5]] }; });
     const bytes = oemBytes({ originator: 'G1 FFM-1', block: { frame: 'GCRF', frameName: 'GCRF', timeSystem: 'UTC', object: { name: cell.id, id: '', norad: 0 }, lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStop: iso(tNode) }, sizePrefixed: false });
