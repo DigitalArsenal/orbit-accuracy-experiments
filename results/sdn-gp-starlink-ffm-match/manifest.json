@@ -35,10 +35,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check"
   ],
-  "planSha256": "933045565ffd10895dfef4dbe4115e21efd8581ab4976b0af964871d5a139859",
+  "planSha256": "d98b2416d375076c084e4950ced2af1a98821afcf5c50ff4f1caa6c46fd0ef98",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "f2d21c3bf83746f67ae32e017179f2a1c202fb06"
+    "commit": "dbcaf936d4361e34659747447fa1eecbf0fcd763"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -262,7 +262,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "4e9c7690638b",
+    "headlineBuild": "aebde849f2f2",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -270,6 +270,22 @@
         "sourceCommit": "39b059398049ce5933813af693d4e627d29e7797",
         "sourceUncommittedFiles": 1,
         "firstUseUtc": "2026-10-24T04:28:54.951Z",
+        "complete": true
+      },
+      {
+        "build": "2d906c4d90fd",
+        "wasmSha256": "2d906c4d90fd43d02496b61446b74ba53c4c155381bdd1add4134f86b7f41cbd",
+        "sourceCommit": "4229929303a502270a50bc91355608c43e115f8a",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T05:31:01.341Z",
+        "complete": true
+      },
+      {
+        "build": "aebde849f2f2",
+        "wasmSha256": "aebde849f2f21dc25cf679623e3648c005e29dc1f9ea86b25ead308bbaf632c2",
+        "sourceCommit": "cb93d1e8bacd75bf5b2386f8051346ac26a09b40",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T05:32:18.223Z",
         "complete": true
       }
     ]
