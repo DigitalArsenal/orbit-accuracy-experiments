@@ -16,11 +16,13 @@ export function loweringSatellites() {
   return fs.readdirSync(dir).filter((n) => /^\d+\.json$/.test(n)).map((n) => read(path.join(dir, n))).filter((m) => !m.fit.bEffAtZeroBound && m.fit.bEffM2Kg > 0.5).sort((a, c) => a.norad - c.norad);
 }
 
-export async function scoreLowering({ b, sink }) {
+/** `only`: [{ norad, variant }] to score (default all 19 in the three variants). */
+export async function scoreLowering({ b, sink, only = null }) {
   const metas = loweringSatellites();
   for (const [variant, limit] of VARIANTS) { // the default pass first: the toggles below persist in an instance
     for (const meta of metas) {
       if (!sink.mine()) continue;
+      if (only && !only.some((x) => x.norad === meta.norad && x.variant === variant)) continue;
       const id = `STARLINK (${meta.norad}) ${variant}`, startUtc = iso(t0Of(meta));
       if (sink.has(`m30|${id}|${startUtc}|86400`)) continue;
       if (limit !== undefined) b.sdngp.setLoweringLimit(limit);

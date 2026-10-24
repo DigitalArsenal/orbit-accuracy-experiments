@@ -1,22 +1,22 @@
 // Amendment A11e: the detector on FFM-1 arcs with a planted impulse, the pipeline check of M24 on the archive: the registered truth of a Starlink from its start to t_b (24 h, every fifth state) followed by the first 36 h
 // after t_b of an M22 case (the control, or an impulse planted at t_b), TEME by foundation/frames, `detect_maneuvers` with the saved weather loaded. The burn is at 24 h of a 60 h arc; its time and size are known exactly.
-import { oemBytes } from './sds.mjs';
-import { transformState } from './frames.mjs';
-import { detectManeuvers, loadEnvironment } from './sdngp-events.mjs';
-import { CASES, satellites, readTruthFlat, t0Of, tbOf, loadTruth, caseStates } from './events.mjs';
-import { iso } from './windows.mjs';
-
 export const PLANTED_CASES = ['ctl', 'imp-V-0.1', 'imp-V-1', 'imp-V-10', 'imp-U-1', 'imp-W-1'];
 export const ARC_HOURS = 60;
 
-export async function scorePlanted({ b, sink, only = null }) {
+/** `only`: NORAD ids to score (default all 48); `cases`: case ids to score (default all six). */
+export async function scorePlanted({ b, sink, only = null, cases = PLANTED_CASES }) {
+  const { oemBytes } = await import('./sds.mjs');
+  const { transformState } = await import('./frames.mjs');
+  const { detectManeuvers, loadEnvironment } = await import('./sdngp-events.mjs');
+  const { CASES, satellites, readTruthFlat, t0Of, tbOf, loadTruth, caseStates } = await import('./events.mjs');
+  const { iso } = await import('./windows.mjs');
   const env = await loadEnvironment(b.sdngp, b.weatherTable);
   if (!env.ok) throw new Error(`load_environment: ${env.error}`);
   for (const meta of satellites('m22')) {
     if (!sink.mine()) continue;
     if (only && !only.includes(meta.norad)) continue;
     const flat = readTruthFlat(meta), t0 = t0Of(meta), tb = tbOf(meta), all = loadTruth('m22', meta.norad);
-    for (const caseId of PLANTED_CASES) {
+    for (const caseId of cases) {
       const id = `STARLINK (${meta.norad}) ${caseId}`, startUtc = iso(t0);
       if (sink.has(`m24p|${id}|${startUtc}|${ARC_HOURS * 3600}`)) continue;
       const st = caseStates(all, CASES.m22.findIndex((c) => c.id === caseId));

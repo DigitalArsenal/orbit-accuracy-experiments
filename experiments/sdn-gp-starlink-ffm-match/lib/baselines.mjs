@@ -120,7 +120,7 @@ export async function fitSgp4(b, object, lines, startMs, stopFit, leadDays, minS
 
 const FIT_FRAME = { EME2000: 'EME2000', GCRF: 'GCRF', ICRF: 'GCRF', TEME: 'TEMEOFDATE' }; // the frame is declared as it is (builds from 2d906c4d90fd read EME2000; earlier builds were given GCRF for it, 23 mas apart: 0.2 m at LEO)
 
-const sdngpOem = (object, lines, stopFit, { defaultSpan = false } = {}) => oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : object.frame === 'EME2000' ? 'EME2000' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
+export const sdngpOem = (object, lines, stopFit, { defaultSpan = false } = {}) => oemBytes({ originator: object.originator ?? 'G1', block: { frame: FIT_FRAME[object.frame] ?? object.frame, frameName: object.frame === 'TEME' ? 'TEME' : object.frame === 'EME2000' ? 'EME2000' : 'GCRF', timeSystem: object.timeSystem ?? 'UTC', object: { name: object.name, id: object.objectId ?? '', norad: object.norad },
   lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: defaultSpan ? undefined : lines[0].epoch, useableStop: iso(stopFit) }, sizePrefixed: false }); // defaultSpan (A9f): only the end of the fit is declared, the module chooses the span
 
 /** The states of a fitted SDN-AP set (TEME, by the module) at the given epochs (ms), in the named axes ('EME2000' or 'GCRF', by foundation/frames): [{r, v}] in km, km/s. */

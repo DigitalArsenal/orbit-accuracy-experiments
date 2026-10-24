@@ -44,7 +44,8 @@ export function predictionEpochs(sets, truthMs, aerospaceEpochMs = null) {
   return out.sort((a, c) => a.t - c.t);
 }
 
-export async function scoreReentries({ b, sink, only = null }) {
+/** `only`: NORAD ids (strings) to score; `at`: ISO prediction epochs to score (default all). */
+export async function scoreReentries({ b, sink, only = null, at = null }) {
   const modules = modulesRoot();
   const g = await openGpPseudo(modules);
   const weather = spaceWeatherHistory(b.weatherTable).payload;
@@ -59,6 +60,7 @@ export async function scoreReentries({ b, sink, only = null }) {
       if (sets.length < 2) { sink.append({ source: 'm29', id: `${norad} ${data.name} (no sets)`, norad, name: data.name, startUtc: iso(truthMs), fitSeconds: 0, skipped: `${sets.length} element sets before the reentry`, truthSource: truth.source }); continue; }
       const intervals = await g.intervals(sets, { stepSeconds: STEP });
       for (const { j, t, aerospace } of predictionEpochs(sets, truthMs, aerospaceMs)) {
+        if (at && !at.includes(iso(t))) continue;
         const id = `${norad} ${data.name} ${iso(t)}`;
         if (sink.has(`m29|${id}|${iso(t)}|0`)) continue;
         const states = intervals.slice(0, j + 1).flatMap((x) => x.states).filter((s) => s.ms > t - M29_HISTORY_H * 3600e3 && s.ms <= t + 1);

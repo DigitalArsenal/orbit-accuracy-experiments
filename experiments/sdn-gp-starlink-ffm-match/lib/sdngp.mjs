@@ -33,6 +33,8 @@ export function snapshot(store, pin = null) {
   if (!fs.existsSync(wasmPath)) {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(`${wasmPath}.part`, wasm); fs.renameSync(`${wasmPath}.part`, wasmPath);
+    const manifestSource = path.join(SDNGP_SOURCE, 'dist/plugin-manifest.json'); // the method list with its ports (the wasm holds it as a flatbuffer; this is the JSON the build wrote beside it)
+    if (fs.existsSync(manifestSource)) fs.copyFileSync(manifestSource, path.join(dir, 'plugin-manifest.json'));
     fs.writeFileSync(path.join(dir, 'snapshot.json'), JSON.stringify({ wasmSha256: hash, sourceCommit: git('rev-parse', 'HEAD'), sourceDirtyFiles: (git('status', '--short') ?? '').split('\n').filter(Boolean).length, createdUtc: new Date().toISOString() }, null, 2) + '\n');
   }
   return { dir, wasmPath, wasmSha256: hash, ...JSON.parse(fs.readFileSync(path.join(dir, 'snapshot.json'), 'utf8')) };
@@ -48,6 +50,10 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
   const fitMethod = renamed ? 'fit_sdnap' : 'fit_sdngp';
   const E = (name) => x[`${typeof x.sdnap_alloc === 'function' ? 'sdnap' : 'sdngp'}_${name}`];
   const historicalName = (n) => String(n).replace(/^SDNAP_/, 'SDNGP_');
+  // The methods and ports the build declares (the JSON manifest beside its snapshot, when it was taken with one): an earlier build's `maneuver` and `detect_maneuvers` have no environment port.
+  const manifestFile = path.join(snap.dir, 'plugin-manifest.json');
+  const declared = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile, 'utf8')).methods ?? [] : [];
+  const declares = (methodId, portId) => (portId === undefined ? declared.some((m) => m.methodId === methodId) : declared.find((m) => m.methodId === methodId)?.inputPorts?.some((q) => q.portId === portId) ?? false);
   const mem = () => h.memory.buffer;
   let scratch = null;
   const reserve = (n) => {
@@ -57,6 +63,7 @@ export async function openSdngp({ store, pin = process.env.SDNGP_SNAPSHOT ?? nul
   };
   return {
     provenance: { module: 'sdn-gp-propagator', wasmSha256: snap.wasmSha256, sourceCommit: snap.sourceCommit, sourceDirtyFiles: snap.sourceDirtyFiles },
+    declares,
     /** Fit an SDN-AP set to one plain (not size-prefixed) $OEM block: { ok, omm (bytes), obd (bytes), unpacked, comment, fitRmsKm, heldOutRmsKm, iterations, params } or { ok: false, error }. */
     async fit(oem, { weatherTable, densityCorrection, prior } = {}) {
       const inputs = [{ portId: 'ephemeris', typeRef: T('OEM'), payload: oem }];

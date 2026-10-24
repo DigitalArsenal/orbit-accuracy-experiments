@@ -723,3 +723,58 @@ known exactly. A first look, made before this registration, ran six cases on the
 state) followed by the first 36 h after t_b (every 300 s) of an M22 case, so that the burn is at 24 h of the arc; cases: the control (no burn), in-track (V) impulses of 0.1, 1 and 10 m/s, radial (U) and cross-track (W) impulses of 1 m/s. A detection
 within 92 min of t_b is a hit. Reported per case: hits, detections elsewhere, no detection, the median [10th, 90th percentile] of the epoch error of the hits, the median |delta-v| over the planted delta-v and the V share of the hits, and the share of
 detections in the first tenth of the arc. Rows: source m24p (rows/sdngp/<build>/m24p.s*.jsonl, four shards). This is a check of the pipeline, not one of M22 to M33.
+
+### A12 - 2026-10-24, before any row of build 04f7c2d1d50f or of its new measurements was read: the eighth build (detector from the theory's own transition, joint segment fit, launch_set with $BOV, launch_batch)
+
+Coordinator, 2026-10-24: side B's dist 04f7c2d1d50f (1,385,409 bytes; closed-modules task branch 65c1c6c, package sdn-ap-propagator, no uncommitted file at the copy). The detector's burn signature now comes from the theory's own
+transition with weights of one sample per revolution; a joint segment fit estimates y0, delta-v and t_b over the whole arc; SGP4XP gains amendment 5 and the cross-track drag terms; new methods `launch_batch` and a $BOV input to
+`launch_set`. The coordinator asks for the re-score on every source, as A10 did, with the M24 control (the 96 burn-free Starlink windows) and the ISS windows on the new detector first, then M22, M23, M25 and M28 on the new
+build, and M31 and M32 on `launch_set` and `launch_batch`; the held-out discipline stands (no row of side B's E2E is read). The rename map is the one A11 registered (package sdn-ap-propagator, fit_sdnap, SDNAP_*; the rows keep the
+historical keys), and this is the first dist that carries it: the adapters are tested on it by the probes below.
+
+Disclosure. The coordinator's message carries side B's own figures on its own burn-free FFM-1 arcs (no false alarm on 48 arcs of 72 h; delta-v error U 9.8 %, W 9.8 %, V 11.5 %; epochs within 0.9 min) and on its own batch
+(the batch fit 2.12 / 10.4 / 26.0 km against 1.08 / 5.2 / 12.8 km for per-object fits, days 1 / 2 / 3), and the subject line of the head commit 65c1c6c, which printed with the path, carries calibration counts on burn-free FFM-1
+arcs (48 arcs of 72 h and 24 of 48 h, none; threshold 20 at 0.35 and 0.005 per object-year). All were seen before this registration; no choice below uses a figure of either. The interface is read from the module's JSON manifest
+(methods, ports, descriptions) and its build provenance record (version, SHA-256) only; none of the module's source, README, tests or E2E rows was opened. The head-commit subject of the clean-room specification worktree also printed with
+a directory listing; nothing of it was opened. Probes, run before this registration (outputs not kept except as stated): the manifest's methods and ports; the adapter on the new dist (one `fit_sdnap` of the first 24 h of the captured
+satellite 799501704, which printed its fit statistics: fit RMS 0.099 km, maximum 0.227 km, 14 iterations, span 24 h; the comment and the parameter names parse as before, the new parameter SDNAP_ARC_END_MIN is read as SDNGP_ARC_END_MIN;
+the batch entry returns states, and the lowering switch answers); `launch_set` with a burnout vector in km (accepted) and in m (refused: "its radius is not an Earth orbit's"); `launch_batch` without a parent state (refused: it takes the
+parent state as a 'launch' $LAM or a 'burnout' $BOV).
+
+What the manifest says about the changed interfaces, and the adapter rule that follows. `detect_maneuvers`, `maneuver` and `launch_batch` now declare `space_weather_table`, `space_weather` and `density_correction` ports; build 35cd83a2b714
+had none on the first two and read the instance's environment (`load_environment`, A10d). For this build the adapters send the environment in force as the `space_weather_table` port with every call that declares one (the saved table
+for M22, M23, M24, M24c and M24p; the 2,703-row table of the years for the ISS archive) and make no `load_environment` call: nothing is left in the instance between calls. `detect_maneuvers` returns, without a burn, the burn-free set,
+and with one the pre-burn set, the post-burn set by the impulse map and a $MNV (still at most one burn per call). An earlier snapshot without a manifest file keeps the old path.
+
+1. Re-score. Every job of `sdngp-run.mjs` runs again on build 04f7c2d1d50f with the rules of A9b to A11e: the G1 rows of every source (baselines, SPK and pack windows, Starlink, fit length, lowering, the default-span rows, the Moon-centered
+windows, the cislunar and heliocentric segment windows) and the events sources m22, m23, m28, m24, m24c, m24a, m24p, m29 and m30; one store snapshot copy, rows in rows/sdngp/04f7c2d1d50f/. Reported as counts, as A10 did: the windows both
+builds ran; how many are identical to the last digit (fit RMS and every held-out day), 24 h rows and default-span rows separately; the sources that differ, with the median and largest change of the day-1 / 2 / 3 error; the
+fit-implausible refusals (new, by source and name). The coordinator names SGP4XP amendment 5 and the cross-track drag terms as changes; the identity counts show where they reach the rows.
+
+2. The detector (the measurement the coordinator ranks first), with the windows, scoring and reading of A10c, A10d, A11 and A11e unchanged. M24c: the 96 burn-free FFM-1 Starlink windows of 72 h (48 satellites, 192 object-days): windows with a detection and
+false alarms per object-year over distinct epochs, beside the 64 of 96 of 35cd83a2b714. M24 on the ISS: the 26 windows of the two NASA files with no reboost (17 of 26 reported a burn before). M24 on the ISS archive (m24a): the 98 pre-burn,
+6 post-burn and 651 burn-free windows (one pre-burn window was refused before): hits within 92 min of TIG (2 of 98 pre-burn before), the epoch error, |delta-v| over the planned value and the in-track share of the hits, and the false
+alarms per object-year over the 4.37 object-years (76.6 per object-year before). The planted-impulse arcs (m24p): hits by case, the control's detections, and the share of detections in the first tenth of the arc. The planned values of the
+headers stay planned values. Nothing is thresholded; the numbers go beside those of 35cd83a2b714 in one table per measurement.
+
+3. M22, M23, M25, M28 as registered in A10 (items 2, 3, 6 and 4; sample, cases, FFM-1 truths and scoring unchanged; the truths are cached and independent of the build), with `maneuver` and `reentry` receiving the saved weather table as
+their port. Reported beside 35cd83a2b714: the excess over the control by magnitude and axis (M22), A against B by duration (M23), the treatment of the Moon-centered windows against the lists (M25), and the hand-off criteria against
+the error by level and the reentry epoch error (M28).
+
+4. M29 and M30 on the new build: the same predictions as A11b and A11c (the same element-set epochs and pseudo-observations; the 19 lowering Starlinks of M30). The M30 predictions of this build are issued when its job runs; both builds'
+predictions are scored later against the same TIP and decay messages, and the issue times are in the rows.
+
+5. M31 and M32. What the two methods take is in the probes above. The captured batch (the 27 satellites first seen 2026-10-24T05:01Z, provisional ids 799501701 to 799501727) holds each satellite's states from 2026-10-24T08:48Z to 09:22Z on
+(8 h after separation), derived and without a parent state at the separation epoch; the batch-joint model (all objects at the parent's position at t0, separated by their own delta-v) has no data to be fitted to there. The protocol is
+registered in A12b, before any row of it is generated or read, in two parts: the per-object fits of 6, 12 and 24 h on the captured trajectories (with SGP4 and SGP4-XP beside), and a synthetic FFM-1 batch with a known parent state for
+`launch_set` and `launch_batch`.
+
+6. Not run, and why. M26 needs the per-file states of the Starlinks (the raw files are not kept) for the agreement with file-to-file differences; M27 needs the notices (QZSS NAQU, BeiDou, GPS NANUs), which the local archive does not hold
+(fetching them needs the coordinator's approval and a registry entry); M33 needs files of an orbit raise, which the batch has not begun. The detector's counts on the GEO and IGSO precise orbits are not a measurement against notices and are
+not reported as M27.
+
+7. Rows and runs. `node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 10 --pin 04f7c2d1d50f` (the snapshot was taken at 14:11 local time and is identified by its hash); failures are rows with the refusal by name, never
+dropped; a rerun after a failure repeats only the failed jobs. No raw operator, ISS, Space-Track or unlicensed data are committed; the committed results are aggregates. American spelling in all generated text.
+
+8. Report: the identity counts and the sources that differ; the four detector measurements beside 35cd83a2b714; M22, M23, M25 and M28 beside it; M29 and M30; M31 and M32 as registered in A12b; what is missing. E2E: `run.mjs --check` with the replays
+of A10 and A11 (an impulse, a finite burn, a decay node, an ISS window, two archive windows, a planted-impulse arc, a reentry prediction and a lowering reentry) on the pinned new build against its stored rows.

@@ -78,7 +78,7 @@ export async function scoreSatellite({ b, sink, kind, meta, only = null }) {
       if (c.kind === 'control') { sink.append({ ...base, id: key, case: c, fit: fitInfo, days: control.days, maxTruthDifferenceM: t.maxDifferenceM }); continue; }
       const dv = c.kind === 'map0' ? [0, 0, 0] : unit(c.axis).map((x) => (x * c.dvMS) / 1000);
       const t1 = performance.now();
-      const man = await maneuver(b.sdngp, { omm: fit.omm, burns: [{ startUtc: iso(tb), dvKmS: dv }] });
+      const man = await maneuver(b.sdngp, { omm: fit.omm, burns: [{ startUtc: iso(tb), dvKmS: dv }], weatherTable: b.weatherTable });
       if (!man.ok) { sink.append({ ...base, id: key, case: c, fit: fitInfo, maneuver: { ok: false, error: man.error } }); continue; }
       const post = man.elements[0];
       const postEpoch = ms(rootOf(OMM.OMM, 'OMM', post).unpack().EPOCH);
@@ -98,7 +98,7 @@ export async function scoreSatellite({ b, sink, kind, meta, only = null }) {
     const dL = nRadS * D;
     const row = { ...base, id: key, case: c, fit: fitInfo, dLRad: dL, sincHalfDL: Math.sin(dL / 2) / (dL / 2), control: control.days, arms: {} };
     for (const [arm, burn] of [['A', { startUtc: iso(tb), endUtc: iso(te), dvKmS: dv }], ['B', { startUtc: iso(tb + (D * 1000) / 2), dvKmS: dv }]]) {
-      const man = await maneuver(b.sdngp, { omm: fit.omm, burns: [burn] });
+      const man = await maneuver(b.sdngp, { omm: fit.omm, burns: [burn], weatherTable: b.weatherTable });
       if (!man.ok) { row.arms[arm] = { ok: false, error: man.error }; continue; }
       const post = man.elements[0];
       const postEpoch = ms(rootOf(OMM.OMM, 'OMM', post).unpack().EPOCH);

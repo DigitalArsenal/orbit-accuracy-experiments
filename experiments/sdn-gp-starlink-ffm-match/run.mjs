@@ -10,6 +10,8 @@
 //    statistics, and the committed results hold no raw operator, Space-Track or COMSPOC records;
 // 4b. SDN-AP (amendment A9b): windows of the headline build (ISS, GNSS, a current SLR arc and a Starlink FFM truth) are fitted again by the pinned copy of the
 //    module (<store>/sdngp-snapshot/<build>) and must reproduce their recorded fit RMS and held-out days.
+// 4c. amendment A10 and A11: an impulse, a finite burn, a decay node, an ISS window, two windows of NASA's ISS archive (a burn and a burn-free one), a planted-impulse arc, a reentry prediction
+//    from an element-set history (M29) and a lowering reentry (M30) are replayed with the pinned module build and must reproduce their recorded numbers.
 // Without the local records the check says so and exits 2: a skip is never a pass.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -316,6 +318,50 @@ if (headline) {
       await scoreIss({ b: bs, sink, only: [{ file: rec24.file, startUtc: rec24.startUtc }] });
       const again = sink.out[0];
       if (!again?.ok || JSON.stringify(again.detections) !== JSON.stringify(rec24.detections)) fail(`events replay M24 ${rec24.file} ${rec24.startUtc}: detections differ`);
+      sdReplayed += 1;
+    }
+    // amendment A11: an ISS archive window with a burn and a burn-free one (M24a), a planted-impulse arc (A11e), a reentry prediction (M29) and a lowering reentry (M30)
+    const burnsFile = path.join(results, 'iss-burns.json');
+    if (fs.existsSync(burnsFile)) {
+      const { scoreArchive } = await import('./lib/events-iss.mjs');
+      const { issArchiveFiles } = await import('./lib/iss-oem.mjs');
+      const fileOf = new Map(issArchiveFiles().map((x) => [x.date, x.file]));
+      const windows = JSON.parse(fs.readFileSync(burnsFile, 'utf8')).windows.map((w) => ({ kind: w.kind, cluster: w.cluster, date: w.file, startMs: Date.parse(w.startUtc), stopMs: Date.parse(w.stopUtc), file: fileOf.get(w.file),
+        ...(w.tigUtc ? { tigMs: Date.parse(w.tigUtc), name: w.name, dvMS: w.plannedDvMS, haKm: w.haKm, hpKm: w.hpKm, otherBurns: w.otherBurns, short: w.short } : {}) }));
+      const recs = buildRows(headline.dir, 'm24a').filter((r) => r.source === 'm24a' && r.ok && r.detections.length);
+      for (const rec of [recs.find((r) => r.kind === 'burn-pre'), recs.find((r) => r.kind === 'free')].filter(Boolean)) {
+        const sink = collector();
+        await scoreArchive({ b: bs, sink, only: [{ id: rec.id }], windows });
+        const again = sink.out[0];
+        if (!again?.ok || JSON.stringify(again.detections) !== JSON.stringify(rec.detections)) fail(`events replay M24 on the archive ${rec.id}: detections differ`);
+        sdReplayed += 1;
+      }
+    }
+    const rec24p = buildRows(headline.dir, 'm24p').find((r) => r.source === 'm24p' && r.ok && r.case === 'imp-V-1' && r.detections.length);
+    if (rec24p) {
+      const { scorePlanted } = await import('./lib/events-plant.mjs');
+      const sink = collector();
+      await scorePlanted({ b: bs, sink, only: [rec24p.norad], cases: [rec24p.case] });
+      const again = sink.out[0];
+      if (!again?.ok || JSON.stringify(again.detections) !== JSON.stringify(rec24p.detections)) fail(`events replay planted impulse ${rec24p.id}: detections differ`);
+      sdReplayed += 1;
+    }
+    const rec29 = buildRows(headline.dir, 'm29').find((r) => r.source === 'm29' && r.truthSource === 'tip-final' && r.reentry?.ok);
+    if (rec29 && fs.existsSync(path.join(store, 'm29/sets', `${rec29.norad}.json`))) {
+      const { scoreReentries } = await import('./lib/events-m29.mjs');
+      const sink = collector();
+      await scoreReentries({ b: bs, sink, only: [rec29.norad], at: [rec29.startUtc] });
+      const again = sink.out[0];
+      if (!again?.reentry?.ok || !same(again.fit.fitRmsKm, rec29.fit.fitRmsKm) || again.reentry.epoch !== rec29.reentry.epoch || again.states !== rec29.states) fail(`events replay M29 ${rec29.id}: fit or reentry epoch differs`);
+      sdReplayed += 1;
+    }
+    const rec30 = buildRows(headline.dir, 'm30').find((r) => r.source === 'm30' && r.variant === 'free' && r.reentry?.ok);
+    if (rec30) {
+      const { scoreLowering } = await import('./lib/events-m30.mjs');
+      const sink = collector();
+      await scoreLowering({ b: bs, sink, only: [{ norad: rec30.norad, variant: 'free' }] });
+      const again = sink.out[0];
+      if (!again?.reentry?.ok || !same(again.fit.fitRmsKm, rec30.fit.fitRmsKm) || again.reentry.epoch !== rec30.reentry.epoch) fail(`events replay M30 ${rec30.id}: fit or reentry epoch differs`);
       sdReplayed += 1;
     }
   }
