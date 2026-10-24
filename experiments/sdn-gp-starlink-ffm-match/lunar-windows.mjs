@@ -1,7 +1,7 @@
 // Amendment A9f: the Moon-centred SDN-GP on the LRO and Danuri windows of A8 (fits of 24 h and 72 h every 48 h, held-out days 1 to 3), rows per build of the module.
 // Per window: the pack's states of the fit span and the three days after it as a $OEM block (CENTER_NAME MOON, the pack's axes declared, UTC), the fit span as the useable interval,
 // `fit_sdngp` (no environment, no prior); the set is propagated by `propagate` on a grid block (CENTER_NAME MOON, ICRF axes, explicit EPOCHs: every fifth pack epoch of the held-out
-// days; the module wants the template to name EARTH and answers about the Moon) and scored by score-pack.mjs (gp-error-model pair_statistics in the pack's Moon-centred axes). Rows: rows/sdngp/<build>/lunar.s<k>.jsonl.
+// days; the template names MOON, the set's own centre) and scored by score-pack.mjs (gp-error-model pair_statistics in the pack's Moon-centred axes). Rows: rows/sdngp/<build>/lunar.s<k>.jsonl.
 //   SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/lunar-windows.mjs [--pack lro-lunar,danuri-lunar] [--shard k/n] [--limit N]
 import { frozen, args } from './common.mjs';
 import { modulesRoot } from './lib/modules.mjs';
@@ -28,7 +28,7 @@ export async function lunarWindow(b, loaded, pack, startMs, fitHours) {
   const fit = await b.sdngp.fit(oemBytes({ originator: 'G1 truth pack', block: block({ lines, start: lines[0].epoch, stop: lines.at(-1).epoch, useableStart: lines[0].epoch, useableStop: iso(stop) }), sizePrefixed: false }));
   if (!fit.ok) return { ...base, sdngp: { ok: false, error: fit.error } };
   const held = slice(object, stop + 1, stop + rule.leadDays.at(-1) * DAY).filter((_, i) => i % THIN === 0);
-  const grid = oemBytes({ originator: 'G1', block: { ...block({ lines: held.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), start: held[0].epoch, stop: held.at(-1).epoch }), frame: 'ICRF', frameName: 'ICRF', center: 'EARTH' }, sizePrefixed: false }); // the template must name EARTH (invalid-grid otherwise); the Moon-centred set answers about the Moon
+  const grid = oemBytes({ originator: 'G1', block: { ...block({ lines: held.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), start: held[0].epoch, stop: held.at(-1).epoch }), frame: 'ICRF', frameName: 'ICRF', center: 'MOON' }, sizePrefixed: false }); // the template names the set's own centre (build ee5dccaa17a8 and later refuse a mismatch as grid-center-mismatch)
   const prop = await b.sdngp.propagateGrid(fit.omm, grid);
   if (!prop.ok) return { ...base, sdngp: { ok: false, error: `propagate: ${prop.error}`, fitRmsKm: fit.fitRmsKm } };
   const scored = await scorePack(b, { pack, startMs, fitHours, leadDays: rule.leadDays, predicted: prop.blocks[0], predictedCenter: prop.centre, loaded });
