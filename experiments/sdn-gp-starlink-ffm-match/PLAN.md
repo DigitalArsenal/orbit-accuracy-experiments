@@ -272,3 +272,32 @@ informative for the satellites at the resonance. The long arcs (A7b d) are there
 difference at 1, 2, 3, 4, 5, 7 and 10 days from the start (median of the absolute value over a group). The rows written before this
 addition get the new numbers from a second pass of `m123.mjs --long-only`, which recomputes only the long arcs of every Starlink
 window; nothing else about the windows, arms or rules changes.
+
+### A8 - 2026-10-24, before any of its data was read: current GNSS truth, the missing-regime spacecraft, windows prepared for SDN-GP
+
+Coordinator, 2026-10-24: approved, all public data, paced, stored in the archive with source, licence and attribution recorded, never
+republished, nothing to the console: (1) GFZ rapid GNSS orbits (CC BY 4.0) as current GNSS truth, so that COMSPOC's GPS sets and
+our GNSS rows can be scored now; (2) JPL Horizons for CAPSTONE, Artemis I and Danuri and STScI MAST for TESS, as ephemeris truth for
+the missing regimes. Then, in order: the fetches and the GNSS and COMSPOC-GPS scoring; the newer-SpaceX pass when the 08:00Z files
+appear; lunar, cislunar and heliocentric windows prepared for SDN-GP.
+
+Horizons (`fetch-horizons.mjs`): the documented API, one request at a time, 6 s apart; vector tables (geometric states, ICRF
+axes, km and km/s, TDB), each response stored as served under `hac/jpl-horizons/<mission>/<centre>/` with a provenance row.
+Spans lie inside the "data through" part of each trajectory (object notes of 2026-10-23): Danuri (-155) Moon-centred
+2026-08-15 to 2026-10-18 at 1 min; CAPSTONE (-1176) Moon-centred 2025-07-15 to 2026-07-15 at 5 min; Artemis I (-1023) Earth- and
+Moon-centred 2022-11-16 08:50 to 2022-12-11 17:15 at 1 min. Epochs are turned TDB -> UTC by `foundation/time`; the ICRF axes are taken
+as the J2000 axes of the NAIF packs (the frame bias, about 20 mas or 37 m at lunar distance, is not applied and is recorded).
+Truth packs go to `<store>/pack/` in the format of the existing packs. They are scored by SGP4 or SGP4-XP only where those
+theories apply (TESS, Earth-centred and highly elliptical); the Moon-centred and Earth-Moon packs wait for SDN-GP.
+
+GNSS truth: the GFZ rapid orbits (GFZ0MGXRAP, GPS, GLONASS, Galileo, BeiDou, QZSS, 5 min) for the newest days published, converted
+to GCRF $OEM by `analysis/reference-states` like the ESA finals. Our GNSS rows: two satellites per constellation chosen by the rule
+of A1 (evenly from the first day's files), fit 24 h, windows every 48 h that leave three held-out days, scored as section 1. COMSPOC's
+XP sets of the GNSS objects (local scoring only, never fitted to or an input) are propagated through the black-box module and
+compared with the rapid orbits for the days after each set's epoch, by day since the epoch.
+
+Windows prepared for SDN-GP (`regime-windows.mjs`): for every regime that awaits SDN-GP (lunar: LRO, Danuri; cislunar: Artemis II,
+CAPSTONE, Artemis I; heliocentric: the cruise kernels) a truth pack and a window list (fit start, fit span, three held-out days,
+state counts, hashes), with a scorer (`score-pack.mjs`) that takes SDN-GP's predicted states for a window as a $OEM and returns the
+radial / in-track / cross-track RMS by held-out day in that pack's centre and axes. Fit spans per regime follow DESIGN 2h:
+Moon-centred 24 h and 72 h, NRHO and DRO segments of 14 days with 7 held-out days, cruise 30 days with 15.
