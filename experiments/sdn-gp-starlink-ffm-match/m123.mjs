@@ -1,7 +1,7 @@
 // Step 8: M1 to M3 of DESIGN.md section 4 (amendments A7 and A7b): the LEO fit floor against zonal-only gravity.
 //   node experiments/sdn-gp-starlink-ffm-match/m123.mjs [--workers N] [--family starlink,iss,lageos1,lageos2] [--limit N] [--only id,id]
 // One window = one start state. FFM-1 (propagator/ffm) is run from it for 96 h at 60 s under each gravity variant (the
-// module's own truncation options), each trajectory is fitted by SGP4 and SGP4-XP over 24 h and 21.7 h and scored on the
+// module's own truncation options), each trajectory is fitted by SGP4 and SGP4-XP over 24 h, 21.7 h and 34.2 h and scored on the
 // three held-out days (the registered `scoreWindow`), and the in-track difference series between variants are taken by
 // gp-error-model `pair_statistics` and summarized by a least-squares sinusoid (lib/curve.mjs). Local output:
 // <store>/m123/<family>/<id>.json (statistics only). Physics is the modules'; this file orchestrates and counts.
@@ -21,7 +21,8 @@ const OUT = path.join(store, 'm123');
 const claimDir = path.join(OUT, 'claims');
 const MIN_FREE_GIB = 25;
 const LEAD_DAYS = config.windows.leadDays;
-const FITS = [['h24', 24 * 3600], ['h21_7', Math.round(21.7 * 3600)]];
+const FITS = [['h24', 24 * 3600], ['h21_7', Math.round(21.7 * 3600)], ['h34_2', Math.round(34.2 * 3600)]]; // A7, A7c
+const M_HOURS = 120; // A7c: the 34.2 h fit plus three held-out days
 
 // FFM force-configuration overrides (propagator/ffm PRWForceConfiguration). MAXIMUM_ORDER truncates the order of the whole
 // field; MAXIMUM_TESSERAL_DEGREE drops the tesseral and sectorial terms above that degree (the zonals run to degree 70).
@@ -60,10 +61,12 @@ function starlinkWindows() {
 async function issWindows(frames) {
   const [iss] = sources.iss(); // the registered file (A7b)
   const out = [];
-  for (const t0 of windowStarts(iss, { fitSeconds: 86400, strideSeconds: 86400, minLeadDays: LEAD_DAYS.at(-1) })) {
-    const line = iss.lines[iss.t.indexOf(t0)];
+  for (const nominal of windowStarts(iss, { fitSeconds: 86400, strideSeconds: 86400, minLeadDays: LEAD_DAYS.at(-1) })) {
+    const index = iss.t.findIndex((t) => t >= nominal); // the first OEM state at or after the nominal start (the 2026-10-13 grid is off by 104 s)
+    const line = iss.lines[index];
+    const t0 = iss.t[index];
     const state = await transformState(frames, 'EME2000', 'GCRF', iso(t0), [...line.r, ...line.v]);
-    out.push({ family: 'iss', id: iso(t0).slice(0, 13), norad: 25544, name: 'ISS', t0, state, cdAm: ISS_CD_AM, crAm: 0, bEff: ISS_CD_AM, variants: DRAG_VARIANTS, baseForces: {}, long: false });
+    out.push({ family: 'iss', id: iso(nominal).slice(0, 13), norad: 25544, name: 'ISS', t0, state, cdAm: ISS_CD_AM, crAm: 0, bEff: ISS_CD_AM, variants: DRAG_VARIANTS, baseForces: {}, long: false });
   }
   return out;
 }
@@ -100,7 +103,7 @@ async function differences(baselines, a, b, every, period) {
 async function processWindow(w, ctx) {
   const { modules, context, baselines } = ctx;
   const t0Iso = iso(w.t0);
-  const epochs = grid(w.t0, config.truth.hours * 3600, config.truth.cadenceSeconds);
+  const epochs = grid(w.t0, M_HOURS * 3600, config.truth.cadenceSeconds);
   const state = w.state.map((x) => x * 1000);
   const row = { family: w.family, id: w.id, norad: w.norad, name: w.name, stratum: w.stratum ?? null, population: w.population ?? null, startUtc: t0Iso, startStateGcrfKm: w.state, cdAm: w.cdAm, crAm: w.crAm, bEff: w.bEff, baseForces: w.baseForces, variants: {}, pairs: {}, long: {} };
   const traj = {};

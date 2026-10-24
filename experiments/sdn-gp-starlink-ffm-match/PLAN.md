@@ -253,3 +253,13 @@ median |BTERM| of XP on `full-nodrag` is at least three times that on `zonal-nod
 median day-3 error than SGP4 with B* fitted on `full-nodrag` and on LAGEOS `full`. (3) Fit length: the quadrature difference of
 XP's median day-3 error on `tess2` and on `zonal` is at least 25 % lower for the 21.7 h fit than for the 24 h fit in the inc1 and
 ISS groups. A rule that fails is reported as failed, with the numbers.
+
+### A7c - 2026-10-24, written after three test windows were read (LAGEOS-1 260725, ISS 2026-10-07T12, Starlink 100011); they stay in the results
+
+The three windows were run to check the step, and a fit-length probe was run on one Starlink truth (degree-2 tesserals only,
+fit lengths 20 to 46 h). It showed that SGP4-XP's `fit` returns BTERM = 0 for every fit span of 22 h or less and a non-zero
+BTERM from 23 h, so a 21.7 h fit differs from a 24 h fit in two ways at once: the J22 alias (zero of j_2) and the drag term
+(off). To separate them the M-runs add the second zero of j_2 for the J22 period, a 34.2 h fit, where the drag term is on:
+fit lengths are 21.7 h, 24 h and 34.2 h for SGP4 and SGP4-XP, and the M-run truths are 120 h long (the 34.2 h fit plus three
+held-out days is 106.2 h). The decision rules of A7b are unchanged and are evaluated on 21.7 h against 24 h as written; 34.2 h
+is reported beside them. The Starlink windows, the ISS windows and the LAGEOS windows of A7 and A7b are unchanged.
