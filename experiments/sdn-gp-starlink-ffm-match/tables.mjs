@@ -504,7 +504,7 @@ export function markdown(t) {
       L.push('Laser-ranged: error of COMSPOC\'s XP set against the NSGF rapid orbit, by days since the set\'s own epoch (median over the sets that have the day; km):', '',
         '| Days after the epoch | Sets | Median 3D | Maximum | Median radial / in-track / cross-track |', '| --- | --: | --: | --: | --- |',
         ...slrRows.map((d) => `| ${d.k} to ${d.k + 1} | ${d.n} | ${f(d.median, 3)} | ${f(d.max, 3)} | ${d.ric.map((v) => f(v, 3)).join(' / ')} |`), '',
-        `The error does not grow over the days after the epoch and is almost all in-track: a set that sits off the orbit by a near-constant amount, not one that drifts. That is the form of the fit floor of section 12 (the tesseral in-track variation a mean-element set cannot follow); the best-case XP fit RMS of the LEO sphere row of section 1 is ${f(t.regimes.find((x) => x.id === 'leo-slr-current')?.xp.fit.median)} km.`, '');
+        `The error does not grow over the days after the epoch and is mostly in-track (components above): a set that sits off the orbit by a near-constant amount, not one that drifts. That is the form of the fit floor of section 12 (the tesseral in-track variation a mean-element set cannot follow); the best-case XP fit RMS of the LEO sphere row of section 1 is ${f(t.regimes.find((x) => x.id === 'leo-slr-current')?.xp.fit.median)} km.`, '');
     }
     if (cp.gnssByDay) {
       L.push('GNSS: error of COMSPOC\'s XP set against the rapid orbit, by days since the set\'s own epoch (median over the sets that have the day; km):', '',

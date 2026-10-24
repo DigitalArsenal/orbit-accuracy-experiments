@@ -705,7 +705,7 @@ Laser-ranged: error of COMSPOC's XP set against the NSGF rapid orbit, by days si
 | 2 to 3 | 7 | 0.558 | 1.577 | 0.100 / 0.534 / 0.116 |
 | 3 to 4 | 5 | 0.467 | 1.584 | 0.076 / 0.449 / 0.109 |
 
-The error does not grow over the days after the epoch and is almost all in-track: a set that sits off the orbit by a near-constant amount, not one that drifts. That is the form of the fit floor of section 12 (the tesseral in-track variation a mean-element set cannot follow); the best-case XP fit RMS of the LEO sphere row of section 1 is 0.406 km.
+The error does not grow over the days after the epoch and is mostly in-track (components above): a set that sits off the orbit by a near-constant amount, not one that drifts. That is the form of the fit floor of section 12 (the tesseral in-track variation a mean-element set cannot follow); the best-case XP fit RMS of the LEO sphere row of section 1 is 0.406 km.
 
 GNSS: error of COMSPOC's XP set against the rapid orbit, by days since the set's own epoch (median over the sets that have the day; km):
 
