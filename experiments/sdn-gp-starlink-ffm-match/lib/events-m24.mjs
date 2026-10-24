@@ -6,7 +6,7 @@ import { config } from '../common.mjs';
 import { iss } from './sources.mjs';
 import { oemBytes } from './sds.mjs';
 import { transformState } from './frames.mjs';
-import { detectManeuvers } from './sdngp-events.mjs';
+import { detectManeuvers, loadEnvironment } from './sdngp-events.mjs';
 import { iso } from './windows.mjs';
 import { satellites, readTruthFlat, t0Of } from './events.mjs';
 
@@ -14,6 +14,8 @@ export const FILES = ['2026-10-12', '2026-10-23'].map((d) => ({ name: d, file: p
 const WINDOW_H = 72, STRIDE_H = 24;
 
 export async function scoreIss({ b, sink, only = null }) { // only: [{ file, startUtc }] (a replay)
+  const env = await loadEnvironment(b.sdngp, b.weatherTable); // amendment A10d: the saved weather table is in force for the detector
+  if (!env.ok) throw new Error(`load_environment: ${env.error}`);
   for (const { name, file } of FILES) {
     const [obj] = iss({ file });
     const teme = [];
@@ -38,6 +40,8 @@ export async function scoreIss({ b, sink, only = null }) { // only: [{ file, sta
  * every fifth state (300 s), TEME by foundation/frames.
  */
 export async function scoreControl({ b, sink, only = null }) {
+  const env = await loadEnvironment(b.sdngp, b.weatherTable); // amendment A10d
+  if (!env.ok) throw new Error(`load_environment: ${env.error}`);
   for (const meta of satellites('m22')) {
     if (!sink.mine()) continue;
     if (only && !only.includes(meta.norad)) continue;

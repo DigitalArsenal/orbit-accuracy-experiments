@@ -12,6 +12,14 @@ const DAYS = [1, 2, 3];
 
 /** The rows of one source (empty when none). */
 const rowsOf = (dir, source) => (dir ? buildRows(dir, source).filter((r) => r.source === source) : []);
+/** The first M24 / M24c rows (amendment A10d): detector scored in an instance with no environment loaded, kept as m24-noenv / m24c-noenv. */
+const noEnvironment = (dir, prefix, source) => {
+  const rows = dir ? buildRows(dir, prefix).filter((r) => r.source === source) : [];
+  if (!rows.length) return null;
+  const ok = rows.filter((r) => r.ok), det = ok.flatMap((r) => r.detections);
+  const lambda = (d) => Number(/Lambda ([\d.]+)/.exec(d.algorithm ?? '')?.[1]);
+  return { windows: rows.length, windowsWithDetection: ok.filter((r) => r.detections.length).length, lambdaMedian: q(det.map(lambda), 0.5) };
+};
 
 function m22(dir) {
   const rows = rowsOf(dir, 'm22');
@@ -108,7 +116,7 @@ function m24(dir) {
   const days = new Set(rows.map((r) => r.startUtc.slice(0, 10))).size;
   return { windows: rows.length, ok: ok.length, refused: rows.filter((r) => !r.ok).map((r) => nameOf(r.error)), windowsWithDetection: ok.filter((r) => r.detections.length).length, detections: det.length,
     distinctEpochs: new Set(det.map((d) => String(d.epoch).slice(0, 16))).size, dvMS: stats(det.map((d) => Math.hypot(...d.dvMS))), lambda: stats(det.map(lambda)), windowDays: days, objectDays: 29,
-    falseAlarmsPerObjectYear: new Set(det.map((d) => String(d.epoch).slice(0, 16))).size / (29 / 365.25) };
+    falseAlarmsPerObjectYear: new Set(det.map((d) => String(d.epoch).slice(0, 16))).size / (29 / 365.25), noEnvironment: noEnvironment(dir, 'm24-noenv', 'm24') };
 }
 
 /**
@@ -150,7 +158,7 @@ function m24c(dir) {
   const sats = new Set(rows.map((r) => r.norad)).size, objectDays = sats * 4;
   const distinct = new Set(det.map((d) => `${d.norad}|${String(d.epoch).slice(0, 16)}`)).size;
   return { windows: rows.length, ok: ok.length, refused: rows.filter((r) => !r.ok).map((r) => nameOf(r.error)), satellites: sats, windowsWithDetection: ok.filter((r) => r.detections.length).length, detections: det.length, distinctEpochs: distinct,
-    dvMS: stats(det.map((d) => Math.hypot(...d.dvMS))), lambda: stats(det.map(lambda)), objectDays, falseAlarmsPerObjectYear: distinct / (objectDays / 365.25) };
+    dvMS: stats(det.map((d) => Math.hypot(...d.dvMS))), lambda: stats(det.map(lambda)), objectDays, falseAlarmsPerObjectYear: distinct / (objectDays / 365.25), noEnvironment: noEnvironment(dir, 'm24c-noenv', 'm24c') };
 }
 
 export function eventsStudy(dir, resultsDir) { return dir ? { build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m25: m25(dir, resultsDir) } : null; }
@@ -197,8 +205,8 @@ export function eventsMarkdown(e) {
   if (e.m24) {
     const m = e.m24;
     L.push('#### M24. The ISS ephemerides through `detect_maneuvers`', '',
-      `The two distinct NASA OEM files in the archive (created 2026-10-07 and 2026-10-21; 15 days each, 29 object-days together) hold no reboost: the event table of the first lists docking, departure and launch events with delta-v 0.0, the second carries none. ${m.windows} windows of 72 h (every 24 h, every 240 s state, TEME by foundation/frames): ${m.ok} answered, ${m.refused.length} refused (${m.refused.join(', ') || 'none'}); ${m.windowsWithDetection} windows reported a burn (${m.detections} detections at ${m.distinctEpochs} distinct epochs; delta-v median ${f(m.dvMS.median, 3)} m/s, maximum ${f(m.dvMS.max, 3)} m/s; Lambda median ${f(m.lambda.median, 0)}). Every detection is a false alarm: ${f(m.falseAlarmsPerObjectYear, 1)} per object-year over the distinct epochs. Detection of real reboosts and the errors of delta-v and epoch need the NASA archive of past OEM headers (TIG, DV, HA, HP), which the local archive does not hold.`, '');
-    if (e.m24c) { const c = e.m24c; L.push(`Control on burn-free FFM-1 arcs (A10c): ${c.windows} windows of 72 h on ${c.satellites} registered Starlink truths (one integration from one state, 300 s states): ${c.windowsWithDetection} windows reported a burn (${c.detections} detections at ${c.distinctEpochs} distinct epochs${c.detections ? `; delta-v median ${f(c.dvMS.median, 3)} m/s, maximum ${f(c.dvMS.max, 3)} m/s; Lambda median ${f(c.lambda.median, 0)}` : ''}), ${f(c.falseAlarmsPerObjectYear, 1)} per object-year over ${c.objectDays} object-days; refused: ${c.refused.length ? c.refused.join(', ') : 'none'}.`, ''); }
+      `The two distinct NASA OEM files in the archive (created 2026-10-07 and 2026-10-21; 15 days each, 29 object-days together) hold no reboost: the event table of the first lists docking, departure and launch events with delta-v 0.0, the second carries none. ${m.windows} windows of 72 h (every 24 h, every 240 s state, TEME by foundation/frames): ${m.ok} answered, ${m.refused.length} refused (${m.refused.join(', ') || 'none'}); ${m.windowsWithDetection} windows reported a burn (${m.detections} detections at ${m.distinctEpochs} distinct epochs; delta-v median ${f(m.dvMS.median, 3)} m/s, maximum ${f(m.dvMS.max, 3)} m/s; Lambda median ${f(m.lambda.median, 0)}). Every detection is a false alarm: ${f(m.falseAlarmsPerObjectYear, 1)} per object-year over the distinct epochs. The detector ran with the saved space-weather table loaded (\`load_environment\`, amendment A10d)${m.noEnvironment ? `; in an instance with no environment loaded the same windows gave ${m.noEnvironment.windowsWithDetection} of ${m.noEnvironment.windows} with a detection (Lambda median ${f(m.noEnvironment.lambdaMedian, 0)})` : ''}. Detection of real reboosts and the errors of delta-v and epoch need the NASA archive of past OEM headers (TIG, DV, HA, HP), which the local archive does not hold.`, '');
+    if (e.m24c) { const c = e.m24c; L.push(`Control on burn-free FFM-1 arcs (A10c): ${c.windows} windows of 72 h on ${c.satellites} registered Starlink truths (one integration from one state, 300 s states): ${c.windowsWithDetection} windows reported a burn (${c.detections} detections at ${c.distinctEpochs} distinct epochs${c.detections ? `; delta-v median ${f(c.dvMS.median, 3)} m/s, maximum ${f(c.dvMS.max, 3)} m/s; Lambda median ${f(c.lambda.median, 0)}` : ''}), ${f(c.falseAlarmsPerObjectYear, 1)} per object-year over ${c.objectDays} object-days; refused: ${c.refused.length ? c.refused.join(', ') : 'none'}${c.noEnvironment ? `; with no environment loaded: ${c.noEnvironment.windowsWithDetection} of ${c.noEnvironment.windows} (Lambda median ${f(c.noEnvironment.lambdaMedian, 0)})` : ''}.`, ''); }
   }
   if (e.m25) {
     L.push('#### M25. LRO and Danuri against the truth-side maneuver list', '',

@@ -17037,51 +17037,61 @@
       "windows": 26,
       "ok": 26,
       "refused": [],
-      "windowsWithDetection": 13,
-      "detections": 13,
-      "distinctEpochs": 13,
+      "windowsWithDetection": 17,
+      "detections": 17,
+      "distinctEpochs": 17,
       "dvMS": {
-        "n": 13,
-        "min": 0.02747513840855912,
-        "median": 0.06439628018318647,
-        "p90": 0.08295242771984283,
-        "max": 0.10730570057211657
+        "n": 17,
+        "min": 0.02024765562620214,
+        "median": 0.04900466387610137,
+        "p90": 0.13019401136166137,
+        "max": 0.1950948078482204
       },
       "lambda": {
-        "n": 13,
-        "min": 33.11,
-        "median": 175.64,
-        "p90": 1968.986,
-        "max": 3738.59
+        "n": 17,
+        "min": 42.31,
+        "median": 927,
+        "p90": 24002.98000000001,
+        "max": 162171.24
       },
       "windowDays": 26,
       "objectDays": 29,
-      "falseAlarmsPerObjectYear": 163.73275862068965
+      "falseAlarmsPerObjectYear": 214.11206896551724,
+      "noEnvironment": {
+        "windows": 26,
+        "windowsWithDetection": 13,
+        "lambdaMedian": 175.64
+      }
     },
     "m24c": {
       "windows": 96,
       "ok": 96,
       "refused": [],
       "satellites": 48,
-      "windowsWithDetection": 59,
-      "detections": 59,
-      "distinctEpochs": 59,
+      "windowsWithDetection": 64,
+      "detections": 64,
+      "distinctEpochs": 64,
       "dvMS": {
-        "n": 59,
-        "min": 0.029420399122974495,
-        "median": 0.05778444900415027,
-        "p90": 0.23206695916207012,
-        "max": 2.339593572941082
+        "n": 64,
+        "min": 0.018102903536802845,
+        "median": 0.06034604667503722,
+        "p90": 0.29604432520781543,
+        "max": 2.603827489773862
       },
       "lambda": {
-        "n": 59,
-        "min": 25.95,
-        "median": 118.99,
-        "p90": 7648.522000000002,
-        "max": 795561.34
+        "n": 64,
+        "min": 24.51,
+        "median": 722.39,
+        "p90": 73195.64600000001,
+        "max": 1180701.35
       },
       "objectDays": 192,
-      "falseAlarmsPerObjectYear": 112.23828125
+      "falseAlarmsPerObjectYear": 121.75,
+      "noEnvironment": {
+        "windows": 96,
+        "windowsWithDetection": 59,
+        "lambdaMedian": 118.99
+      }
     },
     "m25": [
       {

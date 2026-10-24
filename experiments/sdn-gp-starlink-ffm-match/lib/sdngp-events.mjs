@@ -56,3 +56,9 @@ export async function reentry(sdngp, { omm, weatherTable }) {
   if (r.statusCode !== 0) return fail(r);
   return { ok: true, rdm: rootOf(RDM.RDM, 'RDM', port(r, 'reentry')[0]).unpack() };
 }
+
+/** `load_environment`: replaces the instance's environment with a $PRW space-weather table (as FFM reads it); the instance keeps it for the calls that follow (amendment A10d). */
+export async function loadEnvironment(sdngp, weatherTable) {
+  const r = await sdngp.raw.h.invoke({ methodId: 'load_environment', inputs: [{ portId: 'space_weather_table', typeRef: T('PRW'), payload: weatherTable }] });
+  return r.statusCode === 0 ? { ok: true } : fail(r);
+}
