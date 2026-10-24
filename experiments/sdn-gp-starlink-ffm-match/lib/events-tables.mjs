@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { quantile } from './windows.mjs';
 import { buildRows } from './sdngp-rows.mjs';
+import { store } from '../common.mjs';
 import { CELLS, LADDER } from './events-cells.mjs';
 import { PLANTED_CASES, ARC_HOURS } from './events-plant.mjs';
 
@@ -462,23 +463,45 @@ function m32(dir) {
   });
 }
 
-const studyOf = (dir, resultsDir) => ({ build: path.basename(dir), m22: m22(dir), m23: m23(dir), m28: m28(dir), m24: m24(dir), m24c: m24c(dir), m24a: m24a(dir, resultsDir), m24p: m24p(dir), m24b: m24b(dir), m27: m27(dir, resultsDir), m25: m25(dir, resultsDir), m29: m29(dir), m30: m30(dir, resultsDir), m31: m31(resultsDir), m31captured: m31captured(dir), m32: m32(dir) });
+/** The methods the build's manifest declares (the snapshot copy of its plugin-manifest.json), in manifest order; null when the snapshot is not in the store. */
+const methodsOf = (build) => { try { return JSON.parse(fs.readFileSync(path.join(store, 'sdngp-snapshot', build, 'plugin-manifest.json'), 'utf8')).methods.map((x) => x.methodId); } catch { return null; } };
+/** `only`: for a build that has not run every source, the sources its events-focus.json names (amendment A15); the other rows of its directory are not read, so the tables do not move while the build runs the rest. */
+const studyOf = (dir, resultsDir, only = null) => {
+  const on = (name, fn) => (!only || only.includes(name) ? fn() : null);
+  return { build: path.basename(dir), methods: methodsOf(path.basename(dir)), m22: on('m22', () => m22(dir)), m23: on('m23', () => m23(dir)), m28: on('m28', () => m28(dir)), m24: on('m24', () => m24(dir)), m24c: on('m24c', () => m24c(dir)), m24a: on('m24a', () => m24a(dir, resultsDir)), m24p: on('m24p', () => m24p(dir)), m24b: on('m24b', () => m24b(dir)),
+    m27: on('m27', () => m27(dir, resultsDir)), m25: on('m25', () => m25(dir, resultsDir)), m29: on('m29', () => m29(dir)), m30: on('m30', () => m30(dir, resultsDir)), m31: on('m31', () => m31(resultsDir)), m31captured: on('m31', () => m31captured(dir)), m32: on('m32', () => m32(dir)) };
+};
 
-/** The events measurements of a build and, when given, of the earlier complete builds (oldest first; `previous` is the last of them), for the tables that stand the builds side by side. */
-export function eventsStudy(dir, resultsDir, earlierDirs = []) {
+/** The events measurements of a build and, when given, of the earlier complete builds (oldest first; `previous` is the last of them), for the tables that stand the builds side by side.
+ *  `laterDirs`: builds after the headline that have not run every source (amendment A15): each is a study of its own, whose `previous` is the build before it and whose `history` holds all the builds before it. */
+export function eventsStudy(dir, resultsDir, earlierDirs = [], laterDirs = []) {
   if (!dir) return null;
   const history = earlierDirs.map((d) => studyOf(d, resultsDir)).filter((x) => x.m24 || x.m24c || x.m24a || x.m22);
-  return { ...studyOf(dir, resultsDir), previous: history.at(-1) ?? null, history };
+  const headline = studyOf(dir, resultsDir);
+  const later = [];
+  for (const d of laterDirs) {
+    const focus = JSON.parse(fs.readFileSync(path.join(d, 'events-focus.json'), 'utf8')); // the sources this build has run and the rows they hold when the file was written
+    for (const [source, n] of Object.entries(focus.rows)) { const have = rowsOf(d, source).length; if (have !== n) throw new Error(`${path.basename(d)}: ${source} holds ${have} rows, events-focus.json says ${n}`); }
+    const x = studyOf(d, resultsDir, focus.sources);
+    if (!(x.m24 || x.m24c || x.m24a || x.m24b || x.m24p || x.m27 || x.m29 || x.m30)) continue;
+    const before = [...history, headline, ...later], entry = { ...x };
+    for (const [k, v] of Object.entries({ previous: before.at(-1), history: before, later: [] })) Object.defineProperty(entry, k, { value: v, enumerable: false }); // reachable for the tables, not written twice into tables.json
+    later.push(entry);
+  }
+  return { ...headline, previous: history.at(-1) ?? null, history, later };
 }
 
 // ---- markdown (section 16) ----
 const f = (x, d = 3) => (x === null || x === undefined || !Number.isFinite(x) ? '' : Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(d));
 const AX = { U: 'U (radial)', V: 'V (in-track)', W: 'W (cross-track)' };
 
-export function eventsMarkdown(e) {
+export function eventsMarkdown(e, opts = {}) {
   if (!e) return [];
   const L = [];
-  L.push('### 16b. Maneuvers, the reentry hand-off, ISS and lunar maneuver detection', '',
+  const later = opts.later ? [] : (e.later ?? []); // builds after this one that have run only some sources: they join the tables that stand the builds side by side
+  if (opts.later) L.push(`### 16d. Build ${e.build}, the next build of the module (amendment A15)`, '',
+    `Build ${e.build} is built from side B's closed-modules commit ${opts.sourceCommit ? opts.sourceCommit.slice(0, 7) : ''} with a required $PCF \`configuration\` port and one \`fit\` method. It has run the sources of amendment A15 (${opts.sources ?? ''}). The tables that stand the builds side by side (the ISS pre-burn windows, M27, the detector across builds, M30's predictions) carry it in section 16b; the tables below are its own, with the comparison against build ${e.previous?.build ?? ''}.`, '');
+  else L.push('### 16b. Maneuvers, the reentry hand-off, ISS and lunar maneuver detection', '',
     `Build ${e.build}. The truths of M22, M23 and M28 are FFM-1 (propagator/ffm), not the module's own Cowell integration: impulses and finite burns planted in its typed request, synthetic decays integrated to its own stop at 100 km geodetic altitude.`, '',
     'Not run: M26 (the Starlink detector against the files\' own states: the raw files are not kept), M33 (the thrust-onset test needs files of an orbit raise, which the captured batch has not begun) and the BeiDou part of M27 (the BeiDou orbit notices of the CSNO test and assessment center did not answer from this host; the BeiDou site\'s advisories are upgrade and maintenance outages, not orbit notices).', '');
   if (e.m22) {
@@ -541,10 +564,10 @@ export function eventsMarkdown(e) {
     L.push('#### The ISS pre-burn windows, diagnostic (amendments A12c and A12d)', '',
       'The same 99 planned burns of the pre-burn files, windows cut around each burn on the same states, weather and rules. The stretches before and after the burn hold no planned burn (a detection in them is a false alarm); the other two hold the burn. Position is the place of the detection in the window (0 start, 1 end); offset is the detected epoch less TIG for the detections not within 92 min of it:', '',
       `| Build | Window | Scored | Windows with a detection | Hits / elsewhere / none | Position, median [10th, 90th] | Offset from TIG (h), median [10th, 90th] | Absolute delta-v, median (m/s) | Hits: epoch error (min), median [10th, 90th] | Hits: delta-v over planned, median [10th, 90th] |`, '| --- | --- | --- | --: | --- | --- | --- | --: | --- | --- |',
-      ...e.history.filter((x) => x.m24b).flatMap((x) => part(x.m24b, x.build)), ...part(e.m24b, e.build), '');
+      ...(opts.later ? [] : e.history.filter((x) => x.m24b).flatMap((x) => part(x.m24b, x.build))), ...part(e.m24b, e.build), ...later.filter((x) => x.m24b).flatMap((x) => part(x.m24b, x.build)), '');
   }
   if (e.m27) {
-    const builds = [...e.history.filter((x) => x.m27), e];
+    const builds = [...(opts.later ? [] : e.history.filter((x) => x.m27)), e, ...later.filter((x) => x.m27)];
     const rate = (x, y) => (y ? f(x / y, 1) : '');
     const pv = (x) => (x === null || x === undefined ? '' : x < 0.001 ? '< 0.001' : f(x, 3));
     const nullCell = (t) => (t.outages ? `${f(t.expected, t.expected < 1 ? 3 : 1)} of ${t.outages}, observed ${t.observed}, P(at least) ${pv(t.tail)}` : '');
@@ -562,8 +585,8 @@ export function eventsMarkdown(e) {
     if (g.length) L.push(`Per satellite with outages in the notices (build ${e.build}):`, '', '| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Expected under the off-notice rate | Distinct detections (per object-day) | False alarms | Chance level (A14) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
       ...g.map((x) => `| ${x.name} | ${f(x.years, 2)} | ${x.outages} | ${x.scoreable} | ${x.hits} | ${x.offNotice.forecast.outages ? f(x.offNotice.forecast.expected, 1) : ''} | ${x.distinct} (${f(x.perObjectDay, 2)}) | ${x.falseAlarms} | ${Math.round(x.chance * 100)} % |`), '');
   }
-  if (e.previous && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
-    const builds = [...e.history.filter((x) => x.m24 || x.m24c || x.m24a), e];
+  if (e.previous && !opts.later && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
+    const builds = [...e.history.filter((x) => x.m24 || x.m24c || x.m24a), e, ...later.filter((x) => x.m24 || x.m24c || x.m24a)];
     const cells = [
       ['ISS, NASA files without a reboost (M24): windows with a detection', (x) => (x.m24 ? `${x.m24.windowsWithDetection} of ${x.m24.windows}` : '')],
       ['Burn-free FFM-1 Starlink arcs (M24c): windows with a detection', (x) => (x.m24c ? `${x.m24c.windowsWithDetection} of ${x.m24c.windows}` : '')],
@@ -633,12 +656,12 @@ export function eventsMarkdown(e) {
   if (e.m30) {
     const m = e.m30, lab = { default: 'as shipped', rule: 'rule (B_eff above 0.5 replaced by tau0)', free: 'free B_eff' };
     L.push('#### M30. Controlled deorbits (what build ' + e.build + ' covers)', '',
-      `Not covered: the residual series (theory plus the operator's Chebyshev residual inside its span) and a burn model with its stop epoch are not methods of the build (its methods are ingest_omm, propagate, fit, fit_sdnap, load_environment, maneuver, detect_maneuvers, reentry and launch_set). Covered and shown in section 2b: the lowering Starlinks' held-out errors for the three settings. Covered here: \`reentry\` on the set fitted to the first 24 h of each of the ${m.satellites} Starlinks with B_eff above 0.5 m2/kg, issued ${m.issuedFirst.slice(0, 16)} to ${m.issuedLast.slice(0, 16)} UTC, to be scored against Space-Track's TIP and decay messages as they arrive. As of the archive's newest snapshot (${m.snapshot ?? 'none'}) ${m.objectsWithTip} of the ${m.satellites} have a TIP message and ${m.objectsWithDecay} a decay message.`, '',
+      `Not covered: the residual series (theory plus the operator's Chebyshev residual inside its span) and a burn model with its stop epoch are not methods of the build (its methods are ${e.methods ? `${e.methods.slice(0, -1).join(', ')} and ${e.methods.at(-1)}` : 'in its manifest'}). Covered and shown in section 2b: the lowering Starlinks' held-out errors for the three settings. Covered here: \`reentry\` on the set fitted to the first 24 h of each of the ${m.satellites} Starlinks with B_eff above 0.5 m2/kg, issued ${m.issuedFirst.slice(0, 16)} to ${m.issuedLast.slice(0, 16)} UTC, to be scored against Space-Track's TIP and decay messages as they arrive. As of the archive's newest snapshot (${m.snapshot ?? 'none'}) ${m.objectsWithTip} of the ${m.satellites} have a TIP message and ${m.objectsWithDecay} a decay message.`, '',
       '| Setting | Fits | `reentry` answered | Refused | Predicted lifetime (days), median [min, max] | Sigma (h), median | Scored | Within 1 / 2 sigma |', '| --- | --: | --: | --- | --- | --: | --: | --- |',
       ...m.variants.map((v) => `| ${lab[v.variant]} | ${v.fitOk} | ${v.reentryOk} | ${Object.keys(v.refused).length ? Object.entries(v.refused).map(([k, c]) => `${k} ${c}`).join(', ') : 'none'} | ${v.reentryOk ? `${f(v.lifetimeDays.median, 1)} [${f(v.lifetimeDays.min, 1)}, ${f(v.lifetimeDays.max, 1)}]` : ''} | ${f(v.sigmaHours.median, 1)} | ${v.scored} | ${v.scored ? `${pc(v.within1)} / ${pc(v.within2)}` : ''} |`), '',
-      'The predictions of every build (the shipped setting; the free setting gives the same epochs), frozen in this table when it was committed; a dash is a refusal by name (above) or a build that issued none:', '',
-      ...(() => {
-        const builds = [...e.history.filter((x) => x.m30), e];
+      ...(opts.later ? [] : ['The predictions of every build (the shipped setting; the free setting gives the same epochs), frozen in this table when it was committed; a dash is a refusal by name (above) or a build that issued none:', '']),
+      ...(opts.later ? [] : (() => {
+        const builds = [...e.history.filter((x) => x.m30), e, ...later.filter((x) => x.m30)];
         const status = (x) => (x.decayMessage && x.lastTipDecayUtc ? `decayed ${x.lastTipDecayUtc.slice(0, 16)}` : x.tipMessages ? `${x.tipMessages} TIP messages, last ${x.lastTipDecayUtc.slice(0, 16)}` : 'none yet');
         const byBuild = builds.map((b) => new Map(b.m30.predictions.map((x) => [x.norad, x])));
         const objects = [...new Set(byBuild.flatMap((mp) => [...mp.keys()]))].sort((a, c) => Math.min(...byBuild.map((mp) => mp.get(a)?.epoch ?? '9')) < Math.min(...byBuild.map((mp) => mp.get(c)?.epoch ?? '9')) ? -1 : 1);
@@ -646,7 +669,7 @@ export function eventsMarkdown(e) {
         return [`| Object | B_eff (FFM-1 fit, m2/kg) | ${builds.map((b) => `${b.build}: predicted reentry (UTC), sigma (h)`).join(' | ')} | Space-Track TIP / decay |`, `| --- | --: | ${builds.map(() => '---').join(' | ')} | --- |`,
           ...objects.map((n) => `| ${n} | ${f(first(n).bEffFfm, 2)} | ${byBuild.map((mp) => { const x = mp.get(n); return x ? `${x.epoch.slice(0, 16)}, ${f(x.uncHours, 1)}` : '-'; }).join(' | ')} | ${status(first(n))} |`),
           '', `Issued (UTC): ${builds.map((b) => `${b.build} ${b.m30.issuedFirst.slice(0, 16)} to ${b.m30.issuedLast.slice(0, 16)}`).join('; ')}.`, ''];
-      })());
+      })()));
   }
   if (e.m31) {
     const m = e.m31;

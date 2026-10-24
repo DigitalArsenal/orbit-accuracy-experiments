@@ -8854,6 +8854,18 @@
   ],
   "eventsStudy": {
     "build": "61d4ec4e6a12",
+    "methods": [
+      "ingest_omm",
+      "propagate",
+      "fit",
+      "fit_sdnap",
+      "load_environment",
+      "maneuver",
+      "detect_maneuvers",
+      "reentry",
+      "launch_set",
+      "launch_batch"
+    ],
     "m22": {
       "satellites": 48,
       "controlMaxDifferenceM": 0.14465062105122325,
@@ -21899,6 +21911,18 @@
     ],
     "previous": {
       "build": "04f7c2d1d50f",
+      "methods": [
+        "ingest_omm",
+        "propagate",
+        "fit",
+        "fit_sdnap",
+        "load_environment",
+        "maneuver",
+        "detect_maneuvers",
+        "reentry",
+        "launch_set",
+        "launch_batch"
+      ],
       "m22": {
         "satellites": 48,
         "controlMaxDifferenceM": 0.14465062105122325,
@@ -34779,6 +34803,7 @@
     "history": [
       {
         "build": "35cd83a2b714",
+        "methods": null,
         "m22": {
           "satellites": 48,
           "controlMaxDifferenceM": 0.14465062105122325,
@@ -44880,6 +44905,18 @@
       },
       {
         "build": "04f7c2d1d50f",
+        "methods": [
+          "ingest_omm",
+          "propagate",
+          "fit",
+          "fit_sdnap",
+          "load_environment",
+          "maneuver",
+          "detect_maneuvers",
+          "reentry",
+          "launch_set",
+          "launch_batch"
+        ],
         "m22": {
           "satellites": 48,
           "controlMaxDifferenceM": 0.14465062105122325,
@@ -57757,7 +57794,8 @@
           }
         ]
       }
-    ]
+    ],
+    "later": []
   },
   "spanStudy": [
     {
