@@ -388,3 +388,11 @@ Sources: the Starlink FFM truths (every fitted satellite, the window of the base
 (both files), ESA final GNSS, GFZ MGEX GEO and IGSO (2025), GFZ rapid GNSS, ILRS (registered and current), HEO (THEMIS, Chandra, TESS, Artemis II), and the newer-file
 pass (SDN-GP fitted to the first 24 h of the FFM truth). The tables show the newest build that ran every source, and the Starlink FFM-truth row for every
 build run, so the effect of each new term of side B is visible. Lunar, cislunar and heliocentric packs stay awaiting: the module's theory is Earth-centred.
+
+### A9c - 2026-10-24, before any fit-length row of SDN-GP was read: arm 6 (A3) for SDN-GP
+
+The fit-length measurement of A3 (fits of 24, 48 and 72 h to the FFM truth, scored on the common interval 72 to 96 h and on the first day after each fit)
+is repeated for SDN-GP on the satellites of the registered `fitlength.jsonl`, on the headline build (`fitlength.mjs --arm sdngp`; rows
+`rows/sdngp/<build>/fitlength.s<k>.jsonl`), and section 8 of the tables puts SDN-GP beside XP and SGP4. Reason: side B's fit E2E reports that tau_c and tau_s are
+not identified on a one-day arc, so what a longer arc buys is a design question the Starlink truth can answer. The rule of A9b for builds applies (a build's rows
+are never mixed with another's).
