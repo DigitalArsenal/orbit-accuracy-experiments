@@ -97,3 +97,13 @@ held-out-by-time row (the experiment windows, every object) both take the experi
 Those windows belong to the held-out-by-time set only. The held-out-by-object set is LAGEOS-1 (every 9 days) and
 Stella (every second NSGF arc) on the dates of the fit and validation sets, 2025-11-01 to 2026-08-31; they are reported
 as two rows, held-out by object and held-out by time. Nothing else changes.
+
+## Amendment A2 (2026-10-25, after the fit and validation sets, before any held-out window is scored)
+
+M2's factor k, as section 3 defines it, comes out near 40 on every window: the fit residuals are sampled every one to
+two minutes and their along-track lag-1 autocorrelation is about 0.997, so the sum runs to the 20-lag cap. With k that
+large the fit likelihood is worse than M1's in every regime (SGP4XP, drag: negative log-likelihood -72241 for M1 + M2
+at tau 2 days against -83031 for M1), and M3, registered only on top of M2, could not be judged on its own. The
+candidates therefore also include M1 + M3 (M1's tau grid by M3's beta grid, no M2), chosen by the same rule of
+section 4 with M1 + M3 ranked between M1 and M1 + M2 in the order of parameters. Nothing else changes; no held-out
+window has been scored.
