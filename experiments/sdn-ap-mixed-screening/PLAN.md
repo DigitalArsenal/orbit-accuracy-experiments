@@ -132,3 +132,16 @@ foundation/frames); JavaScript selects records, calls modules and computes stati
 ## Amendments
 
 None at registration.
+
+### A1 - 2026-10-25, before any score of part 1a or part 2 was computed (part 1b had run): E6's modules, and the forecast sample's second fetch
+
+1. E6's steps run on its registered modules (space-data-network-modules 095c20a6): the current
+   eop-parser refuses E6's input frames. At that commit propagator/ffm's built module is not in the
+   repository (E6 ran a local build, `0d1f6264...`), so the run takes propagator/ffm from
+   config.modules.commit and every other module from 095c20a6, through a directory of links
+   (<store>/e6-modules). One R fit was tried this way before this amendment (Starlette, cutoff
+   2026-07-18); it is part of the run.
+2. The forecast sample was fetched at 18:11Z, 2 h 50 min before the forecast cycle; a satellite whose
+   SpaceX file was reissued in between has a fetched file that is not F. Such satellites are fetched
+   once more right after the forecast cycle ends, under the same rules; a satellite whose file is
+   still not F after that has no forecast arm and is counted.
