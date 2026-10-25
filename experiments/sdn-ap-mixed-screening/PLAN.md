@@ -145,3 +145,49 @@ None at registration.
    SpaceX file was reissued in between has a fetched file that is not F. Such satellites are fetched
    once more right after the forecast cycle ends, under the same rules; a satellite whose file is
    still not F after that has no forecast arm and is counted.
+
+### A2 - 2026-10-25, before any covariance of parts 3 or 4 is computed: parts 3 and 4
+
+V1c4 (console-covariance-calibration-v1c4-20261023) and V1c5 (its successor) have landed, both with
+negative results (V1c4: 3 of 24 test cells realistic for its selected SGP4 model; V1c5: 0 of 24);
+SDN-AP's own covariance is also too tight in V1c5's measurement. Parts 3 and 4 therefore report every
+covariance below under its own label, and none of them is called calibrated unless it passes the rule
+in this part.
+
+**Covariances.** For the SGP4 objects (the newest public Space-Track set before the prediction start,
+propagated by SGP4, on the objects of parts 1 and 2 that have truth: ISS, the five laser spheres and
+the Starlinks of part 1a), each constructed and applied as its record says, through analysis/gp-error-model
+(`object_covariance`, `calibrate_covariance`) and the causal event rule with analysis/maneuver-detection:
+1. V1c4's selected SGP4 model (results/v1c4/MODEL.json: F-scalar-mle/UNFLAGGED), labeled "V1c4 best".
+2. V1c5's frozen model (results/v1c5/MODEL.json: P-axes-mle/risk/UNFLAGGED), labeled "V1c5 frozen".
+3. The uncalibrated population covariance N (`object_covariance` alone), labeled "uncalibrated".
+4. None (screening by miss distance only), labeled "no covariance".
+For the SDN-AP objects: the module's own propagated covariance (`fit`'s epoch COVARIANCE carried by
+`sdnap_covariance_at`, build config.modules.sdnapWasmSha256), labeled "SDN-AP current covariance".
+
+**Part 3: realism.** For each covariance and each group (ISS; laser spheres; Starlink) at the lead
+times 1, 6, 12, 24, 48 and 72 h: d²/3 of the error vector in the covariance (mean with its 95 %
+object-cluster bootstrap interval, median), and the 95 % coverage; a cell is realistic under V1c5's
+rule (mean d²/3 in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects), and
+every cell is reported.
+
+**Part 4: screening by error injection.** Encounters are synthetic and their errors are real. For
+each SDN-AP window of parts 1 and 2 and each SGP4 window of the same lead time (both scored against
+their own truth), a true encounter is built at the lead time: the relative velocity of a LEO crossing
+(10 km/s at a crossing angle drawn uniformly in [10, 170] degrees), the true miss vector in the
+encounter plane with a length drawn log-uniformly in [10 m, 10 km] and a direction drawn uniformly;
+the predicted relative position is the true one plus the difference of the two objects' actual
+prediction errors at that lead time, each taken in its own radial / in-track / cross-track axes and
+placed in the encounter with the in-track axis along each object's velocity. Draws use xorshift128+
+seeded by SHA-256 of `B2|part4|<pair>`; 20,000 encounters per covariance. Pc is the 2D probability
+of analysis/conjunction-assessment with a 20 m combined hard-body radius and the sum of the two
+covariances (SDN-AP current plus each SGP4 variant). Reported per SGP4 variant: the miss-distance
+error (predicted minus true; median, 10th and 90th percentiles), the share of encounters with true
+miss under 1 km among those with Pc at or above 1e-4 (precision), the share of encounters with true
+miss under 200 m whose Pc is at or above 1e-4 (recall), the false-alert rate (Pc at or above 1e-4
+with true miss above 5 km) and the missed-alert rate (Pc below 1e-7 with true miss under 200 m),
+each with its bootstrap interval over encounters.
+
+When V1c5's successor (a re-score with a screening-oriented criterion) or a calibrated SDN-AP
+covariance (modules-sdn-ap-covariance-calibration-to-band-20261025) lands, it is added as a further
+labeled covariance by amendment, beside these.
