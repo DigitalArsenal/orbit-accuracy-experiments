@@ -89,3 +89,11 @@ ABOVE).
 No tuning on held-out windows; no per-object constants; no per-day constants (the shape over days is M1's tau, a
 model parameter chosen on validation); no window dropped after scoring (a window is excluded only for the harness's
 stated reasons: no reference states in the scored span, or a fit the module refuses, both counted in the report).
+
+## Amendment A1 (2026-10-25, before any candidate is fitted or any window scored)
+
+Section 2 requires that no window be in two sets, but its held-out-by-object rows ("every date") and its
+held-out-by-time row (the experiment windows, every object) both take the experiment windows of LAGEOS-1 and Stella.
+Those windows belong to the held-out-by-time set only. The held-out-by-object set is LAGEOS-1 (every 9 days) and
+Stella (every second NSGF arc) on the dates of the fit and validation sets, 2025-11-01 to 2026-08-31; they are reported
+as two rows, held-out by object and held-out by time. Nothing else changes.
