@@ -54,7 +54,7 @@
   "planSha256": "4f94675a674053e15049995fcf5e1741d69980cc1e3557183fb32edc640b766d",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "672f0c3121cd510e199c9f2290b2316fe4044f9b"
+    "commit": "4c0bab4065aa51d565153270d93002343b10c92c"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -300,7 +300,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "61d4ec4e6a12",
+    "headlineBuild": "b9bc708baa50",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -398,29 +398,8 @@
         "sourceCommit": "610930cbf2f1aeefb2525fecfbd98f1b96bb1ac6",
         "sourceUncommittedFiles": 8,
         "firstUseUtc": "2026-10-24T23:08:22.808Z",
-        "complete": false,
-        "eventsFocus": {
-          "sources": [
-            "m24",
-            "m24a",
-            "m24b",
-            "m24c",
-            "m24p",
-            "m27",
-            "m29",
-            "m30"
-          ],
-          "rows": {
-            "m24": 26,
-            "m24a": 756,
-            "m24b": 693,
-            "m24c": 96,
-            "m24p": 288,
-            "m27": 9443,
-            "m29": 1809,
-            "m30": 57
-          }
-        }
+        "complete": true,
+        "eventsFocus": null
       }
     ]
   },

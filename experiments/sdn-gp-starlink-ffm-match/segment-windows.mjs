@@ -1,4 +1,4 @@
-// Amendment A9h: the cislunar and heliocentric truth packs through the SDN-AP module's methods only (fit_sdngp, then propagate on a grid that names the set's own center), rows per build.
+// Amendment A9h: the cislunar and heliocentric truth packs through the SDN-AP module's methods only (its fit method, then propagate on a grid that names the set's own center), rows per build.
 // Packs and windows are those of A8 and A9 (regime-windows.mjs RULES): Artemis II and Artemis I (Earth-centered, 24 h fits, days 1 to 3), Artemis I and CAPSTONE (Moon-centered, 336 h fits, days 1 to 7),
 // the heliocentric cruises of Psyche, Lucy and Juno (Sun-centered, 720 h fits, days 1 to 15) and Juno's Jupiter orbits (Jupiter-centered, 1,584 h fits, days 1 to 33: the module documents no
 // Jupiter-centered path, so every window is attempted and the refusal is recorded by name). Every held-out pack state is requested, returned and scored (lib/pack-window.mjs).

@@ -1,6 +1,6 @@
 // Amendment A11, M29: real reentries. For each object of the two samples (the CORDS observed reentries of lib/cords.mjs, whose truth is the observed time; the objects whose last TIP message lies before
 // the archive's last snapshot, whose truth is that message's DECAY_EPOCH), at each of its element-set epochs t_k in the last 14 days before the reentry (spaced 4 h or more apart, and the epoch of the
-// set Aerospace's prediction used), the pseudo-observations of its element-set history up to t_k (lib/gp-pseudo.mjs) go to `fit_sdnap` (the module chooses its span from up to 120 h) and the set to
+// set Aerospace's prediction used), the pseudo-observations of its element-set history up to t_k (lib/gp-pseudo.mjs) go to the module's fit method (the module chooses its span from up to 120 h) and the set to
 // `reentry`, with the daily space weather of the years (lib/spw-history.mjs). The inputs are local only (Space-Track element sets and messages, the CORDS spreadsheet stay in the archive); the rows hold
 // times, errors and window widths.
 import fs from 'node:fs';
