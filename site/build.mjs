@@ -32,7 +32,7 @@ import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-ffm-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, PAPER_SOURCES, headingIds } from './src/models/registry.mjs';
-import { moduleList } from './module-list.mjs';
+import { moduleList, pinnedModules } from './module-list.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
 import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildSdnAp, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
@@ -115,6 +115,7 @@ function serveModule(relative, { as = relative, commit = null, wasmSha256 = null
   moduleIndex.push({ path: as, source: relative, commit: from, pluginId: m.pluginId, version: m.version, wasmSha256: sha256(wasm), bytes: wasm.length });
 }
 for (const relative of moduleList) serveModule(relative);
+for (const m of pinnedModules) serveModule(m.path, { commit: m.commit, wasmSha256: m.wasmSha256 });
 // V1 ran an earlier binary of the full-force propagator. A V1 seed reproduces
 // its committed run only with that binary, so it is served beside the current
 // one as propagator/ffm-v1, from the V1 run's own modules commit at the path
@@ -300,7 +301,7 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
 {
   const outside = PAPER_SOURCES['sdn-ap'];
   const paperFile = path.join(process.env[outside.env] ?? path.join(modules, '..', outside.repo), outside.file);
-  const built = await buildSdnAp({ dist, modules, write, own, paperFile, credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
+  const built = await buildSdnAp({ dist, modules: path.resolve(process.env.SDN_AP_MODULES ?? modules), write, own, paperFile, credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
   log(`sdn-ap: ${built.windows} LAGEOS-1 windows`);
 }
 

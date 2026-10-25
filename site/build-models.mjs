@@ -253,13 +253,13 @@ export async function buildUncertaintyModel({ modules, write, own, credits }) {
 //  - SGP4: analysis/gp-error-model `fit_elements` on the 24 h of LAGEOS-1's
 //    ILRS orbit before each epoch (the page propagates the set with
 //    propagator/sdn-ap, which reads SGP4 sets).
-//  - SGP4 and SGP4-XP envelopes: gp-error-model `object_covariance`, the
-//    population covariance of element sets in the set's regime at its age,
-//    on the SGP4 set above and on propagator/sdn-ap's SGP4-XP fit (the same
-//    call the page makes).
+//  - SGP4 envelope: gp-error-model `object_covariance`, the population
+//    covariance of SGP4 element sets in the set's regime at its age, on the
+//    set above. The module has no model for SGP4-XP sets (it refuses them:
+//    sgp4xp-no-propagator-or-error-model).
 //  - FFM envelope: propagator/ffm-v1 (the binary the page runs) from the
-//    precise state at the epoch with an initial covariance and white
-//    acceleration process noise (FFM_COVARIANCE), the V1 forces E-f.
+//    precise state at the epoch, the V1 forces E-f, with white acceleration
+//    process noise fitted on the other laser-ranged MEO spheres (FFM_FIT).
 //  - SDN-AP envelope: propagator/sdn-ap's own propagated covariance.
 //  - The paper's day medians: the 12.3 table's row for laser-ranged MEO
 //    satellites, read from the paper itself.
@@ -267,7 +267,8 @@ export async function buildUncertaintyModel({ modules, write, own, credits }) {
 // position block (km): the root-mean-square distance the covariance predicts.
 export const SDNAP_ROW = 'MEO, laser-ranged (LAGEOS, Etalon, LARES 2)';
 export const SDNAP_STEP_MIN = 30;
-export const FFM_COVARIANCE = { positionM: 1, velocityMs: 1e-3, noisePsdM2s3: 1e-11, noiseIntervalS: 60 };
+export const FFM_FIT = ['lageos2', 'etalon1', 'etalon2'];
+export const FFM_NOISE_INTERVAL_S = 60;
 const OMM_TYPE = { schemaName: 'OMM.fbs', fileIdentifier: '$OMM', rootTypeName: 'OMM', wireFormat: 'flatbuffer' };
 
 /** The 12.3 table row for the named regime: { row, days: [{ day, km }] }. */
@@ -282,9 +283,11 @@ export function sdnApPaperRow(markdown, row = SDNAP_ROW) {
   return { row, windows: cells[2], days };
 }
 
+// `modules`: a modules checkout whose analysis/gp-error-model has the
+// population covariance (SDN_AP_MODULES; the pinned SDN-AP commit or later).
 export async function buildSdnAp({ dist, modules, write, own, credits, paperFile }) {
   const { createBrowserModuleHarness } = await import('space-data-module-sdk/host/browser-module');
-  const { executionFrame } = await import('../harness/prw.mjs');
+  const { PRW_TYPE, executionFrame } = await import('../harness/prw.mjs');
   const P = await import('spacedatastandards.org/lib/js/PRW/main.js');
   const flatbuffers = await import('flatbuffers');
   const codec = await import('./src/models/sdn-ap/codec.js');
@@ -303,20 +306,72 @@ export async function buildSdnAp({ dist, modules, write, own, credits, paperFile
   const truth = JSON.parse(readDist('data/truth/lageos1.json'));
   const seeds = JSON.parse(readDist('data/v1/seeds.json'));
   const v1 = JSON.parse(readDist('data/v1/config.json'));
+  const metrics = JSON.parse(readDist('data/v1/metrics.json'));
   const paper = sdnApPaperRow(fs.readFileSync(paperFile, 'utf8'));
-  const [ap, gem, ffm] = await Promise.all([served('propagator/sdn-ap'), served('analysis/gp-error-model'), served('propagator/ffm-v1')]);
-  const kernel = { portId: 'kernel', payload: readDist('data/kernel/de440-2026.prw') };
-  const eop = { portId: 'earth_orientation', payload: readDist('data/eop/eop-v1.prw') };
+  // gp-error-model is not served: the build runs it from the modules checkout.
+  const { loadModule, gitState } = await import('../harness/modules.mjs');
+  const [ap, ffm, gem] = await Promise.all([served('propagator/sdn-ap'), served('propagator/ffm-v1'), loadModule(modules, 'analysis/gp-error-model')]);
+  gem.manifest = JSON.parse(fs.readFileSync(path.join(modules, 'analysis/gp-error-model/plugin-manifest.json'), 'utf8'));
+  const kernel = { portId: 'kernel', typeRef: PRW_TYPE, payload: readDist('data/kernel/de440-2026.prw') };
+  const eop = { portId: 'earth_orientation', typeRef: PRW_TYPE, payload: readDist('data/eop/eop-v1.prw') };
   const HOUR = 3600e3, DAY = 24 * HOUR;
   const object = { norad: truth.norad, objectId: '1976-039A', name: 'LAGEOS-1' };
   const iso = (ms) => new Date(ms).toISOString();
   const pick = (arr, ids) => ids.flatMap((i) => arr.slice(3 * i, 3 * i + 3));
-  const sizePrefixed = (bytes) => (new TextDecoder().decode(bytes.subarray(8, 12)) === '$OMM' ? bytes
-    : Uint8Array.from([...new Uint8Array(new Uint32Array([bytes.length]).buffer), ...bytes]));
+  // gp-error-model reads the size-prefixed $OMM; propagator/sdn-ap answers
+  // with the plain form. Re-framed through the checkout's own SDS binding.
+  const sds = path.join(modules, 'node_modules');
+  const OMMs = await import(pathToFileURL(path.join(sds, 'spacedatastandards.org/lib/js/OMM/main.js')));
+  const fbs = await import(pathToFileURL(path.join(sds, 'flatbuffers/mjs/flatbuffers.js')));
+  const sizePrefixed = (bytes) => {
+    if (new TextDecoder().decode(bytes.subarray(8, 12)) === '$OMM') return bytes;
+    const builder = new fbs.Builder(1024);
+    OMMs.OMM.finishSizePrefixedOMMBuffer(builder, OMMs.OMM.getRootAsOMM(new fbs.ByteBuffer(bytes)).unpack().pack(builder));
+    return builder.asUint8Array().slice();
+  };
   const sigmaKm = (cov, n) => Math.sqrt(cov[0] + cov[n + 1] + cov[2 * n + 2]) / 1000;  // m² in, km out
   const band = (hours, sigmas) => ({ sigma1: hours.map((h, i) => [h, sigmas[i]]), sigma3: hours.map((h, i) => [h, 3 * sigmas[i]]) });
   const covered = seeds.filter((s) => s.object === 'lageos1' && s.seedUnixMs - DAY >= truth.epochsUnixMs[0] && s.seedUnixMs + 3 * DAY <= truth.epochsUnixMs.at(-1));
   const hours = Array.from({ length: (72 * 60) / SDNAP_STEP_MIN }, (_, k) => ((k + 1) * SDNAP_STEP_MIN) / 60);
+  // FFM's propagated covariance: P₀ = 0 at the precise state (its error, at
+  // centimeters, is below what the days after add) and white acceleration
+  // noise of spectral density q on each RTN axis, whose size is fitted, not
+  // assumed: on the V1 runs of the other laser-ranged MEO spheres (FFM_FIT),
+  // P(t) = q·G(t), so the q at which the covariance predicts the mean squared
+  // error, E|e|² = trace P, is the mean of |e|²/trace G over their samples.
+  // Each sample's position block of P(t), 3×3 row-major, m².
+  const ffmPosition = async (arc, seed, sampleHours, q) => {
+    const e0 = seed.seedUnixMs, i0 = arc.epochsUnixMs.indexOf(e0);
+    if (i0 < 0) throw new Error(`sdn-ap model: no ${arc.object} state at ${seed.seedUtc}`);
+    const samples = sampleHours.map((h) => iso(e0 + h * HOUR).replace('Z', ''));
+    const request = executionFrame({ epoch: iso(e0).replace('Z', ''), timeScale: 'UTC', position: arc.position.slice(3 * i0, 3 * i0 + 3), velocity: arc.velocity.slice(3 * i0, 3 * i0 + 3),
+      samples, target: samples.at(-1), integrator: v1.integrator, forces: { ...v1.configurations['E-f'], ...seed.params }, kernel: true });
+    const prw = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(request.payload)).unpack();
+    prw.EXECUTION_REQUEST.INITIAL_COVARIANCE = Object.assign(new P.PRWStateMatrixT(), { DIMENSION: 6, VALUES: Array(36).fill(0) });
+    prw.EXECUTION_REQUEST.PROCESS_NOISE = Object.assign(new P.PRWProcessNoiseT(), { MODEL: P.prwProcessNoiseModel.WHITE_ACCELERATION, AXES: P.prwProcessNoiseAxes.RADIAL_TRANSVERSE_NORMAL,
+      SPECTRAL_DENSITY_M2_S3: [q, q, q], DISCRETIZATION_SECONDS: FFM_NOISE_INTERVAL_S });
+    const b = new flatbuffers.Builder(1 << 16);
+    P.PRW.finishSizePrefixedPRWBuffer(b, prw.pack(b));
+    const response = await ffm.invoke('invoke', [{ ...request, payload: b.asUint8Array().slice() }, kernel, eop]);
+    const result = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(response.outputs.find((o) => o.portId === 'response').payload))).unpack().EXECUTION_RESULT;
+    if (result.SAMPLES.length !== samples.length || result.SAMPLES.some((x) => !x.COVARIANCE?.VALUES?.length)) throw new Error('sdn-ap model: propagator/ffm-v1 returned a sample without covariance');
+    return result.SAMPLES.map((x) => { const n = x.COVARIANCE.DIMENSION, c = x.COVARIANCE.VALUES; return [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => c[i * n + j])); });
+  };
+  const ffmNoise = { psdM2s3: null, samples: 0, objects: FFM_FIT, intervalSeconds: FFM_NOISE_INTERVAL_S, initial: 'zero' };
+  {
+    let sum = 0;
+    for (const name of FFM_FIT) {
+      const arc = JSON.parse(readDist(`data/truth/${name}.json`));
+      for (const seed of seeds.filter((s) => s.object === name)) {
+        const rows = metrics.results.filter((r) => r.object === name && r.seedEpoch === seed.seedUtc && r.configuration === 'E-f' && Number.isFinite(r.errorM));
+        if (!rows.length) continue;
+        const traces = (await ffmPosition(arc, seed, rows.map((r) => r.hours), 1)).map((c) => c[0] + c[4] + c[8]);
+        rows.forEach((r, k) => { sum += (r.errorM * r.errorM) / traces[k]; ffmNoise.samples += 1; });
+      }
+    }
+    if (!ffmNoise.samples) throw new Error('sdn-ap model: no V1 rows to fit FFM’s process noise on');
+    ffmNoise.psdM2s3 = sum / ffmNoise.samples;
+  }
   const windows = [];
   for (const seed of covered) {
     const e0 = seed.seedUnixMs;
@@ -328,9 +383,6 @@ export async function buildSdnAp({ dist, modules, write, own, credits, paperFile
     const report = erm.decode(codec.outputsOf(fit, 'report')[0]).fits?.[0];
     if (!report?.converged) throw new Error(`sdn-ap model: SGP4 fit for ${seed.seedUtc} did not converge (${report?.error ?? report?.stop})`);
     const sgp4 = codec.outputsOf(fit, 'elements')[0];
-    // SGP4-XP, as the page fits it.
-    const xpFit = await ap.invoke('fit', [codec.frame('ephemeris', 'OEM', codec.oem(object, ...states)), codec.frame('configuration', 'PCF', codec.pcf(codec.THEORY.SGP4XP))]);
-    const xp = codec.outputsOf(xpFit, 'elements')[0];
     const population = async (omm) => {
       const o = codec.readOmm(omm);
       const setMs = Date.parse(/Z$/.test(o.EPOCH) ? o.EPOCH : `${o.EPOCH}Z`);
@@ -340,29 +392,18 @@ export async function buildSdnAp({ dist, modules, write, own, credits, paperFile
       if (missing) throw new Error(`sdn-ap model: object_covariance ${missing.status} at ${hours[Number(missing.id)]} h`);
       return { regime: out.objects[0].regime, status: out.objects[0].status, ...band(hours, out.objects.map((x) => sigmaKm(x.covarianceInertial, 6))) };
     };
-    // FFM: the precise state at the epoch, P₀ and white acceleration noise.
-    const i0 = truth.epochsUnixMs.indexOf(e0);
-    const samples = hours.map((h) => iso(e0 + h * HOUR).replace('Z', ''));
-    const request = executionFrame({ epoch: iso(e0).replace('Z', ''), timeScale: 'UTC', position: truth.position.slice(3 * i0, 3 * i0 + 3), velocity: truth.velocity.slice(3 * i0, 3 * i0 + 3),
-      samples, target: samples.at(-1), integrator: v1.integrator, forces: { ...v1.configurations['E-f'], ...seed.params }, kernel: true });
-    const prw = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(request.payload)).unpack();
-    const { positionM: sp, velocityMs: sv, noisePsdM2s3: q, noiseIntervalS } = FFM_COVARIANCE;
-    prw.EXECUTION_REQUEST.INITIAL_COVARIANCE = Object.assign(new P.PRWStateMatrixT(), { DIMENSION: 6, VALUES: Array.from({ length: 36 }, (_, k) => (k % 7 ? 0 : k < 21 ? sp * sp : sv * sv)) });
-    prw.EXECUTION_REQUEST.PROCESS_NOISE = Object.assign(new P.PRWProcessNoiseT(), { MODEL: P.prwProcessNoiseModel.WHITE_ACCELERATION, AXES: P.prwProcessNoiseAxes.RADIAL_TRANSVERSE_NORMAL,
-      SPECTRAL_DENSITY_M2_S3: [q, q, q], DISCRETIZATION_SECONDS: noiseIntervalS });
-    const b = new flatbuffers.Builder(1 << 16);
-    P.PRW.finishSizePrefixedPRWBuffer(b, prw.pack(b));
-    const response = await ffm.invoke('invoke', [{ ...request, payload: b.asUint8Array().slice() }, kernel, eop]);
-    const result = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(response.outputs.find((o) => o.portId === 'response').payload))).unpack().EXECUTION_RESULT;
-    if (result.SAMPLES.some((s) => !s.COVARIANCE?.VALUES?.length)) throw new Error('sdn-ap model: propagator/ffm-v1 returned a sample without covariance');
-    const envelopes = { sgp4: await population(sgp4), sgp4xp: await population(xp),
-      ffm: { ...band(hours, result.SAMPLES.map((s) => sigmaKm(s.COVARIANCE.VALUES, s.COVARIANCE.DIMENSION))), initial: FFM_COVARIANCE } };
+    const ffmBlocks = await ffmPosition(truth, seed, hours, ffmNoise.psdM2s3);
+    const ffmEnvelope = { ...band(hours, ffmBlocks.map((c) => Math.sqrt(c[0] + c[4] + c[8]) / 1000)),
+      // GCRF position covariance (km²) every hour, for the page's ellipsoids.
+      position: hours.map((h, k) => [h, ffmBlocks[k].map((v) => v / 1e6)]).filter(([h]) => Number.isInteger(h)) };
+    const envelopes = { sgp4: await population(sgp4),
+      ffm: ffmEnvelope };
     windows.push({ seedUnixMs: e0, seedUtc: seed.seedUtc, sgp4: { omm: Buffer.from(sgp4).toString('base64'), epoch: report.epoch, fitRmsKm: report.rms?.rms3dKm ?? null }, envelopes });
   }
   await Promise.all([ap.destroy(), gem.destroy(), ffm.destroy()]);
   const label = own('MIT (this repository); results are analysed information', credits.join(' '), credits);
-  write('data/sdn-ap/held-out.json', { object: object.name, stepMinutes: SDNAP_STEP_MIN, paper, ffmCovariance: FFM_COVARIANCE,
-    modules: { 'propagator/sdn-ap': ap.manifest.version, 'analysis/gp-error-model': gem.manifest.version, 'propagator/ffm-v1': ffm.manifest.version }, windows },
+  write('data/sdn-ap/held-out.json', { object: object.name, stepMinutes: SDNAP_STEP_MIN, paper, ffmNoise,
+    modules: { 'propagator/sdn-ap': ap.manifest.version, 'analysis/gp-error-model': { version: gem.manifest.version, commit: gitState(modules).commit, wasmSha256: gem.provenance.wasmSha256 }, 'propagator/ffm-v1': ffm.manifest.version }, windows },
   'site/build-models.mjs buildSdnAp: SGP4 fits, the envelopes of each propagator, the SDN-AP paper’s 12.3 row', label);
   return { windows: windows.length };
 }

@@ -8,14 +8,17 @@
 //     site build (data/sdn-ap/held-out.json), propagated here by propagator/sdn-ap.
 //   FFM: propagator/ffm from the precise state at the epoch, every modeled
 //     force (the catalog paper's precise-orbits model, the V1 configuration).
-// Envelopes come from each propagator's covariance, as the build provides it.
+// Envelopes come from each propagator's covariance, as the build provides it
+// (site/build-models.mjs buildSdnAp): FFM's propagated covariance with process
+// noise fitted on the other laser-ranged MEO spheres, SGP4's population
+// covariance from analysis/gp-error-model, SDN-AP's own propagated covariance.
 // Three views follow one clock: the orbit (GCRF), each propagator less the
 // truth in the truth's radial, in-track and cross-track axes, and the
 // distance from truth with the paper's day medians. Modules compute; this file
 // moves records and draws.
 import { runV1Seed } from '../../runs.js';
 import { credits, panel, table, tiles, inputs, h } from '../ui.js';
-import { rtn, scene3d, toRtn, v3 } from '../scene.js';
+import { covarianceAxes, rtn, rtnCovariance, scene3d, toRtn, v3 } from '../scene.js';
 import { THEORY, frame, oem, outputsOf, pcf, readOem } from './codec.js';
 import { envelopeChart, formatKm } from './envelope-chart.js';
 
@@ -28,6 +31,7 @@ const COLORS = () => (dark()
   ? { sdnap: '#c47d15', ffm: '#2799c6', sgp4xp: '#d55181', sgp4: '#8e8e93', paper: '#f5f5f7' }
   : { sdnap: '#c77d00', ffm: '#0a84b8', sgp4xp: '#d55181', sgp4: '#6e6e73', paper: '#1d1d1f' });
 const NAMES = { sdnap: 'SDN-AP', ffm: 'FFM', sgp4xp: 'SGP4-XP', sgp4: 'SGP4' };
+const NAMES_TRUTH = { lageos2: 'LAGEOS-2', etalon1: 'Etalon-1', etalon2: 'Etalon-2' };
 const ORDER = ['sdnap', 'ffm', 'sgp4xp', 'sgp4'];
 
 const STYLE = `.env-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 8px;font-size:13px;color:var(--muted)}
@@ -46,11 +50,12 @@ export default async function run(ctx) {
     && s.seedUnixMs - DAY >= truth.epochsUnixMs[0] && s.seedUnixMs + 3 * DAY <= truth.epochsUnixMs.at(-1));
   const p = panel(ctx.root, 'The epoch');
   const form = inputs(p, [{ id: 'seed', label: 'Prediction starts', type: 'select', value: String(covered[0].index),
-    options: covered.map((s) => [String(s.index), `${s.seedUtc.slice(0, 16).replace('T', ' ')} UTC`]) }], () => one());
+    options: covered.map((s) => [String(s.index), `${s.seedUtc.slice(0, 16).replace('T', ' ')} UTC`]) },
+  { id: 'shown', label: 'Error view shows', type: 'select', value: 'all', options: [['all', 'Every propagator'], ['close', 'SDN-AP and FFM']] }], () => one());
   const orbit = scene3d(ctx, { title: 'LAGEOS-1 and each prediction', caption: 'GCRF (km): the ILRS precise orbit and each propagator for 72 h' });
-  const apart = scene3d(ctx, { title: 'Each propagator − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit (km); ellipsoids: each covariance, 1σ' });
+  const apart = scene3d(ctx, { title: 'Each propagator − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit (km); ellipsoids: the 1σ position covariance of FFM and SDN-AP' });
   const card = h('figure', { class: 'chart-card' }, h('figcaption', {}, h('strong', {}, 'Distance from the precise orbit'),
-    h('span', {}, `Hours since the prediction began; markers: the paper’s medians (${built.paper.row}); drag to move the views above in time`)));
+    h('span', {}, `Hours since the prediction began; markers: the paper’s medians (${built.paper.row}, ${built.paper.windows} windows); dashed and dotted: 1σ and 3σ of √trace of each position covariance, FFM’s with white acceleration noise fitted on ${built.ffmNoise.objects.map((o) => NAMES_TRUTH[o] ?? o).join(', ')} (q = ${built.ffmNoise.psdM2s3.toExponential(2)} m²/s³), SGP4’s the population covariance of element sets in its regime and age (analysis/gp-error-model); drag to move the views above in time`)));
   const plot = h('div', { class: 'env-chart', 'data-chart': 'distance' });
   card.append(plot);
   ctx.root.append(card);
@@ -115,11 +120,19 @@ export default async function run(ctx) {
         for (const k of present) s.track(tracks[k].map((r, j) => [truth.epochsUnixMs[heldIds[j]], r]).filter((q) => q[1]), { color: colors[k], width: 2 });
       }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal', time: timeSpec,
         legend: [['text', 'ILRS precise orbit'], ...present.map((k) => [colors[k], NAMES[k]])] });
+      // Each covariance's 1σ ellipsoid about its own prediction, in the
+      // precise orbit's radial, in-track and cross-track axes, every hour.
+      const shown = form.values().shown === 'close' ? present.filter((k) => k === 'sdnap' || k === 'ffm') : present;
+      const ellipsoids = shown.filter((k) => envelopes[k]?.position).map((k) => [k, envelopes[k].position.map(([hr, P]) => {
+        const j = hours.findIndex((x) => Math.abs(x - hr) < 1e-9);
+        return j < 0 || !offsets[k][j] ? null : [truth.epochsUnixMs[heldIds[j]], offsets[k][j], covarianceAxes(rtnCovariance(bases[j], P))];
+      }).filter(Boolean)]);
       apart.draw((s) => {
         s.point([0, 0, 0], { color: 'text', label: 'precise orbit' });
-        for (const k of present) s.track(offsets[k].map((q, j) => [truth.epochsUnixMs[heldIds[j]], q]).filter((q) => q[1]), { color: colors[k], width: 2 });
+        for (const k of shown) s.track(offsets[k].map((q, j) => [truth.epochsUnixMs[heldIds[j]], q]).filter((q) => q[1]), { color: colors[k], width: 2 });
+        for (const [k, samples] of ellipsoids) if (samples.length) s.movingEllipsoid(samples, { color: colors[k], alpha: 0.35 });
       }, { axes: ['radial (km)', 'in-track (km)', 'cross-track (km)'], aspect: 'normal', time: timeSpec,
-        legend: present.map((k) => [colors[k], NAMES[k]]) });
+        legend: shown.map((k) => [colors[k], `${NAMES[k]}${envelopes[k]?.position ? ', with its 1σ ellipsoid' : ''}`]) });
       ctx.time.set(epochMs + 72 * HOUR);
       return `Day 3 RMS: ${present.map((k) => `${NAMES[k]} ${formatKm(dayRms(k, 3))}`).join(', ')}.`;
     });

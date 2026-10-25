@@ -1,5 +1,5 @@
 // Distance from truth against time, one line per propagator, its covariance's
-// 1σ and 3σ envelopes as bands in the propagator's own color, and markers for
+// 1σ and 3σ envelopes as dashed and dotted boundaries in the propagator's own color, and markers for
 // the paper's medians. One y axis (log, km), a legend, a crosshair with a
 // tooltip, direct labels at the line ends, and a table of the same numbers.
 // Drawing only: every value arrives computed.
@@ -39,7 +39,10 @@ export function envelopeChart(container, { series, markers = [], x, onCursor = (
       item.append(Object.assign(document.createElement('span'), { className: 'env-swatch env-dot', style: `background:${m.color}` }), document.createTextNode(m.name));
       legend.append(item);
     }
-    if (series.some((s) => s.envelope)) legend.append(div('env-key env-band-key', 'Bands: 1σ and 3σ of each propagator’s covariance'));
+    if (series.some((s) => s.envelope)) {
+      const key = (dash, text) => { const item = div('env-key'); item.innerHTML = `<svg width="22" height="6" aria-hidden="true"><line x1="1" y1="3" x2="21" y2="3" stroke="currentColor" stroke-width="1.5" stroke-dasharray="${dash}" stroke-linecap="round"/></svg>`; item.append(document.createTextNode(text)); return item; };
+      legend.append(key('6 4', '1σ of its covariance'), key('1.5 3.5', '3σ'));
+    }
     container.append(legend);
     const width = Math.max(320, container.clientWidth || 640), height = 300;
     const svg = el('svg', { viewBox: `0 0 ${width} ${height}`, width: '100%', height, class: 'env-svg', role: 'img', 'aria-label': 'Distance from truth against hours since the prediction began' }, container);
@@ -54,15 +57,17 @@ export function envelopeChart(container, { series, markers = [], x, onCursor = (
       el('text', { x: f.x0 - 8, y: sy(d) + 4, 'text-anchor': 'end' }, axis).textContent = formatKm(d);
     }
     for (const t of x.ticks) el('text', { x: sx(t), y: f.y0 + 22, 'text-anchor': 'middle' }, axis).textContent = `${t} h`;
-    // Bands under the lines: 3σ lighter, 1σ darker, each in its series' color.
+    // Each covariance as the distance it predicts: the 1σ boundary dashed and
+    // the 3σ boundary dotted in the series' color, the ground between them
+    // lightly filled; under the measured lines.
+    const pathOf = (pts) => pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join('');
     for (const s of series) {
-      if (!s.envelope) continue;
-      for (const [band, alpha] of [['sigma3', 0.12], ['sigma1', 0.24]]) {
-        const pts = s.envelope[band];
-        if (!pts?.length) continue;
-        const d = `M${sx(pts[0][0])},${sy(lo)}${pts.map((p) => `L${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join('')}L${sx(pts.at(-1)[0])},${sy(lo)}Z`;
-        el('path', { d, fill: s.color, 'fill-opacity': alpha, stroke: 'none', 'data-band': `${s.id}-${band}` }, svg);
-      }
+      const e = s.envelope;
+      if (!e?.sigma1?.length || !e?.sigma3?.length) continue;
+      const ring = `${pathOf(e.sigma3)}${[...e.sigma1].reverse().map((p) => `L${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join('')}Z`;
+      el('path', { d: ring, fill: s.color, 'fill-opacity': 0.08, stroke: 'none', 'data-band': `${s.id}-fill` }, svg);
+      el('path', { d: pathOf(e.sigma1), fill: 'none', stroke: s.color, 'stroke-width': 1.5, 'stroke-dasharray': '6 4', 'stroke-opacity': 0.9, 'data-band': `${s.id}-sigma1` }, svg);
+      el('path', { d: pathOf(e.sigma3), fill: 'none', stroke: s.color, 'stroke-width': 1.5, 'stroke-dasharray': '1.5 3.5', 'stroke-linecap': 'round', 'stroke-opacity': 0.9, 'data-band': `${s.id}-sigma3` }, svg);
     }
     const labels = [];
     for (const s of series) {
