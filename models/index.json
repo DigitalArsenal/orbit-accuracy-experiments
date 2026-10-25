@@ -1,5 +1,11 @@
 [
   {
+    "paper": "sdn-ap",
+    "section_id": "123-held-out-accuracy",
+    "title": "Every propagator against a laser-ranged precise orbit",
+    "url": "models/sdn-ap/123-held-out-accuracy.html"
+  },
+  {
     "paper": "evidence-supported-aso-catalog",
     "section_id": "23-evidence-model",
     "title": "A solution from observations, with its covariance",
