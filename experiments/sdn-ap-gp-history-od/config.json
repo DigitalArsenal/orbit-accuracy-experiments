@@ -1,0 +1,31 @@
+{
+  "experiment": "sdn-ap-gp-history-od",
+  "frozen": true,
+  "registeredUtc": "2026-10-25T15:30:00Z",
+  "task": "experiments-sdn-ap-gp-history-od-20261025",
+  "g1Store": "/opt/data/sdn-archive/sdn-gp-starlink-ffm-match",
+  "archive": "/opt/data/sdn-archive",
+  "gp": {
+    "dir": "spacetrack/gp_history/by-creation",
+    "theory": "SGP4",
+    "ephemerisType": "0",
+    "firstCreationUtc": "2022-11-20T00:00:00Z",
+    "minimumHistoryDays": 7,
+    "createdNotAfterWindowEnd": true
+  },
+  "window": {"fitSeconds": 86400, "leadDays": [1, 2, 3], "minimumCoverage": 0.9, "rtnStrideSeconds": 300},
+  "pseudoObservations": {"stepSeconds": 300, "historyHours": 120, "maxIntervalHours": 48, "firstIntervalHours": 6, "minimumStates": 48, "frame": "TEMEOFDATE"},
+  "arms": ["sgp4-latest", "sgp4xp-fit", "sdnap-fit"],
+  "sdnap": {"modulesCommit": "25203a0ce7e4c9f7c2772f25f0f05a9ca8ec227c", "wasmSha256Prefix": "80867b356130", "path": "propagator/sdn-ap", "fitTheory": "SDNAP"},
+  "statistics": {"quantiles": [0.1, 0.5, 0.9], "bootstrapResamples": 10000, "bootstrapSeed": 20261025, "intervalPercent": 95, "minimumWindowsForInterval": 5},
+  "regimes": [
+    {"id": "leo-starlink", "label": "LEO, Starlink shells (FFM-1 propagation of fits to the operator's ephemerides)"},
+    {"id": "leo-iss", "label": "LEO, ISS (NASA trajectory files)", "rows": ["iss", "iss-daily"]},
+    {"id": "leo-slr", "label": "LEO, laser-ranged satellites (ILRS NSGF orbits, 2025 and October 2026)", "rows": ["slr-low", "slr-low-current"]},
+    {"id": "meo-gnss", "label": "MEO, GPS, GLONASS, Galileo and BeiDou (ESA final 2024; GFZ rapid October 2026)", "rows": ["gnss", "gnss-rapid"]},
+    {"id": "meo-slr", "label": "MEO, laser-ranged (LAGEOS, Etalon, LARES 2; ILRS orbits)", "rows": ["slr-high", "slr-high-current"]},
+    {"id": "igso-gnss", "label": "IGSO, BeiDou and QZSS (GFZ MGEX rapid)", "rows": ["mgex-igso", "mgex-igso-rapid"]},
+    {"id": "geo-gnss", "label": "GEO, BeiDou and QZSS (GFZ MGEX rapid)", "rows": ["mgex-geo", "mgex-geo-rapid"]},
+    {"id": "heo-tess", "label": "HEO, TESS, 13.7-day orbit (MAST definitive ephemeris)", "rows": ["heo-tess"]}
+  ]
+}
