@@ -25,12 +25,12 @@ export async function crossValidate({ arcs, flagRecords, spec, config, e3, confi
       const prior = arcs.filter(a => index(foldOf(config, a.key)) < index(id));
       let model = null;
       if (c.method !== 'none') {
-        const rows = fitRows(prior, { base: c.base, tiering: c.tiering, flagRecords, spec, cutoffMs: foldStartMs(config, e3, id) });
+        const rows = fitRows(prior, { base: c.base, tiering: c.tiering, claim: c.claim, flagRecords, spec, cutoffMs: foldStartMs(config, e3, id) });
         const fitResult = await fitTiered(gp, codec, rows, c.method, config, `v1c5-${c.name}-cv-${id}`, tierGroups(c, spec));
         model = fitResult.model;
         fitted[`${c.name}|${id}`] = { rows: rows.length, strata: fitResult.calibration.strata.map(s => ({ stratum: s.stratum, status: s.status, n: s.n, objects: s.objects })) };
       }
-      const scored = await scoreArcs({ gp, codec, model, arcs: byFold.get(id) ?? [], base: c.base, tiering: c.tiering, flagRecords, spec });
+      const scored = await scoreArcs({ gp, codec, model, arcs: byFold.get(id) ?? [], base: c.base, tiering: c.tiering, claim: c.claim, flagRecords, spec });
       foldCells[c.name][id] = cellsOf(claimed(scored, c.claim, flags), configs);
       scoredFolds.push(...scored.map(a => ({ fold: id, ...a })));
     }
@@ -41,7 +41,7 @@ export async function crossValidate({ arcs, flagRecords, spec, config, e3, confi
   const models = {};
   for (const c of candidates) {
     if (c.method === 'none') { models[c.name] = { model: null, calibration: null, rows: 0 }; continue; }
-    const rows = fitRows(arcs, { base: c.base, tiering: c.tiering, flagRecords, spec });
+    const rows = fitRows(arcs, { base: c.base, tiering: c.tiering, claim: c.claim, flagRecords, spec });
     models[c.name] = await fitTiered(gp, codec, rows, c.method, config, `v1c5-${c.name}`, tierGroups(c, spec));
     models[c.name].rows = rows.length;
   }

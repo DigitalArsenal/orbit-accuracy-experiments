@@ -87,7 +87,7 @@ export async function check({ runDir }) {
     // every final fit re-derived in WASM from the recorded training arcs
     for (const c of candidates) {
       if (c.method === 'none') { assert.equal(sel.models[c.name].model, null); continue; }
-      const refit = await fitTiered(gp, codec, fitRows(training, { base: c.base, tiering: c.tiering, flagRecords: recordsTrain, spec }), c.method, config, `v1c5-${c.name}`, tierGroups(c, spec));
+      const refit = await fitTiered(gp, codec, fitRows(training, { base: c.base, tiering: c.tiering, claim: c.claim, flagRecords: recordsTrain, spec }), c.method, config, `v1c5-${c.name}`, tierGroups(c, spec));
       assert.deepEqual(roundTrip(refit.model), sel.models[c.name].model, `recorded fit changed: ${c.name}`);
       assert.deepEqual(Buffer.from(codec.frame('model', 'model', refit.model).payload), fs.readFileSync(path.join(output, `${safe(c.name)}.erm`)), `${c.name}.erm`);
     }
@@ -97,7 +97,7 @@ export async function check({ runDir }) {
     const ids = config.windows.folds.map(f => f.id);
     for (const id of sel.evaluationFolds) {
       const prior = training.filter(a => ids.indexOf(foldOf(config, a.key)) < ids.indexOf(id));
-      const model = chosen.method === 'none' ? null : (await fitTiered(gp, codec, fitRows(prior, { base: chosen.base, tiering: chosen.tiering, flagRecords: recordsTrain, spec, cutoffMs: foldStartMs(config, e3, id) }), chosen.method, config, `v1c5-${chosen.name}-cv-${id}`, tierGroups(chosen, spec))).model;
+      const model = chosen.method === 'none' ? null : (await fitTiered(gp, codec, fitRows(prior, { base: chosen.base, tiering: chosen.tiering, claim: chosen.claim, flagRecords: recordsTrain, spec, cutoffMs: foldStartMs(config, e3, id) }), chosen.method, config, `v1c5-${chosen.name}-cv-${id}`, tierGroups(chosen, spec))).model;
       const replay = await scoreArcs({ gp, codec, model, arcs: training.filter(a => foldOf(config, a.key) === id), base: chosen.base, tiering: chosen.tiering, flagRecords: recordsTrain, spec });
       assert.deepEqual(roundTrip(replay), rows.filter(r => r.fold === id).map(({ fold, ...a }) => a), `${chosen.name} ${id} replay`);
     }

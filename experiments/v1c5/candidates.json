@@ -1,0 +1,419 @@
+{
+ "experiment": "v1c5",
+ "candidates": [
+  {
+   "name": "N-none/single/ALL",
+   "base": "N",
+   "method": "none",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-none/single/ALL",
+   "base": "F",
+   "method": "none",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-none/single/ALL",
+   "base": "P",
+   "method": "none",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-scalar-mle/single/ALL",
+   "base": "N",
+   "method": "scalar-mle",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-coverage/single/ALL",
+   "base": "N",
+   "method": "coverage",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-axes-mle/single/ALL",
+   "base": "N",
+   "method": "axes-mle",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-scalar-mle/single/ALL",
+   "base": "F",
+   "method": "scalar-mle",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-coverage/single/ALL",
+   "base": "F",
+   "method": "coverage",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-axes-mle/single/ALL",
+   "base": "F",
+   "method": "axes-mle",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-scalar-mle/single/ALL",
+   "base": "P",
+   "method": "scalar-mle",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-coverage/single/ALL",
+   "base": "P",
+   "method": "coverage",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-axes-mle/single/ALL",
+   "base": "P",
+   "method": "axes-mle",
+   "tiering": "single",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-scalar-mle/single/UNFLAGGED",
+   "base": "N",
+   "method": "scalar-mle",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-coverage/single/UNFLAGGED",
+   "base": "N",
+   "method": "coverage",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-axes-mle/single/UNFLAGGED",
+   "base": "N",
+   "method": "axes-mle",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-scalar-mle/single/UNFLAGGED",
+   "base": "F",
+   "method": "scalar-mle",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-coverage/single/UNFLAGGED",
+   "base": "F",
+   "method": "coverage",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-axes-mle/single/UNFLAGGED",
+   "base": "F",
+   "method": "axes-mle",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-scalar-mle/single/UNFLAGGED",
+   "base": "P",
+   "method": "scalar-mle",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-coverage/single/UNFLAGGED",
+   "base": "P",
+   "method": "coverage",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-axes-mle/single/UNFLAGGED",
+   "base": "P",
+   "method": "axes-mle",
+   "tiering": "single",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-scalar-mle/flag/ALL",
+   "base": "N",
+   "method": "scalar-mle",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-coverage/flag/ALL",
+   "base": "N",
+   "method": "coverage",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-axes-mle/flag/ALL",
+   "base": "N",
+   "method": "axes-mle",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-scalar-mle/flag/ALL",
+   "base": "F",
+   "method": "scalar-mle",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-coverage/flag/ALL",
+   "base": "F",
+   "method": "coverage",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-axes-mle/flag/ALL",
+   "base": "F",
+   "method": "axes-mle",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-scalar-mle/flag/ALL",
+   "base": "P",
+   "method": "scalar-mle",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-coverage/flag/ALL",
+   "base": "P",
+   "method": "coverage",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-axes-mle/flag/ALL",
+   "base": "P",
+   "method": "axes-mle",
+   "tiering": "flag",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-scalar-mle/flag/UNFLAGGED",
+   "base": "N",
+   "method": "scalar-mle",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-coverage/flag/UNFLAGGED",
+   "base": "N",
+   "method": "coverage",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-axes-mle/flag/UNFLAGGED",
+   "base": "N",
+   "method": "axes-mle",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-scalar-mle/flag/UNFLAGGED",
+   "base": "F",
+   "method": "scalar-mle",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-coverage/flag/UNFLAGGED",
+   "base": "F",
+   "method": "coverage",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-axes-mle/flag/UNFLAGGED",
+   "base": "F",
+   "method": "axes-mle",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-scalar-mle/flag/UNFLAGGED",
+   "base": "P",
+   "method": "scalar-mle",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-coverage/flag/UNFLAGGED",
+   "base": "P",
+   "method": "coverage",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-axes-mle/flag/UNFLAGGED",
+   "base": "P",
+   "method": "axes-mle",
+   "tiering": "flag",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-scalar-mle/risk/ALL",
+   "base": "N",
+   "method": "scalar-mle",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-coverage/risk/ALL",
+   "base": "N",
+   "method": "coverage",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-axes-mle/risk/ALL",
+   "base": "N",
+   "method": "axes-mle",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-scalar-mle/risk/ALL",
+   "base": "F",
+   "method": "scalar-mle",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-coverage/risk/ALL",
+   "base": "F",
+   "method": "coverage",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "F-axes-mle/risk/ALL",
+   "base": "F",
+   "method": "axes-mle",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-scalar-mle/risk/ALL",
+   "base": "P",
+   "method": "scalar-mle",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-coverage/risk/ALL",
+   "base": "P",
+   "method": "coverage",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "P-axes-mle/risk/ALL",
+   "base": "P",
+   "method": "axes-mle",
+   "tiering": "risk",
+   "claim": "ALL"
+  },
+  {
+   "name": "N-scalar-mle/risk/UNFLAGGED",
+   "base": "N",
+   "method": "scalar-mle",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-coverage/risk/UNFLAGGED",
+   "base": "N",
+   "method": "coverage",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "N-axes-mle/risk/UNFLAGGED",
+   "base": "N",
+   "method": "axes-mle",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-scalar-mle/risk/UNFLAGGED",
+   "base": "F",
+   "method": "scalar-mle",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-coverage/risk/UNFLAGGED",
+   "base": "F",
+   "method": "coverage",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "F-axes-mle/risk/UNFLAGGED",
+   "base": "F",
+   "method": "axes-mle",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-scalar-mle/risk/UNFLAGGED",
+   "base": "P",
+   "method": "scalar-mle",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-coverage/risk/UNFLAGGED",
+   "base": "P",
+   "method": "coverage",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  },
+  {
+   "name": "P-axes-mle/risk/UNFLAGGED",
+   "base": "P",
+   "method": "axes-mle",
+   "tiering": "risk",
+   "claim": "UNFLAGGED"
+  }
+ ],
+ "risk": {
+  "minimumGapRatio": 0.6667,
+  "minimumAgeDays": null,
+  "pooled": true
+ },
+ "selection": {
+  "keys": [
+   "minRealistic",
+   "meanRealistic",
+   "meanInsufficient",
+   "meanViolation",
+   "order"
+  ],
+  "flagShareCap": 0.2
+ }
+}

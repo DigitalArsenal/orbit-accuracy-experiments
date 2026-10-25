@@ -36,8 +36,10 @@ export const tierGroups = (candidate, spec) => candidate.tiering === 'single' ? 
 export const claimed = (arcs, claim, flags) => claim === 'UNFLAGGED' ? arcs.filter(a => !flags.get(a.key)) : arcs;
 
 // Fit rows: samples of the arcs whose target precedes `cutoffMs`, stratified by the arc's calibration group.
-export function fitRows(arcs, { base, tiering, flagRecords, spec, cutoffMs = Infinity }) {
-  return arcs.flatMap(a => (a.samples ?? []).flatMap(s => {
+export function fitRows(arcs, { base, tiering, claim, flagRecords, spec, cutoffMs = Infinity }) {
+  // a 'single' tiering claiming only unflagged arcs fits on them alone (V1c4's UNFLAGGED arm); the other tierings give flagged arcs their own tier
+  const used = claim === 'UNFLAGGED' && tiering === 'single' ? arcs.filter(a => !flagRecords.get(a.key)?.flagged) : arcs;
+  return used.flatMap(a => (a.samples ?? []).flatMap(s => {
     const b = s.bases[base];
     return s.ms < cutoffMs && b.fit ? [{ stratum: stratum(groupOf(a, tiering, flagRecords.get(a.key), spec), s.hours), object: a.norad, error: b.fit.errorRtn, covariance: b.fit.predictedRtn }] : [];
   }));
