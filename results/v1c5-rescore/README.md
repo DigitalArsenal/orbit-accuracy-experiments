@@ -127,8 +127,12 @@ All samples (unflagged and flagged) and flagged samples pooled; report-only, the
 | all | SLR MEO | G | 88 / 5 | 0.807 [0.200, 0.979] ok | 0.875 [0.371, 1.000] ok | — | — | CALIBRATED (0.9) |
 | all | SLR MEO | T | 88 / 5 | 0.716 [0.000, 0.943] ok | 0.830 [0.256, 0.979] ok | — | — | CALIBRATED (0.9) |
 | all | SLR MEO | Q | 88 / 5 | 0.705 [0.000, 0.938] ok | 0.955 [0.743, 1.000] ok | — | — | CALIBRATED (0.9) |
+| all | ALL CLASSES | G | 2739 / 48 | 0.765 [0.687, 0.835] wide | 0.931 [0.879, 0.972] ok | 0.944 [0.896, 0.982] ok | 0.954 [0.907, 0.989] over | OVERCONFIDENT (0.99) |
+| all | ALL CLASSES | T | 2739 / 48 | 0.640 [0.563, 0.717] wide | 0.932 [0.881, 0.973] ok | 0.946 [0.899, 0.983] ok | 0.965 [0.920, 0.993] ok | PESSIMISTIC (0.99) |
+| all | ALL CLASSES | Q | 2739 / 48 | 0.659 [0.585, 0.734] wide | 0.919 [0.865, 0.964] ok | 0.945 [0.897, 0.984] ok | 0.977 [0.944, 0.997] ok | PESSIMISTIC (0.99) |
 | flaggedPooled | GPS | G | 257 / 6 | 0.673 [0.312, 1.000] ok | 0.747 [0.405, 1.000] ok | 0.767 [0.429, 1.000] ok | — | CALIBRATED (0.95) |
 | flaggedPooled | SLR MEO | G | 48 / 1 | — | — | — | — | INSUFFICIENT |
+| flaggedPooled | ALL CLASSES | G | 305 / 7 | 0.725 [0.376, 1.000] ok | 0.787 [0.474, 1.000] ok | 0.803 [0.486, 1.000] ok | — | CALIBRATED (0.95) |
 
 ## d² concentration
 

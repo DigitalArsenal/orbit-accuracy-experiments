@@ -79,7 +79,7 @@ export function render(metrics, manifest, fits) {
   for (const g of CLASSES) { const s = C.logScore.unflagged.classes[g]; L.push(`| ${g} | ${s.n} | ${f3(s.gaussian)} | ${f3(s.studentT)} | ${f3(s.difference)} [${f3(s.lower)}, ${f3(s.upper)}] |`); }
   L.push('', '## Other views (G, T, Q; classes, all horizons)', '', 'All samples (unflagged and flagged) and flagged samples pooled; report-only, the frozen model claims unflagged samples only.', '',
     '| View | Class | Predictor | n / objects | 0.50 | 0.90 | 0.95 | 0.99 | Verdict (reach) |', '| --- | --- | --- | ---: | --- | --- | --- | --- | --- |');
-  for (const view of ['all', 'flaggedPooled']) for (const g of CLASSES) for (const v of Object.keys(C[view])) { const x = classIn(view, v, g); if (!x.n) continue; L.push(`| ${view} | ${g} | ${v} | ${x.n} / ${x.objects} | ${[0.5, 0.9, 0.95, 0.99].map(p => level(x, p)).join(' | ')} | ${verdict(x)} |`); }
+  for (const view of ['all', 'flaggedPooled']) for (const g of [...CLASSES, POOLED]) for (const v of Object.keys(C[view])) { const x = g === POOLED ? { ...C[view][v].all } : classIn(view, v, g); if (!x.n) continue; L.push(`| ${view} | ${g} | ${v} | ${x.n} / ${x.objects} | ${[0.5, 0.9, 0.95, 0.99].map(p => level(x, p)).join(' | ')} | ${verdict(x)} |`); }
   L.push('', '## d² concentration', '');
   for (const [group, g] of Object.entries(metrics.concentration)) {
     if (!g.objects.length) continue;
