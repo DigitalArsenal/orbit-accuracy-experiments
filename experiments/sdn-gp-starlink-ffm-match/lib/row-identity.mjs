@@ -13,8 +13,8 @@ const EXCLUDE = new Set(['starlink-skipped']);
 export const stems = (dir) => [...new Set(fs.readdirSync(dir).map((f) => /^(.*)\.s\d+\.jsonl$/.exec(f)?.[1]).filter((x) => x && !EXCLUDE.has(x)))].sort();
 const rowsOf = (dir, stem) => fs.readdirSync(dir).filter((f) => /^(.*)\.s\d+\.jsonl$/.exec(f)?.[1] === stem).flatMap((f) => readLines(path.join(dir, f)));
 
-// Wall-clock fields of the rows (milliseconds of a fit, of a propagation, microseconds per state) differ between any two runs, of the same build as well; they are not compared.
-const TIMING = /^(ms|[A-Za-z]*Ms|usPerState)$/;
+// Wall-clock fields of the rows (milliseconds of a fit, of a propagation, microseconds per state, the time a prediction was issued) differ between any two runs, of the same build as well; they are not compared.
+const TIMING = /^(ms|[A-Za-z]*Ms|usPerState|issuedUtc)$/; // issuedUtc: the clock time at which a prediction was made (M30)
 const strip = (r) => {
   const walk = (o) => (Array.isArray(o) ? o.map(walk) : o && typeof o === 'object' ? Object.fromEntries(Object.entries(o).filter(([k]) => !TIMING.test(k)).map(([k, v]) => [k, walk(v)])) : o);
   const { build, ...rest } = r;
@@ -73,7 +73,7 @@ export function identityMarkdown(c, title, f) {
   const exp = (x) => (x === 0 ? '0' : x.toExponential(1));
   const differing = c.sources.filter((x) => x.different || x.onlyA || x.onlyB);
   const L = [title, '',
-    `Rows of the two builds matched by their identifying fields (source, window, case, variant, hours and the like) and compared in every field but \`build\` and the wall-clock timings (milliseconds of a fit, microseconds per state). Build ${c.a}: ${c.rowsA} rows; build ${c.b}: ${c.rowsB} rows; identical ${c.identical}; different ${c.different}; only in ${c.a} ${c.onlyA}; only in ${c.b} ${c.onlyB}. Row files compared ${c.stems}, with differences in ${c.stemsDifferent}.${c.stemsDifferent ? '' : ' Every row of every file is identical.'}`, ''];
+    `Rows of the two builds matched by their identifying fields (source, window, case, variant, hours and the like) and compared in every field but \`build\` and the wall-clock fields (milliseconds of a fit, microseconds per state, the time a prediction was issued). Build ${c.a}: ${c.rowsA} rows; build ${c.b}: ${c.rowsB} rows; identical ${c.identical}; different ${c.different}; only in ${c.a} ${c.onlyA}; only in ${c.b} ${c.onlyB}. Row files compared ${c.stems}, with differences in ${c.stemsDifferent}.${c.stemsDifferent ? '' : ' Every row of every file is identical.'}`, ''];
   if (differing.length) L.push('| Rows file | Rows (' + c.a + ' / ' + c.b + ') | Identical | Different | Only in ' + c.a + ' / only in ' + c.b + ' | Largest change of a result field: absolute / relative | Fields that changed most often (rows) |', '| --- | --- | --: | --: | --- | --- | --- |',
     ...differing.map((x) => `| ${x.stem} | ${x.rowsA} / ${x.rowsB} | ${x.identical} | ${x.different} | ${x.onlyA} / ${x.onlyB} | ${x.numericLeaves ? `${exp(x.maxAbs)} / ${exp(x.maxRel)}` : 'none'} | ${x.fields.slice(0, 3).map((g) => `${g.path} (${g.count}${g.kind === 'bytes' ? ', byte count' : ''})`).join('; ')} |`), '');
   return L;
