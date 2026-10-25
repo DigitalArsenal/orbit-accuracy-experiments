@@ -49,12 +49,13 @@
     "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m31,m32",
     "node experiments/sdn-gp-starlink-ffm-match/fetch-gnss-notices.mjs (GPS NANUs of 2026 and the QZSS NAQU page, 5 s apart)",
     "node experiments/sdn-gp-starlink-ffm-match/m27-events.mjs",
-    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27"
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27b,m27bp (amendment A17: the detector across the omitted days of the GPS series, controls, planted impulses across a hole)"
   ],
-  "planSha256": "4f94675a674053e15049995fcf5e1741d69980cc1e3557183fb32edc640b766d",
+  "planSha256": "8f450f56eb3ed05abeb4df382b93aeacb3f37c426745cd24fd761f2a9dfe7ef3",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "4c0bab4065aa51d565153270d93002343b10c92c"
+    "commit": "a250766085fcea884b395c7b166be3c5488d3f62"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -300,7 +301,7 @@
     }
   },
   "sdngp": {
-    "headlineBuild": "b9bc708baa50",
+    "headlineBuild": "9df647b08978",
     "builds": [
       {
         "build": "4e9c7690638b",
@@ -400,6 +401,15 @@
         "firstUseUtc": "2026-10-24T23:08:22.808Z",
         "complete": true,
         "eventsFocus": null
+      },
+      {
+        "build": "9df647b08978",
+        "wasmSha256": "9df647b089786b3866249d579c57863ecc4f2e3abb4ce63c07ea117cfa2fddda",
+        "sourceCommit": "358e88e77295264f955bb832c0734592d0b100fa",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-25T05:02:05.588Z",
+        "complete": true,
+        "eventsFocus": null
       }
     ]
   },
@@ -444,9 +454,9 @@
           "last": "2026/2026-10-24.json.gz"
         },
         "gpHistory": {
-          "files": 1939,
+          "files": 1945,
           "first": "2022/2022-11-20.json.gz",
-          "last": "2026/2026-10-24T231701Z--2026-10-25T003201Z.json.gz"
+          "last": "2026/2026-10-25T064701Z--2026-10-25T080200Z.json.gz"
         }
       }
     },

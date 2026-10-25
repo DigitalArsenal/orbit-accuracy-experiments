@@ -14,7 +14,8 @@ export const stems = (dir) => [...new Set(fs.readdirSync(dir).map((f) => /^(.*)\
 const rowsOf = (dir, stem) => fs.readdirSync(dir).filter((f) => /^(.*)\.s\d+\.jsonl$/.exec(f)?.[1] === stem).flatMap((f) => readLines(path.join(dir, f)));
 
 // Wall-clock fields of the rows (milliseconds of a fit, of a propagation, microseconds per state, the time a prediction was issued) differ between any two runs, of the same build as well; they are not compared.
-const TIMING = /^(ms|[A-Za-z]*Ms|usPerState|issuedUtc)$/; // issuedUtc: the clock time at which a prediction was made (M30)
+const TIMING = /^(ms|[A-Za-z]*Ms|usPerState|issuedUtc|module)$/; // module: the package label the adapter writes (sdn-gp-propagator in rows of the first runs, sdn-ap-propagator after the rename)
+//  // issuedUtc: the clock time at which a prediction was made (M30)
 const strip = (r) => {
   const walk = (o) => (Array.isArray(o) ? o.map(walk) : o && typeof o === 'object' ? Object.fromEntries(Object.entries(o).filter(([k]) => !TIMING.test(k)).map(([k, v]) => [k, walk(v)])) : o);
   const { build, ...rest } = r;
