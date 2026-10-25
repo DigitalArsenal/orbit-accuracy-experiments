@@ -78,9 +78,9 @@ export function build() {
   out.inputs.starlinkScore = sha256(Buffer.from(JSON.stringify(st)));
   const sw = st.filter((r) => r.arms).map((r) => ({ object: String(r.norad), arms: r.arms, maneuverEvident: r.maneuverEvident }));
   if (st.length) {
-    out.rows.push(tableRow('starlink-all', 'Starlink, SpaceX operator track (all satellites)', `${st.length} satellites in the forecast cycle; ${sw.length} scored`, sw, ['sdnap', 'sgp4xp'], BINS));
-    out.rows.push(tableRow('starlink-quiet', 'Starlink, no maneuver evident', 'truth files agree within 1 km where they overlap', sw.filter((w) => !w.maneuverEvident), ['sdnap', 'sgp4xp'], BINS));
-    out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample (SpaceX\'s own forecast beside)', 'sample satellites whose fetched file is F', sw.filter((w) => w.arms.forecast?.ok), ['sdnap', 'sgp4xp', 'forecast'], BINS));
+    out.rows.push(tableRow('starlink-all', 'Starlink, SpaceX operator track (all satellites)', `${st.length} satellites in the forecast cycle; ${sw.length} scored`, sw, ['sdnap', 'sgp4xp', 'ffm'], BINS));
+    out.rows.push(tableRow('starlink-quiet', 'Starlink, no maneuver evident', 'truth files agree within 1 km where they overlap', sw.filter((w) => !w.maneuverEvident), ['sdnap', 'sgp4xp', 'ffm'], BINS));
+    out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample (SpaceX\'s own forecast beside)', 'sample satellites whose fetched file is F', sw.filter((w) => w.arms.forecast?.ok), ['sdnap', 'sgp4xp', 'ffm', 'forecast'], BINS));
   }
   // part 1b
   const iss = rows('iss.');

@@ -34,7 +34,7 @@ if (laserOld) {
   step('part2-laser.mjs', ['--shard', `${all.findIndex((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff)}/${all.length}`, '--limit', '1']);
   compare(`laser ${laserOld.target} ${laserOld.cutoff}`, rowsOf('laser.', scratch).find((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff) ?? {}, laserOld);
 }
-// Starlink: the first satellite with scores (its fit, then its score, the forecast sample linked in)
+// Starlink: the first satellite with scores (its SDN-AP and SGP4-XP fit, its FFM fit (A3), then its score, the forecast sample linked in)
 const starOld = rowsOf('starlink-score.').filter((r) => r.arms).sort((a, b) => a.norad - b.norad)[0];
 if (starOld) {
   fs.mkdirSync(path.join(scratch, 'rows'), { recursive: true });
@@ -45,6 +45,7 @@ if (starOld) {
   const all = fs.readdirSync(path.join(S.captureRoot, fcCycle)).filter((f) => /^\d+\.json\.gz$/.test(f)).map((f) => Number(f.split('.')[0])).sort((a, b) => a - b);
   const shard = ['--shard', `${all.indexOf(starOld.norad)}/${all.length}`, '--limit', '1'];
   step('part1-starlink.mjs', ['--phase', 'fit', ...shard]);
+  step('part1-starlink.mjs', ['--phase', 'ffm', ...shard]);
   step('part1-starlink.mjs', ['--phase', 'score', ...shard]);
   compare(`starlink ${starOld.norad}`, rowsOf('starlink-score.', scratch).find((r) => r.norad === starOld.norad) ?? {}, starOld);
 }
