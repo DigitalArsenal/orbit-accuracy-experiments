@@ -31,10 +31,10 @@ import { loadModule, modulesRoot, gitState } from '../harness/modules.mjs';
 import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-ffm-physical-truth/seeds.mjs';
-import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
+import { MODELS, PAPERS, PAPER_SOURCES, headingIds } from './src/models/registry.mjs';
 import { moduleList } from './module-list.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
+import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildSdnAp, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -296,6 +296,14 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
   await generateEstimationBindings(modules, path.join(repo, 'node_modules/space-data-module-sdk/schemas/orbpro'), path.join(here, '.cache/estimation'));
 }
 
+// ── The SDN-AP paper's held-out model (its section 12.3) ──
+{
+  const outside = PAPER_SOURCES['sdn-ap'];
+  const paperFile = path.join(process.env[outside.env] ?? path.join(modules, '..', outside.repo), outside.file);
+  const built = await buildSdnAp({ dist, modules, write, own, paperFile, credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
+  log(`sdn-ap: ${built.windows} LAGEOS-1 windows`);
+}
+
 // ── The paper models: a page per section, and the manifest the paper apps read ──
 {
   const papersDir = process.env.SDN_WHITEPAPERS ?? path.join(modules, '..', 'space-data-network', 'whitepapers');
@@ -308,7 +316,8 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
     const source = m.dir === 'od' ? path.join(here, 'src/od', `${m.model}.js`) : path.join(here, 'src/models', m.source ?? m.paper, `${m.model}.js`);
     if (!fs.existsSync(source)) throw new Error(`model ${path.relative(here, source)} is missing`);
     if (!ids[m.paper]) {
-      const file = path.join(papersDir, `${m.paper}.md`);
+      const outside = PAPER_SOURCES[m.paper];
+      const file = outside ? path.join(process.env[outside.env] ?? path.join(modules, '..', outside.repo), outside.file) : path.join(papersDir, `${m.paper}.md`);
       ids[m.paper] = fs.existsSync(file) ? headingIds(fs.readFileSync(file, 'utf8')) : null;
       if (!ids[m.paper]) log(`warning: ${file} not found; section ids are not checked against the paper`);
     }
@@ -323,7 +332,7 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
     fs.writeFileSync(path.join(dist, url), fill(template, {
       base: '../../', paper: m.source ?? m.paper, model: m.model, dir: m.dir ?? '', title: escHtml(m.title), claim: escHtml(m.claim),
       paperTitle: escHtml(PAPERS[m.paper]), heading: escHtml(m.heading),
-      paperUrl: `https://spacedatanetwork.org/whitepapers/${m.paper}.html#${sectionId}`,
+      paperUrl: `${PAPER_SOURCES[m.paper]?.url ?? `https://spacedatanetwork.org/whitepapers/${m.paper}.html`}#${sectionId}`,
     }));
   }
   write('models/index.json', JSON.stringify(manifest, null, 2), 'site/src/models/registry.mjs', own('MIT (this repository)'));

@@ -36,8 +36,10 @@ export function pcf(theory) {
 /**
  * An $OEM block of truth states (GCRF, UTC, km and km/s). `useable` limits the
  * fit to [start, stop]; a grid template passes zero states at its epochs.
+ * `sizePrefixed` for readers that take only the size-prefixed form
+ * (analysis/gp-error-model).
  */
-export function oem(object, epochsMs, position, velocity, { useable = null } = {}) {
+export function oem(object, epochsMs, position, velocity, { useable = null, sizePrefixed = false } = {}) {
   const block = new ephemerisDataBlockT();
   block.OBJECT = Object.assign(new CATT(), { NORAD_CAT_ID: object.norad, OBJECT_ID: object.objectId ?? '', OBJECT_NAME: object.name });
   block.CENTER_NAME = 'EARTH';
@@ -60,7 +62,7 @@ export function oem(object, epochsMs, position, velocity, { useable = null } = {
   const message = new OEMT();
   message.EPHEMERIS_DATA_BLOCK = [block];
   const b = new flatbuffers.Builder(1 << 20);
-  OEM.finishOEMBuffer(b, message.pack(b));
+  if (sizePrefixed) OEM.finishSizePrefixedOEMBuffer(b, message.pack(b)); else OEM.finishOEMBuffer(b, message.pack(b));
   return b.asUint8Array().slice();
 }
 
