@@ -24,6 +24,9 @@ const count = cells => cells.filter(c => c.decision === 'REALISTIC').length;
 const bar = message => console.log(`  ok ${message}`);
 
 export async function check({ root, runDir, config, configs, registration, output }) {
+  // The recorded run (raw OMM, truth and per-sample tables, ignored `runs/`) is local to the machine that made it. Without it the
+  // committed artifacts are verified against each other and the skipped re-derivations are listed (PLAN amendment A1).
+  if (!fs.existsSync(path.join(runDir, 'manifest.json'))) return checkCommitted({ root, config, configs, registration, output });
   const e3 = configs.e3, manifest = read(path.join(runDir, 'manifest.json')), committed = read(path.join(output, 'manifest.json'));
   assert(manifest.finished && manifest.selectionFreeze && manifest.testStarted, 'the run did not finish');
   const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 }).trim();
@@ -186,3 +189,56 @@ export async function checkEvents({ root, runDir, runtime, config, e3, flagsTrai
 }
 const MODES = [SGP4, FFM];
 const nameOf = mode => mode === SGP4 ? 'sgp' : 'ffm';
+
+// What can be verified without the recorded run: the frozen registration, the freeze order in git history, the ranking and selection re-derived from the
+// committed cross-validation cells, the metrics, README and MODEL re-rendered from the committed selections and metrics, and V1c3's published cells from
+// V1c3's recorded run when that run is present. Everything that needs the raw run is named as skipped, never counted as passed.
+export async function checkCommitted({ root, config, configs, registration, output }) {
+  const committed = read(path.join(output, 'manifest.json')), metrics = read(path.join(output, 'metrics.json'));
+  const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 }).trim();
+  const skipped = [];
+  for (const file of ['PLAN.md', 'config.json']) {
+    const name = `experiments/v1c4-console-covariance-calibration/${file}`;
+    assert.equal(git(['show', `${registration}:${name}`]), fs.readFileSync(path.join(root, name), 'utf8').trim(), 'frozen registration changed');
+  }
+  assert.equal(committed.configSha256, sha256(fs.readFileSync(path.join(root, 'experiments/v1c4-console-covariance-calibration/config.json'))));
+  assert(committed.finished && committed.selectionFreeze && committed.testStarted, 'the committed manifest is not a finished run');
+  bar('frozen registration and configuration equal the committed manifest');
+  const sel = { [SGP4]: read(path.join(output, 'sgp-selection.json')), [FFM]: read(path.join(output, 'ffm-selection.json')) };
+  for (const [phase, mode] of [['sgp', SGP4], ['ffm', FFM]]) {
+    const relative = `results/v1c4/${phase}-selection.json`, freeze = committed.selectionFreeze[phase];
+    assert.equal(sha256(fs.readFileSync(path.join(root, relative))), freeze.sha256, `${relative} changed after its freeze`);
+    assert.equal(sha256(execFileSync('git', ['show', `${freeze.commit}:${relative}`], { cwd: root, maxBuffer: 1 << 28 })), freeze.sha256);
+    execFileSync('git', ['merge-base', '--is-ancestor', freeze.commit, 'HEAD'], { cwd: root });
+    assert(Date.parse(freeze.verifiedAt) <= Date.parse(committed.testStarted), 'test read before the selection was pushed');
+    assert.equal(sel[mode].trainingRawSha256, committed.files[`train-${phase}.jsonl`]);
+    assert.equal(sel[mode].eventsSha256, committed.files['events-train.jsonl']);
+  }
+  bar('both selections were frozen in git before the test started, and are unchanged');
+  for (const mode of MODES) {
+    const candidates = candidatesOf(mode, config), s = sel[mode];
+    const eligible = c => c.arm === 'ALL' || s.flagShare <= config.selection.flagShareCap;
+    // the committed cells are compact ({ mean: [estimate, lower, upper], coverage: [...] }); the ranking reads the same fields as the cells of the run
+    const expand = cells => cells.map(c => ({ ...c, meanD2Over3: c.mean ? { estimate: c.mean[0] } : null, coverage95: c.coverage ? { estimate: c.coverage[0] } : null }));
+    const cells = Object.fromEntries(Object.entries(s.cv).map(([name, folds]) => [name, Object.fromEntries(Object.entries(folds).map(([id, x]) => [id, expand(x)]))]));
+    const reselected = selectCv(cells, candidates, eligible);
+    assert.deepEqual(roundTrip(reselected.ranked), s.ranking); assert.equal(reselected.selected, s.selected);
+    bar(`${mode}: ${candidates.length} candidates x ${s.evaluationFolds.length} folds ranked again from the committed cells; selected ${s.selected}`);
+  }
+  const sgpMetric = metrics.modes[SGP4][sel[SGP4].selected], ffmMetric = metrics.modes[FFM][sel[FFM].selected];
+  assert.equal(render(metrics, committed, sel, config), fs.readFileSync(path.join(output, 'README.md'), 'utf8'), 'README differs from the committed metrics');
+  assert.deepEqual(read(path.join(output, 'MODEL.json')), roundTrip(modelRecord({ metrics, sgpSel: sel[SGP4], ffmSel: sel[FFM], manifest: committed, config })));
+  bar(`README and MODEL.json re-rendered from the committed metrics: ${sel[SGP4].selected} ${sgpMetric.realistic.claimed}/24, ${sel[FFM].selected} ${ffmMetric.realistic.claimed}/24 on the fresh test`);
+  const v1c3Dir = process.env.SDN_V1C3_RUN_DIR ?? path.join(root, 'runs/v1c3-console-covariance-calibration-20261023');
+  if (fs.existsSync(path.join(v1c3Dir, 'test-sgp.jsonl'))) {
+    const published = read(path.join(root, 'results/v1c3/metrics.json')).test;
+    for (const [mode, cand, expected] of [[SGP4, 'F-coverage', 4], [FFM, 'coverage', 3]]) {
+      const cells = recordedTables(v1c3Dir, mode, 'test', configs)[cand];
+      assert.deepEqual(cells, published[mode][cand]); assert.equal(count(cells), expected);
+    }
+    bar("V1c3's published test cells reproduced from V1c3's recorded run (F-coverage 4/24, FFM-1 coverage 3/24)");
+  } else skipped.push("V1c3's recorded run (SDN_V1C3_RUN_DIR) is absent: its published cells were not reproduced");
+  skipped.push('the recorded V1c4 run (raw sets, truth, per-sample scores, run manifest hashes) is not on this machine: the fold-cell, fit, test-cell, event-rule, provisioning-replay and control re-derivations were not run');
+  for (const line of skipped) console.log(`  SKIPPED ${line}`);
+  console.log(`V1C4-E2E PASS (committed artifacts only; ${skipped.length} re-derivation group(s) skipped, listed above)`);
+}
