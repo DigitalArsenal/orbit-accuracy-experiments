@@ -112,3 +112,22 @@ the SDN-AP snapshot config.g1.sdnapBuild (SDN-AP, SGP4-XP and SGP4 propagation).
 ## Amendments
 
 None at registration.
+
+### A1 - 2026-10-25, before the run, after the pipeline was tried on the first window of ten rows: the environment of FFM
+
+The pipeline was run, into a scratch store that is discarded, on the first window of the ISS,
+Starlink, laser-ranged LEO, GNSS (ESA final), THEMIS and Chandra, TESS, LRO, CAPSTONE and Psyche
+rows; their values were seen, and the run recomputes them like every other window. Two findings
+change how FFM is given its environment; nothing else changes.
+
+1. G1's saved environment covers 2026-09-13 to 2026-11-02 (space weather) and 2026-07-15 to
+   2027-01-11 (Earth orientation): FFM refuses the older windows (space-weather-out-of-range).
+   Earth orientation is extended by the IERS finals.all (IAU 2000) file of the local archive
+   (hac/iers-eop/20261009), parsed by data-source/eop-parser, the saved rows kept over their own
+   span. Space weather is extended by G1's own construction (its lib/spw-history.mjs, G1 amendment
+   A11) from the GFZ file of the local archive, started on 2012-06-01 instead of 2019-06-01 (the
+   THEMIS windows are of 2013, Chandra's of 2018), the saved rows kept from 2026-09-13 on. The
+   construction is checked against the saved rows the file covers and against G1's cached history
+   over the days both hold; the checks are recorded with the environment.
+2. FFM takes at most 366 rows of Earth orientation: each window is given the rows of its own arc,
+   two days either side, of both tables. A row's values are not changed by the slicing.
