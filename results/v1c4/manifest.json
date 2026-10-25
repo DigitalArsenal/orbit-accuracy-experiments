@@ -1,0 +1,249 @@
+{
+  "run": "v1c4-console-covariance-calibration-20261023",
+  "registration": "94263234aa9d5afcde53e260cf1182517002d155",
+  "started": "2026-10-23T07:52:07.418Z",
+  "configSha256": "aa670f5dc46eb299889296f7abcaadcd79947f7cc498a8699a5afbaece5cb79f",
+  "repository": {
+    "commit": "0f441c3d75ebd9fb079f98838590db2b9fa6d6cd",
+    "dirty": false
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin 25.3.0 arm64",
+    "cpus": 28
+  },
+  "provision": {
+    "runtimeProvenanceSha256": "10c2539dc86fa05260baca07130f0a4d30a350ded73556e9b43c3fb1e66dcd75",
+    "modulesCommit": "f1c7b8942b7a9ded85566f240cbaaeffca1293db",
+    "truthToolsCommit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45",
+    "sds": {
+      "package": "spacedatastandards.org",
+      "version": "1.249.0",
+      "integrity": "sha512-pBquq4h/xEv/UpYHGTnW+ZXGbeVIF/gpgbJBZ1mGmY45f3lUM50FIvFePcxf0OxTQ4zljqRcatcKkcBz7qDqEQ==",
+      "paths": [
+        "package.json",
+        "lib/js",
+        "lib/ts/ERM"
+      ],
+      "treeSha256": "c1f048ba911a3330f6b0c5871ddd2309f2eabed0a0552e229b6bba3fb9215fa4",
+      "files": 21426
+    }
+  },
+  "workers": 6,
+  "threads": 1,
+  "inputs": {
+    "gpHistory": {
+      "count": 378,
+      "sha256": "42d0486ca8713466a47f155f54604ed6da7e4150ea58a3b00b5511fb20a67f19"
+    },
+    "history": {
+      "count": 101,
+      "sha256": "c650316a073825b6141324d1d53567f11466dccecfbb5fed42b64de02c18a9c0"
+    },
+    "reference": {
+      "count": 3436,
+      "sha256": "75c881bc0e05544b0be9c3ea72edcee7990ec8b89dbc86b5b604ee935574bb8e"
+    },
+    "referenceIndex": {
+      "count": 1367,
+      "sha256": "861e4afd069aa07c089b49e001f1fe593958b30b6911d6b265e2126ea220d688"
+    },
+    "implementation": {
+      "count": 10,
+      "sha256": "5a68d87f44695dc16897e654fa485d8f47bf31d9adb586340f61d1f604c0e73e"
+    },
+    "frozenSource": {
+      "count": 29,
+      "sha256": "e4fc281cdc63cb9b517e0111b2ff1cd86b11c8dd6fac5763ff75a93f6291bff5"
+    },
+    "eop": {
+      "count": 1,
+      "sha256": "224eca5063e42db6840eb2d68e30361eba56686dec3b323f630060b1aefcd37e"
+    },
+    "kernel": {
+      "count": 1,
+      "sha256": "bcd79a5408e04e9138015955275203c50ee009402b68533ece6266b87b0537ae"
+    },
+    "weather": {
+      "count": 3,
+      "sha256": "68e9f242a41e133078bfe2c35de9e1954f51034c07e1b7c863c3f1e8e8e007b6"
+    },
+    "truthRefresh": {
+      "count": 3,
+      "sha256": "918f9206ec3ce3fcb104fca73ccebcf935a9692168bc86864e444c6e83f9d648"
+    }
+  },
+  "modules": {
+    "analysis/gp-error-model": {
+      "path": "analysis/gp-error-model",
+      "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+      "version": "0.8.1",
+      "wasmSha256": "f3d06fd4840686a893753fa8fdd19d30b39caa745d23cc2dd867d462886f2778",
+      "manifestSha256": "aa28196b484f3e56155b14bee60418efb018466ab51ac6da46be0650e8b03c9e"
+    },
+    "analysis/maneuver-detection": {
+      "path": "analysis/maneuver-detection",
+      "version": "0.8.0",
+      "wasmSha256": "64731b544ca60c31cc82eff6bcfc0afb2b013f3480da5ee81fc11dae42a4bc85"
+    },
+    "propagator/sgp4": {
+      "path": "propagator/sgp4",
+      "version": "1.3.0",
+      "wasmSha256": "6105fea83381ef0754673ea10bdd99d4290814d872ecb3309ea20c44ba372379"
+    },
+    "data-source/eop-parser": {
+      "path": "data-source/eop-parser",
+      "pluginId": "com.digitalarsenal.data-source.eop-parser",
+      "version": "0.2.0",
+      "wasmSha256": "e5513f3b0bdaabb07f200511cee737413601639d30207f27c9bce1fae8c48452",
+      "manifestSha256": "5dfd0f1c7064eee8596a5737b54ec7e0c7316f36063a42b1b50e61fae6ab7502"
+    },
+    "propagator/ffm": {
+      "path": "propagator/ffm",
+      "version": "2.0.0",
+      "wasmSha256": "b8efb44320d3cea37a155cb2edd07004d0bca567a8b9cc347ba21dbab576f7a7"
+    },
+    "foundation/time": {
+      "path": "foundation/time",
+      "pluginId": "com.digitalarsenal.foundation.time",
+      "version": "0.1.0",
+      "wasmSha256": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+      "manifestSha256": "cacfa4cf259545888f58ff762f76622f5086644b017eec2e8c152e93b9d585c0"
+    }
+  },
+  "files": {
+    "events-train.jsonl": "8db6c6e92e243ea4d7e9ea7939038c872cda357de31bfe1ad028e90da2bf5b1b",
+    "train-sgp.jsonl": "57e9b9fb8254bb813f71fcee5212fc51db30bc110db4c385ddc5a9d6f780e5e8",
+    "cv-SGP4-N-none_ALL-scores.jsonl": "f9e24c601e2525932eefdf184d9df331a592dfb2d2aa83f53e028e97abf61e4a",
+    "cv-SGP4-N-none_UNFLAGGED-scores.jsonl": "f9e24c601e2525932eefdf184d9df331a592dfb2d2aa83f53e028e97abf61e4a",
+    "cv-SGP4-N-scalar-mle_ALL-scores.jsonl": "c5eb765aecbdb47708d2b219619231647d545ffb5bd0e6edac5eb51e41a41153",
+    "cv-SGP4-N-scalar-mle_UNFLAGGED-scores.jsonl": "d6642d9538557270d08e8a90cacdc7937e0d4e5b0cc852b59be71f6e38c1c378",
+    "cv-SGP4-N-coverage_ALL-scores.jsonl": "09b732a4ebd7604170eadbef25cf48cfd52629fb625e9f9f54b8f3dc8d53b298",
+    "cv-SGP4-N-coverage_UNFLAGGED-scores.jsonl": "bff8ca9295d6601340545139b81e8bbac6990f84adee32fdb2f48cd2f50476bf",
+    "cv-SGP4-N-axes-mle_ALL-scores.jsonl": "e5a208f72524c089a4231435017fe3bfc2c047003ec4e2e37c80094b39d0b0e2",
+    "cv-SGP4-N-axes-mle_UNFLAGGED-scores.jsonl": "6946d80655f1ec374c494fecd5762185fc65eaba026442b8931ea368fc4949b9",
+    "cv-SGP4-F-none_ALL-scores.jsonl": "50347eb8c503fb647d083f4edf421a29c49985dadad4fd7a8c661bb087339836",
+    "cv-SGP4-F-none_UNFLAGGED-scores.jsonl": "50347eb8c503fb647d083f4edf421a29c49985dadad4fd7a8c661bb087339836",
+    "cv-SGP4-F-scalar-mle_ALL-scores.jsonl": "b594459866f0b69579aff9a31efff094a3eb29474f97f86605fc4bfc620221ec",
+    "cv-SGP4-F-scalar-mle_UNFLAGGED-scores.jsonl": "9a482a9e6367cc6bfb5c97f527bca251e369e8d6180d75b5279856a3f2d98fa2",
+    "cv-SGP4-F-coverage_ALL-scores.jsonl": "dac4f40bec8f8fe7c686e80b82ea24a0db5e7a6b97ee9cab3bfa3591d2302682",
+    "cv-SGP4-F-coverage_UNFLAGGED-scores.jsonl": "9b373e7bda3d3882f58dfd5328d93c1d95540d0823573a2e87b586477bc6b9e4",
+    "cv-SGP4-F-axes-mle_ALL-scores.jsonl": "747f4739931023903c5f0b46cf0f5b96b656b0baf1e47717354e1274e920b0ed",
+    "cv-SGP4-F-axes-mle_UNFLAGGED-scores.jsonl": "2f872bd32edddffd2aa75feded93e193890de56a1d58ee618134d6a0df245d15",
+    "cv-SGP4-P-none_ALL-scores.jsonl": "6ed025602ccc07f8b55d3f7be13646f8e782d38bdd65be019d593ee85ef4fed4",
+    "cv-SGP4-P-none_UNFLAGGED-scores.jsonl": "6ed025602ccc07f8b55d3f7be13646f8e782d38bdd65be019d593ee85ef4fed4",
+    "cv-SGP4-P-scalar-mle_ALL-scores.jsonl": "f571dd57b6ff7106b08fc9184eecbdda571a462ba56270f906f1ec85abe38f2f",
+    "cv-SGP4-P-scalar-mle_UNFLAGGED-scores.jsonl": "0e82f16e599b0c65a88e625252010e8b445cf10c23641b2322aa35a328c903bd",
+    "cv-SGP4-P-coverage_ALL-scores.jsonl": "6b087ef9e4fb3b03675821138c4212bee4a534e022e4898fb577016f999c5960",
+    "cv-SGP4-P-coverage_UNFLAGGED-scores.jsonl": "08aeaba30dd8cd011f2cc7dccc172be12376c5d10d31643d32ae34c415886a6f",
+    "cv-SGP4-P-axes-mle_ALL-scores.jsonl": "c9a4cbdec91cd7b37ad16a2d90d3f4afadfc52af010f695d31d039bbca03042d",
+    "cv-SGP4-P-axes-mle_UNFLAGGED-scores.jsonl": "9197f9b5cc5a2a0d04310b3521f58acadc937b6b6da7b74d2c7982c3d859d6b6",
+    "train-ffm.jsonl": "7ac3441f8624bbce44e8acb45cb2d56c2ba77aedbe1663149135f31c4ab0f62d",
+    "cv-FFM-1-none_ALL-scores.jsonl": "d609ba6111c714d6eeea31162c2bc75d43343694e33f00f76de3131779ff79df",
+    "cv-FFM-1-none_UNFLAGGED-scores.jsonl": "d609ba6111c714d6eeea31162c2bc75d43343694e33f00f76de3131779ff79df",
+    "cv-FFM-1-scalar-mle_ALL-scores.jsonl": "56f3d94711c0a13bad7433317284963c5af8c54dbf811b35350aba4f759d49d6",
+    "cv-FFM-1-scalar-mle_UNFLAGGED-scores.jsonl": "28c3bf9b360d7d9d871e1feb21e11a880c4761014a0aa34940e4ce21cbba5127",
+    "cv-FFM-1-coverage_ALL-scores.jsonl": "ffce1c7a57c28afe5faf2872e418c70117032ea48b2cc3b9b0744c1a9662b8b6",
+    "cv-FFM-1-coverage_UNFLAGGED-scores.jsonl": "bb3c78dc2ac79a5b10fe4977c66fd8587b7d37a0e617e2d5f3c8c0efa59778e5",
+    "cv-FFM-1-axes-mle_ALL-scores.jsonl": "a9b8229e04ae7fa40119447d7e6a92c4016e5a606ed97b053e04fb92837f66eb",
+    "cv-FFM-1-axes-mle_UNFLAGGED-scores.jsonl": "a108a58bba3b6e48af19238311535eacc8c4e7ce25515b4e46a9d37734525d39",
+    "events-test.jsonl": "842990a82deb32032fd3756dd650d6127cc3e10b405a7910775a41ef56cbe107",
+    "test-sgp.jsonl": "4b2180832b6bd1dfd73b0ed0a5b1a02008836575f5565b992306bec8a003c93d",
+    "test-ffm.jsonl": "bd20d4cfdbe9a91d8197c624e5c001355cead99d6af19e56cb66c51c119b9d0c",
+    "test-SGP4-N-none_ALL-scores.jsonl": "77e56d89e21e1017597f2c840076603d02b5b0c53eeccbb7608fd475d081638d",
+    "test-SGP4-N-none_UNFLAGGED-scores.jsonl": "77e56d89e21e1017597f2c840076603d02b5b0c53eeccbb7608fd475d081638d",
+    "test-SGP4-N-scalar-mle_ALL-scores.jsonl": "1aceea0c76aa2dd9a40e77f2a4d23e74d2d6a6467df6e09de4292b47f7aac351",
+    "test-SGP4-N-scalar-mle_UNFLAGGED-scores.jsonl": "f0ae0d2fbc02edef133de6f81e7b3bee1ec1af4dda9b2bbcbb722a6fc14b99a2",
+    "test-SGP4-N-coverage_ALL-scores.jsonl": "9291f16ca88e8b8f79803877b5b50a1f89795adfaa0653849e6a20919c5f7c02",
+    "test-SGP4-N-coverage_UNFLAGGED-scores.jsonl": "c0a528b08c563f12caab765cb9e3aeff33e924b14012bd549fd5cc5fb7c4db0a",
+    "test-SGP4-N-axes-mle_ALL-scores.jsonl": "cb21930e7074007811b22b2108c1e5b82cbf7879aa37b5323e02783861e9bd8d",
+    "test-SGP4-N-axes-mle_UNFLAGGED-scores.jsonl": "c9bd6a0090ee10394ceec1dd049a20b05a26311956d683d91175a4f12da229d7",
+    "test-SGP4-F-none_ALL-scores.jsonl": "2cce10f3c79f6fbc71aa3ad0a040a322098419d94d3d4a667cd37d38ec2884da",
+    "test-SGP4-F-none_UNFLAGGED-scores.jsonl": "2cce10f3c79f6fbc71aa3ad0a040a322098419d94d3d4a667cd37d38ec2884da",
+    "test-SGP4-F-scalar-mle_ALL-scores.jsonl": "b2f223dc78e2d06c3be524a6730e31e85f96adfc020108b4e1e5cde060a4279c",
+    "test-SGP4-F-scalar-mle_UNFLAGGED-scores.jsonl": "e0967548b71992d6d83ba500b1b864ec39a98af5497f7e20a2794630421e0b8f",
+    "test-SGP4-F-coverage_ALL-scores.jsonl": "5f1ec1df798ef986be00521a5867f0dfb57e5e4373e7178cd688ff9ecf8d264b",
+    "test-SGP4-F-coverage_UNFLAGGED-scores.jsonl": "a407dd0fb47a8a4055cb36113111ccebe2520baa77087d41acd5afdfecd07b83",
+    "test-SGP4-F-axes-mle_ALL-scores.jsonl": "311fdcc09c87a7aa5033b49069c1e6ce4283e0db8184f0f016b12fa7d9880bdd",
+    "test-SGP4-F-axes-mle_UNFLAGGED-scores.jsonl": "a53ff0ccd2108c91aec88d93df43e788fdfa110975add99af13f0d279c8f8492",
+    "test-SGP4-P-none_ALL-scores.jsonl": "4afe9c215c586f04ede19168c2e1cf5de6f8434ae59808e290fe39d0d34a1f6c",
+    "test-SGP4-P-none_UNFLAGGED-scores.jsonl": "4afe9c215c586f04ede19168c2e1cf5de6f8434ae59808e290fe39d0d34a1f6c",
+    "test-SGP4-P-scalar-mle_ALL-scores.jsonl": "b1dfe42e40a8870755e8c51cab8252045db95d669bbf2dce0fd6ecef6c609455",
+    "test-SGP4-P-scalar-mle_UNFLAGGED-scores.jsonl": "f0f05bb97d89ee544a30d3fc00c7fb7bcf574b45db4f788934977a9b55ef23a9",
+    "test-SGP4-P-coverage_ALL-scores.jsonl": "a5fdebe814632ed844c02579a5bf814f9408fc118be7a3603a2a58b22fe6c7ac",
+    "test-SGP4-P-coverage_UNFLAGGED-scores.jsonl": "416b850546853fbdc1adfaeb1acfc9446dab5d11038901318294abe8a0a29f9c",
+    "test-SGP4-P-axes-mle_ALL-scores.jsonl": "c9effa13e5e928d3c114127f85a6e2b32d0a50bc3db0a48a1c2ee0dae05b8977",
+    "test-SGP4-P-axes-mle_UNFLAGGED-scores.jsonl": "5520b80212d888062d5ba3ea3ff2f13ffb774a51e6cef3d8086f36406ade9116",
+    "test-FFM-1-none_ALL-scores.jsonl": "821152f7061eb4d648bc5b7c8478fb4a1d0d523b428a9d99b7ddd96f79af5c05",
+    "test-FFM-1-none_UNFLAGGED-scores.jsonl": "821152f7061eb4d648bc5b7c8478fb4a1d0d523b428a9d99b7ddd96f79af5c05",
+    "test-FFM-1-scalar-mle_ALL-scores.jsonl": "29b7964c05081d68cd0d6e1e538590134d1d4fb343c0111201cc1a0557f1931c",
+    "test-FFM-1-scalar-mle_UNFLAGGED-scores.jsonl": "a1396b91adcf6a0c9be0f0e2c8ad3cf7e0090c47d8d61646bf25253d60c36c60",
+    "test-FFM-1-coverage_ALL-scores.jsonl": "11c353e870f57b3d38c18a2caff454c63c354a4211edf26803b89db978b8c53f",
+    "test-FFM-1-coverage_UNFLAGGED-scores.jsonl": "1eabf6e29b50e1cb6d57c724f4b5c06f0b9fb6e82ed524ba727aef634d650fff",
+    "test-FFM-1-axes-mle_ALL-scores.jsonl": "d463374d8155ed1b311c3f5faeee41eef42385a727a80504b038168dc2445f41",
+    "test-FFM-1-axes-mle_UNFLAGGED-scores.jsonl": "52c3865cd3ee013ea0a6ed239f0a1b0ad8e83a62b58335a5276efaaa69156f2e",
+    "test-SGP4-V1c3-F-coverage-scores.jsonl": "026d7ab4ac54b25e77693f794640da7ef82d33aeb75b298e220109b964a9e828"
+  },
+  "invocations": [
+    {
+      "stage": "train-sgp",
+      "started": "2026-10-23T07:52:07.430Z",
+      "repository": {
+        "commit": "0f441c3d75ebd9fb079f98838590db2b9fa6d6cd",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "train-ffm",
+      "started": "2026-10-23T08:04:05.088Z",
+      "repository": {
+        "commit": "eca34ace3d73c1b0dcff884627c420fce05f0a33",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "train-ffm",
+      "started": "2026-10-23T08:06:24.168Z",
+      "repository": {
+        "commit": "b2658da51d550cc773895ca925385b0dfc8aad46",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-23T11:24:27.506Z",
+      "repository": {
+        "commit": "85c15192ca4a62bca5f20a0e64585f60e7b256d2",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-23T13:43:52.548Z",
+      "repository": {
+        "commit": "169cdd8e858f86df02610c4bcfcefbe7f088d126",
+        "dirty": false
+      }
+    }
+  ],
+  "peakDispatchLoad": 19.98388671875,
+  "sgpFreeze": {
+    "commit": "b2658da51d550cc773895ca925385b0dfc8aad46",
+    "sha256": "66dad5244f8d5789f98ee2024333bde393ec812cb7e45a8d0292881311751c8a",
+    "verifiedAt": "2026-10-23T08:08:18.084Z"
+  },
+  "selectionFreeze": {
+    "sgp": {
+      "commit": "85c15192ca4a62bca5f20a0e64585f60e7b256d2",
+      "sha256": "66dad5244f8d5789f98ee2024333bde393ec812cb7e45a8d0292881311751c8a",
+      "verifiedAt": "2026-10-23T11:24:27.884Z"
+    },
+    "ffm": {
+      "commit": "85c15192ca4a62bca5f20a0e64585f60e7b256d2",
+      "sha256": "ac73c12b599ec0dbd3a2646726672fe8111ae08481de23e44595d1c032d47ade",
+      "verifiedAt": "2026-10-23T11:24:28.017Z"
+    }
+  },
+  "testStarted": "2026-10-23T11:24:28.037Z",
+  "finished": "2026-10-23T13:46:19.068Z"
+}

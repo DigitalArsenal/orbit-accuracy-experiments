@@ -1,0 +1,60 @@
+{
+  "kind": "v1c4-console-calibration-application",
+  "registration": "94263234aa9d5afcde53e260cf1182517002d155",
+  "population": {
+    "source": "analysis/gp-error-model/data/e14-s3-kc.erm",
+    "sha256": "b0ae93c2a92813a1c9b5c2cf5ba786030fd2dc35218e8b167b7af72c0d07c076"
+  },
+  "SGP4": {
+    "candidate": "F-scalar-mle/UNFLAGGED",
+    "base": "F",
+    "arm": "UNFLAGGED",
+    "factors": "sgp-F-scalar-mle_UNFLAGGED.erm"
+  },
+  "FFM-1": {
+    "candidate": "coverage/UNFLAGGED",
+    "seed": "F-scalar-mle/UNFLAGGED",
+    "seedFactorsHorizonHours": 1,
+    "processNoise": null,
+    "arm": "UNFLAGGED",
+    "factors": "ffm-coverage_UNFLAGGED.erm"
+  },
+  "eventRule": {
+    "lookbackDays": 45,
+    "windowDays": 7,
+    "staleFloorDays": 3,
+    "staleFactor": 3,
+    "minimumGapsForMedian": 4,
+    "detector": {
+      "module": "analysis/maneuver-detection",
+      "version": "0.8.0",
+      "minimumSets": 8,
+      "gridStepSeconds": 60,
+      "neighbourSets": 2,
+      "detectors": "defaults (D1, D2, merged)"
+    },
+    "verificationSample": 40,
+    "treatment": "a separate label with no realism claim; UNFLAGGED arms fit and claim on unflagged arcs only"
+  },
+  "claims": {
+    "SGP4": {
+      "SLR LEO 800-1500 km": [
+        6,
+        12,
+        24
+      ]
+    },
+    "FFM-1": {
+      "LEO 400-800 km": [
+        1,
+        72
+      ],
+      "SLR LEO 800-1500 km": [
+        1
+      ]
+    }
+  },
+  "application": "Construct N (object_covariance), F (N plus the age-zero population floor when EMPIRICAL) or P (population at actual age); apply the SGP4 MODEL via calibrate_covariance per term. Transport each calibrated issue term by the FFM resident STM, then apply the FFM MODEL per term. pair_statistics adds terms in WASM. The explicit class and nominal horizon select each stratum. Evaluate the event rule at the sim time from the object's own element sets; a flagged object carries no realism claim.",
+  "selectedOn": "August-September training weeks only; see selectionFreeze in manifest.json",
+  "deployment": "Follow-up modules and SpaceAware-UI task; no adoption in this experiment."
+}
