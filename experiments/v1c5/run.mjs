@@ -72,10 +72,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       noteSets(run)(loaded);
       const bySet = groupBy(loaded.sets, s => s.norad), byHistory = groupBy(loaded.history, s => s.norad);
       const pairs = days.flatMap(day => pairsOf(U.of(day), [day])).filter(p => p.group);
-      const flagRecords = await eventFlags({ run, runtime, config, e3, name: 'events-train', pairs, setsByObject: bySet, workers: Math.min(4, config.workers) });
       const window = { targetBefore: config.windows.trainingTargetBefore };
       const truthOf = new Map(pairs.map(p => [p.key, U.of(p.day)]));
-      const arcs = await collect({ root, run, runtime, name: 'train-sgp', phase: 'sgp', pairs, config, jobFor: pair => jobOf({ e3, config, truth: truthOf.get(pair.key), bySet, byHistory, pair, window }) });
+      // The flags and the arcs do not depend on each other: both run at once (events: 6 workers, arcs: config.workers).
+      const [flagRecords, arcs] = await Promise.all([
+        eventFlags({ run, runtime, config, e3, name: 'events-train', pairs, setsByObject: bySet, workers: 6 }),
+        collect({ root, run, runtime, name: 'train-sgp', phase: 'sgp', pairs, config, jobFor: pair => jobOf({ e3, config, truth: truthOf.get(pair.key), bySet, byHistory, pair, window }) })]);
       noteTruth(run)(U.archive); noteTruth(run)(U.refreshed);
       run.manifest.collected = new Date().toISOString(); run.checkpoint();
       console.log(`collected ${arcs.length} arcs, ${flagRecords.filter(r => r.flagged).length} flagged`);
