@@ -5,10 +5,10 @@ import path from 'node:path';
 import { createBrowserModuleHarness } from 'space-data-module-sdk/testing';
 import { sha256, root } from '../common.mjs';
 
-// The modules checkout: SDN_MODULES_ROOT, else a sibling worktree of this task. It needs a node_modules (the
+// The modules checkout: SDN_MODULES_ROOT, else the sibling worktree of this task (space-data-network-modules--<task id>, the repo--task-id naming of the experiment worktree's own name). It needs a node_modules (the
 // experiment's own, linked at its root) so the modules' helper scripts resolve the same SDK and SDS packages.
 export function modulesRoot() {
-  const candidate = process.env.SDN_MODULES_ROOT ?? path.resolve(root, '../space-data-network-modules--experiments-sdn-gp-starlink-ffm-match-20261023');
+  const candidate = process.env.SDN_MODULES_ROOT ?? path.resolve(root, '..', `space-data-network-modules--${path.basename(root).replace(/^orbit-accuracy-experiments--/, '')}`);
   if (!fs.existsSync(path.join(candidate, 'propagator/sgp4-xp/dist/isomorphic/module.wasm'))) {
     throw new Error(`not a built space-data-network-modules checkout: ${candidate} (set SDN_MODULES_ROOT)`);
   }
