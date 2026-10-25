@@ -910,6 +910,8 @@ and the share of the holding windows whose detection lies inside the actual inte
 
 2. The lower tail. Beside the probability of at least the observed number of detected outages under the off-notice rates (A14b), the probability of at most the observed number (exact), because an observed number below the expected one makes the upper tail uninformative.
 
+3. The position of the detections in their windows (0 the first state of the window, 1 the last), the share of them in the first sixth of the window, and the median, per system and build: the figure the early-epoch defect of the earlier builds shows in (a report about 4 h after each 72 h window starts), which I had seen in the histogram above.
+
 Both are descriptive; nothing is thresholded; the same rules score every build.
 
 ### A15 - 2026-10-24, before any row of build b9bc708baa50 was read: the tenth build (a required $PCF configuration port on SDS 1.264.0, one merged `fit`, the burn epoch and delta-v from the profiled likelihood)
