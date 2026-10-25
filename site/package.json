@@ -11,6 +11,6 @@
     "cesium": "1.146.0",
     "coi-serviceworker": "0.1.7",
     "esbuild": "0.28.2",
-    "hd-wallet-wasm": "2.0.21"
+    "hd-wallet-wasm": "2.1.2"
   }
 }
