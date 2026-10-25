@@ -898,6 +898,20 @@ The detections per object-day (distinct detections over the covered time).
 Both are descriptive; nothing is thresholded; the same rules score every build. `m27` rows are unchanged. The M27 rows of builds 04f7c2d1d50f and 61d4ec4e6a12 are identical row for row (9,443 of 9,443 windows: the same errors, skips and detections), so the two builds' tables agree; the wasm files differ.
 
 
+### A14c - 2026-10-24, after the M27 rows of build b9bc708baa50 were counted: window-level rates and the lower tail
+
+What was seen first. The M27 rows of b9bc708baa50 finished (9,443 windows, none duplicated). I read the same aggregates as for the earlier builds (A14b) and, because the QZSS detections inside the actual intervals fell from 11 of 13 (04f7c2d1d50f and 61d4ec4e6a12) to 0 of 13 while those inside the forecast windows stayed at 13 of 13, a listing of the distinct detections near each QZSS outage (offsets from the actual start, builds 61d4ec4e6a12 and b9bc708baa50) and
+the time-of-day and window-position histograms of the QZSS detections of both builds. In 61d4ec4e6a12 the detections lie at 1 to 9 h UTC and in the first sixth of their windows (a report about 4 h after each window start: the early-epoch defect); in b9bc708baa50 they are spread over the day and the window.
+
+Added, before any statistic below was computed:
+
+1. Window-level rates. A window holds an outage when it contains the whole actual interval of that outage (the summary notice's; an outage without a summary is left out). A window is clear when it overlaps no forecast window plus or minus 6 h of any outage of its satellite. Per system and build: the number of holding windows and the share with a detection (anywhere in the window), the number of clear windows and the share with a detection,
+and the share of the holding windows whose detection lies inside the actual interval plus or minus 6 h. Windows that are neither holding nor clear are not counted. Only answered windows count.
+
+2. The lower tail. Beside the probability of at least the observed number of detected outages under the off-notice rates (A14b), the probability of at most the observed number (exact), because an observed number below the expected one makes the upper tail uninformative.
+
+Both are descriptive; nothing is thresholded; the same rules score every build.
+
 ### A15 - 2026-10-24, before any row of build b9bc708baa50 was read: the tenth build (a required $PCF configuration port on SDS 1.264.0, one merged `fit`, the burn epoch and delta-v from the profiled likelihood)
 
 Coordinator, 2026-10-24: side B's newest dist is b9bc708baa50 (1,440,877 bytes; closed-modules 610930c, package sdn-ap-propagator). Its adapter changes: a required $PCF `configuration` port on SDS 1.264.0; `fit` and `fit_sdnap` merged into one `fit`, THEORY selecting SGP4XP or SDNAP;
