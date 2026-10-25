@@ -32,7 +32,7 @@ import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-ffm-physical-truth/seeds.mjs';
 import { MODELS, PAPERS, PAPER_SOURCES, headingIds } from './src/models/registry.mjs';
-import { moduleList, pinnedModules } from './module-list.mjs';
+import { moduleList } from './module-list.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
 import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
@@ -107,19 +107,15 @@ function serveModule(relative, { as = relative, commit = null, wasmSha256 = null
   const m = JSON.parse(manifest);
   const from = commit ?? modulesGit.commit;
   // FFM compiles in the EGM coefficients and NRLMSISE-00 (registry: reproducible) and the HWM14 winds data (registry: terms unconfirmed, not reproducible).
-  // SDN-AP is open source (Apache-2.0); the other modules are published for this site.
-  const openSource = relative === 'propagator/sdn-ap';
-  const label = openSource ? own('Apache-2.0, © Edgesource Corporation')
-    : relative === 'propagator/ffm' || as === 'propagator/ffm-v1'
-      ? own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08). Embeds HWM14 coefficients, whose terms are unconfirmed (data/licenses.json: hwm14)', creditsFor('V1').filter((c) => /^EGM2008|NRLMSISE/.test(c)).join(' '))
-      : own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08)');
+  const label = relative === 'propagator/ffm' || as === 'propagator/ffm-v1'
+    ? own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08). Embeds HWM14 coefficients, whose terms are unconfirmed (data/licenses.json: hwm14)', creditsFor('V1').filter((c) => /^EGM2008|NRLMSISE/.test(c)).join(' '))
+    : own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08)');
   write(`modules/${as}/module.wasm`, wasm, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/dist/isomorphic/module.wasm`, label);
   write(`modules/${as}/plugin-manifest.json`, manifest, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/plugin-manifest.json`,
-    openSource ? own('Apache-2.0, © Edgesource Corporation') : own('Module manifest, © Edgesource Corporation; published for this site (owner, 2026-10-08)'));
+    own('Module manifest, © Edgesource Corporation; published for this site (owner, 2026-10-08)'));
   moduleIndex.push({ path: as, source: relative, commit: from, pluginId: m.pluginId, version: m.version, wasmSha256: sha256(wasm), bytes: wasm.length });
 }
 for (const relative of moduleList) serveModule(relative);
-for (const m of pinnedModules) serveModule(m.path, { commit: m.commit, wasmSha256: m.wasmSha256 });
 // V1 ran an earlier binary of the full-force propagator. A V1 seed reproduces
 // its committed run only with that binary, so it is served beside the current
 // one as propagator/ffm-v1, from the V1 run's own modules commit at the path
