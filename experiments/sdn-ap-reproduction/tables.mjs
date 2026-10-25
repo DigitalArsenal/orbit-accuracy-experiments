@@ -92,7 +92,7 @@ export const TABLES = [
   { id: '12.2', title: '12.2 Two-runtime parity and determinism', repo: 'modules', result: 'the parity report the command prints (identical bytes in both runtimes)',
     commands: [cmd('cd propagator/sdn-ap && npm ci && npm run fetch-build-data && npm run build', 'propagator/sdn-ap/build.mjs', 'modules'), cmd('PATH=$HOME/.wasmedge/bin:$PATH node test/wasmedge-parity.mjs', 'propagator/sdn-ap/test/wasmedge-parity.mjs', 'modules')],
     inputs: ['sdnapBuildData', 'wasmedge'] },
-  { id: '12.3', title: '12.3 Held-out accuracy', repo: 'experiments', result: `results/sdn-gp-starlink-ffm-match/README.md, sections 1 and 2 (tables.json)`,
+  { id: '12.3', title: '12.3 Held-out accuracy', repo: 'experiments', result: `results/sdn-gp-starlink-ffm-match/README.md, sections 1 and 2 (tables.json)`, resultFiles: ['results/sdn-gp-starlink-ffm-match/tables.json'],
     commands: [
       cmd('node analysis/reference-states/scripts/fetch-reference-products.mjs --from <first day> --to <last day> --products gps,slr,slr-daily --out /opt/data/sdn-archive/reference-states   # the days of the files in inputs.json', 'analysis/reference-states/scripts/fetch-reference-products.mjs', 'modules'),
       cmd(`node ${G1}/population.mjs`, `${G1}/population.mjs`), cmd(`node ${G1}/truth.mjs --workers N`, `${G1}/truth.mjs`),
@@ -115,7 +115,7 @@ export const TABLES = [
   { id: '12.5c', title: '12.5 Operational records: real reentries and controlled deorbits', repo: 'experiments', result: 'results/sdn-gp-starlink-ffm-match/README.md, M29 and M30 (section 16c)',
     commands: [cmd(`node ${G1}/m29-extract.mjs && node ${G1}/m29-extract-cords.mjs`, `${G1}/m29-extract-cords.mjs`), cmd(`node ${G1}/m30-truth.mjs`, `${G1}/m30-truth.mjs`), cmd(`node ${G1}/sdngp-run.mjs --pin 9df647b08978 --only m29,m30`, `${G1}/sdngp-run.mjs`), cmd(`node ${G1}/tables.mjs`, `${G1}/tables.mjs`)],
     inputs: ['spacetrackHistory', 'cords', 'weather'] },
-  { id: 'B1', title: 'Appendix: SGP4, SGP4-XP and FFM on the windows of 12.3 (B1)', repo: 'experiments', result: 'results/sdn-ap-baselines/table.json and README.md',
+  { id: 'B1', title: 'Appendix: SGP4, SGP4-XP and FFM on the windows of 12.3 (B1)', repo: 'experiments', result: 'results/sdn-ap-baselines/table.json and README.md', resultFiles: ['results/sdn-ap-baselines/table.json', 'results/sdn-ap-baselines/README.md'],
     note: '`node experiments/sdn-ap-baselines/table.mjs` regenerates results/sdn-ap-baselines/table.json and README.md from two inputs only: B1\'s window rows and G1\'s rows (the first two lines of the table below, every file of each listed with its SHA-256 in inputs.json); the bootstrap generators are seeded, so the same rows give the same bytes. `table.mjs --check` compares the regenerated table with the committed one.',
     commands: [cmd(`node ${B1}/run.mjs --shard k/n`, `${B1}/run.mjs`), cmd(`node ${B1}/table.mjs`, `${B1}/table.mjs`), cmd(`node ${B1}/table.mjs --check`, `${B1}/table.mjs`), cmd(`node ${B1}/run.mjs --check`, `${B1}/run.mjs`)],
     inputs: ['b1Rows', 'g1Rows', 'b1Environment', 'g1Store', 'eop', 'weather', 'de440s'] },

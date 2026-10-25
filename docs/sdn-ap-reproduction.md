@@ -142,6 +142,8 @@ PATH=$HOME/.wasmedge/bin:$PATH node test/wasmedge-parity.mjs
 
 Run in: this repository, with the modules checkout beside it. Result: results/sdn-gp-starlink-ffm-match/README.md, sections 1 and 2 (tables.json).
 
+- results/sdn-gp-starlink-ffm-match/tables.json: SHA-256 `12753a28e71ff9745d00a549807f5b31e24460bbdf2f518a8798ab07ae10c5c0`
+
 ```sh
 node analysis/reference-states/scripts/fetch-reference-products.mjs --from <first day> --to <last day> --products gps,slr,slr-daily --out /opt/data/sdn-archive/reference-states   # the days of the files in inputs.json
 node experiments/sdn-gp-starlink-ffm-match/population.mjs
@@ -244,6 +246,9 @@ node experiments/sdn-gp-starlink-ffm-match/tables.mjs
 `node experiments/sdn-ap-baselines/table.mjs` regenerates results/sdn-ap-baselines/table.json and README.md from two inputs only: B1's window rows and G1's rows (the first two lines of the table below, every file of each listed with its SHA-256 in inputs.json); the bootstrap generators are seeded, so the same rows give the same bytes. `table.mjs --check` compares the regenerated table with the committed one.
 
 Run in: this repository, with the modules checkout beside it. Result: results/sdn-ap-baselines/table.json and README.md.
+
+- results/sdn-ap-baselines/table.json: SHA-256 `50bf055dd31e618d2a0bfb123d2779ad014940aa82241891daac32dcaaf29d79`
+- results/sdn-ap-baselines/README.md: SHA-256 `20a5673a474bfeb28a9dfcbd948f8b4bbce4779ec7eeaacefbc22b6568bb7803`
 
 ```sh
 node experiments/sdn-ap-baselines/run.mjs --shard k/n

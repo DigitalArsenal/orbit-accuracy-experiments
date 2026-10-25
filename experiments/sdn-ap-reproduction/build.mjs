@@ -104,6 +104,8 @@ function document(inp) {
     o.push(`### ${t.title}`, '');
     if (t.note) o.push(t.note, '');
     o.push(`Run in: ${t.repo === 'modules' ? `the modules checkout, at ${b1.modules.commit.slice(0, 12)}` : t.repo === 'both' ? `the modules checkout (at ${b1.modules.commit.slice(0, 12)}) and this repository, as marked` : 'this repository, with the modules checkout beside it'}. Result: ${t.result}.`, '');
+    for (const f of t.resultFiles ?? []) if (fs.existsSync(path.join(root, f))) o.push(`- ${f}: SHA-256 \`${sha256(fs.readFileSync(path.join(root, f)))}\``);
+    if (t.resultFiles) o.push('');
     o.push('```sh', ...t.commands.map((c) => c.text), '```', '');
     o.push('| Input | Files | SHA-256 | Fetch | Terms | Redistributed here |', '| --- | --: | --- | --- | --- | --- |');
     for (const id of t.inputs) {
