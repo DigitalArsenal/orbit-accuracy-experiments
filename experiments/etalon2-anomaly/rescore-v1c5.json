@@ -1,0 +1,728 @@
+{
+ "rule": "samples of an object whose truth time lies within 1 h of an epoch compare.mjs finds wrong in the ILRS combination are removed and counted",
+ "wrongDays": [
+  {
+   "satellite": "etalon1",
+   "week": "260411",
+   "day": "2026-04-10",
+   "maxKm": 9997.868,
+   "centerSpreadKm": 0.0012,
+   "centers": 7,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-04-10T00:00:00Z",
+     "km": 9997.868,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260530",
+   "day": "2026-05-25",
+   "maxKm": 3057.58,
+   "centerSpreadKm": 0.0012,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-05-25T00:00:00Z",
+     "km": 3057.58,
+     "zeroAxes": [
+      "Y"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260530",
+   "day": "2026-05-29",
+   "maxKm": 3118.977,
+   "centerSpreadKm": 0.0015,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-05-29T00:00:00Z",
+     "km": 3118.977,
+     "zeroAxes": [
+      "Y"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260411",
+   "day": "2026-04-10",
+   "maxKm": 8133.528,
+   "centerSpreadKm": 0.0014,
+   "centers": 7,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-04-10T00:00:00Z",
+     "km": 8133.528,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-05",
+   "maxKm": 7552.278,
+   "centerSpreadKm": 0.0018,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-05T00:00:00Z",
+     "km": 7552.278,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-06",
+   "maxKm": 13580.309,
+   "centerSpreadKm": 0.0016,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-06T00:00:00Z",
+     "km": 13580.309,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-08",
+   "maxKm": 2126.881,
+   "centerSpreadKm": 0.0015,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-08T00:00:00Z",
+     "km": 2126.881,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-09",
+   "maxKm": 7897.19,
+   "centerSpreadKm": 0.002,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-09T00:00:00Z",
+     "km": 7897.19,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  }
+ ],
+ "removedSamples": {
+  "test": 1,
+  "crossValidation": 3,
+  "training": 3
+ },
+ "published": {
+  "selected": "P-axes-mle/risk/UNFLAGGED",
+  "claimed": 0,
+  "candidates": {
+   "N-none/single/ALL": 0,
+   "F-none/single/ALL": 0,
+   "P-none/single/ALL": 2,
+   "N-scalar-mle/single/ALL": 0,
+   "N-coverage/single/ALL": 0,
+   "N-axes-mle/single/ALL": 0,
+   "F-scalar-mle/single/ALL": 0,
+   "F-coverage/single/ALL": 1,
+   "F-axes-mle/single/ALL": 2,
+   "P-scalar-mle/single/ALL": 1,
+   "P-coverage/single/ALL": 1,
+   "P-axes-mle/single/ALL": 0,
+   "N-scalar-mle/single/UNFLAGGED": 0,
+   "N-coverage/single/UNFLAGGED": 0,
+   "N-axes-mle/single/UNFLAGGED": 2,
+   "F-scalar-mle/single/UNFLAGGED": 0,
+   "F-coverage/single/UNFLAGGED": 1,
+   "F-axes-mle/single/UNFLAGGED": 2,
+   "P-scalar-mle/single/UNFLAGGED": 1,
+   "P-coverage/single/UNFLAGGED": 1,
+   "P-axes-mle/single/UNFLAGGED": 1,
+   "N-scalar-mle/flag/ALL": 0,
+   "N-coverage/flag/ALL": 0,
+   "N-axes-mle/flag/ALL": 1,
+   "F-scalar-mle/flag/ALL": 0,
+   "F-coverage/flag/ALL": 1,
+   "F-axes-mle/flag/ALL": 2,
+   "P-scalar-mle/flag/ALL": 1,
+   "P-coverage/flag/ALL": 1,
+   "P-axes-mle/flag/ALL": 0,
+   "N-scalar-mle/flag/UNFLAGGED": 0,
+   "N-coverage/flag/UNFLAGGED": 0,
+   "N-axes-mle/flag/UNFLAGGED": 2,
+   "F-scalar-mle/flag/UNFLAGGED": 0,
+   "F-coverage/flag/UNFLAGGED": 1,
+   "F-axes-mle/flag/UNFLAGGED": 2,
+   "P-scalar-mle/flag/UNFLAGGED": 1,
+   "P-coverage/flag/UNFLAGGED": 1,
+   "P-axes-mle/flag/UNFLAGGED": 1,
+   "N-scalar-mle/risk/ALL": 0,
+   "N-coverage/risk/ALL": 0,
+   "N-axes-mle/risk/ALL": 0,
+   "F-scalar-mle/risk/ALL": 0,
+   "F-coverage/risk/ALL": 1,
+   "F-axes-mle/risk/ALL": 1,
+   "P-scalar-mle/risk/ALL": 1,
+   "P-coverage/risk/ALL": 1,
+   "P-axes-mle/risk/ALL": 0,
+   "N-scalar-mle/risk/UNFLAGGED": 0,
+   "N-coverage/risk/UNFLAGGED": 0,
+   "N-axes-mle/risk/UNFLAGGED": 0,
+   "F-scalar-mle/risk/UNFLAGGED": 0,
+   "F-coverage/risk/UNFLAGGED": 1,
+   "F-axes-mle/risk/UNFLAGGED": 1,
+   "P-scalar-mle/risk/UNFLAGGED": 1,
+   "P-coverage/risk/UNFLAGGED": 1,
+   "P-axes-mle/risk/UNFLAGGED": 0
+  },
+  "slrMeoCellsOfSelected": {
+   "all": [
+    {
+     "hours": 1,
+     "n": 19,
+     "objects": 5,
+     "meanD2Over3": 0.6607745508245754,
+     "coverage95": 0.9473684210526315,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 6,
+     "n": 19,
+     "objects": 5,
+     "meanD2Over3": 0.726859280252249,
+     "coverage95": 0.8947368421052632,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 12,
+     "n": 19,
+     "objects": 5,
+     "meanD2Over3": 0.7388748319740176,
+     "coverage95": 0.9473684210526315,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 24,
+     "n": 14,
+     "objects": 5,
+     "meanD2Over3": 0.3064499881455141,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 48,
+     "n": 9,
+     "objects": 1,
+     "meanD2Over3": 0.004685429101476009,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 72,
+     "n": 8,
+     "objects": 1,
+     "meanD2Over3": 0.0034669580102651802,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    }
+   ],
+   "unflagged": [
+    {
+     "hours": 1,
+     "n": 10,
+     "objects": 5,
+     "meanD2Over3": 1.2510461295184006,
+     "coverage95": 0.9,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 6,
+     "n": 10,
+     "objects": 5,
+     "meanD2Over3": 1.3769337285283676,
+     "coverage95": 0.8,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 12,
+     "n": 10,
+     "objects": 5,
+     "meanD2Over3": 1.3928594395906655,
+     "coverage95": 0.9,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 24,
+     "n": 6,
+     "objects": 5,
+     "meanD2Over3": 0.7052207635818836,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 48,
+     "n": 2,
+     "objects": 1,
+     "meanD2Over3": 9.974900216433017e-7,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 72,
+     "n": 2,
+     "objects": 1,
+     "meanD2Over3": 3.541833285647122e-7,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    }
+   ]
+  }
+ },
+ "labeled": {
+  "selected": "P-axes-mle/risk/UNFLAGGED",
+  "claimed": 0,
+  "candidates": {
+   "N-none/single/ALL": 0,
+   "F-none/single/ALL": 0,
+   "P-none/single/ALL": 2,
+   "N-scalar-mle/single/ALL": 0,
+   "N-coverage/single/ALL": 0,
+   "N-axes-mle/single/ALL": 0,
+   "F-scalar-mle/single/ALL": 0,
+   "F-coverage/single/ALL": 1,
+   "F-axes-mle/single/ALL": 2,
+   "P-scalar-mle/single/ALL": 1,
+   "P-coverage/single/ALL": 1,
+   "P-axes-mle/single/ALL": 0,
+   "N-scalar-mle/single/UNFLAGGED": 0,
+   "N-coverage/single/UNFLAGGED": 0,
+   "N-axes-mle/single/UNFLAGGED": 2,
+   "F-scalar-mle/single/UNFLAGGED": 0,
+   "F-coverage/single/UNFLAGGED": 1,
+   "F-axes-mle/single/UNFLAGGED": 2,
+   "P-scalar-mle/single/UNFLAGGED": 1,
+   "P-coverage/single/UNFLAGGED": 1,
+   "P-axes-mle/single/UNFLAGGED": 1,
+   "N-scalar-mle/flag/ALL": 0,
+   "N-coverage/flag/ALL": 0,
+   "N-axes-mle/flag/ALL": 1,
+   "F-scalar-mle/flag/ALL": 0,
+   "F-coverage/flag/ALL": 1,
+   "F-axes-mle/flag/ALL": 2,
+   "P-scalar-mle/flag/ALL": 1,
+   "P-coverage/flag/ALL": 1,
+   "P-axes-mle/flag/ALL": 0,
+   "N-scalar-mle/flag/UNFLAGGED": 0,
+   "N-coverage/flag/UNFLAGGED": 0,
+   "N-axes-mle/flag/UNFLAGGED": 2,
+   "F-scalar-mle/flag/UNFLAGGED": 0,
+   "F-coverage/flag/UNFLAGGED": 1,
+   "F-axes-mle/flag/UNFLAGGED": 2,
+   "P-scalar-mle/flag/UNFLAGGED": 1,
+   "P-coverage/flag/UNFLAGGED": 1,
+   "P-axes-mle/flag/UNFLAGGED": 1,
+   "N-scalar-mle/risk/ALL": 0,
+   "N-coverage/risk/ALL": 0,
+   "N-axes-mle/risk/ALL": 0,
+   "F-scalar-mle/risk/ALL": 0,
+   "F-coverage/risk/ALL": 1,
+   "F-axes-mle/risk/ALL": 1,
+   "P-scalar-mle/risk/ALL": 1,
+   "P-coverage/risk/ALL": 1,
+   "P-axes-mle/risk/ALL": 0,
+   "N-scalar-mle/risk/UNFLAGGED": 0,
+   "N-coverage/risk/UNFLAGGED": 0,
+   "N-axes-mle/risk/UNFLAGGED": 0,
+   "F-scalar-mle/risk/UNFLAGGED": 0,
+   "F-coverage/risk/UNFLAGGED": 1,
+   "F-axes-mle/risk/UNFLAGGED": 1,
+   "P-scalar-mle/risk/UNFLAGGED": 1,
+   "P-coverage/risk/UNFLAGGED": 1,
+   "P-axes-mle/risk/UNFLAGGED": 0
+  },
+  "slrMeoCellsOfSelected": {
+   "all": [
+    {
+     "hours": 1,
+     "n": 18,
+     "objects": 5,
+     "meanD2Over3": 0.5760191181252946,
+     "coverage95": 0.9444444444444444,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 6,
+     "n": 19,
+     "objects": 5,
+     "meanD2Over3": 0.726859280252249,
+     "coverage95": 0.8947368421052632,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 12,
+     "n": 19,
+     "objects": 5,
+     "meanD2Over3": 0.7388748319740176,
+     "coverage95": 0.9473684210526315,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 24,
+     "n": 14,
+     "objects": 5,
+     "meanD2Over3": 0.3064499881455141,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 48,
+     "n": 9,
+     "objects": 1,
+     "meanD2Over3": 0.004685429101476009,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 72,
+     "n": 8,
+     "objects": 1,
+     "meanD2Over3": 0.0034669580102651802,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    }
+   ],
+   "unflagged": [
+    {
+     "hours": 1,
+     "n": 9,
+     "objects": 5,
+     "meanD2Over3": 1.1471209950858194,
+     "coverage95": 0.8888888888888888,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 6,
+     "n": 10,
+     "objects": 5,
+     "meanD2Over3": 1.3769337285283676,
+     "coverage95": 0.8,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 12,
+     "n": 10,
+     "objects": 5,
+     "meanD2Over3": 1.3928594395906655,
+     "coverage95": 0.9,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 24,
+     "n": 6,
+     "objects": 5,
+     "meanD2Over3": 0.7052207635818836,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 48,
+     "n": 2,
+     "objects": 1,
+     "meanD2Over3": 9.974900216433017e-7,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    },
+    {
+     "hours": 72,
+     "n": 2,
+     "objects": 1,
+     "meanD2Over3": 3.541833285647122e-7,
+     "coverage95": 1,
+     "decision": "INSUFFICIENT"
+    }
+   ]
+  },
+  "extremes": []
+ },
+ "crossValidation": {
+  "publishedSelected": "P-axes-mle/risk/UNFLAGGED",
+  "reselected": "P-axes-mle/risk/UNFLAGGED",
+  "ranking": [
+   {
+    "name": "P-axes-mle/risk/UNFLAGGED",
+    "order": 56,
+    "realisticByFold": {
+     "F3": 3,
+     "F4": 3,
+     "F5": 6,
+     "F6": 5,
+     "F7": 3,
+     "F8": 4
+    },
+    "meanRealistic": 4,
+    "minRealistic": 3,
+    "meanInsufficient": 5,
+    "meanViolation": 5000000018035.32
+   },
+   {
+    "name": "F-coverage/single/ALL",
+    "order": 7,
+    "realisticByFold": {
+     "F3": 3,
+     "F4": 3,
+     "F5": 3,
+     "F6": 4,
+     "F7": 3,
+     "F8": 3
+    },
+    "meanRealistic": 3.1666666666666665,
+    "minRealistic": 3,
+    "meanInsufficient": 3.1666666666666665,
+    "meanViolation": 3166681810260.763
+   },
+   {
+    "name": "F-axes-mle/risk/UNFLAGGED",
+    "order": 53,
+    "realisticByFold": {
+     "F3": 4,
+     "F4": 7,
+     "F5": 3,
+     "F6": 2,
+     "F7": 3,
+     "F8": 11
+    },
+    "meanRealistic": 5,
+    "minRealistic": 2,
+    "meanInsufficient": 5,
+    "meanViolation": 5000000019963.731
+   },
+   {
+    "name": "F-axes-mle/single/UNFLAGGED",
+    "order": 17,
+    "realisticByFold": {
+     "F3": 4,
+     "F4": 4,
+     "F5": 4,
+     "F6": 2,
+     "F7": 3,
+     "F8": 11
+    },
+    "meanRealistic": 4.666666666666667,
+    "minRealistic": 2,
+    "meanInsufficient": 5,
+    "meanViolation": 5000000003933.902
+   },
+   {
+    "name": "F-axes-mle/flag/UNFLAGGED",
+    "order": 35,
+    "realisticByFold": {
+     "F3": 4,
+     "F4": 4,
+     "F5": 4,
+     "F6": 2,
+     "F7": 3,
+     "F8": 11
+    },
+    "meanRealistic": 4.666666666666667,
+    "minRealistic": 2,
+    "meanInsufficient": 5,
+    "meanViolation": 5000000003933.902
+   },
+   {
+    "name": "N-scalar-mle/single/ALL",
+    "order": 3,
+    "realisticByFold": {
+     "F3": 5,
+     "F4": 3,
+     "F5": 3,
+     "F6": 5,
+     "F7": 2,
+     "F8": 9
+    },
+    "meanRealistic": 4.5,
+    "minRealistic": 2,
+    "meanInsufficient": 3.1666666666666665,
+    "meanViolation": 3166666668360.308
+   },
+   {
+    "name": "F-axes-mle/single/ALL",
+    "order": 8,
+    "realisticByFold": {
+     "F3": 3,
+     "F4": 4,
+     "F5": 4,
+     "F6": 2,
+     "F7": 3,
+     "F8": 10
+    },
+    "meanRealistic": 4.333333333333333,
+    "minRealistic": 2,
+    "meanInsufficient": 3.1666666666666665,
+    "meanViolation": 3166666669448.3667
+   },
+   {
+    "name": "F-axes-mle/flag/ALL",
+    "order": 26,
+    "realisticByFold": {
+     "F3": 2,
+     "F4": 4,
+     "F5": 4,
+     "F6": 2,
+     "F7": 3,
+     "F8": 11
+    },
+    "meanRealistic": 4.333333333333333,
+    "minRealistic": 2,
+    "meanInsufficient": 3.1666666666666665,
+    "meanViolation": 3166666713968.35
+   }
+  ]
+ },
+ "corrected": {
+  "P-axes-mle/risk/UNFLAGGED": {
+   "claimed": 0,
+   "all": 0,
+   "unflagged": 0,
+   "slrMeoCells": {
+    "all": [
+     {
+      "hours": 1,
+      "n": 18,
+      "objects": 5,
+      "meanD2Over3": 0.5760191181252946,
+      "coverage95": 0.9444444444444444,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 6,
+      "n": 19,
+      "objects": 5,
+      "meanD2Over3": 0.726859280252249,
+      "coverage95": 0.8947368421052632,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 12,
+      "n": 19,
+      "objects": 5,
+      "meanD2Over3": 0.7388748319740176,
+      "coverage95": 0.9473684210526315,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 24,
+      "n": 14,
+      "objects": 5,
+      "meanD2Over3": 0.3064499881455141,
+      "coverage95": 1,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 48,
+      "n": 9,
+      "objects": 1,
+      "meanD2Over3": 0.01047679162281557,
+      "coverage95": 1,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 72,
+      "n": 8,
+      "objects": 1,
+      "meanD2Over3": 0.019836843859841784,
+      "coverage95": 1,
+      "decision": "INSUFFICIENT"
+     }
+    ],
+    "unflagged": [
+     {
+      "hours": 1,
+      "n": 9,
+      "objects": 5,
+      "meanD2Over3": 1.1471209950858194,
+      "coverage95": 0.8888888888888888,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 6,
+      "n": 10,
+      "objects": 5,
+      "meanD2Over3": 1.3769337285283676,
+      "coverage95": 0.8,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 12,
+      "n": 10,
+      "objects": 5,
+      "meanD2Over3": 1.3928594395906655,
+      "coverage95": 0.9,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 24,
+      "n": 6,
+      "objects": 5,
+      "meanD2Over3": 0.7052207635818836,
+      "coverage95": 1,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 48,
+      "n": 2,
+      "objects": 1,
+      "meanD2Over3": 0.026062128836049664,
+      "coverage95": 1,
+      "decision": "INSUFFICIENT"
+     },
+     {
+      "hours": 72,
+      "n": 2,
+      "objects": 1,
+      "meanD2Over3": 0.06547989758163499,
+      "coverage95": 1,
+      "decision": "INSUFFICIENT"
+     }
+    ]
+   }
+  }
+ }
+}
