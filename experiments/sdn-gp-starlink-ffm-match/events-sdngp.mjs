@@ -3,6 +3,7 @@
 //   m23  finite burns of 1 to 60 min: arm A the module's own finite-burn map (sinc), arm B a centroid impulse (no loss)
 //   m28  the hand-off: synthetic decays, SDN-AP fitted at nodes of the decay, `reentry` (lib/events-m28.mjs)
 //   m24  the ISS OEM captures through `detect_maneuvers` (lib/events-m24.mjs)
+//   m27b, m27bp  amendment A17: the detector across the omitted days of the GPS series, with controls (lib/events-gnss.mjs), and planted impulses across a hole (lib/events-plant.mjs)
 //   node experiments/sdn-gp-starlink-ffm-match/events-sdngp.mjs --source m22 [--shard k/n] [--limit N]
 import fs from 'node:fs';
 import { frozen, args } from './common.mjs';
@@ -14,7 +15,7 @@ import { scoreSatellite } from './lib/events-score.mjs';
 
 frozen();
 const source = args.source;
-if (!['m22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p', 'm31', 'm32', 'm24b', 'm27'].includes(source)) throw new Error('--source m22|m23|m28|m24|m24c|m24a|m29|m30|m24p|m31|m32|m24b|m27');
+if (!['m22', 'm23', 'm28', 'm24', 'm24c', 'm24a', 'm29', 'm30', 'm24p', 'm31', 'm32', 'm24b', 'm27', 'm27b', 'm27bp'].includes(source)) throw new Error('--source m22|m23|m28|m24|m24c|m24a|m29|m30|m24p|m31|m32|m24b|m27|m27b|m27bp');
 const b = await openBaselines(modulesRoot(), { sdngp: true });
 const sink = sdngpSink(b, source, args.shard);
 const limit = args.limit ? Number(args.limit) : Infinity;
@@ -36,6 +37,11 @@ if (source === 'm22' || source === 'm23') {
   await (await import('./lib/events-plant.mjs')).scorePlanted({ b, sink });
 } else if (source === 'm27') {
   await (await import('./lib/events-gnss.mjs')).scoreGnss({ b, sink });
+} else if (source === 'm27b') {
+  await (await import('./lib/events-gnss.mjs')).scoreGnssGaps({ b, sink });
+} else if (source === 'm27bp') {
+  const { scorePlanted, PLANTED_HOLE_H } = await import('./lib/events-plant.mjs');
+  await scorePlanted({ b, sink, hole: PLANTED_HOLE_H });
 } else if (source === 'm24b') {
   await (await import('./lib/events-iss.mjs')).scoreSub({ b, sink });
 } else if (source === 'm31') {
