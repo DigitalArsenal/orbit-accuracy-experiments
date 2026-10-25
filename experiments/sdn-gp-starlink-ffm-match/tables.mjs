@@ -8,6 +8,7 @@ import { quantile, mean } from './lib/windows.mjs';
 import { source as licenseSource } from '../../harness/data-licenses.mjs';
 import { builds as sdngpBuilds, buildRows, rowKey } from './lib/sdngp-rows.mjs';
 import { eventsStudy, eventsMarkdown, methodsOf, fitMethodOf } from './lib/events-tables.mjs';
+import { compareBuilds, identityMarkdown } from './lib/row-identity.mjs';
 
 // SDN-AP (amendment A9b): rows are kept per build of the module; the tables use the newest build that ran every source (complete.json)
 const SD_BUILDS = sdngpBuilds().filter((x) => x.complete || fs.existsSync(path.join(x.dir, 'events-focus.json'))); // a build that is still running its sources and has no events-focus.json is not read: the tables must not move while it runs
@@ -499,7 +500,11 @@ export function build() {
   const sdngpCheck = chk.length ? { windows: chk.length, ratio: [0, 0.5, 1].map((q) => quantile(chk, q)) } : null;
   // SpaceX forecast files that could not be reproduced for SDN-AP because the server's copy had changed since the registered fit
   const spacexSkipped = SD_HEADLINE ? new Set(fs.readdirSync(SD_HEADLINE.dir).filter((n) => n.startsWith('starlink-skipped.')).flatMap((n) => readJsonl(path.join(SD_HEADLINE.dir, n))).filter((x) => /changed on the server/.test(x.reason)).map((x) => x.norad)).size : 0;
-  return { generatedFrom: 'recorded window rows (statistics only)', earthIdentity, packIdentity, heoVsPrevious, fitImplausible, tessVsPrevious, defaultStudy, spanDefault, lunarStudy, segmentStudy, eventsStudy: SD_HEADLINE ? eventsStudy(SD_HEADLINE.dir, results, completeBuilds.filter((x) => x !== SD_HEADLINE).map((x) => x.dir), SD_BUILDS.slice(SD_BUILDS.indexOf(SD_HEADLINE) + 1).filter((x) => !x.complete && fs.existsSync(path.join(x.dir, 'events-focus.json'))).map((x) => x.dir)) : null, spanStudy, lowering, sdngpCheck, sdngpSpacexSkipped: spacexSkipped, bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.filter((a) => !windows.some((w) => a.packs.includes(w.source) && w.sdngp)).map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
+  // amendment A16: every row of the headline build against the build before it, and of a later build (focus sources only) against the build before that
+  const laterBuilds = SD_HEADLINE ? SD_BUILDS.slice(SD_BUILDS.indexOf(SD_HEADLINE) + 1).filter((x) => !x.complete && fs.existsSync(path.join(x.dir, 'events-focus.json'))) : [];
+  const identity = SD_HEADLINE && previous ? compareBuilds(previous.dir, SD_HEADLINE.dir) : null;
+  const identityLater = laterBuilds.map((l, i) => compareBuilds(([SD_HEADLINE, ...laterBuilds][i]).dir, l.dir, JSON.parse(fs.readFileSync(path.join(l.dir, 'events-focus.json'), 'utf8')).sources));
+  return { generatedFrom: 'recorded window rows (statistics only)', identity, identityLater, earthIdentity, packIdentity, heoVsPrevious, fitImplausible, tessVsPrevious, defaultStudy, spanDefault, lunarStudy, segmentStudy, eventsStudy: SD_HEADLINE ? eventsStudy(SD_HEADLINE.dir, results, completeBuilds.filter((x) => x !== SD_HEADLINE).map((x) => x.dir), SD_BUILDS.slice(SD_BUILDS.indexOf(SD_HEADLINE) + 1).filter((x) => !x.complete && fs.existsSync(path.join(x.dir, 'events-focus.json'))).map((x) => x.dir)) : null, spanStudy, lowering, sdngpCheck, sdngpSpacexSkipped: spacexSkipped, bEffRecovery, sdngpHeadlineBuild: SD_HEADLINE?.build ?? null, sdngpBuilds: sdngpBuildInfo, ricConsistency, fitLength, realism, config: { fitHours: config.windows.fitHours, leadDays: config.windows.leadDays, minimumCoverage: config.windows.minimumCoverage }, regimes, awaiting: AWAITING.filter((a) => !windows.some((w) => a.packs.includes(w.source) && w.sdngp)).map((a) => ({ ...a, kernel: kernelOf(a.mission), prepared: preparedOf(a.packs) })), regimeWindows: windowsSummary(), byShell, truthSet, truthQuality, newer, comspocPrecise, packs, heoByObject, bench: bench?.rows ?? null };
 }
 
 // ---- markdown ----
@@ -936,11 +941,13 @@ export function markdown(t) {
       ...(t.heoVsPrevious ?? []).map((x) => `| ${x.source} | ${x.fitHours} h | ${x.now.windows} (${x.identical} of ${x.inBoth}) | ${x.before.fitted} -> ${x.now.fitted} | ${f(x.before.spanHours, 1)} -> ${f(x.now.spanHours, 1)} | ${[1, 2, 3].map((k) => `${f(x.before.days[k])} -> ${f(x.now.days[k])}`).join(' | ')} |`), '',
       `Fits refused as fit-implausible (an Earth fit above 100 km RMS), by source: ${t.fitImplausible && Object.keys(t.fitImplausible.now).length ? Object.entries(t.fitImplausible.now).map(([k, v]) => `${k} ${v}`).join(', ') : 'none'}${t.fitImplausible?.before ? `; the previous build: ${Object.keys(t.fitImplausible.before).length ? Object.entries(t.fitImplausible.before).map(([k, v]) => `${k} ${v}`).join(', ') : 'none'}` : ''}.`, '');
   }
+  if (t.identity) L.push(...identityMarkdown(t.identity, `### 16e. Row identity: build ${t.identity.b} against build ${t.identity.a} (amendment A16)`, f));
   L.push(...eventsMarkdown(t.eventsStudy));
-  for (const l of t.eventsStudy?.later ?? []) { // builds after the headline that have run only some sources (amendment A15)
+  for (const [i, l] of (t.eventsStudy?.later ?? []).entries()) { // builds after the headline that have run only some sources (amendment A15)
     const info = SD_BUILDS.find((x) => x.build === l.build);
     const focus = JSON.parse(fs.readFileSync(path.join(info.dir, 'events-focus.json'), 'utf8'));
     L.push(...eventsMarkdown(l, { later: true, sourceCommit: info.sourceCommit, sources: focus.sources.join(', ') }));
+    if (t.identityLater?.[i]) L.push(...identityMarkdown(t.identityLater[i], `#### Row identity of the focus sources: build ${t.identityLater[i].b} against build ${t.identityLater[i].a} (amendment A16)`, f));
   }
   const CREDITED = ['spacex-starlink', 'nasa-iss-oem', 'esa-navigation-office', 'nasa-cddis', 'gfz-rapid-gnss', 'navcen-gps-nanu', 'qzss-naqu', 'ilrs', 'ilrs-nsgf', 'ilrs-cddis', 'gfz-kp', 'noaa-swpc', 'iers', 'jpl-de440', 'jpl-horizons', 'stsci-mast-tess', 'nrlmsise00', 'egm', 'fes2004'];
   L.push('## Credits and terms', '', ...CREDITED.map((id) => `- ${licenseSource(id).credit}`), '- COMSPOC Spacebook (XP sets and SynCoPate trajectories with covariance, captured locally 2026-10-23): scored locally only, never fitted to or used as an input; terms: no commercial use, no redistribution, no derivative works. Only aggregate statistics are published here.', '', 'Every other source and its terms: [docs/data-licenses.md](../../docs/data-licenses.md).', '');

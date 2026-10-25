@@ -319,6 +319,70 @@ function m27(dir, resultsDir) {
   }).filter((g) => g.windows);
 }
 
+
+// ---- M27b (amendment A17): the detector across the omitted days of the GPS series, with controls, and planted impulses across a hole ----
+function m27b(dir, resultsDir) {
+  const rows = rowsOf(dir, 'm27b');
+  const file = path.join(resultsDir, 'gnss-notice-events.json');
+  if (!rows.length || !fs.existsSync(file)) return null;
+  const notices = JSON.parse(fs.readFileSync(file, 'utf8')).gps;
+  const H = 3600e3, TOL = 6 * H, t = (iso) => Date.parse(`${String(iso).replace(/Z?$/, 'Z')}`);
+  const lam = (d) => Number(/Lambda ([\d.e+]+)/.exec(d.algorithm ?? '')?.[1]);
+  const overlaps = (a0, a1, b0, b1) => a0 < b1 && a1 > b0;
+  const one = (r) => {
+    const hole = [t(r.holeFromUtc), t(r.holeToUtc)], start = t(r.startUtc), stop = t(r.stopUtc);
+    const dets = (r.ok ? r.detections : []).map((d) => ({ ms: t(d.epoch), mag: Math.hypot(...d.dvMS), pos: (t(d.epoch) - start) / (stop - start), lambda: lam(d) }));
+    const dv = notices.deltaV.filter((e) => e.svn === r.svn && overlaps(t(e.forecast.start), t(e.forecast.stop), hole[0], hole[1]));
+    const group = r.kind === 'control' ? 'control' : dv.length ? 'deltaV' : notices.other.some((o) => o.svn === r.svn && overlaps(t(o.start), t(o.stop), hole[0], hole[1])) ? 'other' : 'none';
+    const actual = dv.filter((e) => e.actual).map((e) => [t(e.actual.start), t(e.actual.stop)]);
+    return { r, group, hole, dets, start, stop, svn: r.svn, norad: r.norad,
+      detected: dets.length > 0, located: dets.some((d) => d.ms >= hole[0] - TOL && d.ms <= hole[1] + TOL), inside: dets.some((d) => d.ms >= hole[0] && d.ms <= hole[1]),
+      hasActual: actual.length > 0, inActual: actual.some(([a0, a1]) => dets.some((d) => d.ms >= a0 - TOL && d.ms <= a1 + TOL)) };
+  };
+  const windows = rows.filter((r) => r.kind === 'omitted-day' || r.kind === 'control').map(one);
+  const answered = (g) => windows.filter((w) => w.group === g && w.r.ok);
+  const holeRows = rows.filter((r) => r.kind === 'hole');
+  const stat = (g) => {
+    const all = windows.filter((w) => w.group === g), ok = all.filter((w) => w.r.ok), det = ok.filter((w) => w.detected), dets = ok.flatMap((w) => w.dets.map((d) => ({ ...d, off: (d.ms - w.hole[0]) / H })));
+    return { windows: all.length, answered: ok.length, refused: count(all.filter((w) => w.r.ok === false).map((w) => nameOf(w.r.error))), detected: det.length, located: ok.filter((w) => w.located).length, inside: ok.filter((w) => w.inside).length,
+      withActual: ok.filter((w) => w.hasActual).length, inActual: ok.filter((w) => w.hasActual && w.inActual).length,
+      offsetHours: { median: q(dets.map((d) => d.off), 0.5), p10: q(dets.map((d) => d.off), 0.1), p90: q(dets.map((d) => d.off), 0.9) },
+      position: { n: dets.length, firstSixth: dets.filter((d) => d.pos < 1 / 6).length, lastSixth: dets.filter((d) => d.pos > 5 / 6).length, median: q(dets.map((d) => d.pos), 0.5) },
+      dvMS: stats(dets.map((d) => d.mag)), lambdaMedian: q(dets.map((d) => d.lambda), 0.5) };
+  };
+  const control = stat('control');
+  const pDet = control.answered ? control.detected / control.answered : null, pLoc = control.answered ? control.located / control.answered : null;
+  const tail = (n, p, k, upper) => { if (p === null || !n) return null; let dist = [1]; for (let i = 0; i < n; i++) { const next = new Array(dist.length + 1).fill(0); dist.forEach((w, j) => { next[j] += w * (1 - p); next[j + 1] += w * p; }); dist = next; } return upper ? dist.slice(k).reduce((x, y) => x + y, 0) : dist.slice(0, k + 1).reduce((x, y) => x + y, 0); };
+  const groups = Object.fromEntries(['deltaV', 'other', 'none'].map((g) => { const x = stat(g); return [g, { ...x,
+    expectedDetected: x.answered * (pDet ?? 0), expectedLocated: x.answered * (pLoc ?? 0),
+    detectedAtLeast: tail(x.answered, pDet, x.detected, true), detectedAtMost: tail(x.answered, pDet, x.detected, false), locatedAtLeast: tail(x.answered, pLoc, x.located, true), locatedAtMost: tail(x.answered, pLoc, x.located, false) }]; }));
+  // the false alarms of the controls, counted as in M27: distinct detections (merged within 6 h) over the covered time of the answered control windows
+  const sats = [...new Set(answered('control').map((w) => w.norad))];
+  let years = 0, distinct = 0;
+  for (const n of sats) {
+    const ws = answered('control').filter((w) => w.norad === n).sort((a, c) => a.start - c.start), spans = [];
+    for (const w of ws) { const last = spans.at(-1); if (last && w.start <= last[1]) last[1] = Math.max(last[1], w.stop); else spans.push([w.start, w.stop]); }
+    years += spans.reduce((a, [u, v]) => a + (v - u), 0) / (365.25 * 86400e3);
+    const ds = ws.flatMap((w) => w.dets.map((d) => d.ms)).sort((a, c) => a - c); const merged = []; for (const d of ds) if (!merged.length || d - merged.at(-1) > 6 * H) merged.push(d);
+    distinct += merged.length;
+  }
+  return { windows: windows.length, holesSkipped: count(holeRows.map((r) => String(r.skipped).replace(/^a hole of (\d+) h .*/, (m, h) => `a hole of ${Math.round(h / 24)} days`).replace(/^a flank of.*/, 'a flank of fewer than 24 h or with a gap'))),
+    control: { ...control, rateDetected: pDet, rateLocated: pLoc, objectYears: years, distinct, falseAlarmsPerObjectYear: years ? distinct / years : null }, groups };
+}
+
+function m27bp(dir) {
+  const rows = rowsOf(dir, 'm27bp');
+  if (!rows.length) return null;
+  const H = 3600e3, t = (iso) => Date.parse(`${String(iso).replace(/Z?$/, 'Z')}`);
+  const cases = PLANTED_CASES.map((id) => {
+    const rs = rows.filter((r) => r.case === id), ok = rs.filter((r) => r.ok), planted = /^imp-([UVW])-([\d.]+)$/.exec(id);
+    const per = ok.map((r) => { const d = r.detections[0] ?? null; return { detected: r.detections.length > 0, located: r.detections.some((x) => t(x.epoch) >= t(r.holeFromUtc) - 6 * H && t(x.epoch) <= t(r.holeToUtc) + 6 * H), err: d ? (t(d.epoch) - t(r.tbUtc)) / H : null, ratio: d && planted ? Math.hypot(...d.dvMS) / Number(planted[2]) : null }; });
+    return { id, axis: planted ? planted[1] : null, planted: planted ? Number(planted[2]) : null, arcs: rs.length, answered: ok.length, refused: count(rs.filter((r) => r.ok === false).map((r) => nameOf(r.error))), detected: per.filter((x) => x.detected).length, located: per.filter((x) => x.located).length,
+      epochErrorHours: { median: q(per.map((x) => x.err), 0.5), p10: q(per.map((x) => x.err), 0.1), p90: q(per.map((x) => x.err), 0.9) }, dvRatio: { median: q(per.map((x) => x.ratio), 0.5), p10: q(per.map((x) => x.ratio), 0.1), p90: q(per.map((x) => x.ratio), 0.9) } };
+  });
+  return { arcs: rows.length, holeHours: [18, 42], cases };
+}
+
 /** The detector on FFM-1 arcs with a planted impulse (amendment A11e): the pipeline check of M24 on the archive. */
 function m24p(dir) {
   const rows = rowsOf(dir, 'm24p');
@@ -481,7 +545,7 @@ export const fitMethodOf = (methods) => (!methods ? 'fit' : methods.includes('fi
 const studyOf = (dir, resultsDir, only = null) => {
   const on = (name, fn) => (!only || only.includes(name) ? fn() : null);
   return { build: path.basename(dir), methods: methodsOf(path.basename(dir)), m22: on('m22', () => m22(dir)), m23: on('m23', () => m23(dir)), m28: on('m28', () => m28(dir)), m24: on('m24', () => m24(dir)), m24c: on('m24c', () => m24c(dir)), m24a: on('m24a', () => m24a(dir, resultsDir)), m24p: on('m24p', () => m24p(dir)), m24b: on('m24b', () => m24b(dir)),
-    m27: on('m27', () => m27(dir, resultsDir)), m25: on('m25', () => m25(dir, resultsDir)), m29: on('m29', () => m29(dir)), m30: on('m30', () => m30(dir, resultsDir)), m31: on('m31', () => m31(resultsDir)), m31captured: on('m31', () => m31captured(dir)), m32: on('m32', () => m32(dir)) };
+    m27: on('m27', () => m27(dir, resultsDir)), m27b: on('m27b', () => m27b(dir, resultsDir)), m27bp: on('m27bp', () => m27bp(dir)), m25: on('m25', () => m25(dir, resultsDir)), m29: on('m29', () => m29(dir)), m30: on('m30', () => m30(dir, resultsDir)), m31: on('m31', () => m31(resultsDir)), m31captured: on('m31', () => m31captured(dir)), m32: on('m32', () => m32(dir)) };
 };
 
 /** The events measurements of a build and, when given, of the earlier complete builds (oldest first; `previous` is the last of them), for the tables that stand the builds side by side.
@@ -495,7 +559,7 @@ export function eventsStudy(dir, resultsDir, earlierDirs = [], laterDirs = []) {
     const focus = JSON.parse(fs.readFileSync(path.join(d, 'events-focus.json'), 'utf8')); // the sources this build has run and the rows they hold when the file was written
     for (const [source, n] of Object.entries(focus.rows)) { const have = rowsOf(d, source).length; if (have !== n) throw new Error(`${path.basename(d)}: ${source} holds ${have} rows, events-focus.json says ${n}`); }
     const x = studyOf(d, resultsDir, focus.sources);
-    if (!(x.m24 || x.m24c || x.m24a || x.m24b || x.m24p || x.m27 || x.m29 || x.m30)) continue;
+    if (!(x.m24 || x.m24c || x.m24a || x.m24b || x.m24p || x.m27 || x.m27b || x.m29 || x.m30)) continue;
     const before = [...history, headline, ...later], entry = { ...x };
     for (const [k, v] of Object.entries({ previous: before.at(-1), history: before, later: [] })) Object.defineProperty(entry, k, { value: v, enumerable: false }); // reachable for the tables, not written twice into tables.json
     later.push(entry);
@@ -601,6 +665,36 @@ export function eventsMarkdown(e, opts = {}) {
     const g = (e.m27.find((x) => x.system === 'qzss')?.perSatellite ?? []).concat(e.m27.find((x) => x.system === 'gps')?.perSatellite.filter((x) => x.outages) ?? []);
     if (g.length) L.push(`Per satellite with outages in the notices (build ${e.build}):`, '', '| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Expected under the off-notice rate | Distinct detections (per object-day) | False alarms | Chance level (A14) |', '| --- | --: | --: | --: | --: | --: | --: | --: | --: |',
       ...g.map((x) => `| ${x.name} | ${f(x.years, 2)} | ${x.outages} | ${x.scoreable} | ${x.hits} | ${x.offNotice.forecast.outages ? f(x.offNotice.forecast.expected, 1) : ''} | ${x.distinct} (${f(x.perObjectDay, 2)}) | ${x.falseAlarms} | ${Math.round(x.chance * 100)} % |`), '');
+  }
+  if (e.m27b) {
+    const builds = [...(opts.later ? [] : e.history.filter((x) => x.m27b)), e, ...later.filter((x) => x.m27b)];
+    const pv = (x) => (x === null || x === undefined ? '' : x < 0.001 ? '< 0.001' : f(x, 3)), pc0 = (a, b) => (b ? `${Math.round((100 * a) / b)} %` : '');
+    const near = (n, of, expected, tailUp, tailDown) => `${n} of ${of}${expected === null || expected === undefined ? '' : `; expected ${f(expected, expected < 1 ? 3 : 1)}, P(at least) ${pv(tailUp)}, P(at most) ${pv(tailDown)}`}`;
+    const rowsOf27 = (b) => {
+      const gps = b.m27?.find((x) => x.system === 'gps'), qz = b.m27?.find((x) => x.system === 'qzss'), m = b.m27b, d = m.groups.deltaV, c = m.control, o = [m.groups.other, m.groups.none];
+      const out = [];
+      if (gps) out.push(`| ${b.build} | GPS, gap-free windows (M27) | ${gps.answered} | ${gps.windowsWithDetection} (${pc0(gps.windowsWithDetection, gps.answered)}) | ${gps.distinctDetections} | ${f(gps.falseAlarms / gps.objectYears, 1)} | ${gps.scoreable} | ${near(gps.hitForecast, gps.scoreable, gps.offNotice.pooledForecast.expected, gps.offNotice.pooledForecast.tail, gps.offNotice.pooledForecast.head)} | ${gps.hitActual} of ${gps.withActual}; expected ${f(gps.offNotice.pooledActual.expected, 3)} |`);
+      out.push(`| ${b.build} | GPS, clear windows with a day cut out (M27b controls) | ${c.answered} | ${c.detected} (${pc0(c.detected, c.answered)}) | ${c.distinct} | ${f(c.falseAlarmsPerObjectYear, 1)} | | located in the hole plus or minus 6 h: ${c.located} (${pc0(c.located, c.answered)}) | |`);
+      out.push(`| ${b.build} | GPS, omitted days with a delta-V outage (M27b) | ${d.answered} | ${d.detected} (${pc0(d.detected, d.answered)}) | | | ${d.answered} | ${near(d.located, d.answered, d.expectedLocated, d.locatedAtLeast, d.locatedAtMost)} | ${d.inActual} of ${d.withActual} |`);
+      out.push(`| ${b.build} | GPS, omitted days with another notice or none (M27b) | ${o[0].answered + o[1].answered} | ${o[0].detected + o[1].detected} (${pc0(o[0].detected + o[1].detected, o[0].answered + o[1].answered)}) | | | | located: ${o[0].located + o[1].located} | |`);
+      if (qz) out.push(`| ${b.build} | QZSS, gap-free windows (M27) | ${qz.answered} | ${qz.windowsWithDetection} (${pc0(qz.windowsWithDetection, qz.answered)}) | ${qz.distinctDetections} | ${f(qz.falseAlarms / qz.objectYears, 0)} | ${qz.scoreable} | ${near(qz.hitForecast, qz.scoreable, qz.offNotice.pooledForecast.expected, qz.offNotice.pooledForecast.tail, qz.offNotice.pooledForecast.head)} | ${qz.hitActual} of ${qz.withActual}; expected ${f(qz.offNotice.pooledActual.expected, 1)}, P(at most) ${pv(qz.offNotice.pooledActual.head)} |`);
+      return out;
+    };
+    L.push('#### M27b. The detector across the omitted days of the GPS series (amendment A17)', '',
+      'The ESA final orbits omit a satellite on the day it maneuvers: 16 of the 24 delta-V outages of the 2026 NANUs fall on a hole of exactly one day with 24 h of states on each side (A14). The omitted-day window is those two flanks (578 states) in one `detect_maneuvers` call; a hole of any other length, or one with a short flank, is not windowed (counted below). The controls are the clear windows of M27 (no delta-V outage plus or minus 6 h) with the middle day cut out, so the same call sees the same geometry on burn-free data; their rates are the chance level of the omitted-day windows (pooled over the GPS satellites; exact binomial tails). A window is located when a detection lies inside the hole plus or minus 6 h. False alarms are distinct detections (merged within 6 h) per object-year of covered time. One table holds the false-alarm rates and the hits of M27 and M27b side by side:', '',
+      '| Build | Case | Windows answered | Windows with a detection | Distinct detections | False alarms per object-year | Outages scoreable | Detected near the outage (forecast window for M27; located in the hole for M27b) | Detected in the actual interval |', '| --- | --- | --: | --- | --: | --: | --: | --- | --- |',
+      ...builds.flatMap(rowsOf27), '');
+    const detail = (b, label, g) => `| ${b.build} | ${label} | ${g.windows} | ${g.answered}${Object.keys(g.refused).length ? ` (refused ${Object.entries(g.refused).map(([k, v]) => `${k} ${v}`).join(', ')})` : ''} | ${g.detected} | ${g.located} | ${g.inside} | ${g.offsetHours.median !== null ? `${f(g.offsetHours.median, 1)} [${f(g.offsetHours.p10, 1)}, ${f(g.offsetHours.p90, 1)}]` : ''} | ${g.position.n ? `${g.position.firstSixth} / ${g.position.lastSixth} of ${g.position.n}; median ${f(g.position.median, 2)}` : ''} | ${g.dvMS.n ? `${f(g.dvMS.median, 3)} / ${f(g.dvMS.max, 3)}` : ''} |`;
+    L.push('Detail (epoch relative to the start of the hole; position in the window, 0 the first state and 1 the last; delta-v in m/s):', '',
+      '| Build | Windows | Count | Answered | Detected | Located (hole plus or minus 6 h) | Inside the hole | Epoch from the start of the hole (h), median [10th, 90th] | Detections in the first / last sixth of the window | Delta-v, median / maximum |', '| --- | --- | --: | --- | --: | --: | --: | --- | --- | --- |',
+      ...builds.flatMap((b) => [detail(b, 'omitted days with a delta-V outage', b.m27b.groups.deltaV), detail(b, 'omitted days with another notice', b.m27b.groups.other), detail(b, 'omitted days with no notice', b.m27b.groups.none), detail(b, 'controls', b.m27b.control)]), '');
+    L.push(`Holes of the GPS series that were not windowed (build ${e.build}): ${Object.entries(e.m27b.holesSkipped).map(([k, v]) => `${v} ${k}`).join(', ') || 'none'}.`, '');
+    if (e.m27bp) {
+      const pl = (id, x) => x?.m24p?.cases.find((c) => c.id === id);
+      L.push('Planted impulses across a hole (rows `m27bp`): the 48 arcs of each case of A11e (60 h, the impulse at 24 h) with the states strictly between 18 h and 42 h removed. Located: a detection inside the hole plus or minus 6 h (12 h to 48 h of the arc); the epoch error is the detected epoch less the impulse epoch; the last column is the same case without a hole (A11e: hits within 92 min of the impulse).', '',
+        '| Build | Planted at 24 h | Arcs | Answered | Detected | Located | Epoch error (h), median [10th, 90th] | Absolute delta-v over planted, median [10th, 90th] | Without a hole: hits within 92 min of 48 |', '| --- | --- | --: | --: | --: | --: | --- | --- | --: |',
+        ...builds.filter((b) => b.m27bp).flatMap((b) => b.m27bp.cases.map((c) => `| ${b.build} | ${c.planted === null ? 'none (control)' : `${AX[c.axis]} ${c.planted} m/s`} | ${c.arcs} | ${c.answered}${Object.keys(c.refused).length ? ` (refused ${Object.entries(c.refused).map(([k, v]) => `${k} ${v}`).join(', ')})` : ''} | ${c.detected} | ${c.located} | ${c.detected ? `${f(c.epochErrorHours.median, 1)} [${f(c.epochErrorHours.p10, 1)}, ${f(c.epochErrorHours.p90, 1)}]` : ''} | ${c.planted !== null && c.detected ? `${f(c.dvRatio.median, 2)} [${f(c.dvRatio.p10, 2)}, ${f(c.dvRatio.p90, 2)}]` : ''} | ${pl(c.id, b) ? (c.planted === null ? `${pl(c.id, b).detections} detected` : pl(c.id, b).hits) : ''} |`)), '');
+    }
   }
   if (e.previous && !opts.later && (e.previous.m24c || e.previous.m24a || e.previous.m24)) {
     const builds = [...e.history.filter((x) => x.m24 || x.m24c || x.m24a), e, ...later.filter((x) => x.m24 || x.m24c || x.m24a)];
