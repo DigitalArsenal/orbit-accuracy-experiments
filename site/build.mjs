@@ -299,9 +299,8 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
 
 // ── The SDN-AP paper's held-out model (its section 12.3) ──
 {
-  const outside = PAPER_SOURCES['sdn-ap'];
-  const paperFile = path.join(process.env[outside.env] ?? path.join(modules, '..', outside.repo), outside.file);
-  const built = await buildSdnAp({ dist, modules: path.resolve(process.env.SDN_AP_MODULES ?? modules), write, own, paperFile, credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
+  const built = buildSdnAp({ here, write, own, servedWasmSha256: (relative) => moduleIndex.find((m) => m.path === relative)?.wasmSha256,
+    credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
   log(`sdn-ap: ${built.windows} LAGEOS-1 windows`);
 }
 

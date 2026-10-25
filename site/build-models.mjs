@@ -248,8 +248,10 @@ export async function buildUncertaintyModel({ modules, write, own, credits }) {
 }
 
 // The SDN-AP paper's held-out model (its section 12.3): what the page cannot
-// run in the browser, run here by the modules it serves, on the truth and
-// seeds it serves (dist/), so page and build read the same bytes.
+// run in the browser, run by site/run-sdn-ap.mjs (generateSdnAp) with the
+// modules the site serves, on the truth and seeds it serves (site/dist/ of a
+// build of the same tree), into site/generated/sdn-ap-held-out.json, which
+// buildSdnAp publishes when the modules it recorded are the ones served.
 //  - SGP4: analysis/gp-error-model `fit_elements` on the 24 h of LAGEOS-1's
 //    ILRS orbit before each epoch (the page propagates the set with
 //    propagator/sdn-ap, which reads SGP4 sets).
@@ -287,9 +289,9 @@ export function sdnApPaperRow(markdown, row = SDNAP_ROW) {
   return { row, windows: cells[2], days };
 }
 
-// `modules`: a modules checkout whose analysis/gp-error-model has the
-// population covariance (SDN_AP_MODULES; the pinned SDN-AP commit or later).
-export async function buildSdnAp({ dist, modules, write, own, credits, paperFile }) {
+// `modules`: a modules checkout at the pinned SDN-AP commit (its
+// analysis/gp-error-model, propagator/sdn-ap test helper and realism results).
+export async function generateSdnAp({ dist, modules, paperFile }) {
   const { createBrowserModuleHarness } = await import('space-data-module-sdk/host/browser-module');
   const { PRW_TYPE, executionFrame } = await import('../harness/prw.mjs');
   const P = await import('spacedatastandards.org/lib/js/PRW/main.js');
@@ -454,9 +456,25 @@ export async function buildSdnAp({ dist, modules, write, own, credits, paperFile
     windows.push({ seedUnixMs: e0, seedUtc: seed.seedUtc, sgp4: { omm: Buffer.from(sgp4).toString('base64'), epoch: report.epoch, fitRmsKm: report.rms?.rms3dKm ?? null }, envelopes });
   }
   await Promise.all([ap.destroy(), gem.destroy(), ffm.destroy(), raw.destroy?.()]);
-  const label = own('MIT (this repository); results are analysed information', credits.join(' '), credits);
-  write('data/sdn-ap/held-out.json', { object: object.name, stepMinutes: SDNAP_STEP_MIN, paper, ffmNoise, realism,
-    modules: { 'propagator/sdn-ap': ap.manifest.version, 'analysis/gp-error-model': { version: gem.manifest.version, commit: gitState(modules).commit, wasmSha256: gem.provenance.wasmSha256 }, 'propagator/ffm-v1': ffm.manifest.version }, windows },
-  'site/build-models.mjs buildSdnAp: SGP4 fits, the envelopes of each propagator, the SDN-AP paper’s 12.3 row', label);
-  return { windows: windows.length };
+  const servedOf = (relative) => sha256(fs.readFileSync(path.join(dist, 'modules', relative, 'module.wasm')));
+  return { object: object.name, stepMinutes: SDNAP_STEP_MIN, paper, ffmNoise, realism,
+    modules: { 'propagator/sdn-ap': { version: ap.manifest.version, wasmSha256: servedOf('propagator/sdn-ap') },
+      'propagator/ffm-v1': { version: ffm.manifest.version, wasmSha256: servedOf('propagator/ffm-v1') },
+      'analysis/gp-error-model': { version: gem.manifest.version, commit: gitState(modules).commit, wasmSha256: gem.provenance.wasmSha256 } },
+    windows };
+}
+
+// Publishes site/generated/sdn-ap-held-out.json when it was generated with
+// the module binaries this build serves.
+export function buildSdnAp({ here, write, own, credits, servedWasmSha256 }) {
+  const file = path.join(here, 'generated/sdn-ap-held-out.json');
+  const data = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
+  const stale = data ? Object.entries(data.modules).filter(([relative, m]) => relative.startsWith('propagator/') && m.wasmSha256 !== servedWasmSha256(relative)) : [];
+  if (!data || stale.length) {
+    throw new Error(`site/generated/sdn-ap-held-out.json is ${data ? `for ${stale.map(([r, m]) => `${r} ${m.wasmSha256.slice(0, 12)}`).join(', ')}; this build serves ${stale.map(([r]) => `${r} ${servedWasmSha256(r)?.slice(0, 12)}`).join(', ')}` : 'missing'}. Run node site/run-sdn-ap.mjs, then build again.`);
+  }
+  write('data/sdn-ap/held-out.json', data,
+    'site/run-sdn-ap.mjs (site/generated/sdn-ap-held-out.json): SGP4 fits, the envelopes of each propagator, their measured realism, the SDN-AP paper’s 12.3 row',
+    own('MIT (this repository); results are analysed information', credits.join(' '), credits));
+  return { windows: data.windows.length };
 }
