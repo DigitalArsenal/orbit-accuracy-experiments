@@ -11,7 +11,7 @@ export const PAPERS = {
   'fast-conjunction-assessment': 'Fast All-vs-All Conjunction Screening',
   'provenance-and-security': 'Provenance and Security in Space Data Network',
   'adversarial-security': 'Persistent Adversarial Security',
-  'sdn-ap': 'SDN-AP: Mean-Element Propagation from Low Earth Orbit to Interplanetary Cruise',
+  'sdn-ap': 'SDN-AP: A Semi-Analytic Mean-Element Orbit Propagator for Earth-Orbiting, Cislunar and Heliocentric Objects',
 };
 
 // Papers that live outside the SDN repository: the repository directory beside
