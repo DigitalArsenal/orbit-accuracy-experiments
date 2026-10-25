@@ -51,6 +51,7 @@ export async function openFfmFit(modules) {
           ok: !!f.converged, ...(f.converged ? {} : { error: 'not converged' }), converged: !!f.converged, epoch: p.epoch, state: p.state, parameters: settings.parameters.map((q, i) => ({ kind: q.kind, value: p.parameters[i] })),
           reducedChiSquare: f.reducedChiSquare, weightedRms: f.weightedRms ?? null, measurements: f.measurementCount, rejected: f.rejectedObservationIndices?.length ?? 0, iterations: f.iterations,
           ffmCalls: p.ffmCalls, rounds: p.outer, stoppedBy: p.stoppedBy, seconds: (Date.now() - t0) / 1000,
+          covariance: Array.from(f.covariance ?? []), // fit_batch's formal covariance of [state, B, AGOM] at the fit epoch (m, m/s), for amendment A4
         };
       } catch (error) { return { ok: false, error: short(error), seconds: (Date.now() - t0) / 1000 }; }
     },
