@@ -53,6 +53,23 @@
       "binsHours": [[0, 24], [24, 48], [48, 72]]
     }
   },
+  "a4": {
+    "amendment": "A4",
+    "arms": ["sdnap", "sgp4xp", "ffm", "forecast"],
+    "covariances": {
+      "sdnap": "fit COVARIANCE of the SDNAP set, carried by propagator/sdn-ap (sdnap_covariance_at; propagate's covariance lines in the truth's axes)",
+      "sgp4xp": "fit COVARIANCE of the SGP4XP set, carried by the same module",
+      "ffm": "fit_batch formal covariance times max(1, reduced chi-square), carried by propagator/ffm",
+      "forecast": "none stored: miss distance only"
+    },
+    "issFfm": { "seeds": { "DRAG_AREA_OVER_MASS": 0.01, "SRP_AREA_OVER_MASS": 0.02 }, "aprioriParameterFraction": 1 },
+    "encounters": { "perGroupAndClass": 20000, "groups": ["iss", "laser", "starlink"], "classes": ["gp", "precise"], "leadHours": [1, 6, 12, 24, 48, 72], "seed": "B2|part4|<group>|<class>|<k>" },
+    "pcBins": [0, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1],
+    "metrics": { "alertPc": 1e-4, "quietPc": 1e-7, "hitKm": 0.2, "nearKm": 1, "farKm": 5, "hardBodyRadiusM": 20 },
+    "bootstrap": { "resamples": 10000, "level": 0.95, "seed": "B2|A4|<group>|<class>|<metric>|<kind>", "kinds": ["encounters", "objects"] },
+    "verdict": "SDN-AP makes a difference for CA in a group and class only if no part of either interval of the paired missed-alert difference (SDN-AP - SGP4-XP) is above zero and both intervals of the paired false-alert difference are wholly below zero",
+    "part5": { "selectionKm": 5, "horizonHours": 72, "stepMinutes": 10, "hardBodyRadiusM": 20, "classes": ["unmaneuvered", "maneuvered"], "module": "analysis/conjunction-assessment" }
+  },
   "part2": {
     "normalPoints": "/opt/data/sdn-archive/hac/ilrs-edc/npt_crd_v2",
     "e6Variant": "R",
