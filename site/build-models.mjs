@@ -255,12 +255,15 @@ export async function buildUncertaintyModel({ modules, write, own, credits }) {
 //    propagator/sdn-ap, which reads SGP4 sets).
 //  - SGP4 envelope: gp-error-model `object_covariance`, the population
 //    covariance of SGP4 element sets in the set's regime at its age, on the
-//    set above. The module has no model for SGP4-XP sets (it refuses them:
-//    sgp4xp-no-propagator-or-error-model).
+//    set above.
 //  - FFM envelope: propagator/ffm-v1 (the binary the page runs) from the
 //    precise state at the epoch, the V1 forces E-f, with white acceleration
 //    process noise fitted on the other laser-ranged MEO spheres (FFM_FIT).
-//  - SDN-AP envelope: propagator/sdn-ap's own propagated covariance.
+//  - SDN-AP and SGP4-XP envelopes: propagator/sdn-ap's own propagated
+//    covariance (sdnap_covariance_at) of the set its `fit` returns, the same
+//    fit the page makes, which carries the epoch covariance; the module's
+//    measured realism on LAGEOS-1 (its test/results/covariance-realism-*.json)
+//    goes with them.
 //  - The paper's day medians: the 12.3 table's row for laser-ranged MEO
 //    satellites, read from the paper itself.
 // Envelope values: the 1σ and 3σ of the predicted position, √trace of the
@@ -270,6 +273,7 @@ export const SDNAP_STEP_MIN = 30;
 export const FFM_FIT = ['lageos2', 'etalon1', 'etalon2'];
 export const FFM_NOISE_INTERVAL_S = 60;
 const OMM_TYPE = { schemaName: 'OMM.fbs', fileIdentifier: '$OMM', rootTypeName: 'OMM', wireFormat: 'flatbuffer' };
+const REALISM_SET = 'lageos1';  // the module's LAGEOS-1 windows (2025), none of them the page's
 
 /** The 12.3 table row for the named regime: { row, days: [{ day, km }] }. */
 export function sdnApPaperRow(markdown, row = SDNAP_ROW) {
@@ -312,6 +316,49 @@ export async function buildSdnAp({ dist, modules, write, own, credits, paperFile
   const { loadModule, gitState } = await import('../harness/modules.mjs');
   const [ap, ffm, gem] = await Promise.all([served('propagator/sdn-ap'), served('propagator/ffm-v1'), loadModule(modules, 'analysis/gp-error-model')]);
   gem.manifest = JSON.parse(fs.readFileSync(path.join(modules, 'analysis/gp-error-model/plugin-manifest.json'), 'utf8'));
+  // The served SDN-AP bytes through the modules checkout's own test helper,
+  // for the raw exports (sdnap_covariance_at, sdnap_frame_to_uvw).
+  process.env.SDNAP_WASM = path.join(dist, 'modules/propagator/sdn-ap/module.wasm');
+  const raw = await (await import(pathToFileURL(path.join(modules, 'propagator/sdn-ap/test/lib/module.mjs')))).openModule({ threads: 0 });
+  const f64 = (p, n) => new Float64Array(raw.harness.memory.buffer, p, n);
+  // A set's covariance at hours after the page's epoch: per time the position
+  // 1σ (√trace, km) and the position covariance in the module's own radial,
+  // in-track and cross-track axes of its state (B P Bᵀ, sdnap_frame_to_uvw on
+  // the columns and then the rows), km².
+  const moduleCovariance = (omm, e0, sampleHours) => {
+    const o = codec.readOmm(omm);
+    const setMs = Date.parse(/Z$/.test(o.EPOCH) ? o.EPOCH : `${o.EPOCH}Z`);
+    const n = sampleHours.length;
+    const pO = raw.x.sdnap_alloc(omm.length), pT = raw.x.sdnap_alloc(8 * n), pC = raw.x.sdnap_alloc(8 * 42 * n), pV = raw.x.sdnap_alloc(8 * 12);
+    new Uint8Array(raw.harness.memory.buffer, pO, omm.length).set(omm);
+    f64(pT, n).set(sampleHours.map((h) => (e0 + h * HOUR - setMs) / 60000));
+    const status = raw.x.sdnap_covariance_at(pO, omm.length, pT, n, pC);
+    if (status !== 0) throw new Error(`sdn-ap model: sdnap_covariance_at refused the ${o.MEAN_ELEMENT_THEORY} set (${status})`);
+    const out = f64(pC, 42 * n).slice();
+    const uvw = (state, vec) => {
+      f64(pV, 9).set([...state.slice(0, 6), ...vec]);
+      raw.x.sdnap_frame_to_uvw(pV, pV + 24, pV + 48, pV + 72);
+      return Array.from(f64(pV + 72, 3));
+    };
+    const rows = sampleHours.map((_, k) => {
+      const block = out.subarray(42 * k, 42 * k + 42), state = block.subarray(0, 6), P = block.subarray(6);
+      const col = (j) => [P[j], P[6 + j], P[12 + j]];
+      const BP = [0, 1, 2].map((j) => uvw(state, col(j)));        // B times column j of P (position block)
+      const BPBt = [0, 1, 2].map((i) => uvw(state, BP.map((c) => c[i])));  // B times row i of B P
+      return { sigma: Math.sqrt(P[0] + P[7] + P[14]), rtn: BPBt.flat() };
+    });
+    for (const p of [pO, pT, pC, pV]) raw.x.sdnap_free(p);
+    return rows;
+  };
+  const servedSha = sha256(fs.readFileSync(process.env.SDNAP_WASM));
+  const realism = Object.fromEntries(['sdnap', 'sgp4xp'].map((k) => {
+    const file = path.join(modules, `propagator/sdn-ap/test/results/covariance-realism-${k}.json`);
+    const r = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const days = r.realism?.[REALISM_SET]?.all;
+    if (!days) throw new Error(`sdn-ap model: ${file} has no ${REALISM_SET} realism`);
+    if (r.moduleSha256 !== servedSha) throw new Error(`sdn-ap model: ${file} measures module ${r.moduleSha256.slice(0, 12)}, the site serves ${servedSha.slice(0, 12)}`);
+    return [k, { set: REALISM_SET, moduleSha256: r.moduleSha256, days: [1, 2, 3].map((d) => ({ day: d, windows: days[d].windows, samples: days[d].samples, meanD2Over3: days[d].meanD2Over3, coverage95: days[d].coverage95 })) }];
+  }));
   const kernel = { portId: 'kernel', typeRef: PRW_TYPE, payload: readDist('data/kernel/de440-2026.prw') };
   const eop = { portId: 'earth_orientation', typeRef: PRW_TYPE, payload: readDist('data/eop/eop-v1.prw') };
   const HOUR = 3600e3, DAY = 24 * HOUR;
@@ -396,13 +443,19 @@ export async function buildSdnAp({ dist, modules, write, own, credits, paperFile
     const ffmEnvelope = { ...band(hours, ffmBlocks.map((c) => Math.sqrt(c[0] + c[4] + c[8]) / 1000)),
       // GCRF position covariance (km²) every hour, for the page's ellipsoids.
       position: hours.map((h, k) => [h, ffmBlocks[k].map((v) => v / 1e6)]).filter(([h]) => Number.isInteger(h)) };
-    const envelopes = { sgp4: await population(sgp4),
-      ffm: ffmEnvelope };
+    const envelopes = { sgp4: await population(sgp4), ffm: ffmEnvelope };
+    for (const [key, theory] of [['sdnap', codec.THEORY.SDNAP], ['sgp4xp', codec.THEORY.SGP4XP]]) {
+      const fitted = codec.outputsOf(await ap.invoke('fit', [codec.frame('ephemeris', 'OEM', codec.oem(object, ...states)), codec.frame('configuration', 'PCF', codec.pcf(theory))]), 'elements')[0];
+      const rows = moduleCovariance(fitted, e0, hours);
+      envelopes[key] = { ...band(hours, rows.map((r) => r.sigma)),
+        // radial, in-track, cross-track position covariance (km²) every hour, for the page's ellipsoids
+        rtn: hours.map((h, k) => [h, rows[k].rtn]).filter(([h]) => Number.isInteger(h)) };
+    }
     windows.push({ seedUnixMs: e0, seedUtc: seed.seedUtc, sgp4: { omm: Buffer.from(sgp4).toString('base64'), epoch: report.epoch, fitRmsKm: report.rms?.rms3dKm ?? null }, envelopes });
   }
-  await Promise.all([ap.destroy(), gem.destroy(), ffm.destroy()]);
+  await Promise.all([ap.destroy(), gem.destroy(), ffm.destroy(), raw.destroy?.()]);
   const label = own('MIT (this repository); results are analysed information', credits.join(' '), credits);
-  write('data/sdn-ap/held-out.json', { object: object.name, stepMinutes: SDNAP_STEP_MIN, paper, ffmNoise,
+  write('data/sdn-ap/held-out.json', { object: object.name, stepMinutes: SDNAP_STEP_MIN, paper, ffmNoise, realism,
     modules: { 'propagator/sdn-ap': ap.manifest.version, 'analysis/gp-error-model': { version: gem.manifest.version, commit: gitState(modules).commit, wasmSha256: gem.provenance.wasmSha256 }, 'propagator/ffm-v1': ffm.manifest.version }, windows },
   'site/build-models.mjs buildSdnAp: SGP4 fits, the envelopes of each propagator, the SDN-AP paper’s 12.3 row', label);
   return { windows: windows.length };

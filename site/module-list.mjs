@@ -9,5 +9,5 @@ export const moduleList = ['propagator/ffm', 'foundation/time', 'analysis/vcm-ad
 // commit the rest are built from, and checked against their SHA-256: the
 // SDN-AP paper's pages run the build the paper's site pins.
 export const pinnedModules = [
-  { path: 'propagator/sdn-ap', commit: '3212a4b29c8cb5e9f33d356f9278e386bde062f1', wasmSha256: '0e06d0090e62cfd2ada62e524e21dfe42284243fc26a3b32aa0847dc9ea36140' },
+  { path: 'propagator/sdn-ap', commit: '2c03c36ba38c4b9215af2ab7096e70b2b5c26171', wasmSha256: '74fbb9a89082c23f70aae061435f2bc1db0c716e07cc6054b1eef41ad2028f81' },
 ];

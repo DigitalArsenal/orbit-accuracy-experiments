@@ -31,6 +31,16 @@ const COLORS = () => (dark()
   ? { sdnap: '#c47d15', ffm: '#2799c6', sgp4xp: '#d55181', sgp4: '#8e8e93' }
   : { sdnap: '#c77d00', ffm: '#0a84b8', sgp4xp: '#d55181', sgp4: '#6e6e73' });
 const NAMES = { sdnap: 'SDN-AP', ffm: 'FFM', sgp4xp: 'SGP4-XP', sgp4: 'SGP4' };
+// How far each module covariance can be trusted, from the module's own
+// realism run on LAGEOS-1 (mean squared Mahalanobis distance over 3: 1 is
+// exact, above 1 too tight; and the share of positions inside the 95 %
+// ellipsoid).
+const realismSentence = (r) => {
+  const day = (k, d) => r[k].days.find((x) => x.day === d);
+  const pct = (v) => `${Math.round(100 * v)} %`;
+  const one = (k) => `${NAMES[k]}’s squared errors are ${day(k, 1).meanD2Over3.toFixed(2)} times what its covariance predicts on day 1 and ${day(k, 3).meanD2Over3.toFixed(2)} on day 3, with ${pct(day(k, 1).coverage95)} and ${pct(day(k, 3).coverage95)} of positions inside its 95 % ellipsoid`;
+  return `How far to trust these bands, measured by the module on ${day('sdnap', 1).windows} LAGEOS-1 windows of 2025 (1 is exact; above 1, the band is too tight): ${one('sdnap')}; ${one('sgp4xp')}, so its band runs too tight.`;
+};
 const NAMES_TRUTH = { lageos2: 'LAGEOS-2', etalon1: 'Etalon-1', etalon2: 'Etalon-2' };
 const ORDER = ['sdnap', 'ffm', 'sgp4xp', 'sgp4'];
 
@@ -83,9 +93,9 @@ export default async function run(ctx) {
     playing.frame = requestAnimationFrame(step);
   });
   const orbit = scene3d(ctx, { title: 'LAGEOS-1 and each prediction', caption: 'GCRF (km): the ILRS precise orbit and each propagator for 72 h' });
-  const apart = scene3d(ctx, { title: 'Each propagator − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit (km); ellipsoids: the 1σ position covariance of FFM and SDN-AP' });
+  const apart = scene3d(ctx, { title: 'Each propagator − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit (km); ellipsoids: the 1σ position covariance of SDN-AP, FFM and SGP4-XP' });
   const card = h('figure', { class: 'chart-card' }, h('figcaption', {}, h('strong', {}, 'Distance from the precise orbit'),
-    h('span', {}, `Hours since the prediction began. The curves are this LAGEOS-1 epoch, one of three; the markers are the paper’s medians over ${built.paper.windows} windows (${built.paper.row}). Dashed and dotted: 1σ and 3σ of √trace of each position covariance. FFM starts from the precise orbit with no initial uncertainty, and its white acceleration noise (q = ${built.ffmNoise.psdM2s3.toExponential(2)} m²/s³) is fitted on other satellites, ${built.ffmNoise.objects.map((o) => NAMES_TRUTH[o] ?? o).join(', ')}, not LAGEOS-1. SGP4’s is the population covariance of element sets in its regime and age (analysis/gp-error-model). Drag to move the views above in time.`)));
+    h('span', {}, `Hours since the prediction began. The curves are this LAGEOS-1 epoch, one of three; the markers are the paper’s medians over ${built.paper.windows} windows (${built.paper.row}). Dashed and dotted: 1σ and 3σ of √trace of each position covariance. FFM starts from the precise orbit with no initial uncertainty, and its white acceleration noise (q = ${built.ffmNoise.psdM2s3.toExponential(2)} m²/s³) is fitted on other satellites, ${built.ffmNoise.objects.map((o) => NAMES_TRUTH[o] ?? o).join(', ')}, not LAGEOS-1. SDN-AP’s and SGP4-XP’s are each set’s own propagated covariance from propagator/sdn-ap, and SGP4’s the population covariance of element sets in its regime and age (analysis/gp-error-model). ${realismSentence(built.realism)} Drag to move the views above in time.`)));
   const plot = h('div', { class: 'env-chart', 'data-chart': 'distance' });
   card.append(plot);
   ctx.root.append(card);
@@ -154,16 +164,19 @@ export default async function run(ctx) {
       // Each covariance's 1σ ellipsoid about its own prediction, in the
       // precise orbit's radial, in-track and cross-track axes, every hour.
       const shown = form.values().shown === 'close' ? present.filter((k) => k === 'sdnap' || k === 'ffm') : present;
-      const ellipsoids = shown.filter((k) => envelopes[k]?.position).map((k) => [k, envelopes[k].position.map(([hr, P]) => {
+      // FFM's covariance arrives in GCRF and turns into the precise orbit's
+      // axes here; SDN-AP's and SGP4-XP's arrive in the module's own radial,
+      // in-track and cross-track axes (sdnap_frame_to_uvw).
+      const ellipsoids = shown.filter((k) => envelopes[k]?.position || envelopes[k]?.rtn).map((k) => [k, (envelopes[k].rtn ?? envelopes[k].position).map(([hr, P]) => {
         const j = hours.findIndex((x) => Math.abs(x - hr) < 1e-9);
-        return j < 0 || !offsets[k][j] ? null : [truth.epochsUnixMs[heldIds[j]], offsets[k][j], covarianceAxes(rtnCovariance(bases[j], P))];
+        return j < 0 || !offsets[k][j] ? null : [truth.epochsUnixMs[heldIds[j]], offsets[k][j], covarianceAxes(envelopes[k].rtn ? P : rtnCovariance(bases[j], P))];
       }).filter(Boolean)]);
       await apart.draw((s) => {
         s.point([0, 0, 0], { color: 'text', label: 'precise orbit' });
         for (const k of shown) s.track(offsets[k].map((q, j) => [truth.epochsUnixMs[heldIds[j]], q]).filter((q) => q[1]), { color: colors[k], width: 2 });
         for (const [k, samples] of ellipsoids) if (samples.length) s.movingEllipsoid(samples, { color: colors[k], alpha: 0.35 });
       }, { axes: ['radial (km)', 'in-track (km)', 'cross-track (km)'], aspect: 'normal', time: timeSpec,
-        legend: shown.map((k) => [colors[k], `${NAMES[k]}${envelopes[k]?.position ? ', with its 1σ ellipsoid' : ''}`]) });
+        legend: shown.map((k) => [colors[k], `${NAMES[k]}${envelopes[k]?.position || envelopes[k]?.rtn ? ', with its 1σ ellipsoid' : ''}`]) });
       ctx.time.set(epochMs + 72 * HOUR);
       return `Day 3 RMS: ${present.map((k) => `${NAMES[k]} ${formatKm(dayRms(k, 3))}`).join(', ')}.`;
     });
