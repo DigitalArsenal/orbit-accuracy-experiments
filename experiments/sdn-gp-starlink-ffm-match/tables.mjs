@@ -489,7 +489,7 @@ export function build() {
     variants: ['default', 'rule', 'free'].map((variant) => {
       const ws = decayWs.map((w) => ({ ...w, sdngp: variant === 'default' ? w.sdngp : lowRows.find((r) => r.variant === variant && r.norad === w.norad)?.sdngp })).filter((w) => w.sdngp);
       const ok = ws.filter((w) => w.sdngp.ok);
-      return { variant, ...armStats(ws, 'sdngp'), loweringApplied: ok.filter((w) => w.sdngp.lowering === 1).length,
+      return { variant, ...armStats(ws, 'sdngp'), loweringApplied: ok.filter((w) => (w.sdngp.lowering & 1) === 1).length, // the module's flag bits (build 9df647b08978 on): lowering 1, tau held 2; the builds before wrote 0 or 1
         bEffRatioMedian: variant === 'rule' ? null : quantile(ok.filter((w) => w.meta.bEff > 0).map((w) => w.sdngp.bEff / w.meta.bEff), 0.5), tau0Median: quantile(ok.map((w) => w.sdngp.tau0), 0.5) };
     }),
   } : null;
