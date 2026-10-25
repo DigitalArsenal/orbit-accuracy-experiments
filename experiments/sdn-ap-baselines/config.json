@@ -1,0 +1,73 @@
+{
+  "experiment": "sdn-ap-baselines",
+  "frozen": true,
+  "registeredUtc": "2026-10-25T15:40:00Z",
+  "task": "sdn-ap-paper-baselines-20261025",
+  "store": "/opt/data/sdn-archive/sdn-ap-baselines",
+  "g1": {
+    "store": "/opt/data/sdn-archive/sdn-gp-starlink-ffm-match",
+    "experimentsCommit": "6a2afae840d1b8f70206a5a101309da9ffe337f8",
+    "sdnapBuild": "9df647b08978",
+    "sdnapWasmSha256": "9df647b089786b3866249d579c57863ecc4f2e3abb4ce63c07ea117cfa2fddda",
+    "sdnapSourceCommit": "358e88e77295264f955bb832c0734592d0b100fa"
+  },
+  "modules": {
+    "repository": "space-data-network-modules",
+    "commit": "25203a0ce7e4c9f7c2772f25f0f05a9ca8ec227c"
+  },
+  "rows": [
+    { "row": "LEO, Starlink shells", "regime": "leo-starlink-ffm", "windows": 239, "center": "EARTH" },
+    { "row": "LEO, ISS", "regime": "leo-iss", "windows": 14, "center": "EARTH" },
+    { "row": "LEO, laser-ranged satellites", "regime": "leo-slr", "windows": 98, "center": "EARTH" },
+    { "row": "LEO, laser-ranged spheres, October 2026", "regime": "leo-slr-current", "windows": 51, "center": "EARTH" },
+    { "row": "MEO, GPS, GLONASS and Galileo", "regime": "meo-gnss", "windows": 60, "center": "EARTH" },
+    { "row": "MEO, GNSS, October 2026", "regime": "meo-gnss-rapid", "windows": 48, "center": "EARTH" },
+    { "row": "MEO, laser-ranged (LAGEOS, Etalon, LARES 2)", "regime": "meo-slr", "windows": 77, "center": "EARTH" },
+    { "row": "MEO, laser-ranged, October 2026", "regime": "meo-slr-current", "windows": 44, "center": "EARTH" },
+    { "row": "IGSO, BeiDou and QZSS", "regime": "igso-gnss", "windows": 120, "center": "EARTH" },
+    { "row": "IGSO, October 2026", "regime": "igso-gnss-rapid", "windows": 30, "center": "EARTH" },
+    { "row": "GEO, BeiDou and QZSS", "regime": "geo-gnss", "windows": 90, "center": "EARTH" },
+    { "row": "GEO, October 2026", "regime": "geo-gnss-rapid", "windows": 5, "center": "EARTH" },
+    { "row": "HEO, THEMIS and Chandra", "regime": "heo-gp", "windows": 50, "center": "EARTH" },
+    { "row": "HEO, TESS, 13.7-day orbit (segment set)", "regime": "heo-tess", "windows": 39, "center": "EARTH" },
+    { "row": "Moon, LRO, about 90 km", "regime": "moon-lro-fit24", "windows": 44, "center": "MOON" },
+    { "row": "Moon, Danuri, about 130 km", "regime": "moon-danuri-fit24", "windows": 31, "center": "MOON" },
+    { "row": "Cislunar, CAPSTONE near-rectilinear halo orbit", "regime": "cislunar-capstone", "windows": 50, "center": "MOON" },
+    { "row": "Heliocentric cruise, Psyche", "regime": "helio-psyche", "windows": 20, "center": "SUN" },
+    { "row": "Heliocentric cruise, Lucy", "regime": "helio-lucy-rec", "windows": 15, "center": "SUN" },
+    { "row": "Heliocentric cruise, Juno", "regime": "helio-juno-cruise", "windows": 22, "center": "SUN" }
+  ],
+  "scoring": {
+    "leadDays": [1, 2, 3],
+    "minimumCoverage": 0.9,
+    "thinSeconds": 300,
+    "packThin": { "moon": 5, "cislunar": 1, "helio": 1 }
+  },
+  "statistics": {
+    "quantiles": [0.1, 0.5, 0.9],
+    "bootstrap": { "resamples": 10000, "level": 0.95, "seedPrefix": "B1", "satelliteMinimum": 5 }
+  },
+  "sgp4": { "fitBstar": true, "epoch": "first", "closure": false, "propagator": "propagator/sdn-ap theory 0" },
+  "sgp4xp": { "theory": "SGP4XP", "module": "propagator/sdn-ap", "build": "9df647b08978" },
+  "ffm": {
+    "start": "the last truth state at or before the fit end",
+    "aPriori": { "cdAm": 0.01, "crAm": 0.02 },
+    "sphereCd": 2.2,
+    "spheres": {
+      "8820": { "name": "LAGEOS-1", "massKg": 406.965, "diameterM": 0.6, "cr": 1.13 },
+      "22195": { "name": "LAGEOS-2", "massKg": 405.38, "diameterM": 0.6, "cr": 1.13 },
+      "19751": { "name": "ETALON-1", "massKg": 1415, "diameterM": 1.294, "cr": 1.2 },
+      "20026": { "name": "ETALON-2", "massKg": 1415, "diameterM": 1.294, "cr": 1.2 },
+      "38077": { "name": "LARES", "massKg": 386.8, "diameterM": 0.364, "cr": 1.13 },
+      "53105": { "name": "LARES-2", "massKg": 294.8, "diameterM": 0.424, "cr": 1.13 },
+      "16908": { "name": "AJISAI", "massKg": 685, "diameterM": 2.15, "cr": 1.13 },
+      "7646": { "name": "STARLETTE", "massKg": 47.29, "diameterM": 0.24, "cr": 1.13 },
+      "22824": { "name": "STELLA", "massKg": 48, "diameterM": 0.24, "cr": 1.13 },
+      "27944": { "name": "LARETS", "massKg": 23.28, "diameterM": 0.215, "cr": 1.13 },
+      "25398": { "name": "WESTPAC", "massKg": 23.8, "diameterM": 0.24, "cr": 1.13 }
+    },
+    "spheresSource": "ILRS satellite mission pages (mass, diameter); Cr nominal, not fitted (1.13 for LAGEOS and the other retroreflector spheres, 1.2 for Etalon, as V1)",
+    "moon": { "centralBodyNaifId": 301, "gravity": "GRGM660PRIM", "degree": 150, "thirdBodyIds": [10, 399, 2, 4, 5], "crAm": 0.02 },
+    "notRun": { "SUN": "propagator/ffm flies about the Earth, the Moon or Mars only" }
+  }
+}

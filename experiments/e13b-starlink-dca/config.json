@@ -1,0 +1,11 @@
+{
+  "experiment": "e13b-starlink-dca", "frozen": true,
+  "captureRoot": "/opt/data/sdn-archive/operator-capture",
+  "window": {"start": "2026-10-24T00:00:00Z", "warmupEnd": "2026-10-31T00:00:00Z", "end": "2026-11-28T00:00:00Z", "truthEnd": "2026-12-01T00:00:00Z", "minimumDays": 35},
+  "split": {"salt": "e13b-20261023", "modulus": 5, "heldOutRemainder": 0, "altitudeBinKm": 50, "inclinationBinDeg": 5},
+  "solver": {"nodeHours": 24, "bPrior": 0.03, "logBPriorSigma": 0.6931471805599453, "bRandomWalkSigma": 0.005, "smoothSigma": 0.05, "kappaPrior": 1, "kappaPriorSigma": 1, "huberK": 1.5, "iterations": 100, "tolerance": 1e-6, "minimumSatellites": 6, "energyStepFloorJkg": 5, "energyStepMadMultiplier": 5, "latencyHours": 6, "historyDays": 30, "forecastTauHours": 48},
+  "capture": {"cycleHours": 8, "headHours": 8, "sampleMinutes": 10, "minimumFreeGiB": 25, "maxCpuDuty": 0.5},
+  "hypotheses": {"H1": 0.25, "H3": 0.20, "H4": 0.90, "H5": 0.90, "H6": 0.05, "shiftDays": 7, "horizonsHours": [24,72], "headToHeadDensityGain": 0.03, "headToHeadErrorRatio": 0.90},
+  "bootstrap": {"resamples": 2000, "seed": 20261023, "confidence": 0.95},
+  "minimumSupport": {"calibrationPerShell": 30, "heldOutPerShell": 6, "coastDays": 21, "densityWindows": 100, "truthSatellites": 3, "coastArcs": 100, "predictionPairs": 30}
+}

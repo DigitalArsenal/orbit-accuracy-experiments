@@ -1,0 +1,488 @@
+{
+  "experiment": "sdn-gp-starlink-ffm-match",
+  "commands": [
+    "node experiments/sdn-gp-starlink-ffm-match/population.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/truth.mjs --workers N",
+    "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/bench.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/comspoc.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/covariance.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fitlength.mjs --limit 100",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-kernels.mjs get <path> --dest spk/missions/<mission> (11 files, 5 s apart)",
+    "node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/refit.mjs --cap 30 --workers 10",
+    "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --shard k/4 (re-run as newer files arrive)",
+    "node experiments/sdn-gp-starlink-ffm-match/newer.mjs --truth refit30 --daily-only",
+    "node experiments/sdn-gp-starlink-ffm-match/m123.mjs --workers 10",
+    "node experiments/sdn-gp-starlink-ffm-match/m123-report.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-horizons.mjs",
+    "NODE_EXTRA_CA_CERTS=<archive>/hac/.ca/emsign-root-ca-g1.pem node experiments/sdn-gp-starlink-ffm-match/fetch-mast-tess.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-gnss-rapid.mjs --from 2026-10-11 --to 2026-10-22",
+    "node experiments/sdn-gp-starlink-ffm-match/gnss-rapid-convert.mjs --from 2026-10-11 --to 2026-10-22",
+    "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source gnss-rapid,mgex-geo-rapid,mgex-igso-rapid",
+    "node experiments/sdn-gp-starlink-ffm-match/spk-windows.mjs --source heo-tess",
+    "node experiments/sdn-gp-starlink-ffm-match/comspoc-precise.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-slr.mjs --from 2026-10-08 --to 2026-10-24 --weeks 260912,260919,260926,261003",
+    "node experiments/sdn-gp-starlink-ffm-match/slr-convert.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/baselines.mjs --source slr-low-current,slr-high-current",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --workers 8 [--pin <build>] (baselines.mjs --arm sdngp, spk-windows.mjs --arm sdngp, starlink-sdngp.mjs, starlink-lowering.mjs, fitlength.mjs --arm sdngp, span-windows.mjs --arm sdngp)",
+    "node experiments/sdn-gp-starlink-ffm-match/span-windows.mjs (SGP4 and XP of the COMSPOC-aligned fit-span windows; the SDN-AP arm runs inside sdngp-run.mjs)",
+    "node experiments/sdn-gp-starlink-ffm-match/lunar-maneuvers.mjs",
+    "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/segment-windows.mjs --shard k/8 (inside sdngp-run.mjs: the cislunar and heliocentric packs through the segment fits)",
+    "SDNGP_SNAPSHOT=<build> node experiments/sdn-gp-starlink-ffm-match/lunar-windows.mjs --shard k/8 (inside sdngp-run.mjs; the default-span rows are baselines.mjs, spk-windows.mjs and span-windows.mjs with --arm sdngp --span default)",
+    "node experiments/sdn-gp-starlink-ffm-match/horizons-packs.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/regime-windows.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/score-pack.mjs --pack <pack> --start <ISO> --fit-hours <h> --predicted <states.oem>",
+    "node experiments/sdn-gp-starlink-ffm-match/inventory.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/tables.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/manifest.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/run.mjs --check",
+    "node experiments/sdn-gp-starlink-ffm-match/events-truth.mjs --kind m22,m23,m28 --shard k/n",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m22,m23,m28,m24",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-iss-oem.mjs (NASA ISS OEM archive, 748 files, 2 s apart)",
+    "node experiments/sdn-gp-starlink-ffm-match/iss-burns.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m24a,m24p,m29,m30",
+    "node experiments/sdn-gp-starlink-ffm-match/m29-extract.mjs; node experiments/sdn-gp-starlink-ffm-match/m29-extract-cords.mjs [--shard k/n | --merge]",
+    "node experiments/sdn-gp-starlink-ffm-match/m30-truth.mjs (re-run as TIP and decay messages arrive)",
+    "node experiments/sdn-gp-starlink-ffm-match/m31-capture.mjs --workers k/n; node experiments/sdn-gp-starlink-ffm-match/m31-capture.mjs --summary",
+    "node experiments/sdn-gp-starlink-ffm-match/m32-truth.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m31,m32",
+    "node experiments/sdn-gp-starlink-ffm-match/fetch-gnss-notices.mjs (GPS NANUs of 2026 and the QZSS NAQU page, 5 s apart)",
+    "node experiments/sdn-gp-starlink-ffm-match/m27-events.mjs",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27",
+    "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27b,m27bp (amendment A17: the detector across the omitted days of the GPS series, controls, planted impulses across a hole)"
+  ],
+  "planSha256": "8f450f56eb3ed05abeb4df382b93aeacb3f37c426745cd24fd761f2a9dfe7ef3",
+  "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
+  "repository": {
+    "commit": "a250766085fcea884b395c7b166be3c5488d3f62"
+  },
+  "modules": {
+    "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
+    "artifacts": [
+      {
+        "path": "propagator/sgp4-xp",
+        "version": "0.1.1",
+        "wasmSha256": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb"
+      },
+      {
+        "path": "analysis/gp-error-model",
+        "version": "0.10.0",
+        "wasmSha256": "e9fa64b2c25d12a3ad81e365155003241f69e7c6476294cca04945c4d9b64abe"
+      },
+      {
+        "path": "analysis/od",
+        "version": "0.3.0",
+        "wasmSha256": "970fe6cfe00715b307bedbc677f00a07b2f0a04d22700b47b7c99f01544d58a7"
+      },
+      {
+        "path": "propagator/ffm",
+        "version": "2.0.0",
+        "wasmSha256": "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      },
+      {
+        "path": "files/orbit-products",
+        "version": "0.1.4",
+        "wasmSha256": "1b7f40cfbcc6ed2f7ee7948627b90061c2bb464e539da66463a87f21ad4effef"
+      },
+      {
+        "path": "foundation/time",
+        "version": "0.1.0",
+        "wasmSha256": "61abbb27a8358b05a1141bb983fcf1f6b5a89ba41793dece0bccf1678a4d02ed"
+      },
+      {
+        "path": "foundation/frames",
+        "version": "0.2.0",
+        "wasmSha256": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4"
+      }
+    ]
+  },
+  "packages": {
+    "esbuild": "^0.25.12",
+    "flatbuffers": "25.9.23",
+    "space-data-module-sdk": "0.9.10",
+    "spacedatastandards-1264": "npm:spacedatastandards.org@1.264.0",
+    "spacedatastandards.org": "1.261.0",
+    "lockfileSha256": "e3e083980fb5c61e0ae615c83bcc4890e683d8b457435d4239abff011504c992",
+    "spacedatastandardsInstalled": "1.261.0"
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "environment": {
+    "environmentSha256": "a26b37e4be834361edd3a2b91bb45951e97a8073340c3e1bef9f1c6f124bb848",
+    "weatherSources": [
+      {
+        "url": "https://kp.gfz.de/fileadmin/files_for_gfz_cms/Kp_ap_Ap_SN_F107_since_1932.txt",
+        "sha256": "4e3d3f89e3a9c21766f3948c79064bddfe94c66603ea9818a34c59cc1e28cadc"
+      },
+      {
+        "url": "https://kp.gfz.de/fileadmin/files_for_gfz_cms/Kp_ap_Ap_SN_F107_nowcast.txt",
+        "sha256": "0700a56a54c046ed3b40e7e7af61dbda7c0e2ba7218cb59dd2fc9ece870c1793"
+      },
+      {
+        "url": "https://services.swpc.noaa.gov/text/45-day-forecast.txt",
+        "sha256": "ef9fcd9112540e1cbce481294fad7cb205c21cfad91f1fb4acebb9373a895aa4"
+      },
+      {
+        "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json",
+        "sha256": "09eff43d10a9868f4e34c0c1ea00a26511c9e3a6f25854b689a9e9ab419d3862"
+      }
+    ],
+    "weatherExtension": {
+      "source": "https://services.swpc.noaa.gov/text/45-day-forecast.txt",
+      "sha256": "ef9fcd9112540e1cbce481294fad7cb205c21cfad91f1fb4acebb9373a895aa4",
+      "daysAdded": [
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02"
+      ],
+      "held": "Kp, F10.7 81-day average and provenance of the last module row"
+    },
+    "kernel": {
+      "path": "hac/naif-kernels/spk/planets/de440s.bsp",
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+    },
+    "createdUtc": "2026-10-23T20:25:21.154Z"
+  },
+  "truthSet": {
+    "satellites": 239,
+    "setSha256": "77505e1c4dd00aad80328485720a580b7dcc06f196ed4b434d7adef3cbf305c5"
+  },
+  "events": {
+    "m22": {
+      "files": 48,
+      "setSha256": "430c7d3887e3bacafb70b4d3e1283333431c3e7ec792ed3779b119e9991d6ace",
+      "ffmWasmSha256": [
+        "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      ]
+    },
+    "m23": {
+      "files": 24,
+      "setSha256": "8a1127fdf9e3ee3fc07201bb4c4ab03a99739b09334650a9afb352a138d6564c",
+      "ffmWasmSha256": [
+        "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      ]
+    },
+    "m28": {
+      "files": 12,
+      "setSha256": "2942bca6e9bd4229521281f38defae4683541fd7436a6cca7aa09f4ac743770a",
+      "ffmWasmSha256": []
+    }
+  },
+  "comspoc": {
+    "label": "COMSPOC Spacebook XP (local scoring only)",
+    "startedUtc": "2026-10-23T20:09:27Z",
+    "terms": "COMSPOC Spacebook terms of use: no commercial use, no redistribution, no derivative works; local computation only",
+    "xpTleSha256": "120e2aa649d238d70e49552427267be496143c71568372ee8bf54d23b3a966bf",
+    "syncopateObjects": 91
+  },
+  "kernels": [
+    {
+      "mission": "artemis2",
+      "file": "EM2_FODNAVBET_revF_PUBLIC.oem",
+      "bytes": 6264091,
+      "sha256": "d8ed8a5a16d40d69da32a54d83a19970e47f4e8bd6e547210b01b1c78e002ff3",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/ARTEMIS/kernels/spk/EM2_FODNAVBET_revF_PUBLIC.oem",
+      "retrievedUtc": "2026-10-23T21:34:55Z"
+    },
+    {
+      "mission": "artemis2",
+      "file": "art002_rec_260402_260410_jsc_bet_revf.bsp",
+      "bytes": 5693440,
+      "sha256": "b8b3ebc4d703c3a73c9651b9da36114c3ef0b2c75f92873dd4970f32367aa7be",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/ARTEMIS/kernels/spk/art002_rec_260402_260410_jsc_bet_revf.bsp",
+      "retrievedUtc": "2026-10-23T21:34:51Z"
+    },
+    {
+      "mission": "chandra",
+      "file": "chandra_merged.bsp",
+      "bytes": 67708928,
+      "sha256": "570e1fee3d3d6bba48fb85c366db1e51cb9080794e7b26dc178bf6396f7954cc",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/CHANDRA/kernels/spk/chandra_merged.bsp",
+      "retrievedUtc": "2026-10-23T21:35:29Z"
+    },
+    {
+      "mission": "juno",
+      "file": "spk_merge_110805_171017_130515.bsp",
+      "bytes": 7779328,
+      "sha256": "f595b0abdfd7e8b723c1127a72d35fc6c8eb261e4f4e0fbc4aeea1abc82a407c",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/JUNO/kernels/spk/spk_merge_110805_171017_130515.bsp",
+      "retrievedUtc": "2026-10-23T21:35:16Z"
+    },
+    {
+      "mission": "lro",
+      "file": "lrorg_2026074_2026166_v01.bsp",
+      "bytes": 7557120,
+      "sha256": "5e17414e03c794e9dc29e4f4fde64d1d2d9fd106d87f26404188888495de28b1",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/pds/data/lro-l-spice-6-v1.0/lrosp_1000/data/spk/lrorg_2026074_2026166_v01.bsp",
+      "retrievedUtc": "2026-10-23T21:35:01Z"
+    },
+    {
+      "mission": "lucy",
+      "file": "lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp",
+      "bytes": 821248,
+      "sha256": "b45c99793bfd5fdc32e922b1e1b7f96b877b65bca4f287d3fcf4c4faea55f22d",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/LUCY/kernels/spk/lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp",
+      "retrievedUtc": "2026-10-23T21:35:10Z"
+    },
+    {
+      "mission": "psyche",
+      "file": "psyche_sc-eph_260531-270301_261020_v1.bsp",
+      "bytes": 16357376,
+      "sha256": "98e55a6dfa6410750713205140adad8c63a5a605ae539d73e545d2ba26a14428",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/PSYCHE/kernels/spk/psyche_sc-eph_260531-270301_261020_v1.bsp",
+      "retrievedUtc": "2026-10-23T21:35:06Z"
+    },
+    {
+      "mission": "tdrss",
+      "file": "TDRSS.bsp",
+      "bytes": 8469504,
+      "sha256": "769f828561b98aa04ab4114f5dac9ea6507b569e9119e358f259e33bb90a6970",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/TDRSS/kernels/spk/TDRSS.bsp",
+      "retrievedUtc": "2026-10-23T21:34:31Z"
+    },
+    {
+      "mission": "themis",
+      "file": "THEMIS_A_2013_039_055.bsp",
+      "bytes": 1338368,
+      "sha256": "b754902de448c97c7f9dd60f21e2327d9fc5e9fd95431c61ec00ad8d11220d5b",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/THEMIS/kernels/spk/THEMIS_A_2013_039_055.bsp",
+      "retrievedUtc": "2026-10-23T21:34:35Z"
+    },
+    {
+      "mission": "themis",
+      "file": "THEMIS_D_2013_039_055.bsp",
+      "bytes": 1338368,
+      "sha256": "c5994b43ed417251ce9c675e3b6a3b196aa67e12b188bb234d76d2d6a8445fd1",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/THEMIS/kernels/spk/THEMIS_D_2013_039_055.bsp",
+      "retrievedUtc": "2026-10-23T21:34:40Z"
+    },
+    {
+      "mission": "themis",
+      "file": "THEMIS_E_2013_039_055.bsp",
+      "bytes": 1338368,
+      "sha256": "57e523cf72a67dbe50e08cf593ef877e1b67117e0deef95c322d50f504c7faa6",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/THEMIS/kernels/spk/THEMIS_E_2013_039_055.bsp",
+      "retrievedUtc": "2026-10-23T21:34:45Z"
+    }
+  ],
+  "a8Sources": {
+    "jplHorizons": {
+      "files": 28,
+      "setSha256": "5830c03cecad89c2e8df2609a603de1a77e85e1254f345e49442bf8ace025818",
+      "firstRetrievedUtc": "2026-10-24T03:23:32.532Z",
+      "lastRetrievedUtc": "2026-10-24T04:05:32.803Z"
+    },
+    "mastTess": {
+      "files": 21,
+      "setSha256": "e4d1ceaafad4b828c6813160de3df8754023a5a62b03c7ca77dd6f60fdfbed5c",
+      "firstRetrievedUtc": "2026-10-24T03:26:35.762Z",
+      "lastRetrievedUtc": "2026-10-24T03:28:40.288Z"
+    },
+    "gfzGnssRapid": {
+      "files": 24,
+      "setSha256": "8a537ec867a84ad1bd0017b7be9ec8859faa38236159dabf0e7ccbecafe25f0d",
+      "firstRetrievedUtc": "2026-10-24T03:31:52.893Z",
+      "lastRetrievedUtc": "2026-10-24T03:33:08.245Z"
+    },
+    "ilrsCddis": {
+      "files": 106,
+      "setSha256": "313d0cabbde68cfa3af61a92bf12f2eb3a6f4b5626b2c5e0d65b59d5948fe891",
+      "firstRetrievedUtc": "2026-10-24T04:08:46.465Z",
+      "lastRetrievedUtc": "2026-10-24T04:14:21.335Z"
+    }
+  },
+  "sdngp": {
+    "headlineBuild": "9df647b08978",
+    "builds": [
+      {
+        "build": "4e9c7690638b",
+        "wasmSha256": "4e9c7690638bbd7c4a7c9a0f44be82287782e1236e0a65e77042fbb57eb60202",
+        "sourceCommit": "39b059398049ce5933813af693d4e627d29e7797",
+        "sourceUncommittedFiles": 1,
+        "firstUseUtc": "2026-10-24T04:28:54.951Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "2d906c4d90fd",
+        "wasmSha256": "2d906c4d90fd43d02496b61446b74ba53c4c155381bdd1add4134f86b7f41cbd",
+        "sourceCommit": "4229929303a502270a50bc91355608c43e115f8a",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T05:31:01.341Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "aebde849f2f2",
+        "wasmSha256": "aebde849f2f21dc25cf679623e3648c005e29dc1f9ea86b25ead308bbaf632c2",
+        "sourceCommit": "cb93d1e8bacd75bf5b2386f8051346ac26a09b40",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T05:32:18.223Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "9da7fad24c9d",
+        "wasmSha256": "9da7fad24c9d01e4dd199e6212ba999700d7f7a497765ca224a651b10a3e74d9",
+        "sourceCommit": "1102cd6e3b2c71a4e1899f27abfcfc4904f62444",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T06:32:14.780Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "7ea0ea272bbf",
+        "wasmSha256": "7ea0ea272bbf75d9a5d98f41be73f44d849553271716c367dfa294d9d754b9db",
+        "sourceCommit": "b663c8cb9e3cc3d5378f80779d754d7533efc6d9",
+        "sourceUncommittedFiles": 3,
+        "firstUseUtc": "2026-10-24T08:10:30.044Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "ee5dccaa17a8",
+        "wasmSha256": "ee5dccaa17a8fb9be3e63e5e64b8a99f02dc789422cc39a00497bbef28f3587e",
+        "sourceCommit": "e241cef6b4db4c139ffc4e4d4ab603ca62986831",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T13:08:14.256Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "54b069014557",
+        "wasmSha256": "54b06901455764fcb02fdb3db2d9d80cc7a745e3d862eb00a4b9ef498ef330bc",
+        "sourceCommit": "3617e4d57f517e4ef1e2385415072180bfe3a988",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T14:50:56.044Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "35cd83a2b714",
+        "wasmSha256": "35cd83a2b714670aba39a407ac87b7ff0da689a519e4b0a06bf4299c9673a80e",
+        "sourceCommit": "9c1d5ee3562bfc49c280e2e4074f896d0f21f4ea",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T16:13:45.758Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "04f7c2d1d50f",
+        "wasmSha256": "04f7c2d1d50fdae0a1af6e16fcbc46aead774b6ce4ce00984f55d6ad96f38e80",
+        "sourceCommit": "65c1c6cae7cc0ac4a7ba65ba891f5c001dfdf4f8",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-24T18:21:26.725Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "61d4ec4e6a12",
+        "wasmSha256": "61d4ec4e6a12407ef0badc1e6ec61252fa0acc42f9f2360947cc270f29e4f5eb",
+        "sourceCommit": "f0ea4b4e44fc4a1bc207689d06d723248759ca5d",
+        "sourceUncommittedFiles": 1,
+        "firstUseUtc": "2026-10-24T19:28:48.751Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "b9bc708baa50",
+        "wasmSha256": "b9bc708baa502800fe372ae9904f9951a72e72d6ed014afb431cad884f874fa5",
+        "sourceCommit": "610930cbf2f1aeefb2525fecfbd98f1b96bb1ac6",
+        "sourceUncommittedFiles": 8,
+        "firstUseUtc": "2026-10-24T23:08:22.808Z",
+        "complete": true,
+        "eventsFocus": null
+      },
+      {
+        "build": "9df647b08978",
+        "wasmSha256": "9df647b089786b3866249d579c57863ecc4f2e3abb4ce63c07ea117cfa2fddda",
+        "sourceCommit": "358e88e77295264f955bb832c0734592d0b100fa",
+        "sourceUncommittedFiles": 0,
+        "firstUseUtc": "2026-10-25T05:02:05.588Z",
+        "complete": true,
+        "eventsFocus": null
+      }
+    ]
+  },
+  "a11": {
+    "issArchive": {
+      "files": 763,
+      "setSha256": "d21aa4f17a555ca68d3d0be762eb0e7dbb97375eee0eeb4179c3e03263639b53",
+      "firstRetrievedUtc": "2026-10-24T17:18:54.387Z",
+      "lastRetrievedUtc": "2026-10-24T17:50:00.878Z"
+    },
+    "cords": {
+      "file": "Reentry_History_Spreadsheet_05-22-26.csv",
+      "bytes": 391875,
+      "sha256": "d6fabdbd279f1d3590638edd8738865fb6f6934548b76b0a1bd00d58162f5f24"
+    },
+    "spaceWeatherHistory": {
+      "rows": 2703,
+      "first": "2019-06-01",
+      "last": "2026-11-02",
+      "gfzRows": 2652,
+      "droppedDays": 9,
+      "gfzFileSha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e",
+      "check": {
+        "rows": 26,
+        "fieldsEqual": 569,
+        "fieldsCompared": 572
+      }
+    },
+    "m29": {
+      "objects": 58,
+      "setCounts": 8184,
+      "setSha256": "ef5411148e8e653c1c520119333e3f1062a8c7f3a40cb5d18b90a322940a3634",
+      "space-track": {
+        "tip": {
+          "files": 14,
+          "first": "2026/2026-10-11.json.gz",
+          "last": "2026/2026-10-24.json.gz"
+        },
+        "decay": {
+          "files": 14,
+          "first": "2026/2026-10-11.json.gz",
+          "last": "2026/2026-10-24.json.gz"
+        },
+        "gpHistory": {
+          "files": 1945,
+          "first": "2022/2022-11-20.json.gz",
+          "last": "2026/2026-10-25T064701Z--2026-10-25T080200Z.json.gz"
+        }
+      }
+    },
+    "m31": {
+      "satellites": 27,
+      "setSha256": "1a714ef219d3a312a028101243f4a1ea93f8c8e14ba23a2535d2f5e0dff87791"
+    },
+    "notices": {
+      "gpsNanu": {
+        "files": 97,
+        "setSha256": "4b80e056e3e14b239c2f47e2f73f68053e561fc8a92b480d6dc8ca4204b5cbe5"
+      },
+      "qzssNaqu": {
+        "files": 3,
+        "setSha256": "f05352a182aa5c0856e64de15556d55f0a372665e712b8cc8e8162cbb0dd4b6a"
+      },
+      "eventsSha256": "fb51d84807e93794fb2349f5c071def069c0ad67f79b34149208f5c100cff298",
+      "beidou": "not reachable (hac/gnss-notices/beidou-attempts.json)"
+    },
+    "m32": {
+      "batches": 4,
+      "setSha256": "985615ccf7f114c266385c14232fef442d6d8b6deb305bc881a91c5f8a8a6b58",
+      "ffmWasmSha256": [
+        "4dc525a1c04d93106065920f1437509ceb8e8def49d1c53976ed9c313736d611"
+      ]
+    }
+  },
+  "populationQueueSha256": "8e77cb23e141665ce0da452663e4427a84d5f522eb2ed11b5b96de5b43a7970e"
+}

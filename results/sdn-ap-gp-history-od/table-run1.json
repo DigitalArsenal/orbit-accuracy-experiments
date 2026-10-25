@@ -1,0 +1,1219 @@
+{
+  "schema": "sdn-ap-gp-history-od/1",
+  "superseded": "the first run, before amendment A1 (PLAN.md)",
+  "experiment": "sdn-ap-gp-history-od",
+  "registeredUtc": "2026-10-25T15:30:00Z",
+  "plan": "0f7b41a795932b9d237339ad06f9f880075f47dd36a7a02be3f89b3b9a2959ee",
+  "windowsSha256": "a64bc41e18177bd4b052658ee6dae1174f5497e73699d784b90f4f996c9123b2",
+  "unit": "km",
+  "metric": "day 1 to 3 3D RMS error: sqrt((d1^2 + d2^2 + d3^2) / 3) over a window complete for the arm",
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20261025,
+    "intervalPercent": 95
+  },
+  "sdnapBuild": [
+    "80867b356130"
+  ],
+  "preciseFitBuild": "9df647b08978",
+  "regimes": [
+    {
+      "id": "leo-starlink",
+      "label": "LEO, Starlink shells (FFM-1 propagation of fits to the operator's ephemerides)",
+      "windows": {
+        "registered": 239,
+        "run": 239,
+        "withElementSets": 239,
+        "withPseudoObservations": 239,
+        "skipped": 0
+      },
+      "objects": 239,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 239,
+          "fitted": 239,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 239,
+          "complete": 239,
+          "objects": 239,
+          "median": 38.998,
+          "p10": 3.34764,
+          "p90": 501.937,
+          "ci95": [
+            26.3513,
+            49.6888
+          ],
+          "ci95Objects": [
+            26.3513,
+            49.6888
+          ],
+          "days": {
+            "1": {
+              "windows": 239,
+              "median": 12.2773
+            },
+            "2": {
+              "windows": 239,
+              "median": 29.9176
+            },
+            "3": {
+              "windows": 239,
+              "median": 55.3296
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 239,
+          "fitted": 216,
+          "failed": 23,
+          "skipped": 0,
+          "scored": 216,
+          "complete": 216,
+          "objects": 216,
+          "median": 9.50873,
+          "p10": 2.57057,
+          "p90": 77.469,
+          "ci95": [
+            8.11544,
+            11.5377
+          ],
+          "ci95Objects": [
+            8.27987,
+            11.6468
+          ],
+          "days": {
+            "1": {
+              "windows": 216,
+              "median": 5.31568
+            },
+            "2": {
+              "windows": 216,
+              "median": 6.80695
+            },
+            "3": {
+              "windows": 216,
+              "median": 12.3644
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 239,
+          "fitted": 238,
+          "failed": 1,
+          "skipped": 0,
+          "scored": 238,
+          "complete": 238,
+          "objects": 238,
+          "median": 32.0488,
+          "p10": 5.11007,
+          "p90": 256.353,
+          "ci95": [
+            26.4135,
+            36.5138
+          ],
+          "ci95Objects": [
+            26.4135,
+            36.5138
+          ],
+          "days": {
+            "1": {
+              "windows": 238,
+              "median": 10.0046
+            },
+            "2": {
+              "windows": 238,
+              "median": 23.8049
+            },
+            "3": {
+              "windows": 238,
+              "median": 48.8003
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 215,
+        "arms": {
+          "sgp4-latest": {
+            "median": 28.9321,
+            "p10": 3.15656,
+            "p90": 312.46
+          },
+          "sgp4xp-fit": {
+            "median": 9.39916,
+            "p10": 2.56485,
+            "p90": 74.7564,
+            "ratioToBaselineMedian": 0.534544,
+            "ratioToBaselineCi95": [
+              0.404789,
+              0.641243
+            ],
+            "shareBetterThanBaseline": 0.730233
+          },
+          "sdnap-fit": {
+            "median": 29.2389,
+            "p10": 5.07722,
+            "p90": 133.228,
+            "ratioToBaselineMedian": 1.03733,
+            "ratioToBaselineCi95": [
+              0.877795,
+              1.21688
+            ],
+            "shareBetterThanBaseline": 0.488372
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 215,
+          "median": 0.598304
+        }
+      }
+    },
+    {
+      "id": "leo-iss",
+      "label": "LEO, ISS (NASA trajectory files)",
+      "windows": {
+        "registered": 15,
+        "run": 15,
+        "withElementSets": 15,
+        "withPseudoObservations": 15,
+        "skipped": 0
+      },
+      "objects": 1,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 15,
+          "fitted": 15,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 15,
+          "complete": 13,
+          "objects": 1,
+          "median": 58.6063,
+          "p10": 6.28109,
+          "p90": 139.054,
+          "ci95": [
+            19.004,
+            96.2891
+          ],
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 15,
+              "median": 57.6682
+            },
+            "2": {
+              "windows": 14,
+              "median": 64.3274
+            },
+            "3": {
+              "windows": 13,
+              "median": 69.9114
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 15,
+          "fitted": 15,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 15,
+          "complete": 13,
+          "objects": 1,
+          "median": 70.7853,
+          "p10": 9.69764,
+          "p90": 135.266,
+          "ci95": [
+            12.7348,
+            98.5447
+          ],
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 15,
+              "median": 60.2991
+            },
+            "2": {
+              "windows": 14,
+              "median": 71.9095
+            },
+            "3": {
+              "windows": 13,
+              "median": 88.6201
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 15,
+          "fitted": 15,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 15,
+          "complete": 13,
+          "objects": 1,
+          "median": 63.4539,
+          "p10": 5.78203,
+          "p90": 137.261,
+          "ci95": [
+            20.3428,
+            93.2149
+          ],
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 15,
+              "median": 57.7664
+            },
+            "2": {
+              "windows": 14,
+              "median": 66.1355
+            },
+            "3": {
+              "windows": 13,
+              "median": 78.2054
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 13,
+        "arms": {
+          "sgp4-latest": {
+            "median": 58.6063,
+            "p10": 6.28109,
+            "p90": 139.054
+          },
+          "sgp4xp-fit": {
+            "median": 70.7853,
+            "p10": 9.69764,
+            "p90": 135.266,
+            "ratioToBaselineMedian": 1.01926,
+            "ratioToBaselineCi95": [
+              0.936931,
+              1.17082
+            ],
+            "shareBetterThanBaseline": 0.461538
+          },
+          "sdnap-fit": {
+            "median": 63.4539,
+            "p10": 5.78203,
+            "p90": 137.261,
+            "ratioToBaselineMedian": 0.988874,
+            "ratioToBaselineCi95": [
+              0.968073,
+              1.07045
+            ],
+            "shareBetterThanBaseline": 0.692308
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 13,
+          "median": 1.08447
+        }
+      }
+    },
+    {
+      "id": "leo-slr",
+      "label": "LEO, laser-ranged satellites (ILRS NSGF orbits, 2025 and October 2026)",
+      "windows": {
+        "registered": 210,
+        "run": 210,
+        "withElementSets": 196,
+        "withPseudoObservations": 181,
+        "skipped": 14
+      },
+      "objects": 7,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 196,
+          "fitted": 196,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 196,
+          "complete": 50,
+          "objects": 7,
+          "median": 0.594301,
+          "p10": 0.342838,
+          "p90": 3.77619,
+          "ci95": [
+            0.460347,
+            1.04241
+          ],
+          "ci95Objects": [
+            0.433226,
+            1.25383
+          ],
+          "days": {
+            "1": {
+              "windows": 196,
+              "median": 0.573727
+            },
+            "2": {
+              "windows": 131,
+              "median": 0.584076
+            },
+            "3": {
+              "windows": 50,
+              "median": 0.609322
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 196,
+          "fitted": 181,
+          "failed": 0,
+          "skipped": 15,
+          "scored": 181,
+          "complete": 42,
+          "objects": 7,
+          "median": 0.601493,
+          "p10": 0.419565,
+          "p90": 3.66837,
+          "ci95": [
+            0.584735,
+            0.742846
+          ],
+          "ci95Objects": [
+            0.560255,
+            1.06705
+          ],
+          "days": {
+            "1": {
+              "windows": 181,
+              "median": 0.573415
+            },
+            "2": {
+              "windows": 121,
+              "median": 0.592947
+            },
+            "3": {
+              "windows": 42,
+              "median": 0.664825
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 196,
+          "fitted": 181,
+          "failed": 0,
+          "skipped": 15,
+          "scored": 181,
+          "complete": 42,
+          "objects": 7,
+          "median": 1.0665,
+          "p10": 0.372579,
+          "p90": 5.35534,
+          "ci95": [
+            0.658285,
+            1.68542
+          ],
+          "ci95Objects": [
+            0.475629,
+            2.48256
+          ],
+          "days": {
+            "1": {
+              "windows": 181,
+              "median": 0.414045
+            },
+            "2": {
+              "windows": 121,
+              "median": 0.815072
+            },
+            "3": {
+              "windows": 42,
+              "median": 1.50711
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 40,
+        "arms": {
+          "sgp4-latest": {
+            "median": 0.590477,
+            "p10": 0.336743,
+            "p90": 3.84343
+          },
+          "sgp4xp-fit": {
+            "median": 0.601493,
+            "p10": 0.416991,
+            "p90": 3.73048,
+            "ratioToBaselineMedian": 1.05518,
+            "ratioToBaselineCi95": [
+              0.993716,
+              1.30183
+            ],
+            "shareBetterThanBaseline": 0.4
+          },
+          "sdnap-fit": {
+            "median": 1.28641,
+            "p10": 0.366558,
+            "p90": 5.47343,
+            "ratioToBaselineMedian": 1.52334,
+            "ratioToBaselineCi95": [
+              1.12537,
+              2.11399
+            ],
+            "shareBetterThanBaseline": 0.225
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 40,
+          "median": 0.0836627
+        }
+      }
+    },
+    {
+      "id": "meo-gnss",
+      "label": "MEO, GPS, GLONASS, Galileo and BeiDou (ESA final 2024; GFZ rapid October 2026)",
+      "windows": {
+        "registered": 108,
+        "run": 108,
+        "withElementSets": 108,
+        "withPseudoObservations": 102,
+        "skipped": 0
+      },
+      "objects": 14,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 108,
+          "fitted": 108,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 108,
+          "complete": 92,
+          "objects": 14,
+          "median": 1.27043,
+          "p10": 0.587941,
+          "p90": 2.97547,
+          "ci95": [
+            1.04953,
+            1.41202
+          ],
+          "ci95Objects": [
+            1.01098,
+            1.63661
+          ],
+          "days": {
+            "1": {
+              "windows": 107,
+              "median": 1.21191
+            },
+            "2": {
+              "windows": 94,
+              "median": 1.27303
+            },
+            "3": {
+              "windows": 93,
+              "median": 1.30144
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 108,
+          "fitted": 102,
+          "failed": 0,
+          "skipped": 6,
+          "scored": 102,
+          "complete": 87,
+          "objects": 14,
+          "median": 1.25889,
+          "p10": 0.430198,
+          "p90": 3.20193,
+          "ci95": [
+            1.0177,
+            1.58174
+          ],
+          "ci95Objects": [
+            0.893695,
+            1.63617
+          ],
+          "days": {
+            "1": {
+              "windows": 101,
+              "median": 1.19145
+            },
+            "2": {
+              "windows": 89,
+              "median": 1.22557
+            },
+            "3": {
+              "windows": 88,
+              "median": 1.38749
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 108,
+          "fitted": 102,
+          "failed": 0,
+          "skipped": 6,
+          "scored": 102,
+          "complete": 87,
+          "objects": 14,
+          "median": 1.46558,
+          "p10": 0.525311,
+          "p90": 3.16327,
+          "ci95": [
+            1.13989,
+            1.59836
+          ],
+          "ci95Objects": [
+            0.99822,
+            1.62628
+          ],
+          "days": {
+            "1": {
+              "windows": 101,
+              "median": 1.23348
+            },
+            "2": {
+              "windows": 89,
+              "median": 1.42394
+            },
+            "3": {
+              "windows": 88,
+              "median": 1.63237
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 87,
+        "arms": {
+          "sgp4-latest": {
+            "median": 1.21537,
+            "p10": 0.581898,
+            "p90": 2.47623
+          },
+          "sgp4xp-fit": {
+            "median": 1.25889,
+            "p10": 0.430198,
+            "p90": 3.20193,
+            "ratioToBaselineMedian": 1.14973,
+            "ratioToBaselineCi95": [
+              0.957075,
+              1.21476
+            ],
+            "shareBetterThanBaseline": 0.436782
+          },
+          "sdnap-fit": {
+            "median": 1.46558,
+            "p10": 0.525311,
+            "p90": 3.16327,
+            "ratioToBaselineMedian": 1.16905,
+            "ratioToBaselineCi95": [
+              1.02069,
+              1.2283
+            ],
+            "shareBetterThanBaseline": 0.356322
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 87,
+          "median": 0.118231
+        }
+      }
+    },
+    {
+      "id": "meo-slr",
+      "label": "MEO, laser-ranged (LAGEOS, Etalon, LARES 2; ILRS orbits)",
+      "windows": {
+        "registered": 60,
+        "run": 60,
+        "withElementSets": 60,
+        "withPseudoObservations": 50,
+        "skipped": 0
+      },
+      "objects": 4,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 60,
+          "fitted": 60,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 60,
+          "complete": 60,
+          "objects": 4,
+          "median": 0.898324,
+          "p10": 0.211534,
+          "p90": 1.62109,
+          "ci95": [
+            0.641363,
+            1.09971
+          ],
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 60,
+              "median": 0.907716
+            },
+            "2": {
+              "windows": 60,
+              "median": 0.887888
+            },
+            "3": {
+              "windows": 60,
+              "median": 0.709129
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 60,
+          "fitted": 50,
+          "failed": 0,
+          "skipped": 10,
+          "scored": 50,
+          "complete": 50,
+          "objects": 4,
+          "median": 1.09053,
+          "p10": 0.232937,
+          "p90": 2.22971,
+          "ci95": [
+            0.670919,
+            1.31515
+          ],
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 50,
+              "median": 0.979748
+            },
+            "2": {
+              "windows": 50,
+              "median": 1.07373
+            },
+            "3": {
+              "windows": 50,
+              "median": 1.10304
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 60,
+          "fitted": 50,
+          "failed": 0,
+          "skipped": 10,
+          "scored": 50,
+          "complete": 50,
+          "objects": 4,
+          "median": 1.07107,
+          "p10": 0.183863,
+          "p90": 1.93161,
+          "ci95": [
+            0.577611,
+            1.40551
+          ],
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 50,
+              "median": 0.867127
+            },
+            "2": {
+              "windows": 50,
+              "median": 1.06104
+            },
+            "3": {
+              "windows": 50,
+              "median": 1.12896
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 50,
+        "arms": {
+          "sgp4-latest": {
+            "median": 0.714595,
+            "p10": 0.203371,
+            "p90": 1.40702
+          },
+          "sgp4xp-fit": {
+            "median": 1.09053,
+            "p10": 0.232937,
+            "p90": 2.22971,
+            "ratioToBaselineMedian": 1.4194,
+            "ratioToBaselineCi95": [
+              1.27178,
+              1.5369
+            ],
+            "shareBetterThanBaseline": 0.06
+          },
+          "sdnap-fit": {
+            "median": 1.07107,
+            "p10": 0.183863,
+            "p90": 1.93161,
+            "ratioToBaselineMedian": 1.44935,
+            "ratioToBaselineCi95": [
+              1.23544,
+              1.53804
+            ],
+            "shareBetterThanBaseline": 0.18
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 50,
+          "median": 0.105622
+        }
+      }
+    },
+    {
+      "id": "igso-gnss",
+      "label": "IGSO, BeiDou and QZSS (GFZ MGEX rapid)",
+      "windows": {
+        "registered": 150,
+        "run": 150,
+        "withElementSets": 150,
+        "withPseudoObservations": 147,
+        "skipped": 0
+      },
+      "objects": 12,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 150,
+          "fitted": 150,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 150,
+          "complete": 129,
+          "objects": 12,
+          "median": 2.00494,
+          "p10": 1.36272,
+          "p90": 7.7314,
+          "ci95": [
+            1.88437,
+            2.2291
+          ],
+          "ci95Objects": [
+            1.80933,
+            3.6474
+          ],
+          "days": {
+            "1": {
+              "windows": 148,
+              "median": 1.90434
+            },
+            "2": {
+              "windows": 132,
+              "median": 1.97992
+            },
+            "3": {
+              "windows": 131,
+              "median": 2.32379
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 150,
+          "fitted": 147,
+          "failed": 0,
+          "skipped": 3,
+          "scored": 147,
+          "complete": 126,
+          "objects": 12,
+          "median": 3.1212,
+          "p10": 1.2864,
+          "p90": 10.6964,
+          "ci95": [
+            2.44661,
+            3.57581
+          ],
+          "ci95Objects": [
+            2.28919,
+            4.7216
+          ],
+          "days": {
+            "1": {
+              "windows": 145,
+              "median": 2.44605
+            },
+            "2": {
+              "windows": 129,
+              "median": 3.0919
+            },
+            "3": {
+              "windows": 128,
+              "median": 3.6759
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 150,
+          "fitted": 147,
+          "failed": 0,
+          "skipped": 3,
+          "scored": 147,
+          "complete": 126,
+          "objects": 12,
+          "median": 3.56179,
+          "p10": 1.50505,
+          "p90": 10.5129,
+          "ci95": [
+            3.05555,
+            4.02465
+          ],
+          "ci95Objects": [
+            2.80005,
+            5.46222
+          ],
+          "days": {
+            "1": {
+              "windows": 145,
+              "median": 2.74377
+            },
+            "2": {
+              "windows": 129,
+              "median": 3.47822
+            },
+            "3": {
+              "windows": 128,
+              "median": 4.32316
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 126,
+        "arms": {
+          "sgp4-latest": {
+            "median": 1.99949,
+            "p10": 1.36246,
+            "p90": 7.75202
+          },
+          "sgp4xp-fit": {
+            "median": 3.1212,
+            "p10": 1.2864,
+            "p90": 10.6964,
+            "ratioToBaselineMedian": 1.31373,
+            "ratioToBaselineCi95": [
+              1.23,
+              1.45271
+            ],
+            "shareBetterThanBaseline": 0.230159
+          },
+          "sdnap-fit": {
+            "median": 3.56179,
+            "p10": 1.50505,
+            "p90": 10.5129,
+            "ratioToBaselineMedian": 1.6054,
+            "ratioToBaselineCi95": [
+              1.43812,
+              1.72016
+            ],
+            "shareBetterThanBaseline": 0.18254
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 125,
+          "median": 0.136179
+        }
+      }
+    },
+    {
+      "id": "geo-gnss",
+      "label": "GEO, BeiDou and QZSS (GFZ MGEX rapid)",
+      "windows": {
+        "registered": 95,
+        "run": 95,
+        "withElementSets": 95,
+        "withPseudoObservations": 95,
+        "skipped": 0
+      },
+      "objects": 9,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 95,
+          "fitted": 95,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 95,
+          "complete": 70,
+          "objects": 9,
+          "median": 2.24736,
+          "p10": 1.70893,
+          "p90": 3.48152,
+          "ci95": [
+            2.0692,
+            2.62987
+          ],
+          "ci95Objects": [
+            1.95887,
+            2.7551
+          ],
+          "days": {
+            "1": {
+              "windows": 89,
+              "median": 1.85967
+            },
+            "2": {
+              "windows": 80,
+              "median": 2.25416
+            },
+            "3": {
+              "windows": 79,
+              "median": 2.81117
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 95,
+          "fitted": 95,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 95,
+          "complete": 70,
+          "objects": 9,
+          "median": 2.39354,
+          "p10": 1.0739,
+          "p90": 19.3629,
+          "ci95": [
+            2.16765,
+            2.51951
+          ],
+          "ci95Objects": [
+            2.16132,
+            2.60465
+          ],
+          "days": {
+            "1": {
+              "windows": 89,
+              "median": 1.91299
+            },
+            "2": {
+              "windows": 80,
+              "median": 2.38676
+            },
+            "3": {
+              "windows": 79,
+              "median": 2.74233
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 95,
+          "fitted": 95,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 95,
+          "complete": 70,
+          "objects": 9,
+          "median": 2.4684,
+          "p10": 1.97271,
+          "p90": 3.58147,
+          "ci95": [
+            2.36691,
+            2.61166
+          ],
+          "ci95Objects": [
+            2.27369,
+            2.66756
+          ],
+          "days": {
+            "1": {
+              "windows": 89,
+              "median": 1.96276
+            },
+            "2": {
+              "windows": 80,
+              "median": 2.42352
+            },
+            "3": {
+              "windows": 79,
+              "median": 3.06467
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 70,
+        "arms": {
+          "sgp4-latest": {
+            "median": 2.24736,
+            "p10": 1.70893,
+            "p90": 3.48152
+          },
+          "sgp4xp-fit": {
+            "median": 2.39354,
+            "p10": 1.0739,
+            "p90": 19.3629,
+            "ratioToBaselineMedian": 1.02581,
+            "ratioToBaselineCi95": [
+              0.949181,
+              1.15831
+            ],
+            "shareBetterThanBaseline": 0.471429
+          },
+          "sdnap-fit": {
+            "median": 2.4684,
+            "p10": 1.97271,
+            "p90": 3.58147,
+            "ratioToBaselineMedian": 1.10111,
+            "ratioToBaselineCi95": [
+              1.01403,
+              1.22111
+            ],
+            "shareBetterThanBaseline": 0.371429
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 65,
+          "median": 0.092085
+        }
+      }
+    },
+    {
+      "id": "heo-tess",
+      "label": "HEO, TESS, 13.7-day orbit (MAST definitive ephemeris)",
+      "windows": {
+        "registered": 39,
+        "run": 39,
+        "withElementSets": 4,
+        "withPseudoObservations": 2,
+        "skipped": 35
+      },
+      "objects": 1,
+      "arms": {
+        "sgp4-latest": {
+          "label": "SGP4, latest element set",
+          "attempted": 4,
+          "fitted": 4,
+          "failed": 0,
+          "skipped": 0,
+          "scored": 3,
+          "complete": 3,
+          "objects": 1,
+          "median": 5004.86,
+          "p10": 2201.49,
+          "p90": 10840.4,
+          "ci95": null,
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 3,
+              "median": 2323.61
+            },
+            "2": {
+              "windows": 3,
+              "median": 4384.26
+            },
+            "3": {
+              "windows": 3,
+              "median": 7108.09
+            }
+          }
+        },
+        "sgp4xp-fit": {
+          "label": "SGP4-XP fitted to the history",
+          "attempted": 4,
+          "fitted": 2,
+          "failed": 0,
+          "skipped": 2,
+          "scored": 1,
+          "complete": 1,
+          "objects": 1,
+          "median": 7010.76,
+          "p10": 7010.76,
+          "p90": 7010.76,
+          "ci95": null,
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 1,
+              "median": 4460.05
+            },
+            "2": {
+              "windows": 1,
+              "median": 6630.41
+            },
+            "3": {
+              "windows": 1,
+              "median": 9143.19
+            }
+          }
+        },
+        "sdnap-fit": {
+          "label": "SDN-AP fitted to the history",
+          "attempted": 4,
+          "fitted": 0,
+          "failed": 2,
+          "skipped": 2,
+          "scored": 0,
+          "complete": 0,
+          "objects": 0,
+          "median": null,
+          "p10": null,
+          "p90": null,
+          "ci95": null,
+          "ci95Objects": null,
+          "days": {
+            "1": {
+              "windows": 0,
+              "median": null
+            },
+            "2": {
+              "windows": 0,
+              "median": null
+            },
+            "3": {
+              "windows": 0,
+              "median": null
+            }
+          }
+        }
+      },
+      "paired": {
+        "windows": 0,
+        "arms": {
+          "sgp4-latest": {
+            "median": null,
+            "p10": null,
+            "p90": null
+          },
+          "sgp4xp-fit": {
+            "median": null,
+            "p10": null,
+            "p90": null,
+            "ratioToBaselineMedian": null,
+            "ratioToBaselineCi95": null,
+            "shareBetterThanBaseline": null
+          },
+          "sdnap-fit": {
+            "median": null,
+            "p10": null,
+            "p90": null,
+            "ratioToBaselineMedian": null,
+            "ratioToBaselineCi95": null,
+            "shareBetterThanBaseline": null
+          }
+        },
+        "preciseFitSdnapMedian": {
+          "windows": 0,
+          "median": null
+        }
+      }
+    }
+  ]
+}

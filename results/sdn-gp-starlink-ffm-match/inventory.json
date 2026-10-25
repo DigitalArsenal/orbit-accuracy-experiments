@@ -1,0 +1,672 @@
+{
+  "generatedFrom": "local archive listing and headers; nothing fetched",
+  "archive": "/opt/data/sdn-archive",
+  "rows": [
+    {
+      "regime": "MEO",
+      "source": "ESA/ESOC final GNSS orbits (GPS, GLONASS, Galileo)",
+      "product": "daily SP3 as GCRF states, 5 min, 77 satellites a day",
+      "count": 715,
+      "span": "2024-09-24 to 2026-09-23",
+      "usable": "truth: arm 1-2 windows",
+      "note": "No BeiDou or QZSS in these products; the GFZ MGEX set below carries them."
+    },
+    {
+      "regime": "MEO",
+      "source": "IGS final combination",
+      "product": "daily SP3 as GCRF states, 15 min",
+      "count": 14,
+      "span": "2026-08-02 to 2026-08-15",
+      "usable": "truth",
+      "note": "Spare; the ESA products cover the same constellations at 5 min."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, lageos1",
+      "product": "weekly GCRF states, 2 or 15 min",
+      "count": 46,
+      "span": "2025-10-04 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, lageos2",
+      "product": "weekly GCRF states, 2 or 15 min",
+      "count": 47,
+      "span": "2025-10-04 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, etalon1",
+      "product": "weekly GCRF states, 2 or 15 min",
+      "count": 47,
+      "span": "2025-10-04 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, etalon2",
+      "product": "weekly GCRF states, 2 or 15 min",
+      "count": 47,
+      "span": "2025-10-04 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF analysis-center arc, starlette",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 109,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF analysis-center arc, stella",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 108,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF analysis-center arc, ajisai",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 110,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF analysis-center arc, larets",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 108,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF analysis-center arc, westpac",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 109,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF analysis-center arc, lares",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 107,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": ""
+    },
+    {
+      "regime": "MEO (5,900 km)",
+      "source": "ILRS NSGF analysis-center arc, lares2",
+      "product": "4-day GCRF arcs, 3 min",
+      "count": 107,
+      "span": "2025-10-05 to 2026-08-29",
+      "usable": "truth: arm 1-2 windows",
+      "note": "LARES-2 orbits near 5,900 km although the harness files it with the low targets."
+    },
+    {
+      "regime": "LEO (about 450 km)",
+      "source": "Swarm A precise orbit (ESA)",
+      "product": "daily SP3",
+      "count": 323,
+      "span": "2025-09-30 to 2026-08-18",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO (about 450 km)",
+      "source": "Swarm B precise orbit (ESA)",
+      "product": "daily SP3",
+      "count": 323,
+      "span": "2025-09-30 to 2026-08-18",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO (about 450 km)",
+      "source": "Swarm C precise orbit (ESA)",
+      "product": "daily SP3",
+      "count": 323,
+      "span": "2025-09-30 to 2026-08-18",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO (about 700 km)",
+      "source": "Sentinel-1A precise orbit (Copernicus POD)",
+      "product": "POEORB files",
+      "count": 264,
+      "span": "2025-10-01 to 2026-06-29",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO (about 700 km)",
+      "source": "Sentinel-1C precise orbit (Copernicus POD)",
+      "product": "POEORB files",
+      "count": 313,
+      "span": "2025-10-01 to 2026-08-29",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO (about 700 km)",
+      "source": "Sentinel-1D precise orbit (Copernicus POD)",
+      "product": "POEORB files",
+      "count": 226,
+      "span": "2026-01-09 to 2026-08-29",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "COSMIC-2 precise orbits (UCAR)",
+      "product": "leoOrb files",
+      "count": 17508,
+      "span": "2025-10-01 to 2026-10-07",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "NASA JSC ISS OEM (file of 2026-10-09)",
+      "product": "EME2000, 4 min",
+      "count": 1,
+      "span": "2026-10-07T12:00:00.000 to 2026-10-22T12:00:00.000",
+      "usable": "truth: arm 1-2 windows",
+      "note": "U.S. Government work."
+    },
+    {
+      "regime": "LEO",
+      "source": "NASA JSC ISS OEM (same-day capture 2026-10-23)",
+      "product": "EME2000, 4 min",
+      "count": 1,
+      "span": "2026-10-21T12:00:00.000 to 2026-11-05T12:00:00.000",
+      "usable": "truth for the COMSPOC scoring arm",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "SpaceX Starlink forecasts, prospective capture (E13b collector)",
+      "product": "derived products only: Brouwer mean elements, energy, drag work at 10 min over the first 8 h; no states, no raw files",
+      "count": 33454,
+      "span": "8 cycles logged, 3 complete: 2026-10-23T13:01:35.254Z to 2026-10-24T05:01:35.257Z",
+      "usable": "selection of the population only",
+      "note": "The truth states of V2 start 2026-10-24 08:00Z."
+    },
+    {
+      "regime": "LEO",
+      "source": "SpaceX Starlink forecasts, same-day local capture 2026-10-23",
+      "product": "MEME gz, 60 s, 48 h, EME2000",
+      "count": 40,
+      "span": "2026-10-23 12:06Z start, 48 h",
+      "usable": "start states for the FFM truth and in-span scoring",
+      "note": "Raw operator files: read in memory, never copied."
+    },
+    {
+      "regime": "LEO",
+      "source": "SpaceX Starlink forecasts, sample of 2026-10-09",
+      "product": "MEME, 60 s, 72 h",
+      "count": 25,
+      "span": "2026-10-09",
+      "usable": "start states (stale)",
+      "note": ""
+    },
+    {
+      "regime": "LEO",
+      "source": "Operator-derived OMM/OCM fits (E11)",
+      "product": "derived records",
+      "count": 143,
+      "span": "2026-10-10 to 2026-10-12",
+      "usable": "derived element sets, not truth",
+      "note": ""
+    },
+    {
+      "regime": "All regimes (scoring only)",
+      "source": "COMSPOC Spacebook XP sets and SynCoPate trajectories with covariance (local capture 2026-10-23 20:09Z)",
+      "product": "29674 SGP4-XP sets (of 29689); 91 SynCoPate objects, 12 days at 180 s with 6x6 covariance",
+      "count": 29674,
+      "span": "set epochs 2026-08-15 to 2026-10-22, median 2026-10-20",
+      "usable": "scoring only: never fitted to, never an input, aggregates only",
+      "note": "Terms: no commercial use, no redistribution, no derivative works. The GNSS and the six LEO-sphere laser-ranged sets are scored against the GFZ rapid and ILRS NSGF products; LAGEOS and Etalon sets wait for combined orbits after 2026-10-03."
+    },
+    {
+      "regime": "GEO / IGSO / MEO",
+      "source": "GFZ multi-GNSS rapid orbits GFZ0MGXRAP (MGEX), in the E14 reference set",
+      "product": "daily GCRF states, 5 min, 100 satellites a day: BeiDou and QZSS satellites by name suffix: 9 GEO (G), 12 IGSO (I)",
+      "count": 363,
+      "span": "2025-10-01 to 2026-09-30",
+      "usable": "truth: GEO and IGSO windows (amendment A4)",
+      "note": "Found after registration; the first inventory looked under reference-states only."
+    },
+    {
+      "regime": "LEO (about 490 km)",
+      "source": "GFZ rapid science orbit L64",
+      "product": "5-hour to 14-hour arcs",
+      "count": 731,
+      "span": "2025-09-30 to 2026-09-30",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "LEO (about 490 km)",
+      "source": "GFZ rapid science orbit L65",
+      "product": "5-hour to 14-hour arcs",
+      "count": 731,
+      "span": "2025-09-30 to 2026-09-30",
+      "usable": "truth, not yet scored here",
+      "note": ""
+    },
+    {
+      "regime": "GEO",
+      "source": "operator ephemerides (SES, Intelsat)",
+      "product": "none stored locally",
+      "count": 0,
+      "span": null,
+      "usable": "none",
+      "note": "operator-capture holds Starlink only. Space-Track-hosted operator files were fitted in memory by E4/E11 and not kept; SES, Intelsat, OneWeb and Kuiper exist locally only as CelesTrak SupGP element sets and our OMM fits of them (no ephemerides). Precise GEO truth exists (GFZ MGEX, above)."
+    },
+    {
+      "regime": "MEO",
+      "source": "OneWeb, Kuiper operator ephemerides",
+      "product": "none stored locally",
+      "count": 0,
+      "span": null,
+      "usable": "none",
+      "note": "Same as GEO."
+    },
+    {
+      "regime": "Cislunar and HEO",
+      "source": "NAIF artemis2 EM2_FODNAVBET_revF_PUBLIC.oem",
+      "product": "CCSDS OEM of the same trajectory; SPK type n/a,  segments, 6.3 MB",
+      "count": 1,
+      "span": "same as the SPK",
+      "usable": "cross-check text of the SPK",
+      "note": "Fetched 2026-10-23 from ARTEMIS/kernels/spk/EM2_FODNAVBET_revF_PUBLIC.oem."
+    },
+    {
+      "regime": "Cislunar and HEO",
+      "source": "NAIF artemis2 art002_rec_260402_260410_jsc_bet_revf.bsp",
+      "product": "Orion, Earth-centered J2000 throughout; SPK type 13, 6 segments, 5.7 MB",
+      "count": 6,
+      "span": "2026-04-02T01:58:21.398Z to 2026-04-10T23:53:24.644Z",
+      "usable": "first segment (high-Earth-orbit checkout) scored as one short arc; after the translunar burn: scored as segment sets (section 15)",
+      "note": "Fetched 2026-10-23 from ARTEMIS/kernels/spk/art002_rec_260402_260410_jsc_bet_revf.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF chandra chandra_merged.bsp",
+      "product": "Earth-centered, highly elliptical, 64 h period; SPK type 9, 1523 segments, 67.7 MB",
+      "count": 1523,
+      "span": "1999-08-07T07:29:59.999Z to 2019-09-02T11:59:59.998Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from CHANDRA/kernels/spk/chandra_merged.bsp."
+    },
+    {
+      "regime": "Interplanetary",
+      "source": "NAIF juno spk_merge_110805_171017_130515.bsp",
+      "product": "Jupiter system and cruise, SPK types 1, 2, 3; SPK type 1, 118 segments, 7.8 MB",
+      "count": 118,
+      "span": "2011-08-05T17:18:05.999Z to 2017-10-16T23:58:50.816Z",
+      "usable": "scored from the JPL Horizons vector tables (section 15); type 1 and 2 not readable",
+      "note": "Fetched 2026-10-23 from JUNO/kernels/spk/spk_merge_110805_171017_130515.bsp."
+    },
+    {
+      "regime": "Lunar",
+      "source": "NAIF lro lrorg_2026074_2026166_v01.bsp",
+      "product": "lunar-centered (Moon), J2000; SPK type 13, 92 segments, 7.6 MB",
+      "count": 92,
+      "span": "2026-03-15T00:00:00.001Z to 2026-06-15T00:00:00Z",
+      "usable": "scored: the Moon-centered SDN-AP (section 14)",
+      "note": "Fetched 2026-10-23 from pds/data/lro-l-spice-6-v1.0/lrosp_1000/data/spk/lrorg_2026074_2026166_v01.bsp."
+    },
+    {
+      "regime": "Interplanetary",
+      "source": "NAIF lucy lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp",
+      "product": "Sun-centered, SPK type 1, predicted trajectory; SPK type 1, 18 segments, 0.8 MB",
+      "count": 18,
+      "span": "2026-10-15T23:59:59.998Z to 2033-03-13T16:41:00.001Z",
+      "usable": "scored from the JPL Horizons vector tables (section 15); type 1 not readable",
+      "note": "Fetched 2026-10-23 from LUCY/kernels/spk/lcy_261016_330313_260731_OD100-R-DSM3-P-TCM37a-P_sconly_v1.bsp."
+    },
+    {
+      "regime": "Interplanetary",
+      "source": "NAIF psyche psyche_sc-eph_260531-270301_261020_v1.bsp",
+      "product": "Sun-centered, SPK type 1 (modified difference arrays); SPK type 1, 70 segments, 16.4 MB",
+      "count": 70,
+      "span": "2026-05-31T23:58:50.816Z to 2027-03-01T12:00:00.001Z",
+      "usable": "scored from the JPL Horizons vector tables (section 15); type 1 is not readable by files/orbit-products 0.1.4",
+      "note": "Fetched 2026-10-23 from PSYCHE/kernels/spk/psyche_sc-eph_260531-270301_261020_v1.bsp."
+    },
+    {
+      "regime": "GEO",
+      "source": "NAIF tdrss TDRSS.bsp",
+      "product": "SPK type 10, generated from two-line elements; SPK type 10, 10 segments, 8.5 MB",
+      "count": 10,
+      "span": "2014-09-25T11:32:49.566Z to 2026-02-11T07:05:12.877Z",
+      "usable": "not truth: element-derived",
+      "note": "Fetched 2026-10-23 from TDRSS/kernels/spk/TDRSS.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF themis THEMIS_A_2013_039_055.bsp",
+      "product": "Earth-centered, highly elliptical (THEMIS A, D, E); SPK type 13, 3 segments, 1.3 MB",
+      "count": 3,
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from THEMIS/kernels/spk/THEMIS_A_2013_039_055.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF themis THEMIS_D_2013_039_055.bsp",
+      "product": "Earth-centered, highly elliptical (THEMIS A, D, E); SPK type 13, 3 segments, 1.3 MB",
+      "count": 3,
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from THEMIS/kernels/spk/THEMIS_D_2013_039_055.bsp."
+    },
+    {
+      "regime": "HEO",
+      "source": "NAIF themis THEMIS_E_2013_039_055.bsp",
+      "product": "Earth-centered, highly elliptical (THEMIS A, D, E); SPK type 13, 3 segments, 1.3 MB",
+      "count": 3,
+      "span": "2013-02-08T00:00:00Z to 2013-02-24T00:00:00.001Z",
+      "usable": "scored: SGP4 and SGP4-XP, 24 h and 72 h fits",
+      "note": "Fetched 2026-10-23 from THEMIS/kernels/spk/THEMIS_E_2013_039_055.bsp."
+    },
+    {
+      "regime": "Cislunar / lunar / interplanetary (bodies)",
+      "source": "NAIF planetary ephemeris de440s.bsp",
+      "product": "SPK, planets and Moon",
+      "count": 1,
+      "span": "1849-12-26 to 2150-01-22",
+      "usable": "truth for solar-system-bodies, not for SGP4",
+      "note": "Spans from the archive README."
+    },
+    {
+      "regime": "Cislunar / lunar / interplanetary (bodies)",
+      "source": "NAIF planetary ephemeris de430.bsp",
+      "product": "SPK, planets and Moon",
+      "count": 1,
+      "span": "1549-12-31 to 2650-01-25",
+      "usable": "truth for solar-system-bodies, not for SGP4",
+      "note": "Spans from the archive README."
+    },
+    {
+      "regime": "Cislunar / lunar / interplanetary (bodies)",
+      "source": "NAIF planetary ephemeris de421.bsp",
+      "product": "SPK, planets and Moon",
+      "count": 1,
+      "span": "1899-07-29 to 2053-10-09",
+      "usable": "truth for solar-system-bodies, not for SGP4",
+      "note": "Spans from the archive README."
+    },
+    {
+      "regime": "Cislunar / lunar / interplanetary (bodies)",
+      "source": "NAIF planetary ephemeris de405.bsp",
+      "product": "SPK, planets and Moon",
+      "count": 1,
+      "span": "1950-01-01 to 2049-12-31",
+      "usable": "truth for solar-system-bodies, not for SGP4",
+      "note": "Spans from the archive README."
+    },
+    {
+      "regime": "Lunar",
+      "source": "JPL Horizons API vector tables, Danuri (KPLO), moon-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; KPLO_merged; 4 responses",
+      "count": 92161,
+      "span": "2026-08-15 to 2026-10-18",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Cislunar (NRHO)",
+      "source": "JPL Horizons API vector tables, CAPSTONE, moon-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; CAPSTONE_merged; 7 responses",
+      "count": 105121,
+      "span": "2025-07-15 to 2026-07-15",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Cislunar and distant retrograde",
+      "source": "JPL Horizons API vector tables, Artemis I (Orion), earth-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Artemis-I_ASF; 1 responses",
+      "count": 36506,
+      "span": "2022-11-16 to 2022-12-11",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Cislunar and distant retrograde",
+      "source": "JPL Horizons API vector tables, Artemis I (Orion), moon-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Artemis-I_ASF; 1 responses",
+      "count": 36506,
+      "span": "2022-11-16 to 2022-12-11",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centered)",
+      "source": "JPL Horizons API vector tables, Psyche (cruise), sun-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; psyche_merged; 1 responses",
+      "count": 7993,
+      "span": "2025-08-13 to 2026-07-12",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centered)",
+      "source": "JPL Horizons API vector tables, Lucy (reconstruction through 2025-09-08), sun-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Lucy_merged_DE430; 1 responses",
+      "count": 6265,
+      "span": "2024-12-20 to 2025-09-07",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centered)",
+      "source": "JPL Horizons API vector tables, Lucy (flight project reference trajectory, a planning prediction), sun-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Lucy_merged_DE430; 2 responses",
+      "count": 12913,
+      "span": "2025-09-09 to 2027-03-01",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Sun-centered)",
+      "source": "JPL Horizons API vector tables, Juno (cruise, 2012-10 to 2013-09), sun-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Juno_merged; 1 responses",
+      "count": 8737,
+      "span": "2012-10-01 to 2013-09-30",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "Interplanetary (Jupiter-centered)",
+      "source": "JPL Horizons API vector tables, Juno (Jupiter orbits), jupiter-centered",
+      "product": "ICRF equatorial axes, TDB, km and km/s; Juno_merged; 2 responses",
+      "count": 34609,
+      "span": "2024-09-01 to 2026-08-23",
+      "usable": "truth for the windows prepared for SDN-AP",
+      "note": "Public NASA/JPL data (registry id jpl-horizons); stored as served, results only."
+    },
+    {
+      "regime": "HEO (13.7 day)",
+      "source": "STScI MAST: TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp)",
+      "product": "SPK type 9 (Lagrange, degree 7), Earth-centered J2000, 60 s; 23 MB",
+      "count": 20,
+      "span": "2026-06-29 to 2026-09-17 (doy 194 to 260 of 2026)",
+      "usable": "truth: SGP4 and SGP4-XP windows (24 h and 72 h fits)",
+      "note": "Public NASA mission data (registry id stsci-mast-tess); MAST holds no definitive file after 2026-09-17."
+    },
+    {
+      "regime": "MEO / IGSO / GEO",
+      "source": "GFZ rapid GNSS orbits GFZ0OPSRAP (GPS, GLONASS, Galileo; CC BY 4.0)",
+      "product": "daily SP3, 5 min, from NASA CDDIS (GFZ file server unreachable 2026-10-24)",
+      "count": 12,
+      "span": "2026-10-11 to 2026-10-22",
+      "usable": "truth: arm 1-2 windows and the COMSPOC GNSS scoring",
+      "note": "Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c)."
+    },
+    {
+      "regime": "MEO / IGSO / GEO",
+      "source": "GFZ rapid GNSS orbits GFZ0MGXRAP (BeiDou, QZSS; IGS MGEX terms)",
+      "product": "daily SP3, 5 min, from NASA CDDIS (GFZ file server unreachable 2026-10-24)",
+      "count": 12,
+      "span": "2026-10-11 to 2026-10-22",
+      "usable": "truth: arm 1-2 windows and the COMSPOC GNSS scoring",
+      "note": "Reference states under <store>/gnss-rapid/; the last three days use Bulletin A predicted Earth orientation (amendment A8c)."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, ajisai, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, lares, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "MEO (5,900 km)",
+      "source": "ILRS NSGF rapid orbit, lares2, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, larets, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, starlette, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, stella, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 13,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "LEO",
+      "source": "ILRS NSGF rapid orbit, westpac, via NASA CDDIS",
+      "product": "daily SP3-c, 4- to 7-day arcs, 3 min, ITRF",
+      "count": 12,
+      "span": "2026-10-12 to 2026-10-24 (file dates)",
+      "usable": "truth: current SLR rows and the COMSPOC laser-ranged scoring",
+      "note": "Reference states under <store>/slr-ref/ (slr-convert.mjs); registry id ilrs-cddis; stored as served with provenance rows."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, etalon1, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, etalon2, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, lageos1, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "MEO (5,850-19,100 km)",
+      "source": "ILRS combined weekly orbit, lageos2, via NASA CDDIS",
+      "product": "weekly SP3-c, 2 or 15 min",
+      "count": 4,
+      "span": "2026-09-12 to 2026-10-03 (file dates)",
+      "usable": "truth: current MEO SLR rows (positions end 2026-10-03)",
+      "note": "The files of week 260926 hold no positions and are skipped by the converter."
+    },
+    {
+      "regime": "Cislunar / HEO",
+      "source": "TESS, CAPSTONE, Artemis I, Danuri",
+      "product": "not hosted by NAIF",
+      "count": 0,
+      "span": null,
+      "usable": "none",
+      "note": "NAIF has no TESS, CAPSTONE, Artemis I or Danuri kernels (checked 2026-10-23); with the approvals of 2026-10-24 they come from STScI MAST (TESS) and JPL Horizons (the other three), listed above. Substituted: THEMIS and Chandra for TESS, Artemis II for Artemis I."
+    },
+    {
+      "regime": "Cislunar / L2",
+      "source": "JPL Horizons evidence in modules propagator/ffm (JWST, Moon, Sun, Venus, Jupiter)",
+      "product": "geocentric ICRF vectors, hourly",
+      "count": 50,
+      "span": "2026-06-10 to 2026-08-03",
+      "usable": "fixture truth: 50 epochs in two 25-hour windows",
+      "note": "Test evidence in the modules repository, not the archive."
+    },
+    {
+      "regime": "Lunar / Mars",
+      "source": "SPK fixtures in the modules repository (LADEE segment, MSL and InSight landers)",
+      "product": "type 13 and type 8 test kernels",
+      "count": 3,
+      "span": "short test arcs",
+      "usable": "fixtures only",
+      "note": "Not truth sets; they exercise the SPK reader."
+    },
+    {
+      "regime": "Interplanetary / small bodies",
+      "source": "JPL SBDB, MPC element catalogs",
+      "product": "none",
+      "count": 0,
+      "span": null,
+      "usable": "none",
+      "note": "No small-body element catalog is archived."
+    }
+  ]
+}

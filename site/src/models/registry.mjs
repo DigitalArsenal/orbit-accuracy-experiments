@@ -11,6 +11,15 @@ export const PAPERS = {
   'fast-conjunction-assessment': 'Fast All-vs-All Conjunction Screening',
   'provenance-and-security': 'Provenance and Security in Space Data Network',
   'adversarial-security': 'Persistent Adversarial Security',
+  'sdn-ap': 'SDN-AP: A Semi-Analytic Mean-Element Orbit Propagator for Earth-Orbiting, Cislunar and Heliocentric Objects',
+};
+
+// Papers that live outside the SDN repository: the repository directory beside
+// the modules checkout (or the env override), the markdown in it, and the page
+// that publishes it. Every other paper is SDN's whitepapers/<paper>.md on
+// spacedatanetwork.org.
+export const PAPER_SOURCES = {
+  'sdn-ap': { repo: 'sdn-ap', env: 'SDN_AP_ROOT', file: 'whitepaper/sdn-ap.md', url: 'https://digitalarsenal.github.io/sdn-ap/whitepaper.html' },
 };
 
 const CATALOG = 'evidence-supported-aso-catalog';
@@ -19,7 +28,13 @@ const PROVENANCE = 'provenance-and-security';
 const SECURITY = 'adversarial-security';
 const SIMULATION = ['analysis/observation-simulator', 'foundation/frames', 'propagator/ffm'];
 
+const SDNAP = 'sdn-ap';
+
 export const MODELS = [
+  // SDN-AP
+  { paper: SDNAP, heading: '12.3 Held-out accuracy', model: 'held-out', title: 'Every propagator against a laser-ranged precise orbit',
+    claim: 'SDN-AP, SGP4-XP and SGP4 fitted to the same 24 hours of LAGEOS-1’s ILRS orbit and FFM from its precise state, each carried three days against the precise orbit, with each propagator’s covariance.',
+    modules: ['propagator/sdn-ap', 'propagator/ffm-v1', 'foundation/time'] },
   // Evidence-Supported ASO Catalog
   { paper: CATALOG, heading: '2.3 Evidence model', url: 'models/evidence-supported-aso-catalog/2-evidence-model-and-records.html', dir: 'od', model: 'batch-fit', title: 'A solution from observations, with its covariance',
     claim: 'Radar, optical and RF observations of a GPS satellite, their measurement models, FFM’s dynamics and a weighted least-squares fit: the solution and its covariance against the IGS orbit.',

@@ -313,7 +313,7 @@
   },
   {
    "id": "nasa-iss-oem",
-   "name": "NASA ISS trajectory (ISS.OEM_J2K_EPH.txt)",
+   "name": "NASA ISS trajectory (ISS.OEM_J2K_EPH.txt: the current file and the dated archive of 2020 to 2026)",
    "provider": "NASA JSC Flight Operations Directorate, Trajectory Operations and Planning (TOPO)",
    "license": "U.S. Government work, public domain (data.nasa.gov \"us-pd\")",
    "terms": [
@@ -331,6 +331,11 @@
      "title": "ISS COORDS dataset (data.nasa.gov)",
      "url": "https://data.nasa.gov/dataset/iss-coords-2022-01-10",
      "retrieved": "2026-10-10"
+    },
+    {
+     "title": "NASA public data bucket, ISS trajectory archive (anonymous listing and downloads of iss-coords/<date>/.../ISS.OEM_J2K_EPH.txt)",
+     "url": "https://nasa-public-data.s3.amazonaws.com/iss-coords/",
+     "retrieved": "2026-10-24"
     }
    ],
    "redistribution": "NASA provides this information for use by the public.",
@@ -339,14 +344,15 @@
    "reproduce": "yes",
    "credit": "ISS trajectory: NASA JSC Flight Operations Directorate (TOPO), https://www.nasa.gov/spot-the-station/ (U.S. Government work).",
    "reason": "Public-domain U.S. Government work offered for public use.",
-   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth)",
+   "usedIn": "E4 (ISS operator ephemeris), E6 (ISS truth); G1 (M24: the dated archive of 2020 to 2026, the event tables of the headers and the ephemerides around each burn)",
    "reproducedAt": [
     "data/e4/iss/ (4 files)",
     "data/e6/iss/ (1 file)",
-    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt"
+    "modules: analysis/od/tests/data/supgp-reference/iss*/ISS.OEM_J2K_EPH.trimmed.txt, data-source/iss-source/test/fixtures/ISS.OEM_J2K_EPH.sample.txt",
+    "results/sdn-gp-starlink-ffm-match/: the burn list (event name, TIG, delta-v, HA and HP of the header event tables) and per-burn detection statistics; no state vectors"
    ],
    "notice": null,
-   "obtain": null
+   "obtain": "https://nasa-public-data.s3.amazonaws.com/iss-coords/<yyyy-mm-dd>/ISS_OEM/ISS.OEM_J2K_EPH.txt (the 2020 folders: .../ISS.OEM_J2K_EPH/ISS.OEM_J2K_EPH.txt); the keys are listed with ?list-type=2&prefix=iss-coords/ (anonymous, no login)"
   },
   {
    "id": "ilrs",
@@ -558,13 +564,117 @@
    "reproduce": "no",
    "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
    "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
-   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08)",
+   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts)",
    "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
    "notice": null,
    "reproducedAt": [
     "modules: analysis/conjunction-assessment/tests/fixtures/socrates/gp_*.json and decaying/gp_2026-07-06.json (element sets via CelesTrak, no citation)",
     "modules: analysis/launch-trajectory/tests/fixtures/{crs14,crs16,paz}.json \"catalog\" blocks and iss-teme-crew13.json (per-sample states from Space-Track element sets, no citation)"
    ]
+  },
+  {
+   "id": "aerospace-cords",
+   "name": "Aerospace Corporation CORDS reentry history (Reentry_History_Spreadsheet_05-22-26.csv)",
+   "provider": "The Aerospace Corporation, Center for Orbital and Reentry Debris Studies (CORDS)",
+   "license": "No license stated on the file; published as the public Aerospace Corporation CORDS reentry database (the words of the closed-modules provider that reads it). aerospace.org answers a scripted client's request for its pages with a bot challenge (HTTP 403), so the site's own terms page could not be read",
+   "terms": [
+    {
+     "title": "CORDS reentry history spreadsheet (CSV), fetched as served",
+     "url": "https://aerospace.org/sites/default/files/2026-05/Reentry_History_Spreadsheet_05-22-26.csv",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Aerospace CORDS reentries page (a bot challenge for a script: not read)",
+     "url": "https://aerospace.org/reentries",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "aerospace.org robots.txt (does not disallow /reentries)",
+     "url": "https://aerospace.org/robots.txt",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "(no license, copyright or reuse statement could be read; the closed-modules aerospace-reentry-provider states its terms as \"Public Aerospace Corporation CORDS reentry database; cite Aerospace Corporation CORDS.\")",
+   "attributionClause": "Cite Aerospace Corporation CORDS (the provider's terms line).",
+   "conditions": "Used for local results only: the observed reentry times, Aerospace's predictions and their stated uncertainties of the objects scored; no row of the spreadsheet is copied into this repository. Cited by URL and SHA-256 d6fabdbd279f1d3590638edd8738865fb6f6934548b76b0a1bd00d58162f5f24 (391,875 bytes, retrieved 2026-10-24).",
+   "reproduce": "no",
+   "credit": "Reentry history: The Aerospace Corporation, Center for Orbital and Reentry Debris Studies (CORDS), https://aerospace.org/reentries (public spreadsheet of observed reentries and Aerospace's predictions).",
+   "reason": "No license grants redistribution; cited by URL and SHA-256, results only.",
+   "usedIn": "G1 (M29: the observed reentry times, Aerospace's predictions and stated uncertainties of the objects whose element-set history the local archive holds, scored beside the SDN-AP reentry windows)",
+   "obtain": "https://aerospace.org/sites/default/files/2026-05/Reentry_History_Spreadsheet_05-22-26.csv (anonymous, a plain GET; the listing page needs a browser)",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "navcen-gps-nanu",
+   "name": "GPS Notice Advisory to Navstar Users (NANU), 2026 archive files (nanu/2026/2026NNN.nnu)",
+   "provider": "U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center (NAVCEN)",
+   "license": "No license or copyright statement on the pages or in the files. NANUs are works of the U.S. Government (issued by U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard), which are not subject to copyright in the United States (17 U.S.C. 105); the sources carry no explicit grant",
+   "terms": [
+    {
+     "title": "Programmatically Accessing NANUs, Almanacs, and Ops Advisories (NAVCEN instructions for scripted access, PDF)",
+     "url": "https://navcen.uscg.gov/sites/default/files/pdf/gps/Programmatically_Accessing_Archives.pdf",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAVCEN: GPS NANUs, Almanacs, OPS Advisories and SOFs (the page that links the archive)",
+     "url": "https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAVCEN robots.txt (does not disallow /sites/default/files/gps/)",
+     "url": "https://navcen.uscg.gov/robots.txt",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "(no explicit statement; a U.S. Government work, not subject to copyright in the United States)",
+   "attributionClause": "None stated; credited below.",
+   "conditions": "Used for local results only: the forecast delta-V outages of the GPS satellites (satellite, start and stop times) scored against detections; no NANU text is copied into this repository. Fetched one request at a time, 5 s apart, by the scripted access NAVCEN documents; no credentials.",
+   "reproduce": "no",
+   "credit": "GPS Notice Advisory to Navstar Users (NANU): U.S. Space Force GPS operations, disseminated by the U.S. Coast Guard Navigation Center, https://navcen.uscg.gov/gps-nanus-almanacs-opsadvisories-sof.",
+   "reason": "No explicit license statement; used for results only.",
+   "usedIn": "G1 (M27: the forecast delta-V outages of GPS satellites in 2026 against the maneuver detector)",
+   "obtain": "https://navcen.uscg.gov/sites/default/files/gps/nanu/YYYY/YYYYNNN.nnu (anonymous GET; NNN from 001 up, HTTP 404 beyond the last)",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "qzss-naqu",
+   "name": "QZSS Notice Advisory to QZSS Users (NAQU) messages, 2026 (the NAQU page of the QZSS operational information site)",
+   "provider": "Quasi-Zenith Satellite System, Cabinet Office, Government of Japan (National Space Policy Secretariat)",
+   "license": "Terms of Use of the QZSS website (based on the Government of Japan Standard Terms of Use): content may be freely used, copied, publicly transmitted, translated or modified, commercial use permitted, on condition of a source citation (and a statement that the content was edited, where it was); numerical data and data in simple tables are not subject to copyright",
+   "terms": [
+    {
+     "title": "Terms of Use of the Quasi-Zenith Satellite System (QZSS) Website",
+     "url": "https://qzss.go.jp/en/policy/rule.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAQU Message (the page read: the calendar of NAQUs with each message's text)",
+     "url": "https://sys.qzss.go.jp/dod/en/naqu.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "NAQU format",
+     "url": "https://sys.qzss.go.jp/dod/en/naqu/format.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Application Programming Interface (not used: it states that the APIs shall only be used for not-for-profit tools and services)",
+     "url": "https://sys.qzss.go.jp/dod/en/api.html",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "Allowed under the Terms of Use, with a source citation; content edited for use must say so and must not be presented as created by the QZSS website",
+   "attributionClause": "Source: Quasi-Zenith Satellite System website (URL of the relevant page); for edited content, \"Created by editing the NAQU messages (Quasi-Zenith Satellite System website) (URL of the relevant page)\".",
+   "conditions": "The NAQU web page is read, not the Web API (whose page limits the API to not-for-profit tools and services). Used for local results only: the forecast delta-V outages (satellite, start and stop times), scored against detections.",
+   "reproduce": "yes",
+   "credit": "QZSS NAQU messages: Source: Quasi-Zenith Satellite System website, Cabinet Office, Government of Japan (https://sys.qzss.go.jp/dod/en/naqu.html), accessed 2026-10-24. Created by editing the NAQU messages (Quasi-Zenith Satellite System website): the forecast delta-V outage windows only.",
+   "reason": null,
+   "usedIn": "G1 (M27: the forecast delta-V outages of QZSS satellites in 2026 against the maneuver detector)",
+   "obtain": "https://sys.qzss.go.jp/dod/en/naqu.html (anonymous GET; the page holds the year's NAQUs, each message in a hidden field)",
+   "notice": null,
+   "reproducedAt": []
   },
   {
    "id": "gfz-kp",
@@ -1925,6 +2035,133 @@
    "reproducedAt": [],
    "obtain": "https://isdc-data.gfz.de/grace-fo/ORBIT/<L64|L65>/RSO/<yyyy>/<ddd>/GFZOP_RSO_<L64|L65>_G_<yyyymmdd_hhmmss>_<yyyymmdd_hhmmss>_v03.sp3.gz (anonymous HTTPS; L64 = GRACE-FO-1, L65 = GRACE-FO-2)",
    "notice": null
+  },
+  {
+   "id": "gfz-rapid-gnss",
+   "name": "GFZ rapid product series for the IGS: rapid GNSS orbits (GFZ0OPSRAP: GPS, GLONASS, Galileo, 5 min SP3)",
+   "provider": "GFZ German Research Centre for Geosciences, Potsdam (Section 1.1 Space Geodetic Techniques), published by GFZ Data Services and the GFZ ISDC; the same files are in the NASA CDDIS archive of IGS analysis-center products",
+   "license": "Creative Commons Attribution 4.0 International (CC BY 4.0), as stated in the DataCite record of doi:10.5880/GFZ.1.1.2020.003; the IGS Data and Product Disclaimer and Terms of Use also apply to the IGS products",
+   "terms": [
+    {
+     "title": "GFZ rapid product series for the IGS (DataCite record, doi:10.5880/GFZ.1.1.2020.003; rights: CC BY 4.0)",
+     "url": "https://api.datacite.org/dois/10.5880/gfz.1.1.2020.003",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "GFZ ISDC: GNSS Products (product lines, references, contact)",
+     "url": "https://isdc.gfz.de/gnss-products",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Creative Commons Attribution 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "CC BY 4.0: share and adapt for any purpose, including commercially, with attribution, a link to the licence and an indication of changes.",
+   "attributionClause": "Maennel, B., Brandt, A., Nischan, T., Brack, A., Sakic, P., Bradke, M. (2020): GFZ rapid product series for the IGS. GFZ Data Services. https://doi.org/10.5880/GFZ.1.1.2020.003",
+   "conditions": "GFZ's file server (isdc-data.gfz.de) did not answer from the G1 machine on 2026-10-24, so the files were taken from NASA CDDIS (gnss/products/<GPS week>/) with an Earthdata token read at run time; the bytes are GFZ's. The G1 experiment keeps them in its archive and publishes results only (coordinator, 2026-10-24).",
+   "reproduce": "yes",
+   "credit": "GFZ rapid orbits for the IGS (GFZ0OPSRAP): Maennel, B., Brandt, A., Nischan, T., Brack, A., Sakic, P., Bradke, M. (2020), GFZ rapid product series for the IGS, GFZ Data Services, doi:10.5880/GFZ.1.1.2020.003, CC BY 4.0; obtained from NASA CDDIS (Noll 2010, doi:10.1016/j.asr.2010.01.018).",
+   "reason": "CC BY 4.0 allows reproduction with attribution; the experiment reproduces none of the files.",
+   "usedIn": "G1 (current GNSS truth, 2026-10-11 to 2026-10-22: GPS, GLONASS and Galileo windows, and the scoring of COMSPOC's GNSS sets)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://isdc-data.gfz.de/gnss/products/rapid/w<GPS week>/ or https://cddis.nasa.gov/archive/gnss/products/<GPS week>/GFZ0OPSRAP_<yyyyddd>0000_01D_05M_ORB.SP3.gz (Earthdata login)"
+  },
+  {
+   "id": "jpl-horizons",
+   "name": "JPL Horizons On-Line Ephemeris System: vector tables of CAPSTONE, Artemis I (Orion), Danuri (KPLO), Psyche, Lucy and Juno",
+   "provider": "NASA Jet Propulsion Laboratory, Solar System Dynamics Group (Horizons API); the spacecraft trajectories are the mission navigation teams' (CAPSTONE: NASA/Advanced Space; Artemis I: NASA/JSC; Danuri: KARI; Psyche, Lucy and Juno: NASA/JPL navigation), merged by JPL",
+   "license": "Public NASA/JPL data service: no access restriction; JPL and NASA content is not copyrighted unless noted (JPL copyrights page); acknowledgment of Horizons and its citation (Giorgini et al. 1996) requested",
+   "terms": [
+    {
+     "title": "Horizons API documentation (parameters, time systems, binary SPK limited to small bodies)",
+     "url": "https://ssd-api.jpl.nasa.gov/doc/horizons.html",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "JPL copyrights",
+     "url": "https://www.jpl.nasa.gov/copyrights",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "JPL: unless otherwise noted, JPL and NASA content is in the public domain; trajectory notes and mission descriptions in the object data are NASA/JPL text.",
+   "attributionClause": "Giorgini, J. D., et al. (1996), JPL's On-Line Solar System Data Service, Bulletin of the American Astronomical Society 28(3), 1158. Acknowledge the JPL Horizons system and the mission.",
+   "conditions": "Used through the documented API, one request at a time, 6 s apart. G1 keeps the responses as served in its archive (hac/jpl-horizons/) with a provenance row each and publishes results only (coordinator, 2026-10-24).",
+   "reproduce": "yes",
+   "credit": "State vectors of CAPSTONE, Artemis I, Danuri, Psyche, Lucy and Juno from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL.",
+   "reason": "Public NASA/JPL data; the experiment reproduces none of the files.",
+   "usedIn": "G1 (truth for the lunar, cislunar and heliocentric windows prepared for SDN-AP: Danuri, CAPSTONE, Artemis I, Psyche, Lucy, Juno)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://ssd.jpl.nasa.gov/api/horizons.api?COMMAND='-155'&EPHEM_TYPE='VECTORS'&CENTER='500@301'&REF_PLANE='FRAME'&VEC_TABLE='2'&TIME_TYPE='TDB' (also -1176 CAPSTONE, -1023 Artemis I, -255 Psyche, -49 Lucy, -61 Juno)"
+  },
+  {
+   "id": "stsci-mast-tess",
+   "name": "TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp), STScI MAST",
+   "provider": "Space Telescope Science Institute, Mikulski Archive for Space Telescopes (MAST), for the NASA TESS mission",
+   "license": "MAST Data Use Policy: most data hosted at MAST are in the public domain and carry no restriction on use; the originating mission and STScI are acknowledged in scholarly publications",
+   "terms": [
+    {
+     "title": "MAST Data Use Policy",
+     "url": "https://archive.stsci.edu/publishing/data-use",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "MAST mission acknowledgements (TESS)",
+     "url": "https://archive.stsci.edu/publishing/mission-acknowledgements",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "TESS bulk downloads (engineering and model files)",
+     "url": "https://archive.stsci.edu/tess/bulk_downloads.html",
+     "retrieved": "2026-10-24"
+    }
+   ],
+   "redistribution": "Most data hosted at MAST are in the public domain (see: open data), and therefore do not have restrictions on use.",
+   "attributionClause": "This paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555.",
+   "conditions": "Files from https://archive.stsci.edu/missions/tess/models/, one request at a time, 6 s apart. archive.stsci.edu's certificate chain ends at the emSign Root CA G1, absent from Node's bundle; the root from the macOS system store is added as an extra trusted root and verification stays on. G1 keeps the files in its archive (hac/mast-tess/) and publishes results only (coordinator, 2026-10-24).",
+   "reproduce": "yes",
+   "credit": "TESS spacecraft ephemeris: this paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555.",
+   "reason": "Public-domain NASA mission data; the experiment reproduces none of the files.",
+   "usedIn": "G1 (TESS highly elliptical orbit windows, 2026-06-29 to 2026-09-17)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://archive.stsci.edu/missions/tess/models/TESS_EPH_DEF_<yyyyddd>_21.bsp"
+  },
+  {
+   "id": "ilrs-cddis",
+   "name": "ILRS orbit products via NASA CDDIS (NSGF rapid orbits nsgf.orb.*, ILRS combined weekly orbits ilrsa.orb.*, analysis-center weekly orbits)",
+   "provider": "the International Laser Ranging Service, its analysis centers (NERC Space Geodesy Facility for the rapid orbits) and its combination center ilrsa (ASI Space Geodesy Center), archived by NASA's Crustal Dynamics Data Information System (CDDIS, an Earthdata DAAC at GSFC)",
+   "license": "ILRS: data and products not copyrighted, citation requested (as the ILRS rows); NASA ESDIS: observation data and products generally not copyrighted, NASA to be acknowledged; non-NASA data on ESDIS systems follow the sponsoring organization's license",
+   "terms": [
+    {
+     "title": "NASA Earthdata: Data Use and Citation Guidance (ESDIS)",
+     "url": "https://www.earthdata.nasa.gov/engage/open-data-services-software-policies/data-use-guidance",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "CDDIS /pub/slr/products readme (orbits/rapid and orbits/TRF, file naming, updated October 2026)",
+     "url": "https://cddis.nasa.gov/archive/slr/products/00readme",
+     "retrieved": "2026-10-24"
+    },
+    {
+     "title": "Cite the ILRS",
+     "url": "https://ilrs.gsfc.nasa.gov/about/cite.html",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "NASA ESDIS content, including observation data, metadata and products, is generally not copyrighted; non-NASA data available through the ESDIS project is subject to the license arrangements of the sponsoring organization, and users are encouraged to validate the source and associated use permissions. ILRS: the data and products are not copyrighted.",
+   "attributionClause": "Pearlman, M.R., Noll, C.E., Pavlis, E.C. et al. The ILRS: approaching 20 years and planning for the future. J Geod 93, 2161-2180 (2019), doi:10.1007/s00190-019-01241-1; NASA CDDIS acknowledged as the data center (Noll 2010, doi:10.1016/j.asr.2010.01.018); NSGF orbits: Contains British Geological Survey materials © UKRI 2026.",
+   "conditions": "Downloads need an Earthdata login (a bearer token read at run time, sent only to cddis.nasa.gov, never printed or stored). The files are kept in the G1 archive as served, with a provenance row each; results only are published.",
+   "reproduce": "yes",
+   "credit": "ILRS orbit products (Pearlman et al. 2019, J Geod 93:2161-2180, doi:10.1007/s00190-019-01241-1) from NASA CDDIS (Noll 2010, Adv. Space Res. 45:1421-1440, doi:10.1016/j.asr.2010.01.018); NSGF rapid orbits contain British Geological Survey materials © UKRI 2026, Open Government License v3.0.",
+   "reason": "The ILRS states its data and products are not copyrighted and asks for citation; NASA's policy for CDDIS content is open access with acknowledgement.",
+   "usedIn": "G1 (current SLR truth after 2026-10-10: NSGF rapid arcs of the LEO spheres and LARES-2, ILRS combined weekly orbits of LAGEOS and Etalon; the scoring of COMSPOC's laser-ranged sets)",
+   "reproducedAt": [],
+   "notice": null,
+   "obtain": "https://cddis.nasa.gov/archive/slr/products/orbits/rapid/<satellite>/<yyyy>/<yymmdd>/nsgf.orb.<satellite>.<yymmdd>.v000.sp3.gz and .../orbits/TRF/<satellite>/<yyyy>/<yymmdd>/ilrsa.orb.<satellite>.<yymmdd>.v80.sp3.gz (Earthdata login)"
   }
  ],
  "bundles": [

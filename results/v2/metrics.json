@@ -1,0 +1,84 @@
+{
+  "phase": "commissioning; prospective scores pending",
+  "objects": 1,
+  "cycleRequested": 500,
+  "cycleLimit": 1,
+  "cycleComplete": true,
+  "attempted": 1,
+  "failed": 0,
+  "missing": 0,
+  "armStatuses": {
+    "1:NONCONVERGED": 1,
+    "2:UNAVAILABLE": 1,
+    "3:NONCONVERGED": 1,
+    "4:UNAVAILABLE": 1,
+    "5:UNAVAILABLE": 1,
+    "6:FORECAST": 1,
+    "sgp4-fit:UNAVAILABLE": 1,
+    "sgp4-gp:UNAVAILABLE": 1
+  },
+  "predictions": 105,
+  "unavailableFfmEpochs": 60,
+  "timingAdmissible": false,
+  "pauseSeconds": 345.061,
+  "fitRms3dMedianM": 132.0806064594886,
+  "maxFitReplayDifferenceM": 5.684341886080802e-14,
+  "bandwidthBytes": 8391109,
+  "computeCpuSeconds": 591.378155,
+  "storageBytes": 29175,
+  "wallSeconds": 945.603,
+  "mechanics": {
+    "horizonHours": 6,
+    "ablations": [
+      {
+        "term": "gravity-above-20",
+        "differenceRtnM": [
+          -23.828867232350298,
+          -72.34451236880712,
+          7.924927857215767
+        ],
+        "cpuSeconds": 1.844219
+      },
+      {
+        "term": "ocean-tides",
+        "differenceRtnM": [
+          0.008800569046263806,
+          2.6321668688122015,
+          -0.33670097918353104
+        ],
+        "cpuSeconds": 3.385096
+      },
+      {
+        "term": "solid-tides",
+        "differenceRtnM": [
+          0.44819197031760716,
+          -30.594068720938367,
+          -0.6110866325991449
+        ],
+        "cpuSeconds": 3.632629
+      },
+      {
+        "term": "relativity",
+        "differenceRtnM": [
+          -0.023228622654277387,
+          1.9507634424037226,
+          -0.009492548608571516
+        ],
+        "cpuSeconds": 3.665203
+      },
+      {
+        "term": "earth-radiation",
+        "differenceRtnM": [
+          5.7563009709705995,
+          275.44999755020865,
+          0.08712284948744298
+        ],
+        "cpuSeconds": 3.330434
+      }
+    ],
+    "fullCpuSeconds": 3.677164,
+    "repeatCpuSeconds": 3.713194,
+    "accuracyDecision": "NOT SCORED: prospective truth/window unavailable"
+  },
+  "earliestScoringUtc": "2026-11-14T08:00:00Z"
+}

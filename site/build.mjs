@@ -31,10 +31,10 @@ import { loadModule, modulesRoot, gitState } from '../harness/modules.mjs';
 import { kernelFrame } from '../harness/prw.mjs';
 import { c04Records, eopFrame, finalsRecords } from '../harness/eop.mjs';
 import { selectSeeds, utcMs } from '../experiments/v1-ffm-physical-truth/seeds.mjs';
-import { MODELS, PAPERS, headingIds } from './src/models/registry.mjs';
-import { moduleList } from './module-list.mjs';
+import { MODELS, PAPERS, PAPER_SOURCES, headingIds } from './src/models/registry.mjs';
+import { moduleList, pinnedModules } from './module-list.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
+import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildSdnAp, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -107,14 +107,19 @@ function serveModule(relative, { as = relative, commit = null, wasmSha256 = null
   const m = JSON.parse(manifest);
   const from = commit ?? modulesGit.commit;
   // FFM compiles in the EGM coefficients and NRLMSISE-00 (registry: reproducible) and the HWM14 winds data (registry: terms unconfirmed, not reproducible).
-  const label = relative === 'propagator/ffm' || as === 'propagator/ffm-v1'
-    ? own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08). Embeds HWM14 coefficients, whose terms are unconfirmed (data/licenses.json: hwm14)', creditsFor('V1').filter((c) => /^EGM2008|NRLMSISE/.test(c)).join(' '))
-    : own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08)');
+  // SDN-AP is open source (Apache-2.0); the other modules are published for this site.
+  const openSource = relative === 'propagator/sdn-ap';
+  const label = openSource ? own('Apache-2.0, © Edgesource Corporation')
+    : relative === 'propagator/ffm' || as === 'propagator/ffm-v1'
+      ? own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08). Embeds HWM14 coefficients, whose terms are unconfirmed (data/licenses.json: hwm14)', creditsFor('V1').filter((c) => /^EGM2008|NRLMSISE/.test(c)).join(' '))
+      : own('Module binary, © Edgesource Corporation; published for this site (owner, 2026-10-08)');
   write(`modules/${as}/module.wasm`, wasm, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/dist/isomorphic/module.wasm`, label);
-  write(`modules/${as}/plugin-manifest.json`, manifest, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/plugin-manifest.json`, own('Module manifest, © Edgesource Corporation; published for this site (owner, 2026-10-08)'));
+  write(`modules/${as}/plugin-manifest.json`, manifest, `space-data-network-modules ${from?.slice(0, 8)} ${relative}/plugin-manifest.json`,
+    openSource ? own('Apache-2.0, © Edgesource Corporation') : own('Module manifest, © Edgesource Corporation; published for this site (owner, 2026-10-08)'));
   moduleIndex.push({ path: as, source: relative, commit: from, pluginId: m.pluginId, version: m.version, wasmSha256: sha256(wasm), bytes: wasm.length });
 }
 for (const relative of moduleList) serveModule(relative);
+for (const m of pinnedModules) serveModule(m.path, { commit: m.commit, wasmSha256: m.wasmSha256 });
 // V1 ran an earlier binary of the full-force propagator. A V1 seed reproduces
 // its committed run only with that binary, so it is served beside the current
 // one as propagator/ffm-v1, from the V1 run's own modules commit at the path
@@ -296,6 +301,13 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
   await generateEstimationBindings(modules, path.join(repo, 'node_modules/space-data-module-sdk/schemas/orbpro'), path.join(here, '.cache/estimation'));
 }
 
+// ── The SDN-AP paper's held-out model (its section 12.3) ──
+{
+  const built = buildSdnAp({ here, write, own, servedWasmSha256: (relative) => moduleIndex.find((m) => m.path === relative)?.wasmSha256,
+    credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
+  log(`sdn-ap: ${built.windows} LAGEOS-1 windows`);
+}
+
 // ── The paper models: a page per section, and the manifest the paper apps read ──
 {
   const papersDir = process.env.SDN_WHITEPAPERS ?? path.join(modules, '..', 'space-data-network', 'whitepapers');
@@ -308,7 +320,8 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
     const source = m.dir === 'od' ? path.join(here, 'src/od', `${m.model}.js`) : path.join(here, 'src/models', m.source ?? m.paper, `${m.model}.js`);
     if (!fs.existsSync(source)) throw new Error(`model ${path.relative(here, source)} is missing`);
     if (!ids[m.paper]) {
-      const file = path.join(papersDir, `${m.paper}.md`);
+      const outside = PAPER_SOURCES[m.paper];
+      const file = outside ? path.join(process.env[outside.env] ?? path.join(modules, '..', outside.repo), outside.file) : path.join(papersDir, `${m.paper}.md`);
       ids[m.paper] = fs.existsSync(file) ? headingIds(fs.readFileSync(file, 'utf8')) : null;
       if (!ids[m.paper]) log(`warning: ${file} not found; section ids are not checked against the paper`);
     }
@@ -323,7 +336,7 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
     fs.writeFileSync(path.join(dist, url), fill(template, {
       base: '../../', paper: m.source ?? m.paper, model: m.model, dir: m.dir ?? '', title: escHtml(m.title), claim: escHtml(m.claim),
       paperTitle: escHtml(PAPERS[m.paper]), heading: escHtml(m.heading),
-      paperUrl: `https://spacedatanetwork.org/whitepapers/${m.paper}.html#${sectionId}`,
+      paperUrl: `${PAPER_SOURCES[m.paper]?.url ?? `https://spacedatanetwork.org/whitepapers/${m.paper}.html`}#${sectionId}`,
     }));
   }
   write('models/index.json', JSON.stringify(manifest, null, 2), 'site/src/models/registry.mjs', own('MIT (this repository)'));
