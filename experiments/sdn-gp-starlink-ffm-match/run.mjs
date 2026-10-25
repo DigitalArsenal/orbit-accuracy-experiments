@@ -215,8 +215,8 @@ if (fs.existsSync(m123Dir)) {
   }
   await frames.destroy();
 }
-// amendments A11 to A15: one recorded window of each of the sources M24 (ISS, no reboost), M24a (NASA's ISS archive: a burn and a burn-free window), M24b (the diagnostic window from 24 h before the burn), M24p (a planted impulse),
-// M27 (a GPS and a QZSS window), M29 (a reentry prediction) and M30 (a lowering reentry) of the build in `dir`, replayed with `bs` (the pinned copy of that build) and compared with the recorded detections or numbers. Returns the number replayed.
+// amendments A11 to A17: one recorded window of each of the sources M24 (ISS, no reboost), M24a (NASA's ISS archive: a burn and a burn-free window), M24b (the diagnostic window from 24 h before the burn), M24p (a planted impulse),
+// M27 (a GPS and a QZSS window), M27b (an omitted-day and a control window, a planted impulse across a hole), M29 (a reentry prediction) and M30 (a lowering reentry) of the build in `dir`, replayed with `bs` (the pinned copy of that build) and compared with the recorded detections or numbers. Returns the number replayed.
 async function replayFocus(bs, dir) {
   const collector = () => { const rows = []; return { rows, has: () => false, mine: () => true, append: (r) => rows.push(r) }; };
   const rows = (source) => buildRows(dir, source).filter((r) => r.source === source);
@@ -277,6 +277,24 @@ async function replayFocus(bs, dir) {
     const sink = collector();
     await scoreGnss({ b: bs, sink, only: [{ system, norad: rec27.norad }], at: [rec27.startUtc] });
     sameDetections(sink.rows.find((r) => r.startUtc === rec27.startUtc), rec27, `M27 ${rec27.id} ${rec27.startUtc}`);
+    n += 1;
+  }
+  // amendment A17: an omitted-day window, a control window with a day cut out (M27b) and a planted impulse across a hole (M27b-p)
+  for (const kind of ['omitted-day', 'control']) {
+    const list = rows('m27b').filter((r) => r.kind === kind && r.ok), rec27b = list.find((r) => r.detections.length) ?? list[0];
+    if (!rec27b) continue;
+    const { scoreGnssGaps } = await import('./lib/events-gnss.mjs');
+    const sink = collector();
+    await scoreGnssGaps({ b: bs, sink, only: [{ norad: rec27b.norad }], at: [rec27b.startUtc] });
+    sameDetections(sink.rows.find((r) => r.startUtc === rec27b.startUtc && r.kind === kind), rec27b, `M27b ${kind} ${rec27b.id} ${rec27b.startUtc}`);
+    n += 1;
+  }
+  const rec27bp = rows('m27bp').find((r) => r.ok && r.case === 'imp-V-1' && r.detections.length) ?? rows('m27bp').find((r) => r.ok);
+  if (rec27bp) {
+    const { scorePlanted, PLANTED_HOLE_H } = await import('./lib/events-plant.mjs');
+    const sink = collector();
+    await scorePlanted({ b: bs, sink, only: [rec27bp.norad], cases: [rec27bp.case], hole: PLANTED_HOLE_H });
+    sameDetections(sink.rows[0], rec27bp, `planted impulse across a hole ${rec27bp.id}`);
     n += 1;
   }
   const rec30 = rows('m30').find((r) => r.variant === 'free' && r.reentry?.ok);
@@ -386,7 +404,7 @@ if (headline) {
       if (again.reentry?.epoch !== rec28.reentry?.epoch) fail(`events replay M28 ${rec28.id}: reentry epoch ${again.reentry?.epoch} vs ${rec28.reentry?.epoch}`);
       sdReplayed += 1;
     }
-    // amendments A11 to A15: one window of each of the sources M24, M24a, M24b, M24p, M27, M29 and M30
+    // amendments A11 to A17: one window of each of the sources M24, M24a, M24b, M24p, M27, M27b, M27bp, M29 and M30
     sdReplayed += await replayFocus(bs, headline.dir);
     // amendment A12b: a captured-batch window (M31), a per-object fit with the launch set as prior and a batch-joint fit (M32), on the pinned build
     const rec31 = buildRows(headline.dir, 'm31').find((r) => r.source === 'm31' && r.hours === 6 && r.sdngp?.ok);
