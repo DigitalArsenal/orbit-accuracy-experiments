@@ -983,3 +983,5 @@ One table per build holds M27's and M27b's false-alarm rates and hits side by si
 
 5. Builds and runs. M27b on b9bc708baa50 (the earlier headline) and 9df647b08978 (the shipping build): `sdngp-run.mjs --pin <build> --only m27b,m27bp`, 12 shards for `m27b`, 4 for `m27bp`; the sources join the list of `complete.json`. The PLAN is committed before each start. `run.mjs --check` replays one omitted-day window, one control window and one planted arc with a hole on the pinned builds. American spelling in all generated text.
 
+Note on A16 (2026-10-25, after the focused rows of the new build were compared and before the identity of the other sources): "equal in every field but `build`" leaves out the fields that record the clock and cannot be equal in two runs of the same build: `fitMs`, `maneuverMs`, `ms`, `usPerState` and `issuedUtc`. They are neither counted as differences nor in the largest change. The byte counts of the element records (`elementBytes`, `recordBytes`) are compared and counted, and are kept out of the largest change of the results. The comparison is `lib/row-identity.mjs`; its table is section 16e of the README.
+
