@@ -119,4 +119,15 @@ operator's own accuracy. No threshold is tested; the tables are descriptive.
 
 ## Amendments
 
-(none)
+**A1 (2026-10-25, after the first run, before the second).** The first run of the 916 windows scored every arm,
+and 23 of the 239 Starlink SGP4-XP fits failed with `epochs-not-increasing`. Cause, found in the inputs and not
+in a module: Starlink sets are published two hours apart on the same second, so the last 300 s grid state of an
+interval and the state at the set's epoch coincide (to a millisecond), and the series then holds two states at
+one epoch; SGP4-XP requires strictly increasing epochs (SDN-AP accepts the duplicates). The same duplicates sat
+in the SDN-AP input, so both fit arms were fed a defective series. Amendment: in a window's pseudo-observation
+series, a state less than 1 s after the state before it is dropped (the earlier one is kept), for both fit
+arms; the series is otherwise the plan's. Both fit arms are rerun on all 916 windows; the baseline arm does not
+depend on the series and is unchanged. The first run's table is kept as `results/sdn-ap-gp-history-od/table-run1.json`
+and `table-run1.md`, marked superseded; the headline table is the second run's. Nothing else changed: the windows,
+the arms, the scoring, the statistics and the pinned SDN-AP build are the plan's. A smoke test of one ISS window
+preceded the first run and its row was kept.
