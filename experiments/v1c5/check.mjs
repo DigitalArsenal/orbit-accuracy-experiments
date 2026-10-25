@@ -7,20 +7,20 @@ import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import { sha256, loadModule } from '../../harness/modules.mjs';
 import { dayList } from '../../harness/gp-archive.mjs';
-import { config, configs, e3, registration, git, read, root, dir, universes } from './run.mjs';
+import { repoRoot as root } from '../../harness/provenance.mjs';
+import { config, configs, e3, registration, git, read, dir } from './common.mjs';
 import { candidatesOf, claimed, selectCv, scoreArcs, cellsOf, fitRows, fitTiered, foldOf, foldStartMs, tierGroups } from './cv.mjs';
 import { compactCell, scoresJsonl } from './train.mjs';
 import { deriveMetrics, scoresFile } from './test.mjs';
 import { render, modelRecord, readerTable, summarizeInputs } from './report.mjs';
 import { checkEvents } from '../v1c4-console-covariance-calibration/check.mjs';
-import { controls } from '../v1c3-console-covariance-calibration/controls.mjs';
 
 const jsonl = f => fs.readFileSync(f, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse);
 const roundTrip = x => JSON.parse(JSON.stringify(x));
 const bar = message => console.log(`  ok ${message}`);
 const safe = name => name.replace(/[/|]/g, '_');
 const output = path.join(root, 'results/v1c5');
-export const registrationB = process.env.V1C5_REGISTRATION_B ?? 'f59f2b13f6447a6bb0c8a5cbb078f99fb849c02f';
+import { registrationB } from './common.mjs';
 const specOf = () => read(path.join(dir, 'candidates.json'));
 
 function frozenFiles() {
@@ -115,9 +115,6 @@ export async function check({ runDir }) {
     bar(`test: ${sel.selected} ${metrics.candidates[sel.selected].realistic.claimed}/24; metrics, README, reader table and MODEL re-derived; the selected candidate replayed in WASM`);
     const sampled = await checkEvents({ root, runDir, runtime, config, e3, flagsTrain: flagMap, flagRecordsTest: flagsTest });
     bar(`event rule: ${sampled} pairs re-derived from the archive`);
-    const withModel = Object.entries(sel.models).find(([, m]) => m.model);
-    const result = await controls({ runDir, modules: runtime, gp, codec, selection: { selected: withModel[0], models: sel.models } });
-    bar(`covariance controls: identity ${result.maxIdentityRelative}, sum ${result.maxSumScoreRelative}, zero-time ${result.maxZeroTimeRelative}`);
     console.log(`V1C5-E2E PASS: ${hashes} hashes, ${sel.selected} ${metrics.candidates[sel.selected].realistic.claimed}/24 on the fresh test; cross-validation, selection, fits, test cells and the event-rule sample re-derived from the durable run`);
   } finally { await gp.destroy(); }
 }

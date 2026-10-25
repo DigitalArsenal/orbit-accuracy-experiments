@@ -1,0 +1,42 @@
+{
+  "kind": "v1c5-sgp4-calibration-application",
+  "registration": "0ba47264c57b0aa8b4cd0732f49bea5781c605bf",
+  "population": {
+    "source": "analysis/gp-error-model/data/e14-s3-kc.erm",
+    "sha256": "b0ae93c2a92813a1c9b5c2cf5ba786030fd2dc35218e8b167b7af72c0d07c076"
+  },
+  "SGP4": {
+    "candidate": "P-axes-mle/risk/UNFLAGGED",
+    "base": "P",
+    "method": "axes-mle",
+    "tiering": "risk",
+    "claim": "UNFLAGGED",
+    "factors": "P-axes-mle_risk_UNFLAGGED.erm"
+  },
+  "tiers": {
+    "risk": {
+      "minimumGapRatio": 0.6667,
+      "minimumAgeDays": null,
+      "pooled": true
+    }
+  },
+  "eventRule": {
+    "lookbackDays": 45,
+    "windowDays": 7,
+    "staleFloorDays": 3,
+    "staleFactor": 3,
+    "minimumGapsForMedian": 4,
+    "detector": {
+      "module": "analysis/maneuver-detection",
+      "version": "0.8.0",
+      "minimumSets": 8,
+      "gridStepSeconds": 60,
+      "neighbourSets": 2,
+      "detectors": "defaults (D1, D2, merged)"
+    },
+    "verificationSample": 40
+  },
+  "claims": {},
+  "application": "Construct N (object_covariance), F (N plus the age-zero population floor when EMPIRICAL) or P (population at actual age); choose the group of the object (its class, FLAGGED when the causal event rule flags it, the risk tier where registered) and apply the MODEL via calibrate_covariance. Only the cells listed in claims are realistic.",
+  "selectedOn": "August to early-October training weeks only; see selectionFreeze in manifest.json"
+}

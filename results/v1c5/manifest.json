@@ -1,0 +1,238 @@
+{
+  "run": "v1c5",
+  "registration": "0ba47264c57b0aa8b4cd0732f49bea5781c605bf",
+  "started": "2026-10-25T18:19:23.702Z",
+  "configSha256": "2ff5f4cfa7c1bbfcc6528bf9deed17a02649324f9927883422bc68056dc3195f",
+  "repository": {
+    "commit": "ebdef2455c3b3f1404239795e8661b5e9769287e",
+    "dirty": false
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin 25.3.0 arm64",
+    "cpus": 28
+  },
+  "provision": {
+    "runtimeProvenanceSha256": "10c2539dc86fa05260baca07130f0a4d30a350ded73556e9b43c3fb1e66dcd75",
+    "modulesCommit": "f1c7b8942b7a9ded85566f240cbaaeffca1293db",
+    "truthToolsCommit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45"
+  },
+  "workers": 6,
+  "threads": 1,
+  "inputs": {
+    "gpHistory": {
+      "count": 617,
+      "sha256": "2b2dba54332556104f554674c4587c57996ca74df496cc2c812ca89b16ae959a"
+    },
+    "history": {
+      "count": 101,
+      "sha256": "c650316a073825b6141324d1d53567f11466dccecfbb5fed42b64de02c18a9c0"
+    },
+    "reference": {
+      "count": 376,
+      "sha256": "fdf2410d1834bd700988ae2ffeaf02d1af533e179f12979898a2ad042cfc4594"
+    },
+    "referenceIndex": {
+      "count": 36,
+      "sha256": "f68f0a88f05b1a81526a6708e4222b904817a51e3829dcf8d74e91fd2748897d"
+    }
+  },
+  "modules": {
+    "analysis/maneuver-detection": {
+      "path": "analysis/maneuver-detection",
+      "version": "0.8.0",
+      "wasmSha256": "64731b544ca60c31cc82eff6bcfc0afb2b013f3480da5ee81fc11dae42a4bc85"
+    },
+    "propagator/sgp4": {
+      "path": "propagator/sgp4",
+      "version": "1.3.0",
+      "wasmSha256": "6105fea83381ef0754673ea10bdd99d4290814d872ecb3309ea20c44ba372379"
+    },
+    "analysis/gp-error-model": {
+      "path": "analysis/gp-error-model",
+      "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+      "version": "0.8.1",
+      "wasmSha256": "f3d06fd4840686a893753fa8fdd19d30b39caa745d23cc2dd867d462886f2778",
+      "manifestSha256": "aa28196b484f3e56155b14bee60418efb018466ab51ac6da46be0650e8b03c9e"
+    }
+  },
+  "files": {
+    "train-sgp.jsonl": "a3b47d82dd7fab1b605cc210bac2373bcbe416ff4b5af1f5cfe5d8d3c1217c25",
+    "events-train.jsonl": "fd374d3da873a4a778ce868a9cb8611ac4f1fc156c7575b22004c03ba34ca3ba",
+    "cv-N-none_single_ALL-scores.jsonl": "7183526329a8a6a8ba80a9efc9adc15bf5252a4c547620eb30f218e50a91bd44",
+    "cv-F-none_single_ALL-scores.jsonl": "dc43277e647b851c36b38621f00b467301e3f04bc8f7b80cf0961d6317879d47",
+    "cv-P-none_single_ALL-scores.jsonl": "8f77636f8f01a5052839eae2c81df6fb320053fd7c9749482a13f58cdbb042d3",
+    "cv-N-scalar-mle_single_ALL-scores.jsonl": "01349b4293671265f2bfcaae949cf4b4821eefa7836477b2703332b5b94aa93b",
+    "cv-N-coverage_single_ALL-scores.jsonl": "b0bc93aa38a9be8e3370b81a621559e5eff9ca38b9a2fd81f9b7a8883e3f3d97",
+    "cv-N-axes-mle_single_ALL-scores.jsonl": "f53518b65fc522425384f2dbbd2f2d791977b2d95d8488cc3691cb2e1aa4f5f1",
+    "cv-F-scalar-mle_single_ALL-scores.jsonl": "1881ee4b9431779ac59436775813f98e33b8aeb9944818601bf92ae0135db079",
+    "cv-F-coverage_single_ALL-scores.jsonl": "a991dfbfb5ff7dc72607b48888373e537b7e1e1072a17b6667701be9a986d712",
+    "cv-F-axes-mle_single_ALL-scores.jsonl": "821685f1d63fc3c56421638c22588cd040c9fd3c4b6a440367544882611e8df0",
+    "cv-P-scalar-mle_single_ALL-scores.jsonl": "c096a84e7b6f9c7df7d05fa0c5e5401187d67a2cdca2854566ecd6e4ee709427",
+    "cv-P-coverage_single_ALL-scores.jsonl": "f8877b4cf40bf430b9171170d2cab62e442a9e03282ba06bca95c5778b63b126",
+    "cv-P-axes-mle_single_ALL-scores.jsonl": "b0c68a12790defcf1e35d79116894e9d3c1c8d8db0bcd0f5fe9bbb6c326d64f1",
+    "cv-N-scalar-mle_single_UNFLAGGED-scores.jsonl": "507942cefd067c0b2cf437431ed19b7c5f0fdd8597f8695120576408a2e25b96",
+    "cv-N-coverage_single_UNFLAGGED-scores.jsonl": "8d6f19c200d9c4e551a63fa1ac1d64e84eef33f002f7d5c69e91ba20b895fee4",
+    "cv-N-axes-mle_single_UNFLAGGED-scores.jsonl": "2ba57e215830d26bfeb25b35568f2191f576e797074e60ee450d380d5cbe732f",
+    "cv-F-scalar-mle_single_UNFLAGGED-scores.jsonl": "85233bf8fadab8a0543aabd5cc60cb1dca45239bb71deafe749faff8446452f1",
+    "cv-F-coverage_single_UNFLAGGED-scores.jsonl": "fc3cf8b7f815879dad98a20914040dc57ba2490157bbdc5ec82d4e939e5c6763",
+    "cv-F-axes-mle_single_UNFLAGGED-scores.jsonl": "2e837aa2aa39b78e8e1fa810e303e40016d20f1078a90c527d66af7e8f12d424",
+    "cv-P-scalar-mle_single_UNFLAGGED-scores.jsonl": "75f0278e6f1e47715a840bbf6a486ff7abe71b5eedccdcda104ae31adbd7ce9f",
+    "cv-P-coverage_single_UNFLAGGED-scores.jsonl": "976418452617961e7a8dbb5b746fe1732e721464443fdaec55debd7097796ce2",
+    "cv-P-axes-mle_single_UNFLAGGED-scores.jsonl": "e57204a658efb03c884ef47619b123a8ffb3049b79a8e392e73d677eb06d4092",
+    "cv-N-scalar-mle_flag_ALL-scores.jsonl": "8b84fff345b0e1072bbf0aea222bfd468879c5324de4a54724b8f7b9feb5eb6b",
+    "cv-N-coverage_flag_ALL-scores.jsonl": "d00dc8d147b01cdae493586abb3936c0f3ad2b5b09b2beb5e96734755e81b27a",
+    "cv-N-axes-mle_flag_ALL-scores.jsonl": "d45003a1e9d928e4b8ecbcf13acca1a9c97b5d62bd5960569005214d3e47f425",
+    "cv-F-scalar-mle_flag_ALL-scores.jsonl": "42e628a8ca3e4d22eee3a8d1fa7f1456c3d9426c9fd18e972861163d3ed17342",
+    "cv-F-coverage_flag_ALL-scores.jsonl": "35699b4f1eaedb83fb882338ca4c266d15f11563bfdb276b2f8594fdce96fe23",
+    "cv-F-axes-mle_flag_ALL-scores.jsonl": "ab1aa1788354b205d9b7d6456815c36b694f39f33e7ffc3596dc61535382aebd",
+    "cv-P-scalar-mle_flag_ALL-scores.jsonl": "f15e7cd2ff4c9d86796a1d58ce7fb716c8855a5bf77955119c73674c32d2f61e",
+    "cv-P-coverage_flag_ALL-scores.jsonl": "8d7cace2b5eca93440850defab1a762992955ecbe88a164e0fa54182d0d1d1bb",
+    "cv-P-axes-mle_flag_ALL-scores.jsonl": "af126f57aa4b918b6b6c2926eb0388a7a6ae29f9d19d5587089f9941d2babcc8",
+    "cv-N-scalar-mle_flag_UNFLAGGED-scores.jsonl": "8b84fff345b0e1072bbf0aea222bfd468879c5324de4a54724b8f7b9feb5eb6b",
+    "cv-N-coverage_flag_UNFLAGGED-scores.jsonl": "d00dc8d147b01cdae493586abb3936c0f3ad2b5b09b2beb5e96734755e81b27a",
+    "cv-N-axes-mle_flag_UNFLAGGED-scores.jsonl": "d45003a1e9d928e4b8ecbcf13acca1a9c97b5d62bd5960569005214d3e47f425",
+    "cv-F-scalar-mle_flag_UNFLAGGED-scores.jsonl": "42e628a8ca3e4d22eee3a8d1fa7f1456c3d9426c9fd18e972861163d3ed17342",
+    "cv-F-coverage_flag_UNFLAGGED-scores.jsonl": "35699b4f1eaedb83fb882338ca4c266d15f11563bfdb276b2f8594fdce96fe23",
+    "cv-F-axes-mle_flag_UNFLAGGED-scores.jsonl": "ab1aa1788354b205d9b7d6456815c36b694f39f33e7ffc3596dc61535382aebd",
+    "cv-P-scalar-mle_flag_UNFLAGGED-scores.jsonl": "f15e7cd2ff4c9d86796a1d58ce7fb716c8855a5bf77955119c73674c32d2f61e",
+    "cv-P-coverage_flag_UNFLAGGED-scores.jsonl": "8d7cace2b5eca93440850defab1a762992955ecbe88a164e0fa54182d0d1d1bb",
+    "cv-P-axes-mle_flag_UNFLAGGED-scores.jsonl": "af126f57aa4b918b6b6c2926eb0388a7a6ae29f9d19d5587089f9941d2babcc8",
+    "cv-N-scalar-mle_risk_ALL-scores.jsonl": "5abf22671b57a3f64a537952a021d2d45f99522b8114b8680ed2a60c927da7a6",
+    "cv-N-coverage_risk_ALL-scores.jsonl": "f1888f3317dc47410d88cf3fc941c63ce0896264fc22a2af775eb9534e655dfd",
+    "cv-N-axes-mle_risk_ALL-scores.jsonl": "a63df8a5700a0c766efc8f9ee6effc5a1c10ab3484ed4bf07d99aff01f2387b4",
+    "cv-F-scalar-mle_risk_ALL-scores.jsonl": "3fca957c613facd1bec80b1325ceeeac6c124cdb81f4e0156827238c62a3270a",
+    "cv-F-coverage_risk_ALL-scores.jsonl": "8bdbcc1e84b7a321105e2bc740d611fb723d4bc51ed877b3eed67a370e1aa2b8",
+    "cv-F-axes-mle_risk_ALL-scores.jsonl": "c1af84c4bc55f143e491100fafe3a8bd3b973c86bb855936f9f0b7fa5a9735eb",
+    "cv-P-scalar-mle_risk_ALL-scores.jsonl": "401ab412ab4fafae95f1e5764354e92433705b556128698879ce8969ea20f4b8",
+    "cv-P-coverage_risk_ALL-scores.jsonl": "07ee2a8f1d5980905807e6e151eb3d3363a08de9e88a80beb39d590e18587bb3",
+    "cv-P-axes-mle_risk_ALL-scores.jsonl": "a08e58dcd02974335f733a9f4e5143a4e7138bdd8be89ca9265a7f3d3a793038",
+    "cv-N-scalar-mle_risk_UNFLAGGED-scores.jsonl": "5abf22671b57a3f64a537952a021d2d45f99522b8114b8680ed2a60c927da7a6",
+    "cv-N-coverage_risk_UNFLAGGED-scores.jsonl": "f1888f3317dc47410d88cf3fc941c63ce0896264fc22a2af775eb9534e655dfd",
+    "cv-N-axes-mle_risk_UNFLAGGED-scores.jsonl": "a63df8a5700a0c766efc8f9ee6effc5a1c10ab3484ed4bf07d99aff01f2387b4",
+    "cv-F-scalar-mle_risk_UNFLAGGED-scores.jsonl": "3fca957c613facd1bec80b1325ceeeac6c124cdb81f4e0156827238c62a3270a",
+    "cv-F-coverage_risk_UNFLAGGED-scores.jsonl": "8bdbcc1e84b7a321105e2bc740d611fb723d4bc51ed877b3eed67a370e1aa2b8",
+    "cv-F-axes-mle_risk_UNFLAGGED-scores.jsonl": "c1af84c4bc55f143e491100fafe3a8bd3b973c86bb855936f9f0b7fa5a9735eb",
+    "cv-P-scalar-mle_risk_UNFLAGGED-scores.jsonl": "401ab412ab4fafae95f1e5764354e92433705b556128698879ce8969ea20f4b8",
+    "cv-P-coverage_risk_UNFLAGGED-scores.jsonl": "07ee2a8f1d5980905807e6e151eb3d3363a08de9e88a80beb39d590e18587bb3",
+    "cv-P-axes-mle_risk_UNFLAGGED-scores.jsonl": "a08e58dcd02974335f733a9f4e5143a4e7138bdd8be89ca9265a7f3d3a793038",
+    "test-sgp.jsonl": "2cba7cefcf7a7df96bdad458a9c879d003f5d64de93557bf0a477e66d07bc806",
+    "events-test.jsonl": "d5d95cdac4c761f8d57284d4f91dcfc3a64cb70de8f3b3c3fd4ce200b6371e90",
+    "test-N-none_single_ALL-scores.jsonl": "14c4f71ad0a9bc420f8340d9e9f7aa973c2f647e11875c68ef4a60c330715131",
+    "test-F-none_single_ALL-scores.jsonl": "9a99034422a064427eeaa9daa32baf6d1b65e1f506a3607df1a79f4e14cc506c",
+    "test-P-none_single_ALL-scores.jsonl": "ce5bdb335de04da01fc920f36c1c5c2142def78877c6106422bf9649615bcbf1",
+    "test-N-scalar-mle_single_ALL-scores.jsonl": "5d1b755ed56b8db1742b789e3eed06f35ccd1bee4a45e9be4e272e7719d40a2c",
+    "test-N-coverage_single_ALL-scores.jsonl": "e62c3acd8260081516c2afe37c707203b2cd59e597c3dcb14db85255874976dc",
+    "test-N-axes-mle_single_ALL-scores.jsonl": "08265f931915919da8d07bd06122b973691b542a302a5cf6887cb719c7fa25d3",
+    "test-F-scalar-mle_single_ALL-scores.jsonl": "f3e3bd9bc7100884f29b48261cf1ffcd59393fc8fbf52174b4bf698b879bf0ad",
+    "test-F-coverage_single_ALL-scores.jsonl": "5ca7fa7c239967513c240f8bcfb53188b9fe86ff280edb346950aed526341696",
+    "test-F-axes-mle_single_ALL-scores.jsonl": "69b2c3b16c188968024589878cceb0fc6554db1bd6432bbfb5458c284ae4dee8",
+    "test-P-scalar-mle_single_ALL-scores.jsonl": "5e6c6aceda38d23ce8b73eea9344a1d59c37936d4a3b16430460d5848cf14604",
+    "test-P-coverage_single_ALL-scores.jsonl": "5eb33ea008a995d5c410d7dd1e37d5c615e55f6b02df8f785bece58a7730fe1a",
+    "test-P-axes-mle_single_ALL-scores.jsonl": "4016cc3d8e66b80060563ea73300e75008f0923673c03f14f6653105fc45902d",
+    "test-N-scalar-mle_single_UNFLAGGED-scores.jsonl": "fe951551573ad9965bb6072b5c4fe574161d621a6d5f153ba6825de869745838",
+    "test-N-coverage_single_UNFLAGGED-scores.jsonl": "ba71d46ca33c878b8ab273fe8fecb79ea332f99bff631d396432cb02fd65010f",
+    "test-N-axes-mle_single_UNFLAGGED-scores.jsonl": "7a9e3cbec9d10352f1d8a0d4456d5830c1b5dc7b4b1bee7ca8403ff47c81ef21",
+    "test-F-scalar-mle_single_UNFLAGGED-scores.jsonl": "2cbac664c1346457d892dc3f7baf8196978081ffb77995bc1b3e4d7e79c6d7be",
+    "test-F-coverage_single_UNFLAGGED-scores.jsonl": "27ac0e89b50fd249309cba24d459d8eea2f59a0e92d91ea4a518faf03bf4455a",
+    "test-F-axes-mle_single_UNFLAGGED-scores.jsonl": "d49e903d19ce85d12d01f4c3b08d90b2b500c959d0ed986af8554d4b046c5711",
+    "test-P-scalar-mle_single_UNFLAGGED-scores.jsonl": "9701d1cc4e23ffe2cd73d03a5b6523fb85177d15a42182e93a5e2b66e8ff8d17",
+    "test-P-coverage_single_UNFLAGGED-scores.jsonl": "aff93c623be6feb379d1194d8b58de1dd2f0d4ae8210d297f4848de9d6ca548c",
+    "test-P-axes-mle_single_UNFLAGGED-scores.jsonl": "a58deb2b010a25abdf722478aa840f28abfc59205a204080962f155312fb91e5",
+    "test-N-scalar-mle_flag_ALL-scores.jsonl": "6739b896805c42c71601b8cc0d0621de65d3d82e62e5bfa3315fbc5ec2bf796b",
+    "test-N-coverage_flag_ALL-scores.jsonl": "00bcca58235b0c7b1e2d32818f412ddb29a0ca253455078c6c268f376b12a436",
+    "test-N-axes-mle_flag_ALL-scores.jsonl": "1706a405ac2f5b7e54c9a060e070e209c593fef3e21a058bb5933269441d2f2f",
+    "test-F-scalar-mle_flag_ALL-scores.jsonl": "5289cee9a30489775c30843c204f45c027edb08e21dc190a13da693115081cc4",
+    "test-F-coverage_flag_ALL-scores.jsonl": "eec451a749656f6ea0ce8cf9dd5511c1cb7986af62d5424a3e6854f0e218c272",
+    "test-F-axes-mle_flag_ALL-scores.jsonl": "28f82a22e09cb1bf7f2827ee0cbfb3fe110bd361b703f4d328595a31fecf15fa",
+    "test-P-scalar-mle_flag_ALL-scores.jsonl": "c80bb9d4c59c5caefa5c3715183b6ee3b4f4c4b0ff8ca8181aded68c0873723a",
+    "test-P-coverage_flag_ALL-scores.jsonl": "8bfae3bb25e34ab8599ed38d9585b5589bae2edfd09884ae29cb401139be6f8e",
+    "test-P-axes-mle_flag_ALL-scores.jsonl": "339b94193b304e56005ba763c43bab43b4ee37baebffb583e3a6ba4a2f7d52f5",
+    "test-N-scalar-mle_flag_UNFLAGGED-scores.jsonl": "6739b896805c42c71601b8cc0d0621de65d3d82e62e5bfa3315fbc5ec2bf796b",
+    "test-N-coverage_flag_UNFLAGGED-scores.jsonl": "00bcca58235b0c7b1e2d32818f412ddb29a0ca253455078c6c268f376b12a436",
+    "test-N-axes-mle_flag_UNFLAGGED-scores.jsonl": "1706a405ac2f5b7e54c9a060e070e209c593fef3e21a058bb5933269441d2f2f",
+    "test-F-scalar-mle_flag_UNFLAGGED-scores.jsonl": "5289cee9a30489775c30843c204f45c027edb08e21dc190a13da693115081cc4",
+    "test-F-coverage_flag_UNFLAGGED-scores.jsonl": "eec451a749656f6ea0ce8cf9dd5511c1cb7986af62d5424a3e6854f0e218c272",
+    "test-F-axes-mle_flag_UNFLAGGED-scores.jsonl": "28f82a22e09cb1bf7f2827ee0cbfb3fe110bd361b703f4d328595a31fecf15fa",
+    "test-P-scalar-mle_flag_UNFLAGGED-scores.jsonl": "c80bb9d4c59c5caefa5c3715183b6ee3b4f4c4b0ff8ca8181aded68c0873723a",
+    "test-P-coverage_flag_UNFLAGGED-scores.jsonl": "8bfae3bb25e34ab8599ed38d9585b5589bae2edfd09884ae29cb401139be6f8e",
+    "test-P-axes-mle_flag_UNFLAGGED-scores.jsonl": "339b94193b304e56005ba763c43bab43b4ee37baebffb583e3a6ba4a2f7d52f5",
+    "test-N-scalar-mle_risk_ALL-scores.jsonl": "0e7f7bbfc87298a19d1fb9cbba0100696c20f3faa21dd5ecaebdfab1b884db04",
+    "test-N-coverage_risk_ALL-scores.jsonl": "e19237c0e3b8d089f8f2d3a5f1788f9d687dc499380123a05abaeeda7d77183c",
+    "test-N-axes-mle_risk_ALL-scores.jsonl": "cdc12c9312a614a52710d5f38e16833744326d2bc1e98c09e7d4ccb82447bd9a",
+    "test-F-scalar-mle_risk_ALL-scores.jsonl": "68570147b7b7fe2b50b0b0889cb1d5169ada539ba623f1d9e26ff7e495246d52",
+    "test-F-coverage_risk_ALL-scores.jsonl": "eea36c79771fad0f2784b366ca1bda8d598f42213c2d5d2b173901b772e3d3b4",
+    "test-F-axes-mle_risk_ALL-scores.jsonl": "a1f44b8d235e27deb4338399b52d635d7d146e9cf475f710c80a5e668c5f926a",
+    "test-P-scalar-mle_risk_ALL-scores.jsonl": "d72df95f07ba32c02cce5fff43a9220f540630de174d7828a40da521e1c7edc0",
+    "test-P-coverage_risk_ALL-scores.jsonl": "b8208c919bcbfec2fc32078b14a39a39e0e7eb0fb26a7ad5d2c0bcfd8b81cc7c",
+    "test-P-axes-mle_risk_ALL-scores.jsonl": "0dd7c962948015987ebd2fd2f4861b38ba1a2e301c1ed0cba3e5359955428249",
+    "test-N-scalar-mle_risk_UNFLAGGED-scores.jsonl": "0e7f7bbfc87298a19d1fb9cbba0100696c20f3faa21dd5ecaebdfab1b884db04",
+    "test-N-coverage_risk_UNFLAGGED-scores.jsonl": "e19237c0e3b8d089f8f2d3a5f1788f9d687dc499380123a05abaeeda7d77183c",
+    "test-N-axes-mle_risk_UNFLAGGED-scores.jsonl": "cdc12c9312a614a52710d5f38e16833744326d2bc1e98c09e7d4ccb82447bd9a",
+    "test-F-scalar-mle_risk_UNFLAGGED-scores.jsonl": "68570147b7b7fe2b50b0b0889cb1d5169ada539ba623f1d9e26ff7e495246d52",
+    "test-F-coverage_risk_UNFLAGGED-scores.jsonl": "eea36c79771fad0f2784b366ca1bda8d598f42213c2d5d2b173901b772e3d3b4",
+    "test-F-axes-mle_risk_UNFLAGGED-scores.jsonl": "a1f44b8d235e27deb4338399b52d635d7d146e9cf475f710c80a5e668c5f926a",
+    "test-P-scalar-mle_risk_UNFLAGGED-scores.jsonl": "d72df95f07ba32c02cce5fff43a9220f540630de174d7828a40da521e1c7edc0",
+    "test-P-coverage_risk_UNFLAGGED-scores.jsonl": "b8208c919bcbfec2fc32078b14a39a39e0e7eb0fb26a7ad5d2c0bcfd8b81cc7c",
+    "test-P-axes-mle_risk_UNFLAGGED-scores.jsonl": "0dd7c962948015987ebd2fd2f4861b38ba1a2e301c1ed0cba3e5359955428249"
+  },
+  "invocations": [
+    {
+      "stage": "collect",
+      "started": "2026-10-25T18:19:23.732Z",
+      "repository": {
+        "commit": "ebdef2455c3b3f1404239795e8661b5e9769287e",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "collect",
+      "started": "2026-10-25T18:24:42.037Z",
+      "repository": {
+        "commit": "ebdef2455c3b3f1404239795e8661b5e9769287e",
+        "dirty": true
+      }
+    },
+    {
+      "stage": "collect",
+      "started": "2026-10-25T18:28:26.035Z",
+      "repository": {
+        "commit": "a648fd415a080bfe4dc3720e5896b8c463e10391",
+        "dirty": true
+      }
+    },
+    {
+      "stage": "collect",
+      "started": "2026-10-25T18:39:29.543Z",
+      "repository": {
+        "commit": "a648fd415a080bfe4dc3720e5896b8c463e10391",
+        "dirty": true
+      }
+    },
+    {
+      "stage": "train",
+      "started": "2026-10-25T18:47:53.934Z",
+      "repository": {
+        "commit": "f59f2b13f6447a6bb0c8a5cbb078f99fb849c02f",
+        "dirty": true
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T18:59:33.504Z",
+      "repository": {
+        "commit": "6e60344a154f79601b12cd23e6905f2483217878",
+        "dirty": false
+      }
+    }
+  ],
+  "peakDispatchLoad": 66.423828125,
+  "collected": "2026-10-25T18:46:31.664Z",
+  "selectionFreeze": {
+    "commit": "6e60344a154f79601b12cd23e6905f2483217878",
+    "sha256": "8ab3b051b9ab68a517152bac327cbfc93a47c94b59c4fe003fb557e61bbe5568",
+    "verifiedAt": "2026-10-25T18:59:34.031Z"
+  },
+  "testStarted": "2026-10-25T18:59:34.033Z",
+  "finished": "2026-10-25T19:03:42.878Z"
+}
