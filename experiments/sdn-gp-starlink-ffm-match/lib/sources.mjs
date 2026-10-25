@@ -9,6 +9,7 @@ import zlib from 'node:zlib';
 import { OEM, flatbuffers, blockLines } from './sds.mjs';
 import { ms, withT } from './windows.mjs';
 import { store } from '../common.mjs';
+import { gate } from '../../../harness/truth-gate.mjs';
 
 export const ARCHIVE = process.env.SDN_ARCHIVE ?? '/opt/data/sdn-archive';
 const referenceRoot = path.join(ARCHIVE, 'reference-states/reference');
@@ -41,7 +42,7 @@ const readText = (file) => { const b = fs.readFileSync(file); return (file.endsW
 /** NASA JSC ISS OEM (EME2000, UTC, 4 min): the local copy named by `file`. */
 export function iss({ file = path.join(ARCHIVE, 'hac/nasa-iss-oem/20261009/ISS.OEM_J2K_EPH.txt') } = {}) {
   const { header, blocks } = parseOemKvn(readText(file));
-  const lines = blocks.flatMap((b) => b.lines);
+  const lines = gate(blocks.flatMap((b) => b.lines), { product: `nasa-iss-oem/${header.CREATION_DATE}`, norad: 25544 }).kept; // the truth gate (harness/truth-gate.mjs)
   return [withT({ source: 'iss', id: 'ISS', norad: 25544, name: 'ISS', objectId: '1998-067A', originator: header.ORIGINATOR, creation: header.CREATION_DATE, frame: 'EME2000', timeSystem: 'UTC', lines })];
 }
 
@@ -52,7 +53,8 @@ const memeEpoch = (token) => {
   return new Date(Date.UTC(Number(m[1]), 0, 1) + (Number(m[2]) - 1) * 86400000 + Number(m[3]) * 3600000 + Number(m[4]) * 60000 + Number(m[5]) * 1000).toISOString();
 };
 /** The state lines of a SpaceX MEME text (EME2000, km, km/s, UTC). */
-export function parseMeme(text) {
+/** The states of a SpaceX MEME file, through the truth gate (harness/truth-gate.mjs): the sanity rule, and the ledger when `product` is given. */
+export function parseMeme(text, { product = 'spacex-meme', norad = 0, raw = false } = {}) {
   const lines = [];
   for (const raw of text.split('\n')) {
     const f = raw.trim().split(/\s+/);
@@ -60,7 +62,7 @@ export function parseMeme(text) {
     const epoch = memeEpoch(f[0]);
     if (epoch) lines.push({ epoch, r: f.slice(1, 4).map(Number), v: f.slice(4, 7).map(Number) });
   }
-  return lines;
+  return raw ? lines : gate(lines, { product, norad }).kept;
 }
 export const memeHeader = (text) => ({
   start: /ephemeris_start:(\d{4}-\d\d-\d\d) (\d\d:\d\d:\d\d)/.exec(text)?.slice(1).join('T') ?? null,
@@ -69,10 +71,12 @@ export const memeHeader = (text) => ({
 });
 
 // ---- reference states ($OEM, size-prefixed, GCRF, UTC) ----
-export function readReference(file) {
+export function readReference(file, { raw = false } = {}) { // raw: the file's states as written (the truth gate's scan)
   const oem = OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(new Uint8Array(fs.readFileSync(file)))).unpack();
   const block = oem.EPHEMERIS_DATA_BLOCK[0];
-  return { norad: block.OBJECT.NORAD_CAT_ID, name: block.OBJECT.OBJECT_NAME, objectId: block.OBJECT.OBJECT_ID, lines: blockLines(block) };
+  // the truth gate (harness/truth-gate.mjs): states listed for this product and object, or failing the sanity rule, are not read
+  const lines = raw ? blockLines(block) : gate(blockLines(block), { product: path.basename(path.dirname(file)), norad: block.OBJECT.NORAD_CAT_ID }).kept;
+  return { norad: block.OBJECT.NORAD_CAT_ID, name: block.OBJECT.OBJECT_NAME, objectId: block.OBJECT.OBJECT_ID, lines };
 }
 export function chain(files) { // consecutive files of one object as one series (they overlap at their ends)
   const byEpoch = new Map();

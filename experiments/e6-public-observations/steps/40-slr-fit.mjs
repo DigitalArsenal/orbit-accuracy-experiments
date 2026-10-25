@@ -13,6 +13,7 @@ import { cli, config, guard, windowOf, DAY_MS, HOUR_MS } from '../common.mjs';
 import { repoRoot, startRun } from '../../../harness/provenance.mjs';
 import { sha256 } from '../../../harness/modules.mjs';
 import { decodeOemStream } from '../../../harness/records.mjs';
+import { gate } from '../../../harness/truth-gate.mjs';
 import { readSets } from '../../e4-operator-ephemeris-parity/products.mjs';
 import { anchoredAt, anchoredContext } from '../anchored.mjs';
 
@@ -25,7 +26,7 @@ const env = await anchoredContext(run, modulesDir, repoRoot);
 const S = config.slr;
 const iso = (ms) => new Date(ms).toISOString();
 
-// Truth: every NSGF product of the target, GCRF states by epoch (ms).
+// Truth: every NSGF product of the target, GCRF states by epoch (ms), through the truth gate (harness/truth-gate.mjs).
 function truthOf(prefix, norad) {
   const states = new Map(), spans = [];
   for (const p of fs.readdirSync(config.inputs.reference).filter((n) => n.startsWith(`${prefix}.`)).sort()) {
@@ -35,7 +36,7 @@ function truthOf(prefix, norad) {
     const bytes = fs.readFileSync(path.join(config.inputs.reference, p, o.file));
     const block = decodeOemStream(new Uint8Array(bytes))[0].EPHEMERIS_DATA_BLOCK[0];
     if (block.REFERENCE_FRAME?.NAME !== 'GCRF') throw new Error(`${p}: not GCRF`);
-    const lines = block.EPHEMERIS_DATA_LINES;
+    const lines = gate(block.EPHEMERIS_DATA_LINES, { product: p, norad, epochOf: (l) => Date.parse(l.EPOCH) }).kept;
     spans.push({ product: p, from: Date.parse(lines[0].EPOCH), to: Date.parse(lines.at(-1).EPOCH), sha256: sha256(bytes) });
     for (const l of lines) { const t = Date.parse(l.EPOCH); if (!states.has(t)) states.set(t, [l.X, l.Y, l.Z, l.X_DOT, l.Y_DOT, l.Z_DOT].map((v) => v * 1000)); }
   }
