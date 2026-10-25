@@ -1,0 +1,55 @@
+{
+  "experiment": "sdn-ap-mixed-screening",
+  "frozen": true,
+  "task": "experiments-sdn-ap-mixed-scenario-screening-20261025",
+  "store": "/opt/data/sdn-archive/sdn-ap-mixed-screening",
+  "modules": {
+    "repository": "space-data-network-modules",
+    "commit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "sdnapWasmSha256": "62c783262da9e69c54d6f4eb98c97af4208c1b11daec44cc9c28c0252c564d1e"
+  },
+  "environment": {
+    "file": "/opt/data/sdn-archive/sdn-ap-baselines/environment/environment.json",
+    "sha256": "520b825d61e64418d1904a482da49c647cb2f92765c9df736d14d90a6e61dcf6",
+    "note": "B1's Earth orientation and space-weather tables (B1 amendments A1, A2), sliced to each arc, two days either side"
+  },
+  "part1": {
+    "starlink": {
+      "captureRoot": "/opt/data/sdn-archive/operator-capture/cycles",
+      "registrationCycle": "2026-10-25T13-01-35-267Z",
+      "forecastCycle": "the first capture cycle that starts after the commit of this plan",
+      "trackHours": 24,
+      "stepMinutes": 10,
+      "minimumCoverage": 0.9,
+      "segmentHours": 8,
+      "binsHours": [[0, 24], [24, 48], [48, 72]],
+      "forecastSample": 200,
+      "salt": "B2",
+      "requestSpacingSeconds": 3.2,
+      "maneuverEvidentKm": 1
+    },
+    "iss": {
+      "archive": "/opt/data/sdn-archive/hac/nasa-iss-oem-archive",
+      "burns": "results/sdn-gp-starlink-ffm-match/iss-burns.json",
+      "trackHours": 24,
+      "truthHours": 24,
+      "binsHours": [[0, 24], [24, 48], [48, 72]]
+    }
+  },
+  "part2": {
+    "normalPoints": "/opt/data/sdn-archive/hac/ilrs-edc/npt_crd_v2",
+    "e6Variant": "R",
+    "e6Window": "test",
+    "window": ["2026-07-16T00:00:00Z", "2026-08-30T00:00:00Z"],
+    "targets": ["starlette", "stella", "larets", "westpac", "lares"],
+    "trackHours": 24,
+    "trackStepSeconds": 60,
+    "leadDays": [1, 2, 3],
+    "thinSeconds": 300,
+    "minimumCoverage": 0.9
+  },
+  "statistics": {
+    "quantiles": [0.1, 0.5, 0.9],
+    "bootstrap": { "resamples": 10000, "level": 0.95, "seedPrefix": "B2", "objectMinimum": 5 }
+  }
+}
