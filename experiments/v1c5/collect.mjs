@@ -36,7 +36,7 @@ export async function collect({ root, run, runtime, name, phase, pairs, jobFor, 
     for (let i = 0; i < config.workers; i++) { const w = makeWorker(); pool.push(w); await w.ready; }
     // Lane i dispatches only while the 1-minute load is below dispatchLoadBelow - i, so a busy host keeps the first lanes running.
     async function lane(w, index) {
-      const below = config.dispatchLoadBelow - index;
+      const below = (Number(process.env.V1C5_DISPATCH_LOAD_BELOW) || config.dispatchLoadBelow) - index;
       while (next < pairs.length) {
         while (next < pairs.length && os.loadavg()[0] >= below) { console.log(`Load ${os.loadavg()[0].toFixed(1)}: lane ${index} waiting below ${below}`); await sleep(15000); }
         assert(fs.statfsSync(root).bavail * fs.statfsSync(root).bsize >= config.diskFloorGiB * 1024 ** 3, 'disk guard');

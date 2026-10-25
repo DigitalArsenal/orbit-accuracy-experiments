@@ -47,7 +47,7 @@ export async function eventFlags({ run, runtime, config, e3, name, pairs, setsBy
   try {
     for (let i = 0; i < workers; i++) { const w = make(); pool.push(w); await w.ready; }
     const lane = async (w, index) => {
-      const below = config.dispatchLoadBelow - index;
+      const below = (Number(process.env.V1C5_DISPATCH_LOAD_BELOW) || config.dispatchLoadBelow) - index;
       while (next < pairs.length) {
         while (next < pairs.length && os.loadavg()[0] >= below) await sleep(15000);
         assert(fs.statfsSync(run.root).bavail * fs.statfsSync(run.root).bsize >= config.diskFloorGiB * 1024 ** 3, 'disk guard');
