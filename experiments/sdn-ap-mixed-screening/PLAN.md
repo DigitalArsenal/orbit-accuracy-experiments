@@ -191,3 +191,33 @@ each with its bootstrap interval over encounters.
 When V1c5's successor (a re-score with a screening-oriented criterion) or a calibrated SDN-AP
 covariance (modules-sdn-ap-covariance-calibration-to-band-20261025) lands, it is added as a further
 labeled covariance by amendment, beside these.
+
+### A3 - 2026-10-25, committed at 20:32 UTC, before any score of part 1a exists (no truth epoch of part 1a has been read): an FFM arm for part 1a, and the truth gate
+
+Part 1a gains a fourth arm, the full force model fitted to the same operator track, so that every
+satellite's track is carried by SDN-AP, SGP4-XP and FFM and each is scored against the newer SpaceX
+files (config.part1.starlink.ffm).
+1. **Fit.** analysis/estimation `fit_batch` (batch weighted least squares), answered by propagator/ffm
+   with its state transition matrix and parameter sensitivities, as E6's laser variant R fits
+   (experiments/e6-public-observations fit.mjs `fitOrbit`, no element-set history): the GCRF state at
+   the track's first epoch, the drag parameter B = Cd A/m and the radiation-pressure parameter
+   AGOM = Cr A/m. The measurements are the operator track's positions (the same 24 h track and the
+   same 145-epoch rule, at least 90 % of them) as POSITION_VECTOR observations, 10 m per axis in GCRF.
+   First guess: the track's first state. Seeds: B 0.03 m2/kg; AGOM 0.11 m2/kg below NORAD 56000 and
+   0.19 m2/kg from it (G1's FFM settings). A priori: 1e5 m in position, 10 m/s in velocity and 30 % of
+   each seed (E6's bPriorFraction). Two rounds, the first with every sigma times 100; at most 10
+   iterations, correction tolerance 0.01, edit threshold 5. Forces: E6's (gravity 70 x 70, Sun and
+   Moon, radiation pressure, drag with NRLMSISE-00, solid tides, relativity), integrator tolerance
+   1e-10 and steps of at most 120 s; Earth orientation and space weather from config.environment, the
+   same tables as the SDN-AP arms.
+2. **Prediction and score.** The fitted state and parameters carried forward by propagator/ffm with
+   the same forces to the truth epochs, scored with the same scorer, bins and coverage rule as every
+   arm. A satellite whose fit fails, or ends not converged, has no FFM score and is counted.
+3. **Reporting.** Each arm is reported against the truth, the newer SpaceX files. Arm-to-arm figures
+   (the paired comparison with SDN-AP of Scoring) are reported as registered there.
+4. **Truth gate.** Part 1a reads the captured states through harness/truth-gate.mjs (task
+   experiments-truth-ingest-gate-20261025): a state its ledger lists, or one failing its sanity rule,
+   is used neither in a track nor as truth, and the count is reported. Its scan of the capture cycles
+   to 2026-10-25 13:01Z flags none; before the score phase the scan's capture part is run again over
+   the cycles the truth uses, and any state it flags joins the ledger first.
+

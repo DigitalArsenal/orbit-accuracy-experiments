@@ -26,7 +26,24 @@
       "forecastSample": 200,
       "salt": "B2",
       "requestSpacingSeconds": 3.2,
-      "maneuverEvidentKm": 1
+      "maneuverEvidentKm": 1,
+      "ffm": {
+        "amendment": "A3",
+        "estimator": "analysis/estimation fit_batch (BATCH_WEIGHTED_LEAST_SQUARES) answered by propagator/ffm, through experiments/e6-public-observations fit.mjs fitOrbit and propagateFit",
+        "measurement": { "kind": "POSITION_VECTOR", "frame": "GCRF", "sigmaM": 10 },
+        "firstGuess": "the operator track's first state",
+        "parameters": [
+          { "kind": "DRAG_AREA_OVER_MASS", "seed": 0.03 },
+          { "kind": "SRP_AREA_OVER_MASS", "seed": { "belowNorad56000": 0.11, "fromNorad56000": 0.19 } }
+        ],
+        "apriori": { "positionSigmaM": 1e5, "velocitySigmaMS": 10, "parameterFraction": 0.3 },
+        "firstRoundSigmaFactor": 100,
+        "maximumIterations": 10,
+        "correctionTolerance": 0.01,
+        "sigmaEditThreshold": 5,
+        "forces": { "degree": 70, "order": 70, "thirdBodies": [10, 301], "srp": true, "drag": true, "atmosphere": "NRLMSISE00", "solidTides": true, "relativity": "IERS_2010" },
+        "integrator": { "tolerance": 1e-10, "maxStep": 120, "minStep": 0.0001 }
+      }
     },
     "iss": {
       "archive": "/opt/data/sdn-archive/hac/nasa-iss-oem-archive",
