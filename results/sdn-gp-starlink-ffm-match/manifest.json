@@ -51,10 +51,10 @@
     "node experiments/sdn-gp-starlink-ffm-match/m27-events.mjs",
     "node experiments/sdn-gp-starlink-ffm-match/sdngp-run.mjs --pin <build> --only m27"
   ],
-  "planSha256": "8f03aacce7bcc4884de7b41b9d2e3a210835b632007028c0333135f203a497ec",
+  "planSha256": "4f94675a674053e15049995fcf5e1741d69980cc1e3557183fb32edc640b766d",
   "configSha256": "b3496d61fbc4159707c685577e0dbd8e6c3c8c24641eb862cd9a4466d060d76f",
   "repository": {
-    "commit": "8bfda237ae2cdaf60a437362e0c3efab6e3795d5"
+    "commit": "672f0c3121cd510e199c9f2290b2316fe4044f9b"
   },
   "modules": {
     "commit": "118de023e00e98fa1e1a2abe7ba12c560b0715c1",
@@ -308,7 +308,8 @@
         "sourceCommit": "39b059398049ce5933813af693d4e627d29e7797",
         "sourceUncommittedFiles": 1,
         "firstUseUtc": "2026-10-24T04:28:54.951Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "2d906c4d90fd",
@@ -316,7 +317,8 @@
         "sourceCommit": "4229929303a502270a50bc91355608c43e115f8a",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T05:31:01.341Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "aebde849f2f2",
@@ -324,7 +326,8 @@
         "sourceCommit": "cb93d1e8bacd75bf5b2386f8051346ac26a09b40",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T05:32:18.223Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "9da7fad24c9d",
@@ -332,7 +335,8 @@
         "sourceCommit": "1102cd6e3b2c71a4e1899f27abfcfc4904f62444",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T06:32:14.780Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "7ea0ea272bbf",
@@ -340,7 +344,8 @@
         "sourceCommit": "b663c8cb9e3cc3d5378f80779d754d7533efc6d9",
         "sourceUncommittedFiles": 3,
         "firstUseUtc": "2026-10-24T08:10:30.044Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "ee5dccaa17a8",
@@ -348,7 +353,8 @@
         "sourceCommit": "e241cef6b4db4c139ffc4e4d4ab603ca62986831",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T13:08:14.256Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "54b069014557",
@@ -356,7 +362,8 @@
         "sourceCommit": "3617e4d57f517e4ef1e2385415072180bfe3a988",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T14:50:56.044Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "35cd83a2b714",
@@ -364,7 +371,8 @@
         "sourceCommit": "9c1d5ee3562bfc49c280e2e4074f896d0f21f4ea",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T16:13:45.758Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "04f7c2d1d50f",
@@ -372,7 +380,8 @@
         "sourceCommit": "65c1c6cae7cc0ac4a7ba65ba891f5c001dfdf4f8",
         "sourceUncommittedFiles": 0,
         "firstUseUtc": "2026-10-24T18:21:26.725Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "61d4ec4e6a12",
@@ -380,7 +389,8 @@
         "sourceCommit": "f0ea4b4e44fc4a1bc207689d06d723248759ca5d",
         "sourceUncommittedFiles": 1,
         "firstUseUtc": "2026-10-24T19:28:48.751Z",
-        "complete": true
+        "complete": true,
+        "eventsFocus": null
       },
       {
         "build": "b9bc708baa50",
@@ -388,7 +398,29 @@
         "sourceCommit": "610930cbf2f1aeefb2525fecfbd98f1b96bb1ac6",
         "sourceUncommittedFiles": 8,
         "firstUseUtc": "2026-10-24T23:08:22.808Z",
-        "complete": false
+        "complete": false,
+        "eventsFocus": {
+          "sources": [
+            "m24",
+            "m24a",
+            "m24b",
+            "m24c",
+            "m24p",
+            "m27",
+            "m29",
+            "m30"
+          ],
+          "rows": {
+            "m24": 26,
+            "m24a": 756,
+            "m24b": 693,
+            "m24c": 96,
+            "m24p": 288,
+            "m27": 9443,
+            "m29": 1809,
+            "m30": 57
+          }
+        }
       }
     ]
   },
@@ -433,9 +465,9 @@
           "last": "2026/2026-10-24.json.gz"
         },
         "gpHistory": {
-          "files": 1938,
+          "files": 1939,
           "first": "2022/2022-11-20.json.gz",
-          "last": "2026/2026-10-24T220201Z--2026-10-24T231701Z.json.gz"
+          "last": "2026/2026-10-24T231701Z--2026-10-25T003201Z.json.gz"
         }
       }
     },

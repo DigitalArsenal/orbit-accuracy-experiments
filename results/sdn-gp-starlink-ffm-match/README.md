@@ -139,6 +139,7 @@ COMSPOC does not state the span its XP sets were fitted over, so the 24 h fits o
 - The detector against the public station-keeping notices (section 16b, amendments A14 and A14b; build 61d4ec4e6a12; BeiDou is not scored, its notices did not answer; the tables of build 04f7c2d1d50f are identical): GPS (34 satellites, ESA final orbits): of 24 delta-V outages in the 2026 NANUs 1 is scoreable (16 a day without states of the satellite, 5 after the last day of the product, 2 no states); it is detected, 2.0 h after the start of the actual interval, delta-v 0.162 m/s (a window of that width without a notice holds a detection in 0.5 % of the placements, pooled over the GPS satellites); elsewhere the detector reports 38 distinct burns over 22.2 object-years (1.7 per object-year, delta-v median 0.005 m/s). QZSS (4 satellites, GFZ rapid orbits): of 33 outages 13 are scoreable (3 after the last day of the product, 2 a day without states of the satellite, 1 no states, 14 of a satellite without an orbit series); 13 of 13 have a detection inside the forecast window plus or minus 6 h and 11 of 13 inside the actual interval, but the detector reports a burn every 1.4 days (253 false alarms per object-year, delta-v median 2.5 mm/s), so a window without a notice holds one almost as often: 11.9 of 13 outages are expected detected at the pooled off-notice rate (probability of 13 or more 0.32); the geostationary satellite 11 of 11 against 11.0 expected.
 - Real reentries (section 16c; build 61d4ec4e6a12; time to go is the truth less the prediction epoch, sigma is REENTRY_EPOCH_UNC): CORDS observed reentries: 362 of 441 predictions answered on 17 objects, within 1 sigma 60 %, within 2 sigma 69 %, median |error| 11.4 h; Space-Track last-TIP reentries: 1357 of 1368 predictions answered on 41 objects, within 1 sigma 56 %, within 2 sigma 83 %, median |error| 15.4 h; against Aerospace's prediction at its own element-set epoch (17 objects) the observed time lies inside Aerospace's stated window for 14 and inside SDN-AP's 2 sigma for 9 of 9.
 - Controlled deorbits (section 16c; 19 lowering Starlinks, build 61d4ec4e6a12): `reentry` on the 24 h fit answered for 17 (reentry-not-reached 2; predicted lifetime median 12.5 days, 6.0 to 26.4); the rule setting (B_eff replaced by tau0) is refused for 19 of 19 (no-drag); the free-B_eff setting gives the same epochs as the shipped one; as of the archive's newest snapshot 0 have a TIP message and 0 a decay message, so none is scored yet.
+- Build b9bc708baa50 against build 61d4ec4e6a12 (section 16d, amendment A15; sources run: m24, m24a, m24b, m24c, m24p, m27, m29, m30): ISS archive, 72 h pre-burn windows: hits 5 -> 95 of 97 (detection elsewhere 92 -> 2, none 0 -> 0; epoch error of the hits 5.6 min, delta-v over planned 1.01); burn-free windows with a detection 8 -> 7 of 650; diagnostic windows, hits of the windows scored: TIG - 4 h 95 of 95 -> 96 of 96, TIG - 6 h 94 of 95 -> 95 of 96, TIG - 8 h 51 of 94 -> 96 of 96, TIG - 12 h 7 of 96 -> 95 of 96, TIG - 24 h 9 of 92 -> 90 of 93; the stretches with no burn report a detection in 1 of 96 -> 1 of 96 and 0 of 96 -> 0 of 96 windows; burn-free FFM-1 Starlink arcs 4 -> 4 of 96; planted impulses (hits of 48): U-1 48 -> 48, W-1 48 -> 48, V-0.1 0 -> 11, V-1 48 -> 48, V-10 40 -> 48, control 1 -> 1; GPS and QZSS against the notices: QZSS windows with a detection 789 -> 789 of 989, distinct detections 773 -> 721, detections in the first sixth of their windows 98 % -> 7 %, outages detected inside the forecast window 13 -> 13 of 13 (expected at the pooled off-notice rate 11.8) and inside the actual interval 11 -> 0 of 13 (expected 10.1; probability of that few or fewer under 0.001), windows that hold an outage with a detection 5 of 6 against 713 of 909 clear windows; GPS false alarms per object-year 1.7 -> 1.7, the one scoreable outage detected; real reentries: sample C answered 362 -> 378 of 441, within 1 / 2 sigma 60 % / 69 % -> 56 % / 65 %, median sigma 21.1 -> 18.1 h, median |error| 11.4 -> 10.8 h; sample T answered 1357 -> 1360 of 1368, within 1 / 2 sigma 56 % / 83 % -> 49 % / 75 %, median sigma 18.8 -> 15.6 h, median |error| 15.4 -> 14.6 h; controlled deorbits: `reentry` answered 17 -> 19 of 19 (refused none; before reentry-not-reached 2), predicted lifetime median 12.5 -> 12.4 days.
 - First fits of the captured batch (section 16c; 27 satellites, held-out days 1 / 2 / 3 inside the file, median km): SDN-AP 6 h 1.5 / 6.1 / 15.3; 12 h 1.4 / 6.9 / 16.6; 24 h 0.4 / 0.9 / 0.8; SGP4-XP 6 h 122 / 604 / 1516; 12 h 154 / 687 / 1654; 24 h 7.7 / 21.3 / 22.6; the SDN-AP B_eff at 6 h over its 24 h value has a median of 1.01 (10th to 90th percentile 1.01 to 1.01).
 - Batch-joint fit against per-object fits on synthetic FFM-1 batches with an exact parent state (section 16c, amendment A12b; build 61d4ec4e6a12): separation sigma 1 m/s, 54 objects: 6 h joint 0.8 / 5.4 / 15.1 against per-object 3.4 / 19.0 / 50.8 km; 12 h joint 1.4 / 6.4 / 15.1 against per-object 1.8 / 8.6 / 20.6 km; 24 h joint 0.9 / 3.4 / 7.6 against per-object 0.9 / 3.4 / 7.5 km. separation sigma 0.25 m/s, 54 objects: 6 h joint 1.8 / 8.7 / 21.3 against per-object 2.0 / 9.5 / 23.4 km; 12 h joint 0.3 / 0.4 / 0.7 against per-object 0.4 / 1.6 / 4.7 km; 24 h joint 1.2 / 5.0 / 12.9 against per-object 1.2 / 4.9 / 12.6 km.
 - Moon-centered windows against the truth-side maneuver list (section 16b): LRO: with a listed maneuver in the fit span 2 windows (whole 1, segment 1, refused 0), none in the fit span 85 (segment 4, refused 0); segment starts 1 after and 0 before the last listed maneuver; Danuri: with a listed maneuver in the fit span 14 windows (whole 7, segment 6, refused 1), none in the fit span 47 (segment 2, refused 0); segment starts 5 after and 1 before the last listed maneuver.
@@ -1476,6 +1477,13 @@ The same 99 planned burns of the pre-burn files, windows cut around each burn on
 | 61d4ec4e6a12 | TIG - 6 h to TIG + 24 h | 95 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 95 | 94 / 1 / 0 | 0.20 [0.17, 0.21] | 13.8 [13.8, 13.8] | 1.10 | 5.8 [-58.2, 10.2] | 1.04 [0.98, 1.43] |
 | 61d4ec4e6a12 | TIG - 8 h to TIG + 24 h | 94 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 94 | 51 / 43 / 0 | 0.21 [0.17, 0.26] | -1.9 [-3.5, -1.6] | 1.65 | 8.7 [-83.2, 10.7] | 1.03 [0.99, 2.06] |
 | 61d4ec4e6a12 | TIG - 24 h to TIG + 24 h | 92 of 99 (6 skipped: another planned burn (cluster) in or within an hour of the window) | 92 | 9 / 83 / 0 | 0.09 [0.06, 0.31] | -19.8 [-21.4, -19.6] | 3.75 | 7.2 [-0.3, 12.6] | 1.05 [0.99, 1.07] |
+| b9bc708baa50 | the stretch before the burn (TIG - 36 h to TIG - 2 h; no burn in it) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 1 | not applicable | 0.81 [0.81, 0.81] | -8.6 [-8.6, -8.6] | 1.13 |  |  |
+| b9bc708baa50 | 48 h across the burn (TIG - 12 h to TIG + 36 h) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 95 / 1 / 0 | 0.25 [0.25, 0.25] | 16.7 [16.7, 16.7] | 1.03 | 5.7 [0.4, 10.1] | 1.00 [0.95, 1.11] |
+| b9bc708baa50 | the stretch after the burn (TIG + 2 h to TIG + 38 h; no burn in it) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 0 | not applicable |  |  |  |  |  |
+| b9bc708baa50 | a tight window (TIG - 4 h to TIG + 24 h) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 96 / 0 / 0 | 0.15 [0.14, 0.15] |  | 1.03 | 5.9 [1.0, 10.2] | 1.00 [0.95, 1.07] |
+| b9bc708baa50 | TIG - 6 h to TIG + 24 h | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 95 / 1 / 0 | 0.20 [0.20, 0.21] | 10.3 [10.3, 10.3] | 1.04 | 5.9 [0.4, 10.2] | 1.00 [0.95, 1.08] |
+| b9bc708baa50 | TIG - 8 h to TIG + 24 h | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 96 / 0 / 0 | 0.25 [0.25, 0.26] |  | 1.03 | 5.8 [0.6, 10.2] | 1.00 [0.95, 1.07] |
+| b9bc708baa50 | TIG - 24 h to TIG + 24 h | 93 of 99 (6 skipped: another planned burn (cluster) in or within an hour of the window) | 93 | 90 / 3 / 0 | 0.50 [0.50, 0.50] | 1.9 [-3.6, 7.2] | 1.04 | 5.5 [0.1, 10.2] | 1.01 [0.96, 1.12] |
 
 #### M27. GPS and QZSS station keeping against the NANUs and NAQUs (amendments A14 and A14b)
 
@@ -1483,10 +1491,12 @@ The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits,
 
 | Build | System | Satellites | Windows answered | Outages: notices / with orbits / scoreable | Detected, forecast window | Expected under the satellite's own off-notice rate | Expected under the pooled rate | Detected, actual interval | Own rate | Pooled rate | Offset from the actual start (h), median [10th, 90th] | Delta-v of the detections inside forecast windows (m/s), median / maximum |
 | --- | --- | --: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 04f7c2d1d50f | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.005 of 1, observed 1, P(at least) 0.005 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.003 of 1, observed 1, P(at least) 0.003 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
-| 04f7c2d1d50f | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.829 | 11.9 of 13, observed 13, P(at least) 0.315 | 11 of 13 | 12.0 of 13, observed 11, P(at least) 0.926 | 10.4 of 13, observed 11, P(at least) 0.490 | 28.6 [20.8, 39.0] | 0.002 / 0.009 |
-| 61d4ec4e6a12 | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.005 of 1, observed 1, P(at least) 0.005 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001 | 0.003 of 1, observed 1, P(at least) 0.003 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
-| 61d4ec4e6a12 | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.829 | 11.9 of 13, observed 13, P(at least) 0.315 | 11 of 13 | 12.0 of 13, observed 11, P(at least) 0.926 | 10.4 of 13, observed 11, P(at least) 0.490 | 28.6 [20.8, 39.0] | 0.002 / 0.009 |
+| 04f7c2d1d50f | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.005 of 1, observed 1, P(at least) 0.005, P(at most) 1.000 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.003 of 1, observed 1, P(at least) 0.003, P(at most) 1.000 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
+| 04f7c2d1d50f | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.829, P(at most) 1.000 | 11.9 of 13, observed 13, P(at least) 0.315, P(at most) 1.000 | 11 of 13 | 12.0 of 13, observed 11, P(at least) 0.926, P(at most) 0.277 | 10.4 of 13, observed 11, P(at least) 0.490, P(at most) 0.776 | 28.6 [20.8, 39.0] | 0.002 / 0.009 |
+| 61d4ec4e6a12 | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.005 of 1, observed 1, P(at least) 0.005, P(at most) 1.000 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.003 of 1, observed 1, P(at least) 0.003, P(at most) 1.000 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
+| 61d4ec4e6a12 | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.829, P(at most) 1.000 | 11.9 of 13, observed 13, P(at least) 0.315, P(at most) 1.000 | 11 of 13 | 12.0 of 13, observed 11, P(at least) 0.926, P(at most) 0.277 | 10.4 of 13, observed 11, P(at least) 0.490, P(at most) 0.776 | 28.6 [20.8, 39.0] | 0.002 / 0.009 |
+| b9bc708baa50 | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.004 of 1, observed 1, P(at least) 0.004, P(at most) 1.000 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.003 of 1, observed 1, P(at least) 0.003, P(at most) 1.000 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
+| b9bc708baa50 | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.836, P(at most) 1.000 | 11.8 of 13, observed 13, P(at least) 0.299, P(at most) 1.000 | 0 of 13 | 12.0 of 13, observed 0, P(at least) 1.000, P(at most) < 0.001 | 10.1 of 13, observed 0, P(at least) 1.000, P(at most) < 0.001 |  | 0.002 / 0.004 |
 
 | Build | System | Windows with a detection | Distinct detections | False alarms | In another outage / near a file boundary | Delta-v (m/s), median / maximum | Chance level (A14) |
 | --- | --- | --- | --- | --- | --- | --- | --: |
@@ -1494,6 +1504,19 @@ The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits,
 | 04f7c2d1d50f | QZSS | 789 of 989 | 773 (0.74 per object-day) | 725 (253 per object-year over 2.87) | 11 / 65 | 0.002 / 0.011 | 2 % |
 | 61d4ec4e6a12 | GPS | 41 of 7923 | 39 (0.00 per object-day) | 38 (1.7 per object-year over 22.2) | 0 / 1 | 0.005 / 0.162 | 0 % |
 | 61d4ec4e6a12 | QZSS | 789 of 989 | 773 (0.74 per object-day) | 725 (253 per object-year over 2.87) | 11 / 65 | 0.002 / 0.011 | 2 % |
+| b9bc708baa50 | GPS | 41 of 7923 | 38 (0.00 per object-day) | 37 (1.7 per object-year over 22.2) | 0 / 8 | 0.005 / 0.162 | 0 % |
+| b9bc708baa50 | QZSS | 789 of 989 | 721 (0.69 per object-day) | 691 (241 per object-year over 2.87) | 11 / 75 | 0.002 / 0.006 | 2 % |
+
+Window-level rates (A14c): a window holds an outage when it contains the whole actual interval; it is clear when it overlaps no forecast window plus or minus 6 h of its satellite. The last column is where the detections lie in their windows (0 the first state, 1 the last): the detections in the first sixth, and the median position:
+
+| Build | System | Windows holding an outage | With a detection | With a detection inside the actual interval plus or minus 6 h | Clear windows | With a detection | Detections in the first sixth of their window; median position |
+| --- | --- | --: | --- | --- | --: | --- | --- |
+| 04f7c2d1d50f | GPS | 2 | 2 (100 %) | 2 (100 %) | 7902 | 37 (0 %) | 30 of 41 (73 %); median 0.11 |
+| 04f7c2d1d50f | QZSS | 6 | 5 (83 %) | 4 (67 %) | 909 | 713 (78 %) | 772 of 789 (98 %); median 0.05 |
+| 61d4ec4e6a12 | GPS | 2 | 2 (100 %) | 2 (100 %) | 7902 | 37 (0 %) | 30 of 41 (73 %); median 0.11 |
+| 61d4ec4e6a12 | QZSS | 6 | 5 (83 %) | 4 (67 %) | 909 | 713 (78 %) | 772 of 789 (98 %); median 0.05 |
+| b9bc708baa50 | GPS | 2 | 2 (100 %) | 2 (100 %) | 7902 | 37 (0 %) | 0 of 41 (0 %); median 0.47 |
+| b9bc708baa50 | QZSS | 6 | 5 (83 %) | 0 (0 %) | 909 | 713 (78 %) | 58 of 789 (7 %); median 0.53 |
 
 Outages that cannot be scored (build 61d4ec4e6a12; they depend on the orbit product, not on the build): GPS: 16 a day without states of the satellite, 5 after the last day of the product, 2 no states; QZSS: 14 of a satellite without an orbit series, 3 after the last day of the product, 2 a day without states of the satellite, 1 no states.
 
@@ -1531,27 +1554,27 @@ Per satellite with outages in the notices (build 61d4ec4e6a12):
 
 #### The detector across builds
 
-| Measurement | 35cd83a2b714 | 04f7c2d1d50f | 61d4ec4e6a12 |
-| --- | --: | --: | --: |
-| ISS, NASA files without a reboost (M24): windows with a detection | 17 of 26 | 1 of 26 | 1 of 26 |
-| Burn-free FFM-1 Starlink arcs (M24c): windows with a detection | 64 of 96 | 5 of 96 | 4 of 96 |
-| Burn-free FFM-1 Starlink arcs: false alarms per object-year | 122 | 9.5 | 7.6 |
-| ISS archive, burn-free windows with a detection | 342 of 651 | 8 of 651 | 8 of 650 |
-| ISS archive, burn-free: false alarms per object-year | 76.6 | 1.6 | 1.6 |
-| ISS archive, 72 h pre-burn windows: hits / detection elsewhere / none | 2 / 96 / 0 of 98 | 5 / 93 / 0 of 98 | 5 / 92 / 0 of 97 |
-| ISS archive, 72 h pre-burn hits: epoch error (min), median; absolute delta-v over planned, median | 2.5; 1.12 | -0.8; 1.07 | -0.8; 1.08 |
-| ISS archive, 72 h post-burn windows: hits / elsewhere / none | 1 / 5 / 0 of 6 | 0 / 6 / 0 of 6 | 1 / 5 / 0 of 6 |
-| ISS archive diagnostic, TIG - 4 h to TIG + 24 h: hits of the windows scored | 43 of 96 | 95 of 95 | 95 of 95 |
-| ISS archive diagnostic, TIG - 6 h to TIG + 24 h: hits of the windows scored | 25 of 96 | 94 of 95 | 94 of 95 |
-| ISS archive diagnostic, TIG - 8 h to TIG + 24 h: hits of the windows scored | 18 of 96 | 56 of 96 | 51 of 94 |
-| ISS archive diagnostic, TIG - 12 h to TIG + 36 h: hits of the windows scored | 4 of 96 | 9 of 96 | 7 of 96 |
-| ISS archive diagnostic, TIG - 24 h to TIG + 24 h: hits of the windows scored | 1 of 93 | 9 of 93 | 9 of 92 |
-| Planted arcs, control: detections (of 48) | 24 | 1 | 1 |
-| Planted arcs, imp-V-0.1: hits within 92 min (of 48) | 13 | 0 | 0 |
-| Planted arcs, imp-V-1: hits within 92 min (of 48) | 25 | 48 | 48 |
-| Planted arcs, imp-V-10: hits within 92 min (of 48) | 8 | 40 | 40 |
-| Planted arcs, imp-U-1: hits within 92 min (of 48) | 45 | 48 | 48 |
-| Planted arcs, imp-W-1: hits within 92 min (of 48) | 46 | 48 | 48 |
+| Measurement | 35cd83a2b714 | 04f7c2d1d50f | 61d4ec4e6a12 | b9bc708baa50 |
+| --- | --: | --: | --: | --: |
+| ISS, NASA files without a reboost (M24): windows with a detection | 17 of 26 | 1 of 26 | 1 of 26 | 0 of 26 |
+| Burn-free FFM-1 Starlink arcs (M24c): windows with a detection | 64 of 96 | 5 of 96 | 4 of 96 | 4 of 96 |
+| Burn-free FFM-1 Starlink arcs: false alarms per object-year | 122 | 9.5 | 7.6 | 7.6 |
+| ISS archive, burn-free windows with a detection | 342 of 651 | 8 of 651 | 8 of 650 | 7 of 650 |
+| ISS archive, burn-free: false alarms per object-year | 76.6 | 1.6 | 1.6 | 1.4 |
+| ISS archive, 72 h pre-burn windows: hits / detection elsewhere / none | 2 / 96 / 0 of 98 | 5 / 93 / 0 of 98 | 5 / 92 / 0 of 97 | 95 / 2 / 0 of 97 |
+| ISS archive, 72 h pre-burn hits: epoch error (min), median; absolute delta-v over planned, median | 2.5; 1.12 | -0.8; 1.07 | -0.8; 1.08 | 5.6; 1.01 |
+| ISS archive, 72 h post-burn windows: hits / elsewhere / none | 1 / 5 / 0 of 6 | 0 / 6 / 0 of 6 | 1 / 5 / 0 of 6 | 6 / 0 / 0 of 6 |
+| ISS archive diagnostic, TIG - 4 h to TIG + 24 h: hits of the windows scored | 43 of 96 | 95 of 95 | 95 of 95 | 96 of 96 |
+| ISS archive diagnostic, TIG - 6 h to TIG + 24 h: hits of the windows scored | 25 of 96 | 94 of 95 | 94 of 95 | 95 of 96 |
+| ISS archive diagnostic, TIG - 8 h to TIG + 24 h: hits of the windows scored | 18 of 96 | 56 of 96 | 51 of 94 | 96 of 96 |
+| ISS archive diagnostic, TIG - 12 h to TIG + 36 h: hits of the windows scored | 4 of 96 | 9 of 96 | 7 of 96 | 95 of 96 |
+| ISS archive diagnostic, TIG - 24 h to TIG + 24 h: hits of the windows scored | 1 of 93 | 9 of 93 | 9 of 92 | 90 of 93 |
+| Planted arcs, control: detections (of 48) | 24 | 1 | 1 | 1 |
+| Planted arcs, imp-V-0.1: hits within 92 min (of 48) | 13 | 0 | 0 | 11 |
+| Planted arcs, imp-V-1: hits within 92 min (of 48) | 25 | 48 | 48 | 48 |
+| Planted arcs, imp-V-10: hits within 92 min (of 48) | 8 | 40 | 40 | 48 |
+| Planted arcs, imp-U-1: hits within 92 min (of 48) | 45 | 48 | 48 | 48 |
+| Planted arcs, imp-W-1: hits within 92 min (of 48) | 46 | 48 | 48 | 48 |
 
 #### M25. LRO and Danuri against the truth-side maneuver list
 
@@ -1710,29 +1733,29 @@ Not covered: the residual series (theory plus the operator's Chebyshev residual 
 
 The predictions of every build (the shipped setting; the free setting gives the same epochs), frozen in this table when it was committed; a dash is a refusal by name (above) or a build that issued none:
 
-| Object | B_eff (FFM-1 fit, m2/kg) | 35cd83a2b714: predicted reentry (UTC), sigma (h) | 04f7c2d1d50f: predicted reentry (UTC), sigma (h) | 61d4ec4e6a12: predicted reentry (UTC), sigma (h) | Space-Track TIP / decay |
-| --- | --: | --- | --- | --- | --- |
-| 67211 | 13.6 | 2026-10-28T06:13, 12.5 | 2026-10-28T06:13, 12.5 | - | none yet |
-| 67028 | 11.2 | 2026-10-29T09:32, 14.6 | 2026-10-29T09:32, 14.6 | 2026-10-29T09:27, 14.6 | none yet |
-| 67014 | 9.70 | 2026-11-01T17:21, 19.5 | - | - | none yet |
-| 48120 | 0.56 | 2026-11-02T20:08, 20.8 | 2026-11-02T20:08, 20.8 | 2026-11-02T19:41, 20.8 | none yet |
-| 48370 | 1.56 | 2026-11-03T06:53, 21.4 | 2026-11-03T06:53, 21.4 | 2026-11-03T06:40, 21.4 | none yet |
-| 47788 | 0.54 | 2026-11-04T14:49, 22.9 | 2026-11-04T14:49, 22.9 | 2026-11-04T14:21, 22.9 | none yet |
-| 53660 | 2.14 | 2026-11-04T18:31, 23.1 | 2026-11-04T18:31, 23.1 | 2026-11-04T17:50, 23.1 | none yet |
-| 56483 | 1.69 | 2026-11-04T23:20, 23.3 | 2026-11-04T23:20, 23.3 | 2026-11-04T22:21, 23.3 | none yet |
-| 49179 | 4.09 | 2026-11-05T00:41, 23.4 | 2026-11-05T00:41, 23.4 | 2026-11-05T00:21, 23.4 | none yet |
-| 51121 | 1.88 | 2026-11-05T01:19, 23.4 | 2026-11-05T01:19, 23.4 | 2026-11-05T00:55, 23.4 | none yet |
-| 49151 | 3.02 | 2026-11-06T04:18, 24.6 | - | 2026-11-06T03:03, 24.6 | none yet |
-| 56787 | 1.44 | 2026-11-06T19:38, 25.3 | 2026-11-06T19:38, 25.3 | 2026-11-06T18:50, 25.3 | none yet |
-| 49178 | 2.90 | 2026-11-07T13:49, 26.1 | 2026-11-07T13:49, 26.1 | 2026-11-07T13:04, 26.0 | none yet |
-| 53913 | 1.35 | 2026-11-09T05:32, 27.6 | 2026-11-09T05:32, 27.6 | 2026-11-09T04:38, 27.6 | none yet |
-| 55920 | 1.08 | 2026-11-10T13:10, 28.9 | 2026-11-10T13:10, 28.9 | 2026-11-10T12:20, 28.8 | none yet |
-| 64713 | 0.55 | 2026-11-18T19:41, 35.6 | 2026-11-18T19:41, 35.6 | 2026-11-18T18:26, 35.5 | none yet |
-| 56478 | 1.74 | - | - | 2026-11-04T17:41, 23.1 | none yet |
-| 48129 | 0.91 | - | - | 2026-11-09T12:10, 27.9 | none yet |
-| 48662 | 0.52 | - | - | 2026-11-12T05:14, 30.3 | none yet |
+| Object | B_eff (FFM-1 fit, m2/kg) | 35cd83a2b714: predicted reentry (UTC), sigma (h) | 04f7c2d1d50f: predicted reentry (UTC), sigma (h) | 61d4ec4e6a12: predicted reentry (UTC), sigma (h) | b9bc708baa50: predicted reentry (UTC), sigma (h) | Space-Track TIP / decay |
+| --- | --: | --- | --- | --- | --- | --- |
+| 67211 | 13.6 | 2026-10-28T06:13, 12.5 | 2026-10-28T06:13, 12.5 | - | 2026-10-28T01:43, 10.2 | none yet |
+| 67028 | 11.2 | 2026-10-29T09:32, 14.6 | 2026-10-29T09:32, 14.6 | 2026-10-29T09:27, 14.6 | 2026-10-29T04:37, 12.4 | none yet |
+| 67014 | 9.70 | 2026-11-01T17:21, 19.5 | - | - | 2026-11-01T15:12, 18.0 | none yet |
+| 48120 | 0.56 | 2026-11-02T20:08, 20.8 | 2026-11-02T20:08, 20.8 | 2026-11-02T19:41, 20.8 | 2026-11-02T20:04, 19.5 | none yet |
+| 48370 | 1.56 | 2026-11-03T06:53, 21.4 | 2026-11-03T06:53, 21.4 | 2026-11-03T06:40, 21.4 | 2026-11-03T06:51, 20.1 | none yet |
+| 47788 | 0.54 | 2026-11-04T14:49, 22.9 | 2026-11-04T14:49, 22.9 | 2026-11-04T14:21, 22.9 | 2026-11-04T14:27, 21.7 | none yet |
+| 53660 | 2.14 | 2026-11-04T18:31, 23.1 | 2026-11-04T18:31, 23.1 | 2026-11-04T17:50, 23.1 | 2026-11-04T14:56, 21.8 | none yet |
+| 56483 | 1.69 | 2026-11-04T23:20, 23.3 | 2026-11-04T23:20, 23.3 | 2026-11-04T22:21, 23.3 | 2026-11-04T20:11, 22.0 | none yet |
+| 49179 | 4.09 | 2026-11-05T00:41, 23.4 | 2026-11-05T00:41, 23.4 | 2026-11-05T00:21, 23.4 | 2026-11-04T22:01, 22.1 | none yet |
+| 51121 | 1.88 | 2026-11-05T01:19, 23.4 | 2026-11-05T01:19, 23.4 | 2026-11-05T00:55, 23.4 | 2026-11-05T01:15, 22.3 | none yet |
+| 49151 | 3.02 | 2026-11-06T04:18, 24.6 | - | 2026-11-06T03:03, 24.6 | 2026-11-05T23:20, 23.3 | none yet |
+| 56787 | 1.44 | 2026-11-06T19:38, 25.3 | 2026-11-06T19:38, 25.3 | 2026-11-06T18:50, 25.3 | 2026-11-06T15:25, 24.1 | none yet |
+| 49178 | 2.90 | 2026-11-07T13:49, 26.1 | 2026-11-07T13:49, 26.1 | 2026-11-07T13:04, 26.0 | 2026-11-07T09:46, 24.9 | none yet |
+| 53913 | 1.35 | 2026-11-09T05:32, 27.6 | 2026-11-09T05:32, 27.6 | 2026-11-09T04:38, 27.6 | 2026-11-09T04:58, 26.7 | none yet |
+| 55920 | 1.08 | 2026-11-10T13:10, 28.9 | 2026-11-10T13:10, 28.9 | 2026-11-10T12:20, 28.8 | 2026-11-10T08:30, 27.8 | none yet |
+| 64713 | 0.55 | 2026-11-18T19:41, 35.6 | 2026-11-18T19:41, 35.6 | 2026-11-18T18:26, 35.5 | 2026-11-18T14:02, 34.7 | none yet |
+| 56478 | 1.74 | - | - | 2026-11-04T17:41, 23.1 | 2026-11-04T15:44, 21.8 | none yet |
+| 48129 | 0.91 | - | - | 2026-11-09T12:10, 27.9 | 2026-11-09T12:38, 27.0 | none yet |
+| 48662 | 0.52 | - | - | 2026-11-12T05:14, 30.3 | 2026-11-12T05:50, 29.5 | none yet |
 
-Issued (UTC): 35cd83a2b714 2026-10-24T17:58 to 2026-10-24T18:03; 04f7c2d1d50f 2026-10-24T18:52 to 2026-10-24T18:57; 61d4ec4e6a12 2026-10-24T19:54 to 2026-10-24T20:00.
+Issued (UTC): 35cd83a2b714 2026-10-24T17:58 to 2026-10-24T18:03; 04f7c2d1d50f 2026-10-24T18:52 to 2026-10-24T18:57; 61d4ec4e6a12 2026-10-24T19:54 to 2026-10-24T20:00; b9bc708baa50 2026-10-24T23:19 to 2026-10-24T23:29.
 
 #### M31. First sets of a new batch
 
@@ -1820,6 +1843,225 @@ Batches of 27 objects released from one circular parent orbit (6,630 km, 70 degr
 | 12 h | -0.089 / -0.460 / -0.402 | 27 of 27 / 27 of 27 / 22 of 27 | 0.081 / 0.086 / 0.080 | 1 of 2 (fit-failed 1) | 27 of 27 |
 | 24 h | 0.021 / 0.089 / 0.227 | 2 of 54 / 4 of 54 / 4 of 54 | 0.079 / 0.079 / 0.079 | 2 of 2 | 54 of 54 |
 
+### 16d. Build b9bc708baa50, the next build of the module (amendment A15)
+
+Build b9bc708baa50 (side B's source commit 610930c) has run the sources of amendment A15 (m24, m24a, m24b, m24c, m24p, m27, m29, m30). The tables that stand the builds side by side (the ISS pre-burn windows, M27, the detector across builds, M30's predictions) carry it in section 16b; the tables below are its own, with the comparison against build 61d4ec4e6a12. Its methods are ingest_omm, propagate, fit, load_environment, maneuver, detect_maneuvers, reentry, launch_set and launch_batch.
+
+#### M24. The ISS ephemerides through `detect_maneuvers`
+
+The two distinct NASA OEM files in the archive (created 2026-10-07 and 2026-10-21; 15 days each, 29 object-days together) hold no reboost: the event table of the first lists docking, departure and launch events with delta-v 0.0, the second carries none. 26 windows of 72 h (every 24 h, every 240 s state, TEME by foundation/frames): 26 answered, 0 refused (none); 0 windows reported a burn (0 detections at 0 distinct epochs; delta-v median  m/s, maximum  m/s; Lambda median ). Every detection is a false alarm: 0.0 per object-year over the distinct epochs. The detector ran with the saved space-weather table loaded (`load_environment`, amendment A10d). Detection of real reboosts and the errors of delta-v and epoch need the NASA archive of past OEM headers (TIG, DV, HA, HP), which the local archive does not hold.
+
+Control on burn-free FFM-1 arcs (A10c): 96 windows of 72 h on 48 registered Starlink truths (one integration from one state, 300 s states): 4 windows reported a burn (4 detections at 4 distinct epochs; delta-v median 0.079 m/s, maximum 0.113 m/s; Lambda median 44.4), 7.6 per object-year over 192 object-days; refused: none.
+
+#### M24 on NASA's ISS archive (amendment A11)
+
+748 OEM files in the archive (NASA JSC FOD TOPO; dated folders 2020 to 2026, fetched 2026-10-24; 727 give a window), 99 distinct planned burns (header events with a delta-v above zero, TIGs within 12 h taken as one burn). TIG and delta-v are the headers' planned values, not measurements of the executed burns. Each window is 72 h, every state (TEME by foundation/frames), `detect_maneuvers` with the daily space weather of the years loaded (`load_environment`). A detection within 92 min (one orbit) of TIG is a hit; the epoch error is the detected epoch less TIG, the delta-v ratio the detected |delta-v| over the planned one (median [10th, 90th percentile] over the hits):
+
+| Window | Windows | Hits | Detection elsewhere | No detection | Epoch error (min) | Absolute delta-v over planned | Absolute delta-v error (m/s) | V share of delta-v |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: |
+| pre-burn file (burn still to come) | 97 | 95 | 2 | 0 | 5.6 [0.1, 10.2] | 1.01 [0.97, 1.15] | 0.03 | 0.99 |
+| post-burn file (burn behind its start) | 6 | 6 | 0 | 0 | 1.3 [-0.9, 6.9] | 1.01 [0.92, 1.05] | 0.03 | 0.99 |
+
+Hits by planned delta-v (pre-burn files / post-burn files):
+
+| Planned delta-v | Pre: windows | Pre: hits | Post: windows | Post: hits |
+| --- | --: | --: | --: | --: |
+| 0.1 to 0.3 m/s | 15 | 15 | 1 | 1 |
+| 0.4 to 0.6 m/s | 13 | 13 | 3 | 3 |
+| 0.7 to 1.0 m/s | 20 | 20 | 1 | 1 |
+| above 1.0 m/s | 49 | 47 | 1 | 1 |
+
+Burn-free windows (the leading 72 h of every file whose header lists no burn in or within an hour of it): 650 windows (1 refused) covering 4.37 object-years; 7 windows reported a burn (7 detections, 6 distinct epochs merged within 6 h; delta-v median 0.057 m/s, maximum 0.127 m/s; Lambda median 22.6): 1.4 false alarms per object-year.
+
+#### M24, pipeline check: impulses planted in FFM-1 arcs (amendment A11e)
+
+48 registered Starlink truths, arcs of 60 h: the registered truth for the first 24 h (every fifth state), then the first 36 h after t_b of an M22 case (the control, or the impulse FFM-1 planted at t_b), every 300 s, TEME by foundation/frames, `detect_maneuvers` with the saved weather loaded. The burn is at 24 h and its size and axis are exact. A detection within 92 min of t_b is a hit; the delta-v ratio and the planted-axis share are medians over the hits:
+
+| Planted at 24 h | Arcs | Hits | Detection elsewhere | No detection | Epoch error (min), median [10th, 90th] | Absolute delta-v over planted | Planted-axis share of delta-v | Detections in the first tenth of the arc |
+| --- | --: | --: | --: | --: | --- | --: | --: | --: |
+| none (control) | 48 | 0 | 1 | 47 |  |  |  | 0 of 1 |
+| V (in-track) 0.1 m/s | 48 | 11 | 0 | 37 | 5.3 [2.6, 7.4] | 1.25 | 0.80 | 0 of 11 |
+| V (in-track) 1 m/s | 48 | 48 | 0 | 0 | 0.2 [-1.1, 1.5] | 1.00 | 1.00 | 0 of 48 |
+| V (in-track) 10 m/s | 48 | 48 | 0 | 0 | -0.0 [-0.1, 0.1] | 1.00 | 1.00 | 0 of 48 |
+| U (radial) 1 m/s | 48 | 48 | 0 | 0 | 0.2 [-0.8, 0.5] | 1.00 | 1.00 | 0 of 48 |
+| W (cross-track) 1 m/s | 48 | 48 | 0 | 0 | -0.0 [-0.2, 0.2] | 1.00 | 1.00 | 0 of 48 |
+
+#### The ISS pre-burn windows, diagnostic (amendments A12c and A12d)
+
+The same 99 planned burns of the pre-burn files, windows cut around each burn on the same states, weather and rules. The stretches before and after the burn hold no planned burn (a detection in them is a false alarm); the other two hold the burn. Position is the place of the detection in the window (0 start, 1 end); offset is the detected epoch less TIG for the detections not within 92 min of it:
+
+| Build | Window | Scored | Windows with a detection | Hits / elsewhere / none | Position, median [10th, 90th] | Offset from TIG (h), median [10th, 90th] | Absolute delta-v, median (m/s) | Hits: epoch error (min), median [10th, 90th] | Hits: delta-v over planned, median [10th, 90th] |
+| --- | --- | --- | --: | --- | --- | --- | --: | --- | --- |
+| b9bc708baa50 | the stretch before the burn (TIG - 36 h to TIG - 2 h; no burn in it) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 1 | not applicable | 0.81 [0.81, 0.81] | -8.6 [-8.6, -8.6] | 1.13 |  |  |
+| b9bc708baa50 | 48 h across the burn (TIG - 12 h to TIG + 36 h) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 95 / 1 / 0 | 0.25 [0.25, 0.25] | 16.7 [16.7, 16.7] | 1.03 | 5.7 [0.4, 10.1] | 1.00 [0.95, 1.11] |
+| b9bc708baa50 | the stretch after the burn (TIG + 2 h to TIG + 38 h; no burn in it) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 0 | not applicable |  |  |  |  |  |
+| b9bc708baa50 | a tight window (TIG - 4 h to TIG + 24 h) | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 96 / 0 / 0 | 0.15 [0.14, 0.15] |  | 1.03 | 5.9 [1.0, 10.2] | 1.00 [0.95, 1.07] |
+| b9bc708baa50 | TIG - 6 h to TIG + 24 h | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 95 / 1 / 0 | 0.20 [0.20, 0.21] | 10.3 [10.3, 10.3] | 1.04 | 5.9 [0.4, 10.2] | 1.00 [0.95, 1.08] |
+| b9bc708baa50 | TIG - 8 h to TIG + 24 h | 96 of 99 (3 skipped: another planned burn (cluster) in or within an hour of the window) | 96 | 96 / 0 / 0 | 0.25 [0.25, 0.26] |  | 1.03 | 5.8 [0.6, 10.2] | 1.00 [0.95, 1.07] |
+| b9bc708baa50 | TIG - 24 h to TIG + 24 h | 93 of 99 (6 skipped: another planned burn (cluster) in or within an hour of the window) | 93 | 90 / 3 / 0 | 0.50 [0.50, 0.50] | 1.9 [-3.6, 7.2] | 1.04 | 5.5 [0.1, 10.2] | 1.01 [0.96, 1.12] |
+
+#### M27. GPS and QZSS station keeping against the NANUs and NAQUs (amendments A14 and A14b)
+
+The detector on 72 h windows every 24 h of the GPS satellites (ESA final orbits, 2026-001 to 2026-266) and the QZSS satellites (GFZ multi-GNSS rapid orbits, 2026-004 to 2026-273), against the forecast delta-V outages of the GPS NANUs (97 of 2026) and the QZSS NAQUs (261 of 2026). An outage is detected when a distinct detection (merged within 6 h) lies inside its forecast window plus or minus 6 h; the actual interval is the summary notice's. The baseline of a detection (A14b) is the off-notice window rate: the same window placed at every whole hour of the satellite's answered span where it overlaps no announced outage (plus or minus 6 h), the share of placements that hold a distinct detection; the cell gives the number of outages expected detected under those rates (the satellite's own, and the same placements pooled over the system's satellites), the number observed, and the probability of at least that many (independent outages, exact). False alarms are distinct detections outside every forecast window plus or minus 6 h of their satellite; the last two columns count those inside another outage notice's window and within 2 h of a daily-file boundary. The chance level is the share of a satellite's covered time inside its forecast windows plus or minus 6 h, the hit probability of one detection at a random epoch (A14; median over the satellites with outages). BeiDou is not scored: its notices were not reachable (see section 1).
+
+| Build | System | Satellites | Windows answered | Outages: notices / with orbits / scoreable | Detected, forecast window | Expected under the satellite's own off-notice rate | Expected under the pooled rate | Detected, actual interval | Own rate | Pooled rate | Offset from the actual start (h), median [10th, 90th] | Delta-v of the detections inside forecast windows (m/s), median / maximum |
+| --- | --- | --: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| b9bc708baa50 | GPS | 34 | 7923 of 8371 (448 skipped) | 24 / 24 / 1 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.004 of 1, observed 1, P(at least) 0.004, P(at most) 1.000 | 1 of 1 | 0.000 of 1, observed 1, P(at least) < 0.001, P(at most) 1.000 | 0.003 of 1, observed 1, P(at least) 0.003, P(at most) 1.000 | 2.0 [2.0, 2.0] | 0.162 / 0.162 |
+| b9bc708baa50 | QZSS | 4 | 989 of 1072 (83 skipped) | 33 / 19 / 13 | 13 of 13 | 12.8 of 13, observed 13, P(at least) 0.836, P(at most) 1.000 | 11.8 of 13, observed 13, P(at least) 0.299, P(at most) 1.000 | 0 of 13 | 12.0 of 13, observed 0, P(at least) 1.000, P(at most) < 0.001 | 10.1 of 13, observed 0, P(at least) 1.000, P(at most) < 0.001 |  | 0.002 / 0.004 |
+
+| Build | System | Windows with a detection | Distinct detections | False alarms | In another outage / near a file boundary | Delta-v (m/s), median / maximum | Chance level (A14) |
+| --- | --- | --- | --- | --- | --- | --- | --: |
+| b9bc708baa50 | GPS | 41 of 7923 | 38 (0.00 per object-day) | 37 (1.7 per object-year over 22.2) | 0 / 8 | 0.005 / 0.162 | 0 % |
+| b9bc708baa50 | QZSS | 789 of 989 | 721 (0.69 per object-day) | 691 (241 per object-year over 2.87) | 11 / 75 | 0.002 / 0.006 | 2 % |
+
+Window-level rates (A14c): a window holds an outage when it contains the whole actual interval; it is clear when it overlaps no forecast window plus or minus 6 h of its satellite. The last column is where the detections lie in their windows (0 the first state, 1 the last): the detections in the first sixth, and the median position:
+
+| Build | System | Windows holding an outage | With a detection | With a detection inside the actual interval plus or minus 6 h | Clear windows | With a detection | Detections in the first sixth of their window; median position |
+| --- | --- | --: | --- | --- | --: | --- | --- |
+| b9bc708baa50 | GPS | 2 | 2 (100 %) | 2 (100 %) | 7902 | 37 (0 %) | 0 of 41 (0 %); median 0.47 |
+| b9bc708baa50 | QZSS | 6 | 5 (83 %) | 0 (0 %) | 909 | 713 (78 %) | 58 of 789 (7 %); median 0.53 |
+
+Outages that cannot be scored (build b9bc708baa50; they depend on the orbit product, not on the build): GPS: 16 a day without states of the satellite, 5 after the last day of the product, 2 no states; QZSS: 14 of a satellite without an orbit series, 3 after the last day of the product, 2 a day without states of the satellite, 1 no states.
+
+Per satellite with outages in the notices (build b9bc708baa50):
+
+| Satellite | Orbit series (object-years) | Outages | Scoreable | Detected (forecast window) | Expected under the off-notice rate | Distinct detections (per object-day) | False alarms | Chance level (A14) |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: |
+| J002 QZS-2I | 0.73 | 2 | 0 | 0 |  | 133 (0.50) | 133 | 1 % |
+| J003 QZS-2G | 0.73 | 14 | 11 | 11 | 11.0 | 205 (0.77) | 177 | 20 % |
+| J004 QZS-2I | 0.73 | 1 | 1 | 1 | 0.9 | 181 (0.68) | 180 | 1 % |
+| J005 QZS-2A | 0.68 | 2 | 1 | 1 | 1.0 | 202 (0.81) | 201 | 2 % |
+| G044 GPS-IIR-A | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G059 GPS-IIR-B | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G061 GPS-IIR-B | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G052 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G058 GPS-IIR-M | 0.70 | 2 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G055 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G048 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G050 GPS-IIR-M | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G062 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 3 (0.01) | 3 | 0 % |
+| G065 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 2 (0.01) | 2 | 0 % |
+| G068 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G069 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G071 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G072 GPS-IIF | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G070 GPS-IIF | 0.70 | 1 | 1 | 1 | 0.0 | 1 (0.00) | 0 | 0 % |
+| G075 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G076 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G078 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G079 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G080 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G081 GPS-IIIA | 0.70 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+| G082 GPS-IIIA | 0.56 | 1 | 0 | 0 |  | 15 (0.07) | 15 | 0 % |
+| G083 GPS-IIIA | 0.31 | 1 | 0 | 0 |  | 0 (0.00) | 0 | 0 % |
+
+### 16c. Real reentries, controlled deorbits and first sets (amendment A11)
+
+#### M29. Real reentries
+
+Build b9bc708baa50. Predictions at element-set epochs from 14 days before the reentry (4 h apart or more): the pseudo-observations of the object's element-set history up to the epoch (the last 120 h; the SGP4 module propagates each set over the interval it speaks for, 300 s states) go to `fit_sdnap` (the module chooses the span) and the set to `reentry` with the daily space weather of the years. Time to go is the true one (truth less the prediction epoch); the error is REENTRY_EPOCH less the truth and sigma is REENTRY_EPOCH_UNC (68.27 %). The 20 % rule is |error| <= 0.2 (REENTRY_EPOCH less the epoch); the equal-coverage k is the multiple of sigma that covers the same share of the predictions in the bin as the rule does, and k sigma over the rule's window is below 1 where the module's window is narrower at equal coverage. The space weather is the observed daily values of the years (GFZ Kp, ap, Ap and F10.7 up to 2026-09-12, the saved table after it), which include the days after each prediction epoch: a forecast issued at the epoch would be less exact, so the comparison with Aerospace and with the TIP messages, which use forecasts, favors SDN-AP in that one respect.
+
+**Sample C: 17 objects with an observed reentry in the CORDS spreadsheet** (7 Starlinks, 10 other objects; truth: the observed time, minute precision), 441 predictions.
+
+| Time to go | Predictions | Answered (objects) | Median error (h) | Median absolute error (h) | 90th percentile absolute error (h) | Median absolute error over time to go |
+| --- | --: | --: | --: | --: | --: | --: |
+| over 7 d | 201 | 187 (14) | -0.19 | 19.6 | 309 | 0.078 |
+| 3 to 7 d | 117 | 96 (14) | 3.68 | 6.00 | 263 | 0.053 |
+| 1 to 3 d | 64 | 53 (14) | 2.86 | 4.39 | 138 | 0.074 |
+| 12 to 24 h | 27 | 21 (11) | 1.14 | 1.95 | 5.03 | 0.091 |
+| 6 to 12 h | 12 | 8 (8) | 1.35 | 1.36 | 8.25 | 0.138 |
+| 3 to 6 h | 10 | 6 (6) | 0.53 | 0.58 | 1.65 | 0.109 |
+| under 3 h | 10 | 7 (6) | 0.87 | 0.97 | 1.70 | 0.617 |
+| all | 441 | 378 (15) | 1.80 | 10.8 | 275 | 0.080 |
+
+| Time to go | Answered | Median sigma (h) | Median sigma / time to go | Within 1 sigma (68 %) | Within 2 sigma (95 %) | Inside the module's window | Within the 20 % rule | Equal-coverage k | k sigma over the rule's window (median) |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |
+| over 7 d | 187 | 21.9 | 0.084 | 51 % | 61 % | 51 % | 63 % | 2.53 | 1.03 |
+| 3 to 7 d | 96 | 14.3 | 0.114 | 64 % | 66 % | 64 % | 66 % | 1.93 | 0.98 |
+| 1 to 3 d | 53 | 7.26 | 0.135 | 57 % | 72 % | 57 % | 66 % | 1.49 | 0.93 |
+| 12 to 24 h | 21 | 2.71 | 0.146 | 81 % | 90 % | 81 % | 86 % | 1.14 | 0.80 |
+| 6 to 12 h | 8 | 1.73 | 0.164 | 50 % | 75 % | 50 % | 75 % | 1.58 | 1.14 |
+| 3 to 6 h | 6 | 0.85 | 0.161 | 83 % | 83 % | 83 % | 83 % | 1.18 | 0.87 |
+| under 3 h | 7 | 0.32 | 0.239 | 0 % | 14 % | 0 % | 0 % | 1.81 | 1.34 |
+| all | 378 | 18.1 | 0.111 | 56 % | 65 % | 56 % | 65 % | 1.88 | 0.86 |
+
+Not answered: fit refused fit-implausible 58, fit-failed 4; `reentry` refused no-drag 1; by time to go, over 7 d: 14 of 201 (fit-implausible 14); 3 to 7 d: 21 of 117 (fit-implausible 21); 1 to 3 d: 11 of 64 (fit-implausible 11); 12 to 24 h: 6 of 27 (fit-implausible 3, fit-failed 2, no-drag 1); 6 to 12 h: 4 of 12 (fit-implausible 3, fit-failed 1); 3 to 6 h: 4 of 10 (fit-implausible 3, fit-failed 1); under 3 h: 3 of 10 (fit-implausible 3).
+
+**Sample T: 41 objects with a Space-Track decay message and a last TIP message before the archive's last snapshot** (35 Starlinks; truth: that message's DECAY_EPOCH, a window of about a minute: Space-Track's settled time, not an observation), 1368 predictions.
+
+| Time to go | Predictions | Answered (objects) | Median error (h) | Median absolute error (h) | 90th percentile absolute error (h) | Median absolute error over time to go |
+| --- | --: | --: | --: | --: | --: | --: |
+| over 7 d | 649 | 646 (41) | 3.62 | 20.0 | 118 | 0.085 |
+| 3 to 7 d | 388 | 387 (41) | 10.1 | 15.4 | 37.7 | 0.116 |
+| 1 to 3 d | 208 | 207 (41) | 7.36 | 8.69 | 26.2 | 0.209 |
+| 12 to 24 h | 60 | 60 (37) | 1.65 | 2.58 | 6.46 | 0.139 |
+| 6 to 12 h | 37 | 37 (30) | -0.42 | 0.77 | 2.90 | 0.089 |
+| 3 to 6 h | 11 | 10 (10) | 0.27 | 1.12 | 2.96 | 0.217 |
+| under 3 h | 15 | 13 (13) | -0.00 | 0.67 | 2.72 | 0.273 |
+| all | 1368 | 1360 (41) | 5.99 | 14.6 | 84.8 | 0.106 |
+
+| Time to go | Answered | Median sigma (h) | Median sigma / time to go | Within 1 sigma (68 %) | Within 2 sigma (95 %) | Inside the module's window | Within the 20 % rule | Equal-coverage k | k sigma over the rule's window (median) |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |
+| over 7 d | 646 | 20.4 | 0.083 | 51 % | 73 % | 51 % | 77 % | 2.31 | 0.98 |
+| 3 to 7 d | 387 | 13.7 | 0.114 | 48 % | 80 % | 48 % | 78 % | 1.95 | 1.01 |
+| 1 to 3 d | 207 | 7.24 | 0.151 | 38 % | 67 % | 38 % | 54 % | 1.60 | 1.00 |
+| 12 to 24 h | 60 | 2.65 | 0.154 | 55 % | 85 % | 55 % | 70 % | 1.44 | 1.02 |
+| 6 to 12 h | 37 | 1.23 | 0.139 | 68 % | 92 % | 68 % | 78 % | 1.30 | 0.95 |
+| 3 to 6 h | 10 | 0.74 | 0.156 | 40 % | 60 % | 40 % | 40 % | 1.25 | 0.92 |
+| under 3 h | 13 | 0.33 | 0.149 | 31 % | 46 % | 31 % | 31 % | 1.20 | 0.90 |
+| all | 1360 | 15.6 | 0.101 | 49 % | 75 % | 49 % | 73 % | 1.91 | 0.94 |
+
+Not answered: fit refused fit-failed 8; `reentry` refused none; by time to go, over 7 d: 3 of 649 (fit-failed 3); 3 to 7 d: 1 of 388 (fit-failed 1); 1 to 3 d: 1 of 208 (fit-failed 1); 3 to 6 h: 1 of 11 (fit-failed 1); under 3 h: 2 of 15 (fit-failed 2).
+
+By kind (all times to go): sample C Starlinks 195 answered, within 1 sigma 36 %, 2 sigma 43 %, median |error| 60.7 h; other objects 183, 77 %, 90 %, 5.65 h; sample T Starlinks 1153, 42 %, 71 %, 16.8 h; other objects 207, 83 %, 98 %, 6.87 h.
+
+**Against Aerospace's prediction at its own element-set epoch** (sample C; 17 objects, SDN-AP answered 11, refused: fit-implausible 5, fit-failed 1): the observed time lies inside Aerospace's stated window for 14 of 17 and inside SDN-AP's 1 sigma and 2 sigma for 4 and 6 of 11; median |error| 0.31 h (Aerospace) against 0.87 h (SDN-AP), SDN-AP closer for 2 of 11; median window half-width over time to go 0.362 (Aerospace) against 0.153 (SDN-AP sigma). Aerospace's values are the spreadsheet's (a prediction and its stated plus or minus); the table gives errors and widths only:
+
+| Object | Time to go (h) | Aerospace error (h) | Aerospace plus or minus (h) | SDN-AP error (h) | SDN-AP sigma (h) |
+| --- | --: | --: | --: | --: | --: |
+| 55840 | 1.2 | 0.30 | 1.00 | 0.99 | 0.32 |
+| 51077 | 1.3 | 0.20 | 1.00 | refused (fit-implausible) |  |
+| 51122 | 1.4 | 0.02 | 1.00 | 0.87 | 0.34 |
+| 62878 | 1.5 | 0.97 | 1.00 | -0.66 | 0.13 |
+| 55482 | 1.6 | 0.26 | 1.00 | -0.34 | 0.19 |
+| 53597 | 2.0 | 1.30 | 1.00 | 1.70 | 0.55 |
+| 47853 | 2.8 | 0.60 | 1.00 | -1.70 | 0.16 |
+| 47607 | 2.8 | 0.08 | 1.00 | refused (fit-implausible) |  |
+| 44867 | 3.5 | -1.65 | 1.00 | refused (fit-implausible) |  |
+| 55977 | 4.1 | 0.25 | 2.00 | refused (fit-implausible) |  |
+| 45079 | 4.4 | 0.05 | 1.00 | -0.05 | 0.65 |
+| 54231 | 4.6 | -1.55 | 1.00 | refused (fit-implausible) |  |
+| 29093 | 4.6 | -0.28 | 1.00 | 0.30 | 0.72 |
+| 47801 | 11.8 | 0.31 | 3.00 | -0.97 | 1.57 |
+| 45265 | 11.8 | 0.31 | 3.00 | 0.75 | 1.81 |
+| 57478 | 12.8 | 2.14 | 3.00 | 2.32 | 2.15 |
+| 40108 | 23.7 | -3.85 | 4.00 | refused (fit-failed) |  |
+
+**Against Space-Track's TIP message in force at the same epoch** (sample T; the latest message before the epoch, 254 predictions have one; the truth is the last message, so the comparison is exact only in the sense of that series):
+
+| Time to go | Answered | With a TIP message | TIP median absolute error (h) | SDN-AP median absolute error on the same (h) | Truth inside the TIP window | Truth inside SDN-AP 2 sigma | SDN-AP closer |
+| --- | --: | --: | --: | --: | --: | --: | --: |
+| 3 to 7 d | 387 | 17 | 4.40 | 5.58 | 88 % | 88 % | 7 of 17 |
+| 1 to 3 d | 207 | 132 | 8.85 | 7.18 | 65 % | 71 % | 77 of 132 |
+| 12 to 24 h | 60 | 49 | 3.70 | 2.69 | 86 % | 88 % | 31 of 49 |
+| 6 to 12 h | 37 | 31 | 1.48 | 0.85 | 77 % | 97 % | 23 of 31 |
+| 3 to 6 h | 10 | 10 | 1.09 | 1.12 | 50 % | 60 % | 4 of 10 |
+| under 3 h | 13 | 12 | 0.81 | 0.52 | 75 % | 50 % | 6 of 12 |
+
+#### M30. Controlled deorbits (what build b9bc708baa50 covers)
+
+Not covered: the residual series (theory plus the operator's Chebyshev residual inside its span) and a burn model with its stop epoch are not methods of the build (its methods are ingest_omm, propagate, fit, load_environment, maneuver, detect_maneuvers, reentry, launch_set and launch_batch). Covered and shown in section 2b: the lowering Starlinks' held-out errors for the three settings. Covered here: `reentry` on the set fitted to the first 24 h of each of the 19 Starlinks with B_eff above 0.5 m2/kg, issued 2026-10-24T23:19 to 2026-10-24T23:29 UTC, to be scored against Space-Track's TIP and decay messages as they arrive. As of the archive's newest snapshot (2026-10-24.json.gz) 0 of the 19 have a TIP message and 0 a decay message.
+
+| Setting | Fits | `reentry` answered | Refused | Predicted lifetime (days), median [min, max] | Sigma (h), median | Scored | Within 1 / 2 sigma |
+| --- | --: | --: | --- | --- | --: | --: | --- |
+| as shipped | 19 | 19 | none | 12.4 [4.7, 26.2] | 22.1 | 0 |  |
+| rule (B_eff above 0.5 replaced by tau0) | 19 | 19 | none | 12.4 [4.7, 26.2] | 22.1 | 0 |  |
+| free B_eff | 19 | 19 | none | 12.4 [4.7, 26.2] | 22.1 | 0 |  |
+
+M29, build 61d4ec4e6a12 -> build b9bc708baa50: sample C: answered 362 of 441 -> 378 of 441, within 1 sigma 60 % -> 56 %, within 2 sigma 69 % -> 65 %, median absolute error 11.4 -> 10.8 h; sample T: answered 1357 of 1368 -> 1360 of 1368, within 1 sigma 56 % -> 49 %, within 2 sigma 83 % -> 75 %, median absolute error 15.4 -> 14.6 h.
+
+M30, build 61d4ec4e6a12 -> build b9bc708baa50: `reentry` answered 17 -> 19 of 19 at the shipped setting (predicted lifetime median 12.5 -> 12.4 days), and 0 -> 19 at the rule setting (none refused); both builds' predictions are frozen in the rows with their issue times.
+
 ## Credits and terms
 
 - SpaceX Starlink public ephemerides, https://api.starlink.com/public-files/ephemerides/ (SpaceX).
@@ -1847,8 +2089,9 @@ Every other source and its terms: [docs/data-licenses.md](../../docs/data-licens
 
 - Steps (each reads only the frozen plan and the local archive): `population.mjs`, `truth.mjs --workers N` (resumable: a satellite with a row is skipped; stop with `touch <store>/truth.stop`), `baselines.mjs`, `fetch-kernels.mjs` (paced NAIF fetcher) with `spk-windows.mjs`, `bench.mjs`, `comspoc.mjs`, `covariance.mjs`, `fitlength.mjs`, `refit.mjs`, `newer.mjs` (re-run as newer SpaceX files arrive; `--truth refit30` scores the refitted truth), `m123.mjs --workers N` with `m123-report.mjs` (section 12), `fetch-horizons.mjs`, `fetch-mast-tess.mjs` (needs `NODE_EXTRA_CA_CERTS`, see its header), `fetch-gnss-rapid.mjs`, `fetch-slr.mjs` (needs the Earthdata token in the environment file `lib/cddis.mjs` names, never printed) with `gnss-rapid-convert.mjs` and `slr-convert.mjs` (the public sources approved on 2026-10-24, stored in the archive with provenance rows), `sdngp-run.mjs`, `span-windows.mjs` (the SGP4 and XP rows of section 1c), `horizons-packs.mjs`, `regime-windows.mjs` and `score-pack.mjs` (section 13), `watch-newer.mjs` (waits for the next SpaceX batch, runs `newer.mjs`, regenerates the tables, commits nothing), `inventory.mjs`, `tables.mjs`, `manifest.mjs`; the E2E is `node experiments/sdn-gp-starlink-ffm-match/run.mjs --check`. Setup: `npm ci --prefix experiments/sdn-gp-starlink-ffm-match`; a modules checkout at commit 118de023 (sparse is enough: propagator/sgp4-xp without third_party, propagator/ffm, analysis/od, analysis/gp-error-model, foundation, data-source/space-weather, data) named by `SDN_MODULES_ROOT`, with its `node_modules` linked to the experiment's.
 - Local store (not committed): `/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/` holds the derived FFM trajectories (`truth/`), the saved environment (EOP, space weather with its extension) and the window rows.
-- SDN-AP: `lib/sdngp.mjs` runs side B's `sdn-ap-propagator` (named `sdn-gp-propagator` through build 35cd83a2b714; a copy of its built wasm, named by SHA-256 prefix, in `<store>/sdngp-snapshot/`), `lib/baselines.mjs` `fitSdngp` is the third fitter beside `fitXp` and `fitSgp4`, and `sdngp-run.mjs` runs it over every source on one build (`baselines.mjs --arm sdngp`, `spk-windows.mjs --arm sdngp`, `starlink-sdngp.mjs`, `starlink-lowering.mjs`, `fitlength.mjs --arm sdngp`, `span-windows.mjs --arm sdngp`; `newer.mjs` carries the arm when a complete build exists), rows in `<store>/rows/sdngp/<build>/`; a new build of the module is one more `sdngp-run.mjs`, and section 2a lists the builds. The last row of section 5 stays `pending`. For the regimes awaiting SDN-AP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the center. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.
+- SDN-AP: `lib/sdngp.mjs` runs side B's `sdn-ap-propagator` (named `sdn-gp-propagator` through build 35cd83a2b714; a copy of its built wasm, named by SHA-256 prefix, in `<store>/sdngp-snapshot/`; a new build is read from a commit of the public modules repo, `propagator/sdn-ap` (the closed-modules tree before modules commit c0c5da38), by `git show`: `SDNAP_MODULES_REF`, default origin/main), `lib/baselines.mjs` `fitSdngp` is the third fitter beside `fitXp` and `fitSgp4`, and `sdngp-run.mjs` runs it over every source on one build (`baselines.mjs --arm sdngp`, `spk-windows.mjs --arm sdngp`, `starlink-sdngp.mjs`, `starlink-lowering.mjs`, `fitlength.mjs --arm sdngp`, `span-windows.mjs --arm sdngp`; `newer.mjs` carries the arm when a complete build exists), rows in `<store>/rows/sdngp/<build>/`; a new build of the module is one more `sdngp-run.mjs`, and section 2a lists the builds. The last row of section 5 stays `pending`. For the regimes awaiting SDN-AP, `pack-truth.mjs` writes the truth packs and `compareStates` (gp-error-model `pair_statistics`) scores any predicted states against them in radial / in-track / cross-track axes whatever the center. The arms 3-6 of the task (term ranking, Chebyshev residual bytes, analytic STM) follow in phases 3-4.
 - Maneuvers, hand-off and detection (amendment A10): `events-truth.mjs --kind m22,m23,m28 --shard k/n` makes the FFM-1 truths (impulses and finite burns planted in its typed request; synthetic decays to its stop at 100 km) under `<store>/events/`, independent of the build; `sdngp-run.mjs --pin <build> --only m22,m23,m28,m24` scores them with that build of the module (rows `m22`, `m23`, `m28`, `m24` in `rows/sdngp/<build>/`); `lib/sdngp-events.mjs` is the module's `maneuver`, `detect_maneuvers` and `reentry` surfaces, `lib/ffm-events.mjs` and `lib/decay.mjs` are FFM-1's.
 - NASA ISS archive, reentries and first sets (amendments A11 to A12b): `fetch-iss-oem.mjs` fetches NASA's public ISS OEM archive (748 files, 2 s apart, nothing committed) and `iss-burns.mjs` writes `iss-burns.json` from the headers alone; `m29-extract.mjs` and `m29-extract-cords.mjs` cut the element-set histories of the reentered objects from the local Space-Track archive and the CORDS spreadsheet (kept in the archive, never committed); `m30-truth.mjs` writes `m30-truth.json` (re-run it, then `tables.mjs`, as TIP and decay messages arrive: the frozen reentry predictions of the lowering Starlinks are then scored); `m31-capture.mjs` processes the current files of a new batch into derived trajectories (`--summary` writes `m31-capture.json`); `m32-truth.mjs` makes the synthetic batches' FFM-1 truths; `sdngp-run.mjs --pin <build> --only m24a,m24p,m29,m30,m31,m32` scores them with a build of the module.
+- GPS and QZSS station keeping and the next build (amendments A14 to A15): `fetch-gnss-notices.mjs` fetches the 2026 GPS NANUs (NAVCEN) and the QZSS NAQU page, 5 s apart, into the local archive (`hac/gnss-notices/`; no notice text is committed), `m27-events.mjs` writes the outage windows to `gnss-notice-events.json`, and `sdngp-run.mjs --pin <build> --only m27` scores the detector on the GPS (ESA final) and QZSS (GFZ rapid) orbit series (`lib/events-gnss.mjs`). `lib/pcf.mjs` encodes the $PCF `configuration` record that builds from b9bc708baa50 on require (SDS 1.264.0 as `spacedatastandards-1264`; every other record stays on 1.261.0). A build that has run only some sources joins the tables when `rows/sdngp/<build>/events-focus.json` names those sources and counts their rows (written by hand after the run, as `complete.json` is for a full run); only those sources are read until the build is complete.
 - Newer-file truth: `newer.mjs` scores against the first hours of any SpaceX file created after the registered fit (section 10); re-run it after 2026-10-24 08:00Z for the registered prospective files, and `comspoc.mjs` against the same-day truth files. GPS and laser-ranged objects of the COMSPOC capture need the ESA and ILRS products for 2026-10-23 and later (ESA finals lag about two weeks); `inventory.mjs` shows the newest product dates.
 
