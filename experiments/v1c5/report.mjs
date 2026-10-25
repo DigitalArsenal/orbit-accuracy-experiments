@@ -5,6 +5,8 @@ import { summarizeInputs } from '../v1c4-console-covariance-calibration/report.m
 import { EXTREME_D2_OVER_3 } from './test.mjs';
 
 export { summarizeInputs };
+// Report-only (AMENDMENTS.md B1): a cell is statistically compatible with the rule when its bootstrap intervals overlap the rule's bands and it has enough samples.
+export const compatible = x => x.n >= 30 && x.objects >= 3 && Boolean(x.mean && x.coverage) && x.mean[2] >= 0.8 && x.mean[1] <= 1.25 && x.coverage[2] >= 0.93 && x.coverage[1] <= 0.97;
 const f5 = n => Number.isFinite(n) ? n.toPrecision(5) : '—';
 const safe = name => name.replace(/[/|]/g, '_');
 const HOURS = [1, 6, 12, 24, 48, 72];
@@ -12,12 +14,12 @@ const HOURS = [1, 6, 12, 24, 48, 72];
 // The table the mixed-scenario experiment and the paper read: the selected candidate's cells by class and horizon on its claimed population, with the unflagged and flagged views.
 export function readerTable(metrics, sel, spec) {
   const c = metrics.candidates[metrics.selected];
-  const cell = x => ({ n: x.n, objects: x.objects, meanD2Over3: x.mean?.[0] ?? null, meanD2Over3Ci95: x.mean ? [x.mean[1], x.mean[2]] : null, coverage95: x.coverage?.[0] ?? null, coverage95Ci95: x.coverage ? [x.coverage[1], x.coverage[2]] : null, medianD2Over3: x.medianD2 === null || x.medianD2 === undefined ? null : x.medianD2 / 3, decision: x.decision });
+  const cell = x => ({ n: x.n, objects: x.objects, meanD2Over3: x.mean?.[0] ?? null, meanD2Over3Ci95: x.mean ? [x.mean[1], x.mean[2]] : null, coverage95: x.coverage?.[0] ?? null, coverage95Ci95: x.coverage ? [x.coverage[1], x.coverage[2]] : null, medianD2Over3: x.medianD2 === null || x.medianD2 === undefined ? null : x.medianD2 / 3, decision: x.decision, compatible: compatible(x) });
   const byClass = view => Object.fromEntries([...new Set(c.cells[view].map(x => x.group))].map(g => [g, Object.fromEntries(c.cells[view].filter(x => x.group === g).map(x => [x.hours, cell(x)]))]));
   return { schema: 'v1c5/1', experiment: 'v1c5', registration: metrics.registration, rule: { meanD2Over3: [0.8, 1.25], coverage95: [0.93, 0.97], minimumSamples: 30, minimumObjects: 3 },
     window: metrics.window, selected: { name: metrics.selected, base: spec.candidates.find(x => x.name === metrics.selected).base, claim: c.claim, model: `${safe(metrics.selected)}.erm` },
     realisticCells: c.realistic, hours: HOURS, claimed: byClass(c.claimedView), allSamples: byClass('all'), unflaggedSamples: byClass('unflagged'),
-    flaggedPooled: Object.fromEntries(c.cells.flaggedPooled.map(x => [x.hours, cell(x)])), flagShare: metrics.flags.flagged / metrics.flags.pairs };
+    compatibleCells: c.cells[c.claimedView].filter(compatible).length, flaggedPooled: Object.fromEntries(c.cells.flaggedPooled.map(x => [x.hours, cell(x)])), flagShare: metrics.flags.flagged / metrics.flags.pairs };
 }
 
 export function render(metrics, manifest, sel, spec, config) {
@@ -32,9 +34,9 @@ export function render(metrics, manifest, sel, spec, config) {
     lines.push(`| ${name}${name === metrics.selected ? ' (selected)' : ''} | ${r ? Object.entries(r.realisticByFold).map(([id, n]) => `${id} ${n}`).join(', ') : 'ineligible'} | ${r ? r.meanRealistic.toFixed(2) : '—'} | ${r ? r.minRealistic : '—'} | ${count(c)} | ${c.realistic.all} | ${c.realistic.unflagged} | ${c.realistic.flaggedPooled} |`);
   }
   const cells = pick.cells[pick.claimedView];
-  lines.push('', `## Selected: ${pick.name} (${pick.claimedView} samples)`, '', '| Class | h | n / objects | Mean d²/3 [95% CI] | Median d²/3 | 95% coverage [CI] | Non-PD / unavailable | Verdict |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |');
-  for (const x of cells) lines.push(`| ${x.group} | ${x.hours} | ${x.n} / ${x.objects} | ${f5(x.mean?.[0])} [${f5(x.mean?.[1])}, ${f5(x.mean?.[2])}] | ${f5(x.medianD2 / 3)} | ${f5(x.coverage?.[0])} [${f5(x.coverage?.[1])}, ${f5(x.coverage?.[2])}] | ${x.notPositiveDefinite} / ${x.available - x.n} | ${x.decision} |`);
-  lines.push('', `Split for ${pick.name}: ${pick.realistic.all}/24 cells over all samples, ${pick.realistic.unflagged}/24 over unflagged samples, ${pick.realistic.flaggedPooled}/6 horizons over flagged samples (pooled over classes).`, '',
+  lines.push('', `## Selected: ${pick.name} (${pick.claimedView} samples)`, '', '| Class | h | n / objects | Mean d²/3 [95% CI] | Median d²/3 | 95% coverage [CI] | Non-PD / unavailable | Verdict | Compatible |', '| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | :---: |');
+  for (const x of cells) lines.push(`| ${x.group} | ${x.hours} | ${x.n} / ${x.objects} | ${f5(x.mean?.[0])} [${f5(x.mean?.[1])}, ${f5(x.mean?.[2])}] | ${f5(x.medianD2 / 3)} | ${f5(x.coverage?.[0])} [${f5(x.coverage?.[1])}, ${f5(x.coverage?.[2])}] | ${x.notPositiveDefinite} / ${x.available - x.n} | ${x.decision} | ${compatible(x) ? 'yes' : '—'} |`);
+  lines.push('', `${cells.filter(compatible).length}/24 cells are statistically compatible with the rule (both bootstrap intervals overlap its bands, at least 30 samples from 3 objects): a report-only reading, since a cell of about 70 samples misses the coverage band of 0.93 to 0.97 by chance more often than not even when its covariance is right.`, '', `Split for ${pick.name}: ${pick.realistic.all}/24 cells over all samples, ${pick.realistic.unflagged}/24 over unflagged samples, ${pick.realistic.flaggedPooled}/6 horizons over flagged samples (pooled over classes).`, '',
     '| Flagged samples, pooled | n / objects | Mean d²/3 | 95% coverage | Verdict |', '| --- | ---: | ---: | ---: | --- |');
   for (const x of pick.cells.flaggedPooled) lines.push(`| h ${x.hours} | ${x.n} / ${x.objects} | ${f5(x.mean?.[0])} | ${f5(x.coverage?.[0])} | ${x.decision} |`);
   lines.push('', '## Realistic by class and lead time', '', `Cells REALISTIC on the test for ${pick.name} on its claimed population; nothing else may be labelled realistic.`, '', `| Class | ${HOURS.map(h => `${h} h`).join(' | ')} |`, `| --- | ${HOURS.map(() => ':---:').join(' | ')} |`);

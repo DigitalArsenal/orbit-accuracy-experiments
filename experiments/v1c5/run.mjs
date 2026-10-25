@@ -23,7 +23,7 @@ export const config = read(path.join(dir, 'config.json'));
 export const registration = process.env.V1C5_REGISTRATION ?? '0ba47264c57b0aa8b4cd0732f49bea5781c605bf';
 export const configs = { v1c2: read(path.join(root, 'experiments/v1c2-console-covariance-realism/config.json')), v1: read(path.join(root, 'experiments/v1-ffm-physical-truth/config.json')), e3: read(path.join(root, 'experiments/e3-combined-catalog/config.json')) };
 export const e3 = configs.e3;
-export const registrationB = process.env.V1C5_REGISTRATION_B ?? 'REGISTRATION_B';
+export const registrationB = process.env.V1C5_REGISTRATION_B ?? 'f59f2b13f6447a6bb0c8a5cbb078f99fb849c02f';
 export const output = path.join(root, 'results/v1c5');
 export const specOf = () => read(path.join(dir, 'candidates.json'));
 export const runDirDefault = config.durableRunDirectory;

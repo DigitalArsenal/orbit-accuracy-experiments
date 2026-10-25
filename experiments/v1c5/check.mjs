@@ -20,7 +20,7 @@ const roundTrip = x => JSON.parse(JSON.stringify(x));
 const bar = message => console.log(`  ok ${message}`);
 const safe = name => name.replace(/[/|]/g, '_');
 const output = path.join(root, 'results/v1c5');
-export const registrationB = process.env.V1C5_REGISTRATION_B ?? 'REGISTRATION_B';
+export const registrationB = process.env.V1C5_REGISTRATION_B ?? 'f59f2b13f6447a6bb0c8a5cbb078f99fb849c02f';
 const specOf = () => read(path.join(dir, 'candidates.json'));
 
 function frozenFiles() {
