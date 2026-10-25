@@ -1,0 +1,3680 @@
+{
+ "rule": {
+  "agreeKm": 0.01,
+  "wrongKm": 1,
+  "frame": "the SP3 files' Earth-fixed frame"
+ },
+ "weeksCompared": 210,
+ "wrongDays": [
+  {
+   "satellite": "etalon1",
+   "week": "260411",
+   "day": "2026-04-10",
+   "maxKm": 9997.868,
+   "centerSpreadKm": 0.0012,
+   "centers": 7,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-04-10T00:00:00Z",
+     "km": 9997.868,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260530",
+   "day": "2026-05-25",
+   "maxKm": 3057.58,
+   "centerSpreadKm": 0.0012,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-05-25T00:00:00Z",
+     "km": 3057.58,
+     "zeroAxes": [
+      "Y"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260530",
+   "day": "2026-05-29",
+   "maxKm": 3118.977,
+   "centerSpreadKm": 0.0015,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-05-29T00:00:00Z",
+     "km": 3118.977,
+     "zeroAxes": [
+      "Y"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260411",
+   "day": "2026-04-10",
+   "maxKm": 8133.528,
+   "centerSpreadKm": 0.0014,
+   "centers": 7,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-04-10T00:00:00Z",
+     "km": 8133.528,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-05",
+   "maxKm": 7552.278,
+   "centerSpreadKm": 0.0018,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-05T00:00:00Z",
+     "km": 7552.278,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-06",
+   "maxKm": 13580.309,
+   "centerSpreadKm": 0.0016,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-06T00:00:00Z",
+     "km": 13580.309,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-08",
+   "maxKm": 2126.881,
+   "centerSpreadKm": 0.0015,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-08T00:00:00Z",
+     "km": 2126.881,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "day": "2026-10-09",
+   "maxKm": 7897.19,
+   "centerSpreadKm": 0.002,
+   "centers": 8,
+   "wrongEpochs": [
+    {
+     "epoch": "2026-10-09T00:00:00Z",
+     "km": 7897.19,
+     "zeroAxes": [
+      "X"
+     ]
+    }
+   ],
+   "epochsOfDay": 96
+  }
+ ],
+ "weeks": [
+  {
+   "satellite": "etalon1",
+   "week": "251004",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251011",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0028
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251018",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251025",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0016
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251101",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.002
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251108",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251115",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251122",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251129",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251206",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0006,
+   "centerSpreadKm": 0.0039
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251213",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251220",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "251227",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0007,
+   "centerSpreadKm": 0.0025
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260103",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260110",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260117",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260124",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.002
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260131",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0007,
+   "centerSpreadKm": 0.0036
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260207",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0019
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260214",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0018
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260221",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260228",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260307",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260314",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260321",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260328",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260411",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 9997.8684,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260418",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260425",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260502",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260509",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260516",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260523",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260530",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 3118.9766,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260606",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260613",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260620",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260627",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260704",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260711",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260718",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260725",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260801",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260808",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260815",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260822",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260829",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260905",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260912",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260919",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0027
+  },
+  {
+   "satellite": "etalon1",
+   "week": "260926",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 0,
+   "maxKm": null,
+   "centerSpreadKm": null
+  },
+  {
+   "satellite": "etalon1",
+   "week": "261003",
+   "centers": [
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0019
+  },
+  {
+   "satellite": "etalon1",
+   "week": "261010",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0018
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251004",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251011",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251018",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0014,
+   "centerSpreadKm": 0.0105
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251025",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251101",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0007,
+   "centerSpreadKm": 0.0063
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251108",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251115",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251122",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251129",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0016
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251206",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0008,
+   "centerSpreadKm": 0.0029
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251213",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251220",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0017
+  },
+  {
+   "satellite": "etalon2",
+   "week": "251227",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0025
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260103",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260110",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0006,
+   "centerSpreadKm": 0.0047
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260117",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260124",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0016
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260131",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0026
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260207",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.002
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260214",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0008,
+   "centerSpreadKm": 0.0047
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260221",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0007,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260228",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260307",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260314",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260321",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260328",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260411",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 8133.5281,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260418",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260425",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260502",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260509",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260516",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0006,
+   "centerSpreadKm": 0.0037
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260523",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260530",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260606",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260613",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260620",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0004,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260627",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260704",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260711",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260718",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0013
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260725",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260801",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260808",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260815",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0015
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260822",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.001
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260829",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0014
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260905",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260912",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0003,
+   "centerSpreadKm": 0.0021
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260919",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0005,
+   "centerSpreadKm": 0.0026
+  },
+  {
+   "satellite": "etalon2",
+   "week": "260926",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 0,
+   "maxKm": null,
+   "centerSpreadKm": null
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261003",
+   "centers": [
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0019
+  },
+  {
+   "satellite": "etalon2",
+   "week": "261010",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 672,
+   "maxKm": 13580.3093,
+   "centerSpreadKm": 0.002
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251011",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251018",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251025",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251101",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251108",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251115",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251122",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251129",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251206",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251213",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251220",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "251227",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260103",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260110",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260117",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260124",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260131",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260207",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260214",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260221",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260228",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260307",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260314",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260321",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260328",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260404",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260411",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260418",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260425",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260502",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260509",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260523",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260606",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260613",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260620",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260627",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260704",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260711",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260718",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260725",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260801",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260808",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260815",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260822",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260829",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260905",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260912",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260919",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0012
+  },
+  {
+   "satellite": "lageos1",
+   "week": "260926",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 0,
+   "maxKm": null,
+   "centerSpreadKm": null
+  },
+  {
+   "satellite": "lageos1",
+   "week": "261003",
+   "centers": [
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "lageos1",
+   "week": "261010",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251004",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251011",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251018",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251025",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251101",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251108",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251115",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251122",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251129",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251206",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251213",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251220",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos2",
+   "week": "251227",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260103",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260110",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260117",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260124",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260131",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260207",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260214",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260221",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260228",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260307",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260314",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260321",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260328",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260411",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260418",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260425",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0007
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260502",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260509",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260516",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260523",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260530",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0009
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260606",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260613",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260620",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260627",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260704",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260711",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260718",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260725",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260801",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0003
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260808",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0002
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260815",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "ilrsb",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260822",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0004
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260829",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260905",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0005
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260912",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0001,
+   "centerSpreadKm": 0.0006
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260919",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0.0002,
+   "centerSpreadKm": 0.0011
+  },
+  {
+   "satellite": "lageos2",
+   "week": "260926",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 0,
+   "maxKm": null,
+   "centerSpreadKm": null
+  },
+  {
+   "satellite": "lageos2",
+   "week": "261003",
+   "centers": [
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0008
+  },
+  {
+   "satellite": "lageos2",
+   "week": "261010",
+   "centers": [
+    "asi",
+    "bkg",
+    "cnes",
+    "dgfi",
+    "esa",
+    "gfz",
+    "jcet",
+    "nsgf"
+   ],
+   "epochs": 5040,
+   "maxKm": 0,
+   "centerSpreadKm": 0.0008
+  }
+ ]
+}
