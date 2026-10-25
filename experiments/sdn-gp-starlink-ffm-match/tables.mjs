@@ -331,10 +331,10 @@ export function build() {
 
   // the builds of the SDN-AP module that were run: Starlink FFM-truth windows, on the satellites every substantial build fitted
   const starlinkOf = (x) => buildRows(x.dir, 'starlink').filter((r) => r.source === 'starlink-ffm' && r.sdngp?.ok);
-  const substantial = SD_BUILDS.filter((x) => starlinkOf(x).length >= 100);
+  const substantial = SD_BUILDS.filter((x) => x.complete && starlinkOf(x).length >= 100); // a build still running its sources is not read here: the tables must not move while it runs
   const common = substantial.length ? substantial.map((x) => new Set(starlinkOf(x).map((r) => r.norad))).reduce((a, c) => new Set([...a].filter((n) => c.has(n)))) : new Set();
   const sdngpBuildInfo = SD_BUILDS.map((x) => {
-    const rows = starlinkOf(x).filter((r) => (substantial.includes(x) ? common.has(r.norad) : true));
+    const rows = x.complete ? starlinkOf(x).filter((r) => (substantial.includes(x) ? common.has(r.norad) : true)) : [];
     return { build: x.build, wasmSha256: x.wasmSha256, sourceCommit: x.sourceCommit, sourceDirtyFiles: x.sourceDirtyFiles, firstUseUtc: x.firstUseUtc, builtSeenUtc: x.builtSeenUtc, complete: Boolean(x.complete),
       starlink: rows.length ? { fitted: rows.length, onCommonSet: substantial.includes(x), fit: quantile(rows.map((r) => r.sdngp.fitRmsKm), 0.5), days: Object.fromEntries(DAYS.map((k) => [k, quantile(rows.map((r) => r.sdngp.days?.[k]?.rmsKm), 0.5)])) } : null };
   });
