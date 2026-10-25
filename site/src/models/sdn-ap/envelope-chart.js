@@ -36,7 +36,7 @@ export function envelopeChart(container, { series, markers = [], x, onCursor = (
     }
     for (const m of markers) {
       const item = div('env-key');
-      item.append(Object.assign(document.createElement('span'), { className: 'env-swatch env-dot', style: `background:${m.color}` }), document.createTextNode(m.name));
+      item.append(Object.assign(document.createElement('span'), { className: 'env-swatch env-dot', style: `border:2.5px solid ${m.color}` }), document.createTextNode(m.name));
       legend.append(item);
     }
     if (series.some((s) => s.envelope)) {
@@ -76,7 +76,8 @@ export function envelopeChart(container, { series, markers = [], x, onCursor = (
       const last = s.points.at(-1);
       if (last) labels.push({ y: sy(last[1]), x: sx(last[0]) + 8, text: s.name });
     }
-    for (const m of markers) for (const p of m.points) el('circle', { cx: sx(p[0]), cy: sy(p[1]), r: 5, fill: m.color, stroke: 'var(--surface, #0b0b0c)', 'stroke-width': 2, 'data-marker': m.name }, svg);
+    // Markers: rings in their series' color, so a line through one stays visible.
+    for (const m of markers) for (const p of m.points) el('circle', { cx: sx(p[0]), cy: sy(p[1]), r: 5.5, fill: 'var(--surface, #0b0b0c)', stroke: m.color, 'stroke-width': 2.5, 'data-marker': m.name }, svg);
     labels.sort((a, b) => a.y - b.y);
     for (let i = 1; i < labels.length; ++i) if (labels[i].y - labels[i - 1].y < 14) labels[i].y = labels[i - 1].y + 14;
     for (const l of labels) el('text', { class: 'direct', x: l.x, y: l.y + 4 }, svg).textContent = l.text;

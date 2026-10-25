@@ -28,17 +28,22 @@ const dark = () => document.documentElement.getAttribute('data-theme') !== 'ligh
 // Validated categorical slots (dataviz validator, dark #0b0b0c and light #ffffff
 // surfaces): SDN-AP amber, FFM cyan, SGP4-XP magenta; SGP4 in the muted ink.
 const COLORS = () => (dark()
-  ? { sdnap: '#c47d15', ffm: '#2799c6', sgp4xp: '#d55181', sgp4: '#8e8e93', paper: '#f5f5f7' }
-  : { sdnap: '#c77d00', ffm: '#0a84b8', sgp4xp: '#d55181', sgp4: '#6e6e73', paper: '#1d1d1f' });
+  ? { sdnap: '#c47d15', ffm: '#2799c6', sgp4xp: '#d55181', sgp4: '#8e8e93' }
+  : { sdnap: '#c77d00', ffm: '#0a84b8', sgp4xp: '#d55181', sgp4: '#6e6e73' });
 const NAMES = { sdnap: 'SDN-AP', ffm: 'FFM', sgp4xp: 'SGP4-XP', sgp4: 'SGP4' };
 const NAMES_TRUTH = { lageos2: 'LAGEOS-2', etalon1: 'Etalon-1', etalon2: 'Etalon-2' };
 const ORDER = ['sdnap', 'ffm', 'sgp4xp', 'sgp4'];
 
 const STYLE = `.env-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 8px;font-size:13px;color:var(--muted)}
 .env-key{display:inline-flex;align-items:center;gap:6px}.env-swatch{display:inline-block;width:12px;height:3px;border-radius:2px;vertical-align:middle;margin-right:4px}
-.env-dot{width:9px;height:9px;border-radius:50%}.env-svg .gridline{stroke:var(--border);stroke-width:1}.env-svg text{fill:var(--muted);font-size:11px}
+.env-dot{width:11px;height:11px;border-radius:50%;box-sizing:border-box}.env-svg .gridline{stroke:var(--border);stroke-width:1}.env-svg text{fill:var(--muted);font-size:11px}
 .env-svg text.direct{fill:var(--text);font-size:12px}.env-chart{position:relative}.env-tip{position:absolute;top:36px;pointer-events:none;background:var(--panel-solid,#161617);
-border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.5;color:var(--text);min-width:180px}`;
+border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.5;color:var(--text);min-width:180px}
+.ho-play{display:inline-flex;align-items:center;gap:8px;margin:4px 0 12px;padding:8px 16px 8px 12px;border:1px solid var(--border-strong);border-radius:999px;background:var(--accent-soft);color:var(--text);font:600 14px/1 var(--sans);cursor:pointer}
+.ho-play:hover{border-color:var(--accent)}.ho-play:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.ho-play svg{width:14px;height:14px;color:var(--accent)}`;
+const PLAY_MS = 15000;  // the 72 h in 15 s
+const ICON = { play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>' };
 
 export default async function run(ctx) {
   document.head.append(h('style', {}, STYLE));
@@ -52,6 +57,31 @@ export default async function run(ctx) {
   const form = inputs(p, [{ id: 'seed', label: 'Prediction starts', type: 'select', value: String(covered[0].index),
     options: covered.map((s) => [String(s.index), `${s.seedUtc.slice(0, 16).replace('T', ' ')} UTC`]) },
   { id: 'shown', label: 'Error view shows', type: 'select', value: 'all', options: [['all', 'Every propagator'], ['close', 'SDN-AP and FFM']] }], () => one());
+  // Play: the three views and the chart's cursor follow one clock over the 72 h.
+  const play = h('button', { type: 'button', class: 'ho-play', 'data-playing': 'false', 'aria-pressed': 'false' });
+  p.append(play);
+  let playing = null;
+  const setPlay = (on) => {
+    play.innerHTML = `${on ? ICON.pause : ICON.play}<span>${on ? 'Pause' : 'Play the 72 hours'}</span>`;
+    play.dataset.playing = String(on);
+    play.setAttribute('aria-pressed', String(on));
+  };
+  setPlay(false);
+  const stop = () => { if (playing) cancelAnimationFrame(playing.frame); playing = null; setPlay(false); };
+  play.addEventListener('click', () => {
+    if (playing || epochMs === null) { stop(); return; }
+    const now = ctx.time.get() ?? epochMs;
+    const from = now >= epochMs + 72 * HOUR - 1 ? epochMs : now;
+    playing = { start: performance.now() - ((from - epochMs) / (72 * HOUR)) * PLAY_MS };
+    setPlay(true);
+    const step = (t) => {
+      if (!playing) return;
+      const f = Math.min(1, (t - playing.start) / PLAY_MS);
+      ctx.time.set(epochMs + f * 72 * HOUR);
+      if (f < 1) playing.frame = requestAnimationFrame(step); else stop();
+    };
+    playing.frame = requestAnimationFrame(step);
+  });
   const orbit = scene3d(ctx, { title: 'LAGEOS-1 and each prediction', caption: 'GCRF (km): the ILRS precise orbit and each propagator for 72 h' });
   const apart = scene3d(ctx, { title: 'Each propagator − the precise orbit', caption: 'Radial, in-track and cross-track of the precise orbit (km); ellipsoids: the 1σ position covariance of FFM and SDN-AP' });
   const card = h('figure', { class: 'chart-card' }, h('figcaption', {}, h('strong', {}, 'Distance from the precise orbit'),
@@ -68,6 +98,7 @@ export default async function run(ctx) {
   let chart = null;
 
   async function one() {
+    stop();
     const seed = seeds[Number(form.values().seed)];
     await ctx.run(`propagator/sdn-ap: fit and propagate SDN-AP and SGP4-XP; propagator/ffm: 72 h; ${LAGEOS1.name}`, async () => {
       epochMs = seed.seedUnixMs;
@@ -101,7 +132,7 @@ export default async function run(ctx) {
         points: hours.map((hr, j) => [hr, distance[k][j]]).filter((q) => q[1] !== null),
         envelope: envelopes[k] ?? null }));
       const paperPoints = built.paper.days.map((d) => [24 * d.day - 12, d.km]);
-      chart = envelopeChart(plot, { series, markers: [{ name: `SDN-AP, paper 12.3 (median of each day’s RMS)`, color: colors.paper, points: paperPoints }],
+      chart = envelopeChart(plot, { series, markers: [{ name: `SDN-AP, paper 12.3 (median of each day’s RMS)`, color: colors.sdnap, points: paperPoints }],
         x: { max: 72, ticks: [0, 12, 24, 36, 48, 60, 72] }, onCursor: (hr) => ctx.time.set(epochMs + hr * HOUR) });
 
       const dayRms = (k, day) => {
@@ -115,7 +146,7 @@ export default async function run(ctx) {
       ], { existing: numbers.querySelector('table') });
 
       const timeSpec = { startMs: epochMs, stopMs: epochMs + 3 * DAY, ms: ctx.time.get() ?? epochMs, format: (ms) => `${((ms - epochMs) / HOUR).toFixed(1)} h` };
-      orbit.draw((s) => {
+      await orbit.draw((s) => {
         s.track(heldIds.map((i) => [truth.epochsUnixMs[i], at(i)]), { color: 'text', width: 3, alpha: 0.6 });
         for (const k of present) s.track(tracks[k].map((r, j) => [truth.epochsUnixMs[heldIds[j]], r]).filter((q) => q[1]), { color: colors[k], width: 2 });
       }, { axes: ['x (km)', 'y (km)', 'z (km)'], aspect: 'equal', time: timeSpec,
@@ -127,7 +158,7 @@ export default async function run(ctx) {
         const j = hours.findIndex((x) => Math.abs(x - hr) < 1e-9);
         return j < 0 || !offsets[k][j] ? null : [truth.epochsUnixMs[heldIds[j]], offsets[k][j], covarianceAxes(rtnCovariance(bases[j], P))];
       }).filter(Boolean)]);
-      apart.draw((s) => {
+      await apart.draw((s) => {
         s.point([0, 0, 0], { color: 'text', label: 'precise orbit' });
         for (const k of shown) s.track(offsets[k].map((q, j) => [truth.epochsUnixMs[heldIds[j]], q]).filter((q) => q[1]), { color: colors[k], width: 2 });
         for (const [k, samples] of ellipsoids) if (samples.length) s.movingEllipsoid(samples, { color: colors[k], alpha: 0.35 });
