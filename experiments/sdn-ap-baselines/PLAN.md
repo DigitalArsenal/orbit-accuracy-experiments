@@ -131,3 +131,13 @@ change how FFM is given its environment; nothing else changes.
    over the days both hold; the checks are recorded with the environment.
 2. FFM takes at most 366 rows of Earth orientation: each window is given the rows of its own arc,
    two days either side, of both tables. A row's values are not changed by the slicing.
+
+### A2 - 2026-10-25, after the run, with its failure counts read and before the table was generated: one Earth-orientation series per arc
+
+During the run, a partial table of its first 121 windows was printed once to test the aggregation.
+After the run, only the counts of windows each arm did not fit or score were read. FFM refused 4
+TESS windows (2026-07-09 to 2026-07-15) whose arcs straddle the first day of G1's saved Earth
+orientation: the table A1 gave them mixed the finals.all rows and the saved finals.daily rows
+("EOP table mixes series"). Each arc now takes one series: the saved rows when the arc, two days
+either side, lies within their span, else the finals.all rows. Every other window had one series
+already and is unchanged; the 4 windows were rerun.
