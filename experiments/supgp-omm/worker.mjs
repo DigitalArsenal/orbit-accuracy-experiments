@@ -10,6 +10,7 @@ import { CPF_MODULE } from './sources/cpf.mjs';
 import { labelledEphemeris, summarizeOem } from './lib/records.mjs';
 import { evaluate, windowOf } from './lib/score.mjs';
 import { sp3Context } from '../e4-operator-ephemeris-parity/sp3.mjs';
+import { gateOemFrame } from '../../harness/truth-gate.mjs';
 import { sources } from './sources/index.mjs';
 
 const { fitModules, readerModules, sourceIds, eopFile } = workerData;
@@ -36,6 +37,7 @@ parentPort.on('message', async (job) => {
     const read = await src.read({ readers, cand: job.cand, row: job.row, bytes, context: job.context });
     const tRead = performance.now();
     const ephemeris = labelledEphemeris(read.oem, job.row.norad, read.objectName);
+    ephemeris.payload = gateOemFrame(ephemeris.payload, { product: `supgp-omm/${job.source}` }).bytes; // the truth gate (harness/truth-gate.mjs)
     const summary = summarizeOem(ephemeris.payload);
     const hours = src.hoursFor?.(summary, job.row) ?? job.hours ?? src.hours;
     // A prefix that ends before the window's end: the caller refetches a longer one.

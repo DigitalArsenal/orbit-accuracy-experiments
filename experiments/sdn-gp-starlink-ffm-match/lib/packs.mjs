@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { store, sha256 } from '../common.mjs';
 import { withT } from './windows.mjs';
+import { gate } from '../../../harness/truth-gate.mjs';
 
 export const packDir = () => path.join(store, 'pack');
 
@@ -22,10 +23,11 @@ export function writePack(name, { states, description }) {
 export function readPackMeta(name) { return JSON.parse(fs.readFileSync(path.join(packDir(), `${name}.json`), 'utf8')); }
 
 /** A pack as an ephemeris object in the experiment's form ({lines: [{epoch, r, v}], t}) for scoreWindow-style slicing. */
-export function readPack(name) {
+export function readPack(name, { raw = false } = {}) { // raw: the pack's states as written (the truth gate's scan)
   const meta = readPackMeta(name);
   const flat = new Float64Array(new Uint8Array(fs.readFileSync(path.join(packDir(), `${name}.f64`))).buffer);
-  const lines = Array.from({ length: flat.length / 7 }, (_, i) => ({ epoch: new Date(flat[i * 7]).toISOString(), r: [flat[i * 7 + 1], flat[i * 7 + 2], flat[i * 7 + 3]], v: [flat[i * 7 + 4], flat[i * 7 + 5], flat[i * 7 + 6]] }));
+  const all = Array.from({ length: flat.length / 7 }, (_, i) => ({ epoch: new Date(flat[i * 7]).toISOString(), r: [flat[i * 7 + 1], flat[i * 7 + 2], flat[i * 7 + 3]], v: [flat[i * 7 + 4], flat[i * 7 + 5], flat[i * 7 + 6]] }));
+  const lines = raw ? all : gate(all, { product: name, norad: 0, center: String(meta.center ?? 'EARTH').toUpperCase() }).kept; // the truth gate (harness/truth-gate.mjs)
   return { meta, object: withT({ source: name, id: name, norad: 0, name, objectId: '', originator: meta.source ?? '', creation: '', frame: 'GCRF', timeSystem: 'UTC', lines }) };
 }
 

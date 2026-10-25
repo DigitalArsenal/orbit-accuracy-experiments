@@ -1,0 +1,53 @@
+{
+ "experiment": "sdn-ap-covariance-calibration",
+ "frozen": true,
+ "registeredUtc": "2026-10-25T20:10:00Z",
+ "task": "modules-sdn-ap-covariance-calibration-to-band-20261025",
+ "modules": {
+  "repository": "space-data-network-modules",
+  "commit": "24f162f17c79a0268565ecfd7ef2d9e098061617",
+  "harness": "propagator/sdn-ap/test/covariance-realism.mjs",
+  "baselineCells": "propagator/sdn-ap/test/results/covariance-realism-sdnap.json and -sgp4xp.json at a29c4aec"
+ },
+ "reference": "/opt/data/sdn-archive/reference-states/reference",
+ "experimentRows": "/opt/data/sdn-archive/sdn-gp-starlink-ffm-match/rows",
+ "band": { "meanD2Over3": [0.8, 1.25], "coverage95": [0.93, 0.97], "chi2_3_95": 7.814727903251178 },
+ "scoring": { "fitHours": 24, "leadDays": 3, "sampleMinutes": 30, "highWindowStepDays": 9, "leoArcs": "every second NSGF arc" },
+ "regimes": {
+  "DRAG": { "perigeeBelowKm": 2500 },
+  "ABOVE": {}
+ },
+ "sets": {
+  "fit": {
+   "objects": { "DRAG": ["ajisai", "starlette", "larets", "westpac", "lares"], "ABOVE": ["lares2", "lageos2", "etalon1", "etalon2"] },
+   "dates": [["2026-02-01", "2026-06-01"]]
+  },
+  "validation": {
+   "objects": { "DRAG": ["ajisai", "starlette", "larets", "westpac", "lares"], "ABOVE": ["lares2", "lageos2", "etalon1", "etalon2"] },
+   "dates": [["2025-11-01", "2026-02-01"], ["2026-06-01", "2026-09-01"]]
+  },
+  "heldOutObject": {
+   "objects": { "DRAG": ["stella"], "ABOVE": ["lageos1"] },
+   "dates": "every date"
+  },
+  "heldOutTime": {
+   "objects": "every object",
+   "windows": ["rows/slr-high.jsonl", "rows/slr-low.jsonl"],
+   "dates": [["2025-09-28", "2025-10-23"]]
+  }
+ },
+ "candidates": {
+  "M0": { "growth": "constant rate errors (SPEC 12.5)" },
+  "M1": { "growth": "first-order Gauss-Markov rate errors", "tauDays": [0.5, 1, 2, 4] },
+  "M2": { "epochInflation": "1 + 2 sum of the fit residuals' along-track lag autocorrelations up to the first sign change, at most 20 lags", "floorScale": "fitted per regime" },
+  "M3": { "windowWeight": "(window post-fit residual RMS / regime median over the fit set) ^ beta", "beta": [0, 0.5, 1] },
+  "evaluated": ["M0", "M1", "M1+M2", "M1+M2+M3"],
+  "theories": ["SDNAP", "SGP4XP"]
+ },
+ "selection": {
+  "sizes": "maximum likelihood on the fit set: Gaussian negative log-likelihood of the position errors under P(t), every sample of days 1 to 3",
+  "choice": "validation set only: most validation cells (days 1, 2, 3) inside the band; ties: smaller sum over cells of |ln(mean d2/3)| + |coverage - 0.95| / 0.05; then fewer parameters",
+  "order": ["M0", "M1", "M1+M2", "M1+M2+M3"]
+ },
+ "success": "for each theory, more than half of the held-out cells inside the band"
+}

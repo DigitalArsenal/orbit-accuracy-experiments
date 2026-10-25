@@ -5,17 +5,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { decodeOemStream } from '../../harness/records.mjs';
 import { sha256 } from '../../harness/modules.mjs';
+import { gate } from '../../harness/truth-gate.mjs';
 
 export const HOUR_MS = 3600000;
 export const utcMs = (iso) => Date.parse(/Z$/.test(iso) ? iso : `${iso}Z`);
 
-// One object's states from a list of $OEM files: Map(utc ms -> {epoch, position, velocity}).
+// One object's states from a list of $OEM files (<product>/<norad>.oem), through the truth gate (harness/truth-gate.mjs): Map(utc ms -> {epoch, position, velocity}).
 export function readArc(referenceDir, files, onInput = () => {}) {
   const byTime = new Map();
   for (const file of files) {
     const bytes = fs.readFileSync(path.join(referenceDir, file));
     onInput(file, sha256(bytes));
-    for (const line of decodeOemStream(new Uint8Array(bytes))[0].EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES) {
+    const block = decodeOemStream(new Uint8Array(bytes))[0].EPHEMERIS_DATA_BLOCK[0];
+    for (const line of gate(block.EPHEMERIS_DATA_LINES, { product: path.dirname(file).split(path.sep)[0], norad: block.OBJECT?.NORAD_CAT_ID, epochOf: (l) => utcMs(l.EPOCH) }).kept) {
       byTime.set(utcMs(line.EPOCH), { epoch: line.EPOCH.replace(/Z$/, ''), position: [line.X, line.Y, line.Z], velocity: [line.X_DOT, line.Y_DOT, line.Z_DOT] });
     }
   }

@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { sha256 } from '../../harness/modules.mjs';
 import { decodeOemStream, OEM_TYPE } from '../../harness/records.mjs';
+import { gateOemFrame } from '../../harness/truth-gate.mjs';
 
 export const utcMs = (iso) => Date.parse(/[zZ]$/.test(iso) ? iso : `${iso}Z`);
 
@@ -27,17 +28,20 @@ export class Products {
     }
     this.cache = new Map();
     this.read = {};  // relative file -> SHA-256, every file whose states were used
+    this.gated = [];  // states the truth gate dropped (harness/truth-gate.mjs), with their reasons
   }
 
   objects() { return [...this.byObject.keys()].sort((a, b) => a - b); }
 
   entries(norad) { return this.byObject.get(norad) ?? []; }
 
-  // {bytes, epochs: Float64Array (ms), lines} for one object file.
+  // {bytes, epochs: Float64Array (ms), lines} for one object file, through the truth gate (harness/truth-gate.mjs): the bytes and lines
+  // hold the kept states; the SHA-256 recorded is of the file as read.
   load(entry) {
     if (!this.cache.has(entry.file)) {
-      const bytes = fs.readFileSync(path.join(this.dir, entry.file));
-      this.read[entry.file] = sha256(bytes);
+      const raw = fs.readFileSync(path.join(this.dir, entry.file));
+      this.read[entry.file] = sha256(raw);
+      const { bytes } = gateOemFrame(raw, { product: entry.product, onDrop: (d) => this.gated.push(d) });
       const lines = decodeOemStream(new Uint8Array(bytes)).flatMap((o) => o.EPHEMERIS_DATA_BLOCK.flatMap((b) => b.EPHEMERIS_DATA_LINES));
       this.cache.set(entry.file, { bytes, lines, epochs: Float64Array.from(lines.map((l) => utcMs(l.EPOCH))) });
     }

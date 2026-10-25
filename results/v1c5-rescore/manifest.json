@@ -1,0 +1,148 @@
+{
+  "run": "v1c5-rescore",
+  "registration": "dde67f6445caae92b1e38b12a46dbad823f5d3ca",
+  "started": "2026-10-25T19:45:57.569Z",
+  "configSha256": "f0d12d8c3702c27759537aa861997cef63cc3b3bc7d56be7028a0758a43aeb41",
+  "repository": {
+    "commit": "dde67f6445caae92b1e38b12a46dbad823f5d3ca",
+    "dirty": true
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin 25.3.0 arm64",
+    "cpus": 28
+  },
+  "provision": {
+    "runtimeProvenanceSha256": "10c2539dc86fa05260baca07130f0a4d30a350ded73556e9b43c3fb1e66dcd75",
+    "modulesCommit": "f1c7b8942b7a9ded85566f240cbaaeffca1293db",
+    "truthToolsCommit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45"
+  },
+  "workers": 6,
+  "threads": 1,
+  "inputs": {
+    "gpHistory": {
+      "count": 550,
+      "sha256": "af79974c5870800a0ef0f33abce19064f4e1c93589c6ccf3804008a8b0a16fa0"
+    },
+    "history": {
+      "count": 34,
+      "sha256": "19b06997076f056c1bea7dbcf58804f5beccb9a8c0be879f670d3b45487072b5"
+    },
+    "reference": {
+      "count": 1392,
+      "sha256": "24f1fa042937a37f2f4172b9fd4ce7696f1c359d8b1b5b248aa8df8c0d2812e5"
+    },
+    "referenceIndex": {
+      "count": 1052,
+      "sha256": "92320aae9d401e89a4e16fe7fa3aeca78e5128f072669b60d5e9ae02a23f0343"
+    }
+  },
+  "modules": {
+    "analysis/gp-error-model": {
+      "path": "analysis/gp-error-model",
+      "pluginId": "com.digitalarsenal.analysis.gp-error-model",
+      "version": "0.8.1",
+      "wasmSha256": "f3d06fd4840686a893753fa8fdd19d30b39caa745d23cc2dd867d462886f2778",
+      "manifestSha256": "aa28196b484f3e56155b14bee60418efb018466ab51ac6da46be0650e8b03c9e"
+    },
+    "analysis/maneuver-detection": {
+      "path": "analysis/maneuver-detection",
+      "version": "0.8.0",
+      "wasmSha256": "64731b544ca60c31cc82eff6bcfc0afb2b013f3480da5ee81fc11dae42a4bc85"
+    },
+    "propagator/sgp4": {
+      "path": "propagator/sgp4",
+      "version": "1.3.0",
+      "wasmSha256": "6105fea83381ef0754673ea10bdd99d4290814d872ecb3309ea20c44ba372379"
+    }
+  },
+  "files": {
+    "train-oof-scores.jsonl": "a08e58dcd02974335f733a9f4e5143a4e7138bdd8be89ca9265a7f3d3a793038",
+    "events-train.jsonl": "fd374d3da873a4a778ce868a9cb8611ac4f1fc156c7575b22004c03ba34ca3ba",
+    "test-sgp.jsonl": "3bb793253a35a04210e7db68f24f9cab03814139d7a8cecf616c80eaa96ac374",
+    "events-test.jsonl": "d5d95cdac4c761f8d57284d4f91dcfc3a64cb70de8f3b3c3fd4ce200b6371e90",
+    "test-P-axes-mle_risk_UNFLAGGED-scores.jsonl": "26f2082723f41bb833a6c4cb8a38589ff6842240278c24cb6e14a4c18a32b864"
+  },
+  "invocations": [
+    {
+      "stage": "fit",
+      "started": "2026-10-25T19:45:57.609Z",
+      "repository": {
+        "commit": "dde67f6445caae92b1e38b12a46dbad823f5d3ca",
+        "dirty": true
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T19:47:06.581Z",
+      "repository": {
+        "commit": "69b08808c04cff0272881626ca25f69e1c5ef9f3",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T19:51:14.517Z",
+      "repository": {
+        "commit": "69b08808c04cff0272881626ca25f69e1c5ef9f3",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T19:52:14.904Z",
+      "repository": {
+        "commit": "69b08808c04cff0272881626ca25f69e1c5ef9f3",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T19:54:00.482Z",
+      "repository": {
+        "commit": "69b08808c04cff0272881626ca25f69e1c5ef9f3",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T19:57:16.356Z",
+      "repository": {
+        "commit": "69b08808c04cff0272881626ca25f69e1c5ef9f3",
+        "dirty": false
+      }
+    },
+    {
+      "stage": "test",
+      "started": "2026-10-25T20:03:35.068Z",
+      "repository": {
+        "commit": "fc4c85d264c8463d51246a6c5e6473f64af835c1",
+        "dirty": true
+      }
+    }
+  ],
+  "peakDispatchLoad": 39.5927734375,
+  "fitsFreeze": {
+    "commit": "69b08808c04cff0272881626ca25f69e1c5ef9f3",
+    "sha256": "007a38b29e1c7b2f236f5aa068b4579fbc7f79030fe8c04367806eb8ea3773bf",
+    "verifiedAt": "2026-10-25T19:47:06.726Z"
+  },
+  "testStarted": "2026-10-25T19:47:06.726Z",
+  "truthMerge": {
+    "main": {
+      "products": 106,
+      "added": {
+        "v1c5Refreshed": 0,
+        "fetched": 0
+      }
+    },
+    "leo": {
+      "products": 21506,
+      "added": {
+        "archive": 0,
+        "fetched": 0
+      }
+    }
+  },
+  "finished": "2026-10-25T20:04:25.954Z"
+}

@@ -10,7 +10,7 @@ import { modulesRoot } from './lib/modules.mjs';
 import { openBaselines, scoreWindow } from './lib/baselines.mjs';
 import { openContainers } from './lib/containers.mjs';
 import { openTime } from './lib/timeconv.mjs';
-import { KERNELS, A5, A8, spkObject, spkObjectSeries } from './lib/spk-sources.mjs';
+import { KERNELS, FILES, A5, A8, spkObject, spkObjectSeries } from './lib/spk-sources.mjs';
 import { windowStarts, ms, iso } from './lib/windows.mjs';
 import { sdngpSink, rowKey } from './lib/sdngp-rows.mjs';
 
@@ -19,11 +19,6 @@ const ARM = args.arm ?? 'both';
 const DEFAULT_SPAN = args.span === 'default'; // amendment A9f: see baselines.mjs
 if (DEFAULT_SPAN && ARM !== 'sdngp') throw new Error('--span default needs --arm sdngp');
 const wanted = new Set((args.source ?? 'heo-themis,heo-chandra,heo-artemis2,heo-tess').split(','));
-const FILES = (dir) => ({
-  themis: (letter) => path.join(dir, `themis/THEMIS_${letter}_2013_039_055.bsp`),
-  chandra: path.join(dir, 'chandra/chandra_merged.bsp'),
-  artemis2: path.join(dir, 'artemis2/art002_rec_260402_260410_jsc_bet_revf.bsp'),
-});
 
 frozen();
 const modules = modulesRoot();

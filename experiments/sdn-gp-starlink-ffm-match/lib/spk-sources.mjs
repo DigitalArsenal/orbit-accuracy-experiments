@@ -5,6 +5,7 @@ import path from 'node:path';
 import { openContainers, readSpk } from './containers.mjs';
 import { openTime, convertAll } from './timeconv.mjs';
 import { withT } from './windows.mjs';
+import { gate } from '../../../harness/truth-gate.mjs';
 
 // Amendment A5: the windows of the highly elliptical orbits.
 export const A5 = Object.freeze({
@@ -18,6 +19,12 @@ export const A5 = Object.freeze({
 export const A8 = Object.freeze({ tess: { span: ['2026-06-29T13:02:00Z', '2026-09-17T13:00:00Z'], norad: 43435, stride: 5 } });
 
 export const KERNELS = (archive) => path.join(archive, 'hac/naif-kernels/spk/missions');
+/** The kernels of the A5 windows under KERNELS(archive). */
+export const FILES = (dir) => ({
+  themis: (letter) => path.join(dir, `themis/THEMIS_${letter}_2013_039_055.bsp`),
+  chandra: path.join(dir, 'chandra/chandra_merged.bsp'),
+  artemis2: path.join(dir, 'artemis2/art002_rec_260402_260410_jsc_bet_revf.bsp'),
+});
 
 const parseTdb = (text) => { // 'YYYY-MM-DDTHH:MM:SS.ffffff' -> { wholeMs (to the second), micro }
   const m = /^(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d)(?:\.(\d+))?/.exec(text);
@@ -55,7 +62,7 @@ export function tdbStates(oem, fromUtcMs, toUtcMs) {
 }
 
 /** An ephemeris object in the experiment's form (EME2000 axes = the SPK's J2000, UTC epochs) for a span of an SPK file. */
-export async function spkObject(modules, { file, source, id, name, norad, fromUtc, toUtc, containers, time }) {
+export async function spkObject(modules, { file, source, id, name, norad, fromUtc, toUtc, containers, time, raw = false }) { // raw: the kernel's states ungated (the truth gate's scan)
   const own = { containers: !containers, time: !time };
   containers ??= await openContainers(modules);
   time ??= await openTime(modules);
@@ -69,7 +76,8 @@ export async function spkObject(modules, { file, source, id, name, norad, fromUt
     // segments of one kernel can share their boundary epoch to within a microsecond: keep one state per half second
     const unique = [];
     for (const l of lines) if (!unique.length || Date.parse(l.epoch) - Date.parse(unique.at(-1).epoch) >= 500) unique.push(l);
-    return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: unique });
+    // the truth gate (harness/truth-gate.mjs): the sanity rule, and any state its ledger lists for this source and object
+    return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: raw ? unique : gate(unique, { product: source, norad }).kept });
   } finally {
     if (own.containers) await containers.destroy();
     if (own.time) await time.destroy();
@@ -81,7 +89,7 @@ export async function spkObject(modules, { file, source, id, name, norad, fromUt
  * the states of every file, every `stride`-th state of each segment, later files overriding earlier ones where they overlap
  * (the newer solution), epochs to UTC by foundation/time. Files are given oldest first.
  */
-export async function spkObjectSeries(modules, { files, source, id, name, norad, fromUtc, toUtc, stride = 1, containers, time }) {
+export async function spkObjectSeries(modules, { files, source, id, name, norad, fromUtc, toUtc, stride = 1, containers, time, raw = false }) {
   const own = { containers: !containers, time: !time };
   containers ??= await openContainers(modules);
   time ??= await openTime(modules);
@@ -107,7 +115,8 @@ export async function spkObjectSeries(modules, { files, source, id, name, norad,
     lines.sort((a, b) => Date.parse(a.epoch) - Date.parse(b.epoch));
     const unique = [];
     for (const l of lines) if (!unique.length || Date.parse(l.epoch) - Date.parse(unique.at(-1).epoch) >= 500) unique.push(l);
-    return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: unique });
+    // the truth gate (harness/truth-gate.mjs): the sanity rule, and any state its ledger lists for this source and object
+    return withT({ source, id, norad, name, objectId: '', originator: 'NAIF SPK', creation: '', frame: 'EME2000', timeSystem: 'UTC', lines: raw ? unique : gate(unique, { product: source, norad }).kept });
   } finally {
     if (own.containers) await containers.destroy();
     if (own.time) await time.destroy();

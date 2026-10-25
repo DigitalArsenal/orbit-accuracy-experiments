@@ -8,6 +8,7 @@ import { parseArgs } from 'node:util';
 import { loadModule, modulesRoot, sha256, json } from '../../harness/modules.mjs';
 import { repoRoot } from '../../harness/provenance.mjs';
 import { ReferenceIndex } from '../../harness/reference.mjs';
+import { gateOemFrame } from '../../harness/truth-gate.mjs';
 import { readElementSets, shiftDay, epochMs } from '../../harness/gp-archive.mjs';
 import { decodeOemStream } from '../../harness/records.mjs';
 import { config, configPath, experimentDir, assertWindowReadable, assertSpanReadable, windowSpanMs } from './windows.mjs';
@@ -101,14 +102,15 @@ export class Truth {
   spans(norad, fromMs, toMs) { return (this.byObject.get(norad) ?? []).filter((s) => s.stop >= fromMs && s.start <= toMs); }
   stepAt(norad, ms) { return (this.byObject.get(norad) ?? []).find((s) => s.start <= ms && ms <= s.stop)?.stepSeconds ?? null; }
   sigmaAt(norad, ms) { return (this.byObject.get(norad) ?? []).find((s) => s.start <= ms && ms <= s.stop)?.statedSigmaM ?? null; }
-  // $OEM frames on `reference` for [fromMs, toMs]: the guard is asked first (a span in a test window needs the freeze).
+  // $OEM frames on `reference` for [fromMs, toMs]: the guard is asked first (a span in a test window needs the freeze); the states pass the
+  // truth gate (harness/truth-gate.mjs), and the SHA-256 recorded is of the file as read.
   frames(norad, fromMs, toMs) {
     assertSpanReadable(fromMs, toMs);
     return this.spans(norad, fromMs, toMs).map((s) => {
       const file = path.join(s.root, s.file);
       const bytes = fs.readFileSync(file);
       this.read[path.relative('/', file)] = sha256(bytes);
-      return { portId: 'reference', typeRef: { schemaName: 'OEM.fbs', fileIdentifier: '$OEM', rootTypeName: 'OEM', wireFormat: 'flatbuffer' }, payload: bytes };
+      return { portId: 'reference', typeRef: { schemaName: 'OEM.fbs', fileIdentifier: '$OEM', rootTypeName: 'OEM', wireFormat: 'flatbuffer' }, payload: gateOemFrame(bytes, { product: s.product }).bytes };
     });
   }
   // Epochs whose radius departs from the mean of its neighbours' by more than limitKm (E2b's screen; read only).

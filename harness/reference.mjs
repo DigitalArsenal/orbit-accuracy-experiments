@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { sha256 } from './modules.mjs';
 import { OEM_TYPE } from './records.mjs';
+import { gateOemFrame } from './truth-gate.mjs';
 
 // The sampling interval in a product's long name (IGS0OPSFIN_..._15M_ORB:
 // 900 s), or null.
@@ -38,6 +39,7 @@ export class ReferenceIndex {
     for (const list of this.byObject.values()) list.sort((a, b) => a.start - b.start);
     this.cache = new Map();
     this.read = {};  // relative file -> SHA-256 of every reference file used
+    this.gated = [];  // states the truth gate (truth-gate.mjs) dropped from the files read, with their reasons
   }
 
   objects() { return [...this.byObject.keys()].sort((a, b) => a - b); }
@@ -53,12 +55,12 @@ export class ReferenceIndex {
     return (this.byObject.get(norad) ?? []).find((s) => s.start <= ms && ms <= s.stop)?.stepSeconds ?? null;
   }
 
-  // $OEM frames on the `reference` port for one object over [fromMs, toMs].
+  // $OEM frames on the `reference` port for one object over [fromMs, toMs], through the truth gate (the file's SHA-256 is of its bytes as read).
   frames(norad, fromMs, toMs) {
     return this.spans(norad, fromMs, toMs).map((s) => {
       if (!this.cache.has(s.file)) {
         const bytes = fs.readFileSync(path.join(this.dir, s.file));
-        this.cache.set(s.file, bytes);
+        this.cache.set(s.file, gateOemFrame(bytes, { product: s.product, onDrop: (d) => this.gated.push(d) }).bytes);
         this.read[s.file] = sha256(bytes);
       }
       return { portId: 'reference', typeRef: OEM_TYPE, payload: this.cache.get(s.file) };
@@ -70,11 +72,12 @@ export class ReferenceIndex {
 
 // Every object block whose span starts in [fromMs, toMs), across all products,
 // in product-name then index order: the selection analysis/gp-error-model's
-// own scripts make (scripts/archive.mjs `referenceStates`).
+// own scripts make (scripts/archive.mjs `referenceStates`), through the truth gate.
 export function referenceFramesStartingIn(dir, fromMs, toMs) {
   const frames = [];
   const objects = new Set();
   const read = {};
+  const gated = [];
   for (const product of fs.readdirSync(dir).sort()) {
     const indexFile = path.join(dir, product, 'index.json');
     if (!fs.existsSync(indexFile)) continue;
@@ -84,9 +87,9 @@ export function referenceFramesStartingIn(dir, fromMs, toMs) {
       const file = path.join(product, o.file);
       const bytes = fs.readFileSync(path.join(dir, file));
       read[file] = sha256(bytes);
-      frames.push({ portId: 'reference', typeRef: OEM_TYPE, payload: bytes });
+      frames.push({ portId: 'reference', typeRef: OEM_TYPE, payload: gateOemFrame(bytes, { product, onDrop: (d) => gated.push(d) }).bytes });
       objects.add(o.norad);
     }
   }
-  return { frames, objects, read };
+  return { frames, objects, read, gated };
 }

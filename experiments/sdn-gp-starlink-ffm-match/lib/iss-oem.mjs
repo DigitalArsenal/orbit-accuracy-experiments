@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { config } from '../common.mjs';
+import { gate } from '../../../harness/truth-gate.mjs';
 
 export const ISS_ARCHIVE = path.join(config.archive, 'hac/nasa-iss-oem-archive');
 const DAY = 86400000;
@@ -17,8 +18,11 @@ function tigMs(doy, hh, mm, ss, startMs, stopMs) {
   return candidates.sort((a, b) => Math.abs(a - mid) - Math.abs(b - mid))[0];
 }
 
-/** Header, events and states of one file's text. */
-export function parseIssOem(text) {
+/**
+ * Header, events and states of one file's text. The states pass the truth gate (harness/truth-gate.mjs) under the product
+ * `nasa-iss-oem/<CREATION_DATE>` unless `raw` (the gate's scan); `gated` lists the states it dropped.
+ */
+export function parseIssOem(text, { raw = false } = {}) {
   const lines = text.split(/\r?\n/);
   const kv = {};
   const comments = [];
@@ -30,6 +34,8 @@ export function parseIssOem(text) {
     const s = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*$/.exec(line);
     if (s) states.push({ ms: toMs(s[1]), epoch: s[1], r: [Number(s[2]), Number(s[3]), Number(s[4])], v: [Number(s[5]), Number(s[6]), Number(s[7])] });
   }
+  const product = `nasa-iss-oem/${kv.CREATION_DATE}`;
+  const gated = raw ? { kept: states, dropped: [] } : gate(states, { product, norad: 25544, epochOf: (s) => s.ms });
   const startMs = toMs(kv.START_TIME), stopMs = toMs(kv.STOP_TIME);
   const events = [];
   for (const c of comments) {
@@ -43,7 +49,7 @@ export function parseIssOem(text) {
   const mass = /MASS=([\d.]+)/.exec(comments.join('\n')), area = /DRAG_AREA=([\d.]+)/.exec(comments.join('\n')), cd = /DRAG_COEFF=([\d.]+)/.exec(comments.join('\n'));
   return {
     header: { creationUtc: kv.CREATION_DATE ?? null, startMs, stopMs, usableStartMs: toMs(kv.USABLE_START_TIME ?? kv.USEABLE_START_TIME ?? kv.START_TIME), usableStopMs: toMs(kv.USABLE_STOP_TIME ?? kv.USEABLE_STOP_TIME ?? kv.STOP_TIME), frame: kv.REF_FRAME, timeSystem: kv.TIME_SYSTEM, massKg: mass ? Number(mass[1]) : null, dragAreaM2: area ? Number(area[1]) : null, dragCoeff: cd ? Number(cd[1]) : null },
-    events, states, eventTableLines: comments.filter((c) => /\d{3}:\d{2}:\d{2}:\d{2}/.test(c) || /EVENT/.test(c)).length,
+    product, gated: gated.dropped, events, states: gated.kept, eventTableLines: comments.filter((c) => /\d{3}:\d{2}:\d{2}:\d{2}/.test(c) || /EVENT/.test(c)).length,
   };
 }
 

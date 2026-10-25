@@ -1,0 +1,374 @@
+{
+  "experiment": "v1c5-rescore",
+  "frozen": true,
+  "task": "console-covariance-v1c5-rescore-and-screening-criterion-20261025",
+  "registeredBy": "claude-apsync-d9",
+  "registeredUtc": "2026-10-25T20:00:00Z",
+  "base": {
+    "experiment": "v1c5",
+    "configFile": "experiments/v1c5/config.json",
+    "configSha256": "2ff5f4cfa7c1bbfcc6528bf9deed17a02649324f9927883422bc68056dc3195f",
+    "registration": "0ba47264c57b0aa8b4cd0732f49bea5781c605bf",
+    "registrationB": "f59f2b13f6447a6bb0c8a5cbb078f99fb849c02f",
+    "inherits": [
+      "windows",
+      "runtime",
+      "events",
+      "bootstrap",
+      "minimumSamples",
+      "minimumObjects",
+      "extraTruthPrefixes",
+      "extraObjects",
+      "workers",
+      "dispatchLoadBelow",
+      "diskFloorGiB",
+      "historyDays",
+      "seedFactorHorizonHours (absent: default)"
+    ]
+  },
+  "frozenModel": {
+    "candidate": "P-axes-mle/risk/UNFLAGGED",
+    "selection": {
+      "file": "results/v1c5/selection.json",
+      "sha256": "8ab3b051b9ab68a517152bac327cbfc93a47c94b59c4fe003fb557e61bbe5568"
+    },
+    "erm": {
+      "file": "results/v1c5/P-axes-mle_risk_UNFLAGGED.erm",
+      "sha256": "bc668171bd78ec5cfc149355e2caa5e3b29ce0feefa28ef7f2780df34bf4d7c7"
+    },
+    "metrics": {
+      "file": "results/v1c5/metrics.json",
+      "sha256": "0962fa7cfc352bbab8faea46d60153e19fde0aa15a5c91d275d91943e1d74c68"
+    },
+    "refit": false
+  },
+  "truth": {
+    "fetch": {
+      "script": "analysis/reference-states/scripts/fetch-reference-products.mjs",
+      "modulesCommit": "833a9139",
+      "note": "modules origin/main of 2026-10-25; run with space-data-module-sdk 0.9.16 in node_modules because the script imports eop-parser/tests/harness.mjs, which needs the runtime-contracts export absent from the pinned 0.8.25; the script ends with a ReferenceError (await reference?.destroy()) after all outputs are written",
+      "invocations": [
+        {
+          "args": [
+            "--from",
+            "2026-10-04",
+            "--to",
+            "2026-10-24",
+            "--products",
+            "cosmic2",
+            "--eop",
+            "finals",
+            "--local-archive",
+            "<run>/local-archive",
+            "--out",
+            "<run>/truth"
+          ]
+        },
+        {
+          "args": [
+            "--from",
+            "2026-10-04",
+            "--to",
+            "2026-10-24",
+            "--products",
+            "slr,swarm,sentinel1",
+            "--eop",
+            "finals",
+            "--local-archive",
+            "<run>/local-archive",
+            "--out",
+            "<run>/truth"
+          ]
+        }
+      ]
+    },
+    "eopFile": "/opt/data/sdn-archive/hac/iers-eop/2026/2026-10-21/finals.daily.iau2000.txt",
+    "eopFileSha256": "4fc3bfa6db5f28295104100cda9b35deca765e39cdd68025ed5f658bb00217d6",
+    "cosmic2": {
+      "source": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/<doy>/leoOrb_nrt_2026_<doy>.tar.gz",
+      "terms": "UCAR COSMIC Program (2019) COSMIC-2 Data Products, doi:10.5065/T353-C093; no login",
+      "tarballs": {
+        "280": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/280/leoOrb_nrt_2026_280.tar.gz",
+          "sha256": "2994130406df61178e3084e9eca72d5476e1970945acf72d7f7103264a7085c9",
+          "bytes": 2225114,
+          "retrievedUtc": "2026-10-25T19:31:20Z"
+        },
+        "281": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/281/leoOrb_nrt_2026_281.tar.gz",
+          "sha256": "fc020bd19dc8ddedca085738b860d8d4f72e5290c2cd7f1ebe0f7d95c6dafe1e",
+          "bytes": 2102681,
+          "retrievedUtc": "2026-10-25T19:31:22Z"
+        },
+        "282": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/282/leoOrb_nrt_2026_282.tar.gz",
+          "sha256": "fbf93c2e6fe9e72653ce6a5dc3e7fbd8db31083878fa174af58bffc11bf35c59",
+          "bytes": 2179363,
+          "retrievedUtc": "2026-10-25T19:31:24Z"
+        },
+        "283": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/283/leoOrb_nrt_2026_283.tar.gz",
+          "sha256": "db4aa50d965656461368b3203a91b46960706f924842072aa0ceb43e7829df10",
+          "bytes": 1966591,
+          "retrievedUtc": "2026-10-25T19:31:25Z"
+        },
+        "284": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/284/leoOrb_nrt_2026_284.tar.gz",
+          "sha256": "f2a10c34a0e0dad18f790165d070285d1a6de57e3845d595e9610cfab5af1482",
+          "bytes": 2160497,
+          "retrievedUtc": "2026-10-25T19:31:27Z"
+        },
+        "285": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/285/leoOrb_nrt_2026_285.tar.gz",
+          "sha256": "10eb96576b5b7cff20102d5c5e99656a4418f1412c11daa4aa9f292055145f7c",
+          "bytes": 2024406,
+          "retrievedUtc": "2026-10-25T19:31:29Z"
+        },
+        "286": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/286/leoOrb_nrt_2026_286.tar.gz",
+          "sha256": "407c379bec2b6fc44d928a6aeef3a27278e061baf8729146a164bf9436c1a594",
+          "bytes": 1863454,
+          "retrievedUtc": "2026-10-25T19:31:31Z"
+        },
+        "287": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/287/leoOrb_nrt_2026_287.tar.gz",
+          "sha256": "4d108e21f3b2f866a4b91c6fc047b531ebe06d89c1f3150c6629d0d7125bed97",
+          "bytes": 1904549,
+          "retrievedUtc": "2026-10-25T19:31:33Z"
+        },
+        "288": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/288/leoOrb_nrt_2026_288.tar.gz",
+          "sha256": "7dd3b523303b8bb156fafcb438df329428f790d96aad8c540de870e3a320628a",
+          "bytes": 1863601,
+          "retrievedUtc": "2026-10-25T19:31:34Z"
+        },
+        "289": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/289/leoOrb_nrt_2026_289.tar.gz",
+          "sha256": "5dbf4f1e9bf245d567100112b027a0a2ca418bed664f61d39b8756e66671930a",
+          "bytes": 1659622,
+          "retrievedUtc": "2026-10-25T19:31:36Z"
+        },
+        "290": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/290/leoOrb_nrt_2026_290.tar.gz",
+          "sha256": "75df73c40e9e730d1b1c226847156a12d7eab96cb3b2220f28976fea805fc0df",
+          "bytes": 1528164,
+          "retrievedUtc": "2026-10-25T19:31:37Z"
+        },
+        "291": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/291/leoOrb_nrt_2026_291.tar.gz",
+          "sha256": "01bb73db4ecded8d3bf74b0e0db51d6be9d4d527f729955aadfa873f4880b741",
+          "bytes": 1477978,
+          "retrievedUtc": "2026-10-25T19:31:39Z"
+        },
+        "292": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/292/leoOrb_nrt_2026_292.tar.gz",
+          "sha256": "ede905b7b4a24de5ce25a4d7bf20a080f14688ce4dc6bbf84b29792b441dab8a",
+          "bytes": 1556026,
+          "retrievedUtc": "2026-10-25T19:31:40Z"
+        },
+        "293": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/293/leoOrb_nrt_2026_293.tar.gz",
+          "sha256": "ed28c5f9cbde3ac817cd1e37223064c29eb43b84c1e684801c7c5d3865615f45",
+          "bytes": 1503310,
+          "retrievedUtc": "2026-10-25T19:31:42Z"
+        },
+        "294": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/294/leoOrb_nrt_2026_294.tar.gz",
+          "sha256": "1e4730ea59a54d0debf4b46625a551b76527e96377766ff8b8e99266313cb2c1",
+          "bytes": 1389477,
+          "retrievedUtc": "2026-10-25T19:31:43Z"
+        },
+        "295": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/295/leoOrb_nrt_2026_295.tar.gz",
+          "sha256": "cb90a0bfae842c6981883d016755d9415c41a5abf0bf73b155f8b0ba0d748a21",
+          "bytes": 1192278,
+          "retrievedUtc": "2026-10-25T19:31:44Z"
+        },
+        "296": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/296/leoOrb_nrt_2026_296.tar.gz",
+          "sha256": "912f7dd5c1510b2522821ef3891171fcc3812c7b884aadd6ddef2c8f9fca1c90",
+          "bytes": 1224277,
+          "retrievedUtc": "2026-10-25T19:31:46Z"
+        },
+        "297": {
+          "url": "https://data.cosmic.ucar.edu/gnss-ro/cosmic2/nrt/level1b/2026/297/leoOrb_nrt_2026_297.tar.gz",
+          "sha256": "07d4ad803fc7fac8f52c7de08a0f61ef27b642c68c6ecc979a490d73b484d5df",
+          "bytes": 1144839,
+          "retrievedUtc": "2026-10-25T19:31:47Z"
+        }
+      },
+      "convertedUpToDoy": 292,
+      "note": "doy 293 to 297 were downloaded but have no EOP rows (observed rows end 2026-10-20) and convert to nothing"
+    },
+    "merged": {
+      "main": "<run>/truth/main",
+      "leo": "<run>/truth/leo",
+      "rule": "symlink farms: main = every product of the V1c5 refreshed truth plus the products fetched above that it lacks; leo = every archive leoOrb product plus the fetched ones that it lacks (the archive wins on a name clash)",
+      "v1c5Refreshed": "/opt/data/sdn-archive/v1c5/truth/reference-finals2000a",
+      "archiveLeo": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2"
+    },
+    "published": {
+      "swarm": "not published for any day 2026-10-03 to 2026-10-24 (the ESA server lacks the reduced-dynamic and kinematic pair)",
+      "ilrsCombined": "latest ilrsa weekly arc is 261010 (LAGEOS-1/2, Etalon-1/2); nothing newer",
+      "sentinel1": "POE files end with the arc to 2026-10-06T00:59Z, before the first test issue time",
+      "ucarCosmic2": "NRT orbits to doy 297"
+    }
+  },
+  "training": {
+    "outOfFold": {
+      "file": "/opt/data/sdn-archive/v1c5/cv-P-axes-mle_risk_UNFLAGGED-scores.jsonl",
+      "sha256": "a08e58dcd02974335f733a9f4e5143a4e7138bdd8be89ca9265a7f3d3a793038",
+      "folds": [
+        "F3",
+        "F4",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "population": "unflagged arcs, status POPULATION, d2Predicted finite"
+    },
+    "events": {
+      "file": "/opt/data/sdn-archive/v1c5/events-train.jsonl",
+      "sha256": "fd374d3da873a4a778ce868a9cb8611ac4f1fc156c7575b22004c03ba34ca3ba"
+    },
+    "arcs": {
+      "file": "/opt/data/sdn-archive/v1c5/train-sgp.jsonl",
+      "sha256": "a3b47d82dd7fab1b605cc210bac2373bcbe416ff4b5af1f5cfe5d8d3c1217c25"
+    }
+  },
+  "v1c5Test": {
+    "arcs": {
+      "file": "/opt/data/sdn-archive/v1c5/test-sgp.jsonl",
+      "sha256": "2cba7cefcf7a7df96bdad458a9c879d003f5d64de93557bf0a477e66d07bc806"
+    },
+    "note": "read by V1c5; the control compares this rescore with it, and nothing here is fitted on it"
+  },
+  "durableRunDirectory": "/opt/data/sdn-archive/v1c5-rescore",
+  "horizonsHours": [
+    1,
+    6,
+    12,
+    24,
+    48,
+    72
+  ],
+  "criterion": {
+    "levels": [
+      0.5,
+      0.9,
+      0.95,
+      0.99
+    ],
+    "deepLevel": 0.999,
+    "statistic": "d2Predicted of analysis/gp-error-model pair_statistics under the calibrated position covariance (3 degrees of freedom); level p is covered by a sample when the variant's predictive CDF of d2 is at most p",
+    "evaluableAt": {
+      "minimumSamples": 30,
+      "minimumObjects": 3,
+      "minimumExpectedOnThinSide": 5
+    },
+    "levelStatus": "OVERCONFIDENT when the upper bound of the 95 % object-cluster bootstrap interval of the covered share is below p, PESSIMISTIC when the lower bound is above p, else CALIBRATED",
+    "verdict": {
+      "insufficientWhenHighestEvaluableLevelBelow": 0.9,
+      "overconfidentWhenAnyEvaluableLevelAtOrAbove": 0.9,
+      "order": [
+        "INSUFFICIENT",
+        "OVERCONFIDENT",
+        "PESSIMISTIC",
+        "CALIBRATED"
+      ]
+    },
+    "tail": {
+      "alphas": [
+        0.1,
+        0.05,
+        0.01,
+        0.001
+      ],
+      "ratio": "(1 - covered share) / alpha with the same interval"
+    },
+    "scopes": [
+      "cell (class x horizon, 24)",
+      "class (all horizons, 4)",
+      "all classes (1)"
+    ],
+    "views": {
+      "primary": "unflagged",
+      "reportOnly": [
+        "all",
+        "flaggedPooled (Gaussian variant only)"
+      ]
+    }
+  },
+  "variants": {
+    "G": {
+      "kind": "gaussian",
+      "cdf": "chi-square, 3 degrees of freedom",
+      "model": "the frozen model, no refit"
+    },
+    "T": {
+      "kind": "student-t scale mixture (inverse-gamma mixing) on the frozen covariance",
+      "d2Law": "d2 / c = 3 F(3, nu), cdf = I_z(3/2, nu/2) with z = d2 / (d2 + c nu)",
+      "fitOn": "training out-of-fold population",
+      "nuGrid": [
+        2.5,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        15,
+        20,
+        30,
+        50,
+        100,
+        300,
+        1000
+      ],
+      "nuPer": "class",
+      "cPer": "class x horizon",
+      "likelihood": "sum of log density of d2 (independent samples), c by golden section on ln c in [ln 1e-4, ln 1e4] (tolerance 1e-10), nu by the grid (ties to the larger nu)",
+      "minimum": {
+        "cellSamples": 100,
+        "cellObjects": 3,
+        "classSamples": 200,
+        "classObjects": 3
+      },
+      "fallback": {
+        "cell": "the class-pooled c at the chosen nu",
+        "class": "not fitted: the variant equals G for that class"
+      }
+    },
+    "Q": {
+      "kind": "empirical level multipliers on the frozen covariance",
+      "per": "class (all horizons pooled)",
+      "multiplier": "k_p = empirical p quantile of d2 (harness/stats quantile) / chi-square 3 df quantile at p, for each criterion level",
+      "minimum": {
+        "classSamples": 200,
+        "classObjects": 3
+      },
+      "coverage": "a sample is covered at p when d2 <= k_p * chi-square quantile at p"
+    }
+  },
+  "logScore": {
+    "definition": "mean log density of d2 under the variant (G and T only), per sample; difference T - G with the cluster bootstrap",
+    "scopes": [
+      "class",
+      "all classes"
+    ]
+  },
+  "adoption": {
+    "rule": "T is recommended for a class when, on that class (unflagged, all horizons), the log-score difference T - G has its 95 % interval above 0 and T has no more OVERCONFIDENT levels than G; otherwise G",
+    "output": "recommendation per class, T parameters, the T level multipliers k_p(class, horizon) = Q_T(p) / chi-square quantile at p, and the Q multipliers, in results/v1c5-rescore/table.json (schema v1c5-rescore/1)"
+  },
+  "controls": {
+    "reproduction": "GPS, SLR LEO 800-1500 km and SLR MEO cells (all, unflagged and flagged-pooled views) of the rescore equal results/v1c5/metrics.json for the frozen candidate (n, objects, mean, coverage, decision), because no truth was added for them (no new ILRS combined arc, no Swarm, Sentinel-1 ends before the window); a difference in any is an error of the rescore, not a result. Only the LEO 400-800 km cells may differ",
+    "modelPin": "the frozen model equals selection.json models[candidate] and the committed .erm"
+  },
+  "stages": {
+    "A": "this registration",
+    "B": "fit T and Q on training out-of-fold d2 (no test state), pushed before C",
+    "C": "collect the test arcs on the extended truth, score the frozen model once, evaluate G, T, Q"
+  }
+}

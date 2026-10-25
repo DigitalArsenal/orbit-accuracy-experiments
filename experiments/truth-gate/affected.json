@@ -1,0 +1,321 @@
+{
+ "ledger": "experiments/truth-gate/flags.json",
+ "states": [
+  {
+   "product": "ilrsa.orb.etalon1.260411.v80",
+   "norad": 19751,
+   "epoch": "2026-04-10T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 9997.868
+  },
+  {
+   "product": "ilrsa.orb.etalon1.260530.v80",
+   "norad": 19751,
+   "epoch": "2026-05-25T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 3057.58
+  },
+  {
+   "product": "ilrsa.orb.etalon1.260530.v80",
+   "norad": 19751,
+   "epoch": "2026-05-29T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 3118.977
+  },
+  {
+   "product": "ilrsa.orb.etalon2.260411.v80",
+   "norad": 20026,
+   "epoch": "2026-04-10T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 8133.528
+  },
+  {
+   "product": "ilrsa.orb.etalon2.261010.v80",
+   "norad": 20026,
+   "epoch": "2026-10-05T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 7552.278
+  },
+  {
+   "product": "ilrsa.orb.etalon2.261010.v80",
+   "norad": 20026,
+   "epoch": "2026-10-06T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 13580.309
+  },
+  {
+   "product": "ilrsa.orb.etalon2.261010.v80",
+   "norad": 20026,
+   "epoch": "2026-10-08T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 2126.881
+  },
+  {
+   "product": "ilrsa.orb.etalon2.261010.v80",
+   "norad": 20026,
+   "epoch": "2026-10-09T00:00:00.000Z",
+   "rules": [
+    "center",
+    "jump"
+   ],
+   "missKm": 7897.19
+  }
+ ],
+ "smallestMissKm": 2126.881,
+ "experiments": [
+  {
+   "experiment": "E2b (e2b-correlated-covariance)",
+   "truth": "SLR-MEO from ilrsa.orb., nsgf.orb.lares2.",
+   "check": "own truth screen: radius departure over 10 km",
+   "drops": [
+    {
+     "window": "validation",
+     "product": "ilrsa.orb.etalon1.260411.v80",
+     "norad": 19751,
+     "epoch": "2026-04-10T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    },
+    {
+     "window": "validation",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-25T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    },
+    {
+     "window": "validation",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-29T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    },
+    {
+     "window": "validation",
+     "product": "ilrsa.orb.etalon2.260411.v80",
+     "norad": 20026,
+     "epoch": "2026-04-10T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    }
+   ],
+   "verdict": "unaffected: its own screen excluded every dropped state in its windows"
+  },
+  {
+   "experiment": "E14 (e14-covariance-realism)",
+   "truth": "every product under its reference roots (ETALON-1 and ETALON-2 among its MEO objects)",
+   "check": "own truth screen: radius departure over 10 km",
+   "drops": [
+    {
+     "window": "devSelect",
+     "product": "ilrsa.orb.etalon1.260411.v80",
+     "norad": 19751,
+     "epoch": "2026-04-10T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    },
+    {
+     "window": "devSelect",
+     "product": "ilrsa.orb.etalon2.260411.v80",
+     "norad": 20026,
+     "epoch": "2026-04-10T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-25T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-29T00:00:00.000Z",
+     "excludedByOwnScreen": true
+    }
+   ],
+   "verdict": "unaffected: its own screen excluded every dropped state in its windows"
+  },
+  {
+   "experiment": "E16 (e16-cross-regime-epoch)",
+   "truth": "SLR-MEO from ilrsa.orb.lageos1, ilrsa.orb.lageos2, ilrsa.orb.etalon1, ilrsa.orb.etalon2, nsgf.orb.lares2",
+   "check": "no screen; the largest single error any published test cell allows (RMS x sqrt(n)) against the smallest miss",
+   "drops": [
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260411.v80",
+     "norad": 19751,
+     "epoch": "2026-04-10T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-25T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-29T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.260411.v80",
+     "norad": 20026,
+     "epoch": "2026-04-10T00:00:00.000Z"
+    }
+   ],
+   "largestAllowedErrorKm": 851.5,
+   "cell": "q1.tiers.LEO.T.ages.3",
+   "smallestMissKm": 2126.881,
+   "verdict": "unaffected: no published cell can hold an error the size of a dropped state"
+  },
+  {
+   "experiment": "E7 (e7-full-force-handoff)",
+   "truth": "SLR-MEO from ilrsa.orb.lageos1, ilrsa.orb.lageos2, ilrsa.orb.etalon1, ilrsa.orb.etalon2, nsgf.orb.lares2",
+   "check": "no screen; the largest published error (every variant and horizon, H-truth included) against the smallest miss",
+   "drops": [
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-25T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon1.260530.v80",
+     "norad": 19751,
+     "epoch": "2026-05-29T00:00:00.000Z"
+    }
+   ],
+   "largestErrorKm": {
+    "test": 27.276
+   },
+   "smallestMissKm": 2126.881,
+   "verdict": "unaffected: no published error is the size of a dropped state"
+  },
+  {
+   "experiment": "E3 (e3-combined-catalog)",
+   "truth": "truth prefixes ESA0OPSFIN, SW_OPER_SP3, S1C_OPER_AUX_POEORB, S1D_OPER_AUX_POEORB, nsgf.orb., ilrsa.orb.",
+   "check": "windows",
+   "drops": [],
+   "verdict": "unaffected: no dropped state in its windows"
+  },
+  {
+   "experiment": "V1 (v1-ffm-physical-truth)",
+   "truth": "ILRS weekly arcs 260808, 260815",
+   "check": "arcs",
+   "drops": [],
+   "verdict": "unaffected: no dropped state in its arcs"
+  },
+  {
+   "experiment": "V1c5",
+   "truth": "ilrsa.orb.etalon2.261010.v80 (V1c5 refreshed truth)",
+   "check": "experiments/etalon2-anomaly/rescore-v1c5.json: re-scored without the samples near the dropped states",
+   "drops": [
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-05T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-06T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-08T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-09T00:00:00.000Z"
+    }
+   ],
+   "rescore": {
+    "removedSamples": {
+     "test": 1,
+     "crossValidation": 3,
+     "training": 3
+    },
+    "published": {
+     "selected": "P-axes-mle/risk/UNFLAGGED",
+     "realisticCells": 0
+    },
+    "reselected": "P-axes-mle/risk/UNFLAGGED",
+    "corrected": {
+     "P-axes-mle/risk/UNFLAGGED": {
+      "realisticCells": 0
+     }
+    }
+   },
+   "verdict": "re-scored: unchanged (the selected model and 0 of 24 realistic cells); the Etalon-2 samples within 1 h of a dropped state are labeled wrong truth"
+  },
+  {
+   "experiment": "V1c4",
+   "truth": "ilrsa.orb.etalon2.261010.v80 (test issues 2026-09-27 to 2026-10-08, horizons to 72 h)",
+   "check": "the durable run is not on this machine",
+   "drops": [
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-05T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-06T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-08T00:00:00.000Z"
+    },
+    {
+     "window": "test",
+     "product": "ilrsa.orb.etalon2.261010.v80",
+     "norad": 20026,
+     "epoch": "2026-10-09T00:00:00.000Z"
+    }
+   ],
+   "verdict": "labeled: its SLR MEO cells (results/v1c4 README, mean d²/3 of order 1e8 at 24 to 72 h) carry these wrong truth states"
+  },
+  {
+   "experiment": "G1, B1 (SDN-AP baselines), B2 (mixed screening), SDN-AP GP history",
+   "truth": "G1 laser-ranging copies (CDDIS) and NSGF orbits",
+   "check": "flags.json: no drop in their sets",
+   "drops": [],
+   "verdict": "unaffected"
+  }
+ ]
+}
