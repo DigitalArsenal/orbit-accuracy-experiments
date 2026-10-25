@@ -34,7 +34,7 @@ import { selectSeeds, utcMs } from '../experiments/v1-ffm-physical-truth/seeds.m
 import { MODELS, PAPERS, PAPER_SOURCES, headingIds } from './src/models/registry.mjs';
 import { moduleList, pinnedModules } from './module-list.mjs';
 import { buildOd, generateEstimationBindings } from './build-od.mjs';
-import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildSdnAp, buildUncertaintyModel } from './build-models.mjs';
+import { buildDrag, buildGnss, buildManeuver, buildMeasuredAccuracy, buildOperator, buildUncertaintyModel } from './build-models.mjs';
 import { creditsFor, isReproducible, labelFor, source as licenceSource } from '../harness/data-licenses.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -299,13 +299,6 @@ await buildManeuver({ here, repo, write, own, eopFrame, finalsRecords, loadEopPa
   await parser.destroy();
   await buildOd({ modules, referenceDir, eopRecords: parsed.records, kernelPrw: Buffer.from(kernelFrame(kernelBytes).payload), write, log });
   await generateEstimationBindings(modules, path.join(repo, 'node_modules/space-data-module-sdk/schemas/orbpro'), path.join(here, '.cache/estimation'));
-}
-
-// ── The SDN-AP paper's held-out model (its section 12.3) ──
-{
-  const built = buildSdnAp({ here, write, own, servedWasmSha256: (relative) => moduleIndex.find((m) => m.path === relative)?.wasmSha256,
-    credits: [...new Set(['ilrs', 'jpl-de440', 'iers', 'space-track', 'igs', 'ilrs-nsgf', 'copernicus-sentinel', 'esa-earth-observation'].map((id) => licenceSource(id).credit))] });
-  log(`sdn-ap: ${built.windows} LAGEOS-1 windows`);
 }
 
 // ── The paper models: a page per section, and the manifest the paper apps read ──
