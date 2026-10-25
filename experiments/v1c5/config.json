@@ -1,0 +1,240 @@
+{
+ "experiment": "v1c5",
+ "frozen": true,
+ "runtime": {
+  "modulesCommit": "f1c7b8942b7a9ded85566f240cbaaeffca1293db",
+  "truthToolsCommit": "5f09ba9bb20c31bd8d2f48bd2fa4624f6812ba45",
+  "files": {
+   "analysis/gp-error-model/data/e14-s3-kc.erm": "b0ae93c2a92813a1c9b5c2cf5ba786030fd2dc35218e8b167b7af72c0d07c076",
+   "analysis/gp-error-model/dist/isomorphic/module.wasm": "f3d06fd4840686a893753fa8fdd19d30b39caa745d23cc2dd867d462886f2778",
+   "analysis/gp-error-model/plugin-manifest.json": "8f85220a07fd7eed1e6362b333267cdf575c1118cd86ebfad65a7d8618db7ed3",
+   "analysis/gp-error-model/scripts/erm-codec.mjs": "585725c95710575124a27d9f9dd437ef244dea4215f34a5efe15c2964af437fa",
+   "analysis/maneuver-detection/dist/isomorphic/module.wasm": "64731b544ca60c31cc82eff6bcfc0afb2b013f3480da5ee81fc11dae42a4bc85",
+   "analysis/maneuver-detection/plugin-manifest.json": "356c0d90660e72146c655c562041093702e88f84ced631a6cbbfb73741460c0e",
+   "data-source/eop-parser/dist/isomorphic/module.wasm": "e5513f3b0bdaabb07f200511cee737413601639d30207f27c9bce1fae8c48452",
+   "data-source/eop-parser/plugin-manifest.json": "6fe5661f280d965bef6230672de4a903a5ff02008cc4aacc2496f06543e1839e",
+   "files/orbit-products/tests/fixtures/de440/de440-2026.bsp": "e612a95953ca8211c629bdb632d4c7483cc339f0e963592bd8cae4a7d24ad7ef",
+   "foundation/time/dist/isomorphic/module.wasm": "647029729c8a1d16d3e272b9167577b414f524e8537c2a45904ca109b763a337",
+   "foundation/time/plugin-manifest.json": "3c6ed8f5c0257383995177547d92d6011d6f358525878a9bbfaa641aebb755c4",
+   "propagator/ffm/catalog-configuration.mjs": "8a31e44bac7bbb96bf240cf458d654aba7a4e2a03a9a7a21124d5a4fcbd9de88",
+   "propagator/ffm/catalog.mjs": "a1064d0ee2fb2f0f8c519ad8fde5eb1cec85c272c1ccb11059533caf708d5aec",
+   "propagator/ffm/dist/isomorphic/module.wasm": "b8efb44320d3cea37a155cb2edd07004d0bca567a8b9cc347ba21dbab576f7a7",
+   "propagator/ffm/plugin-manifest.json": "224e37e788b528fb8b13e26815958eb7bbcedb680bcadb9f969bf50f6e65a9e1",
+   "propagator/sgp4/dist/isomorphic/module.wasm": "6105fea83381ef0754673ea10bdd99d4290814d872ecb3309ea20c44ba372379",
+   "propagator/sgp4/plugin-manifest.json": "1cb8c68bece129fdac256158ccb7c23a527cd20f257d22b211da2650be737b50",
+   "propagator/sgp4/tests/lib/generated/StateVector.js": "69e8af294f74bf25a05e1a4c8b2db7689f9c4f824b28b9bd92c64527ba0f42d4",
+   "propagator/sgp4/tests/lib/generated/orbpro.js": "16bc9be082b423672845184a1a3cc5ec74d724b5b723aa53fa630079e3cf1da7",
+   "propagator/sgp4/tests/lib/generated/orbpro/bool32.js": "b69b472187ff455c41aae5c08f441c1d3c2ff7db6cd8023acb384b869c270f87",
+   "propagator/sgp4/tests/lib/generated/orbpro/bool8.js": "4a43bfa64c969e75e1c6288392c77e7e2b261e71e5d4dd133689440827cc2ac0",
+   "propagator/sgp4/tests/lib/generated/orbpro/bounding-box.js": "55d358fe1f7400fc0651f906aeebd607abf3fd42790a921e71ce69d6f6389349",
+   "propagator/sgp4/tests/lib/generated/orbpro/bounding-rectangle.js": "16b74e1d085e305763c45b3c3068acca3ba45d2569482ad7718690401d22591d",
+   "propagator/sgp4/tests/lib/generated/orbpro/bounding-sphere.js": "ad53cf628091b3124550aa109a8a4d3af221ab1e3df337ea74a91c042458fba2",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartesian2.js": "a0f270a28cfabccb8031e3e9e9834f3ce60c72a3c98a50bf7c48ed00f755ca01",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartesian2f.js": "a64f1db451b9f3a413ff3d8476cf90e45e8f97b57126ba93a814627efae64bfb",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartesian3.js": "4bcb1a92788aae6a81158cacc1c7fd41399b6f2d7b3c85d71e754ac85ccc855b",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartesian3f.js": "f2ec12e1b758db4afdc46ded1510244bfcbd2a548b6ada06db01bfb1cf24923f",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartesian4.js": "b63b2cd85437a404a7f0f378401cf4b87949646a784c4b8f555dccbab5b7b90e",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartesian4f.js": "facb4e6e83150f33af1510c29336db4ea6077b7d2a6f1932f3861259f70cd292",
+   "propagator/sgp4/tests/lib/generated/orbpro/cartographic.js": "8ba63e2517a3014fbe9168b4ec24a0fb587fc811678c52a2b76a48240fd419f0",
+   "propagator/sgp4/tests/lib/generated/orbpro/color.js": "ba3a72c406fd0b77d1ed5c48cc6c1fe30c9d863e4129d9e21ea20a19fec47d08",
+   "propagator/sgp4/tests/lib/generated/orbpro/color8.js": "ea9e6a6855d2b4ea1e4607225e6b63d704c9e01922f5e64269e0139e315ee08a",
+   "propagator/sgp4/tests/lib/generated/orbpro/colorf.js": "d2f1352919b9452266ca52d7f52ba9e06e8c869f704cc5b21cf76d851896c472",
+   "propagator/sgp4/tests/lib/generated/orbpro/distance-display-condition.js": "1443f8f0b3f5b0f3036b6f4eae9222fa552dc3197d41611f41a05acac5a039cb",
+   "propagator/sgp4/tests/lib/generated/orbpro/encoded-cartesian3.js": "af1ad6760bd3d856d3bc9d04c5b649ecfb830f0f3ef94b8202f78f9b536cba8e",
+   "propagator/sgp4/tests/lib/generated/orbpro/encoded-vec3.js": "a53ab1d1f1722aa99aafe7bcb76e16680d94fdeba34089e051a02e62dbcbf6e9",
+   "propagator/sgp4/tests/lib/generated/orbpro/entity-handle.js": "e89f801d3631cd5cef8f6da902b74b88989ca003e6d8daa9261a400fa8cd348d",
+   "propagator/sgp4/tests/lib/generated/orbpro/entity-id.js": "285005c5c9b79547aa4586c3fce11f78f9cc620fd00f71be221600a822e5aa2d",
+   "propagator/sgp4/tests/lib/generated/orbpro/entity.js": "67e4b48ec32adf7502754320420ce59a2c4eae8f759c319545eaf20940c74299",
+   "propagator/sgp4/tests/lib/generated/orbpro/entity/entity-kind.js": "44d79a21eb6b85d68d535fb3967778321292a4981ee48dea0c941be162f427eb",
+   "propagator/sgp4/tests/lib/generated/orbpro/entity/entity-metadata.js": "42225d9f703caa7899cc01b21cca02e3138b5df75eac2357c839f599ef24bdec",
+   "propagator/sgp4/tests/lib/generated/orbpro/heading-pitch-roll.js": "952918eb0ecc3cb9bc10e8fa7d3f3d317781279bbe90d8e175c1cec4332b4283",
+   "propagator/sgp4/tests/lib/generated/orbpro/julian-date.js": "0683fae7eac38d6bd9e167a9b1d85d6039444128047dfe62fdce75f5a61c30bd",
+   "propagator/sgp4/tests/lib/generated/orbpro/matrix3.js": "e85a23c066bc3ccf803f45537193d8a6d01302865220c0d05cb963b1c16123fa",
+   "propagator/sgp4/tests/lib/generated/orbpro/matrix4.js": "097a7c5b2fbd6b6c0d269483a98b1a76d2dc40310778391157fb98c833077b8c",
+   "propagator/sgp4/tests/lib/generated/orbpro/near-far-scalar.js": "a268b7e76f4059562a2d544ff47780b795bf44b0a6341cb4257fabf8d4e450cf",
+   "propagator/sgp4/tests/lib/generated/orbpro/optional-double.js": "725df5e870dc9b677b24e4dab2d8e124231902f584b1b19d9221ff238731818e",
+   "propagator/sgp4/tests/lib/generated/orbpro/plugins.js": "a58b93334b5701d2081672777c760b5b03be4d9b772e38f3f647a1b8edb4eaf5",
+   "propagator/sgp4/tests/lib/generated/orbpro/plugins/propagator-state.js": "f733c4af3ef63d6620f7a86b09949c69cf0f436df498b1a4a221890482c38b70",
+   "propagator/sgp4/tests/lib/generated/orbpro/plugins/reference-frame.js": "40a8002dd2878434b99f94b9e3e3f92b7a59d378b90e28a035b1b3086b83144f",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator.js": "4bff26ec7843c0a62b8598622a85c5ba857e2a181002cca8dbcc81b662c3119d",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/keplerian-elements.js": "4c088335058ec57e7b18ea4435cf39bb4d5b5c5965895e82f3f818d21798829f",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/propagator-batch-request.js": "524875f1d1fdb3885fe3e70f65bf6abfb0f9ae2754eb2ee09ac1ec91eb64f85b",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/propagator-batch-response.js": "4feef954285b00ff4a2df0c23768407806107a4ed83b09e144e5b0f3c95dbe57",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/propagator-init.js": "af81de902806a277cd0676c99cbfd00fa276c0138bc31ab0f9b60af5136cc9c1",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/reference-frame.js": "4b56bed4234ff76322ecc8dfa726cade5084a3ce5a3e1c08a5b1b0ce3726de6b",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/state-flags.js": "75b814cc8bb087fa3295cd451928e2d81cec3a59ca88eec231024790abefc094",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/state-vector.js": "1172aac40be51a8199ec424b1538696258439bb596334c4e1ba3c039029cce3f",
+   "propagator/sgp4/tests/lib/generated/orbpro/propagator/tledata.js": "76649193a456bbed89b3e58991dadae95103941fb2e347d6ef25d98c9b6984fd",
+   "propagator/sgp4/tests/lib/generated/orbpro/quaternion.js": "5695d7dd16b5c1e3627c1f2abfa0df28ba13eac5fb67125f0f173e98cb618e6d",
+   "propagator/sgp4/tests/lib/generated/orbpro/quaternionf.js": "39752f8637b101ff12f7f8ba4b7edac27cb9d3883bf9716cc664d4e4dd5143aa",
+   "propagator/sgp4/tests/lib/generated/orbpro/query.js": "f91d067aefdb9ee76f116c38d0da78b8019cd9b3748201020aa8849ab71a4503",
+   "propagator/sgp4/tests/lib/generated/orbpro/query/catalog-query-kind.js": "88688094a9d21d71a66412b7b72e2c5cd1b48d78f2f941a377ab4e657a9cd96a",
+   "propagator/sgp4/tests/lib/generated/orbpro/query/catalog-query-request.js": "fff486336c305b3e731b6e9522c1c73e08825ecd3ee7204daefa713a6b226b70",
+   "propagator/sgp4/tests/lib/generated/orbpro/query/catalog-query-result.js": "1a6522a5fa87ad1f49e81c2de8e58b2cf1b556060a1b6a03532ed9cd14c527d5",
+   "propagator/sgp4/tests/lib/generated/orbpro/rectangle.js": "23147cfcdcb99b6e6c3efed81f60835e37106698e948d7072dc453ea18c479e7",
+   "propagator/sgp4/tests/lib/generated/orbpro/time-interval.js": "0f2eb1b679e07abd19f8ff79c3bdc618d6345c877c54f2f7fd3786ee61e02645",
+   "propagator/sgp4/tests/lib/generated/orbpro/vec2.js": "8aaa82ca60df9b65d973a66fa5d0728c6ce03858188e773cac19e620e2fd955a",
+   "propagator/sgp4/tests/lib/generated/orbpro/vec2f.js": "2297cd09c50289d8ce6cf6b6c124549453fe72ac57f5e9cb45657fcaba830973",
+   "propagator/sgp4/tests/lib/generated/orbpro/vec3.js": "2a3e77c1c353c067b9f067faa16b872856468252e191a9ecb4246c94ac315679",
+   "propagator/sgp4/tests/lib/generated/orbpro/vec3f.js": "9dcfbb4228f14fbc2f0462da39f53965fc41099b471ed38642abf87b9cfdac4f",
+   "propagator/sgp4/tests/lib/generated/orbpro/vec4.js": "dc3edb1ea8f8f2e296b84a5a1dd00fd51bebcf5599ce70839125a633694a321b",
+   "propagator/sgp4/tests/lib/generated/orbpro/vec4f.js": "27e2a22a2f93c7dad80e4215365c1c1a32e8f28b220f78a12372bf27f34a1a10"
+  },
+  "truthToolFiles": {
+   "analysis/reference-states/dist/isomorphic/module.wasm": "61fde7409de08db0f37d0fcc8c696f2dff10dd04aec3b51453181350c012eb8e",
+   "analysis/reference-states/plugin-manifest.json": "9ced192202720e42b4e8af3705e30c4a99cfc026b130ed449233dcd0493e611f",
+   "files/orbit-products/dist/isomorphic/module.wasm": "1f4118f3958185272dfed18955ab0fb1307192436b868b53223c211afcfa72b8",
+   "files/orbit-products/plugin-manifest.json": "bc79df75e4b8fb0821a516f51c397efc64226f623904671629fb235b3605d9e6",
+   "data-source/eop-parser/dist/isomorphic/module.wasm": "f9628c311bfae18754d0e177892b6ab8da221c87c70c1f5fbf01d06c60b6c5c1",
+   "data-source/eop-parser/plugin-manifest.json": "a2f8a4192ffb0bddb93939475088d005941b253323f1ef1b63d5606e27fde157"
+  },
+  "sds": {
+   "package": "spacedatastandards.org",
+   "version": "1.249.0",
+   "integrity": "sha512-pBquq4h/xEv/UpYHGTnW+ZXGbeVIF/gpgbJBZ1mGmY45f3lUM50FIvFePcxf0OxTQ4zljqRcatcKkcBz7qDqEQ==",
+   "paths": [
+    "package.json",
+    "lib/js",
+    "lib/ts/ERM"
+   ],
+   "treeSha256": "c1f048ba911a3330f6b0c5871ddd2309f2eabed0a0552e229b6bba3fb9215fa4"
+  }
+ },
+ "historyDays": 31,
+ "workers": 6,
+ "dispatchLoadBelow": 64,
+ "maximumLoad": 65,
+ "diskFloorGiB": 30,
+ "extraTruthPrefixes": [
+  "leoOrb_"
+ ],
+ "extraObjects": {
+  "LEO 400-800 km": {
+   "44349": "COSMIC-2",
+   "44350": "COSMIC-2",
+   "44351": "COSMIC-2",
+   "44353": "COSMIC-2",
+   "44358": "COSMIC-2"
+  }
+ },
+ "registeredBy": "claude-apsync-d9",
+ "windows": {
+  "trainingTargetBefore": "2026-10-07T00:00:00Z",
+  "folds": [
+   {
+    "id": "F1",
+    "from": "2026-08-03",
+    "to": "2026-08-09"
+   },
+   {
+    "id": "F2",
+    "from": "2026-08-10",
+    "to": "2026-08-16"
+   },
+   {
+    "id": "F3",
+    "from": "2026-08-17",
+    "to": "2026-08-23"
+   },
+   {
+    "id": "F4",
+    "from": "2026-08-24",
+    "to": "2026-08-30"
+   },
+   {
+    "id": "F5",
+    "from": "2026-08-31",
+    "to": "2026-09-06"
+   },
+   {
+    "id": "F6",
+    "from": "2026-09-07",
+    "to": "2026-09-13"
+   },
+   {
+    "id": "F7",
+    "from": "2026-09-14",
+    "to": "2026-09-20"
+   },
+   {
+    "id": "F8",
+    "from": "2026-09-27",
+    "to": "2026-10-03"
+   }
+  ],
+  "evaluationFolds": {
+   "SGP4": [
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8"
+   ]
+  },
+  "test": [
+   "2026-10-09",
+   "2026-10-20"
+  ],
+  "refreshedFrom": "2026-09-27"
+ },
+ "truth": {
+  "leo": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2",
+  "refreshedDirectory": "truth/reference-finals2000a",
+  "fetch": {
+   "script": "experiments/e3-combined-catalog/truth/fetch-reference-products.mjs",
+   "args": [
+    "--from",
+    "2026-09-26",
+    "--to",
+    "2026-10-23",
+    "--products",
+    "gps-esa,slr,slr-daily,sentinel1,swarm"
+   ],
+   "eopFile": "/opt/data/sdn-archive/hac/iers-eop/2026/2026-10-21/finals.daily.iau2000.txt",
+   "eopFileSha256": "4fc3bfa6db5f28295104100cda9b35deca765e39cdd68025ed5f658bb00217d6"
+  },
+  "downloadCache": "truth/download-cache"
+ },
+ "minimumSamples": 30,
+ "minimumObjects": 3,
+ "coverage": 0.95,
+ "events": {
+  "lookbackDays": 45,
+  "windowDays": 7,
+  "staleFloorDays": 3,
+  "staleFactor": 3,
+  "minimumGapsForMedian": 4,
+  "detector": {
+   "module": "analysis/maneuver-detection",
+   "version": "0.8.0",
+   "minimumSets": 8,
+   "gridStepSeconds": 60,
+   "neighbourSets": 2,
+   "detectors": "defaults (D1, D2, merged)"
+  },
+  "verificationSample": 40
+ },
+ "tolerances": {
+  "covarianceSymmetryRelative": 1e-10,
+  "zeroTimeCovarianceRelative": 1e-08,
+  "identityCalibrationRelative": 1e-10,
+  "transportSumRelative": 1e-08
+ },
+ "bootstrap": {
+  "resamples": 2000,
+  "seed": 20261017,
+  "confidence": 0.95
+ },
+ "task": "console-covariance-calibration-v1c5-20261025",
+ "registeredUtc": "2026-10-26T00:00:00Z",
+ "durableRunDirectory": "/opt/data/sdn-archive/v1c5",
+ "modes": [
+  "SGP4"
+ ],
+ "stages": {
+  "A": "data protocol, training arcs and event flags (this file)",
+  "B": "candidates and selection rule (candidates.json, registered before any candidate is fitted)",
+  "C": "test (after the selection is pushed)"
+ }
+}
