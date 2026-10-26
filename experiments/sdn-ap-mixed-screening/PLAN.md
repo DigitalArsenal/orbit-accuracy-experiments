@@ -499,3 +499,14 @@ covariance lines (a synthetic crossing, 50 m at 1 km/s with 100 m sigmas: 0.0093
    on the same track; and how much of FFM's reduced chi-square tail the maneuver flag accounts for.
 3. **Defects, filed and not fixed here.** modules-ffm-fit-batch-round1-out-of-range-20261026 (A3's round-1
    refusals by propagator/ffm); modules-ca-assess-conjunction-tca-window-edge-20261026 (the reason for A9).
+
+### A11 - 2026-10-26, committed at 14:04 UTC, before any score of part 1a: A10's second fetch could not depend on truth
+
+The second fetch of A10 could not depend on truth: F is fixed by identity (its name, its ETag and the SHA-256
+of its first 262,144 bytes, as the capture recorded them at the forecast cycle), so the fetch can return F or
+nothing, and SpaceX's file F is an immutable record issued before E. No truth epoch was read in deciding to
+fetch or in selecting the files: the decision used only the first fetch's first epochs against F's (both
+forecast files, not truth), and the files are the registered sample. Disclosed for completeness: before A5,
+while studying the capture's layout, the start times and state counts of one satellite's newer files (NORAD
+44714) were printed; no truth state was read. Satellite 44968's F is a 48 h file, so its forecast arm covers
+bins 1 and 2 only, counted as such.
