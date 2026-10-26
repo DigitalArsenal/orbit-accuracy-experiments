@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { config,root,results,options,newRun,guard,git,read,sha } from './common.mjs';
+import { config,artifacts,root,results,options,newRun,guard,git,read,sha } from './common.mjs';
 import { windows,loadArc } from './truth.mjs';
 import { wire } from './wire.mjs';
 import { environment } from './environment.mjs';
@@ -20,7 +20,7 @@ async function verify() {
   for(const manifest of [p.orbit,p.pc]){
     assert(manifest.completedUtc,'completed run required');
     assert.equal(manifest.moduleCommit,config.moduleCommit);
-    assert.deepEqual(manifest.artifacts,config.modules);
+    assert.deepEqual(manifest.artifacts,artifacts);
     for(const [file,info] of Object.entries(manifest.plan))assert.equal(sha(git(root,'show',`${info.commit}:experiments/${config.id}/${file}`)),info.sha256,`immutable frozen ${file}`);
     for(const [file,digest] of Object.entries(manifest.sourceHashes))assert.equal(sha(git(root,'show',`${manifest.experimentCommit}:experiments/${config.id}/${file}`)),digest,`immutable source ${file}`);
     for(const [file,digest] of Object.entries(manifest.helperHashes)){

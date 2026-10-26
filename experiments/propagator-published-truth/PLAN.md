@@ -45,3 +45,18 @@ Run all 21 NASA-derived 2D Pc cases through compute_pc, converting km/km2 to m/m
 3. Generate aggregate JSON and a report from local rows. Never commit raw ephemerides or per-sample rows.
 4. One E2E replays representative real arcs and all Pc cases, checks pins and provenance, and regenerates the report exactly. Reproducibility passing does not turn a failed scientific hypothesis into a pass.
 5. Run the repository gauntlet, push the task ref, land on remote main, verify the SHA and close the task. No production deployment.
+
+## Amendment 2026-10-26: timestamp consistency audit
+
+Integration inspection showed that FFM returns TDB timestamp labels for UTC
+requests. Add foundation/time at the same pinned module commit, artifact SHA-256
+`61abbb27a8358b05a1141bb983fcf1f6b5a89ba41793dece0bccf1678a4d02ed`,
+solely to validate returned labels against the requested grid. Convert the
+explicit returned scale to UTC through that module, accepting at most 1 ms
+label disagreement for differing TDB approximations and serialization. States
+are still evaluated on the exact requested grid; no state shifting or
+interpolation is added. This check is registered before examining its converted
+offsets. Scoring, truth matching, forces and scientific acceptance are unchanged.
+The final full run also explicitly converts OEM km/km² to the scorer's required
+SI units, replacing the integration diagnostic's consistent-but-noncontractual
+km inputs. Re-run all registered arcs after these adapter corrections.

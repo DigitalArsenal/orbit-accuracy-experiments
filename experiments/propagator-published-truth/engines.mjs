@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { loadModule } from '../../harness/modules.mjs';
+import { convertIso } from '../../harness/time.mjs';
 import { fitOrbit, propagateFit } from '../e6-public-observations/fit.mjs';
 import { estimationCodec } from '../e2-catalog-covariance/estimation-wire.mjs';
 import { config, root, cpu } from './common.mjs';
@@ -9,7 +10,7 @@ import { config, root, cpu } from './common.mjs';
 export async function engines(run,W) {
   const {createStandaloneHarness}=await import(pathToFileURL(W.req.resolve('space-data-module-sdk/testing/isomorphic')).href);
   const ap=await createStandaloneHarness('browser',path.join(run.modules,'propagator/sdn-ap/dist/isomorphic/module.wasm'),{surface:'direct'});
-  const ffm=await loadModule(run.modules,'propagator/ffm'),estimation=await loadModule(run.modules,'analysis/estimation'),gem=await loadModule(run.modules,'analysis/gp-error-model');
+  const ffm=await loadModule(run.modules,'propagator/ffm'),estimation=await loadModule(run.modules,'analysis/estimation'),gem=await loadModule(run.modules,'analysis/gp-error-model'),time=await loadModule(run.modules,'foundation/time');
   const erm=await import(pathToFileURL(path.join(run.modules,'analysis/gp-error-model/scripts/erm-codec.mjs')).href);
   const codec=await estimationCodec(run.modules,path.join(root,'node_modules/space-data-module-sdk/schemas/orbpro'));
   const invoke=async(methodId,inputs)=>{const r=await ap.invoke({methodId,inputs});if(r.statusCode!==0)throw new Error(`${methodId}: ${r.errorCode}: ${r.errorMessage}`);return r;};
@@ -42,8 +43,18 @@ export async function engines(run,W) {
         fit={epoch:product.epoch,parameters:product.parameters,reducedChiSquare:product.fit.reducedChiSquare,iterations:product.fit.iterations,ffmCalls:product.ffmCalls,stoppedBy:product.stoppedBy};
         timing.fitWallSeconds=(performance.now()-start)/1000;timing.fitCpuSeconds=cpu()-cpu0;
         const t=performance.now(),c=cpu(),scale=Math.max(1,product.fit.reducedChiSquare??1);
-        const samples=await propagateFit(ctx,{epoch:product.epoch,state:product.state,parameters:product.parameters},arc.score.map(l=>l.epoch),s,product.fit.covariance.map(x=>x*scale));
-        pred=samples.map(s=>({epoch:W.utc(s.epoch),ms:Date.parse(W.utc(s.epoch)),r:s.state.slice(0,3).map(x=>x/1000),v:s.state.slice(3).map(x=>x/1000),covariance:s.covariance?Array.from({length:36},(_,k)=>s.covariance[Math.floor(k/6)*s.n+k%6]*1e-6):null}));
+        let metadata;
+        const checked={invoke:async(...args)=>{const out=await ffm.invoke(...args);metadata=W.unpack(W.PRW,'PRW',out.outputs.find(o=>o.portId==='response').payload).EXECUTION_RESULT.SAMPLES.map(s=>({epoch:s.STATE.STATE.EPOCH,scale:s.STATE.STATE.EPOCH_TIME_SYSTEM,frame:s.STATE.STATE.COORDINATE_SYSTEM_NAME}));return out;}};
+        const samples=await propagateFit({...ctx,ffm:checked},{epoch:product.epoch,state:product.state,parameters:product.parameters},arc.score.map(l=>l.epoch),s,product.fit.covariance.map(x=>x*scale));
+        let maxLabelOffsetMs=0;
+        for(let i=0;i<samples.length;i++){
+          if(metadata[i].frame!=='GCRF'||metadata[i].epoch!==samples[i].epoch)throw new Error('FFM returned inconsistent frame/epoch metadata');
+          const converted=W.utc(await convertIso(time,metadata[i].epoch,metadata[i].scale,'UTC')),offset=Math.abs(Date.parse(converted)-arc.score[i].ms);
+          if(!Number.isFinite(offset)||offset>1)throw new Error(`FFM epoch mismatch after ${metadata[i].scale}->UTC: ${converted} vs ${arc.score[i].epoch}`);
+          maxLabelOffsetMs=Math.max(maxLabelOffsetMs,offset);
+        }
+        fit.maximumReturnedEpochLabelOffsetMs=maxLabelOffsetMs;
+        pred=samples.map((s,i)=>({epoch:arc.score[i].epoch,ms:arc.score[i].ms,r:s.state.slice(0,3).map(x=>x/1000),v:s.state.slice(3).map(x=>x/1000),covariance:s.covariance?Array.from({length:36},(_,k)=>s.covariance[Math.floor(k/6)*s.n+k%6]*1e-6):null}));
         timing.propagateWallSeconds=(performance.now()-t)/1000;timing.propagateCpuSeconds=cpu()-c;
       }
       if(pred.length!==arc.score.length)throw new Error(`returned ${pred.length} states for ${arc.score.length} epochs`);
@@ -70,6 +81,6 @@ export async function engines(run,W) {
       }
       return {ok:true,fit,timing,days};
     },
-    async close(){await ap.destroy?.();await ffm.destroy();await estimation.destroy();await gem.destroy();}
+    async close(){await ap.destroy?.();await ffm.destroy();await estimation.destroy();await gem.destroy();await time.destroy();}
   };
 }
