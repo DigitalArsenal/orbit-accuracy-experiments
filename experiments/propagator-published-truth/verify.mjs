@@ -17,6 +17,7 @@ async function verify() {
   guard(opts.modules);
   const p=read(path.join(results,'provenance.json')),summary=read(path.join(results,'summary.json')),pc=read(path.join(results,'pc.json'));
   for(const [file,digest] of Object.entries(p.outputs))assert.equal(sha(fs.readFileSync(path.join(results,file))),digest,`output hash: ${file}`);
+  for(const [file,info] of Object.entries(p.presentation))assert.equal(sha(git(root,'show',`${info.commit}:experiments/${config.id}/${file}`)),info.sha256,`immutable chart source ${file}`);
   for(const manifest of [p.orbit,p.pc]){
     assert(manifest.completedUtc,'completed run required');
     assert.equal(manifest.moduleCommit,config.moduleCommit);

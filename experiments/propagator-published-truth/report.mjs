@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { config,root,results,read,sha } from './common.mjs';
+import { execFileSync } from 'node:child_process';
+import { config,root,results,read,sha,git } from './common.mjs';
 import { windows } from './truth.mjs';
 
 const finite = x => typeof x === 'number' && Number.isFinite(x);
@@ -80,7 +81,7 @@ export function markdown(out,pc,manifest) {
     `FFM/XP-native median paired trajectory-error ratios at 1/3/7 days are **${comparisons.map(p=>ratio(p.medianRatio)).join(' / ')}**, on ${comparisons[0].arcs} successful common arcs. Lower is better. Read these alongside the failures and covariance evidence: a smaller trajectory error alone does not establish trustworthy Pc.`, '',
     `NASA CARA 2D Foster Pc: **${pc.passed}/${pc.cases.length} pass**, using unchanged upstream tolerances. This verifies the integral, not orbit prediction, covariance calibration or operational collision risk.`,
     '',`Orbit exclusions: ${out.exclusions.length}. Failed arm/arc attempts: ${out.failures.length}. SDN-AP contains white-room XP at this pin: “XP-native” and “AP-MSIS” are two configurations of that module. USSF WASM is excluded following the independently reproduced invalid/order-dependent behavior in the [earlier study](../propagator-ca-frontier/README.md).`,
-    '', '## Trajectory accuracy','', 'Median final-day position RMS in metres, across arcs. Each cell uses that arm’s successful arcs; paired comparisons below use identical support. P90, R/T/N components, exact-lead errors and all counts are in [summary.json](summary.json).','',
+    '', '## Trajectory accuracy','', '![Median forecast error by family and lead](accuracy.svg)','', 'Median final-day position RMS in metres, across arcs. Each cell uses that arm’s successful arcs; paired comparisons below use identical support. P90, R/T/N components, exact-lead errors and all counts are in [summary.json](summary.json).','',
     '| Family | Lead | XP-native | AP-MSIS | FFM | Successful arcs XP/AP/FFM |','|---|---:|---:|---:|---:|---|'];
   for(const [family,f] of Object.entries(out.families).filter(([n])=>n!=='All'))for(const [lead,l] of Object.entries(f.leads))lines.push(`| ${family} | ${lead} d | ${config.arms.map(a=>number(l.arms[a].medianRmsM)).join(' | ')} | ${config.arms.map(a=>l.arms[a].successful).join('/')} |`);
   lines.push('','## Matched comparisons','','Pooled median per-arc RMS ratios, with object-cluster bootstrap intervals. A ratio below one favors the numerator. These exploratory pooled results do not establish superiority in every orbit family. Each family has fewer than five objects and is descriptive only. Failure rates remain part of the result.','','| Comparison | Lead | Common arcs | Ratio | 95% interval | Decision |','|---|---:|---:|---:|---|---|');
@@ -101,7 +102,7 @@ export function markdown(out,pc,manifest) {
     '', 'No force model was trimmed or tuned against these scores. DCA/prior merit remains in the separately owned XM study. The scope does not test conjunction screening, TCA search, 3D Pc, Monte Carlo Pc or calibration against physical collisions.',
     '', '## Reproduce','', 'The original [frozen plan](../../experiments/propagator-published-truth/PLAN.md) and [configuration](../../experiments/propagator-published-truth/config.json) preceded state access. Integration corrected the weather record constructor, UTC parsing and explicit SI scorer inputs. A dated appended amendment adds a pinned time-module check of FFM’s TDB output labels against the requested UTC grid, within 1 ms; no state shifting or interpolation is performed. All arcs were rerun with these corrections. Scientific scoring, selection and physics were unchanged.',
     '', '```sh', 'node experiments/propagator-published-truth/run.mjs --modules "$SDN_MODULES_ROOT" --run registered', 'node experiments/propagator-published-truth/pc.mjs --modules "$SDN_MODULES_ROOT" --run pc-registered', 'node experiments/propagator-published-truth/report.mjs --run registered', 'node experiments/propagator-published-truth/verify.mjs --modules "$SDN_MODULES_ROOT"', '```',
-    '', 'Run names must be fresh. The real local archive and pinned module checkout are required; missing data is a visible skip, never a pass. The E2E checks provenance, replays the first registered arc of each family and all 21 Pc cases, and regenerates aggregates/report exactly. Raw ephemerides and per-epoch tables are not committed.',
+    '', 'Run names must be fresh. The real local archive and pinned module checkout are required; missing data is a visible skip, never a pass. The E2E checks provenance, replays the first registered arc of each family and all 21 Pc cases, and regenerates aggregates/report exactly. The report renders the chart with `uv` and locked Matplotlib dependencies. Raw ephemerides and per-epoch tables are not committed.',
     '', 'Sources: [ESA/TU Delft Swarm product catalogue](https://swarm-disc.github.io/product-catalogue-tools/SW_SP3xCOM_2_.html), [Copernicus POD](https://sentiwiki.copernicus.eu/web/precise-orbit-determination), [GFZ GRACE-FO](https://isdc-data.gfz.de/grace-fo/), [NASA CARA software](https://www.nasa.gov/cara/publicly-available-cara-software/).','');
   return lines.join('\n');
 }
@@ -110,13 +111,16 @@ export function report(runName='registered',check=false) {
   if(!manifest.completedUtc)throw new Error('orbit run has not completed');
   const rows=windows().map(w=>read(path.join(dir,'rows',`${w.key}.json`))),pcDir=path.join(root,'runs',config.id,`pc-${runName}`),pc=read(path.join(pcDir,'pc.json')),pcManifest=read(path.join(pcDir,'manifest.json'));
   const out=aggregate(rows),provenance={orbit:manifest,pc:pcManifest,rows:Object.fromEntries(windows().map(w=>[w.key,sha(fs.readFileSync(path.join(dir,'rows',`${w.key}.json`)))])),
-    archive:rows.map(r=>({key:r.key,weather:r.weather,audit:r.audit})),outputs:{'summary.json':sha(JSON.stringify(out,null,2)+'\n'),'pc.json':sha(JSON.stringify(pc,null,2)+'\n')}};
+    archive:rows.map(r=>({key:r.key,weather:r.weather,audit:r.audit})),presentation:Object.fromEntries(['plot.py','plot.py.lock'].map(file=>{const rel=`experiments/${config.id}/${file}`;return [file,{commit:git(root,'log','-1','--format=%H','--',rel).toString().trim(),sha256:sha(fs.readFileSync(path.join(root,rel)))}];})),outputs:{'summary.json':sha(JSON.stringify(out,null,2)+'\n'),'pc.json':sha(JSON.stringify(pc,null,2)+'\n')}};
   const files={'summary.json':JSON.stringify(out,null,2)+'\n','pc.json':JSON.stringify(pc,null,2)+'\n','provenance.json':JSON.stringify(provenance,null,2)+'\n','README.md':markdown(out,pc,manifest)};
   fs.mkdirSync(results,{recursive:true});
   for(const [name,bytes] of Object.entries(files)){
     const f=path.join(results,name);
     if(check){if(fs.readFileSync(f,'utf8')!==bytes)throw new Error(`report differs: ${name}`);}else fs.writeFileSync(f,bytes);
   }
+  const figure=path.join(results,'accuracy.svg'),before=check?fs.readFileSync(figure):null;
+  execFileSync('uv',['run','--locked',path.join(root,`experiments/${config.id}/plot.py`)],{cwd:root,stdio:'pipe'});
+  if(check&&!before.equals(fs.readFileSync(figure)))throw new Error('figure regeneration differs');
   return out;
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const {values}=parseArgs({options:{run:{type:'string',default:'registered'}}});if(!/^[a-zA-Z0-9._-]+$/.test(values.run))throw new Error('invalid run name');report(values.run);console.log(`Wrote ${results}`);}
