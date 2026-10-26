@@ -94,3 +94,23 @@ created after it. Source versions with the same upstream product hash and object
 are deduplicated by the configured reference-root order, with every conversion
 retained in the inventory. Mixed reconstructed/predicted ultra-rapid products
 remain visibly unscored until their portions are explicitly separated.
+
+## Amendment — 2026-10-26: sample operator records at their actual epochs
+
+The full metadata census exposed a scheduling mismatch: Starlink's ten-minute
+record grids shift by several minutes between successive products. The pilot's
+45-second selection tolerance admitted only 91 of 11,170 identities, although
+11,163 have fit/forecast span coverage. This amendment is motivated by timestamp
+metadata, not model residuals. Preserve the strict-grid run separately under
+`catalog`; run the corrected census as `catalog-epochs` without mixing outcomes.
+
+For operator heads only, select the nearest recorded state within half the
+source's ten-minute sampling interval (300 seconds), retaining its exact epoch.
+Every propagator is requested and scored at those actual epochs. There is no
+state interpolation, epoch relabeling, approximate propagation or change to
+the error metric. Keep the 24-hour fit, 90% minimum sample coverage, nominal
+10-/30-minute thinning, issue/publication chronology and every force. Require
+unique selected records, and keep fit and scoring samples within their
+respective windows. The exact-lead covariance statistic retains its original
+45-second tolerance. Precise-reference sampling is unchanged. All coverage
+failures remain visible. Register this amendment before the corrected run.
