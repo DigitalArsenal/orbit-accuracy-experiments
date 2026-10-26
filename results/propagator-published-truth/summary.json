@@ -2472,14 +2472,7 @@
                 2063.1252999819058,
                 156.91094444840866
               ],
-              "denseCoverage95": 0.4791666666666667,
-              "exact": {
-                "positionErrorM": 3220.923610671993,
-                "d2Combined": 11.95101447079637,
-                "d2Predicted": 11.951014486292285,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.4791666666666667
             },
             "3": {
               "samples": 48,
@@ -2489,14 +2482,7 @@
                 9442.324098213476,
                 153.54764219853774
               ],
-              "denseCoverage95": 0.3541666666666667,
-              "exact": {
-                "positionErrorM": 11650.450465342989,
-                "d2Combined": 12.58965854679037,
-                "d2Predicted": 12.589658563675592,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3541666666666667
             },
             "7": {
               "samples": 48,
@@ -2506,14 +2492,7 @@
                 60170.09353774627,
                 167.96835209492818
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 71055.39736336212,
-                "d2Combined": 13.279321192025785,
-                "d2Predicted": 13.279321196035175,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -2538,14 +2517,7 @@
                 2056.1687451149496,
                 156.91387843677623
               ],
-              "denseCoverage95": 0.4791666666666667,
-              "exact": {
-                "positionErrorM": 3208.70549559665,
-                "d2Combined": 11.88816455808849,
-                "d2Predicted": 11.888164573409515,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.4791666666666667
             },
             "3": {
               "samples": 48,
@@ -2555,14 +2527,7 @@
                 9468.006998418468,
                 153.55504866943892
               ],
-              "denseCoverage95": 0.3541666666666667,
-              "exact": {
-                "positionErrorM": 11701.36778970124,
-                "d2Combined": 12.591486302988077,
-                "d2Predicted": 12.591486319630736,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3541666666666667
             },
             "7": {
               "samples": 48,
@@ -2572,14 +2537,7 @@
                 61248.00603150698,
                 168.02358668051014
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 72387.44664132714,
-                "d2Combined": 13.281364829732043,
-                "d2Predicted": 13.281364833315957,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -2604,14 +2562,7 @@
                 104.61635830089419,
                 0.4499208232096299
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 134.90309811909327,
-                "d2Combined": 1545.1110279410068,
-                "d2Predicted": 1545.1767152838704,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -2621,14 +2572,7 @@
                 2083.5932992192397,
                 1.5844339364268862
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 3059.86406825168,
-                "d2Combined": 24569.64181548677,
-                "d2Predicted": 24569.660500915747,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -2638,14 +2582,7 @@
                 6686.328025311216,
                 2.687917233376804
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 10336.435374984656,
-                "d2Combined": 13994.052873975228,
-                "d2Predicted": 13994.373598176315,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -2699,14 +2636,7 @@
                 1790.085503714875,
                 169.5217965011171
               ],
-              "denseCoverage95": 0.5,
-              "exact": {
-                "positionErrorM": 3050.912573116895,
-                "d2Combined": 8.890128650817278,
-                "d2Predicted": 8.890128656812745,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5
             },
             "3": {
               "samples": 48,
@@ -2716,14 +2646,7 @@
                 8364.982384748484,
                 164.34090582613646
               ],
-              "denseCoverage95": 0.3958333333333333,
-              "exact": {
-                "positionErrorM": 10330.987999646177,
-                "d2Combined": 9.502312383637419,
-                "d2Predicted": 9.502312394619976,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3958333333333333
             },
             "7": {
               "samples": 48,
@@ -2733,14 +2656,7 @@
                 34096.16678800203,
                 154.93593421004107
               ],
-              "denseCoverage95": 0.4375,
-              "exact": {
-                "positionErrorM": 39656.53842496479,
-                "d2Combined": 15.398941755377178,
-                "d2Predicted": 15.398941769573801,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.4375
             }
           },
           "timing": {
@@ -2765,14 +2681,7 @@
                 1774.4947515936694,
                 169.52241454967208
               ],
-              "denseCoverage95": 0.5,
-              "exact": {
-                "positionErrorM": 3022.966445829119,
-                "d2Combined": 8.816954274148584,
-                "d2Predicted": 8.816954280273269,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5
             },
             "3": {
               "samples": 48,
@@ -2782,14 +2691,7 @@
                 8294.419738129602,
                 164.3399697828239
               ],
-              "denseCoverage95": 0.3958333333333333,
-              "exact": {
-                "positionErrorM": 10256.846435163277,
-                "d2Combined": 9.567364939675707,
-                "d2Predicted": 9.567364950913545,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3958333333333333
             },
             "7": {
               "samples": 48,
@@ -2799,14 +2701,7 @@
                 34388.23513341642,
                 154.93966997100605
               ],
-              "denseCoverage95": 0.4166666666666667,
-              "exact": {
-                "positionErrorM": 40079.06235056135,
-                "d2Combined": 15.823244536716915,
-                "d2Predicted": 15.823244551334058,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.4166666666666667
             }
           },
           "timing": {
@@ -2831,14 +2726,7 @@
                 97.04430679467386,
                 0.5174297811569131
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 204.55496423627102,
-                "d2Combined": 7418.741750247316,
-                "d2Predicted": 7419.254897614026,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -2848,14 +2736,7 @@
                 415.18424466066006,
                 1.2464019108216158
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 562.0613757966753,
-                "d2Combined": 2273.3171025202014,
-                "d2Predicted": 2273.3861195464756,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -2865,14 +2746,7 @@
                 2857.362305182301,
                 3.9622499943890914
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 2677.8366873308432,
-                "d2Combined": 2341.807530092,
-                "d2Predicted": 2342.341738211842,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -2926,14 +2800,7 @@
                 1174.9351286079286,
                 173.28012302964103
               ],
-              "denseCoverage95": 0.9166666666666666,
-              "exact": {
-                "positionErrorM": 1437.926317593171,
-                "d2Combined": 6.847140781547874,
-                "d2Predicted": 6.847140792150502,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9166666666666666
             },
             "3": {
               "samples": 48,
@@ -2943,14 +2810,7 @@
                 3391.231606418312,
                 172.4921588261094
               ],
-              "denseCoverage95": 0.8333333333333334,
-              "exact": {
-                "positionErrorM": 3601.955011437931,
-                "d2Combined": 6.391967595742713,
-                "d2Predicted": 6.391967606857658,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.8333333333333334
             },
             "7": {
               "samples": 48,
@@ -2960,14 +2820,7 @@
                 1754.1237834437873,
                 173.11006885733508
               ],
-              "denseCoverage95": 0.625,
-              "exact": {
-                "positionErrorM": 2863.186023413879,
-                "d2Combined": 6.545295820932327,
-                "d2Predicted": 6.545295830795534,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.625
             }
           },
           "timing": {
@@ -2992,14 +2845,7 @@
                 1159.7125171052626,
                 173.28059136897724
               ],
-              "denseCoverage95": 0.9166666666666666,
-              "exact": {
-                "positionErrorM": 1405.4726921722133,
-                "d2Combined": 6.809740832117059,
-                "d2Predicted": 6.809740842792107,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9166666666666666
             },
             "3": {
               "samples": 48,
@@ -3009,14 +2855,7 @@
                 3290.160084592481,
                 172.4942919253861
               ],
-              "denseCoverage95": 0.8333333333333334,
-              "exact": {
-                "positionErrorM": 3477.1981219819704,
-                "d2Combined": 6.468265803237305,
-                "d2Predicted": 6.468265814595394,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.8333333333333334
             },
             "7": {
               "samples": 48,
@@ -3026,14 +2865,7 @@
                 1747.7719105713309,
                 173.14022569708516
               ],
-              "denseCoverage95": 0.6041666666666666,
-              "exact": {
-                "positionErrorM": 2889.323942159073,
-                "d2Combined": 6.807091400524849,
-                "d2Predicted": 6.807091410784822,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6041666666666666
             }
           },
           "timing": {
@@ -3058,14 +2890,7 @@
                 167.07984671665997,
                 1.426154519230905
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 352.9009675143084,
-                "d2Combined": 5285.121080699708,
-                "d2Predicted": 5285.440776131516,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -3075,14 +2900,7 @@
                 2173.7158240336157,
                 2.885976928090853
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 3160.602115864269,
-                "d2Combined": 13772.691177022829,
-                "d2Predicted": 13772.890001938504,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -3092,14 +2910,7 @@
                 23288.972018961387,
                 5.5628117856471055
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 28452.312777637795,
-                "d2Combined": 83611.58281420759,
-                "d2Predicted": 83619.91632851111,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3153,14 +2964,7 @@
                 1626.5191135261207,
                 159.38406443102622
               ],
-              "denseCoverage95": 0.6666666666666666,
-              "exact": {
-                "positionErrorM": 2309.1775556983976,
-                "d2Combined": 4.248818615632594,
-                "d2Predicted": 4.2488186163952975,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6666666666666666
             },
             "3": {
               "samples": 48,
@@ -3170,14 +2974,7 @@
                 13146.321991400015,
                 163.94206005497708
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 17248.696835011997,
-                "d2Combined": 18.028358437691356,
-                "d2Predicted": 18.028358464444572,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -3187,14 +2984,7 @@
                 62674.74570567108,
                 167.60821121514812
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 70745.3440442082,
-                "d2Combined": 24.439073754057837,
-                "d2Predicted": 24.43907378412835,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3219,14 +3009,7 @@
                 1626.5191135261207,
                 159.38406443102622
               ],
-              "denseCoverage95": 0.6666666666666666,
-              "exact": {
-                "positionErrorM": 2309.1775556983976,
-                "d2Combined": 4.265126447709333,
-                "d2Predicted": 4.265126448480408,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6666666666666666
             },
             "3": {
               "samples": 48,
@@ -3236,14 +3019,7 @@
                 13146.321991400015,
                 163.94206005497708
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 17248.696835011997,
-                "d2Combined": 17.976507018072134,
-                "d2Predicted": 17.976507044518133,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -3253,14 +3029,7 @@
                 62674.74570567108,
                 167.60821121514812
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 70745.3440442082,
-                "d2Combined": 24.36856739552638,
-                "d2Predicted": 24.368567425591486,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3285,14 +3054,7 @@
                 77.205135605569,
                 0.3581891012514264
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 125.19543599112413,
-                "d2Combined": 6460.374216503432,
-                "d2Predicted": 6524.712901292171,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -3302,14 +3064,7 @@
                 537.4735319188139,
                 0.5617143641857373
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 829.867255669168,
-                "d2Combined": 3898.6617114624264,
-                "d2Predicted": 3898.695639724405,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -3319,14 +3074,7 @@
                 4264.342275100043,
                 1.8539889700586993
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 5933.698464278429,
-                "d2Combined": 10036.86653984794,
-                "d2Predicted": 10041.566407083703,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3380,14 +3128,7 @@
                 1225.4286259274413,
                 163.46466568829354
               ],
-              "denseCoverage95": 0.7708333333333334,
-              "exact": {
-                "positionErrorM": 1411.6625624476424,
-                "d2Combined": 2.1369200006113442,
-                "d2Predicted": 2.136920002946117,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.7708333333333334
             },
             "3": {
               "samples": 48,
@@ -3397,14 +3138,7 @@
                 8597.71755783294,
                 160.97437204240782
               ],
-              "denseCoverage95": 0.5625,
-              "exact": {
-                "positionErrorM": 11256.70338648796,
-                "d2Combined": 6.299598409358908,
-                "d2Predicted": 6.299598412846607,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5625
             },
             "7": {
               "samples": 48,
@@ -3414,14 +3148,7 @@
                 42353.94356237106,
                 173.5905500256572
               ],
-              "denseCoverage95": 0.3333333333333333,
-              "exact": {
-                "positionErrorM": 47307.94863722702,
-                "d2Combined": 9.003347419540612,
-                "d2Predicted": 9.0033474259501,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3333333333333333
             }
           },
           "timing": {
@@ -3446,14 +3173,7 @@
                 1225.4285673001689,
                 163.46466553835876
               ],
-              "denseCoverage95": 0.7708333333333334,
-              "exact": {
-                "positionErrorM": 1411.662586218181,
-                "d2Combined": 2.147198931174816,
-                "d2Predicted": 2.1471989335097112,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.7708333333333334
             },
             "3": {
               "samples": 48,
@@ -3463,14 +3183,7 @@
                 8597.717439171125,
                 160.97437268619493
               ],
-              "denseCoverage95": 0.5416666666666666,
-              "exact": {
-                "positionErrorM": 11256.703014220227,
-                "d2Combined": 6.349321602380784,
-                "d2Predicted": 6.349321605860182,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5416666666666666
             },
             "7": {
               "samples": 48,
@@ -3480,14 +3193,7 @@
                 42353.9434580915,
                 173.59055184190524
               ],
-              "denseCoverage95": 0.3333333333333333,
-              "exact": {
-                "positionErrorM": 47307.94809709587,
-                "d2Combined": 9.048798018019795,
-                "d2Predicted": 9.048798024447008,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3333333333333333
             }
           },
           "timing": {
@@ -3512,14 +3218,7 @@
                 46.82040678091843,
                 0.8533188003308375
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 94.42656122490938,
-                "d2Combined": 1554.6696227436707,
-                "d2Predicted": 1554.942152612106,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -3529,14 +3228,7 @@
                 163.79918461988657,
                 2.2953337077412157
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 244.78547988280388,
-                "d2Combined": 1800.0791521307985,
-                "d2Predicted": 1801.9956281467703,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -3546,14 +3238,7 @@
                 1193.9207167933428,
                 4.01438951247806
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1164.8927059950468,
-                "d2Combined": 1216.1804962799638,
-                "d2Predicted": 1217.580732181185,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3607,14 +3292,7 @@
                 1418.9739271277422,
                 167.71699603127448
               ],
-              "denseCoverage95": 0.75,
-              "exact": {
-                "positionErrorM": 2142.889340034796,
-                "d2Combined": 6.240307998345231,
-                "d2Predicted": 6.240308002712126,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.75
             },
             "3": {
               "samples": 48,
@@ -3624,14 +3302,7 @@
                 9029.799678180296,
                 155.0971801993483
               ],
-              "denseCoverage95": 0.5208333333333334,
-              "exact": {
-                "positionErrorM": 11052.83992664777,
-                "d2Combined": 6.239803113970263,
-                "d2Predicted": 6.239803116452466,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5208333333333334
             },
             "7": {
               "samples": 48,
@@ -3641,14 +3312,7 @@
                 43807.63538943932,
                 160.6665282899131
               ],
-              "denseCoverage95": 0.3958333333333333,
-              "exact": {
-                "positionErrorM": 49812.998200680784,
-                "d2Combined": 25.083793430903732,
-                "d2Predicted": 25.083793491941204,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3958333333333333
             }
           },
           "timing": {
@@ -3673,14 +3337,7 @@
                 1418.9739271277422,
                 167.71699603127448
               ],
-              "denseCoverage95": 0.75,
-              "exact": {
-                "positionErrorM": 2142.889340034796,
-                "d2Combined": 6.278690333177554,
-                "d2Predicted": 6.278690337558261,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.75
             },
             "3": {
               "samples": 48,
@@ -3690,14 +3347,7 @@
                 9029.799678180296,
                 155.0971801993483
               ],
-              "denseCoverage95": 0.5208333333333334,
-              "exact": {
-                "positionErrorM": 11052.83992664777,
-                "d2Combined": 6.304625268236264,
-                "d2Predicted": 6.304625270710464,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5208333333333334
             },
             "7": {
               "samples": 48,
@@ -3707,14 +3357,7 @@
                 43807.63538943932,
                 160.6665282899131
               ],
-              "denseCoverage95": 0.375,
-              "exact": {
-                "positionErrorM": 49812.998200680784,
-                "d2Combined": 25.12809462313016,
-                "d2Predicted": 25.128094684113684,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.375
             }
           },
           "timing": {
@@ -3739,14 +3382,7 @@
                 44.772191230233325,
                 0.7603536769971188
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 91.64756045226727,
-                "d2Combined": 1600.3713045223842,
-                "d2Predicted": 1600.73869684282,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -3756,14 +3392,7 @@
                 608.0896873066171,
                 1.4639544740417727
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 914.525374080936,
-                "d2Combined": 4972.318409272701,
-                "d2Predicted": 4973.0495920654175,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -3773,14 +3402,7 @@
                 7456.093107267076,
                 1.4156361491007445
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 9228.782487038327,
-                "d2Combined": 22958.545779615906,
-                "d2Predicted": 22959.238732579666,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3834,14 +3456,7 @@
                 2242.279157601308,
                 154.57063252976272
               ],
-              "denseCoverage95": 0.4375,
-              "exact": {
-                "positionErrorM": 3622.187237975208,
-                "d2Combined": 13.118278246263342,
-                "d2Predicted": 13.118278259079348,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.4375
             },
             "3": {
               "samples": 48,
@@ -3851,14 +3466,7 @@
                 11267.137665407707,
                 154.28305897231212
               ],
-              "denseCoverage95": 0.0625,
-              "exact": {
-                "positionErrorM": 14025.824237667523,
-                "d2Combined": 13.883325772844033,
-                "d2Predicted": 13.883325785176678,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.0625
             },
             "7": {
               "samples": 48,
@@ -3868,14 +3476,7 @@
                 69651.31104044682,
                 172.6285601926917
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 81946.75328817188,
-                "d2Combined": 14.372363723568826,
-                "d2Predicted": 14.372363725000765,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3900,14 +3501,7 @@
                 2228.197807017619,
                 154.57365810423295
               ],
-              "denseCoverage95": 0.4375,
-              "exact": {
-                "positionErrorM": 3597.673523400091,
-                "d2Combined": 13.033470205494815,
-                "d2Predicted": 13.033470218359186,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.4375
             },
             "3": {
               "samples": 48,
@@ -3917,14 +3511,7 @@
                 11257.262196280539,
                 154.2904536807377
               ],
-              "denseCoverage95": 0.0625,
-              "exact": {
-                "positionErrorM": 14032.014919001433,
-                "d2Combined": 13.918950589108693,
-                "d2Predicted": 13.918950601486898,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.0625
             },
             "7": {
               "samples": 48,
@@ -3934,14 +3521,7 @@
                 70640.87681650584,
                 172.69839886501038
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 83187.14442856067,
-                "d2Combined": 14.491320010012538,
-                "d2Predicted": 14.491320011209993,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -3966,14 +3546,7 @@
                 144.43863084801995,
                 0.4520318255769568
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 216.99303807070237,
-                "d2Combined": 3548.7514031530745,
-                "d2Predicted": 3548.8259067898653,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -3983,14 +3556,7 @@
                 1642.4861689241607,
                 2.0318740701569045
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 2473.856591632865,
-                "d2Combined": 14724.471940357362,
-                "d2Predicted": 14724.51545084401,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -4000,14 +3566,7 @@
                 9027.400187383506,
                 2.8109600317631487
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 13093.867695061326,
-                "d2Combined": 19939.51152860419,
-                "d2Predicted": 19939.806604779365,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -4061,14 +3620,7 @@
                 1576.4893279889438,
                 166.85866606105932
               ],
-              "denseCoverage95": 0.6666666666666666,
-              "exact": {
-                "positionErrorM": 2701.573147671306,
-                "d2Combined": 7.061179910061856,
-                "d2Predicted": 7.061179914493248,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6666666666666666
             },
             "3": {
               "samples": 48,
@@ -4078,14 +3630,7 @@
                 6633.002913480339,
                 161.39966765681586
               ],
-              "denseCoverage95": 0.7291666666666666,
-              "exact": {
-                "positionErrorM": 8076.168543572383,
-                "d2Combined": 6.919972604148843,
-                "d2Predicted": 6.91997261439686,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.7291666666666666
             },
             "7": {
               "samples": 48,
@@ -4095,14 +3640,7 @@
                 23998.907791575857,
                 156.5231418656453
               ],
-              "denseCoverage95": 0.5,
-              "exact": {
-                "positionErrorM": 28011.643441615186,
-                "d2Combined": 11.433256782824365,
-                "d2Predicted": 11.433256794376376,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5
             }
           },
           "timing": {
@@ -4127,14 +3665,7 @@
                 1561.9072452525797,
                 166.85867050447058
               ],
-              "denseCoverage95": 0.6875,
-              "exact": {
-                "positionErrorM": 2675.0089081754445,
-                "d2Combined": 6.999887901036946,
-                "d2Predicted": 6.999887905575075,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6875
             },
             "3": {
               "samples": 48,
@@ -4144,14 +3675,7 @@
                 6565.157559451,
                 161.39625036764843
               ],
-              "denseCoverage95": 0.7291666666666666,
-              "exact": {
-                "positionErrorM": 8004.617515359793,
-                "d2Combined": 6.990489354106428,
-                "d2Predicted": 6.990489364637294,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.7291666666666666
             },
             "7": {
               "samples": 48,
@@ -4161,14 +3685,7 @@
                 24267.559337621784,
                 156.52086141006419
               ],
-              "denseCoverage95": 0.5,
-              "exact": {
-                "positionErrorM": 28403.464564827886,
-                "d2Combined": 11.791183618426084,
-                "d2Predicted": 11.791183630346731,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5
             }
           },
           "timing": {
@@ -4193,14 +3710,7 @@
                 109.56161931927775,
                 0.7790968745178576
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 232.94004003220337,
-                "d2Combined": 9510.295222009121,
-                "d2Predicted": 9510.767454257651,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -4210,14 +3720,7 @@
                 467.62474396522487,
                 1.4744344880128308
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 370.8598243415435,
-                "d2Combined": 1348.425533348932,
-                "d2Predicted": 1348.5672840505067,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -4227,14 +3730,7 @@
                 2126.1954278230587,
                 3.8638016099495416
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1846.5902280117205,
-                "d2Combined": 1243.5741450390713,
-                "d2Predicted": 1243.9565193455744,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -4288,14 +3784,7 @@
                 1050.854522051268,
                 172.82457646808726
               ],
-              "denseCoverage95": 0.9166666666666666,
-              "exact": {
-                "positionErrorM": 1184.4411294311174,
-                "d2Combined": 6.747374643134477,
-                "d2Predicted": 6.747374653572931,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9166666666666666
             },
             "3": {
               "samples": 48,
@@ -4305,14 +3794,7 @@
                 1946.1769836079275,
                 170.7953233333338
               ],
-              "denseCoverage95": 0.875,
-              "exact": {
-                "positionErrorM": 1668.594338225559,
-                "d2Combined": 5.943196556367189,
-                "d2Predicted": 5.943196567527096,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.875
             },
             "7": {
               "samples": 48,
@@ -4322,14 +3804,7 @@
                 8683.0452248908,
                 168.44503134500144
               ],
-              "denseCoverage95": 0.6041666666666666,
-              "exact": {
-                "positionErrorM": 12144.773282653638,
-                "d2Combined": 6.057164099989359,
-                "d2Predicted": 6.057164108647913,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6041666666666666
             }
           },
           "timing": {
@@ -4354,14 +3829,7 @@
                 1039.2552274777865,
                 172.82453156008734
               ],
-              "denseCoverage95": 0.9166666666666666,
-              "exact": {
-                "positionErrorM": 1155.6643542777229,
-                "d2Combined": 6.722142613188162,
-                "d2Predicted": 6.722142623689124,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9166666666666666
             },
             "3": {
               "samples": 48,
@@ -4371,14 +3839,7 @@
                 1862.0688503289005,
                 170.7973684480702
               ],
-              "denseCoverage95": 0.875,
-              "exact": {
-                "positionErrorM": 1557.7735522890869,
-                "d2Combined": 6.035889160796711,
-                "d2Predicted": 6.035889172200608,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.875
             },
             "7": {
               "samples": 48,
@@ -4388,14 +3849,7 @@
                 8739.507563001906,
                 168.47177941655346
               ],
-              "denseCoverage95": 0.6041666666666666,
-              "exact": {
-                "positionErrorM": 12169.242775354669,
-                "d2Combined": 6.301797955671772,
-                "d2Predicted": 6.3017979646979425,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6041666666666666
             }
           },
           "timing": {
@@ -4420,14 +3874,7 @@
                 174.14726742482216,
                 1.2563865956931077
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 364.82242355844375,
-                "d2Combined": 4764.28502331648,
-                "d2Predicted": 4764.518838862574,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -4437,14 +3884,7 @@
                 2183.4072187852507,
                 2.350545434428563
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 3170.7516989808696,
-                "d2Combined": 11884.669613501797,
-                "d2Predicted": 11884.835750445707,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -4454,14 +3894,7 @@
                 23456.920850627346,
                 5.267224879881071
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 28658.685611806886,
-                "d2Combined": 81822.51283207687,
-                "d2Predicted": 81832.25762276658,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -4515,14 +3948,7 @@
                 642.5166013204076,
                 138.40680664379826
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 198.3108179884318,
-                "d2Combined": 2.0198951563325713,
-                "d2Predicted": 2.019895249719053,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -4532,14 +3958,7 @@
                 1620.4607003753215,
                 142.66241559160136
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 1717.2872261609477,
-                "d2Combined": 0.5774231836138253,
-                "d2Predicted": 0.5774231961747928,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -4549,14 +3968,7 @@
                 7190.292727931254,
                 167.94341467055392
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 7337.612452811352,
-                "d2Combined": 1.6979536115440372,
-                "d2Predicted": 1.6979536327821134,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -4581,14 +3993,7 @@
                 629.1827601406308,
                 138.40531993414032
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 207.63662243203234,
-                "d2Combined": 2.0176380391854454,
-                "d2Predicted": 2.0176381321082757,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -4598,14 +4003,7 @@
                 1284.0467074877154,
                 142.6701918661912
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 1232.003435600349,
-                "d2Combined": 0.48555246129572505,
-                "d2Predicted": 0.4855524738939279,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -4615,14 +4013,7 @@
                 5183.905298001291,
                 168.12931692603
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 5036.629162016024,
-                "d2Combined": 1.5969315655876064,
-                "d2Predicted": 1.5969315867357308,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -4647,14 +4038,7 @@
                 0.9809686297198064,
                 0.4935898241047012
               ],
-              "denseCoverage95": 0.3958333333333333,
-              "exact": {
-                "positionErrorM": 2.4421405716012514,
-                "d2Combined": 72.20071570524995,
-                "d2Predicted": 76.9879756592457,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3958333333333333
             },
             "3": {
               "samples": 48,
@@ -4664,14 +4048,7 @@
                 276.3006184791819,
                 1.1923453289994814
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 476.76875571627045,
-                "d2Combined": 1037.1749429067613,
-                "d2Predicted": 1040.8452872607327,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -4681,14 +4058,7 @@
                 2016.4165352039875,
                 1.4450048934669948
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 2191.386053560907,
-                "d2Combined": 1008.5860141815841,
-                "d2Predicted": 1010.2285038991597,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -4742,14 +4112,7 @@
                 627.148008595833,
                 136.87457028148341
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 202.8851711087108,
-                "d2Combined": 2.25563817566258,
-                "d2Predicted": 2.2556382907821577,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -4759,14 +4122,7 @@
                 1540.0911813576113,
                 145.52661063511815
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 1493.0448390578265,
-                "d2Combined": 1.0790385468916475,
-                "d2Predicted": 1.0790385679889813,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -4776,14 +4132,7 @@
                 7564.917498979445,
                 167.47874835332004
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 8026.169279573873,
-                "d2Combined": 1.349587608498302,
-                "d2Predicted": 1.3495876252337495,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -4808,14 +4157,7 @@
                 608.4267834582361,
                 136.87329062917178
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 248.12073567655335,
-                "d2Combined": 2.260925165047447,
-                "d2Predicted": 2.260925278872212,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -4825,14 +4167,7 @@
                 1097.9914759618641,
                 145.5449879418543
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 841.5734142716042,
-                "d2Combined": 0.9727979744090851,
-                "d2Predicted": 0.9727979955056666,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -4842,14 +4177,7 @@
                 4839.019787018532,
                 167.71999654043177
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 4897.537985145977,
-                "d2Combined": 1.181222146724069,
-                "d2Predicted": 1.1812221628609951,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -4874,14 +4202,7 @@
                 13.945969356311965,
                 0.40427221509554373
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 25.746920304334406,
-                "d2Combined": 156.94234685143982,
-                "d2Predicted": 159.81273836190326,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -4891,14 +4212,7 @@
                 63.33225884805217,
                 1.188649936173516
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 69.0300295868304,
-                "d2Combined": 281.2513132283005,
-                "d2Predicted": 302.51682444943106,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -4908,14 +4222,7 @@
                 1309.8858544291304,
                 1.7833705720267836
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1561.0870955382732,
-                "d2Combined": 622.0915804451129,
-                "d2Predicted": 622.093137773681,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -4969,14 +4276,7 @@
                 650.7894617587884,
                 139.26657862986482
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 161.8709582821745,
-                "d2Combined": 1.0234961106235931,
-                "d2Predicted": 1.0234961691029334,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -4986,14 +4286,7 @@
                 2073.440875971809,
                 145.23077017019946
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 2144.204135884434,
-                "d2Combined": 2.026694527254577,
-                "d2Predicted": 2.0266945849253095,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5003,14 +4296,7 @@
                 9268.615829903865,
                 169.81415833923433
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 10575.66634797285,
-                "d2Combined": 1.6037562847242504,
-                "d2Predicted": 1.6037563108429251,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5035,14 +4321,7 @@
                 622.2297340690101,
                 139.2641846668501
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 131.84159180779906,
-                "d2Combined": 1.0012096046896024,
-                "d2Predicted": 1.0012096622147226,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -5052,14 +4331,7 @@
                 1553.446750066856,
                 145.24485515942652
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 1417.8028947790174,
-                "d2Combined": 1.8704870978567079,
-                "d2Predicted": 1.8704871556582374,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5069,14 +4341,7 @@
                 6223.491303178915,
                 170.07758713370993
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 7082.661625646773,
-                "d2Combined": 1.3651489599446522,
-                "d2Predicted": 1.3651489848879814,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5101,14 +4366,7 @@
                 0.2856223930497774,
                 0.27028099118483473
               ],
-              "denseCoverage95": 0.7708333333333334,
-              "exact": {
-                "positionErrorM": 0.49419257923812765,
-                "d2Combined": 15.234922335505821,
-                "d2Predicted": 16.09410857437354,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.7708333333333334
             },
             "3": {
               "samples": 48,
@@ -5118,14 +4376,7 @@
                 4.727249300027388,
                 0.8363248189292232
               ],
-              "denseCoverage95": 0.16666666666666666,
-              "exact": {
-                "positionErrorM": 9.087551392523192,
-                "d2Combined": 90.33413102786133,
-                "d2Predicted": 98.438385584737,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.16666666666666666
             },
             "7": {
               "samples": 48,
@@ -5135,14 +4386,7 @@
                 749.4825728898624,
                 2.0534768434764334
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1306.0397868783318,
-                "d2Combined": 699.0236196718051,
-                "d2Predicted": 706.955786086616,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -5196,14 +4440,7 @@
                 842.3073607148782,
                 137.77803404523502
               ],
-              "denseCoverage95": 0.9791666666666666,
-              "exact": {
-                "positionErrorM": 668.7984589689354,
-                "d2Combined": 2.453906026926731,
-                "d2Predicted": 2.4539061047462525,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9791666666666666
             },
             "3": {
               "samples": 48,
@@ -5213,14 +4450,7 @@
                 2954.317658277382,
                 137.53047873223076
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 3239.059387634301,
-                "d2Combined": 1.2655766277579972,
-                "d2Predicted": 1.2655766413886906,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5230,14 +4460,7 @@
                 12301.84798845507,
                 171.71201633920774
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 13759.253060403535,
-                "d2Combined": 2.833710912147439,
-                "d2Predicted": 2.833710943370054,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5262,14 +4485,7 @@
                 813.2778347397871,
                 137.77746354290278
               ],
-              "denseCoverage95": 0.9791666666666666,
-              "exact": {
-                "positionErrorM": 592.6700542712038,
-                "d2Combined": 2.3724421183757247,
-                "d2Predicted": 2.37244219632133,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9791666666666666
             },
             "3": {
               "samples": 48,
@@ -5279,14 +4495,7 @@
                 2603.3676608204914,
                 137.5407237392826
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 2763.410787546064,
-                "d2Combined": 1.1511254369351356,
-                "d2Predicted": 1.151125450683588,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5296,14 +4505,7 @@
                 10320.448460600222,
                 171.89989680296642
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 11490.560103002988,
-                "d2Combined": 2.7529231408764594,
-                "d2Predicted": 2.752923172806568,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5328,14 +4530,7 @@
                 1.4554753261655198,
                 0.4593021174199951
               ],
-              "denseCoverage95": 0.2916666666666667,
-              "exact": {
-                "positionErrorM": 1.8314123110575395,
-                "d2Combined": 60.5050452271822,
-                "d2Predicted": 64.81843738414025,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2916666666666667
             },
             "3": {
               "samples": 48,
@@ -5345,14 +4540,7 @@
                 362.8743091730101,
                 1.164065084520486
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 600.8035998005375,
-                "d2Combined": 2542.842352307753,
-                "d2Predicted": 2551.3979389723245,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -5362,14 +4550,7 @@
                 3117.7143977777955,
                 38.68857076661534
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 3777.8429461571163,
-                "d2Combined": 215028.0325590777,
-                "d2Predicted": 244773.90158764148,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -5423,14 +4604,7 @@
                 849.5499519923786,
                 143.07160660337078
               ],
-              "denseCoverage95": 0.9574468085106383,
-              "exact": {
-                "positionErrorM": 724.9258248897469,
-                "d2Combined": 2.2406264852365747,
-                "d2Predicted": 2.24062655639624,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9574468085106383
             },
             "3": {
               "samples": 48,
@@ -5440,14 +4614,7 @@
                 3817.1416193479877,
                 145.2479726965243
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 4239.396552375428,
-                "d2Combined": 3.4032908945804907,
-                "d2Predicted": 3.403290939588062,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5457,14 +4624,7 @@
                 13211.217306765875,
                 157.55895262128146
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 14171.414852935055,
-                "d2Combined": 2.2877789898990732,
-                "d2Predicted": 2.287779014801948,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5489,14 +4649,7 @@
                 812.7456168603969,
                 143.07233907469197
               ],
-              "denseCoverage95": 0.9574468085106383,
-              "exact": {
-                "positionErrorM": 624.9536987001175,
-                "d2Combined": 2.126056665228056,
-                "d2Predicted": 2.126056736551948,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.9574468085106383
             },
             "3": {
               "samples": 48,
@@ -5506,14 +4659,7 @@
                 3363.1988629064745,
                 145.27237207587382
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 3631.011464726465,
-                "d2Combined": 3.250482217623516,
-                "d2Predicted": 3.2504822625666647,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5523,14 +4669,7 @@
                 10679.725280843795,
                 157.75128944839528
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 11270.832509086606,
-                "d2Combined": 2.185482991729018,
-                "d2Predicted": 2.185483018067189,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5555,14 +4694,7 @@
                 18.46919985978843,
                 12.276413982904797
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 83.73978779972634,
-                "d2Combined": 30421.421672708486,
-                "d2Predicted": 32285.221682856718,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -5572,14 +4704,7 @@
                 1426.1657763545586,
                 37.79355995615262
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1849.722920362224,
-                "d2Combined": 205922.12428511409,
-                "d2Predicted": 218740.50827320825,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -5589,14 +4714,7 @@
                 5105.688631276234,
                 43.914655366273394
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 5562.304437935253,
-                "d2Combined": 23429.307626147463,
-                "d2Predicted": 24325.341155322774,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -5650,14 +4768,7 @@
                 799.4541215894785,
                 135.9210161120027
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 477.7739920865164,
-                "d2Combined": 0.5012639360407849,
-                "d2Predicted": 0.5012639515106248,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -5667,14 +4778,7 @@
                 2044.7278102061537,
                 142.29980827941287
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 1930.5675590703722,
-                "d2Combined": 1.9198295727620358,
-                "d2Predicted": 1.9198296208689385,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5684,14 +4788,7 @@
                 6008.738762010619,
                 169.76843812580358
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 6681.436287523774,
-                "d2Combined": 1.5950067450661563,
-                "d2Predicted": 1.5950067762597127,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5716,14 +4813,7 @@
                 769.020542961743,
                 135.91994756673986
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 385.9503891620169,
-                "d2Combined": 0.4318939029980754,
-                "d2Predicted": 0.4318939186488999,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "3": {
               "samples": 48,
@@ -5733,14 +4823,7 @@
                 1656.481922838948,
                 142.3118221577831
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 1391.2677173451343,
-                "d2Combined": 1.8183768222126755,
-                "d2Predicted": 1.8183768705145242,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             },
             "7": {
               "samples": 48,
@@ -5750,14 +4833,7 @@
                 3753.9256962884533,
                 169.95845022180313
               ],
-              "denseCoverage95": 1,
-              "exact": {
-                "positionErrorM": 4085.605239681875,
-                "d2Combined": 1.5176902401888277,
-                "d2Predicted": 1.5176902719186953,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 1
             }
           },
           "timing": {
@@ -5782,14 +4858,7 @@
                 0.43274673227943056,
                 0.2476045585249077
               ],
-              "denseCoverage95": 0.8125,
-              "exact": {
-                "positionErrorM": 1.4182775251532505,
-                "d2Combined": 11.123445183528657,
-                "d2Predicted": 11.73031957092289,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.8125
             },
             "3": {
               "samples": 48,
@@ -5799,14 +4868,7 @@
                 16.91724888370793,
                 0.8368712128409852
               ],
-              "denseCoverage95": 0.14583333333333334,
-              "exact": {
-                "positionErrorM": 52.71137873506892,
-                "d2Combined": 81.63136129945646,
-                "d2Predicted": 87.58162293419268,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.14583333333333334
             },
             "7": {
               "samples": 48,
@@ -5816,14 +4878,7 @@
                 1209.5835144762923,
                 1.8979691832478371
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 805.8254106294386,
-                "d2Combined": 373.4194757856481,
-                "d2Predicted": 379.6973851222731,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -5877,14 +4932,7 @@
                 1575.3122237491807,
                 157.8133956484151
               ],
-              "denseCoverage95": 0.6875,
-              "exact": {
-                "positionErrorM": 1795.2719868063195,
-                "d2Combined": 3.1891403345821385,
-                "d2Predicted": 3.1891403518530645,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6875
             },
             "3": {
               "samples": 48,
@@ -5894,14 +4942,7 @@
                 10706.858481853737,
                 160.1630267599624
               ],
-              "denseCoverage95": 0.16666666666666666,
-              "exact": {
-                "positionErrorM": 13726.679901897895,
-                "d2Combined": 8.3169006112466,
-                "d2Predicted": 8.316900615353202,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.16666666666666666
             },
             "7": {
               "samples": 48,
@@ -5911,14 +4952,7 @@
                 258791.89726368713,
                 159.86979914278314
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 330972.76249492145,
-                "d2Combined": 2216.0275053561672,
-                "d2Predicted": 2216.0280176109995,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -5943,14 +4977,7 @@
                 1575.3122237491807,
                 157.8133956484151
               ],
-              "denseCoverage95": 0.7083333333333334,
-              "exact": {
-                "positionErrorM": 1795.2719868063195,
-                "d2Combined": 3.149302038275985,
-                "d2Predicted": 3.1493020560012743,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.7083333333333334
             },
             "3": {
               "samples": 48,
@@ -5960,14 +4987,7 @@
                 10706.858481853737,
                 160.1630267599624
               ],
-              "denseCoverage95": 0.16666666666666666,
-              "exact": {
-                "positionErrorM": 13726.679901897895,
-                "d2Combined": 8.46945495976893,
-                "d2Predicted": 8.46945496461398,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.16666666666666666
             },
             "7": {
               "samples": 48,
@@ -5977,14 +4997,7 @@
                 258791.89726368713,
                 159.86979914278314
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 330972.76249492145,
-                "d2Combined": 2242.3681322795323,
-                "d2Predicted": 2242.36865004715,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6009,14 +5022,7 @@
                 63.772195522655004,
                 0.4414981678652286
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 122.89747300896798,
-                "d2Combined": 2708.418469788401,
-                "d2Predicted": 2714.9666285841076,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6026,14 +5032,7 @@
                 604.2113374770146,
                 1.2468593556049996
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 831.6966806083539,
-                "d2Combined": 3841.6536840069934,
-                "d2Predicted": 3841.872834441763,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6043,14 +5042,7 @@
                 199277.23692846813,
                 8.981458816328043
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 264005.93028668215,
-                "d2Combined": 62258425.71112558,
-                "d2Predicted": 69009254.07468598,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6104,14 +5096,7 @@
                 73476.22261125532,
                 161.46079114329618
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 130918.48606529414,
-                "d2Combined": 12442.953102047346,
-                "d2Predicted": 12442.953114180675,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6121,14 +5106,7 @@
                 416757.5279806289,
                 167.3779331032593
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 544286.7262235924,
-                "d2Combined": 38501.976070469034,
-                "d2Predicted": 38501.97641485144,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6138,14 +5116,7 @@
                 1562692.3315199905,
                 164.43938422962395
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1718134.8540297558,
-                "d2Combined": 1054099.9530843766,
-                "d2Predicted": 1054100.1675217205,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6170,14 +5141,7 @@
                 73476.22261125532,
                 161.46079114329618
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 130918.48606529414,
-                "d2Combined": 12528.20516605247,
-                "d2Predicted": 12528.205178221991,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6187,14 +5151,7 @@
                 416757.5279806289,
                 167.3779331032593
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 544286.7262235924,
-                "d2Combined": 38668.581554426,
-                "d2Predicted": 38668.58189872131,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6204,14 +5161,7 @@
                 1562692.3315199905,
                 164.43938422962395
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1718134.8540297558,
-                "d2Combined": 1054729.7126874323,
-                "d2Predicted": 1054729.927223551,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6236,14 +5186,7 @@
                 71330.59081322124,
                 2.534493440782459
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 127626.40187648292,
-                "d2Combined": 414908545.2562822,
-                "d2Predicted": 415317455.56492966,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6253,14 +5196,7 @@
                 402028.41649930587,
                 11.480918682830282
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 525142.9712915207,
-                "d2Combined": 405343076.40578973,
-                "d2Predicted": 405473874.7196901,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6270,14 +5206,7 @@
                 1489072.276371112,
                 39.33805255134915
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1634236.9243422511,
-                "d2Combined": 5587540027.074843,
-                "d2Predicted": 5905554412.069279,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6331,14 +5260,7 @@
                 2121.371549540872,
                 169.51280049045857
               ],
-              "denseCoverage95": 0.5208333333333334,
-              "exact": {
-                "positionErrorM": 3274.615485136888,
-                "d2Combined": 9.254664089763335,
-                "d2Predicted": 9.25466410095243,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5208333333333334
             },
             "3": {
               "samples": 48,
@@ -6348,14 +5270,7 @@
                 82651.75628975416,
                 156.80375015698763
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 141531.48218981177,
-                "d2Combined": 1123.3190683334478,
-                "d2Predicted": 1123.3191410417414,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6365,14 +5280,7 @@
                 857185.6808344326,
                 169.44633822262458
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 968820.231614866,
-                "d2Combined": 109955.71835434836,
-                "d2Predicted": 109955.71860327822,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6397,14 +5305,7 @@
                 2121.371549540872,
                 169.51280049045857
               ],
-              "denseCoverage95": 0.5208333333333334,
-              "exact": {
-                "positionErrorM": 3274.615485136888,
-                "d2Combined": 9.3082690633897,
-                "d2Predicted": 9.30826907460677,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5208333333333334
             },
             "3": {
               "samples": 48,
@@ -6414,14 +5315,7 @@
                 82651.75628975416,
                 156.80375015698763
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 141531.48218981177,
-                "d2Combined": 1136.6228213280451,
-                "d2Predicted": 1136.6228942607029,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6431,14 +5325,7 @@
                 857185.6808344326,
                 169.44633822262458
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 968820.231614866,
-                "d2Combined": 110095.59887908268,
-                "d2Predicted": 110095.59912821373,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6463,14 +5350,7 @@
                 23.546857295104054,
                 0.5200132165736703
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 25.84199820650134,
-                "d2Combined": 113.4141030470073,
-                "d2Predicted": 113.46121175460387,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6480,14 +5360,7 @@
                 69200.85303214175,
                 2.0215275090520213
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 122688.15967504885,
-                "d2Combined": 95852358.55454224,
-                "d2Predicted": 96297042.7372772,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6497,14 +5370,7 @@
                 785322.4341207643,
                 21.258970247571888
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 888441.6862929615,
-                "d2Combined": 3037928589.1144714,
-                "d2Predicted": 3054083731.466874,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6558,14 +5424,7 @@
                 1580.6530378669347,
                 158.1915770244964
               ],
-              "denseCoverage95": 0.6875,
-              "exact": {
-                "positionErrorM": 1809.0967894374144,
-                "d2Combined": 3.2343716109869987,
-                "d2Predicted": 3.234371628857686,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6875
             },
             "3": {
               "samples": 48,
@@ -6575,14 +5434,7 @@
                 10752.551664527837,
                 160.41224032733828
               ],
-              "denseCoverage95": 0.16666666666666666,
-              "exact": {
-                "positionErrorM": 13807.160953908658,
-                "d2Combined": 8.360835633740274,
-                "d2Predicted": 8.361027843146314,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.16666666666666666
             },
             "7": {
               "samples": 48,
@@ -6592,14 +5444,7 @@
                 258464.83784427788,
                 159.43249978446445
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 330455.5241517884,
-                "d2Combined": 2194.688463480222,
-                "d2Predicted": 2194.6891577806186,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6624,14 +5469,7 @@
                 1580.6530378669347,
                 158.1915770244964
               ],
-              "denseCoverage95": 0.6875,
-              "exact": {
-                "positionErrorM": 1809.0967894374144,
-                "d2Combined": 3.2516402583565824,
-                "d2Predicted": 3.251640276249955,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6875
             },
             "3": {
               "samples": 48,
@@ -6641,14 +5479,7 @@
                 10752.551664527837,
                 160.41224032733828
               ],
-              "denseCoverage95": 0.16666666666666666,
-              "exact": {
-                "positionErrorM": 13807.160953908658,
-                "d2Combined": 8.478138112633815,
-                "d2Predicted": 8.478330899083657,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.16666666666666666
             },
             "7": {
               "samples": 48,
@@ -6658,14 +5489,7 @@
                 258464.83784427788,
                 159.43249978446445
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 330455.5241517884,
-                "d2Combined": 2204.693951746364,
-                "d2Predicted": 2204.694647653777,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6690,14 +5514,7 @@
                 58.88757270877622,
                 0.4761585865044859
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 114.3277653801743,
-                "d2Combined": 2361.960302381795,
-                "d2Predicted": 2368.2214483965736,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6707,14 +5524,7 @@
                 560.7801710414269,
                 1.3163279910616068
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 769.9632022941718,
-                "d2Combined": 3172.6369521576858,
-                "d2Predicted": 3307.436668943629,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6724,14 +5534,7 @@
                 198860.96859454812,
                 9.581299444884284
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 263409.1070432241,
-                "d2Combined": 58157627.57827293,
-                "d2Predicted": 66511840.75962165,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6785,14 +5588,7 @@
                 73235.30665958712,
                 161.41844453196603
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 130475.91355289258,
-                "d2Combined": 12343.853519064332,
-                "d2Predicted": 12343.853538163512,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6802,14 +5598,7 @@
                 415273.25785525225,
                 167.08455178614173
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 542293.4877092544,
-                "d2Combined": 37903.007667759965,
-                "d2Predicted": 37903.00783281339,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6819,14 +5608,7 @@
                 1557538.3066007916,
                 164.39445186474902
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1712507.7821822355,
-                "d2Combined": 1038865.8438007889,
-                "d2Predicted": 1038866.1603956494,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6851,14 +5633,7 @@
                 73235.30665958712,
                 161.41844453196603
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 130475.91355289258,
-                "d2Combined": 12428.500656060367,
-                "d2Predicted": 12428.50067521555,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6868,14 +5643,7 @@
                 415273.25785525225,
                 167.08455178614173
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 542293.4877092544,
-                "d2Combined": 38069.227613321375,
-                "d2Predicted": 38069.227778338274,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6885,14 +5653,7 @@
                 1557538.3066007916,
                 164.39445186474902
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1712507.7821822355,
-                "d2Combined": 1039486.3070137326,
-                "d2Predicted": 1039486.6237539349,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -6917,14 +5678,7 @@
                 71060.50553502953,
                 3.1789466167453115
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 127129.47811541616,
-                "d2Combined": 390026638.4792417,
-                "d2Predicted": 390478554.7364979,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -6934,14 +5688,7 @@
                 400361.1021801831,
                 12.654914380344271
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 522916.00070902245,
-                "d2Combined": 392557354.0697519,
-                "d2Predicted": 392618826.46119034,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -6951,14 +5698,7 @@
                 1483072.6302872065,
                 39.64969683028683
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 1627654.071511766,
-                "d2Combined": 5265666679.100332,
-                "d2Predicted": 5723002229.8482895,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -7012,14 +5752,7 @@
                 2131.268241773166,
                 169.50135564771074
               ],
-              "denseCoverage95": 0.5208333333333334,
-              "exact": {
-                "positionErrorM": 3298.071421594172,
-                "d2Combined": 9.342216461439865,
-                "d2Predicted": 9.342216475631806,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5208333333333334
             },
             "3": {
               "samples": 48,
@@ -7029,14 +5762,7 @@
                 82476.18382565846,
                 156.53647426406968
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 141173.9060300024,
-                "d2Combined": 1120.92903496416,
-                "d2Predicted": 1120.92915004318,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -7046,14 +5772,7 @@
                 853871.0622045699,
                 169.36066100458626
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 965069.0972021419,
-                "d2Combined": 156965.38395483402,
-                "d2Predicted": 156965.38492577797,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -7078,14 +5797,7 @@
                 2131.268241773166,
                 169.50135564771074
               ],
-              "denseCoverage95": 0.5208333333333334,
-              "exact": {
-                "positionErrorM": 3298.071421594172,
-                "d2Combined": 9.396646818606103,
-                "d2Predicted": 9.396646832833316,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5208333333333334
             },
             "3": {
               "samples": 48,
@@ -7095,14 +5807,7 @@
                 82476.18382565846,
                 156.53647426406968
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 141173.9060300024,
-                "d2Combined": 1134.2743656244868,
-                "d2Predicted": 1134.2744810875317,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -7112,14 +5817,7 @@
                 853871.0622045699,
                 169.36066100458626
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 965069.0972021419,
-                "d2Combined": 157571.47572831818,
-                "d2Predicted": 157571.47670289455,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -7144,14 +5842,7 @@
                 20.35339880188554,
                 0.52990233765543
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 21.14738515853188,
-                "d2Combined": 80.00612257556678,
-                "d2Predicted": 80.09153671430357,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "3": {
               "samples": 48,
@@ -7161,14 +5852,7 @@
                 68918.21617287728,
                 2.5786469420106606
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 122184.57244169942,
-                "d2Combined": 95157334.52302212,
-                "d2Predicted": 95775490.5817914,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             },
             "7": {
               "samples": 48,
@@ -7178,14 +5862,7 @@
                 781339.1765292789,
                 22.550123724593895
               ],
-              "denseCoverage95": 0,
-              "exact": {
-                "positionErrorM": 883926.9959278847,
-                "d2Combined": 2973497927.6268663,
-                "d2Predicted": 3003768891.676545,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0
             }
           },
           "timing": {
@@ -7239,14 +5916,7 @@
                 56.29045536266699,
                 32.77468092247651
               ],
-              "denseCoverage95": 0.6041666666666666,
-              "exact": {
-                "positionErrorM": 114.59435183484428,
-                "d2Combined": 8.701874723719488,
-                "d2Predicted": 8.701916093335585,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6041666666666666
             },
             "3": {
               "samples": 48,
@@ -7256,14 +5926,7 @@
                 153.01949953574947,
                 59.71677759307569
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 291.4855852722481,
-                "d2Combined": 8.905407944504551,
-                "d2Predicted": 8.905421500993675,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             },
             "7": {
               "samples": 48,
@@ -7273,14 +5936,7 @@
                 427.21823152446393,
                 122.4469335448129
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 788.8755940365697,
-                "d2Combined": 5.370455971065049,
-                "d2Predicted": 5.370457327969272,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -7305,14 +5961,7 @@
                 56.29045536266699,
                 32.77468092247651
               ],
-              "denseCoverage95": 0.6041666666666666,
-              "exact": {
-                "positionErrorM": 114.59435183484428,
-                "d2Combined": 8.701874723719488,
-                "d2Predicted": 8.701916093335585,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.6041666666666666
             },
             "3": {
               "samples": 48,
@@ -7322,14 +5971,7 @@
                 153.01949953574947,
                 59.71677759307569
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 291.4855852722481,
-                "d2Combined": 8.905407944504551,
-                "d2Predicted": 8.905421500993675,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             },
             "7": {
               "samples": 48,
@@ -7339,14 +5981,7 @@
                 427.21823152446393,
                 122.4469335448129
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 788.8755940365697,
-                "d2Combined": 5.370455971065049,
-                "d2Predicted": 5.370457327969272,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -7404,14 +6039,7 @@
                 59.087577904768835,
                 13.760753179804569
               ],
-              "denseCoverage95": 0.5833333333333334,
-              "exact": {
-                "positionErrorM": 121.27509556916152,
-                "d2Combined": 5.148856528413965,
-                "d2Predicted": 5.1488806386380634,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5833333333333334
             },
             "3": {
               "samples": 48,
@@ -7421,14 +6049,7 @@
                 156.91282786802458,
                 29.3066047017413
               ],
-              "denseCoverage95": 0.2916666666666667,
-              "exact": {
-                "positionErrorM": 258.67531346256493,
-                "d2Combined": 3.4085638698575087,
-                "d2Predicted": 3.4085695347859044,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2916666666666667
             },
             "7": {
               "samples": 48,
@@ -7438,14 +6059,7 @@
                 362.6257929631641,
                 57.48292265071761
               ],
-              "denseCoverage95": 0.3333333333333333,
-              "exact": {
-                "positionErrorM": 591.3605736995889,
-                "d2Combined": 1.707549165881859,
-                "d2Predicted": 1.707549511051649,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3333333333333333
             }
           },
           "timing": {
@@ -7470,14 +6084,7 @@
                 59.087577904768835,
                 13.760753179804569
               ],
-              "denseCoverage95": 0.5833333333333334,
-              "exact": {
-                "positionErrorM": 121.27509556916152,
-                "d2Combined": 5.148856528413965,
-                "d2Predicted": 5.1488806386380634,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5833333333333334
             },
             "3": {
               "samples": 48,
@@ -7487,14 +6094,7 @@
                 156.91282786802458,
                 29.3066047017413
               ],
-              "denseCoverage95": 0.2916666666666667,
-              "exact": {
-                "positionErrorM": 258.67531346256493,
-                "d2Combined": 3.4085638698575087,
-                "d2Predicted": 3.4085695347859044,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2916666666666667
             },
             "7": {
               "samples": 48,
@@ -7504,14 +6104,7 @@
                 362.6257929631641,
                 57.48292265071761
               ],
-              "denseCoverage95": 0.3333333333333333,
-              "exact": {
-                "positionErrorM": 591.3605736995889,
-                "d2Combined": 1.707549165881859,
-                "d2Predicted": 1.707549511051649,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3333333333333333
             }
           },
           "timing": {
@@ -7569,14 +6162,7 @@
                 60.7195775167686,
                 15.912658584640297
               ],
-              "denseCoverage95": 0.5833333333333334,
-              "exact": {
-                "positionErrorM": 139.1952108035964,
-                "d2Combined": 3.972237944663639,
-                "d2Predicted": 3.9722401674055052,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5833333333333334
             },
             "3": {
               "samples": 48,
@@ -7586,14 +6172,7 @@
                 176.21907716371723,
                 15.100434153420128
               ],
-              "denseCoverage95": 0.375,
-              "exact": {
-                "positionErrorM": 346.41472935038433,
-                "d2Combined": 2.4440069400413424,
-                "d2Predicted": 2.44400889660027,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.375
             },
             "7": {
               "samples": 48,
@@ -7603,14 +6182,7 @@
                 426.3430966398857,
                 62.61429520036925
               ],
-              "denseCoverage95": 0.2916666666666667,
-              "exact": {
-                "positionErrorM": 795.3234835518364,
-                "d2Combined": 1.9415039742301945,
-                "d2Predicted": 1.9415039840430777,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2916666666666667
             }
           },
           "timing": {
@@ -7635,14 +6207,7 @@
                 60.7195775167686,
                 15.912658584640297
               ],
-              "denseCoverage95": 0.5833333333333334,
-              "exact": {
-                "positionErrorM": 139.1952108035964,
-                "d2Combined": 3.972237944663639,
-                "d2Predicted": 3.9722401674055052,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.5833333333333334
             },
             "3": {
               "samples": 48,
@@ -7652,14 +6217,7 @@
                 176.21907716371723,
                 15.100434153420128
               ],
-              "denseCoverage95": 0.375,
-              "exact": {
-                "positionErrorM": 346.41472935038433,
-                "d2Combined": 2.4440069400413424,
-                "d2Predicted": 2.44400889660027,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.375
             },
             "7": {
               "samples": 48,
@@ -7669,14 +6227,7 @@
                 426.3430966398857,
                 62.61429520036925
               ],
-              "denseCoverage95": 0.2916666666666667,
-              "exact": {
-                "positionErrorM": 795.3234835518364,
-                "d2Combined": 1.9415039742301945,
-                "d2Predicted": 1.9415039840430777,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2916666666666667
             }
           },
           "timing": {
@@ -7734,14 +6285,7 @@
                 69.09867107385982,
                 13.05088753296979
               ],
-              "denseCoverage95": 0.3333333333333333,
-              "exact": {
-                "positionErrorM": 119.94442717606525,
-                "d2Combined": 21.56761449544103,
-                "d2Predicted": 21.567727110681002,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3333333333333333
             },
             "3": {
               "samples": 48,
@@ -7751,14 +6295,7 @@
                 193.11729756022584,
                 32.57827156579201
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 271.345639724282,
-                "d2Combined": 31.540935379211454,
-                "d2Predicted": 31.540988821812356,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             },
             "7": {
               "samples": 48,
@@ -7768,14 +6305,7 @@
                 436.7310556916594,
                 97.70593059149114
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 604.6606966666308,
-                "d2Combined": 30.110235791213668,
-                "d2Predicted": 30.110283723893783,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -7800,14 +6330,7 @@
                 69.09867107385982,
                 13.05088753296979
               ],
-              "denseCoverage95": 0.3333333333333333,
-              "exact": {
-                "positionErrorM": 119.94442717606525,
-                "d2Combined": 21.56761449544103,
-                "d2Predicted": 21.567727110681002,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.3333333333333333
             },
             "3": {
               "samples": 48,
@@ -7817,14 +6340,7 @@
                 193.11729756022584,
                 32.57827156579201
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 271.345639724282,
-                "d2Combined": 31.540935379211454,
-                "d2Predicted": 31.540988821812356,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             },
             "7": {
               "samples": 48,
@@ -7834,14 +6350,7 @@
                 436.7310556916594,
                 97.70593059149114
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 604.6606966666308,
-                "d2Combined": 30.110235791213668,
-                "d2Predicted": 30.110283723893783,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -7899,14 +6408,7 @@
                 64.98538624227982,
                 42.653873515977175
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 145.71876850482013,
-                "d2Combined": 23.38603824324066,
-                "d2Predicted": 23.386145637421116,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "3": {
               "samples": 48,
@@ -7916,14 +6418,7 @@
                 225.55325238878137,
                 70.25847211138294
               ],
-              "denseCoverage95": 0.125,
-              "exact": {
-                "positionErrorM": 375.59457214367427,
-                "d2Combined": 28.68160459225858,
-                "d2Predicted": 28.681648659486832,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.125
             },
             "7": {
               "samples": 48,
@@ -7933,14 +6428,7 @@
                 578.2225193737657,
                 104.29123609865351
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 892.7908746560739,
-                "d2Combined": 24.614188298175577,
-                "d2Predicted": 24.61419736866259,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             }
           },
           "timing": {
@@ -7965,14 +6453,7 @@
                 64.98538624227982,
                 42.653873515977175
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 145.71876850482013,
-                "d2Combined": 23.38603824324066,
-                "d2Predicted": 23.386145637421116,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "3": {
               "samples": 48,
@@ -7982,14 +6463,7 @@
                 225.55325238878137,
                 70.25847211138294
               ],
-              "denseCoverage95": 0.125,
-              "exact": {
-                "positionErrorM": 375.59457214367427,
-                "d2Combined": 28.68160459225858,
-                "d2Predicted": 28.681648659486832,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.125
             },
             "7": {
               "samples": 48,
@@ -7999,14 +6473,7 @@
                 578.2225193737657,
                 104.29123609865351
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 892.7908746560739,
-                "d2Combined": 24.614188298175577,
-                "d2Predicted": 24.61419736866259,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             }
           },
           "timing": {
@@ -8064,14 +6531,7 @@
                 63.72619106025658,
                 17.821137503876464
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 120.68780433736973,
-                "d2Combined": 17.67575138280806,
-                "d2Predicted": 17.67585684940985,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "3": {
               "samples": 48,
@@ -8081,14 +6541,7 @@
                 181.85093602794294,
                 38.11561226313408
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 300.9361182125289,
-                "d2Combined": 24.76115220964797,
-                "d2Predicted": 24.76133898512671,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "7": {
               "samples": 48,
@@ -8098,14 +6551,7 @@
                 452.1226223799108,
                 90.49096174653805
               ],
-              "denseCoverage95": 0.22916666666666666,
-              "exact": {
-                "positionErrorM": 722.1251686889925,
-                "d2Combined": 22.575184108477714,
-                "d2Predicted": 22.575193806176983,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.22916666666666666
             }
           },
           "timing": {
@@ -8130,14 +6576,7 @@
                 63.72619106025658,
                 17.821137503876464
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 120.68780433736973,
-                "d2Combined": 17.67575138280806,
-                "d2Predicted": 17.67585684940985,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "3": {
               "samples": 48,
@@ -8147,14 +6586,7 @@
                 181.85093602794294,
                 38.11561226313408
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 300.9361182125289,
-                "d2Combined": 24.76115220964797,
-                "d2Predicted": 24.76133898512671,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "7": {
               "samples": 48,
@@ -8164,14 +6596,7 @@
                 452.1226223799108,
                 90.49096174653805
               ],
-              "denseCoverage95": 0.22916666666666666,
-              "exact": {
-                "positionErrorM": 722.1251686889925,
-                "d2Combined": 22.575184108477714,
-                "d2Predicted": 22.575193806176983,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.22916666666666666
             }
           },
           "timing": {
@@ -8229,14 +6654,7 @@
                 69.33153361863461,
                 17.85255794622246
               ],
-              "denseCoverage95": 0.1875,
-              "exact": {
-                "positionErrorM": 63.798036555753214,
-                "d2Combined": 1.929690641397775,
-                "d2Predicted": 1.9296989747426667,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.1875
             },
             "3": {
               "samples": 48,
@@ -8246,14 +6664,7 @@
                 187.59053717723958,
                 35.5193624185183
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 167.65840595618607,
-                "d2Combined": 1.9592492174490486,
-                "d2Predicted": 1.9592527519956202,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "7": {
               "samples": 48,
@@ -8263,14 +6674,7 @@
                 403.95459023253323,
                 81.13457400321155
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 432.73176044678996,
-                "d2Combined": 3.683500970906223,
-                "d2Predicted": 3.683502653414795,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -8295,14 +6699,7 @@
                 69.33153361863461,
                 17.85255794622246
               ],
-              "denseCoverage95": 0.1875,
-              "exact": {
-                "positionErrorM": 63.798036555753214,
-                "d2Combined": 1.929690641397775,
-                "d2Predicted": 1.9296989747426667,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.1875
             },
             "3": {
               "samples": 48,
@@ -8312,14 +6709,7 @@
                 187.59053717723958,
                 35.5193624185183
               ],
-              "denseCoverage95": 0.20833333333333334,
-              "exact": {
-                "positionErrorM": 167.65840595618607,
-                "d2Combined": 1.9592492174490486,
-                "d2Predicted": 1.9592527519956202,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.20833333333333334
             },
             "7": {
               "samples": 48,
@@ -8329,14 +6719,7 @@
                 403.95459023253323,
                 81.13457400321155
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 432.73176044678996,
-                "d2Combined": 3.683500970906223,
-                "d2Predicted": 3.683502653414795,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -8394,14 +6777,7 @@
                 75.94653198315953,
                 9.96489846269258
               ],
-              "denseCoverage95": 0.2708333333333333,
-              "exact": {
-                "positionErrorM": 28.63573873669589,
-                "d2Combined": 2.112772751427485,
-                "d2Predicted": 2.1127917213477643,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2708333333333333
             },
             "3": {
               "samples": 48,
@@ -8411,14 +6787,7 @@
                 193.6699239333585,
                 32.94001438355678
               ],
-              "denseCoverage95": 0.22916666666666666,
-              "exact": {
-                "positionErrorM": 166.57397863919962,
-                "d2Combined": 2.899242671955687,
-                "d2Predicted": 2.8992489574352227,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.22916666666666666
             },
             "7": {
               "samples": 48,
@@ -8428,14 +6797,7 @@
                 417.89908413082065,
                 70.29197146314849
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 467.55770163306426,
-                "d2Combined": 3.780163809031414,
-                "d2Predicted": 3.7801655204874205,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -8460,14 +6822,7 @@
                 75.94653198315953,
                 9.96489846269258
               ],
-              "denseCoverage95": 0.2708333333333333,
-              "exact": {
-                "positionErrorM": 28.63573873669589,
-                "d2Combined": 2.112772751427485,
-                "d2Predicted": 2.1127917213477643,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2708333333333333
             },
             "3": {
               "samples": 48,
@@ -8477,14 +6832,7 @@
                 193.6699239333585,
                 32.94001438355678
               ],
-              "denseCoverage95": 0.22916666666666666,
-              "exact": {
-                "positionErrorM": 166.57397863919962,
-                "d2Combined": 2.899242671955687,
-                "d2Predicted": 2.8992489574352227,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.22916666666666666
             },
             "7": {
               "samples": 48,
@@ -8494,14 +6842,7 @@
                 417.89908413082065,
                 70.29197146314849
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 467.55770163306426,
-                "d2Combined": 3.780163809031414,
-                "d2Predicted": 3.7801655204874205,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -8559,14 +6900,7 @@
                 68.86619974359337,
                 15.94847640480877
               ],
-              "denseCoverage95": 0.22916666666666666,
-              "exact": {
-                "positionErrorM": 50.16317444739763,
-                "d2Combined": 3.2327000513431083,
-                "d2Predicted": 3.232707019484862,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.22916666666666666
             },
             "3": {
               "samples": 48,
@@ -8576,14 +6910,7 @@
                 184.93434193744298,
                 24.703002700509398
               ],
-              "denseCoverage95": 0.2708333333333333,
-              "exact": {
-                "positionErrorM": 146.04210497572834,
-                "d2Combined": 1.912510127691364,
-                "d2Predicted": 1.9125262193310437,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2708333333333333
             },
             "7": {
               "samples": 48,
@@ -8593,14 +6920,7 @@
                 385.79869682624286,
                 59.20448848401422
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 459.4909045968697,
-                "d2Combined": 3.627965358909454,
-                "d2Predicted": 3.62796696957309,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
@@ -8625,14 +6945,7 @@
                 68.86619974359337,
                 15.94847640480877
               ],
-              "denseCoverage95": 0.22916666666666666,
-              "exact": {
-                "positionErrorM": 50.16317444739763,
-                "d2Combined": 3.2327000513431083,
-                "d2Predicted": 3.232707019484862,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.22916666666666666
             },
             "3": {
               "samples": 48,
@@ -8642,14 +6955,7 @@
                 184.93434193744298,
                 24.703002700509398
               ],
-              "denseCoverage95": 0.2708333333333333,
-              "exact": {
-                "positionErrorM": 146.04210497572834,
-                "d2Combined": 1.912510127691364,
-                "d2Predicted": 1.9125262193310437,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.2708333333333333
             },
             "7": {
               "samples": 48,
@@ -8659,14 +6965,7 @@
                 385.79869682624286,
                 59.20448848401422
               ],
-              "denseCoverage95": 0.25,
-              "exact": {
-                "positionErrorM": 459.4909045968697,
-                "d2Combined": 3.627965358909454,
-                "d2Predicted": 3.62796696957309,
-                "referenceCovariancePresent": true,
-                "offsetSeconds": 0
-              }
+              "denseCoverage95": 0.25
             }
           },
           "timing": {
