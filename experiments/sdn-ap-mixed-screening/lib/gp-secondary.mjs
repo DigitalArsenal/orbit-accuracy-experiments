@@ -15,6 +15,9 @@ import { pathToFileURL } from 'node:url';
 import { root, sha256, gpArchive } from '../common.mjs';
 
 export const RUNTIME = '/opt/data/sdn-archive/v1c5/runtime';
+const E3 = JSON.parse(fs.readFileSync(path.join(root, 'experiments/e3-combined-catalog/config.json'), 'utf8'));
+/** The class of an object for V1c5's model (A6 point 3): E3's registry where it lists the object, else "LEO 400-800 km" (the ISS, Starlinks). */
+export const v1c5Class = (norad) => Object.entries(E3.regimes).find(([, spec]) => spec.objects && String(norad) in spec.objects)?.[0] ?? 'LEO 400-800 km';
 export const FIRST_ISSUE_MS = Date.parse('2023-01-04T00:00:00Z'); // the archive's first day plus the event rule's 45-day lookback (A6 point 4)
 const DAY = 86400e3;
 const imp = (rel) => import(path.join(root, rel));
