@@ -70,6 +70,7 @@ export function markdown(out){
     lines.push('',`Endpoint recheck (${out.endpointChecks.checkedUtc}): public HTTP responses are recorded separately from local mirror failures. HTTP success is not a complete inventory or proof of authentication to a credentialed dataset.`, '', '| Source | Endpoint checked | HTTP status / transport error |','|---|---|---|');
     for(const p of out.endpointChecks.probes.filter(p=>p.scope!=='local-provider-api'))lines.push(`| ${p.source} | [${p.scope}](${p.url}) | ${p.httpResponded?p.status:p.causeCode||p.error} |`);
   }
+  if(out.executionAmendment)lines.push('',`Execution amendment: ${n(out.executionAmendment.initialTerminal)} completed outcomes were retained after two long-lived FlatBuffer encoders stalled. Remaining objects run in fresh processes, ${out.executionAmendment.workers} at a time, through the same registered numerical code. No spacecraft, force, tolerance or accuracy criterion was removed. The [execution amendment](../../experiments/propagator-catalog-census/isolation/PLAN.md) records the diagnosis and provenance.`);
   lines.push('', '## Accuracy on available support','',
     'Results are separated by product lineage and evidence class. Only successful common support enters paired ratios; all missing coverage and numerical failures remain in the denominators in [summary.json](summary.json). No numerical orbit-regime classification has yet been added.','',
     '| Lineage | Evidence | Lead | XP / AP / FFM successes | Median RMS metres XP / AP / FFM | FFM/XP paired ratio |','|---|---|---:|---:|---|---:|');
@@ -96,6 +97,8 @@ export function report(name='registered',destination=path.join(root,'results',co
   const executionFile=path.join(dir,'execution.json'),execution=fs.existsSync(executionFile)?read(executionFile):null;
   if(rows.some(r=>r.executionId!==execution?.executionId))throw new Error('Mixed execution provenance');
   const out=aggregate(census,rows,{censusHash,executionId:execution?.executionId??null,moduleCommit:config.moduleCommit,sourceSnapshotUtc:census.frozenUtc,outcomeHashesSha256:sha(JSON.stringify(outcomeHashes))});
+  const isolationFile=path.join(dir,'isolation-execution.json');
+  if(fs.existsSync(isolationFile)){const a=read(isolationFile);if(a.executionId!==execution.executionId)throw new Error('Process isolation belongs to another execution');out.executionAmendment={method:'fresh process per remaining source/object',sourceHashes:a.sourceHashes,experimentCommit:a.experimentCommit,startedUtc:a.startedUtc,workers:a.workers,initialTerminal:a.initialTerminal};}
   const endpointFile=path.join(dir,'reachability.json');
   if(fs.existsSync(endpointFile)){const e=read(endpointFile);out.endpointChecks={checkedUtc:e.checkedUtc,classification:e.classification,sha256:hashFile(endpointFile),probes:e.probes};}
   const auditFile=path.join(dir,'operator-epoch-audit.json');
