@@ -388,3 +388,43 @@ have been seen; none of them is re-run or changed (config.a5).
      interval, median, 95 % coverage, V1c5's rule) for the FFM and SGP4-XP covariances per group at 1, 6,
      12, 24, 48 and 72 h, reported beside the calls.
    - Order: part 1b's FFM row and part 1a's accuracy rows first; the contrast follows on the same fits.
+
+### A6 - 2026-10-26, committed at 11:24 UTC, before any GP-secondary covariance, encounter, Pc or call exists: how the contrast's records are formed
+
+The lead records of SGP4-XP and FFM of one ISS window (2021-02-25) were computed while testing the code; no
+other covariance or conjunction number of parts 3 to 5 exists. These are the rules A5 point 8 left to the code.
+
+1. **Lead records.** For a window, arm and lead time L: the arm's state and covariance at the lead epoch and
+   pair_statistics' error and predicted position covariance in the truth's RTN axes, with d² against the
+   predicted covariance (lib/leads.mjs). SGP4-XP in TEME (the module's covariance axes; the truth to TEME by
+   foundation/frames), FFM in GCRF (the state block of the carried covariance), the operator forecast's
+   error only. Part 2's SGP4-XP is fitted again to the same FFM-carried 24 h, as part 2 fits it; part 2's
+   FFM covariance is E6's R product's at T (formal times max(1, reduced chi-square), propagated to T by
+   E6), carried by propagator/ffm with E6's forces and the fixed AGOM.
+2. **GP secondary and the SGP4 covariances of part 3 (A2)** run in V1c5's pinned runtime
+   (/opt/data/sdn-archive/v1c5/runtime, modules f1c7b894; its PROVENANCE.json hashes are checked at start)
+   with V1c5's rules at the issue time, which is the window's prediction start (E; T in part 2): the newest
+   Space-Track set created and dated at or before it and its 31-day history (gp_history by-creation), the
+   causal event rule over the 45 days before it (custody, and analysis/maneuver-detection on at least 8
+   sets), SGP4 by V1c5's propagator/sgp4 (GCRF; the truth to GCRF by foundation/frames). Covariances:
+   "V1c5 frozen" (base P at the actual age, the group from the event rule and the risk tier, V1c5's
+   selected model from results/v1c5/selection.json, calibrate_covariance), "uncalibrated" (base N,
+   object_covariance alone) and "V1c4 best" (base F, results/v1c4/sgp-F-scalar-mle_UNFLAGGED.erm, the class
+   factors; V1c4's own runtime is not on this machine). The GP secondary uses "V1c5 frozen".
+3. **Classes for V1c5's model.** E3's registry where it lists the object (LARETS "LEO 400-800 km";
+   Starlette, Stella, WESTPAC and LARES "SLR LEO 800-1500 km"); the ISS and every Starlink "LEO 400-800 km",
+   V1c5's only class below 800 km (Starlinks below 400 km lie outside its range: an extrapolation, stated
+   with every GP row).
+4. **Counted, not drawn.** The archive starts 2022-11-20, so a window whose prediction start is before
+   2023-01-04 (45 days later, the event rule's lookback) has no GP record; nor has a window without an
+   anchor, or a lead without a lead epoch. Each is counted.
+5. **Encounter frame.** The radial axis is common (z); the primary's velocity is along (cos θ/2, -sin θ/2, 0),
+   the secondary's along (cos θ/2, sin θ/2, 0), so the relative velocity lies along y and the encounter plane
+   is x-z; each object's RTN axes are (z, its velocity, z x its velocity). The true miss is |m| (cos φ, 0,
+   sin φ); the predicted relative position is m + e_s - e_p with each error rotated from its RTN axes; the
+   predicted miss is its x-z part, the combined covariance the x-z block of C_p + C_s (each rotated the
+   same way); Pc by compute_pc (FOSTER) in meters. Draws per encounter in this order: L, the primary window,
+   the secondary window, θ, |m|, φ (the generator of table.mjs). The operator-forecast arm has miss
+   distance only, on the encounters whose primary (and, in the precise class, secondary) has its record.
+6. **Object clusters.** The ISS group has one object, so it has no object-cluster interval; the verdict needs
+   both intervals and reads "no demonstrated CA difference" there, with the reason.
