@@ -85,6 +85,31 @@ export async function statesAt(a, ommB64, epochsMs, axes) {
   return out;
 }
 
+/** The propagated covariance of a fitted SGP4XP set (base64 $OMM carrying the fit's COVARIANCE) at epochs (ms), by the module's
+ *  `sdnap_covariance_at` (A5 point 8): [{ r, v (TEME km, km/s), covariance (6 x 6 row-major, km^2, km^2/s, km^2/s^2) }]. */
+export async function sgp4xpCovarianceAt(a, ommB64, epochsMs) {
+  const omm = new Uint8Array(Buffer.from(ommB64, 'base64'));
+  const epochMs = ms(readEpoch(omm));
+  const x = a.b.sdngp.raw.x, memory = () => a.b.sdngp.raw.h.memory.buffer;
+  const pOmm = x.sdnap_alloc(omm.length), pMin = x.sdnap_alloc(8 * epochsMs.length), pOut = x.sdnap_alloc(8 * 42 * epochsMs.length);
+  try {
+    new Uint8Array(memory(), pOmm, omm.length).set(omm);
+    new Float64Array(memory(), pMin, epochsMs.length).set(epochsMs.map((t) => (t - epochMs) / 60000));
+    const rc = x.sdnap_covariance_at(pOmm, omm.length, pMin, epochsMs.length, pOut);
+    if (rc !== 0) throw new Error(`sdnap_covariance_at ${rc}`);
+    const o = new Float64Array(memory(), pOut, 42 * epochsMs.length).slice();
+    return epochsMs.map((_, k) => ({ r: [...o.slice(42 * k, 42 * k + 3)], v: [...o.slice(42 * k + 3, 42 * k + 6)], covariance: [...o.slice(42 * k + 6, 42 * k + 42)] }));
+  } finally { for (const q of [pOmm, pMin, pOut]) x.sdnap_free(q); }
+}
+
+/** pair_statistics (gp-error-model) of predicted states with their covariance against truth states in the same inertial axes, in the truth's
+ *  RTN axes: [{ errorRtn (km), predictedRtn (packed lower triangle, km^2), d2Predicted }]. */
+export async function pairCovariance(a, predicted, truth) {
+  const pairs = predicted.map((p, i) => ({ id: String(i), predicted: { position: p.r, velocity: p.v, covariance: p.covariance, covarianceAxes: 'INERTIAL' }, truth: { position: truth[i].r, velocity: truth[i].v } }));
+  const out = a.b.erm.decode((await a.b.gem.call('pair_statistics', [a.b.erm.frame('pairs', 'pairs', { axesFrom: 'truth', pairs })])).statistics).pairs;
+  return out.map((s) => ({ errorRtn: s.errorRtn, predictedRtn: s.predictedRtn, d2Predicted: s.d2Predicted }));
+}
+
 /** States from one axes set to another by foundation/frames: [{epoch, r, v}] -> [{r, v}]. */
 export async function convert(a, lines, from, to) {
   if (from === to) return lines.map((l) => ({ r: l.r, v: l.v }));

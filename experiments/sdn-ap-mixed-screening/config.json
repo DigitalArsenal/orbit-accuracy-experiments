@@ -68,5 +68,46 @@
   "statistics": {
     "quantiles": [0.1, 0.5, 0.9],
     "bootstrap": { "resamples": 10000, "level": 0.95, "seedPrefix": "B2", "objectMinimum": 5 }
+  },
+  "a4": {
+    "amendment": "A4",
+    "arms": ["sdnap", "sgp4xp", "ffm", "forecast"],
+    "covariances": {
+      "sdnap": "fit COVARIANCE of the SDNAP set, carried by propagator/sdn-ap (sdnap_covariance_at; propagate's covariance lines in the truth's axes)",
+      "sgp4xp": "fit COVARIANCE of the SGP4XP set, carried by the same module",
+      "ffm": "fit_batch formal covariance times max(1, reduced chi-square), carried by propagator/ffm",
+      "forecast": "none stored: miss distance only"
+    },
+    "issFfm": { "seeds": { "DRAG_AREA_OVER_MASS": 0.01, "SRP_AREA_OVER_MASS": 0.02 }, "aprioriParameterFraction": 1 },
+    "encounters": { "perGroupAndClass": 20000, "groups": ["iss", "laser", "starlink"], "classes": ["gp", "precise"], "leadHours": [1, 6, 12, 24, 48, 72], "seed": "B2|part4|<group>|<class>|<k>" },
+    "pcBins": [0, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1],
+    "metrics": { "alertPc": 1e-4, "quietPc": 1e-7, "hitKm": 0.2, "nearKm": 1, "farKm": 5, "hardBodyRadiusM": 20 },
+    "bootstrap": { "resamples": 10000, "level": 0.95, "seed": "B2|A4|<group>|<class>|<metric>|<kind>", "kinds": ["encounters", "objects"] },
+    "verdict": "SDN-AP makes a difference for CA in a group and class only if no part of either interval of the paired missed-alert difference (SDN-AP - SGP4-XP) is above zero and both intervals of the paired false-alert difference are wholly below zero",
+    "part5": { "selectionKm": 5, "horizonHours": 72, "stepMinutes": 10, "hardBodyRadiusM": 20, "classes": ["unmaneuvered", "maneuvered"], "module": "analysis/conjunction-assessment" }
+  },
+  "a5": {
+    "amendment": "A5",
+    "issFfm": { "from": "A4 (716496c0)", "seeds": { "DRAG_AREA_OVER_MASS": 0.01, "SRP_AREA_OVER_MASS": 0.02 }, "aprioriParameterFraction": 1, "frames": "EME2000 track to GCRF and predictions back by foundation/frames" },
+    "starlinkArms": ["sgp4xp", "ffm", "forecast"],
+    "pairedWith": "ffm",
+    "pairedOthers": { "iss": ["sgp4xp", "sgp4", "forecast"], "starlink": ["sgp4xp", "forecast"] },
+    "trackFromCyclesBefore": "the forecast cycle",
+    "binCompleteAfterCycles": ["2026-10-26T21", "2026-10-27T21", "2026-10-28T21"],
+    "ca": {
+      "base": "A4 (716496c0, 2026-10-25 20:49:16 UTC)",
+      "arms": ["ffm", "sgp4xp"],
+      "missOnly": ["forecast"],
+      "covariances": {
+        "ffm": "fit_batch formal covariance of state, B and AGOM times max(1, reduced chi-square), carried by propagator/ffm (no process noise)",
+        "sgp4xp": "fit COVARIANCE of the SGP4XP set, carried by propagator/sdn-ap build 62c783262da9 (sdnap_covariance_at)",
+        "forecast": "none stored: miss distance only"
+      },
+      "leadToleranceSeconds": { "starlink": 300, "iss": 120, "laser": 150 },
+      "calls": { "red": 1e-4, "green": 1e-7 },
+      "truthClassesKm": [0.2, 5],
+      "verdict": "FFM makes a CA difference in a group and class only if no part of either interval of the paired missed-alert difference (FFM - SGP4-XP) is above zero and both intervals of the paired false-alert difference are wholly below zero; otherwise no demonstrated CA difference",
+      "callSeed": "B2|A5|<group>|<class>|<lead>|<arm>|<metric>"
+    }
   }
 }

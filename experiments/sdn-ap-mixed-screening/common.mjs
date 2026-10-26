@@ -9,6 +9,7 @@ export const root = path.resolve(dir, '../..');
 export const config = JSON.parse(fs.readFileSync(path.join(dir, 'config.json')));
 export const store = process.env.B2_STORE ?? config.store;
 export const results = path.join(root, 'results/sdn-ap-mixed-screening');
+export const gpArchive = path.join(config.store, 'gp-archive'); // A6: the Space-Track sets of B2's objects (gp-extract.mjs), local only; an input, so never a scratch store's
 export const g1Dir = path.join(root, 'experiments/sdn-gp-starlink-ffm-match');
 export const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
 export const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
