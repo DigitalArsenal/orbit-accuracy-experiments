@@ -1,0 +1,57 @@
+{
+  "id": "propagator-ca-frontier",
+  "frozen": true,
+  "classification": "exploratory follow-up to known timing and B2 results; no new truth window",
+  "node": "v25.4.0",
+  "moduleCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+  "modules": {
+    "propagator/sdn-ap/dist/isomorphic/module.wasm": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+    "propagator/sgp4-xp/third_party/ussf-sgp4/Sgp4Prop.xp.wasm": "9f061110f12ac85a76ad80dc76cdb8a33ddad64e54d8dab3b6778602e16cbeb7",
+    "propagator/ffm/dist/isomorphic/module.wasm": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94"
+  },
+  "xp": {
+    "objects": 100,
+    "seed": 20261026,
+    "repetitions": 5,
+    "warmupQueries": 40,
+    "queries": 256,
+    "durationMinutes": 4320,
+    "directions": [
+      "forward",
+      "backward",
+      "both"
+    ],
+    "cpuMetric": "thread user plus system time; median and range",
+    "correctness": "exact position, velocity and status equality after restoring caller query order; reject nonfinite successful states"
+  },
+  "ca": {
+    "sourceCommit": "75675e060910c1337c6fe87af8422a2fb1d5c872",
+    "configPath": "experiments/sdn-ap-mixed-screening/config.json",
+    "configSha256": "9f7d2f019e7ae8df149d3af5691d0b797234ca612048f45a096473d80d03caa8",
+    "tablePath": "results/sdn-ap-mixed-screening/table.json",
+    "tableSha256": "d3b01394f6e27ac006dd87c9ace1f92646dc93512effe80c8334e3acbb64d030",
+    "rowsRoot": "/opt/data/sdn-archive/sdn-ap-mixed-screening/rows",
+    "files": {
+      "ca-encounters.iss.gp.jsonl": "a75318b355d664978e5003b3301bf7cb6a92096d2e5c2254d21b9252e79bf9ac",
+      "ca-encounters.laser.gp.jsonl": "666a8affe54a00e42e5dbea050a77f26f1580dd05ce5634ef16791e241532830",
+      "ca-encounters.laser.precise.jsonl": "fa81b9a0e0545a13996128ac44afc41e2807273c28990aa0f8c878c2f59be807"
+    },
+    "hardBodyRadiusM": 20,
+    "proximityRadiusM": 200,
+    "farM": 5000,
+    "quietPc": 1e-07,
+    "alertPc": 0.0001
+  },
+  "ffm": {
+    "benchmark": "propagator/ffm/tests/evidence/engines/resident-ab.mjs",
+    "repetitions": 2,
+    "wasmedgeHours": 0,
+    "baselineCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+    "purpose": "same-artifact resident timing and batched-byte equivalence; distinct workload from XP; synthetic weather; no superiority inference"
+  },
+  "decisionRules": {
+    "accuracy": "Retain demonstrated accuracy gains regardless of speed cost; preserve forces and arithmetic in execution optimizations.",
+    "speed": "Report batching speedup only with exact states and measured sorting/output/reordering overhead. No full-service or catalog claim.",
+    "ca": "Reproduce registered all-encounter rates first, then count conditional HBR and proximity outcomes. Never reinterpret the selected synthetic population as calibrated operational collision probability."
+  }
+}
