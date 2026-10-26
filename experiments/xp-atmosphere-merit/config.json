@@ -1,0 +1,155 @@
+{
+  "experiment": "xp-atmosphere-merit",
+  "id": "XM",
+  "frozen": false,
+  "task": "experiments-xp-atmosphere-merit-20261026",
+  "store": "/opt/data/sdn-archive/xp-atmosphere-merit",
+  "build": {
+    "file": "experiments/xp-atmosphere-merit/build.json",
+    "moduleTask": "modules-sgp4xp-fit-lognormal-drag-20261026",
+    "note": "the modules commit (on modules main) and each module's wasm SHA-256; every step refuses to run on another build"
+  },
+  "period": { "from": "2026-01-01", "to": "2026-07-31" },
+  "arms": {
+    "X0": { "label": "XP native: Jacchia-70 on the generic flux model, fixed by date", "forces": null, "inputs": [] },
+    "X1": { "label": "Jacchia-70 on real-weather $SPW rows", "forces": { "WEATHER_SOURCE": "RECORDS", "WEATHER_EXTENSION": "HOLD_LAST" }, "inputs": ["space_weather"] },
+    "X2": { "label": "NRLMSISE-00 on the rows", "forces": { "ENABLE_DRAG": true, "ATMOSPHERE_MODEL": "NRLMSISE00", "WEATHER_SOURCE": "RECORDS", "WEATHER_EXTENSION": "HOLD_LAST" }, "inputs": ["space_weather"] },
+    "X3": { "label": "NRLMSISE-00 times the open DCA (the E13 solve referenced to NRLMSISE-00)", "forces": { "ENABLE_DRAG": true, "ATMOSPHERE_MODEL": "NRLMSISE00", "WEATHER_SOURCE": "RECORDS", "WEATHER_EXTENSION": "HOLD_LAST", "DENSITY_CORRECTION": "DCA_COMMON_MODE" }, "inputs": ["space_weather", "density_correction"] }
+  },
+  "contrasts": {
+    "primary": ["X3", "X0"],
+    "components": [["X1", "X0"], ["X2", "X1"], ["X3", "X2"]]
+  },
+  "fit": {
+    "theory": "SGP4XP",
+    "dragPrior": { "form": "LOG_NORMAL", "median": 0.01, "sigmaLn": 2.302585092994046, "note": "ln BTERM ~ N(ln 0.01, ln 10)" },
+    "srpPrior": { "form": "GAUSSIAN_SIGNED", "mean": 0.01, "sigma": 1e-9, "note": "AGOM fixed at 0.01 m2/kg (ruling 2); the lattice keeps it (ruling P8 (b))" },
+    "arcsHours": { "primary": 72, "secondary": 24 },
+    "epoch": "the arc's first state (the module's placement)",
+    "thinSeconds": 300,
+    "thinRule": "every round(300 / step)-th state on the product's own grid (G1); ISS at its native 240 s",
+    "minimumCoverage": 0.9
+  },
+  "conditions": {
+    "O": {
+      "primary": true,
+      "cutoff": "00:00 UTC of D0 (ISS: E, the inputs of a 00:00 cutoff on E's UTC date)",
+      "rsga": "the most recent RSGA issued at or before the cutoff (its header's Issued time), whatever date it carries; its Observed, Estimated and Predicted lines fill the days it covers; days beyond its last predicted day hold its last predicted F10.7 and Ap; no RSGA issued in the 72 h before the cutoff: the cutoff is excluded from O and counted",
+      "f107": "days <= D0-2: DRAO observed (GFZ file); D0-1: the RSGA's Observed line when it is D0-1's, else its Predicted value; D0 on: Predicted, then held",
+      "ap": "days <= D0-3: GFZ definitive Ap; later days: the RSGA's Observed, Estimated or Predicted value for that day, then held",
+      "center81": "every row: the trailing 81-day mean of the observed F10.7 ending on the last day observed by the cutoff (D0-1; D0-2 when the RSGA in force predates D0-1's issue)",
+      "dca": "the E13 solver's nowcast issued at the cutoff: arcs ending at least 6 h before it, 30 days back, the frozen settings, 48 h forecast decay"
+    },
+    "M": {
+      "primary": false,
+      "rows": "observed F10.7 (DRAO, GFZ file) and GFZ definitive Ap through the horizon, the true centered 81-day mean",
+      "dca": "the hindcast: the same solver issued at cutoff + 78 h (every arc through the horizon)",
+      "dclIssueOffsetHours": 78,
+      "excludeCutoffs": ["2026-07-29", "2026-07-30", "2026-07-31"]
+    }
+  },
+  "spaceWeather": {
+    "gfzHistory": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "rsgaDirs": ["/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA", "/opt/data/sdn-archive/hac/noaa-swpc/2026"],
+    "rsgaMaximumAgeHours": 72,
+    "center81Days": 40,
+    "license": "GFZ Kp/ap/Ap/F10.7: CC BY 4.0, Matzka et al. (2021), doi:10.5880/Kp.0001; NOAA SWPC RSGA: US Government work"
+  },
+  "dca": {
+    "arcs": [
+      "/opt/data/sdn-archive/e13-open-dca/planet-arcs/dev-g24lean.msis.jsonl",
+      "/opt/data/sdn-archive/e13-open-dca/planet-arcs/testA-g24lean.msis.jsonl",
+      "/opt/data/sdn-archive/e13-open-dca/planet-arcs/testB-g24lean.msis.jsonl"
+    ],
+    "sample": "experiments/e13-open-dca/planet-sample.json",
+    "selection": "results/e13/selection.json",
+    "latencyHours": 6,
+    "historyDays": 30,
+    "arcHours": [20, 28],
+    "maximumRelativeSigma": 0.5,
+    "coverage": ["2025-10-01", "2026-07-31"],
+    "license": "derived aggregate of Planet Labs PBC ephemerides, CC BY-NC 4.0; Planet states and arcs stay local"
+  },
+  "groups": {
+    "P": {
+      "name": "drag-strong precise LEO (primary)",
+      "objects": [
+        { "norad": 39452, "name": "Swarm A", "truth": "swarm", "product": "SW_OPER_SP3ACOM_2__" },
+        { "norad": 39451, "name": "Swarm B", "truth": "swarm", "product": "SW_OPER_SP3BCOM_2__" },
+        { "norad": 39453, "name": "Swarm C", "truth": "swarm", "product": "SW_OPER_SP3CCOM_2__" },
+        { "norad": 43476, "name": "GRACE-FO 1", "truth": "gfz-rso", "code": "L64", "objectId": "2018-047A" },
+        { "norad": 43477, "name": "GRACE-FO 2", "truth": "gfz-rso", "code": "L65", "objectId": "2018-047B" },
+        { "norad": 31698, "name": "TerraSAR-X", "truth": "gfz-rso", "code": "L13", "objectId": "2007-026A" }
+      ],
+      "cutoffs": "every day at 00:00 UTC of the period",
+      "screening": "none (ruling 14): every window is scored"
+    },
+    "S1": {
+      "name": "Sentinel-1 (secondary)",
+      "objects": [
+        { "norad": 39634, "name": "Sentinel-1A", "truth": "sentinel1", "product": "S1A_OPER_AUX_POEORB_OPOD_" },
+        { "norad": 62261, "name": "Sentinel-1C", "truth": "sentinel1", "product": "S1C_OPER_AUX_POEORB_OPOD_" },
+        { "norad": 66315, "name": "Sentinel-1D", "truth": "sentinel1", "product": "S1D_OPER_AUX_POEORB_OPOD_" }
+      ],
+      "cutoffs": "every day at 00:00 UTC of the period",
+      "screening": "none (ruling 14)"
+    },
+    "ISS": {
+      "name": "ISS from NASA trajectory files (secondary)",
+      "norad": 25544,
+      "layout": "E = file i's start + 24 h; the 24 h arc is file i's first 24 h; the long arc is the first 24 h of files i-2, i-1 and i (3 clean segments, about 5.4 d with gaps); truth is the newer files' first 24 h within (E, E + 72 h]",
+      "screening": "NASA's burn marks in [arc start, E + 72 h] exclude the window",
+      "stepSeconds": 240
+    },
+    "GN": {
+      "name": "GNSS MEO (control): B1's meo-gnss objects with ESA final truth in the period",
+      "objects": [
+        { "norad": 28874, "name": "G053 GPS-IIR-M" },
+        { "norad": 41019, "name": "G073 GPS-IIF" },
+        { "norad": 40889, "name": "E205 GAL-2" },
+        { "norad": 43058, "name": "E218 GAL-2" },
+        { "norad": 37869, "name": "R743 GLO-M" },
+        { "norad": 44850, "name": "R859 GLO-M+" }
+      ],
+      "product": "ESA0OPSFIN_",
+      "cutoffs": "every day at 00:00 UTC of the period",
+      "control": "X1, X2 and X3 equal X0 to |ratio - 1| < 1e-6; a failure is a software defect: stop"
+    },
+    "LS": {
+      "name": "laser-ranged spheres (descriptive)",
+      "source": "B2 part 2: E6's variant R states at its cutoffs (XA's copy), the NSGF orbit chained as truth after T, the fit arc carried back from R's state by propagator/ffm",
+      "e6Products": "/opt/data/sdn-archive/xp-atmosphere-ablation/inputs/e6-products.jsonl",
+      "e6Variant": "R",
+      "window": ["2026-07-16T00:00:00Z", "2026-08-30T00:00:00Z"],
+      "targets": ["starlette", "stella", "larets", "westpac", "lares"],
+      "trackStepSeconds": 60,
+      "x3Through": "2026-07-31"
+    }
+  },
+  "scoring": {
+    "leadDays": [1, 2, 3],
+    "metrics": ["3D RMS", "along-track RMS"],
+    "scorer": "G1 lib/baselines.mjs rtnSeries (analysis/gp-error-model pair_statistics) in the truth's RTN axes; XP propagated at the truth epochs, TEME to the truth's axes by foundation/frames"
+  },
+  "statistics": {
+    "statistic": "the median paired ratio arm / reference over (object, cutoff)",
+    "bootstrap": { "kind": "moving block over cutoff days", "blockDays": 6, "circular": false, "resamples": 10000, "level": 0.95, "interval": "percentile", "generator": "xorshift128+ seeded by SHA-256", "seed": "XM|<group>|<condition>|<arc>|<contrast>|<day>" }
+  },
+  "verdict": {
+    "primary": { "contrast": ["X3", "X0"], "condition": "O", "arcHours": 72, "group": "P", "day": 3,
+      "rule": "merit demonstrated if the day-3 interval's upper bound is < 1 and the day-1 interval's upper bound is <= 1.05; otherwise no demonstrated merit" },
+    "size": "the median of the paired day-3 differences (km) with both arms' medians beside it, and 1 - the median ratio (%); practically meaningful only if the median gain is >= 10 % at day 3",
+    "components": "the same rule for X1/X0, X2/X1 and X3/X2, for the 24 h arc, for condition M and for the secondary groups; no pooling across groups"
+  },
+  "density": {
+    "objects": [39452, 39451, 39453, 43476],
+    "swarmDns": "/opt/data/sdn-archive/hac/esa-swarm-dns/POD",
+    "gracefoDns": "/opt/data/sdn-archive/hac/esa-gracefo-dns/Sat_1",
+    "probe": "sdnap_atmosphere_probe: model 0 (X0), 1 (X1), 2 (X2), 3 (X3) on the condition's rows and $DCL",
+    "measures": ["(a) mean ln(rho_arm / rho_obs) over the 72 h arc", "(b) its change from the arc mean to each prediction day"]
+  },
+  "screeningSensitivity": {
+    "method": "analysis/maneuver-detection detect_maneuvers at its defaults on daily XP-native element sets fitted to the truth (the X0 24 h fit of each UTC day), with their propagator/sdn-ap trajectories; an event within [arc start, cutoff + 72 h] flags the window",
+    "storm": "a flagged window on a storm day: Ap >= 50 or any Kp >= 6 within [arc start, cutoff + 72 h]"
+  }
+}

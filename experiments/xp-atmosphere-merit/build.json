@@ -1,0 +1,16 @@
+{
+  "modulesCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+  "modulesCommitNote": "modules main after task modules-sgp4xp-fit-lognormal-drag-20261026 (SDS 1.272.0, $PCF 1.0.6 prior forms); f0a57c11a is the module commit, cb22348f2 its artifact ledger",
+  "sds": "1.272.0",
+  "wasmSha256": {
+    "propagator/sdn-ap": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+    "analysis/gp-error-model": "a7a0e21805d50737b6f0c84b89a9ee6e7b981668d8cbe321c36217228f1d76f7",
+    "foundation/frames": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+    "analysis/density-calibration": "5d284078821dd80cabd499bce10b174bf635a2456cda261d641a6219b4df3719",
+    "analysis/reference-states": "77e16becd0167651219e11f1caaceacf352be535b8de56640ebe108cd7c3492f",
+    "files/orbit-products": "688f22ee2dba278d19e4029e8aedf1aa46fffd9910428f7d7ed40c9eeb583ad3",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/maneuver-detection": "e669cd067dd74ec623f3d7d8222dcceffd5a5965780e7fd596eee289a7d74dfe",
+    "propagator/ffm": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94"
+  }
+}
