@@ -47,7 +47,7 @@ export async function engines(run,W) {
         timing.propagateWallSeconds=(performance.now()-t)/1000;timing.propagateCpuSeconds=cpu()-c;
       }
       if(pred.length!==arc.score.length)throw new Error(`returned ${pred.length} states for ${arc.score.length} epochs`);
-      for(let i=0;i<pred.length;i++)if(![...pred[i].r,...pred[i].v].every(Number.isFinite)||Date.parse(pred[i].epoch)!==arc.score[i].ms)throw new Error(`invalid state/epoch ${i}`);
+      for(let i=0;i<pred.length;i++)if(![...pred[i].r,...pred[i].v].every(Number.isFinite)||Date.parse(pred[i].epoch)!==arc.score[i].ms)throw new Error(`invalid state/epoch ${i}: returned ${pred[i].epoch}, expected ${arc.score[i].epoch}, offsetMs ${Date.parse(pred[i].epoch)-arc.score[i].ms}, finite ${[...pred[i].r,...pred[i].v].every(Number.isFinite)}`);
       const t=performance.now(),c=cpu();
       // OEM is km/km²; ERM pair_statistics explicitly requires SI units.
       const si=p=>({position:p.r.map(x=>x*1000),velocity:p.v.map(x=>x*1000),covariance:p.covariance?.map(x=>x*1e6)??null,covarianceAxes:'INERTIAL'});
