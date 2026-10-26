@@ -49,7 +49,7 @@ export function aggregate(rows) {
       const arms={};
       for(const arm of config.arms){
         const attempted=selected.filter(r=>r.arms[arm]),good=attempted.filter(r=>r.arms[arm].ok&&r.arms[arm].days[lead]),d=good.map(r=>r.arms[arm].days[lead]);
-        arms[arm]={registered:selected.length,excluded:selected.filter(r=>r.excluded).length,attempted:attempted.length,failed:attempted.filter(r=>!r.arms[arm].ok).length,successful:good.length,
+        arms[arm]={registered:selected.length,excluded:selected.filter(r=>r.excluded).length,attempted:attempted.length,failed:attempted.filter(r=>!r.arms[arm].ok).length,successful:good.length,unavailableLead:selected.filter(r=>!r.excluded&&!r.leads[lead]?.available).length,
           objects:unique(good.map(r=>r.norad)).length,medianRmsM:median(d.map(x=>x.rmsM)),p90RmsM:quantile(d.map(x=>x.rmsM),.9),
           medianRicRmsM:[0,1,2].map(k=>median(d.map(x=>x.ricRmsM[k]))),medianExactErrorM:median(d.map(x=>x.exact?.positionErrorM).filter(finite)),
           combined:coverage(selected,arm,lead,'d2Combined'),predictionOnly:coverage(selected,arm,lead,'d2Predicted')};
@@ -65,12 +65,14 @@ export function aggregate(rows) {
     pairedStatistic:'median per-arc RMS ratio; 2,000 object-cluster bootstrap resamples, percentile 95% interval',families,
     exclusions:rows.filter(r=>r.excluded).map(r=>({key:r.key,reason:r.excluded})),
     failures:rows.flatMap(r=>config.arms.filter(a=>r.arms[a]&&!r.arms[a].ok).map(a=>({key:r.key,arm:a,error:r.arms[a].error.split('\n')[0]}))),
+    retainedFirstRoundFits:rows.filter(r=>r.arms.ffm?.ok&&r.arms.ffm.fit.stoppedBy).map(r=>({key:r.key,reason:r.arms.ffm.fit.stoppedBy})),
     // Arc-level aggregates contain no states, fitted elements, or per-epoch tables.
     arcSummaries:rows.map(r=>({key:r.key,norad:r.norad,family:r.family,issue:r.issue,fitSamples:r.fitSamples,leads:r.leads,excluded:r.excluded,
       arms:Object.fromEntries(config.arms.filter(a=>r.arms[a]).map(a=>[a,r.arms[a].ok?{ok:true,days:r.arms[a].days,timing:r.arms[a].timing}:{ok:false,error:r.arms[a].error.split('\n')[0]}]))}))};
 }
 const number = x => finite(x)?x.toLocaleString('en-US',{maximumFractionDigits:1}):'—';
 const ratio = x => finite(x)?x.toFixed(3):'—';
+const percent = x => finite(x)?`${number(x*100)}%`:'—';
 export function markdown(out,pc,manifest) {
   const lines=['# Published-reference propagator comparison','',`Thirty registered arcs across ten spacecraft; module commit \`${config.moduleCommit}\`. Precise orbit products are held out from each fit, not globally unseen. Accuracy gains are retained regardless of execution cost.`,'',
     `NASA CARA 2D Foster Pc: **${pc.passed}/${pc.cases.length} pass**, using unchanged upstream tolerances. This verifies the integral, not orbit prediction, covariance calibration or operational collision risk.`,
@@ -81,7 +83,7 @@ export function markdown(out,pc,manifest) {
   lines.push('','## Matched comparisons','','Pooled median per-arc RMS ratios, with object-cluster bootstrap intervals. A ratio below one favors the numerator. These exploratory pooled results do not establish superiority in every orbit family. Each family has fewer than five objects and is descriptive only. Failure rates remain part of the result.','','| Comparison | Lead | Common arcs | Ratio | 95% interval | Decision |','|---|---:|---:|---:|---|---|');
   for(const [lead,l] of Object.entries(out.families.All.leads))for(const p of l.paired)lines.push(`| ${p.numerator}/${p.denominator} | ${lead} d | ${p.arcs} | ${ratio(p.medianRatio)} | ${p.objectBootstrap95?.map(ratio).join('–')??'insufficient'} | ${p.decision} |`);
   lines.push('','## Covariance coverage','','One exact-lead observation per arc; no dense-sample independence claim. Primary values add available reference covariance. Realism requires both mean D²/3 in [0.8, 1.25] and 95% coverage in [93%, 97%], with at least 30 arcs and five objects. “INSUFFICIENT” is not a pass. Three arcs per object remain correlated; this is a screening diagnostic, not certification.','','| Arm | Lead | Arcs | Mean D²/3 | Coverage | Prediction-only coverage | Result |','|---|---:|---:|---:|---:|---:|---|');
-  for(const [lead,l] of Object.entries(out.families.All.leads))for(const [arm,a] of Object.entries(l.arms))lines.push(`| ${arm} | ${lead} d | ${a.combined.arcs} | ${number(a.combined.meanD2Over3)} | ${number(a.combined.coverage95*100)}% | ${number(a.predictionOnly.coverage95*100)}% | ${a.combined.status} |`);
+  for(const [lead,l] of Object.entries(out.families.All.leads))for(const [arm,a] of Object.entries(l.arms))lines.push(`| ${arm} | ${lead} d | ${a.combined.arcs} | ${number(a.combined.meanD2Over3)} | ${percent(a.combined.coverage95)} | ${percent(a.predictionOnly.coverage95)} | ${a.combined.status} |`);
   const t=out.families.All.timing;
   lines.push('','## Execution cost','',`Median seconds on ${t.commonArcs} arcs for which all three arms completed the same scored workload, including covariance. One sequential pass on a shared host; these are observed costs, not a controlled throughput ranking. CPU seconds include all process threads. Start/end load averages: ${manifest.host.loadStart.join(', ')} / ${manifest.host.loadEnd.join(', ')}; ${manifest.host.cpus} logical CPUs. Endpoint load measurements do not certify absence of saturation throughout the run.`,
     '','| Arm | Fit wall | Forecast wall | Score wall | Total wall | Total CPU |','|---|---:|---:|---:|---:|---:|');
@@ -90,6 +92,7 @@ export function markdown(out,pc,manifest) {
   if(!out.exclusions.length&&!out.failures.length)lines.push('Every registered arc completed all three arms.');
   for(const r of out.exclusions)lines.push(`- ${r.key}: excluded — ${r.reason}.`);
   for(const r of out.failures)lines.push(`- ${r.key}, ${r.arm}: ${r.error}.`);
+  for(const r of out.retainedFirstRoundFits)lines.push(`- ${r.key}, FFM: the existing E6 estimator retained its first-round solution after the second round stopped: ${r.reason}.`);
   lines.push('','The 24-hour fits use retrospective precise states, not public TLEs. The estimators differ, so force models alone cannot explain all differences. Final EOP and historical revised weather are not a verified as-issued forecast replay. Driver dates stop before issue day and then persist. Maneuvers were not independently screened; no residual-based exclusions were made.',
     '', 'Swarm uses ESA/TU Delft reduced-dynamic products. Sentinel uncertainties encode the product accuracy requirement rather than measured epoch-specific errors. GRACE-FO uses GFZ rapid RSO, not final GNV1B; overlap uncertainties are not independent absolute accuracy. GPS uses ESA final SP3. Source URLs, checksums and converter metadata are retained in the provenance file. The existing truth gate applies to every reference product.',
     '', 'No force model was trimmed or tuned against these scores. DCA/prior merit remains in the separately owned XM study. The scope does not test conjunction screening, TCA search, 3D Pc, Monte Carlo Pc or calibration against physical collisions.',
