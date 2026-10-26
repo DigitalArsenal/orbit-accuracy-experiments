@@ -84,3 +84,23 @@ required site build and headless page checks. No product UI is changed.
 Publish only scripts, frozen plan/configuration, aggregate metrics, manifests
 and generated report in the claimed directories. Record blocked checks and
 limitations. No production deployment is part of this task.
+
+## Amendment A1 — 2026-10-26: reference-order diagnostic
+
+The first full batch run passed exact equality for white-room XP but found
+nonfinite successful USSF states and order-dependent values. The original
+result is retained as a failed exploratory comparison. The USSF package's
+distributed API documentation confirms the eight-double output layout.
+
+Before any new diagnostic run, add a check through the existing single-object
+`referenceLibrary` wrapper on the first object in each of the five regimes.
+Compare sorted, shuffled, and precomputed-to-72-hours-then-shuffled execution
+on the same 256 forward epochs. Report nonfinite state counts and the largest
+finite position/velocity differences, without relaxing exact equality.
+
+Keep per-engine outcomes separate. USSF failures remain failures and exclude
+its affected workload from a valid-throughput ranking; they do not invalidate
+a successful within-white-XP scheduling experiment. The E2E checks that the
+analysis reproduces these outcomes, not that every scientific hypothesis
+succeeds. This result concerns the pinned 9.1.1.0 WASM artifact and does not
+establish anything about the native 9.9 reference or later distributions.
