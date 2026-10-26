@@ -24,7 +24,7 @@ export function referenceClass(x){
 
 export async function providerInventory(node,dir,apiBase=config.providerApi){
   const api=new URL(apiBase);api.port=String(node.apiPort);
-  const audit={source:node.sourceId,api:api.origin,queriedUtc:iso(Date.now()),pages:[],records:[]};
+  const audit={source:node.sourceId,scope:'local-provider-api',api:api.origin,queriedUtc:iso(Date.now()),pages:[],records:[],upstreamReachability:'not_tested'};
   const query=async offset=>{
     const response=await fetch(new URL('/api/v1/data/query',api),{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json',Accept:'application/vnd.sdn.flatbuffers.stream'},body:JSON.stringify({schema:'NCD.fbs',provider_id:`ephemeris-provider:${node.sourceId}`,source_name:node.sourceId,limit:256,offset})});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
@@ -54,7 +54,7 @@ export async function providerInventory(node,dir,apiBase=config.providerApi){
     const end=await query(first.total),again=await query(0);
     if(end.count||end.total!==first.total||again.sha256!==first.sha256)throw new Error('Unstable terminal page or snapshot');
     audit.status='inventory_acquired';audit.completePagination=true;
-  }catch(e){audit.status='source_unreachable';audit.reason=e.message;audit.completePagination=false;}
+  }catch(e){audit.status='local_inventory_unavailable';audit.reason=e.message;audit.causeCode=e.cause?.code??null;audit.completePagination=false;}
   return audit;
 }
 
