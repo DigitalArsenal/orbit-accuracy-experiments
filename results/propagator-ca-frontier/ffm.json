@@ -1,0 +1,125 @@
+{
+  "exitCode": 0,
+  "result": {
+    "ok": true,
+    "baselineCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+    "baselineWasmSha256": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94",
+    "candidateWasmSha256": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94",
+    "boundM": 0.001,
+    "days": 3,
+    "sampleSeconds": 60,
+    "reps": 2,
+    "cpuMethod": "process.threadCpuUsage over ingest + prepare + describe, alternating baseline and candidate, smallest of reps, divided by 3 days",
+    "host": {
+      "cpu": "Apple M3 Ultra",
+      "logicalCpus": 28,
+      "loadAverageStart": [
+        2.89013671875,
+        2.65380859375,
+        2.49609375
+      ],
+      "loadAverageEnd": [
+        2.89892578125,
+        2.6591796875,
+        2.4990234375
+      ]
+    },
+    "rows": [
+      {
+        "seed": "ISS",
+        "baselineCpuSPerObjectDay": 0.07007500000000001,
+        "candidateCpuSPerObjectDay": 0.06997533333333333,
+        "speedup": 1.0014243114240258,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "111bdbbb10c05dc2a6d66498eb55461c4c5081a9250fd128b8e759781a6e7ebb"
+      },
+      {
+        "seed": "STARLINK",
+        "baselineCpuSPerObjectDay": 0.07890566666666667,
+        "candidateCpuSPerObjectDay": 0.07894033333333333,
+        "speedup": 0.9995608497557227,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "76c476c4199ae7ae0e8073f1f04a443cc2c9da346ca149077fbd56099b78defe"
+      },
+      {
+        "seed": "SSO800",
+        "baselineCpuSPerObjectDay": 0.04970966666666667,
+        "candidateCpuSPerObjectDay": 0.04998966666666666,
+        "speedup": 0.9943988424274351,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "ef6413f00d8be78cbd21223ca83b9007d53eb00bc946f61e0051040fd21bd10b"
+      },
+      {
+        "seed": "LOW250",
+        "baselineCpuSPerObjectDay": 0.10487833333333334,
+        "candidateCpuSPerObjectDay": 0.10579433333333334,
+        "speedup": 0.9913416912689085,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "32eff97f2de03b277728585278e852e7be2f40886e52e250e19cf77b6ddb2412"
+      },
+      {
+        "seed": "GPS",
+        "baselineCpuSPerObjectDay": 0.022061,
+        "candidateCpuSPerObjectDay": 0.022168000000000004,
+        "speedup": 0.9951732226632984,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "e755fdca6b94f1570f558165e01bc1b9054f49930767615f3e10e9f732fd0ae1"
+      },
+      {
+        "seed": "GEO",
+        "baselineCpuSPerObjectDay": 0.013018000000000002,
+        "candidateCpuSPerObjectDay": 0.013019000000000001,
+        "speedup": 0.9999231891850373,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "d11e140f8fafa48e4a4488ba7e3d2fcb5e781ee458b9b4e509b69871e8851e61"
+      },
+      {
+        "seed": "MOLNIYA",
+        "baselineCpuSPerObjectDay": 0.063436,
+        "candidateCpuSPerObjectDay": 0.06363,
+        "speedup": 0.9969511236837969,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "4783f28a775c57047c5bb376c2dfd6a8493dfddb3ab36714d61f6a96708e0fc3"
+      },
+      {
+        "seed": "GTO",
+        "baselineCpuSPerObjectDay": 0.07472733333333334,
+        "candidateCpuSPerObjectDay": 0.074524,
+        "speedup": 1.0027284275311756,
+        "maxPositionDifferenceM": 0,
+        "atS": 0,
+        "maxVelocityDifferenceMS": 0,
+        "byteIdentical": true,
+        "candidateEphemerisSha256": "99cd7be9b267350652fae26c2425a354af053d27da51c2f0bd7cb22dddada849"
+      }
+    ],
+    "batchedIdentical": true,
+    "wasmedge": {
+      "skipped": "wasmedge-hours 0"
+    },
+    "failures": []
+  },
+  "logSha256": "9720b430804ac16b58645890a5e4b4ab59be100d6871e1019456b6ae7247511d",
+  "limitation": "Same-artifact repeatability and resident preparation cost on eight fixtures with synthetic weather; not independent accuracy or an XP speed comparison."
+}

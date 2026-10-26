@@ -1,0 +1,178 @@
+{
+  "diagnostic": "Existing single-object reference wrapper, independent of the new multi-object adapter",
+  "version": "USSF 9.1.1.0 WASM",
+  "queries": 256,
+  "rows": [
+    {
+      "regime": "LEO",
+      "preparedTo72h": false,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1446,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 12,
+        "temporal": 0
+      },
+      "finiteStatePairs": 244,
+      "maxFinitePositionDifferenceM": 35.954427170079065,
+      "maxFiniteVelocityDifferenceMS": 0.03888015456611686,
+      "pass": false
+    },
+    {
+      "regime": "LEO",
+      "preparedTo72h": true,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1440,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 12,
+        "temporal": 0
+      },
+      "finiteStatePairs": 244,
+      "maxFinitePositionDifferenceM": 35.954427170079065,
+      "maxFiniteVelocityDifferenceMS": 0.03888015456611686,
+      "pass": false
+    },
+    {
+      "regime": "SSO",
+      "preparedTo72h": false,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1428,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 12,
+        "temporal": 0
+      },
+      "finiteStatePairs": 244,
+      "maxFinitePositionDifferenceM": 0.40332232722751904,
+      "maxFiniteVelocityDifferenceMS": 0.00042327961095849586,
+      "pass": false
+    },
+    {
+      "regime": "SSO",
+      "preparedTo72h": true,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1422,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 12,
+        "temporal": 0
+      },
+      "finiteStatePairs": 244,
+      "maxFinitePositionDifferenceM": 0.40332232722751904,
+      "maxFiniteVelocityDifferenceMS": 0.00042327961095849586,
+      "pass": false
+    },
+    {
+      "regime": "MEO",
+      "preparedTo72h": false,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 678,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 85,
+        "temporal": 0
+      },
+      "finiteStatePairs": 171,
+      "maxFinitePositionDifferenceM": 6.239745060888724,
+      "maxFiniteVelocityDifferenceMS": 0.0007857783120495479,
+      "pass": false
+    },
+    {
+      "regime": "MEO",
+      "preparedTo72h": true,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1020,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 85,
+        "temporal": 0
+      },
+      "finiteStatePairs": 171,
+      "maxFinitePositionDifferenceM": 6.583061190856339,
+      "maxFiniteVelocityDifferenceMS": 0.0008945223334059825,
+      "pass": false
+    },
+    {
+      "regime": "GEO",
+      "preparedTo72h": false,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1494,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 6,
+        "temporal": 0
+      },
+      "finiteStatePairs": 250,
+      "maxFinitePositionDifferenceM": 16549.403133459164,
+      "maxFiniteVelocityDifferenceMS": 0.8886358461314892,
+      "pass": false
+    },
+    {
+      "regime": "GEO",
+      "preparedTo72h": true,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 1488,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 6,
+        "temporal": 0
+      },
+      "finiteStatePairs": 250,
+      "maxFinitePositionDifferenceM": 16549.403133459164,
+      "maxFiniteVelocityDifferenceMS": 0.8886358461314892,
+      "pass": false
+    },
+    {
+      "regime": "HEO",
+      "preparedTo72h": false,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 510,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 85,
+        "temporal": 0
+      },
+      "finiteStatePairs": 171,
+      "maxFinitePositionDifferenceM": 0,
+      "maxFiniteVelocityDifferenceMS": 0,
+      "pass": false
+    },
+    {
+      "regime": "HEO",
+      "preparedTo72h": true,
+      "states": 256,
+      "components": 1536,
+      "differingValues": 510,
+      "differingStatuses": 0,
+      "nonzeroStatuses": 0,
+      "nonfiniteStates": {
+        "caller": 85,
+        "temporal": 0
+      },
+      "finiteStatePairs": 171,
+      "maxFinitePositionDifferenceM": 0,
+      "maxFiniteVelocityDifferenceMS": 0,
+      "pass": false
+    }
+  ],
+  "pass": false
+}

@@ -1,0 +1,102 @@
+{
+  "experiment": "propagator-ca-frontier",
+  "kind": "ffm",
+  "startedAt": "2026-10-26T16:22:02.904Z",
+  "command": [
+    "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+    "/Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-propagator-ca-frontier-20261026/experiments/propagator-ca-frontier/run-ffm.mjs",
+    "--modules",
+    "/Users/tj/software/worktrees/space-data-network-modules--propagator-ca-frontier-runtime",
+    "--run",
+    "ffm-final-20261026"
+  ],
+  "plan": {
+    "commit": "b988ee120f209a1d9aca334dc9d2952c0a53f038",
+    "configSha256": "f2617e4ac0d068e71e3355e7e9dc21e83172fdbe434f32e6e9b81fc46adfab78",
+    "planCommit": "f4cc9278c1f0445e6047ce4e2e58108d128dcac2",
+    "planSha256": "0c60cf95b50ca6713b960b9b0f76b1fddb73496df3094a16b368370ffdbb9b8a"
+  },
+  "experimentCommit": "df94df26f499277c0ee7fa53da059e1777be75e4",
+  "experimentSourceHashes": {
+    "audit-ca.mjs": "5eb404b5c491b9566c83e8df8005a19a67e79a746ac58e8e0994fb29a34deb1c",
+    "batch.mjs": "20b66f6e8d5ac775e7eee5d34f8ac6f8e500df60665062f78cc96e854fa34b74",
+    "lib.mjs": "4d35273b0b85a033495deed81dbf4bc80ee71c86a5a2ac1ab2da0f6e7d854670",
+    "probe-reference.mjs": "402d1bb8a6347ac15e375124daa0c72aa1c5d4706e17c4257b98dbb9a6d49899",
+    "report.mjs": "8cfd8dae7330c291a6cb4539af3ebf2d94bb6b27c894c52334c990e6532ecdc7",
+    "run-ffm.mjs": "72ac603915318b57e40881c936d40ac86f773c0c2b97d29d184ec210749361d3",
+    "run-xp.mjs": "67f5cc3881e31d64fc0810698fe158a8fa759f708bd38c191ba792ed7b0445dc",
+    "verify.mjs": "10e27b2a4121786921566bab1ecf0fe9a0c4ad0ca3e93fa0901a23c1c5c6e5de",
+    "xp-corpus.mjs": "bee2651ff490dbf92a11a091560f464422385f0fc6dae83ce4684fbb5b9453b2"
+  },
+  "modules": {
+    "root": "/Users/tj/software/worktrees/space-data-network-modules--propagator-ca-frontier-runtime",
+    "commit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+    "artifacts": {
+      "propagator/sdn-ap/dist/isomorphic/module.wasm": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+      "propagator/sgp4-xp/third_party/ussf-sgp4/Sgp4Prop.xp.wasm": "9f061110f12ac85a76ad80dc76cdb8a33ddad64e54d8dab3b6778602e16cbeb7",
+      "propagator/ffm/dist/isomorphic/module.wasm": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94"
+    },
+    "sourceHashes": {
+      "propagator/sdn-ap/test/lib/module.mjs": "083b6d004fd76f62bcb6251c5b0ffb258ed002bd897aba9f396ff89ac410f09c",
+      "propagator/sdn-ap/test/lib/tle.mjs": "c6962286eb47547bf0a22d9832c9967cd3002019b40db38163eaa8ea6438ac4a",
+      "propagator/sgp4-xp/tests/lib/tle.mjs": "8f7cc8def65d989827c377acb72c493910233545ee692033298767561dcb5129",
+      "propagator/sgp4-xp/third_party/ussf-sgp4/Sgp4Prop.xp.js": "0d9848bb0ed7ce6eadd85e22f5325e81492ef03355bab85a580eb421c7f22707",
+      "propagator/ffm/tests/evidence/engines/resident-ab.mjs": "c551001e47e996683d0c58470cf679797e42a8161dea85d548148e9eae795e2e"
+    },
+    "packages": {
+      "sdn-ap": {
+        "lockSha256": "2048d5ee5d298ac067807def1ef661fb5142dc8288fe4d70aeb807fbeb98c843",
+        "space-data-module-sdk": "0.9.14",
+        "spacedatastandards.org": "1.272.0"
+      },
+      "ffm": {
+        "lockSha256": "2ac0b5b2c479d5c1f412e37bee52abc4c76f29b80046abc0388bc31cb73fc6c8",
+        "space-data-module-sdk": "0.9.12",
+        "spacedatastandards.org": "1.271.0"
+      }
+    }
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "v8": "14.1.146.11-node.15"
+  },
+  "host": {
+    "model": "Apple M3 Ultra",
+    "logicalCpus": 28,
+    "loadStart": [
+      2.89013671875,
+      2.65380859375,
+      2.49609375
+    ],
+    "loadEnd": [
+      2.89892578125,
+      2.6591796875,
+      2.4990234375
+    ]
+  },
+  "inputs": {
+    "propagator/ffm/tests/evidence/engines/resident-ab.mjs": "c551001e47e996683d0c58470cf679797e42a8161dea85d548148e9eae795e2e",
+    "propagator/ffm/tests/fixtures/standard.json": "53a0cbdbff61c38ae869683f1f8ad56280975d505647e79d0dee7f4adc087972",
+    "propagator/ffm/tests/fixtures/seeds.json": "b45f7773539e932b39601c9d996cfe4d62040889e555d1cc4d4800dbea06a69e",
+    "propagator/ffm/tests/fixtures/resident/eop-2026-08.json": "538207371a5bd1ff87f576ebefff11eeb0283264eb8c68e4a48847bbf17e906f",
+    "propagator/ffm/tests/fixtures/resident/spw-2026-08-synthetic.json": "4307b58399e496d45bfceea7eb0e2edd7b823b89abb3397ff06d1b10c90c9784",
+    "files/orbit-products/tests/fixtures/de440/de440-2026.bsp": "e612a95953ca8211c629bdb632d4c7483cc339f0e963592bd8cae4a7d24ad7ef"
+  },
+  "childCommand": [
+    "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+    "/Users/tj/software/worktrees/space-data-network-modules--propagator-ca-frontier-runtime/propagator/ffm/tests/evidence/engines/resident-ab.mjs",
+    "--baseline",
+    "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+    "--reps",
+    "2",
+    "--wasmedge-hours",
+    "0",
+    "--out",
+    "/Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-propagator-ca-frontier-20261026/runs/propagator-ca-frontier/ffm-final-20261026/resident-aa.json"
+  ],
+  "completedAt": "2026-10-26T16:22:11.025Z",
+  "output": {
+    "file": "ffm.json",
+    "sha256": "2e8c794aab9bfe04d1e8fccc168aa14a0cafea80bf66532c608a48077803d13a"
+  }
+}
