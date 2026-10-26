@@ -6,6 +6,9 @@
 // starlink-score.<through>.s<k>.jsonl.
 //   node experiments/sdn-ap-mixed-screening/part1-starlink.mjs --phase fit|ffm [--shard k/n] [--limit n]
 //   node experiments/sdn-ap-mixed-screening/part1-starlink.mjs --phase score --through <cycle id> [--shard k/n] [--limit n]
+// Phases `leads` and `gp` (A5 point 8, A6) write the conjunction contrast's lead records at the truth epochs nearest E + L of the truth up to
+// --through: SGP4-XP and FFM with their covariances and SpaceX's forecast's error (starlink-leads.s<k>.jsonl), and the public set's SGP4 with
+// its three covariances in V1c5's runtime (starlink-gp.s<k>.jsonl).
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -101,22 +104,29 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
   const { openFits, fitSdnap, statesAt, convert, scoreBins } = await import('./lib/fits.mjs');
   const phase = args.phase ?? 'fit';
-  if (!['fit', 'ffm', 'score'].includes(phase)) throw new Error(`unknown phase ${phase}`);
-  const through = phase === 'score' ? args.through : null;
-  if (phase === 'score' && !cycles.includes(through)) throw new Error('--through names a closed capture cycle');
-  const scored = phase === 'score' ? completeBins(through) : [];
-  if (phase === 'score' && !scored.length) throw new Error(`no bin is complete at ${through}`);
+  if (!['fit', 'ffm', 'score', 'leads', 'gp'].includes(phase)) throw new Error(`unknown phase ${phase}`);
+  const late = ['score', 'leads', 'gp'].includes(phase);
+  const through = late ? args.through : null;
+  if (late && !cycles.includes(through)) throw new Error('--through names a closed capture cycle');
+  const scored = late ? completeBins(through) : [];
+  if (late && !scored.length) throw new Error(`no bin is complete at ${through}`);
   const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
   const norads = fs.readdirSync(path.join(S.captureRoot, forecastCycle)).filter((f) => /^\d+\.json\.gz$/.test(f)).map((f) => Number(f.split('.')[0])).sort((a, b) => a - b);
   const out = path.join(store, 'rows', phase === 'score' ? `starlink-score.${through}.s${k}.jsonl` : `starlink-${phase}.s${k}.jsonl`);
+  const mine = norads.filter((_, i) => i % n === k);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const done = new Set(readJsonl(out).map((r) => r.norad));
   const modules = modulesRoot();
   const a = phase === 'ffm' ? null : await openFits(modules);
-  const ff = phase === 'fit' ? null : await (await import('./lib/ffm-fit.mjs')).openFfmFit(modules);
+  const ff = ['ffm', 'score', 'leads'].includes(phase) ? await (await import('./lib/ffm-fit.mjs')).openFfmFit(modules) : null;
+  const G = phase === 'gp' ? await import('./lib/gp-secondary.mjs') : null;
+  const gp = G ? await G.openGp() : null;
+  let loaded = null; // the shard's sets, read once its windows' prediction starts are known
   const object = (norad) => ({ frame: 'GCRF', name: `STARLINK ${norad}`, norad, originator: 'SpaceX via operator-capture' });
   const rowsOf = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
-  const fits = phase === 'score' ? rowsOf('starlink-fit.') : null, ffmFits = phase === 'score' ? rowsOf('starlink-ffm.') : null;
+  const fits = late ? rowsOf('starlink-fit.') : null, ffmFits = late ? rowsOf('starlink-ffm.') : null;
+  const L5 = late && phase !== 'score' ? await import('./lib/leads.mjs') : null;
+  const tolerance = config.a5.ca.leadToleranceSeconds.starlink;
   const fitIdentity = (w) => ({ norad: w.norad, F: w.F, E: iso(w.E), coverage: w.coverage, olderFiles: w.olderFiles, gated: w.gated.track, track: w.track, trackFrom: `the capture cycles before ${forecastCycle}` });
   const changed = (w, f) => (f.F?.sha !== w.F.sha ? 'the forecast file changed since the fit' : f.track?.sha !== w.track.sha ? 'the track changed since the fit' : null);
   let count = 0;
@@ -127,7 +137,31 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
     const w = windowOf(norad, through ?? cycles.at(-1));
     let row;
     if (w.excluded) row = { norad, excluded: w.excluded };
-    else if (phase === 'fit' || phase === 'ffm') {
+    else if (phase === 'leads' || phase === 'gp') {
+      // the lead epochs in the complete bins (A5 point 6)
+      const last = w.E + Math.max(...scored.map((b) => S.binsHours[Number(b) - 1][1])) * H;
+      const leads = L5.leadLines(w.truth, w.E, tolerance).filter(({ line }) => Date.parse(line.epoch) <= last);
+      const f = fits.get(norad), g = ffmFits.get(norad);
+      row = { norad, E: iso(w.E), through, leads: leads.map((x) => x.L) };
+      if (!f || f.excluded || changed(w, f)) row.excluded = f ? (f.excluded ?? changed(w, f)) : 'no fit row';
+      else if (phase === 'leads') {
+        row.sgp4xp = f.sgp4xp?.ok ? await L5.sgp4xpLeads(a, f.sgp4xp.omm, leads, 'GCRF') : { error: f.sgp4xp?.error ?? 'no SGP4-XP fit' };
+        row.ffm = g && !g.excluded && !changed(w, g) && g.ffm?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => ff.predict(product, norad, ms, w.E, 'starlink', { covariance }), g.ffm, leads, 'GCRF') : { error: g?.ffm?.error ?? g?.excluded ?? 'no FFM fit' };
+        const fcFile = path.join(store, 'forecast', `${norad}.json`);
+        if (fs.existsSync(fcFile)) {
+          const fc = JSON.parse(fs.readFileSync(fcFile));
+          if (!fc.error && Date.parse(fc.firstEpoch) === Date.parse(w.F.startUtc)) {
+            const by = new Map(fc.states.map((x) => [Date.parse(x.epoch), x]));
+            const at = leads.filter(({ line }) => by.has(Date.parse(line.epoch)));
+            row.forecast = await L5.stateLeads(a, await convert(a, at.map(({ line }) => by.get(Date.parse(line.epoch))), 'EME2000', 'GCRF'), at);
+          }
+        }
+      } else {
+        loaded ??= gp.load(new Set(mine), cycleMs(forecastCycle) - DAY, cycleMs(forecastCycle)); // every E lies in the 8 h before the forecast cycle
+        const { key, ...rest } = await gp.record({ key: String(norad), norad, cls: G.v1c5Class(norad), issueMs: w.E, leads }, loaded);
+        row.gp = rest;
+      }
+    } else if (phase === 'fit' || phase === 'ffm') {
       row = fitIdentity(w);
       if (w.coverage < S.minimumCoverage) row.excluded = `operator track ${w.fit.length} epochs`;
       else if (phase === 'ffm') row.ffm = await ff.fit(norad, w.fit, w.E);
@@ -173,5 +207,6 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   console.error(`starlink ${phase} shard ${k}/${n}: ${count} satellites`);
   await a?.close();
   await ff?.close();
+  await gp?.close();
   process.exit(0);
 }
