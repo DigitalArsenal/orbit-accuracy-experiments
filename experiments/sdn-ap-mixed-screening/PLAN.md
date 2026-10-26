@@ -438,3 +438,32 @@ an arm whose Pc compute_pc cannot evaluate is counted, per arm and error, and le
 call, Pc calibration and paired figure of its group and class for both arms, so that the arms stay paired
 on the same encounters. Lead-time epochs of part 2 come from the NSGF truth itself; the 300 s thinning is
 the accuracy scorer's (its grid can miss T + L by more than 150 s).
+
+### A8 - 2026-10-26, committed at 12:30 UTC, before any part 5 number exists: how part 5 screens and assesses
+
+Prototyped only on a capture cycle before the registration (2026-10-24 21:01Z, none of part 1a's truth):
+analysis/conjunction-assessment screens sampled (OEM) sources only by its generic path, which refines every
+pair (its KD search and refine_candidates take PPE sources only, and its perigee filter does not act on
+sampled sources), so part 5 is cut into windows and units as below; assess_conjunction gives a pair's TCA,
+miss and Pc from OEM sources with covariance lines.
+1. **Windows.** Abutting 1 h windows from the earliest E to the latest E + 72 h. A satellite enters a
+   window's screens only when its truth (part 1a's reader) covers the window and 10 min either side with no
+   gap over 11 min; otherwise it is counted as uncovered there.
+2. **Sets.** The truth, and FFM and SGP4-XP predicted at the same epochs (A4 part 5 point 2), as OEM explicit
+   samples in GCRF, screened all-vs-all by screen_catalog: 5 km threshold, coarse step 60 s, combined radius
+   20 m. The population is the part 1a satellites both SGP4-XP and FFM fitted.
+3. **Units, losslessly.** A window's screen runs in units of satellites grouped by their distance from
+   Earth's center over the window; units whose ranges of that distance stay more than 5 km apart are not
+   screened against each other (two such satellites cannot come within 5 km).
+4. **Encounters.** A pair's events of the three sets whose TCAs lie within 10 min of each other are one
+   encounter, timed at the earliest; it enters when any set's miss is under 5 km.
+5. **Assessment.** For every entering encounter, assess_conjunction within 10 min either side of its time:
+   on the two truth ephemerides for the true closest approach (a truth gap there sets the encounter aside,
+   counted), and on each arm's ephemerides at 60 s steps with its covariance at each epoch (FFM: fit_batch's
+   formal covariance times max(1, reduced chi-square) carried by propagator/ffm; SGP4-XP: the module's,
+   sdnap_covariance_at, in TEME), Foster, 10 m per object (20 m combined), for the arm's TCA, predicted miss,
+   Pc and call.
+6. **Classes.** Unmaneuvered pairs (neither satellite maneuver-evident in part 1a's final score pass) and
+   maneuvered pairs, apart; A4's metrics and verdict and A5's calls and confusion matrix per class; a class
+   too small for an interval is stated as small, never pooled.
+7. **Order.** Part 5 runs after part 1a's final score pass, once bin 3 is complete.
