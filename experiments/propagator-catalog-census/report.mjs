@@ -64,6 +64,7 @@ export function markdown(out){
     '',`Numerical/accounting outcomes: **${n(out.counts.finished)} finished; ${n(out.counts.pending)} pending**. Live provider inventories reconciled: **${out.counts.providerInventoriesComplete}/${out.counts.registrySources}**. A finished coverage or parser failure is not a successful propagation.`,
     '', '## Source coverage','', '| Source | Local files | Source/object identities | Resolved NORAD | Finished / pending | Provider inventory |','|---|---:|---:|---:|---:|---|'];
   for(const s of out.sources)lines.push(`| ${s.id} | ${n(s.files)} | ${n(s.sourceObjects)} | ${n(s.uniqueNorad)} | ${n(s.finished)} / ${n(s.pending)} | ${s.provider?.status??'additional archive; no provider reconciliation'} |`);
+  if(out.operatorRecordCoverage)lines.push('',`Full Starlink record/epoch audit: **${n(out.operatorRecordCoverage.objects)} identities checked; ${n(out.operatorRecordCoverage.statuses.eligible||0)} eligible; ${n(out.operatorRecordCoverage.statuses.missing_fit_coverage||0)} with insufficient fit coverage**. ${n(out.operatorRecordCoverage.epochChecks)} selected epochs survive OEM framing unchanged. This is a coverage/framing check; it is not completion of the numerical batch.`);
   lines.push('', 'A zero means no identified local object for that source, not an empty upstream catalog. Registered source endpoints are deployment metadata, not proof of active ingestion. Credentialed feeds remain in the source reconciliation; a private commercial feed does not count as public truth.','', '## Accuracy on available support','',
     'Results are separated by product lineage and evidence class. Only successful common support enters paired ratios; all missing coverage and numerical failures remain in the denominators in [summary.json](summary.json). No numerical orbit-regime classification has yet been added.','',
     '| Lineage | Evidence | Lead | XP / AP / FFM successes | Median RMS metres XP / AP / FFM | FFM/XP paired ratio |','|---|---|---:|---:|---|---:|');
@@ -90,6 +91,13 @@ export function report(name='registered',destination=path.join(root,'results',co
   const executionFile=path.join(dir,'execution.json'),execution=fs.existsSync(executionFile)?read(executionFile):null;
   if(rows.some(r=>r.executionId!==execution?.executionId))throw new Error('Mixed execution provenance');
   const out=aggregate(census,rows,{censusHash,executionId:execution?.executionId??null,moduleCommit:config.moduleCommit,sourceSnapshotUtc:census.frozenUtc,outcomeHashesSha256:sha(JSON.stringify(outcomeHashes))});
+  const auditFile=path.join(dir,'operator-epoch-audit.json');
+  if(fs.existsSync(auditFile)){
+    const a=read(auditFile);if(a.censusHash!==censusHash)throw new Error('Operator audit belongs to another census');
+    const source=`experiments/${config.id}/arcs.mjs`;
+    if(a.sourceHashes[source]!==execution.sourceHashes[source])throw new Error('Operator audit uses another sampling implementation');
+    out.operatorRecordCoverage={classification:'source coverage and exact epoch framing, not numerical completion',censusHash,selectionSha256:a.sourceHashes[source],objects:a.objects,statuses:a.statuses,fitSamples:a.fitSamples,scoreSamples:a.scoreSamples,epochChecks:a.epochChecks,completedUtc:a.completedUtc};
+  }
   write(path.join(dir,'report-inputs.json'),{censusHash,execution,outcomeHashes});
   write(path.join(destination,'summary.json'),out);fs.writeFileSync(path.join(destination,'README.md'),markdown(out));return out;
 }
