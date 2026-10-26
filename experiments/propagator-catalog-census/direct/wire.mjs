@@ -19,7 +19,8 @@ export async function wire(modules){
     async plan(id,epoch){return (await invoke('plan_source_requests',[settings(id,epoch)])).filter(x=>x.portId==='requests').map(x=>decodeHttpRequest(x.payload));},
     async discover(id,epoch,listings){const out=await invoke('discover_sources',[settings(id,epoch),...listings.map(x=>response('responses',x,x.body))]);return out.filter(x=>x.portId==='resources').flatMap(x=>readSrg(x.payload).RESOURCES??[]);},
     async validate(resource,rec,body){
-      const out=await invoke('describe_coverage',[response('response',rec,body,srg({resources:[resource]}))]),identities=[];
+      const typed={...resource};for(const key of ['BYTE_LENGTH','MODIFIED_AT_MS','DISCOVERED_AT_MS'])if(typed[key]!=null)typed[key]=BigInt(typed[key]);
+      const out=await invoke('describe_coverage',[response('response',rec,body,srg({resources:[typed]}))]),identities=[];
       for(const frame of out.filter(x=>x.portId==='catalog'))for(let at=0;at<frame.payload.length;){const bytes=frame.payload,n=new DataView(bytes.buffer,bytes.byteOffset+at,4).getUint32(0,true)+4;if(n<12||at+n>bytes.length)throw Error('Invalid CAT framing');const row=CAT.getSizePrefixedRootAsCAT(new ByteBuffer(bytes.slice(at,at+n)));identities.push({objectId:row.OBJECT_ID(),name:row.OBJECT_NAME()});at+=n;}
       return {rawValidation:'passed',identityCoverage:identities.length?'declared':'not_provided_by_module',identities};
     },

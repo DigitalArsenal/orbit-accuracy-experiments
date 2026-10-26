@@ -47,3 +47,20 @@ agreement, native listing replay, and native validation replay on each acquired
 format. The E2E uses actual public feeds and the actual retained archive. Report
 source/discovery/download/validation gaps separately and fail full-coverage
 claims if any remain. An interrupted job remains resumable and incomplete.
+
+## Amendment — 2026-10-26: typed replay and fair download order
+
+The first live acquisition exposed a wrapper error: JSON persistence stores SRG
+64-bit integers as decimal strings; they must be restored to BigInt before
+FlatBuffer packing. No raw download was invalidated. Preserve the first run as
+evidence and import its frozen queue, exact raw bytes and HTTP receipts into a
+separate corrected run. Revalidate every imported successful download through
+the corrected wrapper, recording the parent manifest and queue hashes. No
+discovery or numerical selection criterion changes. Interleave source queues
+before draining them so large fleets do not delay every smaller source.
+
+The config's manually assigned `registeredUtc` of 21:20:00Z was a mistaken
+timestamp label, not the actual registration time. The authoritative initial
+registration is commit `22cb55513201b61bccd6c6d856af38d73246c3cf`, timestamp
+2026-10-26T21:17:44Z, before acquisition started at 21:17:58Z. Future provenance
+records use the actual source commit time, while retaining the frozen label.

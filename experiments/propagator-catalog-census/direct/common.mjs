@@ -22,7 +22,7 @@ export function registration(modules){
   }
   if(execFileSync('git',['-C',modules,'rev-parse','HEAD']).toString().trim()!==config.modulesCommit)throw Error('Module revision differs');
   for(const [f,h]of Object.entries(config.moduleFiles))if(sha(fs.readFileSync(path.join(moduleRoot,f)))!==h)throw Error(`Module pin differs: ${f}`);
-  return {experimentCommit:execFileSync('git',['-C',root,'rev-parse','HEAD']).toString().trim(),sourceHashes:hashes,moduleFiles:config.moduleFiles,modulesCommit:config.modulesCommit,node:process.version,command:process.argv,registeredUtc:config.registeredUtc};
+  return {experimentCommit:execFileSync('git',['-C',root,'rev-parse','HEAD']).toString().trim(),sourceHashes:hashes,moduleFiles:config.moduleFiles,modulesCommit:config.modulesCommit,node:process.version,command:process.argv,registeredUtc:execFileSync('git',['-C',root,'log','-1','--format=%cI','--',here]).toString().trim(),frozenConfigTimestampLabel:config.registeredUtc};
 }
 export function storeBody(dir,body){
   const hash=sha(body),relative=`raw/${hash.slice(0,2)}/${hash}.gz`,file=path.join(dir,relative);

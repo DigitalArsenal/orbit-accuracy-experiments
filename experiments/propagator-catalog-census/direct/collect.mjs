@@ -88,7 +88,7 @@ export async function discover(dir,modules,W,manifest){
   write(path.join(dir,'queue.json'),{epochMs:manifest.epochMs,sources});
   manifest.queueSha256=sha(fs.readFileSync(path.join(dir,'queue.json')));manifest.queueFrozenUtc=iso();write(path.join(dir,'manifest.json'),manifest);
 }
-export async function collect(run,modules){
+export async function collect(run,modules,from){
   const provenance=registration(modules),dir=runDir(run);fs.mkdirSync(dir,{recursive:true});
   const lock=path.join(dir,'collector.lock');fs.mkdirSync(lock); // A failed process leaves an explicit lock for inspection.
   write(path.join(lock,'owner.json'),{pid:process.pid,startedUtc:iso()});
@@ -96,11 +96,27 @@ export async function collect(run,modules){
   try{
     let manifest;
     if(fs.existsSync(path.join(dir,'manifest.json'))){manifest=read(path.join(dir,'manifest.json'));if(JSON.stringify(manifest.sourceHashes)!==JSON.stringify(provenance.sourceHashes))throw Error('Acquisition implementation differs from the frozen run');}
-    else {manifest={...provenance,epochMs:Date.now(),startedUtc:iso(),modules,scope:'all advertised public spacecraft; current discovery windows plus existing census archives',completeCatalog:false};write(path.join(dir,'manifest.json'),manifest);}
+    else {
+      manifest={...provenance,epochMs:Date.now(),startedUtc:iso(),modules,scope:'all advertised public spacecraft; current discovery windows plus existing census archives',completeCatalog:false};
+      if(from){
+        const parent=runDir(from);if(parent===dir)throw Error('Import must name a distinct run');
+        const prior=read(path.join(parent,'manifest.json'));
+        if(prior.modulesCommit!==provenance.modulesCommit||sha(fs.readFileSync(path.join(parent,'queue.json')))!==prior.queueSha256)throw Error('Parent queue or module pin differs');
+        manifest.epochMs=prior.epochMs;manifest.queueSha256=prior.queueSha256;manifest.queueFrozenUtc=prior.queueFrozenUtc;
+        manifest.imported={run:from,manifestSha256:sha(fs.readFileSync(path.join(parent,'manifest.json'))),queueSha256:prior.queueSha256};
+        fs.cpSync(path.join(parent,'raw'),path.join(dir,'raw'),{recursive:true,errorOnExist:true,force:false});
+        fs.copyFileSync(path.join(parent,'queue.json'),path.join(dir,'queue.json'),fs.constants.COPYFILE_EXCL);
+        const receipts=[];for(const f of fs.readdirSync(path.join(parent,'outcomes')).filter(x=>x.endsWith('.json'))){const old=read(path.join(parent,'outcomes',f));if(old.receipt.state==='downloaded'){bodyOf(dir,old.receipt);receipts.push(old.receipt);}}
+        write(path.join(dir,'imported-receipts.json'),receipts);manifest.imported.receiptsSha256=sha(fs.readFileSync(path.join(dir,'imported-receipts.json')));manifest.imported.downloads=receipts.length;
+      }
+      write(path.join(dir,'manifest.json'),manifest);
+    }
     W=await wire(modules);
     if(!manifest.queueSha256)await discover(dir,modules,W,manifest);
     if(sha(fs.readFileSync(path.join(dir,'queue.json')))!==manifest.queueSha256)throw Error('Frozen discovery queue changed');
-    const queue=read(path.join(dir,'queue.json')),resources=queue.sources.flatMap(s=>s.resources),cached=new Map(queue.sources.flatMap(s=>s.listings.filter(l=>l.state==='downloaded').map(l=>[l.url,l])));
+    const queue=read(path.join(dir,'queue.json')),resources=[],cached=new Map(queue.sources.flatMap(s=>s.listings.filter(l=>l.state==='downloaded').map(l=>[l.url,l])));
+    for(let i=0;queue.sources.some(s=>i<s.resources.length);i++)for(const s of queue.sources)if(s.resources[i])resources.push(s.resources[i]);
+    if(manifest.imported){if(sha(fs.readFileSync(path.join(dir,'imported-receipts.json')))!==manifest.imported.receiptsSha256)throw Error('Imported receipts changed');for(const r of read(path.join(dir,'imported-receipts.json')))cached.set(r.url,r);}
     let completed=0,validationTail=Promise.resolve();
     await pool(resources,async r=>{
       const f=path.join(dir,'outcomes',keyOf(r)+'.json');
@@ -119,4 +135,4 @@ export async function collect(run,modules){
     report(run);
   }finally{await W?.close();fs.rmSync(lock,{recursive:true});}
 }
-if(process.argv[1]===new URL(import.meta.url).pathname){const {values}=parseArgs({options:{run:{type:'string',default:'direct-20261026'},modules:{type:'string'}}});if(!values.modules)throw Error('--modules required');await collect(values.run,values.modules);}
+if(process.argv[1]===new URL(import.meta.url).pathname){const {values}=parseArgs({options:{run:{type:'string',default:'direct-20261026-r2'},modules:{type:'string'},from:{type:'string'}}});if(!values.modules)throw Error('--modules required');await collect(values.run,values.modules,values.from);}

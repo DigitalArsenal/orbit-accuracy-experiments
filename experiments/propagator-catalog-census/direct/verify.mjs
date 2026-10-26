@@ -8,11 +8,18 @@ import {read,write,sha,iso,registration,runDir,bodyOf,keyOf} from './common.mjs'
 import {wire} from './wire.mjs';
 import {supplements} from './collect.mjs';
 import {report} from './report.mjs';
-const {values}=parseArgs({options:{run:{type:'string',default:'direct-20261026'},modules:{type:'string'}}});
+const {values}=parseArgs({options:{run:{type:'string',default:'direct-20261026-r2'},modules:{type:'string'}}});
 if(!values.modules)throw Error('--modules required');
 const reg=registration(values.modules),dir=runDir(values.run),manifest=read(path.join(dir,'manifest.json'));
 assert.deepEqual(reg.sourceHashes,manifest.sourceHashes,'Run source changed');
 assert.equal(sha(fs.readFileSync(path.join(dir,'queue.json'))),manifest.queueSha256);
+if(manifest.imported){
+  const parent=runDir(manifest.imported.run);
+  assert.equal(sha(fs.readFileSync(path.join(parent,'manifest.json'))),manifest.imported.manifestSha256);
+  assert.equal(sha(fs.readFileSync(path.join(parent,'queue.json'))),manifest.queueSha256);
+  assert.equal(sha(fs.readFileSync(path.join(dir,'imported-receipts.json'))),manifest.imported.receiptsSha256);
+  for(const r of read(path.join(dir,'imported-receipts.json')))bodyOf(dir,r);
+}
 const queue=read(path.join(dir,'queue.json')),registry=read(path.join(values.modules,'data-source/ephemeris-source/sources.json'));
 assert.deepEqual(queue.sources.map(x=>x.source_id),registry.sources.map(x=>x.source_id));
 const W=await wire(values.modules),keys=new Set(),files=new Set(),replayed=new Set(),gaps=[];
