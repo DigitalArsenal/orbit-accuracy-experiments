@@ -325,3 +325,20 @@ to the truth after this registration.
 ## Amendments
 
 None at registration.
+
+### A1 - 2026-10-26, before any score: the build
+
+build.json fixes the build. It is modules main 348636447dc900e7e2feb264083ec82ec3344df5, the commit that lands
+task modules-sgp4xp-atmosphere-variant-20261026, with the SHA-256 of every module the steps load. In it,
+propagator/sdn-ap is 8522b88bcbac (SPEC 15, the selectable drag atmosphere). At the default it reproduces the
+conformance run bit for bit: XP 72dcf6005046, control 9ecfafcd9027.
+
+The arms read the module's own documented interface, `$PCF` FORCES on `fit` and `propagate`:
+
+- `$SPW` rows on `space_weather`;
+- one `$DCL` on `density_correction`.
+
+Part D's epoch placements and finite-difference columns are the module's diagnostic exports
+`sdnap_fit_epoch_diagnostic` and `sdnap_fit_jacobian_diagnostic`.
+
+Nothing else changes.
