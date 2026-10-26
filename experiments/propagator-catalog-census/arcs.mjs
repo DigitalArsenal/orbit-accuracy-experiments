@@ -14,6 +14,7 @@ const span=f=>({...f,a:Date.parse(f.start),b:Date.parse(f.stop),step:(Date.parse
 const covers=(f,t)=>t>=f.a-tolerance&&t<=f.b+tolerance&&(f.step<=tolerance||Math.abs(f.a+Math.round((t-f.a)/f.step)*f.step-t)<=tolerance);
 
 export function select(object,census){
+  if(object.evidence==='gp-only')return {status:'missing_future_reference',reason:'Catalog membership only: GP elements do not provide independent high-accuracy reference states'};
   if(object.lineage==='planet-daily-states')return {status:'missing_fit_coverage',reason:'Daily OD states do not meet the registered 10-minute, 90% fit coverage'};
   if(object.evidence==='mixed-reconstructed-predicted')return {status:'unsupported_format_or_frame',reason:'Ultra-rapid reconstructed and predicted portions have not been separated'};
   const files=object.files.map(i=>({...census.files[i],fileId:i})).filter(f=>['reference','operator-head'].includes(f.kind)&&f.epochs>1).map(span);
