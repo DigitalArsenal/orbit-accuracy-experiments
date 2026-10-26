@@ -38,6 +38,9 @@ export function guard(modules) {
 }
 export function newRun(opts) {
   const plan = guard(opts.modules), dir = path.join(root, 'runs', config.id, opts.run);
+  for(const file of fs.readdirSync(here).filter(f=>f.endsWith('.mjs'))){
+    if(!git(root,'show',`HEAD:experiments/${config.id}/${file}`).equals(fs.readFileSync(path.join(here,file))))throw new Error(`uncommitted run source: ${file}`);
+  }
   if (fs.existsSync(path.join(dir, 'manifest.json'))) throw new Error(`run already exists: ${opts.run}`);
   fs.mkdirSync(dir, { recursive: true });
   const modules = fs.realpathSync(opts.modules);

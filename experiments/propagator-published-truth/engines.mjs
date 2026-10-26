@@ -49,7 +49,9 @@ export async function engines(run,W) {
       if(pred.length!==arc.score.length)throw new Error(`returned ${pred.length} states for ${arc.score.length} epochs`);
       for(let i=0;i<pred.length;i++)if(![...pred[i].r,...pred[i].v].every(Number.isFinite)||Date.parse(pred[i].epoch)!==arc.score[i].ms)throw new Error(`invalid state/epoch ${i}`);
       const t=performance.now(),c=cpu();
-      const pairs=pred.map((p,i)=>({id:String(i),predicted:{position:p.r,velocity:p.v,covariance:p.covariance,covarianceAxes:'INERTIAL'},truth:{position:arc.score[i].r,velocity:arc.score[i].v,covariance:arc.score[i].covariance,covarianceAxes:'INERTIAL'}}));
+      // OEM is km/km²; ERM pair_statistics explicitly requires SI units.
+      const si=p=>({position:p.r.map(x=>x*1000),velocity:p.v.map(x=>x*1000),covariance:p.covariance?.map(x=>x*1e6)??null,covarianceAxes:'INERTIAL'});
+      const pairs=pred.map((p,i)=>({id:String(i),predicted:si(p),truth:si(arc.score[i])}));
       const response=await gem.invoke('pair_statistics',[erm.frame('pairs','pairs',{axesFrom:'truth',pairs})]);
       const stats=erm.decode(response.outputs.find(o=>o.portId==='statistics').payload).pairs;
       if(stats.length!==pred.length)throw new Error('scorer count mismatch');
@@ -63,8 +65,8 @@ export async function engines(run,W) {
         const ric=[0,1,2].map(k=>Math.sqrt(e.reduce((v,s)=>v+s.errorRtn[k]**2,0)/e.length));
         const j=indices.find(i=>arc.score[i].ms===arc.leads[lead].exactMs),exact=j===undefined?null:stats[j];
         const finite=e.filter(s=>Number.isFinite(s.d2Combined));
-        days[lead]={samples:e.length,rmsM:Math.hypot(...ric)*1000,ricRmsM:ric.map(x=>x*1000),denseCoverage95:finite.length?finite.filter(s=>s.d2Combined<=config.covariance.chiSquare3_95).length/finite.length:null,
-          exact:exact?{positionErrorM:Math.hypot(...exact.errorRtn)*1000,d2Combined:exact.d2Combined,d2Predicted:exact.d2Predicted,referenceCovariancePresent:!!arc.score[j].covariance,offsetSeconds:arc.leads[lead].offsetSeconds}:null};
+        days[lead]={samples:e.length,rmsM:Math.hypot(...ric),ricRmsM:ric,denseCoverage95:finite.length?finite.filter(s=>s.d2Combined<=config.covariance.chiSquare3_95).length/finite.length:null,
+          exact:exact?{positionErrorM:Math.hypot(...exact.errorRtn),d2Combined:exact.d2Combined,d2Predicted:exact.d2Predicted,referenceCovariancePresent:!!arc.score[j].covariance,offsetSeconds:arc.leads[lead].offsetSeconds}:null};
       }
       return {ok:true,fit,timing,days};
     },
