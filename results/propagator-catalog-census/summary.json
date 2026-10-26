@@ -7,7 +7,7 @@
     "executionId": "71697feb66aa81d2e6dafd3721617d279a41b358ac1e76ef030e1327bf297e85",
     "moduleCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
     "sourceSnapshotUtc": "2026-10-26T19:50:41.810Z",
-    "outcomeHashesSha256": "25eea1f008b54c2c33fe62ba887a356fa4108006cd70e07f9004f5770dc45a07"
+    "outcomeHashesSha256": "93967af7c52beffe89c3f72d8315344e65b8070a7a1cac479ea8f2c57af985a8"
   },
   "counts": {
     "registrySources": 17,
@@ -26,8 +26,8 @@
       "UNKNOWN": 1349
     },
     "unresolvedSourceIdentities": 24,
-    "finished": 47414,
-    "pending": 9999
+    "finished": 53690,
+    "pending": 3723
   },
   "sources": [
     {
@@ -40,12 +40,12 @@
       "sourceObjects": 11170,
       "uniqueNorad": 11170,
       "unresolvedIdentities": 0,
-      "finished": 1180,
-      "pending": 9990,
+      "finished": 7452,
+      "pending": 3718,
       "outcomes": {
         "eligible": 4,
-        "evaluated": 1176,
-        "missing_fit_coverage": 4
+        "evaluated": 7444,
+        "missing_fit_coverage": 8
       },
       "provider": {
         "scope": "local-provider-api",
@@ -479,9 +479,11 @@
       "sourceObjects": 3,
       "uniqueNorad": 3,
       "unresolvedIdentities": 0,
-      "finished": 0,
-      "pending": 3,
-      "outcomes": {},
+      "finished": 2,
+      "pending": 1,
+      "outcomes": {
+        "evaluated": 2
+      },
       "provider": null,
       "populationKnown": false
     },
@@ -510,9 +512,11 @@
       "sourceObjects": 5,
       "uniqueNorad": 5,
       "unresolvedIdentities": 0,
-      "finished": 0,
-      "pending": 5,
-      "outcomes": {},
+      "finished": 2,
+      "pending": 3,
+      "outcomes": {
+        "missing_fit_coverage": 2
+      },
       "provider": null,
       "populationKnown": false
     },
@@ -13721,95 +13725,95 @@
       "population": 11170,
       "statuses": {
         "eligible": 4,
-        "evaluated": 1176,
-        "missing_fit_coverage": 4
+        "evaluated": 7444,
+        "missing_fit_coverage": 8
       },
       "leads": {
         "1": {
           "arms": {
             "xp-native": {
               "population": 11170,
-              "attempted": 1180,
+              "attempted": 7448,
               "failed": 0,
-              "successful": 1180,
-              "leadAvailable": 1180,
-              "unavailableReference": 4,
-              "pending": 9990,
-              "medianRmsM": 2857.1407458944605,
-              "p90RmsM": 42198.033595693305,
+              "successful": 7448,
+              "leadAvailable": 7448,
+              "unavailableReference": 8,
+              "pending": 3718,
+              "medianRmsM": 2180.7699163251627,
+              "p90RmsM": 12907.77089745552,
               "combined": {
-                "arcs": 1180,
-                "objects": 1180,
+                "arcs": 7448,
+                "objects": 7448,
                 "invalidOrMissing": 0,
-                "coverage95": 0.33220338983050846,
-                "meanD2Over3": 1248.0646656449085,
+                "coverage95": 0.3766111707841031,
+                "meanD2Over3": 283.07244488008405,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               },
               "predictionOnly": {
-                "arcs": 1180,
-                "objects": 1180,
+                "arcs": 7448,
+                "objects": 7448,
                 "invalidOrMissing": 0,
-                "coverage95": 0.33220338983050846,
-                "meanD2Over3": 1248.0646656449085,
+                "coverage95": 0.3766111707841031,
+                "meanD2Over3": 283.07244488008405,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               }
             },
             "ap-msis": {
               "population": 11170,
-              "attempted": 1180,
+              "attempted": 7448,
               "failed": 0,
-              "successful": 1180,
-              "leadAvailable": 1180,
-              "unavailableReference": 4,
-              "pending": 9990,
-              "medianRmsM": 2740.3191002010935,
-              "p90RmsM": 45535.20625700539,
+              "successful": 7448,
+              "leadAvailable": 7448,
+              "unavailableReference": 8,
+              "pending": 3718,
+              "medianRmsM": 2148.7644830206063,
+              "p90RmsM": 12884.910084348312,
               "combined": {
-                "arcs": 1180,
-                "objects": 1180,
+                "arcs": 7448,
+                "objects": 7448,
                 "invalidOrMissing": 0,
-                "coverage95": 0.32966101694915256,
-                "meanD2Over3": 1227.456059413638,
+                "coverage95": 0.3772824919441461,
+                "meanD2Over3": 269.4295554455297,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               },
               "predictionOnly": {
-                "arcs": 1180,
-                "objects": 1180,
+                "arcs": 7448,
+                "objects": 7448,
                 "invalidOrMissing": 0,
-                "coverage95": 0.32966101694915256,
-                "meanD2Over3": 1227.456059413638,
+                "coverage95": 0.3772824919441461,
+                "meanD2Over3": 269.4295554455297,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               }
             },
             "ffm": {
               "population": 11170,
-              "attempted": 1176,
-              "failed": 455,
-              "successful": 721,
-              "leadAvailable": 1180,
-              "unavailableReference": 4,
-              "pending": 9990,
-              "medianRmsM": 1669.0742137719983,
-              "p90RmsM": 20518.52551685213,
+              "attempted": 7444,
+              "failed": 5209,
+              "successful": 2235,
+              "leadAvailable": 7448,
+              "unavailableReference": 8,
+              "pending": 3718,
+              "medianRmsM": 1323.8067312862704,
+              "p90RmsM": 11203.215906475869,
               "combined": {
-                "arcs": 721,
-                "objects": 721,
+                "arcs": 2235,
+                "objects": 2235,
                 "invalidOrMissing": 0,
-                "coverage95": 0.018030513176144243,
-                "meanD2Over3": 132466.20650758632,
+                "coverage95": 0.02371364653243848,
+                "meanD2Over3": 167238.16673806784,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               },
               "predictionOnly": {
-                "arcs": 721,
-                "objects": 721,
+                "arcs": 2235,
+                "objects": 2235,
                 "invalidOrMissing": 0,
-                "coverage95": 0.018030513176144243,
-                "meanD2Over3": 132466.20650758632,
+                "coverage95": 0.02371364653243848,
+                "meanD2Over3": 167238.16673806784,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               }
@@ -13819,8 +13823,8 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 1180,
-              "objects": 1180,
+              "arcs": 7448,
+              "objects": 7448,
               "undefinedRatio": 0,
               "medianRatio": 1,
               "objectBootstrap95": [
@@ -13832,26 +13836,26 @@
             {
               "numerator": "ffm",
               "denominator": "xp-native",
-              "arcs": 721,
-              "objects": 721,
+              "arcs": 2235,
+              "objects": 2235,
               "undefinedRatio": 0,
-              "medianRatio": 0.687453484606446,
+              "medianRatio": 0.6375330551418972,
               "objectBootstrap95": [
-                0.6448234558548949,
-                0.759259897063961
+                0.5970026899822647,
+                0.6713206375041824
               ],
               "decision": "LOWER_ERROR_ON_COMMON_SUPPORT"
             },
             {
               "numerator": "ffm",
               "denominator": "ap-msis",
-              "arcs": 721,
-              "objects": 721,
+              "arcs": 2235,
+              "objects": 2235,
               "undefinedRatio": 0,
-              "medianRatio": 0.6851645642114734,
+              "medianRatio": 0.6297174178059252,
               "objectBootstrap95": [
-                0.6341581464263379,
-                0.7548856387664032
+                0.5944492601586477,
+                0.6716834661870447
               ],
               "decision": "LOWER_ERROR_ON_COMMON_SUPPORT"
             }
@@ -13861,12 +13865,12 @@
           "arms": {
             "xp-native": {
               "population": 11170,
-              "attempted": 1180,
+              "attempted": 7448,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 1180,
-              "pending": 9990,
+              "unavailableReference": 7452,
+              "pending": 3718,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -13890,12 +13894,12 @@
             },
             "ap-msis": {
               "population": 11170,
-              "attempted": 1180,
+              "attempted": 7448,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 1180,
-              "pending": 9990,
+              "unavailableReference": 7452,
+              "pending": 3718,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -13919,12 +13923,12 @@
             },
             "ffm": {
               "population": 11170,
-              "attempted": 1176,
-              "failed": 455,
+              "attempted": 7444,
+              "failed": 5209,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 1180,
-              "pending": 9990,
+              "unavailableReference": 7452,
+              "pending": 3718,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -13984,12 +13988,12 @@
           "arms": {
             "xp-native": {
               "population": 11170,
-              "attempted": 1180,
+              "attempted": 7448,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 1180,
-              "pending": 9990,
+              "unavailableReference": 7452,
+              "pending": 3718,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14013,12 +14017,12 @@
             },
             "ap-msis": {
               "population": 11170,
-              "attempted": 1180,
+              "attempted": 7448,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 1180,
-              "pending": 9990,
+              "unavailableReference": 7452,
+              "pending": 3718,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14042,12 +14046,12 @@
             },
             "ffm": {
               "population": 11170,
-              "attempted": 1176,
-              "failed": 455,
+              "attempted": 7444,
+              "failed": 5209,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 1180,
-              "pending": 9990,
+              "unavailableReference": 7452,
+              "pending": 3718,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14105,28 +14109,28 @@
         }
       },
       "timing": {
-        "commonArcs": 721,
+        "commonArcs": 2235,
         "arms": {
           "xp-native": {
-            "fitWallSeconds": 0.032969541999977085,
-            "propagateWallSeconds": 0.006353916999883949,
-            "scoreWallSeconds": 0.0013783330000005662,
-            "totalWallSeconds": 0.04062308300007135,
-            "totalCpuSeconds": 0.09189300000002731
+            "fitWallSeconds": 0.031110333000309767,
+            "propagateWallSeconds": 0.00566800000006333,
+            "scoreWallSeconds": 0.0013676249999552965,
+            "totalWallSeconds": 0.03863129200041294,
+            "totalCpuSeconds": 0.07959600000003775
           },
           "ap-msis": {
-            "fitWallSeconds": 0.10997129100002348,
-            "propagateWallSeconds": 0.025004249999765308,
-            "scoreWallSeconds": 0.0009920830000191927,
-            "totalWallSeconds": 0.13596858400013298,
-            "totalCpuSeconds": 0.13756299999977273
+            "fitWallSeconds": 0.10188200000021606,
+            "propagateWallSeconds": 0.023939458999782802,
+            "scoreWallSeconds": 0.0010430000005289912,
+            "totalWallSeconds": 0.12760237500001675,
+            "totalCpuSeconds": 0.12883899999997084
           },
           "ffm": {
-            "fitWallSeconds": 9.668663790999911,
-            "propagateWallSeconds": 3.0620852079999166,
-            "scoreWallSeconds": 0.00155420899996534,
-            "totalWallSeconds": 12.666494541999883,
-            "totalCpuSeconds": 14.173629000000119
+            "fitWallSeconds": 8.482039000000107,
+            "propagateWallSeconds": 2.9383757090000437,
+            "scoreWallSeconds": 0.00108587499987334,
+            "totalWallSeconds": 11.623623833000194,
+            "totalCpuSeconds": 12.976988000000006
           }
         }
       }
@@ -14136,76 +14140,78 @@
       "evidence": "precise-reconstruction",
       "regime": "not yet classified by native module",
       "population": 3,
-      "statuses": {},
+      "statuses": {
+        "evaluated": 2
+      },
       "leads": {
         "1": {
           "arms": {
             "xp-native": {
               "population": 3,
-              "attempted": 0,
+              "attempted": 2,
               "failed": 0,
-              "successful": 0,
-              "leadAvailable": 0,
+              "successful": 2,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 1,
+              "medianRmsM": 1015.9209966744837,
+              "p90RmsM": 1114.1959832569542,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 1.349401512112949,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 1.3494015127333723,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             },
             "ap-msis": {
               "population": 3,
-              "attempted": 0,
+              "attempted": 2,
               "failed": 0,
-              "successful": 0,
-              "leadAvailable": 0,
+              "successful": 2,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 1,
+              "medianRmsM": 1003.160287262593,
+              "p90RmsM": 1100.2367499031498,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 1.326466049099465,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 1.3264660497143475,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             },
             "ffm": {
               "population": 3,
-              "attempted": 0,
-              "failed": 0,
+              "attempted": 2,
+              "failed": 2,
               "successful": 0,
-              "leadAvailable": 0,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
+              "pending": 1,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14232,10 +14238,10 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.9874338522637586,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
@@ -14265,70 +14271,70 @@
           "arms": {
             "xp-native": {
               "population": 3,
-              "attempted": 0,
+              "attempted": 2,
               "failed": 0,
-              "successful": 0,
-              "leadAvailable": 0,
+              "successful": 2,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 1,
+              "medianRmsM": 2718.215864777023,
+              "p90RmsM": 3482.2022990301784,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 0.5421450388018779,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 0.5421450394246472,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             },
             "ap-msis": {
               "population": 3,
-              "attempted": 0,
+              "attempted": 2,
               "failed": 0,
-              "successful": 0,
-              "leadAvailable": 0,
+              "successful": 2,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 1,
+              "medianRmsM": 2628.0188591785386,
+              "p90RmsM": 3386.0117723901803,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 0.5414997915161617,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 0.5414997921551924,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             },
             "ffm": {
               "population": 3,
-              "attempted": 0,
-              "failed": 0,
+              "attempted": 2,
+              "failed": 2,
               "successful": 0,
-              "leadAvailable": 0,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
+              "pending": 1,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14355,10 +14361,10 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.9632497855856725,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
@@ -14388,70 +14394,70 @@
           "arms": {
             "xp-native": {
               "population": 3,
-              "attempted": 0,
+              "attempted": 2,
               "failed": 0,
-              "successful": 0,
-              "leadAvailable": 0,
+              "successful": 2,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 1,
+              "medianRmsM": 6281.946565406806,
+              "p90RmsM": 9629.334915470628,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 2.1923595598551104,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 2.1923595630318147,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             },
             "ap-msis": {
               "population": 3,
-              "attempted": 0,
+              "attempted": 2,
               "failed": 0,
-              "successful": 0,
-              "leadAvailable": 0,
+              "successful": 2,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 1,
+              "medianRmsM": 6298.770205814179,
+              "p90RmsM": 9676.259483258475,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 2.228436074305891,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 1,
+                "meanD2Over3": 2.2284360775327703,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             },
             "ffm": {
               "population": 3,
-              "attempted": 0,
-              "failed": 0,
+              "attempted": 2,
+              "failed": 2,
               "successful": 0,
-              "leadAvailable": 0,
+              "leadAvailable": 2,
               "unavailableReference": 0,
-              "pending": 3,
+              "pending": 1,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14478,10 +14484,10 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.9976428405200718,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
@@ -14944,7 +14950,9 @@
       "evidence": "precise-reconstruction",
       "regime": "not yet classified by native module",
       "population": 5,
-      "statuses": {},
+      "statuses": {
+        "missing_fit_coverage": 2
+      },
       "leads": {
         "1": {
           "arms": {
@@ -14954,8 +14962,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14983,8 +14991,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15012,8 +15020,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15077,8 +15085,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15106,8 +15114,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15135,8 +15143,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15200,8 +15208,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15229,8 +15237,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15258,8 +15266,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 5,
+              "unavailableReference": 2,
+              "pending": 3,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15378,10 +15386,17 @@
     "planet-daily-states | missing_fit_coverage: Daily OD states do not meet the registered 10-minute, 90% fit coverage": 172,
     "space-track-gp | missing_future_reference: Catalog membership only: GP elements do not provide independent high-accuracy reference states": 33045,
     "sscweb | unsupported_format_or_frame: No normalized reference or captured operator-head states; raw archive retained": 3,
-    "starlink-capture-heads | ffm | fit_failed: FFM fit not converged": 61,
-    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr are invalid.": 394,
+    "starlink-capture-heads | ffm | fit_failed: FFM fit not converged": 94,
+    "starlink-capture-heads | ffm | propagation_failed: memory access out of bounds": 3756,
+    "starlink-capture-heads | ffm | propagation_failed: null function or function signature mismatch": 4,
+    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term.": 2,
+    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr are invalid.": 1341,
+    "starlink-capture-heads | ffm | propagation_failed: table index is out of bounds": 4,
+    "starlink-capture-heads | ffm | propagation_failed: undefined": 8,
     "starlink-capture-heads | missing_fit_coverage: Actual gated states fail the metadata-selected fit coverage": 1,
-    "starlink-capture-heads | missing_fit_coverage: No metadata-selected arc satisfies the registered cadence, coverage and publication chronology": 3
+    "starlink-capture-heads | missing_fit_coverage: No metadata-selected arc satisfies the registered cadence, coverage and publication chronology": 7,
+    "swarm-reduced-dynamic | ffm | propagation_failed: memory access out of bounds": 2,
+    "ucar-nrt-leoorb | missing_fit_coverage: No metadata-selected arc satisfies the registered cadence, coverage and publication chronology": 2
   },
   "rawArchives": [
     {
@@ -15463,6 +15478,18 @@
     "Runtime on this shared host is descriptive; retain accuracy improvements regardless of speed cost.",
     "The earlier 21/21 NASA CARA Pc integral tests do not certify covariance or conjunction performance for this larger population."
   ],
+  "executionAmendment": {
+    "method": "fresh process per remaining source/object",
+    "sourceHashes": {
+      "experiments/propagator-catalog-census/isolation/PLAN.md": "5e048dfd3efef25c59b68f386bd9e421b1f75cc2c616e822bb1ca00eec121d31",
+      "experiments/propagator-catalog-census/isolation/config.json": "452433c8096990358dd0bd7296f62052c476762e80ef67ea3610cd9e79b3b5a7",
+      "experiments/propagator-catalog-census/isolation/run.mjs": "64e8b69d46893f5fee16c1fe6dd6ddb31616b2ad6615be0cf3bd761c886e21f8"
+    },
+    "experimentCommit": "46e92f5a0fc8ac6dc5539813cd2be608e54bb183",
+    "startedUtc": "2026-10-26T23:14:03.444Z",
+    "workers": 4,
+    "initialTerminal": 53664
+  },
   "endpointChecks": {
     "checkedUtc": "2026-10-26T20:56:49.428Z",
     "classification": "HTTP endpoint diagnostics; no claim of full acquisition or source inventory",

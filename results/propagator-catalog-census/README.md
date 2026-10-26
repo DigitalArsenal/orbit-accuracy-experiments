@@ -6,13 +6,13 @@ The frozen local inventory contains **57,413 source/object identities**, represe
 
 Ephemeris archives identify **11,518 distinct numeric IDs** across **11,697 source/object entries**. These include provisional operator IDs; full SATCAT identity validation remains open. GP feeds add catalog membership, not independent truth. The Space-Track membership includes 10,467 debris, 18,999 payload, 2,230 rocket body, 1,349 unknown; debris and rocket bodies are not mislabeled spacecraft.
 
-Numerical/accounting outcomes: **47,414 finished; 9,999 pending**. Live provider inventories reconciled: **0/17**. A finished coverage or parser failure is not a successful propagation.
+Numerical/accounting outcomes: **53,690 finished; 3,723 pending**. Live provider inventories reconciled: **0/17**. A finished coverage or parser failure is not a successful propagation.
 
 ## Source coverage
 
 | Source | Local files | Source/object identities | Resolved NORAD | Finished / pending | Provider inventory |
 |---|---:|---:|---:|---:|---|
-| spacex-starlink | 116,182 | 11,170 | 11,170 | 1,180 / 9,990 | local_inventory_unavailable |
+| spacex-starlink | 116,182 | 11,170 | 11,170 | 7,452 / 3,718 | local_inventory_unavailable |
 | eutelsat-oneweb | 0 | 0 | 0 | 0 / 0 | local_inventory_unavailable |
 | planet | 750 | 172 | 167 | 172 / 0 | local_inventory_unavailable |
 | iss | 770 | 1 | 1 | 1 / 0 | local_inventory_unavailable |
@@ -30,9 +30,9 @@ Numerical/accounting outcomes: **47,414 finished; 9,999 pending**. Live provider
 | vimpel | 0 | 0 | 0 | 0 / 0 | local_inventory_unavailable |
 | cpf-edc | 2,310 | 4 | 4 | 4 / 0 | local_inventory_unavailable |
 | sentinel-1 | 1,798 | 3 | 3 | 3 / 0 | additional archive; no provider reconciliation |
-| swarm | 2,052 | 3 | 3 | 0 / 3 | additional archive; no provider reconciliation |
+| swarm | 2,052 | 3 | 3 | 2 / 1 | additional archive; no provider reconciliation |
 | ilrs | 2,178 | 11 | 11 | 11 / 0 | additional archive; no provider reconciliation |
-| cosmic-2 | 35,016 | 5 | 5 | 0 / 5 | additional archive; no provider reconciliation |
+| cosmic-2 | 35,016 | 5 | 5 | 2 / 3 | additional archive; no provider reconciliation |
 | doris | 802 | 10 | 10 | 10 / 0 | additional archive; no provider reconciliation |
 | gfz-gnss | 33,567 | 107 | 107 | 107 / 0 | additional archive; no provider reconciliation |
 | grace-fo | 2,924 | 2 | 2 | 2 / 0 | additional archive; no provider reconciliation |
@@ -73,6 +73,8 @@ Endpoint recheck (2026-10-26T20:56:49.428Z): public HTTP responses are recorded 
 | vimpel | [upstream-origin-only](http://spacedata.vimpel.ru) | 200 |
 | cpf-edc | [upstream-origin-only](https://edc.dgfi.tum.de) | 200 |
 
+Execution amendment: 53,664 completed outcomes were retained after two long-lived FlatBuffer encoders stalled. Remaining objects run in fresh processes, 4 at a time, through the same registered numerical code. No spacecraft, force, tolerance or accuracy criterion was removed. The [execution amendment](../../experiments/propagator-catalog-census/isolation/PLAN.md) records the diagnosis and provenance.
+
 ## Accuracy on available support
 
 Results are separated by product lineage and evidence class. Only successful common support enters paired ratios; all missing coverage and numerical failures remain in the denominators in [summary.json](summary.json). No numerical orbit-regime classification has yet been added.
@@ -100,9 +102,12 @@ Results are separated by product lineage and evidence class. Only successful com
 | sentinel-1-poeorb | precise-reconstruction | 1 d | 3 / 3 / 3 | 880.18 / 850.47 / 0.74 | 0.00 |
 | sentinel-1-poeorb | precise-reconstruction | 3 d | 3 / 3 / 3 | 2012.69 / 1687.17 / 25.71 | 0.01 |
 | sentinel-1-poeorb | precise-reconstruction | 7 d | 3 / 3 / 3 | 6958.33 / 4431.74 / 1206.65 | 0.26 |
-| starlink-capture-heads | operator-reconstruction | 1 d | 1180 / 1180 / 721 | 2857.14 / 2740.32 / 1669.07 | 0.69 |
+| starlink-capture-heads | operator-reconstruction | 1 d | 7448 / 7448 / 2235 | 2180.77 / 2148.76 / 1323.81 | 0.64 |
 | starlink-capture-heads | operator-reconstruction | 3 d | 0 / 0 / 0 | — / — / — | — |
 | starlink-capture-heads | operator-reconstruction | 7 d | 0 / 0 / 0 | — / — / — | — |
+| swarm-reduced-dynamic | precise-reconstruction | 1 d | 2 / 2 / 0 | 1015.92 / 1003.16 / — | — |
+| swarm-reduced-dynamic | precise-reconstruction | 3 d | 2 / 2 / 0 | 2718.22 / 2628.02 / — | — |
+| swarm-reduced-dynamic | precise-reconstruction | 7 d | 2 / 2 / 0 | 6281.95 / 6298.77 / — | — |
 
 Covariance calibration diagnostics, 2,000-resample object-cluster intervals, arm failures and common-support timing are in the aggregate JSON. Reference covariance is not assumed when absent. These results do not establish calibrated Pc or operational conjunction performance.
 
