@@ -17,7 +17,21 @@ export function hashFile(file){
 }
 export function write(file,value){
   fs.mkdirSync(path.dirname(file),{recursive:true});const tmp=`${file}.${process.pid}.tmp`;
-  fs.writeFileSync(tmp,JSON.stringify(value,null,2)+'\n');fs.renameSync(tmp,file);
+  fs.writeFileSync(tmp,JSON.stringify(value,(_,v)=>typeof v==='bigint'?String(v):v,2)+'\n');fs.renameSync(tmp,file);
+}
+export function writeInventory(file,value){
+  fs.mkdirSync(path.dirname(file),{recursive:true});const tmp=`${file}.${process.pid}.tmp`,fd=fs.openSync(tmp,'w');
+  const json=v=>JSON.stringify(v,(_,x)=>typeof x==='bigint'?String(x):x);
+  try{
+    fs.writeSync(fd,'{');let first=true;
+    for(const [key,v] of Object.entries(value)){
+      fs.writeSync(fd,`${first?'':','}\n${json(key)}:`);first=false;
+      if(Array.isArray(v)){fs.writeSync(fd,'[');for(let i=0;i<v.length;i++)fs.writeSync(fd,`${i?',':''}\n${json(v[i])}`);fs.writeSync(fd,']');}
+      else fs.writeSync(fd,json(v));
+    }
+    fs.writeSync(fd,'\n}\n');
+  }finally{fs.closeSync(fd);}
+  fs.renameSync(tmp,file);
 }
 export function* walk(dir){
   if(!fs.existsSync(dir))return;

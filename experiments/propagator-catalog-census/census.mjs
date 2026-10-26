@@ -5,7 +5,7 @@ import { gunzipSync } from 'node:zlib';
 import { parseArgs } from 'node:util';
 import { ByteBuffer } from 'flatbuffers';
 import { NCD } from 'spacedatastandards.org/lib/js/NCD/main.js';
-import { config,read,write,walk,hashFile,sha,registration,runDir,iso } from './common.mjs';
+import { config,read,write,writeInventory,walk,hashFile,sha,registration,runDir,iso } from './common.mjs';
 
 export function referenceClass(x){
   const p=x.product;
@@ -103,7 +103,7 @@ export async function census(dir){
     for(const name of fs.readdirSync(path.join(cycleRoot,c)).filter(n=>/^\d+\.json\.gz$/.test(n)).sort()){
       const f=path.join(cycleRoot,c,name),b=fs.readFileSync(f),x=JSON.parse(gunzipSync(b)),norad=Number(name.split('.')[0]);
       if(x.source.norad!==norad)throw new Error(`Capture identity differs: ${f}`);
-      const truth=x.truth||[],id=file(f,{kind:'operator-head',source:'spacex-starlink',lineage:'starlink-capture-heads',cycle:c,norad,created:x.source.createdUtc,retrieved:x.source.retrievedUtc,sourceSha256:x.source.sha256,frame:x.frame,units:x.units,start:truth.length?iso(truth[0].ms):null,stop:truth.length?iso(truth.at(-1).ms):null,epochs:truth.length,conversion:s.registration,earthOrientation:x.energyEarthOrientation});
+      const truth=x.truth||[],id=file(f,{kind:'operator-head',source:'spacex-starlink',lineage:'starlink-capture-heads',cycle:c,summaryId,norad,created:x.source.createdUtc,retrieved:x.source.retrievedUtc,sourceSha256:x.source.sha256,frame:x.frame,units:x.units,start:truth.length?iso(truth[0].ms):null,stop:truth.length?iso(truth.at(-1).ms):null,epochs:truth.length,earthOrientation:x.energyEarthOrientation});
       obj('spacex-starlink','starlink-capture-heads','operator-reconstruction',String(norad),norad).files.push(id);n++;
     }
     if(n!==s.files)issues.push({cycle:c,status:'inventory_count_mismatch',summary:s.files,actual:n});
@@ -153,7 +153,7 @@ export async function census(dir){
   }
   const out={schema:'public-ephemeris-census-v1',...reg,startedUtc:start,frozenUtc:iso(Date.now()),populationCap:null,sourceCap:null,files,objects:[...objects.values()].sort((a,b)=>a.key.localeCompare(b.key)),duplicates,cycles,rawArchives,providers,sources:[...sourceRows.values()],issues,complete:false,
     incompleteness:['Provider inventories and local archives must be reconciled; raw/unparsed files remain visible.','All discovered objects are retained; unknown identities are not asserted to be unique spacecraft.']};
-  write(target,out);write(path.join(dir,'census.sha256.json'),{sha256:hashFile(target),files:files.length,sourceObjects:objects.size});
+  writeInventory(target,out);write(path.join(dir,'census.sha256.json'),{sha256:hashFile(target),files:files.length,sourceObjects:objects.size});
   console.log(JSON.stringify({stage:'census-frozen',path:target,files:files.length,sourceObjects:objects.size,uniqueNorad:new Set(out.objects.map(o=>o.norad).filter(Boolean)).size}));return out;
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const {values}=parseArgs({options:{run:{type:'string',default:'registered'}}});await census(runDir(values.run));}

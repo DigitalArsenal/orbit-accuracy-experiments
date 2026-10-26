@@ -71,3 +71,26 @@ An incomplete source or still-running batch is not a completed all-catalog
 accuracy result. Record progress and blockers explicitly; never call the census
 complete merely because its available or easy subset finished. Production
 collectors, source retention and deployment are unchanged by this experiment.
+
+## Amendment — 2026-10-26: contemporary environment and metadata selection
+
+Before any numerical comparison in this extension, the pilot's October 9
+weather archive was found to have no rows in the current Starlink fit window.
+Use the same GFZ historical daily-driver product retrieved on October 26 at
+19:42:15 UTC, SHA-256
+`7cc9d6865ebf286891099ff9186f0ca5b05855eba8778b112e5cc6fc83c86bda`.
+The original driver-date cutoff, truncated centered mean, persistence, force
+model and integrator remain the same. This remains a causal-date retrospective
+experiment, not an as-issued weather replay. Historical reference arcs retain
+the original October 9 file. No scored residual motivated this update.
+
+For reproducible latest-arc selection, candidate issue epochs are each product's
+last retained epoch minus the requested lead. Evaluate candidates latest first,
+using only declared spans/cadence and publication time for eligibility. Once a
+candidate is selected, failed actual coverage or the truth gate remains a
+failure; do not search for a better-scoring window. Operator fit files must have
+creation time at or before the issue; reference heads must come from files
+created after it. Source versions with the same upstream product hash and object
+are deduplicated by the configured reference-root order, with every conversion
+retained in the inventory. Mixed reconstructed/predicted ultra-rapid products
+remain visibly unscored until their portions are explicitly separated.
