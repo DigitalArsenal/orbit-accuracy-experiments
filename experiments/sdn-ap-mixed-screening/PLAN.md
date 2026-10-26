@@ -467,3 +467,16 @@ miss and Pc from OEM sources with covariance lines.
    maneuvered pairs, apart; A4's metrics and verdict and A5's calls and confusion matrix per class; a class
    too small for an interval is stated as small, never pooled.
 7. **Order.** Part 5 runs after part 1a's final score pass, once bin 3 is complete.
+
+### A9 - 2026-10-26, committed at 12:56 UTC, before any part 5 number exists: part 5's assessment by the module's screen of each pair
+
+Testing A8 on the pre-registration window, assess_conjunction's TCA search returned the window's first coarse
+step on these sampled sources (its fast solver assumed one minimum), while screen_catalog of the same two
+sources over the same window reproduced the screens' event exactly and gave Foster's Pc from the sources'
+covariance lines (a synthetic crossing, 50 m at 1 km/s with 100 m sigmas: 0.00935 against 0.0094 by hand).
+1. Each assessment of A8 point 5 is screen_catalog of the two objects (the generic path, threshold 1,000 km),
+   the encounter's value being the least-miss event: the truth over 30 min either side of the encounter (its
+   states there); each arm over its 21 epochs, 60 s apart, from 10 min before to 10 min after.
+2. An encounter is a pair's events within 10 min of its earliest event.
+3. A truth with no minimum in its 60 min sets the encounter aside, counted. An arm with no minimum in its 20
+   min predicts no close approach there: its call is green (Pc 0) and it has no predicted miss; counted.

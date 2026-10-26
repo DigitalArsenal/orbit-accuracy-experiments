@@ -140,6 +140,8 @@ export function build() {
   // parts 3 and 4 (A4, A5, A6): each group's summary, written by part4-ca.mjs
   const ca = ['iss', 'laser', 'starlink'].map((g) => path.join(store, 'rows', `ca.${g}.json`)).filter((f) => fs.existsSync(f)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
   if (ca.length) out.ca = Object.fromEntries(ca.map((c) => [c.group, c]));
+  const part5 = path.join(store, 'rows', 'ca.part5.json');
+  if (fs.existsSync(part5)) out.part5 = JSON.parse(fs.readFileSync(part5, 'utf8'));
   return out;
 }
 
@@ -184,6 +186,7 @@ export function markdown(t) {
     if (r.id === 'starlink-all' && t.starlink) o.push(...starlinkMarkdown(t.starlink));
   }
   if (t.ca) o.push(...caMarkdown(t.ca));
+  if (t.part5) o.push(...partFiveMarkdown(t.part5));
   return o.join('\n');
 }
 
@@ -217,6 +220,25 @@ function caMarkdown(ca) {
   return o;
 }
 const LEAD_COLS = [1, 6, 12, 24, 48, 72];
+/** Part 5 (A4, A8): real Starlink close approaches, per class. */
+function partFiveMarkdown(p) {
+  const o = ['## Real Starlink close approaches: FFM against SGP4-XP, with Pc calls (part 5; A4, A5, A8)', ''];
+  o.push(`Steps. The part 1a satellites both SGP4-XP and FFM fitted; in 1 h windows from the earliest E to the latest E + 72 h, the truth (the newer SpaceX files at their 10-min epochs) and FFM's and SGP4-XP's predictions at the same epochs are each screened all-vs-all by analysis/conjunction-assessment (explicit OEM samples, 5 km threshold, its range sampled every 5 s), a satellite entering a window only where its truth covers it. Events of a pair within 10 min are one encounter; it enters when any set's miss is under 5 km. Each entering encounter is assessed by assess_conjunction over 20 min: the truth's closest approach, and each arm's TCA, miss and Pc (Foster, 20 m combined) from its ephemeris at 60 s steps with its covariance (FFM: fit_batch's formal covariance times max(1, reduced chi-square) carried by propagator/ffm; SGP4-XP: the module's). Screens through the capture cycle ${p.through}.`, '');
+  o.push(`${p.encounters} encounters, ${p.entering} entering; ${p.setAside} set aside (a truth gap at the encounter); ${p.truthFailed} whose truth assessment failed. Screens: ${Object.entries(p.screens.bySet).map(([set, x]) => `${NAMES[set] ?? 'truth'}: ${x.windows} windows, ${x.events} events, ${x.pairsScreened} pair-windows, ${x.meanCovered.toFixed(0)} satellites covered per window`).join('; ')}.`, '');
+  for (const [cls, s] of Object.entries(p.classes)) {
+    o.push(`### ${cls === 'unmaneuvered' ? 'Pairs with no maneuver evident' : 'Pairs with a maneuver evident (either satellite)'}`, '');
+    if (!s.encounters) { o.push('No encounter in this class.', ''); continue; }
+    o.push(`${s.encounters} encounters over ${s.objects} primary object(s)${s.encounters < 30 ? ' (a small count: intervals are wide or absent)' : ''}; ${s.counts.leftOut} left out where an arm's Pc could not be evaluated (A7).`, '');
+    o.push('| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |', '| --- | --- | --- | --- | --- | --- |');
+    for (const [arm, x] of Object.entries(s.arms)) if (x.missedAlert) o.push(`| ${NAMES[arm]} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
+    for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => NAMES[a]).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
+    o.push('', `Verdict: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+    o.push('| Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- |');
+    for (const [arm, x] of Object.entries(s.calls.all ?? {})) o.push(`| ${NAMES[arm]} | ${['red', 'yellow', 'green'].map((q) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[q]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`);
+    o.push('');
+  }
+  return o;
+}
 const num = (v) => (v == null ? '-' : Math.abs(v) >= 1000 ? v.toExponential(2) : Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2));
 
 if (process.argv[1] === new URL(import.meta.url).pathname) {

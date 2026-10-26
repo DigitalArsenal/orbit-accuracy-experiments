@@ -126,7 +126,7 @@ const truthClass = (m) => (m < CA.truthClassesKm[0] * 1000 ? 'under 200 m' : m <
 
 /** Every registered figure of one group and class from its encounter rows; an encounter with an arm whose Pc the module could not evaluate
  *  is counted and left out for both arms (A7). */
-export function summarize(group, cls, allRows, counts) {
+export function summarize(group, cls, allRows, counts, { leads = LEADS } = {}) {
   const failed = allRows.filter((r) => ARMS.some((arm) => r.arms[arm]?.pc == null));
   const rows = allRows.filter((r) => !failed.includes(r));
   counts = { ...counts, formed: allRows.length, pcNotEvaluated: Object.fromEntries(ARMS.map((arm) => [arm, failed.filter((r) => r.arms[arm]?.pc == null).length])), leftOut: failed.length };
@@ -174,8 +174,8 @@ export function summarize(group, cls, allRows, counts) {
   const nowhereAbove = interval(pm.missedAlert).every((c) => c && c[1] <= 0), whollyBelow = interval(pm.falseAlert).every((c) => c && c[1] < 0);
   out.verdict = nowhereAbove && whollyBelow ? 'FFM makes a CA difference' : 'no demonstrated CA difference';
   if (objects < 2) out.verdictReason = 'one primary object: no object-cluster interval';
-  // A5's Pc calls per lead and arm
-  for (const L of LEADS) {
+  // A5's Pc calls per lead and arm (part 5 has one lead, 'all')
+  for (const L of leads) {
     const atL = rows.filter((r) => r.L === L);
     out.calls[L] = {};
     for (const arm of ARMS) {
