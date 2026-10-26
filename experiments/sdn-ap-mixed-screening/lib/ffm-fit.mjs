@@ -60,9 +60,10 @@ export async function openFfmFit(modules) {
       } catch (error) { return { ok: false, error: short(error), seconds: (Date.now() - t0) / 1000 }; }
     },
     /** The fitted product carried by propagator/ffm to epochs (ms): [{ r, v }] km, km/s, GCRF; with `covariance` (n x n over state and
-     *  parameters, m, m/s) each state also carries its propagated covariance (n x n, m, m/s). */
-    async predict(product, norad, epochsMs, E, profile = 'starlink', { covariance = null } = {}) {
-      const settings = { ...settingsFor(norad, profile), parameters: product.parameters };
+     *  parameters, m, m/s) each state also carries its propagated covariance (n x n, m, m/s). `forces` and `fixed` replace the profile's
+     *  (part 2 carries E6's R products with E6's own forces and fixed AGOM, A6 point 1). */
+    async predict(product, norad, epochsMs, E, profile = 'starlink', { covariance = null, forces = null, fixed = null } = {}) {
+      const settings = { ...settingsFor(norad, profile), parameters: product.parameters, ...(forces ? { forces } : {}), ...(fixed ? { fixed } : {}) };
       const states = await propagateFit(ctxFor(Date.parse(product.epoch), E), { epoch: product.epoch, state: product.state, parameters: product.parameters.map((p) => p.value) }, epochsMs.map(iso), settings, covariance);
       return states.map((s) => ({ r: s.state.slice(0, 3).map((x) => x / 1000), v: s.state.slice(3, 6).map((x) => x / 1000), ...(covariance ? { covariance: s.covariance, n: s.n } : {}) }));
     },
