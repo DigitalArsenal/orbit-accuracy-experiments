@@ -480,3 +480,22 @@ covariance lines (a synthetic crossing, 50 m at 1 km/s with 100 m sigmas: 0.0093
 2. An encounter is a pair's events within 10 min of its earliest event.
 3. A truth with no minimum in its 60 min sets the encounter aside, counted. An arm with no minimum in its 20
    min predicts no close approach there: its call is green (Pc 0) and it has no predicted miss; counted.
+
+### A10 - 2026-10-26, committed at 13:39 UTC, before any number of the forecast arm exists: A1's second fetch, made late by name; part 1a's reporting
+
+1. **The second fetch.** None of the 200 sample files fetched at 18:11-18:23 UTC is F: SpaceX reissued every one
+   before the forecast cycle (the fetched files start 09:00-11:20 UTC on 2026-10-25, the F files 16:21-19:58
+   UTC), and A1's second fetch was not made when registered (the lane stopped). SpaceX keeps superseded
+   versions downloadable by name, and the capture records each F's name, its ETag and the SHA-256 of its first
+   262,144 bytes. The second fetch is made now by F's name under A1's rules otherwise (in memory, requests at
+   least 3.2 s apart, the states at 10-min epochs up to 72 h after its start kept in the local store, the
+   first fetch kept as <NORAD>.first.json). A fetched file is F only when its ETag equals the capture's and the
+   SHA-256 of its first 262,144 bytes equals the capture's; any other is counted and has no forecast arm.
+   The same bytes fetched late are the same input (A5 point 4).
+2. **Reporting, no rule changed.** Part 1a's primary FFM-against-SGP4-XP figures are on the satellites both
+   arms fitted (Scoring's pairs). SGP4-XP is also reported, as descriptive, on the satellites FFM fitted and on
+   those it refused. FFM's refusal rate is a headline result. Exploratory and labeled so: the refusals by the
+   track's mean distance from Earth's center (shells of 10 km), by the maneuver flag and by SGP4-XP's fit RMS
+   on the same track; and how much of FFM's reduced chi-square tail the maneuver flag accounts for.
+3. **Defects, filed and not fixed here.** modules-ffm-fit-batch-round1-out-of-range-20261026 (A3's round-1
+   refusals by propagator/ffm); modules-ca-assess-conjunction-tca-window-edge-20261026 (the reason for A9).
