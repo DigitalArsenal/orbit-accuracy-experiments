@@ -20,9 +20,11 @@ export async function wire(modules) {
     let n = 0; for (let i = 0; i < 6; i++) for (let j = 0; j <= i; j++) full[i * 6 + j] = full[j * 6 + i] = lower[n++];
     return full;
   };
+  // CCSDS UTC fields may omit Z; never let the host timezone interpret them.
+  const utc = s => /(?:Z|[+-]\d{2}:\d{2})$/.test(s) ? s : `${s}Z`;
   const lines = block => {
-    // CCSDS UTC fields may omit Z; never let the host timezone interpret them.
-    const utc = s => /(?:Z|[+-]\d{2}:\d{2})$/.test(s) ? s : `${s}Z`;
+    if (block.TIME_SYSTEM !== OEM.timingStandard.UTC) throw new Error('non-UTC OEM block');
+    if (block.COVARIANCE_MATRIX_LINES?.length && (block.COV_REFERENCE_FRAME?.NAME || block.REFERENCE_FRAME?.NAME) !== 'GCRF') throw new Error('non-GCRF covariance');
     const cov = new Map((block.COVARIANCE_MATRIX_LINES || []).map(c => [Date.parse(utc(c.EPOCH)), covariance(c)]));
     return block.EPHEMERIS_DATA_LINES.map(l => ({ epoch: utc(l.EPOCH), ms: Date.parse(utc(l.EPOCH)), r: [l.X,l.Y,l.Z], v: [l.X_DOT,l.Y_DOT,l.Z_DOT], covariance: cov.get(Date.parse(utc(l.EPOCH))) || null }));
   };
@@ -41,5 +43,5 @@ export async function wire(modules) {
     const parts = rows.map(r => encode(SPW, 'SPW', Object.assign(new SPW.SPWT(), { DATE:r.date,F107_OBS:r.f107,F107_OBS_CENTER81:r.c81,AP_AVG:r.ap,F107_DATA_TYPE:SPW.F107DataType.OBS }), true));
     return new Uint8Array(Buffer.concat(parts));
   };
-  return { req,fb,OEM,OMM,PCF,PRW,CQR,type,encode,unpack,frame,lines,oem,pcf,spw };
+  return { req,fb,OEM,OMM,PCF,PRW,CQR,type,encode,unpack,frame,lines,oem,pcf,spw,utc };
 }

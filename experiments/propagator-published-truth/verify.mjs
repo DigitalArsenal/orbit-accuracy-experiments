@@ -36,6 +36,11 @@ async function verify() {
   const run=newRun({...opts,run:`verify-${Date.now()}`}),W=await wire(run.modules),env=await environment(run,W),m=await engines(run,W);
   const first=windows().filter((w,i,a)=>a.findIndex(q=>q.family===w.family)===i);
   try{
+    for(const w of windows()){
+      const arc=loadArc(w,run,W),expected=summary.arcSummaries.find(r=>r.key===w.key);
+      assert.equal(arc.excluded,expected.excluded,`${w.key}: all-arc reference selection and axes`);
+      if(!arc.excluded){assert.equal(arc.fit.length,expected.fitSamples);assert.deepEqual(arc.leads,expected.leads);}
+    }
     for(const w of first){
       const expected=summary.arcSummaries.find(r=>r.key===w.key),arc=loadArc(w,run,W);
       assert.equal(arc.excluded,expected.excluded,`${w.key}: selection`);

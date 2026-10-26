@@ -43,7 +43,7 @@ export async function engines(run,W) {
         timing.fitWallSeconds=(performance.now()-start)/1000;timing.fitCpuSeconds=cpu()-cpu0;
         const t=performance.now(),c=cpu(),scale=Math.max(1,product.fit.reducedChiSquare??1);
         const samples=await propagateFit(ctx,{epoch:product.epoch,state:product.state,parameters:product.parameters},arc.score.map(l=>l.epoch),s,product.fit.covariance.map(x=>x*scale));
-        pred=samples.map((s,i)=>({epoch:arc.score[i].epoch,ms:arc.score[i].ms,r:s.state.slice(0,3).map(x=>x/1000),v:s.state.slice(3).map(x=>x/1000),covariance:s.covariance?Array.from({length:36},(_,k)=>s.covariance[Math.floor(k/6)*s.n+k%6]*1e-6):null}));
+        pred=samples.map(s=>({epoch:W.utc(s.epoch),ms:Date.parse(W.utc(s.epoch)),r:s.state.slice(0,3).map(x=>x/1000),v:s.state.slice(3).map(x=>x/1000),covariance:s.covariance?Array.from({length:36},(_,k)=>s.covariance[Math.floor(k/6)*s.n+k%6]*1e-6):null}));
         timing.propagateWallSeconds=(performance.now()-t)/1000;timing.propagateCpuSeconds=cpu()-c;
       }
       if(pred.length!==arc.score.length)throw new Error(`returned ${pred.length} states for ${arc.score.length} epochs`);
