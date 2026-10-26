@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {parseArgs} from 'node:util';
+import {read,write,sha,iso,root,runDir,keyOf} from './common.mjs';
+export function report(run){
+  const dir=runDir(run),manifest=read(path.join(dir,'manifest.json')),queue=read(path.join(dir,'queue.json'));
+  const rows=queue.sources.map(s=>{
+    const row={source:s.source_id,credentialed:s.credentialed,discovery:s.discoveryState,discoveryError:s.error??null,listings:s.listings.map(l=>({url:l.url,status:l.status??null,state:l.state,sha256:l.sha256??null,error:l.error??null})),discovered:s.resources.length,native:s.nativeResources??0,supplement:s.supplementResources??0,downloaded:0,downloadFailed:0,rawValidated:0,rawValidationFailed:0,pending:0,rawBytes:0,storedBytes:0,declaredIdentityCount:0,downloadErrors:{},validationErrors:{}};
+    const identities=new Set();
+    for(const r of s.resources){const f=path.join(dir,'outcomes',keyOf(r)+'.json');if(!fs.existsSync(f)){row.pending++;continue;}const out=read(f);
+      if(out.receipt.state==='downloaded'){row.downloaded++;row.rawBytes+=out.receipt.bytes;row.storedBytes+=out.receipt.storedBytes;}else {row.downloadFailed++;const e=out.receipt.error;row.downloadErrors[e]=(row.downloadErrors[e]??0)+1;}
+      if(out.validation.rawValidation==='passed')row.rawValidated++;
+      if(out.validation.rawValidation==='failed'){row.rawValidationFailed++;const e=out.validation.error;row.validationErrors[e]=(row.validationErrors[e]??0)+1;}
+      for(const id of out.validation.identities??[])identities.add(id.objectId);
+    }
+    row.declaredIdentityCount=identities.size;return row;
+  });
+  const sum=k=>rows.reduce((n,r)=>n+r[k],0),summary={generatedUtc:iso(),run,manifestSha256:sha(fs.readFileSync(path.join(dir,'manifest.json'))),queueSha256:manifest.queueSha256,provenance:manifest,completeCatalog:false,allDiscoveredResourcesTerminal:sum('pending')===0,anonymousDiscoveryComplete:rows.filter(x=>!x.credentialed).every(x=>x.discovery==='discovered'),sourceCount:rows.length,resources:sum('discovered'),downloaded:sum('downloaded'),downloadFailed:sum('downloadFailed'),pending:sum('pending'),rawValidated:sum('rawValidated'),rawValidationFailed:sum('rawValidationFailed'),rawBytes:sum('rawBytes'),storedBytes:sum('storedBytes'),sources:rows};
+  const out=path.join(root,'results/propagator-catalog-census/direct');write(path.join(out,'summary.json'),summary);
+  const md=['# Direct public-feed acquisition','',`Snapshot started ${manifest.startedUtc}. Report generated ${summary.generatedUtc}.`,'',`${summary.downloaded.toLocaleString()} of ${summary.resources.toLocaleString()} discovered resources downloaded; ${summary.downloadFailed.toLocaleString()} failed, ${summary.pending.toLocaleString()} pending. All ${rows.length} registry sources remain accounted for.`,'','This is acquisition evidence, not a new accuracy result or complete-catalog claim. Native raw validation rejects invalid containers but does not establish valid orbital states, independent truth, frame/time normalization, or covariance calibration. Identity extraction currently supports only some formats; its counts are not the total spacecraft population. The running numerical benchmark retains its previous frozen inputs.','','| Source | Discovery | Resources | Downloaded | Failed | Pending | Raw validated |','| --- | --- | ---: | ---: | ---: | ---: | ---: |',...rows.map(r=>`| ${r.source} | ${r.discovery} | ${r.discovered} | ${r.downloaded} | ${r.downloadFailed} | ${r.pending} | ${r.rawValidated} |`),'','Credential-required sources retain their existing local archives; no credential files were read. Discovery errors, missing access and file failures remain open gaps. A source with successful HTTP responses can still have incomplete discovery. Supplementary resources include all Planet OEMs advertised by its crosswalk, other Intelsat orbit options, all linked SP3s in the planned GNSS directories, and every advertised Swarm spacecraft’s latest SP3.','','Full files are retained locally with raw and compressed SHA-256 hashes. The reproducible queue and per-resource receipts are in the ignored run directory. Only this aggregate summary is published.',''];fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'README.md'),md.join('\n'));return summary;
+}
+if(process.argv[1]===new URL(import.meta.url).pathname){const {values}=parseArgs({options:{run:{type:'string',default:'direct-20261026'}}});console.log(JSON.stringify(report(values.run),null,2));}

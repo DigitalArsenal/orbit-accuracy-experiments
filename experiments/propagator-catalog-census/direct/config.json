@@ -1,0 +1,19 @@
+{
+  "frozen": true,
+  "registeredUtc": "2026-10-26T21:20:00Z",
+  "modulesCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+  "moduleFiles": {
+    "dist/isomorphic/module.wasm": "5c789c4758679a03f6890e79a6333d4338a00eae21d816eb0b37c4055d9eb959",
+    "sources.json": "2592308649dc926631d7ae2e5b517298f72b4dc3337238b7f012fa273af82e06",
+    "tests/harness.mjs": "c540ba72d7c20a5c0b3a621391ee3d61c562fde467854003be16bde4907f43ba",
+    "package-lock.json": "8c0758e6056fc9b2df1671e17f4eb084e8c47636db51e39c003fb0140f69713b"
+  },
+  "workers": 4,
+  "attempts": 3,
+  "timeoutMs": 60000,
+  "listingMaxBytes": 33554432,
+  "artifactMaxBytes": 134217728,
+  "minimumFreeBytes": 10737418240,
+  "supplements": ["planet-all-oem", "intelsat-all-orbit-options", "gnss-all-listed-sp3", "swarm-latest-per-spacecraft"],
+  "transportUpgrades": {"http://navigation-office.esa.int": "https://navigation-office.esa.int"}
+}
