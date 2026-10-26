@@ -428,3 +428,13 @@ other covariance or conjunction number of parts 3 to 5 exists. These are the rul
    distance only, on the encounters whose primary (and, in the precise class, secondary) has its record.
 6. **Object clusters.** The ISS group has one object, so it has no object-cluster interval; the verdict needs
    both intervals and reads "no demonstrated CA difference" there, with the reason.
+
+### A7 - 2026-10-26, committed at 11:50 UTC, before any rate, call, Pc calibration or verdict of part 4 is read: a Pc the module cannot evaluate
+
+Testing part 4 on the ISS group (GP class; 10,036 of its 20,000 draws formed an encounter), compute_pc's
+Foster quadrature did not converge for 3 arm-encounters (1 FFM, 2 SGP4-XP; predicted misses of 6 to 12 km
+with sigmas of about 1 to 5 km by 200 m); only those failing inputs were printed. Rule: an encounter with
+an arm whose Pc compute_pc cannot evaluate is counted, per arm and error, and left out of every rate,
+call, Pc calibration and paired figure of its group and class for both arms, so that the arms stay paired
+on the same encounters. Lead-time epochs of part 2 come from the NSGF truth itself; the 300 s thinning is
+the accuracy scorer's (its grid can miss T + L by more than 150 s).

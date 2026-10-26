@@ -113,7 +113,8 @@ export async function encounters(group, cls, windows, pc) {
       const predicted = Math.hypot(r[0], r[2]);
       if (CA.missOnly.includes(arm)) { row.arms[arm] = { predictedMissM: predicted }; continue; }
       const C = [congruence(Mp, unpackSym(ep.cov)), congruence(Ms, unpackSym(es.cov))].reduce((a, c) => a.map((rr, i) => rr.map((x, j) => x + c[i][j])));
-      row.arms[arm] = { predictedMissM: predicted, pc: await pc(r[0], r[2], C[0][0] * 1e6, C[0][2] * 1e6, C[2][2] * 1e6) };
+      const plane = [r[0], r[2], C[0][0] * 1e6, C[0][2] * 1e6, C[2][2] * 1e6];
+      try { row.arms[arm] = { predictedMissM: predicted, pc: await pc(...plane) }; } catch (error) { row.arms[arm] = { predictedMissM: predicted, pc: null, pcError: String(error.message).replace(/^.*compute_pc: /, '').slice(0, 160), plane }; }
     }
     out.push(row);
   }
@@ -123,8 +124,12 @@ export async function encounters(group, cls, windows, pc) {
 const callOf = (pcv) => (pcv >= CA.calls.red ? 'red' : pcv >= CA.calls.green ? 'yellow' : 'green');
 const truthClass = (m) => (m < CA.truthClassesKm[0] * 1000 ? 'under 200 m' : m <= CA.truthClassesKm[1] * 1000 ? '200 m to 5 km' : 'above 5 km');
 
-/** Every registered figure of one group and class from its encounter rows. */
-export function summarize(group, cls, rows, counts) {
+/** Every registered figure of one group and class from its encounter rows; an encounter with an arm whose Pc the module could not evaluate
+ *  is counted and left out for both arms (A7). */
+export function summarize(group, cls, allRows, counts) {
+  const failed = allRows.filter((r) => ARMS.some((arm) => r.arms[arm]?.pc == null));
+  const rows = allRows.filter((r) => !failed.includes(r));
+  counts = { ...counts, formed: allRows.length, pcNotEvaluated: Object.fromEntries(ARMS.map((arm) => [arm, failed.filter((r) => r.arms[arm]?.pc == null).length])), leftOut: failed.length };
   const seed = (metric, kind) => `B2|A4|${group}|${cls}|${metric}|${kind}`;
   const cluster = rows.map((r) => r.primaryObject);
   const objects = new Set(cluster).size;
