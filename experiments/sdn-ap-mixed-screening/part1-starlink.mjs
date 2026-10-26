@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { config, store, args, frozen, readJsonl, registeredMs, g1Dir, root, sha256 } from './common.mjs';
+import { config, store, args, frozen, readJsonl, registeredMs, g1Dir, root, sha256, paced } from './common.mjs';
 
 const { gate } = await import(path.join(root, 'harness/truth-gate.mjs'));
 
@@ -134,6 +134,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
     const norad = norads[i];
     if (i % n !== k || done.has(norad)) continue;
     if (args.limit && count >= Number(args.limit)) break;
+    if (count % 50 === 0) await paced();
     const w = windowOf(norad, through ?? cycles.at(-1));
     let row;
     if (w.excluded) row = { norad, excluded: w.excluded };
@@ -170,7 +171,9 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
       // the score of the complete bins that the coverage rule counts
       const counted = scored.filter((b) => w.bins[b].counts);
       const binOf = (t) => { const h = (t - w.E) / H; const b = String(S.binsHours.findIndex(([lo, hi]) => h > lo && h <= hi) + 1); return counted.includes(b) ? b : null; };
-      row = { norad, E: iso(w.E), through, binsComplete: scored, bins: w.bins, truthEpochs: w.truth.length, truthDropped: w.truthDropped, newerFiles: w.newerFiles, worstOverlapKm: w.worstOverlapKm, overlapEpochs: w.overlapEpochs, maneuverEvident: w.worstOverlapKm >= S.maneuverEvidentKm, gated: w.gated.truth };
+      // the track's mean distance from Earth's center (km), for A10's exploratory breakdown by shell
+      const trackMeanRadiusKm = w.fit.length ? w.fit.reduce((t, l) => t + Math.hypot(...l.r), 0) / w.fit.length : null;
+      row = { norad, E: iso(w.E), through, binsComplete: scored, bins: w.bins, truthEpochs: w.truth.length, truthDropped: w.truthDropped, newerFiles: w.newerFiles, worstOverlapKm: w.worstOverlapKm, overlapEpochs: w.overlapEpochs, maneuverEvident: w.worstOverlapKm >= S.maneuverEvidentKm, gated: w.gated.truth, trackMeanRadiusKm };
       const f = fits.get(norad), g = ffmFits.get(norad);
       if (!f || f.excluded || changed(w, f)) row.excluded = f ? (f.excluded ?? changed(w, f)) : 'no fit row';
       else if (!counted.length) row.excluded = 'no complete bin meets the coverage rule';

@@ -11,7 +11,7 @@
 // JavaScript routes records, groups satellites by the module's own states and counts; screening, TCA, miss and Pc are the module's.
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, store, args, frozen, readJsonl, write, g1Dir } from './common.mjs';
+import { config, store, args, frozen, readJsonl, write, g1Dir, paced } from './common.mjs';
 
 frozen();
 const { windowOf, completeBins, forecastCycle } = await import('./part1-starlink.mjs');
@@ -53,6 +53,7 @@ if (phase === 'states') {
   for (let i = 0; i < population.length; i += 1) {
     const norad = population[i];
     if (i % n !== k || done.has(norad)) continue;
+    if (i % 50 === k) await paced();
     const w = windowOf(norad, through);
     const epochs = w.truth.map((l) => Date.parse(l.epoch));
     const f = ffmFits.get(norad), g = fits.get(norad);
@@ -82,6 +83,7 @@ if (phase === 'screen') {
     if (wi % n !== k) continue;
     const out = path.join(dir, `events.${set}.w${wi}.json`);
     if (fs.existsSync(out)) continue;
+    await paced();
     const ws = first + wi * H, we = Math.min(ws + H, last);
     const covered = [], uncovered = [];
     for (const s of sats) {
@@ -159,6 +161,7 @@ if (phase === 'cov') {
   for (let i = 0; i < sats.length; i += 1) {
     const norad = sats[i], file = path.join(dir, 'cov', `${norad}.json`);
     if (i % n !== k || fs.existsSync(file)) continue;
+    if (i % 50 === k) await paced();
     const epochs = [...need.get(norad)].sort((x, y) => x - y);
     const out = { norad, epochs };
     try {
@@ -186,6 +189,7 @@ if (phase === 'assess') {
   const man = new Map(index().map((r) => [r.norad, r.maneuverEvident]));
   for (const e of enc()) {
     if (only != null ? e.id !== only : e.id % n !== k || done.has(e.id)) continue;
+    if (only == null && e.id % 200 === k) await paced();
     const epochs = assessEpochs(e.timeMs);
     const ctl = (algorithm, from, to) => ({ startMs: from, seconds: (to - from) / 1000, thresholdM: 1e6, algorithm, coarseStepSeconds: 10 });
     const row = { id: e.id, a: e.a, b: e.b, timeMs: e.timeMs, maneuvered: Boolean(man.get(e.a) || man.get(e.b)), sets: Object.fromEntries(e.events.map((x) => [x.set, { tcaMs: x.tcaMs, missM: x.missM }])) };

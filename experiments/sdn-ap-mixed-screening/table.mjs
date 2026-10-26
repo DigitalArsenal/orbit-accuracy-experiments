@@ -100,6 +100,29 @@ function starlinkCounts(st, fit, ffm, through) {
     binsCounted: Object.fromEntries(['1', '2', '3'].map((b) => [b, { complete: (st[0]?.binsComplete ?? []).includes(b), counted: scored.filter((r) => r.bins?.[b]?.counts && r.binsComplete.includes(b)).length, belowCoverage: scored.filter((r) => r.binsComplete.includes(b) && !r.bins?.[b]?.counts).length }])),
     maneuver: { evident: scored.filter((r) => r.maneuverEvident).length, notEvident: scored.filter((r) => !r.maneuverEvident).length, notEvidentWithOverlap: scored.filter((r) => !r.maneuverEvident && r.overlapEpochs > 0).length, notEvidentWithoutOverlap: scored.filter((r) => !r.maneuverEvident && !r.overlapEpochs).length },
     forecastSample: { drawn: sample.length, scored: scored.filter((r) => r.arms.forecast?.ok).length, outcomes: tally(sample.map((nr) => { const r = st.find((x) => x.norad === nr); return !r ? 'not in the forecast cycle' : !r.arms ? `excluded: ${r.excluded}` : r.arms.forecast?.ok ? 'scored' : `no forecast arm: ${r.arms.forecast?.error ?? 'none'}`; })) },
+    headline: { satellites: fit.length, ffmFitted: ffm.filter((r) => r.ffm?.ok).length, ffmRefused: ffm.filter((r) => r.ffm && !r.ffm.ok && r.ffm.converged !== false).length, ffmNotConverged: ffm.filter((r) => r.ffm?.converged === false).length },
+    exploratory: exploratoryRefusals(st, fit, ffm),
+  };
+}
+
+/** A10 point 2, exploratory: FFM's refusals by shell (the track's mean distance from Earth's center), by the maneuver flag and by SGP4-XP's
+ *  fit RMS on the same track; and how much of FFM's reduced chi-square tail (above its 90th percentile) is maneuver-evident. */
+function exploratoryRefusals(st, fit, ffm) {
+  const score = new Map(st.map((r) => [r.norad, r])), xp = new Map(fit.map((r) => [r.norad, r]));
+  const sats = ffm.filter((r) => r.ffm).map((r) => ({ norad: r.norad, state: r.ffm.ok ? 'fitted' : r.ffm.converged === false ? 'not converged' : 'refused', chi2: r.ffm.ok ? r.ffm.reducedChiSquare : null, radius: score.get(r.norad)?.trackMeanRadiusKm ?? null, maneuver: score.get(r.norad)?.maneuverEvident ?? null, xpRms: xp.get(r.norad)?.sgp4xp?.moduleFitRmsKm ?? null }));
+  const share = (list) => ({ satellites: list.length, refused: list.filter((x) => x.state === 'refused').length, refusedShare: list.length ? list.filter((x) => x.state === 'refused').length / list.length : null });
+  const shells = new Map();
+  for (const x of sats.filter((y) => Number.isFinite(y.radius))) { const lo = Math.floor(x.radius / 10) * 10; if (!shells.has(lo)) shells.set(lo, []); shells.get(lo).push(x); }
+  const rms = sats.filter((x) => Number.isFinite(x.xpRms)).map((x) => x.xpRms).sort((a, b) => a - b), q = (p) => rms[Math.floor(p * (rms.length - 1))];
+  const edges = [0, q(0.25), q(0.5), q(0.75), Infinity];
+  const fitted = sats.filter((x) => x.state === 'fitted' && Number.isFinite(x.chi2)), chi = fitted.map((x) => x.chi2).sort((a, b) => a - b), p90 = chi[Math.floor(0.9 * (chi.length - 1))];
+  const tail = fitted.filter((x) => x.chi2 > p90 && x.maneuver !== null), body = fitted.filter((x) => x.chi2 <= p90 && x.maneuver !== null);
+  return {
+    note: 'exploratory, not registered as a test (A10 point 2)',
+    byShellKm: [...shells.entries()].sort((a, b) => a[0] - b[0]).map(([lo, list]) => ({ meanRadiusKm: [lo, lo + 10], ...share(list) })),
+    byManeuver: { evident: share(sats.filter((x) => x.maneuver === true)), notEvident: share(sats.filter((x) => x.maneuver === false)), unknown: share(sats.filter((x) => x.maneuver === null)) },
+    bySgp4xpFitRmsKm: edges.slice(0, -1).map((lo, i) => ({ fitRmsKm: [lo, edges[i + 1]], ...share(sats.filter((x) => Number.isFinite(x.xpRms) && x.xpRms >= lo && x.xpRms < edges[i + 1])) })),
+    chi2Tail: { p90, tail: tail.length, tailManeuverShare: tail.length ? tail.filter((x) => x.maneuver).length / tail.length : null, bodyManeuverShare: body.length ? body.filter((x) => x.maneuver).length / body.length : null },
   };
 }
 
@@ -116,10 +139,15 @@ export function build() {
     out.inputs.starlinkFfm = sha256(Buffer.from(JSON.stringify(ffm)));
     out.starlink = starlinkCounts(st, fit, ffm, through);
     const interim = out.starlink.binsComplete.length < BINS.length ? `interim: bins ${out.starlink.binsComplete.join(', ')} complete at the capture cycle ${through}` : `final: every bin complete at the capture cycle ${through}`;
-    out.rows.push(tableRow('starlink-all', 'Starlink, SpaceX operator track (all satellites)', `${st.length} satellites in the forecast cycle; ${sw.length} scored; ${interim}`, sw, ['sgp4xp', 'ffm'], BINS, { paired: [], pairedWithFfm: ['sgp4xp'] }));
-    out.rows.push(tableRow('starlink-quiet', 'Starlink, no maneuver evident', `truth files agree within 1 km where they overlap; ${interim}`, sw.filter((w) => !w.maneuverEvident), ['sgp4xp', 'ffm'], BINS, { paired: [], pairedWithFfm: ['sgp4xp'] }));
-    out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample (SpaceX\'s own forecast beside)', `sample satellites whose fetched file is F; ${interim}`, sw.filter((w) => w.arms.forecast?.ok), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
-    out.rows.push(tableRow('starlink-forecast-quiet', 'Starlink, the forecast sample, no maneuver evident', `sample satellites whose fetched file is F and whose truth files agree within 1 km where they overlap; ${interim}`, sw.filter((w) => w.arms.forecast?.ok && !w.maneuverEvident), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
+    // A10 point 2: the primary FFM-against-SGP4-XP rows are on the satellites both arms fitted and scored; SGP4-XP alone on the others is descriptive
+    const both = (w) => w.arms.sgp4xp?.ok && w.arms.ffm?.ok, xpOnly = (w) => ({ ...w, arms: { sgp4xp: w.arms.sgp4xp } });
+    const forecastAll = (w) => both(w) && w.arms.forecast?.ok;
+    out.rows.push(tableRow('starlink-both', 'Starlink, satellites both SGP4-XP and FFM fitted and scored (the primary comparison)', `${sw.filter(both).length} of ${st.length} satellites in the forecast cycle; ${interim}`, sw.filter(both), ['sgp4xp', 'ffm'], BINS, { paired: [], pairedWithFfm: ['sgp4xp'] }));
+    out.rows.push(tableRow('starlink-both-quiet', 'Starlink, both arms fitted, no maneuver evident', `truth files agree within 1 km where they overlap; ${interim}`, sw.filter((w) => both(w) && !w.maneuverEvident), ['sgp4xp', 'ffm'], BINS, { paired: [], pairedWithFfm: ['sgp4xp'] }));
+    out.rows.push(tableRow('starlink-xp-refused', 'Starlink, SGP4-XP on the satellites FFM did not fit (descriptive: the selection FFM\'s refusals make)', `${sw.filter((w) => w.arms.sgp4xp?.ok && !w.arms.ffm?.ok).length} satellites; ${interim}`, sw.filter((w) => w.arms.sgp4xp?.ok && !w.arms.ffm?.ok).map(xpOnly), ['sgp4xp'], BINS, { paired: [] }));
+    out.rows.push(tableRow('starlink-xp-all', 'Starlink, SGP4-XP on every scored satellite (descriptive)', `${sw.filter((w) => w.arms.sgp4xp?.ok).length} satellites; ${interim}`, sw.map(xpOnly), ['sgp4xp'], BINS, { paired: [] }));
+    out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample with all three arms scored (SpaceX\'s own forecast beside)', `sample satellites whose fetched file is F (A10) and both fits scored; ${interim}`, sw.filter(forecastAll), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
+    out.rows.push(tableRow('starlink-forecast-quiet', 'Starlink, the forecast sample with all three arms, no maneuver evident', `as above, truth files agreeing within 1 km where they overlap; ${interim}`, sw.filter((w) => forecastAll(w) && !w.maneuverEvident), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
   }
   // part 1b (the FFM arm by A5, from its own phase's rows)
   const iss = rows('iss.'), issFfm = new Map(rows('iss-ffm.').map((r) => [r.file, r]));
@@ -162,6 +190,19 @@ function starlinkMarkdown(c) {
     `Late-start proof (A5 point 4): ${c.trackProof.fitRows} fit rows; the track built from the cycles before the forecast cycle and from every cycle present differ for ${c.trackProof.shaDiffers}. Reader (A5 point 5): ${c.readerDroppedStates.track} track and ${c.readerDroppedStates.truth} truth states dropped that the earlier reader kept. Truth gate: ${c.gatedStates.track} track and ${c.gatedStates.truth} truth states dropped.`, '',
     `Forecast sample: ${c.forecastSample.drawn} drawn, ${c.forecastSample.scored} scored; ${listed(c.forecastSample.outcomes)}.`, '',
     `FFM fitted ${fitted(c.ffmFit)} and SGP4-XP ${fitted(c.sgp4xpFit)} of ${c.forecastCycleSatellites}.`, '',
+    ...exploratoryMarkdown(c.exploratory),
+  ];
+}
+/** A10's exploratory breakdown of FFM's refusals, labeled as such. */
+function exploratoryMarkdown(x) {
+  if (!x) return [];
+  const sh = (v) => `${v.refused} of ${v.satellites} refused (${v.refusedShare == null ? '-' : (100 * v.refusedShare).toFixed(1)} %)`;
+  return [
+    'Exploratory (A10 point 2, not a registered test): FFM\'s refusals', '',
+    `- by the track's mean distance from Earth's center: ${x.byShellKm.map((b) => `${b.meanRadiusKm[0]} to ${b.meanRadiusKm[1]} km: ${sh(b)}`).join('; ')};`,
+    `- by the maneuver flag: evident ${sh(x.byManeuver.evident)}; not evident ${sh(x.byManeuver.notEvident)}${x.byManeuver.unknown.satellites ? `; no score row ${sh(x.byManeuver.unknown)}` : ''};`,
+    `- by SGP4-XP's fit RMS on the same track (quartiles): ${x.bySgp4xpFitRmsKm.map((b) => `${num(b.fitRmsKm[0])} to ${Number.isFinite(b.fitRmsKm[1]) ? num(b.fitRmsKm[1]) : 'max'} km: ${sh(b)}`).join('; ')};`,
+    `- FFM's reduced chi-square above its 90th percentile (${num(x.chi2Tail.p90)}): ${x.chi2Tail.tail} fits, ${x.chi2Tail.tailManeuverShare == null ? '-' : (100 * x.chi2Tail.tailManeuverShare).toFixed(1)} % of them maneuver-evident, against ${x.chi2Tail.bodyManeuverShare == null ? '-' : (100 * x.chi2Tail.bodyManeuverShare).toFixed(1)} % of the fits below it.`, '',
   ];
 }
 
@@ -172,6 +213,10 @@ export function markdown(t) {
   o.push('Steps. Truth: part 1a the first 8 h of each newer SpaceX file at its 10-min epochs (GCRF); part 1b the first 24 h of each newer NASA file at its 4-min epochs (EME2000); part 2 NSGF orbits thinned to one state per 300 s. FFM: analysis/estimation fit_batch answered by propagator/ffm (gravity 70 x 70, Sun and Moon, radiation pressure, NRLMSISE-00 drag, solid tides, relativity; integrator tolerance 1e-10, steps of at most 120 s), fitted to the 24 h track\'s positions at 10 m per axis (part 1a every 10 min, part 1b every 4 min) and carried by the same model to the truth epochs. SGP4-XP and SDN-AP (propagator/sdn-ap, THEORY SGP4XP and SDNAP) are analytic theories fitted to the same 24 h track (in part 2, the 24 h the full force model carries back from the normal-point fit) and evaluated at the truth epochs; SGP4 is analysis/gp-error-model fit_elements on the track in part 1b and the newest public element set in part 2. The operator forecast is the operator\'s own file at the truth epochs.', '');
   o.push('Amendment A5 (2026-10-26): SDN-AP is withdrawn from part 1a (the owner withdrew the theory on 2026-10-25, before any part 1a fit or score); part 1b gains the FFM arm, added to windows whose other arms were scored and landed on 2026-10-25. Rows paired with FFM give the share of windows where FFM is closer and the median ratio other / FFM.', '');
   if (!t.rows.some((r) => r.id.startsWith('starlink'))) o.push('Part 1a (Starlink, prospective) is scored bin by bin as the capture cycles complete each bin\'s truth (A5): bin 1 from 2026-10-26 21:01Z, bin 3 from 2026-10-28 21:01Z; its rows are not in this table yet.', '');
+  if (t.starlink) {
+    const h = t.starlink.headline;
+    o.push(`**Part 1a headline (A10): FFM fitted ${h.ffmFitted} of ${h.satellites} Starlink tracks; propagator/ffm refused ${h.ffmRefused} (${(100 * h.ffmRefused / h.satellites).toFixed(1)} %) when fit_batch stepped B or AGOM out of range in A3's first round, and ${h.ffmNotConverged} did not converge (defect modules-ffm-fit-batch-round1-out-of-range-20261026, not fixed here). FFM against SGP4-XP is compared on the satellites both arms fitted; SGP4-XP on the others is descriptive.**`, '');
+  }
   for (const r of t.rows) {
     o.push(`## ${r.row}`, '', r.note ? `${r.note}.` : '', '', '| Arm | Scored / attempted | Bin 1 | Bin 2 | Bin 3 |', '| --- | --: | --- | --- | --- |');
     for (const [arm, a] of Object.entries(r.arms)) o.push(`| ${NAMES[arm]} | ${a.scored} / ${a.attempted} | ${['1', '2', '3'].map((b) => cell(a.bins[b])).join(' | ')} |`);
@@ -183,7 +228,7 @@ export function markdown(t) {
       for (const [other, v] of p) o.push(`| ${NAMES[other]} | ${['1', '2', '3'].map((b) => (v[b].n ? `${REF[ref]} closer in ${Math.round(100 * v[b][`${ref}Closer`])} %; other / ${REF[ref]} ${km(v[b].medianRatio)}${v[b].ci95Windows ? ` [${km(v[b].ci95Windows[0])}, ${km(v[b].ci95Windows[1])}]` : ''} (n ${v[b].n})` : '-')).join(' | ')} |`);
       o.push('');
     }
-    if (r.id === 'starlink-all' && t.starlink) o.push(...starlinkMarkdown(t.starlink));
+    if (r.id === 'starlink-both' && t.starlink) o.push(...starlinkMarkdown(t.starlink));
   }
   if (t.ca) o.push(...caMarkdown(t.ca));
   if (t.part5) o.push(...partFiveMarkdown(t.part5));

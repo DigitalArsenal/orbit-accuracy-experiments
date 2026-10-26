@@ -2,6 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import os from 'node:os';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { execFileSync } from 'node:child_process';
 
 export const dir = path.dirname(new URL(import.meta.url).pathname);
@@ -34,3 +36,8 @@ export function write(file, value) {
   fs.renameSync(temp, file);
 }
 export const readJsonl = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []);
+/** Waits while the host's 1-minute load average is above B2_LOAD_MAX (default 20 of 28 cores), so that the archive's cron jobs, the
+ *  capture collector and other lanes keep CPU; pacing only, no result depends on it. */
+export async function paced(max = Number(process.env.B2_LOAD_MAX ?? 20)) {
+  while (os.loadavg()[0] > max) await sleep(30e3);
+}
