@@ -36,7 +36,7 @@ export function select(object,census){
 }
 
 export function loadArc(object,census,selection,W){
-  const {E,maximumLead,fitIds,scoreIds}=selection,limit=selection.samplingToleranceSeconds*1000,audit={files:[],dropped:[],invalidStates:0,referenceCovariance:'per-record availability',samplingToleranceSeconds:limit/1000,actualRecordedEpochs:true};
+  const {E,maximumLead,fitIds,scoreIds}=selection,operator=object.lineage==='starlink-capture-heads',limit=selection.samplingToleranceSeconds*1000,audit={files:[],dropped:[],invalidStates:0,referenceCovariance:'per-record availability',samplingToleranceSeconds:limit/1000,actualRecordedEpochs:true};
   const cache=new Map();
   const load=id=>{
     if(cache.has(id))return cache.get(id);
@@ -69,10 +69,10 @@ export function loadArc(object,census,selection,W){
     return q&&Math.abs(q.ms-t)<=allowed?q:null;
   };
   const unique=lines=>[...new Map(lines.map(l=>[l.ms,l])).values()];
-  const fitting=series(fitIds),scoring=series(scoreIds),fit=unique(fitTimes(E).map(t=>nearest(fitting,t)).filter(l=>l&&l.ms>=E-DAY&&l.ms<=E)),leads={},score=[];
+  const fitting=series(fitIds),scoring=series(scoreIds),fit=unique(fitTimes(E).map(t=>nearest(fitting,t)).filter(l=>l&&(!operator||l.ms>=E-DAY)&&l.ms<=E)),leads={},score=[];
   if(fit.length<minimum*fitTimes(E).length)return {status:'missing_fit_coverage',reason:'Actual gated states fail the metadata-selected fit coverage',selection,audit,fitSamples:fit.length};
   for(const d of config.selection.leadDays){
-    const wanted=scoreTimes(E,d),selected=d<=maximumLead?unique(wanted.map(t=>nearest(scoring,t)).filter(l=>l&&l.ms>E+(d-1)*DAY&&l.ms<=E+d*DAY)):[];
+    const wanted=scoreTimes(E,d),selected=d<=maximumLead?unique(wanted.map(t=>nearest(scoring,t)).filter(l=>l&&l.ms>E&&(!operator||(l.ms>E+(d-1)*DAY&&l.ms<=E+d*DAY)))):[];
     const exact=d<=maximumLead?nearest(scoring,E+d*DAY,tolerance):null,available=selected.length>=minimum*wanted.length;
     leads[d]={available,samples:selected.length,expectedSamples:wanted.length,exactMs:exact?.ms??null,offsetSeconds:exact?(exact.ms-E-d*DAY)/1000:null};
     if(available)score.push(...selected.map(l=>({...l,lead:d})));
