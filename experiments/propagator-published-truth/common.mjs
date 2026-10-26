@@ -14,7 +14,7 @@ export const config = read(path.join(here, 'config.json'));
 export const DAY = 86400000, iso = t => new Date(t).toISOString();
 export const sha = x => createHash('sha256').update(x).digest('hex');
 export const git = (dir, ...args) => execFileSync('git', ['-C', dir, ...args], { maxBuffer: 32 << 20 });
-export const cpu = () => { const c = process.threadCpuUsage(); return (c.user + c.system) / 1e6; };
+export const cpu = () => { const c = process.cpuUsage(); return (c.user + c.system) / 1e6; };
 export const write = (file, data) => { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n'); };
 export function options() {
   const { values } = parseArgs({ options: { modules: { type: 'string' }, run: { type: 'string', default: 'registered' }, only: { type: 'string' }, replay: { type: 'boolean', default: false } } });
@@ -38,6 +38,7 @@ export function guard(modules) {
 }
 export function newRun(opts) {
   const plan = guard(opts.modules), dir = path.join(root, 'runs', config.id, opts.run);
+  if (fs.existsSync(path.join(dir, 'manifest.json'))) throw new Error(`run already exists: ${opts.run}`);
   fs.mkdirSync(dir, { recursive: true });
   const modules = fs.realpathSync(opts.modules);
   const manifest = { experiment: config.id, command: [process.execPath, ...process.argv.slice(1)], startedUtc: iso(Date.now()), plan,
@@ -52,6 +53,11 @@ export function newRun(opts) {
   }
   const record = file => { manifest.inputs[file] = sha(fs.readFileSync(file)); };
   for (const f of [config.environment, config.kernel, config.weather.file]) record(f);
+  for (const rel of ['propagator/ffm/catalog.mjs', 'analysis/gp-error-model/scripts/erm-codec.mjs']) {
+    const bytes = fs.readFileSync(path.join(modules, rel));
+    if (!git(modules, 'show', `HEAD:${rel}`).equals(bytes)) throw new Error(`modified module helper: ${rel}`);
+    manifest.helperHashes[`modules:${rel}`] = sha(bytes);
+  }
   for (const rel of ['harness/records.mjs', 'harness/reference.mjs', 'harness/truth-gate.mjs', 'harness/modules.mjs', 'harness/ffm-execution.mjs', 'harness/prw.mjs', 'experiments/truth-gate/flags.json', 'experiments/e6-public-observations/fit.mjs', 'experiments/e2-catalog-covariance/estimation-wire.mjs', 'experiments/e2-catalog-covariance/product.mjs']) {
     const bytes = fs.readFileSync(path.join(root, rel));
     if (!git(root, 'show', `HEAD:${rel}`).equals(bytes)) throw new Error(`modified imported helper: ${rel}`);

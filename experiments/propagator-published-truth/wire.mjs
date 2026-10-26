@@ -21,8 +21,10 @@ export async function wire(modules) {
     return full;
   };
   const lines = block => {
-    const cov = new Map((block.COVARIANCE_MATRIX_LINES || []).map(c => [Date.parse(c.EPOCH), covariance(c)]));
-    return block.EPHEMERIS_DATA_LINES.map(l => ({ epoch: l.EPOCH, ms: Date.parse(l.EPOCH), r: [l.X,l.Y,l.Z], v: [l.X_DOT,l.Y_DOT,l.Z_DOT], covariance: cov.get(Date.parse(l.EPOCH)) || null }));
+    // CCSDS UTC fields may omit Z; never let the host timezone interpret them.
+    const utc = s => /(?:Z|[+-]\d{2}:\d{2})$/.test(s) ? s : `${s}Z`;
+    const cov = new Map((block.COVARIANCE_MATRIX_LINES || []).map(c => [Date.parse(utc(c.EPOCH)), covariance(c)]));
+    return block.EPHEMERIS_DATA_LINES.map(l => ({ epoch: utc(l.EPOCH), ms: Date.parse(utc(l.EPOCH)), r: [l.X,l.Y,l.Z], v: [l.X_DOT,l.Y_DOT,l.Z_DOT], covariance: cov.get(Date.parse(utc(l.EPOCH))) || null }));
   };
   const oem = (list, norad, axes = 'GCRF') => {
     const block = Object.assign(new OEM.ephemerisDataBlockT(), { OBJECT: Object.assign(new OEM.CATT(), { NORAD_CAT_ID: norad, OBJECT_NAME: String(norad) }), CENTER_NAME: 'EARTH', REFERENCE_FRAME: rfm(axes), TIME_SYSTEM: OEM.timingStandard.UTC,

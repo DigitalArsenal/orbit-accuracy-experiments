@@ -9,6 +9,7 @@ export const windows = () => config.objects.flatMap(o => o.issueDates.map(date =
 export function loadArc(w, run, codec) {
   const nominal = Date.parse(`${w.date}T00:00:00Z`), start = nominal - config.fitHours * 3600e3, stop = nominal + 7 * DAY;
   const ref = new ReferenceIndex(w.root, w.prefix), spans = ref.spans(w.norad, start - 60000, stop + 60000);
+  for (const p of ref.products) run.record(path.join(w.root,p.product,'index.json'));
   const byTime = new Map(), products = [];
   for (const s of spans.sort((a,b) => a.product.localeCompare(b.product))) {
     const indexFile = path.join(w.root, s.product, 'index.json'); run.record(indexFile);
@@ -19,6 +20,7 @@ export function loadArc(w, run, codec) {
     run.record(path.join(w.root,s.file));
     for (const record of decodeOemStream(bytes)) for (const b of record.EPHEMERIS_DATA_BLOCK) {
       if (b.OBJECT.NORAD_CAT_ID !== w.norad) continue;
+      if (b.REFERENCE_FRAME?.NAME !== 'GCRF' || b.TIME_SYSTEM !== codec.OEM.timingStandard.UTC) throw new Error(`unsupported reference axes/time in ${s.file}`);
       for (const l of codec.lines(b)) if (l.ms >= start - 60000 && l.ms <= stop + 60000 && [...l.r,...l.v].every(Number.isFinite) && l.v.some(v => v !== 0)) byTime.set(l.ms,l);
     }
   }
@@ -41,5 +43,6 @@ export function loadArc(w, run, codec) {
     if(leads[lead].available)score.push(...selected);
   }
   ref.dropCache();
+  if (!score.length) return {excluded:'no lead meets registered coverage',audit,issue:iso(E),fit,leads};
   return {E,fit,score,leads,audit,issue:iso(E)};
 }

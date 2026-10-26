@@ -30,7 +30,7 @@ export async function environment(run, W) {
     for(let t=Date.parse(`${last.date}T00:00:00Z`)+DAY;t<=arc.E+9*DAY;t+=DAY)ffmRows.push({...last,date:date(t)});
     const lo=arc.fit[0].ms/DAY+40587-2,hi=arc.E/DAY+40587+9,earth=eop.filter(r=>r.MJD>=lo&&r.MJD<=hi);
     if(!earth.length || earth[0].MJD>lo+1 || earth.at(-1).MJD<hi-1)throw new Error('EOP coverage insufficient');
-    const weather=ffmRows.map(r=>table('PRWSpaceWeatherRow',{DATE:r.date,F107_OBS:r.f107,F107_ADJ:r.f107,F107_OBS_CENTER81:r.c81,F107_OBS_LAST81:r.c81,AP_AVG:r.ap,AP1:r.ap,AP2:r.ap,AP3:r.ap,AP4:r.ap,AP5:r.ap,AP6:r.ap,AP7:r.ap,AP8:r.ap}));
+    const weather=ffmRows.map(r=>table('SPW',{DATE:r.date,F107_OBS:r.f107,F107_ADJ:r.f107,F107_OBS_CENTER81:r.c81,F107_OBS_LAST81:r.c81,AP_AVG:r.ap,AP1:r.ap,AP2:r.ap,AP3:r.ap,AP4:r.ap,AP5:r.ap,AP6:r.ap,AP7:r.ap,AP8:r.ap}));
     return { ap:W.frame('space_weather','SPW',W.spw(rows)),inputs:[kernel,encode('earth_orientation','EARTH_ORIENTATION',table('PRWEarthOrientation',{ROWS:earth})),encode('space_weather','SPACE_WEATHER',table('PRWSpaceWeatherTable',{ROWS:weather}))],audit:{cutoff:lastDate,lastObserved:last.date,rows:rows.length,forecast:'persistence',eopRows:earth.length} };
   };
 }
