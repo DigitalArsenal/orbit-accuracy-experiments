@@ -221,3 +221,170 @@ files (config.part1.starlink.ffm).
    to 2026-10-25 13:01Z flags none; before the score phase the scan's capture part is run again over
    the cycles the truth uses, and any state it flags joins the ledger first.
 
+### A4 - 2026-10-25, committed at 20:49 UTC, before any truth epoch of part 1a is read and before any covariance of parts 3 to 5 is computed: the contrast for conjunction assessment, and real Starlink close approaches
+
+*Committed 2026-10-25 20:49:16 UTC as 716496c0 on branch task/experiments-sdn-ap-mixed-scenario-screening-20261025, before any part 1a truth epoch was read and before any covariance of parts 3 to 5 existed; brought onto main unchanged with A5, which amends it.*
+
+The owner's question: "The most important question here is do our changes make a difference for doing
+accurate conjunction assessment". Part 4 as registered tests SDN-AP objects against SGP4 objects; it
+never contrasts SDN-AP with SGP4-XP or FFM on the same encounters. A4 adds that contrast (config.a4).
+
+1. **Arms and their covariances.** The primary of an encounter is predicted by each fitted arm in turn,
+   each with its own covariance:
+   - SDN-AP: its current covariance (A2);
+   - SGP4-XP: the same module's fit covariance under THEORY SGP4XP (`fit`'s COVARIANCE of the set,
+     carried by the module as for SDN-AP);
+   - FFM: fit_batch's formal covariance of the state and parameters, scaled by max(1, reduced
+     chi-square) and carried by propagator/ffm with the fitted state, as E6 carries its products
+     (part 1a: A3's fit; part 2: E6's R product; part 1b: the FFM arm added below);
+   - the operator forecast, with the operator's covariance where the stored file carries one. The
+     stored SpaceX forecasts keep states only (as registered) and NASA's ISS files carry none, so the
+     operator arm is reported on miss distance alone and has no probability or alert row.
+   Part 1b gains A3's FFM arm on its own 24 h track (the same settings; seeds the module's a priori
+   values B 0.01 and AGOM 0.02 m2/kg with a priori sigma equal to the seed), scored like its other
+   arms. Part 3's realism cells are reported for the SGP4-XP and FFM covariances as well, descriptive.
+2. **Encounters.** The synthetic encounters of part 4 (A2's geometry, hard-body radius, thresholds and
+   draws), made per group (ISS; laser spheres; Starlink) and per secondary class: 20,000 per group and
+   class, drawn with xorshift128+ seeded by SHA-256 of `B2|part4|<group>|<class>|<k>`. Each draws a
+   lead time uniformly from 1, 6, 12, 24, 48 and 72 h, a primary window of the group that every one
+   of SDN-AP, SGP4-XP and FFM scored at that lead time, the secondary below, and the geometry. The
+   arms then differ only in the primary's prediction error and covariance at that lead time; the
+   true geometry, the draws and the secondary are the same for every arm. A2's part 4 (the SGP4
+   covariance variants of the secondary) is computed on the GP-class encounters, with SDN-AP as the
+   primary's arm.
+   - **GP secondary** (the common case, debris): a window of the same group at the same lead time,
+     predicted by the newest public set and SGP4 with V1c5's frozen covariance (A2), the same for
+     every arm of the encounter.
+   - **Precise secondary** (the operator-operator case): a window of another object of the same group
+     at the same lead time, predicted by the same arm as the primary with that arm's covariance. The
+     ISS group has one object and has no precise class.
+3. **Metrics, per group, class and arm.** The miss-distance error (predicted minus true: median,
+   10th and 90th percentiles); the missed-alert rate (Pc below 1e-7 with true miss under 200 m), the
+   false-alert rate (Pc at or above 1e-4 with true miss above 5 km), recall and precision as A2
+   defines them, each with its 95 % interval; and the Pc calibration: per Pc bin (below 1e-7, then
+   each decade from 1e-7 to 1), the encounters and the share of them with true miss under 200 m. The
+   paired differences SDN-AP minus SGP4-XP and SDN-AP minus FFM of each rate, on the same encounters,
+   with 95 % percentile-bootstrap intervals over encounters and over object clusters (encounters
+   resampled by primary object), 10,000 resamples, xorshift128+ seeded by SHA-256 of
+   `B2|A4|<group>|<class>|<metric>|<kind>`.
+4. **Verdict rule, fixed here.** In a group and class, SDN-AP "makes a difference for CA" only if its
+   missed-alert rate is no worse than SGP4-XP's (no part of either interval of the paired difference
+   SDN-AP minus SGP4-XP lies above zero) and its false-alert rate is lower (both intervals of that
+   paired difference lie wholly below zero). Otherwise the cell reads "no demonstrated CA difference".
+   The same test against FFM is reported beside it. Groups and classes are never pooled.
+
+**Part 5: real Starlink-Starlink close approaches in part 1a.** Both objects of a pair have SpaceX
+truth (part 1a's truth files).
+1. Population: the part 1a satellites that SDN-AP, SGP4-XP and FFM fitted. A pair's span is the
+   common part of the two satellites' (E, E + 72 h], where both have truth.
+2. Trajectories: each satellite's truth states (the 10-min epochs of part 1a), and each arm's
+   prediction at the same epochs with its covariance, as ephemerides; times of closest approach and
+   miss distances are found by analysis/conjunction-assessment's screening on those ephemerides,
+   never in JavaScript.
+3. Selection: a pair enters if its true miss is under 5 km in its span, or if any arm's predicted
+   miss is under 5 km in it, so missed events and false alerts both enter. Pairs whose true closest
+   approach falls where a truth has no state are counted and set aside.
+4. Per pair and arm, at the arm's predicted time of closest approach: the predicted miss against the
+   true miss (the truth's closest approach of that encounter), and Pc with both objects' covariances
+   of that arm (20 m combined hard-body radius); and the metrics and paired differences of point 3,
+   with the verdict rule of point 4.
+5. Maneuvered pairs (either satellite with a maneuver evident by part 1a's flag) are reported apart
+   from unmaneuvered pairs, and both are counted. Where a class has too few encounters for an
+   interval, the table says so; classes are not pooled to reach a count.
+
+### A5 - 2026-10-26, committed at 11:06 UTC, before any FFM fit of part 1b, any fit or score of part 1a, and any covariance or conjunction number of parts 3 to 5: FFM in part 1b, part 1a without SDN-AP and run late, and the conjunction contrast of FFM against SGP4-XP with Pc calls
+
+Owner, verbatim (2026-10-26): "Do the FFM row for ISS and the full Starlink test"; asked whether to add the
+conjunction-assessment test as FFM against SGP4-XP: "Yes with probability of collision calls as well".
+
+The store when this is committed (config.store/rows): part 1b's rows (748 files) and part 2's (206 cutoffs)
+only. No part 1a row of any phase exists: the lane that was to fit part 1a after the forecast cycle was
+stopped on 2026-10-25 before it ran. No FFM fit of part 1b and no covariance of parts 3 to 5 exists. Part
+1b's other arms (SDN-AP, SGP4-XP, SGP4, NASA's forecast) were scored and landed on 2026-10-25 (be50582) and
+have been seen; none of them is re-run or changed (config.a5).
+
+1. **Part 1b: the FFM arm**, as A4 registered it (commit 716496c0 on branch
+   task/experiments-sdn-ap-mixed-scenario-screening-20261025, committed 2026-10-25 20:49:16 UTC, before
+   any FFM fit of part 1b existed; brought onto main here). A3's fit and prediction (config.part1.starlink.ffm:
+   the estimator, 10 m POSITION_VECTOR measurements, the state's a priori, two rounds with the first at 100
+   times the sigmas, iterations, tolerance and edit threshold, the forces, the integrator and the
+   environment) on file k's first 24 h, the same track as the window's other arms (NASA's 4-min states),
+   with the seeds propagator/ffm's catalog defaults, B 0.01 and AGOM 0.02 m2/kg, each with an a priori
+   sigma equal to the seed (A3's seeds are G1's Starlink values). The track's EME2000 states go to GCRF by
+   foundation/frames for the fit (A3 measures in GCRF); the predictions come back to EME2000 by
+   foundation/frames and are scored by the same scorer against the same truth, windows, exclusions and
+   bins as the other arms. A window whose fit fails or ends not converged has no FFM score and is counted.
+2. **Part 1a without SDN-AP.** The owner withdrew the SDN-AP theory on 2026-10-25, before any part 1a
+   fit or score existed, and it is removed from the modules. Part 1a's arms are SGP4-XP (propagator/sdn-ap
+   `fit`, THEORY SGP4XP, the registered build 62c783262da9 from G1's store snapshot, modules c860a072),
+   FFM (A3) and, for the sample, SpaceX's forecast, as registered.
+3. **Paired figures.** Scoring's paired form with FFM in SDN-AP's place: on the windows both arms scored
+   in a bin, the share where FFM is closer and the median per-window ratio other / FFM with its 95 %
+   bootstrap interval over windows (seeds SHA-256 of `B2|<row>|<other>/ffm|<bin>|windows`); against
+   SGP4-XP and the operator forecast in parts 1a and 1b, and SGP4 in 1b. Part 1b's registered pairs with
+   SDN-AP stay, FFM among them.
+4. **Part 1a runs late; its inputs do not change.** The fits run from 2026-10-26, not right after the
+   forecast cycle (2026-10-25 21:01Z). Every input was fixed before: F is the file in that cycle; the
+   track comes only from captured files that start before F, stored by cycles before the forecast cycle;
+   the SGP4-XP build by SHA-256 (62c783262da9), the other modules at c860a072; the environment by SHA-256
+   (520b825d, made 2026-10-25 16:02 UTC: space weather observed to 2026-10-23 and forecast after, Earth
+   orientation from the 2026-10-09 finals). To show it, each fit row records the SHA-256 of its track built
+   from the cycles before the forecast cycle only and from every cycle present at the run; the fit uses
+   the first, and the number of satellites whose two differ is reported.
+5. **Part 1a's reader follows the registered rule.** Each SpaceX file's states lie on its own 10-min grid
+   from its first epoch, and successive files' grids differ. The reader at 2c2c4d4 kept an older file's
+   states that fall after a newer file's start when their epochs differ (a track built while timing a fit,
+   on the registration cycle's window of one satellite, held 149 states for 145 epochs). The plan takes each
+   epoch from the newest file that starts at or before it, so the reader keeps a file's state at t only
+   when no newer file of the same set (older than F for the track, newer than F for the truth) starts in
+   (its start, t]; every row reports how many states this drops. The score phase at 2c2c4d4 did not
+   apply 1a's bin coverage rule; it now does, counting a bin's 10-min epochs from the later of its start
+   and the first newer file's start to its end.
+6. **Part 1a is scored bin by bin.** Every E lies between 2026-10-25 16:21Z and 19:58Z, so bin k's
+   truth is complete once the capture cycle of 21:01Z k days after the forecast cycle has run (bin 1 on
+   2026-10-26, bin 2 on 10-27, bin 3 on 10-28). A score pass scores the complete bins from the stored fits;
+   a later pass must reproduce every bin an earlier one scored (any difference is reported); the table
+   holds the last pass, and earlier reports are labeled interim.
+7. **No second forecast fetch.** A1's second fetch was not made: the lane stopped before the forecast
+   cycle ended. The sample keeps the first fetch (2026-10-25 18:11 to 18:23 UTC); a sample satellite whose
+   fetched file is not F has no forecast arm and is counted, as A1 rules. A fetch now would return files
+   issued after F, so none is made.
+8. **The conjunction contrast: A4 with FFM against SGP4-XP, and Pc calls** (config.a5.ca). A4's design
+   (716496c0) holds, with these changes:
+   - Arms: SDN-AP is withdrawn. The primary is predicted by FFM, with fit_batch's formal covariance of
+     the state and parameters times max(1, reduced chi-square), carried by propagator/ffm with the fitted
+     state (no process noise), and by SGP4-XP, with the module's fit COVARIANCE of the SGP4XP set carried
+     by the module (`sdnap_covariance_at`, build 62c783262da9). The operator forecast has miss distance
+     only: the stored SpaceX forecasts hold epoch, position and velocity and no covariance, and NASA's
+     files carry none. A2's part 4 (the SGP4 covariance variants with SDN-AP as the primary) is withdrawn
+     with SDN-AP; A2's part 3 cells of its SGP4 covariances stay as registered.
+   - Encounters: A4's, every SDN-AP condition removed: a primary window must hold FFM and SGP4-XP at the
+     lead time. A lead time L's epoch is the truth epoch nearest E + L (part 2: T + L), within half the
+     truth's spacing (1a 5 min, 1b 2 min, part 2 150 s); a window without one does not serve at L, and
+     the count is reported. Errors (pair_statistics, the truth's RTN axes) and position covariances (the
+     same call's) are placed in the encounter as A2 places them.
+   - Contrast: the paired differences FFM - SGP4-XP of each rate on the same encounters, with 95 %
+     intervals over encounters and over object clusters, A4's resamples and seeds.
+   - Verdict, fixed here: in a group and class FFM "makes a CA difference" only if no part of either
+     interval of the paired missed-alert difference (FFM - SGP4-XP) lies above zero and both intervals of
+     the paired false-alert difference lie wholly below zero; otherwise the cell reads "no demonstrated CA
+     difference". Groups and classes are never pooled.
+   - Rates: over all encounters of a cell, the false-alert rate is the share with Pc at or above 1e-4 and
+     true miss above 5 km, the missed-alert rate the share with Pc below 1e-7 and true miss under 200 m;
+     recall and precision as A2 defines them.
+   - Pc calls (the owner's addition): for every encounter and arm, the Pc (2D, analysis/conjunction-
+     assessment, 20 m combined hard-body radius, the sum of the two objects' covariances as A4 pairs them)
+     and its call: red at Pc >= 1e-4, yellow at 1e-7 <= Pc < 1e-4, green at Pc < 1e-7 (A2's thresholds).
+     Per group, class and lead time: the confusion matrix of calls against the true miss (under 200 m;
+     200 m to 5 km; above 5 km), the share of red calls whose true miss is above 5 km and the share of true
+     misses under 200 m called green, each share with its 95 % bootstrap interval over encounters (seed
+     SHA-256 of `B2|A5|<group>|<class>|<lead>|<arm>|<metric>`).
+   - Part 5: A4's, with FFM and SGP4-XP: the population is the part 1a satellites both fitted; per pair
+     and arm, at the arm's predicted time of closest approach, the Pc and call with both objects'
+     covariances of that arm, against the truth's closest approach of the encounter; maneuvered and
+     unmaneuvered pairs apart; a class too small for an interval is stated as small and never pooled. It
+     runs once bin 3's truth is complete.
+   - Covariance realism: part 3's cells (A2: d²/3 by pair_statistics, mean with its 95 % object-cluster
+     interval, median, 95 % coverage, V1c5's rule) for the FFM and SGP4-XP covariances per group at 1, 6,
+     12, 24, 48 and 72 h, reported beside the calls.
+   - Order: part 1b's FFM row and part 1a's accuracy rows first; the contrast follows on the same fits.
