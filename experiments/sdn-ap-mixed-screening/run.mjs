@@ -110,6 +110,16 @@ if (caGroups.length) {
     }
   }
 }
+// part 5 (A8, A9): the first assessed encounter, re-assessed from the stored states and covariances
+const p5 = path.join(store, 'rows', 'ca.part5.json');
+if (fs.existsSync(p5)) {
+  const { through } = JSON.parse(fs.readFileSync(p5, 'utf8'));
+  const pdir = path.join(store, 'part5', through);
+  const first = fs.readdirSync(pdir).filter((f) => /^assessed\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(pdir, f))).sort((a, b) => a.id - b.id)[0];
+  const file = path.join(scratch, 'part5-replay.jsonl');
+  execFileSync(process.execPath, [path.join(dir, 'part5-starlink.mjs'), '--through', through, '--phase', 'assess', '--only', String(first.id), '--out', file], { stdio: ['ignore', 'ignore', 'inherit'] });
+  sameLeads(`part 5 encounter ${first.id}`, readJsonl(file)[0], first);
+}
 const { build, sameAsCommitted } = await import('./table.mjs');
 if (!sameAsCommitted(build())) { console.error('B2 check: the table regenerated from the stored rows differs from the committed table.json'); bad += 1; }
 fs.rmSync(scratch, { recursive: true, force: true });

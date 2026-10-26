@@ -176,14 +176,16 @@ if (phase === 'cov') {
 if (phase === 'assess') {
   const { openCqr } = await import('./lib/cqr.mjs');
   const cqr = await openCqr(modules);
-  const out = path.join(dir, `assessed.s${k}.jsonl`);
+  // --only <id> --out <file>: one encounter into another file (run.mjs --check replays it)
+  const out = args.out ?? path.join(dir, `assessed.s${k}.jsonl`);
   const done = new Set(readJsonl(out).map((r) => r.id));
+  const only = args.only != null ? Number(args.only) : null;
   const cache = new Map();
   const statesOf = (norad) => { if (!cache.has(norad)) { if (cache.size > 2000) cache.delete(cache.keys().next().value); cache.set(norad, readStates(norad)); } return cache.get(norad); };
   const covOf = (norad) => JSON.parse(fs.readFileSync(path.join(dir, 'cov', `${norad}.json`), 'utf8'));
   const man = new Map(index().map((r) => [r.norad, r.maneuverEvident]));
   for (const e of enc()) {
-    if (e.id % n !== k || done.has(e.id)) continue;
+    if (only != null ? e.id !== only : e.id % n !== k || done.has(e.id)) continue;
     const epochs = assessEpochs(e.timeMs);
     const ctl = (algorithm, from, to) => ({ startMs: from, seconds: (to - from) / 1000, thresholdM: 1e6, algorithm, coarseStepSeconds: 10 });
     const row = { id: e.id, a: e.a, b: e.b, timeMs: e.timeMs, maneuvered: Boolean(man.get(e.a) || man.get(e.b)), sets: Object.fromEntries(e.events.map((x) => [x.set, { tcaMs: x.tcaMs, missM: x.missM }])) };
