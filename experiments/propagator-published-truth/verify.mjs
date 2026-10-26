@@ -53,7 +53,7 @@ async function verify() {
         let actual;
         try{actual=await m.predict(arm,w,arc,inputs);}catch(e){actual={ok:false,error:String(e.stack||e).split('\n')[0]};}
         const prior=expected.arms[arm];assert.equal(actual.ok,prior.ok,`${w.key}/${arm}: scientific outcome`);
-        if(actual.ok)assert.deepEqual(actual.days,prior.days,`${w.key}/${arm}: every reported orbit/covariance statistic`);
+        if(actual.ok){const local=read(path.join(root,'runs',config.id,'registered','rows',`${w.key}.json`));assert.deepEqual(actual.days,local.arms[arm].days,`${w.key}/${arm}: every orbit/covariance statistic including uncommitted exact-epoch samples`);}
         else assert.equal(actual.error,prior.error,`${w.key}/${arm}: retained failure`);
         console.log(`Replayed ${w.key}/${arm}: ${actual.ok?'identical scores':'identical failure'}`);
       }

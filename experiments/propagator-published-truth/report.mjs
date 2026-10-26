@@ -70,7 +70,7 @@ export function aggregate(rows) {
     returnedEpochAudit:rows.filter(r=>r.arms.ffm?.ok).map(r=>({key:r.key,maximumUtcLabelOffsetMs:r.arms.ffm.fit.maximumReturnedEpochLabelOffsetMs})),
     // Arc-level aggregates contain no states, fitted elements, or per-epoch tables.
     arcSummaries:rows.map(r=>({key:r.key,norad:r.norad,family:r.family,issue:r.issue,fitSamples:r.fitSamples,leads:r.leads,excluded:r.excluded,
-      arms:Object.fromEntries(config.arms.filter(a=>r.arms[a]).map(a=>[a,r.arms[a].ok?{ok:true,days:r.arms[a].days,timing:r.arms[a].timing}:{ok:false,error:r.arms[a].error.split('\n')[0]}]))}))};
+      arms:Object.fromEntries(config.arms.filter(a=>r.arms[a]).map(a=>[a,r.arms[a].ok?{ok:true,days:Object.fromEntries(Object.entries(r.arms[a].days).map(([lead,{exact,...aggregates}])=>[lead,aggregates])),timing:r.arms[a].timing}:{ok:false,error:r.arms[a].error.split('\n')[0]}]))}))};
 }
 const number = x => finite(x)?x.toLocaleString('en-US',{maximumFractionDigits:1}):'—';
 const ratio = x => finite(x)?x.toFixed(3):'—';
