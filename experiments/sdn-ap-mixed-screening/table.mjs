@@ -137,6 +137,9 @@ export function build() {
   const lw = la.filter((r) => r.arms && !r.arms.error).map((r) => ({ object: r.target, arms: r.arms }));
   out.rows.push(tableRow('laser', 'LEO laser-ranged spheres from ILRS normal points (Starlette, Stella, LARETS, WESTPAC, LARES), 2026-07-16 to 08-30', `${la.length} cutoffs; SDN-AP and SGP4-XP fitted to 24 h of the full force model carried from the normal-point fit (not to the ranges directly)`, lw, ['sdnap', 'sgp4xp', 'ffm', 'sgp4', 'sdnapTruth'], BINS));
   for (const t of config.part2.targets) out.rows.push(tableRow(`laser-${t}`, `Laser, ${t}`, '', lw.filter((w) => w.object === t), ['sdnap', 'sgp4xp', 'ffm', 'sgp4', 'sdnapTruth'], BINS));
+  // parts 3 and 4 (A4, A5, A6): each group's summary, written by part4-ca.mjs
+  const ca = ['iss', 'laser', 'starlink'].map((g) => path.join(store, 'rows', `ca.${g}.json`)).filter((f) => fs.existsSync(f)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+  if (ca.length) out.ca = Object.fromEntries(ca.map((c) => [c.group, c]));
   return out;
 }
 
@@ -180,8 +183,41 @@ export function markdown(t) {
     }
     if (r.id === 'starlink-all' && t.starlink) o.push(...starlinkMarkdown(t.starlink));
   }
+  if (t.ca) o.push(...caMarkdown(t.ca));
   return o.join('\n');
 }
+
+const pct = (x) => (x == null ? '-' : `${(100 * x).toFixed(x !== 0 && Math.abs(x) < 0.001 ? 3 : 1)} %`);
+const ci = (c) => (c ? ` [${pct(c[0])}, ${pct(c[1])}]` : '');
+const rate = (x) => (x ? `${pct(x.value)}${ci(x.ci95Encounters)}${x.ci95Objects ? `, objects${ci(x.ci95Objects)}` : ''}` : '-');
+const GROUP = { iss: 'ISS (part 1b)', laser: 'Laser spheres (part 2)', starlink: 'Starlink (part 1a)' };
+const COV = { ffm: 'FFM', sgp4xp: 'SGP4-XP', v1c5: 'V1c5 frozen (public set, SGP4)', uncalibrated: 'uncalibrated (public set, SGP4)', v1c4: 'V1c4 best (public set, SGP4)' };
+/** Parts 3 and 4 as prose and tables. */
+function caMarkdown(ca) {
+  const o = ['## Conjunction contrast: FFM against SGP4-XP, with Pc calls (parts 3 and 4; A4, A5, A6)', ''];
+  o.push('Steps. Each window\'s arms are predicted at the truth epoch nearest each lead time (1, 6, 12, 24, 48 and 72 h after E or T): FFM with fit_batch\'s formal covariance times max(1, reduced chi-square) carried by propagator/ffm (no process noise); SGP4-XP with the module\'s fit covariance carried by sdnap_covariance_at; the public element set by SGP4 with V1c5\'s frozen covariance (and, for part 3, the uncalibrated and V1c4 covariances) in V1c5\'s runtime. pair_statistics gives each error and covariance in the truth\'s RTN axes and d². Encounters are synthetic with real errors: 20,000 per group and class, a relative speed of 10 km/s at a crossing angle uniform in [10, 170] degrees, a true miss log-uniform in [10 m, 10 km] in the encounter plane; the GP class pairs the primary with a public-set secondary, the precise class with another object predicted by the same arm. Pc is analysis/conjunction-assessment compute_pc (Foster, 20 m combined hard-body radius). Calls: red Pc >= 1e-4, yellow 1e-7 <= Pc < 1e-4, green Pc < 1e-7. Intervals are 95 % bootstrap intervals over encounters and, where marked, over primary objects.', '');
+  for (const [g, c] of Object.entries(ca)) {
+    o.push(`### ${GROUP[g] ?? g}`, '', `${c.leadRows} windows with lead records over ${c.objects} object(s); public-set records: ${listed(c.gpExcluded)}.`, '');
+    o.push('Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5\'s rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).', '');
+    o.push(`| Covariance | ${LEAD_COLS.map((L) => `${L} h`).join(' | ')} |`, `| --- | ${LEAD_COLS.map(() => '---').join(' | ')} |`);
+    for (const [label, cells] of Object.entries(c.realism)) o.push(`| ${COV[label] ?? label} | ${LEAD_COLS.map((L) => { const x = cells[L]; return !x?.n ? '-' : `${num(x.meanD2Over3)}${x.ci95Objects ? ` [${num(x.ci95Objects[0])}, ${num(x.ci95Objects[1])}]` : ''}; ${pct(x.coverage95)}; ${x.n} / ${x.objects}; ${x.decision.toLowerCase()}`; }).join(' | ')} |`);
+    o.push('');
+    for (const [cls, s] of Object.entries(c.classes)) {
+      o.push(`Part 4, ${cls === 'gp' ? 'GP secondary (public set, V1c5 frozen covariance)' : 'precise secondary (another object, the same arm)'}: ${s.encounters} encounters over ${s.objects} primary object(s) (${s.counts.noPrimary} draws without a primary, ${s.counts.noSecondary} without a secondary).`, '');
+      o.push('| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |', '| --- | --- | --- | --- | --- | --- |');
+      for (const [arm, x] of Object.entries(s.arms)) o.push(`| ${NAMES[arm]} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
+      for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => NAMES[a]).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
+      o.push('', `Verdict: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+      o.push('Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).', '');
+      o.push('| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- | --- |');
+      for (const [L, arms] of Object.entries(s.calls)) for (const [arm, x] of Object.entries(arms)) o.push(`| ${L} h | ${NAMES[arm]} | ${['red', 'yellow', 'green'].map((k) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[k]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`);
+      o.push('');
+    }
+  }
+  return o;
+}
+const LEAD_COLS = [1, 6, 12, 24, 48, 72];
+const num = (v) => (v == null ? '-' : Math.abs(v) >= 1000 ? v.toExponential(2) : Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2));
 
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   const t = build();

@@ -87,12 +87,12 @@ export function pcClient(ca) {
 }
 
 /** The encounters of one group and class. windows: [{ object, key, leads: { L: { ffm, sgp4xp, forecast, gp } } }] (lead records, km). */
-export async function encounters(group, cls, windows, pc) {
+export async function encounters(group, cls, windows, pc, { limit = A4.encounters.perGroupAndClass } = {}) {
   const has = (w, L, arm) => w.leads[L]?.[arm] && (arm === 'forecast' || Array.isArray(w.leads[L][arm].cov));
   const primaries = Object.fromEntries(LEADS.map((L) => [L, windows.filter((w) => ARMS.every((arm) => has(w, L, arm)))]));
   const secondaries = Object.fromEntries(LEADS.map((L) => [L, cls === 'gp' ? windows.filter((w) => has(w, L, 'gp')) : primaries[L]]));
-  const out = [], counts = { attempted: A4.encounters.perGroupAndClass, noPrimary: 0, noSecondary: 0 };
-  for (let k = 0; k < A4.encounters.perGroupAndClass; k += 1) {
+  const out = [], counts = { attempted: limit, noPrimary: 0, noSecondary: 0 };
+  for (let k = 0; k < limit; k += 1) {
     const next = generator(`B2|part4|${group}|${cls}|${k}`);
     const L = LEADS[Math.floor(next() * LEADS.length)];
     if (!primaries[L].length) { counts.noPrimary += 1; continue; } // each encounter has its own generator: a skipped one moves no other

@@ -10,14 +10,13 @@ import { store, args, frozen, readJsonl, write, sha256, g1Dir, root } from './co
 
 frozen();
 const { LEADS, encounters, summarize, realismCell, pcClient } = await import('./lib/ca.mjs');
-const group = args.group;
 const SOURCES = { iss: { leads: 'iss-leads.', gp: 'iss-gp.', key: (r) => r.file, object: () => 'ISS' }, laser: { leads: 'laser-leads.', gp: 'laser-gp.', key: (r) => `${r.norad}|${r.cutoff}`, object: (r) => r.target }, starlink: { leads: 'starlink-leads.', gp: 'starlink-gp.', key: (r) => String(r.norad), object: (r) => String(r.norad) } };
-const S = SOURCES[group];
-if (!S) throw new Error('--group iss|laser|starlink');
 const rowsOf = (prefix) => { const d = path.join(store, 'rows'); return fs.readdirSync(d).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).sort().flatMap((f) => readJsonl(path.join(d, f))); };
 
 /** The group's windows: { object, key, leads: { L: { ffm, sgp4xp, forecast, gp, gpLabels } } } from its lead and GP rows. */
-export function windowsOf() {
+export function windowsOf(group) {
+  const S = SOURCES[group];
+  if (!S) throw new Error('--group iss|laser|starlink');
   const leadRows = rowsOf(S.leads).filter((r) => !r.excluded), gpRows = new Map(rowsOf(S.gp).filter((r) => r.gp).map((r) => [S.key(r), r.gp]));
   const inputs = sha256(Buffer.from(JSON.stringify([leadRows, [...gpRows.entries()]])));
   const windows = leadRows.map((r) => {
@@ -28,12 +27,12 @@ export function windowsOf() {
     }]));
     return { object: S.object(r), key: S.key(r), leads, gpTier: g?.tier ?? null, gpFlagged: g?.flagged ?? null };
   });
-  return { windows, inputs, leadRows: leadRows.length, gpRows: gpRows.size, gpExcluded: tally(rowsOf(S.gp).map((r) => r.gp?.excluded ?? (r.excluded ? `window: ${r.excluded}` : 'recorded'))) };
+  return { windows, inputs, leadRows: leadRows.length, gpRows: gpRows.size, gpExcluded: tally(rowsOf(S.gp).map((r) => r.gp?.excluded ?? (r.excluded ? `window excluded: ${r.excluded.replace(/^planned burn .*/, 'a planned burn')}` : 'recorded'))) };
 }
 const tally = (values) => Object.fromEntries([...values.reduce((m, v) => m.set(v, (m.get(v) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1]));
 
 /** Part 3: per covariance and lead, the realism cell over the group's windows. */
-export function realism(windows) {
+export function realism(group, windows) {
   const labels = { ffm: (l) => l.ffm, sgp4xp: (l) => l.sgp4xp, v1c5: (l) => l.gpLabels?.v1c5, uncalibrated: (l) => l.gpLabels?.uncalibrated, v1c4: (l) => l.gpLabels?.v1c4 };
   return Object.fromEntries(Object.entries(labels).map(([label, pick]) => [label, Object.fromEntries(LEADS.map((L) => [L, realismCell(windows.flatMap((w) => { const r = pick(w.leads[L] ?? {}); return r && Number.isFinite(r.d2) ? [{ object: w.object, d2: r.d2 }] : []; }), `B2|part3|${group}|${label}|${L}`)]))]));
 }
@@ -43,8 +42,9 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
   const ca = await loadModule(modulesRoot(), 'analysis/conjunction-assessment');
   const pc = pcClient(ca);
-  const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf();
-  const summary = { group, inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(windows), classes: {} };
+  const group = args.group;
+  const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group);
+  const summary = { group, inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
   const classes = summary.objects > 1 ? ['gp', 'precise'] : ['gp'];
   for (const cls of classes) {
     const t0 = Date.now();

@@ -3018,5 +3018,2702 @@
         ]
       }
     }
-  ]
+  ],
+  "ca": {
+    "iss": {
+      "group": "iss",
+      "inputs": "1f1ecbc7d2022d8a019a0ce671c479ace83bfa13942b5e1872b216be55cb70f9",
+      "leadRows": 519,
+      "gpRows": 519,
+      "gpExcluded": {
+        "recorded": 335,
+        "prediction start before 2023-01-04": 184,
+        "window excluded: a planned burn": 136,
+        "window excluded: no newer file starts in the 72 h after the fit": 92,
+        "window excluded: the header has no readable START_TIME": 1
+      },
+      "objects": 1,
+      "realism": {
+        "ffm": {
+          "1": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "6": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "12": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "24": {
+            "n": 285,
+            "objects": 1,
+            "meanD2Over3": 14472.807168921703,
+            "ci95Objects": null,
+            "medianD2Over3": 255.77387199999998,
+            "coverage95": 0.312280701754386,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "48": {
+            "n": 415,
+            "objects": 1,
+            "meanD2Over3": 23008.177399165474,
+            "ci95Objects": null,
+            "medianD2Over3": 238.76428066666665,
+            "coverage95": 0.3373493975903614,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "72": {
+            "n": 262,
+            "objects": 1,
+            "meanD2Over3": 21935.66822500691,
+            "ci95Objects": null,
+            "medianD2Over3": 102.77942433333334,
+            "coverage95": 0.3702290076335878,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          }
+        },
+        "sgp4xp": {
+          "1": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "6": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "12": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "24": {
+            "n": 287,
+            "objects": 1,
+            "meanD2Over3": 52.850751966319486,
+            "ci95Objects": null,
+            "medianD2Over3": 17.265089133333333,
+            "coverage95": 0.17421602787456447,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "48": {
+            "n": 418,
+            "objects": 1,
+            "meanD2Over3": 86.63570827283797,
+            "ci95Objects": null,
+            "medianD2Over3": 28.658091766666665,
+            "coverage95": 0.10526315789473684,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "72": {
+            "n": 266,
+            "objects": 1,
+            "meanD2Over3": 182.55037206266408,
+            "ci95Objects": null,
+            "medianD2Over3": 33.962546833333334,
+            "coverage95": 0.06015037593984962,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          }
+        },
+        "v1c5": {
+          "1": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "6": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "12": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "24": {
+            "n": 198,
+            "objects": 1,
+            "meanD2Over3": 42.41676074577139,
+            "ci95Objects": null,
+            "medianD2Over3": 1.6785402816666668,
+            "coverage95": 0.6060606060606061,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "48": {
+            "n": 285,
+            "objects": 1,
+            "meanD2Over3": 85.92472560923473,
+            "ci95Objects": null,
+            "medianD2Over3": 2.00685534,
+            "coverage95": 0.543859649122807,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "72": {
+            "n": 169,
+            "objects": 1,
+            "meanD2Over3": 285.87522101159453,
+            "ci95Objects": null,
+            "medianD2Over3": 2.9421648499999997,
+            "coverage95": 0.47337278106508873,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          }
+        },
+        "uncalibrated": {
+          "1": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "6": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "12": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "24": {
+            "n": 198,
+            "objects": 1,
+            "meanD2Over3": 3.0229982028205384,
+            "ci95Objects": null,
+            "medianD2Over3": 1.2577324333333333,
+            "coverage95": 0.797979797979798,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "48": {
+            "n": 285,
+            "objects": 1,
+            "meanD2Over3": 4.3939876075102475,
+            "ci95Objects": null,
+            "medianD2Over3": 0.7222214,
+            "coverage95": 0.8842105263157894,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "72": {
+            "n": 169,
+            "objects": 1,
+            "meanD2Over3": 4.334857511677024,
+            "ci95Objects": null,
+            "medianD2Over3": 0.5992184866666667,
+            "coverage95": 0.9289940828402367,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          }
+        },
+        "v1c4": {
+          "1": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "6": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "12": {
+            "n": 0,
+            "objects": 0,
+            "decision": "INSUFFICIENT"
+          },
+          "24": {
+            "n": 198,
+            "objects": 1,
+            "meanD2Over3": 2.745222166982491,
+            "ci95Objects": null,
+            "medianD2Over3": 0.9416518083333333,
+            "coverage95": 0.8636363636363636,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "48": {
+            "n": 285,
+            "objects": 1,
+            "meanD2Over3": 5.290992282201062,
+            "ci95Objects": null,
+            "medianD2Over3": 0.92928247,
+            "coverage95": 0.856140350877193,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          },
+          "72": {
+            "n": 169,
+            "objects": 1,
+            "meanD2Over3": 6.212061403222682,
+            "ci95Objects": null,
+            "medianD2Over3": 0.9017375233333333,
+            "coverage95": 0.8816568047337278,
+            "ci95CoverageObjects": null,
+            "decision": "INSUFFICIENT"
+          }
+        }
+      },
+      "classes": {
+        "gp": {
+          "group": "iss",
+          "class": "gp",
+          "encounters": 10033,
+          "objects": 1,
+          "counts": {
+            "attempted": 20000,
+            "noPrimary": 9964,
+            "noSecondary": 0,
+            "formed": 10036,
+            "pcNotEvaluated": {
+              "ffm": 1,
+              "sgp4xp": 2
+            },
+            "leftOut": 3
+          },
+          "arms": {
+            "ffm": {
+              "encounters": 10033,
+              "missErrorM": {
+                "median": 4599.37314986336,
+                "p10": 157.66408301107583,
+                "p90": 32340.413343642263
+              },
+              "missedAlert": {
+                "value": 0.10415628426193561,
+                "ci95Encounters": [
+                  0.0981760191368484,
+                  0.11013654938702283
+                ],
+                "ci95Objects": null
+              },
+              "falseAlert": {
+                "value": 0,
+                "ci95Encounters": [
+                  0,
+                  0
+                ],
+                "ci95Objects": null
+              },
+              "recall": {
+                "value": 0.18002748511223088,
+                "ci95Encounters": [
+                  0.16873117758330558,
+                  0.19180303907480545
+                ],
+                "ci95Objects": null
+              },
+              "precision": {
+                "value": 0.9749276759884281,
+                "ci95Encounters": [
+                  0.9650145772594753,
+                  0.9840637450199203
+                ],
+                "ci95Objects": null
+              },
+              "pcCalibration": [
+                {
+                  "pc": [
+                    0,
+                    1e-7
+                  ],
+                  "encounters": 4188,
+                  "hitShare": 0.24952244508118435
+                },
+                {
+                  "pc": [
+                    1e-7,
+                    0.000001
+                  ],
+                  "encounters": 1868,
+                  "hitShare": 0.4470021413276231
+                },
+                {
+                  "pc": [
+                    0.000001,
+                    0.00001
+                  ],
+                  "encounters": 1798,
+                  "hitShare": 0.5417130144605117
+                },
+                {
+                  "pc": [
+                    0.00001,
+                    0.0001
+                  ],
+                  "encounters": 1142,
+                  "hitShare": 0.6357267950963222
+                },
+                {
+                  "pc": [
+                    0.0001,
+                    0.001
+                  ],
+                  "encounters": 919,
+                  "hitShare": 0.7551686615886833
+                },
+                {
+                  "pc": [
+                    0.001,
+                    0.01
+                  ],
+                  "encounters": 118,
+                  "hitShare": 0.7796610169491526
+                },
+                {
+                  "pc": [
+                    0.01,
+                    1
+                  ],
+                  "encounters": 0,
+                  "hitShare": null
+                }
+              ]
+            },
+            "sgp4xp": {
+              "encounters": 10033,
+              "missErrorM": {
+                "median": 9050.998275587961,
+                "p10": 473.8086543431179,
+                "p90": 58916.13360598159
+              },
+              "missedAlert": {
+                "value": 0.1706368982358218,
+                "ci95Encounters": [
+                  0.1632612379148809,
+                  0.17821190072759893
+                ],
+                "ci95Objects": null
+              },
+              "falseAlert": {
+                "value": 0.0000996710854181202,
+                "ci95Encounters": [
+                  0,
+                  0.0002990132562543606
+                ],
+                "ci95Objects": null
+              },
+              "recall": {
+                "value": 0.09825927622537792,
+                "ci95Encounters": [
+                  0.08976936802557232,
+                  0.10724107909903573
+                ],
+                "ci95Objects": null
+              },
+              "precision": {
+                "value": 0.9612794612794613,
+                "ci95Encounters": [
+                  0.9452554744525548,
+                  0.9761904761904762
+                ],
+                "ci95Objects": null
+              },
+              "pcCalibration": [
+                {
+                  "pc": [
+                    0,
+                    1e-7
+                  ],
+                  "encounters": 5181,
+                  "hitShare": 0.33043813935533684
+                },
+                {
+                  "pc": [
+                    1e-7,
+                    0.000001
+                  ],
+                  "encounters": 1835,
+                  "hitShare": 0.4539509536784741
+                },
+                {
+                  "pc": [
+                    0.000001,
+                    0.00001
+                  ],
+                  "encounters": 1651,
+                  "hitShare": 0.5511811023622047
+                },
+                {
+                  "pc": [
+                    0.00001,
+                    0.0001
+                  ],
+                  "encounters": 772,
+                  "hitShare": 0.6243523316062176
+                },
+                {
+                  "pc": [
+                    0.0001,
+                    0.001
+                  ],
+                  "encounters": 541,
+                  "hitShare": 0.7282809611829945
+                },
+                {
+                  "pc": [
+                    0.001,
+                    0.01
+                  ],
+                  "encounters": 53,
+                  "hitShare": 0.660377358490566
+                },
+                {
+                  "pc": [
+                    0.01,
+                    1
+                  ],
+                  "encounters": 0,
+                  "hitShare": null
+                }
+              ]
+            },
+            "forecast": {
+              "encounters": 6044,
+              "missErrorM": {
+                "median": 4321.663297557308,
+                "p10": 105.90745086863737,
+                "p90": 30232.371218099302
+              }
+            }
+          },
+          "paired": {
+            "ffm-sgp4xp": {
+              "missedAlert": {
+                "value": -0.06648061397388617,
+                "ci95Encounters": [
+                  -0.0725605501843915,
+                  -0.060500348848798964
+                ],
+                "ci95Objects": null
+              },
+              "falseAlert": {
+                "value": -0.0000996710854181202,
+                "ci95Encounters": [
+                  -0.0002990132562543606,
+                  0
+                ],
+                "ci95Objects": null
+              },
+              "recall": {
+                "value": 0.08176820888685296,
+                "ci95Encounters": [
+                  0.06979404866407088,
+                  0.09362692795092559
+                ],
+                "ci95Objects": null
+              },
+              "precision": {
+                "value": 0.013648214708966822,
+                "ci95Encounters": [
+                  -0.0016417927212550398,
+                  0.029902929507969897
+                ],
+                "ci95Objects": null
+              }
+            }
+          },
+          "calls": {
+            "1": {
+              "ffm": {
+                "encounters": 0,
+                "matrix": {},
+                "redFar": {
+                  "value": null,
+                  "ci95Encounters": null
+                },
+                "hitGreen": {
+                  "value": null,
+                  "ci95Encounters": null
+                }
+              },
+              "sgp4xp": {
+                "encounters": 0,
+                "matrix": {},
+                "redFar": {
+                  "value": null,
+                  "ci95Encounters": null
+                },
+                "hitGreen": {
+                  "value": null,
+                  "ci95Encounters": null
+                }
+              }
+            },
+            "6": {
+              "ffm": {
+                "encounters": 0,
+                "matrix": {},
+                "redFar": {
+                  "value": null,
+                  "ci95Encounters": null
+                },
+                "hitGreen": {
+                  "value": null,
+                  "ci95Encounters": null
+                }
+              },
+              "sgp4xp": {
+                "encounters": 0,
+                "matrix": {},
+                "redFar": {
+                  "value": null,
+                  "ci95Encounters": null
+                },
+                "hitGreen": {
+                  "value": null,
+                  "ci95Encounters": null
+                }
+              }
+            },
+            "12": {
+              "ffm": {
+                "encounters": 0,
+                "matrix": {},
+                "redFar": {
+                  "value": null,
+                  "ci95Encounters": null
+                },
+                "hitGreen": {
+                  "value": null,
+                  "ci95Encounters": null
+                }
+              },
+              "sgp4xp": {
+                "encounters": 0,
+                "matrix": {},
+                "redFar": {
+                  "value": null,
+                  "ci95Encounters": null
+                },
+                "hitGreen": {
+                  "value": null,
+                  "ci95Encounters": null
+                }
+              }
+            },
+            "24": {
+              "ffm": {
+                "encounters": 3298,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 682,
+                    "under 200 m": 819,
+                    "above 5 km": 34
+                  },
+                  "red": {
+                    "200 m to 5 km": 110,
+                    "under 200 m": 318
+                  },
+                  "green": {
+                    "200 m to 5 km": 755,
+                    "under 200 m": 292,
+                    "above 5 km": 288
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.20433869839048285,
+                  "ci95Encounters": [
+                    0.18378718557093718,
+                    0.2255754832358907
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3298,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 653,
+                    "under 200 m": 800,
+                    "above 5 km": 32
+                  },
+                  "green": {
+                    "200 m to 5 km": 802,
+                    "under 200 m": 430,
+                    "above 5 km": 290
+                  },
+                  "red": {
+                    "under 200 m": 199,
+                    "200 m to 5 km": 92
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.3009097270818754,
+                  "ci95Encounters": [
+                    0.2772346368715084,
+                    0.32456200930503054
+                  ]
+                }
+              }
+            },
+            "48": {
+              "ffm": {
+                "encounters": 3424,
+                "matrix": {
+                  "green": {
+                    "above 5 km": 289,
+                    "under 200 m": 354,
+                    "200 m to 5 km": 793
+                  },
+                  "red": {
+                    "under 200 m": 301,
+                    "200 m to 5 km": 91
+                  },
+                  "yellow": {
+                    "under 200 m": 852,
+                    "200 m to 5 km": 719,
+                    "above 5 km": 25
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.23490378234903783,
+                  "ci95Encounters": [
+                    0.21362288395322312,
+                    0.256728812453355
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3424,
+                "matrix": {
+                  "green": {
+                    "above 5 km": 289,
+                    "under 200 m": 600,
+                    "200 m to 5 km": 910
+                  },
+                  "red": {
+                    "under 200 m": 151,
+                    "200 m to 5 km": 51,
+                    "above 5 km": 1
+                  },
+                  "yellow": {
+                    "under 200 m": 756,
+                    "200 m to 5 km": 642,
+                    "above 5 km": 24
+                  }
+                },
+                "redFar": {
+                  "value": 0.0049261083743842365,
+                  "ci95Encounters": [
+                    0,
+                    0.015706806282722512
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.39814200398142,
+                  "ci95Encounters": [
+                    0.37335936363825234,
+                    0.42254472000413545
+                  ]
+                }
+              }
+            },
+            "72": {
+              "ffm": {
+                "encounters": 3311,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 777,
+                    "under 200 m": 864,
+                    "above 5 km": 36
+                  },
+                  "green": {
+                    "above 5 km": 295,
+                    "under 200 m": 399,
+                    "200 m to 5 km": 723
+                  },
+                  "red": {
+                    "under 200 m": 167,
+                    "200 m to 5 km": 50
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.279020979020979,
+                  "ci95Encounters": [
+                    0.25573226946142164,
+                    0.3024699943336939
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3311,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 653,
+                    "under 200 m": 669,
+                    "above 5 km": 29
+                  },
+                  "green": {
+                    "above 5 km": 302,
+                    "under 200 m": 682,
+                    "200 m to 5 km": 876
+                  },
+                  "red": {
+                    "under 200 m": 79,
+                    "200 m to 5 km": 21
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.47692307692307695,
+                  "ci95Encounters": [
+                    0.451333339994845,
+                    0.5031716968608173
+                  ]
+                }
+              }
+            }
+          },
+          "verdict": "no demonstrated CA difference",
+          "verdictReason": "one primary object: no object-cluster interval"
+        }
+      }
+    },
+    "laser": {
+      "group": "laser",
+      "inputs": "d388a8cec3fe2f6bdbea0c482c6c9654ef2c2cbbb186b7d0a969be8299f5f41b",
+      "leadRows": 206,
+      "gpRows": 206,
+      "gpExcluded": {
+        "recorded": 206
+      },
+      "objects": 5,
+      "realism": {
+        "ffm": {
+          "1": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 17.340033129776135,
+            "ci95Objects": [
+              7.769780054447194,
+              26.562485216047623
+            ],
+            "medianD2Over3": 11.258234733333333,
+            "coverage95": 0.13725490196078433,
+            "ci95CoverageObjects": [
+              0.014285714285714285,
+              0.28217821782178215
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "6": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 16.872130120594772,
+            "ci95Objects": [
+              7.426294268616161,
+              25.77820392388889
+            ],
+            "medianD2Over3": 9.85653395,
+            "coverage95": 0.1568627450980392,
+            "ci95CoverageObjects": [
+              0.01904761904761905,
+              0.30927835051546393
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "12": {
+            "n": 203,
+            "objects": 5,
+            "meanD2Over3": 17.0436785381839,
+            "ci95Objects": [
+              7.127070430336735,
+              26.29917943884127
+            ],
+            "medianD2Over3": 9.233033066666666,
+            "coverage95": 0.13793103448275862,
+            "ci95CoverageObjects": [
+              0.03333333333333333,
+              0.265
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "24": {
+            "n": 199,
+            "objects": 5,
+            "meanD2Over3": 16.44249333929146,
+            "ci95Objects": [
+              7.075125770870467,
+              25.261527196390244
+            ],
+            "medianD2Over3": 9.606831366666666,
+            "coverage95": 0.18090452261306533,
+            "ci95CoverageObjects": [
+              0.06829268292682927,
+              0.32275132275132273
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "48": {
+            "n": 195,
+            "objects": 5,
+            "meanD2Over3": 16.79454486873897,
+            "ci95Objects": [
+              7.230604730032631,
+              25.88028800051
+            ],
+            "medianD2Over3": 10.549631966666666,
+            "coverage95": 0.18461538461538463,
+            "ci95CoverageObjects": [
+              0.06,
+              0.3689839572192513
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "72": {
+            "n": 190,
+            "objects": 5,
+            "meanD2Over3": 16.298905386624384,
+            "ci95Objects": [
+              7.301138575156397,
+              24.835248259042736
+            ],
+            "medianD2Over3": 9.172996516666666,
+            "coverage95": 0.1631578947368421,
+            "ci95CoverageObjects": [
+              0.046153846153846156,
+              0.3076923076923077
+            ],
+            "decision": "NOT REALISTIC"
+          }
+        },
+        "sgp4xp": {
+          "1": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 1.9126007831078435,
+            "ci95Objects": [
+              1.5440998090416667,
+              2.2669286427868585
+            ],
+            "medianD2Over3": 1.8988202266666667,
+            "coverage95": 0.7598039215686274,
+            "ci95CoverageObjects": [
+              0.6298076923076923,
+              0.9020618556701031
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "6": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 1.2500735140382362,
+            "ci95Objects": [
+              1.0596538563890034,
+              1.4261647043990384
+            ],
+            "medianD2Over3": 1.0609990483333334,
+            "coverage95": 0.9411764705882353,
+            "ci95CoverageObjects": [
+              0.8708133971291866,
+              0.9950738916256158
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "12": {
+            "n": 203,
+            "objects": 5,
+            "meanD2Over3": 1.6535506825835797,
+            "ci95Objects": [
+              1.2185783972384125,
+              2.1666574589225593
+            ],
+            "medianD2Over3": 1.6821178033333333,
+            "coverage95": 0.9113300492610837,
+            "ci95CoverageObjects": [
+              0.7708333333333334,
+              1
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "24": {
+            "n": 199,
+            "objects": 5,
+            "meanD2Over3": 1.8375374511775544,
+            "ci95Objects": [
+              1.3005790301766669,
+              2.3799196946127945
+            ],
+            "medianD2Over3": 1.66791877,
+            "coverage95": 0.7437185929648241,
+            "ci95CoverageObjects": [
+              0.5376884422110553,
+              0.9384615384615385
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "48": {
+            "n": 195,
+            "objects": 5,
+            "meanD2Over3": 1.4970841868461549,
+            "ci95Objects": [
+              1.1475235303911564,
+              1.8502485614089341
+            ],
+            "medianD2Over3": 1.3737412066666668,
+            "coverage95": 0.9076923076923077,
+            "ci95CoverageObjects": [
+              0.826530612244898,
+              0.9743589743589743
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "72": {
+            "n": 190,
+            "objects": 5,
+            "meanD2Over3": 1.211056431487719,
+            "ci95Objects": [
+              1.0194056263573883,
+              1.3955217943033507
+            ],
+            "medianD2Over3": 1.1962627766666665,
+            "coverage95": 0.9789473684210527,
+            "ci95CoverageObjects": [
+              0.9476439790575916,
+              1
+            ],
+            "decision": "NOT REALISTIC"
+          }
+        },
+        "v1c5": {
+          "1": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 1.19539669826536,
+            "ci95Objects": [
+              0.9591087210825944,
+              1.4640780806731746
+            ],
+            "medianD2Over3": 0.9726670249999999,
+            "coverage95": 0.9313725490196079,
+            "ci95CoverageObjects": [
+              0.861244019138756,
+              0.9950738916256158
+            ],
+            "decision": "REALISTIC"
+          },
+          "6": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 1.226813084707804,
+            "ci95Objects": [
+              0.8186509728558113,
+              1.6484616102392347
+            ],
+            "medianD2Over3": 0.9533214200000001,
+            "coverage95": 0.8921568627450981,
+            "ci95CoverageObjects": [
+              0.7751196172248804,
+              0.9848484848484849
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "12": {
+            "n": 203,
+            "objects": 5,
+            "meanD2Over3": 0.9550463033784896,
+            "ci95Objects": [
+              0.6193399771095238,
+              1.3604490876045754
+            ],
+            "medianD2Over3": 0.7665738633333333,
+            "coverage95": 0.9556650246305419,
+            "ci95CoverageObjects": [
+              0.9068627450980392,
+              1
+            ],
+            "decision": "REALISTIC"
+          },
+          "24": {
+            "n": 199,
+            "objects": 5,
+            "meanD2Over3": 1.1052110773283084,
+            "ci95Objects": [
+              0.8661797534732298,
+              1.330250323689431
+            ],
+            "medianD2Over3": 0.9875416100000001,
+            "coverage95": 0.9748743718592965,
+            "ci95CoverageObjects": [
+              0.949748743718593,
+              0.9950738916256158
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "48": {
+            "n": 195,
+            "objects": 5,
+            "meanD2Over3": 1.2310569068323722,
+            "ci95Objects": [
+              0.8146273905032912,
+              1.626664947345
+            ],
+            "medianD2Over3": 0.9876296833333332,
+            "coverage95": 0.8769230769230769,
+            "ci95CoverageObjects": [
+              0.785,
+              0.9639175257731959
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "72": {
+            "n": 190,
+            "objects": 5,
+            "meanD2Over3": 1.3243247819955448,
+            "ci95Objects": [
+              0.7512555325169742,
+              1.868005864834188
+            ],
+            "medianD2Over3": 1.0370765849999999,
+            "coverage95": 0.8842105263157894,
+            "ci95CoverageObjects": [
+              0.774869109947644,
+              0.9945945945945946
+            ],
+            "decision": "NOT REALISTIC"
+          }
+        },
+        "uncalibrated": {
+          "1": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 4.147393869898691,
+            "ci95Objects": [
+              3.0559435455283324,
+              5.196865335639424
+            ],
+            "medianD2Over3": 3.86971435,
+            "coverage95": 0.3333333333333333,
+            "ci95CoverageObjects": [
+              0.1642512077294686,
+              0.49
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "6": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 3.4685458341669944,
+            "ci95Objects": [
+              2.175745225580666,
+              4.881588505110047
+            ],
+            "medianD2Over3": 2.6171431983333333,
+            "coverage95": 0.5,
+            "ci95CoverageObjects": [
+              0.3125,
+              0.7435897435897436
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "12": {
+            "n": 203,
+            "objects": 5,
+            "meanD2Over3": 2.2843593235172417,
+            "ci95Objects": [
+              1.660788166730159,
+              2.952471277217688
+            ],
+            "medianD2Over3": 1.8504845733333333,
+            "coverage95": 0.6798029556650246,
+            "ci95CoverageObjects": [
+              0.5255102040816326,
+              0.8238095238095238
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "24": {
+            "n": 199,
+            "objects": 5,
+            "meanD2Over3": 2.2828105034790607,
+            "ci95Objects": [
+              1.9245852010000006,
+              2.6762972133056913
+            ],
+            "medianD2Over3": 2.0991359766666666,
+            "coverage95": 0.6532663316582915,
+            "ci95CoverageObjects": [
+              0.551219512195122,
+              0.745
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "48": {
+            "n": 195,
+            "objects": 5,
+            "meanD2Over3": 1.1122447455094024,
+            "ci95Objects": [
+              0.9282955063630018,
+              1.3762610233027213
+            ],
+            "medianD2Over3": 0.9033667866666667,
+            "coverage95": 0.9230769230769231,
+            "ci95CoverageObjects": [
+              0.8205128205128205,
+              0.9898477157360406
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "72": {
+            "n": 190,
+            "objects": 5,
+            "meanD2Over3": 0.6881605828157898,
+            "ci95Objects": [
+              0.4904940883442623,
+              0.9545702614035088
+            ],
+            "medianD2Over3": 0.5371868033333334,
+            "coverage95": 0.9789473684210527,
+            "ci95CoverageObjects": [
+              0.93717277486911,
+              1
+            ],
+            "decision": "NOT REALISTIC"
+          }
+        },
+        "v1c4": {
+          "1": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 1.1498485815555555,
+            "ci95Objects": [
+              0.9404038131900001,
+              1.3512377819070511
+            ],
+            "medianD2Over3": 1.0677598816666667,
+            "coverage95": 0.9656862745098039,
+            "ci95CoverageObjects": [
+              0.9282296650717703,
+              1
+            ],
+            "decision": "REALISTIC"
+          },
+          "6": {
+            "n": 204,
+            "objects": 5,
+            "meanD2Over3": 1.2373094889148855,
+            "ci95Objects": [
+              0.8445641986935555,
+              1.5763805424587307
+            ],
+            "medianD2Over3": 0.9193052366666667,
+            "coverage95": 0.8921568627450981,
+            "ci95CoverageObjects": [
+              0.819047619047619,
+              0.9547738693467337
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "12": {
+            "n": 203,
+            "objects": 5,
+            "meanD2Over3": 0.9593525001018064,
+            "ci95Objects": [
+              0.6977259280877194,
+              1.2928110999531253
+            ],
+            "medianD2Over3": 0.7960436299999999,
+            "coverage95": 0.9704433497536946,
+            "ci95CoverageObjects": [
+              0.9375,
+              1
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "24": {
+            "n": 199,
+            "objects": 5,
+            "meanD2Over3": 1.125221728947739,
+            "ci95Objects": [
+              0.9117966385411966,
+              1.330235978353038
+            ],
+            "medianD2Over3": 1.0467983466666666,
+            "coverage95": 0.9748743718592965,
+            "ci95CoverageObjects": [
+              0.95,
+              0.9949748743718593
+            ],
+            "decision": "NOT REALISTIC"
+          },
+          "48": {
+            "n": 195,
+            "objects": 5,
+            "meanD2Over3": 1.03732837774359,
+            "ci95Objects": [
+              0.8629850000000001,
+              1.2543019605252528
+            ],
+            "medianD2Over3": 0.9259928266666666,
+            "coverage95": 0.958974358974359,
+            "ci95CoverageObjects": [
+              0.914572864321608,
+              0.9948453608247423
+            ],
+            "decision": "REALISTIC"
+          },
+          "72": {
+            "n": 190,
+            "objects": 5,
+            "meanD2Over3": 1.042496569419298,
+            "ci95Objects": [
+              0.7668482420702705,
+              1.4078826587766324
+            ],
+            "medianD2Over3": 0.8185921816666667,
+            "coverage95": 0.9315789473684211,
+            "ci95CoverageObjects": [
+              0.8205128205128205,
+              1
+            ],
+            "decision": "REALISTIC"
+          }
+        }
+      },
+      "classes": {
+        "gp": {
+          "group": "laser",
+          "class": "gp",
+          "encounters": 19997,
+          "objects": 5,
+          "counts": {
+            "attempted": 20000,
+            "noPrimary": 0,
+            "noSecondary": 0,
+            "formed": 20000,
+            "pcNotEvaluated": {
+              "ffm": 1,
+              "sgp4xp": 2
+            },
+            "leftOut": 3
+          },
+          "arms": {
+            "ffm": {
+              "encounters": 19997,
+              "missErrorM": {
+                "median": 138.92817777301548,
+                "p10": -161.11782759347807,
+                "p90": 522.3056534822791
+              },
+              "missedAlert": {
+                "value": 0.005400810121518228,
+                "ci95Encounters": [
+                  0.0044006600990148526,
+                  0.006450967645146772
+                ],
+                "ci95Objects": [
+                  0.004309033762546892,
+                  0.006606230108978687
+                ]
+              },
+              "falseAlert": {
+                "value": 0,
+                "ci95Encounters": [
+                  0,
+                  0
+                ],
+                "ci95Objects": [
+                  0,
+                  0
+                ]
+              },
+              "recall": {
+                "value": 0.9238526912181303,
+                "ci95Encounters": [
+                  0.9182653560028791,
+                  0.9293983525405523
+                ],
+                "ci95Objects": [
+                  0.9163152773272786,
+                  0.9300535475234271
+                ]
+              },
+              "precision": {
+                "value": 0.9937316356513223,
+                "ci95Encounters": [
+                  0.9921622031973427,
+                  0.9952153110047847
+                ],
+                "ci95Objects": [
+                  0.9918731029080583,
+                  0.9958745082989542
+                ]
+              },
+              "pcCalibration": [
+                {
+                  "pc": [
+                    0,
+                    1e-7
+                  ],
+                  "encounters": 7504,
+                  "hitShare": 0.014392324093816631
+                },
+                {
+                  "pc": [
+                    1e-7,
+                    0.000001
+                  ],
+                  "encounters": 416,
+                  "hitShare": 0.016826923076923076
+                },
+                {
+                  "pc": [
+                    0.000001,
+                    0.00001
+                  ],
+                  "encounters": 568,
+                  "hitShare": 0.10387323943661972
+                },
+                {
+                  "pc": [
+                    0.00001,
+                    0.0001
+                  ],
+                  "encounters": 1299,
+                  "hitShare": 0.3833718244803695
+                },
+                {
+                  "pc": [
+                    0.0001,
+                    0.001
+                  ],
+                  "encounters": 3873,
+                  "hitShare": 0.6906790601600826
+                },
+                {
+                  "pc": [
+                    0.001,
+                    0.01
+                  ],
+                  "encounters": 6288,
+                  "hitShare": 0.8638676844783715
+                },
+                {
+                  "pc": [
+                    0.01,
+                    1
+                  ],
+                  "encounters": 49,
+                  "hitShare": 0.9387755102040817
+                }
+              ]
+            },
+            "sgp4xp": {
+              "encounters": 19997,
+              "missErrorM": {
+                "median": 318.2799441464649,
+                "p10": -217.56455057313264,
+                "p90": 1495.0185073466582
+              },
+              "missedAlert": {
+                "value": 0.005450817622643396,
+                "ci95Encounters": [
+                  0.004450667600140021,
+                  0.006500975146271941
+                ],
+                "ci95Objects": [
+                  0.004426955238563699,
+                  0.006383302092304575
+                ]
+              },
+              "falseAlert": {
+                "value": 0,
+                "ci95Encounters": [
+                  0,
+                  0
+                ],
+                "ci95Objects": [
+                  0,
+                  0
+                ]
+              },
+              "recall": {
+                "value": 0.8530311614730878,
+                "ci95Encounters": [
+                  0.8454939432743495,
+                  0.8603648622426917
+                ],
+                "ci95Objects": [
+                  0.807295709058654,
+                  0.8945488071914256
+                ]
+              },
+              "precision": {
+                "value": 0.9847715736040609,
+                "ci95Encounters": [
+                  0.9822733756773724,
+                  0.9871192314441956
+                ],
+                "ci95Objects": [
+                  0.980067164987542,
+                  0.9892016612828796
+                ]
+              },
+              "pcCalibration": [
+                {
+                  "pc": [
+                    0,
+                    1e-7
+                  ],
+                  "encounters": 6672,
+                  "hitShare": 0.01633693045563549
+                },
+                {
+                  "pc": [
+                    1e-7,
+                    0.000001
+                  ],
+                  "encounters": 476,
+                  "hitShare": 0.037815126050420166
+                },
+                {
+                  "pc": [
+                    0.000001,
+                    0.00001
+                  ],
+                  "encounters": 790,
+                  "hitShare": 0.1569620253164557
+                },
+                {
+                  "pc": [
+                    0.00001,
+                    0.0001
+                  ],
+                  "encounters": 2209,
+                  "hitShare": 0.47351742870076957
+                },
+                {
+                  "pc": [
+                    0.0001,
+                    0.001
+                  ],
+                  "encounters": 6180,
+                  "hitShare": 0.7213592233009709
+                },
+                {
+                  "pc": [
+                    0.001,
+                    0.01
+                  ],
+                  "encounters": 3670,
+                  "hitShare": 0.8365122615803815
+                },
+                {
+                  "pc": [
+                    0.01,
+                    1
+                  ],
+                  "encounters": 0,
+                  "hitShare": null
+                }
+              ]
+            },
+            "forecast": {
+              "encounters": 0,
+              "missErrorM": {
+                "median": null,
+                "p10": null,
+                "p90": null
+              }
+            }
+          },
+          "paired": {
+            "ffm-sgp4xp": {
+              "missedAlert": {
+                "value": -0.00005000750112516878,
+                "ci95Encounters": [
+                  -0.00030004500675101265,
+                  0.0002000300045006751
+                ],
+                "ci95Objects": [
+                  -0.0003224939532383768,
+                  0.0002418028822903569
+                ]
+              },
+              "falseAlert": {
+                "value": 0,
+                "ci95Encounters": [
+                  0,
+                  0
+                ],
+                "ci95Objects": [
+                  0,
+                  0
+                ]
+              },
+              "recall": {
+                "value": 0.07082152974504252,
+                "ci95Encounters": [
+                  0.0640500275949593,
+                  0.07760968117117859
+                ],
+                "ci95Objects": [
+                  0.023761936486786595,
+                  0.11996895442953759
+                ]
+              },
+              "precision": {
+                "value": 0.008960062047261408,
+                "ci95Encounters": [
+                  0.006854314818846084,
+                  0.011118423735808394
+                ],
+                "ci95Objects": [
+                  0.006409490240727678,
+                  0.012994892781784673
+                ]
+              }
+            }
+          },
+          "calls": {
+            "1": {
+              "ffm": {
+                "encounters": 3295,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 926,
+                    "above 5 km": 309
+                  },
+                  "red": {
+                    "under 200 m": 1346,
+                    "200 m to 5 km": 334
+                  },
+                  "yellow": {
+                    "under 200 m": 93,
+                    "200 m to 5 km": 285,
+                    "above 5 km": 2
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3295,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 345,
+                    "under 200 m": 189,
+                    "above 5 km": 2
+                  },
+                  "red": {
+                    "under 200 m": 1250,
+                    "200 m to 5 km": 375
+                  },
+                  "green": {
+                    "200 m to 5 km": 825,
+                    "above 5 km": 309
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "6": {
+              "ffm": {
+                "encounters": 3291,
+                "matrix": {
+                  "red": {
+                    "under 200 m": 1364,
+                    "200 m to 5 km": 318
+                  },
+                  "green": {
+                    "above 5 km": 320,
+                    "200 m to 5 km": 890,
+                    "under 200 m": 1
+                  },
+                  "yellow": {
+                    "under 200 m": 113,
+                    "200 m to 5 km": 284,
+                    "above 5 km": 1
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.0006765899864682003,
+                  "ci95Encounters": [
+                    0,
+                    0.002102312543798178
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3291,
+                "matrix": {
+                  "red": {
+                    "under 200 m": 1358,
+                    "200 m to 5 km": 407
+                  },
+                  "green": {
+                    "above 5 km": 320,
+                    "200 m to 5 km": 764
+                  },
+                  "yellow": {
+                    "200 m to 5 km": 321,
+                    "under 200 m": 120,
+                    "above 5 km": 1
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "12": {
+              "ffm": {
+                "encounters": 3342,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 989,
+                    "above 5 km": 330
+                  },
+                  "red": {
+                    "200 m to 5 km": 318,
+                    "under 200 m": 1379
+                  },
+                  "yellow": {
+                    "200 m to 5 km": 275,
+                    "under 200 m": 51
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3342,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 350,
+                    "under 200 m": 111
+                  },
+                  "red": {
+                    "200 m to 5 km": 388,
+                    "under 200 m": 1319
+                  },
+                  "green": {
+                    "200 m to 5 km": 844,
+                    "above 5 km": 330
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "24": {
+              "ffm": {
+                "encounters": 3300,
+                "matrix": {
+                  "red": {
+                    "200 m to 5 km": 333,
+                    "under 200 m": 1401
+                  },
+                  "green": {
+                    "200 m to 5 km": 893,
+                    "above 5 km": 295
+                  },
+                  "yellow": {
+                    "under 200 m": 91,
+                    "200 m to 5 km": 285,
+                    "above 5 km": 2
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3300,
+                "matrix": {
+                  "red": {
+                    "200 m to 5 km": 358,
+                    "under 200 m": 1230
+                  },
+                  "green": {
+                    "200 m to 5 km": 757,
+                    "above 5 km": 295,
+                    "under 200 m": 1
+                  },
+                  "yellow": {
+                    "under 200 m": 261,
+                    "200 m to 5 km": 396,
+                    "above 5 km": 2
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.0006702412868632708,
+                  "ci95Encounters": [
+                    0,
+                    0.0020718589995685484
+                  ]
+                }
+              }
+            },
+            "48": {
+              "ffm": {
+                "encounters": 3400,
+                "matrix": {
+                  "green": {
+                    "under 200 m": 53,
+                    "200 m to 5 km": 919,
+                    "above 5 km": 323
+                  },
+                  "red": {
+                    "under 200 m": 1376,
+                    "200 m to 5 km": 362
+                  },
+                  "yellow": {
+                    "above 5 km": 2,
+                    "200 m to 5 km": 266,
+                    "under 200 m": 99
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.03468586387434555,
+                  "ci95Encounters": [
+                    0.025739779616691997,
+                    0.04428299835316856
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3400,
+                "matrix": {
+                  "green": {
+                    "under 200 m": 56,
+                    "200 m to 5 km": 779,
+                    "above 5 km": 321
+                  },
+                  "red": {
+                    "under 200 m": 1236,
+                    "200 m to 5 km": 395
+                  },
+                  "yellow": {
+                    "above 5 km": 4,
+                    "200 m to 5 km": 373,
+                    "under 200 m": 236
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.03664921465968586,
+                  "ci95Encounters": [
+                    0.027479357766752612,
+                    0.0462845260514752
+                  ]
+                }
+              }
+            },
+            "72": {
+              "ffm": {
+                "encounters": 3369,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 876,
+                    "above 5 km": 326,
+                    "under 200 m": 54
+                  },
+                  "red": {
+                    "under 200 m": 1287,
+                    "200 m to 5 km": 392
+                  },
+                  "yellow": {
+                    "200 m to 5 km": 317,
+                    "under 200 m": 117
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.037037037037037035,
+                  "ci95Encounters": [
+                    0.027561496753594414,
+                    0.047043406072106254
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3369,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 694,
+                    "above 5 km": 325,
+                    "under 200 m": 52
+                  },
+                  "red": {
+                    "under 200 m": 1135,
+                    "200 m to 5 km": 399
+                  },
+                  "yellow": {
+                    "200 m to 5 km": 492,
+                    "under 200 m": 271,
+                    "above 5 km": 1
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.03566529492455418,
+                  "ci95Encounters": [
+                    0.026517794836008374,
+                    0.04518309964900426
+                  ]
+                }
+              }
+            }
+          },
+          "verdict": "no demonstrated CA difference"
+        },
+        "precise": {
+          "group": "laser",
+          "class": "precise",
+          "encounters": 19997,
+          "objects": 5,
+          "counts": {
+            "attempted": 20000,
+            "noPrimary": 0,
+            "noSecondary": 0,
+            "formed": 20000,
+            "pcNotEvaluated": {
+              "ffm": 0,
+              "sgp4xp": 3
+            },
+            "leftOut": 3
+          },
+          "arms": {
+            "ffm": {
+              "encounters": 19997,
+              "missErrorM": {
+                "median": 0.8261885819747192,
+                "p10": -11.816360055735554,
+                "p90": 20.717033162187022
+              },
+              "missedAlert": {
+                "value": 0.25008751312696903,
+                "ci95Encounters": [
+                  0.24418537780667102,
+                  0.2560896634495174
+                ],
+                "ci95Objects": [
+                  0.2325971777789435,
+                  0.2624055049428184
+                ]
+              },
+              "falseAlert": {
+                "value": 0,
+                "ci95Encounters": [
+                  0,
+                  0
+                ],
+                "ci95Objects": [
+                  0,
+                  0
+                ]
+              },
+              "recall": {
+                "value": 0.3810129509713229,
+                "ci95Encounters": [
+                  0.37097872671259124,
+                  0.391334777895038
+                ],
+                "ci95Objects": [
+                  0.35726950354609927,
+                  0.42101237871940134
+                ]
+              },
+              "precision": {
+                "value": 0.9996983408748115,
+                "ci95Encounters": [
+                  0.999075778461959,
+                  1
+                ],
+                "ci95Objects": [
+                  0.9991496598639455,
+                  1
+                ]
+              },
+              "pcCalibration": [
+                {
+                  "pc": [
+                    0,
+                    1e-7
+                  ],
+                  "encounters": 16301,
+                  "hitShare": 0.3067909944175204
+                },
+                {
+                  "pc": [
+                    1e-7,
+                    0.000001
+                  ],
+                  "encounters": 87,
+                  "hitShare": 0.9425287356321839
+                },
+                {
+                  "pc": [
+                    0.000001,
+                    0.00001
+                  ],
+                  "encounters": 133,
+                  "hitShare": 0.8947368421052632
+                },
+                {
+                  "pc": [
+                    0.00001,
+                    0.0001
+                  ],
+                  "encounters": 161,
+                  "hitShare": 0.937888198757764
+                },
+                {
+                  "pc": [
+                    0.0001,
+                    0.001
+                  ],
+                  "encounters": 261,
+                  "hitShare": 0.9425287356321839
+                },
+                {
+                  "pc": [
+                    0.001,
+                    0.01
+                  ],
+                  "encounters": 294,
+                  "hitShare": 0.9897959183673469
+                },
+                {
+                  "pc": [
+                    0.01,
+                    1
+                  ],
+                  "encounters": 2760,
+                  "hitShare": 0.9992753623188406
+                }
+              ]
+            },
+            "sgp4xp": {
+              "encounters": 19997,
+              "missErrorM": {
+                "median": 389.814185271339,
+                "p10": -227.3139638305846,
+                "p90": 2020.8427189969975
+              },
+              "missedAlert": {
+                "value": 0.00035005250787618143,
+                "ci95Encounters": [
+                  0.00010001500225033755,
+                  0.000650097514627194
+                ],
+                "ci95Objects": [
+                  0.00014619170605720968,
+                  0.0005785920925747348
+                ]
+              },
+              "falseAlert": {
+                "value": 0.00005000750112516878,
+                "ci95Encounters": [
+                  0,
+                  0.00015002250337550632
+                ],
+                "ci95Objects": [
+                  0,
+                  0.00014708766424789175
+                ]
+              },
+              "recall": {
+                "value": 0.7856151711378353,
+                "ci95Encounters": [
+                  0.7769266035503495,
+                  0.794434960356294
+                ],
+                "ci95Objects": [
+                  0.6795612009237876,
+                  0.8527735783230608
+                ]
+              },
+              "precision": {
+                "value": 0.98330701556508,
+                "ci95Encounters": [
+                  0.9806545945337982,
+                  0.9858805785405403
+                ],
+                "ci95Objects": [
+                  0.9789662690778504,
+                  0.9860732984293193
+                ]
+              },
+              "pcCalibration": [
+                {
+                  "pc": [
+                    0,
+                    1e-7
+                  ],
+                  "encounters": 6936,
+                  "hitShare": 0.0010092272202998846
+                },
+                {
+                  "pc": [
+                    1e-7,
+                    0.000001
+                  ],
+                  "encounters": 579,
+                  "hitShare": 0.10362694300518134
+                },
+                {
+                  "pc": [
+                    0.000001,
+                    0.00001
+                  ],
+                  "encounters": 1044,
+                  "hitShare": 0.31896551724137934
+                },
+                {
+                  "pc": [
+                    0.00001,
+                    0.0001
+                  ],
+                  "encounters": 2572,
+                  "hitShare": 0.5653188180404355
+                },
+                {
+                  "pc": [
+                    0.0001,
+                    0.001
+                  ],
+                  "encounters": 5512,
+                  "hitShare": 0.7309506531204645
+                },
+                {
+                  "pc": [
+                    0.001,
+                    0.01
+                  ],
+                  "encounters": 3354,
+                  "hitShare": 0.8243887895050686
+                },
+                {
+                  "pc": [
+                    0.01,
+                    1
+                  ],
+                  "encounters": 0,
+                  "hitShare": null
+                }
+              ]
+            },
+            "forecast": {
+              "encounters": 0,
+              "missErrorM": {
+                "median": null,
+                "p10": null,
+                "p90": null
+              }
+            }
+          },
+          "paired": {
+            "ffm-sgp4xp": {
+              "missedAlert": {
+                "value": 0.24973746061909285,
+                "ci95Encounters": [
+                  0.24383657548632295,
+                  0.2558383757563635
+                ],
+                "ci95Objects": [
+                  0.2324017102930441,
+                  0.26216320992440395
+                ]
+              },
+              "falseAlert": {
+                "value": -0.00005000750112516878,
+                "ci95Encounters": [
+                  -0.00015002250337550632,
+                  0
+                ],
+                "ci95Objects": [
+                  -0.00014708766424789175,
+                  0
+                ]
+              },
+              "recall": {
+                "value": -0.4046022201665124,
+                "ci95Encounters": [
+                  -0.41773916240642495,
+                  -0.3912841910060269
+                ],
+                "ci95Objects": [
+                  -0.4835079117450412,
+                  -0.3047049161093512
+                ]
+              },
+              "precision": {
+                "value": 0.01639132530973142,
+                "ci95Encounters": [
+                  0.013647256386657454,
+                  0.01922661486753195
+                ],
+                "ci95Objects": [
+                  0.013926701570680655,
+                  0.020400781142506874
+                ]
+              }
+            }
+          },
+          "calls": {
+            "1": {
+              "ffm": {
+                "encounters": 3376,
+                "matrix": {
+                  "green": {
+                    "under 200 m": 890,
+                    "200 m to 5 km": 1577,
+                    "above 5 km": 357
+                  },
+                  "red": {
+                    "under 200 m": 490,
+                    "200 m to 5 km": 5
+                  },
+                  "yellow": {
+                    "under 200 m": 53,
+                    "200 m to 5 km": 4
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.6210746685275645,
+                  "ci95Encounters": [
+                    0.5955457515750493,
+                    0.6459227467811158
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3376,
+                "matrix": {
+                  "red": {
+                    "under 200 m": 1099,
+                    "200 m to 5 km": 301
+                  },
+                  "green": {
+                    "200 m to 5 km": 918,
+                    "above 5 km": 357,
+                    "under 200 m": 2
+                  },
+                  "yellow": {
+                    "under 200 m": 332,
+                    "200 m to 5 km": 367
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.0013956734124214933,
+                  "ci95Encounters": [
+                    0,
+                    0.0035310734463276836
+                  ]
+                }
+              }
+            },
+            "6": {
+              "ffm": {
+                "encounters": 3220,
+                "matrix": {
+                  "red": {
+                    "under 200 m": 501,
+                    "200 m to 5 km": 2
+                  },
+                  "green": {
+                    "200 m to 5 km": 1508,
+                    "under 200 m": 829,
+                    "above 5 km": 316
+                  },
+                  "yellow": {
+                    "under 200 m": 59,
+                    "200 m to 5 km": 5
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.5968322534197265,
+                  "ci95Encounters": [
+                    0.5711294034772364,
+                    0.6226834692364714
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3220,
+                "matrix": {
+                  "red": {
+                    "under 200 m": 1318,
+                    "200 m to 5 km": 402
+                  },
+                  "green": {
+                    "200 m to 5 km": 797,
+                    "above 5 km": 316
+                  },
+                  "yellow": {
+                    "200 m to 5 km": 316,
+                    "under 200 m": 71
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "12": {
+              "ffm": {
+                "encounters": 3412,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 1606,
+                    "under 200 m": 882,
+                    "above 5 km": 326
+                  },
+                  "red": {
+                    "under 200 m": 532,
+                    "200 m to 5 km": 4
+                  },
+                  "yellow": {
+                    "under 200 m": 59,
+                    "200 m to 5 km": 3
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.5987780040733197,
+                  "ci95Encounters": [
+                    0.5738890332914176,
+                    0.6230994817466479
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3412,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 372,
+                    "under 200 m": 279
+                  },
+                  "green": {
+                    "200 m to 5 km": 874,
+                    "above 5 km": 326
+                  },
+                  "red": {
+                    "200 m to 5 km": 367,
+                    "under 200 m": 1194
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "24": {
+              "ffm": {
+                "encounters": 3361,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 1568,
+                    "under 200 m": 825,
+                    "above 5 km": 341
+                  },
+                  "red": {
+                    "under 200 m": 558,
+                    "200 m to 5 km": 1
+                  },
+                  "yellow": {
+                    "under 200 m": 63,
+                    "200 m to 5 km": 5
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.5705394190871369,
+                  "ci95Encounters": [
+                    0.5451922565267723,
+                    0.5948278867888231
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3361,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 865,
+                    "above 5 km": 340,
+                    "under 200 m": 4
+                  },
+                  "red": {
+                    "under 200 m": 1083,
+                    "200 m to 5 km": 308
+                  },
+                  "yellow": {
+                    "under 200 m": 359,
+                    "200 m to 5 km": 401,
+                    "above 5 km": 1
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.0027662517289073307,
+                  "ci95Encounters": [
+                    0.0006724949562878278,
+                    0.005726659460612486
+                  ]
+                }
+              }
+            },
+            "48": {
+              "ffm": {
+                "encounters": 3333,
+                "matrix": {
+                  "green": {
+                    "200 m to 5 km": 1505,
+                    "under 200 m": 822,
+                    "above 5 km": 342
+                  },
+                  "red": {
+                    "under 200 m": 592,
+                    "200 m to 5 km": 3
+                  },
+                  "yellow": {
+                    "under 200 m": 62,
+                    "200 m to 5 km": 7
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.556910569105691,
+                  "ci95Encounters": [
+                    0.5317030724143669,
+                    0.5820701114681128
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3333,
+                "matrix": {
+                  "yellow": {
+                    "200 m to 5 km": 420,
+                    "under 200 m": 411,
+                    "above 5 km": 3
+                  },
+                  "red": {
+                    "under 200 m": 1064,
+                    "200 m to 5 km": 330
+                  },
+                  "green": {
+                    "above 5 km": 339,
+                    "200 m to 5 km": 765,
+                    "under 200 m": 1
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.0006775067750677507,
+                  "ci95Encounters": [
+                    0,
+                    0.0020804438280166435
+                  ]
+                }
+              }
+            },
+            "72": {
+              "ffm": {
+                "encounters": 3295,
+                "matrix": {
+                  "green": {
+                    "above 5 km": 322,
+                    "under 200 m": 753,
+                    "200 m to 5 km": 1532
+                  },
+                  "red": {
+                    "under 200 m": 622,
+                    "200 m to 5 km": 5
+                  },
+                  "yellow": {
+                    "under 200 m": 56,
+                    "200 m to 5 km": 5
+                  }
+                },
+                "redFar": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0.5262054507337526,
+                  "ci95Encounters": [
+                    0.5003557347245671,
+                    0.5518672199170125
+                  ]
+                }
+              },
+              "sgp4xp": {
+                "encounters": 3295,
+                "matrix": {
+                  "green": {
+                    "above 5 km": 316,
+                    "200 m to 5 km": 716
+                  },
+                  "yellow": {
+                    "under 200 m": 395,
+                    "200 m to 5 km": 463,
+                    "above 5 km": 5
+                  },
+                  "red": {
+                    "under 200 m": 1036,
+                    "200 m to 5 km": 363,
+                    "above 5 km": 1
+                  }
+                },
+                "redFar": {
+                  "value": 0.0007142857142857143,
+                  "ci95Encounters": [
+                    0,
+                    0.002191380569758948
+                  ]
+                },
+                "hitGreen": {
+                  "value": 0,
+                  "ci95Encounters": [
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          "verdict": "no demonstrated CA difference"
+        }
+      }
+    }
+  }
 }
