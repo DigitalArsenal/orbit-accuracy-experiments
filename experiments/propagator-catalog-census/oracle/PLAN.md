@@ -85,3 +85,13 @@ same-frame Cartesian distance follows the completed conformance harness's
 definition. Keep the failed preflight separately; retain all criteria and
 population rules. A nonrepresentable type-4 element set remains a visible
 interface failure, not an excluded spacecraft.
+
+The second preflight traced the CNES interface failure to the public test
+writer's assumption of a normalized five-digit mantissa: a small fitted AGOM
+required a two-digit exponent, shifting the fixed-width fields. Preserve the
+failed preflight and interrupt the new full runner before native workers begin.
+Encode subnormal TLE numbers with leading mantissa zeroes and exponent -9;
+round only below half the format's least representable 1e-14 to zero. This is
+the declared text quantization, applied identically to both XP implementations.
+Overflow remains an explicit error. The registered orbit/uncertainty criteria
+are unchanged; this amendment fixes serialization, not fit parameters.

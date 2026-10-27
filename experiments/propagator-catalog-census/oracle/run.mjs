@@ -45,7 +45,7 @@ async function run(){
     const file=path.join(outputDir,'manifest.json');
     if(fs.existsSync(file)){if(read(file).extensionId!==identity.extensionId)throw Error('Different extension code or inputs; retain prior run');}
     else write(file,{...identity,startedUtc:state.startedUtc,modules:fs.realpathSync(values.modules),oracleRoot:fs.realpathSync(values.oracle),runtime:{node:process.version,v8:process.versions.v8},sourceObjects:census.objects.length});
-    const jobs=[],lineages=new Set();
+    const jobs=[],lineages=new Set();state.stage='accounting';persist();
     for(let index=0;index<census.objects.length;index++){
       const object=census.objects[index],source=outcomeFile(sourceDir,object.key),prior=read(source),output=outcomePath(object.key);
       if(prior.key!==object.key||prior.executionId!==settings.sourceExecutionId||!prior.finishedUtc)throw Error(`Incomplete/foreign source outcome: ${object.key}`);
@@ -62,8 +62,9 @@ async function run(){
         extensionId:identity.extensionId,sourceOutcomeSha256:hashFile(source),status:prior.status==='evaluated'?'source_xp_fit_unavailable':prior.status,
         reason:prior.reason??prior.arms?.['xp-native']?.reason??'No admitted arc',finishedUtc:iso(Date.now())});
       state.completed++;state.preservedMetadata++;
+      if(state.completed%1000===0)persist();
     }
-    state.scheduled=jobs.length;persist();let cursor=0;
+    state.scheduled=jobs.length;state.stage='reference-comparison';persist();let cursor=0;
     await Promise.all(Array.from({length:settings.workers},async(_,slot)=>{
       while(cursor<jobs.length){
         const index=jobs[cursor++],key=census.objects[index].key;

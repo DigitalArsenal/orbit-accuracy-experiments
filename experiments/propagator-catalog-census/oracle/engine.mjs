@@ -12,13 +12,26 @@ import {config as baseline} from '../../propagator-published-truth/common.mjs';
 import {settings} from './common.mjs';
 const imported=file=>import(pathToFileURL(file).href);
 const finiteState=s=>s&&s.error===0&&[...s.r,...s.v].every(Number.isFinite);
+// TLE's implied-decimal field has five mantissa digits and ONE exponent
+// digit. Subnormal fields retain leading zeroes at exponent -9; values below
+// half the least representable 1e-14 round to zero as text quantization.
+function tleExponent(value){
+  if(!Number.isFinite(value))throw Error('Nonfinite TLE exponent field');
+  if(value===0)return ' 00000-0';
+  let exponent=Math.max(-9,Math.floor(Math.log10(Math.abs(value)))+1);
+  let mantissa=Math.round(Math.abs(value)/10**exponent*1e5);
+  if(mantissa>=100000){mantissa=Math.round(mantissa/10);exponent++;}
+  if(exponent>9)throw Error('TLE exponent field overflow');
+  if(mantissa===0)return ' 00000-0';
+  return `${value<0?'-':' '}${String(mantissa).padStart(5,'0')}${exponent<0?'-':'+'}${Math.abs(exponent)}`;
+}
 
 export async function openEngines(modules,oracleRoot,W){
   const {createStandaloneHarness}=await imported(W.req.resolve('space-data-module-sdk/testing/isomorphic'));
   const fit=await createStandaloneHarness('browser',path.join(modules,'propagator/sdn-ap/dist/isomorphic/module.wasm'),{surface:'direct'});
   const {openModule}=await imported(path.join(modules,'propagator/sdn-ap/test/lib/module.mjs'));
   const xp=await openModule(),frames=await loadModule(modules,'foundation/frames');
-  const {tleLines,elementsOf}=await imported(path.join(modules,'propagator/sdn-ap/test/lib/tle.mjs'));
+  const {tleLines,elementsOf,checksum}=await imported(path.join(modules,'propagator/sdn-ap/test/lib/tle.mjs'));
   const {openOracle}=await imported(path.join(oracleRoot,'oracle.mjs'));
   const reference=await openOracle({version:settings.oracleVersion});
   async function positionErrorRtn(predicted,truth,epoch){
@@ -65,8 +78,9 @@ export async function openEngines(modules,oracleRoot,W){
       await saveInput(recovered);
       const epoch=new Date(W.utc(set.EPOCH)),year=epoch.getUTCFullYear(),day=1+(epoch-Date.UTC(year,0,1))/86400000;
       if(!(year>=1957&&year<=2056))throw Error('TLE epoch outside representable year range');
-      const lines=tleLines({satnum:settings.syntheticInterfaceId,year:year%100,day,type:4,bterm:set.BSTAR,agom:set.MEAN_MOTION_DDOT,
+      const lines=tleLines({satnum:settings.syntheticInterfaceId,year:year%100,day,type:4,bterm:0,agom:0,
         inc:set.INCLINATION,raan:set.RA_OF_ASC_NODE,ecc:set.ECCENTRICITY,argp:set.ARG_OF_PERICENTER,ma:set.MEAN_ANOMALY,mm:set.MEAN_MOTION});
+      lines[0]=checksum(lines[0].slice(0,44)+tleExponent(set.MEAN_MOTION_DDOT)+' '+tleExponent(set.BSTAR)+lines[0].slice(61));
       if(lines.some(line=>line.length!==69))throw Error('Fitted elements not representable in type-4 TLE fields');
       const elements=elementsOf(lines);
       if(!Object.values(elements).every(Number.isFinite))throw Error('Nonfinite quantized elements');
@@ -92,6 +106,9 @@ export async function openEngines(modules,oracleRoot,W){
         timing:{xpQuantizedWallSeconds:whiteWallSeconds,ussfNativeWallSeconds:referenceWallSeconds,comparableRuntime:false},referenceCovariance:'unavailable'};
     },
     async verifyGeometry(){
+      assert.equal(tleExponent(-1.6577e-12),'-00166-9');
+      assert.equal(tleExponent(1e-37),' 00000-0');
+      assert.equal(tleExponent(.020863),' 20863-1');
       // Circular reference at +X with velocity +Y gives RTN = X,Y,Z.
       // The translated position is independently known in metres.
       const error=await positionErrorRtn({r:[7000.001,.002,.003],v:[0,7.5,0]},
