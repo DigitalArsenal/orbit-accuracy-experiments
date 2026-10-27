@@ -11,6 +11,7 @@ import { wire } from '../propagator-published-truth/wire.mjs';
 import { engines } from '../propagator-published-truth/engines.mjs';
 import { environment } from './environment.mjs';
 import { report } from './report.mjs';
+import { verifyInputHashes } from './verify-input-hashes.mjs';
 
 export async function verify(name,modules){
   const dir=runDir(name),manifest=execution(dir,modules),census=read(path.join(dir,'census.json'));
@@ -27,7 +28,7 @@ export async function verify(name,modules){
     if(r.status==='evaluated'){assert.deepEqual(Object.keys(r.arms),config.arms);if(!representatives.has(o.lineage))representatives.set(o.lineage,{o,r});}
     allRows.push(r);
   }
-  let n=0;for(const f of census.files){assert.equal(hashFile(f.path),f.sha256,`Changed archive input: ${f.path}`);if(++n%50000===0)console.log(JSON.stringify({stage:'hash-audit',files:n}));}
+  await verifyInputHashes(census.files);
   for(const p of census.providers)if(p.completePagination){assert.equal(p.records.length,p.advertisedRecords);assert.equal(new Set(p.records.map(r=>r.frameSha256)).size,p.records.length);}
   for(const c of census.cycles){
     const files=census.files.filter(f=>f.kind==='operator-head'&&f.cycle===c.id);
