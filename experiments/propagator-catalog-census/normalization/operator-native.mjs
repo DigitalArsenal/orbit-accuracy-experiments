@@ -63,7 +63,7 @@ export async function openOperatorNative(modules,eopStream){
         // The frame module may emit its own epoch spelling; preserve the exact
         // UTC source instant when framing the same-state covariance request.
         resident.STATE.EPOCH=t;resident.STATE.EPOCH_TIME_SYSTEM='UTC';
-        const req=table(P,'PRW',{RESIDENT_STATE:resident,RESIDENT_REQUEST:table(P,'PRWResidentRequest',{INSTANCE:table(P,'PRWInstance',{}),TARGET_COORDINATE_SYSTEM:system('ICRF','GCRF'),TARGET_EPOCH:table(P,'TIMInstant',{TIME_SYSTEM:P.timingStandard.UTC,EPOCH_FORMAT:P.timEpochRepresentation.ISO8601,ISO8601:t})}),
+        const req=table(P,'PRW',{RESIDENT_STATE:resident,RESIDENT_REQUEST:table(P,'PRWResidentRequest',{INSTANCE:table(P,'PRWInstance',{MODULE_ID:'catalog-normalization',INSTANCE_ID:'source-covariance',GENERATION:1n}),TARGET_COORDINATE_SYSTEM:system('ICRF','GCRF'),TARGET_EPOCH:table(P,'TIMInstant',{TIME_SYSTEM:P.timingStandard.UTC,EPOCH_FORMAT:P.timEpochRepresentation.ISO8601,ISO8601:t})}),
           ...(eopRows.length?{EARTH_ORIENTATION:table(P,'PRWEarthOrientation',{ROWS:eopRows.map(r=>r.row)})}:{})});
         const result=await gem.invoke('source_covariance',[frame('request','PRW',encode(P,'PRW',req)),frame('oem','OEM',encode(O,'OEM',source))]);
         const r=unpack(P,'PRW',result.outputs.find(x=>x.portId==='state').payload).RESIDENT_STATE;
