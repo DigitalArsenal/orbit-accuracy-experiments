@@ -1,0 +1,95 @@
+{
+  "schema": "direct-sp3-physical-verification",
+  "physicalId": "75730a94522d913c898fb87da6a3f52b4b22b22dd3a74df394347edd2804a276",
+  "resourceAccounting": "PASS",
+  "nativeFrameAuthority": "PASS",
+  "physicalComparison": "NOT_YET_EVALUATED",
+  "covarianceCalibration": "NOT_EVALUATED",
+  "provenance": {
+    "manifestSha256": "a4a036c52f28872627e6b399905c1d31c3ea9760d9c1adb7c76a9e906a651905",
+    "verifierSha256": "122bcef819121015e866f5368b84d0f122e890063a3a41a06e8ead419f352228",
+    "authorityHarnessSha256": "72bbc4cba5987e7c074525e73c5c541b1ea302b38faf6b1273314ca221457180",
+    "outcomeHashesSha256": "a43bc53e742339015ab95afade3d2032fc4e511e8e5d7d7f90d15ec53cb8763c",
+    "eopSha256": "95a61292c957fa74ed624bd4f7a84b1b984077e412b43ed39b99e092f38de9da"
+  },
+  "authority": {
+    "url": "https://www.iausofa.org/s/sofa_pn_c.pdf",
+    "section": "5.6 X,Y-series method",
+    "maximumMatrixError": 2.6645352591003757e-15,
+    "maximumAcceptedError": 1e-12
+  },
+  "counts": {
+    "resources": 134,
+    "sourceObjectRows": 6614,
+    "uniqueConvertedNumericIds": 121,
+    "states": 2731165,
+    "covarianceRows": 2731165,
+    "predictedSamples": 1057728,
+    "maneuverSamples": 0,
+    "statuses": {
+      "converted_with_source_flags": 6613,
+      "physical_conversion_failed": 1
+    }
+  },
+  "failures": [
+    {
+      "source": "esa-pod",
+      "product": "261003.cs2.v4.sp3.gz",
+      "sourceObjectId": "L12",
+      "norad": 36508,
+      "status": "physical_conversion_failed",
+      "reason": "L12: the SP3 states no accuracy and none was stated for the product; no default is assumed."
+    }
+  ],
+  "eop": {
+    "receipt": {
+      "id": "iers-finals",
+      "url": "https://datacenter.iers.org/data/9/finals2000A.all",
+      "sourceSha256": "9b9d5a8d5c757a693ae7bb7a69aa4e09850d2d8febf97bf6d82bf2abc9c129c0",
+      "planSha256": "539b88ec897e92cbfe166b3d2f659e466e772f370b7944b82fc05461f0cf8a26",
+      "retrievedUtc": "2026-10-27T19:10:25.456Z",
+      "status": 200,
+      "finalUrl": "https://datacenter.iers.org/data/9/finals2000A.all",
+      "headers": {
+        "last-modified": "Thu, 22 Oct 2026 17:36:56 GMT"
+      },
+      "sha256": "95a61292c957fa74ed624bd4f7a84b1b984077e412b43ed39b99e092f38de9da",
+      "bytes": 3773912,
+      "file": "raw/95/95a61292c957fa74ed624bd4f7a84b1b984077e412b43ed39b99e092f38de9da.gz",
+      "storedSha256": "bd1bc1016b69455fd066de80d56ecaf815b3c7668bcd8b88c2bc144801756344",
+      "storedBytes": 1070194,
+      "storageEncoding": "gzip",
+      "state": "downloaded"
+    },
+    "rows": 20024,
+    "firstMjd": 41684,
+    "lastMjd": 61707,
+    "observations": 16818,
+    "predictions": 3206,
+    "nativeIssueEpoch": "Not emitted on HTTP input by this pinned parser; HTTP Last-Modified retained separately, never inferred from retrieval.",
+    "records": {
+      "sha256": "0a2e36d541ce1c142c83f6b3d14510697d5b3c8d356716b92a5bd0c23fe83717",
+      "bytes": 6309976,
+      "file": "raw/0a/0a2e36d541ce1c142c83f6b3d14510697d5b3c8d356716b92a5bd0c23fe83717.gz",
+      "storedSha256": "aa7b5cadeaa5a7ceda34865367de0e8e484235fe0e94d7959f333cf73b4e6cd1",
+      "storedBytes": 1679464,
+      "storageEncoding": "gzip"
+    },
+    "meta": [
+      {
+        "sha256": "f065684bb55a6f4122a5258f41c339e452ff475ed63c8c51e67208a3e8ded555",
+        "bytes": 600,
+        "file": "raw/f0/f065684bb55a6f4122a5258f41c339e452ff475ed63c8c51e67208a3e8ded555.gz",
+        "storedSha256": "d5092c9d7235b8870341e3d59ba1bfef930eb354dbff6ea77dfc678ef7ebd971",
+        "storedBytes": 352,
+        "storageEncoding": "gzip"
+      }
+    ]
+  },
+  "limitations": [
+    "SOFA conformance and exact source accounting verify the conversion path; they do not validate a fitted propagator or calibrated uncertainty.",
+    "SP3 accuracy declarations are retained as the native module interprets them; reference-covariance realism is not established by format compliance.",
+    "Predicted orbit samples and EOP rows remain labeled; no prediction is relabeled as an observation.",
+    "Missing source uncertainty is a retained conversion gap, not a synthetic covariance or a discarded object."
+  ]
+}

@@ -1,10 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import {pathToFileURL} from 'node:url';
+import {execFileSync} from 'node:child_process';
 import {parseArgs} from 'node:util';
 import * as fb from 'flatbuffers';
-import {FRM,frmResultStatus} from 'spacedatastandards.org/lib/js/FRM/main.js';
+import {FRM,FRMT,FRMFrameTransformRequestT,frmOperationCode,frmResultStatus,RFMCoordinateSystemT,RFMOriginT,rfmOriginKind,rfmAxisType} from 'spacedatastandards.org/lib/js/FRM/main.js';
+import {EOP,EOPT} from 'spacedatastandards.org/lib/js/EOP/main.js';
 import {loadModule} from '../../../harness/modules.mjs';
 import {unpackOem} from '../../supgp-omm/lib/records.mjs';
 import {root,read,write,sha,bodyOf,outputDir,keyOf,hashFile,sourceDir} from './common.mjs';
@@ -13,11 +14,21 @@ const modules=path.resolve(values.modules),dir=path.join(root,'runs/propagator-c
 for(const [file,hash]of Object.entries(manifest.moduleFiles))assert.equal(hashFile(path.join(modules,file)),hash);
 for(const [file,hash]of Object.entries(manifest.sourceHashes))assert.equal(hashFile(path.join(root,file)),hash);
 assert.equal(hashFile(path.join(modules,'foundation/frames/dist/isomorphic/module.wasm')),'486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4');
-const authority=path.join(modules,'foundation/frames/tests/eop_harness.mjs'),H=await import(pathToFileURL(authority).href),frames=await loadModule(modules,'foundation/frames');
+const authorityPath='foundation/frames/tests/eop_harness.mjs',authority=path.join(modules,authorityPath),authorityBytes=fs.readFileSync(authority);
+assert.ok(execFileSync('git',['-C',modules,'show',`${manifest.moduleCommit}:${authorityPath}`]).equals(authorityBytes));
+const sofaMatrix=JSON.parse(authorityBytes.toString().match(/export const sofaMatrix=(\[[^;]+\]);/)[1].replace(/(?<=[\[,])\./g,'0.').replace(/-\./g,'-0.'));
+const epoch='2007-04-05T12:00:00Z',system=(name,axis)=>new RFMCoordinateSystemT(name,axis,new RFMOriginT(rfmOriginKind.CELESTIAL_BODY,399),399,epoch,'UTC');
+const request=Object.assign(new FRMFrameTransformRequestT(),{OPERATION:frmOperationCode.FRAME_ROTATION,EPOCH:epoch,EPOCH_TIME_SYSTEM:'UTC',SOURCE_COORDINATE_SYSTEM:system('GCRF',rfmAxisType.ICRF),TARGET_COORDINATE_SYSTEM:system('ITRF',rfmAxisType.BODY_FIXED)});
+const rb=new fb.Builder(1024);FRM.finishFRMBuffer(rb,new FRMT(request,null).pack(rb));
+const eop=Object.assign(new EOPT(),{DATE:'2007-04-05T00:00:00Z',MJD:54195,SERIES:5,IAU_CONVENTION:3,DATA_SET_CID:'sofa-example'}),as2r=Math.PI/648000;
+for(const [key,value]of Object.entries({X_POLE_WANDER_RADIANS:.0349282*as2r,Y_POLE_WANDER_RADIANS:.4833163*as2r,UT1_MINUS_UTC_SECONDS:-.072073685,X_CELESTIAL_POLE_OFFSET_RADIANS:.0001750*as2r,Y_CELESTIAL_POLE_OFFSET_RADIANS:-.0002259*as2r}))eop[key]=eop[key+'_HP']=value;
+const eb=new fb.Builder(1024);EOP.finishEOPBuffer(eb,eop.pack(eb));
+const inputs=[{portId:'request',typeRef:{schemaName:'FRM.fbs',fileIdentifier:'$FRM',rootTypeName:'FRM'},payload:rb.asUint8Array()},{portId:'earth_orientation',typeRef:{schemaName:'EOP.fbs',fileIdentifier:'$EOP',rootTypeName:'EOP'},payload:eb.asUint8Array()}];
+const frames=await loadModule(modules,'foundation/frames');
 let matrixError;
-try{const r=await frames.invoke('transform_frame_position',H.invokeRequest(undefined,[H.eop()]).inputs),result=FRM.getRootAsFRM(new fb.ByteBuffer(r.outputs[0].payload)).FRAME_TRANSFORM_RESULT();assert.equal(result.STATUS(),frmResultStatus.OK);
+try{const r=await frames.invoke('transform_frame_position',inputs),result=FRM.getRootAsFRM(new fb.ByteBuffer(r.outputs[0].payload)).FRAME_TRANSFORM_RESULT();assert.equal(result.STATUS(),frmResultStatus.OK);
   const m=result.ROTATION_DCM(),actual=[m.M11(),m.M12(),m.M13(),m.M21(),m.M22(),m.M23(),m.M31(),m.M32(),m.M33()];
-  matrixError=Math.max(...actual.map((x,i)=>Math.abs(x-H.sofaMatrix[i])));assert.ok(matrixError<1e-12,'SOFA Earth Attitude section 5.6 printed matrix, fixed native criterion');
+  matrixError=Math.max(...actual.map((x,i)=>Math.abs(x-sofaMatrix[i])));assert.ok(matrixError<1e-12,'SOFA Earth Attitude section 5.6 printed matrix, fixed native criterion');
 }finally{await frames.destroy();}
 const all=read(path.join(sourceDir,'queue.json')).sources.flatMap(s=>s.resources).filter(r=>r.FORMAT==='sp3-gzip');assert.equal(all.length,134);
 const hashes=[],rows=[],seen=new Set();let states=0,covarianceRows=0,predictedSamples=0,maneuverSamples=0;
