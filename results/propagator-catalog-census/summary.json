@@ -1,13 +1,13 @@
 {
   "schema": "public-ephemeris-census-report-v1",
   "completeCatalog": false,
-  "completeAvailableBatch": false,
+  "completeAvailableBatch": true,
   "provenance": {
     "censusHash": "1ba68a5c4138837591540dc5b55b35bbd35849d318bd119c77cd1ebaa1a90fbd",
     "executionId": "71697feb66aa81d2e6dafd3721617d279a41b358ac1e76ef030e1327bf297e85",
     "moduleCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
     "sourceSnapshotUtc": "2026-10-26T19:50:41.810Z",
-    "outcomeHashesSha256": "93967af7c52beffe89c3f72d8315344e65b8070a7a1cac479ea8f2c57af985a8"
+    "outcomeHashesSha256": "ae92493a70f46b72d448db880dbaac40d8c89c1f7ceb993427cdcbd0fdf929f9"
   },
   "counts": {
     "registrySources": 17,
@@ -26,8 +26,8 @@
       "UNKNOWN": 1349
     },
     "unresolvedSourceIdentities": 24,
-    "finished": 53690,
-    "pending": 3723
+    "finished": 57413,
+    "pending": 0
   },
   "sources": [
     {
@@ -40,11 +40,10 @@
       "sourceObjects": 11170,
       "uniqueNorad": 11170,
       "unresolvedIdentities": 0,
-      "finished": 7452,
-      "pending": 3718,
+      "finished": 11170,
+      "pending": 0,
       "outcomes": {
-        "eligible": 4,
-        "evaluated": 7444,
+        "evaluated": 11162,
         "missing_fit_coverage": 8
       },
       "provider": {
@@ -479,10 +478,10 @@
       "sourceObjects": 3,
       "uniqueNorad": 3,
       "unresolvedIdentities": 0,
-      "finished": 2,
-      "pending": 1,
+      "finished": 3,
+      "pending": 0,
       "outcomes": {
-        "evaluated": 2
+        "evaluated": 3
       },
       "provider": null,
       "populationKnown": false
@@ -512,10 +511,10 @@
       "sourceObjects": 5,
       "uniqueNorad": 5,
       "unresolvedIdentities": 0,
-      "finished": 2,
-      "pending": 3,
+      "finished": 5,
+      "pending": 0,
       "outcomes": {
-        "missing_fit_coverage": 2
+        "missing_fit_coverage": 5
       },
       "provider": null,
       "populationKnown": false
@@ -593,9 +592,11 @@
       "sourceObjects": 1,
       "uniqueNorad": 1,
       "unresolvedIdentities": 0,
-      "finished": 0,
-      "pending": 1,
-      "outcomes": {},
+      "finished": 1,
+      "pending": 0,
+      "outcomes": {
+        "unsupported_format_or_frame": 1
+      },
       "provider": null,
       "populationKnown": false
     },
@@ -7584,25 +7585,25 @@
         "commonArcs": 6,
         "arms": {
           "xp-native": {
-            "fitWallSeconds": 0.0364361459999991,
-            "propagateWallSeconds": 0.019456249999999273,
-            "scoreWallSeconds": 0.004295645500000319,
-            "totalWallSeconds": 0.058556312499999874,
-            "totalCpuSeconds": 0.09736600000000184
+            "fitWallSeconds": 0.046733375499999966,
+            "propagateWallSeconds": 0.0212818749999999,
+            "scoreWallSeconds": 0.02720379150000008,
+            "totalWallSeconds": 0.09562852099999987,
+            "totalCpuSeconds": 0.19227600000000034
           },
           "ap-msis": {
-            "fitWallSeconds": 0.0990432914999965,
-            "propagateWallSeconds": 0.07875835400000096,
-            "scoreWallSeconds": 0.0040852085000005894,
-            "totalWallSeconds": 0.1832903540000002,
-            "totalCpuSeconds": 0.18976350000000153
+            "fitWallSeconds": 0.10341935400000034,
+            "propagateWallSeconds": 0.08293866649999995,
+            "scoreWallSeconds": 0.005438041500000055,
+            "totalWallSeconds": 0.19479841699999997,
+            "totalCpuSeconds": 0.2203630000000003
           },
           "ffm": {
-            "fitWallSeconds": 6.5504301875,
-            "propagateWallSeconds": 10.8566417085,
-            "scoreWallSeconds": 0.004204333499998028,
-            "totalWallSeconds": 17.2829397505,
-            "totalCpuSeconds": 18.627202500000003
+            "fitWallSeconds": 6.959656041499999,
+            "propagateWallSeconds": 11.2326874585,
+            "scoreWallSeconds": 0.004719854000000851,
+            "totalWallSeconds": 18.060480187499998,
+            "totalCpuSeconds": 19.6859235
           }
         }
       }
@@ -8811,25 +8812,25 @@
         "commonArcs": 2,
         "arms": {
           "xp-native": {
-            "fitWallSeconds": 0.02060704149999947,
-            "propagateWallSeconds": 0.010828437500007566,
-            "scoreWallSeconds": 0.0034619165000040085,
-            "totalWallSeconds": 0.03495931249999558,
-            "totalCpuSeconds": 0.035263499999999226
+            "fitWallSeconds": 0.0378945205,
+            "propagateWallSeconds": 0.017413958000000094,
+            "scoreWallSeconds": 0.026136375000000045,
+            "totalWallSeconds": 0.08161164550000012,
+            "totalCpuSeconds": 0.17616750000000025
           },
           "ap-msis": {
-            "fitWallSeconds": 0.021721374999979164,
-            "propagateWallSeconds": 0.014442520999989938,
-            "scoreWallSeconds": 0.003146166999998968,
-            "totalWallSeconds": 0.039368874999985565,
-            "totalCpuSeconds": 0.039388999999999896
+            "fitWallSeconds": 0.024683895499999834,
+            "propagateWallSeconds": 0.016708853999999974,
+            "scoreWallSeconds": 0.005333707999999888,
+            "totalWallSeconds": 0.04682208300000002,
+            "totalCpuSeconds": 0.07466100000000009
           },
           "ffm": {
-            "fitWallSeconds": 7.646009937000009,
-            "propagateWallSeconds": 11.262915166499996,
-            "scoreWallSeconds": 0.0039691874999844,
-            "totalWallSeconds": 18.912978437499987,
-            "totalCpuSeconds": 20.22205249999999
+            "fitWallSeconds": 8.269216167,
+            "propagateWallSeconds": 11.690174999500002,
+            "scoreWallSeconds": 0.0058243749999983266,
+            "totalWallSeconds": 19.965313417,
+            "totalCpuSeconds": 21.802301
           }
         }
       }
@@ -12883,25 +12884,25 @@
         "commonArcs": 3,
         "arms": {
           "xp-native": {
-            "fitWallSeconds": 0.030682334000011906,
-            "propagateWallSeconds": 0.017741250000020956,
-            "scoreWallSeconds": 0.003401125000033062,
-            "totalWallSeconds": 0.05194116700004088,
-            "totalCpuSeconds": 0.05273299999998926
+            "fitWallSeconds": 0.047901042000000414,
+            "propagateWallSeconds": 0.022068624999999883,
+            "scoreWallSeconds": 0.02664595799999961,
+            "totalWallSeconds": 0.09633691700000009,
+            "totalCpuSeconds": 0.1938439999999999
           },
           "ap-msis": {
-            "fitWallSeconds": 0.09562062500003958,
-            "propagateWallSeconds": 0.07965124999999534,
-            "scoreWallSeconds": 0.003255332999979146,
-            "totalWallSeconds": 0.18001841600000626,
-            "totalCpuSeconds": 0.17999900000000935
+            "fitWallSeconds": 0.10018641699999989,
+            "propagateWallSeconds": 0.08283083399999987,
+            "scoreWallSeconds": 0.005633124999999836,
+            "totalWallSeconds": 0.1907497500000004,
+            "totalCpuSeconds": 0.21699599999999997
           },
           "ffm": {
-            "fitWallSeconds": 5.107148250000027,
-            "propagateWallSeconds": 8.501640207999968,
-            "scoreWallSeconds": 0.004040084000036586,
-            "totalWallSeconds": 13.606281791999994,
-            "totalCpuSeconds": 14.795019000000025
+            "fitWallSeconds": 5.599253375,
+            "propagateWallSeconds": 8.755090209,
+            "scoreWallSeconds": 0.004455207999999402,
+            "totalWallSeconds": 14.356585875,
+            "totalCpuSeconds": 15.981924
           }
         }
       }
@@ -13724,8 +13725,7 @@
       "regime": "not yet classified by native module",
       "population": 11170,
       "statuses": {
-        "eligible": 4,
-        "evaluated": 7444,
+        "evaluated": 11162,
         "missing_fit_coverage": 8
       },
       "leads": {
@@ -13733,87 +13733,87 @@
           "arms": {
             "xp-native": {
               "population": 11170,
-              "attempted": 7448,
+              "attempted": 11162,
               "failed": 0,
-              "successful": 7448,
-              "leadAvailable": 7448,
+              "successful": 11162,
+              "leadAvailable": 11162,
               "unavailableReference": 8,
-              "pending": 3718,
-              "medianRmsM": 2180.7699163251627,
-              "p90RmsM": 12907.77089745552,
+              "pending": 0,
+              "medianRmsM": 2246.1451552953195,
+              "p90RmsM": 12323.702852406203,
               "combined": {
-                "arcs": 7448,
-                "objects": 7448,
+                "arcs": 11162,
+                "objects": 11162,
                 "invalidOrMissing": 0,
-                "coverage95": 0.3766111707841031,
-                "meanD2Over3": 283.07244488008405,
+                "coverage95": 0.3730514244759004,
+                "meanD2Over3": 346.2773018250237,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               },
               "predictionOnly": {
-                "arcs": 7448,
-                "objects": 7448,
+                "arcs": 11162,
+                "objects": 11162,
                 "invalidOrMissing": 0,
-                "coverage95": 0.3766111707841031,
-                "meanD2Over3": 283.07244488008405,
+                "coverage95": 0.3730514244759004,
+                "meanD2Over3": 346.2773018250237,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               }
             },
             "ap-msis": {
               "population": 11170,
-              "attempted": 7448,
+              "attempted": 11162,
               "failed": 0,
-              "successful": 7448,
-              "leadAvailable": 7448,
+              "successful": 11162,
+              "leadAvailable": 11162,
               "unavailableReference": 8,
-              "pending": 3718,
-              "medianRmsM": 2148.7644830206063,
-              "p90RmsM": 12884.910084348312,
+              "pending": 0,
+              "medianRmsM": 2221.6304986200785,
+              "p90RmsM": 12195.9428051625,
               "combined": {
-                "arcs": 7448,
-                "objects": 7448,
+                "arcs": 11162,
+                "objects": 11162,
                 "invalidOrMissing": 0,
-                "coverage95": 0.3772824919441461,
-                "meanD2Over3": 269.4295554455297,
+                "coverage95": 0.3723347070417488,
+                "meanD2Over3": 333.9745388724994,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               },
               "predictionOnly": {
-                "arcs": 7448,
-                "objects": 7448,
+                "arcs": 11162,
+                "objects": 11162,
                 "invalidOrMissing": 0,
-                "coverage95": 0.3772824919441461,
-                "meanD2Over3": 269.4295554455297,
+                "coverage95": 0.3723347070417488,
+                "meanD2Over3": 333.9745388724994,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               }
             },
             "ffm": {
               "population": 11170,
-              "attempted": 7444,
-              "failed": 5209,
-              "successful": 2235,
-              "leadAvailable": 7448,
+              "attempted": 11162,
+              "failed": 5081,
+              "successful": 6081,
+              "leadAvailable": 11162,
               "unavailableReference": 8,
-              "pending": 3718,
-              "medianRmsM": 1323.8067312862704,
-              "p90RmsM": 11203.215906475869,
+              "pending": 0,
+              "medianRmsM": 2860.859733486978,
+              "p90RmsM": 11069.02105954851,
               "combined": {
-                "arcs": 2235,
-                "objects": 2235,
+                "arcs": 6081,
+                "objects": 6081,
                 "invalidOrMissing": 0,
-                "coverage95": 0.02371364653243848,
-                "meanD2Over3": 167238.16673806784,
+                "coverage95": 0.020062489722085183,
+                "meanD2Over3": 6270027.965774653,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               },
               "predictionOnly": {
-                "arcs": 2235,
-                "objects": 2235,
+                "arcs": 6081,
+                "objects": 6081,
                 "invalidOrMissing": 0,
-                "coverage95": 0.02371364653243848,
-                "meanD2Over3": 167238.16673806784,
+                "coverage95": 0.020062489722085183,
+                "meanD2Over3": 6270027.965774653,
                 "referenceCovarianceArcs": 0,
                 "status": "FAIL"
               }
@@ -13823,8 +13823,8 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 7448,
-              "objects": 7448,
+              "arcs": 11162,
+              "objects": 11162,
               "undefinedRatio": 0,
               "medianRatio": 1,
               "objectBootstrap95": [
@@ -13836,26 +13836,26 @@
             {
               "numerator": "ffm",
               "denominator": "xp-native",
-              "arcs": 2235,
-              "objects": 2235,
+              "arcs": 6081,
+              "objects": 6081,
               "undefinedRatio": 0,
-              "medianRatio": 0.6375330551418972,
+              "medianRatio": 0.8320329229294193,
               "objectBootstrap95": [
-                0.5970026899822647,
-                0.6713206375041824
+                0.8204169511420737,
+                0.8486472045128688
               ],
               "decision": "LOWER_ERROR_ON_COMMON_SUPPORT"
             },
             {
               "numerator": "ffm",
               "denominator": "ap-msis",
-              "arcs": 2235,
-              "objects": 2235,
+              "arcs": 6081,
+              "objects": 6081,
               "undefinedRatio": 0,
-              "medianRatio": 0.6297174178059252,
+              "medianRatio": 0.8469904113542783,
               "objectBootstrap95": [
-                0.5944492601586477,
-                0.6716834661870447
+                0.8324653978917684,
+                0.8595052647121577
               ],
               "decision": "LOWER_ERROR_ON_COMMON_SUPPORT"
             }
@@ -13865,12 +13865,12 @@
           "arms": {
             "xp-native": {
               "population": 11170,
-              "attempted": 7448,
+              "attempted": 11162,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 7452,
-              "pending": 3718,
+              "unavailableReference": 11170,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -13894,12 +13894,12 @@
             },
             "ap-msis": {
               "population": 11170,
-              "attempted": 7448,
+              "attempted": 11162,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 7452,
-              "pending": 3718,
+              "unavailableReference": 11170,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -13923,12 +13923,12 @@
             },
             "ffm": {
               "population": 11170,
-              "attempted": 7444,
-              "failed": 5209,
+              "attempted": 11162,
+              "failed": 5081,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 7452,
-              "pending": 3718,
+              "unavailableReference": 11170,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -13988,12 +13988,12 @@
           "arms": {
             "xp-native": {
               "population": 11170,
-              "attempted": 7448,
+              "attempted": 11162,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 7452,
-              "pending": 3718,
+              "unavailableReference": 11170,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14017,12 +14017,12 @@
             },
             "ap-msis": {
               "population": 11170,
-              "attempted": 7448,
+              "attempted": 11162,
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 7452,
-              "pending": 3718,
+              "unavailableReference": 11170,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14046,12 +14046,12 @@
             },
             "ffm": {
               "population": 11170,
-              "attempted": 7444,
-              "failed": 5209,
+              "attempted": 11162,
+              "failed": 5081,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 7452,
-              "pending": 3718,
+              "unavailableReference": 11170,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14109,28 +14109,28 @@
         }
       },
       "timing": {
-        "commonArcs": 2235,
+        "commonArcs": 6081,
         "arms": {
           "xp-native": {
-            "fitWallSeconds": 0.031110333000309767,
-            "propagateWallSeconds": 0.00566800000006333,
-            "scoreWallSeconds": 0.0013676249999552965,
-            "totalWallSeconds": 0.03863129200041294,
-            "totalCpuSeconds": 0.07959600000003775
+            "fitWallSeconds": 0.042175625000000085,
+            "propagateWallSeconds": 0.0079525000000001,
+            "scoreWallSeconds": 0.020888332999999874,
+            "totalWallSeconds": 0.0712874999999999,
+            "totalCpuSeconds": 0.14978500000000006
           },
           "ap-msis": {
-            "fitWallSeconds": 0.10188200000021606,
-            "propagateWallSeconds": 0.023939458999782802,
-            "scoreWallSeconds": 0.0010430000005289912,
-            "totalWallSeconds": 0.12760237500001675,
-            "totalCpuSeconds": 0.12883899999997084
+            "fitWallSeconds": 0.03084983299999999,
+            "propagateWallSeconds": 0.006766583999999966,
+            "scoreWallSeconds": 0.0018669170000000577,
+            "totalWallSeconds": 0.039521040999999965,
+            "totalCpuSeconds": 0.055093999999999976
           },
           "ffm": {
-            "fitWallSeconds": 8.482039000000107,
-            "propagateWallSeconds": 2.9383757090000437,
-            "scoreWallSeconds": 0.00108587499987334,
-            "totalWallSeconds": 11.623623833000194,
-            "totalCpuSeconds": 12.976988000000006
+            "fitWallSeconds": 9.669381416,
+            "propagateWallSeconds": 2.9614982920000004,
+            "scoreWallSeconds": 0.002647292000001471,
+            "totalWallSeconds": 12.534917875000001,
+            "totalCpuSeconds": 14.464822999999999
           }
         }
       }
@@ -14141,95 +14141,95 @@
       "regime": "not yet classified by native module",
       "population": 3,
       "statuses": {
-        "evaluated": 2
+        "evaluated": 3
       },
       "leads": {
         "1": {
           "arms": {
             "xp-native": {
               "population": 3,
-              "attempted": 2,
+              "attempted": 3,
               "failed": 0,
-              "successful": 2,
-              "leadAvailable": 2,
+              "successful": 3,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": 1015.9209966744837,
-              "p90RmsM": 1114.1959832569542,
+              "pending": 0,
+              "medianRmsM": 1138.7647299025716,
+              "p90RmsM": 1640.7697255024514,
               "combined": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 1.349401512112949,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.3716506647354594,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 1.3494015127333723,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.3716506652010312,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               }
             },
             "ap-msis": {
               "population": 3,
-              "attempted": 2,
+              "attempted": 3,
               "failed": 0,
-              "successful": 2,
-              "leadAvailable": 2,
+              "successful": 3,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": 1003.160287262593,
-              "p90RmsM": 1100.2367499031498,
+              "pending": 0,
+              "medianRmsM": 1124.505865563289,
+              "p90RmsM": 1637.9179526345947,
               "combined": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 1.326466049099465,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.3611030407184102,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 1.3264660497143475,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.3611030411813196,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               }
             },
             "ffm": {
               "population": 3,
-              "attempted": 2,
-              "failed": 2,
-              "successful": 0,
-              "leadAvailable": 2,
+              "attempted": 3,
+              "failed": 1,
+              "successful": 2,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 0,
+              "medianRmsM": 25.548336047982026,
+              "p90RmsM": 33.115780146662644,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 0,
+                "meanD2Over3": 270.6338360573755,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 0,
+                "meanD2Over3": 271.01666729276553,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             }
@@ -14238,30 +14238,30 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 2,
-              "objects": 2,
+              "arcs": 3,
+              "objects": 3,
               "undefinedRatio": 0,
-              "medianRatio": 0.9874338522637586,
+              "medianRatio": 0.9874786565083531,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
             {
               "numerator": "ffm",
               "denominator": "xp-native",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.01992540344148787,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
             {
               "numerator": "ffm",
               "denominator": "ap-msis",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.020120308027298542,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             }
@@ -14271,88 +14271,88 @@
           "arms": {
             "xp-native": {
               "population": 3,
-              "attempted": 2,
+              "attempted": 3,
               "failed": 0,
-              "successful": 2,
-              "leadAvailable": 2,
+              "successful": 3,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": 2718.215864777023,
-              "p90RmsM": 3482.2022990301784,
+              "pending": 0,
+              "medianRmsM": 3673.198907593467,
+              "p90RmsM": 8183.981453182882,
               "combined": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 0.5421450388018779,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.2107172810564817,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 0.5421450394246472,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.2107172821041654,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               }
             },
             "ap-msis": {
               "population": 3,
-              "attempted": 2,
+              "attempted": 3,
               "failed": 0,
-              "successful": 2,
-              "leadAvailable": 2,
+              "successful": 3,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": 2628.0188591785386,
-              "p90RmsM": 3386.0117723901803,
+              "pending": 0,
+              "medianRmsM": 3575.510000693091,
+              "p90RmsM": 8164.443671802806,
               "combined": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 0.5414997915161617,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.2170604019832185,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
                 "coverage95": 1,
-                "meanD2Over3": 0.5414997921551924,
-                "referenceCovarianceArcs": 2,
+                "meanD2Over3": 1.217060403039468,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               }
             },
             "ffm": {
               "population": 3,
-              "attempted": 2,
-              "failed": 2,
-              "successful": 0,
-              "leadAvailable": 2,
+              "attempted": 3,
+              "failed": 1,
+              "successful": 2,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 0,
+              "medianRmsM": 531.0497490470856,
+              "p90RmsM": 715.8183412909733,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 0,
+                "meanD2Over3": 1773.5871568062414,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 0,
+                "meanD2Over3": 1773.6399624132482,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             }
@@ -14361,30 +14361,30 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 2,
-              "objects": 2,
+              "arcs": 3,
+              "objects": 3,
               "undefinedRatio": 0,
-              "medianRatio": 0.9632497855856725,
+              "medianRatio": 0.9734049504647223,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
             {
               "numerator": "ffm",
               "denominator": "xp-native",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.11983931722319628,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
             {
               "numerator": "ffm",
               "denominator": "ap-msis",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 0.12267327751232816,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             }
@@ -14394,88 +14394,88 @@
           "arms": {
             "xp-native": {
               "population": 3,
-              "attempted": 2,
+              "attempted": 3,
               "failed": 0,
-              "successful": 2,
-              "leadAvailable": 2,
+              "successful": 3,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": 6281.946565406806,
-              "p90RmsM": 9629.334915470628,
+              "pending": 0,
+              "medianRmsM": 10466.182002986585,
+              "p90RmsM": 39357.60775091001,
               "combined": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
-                "coverage95": 1,
-                "meanD2Over3": 2.1923595598551104,
-                "referenceCovarianceArcs": 2,
+                "coverage95": 0.6666666666666666,
+                "meanD2Over3": 2.5778018458986596,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
-                "coverage95": 1,
-                "meanD2Over3": 2.1923595630318147,
-                "referenceCovarianceArcs": 2,
+                "coverage95": 0.6666666666666666,
+                "meanD2Over3": 2.577801848961085,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               }
             },
             "ap-msis": {
               "population": 3,
-              "attempted": 2,
+              "attempted": 3,
               "failed": 0,
-              "successful": 2,
-              "leadAvailable": 2,
+              "successful": 3,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": 6298.770205814179,
-              "p90RmsM": 9676.259483258475,
+              "pending": 0,
+              "medianRmsM": 10520.631802619548,
+              "p90RmsM": 39368.4977108366,
               "combined": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
-                "coverage95": 1,
-                "meanD2Over3": 2.228436074305891,
-                "referenceCovarianceArcs": 2,
+                "coverage95": 0.6666666666666666,
+                "meanD2Over3": 2.609180125654236,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 2,
-                "objects": 2,
+                "arcs": 3,
+                "objects": 3,
                 "invalidOrMissing": 0,
-                "coverage95": 1,
-                "meanD2Over3": 2.2284360775327703,
-                "referenceCovarianceArcs": 2,
+                "coverage95": 0.6666666666666666,
+                "meanD2Over3": 2.609180128751368,
+                "referenceCovarianceArcs": 3,
                 "status": "INSUFFICIENT"
               }
             },
             "ffm": {
               "population": 3,
-              "attempted": 2,
-              "failed": 2,
-              "successful": 0,
-              "leadAvailable": 2,
+              "attempted": 3,
+              "failed": 1,
+              "successful": 2,
+              "leadAvailable": 3,
               "unavailableReference": 0,
-              "pending": 1,
-              "medianRmsM": null,
-              "p90RmsM": null,
+              "pending": 0,
+              "medianRmsM": 11805.354196398592,
+              "p90RmsM": 16025.027985491406,
               "combined": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 0,
+                "meanD2Over3": 44167.3965331814,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               },
               "predictionOnly": {
-                "arcs": 0,
-                "objects": 0,
+                "arcs": 2,
+                "objects": 2,
                 "invalidOrMissing": 0,
-                "coverage95": null,
-                "meanD2Over3": null,
-                "referenceCovarianceArcs": 0,
+                "coverage95": 0,
+                "meanD2Over3": 44220.47675768099,
+                "referenceCovarianceArcs": 2,
                 "status": "INSUFFICIENT"
               }
             }
@@ -14484,30 +14484,30 @@
             {
               "numerator": "ap-msis",
               "denominator": "xp-native",
-              "arcs": 2,
-              "objects": 2,
+              "arcs": 3,
+              "objects": 3,
               "undefinedRatio": 0,
-              "medianRatio": 0.9976428405200718,
+              "medianRatio": 1,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
             {
               "numerator": "ffm",
               "denominator": "xp-native",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 4.141193095709662,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             },
             {
               "numerator": "ffm",
               "denominator": "ap-msis",
-              "arcs": 0,
-              "objects": 0,
+              "arcs": 2,
+              "objects": 2,
               "undefinedRatio": 0,
-              "medianRatio": null,
+              "medianRatio": 4.181969541036523,
               "objectBootstrap95": null,
               "decision": "DESCRIPTIVE_ONLY"
             }
@@ -14515,28 +14515,28 @@
         }
       },
       "timing": {
-        "commonArcs": 0,
+        "commonArcs": 2,
         "arms": {
           "xp-native": {
-            "fitWallSeconds": null,
-            "propagateWallSeconds": null,
-            "scoreWallSeconds": null,
-            "totalWallSeconds": null,
-            "totalCpuSeconds": null
+            "fitWallSeconds": 0.04653979200000004,
+            "propagateWallSeconds": 0.021481207999999925,
+            "scoreWallSeconds": 0.02494620850000001,
+            "totalWallSeconds": 0.09311712550000015,
+            "totalCpuSeconds": 0.1805905000000001
           },
           "ap-msis": {
-            "fitWallSeconds": null,
-            "propagateWallSeconds": null,
-            "scoreWallSeconds": null,
-            "totalWallSeconds": null,
-            "totalCpuSeconds": null
+            "fitWallSeconds": 0.07919947950000006,
+            "propagateWallSeconds": 0.05951125049999997,
+            "scoreWallSeconds": 0.005168771000000107,
+            "totalWallSeconds": 0.143965917,
+            "totalCpuSeconds": 0.16825849999999987
           },
           "ffm": {
-            "fitWallSeconds": null,
-            "propagateWallSeconds": null,
-            "scoreWallSeconds": null,
-            "totalWallSeconds": null,
-            "totalCpuSeconds": null
+            "fitWallSeconds": 9.7486744375,
+            "propagateWallSeconds": 11.7954041875,
+            "scoreWallSeconds": 0.00450556300000062,
+            "totalWallSeconds": 21.5486569375,
+            "totalCpuSeconds": 23.523610499999997
           }
         }
       }
@@ -14546,7 +14546,9 @@
       "evidence": "precise-reconstruction",
       "regime": "not yet classified by native module",
       "population": 1,
-      "statuses": {},
+      "statuses": {
+        "unsupported_format_or_frame": 1
+      },
       "leads": {
         "1": {
           "arms": {
@@ -14556,8 +14558,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14585,8 +14587,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14614,8 +14616,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14679,8 +14681,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14708,8 +14710,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14737,8 +14739,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14802,8 +14804,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14831,8 +14833,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14860,8 +14862,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 0,
-              "pending": 1,
+              "unavailableReference": 1,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14951,7 +14953,7 @@
       "regime": "not yet classified by native module",
       "population": 5,
       "statuses": {
-        "missing_fit_coverage": 2
+        "missing_fit_coverage": 5
       },
       "leads": {
         "1": {
@@ -14962,8 +14964,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -14991,8 +14993,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15020,8 +15022,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15085,8 +15087,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15114,8 +15116,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15143,8 +15145,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15208,8 +15210,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15237,8 +15239,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15266,8 +15268,8 @@
               "failed": 0,
               "successful": 0,
               "leadAvailable": 0,
-              "unavailableReference": 2,
-              "pending": 3,
+              "unavailableReference": 5,
+              "pending": 0,
               "medianRmsM": null,
               "p90RmsM": null,
               "combined": {
@@ -15386,17 +15388,14 @@
     "planet-daily-states | missing_fit_coverage: Daily OD states do not meet the registered 10-minute, 90% fit coverage": 172,
     "space-track-gp | missing_future_reference: Catalog membership only: GP elements do not provide independent high-accuracy reference states": 33045,
     "sscweb | unsupported_format_or_frame: No normalized reference or captured operator-head states; raw archive retained": 3,
-    "starlink-capture-heads | ffm | fit_failed: FFM fit not converged": 94,
-    "starlink-capture-heads | ffm | propagation_failed: memory access out of bounds": 3756,
-    "starlink-capture-heads | ffm | propagation_failed: null function or function signature mismatch": 4,
-    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term.": 2,
-    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr are invalid.": 1341,
-    "starlink-capture-heads | ffm | propagation_failed: table index is out of bounds": 4,
-    "starlink-capture-heads | ffm | propagation_failed: undefined": 8,
+    "starlink-capture-heads | ffm | fit_failed: FFM fit not converged": 171,
+    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term.": 3,
+    "starlink-capture-heads | ffm | propagation_failed: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr are invalid.": 4907,
     "starlink-capture-heads | missing_fit_coverage: Actual gated states fail the metadata-selected fit coverage": 1,
     "starlink-capture-heads | missing_fit_coverage: No metadata-selected arc satisfies the registered cadence, coverage and publication chronology": 7,
-    "swarm-reduced-dynamic | ffm | propagation_failed: memory access out of bounds": 2,
-    "ucar-nrt-leoorb | missing_fit_coverage: No metadata-selected arc satisfies the registered cadence, coverage and publication chronology": 2
+    "swarm-reduced-dynamic | ffm | fit_failed: FFM fit not converged": 1,
+    "tess-definitive | unsupported_format_or_frame: No normalized reference or captured operator-head states; raw archive retained": 1,
+    "ucar-nrt-leoorb | missing_fit_coverage: No metadata-selected arc satisfies the registered cadence, coverage and publication chronology": 5
   },
   "rawArchives": [
     {
@@ -15478,17 +15477,23 @@
     "Runtime on this shared host is descriptive; retain accuracy improvements regardless of speed cost.",
     "The earlier 21/21 NASA CARA Pc integral tests do not certify covariance or conjunction performance for this larger population."
   ],
-  "executionAmendment": {
-    "method": "fresh process per remaining source/object",
+  "replayAmendment": {
+    "method": "fresh process for every metadata-eligible source/object; no imported outcomes",
+    "amendmentId": "8b70256876705a30e8c7b5cc56c5acc9b9d92dabbe020105a6187cca40b25523",
     "sourceHashes": {
-      "experiments/propagator-catalog-census/isolation/PLAN.md": "5e048dfd3efef25c59b68f386bd9e421b1f75cc2c616e822bb1ca00eec121d31",
-      "experiments/propagator-catalog-census/isolation/config.json": "452433c8096990358dd0bd7296f62052c476762e80ef67ea3610cd9e79b3b5a7",
-      "experiments/propagator-catalog-census/isolation/run.mjs": "64e8b69d46893f5fee16c1fe6dd6ddb31616b2ad6615be0cf3bd761c886e21f8"
+      "experiments/propagator-catalog-census/replay/PLAN.md": "44f8dfa1b0f3100f840f98cb93dec94f5a964aa215d0d8c751ee552508785473",
+      "experiments/propagator-catalog-census/replay/common.mjs": "60173254348648aa2823d3489f3546a9048708d8fcc659d0cd34b43c4e8e212e",
+      "experiments/propagator-catalog-census/replay/config.json": "e1770f20b3681fc184122e47601847b2260bbcf3eb6b62e2ecac4e78cb22aaf5",
+      "experiments/propagator-catalog-census/replay/run.mjs": "bcdbae67684a21480fcf1216b065eb0da4c631ac8e8e3f263ee41909661de916",
+      "experiments/propagator-catalog-census/replay/verify.mjs": "dc01d0c943ecc6f68aaf65204fabbf488d727c34a3477dbce183088d3543be51"
     },
-    "experimentCommit": "46e92f5a0fc8ac6dc5539813cd2be608e54bb183",
-    "startedUtc": "2026-10-26T23:14:03.444Z",
+    "experimentCommit": "e49ce42aebadadceff4875bd42a452d0d7d701ff",
+    "sourceRun": "catalog-epochs",
+    "replayRun": "catalog-epochs-full-replay",
+    "startedUtc": "2026-10-27T00:50:59.367Z",
     "workers": 4,
-    "initialTerminal": 53664
+    "nativeCompleted": 11415,
+    "metadataCompleted": 45998
   },
   "endpointChecks": {
     "checkedUtc": "2026-10-26T20:56:49.428Z",

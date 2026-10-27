@@ -1,6 +1,6 @@
 # Direct public-feed acquisition
 
-Snapshot started 2026-10-26T21:20:24.907Z. Report generated 2026-10-26T22:03:22.715Z.
+Snapshot started 2026-10-26T21:20:24.907Z. Report generated 2026-10-27T09:16:26.879Z.
 
 11,769 of 11,771 discovered resources downloaded; 2 failed, 0 pending. All 17 registry sources remain accounted for.
 

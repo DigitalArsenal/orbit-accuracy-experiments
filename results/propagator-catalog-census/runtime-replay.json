@@ -1,0 +1,30 @@
+{
+  "executionId": "71697feb66aa81d2e6dafd3721617d279a41b358ac1e76ef030e1327bf297e85",
+  "amendmentId": "8b70256876705a30e8c7b5cc56c5acc9b9d92dabbe020105a6187cca40b25523",
+  "sourceRun": "catalog-epochs",
+  "replayRun": "catalog-epochs-full-replay",
+  "sourceObjects": 57413,
+  "nativeObjects": 11415,
+  "metadataObjects": 45998,
+  "statusTransitions": {
+    "object: missing_future_reference -> missing_future_reference": 45716,
+    "object: evaluated -> evaluated": 11414,
+    "xp-native: scored/true -> scored/true": 11414,
+    "ap-msis: scored/true -> scored/true": 11414,
+    "ffm: scored/true -> scored/true": 4142,
+    "ffm: propagation_failed/false -> propagation_failed/false": 5148,
+    "object: unsupported_format_or_frame -> unsupported_format_or_frame": 57,
+    "object: missing_fit_coverage -> missing_fit_coverage": 226,
+    "ffm: fit_failed/false -> fit_failed/false": 132,
+    "ffm: propagation_failed/false -> scored/true": 1952,
+    "ffm: propagation_failed/false -> fit_failed/false": 40
+  },
+  "remainingArmFailures": {
+    "ffm: propagation_failed: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term.": 241,
+    "ffm: propagation_failed: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr are invalid.": 4907,
+    "ffm: fit_failed: FFM fit not converged": 172
+  },
+  "successfulResultDifferences": 0,
+  "previousSuccessNowFailed": 0,
+  "checkedUtc": "2026-10-27T09:02:29.165Z"
+}
