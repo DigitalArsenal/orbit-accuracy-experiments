@@ -1,0 +1,15 @@
+{
+  "frozen": true,
+  "sourceRun": "catalog-epochs-full-replay",
+  "outputRun": "ussf99-extension",
+  "sourceExecutionId": "71697feb66aa81d2e6dafd3721617d279a41b358ac1e76ef030e1327bf297e85",
+  "oracleCommit": "7eaa8ab0e3fe7bb046919c7ba2e4df2fefa0f60f",
+  "oracleVersion": "9.9",
+  "oraclePackageSha256": "fe686600c4d0089bef14f63a347ae011e34369afa4afcdc651f90efa597b430d",
+  "workers": 4,
+  "strictPositionAgreementM": 1,
+  "syntheticInterfaceId": 99999,
+  "referenceCovariance": "unavailable",
+  "objectCap": null,
+  "perObjectTimeoutSeconds": null
+}
