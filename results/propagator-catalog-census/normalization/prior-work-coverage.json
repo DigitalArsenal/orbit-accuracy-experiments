@@ -1,0 +1,873 @@
+{
+  "schema": "direct-feed-prior-work-audit",
+  "status": "ACCOUNTING_ONLY",
+  "completeDirectScoring": false,
+  "provenance": {
+    "sourceSha256": "da04e46813465cf7f8917e945d55fba9833fef2497800ba565bdd98ce01ecc67",
+    "identitiesSha256": "d42519075746a901b66656fa60bc3a555ae7f0011ca89c1c1518a12a13237f69",
+    "censusSha256": "1ba68a5c4138837591540dc5b55b35bbd35849d318bd119c77cd1ebaa1a90fbd",
+    "inventoryQueueSha256": "a894aba45e241f5f0820cb29b58c7ae71472e5e47dd5b25df869b0960cc9806a",
+    "priorOutcomeHashesSha256": "67b7914252dc569ee4a572bfcb1379458e5561c999c8a2b2ca03abedb01024e9",
+    "detailSha256": "8198d0bdb532eddb0d9cff4c737d2d26f295256f81ffed7441a2e208ae36cb74"
+  },
+  "counts": {
+    "resources": 11771,
+    "identityRows": 19132,
+    "priorSourceObjects": 57413,
+    "identityStatuses": {
+      "authoritative_identifier_crosswalk": 4,
+      "authoritative_interval_crosswalk": 6610,
+      "operator_crosswalk_unverified": 228,
+      "resource_without_decoded_identity": 2,
+      "source_declared_alpha5": 12,
+      "source_declared_numeric": 11386,
+      "unresolved": 890
+    }
+  },
+  "sources": {
+    "spacex-starlink": {
+      "resources": 11163,
+      "identityRows": 11163,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 11163,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 11162,
+          "successfulCandidateIds": 11162,
+          "candidateIdsWithoutAttempt": [
+            47810
+          ]
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 11162,
+          "successfulCandidateIds": 11162,
+          "candidateIdsWithoutAttempt": [
+            47810
+          ]
+        },
+        "ffm": {
+          "attemptedCandidateIds": 11162,
+          "successfulCandidateIds": 6081,
+          "candidateIdsWithoutAttempt": [
+            47810
+          ]
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 11163,
+      "exactRawSourcePresentRows": 0
+    },
+    "eutelsat-oneweb": {
+      "resources": 1,
+      "identityRows": 576,
+      "unresolvedRows": 576,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "planet": {
+      "resources": 116,
+      "identityRows": 342,
+      "unresolvedRows": 9,
+      "candidateNumericIds": 111,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": [
+            60481,
+            60519,
+            58320,
+            58327,
+            66710,
+            60501,
+            60517,
+            60518,
+            60509,
+            58271,
+            62645,
+            58322,
+            58328,
+            60512,
+            62670,
+            60561,
+            60559,
+            60516,
+            60492,
+            60495,
+            60494,
+            60514,
+            66713,
+            60505,
+            60563,
+            60480,
+            60488,
+            60490,
+            62622,
+            60487,
+            66712,
+            60497,
+            62666,
+            62661,
+            66705,
+            62613,
+            62646,
+            62629,
+            62660,
+            62675,
+            62678,
+            62624,
+            62633,
+            62681,
+            62625,
+            62667,
+            62637,
+            66707,
+            62650,
+            62652,
+            62641,
+            66711,
+            66706,
+            66708,
+            66729,
+            66716,
+            66717,
+            66715,
+            66718,
+            66722,
+            66730,
+            66723,
+            66733,
+            66725,
+            66739,
+            66727,
+            66735,
+            66719,
+            66737,
+            66726,
+            66734,
+            66728,
+            66721,
+            66724,
+            66732,
+            66736,
+            66738,
+            101104,
+            101105,
+            100948,
+            100938,
+            100970,
+            101106,
+            101074,
+            101071,
+            101072,
+            101073,
+            58296,
+            62631,
+            65315,
+            65316,
+            66667,
+            66703,
+            69017,
+            69018,
+            69019,
+            69871,
+            60507,
+            100886,
+            100902,
+            39418,
+            41771,
+            41772,
+            42992,
+            42991,
+            42990,
+            42989,
+            42988,
+            43797,
+            41601,
+            41773
+          ]
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": [
+            60481,
+            60519,
+            58320,
+            58327,
+            66710,
+            60501,
+            60517,
+            60518,
+            60509,
+            58271,
+            62645,
+            58322,
+            58328,
+            60512,
+            62670,
+            60561,
+            60559,
+            60516,
+            60492,
+            60495,
+            60494,
+            60514,
+            66713,
+            60505,
+            60563,
+            60480,
+            60488,
+            60490,
+            62622,
+            60487,
+            66712,
+            60497,
+            62666,
+            62661,
+            66705,
+            62613,
+            62646,
+            62629,
+            62660,
+            62675,
+            62678,
+            62624,
+            62633,
+            62681,
+            62625,
+            62667,
+            62637,
+            66707,
+            62650,
+            62652,
+            62641,
+            66711,
+            66706,
+            66708,
+            66729,
+            66716,
+            66717,
+            66715,
+            66718,
+            66722,
+            66730,
+            66723,
+            66733,
+            66725,
+            66739,
+            66727,
+            66735,
+            66719,
+            66737,
+            66726,
+            66734,
+            66728,
+            66721,
+            66724,
+            66732,
+            66736,
+            66738,
+            101104,
+            101105,
+            100948,
+            100938,
+            100970,
+            101106,
+            101074,
+            101071,
+            101072,
+            101073,
+            58296,
+            62631,
+            65315,
+            65316,
+            66667,
+            66703,
+            69017,
+            69018,
+            69019,
+            69871,
+            60507,
+            100886,
+            100902,
+            39418,
+            41771,
+            41772,
+            42992,
+            42991,
+            42990,
+            42989,
+            42988,
+            43797,
+            41601,
+            41773
+          ]
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": [
+            60481,
+            60519,
+            58320,
+            58327,
+            66710,
+            60501,
+            60517,
+            60518,
+            60509,
+            58271,
+            62645,
+            58322,
+            58328,
+            60512,
+            62670,
+            60561,
+            60559,
+            60516,
+            60492,
+            60495,
+            60494,
+            60514,
+            66713,
+            60505,
+            60563,
+            60480,
+            60488,
+            60490,
+            62622,
+            60487,
+            66712,
+            60497,
+            62666,
+            62661,
+            66705,
+            62613,
+            62646,
+            62629,
+            62660,
+            62675,
+            62678,
+            62624,
+            62633,
+            62681,
+            62625,
+            62667,
+            62637,
+            66707,
+            62650,
+            62652,
+            62641,
+            66711,
+            66706,
+            66708,
+            66729,
+            66716,
+            66717,
+            66715,
+            66718,
+            66722,
+            66730,
+            66723,
+            66733,
+            66725,
+            66739,
+            66727,
+            66735,
+            66719,
+            66737,
+            66726,
+            66734,
+            66728,
+            66721,
+            66724,
+            66732,
+            66736,
+            66738,
+            101104,
+            101105,
+            100948,
+            100938,
+            100970,
+            101106,
+            101074,
+            101071,
+            101072,
+            101073,
+            58296,
+            62631,
+            65315,
+            65316,
+            66667,
+            66703,
+            69017,
+            69018,
+            69019,
+            69871,
+            60507,
+            100886,
+            100902,
+            39418,
+            41771,
+            41772,
+            42992,
+            42991,
+            42990,
+            42989,
+            42988,
+            43797,
+            41601,
+            41773
+          ]
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "iss": {
+      "resources": 1,
+      "identityRows": 1,
+      "unresolvedRows": 1,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "ses": {
+      "resources": 41,
+      "identityRows": 41,
+      "unresolvedRows": 41,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "intelsat": {
+      "resources": 258,
+      "identityRows": 258,
+      "unresolvedRows": 258,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "telesat": {
+      "resources": 12,
+      "identityRows": 12,
+      "unresolvedRows": 12,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "css-tiangong": {
+      "resources": 1,
+      "identityRows": 1,
+      "unresolvedRows": 1,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "gps-precise": {
+      "resources": 40,
+      "identityRows": 1272,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 32,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 32,
+          "successfulCandidateIds": 32,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 32,
+          "successfulCandidateIds": 32,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 32,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "glonass-precise": {
+      "resources": 45,
+      "identityRows": 2669,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 118,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 117,
+          "successfulCandidateIds": 117,
+          "candidateIdsWithoutAttempt": [
+            100744
+          ]
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 117,
+          "successfulCandidateIds": 117,
+          "candidateIdsWithoutAttempt": [
+            100744
+          ]
+        },
+        "ffm": {
+          "attemptedCandidateIds": 117,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": [
+            100744
+          ]
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "esa-pod": {
+      "resources": 49,
+      "identityRows": 2673,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 122,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 121,
+          "successfulCandidateIds": 121,
+          "candidateIdsWithoutAttempt": [
+            100744
+          ]
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 121,
+          "successfulCandidateIds": 121,
+          "candidateIdsWithoutAttempt": [
+            100744
+          ]
+        },
+        "ffm": {
+          "attemptedCandidateIds": 121,
+          "successfulCandidateIds": 3,
+          "candidateIdsWithoutAttempt": [
+            100744
+          ]
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 1,
+      "exactRawSourcePresentRows": 0
+    },
+    "eumetsat": {
+      "resources": 10,
+      "identityRows": 90,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 10,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 3,
+          "successfulCandidateIds": 3,
+          "candidateIdsWithoutAttempt": [
+            38771,
+            29499,
+            43689,
+            43013,
+            54234,
+            37849,
+            65159
+          ]
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 3,
+          "successfulCandidateIds": 3,
+          "candidateIdsWithoutAttempt": [
+            38771,
+            29499,
+            43689,
+            43013,
+            54234,
+            37849,
+            65159
+          ]
+        },
+        "ffm": {
+          "attemptedCandidateIds": 3,
+          "successfulCandidateIds": 2,
+          "candidateIdsWithoutAttempt": [
+            38771,
+            29499,
+            43689,
+            43013,
+            54234,
+            37849,
+            65159
+          ]
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 24,
+      "exactRawSourcePresentRows": 0
+    },
+    "cpf": {
+      "resources": 34,
+      "identityRows": 34,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 34,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 31,
+          "successfulCandidateIds": 31,
+          "candidateIdsWithoutAttempt": [
+            38858,
+            40545,
+            41550
+          ]
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 31,
+          "successfulCandidateIds": 31,
+          "candidateIdsWithoutAttempt": [
+            38858,
+            40545,
+            41550
+          ]
+        },
+        "ffm": {
+          "attemptedCandidateIds": 31,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": [
+            38858,
+            40545,
+            41550
+          ]
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "spire": {
+      "resources": 0,
+      "identityRows": 0,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "space-track": {
+      "resources": 0,
+      "identityRows": 0,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "vimpel": {
+      "resources": 0,
+      "identityRows": 0,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    },
+    "cpf-edc": {
+      "resources": 0,
+      "identityRows": 0,
+      "unresolvedRows": 0,
+      "candidateNumericIds": 0,
+      "identityCollisionRows": 0,
+      "arms": {
+        "xp-native": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ap-msis": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        },
+        "ffm": {
+          "attemptedCandidateIds": 0,
+          "successfulCandidateIds": 0,
+          "candidateIdsWithoutAttempt": []
+        }
+      },
+      "rowsWithPriorDiagnosticReference": 0,
+      "exactRawSourcePresentRows": 0
+    }
+  },
+  "planetCandidateCollisions": [],
+  "priorNumericalFailureReasons": {
+    "ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term.": 241,
+    "ffm: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr are invalid.": 4907,
+    "ffm: FFM fit not converged": 172
+  },
+  "limitations": [
+    "No new propagator residual, covariance-calibration or collision-risk result is calculated.",
+    "Archive results are reused as historical evidence, never as current-feed results. Diagnostic EOP and assumed reference uncertainty are explicitly flagged.",
+    "An unsuccessful prior arm remains a failure. New data, corrected normalization or changed numerical code requires a separately registered comparison.",
+    "Unresolved source-local identities and failed resources remain in the denominator. Planet candidate collisions must not merge hardware identities."
+  ]
+}
