@@ -5,7 +5,7 @@ import {root,read,write,sha,sourceDir,outputDir,keyOf,bodyOf,hashFile} from './c
 const identityDir=path.join(root,'runs/propagator-catalog-census/direct-identity-20261027');
 const acquired=id=>{const file=path.join(identityDir,'receipts',id+'-node-fetch.json'),receipt=read(file);assert.equal(receipt.state,'downloaded');return{text:bodyOf(identityDir,receipt).toString(),receipt,receiptSha256:hashFile(file)};};
 const igs=acquired('igs-satellite-metadata'),nasa=acquired('nasa-sp3-correspondence'),planet=acquired('planet-matches');
-const block=name=>{const parts=igs.text.split('+'+name);assert.equal(parts.length,2);return parts[1].split('-'+name)[0].split(/\r?\n/).filter(l=>l.startsWith(' ')).map(l=>l.trim().split(/\s+/));};
+const block=name=>{const parts=igs.text.split('+'+name);assert.equal(parts.length,2);return parts[1].split('-'+name)[0].split(/\r?\n/).filter(l=>l.startsWith(' ')&&l.trim()).map(l=>l.trim().split(/\s+/));};
 const svn=new Map();for(const a of block('SATELLITE/IDENTIFIER')){assert.ok(!svn.has(a[0]));svn.set(a[0],{cospar:a[1],norad:Number(a[2]),block:a[3]});}
 const time=(s,end)=>s==='0000:000:00000'?(end?Infinity:-Infinity):Date.UTC(+s.slice(0,4),0,+s.slice(5,8))+(+s.slice(9))*1000;
 const prn=block('SATELLITE/PRN').map(a=>({svn:a[0],from:time(a[1],false),to:time(a[2],true),prn:a[3],fromText:a[1],toText:a[2]}));
@@ -24,10 +24,14 @@ const planetMatches=new Map();for(const line of planet.text.split(/\r?\n/).filte
 const queue=read(path.join(sourceDir,'queue.json')),planetSource=queue.sources.find(s=>s.source_id==='planet');
 const tleListing=planetSource.listings.find(l=>l.url.endsWith('/planet_mc.tle')),tle=bodyOf(sourceDir,tleListing).toString().split(/\r?\n/),planetSnapshot=new Map();
 const checksum=s=>s.length===69&&[...s.slice(0,68)].reduce((n,c)=>n+(/\d/.test(c)?Number(c):c==='-'?1:0),0)%10===Number(s[68]);
+// Space-Track's published Alpha-5 table and examples; I and O are omitted.
+// https://www.space-track.org/documentation#/tle-alpha5
+const catalogNumber=s=>{if(/^\d{1,5}$/.test(s))return Number(s);assert.match(s,/^[A-HJ-NP-Z]\d{4}$/);return '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'.indexOf(s[0])*10000+Number(s.slice(1));};
+for(const [encoded,number]of [['A0000',100000],['E8493',148493],['J2931',182931],['P4018',234018],['W1928',301928],['Z9999',339999]])assert.equal(catalogNumber(encoded),number);
 for(let i=0;i<tle.length-2;i++)if(tle[i].startsWith('0 ')&&tle[i+1].startsWith('1 ')&&tle[i+2].startsWith('2 ')){
   const hwid=tle[i].trim().split(/\s+/).at(-1).toLowerCase(),id=tle[i+1].slice(2,7).trim();assert.match(hwid,/^[0-9a-f]{4}$/);
-  assert.equal(tle[i+2].slice(2,7).trim(),id);assert.ok(checksum(tle[i+1])&&checksum(tle[i+2]));assert.match(id,/^\d+$/);
-  if(!planetSnapshot.has(hwid))planetSnapshot.set(hwid,[]);planetSnapshot.get(hwid).push(Number(id));
+  assert.equal(tle[i+2].slice(2,7).trim(),id);assert.ok(checksum(tle[i+1])&&checksum(tle[i+2]));
+  if(!planetSnapshot.has(hwid))planetSnapshot.set(hwid,[]);planetSnapshot.get(hwid).push(catalogNumber(id));
 }
 const censusFile=path.join(root,'runs/propagator-catalog-census/catalog-epochs-full-replay/census.json'),census=read(censusFile),archive=new Set(census.objects.map(x=>x.norad).filter(Boolean));
 const epoch=t=>Date.parse(/[zZ]$/.test(t)?t:t+'Z'),rows=[];
@@ -36,7 +40,9 @@ for(const source of queue.sources)for(const resource of source.resources){
   for(let i=0;i<(outcome.identities??[]).length;i++){
     const input=outcome.identities[i],b=outcome.blocks?.[i],row={resourceKey:key,source:source.source_id,index:i,input,status:'unresolved',norad:null,evidence:[]};
     if(Number.isSafeInteger(input.norad)&&input.norad>0){row.status='source_declared_numeric';row.norad=input.norad;}
-    else if(source.source_id==='planet'){
+    else if(['tle','eumetsat-tle-js'].includes(resource.FORMAT)&&input.paired&&input.checksumValid&&/^[A-HJ-NP-Z]\d{4}$/.test(input.sourceObjectId??'')){
+      row.norad=catalogNumber(input.sourceObjectId);row.status='source_declared_alpha5';row.evidence.push({kind:'space_track_alpha5',url:'https://www.space-track.org/documentation#/tle-alpha5'});
+    }else if(source.source_id==='planet'){
       const hwid=String(input.objectId??input.sourceObjectId??'').toLowerCase(),snapshot=[...new Set(planetSnapshot.get(hwid)??[])],fresh=planetMatches.get(hwid)??null;
       row.evidence.push({kind:'snapshot_operator_tle_hwid',sha256:tleListing.sha256,candidates:snapshot},{kind:'later_operator_best_guess',sha256:planet.receipt.sha256,match:fresh});
       if(snapshot.length===1){row.norad=snapshot[0];row.status='operator_crosswalk_unverified';if(fresh?.catid&&fresh.catid!==row.norad){row.status='crosswalk_disagreement';row.norad=null;}}
