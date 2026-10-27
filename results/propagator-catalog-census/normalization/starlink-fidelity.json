@@ -1,0 +1,50 @@
+{
+  "schema": "starlink-native-source-fidelity-verification",
+  "status": "PASS_SOURCE_FIDELITY",
+  "completeAvailablePopulation": true,
+  "provenance": {
+    "amendmentId": "9f4be4d66248d857de4d8fd64b09768728130cb8f96b178d75ab06b64ead0137",
+    "manifestSha256": "0aa8b652f8e4004e91d7b0bade6eb72d564067e8e78a064ce6716315153b441a",
+    "moduleCommit": "cc64880aee735ed7b3cdf36d7a3d1fabbbf463c4",
+    "moduleFiles": {
+      "data-source/spacex-starlink-source/dist/isomorphic/module.wasm": "7b88f0791df66e042d2d0d1e96b5fdd5cd437986e2e62f2907c2610d598458f8",
+      "data-source/spacex-starlink-source/plugin-manifest.json": "9871aff37275edf78e25b1b9bae32dea508257700e9884f91cf012bac6e25fb9"
+    },
+    "sourceHashes": {
+      "experiments/propagator-catalog-census/normalization/starlink-covariance.mjs": "ddb77689e3924494febfaab6166d3f52663d84f110ba627e35c9729dcdafe207",
+      "experiments/propagator-catalog-census/normalization/RECONCILIATION.md": "4ef37f2d5b7b87888c00fb885d487e23b9b4c5a63d1029285fb05908e60cdc3f",
+      "experiments/propagator-catalog-census/normalization/common.mjs": "a15be31e63675c3169d1a46879a41e59212f78a71ea1f7ee7cac89beb87230b5",
+      "experiments/propagator-catalog-census/normalization/config.json": "29177eaf5338e7be4b2a19f0bf945ad8e50273efd8ebdae8eb60fd3a923acade",
+      "experiments/propagator-catalog-census/direct/common.mjs": "d01ddbd312e4986226793adc0801f5016edc50aadad814d81953c366f96956ce",
+      "experiments/propagator-catalog-census/direct/config.json": "04a1ad008ddd62586dc5ee377cf1d0ef1fd53083db0b672279b867ce286ac730",
+      "harness/modules.mjs": "10e7d5a6144006c136af7ab946d0d3609df314faf4f25c59e489f3d1e5af3c76",
+      "experiments/supgp-omm/lib/records.mjs": "a32416ea9519841411ab86a191aca9fb606c5fac6e2395414d687ec6c8cce435",
+      "package-lock.json": "17de4859835189dee94d053b95a09bda0722ef8df229f5e94340f484065dd4a0"
+    },
+    "verifierSha256": "15b5adeb1463b645780e76342120719ce1713659195e965d4a2177be64bfd008",
+    "outcomeHashesSha256": "10231000929ac156b8b77f984ea0c098442dc3e67f62ed143ae5a5fc69d5e199"
+  },
+  "totals": {
+    "resources": 11163,
+    "sourceBytes": 22674073313,
+    "artifactBytes": 14594701312,
+    "states": 47989471,
+    "covarianceRows": 47989471,
+    "covarianceValues": 1007778891,
+    "stateValues": 287936826
+  },
+  "statuses": {
+    "exact_source_fidelity": 11163
+  },
+  "failures": [],
+  "scientificValidation": {
+    "propagatorAccuracy": "NOT_EVALUATED_BY_THIS_CHECK",
+    "covarianceCalibration": "NOT_EVALUATED",
+    "collisionProbability": "NOT_EVALUATED"
+  },
+  "limitations": [
+    "Every source value was checked by the pinned full runner. This verifier rehashes all source and output bytes and reconciles independent native-inventory counts.",
+    "Source EME2000 states, UTC epochs and declared UVW covariance are preserved. Physical frame/covariance normalization and publication chronology remain separate admission requirements.",
+    "Parser fidelity does not establish covariance realism, independent reference truth, or calibrated collision probability."
+  ]
+}
