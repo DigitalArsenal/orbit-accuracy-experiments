@@ -11,7 +11,9 @@
     "data-source/intelsat-source/dist/isomorphic/module.wasm": "be8547f2a6e3da12466466a328d09603d29cc2d620bc75668857f1da36c6cb65",
     "data-source/intelsat-source/plugin-manifest.json": "17327dc2eb2727dd5b4557d76a6aa64d7b2d76599ddf1562e923a6cd74f19c7e",
     "data-source/cpf-source/dist/isomorphic/module.wasm": "4edab160c53d71af0b830cffa424f7193d51d9460080f4f8a60b87fa1338f06f",
-    "data-source/cpf-source/plugin-manifest.json": "5e86fc18529ba53f6c845f12659e6f9dea27d4e52cf341bc5a613f6368c04c39"
+    "data-source/cpf-source/plugin-manifest.json": "5e86fc18529ba53f6c845f12659e6f9dea27d4e52cf341bc5a613f6368c04c39",
+    "files/ccsds-messages/dist/isomorphic/module.wasm": "de53d7ac4389317a02a5fe5220b6fa67da708a5371014be5ef8d5a0f0d62d9ee",
+    "files/ccsds-messages/plugin-manifest.json": "5a57f294152546a0da54185e8e190733f18f5554b1da86093b0634127e62b3ca"
   },
   "helpers": [
     "harness/modules.mjs",

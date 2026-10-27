@@ -26,7 +26,8 @@ export function summarize(bytes){
       if(!Number.isFinite(t)||!v.every(Number.isFinite))invalidStates++;
       if(t<=prior)nonIncreasingEpochs++;prior=t;first??=l.EPOCH;last=l.EPOCH;
     }
-    const frame=b.REFERENCE_FRAME?.NAME||O.CelestialFrame[b.REFERENCE_FRAME?.REFERENCE_FRAME?.frame]||null;
+    const ref=b.REFERENCE_FRAME, kinds={1:O.CelestialFrame,2:O.OrbitFrame,3:O.SpacecraftFrame,4:O.CustomFrame};
+    const frame=ref?.NAME||kinds[ref?.REFERENCE_FRAME_type]?.[ref?.REFERENCE_FRAME?.frame]||null;
     return {index,identity:{norad:b.OBJECT?.NORAD_CAT_ID||null,objectId:b.OBJECT?.OBJECT_ID||null,name:b.OBJECT?.OBJECT_NAME||null},
       states,stateVectorSize:width,frame,timeSystem:O.timingStandard[b.TIME_SYSTEM]??null,first,last,stepSeconds:b.STEP_SIZE||null,
       covarianceRows:b.COVARIANCE_MATRIX_LINES?.length??0,invalidStates,nonIncreasingEpochs,
@@ -83,7 +84,8 @@ export async function openReaders(modules){
       if(resource.FORMAT==='sp3-gzip'){
         bytes=gunzipSync(body);sidecar={sp3Flags:sp3Flags(bytes)};evidence='source_product_flags';
       }
-      if(['sp3-gzip','ccsds-oem-kvn'].includes(resource.FORMAT))outputs=(await (await module('files/orbit-products')).invoke('read_container',[containerFrame(bytes)])).outputs;
+      if(resource.FORMAT==='sp3-gzip')outputs=(await (await module('files/orbit-products')).invoke('read_container',[containerFrame(bytes)])).outputs;
+      else if(resource.FORMAT==='ccsds-oem-kvn'){const input=containerFrame(bytes);outputs=(await (await module('files/ccsds-messages')).invoke('read_oem',[{...input,portId:'message'}])).outputs;}
       else if(resource.FORMAT==='ses-i11'){
         const adapted=withoutTelexAnnotations(bytes);outputs=[{portId:'ephemeris',payload:await readI11(await module('files/orbit-products'),adapted)}];
         sidecar={adapter:'CR removal and redundant (MINUS) annotation removal only'};
@@ -104,6 +106,12 @@ export async function openReaders(modules){
       const artifacts=outputs.filter(x=>['ephemeris','oem','descriptor'].includes(x.portId)).map((x,i)=>({name:`${i}-${x.portId}.bin`,portId:x.portId,bytes:Buffer.from(x.payload)}));
       const blocks=artifacts.filter(x=>x.portId!=='descriptor').flatMap(x=>summarize(x.bytes));
       const states=blocks.reduce((n,b)=>n+b.states,0),issues=[];
+      // These native readers store zero velocity slots. Their sources provide
+      // positions only; those slots must never become measured velocities.
+      for(const b of blocks){
+        const positionOnly=['cpf','intelsat-ecf'].includes(resource.FORMAT)||(resource.FORMAT==='sp3-gzip'&&!/^V[A-Z0-9]/m.test(bytes.toString('ascii')));
+        b.sourceStateVectorSize=positionOnly?3:b.stateVectorSize;b.velocityAvailable=!positionOnly;
+      }
       if(!states)issues.push('native_reader_returned_no_states');
       if(blocks.some(x=>x.invalidStates||x.nonIncreasingEpochs))issues.push('invalid_or_unordered_states');
       if(blocks.some(x=>!x.frame||!x.timeSystem))issues.push('undeclared_frame_or_time_system');
