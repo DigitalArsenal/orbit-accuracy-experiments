@@ -1,0 +1,2803 @@
+{
+  "schema": "direct-native-inventory",
+  "completeResourceAccounting": true,
+  "completeScientificComparison": false,
+  "provenance": {
+    "normalizationId": "9671e21c3eeef89acce451c55342152864312d241850c8ce59a1b0713b9d01bd",
+    "modulesCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+    "queueSha256": "a894aba45e241f5f0820cb29b58c7ae71472e5e47dd5b25df869b0960cc9806a",
+    "manifestSha256": "e101f31d3994dc886bbb7ceb00e3621cd8a88edfc1b9d758ab5bef1d99bbd77b",
+    "censusSha256": "1ba68a5c4138837591540dc5b55b35bbd35849d318bd119c77cd1ebaa1a90fbd",
+    "outcomeHashesSha256": "67b647c5d56451ccaf3c239ca54fc25ec61575171fd91bd410c07418f8b0491a",
+    "reportSourceSha256": "981b913ff1f77dbce8acd4a286cc2daae0ecd7d253a2177258f0da675ea3c866"
+  },
+  "counts": {
+    "registryEntries": 17,
+    "credentialRequiredEntries": 4,
+    "resources": 11771,
+    "pending": 0,
+    "statuses": {
+      "catalog_elements_only": 11,
+      "decoded_native_frame": 11744,
+      "decoded_source_states": 1,
+      "download_unavailable": 2,
+      "partial_orbit_information": 12,
+      "unsupported_physical_encoding": 1
+    },
+    "stateRows": 52122407,
+    "uniqueDownloadedContent": 11724,
+    "duplicateContentGroups": 46,
+    "duplicateContentResourceExcess": 46,
+    "duplicateUrlGroups": 45,
+    "declaredNumericIds": 11306,
+    "declaredNumericIdsInArchive": 11306,
+    "declaredNumericIdsAbsentFromArchive": 0
+  },
+  "sources": {
+    "spacex-starlink": {
+      "name": "SpaceX Starlink",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 11163,
+      "statuses": {
+        "decoded_native_frame": 11163
+      },
+      "stateRows": 47989471,
+      "blocks": 11163,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 11163,
+      "positionOnlyBlocks": 0,
+      "frames": {
+        "EME2000": 11163
+      },
+      "timeSystems": {
+        "UTC": 11163
+      },
+      "identityRows": 11163,
+      "distinctSourceIdentityKeys": 11163,
+      "declaredNumericIds": 11163,
+      "declaredNumericIdsInArchive": 11163,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {
+        "operator_blended_forecast": 11163
+      },
+      "failures": []
+    },
+    "eutelsat-oneweb": {
+      "name": "Eutelsat OneWeb",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 1,
+      "statuses": {
+        "unsupported_physical_encoding": 1
+      },
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 576,
+      "distinctSourceIdentityKeys": 576,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "eutelsat-oneweb:10",
+        "eutelsat-oneweb:101",
+        "eutelsat-oneweb:102",
+        "eutelsat-oneweb:107",
+        "eutelsat-oneweb:108",
+        "eutelsat-oneweb:110",
+        "eutelsat-oneweb:111",
+        "eutelsat-oneweb:112",
+        "eutelsat-oneweb:114",
+        "eutelsat-oneweb:115",
+        "eutelsat-oneweb:116",
+        "eutelsat-oneweb:117",
+        "eutelsat-oneweb:118",
+        "eutelsat-oneweb:119",
+        "eutelsat-oneweb:120",
+        "eutelsat-oneweb:121",
+        "eutelsat-oneweb:123",
+        "eutelsat-oneweb:124",
+        "eutelsat-oneweb:125",
+        "eutelsat-oneweb:126",
+        "eutelsat-oneweb:127",
+        "eutelsat-oneweb:128",
+        "eutelsat-oneweb:129",
+        "eutelsat-oneweb:130",
+        "eutelsat-oneweb:131",
+        "eutelsat-oneweb:132",
+        "eutelsat-oneweb:133",
+        "eutelsat-oneweb:134",
+        "eutelsat-oneweb:135",
+        "eutelsat-oneweb:136",
+        "eutelsat-oneweb:137",
+        "eutelsat-oneweb:138",
+        "eutelsat-oneweb:139",
+        "eutelsat-oneweb:140",
+        "eutelsat-oneweb:141",
+        "eutelsat-oneweb:142",
+        "eutelsat-oneweb:143",
+        "eutelsat-oneweb:144",
+        "eutelsat-oneweb:145",
+        "eutelsat-oneweb:146",
+        "eutelsat-oneweb:147",
+        "eutelsat-oneweb:148",
+        "eutelsat-oneweb:149",
+        "eutelsat-oneweb:15",
+        "eutelsat-oneweb:150",
+        "eutelsat-oneweb:151",
+        "eutelsat-oneweb:152",
+        "eutelsat-oneweb:153",
+        "eutelsat-oneweb:154",
+        "eutelsat-oneweb:155",
+        "eutelsat-oneweb:156",
+        "eutelsat-oneweb:157",
+        "eutelsat-oneweb:158",
+        "eutelsat-oneweb:159",
+        "eutelsat-oneweb:160",
+        "eutelsat-oneweb:161",
+        "eutelsat-oneweb:162",
+        "eutelsat-oneweb:163",
+        "eutelsat-oneweb:164",
+        "eutelsat-oneweb:165",
+        "eutelsat-oneweb:166",
+        "eutelsat-oneweb:168",
+        "eutelsat-oneweb:169",
+        "eutelsat-oneweb:17",
+        "eutelsat-oneweb:170",
+        "eutelsat-oneweb:171",
+        "eutelsat-oneweb:172",
+        "eutelsat-oneweb:173",
+        "eutelsat-oneweb:174",
+        "eutelsat-oneweb:175",
+        "eutelsat-oneweb:176",
+        "eutelsat-oneweb:177",
+        "eutelsat-oneweb:178",
+        "eutelsat-oneweb:18",
+        "eutelsat-oneweb:180",
+        "eutelsat-oneweb:181",
+        "eutelsat-oneweb:182",
+        "eutelsat-oneweb:183",
+        "eutelsat-oneweb:184",
+        "eutelsat-oneweb:186",
+        "eutelsat-oneweb:188",
+        "eutelsat-oneweb:189",
+        "eutelsat-oneweb:19",
+        "eutelsat-oneweb:190",
+        "eutelsat-oneweb:191",
+        "eutelsat-oneweb:192",
+        "eutelsat-oneweb:193",
+        "eutelsat-oneweb:194",
+        "eutelsat-oneweb:196",
+        "eutelsat-oneweb:197",
+        "eutelsat-oneweb:198",
+        "eutelsat-oneweb:199",
+        "eutelsat-oneweb:20",
+        "eutelsat-oneweb:200",
+        "eutelsat-oneweb:201",
+        "eutelsat-oneweb:202",
+        "eutelsat-oneweb:203",
+        "eutelsat-oneweb:205",
+        "eutelsat-oneweb:206",
+        "eutelsat-oneweb:208",
+        "eutelsat-oneweb:209",
+        "eutelsat-oneweb:21",
+        "eutelsat-oneweb:210",
+        "eutelsat-oneweb:213",
+        "eutelsat-oneweb:215",
+        "eutelsat-oneweb:216",
+        "eutelsat-oneweb:217",
+        "eutelsat-oneweb:218",
+        "eutelsat-oneweb:219",
+        "eutelsat-oneweb:221",
+        "eutelsat-oneweb:223",
+        "eutelsat-oneweb:224",
+        "eutelsat-oneweb:225",
+        "eutelsat-oneweb:226",
+        "eutelsat-oneweb:227",
+        "eutelsat-oneweb:228",
+        "eutelsat-oneweb:229",
+        "eutelsat-oneweb:230",
+        "eutelsat-oneweb:231",
+        "eutelsat-oneweb:232",
+        "eutelsat-oneweb:233",
+        "eutelsat-oneweb:234",
+        "eutelsat-oneweb:235",
+        "eutelsat-oneweb:236",
+        "eutelsat-oneweb:237",
+        "eutelsat-oneweb:238",
+        "eutelsat-oneweb:239",
+        "eutelsat-oneweb:24",
+        "eutelsat-oneweb:241",
+        "eutelsat-oneweb:242",
+        "eutelsat-oneweb:243",
+        "eutelsat-oneweb:244",
+        "eutelsat-oneweb:245",
+        "eutelsat-oneweb:246",
+        "eutelsat-oneweb:247",
+        "eutelsat-oneweb:248",
+        "eutelsat-oneweb:25",
+        "eutelsat-oneweb:252",
+        "eutelsat-oneweb:253",
+        "eutelsat-oneweb:254",
+        "eutelsat-oneweb:255",
+        "eutelsat-oneweb:257",
+        "eutelsat-oneweb:258",
+        "eutelsat-oneweb:259",
+        "eutelsat-oneweb:26",
+        "eutelsat-oneweb:262",
+        "eutelsat-oneweb:263",
+        "eutelsat-oneweb:266",
+        "eutelsat-oneweb:267",
+        "eutelsat-oneweb:268",
+        "eutelsat-oneweb:269",
+        "eutelsat-oneweb:27",
+        "eutelsat-oneweb:270",
+        "eutelsat-oneweb:271",
+        "eutelsat-oneweb:272",
+        "eutelsat-oneweb:273",
+        "eutelsat-oneweb:274",
+        "eutelsat-oneweb:275",
+        "eutelsat-oneweb:276",
+        "eutelsat-oneweb:277",
+        "eutelsat-oneweb:278",
+        "eutelsat-oneweb:279",
+        "eutelsat-oneweb:28",
+        "eutelsat-oneweb:281",
+        "eutelsat-oneweb:282",
+        "eutelsat-oneweb:283",
+        "eutelsat-oneweb:284",
+        "eutelsat-oneweb:286",
+        "eutelsat-oneweb:287",
+        "eutelsat-oneweb:288",
+        "eutelsat-oneweb:289",
+        "eutelsat-oneweb:290",
+        "eutelsat-oneweb:292",
+        "eutelsat-oneweb:293",
+        "eutelsat-oneweb:294",
+        "eutelsat-oneweb:296",
+        "eutelsat-oneweb:297",
+        "eutelsat-oneweb:298",
+        "eutelsat-oneweb:299",
+        "eutelsat-oneweb:301",
+        "eutelsat-oneweb:302",
+        "eutelsat-oneweb:303",
+        "eutelsat-oneweb:304",
+        "eutelsat-oneweb:305",
+        "eutelsat-oneweb:306",
+        "eutelsat-oneweb:308",
+        "eutelsat-oneweb:309",
+        "eutelsat-oneweb:31",
+        "eutelsat-oneweb:310",
+        "eutelsat-oneweb:311",
+        "eutelsat-oneweb:312",
+        "eutelsat-oneweb:313",
+        "eutelsat-oneweb:314",
+        "eutelsat-oneweb:315",
+        "eutelsat-oneweb:316",
+        "eutelsat-oneweb:317",
+        "eutelsat-oneweb:319",
+        "eutelsat-oneweb:32",
+        "eutelsat-oneweb:320",
+        "eutelsat-oneweb:321",
+        "eutelsat-oneweb:322",
+        "eutelsat-oneweb:323",
+        "eutelsat-oneweb:324",
+        "eutelsat-oneweb:325",
+        "eutelsat-oneweb:326",
+        "eutelsat-oneweb:328",
+        "eutelsat-oneweb:329",
+        "eutelsat-oneweb:33",
+        "eutelsat-oneweb:331",
+        "eutelsat-oneweb:333",
+        "eutelsat-oneweb:335",
+        "eutelsat-oneweb:336",
+        "eutelsat-oneweb:337",
+        "eutelsat-oneweb:338",
+        "eutelsat-oneweb:339",
+        "eutelsat-oneweb:34",
+        "eutelsat-oneweb:340",
+        "eutelsat-oneweb:341",
+        "eutelsat-oneweb:342",
+        "eutelsat-oneweb:343",
+        "eutelsat-oneweb:344",
+        "eutelsat-oneweb:345",
+        "eutelsat-oneweb:346",
+        "eutelsat-oneweb:347",
+        "eutelsat-oneweb:348",
+        "eutelsat-oneweb:349",
+        "eutelsat-oneweb:35",
+        "eutelsat-oneweb:350",
+        "eutelsat-oneweb:351",
+        "eutelsat-oneweb:352",
+        "eutelsat-oneweb:353",
+        "eutelsat-oneweb:354",
+        "eutelsat-oneweb:356",
+        "eutelsat-oneweb:357",
+        "eutelsat-oneweb:359",
+        "eutelsat-oneweb:36",
+        "eutelsat-oneweb:360",
+        "eutelsat-oneweb:361",
+        "eutelsat-oneweb:362",
+        "eutelsat-oneweb:363",
+        "eutelsat-oneweb:364",
+        "eutelsat-oneweb:365",
+        "eutelsat-oneweb:366",
+        "eutelsat-oneweb:368",
+        "eutelsat-oneweb:369",
+        "eutelsat-oneweb:37",
+        "eutelsat-oneweb:370",
+        "eutelsat-oneweb:371",
+        "eutelsat-oneweb:372",
+        "eutelsat-oneweb:373",
+        "eutelsat-oneweb:374",
+        "eutelsat-oneweb:375",
+        "eutelsat-oneweb:376",
+        "eutelsat-oneweb:377",
+        "eutelsat-oneweb:378",
+        "eutelsat-oneweb:379",
+        "eutelsat-oneweb:38",
+        "eutelsat-oneweb:380",
+        "eutelsat-oneweb:381",
+        "eutelsat-oneweb:382",
+        "eutelsat-oneweb:383",
+        "eutelsat-oneweb:385",
+        "eutelsat-oneweb:386",
+        "eutelsat-oneweb:387",
+        "eutelsat-oneweb:389",
+        "eutelsat-oneweb:39",
+        "eutelsat-oneweb:390",
+        "eutelsat-oneweb:391",
+        "eutelsat-oneweb:392",
+        "eutelsat-oneweb:394",
+        "eutelsat-oneweb:395",
+        "eutelsat-oneweb:396",
+        "eutelsat-oneweb:397",
+        "eutelsat-oneweb:398",
+        "eutelsat-oneweb:399",
+        "eutelsat-oneweb:40",
+        "eutelsat-oneweb:400",
+        "eutelsat-oneweb:401",
+        "eutelsat-oneweb:402",
+        "eutelsat-oneweb:403",
+        "eutelsat-oneweb:404",
+        "eutelsat-oneweb:405",
+        "eutelsat-oneweb:406",
+        "eutelsat-oneweb:407",
+        "eutelsat-oneweb:409",
+        "eutelsat-oneweb:410",
+        "eutelsat-oneweb:411",
+        "eutelsat-oneweb:412",
+        "eutelsat-oneweb:413",
+        "eutelsat-oneweb:414",
+        "eutelsat-oneweb:415",
+        "eutelsat-oneweb:416",
+        "eutelsat-oneweb:417",
+        "eutelsat-oneweb:42",
+        "eutelsat-oneweb:420",
+        "eutelsat-oneweb:421",
+        "eutelsat-oneweb:422",
+        "eutelsat-oneweb:423",
+        "eutelsat-oneweb:424",
+        "eutelsat-oneweb:425",
+        "eutelsat-oneweb:427",
+        "eutelsat-oneweb:428",
+        "eutelsat-oneweb:429",
+        "eutelsat-oneweb:43",
+        "eutelsat-oneweb:430",
+        "eutelsat-oneweb:431",
+        "eutelsat-oneweb:432",
+        "eutelsat-oneweb:434",
+        "eutelsat-oneweb:435",
+        "eutelsat-oneweb:436",
+        "eutelsat-oneweb:438",
+        "eutelsat-oneweb:439",
+        "eutelsat-oneweb:44",
+        "eutelsat-oneweb:440",
+        "eutelsat-oneweb:443",
+        "eutelsat-oneweb:444",
+        "eutelsat-oneweb:445",
+        "eutelsat-oneweb:446",
+        "eutelsat-oneweb:449",
+        "eutelsat-oneweb:45",
+        "eutelsat-oneweb:450",
+        "eutelsat-oneweb:451",
+        "eutelsat-oneweb:452",
+        "eutelsat-oneweb:456",
+        "eutelsat-oneweb:457",
+        "eutelsat-oneweb:458",
+        "eutelsat-oneweb:46",
+        "eutelsat-oneweb:461",
+        "eutelsat-oneweb:463",
+        "eutelsat-oneweb:464",
+        "eutelsat-oneweb:468",
+        "eutelsat-oneweb:47",
+        "eutelsat-oneweb:473",
+        "eutelsat-oneweb:474",
+        "eutelsat-oneweb:475",
+        "eutelsat-oneweb:48",
+        "eutelsat-oneweb:49",
+        "eutelsat-oneweb:490",
+        "eutelsat-oneweb:492",
+        "eutelsat-oneweb:495",
+        "eutelsat-oneweb:497",
+        "eutelsat-oneweb:500",
+        "eutelsat-oneweb:501",
+        "eutelsat-oneweb:502",
+        "eutelsat-oneweb:503",
+        "eutelsat-oneweb:504",
+        "eutelsat-oneweb:505",
+        "eutelsat-oneweb:506",
+        "eutelsat-oneweb:507",
+        "eutelsat-oneweb:508",
+        "eutelsat-oneweb:509",
+        "eutelsat-oneweb:51",
+        "eutelsat-oneweb:510",
+        "eutelsat-oneweb:511",
+        "eutelsat-oneweb:512",
+        "eutelsat-oneweb:515",
+        "eutelsat-oneweb:516",
+        "eutelsat-oneweb:517",
+        "eutelsat-oneweb:518",
+        "eutelsat-oneweb:519",
+        "eutelsat-oneweb:52",
+        "eutelsat-oneweb:520",
+        "eutelsat-oneweb:521",
+        "eutelsat-oneweb:522",
+        "eutelsat-oneweb:523",
+        "eutelsat-oneweb:524",
+        "eutelsat-oneweb:525",
+        "eutelsat-oneweb:526",
+        "eutelsat-oneweb:529",
+        "eutelsat-oneweb:53",
+        "eutelsat-oneweb:530",
+        "eutelsat-oneweb:531",
+        "eutelsat-oneweb:533",
+        "eutelsat-oneweb:534",
+        "eutelsat-oneweb:535",
+        "eutelsat-oneweb:536",
+        "eutelsat-oneweb:537",
+        "eutelsat-oneweb:538",
+        "eutelsat-oneweb:539",
+        "eutelsat-oneweb:54",
+        "eutelsat-oneweb:541",
+        "eutelsat-oneweb:542",
+        "eutelsat-oneweb:543",
+        "eutelsat-oneweb:544",
+        "eutelsat-oneweb:545",
+        "eutelsat-oneweb:546",
+        "eutelsat-oneweb:549",
+        "eutelsat-oneweb:55",
+        "eutelsat-oneweb:550",
+        "eutelsat-oneweb:551",
+        "eutelsat-oneweb:552",
+        "eutelsat-oneweb:553",
+        "eutelsat-oneweb:554",
+        "eutelsat-oneweb:555",
+        "eutelsat-oneweb:556",
+        "eutelsat-oneweb:557",
+        "eutelsat-oneweb:558",
+        "eutelsat-oneweb:559",
+        "eutelsat-oneweb:56",
+        "eutelsat-oneweb:560",
+        "eutelsat-oneweb:561",
+        "eutelsat-oneweb:562",
+        "eutelsat-oneweb:563",
+        "eutelsat-oneweb:564",
+        "eutelsat-oneweb:565",
+        "eutelsat-oneweb:566",
+        "eutelsat-oneweb:567",
+        "eutelsat-oneweb:568",
+        "eutelsat-oneweb:569",
+        "eutelsat-oneweb:57",
+        "eutelsat-oneweb:570",
+        "eutelsat-oneweb:571",
+        "eutelsat-oneweb:572",
+        "eutelsat-oneweb:573",
+        "eutelsat-oneweb:574",
+        "eutelsat-oneweb:575",
+        "eutelsat-oneweb:576",
+        "eutelsat-oneweb:577",
+        "eutelsat-oneweb:578",
+        "eutelsat-oneweb:579",
+        "eutelsat-oneweb:58",
+        "eutelsat-oneweb:581",
+        "eutelsat-oneweb:582",
+        "eutelsat-oneweb:583",
+        "eutelsat-oneweb:584",
+        "eutelsat-oneweb:585",
+        "eutelsat-oneweb:586",
+        "eutelsat-oneweb:587",
+        "eutelsat-oneweb:588",
+        "eutelsat-oneweb:589",
+        "eutelsat-oneweb:59",
+        "eutelsat-oneweb:590",
+        "eutelsat-oneweb:591",
+        "eutelsat-oneweb:592",
+        "eutelsat-oneweb:593",
+        "eutelsat-oneweb:594",
+        "eutelsat-oneweb:595",
+        "eutelsat-oneweb:596",
+        "eutelsat-oneweb:597",
+        "eutelsat-oneweb:598",
+        "eutelsat-oneweb:599",
+        "eutelsat-oneweb:600",
+        "eutelsat-oneweb:601",
+        "eutelsat-oneweb:603",
+        "eutelsat-oneweb:604",
+        "eutelsat-oneweb:605",
+        "eutelsat-oneweb:606",
+        "eutelsat-oneweb:607",
+        "eutelsat-oneweb:608",
+        "eutelsat-oneweb:61",
+        "eutelsat-oneweb:610",
+        "eutelsat-oneweb:611",
+        "eutelsat-oneweb:612",
+        "eutelsat-oneweb:613",
+        "eutelsat-oneweb:614",
+        "eutelsat-oneweb:615",
+        "eutelsat-oneweb:616",
+        "eutelsat-oneweb:617",
+        "eutelsat-oneweb:619",
+        "eutelsat-oneweb:62",
+        "eutelsat-oneweb:620",
+        "eutelsat-oneweb:621",
+        "eutelsat-oneweb:622",
+        "eutelsat-oneweb:623",
+        "eutelsat-oneweb:625",
+        "eutelsat-oneweb:626",
+        "eutelsat-oneweb:627",
+        "eutelsat-oneweb:628",
+        "eutelsat-oneweb:629",
+        "eutelsat-oneweb:63",
+        "eutelsat-oneweb:630",
+        "eutelsat-oneweb:631",
+        "eutelsat-oneweb:632",
+        "eutelsat-oneweb:633",
+        "eutelsat-oneweb:635",
+        "eutelsat-oneweb:636",
+        "eutelsat-oneweb:637",
+        "eutelsat-oneweb:638",
+        "eutelsat-oneweb:639",
+        "eutelsat-oneweb:64",
+        "eutelsat-oneweb:640",
+        "eutelsat-oneweb:641",
+        "eutelsat-oneweb:642",
+        "eutelsat-oneweb:643",
+        "eutelsat-oneweb:644",
+        "eutelsat-oneweb:645",
+        "eutelsat-oneweb:646",
+        "eutelsat-oneweb:647",
+        "eutelsat-oneweb:648",
+        "eutelsat-oneweb:649",
+        "eutelsat-oneweb:65",
+        "eutelsat-oneweb:650",
+        "eutelsat-oneweb:651",
+        "eutelsat-oneweb:652",
+        "eutelsat-oneweb:653",
+        "eutelsat-oneweb:654",
+        "eutelsat-oneweb:655",
+        "eutelsat-oneweb:656",
+        "eutelsat-oneweb:657",
+        "eutelsat-oneweb:658",
+        "eutelsat-oneweb:659",
+        "eutelsat-oneweb:66",
+        "eutelsat-oneweb:660",
+        "eutelsat-oneweb:661",
+        "eutelsat-oneweb:662",
+        "eutelsat-oneweb:664",
+        "eutelsat-oneweb:666",
+        "eutelsat-oneweb:667",
+        "eutelsat-oneweb:668",
+        "eutelsat-oneweb:669",
+        "eutelsat-oneweb:670",
+        "eutelsat-oneweb:671",
+        "eutelsat-oneweb:672",
+        "eutelsat-oneweb:674",
+        "eutelsat-oneweb:675",
+        "eutelsat-oneweb:676",
+        "eutelsat-oneweb:677",
+        "eutelsat-oneweb:678",
+        "eutelsat-oneweb:679",
+        "eutelsat-oneweb:68",
+        "eutelsat-oneweb:680",
+        "eutelsat-oneweb:681",
+        "eutelsat-oneweb:682",
+        "eutelsat-oneweb:683",
+        "eutelsat-oneweb:684",
+        "eutelsat-oneweb:686",
+        "eutelsat-oneweb:687",
+        "eutelsat-oneweb:688",
+        "eutelsat-oneweb:689",
+        "eutelsat-oneweb:69",
+        "eutelsat-oneweb:690",
+        "eutelsat-oneweb:691",
+        "eutelsat-oneweb:692",
+        "eutelsat-oneweb:693",
+        "eutelsat-oneweb:694",
+        "eutelsat-oneweb:695",
+        "eutelsat-oneweb:696",
+        "eutelsat-oneweb:697",
+        "eutelsat-oneweb:698",
+        "eutelsat-oneweb:699",
+        "eutelsat-oneweb:7",
+        "eutelsat-oneweb:700",
+        "eutelsat-oneweb:701",
+        "eutelsat-oneweb:702",
+        "eutelsat-oneweb:703",
+        "eutelsat-oneweb:704",
+        "eutelsat-oneweb:705",
+        "eutelsat-oneweb:706",
+        "eutelsat-oneweb:707",
+        "eutelsat-oneweb:708",
+        "eutelsat-oneweb:709",
+        "eutelsat-oneweb:710",
+        "eutelsat-oneweb:711",
+        "eutelsat-oneweb:712",
+        "eutelsat-oneweb:713",
+        "eutelsat-oneweb:714",
+        "eutelsat-oneweb:715",
+        "eutelsat-oneweb:716",
+        "eutelsat-oneweb:717",
+        "eutelsat-oneweb:718",
+        "eutelsat-oneweb:719",
+        "eutelsat-oneweb:720",
+        "eutelsat-oneweb:8",
+        "eutelsat-oneweb:80",
+        "eutelsat-oneweb:81",
+        "eutelsat-oneweb:82",
+        "eutelsat-oneweb:83",
+        "eutelsat-oneweb:85",
+        "eutelsat-oneweb:86",
+        "eutelsat-oneweb:87",
+        "eutelsat-oneweb:88",
+        "eutelsat-oneweb:90",
+        "eutelsat-oneweb:92",
+        "eutelsat-oneweb:93",
+        "eutelsat-oneweb:95",
+        "eutelsat-oneweb:96"
+      ],
+      "evidenceClasses": {
+        "encoded_operator_elements": 1
+      },
+      "failures": [
+        {
+          "key": "b0df001b2478b5c4c676805e1c07688f8d3c8e2f6f5ca7352b523e61ceb7a418",
+          "resourceId": "ltef.csv",
+          "status": "unsupported_physical_encoding",
+          "reason": "No authoritative LTEF orbital column/frame specification located; every slot retained without fabricated states.",
+          "identityRows": 576
+        }
+      ]
+    },
+    "planet": {
+      "name": "Planet Labs",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 116,
+      "statuses": {
+        "catalog_elements_only": 1,
+        "decoded_native_frame": 114,
+        "decoded_source_states": 1
+      },
+      "stateRows": 821028,
+      "blocks": 114,
+      "covarianceRows": 820914,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {
+        "EME2000": 114
+      },
+      "timeSystems": {
+        "UTC": 114
+      },
+      "identityRows": 342,
+      "distinctSourceIdentityKeys": 226,
+      "declaredNumericIds": 99,
+      "declaredNumericIdsInArchive": 99,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "planet:0",
+        "planet:2409",
+        "planet:24ae",
+        "planet:24bd",
+        "planet:24d1",
+        "planet:24d8",
+        "planet:24da",
+        "planet:24db",
+        "planet:24dc",
+        "planet:24de",
+        "planet:24e5",
+        "planet:24e9",
+        "planet:24eb",
+        "planet:24f3",
+        "planet:24fa",
+        "planet:24fe",
+        "planet:2500",
+        "planet:2501",
+        "planet:2506",
+        "planet:250a",
+        "planet:250b",
+        "planet:250d",
+        "planet:250e",
+        "planet:2510",
+        "planet:2514",
+        "planet:2518",
+        "planet:251a",
+        "planet:251b",
+        "planet:251d",
+        "planet:251e",
+        "planet:251f",
+        "planet:2520",
+        "planet:2523",
+        "planet:2526",
+        "planet:2527",
+        "planet:2528",
+        "planet:252b",
+        "planet:252d",
+        "planet:252e",
+        "planet:2530",
+        "planet:2531",
+        "planet:2534",
+        "planet:2538",
+        "planet:2539",
+        "planet:253a",
+        "planet:253b",
+        "planet:253c",
+        "planet:253d",
+        "planet:2544",
+        "planet:2546",
+        "planet:2549",
+        "planet:254a",
+        "planet:254b",
+        "planet:254c",
+        "planet:254f",
+        "planet:2550",
+        "planet:2552",
+        "planet:2553",
+        "planet:2554",
+        "planet:2555",
+        "planet:2558",
+        "planet:255a",
+        "planet:255b",
+        "planet:255c",
+        "planet:255d",
+        "planet:255e",
+        "planet:255f",
+        "planet:2560",
+        "planet:2562",
+        "planet:2563",
+        "planet:2565",
+        "planet:256c",
+        "planet:256e",
+        "planet:2570",
+        "planet:2571",
+        "planet:2575",
+        "planet:2579",
+        "planet:257a",
+        "planet:2584",
+        "planet:2587",
+        "planet:258e",
+        "planet:2591",
+        "planet:2592",
+        "planet:2597",
+        "planet:259b",
+        "planet:25a2",
+        "planet:25a3",
+        "planet:25a5",
+        "planet:25a7",
+        "planet:25b0",
+        "planet:3001",
+        "planet:3009",
+        "planet:300a",
+        "planet:300b",
+        "planet:300c",
+        "planet:300d",
+        "planet:300e",
+        "planet:300f",
+        "planet:3010",
+        "planet:3012",
+        "planet:3013",
+        "planet:4001",
+        "planet:4004",
+        "planet:6001",
+        "planet:A0886",
+        "planet:A0902",
+        "planet:A0938",
+        "planet:A0948",
+        "planet:A0970",
+        "planet:A1071",
+        "planet:A1072",
+        "planet:A1073",
+        "planet:A1074",
+        "planet:A1104",
+        "planet:A1105",
+        "planet:A1106",
+        "planet:s1",
+        "planet:s104",
+        "planet:s105",
+        "planet:s106",
+        "planet:s107",
+        "planet:s108",
+        "planet:s109",
+        "planet:s110",
+        "planet:s112",
+        "planet:s3",
+        "planet:s4"
+      ],
+      "evidenceClasses": {
+        "catalog_mean_elements": 1,
+        "operator_forecast": 114,
+        "operator_near_epoch_state": 1
+      },
+      "failures": []
+    },
+    "iss": {
+      "name": "NASA ISS",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 1,
+      "statuses": {
+        "decoded_native_frame": 1
+      },
+      "stateRows": 5402,
+      "blocks": 1,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 1,
+      "positionOnlyBlocks": 0,
+      "frames": {
+        "EME2000": 1
+      },
+      "timeSystems": {
+        "UTC": 1
+      },
+      "identityRows": 1,
+      "distinctSourceIdentityKeys": 1,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "iss:1998-067-A"
+      ],
+      "evidenceClasses": {
+        "operator_forecast": 1
+      },
+      "failures": []
+    },
+    "ses": {
+      "name": "SES",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 41,
+      "statuses": {
+        "decoded_native_frame": 40,
+        "download_unavailable": 1
+      },
+      "stateRows": 133348,
+      "blocks": 40,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 40,
+      "positionOnlyBlocks": 0,
+      "frames": {
+        "FIXED_EARTH": 40
+      },
+      "timeSystems": {
+        "UTC": 40
+      },
+      "identityRows": 40,
+      "distinctSourceIdentityKeys": 40,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "ses:AMC-11",
+        "ses:AMC-15",
+        "ses:AMC-21",
+        "ses:AMC-3",
+        "ses:AMC-6",
+        "ses:Astra-1KR",
+        "ses:Astra-1L",
+        "ses:Astra-1M",
+        "ses:Astra-1N",
+        "ses:Astra-2E",
+        "ses:Astra-2F",
+        "ses:Astra-2G",
+        "ses:Astra-3B",
+        "ses:Astra-5B",
+        "ses:NSS-10",
+        "ses:NSS-11",
+        "ses:NSS-12",
+        "ses:NSS-9",
+        "ses:SES-1",
+        "ses:SES-10",
+        "ses:SES-11",
+        "ses:SES-12",
+        "ses:SES-14",
+        "ses:SES-15",
+        "ses:SES-18",
+        "ses:SES-19",
+        "ses:SES-2",
+        "ses:SES-20",
+        "ses:SES-21",
+        "ses:SES-22",
+        "ses:SES-24",
+        "ses:SES-3",
+        "ses:SES-4",
+        "ses:SES-5",
+        "ses:SES-6",
+        "ses:SES-7",
+        "ses:SES-8",
+        "ses:SES-9",
+        "ses:Sirius-4",
+        "ses:TKM/MonacoSat"
+      ],
+      "evidenceClasses": {
+        "operator_forecast": 40,
+        "unavailable": 1
+      },
+      "failures": [
+        {
+          "key": "aa6abc9614341e22f0a9597014735f426ea2b7b55772ec9e74131f41b069b0f5",
+          "resourceId": "SES17_THRU.I11",
+          "status": "download_unavailable",
+          "reason": "HTTP 403",
+          "identityRows": 0
+        }
+      ]
+    },
+    "intelsat": {
+      "name": "Intelsat",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 258,
+      "statuses": {
+        "decoded_native_frame": 258
+      },
+      "stateRows": 424178,
+      "blocks": 258,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 258,
+      "positionOnlyBlocks": 64,
+      "frames": {
+        "ECEF": 64,
+        "FIXED_EARTH": 194
+      },
+      "timeSystems": {
+        "UTC": 258
+      },
+      "identityRows": 258,
+      "distinctSourceIdentityKeys": 130,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "intelsat:G-11",
+        "intelsat:G-12",
+        "intelsat:G-13",
+        "intelsat:G-14",
+        "intelsat:G-15",
+        "intelsat:G-16",
+        "intelsat:G-17",
+        "intelsat:G-18",
+        "intelsat:G-19",
+        "intelsat:G-23",
+        "intelsat:G-25",
+        "intelsat:G-28",
+        "intelsat:G-30",
+        "intelsat:G-31",
+        "intelsat:G-32",
+        "intelsat:G-33",
+        "intelsat:G-34",
+        "intelsat:G-35",
+        "intelsat:G-36",
+        "intelsat:G-37",
+        "intelsat:G-3C",
+        "intelsat:H-2",
+        "intelsat:H-2/286.20 Deg E",
+        "intelsat:H-3e",
+        "intelsat:H-3e/169.00 Deg E",
+        "intelsat:H3E",
+        "intelsat:H3E/169.00 Deg E",
+        "intelsat:INTELSAT G-11/166.30 Deg E",
+        "intelsat:INTELSAT G-12/222.90 Deg E",
+        "intelsat:INTELSAT G-13/210.00 Deg E",
+        "intelsat:INTELSAT G-14/ 32.90 Deg E",
+        "intelsat:INTELSAT G-15/251.10 Deg E",
+        "intelsat:INTELSAT G-16/261.00 Deg E",
+        "intelsat:INTELSAT G-17/275.00 Deg E",
+        "intelsat:INTELSAT G-18/237.00 Deg E",
+        "intelsat:INTELSAT G-19/263.00 Deg E",
+        "intelsat:INTELSAT G-23/239.10 Deg E",
+        "intelsat:INTELSAT G-25/  1.00 Deg E",
+        "intelsat:INTELSAT G-28/332.90 Deg E",
+        "intelsat:INTELSAT G-30/235.00 Deg E",
+        "intelsat:INTELSAT G-31/239.00 Deg E",
+        "intelsat:INTELSAT G-32/269.00 Deg E",
+        "intelsat:INTELSAT G-33/227.00 Deg E",
+        "intelsat:INTELSAT G-34/231.00 Deg E",
+        "intelsat:INTELSAT G-35/266.90 Deg E",
+        "intelsat:INTELSAT G-36/271.00 Deg E",
+        "intelsat:INTELSAT G-37/233.00 Deg E",
+        "intelsat:INTELSAT G-3C/265.15 Deg E",
+        "intelsat:INTELSAT IS-10/ 66.10 Deg E",
+        "intelsat:INTELSAT IS-1002/359.00 Deg E",
+        "intelsat:INTELSAT IS-11/317.00 Deg E",
+        "intelsat:INTELSAT IS-12/ 64.25 Deg E",
+        "intelsat:INTELSAT IS-14/315.00 Deg E",
+        "intelsat:INTELSAT IS-15/ 85.15 Deg E",
+        "intelsat:INTELSAT IS-16/ 85.15 Deg E",
+        "intelsat:INTELSAT IS-17/ 66.00 Deg E",
+        "intelsat:INTELSAT IS-18/180.00 Deg E",
+        "intelsat:INTELSAT IS-19/166.00 Deg E",
+        "intelsat:INTELSAT IS-1R/157.10 Deg E",
+        "intelsat:INTELSAT IS-20/ 68.50 Deg E",
+        "intelsat:INTELSAT IS-21/302.00 Deg E",
+        "intelsat:INTELSAT IS-22/ 72.10 Deg E",
+        "intelsat:INTELSAT IS-23/307.00 Deg E",
+        "intelsat:INTELSAT IS-25/328.50 Deg E",
+        "intelsat:INTELSAT IS-26/ 66.13 Deg E",
+        "intelsat:INTELSAT IS-28/328.30 Deg E",
+        "intelsat:INTELSAT IS-29e/310.00 Deg E",
+        "intelsat:INTELSAT IS-30/264.95 Deg E",
+        "intelsat:INTELSAT IS-31/264.95 Deg E",
+        "intelsat:INTELSAT IS-33e/ 60.00 Deg E",
+        "intelsat:INTELSAT IS-34/304.50 Deg E",
+        "intelsat:INTELSAT IS-35e/325.50 Deg E",
+        "intelsat:INTELSAT IS-36/ 68.50 Deg E",
+        "intelsat:INTELSAT IS-37e/342.00 Deg E",
+        "intelsat:INTELSAT IS-38/ 45.10 Deg E",
+        "intelsat:INTELSAT IS-39/ 61.95 Deg E",
+        "intelsat:INTELSAT IS-40e/269.00 Deg E",
+        "intelsat:INTELSAT IS-5/166.15 Deg E",
+        "intelsat:INTELSAT IS-805/169.10 Deg E",
+        "intelsat:INTELSAT IS-9/ 10.00 Deg E",
+        "intelsat:INTELSAT IS-9/ 66.25 Deg E",
+        "intelsat:INTELSAT IS-901/332.50 Deg E",
+        "intelsat:INTELSAT IS-902/309.90 Deg E",
+        "intelsat:INTELSAT IS-903/328.50 Deg E",
+        "intelsat:INTELSAT IS-904/328.50 Deg E",
+        "intelsat:INTELSAT IS-905/222.80 Deg E",
+        "intelsat:INTELSAT IS-906/ 64.15 Deg E",
+        "intelsat:INTELSAT IS-907/332.40 Deg E",
+        "intelsat:IS-10",
+        "intelsat:IS-1002",
+        "intelsat:IS-11",
+        "intelsat:IS-12",
+        "intelsat:IS-14",
+        "intelsat:IS-15",
+        "intelsat:IS-16",
+        "intelsat:IS-17",
+        "intelsat:IS-18",
+        "intelsat:IS-19",
+        "intelsat:IS-1R",
+        "intelsat:IS-20",
+        "intelsat:IS-21",
+        "intelsat:IS-22",
+        "intelsat:IS-23",
+        "intelsat:IS-25",
+        "intelsat:IS-26",
+        "intelsat:IS-28",
+        "intelsat:IS-29e",
+        "intelsat:IS-30",
+        "intelsat:IS-31",
+        "intelsat:IS-33e",
+        "intelsat:IS-34",
+        "intelsat:IS-35e",
+        "intelsat:IS-36",
+        "intelsat:IS-37e",
+        "intelsat:IS-38",
+        "intelsat:IS-39",
+        "intelsat:IS-40e",
+        "intelsat:IS-5",
+        "intelsat:IS-805",
+        "intelsat:IS-9",
+        "intelsat:IS-901",
+        "intelsat:IS-902",
+        "intelsat:IS-903",
+        "intelsat:IS-904",
+        "intelsat:IS-905",
+        "intelsat:IS-906",
+        "intelsat:IS-907",
+        "intelsat:JSAT-RA/169.00 Deg E",
+        "intelsat:SKYB-1",
+        "intelsat:SKYB-1/316.82 Deg E"
+      ],
+      "evidenceClasses": {
+        "operator_forecast": 258
+      },
+      "failures": []
+    },
+    "telesat": {
+      "name": "Telesat",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 12,
+      "statuses": {
+        "partial_orbit_information": 12
+      },
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 12,
+      "distinctSourceIdentityKeys": 12,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "telesat:AnikF1R.C.csv",
+        "telesat:AnikF2.C.csv",
+        "telesat:AnikF3.C.csv",
+        "telesat:AnikG1.C.csv",
+        "telesat:NimiqN2.C.csv",
+        "telesat:NimiqN4.C.csv",
+        "telesat:NimiqN5.C.csv",
+        "telesat:NimiqN6.C.csv",
+        "telesat:Telstar11N.C.csv",
+        "telesat:Telstar12V.C.csv",
+        "telesat:Telstar18V.C.csv",
+        "telesat:Telstar19V.C.csv"
+      ],
+      "evidenceClasses": {
+        "coarse_center_of_box": 12
+      },
+      "failures": [
+        {
+          "key": "681c07b356d034196d19b686abe5871773b1fa108d286ef0e48015058d218e2a",
+          "resourceId": "AnikF1R.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "ae360fbf1e05e1e54b54e47343d6c40c48800f9635378a4588ec72670edf04ca",
+          "resourceId": "AnikF2.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "1bc89a0c815a31341336ca876c6abb882b9d8fcbabadcc2031dd6e6419af159e",
+          "resourceId": "AnikF3.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "ae01e24ea123d4fc05e8d2d46411ff6f8699d2823c4c500c4737fe400c2fb64c",
+          "resourceId": "AnikG1.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "61bd91e9cb6bd4c9b3f90cc4490efbd629203d927b4d71f98c73ea1e705dfc43",
+          "resourceId": "NimiqN2.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "491c462cff65984e368f8d75fa19d056fa04f884d9aac47ab4715ac2518a73ac",
+          "resourceId": "NimiqN4.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "c77df77af15b928723b740fde35292513dfa8f0f473c06d600f74b0f078aa6b9",
+          "resourceId": "NimiqN5.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "6241f8f39f54da64c334e7c227b6c6c001b1ce09a72f1bf84708e0568dcef9b7",
+          "resourceId": "NimiqN6.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "dd9c3113669e2ccb6842a802b4651c47a722b853073528b7d9107e5fcda00fcc",
+          "resourceId": "Telstar11N.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "90ccabbf4ea30def296cedb5266c505ac466f0aeedc6f55a9faf942a6b51ec88",
+          "resourceId": "Telstar12V.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "efc6d9780fdebeb8f62edaae8b8e6bf7e0e6a55502c3cf0c5eef2dd6b55f1fea",
+          "resourceId": "Telstar18V.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        },
+        {
+          "key": "7bf0ade6788842921322e89f83eb83ea2bf4cc772689298b0fd470fbfc46c382",
+          "resourceId": "Telstar19V.C.csv",
+          "status": "partial_orbit_information",
+          "reason": "Center-of-box time/angle rows do not supply a Cartesian trajectory or range.",
+          "identityRows": 1
+        }
+      ]
+    },
+    "css-tiangong": {
+      "name": "China Space Station",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 1,
+      "statuses": {
+        "download_unavailable": 1
+      },
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 0,
+      "distinctSourceIdentityKeys": 0,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {
+        "unavailable": 1
+      },
+      "failures": [
+        {
+          "key": "6799079580064fd3c8ce987eca5c5f0531b03b24bd205217fd3366346e3592c5",
+          "resourceId": "W020261026552887021581.zip",
+          "status": "download_unavailable",
+          "reason": "fetch failed",
+          "identityRows": 0
+        }
+      ]
+    },
+    "gps-precise": {
+      "name": "IGS / BKG GPS Precise",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 40,
+      "statuses": {
+        "decoded_native_frame": 40
+      },
+      "stateRows": 219648,
+      "blocks": 1272,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 1272,
+      "positionOnlyBlocks": 1272,
+      "frames": {
+        "IGc20": 1272
+      },
+      "timeSystems": {
+        "GPS": 1272
+      },
+      "identityRows": 1272,
+      "distinctSourceIdentityKeys": 32,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "gps-precise:G01",
+        "gps-precise:G02",
+        "gps-precise:G03",
+        "gps-precise:G04",
+        "gps-precise:G05",
+        "gps-precise:G06",
+        "gps-precise:G07",
+        "gps-precise:G08",
+        "gps-precise:G09",
+        "gps-precise:G10",
+        "gps-precise:G11",
+        "gps-precise:G12",
+        "gps-precise:G13",
+        "gps-precise:G14",
+        "gps-precise:G15",
+        "gps-precise:G16",
+        "gps-precise:G17",
+        "gps-precise:G18",
+        "gps-precise:G19",
+        "gps-precise:G20",
+        "gps-precise:G21",
+        "gps-precise:G22",
+        "gps-precise:G23",
+        "gps-precise:G24",
+        "gps-precise:G25",
+        "gps-precise:G26",
+        "gps-precise:G27",
+        "gps-precise:G28",
+        "gps-precise:G29",
+        "gps-precise:G30",
+        "gps-precise:G31",
+        "gps-precise:G32"
+      ],
+      "evidenceClasses": {
+        "source_product_flags": 40
+      },
+      "failures": []
+    },
+    "glonass-precise": {
+      "name": "ESA GLONASS Precise",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 45,
+      "statuses": {
+        "decoded_native_frame": 45
+      },
+      "stateRows": 1251437,
+      "blocks": 2669,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 2669,
+      "positionOnlyBlocks": 2253,
+      "frames": {
+        "IGS20": 2669
+      },
+      "timeSystems": {
+        "GPS": 2669
+      },
+      "identityRows": 2669,
+      "distinctSourceIdentityKeys": 118,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "glonass-precise:C06",
+        "glonass-precise:C07",
+        "glonass-precise:C08",
+        "glonass-precise:C11",
+        "glonass-precise:C12",
+        "glonass-precise:C13",
+        "glonass-precise:C14",
+        "glonass-precise:C19",
+        "glonass-precise:C20",
+        "glonass-precise:C21",
+        "glonass-precise:C22",
+        "glonass-precise:C23",
+        "glonass-precise:C24",
+        "glonass-precise:C25",
+        "glonass-precise:C26",
+        "glonass-precise:C27",
+        "glonass-precise:C28",
+        "glonass-precise:C29",
+        "glonass-precise:C30",
+        "glonass-precise:C31",
+        "glonass-precise:C32",
+        "glonass-precise:C33",
+        "glonass-precise:C34",
+        "glonass-precise:C35",
+        "glonass-precise:C36",
+        "glonass-precise:C37",
+        "glonass-precise:C38",
+        "glonass-precise:C39",
+        "glonass-precise:C41",
+        "glonass-precise:C42",
+        "glonass-precise:E02",
+        "glonass-precise:E03",
+        "glonass-precise:E04",
+        "glonass-precise:E05",
+        "glonass-precise:E06",
+        "glonass-precise:E07",
+        "glonass-precise:E08",
+        "glonass-precise:E09",
+        "glonass-precise:E10",
+        "glonass-precise:E11",
+        "glonass-precise:E12",
+        "glonass-precise:E13",
+        "glonass-precise:E14",
+        "glonass-precise:E15",
+        "glonass-precise:E16",
+        "glonass-precise:E18",
+        "glonass-precise:E19",
+        "glonass-precise:E21",
+        "glonass-precise:E23",
+        "glonass-precise:E25",
+        "glonass-precise:E26",
+        "glonass-precise:E27",
+        "glonass-precise:E28",
+        "glonass-precise:E29",
+        "glonass-precise:E30",
+        "glonass-precise:E31",
+        "glonass-precise:E32",
+        "glonass-precise:E33",
+        "glonass-precise:E34",
+        "glonass-precise:E36",
+        "glonass-precise:G01",
+        "glonass-precise:G02",
+        "glonass-precise:G03",
+        "glonass-precise:G04",
+        "glonass-precise:G05",
+        "glonass-precise:G06",
+        "glonass-precise:G07",
+        "glonass-precise:G08",
+        "glonass-precise:G09",
+        "glonass-precise:G10",
+        "glonass-precise:G11",
+        "glonass-precise:G12",
+        "glonass-precise:G13",
+        "glonass-precise:G14",
+        "glonass-precise:G15",
+        "glonass-precise:G16",
+        "glonass-precise:G17",
+        "glonass-precise:G18",
+        "glonass-precise:G19",
+        "glonass-precise:G20",
+        "glonass-precise:G21",
+        "glonass-precise:G22",
+        "glonass-precise:G23",
+        "glonass-precise:G24",
+        "glonass-precise:G25",
+        "glonass-precise:G26",
+        "glonass-precise:G27",
+        "glonass-precise:G28",
+        "glonass-precise:G29",
+        "glonass-precise:G30",
+        "glonass-precise:G31",
+        "glonass-precise:G32",
+        "glonass-precise:J02",
+        "glonass-precise:J03",
+        "glonass-precise:J04",
+        "glonass-precise:J07",
+        "glonass-precise:J08",
+        "glonass-precise:R02",
+        "glonass-precise:R03",
+        "glonass-precise:R04",
+        "glonass-precise:R05",
+        "glonass-precise:R06",
+        "glonass-precise:R07",
+        "glonass-precise:R08",
+        "glonass-precise:R09",
+        "glonass-precise:R10",
+        "glonass-precise:R11",
+        "glonass-precise:R12",
+        "glonass-precise:R14",
+        "glonass-precise:R15",
+        "glonass-precise:R16",
+        "glonass-precise:R17",
+        "glonass-precise:R18",
+        "glonass-precise:R19",
+        "glonass-precise:R20",
+        "glonass-precise:R21",
+        "glonass-precise:R22",
+        "glonass-precise:R24"
+      ],
+      "evidenceClasses": {
+        "source_product_flags": 45
+      },
+      "failures": []
+    },
+    "esa-pod": {
+      "name": "ESA Precise Orbit Determination",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 49,
+      "statuses": {
+        "decoded_native_frame": 49
+      },
+      "stateRows": 1261541,
+      "blocks": 2673,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 2673,
+      "positionOnlyBlocks": 2253,
+      "frames": {
+        "IGS20": 2669,
+        "ITRF": 4
+      },
+      "timeSystems": {
+        "GPS": 2673
+      },
+      "identityRows": 2673,
+      "distinctSourceIdentityKeys": 122,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [
+        "esa-pod:C06",
+        "esa-pod:C07",
+        "esa-pod:C08",
+        "esa-pod:C11",
+        "esa-pod:C12",
+        "esa-pod:C13",
+        "esa-pod:C14",
+        "esa-pod:C19",
+        "esa-pod:C20",
+        "esa-pod:C21",
+        "esa-pod:C22",
+        "esa-pod:C23",
+        "esa-pod:C24",
+        "esa-pod:C25",
+        "esa-pod:C26",
+        "esa-pod:C27",
+        "esa-pod:C28",
+        "esa-pod:C29",
+        "esa-pod:C30",
+        "esa-pod:C31",
+        "esa-pod:C32",
+        "esa-pod:C33",
+        "esa-pod:C34",
+        "esa-pod:C35",
+        "esa-pod:C36",
+        "esa-pod:C37",
+        "esa-pod:C38",
+        "esa-pod:C39",
+        "esa-pod:C41",
+        "esa-pod:C42",
+        "esa-pod:E02",
+        "esa-pod:E03",
+        "esa-pod:E04",
+        "esa-pod:E05",
+        "esa-pod:E06",
+        "esa-pod:E07",
+        "esa-pod:E08",
+        "esa-pod:E09",
+        "esa-pod:E10",
+        "esa-pod:E11",
+        "esa-pod:E12",
+        "esa-pod:E13",
+        "esa-pod:E14",
+        "esa-pod:E15",
+        "esa-pod:E16",
+        "esa-pod:E18",
+        "esa-pod:E19",
+        "esa-pod:E21",
+        "esa-pod:E23",
+        "esa-pod:E25",
+        "esa-pod:E26",
+        "esa-pod:E27",
+        "esa-pod:E28",
+        "esa-pod:E29",
+        "esa-pod:E30",
+        "esa-pod:E31",
+        "esa-pod:E32",
+        "esa-pod:E33",
+        "esa-pod:E34",
+        "esa-pod:E36",
+        "esa-pod:G01",
+        "esa-pod:G02",
+        "esa-pod:G03",
+        "esa-pod:G04",
+        "esa-pod:G05",
+        "esa-pod:G06",
+        "esa-pod:G07",
+        "esa-pod:G08",
+        "esa-pod:G09",
+        "esa-pod:G10",
+        "esa-pod:G11",
+        "esa-pod:G12",
+        "esa-pod:G13",
+        "esa-pod:G14",
+        "esa-pod:G15",
+        "esa-pod:G16",
+        "esa-pod:G17",
+        "esa-pod:G18",
+        "esa-pod:G19",
+        "esa-pod:G20",
+        "esa-pod:G21",
+        "esa-pod:G22",
+        "esa-pod:G23",
+        "esa-pod:G24",
+        "esa-pod:G25",
+        "esa-pod:G26",
+        "esa-pod:G27",
+        "esa-pod:G28",
+        "esa-pod:G29",
+        "esa-pod:G30",
+        "esa-pod:G31",
+        "esa-pod:G32",
+        "esa-pod:J02",
+        "esa-pod:J03",
+        "esa-pod:J04",
+        "esa-pod:J07",
+        "esa-pod:J08",
+        "esa-pod:L12",
+        "esa-pod:L47",
+        "esa-pod:L48",
+        "esa-pod:L49",
+        "esa-pod:R02",
+        "esa-pod:R03",
+        "esa-pod:R04",
+        "esa-pod:R05",
+        "esa-pod:R06",
+        "esa-pod:R07",
+        "esa-pod:R08",
+        "esa-pod:R09",
+        "esa-pod:R10",
+        "esa-pod:R11",
+        "esa-pod:R12",
+        "esa-pod:R14",
+        "esa-pod:R15",
+        "esa-pod:R16",
+        "esa-pod:R17",
+        "esa-pod:R18",
+        "esa-pod:R19",
+        "esa-pod:R20",
+        "esa-pod:R21",
+        "esa-pod:R22",
+        "esa-pod:R24"
+      ],
+      "evidenceClasses": {
+        "source_product_flags": 49
+      },
+      "failures": []
+    },
+    "eumetsat": {
+      "name": "EUMETSAT",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 10,
+      "statuses": {
+        "catalog_elements_only": 10
+      },
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 90,
+      "distinctSourceIdentityKeys": 10,
+      "declaredNumericIds": 10,
+      "declaredNumericIdsInArchive": 10,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {
+        "catalog_mean_elements": 10
+      },
+      "failures": []
+    },
+    "cpf": {
+      "name": "ESA CPF Predictions",
+      "discoveryState": "discovered",
+      "credentialRequired": false,
+      "resources": 34,
+      "statuses": {
+        "decoded_native_frame": 34
+      },
+      "stateRows": 16354,
+      "blocks": 34,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 34,
+      "positionOnlyBlocks": 34,
+      "frames": {
+        "ECEF": 34
+      },
+      "timeSystems": {
+        "UTC": 34
+      },
+      "identityRows": 34,
+      "distinctSourceIdentityKeys": 34,
+      "declaredNumericIds": 34,
+      "declaredNumericIdsInArchive": 34,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {
+        "operator_forecast": 34
+      },
+      "failures": []
+    },
+    "spire": {
+      "name": "Spire Global",
+      "discoveryState": "credential_required",
+      "credentialRequired": true,
+      "resources": 0,
+      "statuses": {},
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 0,
+      "distinctSourceIdentityKeys": 0,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {},
+      "failures": []
+    },
+    "space-track": {
+      "name": "Space-Track",
+      "discoveryState": "credential_required",
+      "credentialRequired": true,
+      "resources": 0,
+      "statuses": {},
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 0,
+      "distinctSourceIdentityKeys": 0,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {},
+      "failures": []
+    },
+    "vimpel": {
+      "name": "JSC Vimpel",
+      "discoveryState": "credential_required",
+      "credentialRequired": true,
+      "resources": 0,
+      "statuses": {},
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 0,
+      "distinctSourceIdentityKeys": 0,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {},
+      "failures": []
+    },
+    "cpf-edc": {
+      "name": "EDC CPF Predictions",
+      "discoveryState": "credential_required",
+      "credentialRequired": true,
+      "resources": 0,
+      "statuses": {},
+      "stateRows": 0,
+      "blocks": 0,
+      "covarianceRows": 0,
+      "blocksWithoutCovariance": 0,
+      "positionOnlyBlocks": 0,
+      "frames": {},
+      "timeSystems": {},
+      "identityRows": 0,
+      "distinctSourceIdentityKeys": 0,
+      "declaredNumericIds": 0,
+      "declaredNumericIdsInArchive": 0,
+      "declaredNumericIdsAbsentFromArchive": [],
+      "identitiesWithoutNumericId": [],
+      "evidenceClasses": {},
+      "failures": []
+    }
+  },
+  "duplicateContent": [
+    {
+      "sha256": "59b4c43c405fc4a89f71e578121a08da4834a4851e1126a43cd95a84cda1a9b9",
+      "resources": [
+        {
+          "key": "a5112f73d1a2003e0cff11d17978174788c29b34e590fd0ebeedd39f20856499",
+          "source": "intelsat",
+          "url": "https://my.intelsat.com/Resource/Ephemeris/n_por_w_169.00_h3e_20190107_000000.txt"
+        },
+        {
+          "key": "4e9c929e8dcbdc9a457d5e4b35aa02937e3b2e4cecb07d25b7fa535778486090",
+          "source": "intelsat",
+          "url": "https://my.intelsat.com/Resource/Ephemeris/n_por_x_169.00_h3e_20190107_000000.txt"
+        }
+      ]
+    },
+    {
+      "sha256": "7669f658905e0783e51b0ccc7cfd560d3dd4b6488ce56d62f9c18d5ffd98b775",
+      "resources": [
+        {
+          "key": "01664e426c6ad78500cc1c882f4de3594f1400b57b3d1dbdb7996f114c139536",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262910000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "c0b348008638d76c8e5ff91a1b9899dcb7fb1454b8317d08ba429f9cccdaf0aa",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262910000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "b9df78e136e43ae9ca6b93fd913801d7b184df6796cd7ba5255f31aac887a53b",
+      "resources": [
+        {
+          "key": "ce50c9379cc1b48a9c2622b639bd61d65e313b8ec177db1ad496dd9060018081",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262920000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "878ca281a045ac4a1aee09a7e5cce9c49a62e0a57d9dc49bfe9e2000c13dc15d",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262920000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "847ce1046c8e5d8a87bf902c558f208f96265bbe971bcc97d6e7b845678a203c",
+      "resources": [
+        {
+          "key": "8c2bb33741460389d0d1d2a81897e2871c9ccb723f2498a4c73ef1caf91a8f6c",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262930000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "756f7b90756a9e72c168ecb37ae373470a74d4d4876506c8327a2c010933139d",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262930000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "fb9b3e0a93aa7a3a6d487ca23abd6cdc8cf247d7bb946b055337318fedbd2478",
+      "resources": [
+        {
+          "key": "efbc3a49a84a531aff2db067fecd3b5a0b7d0dc2bbca4588c471e0d665b1d018",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262940000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "555937891bbad2ef225fe7d83108fe7556d9158f531a404ee143951c0b4d2dcf",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262940000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "0e41535072f4cbf1b841f647d8f14b777e1a17b63ad7ba5e9f916ad1515db59d",
+      "resources": [
+        {
+          "key": "f43473f0074dee30fd57fd57a1f8484422a07a00d9ab383f4a2866b7a8519c89",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262950000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "acd5d1c413f7b86c44c92c961e8d7e653ef474774a1b2a746cf8fc3c7b11a3f6",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262950000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "dfe2a149aa6b91e6af9d20bdf56e6d11147bfa9b4dc228d1081a0a59fd03f39c",
+      "resources": [
+        {
+          "key": "54ae6a22a7043f2f20a4a5d4fbc394c13f1e2dc6b6ebf17bdf87e80ec4964826",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262910000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "3dd18586070a101c32022d983b3cb3749691540d3bb447b9e22ccd7be1cc5a52",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262910000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "2694a568ead9bdcb8d8ea2cc51ab146a6f67632329ed59b25f8ba5794e09aa10",
+      "resources": [
+        {
+          "key": "ab5970f90598b799492ec53fae52d2737c033a7ef5092945e3cb3f8f39d9eb71",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262920000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "17b47a4a893a5fca795b73e73f8c12e0f7ceb071ed7946a06dddf7696aa6a199",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262920000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "156b7a1eb878efc40c1674a054f3faba35b2e3e6a253d25e435acf0b922b1828",
+      "resources": [
+        {
+          "key": "405988975e4026b666b138efeaaea1ebdbc969c08e37279e2daf3339c3ae758f",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262930000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "73a6e8e6bf839ac24f9ec8aacb09f5c961dd456cebdb0748461ac99fb5a97077",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262930000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "ecbf51830d3fdf3c4e92ff9d1972d8e4abab31766a7662940ca872114012ea5c",
+      "resources": [
+        {
+          "key": "b65e89b9d17c780965e2219611c5e48b737f83107fa091962815bba6de8277ae",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262940000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "442abcfce6b760453ac2b26c41d441413480123e23db3d07a826fbc87ac2ffa3",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262940000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "a6ecad0e744e3d7466a6fb1ae853a1e2c0dace6d3cb5cdf58d151d4f5a900e8c",
+      "resources": [
+        {
+          "key": "f34a13db5961b07f672b589548e6268cba470fe6aad427e40b53d18b9686fc96",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262950000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "74aca5630b0a0f831933e47121910b9c4268f89f656f7946935e3e40d47405f4",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262950000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "28c7e6479f6f71db78c9620a8723ab68f48650d578ba55ac8aa64faa52ea4714",
+      "resources": [
+        {
+          "key": "da06e299d7855ef5149818e537fa2075d9fa3b3909ed4cd18e006b4e35880e48",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262960000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "5e219a3d6ea1576e5c2a3d5d1ff800fdb518e9a06581219f17950f065dde9112",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262960000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "16b8f0bc1a30ee2c1bf0fb6c0214d8d1e881af048939002d999a21d780a7f630",
+      "resources": [
+        {
+          "key": "4f8c478d799e76d427a24aea8223b2fa20b84b31770026e8314fdc2702e5d377",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262970000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "c9302be7d74c71a24bd2103bb2fc3426b4facefe7115626170a8ddf553a33520",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262970000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "5435a818a664445d96f75a1dd856017fc113fb5c4ee7b4c2e5615797ac942208",
+      "resources": [
+        {
+          "key": "0fab54d3f3820c1b835882e308286d4424404b4ed1fec97e184641941f59d650",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262910000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "c7b85a1cbabc49b37d398d2c342119f044c92dc398b74857ca99f5cb6a7bccba",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262910000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "ccf9555203d015c6fcb8c938f72c94037362ad1a19bc214499e6240c8fe91c8a",
+      "resources": [
+        {
+          "key": "06b9c6879069e0c3cb84df01a38f276f31702c146eaca1361964559be738af96",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262910600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "8fb179d35581fd8966e28d443986de9e7af48f5b5c32dfe1d4b163420a44f18e",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262910600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "e063cbf8e27e76a747a47dcda78196428bdea4b6498c7aa2201f1a97c2324ae6",
+      "resources": [
+        {
+          "key": "65afb0537630be2cfca55620f6bbf7bd6d5e760c25d7268ad7eb362dca4cf868",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262911200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "fc3a0fe9c874b083dfb697b225269e1a2ef98425f577977ff1ea320554d91f17",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262911200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "b8458be6e30656f63844f78fb8e6e90cf71043bc732a1556bb6fe0f1b83b68ec",
+      "resources": [
+        {
+          "key": "c7424db484984929f648fc68afdb9a9c6a8bf92b1a97f5574af74b2dbf739e1e",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262911800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "c8a95ad57fba3aa35d219598e1dd5508d730a7d66e970d312363e37776a3bc95",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262911800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "d64ccf325af8515cf083de5874cd19309c2858ecf9df33f13ead2203198e5da6",
+      "resources": [
+        {
+          "key": "7a4f25010d43adb1ebd3b827b9576f7509f4ad7eb06f2323ba16b8b136148015",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262920000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "f5d33a4969502b62f366548f841ffaa13916038103ee2cc5ccab779a40b60cab",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262920000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "8e38519b2a1ca02fbf807bfb637d27c748b0d06e52c8e02629f0e69ee7dd5dc2",
+      "resources": [
+        {
+          "key": "a1991256b810ce1d1489d97c40e6e71ab3c7e726db4642d03e8651edf5d0f749",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262920600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "7677d24df1cdad3c9f76d0aa502350043d60e2bb45d87191cd62dea521fe5781",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262920600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "854ee9b5661bd9c0b9c0c6eb17f09f319644ed38d2e5a3fd6db744dc1c257eac",
+      "resources": [
+        {
+          "key": "175c6b67cbf8183429921c081cd4afecf673f1c0060c46c381ce74b5c23aafe9",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262921200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "682169abcde933543be7293a2f4adbbaae7a21fb123737f37a6d389fe4d1f757",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262921200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "3d391245094654c987767283ac4fb794b203f6142fbd46cd99351043b6623142",
+      "resources": [
+        {
+          "key": "7bdd2fec8a42380ea900992a7ae6bf5a9b42e8362e9a44062d6f5461a9a364c6",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262921800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "0accd8a6129830e59751041ba1c51c4dd44b44b564501bd7c5cd2d70cd7a9b4f",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262921800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "6b530f99771c48d4f43ffa5f5d1ec6dc48e5ac8c40c035c06862875ed662fadc",
+      "resources": [
+        {
+          "key": "e46bc89e03ad3eb1b83da12bf8c735901fbbabe04472ca28d3078db7ef692e35",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262930000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "8a05c3538480ad221fc2c692cbb35a0ad25f7458bce2e817a0796431f091c0d3",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262930000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "a169da4bace87361a627b74db9c23445d664a6fba4fdbcc35ee24b9a86dad455",
+      "resources": [
+        {
+          "key": "61f3a90ec05010029343ff111fed5c133069c6027671d98e3032f98fb652bd33",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262930600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "210e7343ae8ec7600e318708a8d9fb8a743c339b419ccb734422e78e7968a6f3",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262930600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "bf2fab2ab12405477230fac5a21dd789a34db7649f0e700ed692af0bfd46cbcd",
+      "resources": [
+        {
+          "key": "e19e79cee281ccab3bfb2596dae3370d3e28fb6500982d755b0b28554141577b",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262931200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "e1af98403a3ebe30c363be642661d6300ba3414564c113b998e3802447405354",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262931200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "cb7467a065fadffb43fb910b42339705c47785f082d567e03789090234cc4712",
+      "resources": [
+        {
+          "key": "410884028fdbfee505ca49c38ffa7ef893a44188de5c7023a1a6e644cc537703",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262931800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "c491f7b25dcb32ce27393012f9a12814d14cefaaec1ffd099e8308f5b59e611b",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262931800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "3b070d15a962d3ec8f6604c08dbd611ba121740e6ecb8f8e9cbcbc6c6645075e",
+      "resources": [
+        {
+          "key": "59404cec285800d6a6af2287d9cbb2096e40e94115522a5704146613b720e8a3",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262940000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "caf6eba579ed33f8c13cc1905b18329ddbfc56f8c0616402014113957996d007",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262940000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "faaf78b5506acf5d2a1904de9c4edb84bc5a19198e5fd73ed15af1d1448b61cb",
+      "resources": [
+        {
+          "key": "96d7c5e09f86c2da1053142e8d8c44233f565cc8c8061bf5685666ed2f96ece8",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262940600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "4351c7b5322798c55e59dd68435f937c3e68fa95171ff2f840836224ec804565",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262940600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "c28943952527dc33bfa3247deb67c218c1b36ecc70ba69eee14bcde9148313ee",
+      "resources": [
+        {
+          "key": "fcfa190e2ff2d744be08550420c14ca6a032836f6cb89897fc71162c3ea13c35",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262941200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "900998743a39934f8c73d665dfc0015de143bc651b31f444387900fbf07b1e6c",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262941200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "0b1537e67750c65b624f0854b01a7b4ea9852f941064e4d48ce7d0c33001ce75",
+      "resources": [
+        {
+          "key": "5698898d073e1dc3f2e335146b2d9ccaff2af1c08e13a915301e44e5994a5195",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262941800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "dd2f8f3d330f5612488b4717a291ca20daf45bab3a112b40f6f1008801b403ef",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262941800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "0ff2e0ab0836f4c3fc21e4816d8145f46a597d4f8e688af4051f3aee56b30216",
+      "resources": [
+        {
+          "key": "992135d1ee00fcaa7f5b1634c92b62788c6dac195665b9b5ffe2b2768d5c877d",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262950000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "8adcf9f088a185837739817f3d088b3032bd289f916cd46cc0682278d7cfccf9",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262950000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "9c9969b98b16448afc34b5ff2a53e486c5b3abde8bf08f57d62454e82c89dcb1",
+      "resources": [
+        {
+          "key": "51c05c1de6da6db7f5b0d594520a2225f42f45811ba8ef6ed581bb7a983121c4",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262950600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "dbf9eb831b7667b5eeee1a4a7bd2bbba0c65d89144d6a57c406175a7091c2359",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262950600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "2b3392f7c53d10c13c962d64d1b0f48c6ec905e23f7b9d0d90d361a0d9e1ba43",
+      "resources": [
+        {
+          "key": "0abcdb56e77af9745853dada0c0d316aefb92f682e6c3e88c9bba375da1a022e",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262951200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "f159ce38826320a201017a7682d04e6c54f9fa3b5fac19398f1f97db37f3a242",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262951200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "8ab15bd98cb9cee978497ff4ae7cfe45f687068d0e39da58d5cded70a8eea44a",
+      "resources": [
+        {
+          "key": "a9ab70433ef1290571b66b5ac8c6a9da6701b47da911289bb3232b31f6326c85",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262951800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "3066af63efa91fc41b84f3af8639f47648ace99bec136012634617b54cec71de",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262951800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "120f669a397163096de279a489909e14c9cfea05db4593f9da3567b55243ff58",
+      "resources": [
+        {
+          "key": "f69d9740b4b3dac2e2244a9d001d7fd85e614ed11e2b62bcafc9a205247c2623",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262960000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "9da8929cd0915c9d5d1a0e26a0f890205297c18d2e09d3436b5ec614f2459fec",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262960000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "e22ad6bb215fad14c5612825c756f0ff14c718aee46cd886b0ac6ebcd2a46cad",
+      "resources": [
+        {
+          "key": "788adb8100897a61a0b739e71c3516656ceb715116a97ad7f37bc81f3e9e319a",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262960600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "852486968eddaa9b7593939cdf832056feabd0d49ac7858131b7339c4b96778f",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262960600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "4597cd64e0faec582c398a7f0ea15dbf103efd44967055cb1e773dd51cb9f1a6",
+      "resources": [
+        {
+          "key": "3ef5551c31944c9bdf2d579111caa6e53691f8f81e8878762cd7902575c22325",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262961200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "a5f9c01f120c241c7c842032bd5e156b3274fefb05ffc5ebf683d51090833eb4",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262961200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "9971bc91de81beabbf240c5924456651cb2158b7d90a8bd644c05cdec7c8a9b1",
+      "resources": [
+        {
+          "key": "34d0102181dde6b69b43f7c33e1e3cff5a60042a6c7a01eadf21f67437a84a6c",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262961800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "7b3d49bd6bc71d01bab0675bf58e5ef12a91230019c89f1d206cb28d49f9eea0",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262961800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "6245649207048305552fba60f3c2d3a41c6077d1bc18010e9f4a7a739709edca",
+      "resources": [
+        {
+          "key": "34f774689f723afd779a50fab7deb09b1248af96cbb8e5921290950aa0d87269",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262970000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "6c4a07d6b094d0107c28a3f253f032181927c1d94b7942856169e331de2fb2ba",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262970000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "8a92718433a5f0376ffbd4180f6f0e94bd794c736719e9144bf5ecea61b5ac3e",
+      "resources": [
+        {
+          "key": "8a6dae6606c20c16e3cee5ef02c85063b815067692e2a2d0adfd66d87fbc5a70",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262970600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "132e7ff632b32ae6cf73df36a45074b021bbc95bb1d44301bb74cff763b2c9dd",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262970600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "9ac2a0e2a067df65f70bc7a1a2648b818a172adfdc634e6542270abe537da268",
+      "resources": [
+        {
+          "key": "4b45770770a967d657d9544420ee839f7a99d40a0fb44d6e8442535e9041c392",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262971200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "123f22e8f2673185880552fbbec10a32f96ef51a63f0a620ff1b8a21eed57dbe",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262971200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "ab5861136df9ec0275ef6de28f3fef8beddd6fc3243fdb5d44b04d47f607754f",
+      "resources": [
+        {
+          "key": "98cd77d32f195c9fd5e07dd3571782ffb7576e5c0bbd90394a4ffaf22b7c4708",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262971800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "5faa415482e508795899c115270a08a5286be41b5f10cddb874d7a6561c0a4b5",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262971800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "c806c5ba3a195ef839a84a3819481b6178533b1ecaa68cd9de6bfdc5f8db1f35",
+      "resources": [
+        {
+          "key": "ae84b033ff090320815a149e1195d0dae49270e5abd55aa16b3cb388863de387",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSRAP_20262980000_01D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "7fe1f701167c0319f29cb626d47dc4ce3167b86cc4d8ba861bddcc68680cb50c",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSRAP_20262980000_01D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "eafb2ac4ec0251e8987a6c4bc60d22e6ae7c42c1dfdcbba59c7c5dae6c09b3bd",
+      "resources": [
+        {
+          "key": "5a63e3d1e1ebf94bd0dd3bf6bc4c2a64550400056833e1fb673b64ab8eb3bc03",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262980000_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "c9fd60bd7c6803f8c0463ac08e550f0883ad2c3ce53e3135b2d5ab261528f80b",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262980000_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "10ffd2a513c0807e58d7b42c7c459fa3b2d9530e71b70d6f8875195ce255ffea",
+      "resources": [
+        {
+          "key": "9f0d4bdc668364d3beb3de812476ec78bfd7a5d3ac6114c1c070d42d7d68fbe5",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262980600_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "3143755229c436123513b1bb7eaef41b45ecbd66bb486c447a5e65c3b35b7399",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262980600_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "49723a6e0684db05a592dd3d297a1fd7bfe6304009f7c73a4eb103718753bd5c",
+      "resources": [
+        {
+          "key": "d358f5d1f0c3fee628cebce0f0ce019ddcb902e968ab7e052dcbed99d9aa17b0",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262981200_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "f7c1710191bf6471273b8ff223456275a4941af297b35e3bbb1d27cb0dbc06dd",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262981200_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    },
+    {
+      "sha256": "0e3d037beec47b1e4d6cd267aca0335b9afed57b4c896d704f54ff0f13817aec",
+      "resources": [
+        {
+          "key": "6cc32ab8b6ad0a9229144a05845b6a31eee6a5c0bb8f34501771f24919a52ced",
+          "source": "glonass-precise",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262981800_02D_05M_ORB.SP3.gz"
+        },
+        {
+          "key": "184825f3f300ed13c8beadac7059ab739868117e5cafa422506d8f9c08aa5380",
+          "source": "esa-pod",
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262981800_02D_05M_ORB.SP3.gz"
+        }
+      ]
+    }
+  ],
+  "duplicateUrls": [
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262910000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "01664e426c6ad78500cc1c882f4de3594f1400b57b3d1dbdb7996f114c139536",
+        "c0b348008638d76c8e5ff91a1b9899dcb7fb1454b8317d08ba429f9cccdaf0aa"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262920000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "ce50c9379cc1b48a9c2622b639bd61d65e313b8ec177db1ad496dd9060018081",
+        "878ca281a045ac4a1aee09a7e5cce9c49a62e0a57d9dc49bfe9e2000c13dc15d"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262930000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "8c2bb33741460389d0d1d2a81897e2871c9ccb723f2498a4c73ef1caf91a8f6c",
+        "756f7b90756a9e72c168ecb37ae373470a74d4d4876506c8327a2c010933139d"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262940000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "efbc3a49a84a531aff2db067fecd3b5a0b7d0dc2bbca4588c471e0d665b1d018",
+        "555937891bbad2ef225fe7d83108fe7556d9158f531a404ee143951c0b4d2dcf"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSFIN_20262950000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "f43473f0074dee30fd57fd57a1f8484422a07a00d9ab383f4a2866b7a8519c89",
+        "acd5d1c413f7b86c44c92c961e8d7e653ef474774a1b2a746cf8fc3c7b11a3f6"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262910000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "54ae6a22a7043f2f20a4a5d4fbc394c13f1e2dc6b6ebf17bdf87e80ec4964826",
+        "3dd18586070a101c32022d983b3cb3749691540d3bb447b9e22ccd7be1cc5a52"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262920000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "ab5970f90598b799492ec53fae52d2737c033a7ef5092945e3cb3f8f39d9eb71",
+        "17b47a4a893a5fca795b73e73f8c12e0f7ceb071ed7946a06dddf7696aa6a199"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262930000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "405988975e4026b666b138efeaaea1ebdbc969c08e37279e2daf3339c3ae758f",
+        "73a6e8e6bf839ac24f9ec8aacb09f5c961dd456cebdb0748461ac99fb5a97077"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262940000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "b65e89b9d17c780965e2219611c5e48b737f83107fa091962815bba6de8277ae",
+        "442abcfce6b760453ac2b26c41d441413480123e23db3d07a826fbc87ac2ffa3"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262950000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "f34a13db5961b07f672b589548e6268cba470fe6aad427e40b53d18b9686fc96",
+        "74aca5630b0a0f831933e47121910b9c4268f89f656f7946935e3e40d47405f4"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262960000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "da06e299d7855ef5149818e537fa2075d9fa3b3909ed4cd18e006b4e35880e48",
+        "5e219a3d6ea1576e5c2a3d5d1ff800fdb518e9a06581219f17950f065dde9112"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSRAP_20262970000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "4f8c478d799e76d427a24aea8223b2fa20b84b31770026e8314fdc2702e5d377",
+        "c9302be7d74c71a24bd2103bb2fc3426b4facefe7115626170a8ddf553a33520"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262910000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "0fab54d3f3820c1b835882e308286d4424404b4ed1fec97e184641941f59d650",
+        "c7b85a1cbabc49b37d398d2c342119f044c92dc398b74857ca99f5cb6a7bccba"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262910600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "06b9c6879069e0c3cb84df01a38f276f31702c146eaca1361964559be738af96",
+        "8fb179d35581fd8966e28d443986de9e7af48f5b5c32dfe1d4b163420a44f18e"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262911200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "65afb0537630be2cfca55620f6bbf7bd6d5e760c25d7268ad7eb362dca4cf868",
+        "fc3a0fe9c874b083dfb697b225269e1a2ef98425f577977ff1ea320554d91f17"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262911800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "c7424db484984929f648fc68afdb9a9c6a8bf92b1a97f5574af74b2dbf739e1e",
+        "c8a95ad57fba3aa35d219598e1dd5508d730a7d66e970d312363e37776a3bc95"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262920000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "7a4f25010d43adb1ebd3b827b9576f7509f4ad7eb06f2323ba16b8b136148015",
+        "f5d33a4969502b62f366548f841ffaa13916038103ee2cc5ccab779a40b60cab"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262920600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "a1991256b810ce1d1489d97c40e6e71ab3c7e726db4642d03e8651edf5d0f749",
+        "7677d24df1cdad3c9f76d0aa502350043d60e2bb45d87191cd62dea521fe5781"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262921200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "175c6b67cbf8183429921c081cd4afecf673f1c0060c46c381ce74b5c23aafe9",
+        "682169abcde933543be7293a2f4adbbaae7a21fb123737f37a6d389fe4d1f757"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262921800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "7bdd2fec8a42380ea900992a7ae6bf5a9b42e8362e9a44062d6f5461a9a364c6",
+        "0accd8a6129830e59751041ba1c51c4dd44b44b564501bd7c5cd2d70cd7a9b4f"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262930000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "e46bc89e03ad3eb1b83da12bf8c735901fbbabe04472ca28d3078db7ef692e35",
+        "8a05c3538480ad221fc2c692cbb35a0ad25f7458bce2e817a0796431f091c0d3"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262930600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "61f3a90ec05010029343ff111fed5c133069c6027671d98e3032f98fb652bd33",
+        "210e7343ae8ec7600e318708a8d9fb8a743c339b419ccb734422e78e7968a6f3"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262931200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "e19e79cee281ccab3bfb2596dae3370d3e28fb6500982d755b0b28554141577b",
+        "e1af98403a3ebe30c363be642661d6300ba3414564c113b998e3802447405354"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262931800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "410884028fdbfee505ca49c38ffa7ef893a44188de5c7023a1a6e644cc537703",
+        "c491f7b25dcb32ce27393012f9a12814d14cefaaec1ffd099e8308f5b59e611b"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262940000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "59404cec285800d6a6af2287d9cbb2096e40e94115522a5704146613b720e8a3",
+        "caf6eba579ed33f8c13cc1905b18329ddbfc56f8c0616402014113957996d007"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262940600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "96d7c5e09f86c2da1053142e8d8c44233f565cc8c8061bf5685666ed2f96ece8",
+        "4351c7b5322798c55e59dd68435f937c3e68fa95171ff2f840836224ec804565"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262941200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "fcfa190e2ff2d744be08550420c14ca6a032836f6cb89897fc71162c3ea13c35",
+        "900998743a39934f8c73d665dfc0015de143bc651b31f444387900fbf07b1e6c"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262941800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "5698898d073e1dc3f2e335146b2d9ccaff2af1c08e13a915301e44e5994a5195",
+        "dd2f8f3d330f5612488b4717a291ca20daf45bab3a112b40f6f1008801b403ef"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262950000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "992135d1ee00fcaa7f5b1634c92b62788c6dac195665b9b5ffe2b2768d5c877d",
+        "8adcf9f088a185837739817f3d088b3032bd289f916cd46cc0682278d7cfccf9"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262950600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "51c05c1de6da6db7f5b0d594520a2225f42f45811ba8ef6ed581bb7a983121c4",
+        "dbf9eb831b7667b5eeee1a4a7bd2bbba0c65d89144d6a57c406175a7091c2359"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262951200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "0abcdb56e77af9745853dada0c0d316aefb92f682e6c3e88c9bba375da1a022e",
+        "f159ce38826320a201017a7682d04e6c54f9fa3b5fac19398f1f97db37f3a242"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262951800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "a9ab70433ef1290571b66b5ac8c6a9da6701b47da911289bb3232b31f6326c85",
+        "3066af63efa91fc41b84f3af8639f47648ace99bec136012634617b54cec71de"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262960000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "f69d9740b4b3dac2e2244a9d001d7fd85e614ed11e2b62bcafc9a205247c2623",
+        "9da8929cd0915c9d5d1a0e26a0f890205297c18d2e09d3436b5ec614f2459fec"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262960600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "788adb8100897a61a0b739e71c3516656ceb715116a97ad7f37bc81f3e9e319a",
+        "852486968eddaa9b7593939cdf832056feabd0d49ac7858131b7339c4b96778f"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262961200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "3ef5551c31944c9bdf2d579111caa6e53691f8f81e8878762cd7902575c22325",
+        "a5f9c01f120c241c7c842032bd5e156b3274fefb05ffc5ebf683d51090833eb4"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262961800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "34d0102181dde6b69b43f7c33e1e3cff5a60042a6c7a01eadf21f67437a84a6c",
+        "7b3d49bd6bc71d01bab0675bf58e5ef12a91230019c89f1d206cb28d49f9eea0"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262970000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "34f774689f723afd779a50fab7deb09b1248af96cbb8e5921290950aa0d87269",
+        "6c4a07d6b094d0107c28a3f253f032181927c1d94b7942856169e331de2fb2ba"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262970600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "8a6dae6606c20c16e3cee5ef02c85063b815067692e2a2d0adfd66d87fbc5a70",
+        "132e7ff632b32ae6cf73df36a45074b021bbc95bb1d44301bb74cff763b2c9dd"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262971200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "4b45770770a967d657d9544420ee839f7a99d40a0fb44d6e8442535e9041c392",
+        "123f22e8f2673185880552fbbec10a32f96ef51a63f0a620ff1b8a21eed57dbe"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2441/ESA0OPSULT_20262971800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "98cd77d32f195c9fd5e07dd3571782ffb7576e5c0bbd90394a4ffaf22b7c4708",
+        "5faa415482e508795899c115270a08a5286be41b5f10cddb874d7a6561c0a4b5"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSRAP_20262980000_01D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "ae84b033ff090320815a149e1195d0dae49270e5abd55aa16b3cb388863de387",
+        "7fe1f701167c0319f29cb626d47dc4ce3167b86cc4d8ba861bddcc68680cb50c"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262980000_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "5a63e3d1e1ebf94bd0dd3bf6bc4c2a64550400056833e1fb673b64ab8eb3bc03",
+        "c9fd60bd7c6803f8c0463ac08e550f0883ad2c3ce53e3135b2d5ab261528f80b"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262980600_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "9f0d4bdc668364d3beb3de812476ec78bfd7a5d3ac6114c1c070d42d7d68fbe5",
+        "3143755229c436123513b1bb7eaef41b45ecbd66bb486c447a5e65c3b35b7399"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262981200_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "d358f5d1f0c3fee628cebce0f0ce019ddcb902e968ab7e052dcbed99d9aa17b0",
+        "f7c1710191bf6471273b8ff223456275a4941af297b35e3bbb1d27cb0dbc06dd"
+      ]
+    },
+    {
+      "url": "http://navigation-office.esa.int/products/gnss-products/2442/ESA0OPSULT_20262981800_02D_05M_ORB.SP3.gz",
+      "resourceKeys": [
+        "6cc32ab8b6ad0a9229144a05845b6a31eee6a5c0bb8f34501771f24919a52ced",
+        "184825f3f300ed13c8beadac7059ab739868117e5cafa422506d8f9c08aa5380"
+      ]
+    }
+  ],
+  "limitations": [
+    "Complete accounting means one terminal record for every discovered resource. It does not mean complete truth coverage, every historical product, or successful scientific scoring.",
+    "No GCRF conversion or propagator accuracy calculation is performed here. Native-frame state counts include repeated products and are not counts of independent observations.",
+    "Source identity keys may be slots, names or constellation identifiers, not unique spacecraft. No name-based or unpinned crosswalk merges are included.",
+    "The frozen Starlink reader drops covariance and imposes a compact epoch grid. Raw epochs and covariance remain preserved; this inventory is not admitted for covariance scoring. The corrected reader requires a separately registered amendment.",
+    "CPF, Intelsat ECF and position-only SP3 outputs contain native zero velocity slots; these are explicitly unavailable velocities, not measurements.",
+    "SP3 per-epoch prediction/event flags are retained in hashed sidecars. A product label alone does not classify every sample as reconstructed truth.",
+    "The two unsuccessful downloads and all four credential-required providers remain explicit gaps. Unsupported OneWeb orbital encoding and Telesat center-of-box data remain in denominators.",
+    "Covariance availability is not calibration. The failed original calibration results are unchanged."
+  ]
+}

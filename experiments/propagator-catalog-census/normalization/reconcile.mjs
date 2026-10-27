@@ -29,7 +29,7 @@ const checksum=s=>s.length===69&&[...s.slice(0,68)].reduce((n,c)=>n+(/\d/.test(c
 const catalogNumber=s=>{if(/^\d{1,5}$/.test(s))return Number(s);assert.match(s,/^[A-HJ-NP-Z]\d{4}$/);return '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'.indexOf(s[0])*10000+Number(s.slice(1));};
 for(const [encoded,number]of [['A0000',100000],['E8493',148493],['J2931',182931],['P4018',234018],['W1928',301928],['Z9999',339999]])assert.equal(catalogNumber(encoded),number);
 for(let i=0;i<tle.length-2;i++)if(tle[i].startsWith('0 ')&&tle[i+1].startsWith('1 ')&&tle[i+2].startsWith('2 ')){
-  const hwid=tle[i].trim().split(/\s+/).at(-1).toLowerCase(),id=tle[i+1].slice(2,7).trim();assert.match(hwid,/^[0-9a-f]{4}$/);
+  const hwid=tle[i].trim().split(/\s+/).at(-1).toLowerCase(),id=tle[i+1].slice(2,7).trim();assert.match(hwid,/^(?:[0-9a-f]{4}|s\d{1,3})$/);
   assert.equal(tle[i+2].slice(2,7).trim(),id);assert.ok(checksum(tle[i+1])&&checksum(tle[i+2]));
   if(!planetSnapshot.has(hwid))planetSnapshot.set(hwid,[]);planetSnapshot.get(hwid).push(catalogNumber(id));
 }

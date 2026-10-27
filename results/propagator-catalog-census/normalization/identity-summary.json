@@ -1,0 +1,203 @@
+{
+  "schema": "direct-identity-reconciliation",
+  "completeResourceAccounting": true,
+  "completeScientificComparison": false,
+  "provenance": {
+    "normalizationId": "9671e21c3eeef89acce451c55342152864312d241850c8ce59a1b0713b9d01bd",
+    "inventoryOutcomesSha256": "67b647c5d56451ccaf3c239ca54fc25ec61575171fd91bd410c07418f8b0491a",
+    "censusSha256": "1ba68a5c4138837591540dc5b55b35bbd35849d318bd119c77cd1ebaa1a90fbd",
+    "sourceSha256": "581ee9ed0721bf543f758ae58b0cdf5350bfd5ea7a6150f9e9b4c5354d35185a",
+    "crosswalks": [
+      {
+        "url": "https://files.igs.org/pub/station/general/igs_satellite_metadata.snx",
+        "sha256": "ac93d053eac7d8b08ce129b6af98667e1867296e1685417d38c081cd046558ae",
+        "receiptSha256": "f47a3fcaf55622f74608fdf54e508efbbcc6ad1941c9e1291f147a8036856c5f"
+      },
+      {
+        "url": "https://cddis.nasa.gov/sp3c_satlist.html",
+        "sha256": "76e199dd6f7d124e01e0ecd72ba1bcba228c71276b81b3423dbc04bc477ce559",
+        "receiptSha256": "8d8df5c70a65cc3bc9a04c5c6a9094bb484741a77049c78a7820ecc180d7872f"
+      },
+      {
+        "url": "https://ephemerides.planet-labs.com/18SPCS_matches_v1.txt",
+        "sha256": "adb5d2c8491d2e97dde7992a5c0c65eef1ef449f98cc44596a735d4a10598f5a",
+        "receiptSha256": "5a9f20b74f2ac48a0e94ae92fdfe76afc8f0b974c269446d4e7f622cf2c4bfc2"
+      }
+    ],
+    "planetSnapshotTleSha256": "090995adfeb3f2804559aabd65f0517014f974a2ffcaa35bfa69cf1bc3f1c3bc",
+    "identityRowsSha256": "d42519075746a901b66656fa60bc3a555ae7f0011ca89c1c1518a12a13237f69"
+  },
+  "counts": {
+    "resources": 11771,
+    "identityOrMissingRows": 19132,
+    "statuses": {
+      "authoritative_identifier_crosswalk": 4,
+      "authoritative_interval_crosswalk": 6610,
+      "operator_crosswalk_unverified": 228,
+      "resource_without_decoded_identity": 2,
+      "source_declared_alpha5": 12,
+      "source_declared_numeric": 11386,
+      "unresolved": 890
+    },
+    "uniqueCandidateNumericIds": 11410,
+    "numericIdsAbsentFromArchive": []
+  },
+  "sources": {
+    "spacex-starlink": {
+      "resources": 11163,
+      "discoveryState": "discovered",
+      "identityRows": 11163,
+      "statuses": {
+        "source_declared_numeric": 11163
+      },
+      "uniqueCandidateNumericIds": 11163
+    },
+    "eutelsat-oneweb": {
+      "resources": 1,
+      "discoveryState": "discovered",
+      "identityRows": 576,
+      "statuses": {
+        "unresolved": 576
+      },
+      "uniqueCandidateNumericIds": 0
+    },
+    "planet": {
+      "resources": 116,
+      "discoveryState": "discovered",
+      "identityRows": 342,
+      "statuses": {
+        "operator_crosswalk_unverified": 228,
+        "source_declared_alpha5": 12,
+        "source_declared_numeric": 99,
+        "unresolved": 3
+      },
+      "uniqueCandidateNumericIds": 111
+    },
+    "iss": {
+      "resources": 1,
+      "discoveryState": "discovered",
+      "identityRows": 1,
+      "statuses": {
+        "unresolved": 1
+      },
+      "uniqueCandidateNumericIds": 0
+    },
+    "ses": {
+      "resources": 41,
+      "discoveryState": "discovered",
+      "identityRows": 41,
+      "statuses": {
+        "resource_without_decoded_identity": 1,
+        "unresolved": 40
+      },
+      "uniqueCandidateNumericIds": 0
+    },
+    "intelsat": {
+      "resources": 258,
+      "discoveryState": "discovered",
+      "identityRows": 258,
+      "statuses": {
+        "unresolved": 258
+      },
+      "uniqueCandidateNumericIds": 0
+    },
+    "telesat": {
+      "resources": 12,
+      "discoveryState": "discovered",
+      "identityRows": 12,
+      "statuses": {
+        "unresolved": 12
+      },
+      "uniqueCandidateNumericIds": 0
+    },
+    "css-tiangong": {
+      "resources": 1,
+      "discoveryState": "discovered",
+      "identityRows": 1,
+      "statuses": {
+        "resource_without_decoded_identity": 1
+      },
+      "uniqueCandidateNumericIds": 0
+    },
+    "gps-precise": {
+      "resources": 40,
+      "discoveryState": "discovered",
+      "identityRows": 1272,
+      "statuses": {
+        "authoritative_interval_crosswalk": 1272
+      },
+      "uniqueCandidateNumericIds": 32
+    },
+    "glonass-precise": {
+      "resources": 45,
+      "discoveryState": "discovered",
+      "identityRows": 2669,
+      "statuses": {
+        "authoritative_interval_crosswalk": 2669
+      },
+      "uniqueCandidateNumericIds": 118
+    },
+    "esa-pod": {
+      "resources": 49,
+      "discoveryState": "discovered",
+      "identityRows": 2673,
+      "statuses": {
+        "authoritative_identifier_crosswalk": 4,
+        "authoritative_interval_crosswalk": 2669
+      },
+      "uniqueCandidateNumericIds": 122
+    },
+    "eumetsat": {
+      "resources": 10,
+      "discoveryState": "discovered",
+      "identityRows": 90,
+      "statuses": {
+        "source_declared_numeric": 90
+      },
+      "uniqueCandidateNumericIds": 10
+    },
+    "cpf": {
+      "resources": 34,
+      "discoveryState": "discovered",
+      "identityRows": 34,
+      "statuses": {
+        "source_declared_numeric": 34
+      },
+      "uniqueCandidateNumericIds": 34
+    },
+    "spire": {
+      "resources": 0,
+      "discoveryState": "credential_required",
+      "identityRows": 0,
+      "statuses": {},
+      "uniqueCandidateNumericIds": 0
+    },
+    "space-track": {
+      "resources": 0,
+      "discoveryState": "credential_required",
+      "identityRows": 0,
+      "statuses": {},
+      "uniqueCandidateNumericIds": 0
+    },
+    "vimpel": {
+      "resources": 0,
+      "discoveryState": "credential_required",
+      "identityRows": 0,
+      "statuses": {},
+      "uniqueCandidateNumericIds": 0
+    },
+    "cpf-edc": {
+      "resources": 0,
+      "discoveryState": "credential_required",
+      "identityRows": 0,
+      "statuses": {},
+      "uniqueCandidateNumericIds": 0
+    }
+  },
+  "limitations": [
+    "Candidate identity resolution does not verify physical identity or remove cross-tagging risk. Planet matches remain explicitly unverified.",
+    "Repeated versions, duplicate payloads, source-local slots and failed resources remain separate records. No spacecraft are merged by a loose name.",
+    "IGS interval checks use a conservative time-label margin for identity only; physical time/frame conversion remains a native-module requirement.",
+    "No propagator, covariance calibration or collision-risk result is generated by identity reconciliation."
+  ]
+}

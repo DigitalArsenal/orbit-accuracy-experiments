@@ -1,0 +1,113 @@
+{
+  "schema": "direct-inventory-verification",
+  "normalizationId": "9671e21c3eeef89acce451c55342152864312d241850c8ce59a1b0713b9d01bd",
+  "accountingAndReplay": "PASS",
+  "scientificAdmission": "PENDING_PHYSICAL_AND_IDENTITY_CHECKS",
+  "counts": {
+    "resources": 11771,
+    "rawFiles": 11723,
+    "artifacts": 22079,
+    "sourceEpochs": 47989471,
+    "sourceEpochMismatches": 0,
+    "sourceNonIncreasingEpochs": 0
+  },
+  "replayed": [
+    {
+      "source": "spacex-starlink",
+      "format": "starlink-meme",
+      "key": "ae1fa63b14f1b528e895812c8554e37b4242447a78324e53a5b24f5ee0a03f03",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "eutelsat-oneweb",
+      "format": "oneweb-ltef",
+      "key": "b0df001b2478b5c4c676805e1c07688f8d3c8e2f6f5ca7352b523e61ceb7a418",
+      "status": "unsupported_physical_encoding"
+    },
+    {
+      "source": "planet",
+      "format": "ccsds-oem-kvn",
+      "key": "063e0de66f558dd7b70ea589e888c80f3bf2d938208b503d785a0bca7c812bbf",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "planet",
+      "format": "tle",
+      "key": "0af570bc7849a7984a0d64687ae1b943ee9ce227503ef8bda3e6cde58e4aae0a",
+      "status": "catalog_elements_only"
+    },
+    {
+      "source": "planet",
+      "format": "planet-states",
+      "key": "3e538de2b2c876b318e363cb4a77ccd7e2b9898ecb2c954b05a4206f44a38613",
+      "status": "decoded_source_states"
+    },
+    {
+      "source": "iss",
+      "format": "ccsds-oem-kvn",
+      "key": "8383247b2379dc0d2a9490497cd409bd61814550a03e5bf1504bed8b7ad4f677",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "ses",
+      "format": "ses-i11",
+      "key": "47aba5dc8e587538d0a60a572bc6102f9575bbbcd827754d1bfc1fbfe6ee429f",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "intelsat",
+      "format": "intelsat-ecf",
+      "key": "e5270f8ba3938a38731d69b2f1ba95e297784d802eab1857a54d73dbd0505361",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "intelsat",
+      "format": "ses-i11",
+      "key": "c7fe762eea8cb6e5f7f852c2635b1da184e5676b30d8bf6ed8edd32990c6de2c",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "telesat",
+      "format": "telesat-cob",
+      "key": "681c07b356d034196d19b686abe5871773b1fa108d286ef0e48015058d218e2a",
+      "status": "partial_orbit_information"
+    },
+    {
+      "source": "gps-precise",
+      "format": "sp3-gzip",
+      "key": "b1fd42ab1d418f826ecdafdd2a1cf9d38f6cdf0f3651f8ade053256c4c9cdd6c",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "glonass-precise",
+      "format": "sp3-gzip",
+      "key": "01664e426c6ad78500cc1c882f4de3594f1400b57b3d1dbdb7996f114c139536",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "esa-pod",
+      "format": "sp3-gzip",
+      "key": "f3d415789d06fe23eaec31e3780c6b42d60c9868e2f6cc1001e5f4d0990c9703",
+      "status": "decoded_native_frame"
+    },
+    {
+      "source": "eumetsat",
+      "format": "eumetsat-tle-js",
+      "key": "7b5be576515c1b976cd26a7bb651b8cbd16b317ad125197cb415bb0cc0708318",
+      "status": "catalog_elements_only"
+    },
+    {
+      "source": "cpf",
+      "format": "cpf",
+      "key": "eb0088cea65e924bc2295f52e3fefdbb8f0349e40de212346d257e63d2936393",
+      "status": "decoded_native_frame"
+    }
+  ],
+  "problems": [],
+  "verifierSha256": "aeb4853aa9b851fedac669f568bbfd8da3b39f79d2eb95254ec9f86d960a56b6",
+  "outcomeHashesSha256": "67b647c5d56451ccaf3c239ca54fc25ec61575171fd91bd410c07418f8b0491a",
+  "limitations": [
+    "Hashes and exact reader replay establish retained-input reproducibility, not physical truth or covariance calibration.",
+    "All source epoch mismatches remain exclusions until the separately registered corrected reader is applied."
+  ]
+}
