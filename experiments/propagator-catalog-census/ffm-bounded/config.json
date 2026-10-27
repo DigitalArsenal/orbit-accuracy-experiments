@@ -1,0 +1,18 @@
+{
+  "frozen": true,
+  "sourceRun": "catalog-epochs-full-replay",
+  "outputRun": "ffm-bounded-20261027",
+  "sourceExecutionId": "71697feb66aa81d2e6dafd3721617d279a41b358ac1e76ef030e1327bf297e85",
+  "ffmCommit": "5746b0f53504d4d8a83c4ec7921f4a34b85901a6",
+  "ffmFiles": {
+    "propagator/ffm/dist/isomorphic/module.wasm": "343c4145a6fa2154b987658dd510f8d1fd1f378ee39c3fc30f3f1d594c7546e3",
+    "propagator/ffm/plugin-manifest.json": "167f355101d1ae1d84430c781eb299fa6283a3d48958baa67db0fc8a368062fb"
+  },
+  "arm": "ffm-bounded-lm",
+  "parameterLowerBounds": [0, 0],
+  "levenbergMarquardt": true,
+  "maximumIterations": 50,
+  "workers": 4,
+  "objectCap": null,
+  "perObjectTimeoutSeconds": null
+}
