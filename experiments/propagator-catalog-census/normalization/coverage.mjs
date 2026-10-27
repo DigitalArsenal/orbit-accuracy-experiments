@@ -14,11 +14,12 @@ for(const object of census.objects){
   const file=path.join(priorDir,'outcomes',sha(object.key).slice(0,32)+'.json'),bytes=fs.readFileSync(file),o=JSON.parse(bytes);
   assert.equal(o.key,object.key);assert.ok(o.finishedUtc);outcomeHashes.push([o.key,sha(bytes)]);
   const warnings=[...new Set((o.audit?.files??[]).flatMap(f=>[
-    ...(/UT1=UTC|xp=yp=0/.test(f.earthOrientation??'')?['diagnostic_earth_orientation']:[]),
     ...(/assum(?:ed|ption)|placeholder/i.test(f.uncertainty??'')?['assumed_reference_uncertainty']:[])
   ]))];
   const saved={key:o.key,source:o.source,lineage:o.lineage,evidence:o.evidence,issue:o.issue??null,status:o.status,
     outcomeSha256:sha(bytes),referenceProvenanceWarnings:warnings,
+    ancillaryEnergyEarthOrientation:(o.audit?.files??[]).some(f=>/UT1=UTC|xp=yp=0/.test(f.earthOrientation??''))?
+      'Collector energy diagnostic only. Position truth uses native EME2000 -> GCRF frame bias, not Earth-fixed axes; this diagnostic EOP choice does not enter that transform.':null,
     rawSourceSha256:[...new Set((o.audit?.files??[]).map(f=>f.sourceSha256).filter(Boolean))],
     arms:Object.fromEntries(arms.map(a=>[a,o.arms?.[a]?{ok:!!o.arms[a].ok,status:o.arms[a].status,reason:o.arms[a].reason??null}:null]))};
   for(const a of arms)if(saved.arms[a]&&!saved.arms[a].ok){const k=a+': '+saved.arms[a].reason;failureReasons[k]=(failureReasons[k]??0)+1;}
@@ -51,16 +52,18 @@ for(const source of queue.sources){
       successfulCandidateIds:records.filter(ps=>ps.some(p=>p.arms[a]?.ok)).length,
       candidateIdsWithoutAttempt:ids.filter((id,i)=>!records[i].some(p=>p.arms[a]))}])),
     rowsWithPriorDiagnosticReference:rr.filter(r=>r.priorCandidateObjectResults.some(p=>p.referenceProvenanceWarnings.length)).length,
+    rowsWithAncillaryEnergyConvention:rr.filter(r=>r.priorCandidateObjectResults.some(p=>p.ancillaryEnergyEarthOrientation)).length,
     exactRawSourcePresentRows:rr.filter(r=>r.exactRawSourcePresentInPriorResults).length};
 }
 const file=path.join(root,'runs/propagator-catalog-census/direct-identity-20261027/prior-work-coverage.json');write(file,rows);
 const out={schema:'direct-feed-prior-work-audit',status:'ACCOUNTING_ONLY',completeDirectScoring:false,
   provenance:{sourceSha256:hashFile(new URL(import.meta.url)),identitiesSha256:hashFile(identityFile),censusSha256:hashFile(censusFile),
-    inventoryQueueSha256:hashFile(path.join(sourceDir,'queue.json')),priorOutcomeHashesSha256:sha(JSON.stringify(outcomeHashes)),detailSha256:hashFile(file)},
+    inventoryQueueSha256:hashFile(path.join(sourceDir,'queue.json')),priorOutcomeHashesSha256:sha(JSON.stringify(outcomeHashes)),detailSha256:hashFile(file),
+    collectorSourceHashes:Object.fromEntries(['collect.mjs','physics.mjs'].map(f=>['experiments/operator-capture/collector/'+f,hashFile(path.join(root,'experiments/operator-capture/collector',f))]))},
   counts:{resources:resources.size,identityRows:rows.length,priorSourceObjects:census.objects.length,identityStatuses:counts(rows.map(r=>r.identityStatus))},
   sources:bySource,planetCandidateCollisions:collisions,priorNumericalFailureReasons:failureReasons,
   limitations:['No new propagator residual, covariance-calibration or collision-risk result is calculated.',
-    'Archive results are reused as historical evidence, never as current-feed results. Diagnostic EOP and assumed reference uncertainty are explicitly flagged.',
+    'Archive results are reused as historical evidence, never as current-feed results. Assumed reference uncertainty is explicitly flagged. The collector energy-only EOP convention is not incorrectly attributed to its inertial state transform.',
     'An unsuccessful prior arm remains a failure. New data, corrected normalization or changed numerical code requires a separately registered comparison.',
     'Unresolved source-local identities and failed resources remain in the denominator. Planet candidate collisions must not merge hardware identities.']};
 write(path.join(root,'results/propagator-catalog-census/normalization/prior-work-coverage.json'),out);

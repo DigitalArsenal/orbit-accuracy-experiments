@@ -3,12 +3,16 @@
   "status": "ACCOUNTING_ONLY",
   "completeDirectScoring": false,
   "provenance": {
-    "sourceSha256": "da04e46813465cf7f8917e945d55fba9833fef2497800ba565bdd98ce01ecc67",
+    "sourceSha256": "fe901b934b9ee7229a20adb390168994e297f237e783d79650c082326fbf2b07",
     "identitiesSha256": "d42519075746a901b66656fa60bc3a555ae7f0011ca89c1c1518a12a13237f69",
     "censusSha256": "1ba68a5c4138837591540dc5b55b35bbd35849d318bd119c77cd1ebaa1a90fbd",
     "inventoryQueueSha256": "a894aba45e241f5f0820cb29b58c7ae71472e5e47dd5b25df869b0960cc9806a",
     "priorOutcomeHashesSha256": "67b7914252dc569ee4a572bfcb1379458e5561c999c8a2b2ca03abedb01024e9",
-    "detailSha256": "8198d0bdb532eddb0d9cff4c737d2d26f295256f81ffed7441a2e208ae36cb74"
+    "detailSha256": "a7153052d315de3fca3a59dd29ce151e7f2ad09ada42e5c5e0afb5d0bf46874a",
+    "collectorSourceHashes": {
+      "experiments/operator-capture/collector/collect.mjs": "7f87459f5eaeb49cfbeb5f64e093016abb8770de0ee0a5bcbbdb44ae86786d75",
+      "experiments/operator-capture/collector/physics.mjs": "db1a185d7446729d7ba5bed5846a1f48bb6d088687aab3db9dd1dacec0060e13"
+    }
   },
   "counts": {
     "resources": 11771,
@@ -54,7 +58,8 @@
           ]
         }
       },
-      "rowsWithPriorDiagnosticReference": 11163,
+      "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 11163,
       "exactRawSourcePresentRows": 0
     },
     "eutelsat-oneweb": {
@@ -81,6 +86,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "planet": {
@@ -443,6 +449,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "iss": {
@@ -469,6 +476,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "ses": {
@@ -495,6 +503,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "intelsat": {
@@ -521,6 +530,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "telesat": {
@@ -547,6 +557,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "css-tiangong": {
@@ -573,6 +584,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "gps-precise": {
@@ -599,6 +611,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "glonass-precise": {
@@ -631,6 +644,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "esa-pod": {
@@ -663,6 +677,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 1,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "eumetsat": {
@@ -713,6 +728,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 24,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "cpf": {
@@ -751,6 +767,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "spire": {
@@ -777,6 +794,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "space-track": {
@@ -803,6 +821,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "vimpel": {
@@ -829,6 +848,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     },
     "cpf-edc": {
@@ -855,6 +875,7 @@
         }
       },
       "rowsWithPriorDiagnosticReference": 0,
+      "rowsWithAncillaryEnergyConvention": 0,
       "exactRawSourcePresentRows": 0
     }
   },
@@ -866,7 +887,7 @@
   },
   "limitations": [
     "No new propagator residual, covariance-calibration or collision-risk result is calculated.",
-    "Archive results are reused as historical evidence, never as current-feed results. Diagnostic EOP and assumed reference uncertainty are explicitly flagged.",
+    "Archive results are reused as historical evidence, never as current-feed results. Assumed reference uncertainty is explicitly flagged. The collector energy-only EOP convention is not incorrectly attributed to its inertial state transform.",
     "An unsuccessful prior arm remains a failure. New data, corrected normalization or changed numerical code requires a separately registered comparison.",
     "Unresolved source-local identities and failed resources remain in the denominator. Planet candidate collisions must not merge hardware identities."
   ]
