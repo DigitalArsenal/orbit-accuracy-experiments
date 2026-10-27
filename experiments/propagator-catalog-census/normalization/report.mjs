@@ -35,14 +35,15 @@ export function aggregate(){
       evidenceClasses:count(selected.map(r=>r.evidence??'unavailable')),
       failures:selected.filter(r=>!['decoded_native_frame','decoded_source_states','catalog_elements_only'].includes(r.status)).map(r=>({key:r.key,resourceId:r.resource.RESOURCE_ID,status:r.status,reason:r.reason??null,identityRows:r.identities.length}))};
   }
-  const duplicateContent=[...groups(rows,r=>r.rawSha256).entries()].filter(([,r])=>r.length>1).map(([sha256,rs])=>({sha256,resources:rs.map(r=>({key:r.key,source:r.resource.SOURCE_ID,url:r.resource.URL}))}));
+  const downloaded=rows.filter(r=>r.rawSha256&&r.status!=='download_unavailable');
+  const duplicateContent=[...groups(downloaded,r=>r.rawSha256).entries()].filter(([,r])=>r.length>1).map(([sha256,rs])=>({sha256,resources:rs.map(r=>({key:r.key,source:r.resource.SOURCE_ID,url:r.resource.URL}))}));
   const duplicateUrls=[...groups(rows,r=>r.resource.URL).entries()].filter(([,r])=>r.length>1).map(([url,rs])=>({url,resourceKeys:rs.map(r=>r.key)}));
   const allNumeric=sorted(rows.flatMap(r=>r.identities??[]).map(x=>x.norad).filter(positiveId)),pending=rows.filter(r=>r.status==='pending').length;
   return{schema:'direct-native-inventory',completeResourceAccounting:pending===0,completeScientificComparison:false,
     provenance:{normalizationId:manifest.normalizationId,modulesCommit:config.modulesCommit,queueSha256:manifest.queueSha256,manifestSha256:hashFile(path.join(outputDir,'manifest.json')),
       censusSha256:hashFile(censusFile),outcomeHashesSha256:sha(JSON.stringify(fingerprints)),reportSourceSha256:hashFile(new URL(import.meta.url))},
     counts:{registryEntries:queue.sources.length,credentialRequiredEntries:queue.sources.filter(s=>s.credentialed).length,resources:rows.length,pending,
-      statuses:count(rows.map(r=>r.status)),stateRows:rows.reduce((n,r)=>n+r.states,0),uniqueDownloadedContent:groups(rows,r=>r.rawSha256).size,
+      statuses:count(rows.map(r=>r.status)),stateRows:rows.reduce((n,r)=>n+r.states,0),uniqueDownloadedContent:groups(downloaded,r=>r.rawSha256).size,
       duplicateContentGroups:duplicateContent.length,duplicateContentResourceExcess:duplicateContent.reduce((n,g)=>n+g.resources.length-1,0),duplicateUrlGroups:duplicateUrls.length,
       declaredNumericIds:allNumeric.length,declaredNumericIdsInArchive:allNumeric.filter(x=>archiveIds.has(x)).length,
       declaredNumericIdsAbsentFromArchive:allNumeric.filter(x=>!archiveIds.has(x)).length},

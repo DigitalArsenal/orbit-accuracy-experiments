@@ -9,7 +9,7 @@
     "manifestSha256": "e101f31d3994dc886bbb7ceb00e3621cd8a88edfc1b9d758ab5bef1d99bbd77b",
     "censusSha256": "1ba68a5c4138837591540dc5b55b35bbd35849d318bd119c77cd1ebaa1a90fbd",
     "outcomeHashesSha256": "67b647c5d56451ccaf3c239ca54fc25ec61575171fd91bd410c07418f8b0491a",
-    "reportSourceSha256": "981b913ff1f77dbce8acd4a286cc2daae0ecd7d253a2177258f0da675ea3c866"
+    "reportSourceSha256": "4db899e40f94ba98e48f6e2d8d98d37fec4eac60ac8b4e798580ba791bd01fde"
   },
   "counts": {
     "registryEntries": 17,
@@ -25,7 +25,7 @@
       "unsupported_physical_encoding": 1
     },
     "stateRows": 52122407,
-    "uniqueDownloadedContent": 11724,
+    "uniqueDownloadedContent": 11723,
     "duplicateContentGroups": 46,
     "duplicateContentResourceExcess": 46,
     "duplicateUrlGroups": 45,

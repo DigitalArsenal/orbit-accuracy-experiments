@@ -2,7 +2,7 @@
 
 All 11,771 discovered resources have terminal inventory records. **Scientific comparison remains incomplete.**
 
-17 registry entries, including 4 access gaps. 11,724 distinct downloaded byte payloads; 46 additional resource records repeat exact content.
+17 registry entries, including 4 access gaps. 11,723 distinct downloaded byte payloads; 46 additional resource records repeat exact content.
 
 | Source | Resources | Native state rows | Declared numeric IDs | Statuses |
 |---|---:|---:|---:|---|
