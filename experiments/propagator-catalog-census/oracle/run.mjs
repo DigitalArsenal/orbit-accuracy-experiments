@@ -25,7 +25,10 @@ async function worker(index){
     const W=await wire(values.modules),arc=loadArc(object,census,prior.selection,W);
     if(arc.status!=='eligible')throw Error(`Previously eligible arc now ${arc.status}`);
     engines=await openEngines(values.modules,values.oracle,W);
-    Object.assign(out,{status:'evaluated',issue:arc.issue,leads:arc.leads,audit:arc.audit,fitSamples:arc.fit.length,scoreSamples:arc.score.length},await engines.compare(object,arc,prior.arms['xp-native']));
+    out.geometryVerification=await engines.verifyGeometry();
+    const saveInput=input=>write(path.join(outputDir,'inputs',`${sha(object.key).slice(0,32)}.json`),
+      {key:object.key,extensionId:manifest.extensionId,sourceOutcomeSha256:sourceHash,...input});
+    Object.assign(out,{status:'evaluated',issue:arc.issue,leads:arc.leads,audit:arc.audit,fitSamples:arc.fit.length,scoreSamples:arc.score.length},await engines.compare(object,arc,prior.arms['xp-native'],saveInput));
   }catch(error){out.status='reference_extension_failed';out.reason=String(error.message);}
   finally{await engines?.close();out.finishedUtc=iso(Date.now());write(outcomePath(object.key),out);}
 }

@@ -41,6 +41,7 @@ export function registration(modules,oracleRoot){
   if(censusHash!==source.censusHash)throw Error('Frozen census hash changed');
   const identity={sourceExecutionId:source.executionId,censusHash,moduleCommit:censusConfig.moduleCommit,
     oracleCommit:settings.oracleCommit,oracleVersion:settings.oracleVersion,oraclePackageSha256:settings.oraclePackageSha256,
-    sourceHashes,baseline};
+    sourceHashes,baseline,packageLocks:{experiment:hashFile(path.join(root,'package-lock.json')),
+      xp:hashFile(path.join(modules,'propagator/sdn-ap/package-lock.json'))}};
   return {...identity,extensionId:sha(JSON.stringify(identity)),experimentCommit:git(root,'rev-parse','HEAD').toString().trim()};
 }

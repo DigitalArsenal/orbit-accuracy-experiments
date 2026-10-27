@@ -74,3 +74,14 @@ aggregates and provenance; orbital inputs and provider binaries stay local.
 This extension is a checkpoint within the all-catalog goal. Incomplete source
 normalization, covariance calibration and conjunction model validity remain
 explicitly unfinished after a successful reference comparison.
+
+## Adapter preflight amendment
+
+The first nine-lineage preflight produced no accepted accuracy results: the
+existing covariance-statistics method requires a predicted covariance. Use the
+same pinned native frame module's state transform into a truth-centered RTN
+frame to calculate geometric residuals without any covariance input. The
+same-frame Cartesian distance follows the completed conformance harness's
+definition. Keep the failed preflight separately; retain all criteria and
+population rules. A nonrepresentable type-4 element set remains a visible
+interface failure, not an excluded spacecraft.
