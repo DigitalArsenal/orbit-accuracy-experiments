@@ -129,7 +129,7 @@ if (args.fit) {
   const report = { class: cls, sensitivity: args.sensitivity === 'true', calibration: cal.counts, validation: val.counts, samples: { calibration: cal.out.length, validation: val.out.length }, candidates: {} };
   for (const [name, c] of Object.entries(CANDIDATES)) {
     if (name.startsWith('M3') && !hasD) { report.candidates[name] = { skipped: 'no B parameter in this class: no density term' }; continue; }
-    let p = { ...START, ...c.fixed };
+    let p = c.names.length ? null : { ...c.fixed }; // M0 = A5: k_e = 1, every other term zero
     if (c.names.length) {
       // likelihood start
       const nll = async (x) => { const q = toP(c.names, x, c.fixed); const d2 = await d2Of(q, cal.out); return d2.reduce((s, v, i) => s + 0.5 * (v + logDet(q, cal.out[i])), 0); };
