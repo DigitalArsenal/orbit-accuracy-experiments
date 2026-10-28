@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P1",
- "createdUtc": "2026-10-28T22:05:52.887Z",
- "experimentsCommit": "da17559345e55d0e8ea5b1ef2180284a4b529083",
+ "createdUtc": "2026-10-28T22:14:14.418Z",
+ "experimentsCommit": "812437dbf7d65de4899ae8092184a5a522ee8670",
  "plan": "3.8 P1; D2 (iss-ffm3)",
  "criterion": "ISS refit with fit_batch version 3: zero refusals and at least 99.9 % CONVERGED",
  "settings": {
@@ -41,10 +41,27 @@
   }
  },
  "windows": 748,
- "excluded": 229,
- "fitted": 519,
+ "excluded": 231,
+ "dataExclusions": [
+  {
+   "file": "2025-02-12",
+   "E": "2025-02-13T12:00:00.000Z",
+   "firstFit": {
+    "error": "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+   }
+  },
+  {
+   "file": "2021-05-11",
+   "E": "2021-05-11T12:00:00.000Z",
+   "firstFit": {
+    "error": "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+   }
+  }
+ ],
+ "fitted": 517,
  "converged": 508,
- "refusedFits": 2,
+ "convergedRate": 0.9825918762088974,
+ "refusedFits": 0,
  "failed": [
   {
    "file": "2022-10-29",
@@ -83,22 +100,10 @@
    "termination": "STALLED"
   },
   {
-   "file": "2025-02-12",
-   "E": "2025-02-13T12:00:00.000Z",
-   "error": "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it.",
-   "termination": null
-  },
-  {
    "file": "2021-02-02",
    "E": "2021-02-02T13:47:11.137Z",
-   "error": "MAXIMUM_ITERATIONS",
-   "termination": "MAXIMUM_ITERATIONS"
-  },
-  {
-   "file": "2021-05-11",
-   "E": "2021-05-11T12:00:00.000Z",
-   "error": "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it.",
-   "termination": null
+   "error": "STALLED",
+   "termination": "STALLED"
   },
   {
    "file": "2022-01-29",
@@ -115,7 +120,7 @@
  ],
  "bySet": {
   "calibration": {
-   "windows": 296,
+   "windows": 295,
    "converged": 290
   },
   "validation": {
@@ -123,16 +128,322 @@
    "converged": 101
   },
   "heldOut": {
-   "windows": 118,
+   "windows": 117,
    "converged": 117
   }
  },
+ "rerunAt60": {
+  "files": [
+   "2021-02-02",
+   "2021-09-14",
+   "2022-01-29",
+   "2022-10-29",
+   "2023-10-06",
+   "2024-03-21",
+   "2024-03-28",
+   "2024-04-02",
+   "2024-12-17"
+  ],
+  "maximumIterations": 60,
+  "results": [
+   {
+    "file": "2022-10-29",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 28,
+    "rejectedTrials": 21
+   },
+   {
+    "file": "2024-03-28",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 22,
+    "rejectedTrials": 18
+   },
+   {
+    "file": "2024-12-17",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 20,
+    "rejectedTrials": 17
+   },
+   {
+    "file": "2021-09-14",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 25,
+    "rejectedTrials": 20
+   },
+   {
+    "file": "2023-10-06",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 23,
+    "rejectedTrials": 18
+   },
+   {
+    "file": "2024-03-21",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 23,
+    "rejectedTrials": 19
+   },
+   {
+    "file": "2021-02-02",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 44,
+    "rejectedTrials": 29
+   },
+   {
+    "file": "2022-01-29",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 20,
+    "rejectedTrials": 17
+   },
+   {
+    "file": "2024-04-02",
+    "ok": false,
+    "termination": "STALLED",
+    "iterations": 20,
+    "rejectedTrials": 17
+   }
+  ]
+ },
+ "stalledDetail": [
+  {
+   "file": "2022-10-29",
+   "E": "2022-10-29T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 28,
+   "ffmCalls": 28,
+   "rejectedTrials": 21,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.26450887365013526,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.007838626967137717
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.015851479759827813
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2024-03-28",
+   "E": "2024-03-28T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 22,
+   "ffmCalls": 22,
+   "rejectedTrials": 18,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.24681642513645355,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.011104423506608072
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0
+    }
+   ],
+   "boundStatus": [
+    0,
+    1
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2024-12-17",
+   "E": "2024-12-17T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 20,
+   "ffmCalls": 20,
+   "rejectedTrials": 17,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.4108062285393457,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.005053155543433928
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0
+    }
+   ],
+   "boundStatus": [
+    0,
+    1
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2021-09-14",
+   "E": "2021-09-14T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 25,
+   "ffmCalls": 25,
+   "rejectedTrials": 20,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.12054195321051957,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.005683295361424192
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.022465871761692773
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2023-10-06",
+   "E": "2023-10-05T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 23,
+   "ffmCalls": 23,
+   "rejectedTrials": 18,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.2405291277206208,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.0073939702058824774
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.005104922028515661
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2024-03-21",
+   "E": "2024-03-21T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 23,
+   "ffmCalls": 23,
+   "rejectedTrials": 19,
+   "refusedTrials": 0,
+   "reducedChiSquare": 2.4977182255947383,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.0078079889646624845
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.011383441044919297
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2021-02-02",
+   "E": "2021-02-02T13:47:11.137Z",
+   "termination": "MAXIMUM_ITERATIONS",
+   "iterations": 40,
+   "ffmCalls": 40,
+   "rejectedTrials": 26,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.15931529155916388,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.004259625861523698
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.001157307262441417
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2022-01-29",
+   "E": "2022-01-29T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 20,
+   "ffmCalls": 20,
+   "rejectedTrials": 17,
+   "refusedTrials": 0,
+   "reducedChiSquare": 0.9233758246613276,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.006364918971393907
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.011255467700680574
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  },
+  {
+   "file": "2024-04-02",
+   "E": "2024-04-02T12:00:00.000Z",
+   "termination": "STALLED",
+   "iterations": 20,
+   "ffmCalls": 20,
+   "rejectedTrials": 17,
+   "refusedTrials": 0,
+   "reducedChiSquare": 1.090710822571592,
+   "parameters": [
+    {
+     "kind": "DRAG_AREA_OVER_MASS",
+     "value": 0.007689643413786303
+    },
+    {
+     "kind": "SRP_AREA_OVER_MASS",
+     "value": 0.012939138345983644
+    }
+   ],
+   "boundStatus": [
+    0,
+    0
+   ],
+   "finalStepNorm": "not reported (BatchFitResult has no step-norm field)"
+  }
+ ],
  "secondsPerFit": {
-  "median": 8.55,
+  "median": 8.551,
   "p90": 11.481,
   "note": "wall seconds per fit (24 h track, 4-min NASA states) at RK78 1e-10, steps <= 120 s, while the host load was ~30 of 28 cores"
  },
  "labeled": "in-sample-seen (the planner read A5's ISS rows)",
- "outcome": "FAIL",
+ "outcome": "FAIL (C2-A3 point 3: failures are excluded from the cells and C2 proceeds)",
  "opened": null
 }

@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P5",
- "createdUtc": "2026-10-28T21:51:32.449Z",
- "experimentsCommit": "5ccf6caa7e93446626d00bef3f2edb0b6ad249b4",
+ "createdUtc": "2026-10-28T22:11:08.929Z",
+ "experimentsCommit": "779ab008311eeec4d5c6fda2ca1bfd098095b6e0",
  "plan": "3.8 P5",
  "builds": {
   "v200": {
@@ -97,7 +97,9 @@
    "noisyCovarianceIdentical": false
   }
  ],
- "outcome": "FAIL",
+ "outcome": "FAIL (not identical)",
+ "ruling": "C2-A3 point 4 (Q15): agreement within 25 mm over 72 h is accepted as parity for C2 (every C2 and B2 run uses 2.0.0); the assumption \"2.0.1 changed only covariance validation\" is DISPROVED: the states differ by 1-25 mm",
+ "maxDifferenceM": 0.024642788106575608,
  "opened": {
   "files": 5,
   "sha256": "2ff65aa34da652f1bc5710e6309c1684906e4627a010324ab73c42fd99ea6797",
