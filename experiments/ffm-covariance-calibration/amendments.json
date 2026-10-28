@@ -45,5 +45,53 @@
    "Swarm B",
    "GRACE-FO 1+2"
   ]
+ },
+ "C2-A3": {
+  "date": "2026-10-28",
+  "before": "any calibration fit",
+  "rulings": [
+   "Q13",
+   "Q14",
+   "Q15"
+  ],
+  "npBiasTask": "experiments-e6-normal-point-along-track-bias-20261028",
+  "typeLLabel": "NP along-track bias present (task experiments-e6-normal-point-along-track-bias-20261028)",
+  "classLP": {
+   "objects": [
+    "lares",
+    "starlette",
+    "stella",
+    "larets",
+    "westpac"
+   ],
+   "fit": "harness/ffm-fit-v3.mjs, one round, 10 m, 24 h NSGF at 10 min; state + B (seed E6 b, a priori 30 %), AGOM fixed E6",
+   "cutoffEveryHours": 24,
+   "split": "type L's",
+   "truthCovariance": "C2-A1 point 3",
+   "role": "bias-free measure of the floor"
+  },
+  "issFits": {
+   "dataExclusions": [
+    "2021-05-11",
+    "2025-02-12"
+   ],
+   "rerunAt60": [
+    "2021-02-02",
+    "2021-09-14",
+    "2022-01-29",
+    "2022-10-29",
+    "2023-10-06",
+    "2024-03-21",
+    "2024-03-28",
+    "2024-04-02",
+    "2024-12-17"
+   ],
+   "maximumIterations": 60
+  },
+  "ffmParity": {
+   "accepted": "<= 25 mm over 72 h",
+   "disproved": "2.0.1 changed only covariance validation"
+  },
+  "terrasarX": "results only, not redistributable"
  }
 }

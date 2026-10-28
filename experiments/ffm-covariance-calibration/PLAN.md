@@ -337,3 +337,24 @@ per satellite (`precheck-P9.json` at 20c7263); B2 applies the 90 % rule to the 2
    is in the receipt.
 3. COSMIC-2's truth is arcs of about 2 h with gaps, so it adds few windows: R1's cluster rule (at least 3 independent clusters)
    rests chiefly on Swarm A+C, Swarm B and GRACE-FO 1+2.
+
+### C2-A3 - 2026-10-28, before any calibration fit (coordinator rulings Q13-Q15)
+
+Reason: `precheck-P3-empirical.json`, `precheck-P1.json` and `precheck-P5.json` at d487332.
+
+1. **Normal-point along-track bias (Q13, D6).** It is a defect of E6's normal-point path, filed as the separate, unclaimed task
+   `experiments-e6-normal-point-along-track-bias-20261028`; it is not fixed here. Type L proceeds on the registered E6 R arm, labeled
+   "NP along-track bias present (task experiments-e6-normal-point-along-track-bias-20261028)".
+2. **Companion class L-P.** FFM fitted directly to the NSGF positions of the five type L spheres with E6 R's parameterization (state
+   and B, B seeded at E6's value with an a priori sigma of 30 %, AGOM fixed at E6's), by fit_batch version 3 (harness/ffm-fit-v3.mjs, one
+   round at 10 m per axis, the 24 h NSGF track [E - 24 h, E] at 10 min, A12's modules), cutoffs every 24 h (E6's cadence) on type L's
+   splits (calibration 2026-06-03 to 06-27, validation 06-28 to 07-15, held out 07-16 to 08-30) and leads, with the C2-A1 truth
+   covariance; candidates, fitting, choice, freeze and pass rule as every class. Both L and L-P are reported; L-P is the bias-free
+   measure of the floor.
+3. **ISS fits (Q14).** The two fits refused for missing weather days (2021-05-11 and 2025-02-12: B1's environment drops 2021-05-09 and
+   2025-02-12) are data exclusions, counted and disclosed. The 8 STALLED fits and the 1 MAXIMUM_ITERATIONS fit are re-run once at 60
+   evaluations (A12's contingency, A12 point 11); any that still fail are failures, excluded from the cells, and C2 proceeds whatever
+   the final rate. Each stalled fit's termination detail is recorded for the coordinator.
+4. **FFM build parity (Q15).** Agreement within 25 mm over 72 h between 2.0.0 and 2.0.1 is accepted as parity for C2, since every C2
+   and B2 run uses 2.0.0. The assumption that 2.0.1 changed only covariance validation is disproved: the states differ by 1-25 mm.
+5. **TerraSAR-X licence.** No licence is stated, so its files are not redistributable: results only.
