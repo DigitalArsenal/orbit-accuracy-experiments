@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P2",
- "createdUtc": "2026-10-28T21:27:46.096Z",
- "experimentsCommit": "28120ff2965bcd91027a2bfd247efd900640c4ca",
+ "createdUtc": "2026-10-28T21:29:24.532Z",
+ "experimentsCommit": "7c146406e4a0be9829d8320fd230c4df3b9ae1a7",
  "plan": "3.8 P2",
  "criterion": "each NSGF arc agrees with the next day's arc within 0.3 m RMS per axis (the stated sigma of analysis/reference-states: the per-axis RMS of the overlap)",
  "issTruthAge": "checked by the planner (PLAN.md section 1, row 7): minor",

@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P11",
- "createdUtc": "2026-10-28T21:27:50.572Z",
- "experimentsCommit": "28120ff2965bcd91027a2bfd247efd900640c4ca",
+ "createdUtc": "2026-10-28T21:29:29.310Z",
+ "experimentsCommit": "7c146406e4a0be9829d8320fd230c4df3b9ae1a7",
  "plan": "3.6, 3.8 P11",
  "method": "independent chi-square(3) draws (Box-Muller on SplitMix32, seed 1), 4,000 trials per size; the scale case multiplies each of 5 objects' draws by exp(N(0, 0.15))",
  "independent": {
@@ -23,56 +23,56 @@
  "perClassCell": {
   "R1": {
    "calibration": {
-    "windows": 455,
-    "oracle": 0.9445
+    "windows": 482,
+    "oracle": 0.95
    },
    "validation": {
-    "windows": 158,
-    "oracle": 0.7865
+    "windows": 164,
+    "oracle": 0.7815
    },
    "heldOutTime": {
-    "windows": 238,
-    "oracle": 0.81
+    "windows": 276,
+    "oracle": 0.873
    },
    "heldOutObject": {
-    "windows": 4,
+    "windows": 14,
     "oracle": 0
    }
   },
   "R2": {
    "calibration": {
-    "windows": 564,
-    "oracle": 0.9685
+    "windows": 514,
+    "oracle": 0.9505
    },
    "validation": {
-    "windows": 201,
-    "oracle": 0.7955
+    "windows": 188,
+    "oracle": 0.8
    },
    "heldOutTime": {
-    "windows": 237,
-    "oracle": 0.801
+    "windows": 261,
+    "oracle": 0.8815
    },
    "heldOutObject": {
-    "windows": 253,
-    "oracle": 0.842
+    "windows": 238,
+    "oracle": 0.81
    }
   },
   "R3": {
    "calibration": {
-    "windows": 1393,
-    "oracle": 0.9985
+    "windows": 1425,
+    "oracle": 0.9995
    },
    "validation": {
     "windows": 487,
     "oracle": 0.9595
    },
    "heldOutTime": {
-    "windows": 724,
-    "oracle": 0.98
+    "windows": 755,
+    "oracle": 0.983
    },
    "heldOutObject": {
-    "windows": 1158,
-    "oracle": 0.9975
+    "windows": 1176,
+    "oracle": 0.9985
    }
   }
  },
