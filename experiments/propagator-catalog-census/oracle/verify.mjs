@@ -9,7 +9,7 @@ import {loadArc} from '../arcs.mjs';
 import {outcomeFile} from '../run.mjs';
 import {aggregate} from './report.mjs';
 import {openEngines} from './engine.mjs';
-import {root,read,write,hashFile,settings,sourceDir,outputDir,registration} from './common.mjs';
+import {root,read,write,sha,hashFile,settings,sourceDir,outputDir,registration} from './common.mjs';
 const {values}=parseArgs({options:{modules:{type:'string'},oracle:{type:'string'}}});
 if(!values.modules||!values.oracle)throw Error('--modules and --oracle required');
 const identity=registration(values.modules,values.oracle),manifest=read(path.join(outputDir,'manifest.json'));
@@ -36,7 +36,14 @@ for(const object of census.objects){
   strict+=out.agreement.exceedances.length;
   if(out.agreement.exceedances.length){
     const diagnostic=read(path.join(outputDir,'diagnostics',path.basename(file)));
+    assert.equal(diagnostic.key,object.key);assert.equal(diagnostic.extensionId,identity.extensionId);
+    assert.equal(diagnostic.inputHash,sha(JSON.stringify(input)));
+    assert.equal(diagnostic.sourceHash,hashFile(new URL('./diagnose.mjs',import.meta.url)));
     assert.equal(diagnostic.rows.length,out.agreement.exceedances.length);
+    for(let i=0;i<diagnostic.rows.length;i++){
+      assert.equal(diagnostic.rows[i].index,out.agreement.exceedances[i].index);
+      assert.equal(diagnostic.rows[i].epoch,out.agreement.exceedances[i].epoch);
+    }
     assert.ok(diagnostic.strictExceedancesRemainReported);
     unresolved+=diagnostic.rows.filter(r=>r.classification==='unexplained-strict-exceedance'||!r.classification).length;
   }

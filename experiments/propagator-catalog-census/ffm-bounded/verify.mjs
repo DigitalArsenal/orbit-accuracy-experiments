@@ -15,7 +15,7 @@ const identity=registration(values.modules,values.ffm),manifest=read(path.join(o
 assert.equal(identity.amendmentId,manifest.amendmentId);
 const report=aggregate();assert.ok(report.completeAvailableArm);assert.equal(report.counts.sourceObjects,57413);
 assert.deepEqual(report,read(path.join(root,'results/propagator-catalog-census/ffm-bounded/summary.json')));
-const census=read(path.join(sourceDir,'census.json')),representatives=new Map(),classes=new Set();let attempted=0,metadata=0;
+const census=read(path.join(sourceDir,'census.json')),representatives=new Map(),classes=new Set(),lineages=new Set();let attempted=0,metadata=0;
 for(const object of census.objects){
   const out=read(outcomePath(object.key)),prior=read(outcomeFile(sourceDir,object.key));assert.ok(out.finishedUtc);assert.equal(out.method??out.arm?.method??settings.arm,settings.arm);
   if(!out.arm){assert.equal(out.status,prior.status);assert.ok(!prior.arms?.ffm);metadata++;continue;}attempted++;
@@ -27,9 +27,7 @@ for(const object of census.objects){
   }else assert.ok(!out.arm.ok,'Success requires hashed fit provenance');
   if(out.arm.ok)for(const [day,d]of Object.entries(out.arm.days)){assert.ok(out.leads[day].available);assert.equal(d.samples,out.leads[day].samples);assert.ok(Number.isFinite(d.rmsM)&&d.rmsM>=0);assert.ok(d.ricRmsM.every(Number.isFinite));}
   const cls=`${prior.arms.ffm.ok?'success':prior.arms.ffm.reason} -> ${out.arm.ok?'success':out.arm.reason}`;
-  if(!representatives.has(object.lineage)||!classes.has(cls))representatives.set(object.key,{object,out,prior});classes.add(cls);
-  // A separate set tracks lineage keys because representatives are keyed by object.
-  if(!representatives.has(object.lineage))representatives.set(object.lineage,{object,out,prior});
+  if(!lineages.has(object.lineage)||!classes.has(cls))representatives.set(object.key,{object,out,prior});classes.add(cls);lineages.add(object.lineage);
 }
 assert.equal(attempted,11414);assert.equal(metadata,45999);
 const W=await wire(values.modules),envFor=await environment({modules:values.modules,dir:sourceDir},W),engine=await openEngine(values.modules,values.ffm,W),replayed=[],seen=new Set();
