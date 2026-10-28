@@ -73,3 +73,25 @@ export async function windowTerms(ctx, pairs, fit, E, leads, settings) {
   stats.forEach((s, k) => { const [i, name] = keys[k]; out[i].terms[name] = s.predictedRtn; out[i].errRtnM ??= s.errorRtn; });
   return { leads: out, cov0Scale: scale, samples: grid.length };
 }
+
+/**
+ * The held-out path (PLAN.md 3.5 point 5): FFM carries A5's covariance from t0 to E, then from E with PROCESS_NOISE (white acceleration,
+ * q [R, T, N] m^2/s^3, 600 s) to the leads; returns each lead's position covariance in the predicted RTN axes (lower 6, m^2) and the
+ * predicted state. ctx, pairs, fit, E, leads, settings as windowTerms; q = [q_R, q_T, q_N].
+ */
+export async function ffmNoiseCovariances(ctx, pairs, fit, E, leads, settings, q) {
+  const scale = Math.max(1, fit.reducedChiSquare ?? 1);
+  const cov0 = fit.covariance.map((x) => x * scale);
+  const [atE] = decodeSamples(await ctx.ffm.invoke('invoke', [
+    executionFrame({ epoch: fit.epoch, state: fit.state, samples: [iso(E)], forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: cov0, noise: null, integrator: settings.integrator }),
+    ...ctx.inputs,
+  ]));
+  const leadIso = leads.map((x) => x.line.epoch);
+  const out = decodeSamples(await ctx.ffm.invoke('invoke', [
+    executionFrame({ epoch: iso(E), state: atE.state, samples: leadIso, forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: atE.covariance, noise: { q, intervalSeconds: STEP_S }, integrator: settings.integrator }),
+    ...ctx.inputs,
+  ]));
+  const stats = await pairs.stats(out.map((s, i) => ({ predicted: { position: s.state.slice(0, 3), velocity: s.state.slice(3, 6), covariance: stateBlock(s.covariance, s.n), covarianceAxes: 'INERTIAL' },
+    truth: { position: leads[i].line.r.map((v) => v * 1000), velocity: leads[i].line.v.map((v) => v * 1000) } })), 'predicted');
+  return out.map((s, i) => ({ L: leads[i].L, state: s.state, rtn: stats[i].predictedRtn, errRtnM: stats[i].errorRtn }));
+}
