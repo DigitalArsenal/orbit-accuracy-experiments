@@ -1,9 +1,9 @@
 {
  "receipt": "precheck-P9",
- "createdUtc": "2026-10-28T21:24:15.018Z",
- "experimentsCommit": "ca10e62ebb0a8ec0ba3afd6ff8b37d8a37368808",
+ "createdUtc": "2026-10-28T21:27:46.033Z",
+ "experimentsCommit": "28120ff2965bcd91027a2bfd247efd900640c4ca",
  "plan": "3.8 P9, 3.4",
- "rule": "windows counted where the truth spans cover [E - 24 h, E + 72 h] with no hole over 30 min (the 90 % epoch rule is applied per window at run time); cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day",
+ "rule": "windows counted where the union of the truth spans covers at least 90 % of [E - 24 h, E + 72 h] (the 90 % epoch rule is applied per window at run time); cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day",
  "gnss": {
   "GPS": {
    "truthProduct": "ESA0OPSFIN (ESA final, one product per object)",
@@ -197,6 +197,8 @@
  },
  "cosmic": {
   "truthProduct": "UCAR COSMIC-2 leoOrb (reference-leo-pod-2)",
+  "coverageMin": 0.75,
+  "selection": "lowest SHA-256 of C2|P9|cosmic2|<norad>",
   "satellites": [
    44349,
    44350,
@@ -204,7 +206,13 @@
    44353,
    44358
   ],
-  "withCoverage": [],
+  "withCoverage": [
+   44349,
+   44350,
+   44351,
+   44353,
+   44358
+  ],
   "coverage": {
    "44349": 0.8033,
    "44350": 0.7746,
@@ -292,7 +300,28 @@
     "key": "2f40f5d81f92b271156084dde8177ef2ff43e0aa4236344ed201b61694e221a2"
    }
   ],
-  "COSMIC-2": []
+  "COSMIC-2": [
+   {
+    "norad": 44351,
+    "key": "0cf71fe6c85b6b50969674c190924160859252a1e073c69e3eb7213bd8c6a7b8"
+   },
+   {
+    "norad": 44353,
+    "key": "43b022943af4d7648a0b0f73d8b8e13ea477f37cac039c2d13bf979d422eea70"
+   },
+   {
+    "norad": 44358,
+    "key": "49923b756c2fe6fa80b17a1d8a7cd1c2c473604f9ea1a4609cbe76f2a632e9df"
+   },
+   {
+    "norad": 44349,
+    "key": "7423effd3905085bcfd8d7fd9c643b8451e1945e41104b160f8402fd2a3c7cb3"
+   },
+   {
+    "norad": 44350,
+    "key": "cd19508982709e2eeb0a2fcd8cec94024f63c00dcc4d8749195f8c14d60ef4ce"
+   }
+  ]
  },
  "perObject": [
   {
@@ -422,9 +451,9 @@
    ],
    "first": "2025-10-01T00:00:00.000Z",
    "last": "2026-08-28T23:52:00.000Z",
-   "calibration": 42,
-   "validation": 16,
-   "heldOutTime": 22
+   "calibration": 86,
+   "validation": 31,
+   "heldOutTime": 43
   },
   {
    "class": "R2",
@@ -437,9 +466,9 @@
    ],
    "first": "2025-10-01T00:00:00.000Z",
    "last": "2026-08-28T22:21:00.000Z",
-   "calibration": 30,
-   "validation": 14,
-   "heldOutTime": 16
+   "calibration": 82,
+   "validation": 31,
+   "heldOutTime": 40
   },
   {
    "class": "R2",
@@ -452,9 +481,9 @@
    ],
    "first": "2025-10-01T00:00:00.000Z",
    "last": "2026-08-27T16:57:00.000Z",
-   "calibration": 24,
-   "validation": 16,
-   "heldOutTime": 14
+   "calibration": 78,
+   "validation": 29,
+   "heldOutTime": 36
   },
   {
    "class": "R2",
@@ -467,9 +496,9 @@
    ],
    "first": "2025-10-01T00:00:00.000Z",
    "last": "2026-08-28T21:57:00.000Z",
-   "calibration": 36,
-   "validation": 18,
-   "heldOutTime": 18
+   "calibration": 84,
+   "validation": 31,
+   "heldOutTime": 41
   },
   {
    "class": "R2",
@@ -482,9 +511,9 @@
    ],
    "first": "2025-10-01T00:00:00.000Z",
    "last": "2026-08-27T15:33:00.000Z",
-   "calibration": 24,
-   "validation": 14,
-   "heldOutTime": 16
+   "calibration": 76,
+   "validation": 25,
+   "heldOutTime": 31
   },
   {
    "class": "R2",
@@ -497,7 +526,7 @@
    ],
    "first": "2025-10-01T00:00:00.000Z",
    "last": "2026-08-28T21:03:00.000Z",
-   "heldOutObject": 60
+   "heldOutObject": 151
   },
   {
    "class": "R2",
@@ -523,7 +552,7 @@
    ],
    "first": "2025-09-28T00:00:00.000Z",
    "last": "2026-08-29T23:58:00.000Z",
-   "calibration": 87,
+   "calibration": 88,
    "validation": 28,
    "heldOutTime": 44
   },
@@ -553,7 +582,7 @@
    ],
    "first": "2025-09-28T00:00:00.000Z",
    "last": "2026-08-29T23:45:00.000Z",
-   "calibration": 87,
+   "calibration": 88,
    "validation": 28,
    "heldOutTime": 44
   },
@@ -568,7 +597,7 @@
    ],
    "first": "2025-09-28T00:00:00.000Z",
    "last": "2026-08-29T23:45:00.000Z",
-   "calibration": 87,
+   "calibration": 88,
    "validation": 28,
    "heldOutTime": 44
   },
@@ -583,7 +612,7 @@
    ],
    "first": "2025-09-28T00:00:00.000Z",
    "last": "2026-08-29T23:58:00.000Z",
-   "heldOutObject": 153
+   "heldOutObject": 155
   },
   {
    "class": "R3",
@@ -626,7 +655,7 @@
    ],
    "first": "2024-09-23T23:59:42.000Z",
    "last": "2026-09-23T23:59:42.000Z",
-   "calibration": 82,
+   "calibration": 84,
    "validation": 31,
    "heldOutTime": 47
   },
@@ -658,7 +687,7 @@
    "last": "2026-09-23T23:59:42.000Z",
    "calibration": 90,
    "validation": 31,
-   "heldOutTime": 44
+   "heldOutTime": 45
   },
   {
    "class": "R3",
@@ -701,7 +730,7 @@
    ],
    "first": "2024-09-23T23:59:42.000Z",
    "last": "2026-09-23T23:59:42.000Z",
-   "calibration": 85,
+   "calibration": 86,
    "validation": 31,
    "heldOutTime": 47
   },
@@ -842,32 +871,105 @@
    "first": "2024-09-23T23:59:42.000Z",
    "last": "2026-09-23T23:59:42.000Z",
    "heldOutObject": 168
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44351,
+   "cluster": 44351,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T21:53:42.000Z",
+   "last": "2026-10-07T23:46:42.000Z",
+   "calibration": 1,
+   "validation": 0,
+   "heldOutTime": 0
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44353,
+   "cluster": 44353,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T23:08:42.000Z",
+   "last": "2026-10-07T22:28:42.000Z",
+   "calibration": 0,
+   "validation": 1,
+   "heldOutTime": 0
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44358,
+   "cluster": 44358,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T22:02:42.000Z",
+   "last": "2026-10-07T23:10:42.000Z",
+   "calibration": 0,
+   "validation": 1,
+   "heldOutTime": 1
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44349,
+   "cluster": 44349,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T22:02:42.000Z",
+   "last": "2026-10-07T22:01:42.000Z",
+   "calibration": 4,
+   "validation": 1,
+   "heldOutTime": 0
+  },
+  {
+   "class": "R1",
+   "set": "heldOutObject",
+   "name": "COSMIC-2",
+   "norad": 44350,
+   "cluster": 44350,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T21:53:42.000Z",
+   "last": "2026-10-07T21:52:42.000Z",
+   "heldOutObject": 4
   }
  ],
  "totals": {
   "R1": {
-   "calibration": 450,
-   "validation": 155,
-   "heldOutTime": 237,
-   "heldOutObject": 0
+   "calibration": 455,
+   "validation": 158,
+   "heldOutTime": 238,
+   "heldOutObject": 4
   },
   "R2": {
-   "calibration": 314,
-   "validation": 132,
-   "heldOutTime": 132,
-   "heldOutObject": 162
+   "calibration": 564,
+   "validation": 201,
+   "heldOutTime": 237,
+   "heldOutObject": 253
   },
   "R3": {
-   "calibration": 1387,
+   "calibration": 1393,
    "validation": 487,
-   "heldOutTime": 723,
-   "heldOutObject": 1156
+   "heldOutTime": 724,
+   "heldOutObject": 1158
   }
  },
  "clusterCounts": {
   "R1": {
-   "calibration": 3,
-   "heldOutObject": 1
+   "calibration": 7,
+   "heldOutObject": 2
   },
   "R2": {
    "calibration": 7,
@@ -883,12 +985,11 @@
  ],
  "outcome": "FAIL",
  "failures": [
-  "COSMIC-2: 0 satellites with coverage (44349, 44350, 44351, 44353, 44358), 6 needed (4 calibration + 2 held out)",
   "TerraSAR-X (31698): no converted truth in the reference roots"
  ],
  "opened": {
-  "files": 23183,
-  "sha256": "65de05fa0d3edad09ae9b967944767aca9d25fdab1981c638859787cdaee3939",
+  "files": 23184,
+  "sha256": "aa43a45f79413313507dd2c0623ce1b66fa8babb780543be4937438ef3d2ccad",
   "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P9.json",
   "groups": [
    {
@@ -931,6 +1032,13 @@
     "files": 3446,
     "labels": [
      "index.json"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "amendments"
     ]
    }
   ]

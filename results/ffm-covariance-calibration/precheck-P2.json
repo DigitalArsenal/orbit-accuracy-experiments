@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P2",
- "createdUtc": "2026-10-28T21:24:15.093Z",
- "experimentsCommit": "ca10e62ebb0a8ec0ba3afd6ff8b37d8a37368808",
+ "createdUtc": "2026-10-28T21:27:46.096Z",
+ "experimentsCommit": "28120ff2965bcd91027a2bfd247efd900640c4ca",
  "plan": "3.8 P2",
  "criterion": "each NSGF arc agrees with the next day's arc within 0.3 m RMS per axis (the stated sigma of analysis/reference-states: the per-axis RMS of the overlap)",
  "issTruthAge": "checked by the planner (PLAN.md section 1, row 7): minor",
@@ -1458,8 +1458,8 @@
  ],
  "note": "no exclusion is applied: the treatment of arcs above 0.3 m is a question to the coordinator",
  "opened": {
-  "files": 23183,
-  "sha256": "65de05fa0d3edad09ae9b967944767aca9d25fdab1981c638859787cdaee3939",
+  "files": 23184,
+  "sha256": "aa43a45f79413313507dd2c0623ce1b66fa8babb780543be4937438ef3d2ccad",
   "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P2.json",
   "groups": [
    {
@@ -1502,6 +1502,13 @@
     "files": 3446,
     "labels": [
      "index.json"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "amendments"
     ]
    }
   ]

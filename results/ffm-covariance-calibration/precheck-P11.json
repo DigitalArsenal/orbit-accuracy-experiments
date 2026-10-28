@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P11",
- "createdUtc": "2026-10-28T21:24:19.247Z",
- "experimentsCommit": "ca10e62ebb0a8ec0ba3afd6ff8b37d8a37368808",
+ "createdUtc": "2026-10-28T21:27:50.572Z",
+ "experimentsCommit": "28120ff2965bcd91027a2bfd247efd900640c4ca",
  "plan": "3.6, 3.8 P11",
  "method": "independent chi-square(3) draws (Box-Muller on SplitMix32, seed 1), 4,000 trials per size; the scale case multiplies each of 5 objects' draws by exp(N(0, 0.15))",
  "independent": {
@@ -23,63 +23,63 @@
  "perClassCell": {
   "R1": {
    "calibration": {
-    "windows": 450,
-    "oracle": 0.9395
+    "windows": 455,
+    "oracle": 0.9445
    },
    "validation": {
-    "windows": 155,
-    "oracle": 0.714
+    "windows": 158,
+    "oracle": 0.7865
+   },
+   "heldOutTime": {
+    "windows": 238,
+    "oracle": 0.81
+   },
+   "heldOutObject": {
+    "windows": 4,
+    "oracle": 0
+   }
+  },
+  "R2": {
+   "calibration": {
+    "windows": 564,
+    "oracle": 0.9685
+   },
+   "validation": {
+    "windows": 201,
+    "oracle": 0.7955
    },
    "heldOutTime": {
     "windows": 237,
     "oracle": 0.801
    },
    "heldOutObject": {
-    "windows": 0,
-    "oracle": null
-   }
-  },
-  "R2": {
-   "calibration": {
-    "windows": 314,
-    "oracle": 0.874
-   },
-   "validation": {
-    "windows": 132,
-    "oracle": 0.7715
-   },
-   "heldOutTime": {
-    "windows": 132,
-    "oracle": 0.7715
-   },
-   "heldOutObject": {
-    "windows": 162,
-    "oracle": 0.7925
+    "windows": 253,
+    "oracle": 0.842
    }
   },
   "R3": {
    "calibration": {
-    "windows": 1387,
-    "oracle": 0.999
+    "windows": 1393,
+    "oracle": 0.9985
    },
    "validation": {
     "windows": 487,
     "oracle": 0.9595
    },
    "heldOutTime": {
-    "windows": 723,
-    "oracle": 0.987
+    "windows": 724,
+    "oracle": 0.98
    },
    "heldOutObject": {
-    "windows": 1156,
-    "oracle": 0.996
+    "windows": 1158,
+    "oracle": 0.9975
    }
   }
  },
  "note": "per class and set, the cell size is the window count of P9 (each window gives one sample per lead); the per-cell oracle pass count and its 5th percentile are recomputed with the realized cell sizes at scoring",
  "opened": {
-  "files": 23183,
-  "sha256": "65de05fa0d3edad09ae9b967944767aca9d25fdab1981c638859787cdaee3939",
+  "files": 23184,
+  "sha256": "aa43a45f79413313507dd2c0623ce1b66fa8babb780543be4937438ef3d2ccad",
   "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P11.json",
   "groups": [
    {
@@ -122,6 +122,13 @@
     "files": 3446,
     "labels": [
      "index.json"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "amendments"
     ]
    }
   ]
