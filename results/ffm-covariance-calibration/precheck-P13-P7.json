@@ -1,0 +1,193 @@
+{
+ "receipt": "precheck-P13-P7",
+ "createdUtc": "2026-10-28T22:15:55.261Z",
+ "experimentsCommit": "47c59a8c722020413266f3d7e87d78d418895ee1",
+ "plan": "3.8 P13 and P7",
+ "window": {
+  "file": "2021-01-12",
+  "E": "2021-01-12T12:00:00.000Z",
+  "set": "calibration",
+  "labeled": "in-sample-seen"
+ },
+ "q_m2s3": [
+  1e-9,
+  3e-9,
+  1e-9
+ ],
+ "p13": {
+  "cells": [
+   {
+    "L": 24,
+    "maxRelative": 3.3436002562986563e-7
+   },
+   {
+    "L": 48,
+    "maxRelative": 3.019923343295983e-7
+   },
+   {
+    "L": 72,
+    "maxRelative": 2.52063555480162e-7
+   }
+  ],
+  "maxRelative": 3.3436002562986563e-7,
+  "threshold": 0.000001,
+  "outcome": "pass",
+  "detail": [
+   {
+    "L": 24,
+    "composed": [
+     1391.2901562113593,
+     -65673.00968136656,
+     6069086.124172856,
+     -55.87270093836887,
+     5196.326505950668,
+     45.66339353398359
+    ],
+    "ffm": [
+     1391.290423274866,
+     -65673.03368752962,
+     6069088.153433327,
+     -55.87271966345861,
+     5196.32802667,
+     45.66339464284465
+    ],
+    "maxRelative": 3.3436002562986563e-7
+   },
+   {
+    "L": 48,
+    "composed": [
+     2204.218509005987,
+     -203014.90785091108,
+     48782454.411891736,
+     176.12757834152944,
+     -41985.63700438405,
+     120.59256365421496
+    ],
+    "ffm": [
+     2204.2186882004753,
+     -203014.95971151628,
+     48782469.14382347,
+     176.12762236165145,
+     -41985.64933804123,
+     120.59257375065135
+    ],
+    "maxRelative": 3.019923343295983e-7
+   },
+   {
+    "L": 72,
+    "composed": [
+     4710.501883031581,
+     -661921.2114355939,
+     164527830.91283596,
+     -571.5573007111188,
+     142579.45694547135,
+     254.5163023913809
+    ],
+    "ffm": [
+     4710.5025579418,
+     -661921.3783903122,
+     164527872.38431644,
+     -571.5574434593218,
+     142579.4920521381,
+     254.51633149282134
+    ],
+    "maxRelative": 2.52063555480162e-7
+   }
+  ]
+ },
+ "p7": {
+  "settings": {
+   "integrator": "RK78",
+   "relativeTolerance": 1e-10,
+   "maxStepSeconds": 120,
+   "output": "hourly, E to E + 72 h (73 samples)",
+   "noiseStepSeconds": 600,
+   "parameters": "B and AGOM columns for STM runs",
+   "note": "best of 3 runs, in-process CPU (process.cpuUsage), host load about 30 of 28 cores"
+  },
+  "costs": {
+   "stateOnly": {
+    "cpuSecondsPerObjectDay": 0.21547933333333333,
+    "wallSecondsPerObjectDay": 0.18133333333333335,
+    "runs": [
+     {
+      "cpuSeconds": 0.646438,
+      "wallSeconds": 0.544
+     },
+     {
+      "cpuSeconds": 0.648123,
+      "wallSeconds": 0.544
+     },
+     {
+      "cpuSeconds": 0.657194,
+      "wallSeconds": 0.554
+     }
+    ]
+   },
+   "stmB": {
+    "cpuSecondsPerObjectDay": 1.7926339999999998,
+    "wallSecondsPerObjectDay": 1.7666666666666666,
+    "runs": [
+     {
+      "cpuSeconds": 5.377902,
+      "wallSeconds": 5.3
+     },
+     {
+      "cpuSeconds": 5.391719,
+      "wallSeconds": 5.301
+     },
+     {
+      "cpuSeconds": 5.396933,
+      "wallSeconds": 5.319
+     }
+    ]
+   },
+   "stmBNoise": {
+    "cpuSecondsPerObjectDay": 1.9115356666666665,
+    "wallSecondsPerObjectDay": 1.885,
+    "runs": [
+     {
+      "cpuSeconds": 5.734607,
+      "wallSeconds": 5.655
+     },
+     {
+      "cpuSeconds": 5.738185,
+      "wallSeconds": 5.659
+     },
+     {
+      "cpuSeconds": 5.742387,
+      "wallSeconds": 5.654
+     }
+    ]
+   }
+  }
+ },
+ "opened": {
+  "files": 6,
+  "sha256": "ab58a7aea2eaac4da58ac83dd411509fc225ad411af957e8da0d026339e80d1d",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P13-P7.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/rows/*",
+    "files": 4,
+    "labels": [
+     "iss-fit rows"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/nasa-iss-oem-archive/*",
+    "files": 1,
+    "labels": [
+     "ISS OEM"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "B2 config"
+    ]
+   }
+  ]
+ }
+}
