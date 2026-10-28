@@ -358,3 +358,31 @@ Reason: `precheck-P3-empirical.json`, `precheck-P1.json` and `precheck-P5.json` 
 4. **FFM build parity (Q15).** Agreement within 25 mm over 72 h between 2.0.0 and 2.0.1 is accepted as parity for C2, since every C2
    and B2 run uses 2.0.0. The assumption that 2.0.1 changed only covariance validation is disproved: the states differ by 1-25 mm.
 5. **TerraSAR-X licence.** No licence is stated, so its files are not redistributable: results only.
+
+### C2-A4 - 2026-10-28, before any freeze (coordinator rulings Q16-Q23)
+
+Disclosure: when this amendment was written, the type I and L-P calibration fits and validation choices had already been made
+(`fit-I.json`, `fit-LP.json`, `fit-LP-sensitivity.json` at b54dd85: type I M1, L-P M0, L-P sensitivity M3 with tau infinite). None of
+these rulings changes those two classes' candidates or rules.
+
+1. **P8 (Q16).** The shape statistic is mean d2/3 after scaling each lead's covariance so that its 95 % coverage is exactly 0.95 (the
+   planner's row 11). P8 passes when it lies in 0.8-1.25 at every lead of the chosen model on validation; otherwise the class is
+   reported infeasible for a lead-independent model. P8 runs for type I and L-P before they are frozen.
+2. **R3 seeds (Q17).** State + AGOM, AGOM seeded per object from its published area-to-mass ratio x Cr 1.3 (ILRS spheres from the ILRS
+   mission pages; GNSS by block, from published dimensions and masses), a priori sigma 100 % of the seed, domain [0, inf). Every seed and
+   its source is in a receipt (`seeds-R3.json`) before any R3 fit.
+3. **R1/R2 (Q18).** P0's structure (B and AGOM bounded to [0, inf), one round at 10 m, at most 40 evaluations, a priori sigma 30 % of
+   each seed) with per-object seeds, not Starlink's: B = published A/m x Cd 2.2, AGOM = published A/m x Cr 1.3, from operator or mission
+   pages, in a receipt (`seeds-R1R2.json`) before any fit.
+4. **Precise maneuver screen (Q19).** Truth only: per window, FFM fitted to the truth itself over [E - 24 h, E + 72 h] (state + B + AGOM,
+   10 m, harness/ffm-fit-v3.mjs); a maneuver is flagged when that fit's 3D RMS exceeds 5 m, or, for GNSS, when an operator notice in
+   `hac/gnss-notices` overlaps the window. Flagged windows are excluded, counted and disclosed; all-sample cells are reported as well.
+5. **Type L split (Q20).** Calibration 2026-06-28 to 07-07, validation 07-08 to 07-15 (E6's dev window), held out 07-16 to 08-30 (seen
+   under A5, labeled). 06-03 to 06-27 was unavailable: E6's frozen configuration defines no window there. Type L is reported as
+   bias-contaminated; L-P and R2 are the laser-floor results.
+6. **M2c dropped (Q21):** the normal-point path has the defect of C2-A3 point 1, and the version 3 driver fits positions only.
+7. **Weather O (Q22).** XM's libraries are imported read-only from `origin/wip/experiments-xp-atmosphere-merit-20261026` at its current
+   SHA, recorded with each file's SHA-256 in a receipt; that branch is not edited.
+8. **Small cells (Q23).** Cells below 100 windows are reported in full, labeled "not eligible (n < 100)"; a class verdict counts only
+   eligible cells and states how many were eligible. No data are added to type I or L-P after the fact.
+9. **P12** has its receipt before any R-class fit.
