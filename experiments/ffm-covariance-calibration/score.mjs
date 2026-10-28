@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, frozen, writeReceipt, store, args, results, sha256 } from './common.mjs';
 import { b2 } from './lib/precise.mjs';
+import { rng } from '../../harness/stats.mjs';
 
 frozen();
 const cls = args.class;
@@ -148,6 +149,64 @@ if (args.fit) {
   report.chosen = ranked[0][0];
   report.ranking = ranked.map(([n, c]) => ({ candidate: n, validationInBand: c.validationInBand, validationLoss: c.validationLoss, freeParameters: c.freeParameters }));
   console.log(writeReceipt(`fit-${cls}${report.sensitivity ? '-sensitivity' : ''}`, report));
+  await pairs?.close();
+  process.exit(0);
+}
+
+if (args.heldout) {
+  // PLAN.md 3.5 point 5 and 3.6: the held-out cells, once, with the frozen constants; the covariance is FFM's own (k_e A5 carried, PROCESS_NOISE
+  // from E) plus the floor and sigma_delta^2 D_tau in the composition. Per lead: n, clusters, mean and median d2/3, coverage, 95 % cluster-
+  // bootstrap intervals (10,000 resamples, seed SHA-256 of C2|boot|<class>|<lead>), mean z^2 per axis, the oracle pass probability at n,
+  // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
+  const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
+  const rows = rowsOf(`heldout.${cls}.`);
+  const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
+  const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
+  const table = { class: cls, variants: {} };
+  for (const key of Object.keys(FZ).filter((x) => x === cls || x === `${cls}-sensitivity`)) {
+    const p = FZ[key].parameters, sens = key.endsWith('-sensitivity');
+    for (const scope of cls === 'I' ? ['primary', 'allSamples'] : ['primary']) {
+      const list = [], counts = { windows: 0, excluded: {} };
+      const ex = (why) => { counts.excluded[why] = (counts.excluded[why] ?? 0) + 1; };
+      for (const r of rows) {
+        if (r.excluded || !r.leads || !r.ffm) { ex(r.excluded ? r.excluded.slice(0, 60) : `fit ${r.fit?.termination ?? r.fit?.error ?? 'none'}`); continue; }
+        if (cls === 'I' && scope === 'primary' && screen.get(r.file)?.excluded) { ex('overlapping NASA files differ radially by more than 0.5 km'); continue; }
+        if (sens && r.trackMaxSigmaM > 0.3) { ex('sensitivity: fit-track arc above 0.3 m'); continue; }
+        counts.windows += 1;
+        r.leads.forEach((l, j) => {
+          if (sens && l.truthSigmaM > 0.3) return;
+          const terms = [{ weight: 1, covariance: r.ffm[key][j] }];
+          for (const [ax, u] of [['f_R', unitRtn.RR], ['f_T', unitRtn.TT], ['f_N', unitRtn.NN]]) if (p[ax]) terms.push({ weight: p[ax] ** 2, covariance: u });
+          if (p.s2) terms.push({ weight: p.s2, covariance: p.tau === 'inf' ? l.terms.Dinf : l.terms.D1 });
+          list.push({ L: l.L, err: l.errRtnM, terms, truthSigma: cls === 'LP' && !sens ? l.truthSigmaM : null, cluster: cls === 'I' ? Math.floor(Date.parse(r.E) / (30 * DAY)) : r.norad, window: r.id });
+        });
+      }
+      pairs ??= await (await import('./lib/pairs.mjs')).openPairs(B2C.a12.modulesLinks);
+      const st = [];
+      for (let i = 0; i < list.length; i += 4000) st.push(...(await pairs.stats(list.slice(i, i + 4000).map((x) => ({ predicted: { position: P0, velocity: V0, covarianceTerms: x.terms, covarianceAxes: 'RTN' },
+        truth: { position: P0.map((v, k) => v - x.err[k]), velocity: V0, ...(x.truthSigma ? { covariance: [1, 0, 1, 0, 0, 1].map((v) => v * x.truthSigma ** 2 / 2), covarianceAxes: 'RTN' } : {}) } })), 'predicted')));
+      const by = {};
+      list.forEach((x, i) => (by[x.L] ??= []).push({ d2: st[i].d2Combined ?? st[i].d2Predicted, z: st[i].zCombined ?? st[i].zPredicted, cluster: x.cluster }));
+      const leads = {};
+      for (const [L, xs] of Object.entries(by)) {
+        const n = xs.length, d2 = xs.map((x) => x.d2), mean = d2.reduce((a, b) => a + b, 0) / n / 3, cov = d2.filter((v) => v <= CHI).length / n;
+        const clusters = [...new Set(xs.map((x) => x.cluster))];
+        const seed = parseInt(sha256(`C2|boot|${key}|${L}`).slice(0, 8), 16), r0 = rng(seed);
+        const means = [], covs = [];
+        const byC = new Map(clusters.map((c) => [c, xs.filter((x) => x.cluster === c).map((x) => x.d2)]));
+        for (let b = 0; b < config.bootstrap.resamples; b += 1) { let s1 = 0, s2 = 0, m = 0; for (let j = 0; j < clusters.length; j += 1) { const g = byC.get(clusters[Math.floor(r0() * clusters.length)]); for (const v of g) { s1 += v; if (v <= CHI) s2 += 1; m += 1; } } means.push(s1 / m / 3); covs.push(s2 / m); }
+        const qq = (a, f) => { const s0 = [...a].sort((u, v) => u - v); return s0[Math.floor(f * (s0.length - 1))]; };
+        const minClusters = cls === 'I' ? BAND.issMin30DayBlocks : BAND.minClusters;
+        const eligible = n >= BAND.minWindows && clusters.length >= minClusters;
+        const inBand = mean >= BAND.meanD2over3[0] && mean <= BAND.meanD2over3[1] && cov >= BAND.coverage95[0] && cov <= BAND.coverage95[1];
+        const z2 = [0, 1, 2].map((k) => xs.reduce((a, x) => a + x.z[k] ** 2, 0) / n);
+        leads[L] = { n, clusters: clusters.length, meanD2over3: mean, medianD2over3: qq(d2, 0.5) / 3, coverage: cov, meanInterval: [qq(means, 0.025), qq(means, 0.975)], coverageInterval: [qq(covs, 0.025), qq(covs, 0.975)],
+          meanZ2Rtn: z2, oraclePassProbability: passProbability(n), inBand, eligible, label: eligible ? (inBand ? 'pass' : 'fail') : `not eligible (n < ${BAND.minWindows}${clusters.length < minClusters ? ` or clusters < ${minClusters}` : ''})` };
+      }
+      table.variants[`${key}/${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
+    }
+  }
+  console.log(writeReceipt(`heldout-${cls}`, table));
   await pairs?.close();
   process.exit(0);
 }
