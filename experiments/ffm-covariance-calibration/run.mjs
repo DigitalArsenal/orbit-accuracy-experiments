@@ -76,7 +76,7 @@ const openedLog = path.join(store, 'opened', `${phase}.s${k}.txt`);
 fs.mkdirSync(path.dirname(openedLog), { recursive: true });
 
 if (phase === 'iss-fit60') {
-  const out = path.join(rowsDir, 'iss-fit60.s0.jsonl');
+  const out = path.join(rowsDir, `iss-fit60.s${k}.jsonl`);
   const done = new Set(readJsonl(out).map((r) => r.file));
   const settings = issSettings(A3.issFits.maximumIterations);
   for (let i = 0; i < W.headers.length; i += 1) {
@@ -90,7 +90,7 @@ if (phase === 'iss-fit60') {
     const row = { file: W.headers[i].date, E: iso(w.E), set: setOfIss(w.E), maximumIterations: settings.maximumIterations, fit: { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, boundStatus: f.boundStatus, reducedChiSquare: f.reducedChiSquare,
       measurements: f.measurements, rejected: f.rejected, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, refusedRounds: f.refusedRounds, refusal: f.refusal ?? null, ffmCalls: f.ffmCalls, covariance: f.covariance, seconds: (Date.now() - t0) / 1000 },
       provenance: { estimation: v3.provenance.estimation.wasmSha256, ffm: v3.provenance.ffm.wasmSha256 } };
-    fs.appendFileSync(out.replace('.s0.', `.s${k}.`), `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
   }
 }
 
