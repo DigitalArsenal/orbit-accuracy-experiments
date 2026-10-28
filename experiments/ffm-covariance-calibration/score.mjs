@@ -171,11 +171,15 @@ if (args.p8) {
 }
 
 if (args.freeze) {
-  const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${cls}.json`)));
+  const key = `${cls}${args.sensitivity === 'true' ? '-sensitivity' : ''}`;
+  const fitFile = path.join(results, `fit-${key}.json`);
+  const fit = JSON.parse(fs.readFileSync(fitFile));
   const file = path.join(results, 'frozen-constants.json');
-  const frozenAll = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : { receipt: 'frozen-constants', classes: {} };
-  if (frozenAll.classes[cls]) throw new Error(`${cls} is already frozen`);
-  frozenAll.classes[cls] = { chosen: fit.chosen, parameters: fit.candidates[fit.chosen].parameters, fitReceipt: `fit-${cls}.json`, fitReceiptSha256: sha256(fs.readFileSync(path.join(results, `fit-${cls}.json`))), frozenUtc: new Date().toISOString(), fitCommit: fit.experimentsCommit };
+  const frozenAll = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : { receipt: 'frozen-constants', note: 'PLAN.md 3.5 point 4: no change after any held-out score; any later variant is exploratory', classes: {} };
+  if (frozenAll.classes[key]) throw new Error(`${key} is already frozen`);
+  const p8 = path.join(results, `precheck-P8-${cls}.json`);
+  frozenAll.classes[key] = { chosen: fit.chosen, parameters: fit.candidates[fit.chosen].parameters, fitReceipt: path.basename(fitFile), fitReceiptSha256: sha256(fs.readFileSync(fitFile)), fitCommit: fit.experimentsCommit,
+    p8: fs.existsSync(p8) && !args.sensitivity ? JSON.parse(fs.readFileSync(p8)).outcome : null, frozenUtc: new Date().toISOString() };
   fs.writeFileSync(file, `${JSON.stringify(frozenAll, null, 1)}\n`);
   console.log(file);
 }
