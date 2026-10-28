@@ -510,3 +510,107 @@ forecast files, not truth), and the files are the registered sample. Disclosed f
 while studying the capture's layout, the start times and state counts of one satellite's newer files (NORAD
 44714) were printed; no truth state was read. Satellite 44968's F is a 48 h file, so its forecast arm covers
 bins 1 and 2 only, counted as such.
+
+### A12 - 2026-10-28, part 1 (the rule), committed before any selection fit, any part 1a fit of the new arms and any score of any part 1a arm: an FFM arm on fit_batch version 3, the fairness arm XP-LN, and the rule that selects the new arm's profile
+
+No part 1a score exists: the store's rows directory holds, by file name, starlink-fit.s0-s1 (SGP4-XP fits) and starlink-ffm.s0-s11 (A3's
+fits), and no starlink-score, starlink-leads or starlink-gp file. This part fixes the arms, the selection rule, its data, the gate, the
+contingency and the reporting before the selection runs; part 2 commits the selection receipt and the chosen profile before any fit of
+the new arms on the part 1a tracks and before any score (config.a12).
+
+1. **Why.** A3's fit (E6's fitOrbit on analysis/estimation 0.5.0, fit_batch version 1: full Gauss-Newton steps, no bounds) stepped B
+   (round 1) or AGOM (round 2) below zero on 6,033 of 11,163 tracks (54.0 %); propagator/ffm refused the negative coefficient and the
+   harness had no refused answer. 2,985 satellites were dropped in round 1; 3,048 kept the round-1 product weighted at 100 times the
+   sigmas (stoppedBy set, reported ok by lib/ffm-fit.mjs); 5 ended not converged; 5,125 are full-weight fits. NORAD 65202 is a
+   full-weight fit with B = -1.86e-6 m^2/kg, which FFM refuses at prediction.
+2. **A3 stays registered**, its rows and code path unchanged (E6 fit.mjs, lib/ffm-fit.mjs, modules c860a072: estimation d3aa2c8a,
+   FFM d0b04935), and is scored and reported as registered beside the new arm. Its 3,048 round-2-refused rows count as FAILED; the
+   headline is 6,033/11,163 = 54.0 % refused in any round, shown beside 26.7 % (2,985) for round 1; those rows' round-1 products appear
+   only as a labeled descriptive row, never pooled with full fits; NORAD 65202 is noted.
+3. **The new FFM arm (ffm3)**: analysis/estimation 0.6.0 (fit_batch version 3) at modules f54b5107e (module.wasm SHA-256 0e7b4f6a...),
+   answered by propagator/ffm 2.0.0 of B2's c860a072 build (module.wasm d0b04935...) through a directory of links (<store>/a12-modules:
+   every module from c860a072, analysis/estimation from f54b5107e), as A1 did, so that the estimator and the fit configuration are the
+   only differences from A3. Driver harness/ffm-fit-v3.mjs: one round at 10 m per axis in GCRF (POSITION_VECTOR), no prior
+   re-centering, each parameter's domain from propagator/ffm's FIT_PARAMETER_DOMAINS (catalog-configuration.mjs at f54b5107e: B and
+   AGOM in [0, inf), the in-track acceleration T signed), every FFM error answered as a refused answer, correction tolerance 0.01, edit
+   threshold 5, the evaluation cap of the selected profile; ok only when termination is CONVERGED. NOT_CONVERGED (MAXIMUM_ITERATIONS,
+   STALLED) and fit-failed are failures, never replaced by another result. harness/ffm-execution.mjs sets HAS_IN_TRACK_ACCELERATION_M_S2
+   and its value whenever T is fitted or fixed. Forces, integrator (RK78, relative tolerance 1e-10, steps of at most 120 s), Earth
+   orientation and space weather are A3's. Prediction: the fitted state and parameters (T included when estimated) carried by the same
+   propagator/ffm with the same forces; the same scorer, bins and coverage rule as every arm; A5's covariance for the contrast (formal
+   times max(1, reduced chi-square)). Every row records the modules commits, the estimation and FFM wasm SHA-256 and the experiments SHA.
+4. **The fairness arm XP-LN**: SGP4-XP fitted by propagator/sdn-ap `fit` (THEORY SGP4XP) on the identical operator track and fit
+   interval as the registered SGP4-XP arm, with FIT.DRAG_PRIOR_FORM LOG_NORMAL, median 0.01 m^2/kg and sigma of the log ln 10 (2.302585),
+   the radiation-pressure prior at its default; build 49fa4b0f... (modules f54b5107e, $PCF encoded with SDS 1.272.0, the build's own
+   release), the same build propagating its sets for scoring. With the default prior and no FORCES this build returns the registered
+   arm's sets byte for byte (checked on 2 pre-F tracks, NORAD 44714 and 44927), so the prior is the only difference; the build takes no
+   space-weather frame on this path. The registered SGP4-XP arm stays as registered.
+5. **The fit-only reader** (lib/prefit.mjs) for the ffm3 and XP-LN fit phases and for the selection: never calls windowOf; reads only
+   capture cycles strictly before 2026-10-25T21-01-35-269Z; aborts on any file starting at or after F (F and E from A3's stored row, so
+   the forecast cycle is not opened); every state through harness/truth-gate.mjs; each rebuilt track's SHA-256 must equal A3's stored
+   track.sha, else the run aborts; every opened path is logged in the phase's receipt. Rows: rows/starlink-ffm3.s<k>.jsonl and
+   rows/starlink-xpln.s<k>.jsonl. Only the score phase opens truth, for all arms in one pass.
+6. **Candidates** (seeds and a priori of A3: B 0.03 m^2/kg; AGOM 0.11 below NORAD 56000 and 0.19 from it; 1e5 m, 10 m/s, 30 % of each
+   seed; one round at 10 m; at most 40 evaluations):
+   - P0: state, B and AGOM, B and AGOM bounded to [0, inf).
+   - P1: P0 with AGOM held at G1's 0.11/0.19 (state and B estimated).
+   - P2(c), c = 0.1, 0.3 and 1.0 m^2/kg, three candidates: P0, and where P0's fit on the same window ends with B > c, the fit with P0's
+     parameters plus a signed T instead (T seed 0, a priori sigma 1e-5 m/s^2), which is P3's fit on that window.
+   - P3: P0 plus a signed T always (T seed 0, a priori sigma 1e-5 m/s^2), a control.
+   Free parameters: P1 7, P0 8, P2 9 (it may estimate T), P3 9.
+7. **Selection data, pre-F only, V2 excluded.** A fixed sample of 2,000 satellites: those with the lowest SHA-256 of
+   `B2|A12|select|<norad>` among part 1a's 11,163 fit tracks, the 500 satellites of V2 (experiments/operator-capture/SUBSETS.md)
+   excluded. Three datasets per satellite:
+   - split 12/12: the A3 operator track's first 12 h fitted, the rest held out (the 90 % rule on the 24 h track, as registered);
+   - split 18/6: the first 18 h fitted, the rest held out (the same rule);
+   - E' = E - 24 h: the fit track over [E - 48 h, E - 24 h] by the registered track rule from captured files that start before E',
+     stored by the cycles before the forecast cycle; it needs at least 60 % of its 145 epochs, no gap longer than 8 h, and states in both
+     its first and its last 2 h. The truth over (E', E] uses only files that start after E' and before F, from cycles 2026-10-24T21:01Z,
+     2026-10-25T05:01Z and 2026-10-25T13:01Z, only their first 8 h, each epoch from the newest such file that starts at or before it,
+     through the truth gate; every truth epoch present is scored.
+   Disclosed: the 90 % rule is relaxed for E' only, because the capture holds a gap of about 7 h in [E - 48 h, E - 24 h] for every
+   satellite sampled (cycles 2026-10-23T21:01Z and 2026-10-24T05:01Z read files about 8 h apart, each kept for its first 8 h; NORAD
+   44725: the file of cycle 10-23T21 covers 2026-10-23 12:09-20:09Z and the next captured file starts 2026-10-24 03:00Z), so the E' fit
+   tracks hold 97-101 of 145 epochs and none of 60 sampled passed 90 %. The within-track splits keep the 90 % rule.
+8. **Metric.** Per window and candidate, the 3D RMS position error over the held-out span (the fitted product carried by propagator/ffm
+   to the held-out epochs, GCRF, against the held-out states). The longest lead is E' (24 h).
+9. **Rule.** Eligible candidates: zero refusals (no refused trial), zero fit-failed and at least 99.9 % CONVERGED, pooled over all of a
+   candidate's selection fits on the three datasets, and every parameter in its domain. Among them, the lowest median of the E' metric
+   over the common converged satellites (those on which every eligible candidate converged in E', V2 excluded). A tie: a candidate whose
+   paired median ratio to the lowest (candidate / lowest, per satellite, on the common set) has a 95 % bootstrap interval containing 1
+   (10,000 resamples over satellites, xorshift128+ seeded by SHA-256 of `B2|A12|tie|<candidate>/<lowest>|eprime`). On a tie the
+   candidate with fewer free parameters wins, then P0 < P1 < P2(lower ceiling) < P3.
+10. **No-degradation gate.** On the sample's satellites among A3's 5,125 full-weight tracks: A3's registered configuration (E6's
+    fitOrbit, two rounds, estimation 0.5.0 and FFM 2.0.0 at c860a072, lib/ffm-fit.mjs, ok as it reports) refitted on the same selection
+    windows; per satellite the ratio candidate / A3 of the metric, on the satellites both fitted; the gate passes when the paired median
+    ratio is at most 1.00, its 95 % bootstrap upper bound at most 1.03 (10,000 resamples over satellites, seed SHA-256 of
+    `B2|A12|gate|<candidate>|<dataset>`) and the 90th percentile of the ratio at most 1.05, on each of the three datasets. If the rule's
+    choice fails the gate, the next eligible candidate in rank order (by the E' median) that passes is taken. If none passes, the
+    primary is P0 (the smallest change from A3), labeled "gate failed", with the gate numbers in the headline. Every candidate's
+    selection numbers are reported either way.
+11. **Fit-only gate and contingency.** After the ffm3 fit phase over all 11,163 tracks, its gate (at least 99.9 % CONVERGED, 0
+    refusals, every parameter in its domain) is committed before any score. If it fails, the fit phase runs once more at 60 evaluations,
+    then the result is reported as is. No re-tuning after any score; any later variant is a separate arm, labeled post-score and
+    exploratory.
+12. **Reporting.** The FFM arm of record for A5's conjunction contrast and part 5 is ffm3; A3 is reported as registered beside it. ffm3
+    is paired with SGP4-XP on the satellites both fitted (A10's primary form), with A3 on A3's 5,125 full-weight satellites, and its own
+    failure rate is a headline beside A3's. XP-LN is paired with SGP4-XP and with ffm3. A10's exploratory breakdowns apply to the new
+    arms in the score phase only. One score pass, after the 2026-10-28T21:01Z capture cycle has completed (bin 3), scores A3, ffm3,
+    SGP4-XP, XP-LN and the forecast together per A5 point 6; then the registered leads, gp, part 4 and part 5 phases. The E2E (run.mjs
+    --check) replays one window of each new arm.
+13. **Disclosures.** The design used only: the fit fields of A3's fit rows (ok, rounds, stoppedBy, error, parameters, seconds) and of the
+    SGP4-XP fit rows (fit RMS, decoded BTERM); fit tracks rebuilt from capture cycles strictly before 2026-10-25T21-01-35-269Z and from
+    files starting before F, each ending at E, hashed equal to the stored track.sha (11,163/11,163 in the evidence probe, 27/27 in Design
+    2's mirror); module and harness source; the propagator-catalog-census bounded arm's fit-level fields; and offline probes under the
+    coordinator's scratchpad (ffmfit/: all-tracks.jsonl, probe-tracks*.jsonl, repro-*.jsonl, solver/proto/tracks27.jsonl and runs,
+    judge3/j3.mjs and runs/summary.txt, staging-angle/out). Probe tracks: Design 2's 27 (NORAD 47356, 48444, 49767, 52275, 52608, 55274,
+    57249, 58168, 58881, 59264, 59406, 61219, 61886, 62531, 63561, 64244, 64802, 64815, 64917, 65399, 65541, 65660, 66030, 66090, 67201,
+    67827, 100407); the evidence reproductions' 7 (49767, 55274, 58881, 59406, 64244, 65660, 66090); Design 3's 11 (44714, 45064, 45535,
+    45696, 49767, 55274, 58881, 59406, 64244, 65660, 66090); this lane's smoke tests (version 3 fits on 44714, 44927, 45064 and 45187; XP-LN
+    and its control on 44714 and 44927; E' state counts on the first 60 satellites of shard 3 and file spans of 44725, 44949 and 45074). The
+    judges' notes on these inputs are in the coordinator's plan (PLAN-all-judges.json, b2_integrity_notes). Census overlap: the census
+    scores Starlink on SpaceX files created after its own E, which are B2's part 1a truth; its Starlink accuracy (the days fields, the
+    README accuracy tables, summary.json leads) is derived from part 1a truth, and nobody in this amendment's chain read it. V2 overlap:
+    probes scored 6 h holdouts of V2 satellites 65660 and 67201 at V2 targets 2026-10-25T14:00Z and 16:00Z. A3's registered ffm phase
+    called windowOf (part1-starlink.mjs), which loads the newer files into memory, though it wrote only fit identity and fit fields. No
+    part 1a truth epoch, score row, truth-derived maneuver flag (worstOverlapKm) or census Starlink accuracy aggregate was read.

@@ -109,5 +109,171 @@
       "verdict": "FFM makes a CA difference in a group and class only if no part of either interval of the paired missed-alert difference (FFM - SGP4-XP) is above zero and both intervals of the paired false-alert difference are wholly below zero; otherwise no demonstrated CA difference",
       "callSeed": "B2|A5|<group>|<class>|<lead>|<arm>|<metric>"
     }
+  },
+  "a12": {
+    "amendment": "A12",
+    "modulesLinks": "/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-modules",
+    "estimation": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "version": "0.6.0",
+      "wasmSha256": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac"
+    },
+    "ffm": {
+      "modulesCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+      "version": "2.0.0",
+      "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f"
+    },
+    "domains": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "file": "propagator/ffm/catalog-configuration.mjs",
+      "sha256": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6"
+    },
+    "forecastCycle": "2026-10-25T21-01-35-269Z",
+    "fit": {
+      "sigmaM": 10,
+      "rounds": 1,
+      "correctionTolerance": 0.01,
+      "sigmaEditThreshold": 5,
+      "maximumIterations": 40,
+      "contingencyMaximumIterations": 60,
+      "seeds": {
+        "DRAG_AREA_OVER_MASS": 0.03,
+        "SRP_AREA_OVER_MASS": {
+          "belowNorad56000": 0.11,
+          "fromNorad56000": 0.19
+        },
+        "IN_TRACK_ACCELERATION": 0
+      },
+      "apriori": {
+        "positionSigmaM": 100000.0,
+        "velocitySigmaMS": 10,
+        "parameterFraction": 0.3,
+        "inTrackSigmaMS2": 1e-05
+      }
+    },
+    "candidates": {
+      "P0": {
+        "parameters": [
+          "DRAG_AREA_OVER_MASS",
+          "SRP_AREA_OVER_MASS"
+        ],
+        "freeParameters": 8
+      },
+      "P1": {
+        "parameters": [
+          "DRAG_AREA_OVER_MASS"
+        ],
+        "fixedAgom": "seed",
+        "freeParameters": 7
+      },
+      "P2(0.1)": {
+        "base": "P0",
+        "releaseT": "P3",
+        "ceiling": 0.1,
+        "freeParameters": 9
+      },
+      "P2(0.3)": {
+        "base": "P0",
+        "releaseT": "P3",
+        "ceiling": 0.3,
+        "freeParameters": 9
+      },
+      "P2(1.0)": {
+        "base": "P0",
+        "releaseT": "P3",
+        "ceiling": 1.0,
+        "freeParameters": 9
+      },
+      "P3": {
+        "parameters": [
+          "DRAG_AREA_OVER_MASS",
+          "SRP_AREA_OVER_MASS",
+          "IN_TRACK_ACCELERATION"
+        ],
+        "freeParameters": 9
+      }
+    },
+    "tieOrder": [
+      "P0",
+      "P1",
+      "P2(0.1)",
+      "P2(0.3)",
+      "P2(1.0)",
+      "P3"
+    ],
+    "selection": {
+      "sampleSize": 2000,
+      "sampleSeed": "B2|A12|select|<norad>",
+      "exclude": "experiments/operator-capture/SUBSETS.md v2-operator-seeded-prediction norads",
+      "datasets": {
+        "split12": {
+          "fitHours": 12,
+          "minimumCoverage": 0.9
+        },
+        "split18": {
+          "fitHours": 18,
+          "minimumCoverage": 0.9
+        },
+        "eprime": {
+          "shiftHours": 24,
+          "minimumCoverage": 0.6,
+          "maximumGapHours": 8,
+          "edgeHours": 2,
+          "truthCycles": [
+            "2026-10-24T21-01-35-262Z",
+            "2026-10-25T05-01-35-265Z",
+            "2026-10-25T13-01-35-267Z"
+          ],
+          "truthSegmentHours": 8
+        }
+      },
+      "longestLead": "eprime",
+      "eligibility": {
+        "refusals": 0,
+        "fitFailed": 0,
+        "minimumConverged": 0.999
+      },
+      "tieSeed": "B2|A12|tie|<candidate>/<lowest>|eprime",
+      "resamples": 10000,
+      "level": 0.95
+    },
+    "gate": {
+      "population": "A3 full-weight (ffm.ok, 2 rounds, no stoppedBy) satellites of the sample",
+      "comparator": "A3 registered configuration refitted on the selection windows",
+      "maximumMedianRatio": 1.0,
+      "maximumUpper95": 1.03,
+      "maximumP90": 1.05,
+      "datasets": [
+        "split12",
+        "split18",
+        "eprime"
+      ],
+      "seed": "B2|A12|gate|<candidate>|<dataset>",
+      "onFailure": "next eligible in E' rank order that passes; none: P0 labeled gate failed"
+    },
+    "xpln": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "sdnapWasmSha256": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+      "sdsVersion": "1.272.0",
+      "dragPrior": {
+        "form": "LOG_NORMAL",
+        "MEAN": 0.01,
+        "SIGMA": 2.302585092994046
+      },
+      "srpPrior": "default (GAUSSIAN_SIGNED 0 +- 0.05)"
+    },
+    "rows": {
+      "ffm3": "rows/starlink-ffm3.s<k>.jsonl",
+      "xpln": "rows/starlink-xpln.s<k>.jsonl"
+    },
+    "a3Reporting": {
+      "failedRoundTwoRefused": 3048,
+      "refusedAnyRound": 6033,
+      "refusedRoundOne": 2985,
+      "tracks": 11163,
+      "notConverged": 5,
+      "fullWeight": 5125,
+      "note65202": "ok with B = -1.86e-6"
+    }
   }
 }
