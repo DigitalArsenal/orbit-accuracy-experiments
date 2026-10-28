@@ -41,7 +41,9 @@ for (const r of rows) {
 const pass = out.length === 5 && out.every((o) => o.statesIdentical && o.noisyCovariancesMissing.v200 === 0 && o.noisyCovariancesMissing.v201 === 0);
 console.log(writeReceipt('precheck-P5', {
   plan: '3.8 P5', builds: { v200: { commit: B2C.a12.ffm.modulesCommit, wasmSha256: B2C.a12.ffm.wasmSha256 }, v201: { commit: 'f54b5107efc06ff1090e3c48681e28c35b732ff2', wasmSha256: ffm201.provenance.wasmSha256 } },
-  settings: { samples: 'E to E + 72 h hourly', integrator: F.integrator, forces: F.forces, noise: 'q = 1e-9 m^2/s^3 R, T, N, 600 s; A5 covariance x 4' }, windows: out, outcome: pass ? 'pass' : 'FAIL',
+  settings: { samples: 'E to E + 72 h hourly', integrator: F.integrator, forces: F.forces, noise: 'q = 1e-9 m^2/s^3 R, T, N, 600 s; A5 covariance x 4' }, windows: out, outcome: pass ? 'pass' : 'FAIL (not identical)',
+  ruling: 'C2-A3 point 4 (Q15): agreement within 25 mm over 72 h is accepted as parity for C2 (every C2 and B2 run uses 2.0.0); the assumption "2.0.1 changed only covariance validation" is DISPROVED: the states differ by 1-25 mm',
+  maxDifferenceM: Math.max(...out.map((o) => o.maxPositionDifferenceM ?? 0)),
 }, opened));
 await v3.close();
 await ffm201.destroy?.();
