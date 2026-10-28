@@ -32,5 +32,18 @@
    "dayCoverageMin": 0.9,
    "heldOutTimeEveryDays": 2
   }
+ },
+ "C2-A2": {
+  "date": "2026-10-28",
+  "before": "any fit",
+  "ruling": "Q12",
+  "coverageSpan": "24 h fit track [E - 24 h, E], >= 90 %",
+  "leadScored": "where truth holds E + L",
+  "yieldReceipt": "results/ffm-covariance-calibration/precheck-P9.json",
+  "r1ClustersRestOn": [
+   "Swarm A+C",
+   "Swarm B",
+   "GRACE-FO 1+2"
+  ]
  }
 }

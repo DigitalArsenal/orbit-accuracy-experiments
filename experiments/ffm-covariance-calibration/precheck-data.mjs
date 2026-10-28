@@ -43,7 +43,10 @@ const cutoffs = (from, to, everyDays = 2) => { const out = []; for (let t = Date
 const CAL = cutoffs(S.calibration.cutoffs.from, S.calibration.cutoffs.to, S.calibration.cutoffs.everyDays);
 const VAL = cutoffs(S.validation.cutoffs.from, S.validation.cutoffs.to, S.validation.cutoffs.everyDays);
 const HOT = (last) => cutoffs(S.heldOutTime.from, iso(last - 72 * HOUR).slice(0, 10), 2);
-const usable = (list, Es) => Es.filter((E) => covers(list, E - 24 * HOUR, E + 72 * HOUR));
+// C2-A2: the 90 % rule applies to the 24 h fit track; each lead is scored where truth exists at E + L.
+const usable = (list, Es) => Es.filter((E) => covers(list, E - 24 * HOUR, E));
+const held = (list, t) => list.some((s) => s.start <= t && t <= s.stop);
+const leadCounts = (list, Es) => Object.fromEntries(config.model.leads_h.map((L) => [L, usable(list, Es).filter((E) => held(list, E + L * HOUR)).length]));
 
 // ── GNSS and COSMIC-2 sample (P9): coverage = spans cover >= 90 % of the days of [first calibration E - 24 h, last validation E + 72 h] ──
 const coverFrom = CAL[0] - 24 * HOUR, coverTo = VAL.at(-1) + 72 * HOUR;
@@ -78,8 +81,8 @@ const row = (cls, set, name, norad, preferPrefix = null) => {
   const list = preferPrefix ? all.filter((s) => s.product.startsWith(preferPrefix)) : all;
   const last = list.length ? Math.max(...list.map((s) => s.stop)) : null;
   const r = { class: cls, set, name, norad, cluster: clusterOf(norad), products: [...new Set(list.map((s) => s.product.replace(/[._0-9].*$/, '')))], first: list.length ? iso(list[0].start) : null, last: last ? iso(last) : null };
-  if (set === 'calibration') Object.assign(r, { calibration: usable(list, CAL).length, validation: usable(list, VAL).length, heldOutTime: last ? usable(list, HOT(last)).length : 0 });
-  else Object.assign(r, { heldOutObject: usable(list, [...CAL, ...VAL, ...(last ? HOT(last) : [])]).length });
+  if (set === 'calibration') Object.assign(r, { calibration: usable(list, CAL).length, validation: usable(list, VAL).length, heldOutTime: last ? usable(list, HOT(last)).length : 0, leads: { calibration: leadCounts(list, CAL), validation: leadCounts(list, VAL), heldOutTime: last ? leadCounts(list, HOT(last)) : null } });
+  else Object.assign(r, { heldOutObject: usable(list, [...CAL, ...VAL, ...(last ? HOT(last) : [])]).length, leads: { heldOutObject: leadCounts(list, [...CAL, ...VAL, ...(last ? HOT(last) : [])]) } });
   perObject.push(r);
 };
 for (const [cls, sets] of Object.entries(objectsOf)) for (const [set, names] of Object.entries(sets)) for (const name of names) row(cls, set, name, NAMED[name]);
@@ -89,6 +92,8 @@ sample.Galileo.forEach((x) => row('R3', 'heldOutObject', 'Galileo', x.norad, 'ES
 sample['COSMIC-2'].forEach((x, i) => row('R1', i < A1.cosmic2.calibration ? 'calibration' : 'heldOutObject', 'COSMIC-2', x.norad, 'leoOrb'));
 const totals = {};
 for (const r of perObject) for (const k of ['calibration', 'validation', 'heldOutTime', 'heldOutObject']) if (r[k] !== undefined) { totals[r.class] ??= {}; totals[r.class][k] = (totals[r.class][k] ?? 0) + r[k]; }
+const leadTotals = {};
+for (const r of perObject) for (const [set, byLead] of Object.entries(r.leads ?? {})) if (byLead) for (const [L, n] of Object.entries(byLead)) { const t = ((leadTotals[r.class] ??= {})[set] ??= {}); t[L] = (t[L] ?? 0) + n; }
 const clusters = {};
 for (const r of perObject) for (const k of ['calibration', 'heldOutObject']) if (r.set === k) { clusters[r.class] ??= {}; (clusters[r.class][k] ??= new Set()).add(r.cluster); }
 const clusterCounts = Object.fromEntries(Object.entries(clusters).map(([c, v]) => [c, Object.fromEntries(Object.entries(v).map(([k, s]) => [k, s.size]))]));
@@ -96,8 +101,8 @@ const clusterCounts = Object.fromEntries(Object.entries(clusters).map(([c, v]) =
 const missing = perObject.filter((r) => !r.products.length).map((r) => `${r.name} (${r.norad}): no converted truth in the reference roots`);
 const p9 = {
   plan: '3.8 P9, 3.4',
-  rule: 'windows counted where the union of the truth spans covers at least 90 % of [E - 24 h, E + 72 h] (the 90 % epoch rule is applied per window at run time); cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day',
-  gnss, cosmic, sample, perObject, totals, clusterCounts, missing,
+  rule: 'C2-A2: windows counted where the union of the truth spans covers at least 90 % of the 24 h fit track [E - 24 h, E] (the 90 % epoch rule is applied per window at run time); per lead, the windows whose truth holds E + L; cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day',
+  gnss, cosmic, sample, perObject, totals, leadTotals, clusterCounts, missing,
   outcome: cosmic.withCoverage.length >= cosmicNeeded && !missing.length ? 'pass' : 'FAIL',
   failures: [
     ...(cosmic.withCoverage.length < cosmicNeeded ? [`COSMIC-2: ${cosmic.withCoverage.length} satellites with coverage (${cosmic.satellites.join(', ')}), ${cosmicNeeded} needed`] : []),

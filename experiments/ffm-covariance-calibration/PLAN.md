@@ -323,3 +323,17 @@ LARES arcs). The numbers are in `amendments.json`.
 4. **Definitions (Q10).** GNSS truth is ESA0OPSFIN only (one product per object); a satellite has coverage at 90 % of the days from
    the first calibration window (E - 24 h) to the last validation window (E + 72 h), except COSMIC-2 (point 1); held-out-by-time
    cutoffs are every second day.
+
+### C2-A2 - 2026-10-28, before any fit (coordinator ruling Q12): the coverage rule applies to the fit track
+
+Reason: section 3.7's "90 % coverage rule on the truth" did not name its span. Over [E - 24 h, E + 72 h] it left COSMIC-2 0-4 windows
+per satellite (`precheck-P9.json` at 20c7263); B2 applies the 90 % rule to the 24 h track.
+
+1. A window enters when its truth holds at least 90 % of the 24 h fit track [E - 24 h, E] (145 epochs at 10 min); each lead L is
+   scored where the truth holds E + L (the epoch nearest E + L within the class tolerance).
+2. Yield (span level, `precheck-P9.json` after this amendment), windows per set: R1 482 calibration, 164 validation, 276 held out by
+   time, 14 held out by object; R2 514, 188, 261, 238; R3 1,425, 487, 755, 1,176. Per lead (1/6/12/24/48/72 h), R1 calibration
+   481/480/476/475/478/475; COSMIC-2 per satellite 3-10 calibration windows per lead, 44350 (held out) 9-13. Every per-lead count
+   is in the receipt.
+3. COSMIC-2's truth is arcs of about 2 h with gaps, so it adds few windows: R1's cluster rule (at least 3 independent clusters)
+   rests chiefly on Swarm A+C, Swarm B and GRACE-FO 1+2.
