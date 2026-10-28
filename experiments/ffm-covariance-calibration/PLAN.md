@@ -386,3 +386,22 @@ these rulings changes those two classes' candidates or rules.
 8. **Small cells (Q23).** Cells below 100 windows are reported in full, labeled "not eligible (n < 100)"; a class verdict counts only
    eligible cells and states how many were eligible. No data are added to type I or L-P after the fact.
 9. **P12** has its receipt before any R-class fit.
+
+### C2-A5 - 2026-10-29, before the held-out re-run (coordinator rulings Q24-Q25)
+
+1. **Run 1 (disclosed in full).** The first held-out run carried k_e x A5's covariance to E and fed FFM's own output covariance back as
+   the input of the PROCESS_NOISE leg from E. propagator/ffm 2.0.0 emits that covariance asymmetric at about 1e-12 relative and refuses
+   it as input ("invalid-covariance: Covariance must be finite and symmetric"). Type I: 105 of 117 windows refused, 2 refused for weather
+   gaps; the 10 usable windows were seen (mean d2/3 0.07-0.27, coverage 1.00, every cell not eligible), recorded in
+   `results/ffm-covariance-calibration/heldout-I.run1-refused.json`, rows kept in `<store>/rows-run1/`. L-P: stopped at 143 of about 230
+   windows (81 refused); no partial L-P table was written or read.
+2. **The fix (mechanical).** The covariance handed to FFM at E is symmetrized, (P + P^T) / 2, in the harness
+   (`lib/products.mjs` ffmNoiseCovariances): matrix conditioning for transport between two FFM calls, not physics. Diagnosis on 12
+   type I calibration windows (read-only): 11 of 12 refused unsymmetrized; with symmetrizing 10 of the 11 pass, and the remaining one
+   (2021-06-15) is refused for a weather gap (space-weather-out-of-range: B1's environment drops 2021-06-16), not for its covariance.
+   The defect is filed as the unclaimed modules task `modules-ffm-covariance-roundtrip-symmetry-20261029`.
+3. **Frozen constants unchanged:** `results/ffm-covariance-calibration/frozen-constants.json`, SHA-256 c50936e5646a6e55ea6c5fec0cab230b078082b4e4e770afd0715ca98c38c803, byte-identical.
+4. **Run 2 is the final held-out score** for type I and L-P; no further re-run for any reason. A window FFM still refuses in run 2 counts
+   as a failure (not an exclusion) and is listed. The report shows run 1 beside run 2.
+5. **P8 finding:** type I and L-P are infeasible for a lead-independent model (`precheck-P8-I.json`, `precheck-P8-LP.json`); a finding,
+   not a blocker.

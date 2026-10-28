@@ -161,5 +161,26 @@
   "m2c": "dropped",
   "weatherO": "XM libraries read-only from origin/wip/experiments-xp-atmosphere-merit-20261026 at its SHA",
   "smallCells": "not eligible (n < 100)"
+ },
+ "C2-A5": {
+  "date": "2026-10-29",
+  "before": "held-out run 2",
+  "run1": {
+   "I": {
+    "refusedCovariance": 105,
+    "refusedWeather": 2,
+    "usableSeen": 10,
+    "record": "heldout-I.run1-refused.json"
+   },
+   "LP": {
+    "stoppedAt": 143,
+    "refused": 81,
+    "tableWritten": false
+   }
+  },
+  "fix": "symmetrize the covariance handed to FFM at E, (P + P^T)/2, in lib/products.mjs (conditioning for transport, not physics)",
+  "frozenConstantsSha256": "c50936e5646a6e55ea6c5fec0cab230b078082b4e4e770afd0715ca98c38c803",
+  "run2": "final; any FFM refusal is a failure, listed",
+  "modulesTask": "modules-ffm-covariance-roundtrip-symmetry-20261029"
  }
 }

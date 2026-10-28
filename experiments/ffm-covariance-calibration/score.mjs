@@ -169,6 +169,7 @@ if (args.heldout) {
       const list = [], counts = { windows: 0, excluded: {} };
       const ex = (why) => { counts.excluded[why] = (counts.excluded[why] ?? 0) + 1; };
       for (const r of rows) {
+        if (r.failed) { (counts.failures ??= []).push({ id: r.id, failure: r.failed }); continue; }
         if (r.excluded || !r.leads || !r.ffm) { ex(r.excluded ? r.excluded.slice(0, 60) : `fit ${r.fit?.termination ?? r.fit?.error ?? 'none'}`); continue; }
         if (cls === 'I' && scope === 'primary' && screen.get(r.file)?.excluded) { ex('overlapping NASA files differ radially by more than 0.5 km'); continue; }
         if (sens && r.trackMaxSigmaM > 0.3) { ex('sensitivity: fit-track arc above 0.3 m'); continue; }

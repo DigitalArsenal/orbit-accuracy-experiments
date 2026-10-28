@@ -223,7 +223,7 @@ if (phase === 'heldout') {
       const ctx = v3.ctxFor(Date.parse(f.fit.epoch), w.E + 72 * HOUR);
       const row = { id: f.file, file: f.file, E: f.E, set: 'heldOut' };
       try { Object.assign(row, await windowTerms(ctx, pairs, f.fit, w.E, L, settings)); row.ffm = await variantsOf(ctx, f.fit, w.E, L, settings); }
-      catch (error) { row.excluded = `terms: ${String(error.message).slice(0, 200)}`; }
+      catch (error) { row.failed = `FFM refused (C2-A5 point 4: a failure): ${String(error.message).slice(0, 200)}`; }
       fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
     }
   } else if (cls === 'LP') {
@@ -250,7 +250,7 @@ if (phase === 'heldout') {
         const f = await fitV3(ctx, points, reference, settings);
         row.fit = { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, parameters: f.parameters, reducedChiSquare: f.reducedChiSquare };
         row.trackMaxSigmaM = Math.max(...w.track.map((l) => l.sigma ?? 0));
-        if (f.ok && w.leads.length) { try { Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings)); row.ffm = await variantsOf(ctx, f, E, w.leads, settings); } catch (error) { row.excluded = `terms: ${String(error.message).slice(0, 200)}`; } }
+        if (f.ok && w.leads.length) { try { Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings)); row.ffm = await variantsOf(ctx, f, E, w.leads, settings); } catch (error) { row.failed = `FFM refused (C2-A5 point 4: a failure): ${String(error.message).slice(0, 200)}`; } }
       }
       fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
     }
