@@ -153,6 +153,51 @@ if (phase === 'iss-terms') {
   }
   await pairs.close();
 }
+if (phase === 'lp-terms') {
+  // Class L-P (C2-A3 point 2): FFM fitted to the NSGF positions of a type L sphere, E6 R's parameterization, cutoffs every 24 h on type L's
+  // splits; then the terms at each lead (truth: every NSGF arc, its stated sigma kept for the C2-A1 truth covariance).
+  const set = args.set;
+  if (!['calibration', 'validation', 'heldOut'].includes(set)) throw new Error('--set calibration|validation|heldOut');
+  if (set === 'heldOut' && !fs.existsSync(path.join(results, 'frozen-constants.json'))) throw new Error('held-out sets are scored only after the frozen-constants receipt');
+  const { truthSeries, windowAt } = await import('./lib/precise.mjs');
+  const { openPairs } = await import('./lib/pairs.mjs');
+  const { windowTerms } = await import('./lib/products.mjs');
+  const pairs = await openPairs(B2C.a12.modulesLinks);
+  const E6 = JSON.parse(fs.readFileSync(path.join(root, 'experiments/e6-public-observations/config.json'))).slr.targets;
+  const [lo, hi] = config.split.L[set];
+  const out = path.join(rowsDir, `lp-terms.${set}.s${k}.jsonl`);
+  const done = new Set(readJsonl(out).map((r) => `${r.sphere}|${r.E}`));
+  const tasks = [];
+  for (const t of config.classes.L.objects.map((o) => o.toLowerCase())) for (let E = Date.parse(`${lo}T00:00:00Z`); E <= Date.parse(`${hi}T00:00:00Z`); E += 24 * HOUR) tasks.push([t, E]);
+  let series = null, count = 0;
+  for (let i = 0; i < tasks.length; i += 1) {
+    const [t, E] = tasks[i];
+    if (i % n !== k || done.has(`${t}|${iso(E)}`)) continue;
+    if (args.limit && count >= Number(args.limit)) break;
+    if (series?.sphere !== t) series = { sphere: t, s: truthSeries(E6[t].norad, `nsgf.orb.${t}.`, { opened, from: Date.parse(lo) - 3 * 24 * HOUR, to: Date.parse(hi) + 5 * 24 * HOUR }) };
+    const w = windowAt(series.s, E, { leadToleranceSeconds: B2C.a5.ca.leadToleranceSeconds.laser });
+    const row = { sphere: t, norad: E6[t].norad, E: iso(E), set };
+    if (w.excluded) row.excluded = w.excluded;
+    else if (Math.abs(Date.parse(w.track[0].epoch) - (E - 24 * HOUR)) > 300e3) row.excluded = 'no state at the track start';
+    else {
+      const t0 = Date.now();
+      const diag = [1e10, 1e10, 1e10, 100, 100, 100, (0.3 * E6[t].b) ** 2];
+      const settings = { sigmaM: 10, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: E6[t].b }], fixed: { agom: E6[t].agom }, apriori: Array.from({ length: 49 }, (_, j) => (Math.floor(j / 7) === j % 7 ? diag[j % 7] : 0)),
+        maximumIterations: B2C.a12.fit.maximumIterations, correctionTolerance: B2C.a12.fit.correctionTolerance, sigmaEditThreshold: B2C.a12.fit.sigmaEditThreshold, forces: F.forces, integrator: F.integrator };
+      const { points, reference } = fitInput(w.track);
+      const ctx = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
+      const f = await fitV3(ctx, points, reference, settings);
+      row.fit = { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, reducedChiSquare: f.reducedChiSquare, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, covariance: f.covariance };
+      row.trackMaxSigmaM = Math.max(...w.track.map((l) => l.sigma ?? 0));
+      if (f.ok && w.leads.length) Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings));
+      row.seconds = (Date.now() - t0) / 1000;
+    }
+    fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
+    count += 1;
+  }
+  fs.writeFileSync(path.join(store, 'opened', `lp-terms.${set}.s${k}.json`), JSON.stringify(opened.list()));
+  await pairs.close();
+}
 await v3.close();
 await frames.destroy();
 process.exit(0);
