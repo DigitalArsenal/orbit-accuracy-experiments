@@ -1,9 +1,16 @@
 # C2: FFM fitted-product covariance calibrated to the band
 
-Plan. Status: **draft, not frozen** (`config.json` `"frozen": false`). It is
-frozen by a commit, and pushed, before any calibration fit, any v3 refit of
-this experiment and any held-out score. After that nothing below changes; a
-deviation is an amendment at the end, dated, with its reason.
+Plan. Status: **frozen** (`config.json` `"frozen": true`), committed and
+pushed 2026-10-28 before any calibration fit, any v3 refit of this experiment
+and any held-out score. Nothing below changes after this commit; a deviation
+is an amendment at the end, dated, with its reason.
+
+**Base.** This branch is rebased onto B2's task branch
+(`origin/task/experiments-b2-ffm-iss-starlink-20261026`) at
+`df0621d5690b7c45e3408f1366c019fc05410eee`, for `harness/ffm-fit-v3.mjs` and
+B2's `lib/` (including `lib/prefit.mjs`), which C2 uses and never edits. C2
+lands on main only after B2 lands. A later change of either file on the B2
+branch is followed by a rebase and recorded in the receipt.
 
 Lane: claude-c2cov-d9. Task: `experiments-c2-ffm-covariance-calibration-20261028`
 (branch `task/experiments-c2-ffm-covariance-calibration-20261028`). Owner item
@@ -140,8 +147,20 @@ Common to all classes: B2's forces and integrator (RK78, relative tolerance
 | Type S | Part 1a satellites | Validation (D3): A12's pre-F E′ windows, 24 h, V2 excluded. Held out: part 1a truth via A13 part 3 | Prospective |
 
 The COSMIC-2 satellites, the 8 GPS, 4 GLONASS and 6 Galileo satellites are
-fixed in pre-check P9, before any fit; nothing about their FFM error is read
-to choose them. (Selection rule: open question Q3 to the coordinator.)
+fixed in pre-check P9, before any fit, by the lowest SHA-256 of
+`C2|P9|<class>|<norad>` among the satellites with coverage: 8 GPS, 4 GLONASS
+and 4 COSMIC-2 in calibration; 6 Galileo and 2 COSMIC-2 held out. Nothing
+about their FFM error is read to choose them. Validation cutoffs are every
+second day, as calibration.
+
+**R1/R2 hold.** Their fits use "the profile A12 part 2 names", by reference;
+the A12 part 2 commit SHA is recorded in a receipt the moment it lands, and
+no R1/R2 fit runs before it. Type I, type L and R3 run first.
+
+**D10 data.** The normal points 2025-10 to 2026-05 are archived with their
+licence line and used only for P2 and P3; section 3.4 is unchanged (any
+extension of type L is a later, separate amendment). The NSGF orbits after
+2026-08 extend held-out by time.
 
 Data on disk (counts confirmed in P9): Swarm A/B/C 2025-10-01 to 2026-08-19;
 Sentinel-1A/C/D to 2026-08-31; NSGF orbits for 7 spheres and ILRS combined
@@ -171,7 +190,8 @@ COSMIC-2 in `reference-leo-pod-2`; normal points 2026-06 to 08
   0.93–0.97, with at least 100 windows from at least 3 independent clusters.
   Clusters are independent orbits (Swarm A+C count as one; GRACE-FO 1+2 count
   as one). ISS has one object, so it needs at least six 30-day blocks instead.
-- **Every cell reports** median d²/3, 95 % cluster-bootstrap intervals, mean
+- **Every cell reports** median d²/3, 95 % cluster-bootstrap intervals
+  (10,000 resamples over clusters, seed SHA-256 of `C2|boot|<class>|<lead>`), mean
   z² per axis, and its oracle pass probability.
 - **Oracle pass probability.** A perfectly calibrated covariance with
   independent samples passes with probability 0.56 at n = 30, 0.75 at

@@ -1,8 +1,8 @@
 {
   "experiment": "ffm-covariance-calibration",
   "id": "C2",
-  "frozen": false,
-  "frozenNote": "DRAFT, not frozen: open questions Q1-Q6 to the coordinator (lane report 2026-10-28). Freezes before any calibration fit.",
+  "frozen": true,
+  "frozenNote": "Frozen 2026-10-28 before any calibration fit, any v3 refit of this experiment and any held-out score (PLAN.md; coordinator rulings Q1-Q6).",
   "store": "/opt/data/sdn-archive/ffm-covariance-calibration",
   "workers": 12,
   "model": {
@@ -124,7 +124,8 @@
         "M",
         "O'"
       ],
-      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; profile named by B2 A12 part 2"
+      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; profile named by B2 A12 part 2",
+      "hold": "fits held until B2 A12 part 2 is committed (its SHA recorded in receipt a12-part2.json)"
     },
     "R2": {
       "perigee_km": [
@@ -135,7 +136,8 @@
         "M",
         "O'"
       ],
-      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; profile named by B2 A12 part 2"
+      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; profile named by B2 A12 part 2",
+      "hold": "fits held until B2 A12 part 2 is committed (its SHA recorded in receipt a12-part2.json)"
     },
     "R3": {
       "perigee_km": [
@@ -219,7 +221,7 @@
       "cutoffs": {
         "from": "2026-04-01",
         "to": "2026-05-31",
-        "everyDays": "OPEN Q4"
+        "everyDays": 2
       }
     },
     "heldOutObject": {
@@ -269,7 +271,20 @@
         "2026-08-30"
       ]
     },
-    "sampleSelectionSeed": "OPEN Q3"
+    "sampleSelection": {
+      "rule": "lowest SHA-256 of C2|P9|<class>|<norad> among satellites with coverage, chosen before any fit",
+      "counts": {
+        "calibration": {
+          "GPS": 8,
+          "GLONASS": 4,
+          "COSMIC-2": 4
+        },
+        "heldOutObject": {
+          "Galileo": 6,
+          "COSMIC-2": 2
+        }
+      }
+    }
   },
   "common": {
     "integrator": "RK78",
@@ -331,7 +346,36 @@
   },
   "bootstrap": {
     "resamples": 10000,
-    "seed": "OPEN Q5",
+    "seed": "SHA-256 of C2|boot|<class>|<lead>",
     "unit": "cluster"
+  },
+  "base": {
+    "b2Branch": "origin/task/experiments-b2-ffm-iss-starlink-20261026",
+    "b2Sha": "df0621d5690b7c45e3408f1366c019fc05410eee",
+    "b2FilesUsed": [
+      "harness/ffm-fit-v3.mjs",
+      "experiments/sdn-ap-mixed-screening/lib/prefit.mjs",
+      "experiments/sdn-ap-mixed-screening/lib/*"
+    ],
+    "landing": "C2 lands on main only after B2 lands; any later change of harness/ffm-fit-v3.mjs or lib/prefit.mjs on the B2 branch: rebase and record in the receipt"
+  },
+  "order": [
+    "register",
+    "P1-P13",
+    "D10 fetch",
+    "fits: I, L, R3, then R1/R2 after A12 part 2"
+  ],
+  "d10": {
+    "npt": {
+      "span": [
+        "2025-10",
+        "2026-05"
+      ],
+      "use": "archive with SOURCES.md licence line; P2/P3 only; section 3.4 unchanged"
+    },
+    "nsgf": {
+      "span": "after 2026-08",
+      "use": "extends held-out by time (to the end of each product)"
+    }
   }
 }
