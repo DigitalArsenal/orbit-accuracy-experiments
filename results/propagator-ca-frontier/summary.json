@@ -1,0 +1,87 @@
+{
+  "exploratory": true,
+  "xp": [
+    {
+      "direction": "forward",
+      "caller": {
+        "medianCpuUsPerState": 18.595,
+        "rangeCpuUsPerState": [
+          18.2472265625,
+          18.869296875
+        ],
+        "medianJobWallMs": 476.1070829999999,
+        "medianPlanningCpuUs": 29
+      },
+      "temporal": {
+        "medianCpuUsPerState": 2.0994921875,
+        "rangeCpuUsPerState": [
+          2.001484375,
+          2.1278125
+        ],
+        "medianJobWallMs": 53.753541999999925,
+        "medianPlanningCpuUs": 88
+      },
+      "speedup": 8.856903641133458
+    },
+    {
+      "direction": "backward",
+      "caller": {
+        "medianCpuUsPerState": 19.000078125,
+        "rangeCpuUsPerState": [
+          18.9427734375,
+          19.0453515625
+        ],
+        "medianJobWallMs": 486.44662399999925,
+        "medianPlanningCpuUs": 29
+      },
+      "temporal": {
+        "medianCpuUsPerState": 2.1145703125,
+        "rangeCpuUsPerState": [
+          2.0865234375,
+          2.309609375
+        ],
+        "medianJobWallMs": 54.136334000000716,
+        "medianPlanningCpuUs": 86
+      },
+      "speedup": 8.985313948977518
+    },
+    {
+      "direction": "both",
+      "caller": {
+        "medianCpuUsPerState": 17.4615625,
+        "rangeCpuUsPerState": [
+          17.23203125,
+          17.4926171875
+        ],
+        "medianJobWallMs": 447.1087920000009,
+        "medianPlanningCpuUs": 30
+      },
+      "temporal": {
+        "medianCpuUsPerState": 2.1368359375,
+        "rangeCpuUsPerState": [
+          2.0682421875,
+          2.3205078125
+        ],
+        "medianJobWallMs": 55.02616599999965,
+        "medianPlanningCpuUs": 85
+      },
+      "speedup": 8.171690766502751
+    }
+  ],
+  "ca": {
+    "registeredRatesReproduced": 6,
+    "sourceRows": 50036
+  },
+  "ffmPass": true,
+  "xpEnginePass": {
+    "white": true,
+    "ussf": false
+  },
+  "referenceOrderPass": false,
+  "sourceHashes": {
+    "xp": "7c04ea19c90154b68ccd8f777214fb751a66455ccef2ace6c6983a31010a7431",
+    "ca": "ba456a14b7d59570b6e32bc7fc68398f3f80cf7157ce745f152872902656d175",
+    "ffm": "2e8c794aab9bfe04d1e8fccc168aa14a0cafea80bf66532c608a48077803d13a",
+    "reference": "5e95b318fced89c15ddee129eee6447a11170aac8b8cf25b1d3c5e85c8f9dd4f"
+  }
+}

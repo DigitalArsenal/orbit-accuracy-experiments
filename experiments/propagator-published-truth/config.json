@@ -1,0 +1,228 @@
+{
+  "id": "propagator-published-truth",
+  "frozen": true,
+  "classification": "exploratory preregistered scoring of archived agency data; held out from each fit, not globally unseen",
+  "node": "v25.4.0",
+  "moduleCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+  "modules": {
+    "propagator/sdn-ap/dist/isomorphic/module.wasm": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+    "propagator/ffm/dist/isomorphic/module.wasm": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94",
+    "analysis/estimation/dist/isomorphic/module.wasm": "d3aa2c8a29654da64eb43370413883b501a985c653181e5b672f722f3acdda3d",
+    "analysis/gp-error-model/dist/isomorphic/module.wasm": "a7a0e21805d50737b6f0c84b89a9ee6e7b981668d8cbe321c36217228f1d76f7",
+    "foundation/frames/dist/isomorphic/module.wasm": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+    "analysis/conjunction-assessment/dist/isomorphic/module.wasm": "e5824aedfb0300ba091297a2eaa940562da0811c23e85b4071db2c1210e5eec3"
+  },
+  "objects": [
+    {
+      "family": "Swarm",
+      "norad": 39452,
+      "prefix": "SW_OPER_SP3",
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-08-02",
+        "2026-08-07",
+        "2026-08-12"
+      ]
+    },
+    {
+      "family": "Swarm",
+      "norad": 39451,
+      "prefix": "SW_OPER_SP3",
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-08-02",
+        "2026-08-07",
+        "2026-08-12"
+      ]
+    },
+    {
+      "family": "Swarm",
+      "norad": 39453,
+      "prefix": "SW_OPER_SP3",
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-08-02",
+        "2026-08-07",
+        "2026-08-12"
+      ]
+    },
+    {
+      "family": "Sentinel",
+      "norad": 62261,
+      "prefix": [
+        "S1C_OPER_AUX_POEORB",
+        "S1D_OPER_AUX_POEORB"
+      ],
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    },
+    {
+      "family": "Sentinel",
+      "norad": 66315,
+      "prefix": [
+        "S1C_OPER_AUX_POEORB",
+        "S1D_OPER_AUX_POEORB"
+      ],
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    },
+    {
+      "family": "GRACE-FO",
+      "norad": 43476,
+      "prefix": "GFZOP_RSO",
+      "root": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    },
+    {
+      "family": "GRACE-FO",
+      "norad": 43477,
+      "prefix": "GFZOP_RSO",
+      "root": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    },
+    {
+      "family": "GPS",
+      "norad": 26407,
+      "prefix": "ESA0OPSFIN",
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    },
+    {
+      "family": "GPS",
+      "norad": 27663,
+      "prefix": "ESA0OPSFIN",
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    },
+    {
+      "family": "GPS",
+      "norad": 28190,
+      "prefix": "ESA0OPSFIN",
+      "root": "/opt/data/sdn-archive/reference-states/reference-finals2000a",
+      "issueDates": [
+        "2026-09-03",
+        "2026-09-08",
+        "2026-09-13"
+      ]
+    }
+  ],
+  "fitHours": 24,
+  "fitStepSeconds": 600,
+  "scoreStepSeconds": 1800,
+  "leadDays": [
+    1,
+    3,
+    7
+  ],
+  "minimumCoverage": 0.9,
+  "truthToleranceSeconds": 45,
+  "arms": [
+    "xp-native",
+    "ap-msis",
+    "ffm"
+  ],
+  "weather": {
+    "file": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "cutoff": "rows strictly before issue day; centered means truncated at that day; persist last drivers",
+    "classification": "causal-date retrospective drivers; revised values, not as-issued operational replay",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+  },
+  "environment": "/opt/data/sdn-archive/sdn-ap-baselines/environment/environment.json",
+  "kernel": "/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de440s.bsp",
+  "ffm": {
+    "forces": {
+      "degree": 70,
+      "order": 70,
+      "thirdBodies": [
+        10,
+        301
+      ],
+      "srp": true,
+      "drag": true,
+      "atmosphere": "NRLMSISE00",
+      "solidTides": true,
+      "relativity": "IERS_2010"
+    },
+    "integrator": {
+      "tolerance": 1e-10,
+      "maxStep": 120,
+      "minStep": 0.0001
+    },
+    "parameters": [
+      {
+        "kind": "DRAG_AREA_OVER_MASS",
+        "value": 0.01
+      },
+      {
+        "kind": "SRP_AREA_OVER_MASS",
+        "value": 0.02
+      }
+    ],
+    "measurementSigmaM": 1,
+    "positionPriorSigmaM": 100000.0,
+    "velocityPriorSigmaMS": 10,
+    "parameterPriorFraction": 1,
+    "maximumIterations": 10,
+    "correctionTolerance": 0.01,
+    "sigmaEditThreshold": 5,
+    "firstRoundSigmaFactor": 100
+  },
+  "covariance": {
+    "chiSquare3_95": 7.814727903251178,
+    "primary": "one nearest epoch per arc per lead; add reference position covariance",
+    "minimumArcs": 30,
+    "minimumObjects": 5,
+    "acceptableMeanD2Over3": [
+      0.8,
+      1.25
+    ],
+    "acceptableCoverage95": [
+      0.93,
+      0.97
+    ]
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "seed": "published-truth-20261026",
+    "cluster": "object",
+    "minimumObjectsForSuperiority": 5
+  },
+  "pc": {
+    "fixture": "analysis/conjunction-assessment/src/cpp/tests/fixtures/cara_pc.csv",
+    "expectedCases": 21,
+    "algorithm": "FOSTER",
+    "tolerances": "unchanged per-row upstream tolerances; refusals are failures",
+    "fixtureSha256": "1b6967955a3f398609e1a5d047f01c41340268b090cc41aed9b7650d34c6b226"
+  },
+  "decisionRules": {
+    "accuracy": "Retain gains regardless of speed cost; no tuning on scored data",
+    "speed": "separate fit, covariance propagation and scoring cost; compare common support only",
+    "scope": "orbit/covariance comparison and published 2D Pc cases; not all-catalog or operational collision calibration"
+  },
+  "environmentSha256": "520b825d61e64418d1904a482da49c647cb2f92765c9df736d14d90a6e61dcf6",
+  "kernelSha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2"
+}

@@ -1,0 +1,9 @@
+{
+  "frozen": true,
+  "sourceRun": "catalog-epochs",
+  "replayRun": "catalog-epochs-full-replay",
+  "workers": 4,
+  "objectCap": null,
+  "perObjectTimeoutSeconds": null,
+  "reuseSourceOutcomes": false
+}

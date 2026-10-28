@@ -1,0 +1,95 @@
+{
+  "id": "propagator-catalog-census",
+  "frozen": true,
+  "registeredUtc": "2026-10-26T19:33:55.528Z",
+  "objective": "Every public spacecraft ephemeris source and spacecraft feeding the combined catalog; no spacecraft or source sampling",
+  "baseline": {
+    "experiment": "propagator-published-truth",
+    "commit": "ae57bcecf0e20e069967511396ae62cd5806c595",
+    "configSha256": "57ed7694fc67e2ffd8c0c5089503ee0ca7c01d1c6d51d38ce4271262d6696a0f"
+  },
+  "moduleCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+  "registry": {
+    "file": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/data-source/ephemeris-source/sources.json",
+    "sha256": "2592308649dc926631d7ae2e5b517298f72b4dc3337238b7f012fa273af82e06",
+    "fleetFile": "/Users/tj/software/spacedatanetwork-stack/deployment/ephemeris-provider-nodes/fleet-plan.json",
+    "fleetSha256": "deb3ca19a63d0045809c2437d0a1f207f976efe1037b505b32f874ca98430f7c"
+  },
+  "archive": "/opt/data/sdn-archive",
+  "referenceRoots": [
+    "reference-states/reference-finals2000a",
+    "reference-states/reference-leo-pod-2",
+    "reference-states/reference",
+    "e14-covariance-realism/reference"
+  ],
+  "operatorCycles": "operator-capture/cycles",
+  "providerApi": "http://127.0.0.1",
+  "sourceIds": [
+    "spacex-starlink",
+    "eutelsat-oneweb",
+    "planet",
+    "iss",
+    "ses",
+    "intelsat",
+    "telesat",
+    "css-tiangong",
+    "gps-precise",
+    "glonass-precise",
+    "esa-pod",
+    "eumetsat",
+    "cpf",
+    "spire",
+    "space-track",
+    "vimpel",
+    "cpf-edc"
+  ],
+  "selection": {
+    "spacecraftCap": null,
+    "sourceCap": null,
+    "files": "Inventory every source record/file available at snapshot, no pagination or per-invocation truncation; fingerprint the frozen census",
+    "fitHours": 24,
+    "leadDays": [
+      1,
+      3,
+      7
+    ],
+    "cadenceSeconds": {
+      "fit": 600,
+      "score": 1800
+    },
+    "minimumCoverage": 0.9,
+    "epochToleranceSeconds": 45,
+    "arcs": "One latest metadata-eligible issue per source/object, maximizing available registered lead (7, then 3, then 1); record all objects even if none is scoreable",
+    "duplicates": "Keep distinct source/quality lineages; deduplicate exact content; overlapping precise files sorted by name, last wins"
+  },
+  "arms": [
+    "xp-native",
+    "ap-msis",
+    "ffm"
+  ],
+  "physics": "Reuse the unchanged published-truth module/configuration/estimator settings, retaining 70x70 FFM, all registered forces and covariance",
+  "truthPolicy": {
+    "precise": "Reconstructed agency reference ephemerides, quality basis retained",
+    "operator": "Cross-version near-epoch heads, separately labeled operator-reconstruction; future predictions alone are not independent truth",
+    "singleForecast": "Within-product continuation/closure only, separate from forecast-accuracy results",
+    "gp": "Element-set feeds remain in source census but do not count as independent high-accuracy truth"
+  },
+  "coverageStatuses": [
+    "scored",
+    "fit_failed",
+    "propagation_failed",
+    "missing_fit_coverage",
+    "missing_future_reference",
+    "unavailable_archive",
+    "unsupported_format_or_frame",
+    "not_public_ephemeris",
+    "source_unreachable"
+  ],
+  "failurePolicy": "Never omit an object because a fit, covariance, parser or coverage check fails; report all source/object denominators and reasons",
+  "execution": {
+    "workers": 4,
+    "resumable": true,
+    "noNumericalShortcuts": true
+  },
+  "verification": "Complete census accounting and deterministic representative real-module replay for every available source/reader; no pass for unsupported sources or absent truth"
+}

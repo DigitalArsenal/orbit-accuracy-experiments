@@ -1,0 +1,72 @@
+{
+  "experiment": "propagator-ca-frontier",
+  "kind": "ca",
+  "startedAt": "2026-10-26T16:22:36.139Z",
+  "command": [
+    "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+    "/Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-propagator-ca-frontier-20261026/experiments/propagator-ca-frontier/audit-ca.mjs",
+    "--run",
+    "ca-final-20261026"
+  ],
+  "plan": {
+    "commit": "b988ee120f209a1d9aca334dc9d2952c0a53f038",
+    "configSha256": "f2617e4ac0d068e71e3355e7e9dc21e83172fdbe434f32e6e9b81fc46adfab78",
+    "planCommit": "f4cc9278c1f0445e6047ce4e2e58108d128dcac2",
+    "planSha256": "0c60cf95b50ca6713b960b9b0f76b1fddb73496df3094a16b368370ffdbb9b8a"
+  },
+  "experimentCommit": "df94df26f499277c0ee7fa53da059e1777be75e4",
+  "experimentSourceHashes": {
+    "audit-ca.mjs": "5eb404b5c491b9566c83e8df8005a19a67e79a746ac58e8e0994fb29a34deb1c",
+    "batch.mjs": "20b66f6e8d5ac775e7eee5d34f8ac6f8e500df60665062f78cc96e854fa34b74",
+    "lib.mjs": "4d35273b0b85a033495deed81dbf4bc80ee71c86a5a2ac1ab2da0f6e7d854670",
+    "probe-reference.mjs": "402d1bb8a6347ac15e375124daa0c72aa1c5d4706e17c4257b98dbb9a6d49899",
+    "report.mjs": "8cfd8dae7330c291a6cb4539af3ebf2d94bb6b27c894c52334c990e6532ecdc7",
+    "run-ffm.mjs": "72ac603915318b57e40881c936d40ac86f773c0c2b97d29d184ec210749361d3",
+    "run-xp.mjs": "67f5cc3881e31d64fc0810698fe158a8fa759f708bd38c191ba792ed7b0445dc",
+    "verify.mjs": "10e27b2a4121786921566bab1ecf0fe9a0c4ad0ca3e93fa0901a23c1c5c6e5de",
+    "xp-corpus.mjs": "bee2651ff490dbf92a11a091560f464422385f0fc6dae83ce4684fbb5b9453b2"
+  },
+  "modules": null,
+  "runtime": {
+    "node": "v25.4.0",
+    "v8": "14.1.146.11-node.15"
+  },
+  "host": {
+    "model": "Apple M3 Ultra",
+    "logicalCpus": 28,
+    "loadStart": [
+      2.43701171875,
+      2.572265625,
+      2.47265625
+    ],
+    "loadEnd": [
+      2.43701171875,
+      2.572265625,
+      2.47265625
+    ]
+  },
+  "inputs": {
+    "experiments/sdn-ap-mixed-screening/config.json": {
+      "commit": "75675e060910c1337c6fe87af8422a2fb1d5c872",
+      "sha256": "9f7d2f019e7ae8df149d3af5691d0b797234ca612048f45a096473d80d03caa8"
+    },
+    "results/sdn-ap-mixed-screening/table.json": {
+      "commit": "75675e060910c1337c6fe87af8422a2fb1d5c872",
+      "sha256": "d3b01394f6e27ac006dd87c9ace1f92646dc93512effe80c8334e3acbb64d030"
+    },
+    "ca-encounters.iss.gp.jsonl": {
+      "sha256": "a75318b355d664978e5003b3301bf7cb6a92096d2e5c2254d21b9252e79bf9ac"
+    },
+    "ca-encounters.laser.gp.jsonl": {
+      "sha256": "666a8affe54a00e42e5dbea050a77f26f1580dd05ce5634ef16791e241532830"
+    },
+    "ca-encounters.laser.precise.jsonl": {
+      "sha256": "fa81b9a0e0545a13996128ac44afc41e2807273c28990aa0f8c878c2f59be807"
+    }
+  },
+  "completedAt": "2026-10-26T16:22:36.251Z",
+  "output": {
+    "file": "ca.json",
+    "sha256": "ba456a14b7d59570b6e32bc7fc68398f3f80cf7157ce745f152872902656d175"
+  }
+}

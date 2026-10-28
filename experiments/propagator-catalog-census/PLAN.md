@@ -1,0 +1,116 @@
+# Complete public-ephemeris propagator census
+
+Registered 2026-10-26 before reading orbital states for this extension. The
+ten-spacecraft published-reference experiment is a pilot, not evidence of
+catalog-wide coverage. The owner requires every public spacecraft ephemeris
+source being pulled for the combined catalog, without a spacecraft sample.
+
+## Population and accounting
+
+Start with every entry in the pinned 17-source provider registry, every returned
+page of source inventory, and all existing agency-reference and operator-capture
+archives. Census metadata and source/file hashes define a reproducible snapshot.
+There is no spacecraft, source, pagination, or per-pull resource cap. A private
+commercial feed is recorded as such rather than counted as public truth. A
+registry entry alone is not evidence of successful acquisition.
+
+Record per source: advertised resources, acquired files, parsed records, unique
+spacecraft, data-quality class, eligible fits and horizons, completed arms,
+failures, and missing/unsupported cases. Every discovered object stays in the
+denominator. Distinguish unavailable ingestion from unsupported decoding,
+insufficient history, absent future reference and numerical failures. Report
+both source/object counts and deduplicated spacecraft counts; do not count one
+spacecraft repeatedly to imply a larger population.
+
+The census covers every discovered file and object. Numerical comparisons use
+one latest eligible arc per source/object, selected from metadata before scoring:
+maximize the available registered lead (7, then 3, then 1 day), then choose the
+latest UTC issue with a preceding 24-hour fit. Sources with no eligible arc stay
+visible. This samples forecast dates, not spacecraft. Historical periods may
+already have appeared in other studies; each forecast remains held out from
+its own fit.
+
+## Evidence and numerical method
+
+Reuse the prior study's immutable module pin, three configurations, full force
+model, estimators, 10-minute fit cadence, 30-minute score cadence, 90% coverage,
+45-second reference matching, causal-date weather, covariance propagation and
+scoring rules. Do not cut physics or relax criteria to accelerate the census.
+Use native modules for all propagation, physical frame/time conversion and
+covariance geometry. Apply the existing truth gate and retain every rejection.
+
+Precise reconstructed orbits support trajectory-accuracy measurements. Operator
+near-epoch heads from subsequent versions support separately labeled
+operator-reconstruction comparisons. A provider's future forecast is not
+independent physical truth: within-product continuation is labeled model closure
+and never pooled with reconstructed-orbit accuracy. GP/OMM-only sources remain
+in the catalog census but cannot establish high-accuracy truth by themselves.
+Do not splice sources, frames, time scales, uncertainties or predicted and
+reconstructed portions without explicit provenance. Missing reference covariance
+is reported. Maneuvers remain unless the pre-existing truth gate rejects the
+underlying state; no residual-based selection is allowed.
+
+Report accuracy and uncertainty by source, evidence class, regime and horizon.
+Keep all failure rates beside paired common-support comparisons. Retain the
+prior study's sample-size and object-cluster statistical rules. Runtime cost is
+descriptive on this shared host; accuracy improvements do not need to justify
+their speed cost. Existing Pc integral validation is separate evidence and does
+not certify the enlarged population's covariance or operational collision risk.
+
+## Execution and completion
+
+1. Commit this plan and config before state access; freeze a complete census.
+2. Reconcile live provider inventories with local archives, retaining every gap.
+3. Run each eligible object through all arms using resumable, bounded workers.
+4. Publish aggregate coverage, accuracy, covariance, failure and runtime reports;
+   keep ephemerides, elements and per-epoch results local.
+5. Replay real source paths and verify complete denominator accounting through
+   one E2E, run the component gate, push and verify remote main.
+
+An incomplete source or still-running batch is not a completed all-catalog
+accuracy result. Record progress and blockers explicitly; never call the census
+complete merely because its available or easy subset finished. Production
+collectors, source retention and deployment are unchanged by this experiment.
+
+## Amendment — 2026-10-26: contemporary environment and metadata selection
+
+Before any numerical comparison in this extension, the pilot's October 9
+weather archive was found to have no rows in the current Starlink fit window.
+Use the same GFZ historical daily-driver product retrieved on October 26 at
+19:42:15 UTC, SHA-256
+`7cc9d6865ebf286891099ff9186f0ca5b05855eba8778b112e5cc6fc83c86bda`.
+The original driver-date cutoff, truncated centered mean, persistence, force
+model and integrator remain the same. This remains a causal-date retrospective
+experiment, not an as-issued weather replay. Historical reference arcs retain
+the original October 9 file. No scored residual motivated this update.
+
+For reproducible latest-arc selection, candidate issue epochs are each product's
+last retained epoch minus the requested lead. Evaluate candidates latest first,
+using only declared spans/cadence and publication time for eligibility. Once a
+candidate is selected, failed actual coverage or the truth gate remains a
+failure; do not search for a better-scoring window. Operator fit files must have
+creation time at or before the issue; reference heads must come from files
+created after it. Source versions with the same upstream product hash and object
+are deduplicated by the configured reference-root order, with every conversion
+retained in the inventory. Mixed reconstructed/predicted ultra-rapid products
+remain visibly unscored until their portions are explicitly separated.
+
+## Amendment — 2026-10-26: sample operator records at their actual epochs
+
+The full metadata census exposed a scheduling mismatch: Starlink's ten-minute
+record grids shift by several minutes between successive products. The pilot's
+45-second selection tolerance admitted only 91 of 11,170 identities, although
+11,163 have fit/forecast span coverage. This amendment is motivated by timestamp
+metadata, not model residuals. Preserve the strict-grid run separately under
+`catalog`; run the corrected census as `catalog-epochs` without mixing outcomes.
+
+For operator heads only, select the nearest recorded state within half the
+source's ten-minute sampling interval (300 seconds), retaining its exact epoch.
+Every propagator is requested and scored at those actual epochs. There is no
+state interpolation, epoch relabeling, approximate propagation or change to
+the error metric. Keep the 24-hour fit, 90% minimum sample coverage, nominal
+10-/30-minute thinning, issue/publication chronology and every force. Require
+unique selected records, and keep fit and scoring samples within their
+respective windows. The exact-lead covariance statistic retains its original
+45-second tolerance. Precise-reference sampling is unchanged. All coverage
+failures remain visible. Register this amendment before the corrected run.

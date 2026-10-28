@@ -1,0 +1,534 @@
+{
+  "generatedUtc": "2026-10-27T09:16:26.879Z",
+  "run": "direct-20261026-r2",
+  "manifestSha256": "a8eaf4c04276f40c58be0d4c6e66771f2cf217b07fa20ffc001f2226cd5b0558",
+  "queueSha256": "a894aba45e241f5f0820cb29b58c7ae71472e5e47dd5b25df869b0960cc9806a",
+  "provenance": {
+    "experimentCommit": "bdcbc83552d071f9aace15a0aa50b03d3f1e20aa",
+    "sourceHashes": {
+      "experiments/propagator-catalog-census/direct/PLAN.md": "b431e8d30ad5e9a63a481c1c322ad4dff7a1fb223f131a086643c0702ea1ffae",
+      "experiments/propagator-catalog-census/direct/batch.mjs": "f9cff695bd9aa81abd16985013d7874d8dc72fcdb19f5c1e913aa7c37c76d53f",
+      "experiments/propagator-catalog-census/direct/collect.mjs": "cd74d42561583c1a04987c61ccd0bc3aa2d22f4512869c5f343982a3be1dc8ac",
+      "experiments/propagator-catalog-census/direct/common.mjs": "d01ddbd312e4986226793adc0801f5016edc50aadad814d81953c366f96956ce",
+      "experiments/propagator-catalog-census/direct/config.json": "04a1ad008ddd62586dc5ee377cf1d0ef1fd53083db0b672279b867ce286ac730",
+      "experiments/propagator-catalog-census/direct/report.mjs": "2b53a6611abfa80496d9cdcac97559092790240302c72be4834970832abc4492",
+      "experiments/propagator-catalog-census/direct/verify.mjs": "b1389c4eb1e48cfc6f774828a2c6a30104238f03429704824affcedbb6e34b01",
+      "experiments/propagator-catalog-census/direct/wire.mjs": "cf0a7e0f92d58690054c7fcd74b6d153b3a8062d9510f9c27dbbc085b2371e50"
+    },
+    "moduleFiles": {
+      "dist/isomorphic/module.wasm": "5c789c4758679a03f6890e79a6333d4338a00eae21d816eb0b37c4055d9eb959",
+      "sources.json": "2592308649dc926631d7ae2e5b517298f72b4dc3337238b7f012fa273af82e06",
+      "tests/harness.mjs": "c540ba72d7c20a5c0b3a621391ee3d61c562fde467854003be16bde4907f43ba",
+      "package-lock.json": "8c0758e6056fc9b2df1671e17f4eb084e8c47636db51e39c003fb0140f69713b"
+    },
+    "modulesCommit": "cb22348f2c674e8920716af09f7ca2a6a87f5f28",
+    "node": "v25.4.0",
+    "command": [
+      "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+      "/Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-propagator-catalog-census-20261026/experiments/propagator-catalog-census/direct/collect.mjs",
+      "--run",
+      "direct-20261026-r2",
+      "--modules",
+      "/Users/tj/software/worktrees/space-data-network-modules--catalog-census-runtime",
+      "--from",
+      "direct-20261026"
+    ],
+    "registeredUtc": "2026-10-26T17:20:18-04:00",
+    "frozenConfigTimestampLabel": "2026-10-26T21:20:00Z",
+    "epochMs": 1793049478177,
+    "startedUtc": "2026-10-26T21:20:24.907Z",
+    "modules": "/Users/tj/software/worktrees/space-data-network-modules--catalog-census-runtime",
+    "scope": "all advertised public spacecraft; current discovery windows plus existing census archives",
+    "completeCatalog": false,
+    "queueSha256": "a894aba45e241f5f0820cb29b58c7ae71472e5e47dd5b25df869b0960cc9806a",
+    "queueFrozenUtc": "2026-10-26T21:18:26.288Z",
+    "imported": {
+      "run": "direct-20261026",
+      "manifestSha256": "163af22600ec65eb61b541437946828cceab9e97e1038b19e85ca6e45c65a652",
+      "queueSha256": "a894aba45e241f5f0820cb29b58c7ae71472e5e47dd5b25df869b0960cc9806a",
+      "receiptsSha256": "9d07c83bb3530dea16316f3dca88ca3a29d515e158a7b6cc4bba4711dfe2122c",
+      "downloads": 488
+    }
+  },
+  "completeCatalog": false,
+  "allDiscoveredResourcesTerminal": true,
+  "anonymousDiscoveryComplete": true,
+  "sourceCount": 17,
+  "resources": 11771,
+  "downloaded": 11769,
+  "downloadFailed": 2,
+  "pending": 0,
+  "rawValidated": 11769,
+  "rawValidationFailed": 0,
+  "rawBytes": 23294569462,
+  "storedBytes": 9603209975,
+  "sources": [
+    {
+      "source": "spacex-starlink",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://api.starlink.com/public-files/ephemerides/MANIFEST.txt",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "5ab663e077d872db28e5566e5babe6e6fcdaf054db3afab78b5d8daac845f379",
+          "error": null
+        }
+      ],
+      "discovered": 11163,
+      "native": 11163,
+      "supplement": 0,
+      "downloaded": 11163,
+      "downloadFailed": 0,
+      "rawValidated": 11163,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 22674073313,
+      "storedBytes": 9308814801,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "eutelsat-oneweb",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [],
+      "discovered": 1,
+      "native": 1,
+      "supplement": 0,
+      "downloaded": 1,
+      "downloadFailed": 0,
+      "rawValidated": 1,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 44673,
+      "storedBytes": 7093,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "planet",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://ephemerides.planet-labs.com/planet_mc.tle",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "090995adfeb3f2804559aabd65f0517014f974a2ffcaa35bfa69cf1bc3f1c3bc",
+          "error": null
+        }
+      ],
+      "discovered": 116,
+      "native": 2,
+      "supplement": 114,
+      "downloaded": 116,
+      "downloadFailed": 0,
+      "rawValidated": 116,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 532061492,
+      "storedBytes": 209498242,
+      "declaredIdentityCount": 89,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "iss",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [],
+      "discovered": 1,
+      "native": 1,
+      "supplement": 0,
+      "downloaded": 1,
+      "downloadFailed": 0,
+      "rawValidated": 1,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 717310,
+      "storedBytes": 312802,
+      "declaredIdentityCount": 1,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "ses",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://www.ses.com/network-and-technology/technical-data-and-tools/satellite-orbital-data",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "c17f7881691a2b74ade7fa54080853ba32be261e6228e68fb7be3712e941f766",
+          "error": null
+        }
+      ],
+      "discovered": 41,
+      "native": 41,
+      "supplement": 0,
+      "downloaded": 40,
+      "downloadFailed": 1,
+      "rawValidated": 40,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 44689,
+      "storedBytes": 20923,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {
+        "HTTP 403": 1
+      },
+      "validationErrors": {}
+    },
+    {
+      "source": "intelsat",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://my.intelsat.com/ephemeris/public",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "3208b7568f2add62e2f11f484c2368d7a7081e7b618bc8aa071a7fbe894c919b",
+          "error": null
+        }
+      ],
+      "discovered": 258,
+      "native": 64,
+      "supplement": 194,
+      "downloaded": 258,
+      "downloadFailed": 0,
+      "rawValidated": 258,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 2505473,
+      "storedBytes": 752640,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "telesat",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://app.telesat.com/data/FleetLong.csv",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "4ac9c30d5a8dd2ea704553411c9a9a1e75482b5cadd0e0b167feb0a5092b6883",
+          "error": null
+        }
+      ],
+      "discovered": 12,
+      "native": 12,
+      "supplement": 0,
+      "downloaded": 12,
+      "downloadFailed": 0,
+      "rawValidated": 12,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 5873,
+      "storedBytes": 2459,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "css-tiangong",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://www.cmse.gov.cn/gfgg/zgkjzgdcs/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "553303f80c9ea74f7d9c7acda1d599383c010eaabc2ad9d4be24ac3c4b005017",
+          "error": null
+        }
+      ],
+      "discovered": 1,
+      "native": 1,
+      "supplement": 0,
+      "downloaded": 0,
+      "downloadFailed": 1,
+      "rawValidated": 0,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 0,
+      "storedBytes": 0,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {
+        "fetch failed": 1
+      },
+      "validationErrors": {}
+    },
+    {
+      "source": "gps-precise",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://igs.bkg.bund.de/root_ftp/IGS/products/2441/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "484df85b992964712ed18cbecf4ed31b65cec796957e9ff615cb3af9c5c82673",
+          "error": null
+        },
+        {
+          "url": "https://igs.bkg.bund.de/root_ftp/IGS/products/2442/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "42cfe3f4b0bedcd99625d71863b21bec157680952d7410aa46f4e025915b9796",
+          "error": null
+        }
+      ],
+      "discovered": 40,
+      "native": 1,
+      "supplement": 39,
+      "downloaded": 40,
+      "downloadFailed": 0,
+      "rawValidated": 40,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 7271775,
+      "storedBytes": 7268912,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "glonass-precise",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "176a5e470cb988ae32dcf02d0cbc62ce84efbd11582b58e30883f10fd8c9f9d7",
+          "error": null
+        },
+        {
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "7f72e6fac800143f5620bd7b0be5fab9e67094e8ef70d9da526cd6ea59b68b03",
+          "error": null
+        }
+      ],
+      "discovered": 45,
+      "native": 1,
+      "supplement": 44,
+      "downloaded": 45,
+      "downloadFailed": 0,
+      "rawValidated": 45,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 37971202,
+      "storedBytes": 37774256,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "esa-pod",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "http://navigation-office.esa.int/products/cryosat2/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "6ef3a224ad24e1abd2b746ae6f77107458ee3b460451ad96a9d0ff6a9fb8058a",
+          "error": null
+        },
+        {
+          "url": "http://navigation-office.esa.int/products/gnss-products/2441/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "176a5e470cb988ae32dcf02d0cbc62ce84efbd11582b58e30883f10fd8c9f9d7",
+          "error": null
+        },
+        {
+          "url": "http://navigation-office.esa.int/products/gnss-products/2442/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "7f72e6fac800143f5620bd7b0be5fab9e67094e8ef70d9da526cd6ea59b68b03",
+          "error": null
+        },
+        {
+          "url": "http://navigation-office.esa.int/products/swarm/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "10c6bd571d50cdf67cd368c1fe4a387b0d6a2f066a52f2c2d70cca1f2427464d",
+          "error": null
+        }
+      ],
+      "discovered": 49,
+      "native": 3,
+      "supplement": 46,
+      "downloaded": 49,
+      "downloadFailed": 0,
+      "rawValidated": 49,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 38511182,
+      "storedBytes": 38310095,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "eumetsat",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "https://service.eumetsat.int/tle/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "56a222f43298aff4ccb50874c76fed31e23743e788aaaca1d9d45ddc866acf13",
+          "error": null
+        }
+      ],
+      "discovered": 10,
+      "native": 10,
+      "supplement": 0,
+      "downloaded": 10,
+      "downloadFailed": 0,
+      "rawValidated": 10,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 16760,
+      "storedBytes": 5088,
+      "declaredIdentityCount": 10,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "cpf",
+      "credentialed": false,
+      "discovery": "discovered",
+      "discoveryError": null,
+      "listings": [
+        {
+          "url": "http://navigation-office.esa.int/products/cpf_predictions/",
+          "status": 200,
+          "state": "downloaded",
+          "sha256": "25daf4a339593bd8329ac93e29417a4498ff4c39a7d2232b4c132a32705207fa",
+          "error": null
+        }
+      ],
+      "discovered": 34,
+      "native": 34,
+      "supplement": 0,
+      "downloaded": 34,
+      "downloadFailed": 0,
+      "rawValidated": 34,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 1345720,
+      "storedBytes": 442664,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "spire",
+      "credentialed": true,
+      "discovery": "credential_required",
+      "discoveryError": null,
+      "listings": [],
+      "discovered": 0,
+      "native": 0,
+      "supplement": 0,
+      "downloaded": 0,
+      "downloadFailed": 0,
+      "rawValidated": 0,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 0,
+      "storedBytes": 0,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "space-track",
+      "credentialed": true,
+      "discovery": "credential_required",
+      "discoveryError": null,
+      "listings": [],
+      "discovered": 0,
+      "native": 0,
+      "supplement": 0,
+      "downloaded": 0,
+      "downloadFailed": 0,
+      "rawValidated": 0,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 0,
+      "storedBytes": 0,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "vimpel",
+      "credentialed": true,
+      "discovery": "credential_required",
+      "discoveryError": null,
+      "listings": [],
+      "discovered": 0,
+      "native": 0,
+      "supplement": 0,
+      "downloaded": 0,
+      "downloadFailed": 0,
+      "rawValidated": 0,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 0,
+      "storedBytes": 0,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    },
+    {
+      "source": "cpf-edc",
+      "credentialed": true,
+      "discovery": "credential_required",
+      "discoveryError": null,
+      "listings": [],
+      "discovered": 0,
+      "native": 0,
+      "supplement": 0,
+      "downloaded": 0,
+      "downloadFailed": 0,
+      "rawValidated": 0,
+      "rawValidationFailed": 0,
+      "pending": 0,
+      "rawBytes": 0,
+      "storedBytes": 0,
+      "declaredIdentityCount": 0,
+      "downloadErrors": {},
+      "validationErrors": {}
+    }
+  ]
+}

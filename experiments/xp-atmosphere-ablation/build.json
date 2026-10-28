@@ -1,0 +1,16 @@
+{
+  "amendment": "A1",
+  "modulesCommit": "348636447dc900e7e2feb264083ec82ec3344df5",
+  "modulesTask": "modules-sgp4xp-atmosphere-variant-20261026",
+  "note": "every module the steps load, at this commit of space-data-network-modules main; the steps refuse a checkout at another commit or with other wasm bytes",
+  "wasmSha256": {
+    "propagator/sdn-ap": "8522b88bcbac03e28483bb9d8c907457b664a86c70380e463f2803117e854695",
+    "propagator/ffm": "8e6f63d147e5d51cbb55a1e6b557d011c71906a5447598a7c5794ce7dafaad94",
+    "analysis/density-calibration": "5d284078821dd80cabd499bce10b174bf635a2456cda261d641a6219b4df3719",
+    "analysis/gp-error-model": "a7a0e21805d50737b6f0c84b89a9ee6e7b981668d8cbe321c36217228f1d76f7",
+    "foundation/frames": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+    "foundation/time": "61abbb27a8358b05a1141bb983fcf1f6b5a89ba41793dece0bccf1678a4d02ed",
+    "files/orbit-products": "688f22ee2dba278d19e4029e8aedf1aa46fffd9910428f7d7ed40c9eeb583ad3",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1"
+  }
+}

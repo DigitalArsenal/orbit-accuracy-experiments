@@ -1,0 +1,838 @@
+{
+  "exploratory": true,
+  "originalResultsUnchanged": true,
+  "hardBodyRadiusM": 20,
+  "proximityRadiusM": 200,
+  "quietPc": 1e-7,
+  "alertPc": 0.0001,
+  "groups": {
+    "iss-gp": {
+      "formed": 10036,
+      "paired": 10033,
+      "excludedInvalidOrMissingPc": 3,
+      "primaryObjects": 1,
+      "reproduction": {
+        "ffm": {
+          "published": 0.10415628426193561,
+          "reproduced": 0.10415628426193561,
+          "denominator": 10033,
+          "greenBelow200M": 1045,
+          "greenInsideHbr": 250,
+          "greenOutsideHbrBelow200M": 795,
+          "fractionOfProximityMissesOutsideHbr": 0.7607655502392344
+        },
+        "sgp4xp": {
+          "published": 0.1706368982358218,
+          "reproduced": 0.1706368982358218,
+          "denominator": 10033,
+          "greenBelow200M": 1712,
+          "greenInsideHbr": 412,
+          "greenOutsideHbrBelow200M": 1300,
+          "fractionOfProximityMissesOutsideHbr": 0.7593457943925234
+        }
+      },
+      "strata": {
+        "inside-HBR": {
+          "denominator": 1048,
+          "arms": {
+            "ffm": {
+              "green": 250,
+              "yellow": 608,
+              "red": 190,
+              "greenConditional": 0.2385496183206107,
+              "redConditional": 0.18129770992366412
+            },
+            "sgp4xp": {
+              "green": 412,
+              "yellow": 523,
+              "red": 113,
+              "greenConditional": 0.3931297709923664,
+              "redConditional": 0.10782442748091603
+            }
+          }
+        },
+        "HBR-to-200m": {
+          "denominator": 3318,
+          "arms": {
+            "ffm": {
+              "green": 795,
+              "yellow": 1927,
+              "red": 596,
+              "greenConditional": 0.23960216998191683,
+              "redConditional": 0.17962628089210367
+            },
+            "sgp4xp": {
+              "green": 1300,
+              "yellow": 1702,
+              "red": 316,
+              "greenConditional": 0.39180229053646776,
+              "redConditional": 0.09523809523809523
+            }
+          }
+        },
+        "200m-through-5km": {
+          "denominator": 4700,
+          "arms": {
+            "ffm": {
+              "green": 2271,
+              "yellow": 2178,
+              "red": 251,
+              "greenConditional": 0.48319148936170214,
+              "redConditional": 0.053404255319148934
+            },
+            "sgp4xp": {
+              "green": 2588,
+              "yellow": 1948,
+              "red": 164,
+              "greenConditional": 0.5506382978723404,
+              "redConditional": 0.03489361702127659
+            }
+          }
+        },
+        "above-5km": {
+          "denominator": 967,
+          "arms": {
+            "ffm": {
+              "green": 872,
+              "yellow": 95,
+              "red": 0,
+              "greenConditional": 0.9017580144777663,
+              "redConditional": 0
+            },
+            "sgp4xp": {
+              "green": 881,
+              "yellow": 85,
+              "red": 1,
+              "greenConditional": 0.9110651499482937,
+              "redConditional": 0.001034126163391934
+            }
+          }
+        }
+      },
+      "originalVerdict": "no demonstrated CA difference"
+    },
+    "laser-gp": {
+      "formed": 20000,
+      "paired": 19997,
+      "excludedInvalidOrMissingPc": 3,
+      "primaryObjects": 5,
+      "reproduction": {
+        "ffm": {
+          "published": 0.005400810121518228,
+          "reproduced": 0.005400810121518228,
+          "denominator": 19997,
+          "greenBelow200M": 108,
+          "greenInsideHbr": 31,
+          "greenOutsideHbrBelow200M": 77,
+          "fractionOfProximityMissesOutsideHbr": 0.7129629629629629
+        },
+        "sgp4xp": {
+          "published": 0.005450817622643396,
+          "reproduced": 0.005450817622643396,
+          "denominator": 19997,
+          "greenBelow200M": 109,
+          "greenInsideHbr": 31,
+          "greenOutsideHbrBelow200M": 78,
+          "fractionOfProximityMissesOutsideHbr": 0.7155963302752294
+        }
+      },
+      "strata": {
+        "inside-HBR": {
+          "denominator": 1980,
+          "arms": {
+            "ffm": {
+              "green": 31,
+              "yellow": 91,
+              "red": 1858,
+              "greenConditional": 0.015656565656565657,
+              "redConditional": 0.9383838383838384
+            },
+            "sgp4xp": {
+              "green": 31,
+              "yellow": 236,
+              "red": 1713,
+              "greenConditional": 0.015656565656565657,
+              "redConditional": 0.8651515151515151
+            }
+          }
+        },
+        "HBR-to-200m": {
+          "denominator": 6845,
+          "arms": {
+            "ffm": {
+              "green": 77,
+              "yellow": 473,
+              "red": 6295,
+              "greenConditional": 0.0112490869247626,
+              "redConditional": 0.9196493791088386
+            },
+            "sgp4xp": {
+              "green": 78,
+              "yellow": 952,
+              "red": 5815,
+              "greenConditional": 0.01139517896274653,
+              "redConditional": 0.8495252008765523
+            }
+          }
+        },
+        "200m-through-5km": {
+          "denominator": 9262,
+          "arms": {
+            "ffm": {
+              "green": 5493,
+              "yellow": 1712,
+              "red": 2057,
+              "greenConditional": 0.5930684517382855,
+              "redConditional": 0.22209026128266032
+            },
+            "sgp4xp": {
+              "green": 4663,
+              "yellow": 2277,
+              "red": 2322,
+              "greenConditional": 0.5034549773267113,
+              "redConditional": 0.25070179226948824
+            }
+          }
+        },
+        "above-5km": {
+          "denominator": 1910,
+          "arms": {
+            "ffm": {
+              "green": 1903,
+              "yellow": 7,
+              "red": 0,
+              "greenConditional": 0.9963350785340314,
+              "redConditional": 0
+            },
+            "sgp4xp": {
+              "green": 1900,
+              "yellow": 10,
+              "red": 0,
+              "greenConditional": 0.9947643979057592,
+              "redConditional": 0
+            }
+          }
+        }
+      },
+      "originalVerdict": "no demonstrated CA difference"
+    },
+    "laser-precise": {
+      "formed": 20000,
+      "paired": 19997,
+      "excludedInvalidOrMissingPc": 3,
+      "primaryObjects": 5,
+      "reproduction": {
+        "ffm": {
+          "published": 0.25008751312696903,
+          "reproduced": 0.25008751312696903,
+          "denominator": 19997,
+          "greenBelow200M": 5001,
+          "greenInsideHbr": 14,
+          "greenOutsideHbrBelow200M": 4987,
+          "fractionOfProximityMissesOutsideHbr": 0.9972005598880224
+        },
+        "sgp4xp": {
+          "published": 0.00035005250787618143,
+          "reproduced": 0.00035005250787618143,
+          "denominator": 19997,
+          "greenBelow200M": 7,
+          "greenInsideHbr": 2,
+          "greenOutsideHbrBelow200M": 5,
+          "fractionOfProximityMissesOutsideHbr": 0.7142857142857143
+        }
+      },
+      "strata": {
+        "inside-HBR": {
+          "denominator": 1951,
+          "arms": {
+            "ffm": {
+              "green": 14,
+              "yellow": 22,
+              "red": 1915,
+              "greenConditional": 0.007175807278318811,
+              "redConditional": 0.981547924141466
+            },
+            "sgp4xp": {
+              "green": 2,
+              "yellow": 389,
+              "red": 1560,
+              "greenConditional": 0.0010251153254741158,
+              "redConditional": 0.7995899538698104
+            }
+          }
+        },
+        "HBR-to-200m": {
+          "denominator": 6697,
+          "arms": {
+            "ffm": {
+              "green": 4987,
+              "yellow": 330,
+              "red": 1380,
+              "greenConditional": 0.7446617888606839,
+              "redConditional": 0.20606241600716738
+            },
+            "sgp4xp": {
+              "green": 5,
+              "yellow": 1458,
+              "red": 5234,
+              "greenConditional": 0.000746602956547708,
+              "redConditional": 0.7815439749141406
+            }
+          }
+        },
+        "200m-through-5km": {
+          "denominator": 9345,
+          "arms": {
+            "ffm": {
+              "green": 9296,
+              "yellow": 29,
+              "red": 20,
+              "greenConditional": 0.9947565543071161,
+              "redConditional": 0.002140181915462814
+            },
+            "sgp4xp": {
+              "green": 4935,
+              "yellow": 2339,
+              "red": 2071,
+              "greenConditional": 0.5280898876404494,
+              "redConditional": 0.22161583734617443
+            }
+          }
+        },
+        "above-5km": {
+          "denominator": 2004,
+          "arms": {
+            "ffm": {
+              "green": 2004,
+              "yellow": 0,
+              "red": 0,
+              "greenConditional": 1,
+              "redConditional": 0
+            },
+            "sgp4xp": {
+              "green": 1994,
+              "yellow": 9,
+              "red": 1,
+              "greenConditional": 0.9950099800399201,
+              "redConditional": 0.000499001996007984
+            }
+          }
+        }
+      },
+      "originalVerdict": "no demonstrated CA difference"
+    }
+  },
+  "checks": {
+    "registeredRatesReproduced": 6,
+    "sourceRows": 50036
+  },
+  "historicalAccuracy": {
+    "moduleCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "wasmSha256": "62c783262da9e69c54d6f4eb98c97af4208c1b11daec44cc9c28c0252c564d1e",
+    "rows": [
+      {
+        "id": "iss",
+        "objects": 1,
+        "arms": {
+          "ffm": {
+            "attempted": 519,
+            "scored": 514,
+            "bins": {
+              "1": {
+                "n": 284,
+                "objects": 1,
+                "median": 2.435287490472124,
+                "p10": 0.4542988686209963,
+                "p90": 8.316031048495724,
+                "ci95Windows": [
+                  2.102772220966235,
+                  3.0062695167332256
+                ],
+                "ci95Objects": null
+              },
+              "2": {
+                "n": 472,
+                "objects": 1,
+                "median": 4.645550719235017,
+                "p10": 0.7147254337021229,
+                "p90": 15.559657093806592,
+                "ci95Windows": [
+                  4.074110384015481,
+                  5.163225226118149
+                ],
+                "ci95Objects": null
+              },
+              "3": {
+                "n": 336,
+                "objects": 1,
+                "median": 7.972274928314472,
+                "p10": 1.206149906425326,
+                "p90": 32.746642497518664,
+                "ci95Windows": [
+                  6.955183133428344,
+                  9.221588167714032
+                ],
+                "ci95Objects": null
+              }
+            }
+          },
+          "sgp4xp": {
+            "attempted": 519,
+            "scored": 519,
+            "bins": {
+              "1": {
+                "n": 286,
+                "objects": 1,
+                "median": 5.850023249805985,
+                "p10": 0.8304551622212142,
+                "p90": 19.480477198610814,
+                "ci95Windows": [
+                  4.936032210575495,
+                  6.819497138353097
+                ],
+                "ci95Objects": null
+              },
+              "2": {
+                "n": 475,
+                "objects": 1,
+                "median": 12.00097342969882,
+                "p10": 1.9483981022115169,
+                "p90": 42.905366493413624,
+                "ci95Windows": [
+                  10.853399299405915,
+                  13.872290134635055
+                ],
+                "ci95Objects": null
+              },
+              "3": {
+                "n": 340,
+                "objects": 1,
+                "median": 23.221916672752286,
+                "p10": 3.8705263067085034,
+                "p90": 92.11546358517238,
+                "ci95Windows": [
+                  19.925111651650614,
+                  25.706658406014583
+                ],
+                "ci95Objects": null
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "laser",
+        "objects": 5,
+        "arms": {
+          "ffm": {
+            "attempted": 206,
+            "scored": 206,
+            "bins": {
+              "1": {
+                "n": 183,
+                "objects": 5,
+                "median": 0.008449236838841578,
+                "p10": 0.00505890683967238,
+                "p90": 0.022171517973839924,
+                "ci95Windows": [
+                  0.007457098748194728,
+                  0.00937434007747569
+                ],
+                "ci95Objects": [
+                  0.0067629410787001945,
+                  0.01339180234667982
+                ]
+              },
+              "2": {
+                "n": 180,
+                "objects": 5,
+                "median": 0.010714125682734225,
+                "p10": 0.005497815113138558,
+                "p90": 0.045106805639403384,
+                "ci95Windows": [
+                  0.009061222280859545,
+                  0.012620111571075156
+                ],
+                "ci95Objects": [
+                  0.00782710165903288,
+                  0.026090687967460738
+                ]
+              },
+              "3": {
+                "n": 179,
+                "objects": 5,
+                "median": 0.015229357128469274,
+                "p10": 0.006205480510114865,
+                "p90": 0.07272988541306298,
+                "ci95Windows": [
+                  0.012716628156780586,
+                  0.018302742675176495
+                ],
+                "ci95Objects": [
+                  0.010226075785226284,
+                  0.04673511508513405
+                ]
+              }
+            }
+          },
+          "sgp4xp": {
+            "attempted": 206,
+            "scored": 206,
+            "bins": {
+              "1": {
+                "n": 183,
+                "objects": 5,
+                "median": 0.7841826822848342,
+                "p10": 0.44347427348637913,
+                "p90": 0.9833338806444883,
+                "ci95Windows": [
+                  0.736945647303861,
+                  0.8179548922873985
+                ],
+                "ci95Objects": [
+                  0.505401140117671,
+                  0.8778526844517857
+                ]
+              },
+              "2": {
+                "n": 180,
+                "objects": 5,
+                "median": 1.2179147323529627,
+                "p10": 0.5526520873288135,
+                "p90": 1.7722537922020547,
+                "ci95Windows": [
+                  1.1693825526511124,
+                  1.3059883113744197
+                ],
+                "ci95Objects": [
+                  0.777253248712459,
+                  1.4514370343404783
+                ]
+              },
+              "3": {
+                "n": 179,
+                "objects": 5,
+                "median": 1.7176901137512028,
+                "p10": 0.7345659455543199,
+                "p90": 2.643128501349164,
+                "ci95Windows": [
+                  1.5158944005096646,
+                  1.92983087458411
+                ],
+                "ci95Objects": [
+                  1.1272536198377345,
+                  2.045884643744131
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "historicalCovarianceRealism": {
+    "iss": {
+      "ffm": {
+        "1": {
+          "n": 0,
+          "objects": 0,
+          "decision": "INSUFFICIENT"
+        },
+        "6": {
+          "n": 0,
+          "objects": 0,
+          "decision": "INSUFFICIENT"
+        },
+        "12": {
+          "n": 0,
+          "objects": 0,
+          "decision": "INSUFFICIENT"
+        },
+        "24": {
+          "n": 285,
+          "objects": 1,
+          "meanD2Over3": 14472.807168921703,
+          "ci95Objects": null,
+          "medianD2Over3": 255.77387199999998,
+          "coverage95": 0.312280701754386,
+          "ci95CoverageObjects": null,
+          "decision": "INSUFFICIENT"
+        },
+        "48": {
+          "n": 415,
+          "objects": 1,
+          "meanD2Over3": 23008.177399165474,
+          "ci95Objects": null,
+          "medianD2Over3": 238.76428066666665,
+          "coverage95": 0.3373493975903614,
+          "ci95CoverageObjects": null,
+          "decision": "INSUFFICIENT"
+        },
+        "72": {
+          "n": 262,
+          "objects": 1,
+          "meanD2Over3": 21935.66822500691,
+          "ci95Objects": null,
+          "medianD2Over3": 102.77942433333334,
+          "coverage95": 0.3702290076335878,
+          "ci95CoverageObjects": null,
+          "decision": "INSUFFICIENT"
+        }
+      },
+      "sgp4xp": {
+        "1": {
+          "n": 0,
+          "objects": 0,
+          "decision": "INSUFFICIENT"
+        },
+        "6": {
+          "n": 0,
+          "objects": 0,
+          "decision": "INSUFFICIENT"
+        },
+        "12": {
+          "n": 0,
+          "objects": 0,
+          "decision": "INSUFFICIENT"
+        },
+        "24": {
+          "n": 287,
+          "objects": 1,
+          "meanD2Over3": 52.850751966319486,
+          "ci95Objects": null,
+          "medianD2Over3": 17.265089133333333,
+          "coverage95": 0.17421602787456447,
+          "ci95CoverageObjects": null,
+          "decision": "INSUFFICIENT"
+        },
+        "48": {
+          "n": 418,
+          "objects": 1,
+          "meanD2Over3": 86.63570827283797,
+          "ci95Objects": null,
+          "medianD2Over3": 28.658091766666665,
+          "coverage95": 0.10526315789473684,
+          "ci95CoverageObjects": null,
+          "decision": "INSUFFICIENT"
+        },
+        "72": {
+          "n": 266,
+          "objects": 1,
+          "meanD2Over3": 182.55037206266408,
+          "ci95Objects": null,
+          "medianD2Over3": 33.962546833333334,
+          "coverage95": 0.06015037593984962,
+          "ci95CoverageObjects": null,
+          "decision": "INSUFFICIENT"
+        }
+      }
+    },
+    "laser": {
+      "ffm": {
+        "1": {
+          "n": 204,
+          "objects": 5,
+          "meanD2Over3": 17.340033129776135,
+          "ci95Objects": [
+            7.769780054447194,
+            26.562485216047623
+          ],
+          "medianD2Over3": 11.258234733333333,
+          "coverage95": 0.13725490196078433,
+          "ci95CoverageObjects": [
+            0.014285714285714285,
+            0.28217821782178215
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "6": {
+          "n": 204,
+          "objects": 5,
+          "meanD2Over3": 16.872130120594772,
+          "ci95Objects": [
+            7.426294268616161,
+            25.77820392388889
+          ],
+          "medianD2Over3": 9.85653395,
+          "coverage95": 0.1568627450980392,
+          "ci95CoverageObjects": [
+            0.01904761904761905,
+            0.30927835051546393
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "12": {
+          "n": 203,
+          "objects": 5,
+          "meanD2Over3": 17.0436785381839,
+          "ci95Objects": [
+            7.127070430336735,
+            26.29917943884127
+          ],
+          "medianD2Over3": 9.233033066666666,
+          "coverage95": 0.13793103448275862,
+          "ci95CoverageObjects": [
+            0.03333333333333333,
+            0.265
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "24": {
+          "n": 199,
+          "objects": 5,
+          "meanD2Over3": 16.44249333929146,
+          "ci95Objects": [
+            7.075125770870467,
+            25.261527196390244
+          ],
+          "medianD2Over3": 9.606831366666666,
+          "coverage95": 0.18090452261306533,
+          "ci95CoverageObjects": [
+            0.06829268292682927,
+            0.32275132275132273
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "48": {
+          "n": 195,
+          "objects": 5,
+          "meanD2Over3": 16.79454486873897,
+          "ci95Objects": [
+            7.230604730032631,
+            25.88028800051
+          ],
+          "medianD2Over3": 10.549631966666666,
+          "coverage95": 0.18461538461538463,
+          "ci95CoverageObjects": [
+            0.06,
+            0.3689839572192513
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "72": {
+          "n": 190,
+          "objects": 5,
+          "meanD2Over3": 16.298905386624384,
+          "ci95Objects": [
+            7.301138575156397,
+            24.835248259042736
+          ],
+          "medianD2Over3": 9.172996516666666,
+          "coverage95": 0.1631578947368421,
+          "ci95CoverageObjects": [
+            0.046153846153846156,
+            0.3076923076923077
+          ],
+          "decision": "NOT REALISTIC"
+        }
+      },
+      "sgp4xp": {
+        "1": {
+          "n": 204,
+          "objects": 5,
+          "meanD2Over3": 1.9126007831078435,
+          "ci95Objects": [
+            1.5440998090416667,
+            2.2669286427868585
+          ],
+          "medianD2Over3": 1.8988202266666667,
+          "coverage95": 0.7598039215686274,
+          "ci95CoverageObjects": [
+            0.6298076923076923,
+            0.9020618556701031
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "6": {
+          "n": 204,
+          "objects": 5,
+          "meanD2Over3": 1.2500735140382362,
+          "ci95Objects": [
+            1.0596538563890034,
+            1.4261647043990384
+          ],
+          "medianD2Over3": 1.0609990483333334,
+          "coverage95": 0.9411764705882353,
+          "ci95CoverageObjects": [
+            0.8708133971291866,
+            0.9950738916256158
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "12": {
+          "n": 203,
+          "objects": 5,
+          "meanD2Over3": 1.6535506825835797,
+          "ci95Objects": [
+            1.2185783972384125,
+            2.1666574589225593
+          ],
+          "medianD2Over3": 1.6821178033333333,
+          "coverage95": 0.9113300492610837,
+          "ci95CoverageObjects": [
+            0.7708333333333334,
+            1
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "24": {
+          "n": 199,
+          "objects": 5,
+          "meanD2Over3": 1.8375374511775544,
+          "ci95Objects": [
+            1.3005790301766669,
+            2.3799196946127945
+          ],
+          "medianD2Over3": 1.66791877,
+          "coverage95": 0.7437185929648241,
+          "ci95CoverageObjects": [
+            0.5376884422110553,
+            0.9384615384615385
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "48": {
+          "n": 195,
+          "objects": 5,
+          "meanD2Over3": 1.4970841868461549,
+          "ci95Objects": [
+            1.1475235303911564,
+            1.8502485614089341
+          ],
+          "medianD2Over3": 1.3737412066666668,
+          "coverage95": 0.9076923076923077,
+          "ci95CoverageObjects": [
+            0.826530612244898,
+            0.9743589743589743
+          ],
+          "decision": "NOT REALISTIC"
+        },
+        "72": {
+          "n": 190,
+          "objects": 5,
+          "meanD2Over3": 1.211056431487719,
+          "ci95Objects": [
+            1.0194056263573883,
+            1.3955217943033507
+          ],
+          "medianD2Over3": 1.1962627766666665,
+          "coverage95": 0.9789473684210527,
+          "ci95CoverageObjects": [
+            0.9476439790575916,
+            1
+          ],
+          "decision": "NOT REALISTIC"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Post-hoc diagnostic of already-seen B2 outputs, not confirmatory evidence.",
+    "Misses were log-uniform from 10 m to 10 km, with constructed geometry and reused orbital errors.",
+    "No draws below 10 m: the collision stratum is only 10–20 m, not the full collision disk.",
+    "One ISS and five laser objects; encounter counts are not independent-object counts.",
+    "Conditional rates describe the selected synthetic population, not operational collision frequencies.",
+    "Changing the event radius alone does not establish Pc calibration; population selection also matters.",
+    "Covariance-realism failures remain independently of the event-definition mismatch."
+  ]
+}

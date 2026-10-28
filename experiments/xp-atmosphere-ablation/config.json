@@ -1,0 +1,130 @@
+{
+  "experiment": "xp-atmosphere-ablation",
+  "id": "XA",
+  "frozen": true,
+  "task": "experiments-xp-atmosphere-ablation-20261026",
+  "store": "/opt/data/sdn-archive/xp-atmosphere-ablation",
+  "build": {
+    "file": "experiments/xp-atmosphere-ablation/build.json",
+    "moduleTask": "modules-sgp4xp-atmosphere-variant-20261026",
+    "note": "the modules commit (on modules main) and each module's wasm SHA-256, committed under amendment A1 before the first score; the steps refuse to run without it"
+  },
+  "arms": {
+    "A0": { "forces": null, "inputs": [] },
+    "A1": { "forces": { "WEATHER_SOURCE": "RECORDS", "WEATHER_EXTENSION": "HOLD_LAST" }, "inputs": ["space_weather"] },
+    "A2": { "forces": { "ENABLE_DRAG": true, "ATMOSPHERE_MODEL": "NRLMSISE00", "WEATHER_SOURCE": "RECORDS", "WEATHER_EXTENSION": "HOLD_LAST" }, "inputs": ["space_weather"] },
+    "A3": { "forces": { "ENABLE_DRAG": true, "ATMOSPHERE_MODEL": "NRLMSISE00", "WEATHER_SOURCE": "RECORDS", "WEATHER_EXTENSION": "HOLD_LAST", "DENSITY_CORRECTION": "DCA_COMMON_MODE" }, "inputs": ["space_weather", "density_correction"] }
+  },
+  "conditions": {
+    "M": { "rows": "every day the fit and the three prediction days need", "dclIssueOffsetHours": 78 },
+    "O": { "rows": "dated before the UTC day of E; F10.7a over the days of its window at or before the last row", "dclIssueOffsetHours": 0 }
+  },
+  "spaceWeather": {
+    "gfzHistory": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "gfzNowcastDir": "/opt/data/sdn-archive/hac/gfz-kp/2026",
+    "gfzNowcastName": "Kp_ap_Ap_SN_F107_nowcast.txt",
+    "center81Days": 40,
+    "swpcCheck": "/opt/data/sdn-archive/hac/noaa-swpc/warehouse",
+    "rowsMarginDays": 3,
+    "license": "GFZ Kp/ap/Ap/F10.7: CC BY 4.0, Matzka et al. (2021), doi:10.5880/Kp.0001"
+  },
+  "dca": {
+    "arcs": [
+      "/opt/data/sdn-archive/e13-open-dca/planet-arcs/dev-g24lean.msis.jsonl",
+      "/opt/data/sdn-archive/e13-open-dca/planet-arcs/testA-g24lean.msis.jsonl",
+      "/opt/data/sdn-archive/e13-open-dca/planet-arcs/testB-g24lean.msis.jsonl"
+    ],
+    "sample": "experiments/e13-open-dca/planet-sample.json",
+    "latencyHours": 6,
+    "historyDays": 30,
+    "arcHours": [20, 28],
+    "maximumRelativeSigma": 0.5,
+    "license": "derived aggregate of Planet Labs PBC ephemerides, CC BY-NC 4.0; Planet states and arcs stay local"
+  },
+  "groups": {
+    "L1": {
+      "name": "LEO laser-ranged spheres from ILRS normal points",
+      "source": "B2 part 2",
+      "e6Products": "/Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-sdn-ap-mixed-scenario-screening-20261025/runs",
+      "e6ProductsPattern": "e6-40-slr-fit-test-",
+      "e6Variant": "R",
+      "window": ["2026-07-16T00:00:00Z", "2026-08-30T00:00:00Z"],
+      "targets": ["starlette", "stella", "larets", "westpac", "lares"],
+      "windows": 206,
+      "trackHours": 24,
+      "trackStepSeconds": 60,
+      "fitInput": "the 24 h before T at 60 s, propagator/ffm carried from E6's variant R state at T with E6's forces and the target's E6 B and AGOM (B2's track); XP is not fitted to the ranges",
+      "cluster": "object"
+    },
+    "L2": {
+      "name": "LEO laser-ranged satellites from precise orbits",
+      "source": "B1",
+      "regimes": { "leo-slr": 98, "leo-slr-current": 51 },
+      "fitInput": "the truth's own 24 h at its spacing (B1's block)",
+      "cluster": "object"
+    },
+    "I": {
+      "name": "ISS from NASA trajectory files",
+      "source": "B2 part 1b",
+      "windows": 519,
+      "trackHours": 24,
+      "truthHours": 24,
+      "binsHours": [[0, 24], [24, 48], [48, 72]],
+      "fitInput": "file k's first 24 h at 240 s",
+      "cluster": "calendar month of E"
+    },
+    "N": {
+      "name": "GNSS MEO (negative control)",
+      "source": "B1",
+      "regimes": { "meo-gnss": 60, "meo-gnss-rapid": 48 },
+      "fitInput": "the truth's own 24 h",
+      "cluster": "object",
+      "agreementRelative": 1e-9
+    }
+  },
+  "fit": {
+    "method": "propagator/sdn-ap fit, THEORY SGP4XP, FIT at its defaults, the fit interval declared (USEABLE_START_TIME the first state, USEABLE_STOP_TIME = E)",
+    "epoch": "the first state of the fit interval (the module's placement)",
+    "propagate": "propagator/sdn-ap propagate with the arm's $PCF and inputs, explicit truth epochs, TEME; foundation/frames to the truth's axes"
+  },
+  "public": {
+    "gpHistory": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "selection": "the newest Space-Track set before E (experiments/e4-operator-ephemeris-parity products.mjs setAt), SGP4 in propagator/sdn-ap"
+  },
+  "scoring": {
+    "leadDays": [1, 2, 3],
+    "thinSeconds": 300,
+    "minimumCoverage": 0.9,
+    "scorer": "G1 lib/baselines.mjs rtnSeries (gp-error-model pair_statistics)"
+  },
+  "statistics": {
+    "quantiles": [0.1, 0.5, 0.9],
+    "bootstrap": { "resamples": 10000, "level": 0.95, "seedPrefix": "XA" }
+  },
+  "verdict": {
+    "groups": ["L1", "L2", "I"],
+    "arms": ["A1", "A2", "A3"],
+    "conditions": ["M", "O"],
+    "rule": "improves accuracy: the cluster-bootstrap 95 % interval of the day-3 median paired ratio arm/A0 lies wholly below 1, and the same interval at day 1 does not lie wholly above 1; otherwise no demonstrated improvement"
+  },
+  "diagnostic": {
+    "groups": ["L1", "I"],
+    "variants": {
+      "D-span72": { "spanHours": 72 },
+      "D-span168": { "spanHours": 168 },
+      "D-agomP": { "srpPrior": { "mean": "public", "sigma": 1e-9 } },
+      "D-bothP": { "dragPrior": { "mean": "public", "sigma": 1e-9 }, "srpPrior": { "mean": "public", "sigma": 1e-9 } },
+      "D-bothPhys": { "groups": ["L1"], "dragPrior": { "mean": "physical", "sigma": 1e-9 }, "srpPrior": { "mean": "physical", "sigma": 1e-9 } },
+      "D-sparse": { "passesPerDay": 4, "passMinutes": 8, "minimumSeparationMinutes": 60 },
+      "D-epochMid": { "epoch": "middle" },
+      "D-epochEnd": { "epoch": "end" },
+      "D-fdJac": { "jacobian": "finite differences" },
+      "D-np": { "notRun": "propagator/sdn-ap fit takes ephemerides; analysis/estimation fit_batch needs a state-and-transition-matrix provider, and none exists for XP" }
+    },
+    "publicAgom": 0,
+    "publicBterm": "2 BSTAR / 0.15696615 (m^2/kg; SGP4's reference density rho0 in kg m^-2 per Earth radius)",
+    "sphereCd": 2.2,
+    "spheres": "experiments/sdn-ap-baselines/config.json ffm.spheres",
+    "coverage": 0.9
+  }
+}
