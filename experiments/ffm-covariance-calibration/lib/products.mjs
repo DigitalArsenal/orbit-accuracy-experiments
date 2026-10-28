@@ -79,8 +79,8 @@ export async function windowTerms(ctx, pairs, fit, E, leads, settings) {
  * q [R, T, N] m^2/s^3, 600 s) to the leads; returns each lead's position covariance in the predicted RTN axes (lower 6, m^2) and the
  * predicted state. ctx, pairs, fit, E, leads, settings as windowTerms; q = [q_R, q_T, q_N].
  */
-export async function ffmNoiseCovariances(ctx, pairs, fit, E, leads, settings, q) {
-  const scale = Math.max(1, fit.reducedChiSquare ?? 1);
+export async function ffmNoiseCovariances(ctx, pairs, fit, E, leads, settings, q, k_e = 1) {
+  const scale = k_e * Math.max(1, fit.reducedChiSquare ?? 1);
   const cov0 = fit.covariance.map((x) => x * scale);
   const [atE] = decodeSamples(await ctx.ffm.invoke('invoke', [
     executionFrame({ epoch: fit.epoch, state: fit.state, samples: [iso(E)], forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: cov0, noise: null, integrator: settings.integrator }),
@@ -88,7 +88,7 @@ export async function ffmNoiseCovariances(ctx, pairs, fit, E, leads, settings, q
   ]));
   const leadIso = leads.map((x) => x.line.epoch);
   const out = decodeSamples(await ctx.ffm.invoke('invoke', [
-    executionFrame({ epoch: iso(E), state: atE.state, samples: leadIso, forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: atE.covariance, noise: { q, intervalSeconds: STEP_S }, integrator: settings.integrator }),
+    executionFrame({ epoch: iso(E), state: atE.state, samples: leadIso, forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: atE.covariance, noise: q && q.some((v) => v > 0) ? { q, intervalSeconds: STEP_S } : null, integrator: settings.integrator }),
     ...ctx.inputs,
   ]));
   const stats = await pairs.stats(out.map((s, i) => ({ predicted: { position: s.state.slice(0, 3), velocity: s.state.slice(3, 6), covariance: stateBlock(s.covariance, s.n), covarianceAxes: 'INERTIAL' },
