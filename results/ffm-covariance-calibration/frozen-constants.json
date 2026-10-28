@@ -1,0 +1,49 @@
+{
+ "receipt": "frozen-constants",
+ "note": "PLAN.md 3.5 point 4: no change after any held-out score; any later variant is exploratory",
+ "classes": {
+  "I": {
+   "chosen": "M1",
+   "parameters": {
+    "k_e": 33815.04311442945,
+    "f_R": 0.020041705656607373,
+    "f_T": 9.401534204448408,
+    "f_N": 0.34203999033474175
+   },
+   "fitReceipt": "fit-I.json",
+   "fitReceiptSha256": "4499b3482776001129e060fb19cfd0168d48c65e140678340f38a57399a6be6b",
+   "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-28T22:44:27.217Z"
+  },
+  "LP": {
+   "chosen": "M0",
+   "parameters": {
+    "k_e": 1
+   },
+   "fitReceipt": "fit-LP.json",
+   "fitReceiptSha256": "18cb8b39499464edf92a19983cbe19dbad7e802431ecc44b794039171a5d1ae6",
+   "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-28T22:44:27.484Z"
+  },
+  "LP-sensitivity": {
+   "chosen": "M3/tauInf",
+   "parameters": {
+    "tau": "inf",
+    "k_e": 0.034825981391852424,
+    "f_R": 0.17191523755809457,
+    "f_T": 0.0004875830872405324,
+    "f_N": 1.203303166378585,
+    "q_T": 1.8486118151964574e-17,
+    "q_RN": 7.217959781761523e-17,
+    "s2": 0.17850209243128934
+   },
+   "fitReceipt": "fit-LP-sensitivity.json",
+   "fitReceiptSha256": "f8ada4108bd65bfca223857b1da1cbd367503d90dec92bdda16068d447baae83",
+   "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+   "p8": null,
+   "frozenUtc": "2026-10-28T22:44:27.710Z"
+  }
+ }
+}
