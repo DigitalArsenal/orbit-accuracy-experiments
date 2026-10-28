@@ -1,0 +1,223 @@
+{
+ "receipt": "heldout-I",
+ "createdUtc": "2026-10-28T23:24:06.626Z",
+ "experimentsCommit": "48b9abb31e8355a3eb87c66be5d919470d9d995c",
+ "class": "I",
+ "variants": {
+  "I/primary": {
+   "constants": {
+    "chosen": "M1",
+    "parameters": {
+     "k_e": 33815.04311442945,
+     "f_R": 0.020041705656607373,
+     "f_T": 9.401534204448408,
+     "f_N": 0.34203999033474175
+    },
+    "fitReceipt": "fit-I.json",
+    "fitReceiptSha256": "4499b3482776001129e060fb19cfd0168d48c65e140678340f38a57399a6be6b",
+    "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-28T22:44:27.217Z"
+   },
+   "counts": {
+    "windows": 114,
+    "excluded": {
+     "overlapping NASA files differ radially by more than 0.5 km": 1
+    },
+    "failures": [
+     {
+      "id": "2025-02-10",
+      "failure": "FFM refused (C2-A5 point 4: a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     },
+     {
+      "id": "2025-02-15",
+      "failure": "FFM refused (C2-A5 point 4: a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     }
+    ]
+   },
+   "leads": {
+    "24": {
+     "n": 69,
+     "clusters": 21,
+     "meanD2over3": 0.5183211691783249,
+     "medianD2over3": 0.1432094316984357,
+     "coverage": 0.9565217391304348,
+     "meanInterval": [
+      0.32936470891914577,
+      0.7387701333932087
+     ],
+     "coverageInterval": [
+      0.9076923076923077,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.13456193411994694,
+      1.3636577233747453,
+      0.0549360164403416
+     ],
+     "oraclePassProbability": 0.41225,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100)"
+    },
+    "48": {
+     "n": 97,
+     "clusters": 22,
+     "meanD2over3": 0.27430581859999936,
+     "medianD2over3": 0.12863563830177024,
+     "coverage": 1,
+     "meanInterval": [
+      0.20032077991897432,
+      0.34917950309739826
+     ],
+     "coverageInterval": [
+      1,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.0550855596918808,
+      0.7123251246996208,
+      0.05274466520696131
+     ],
+     "oraclePassProbability": 0.645,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100)"
+    },
+    "72": {
+     "n": 54,
+     "clusters": 19,
+     "meanD2over3": 0.7988161042216829,
+     "medianD2over3": 0.12840761569103612,
+     "coverage": 0.9814814814814815,
+     "meanInterval": [
+      0.15890847996222748,
+      2.1768721829119637
+     ],
+     "coverageInterval": [
+      0.9361702127659575,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.07972663747359994,
+      2.1905265668097247,
+      0.03550245545147743
+     ],
+     "oraclePassProbability": 0.45775,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100)"
+    }
+   },
+   "eligibleCells": 0,
+   "passingEligibleCells": 0
+  },
+  "I/allSamples": {
+   "constants": {
+    "chosen": "M1",
+    "parameters": {
+     "k_e": 33815.04311442945,
+     "f_R": 0.020041705656607373,
+     "f_T": 9.401534204448408,
+     "f_N": 0.34203999033474175
+    },
+    "fitReceipt": "fit-I.json",
+    "fitReceiptSha256": "4499b3482776001129e060fb19cfd0168d48c65e140678340f38a57399a6be6b",
+    "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-28T22:44:27.217Z"
+   },
+   "counts": {
+    "windows": 115,
+    "excluded": {},
+    "failures": [
+     {
+      "id": "2025-02-10",
+      "failure": "FFM refused (C2-A5 point 4: a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     },
+     {
+      "id": "2025-02-15",
+      "failure": "FFM refused (C2-A5 point 4: a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     }
+    ]
+   },
+   "leads": {
+    "24": {
+     "n": 69,
+     "clusters": 21,
+     "meanD2over3": 0.5183211691783249,
+     "medianD2over3": 0.1432094316984357,
+     "coverage": 0.9565217391304348,
+     "meanInterval": [
+      0.32936470891914577,
+      0.7387701333932087
+     ],
+     "coverageInterval": [
+      0.9076923076923077,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.13456193411994694,
+      1.3636577233747453,
+      0.0549360164403416
+     ],
+     "oraclePassProbability": 0.41225,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100)"
+    },
+    "48": {
+     "n": 97,
+     "clusters": 22,
+     "meanD2over3": 0.27430581859999936,
+     "medianD2over3": 0.12863563830177024,
+     "coverage": 1,
+     "meanInterval": [
+      0.20032077991897432,
+      0.34917950309739826
+     ],
+     "coverageInterval": [
+      1,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.0550855596918808,
+      0.7123251246996208,
+      0.05274466520696131
+     ],
+     "oraclePassProbability": 0.645,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100)"
+    },
+    "72": {
+     "n": 55,
+     "clusters": 19,
+     "meanD2over3": 2.0307625687205637,
+     "medianD2over3": 0.13303321677458363,
+     "coverage": 0.9636363636363636,
+     "meanInterval": [
+      0.16066447539017142,
+      5.040649689162698
+     ],
+     "coverageInterval": [
+      0.9074074074074074,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.6668823268144362,
+      4.926398396560995,
+      0.06255718197477556
+     ],
+     "oraclePassProbability": 0.46175,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100)"
+    }
+   },
+   "eligibleCells": 0,
+   "passingEligibleCells": 0
+  }
+ },
+ "opened": null
+}
