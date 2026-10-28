@@ -303,4 +303,23 @@ against header-listed burns.
 
 ## Amendments
 
-None.
+### C2-A1 - 2026-10-28, before any fit (coordinator rulings Q7-Q10 on the failed pre-checks P9 and P2)
+
+Reason: `results/ffm-covariance-calibration/precheck-P9.json` (COSMIC-2: 5 satellites in the archive, 44349, 44350, 44351, 44353 and
+44358, with truth on 77-86 % of days, none at 90 %; TerraSAR-X: no converted truth) and `precheck-P2.json` (NSGF overlaps above
+0.3 m per axis on 106 of 108 LARETS arcs, 95 of 109 WESTPAC, 85 of 108 Stella, 39 of 109 Starlette, 9 of 110 Ajisai and 8 of 107
+LARES arcs). The numbers are in `amendments.json`.
+
+1. **COSMIC-2 (Q7).** 4 satellites in calibration and 1 held out by object, the lowest SHA-256 of `C2|P9|cosmic2|<norad>`. For
+   COSMIC-2 only, a satellite has coverage when its truth holds at least 75 % of the days (other objects: 90 %); the 90 % per-window
+   epoch rule still applies to every window. Disclosed: lowered because no COSMIC-2 satellite reaches 90 %.
+2. **TerraSAR-X (Q8).** The GFZ RSO L13 files (`/opt/data/sdn-archive/hac/gfz-isdc-rso/RSO/L13`, 2025-09-30 to 2026-07-13) are
+   converted by analysis/reference-states into C2's store exactly as GRACE-FO's GFZOP files were made; the licence line is recorded
+   in `data/ffm-covariance-calibration/SOURCES.md`. TerraSAR-X is R1's held-out-by-object object beside the held-out COSMIC-2.
+3. **NSGF truth error (Q9).** Primary: every arc is kept, and each NSGF-truth window (R2 and type L) adds a truth covariance, a
+   diagonal RTN term with per-axis sigma = the arc's stated overlap RMS / sqrt(2), to the predicted covariance in pair_statistics; d2
+   is scored against the combined covariance, so the fitted floor stands for model error only. Registered sensitivity: the same
+   cells with the arcs above 0.3 m excluded (no truth term). P3's empirical step uses only arcs at or under 0.3 m.
+4. **Definitions (Q10).** GNSS truth is ESA0OPSFIN only (one product per object); a satellite has coverage at 90 % of the days from
+   the first calibration window (E - 24 h) to the last validation window (E + 72 h), except COSMIC-2 (point 1); held-out-by-time
+   cutoffs are every second day.

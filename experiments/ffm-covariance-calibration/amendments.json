@@ -1,0 +1,36 @@
+{
+ "C2-A1": {
+  "date": "2026-10-28",
+  "before": "any fit",
+  "reasonReceipts": [
+   "results/ffm-covariance-calibration/precheck-P9.json",
+   "results/ffm-covariance-calibration/precheck-P2.json"
+  ],
+  "cosmic2": {
+   "calibration": 4,
+   "heldOutObject": 1,
+   "selection": "lowest SHA-256 of C2|P9|cosmic2|<norad>",
+   "dayCoverageMin": 0.75,
+   "perWindowEpochCoverage": 0.9
+  },
+  "terrasarX": {
+   "source": "/opt/data/sdn-archive/hac/gfz-isdc-rso/RSO/L13",
+   "convertWith": "analysis/reference-states, as GRACE-FO GFZOP",
+   "role": "R1 held out by object"
+  },
+  "nsgfTruthCovariance": {
+   "primary": "per-arc diagonal RTN truth term, sigma = statedSigmaM / sqrt(2) per axis, added in pair_statistics; d2 against combined",
+   "appliesTo": [
+    "R2 NSGF objects",
+    "L"
+   ],
+   "sensitivity": "arcs with statedSigmaM > 0.3 m excluded, no truth term",
+   "p3Arcs": "statedSigmaM <= 0.3 m only"
+  },
+  "definitions": {
+   "gnssTruth": "ESA0OPSFIN only",
+   "dayCoverageMin": 0.9,
+   "heldOutTimeEveryDays": 2
+  }
+ }
+}
