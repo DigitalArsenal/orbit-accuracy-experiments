@@ -152,6 +152,24 @@ if (args.fit) {
   process.exit(0);
 }
 
+if (args.p8) {
+  // C2-A4 point 1: per lead of the chosen model on validation, the covariance scaled so that the 95 % coverage is exactly 0.95
+  // (s = the type-7 0.95 quantile of d2 / 7.8147), then mean d2 / 3 of the scaled d2; P8 passes when every lead lies in 0.8-1.25.
+  const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${cls}.json`)));
+  const p = fit.candidates[fit.chosen].parameters;
+  const val = samples('validation');
+  const d2 = await d2Of(p, val.out);
+  const by = {};
+  val.out.forEach((x, i) => (by[x.L] ??= []).push(d2[i]));
+  const q = (xs, f) => { const s0 = [...xs].sort((a, b) => a - b); const h = (s0.length - 1) * f, lo = Math.floor(h); return s0[lo] + (s0[Math.ceil(h)] - s0[lo]) * (h - lo); };
+  const leads = Object.fromEntries(Object.entries(by).map(([L, xs]) => { const sc = q(xs, 0.95) / CHI; const m = xs.reduce((a, b) => a + b / sc, 0) / xs.length / 3; return [L, { n: xs.length, scale: sc, shape: m, inBand: m >= 0.8 && m <= 1.25 }]; }));
+  const pass = Object.values(leads).every((x) => x.inBand);
+  console.log(writeReceipt(`precheck-P8-${cls}`, { plan: '3.8 P8; C2-A4 point 1', class: cls, chosen: fit.chosen, parameters: p, fitReceipt: `fit-${cls}.json`, leads,
+    outcome: pass ? 'pass' : 'FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)' }));
+  await pairs?.close();
+  process.exit(0);
+}
+
 if (args.freeze) {
   const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${cls}.json`)));
   const file = path.join(results, 'frozen-constants.json');
