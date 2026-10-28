@@ -1,0 +1,1509 @@
+{
+ "receipt": "precheck-P2",
+ "createdUtc": "2026-10-28T21:24:15.093Z",
+ "experimentsCommit": "ca10e62ebb0a8ec0ba3afd6ff8b37d8a37368808",
+ "plan": "3.8 P2",
+ "criterion": "each NSGF arc agrees with the next day's arc within 0.3 m RMS per axis (the stated sigma of analysis/reference-states: the per-axis RMS of the overlap)",
+ "issTruthAge": "checked by the planner (PLAN.md section 1, row 7): minor",
+ "anomalyLedger": "applied at run time through harness/truth-gate.mjs (every frame read)",
+ "nsgf": {
+  "ajisai": {
+   "norad": 16908,
+   "arcs": 110,
+   "stated": 110,
+   "medianM": 0.1749897117768805,
+   "p90M": 0.2892300493750521,
+   "maxM": 0.7487980414797025,
+   "over": [
+    {
+     "product": "nsgf.orb.ajisai.251216.v000",
+     "rmsM": 0.3441
+    },
+    {
+     "product": "nsgf.orb.ajisai.260112.v000",
+     "rmsM": 0.3466
+    },
+    {
+     "product": "nsgf.orb.ajisai.260121.v000",
+     "rmsM": 0.7488
+    },
+    {
+     "product": "nsgf.orb.ajisai.260201.v000",
+     "rmsM": 0.3131
+    },
+    {
+     "product": "nsgf.orb.ajisai.260218.v000",
+     "rmsM": 0.6142
+    },
+    {
+     "product": "nsgf.orb.ajisai.260322.v000",
+     "rmsM": 0.3098
+    },
+    {
+     "product": "nsgf.orb.ajisai.260401.v000",
+     "rmsM": 0.327
+    },
+    {
+     "product": "nsgf.orb.ajisai.260630.v000",
+     "rmsM": 0.3008
+    },
+    {
+     "product": "nsgf.orb.ajisai.260707.v000",
+     "rmsM": 0.5501
+    }
+   ]
+  },
+  "lares": {
+   "norad": 38077,
+   "arcs": 107,
+   "stated": 107,
+   "medianM": 0.1471762583698561,
+   "p90M": 0.2662031479196777,
+   "maxM": 0.41124974162493305,
+   "over": [
+    {
+     "product": "nsgf.orb.lares.260210.v000",
+     "rmsM": 0.41
+    },
+    {
+     "product": "nsgf.orb.lares.260324.v000",
+     "rmsM": 0.3069
+    },
+    {
+     "product": "nsgf.orb.lares.260602.v000",
+     "rmsM": 0.4112
+    },
+    {
+     "product": "nsgf.orb.lares.260622.v000",
+     "rmsM": 0.3057
+    },
+    {
+     "product": "nsgf.orb.lares.260630.v000",
+     "rmsM": 0.3417
+    },
+    {
+     "product": "nsgf.orb.lares.260707.v000",
+     "rmsM": 0.338
+    },
+    {
+     "product": "nsgf.orb.lares.260720.v000",
+     "rmsM": 0.3967
+    },
+    {
+     "product": "nsgf.orb.lares.260829.v000",
+     "rmsM": 0.3019
+    }
+   ]
+  },
+  "lares2": {
+   "norad": 53105,
+   "arcs": 107,
+   "stated": 107,
+   "medianM": 0.03717753901969574,
+   "p90M": 0.07479573554245288,
+   "maxM": 0.13912808028680318,
+   "over": []
+  },
+  "larets": {
+   "norad": 27944,
+   "arcs": 108,
+   "stated": 108,
+   "medianM": 1.8085962647632887,
+   "p90M": 6.47462078650261,
+   "maxM": 30.025087230484097,
+   "over": [
+    {
+     "product": "nsgf.orb.larets.251005.v000",
+     "rmsM": 11.4494
+    },
+    {
+     "product": "nsgf.orb.larets.251009.v000",
+     "rmsM": 1.15
+    },
+    {
+     "product": "nsgf.orb.larets.251013.v000",
+     "rmsM": 8.0564
+    },
+    {
+     "product": "nsgf.orb.larets.251017.v000",
+     "rmsM": 0.4934
+    },
+    {
+     "product": "nsgf.orb.larets.251021.v000",
+     "rmsM": 5.9806
+    },
+    {
+     "product": "nsgf.orb.larets.251025.v000",
+     "rmsM": 0.7592
+    },
+    {
+     "product": "nsgf.orb.larets.251029.v000",
+     "rmsM": 0.3778
+    },
+    {
+     "product": "nsgf.orb.larets.251102.v000",
+     "rmsM": 5.8758
+    },
+    {
+     "product": "nsgf.orb.larets.251106.v000",
+     "rmsM": 1.1924
+    },
+    {
+     "product": "nsgf.orb.larets.251110.v000",
+     "rmsM": 4.1866
+    },
+    {
+     "product": "nsgf.orb.larets.251114.v000",
+     "rmsM": 6.4868
+    },
+    {
+     "product": "nsgf.orb.larets.251118.v000",
+     "rmsM": 3.2863
+    },
+    {
+     "product": "nsgf.orb.larets.251122.v000",
+     "rmsM": 3.8687
+    },
+    {
+     "product": "nsgf.orb.larets.251126.v000",
+     "rmsM": 0.7564
+    },
+    {
+     "product": "nsgf.orb.larets.251204.v000",
+     "rmsM": 15.3587
+    },
+    {
+     "product": "nsgf.orb.larets.251208.v000",
+     "rmsM": 3.3377
+    },
+    {
+     "product": "nsgf.orb.larets.251212.v000",
+     "rmsM": 3.6486
+    },
+    {
+     "product": "nsgf.orb.larets.251216.v000",
+     "rmsM": 9.771
+    },
+    {
+     "product": "nsgf.orb.larets.251220.v000",
+     "rmsM": 1.1748
+    },
+    {
+     "product": "nsgf.orb.larets.251224.v000",
+     "rmsM": 1.8074
+    },
+    {
+     "product": "nsgf.orb.larets.251228.v000",
+     "rmsM": 4.4063
+    },
+    {
+     "product": "nsgf.orb.larets.260101.v000",
+     "rmsM": 0.9504
+    },
+    {
+     "product": "nsgf.orb.larets.260105.v000",
+     "rmsM": 6.8771
+    },
+    {
+     "product": "nsgf.orb.larets.260109.v000",
+     "rmsM": 1.7729
+    },
+    {
+     "product": "nsgf.orb.larets.260112.v000",
+     "rmsM": 0.993
+    },
+    {
+     "product": "nsgf.orb.larets.260113.v000",
+     "rmsM": 12.6091
+    },
+    {
+     "product": "nsgf.orb.larets.260116.v000",
+     "rmsM": 0.4132
+    },
+    {
+     "product": "nsgf.orb.larets.260117.v000",
+     "rmsM": 3.9869
+    },
+    {
+     "product": "nsgf.orb.larets.260120.v000",
+     "rmsM": 17.1288
+    },
+    {
+     "product": "nsgf.orb.larets.260121.v000",
+     "rmsM": 30.0251
+    },
+    {
+     "product": "nsgf.orb.larets.260124.v000",
+     "rmsM": 9.0813
+    },
+    {
+     "product": "nsgf.orb.larets.260125.v000",
+     "rmsM": 3.4303
+    },
+    {
+     "product": "nsgf.orb.larets.260128.v000",
+     "rmsM": 1.3662
+    },
+    {
+     "product": "nsgf.orb.larets.260129.v000",
+     "rmsM": 0.5078
+    },
+    {
+     "product": "nsgf.orb.larets.260201.v000",
+     "rmsM": 6.4746
+    },
+    {
+     "product": "nsgf.orb.larets.260202.v000",
+     "rmsM": 1.8086
+    },
+    {
+     "product": "nsgf.orb.larets.260205.v000",
+     "rmsM": 1.7529
+    },
+    {
+     "product": "nsgf.orb.larets.260206.v000",
+     "rmsM": 2.0395
+    },
+    {
+     "product": "nsgf.orb.larets.260210.v000",
+     "rmsM": 1.6827
+    },
+    {
+     "product": "nsgf.orb.larets.260214.v000",
+     "rmsM": 3.6713
+    },
+    {
+     "product": "nsgf.orb.larets.260218.v000",
+     "rmsM": 1.8906
+    },
+    {
+     "product": "nsgf.orb.larets.260222.v000",
+     "rmsM": 1.3689
+    },
+    {
+     "product": "nsgf.orb.larets.260226.v000",
+     "rmsM": 1.6245
+    },
+    {
+     "product": "nsgf.orb.larets.260302.v000",
+     "rmsM": 2.6165
+    },
+    {
+     "product": "nsgf.orb.larets.260306.v000",
+     "rmsM": 0.8905
+    },
+    {
+     "product": "nsgf.orb.larets.260310.v000",
+     "rmsM": 2.7819
+    },
+    {
+     "product": "nsgf.orb.larets.260314.v000",
+     "rmsM": 0.9426
+    },
+    {
+     "product": "nsgf.orb.larets.260316.v000",
+     "rmsM": 2.4925
+    },
+    {
+     "product": "nsgf.orb.larets.260318.v000",
+     "rmsM": 2.944
+    },
+    {
+     "product": "nsgf.orb.larets.260320.v000",
+     "rmsM": 0.5927
+    },
+    {
+     "product": "nsgf.orb.larets.260322.v000",
+     "rmsM": 13.7551
+    },
+    {
+     "product": "nsgf.orb.larets.260324.v000",
+     "rmsM": 3.7474
+    },
+    {
+     "product": "nsgf.orb.larets.260326.v000",
+     "rmsM": 2.2658
+    },
+    {
+     "product": "nsgf.orb.larets.260328.v000",
+     "rmsM": 2.8283
+    },
+    {
+     "product": "nsgf.orb.larets.260330.v000",
+     "rmsM": 4.8501
+    },
+    {
+     "product": "nsgf.orb.larets.260401.v000",
+     "rmsM": 4.0896
+    },
+    {
+     "product": "nsgf.orb.larets.260403.v000",
+     "rmsM": 5.624
+    },
+    {
+     "product": "nsgf.orb.larets.260405.v000",
+     "rmsM": 2.329
+    },
+    {
+     "product": "nsgf.orb.larets.260407.v000",
+     "rmsM": 5.7535
+    },
+    {
+     "product": "nsgf.orb.larets.260409.v000",
+     "rmsM": 3.1312
+    },
+    {
+     "product": "nsgf.orb.larets.260411.v000",
+     "rmsM": 0.7036
+    },
+    {
+     "product": "nsgf.orb.larets.260413.v000",
+     "rmsM": 3.3799
+    },
+    {
+     "product": "nsgf.orb.larets.260415.v000",
+     "rmsM": 1.1114
+    },
+    {
+     "product": "nsgf.orb.larets.260417.v000",
+     "rmsM": 0.5641
+    },
+    {
+     "product": "nsgf.orb.larets.260419.v000",
+     "rmsM": 3.6358
+    },
+    {
+     "product": "nsgf.orb.larets.260421.v000",
+     "rmsM": 1.1954
+    },
+    {
+     "product": "nsgf.orb.larets.260423.v000",
+     "rmsM": 2.3281
+    },
+    {
+     "product": "nsgf.orb.larets.260425.v000",
+     "rmsM": 1.824
+    },
+    {
+     "product": "nsgf.orb.larets.260427.v000",
+     "rmsM": 3.9471
+    },
+    {
+     "product": "nsgf.orb.larets.260429.v000",
+     "rmsM": 1.2228
+    },
+    {
+     "product": "nsgf.orb.larets.260501.v000",
+     "rmsM": 2.6412
+    },
+    {
+     "product": "nsgf.orb.larets.260503.v000",
+     "rmsM": 0.6735
+    },
+    {
+     "product": "nsgf.orb.larets.260505.v000",
+     "rmsM": 0.6465
+    },
+    {
+     "product": "nsgf.orb.larets.260509.v000",
+     "rmsM": 0.984
+    },
+    {
+     "product": "nsgf.orb.larets.260513.v000",
+     "rmsM": 0.6502
+    },
+    {
+     "product": "nsgf.orb.larets.260517.v000",
+     "rmsM": 5.3618
+    },
+    {
+     "product": "nsgf.orb.larets.260521.v000",
+     "rmsM": 0.6563
+    },
+    {
+     "product": "nsgf.orb.larets.260525.v000",
+     "rmsM": 1.5178
+    },
+    {
+     "product": "nsgf.orb.larets.260529.v000",
+     "rmsM": 2.1262
+    },
+    {
+     "product": "nsgf.orb.larets.260602.v000",
+     "rmsM": 2.2965
+    },
+    {
+     "product": "nsgf.orb.larets.260606.v000",
+     "rmsM": 0.3739
+    },
+    {
+     "product": "nsgf.orb.larets.260610.v000",
+     "rmsM": 0.3922
+    },
+    {
+     "product": "nsgf.orb.larets.260614.v000",
+     "rmsM": 0.5476
+    },
+    {
+     "product": "nsgf.orb.larets.260618.v000",
+     "rmsM": 0.5146
+    },
+    {
+     "product": "nsgf.orb.larets.260622.v000",
+     "rmsM": 1.3792
+    },
+    {
+     "product": "nsgf.orb.larets.260626.v000",
+     "rmsM": 5.1172
+    },
+    {
+     "product": "nsgf.orb.larets.260630.v000",
+     "rmsM": 0.9116
+    },
+    {
+     "product": "nsgf.orb.larets.260704.v000",
+     "rmsM": 0.6553
+    },
+    {
+     "product": "nsgf.orb.larets.260707.v000",
+     "rmsM": 6.2123
+    },
+    {
+     "product": "nsgf.orb.larets.260708.v000",
+     "rmsM": 4.0425
+    },
+    {
+     "product": "nsgf.orb.larets.260715.v000",
+     "rmsM": 0.6609
+    },
+    {
+     "product": "nsgf.orb.larets.260716.v000",
+     "rmsM": 0.6265
+    },
+    {
+     "product": "nsgf.orb.larets.260720.v000",
+     "rmsM": 0.7871
+    },
+    {
+     "product": "nsgf.orb.larets.260724.v000",
+     "rmsM": 0.8863
+    },
+    {
+     "product": "nsgf.orb.larets.260728.v000",
+     "rmsM": 1.253
+    },
+    {
+     "product": "nsgf.orb.larets.260801.v000",
+     "rmsM": 1.0771
+    },
+    {
+     "product": "nsgf.orb.larets.260805.v000",
+     "rmsM": 1.1253
+    },
+    {
+     "product": "nsgf.orb.larets.260806.v00",
+     "rmsM": 4.6961
+    },
+    {
+     "product": "nsgf.orb.larets.260809.v000",
+     "rmsM": 1.1484
+    },
+    {
+     "product": "nsgf.orb.larets.260810.v00",
+     "rmsM": 2.2568
+    },
+    {
+     "product": "nsgf.orb.larets.260813.v000",
+     "rmsM": 0.3646
+    },
+    {
+     "product": "nsgf.orb.larets.260814.v00",
+     "rmsM": 0.3355
+    },
+    {
+     "product": "nsgf.orb.larets.260817.v000",
+     "rmsM": 0.4618
+    },
+    {
+     "product": "nsgf.orb.larets.260818.v00",
+     "rmsM": 3.5983
+    },
+    {
+     "product": "nsgf.orb.larets.260825.v000",
+     "rmsM": 0.9248
+    },
+    {
+     "product": "nsgf.orb.larets.260829.v000",
+     "rmsM": 2.5091
+    }
+   ]
+  },
+  "starlette": {
+   "norad": 7646,
+   "arcs": 109,
+   "stated": 109,
+   "medianM": 0.22679429182581856,
+   "p90M": 0.4356107030690486,
+   "maxM": 2.935529562771913,
+   "over": [
+    {
+     "product": "nsgf.orb.starlette.251005.v000",
+     "rmsM": 0.9352
+    },
+    {
+     "product": "nsgf.orb.starlette.251021.v000",
+     "rmsM": 0.4378
+    },
+    {
+     "product": "nsgf.orb.starlette.251102.v000",
+     "rmsM": 0.4731
+    },
+    {
+     "product": "nsgf.orb.starlette.251114.v000",
+     "rmsM": 0.6264
+    },
+    {
+     "product": "nsgf.orb.starlette.251204.v000",
+     "rmsM": 1.0071
+    },
+    {
+     "product": "nsgf.orb.starlette.251216.v000",
+     "rmsM": 0.5043
+    },
+    {
+     "product": "nsgf.orb.starlette.251228.v000",
+     "rmsM": 0.3299
+    },
+    {
+     "product": "nsgf.orb.starlette.260105.v000",
+     "rmsM": 0.3925
+    },
+    {
+     "product": "nsgf.orb.starlette.260109.v000",
+     "rmsM": 0.3481
+    },
+    {
+     "product": "nsgf.orb.starlette.260113.v000",
+     "rmsM": 0.3752
+    },
+    {
+     "product": "nsgf.orb.starlette.260120.v000",
+     "rmsM": 2.7035
+    },
+    {
+     "product": "nsgf.orb.starlette.260121.v000",
+     "rmsM": 2.9355
+    },
+    {
+     "product": "nsgf.orb.starlette.260125.v000",
+     "rmsM": 0.4291
+    },
+    {
+     "product": "nsgf.orb.starlette.260201.v000",
+     "rmsM": 0.3613
+    },
+    {
+     "product": "nsgf.orb.starlette.260202.v000",
+     "rmsM": 0.3334
+    },
+    {
+     "product": "nsgf.orb.starlette.260210.v000",
+     "rmsM": 0.4126
+    },
+    {
+     "product": "nsgf.orb.starlette.260222.v000",
+     "rmsM": 0.3388
+    },
+    {
+     "product": "nsgf.orb.starlette.260322.v000",
+     "rmsM": 0.3398
+    },
+    {
+     "product": "nsgf.orb.starlette.260324.v000",
+     "rmsM": 0.3543
+    },
+    {
+     "product": "nsgf.orb.starlette.260330.v000",
+     "rmsM": 0.3691
+    },
+    {
+     "product": "nsgf.orb.starlette.260405.v000",
+     "rmsM": 0.3014
+    },
+    {
+     "product": "nsgf.orb.starlette.260407.v000",
+     "rmsM": 0.3024
+    },
+    {
+     "product": "nsgf.orb.starlette.260411.v000",
+     "rmsM": 0.4163
+    },
+    {
+     "product": "nsgf.orb.starlette.260413.v000",
+     "rmsM": 0.3658
+    },
+    {
+     "product": "nsgf.orb.starlette.260419.v000",
+     "rmsM": 0.4298
+    },
+    {
+     "product": "nsgf.orb.starlette.260421.v000",
+     "rmsM": 0.3278
+    },
+    {
+     "product": "nsgf.orb.starlette.260423.v000",
+     "rmsM": 0.3406
+    },
+    {
+     "product": "nsgf.orb.starlette.260429.v000",
+     "rmsM": 0.4356
+    },
+    {
+     "product": "nsgf.orb.starlette.260501.v000",
+     "rmsM": 0.3577
+    },
+    {
+     "product": "nsgf.orb.starlette.260505.v000",
+     "rmsM": 0.3204
+    },
+    {
+     "product": "nsgf.orb.starlette.260509.v000",
+     "rmsM": 0.389
+    },
+    {
+     "product": "nsgf.orb.starlette.260525.v000",
+     "rmsM": 0.5921
+    },
+    {
+     "product": "nsgf.orb.starlette.260529.v000",
+     "rmsM": 0.3399
+    },
+    {
+     "product": "nsgf.orb.starlette.260622.v000",
+     "rmsM": 0.3412
+    },
+    {
+     "product": "nsgf.orb.starlette.260707.v000",
+     "rmsM": 0.7786
+    },
+    {
+     "product": "nsgf.orb.starlette.260712.v000",
+     "rmsM": 0.3234
+    },
+    {
+     "product": "nsgf.orb.starlette.260728.v000",
+     "rmsM": 0.3325
+    },
+    {
+     "product": "nsgf.orb.starlette.260806.v00",
+     "rmsM": 0.3084
+    },
+    {
+     "product": "nsgf.orb.starlette.260818.v00",
+     "rmsM": 0.543
+    }
+   ]
+  },
+  "stella": {
+   "norad": 22824,
+   "arcs": 108,
+   "stated": 108,
+   "medianM": 0.4746830781947823,
+   "p90M": 0.946334468218344,
+   "maxM": 7.292049771432166,
+   "over": [
+    {
+     "product": "nsgf.orb.stella.251005.v000",
+     "rmsM": 1.5714
+    },
+    {
+     "product": "nsgf.orb.stella.251013.v000",
+     "rmsM": 0.8175
+    },
+    {
+     "product": "nsgf.orb.stella.251017.v000",
+     "rmsM": 0.3532
+    },
+    {
+     "product": "nsgf.orb.stella.251021.v000",
+     "rmsM": 1.1636
+    },
+    {
+     "product": "nsgf.orb.stella.251102.v000",
+     "rmsM": 0.9463
+    },
+    {
+     "product": "nsgf.orb.stella.251106.v000",
+     "rmsM": 0.4583
+    },
+    {
+     "product": "nsgf.orb.stella.251110.v000",
+     "rmsM": 0.582
+    },
+    {
+     "product": "nsgf.orb.stella.251114.v000",
+     "rmsM": 1.7396
+    },
+    {
+     "product": "nsgf.orb.stella.251118.v000",
+     "rmsM": 0.5822
+    },
+    {
+     "product": "nsgf.orb.stella.251122.v000",
+     "rmsM": 0.6323
+    },
+    {
+     "product": "nsgf.orb.stella.251126.v000",
+     "rmsM": 0.9655
+    },
+    {
+     "product": "nsgf.orb.stella.251204.v000",
+     "rmsM": 0.8776
+    },
+    {
+     "product": "nsgf.orb.stella.251208.v000",
+     "rmsM": 0.6325
+    },
+    {
+     "product": "nsgf.orb.stella.251212.v000",
+     "rmsM": 0.7681
+    },
+    {
+     "product": "nsgf.orb.stella.251216.v000",
+     "rmsM": 0.9139
+    },
+    {
+     "product": "nsgf.orb.stella.251220.v000",
+     "rmsM": 0.3529
+    },
+    {
+     "product": "nsgf.orb.stella.251224.v000",
+     "rmsM": 0.3486
+    },
+    {
+     "product": "nsgf.orb.stella.260101.v000",
+     "rmsM": 0.3714
+    },
+    {
+     "product": "nsgf.orb.stella.260105.v000",
+     "rmsM": 0.8418
+    },
+    {
+     "product": "nsgf.orb.stella.260109.v000",
+     "rmsM": 0.5238
+    },
+    {
+     "product": "nsgf.orb.stella.260113.v000",
+     "rmsM": 0.7847
+    },
+    {
+     "product": "nsgf.orb.stella.260117.v000",
+     "rmsM": 0.3194
+    },
+    {
+     "product": "nsgf.orb.stella.260120.v000",
+     "rmsM": 2.9976
+    },
+    {
+     "product": "nsgf.orb.stella.260121.v000",
+     "rmsM": 7.292
+    },
+    {
+     "product": "nsgf.orb.stella.260124.v000",
+     "rmsM": 1.7115
+    },
+    {
+     "product": "nsgf.orb.stella.260125.v000",
+     "rmsM": 0.8125
+    },
+    {
+     "product": "nsgf.orb.stella.260128.v000",
+     "rmsM": 0.4468
+    },
+    {
+     "product": "nsgf.orb.stella.260201.v000",
+     "rmsM": 0.7899
+    },
+    {
+     "product": "nsgf.orb.stella.260202.v000",
+     "rmsM": 0.6666
+    },
+    {
+     "product": "nsgf.orb.stella.260205.v000",
+     "rmsM": 0.4305
+    },
+    {
+     "product": "nsgf.orb.stella.260206.v000",
+     "rmsM": 0.5267
+    },
+    {
+     "product": "nsgf.orb.stella.260210.v000",
+     "rmsM": 0.3394
+    },
+    {
+     "product": "nsgf.orb.stella.260218.v000",
+     "rmsM": 0.6723
+    },
+    {
+     "product": "nsgf.orb.stella.260302.v000",
+     "rmsM": 0.5034
+    },
+    {
+     "product": "nsgf.orb.stella.260306.v000",
+     "rmsM": 0.5887
+    },
+    {
+     "product": "nsgf.orb.stella.260310.v000",
+     "rmsM": 1.0331
+    },
+    {
+     "product": "nsgf.orb.stella.260314.v000",
+     "rmsM": 0.3538
+    },
+    {
+     "product": "nsgf.orb.stella.260316.v000",
+     "rmsM": 0.3306
+    },
+    {
+     "product": "nsgf.orb.stella.260318.v000",
+     "rmsM": 0.3838
+    },
+    {
+     "product": "nsgf.orb.stella.260320.v000",
+     "rmsM": 0.7675
+    },
+    {
+     "product": "nsgf.orb.stella.260322.v000",
+     "rmsM": 1.43
+    },
+    {
+     "product": "nsgf.orb.stella.260324.v000",
+     "rmsM": 1.3153
+    },
+    {
+     "product": "nsgf.orb.stella.260328.v000",
+     "rmsM": 0.4619
+    },
+    {
+     "product": "nsgf.orb.stella.260330.v000",
+     "rmsM": 0.6842
+    },
+    {
+     "product": "nsgf.orb.stella.260401.v000",
+     "rmsM": 0.3211
+    },
+    {
+     "product": "nsgf.orb.stella.260403.v000",
+     "rmsM": 0.9368
+    },
+    {
+     "product": "nsgf.orb.stella.260405.v000",
+     "rmsM": 0.8148
+    },
+    {
+     "product": "nsgf.orb.stella.260407.v000",
+     "rmsM": 0.4833
+    },
+    {
+     "product": "nsgf.orb.stella.260409.v000",
+     "rmsM": 0.8511
+    },
+    {
+     "product": "nsgf.orb.stella.260411.v000",
+     "rmsM": 0.5568
+    },
+    {
+     "product": "nsgf.orb.stella.260413.v000",
+     "rmsM": 0.5097
+    },
+    {
+     "product": "nsgf.orb.stella.260415.v000",
+     "rmsM": 0.4991
+    },
+    {
+     "product": "nsgf.orb.stella.260417.v000",
+     "rmsM": 0.3979
+    },
+    {
+     "product": "nsgf.orb.stella.260419.v000",
+     "rmsM": 0.5506
+    },
+    {
+     "product": "nsgf.orb.stella.260421.v000",
+     "rmsM": 0.3048
+    },
+    {
+     "product": "nsgf.orb.stella.260423.v000",
+     "rmsM": 0.4052
+    },
+    {
+     "product": "nsgf.orb.stella.260425.v000",
+     "rmsM": 0.3529
+    },
+    {
+     "product": "nsgf.orb.stella.260427.v000",
+     "rmsM": 0.5949
+    },
+    {
+     "product": "nsgf.orb.stella.260429.v000",
+     "rmsM": 0.6327
+    },
+    {
+     "product": "nsgf.orb.stella.260501.v000",
+     "rmsM": 0.3573
+    },
+    {
+     "product": "nsgf.orb.stella.260505.v000",
+     "rmsM": 0.5504
+    },
+    {
+     "product": "nsgf.orb.stella.260509.v000",
+     "rmsM": 0.3307
+    },
+    {
+     "product": "nsgf.orb.stella.260513.v000",
+     "rmsM": 0.4426
+    },
+    {
+     "product": "nsgf.orb.stella.260517.v000",
+     "rmsM": 0.4747
+    },
+    {
+     "product": "nsgf.orb.stella.260521.v000",
+     "rmsM": 0.5245
+    },
+    {
+     "product": "nsgf.orb.stella.260525.v000",
+     "rmsM": 0.5688
+    },
+    {
+     "product": "nsgf.orb.stella.260529.v000",
+     "rmsM": 0.3744
+    },
+    {
+     "product": "nsgf.orb.stella.260602.v000",
+     "rmsM": 0.3623
+    },
+    {
+     "product": "nsgf.orb.stella.260606.v000",
+     "rmsM": 0.4179
+    },
+    {
+     "product": "nsgf.orb.stella.260610.v000",
+     "rmsM": 0.3537
+    },
+    {
+     "product": "nsgf.orb.stella.260614.v000",
+     "rmsM": 0.5393
+    },
+    {
+     "product": "nsgf.orb.stella.260618.v000",
+     "rmsM": 0.3308
+    },
+    {
+     "product": "nsgf.orb.stella.260622.v000",
+     "rmsM": 0.5371
+    },
+    {
+     "product": "nsgf.orb.stella.260626.v000",
+     "rmsM": 0.7217
+    },
+    {
+     "product": "nsgf.orb.stella.260630.v000",
+     "rmsM": 0.4162
+    },
+    {
+     "product": "nsgf.orb.stella.260704.v000",
+     "rmsM": 0.3558
+    },
+    {
+     "product": "nsgf.orb.stella.260707.v000",
+     "rmsM": 2.2131
+    },
+    {
+     "product": "nsgf.orb.stella.260708.v000",
+     "rmsM": 0.6726
+    },
+    {
+     "product": "nsgf.orb.stella.260715.v000",
+     "rmsM": 0.5599
+    },
+    {
+     "product": "nsgf.orb.stella.260719.v000",
+     "rmsM": 0.3215
+    },
+    {
+     "product": "nsgf.orb.stella.260720.v000",
+     "rmsM": 0.6548
+    },
+    {
+     "product": "nsgf.orb.stella.260728.v000",
+     "rmsM": 0.4987
+    },
+    {
+     "product": "nsgf.orb.stella.260806.v00",
+     "rmsM": 0.5077
+    },
+    {
+     "product": "nsgf.orb.stella.260810.v00",
+     "rmsM": 0.4984
+    },
+    {
+     "product": "nsgf.orb.stella.260813.v000",
+     "rmsM": 0.386
+    }
+   ]
+  },
+  "westpac": {
+   "norad": 25398,
+   "arcs": 109,
+   "stated": 109,
+   "medianM": 0.8087840160052611,
+   "p90M": 2.312759315636571,
+   "maxM": 19.00094232352135,
+   "over": [
+    {
+     "product": "nsgf.orb.westpac.251005.v000",
+     "rmsM": 3.9809
+    },
+    {
+     "product": "nsgf.orb.westpac.251009.v000",
+     "rmsM": 0.6966
+    },
+    {
+     "product": "nsgf.orb.westpac.251013.v000",
+     "rmsM": 2.8288
+    },
+    {
+     "product": "nsgf.orb.westpac.251017.v000",
+     "rmsM": 0.3031
+    },
+    {
+     "product": "nsgf.orb.westpac.251021.v000",
+     "rmsM": 1.2094
+    },
+    {
+     "product": "nsgf.orb.westpac.251025.v000",
+     "rmsM": 0.892
+    },
+    {
+     "product": "nsgf.orb.westpac.251029.v000",
+     "rmsM": 1.1346
+    },
+    {
+     "product": "nsgf.orb.westpac.251102.v000",
+     "rmsM": 2.4011
+    },
+    {
+     "product": "nsgf.orb.westpac.251106.v000",
+     "rmsM": 0.8666
+    },
+    {
+     "product": "nsgf.orb.westpac.251110.v000",
+     "rmsM": 0.8193
+    },
+    {
+     "product": "nsgf.orb.westpac.251114.v000",
+     "rmsM": 4.4485
+    },
+    {
+     "product": "nsgf.orb.westpac.251118.v000",
+     "rmsM": 0.5124
+    },
+    {
+     "product": "nsgf.orb.westpac.251122.v000",
+     "rmsM": 1.7788
+    },
+    {
+     "product": "nsgf.orb.westpac.251126.v000",
+     "rmsM": 0.4494
+    },
+    {
+     "product": "nsgf.orb.westpac.251204.v000",
+     "rmsM": 1.9208
+    },
+    {
+     "product": "nsgf.orb.westpac.251208.v000",
+     "rmsM": 0.9293
+    },
+    {
+     "product": "nsgf.orb.westpac.251212.v000",
+     "rmsM": 2.4377
+    },
+    {
+     "product": "nsgf.orb.westpac.251216.v000",
+     "rmsM": 3.5175
+    },
+    {
+     "product": "nsgf.orb.westpac.251220.v000",
+     "rmsM": 0.4514
+    },
+    {
+     "product": "nsgf.orb.westpac.251224.v000",
+     "rmsM": 0.4236
+    },
+    {
+     "product": "nsgf.orb.westpac.251228.v000",
+     "rmsM": 1.8449
+    },
+    {
+     "product": "nsgf.orb.westpac.260105.v000",
+     "rmsM": 2.3128
+    },
+    {
+     "product": "nsgf.orb.westpac.260109.v000",
+     "rmsM": 0.7044
+    },
+    {
+     "product": "nsgf.orb.westpac.260112.v000",
+     "rmsM": 0.7771
+    },
+    {
+     "product": "nsgf.orb.westpac.260113.v000",
+     "rmsM": 0.7077
+    },
+    {
+     "product": "nsgf.orb.westpac.260116.v000",
+     "rmsM": 0.5771
+    },
+    {
+     "product": "nsgf.orb.westpac.260120.v000",
+     "rmsM": 0.8277
+    },
+    {
+     "product": "nsgf.orb.westpac.260121.v000",
+     "rmsM": 19.0009
+    },
+    {
+     "product": "nsgf.orb.westpac.260124.v000",
+     "rmsM": 1.5211
+    },
+    {
+     "product": "nsgf.orb.westpac.260125.v000",
+     "rmsM": 1.0766
+    },
+    {
+     "product": "nsgf.orb.westpac.260129.v000",
+     "rmsM": 0.5743
+    },
+    {
+     "product": "nsgf.orb.westpac.260201.v000",
+     "rmsM": 3.6075
+    },
+    {
+     "product": "nsgf.orb.westpac.260202.v000",
+     "rmsM": 0.9723
+    },
+    {
+     "product": "nsgf.orb.westpac.260205.v000",
+     "rmsM": 0.3846
+    },
+    {
+     "product": "nsgf.orb.westpac.260206.v000",
+     "rmsM": 1.6158
+    },
+    {
+     "product": "nsgf.orb.westpac.260210.v000",
+     "rmsM": 1.3335
+    },
+    {
+     "product": "nsgf.orb.westpac.260214.v000",
+     "rmsM": 2.1486
+    },
+    {
+     "product": "nsgf.orb.westpac.260218.v000",
+     "rmsM": 1.6892
+    },
+    {
+     "product": "nsgf.orb.westpac.260222.v000",
+     "rmsM": 2.2414
+    },
+    {
+     "product": "nsgf.orb.westpac.260226.v000",
+     "rmsM": 0.6388
+    },
+    {
+     "product": "nsgf.orb.westpac.260302.v000",
+     "rmsM": 2.4373
+    },
+    {
+     "product": "nsgf.orb.westpac.260306.v000",
+     "rmsM": 0.608
+    },
+    {
+     "product": "nsgf.orb.westpac.260310.v000",
+     "rmsM": 1.8998
+    },
+    {
+     "product": "nsgf.orb.westpac.260316.v000",
+     "rmsM": 1.8779
+    },
+    {
+     "product": "nsgf.orb.westpac.260318.v000",
+     "rmsM": 1.1589
+    },
+    {
+     "product": "nsgf.orb.westpac.260320.v000",
+     "rmsM": 0.47
+    },
+    {
+     "product": "nsgf.orb.westpac.260322.v000",
+     "rmsM": 1.8052
+    },
+    {
+     "product": "nsgf.orb.westpac.260324.v000",
+     "rmsM": 1.3724
+    },
+    {
+     "product": "nsgf.orb.westpac.260326.v000",
+     "rmsM": 0.5788
+    },
+    {
+     "product": "nsgf.orb.westpac.260328.v000",
+     "rmsM": 0.7026
+    },
+    {
+     "product": "nsgf.orb.westpac.260330.v000",
+     "rmsM": 1.9079
+    },
+    {
+     "product": "nsgf.orb.westpac.260401.v000",
+     "rmsM": 1.2076
+    },
+    {
+     "product": "nsgf.orb.westpac.260403.v000",
+     "rmsM": 2.2182
+    },
+    {
+     "product": "nsgf.orb.westpac.260405.v000",
+     "rmsM": 1.3651
+    },
+    {
+     "product": "nsgf.orb.westpac.260407.v000",
+     "rmsM": 1.8569
+    },
+    {
+     "product": "nsgf.orb.westpac.260409.v000",
+     "rmsM": 0.4317
+    },
+    {
+     "product": "nsgf.orb.westpac.260413.v000",
+     "rmsM": 1.157
+    },
+    {
+     "product": "nsgf.orb.westpac.260417.v000",
+     "rmsM": 1.523
+    },
+    {
+     "product": "nsgf.orb.westpac.260419.v000",
+     "rmsM": 0.6376
+    },
+    {
+     "product": "nsgf.orb.westpac.260421.v000",
+     "rmsM": 1.0055
+    },
+    {
+     "product": "nsgf.orb.westpac.260423.v000",
+     "rmsM": 0.3569
+    },
+    {
+     "product": "nsgf.orb.westpac.260427.v000",
+     "rmsM": 0.6864
+    },
+    {
+     "product": "nsgf.orb.westpac.260429.v000",
+     "rmsM": 1.3178
+    },
+    {
+     "product": "nsgf.orb.westpac.260501.v000",
+     "rmsM": 0.4416
+    },
+    {
+     "product": "nsgf.orb.westpac.260503.v000",
+     "rmsM": 2.2777
+    },
+    {
+     "product": "nsgf.orb.westpac.260505.v000",
+     "rmsM": 0.8088
+    },
+    {
+     "product": "nsgf.orb.westpac.260509.v000",
+     "rmsM": 0.6222
+    },
+    {
+     "product": "nsgf.orb.westpac.260517.v000",
+     "rmsM": 1.0964
+    },
+    {
+     "product": "nsgf.orb.westpac.260521.v000",
+     "rmsM": 0.4463
+    },
+    {
+     "product": "nsgf.orb.westpac.260529.v000",
+     "rmsM": 0.6168
+    },
+    {
+     "product": "nsgf.orb.westpac.260602.v000",
+     "rmsM": 0.7067
+    },
+    {
+     "product": "nsgf.orb.westpac.260610.v000",
+     "rmsM": 0.3357
+    },
+    {
+     "product": "nsgf.orb.westpac.260614.v000",
+     "rmsM": 4.2536
+    },
+    {
+     "product": "nsgf.orb.westpac.260618.v000",
+     "rmsM": 0.9514
+    },
+    {
+     "product": "nsgf.orb.westpac.260622.v000",
+     "rmsM": 8.9429
+    },
+    {
+     "product": "nsgf.orb.westpac.260626.v000",
+     "rmsM": 1.2705
+    },
+    {
+     "product": "nsgf.orb.westpac.260704.v000",
+     "rmsM": 1.2834
+    },
+    {
+     "product": "nsgf.orb.westpac.260707.v000",
+     "rmsM": 0.9523
+    },
+    {
+     "product": "nsgf.orb.westpac.260708.v000",
+     "rmsM": 1.6762
+    },
+    {
+     "product": "nsgf.orb.westpac.260715.v000",
+     "rmsM": 0.4151
+    },
+    {
+     "product": "nsgf.orb.westpac.260716.v000",
+     "rmsM": 0.4716
+    },
+    {
+     "product": "nsgf.orb.westpac.260719.v000",
+     "rmsM": 0.3145
+    },
+    {
+     "product": "nsgf.orb.westpac.260720.v000",
+     "rmsM": 0.6107
+    },
+    {
+     "product": "nsgf.orb.westpac.260724.v000",
+     "rmsM": 1.3789
+    },
+    {
+     "product": "nsgf.orb.westpac.260728.v000",
+     "rmsM": 0.6183
+    },
+    {
+     "product": "nsgf.orb.westpac.260801.v000",
+     "rmsM": 0.4261
+    },
+    {
+     "product": "nsgf.orb.westpac.260805.v000",
+     "rmsM": 0.6731
+    },
+    {
+     "product": "nsgf.orb.westpac.260806.v00",
+     "rmsM": 2.3124
+    },
+    {
+     "product": "nsgf.orb.westpac.260810.v00",
+     "rmsM": 0.5643
+    },
+    {
+     "product": "nsgf.orb.westpac.260813.v000",
+     "rmsM": 0.3069
+    },
+    {
+     "product": "nsgf.orb.westpac.260814.v00",
+     "rmsM": 0.4969
+    },
+    {
+     "product": "nsgf.orb.westpac.260817.v000",
+     "rmsM": 0.3166
+    },
+    {
+     "product": "nsgf.orb.westpac.260818.v00",
+     "rmsM": 0.5664
+    },
+    {
+     "product": "nsgf.orb.westpac.260825.v000",
+     "rmsM": 0.4177
+    },
+    {
+     "product": "nsgf.orb.westpac.260829.v000",
+     "rmsM": 1.5943
+    }
+   ]
+  }
+ },
+ "arcsOver": 342,
+ "arcs": 758,
+ "outcome": "FAIL",
+ "failures": [
+  "ajisai: 9 of 110 arcs above 0.3 m (median 0.175 m, p90 0.289 m, max 0.749 m)",
+  "lares: 8 of 107 arcs above 0.3 m (median 0.147 m, p90 0.266 m, max 0.411 m)",
+  "larets: 106 of 108 arcs above 0.3 m (median 1.809 m, p90 6.475 m, max 30.025 m)",
+  "starlette: 39 of 109 arcs above 0.3 m (median 0.227 m, p90 0.436 m, max 2.936 m)",
+  "stella: 85 of 108 arcs above 0.3 m (median 0.475 m, p90 0.946 m, max 7.292 m)",
+  "westpac: 95 of 109 arcs above 0.3 m (median 0.809 m, p90 2.313 m, max 19.001 m)"
+ ],
+ "note": "no exclusion is applied: the treatment of arcs above 0.3 m is a question to the coordinator",
+ "opened": {
+  "files": 23183,
+  "sha256": "65de05fa0d3edad09ae9b967944767aca9d25fdab1981c638859787cdaee3939",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P2.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
+    "files": 1825,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2/*",
+    "files": 17909,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference/*",
+    "files": 3446,
+    "labels": [
+     "index.json"
+    ]
+   }
+  ]
+ }
+}

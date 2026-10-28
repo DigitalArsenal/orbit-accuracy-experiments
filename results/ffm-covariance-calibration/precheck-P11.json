@@ -1,0 +1,129 @@
+{
+ "receipt": "precheck-P11",
+ "createdUtc": "2026-10-28T21:24:19.247Z",
+ "experimentsCommit": "ca10e62ebb0a8ec0ba3afd6ff8b37d8a37368808",
+ "plan": "3.6, 3.8 P11",
+ "method": "independent chi-square(3) draws (Box-Muller on SplitMix32, seed 1), 4,000 trials per size; the scale case multiplies each of 5 objects' draws by exp(N(0, 0.15))",
+ "independent": {
+  "30": 0.55375,
+  "100": 0.754,
+  "200": 0.85925,
+  "300": 0.91925,
+  "500": 0.96675,
+  "1000": 0.99825
+ },
+ "fiveObjectsScale15": {
+  "30": 0.532,
+  "100": 0.67225,
+  "200": 0.749,
+  "300": 0.7755,
+  "500": 0.807,
+  "1000": 0.8455
+ },
+ "perClassCell": {
+  "R1": {
+   "calibration": {
+    "windows": 450,
+    "oracle": 0.9395
+   },
+   "validation": {
+    "windows": 155,
+    "oracle": 0.714
+   },
+   "heldOutTime": {
+    "windows": 237,
+    "oracle": 0.801
+   },
+   "heldOutObject": {
+    "windows": 0,
+    "oracle": null
+   }
+  },
+  "R2": {
+   "calibration": {
+    "windows": 314,
+    "oracle": 0.874
+   },
+   "validation": {
+    "windows": 132,
+    "oracle": 0.7715
+   },
+   "heldOutTime": {
+    "windows": 132,
+    "oracle": 0.7715
+   },
+   "heldOutObject": {
+    "windows": 162,
+    "oracle": 0.7925
+   }
+  },
+  "R3": {
+   "calibration": {
+    "windows": 1387,
+    "oracle": 0.999
+   },
+   "validation": {
+    "windows": 487,
+    "oracle": 0.9595
+   },
+   "heldOutTime": {
+    "windows": 723,
+    "oracle": 0.987
+   },
+   "heldOutObject": {
+    "windows": 1156,
+    "oracle": 0.996
+   }
+  }
+ },
+ "note": "per class and set, the cell size is the window count of P9 (each window gives one sample per lead); the per-cell oracle pass count and its 5th percentile are recomputed with the realized cell sizes at scoring",
+ "opened": {
+  "files": 23183,
+  "sha256": "65de05fa0d3edad09ae9b967944767aca9d25fdab1981c638859787cdaee3939",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P11.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
+    "files": 1825,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2/*",
+    "files": 17909,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference/*",
+    "files": 3446,
+    "labels": [
+     "index.json"
+    ]
+   }
+  ]
+ }
+}
