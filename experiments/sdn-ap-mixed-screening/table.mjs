@@ -7,8 +7,9 @@ import crypto from 'node:crypto';
 import { config, store, results, args, readJsonl, sha256 } from './common.mjs';
 
 const B = config.statistics.bootstrap;
-const NAMES = { sdnap: 'SDN-AP', sgp4xp: 'SGP4-XP', sgp4: 'SGP4', forecast: 'Operator forecast', ffm: 'FFM', sdnapTruth: 'SDN-AP fitted to the truth' };
-const REF = { sdnap: 'SDN-AP', ffm: 'FFM' };
+const NAMES = { sdnap: 'SDN-AP', sgp4xp: 'SGP4-XP', sgp4: 'SGP4', forecast: 'Operator forecast', ffm: 'FFM', sdnapTruth: 'SDN-AP fitted to the truth',
+  ffm3: 'FFM, fit_batch version 3 (A12)', xpln: 'SGP4-XP, log-normal drag prior (XP-LN, A12)', ffmRound1: 'FFM (A3), round-1 products at 100 x sigma (descriptive)' };
+const REF = { sdnap: 'SDN-AP', ffm: 'FFM', ffm3: 'FFM v3', sgp4xp: 'SGP4-XP' };
 const quantile = (values, q) => { const a = values.filter(Number.isFinite).sort((x, y) => x - y); if (!a.length) return null; const pos = (a.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos); return a[lo] + (a[hi] - a[lo]) * (pos - lo); };
 const medianSorted = (a) => { const pos = (a.length - 1) / 2, lo = Math.floor(pos), hi = Math.ceil(pos); return a[lo] + (a[hi] - a[lo]) * (pos - lo); };
 function generator(label) { // xorshift128+ (23, 17, 26), seeded by SHA-256 of the label; the high 32 bits as a float in [0, 1)
@@ -59,7 +60,7 @@ function pairedWith(windows, ref, others, bins, label) {
 
 /** One table row: windows [{ object, arms: { arm: { ok, bins } } }], the arms, the bins; `paired` the others paired with SDN-AP (registered),
  *  `pairedWithFfm` the others paired with FFM (amendment A5). */
-function tableRow(id, label, note, windows, arms, bins, { paired = arms.filter((x) => x !== 'sdnap'), pairedWithFfm = null } = {}) {
+function tableRow(id, label, note, windows, arms, bins, { paired = arms.filter((x) => x !== 'sdnap'), pairedWithFfm = null, pairedWithRef = null } = {}) {
   const row = { id, row: label, note, windows: windows.length, objects: new Set(windows.map((w) => w.object)).size, arms: {}, paired: {}, closest: {} };
   for (const arm of arms) {
     const attempted = windows.filter((w) => w.arms?.[arm]).length;
@@ -67,6 +68,7 @@ function tableRow(id, label, note, windows, arms, bins, { paired = arms.filter((
   }
   row.paired = pairedWith(windows, 'sdnap', paired, bins, label);
   if (pairedWithFfm) row.pairedWithFfm = pairedWith(windows, 'ffm', pairedWithFfm, bins, label);
+  if (pairedWithRef) row.pairedWithRef = Object.fromEntries(Object.entries(pairedWithRef).map(([ref, others]) => [ref, pairedWith(windows, ref, others, bins, label)])); // A12
   for (const b of bins) {
     const c = arms.filter((x) => x !== 'sdnapTruth' && row.arms[x].bins[b].n > 0).map((x) => [x, row.arms[x].bins[b].median]);
     const best = c.length ? Math.min(...c.map(([, m]) => m)) : null;
@@ -132,7 +134,10 @@ export function build() {
   // part 1a (A5: SGP4-XP, FFM and SpaceX's forecast; the latest score pass)
   const { through, rows: st } = latestPass();
   out.inputs.starlinkScore = sha256(Buffer.from(JSON.stringify(st)));
-  const sw = st.filter((r) => r.arms).map((r) => ({ object: String(r.norad), arms: r.arms, maneuverEvident: r.maneuverEvident }));
+  // A12 point 2: A3's round-2-refused satellites (the round-1 product kept, stoppedBy set) count as failed; their products only as a labeled descriptive arm
+  const roundOne = new Set(rows('starlink-ffm.').filter((r) => r.ffm?.ok && r.ffm.stoppedBy).map((r) => r.norad));
+  const relabel = (r) => (roundOne.has(r.norad) && r.arms.ffm ? { ...r.arms, ffm: { ok: false, error: 'A3 round 2 refused (counted failed, A12 point 2)' }, ffmRound1: r.arms.ffm } : r.arms);
+  const sw = st.filter((r) => r.arms).map((r) => ({ object: String(r.norad), arms: relabel(r), maneuverEvident: r.maneuverEvident }));
   if (st.length) {
     const fit = rows('starlink-fit.'), ffm = rows('starlink-ffm.');
     out.inputs.starlinkFit = sha256(Buffer.from(JSON.stringify(fit)));
@@ -147,6 +152,24 @@ export function build() {
     out.rows.push(tableRow('starlink-xp-refused', 'Starlink, SGP4-XP on the satellites FFM did not fit (descriptive: the selection FFM\'s refusals make)', `${sw.filter((w) => w.arms.sgp4xp?.ok && !w.arms.ffm?.ok).length} satellites; ${interim}`, sw.filter((w) => w.arms.sgp4xp?.ok && !w.arms.ffm?.ok).map(xpOnly), ['sgp4xp'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-xp-all', 'Starlink, SGP4-XP on every scored satellite (descriptive)', `${sw.filter((w) => w.arms.sgp4xp?.ok).length} satellites; ${interim}`, sw.map(xpOnly), ['sgp4xp'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample with all three arms scored (SpaceX\'s own forecast beside)', `sample satellites whose fetched file is F (A10) and both fits scored; ${interim}`, sw.filter(forecastAll), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
+    // A12: the new arms. ffm3 is the FFM arm of record (point 12); A3 stays reported as registered above.
+    const ffm3 = rows(`starlink-ffm3${config.a12.selected?.contingency ? '-60' : ''}.`), xpln = rows('starlink-xpln.');
+    out.inputs.starlinkFfm3 = sha256(Buffer.from(JSON.stringify(ffm3)));
+    out.inputs.starlinkXpln = sha256(Buffer.from(JSON.stringify(xpln)));
+    out.starlink.a12 = {
+      profile: config.a12.selected?.profile ?? null, gateFailed: config.a12.selected?.gateFailed ?? null,
+      ffm3Fit: tally(ffm3.map((r) => (r.ffm3?.ok ? 'fitted (CONVERGED)' : `failed: ${r.ffm3?.termination ?? String(r.ffm3?.error ?? '').replace(/\d+(\.\d+)?/g, '#').slice(0, 90)}`))),
+      ffm3Refused: ffm3.filter((r) => r.ffm3?.refusedTrials > 0 || r.ffm3?.refusedRounds > 0).length,
+      xplnFit: tally(xpln.map((r) => (r.xpln?.ok ? 'fitted' : `refused: ${String(r.xpln?.error ?? '').slice(0, 90)}`))),
+      a3: { tracks: ffm.length, refusedAnyRound: ffm.filter((r) => !r.ffm?.ok && r.ffm?.converged !== false).length + roundOne.size, refusedRoundOne: ffm.filter((r) => !r.ffm?.ok && r.ffm?.converged !== false).length, roundTwoRefusedCountedFailed: roundOne.size, notConverged: ffm.filter((r) => r.ffm?.converged === false).length, fullWeight: ffm.filter((r) => r.ffm?.ok && !r.ffm.stoppedBy).length, note65202: 'NORAD 65202: a full-weight A3 fit with B = -1.86e-6 m^2/kg, which propagator/ffm refuses at prediction' },
+    };
+    const v3both = (w) => w.arms.sgp4xp?.ok && w.arms.ffm3?.ok;
+    out.rows.push(tableRow('starlink-ffm3-both', 'Starlink, FFM v3 (A12, the FFM arm of record) against SGP4-XP on the satellites both fitted and scored (A10\'s primary form)', `${sw.filter(v3both).length} of ${st.length} satellites; ${interim}`, sw.filter(v3both), ['sgp4xp', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp'] } }));
+    out.rows.push(tableRow('starlink-ffm3-both-quiet', 'Starlink, FFM v3 and SGP4-XP both fitted, no maneuver evident', `truth files agree within 1 km where they overlap; ${interim}`, sw.filter((w) => v3both(w) && !w.maneuverEvident), ['sgp4xp', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp'] } }));
+    out.rows.push(tableRow('starlink-ffm3-a3', 'Starlink, FFM v3 against A3 on A3\'s full-weight satellites both scored', `${sw.filter((w) => w.arms.ffm?.ok && w.arms.ffm3?.ok).length} satellites; ${interim}`, sw.filter((w) => w.arms.ffm?.ok && w.arms.ffm3?.ok), ['ffm', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['ffm'] } }));
+    out.rows.push(tableRow('starlink-xpln', 'Starlink, XP-LN (fairness arm, A12) beside SGP4-XP and FFM v3, on the satellites all three fitted and scored', `${sw.filter((w) => v3both(w) && w.arms.xpln?.ok).length} satellites; ${interim}`, sw.filter((w) => v3both(w) && w.arms.xpln?.ok), ['sgp4xp', 'xpln', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'xpln'], sgp4xp: ['xpln'] } }));
+    out.rows.push(tableRow('starlink-ffm3-forecast', 'Starlink, the forecast sample with SGP4-XP, FFM v3 and SpaceX\'s forecast all scored', `sample satellites whose fetched file is F; ${interim}`, sw.filter((w) => v3both(w) && w.arms.forecast?.ok), ['sgp4xp', 'ffm3', 'forecast'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'forecast'] } }));
+    out.rows.push(tableRow('starlink-a3-round1', 'Starlink, A3\'s round-1 products on its 3,048 round-2-refused satellites (descriptive, labeled; counted as failed fits)', `${sw.filter((w) => w.arms.ffmRound1?.ok).length} satellites; never pooled with full fits; ${interim}`, sw.filter((w) => w.arms.ffmRound1).map((w) => ({ ...w, arms: { ffmRound1: w.arms.ffmRound1 } })), ['ffmRound1'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-forecast-quiet', 'Starlink, the forecast sample with all three arms, no maneuver evident', `as above, truth files agreeing within 1 km where they overlap; ${interim}`, sw.filter((w) => forecastAll(w) && !w.maneuverEvident), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
   }
   // part 1b (the FFM arm by A5, from its own phase's rows)
@@ -166,10 +189,12 @@ export function build() {
   out.rows.push(tableRow('laser', 'LEO laser-ranged spheres from ILRS normal points (Starlette, Stella, LARETS, WESTPAC, LARES), 2026-07-16 to 08-30', `${la.length} cutoffs; SDN-AP and SGP4-XP fitted to 24 h of the full force model carried from the normal-point fit (not to the ranges directly)`, lw, ['sdnap', 'sgp4xp', 'ffm', 'sgp4', 'sdnapTruth'], BINS));
   for (const t of config.part2.targets) out.rows.push(tableRow(`laser-${t}`, `Laser, ${t}`, '', lw.filter((w) => w.object === t), ['sdnap', 'sgp4xp', 'ffm', 'sgp4', 'sdnapTruth'], BINS));
   // parts 3 and 4 (A4, A5, A6): each group's summary, written by part4-ca.mjs
-  const ca = ['iss', 'laser', 'starlink'].map((g) => path.join(store, 'rows', `ca.${g}.json`)).filter((f) => fs.existsSync(f)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
-  if (ca.length) out.ca = Object.fromEntries(ca.map((c) => [c.group, c]));
+  const ca = ['iss', 'laser', 'starlink', 'starlink.ffm3'].map((g) => path.join(store, 'rows', `ca.${g}.json`)).filter((f) => fs.existsSync(f)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+  if (ca.length) out.ca = Object.fromEntries(ca.map((c) => [c.ffmArm && c.ffmArm !== 'ffm' ? `${c.group}.${c.ffmArm}` : c.group, c])); // A12: ffm3 in the FFM slot, the FFM arm of record
   const part5 = path.join(store, 'rows', 'ca.part5.json');
   if (fs.existsSync(part5)) out.part5 = JSON.parse(fs.readFileSync(part5, 'utf8'));
+  const part5v3 = path.join(store, 'rows', 'ca.part5.ffm3.json');
+  if (fs.existsSync(part5v3)) out.part5ffm3 = JSON.parse(fs.readFileSync(part5v3, 'utf8'));
   return out;
 }
 
@@ -208,7 +233,7 @@ function exploratoryMarkdown(x) {
 
 export function markdown(t) {
   const o = ['# B2: operator ephemerides and observations, SGP4-XP, FFM and the operators\' forecasts (parts 1 and 2)', ''];
-  o.push(`Generated by \`node experiments/sdn-ap-mixed-screening/table.mjs\` from the stored rows; plan: [PLAN.md](../../experiments/sdn-ap-mixed-screening/PLAN.md) with its amendments A1 to A11. Modules at ${t.modulesCommit.slice(0, 12)}; SGP4-XP (THEORY SGP4XP) and SDN-AP run in propagator/sdn-ap build ${t.sdnapWasmSha256.slice(0, 12)}.`, '');
+  o.push(`Generated by \`node experiments/sdn-ap-mixed-screening/table.mjs\` from the stored rows; plan: [PLAN.md](../../experiments/sdn-ap-mixed-screening/PLAN.md) with its amendments A1 to A12. Modules at ${t.modulesCommit.slice(0, 12)}; SGP4-XP (THEORY SGP4XP) and SDN-AP run in propagator/sdn-ap build ${t.sdnapWasmSha256.slice(0, 12)}.`, '');
   o.push('A cell is the median over windows of a bin\'s 3D RMS (km), the 10th and 90th percentiles in parentheses, the 95 % bootstrap interval of the median over windows in brackets, and the windows scored. Part 1 bins are hours after E, (0, 24], (24, 48], (48, 72]; part 2 bins are days after T. SDN-AP in part 2 is fitted to 24 h of the full force model carried from the normal-point fit, not to the ranges directly.', '');
   o.push('Steps. Truth: part 1a the first 8 h of each newer SpaceX file at its 10-min epochs (GCRF); part 1b the first 24 h of each newer NASA file at its 4-min epochs (EME2000); part 2 NSGF orbits thinned to one state per 300 s. FFM: analysis/estimation fit_batch answered by propagator/ffm (gravity 70 x 70, Sun and Moon, radiation pressure, NRLMSISE-00 drag, solid tides, relativity; integrator tolerance 1e-10, steps of at most 120 s), fitted to the 24 h track\'s positions at 10 m per axis (part 1a every 10 min, part 1b every 4 min) and carried by the same model to the truth epochs. SGP4-XP and SDN-AP (propagator/sdn-ap, THEORY SGP4XP and SDNAP) are analytic theories fitted to the same 24 h track (in part 2, the 24 h the full force model carries back from the normal-point fit) and evaluated at the truth epochs; SGP4 is analysis/gp-error-model fit_elements on the track in part 1b and the newest public element set in part 2. The operator forecast is the operator\'s own file at the truth epochs.', '');
   o.push('Amendment A5 (2026-10-26): SDN-AP is withdrawn from part 1a (the owner withdrew the theory on 2026-10-25, before any part 1a fit or score); part 1b gains the FFM arm, added to windows whose other arms were scored and landed on 2026-10-25. Rows paired with FFM give the share of windows where FFM is closer and the median ratio other / FFM.', '');
@@ -216,12 +241,17 @@ export function markdown(t) {
   if (t.starlink) {
     const h = t.starlink.headline;
     o.push(`**Part 1a headline (A10): FFM fitted ${h.ffmFitted} of ${h.satellites} Starlink tracks; propagator/ffm refused ${h.ffmRefused} (${(100 * h.ffmRefused / h.satellites).toFixed(1)} %) when fit_batch stepped B or AGOM out of range in A3's first round, and ${h.ffmNotConverged} did not converge (defect modules-ffm-fit-batch-round1-out-of-range-20261026, not fixed here). FFM against SGP4-XP is compared on the satellites both arms fitted; SGP4-XP on the others is descriptive.**`, '');
+    const a = t.starlink.a12;
+    if (a) {
+      const fitted = a.ffm3Fit['fitted (CONVERGED)'] ?? 0, n = Object.values(a.ffm3Fit).reduce((x, y) => x + y, 0);
+      o.push(`**A12 headline: A3 refused in any round ${a.a3.refusedAnyRound} of ${a.a3.tracks} (${(100 * a.a3.refusedAnyRound / a.a3.tracks).toFixed(1)} %; round 1 alone ${a.a3.refusedRoundOne}, ${(100 * a.a3.refusedRoundOne / a.a3.tracks).toFixed(1)} %), its ${a.a3.roundTwoRefusedCountedFailed} round-2-refused satellites counted failed and their round-1 products shown only as a labeled descriptive row; ${a.a3.note65202}. FFM v3 (fit_batch version 3, profile ${a.profile}${a.gateFailed ? ', gate failed' : ''}) fitted ${fitted} of ${n} (${n ? (100 * (n - fitted) / n).toFixed(1) : '-'} % failed, ${a.ffm3Refused} with a refused trial); XP-LN fitted ${a.xplnFit.fitted ?? 0}. FFM v3 is the FFM arm of record for the conjunction contrast and part 5; A3 is reported as registered.**`, '');
+    }
   }
   for (const r of t.rows) {
     o.push(`## ${r.row}`, '', r.note ? `${r.note}.` : '', '', '| Arm | Scored / attempted | Bin 1 | Bin 2 | Bin 3 |', '| --- | --: | --- | --- | --- |');
     for (const [arm, a] of Object.entries(r.arms)) o.push(`| ${NAMES[arm]} | ${a.scored} / ${a.attempted} | ${['1', '2', '3'].map((b) => cell(a.bins[b])).join(' | ')} |`);
     o.push('', `Closest by bin: ${['1', '2', '3'].map((b) => `${b}: ${r.closest[b] ? r.closest[b].map((x) => NAMES[x]).join(', ') : '-'}`).join('; ')}.`, '');
-    for (const [ref, paired] of [['sdnap', r.paired], ['ffm', r.pairedWithFfm ?? {}]]) {
+    for (const [ref, paired] of [['sdnap', r.paired], ['ffm', r.pairedWithFfm ?? {}], ...Object.entries(r.pairedWithRef ?? {})]) {
       const p = Object.entries(paired).filter(([, v]) => Object.values(v).some((x) => x.n));
       if (!p.length) continue;
       o.push(`| Paired with ${REF[ref]} | Bin 1 | Bin 2 | Bin 3 |`, '| --- | --- | --- | --- |');
@@ -231,14 +261,15 @@ export function markdown(t) {
     if (r.id === 'starlink-both' && t.starlink) o.push(...starlinkMarkdown(t.starlink));
   }
   if (t.ca) o.push(...caMarkdown(t.ca));
-  if (t.part5) o.push(...partFiveMarkdown(t.part5));
+  if (t.part5ffm3) o.push(...partFiveMarkdown(t.part5ffm3, 'FFM v3 of A12 (the FFM arm of record)'));
+  if (t.part5) o.push(...partFiveMarkdown(t.part5, 'FFM as A3 registered'));
   return o.join('\n');
 }
 
 const pct = (x) => (x == null ? '-' : `${(100 * x).toFixed(x !== 0 && Math.abs(x) < 0.001 ? 3 : 1)} %`);
 const ci = (c) => (c ? ` [${pct(c[0])}, ${pct(c[1])}]` : '');
 const rate = (x) => (x ? `${pct(x.value)}${ci(x.ci95Encounters)}${x.ci95Objects ? `, objects${ci(x.ci95Objects)}` : ''}` : '-');
-const GROUP = { iss: 'ISS (part 1b)', laser: 'Laser spheres (part 2)', starlink: 'Starlink (part 1a)' };
+const GROUP = { iss: 'ISS (part 1b)', laser: 'Laser spheres (part 2)', starlink: 'Starlink (part 1a), FFM as A3 registered', 'starlink.ffm3': 'Starlink (part 1a), FFM v3 of A12 in the FFM slot (the FFM arm of record)' };
 const COV = { ffm: 'FFM', sgp4xp: 'SGP4-XP', v1c5: 'V1c5 frozen (public set, SGP4)', uncalibrated: 'uncalibrated (public set, SGP4)', v1c4: 'V1c4 best (public set, SGP4)' };
 /** Parts 3 and 4 as prose and tables. */
 function caMarkdown(ca) {
@@ -266,8 +297,8 @@ function caMarkdown(ca) {
 }
 const LEAD_COLS = [1, 6, 12, 24, 48, 72];
 /** Part 5 (A4, A8): real Starlink close approaches, per class. */
-function partFiveMarkdown(p) {
-  const o = ['## Real Starlink close approaches: FFM against SGP4-XP, with Pc calls (part 5; A4, A5, A8)', ''];
+function partFiveMarkdown(p, ffmLabel = 'FFM') {
+  const o = [`## Real Starlink close approaches: FFM against SGP4-XP, with Pc calls (part 5; A4, A5, A8); FFM: ${ffmLabel}`, ''];
   o.push(`Steps. The part 1a satellites both SGP4-XP and FFM fitted; in 1 h windows from the earliest E to the latest E + 72 h, the truth (the newer SpaceX files at their 10-min epochs) and FFM's and SGP4-XP's predictions at the same epochs are each screened all-vs-all by analysis/conjunction-assessment (explicit OEM samples, 5 km threshold, its range sampled every 5 s), a satellite entering a window only where its truth covers it. Events of a pair within 10 min are one encounter; it enters when any set's miss is under 5 km. Each entering encounter is assessed by assess_conjunction over 20 min: the truth's closest approach, and each arm's TCA, miss and Pc (Foster, 20 m combined) from its ephemeris at 60 s steps with its covariance (FFM: fit_batch's formal covariance times max(1, reduced chi-square) carried by propagator/ffm; SGP4-XP: the module's). Screens through the capture cycle ${p.through}.`, '');
   o.push(`${p.encounters} encounters, ${p.entering} entering; ${p.setAside} set aside (a truth gap at the encounter); ${p.truthFailed} whose truth assessment failed. Screens: ${Object.entries(p.screens.bySet).map(([set, x]) => `${NAMES[set] ?? 'truth'}: ${x.windows} windows, ${x.events} events, ${x.pairsScreened} pair-windows, ${x.meanCovered.toFixed(0)} satellites covered per window`).join('; ')}.`, '');
   for (const [cls, s] of Object.entries(p.classes)) {

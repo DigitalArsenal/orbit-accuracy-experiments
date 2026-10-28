@@ -71,7 +71,12 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
   const { openFits, fitSdnap, statesAt, convert, scoreBins } = await import('./lib/fits.mjs');
   const phase = args.phase ?? 'fit';
-  if (!['fit', 'ffm', 'score', 'leads', 'gp'].includes(phase)) throw new Error(`unknown phase ${phase}`);
+  if (!['fit', 'ffm', 'score', 'leads', 'gp', 'ffm3', 'xpln'].includes(phase)) throw new Error(`unknown phase ${phase}`);
+  if (phase === 'ffm3' || phase === 'xpln') { // A12: the new arms' fits through the fit-only reader, never windowOf
+    const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
+    await (await import('./lib/a12-arms.mjs')).fitPhase(phase, { k, n, limit: args.limit ? Number(args.limit) : null, maximumIterations: Number(args['max-evals'] ?? config.a12.fit.maximumIterations) });
+    process.exit(0);
+  }
   const late = ['score', 'leads', 'gp'].includes(phase);
   const through = late ? args.through : null;
   if (late && !cycles.includes(through)) throw new Error('--through names a closed capture cycle');
@@ -92,6 +97,9 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const object = (norad) => ({ frame: 'GCRF', name: `STARLINK ${norad}`, norad, originator: 'SpaceX via operator-capture' });
   const rowsOf = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
   const fits = late ? rowsOf('starlink-fit.') : null, ffmFits = late ? rowsOf('starlink-ffm.') : null;
+  // A12's arms (ffm3: fit_batch version 3 with the selected profile; XP-LN) beside the registered ones
+  const ffm3Fits = late ? rowsOf(`starlink-ffm3${config.a12.selected?.contingency ? '-60' : ''}.`) : null, xplnFits = late ? rowsOf('starlink-xpln.') : null;
+  const arms = ['score', 'leads'].includes(phase) ? await (await import('./lib/a12-arms.mjs')).openArms() : null;
   const L5 = late && phase !== 'score' ? await import('./lib/leads.mjs') : null;
   const tolerance = config.a5.ca.leadToleranceSeconds.starlink;
   const fitIdentity = (w) => ({ norad: w.norad, F: w.F, E: iso(w.E), coverage: w.coverage, olderFiles: w.olderFiles, gated: w.gated.track, track: w.track, trackFrom: `the capture cycles before ${forecastCycle}` });
@@ -115,6 +123,8 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
       else if (phase === 'leads') {
         row.sgp4xp = f.sgp4xp?.ok ? await L5.sgp4xpLeads(a, f.sgp4xp.omm, leads, 'GCRF') : { error: f.sgp4xp?.error ?? 'no SGP4-XP fit' };
         row.ffm = g && !g.excluded && !changed(w, g) && g.ffm?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => ff.predict(product, norad, ms, w.E, 'starlink', { covariance }), g.ffm, leads, 'GCRF') : { error: g?.ffm?.error ?? g?.excluded ?? 'no FFM fit' };
+        const g3 = ffm3Fits.get(norad); // A12: the FFM arm of record for the contrast
+        row.ffm3 = g3 && !changed(w, g3) && g3.ffm3?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => arms.ffm3(product, ms, w.E, covariance), g3.ffm3, leads, 'GCRF') : { error: g3?.ffm3?.error ?? 'no ffm3 fit' };
         const fcFile = path.join(store, 'forecast', `${norad}.json`);
         if (fs.existsSync(fcFile)) {
           const fc = JSON.parse(fs.readFileSync(fcFile));
@@ -157,6 +167,16 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
         else {
           try { row.arms.ffm = { ok: true, bins: await scoreBins(a, await ff.predict(g.ffm, norad, epochs, w.E), truth, binOf) }; } catch (error) { row.arms.ffm = { ok: false, error: String(error.message).slice(0, 160) }; }
         }
+        // A12's arms: ffm3 carried by the same propagator/ffm (T when estimated), XP-LN by its own build
+        const g3 = ffm3Fits.get(norad), gx = xplnFits.get(norad);
+        if (!g3 || changed(w, g3) || !g3.ffm3?.ok) row.arms.ffm3 = { ok: false, error: !g3 ? 'no ffm3 fit row' : changed(w, g3) ?? g3.ffm3?.error };
+        else {
+          try { row.arms.ffm3 = { ok: true, bins: await scoreBins(a, await arms.ffm3(g3.ffm3, epochs, w.E), truth, binOf) }; } catch (error) { row.arms.ffm3 = { ok: false, error: String(error.message).slice(0, 160) }; }
+        }
+        if (!gx || changed(w, gx) || !gx.xpln?.ok) row.arms.xpln = { ok: false, error: !gx ? 'no XP-LN fit row' : changed(w, gx) ?? gx.xpln?.error };
+        else {
+          try { row.arms.xpln = { ok: true, bins: await scoreBins(a, await arms.xpln(gx.xpln.omm, epochs), truth, binOf) }; } catch (error) { row.arms.xpln = { ok: false, error: String(error.message).slice(0, 160) }; }
+        }
         const fcFile = path.join(store, 'forecast', `${norad}.json`);
         if (fs.existsSync(fcFile)) {
           const fc = JSON.parse(fs.readFileSync(fcFile));
@@ -178,5 +198,6 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   await a?.close();
   await ff?.close();
   await gp?.close();
+  await arms?.close();
   process.exit(0);
 }

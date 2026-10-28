@@ -13,16 +13,18 @@ const { LEADS, encounters, summarize, realismCell, pcClient } = await import('./
 const SOURCES = { iss: { leads: 'iss-leads.', gp: 'iss-gp.', key: (r) => r.file, object: () => 'ISS' }, laser: { leads: 'laser-leads.', gp: 'laser-gp.', key: (r) => `${r.norad}|${r.cutoff}`, object: (r) => r.target }, starlink: { leads: 'starlink-leads.', gp: 'starlink-gp.', key: (r) => String(r.norad), object: (r) => String(r.norad) } };
 const rowsOf = (prefix) => { const d = path.join(store, 'rows'); return fs.readdirSync(d).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).sort().flatMap((f) => readJsonl(path.join(d, f))); };
 
-/** The group's windows: { object, key, leads: { L: { ffm, sgp4xp, forecast, gp, gpLabels } } } from its lead and GP rows. */
-export function windowsOf(group) {
+/** The group's windows: { object, key, leads: { L: { ffm, sgp4xp, forecast, gp, gpLabels } } } from its lead and GP rows. `ffm` names the
+ *  lead field in the FFM slot: 'ffm' (A3 as registered) or, for Starlink, 'ffm3' (A12 point 12, the FFM arm of record). */
+export function windowsOf(group, ffm = 'ffm') {
   const S = SOURCES[group];
   if (!S) throw new Error('--group iss|laser|starlink');
   const leadRows = rowsOf(S.leads).filter((r) => !r.excluded), gpRows = new Map(rowsOf(S.gp).filter((r) => r.gp).map((r) => [S.key(r), r.gp]));
   const inputs = sha256(Buffer.from(JSON.stringify([leadRows, [...gpRows.entries()]])));
+  if (ffm !== 'ffm' && group !== 'starlink') throw new Error('--ffm ffm3 is part 1a\'s (Starlink) only');
   const windows = leadRows.map((r) => {
     const g = gpRows.get(S.key(r));
     const leads = Object.fromEntries(LEADS.map((L) => [L, {
-      ...(r.sgp4xp?.[L] ? { sgp4xp: r.sgp4xp[L] } : {}), ...(r.ffm?.[L] ? { ffm: r.ffm[L] } : {}), ...(r.forecast?.[L] ? { forecast: r.forecast[L] } : {}),
+      ...(r.sgp4xp?.[L] ? { sgp4xp: r.sgp4xp[L] } : {}), ...(r[ffm]?.[L] ? { ffm: r[ffm][L] } : {}), ...(r.forecast?.[L] ? { forecast: r.forecast[L] } : {}),
       ...(g?.leads?.[L]?.v1c5?.cov ? { gp: g.leads[L].v1c5 } : {}), ...(g?.leads?.[L] ? { gpLabels: g.leads[L] } : {}),
     }]));
     return { object: S.object(r), key: S.key(r), leads, gpTier: g?.tier ?? null, gpFlagged: g?.flagged ?? null };
@@ -42,19 +44,20 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
   const ca = await loadModule(modulesRoot(), 'analysis/conjunction-assessment');
   const pc = pcClient(ca);
-  const group = args.group;
-  const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group);
-  const summary = { group, inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
+  const group = args.group, ffm = args.ffm ?? 'ffm';
+  const label = ffm === 'ffm' ? group : `${group}.${ffm}`; // the draws stay the group's (seeds B2|part4|<group>|...), so the two FFM slots meet the same encounters
+  const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group, ffm);
+  const summary = { group, ffmArm: ffm, inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
   const classes = summary.objects > 1 ? ['gp', 'precise'] : ['gp'];
   for (const cls of classes) {
     const t0 = Date.now();
     const { rows, counts } = await encounters(group, cls, windows, pc);
-    const file = path.join(store, 'rows', `ca-encounters.${group}.${cls}.jsonl`);
+    const file = path.join(store, 'rows', `ca-encounters.${label}.${cls}.jsonl`);
     fs.writeFileSync(file, rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
     summary.classes[cls] = summarize(group, cls, rows, counts);
     console.error(`part 4 ${group} ${cls}: ${rows.length} encounters (${counts.noPrimary} without a primary, ${counts.noSecondary} without a secondary), ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   }
-  write(path.join(store, 'rows', `ca.${group}.json`), summary);
+  write(path.join(store, 'rows', `ca.${label}.json`), summary);
   await ca.destroy?.();
   process.exit(0);
 }
