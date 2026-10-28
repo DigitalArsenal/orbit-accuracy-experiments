@@ -155,6 +155,38 @@ if (phase === 'iss-terms') {
   }
   await pairs.close();
 }
+if (phase === 'iss-screen') {
+  // PLAN.md 3.7, ISS: a window is excluded when a header-listed burn lies in [start of file k, E + 72 h] (B2's windowOf) or when two
+  // overlapping NASA files differ radially by more than 0.5 km at a common epoch in that span (hourly epochs, pair_statistics radial
+  // component of file j' minus file j in j's RTN axes). Truth against truth only: no FFM error is read. Rows: rows/iss-screen.s<k>.jsonl.
+  const { parseIssOem } = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/iss-oem.mjs'));
+  const { openPairs } = await import('./lib/pairs.mjs');
+  const pairs = await openPairs(B2C.a12.modulesLinks);
+  const fits = new Map(issFitRows().filter((r) => r.fit?.ok).map((r) => [r.file, r]));
+  const out = path.join(rowsDir, `iss-screen.s${k}.jsonl`);
+  const done = new Set(readJsonl(out).map((r) => r.file));
+  const cache = new Map();
+  const statesOf = (j) => { if (!cache.has(j)) { if (cache.size > 16) cache.delete(cache.keys().next().value); opened.add(W.headers[j].file, 'ISS OEM'); cache.set(j, new Map(parseIssOem(fs.readFileSync(W.headers[j].file, 'utf8')).states.map((x) => [x.ms, x]))); } return cache.get(j); };
+  const starts = W.headers.map((h) => h.header.startMs);
+  for (let i = 0; i < W.headers.length; i += 1) {
+    const f = fits.get(W.headers[i].date);
+    if (!f || i % n !== k || done.has(f.file)) continue;
+    const start = starts[i], E = Date.parse(f.E), end = E + 72 * HOUR;
+    const files = starts.map((s0, j) => ({ s0, j })).filter(({ s0, j }) => j === i || (s0 > start && s0 <= end)).sort((a, b) => a.s0 - b.s0).map((x) => x.j);
+    let maxRadialKm = 0, compared = 0;
+    for (let a = 0; a < files.length; a += 1) for (let b = a + 1; b < files.length; b += 1) {
+      const A = statesOf(files[a]), Bm = statesOf(files[b]);
+      const common = [...A.keys()].filter((t) => t >= Math.max(start, starts[files[b]]) && t <= end && t % HOUR === 0 && Bm.has(t));
+      if (!common.length) continue;
+      const st = await pairs.stats(common.map((t) => ({ predicted: { position: Bm.get(t).r.map((x) => x * 1000), velocity: Bm.get(t).v.map((x) => x * 1000), covariance: [1, 0, 1, 0, 0, 1], covarianceAxes: 'RTN' }, truth: { position: A.get(t).r.map((x) => x * 1000), velocity: A.get(t).v.map((x) => x * 1000) } })), 'truth');
+      for (const x of st) maxRadialKm = Math.max(maxRadialKm, Math.abs(x.errorRtn[0]) / 1000);
+      compared += common.length;
+    }
+    fs.appendFileSync(out, `${JSON.stringify({ file: f.file, E: f.E, set: f.set, files: files.map((j) => W.headers[j].date), compared, maxRadialKm, excluded: maxRadialKm > 0.5 })}\n`);
+  }
+  await pairs.close();
+}
+
 if (phase === 'lp-terms') {
   // Class L-P (C2-A3 point 2): FFM fitted to the NSGF positions of a type L sphere, E6 R's parameterization, cutoffs every 24 h on type L's
   // splits; then the terms at each lead (truth: every NSGF arc, its stated sigma kept for the C2-A1 truth covariance).
