@@ -25,7 +25,7 @@ function generator(label) { // xorshift128+ (23, 17, 26), seeded by SHA-256 of t
     return ((bh + yh + carry) >>> 0) / 4294967296;
   };
 }
-function interval(items, label, clustered) {
+export function interval(items, label, clustered) {
   if (items.length < 2) return null;
   const next = generator(label), medians = [];
   for (let r = 0; r < B.resamples; r += 1) {
