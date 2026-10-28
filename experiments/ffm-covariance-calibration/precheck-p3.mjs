@@ -43,6 +43,14 @@ if (args.summary) {
     plan: '3.8 P3 (empirical step); C2-A1 point 3; D6', question: 'does the type L along-track bias (+4.0 to +5.65 m) survive a fit to the NSGF orbit itself?',
     design: { spheres: SPHERES, cutoffs: 'every second day, 2025-10-03 to 2026-03-31 (R2 calibration period)', arcs: 'NSGF arcs with statedSigmaM <= 0.3 m only', fit: 'harness/ffm-fit-v3.mjs, one round, 10 m per axis, POSITION_VECTOR GCRF, 24 h at 10 min; state + DRAG_AREA_OVER_MASS (seed E6 b, a priori 30 %), AGOM fixed at E6; a priori 1e5 m, 10 m/s; tolerance 0.01, edit 5, at most 40 evaluations', forces: B2C.part1.starlink.ffm.forces, integrator: B2C.part1.starlink.ffm.integrator, leadToleranceSeconds: B2C.a5.ca.leadToleranceSeconds.laser, modules: { links: B2C.a12.modulesLinks, estimation: B2C.a12.estimation, ffm: B2C.a12.ffm } },
     normalPointBiasInSample_m: ref, perSphere: per,
+    timeScaleTrace: {
+      nsgfSp3: 'nsgf.orb.lares.260218.v000.sp3.gz (SHA-256 f75ba3b0..., equal to the archive index): header "%c L  cc UTC": UTC; analysis/reference-states writes the $OEM in UTC (index comment), read as UTC',
+      normalPoints: 'CRD v2 (lares_202607.np2): H2 epoch time-scale field 7 (UTC); H4 range type 2 (two-way), station system delay applied 1, troposphere 0, CoM 0; record 11 epoch event 2 (transmit): E6 slr.mjs bounce = t + tof/2 (event 0: t - tof/2; 1: t)',
+      ffmSamples: 'harness/ffm-execution.mjs: EPOCH_TIME_SYSTEM UTC, TARGET_EPOCH and SAMPLE_EPOCHS instant(..., UTC)',
+      rangeModel: 'E6 step 12: one-way range c tof / 2 at the bounce instant against the station GCRF position at that instant (analysis/association, light_time false); E6 fit flags 3; for a two-way range the station-motion terms of the up and down legs cancel to first order',
+      stationCoordinates: 'weekly ILRS SINEX (ilrsa.pos+eop), SITE/ECCENTRICITY all XYZ (21 sites in 260725) and applied by E6 slr.mjs parseSinex',
+    },
+    outcome: 'DEFECT SUSPECTED IN THE NORMAL-POINT PATH (D6: stop and report): fitted to the NSGF orbit itself, FFM shows no common along-track bias (LARES mean T -0.05 to +0.26 m at 1-24 h over 68 windows, Starlette -0.16 to +0.20 m over 44, against +4.0 and +4.8 m on B2 part 2\'s normal-point fits); every time label traced is UTC and consistent. The bias therefore sits in E6 R\'s normal-point fit (its measurement model or inputs), not in propagator/ffm and not in the NSGF truth; its root cause is not located.',
   }, opened));
   process.exit(0);
 }
