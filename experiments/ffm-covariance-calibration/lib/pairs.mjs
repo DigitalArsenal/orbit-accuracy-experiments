@@ -9,10 +9,13 @@ export async function openPairs(modules) {
   return {
     provenance: b.provenance,
     /** pairs [{ predicted: {position, velocity (km, km/s), covariance | covarianceTerms, covarianceAxes}, truth: {position, velocity, covariance?, covarianceAxes?} }] */
-    async stats(pairs) {
+    async stats(pairs, axesFrom = 'truth') {
       const framed = pairs.map((p, i) => ({ id: String(i), ...p }));
-      return b.erm.decode((await b.gem.call('pair_statistics', [b.erm.frame('pairs', 'pairs', { axesFrom: 'truth', pairs: framed })])).statistics).pairs;
+      return b.erm.decode((await b.gem.call('pair_statistics', [b.erm.frame('pairs', 'pairs', { axesFrom, pairs: framed })])).statistics).pairs;
     },
+    /** noise_responses (request -> responses) and dcp_covariance (request -> dcp) by the module's typed frames. */
+    async noise(request) { const out = await b.gem.call('noise_responses', [b.erm.frame('request', 'noise', request)]); return b.erm.decode(out.responses); },
+    async dcp(request) { const out = await b.gem.call('dcp_covariance', [b.erm.frame('request', 'dcp', request)]); return b.erm.decode(out.dcp); },
     close: () => b.close(),
   };
 }
