@@ -1,0 +1,337 @@
+{
+  "experiment": "ffm-covariance-calibration",
+  "id": "C2",
+  "frozen": false,
+  "frozenNote": "DRAFT, not frozen: open questions Q1-Q6 to the coordinator (lane report 2026-10-28). Freezes before any calibration fit.",
+  "store": "/opt/data/sdn-archive/ffm-covariance-calibration",
+  "workers": 12,
+  "model": {
+    "terms": [
+      "A",
+      "floorRTN",
+      "U_T",
+      "U_RN",
+      "D"
+    ],
+    "fitted": {
+      "k_e": {
+        "min": 0,
+        "exclusiveMin": true
+      },
+      "f_R_m": {
+        "min": 0
+      },
+      "f_T_m": {
+        "min": 0
+      },
+      "f_N_m": {
+        "min": 0
+      },
+      "q_T_m2s3": {
+        "min": 0
+      },
+      "q_RN_m2s3": {
+        "min": 0,
+        "sharedAxes": [
+          "R",
+          "N"
+        ]
+      },
+      "sigma_delta": {
+        "min": 0,
+        "meaning": "error in ln(B*rho) per lead day"
+      },
+      "tau_d_days": {
+        "choices": [
+          1,
+          "inf"
+        ],
+        "chosenOn": "validation"
+      }
+    },
+    "m2c": {
+      "classes": [
+        "L"
+      ],
+      "perPassRangeBiasSigma_m": [
+        1,
+        2,
+        4
+      ],
+      "replaces": "k_e"
+    },
+    "starlinkAddOn": {
+      "q_S_m2s3": [
+        0,
+        1e-10,
+        1e-09
+      ]
+    },
+    "noiseStep_s": 600,
+    "noiseStart": "E",
+    "dcpLeadDays": 3,
+    "leads_h": [
+      1,
+      6,
+      12,
+      24,
+      48,
+      72
+    ],
+    "positionBlock": 3,
+    "chi2_3_95": 7.8147
+  },
+  "candidates": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M2c"
+  ],
+  "candidateTerms": {
+    "M0": "A5 (k_e = 1, all else 0)",
+    "M1": "k_e + floor",
+    "M2": "M1 + white noise (q_T, q_RN)",
+    "M3": "M2 + density term (sigma_delta, tau_d)",
+    "M2c": "type L only: per-pass range-bias consider (sigma_b) replaces k_e"
+  },
+  "fitLoss": "sum over six lead cells of (ln mean d2/3)^2 + ((coverage - 0.95)/0.02)^2, after a Gaussian likelihood start",
+  "choice": [
+    "most cells in band",
+    "smaller band loss",
+    "fewer parameters"
+  ],
+  "band": {
+    "meanD2over3": [
+      0.8,
+      1.25
+    ],
+    "coverage95": [
+      0.93,
+      0.97
+    ],
+    "minWindows": 100,
+    "minClusters": 3,
+    "issMin30DayBlocks": 6
+  },
+  "classes": {
+    "R1": {
+      "perigee_km": [
+        0,
+        600
+      ],
+      "weather": [
+        "M",
+        "O'"
+      ],
+      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; profile named by B2 A12 part 2"
+    },
+    "R2": {
+      "perigee_km": [
+        600,
+        2000
+      ],
+      "weather": [
+        "M",
+        "O'"
+      ],
+      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; profile named by B2 A12 part 2"
+    },
+    "R3": {
+      "perigee_km": [
+        2000,
+        35000
+      ],
+      "weather": [
+        "M"
+      ],
+      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; state + AGOM"
+    },
+    "I": {
+      "objects": [
+        "ISS"
+      ],
+      "weather": [
+        "M"
+      ],
+      "fit": "harness/ffm-fit-v3.mjs, one round at 10 m, GCRF; A5's seeds and priors",
+      "inSampleSeen": true
+    },
+    "L": {
+      "objects": [
+        "LARES",
+        "Starlette",
+        "Stella",
+        "LARETS",
+        "WESTPAC"
+      ],
+      "weather": [
+        "M"
+      ],
+      "fit": "E6 R steps unchanged",
+      "heldOutInSampleSeen": true
+    },
+    "S": {
+      "transferFrom": "R1/O'",
+      "validation": "A12 pre-F E' windows (24 h), V2 excluded, validation only",
+      "heldOut": "part 1a truth via A13 part 3"
+    }
+  },
+  "precise": {
+    "fitArc_h": 24,
+    "spacing_s": 600,
+    "sigma_m": 10
+  },
+  "split": {
+    "calibration": {
+      "objects": {
+        "R1": [
+          "Swarm A+C (one cluster)",
+          "Swarm B",
+          "GRACE-FO 1+2 (one cluster)",
+          "COSMIC-2 x4 (P9)"
+        ],
+        "R2": [
+          "Sentinel-1A",
+          "Sentinel-1C",
+          "Ajisai",
+          "LARES",
+          "LARETS",
+          "Starlette",
+          "WESTPAC"
+        ],
+        "R3": [
+          "LAGEOS-2",
+          "LARES-2",
+          "Etalon-1",
+          "Etalon-2",
+          "GPS x8 (P9)",
+          "GLONASS x4 (P9)"
+        ]
+      },
+      "cutoffs": {
+        "from": "2025-10-03",
+        "to": "2026-03-31",
+        "everyDays": 2
+      }
+    },
+    "validation": {
+      "cutoffs": {
+        "from": "2026-04-01",
+        "to": "2026-05-31",
+        "everyDays": "OPEN Q4"
+      }
+    },
+    "heldOutObject": {
+      "R1": [
+        "TerraSAR-X",
+        "COSMIC-2 x2 (P9)"
+      ],
+      "R2": [
+        "Stella",
+        "Sentinel-1D"
+      ],
+      "R3": [
+        "LAGEOS-1",
+        "Galileo x6 (P9)"
+      ],
+      "dates": "all"
+    },
+    "heldOutTime": {
+      "from": "2026-06-01",
+      "to": "end of each product"
+    },
+    "I": {
+      "calibration": [
+        "2020-09-01",
+        "2023-12-31"
+      ],
+      "validation": [
+        "2024-01-01",
+        "2024-12-31"
+      ],
+      "heldOut": [
+        "2025-01-01",
+        "2026-10-31"
+      ]
+    },
+    "L": {
+      "calibration": [
+        "2026-06-03",
+        "2026-06-27"
+      ],
+      "validation": [
+        "2026-06-28",
+        "2026-07-15"
+      ],
+      "heldOut": [
+        "2026-07-16",
+        "2026-08-30"
+      ]
+    },
+    "sampleSelectionSeed": "OPEN Q3"
+  },
+  "common": {
+    "integrator": "RK78",
+    "relativeTolerance": 1e-10,
+    "maxStep_s": 120,
+    "ffm": "2.0.0 from modules c860a072 (P5)",
+    "forces": "B2's"
+  },
+  "exclusions": {
+    "issManeuver": "header-listed burn, or radial difference > 0.5 km between overlapping NASA files in [start of file k, E + 72 h]",
+    "preciseManeuver_dv_mm_s": 1,
+    "preciseManeuverSpan_h": [
+      -24,
+      72
+    ],
+    "starlink": "part 1a's registered flag, reported apart",
+    "truthAnomalies": "existing ledger incl. Etalon zero-X states",
+    "truthCoverage": 0.9
+  },
+  "prechecks": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "precheckThresholds": {
+    "P1": {
+      "refusals": 0,
+      "convergedMin": 0.999
+    },
+    "P2": {
+      "nsgfOverlapRms_m": 0.3
+    },
+    "P5": {
+      "statesIdentical": true,
+      "windows": 5
+    },
+    "P6": {
+      "sigmaTolerance": 0.001
+    },
+    "P8": {
+      "shape": [
+        0.8,
+        1.25
+      ]
+    },
+    "P13": {
+      "relative": 1e-06
+    }
+  },
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": "OPEN Q5",
+    "unit": "cluster"
+  }
+}
