@@ -27,12 +27,13 @@ function encode(arm, value, size = 1 << 16) {
 
 // request: {epoch (ISO UTC), state [m, m/s] GCRF, samples [ISO UTC],
 //   forces {degree, order, thirdBodies [NAIF], srp, drag, atmosphere ('JB2008' | 'NRLMSISE00'), solidTides, relativity ('IERS_2010' | ...)},
-//   parameters [{kind, value}], fixed {b, agom}, stm (bool), covariance [(6+p)^2] | null,
+//   parameters [{kind, value}], fixed {b, agom, t}, stm (bool), covariance [(6+p)^2] | null,
 //   noise {q [3] m^2/s^3 RTN, intervalSeconds} | null, integrator {tolerance, maxStep}}
 export function executionFrame(request) {
   const f = request.forces, it = request.integrator;
   const value = (kind, fallback) => request.parameters.find((p) => p.kind === kind)?.value ?? fallback;
   const n = 6 + request.parameters.length;
+  const inTrack = value('IN_TRACK_ACCELERATION', request.fixed?.t);
   const forces = table('PRWForceConfiguration', {
     GRAVITY_CHOICE: P.prwGravitySelection.SPHERICAL_HARMONICS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
     ENABLE_J2: false, ENABLE_J3: false, ENABLE_J4: false, ENABLE_HIGHER_ZONALS: false,
@@ -42,6 +43,8 @@ export function executionFrame(request) {
     INITIAL_MASS_KG: 1, AREA_M2: 1,
     REFLECTIVITY_COEFFICIENT: value('SRP_AREA_OVER_MASS', request.fixed?.agom ?? 0),
     DRAG_COEFFICIENT: value('DRAG_AREA_OVER_MASS', request.fixed?.b ?? 0),
+    // The in-track acceleration T (m/s^2), estimated or fixed: propagator/ffm reads it only when HAS_ is set.
+    ...(inTrack === undefined ? {} : { HAS_IN_TRACK_ACCELERATION_M_S2: true, IN_TRACK_ACCELERATION_M_S2: inTrack }),
     ATMOSPHERE_MODEL: P.prwAtmosphereFamily[f.atmosphere ?? 'NRLMSISE00'],
     EPHEMERIS_SOURCE: 'JPL_SPK',
     SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
