@@ -1,0 +1,217 @@
+{
+ "receipt": "seeds-R1R2",
+ "createdUtc": "2026-10-28T23:30:51.856Z",
+ "experimentsCommit": "a703cd9178e675cf184bfdd763817e11c00e2195",
+ "plan": "C2-A4 point 3 (Q18)",
+ "rule": "P0 structure; B = A/m x Cd 2.2, AGOM = A/m x Cr 1.3, a priori sigma 30 % of each seed, both bounded to [0, inf); seeds per object, not Starlink's",
+ "objects": [
+  {
+   "name": "Swarm A",
+   "norad": 39452,
+   "area": 1.275,
+   "arithmetic": "1.5 m x 0.85 m (width x height: the flight-direction face of the 9.1 m long body)",
+   "mass": 473,
+   "source": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/Swarm/Facts_and_figures",
+   "quoted": "Each satellite is 9.1 m long (including a 4-m deployable boom), 1.5 m wide and 0.85 m high; weighs 473 kg at launch (including 106 kg of Freon propellant)",
+   "areaM2": 1.275,
+   "areaOverMassM2kg": 0.00269556,
+   "agomSeed": 0.00350423,
+   "bSeed": 0.00593023
+  },
+  {
+   "name": "Swarm B",
+   "norad": 39451,
+   "area": 1.275,
+   "arithmetic": "1.5 m x 0.85 m (width x height: the flight-direction face of the 9.1 m long body)",
+   "mass": 473,
+   "source": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/Swarm/Facts_and_figures",
+   "quoted": "Each satellite is 9.1 m long (including a 4-m deployable boom), 1.5 m wide and 0.85 m high; weighs 473 kg at launch (including 106 kg of Freon propellant)",
+   "areaM2": 1.275,
+   "areaOverMassM2kg": 0.00269556,
+   "agomSeed": 0.00350423,
+   "bSeed": 0.00593023
+  },
+  {
+   "name": "Swarm C",
+   "norad": 39453,
+   "area": 1.275,
+   "arithmetic": "1.5 m x 0.85 m (width x height: the flight-direction face of the 9.1 m long body)",
+   "mass": 473,
+   "source": "https://www.esa.int/Applications/Observing_the_Earth/FutureEO/Swarm/Facts_and_figures",
+   "quoted": "Each satellite is 9.1 m long (including a 4-m deployable boom), 1.5 m wide and 0.85 m high; weighs 473 kg at launch (including 106 kg of Freon propellant)",
+   "areaM2": 1.275,
+   "areaOverMassM2kg": 0.00269556,
+   "agomSeed": 0.00350423,
+   "bSeed": 0.00593023
+  },
+  {
+   "name": "Sentinel-1A",
+   "norad": 39634,
+   "area": 10,
+   "arithmetic": "2.5 m x 4 m (width x height of the body; the 2 x 10 m solar arrays and the 12 m antenna not included (widths not stated))",
+   "mass": 2185,
+   "source": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures",
+   "quoted": "Satellite: 21 m long, 2.5 m wide, 4 m high with 2x10 m-long solar arrays and a 12 m-long radar antenna; Mass: 2185 kg",
+   "areaM2": 10,
+   "areaOverMassM2kg": 0.00457666,
+   "agomSeed": 0.00594966,
+   "bSeed": 0.0100686
+  },
+  {
+   "name": "Sentinel-1C",
+   "norad": 62261,
+   "area": 10,
+   "arithmetic": "2.5 m x 4 m (width x height of the body; the 2 x 10 m solar arrays and the 12 m antenna not included (widths not stated))",
+   "mass": 2185,
+   "source": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures",
+   "quoted": "Satellite: 21 m long, 2.5 m wide, 4 m high with 2x10 m-long solar arrays and a 12 m-long radar antenna; Mass: 2185 kg",
+   "areaM2": 10,
+   "areaOverMassM2kg": 0.00457666,
+   "agomSeed": 0.00594966,
+   "bSeed": 0.0100686
+  },
+  {
+   "name": "Sentinel-1D",
+   "norad": 66315,
+   "area": 10,
+   "arithmetic": "2.5 m x 4 m (width x height of the body; the 2 x 10 m solar arrays and the 12 m antenna not included (widths not stated))",
+   "mass": 2185,
+   "source": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Facts_and_figures",
+   "quoted": "Satellite: 21 m long, 2.5 m wide, 4 m high with 2x10 m-long solar arrays and a 12 m-long radar antenna; Mass: 2185 kg",
+   "areaM2": 10,
+   "areaOverMassM2kg": 0.00457666,
+   "agomSeed": 0.00594966,
+   "bSeed": 0.0100686
+  },
+  {
+   "name": "TerraSAR-X",
+   "norad": 31698,
+   "area": 4.523893421169302,
+   "arithmetic": "pi x (2.4 m / 2)^2: the end face of the 4.88 m x 2.4 m body",
+   "mass": 1230,
+   "source": "https://www.dlr.de/en/research-and-transfer/projects-and-missions/terrasar-x",
+   "quoted": "Length: 4.88 metres; Diameter: 2.4 metres; Launch mass: 1,230 kilograms",
+   "areaM2": 4.52389,
+   "areaOverMassM2kg": 0.00367796,
+   "agomSeed": 0.00478135,
+   "bSeed": 0.00809152
+  },
+  {
+   "name": "Ajisai",
+   "norad": 16908,
+   "area": 3.6305030103047047,
+   "arithmetic": "pi x 2.15 m^2 / 4",
+   "mass": 685,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/ajis_general.html",
+   "quoted": "RRA Diameter: 215 cm; Weight: 685 kg",
+   "areaM2": 3.6305,
+   "areaOverMassM2kg": 0.0053,
+   "agomSeed": 0.00689001,
+   "bSeed": 0.01166
+  },
+  {
+   "name": "LARES",
+   "norad": 38077,
+   "area": 0.1040621150575083,
+   "arithmetic": "pi x 0.364 m^2 / 4",
+   "mass": 386.8,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/lars_general.html",
+   "quoted": "Satellite Radius: 182 mm; Weight: 386.8 kg",
+   "areaM2": 0.104062,
+   "areaOverMassM2kg": 0.000269033,
+   "agomSeed": 0.000349743,
+   "bSeed": 0.000591873
+  },
+  {
+   "name": "LARETS",
+   "norad": 27944,
+   "area": 0.04523893421169302,
+   "arithmetic": "pi x 0.24 m^2 / 4",
+   "mass": 23.28,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/lare_general.html",
+   "quoted": "Satellite Diameter: 24 cm; Weight: 23.28 kg",
+   "areaM2": 0.0452389,
+   "areaOverMassM2kg": 0.00194325,
+   "agomSeed": 0.00252623,
+   "bSeed": 0.00427516
+  },
+  {
+   "name": "Starlette",
+   "norad": 7646,
+   "area": 0.04523893421169302,
+   "arithmetic": "pi x 0.24 m^2 / 4",
+   "mass": 47.5,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/star_general.html",
+   "quoted": "RRA Diameter: 24 cm; Weight: 47.5 kg",
+   "areaM2": 0.0452389,
+   "areaOverMassM2kg": 0.000952399,
+   "agomSeed": 0.00123812,
+   "bSeed": 0.00209528
+  },
+  {
+   "name": "Stella",
+   "norad": 22824,
+   "area": 0.04523893421169302,
+   "arithmetic": "pi x 0.24 m^2 / 4",
+   "mass": 48,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/star_general.html",
+   "quoted": "RRA Diameter: 24 cm; Weight: 48 kg",
+   "areaM2": 0.0452389,
+   "areaOverMassM2kg": 0.000942478,
+   "agomSeed": 0.00122522,
+   "bSeed": 0.00207345
+  },
+  {
+   "name": "WESTPAC",
+   "norad": 25398,
+   "area": 0.04523893421169302,
+   "arithmetic": "pi x 0.24 m^2 / 4",
+   "mass": 23,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/west_general.html",
+   "quoted": "RRA Diameter: 24 cm; Weight: 23 kg",
+   "areaM2": 0.0452389,
+   "areaOverMassM2kg": 0.00196691,
+   "agomSeed": 0.00255698,
+   "bSeed": 0.0043272
+  }
+ ],
+ "excluded": [
+  {
+   "name": "GRACE-FO 1",
+   "norad": 43476,
+   "reason": "no area, dimension or mass on the pages retrieved: gracefo.jpl.nasa.gov (fact sheet, home), podaac.jpl.nasa.gov/GRACE-FO, earth.esa.int/eogateway/missions/grace-fo, the ILRS grf1 page (reflector only); jpl.nasa.gov press kit HTTP 403; gfz.de GRACE-FO pages HTTP 404"
+  },
+  {
+   "name": "GRACE-FO 2",
+   "norad": 43477,
+   "reason": "no area, dimension or mass on the pages retrieved: gracefo.jpl.nasa.gov (fact sheet, home), podaac.jpl.nasa.gov/GRACE-FO, earth.esa.int/eogateway/missions/grace-fo, the ILRS grf1 page (reflector only); jpl.nasa.gov press kit HTTP 403; gfz.de GRACE-FO pages HTTP 404"
+  },
+  {
+   "name": "COSMIC-2 FM1",
+   "norad": 44349,
+   "reason": "no area, dimension or mass on cosmic.ucar.edu (COSMIC-2 pages) or nesdis.noaa.gov (COSMIC-2); NSPO page unreachable"
+  },
+  {
+   "name": "COSMIC-2 FM2",
+   "norad": 44351,
+   "reason": "no area, dimension or mass on cosmic.ucar.edu (COSMIC-2 pages) or nesdis.noaa.gov (COSMIC-2); NSPO page unreachable"
+  },
+  {
+   "name": "COSMIC-2 FM4",
+   "norad": 44350,
+   "reason": "no area, dimension or mass on cosmic.ucar.edu (COSMIC-2 pages) or nesdis.noaa.gov (COSMIC-2); NSPO page unreachable"
+  },
+  {
+   "name": "COSMIC-2 FM5",
+   "norad": 44358,
+   "reason": "no area, dimension or mass on cosmic.ucar.edu (COSMIC-2 pages) or nesdis.noaa.gov (COSMIC-2); NSPO page unreachable"
+  },
+  {
+   "name": "COSMIC-2 FM6",
+   "norad": 44353,
+   "reason": "no area, dimension or mass on cosmic.ucar.edu (COSMIC-2 pages) or nesdis.noaa.gov (COSMIC-2); NSPO page unreachable"
+  }
+ ],
+ "disclosure": "GRACE-FO 1/2 and the 5 COSMIC-2 satellites are left out of R1: no public dimension retrieved. R1 calibration keeps Swarm A+C and Swarm B (2 independent clusters, below the 3-cluster rule); R1 held out by object keeps TerraSAR-X only",
+ "opened": null
+}

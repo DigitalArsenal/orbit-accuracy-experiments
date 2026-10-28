@@ -1,7 +1,7 @@
 {
  "receipt": "heldout-LP",
- "createdUtc": "2026-10-28T23:24:09.092Z",
- "experimentsCommit": "48b9abb31e8355a3eb87c66be5d919470d9d995c",
+ "createdUtc": "2026-10-28T23:30:53.786Z",
+ "experimentsCommit": "a703cd9178e675cf184bfdd763817e11c00e2195",
  "class": "LP",
  "variants": {
   "LP/primary": {
@@ -21,7 +21,7 @@
     "excluded": {
      "fit track 120/145 states (< 90 %)": 1,
      "fit track 115/145 states (< 90 %)": 1,
-     "fit CONVERGED": 2,
+     "fit converged, no truth at any lead": 2,
      "fit track 125/145 states (< 90 %)": 3,
      "fit track 129/145 states (< 90 %)": 2,
      "fit track 109/145 states (< 90 %)": 1,
@@ -214,7 +214,7 @@
      "sensitivity: fit-track arc above 0.3 m": 105,
      "fit track 120/145 states (< 90 %)": 1,
      "fit track 115/145 states (< 90 %)": 1,
-     "fit CONVERGED": 2,
+     "fit converged, no truth at any lead": 2,
      "fit track 125/145 states (< 90 %)": 3,
      "fit track 129/145 states (< 90 %)": 2,
      "fit track 109/145 states (< 90 %)": 1,
