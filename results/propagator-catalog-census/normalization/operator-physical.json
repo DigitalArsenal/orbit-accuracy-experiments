@@ -1,0 +1,310 @@
+{
+  "physicalId": "b99a7b63289929454aaa59f3119279cd6e4e36e828d07f7897d7708a6fe2f174",
+  "verdict": "PASS_NORMALIZATION_CONTRACT",
+  "resources": 11771,
+  "states": 2238256,
+  "covariances": 2181645,
+  "covarianceComponents": 78539220,
+  "sources": {
+    "spacex-starlink": {
+      "resources": 11163,
+      "statuses": {
+        "converted_all_objects": 11161,
+        "object_gaps_retained": 2
+      },
+      "objects": {
+        "selected_states_converted": 11161,
+        "coverage_gap": 2
+      },
+      "states": 2154171,
+      "covariances": 2154171,
+      "covarianceStatuses": {
+        "native_gcrf_full_matrix": 2154171
+      },
+      "fitAvailable": 11162,
+      "leads": {
+        "1": 11161,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "eutelsat-oneweb": {
+      "resources": 1,
+      "statuses": {
+        "source_limitation_retained": 1
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "planet": {
+      "resources": 116,
+      "statuses": {
+        "converted_all_objects": 114,
+        "source_limitation_retained": 2
+      },
+      "objects": {
+        "selected_states_converted": 114
+      },
+      "states": 27474,
+      "covariances": 27474,
+      "covarianceStatuses": {
+        "native_gcrf_full_matrix": 27474
+      },
+      "fitAvailable": 114,
+      "leads": {
+        "1": 114,
+        "3": 114,
+        "7": 0
+      },
+      "unresolvedIdentity": 3,
+      "provisionalIdentity": 114
+    },
+    "iss": {
+      "resources": 1,
+      "statuses": {
+        "object_gaps_retained": 1
+      },
+      "objects": {
+        "coverage_gap": 1
+      },
+      "states": 73,
+      "covariances": 0,
+      "covarianceStatuses": {
+        "source_unavailable": 73
+      },
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 1,
+      "provisionalIdentity": 0
+    },
+    "ses": {
+      "resources": 41,
+      "statuses": {
+        "converted_all_objects": 40,
+        "source_limitation_retained": 1
+      },
+      "objects": {
+        "selected_states_converted": 40
+      },
+      "states": 9784,
+      "covariances": 0,
+      "covarianceStatuses": {
+        "source_unavailable": 9784
+      },
+      "fitAvailable": 40,
+      "leads": {
+        "1": 40,
+        "3": 40,
+        "7": 3
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "intelsat": {
+      "resources": 258,
+      "statuses": {
+        "source_limitation_retained": 64,
+        "converted_all_objects": 194
+      },
+      "objects": {
+        "selected_states_converted": 194
+      },
+      "states": 46754,
+      "covariances": 0,
+      "covarianceStatuses": {
+        "source_unavailable": 46754
+      },
+      "fitAvailable": 194,
+      "leads": {
+        "1": 194,
+        "3": 194,
+        "7": 0
+      },
+      "unresolvedIdentity": 194,
+      "provisionalIdentity": 0
+    },
+    "telesat": {
+      "resources": 12,
+      "statuses": {
+        "source_limitation_retained": 12
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "css-tiangong": {
+      "resources": 1,
+      "statuses": {
+        "source_limitation_retained": 1
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "gps-precise": {
+      "resources": 40,
+      "statuses": {
+        "separate_sp3_physical_run": 40
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "glonass-precise": {
+      "resources": 45,
+      "statuses": {
+        "separate_sp3_physical_run": 45
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "esa-pod": {
+      "resources": 49,
+      "statuses": {
+        "separate_sp3_physical_run": 49
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "eumetsat": {
+      "resources": 10,
+      "statuses": {
+        "source_limitation_retained": 10
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    },
+    "cpf": {
+      "resources": 34,
+      "statuses": {
+        "source_limitation_retained": 34
+      },
+      "objects": {},
+      "states": 0,
+      "covariances": 0,
+      "covarianceStatuses": {},
+      "fitAvailable": 0,
+      "leads": {
+        "1": 0,
+        "3": 0,
+        "7": 0
+      },
+      "unresolvedIdentity": 0,
+      "provisionalIdentity": 0
+    }
+  },
+  "replayed": [
+    {
+      "source": "spacex-starlink",
+      "key": "ae1fa63b14f1b528e895812c8554e37b4242447a78324e53a5b24f5ee0a03f03",
+      "status": "selected_states_converted",
+      "states": 193
+    },
+    {
+      "source": "spacex-starlink",
+      "key": "b51780e438c5c1ec92467e360020d11163f876d1d2249079ddfc70158e322b41",
+      "status": "coverage_gap",
+      "states": 145
+    },
+    {
+      "source": "planet",
+      "key": "063e0de66f558dd7b70ea589e888c80f3bf2d938208b503d785a0bca7c812bbf",
+      "status": "selected_states_converted",
+      "states": 241
+    },
+    {
+      "source": "iss",
+      "key": "8383247b2379dc0d2a9490497cd409bd61814550a03e5bf1504bed8b7ad4f677",
+      "status": "coverage_gap",
+      "states": 73
+    },
+    {
+      "source": "ses",
+      "key": "47aba5dc8e587538d0a60a572bc6102f9575bbbcd827754d1bfc1fbfe6ee429f",
+      "status": "selected_states_converted",
+      "states": 241
+    },
+    {
+      "source": "intelsat",
+      "key": "c7fe762eea8cb6e5f7f852c2635b1da184e5676b30d8bf6ed8edd32990c6de2c",
+      "status": "selected_states_converted",
+      "states": 241
+    }
+  ],
+  "outcomeHashesSha256": "21f9ecb84b6dd755dd6668997e6185b0ad094792d130a26096dd8d24398a4c8c",
+  "verificationSourceSha256": "4b0daab0e728ac40c39d725ed724c9a247c7986893ef4f521b061c41eaf257e3",
+  "scientificAdmission": "Not an accuracy, empirical calibration or collision-risk pass. Retained gaps and provisional identities remain explicit."
+}
