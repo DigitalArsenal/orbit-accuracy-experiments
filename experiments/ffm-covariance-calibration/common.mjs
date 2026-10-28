@@ -37,6 +37,22 @@ export class Opened {
   }
   read(file, label) { return fs.readFileSync(this.add(file, label)); }
   list() { return [...this.paths.entries()].map(([p, label]) => ({ path: p, label })).sort((a, b) => a.path.localeCompare(b.path)); }
+  /** The log for a receipt: per directory group (the path up to its product directory) the count and label, and the SHA-256 of the full
+   *  sorted list, which is written in full to <store>/opened/<receipt>.json (local, not committed). */
+  summary(name) {
+    const list = this.list();
+    const groups = new Map();
+    for (const { path: p, label } of list) {
+      const g = p.replace(/\/(?:[^/]*\d{4,}[^/]*)(?:\/.*)?$/, '/*').replace(/\/[^/]+\.(json|oem|gz|np2|txt|jsonl)$/, '/*');
+      const e = groups.get(g) ?? { group: g, files: 0, labels: new Set() };
+      e.files += 1; e.labels.add(label); groups.set(g, e);
+    }
+    const full = JSON.stringify(list);
+    const file = path.join(store, 'opened', `${name}.json`);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, full);
+    return { files: list.length, sha256: sha256(full), fullList: file, groups: [...groups.values()].map((e) => ({ group: e.group, files: e.files, labels: [...e.labels] })) };
+  }
 }
 
 export function gitHead() { return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root }).toString().trim(); }
@@ -44,7 +60,7 @@ export function gitHead() { return execFileSync('git', ['rev-parse', 'HEAD'], { 
 /** A receipt under results/ffm-covariance-calibration/: the value, the experiments commit and the integrity log. */
 export function writeReceipt(name, value, opened) {
   fs.mkdirSync(results, { recursive: true });
-  const body = { receipt: name, createdUtc: new Date().toISOString(), experimentsCommit: gitHead(), ...value, opened: opened ? opened.list() : [] };
+  const body = { receipt: name, createdUtc: new Date().toISOString(), experimentsCommit: gitHead(), ...value, opened: opened ? opened.summary(name) : null };
   const file = path.join(results, `${name}.json`);
   fs.writeFileSync(file, `${JSON.stringify(body, null, 1)}\n`);
   return file;
