@@ -41,6 +41,17 @@ function samples(set) {
       counts.windows += 1;
       for (const l of r.leads) { if (sens && l.truthSigmaM > 0.3) continue; out.push({ L: l.L, err: l.errRtnM, terms: l.terms, truthSigma: sens ? null : l.truthSigmaM, cluster: r.norad, window: `${r.sphere}|${r.E}` }); }
     }
+  } else if (['R1', 'R2', 'R3'].includes(cls)) {
+    const allSamples = args.allSamples === 'true';
+    for (const r of rowsOf(`${cls}.${set}.`)) {
+      if (r.excluded || !r.fit?.ok) { ex(r.excluded ? r.excluded.slice(0, 60) : `fit ${r.fit?.termination ?? r.fit?.error}`); continue; }
+      if (!r.leads?.length) { ex('fit converged, no truth at any lead'); continue; }
+      if (!allSamples && r.screen?.flagged) { ex('maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)'); continue; }
+      if (!allSamples && r.screen?.failed) { ex('maneuver screen: truth fit not converged'); continue; }
+      counts.windows += 1;
+      const nsgf = cls === 'R2' && r.trackMaxSigmaM > 0 && /^(16908|38077|27944|7646|25398|22824)$/.test(String(r.norad));
+      for (const l of r.leads) out.push({ L: l.L, err: l.errRtnM, terms: l.terms, truthSigma: nsgf ? l.truthSigmaM : null, cluster: r.cluster, window: `${r.norad}|${r.E}` });
+    }
   } else throw new Error(`class ${cls}: rows not built yet`);
   return { out, counts };
 }
