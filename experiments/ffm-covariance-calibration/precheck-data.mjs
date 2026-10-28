@@ -14,6 +14,7 @@ import { rng } from '../../harness/stats.mjs';
 frozen();
 const opened = new Opened();
 const S = config.split;
+const A1 = JSON.parse(opened.read(new URL('./amendments.json', import.meta.url).pathname, 'amendments'))['C2-A1'];
 
 // ── the spans of every object in every reference root (index.json only) ──
 const spans = new Map(); // norad -> [{start, stop, product, system, root}]
@@ -32,11 +33,11 @@ for (const r of REFERENCE_ROOTS) {
 }
 for (const l of spans.values()) l.sort((a, b) => a.start - b.start);
 
-/** Whether the spans of `list` cover [a, b] with no hole longer than `gap` ms. */
-function covers(list, a, b, gap = 30 * 60e3) {
-  let t = a;
-  for (const s of list) { if (s.stop < t) continue; if (s.start > t + gap) return false; t = Math.max(t, s.stop); if (t >= b) return true; }
-  return t >= b;
+/** Whether the union of the spans of `list` covers at least 90 % of [a, b] (section 3.7's coverage rule, at span level). */
+function covers(list, a, b, minFraction = 0.9) {
+  let t = a, held = 0;
+  for (const s of list) { if (s.stop <= t) continue; if (s.start >= b) break; const lo = Math.max(t, s.start), hi = Math.min(b, s.stop); if (hi > lo) { held += hi - lo; t = hi; } }
+  return held / (b - a) >= minFraction;
 }
 const cutoffs = (from, to, everyDays = 2) => { const out = []; for (let t = Date.parse(`${from}T00:00:00Z`); t <= Date.parse(`${to}T00:00:00Z`); t += everyDays * DAY) out.push(t); return out; };
 const CAL = cutoffs(S.calibration.cutoffs.from, S.calibration.cutoffs.to, S.calibration.cutoffs.everyDays);
@@ -55,15 +56,15 @@ for (const [cls, system] of [['GPS', 'G'], ['GLONASS', 'R'], ['Galileo', 'E']]) 
   gnss[cls] = { truthProduct: 'ESA0OPSFIN (ESA final, one product per object)', satellites: all.length, withCoverage: all.filter((x) => x.coverage >= 0.9).map((x) => x.norad).sort((a, b) => a - b), coverage: Object.fromEntries(all.map((x) => [x.norad, Number(x.coverage.toFixed(4))])) };
 }
 const cosmicAll = [...spans].filter(([, l]) => l.some((s) => s.product.startsWith('leoOrb'))).map(([n, l]) => ({ norad: n, coverage: dayCoverage(l.filter((s) => s.product.startsWith('leoOrb'))) }));
-const cosmic = { truthProduct: 'UCAR COSMIC-2 leoOrb (reference-leo-pod-2)', satellites: cosmicAll.map((x) => x.norad).sort((a, b) => a - b), withCoverage: cosmicAll.filter((x) => x.coverage >= 0.9).map((x) => x.norad).sort((a, b) => a - b), coverage: Object.fromEntries(cosmicAll.map((x) => [x.norad, Number(x.coverage.toFixed(4))])) };
+const cosmic = { truthProduct: 'UCAR COSMIC-2 leoOrb (reference-leo-pod-2)', coverageMin: A1.cosmic2.dayCoverageMin, selection: A1.cosmic2.selection, satellites: cosmicAll.map((x) => x.norad).sort((a, b) => a - b), withCoverage: cosmicAll.filter((x) => x.coverage >= A1.cosmic2.dayCoverageMin).map((x) => x.norad).sort((a, b) => a - b), coverage: Object.fromEntries(cosmicAll.map((x) => [x.norad, Number(x.coverage.toFixed(4))])) };
 const counts = S.sampleSelection.counts;
 const sample = {
   GPS: pick('GPS', gnss.GPS.withCoverage, counts.calibration.GPS),
   GLONASS: pick('GLONASS', gnss.GLONASS.withCoverage, counts.calibration.GLONASS),
   Galileo: pick('Galileo', gnss.Galileo.withCoverage, counts.heldOutObject.Galileo),
-  'COSMIC-2': pick('COSMIC-2', cosmic.withCoverage, counts.calibration['COSMIC-2'] + counts.heldOutObject['COSMIC-2']),
+  'COSMIC-2': pick('cosmic2', cosmic.withCoverage, A1.cosmic2.calibration + A1.cosmic2.heldOutObject), // C2-A1 point 1
 };
-const cosmicNeeded = counts.calibration['COSMIC-2'] + counts.heldOutObject['COSMIC-2'];
+const cosmicNeeded = A1.cosmic2.calibration + A1.cosmic2.heldOutObject;
 
 // ── windows per object and set ──
 const objectsOf = {
@@ -85,7 +86,7 @@ for (const [cls, sets] of Object.entries(objectsOf)) for (const [set, names] of 
 sample.GPS.forEach((x) => row('R3', 'calibration', 'GPS', x.norad, 'ESA0OPSFIN'));
 sample.GLONASS.forEach((x) => row('R3', 'calibration', 'GLONASS', x.norad, 'ESA0OPSFIN'));
 sample.Galileo.forEach((x) => row('R3', 'heldOutObject', 'Galileo', x.norad, 'ESA0OPSFIN'));
-sample['COSMIC-2'].forEach((x, i) => row('R1', i < counts.calibration['COSMIC-2'] ? 'calibration' : 'heldOutObject', 'COSMIC-2', x.norad, 'leoOrb'));
+sample['COSMIC-2'].forEach((x, i) => row('R1', i < A1.cosmic2.calibration ? 'calibration' : 'heldOutObject', 'COSMIC-2', x.norad, 'leoOrb'));
 const totals = {};
 for (const r of perObject) for (const k of ['calibration', 'validation', 'heldOutTime', 'heldOutObject']) if (r[k] !== undefined) { totals[r.class] ??= {}; totals[r.class][k] = (totals[r.class][k] ?? 0) + r[k]; }
 const clusters = {};
@@ -95,11 +96,11 @@ const clusterCounts = Object.fromEntries(Object.entries(clusters).map(([c, v]) =
 const missing = perObject.filter((r) => !r.products.length).map((r) => `${r.name} (${r.norad}): no converted truth in the reference roots`);
 const p9 = {
   plan: '3.8 P9, 3.4',
-  rule: 'windows counted where the truth spans cover [E - 24 h, E + 72 h] with no hole over 30 min (the 90 % epoch rule is applied per window at run time); cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day',
+  rule: 'windows counted where the union of the truth spans covers at least 90 % of [E - 24 h, E + 72 h] (the 90 % epoch rule is applied per window at run time); cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day',
   gnss, cosmic, sample, perObject, totals, clusterCounts, missing,
   outcome: cosmic.withCoverage.length >= cosmicNeeded && !missing.length ? 'pass' : 'FAIL',
   failures: [
-    ...(cosmic.withCoverage.length < cosmicNeeded ? [`COSMIC-2: ${cosmic.withCoverage.length} satellites with coverage (${cosmic.satellites.join(', ')}), ${cosmicNeeded} needed (4 calibration + 2 held out)`] : []),
+    ...(cosmic.withCoverage.length < cosmicNeeded ? [`COSMIC-2: ${cosmic.withCoverage.length} satellites with coverage (${cosmic.satellites.join(', ')}), ${cosmicNeeded} needed`] : []),
     ...missing,
   ],
 };
