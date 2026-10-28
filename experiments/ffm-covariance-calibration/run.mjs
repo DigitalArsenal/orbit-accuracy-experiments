@@ -258,6 +258,70 @@ if (phase === 'heldout') {
   await pairs.close();
 }
 
+if (phase === 'precise') {
+  // R classes (PLAN.md 3.3-3.4; C2-A1, C2-A2, C2-A4): per object and cutoff E of --set, the truth-only maneuver screen (C2-A4 point 4: FFM
+  // fitted to the truth over [E - 24 h, E + 72 h] at 10 min, state + B + AGOM, 10 m; flagged when its 3D RMS, sqrt(3) x 10 m x the
+  // weighted RMS, exceeds 5 m), then the class fit on the 24 h track (seeds from seeds-R3.json / seeds-R1R2.json) and the terms at each lead.
+  // Rows: rows/<class>.<set>.s<k>.jsonl. --weather M only here (condition O is a separate pass).
+  const cls = args.class, set = args.set;
+  if (!['R3', 'R1', 'R2'].includes(cls)) throw new Error('--class R3|R1|R2');
+  if (!['calibration', 'validation'].includes(set)) throw new Error('--set calibration|validation (held-out sets after the freeze)');
+  const { truthSeries, windowAt } = await import('./lib/precise.mjs');
+  const { openPairs } = await import('./lib/pairs.mjs');
+  const { windowTerms } = await import('./lib/products.mjs');
+  const pairs = await openPairs(B2C.a12.modulesLinks);
+  const seeds = JSON.parse(fs.readFileSync(path.join(results, cls === 'R3' ? 'seeds-R3.json' : 'seeds-R1R2.json')));
+  const P9 = JSON.parse(fs.readFileSync(path.join(results, 'precheck-P9.json')));
+  const objects = P9.perObject.filter((o) => o.class === cls && o.set === 'calibration').map((o) => ({ ...o, seed: seeds.objects.find((x) => x.norad === o.norad) })).filter((o) => o.seed);
+  const prefixOf = (o) => (o.products.includes('ESA') ? 'ESA0OPSFIN' : o.products.includes('nsgf') ? 'nsgf.orb.' : o.products.includes('ilrsa') ? 'ilrsa.orb.' : o.products.includes('SW') ? 'SW_OPER' : o.products.includes('S') ? `${o.name.replace('Sentinel-', 'S')}_OPER` : o.products[0]);
+  const S = config.split[set];
+  const cutoffs = []; for (let E = Date.parse(`${S.cutoffs.from}T00:00:00Z`); E <= Date.parse(`${S.cutoffs.to}T00:00:00Z`); E += S.cutoffs.everyDays * 24 * HOUR) cutoffs.push(E);
+  const out = path.join(rowsDir, `${cls}.${set}.s${k}.jsonl`);
+  const done = new Set(readJsonl(out).map((r) => `${r.norad}|${r.E}`));
+  const frac = cls === 'R3' ? 1 : B2C.a12.fit.apriori.parameterFraction;
+  const settingsOf = (o, withB) => {
+    const ps = [...(withB ? [{ kind: 'DRAG_AREA_OVER_MASS', value: o.seed.bSeed ?? o.seed.areaOverMassM2kg * 2.2 }] : []), { kind: 'SRP_AREA_OVER_MASS', value: o.seed.agomSeed }];
+    const diag = [...Array(3).fill(F.apriori.positionSigmaM ** 2), ...Array(3).fill(F.apriori.velocitySigmaMS ** 2), ...ps.map((q) => (frac * q.value) ** 2)];
+    const m = diag.length;
+    return { sigmaM: 10, parameters: ps, fixed: withB ? {} : { b: 0 }, apriori: Array.from({ length: m * m }, (_, j) => (Math.floor(j / m) === j % m ? diag[j % m] : 0)), maximumIterations: B2C.a12.fit.maximumIterations, correctionTolerance: B2C.a12.fit.correctionTolerance, sigmaEditThreshold: B2C.a12.fit.sigmaEditThreshold, forces: F.forces, integrator: F.integrator };
+  };
+  const tasks = objects.flatMap((o) => cutoffs.map((E) => [o, E]));
+  let series = null;
+  for (let i = 0; i < tasks.length; i += 1) {
+    const [o, E] = tasks[i], id = `${o.norad}|${iso(E)}`;
+    if (i % n !== k || done.has(id)) continue;
+    if (args.limit && i / n > Number(args.limit)) break;
+    if (series?.norad !== o.norad) series = { norad: o.norad, s: truthSeries(o.norad, prefixOf(o), { opened, from: Date.parse(S.cutoffs.from) - 3 * 24 * HOUR, to: Date.parse(S.cutoffs.to) + 5 * 24 * HOUR }) };
+    const w = windowAt(series.s, E, { leadToleranceSeconds: B2C.a5.ca.leadToleranceSeconds.laser });
+    const row = { norad: o.norad, name: o.name, cluster: o.cluster, E: iso(E), set, class: cls };
+    const t0 = Date.now();
+    if (w.excluded) row.excluded = w.excluded;
+    else if (Math.abs(Date.parse(w.track[0].epoch) - (E - 24 * HOUR)) > 300e3) row.excluded = 'no state at the track start';
+    else {
+      try {
+        // the maneuver screen on the truth itself
+        const sw = windowAt(series.s, E + 72 * HOUR, { trackHours: 96, leadToleranceSeconds: 0, minCoverage: 0 });
+        const ctxS = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
+        const fs0 = await fitV3(ctxS, fitInput(sw.track).points, fitInput(sw.track).reference, settingsOf(o, true));
+        row.screen = { ok: fs0.ok, termination: fs0.termination ?? null, points: sw.track.length, rms3dM: fs0.weightedRms != null ? Math.sqrt(3) * 10 * fs0.weightedRms : null };
+        row.screen.flagged = fs0.ok && row.screen.rms3dM > 5; // C2-A4 point 4
+        row.screen.failed = !fs0.ok; // a screen fit that does not converge cannot clear the window: counted apart
+        const settings = cls === 'R3' ? settingsOf(o, false) : settingsOf(o, true);
+        const { points, reference } = fitInput(w.track);
+        const ctx = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
+        const f = await fitV3(ctx, points, reference, settings);
+        row.fit = { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, reducedChiSquare: f.reducedChiSquare, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, covariance: f.covariance };
+        row.trackMaxSigmaM = Math.max(...w.track.map((l) => l.sigma ?? 0));
+        if (f.ok && w.leads.length) Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings));
+      } catch (error) { row.excluded = `refused: ${String(error.message).slice(0, 200)}`; }
+    }
+    row.seconds = (Date.now() - t0) / 1000;
+    fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
+  }
+  fs.writeFileSync(path.join(store, 'opened', `${cls}.${set}.s${k}.json`), JSON.stringify(opened.list()));
+  await pairs.close();
+}
+
 if (phase === 'lp-terms') {
   // Class L-P (C2-A3 point 2): FFM fitted to the NSGF positions of a type L sphere, E6 R's parameterization, cutoffs every 24 h on type L's
   // splits; then the terms at each lead (truth: every NSGF arc, its stated sigma kept for the C2-A1 truth covariance).
