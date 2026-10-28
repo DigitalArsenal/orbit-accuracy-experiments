@@ -29,7 +29,8 @@ for (const j of jobs) {
   const file = path.join(base, j.rel);
   if (seen.has(j.url) && (seen.get(j.url).absent || fs.existsSync(file))) { ++kept; continue; }
   await sleep(1000);
-  const res = await fetch(j.url);
+  let res = null;
+  for (let attempt = 1; attempt <= 4 && !res; attempt += 1) { try { res = await fetch(j.url, { signal: AbortSignal.timeout(180e3) }); } catch (error) { if (attempt === 4) throw error; await sleep(10e3 * attempt); } }
   const rec = { url: j.url, path: j.rel, retrieved: new Date().toISOString() };
   if (res.status === 404) { fs.appendFileSync(prov, `${JSON.stringify({ ...rec, absent: true, status: 404 })}\n`); ++absent; continue; }
   if (!res.ok) throw new Error(`${j.url}: HTTP ${res.status}`);
