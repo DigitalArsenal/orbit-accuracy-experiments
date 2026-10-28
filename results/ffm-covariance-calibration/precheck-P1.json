@@ -1,0 +1,138 @@
+{
+ "receipt": "precheck-P1",
+ "createdUtc": "2026-10-28T22:05:52.887Z",
+ "experimentsCommit": "da17559345e55d0e8ea5b1ef2180284a4b529083",
+ "plan": "3.8 P1; D2 (iss-ffm3)",
+ "criterion": "ISS refit with fit_batch version 3: zero refusals and at least 99.9 % CONVERGED",
+ "settings": {
+  "sigmaM": 10,
+  "parameters": [
+   {
+    "kind": "DRAG_AREA_OVER_MASS",
+    "value": 0.01
+   },
+   {
+    "kind": "SRP_AREA_OVER_MASS",
+    "value": 0.02
+   }
+  ],
+  "fixed": {},
+  "apriori": "diagonal: 1e5 m, 10 m/s, 100 % of each seed",
+  "maximumIterations": 40,
+  "correctionTolerance": 0.01,
+  "sigmaEditThreshold": 5,
+  "forces": {
+   "degree": 70,
+   "order": 70,
+   "thirdBodies": [
+    10,
+    301
+   ],
+   "srp": true,
+   "drag": true,
+   "atmosphere": "NRLMSISE00",
+   "solidTides": true,
+   "relativity": "IERS_2010"
+  },
+  "integrator": {
+   "tolerance": 1e-10,
+   "maxStep": 120,
+   "minStep": 0.0001
+  }
+ },
+ "windows": 748,
+ "excluded": 229,
+ "fitted": 519,
+ "converged": 508,
+ "refusedFits": 2,
+ "failed": [
+  {
+   "file": "2022-10-29",
+   "E": "2022-10-29T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2024-03-28",
+   "E": "2024-03-28T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2024-12-17",
+   "E": "2024-12-17T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2021-09-14",
+   "E": "2021-09-14T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2023-10-06",
+   "E": "2023-10-05T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2024-03-21",
+   "E": "2024-03-21T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2025-02-12",
+   "E": "2025-02-13T12:00:00.000Z",
+   "error": "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it.",
+   "termination": null
+  },
+  {
+   "file": "2021-02-02",
+   "E": "2021-02-02T13:47:11.137Z",
+   "error": "MAXIMUM_ITERATIONS",
+   "termination": "MAXIMUM_ITERATIONS"
+  },
+  {
+   "file": "2021-05-11",
+   "E": "2021-05-11T12:00:00.000Z",
+   "error": "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it.",
+   "termination": null
+  },
+  {
+   "file": "2022-01-29",
+   "E": "2022-01-29T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  },
+  {
+   "file": "2024-04-02",
+   "E": "2024-04-02T12:00:00.000Z",
+   "error": "STALLED",
+   "termination": "STALLED"
+  }
+ ],
+ "bySet": {
+  "calibration": {
+   "windows": 296,
+   "converged": 290
+  },
+  "validation": {
+   "windows": 105,
+   "converged": 101
+  },
+  "heldOut": {
+   "windows": 118,
+   "converged": 117
+  }
+ },
+ "secondsPerFit": {
+  "median": 8.55,
+  "p90": 11.481,
+  "note": "wall seconds per fit (24 h track, 4-min NASA states) at RK78 1e-10, steps <= 120 s, while the host load was ~30 of 28 cores"
+ },
+ "labeled": "in-sample-seen (the planner read A5's ISS rows)",
+ "outcome": "FAIL",
+ "opened": null
+}
