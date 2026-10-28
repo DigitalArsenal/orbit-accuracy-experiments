@@ -12,15 +12,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { config, store, args, frozen, readJsonl, registeredMs, g1Dir, root, sha256, paced } from './common.mjs';
+import { config, store, args, frozen, readJsonl, registeredMs, g1Dir, paced } from './common.mjs';
+import { cycleMs, filesOf, track, trackSha } from './lib/capture.mjs';
 
-const { gate } = await import(path.join(root, 'harness/truth-gate.mjs'));
 
 frozen();
 const S = config.part1.starlink;
 const H = 3600e3, STEP = S.stepMinutes * 60e3, SEG = S.segmentHours * H, DAY = 24 * H;
 const iso = (t) => new Date(t).toISOString();
-export const cycleMs = (id) => Date.parse(id.replace(/T(\d\d)-(\d\d)-(\d\d)-(\d+)Z$/, 'T$1:$2:$3.$4Z'));
+export { cycleMs };
 const finished = new Set(readJsonl(path.join(path.dirname(S.captureRoot), 'cycles.jsonl')).map((c) => c.id)); // a cycle the collector has closed
 const cycles = fs.readdirSync(S.captureRoot).filter((d) => /^\d{4}-\d\d-\d\dT/.test(d) && finished.has(d)).sort();
 export const forecastCycle = process.env.B2_FORECAST_CYCLE ?? cycles.find((c) => cycleMs(c) > registeredMs());
@@ -30,39 +30,6 @@ const before = cycles.filter((c) => cycleMs(c) < cycleMs(forecastCycle)); // the
 /** The bins whose truth is complete at cycle `through` (A5 point 6): bin k once a cycle has started k days after the forecast cycle. */
 export const completeBins = (through) => S.binsHours.map((_, b) => String(b + 1)).filter((b) => cycleMs(through) >= cycleMs(forecastCycle) + Number(b) * DAY - 60e3);
 
-/** Every captured file of one satellite in `within` (cycle ids), one entry per file (by SHA-256): { start, sha, cycle, states: Map(ms -> [x, y, z,
- *  vx, vy, vz] km, km/s), gated: the states the truth gate dropped }; the gate's product is the capture's (operator-capture/<cycle>/<SHA-256, 16 hex>). */
-function filesOf(norad, within) {
-  const byFile = new Map();
-  for (const c of within) {
-    const f = path.join(S.captureRoot, c, `${norad}.json.gz`);
-    if (!fs.existsSync(f)) continue;
-    let d;
-    try { d = JSON.parse(zlib.gunzipSync(fs.readFileSync(f))); } catch { continue; }
-    if (!d.source?.sha256 || !(d.truth ?? []).length || byFile.has(d.source.sha256)) continue; // a cycle that stored no states of the file does not hold it
-    const { kept, dropped } = gate(d.truth, { product: `operator-capture/${c}/${d.source.sha256.slice(0, 16)}`, norad, epochOf: (s) => s.ms, positionOf: (s) => s.stateM.slice(0, 3).map((x) => x / 1000) });
-    byFile.set(d.source.sha256, { start: Date.parse(d.source.startUtc), sha: d.source.sha256, cycle: c, gated: dropped.length, states: new Map(kept.map((s) => [s.ms, s.stateM.map((x) => x / 1000)])) });
-  }
-  return [...byFile.values()].sort((a, b) => a.start - b.start); // ties keep the capture order: the later capture is the newer file
-}
-
-/** The states in [from, to] ((from, to] when openLow) of `files`, each epoch from the newest file that starts at or before it (A5 point 5): a
- *  file's state at t counts within its first segment hours and only when no newer file of the set starts in (its start, t]. `dropped` counts
- *  the states that rule removes and no newer file holds at the same epoch (the states the reader at 2c2c4d4 kept). */
-function track(files, from, to, openLow) {
-  const out = new Map();
-  let dropped = 0;
-  files.forEach((f, i) => {
-    const newer = files.slice(i + 1), next = newer[0]?.start ?? Infinity;
-    for (const [t, s] of f.states) {
-      if ((openLow ? t <= from : t < from) || t > to || t < f.start || t - f.start > SEG) continue;
-      if (t >= next) { if (!newer.some((g) => t >= g.start && t - g.start <= SEG && g.states.has(t))) dropped += 1; continue; }
-      out.set(t, { epoch: iso(t), r: s.slice(0, 3), v: s.slice(3, 6), file: f.sha.slice(0, 12) });
-    }
-  });
-  return { lines: [...out.entries()].sort((a, b) => a[0] - b[0]).map(([, l]) => l), dropped };
-}
-const trackSha = (lines) => sha256(Buffer.from(JSON.stringify(lines.map((l) => [l.epoch, l.r, l.v]))));
 
 /** Bin coverage (PLAN.md part 1a, A5 point 5): per bin, the truth epochs held, the 10-min epochs files newer than F can cover in it (from the
  *  later of the bin's start and the first newer file's start to its end), and whether it counts (at least minimumCoverage of them). */
