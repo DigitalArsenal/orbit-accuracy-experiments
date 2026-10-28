@@ -1,0 +1,37 @@
+{
+ "receipt": "precheck-P8-I",
+ "createdUtc": "2026-10-28T22:44:06.229Z",
+ "experimentsCommit": "5fa7b577a9334aee6b3930915da463323f788167",
+ "plan": "3.8 P8; C2-A4 point 1",
+ "class": "I",
+ "chosen": "M1",
+ "parameters": {
+  "k_e": 33815.04311442945,
+  "f_R": 0.020041705656607373,
+  "f_T": 9.401534204448408,
+  "f_N": 0.34203999033474175
+ },
+ "fitReceipt": "fit-I.json",
+ "leads": {
+  "24": {
+   "n": 59,
+   "scale": 1.7065560826032746,
+   "shape": 0.7698736414316228,
+   "inBand": false
+  },
+  "48": {
+   "n": 79,
+   "scale": 1.8938074971143297,
+   "shape": 1.64890702777922,
+   "inBand": false
+  },
+  "72": {
+   "n": 45,
+   "scale": 1.807423004114128,
+   "shape": 0.44830552004557345,
+   "inBand": false
+  }
+ },
+ "outcome": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+ "opened": null
+}
