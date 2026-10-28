@@ -146,7 +146,9 @@ if (phase === 'iss-terms') {
     const leads = leadLines(w.truth, w.E, B2C.a5.ca.leadToleranceSeconds.iss);
     const g = await toGcrf(leads.map((x) => x.line));
     const t0 = Date.now();
-    const terms = await windowTerms(v3.ctxFor(Date.parse(f.fit.epoch), w.E + 72 * HOUR), pairs, f.fit, w.E, leads.map((x, j) => ({ L: x.L, line: { ...g[j], file: x.line.file } })), settings);
+    let terms;
+    try { terms = await windowTerms(v3.ctxFor(Date.parse(f.fit.epoch), w.E + 72 * HOUR), pairs, f.fit, w.E, leads.map((x, j) => ({ L: x.L, line: { ...g[j], file: x.line.file } })), settings); }
+    catch (error) { terms = { excluded: `terms: ${String(error.message).slice(0, 200)}` }; } // counted and disclosed (a weather gap in the prediction span)
     fs.appendFileSync(out, `${JSON.stringify({ file: f.file, E: f.E, set, truthFiles: [...new Set(leads.map((x) => x.line.file))], ...terms, seconds: (Date.now() - t0) / 1000 })}\n`);
     count += 1;
     if (count % 10 === 0) console.error(`iss-terms ${set} shard ${k}/${n}: ${count}`);
@@ -189,7 +191,7 @@ if (phase === 'lp-terms') {
       const f = await fitV3(ctx, points, reference, settings);
       row.fit = { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, reducedChiSquare: f.reducedChiSquare, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, covariance: f.covariance };
       row.trackMaxSigmaM = Math.max(...w.track.map((l) => l.sigma ?? 0));
-      if (f.ok && w.leads.length) Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings));
+      if (f.ok && w.leads.length) { try { Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings)); } catch (error) { row.excluded = `terms: ${String(error.message).slice(0, 200)}`; } }
       row.seconds = (Date.now() - t0) / 1000;
     }
     fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
