@@ -44,6 +44,22 @@
    "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
    "p8": null,
    "frozenUtc": "2026-10-28T22:44:27.710Z"
+  },
+  "R3": {
+   "chosen": "M2",
+   "parameters": {
+    "k_e": 0.02853272473723102,
+    "f_R": 0.0000017742599034924027,
+    "f_T": 2.643418138356871e-8,
+    "f_N": 2.7420989309141017e-8,
+    "q_T": 3.5222228751886823e-15,
+    "q_RN": 5.197102895121907e-20
+   },
+   "fitReceipt": "fit-R3.json",
+   "fitReceiptSha256": "dd8a5a4cb19813baf1a369f88e45f69060fe3f071e3cd622ceb27c12e0e35dfc",
+   "fitCommit": "3281d0dc2497e5b7f633488063b2c760928b3f52",
+   "p8": "pass",
+   "frozenUtc": "2026-10-29T00:25:23.869Z"
   }
  }
 }
