@@ -94,6 +94,24 @@
    "fitCommit": "2343f34f4e9e798f93502e7b73449cbba2e500dc",
    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
    "frozenUtc": "2026-10-29T03:21:10.425Z"
+  },
+  "R2-O": {
+   "chosen": "M3/tauInf",
+   "parameters": {
+    "tau": "inf",
+    "k_e": 0.4093773963103564,
+    "f_R": 0.30853316860862723,
+    "f_T": 0.00816578105933752,
+    "f_N": 0.6991948653149317,
+    "q_T": 3.2570407097399e-19,
+    "q_RN": 2.0827218387940405e-19,
+    "s2": 0.05430922572329374
+   },
+   "fitReceipt": "fit-R2-O.json",
+   "fitReceiptSha256": "cc3a412899ddff94219ef2cfcdbcbcffd54133779799e9351f1aa5acc5e4eec2",
+   "fitCommit": "5a565513d0ecc9aa7732febcbe9d4c745dd9c763",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T03:40:25.392Z"
   }
  }
 }
