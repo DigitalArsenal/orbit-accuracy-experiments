@@ -29,12 +29,22 @@ function generator(label) { // xorshift128+ (23, 17, 26), seeded by SHA-256 of t
 }
 export function interval(items, label, clustered) {
   if (items.length < 2) return null;
+  // Each resample's median read from draw counts over the values sorted once (the same draws and the same median as sorting each
+  // resample: the median of a multiset depends only on its counts), so the E2E's regeneration stays within its time box.
   const next = generator(label), medians = [];
+  const groups = clustered ? items : items.map((x) => [x]);
+  const flat = groups.flat(), order = flat.map((_, i) => i).sort((a, b) => flat[a] - flat[b]), sorted = order.map((i) => flat[i]);
+  const rank = new Int32Array(flat.length); order.forEach((i, r) => { rank[i] = r; });
+  let at = 0;
+  const members = groups.map((g) => g.map(() => rank[at++]));
+  const counts = new Int32Array(flat.length);
+  const kth = (k) => { let c = 0; for (let r = 0; r < counts.length; r += 1) { c += counts[r]; if (c > k) return sorted[r]; } return sorted.at(-1); };
   for (let r = 0; r < B.resamples; r += 1) {
-    const draw = [];
-    for (let i = 0; i < items.length; i += 1) { const pick = items[Math.floor(next() * items.length)]; if (clustered) draw.push(...pick); else draw.push(pick); }
-    draw.sort((x, y) => x - y);
-    medians.push(medianSorted(draw));
+    counts.fill(0);
+    let total = 0;
+    for (let i = 0; i < items.length; i += 1) { const m = members[Math.floor(next() * items.length)]; for (const q of m) counts[q] += 1; total += m.length; }
+    const pos = (total - 1) / 2, lo = Math.floor(pos), hi = Math.ceil(pos), a = kth(lo), b = hi === lo ? a : kth(hi);
+    medians.push(a + (b - a) * (pos - lo));
   }
   const tail = (1 - B.level) / 2;
   return [quantile(medians, tail), quantile(medians, 1 - tail)];
