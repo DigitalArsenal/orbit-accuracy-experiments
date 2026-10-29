@@ -60,6 +60,22 @@
    "fitCommit": "3281d0dc2497e5b7f633488063b2c760928b3f52",
    "p8": "pass",
    "frozenUtc": "2026-10-29T00:25:23.869Z"
+  },
+  "L": {
+   "chosen": "M2",
+   "parameters": {
+    "k_e": 1.9516758785436588,
+    "f_R": 1.9804750224401257,
+    "f_T": 7.0185456205260435,
+    "f_N": 2.4119377776703086,
+    "q_T": 4.139573739847988e-20,
+    "q_RN": 1.1327773785338313e-15
+   },
+   "fitReceipt": "fit-L.json",
+   "fitReceiptSha256": "5751a904e061bbe6fcd46a72a3335fafb605cd0ff4b451bb9625013501fe3205",
+   "fitCommit": "5a15eea69be98102d9786a2ef4efbf1793394bb0",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T02:15:44.329Z"
   }
  }
 }
