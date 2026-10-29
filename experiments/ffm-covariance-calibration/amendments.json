@@ -255,5 +255,20 @@
   },
   "fairness": "SGP4-XP Starlink calibration follows R1-M",
   "deletedTrialRow": "NORAD 45237, missing input"
+ },
+ "C2-A9": {
+  "date": "2026-10-29",
+  "before": "any SGP4-XP fit",
+  "model": "k_e A_xp + RTN floor; candidates M0, M1",
+  "inputs": "B2 SGP4-XP arm: sdn-ap fit THEORY SGP4XP on each class's 24 h fit track; sdnap_covariance_at",
+  "build": "62c783262da9e69c54d6f4eb98c97af4208c1b11daec44cc9c28c0252c564d1e",
+  "classes": [
+   "I",
+   "L",
+   "LP",
+   "R1"
+  ],
+  "frozen": "results/ffm-covariance-calibration/sgp4xp/frozen-constants.json",
+  "starlink": "B2-extended export, new manifest"
  }
 }
