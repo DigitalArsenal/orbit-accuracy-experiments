@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { config, store, results, args, readJsonl, sha256 } from './common.mjs';
+import { ffm3Merged } from './lib/a12-arms.mjs';
 
 const B = config.statistics.bootstrap;
 const NAMES = { sdnap: 'SDN-AP', sgp4xp: 'SGP4-XP', sgp4: 'SGP4', forecast: 'Operator forecast', ffm: 'FFM', sdnapTruth: 'SDN-AP fitted to the truth',
@@ -153,7 +154,7 @@ export function build() {
     out.rows.push(tableRow('starlink-xp-all', 'Starlink, SGP4-XP on every scored satellite (descriptive)', `${sw.filter((w) => w.arms.sgp4xp?.ok).length} satellites; ${interim}`, sw.map(xpOnly), ['sgp4xp'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample with all three arms scored (SpaceX\'s own forecast beside)', `sample satellites whose fetched file is F (A10) and both fits scored; ${interim}`, sw.filter(forecastAll), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
     // A12: the new arms. ffm3 is the FFM arm of record (point 12); A3 stays reported as registered above.
-    const ffm3 = rows(`starlink-ffm3${config.a12.selected?.contingency ? '-60' : ''}.`), xpln = rows('starlink-xpln.');
+    const ffm3 = ffm3Merged(rows), xpln = rows('starlink-xpln.');
     out.inputs.starlinkFfm3 = sha256(Buffer.from(JSON.stringify(ffm3)));
     out.inputs.starlinkXpln = sha256(Buffer.from(JSON.stringify(xpln)));
     out.starlink.a12 = {

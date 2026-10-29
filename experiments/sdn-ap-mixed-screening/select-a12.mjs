@@ -187,17 +187,18 @@ if (phase === 'select') {
 if (phase === 'fitgate') {
   // A12 point 11: the fit-only gate of the ffm3 fit phase over all tracks (and XP-LN's counts), committed before any score
   const tally = (v) => Object.fromEntries([...v.reduce((m, x) => m.set(x, (m.get(x) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1]));
-  const suffix = A.selected?.contingency ? '-60' : '';
+  const suffix = args.contingency ? '-60' : ''; // the summary after the contingency: the 40-evaluation rows with the 60-evaluation refits merged
   const rowsOf = (prefix) => fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).sort().flatMap((f) => readJsonl(path.join(store, 'rows', f)));
-  const f3 = rowsOf(`starlink-ffm3${suffix}.`), xp = rowsOf('starlink-xpln.'), a3 = a3Rows();
+  const { ffm3Merged } = await import('./lib/a12-arms.mjs');
+  const f3 = suffix ? ffm3Merged(rowsOf) : rowsOf('starlink-ffm3.'), xp = rowsOf('starlink-xpln.'), a3 = a3Rows();
   const converged = f3.filter((r) => r.ffm3?.termination === 'CONVERGED' && r.ffm3.ok).length;
   const refused = f3.filter((r) => r.ffm3?.refusedTrials > 0 || r.ffm3?.refusedRounds > 0).length;
   const outOfDomain = f3.filter((r) => (r.ffm3?.parameters ?? []).some((q) => q.kind !== 'IN_TRACK_ACCELERATION' && !(q.value >= 0))).length;
   const opened = (arm) => { const d = path.join(store, 'a12-receipts'); const files = fs.readdirSync(d).filter((f) => f.startsWith(`${arm}.opened.`)).sort(); const all = files.flatMap((f) => fs.readFileSync(path.join(d, f), 'utf8').split('\n').filter(Boolean)); return { files: files.length, paths: all.length, sha256: sha256(Buffer.from(all.join('\n'))), allBeforeForecastCycle: all.every((q) => cycleMs(path.basename(path.dirname(q))) < cycleMs(A.forecastCycle)) }; };
   const shaMatch = (rows) => { const a = new Map(a3.map((r) => [r.norad, r.track.sha])); return rows.filter((r) => a.get(r.norad) === r.track.sha).length; };
   const g = {
-    amendment: 'A12 point 11', profile: A.selected.profile, maximumIterations: suffix ? A.fit.contingencyMaximumIterations : A.fit.maximumIterations, tracks: a3.length,
-    ffm3: { rows: f3.length, converged, convergedShare: f3.length ? converged / f3.length : 0, refused, outOfDomain, terminations: tally(f3.map((r) => r.ffm3?.termination ?? `fit-failed: ${String(r.ffm3?.error ?? '').replace(/\d+(\.\d+)?/g, '#').slice(0, 80)}`)), releasedT: f3.filter((r) => r.ffm3?.released).length, trackShaMatchesA3: shaMatch(f3), opened: opened(`ffm3${suffix}`), provenance: f3[0]?.provenance ?? null },
+    amendment: 'A12 point 11', profile: A.selected.profile, maximumIterations: A.fit.maximumIterations, ...(suffix ? { contingency: { maximumIterations: A.fit.contingencyMaximumIterations, refitted: rowsOf('starlink-ffm3-60.').length, note: 'one rerun at 60 evaluations of the tracks not CONVERGED, then reported as is' } } : {}), tracks: a3.length,
+    ffm3: { rows: f3.length, converged, convergedShare: f3.length ? converged / f3.length : 0, refused, outOfDomain, terminations: tally(f3.map((r) => r.ffm3?.termination ?? `fit-failed: ${String(r.ffm3?.error ?? '').replace(/\d+(\.\d+)?/g, '#').slice(0, 80)}`)), releasedT: f3.filter((r) => r.ffm3?.released).length, trackShaMatchesA3: shaMatch(f3), opened: opened('ffm3'), ...(suffix ? { openedContingency: opened('ffm3-60') } : {}), provenance: f3[0]?.provenance ?? null },
     xpln: { rows: xp.length, fitted: xp.filter((r) => r.xpln?.ok).length, refusals: tally(xp.filter((r) => !r.xpln?.ok).map((r) => String(r.xpln?.error ?? '').slice(0, 80))), trackShaMatchesA3: shaMatch(xp), opened: opened('xpln'), provenance: xp[0]?.provenance ?? null },
   };
   g.pass = g.ffm3.rows === a3.length && g.ffm3.convergedShare >= A.selection.eligibility.minimumConverged && refused === 0 && outOfDomain === 0;

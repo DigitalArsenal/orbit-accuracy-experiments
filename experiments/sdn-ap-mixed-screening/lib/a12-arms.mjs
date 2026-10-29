@@ -36,8 +36,15 @@ export async function fitFfm3(v3, fitV3, norad, lines, E, prof) {
   return { ...f, profile: prof.name, settingsProfile: s.profile, fixed: s.fixed, released, ...(prof.release ? { baseB } : {}) };
 }
 
-/** Phase ffm3 or xpln over every part 1a track (A3's fit rows), shard k of n. */
-export async function fitPhase(phase, { k, n, limit, maximumIterations }) {
+/** ffm3's rows (A12 point 11): the 40-evaluation fits, each replaced by its contingency refit at 60 evaluations where one exists
+ *  (rows/starlink-ffm3-60.*: the tracks the first fit phase did not bring to CONVERGED, rerun once). `rowsOf(prefix)` -> [rows]. */
+export function ffm3Merged(rowsOf) {
+  const rerun = new Map(rowsOf('starlink-ffm3-60.').map((r) => [r.norad, { ...r, contingency: true }]));
+  return rowsOf('starlink-ffm3.').map((r) => rerun.get(r.norad) ?? r);
+}
+
+/** Phase ffm3 or xpln over every part 1a track (A3's fit rows), shard k of n; `only` restricts it to those satellites (the contingency). */
+export async function fitPhase(phase, { k, n, limit, maximumIterations, only = null }) {
   const outDir = path.join(store, 'rows'), recDir = path.join(store, 'a12-receipts');
   fs.mkdirSync(recDir, { recursive: true });
   const suffix = maximumIterations === A.fit.contingencyMaximumIterations ? '-60' : '';
@@ -62,7 +69,7 @@ export async function fitPhase(phase, { k, n, limit, maximumIterations }) {
   let count = 0;
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
-    if (i % n !== k || done.has(row.norad)) continue;
+    if (i % n !== k || done.has(row.norad) || (only && !only.has(row.norad))) continue;
     if (limit && count >= limit) break;
     if (count % 20 === 0) await paced(Number(process.env.B2_LOAD_MAX ?? 26));
     const t = R.trackOf(row); // aborts unless the track hashes to A3's

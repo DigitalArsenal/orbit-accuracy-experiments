@@ -74,7 +74,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   if (!['fit', 'ffm', 'score', 'leads', 'gp', 'ffm3', 'xpln'].includes(phase)) throw new Error(`unknown phase ${phase}`);
   if (phase === 'ffm3' || phase === 'xpln') { // A12: the new arms' fits through the fit-only reader, never windowOf
     const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
-    await (await import('./lib/a12-arms.mjs')).fitPhase(phase, { k, n, limit: args.limit ? Number(args.limit) : null, maximumIterations: Number(args['max-evals'] ?? config.a12.fit.maximumIterations) });
+    await (await import('./lib/a12-arms.mjs')).fitPhase(phase, { k, n, limit: args.limit ? Number(args.limit) : null, maximumIterations: Number(args['max-evals'] ?? config.a12.fit.maximumIterations), only: args.only ? new Set(String(args.only).split(',').map(Number)) : null });
     process.exit(0);
   }
   const late = ['score', 'leads', 'gp'].includes(phase);
@@ -98,7 +98,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const rowsOf = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
   const fits = late ? rowsOf('starlink-fit.') : null, ffmFits = late ? rowsOf('starlink-ffm.') : null;
   // A12's arms (ffm3: fit_batch version 3 with the selected profile; XP-LN) beside the registered ones
-  const ffm3Fits = late ? rowsOf(`starlink-ffm3${config.a12.selected?.contingency ? '-60' : ''}.`) : null, xplnFits = late ? rowsOf('starlink-xpln.') : null;
+  const ffm3Fits = late ? new Map((await import('./lib/a12-arms.mjs')).ffm3Merged((p) => [...rowsOf(p).values()]).map((r) => [r.norad, r])) : null, xplnFits = late ? rowsOf('starlink-xpln.') : null;
   const arms = ['score', 'leads'].includes(phase) ? await (await import('./lib/a12-arms.mjs')).openArms() : null;
   const L5 = late && phase !== 'score' ? await import('./lib/leads.mjs') : null;
   const tolerance = config.a5.ca.leadToleranceSeconds.starlink;
