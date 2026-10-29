@@ -11,6 +11,7 @@
 // JavaScript routes records, groups satellites by the module's own states and counts; screening, TCA, miss and Pc are the module's.
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { config, store, args, frozen, readJsonl, write, g1Dir, paced } from './common.mjs';
 
 frozen();
@@ -184,7 +185,7 @@ if (phase === 'cov') {
   // --order reverse walks the same shard from its end (a second worker on a shard; each satellite's file is written once, atomically)
   for (const i of args.order === 'reverse' ? [...sats.keys()].reverse() : sats.keys()) {
     const norad = sats[i], file = path.join(dir, 'cov', `${norad}.json`);
-    if (i % n !== k || fs.existsSync(file)) continue;
+    if (i % n !== k || fs.existsSync(file) || fs.existsSync(`${file}.gz`)) continue;
     if (i % 50 === k) await paced();
     const epochs = [...need.get(norad)].sort((x, y) => x - y);
     const out = { norad, epochs };
@@ -215,7 +216,8 @@ if (phase === 'assess') {
   const only = args.only != null ? Number(args.only) : null;
   const cache = new Map();
   const statesOf = (norad) => { if (!cache.has(norad)) { if (cache.size > 2000) cache.delete(cache.keys().next().value); cache.set(norad, readStates(norad)); } return cache.get(norad); };
-  const covOf = (norad) => JSON.parse(fs.readFileSync(path.join(dir, 'cov', `${norad}.json`), 'utf8'));
+  // a satellite's covariances: cov/<norad>.json, or the same bytes gzipped once the run is done (cov/<norad>.json.gz; the store's disk)
+  const covOf = (norad) => { const f = path.join(dir, 'cov', `${norad}.json`); return JSON.parse(fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : zlib.gunzipSync(fs.readFileSync(`${f}.gz`)).toString('utf8')); };
   const man = new Map(index().map((r) => [r.norad, r.maneuverEvident]));
   for (const e of enc()) {
     if (only != null ? e.id !== only : e.id % n !== k || done.has(e.id)) continue;
