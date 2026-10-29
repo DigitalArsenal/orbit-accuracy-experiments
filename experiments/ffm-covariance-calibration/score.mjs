@@ -14,9 +14,15 @@ frozen();
 const cls = args.class;
 const CK = `${cls}${args.weather === 'O' ? '-O' : ''}`; // the constants key: class, and weather O for R1/R2
 const B2C = JSON.parse(fs.readFileSync(b2('config.json')));
-const rowsDir = path.join(store, 'rows');
+// C2-A9: --arm sgp4xp scores the SGP4-XP fairness rows (rows-sgp4xp/, receipts under results/.../sgp4xp/, candidates M0 and M1, the
+// held-out covariance k_e A_xp + floor); C2's own FFM rows (the ISS screen) are still read from rows/.
+const XP = args.arm === 'sgp4xp';
+const ffmRowsDir = path.join(store, 'rows');
+const rowsDir = XP ? path.join(store, 'rows-sgp4xp') : ffmRowsDir;
+const RX = XP ? 'sgp4xp/' : ''; // receipt name prefix
+if (XP) fs.mkdirSync(path.join(results, 'sgp4xp'), { recursive: true });
 const readJsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-const rowsOf = (prefix) => fs.readdirSync(rowsDir).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).sort().flatMap((f) => readJsonl(path.join(rowsDir, f)));
+const rowsOf = (prefix, dir = rowsDir) => fs.readdirSync(dir).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).sort().flatMap((f) => readJsonl(path.join(dir, f)));
 const CHI = config.model.chi2_3_95, BAND = config.band;
 const DAY = 86400e3;
 
@@ -24,6 +30,19 @@ const DAY = 86400e3;
 function samples(set) {
   const out = [], counts = { windows: 0, excluded: {} };
   const ex = (why) => { counts.excluded[why] = (counts.excluded[why] ?? 0) + 1; };
+  if (XP) {
+    const screen = cls === 'I' ? new Map(rowsOf('iss-screen.', ffmRowsDir).map((r) => [r.file, r])) : null;
+    for (const r of reflag(rowsOf(`${cls}.${set}.s`))) {
+      if (r.failed || r.excluded || !r.fit?.ok) { ex(r.failed ? 'SGP4-XP refused' : r.excluded ? r.excluded.slice(0, 60) : `SGP4-XP fit: ${String(r.fit?.error).slice(0, 40)}`); continue; }
+      if (!r.leads?.length) { ex('no truth at any lead'); continue; }
+      if (cls === 'I' && screen.get(r.file)?.excluded) { ex('overlapping NASA files differ radially by more than 0.5 km'); continue; }
+      if (cls === 'R1' && r.screen?.flagged) { ex('maneuver screen: truth fit 3D RMS above the C2-A7 class threshold'); continue; }
+      if (cls === 'R1' && r.screen?.failed) { ex('maneuver screen: truth fit not converged'); continue; }
+      counts.windows += 1;
+      for (const l of r.leads) out.push({ L: l.L, err: l.errRtnM, terms: l.terms, truthSigma: cls === 'L' || cls === 'LP' ? l.truthSigmaM : null, cluster: cls === 'I' ? Math.floor(Date.parse(r.E) / (30 * DAY)) : r.cluster ?? r.norad, window: r.id });
+    }
+    return { out, counts };
+  }
   if (cls === 'I') {
     const screen = new Map(rowsOf('iss-screen.').map((r) => [r.file, r]));
     for (const r of rowsOf(`iss-terms.${set}.`)) {
@@ -141,13 +160,14 @@ async function minimize(f, x0, { iterations = 300, step = 1 } = {}) {
   return { x: simplex[best], value: values[best] };
 }
 
-const CANDIDATES = {
+const CANDIDATES_ALL = {
   M0: { names: [], fixed: { k_e: 1 } },
   M1: { names: ['k_e', 'f_R', 'f_T', 'f_N'] },
   M2: { names: ['k_e', 'f_R', 'f_T', 'f_N', 'q_T', 'q_RN'] },
   'M3/tau1': { names: ['k_e', 'f_R', 'f_T', 'f_N', 'q_T', 'q_RN', 's2'], fixed: { tau: 1 } },
   'M3/tauInf': { names: ['k_e', 'f_R', 'f_T', 'f_N', 'q_T', 'q_RN', 's2'], fixed: { tau: 'inf' } },
 };
+const CANDIDATES = XP ? { M0: CANDIDATES_ALL.M0, M1: CANDIDATES_ALL.M1 } : CANDIDATES_ALL; // C2-A9: SGP4-XP has no process noise
 const START = { k_e: 1, f_R: 1, f_T: 1, f_N: 1, q_T: 1e-12, q_RN: 1e-13, s2: 1e-2 };
 const toP = (names, x, fixed = {}) => ({ ...fixed, ...Object.fromEntries(names.map((k, i) => [k, Math.exp(x[i])])) });
 
@@ -175,7 +195,7 @@ if (args.fit) {
   const ranked = Object.entries(report.candidates).filter(([, c]) => c.validationCells).sort(([, a], [, b]) => b.validationInBand - a.validationInBand || a.validationLoss - b.validationLoss || a.freeParameters - b.freeParameters);
   report.chosen = ranked[0][0];
   report.ranking = ranked.map(([n, c]) => ({ candidate: n, validationInBand: c.validationInBand, validationLoss: c.validationLoss, freeParameters: c.freeParameters }));
-  console.log(writeReceipt(`fit-${CK}${report.sensitivity ? '-sensitivity' : ''}`, report));
+  console.log(writeReceipt(`${RX}fit-${CK}${report.sensitivity ? '-sensitivity' : ''}`, report));
   await pairs?.close();
   process.exit(0);
 }
@@ -187,8 +207,8 @@ if (args.heldout) {
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
   const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
   const R = ['R1', 'R2', 'R3'].includes(cls);
-  const rowsAll = cls === 'S' ? rowsOf('S.transfer.s') : cls === 'L' ? rowsOf('L.heldOut.s') : R ? reflag(screenFromM('heldOut', rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`))) : rowsOf(`heldout.${cls}.`);
-  const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
+  const rowsAll = XP ? reflag(rowsOf(`${cls}.heldOut.s`)) : cls === 'S' ? rowsOf('S.transfer.s') : cls === 'L' ? rowsOf('L.heldOut.s') : R ? reflag(screenFromM('heldOut', rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`))) : rowsOf(`heldout.${cls}.`);
+  const screen = cls === 'I' ? new Map(rowsOf('iss-screen.', ffmRowsDir).map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
   for (const key of cls === 'S' ? ['R1'] : Object.keys(FZ).filter((x) => x === CK || x === `${CK}-sensitivity`)) {
@@ -199,7 +219,8 @@ if (args.heldout) {
       const ex = (why) => { counts.excluded[why] = (counts.excluded[why] ?? 0) + 1; };
       for (const r of rows) {
         if (r.failed) { (counts.failures ??= []).push({ id: r.id, failure: r.failed }); continue; }
-        if (r.excluded || !r.leads || !r.ffm) { ex(r.excluded ? r.excluded.slice(0, 60) : r.fit?.ok ? 'fit converged, no truth at any lead' : `fit ${r.fit?.termination ?? r.fit?.error ?? 'none'}`); continue; }
+        if (XP && r.failed) { (counts.failures ??= []).push({ id: r.id, failure: r.failed }); continue; }
+        if (r.excluded || !r.leads || (!XP && !r.ffm)) { ex(r.excluded ? r.excluded.slice(0, 60) : r.fit?.ok ? 'fit converged, no truth at any lead' : `fit ${r.fit?.termination ?? r.fit?.error ?? 'none'}`); continue; }
         if (cls === 'I' && scope === 'primary' && screen.get(r.file)?.excluded) { ex('overlapping NASA files differ radially by more than 0.5 km'); continue; }
         if (R && scope === 'primary' && r.screen?.flagged) { ex('maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)'); continue; }
         if (R && scope === 'primary' && r.screen?.failed) { ex('maneuver screen: truth fit not converged'); continue; }
@@ -207,7 +228,7 @@ if (args.heldout) {
         counts.windows += 1;
         r.leads.forEach((l, j) => {
           if (sens && l.truthSigmaM > 0.3) return;
-          const terms = [{ weight: 1, covariance: r.ffm[key][j] }];
+          const terms = XP ? [{ weight: p.k_e, covariance: l.terms.A }] : [{ weight: 1, covariance: r.ffm[key][j] }];
           for (const [ax, u] of [['f_R', unitRtn.RR], ['f_T', unitRtn.TT], ['f_N', unitRtn.NN]]) if (p[ax]) terms.push({ weight: p[ax] ** 2, covariance: u });
           if (p.s2) terms.push({ weight: p.s2, covariance: p.tau === 'inf' ? l.terms.Dinf : l.terms.D1 });
           const nsgfR2 = (cls === 'R2' && /^(16908|38077|27944|7646|25398|22824)$/.test(String(r.norad))) || cls === 'L';
@@ -240,7 +261,7 @@ if (args.heldout) {
       table.variants[`${key}/${subset ? `${subset}/` : ''}${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
     }
   }
-  console.log(writeReceipt(`heldout-${CK}`, table));
+  console.log(writeReceipt(`${RX}heldout-${CK}`, table));
   await pairs?.close();
   process.exit(0);
 }
@@ -248,7 +269,7 @@ if (args.heldout) {
 if (args.p8) {
   // C2-A4 point 1: per lead of the chosen model on validation, the covariance scaled so that the 95 % coverage is exactly 0.95
   // (s = the type-7 0.95 quantile of d2 / 7.8147), then mean d2 / 3 of the scaled d2; P8 passes when every lead lies in 0.8-1.25.
-  const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${CK}.json`)));
+  const fit = JSON.parse(fs.readFileSync(path.join(results, `${RX}fit-${CK}.json`)));
   const p = fit.candidates[fit.chosen].parameters;
   const val = samples('validation');
   const d2 = await d2Of(p, val.out);
@@ -257,7 +278,7 @@ if (args.p8) {
   const q = (xs, f) => { const s0 = [...xs].sort((a, b) => a - b); const h = (s0.length - 1) * f, lo = Math.floor(h); return s0[lo] + (s0[Math.ceil(h)] - s0[lo]) * (h - lo); };
   const leads = Object.fromEntries(Object.entries(by).map(([L, xs]) => { const sc = q(xs, 0.95) / CHI; const m = xs.reduce((a, b) => a + b / sc, 0) / xs.length / 3; return [L, { n: xs.length, scale: sc, shape: m, inBand: m >= 0.8 && m <= 1.25 }]; }));
   const pass = Object.values(leads).every((x) => x.inBand);
-  console.log(writeReceipt(`precheck-P8-${CK}`, { plan: '3.8 P8; C2-A4 point 1', class: CK, chosen: fit.chosen, parameters: p, fitReceipt: `fit-${CK}.json`, leads,
+  console.log(writeReceipt(`${RX}precheck-P8-${CK}`, { plan: '3.8 P8; C2-A4 point 1', class: CK, chosen: fit.chosen, parameters: p, fitReceipt: `fit-${CK}.json`, leads,
     outcome: pass ? 'pass' : 'FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)' }));
   await pairs?.close();
   process.exit(0);
@@ -265,12 +286,12 @@ if (args.p8) {
 
 if (args.freeze) {
   const key = `${CK}${args.sensitivity === 'true' ? '-sensitivity' : ''}`;
-  const fitFile = path.join(results, `fit-${key}.json`);
+  const fitFile = path.join(results, `${RX}fit-${key}.json`);
   const fit = JSON.parse(fs.readFileSync(fitFile));
-  const file = path.join(results, 'frozen-constants.json');
+  const file = path.join(results, `${RX}frozen-constants.json`);
   const frozenAll = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : { receipt: 'frozen-constants', note: 'PLAN.md 3.5 point 4: no change after any held-out score; any later variant is exploratory', classes: {} };
   if (frozenAll.classes[key]) throw new Error(`${key} is already frozen`);
-  const p8 = path.join(results, `precheck-P8-${CK}.json`);
+  const p8 = path.join(results, `${RX}precheck-P8-${CK}.json`);
   frozenAll.classes[key] = { chosen: fit.chosen, parameters: fit.candidates[fit.chosen].parameters, fitReceipt: path.basename(fitFile), fitReceiptSha256: sha256(fs.readFileSync(fitFile)), fitCommit: fit.experimentsCommit,
     p8: fs.existsSync(p8) && !args.sensitivity ? JSON.parse(fs.readFileSync(p8)).outcome : null, frozenUtc: new Date().toISOString() };
   fs.writeFileSync(file, `${JSON.stringify(frozenAll, null, 1)}\n`);
