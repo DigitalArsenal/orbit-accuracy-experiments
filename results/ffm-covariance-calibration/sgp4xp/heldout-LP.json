@@ -1,0 +1,174 @@
+{
+ "receipt": "sgp4xp/heldout-LP",
+ "createdUtc": "2026-10-29T08:15:55.672Z",
+ "experimentsCommit": "f9d6475329199fe3eb7eee33f6ce98b15befc2c8",
+ "class": "LP",
+ "variants": {
+  "LP/primary": {
+   "constants": {
+    "chosen": "M0",
+    "parameters": {
+     "k_e": 1
+    },
+    "fitReceipt": "fit-LP.json",
+    "fitReceiptSha256": "ad001d900b55fecc5699a98fba70a99e8d63f4c2b5cb005924628e3737aa6ed9",
+    "fitCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T08:12:20.966Z"
+   },
+   "counts": {
+    "windows": 200,
+    "excluded": {}
+   },
+   "leads": {
+    "1": {
+     "n": 198,
+     "clusters": 5,
+     "meanD2over3": 1.8037245113362947,
+     "medianD2over3": 1.7551950779443992,
+     "coverage": 0.7878787878787878,
+     "meanInterval": [
+      1.3993738448248783,
+      2.1999881645174804
+     ],
+     "coverageInterval": [
+      0.6238095238095238,
+      0.9424083769633508
+     ],
+     "meanZ2Rtn": [
+      1.1029582181672388,
+      3.3976092519961263,
+      0.988623135951275
+     ],
+     "oraclePassProbability": 0.80925,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "6": {
+     "n": 198,
+     "clusters": 5,
+     "meanD2over3": 1.1693643405782275,
+     "medianD2over3": 1.0484469474039286,
+     "coverage": 0.9444444444444444,
+     "meanInterval": [
+      0.9487511775646134,
+      1.3437101456658322
+     ],
+     "coverageInterval": [
+      0.8714285714285714,
+      1
+     ],
+     "meanZ2Rtn": [
+      1.1869033922164194,
+      0.994955666147568,
+      1.2265100939760452
+     ],
+     "oraclePassProbability": 0.80925,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "12": {
+     "n": 197,
+     "clusters": 5,
+     "meanD2over3": 1.468630209930027,
+     "medianD2over3": 1.5748532419198995,
+     "coverage": 0.9441624365482234,
+     "meanInterval": [
+      1.0846004527267543,
+      1.8526006513459468
+     ],
+     "coverageInterval": [
+      0.8440860215053764,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.9790371397964397,
+      2.065550300275046,
+      1.2738765113565402
+     ],
+     "oraclePassProbability": 0.80925,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "24": {
+     "n": 191,
+     "clusters": 5,
+     "meanD2over3": 1.7048596252146282,
+     "medianD2over3": 1.544127339393136,
+     "coverage": 0.8010471204188482,
+     "meanInterval": [
+      1.1694329538125683,
+      2.2920442264898564
+     ],
+     "coverageInterval": [
+      0.58,
+      0.9786096256684492
+     ],
+     "meanZ2Rtn": [
+      1.0631787687732357,
+      2.5796142787906082,
+      1.340551092056226
+     ],
+     "oraclePassProbability": 0.8105,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "48": {
+     "n": 186,
+     "clusters": 5,
+     "meanD2over3": 1.3543422488832702,
+     "medianD2over3": 1.2354661629964954,
+     "coverage": 0.9193548387096774,
+     "meanInterval": [
+      0.9781053775154639,
+      1.8029155710259257
+     ],
+     "coverageInterval": [
+      0.7897435897435897,
+      0.9946236559139785
+     ],
+     "meanZ2Rtn": [
+      0.9859107582876793,
+      1.7528598703193528,
+      1.1627858441143724
+     ],
+     "oraclePassProbability": 0.818,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "72": {
+     "n": 182,
+     "clusters": 5,
+     "meanD2over3": 1.0664182313439428,
+     "medianD2over3": 1.0553755003110963,
+     "coverage": 0.9945054945054945,
+     "meanInterval": [
+      0.8209752018947759,
+      1.3758581827745704
+     ],
+     "coverageInterval": [
+      0.9838709677419355,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.8682027534174886,
+      1.2976817551407858,
+      0.9078707433124026
+     ],
+     "oraclePassProbability": 0.77225,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    }
+   },
+   "eligibleCells": 6,
+   "passingEligibleCells": 1
+  }
+ },
+ "opened": null
+}

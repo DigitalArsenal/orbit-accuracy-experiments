@@ -270,5 +270,9 @@
   ],
   "frozen": "results/ffm-covariance-calibration/sgp4xp/frozen-constants.json",
   "starlink": "B2-extended export, new manifest"
+ },
+ "C2-A10": {
+  "date": "2026-10-29",
+  "disclosure": "first SGP4-XP held-out scoring used FFM constants by a scorer path bug; I and L tables seen and deleted; rescored with sgp4xp/frozen-constants.json (3f21116c...); rows unchanged, no refit"
  }
 }

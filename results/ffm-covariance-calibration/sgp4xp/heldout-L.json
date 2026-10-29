@@ -1,0 +1,177 @@
+{
+ "receipt": "sgp4xp/heldout-L",
+ "createdUtc": "2026-10-29T08:15:54.383Z",
+ "experimentsCommit": "f9d6475329199fe3eb7eee33f6ce98b15befc2c8",
+ "class": "L",
+ "variants": {
+  "L/primary": {
+   "constants": {
+    "chosen": "M1",
+    "parameters": {
+     "k_e": 1.349859374981793,
+     "f_R": 3.1280099567957196,
+     "f_T": 1.4465372592109917,
+     "f_N": 2.76418148270726
+    },
+    "fitReceipt": "fit-L.json",
+    "fitReceiptSha256": "235fb1fe61f8902aa42400f0987c6fcd44ef1cefaa4886354f74e86099bfe804",
+    "fitCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T08:12:20.083Z"
+   },
+   "counts": {
+    "windows": 206,
+    "excluded": {}
+   },
+   "leads": {
+    "1": {
+     "n": 204,
+     "clusters": 5,
+     "meanD2over3": 1.4165184110845954,
+     "medianD2over3": 1.4022859115567947,
+     "coverage": 0.9656862745098039,
+     "meanInterval": [
+      1.1434655341482725,
+      1.679069254292598
+     ],
+     "coverageInterval": [
+      0.9073170731707317,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.8411305867332104,
+      2.6429173313699277,
+      0.8419917465338649
+     ],
+     "oraclePassProbability": 0.796,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "6": {
+     "n": 204,
+     "clusters": 5,
+     "meanD2over3": 0.9255826295271312,
+     "medianD2over3": 0.7853345027236847,
+     "coverage": 0.9901960784313726,
+     "meanInterval": [
+      0.7846414255424138,
+      1.0559715411124477
+     ],
+     "coverageInterval": [
+      0.9804878048780488,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.9673673659588096,
+      0.7796490245357449,
+      0.937045962764984
+     ],
+     "oraclePassProbability": 0.796,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "12": {
+     "n": 203,
+     "clusters": 5,
+     "meanD2over3": 1.2245610284372064,
+     "medianD2over3": 1.2460513416901586,
+     "coverage": 0.9655172413793104,
+     "meanInterval": [
+      0.9023369183655513,
+      1.6047451791973792
+     ],
+     "coverageInterval": [
+      0.8900523560209425,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.7559007830668494,
+      1.7115997149329074,
+      1.1354364856224677
+     ],
+     "oraclePassProbability": 0.78775,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "24": {
+     "n": 199,
+     "clusters": 5,
+     "meanD2over3": 1.3609020129563667,
+     "medianD2over3": 1.2344952826581808,
+     "coverage": 0.9296482412060302,
+     "meanInterval": [
+      0.9631707187782607,
+      1.7626507949544525
+     ],
+     "coverageInterval": [
+      0.8578431372549019,
+      0.995
+     ],
+     "meanZ2Rtn": [
+      0.8246953233035619,
+      2.1051197961450407,
+      1.047320972612605
+     ],
+     "oraclePassProbability": 0.80225,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "48": {
+     "n": 195,
+     "clusters": 5,
+     "meanD2over3": 1.1087932771221307,
+     "medianD2over3": 1.0175620948344013,
+     "coverage": 0.9948717948717949,
+     "meanInterval": [
+      0.8498966553497594,
+      1.3703589362323607
+     ],
+     "coverageInterval": [
+      0.983957219251337,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.7546270179634105,
+      1.5169933508712141,
+      0.9307360353983041
+     ],
+     "oraclePassProbability": 0.81175,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "72": {
+     "n": 190,
+     "clusters": 5,
+     "meanD2over3": 0.8969944440906185,
+     "medianD2over3": 0.8850184813637308,
+     "coverage": 0.9947368421052631,
+     "meanInterval": [
+      0.7550648213180472,
+      1.0336067682416303
+     ],
+     "coverageInterval": [
+      0.9835164835164835,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.6824278250663756,
+      1.1693084332580317,
+      0.745304093185556
+     ],
+     "oraclePassProbability": 0.82175,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    }
+   },
+   "eligibleCells": 6,
+   "passingEligibleCells": 1
+  }
+ },
+ "opened": null
+}

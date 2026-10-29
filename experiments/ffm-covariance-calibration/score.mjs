@@ -205,7 +205,7 @@ if (args.heldout) {
   // from E) plus the floor and sigma_delta^2 D_tau in the composition. Per lead: n, clusters, mean and median d2/3, coverage, 95 % cluster-
   // bootstrap intervals (10,000 resamples, seed SHA-256 of C2|boot|<class>|<lead>), mean z^2 per axis, the oracle pass probability at n,
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
-  const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
+  const FZ = JSON.parse(fs.readFileSync(path.join(results, `${RX}frozen-constants.json`))).classes;
   const R = ['R1', 'R2', 'R3'].includes(cls);
   const rowsAll = XP ? reflag(rowsOf(`${cls}.heldOut.s`)) : cls === 'S' ? rowsOf('S.transfer.s') : cls === 'L' ? rowsOf('L.heldOut.s') : R ? reflag(screenFromM('heldOut', rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`))) : rowsOf(`heldout.${cls}.`);
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.', ffmRowsDir).map((r) => [r.file, r])) : null;

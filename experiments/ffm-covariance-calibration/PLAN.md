@@ -468,3 +468,11 @@ registered rule applies unchanged. The 8 GPS satellites stay out of R3 (R3 froze
 4. **Starlink (Q30).** The transfer validation uses R1-M's SGP4-XP constants on the B2 export extended by the B2 lane (its fit-only
    reader, B2's registered build): the SGP4-XP fit over [E - 48 h, E - 24 h] for the same 1,058 satellites, its OMM, the
    `sdnap_covariance_at` covariance at every truth epoch (TEME) and the TEME states, under a new manifest SHA-256; robustness only.
+
+### C2-A10 - 2026-10-29, after the SGP4-XP held-out run: a scorer defect in the first SGP4-XP held-out scoring, disclosed
+
+The first scoring of the SGP4-XP held-out rows read C2's FFM frozen constants instead of `sgp4xp/frozen-constants.json` (a path not
+switched by the SGP4-XP arm). Its I and L tables were printed and seen (I: mean d2/3 near 0; L: 0.62-0.98, with FFM's M2 constants applied
+to A_xp); LP and R1 failed to compose. Those tables were deleted and never committed. The scorer was fixed and the held-out sets scored
+with the SGP4-XP frozen constants (SHA-256 3f21116ca436d8edb38c47a9ab4661137b618f95e9cce9e52da7523bd9d04992, frozen before any
+SGP4-XP held-out row existed); the held-out rows themselves (errors and A_xp) are unchanged and no constant was refitted.
