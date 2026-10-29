@@ -1,0 +1,185 @@
+{
+ "receipt": "sgp4xp/fit-I",
+ "createdUtc": "2026-10-29T08:11:42.917Z",
+ "experimentsCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+ "class": "I",
+ "sensitivity": false,
+ "calibration": {
+  "windows": 286,
+  "excluded": {
+   "no truth at any lead": 6,
+   "overlapping NASA files differ radially by more than 0.5 km": 4
+  }
+ },
+ "validation": {
+  "windows": 99,
+  "excluded": {
+   "overlapping NASA files differ radially by more than 0.5 km": 5,
+   "no truth at any lead": 1
+  }
+ },
+ "samples": {
+  "calibration": 535,
+  "validation": 189
+ },
+ "candidates": {
+  "M0": {
+   "parameters": {
+    "k_e": 1
+   },
+   "calibrationCells": {
+    "24": {
+     "n": 153,
+     "clusters": 35,
+     "meanD2over3": 36.578379475406265,
+     "medianD2over3": 16.27269079736072,
+     "coverage": 0.1568627450980392,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 228,
+     "clusters": 37,
+     "meanD2over3": 53.80426053281434,
+     "medianD2over3": 22.033975429255097,
+     "coverage": 0.09210526315789473,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 154,
+     "clusters": 37,
+     "meanD2over3": 73.73999486189845,
+     "medianD2over3": 25.971587520367294,
+     "coverage": 0.045454545454545456,
+     "inBand": false,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "24": {
+     "n": 60,
+     "clusters": 13,
+     "meanD2over3": 45.532101676096,
+     "medianD2over3": 25.643004361006845,
+     "coverage": 0.2,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 82,
+     "clusters": 13,
+     "meanD2over3": 100.00622861945733,
+     "medianD2over3": 31.952377598561707,
+     "coverage": 0.15853658536585366,
+     "inBand": false,
+     "eligible": false
+    },
+    "72": {
+     "n": 47,
+     "clusters": 13,
+     "meanD2over3": 119.06479907139095,
+     "medianD2over3": 35.503515203676216,
+     "coverage": 0.10638297872340426,
+     "inBand": false,
+     "eligible": false
+    }
+   },
+   "validationInBand": 0,
+   "validationLoss": 4810.143742362502,
+   "freeParameters": 0
+  },
+  "M1": {
+   "parameters": {
+    "k_e": 96.49426709485638,
+    "f_R": 2.408758736789693,
+    "f_T": 0.4992517195365452,
+    "f_N": 0.45192278835875893
+   },
+   "likelihoodStart": {
+    "k_e": 54.731708039979466,
+    "f_R": 4.588178130949428,
+    "f_T": 0.4573384044293242,
+    "f_N": 0.4733915972151245
+   },
+   "calibrationLoss": 8.582344189093911,
+   "calibrationCells": {
+    "24": {
+     "n": 153,
+     "clusters": 35,
+     "meanD2over3": 0.37907303155803634,
+     "medianD2over3": 0.16863893799671614,
+     "coverage": 0.9934640522875817,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 228,
+     "clusters": 37,
+     "meanD2over3": 0.557590157848558,
+     "medianD2over3": 0.22834491516010635,
+     "coverage": 0.9649122807017544,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 154,
+     "clusters": 37,
+     "meanD2over3": 0.764190290990106,
+     "medianD2over3": 0.26915147905881504,
+     "coverage": 0.922077922077922,
+     "inBand": false,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "24": {
+     "n": 60,
+     "clusters": 13,
+     "meanD2over3": 0.4718632230133508,
+     "medianD2over3": 0.26574629931998855,
+     "coverage": 1,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 82,
+     "clusters": 13,
+     "meanD2over3": 1.0363954300521665,
+     "medianD2over3": 0.33113237955058034,
+     "coverage": 0.9146341463414634,
+     "inBand": false,
+     "eligible": false
+    },
+    "72": {
+     "n": 47,
+     "clusters": 13,
+     "meanD2over3": 1.2339049824446113,
+     "medianD2over3": 0.36793387553353396,
+     "coverage": 0.8085106382978723,
+     "inBand": false,
+     "eligible": false
+    }
+   },
+   "validationInBand": 0,
+   "validationLoss": 60.03451326729762,
+   "freeParameters": 4
+  }
+ },
+ "chosen": "M1",
+ "ranking": [
+  {
+   "candidate": "M1",
+   "validationInBand": 0,
+   "validationLoss": 60.03451326729762,
+   "freeParameters": 4
+  },
+  {
+   "candidate": "M0",
+   "validationInBand": 0,
+   "validationLoss": 4810.143742362502,
+   "freeParameters": 0
+  }
+ ],
+ "opened": null
+}

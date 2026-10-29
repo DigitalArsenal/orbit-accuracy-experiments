@@ -1,0 +1,59 @@
+{
+ "receipt": "frozen-constants",
+ "note": "PLAN.md 3.5 point 4: no change after any held-out score; any later variant is exploratory",
+ "classes": {
+  "I": {
+   "chosen": "M1",
+   "parameters": {
+    "k_e": 96.49426709485638,
+    "f_R": 2.408758736789693,
+    "f_T": 0.4992517195365452,
+    "f_N": 0.45192278835875893
+   },
+   "fitReceipt": "fit-I.json",
+   "fitReceiptSha256": "3c24d12d53b356b492d8dce5c850cd92b65881bcf34da1d64b60e15d8b1f4913",
+   "fitCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T08:12:19.181Z"
+  },
+  "L": {
+   "chosen": "M1",
+   "parameters": {
+    "k_e": 1.349859374981793,
+    "f_R": 3.1280099567957196,
+    "f_T": 1.4465372592109917,
+    "f_N": 2.76418148270726
+   },
+   "fitReceipt": "fit-L.json",
+   "fitReceiptSha256": "235fb1fe61f8902aa42400f0987c6fcd44ef1cefaa4886354f74e86099bfe804",
+   "fitCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T08:12:20.083Z"
+  },
+  "LP": {
+   "chosen": "M0",
+   "parameters": {
+    "k_e": 1
+   },
+   "fitReceipt": "fit-LP.json",
+   "fitReceiptSha256": "ad001d900b55fecc5699a98fba70a99e8d63f4c2b5cb005924628e3737aa6ed9",
+   "fitCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T08:12:20.966Z"
+  },
+  "R1": {
+   "chosen": "M1",
+   "parameters": {
+    "k_e": 18.44601147139567,
+    "f_R": 1.4314883773240414,
+    "f_T": 0.5724131928037121,
+    "f_N": 0.7515724406612534
+   },
+   "fitReceipt": "fit-R1.json",
+   "fitReceiptSha256": "e9e2f9764fa42a81df5aecb13df5a20cb699e4f2142ef03041f6af1bf7abe020",
+   "fitCommit": "a6c888172b136056de06550812d8c381fa3255ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T08:12:21.884Z"
+  }
+ }
+}

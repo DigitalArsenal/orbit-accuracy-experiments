@@ -451,3 +451,28 @@ registered rule applies unchanged. The 8 GPS satellites stay out of R3 (R3 froze
    forecast after: part 1a's rule). The SGP4-XP fairness calibration for Starlink follows the same rule (R1-M).
 4. **The deleted trial row.** One transfer row (NORAD 45237, from a single-satellite trial under R1-O) was written and deleted: a missing
    input (no RSGA), not a failure; no covariance or d2 was computed.
+
+### C2-A9 - 2026-10-29, before any SGP4-XP fit (coordinator ruling D7 follow-through, Q29, Q30): the SGP4-XP fairness calibration
+
+1. **Model.** SGP4-XP's own module covariance A_xp at each lead, calibrated as P = k_e A_xp + diag(f_R^2, f_T^2, f_N^2) (RTN of the
+   predicted state); nothing else (SGP4-XP has no process-noise terms). Candidates M0 (k_e = 1) and M1 (k_e and the floor).
+2. **Inputs (Q29; this replaces the brief's GP-set wording).** B2's SGP4-XP arm exactly: propagator/sdn-ap `fit` with THEORY SGP4XP,
+   B2's registered build (module.wasm 62c783262da9e69c54d6f4eb98c97af4208c1b11daec44cc9c28c0252c564d1e, the G1 store snapshot B2's
+   lib/fits.mjs pins; modules root the B2 modules worktree at c860a072), on each class's 24 h fit track - ISS: the NASA track; type L:
+   the FFM-carried 24 h track of the E6 R product (60 s, as part2-laser.mjs); L-P and R1: the precise truth track (10 min) - and its
+   covariance at each lead by `sdnap_covariance_at` (TEME; the truth taken to TEME by foundation/frames).
+3. **Pipeline.** C2's classes I, L (L-P beside it) and R1 under weather M, their splits, windows (the FFM rows of each class define them),
+   truth, leads, pass rule, maneuver screens (the 5 m rule; R1 C2-A7's 277.4858 m) and exclusions; the C2-A1 truth term for NSGF truth.
+   Fit on calibration (Gaussian likelihood start, then the band loss), choose on validation, freeze into
+   `results/ffm-covariance-calibration/sgp4xp/frozen-constants.json`, then score the held-out sets once.
+4. **Starlink (Q30).** The transfer validation uses R1-M's SGP4-XP constants on the B2 export extended by the B2 lane (its fit-only
+   reader, B2's registered build): the SGP4-XP fit over [E - 48 h, E - 24 h] for the same 1,058 satellites, its OMM, the
+   `sdnap_covariance_at` covariance at every truth epoch (TEME) and the TEME states, under a new manifest SHA-256; robustness only.
+
+### C2-A10 - 2026-10-29, after the SGP4-XP held-out run: a scorer defect in the first SGP4-XP held-out scoring, disclosed
+
+The first scoring of the SGP4-XP held-out rows read C2's FFM frozen constants instead of `sgp4xp/frozen-constants.json` (a path not
+switched by the SGP4-XP arm). Its I and L tables were printed and seen (I: mean d2/3 near 0; L: 0.62-0.98, with FFM's M2 constants applied
+to A_xp); LP and R1 failed to compose. Those tables were deleted and never committed. The scorer was fixed and the held-out sets scored
+with the SGP4-XP frozen constants (SHA-256 3f21116ca436d8edb38c47a9ab4661137b618f95e9cce9e52da7523bd9d04992, frozen before any
+SGP4-XP held-out row existed); the held-out rows themselves (errors and A_xp) are unchanged and no constant was refitted.
