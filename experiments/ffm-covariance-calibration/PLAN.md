@@ -405,3 +405,15 @@ these rulings changes those two classes' candidates or rules.
    as a failure (not an exclusion) and is listed. The report shows run 1 beside run 2.
 5. **P8 finding:** type I and L-P are infeasible for a lead-independent model (`precheck-P8-I.json`, `precheck-P8-LP.json`); a finding,
    not a blocker.
+
+### C2-A6 - 2026-10-29, before any R1 fit (coordinator ruling: one bounded seed retry)
+
+The first `seeds-R1R2.json` (cacb129) left GRACE-FO 1/2 and the 5 COSMIC-2 satellites out of R1 (no public dimension retrieved). The one
+bounded retry found:
+- GRACE-FO: the Level-1 Data Product User Handbook (JPL D-56935, PO.DAAC), Table 5 macro model Front panel 0.9551567 m^2 (normal +X,
+  the flight direction) and Table 4 launch masses 601.214 kg (FM 1) and 601.209 kg (FM 2);
+- COSMIC-2: eoPortal FORMOSAT-7, stowed bus 1000 x 1250 x 1250 mm and launch mass (wet) 277.8 kg; A = 1.25 x 1.25 m (the largest face;
+  deployed arrays not documented). The TASA mission page gives no dimension.
+Both are restored to their registered splits (GRACE-FO 1+2 in calibration as one cluster; COSMIC-2 4 in calibration, 44350 held out),
+with seeds B = A/m x 2.2 and AGOM = A/m x 1.3 in the amended `seeds-R1R2.json`. R1 then has at least 3 independent clusters and the
+registered rule applies unchanged. The 8 GPS satellites stay out of R3 (R3 frozen at 9717f94).

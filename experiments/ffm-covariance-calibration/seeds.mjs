@@ -42,12 +42,18 @@ const r12 = [
   { name: 'Stella', norad: 22824, ...sphere(0.24), mass: 48, source: ILRS('star'), quoted: 'RRA Diameter: 24 cm; Weight: 48 kg' },
   { name: 'WESTPAC', norad: 25398, ...sphere(0.24), mass: 23, source: ILRS('west'), quoted: 'RRA Diameter: 24 cm; Weight: 23 kg' },
 ];
-const r12Excluded = [
-  ...[['GRACE-FO 1', 43476], ['GRACE-FO 2', 43477]].map(([name, norad]) => ({ name, norad, reason: 'no area, dimension or mass on the pages retrieved: gracefo.jpl.nasa.gov (fact sheet, home), podaac.jpl.nasa.gov/GRACE-FO, earth.esa.int/eogateway/missions/grace-fo, the ILRS grf1 page (reflector only); jpl.nasa.gov press kit HTTP 403; gfz.de GRACE-FO pages HTTP 404' })),
-  ...[['COSMIC-2 FM1', 44349], ['COSMIC-2 FM2', 44351], ['COSMIC-2 FM4', 44350], ['COSMIC-2 FM5', 44358], ['COSMIC-2 FM6', 44353]].map(([name, norad]) => ({ name, norad, reason: 'no area, dimension or mass on cosmic.ucar.edu (COSMIC-2 pages) or nesdis.noaa.gov (COSMIC-2); NSPO page unreachable' })),
-];
+// C2-A6 (coordinator ruling, the one bounded retry before any R1 fit): GRACE-FO from the Level-1 handbook's macro model, COSMIC-2 from eoPortal.
+const GFO = 'https://archive.podaac.earthdata.nasa.gov/podaac-ops-cumulus-docs/gracefo/open/docs/GRACE-FO_L1_Handbook.pdf (GRACE-FO Level-1 Data Product User Handbook, JPL D-56935; PDF SHA-256 b6d27a5bd30615df5087461999782f09480d3347f36dfd8ab2480f62572e0edd), Table 4 and Table 5';
+const C2P = 'https://www.eoportal.org/satellite-missions/formosat-7 (Table: spacecraft bus key design features)';
+r12.push(
+  { name: 'GRACE-FO 1', norad: 43476, area: 0.9551567, arithmetic: 'the Front panel of the macro model (unit normal +X, the flight direction): 0.9551567 m^2', mass: 601.214, source: GFO, quoted: 'Front 0.9551567 m^2 (unit normal +1.0, 0, 0); Mass at Launch FM 1 601.214 kg' },
+  { name: 'GRACE-FO 2', norad: 43477, area: 0.9551567, arithmetic: 'the Front panel of the macro model (unit normal +X, the flight direction): 0.9551567 m^2', mass: 601.209, source: GFO, quoted: 'Front 0.9551567 m^2 (unit normal +1.0, 0, 0); Mass at Launch FM 2 601.209 kg' },
+  ...[['COSMIC-2 FM1', 44349], ['COSMIC-2 FM2', 44351], ['COSMIC-2 FM4', 44350], ['COSMIC-2 FM5', 44358], ['COSMIC-2 FM6', 44353]].map(([name, norad]) => ({ name, norad, area: 1.25 * 1.25, arithmetic: '1.25 m x 1.25 m: the largest face of the stowed bus 1000 x 1250 x 1250 mm (deployed solar arrays not documented, not included)', mass: 277.8, source: C2P, quoted: 'Spacecraft size (stowed) 1000 mm x 1250 mm x 1250 mm; Launch mass (wet) 277.8 kg' })),
+);
+const r12Excluded = [];
 const seed = (o, withB) => { const am = o.area / o.mass; return { ...o, areaM2: Number(o.area.toPrecision(6)), areaOverMassM2kg: Number(am.toPrecision(6)), agomSeed: Number((am * 1.3).toPrecision(6)), ...(withB ? { bSeed: Number((am * 2.2).toPrecision(6)) } : {}) }; };
 console.log(writeReceipt('seeds-R3', { plan: 'C2-A4 point 2 (Q17)', rule: 'AGOM = A/m x Cr 1.3, a priori sigma 100 % of the seed, domain [0, inf)', objects: r3.map((o) => seed(o, false)), excluded: r3Excluded,
   disclosure: 'the 8 GPS satellites of R3 calibration are left out: no public dimension retrieved; GLONASS areas are the documented body only (solar arrays not documented by the IAC page)' }));
 console.log(writeReceipt('seeds-R1R2', { plan: 'C2-A4 point 3 (Q18)', rule: 'P0 structure; B = A/m x Cd 2.2, AGOM = A/m x Cr 1.3, a priori sigma 30 % of each seed, both bounded to [0, inf); seeds per object, not Starlink\'s', objects: r12.map((o) => seed(o, true)), excluded: r12Excluded,
-  disclosure: 'GRACE-FO 1/2 and the 5 COSMIC-2 satellites are left out of R1: no public dimension retrieved. R1 calibration keeps Swarm A+C and Swarm B (2 independent clusters, below the 3-cluster rule); R1 held out by object keeps TerraSAR-X only' }));
+  amendment: 'C2-A6: GRACE-FO 1/2 and the 5 COSMIC-2 satellites restored to their registered splits from the bounded retry (the first issue of this receipt, at cacb129, left them out)',
+  disclosure: 'GRACE-FO uses the macro model front panel; COSMIC-2 the stowed bus face; the GRACE-FO handbook carries a U.S. export-regulation notice on its technical data (the values used are those it publishes)' }));

@@ -182,5 +182,26 @@
   "frozenConstantsSha256": "c50936e5646a6e55ea6c5fec0cab230b078082b4e4e770afd0715ca98c38c803",
   "run2": "final; any FFM refusal is a failure, listed",
   "modulesTask": "modules-ffm-covariance-roundtrip-symmetry-20261029"
+ },
+ "C2-A6": {
+  "date": "2026-10-29",
+  "before": "any R1 fit",
+  "restored": {
+   "GRACE-FO": {
+    "areaM2": 0.9551567,
+    "mass": [
+     601.214,
+     601.209
+    ],
+    "source": "GRACE-FO L1 Handbook JPL D-56935, Tables 4-5"
+   },
+   "COSMIC-2": {
+    "areaM2": 1.5625,
+    "mass": 277.8,
+    "source": "eoPortal FORMOSAT-7 (stowed bus 1000 x 1250 x 1250 mm)"
+   }
+  },
+  "r1Clusters": ">= 3: registered rule applies",
+  "gps": "stays out of R3"
  }
 }
