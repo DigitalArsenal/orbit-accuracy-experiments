@@ -30,7 +30,7 @@ export async function runCycle({captureRoot,physics,registration,producer,subset
   }
   if(stop())return null;
   const cycleDir=path.join(captureRoot,'cycles',id);fs.mkdirSync(cycleDir,{recursive:true});
-  const fetcher=new Fetcher(),summary={id,startedUtc:iso(),status:'running',files:0,samples:0,truthStates:0,failures:0,storedBytes:0,sidecars:0,sidecarStates:0,sidecarFailures:0,sidecarBytes:0};
+  const fetcher=new Fetcher(),summary={id,startedUtc:iso(),status:'running',files:0,samples:0,truthStates:0,failures:0,storedBytes:0,sidecars:0,sidecarFailures:0,sidecarBytes:0};
   let failure;const pending=[];
   try{
     const reg=subsets(subsetsFile);
