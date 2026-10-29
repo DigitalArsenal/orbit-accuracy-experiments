@@ -824,3 +824,14 @@ kept, the missing satellites are added).
    point 2 rules (a failed fit has no record). Part 5's A3 run had screened with them; those screens were set aside unread
    (<store>/aborted-part5-a3-screens-with-round1/) and the A3 run screened again over the smaller population (the satellites both
    SGP4-XP and A3 fitted at full weight).
+
+### A13 - 2026-10-29, part 8 (an implementation note), committed before any part 5 number of part 1a is read
+
+Part 5's calibrated FFM covariance needs the density term D_tau at every assessment epoch of a satellite (21 per encounter, up to
+hundreds per satellite). C2's windowTerms computes D_tau together with the noise responses on a dense 600 s grid from E to each epoch, which
+for hundreds of epochs is tens of thousands of STM samples; part 5 uses none of those noise responses (its white-noise terms come from
+FFM's own PROCESS_NOISE run, A13 part 2 point 4). Part 5 therefore computes D_tau with the same dcp_covariance inputs (the STM and the
+B sensitivity at E and at the epoch, from one propagator/ffm run from the fit epoch with A5's covariance, RK78 relative tolerance 1e-10,
+steps of at most 120 s) sampled at E and the epochs only (lib/a13.mjs densityTerms). The lead records keep windowTerms. On two Starlink
+lead records the composed calibrated covariance differs between the two paths by at most 2.4e-4 relative per element and d2 agrees to
+six digits (the integrator's sampling); part 5's records are not otherwise affected.

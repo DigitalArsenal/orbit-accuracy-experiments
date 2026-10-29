@@ -104,13 +104,35 @@ export function rotate6(Q, P) {
   return RP.flatMap((row) => Array.from({ length: 6 }, (_, j) => row.reduce((s, x, k) => s + x * Rm[j][k], 0)));
 }
 
+/** Part 5's density term (A13 part 2 point 4) at many epochs: C2's D_tau (lib/products.mjs windowTerms' D part, the same dcp_covariance
+ *  inputs) from one propagator/ffm run from the fit epoch with A5's covariance and the STM, sampled at E and the epochs, without
+ *  windowTerms' dense 600 s noise grid (part 5 uses no noise response from it); taken to the predicted state's RTN axes by pair_statistics
+ *  (lower 6, m^2). A fitted B at zero (its bound) gives a zero term, as in windowTerms. */
+export async function densityTerms(pairs, ctx, fit, E, epochsMs, settings, tau) {
+  const { decodeSamples, executionFrame } = await import(path.join(root, 'harness/ffm-execution.mjs'));
+  const iso = (t) => new Date(t).toISOString(), DAY = 86400e3;
+  const zero = [0, 0, 0, 0, 0, 0];
+  const j0 = fit.parameters.findIndex((q) => q.kind === 'DRAG_AREA_OVER_MASS');
+  if (j0 < 0 || !(fit.parameters[j0].value > 0)) return epochsMs.map(() => zero);
+  const n = 6 + fit.parameters.length, j = 6 + j0, b = fit.parameters[j0].value;
+  const scale = Math.max(1, fit.reducedChiSquare ?? 1);
+  const smp = decodeSamples(await ctx.ffm.invoke('invoke', [executionFrame({ epoch: fit.epoch, state: fit.state, samples: [E, ...epochsMs].map(iso), forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: true, covariance: fit.covariance.map((x) => x * scale), noise: null, integrator: settings.integrator }), ...ctx.inputs]));
+  const block = (st) => Array.from({ length: 36 }, (_, k) => st[n * Math.floor(k / 6) + (k % 6)]);
+  const col = (st) => Array.from({ length: 6 }, (_, r) => st[n * r + j]);
+  const C = [0, 1, 2].map((a) => [0, 1, 2].map((c) => (Number.isFinite(tau) ? Math.exp(-Math.abs(a - c) / tau) : 1)));
+  const segments = [1, 2, 3].map((k) => ({ from: iso(E + (k - 1) * DAY), to: iso(E + k * DAY + (k === 3 ? DAY : 0)), lead: k }));
+  const r = await pairs.dcp({ leadCovariance: C, start: iso(E), segments, ballisticCoefficient: b, startSample: { stm: block(smp[0].stm), s: col(smp[0].stm) }, epochs: epochsMs.map((t, i) => ({ epoch: iso(t), stm: block(smp[i + 1].stm), s: col(smp[i + 1].stm) })) });
+  const byEpoch = new Map(r.epochs.map((x) => [Date.parse(/Z$/.test(x.epoch) ? x.epoch : `${x.epoch}Z`), x.covariance]));
+  const st = await pairs.stats(epochsMs.map((t, i) => ({ predicted: { position: smp[i + 1].state.slice(0, 3), velocity: smp[i + 1].state.slice(3, 6), covariance: byEpoch.get(t), covarianceAxes: 'INERTIAL' }, truth: { position: smp[i + 1].state.slice(0, 3), velocity: smp[i + 1].state.slice(3, 6) } })), 'predicted');
+  return st.map((x) => x.predictedRtn);
+}
+
 const unpack6 = (p) => [[p[0], p[1], p[3]], [p[1], p[2], p[4]], [p[3], p[4], p[5]]];
 /** Part 5's calibrated covariances at epochs (A13 part 2 point 4, part 5 point 3), each 6 x 6 in the object's RTN axes (km, km/s):
  *  ffm(ctx, fit, E, epochsMs, settings, cls) -> [{ r, v (km, km/s, GCRF), covariance }]: FFM's PROCESS_NOISE run from E (k_e x A5's
  *  covariance carried to E, symmetrized, q per the class), taken to RTN, the floor and sigma_delta^2 D_tau added to the position block;
  *  xp(teme [{ r, v, covariance (TEME, km) }], epochsMs, cls) -> the same for SGP4-XP's module covariance times k_e plus the floor. */
 export async function openPart5Cal(cal, frames) {
-  const { windowTerms } = await import(path.join(root, 'experiments/ffm-covariance-calibration/lib/products.mjs'));
   const { decodeSamples, executionFrame } = await import(path.join(root, 'harness/ffm-execution.mjs'));
   const F = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/frames.mjs'));
   const rot = await openRtnRotation(frames);
@@ -125,11 +147,7 @@ export async function openPart5Cal(cal, frames) {
       const sym = atE.covariance.map((v, idx) => (v + atE.covariance[(idx % atE.n) * atE.n + Math.floor(idx / atE.n)]) / 2);
       const q = [p.q_RN ?? 0, p.q_T ?? 0, p.q_RN ?? 0];
       const out = decodeSamples(await ctx.ffm.invoke('invoke', [executionFrame({ epoch: iso(E), state: atE.state, samples: epochsMs.map(iso), forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: sym, noise: q.some((v) => v > 0) ? { q, intervalSeconds: 600 } : null, integrator: settings.integrator }), ...ctx.inputs]));
-      let D = null;
-      if (p.s2) {
-        const t = await windowTerms(ctx, cal.pairs, fit, E, out.map((s, i) => ({ L: i, line: { epoch: iso(epochsMs[i]), r: s.state.slice(0, 3).map((x) => x / 1000), v: s.state.slice(3, 6).map((x) => x / 1000) } })), settings);
-        D = t.leads.map((l) => (p.tau === 'inf' ? l.terms.Dinf : l.terms.D1));
-      }
+      const D = p.s2 ? await densityTerms(cal.pairs, ctx, fit, E, epochsMs, settings, p.tau === 'inf' ? Infinity : p.tau) : null; // A13 part 8
       const res = [];
       for (let i = 0; i < out.length; i += 1) {
         const s = out[i], n = s.n, P6 = Array.from({ length: 36 }, (_, k) => s.covariance[n * Math.floor(k / 6) + (k % 6)]);
