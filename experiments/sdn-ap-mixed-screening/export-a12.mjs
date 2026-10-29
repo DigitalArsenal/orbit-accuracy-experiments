@@ -58,8 +58,14 @@ if (phase === 'export') {
       if (p0?.termination !== f.termination || p0.parameters.some((q, j) => q.value !== f.parameters[j].value)) throw new Error(`P0 refit of ${sel.norad} differs from the selection's`);
       const scale = Math.max(1, f.reducedChiSquare ?? 1);
       rec.fit = { ok: f.ok, termination: f.termination, epoch: f.epoch, stateM: f.state, parameters: f.parameters, boundStatus: f.boundStatus, reducedChiSquare: f.reducedChiSquare, weightedRms: f.weightedRms, measurements: f.measurements, rejected: f.rejected, covarianceFormal: f.covariance, covarianceScale: scale, n: 6 + f.parameters.length };
-      const carried = await propagateV3(ctx, f, w.held.map((l) => l.epoch), { forces: F.forces, integrator: F.integrator, fixed: {} }, f.covariance.map((x) => x * scale));
-      rec.carried = carried.map((c, j) => ({ epoch: w.held[j].epoch, stateM: c.state, covariance: c.covariance, n: c.n }));
+      // propagator/ffm 2.0.0 may refuse the covariance (for example a parameter held at its bound): the refusal is recorded, and the
+      // product is then carried without it, so the states are still exported
+      let carried;
+      try { carried = await propagateV3(ctx, f, w.held.map((l) => l.epoch), { forces: F.forces, integrator: F.integrator, fixed: {} }, f.covariance.map((x) => x * scale)); } catch (error) {
+        rec.carriedCovarianceError = String(error.message).slice(0, 200);
+        carried = await propagateV3(ctx, f, w.held.map((l) => l.epoch), { forces: F.forces, integrator: F.integrator, fixed: {} }, null);
+      }
+      rec.carried = carried.map((c, j) => ({ epoch: w.held[j].epoch, stateM: c.state, covariance: c.covariance ?? null, n: c.n }));
     }
     rec.truth = w.held.map((l) => ({ epoch: l.epoch, rKm: l.r, vKmS: l.v, file: l.file }));
     write(file, rec);
@@ -72,7 +78,7 @@ if (phase === 'manifest') {
   const list = members();
   const files = fs.readdirSync(path.join(out, 'satellites')).filter((f) => f.endsWith('.json')).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
   if (files.length !== list.length) throw new Error(`${files.length} files for ${list.length} satellites`);
-  const entries = files.map((f) => { const b = fs.readFileSync(path.join(out, 'satellites', f)); const r = JSON.parse(b); return { file: `satellites/${f}`, sha256: sha256(b), norad: r.norad, ok: r.fit.ok, termination: r.fit.termination ?? null, truthStates: r.truth.length }; });
+  const entries = files.map((f) => { const b = fs.readFileSync(path.join(out, 'satellites', f)); const r = JSON.parse(b); return { file: `satellites/${f}`, sha256: sha256(b), norad: r.norad, ok: r.fit.ok, termination: r.fit.termination ?? null, truthStates: r.truth.length, carriedCovarianceError: r.carriedCovarianceError ?? null }; });
   const manifest = { export: 'B2 A12 E\' export for the FFM covariance calibration (C2) Starlink transfer check', satellites: entries.length, files: entries };
   const manifestBytes = Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(path.join(out, 'manifest.json'), manifestBytes);
@@ -84,7 +90,7 @@ if (phase === 'manifest') {
   const experiments = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root }).toString().trim();
   write(path.join(results, 'a12-eprime-export.json'), {
     export: manifest.export, directory: out, satellites: entries.length, terminations: entries.reduce((m, e) => ({ ...m, [e.termination ?? 'fit-failed']: (m[e.termination ?? 'fit-failed'] ?? 0) + 1 }), {}),
-    truthStates: entries.reduce((t, e) => t + e.truthStates, 0), manifestSha256: sha256(manifestBytes),
+    truthStates: entries.reduce((t, e) => t + e.truthStates, 0), carriedCovarianceRefused: entries.filter((e) => e.carriedCovarianceError).map((e) => ({ norad: e.norad, error: e.carriedCovarianceError })), manifestSha256: sha256(manifestBytes),
     opened: { paths: opened.length, distinct: new Set(opened).size, sha256: sha256(Buffer.from(openedText)), list: 'results/sdn-ap-mixed-screening/a12-eprime-export-opened.txt', allBeforeForecastCycle: true },
     pins: { estimation: A.estimation, ffm: A.ffm, domains: A.domains, modulesLinks: A.modulesLinks, profile: 'P0 (A12 part 2)', covariance: 'formal times max(1, reduced chi-square), carried by propagator/ffm, no process noise (A5)', experiments },
     rule: 'A12 point 7 (E\'), the selection sample (V2 excluded); no state after E is read into the export',
