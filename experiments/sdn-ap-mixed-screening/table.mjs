@@ -4,11 +4,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { config, store, results, args, readJsonl, sha256 } from './common.mjs';
+import { config, store, results, args, readJsonl, sha256, root } from './common.mjs';
 import { ffm3Merged } from './lib/a12-arms.mjs';
 
 const B = config.statistics.bootstrap;
-const NAMES = { sdnap: 'SDN-AP', sgp4xp: 'SGP4-XP', sgp4: 'SGP4', forecast: 'Operator forecast', ffm: 'FFM', sdnapTruth: 'SDN-AP fitted to the truth',
+const NAMES = { ffmCal: 'FFM calibrated (A13)', sgp4xpCal: 'SGP4-XP calibrated (A13)', ffmCalLP: 'FFM, L-P (beside)', ffmCalR2: 'FFM, R2 (beside)', sdnap: 'SDN-AP', sgp4xp: 'SGP4-XP', sgp4: 'SGP4', forecast: 'Operator forecast', ffm: 'FFM', sdnapTruth: 'SDN-AP fitted to the truth',
   ffm3: 'FFM, fit_batch version 3 (A12)', xpln: 'SGP4-XP, log-normal drag prior (XP-LN, A12)', ffmRound1: 'FFM (A3), round-1 products at 100 x sigma (descriptive)' };
 const REF = { sdnap: 'SDN-AP', ffm: 'FFM', ffm3: 'FFM v3', sgp4xp: 'SGP4-XP' };
 const quantile = (values, q) => { const a = values.filter(Number.isFinite).sort((x, y) => x - y); if (!a.length) return null; const pos = (a.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos); return a[lo] + (a[hi] - a[lo]) * (pos - lo); };
@@ -209,8 +209,11 @@ export function build() {
   out.rows.push(tableRow('laser', 'LEO laser-ranged spheres from ILRS normal points (Starlette, Stella, LARETS, WESTPAC, LARES), 2026-07-16 to 08-30', `${la.length} cutoffs; SDN-AP and SGP4-XP fitted to 24 h of the full force model carried from the normal-point fit (not to the ranges directly)`, lw, ['sdnap', 'sgp4xp', 'ffm', 'sgp4', 'sdnapTruth'], BINS));
   for (const t of config.part2.targets) out.rows.push(tableRow(`laser-${t}`, `Laser, ${t}`, '', lw.filter((w) => w.object === t), ['sdnap', 'sgp4xp', 'ffm', 'sgp4', 'sdnapTruth'], BINS));
   // parts 3 and 4 (A4, A5, A6): each group's summary, written by part4-ca.mjs
-  const ca = ['iss', 'laser', 'starlink', 'starlink.ffm3'].map((g) => path.join(store, 'rows', `ca.${g}.json`)).filter((f) => fs.existsSync(f)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
-  if (ca.length) out.ca = Object.fromEntries(ca.map((c) => [c.ffmArm && c.ffmArm !== 'ffm' ? `${c.group}.${c.ffmArm}` : c.group, c])); // A12: ffm3 in the FFM slot, the FFM arm of record
+  const ca = ['iss', 'laser', 'starlink', 'starlink.ffm3', 'iss.a13', 'laser.a13'].map((g) => path.join(store, 'rows', `ca.${g}.json`)).filter((f) => fs.existsSync(f)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+  if (ca.length) out.ca = Object.fromEntries(ca.map((c) => [c.a13?.run ?? (c.ffmArm && c.ffmArm !== 'ffm' ? `${c.group}.${c.ffmArm}` : c.group), c])); // A12: ffm3 in the FFM slot, the FFM arm of record; A13's runs by name
+  // A13: C2's Starlink transfer validations (robustness only), reported beside the contrast unchanged
+  const tv = (f) => { const x = path.join(root, 'results/ffm-covariance-calibration', f); if (!fs.existsSync(x)) return null; const d = JSON.parse(fs.readFileSync(x, 'utf8')); return { file: `results/ffm-covariance-calibration/${f}`, sha256: sha256(fs.readFileSync(x)), leads: Object.values(d.variants)[0].leads }; };
+  if (out.ca?.['starlink.ffm3']) out.a13TransferValidation = { ffm: tv('heldout-S.json'), sgp4xp: tv('sgp4xp/heldout-S.json'), label: 'robustness only: R1 (weather M) transferred to the B2 E\' export (C2-A8, D3)' };
   const part5 = path.join(store, 'rows', 'ca.part5.json');
   if (fs.existsSync(part5)) out.part5 = JSON.parse(fs.readFileSync(part5, 'utf8'));
   const part5v3 = path.join(store, 'rows', 'ca.part5.ffm3.json');
@@ -283,7 +286,11 @@ export function markdown(t) {
     if (r.id === 'starlink-both' && t.starlink) o.push(...starlinkMarkdown(t.starlink));
   }
   if (t.ca) o.push(...caMarkdown(t.ca));
-  if (t.part5ffm3) o.push(...partFiveMarkdown(t.part5ffm3, 'FFM v3 of A12 (the FFM arm of record)'));
+  if (t.a13TransferValidation) {
+    const v = t.a13TransferValidation, cells = (x) => (x ? Object.entries(x.leads).map(([L, c]) => `${L} h: mean d²/3 ${num(c.meanD2over3)}, coverage ${pct(c.coverage)}, n ${c.n}`).join('; ') : '-');
+    o.push('## A13: the Starlink transfer validations (robustness only, reported unchanged beside the contrast)', '', `${v.label}. FFM (R1-M): ${cells(v.ffm)}. SGP4-XP (R1-M): ${cells(v.sgp4xp)}. Sources: ${v.ffm?.file}, ${v.sgp4xp?.file}.`, '');
+  }
+  if (t.part5ffm3) o.push(...partFiveMarkdown(t.part5ffm3, 'FFM v3 of A12 (the FFM arm of record), with A13\'s calibrated covariances'));
   if (t.part5) o.push(...partFiveMarkdown(t.part5, 'FFM as A3 registered'));
   return o.join('\n');
 }
@@ -291,8 +298,8 @@ export function markdown(t) {
 const pct = (x) => (x == null ? '-' : `${(100 * x).toFixed(x !== 0 && Math.abs(x) < 0.001 ? 3 : 1)} %`);
 const ci = (c) => (c ? ` [${pct(c[0])}, ${pct(c[1])}]` : '');
 const rate = (x) => (x ? `${pct(x.value)}${ci(x.ci95Encounters)}${x.ci95Objects ? `, objects${ci(x.ci95Objects)}` : ''}` : '-');
-const GROUP = { iss: 'ISS (part 1b)', laser: 'Laser spheres (part 2)', starlink: 'Starlink (part 1a), FFM as A3 registered', 'starlink.ffm3': 'Starlink (part 1a), FFM v3 of A12 in the FFM slot (the FFM arm of record)' };
-const COV = { ffm: 'FFM', sgp4xp: 'SGP4-XP', v1c5: 'V1c5 frozen (public set, SGP4)', uncalibrated: 'uncalibrated (public set, SGP4)', v1c4: 'V1c4 best (public set, SGP4)' };
+const GROUP = { 'iss.a13': 'ISS (part 1b), A13: iss-ffm3 with A5\'s and class I\'s calibrated covariance', 'laser.a13': 'Laser spheres (part 2), A13: E6 R with A5\'s and class L\'s calibrated covariance (L-P and R2 beside)', iss: 'ISS (part 1b)', laser: 'Laser spheres (part 2)', starlink: 'Starlink (part 1a), FFM as A3 registered', 'starlink.ffm3': 'Starlink (part 1a), FFM v3 of A12 in the FFM slot (the FFM arm of record)' };
+const COV = { ffmCal: 'FFM calibrated (A13)', sgp4xpCal: 'SGP4-XP calibrated (A13)', ffmCalLP: 'FFM, L-P (beside)', ffmCalR2: 'FFM, R2 (beside)', ffm: 'FFM', sgp4xp: 'SGP4-XP', v1c5: 'V1c5 frozen (public set, SGP4)', uncalibrated: 'uncalibrated (public set, SGP4)', v1c4: 'V1c4 best (public set, SGP4)' };
 /** Parts 3 and 4 as prose and tables. */
 function caMarkdown(ca) {
   const o = ['## Conjunction contrast: FFM against SGP4-XP, with Pc calls (parts 3 and 4; A4, A5, A6)', ''];
@@ -301,7 +308,7 @@ function caMarkdown(ca) {
     o.push(`### ${GROUP[g] ?? g}`, '', `${c.leadRows} windows with lead records over ${c.objects} object(s); public-set records: ${listed(c.gpExcluded)}.`, '');
     o.push('Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5\'s rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).', '');
     o.push(`| Covariance | ${LEAD_COLS.map((L) => `${L} h`).join(' | ')} |`, `| --- | ${LEAD_COLS.map(() => '---').join(' | ')} |`);
-    for (const [label, cells] of Object.entries(c.realism)) o.push(`| ${COV[label] ?? label} | ${LEAD_COLS.map((L) => { const x = cells[L]; return !x?.n ? '-' : `${num(x.meanD2Over3)}${x.ci95Objects ? ` [${num(x.ci95Objects[0])}, ${num(x.ci95Objects[1])}]` : ''}; ${pct(x.coverage95)}; ${x.n} / ${x.objects}; ${x.decision.toLowerCase()}`; }).join(' | ')} |`);
+    for (const [label, cells] of Object.entries({ ...c.realism, ...(c.realismCalibrated ?? {}) })) o.push(`| ${COV[label] ?? label} | ${LEAD_COLS.map((L) => { const x = cells[L]; return !x?.n ? '-' : `${num(x.meanD2Over3)}${x.ci95Objects ? ` [${num(x.ci95Objects[0])}, ${num(x.ci95Objects[1])}]` : ''}; ${pct(x.coverage95)}; ${x.n} / ${x.objects}; ${x.decision.toLowerCase()}`; }).join(' | ')} |`);
     o.push('');
     for (const [cls, s] of Object.entries(c.classes)) {
       o.push(`Part 4, ${cls === 'gp' ? 'GP secondary (public set, V1c5 frozen covariance)' : 'precise secondary (another object, the same arm)'}: ${s.encounters} encounters over ${s.objects} primary object(s) (${s.counts.noPrimary} draws without a primary, ${s.counts.noSecondary} without a secondary).`, '');
@@ -309,6 +316,7 @@ function caMarkdown(ca) {
       for (const [arm, x] of Object.entries(s.arms)) o.push(`| ${NAMES[arm]} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
       for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => NAMES[a]).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
       o.push('', `Verdict: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+      if (s.a13) o.push(...a13Markdown(s.a13));
       o.push('Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).', '');
       o.push('| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- | --- |');
       for (const [L, arms] of Object.entries(s.calls)) for (const [arm, x] of Object.entries(arms)) o.push(`| ${L} h | ${NAMES[arm]} | ${['red', 'yellow', 'green'].map((k) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[k]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`);
@@ -318,6 +326,21 @@ function caMarkdown(ca) {
   return o;
 }
 const LEAD_COLS = [1, 6, 12, 24, 48, 72];
+const sci = (v) => (v == null ? '-' : Math.abs(v) < 1e-3 && v !== 0 ? v.toExponential(2) : v.toFixed(4));
+const mci = (x) => (x?.n ? `${sci(x.value)} [${x.ci95Encounters ? x.ci95Encounters.map(sci).join(', ') : '-'}]${x.ci95Objects ? `, objects [${x.ci95Objects.map(sci).join(', ')}]` : ''} (n ${x.n})` : '-');
+/** A13's proper scores of one cell: per arm, the paired differences, the reliability table. */
+function a13Markdown(a) {
+  const o = ['A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).', ''];
+  o.push('| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |', '| --- | --- | --- | --- | --- | --- |');
+  for (const [arm, x] of Object.entries(a.arms)) o.push(`| ${NAMES[arm] ?? COV[arm] ?? arm} | ${x.encounters} (${x.hits}) | ${mci(x.brier)} | ${mci(x.log)} | ${x.clipped} | ${mci(x.logUnclipped)} |`);
+  o.push('', '| Paired difference (arm - reference) | Encounters | Brier | Log score |', '| --- | --- | --- | --- |');
+  for (const [pair, x] of Object.entries(a.paired)) o.push(`| ${pair.split('-').map((q) => NAMES[q] ?? COV[q] ?? q).join(' - ')} | ${x.encounters} | ${mci(x.brier)} | ${mci(x.log)} |`);
+  o.push('', '| Pc decade | ' + Object.keys(a.reliability).map((q) => NAMES[q] ?? COV[q] ?? q).join(' | ') + ' |', '| --- | ' + Object.keys(a.reliability).map(() => '---').join(' | ') + ' |');
+  const bins = Object.values(a.reliability)[0] ?? [];
+  bins.forEach((b, i) => o.push(`| [${sci(b.pc[0])}, ${sci(b.pc[1])}) | ${Object.values(a.reliability).map((rows) => { const x = rows[i]; return x.encounters ? `${x.encounters}: mean Pc ${sci(x.meanPc)}, hit share ${sci(x.hitShare)}` : '-'; }).join(' | ')} |`));
+  o.push('');
+  return o;
+}
 /** Part 5 (A4, A8): real Starlink close approaches, per class. */
 function partFiveMarkdown(p, ffmLabel = 'FFM') {
   const o = [`## Real Starlink close approaches: FFM against SGP4-XP, with Pc calls (part 5; A4, A5, A8); FFM: ${ffmLabel}`, ''];
@@ -331,6 +354,7 @@ function partFiveMarkdown(p, ffmLabel = 'FFM') {
     for (const [arm, x] of Object.entries(s.arms)) if (x.missedAlert) o.push(`| ${NAMES[arm]} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
     for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => NAMES[a]).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
     o.push('', `Verdict: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+    if (s.a13) o.push(...a13Markdown(s.a13));
     o.push('| Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- |');
     for (const [arm, x] of Object.entries(s.calls.all ?? {})) o.push(`| ${NAMES[arm]} | ${['red', 'yellow', 'green'].map((q) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[q]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`);
     o.push('');
