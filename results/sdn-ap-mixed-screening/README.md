@@ -10,6 +10,8 @@ Amendment A5 (2026-10-26): SDN-AP is withdrawn from part 1a (the owner withdrew 
 
 **Part 1a headline (A10): FFM fitted 8173 of 11163 Starlink tracks; propagator/ffm refused 2985 (26.7 %) when fit_batch stepped B or AGOM out of range in A3's first round, and 5 did not converge (defect modules-ffm-fit-batch-round1-out-of-range-20261026, not fixed here). FFM against SGP4-XP is compared on the satellites both arms fitted; SGP4-XP on the others is descriptive.**
 
+**Bins 2 and 3 are empty under the registered rule: the capture reads each SpaceX file's first 8 h once per 8 h cycle, which leaves a gap of about 7 h in every day of truth, so no satellite holds 90 % of a bin's coverable epochs after bin 1 (bin 2 below coverage for 11159, bin 3 for 11159). Bin 1, (0, 24] h, is the only primary result. A secondary row, labeled post-score and exploratory, applies the E′ windows' registered relaxed rule to bins 2 and 3 (counted for 1074 and 25 satellites).**
+
 **A12 headline: A3 refused in any round 6033 of 11163 (54.0 %; round 1 alone 2985, 26.7 %), its 3048 round-2-refused satellites counted failed and their round-1 products shown only as a labeled descriptive row; NORAD 65202: a full-weight A3 fit with B = -1.86e-6 m^2/kg, which propagator/ffm refuses at prediction. FFM v3 (fit_batch version 3, profile P0, gate failed) fitted 11147 of 11163 (0.1 % failed, 0 with a refused trial); XP-LN fitted 11163. FFM v3 is the FFM arm of record for the conjunction contrast and part 5; A3 is reported as registered.**
 
 ## Starlink, satellites both SGP4-XP and FFM fitted and scored (the primary comparison)
@@ -180,6 +182,23 @@ Closest by bin: 1: Operator forecast; 2: -; 3: -.
 | --- | --- | --- | --- |
 | SGP4-XP | FFM v3 closer in 53 %; other / FFM v3 1.02 [0.963, 1.27] (n 62) | - | - |
 | Operator forecast | FFM v3 closer in 5 %; other / FFM v3 0.051 [0.034, 0.081] (n 62) | - | - |
+
+## Starlink, bins 2 and 3 under the E′ windows' relaxed coverage rule (post-score, exploratory; not a registered result)
+
+1084 satellites with SGP4-XP and FFM v3 scored; bin 2 counted for 1074, bin 3 for 25 of 11163.
+
+| Arm | Scored / attempted | Bin 1 | Bin 2 | Bin 3 |
+| --- | --: | --- | --- | --- |
+| SGP4-XP | 1084 / 1084 | - | 5.93 (1.18 to 50.2) [5.49, 6.74] n 1073 | 31.4 (11.6 to 1443) [17.1, 98.9] n 25 |
+| FFM, fit_batch version 3 (A12) | 1084 / 1084 | - | 5.00 (0.784 to 37.3) [4.54, 5.64] n 1073 | 39.6 (1.10 to 1536) [10.6, 57.9] n 25 |
+| SGP4-XP, log-normal drag prior (XP-LN, A12) | 1084 / 1084 | - | 6.77 (1.39 to 51.5) [6.06, 7.59] n 1073 | 31.4 (11.2 to 1440) [17.7, 99.3] n 25 |
+
+Closest by bin: 1: -; 2: FFM, fit_batch version 3 (A12); 3: SGP4-XP, log-normal drag prior (XP-LN, A12).
+
+| Paired with FFM v3 | Bin 1 | Bin 2 | Bin 3 |
+| --- | --- | --- | --- |
+| SGP4-XP | - | FFM v3 closer in 60 %; other / FFM v3 1.16 [1.12, 1.22] (n 1073) | FFM v3 closer in 68 %; other / FFM v3 1.50 [0.958, 2.02] (n 25) |
+| SGP4-XP, log-normal drag prior (XP-LN, A12) | - | FFM v3 closer in 66 %; other / FFM v3 1.21 [1.17, 1.25] (n 1073) | FFM v3 closer in 72 %; other / FFM v3 1.51 [1.13, 2.02] (n 25) |
 
 ## Starlink, A3's round-1 products on its 3,048 round-2-refused satellites (descriptive, labeled; counted as failed fits)
 

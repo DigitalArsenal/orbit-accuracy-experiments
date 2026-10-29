@@ -10,6 +10,7 @@
     "starlinkFfm": "e5a93e883b24fdfdbda1c0cd53ed68ee5cdcbff311eae022f6da08e407213c8e",
     "starlinkFfm3": "e9521b7cdd1c304df1e297ef1944f1ce89a1ddbd869d6885d13e91abd1ee52d6",
     "starlinkXpln": "9b478c8ea3b3733caa907b4818ac29b8c890d631583af945486fe3f83591c6b0",
+    "starlinkScoreExplore": "e764a56bc99d5647aa4d82ebe66b1d935830f59f39a0d023be3eaf15d162173c",
     "iss": "d3d027ee00dc57fff9472a03308fe2573f5440de232223bcb45705ca5272b857",
     "issFfm": "252c80220f10d1ed7b05e805b6ac651da1010c48d19d506008bf6bb99e242257",
     "laser": "050ba44a0b8df61c99edd55741844002e49b0299c719ed6ae541f9af0422ecc2"
@@ -979,6 +980,192 @@
             },
             "3": {
               "n": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-explore",
+      "row": "Starlink, bins 2 and 3 under the E′ windows' relaxed coverage rule (post-score, exploratory; not a registered result)",
+      "note": "1084 satellites with SGP4-XP and FFM v3 scored; bin 2 counted for 1074, bin 3 for 25 of 11163",
+      "windows": 1084,
+      "objects": 1084,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 1084,
+          "scored": 1084,
+          "bins": {
+            "1": {
+              "n": 0
+            },
+            "2": {
+              "n": 1073,
+              "objects": 1073,
+              "median": 5.931638615153047,
+              "p10": 1.1833405984265624,
+              "p90": 50.18451729858293,
+              "ci95Windows": [
+                5.491423456869152,
+                6.7440910913891985
+              ],
+              "ci95Objects": [
+                5.479381498855082,
+                6.7630799131997605
+              ]
+            },
+            "3": {
+              "n": 25,
+              "objects": 25,
+              "median": 31.375112467777793,
+              "p10": 11.620246522856709,
+              "p90": 1442.5656034742378,
+              "ci95Windows": [
+                17.113222247365684,
+                98.92962429839228
+              ],
+              "ci95Objects": [
+                17.113222247365684,
+                98.92962429839228
+              ]
+            }
+          }
+        },
+        "ffm3": {
+          "attempted": 1084,
+          "scored": 1084,
+          "bins": {
+            "1": {
+              "n": 0
+            },
+            "2": {
+              "n": 1073,
+              "objects": 1073,
+              "median": 4.99964599985362,
+              "p10": 0.7837628249485493,
+              "p90": 37.32892246196338,
+              "ci95Windows": [
+                4.535514328616891,
+                5.639131361082673
+              ],
+              "ci95Objects": [
+                4.535514328616891,
+                5.639131361082673
+              ]
+            },
+            "3": {
+              "n": 25,
+              "objects": 25,
+              "median": 39.63042553152526,
+              "p10": 1.1012520201270777,
+              "p90": 1536.054653026153,
+              "ci95Windows": [
+                10.568617920638545,
+                57.899895767291795
+              ],
+              "ci95Objects": [
+                10.568617920638545,
+                57.899895767291795
+              ]
+            }
+          }
+        },
+        "xpln": {
+          "attempted": 1084,
+          "scored": 1084,
+          "bins": {
+            "1": {
+              "n": 0
+            },
+            "2": {
+              "n": 1073,
+              "objects": 1073,
+              "median": 6.769912113293721,
+              "p10": 1.389928581184098,
+              "p90": 51.499809287661186,
+              "ci95Windows": [
+                6.064078988318022,
+                7.591067265655138
+              ],
+              "ci95Objects": [
+                6.081190839981472,
+                7.624973608064807
+              ]
+            },
+            "3": {
+              "n": 25,
+              "objects": 25,
+              "median": 31.373581688169068,
+              "p10": 11.153902735097551,
+              "p90": 1440.1333573271727,
+              "ci95Windows": [
+                17.656518142562096,
+                99.32782919876135
+              ],
+              "ci95Objects": [
+                17.656518142562096,
+                99.32782919876135
+              ]
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": null,
+        "2": [
+          "ffm3"
+        ],
+        "3": [
+          "xpln"
+        ]
+      },
+      "pairedWithRef": {
+        "ffm3": {
+          "sgp4xp": {
+            "1": {
+              "n": 0
+            },
+            "2": {
+              "n": 1073,
+              "ffm3Closer": 0.6048462255358807,
+              "medianRatio": 1.1597618493589552,
+              "ci95Windows": [
+                1.1170481826369993,
+                1.216006667630644
+              ]
+            },
+            "3": {
+              "n": 25,
+              "ffm3Closer": 0.68,
+              "medianRatio": 1.5013351951216143,
+              "ci95Windows": [
+                0.9584776117183463,
+                2.0215669168104027
+              ]
+            }
+          },
+          "xpln": {
+            "1": {
+              "n": 0
+            },
+            "2": {
+              "n": 1073,
+              "ffm3Closer": 0.6579683131407269,
+              "medianRatio": 1.2100662708399177,
+              "ci95Windows": [
+                1.1689669277329287,
+                1.2479149244841485
+              ]
+            },
+            "3": {
+              "n": 25,
+              "ffm3Closer": 0.72,
+              "medianRatio": 1.5078694589176267,
+              "ci95Windows": [
+                1.1331813373937518,
+                2.0215992144074524
+              ]
             }
           }
         }
@@ -4649,6 +4836,14 @@
         "notConverged": 5,
         "fullWeight": 5125,
         "note65202": "NORAD 65202: a full-weight A3 fit with B = -1.86e-6 m^2/kg, which propagator/ffm refuses at prediction"
+      }
+    },
+    "binsTwoThreeExploratory": {
+      "rule": "post-score, exploratory: the E′ windows' relaxed rule (at least 60 % of the bin's coverable epochs, no gap over 8 h, states within its first and last 2 h)",
+      "satellites": 11163,
+      "counted": {
+        "2": 1074,
+        "3": 25
       }
     }
   },

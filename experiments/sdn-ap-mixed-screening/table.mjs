@@ -170,6 +170,15 @@ export function build() {
     out.rows.push(tableRow('starlink-ffm3-a3', 'Starlink, FFM v3 against A3 on A3\'s full-weight satellites both scored', `${sw.filter((w) => w.arms.ffm?.ok && w.arms.ffm3?.ok).length} satellites; ${interim}`, sw.filter((w) => w.arms.ffm?.ok && w.arms.ffm3?.ok), ['ffm', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['ffm'] } }));
     out.rows.push(tableRow('starlink-xpln', 'Starlink, XP-LN (fairness arm, A12) beside SGP4-XP and FFM v3, on the satellites all three fitted and scored', `${sw.filter((w) => v3both(w) && w.arms.xpln?.ok).length} satellites; ${interim}`, sw.filter((w) => v3both(w) && w.arms.xpln?.ok), ['sgp4xp', 'xpln', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'xpln'], sgp4xp: ['xpln'] } }));
     out.rows.push(tableRow('starlink-ffm3-forecast', 'Starlink, the forecast sample with SGP4-XP, FFM v3 and SpaceX\'s forecast all scored', `sample satellites whose fetched file is F; ${interim}`, sw.filter((w) => v3both(w) && w.arms.forecast?.ok), ['sgp4xp', 'ffm3', 'forecast'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'forecast'] } }));
+    // post-score, exploratory (coordinator ruling 2026-10-29): bins 2 and 3 under the E′ windows' registered relaxed rule (A12 point 7), one row
+    const ex = rows(`starlink-score-explore.${through}.`).filter((r) => r.arms);
+    if (ex.length || rows(`starlink-score-explore.${through}.`).length) {
+      const all = rows(`starlink-score-explore.${through}.`);
+      out.inputs.starlinkScoreExplore = sha256(Buffer.from(JSON.stringify(all)));
+      out.starlink.binsTwoThreeExploratory = { rule: 'post-score, exploratory: the E′ windows\' relaxed rule (at least 60 % of the bin\'s coverable epochs, no gap over 8 h, states within its first and last 2 h)', satellites: all.length, counted: Object.fromEntries(['2', '3'].map((b) => [b, all.filter((r) => (r.relaxedCounted ?? []).includes(b)).length])) };
+      const xw = ex.map((r) => ({ object: String(r.norad), arms: r.arms, maneuverEvident: r.maneuverEvident })).filter((w) => w.arms.sgp4xp?.ok && w.arms.ffm3?.ok);
+      out.rows.push(tableRow('starlink-explore', 'Starlink, bins 2 and 3 under the E′ windows\' relaxed coverage rule (post-score, exploratory; not a registered result)', `${xw.length} satellites with SGP4-XP and FFM v3 scored; bin 2 counted for ${out.starlink.binsTwoThreeExploratory.counted['2']}, bin 3 for ${out.starlink.binsTwoThreeExploratory.counted['3']} of ${all.length}`, xw, ['sgp4xp', 'ffm3', 'xpln'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'xpln'] } }));
+    }
     out.rows.push(tableRow('starlink-a3-round1', 'Starlink, A3\'s round-1 products on its 3,048 round-2-refused satellites (descriptive, labeled; counted as failed fits)', `${sw.filter((w) => w.arms.ffmRound1?.ok).length} satellites; never pooled with full fits; ${interim}`, sw.filter((w) => w.arms.ffmRound1).map((w) => ({ ...w, arms: { ffmRound1: w.arms.ffmRound1 } })), ['ffmRound1'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-forecast-quiet', 'Starlink, the forecast sample with all three arms, no maneuver evident', `as above, truth files agreeing within 1 km where they overlap; ${interim}`, sw.filter((w) => forecastAll(w) && !w.maneuverEvident), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
   }
@@ -242,6 +251,8 @@ export function markdown(t) {
   if (t.starlink) {
     const h = t.starlink.headline;
     o.push(`**Part 1a headline (A10): FFM fitted ${h.ffmFitted} of ${h.satellites} Starlink tracks; propagator/ffm refused ${h.ffmRefused} (${(100 * h.ffmRefused / h.satellites).toFixed(1)} %) when fit_batch stepped B or AGOM out of range in A3's first round, and ${h.ffmNotConverged} did not converge (defect modules-ffm-fit-batch-round1-out-of-range-20261026, not fixed here). FFM against SGP4-XP is compared on the satellites both arms fitted; SGP4-XP on the others is descriptive.**`, '');
+    const bc = t.starlink.binsCounted;
+    if (bc?.['2']?.complete && !bc['2'].counted && !bc['3'].counted) o.push(`**Bins 2 and 3 are empty under the registered rule: the capture reads each SpaceX file's first 8 h once per 8 h cycle, which leaves a gap of about 7 h in every day of truth, so no satellite holds 90 % of a bin's coverable epochs after bin 1 (bin 2 below coverage for ${bc['2'].belowCoverage}, bin 3 for ${bc['3'].belowCoverage}). Bin 1, (0, 24] h, is the only primary result.${t.starlink.binsTwoThreeExploratory ? ` A secondary row, labeled post-score and exploratory, applies the E′ windows' registered relaxed rule to bins 2 and 3 (counted for ${t.starlink.binsTwoThreeExploratory.counted['2']} and ${t.starlink.binsTwoThreeExploratory.counted['3']} satellites).` : ''}**`, '');
     const a = t.starlink.a12;
     if (a) {
       const fitted = a.ffm3Fit['fitted (CONVERGED)'] ?? 0, n = Object.values(a.ffm3Fit).reduce((x, y) => x + y, 0);
