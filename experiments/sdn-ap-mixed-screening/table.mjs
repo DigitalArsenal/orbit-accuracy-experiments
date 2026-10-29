@@ -309,9 +309,16 @@ function a3Population(r) {
 }
 /** A13 part 6 point 2: the per-arm refusal table of one run. */
 function refusalMarkdown(refusals) {
-  const o = ['Records per arm (A13 part 6): windows attempted, records written, refusals by propagator/ffm (rate), other failures.', '', '| Arm | Attempted | Written | Refused | Other failures | Refusals by message |', '| --- | --: | --: | --- | --- | --- |'];
-  for (const [arm, r] of Object.entries(refusals)) {
-    const other = { ...r.otherFailures, ...(r.roundOneCountedFailed ? { 'A3 round 2 refused (counted failed, A12 point 2)': r.roundOneCountedFailed } : {}) };
+  const o = ['Records per arm (A13 parts 6 and 7): windows attempted, records written, lead-phase refusals by propagator/ffm (rate), other failures.', '', '| Arm | Attempted | Written | Refused | Other failures | Refusals by message |', '| --- | --: | --: | --- | --- | --- |'];
+  // one key per refusal message: rows recorded before A13 part 6 carry propagator/ffm's message without the `refused by propagator/ffm: ` prefix
+  const byMessage = (m) => Object.entries(m).reduce((acc, [k, v]) => { const key = /^refused by propagator\/ffm: /.test(k) ? k : `refused by propagator/ffm: ${k}`; acc[key] = (acc[key] ?? 0) + v; return acc; }, {});
+  for (const [arm, r0] of Object.entries(refusals)) {
+    // A13 part 7 (ruling Q6): the lead-phase refusals are the rate the stop reads; A3's fit-phase refusals (invalid-forces, its registered
+    // round-1 defect, A12) are listed with the other failures
+    const fitPhase = Object.entries(r0.byMessage).filter(([m]) => /invalid-forces/.test(m)), lead = Object.fromEntries(Object.entries(r0.byMessage).filter(([m]) => !/invalid-forces/.test(m)));
+    const leadN = Object.values(lead).reduce((a, b) => a + b, 0);
+    const r = { ...r0, byMessage: byMessage(lead), refused: leadN, refusalRate: r0.attempted ? leadN / r0.attempted : 0 };
+    const other = { ...r.otherFailures, ...Object.fromEntries(fitPhase.map(([m, v]) => [`A3 fit refused by propagator/ffm (${m.replace(/^.*invalid-forces: /, '')}; A12)`, v])), ...(r.roundOneCountedFailed ? { 'A3 round 2 refused (counted failed, A12 point 2)': r.roundOneCountedFailed } : {}) };
     o.push(`| ${NAMES[arm] ?? COV[arm] ?? arm} | ${r.attempted} | ${r.written} | ${r.refused} (${(100 * r.refusalRate).toFixed(2)} %) | ${Object.entries(other).map(([m, v]) => `${v} ${m}`).join('; ') || '-'} | ${Object.entries(r.byMessage).map(([m, v]) => `${v}: ${m}`).join('; ') || '-'} |`);
   }
   o.push('');
