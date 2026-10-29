@@ -291,7 +291,7 @@ export function markdown(t) {
     o.push('## A13: the Starlink transfer validations (robustness only, reported unchanged beside the contrast)', '', `${v.label}. FFM (R1-M): ${cells(v.ffm)}. SGP4-XP (R1-M): ${cells(v.sgp4xp)}. Sources: ${v.ffm?.file}, ${v.sgp4xp?.file}.`, '');
   }
   if (t.part5ffm3) o.push(...partFiveMarkdown(t.part5ffm3, 'FFM v3 of A12 (the FFM arm of record), with A13\'s calibrated covariances'));
-  if (t.part5) o.push(...partFiveMarkdown(t.part5, 'FFM as A3 registered'));
+  if (t.part5) o.push(...partFiveMarkdown(t.part5, `FFM as A3 registered${t.ca?.starlink?.refusals?.ffm ? `; population: the satellites both SGP4-XP and A3 fitted at full weight (${a3Population(t.ca.starlink.refusals.ffm)}); reported for completeness, not comparable with the ffm3 run without this difference` : ''}`));
   return o.join('\n');
 }
 
@@ -300,12 +300,33 @@ const ci = (c) => (c ? ` [${pct(c[0])}, ${pct(c[1])}]` : '');
 const rate = (x) => (x ? `${pct(x.value)}${ci(x.ci95Encounters)}${x.ci95Objects ? `, objects${ci(x.ci95Objects)}` : ''}` : '-');
 const GROUP = { 'iss.a13': 'ISS (part 1b), A13: iss-ffm3 with A5\'s and class I\'s calibrated covariance', 'laser.a13': 'Laser spheres (part 2), A13: E6 R with A5\'s and class L\'s calibrated covariance (L-P and R2 beside)', iss: 'ISS (part 1b)', laser: 'Laser spheres (part 2)', starlink: 'Starlink (part 1a), FFM as A3 registered', 'starlink.ffm3': 'Starlink (part 1a), FFM v3 of A12 in the FFM slot (the FFM arm of record)' };
 const COV = { ffmCal: 'FFM calibrated (A13)', sgp4xpCal: 'SGP4-XP calibrated (A13)', ffmCalLP: 'FFM, L-P (beside)', ffmCalR2: 'FFM, R2 (beside)', ffm: 'FFM', sgp4xp: 'SGP4-XP', v1c5: 'V1c5 frozen (public set, SGP4)', uncalibrated: 'uncalibrated (public set, SGP4)', v1c4: 'V1c4 best (public set, SGP4)' };
+/** A3's Starlink population (A13 part 7, ruling Q6): written satellites, those A3's own fit refusals and failures exclude (A12), and the
+ *  lead-phase refusals (A13 part 6). */
+function a3Population(r) {
+  const fit = Object.entries(r.byMessage).filter(([m]) => !/^refused by propagator\/ffm/.test(m)).reduce((t, [, v]) => t + v, 0) + r.roundOneCountedFailed + Object.values(r.otherFailures).reduce((t, v) => t + v, 0);
+  const lead = Object.entries(r.byMessage).filter(([m]) => /^refused by propagator\/ffm/.test(m)).reduce((t, [, v]) => t + v, 0);
+  return `A3 written for ${r.written.toLocaleString('en-US')} of ${r.attempted.toLocaleString('en-US')} satellites; ${fit.toLocaleString('en-US')} (${(100 * fit / r.attempted).toFixed(1)} %) excluded by A3's own fit refusals and failures (A12)${lead ? `; ${lead} more refused by propagator/ffm at the lead phase (A13 part 6)` : ''}`;
+}
+/** A13 part 6 point 2: the per-arm refusal table of one run. */
+function refusalMarkdown(refusals) {
+  const o = ['Records per arm (A13 part 6): windows attempted, records written, refusals by propagator/ffm (rate), other failures.', '', '| Arm | Attempted | Written | Refused | Other failures | Refusals by message |', '| --- | --: | --: | --- | --- | --- |'];
+  for (const [arm, r] of Object.entries(refusals)) {
+    const other = { ...r.otherFailures, ...(r.roundOneCountedFailed ? { 'A3 round 2 refused (counted failed, A12 point 2)': r.roundOneCountedFailed } : {}) };
+    o.push(`| ${NAMES[arm] ?? COV[arm] ?? arm} | ${r.attempted} | ${r.written} | ${r.refused} (${(100 * r.refusalRate).toFixed(2)} %) | ${Object.entries(other).map(([m, v]) => `${v} ${m}`).join('; ') || '-'} | ${Object.entries(r.byMessage).map(([m, v]) => `${v}: ${m}`).join('; ') || '-'} |`);
+  }
+  o.push('');
+  return o;
+}
 /** Parts 3 and 4 as prose and tables. */
 function caMarkdown(ca) {
   const o = ['## Conjunction contrast: FFM against SGP4-XP, with Pc calls (parts 3 and 4; A4, A5, A6)', ''];
   o.push('Steps. Each window\'s arms are predicted at the truth epoch nearest each lead time (1, 6, 12, 24, 48 and 72 h after E or T): FFM with fit_batch\'s formal covariance times max(1, reduced chi-square) carried by propagator/ffm (no process noise); SGP4-XP with the module\'s fit covariance carried by sdnap_covariance_at; the public element set by SGP4 with V1c5\'s frozen covariance (and, for part 3, the uncalibrated and V1c4 covariances) in V1c5\'s runtime. pair_statistics gives each error and covariance in the truth\'s RTN axes and d². Encounters are synthetic with real errors: 20,000 per group and class, a relative speed of 10 km/s at a crossing angle uniform in [10, 170] degrees, a true miss log-uniform in [10 m, 10 km] in the encounter plane; the GP class pairs the primary with a public-set secondary, the precise class with another object predicted by the same arm. Pc is analysis/conjunction-assessment compute_pc (Foster, 20 m combined hard-body radius). Calls: red Pc >= 1e-4, yellow 1e-7 <= Pc < 1e-4, green Pc < 1e-7. Intervals are 95 % bootstrap intervals over encounters and, where marked, over primary objects.', '');
   for (const [g, c] of Object.entries(ca)) {
     o.push(`### ${GROUP[g] ?? g}`, '', `${c.leadRows} windows with lead records over ${c.objects} object(s); public-set records: ${listed(c.gpExcluded)}.`, '');
+    // A13 part 7 (ruling Q6): A3's Starlink contrast states its population, and is never read against ffm3's without it
+    const a3 = g === 'starlink' && c.refusals?.ffm ? a3Population(c.refusals.ffm) : null;
+    if (a3) o.push(`**Population: ${a3}. The ffm3 run below is the primary Starlink contrast (0.12 % lead-phase refusals); this A3 contrast is reported for completeness, and its cells are not comparable with ffm3's without this difference in population.**`, '');
+    if (c.refusals) o.push(...refusalMarkdown(c.refusals));
     o.push('Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5\'s rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).', '');
     o.push(`| Covariance | ${LEAD_COLS.map((L) => `${L} h`).join(' | ')} |`, `| --- | ${LEAD_COLS.map(() => '---').join(' | ')} |`);
     for (const [label, cells] of Object.entries({ ...c.realism, ...(c.realismCalibrated ?? {}) })) o.push(`| ${COV[label] ?? label} | ${LEAD_COLS.map((L) => { const x = cells[L]; return !x?.n ? '-' : `${num(x.meanD2Over3)}${x.ci95Objects ? ` [${num(x.ci95Objects[0])}, ${num(x.ci95Objects[1])}]` : ''}; ${pct(x.coverage95)}; ${x.n} / ${x.objects}; ${x.decision.toLowerCase()}`; }).join(' | ')} |`);
