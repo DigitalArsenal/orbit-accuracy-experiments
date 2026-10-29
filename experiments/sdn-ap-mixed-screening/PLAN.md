@@ -718,3 +718,13 @@ builds used; for part 5 the covariance at the 21 epochs of each assessment as OE
 
 5. **Disclosures.** C2's held-out results (type I and L-P run 2 final, C2-A5; R3, L, R1, R2 and their O variants each scored once) are
    in C2's results; the Starlink transfer is robustness only; R1-O and R2-O were calibrated on 2026-01 to 03 cutoffs only (C2-A8).
+
+### A13 - 2026-10-29, part 4 (seeds only), committed before any calibrated number of part 1a, part 4 or part 5
+
+The seeds of A13's new figures, which parts 1 and 2 leave unstated (coordinator ruling Q3, 2026-10-29). The encounter draws stay A4's
+(`B2|part4|<group>|<class>|<k>`), the same for both covariances; A4's and A5's own intervals keep their registered seeds.
+1. The Brier and log scores of Pc against the hit indicator (true miss under 20 m), and the Pc reliability table by decade: 95 %
+   percentile-bootstrap intervals, 10,000 resamples, xorshift128+ seeded by SHA-256 of `B2|A13|<group>|<class>|<metric>|<kind>`, with
+   `<kind>` A4's (`encounters`, and `objects` for resampling by primary object).
+2. Their paired differences (an arm or covariance against SGP4-XP and against FFM with A5's covariance): seeded by SHA-256 of
+   `B2|A13|<group>|<class>|<metric>|<arm-pair>|<kind>`, `<arm-pair>` naming the two as `<a>-<b>`.

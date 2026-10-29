@@ -64,3 +64,14 @@ export const rms3dM = (predicted, held) => Math.sqrt(held.reduce((s, l, i) => s 
 /** A fit's compact record (no covariance). */
 export const brief = (f) => (f.ok !== undefined && f.termination === undefined && !f.ok ? { ok: false, error: f.error, refusedRounds: f.refusedRounds ?? 0 }
   : { ok: f.ok, termination: f.termination, error: f.error ?? null, parameters: f.parameters, boundStatus: f.boundStatus, reducedChiSquare: f.reducedChiSquare, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, refusal: f.refusal ?? null, ffmCalls: f.ffmCalls });
+
+/** A13's ISS arm iss-ffm3 (part 1 point 2): A5's ISS seeds and priors (config.a5.issFfm; a priori 1e5 m, 10 m/s, the seed's fraction) for
+ *  fit_batch version 3, one round at 10 m, A12's evaluation cap (or the contingency's) and tolerances. */
+export function issSettingsV3(maximumIterations = A.fit.maximumIterations) {
+  const seeds = config.a5.issFfm.seeds, frac = config.a5.issFfm.aprioriParameterFraction;
+  const kinds = ['DRAG_AREA_OVER_MASS', 'SRP_AREA_OVER_MASS'];
+  const diag = [...Array(3).fill(F.apriori.positionSigmaM ** 2), ...Array(3).fill(F.apriori.velocitySigmaMS ** 2), ...kinds.map((q) => (frac * seeds[q]) ** 2)];
+  const m = diag.length;
+  return { profile: 'iss-ffm3', sigmaM: A.fit.sigmaM, parameters: kinds.map((kind) => ({ kind, value: seeds[kind] })), fixed: {}, apriori: Array.from({ length: m * m }, (_, i) => (Math.floor(i / m) === i % m ? diag[i % m] : 0)),
+    maximumIterations, correctionTolerance: A.fit.correctionTolerance, sigmaEditThreshold: A.fit.sigmaEditThreshold, forces: F.forces, integrator: F.integrator };
+}

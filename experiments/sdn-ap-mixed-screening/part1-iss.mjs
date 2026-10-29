@@ -18,14 +18,18 @@ const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
 const { openFits, fitSdnap, fitSgp4, statesAt, scoreBins, convert } = await import('./lib/fits.mjs');
 
 const phase = args.phase ?? 'arms';
-if (!['arms', 'ffm', 'leads', 'gp'].includes(phase)) throw new Error(`unknown phase ${phase}`);
+if (!['arms', 'ffm', 'leads', 'gp', 'ffm3'].includes(phase)) throw new Error(`unknown phase ${phase}`);
 const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
-const out = path.join(store, 'rows', `${{ arms: 'iss', ffm: 'iss-ffm', leads: 'iss-leads', gp: 'iss-gp' }[phase]}.s${k}.jsonl`);
+// A13's iss-ffm3 (part 1 point 2): fit_batch version 3 on the same GCRF track; --max-evals 60 --only <dates> is the contingency rerun
+const evals60 = phase === 'ffm3' && Number(args['max-evals']) === config.a12.fit.contingencyMaximumIterations;
+const only = args.only ? new Set(String(args.only).split(',')) : null;
+const out = path.join(store, 'rows', `${{ arms: 'iss', ffm: 'iss-ffm', leads: 'iss-leads', gp: 'iss-gp', ffm3: evals60 ? 'iss-ffm3-60' : 'iss-ffm3' }[phase]}.s${k}.jsonl`);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 const done = new Set(readJsonl(out).map((r) => r.file));
 const modules = modulesRoot();
 const a = await openFits(modules);
 const ff = ['ffm', 'leads'].includes(phase) ? await (await import('./lib/ffm-fit.mjs')).openFfmFit(modules) : null;
+const v3 = phase === 'ffm3' ? await (await import('./lib/a12.mjs')).openV3() : null;
 const gp = phase === 'gp' ? await (await import('./lib/gp-secondary.mjs')).openGp() : null;
 const loaded = gp ? gp.load(new Set([object.norad]), Math.min(...headers.map((h) => h.header.startMs).filter(Number.isFinite)), Date.now()) : null;
 const stored = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.file, r]));
@@ -65,6 +69,20 @@ async function ffmArm(w) {
   return fit;
 }
 
+/** A13's iss-ffm3 fit of one window (the fit only, as C2's iss-fit rows record it). */
+async function ffm3Fit(w) {
+  const { fitV3 } = await import('../../harness/ffm-fit-v3.mjs');
+  const { issSettingsV3, fitInput } = await import('./lib/a12.mjs');
+  const gcrf = (await convert(a, w.track, 'EME2000', 'GCRF')).map((s, i) => ({ epoch: w.track[i].epoch, ...s }));
+  const settings = issSettingsV3(Number(args['max-evals'] ?? config.a12.fit.maximumIterations));
+  const { points, reference } = fitInput(gcrf);
+  const t0 = Date.now();
+  const f = await fitV3(v3.ctxFor(Date.parse(gcrf[0].epoch), w.E + 72 * 3600e3), points, reference, settings);
+  return { maximumIterations: settings.maximumIterations, fit: { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, boundStatus: f.boundStatus, reducedChiSquare: f.reducedChiSquare,
+    measurements: f.measurements, rejected: f.rejected, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, refusedRounds: f.refusedRounds, refusal: f.refusal ?? null, ffmCalls: f.ffmCalls, covariance: f.covariance, seconds: (Date.now() - t0) / 1000 },
+    provenance: { estimation: v3.provenance.estimation.wasmSha256, ffm: v3.provenance.ffm.wasmSha256 } };
+}
+
 /** A5's lead records of one window from its stored fits: SGP4-XP and FFM with covariance, NASA's forecast error only. */
 async function leadRecords(w) {
   const { leadLines, sgp4xpLeads, ffmLeads, stateLeads } = await import('./lib/leads.mjs');
@@ -90,10 +108,10 @@ async function gpRecord(w) {
 
 let count = 0;
 for (let i = 0; i < headers.length; i += 1) {
-  if (i % n !== k || done.has(headers[i].date)) continue;
+  if (i % n !== k || done.has(headers[i].date) || (only && !only.has(headers[i].date))) continue;
   if (args.limit && count >= Number(args.limit)) break;
   const w = windowOf(i);
-  const row = w.excluded ? { ...w.row, excluded: w.excluded } : { ...w.row, truth: { epochs: w.truth.length, files: [...new Set(w.truth.map((t) => t.file))] }, ...(phase === 'arms' ? { arms: await arms(w) } : phase === 'ffm' ? { ffm: await ffmArm(w) } : phase === 'leads' ? await leadRecords(w) : await gpRecord(w)) };
+  const row = w.excluded ? { ...w.row, excluded: w.excluded } : { ...w.row, truth: { epochs: w.truth.length, files: [...new Set(w.truth.map((t) => t.file))] }, ...(phase === 'arms' ? { arms: await arms(w) } : phase === 'ffm' ? { ffm: await ffmArm(w) } : phase === 'leads' ? await leadRecords(w) : phase === 'ffm3' ? await ffm3Fit(w) : await gpRecord(w)) };
   fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
   count += 1;
   if (count % 20 === 0) console.error(`iss ${phase} shard ${k}/${n}: ${count}`);
@@ -102,4 +120,5 @@ console.error(`iss ${phase} shard ${k}/${n}: ${count} windows`);
 await a.close();
 await ff?.close();
 await gp?.close();
+await v3?.close();
 process.exit(0);
