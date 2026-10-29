@@ -806,3 +806,21 @@ kept, the missing satellites are added).
    two arms both have records, with n stated per pair; a refused window never stands in for another arm.
 4. Disclosed: refusals cluster in hard windows, so leaving them out can flatter the refusing arm; the counts of point 2 are the guard.
    If an arm's refusals exceed 5 % of its windows, the lane stops and reports before part 4.
+
+### A13 - 2026-10-29, part 7 (disclosures and two rulings), committed before any part 5 number of part 1a is read
+
+1. **Disclosed: part 4 ran under a literal reading of part 6 point 4.** Part 6's stop (an arm's refusals above 5 % of its windows) was
+   checked on the lead-phase covariance refusals only, and part 4 then ran for every group. Its accounting also counts A3's fit-phase
+   refusals (2,985 `invalid-forces`, A3's registered round-1 defect), which put A3's arm at 26.8 %; the lane stopped and asked after the
+   Starlink part 4 numbers had been computed and seen.
+2. **Ruling Q6 (2026-10-29).** Part 6's stop covers the lead-phase refusals part 6 introduced (propagator/ffm refusing a carried
+   covariance): A3 0.03 %, ffm3 0.12 %, ffm3's calibrated covariance 0.16 %, the ISS iss-ffm3 arms 0.6 %, laser's calibrated covariances
+   3.4 %, all under 5 %. A3's fit-phase refusals and its 3,048 round-2 failures are the registered A3 defect, reported in A12's headline,
+   not what the stop targets. Because a population without the hard windows can flatter its arm, A3's Starlink contrast states its
+   population in every A3 row and in the README: A3 written for 5,122 of 11,163 satellites; 6,038 (54.1 %) excluded by A3's own fit
+   refusals and failures (A12). The ffm3 run (rows/ca.starlink.ffm3.json, 0.12 % refusals) is the primary Starlink contrast; A3's is
+   reported for completeness, and an A3 cell is never compared with an ffm3 cell without saying that their populations differ.
+3. **Ruling Q7 (2026-10-29).** A3's round-2-refused windows (the round-1 product kept) are left out of A3's pools in parts 4 and 5, as A12
+   point 2 rules (a failed fit has no record). Part 5's A3 run had screened with them; those screens were set aside unread
+   (<store>/aborted-part5-a3-screens-with-round1/) and the A3 run screened again over the smaller population (the satellites both
+   SGP4-XP and A3 fitted at full weight).
