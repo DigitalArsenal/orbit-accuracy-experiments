@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P2",
- "createdUtc": "2026-10-28T21:29:24.532Z",
- "experimentsCommit": "7c146406e4a0be9829d8320fd230c4df3b9ae1a7",
+ "createdUtc": "2026-10-29T05:28:02.060Z",
+ "experimentsCommit": "1f30edb30df0b6b22273536fe04829a9380038c9",
  "plan": "3.8 P2",
  "criterion": "each NSGF arc agrees with the next day's arc within 0.3 m RMS per axis (the stated sigma of analysis/reference-states: the per-axis RMS of the overlap)",
  "issTruthAge": "checked by the planner (PLAN.md section 1, row 7): minor",
@@ -1458,8 +1458,8 @@
  ],
  "note": "no exclusion is applied: the treatment of arcs above 0.3 m is a question to the coordinator",
  "opened": {
-  "files": 23184,
-  "sha256": "aa43a45f79413313507dd2c0623ce1b66fa8babb780543be4937438ef3d2ccad",
+  "files": 24907,
+  "sha256": "b5137ae5ecf776eb86b1edd6b176ad317a092f3bb52195295a99d96f85a34fe5",
   "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P2.json",
   "groups": [
    {
@@ -1472,6 +1472,20 @@
    {
     "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
     "files": 1825,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference/*",
+    "files": 1722,
     "labels": [
      "index.json"
     ]

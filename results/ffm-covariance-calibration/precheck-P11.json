@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P11",
- "createdUtc": "2026-10-28T21:29:29.310Z",
- "experimentsCommit": "7c146406e4a0be9829d8320fd230c4df3b9ae1a7",
+ "createdUtc": "2026-10-29T05:28:05.479Z",
+ "experimentsCommit": "1f30edb30df0b6b22273536fe04829a9380038c9",
  "plan": "3.6, 3.8 P11",
  "method": "independent chi-square(3) draws (Box-Muller on SplitMix32, seed 1), 4,000 trials per size; the scale case multiplies each of 5 objects' draws by exp(N(0, 0.15))",
  "independent": {
@@ -35,8 +35,8 @@
     "oracle": 0.873
    },
    "heldOutObject": {
-    "windows": 14,
-    "oracle": 0
+    "windows": 156,
+    "oracle": 0.7335
    }
   },
   "R2": {
@@ -78,8 +78,8 @@
  },
  "note": "per class and set, the cell size is the window count of P9 (each window gives one sample per lead); the per-cell oracle pass count and its 5th percentile are recomputed with the realized cell sizes at scoring",
  "opened": {
-  "files": 23184,
-  "sha256": "aa43a45f79413313507dd2c0623ce1b66fa8babb780543be4937438ef3d2ccad",
+  "files": 24907,
+  "sha256": "b5137ae5ecf776eb86b1edd6b176ad317a092f3bb52195295a99d96f85a34fe5",
   "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P11.json",
   "groups": [
    {
@@ -92,6 +92,20 @@
    {
     "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
     "files": 1825,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference/*",
+    "files": 1722,
     "labels": [
      "index.json"
     ]
