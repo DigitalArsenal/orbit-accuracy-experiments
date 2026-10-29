@@ -25,6 +25,8 @@ const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
 // --ffm ffm3 (A12 point 12): the FFM slot is A12's ffm3 arm, the FFM arm of record, under <store>/part5-ffm3/<through>; without it, A3 as registered
 const FFM = args.ffm ?? 'ffm';
 if (!['ffm', 'ffm3'].includes(FFM)) throw new Error('--ffm ffm|ffm3');
+// A13 (part 1 point 1, part 5 point 4): the ffm3 run also carries the calibrated covariances (FFM-cal, SGP4-XP-cal; R1 under weather M)
+const CAL = FFM === 'ffm3' ? [['ffmCal', 'GCRF'], ['sgp4xpCal', 'TEME']] : [];
 const dir = path.join(store, FFM === 'ffm' ? 'part5' : `part5-${FFM}`, through);
 fs.mkdirSync(path.join(dir, 'states'), { recursive: true });
 const rowsOf = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
@@ -40,7 +42,7 @@ function readStates(norad) {
   }
   return { ms, ...sets };
 }
-const ffmRowsOf = () => rowsOf(FFM === 'ffm' ? 'starlink-ffm.' : 'starlink-ffm3.');
+const ffmRowsOf = async () => (FFM === 'ffm' ? rowsOf('starlink-ffm.') : new Map((await import('./lib/a12-arms.mjs')).ffm3Merged((p) => [...rowsOf(p).values()]).map((r) => [r.norad, r]))); // ffm3: with A12's contingency rows merged
 /** The FFM slot's predictor: A3's (lib/ffm-fit.mjs) or ffm3's (lib/a12-arms.mjs): carry(row, norad, epochs, E, covariance) -> [{ r, v, covariance?, n? }]. */
 async function openFfmSlot() {
   if (FFM === 'ffm') { const ff = await (await import('./lib/ffm-fit.mjs')).openFfmFit(modules); return { carry: (g, norad, epochs, E, covariance) => ff.predict(g, norad, epochs, E, 'starlink', covariance ? { covariance } : {}), close: () => ff.close() }; }
@@ -55,7 +57,7 @@ const modules = modulesRoot();
 if (phase === 'states') {
   const { openFits, statesAt } = await import('./lib/fits.mjs');
   const a = await openFits(modules), ff = await openFfmSlot();
-  const fits = rowsOf('starlink-fit.'), ffmFits = ffmRowsOf();
+  const fits = rowsOf('starlink-fit.'), ffmFits = await ffmRowsOf();
   const score = new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(`starlink-score.${through}.`)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
   const population = [...fits.keys()].filter((x) => fits.get(x).sgp4xp?.ok && ffmFits.get(x)?.[FFM]?.ok && (score.get(x)?.arms || process.env.B2_PART5_TEST)).sort((x, y) => x - y);
   const out = path.join(dir, `states.s${k}.jsonl`);
@@ -162,12 +164,20 @@ if (phase === 'cov') {
   // FFM's carried covariance and SGP4-XP's at the 21 epochs of each entering encounter, one propagation per satellite (A8 point 5)
   const { openFits, sgp4xpCovarianceAt } = await import('./lib/fits.mjs');
   const a = await openFits(modules), ff = await openFfmSlot();
-  const fits = rowsOf('starlink-fit.'), ffmFits = ffmRowsOf();
+  const fits = rowsOf('starlink-fit.'), ffmFits = await ffmRowsOf();
   const need = new Map();
   for (const e of enc()) for (const x of [e.a, e.b]) { if (!need.has(x)) need.set(x, new Set()); for (const t of assessEpochs(e.timeMs)) need.get(x).add(t); }
   const sats = [...need.keys()].sort((x, y) => x - y);
   fs.mkdirSync(path.join(dir, 'cov'), { recursive: true });
   const E = new Map(index().map((r) => [r.norad, Date.parse(r.E)]));
+  let p5 = null, v3 = null;
+  if (CAL.length) {
+    const A13 = await import('./lib/a13.mjs');
+    const cal = await A13.openA13();
+    const { openModule } = await import(path.join(g1Dir, 'lib/modules.mjs'));
+    p5 = { A13, cal, b: await A13.openPart5Cal(cal, await openModule(config.a12.modulesLinks, 'foundation/frames')) };
+    v3 = await (await import('./lib/a12.mjs')).openV3();
+  }
   for (let i = 0; i < sats.length; i += 1) {
     const norad = sats[i], file = path.join(dir, 'cov', `${norad}.json`);
     if (i % n !== k || fs.existsSync(file)) continue;
@@ -180,9 +190,15 @@ if (phase === 'cov') {
       out.ffm = fm.map((s) => ({ r: s.r, v: s.v, covariance: Array.from({ length: 36 }, (_, q) => s.covariance[Math.floor(q / 6) * s.n + (q % 6)] * 1e-6) }));
     } catch (error) { out.ffmError = String(error.message).slice(0, 160); }
     try { out.sgp4xp = await sgp4xpCovarianceAt(a, fits.get(norad).sgp4xp.omm, epochs); } catch (error) { out.sgp4xpError = String(error.message).slice(0, 160); }
+    if (p5) {
+      // A13 part 2 point 4: the calibrated covariances at the same epochs, in the object's RTN axes (A13 part 5 point 3)
+      const C = p5.A13.CLASS.starlink, F = config.part1.starlink.ffm;
+      try { const g = ffmFits.get(norad)[FFM]; out.ffmCal = await p5.b.ffm(v3.ctxFor(Date.parse(g.epoch), E.get(norad) + 72 * H), g, E.get(norad), epochs, { forces: F.forces, integrator: F.integrator, fixed: g.fixed ?? {} }, C); } catch (error) { out.ffmCalError = String(error.message).slice(0, 160); }
+      try { if (!out.sgp4xp) throw new Error(out.sgp4xpError ?? 'no SGP4-XP covariance'); out.sgp4xpCal = await p5.b.xp(out.sgp4xp, epochs, C); } catch (error) { out.sgp4xpCalError = String(error.message).slice(0, 160); }
+    }
     write(file, out);
   }
-  await a.close(); await ff.close();
+  await a.close(); await ff.close(); await p5?.cal.close(); await v3?.close();
   process.exit(0);
 }
 
@@ -218,10 +234,10 @@ if (phase === 'assess') {
       if (row.truth.error === 'no minimum in the window') row.setAside = 'no true minimum within 30 min (A9)';
       const ca = covOf(e.a), cb = covOf(e.b);
       row.arms = {};
-      for (const [arm, frame] of [['ffm', 'GCRF'], ['sgp4xp', 'TEME']]) {
+      for (const [arm, frame, covFrame] of [['ffm', 'GCRF'], ['sgp4xp', 'TEME'], ...CAL.map(([x, f]) => [x, f, 'RTN'])]) {
         if (!ca[arm] || !cb[arm]) { row.arms[arm] = { pcError: ca[`${arm}Error`] ?? cb[`${arm}Error`] ?? 'no covariance' }; continue; }
         const pick = (c) => epochs.map((t) => { const j = c.epochs.indexOf(t); return { ms: t, ...c[arm][j] }; });
-        const r = await cqr.closest(cqr.source(1, e.a, pick(ca), frame), cqr.source(2, e.b, pick(cb), frame), ctl('FOSTER', epochs[0], epochs.at(-1)), frame);
+        const r = await cqr.closest(cqr.source(1, e.a, pick(ca), frame, covFrame ?? null), cqr.source(2, e.b, pick(cb), frame, covFrame ?? null), ctl('FOSTER', epochs[0], epochs.at(-1)), frame);
         // no minimum in the 20 min: the arm predicts no close approach there, a green call (A9 point 3)
         row.arms[arm] = r.error === 'no minimum in the window' ? { noMinimum: true, predictedMissM: null, pc: 0 } : r.error ? { pcError: r.error } : { tcaMs: r.tcaMs, predictedMissM: r.missM, pc: r.pc, pcConverged: r.pcConverged };
       }
@@ -245,6 +261,7 @@ if (phase === 'summary') {
   for (const [cls, f] of [['unmaneuvered', (r) => !r.maneuvered], ['maneuvered', (r) => r.maneuvered]]) {
     const list = ok.filter(f).map(asEncounter);
     summary.classes[cls] = list.length ? summarize('starlink-part5', cls, list, { attempted: list.length, noPrimary: 0, noSecondary: 0 }, { leads: ['all'] }) : { encounters: 0, note: 'no encounter' };
+    if (list.length && CAL.length) { const { a13Scores } = await import('./lib/ca.mjs'); summary.classes[cls].a13 = a13Scores('starlink-part5', cls, list, ['ffm', 'sgp4xp', ...CAL.map(([x]) => x)]); }
   }
   write(path.join(store, 'rows', FFM === 'ffm' ? 'ca.part5.json' : `ca.part5.${FFM}.json`), summary);
   console.error(`part 5 summary: ${rows.length} entering, ${summary.setAside} set aside`);

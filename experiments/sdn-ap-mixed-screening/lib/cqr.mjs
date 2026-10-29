@@ -26,14 +26,15 @@ export async function openCqr(modules) {
     START_EPOCH: Object.assign(new C.TIMInstantT(), { TIME_SYSTEM: C.timingStandard.UTC, EPOCH_FORMAT: C.timEpochRepresentation.JULIAN_DATE, JULIAN_DATE: jd(startMs) }),
     DURATION_SECONDS: seconds, THRESHOLD_M: thresholdM, REQUESTED_WORKERS: workers, COARSE_STEP_SECONDS: coarseStepSeconds, REFINEMENT_TOLERANCE_SECONDS: 0.001, COMBINED_RADIUS_M: 20,
     USE_KD_TREE: filters, USE_DYNAMIC_WINDOW: filters, USE_PERIGEE_FILTER: filters, ALGORITHM: C.cqrProbabilityAlgorithm[algorithm] });
-  /** One object's OEM source: states [{ ms, r (km), v (km/s), covariance? (6 x 6 row-major, km^2 ...) }] in `frame`. */
-  const source = (handle, norad, states, frame = 'GCRF') => {
+  /** One object's OEM source: states [{ ms, r (km), v (km/s), covariance? (6 x 6 row-major, km^2 ...) }] in `frame`; the covariance in
+   *  `frame` too, or with covFrame 'RTN' in the object's RTN axes (RSW_INERTIAL, A13 part 5 point 3), which the module rotates itself. */
+  const source = (handle, norad, states, frame = 'GCRF', covFrame = null) => {
     const b = new C.ephemerisDataBlockT();
     b.CENTER_NAME = 'EARTH'; b.CENTER_NAIF_ID = 399; b.REFERENCE_FRAME = rfm(sdsFrame[frame]); b.TIME_SYSTEM = C.timingStandard.UTC; b.INTERPOLATION = 'HERMITE';
     b.START_TIME = iso(states[0].ms); b.STOP_TIME = iso(states.at(-1).ms);
     b.EPHEMERIS_DATA_LINES = states.map((s) => Object.assign(new C.ephemerisDataLineT(), { EPOCH: iso(s.ms), X: s.r[0], Y: s.r[1], Z: s.r[2], X_DOT: s.v[0], Y_DOT: s.v[1], Z_DOT: s.v[2] }));
     if (states[0].covariance) {
-      b.COV_REFERENCE_FRAME = rfm(sdsFrame[frame]);
+      b.COV_REFERENCE_FRAME = covFrame === 'RTN' ? new C.RFMT(C.RFMUnion.OrbitFrameWrapper, new C.OrbitFrameWrapperT(C.OrbitFrame.RSW_INERTIAL)) : rfm(sdsFrame[frame]);
       const L = ['CX_X', 'CY_X', 'CY_Y', 'CZ_X', 'CZ_Y', 'CZ_Z', 'CX_DOT_X', 'CX_DOT_Y', 'CX_DOT_Z', 'CX_DOT_X_DOT', 'CY_DOT_X', 'CY_DOT_Y', 'CY_DOT_Z', 'CY_DOT_X_DOT', 'CY_DOT_Y_DOT', 'CZ_DOT_X', 'CZ_DOT_Y', 'CZ_DOT_Z', 'CZ_DOT_X_DOT', 'CZ_DOT_Y_DOT', 'CZ_DOT_Z_DOT'];
       const lower = []; for (let i = 0; i < 6; i += 1) for (let j = 0; j <= i; j += 1) lower.push([i, j]);
       b.COVARIANCE_MATRIX_LINES = states.map((s) => Object.assign(new C.covarianceMatrixLineT(), { EPOCH: iso(s.ms), ...Object.fromEntries(L.map((k, q) => [k, s.covariance[lower[q][0] * 6 + lower[q][1]]])) }));

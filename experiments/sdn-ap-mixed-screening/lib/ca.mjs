@@ -87,7 +87,8 @@ export function pcClient(ca) {
 }
 
 /** The encounters of one group and class. windows: [{ object, key, leads: { L: { ffm, sgp4xp, forecast, gp } } }] (lead records, km). */
-export async function encounters(group, cls, windows, pc, { limit = A4.encounters.perGroupAndClass } = {}) {
+export async function encounters(group, cls, windows, pc, { limit = A4.encounters.perGroupAndClass, extraArms = [] } = {}) {
+  // extraArms (A13 part 5 point 1): further covariance arms evaluated on the same encounters; the pools stay A5's (the registered pair)
   const has = (w, L, arm) => w.leads[L]?.[arm] && (arm === 'forecast' || Array.isArray(w.leads[L][arm].cov));
   const primaries = Object.fromEntries(LEADS.map((L) => [L, windows.filter((w) => ARMS.every((arm) => has(w, L, arm)))]));
   const secondaries = Object.fromEntries(LEADS.map((L) => [L, cls === 'gp' ? windows.filter((w) => has(w, L, 'gp')) : primaries[L]]));
@@ -105,9 +106,9 @@ export async function encounters(group, cls, windows, pc, { limit = A4.encounter
     const up = [Math.cos(theta / 2), -Math.sin(theta / 2), 0], us = [Math.cos(theta / 2), Math.sin(theta / 2), 0];
     const Mp = rtnToEncounter(up), Ms = rtnToEncounter(us), m = [missM * Math.cos(phi), 0, missM * Math.sin(phi)];
     const row = { k, L, primary: p.key, primaryObject: p.object, secondary: s.key, secondaryObject: s.object, thetaDeg: theta * 180 / Math.PI, trueMissM: missM, arms: {} };
-    for (const arm of [...ARMS, ...CA.missOnly]) {
+    for (const arm of [...ARMS, ...extraArms, ...CA.missOnly]) {
       const ep = p.leads[L][arm], es = cls === 'gp' ? s.leads[L].gp : s.leads[L][arm];
-      if (!ep || !es) continue;
+      if (!ep || !es || (arm !== 'forecast' && (!Array.isArray(ep.cov) || !Array.isArray(es.cov)))) continue;
       const dp = mulVec(Mp, ep.err), ds = mulVec(Ms, es.err);
       const r = [0, 1, 2].map((i) => m[i] + 1000 * (ds[i] - dp[i]));
       const predicted = Math.hypot(r[0], r[2]);
@@ -191,4 +192,62 @@ export function summarize(group, cls, allRows, counts, { leads = LEADS } = {}) {
     }
   }
   return out;
+}
+
+
+// ---- A13 (parts 1, 4 and 5): proper scores of Pc against the hit indicator, their paired differences, the reliability table ----
+const HIT_M = MET.hardBodyRadiusM; // a hit: true miss under 20 m (A13 part 1 point 4)
+const CLIP = 1e-15;
+/** Brier and log scores per arm, paired differences against SGP4-XP and against FFM with A5's covariance, and the Pc reliability table by
+ *  decade (A4's pcBins), with A4's intervals over encounters and primary objects, seeds B2|A13|<group>|<class>|<metric>[|<a>-<b>]|<kind>. */
+export function a13Scores(group, cls, rows, arms) {
+  const seed = (metric, kind, pair) => `B2|A13|${group}|${cls}|${metric}|${pair ? `${pair}|` : ''}${kind}`;
+  const hit = (r) => (r.trueMissM < HIT_M ? 1 : 0);
+  const pcOf = (r, arm) => r.arms[arm]?.pc;
+  const ok = (r, arm) => Number.isFinite(pcOf(r, arm));
+  const brier = (p, h) => (p - h) ** 2;
+  const logLoss = (p, h) => { const q = Math.min(Math.max(p, CLIP), 1 - CLIP); return -(h * Math.log(q) + (1 - h) * Math.log(1 - q)); };
+  const clipped = (p) => p < CLIP || p > 1 - CLIP;
+  const meanCI = (values, cluster, metric, pair) => {
+    const ones = values.map(() => 1), objects = new Set(cluster).size;
+    return { value: values.length ? values.reduce((a, b) => a + b, 0) / values.length : null, n: values.length,
+      ci95Encounters: values.length >= 2 ? ratioInterval(values, ones, seed(metric, 'encounters', pair)) : null,
+      ci95Objects: objects >= 2 ? ratioInterval(values, ones, seed(metric, 'objects', pair), cluster) : null };
+  };
+  const out = { hitM: HIT_M, clip: CLIP, arms: {}, paired: {}, reliability: {} };
+  for (const arm of arms) {
+    const used = rows.filter((r) => ok(r, arm)), cluster = used.map((r) => r.primaryObject);
+    const unclipped = used.filter((r) => !clipped(pcOf(r, arm)));
+    out.arms[arm] = {
+      encounters: used.length, hits: used.filter(hit).length, pcNotEvaluated: rows.length - used.length,
+      brier: meanCI(used.map((r) => brier(pcOf(r, arm), hit(r))), cluster, `brier:${arm}`),
+      log: meanCI(used.map((r) => logLoss(pcOf(r, arm), hit(r))), cluster, `log:${arm}`),
+      clipped: used.length - unclipped.length,
+      logUnclipped: meanCI(unclipped.map((r) => logLoss(pcOf(r, arm), hit(r))), unclipped.map((r) => r.primaryObject), `logUnclipped:${arm}`),
+    };
+    out.reliability[arm] = A4.pcBins.slice(0, -1).map((lo, i) => {
+      const hi = A4.pcBins[i + 1], inBin = used.filter((r) => { const p = pcOf(r, arm); return p >= lo && (i === A4.pcBins.length - 2 ? p <= hi : p < hi); });
+      const h = inBin.map(hit);
+      return { pc: [lo, hi], encounters: inBin.length, meanPc: inBin.length ? inBin.reduce((a, r) => a + pcOf(r, arm), 0) / inBin.length : null, hitShare: inBin.length ? h.reduce((a, b) => a + b, 0) / inBin.length : null,
+        ci95Encounters: inBin.length >= 2 ? ratioInterval(h, h.map(() => 1), seed(`reliability:${arm}:${lo}`, 'encounters')) : null };
+    });
+  }
+  // paired differences (arm minus reference) on the encounters both evaluated: against SGP4-XP and against FFM with A5's covariance
+  for (const ref of ['sgp4xp', 'ffm']) for (const arm of arms.filter((a) => a !== ref && !(ref === 'ffm' && a === 'sgp4xp'))) {
+    const both = rows.filter((r) => ok(r, arm) && ok(r, ref)), cluster = both.map((r) => r.primaryObject), pair = `${arm}-${ref}`;
+    out.paired[pair] = {
+      encounters: both.length,
+      brier: meanCI(both.map((r) => brier(pcOf(r, arm), hit(r)) - brier(pcOf(r, ref), hit(r))), cluster, 'brier', pair),
+      log: meanCI(both.map((r) => logLoss(pcOf(r, arm), hit(r)) - logLoss(pcOf(r, ref), hit(r))), cluster, 'log', pair),
+    };
+  }
+  return out;
+}
+
+/** Part 3 cells of a calibrated covariance under C2's pass rule (A13 part 5 point 6): mean d2/3 in [0.8, 1.25] and 95 % coverage in
+ *  [0.93, 0.97]; a cell with fewer than 100 windows or 3 clusters (objects) is not eligible. samples [{ object, d2 }]. */
+export function realismCellC2(samples, label) {
+  const c = realismCell(samples, label);
+  const eligible = c.n >= 100 && c.objects >= 3;
+  return { ...c, decision: !eligible ? `not eligible (${[c.n < 100 ? 'n < 100' : null, c.objects < 3 ? 'clusters < 3' : null].filter(Boolean).join(', ')})` : c.meanD2Over3 >= 0.8 && c.meanD2Over3 <= 1.25 && c.coverage95 >= 0.93 && c.coverage95 <= 0.97 ? 'pass' : 'fail' };
 }

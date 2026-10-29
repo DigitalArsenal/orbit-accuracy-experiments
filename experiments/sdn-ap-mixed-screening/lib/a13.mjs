@@ -67,3 +67,89 @@ export async function openA13() {
     close: () => pairs.close(),
   };
 }
+
+/** foundation/frames' rotation from axes `from` (GCRF or TEME) to the RTN axes of an object whose Earth-centred ICRF state is `stateM`
+ *  [m, m/s] at `epoch` (FRAME_ROTATION, ORBITAL_RADIAL_TRANSVERSE_NORMAL, the state on object_state): the 3 x 3 matrix Q (rows), x_RTN = Q x.
+ *  For A13 part 5 point 3: the covariance is then taken to RTN as R P R^T, R = blockdiag(Q, Q), in the harness. */
+export async function openRtnRotation(frames) {
+  const { createRequire } = await import('node:module');
+  const { pathToFileURL } = await import('node:url');
+  const req = createRequire(path.join(root, 'package.json'));
+  const standards = path.dirname(req.resolve('spacedatastandards.org/package.json'));
+  const fb = await import(pathToFileURL(req.resolve('flatbuffers')).href);
+  const [S, R] = await Promise.all(['FRM', 'RFM'].map((c) => import(pathToFileURL(path.join(standards, `lib/js/${c}/main.js`)).href)));
+  const TYPE = { schemaName: 'FRM.fbs', fileIdentifier: '$FRM', rootTypeName: 'FRM' };
+  const AX = { GCRF: ['GCRF', 'ICRF'], TEME: ['TEME', 'TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE'] };
+  const earth = () => new R.RFMOriginT(R.rfmOriginKind.CELESTIAL_BODY, 399);
+  const frame = (request) => { const b = new fb.Builder(2048); S.FRM.finishFRMBuffer(b, new S.FRMT(request, null).pack(b)); return b.asUint8Array(); };
+  return async (from, epoch, stateM) => {
+    const [n, a] = AX[from];
+    const sys = (name, axis, origin) => new R.RFMCoordinateSystemT(name, R.rfmAxisType[axis], origin, 399, epoch, 'UTC');
+    const object = Object.assign(new R.RFMOriginT(), { KIND: R.rfmOriginKind.SPACE_OBJECT, OBJECT_ID: 'object' });
+    const state = new S.FRMStateVectorT(S.frmStateRepresentation.CARTESIAN, [...stateM], new S.FRMVector3T(stateM[0], stateM[1], stateM[2]), new S.FRMVector3T(stateM[3], stateM[4], stateM[5]), 'GCRF', epoch, 'UTC', 3.986004418e14);
+    const request = Object.assign(new S.FRMFrameTransformRequestT(), { OPERATION: S.frmOperationCode.FRAME_ROTATION, SOURCE_COORDINATE_SYSTEM: sys(n, a, earth()), TARGET_COORDINATE_SYSTEM: sys('RTN', 'ORBITAL_RADIAL_TRANSVERSE_NORMAL', object), EPOCH: epoch, EPOCH_TIME_SYSTEM: 'UTC' });
+    const objectState = Object.assign(new S.FRMFrameTransformRequestT(), { OPERATION: S.frmOperationCode.STATE_TRANSFORM, SOURCE_COORDINATE_SYSTEM: sys('GCRF', 'ICRF', object), SOURCE_STATE: state, EPOCH: epoch, EPOCH_TIME_SYSTEM: 'UTC' });
+    const out = await frames.call('transform_frame_position', [{ portId: 'request', typeRef: TYPE, payload: frame(request) }, { portId: 'object_state', typeRef: TYPE, payload: frame(objectState) }]);
+    const r = S.FRM.getRootAsFRM(new fb.ByteBuffer(new Uint8Array(Object.values(out)[0]))).FRAME_TRANSFORM_RESULT();
+    if (!r || r.STATUS() !== S.frmResultStatus.OK) throw new Error(`foundation/frames rotation: ${r?.ERROR_MESSAGE() ?? 'no result'}`);
+    const m = r.ROTATION_DCM();
+    return [[m.M11(), m.M12(), m.M13()], [m.M21(), m.M22(), m.M23()], [m.M31(), m.M32(), m.M33()]];
+  };
+}
+/** R P R^T with R = blockdiag(Q, Q) for a 6 x 6 row-major P (the harness step A13 part 5 point 3 discloses). */
+export function rotate6(Q, P) {
+  const Rm = Array.from({ length: 6 }, (_, i) => Array.from({ length: 6 }, (_, j) => ((i < 3) === (j < 3) ? Q[i % 3][j % 3] : 0)));
+  const at = (i, j) => P[6 * i + j];
+  const RP = Rm.map((row) => Array.from({ length: 6 }, (_, j) => row.reduce((s, x, k) => s + x * at(k, j), 0)));
+  return RP.flatMap((row) => Array.from({ length: 6 }, (_, j) => row.reduce((s, x, k) => s + x * Rm[j][k], 0)));
+}
+
+const unpack6 = (p) => [[p[0], p[1], p[3]], [p[1], p[2], p[4]], [p[3], p[4], p[5]]];
+/** Part 5's calibrated covariances at epochs (A13 part 2 point 4, part 5 point 3), each 6 x 6 in the object's RTN axes (km, km/s):
+ *  ffm(ctx, fit, E, epochsMs, settings, cls) -> [{ r, v (km, km/s, GCRF), covariance }]: FFM's PROCESS_NOISE run from E (k_e x A5's
+ *  covariance carried to E, symmetrized, q per the class), taken to RTN, the floor and sigma_delta^2 D_tau added to the position block;
+ *  xp(teme [{ r, v, covariance (TEME, km) }], epochsMs, cls) -> the same for SGP4-XP's module covariance times k_e plus the floor. */
+export async function openPart5Cal(cal, frames) {
+  const { windowTerms } = await import(path.join(root, 'experiments/ffm-covariance-calibration/lib/products.mjs'));
+  const { decodeSamples, executionFrame } = await import(path.join(root, 'harness/ffm-execution.mjs'));
+  const F = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/frames.mjs'));
+  const rot = await openRtnRotation(frames);
+  const iso = (t) => new Date(t).toISOString();
+  const addPosition = (P, A, w) => { const M = unpack6(A); for (let i = 0; i < 3; i += 1) for (let j = 0; j < 3; j += 1) P[6 * i + j] += w * M[i][j]; };
+  return {
+    async ffm(ctx, fit, E, epochsMs, settings, cls) {
+      if (epochsMs.some((t) => t <= E)) throw new Error('an assessment epoch at or before E');
+      const p = FFM_CONSTANTS[cls].parameters;
+      const scale = p.k_e * Math.max(1, fit.reducedChiSquare ?? 1);
+      const [atE] = decodeSamples(await ctx.ffm.invoke('invoke', [executionFrame({ epoch: fit.epoch, state: fit.state, samples: [iso(E)], forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: fit.covariance.map((x) => x * scale), noise: null, integrator: settings.integrator }), ...ctx.inputs]));
+      const sym = atE.covariance.map((v, idx) => (v + atE.covariance[(idx % atE.n) * atE.n + Math.floor(idx / atE.n)]) / 2);
+      const q = [p.q_RN ?? 0, p.q_T ?? 0, p.q_RN ?? 0];
+      const out = decodeSamples(await ctx.ffm.invoke('invoke', [executionFrame({ epoch: iso(E), state: atE.state, samples: epochsMs.map(iso), forces: settings.forces, parameters: fit.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: sym, noise: q.some((v) => v > 0) ? { q, intervalSeconds: 600 } : null, integrator: settings.integrator }), ...ctx.inputs]));
+      let D = null;
+      if (p.s2) {
+        const t = await windowTerms(ctx, cal.pairs, fit, E, out.map((s, i) => ({ L: i, line: { epoch: iso(epochsMs[i]), r: s.state.slice(0, 3).map((x) => x / 1000), v: s.state.slice(3, 6).map((x) => x / 1000) } })), settings);
+        D = t.leads.map((l) => (p.tau === 'inf' ? l.terms.Dinf : l.terms.D1));
+      }
+      const res = [];
+      for (let i = 0; i < out.length; i += 1) {
+        const s = out[i], n = s.n, P6 = Array.from({ length: 36 }, (_, k) => s.covariance[n * Math.floor(k / 6) + (k % 6)]);
+        const P = rotate6(await rot('GCRF', iso(epochsMs[i]), s.state), P6);
+        ['f_R', 'f_T', 'f_N'].forEach((f, a) => { if (p[f]) P[7 * a] += p[f] ** 2; });
+        if (D) addPosition(P, D[i], p.s2);
+        res.push({ r: s.state.slice(0, 3).map((x) => x / 1000), v: s.state.slice(3, 6).map((x) => x / 1000), covariance: P.map((x) => x * 1e-6) });
+      }
+      return res;
+    },
+    async xp(teme, epochsMs, cls) {
+      const p = XP_CONSTANTS[cls].parameters;
+      const res = [];
+      for (let i = 0; i < teme.length; i += 1) {
+        const x = teme[i], g = await F.transformState(frames, 'TEME', 'GCRF', iso(epochsMs[i]), [...x.r, ...x.v]);
+        const P = rotate6(await rot('TEME', iso(epochsMs[i]), g.map((y) => y * 1000)), x.covariance.map((y) => y * p.k_e));
+        ['f_R', 'f_T', 'f_N'].forEach((f, a) => { if (p[f]) P[7 * a] += p[f] ** 2 * 1e-6; });
+        res.push({ r: x.r, v: x.v, covariance: P });
+      }
+      return res;
+    },
+  };
+}

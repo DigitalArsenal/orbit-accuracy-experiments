@@ -9,22 +9,30 @@ import path from 'node:path';
 import { store, args, frozen, readJsonl, write, sha256, g1Dir, root } from './common.mjs';
 
 frozen();
-const { LEADS, encounters, summarize, realismCell, pcClient } = await import('./lib/ca.mjs');
+const { LEADS, encounters, summarize, realismCell, pcClient, a13Scores, realismCellC2 } = await import('./lib/ca.mjs');
+/** A13 (part 5 point 4): the lead rows, the field in the FFM slot and the calibrated arms of each run. */
+export const A13RUNS = {
+  'iss.a13': { group: 'iss', leads: 'iss-leads3.', ffm: 'ffm3', extras: { ffmCal: 'ffm3Cal', sgp4xpCal: 'sgp4xpCal' } },
+  'laser.a13': { group: 'laser', leads: 'laser-leads3.', ffm: 'ffm', extras: { ffmCal: 'ffmCal', ffmCalLP: 'ffmCalLP', ffmCalR2: 'ffmCalR2', sgp4xpCal: 'sgp4xpCal' } },
+  starlink: { group: 'starlink', leads: 'starlink-leads.', ffm: 'ffm', extras: { sgp4xpCal: 'sgp4xpCal' } },
+  'starlink.ffm3': { group: 'starlink', leads: 'starlink-leads.', ffm: 'ffm3', extras: { ffmCal: 'ffm3Cal', sgp4xpCal: 'sgp4xpCal' } },
+};
 const SOURCES = { iss: { leads: 'iss-leads.', gp: 'iss-gp.', key: (r) => r.file, object: () => 'ISS' }, laser: { leads: 'laser-leads.', gp: 'laser-gp.', key: (r) => `${r.norad}|${r.cutoff}`, object: (r) => r.target }, starlink: { leads: 'starlink-leads.', gp: 'starlink-gp.', key: (r) => String(r.norad), object: (r) => String(r.norad) } };
 const rowsOf = (prefix) => { const d = path.join(store, 'rows'); return fs.readdirSync(d).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).sort().flatMap((f) => readJsonl(path.join(d, f))); };
 
 /** The group's windows: { object, key, leads: { L: { ffm, sgp4xp, forecast, gp, gpLabels } } } from its lead and GP rows. `ffm` names the
  *  lead field in the FFM slot: 'ffm' (A3 as registered) or, for Starlink, 'ffm3' (A12 point 12, the FFM arm of record). */
-export function windowsOf(group, ffm = 'ffm') {
-  const S = SOURCES[group];
+export function windowsOf(group, ffm = 'ffm', run = null) {
+  const S = run ? { ...SOURCES[group], leads: run.leads } : SOURCES[group];
   if (!S) throw new Error('--group iss|laser|starlink');
   const leadRows = rowsOf(S.leads).filter((r) => !r.excluded), gpRows = new Map(rowsOf(S.gp).filter((r) => r.gp).map((r) => [S.key(r), r.gp]));
   const inputs = sha256(Buffer.from(JSON.stringify([leadRows, [...gpRows.entries()]])));
-  if (ffm !== 'ffm' && group !== 'starlink') throw new Error('--ffm ffm3 is part 1a\'s (Starlink) only');
+  if (!run && ffm !== 'ffm' && group !== 'starlink') throw new Error('--ffm ffm3 is part 1a\'s (Starlink) only');
   const windows = leadRows.map((r) => {
     const g = gpRows.get(S.key(r));
     const leads = Object.fromEntries(LEADS.map((L) => [L, {
-      ...(r.sgp4xp?.[L] ? { sgp4xp: r.sgp4xp[L] } : {}), ...(r[ffm]?.[L] ? { ffm: r[ffm][L] } : {}), ...(r.forecast?.[L] ? { forecast: r.forecast[L] } : {}),
+      ...(r.sgp4xp?.[L] ? { sgp4xp: r.sgp4xp[L] } : {}), ...(r[ffm]?.[L] ? { ffm: r[ffm][L] } : {}),
+      ...Object.fromEntries(Object.entries(run?.extras ?? {}).filter(([, f]) => r[f]?.[L]).map(([arm, f]) => [arm, r[f][L]])), ...(r.forecast?.[L] ? { forecast: r.forecast[L] } : {}),
       ...(g?.leads?.[L]?.v1c5?.cov ? { gp: g.leads[L].v1c5 } : {}), ...(g?.leads?.[L] ? { gpLabels: g.leads[L] } : {}),
     }]));
     return { object: S.object(r), key: S.key(r), leads, gpTier: g?.tier ?? null, gpFlagged: g?.flagged ?? null };
@@ -44,19 +52,25 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
   const ca = await loadModule(modulesRoot(), 'analysis/conjunction-assessment');
   const pc = pcClient(ca);
-  const group = args.group, ffm = args.ffm ?? 'ffm';
-  const label = ffm === 'ffm' ? group : `${group}.${ffm}`; // the draws stay the group's (seeds B2|part4|<group>|...), so the two FFM slots meet the same encounters
-  const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group, ffm);
-  const summary = { group, ffmArm: ffm, inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
+  // --a13 <run> (A13): one of A13RUNS, the registered A5 figures on A5's pools plus the calibrated arms on the same encounters
+  const run = args.a13 ? A13RUNS[args.a13] : null;
+  if (args.a13 && !run) throw new Error(`--a13 ${Object.keys(A13RUNS).join('|')}`);
+  const group = run ? run.group : args.group, ffm = run ? run.ffm : args.ffm ?? 'ffm';
+  const label = run ? args.a13 : ffm === 'ffm' ? group : `${group}.${ffm}`; // the draws stay the group's (seeds B2|part4|<group>|...), so the two FFM slots meet the same encounters
+  const extraArms = Object.keys(run?.extras ?? {});
+  const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group, ffm, run);
+  const summary = { group, ffmArm: ffm, ...(run ? { a13: { run: args.a13, extraArms } } : {}), inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
   const classes = summary.objects > 1 ? ['gp', 'precise'] : ['gp'];
   for (const cls of classes) {
     const t0 = Date.now();
-    const { rows, counts } = await encounters(group, cls, windows, pc);
+    const { rows, counts } = await encounters(group, cls, windows, pc, { extraArms });
     const file = path.join(store, 'rows', `ca-encounters.${label}.${cls}.jsonl`);
     fs.writeFileSync(file, rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
     summary.classes[cls] = summarize(group, cls, rows, counts);
+    if (run) summary.classes[cls].a13 = a13Scores(group, cls, rows, ['ffm', 'sgp4xp', ...extraArms]);
     console.error(`part 4 ${group} ${cls}: ${rows.length} encounters (${counts.noPrimary} without a primary, ${counts.noSecondary} without a secondary), ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   }
+  if (run) summary.realismCalibrated = Object.fromEntries(extraArms.map((arm) => [arm, Object.fromEntries(LEADS.map((L) => [L, realismCellC2(windows.flatMap((w) => { const x = w.leads[L]?.[arm]; return x && Number.isFinite(x.d2) ? [{ object: w.object, d2: x.d2 }] : []; }), `B2|A13|part3|${group}|${arm}|${L}`)]))]));
   write(path.join(store, 'rows', `ca.${label}.json`), summary);
   await ca.destroy?.();
   process.exit(0);
