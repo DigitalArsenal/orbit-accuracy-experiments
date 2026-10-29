@@ -173,7 +173,7 @@ const toP = (names, x, fixed = {}) => ({ ...fixed, ...Object.fromEntries(names.m
 
 if (args.fit) {
   const cal = samples('calibration'), val = samples('validation');
-  const hasD = cal.out.some((s) => s.terms.D1.some((v) => v !== 0));
+  const hasD = !XP && cal.out.some((s) => s.terms.D1.some((v) => v !== 0));
   const report = { class: cls, sensitivity: args.sensitivity === 'true', calibration: cal.counts, validation: val.counts, samples: { calibration: cal.out.length, validation: val.out.length }, candidates: {} };
   for (const [name, c] of Object.entries(CANDIDATES)) {
     if (name.startsWith('M3') && !hasD) { report.candidates[name] = { skipped: 'no B parameter in this class: no density term' }; continue; }
