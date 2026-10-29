@@ -5,12 +5,1163 @@
   "sdnapWasmSha256": "62c783262da9e69c54d6f4eb98c97af4208c1b11daec44cc9c28c0252c564d1e",
   "units": "km, 3D RMS of a horizon bin (part 1: hours after E; part 2: days after T); a cell is over windows",
   "inputs": {
-    "starlinkScore": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "starlinkScore": "0f3fe3691872efb1676a2eff0736aae7b64c6ce41302ad69124412261f7fd85a",
+    "starlinkFit": "59e5a0d91b8a33967b2237cb72aa81ed93a65a08910725002bb9217f11060326",
+    "starlinkFfm": "e5a93e883b24fdfdbda1c0cd53ed68ee5cdcbff311eae022f6da08e407213c8e",
+    "starlinkFfm3": "e9521b7cdd1c304df1e297ef1944f1ce89a1ddbd869d6885d13e91abd1ee52d6",
+    "starlinkXpln": "9b478c8ea3b3733caa907b4818ac29b8c890d631583af945486fe3f83591c6b0",
     "iss": "d3d027ee00dc57fff9472a03308fe2573f5440de232223bcb45705ca5272b857",
     "issFfm": "252c80220f10d1ed7b05e805b6ac651da1010c48d19d506008bf6bb99e242257",
     "laser": "050ba44a0b8df61c99edd55741844002e49b0299c719ed6ae541f9af0422ecc2"
   },
   "rows": [
+    {
+      "id": "starlink-both",
+      "row": "Starlink, satellites both SGP4-XP and FFM fitted and scored (the primary comparison)",
+      "note": "5121 of 11163 satellites in the forecast cycle; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 5121,
+      "objects": 5121,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 5121,
+          "scored": 5121,
+          "bins": {
+            "1": {
+              "n": 5121,
+              "objects": 5121,
+              "median": 3.5239827664863035,
+              "p10": 0.9260569091697574,
+              "p90": 16.989047676410355,
+              "ci95Windows": [
+                3.415742100851115,
+                3.6596924062577205
+              ],
+              "ci95Objects": [
+                3.4148693671725048,
+                3.6596924062577205
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm": {
+          "attempted": 5121,
+          "scored": 5121,
+          "bins": {
+            "1": {
+              "n": 5121,
+              "objects": 5121,
+              "median": 3.2341985363518915,
+              "p10": 0.30964294896619915,
+              "p90": 14.53504353420651,
+              "ci95Windows": [
+                3.038683799290339,
+                3.41854301790342
+              ],
+              "ci95Objects": [
+                3.041761718846658,
+                3.417697588101846
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffm"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithFfm": {
+        "sgp4xp": {
+          "1": {
+            "n": 5121,
+            "ffmCloser": 0.6295645381761374,
+            "medianRatio": 1.2295801206875503,
+            "ci95Windows": [
+              1.2036912238260946,
+              1.2498702951310043
+            ]
+          },
+          "2": {
+            "n": 0
+          },
+          "3": {
+            "n": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-both-quiet",
+      "row": "Starlink, both arms fitted, no maneuver evident",
+      "note": "truth files agree within 1 km where they overlap; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 5099,
+      "objects": 5099,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 5099,
+          "scored": 5099,
+          "bins": {
+            "1": {
+              "n": 5099,
+              "objects": 5099,
+              "median": 3.514117571548071,
+              "p10": 0.9236862961410011,
+              "p90": 16.936602591384545,
+              "ci95Windows": [
+                3.411092219259258,
+                3.6438855725892947
+              ],
+              "ci95Objects": [
+                3.411068880399385,
+                3.642010802458107
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm": {
+          "attempted": 5099,
+          "scored": 5099,
+          "bins": {
+            "1": {
+              "n": 5099,
+              "objects": 5099,
+              "median": 3.2220377444686568,
+              "p10": 0.3088662888198841,
+              "p90": 14.517182696858839,
+              "ci95Windows": [
+                3.026511616137997,
+                3.4110791610027142
+              ],
+              "ci95Objects": [
+                3.0269523472742756,
+                3.4110791610027142
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffm"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithFfm": {
+        "sgp4xp": {
+          "1": {
+            "n": 5099,
+            "ffmCloser": 0.6297313198666405,
+            "medianRatio": 1.2300893379843265,
+            "ci95Windows": [
+              1.2038613886704237,
+              1.2498740575657477
+            ]
+          },
+          "2": {
+            "n": 0
+          },
+          "3": {
+            "n": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-xp-refused",
+      "row": "Starlink, SGP4-XP on the satellites FFM did not fit (descriptive: the selection FFM's refusals make)",
+      "note": "6038 satellites; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 6038,
+      "objects": 6038,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 6038,
+          "scored": 6038,
+          "bins": {
+            "1": {
+              "n": 6038,
+              "objects": 6038,
+              "median": 1.895503248557932,
+              "p10": 0.7401603194948235,
+              "p90": 12.111801943587942,
+              "ci95Windows": [
+                1.8258692734580149,
+                1.964035411450666
+              ],
+              "ci95Objects": [
+                1.8237868832672235,
+                1.9647976816209531
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "sgp4xp"
+        ],
+        "2": null,
+        "3": null
+      }
+    },
+    {
+      "id": "starlink-xp-all",
+      "row": "Starlink, SGP4-XP on every scored satellite (descriptive)",
+      "note": "11159 satellites; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 11159,
+      "objects": 11159,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 11159,
+          "scored": 11159,
+          "bins": {
+            "1": {
+              "n": 11159,
+              "objects": 11159,
+              "median": 2.5125551419681287,
+              "p10": 0.7965152657811494,
+              "p90": 14.353949323796888,
+              "ci95Windows": [
+                2.4382532125948666,
+                2.578182559802338
+              ],
+              "ci95Objects": [
+                2.442215730695511,
+                2.578182559802338
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "sgp4xp"
+        ],
+        "2": null,
+        "3": null
+      }
+    },
+    {
+      "id": "starlink-forecast",
+      "row": "Starlink, the forecast sample with all three arms scored (SpaceX's own forecast beside)",
+      "note": "sample satellites whose fetched file is F (A10) and both fits scored; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 31,
+      "objects": 31,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 31,
+          "scored": 31,
+          "bins": {
+            "1": {
+              "n": 31,
+              "objects": 31,
+              "median": 4.064479064308685,
+              "p10": 0.7481503200217464,
+              "p90": 15.796759745893782,
+              "ci95Windows": [
+                2.5033722655378985,
+                6.699742208451839
+              ],
+              "ci95Objects": [
+                2.5033722655378985,
+                6.699742208451839
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm": {
+          "attempted": 31,
+          "scored": 31,
+          "bins": {
+            "1": {
+              "n": 31,
+              "objects": 31,
+              "median": 3.231478090806317,
+              "p10": 0.5912950124575443,
+              "p90": 11.443982208507443,
+              "ci95Windows": [
+                1.2652630007755168,
+                5.305021509899628
+              ],
+              "ci95Objects": [
+                1.2652630007755168,
+                5.305021509899628
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "forecast": {
+          "attempted": 31,
+          "scored": 31,
+          "bins": {
+            "1": {
+              "n": 31,
+              "objects": 31,
+              "median": 0.22056040077443342,
+              "p10": 0.03380730990132182,
+              "p90": 0.6432127176690604,
+              "ci95Windows": [
+                0.15274360112622687,
+                0.3008680194141067
+              ],
+              "ci95Objects": [
+                0.15274360112622687,
+                0.3008680194141067
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "forecast"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithFfm": {
+        "sgp4xp": {
+          "1": {
+            "n": 31,
+            "ffmCloser": 0.5161290322580645,
+            "medianRatio": 1.032300030083237,
+            "ci95Windows": [
+              0.6946959536308164,
+              1.8117423817827403
+            ]
+          },
+          "2": {
+            "n": 0
+          },
+          "3": {
+            "n": 0
+          }
+        },
+        "forecast": {
+          "1": {
+            "n": 31,
+            "ffmCloser": 0.06451612903225806,
+            "medianRatio": 0.06370536948551785,
+            "ci95Windows": [
+              0.03275492845330396,
+              0.12325183707064706
+            ]
+          },
+          "2": {
+            "n": 0
+          },
+          "3": {
+            "n": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-ffm3-both",
+      "row": "Starlink, FFM v3 (A12, the FFM arm of record) against SGP4-XP on the satellites both fitted and scored (A10's primary form)",
+      "note": "11144 of 11163 satellites; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 11144,
+      "objects": 11144,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 11144,
+          "scored": 11144,
+          "bins": {
+            "1": {
+              "n": 11144,
+              "objects": 11144,
+              "median": 2.5128213975168867,
+              "p10": 0.7967131423526229,
+              "p90": 14.36096374360497,
+              "ci95Windows": [
+                2.4411493248587717,
+                2.577160758083954
+              ],
+              "ci95Objects": [
+                2.442215730695511,
+                2.5773373182014154
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm3": {
+          "attempted": 11144,
+          "scored": 11144,
+          "bins": {
+            "1": {
+              "n": 11144,
+              "objects": 11144,
+              "median": 2.3035008911864687,
+              "p10": 0.3908668662395421,
+              "p90": 13.090498235400617,
+              "ci95Windows": [
+                2.2181496216749523,
+                2.3827524147331176
+              ],
+              "ci95Objects": [
+                2.2152349194019894,
+                2.384438603551513
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffm3"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithRef": {
+        "ffm3": {
+          "sgp4xp": {
+            "1": {
+              "n": 11144,
+              "ffm3Closer": 0.6235642498205313,
+              "medianRatio": 1.1216735020826174,
+              "ci95Windows": [
+                1.1099562891542372,
+                1.1339132162791068
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-ffm3-both-quiet",
+      "row": "Starlink, FFM v3 and SGP4-XP both fitted, no maneuver evident",
+      "note": "truth files agree within 1 km where they overlap; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 11092,
+      "objects": 11092,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 11092,
+          "scored": 11092,
+          "bins": {
+            "1": {
+              "n": 11092,
+              "objects": 11092,
+              "median": 2.5063714189138393,
+              "p10": 0.7969053243591692,
+              "p90": 14.325214642608705,
+              "ci95Windows": [
+                2.4364226832191798,
+                2.570946280981434
+              ],
+              "ci95Objects": [
+                2.434299980386668,
+                2.570955443801797
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm3": {
+          "attempted": 11092,
+          "scored": 11092,
+          "bins": {
+            "1": {
+              "n": 11092,
+              "objects": 11092,
+              "median": 2.2926203837926993,
+              "p10": 0.3885560849533595,
+              "p90": 13.064526387287641,
+              "ci95Windows": [
+                2.2118237164123786,
+                2.378857917845249
+              ],
+              "ci95Objects": [
+                2.208831355537457,
+                2.378796514759884
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffm3"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithRef": {
+        "ffm3": {
+          "sgp4xp": {
+            "1": {
+              "n": 11092,
+              "ffm3Closer": 0.6237829065993509,
+              "medianRatio": 1.1215246163553718,
+              "ci95Windows": [
+                1.1098921139119098,
+                1.1339147062613582
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-ffm3-a3",
+      "row": "Starlink, FFM v3 against A3 on A3's full-weight satellites both scored",
+      "note": "5108 satellites; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 5108,
+      "objects": 5108,
+      "arms": {
+        "ffm": {
+          "attempted": 5108,
+          "scored": 5108,
+          "bins": {
+            "1": {
+              "n": 5108,
+              "objects": 5108,
+              "median": 3.2363794114327296,
+              "p10": 0.30951826015152956,
+              "p90": 14.639940577270703,
+              "ci95Windows": [
+                3.041761718846658,
+                3.419788764658509
+              ],
+              "ci95Objects": [
+                3.0412850178064126,
+                3.420623136411548
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm3": {
+          "attempted": 5108,
+          "scored": 5108,
+          "bins": {
+            "1": {
+              "n": 5108,
+              "objects": 5108,
+              "median": 3.2364447846345605,
+              "p10": 0.3096258554109677,
+              "p90": 14.637304712434586,
+              "ci95Windows": [
+                3.0437839589348092,
+                3.4267844392857474
+              ],
+              "ci95Objects": [
+                3.044973103203227,
+                3.4210517281555575
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffm"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithRef": {
+        "ffm3": {
+          "ffm": {
+            "1": {
+              "n": 5108,
+              "ffm3Closer": 0.43519968676585746,
+              "medianRatio": 0.9999925743955413,
+              "ci95Windows": [
+                0.9999910584373569,
+                0.9999944162650374
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-xpln",
+      "row": "Starlink, XP-LN (fairness arm, A12) beside SGP4-XP and FFM v3, on the satellites all three fitted and scored",
+      "note": "11144 satellites; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 11144,
+      "objects": 11144,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 11144,
+          "scored": 11144,
+          "bins": {
+            "1": {
+              "n": 11144,
+              "objects": 11144,
+              "median": 2.5128213975168867,
+              "p10": 0.7967131423526229,
+              "p90": 14.36096374360497,
+              "ci95Windows": [
+                2.4391336613773382,
+                2.577160758083954
+              ],
+              "ci95Objects": [
+                2.445134110098315,
+                2.57776059542141
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "xpln": {
+          "attempted": 11144,
+          "scored": 11144,
+          "bins": {
+            "1": {
+              "n": 11144,
+              "objects": 11144,
+              "median": 2.822439194267645,
+              "p10": 0.8304630396932967,
+              "p90": 14.624268022994794,
+              "ci95Windows": [
+                2.749169078162143,
+                2.9108285933991898
+              ],
+              "ci95Objects": [
+                2.748654345958311,
+                2.909740461424019
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm3": {
+          "attempted": 11144,
+          "scored": 11144,
+          "bins": {
+            "1": {
+              "n": 11144,
+              "objects": 11144,
+              "median": 2.3035008911864687,
+              "p10": 0.3908668662395421,
+              "p90": 13.090498235400617,
+              "ci95Windows": [
+                2.2152452668935307,
+                2.3834650989456705
+              ],
+              "ci95Objects": [
+                2.217339244627464,
+                2.3828742044923823
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffm3"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithRef": {
+        "ffm3": {
+          "sgp4xp": {
+            "1": {
+              "n": 11144,
+              "ffm3Closer": 0.6235642498205313,
+              "medianRatio": 1.1216735020826174,
+              "ci95Windows": [
+                1.110118581666892,
+                1.1338268680677173
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          },
+          "xpln": {
+            "1": {
+              "n": 11144,
+              "ffm3Closer": 0.6938262742282842,
+              "medianRatio": 1.181440466061013,
+              "ci95Windows": [
+                1.1685944544012328,
+                1.191051015164981
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "sgp4xp": {
+          "xpln": {
+            "1": {
+              "n": 11144,
+              "sgp4xpCloser": 0.7071069633883704,
+              "medianRatio": 1.0110013955758193,
+              "ci95Windows": [
+                1.0094212770288524,
+                1.0128492069751254
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-ffm3-forecast",
+      "row": "Starlink, the forecast sample with SGP4-XP, FFM v3 and SpaceX's forecast all scored",
+      "note": "sample satellites whose fetched file is F; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 62,
+      "objects": 62,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 62,
+          "scored": 62,
+          "bins": {
+            "1": {
+              "n": 62,
+              "objects": 62,
+              "median": 4.093491970242412,
+              "p10": 0.8246167427290158,
+              "p90": 21.519259725390796,
+              "ci95Windows": [
+                2.5033722655378985,
+                6.202970640191522
+              ],
+              "ci95Objects": [
+                2.5033722655378985,
+                6.202970640191522
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm3": {
+          "attempted": 62,
+          "scored": 62,
+          "bins": {
+            "1": {
+              "n": 62,
+              "objects": 62,
+              "median": 3.1720762631929063,
+              "p10": 0.5802271920991182,
+              "p90": 14.726481319137472,
+              "ci95Windows": [
+                1.6818095647898765,
+                5.262961104856869
+              ],
+              "ci95Objects": [
+                1.6818095647898765,
+                5.262961104856869
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "forecast": {
+          "attempted": 62,
+          "scored": 62,
+          "bins": {
+            "1": {
+              "n": 62,
+              "objects": 62,
+              "median": 0.16900761440328088,
+              "p10": 0.033831952933259773,
+              "p90": 0.5402899487839552,
+              "ci95Windows": [
+                0.1131856776313686,
+                0.24831156809107696
+              ],
+              "ci95Objects": [
+                0.1131856776313686,
+                0.24831156809107696
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "forecast"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithRef": {
+        "ffm3": {
+          "sgp4xp": {
+            "1": {
+              "n": 62,
+              "ffm3Closer": 0.532258064516129,
+              "medianRatio": 1.016250155183886,
+              "ci95Windows": [
+                0.9634589312352624,
+                1.271792656858415
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          },
+          "forecast": {
+            "1": {
+              "n": 62,
+              "ffm3Closer": 0.04838709677419355,
+              "medianRatio": 0.051031445513988756,
+              "ci95Windows": [
+                0.0336369416915788,
+                0.08132702529986012
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "starlink-a3-round1",
+      "row": "Starlink, A3's round-1 products on its 3,048 round-2-refused satellites (descriptive, labeled; counted as failed fits)",
+      "note": "3047 satellites; never pooled with full fits; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 3048,
+      "objects": 3048,
+      "arms": {
+        "ffmRound1": {
+          "attempted": 3048,
+          "scored": 3047,
+          "bins": {
+            "1": {
+              "n": 3047,
+              "objects": 3047,
+              "median": 2.8570882358799263,
+              "p10": 0.6270420218544718,
+              "p90": 11.707240261396656,
+              "ci95Windows": [
+                2.6841645696885013,
+                3.040157969017209
+              ],
+              "ci95Objects": [
+                2.6841645696885013,
+                3.035261983569673
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "ffmRound1"
+        ],
+        "2": null,
+        "3": null
+      }
+    },
+    {
+      "id": "starlink-forecast-quiet",
+      "row": "Starlink, the forecast sample with all three arms, no maneuver evident",
+      "note": "as above, truth files agreeing within 1 km where they overlap; final: every bin complete at the capture cycle 2026-10-28T21-01-35-288Z",
+      "windows": 31,
+      "objects": 31,
+      "arms": {
+        "sgp4xp": {
+          "attempted": 31,
+          "scored": 31,
+          "bins": {
+            "1": {
+              "n": 31,
+              "objects": 31,
+              "median": 4.064479064308685,
+              "p10": 0.7481503200217464,
+              "p90": 15.796759745893782,
+              "ci95Windows": [
+                2.5033722655378985,
+                6.699742208451839
+              ],
+              "ci95Objects": [
+                2.5033722655378985,
+                6.699742208451839
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "ffm": {
+          "attempted": 31,
+          "scored": 31,
+          "bins": {
+            "1": {
+              "n": 31,
+              "objects": 31,
+              "median": 3.231478090806317,
+              "p10": 0.5912950124575443,
+              "p90": 11.443982208507443,
+              "ci95Windows": [
+                1.2652630007755168,
+                5.305021509899628
+              ],
+              "ci95Objects": [
+                1.2652630007755168,
+                5.305021509899628
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        },
+        "forecast": {
+          "attempted": 31,
+          "scored": 31,
+          "bins": {
+            "1": {
+              "n": 31,
+              "objects": 31,
+              "median": 0.22056040077443342,
+              "p10": 0.03380730990132182,
+              "p90": 0.6432127176690604,
+              "ci95Windows": [
+                0.15274360112622687,
+                0.3008680194141067
+              ],
+              "ci95Objects": [
+                0.15274360112622687,
+                0.3008680194141067
+              ]
+            },
+            "2": {
+              "n": 0
+            },
+            "3": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "paired": {},
+      "closest": {
+        "1": [
+          "forecast"
+        ],
+        "2": null,
+        "3": null
+      },
+      "pairedWithFfm": {
+        "sgp4xp": {
+          "1": {
+            "n": 31,
+            "ffmCloser": 0.5161290322580645,
+            "medianRatio": 1.032300030083237,
+            "ci95Windows": [
+              0.6946959536308164,
+              1.8117423817827403
+            ]
+          },
+          "2": {
+            "n": 0
+          },
+          "3": {
+            "n": 0
+          }
+        },
+        "forecast": {
+          "1": {
+            "n": 31,
+            "ffmCloser": 0.06451612903225806,
+            "medianRatio": 0.06370536948551785,
+            "ci95Windows": [
+              0.03275492845330396,
+              0.12325183707064706
+            ]
+          },
+          "2": {
+            "n": 0
+          },
+          "3": {
+            "n": 0
+          }
+        }
+      }
+    },
     {
       "id": "iss",
       "row": "ISS, NASA trajectory files 2020 to 2026",
@@ -3019,6 +4170,488 @@
       }
     }
   ],
+  "starlink": {
+    "through": "2026-10-28T21-01-35-288Z",
+    "binsComplete": [
+      "1",
+      "2",
+      "3"
+    ],
+    "forecastCycleSatellites": 11163,
+    "sgp4xpFit": {
+      "fitted": 11163
+    },
+    "ffmFit": {
+      "fitted": 8173,
+      "refused: propagator/ffm invoke: invalid-forces: invalid-forces: Spacecraft mass, area, Cd and Cr ar": 2985,
+      "not converged": 5
+    },
+    "trackProof": {
+      "fitRows": 11163,
+      "shaDiffers": 0
+    },
+    "readerDroppedStates": {
+      "track": 23175,
+      "truth": 389120
+    },
+    "gatedStates": {
+      "track": 0,
+      "truth": 0
+    },
+    "score": {
+      "scored": 11159,
+      "excluded: no complete bin meets the coverage rule": 4
+    },
+    "binsCounted": {
+      "1": {
+        "complete": true,
+        "counted": 11159,
+        "belowCoverage": 0
+      },
+      "2": {
+        "complete": true,
+        "counted": 0,
+        "belowCoverage": 11159
+      },
+      "3": {
+        "complete": true,
+        "counted": 0,
+        "belowCoverage": 11159
+      }
+    },
+    "maneuver": {
+      "evident": 52,
+      "notEvident": 11107,
+      "notEvidentWithOverlap": 4423,
+      "notEvidentWithoutOverlap": 6684
+    },
+    "forecastSample": {
+      "drawn": 200,
+      "scored": 62,
+      "outcomes": {
+        "no forecast arm: no common epochs": 138,
+        "scored": 62
+      }
+    },
+    "headline": {
+      "satellites": 11163,
+      "ffmFitted": 8173,
+      "ffmRefused": 2985,
+      "ffmNotConverged": 5
+    },
+    "exploratory": {
+      "note": "exploratory, not registered as a test (A10 point 2)",
+      "byShellKm": [
+        {
+          "meanRadiusKm": [
+            6590,
+            6600
+          ],
+          "satellites": 3,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6610,
+            6620
+          ],
+          "satellites": 1,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6620,
+            6630
+          ],
+          "satellites": 3,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6630,
+            6640
+          ],
+          "satellites": 30,
+          "refused": 16,
+          "refusedShare": 0.5333333333333333
+        },
+        {
+          "meanRadiusKm": [
+            6640,
+            6650
+          ],
+          "satellites": 8,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6650,
+            6660
+          ],
+          "satellites": 8,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6660,
+            6670
+          ],
+          "satellites": 8,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6670,
+            6680
+          ],
+          "satellites": 12,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6680,
+            6690
+          ],
+          "satellites": 14,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6690,
+            6700
+          ],
+          "satellites": 13,
+          "refused": 1,
+          "refusedShare": 0.07692307692307693
+        },
+        {
+          "meanRadiusKm": [
+            6700,
+            6710
+          ],
+          "satellites": 29,
+          "refused": 16,
+          "refusedShare": 0.5517241379310345
+        },
+        {
+          "meanRadiusKm": [
+            6710,
+            6720
+          ],
+          "satellites": 17,
+          "refused": 2,
+          "refusedShare": 0.11764705882352941
+        },
+        {
+          "meanRadiusKm": [
+            6720,
+            6730
+          ],
+          "satellites": 80,
+          "refused": 53,
+          "refusedShare": 0.6625
+        },
+        {
+          "meanRadiusKm": [
+            6730,
+            6740
+          ],
+          "satellites": 635,
+          "refused": 240,
+          "refusedShare": 0.3779527559055118
+        },
+        {
+          "meanRadiusKm": [
+            6740,
+            6750
+          ],
+          "satellites": 100,
+          "refused": 73,
+          "refusedShare": 0.73
+        },
+        {
+          "meanRadiusKm": [
+            6750,
+            6760
+          ],
+          "satellites": 12,
+          "refused": 3,
+          "refusedShare": 0.25
+        },
+        {
+          "meanRadiusKm": [
+            6760,
+            6770
+          ],
+          "satellites": 11,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6770,
+            6780
+          ],
+          "satellites": 11,
+          "refused": 1,
+          "refusedShare": 0.09090909090909091
+        },
+        {
+          "meanRadiusKm": [
+            6780,
+            6790
+          ],
+          "satellites": 17,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6790,
+            6800
+          ],
+          "satellites": 23,
+          "refused": 1,
+          "refusedShare": 0.043478260869565216
+        },
+        {
+          "meanRadiusKm": [
+            6800,
+            6810
+          ],
+          "satellites": 59,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6810,
+            6820
+          ],
+          "satellites": 76,
+          "refused": 1,
+          "refusedShare": 0.013157894736842105
+        },
+        {
+          "meanRadiusKm": [
+            6820,
+            6830
+          ],
+          "satellites": 160,
+          "refused": 7,
+          "refusedShare": 0.04375
+        },
+        {
+          "meanRadiusKm": [
+            6830,
+            6840
+          ],
+          "satellites": 329,
+          "refused": 40,
+          "refusedShare": 0.12158054711246201
+        },
+        {
+          "meanRadiusKm": [
+            6840,
+            6850
+          ],
+          "satellites": 5438,
+          "refused": 1572,
+          "refusedShare": 0.28907686649503495
+        },
+        {
+          "meanRadiusKm": [
+            6850,
+            6860
+          ],
+          "satellites": 403,
+          "refused": 84,
+          "refusedShare": 0.20843672456575682
+        },
+        {
+          "meanRadiusKm": [
+            6860,
+            6870
+          ],
+          "satellites": 3258,
+          "refused": 869,
+          "refusedShare": 0.2667280540208717
+        },
+        {
+          "meanRadiusKm": [
+            6870,
+            6880
+          ],
+          "satellites": 32,
+          "refused": 1,
+          "refusedShare": 0.03125
+        },
+        {
+          "meanRadiusKm": [
+            6880,
+            6890
+          ],
+          "satellites": 23,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6890,
+            6900
+          ],
+          "satellites": 40,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6900,
+            6910
+          ],
+          "satellites": 32,
+          "refused": 1,
+          "refusedShare": 0.03125
+        },
+        {
+          "meanRadiusKm": [
+            6910,
+            6920
+          ],
+          "satellites": 43,
+          "refused": 2,
+          "refusedShare": 0.046511627906976744
+        },
+        {
+          "meanRadiusKm": [
+            6920,
+            6930
+          ],
+          "satellites": 52,
+          "refused": 1,
+          "refusedShare": 0.019230769230769232
+        },
+        {
+          "meanRadiusKm": [
+            6930,
+            6940
+          ],
+          "satellites": 1,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6940,
+            6950
+          ],
+          "satellites": 1,
+          "refused": 0,
+          "refusedShare": 0
+        },
+        {
+          "meanRadiusKm": [
+            6950,
+            6960
+          ],
+          "satellites": 181,
+          "refused": 1,
+          "refusedShare": 0.0055248618784530384
+        }
+      ],
+      "byManeuver": {
+        "evident": {
+          "satellites": 52,
+          "refused": 14,
+          "refusedShare": 0.2692307692307692
+        },
+        "notEvident": {
+          "satellites": 11111,
+          "refused": 2971,
+          "refusedShare": 0.26739267392673927
+        },
+        "unknown": {
+          "satellites": 0,
+          "refused": 0,
+          "refusedShare": null
+        }
+      },
+      "bySgp4xpFitRmsKm": [
+        {
+          "fitRmsKm": [
+            0,
+            0.484977
+          ],
+          "satellites": 2790,
+          "refused": 61,
+          "refusedShare": 0.02186379928315412
+        },
+        {
+          "fitRmsKm": [
+            0.484977,
+            0.594783
+          ],
+          "satellites": 2791,
+          "refused": 399,
+          "refusedShare": 0.1429595127194554
+        },
+        {
+          "fitRmsKm": [
+            0.594783,
+            0.755124
+          ],
+          "satellites": 2790,
+          "refused": 767,
+          "refusedShare": 0.27491039426523295
+        },
+        {
+          "fitRmsKm": [
+            0.755124,
+            null
+          ],
+          "satellites": 2792,
+          "refused": 1758,
+          "refusedShare": 0.6296561604584527
+        }
+      ],
+      "chi2Tail": {
+        "p90": 311.2614672867893,
+        "tail": 818,
+        "tailManeuverShare": 0.009779951100244499,
+        "bodyManeuverShare": 0.004078857919782461
+      }
+    },
+    "a12": {
+      "profile": "P0",
+      "gateFailed": true,
+      "ffm3Fit": {
+        "fitted (CONVERGED)": 11147,
+        "failed: STALLED": 15,
+        "failed: MAXIMUM_ITERATIONS": 1
+      },
+      "ffm3Refused": 0,
+      "xplnFit": {
+        "fitted": 11163
+      },
+      "a3": {
+        "tracks": 11163,
+        "refusedAnyRound": 6033,
+        "refusedRoundOne": 2985,
+        "roundTwoRefusedCountedFailed": 3048,
+        "notConverged": 5,
+        "fullWeight": 5125,
+        "note65202": "NORAD 65202: a full-weight A3 fit with B = -1.86e-6 m^2/kg, which propagator/ffm refuses at prediction"
+      }
+    }
+  },
   "ca": {
     "iss": {
       "group": "iss",
