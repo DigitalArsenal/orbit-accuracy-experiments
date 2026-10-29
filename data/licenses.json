@@ -564,7 +564,7 @@
    "reproduce": "no",
    "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
    "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
-   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts)",
+   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts), ca-screen-recall (the daily GP snapshot of 2026-10-29: a 2,000-object LEO subset propagated for 72 h; aggregates and NORAD pairs only)",
    "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
    "notice": null,
    "reproducedAt": [

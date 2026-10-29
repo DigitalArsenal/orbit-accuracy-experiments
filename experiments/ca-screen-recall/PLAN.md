@@ -181,3 +181,13 @@ subset, the reference events, the screen events and the matches. Time figures in
 ## Amendments
 
 None. A deviation is recorded here, dated, with its reason, and reported in the results.
+
+### A1 (2026-10-29, after the registered run): the end-to-end replay slice
+
+The registered ranking's first 300 objects over the first six hours hold three reference events and none below 1 km, too
+few to guard recall. `verify.mjs` therefore repeats the method on the unregistered smoke ranking (seed
+`ca-screen-recall-smoke-not-registered`), 2,000 objects for 12 hours, and requires the counts in
+`results/ca-screen-recall/replay.json`. The registered run, its subset, its window and its numbers are unchanged;
+`config.json` keeps its `replay` block, now unused. `parity-diagnostic.mjs`, added after the registered results were read,
+bins the propagator comparison by BSTAR and by time since epoch; its output is labelled post-hoc in the report and is not
+part of the pre-registered analysis.

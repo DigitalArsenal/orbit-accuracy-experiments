@@ -10,6 +10,7 @@ import { parseArgs } from 'node:util';
 import { config, repo, id } from './common.mjs';
 
 export const resultsDir = path.join(repo, 'results', id);
+export const diagnosticOf = () => (fs.existsSync(path.join(resultsDir, 'parity-diagnostic.json')) ? JSON.parse(fs.readFileSync(path.join(resultsDir, 'parity-diagnostic.json'), 'utf8')) : null);
 const int = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const fix = (v, d) => (v === null || v === undefined ? 'n/a' : Number(v).toFixed(d));
 const sci = (v) => (v === null || v === undefined ? 'n/a' : Number(v).toExponential(2));
@@ -34,7 +35,7 @@ export function replaySummary(metrics) {
 
 const diffRow = (label, d) => `| ${label} | ${int(d.matched)} | ${fix(d.tcaSeconds.median, 4)} | ${fix(d.tcaSeconds.p95, 4)} | ${fix(d.tcaSeconds.max, 4)} | ${fix(d.missM.median, 3)} | ${fix(d.missM.p95, 3)} | ${fix(d.missM.max, 3)} | ${fix(d.signedMissMeanM, 3)} |`;
 
-export function render(metrics, manifest) {
+export function render(metrics, manifest, diagnostic = null) {
   const L = [], arms = Object.values(metrics.arms), main = metrics.arms[config.pass.arm], ref = metrics.reference, gate = metrics.verdict;
   const planCommit = manifest.plan?.planCommit?.slice(0, 10) ?? 'n/a';
   const verdictLine = gate.status === 'pass'
@@ -46,7 +47,7 @@ export function render(metrics, manifest) {
     `Pre-registered experiment ([PLAN](../../experiments/${id}/PLAN.md), registered at commit \`${planCommit}\` before the run read the element sets). Run \`${manifest.startedAt}\`.`,
     `${int(metrics.subset.selected)} LEO objects of the Space-Track GP snapshot of 2026-10-29, ${int(metrics.window.durationSeconds / 3600)} hours from ${metrics.window.startUtc}. Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org). Element sets are not reproduced here (README rule 4); only aggregates and the NORAD pairs of defects are.`, '',
     '## Result', '', verdictLine, '',
-    `**Propagator agreement (a finding of its own).** The screen's built-in SGP4 and the \`propagator/sgp4\` module, given the same element sets, differ by up to ${fix(main.parity.positionM.max, 1)} m in position (median ${fix(main.parity.positionM.median, 2)} m, 95th percentile ${fix(main.parity.positionM.p95, 2)} m) and up to ${fix(main.parity.velocityMS.max * 1000, 2)} mm/s in velocity, over ${int(main.parity.objects)} object states at the instants of the screen's events; the largest is NORAD ${main.parity.largest[0]?.norad ?? 'n/a'}. Details below.`, '',
+    `**A second finding, below:** the screen's built-in SGP4 and the \`propagator/sgp4\` module disagree by a median ${fix(main.parity.positionM.median, 2)} m and up to ${fix(main.parity.positionM.max, 1)} m in position, more for element sets with a large BSTAR.`, '',
     ...(main.fallback ? [`**The 5 km screen could not run as one 72 h call** (${main.fallback.reason}); it ran as ${main.windows} consecutive ${main.fallback.windowSeconds / 3600} h calls.`, ''] : []));
   L.push('Recall of the module\'s `screen_catalog` against the exhaustive reference, by the reference\'s miss distance (a reference event is one local minimum of a pair\'s distance below 5 km):', '',
     '| Arm | Miss band | Reference events | Found | Recall | 95 % lower bound |', '| --- | --- | --- | --- | --- | --- |');
@@ -54,6 +55,26 @@ export function render(metrics, manifest) {
   L.push('', `The reference found ${int(ref.events)} events: ${int(ref.belowOneKm)} below 1 km and ${int(ref.oneToFiveKm)} from 1 to 5 km inside the window, ${int(ref.nearThreshold)} from 5.0 to 5.5 km (near the threshold, never counted), ${int(ref.atWindowEdge)} within ${config.comparison.edgeSeconds} s of a window end (counted apart) and ${int(ref.outsideWindow)} outside it.`, '',
     '| Arm | Screen events | Matched | Near-threshold | At a window end | Beyond 5 km (not assessed) | False events | Duplicates | Objects excluded by the screen |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |');
   for (const a of arms) { const s = a.screenEvents; L.push(`| ${a.id} | ${int(s.total)} | ${int(s.matched)} | ${int(s.nearThreshold)} | ${int(s.edge)} | ${int(s.beyondReference)} | ${int(s.falseEvents.length)} | ${int(s.duplicates)} | ${int(a.excludedObjects.length)} |`); }
+
+  // ---- the SGP4 finding, high in the report ----
+  const p = main.parity, rowOf = (b) => `| ${b.bin} | ${int(b.objectStates)} | ${int(b.objects)} | ${fix(b.positionM.median, 2)} | ${fix(b.positionM.p95, 2)} | ${fix(b.positionM.max, 2)} | ${fix(b.velocityMS.max * 1000, 2)} |`;
+  L.push('', '## Finding: the screen\'s SGP4 and the SGP4 module disagree', '',
+    `The screen's built-in SGP4 (the conjunction module's vendored \`deps/sgp4/libsgp4\`) and \`propagator/sgp4\` (\`foundation/sgp4-str3\`), given the same OMM bytes, report different states for the same object at the same instant. At the instants of the screen's ${int(main.screenEvents.matched)} matched events (${int(p.objects)} object states) the position differs by a median ${fix(p.positionM.median, 2)} m, a 95th percentile of ${fix(p.positionM.p95, 2)} m, a 99th of ${fix(p.positionM.p99, 2)} m and at most ${fix(p.positionM.max, 1)} m; the velocity by a median ${fix(p.velocityMS.median * 1000, 2)} mm/s and at most ${fix(p.velocityMS.max * 1000, 1)} mm/s. This comparison has no independent reference, so it does not say which implementation is closer to where an object really was.`);
+  if (!diagnostic) {
+    L.push('', 'Largest position differences:', '', '| NORAD | Position difference (m) | Velocity difference (mm/s) | Event TCA (UTC) |', '| --- | --- | --- | --- |',
+      ...p.largest.map((r) => `| ${r.norad} | ${fix(r.positionM, 3)} | ${fix(r.velocityMS * 1000, 3)} | ${r.tcaUtc} |`));
+  } else {
+    const link = diagnostic.missDifferenceVersusStateDifferences;
+    L.push('', 'The overall comparison above is pre-registered (PLAN.md, propagator parity). The breakdowns below were added after the results were read (PLAN.md, amendment A1): the same states, binned by the size of the element set\'s BSTAR drag term (absolute value) and by the time from the element epoch to the event.', '',
+      '| Bin | Object states | Objects | Position median (m) | 95th (m) | Max (m) | Velocity max (mm/s) |', '| --- | --- | --- | --- | --- | --- | --- |',
+      ...diagnostic.byBstar.map(rowOf), ...diagnostic.byAgeAtEvent.filter((b) => b.objectStates).map((b) => rowOf({ ...b, bin: `Time since epoch ${b.bin}` })), '',
+      'The differences grow steeply with BSTAR and more slowly with the time since the element epoch. The ten largest, by NORAD id:', '',
+      '| NORAD | Name | Position (m) | Velocity (mm/s) | BSTAR | Time since element epoch | Event TCA (UTC) |', '| --- | --- | --- | --- | --- | --- | --- |',
+      ...diagnostic.largest.map((x) => `| ${x.norad} | ${x.name} | ${fix(x.positionM, 2)} | ${fix(x.velocityMS * 1000, 2)} | ${x.bstar.replace('BSTAR ', '')} | ${x.ageAtEvent} | ${x.tcaUtc} |`),
+      '', `**It explains the largest miss differences.** The screen's miss distance is the distance of its two states; the reference's, of the module's two. At ${int(link.withinStateDifferences)} of the ${int(link.events)} matched events the two differ by no more than the sum of the two objects' state differences (plus ${link.slackM} m for the milliseconds between the two TCAs). All ${int(link.largeMissDifferenceEvents)} events whose miss differs by more than ${link.eventsWithMissDifferenceAbove} m involve an object with a BSTAR of 0.001 or more, and in them the miss difference is a median ${fix(link.largeRatioToStateDifferences.median, 2)} (at most ${fix(link.largeRatioToStateDifferences.max, 2)}) of that sum. The ten largest miss differences:`, '',
+      '| NORAD pair | Band | Reference miss (m) | Miss difference (m) | Objects: state difference (m), BSTAR | Sum of the state differences (m) |', '| --- | --- | --- | --- | --- | --- |',
+      ...link.largest.map((x) => `| ${x.pair.join(' / ')} | ${x.band} | ${fix(x.referenceMissM, 1)} | ${fix(x.missDifferenceM, 2)} | ${x.objects.map((o) => `${o.norad}: ${fix(o.positionM, 2)}, ${o.bstar.replace('BSTAR ', '')}`).join('; ')} | ${fix(x.sumOfStateDifferencesM, 2)} |`));
+  }
 
   L.push('', '## Defects', '');
   const defects = arms.flatMap((a) => [...a.misses.map((m) => ({ kind: 'missed', arm: a.id, m })), ...a.screenEvents.falseEvents.map((f) => ({ kind: 'false', arm: a.id, f }))]);
@@ -71,24 +92,22 @@ export function render(metrics, manifest) {
     `Absolute differences; the reference's TCA has a resolution of 1 ms. Events beyond ${config.comparison.flag.tcaSeconds} s or ${config.comparison.flag.missM} m are flagged.`, '',
     '| Arm, band | Matched | TCA median (s) | TCA 95th (s) | TCA max (s) | Miss median (m) | Miss 95th (m) | Miss max (m) | Mean signed miss (m) |', '| --- | --- | --- | --- | --- | --- | --- | --- | --- |');
   for (const a of arms) for (const b of BANDS) L.push(diffRow(`${a.id}, ${b}`, a.differences[b]));
-  for (const a of arms) {
+  arms.forEach((a, n) => {
     L.push('', `Flagged in ${a.id}: ${int(a.outliers.flagged)} of ${int(a.differences.all.matched)}.`);
+    if (n > 0 && JSON.stringify(a.outliers.rows) === JSON.stringify(arms[0].outliers.rows)) { if (a.outliers.rows.length) L.push('', `The same events as in arm ${arms[0].id}.`); return; }
     if (a.outliers.rows.length) {
       L.push('', '| NORAD pair | Band | Reference TCA (UTC) | Reference miss (m) | TCA difference (s) | Miss difference (m) |', '| --- | --- | --- | --- | --- | --- |');
       for (const r of a.outliers.rows) L.push(`| ${r.pair.join(' / ')} | ${r.band} | ${r.referenceTcaUtc} | ${fix(r.referenceMissM, 1)} | ${fix(r.dtSeconds, 4)} | ${fix(r.dMissM, 3)} |`);
     }
+  });
+  if (diagnostic?.tcaDifferencesAbove10ms.length) {
+    L.push('', `${int(diagnostic.tcaDifferencesAbove10ms.length)} matched event(s) differ in TCA by more than 10 ms (post-hoc): ${diagnostic.tcaDifferencesAbove10ms.map((x) => `NORAD ${x.pair.join(' / ')}, relative speed ${fix(x.relativeSpeedMS, 2)} m/s, TCA ${fix(x.dtSeconds, 3)} s, miss ${fix(x.dMissM, 3)} m`).join('; ')}. A pair that barely moves relative to itself has a flat minimum, where the TCA is poorly determined and the miss distance is not.`);
   }
 
   L.push('', '## Probability of collision', '',
     'The events carry no covariance, so the screen reports the Alfano maximum. Each matched event\'s value is compared with the module\'s `alfano_max_probability` at the screen\'s own miss and combined radius (they must be identical) and at the reference\'s miss (a difference of a few decimetres in the miss shows as a relative difference in the probability).', '',
     '| Arm | Compared | At the screen\'s miss: median / max relative difference | At the reference\'s miss: median / 95th / max relative difference |', '| --- | --- | --- | --- |');
   for (const a of arms) L.push(`| ${a.id} | ${int(a.probability.compared)} | ${sci(a.probability.relativeDifferenceAtScreenMiss.median)} / ${sci(a.probability.relativeDifferenceAtScreenMiss.max)} | ${sci(a.probability.relativeDifferenceAtReferenceMiss.median)} / ${sci(a.probability.relativeDifferenceAtReferenceMiss.p95)} / ${sci(a.probability.relativeDifferenceAtReferenceMiss.max)} |`);
-
-  const p = main.parity;
-  L.push('', '## The two SGP4 implementations', '',
-    `The screen reports each event's two states. Against the SGP4 module's states at the same instant (${int(p.objects)} object states, arm ${main.id}), position differs by a median ${fix(p.positionM.median, 3)} m, 95th percentile ${fix(p.positionM.p95, 3)} m, maximum ${fix(p.positionM.max, 3)} m, and velocity by a median ${fix(p.velocityMS.median * 1000, 3)} mm/s, maximum ${fix(p.velocityMS.max * 1000, 3)} mm/s. That bounds how much of any TCA or miss-distance difference above is the propagators' and not the screen's.`,
-    '', 'Largest position differences:', '', '| NORAD | Position difference (m) | Velocity difference (mm/s) | Event TCA (UTC) |', '| --- | --- | --- | --- |',
-    ...p.largest.map((r) => `| ${r.norad} | ${fix(r.positionM, 3)} | ${fix(r.velocityMS * 1000, 3)} | ${r.tcaUtc} |`));
 
   const st = ref.stats, a0 = main;
   const callText = (a) => `${a.windows} ${a.windows === 1 ? 'call' : 'calls'}${a.fallback ? ` (the single 72 h call failed: ${a.fallback.reason})` : ''}${a.mergedAcrossEdges ? `, ${int(a.mergedAcrossEdges)} event(s) merged across window edges` : ''}`;
@@ -98,13 +117,16 @@ export function render(metrics, manifest) {
     `- Guards: largest object speed ${fix(st.maxObjectSpeedKmS, 3)} km/s (registered bound ${config.reference.maxObjectSpeedKmS} km/s); the module's ephemeris lines against its single-epoch states: at most ${fix(metrics.timeGrid.maxLineVersusStateM, 3)} m; one instant answered twice at a chunk boundary differs by at most ${fix(st.maxDuplicateSampleDiffKm * 1000, 3)} m.`,
     `- Subset: ${int(metrics.subset.eligible)} eligible objects, ranked by SHA-256 of \`${metrics.subset.seed}:<NORAD_CAT_ID>\`, first ${int(metrics.subset.requested)}; list SHA-256 \`${metrics.subset.listSha256}\`.`);
 
+  L.push('', '## Findings on the modules', '',
+    '- A single 72 h `screen_catalog` call at the console\'s 15 km threshold trapped in the module (WebAssembly `unreachable`) in a pre-freeze probe, where 24 h calls complete; a refusal would be the right answer to memory exhaustion. This is why the console arm runs as 24 h calls (PLAN.md, Disclosures).',
+    '- The `propagator/sgp4` isomorphic artifact lays its response payload arena out on 4 bytes, which the current module SDK decoder rejects; the harness pads the copy, bytes unchanged (PLAN.md, Disclosures).');
   const mods = manifest.modules;
   L.push('', '## Provenance', '',
     `- Snapshot \`${manifest.inputs.snapshot.path}\`, SHA-256 \`${manifest.inputs.snapshot.sha256}\`, ${int(manifest.inputs.snapshot.records)} records.`,
     `- space-data-network-modules commit \`${manifest.modulesRepository.pinnedCommit}\`; artifacts read from that commit, not from a working tree: conjunction-assessment ${mods['analysis/conjunction-assessment'].version} \`${mods['analysis/conjunction-assessment'].wasmSha256}\`, propagator/sgp4 ${mods['propagator/sgp4'].version} \`${mods['propagator/sgp4'].wasmSha256}\`.`,
     `- Packages: space-data-module-sdk ${mods['analysis/conjunction-assessment'].packages['space-data-module-sdk']}, spacedatastandards.org ${mods['analysis/conjunction-assessment'].packages['spacedatastandards.org']} (screen) and ${mods['propagator/sgp4'].packages['spacedatastandards.org']} (SGP4 answers). Node ${manifest.runtime.node}, ${manifest.runtime.cpus} logical CPUs, 1-minute load average ${fix(manifest.runtime.loadAverageStart[0], 1)} at the start and ${fix(manifest.runtime.loadAverageEnd[0], 1)} at the end (the host was shared).`,
     `- Experiment commit \`${manifest.plan?.experimentCommit?.slice(0, 10) ?? 'n/a'}\`; run sources: ${Object.entries(manifest.plan?.sourceHashes ?? {}).map(([f, h]) => `${f} \`${h.slice(0, 12)}\``).join(', ')}.`,
-    '- Files: `metrics.json`, `manifest.json`, `replay.json` in this folder; the subset, the reference events, the screen events and the matches stay under `runs/` (element-set-derived).',
+    '- Files: `metrics.json`, `manifest.json`, `parity-diagnostic.json` (post-hoc) and `replay.json` in this folder; the subset, the reference events, the screen events and the matches stay under `runs/` (element-set-derived).',
     '', '## What this does and does not show', '',
     '- It shows whether the screen finds what an exhaustive search over the same SGP4 element sets finds, and how closely their TCA, miss distance and Pc agree. It does not measure accuracy against where objects were: both sides use the same element sets.',
     '- One snapshot, one 2,000-object subset, one 72-hour window; `screen_catalog` (the single-call screen), not the resident windowed screen the console uses; only events below 5 km are assessed.',
@@ -122,11 +144,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   const read = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
   if (values.run) {
     fs.mkdirSync(resultsDir, { recursive: true });
-    for (const f of ['metrics.json', 'manifest.json']) fs.copyFileSync(path.join(values.run, f), path.join(resultsDir, f));
-    fs.writeFileSync(path.join(resultsDir, 'README.md'), render(read(path.join(resultsDir, 'metrics.json')), read(path.join(resultsDir, 'manifest.json'))));
+    for (const f of ['metrics.json', 'manifest.json', 'parity-diagnostic.json']) if (fs.existsSync(path.join(values.run, f))) fs.copyFileSync(path.join(values.run, f), path.join(resultsDir, f));
+    fs.writeFileSync(path.join(resultsDir, 'README.md'), render(read(path.join(resultsDir, 'metrics.json')), read(path.join(resultsDir, 'manifest.json')), diagnosticOf()));
     console.log(`wrote ${path.join(resultsDir, 'README.md')}`);
   } else if (values.check) {
-    const expected = render(read(path.join(resultsDir, 'metrics.json')), read(path.join(resultsDir, 'manifest.json')));
+    const expected = render(read(path.join(resultsDir, 'metrics.json')), read(path.join(resultsDir, 'manifest.json')), diagnosticOf());
     if (expected !== fs.readFileSync(path.join(resultsDir, 'README.md'), 'utf8')) { console.error('README.md differs from the report generated from metrics.json'); process.exit(1); }
     console.log('README.md regenerates exactly');
   } else if (values['replay-from']) {

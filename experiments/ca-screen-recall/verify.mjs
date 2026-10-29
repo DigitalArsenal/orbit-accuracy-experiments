@@ -3,7 +3,8 @@
 //   1. the stored provenance: the run's sources, plan and configuration resolve to the commits and hashes in the manifest,
 //      the plan commit precedes the run's commit, the pinned module artifacts are the registered ones;
 //   2. the report regenerates from metrics.json to the same bytes;
-//   3. the whole method, through the real modules on the first 300 objects for six hours, gives the counts in replay.json.
+//   3. the whole method, through the real modules on 2,000 objects of the unregistered smoke ranking for 12 hours (PLAN.md,
+//      amendment A1), gives the counts in replay.json.
 // Absent inputs (snapshot, modules commit) end in a visible skip, exit 3; a skip is not a pass.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -12,8 +13,9 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { config, repo, id, sha256, git, RUN_SOURCES, modulesRoot, pinnedModules } from './common.mjs';
 import { execute } from './run.mjs';
-import { render, replaySummary, resultsDir } from './report.mjs';
+import { render, replaySummary, resultsDir, diagnosticOf } from './report.mjs';
 
+const REPLAY = { count: 2000, seconds: 43200 };
 const { values } = parseArgs({ options: { modules: { type: 'string' }, archive: { type: 'string' } } });
 const read = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
 const snapshot = path.join(values.archive ?? config.data.archiveRoot, config.data.snapshot);
@@ -46,13 +48,13 @@ assert.equal(metrics.reference.stats.objects, config.selection.count);
 console.log('provenance: plan, sources, configuration, module artifacts and snapshot match the recorded run');
 
 // 2. the report
-assert.equal(render(metrics, manifest), fs.readFileSync(path.join(resultsDir, 'README.md'), 'utf8'), 'README.md must regenerate exactly from metrics.json');
+assert.equal(render(metrics, manifest, diagnosticOf()), fs.readFileSync(path.join(resultsDir, 'README.md'), 'utf8'), 'README.md must regenerate exactly from metrics.json');
 console.log('report: README.md regenerates exactly');
 
-// 3. the whole method on a slice, through the real modules
+// 3. the whole method on a slice, through the real modules (PLAN.md amendment A1: the unregistered smoke ranking, 2,000 objects, 12 hours)
 const out = fs.mkdtempSync(path.join(os.tmpdir(), `${id}-verify-`));
 try {
-  const replay = await execute({ mode: 'replay', modules: values.modules, archive: values.archive, outDir: out, log: () => {} });
+  const replay = await execute({ mode: 'smoke', smokeSize: REPLAY, modules: values.modules, archive: values.archive, outDir: out, log: () => {} });
   const summary = replaySummary(replay.metrics), stored = read(path.join(resultsDir, 'replay.json'));
   assert.deepEqual(summary, stored, 'the replay must reproduce results/ca-screen-recall/replay.json');
   assert.ok(summary.reference.events > 0, 'the replay slice must contain reference events');
