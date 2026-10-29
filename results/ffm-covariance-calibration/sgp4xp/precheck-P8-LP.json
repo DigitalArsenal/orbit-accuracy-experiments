@@ -1,0 +1,52 @@
+{
+ "receipt": "sgp4xp/precheck-P8-LP",
+ "createdUtc": "2026-10-29T08:12:20.738Z",
+ "experimentsCommit": "104d3bf20ef360226abc5a6d844f7c44b4aac947",
+ "plan": "3.8 P8; C2-A4 point 1",
+ "class": "LP",
+ "chosen": "M0",
+ "parameters": {
+  "k_e": 1
+ },
+ "fitReceipt": "fit-LP.json",
+ "leads": {
+  "1": {
+   "n": 73,
+   "scale": 1.1524007035110264,
+   "shape": 1.3065100512608603,
+   "inBand": false
+  },
+  "6": {
+   "n": 73,
+   "scale": 0.7428788353880557,
+   "shape": 1.383830803924983,
+   "inBand": false
+  },
+  "12": {
+   "n": 73,
+   "scale": 1.0052080731428057,
+   "shape": 1.42950402841409,
+   "inBand": false
+  },
+  "24": {
+   "n": 70,
+   "scale": 1.272630548733982,
+   "shape": 1.2270740042371155,
+   "inBand": true
+  },
+  "48": {
+   "n": 67,
+   "scale": 0.974778071467696,
+   "shape": 1.2730571271497162,
+   "inBand": false
+  },
+  "72": {
+   "n": 66,
+   "scale": 0.7798300261480894,
+   "shape": 1.268999993206621,
+   "inBand": false
+  }
+ },
+ "outcome": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+ "opened": null
+}
