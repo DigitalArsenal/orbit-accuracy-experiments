@@ -18,7 +18,8 @@ const run = (args, env) => new Promise((resolve, reject) => {
   c.on('error', reject);
   c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${path.basename(args[0])} ${args.slice(1).join(' ')} exited ${code}`))));
 });
-const step = (script, extra, env = {}) => run([path.join(dir, script), ...extra], { ...process.env, B2_STORE: scratch, ...env });
+// B2_LOAD_MAX: a replay of one window never waits for the host's load (paced() is the bulk phases' courtesy, no result depends on it)
+const step = (script, extra, env = {}) => run([path.join(dir, script), ...extra], { ...process.env, B2_STORE: scratch, B2_LOAD_MAX: '1e9', ...env });
 const close = (x, y) => Number.isFinite(x) && Number.isFinite(y) && Math.abs(x - y) <= 1e-9 * Math.max(1, Math.abs(y));
 // lead records (A5, A6): every number of every lead of every arm, against the stored record
 const sameLeads = (label, now, old) => {
@@ -99,24 +100,20 @@ if (starOld) {
   const { config } = await import('./common.mjs');
   const all = fs.readdirSync(path.join(config.part1.starlink.captureRoot, forecastCycle)).filter((f) => /^\d+\.json\.gz$/.test(f)).map((f) => Number(f.split('.')[0])).sort((a, b) => a - b);
   const shard = ['--shard', `${all.indexOf(starOld.norad)}/${all.length}`, '--limit', '1'];
-  await step('part1-starlink.mjs', ['--phase', 'fit', ...shard]);
-  await step('part1-starlink.mjs', ['--phase', 'ffm', ...shard]);
+  await Promise.all([step('part1-starlink.mjs', ['--phase', 'fit', ...shard]), step('part1-starlink.mjs', ['--phase', 'ffm', ...shard])]);
   // A12's arms: the same satellite's ffm3 and XP-LN fits through the fit-only reader (the scratch store holds its one A3 row), against the stored fit rows
-  for (const [phase, key] of [['ffm3', 'ffm3'], ['xpln', 'xpln']]) {
+  await Promise.all([['ffm3', 'ffm3'], ['xpln', 'xpln']].map(async ([phase, key]) => {
     const old = rowsOf(`starlink-${phase}.`).find((r) => r.norad === starOld.norad);
-    if (!old) { console.error(`B2 check: starlink ${starOld.norad}: no stored ${phase} row`); bad += 1; continue; }
+    if (!old) { console.error(`B2 check: starlink ${starOld.norad}: no stored ${phase} row`); bad += 1; return; }
     await step('part1-starlink.mjs', ['--phase', phase, '--shard', '0/1', '--limit', '1']);
     const now = rowsOf(`starlink-${phase}.`, scratch).find((r) => r.norad === starOld.norad);
     const same = key === 'xpln' ? now?.xpln?.omm === old.xpln.omm : now?.ffm3?.termination === old.ffm3.termination && [...(now?.ffm3?.state ?? []), ...(now?.ffm3?.parameters ?? []).map((q) => q.value)].every((v, i) => close(v, [...old.ffm3.state, ...old.ffm3.parameters.map((q) => q.value)][i]));
     if (!same) { console.error(`B2 check: starlink ${starOld.norad} ${phase} fit differs from the stored row`); bad += 1; } else console.error(`B2 check: starlink ${starOld.norad} ${phase} fit replayed`);
-  }
-  await step('part1-starlink.mjs', ['--phase', 'score', '--through', starOld.through, ...shard]);
-  // the same satellite's lead records (A5, with ffm3 and A13's calibrated covariances)
+  }));
+  // the score and the same satellite's lead records (A5, with ffm3 and A13's calibrated covariances), side by side
   const leadOld = rowsOf('starlink-leads.').find((r) => r.norad === starOld.norad);
-  if (leadOld) {
-    await step('part1-starlink.mjs', ['--phase', 'leads', '--through', leadOld.through, ...shard]);
-    sameLeads(`starlink ${starOld.norad} lead records`, rowsOf('starlink-leads.', scratch).find((r) => r.norad === starOld.norad), leadOld);
-  }
+  await Promise.all([step('part1-starlink.mjs', ['--phase', 'score', '--through', starOld.through, ...shard]), leadOld ? step('part1-starlink.mjs', ['--phase', 'leads', '--through', leadOld.through, ...shard]) : null]);
+  if (leadOld) sameLeads(`starlink ${starOld.norad} lead records`, rowsOf('starlink-leads.', scratch).find((r) => r.norad === starOld.norad), leadOld);
   compare(`starlink ${starOld.norad} at ${starOld.through}`, rowsOf(`starlink-score.${starOld.through}.`, scratch).find((r) => r.norad === starOld.norad) ?? {}, starOld);
 } else console.error('B2 check: part 1a has no score pass in the store yet, so the table has no part 1a row to replay');
 };
@@ -158,7 +155,7 @@ for (const ffm of ['ffm', 'ffm3']) {
   const pdir = path.join(store, ffm === 'ffm' ? 'part5' : `part5-${ffm}`, through);
   const first = fs.readdirSync(pdir).filter((f) => /^assessed\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(pdir, f))).sort((a, b) => a.id - b.id)[0];
   const file = path.join(scratch, `part5-replay.${ffm}.jsonl`);
-  await run([path.join(dir, 'part5-starlink.mjs'), '--through', through, '--ffm', ffm, '--phase', 'assess', '--only', String(first.id), '--out', file], process.env);
+  await run([path.join(dir, 'part5-starlink.mjs'), '--through', through, '--ffm', ffm, '--phase', 'assess', '--only', String(first.id), '--out', file], { ...process.env, B2_LOAD_MAX: '1e9' });
   sameLeads(`part 5 (${ffm}) encounter ${first.id}`, readJsonl(file)[0], first);
 }
 };
