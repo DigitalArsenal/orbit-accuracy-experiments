@@ -70,7 +70,10 @@ export function windowOf(norad, through = cycles.at(-1)) {
 if (process.argv[1] === new URL(import.meta.url).pathname) {
   const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
   const { openFits, fitSdnap, statesAt, convert, scoreBins } = await import('./lib/fits.mjs');
-  const phase = args.phase ?? 'fit';
+  // `explore` (post-score, exploratory; coordinator ruling 2026-10-29): the score phase on bins 2 and 3 under E''s registered relaxed rule
+  // (A12 point 7: at least 60 % of the bin's coverable epochs, no gap over 8 h, states within the first and the last 2 h), never bin 1
+  const explore = args.phase === 'explore';
+  const phase = explore ? 'score' : args.phase ?? 'fit';
   if (!['fit', 'ffm', 'score', 'leads', 'gp', 'ffm3', 'xpln'].includes(phase)) throw new Error(`unknown phase ${phase}`);
   if (phase === 'ffm3' || phase === 'xpln') { // A12: the new arms' fits through the fit-only reader, never windowOf
     const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
@@ -84,7 +87,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   if (late && !scored.length) throw new Error(`no bin is complete at ${through}`);
   const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
   const norads = fs.readdirSync(path.join(S.captureRoot, forecastCycle)).filter((f) => /^\d+\.json\.gz$/.test(f)).map((f) => Number(f.split('.')[0])).sort((a, b) => a - b);
-  const out = path.join(store, 'rows', phase === 'score' ? `starlink-score.${through}.s${k}.jsonl` : `starlink-${phase}.s${k}.jsonl`);
+  const out = path.join(store, 'rows', phase === 'score' ? `starlink-score${explore ? '-explore' : ''}.${through}.s${k}.jsonl` : `starlink-${phase}.s${k}.jsonl`);
   const mine = norads.filter((_, i) => i % n === k);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const done = new Set(readJsonl(out).map((r) => r.norad));
@@ -146,11 +149,19 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
       else row.sgp4xp = await fitSdnap(a, object(norad), w.fit, w.E, 'SGP4XP');
     } else {
       // the score of the complete bins that the coverage rule counts
-      const counted = scored.filter((b) => w.bins[b].counts);
+      const relaxed = (b) => { // E''s rule on the bin's coverable span
+        const [lo, hi] = S.binsHours[Number(b) - 1], end = w.E + hi * H, full = Math.round((hi - lo) * 60 / S.stepMinutes), cov = w.bins[b].coverable;
+        const start = cov >= full ? w.E + lo * H : end - (cov - 1) * STEP;
+        const t = w.truth.map((l) => Date.parse(l.epoch)).filter((x) => x > w.E + lo * H && x <= end);
+        const E2 = config.a12.selection.datasets.eprime;
+        return cov > 0 && t.length >= E2.minimumCoverage * cov && t[0] <= start + E2.edgeHours * H && t.at(-1) >= end - E2.edgeHours * H && t.every((x, i) => !i || x - t[i - 1] <= E2.maximumGapHours * H);
+      };
+      const counted = explore ? scored.filter((b) => b !== '1' && relaxed(b)) : scored.filter((b) => w.bins[b].counts);
       const binOf = (t) => { const h = (t - w.E) / H; const b = String(S.binsHours.findIndex(([lo, hi]) => h > lo && h <= hi) + 1); return counted.includes(b) ? b : null; };
       // the track's mean distance from Earth's center (km), for A10's exploratory breakdown by shell
       const trackMeanRadiusKm = w.fit.length ? w.fit.reduce((t, l) => t + Math.hypot(...l.r), 0) / w.fit.length : null;
       row = { norad, E: iso(w.E), through, binsComplete: scored, bins: w.bins, truthEpochs: w.truth.length, truthDropped: w.truthDropped, newerFiles: w.newerFiles, worstOverlapKm: w.worstOverlapKm, overlapEpochs: w.overlapEpochs, maneuverEvident: w.worstOverlapKm >= S.maneuverEvidentKm, gated: w.gated.truth, trackMeanRadiusKm };
+      if (explore) row.relaxedCounted = counted;
       const f = fits.get(norad), g = ffmFits.get(norad);
       if (!f || f.excluded || changed(w, f)) row.excluded = f ? (f.excluded ?? changed(w, f)) : 'no fit row';
       else if (!counted.length) row.excluded = 'no complete bin meets the coverage rule';
