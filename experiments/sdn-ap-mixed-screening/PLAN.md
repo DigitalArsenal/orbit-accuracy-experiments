@@ -754,3 +754,34 @@ The seeds of A13's new figures, which parts 1 and 2 leave unstated (coordinator 
 4. **Disclosures.** C2-A10: the first SGP4-XP held-out scoring read FFM's constants by a scorer defect; its I and L tables were seen and
    deleted; the held-out cells are those scored with the SGP4-XP frozen constants (no refit). P8: every SGP4-XP class is infeasible for a
    lead-independent model (shape I 0.80-0.86, L 1.21-1.62, L-P 1.23-1.43, R1 0.77-1.08).
+
+### A13 - 2026-10-29, part 5 (decisions only), committed before any calibrated number of part 1a, part 4 or part 5
+
+The coordinator's rulings of 2026-10-29 on what A13 parts 1 to 4 leave to the harness.
+1. **Encounter pools.** Primaries and secondaries are drawn exactly as A5 registers them, from the windows holding the registered pair (the
+   group's FFM arm and SGP4-XP) at the lead, seeds `B2|part4|<group>|<class>|<k>`. The calibrated arms (FFM-cal, SGP4-XP-cal) are
+   evaluated on the same encounters; an encounter whose calibrated covariance or Pc fails is counted and left out of the calibrated scores
+   and of their paired figures (A7's rule applied per pair), and stays in A5's figures.
+2. **Error vector.** A calibrated arm uses the A5 lead record's error (pair_statistics, the truth's RTN axes), so the covariance is the only
+   difference. The calibrated covariance is composed as C2 composes it (gp-error-model covarianceTerms in the predicted state's RTN axes:
+   FFM's k_e A5 carried with PROCESS_NOISE from E, plus the floor and sigma_delta^2 D_tau; SGP4-XP's k_e A_xp plus the floor); the two axis
+   sets differ by about 1e-4 rad.
+3. **Part 5's covariance frame.** analysis/conjunction-assessment at c860a072 (module.wasm 49516f8fc092...) reads OEM covariance lines
+   with COV_REFERENCE_FRAME RTN (RSW_INERTIAL, or an RFM ORBITAL_RADIAL_TRANSVERSE_NORMAL system) and rotates them itself
+   (src/cpp/src/plugin_invoke_bridge.cpp covarianceAxes; README "OEM covariance lines ... read with their declared axes: RTN (RSW)"). Part
+   5's calibrated covariances are therefore written in COV_REFERENCE_FRAME RTN (RSW_INERTIAL) and the module rotates them. The 6 x 6 they
+   start from is FFM's PROCESS_NOISE run in GCRF (SGP4-XP: sdnap_covariance_at in TEME), which has to reach RTN: it is taken there as
+   R P R^T, R = blockdiag(Q, Q) with Q foundation/frames' rotation (FRAME_ROTATION, ORBITAL_RADIAL_TRANSVERSE_NORMAL axes of the object's
+   own predicted state on object_state) at each epoch, in the harness, as lib/ca.mjs already rotates records into the encounter frame;
+   the floor and the density term are then added to the RTN position block. Disclosed: this is a covariance rotation in JavaScript with the
+   module's matrix; follow-up modules-frames-covariance-rotation-20261029 (a module covariance-rotation call). A5's own covariances keep
+   lib/cqr.mjs's convention (the ephemeris frame), unchanged.
+4. **The FFM arm per group.** ISS: a new A13 contrast with iss-ffm3 in the FFM slot and its calibrated covariance, beside the registered
+   A5 contrast (rows/ca.iss.json, unchanged); iss-ffm3's accuracy rows are scored and labeled in-sample. Laser: E6 R in the FFM slot with
+   class L's calibration; L-P (M0) and R2 (M3, tau infinite) are two further FFM arms, reported beside, never in a verdict; SGP4-XP's L-P is
+   its uncalibrated module covariance, the registered SGP4-XP arm. Starlink: the registered A5 contrast with A3 in the FFM slot
+   (rows/ca.starlink.json) and the A13 contrast with ffm3 and its calibrated covariance (rows/ca.starlink.ffm3.json), on the same draws;
+   SGP4-XP and SGP4-XP-cal in both.
+5. **Reliability table.** By Pc decade as A4's pcBins, the hit share being the share with true miss under 20 m; seeds as part 4.
+6. **Part 3 cells of the calibrated covariances.** d2 from gp-error-model on the composed covariance, as C2 computes it; C2's pass rule
+   (a cell with fewer than 100 windows or 3 clusters is labeled not eligible).
