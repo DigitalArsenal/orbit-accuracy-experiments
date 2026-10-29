@@ -5,14 +5,20 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { store, frozen, readJsonl, dir } from './common.mjs';
 
 frozen();
 const rowsOf = (prefix, s = store) => { const d = path.join(s, 'rows'); return fs.existsSync(d) ? fs.readdirSync(d).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).flatMap((f) => readJsonl(path.join(d, f))) : []; };
 if (!rowsOf('iss.').length) { console.error('B2 check: no local rows under the store; the check cannot pass without them'); process.exit(1); }
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'b2-check-'));
-const step = (script, extra, env = {}) => execFileSync(process.execPath, [path.join(dir, script), ...extra], { env: { ...process.env, B2_STORE: scratch, ...env }, stdio: ['ignore', 'ignore', 'inherit'] });
+// Each group's replay runs its steps in order; the groups, part 4's replays, part 5's and the table run side by side (the gauntlet's box).
+const run = (args, env) => new Promise((resolve, reject) => {
+  const c = spawn(process.execPath, args, { env, stdio: ['ignore', 'ignore', 'inherit'] });
+  c.on('error', reject);
+  c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${path.basename(args[0])} ${args.slice(1).join(' ')} exited ${code}`))));
+});
+const step = (script, extra, env = {}) => run([path.join(dir, script), ...extra], { ...process.env, B2_STORE: scratch, ...env });
 const close = (x, y) => Number.isFinite(x) && Number.isFinite(y) && Math.abs(x - y) <= 1e-9 * Math.max(1, Math.abs(y));
 // lead records (A5, A6): every number of every lead of every arm, against the stored record
 const sameLeads = (label, now, old) => {
@@ -30,52 +36,57 @@ const compare = (label, now, old) => {
   }
   console.error(`B2 check: ${label} replayed`);
 };
+const issCheck = async () => {
 // ISS: the first file with scores
 const { archiveHeaders } = await import(path.join(dir, '../sdn-gp-starlink-ffm-match/lib/iss-windows.mjs'));
 const headers = archiveHeaders();
 const issOld = rowsOf('iss.').filter((r) => r.arms).sort((a, b) => (a.file < b.file ? -1 : 1))[0];
 const issShard = ['--shard', `${headers.findIndex((h) => h.date === issOld.file)}/${headers.length}`, '--limit', '1'];
-step('part1-iss.mjs', ['--phase', 'arms', ...issShard]);
+await step('part1-iss.mjs', ['--phase', 'arms', ...issShard]);
 compare(`iss ${issOld.file}`, rowsOf('iss.', scratch).find((r) => r.file === issOld.file) ?? {}, issOld);
 // ISS's FFM arm (A5): the same window through the ffm phase
 const issFfmOld = rowsOf('iss-ffm.').find((r) => r.file === issOld.file);
 if (!issFfmOld) { console.error(`B2 check: iss ${issOld.file}: no stored FFM row`); bad += 1; } else {
-  step('part1-iss.mjs', ['--phase', 'ffm', ...issShard]);
+  await step('part1-iss.mjs', ['--phase', 'ffm', ...issShard]);
   const now = rowsOf('iss-ffm.', scratch).find((r) => r.file === issOld.file) ?? {};
   compare(`iss ${issOld.file} FFM`, { arms: { ffm: now.ffm } }, { arms: { ffm: issFfmOld.ffm } });
 }
 // ISS's lead records (A5) of the same window, and the GP record (A6) of the first window that has one
 const issLeadsOld = rowsOf('iss-leads.').find((r) => r.file === issOld.file);
 if (issLeadsOld) {
-  step('part1-iss.mjs', ['--phase', 'leads', ...issShard]);
+  await step('part1-iss.mjs', ['--phase', 'leads', ...issShard]);
   sameLeads(`iss ${issOld.file} lead records`, rowsOf('iss-leads.', scratch).find((r) => r.file === issOld.file), issLeadsOld);
   // A13: the same window's iss-ffm3 fit and its lead records with A5's and the calibrated covariances
   const issL3Old = rowsOf('iss-leads3.').find((r) => r.file === issOld.file);
   if (issL3Old) {
-    step('part1-iss.mjs', ['--phase', 'ffm3', ...issShard]);
-    step('part1-iss.mjs', ['--phase', 'leads3', ...issShard]);
+    await step('part1-iss.mjs', ['--phase', 'ffm3', ...issShard]);
+    await step('part1-iss.mjs', ['--phase', 'leads3', ...issShard]);
     sameLeads(`iss ${issOld.file} A13 lead records`, rowsOf('iss-leads3.', scratch).find((r) => r.file === issOld.file), issL3Old);
   }
   const gpOld = rowsOf('iss-gp.').filter((r) => r.gp?.leads && Object.keys(r.gp.leads).length).sort((a, b) => (a.file < b.file ? -1 : 1))[0];
   if (gpOld) {
-    step('part1-iss.mjs', ['--phase', 'gp', '--shard', `${headers.findIndex((h) => h.date === gpOld.file)}/${headers.length}`, '--limit', '1']);
+    await step('part1-iss.mjs', ['--phase', 'gp', '--shard', `${headers.findIndex((h) => h.date === gpOld.file)}/${headers.length}`, '--limit', '1']);
     sameLeads(`iss ${gpOld.file} GP record`, rowsOf('iss-gp.', scratch).find((r) => r.file === gpOld.file), gpOld);
   }
 }
+};
+const laserCheck = async () => {
 // laser: the first cutoff with scores
 const laserOld = rowsOf('laser.').filter((r) => r.arms && !r.arms.error).sort((a, b) => a.norad - b.norad || Date.parse(a.cutoff) - Date.parse(b.cutoff))[0];
 if (laserOld) {
   const all = rowsOf('laser.').sort((a, b) => a.norad - b.norad || Date.parse(a.cutoff) - Date.parse(b.cutoff));
-  step('part2-laser.mjs', ['--shard', `${all.findIndex((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff)}/${all.length}`, '--limit', '1']);
+  await step('part2-laser.mjs', ['--shard', `${all.findIndex((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff)}/${all.length}`, '--limit', '1']);
   compare(`laser ${laserOld.target} ${laserOld.cutoff}`, rowsOf('laser.', scratch).find((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff) ?? {}, laserOld);
   const laserShard = ['--shard', `${all.findIndex((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff)}/${all.length}`, '--limit', '1'];
   for (const [phase, prefix] of [['leads', 'laser-leads.'], ['gp', 'laser-gp.'], ['leads3', 'laser-leads3.']]) {
     const old = rowsOf(prefix).find((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff);
     if (!old) continue;
-    step('part2-laser.mjs', ['--phase', phase, ...laserShard]);
+    await step('part2-laser.mjs', ['--phase', phase, ...laserShard]);
     sameLeads(`laser ${laserOld.target} ${laserOld.cutoff} ${phase}`, rowsOf(prefix, scratch).find((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff), old);
   }
 }
+};
+const starlinkCheck = async () => {
 // Starlink: the first satellite with scores in the latest score pass (its SGP4-XP fit and FFM fit, then its score at the same capture cycle,
 // the forecast sample linked in)
 const passes = [...new Set(fs.readdirSync(path.join(store, 'rows')).map((f) => /^starlink-score\.(.+)\.s\d+\.jsonl$/.exec(f)?.[1]).filter(Boolean))].sort();
@@ -88,26 +99,28 @@ if (starOld) {
   const { config } = await import('./common.mjs');
   const all = fs.readdirSync(path.join(config.part1.starlink.captureRoot, forecastCycle)).filter((f) => /^\d+\.json\.gz$/.test(f)).map((f) => Number(f.split('.')[0])).sort((a, b) => a - b);
   const shard = ['--shard', `${all.indexOf(starOld.norad)}/${all.length}`, '--limit', '1'];
-  step('part1-starlink.mjs', ['--phase', 'fit', ...shard]);
-  step('part1-starlink.mjs', ['--phase', 'ffm', ...shard]);
+  await step('part1-starlink.mjs', ['--phase', 'fit', ...shard]);
+  await step('part1-starlink.mjs', ['--phase', 'ffm', ...shard]);
   // A12's arms: the same satellite's ffm3 and XP-LN fits through the fit-only reader (the scratch store holds its one A3 row), against the stored fit rows
   for (const [phase, key] of [['ffm3', 'ffm3'], ['xpln', 'xpln']]) {
     const old = rowsOf(`starlink-${phase}.`).find((r) => r.norad === starOld.norad);
     if (!old) { console.error(`B2 check: starlink ${starOld.norad}: no stored ${phase} row`); bad += 1; continue; }
-    step('part1-starlink.mjs', ['--phase', phase, '--shard', '0/1', '--limit', '1']);
+    await step('part1-starlink.mjs', ['--phase', phase, '--shard', '0/1', '--limit', '1']);
     const now = rowsOf(`starlink-${phase}.`, scratch).find((r) => r.norad === starOld.norad);
     const same = key === 'xpln' ? now?.xpln?.omm === old.xpln.omm : now?.ffm3?.termination === old.ffm3.termination && [...(now?.ffm3?.state ?? []), ...(now?.ffm3?.parameters ?? []).map((q) => q.value)].every((v, i) => close(v, [...old.ffm3.state, ...old.ffm3.parameters.map((q) => q.value)][i]));
     if (!same) { console.error(`B2 check: starlink ${starOld.norad} ${phase} fit differs from the stored row`); bad += 1; } else console.error(`B2 check: starlink ${starOld.norad} ${phase} fit replayed`);
   }
-  step('part1-starlink.mjs', ['--phase', 'score', '--through', starOld.through, ...shard]);
+  await step('part1-starlink.mjs', ['--phase', 'score', '--through', starOld.through, ...shard]);
   // the same satellite's lead records (A5, with ffm3 and A13's calibrated covariances)
   const leadOld = rowsOf('starlink-leads.').find((r) => r.norad === starOld.norad);
   if (leadOld) {
-    step('part1-starlink.mjs', ['--phase', 'leads', '--through', leadOld.through, ...shard]);
+    await step('part1-starlink.mjs', ['--phase', 'leads', '--through', leadOld.through, ...shard]);
     sameLeads(`starlink ${starOld.norad} lead records`, rowsOf('starlink-leads.', scratch).find((r) => r.norad === starOld.norad), leadOld);
   }
   compare(`starlink ${starOld.norad} at ${starOld.through}`, rowsOf(`starlink-score.${starOld.through}.`, scratch).find((r) => r.norad === starOld.norad) ?? {}, starOld);
 } else console.error('B2 check: part 1a has no score pass in the store yet, so the table has no part 1a row to replay');
+};
+const caCheck = async () => {
 // parts 3 and 4 (A5 to A7): each group's summary must rest on the current lead and GP rows, and its first encounters must replay
 // A12: Starlink also with ffm3 in the FFM slot (ca.starlink.ffm3.json; the same draws as the group's)
 const { A13RUNS } = await import('./part4-ca.mjs');
@@ -135,6 +148,8 @@ if (caGroups.length) {
     }
   }
 }
+};
+const part5Check = async () => {
 // part 5 (A8, A9): the first assessed encounter, re-assessed from the stored states and covariances (A3 as registered, and A12's ffm3)
 for (const ffm of ['ffm', 'ffm3']) {
   const p5 = path.join(store, 'rows', ffm === 'ffm' ? 'ca.part5.json' : `ca.part5.${ffm}.json`);
@@ -143,11 +158,13 @@ for (const ffm of ['ffm', 'ffm3']) {
   const pdir = path.join(store, ffm === 'ffm' ? 'part5' : `part5-${ffm}`, through);
   const first = fs.readdirSync(pdir).filter((f) => /^assessed\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(pdir, f))).sort((a, b) => a.id - b.id)[0];
   const file = path.join(scratch, `part5-replay.${ffm}.jsonl`);
-  execFileSync(process.execPath, [path.join(dir, 'part5-starlink.mjs'), '--through', through, '--ffm', ffm, '--phase', 'assess', '--only', String(first.id), '--out', file], { stdio: ['ignore', 'ignore', 'inherit'] });
+  await run([path.join(dir, 'part5-starlink.mjs'), '--through', through, '--ffm', ffm, '--phase', 'assess', '--only', String(first.id), '--out', file], process.env);
   sameLeads(`part 5 (${ffm}) encounter ${first.id}`, readJsonl(file)[0], first);
 }
-const { build, sameAsCommitted } = await import('./table.mjs');
-if (!sameAsCommitted(build())) { console.error('B2 check: the table regenerated from the stored rows differs from the committed table.json'); bad += 1; }
+};
+// the table, regenerated from the stored rows by table.mjs --check (its own process), against the committed table.json
+const tableCheck = () => run([path.join(dir, 'table.mjs'), '--check'], process.env).catch(() => { console.error('B2 check: the table regenerated from the stored rows differs from the committed table.json'); bad += 1; });
+await Promise.all([issCheck(), laserCheck(), starlinkCheck(), caCheck(), part5Check(), tableCheck()].map((x) => x.catch((error) => { console.error(`B2 check: ${error.message}`); bad += 1; })));
 fs.rmSync(scratch, { recursive: true, force: true });
 console.error(bad ? `B2 check: FAIL (${bad})` : 'B2 check: PASS');
 process.exit(bad ? 1 : 0);
