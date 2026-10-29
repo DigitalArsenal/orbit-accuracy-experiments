@@ -785,3 +785,7 @@ The coordinator's rulings of 2026-10-29 on what A13 parts 1 to 4 leave to the ha
 5. **Reliability table.** By Pc decade as A4's pcBins, the hit share being the share with true miss under 20 m; seeds as part 4.
 6. **Part 3 cells of the calibrated covariances.** d2 from gp-error-model on the composed covariance, as C2 computes it; C2's pass rule
    (a cell with fewer than 100 windows or 3 clusters is labeled not eligible).
+7. **The log score (addendum, coordinator ruling of 2026-10-29, before any number).** Per arm, over the encounters of a cell: the log score
+   -mean[h ln p + (1 - h) ln(1 - p)] with h the hit indicator (true miss under 20 m) and p the arm's Pc clipped to [1e-15, 1 - 1e-15];
+   reported with the count of clipped encounters and the log score over the unclipped encounters alone. The Brier score mean (p - h)^2
+   is unclipped.
