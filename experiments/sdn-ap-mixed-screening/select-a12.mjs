@@ -8,7 +8,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, results, args, frozen, readJsonl, g1Dir, root, write, sha256, paced } from './common.mjs';
 import { prefitReader } from './lib/prefit.mjs';
-import { track, cycleMs } from './lib/capture.mjs';
+import { cycleMs } from './lib/capture.mjs';
+import { eprimeWindow } from './lib/a12-windows.mjs';
 import { selectionSample, profileSettings, openV3, fitInput, rms3dM, brief } from './lib/a12.mjs';
 
 frozen();
@@ -19,15 +20,6 @@ const a3Rows = () => fs.readdirSync(path.join(store, 'rows')).filter((f) => /^st
 const iso = (t) => new Date(t).toISOString();
 const fullWeight = (r) => r.ffm?.ok && r.ffm.rounds === 2 && !r.ffm.stoppedBy;
 
-/** E' fit track rule (A12 point 7): at least 60 % of 145 epochs, no gap over 8 h, states in the first and the last 2 h. */
-function eprimeOk(lines, from, to) {
-  const t = lines.map((l) => Date.parse(l.epoch));
-  if (t.length < D.eprime.minimumCoverage * (S.trackHours * 60 / S.stepMinutes + 1)) return `fit track ${t.length} epochs`;
-  if (!(t[0] <= from + D.eprime.edgeHours * H) || !(t.at(-1) >= to - D.eprime.edgeHours * H)) return 'fit track misses its first or last 2 h';
-  for (let i = 1; i < t.length; i += 1) if (t[i] - t[i - 1] > D.eprime.maximumGapHours * H) return 'fit track gap over 8 h';
-  return null;
-}
-
 /** The three windows of one satellite: [{ dataset, fit, held, E (end of fit), skipped }]. */
 function windowsOf(row, R) {
   const E = Date.parse(row.E), out = [];
@@ -36,13 +28,7 @@ function windowsOf(row, R) {
     const cut = t0 + D[name].fitHours * H;
     out.push({ dataset: name, fit: t.filter((l) => Date.parse(l.epoch) <= cut), held: t.filter((l) => Date.parse(l.epoch) > cut), E });
   }
-  const Ep = E - D.eprime.shiftHours * H, Fs = Date.parse(row.F.startUtc);
-  const files = R.olderFiles(row.norad, Fs);
-  const fit = track(files.filter((f) => f.start < Ep), Ep - S.trackHours * H, Ep, false).lines;
-  const truthFiles = R.olderFiles(row.norad, Fs, D.eprime.truthCycles).filter((f) => f.start > Ep && f.start < Fs);
-  const held = track(truthFiles, Ep, E, true).lines; // first 8 h of each file (config.part1.starlink.segmentHours), the newest file at each epoch
-  const skipped = eprimeOk(fit, Ep - S.trackHours * H, Ep) ?? (held.length ? null : 'no truth epoch in (E\', E]');
-  out.push({ dataset: 'eprime', fit, held, E: Ep, skipped });
+  out.push(eprimeWindow(row, R));
   return out;
 }
 
