@@ -111,8 +111,8 @@ async function leads3(w) {
   const r = ffm3Of.get(w.row.file);
   if (!r?.fit?.ok) out.ffm3 = { error: r ? r.fit?.termination ?? r.fit?.error ?? r.excluded : 'no iss-ffm3 row' };
   else {
-    out.ffm3 = await ffmLeads(a, (product, ms, covariance) => carry3(product, ms, w.E, covariance), r.fit, leads, 'EME2000');
-    try {
+    try { out.ffm3 = await ffmLeads(a, (product, ms, covariance) => carry3(product, ms, w.E, covariance), r.fit, leads, 'EME2000'); } catch (error) { out.ffm3 = { error: `refused by propagator/ffm: ${String(error.message).slice(0, 180)}` }; }
+    if (!out.ffm3.error) try {
       const gcrf = (await convert(a, leads.map(({ line }) => line), 'EME2000', 'GCRF')).map((s, i) => ({ L: leads[i].L, line: { epoch: leads[i].line.epoch, ...s } }));
       const { issSettingsV3 } = await import('./lib/a12.mjs');
       const s = issSettingsV3();
