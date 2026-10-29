@@ -2,8 +2,8 @@
 import { createHash } from 'node:crypto';
 import { setTimeout as sleep } from 'node:timers/promises';
 export const base = 'https://api.starlink.com/public-files/ephemerides/';
-// One range request per file, from byte 0 (E13b amendment A2).
-export const PREFIX_BYTES = 262144;
+// One range request per file, from byte 0: 512 KiB hold the first 16 hours of a 60 s file with margin (E13b amendments A2, A4).
+export const PREFIX_BYTES = 524288;
 export const sha = b => createHash('sha256').update(b).digest('hex');
 export class Fetcher {
   bytes = 0; requests = 0; next = 0; controller = new AbortController();

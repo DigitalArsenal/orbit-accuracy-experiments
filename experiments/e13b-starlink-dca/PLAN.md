@@ -169,3 +169,24 @@ raw buffers to four 256 KiB heads and shortens the fleet's acquisition span.
 On stop/fatal failure, cancel and account for outstanding transfers. Verify
 one full cycle with this scheduler. Physics, outputs and all scientific
 registration choices remain unchanged.
+
+## Amendment A4 — operator covariance sidecar and 16-hour retention (2026-10-29, during capture)
+
+Owner ruling, 2026-10-29: Q9 (keep SpaceX's covariance, retain more of each file) was recommended and the owner said "do all your
+recommendations". The change is additive only. No endpoint, threshold, window, estimator, hypothesis or `config.json` value changes
+(`headHours` stays 8, `sampleMinutes` 10): E13b's input is identical. The raw file is still never persisted. For each file the collector now also
+stores a sidecar, `<norad>.ocm` beside `<norad>.json.gz`, a `$OCM` FlatBuffer holding derived ten-minute GCRF states (the frames module's output, as
+for the registered samples) over the first 16 hours of the file, and the operator's 21 UVW covariance values at each state, exactly as the source
+gives them (lower triangle by rows, UVW = RTN, not rotated). A file that holds less than 16 hours gives all it holds.
+
+Transport: one 512 KiB range per file (was 256 KiB), still HTTP 206 only. The registered record is derived from the first 262,144 bytes of it and
+its `source` block still reports that range, its hash and its tail bytes, so it is byte-identical to the record a 256 KiB range gives. The E2E of
+the change (`experiments/operator-capture/collector/check.mjs`) proves this on live files, with `run.mjs` unchanged. A sidecar that cannot be built
+is counted and logged and never removes the registered record. Covariance is not used by any E13b estimator.
+
+Cost, measured on the 11,187 listed files: network per cycle 2.93 GB to 5.87 GB (+2.93 GB); sidecar about 23 KB per file, 257 MB per cycle, about
+0.77 GB a day, about 25 GB to December 2; free space was 102 GiB on 2026-10-29 and stays above the 25 GiB floor, which still pauses the collector.
+
+Cadence: eight-hour cycles are registered, so the replacement process starts its first cycle at the next scheduled slot (the last recorded start
+plus eight hours), not at once, and a restart never moves the cadence. Installed WASM artifacts are carried forward byte for byte (same hashes and
+modules commit); the upgrade is another install, and cycles before it keep their format.

@@ -3,34 +3,85 @@ import path from 'node:path';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {gzipSync} from 'node:zlib';
 import {Fetcher,sha} from './transport.mjs';
-import {registeredHead} from './meme.mjs';
-import {registeredRecord} from './products.mjs';
+import {subsets} from './registration.mjs';
+import {registeredProducts,sidecarProducts} from './capture.mjs';
 import {openPhysics} from './physics.mjs';
 export const root=process.env.OPERATOR_CAPTURE_ROOT??'/opt/data/sdn-archive/operator-capture';
+export const CYCLE_MS=8*3600000;
 const iso=()=>new Date().toISOString();
 export function append(file,value){fs.appendFileSync(file,JSON.stringify(value)+'\n');}
 export function write(file,value){const temp=file+'.'+process.pid+'.tmp';fs.writeFileSync(temp,JSON.stringify(value,null,2)+'\n');fs.renameSync(temp,file);}
-export function subsets(file){
-  if(!fs.existsSync(file))return {mode:'fallback-all',sha256:null,subsets:[]};
-  const text=fs.readFileSync(file,'utf8'),block=/```json\s*([\s\S]*?)```/.exec(text);
-  if(!block)throw new Error('SUBSETS.md has no JSON registration');
-  const value=JSON.parse(block[1]);
-  if(value.version!==1||!Array.isArray(value.subsets))throw new Error('unsupported subset registration');
-  for(const s of value.subsets){if(!Array.isArray(s.norads)||!Array.isArray(s.epochsUtc)||!s.norads.every(Number.isSafeInteger)||!s.epochsUtc.every(e=>Number.isFinite(Date.parse(e)))||!(s.epochToleranceSeconds>=0&&s.epochToleranceSeconds<=3600)||!(s.truthHeadHours>0&&s.truthHeadHours<=8))throw new Error('invalid subset registration');}
-  return {...value,mode:'registered',sha256:sha(text)};
+/** A process starts its first cycle one registered spacing after the last recorded start (at once when that has passed): a restart never moves the eight-hour cadence. */
+export function firstSlot(captureRoot,now=Date.now()){
+  const ledger=path.join(captureRoot,'cycles.jsonl');
+  if(!fs.existsSync(ledger))return now;
+  const last=fs.readFileSync(ledger,'utf8').trim().split('\n').filter(Boolean).at(-1);
+  const started=last?Date.parse(JSON.parse(last).startedUtc):NaN;
+  return Number.isFinite(started)?Math.max(now,started+CYCLE_MS):now;
 }
-export function selectTruth(reg,norad,native,samples){
-  if(reg.mode==='fallback-all')return samples.map(p=>({ms:p.ms,stateM:p.stateM,registration:'fallback-all'}));
-  const result=[];
-  for(const s of reg.subsets.filter(s=>s.norads.includes(norad)))for(const epoch of s.epochsUtc){
-    const wanted=Date.parse(epoch),tol=s.epochToleranceSeconds*1000;
-    const point=native.find(p=>p.ms>=wanted&&p.ms<=wanted+tol&&p.ms<=native[0].ms+s.truthHeadHours*3600000);
-    if(point)result.push({...point,registeredMs:wanted,registration:s.id});
+/** One capture cycle: every listed file (or the first `limit` of them, a commissioning subset that never reads as complete), its registered record and its sidecar.
+ *  Returns { started, failure }, or null when stopped before it began. */
+export async function runCycle({captureRoot,physics,registration,producer,subsetsFile,log,stop,limit=null}){
+  const started=Date.now(),cpu0=process.cpuUsage(),id=iso().replace(/[:.]/g,'-');
+  while(!stop()){
+    const stat=fs.statfsSync(captureRoot),freeGiB=stat.bavail*stat.bsize/2**30;
+    if(freeGiB>=25)break;
+    log('paused',{freeGiB});await sleep(30000);
   }
-  return result;
+  if(stop())return null;
+  const cycleDir=path.join(captureRoot,'cycles',id);fs.mkdirSync(cycleDir,{recursive:true});
+  const fetcher=new Fetcher(),summary={id,startedUtc:iso(),status:'running',files:0,samples:0,truthStates:0,failures:0,storedBytes:0,sidecars:0,sidecarStates:0,sidecarFailures:0,sidecarBytes:0};
+  let failure;const pending=[];
+  try{
+    const reg=subsets(subsetsFile);
+    summary.subsetSha256=reg.sha256;summary.subsetMode=reg.mode;
+    const weather=await physics.weather(fetcher);summary.weather={sha256:weather.sha256,sources:weather.sources,rows:weather.rows.length};
+    const manifest=await fetcher.manifest();summary.listed=manifest.names.length;summary.manifestSha256=manifest.sha256;
+    const names=limit?manifest.names.slice(0,limit):manifest.names;if(limit)summary.limit=limit;
+    write(path.join(cycleDir,'summary.json'),summary);
+    let queued=0;
+    const queue=()=>{const name=names[queued++];pending.push(fetcher.prefix(name).then(file=>({file}),error=>({error})));};
+    while(queued<Math.min(4,names.length))queue();
+    for(const name of names){
+      if(stop()){summary.status='interrupted';break;}
+      const s=fs.statfsSync(captureRoot);if(s.bavail*s.bsize<25*2**30)throw new Error('disk below 25 GiB; cycle interrupted');
+      try{
+        const fetched=await pending.shift();
+        if(fetched.error)throw fetched.error;
+        if(queued<names.length)queue();
+        const {head,derived,truth,record}=await registeredProducts({file:fetched.file,physics,weatherRows:weather.rows,weatherSha256:weather.sha256,reg});
+        const bytes=gzipSync(JSON.stringify(record)+'\n'),file=path.join(cycleDir,head.source.norad+'.json.gz');
+        fs.writeFileSync(file,bytes,{flag:'wx'});
+        summary.files++;summary.samples+=record.samples.length;summary.truthStates+=truth.length;summary.storedBytes+=bytes.length;
+        // The sidecar never changes the registered record above: a failure here is counted and logged, and the record stays.
+        try{
+          const ocm=await sidecarProducts({file:fetched.file,head,derived,physics,producer});
+          fs.writeFileSync(path.join(cycleDir,head.source.norad+'.ocm'),ocm,{flag:'wx'});
+          summary.sidecars++;summary.sidecarBytes+=ocm.length;
+        }catch(error){
+          summary.sidecarFailures++;append(path.join(cycleDir,'failures.jsonl'),{name,at:iso(),product:'ocm',error:error.message});
+        }
+      }catch(error){
+        summary.failures++;append(path.join(cycleDir,'failures.jsonl'),{name,at:iso(),error:error.message});
+        if(error.fatal)throw error;
+        // A superseded file still frees its bounded prefetch slot.
+        if(queued<names.length&&pending.length<4)queue();
+      }
+      const cpu=process.cpuUsage(cpu0),cpuSeconds=(cpu.user+cpu.system)/1e6,elapsed=(Date.now()-started)/1000;
+      await sleep(Math.max(0,Math.min(30000,(cpuSeconds/0.5-elapsed)*1000)));
+      if((summary.files+summary.failures)%100===0){log('progress',{id,...summary,bytes:fetcher.bytes,cpuSeconds});write(path.join(cycleDir,'summary.json'),summary);}
+    }
+    if(summary.status==='running')summary.status=summary.files===summary.listed?'complete':'partial';
+  }catch(error){failure=error;summary.status='failed';summary.error=error.message;}
+  fetcher.cancel();await Promise.all(pending);
+  const cpu=process.cpuUsage(cpu0);
+  Object.assign(summary,{endedUtc:iso(),wallSeconds:(Date.now()-started)/1000,cpuSeconds:(cpu.user+cpu.system)/1e6,bytes:fetcher.bytes,requests:fetcher.requests,modules:physics.provenance,registration});
+  write(path.join(cycleDir,'summary.json'),summary);append(path.join(captureRoot,'cycles.jsonl'),summary);log('cycle-end',summary);
+  return {started,failure};
 }
 async function main(){
-  const once=process.argv.includes('--once');
+  const once=process.argv.includes('--once'),at=process.argv.indexOf('--limit'),limit=at<0?null:Number(process.argv[at+1]);
+  if(limit!==null&&!(Number.isSafeInteger(limit)&&limit>0))throw new Error('--limit needs a positive integer');
   fs.mkdirSync(root,{recursive:true});
   const pidFile=path.join(root,'collector.pid'),stopFile=path.join(root,'collector.stop'),logFile=path.join(root,'collector.log');
   const log=(event,extra={})=>append(logFile,{at:iso(),pid:process.pid,event,...extra});
@@ -50,58 +101,15 @@ async function main(){
     physics=await openPhysics(moduleRoot);
     for(const m of physics.provenance){const pin=registration.modules.find(x=>x.name===m.name);if(pin?.wasmSha256!==m.wasmSha256||pin?.manifestSha256!==m.manifestSha256)throw new Error('pinned artifact mismatch');}
     log('start',{registration,modules:physics.provenance,cycleHours:8,cpuDuty:0.5});
+    const subsetsFile=process.env.OPERATOR_SUBSETS??path.resolve(new URL('../SUBSETS.md',import.meta.url).pathname),producer=`sdn-operator-capture ${registration.componentCommit}`;
+    const first=once?Date.now():firstSlot(root);
+    if(first>Date.now()){log('waiting',{nextUtc:new Date(first).toISOString()});while(!stop()&&Date.now()<first)await sleep(Math.min(30000,first-Date.now()));}
     while(!stop()&&Date.now()<Date.parse('2026-12-02T00:00:00Z')){
-      const started=Date.now(),cpu0=process.cpuUsage(),id=iso().replace(/[:.]/g,'-');
-      while(!stop()){
-        const stat=fs.statfsSync(root),freeGiB=stat.bavail*stat.bsize/2**30;
-        if(freeGiB>=25)break;
-        log('paused',{freeGiB});await sleep(30000);
-      }
-      if(stop())break;
-      const cycleDir=path.join(root,'cycles',id);fs.mkdirSync(cycleDir,{recursive:true});
-      const fetcher=new Fetcher(),summary={id,startedUtc:iso(),status:'running',files:0,samples:0,truthStates:0,failures:0,storedBytes:0};
-      let failure;const pending=[];
-      try{
-        const reg=subsets(process.env.OPERATOR_SUBSETS??path.resolve(new URL('../SUBSETS.md',import.meta.url).pathname));
-        summary.subsetSha256=reg.sha256;summary.subsetMode=reg.mode;
-        const weather=await physics.weather(fetcher);summary.weather={sha256:weather.sha256,sources:weather.sources,rows:weather.rows.length};
-        const manifest=await fetcher.manifest();summary.listed=manifest.names.length;summary.manifestSha256=manifest.sha256;
-        write(path.join(cycleDir,'summary.json'),summary);
-        let queued=0;
-        const queue=()=>{const name=manifest.names[queued++];pending.push(fetcher.prefix(name).then(file=>({file}),error=>({error})));};
-        while(queued<Math.min(4,manifest.names.length))queue();
-        for(const name of manifest.names){
-          if(stop()){summary.status='interrupted';break;}
-          const s=fs.statfsSync(root);if(s.bavail*s.bsize<25*2**30)throw new Error('disk below 25 GiB; cycle interrupted');
-          try{
-            const fetched=await pending.shift();
-            if(fetched.error)throw fetched.error;
-            if(queued<manifest.names.length)queue();
-            const head=registeredHead(fetched.file),derived=await physics.derive(head,weather.rows);
-            const truth=selectTruth(reg,head.source.norad,derived.native,derived.samples);
-            const record=registeredRecord({head,derived,truth,reg,weatherSha256:weather.sha256});
-            const bytes=gzipSync(JSON.stringify(record)+'\n'),file=path.join(cycleDir,head.source.norad+'.json.gz');
-            fs.writeFileSync(file,bytes,{flag:'wx'});
-            summary.files++;summary.samples+=record.samples.length;summary.truthStates+=truth.length;summary.storedBytes+=bytes.length;
-          }catch(error){
-            summary.failures++;append(path.join(cycleDir,'failures.jsonl'),{name,at:iso(),error:error.message});
-            if(error.fatal)throw error;
-            // A superseded file still frees its bounded prefetch slot.
-            if(queued<manifest.names.length&&pending.length<4)queue();
-          }
-          const cpu=process.cpuUsage(cpu0),cpuSeconds=(cpu.user+cpu.system)/1e6,elapsed=(Date.now()-started)/1000;
-          await sleep(Math.max(0,Math.min(30000,(cpuSeconds/0.5-elapsed)*1000)));
-          if((summary.files+summary.failures)%100===0){log('progress',{id,...summary,bytes:fetcher.bytes,cpuSeconds});write(path.join(cycleDir,'summary.json'),summary);}
-        }
-        if(summary.status==='running')summary.status=summary.files===summary.listed?'complete':'partial';
-      }catch(error){failure=error;summary.status='failed';summary.error=error.message;}
-      fetcher.cancel();await Promise.all(pending);
-      const cpu=process.cpuUsage(cpu0);
-      Object.assign(summary,{endedUtc:iso(),wallSeconds:(Date.now()-started)/1000,cpuSeconds:(cpu.user+cpu.system)/1e6,bytes:fetcher.bytes,requests:fetcher.requests,modules:physics.provenance,registration});
-      write(path.join(cycleDir,'summary.json'),summary);append(path.join(root,'cycles.jsonl'),summary);log('cycle-end',summary);
-      if(failure?.fatal)throw failure;
+      const cycle=await runCycle({captureRoot:root,physics,registration,producer,subsetsFile,log,stop,limit});
+      if(!cycle)break;
+      if(cycle.failure?.fatal)throw cycle.failure;
       if(once)break;
-      const next=started+8*3600000;log('waiting',{nextUtc:new Date(Math.max(Date.now(),next)).toISOString()});
+      const next=cycle.started+CYCLE_MS;log('waiting',{nextUtc:new Date(Math.max(Date.now(),next)).toISOString()});
       while(!stop()&&Date.now()<next)await sleep(Math.min(30000,next-Date.now()));
     }
   }finally{await physics?.destroy();if(fs.readFileSync(pidFile,'utf8').trim()===String(process.pid))fs.unlinkSync(pidFile);log('exit');}

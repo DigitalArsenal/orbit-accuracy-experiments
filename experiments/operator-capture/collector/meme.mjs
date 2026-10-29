@@ -6,6 +6,8 @@ import { sha } from './transport.mjs';
 export const STEP = 60;                                  // the registered native step, seconds
 export const REGISTERED_BYTES = 262144;                  // amendment A2: the prefix the registered products come from
 export const REGISTERED_RECORDS = 8 * 3600 / STEP + 1;   // the first eight hours: 481 one-minute states
+export const RETAINED_RECORDS = 16 * 3600 / STEP + 1;    // amendment A4: the sidecar keeps the first sixteen hours: 961 one-minute states
+export const SAMPLE_EVERY = 10;                          // ten-minute spacing: every 10th native state
 const EPOCH = /^(\d{4})(\d{3})(\d{2})(\d{2})(\d{2}(?:\.\d+)?)$/;
 const utc = text => Date.parse(text.replace(' ', 'T') + 'Z');
 
@@ -51,4 +53,15 @@ export function registeredHead(file) {
   return { points: points.map(({ ms, stateKm }) => ({ ms, stateKm })), source: { name: file.name, url: file.url, norad: Number(file.name.split('_')[1]), createdUtc: meme.createdUtc,
     startUtc: new Date(meme.startMs).toISOString(), retrievedUtc: file.retrievedUtc, range: [0, total - 1], bytes: total, tailBytes: total - Buffer.byteLength(text),
     sha256: sha(buffer), headSha256: sha(text), etag: file.etag, rawPersisted: false } };
+}
+
+/** The ten-minute states of the first 16 hours of a fetched prefix, each with the operator's 21 UVW covariance values as the source
+ *  gives them; a file that holds less than 16 hours gives all it holds. */
+export function retainedPoints(file) {
+  const meme = openMeme(file.bytes);
+  const declared = Math.round((meme.stopMs - meme.startMs) / (meme.step * 1000)) + 1;
+  if (!Number.isInteger(declared) || declared < 1) throw new Error('invalid MEME ephemeris span');
+  const count = Math.min(declared, RETAINED_RECORDS);
+  if (complete(meme) < count) throw new Error('sixteen hours exceed the fixed prefix budget');
+  return readRecords(meme, count).points.filter((_, i) => i % SAMPLE_EVERY === 0);
 }
