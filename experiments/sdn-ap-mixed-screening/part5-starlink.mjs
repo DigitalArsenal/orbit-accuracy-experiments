@@ -49,7 +49,10 @@ async function openFfmSlot() {
   const arms = await (await import('./lib/a12-arms.mjs')).openArms();
   return { carry: (g, norad, epochs, E, covariance) => arms.ffm3(g, epochs, E, covariance), close: () => arms.close() };
 }
-const index = () => fs.readdirSync(dir).filter((f) => /^states\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(dir, f)));
+// A12 point 2: A3's round-2-refused satellites (the round-1 product kept, stoppedBy set) count as failed fits and are never pooled with
+// full fits, so the A3 run's population leaves them out (their states rows stay on disk, unused)
+const roundOne = FFM === 'ffm' ? new Set([...rowsOf('starlink-ffm.').values()].filter((r) => r.ffm?.ok && r.ffm.stoppedBy).map((r) => r.norad)) : new Set();
+const index = () => fs.readdirSync(dir).filter((f) => /^states\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(dir, f))).filter((r) => !roundOne.has(r.norad));
 
 const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
 const modules = modulesRoot();

@@ -25,7 +25,9 @@ const rowsOf = (prefix) => { const d = path.join(store, 'rows'); return fs.readd
 export function windowsOf(group, ffm = 'ffm', run = null) {
   const S = run ? { ...SOURCES[group], leads: run.leads } : SOURCES[group];
   if (!S) throw new Error('--group iss|laser|starlink');
-  const leadRows = rowsOf(S.leads).filter((r) => !r.excluded), gpRows = new Map(rowsOf(S.gp).filter((r) => r.gp).map((r) => [S.key(r), r.gp]));
+  // A12 point 2: with A3 in the FFM slot, A3's round-2-refused windows (the round-1 product kept) count as failed fits: no FFM record
+  const roundOne = group === 'starlink' && ffm === 'ffm' ? new Set(rowsOf('starlink-ffm.').filter((r) => r.ffm?.ok && r.ffm.stoppedBy).map((r) => r.norad)) : new Set();
+  const leadRows = rowsOf(S.leads).filter((r) => !r.excluded).map((r) => (roundOne.has(r.norad) ? { ...r, ffm: { error: 'A3 round 2 refused (counted failed, A12 point 2)' } } : r)), gpRows = new Map(rowsOf(S.gp).filter((r) => r.gp).map((r) => [S.key(r), r.gp]));
   const inputs = sha256(Buffer.from(JSON.stringify([leadRows, [...gpRows.entries()]])));
   if (!run && ffm !== 'ffm' && group !== 'starlink') throw new Error('--ffm ffm3 is part 1a\'s (Starlink) only');
   const windows = leadRows.map((r) => {
@@ -59,12 +61,27 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const label = run ? args.a13 : ffm === 'ffm' ? group : `${group}.${ffm}`; // the draws stay the group's (seeds B2|part4|<group>|...), so the two FFM slots meet the same encounters
   const extraArms = Object.keys(run?.extras ?? {});
   const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group, ffm, run);
-  // A13 part 6 point 2: per arm, the windows attempted, the records written and the refusals by message (the list in the receipt)
+  // A13 part 6 point 2: per arm, the windows attempted, the records written and the refusals by message (the list in the receipt). A
+  // record missing because the arm it derives from failed (a calibrated covariance without its A5 records; laser's L-P and R2 beside a
+  // refused L run) takes that failure; A3's round-2-refused windows are failures counted apart (A12 point 2).
+  const REFUSED = /^(refused by propagator\/ffm|propagator\/ffm invoke)/;
+  const roundOneA3 = group === 'starlink' && ffm === 'ffm' ? new Set(rowsOf('starlink-ffm.').filter((r) => r.ffm?.ok && r.ffm.stoppedBy).map((r) => r.norad)) : new Set();
   const refusals = run ? Object.fromEntries([['ffm', ffm], ['sgp4xp', 'sgp4xp'], ...Object.entries(run.extras)].map(([arm, field]) => {
-    const rowsAll = rowsOf(run.leads).filter((r) => !r.excluded), recs = rowsAll.map((r) => r[field]);
-    const refused = rowsAll.filter((r) => /^(refused by propagator\/ffm|propagator\/ffm invoke)/.test(r[field]?.error ?? ''));
-    const byMessage = refused.reduce((m, r) => { const k = r[field].error; m[k] = (m[k] ?? 0) + 1; return m; }, {});
-    return [arm, { field, attempted: rowsAll.length, written: recs.filter((x) => x && !x.error && Object.keys(x).some((q) => /^\d+$/.test(q))).length, otherErrors: recs.filter((x) => x?.error && !/^(refused by propagator\/ffm|propagator\/ffm invoke)/.test(x.error)).length, refused: refused.length, refusalRate: rowsAll.length ? refused.length / rowsAll.length : 0, byMessage, refusedWindows: refused.map((r) => SOURCES[group].key(r)) }];
+    const rowsAll = rowsOf(run.leads).filter((r) => !r.excluded);
+    const parent = field === 'ffmCalLP' || field === 'ffmCalR2' ? 'ffmCal' : /Cal$/.test(field) ? (field === 'sgp4xpCal' ? 'sgp4xp' : ffm) : null;
+    const stateOf = (r) => {
+      if (field === 'ffm' && roundOneA3.has(r.norad)) return { kind: 'roundOne', message: 'A3 round 2 refused (counted failed, A12 point 2)' };
+      let x = r[field];
+      if ((!x || x.error) && parent && (r[parent]?.error || !r[parent])) x = { error: r[parent]?.error ?? `no ${parent} records` };
+      if (!x) return { kind: 'other', message: 'no record' };
+      if (x.error) return REFUSED.test(x.error) ? { kind: 'refused', message: x.error } : { kind: 'other', message: x.error.slice(0, 120) };
+      return Object.keys(x).some((q) => /^\d+$/.test(q)) ? { kind: 'written' } : { kind: 'other', message: 'no lead epoch' };
+    };
+    const st = rowsAll.map((r) => ({ key: SOURCES[group].key(r), ...stateOf(r) }));
+    const tally = (kind) => st.filter((x) => x.kind === kind).reduce((m, x) => { m[x.message] = (m[x.message] ?? 0) + 1; return m; }, {});
+    const refused = st.filter((x) => x.kind === 'refused');
+    return [arm, { field, attempted: rowsAll.length, written: st.filter((x) => x.kind === 'written').length, refused: refused.length, refusalRate: rowsAll.length ? refused.length / rowsAll.length : 0,
+      byMessage: tally('refused'), roundOneCountedFailed: st.filter((x) => x.kind === 'roundOne').length, otherFailures: tally('other'), refusedWindows: refused.map((x) => x.key) }];
   })) : null;
   const summary = { group, ffmArm: ffm, ...(run ? { a13: { run: args.a13, extraArms }, refusals } : {}), inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
   const classes = summary.objects > 1 ? ['gp', 'precise'] : ['gp'];
