@@ -49,7 +49,8 @@ export async function windowTerms(ctx, pairs, fit, E, leads, settings) {
   // density term (unit sigma_delta), tau = 1 day and infinite
   const bIndex = fit.parameters.findIndex((p) => p.kind === 'DRAG_AREA_OVER_MASS');
   const D = { D1: null, Dinf: null };
-  if (bIndex >= 0) {
+  // A fitted B of zero (at its bound) has a zero density sensitivity (g = B x dx/dB), so D_tau is exactly zero; dcp_covariance refuses B = 0.
+  if (bIndex >= 0 && fit.parameters[bIndex].value > 0) {
     const b = fit.parameters[bIndex].value, j = 6 + bIndex;
     const segments = [1, 2, 3].map((k) => ({ from: iso(E + (k - 1) * DAY), to: iso(E + k * DAY + (k === 3 ? DAY : 0)), lead: k }));
     const epochs = leadMs.map((t) => ({ epoch: iso(t), stm: stateBlock(at.get(t).stm, n), s: column(at.get(t).stm, n, j) }));

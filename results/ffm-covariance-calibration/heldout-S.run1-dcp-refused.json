@@ -1,0 +1,879 @@
+{
+ "receipt": "heldout-S",
+ "createdUtc": "2026-10-29T07:46:28.639Z",
+ "experimentsCommit": "b81a454f20253baf3db7c7b24148205d7b859fb5",
+ "class": "S",
+ "variants": {
+  "R1/primary": {
+   "constants": {
+    "chosen": "M3/tau1",
+    "parameters": {
+     "tau": 1,
+     "k_e": 5.305292516976156,
+     "f_R": 0.2843105151053393,
+     "f_T": 26.134262801933524,
+     "f_N": 0.07489481602220313,
+     "q_T": 6.840587227450634e-11,
+     "q_RN": 2.883495985334589e-15,
+     "s2": 0.031061192901856948
+    },
+    "fitReceipt": "fit-R1.json",
+    "fitReceiptSha256": "32ca54b631810773e052cafc1cdba736dea4cbf4f986c792b033670435ec4888",
+    "fitCommit": "4ffd2f6515c16c39a7007d9464e33d6ec800efbe",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T05:24:23.919Z"
+   },
+   "counts": {
+    "windows": 810,
+    "excluded": {},
+    "failures": [
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused the carried covariance (B2 export): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "fit MAXIMUM_ITERATIONS"
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "fit STALLED"
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "fit STALLED"
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 565,
+     "clusters": 565,
+     "meanD2over3": 81.39876853635579,
+     "medianD2over3": 5.227306857769023,
+     "coverage": 0.3185840707964602,
+     "meanInterval": [
+      54.91955877427384,
+      111.52928081962318
+     ],
+     "coverageInterval": [
+      0.27964601769911507,
+      0.35575221238938054
+     ],
+     "meanZ2Rtn": [
+      147.91539761158316,
+      103.57153554934752,
+      0.9673885317128645
+     ],
+     "oraclePassProbability": 0.96975,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    },
+    "6": {
+     "n": 565,
+     "clusters": 565,
+     "meanD2over3": 134.19396583437904,
+     "medianD2over3": 13.37543445213372,
+     "coverage": 0.21238938053097345,
+     "meanInterval": [
+      93.90587615790504,
+      182.36528887101338
+     ],
+     "coverageInterval": [
+      0.17876106194690267,
+      0.24601769911504426
+     ],
+     "meanZ2Rtn": [
+      88.43688769742201,
+      274.3961707054736,
+      2.2202099068460788
+     ],
+     "oraclePassProbability": 0.96975,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    },
+    "12": {
+     "n": 810,
+     "clusters": 810,
+     "meanD2over3": 156.76261030601754,
+     "medianD2over3": 18.195729235410557,
+     "coverage": 0.19012345679012346,
+     "meanInterval": [
+      87.87596638810275,
+      258.16171471697936
+     ],
+     "coverageInterval": [
+      0.16419753086419753,
+      0.21728395061728395
+     ],
+     "meanZ2Rtn": [
+      208.30138897602677,
+      248.39046083281406,
+      3.416689220874152
+     ],
+     "oraclePassProbability": 0.98925,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    },
+    "24": {
+     "n": 537,
+     "clusters": 537,
+     "meanD2over3": 1888.45692252997,
+     "medianD2over3": 15.970309341922393,
+     "coverage": 0.1787709497206704,
+     "meanInterval": [
+      155.92905355969165,
+      4893.457205378537
+     ],
+     "coverageInterval": [
+      0.14711359404096835,
+      0.2122905027932961
+     ],
+     "meanZ2Rtn": [
+      4596.179879779872,
+      906.2887287429863,
+      15.347474240166981
+     ],
+     "oraclePassProbability": 0.95875,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    }
+   },
+   "eligibleCells": 4,
+   "passingEligibleCells": 0
+  }
+ },
+ "opened": null
+}
