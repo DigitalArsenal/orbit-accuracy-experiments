@@ -126,16 +126,18 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
       if (!f || f.excluded || changed(w, f)) row.excluded = f ? (f.excluded ?? changed(w, f)) : 'no fit row';
       else if (phase === 'leads') {
         row.sgp4xp = f.sgp4xp?.ok ? await L5.sgp4xpLeads(a, f.sgp4xp.omm, leads, 'GCRF') : { error: f.sgp4xp?.error ?? 'no SGP4-XP fit' };
-        row.ffm = g && !g.excluded && !changed(w, g) && g.ffm?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => ff.predict(product, norad, ms, w.E, 'starlink', { covariance }), g.ffm, leads, 'GCRF') : { error: g?.ffm?.error ?? g?.excluded ?? 'no FFM fit' };
+        // A13 part 6: propagator/ffm's refusal of a carried covariance is that arm's lead failure, recorded verbatim; the registered path is not repaired
+        const refused = async (f) => { try { return await f(); } catch (error) { return { error: `refused by propagator/ffm: ${error.message}` }; } };
+        row.ffm = g && !g.excluded && !changed(w, g) && g.ffm?.ok ? await refused(() => L5.ffmLeads(a, (product, ms, covariance) => ff.predict(product, norad, ms, w.E, 'starlink', { covariance }), g.ffm, leads, 'GCRF')) : { error: g?.ffm?.error ?? g?.excluded ?? 'no FFM fit' };
         const g3 = ffm3Fits.get(norad); // A12: the FFM arm of record for the contrast
-        row.ffm3 = g3 && !changed(w, g3) && g3.ffm3?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => arms.ffm3(product, ms, w.E, covariance), g3.ffm3, leads, 'GCRF') : { error: g3?.ffm3?.error ?? 'no ffm3 fit' };
+        row.ffm3 = g3 && !changed(w, g3) && g3.ffm3?.ok ? await refused(() => L5.ffmLeads(a, (product, ms, covariance) => arms.ffm3(product, ms, w.E, covariance), g3.ffm3, leads, 'GCRF')) : { error: g3?.ffm3?.error ?? 'no ffm3 fit' };
         // A13: ffm3 and SGP4-XP with C2's R1 (weather M) constants by transfer, on the A5 records' errors
         const C = A13.CLASS.starlink;
         if (!row.ffm3.error) {
           try {
             const p3 = g3.ffm3, F = config.part1.starlink.ffm;
             row.ffm3Cal = (await cal.ffmCal(arms.v3.ctxFor(Date.parse(p3.epoch), w.E + 72 * H), p3, w.E, leads, { forces: F.forces, integrator: F.integrator, fixed: p3.fixed ?? {} }, row.ffm3, { ffm3Cal: C })).ffm3Cal;
-          } catch (error) { row.ffm3Cal = { error: String(error.message).slice(0, 200) }; }
+          } catch (error) { row.ffm3Cal = { error: /propagator\/ffm/.test(error.message) ? `refused by propagator/ffm: ${error.message}` : String(error.message).slice(0, 200) }; }
         } else row.ffm3Cal = { error: 'no ffm3 records' };
         row.sgp4xpCal = row.sgp4xp?.error ? { error: 'no SGP4-XP records' } : await cal.xpCal(row.sgp4xp, C);
         const fcFile = path.join(store, 'forecast', `${norad}.json`);

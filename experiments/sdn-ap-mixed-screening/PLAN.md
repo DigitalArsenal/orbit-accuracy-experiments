@@ -789,3 +789,20 @@ The coordinator's rulings of 2026-10-29 on what A13 parts 1 to 4 leave to the ha
    -mean[h ln p + (1 - h) ln(1 - p)] with h the hit indicator (true miss under 20 m) and p the arm's Pc clipped to [1e-15, 1 - 1e-15];
    reported with the count of clipped encounters and the log score over the unclipped encounters alone. The Brier score mean (p - h)^2
    is unclipped.
+
+### A13 - 2026-10-29, part 6 (a refusal rule), committed before any Starlink part 4 number is read
+
+Coordinator ruling Q5 (2026-10-29). propagator/ffm 2.0.0 refuses some carried covariances (`invalid-covariance: Singular covariance has
+an inconsistent cross term`), and B1's environment drops days of space weather (`space-weather-out-of-range`); the registered lead code
+had no handler, so a refusal stopped its shard (eleven of part 1a's lead shards stopped at their first refusal; rows already written are
+kept, the missing satellites are added).
+1. A refusal is caught per arm and window and recorded as that arm's lead failure, verbatim: `refused by propagator/ffm: <message>`.
+   The registered A5 path (A3 by E6's propagateFit, ffm3 by propagateV3, iss-ffm3) is not repaired or symmetrized; symmetrizing stays
+   only at the calibrated hand-off (C2-A5). The same rule covers the ISS `space-weather-out-of-range` refusals of the iss-ffm3 lead
+   records (commit ba37347).
+2. A refusal is that arm's failure, not a missing record: every table reports per arm and group the windows attempted, records written,
+   refusals by message, and the refusal rate beside each verdict; the refused windows are listed in a receipt.
+3. Paired differences (Brier and log score, against SGP4-XP and against FFM with A5's covariance) are computed only on encounters whose
+   two arms both have records, with n stated per pair; a refused window never stands in for another arm.
+4. Disclosed: refusals cluster in hard windows, so leaving them out can flatter the refusing arm; the counts of point 2 are the guard.
+   If an arm's refusals exceed 5 % of its windows, the lane stops and reports before part 4.

@@ -59,7 +59,14 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   const label = run ? args.a13 : ffm === 'ffm' ? group : `${group}.${ffm}`; // the draws stay the group's (seeds B2|part4|<group>|...), so the two FFM slots meet the same encounters
   const extraArms = Object.keys(run?.extras ?? {});
   const { windows, inputs, leadRows, gpRows, gpExcluded } = windowsOf(group, ffm, run);
-  const summary = { group, ffmArm: ffm, ...(run ? { a13: { run: args.a13, extraArms } } : {}), inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
+  // A13 part 6 point 2: per arm, the windows attempted, the records written and the refusals by message (the list in the receipt)
+  const refusals = run ? Object.fromEntries([['ffm', ffm], ['sgp4xp', 'sgp4xp'], ...Object.entries(run.extras)].map(([arm, field]) => {
+    const rowsAll = rowsOf(run.leads).filter((r) => !r.excluded), recs = rowsAll.map((r) => r[field]);
+    const refused = rowsAll.filter((r) => /^(refused by propagator\/ffm|propagator\/ffm invoke)/.test(r[field]?.error ?? ''));
+    const byMessage = refused.reduce((m, r) => { const k = r[field].error; m[k] = (m[k] ?? 0) + 1; return m; }, {});
+    return [arm, { field, attempted: rowsAll.length, written: recs.filter((x) => x && !x.error && Object.keys(x).some((q) => /^\d+$/.test(q))).length, otherErrors: recs.filter((x) => x?.error && !/^(refused by propagator\/ffm|propagator\/ffm invoke)/.test(x.error)).length, refused: refused.length, refusalRate: rowsAll.length ? refused.length / rowsAll.length : 0, byMessage, refusedWindows: refused.map((r) => SOURCES[group].key(r)) }];
+  })) : null;
+  const summary = { group, ffmArm: ffm, ...(run ? { a13: { run: args.a13, extraArms }, refusals } : {}), inputs, leadRows, gpRows, gpExcluded, objects: new Set(windows.map((w) => w.object)).size, realism: realism(group, windows), classes: {} };
   const classes = summary.objects > 1 ? ['gp', 'precise'] : ['gp'];
   for (const cls of classes) {
     const t0 = Date.now();
