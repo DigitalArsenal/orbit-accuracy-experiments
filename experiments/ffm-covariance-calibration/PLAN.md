@@ -436,3 +436,18 @@ registered rule applies unchanged. The 8 GPS satellites stay out of R3 (R3 froze
    the R2-O fit, before any R2-O held-out score was committed. Disclosed: R2-O held-out rows (errors and terms, with FFM's carried
    covariance) were already written to the store when this was recorded; no R2-O held-out table was computed, written or read.
 4. **GRACE-FO handbook:** cited for two published values only (the Front panel area and the launch masses).
+
+### C2-A8 - 2026-10-29, before the Starlink transfer runs (coordinator ruling Q28)
+
+1. **The 2025 RSGA gap.** XM's RSGA folders (`warehouse/2026/RSGA` and the daily `2026/` captures) hold only 2026 bulletins
+   (2026-01-01 to 2026-10-09), although `warehouse/2025_RSGA.tar.gz` exists. Under weather O, every 2025 cutoff found no RSGA issued in
+   the 72 h before it and was excluded: R1 calibration lost 318 of 810 windows and R2 calibration 236 of 630 (validation none), so R1-O
+   and R2-O were calibrated on the 2026-01 to 03 cutoffs only; held out, R1 lost 71 of 814 and R2 24 of 603.
+2. **R1-O and R2-O stay as frozen and scored** (no refit: post-score). A 2025-inclusive O refit would be a post-score exploratory row
+   and is not run.
+3. **Q28.** No RSGA bulletin was issued in the 72 h before any E' cutoff of the B2-supplied export (XM's collection ends 2026-10-09), so
+   R1-O cannot be applied. Ruled, on input availability and before any Starlink covariance number exists: the Starlink transfer (type S,
+   robustness only) uses R1 under weather M (frozen R1, M3 tau = 1 day) with B2's own environment table (observed through 2026-10-23,
+   forecast after: part 1a's rule). The SGP4-XP fairness calibration for Starlink follows the same rule (R1-M).
+4. **The deleted trial row.** One transfer row (NORAD 45237, from a single-satellite trial under R1-O) was written and deleted: a missing
+   input (no RSGA), not a failure; no covariance or d2 was computed.

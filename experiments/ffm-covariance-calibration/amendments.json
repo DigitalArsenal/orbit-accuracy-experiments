@@ -219,5 +219,41 @@
   "r2": "5 m rule kept; all-sample cells secondary",
   "r3": "as scored; Galileo flag rate disclosed as SRP artifact",
   "weatherO": "B1 forecast-day form, confirmed; R2-O held-out rows on disk, no table"
+ },
+ "C2-A8": {
+  "date": "2026-10-29",
+  "before": "the Starlink transfer",
+  "rsgaGap": {
+   "xmRsgaSpan": [
+    "2026-01-01",
+    "2026-10-09"
+   ],
+   "lost": {
+    "R1calibrationO": [
+     318,
+     810
+    ],
+    "R2calibrationO": [
+     236,
+     630
+    ],
+    "R1heldOutO": [
+     71,
+     814
+    ],
+    "R2heldOutO": [
+     24,
+     603
+    ]
+   }
+  },
+  "r1oR2o": "frozen and scored, no refit",
+  "transfer": {
+   "constants": "R1 (M3 tau 1 day)",
+   "weather": "B2 environment table (observed to 2026-10-23, forecast after)",
+   "reason": "no RSGA in the 72 h before any E' cutoff"
+  },
+  "fairness": "SGP4-XP Starlink calibration follows R1-M",
+  "deletedTrialRow": "NORAD 45237, missing input"
  }
 }

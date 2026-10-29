@@ -191,7 +191,7 @@ if (args.heldout) {
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
-  for (const key of cls === 'S' ? ['R1-O'] : Object.keys(FZ).filter((x) => x === CK || x === `${CK}-sensitivity`)) {
+  for (const key of cls === 'S' ? ['R1'] : Object.keys(FZ).filter((x) => x === CK || x === `${CK}-sensitivity`)) {
     const p = FZ[key].parameters, sens = key.endsWith('-sensitivity');
     for (const [subset, scope] of R ? [['object', 'primary'], ['object', 'allSamples'], ['time', 'primary'], ['time', 'allSamples']] : (cls === 'I' ? [[null, 'primary'], [null, 'allSamples']] : [[null, 'primary']])) {
       const rows = subset ? rowsAll.filter((r) => r.subset === subset) : rowsAll;
