@@ -203,5 +203,21 @@
   },
   "r1Clusters": ">= 3: registered rule applies",
   "gps": "stays out of R3"
+ },
+ "C2-A7": {
+  "date": "2026-10-29",
+  "before": "any R1 fit",
+  "r1Screen": {
+   "rule": "median + 5 x 1.4826 x MAD of R1 calibration screen RMS under M",
+   "median": 56.6055923979269,
+   "mad": 29.796333622108737,
+   "thresholdM": 277.4858135386189,
+   "calibrationScreens": 566,
+   "aboveThreshold": 28,
+   "appliesTo": "R1 calibration, validation, held out; M and O"
+  },
+  "r2": "5 m rule kept; all-sample cells secondary",
+  "r3": "as scored; Galileo flag rate disclosed as SRP artifact",
+  "weatherO": "B1 forecast-day form, confirmed; R2-O held-out rows on disk, no table"
  }
 }

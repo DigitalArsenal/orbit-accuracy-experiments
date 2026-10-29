@@ -417,3 +417,22 @@ bounded retry found:
 Both are restored to their registered splits (GRACE-FO 1+2 in calibration as one cluster; COSMIC-2 4 in calibration, 44350 held out),
 with seeds B = A/m x 2.2 and AGOM = A/m x 1.3 in the amended `seeds-R1R2.json`. R1 then has at least 3 independent clusters and the
 registered rule applies unchanged. The 8 GPS satellites stay out of R3 (R3 frozen at 9717f94).
+
+### C2-A7 - 2026-10-29, before any R1 fit (coordinator ruling Q26, the weather-O mapping)
+
+1. **R1 maneuver screen.** Over 96 h with a constant B, a 3D fit RMS above 5 m is the normal drag-mismodeling level in LEO (R1
+   calibration under M: 88 of 90 Swarm A, 89 of 90 Swarm C, 81 of 90 Swarm B and 82 of 90 GRACE-FO 1 windows above 5 m), so the screen
+   must detect outliers relative to the class, not mismodeling. For R1 only, a window is flagged when its screen RMS exceeds
+   median + 5 x 1.4826 x MAD of R1's calibration-window screen RMS under weather M (566 converged screens): median 56.6056 m, MAD
+   29.7963 m, threshold **277.4858 m** (28 of the 566 calibration screens above it). The one value applies to R1's calibration,
+   validation and held-out sets under M and O; GNSS notices still apply (R1 holds no GNSS satellite). A screen fit that does not converge
+   is counted apart and excluded, as before.
+2. **R2** keeps the registered 5 m rule (fitted and frozen with it); its all-sample cells are reported as secondary, labeled. **R3**
+   stays as scored; its by-object all-sample cells are secondary. Disclosed: the Galileo flag rate under the 5 m rule (593 of 1,062
+   held-out windows, median screen RMS 5.9 m) is likely an SRP-mismodeling artifact of the rule, not maneuvers. A re-screened R3 would be
+   a post-score exploratory row only; none is run.
+3. **Weather O mapping (confirmed).** XM's RSGA rows enter FFM's space-weather table in B1's forecast-day form (F10.7 data type 2,
+   3-hourly ap -1, daily Ap kept, the last row held through the arc), observed rows through D0 - 3 (`lib/weather-o.mjs`). Fixed after
+   the R2-O fit, before any R2-O held-out score was committed. Disclosed: R2-O held-out rows (errors and terms, with FFM's carried
+   covariance) were already written to the store when this was recorded; no R2-O held-out table was computed, written or read.
+4. **GRACE-FO handbook:** cited for two published values only (the Front panel area and the launch masses).
