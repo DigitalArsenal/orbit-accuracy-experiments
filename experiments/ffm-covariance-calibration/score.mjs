@@ -170,19 +170,23 @@ if (args.heldout) {
   // bootstrap intervals (10,000 resamples, seed SHA-256 of C2|boot|<class>|<lead>), mean z^2 per axis, the oracle pass probability at n,
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
   const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
-  const rows = rowsOf(`heldout.${cls}.`);
+  const R = ['R1', 'R2', 'R3'].includes(cls);
+  const rowsAll = R ? rowsOf(`${cls}.heldOut.`) : rowsOf(`heldout.${cls}.`);
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
   for (const key of Object.keys(FZ).filter((x) => x === cls || x === `${cls}-sensitivity`)) {
     const p = FZ[key].parameters, sens = key.endsWith('-sensitivity');
-    for (const scope of cls === 'I' ? ['primary', 'allSamples'] : ['primary']) {
+    for (const [subset, scope] of R ? [['object', 'primary'], ['object', 'allSamples'], ['time', 'primary'], ['time', 'allSamples']] : (cls === 'I' ? [[null, 'primary'], [null, 'allSamples']] : [[null, 'primary']])) {
+      const rows = subset ? rowsAll.filter((r) => r.subset === subset) : rowsAll;
       const list = [], counts = { windows: 0, excluded: {} };
       const ex = (why) => { counts.excluded[why] = (counts.excluded[why] ?? 0) + 1; };
       for (const r of rows) {
         if (r.failed) { (counts.failures ??= []).push({ id: r.id, failure: r.failed }); continue; }
         if (r.excluded || !r.leads || !r.ffm) { ex(r.excluded ? r.excluded.slice(0, 60) : r.fit?.ok ? 'fit converged, no truth at any lead' : `fit ${r.fit?.termination ?? r.fit?.error ?? 'none'}`); continue; }
         if (cls === 'I' && scope === 'primary' && screen.get(r.file)?.excluded) { ex('overlapping NASA files differ radially by more than 0.5 km'); continue; }
+        if (R && scope === 'primary' && r.screen?.flagged) { ex('maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)'); continue; }
+        if (R && scope === 'primary' && r.screen?.failed) { ex('maneuver screen: truth fit not converged'); continue; }
         if (sens && r.trackMaxSigmaM > 0.3) { ex('sensitivity: fit-track arc above 0.3 m'); continue; }
         counts.windows += 1;
         r.leads.forEach((l, j) => {
@@ -190,7 +194,8 @@ if (args.heldout) {
           const terms = [{ weight: 1, covariance: r.ffm[key][j] }];
           for (const [ax, u] of [['f_R', unitRtn.RR], ['f_T', unitRtn.TT], ['f_N', unitRtn.NN]]) if (p[ax]) terms.push({ weight: p[ax] ** 2, covariance: u });
           if (p.s2) terms.push({ weight: p.s2, covariance: p.tau === 'inf' ? l.terms.Dinf : l.terms.D1 });
-          list.push({ L: l.L, err: l.errRtnM, terms, truthSigma: cls === 'LP' && !sens ? l.truthSigmaM : null, cluster: cls === 'I' ? Math.floor(Date.parse(r.E) / (30 * DAY)) : r.norad, window: r.id });
+          const nsgfR2 = cls === 'R2' && /^(16908|38077|27944|7646|25398|22824)$/.test(String(r.norad));
+          list.push({ L: l.L, err: l.errRtnM, terms, truthSigma: (cls === 'LP' && !sens) || nsgfR2 ? l.truthSigmaM : null, cluster: cls === 'I' ? Math.floor(Date.parse(r.E) / (30 * DAY)) : (r.cluster ?? r.norad), window: r.id ?? `${r.norad}|${r.E}` });
         });
       }
       pairs ??= await (await import('./lib/pairs.mjs')).openPairs(B2C.a12.modulesLinks);
@@ -215,7 +220,7 @@ if (args.heldout) {
         leads[L] = { n, clusters: clusters.length, meanD2over3: mean, medianD2over3: qq(d2, 0.5) / 3, coverage: cov, meanInterval: [qq(means, 0.025), qq(means, 0.975)], coverageInterval: [qq(covs, 0.025), qq(covs, 0.975)],
           meanZ2Rtn: z2, oraclePassProbability: passProbability(n), inBand, eligible, label: eligible ? (inBand ? 'pass' : 'fail') : `not eligible (n < ${BAND.minWindows}${clusters.length < minClusters ? ` or clusters < ${minClusters}` : ''})` };
       }
-      table.variants[`${key}/${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
+      table.variants[`${key}/${subset ? `${subset}/` : ''}${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
     }
   }
   console.log(writeReceipt(`heldout-${cls}`, table));

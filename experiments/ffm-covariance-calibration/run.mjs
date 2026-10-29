@@ -265,17 +265,23 @@ if (phase === 'precise') {
   // Rows: rows/<class>.<set>.s<k>.jsonl. --weather M only here (condition O is a separate pass).
   const cls = args.class, set = args.set;
   if (!['R3', 'R1', 'R2'].includes(cls)) throw new Error('--class R3|R1|R2');
-  if (!['calibration', 'validation'].includes(set)) throw new Error('--set calibration|validation (held-out sets after the freeze)');
+  if (!['calibration', 'validation', 'heldOut'].includes(set)) throw new Error('--set calibration|validation|heldOut');
+  const FZ = fs.existsSync(path.join(results, 'frozen-constants.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes : {};
+  if (set === 'heldOut' && !FZ[cls]) throw new Error(`${cls} is not frozen: held-out sets are scored only after the freeze`);
   const { truthSeries, windowAt } = await import('./lib/precise.mjs');
   const { openPairs } = await import('./lib/pairs.mjs');
   const { windowTerms } = await import('./lib/products.mjs');
   const pairs = await openPairs(B2C.a12.modulesLinks);
   const seeds = JSON.parse(fs.readFileSync(path.join(results, cls === 'R3' ? 'seeds-R3.json' : 'seeds-R1R2.json')));
   const P9 = JSON.parse(fs.readFileSync(path.join(results, 'precheck-P9.json')));
-  const objects = P9.perObject.filter((o) => o.class === cls && o.set === 'calibration').map((o) => ({ ...o, seed: seeds.objects.find((x) => x.norad === o.norad) })).filter((o) => o.seed);
+  const objects = P9.perObject.filter((o) => o.class === cls && (set === 'heldOut' ? true : o.set === 'calibration')).map((o) => ({ ...o, seed: seeds.objects.find((x) => x.norad === o.norad) })).filter((o) => o.seed);
   const prefixOf = (o) => (o.products.includes('ESA') ? 'ESA0OPSFIN' : o.products.includes('nsgf') ? 'nsgf.orb.' : o.products.includes('ilrsa') ? 'ilrsa.orb.' : o.products.includes('SW') ? 'SW_OPER' : o.products.includes('S') ? `${o.name.replace('Sentinel-', 'S')}_OPER` : o.products[0]);
-  const S = config.split[set];
-  const cutoffs = []; for (let E = Date.parse(`${S.cutoffs.from}T00:00:00Z`); E <= Date.parse(`${S.cutoffs.to}T00:00:00Z`); E += S.cutoffs.everyDays * 24 * HOUR) cutoffs.push(E);
+  const every = (from, to, d = 2) => { const out = []; for (let E = Date.parse(`${from}T00:00:00Z`); E <= Date.parse(`${to}T00:00:00Z`); E += d * 24 * HOUR) out.push(E); return out; };
+  const S = set === 'heldOut' ? { cutoffs: { from: config.split.calibration.cutoffs.from, to: '2026-10-31' } } : config.split[set];
+  const cutoffs = set === 'heldOut' ? null : every(S.cutoffs.from, S.cutoffs.to, S.cutoffs.everyDays);
+  // held out (PLAN.md 3.4): by object, every cutoff of every set to the end of the product; by time, calibration objects from 2026-06-01 to the end
+  const lastE = (o) => (o.last ? iso(Date.parse(o.last) - 72 * HOUR).slice(0, 10) : config.split.heldOutTime.from);
+  const heldTasks = (o) => (o.set === 'heldOutObject' ? every(config.split.calibration.cutoffs.from, lastE(o)).map((E) => [o, E, 'object']) : every(config.split.heldOutTime.from, lastE(o)).map((E) => [o, E, 'time']));
   const out = path.join(rowsDir, `${cls}.${set}.s${k}.jsonl`);
   const done = new Set(readJsonl(out).map((r) => `${r.norad}|${r.E}`));
   const frac = cls === 'R3' ? 1 : B2C.a12.fit.apriori.parameterFraction;
@@ -285,15 +291,15 @@ if (phase === 'precise') {
     const m = diag.length;
     return { sigmaM: 10, parameters: ps, fixed: withB ? {} : { b: 0 }, apriori: Array.from({ length: m * m }, (_, j) => (Math.floor(j / m) === j % m ? diag[j % m] : 0)), maximumIterations: B2C.a12.fit.maximumIterations, correctionTolerance: B2C.a12.fit.correctionTolerance, sigmaEditThreshold: B2C.a12.fit.sigmaEditThreshold, forces: F.forces, integrator: F.integrator };
   };
-  const tasks = objects.flatMap((o) => cutoffs.map((E) => [o, E]));
+  const tasks = set === 'heldOut' ? objects.flatMap(heldTasks) : objects.flatMap((o) => cutoffs.map((E) => [o, E]));
   let series = null;
   for (let i = 0; i < tasks.length; i += 1) {
-    const [o, E] = tasks[i], id = `${o.norad}|${iso(E)}`;
+    const [o, E, subset] = tasks[i], id = `${o.norad}|${iso(E)}`;
     if (i % n !== k || done.has(id)) continue;
     if (args.limit && i / n > Number(args.limit)) break;
     if (series?.norad !== o.norad) series = { norad: o.norad, s: truthSeries(o.norad, prefixOf(o), { opened, from: Date.parse(S.cutoffs.from) - 3 * 24 * HOUR, to: Date.parse(S.cutoffs.to) + 5 * 24 * HOUR }) };
     const w = windowAt(series.s, E, { leadToleranceSeconds: B2C.a5.ca.leadToleranceSeconds.laser });
-    const row = { norad: o.norad, name: o.name, cluster: o.cluster, E: iso(E), set, class: cls };
+    const row = { norad: o.norad, name: o.name, cluster: o.cluster, E: iso(E), set, class: cls, ...(subset ? { subset } : {}) };
     const t0 = Date.now();
     if (w.excluded) row.excluded = w.excluded;
     else if (Math.abs(Date.parse(w.track[0].epoch) - (E - 24 * HOUR)) > 300e3) row.excluded = 'no state at the track start';
@@ -313,7 +319,13 @@ if (phase === 'precise') {
         row.fit = { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, reducedChiSquare: f.reducedChiSquare, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, covariance: f.covariance };
         row.trackMaxSigmaM = Math.max(...w.track.map((l) => l.sigma ?? 0));
         if (f.ok && w.leads.length) Object.assign(row, await windowTerms(ctx, pairs, f, E, w.leads, settings));
-      } catch (error) { row.excluded = `refused: ${String(error.message).slice(0, 200)}`; }
+        if (set === 'heldOut' && f.ok && w.leads.length) {
+          // end to end through FFM's PROCESS_NOISE with the frozen constants (C2-A5: the hand-off at E symmetrized); a refusal is a failure
+          const { ffmNoiseCovariances } = await import('./lib/products.mjs');
+          row.ffm = {};
+          for (const key of Object.keys(FZ).filter((x) => x === cls)) { const p = FZ[key].parameters; row.ffm[key] = (await ffmNoiseCovariances(ctx, pairs, f, E, w.leads, settings, [p.q_RN ?? 0, p.q_T ?? 0, p.q_RN ?? 0], p.k_e)).map((x) => x.rtn); }
+        }
+      } catch (error) { if (set === 'heldOut' && row.fit?.ok) row.failed = `FFM refused (a failure): ${String(error.message).slice(0, 200)}`; else row.excluded = `refused: ${String(error.message).slice(0, 200)}`; }
     }
     row.seconds = (Date.now() - t0) / 1000;
     fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
