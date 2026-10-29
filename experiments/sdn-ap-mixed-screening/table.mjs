@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { config, store, results, args, readJsonl, sha256 } from './common.mjs';
+import { ffm3Merged } from './lib/a12-arms.mjs';
 
 const B = config.statistics.bootstrap;
 const NAMES = { sdnap: 'SDN-AP', sgp4xp: 'SGP4-XP', sgp4: 'SGP4', forecast: 'Operator forecast', ffm: 'FFM', sdnapTruth: 'SDN-AP fitted to the truth',
@@ -28,12 +29,22 @@ function generator(label) { // xorshift128+ (23, 17, 26), seeded by SHA-256 of t
 }
 export function interval(items, label, clustered) {
   if (items.length < 2) return null;
+  // Each resample's median read from draw counts over the values sorted once (the same draws and the same median as sorting each
+  // resample: the median of a multiset depends only on its counts), so the E2E's regeneration stays within its time box.
   const next = generator(label), medians = [];
+  const groups = clustered ? items : items.map((x) => [x]);
+  const flat = groups.flat(), order = flat.map((_, i) => i).sort((a, b) => flat[a] - flat[b]), sorted = order.map((i) => flat[i]);
+  const rank = new Int32Array(flat.length); order.forEach((i, r) => { rank[i] = r; });
+  let at = 0;
+  const members = groups.map((g) => g.map(() => rank[at++]));
+  const counts = new Int32Array(flat.length);
+  const kth = (k) => { let c = 0; for (let r = 0; r < counts.length; r += 1) { c += counts[r]; if (c > k) return sorted[r]; } return sorted.at(-1); };
   for (let r = 0; r < B.resamples; r += 1) {
-    const draw = [];
-    for (let i = 0; i < items.length; i += 1) { const pick = items[Math.floor(next() * items.length)]; if (clustered) draw.push(...pick); else draw.push(pick); }
-    draw.sort((x, y) => x - y);
-    medians.push(medianSorted(draw));
+    counts.fill(0);
+    let total = 0;
+    for (let i = 0; i < items.length; i += 1) { const m = members[Math.floor(next() * items.length)]; for (const q of m) counts[q] += 1; total += m.length; }
+    const pos = (total - 1) / 2, lo = Math.floor(pos), hi = Math.ceil(pos), a = kth(lo), b = hi === lo ? a : kth(hi);
+    medians.push(a + (b - a) * (pos - lo));
   }
   const tail = (1 - B.level) / 2;
   return [quantile(medians, tail), quantile(medians, 1 - tail)];
@@ -153,7 +164,7 @@ export function build() {
     out.rows.push(tableRow('starlink-xp-all', 'Starlink, SGP4-XP on every scored satellite (descriptive)', `${sw.filter((w) => w.arms.sgp4xp?.ok).length} satellites; ${interim}`, sw.map(xpOnly), ['sgp4xp'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-forecast', 'Starlink, the forecast sample with all three arms scored (SpaceX\'s own forecast beside)', `sample satellites whose fetched file is F (A10) and both fits scored; ${interim}`, sw.filter(forecastAll), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
     // A12: the new arms. ffm3 is the FFM arm of record (point 12); A3 stays reported as registered above.
-    const ffm3 = rows(`starlink-ffm3${config.a12.selected?.contingency ? '-60' : ''}.`), xpln = rows('starlink-xpln.');
+    const ffm3 = ffm3Merged(rows), xpln = rows('starlink-xpln.');
     out.inputs.starlinkFfm3 = sha256(Buffer.from(JSON.stringify(ffm3)));
     out.inputs.starlinkXpln = sha256(Buffer.from(JSON.stringify(xpln)));
     out.starlink.a12 = {
@@ -169,6 +180,15 @@ export function build() {
     out.rows.push(tableRow('starlink-ffm3-a3', 'Starlink, FFM v3 against A3 on A3\'s full-weight satellites both scored', `${sw.filter((w) => w.arms.ffm?.ok && w.arms.ffm3?.ok).length} satellites; ${interim}`, sw.filter((w) => w.arms.ffm?.ok && w.arms.ffm3?.ok), ['ffm', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['ffm'] } }));
     out.rows.push(tableRow('starlink-xpln', 'Starlink, XP-LN (fairness arm, A12) beside SGP4-XP and FFM v3, on the satellites all three fitted and scored', `${sw.filter((w) => v3both(w) && w.arms.xpln?.ok).length} satellites; ${interim}`, sw.filter((w) => v3both(w) && w.arms.xpln?.ok), ['sgp4xp', 'xpln', 'ffm3'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'xpln'], sgp4xp: ['xpln'] } }));
     out.rows.push(tableRow('starlink-ffm3-forecast', 'Starlink, the forecast sample with SGP4-XP, FFM v3 and SpaceX\'s forecast all scored', `sample satellites whose fetched file is F; ${interim}`, sw.filter((w) => v3both(w) && w.arms.forecast?.ok), ['sgp4xp', 'ffm3', 'forecast'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'forecast'] } }));
+    // post-score, exploratory (coordinator ruling 2026-10-29): bins 2 and 3 under the E′ windows' registered relaxed rule (A12 point 7), one row
+    const ex = rows(`starlink-score-explore.${through}.`).filter((r) => r.arms);
+    if (ex.length || rows(`starlink-score-explore.${through}.`).length) {
+      const all = rows(`starlink-score-explore.${through}.`);
+      out.inputs.starlinkScoreExplore = sha256(Buffer.from(JSON.stringify(all)));
+      out.starlink.binsTwoThreeExploratory = { rule: 'post-score, exploratory: the E′ windows\' relaxed rule (at least 60 % of the bin\'s coverable epochs, no gap over 8 h, states within its first and last 2 h)', satellites: all.length, counted: Object.fromEntries(['2', '3'].map((b) => [b, all.filter((r) => (r.relaxedCounted ?? []).includes(b)).length])) };
+      const xw = ex.map((r) => ({ object: String(r.norad), arms: r.arms, maneuverEvident: r.maneuverEvident })).filter((w) => w.arms.sgp4xp?.ok && w.arms.ffm3?.ok);
+      out.rows.push(tableRow('starlink-explore', 'Starlink, bins 2 and 3 under the E′ windows\' relaxed coverage rule (post-score, exploratory; not a registered result)', `${xw.length} satellites with SGP4-XP and FFM v3 scored; bin 2 counted for ${out.starlink.binsTwoThreeExploratory.counted['2']}, bin 3 for ${out.starlink.binsTwoThreeExploratory.counted['3']} of ${all.length}`, xw, ['sgp4xp', 'ffm3', 'xpln'], BINS, { paired: [], pairedWithRef: { ffm3: ['sgp4xp', 'xpln'] } }));
+    }
     out.rows.push(tableRow('starlink-a3-round1', 'Starlink, A3\'s round-1 products on its 3,048 round-2-refused satellites (descriptive, labeled; counted as failed fits)', `${sw.filter((w) => w.arms.ffmRound1?.ok).length} satellites; never pooled with full fits; ${interim}`, sw.filter((w) => w.arms.ffmRound1).map((w) => ({ ...w, arms: { ffmRound1: w.arms.ffmRound1 } })), ['ffmRound1'], BINS, { paired: [] }));
     out.rows.push(tableRow('starlink-forecast-quiet', 'Starlink, the forecast sample with all three arms, no maneuver evident', `as above, truth files agreeing within 1 km where they overlap; ${interim}`, sw.filter((w) => forecastAll(w) && !w.maneuverEvident), ['sgp4xp', 'ffm', 'forecast'], BINS, { paired: [], pairedWithFfm: ['sgp4xp', 'forecast'] }));
   }
@@ -241,6 +261,8 @@ export function markdown(t) {
   if (t.starlink) {
     const h = t.starlink.headline;
     o.push(`**Part 1a headline (A10): FFM fitted ${h.ffmFitted} of ${h.satellites} Starlink tracks; propagator/ffm refused ${h.ffmRefused} (${(100 * h.ffmRefused / h.satellites).toFixed(1)} %) when fit_batch stepped B or AGOM out of range in A3's first round, and ${h.ffmNotConverged} did not converge (defect modules-ffm-fit-batch-round1-out-of-range-20261026, not fixed here). FFM against SGP4-XP is compared on the satellites both arms fitted; SGP4-XP on the others is descriptive.**`, '');
+    const bc = t.starlink.binsCounted;
+    if (bc?.['2']?.complete && !bc['2'].counted && !bc['3'].counted) o.push(`**Bins 2 and 3 are empty under the registered rule: the capture reads each SpaceX file's first 8 h once per 8 h cycle, which leaves a gap of about 7 h in every day of truth, so no satellite holds 90 % of a bin's coverable epochs after bin 1 (bin 2 below coverage for ${bc['2'].belowCoverage}, bin 3 for ${bc['3'].belowCoverage}). Bin 1, (0, 24] h, is the only primary result.${t.starlink.binsTwoThreeExploratory ? ` A secondary row, labeled post-score and exploratory, applies the E′ windows' registered relaxed rule to bins 2 and 3 (counted for ${t.starlink.binsTwoThreeExploratory.counted['2']} and ${t.starlink.binsTwoThreeExploratory.counted['3']} satellites).` : ''}**`, '');
     const a = t.starlink.a12;
     if (a) {
       const fitted = a.ffm3Fit['fitted (CONVERGED)'] ?? 0, n = Object.values(a.ffm3Fit).reduce((x, y) => x + y, 0);

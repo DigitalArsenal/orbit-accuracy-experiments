@@ -614,3 +614,22 @@ the new arms on the part 1a tracks and before any score (config.a12).
     probes scored 6 h holdouts of V2 satellites 65660 and 67201 at V2 targets 2026-10-25T14:00Z and 16:00Z. A3's registered ffm phase
     called windowOf (part1-starlink.mjs), which loads the newer files into memory, though it wrote only fit identity and fit fields. No
     part 1a truth epoch, score row, truth-derived maneuver flag (worstOverlapKm) or census Starlink accuracy aggregate was read.
+
+### A12 - 2026-10-28, part 2 (the selection), committed before any ffm3 or XP-LN fit on the part 1a tracks and before any score of part 1a
+
+The selection ran as part 1 fixed it (select-a12.mjs at 40dc19d; receipt results/sdn-ap-mixed-screening/a12-selection.json): the
+2,000-satellite sample, 931 of them among A3's full-weight satellites; split 12/12 and 18/6 windows for all 2,000; E' windows for 1,058
+(942 set aside by the E' fit-track rule: 762 with a gap over 8 h, 180 missing the first or last 2 h). Every opened capture path (22
+logs, hashed in the receipt) lies in a cycle before the forecast cycle; no truth of part 1a was opened. Pooled over each candidate's
+5,058 fits: no refused trial, no fit-failed and every parameter in its domain for every candidate; CONVERGED 99.86 % (P0), 99.84 % (P1),
+99.47 % (P2(0.1), T released on 277 windows), 99.60 % (P2(0.3), 156), 99.70 % (P2(1.0), 101) and 94.48 % (P3). No candidate reaches 99.9 %
+CONVERGED, so none is eligible and the rule has no choice; the gate, computed for every candidate, passes for none (each fails on E',
+where the 90th percentile of the ratio to A3 is 1.39 to 1.76). By point 10, "if none passes, the primary is P0, labeled gate failed":
+**the ffm3 arm is P0, labeled "gate failed"**, with the gate numbers in the headline (P0: split 12/12 median ratio 1.000, upper bound
+1.000, p90 1.004; split 18/6 1.000, 1.000, 1.002; E' 1.000, 1.000, 1.386 on 434 satellites). Every candidate's numbers are in the receipt.
+
+A13 pending: part 1a leads/gp/parts 4-5 deferred until A13 is committed. By the coordinator's ruling of 2026-10-28, this amendment's
+lane runs the fit phases, the fit-only gate and the single accuracy score pass (A12 point 12) and stops; the leads and gp phases of
+part 1a and parts 4 and 5 (every covariance-based statistic, Pc and conjunction number of part 1a) wait for amendment A13 (covariance
+calibration), which runs A5's registered covariance and a calibrated one side by side in one pass. The score pass computes each bin's
+3D RMS only (G1's scorer reads the error vector of pair_statistics and keeps no d² or coverage).

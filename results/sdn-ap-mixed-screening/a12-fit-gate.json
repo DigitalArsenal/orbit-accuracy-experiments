@@ -1,0 +1,56 @@
+{
+  "amendment": "A12 point 11",
+  "profile": "P0",
+  "maximumIterations": 40,
+  "tracks": 11163,
+  "ffm3": {
+    "rows": 11163,
+    "converged": 11147,
+    "convergedShare": 0.9985666935411628,
+    "refused": 0,
+    "outOfDomain": 0,
+    "terminations": {
+      "CONVERGED": 11147,
+      "STALLED": 15,
+      "MAXIMUM_ITERATIONS": 1
+    },
+    "releasedT": 0,
+    "trackShaMatchesA3": 11163,
+    "opened": {
+      "files": 22,
+      "paths": 82647,
+      "sha256": "5af2cbadffcdbce2a6df040d9e7d280f35e9f6b90fefcd320b3755c9183f3c18",
+      "allBeforeForecastCycle": true
+    },
+    "provenance": {
+      "estimationCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "estimationWasm": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac",
+      "ffmCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+      "ffmWasm": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f",
+      "domains": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6",
+      "experiments": "ac8971902dd614341d68bb6b2118a871fbef98a3",
+      "profile": "P0",
+      "maximumIterations": 40
+    }
+  },
+  "xpln": {
+    "rows": 11163,
+    "fitted": 11163,
+    "refusals": {},
+    "trackShaMatchesA3": 11163,
+    "opened": {
+      "files": 4,
+      "paths": 82647,
+      "sha256": "101c8e634d434e1b7b6caeb3d206c1b8f3abae458d924cb89573bc2506727eb5",
+      "allBeforeForecastCycle": true
+    },
+    "provenance": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "sdnapWasm": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+      "sdsVersion": "1.272.0",
+      "pcfSha256": "bf6a715542d4709c4139a7d9601cd56f533f7f27a2d078079e7a87b248406654",
+      "experiments": "ac8971902dd614341d68bb6b2118a871fbef98a3"
+    }
+  },
+  "pass": false
+}

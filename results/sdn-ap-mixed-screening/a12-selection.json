@@ -1,0 +1,527 @@
+{
+  "amendment": "A12 part 2",
+  "rule": "PLAN.md A12 points 6-10",
+  "sampleSize": 2000,
+  "sampleSeed": "B2|A12|select|<norad>",
+  "fullWeightInSample": 931,
+  "windows": {
+    "split12": {
+      "fitted": 2000,
+      "skipped": []
+    },
+    "split18": {
+      "fitted": 2000,
+      "skipped": []
+    },
+    "eprime": {
+      "fitted": 1058,
+      "skipped": [
+        [
+          "fit track misses its first or last 2 h",
+          180
+        ],
+        [
+          "fit track gap over 8 h",
+          762
+        ]
+      ]
+    }
+  },
+  "candidates": {
+    "P0": {
+      "fits": 5058,
+      "converged": 5051,
+      "convergedShare": 0.9986160537761961,
+      "refusals": 0,
+      "fitFailed": 0,
+      "outOfDomain": 0,
+      "byDataset": {
+        "split12": {
+          "fits": 2000,
+          "converged": 1999,
+          "medianM": 998.4241748496569,
+          "p90M": 5044.09055529061
+        },
+        "split18": {
+          "fits": 2000,
+          "converged": 1997,
+          "medianM": 547.5532597321628,
+          "p90M": 2828.5097008849175
+        },
+        "eprime": {
+          "fits": 1058,
+          "converged": 1055,
+          "medianM": 2842.5835500325243,
+          "p90M": 13315.67032802704
+        }
+      },
+      "eligible": false,
+      "eprimeMedianM": 2842.5835500325243,
+      "eprimeScored": 1055,
+      "eprimeCommonMedianM": null
+    },
+    "P1": {
+      "fits": 5058,
+      "converged": 5050,
+      "convergedShare": 0.9984183471727955,
+      "refusals": 0,
+      "fitFailed": 0,
+      "outOfDomain": 0,
+      "byDataset": {
+        "split12": {
+          "fits": 2000,
+          "converged": 1999,
+          "medianM": 998.5143299674409,
+          "p90M": 5055.400569793325
+        },
+        "split18": {
+          "fits": 2000,
+          "converged": 1998,
+          "medianM": 549.4471062328066,
+          "p90M": 2813.467003742003
+        },
+        "eprime": {
+          "fits": 1058,
+          "converged": 1053,
+          "medianM": 2873.5381463079243,
+          "p90M": 13192.03269299019
+        }
+      },
+      "eligible": false,
+      "eprimeMedianM": 2873.5381463079243,
+      "eprimeScored": 1053,
+      "eprimeCommonMedianM": null
+    },
+    "P2(0.1)": {
+      "fits": 5058,
+      "converged": 5031,
+      "convergedShare": 0.994661921708185,
+      "refusals": 0,
+      "fitFailed": 0,
+      "outOfDomain": 0,
+      "releasedT": 277,
+      "byDataset": {
+        "split12": {
+          "fits": 2000,
+          "converged": 1996,
+          "medianM": 976.0291922954657,
+          "p90M": 4978.905080301143
+        },
+        "split18": {
+          "fits": 2000,
+          "converged": 1991,
+          "medianM": 538.674032599111,
+          "p90M": 2740.35285351583
+        },
+        "eprime": {
+          "fits": 1058,
+          "converged": 1044,
+          "medianM": 2761.4446204210844,
+          "p90M": 11812.147962323106
+        }
+      },
+      "eligible": false,
+      "eprimeMedianM": 2761.4446204210844,
+      "eprimeScored": 1044,
+      "eprimeCommonMedianM": null
+    },
+    "P2(0.3)": {
+      "fits": 5058,
+      "converged": 5038,
+      "convergedShare": 0.9960458679319889,
+      "refusals": 0,
+      "fitFailed": 0,
+      "outOfDomain": 0,
+      "releasedT": 156,
+      "byDataset": {
+        "split12": {
+          "fits": 2000,
+          "converged": 1996,
+          "medianM": 978.3289179739033,
+          "p90M": 4952.483925118537
+        },
+        "split18": {
+          "fits": 2000,
+          "converged": 1993,
+          "medianM": 538.9503948388384,
+          "p90M": 2739.0810532976448
+        },
+        "eprime": {
+          "fits": 1058,
+          "converged": 1049,
+          "medianM": 2780.966652312027,
+          "p90M": 11976.563588713305
+        }
+      },
+      "eligible": false,
+      "eprimeMedianM": 2780.966652312027,
+      "eprimeScored": 1049,
+      "eprimeCommonMedianM": null
+    },
+    "P2(1.0)": {
+      "fits": 5058,
+      "converged": 5043,
+      "convergedShare": 0.9970344009489917,
+      "refusals": 0,
+      "fitFailed": 0,
+      "outOfDomain": 0,
+      "releasedT": 101,
+      "byDataset": {
+        "split12": {
+          "fits": 2000,
+          "converged": 1996,
+          "medianM": 987.9231510109364,
+          "p90M": 4952.483925118537
+        },
+        "split18": {
+          "fits": 2000,
+          "converged": 1994,
+          "medianM": 540.0301361723332,
+          "p90M": 2763.630462090162
+        },
+        "eprime": {
+          "fits": 1058,
+          "converged": 1053,
+          "medianM": 2791.6537033860327,
+          "p90M": 12091.16351822997
+        }
+      },
+      "eligible": false,
+      "eprimeMedianM": 2791.6537033860327,
+      "eprimeScored": 1053,
+      "eprimeCommonMedianM": null
+    },
+    "P3": {
+      "fits": 5058,
+      "converged": 4779,
+      "convergedShare": 0.9448398576512456,
+      "refusals": 0,
+      "fitFailed": 0,
+      "outOfDomain": 0,
+      "byDataset": {
+        "split12": {
+          "fits": 2000,
+          "converged": 1970,
+          "medianM": 1141.8234662431591,
+          "p90M": 5170.09112892525
+        },
+        "split18": {
+          "fits": 2000,
+          "converged": 1855,
+          "medianM": 492.7033307253675,
+          "p90M": 2515.5114331486384
+        },
+        "eprime": {
+          "fits": 1058,
+          "converged": 954,
+          "medianM": 3645.6218090278403,
+          "p90M": 14656.75927975109
+        }
+      },
+      "eligible": false,
+      "eprimeMedianM": 3645.6218090278403,
+      "eprimeScored": 954,
+      "eprimeCommonMedianM": null
+    }
+  },
+  "eligible": [],
+  "commonSatellites": 2000,
+  "rank": [],
+  "lowest": null,
+  "ties": {},
+  "tied": [
+    null
+  ],
+  "ruleChoice": null,
+  "gates": {
+    "P0": {
+      "datasets": {
+        "split12": {
+          "n": 928,
+          "medianRatio": 0.9999552626153467,
+          "upper95": 0.999972998329878,
+          "p90": 1.0038027821592514,
+          "pass": true
+        },
+        "split18": {
+          "n": 924,
+          "medianRatio": 0.9999667251605547,
+          "upper95": 0.9999824742740298,
+          "p90": 1.00161637568805,
+          "pass": true
+        },
+        "eprime": {
+          "n": 434,
+          "medianRatio": 0.9999994944617091,
+          "upper95": 1.0000186725140898,
+          "p90": 1.3863687849874904,
+          "pass": false
+        }
+      },
+      "pass": false
+    },
+    "P1": {
+      "datasets": {
+        "split12": {
+          "n": 928,
+          "medianRatio": 1.0010870865949129,
+          "upper95": 1.0031806723276588,
+          "p90": 1.326954392250584,
+          "pass": false
+        },
+        "split18": {
+          "n": 923,
+          "medianRatio": 1.0049567298460826,
+          "upper95": 1.0068532070471365,
+          "p90": 1.5396046175281235,
+          "pass": false
+        },
+        "eprime": {
+          "n": 433,
+          "medianRatio": 1.0000864439953605,
+          "upper95": 1.0012247712143472,
+          "p90": 1.3972784902013105,
+          "pass": false
+        }
+      },
+      "pass": false
+    },
+    "P2(0.1)": {
+      "datasets": {
+        "split12": {
+          "n": 926,
+          "medianRatio": 0.999958042347785,
+          "upper95": 0.99997543713217,
+          "p90": 1.0397448433985437,
+          "pass": true
+        },
+        "split18": {
+          "n": 919,
+          "medianRatio": 0.9999673460683658,
+          "upper95": 0.9999845719450764,
+          "p90": 1.0022330815089069,
+          "pass": true
+        },
+        "eprime": {
+          "n": 432,
+          "medianRatio": 1.0000049665506463,
+          "upper95": 1.0000258204539119,
+          "p90": 1.3886120311740018,
+          "pass": false
+        }
+      },
+      "pass": false
+    },
+    "P2(0.3)": {
+      "datasets": {
+        "split12": {
+          "n": 926,
+          "medianRatio": 0.9999552626153467,
+          "upper95": 0.9999717782160145,
+          "p90": 1.0211265468479813,
+          "pass": true
+        },
+        "split18": {
+          "n": 920,
+          "medianRatio": 0.9999658190060015,
+          "upper95": 0.9999794928392085,
+          "p90": 1.001707635219056,
+          "pass": true
+        },
+        "eprime": {
+          "n": 433,
+          "medianRatio": 0.9999999386821133,
+          "upper95": 1.0000194127384,
+          "p90": 1.3935093624360322,
+          "pass": false
+        }
+      },
+      "pass": false
+    },
+    "P2(1.0)": {
+      "datasets": {
+        "split12": {
+          "n": 926,
+          "medianRatio": 0.9999568839461085,
+          "upper95": 0.9999745998484364,
+          "p90": 1.0051405987083326,
+          "pass": true
+        },
+        "split18": {
+          "n": 921,
+          "medianRatio": 0.9999658699856565,
+          "upper95": 0.9999800254893273,
+          "p90": 1.001649557439061,
+          "pass": true
+        },
+        "eprime": {
+          "n": 433,
+          "medianRatio": 0.9999999386821133,
+          "upper95": 1.0000224762763383,
+          "p90": 1.3935093624360322,
+          "pass": false
+        }
+      },
+      "pass": false
+    },
+    "P3": {
+      "datasets": {
+        "split12": {
+          "n": 914,
+          "medianRatio": 0.9840042233857622,
+          "upper95": 0.9897561357460266,
+          "p90": 1.8824698408072549,
+          "pass": false
+        },
+        "split18": {
+          "n": 857,
+          "medianRatio": 0.9500983368254253,
+          "upper95": 0.9639842520335298,
+          "p90": 1.1494063354791932,
+          "pass": false
+        },
+        "eprime": {
+          "n": 400,
+          "medianRatio": 1.017905077794069,
+          "upper95": 1.033242945300781,
+          "p90": 1.7585098521655038,
+          "pass": false
+        }
+      },
+      "pass": false
+    }
+  },
+  "chosen": "P0",
+  "gateFailed": true,
+  "provenance": {
+    "estimation": {
+      "path": "analysis/estimation",
+      "pluginId": "com.digitalarsenal.analysis.estimation",
+      "version": "0.6.0",
+      "wasmSha256": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac",
+      "manifestSha256": "8f1e23455dadb028ce0e9e8368f2f33538a92de7735149a5aaa41b48875b4784"
+    },
+    "ffm": {
+      "path": "propagator/ffm",
+      "pluginId": "com.orbpro.ffm",
+      "version": "2.0.0",
+      "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f",
+      "manifestSha256": "cf9c454611fe000f2217c5889a6916f0ace6fbf46af127ecf9857d004851e741"
+    },
+    "estimationCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+    "ffmCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "domains": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "file": "propagator/ffm/catalog-configuration.mjs",
+      "sha256": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6"
+    },
+    "a3": {
+      "estimation": {
+        "path": "analysis/estimation",
+        "pluginId": "com.digitalarsenal.analysis.estimation",
+        "version": "0.5.0",
+        "wasmSha256": "d3aa2c8a29654da64eb43370413883b501a985c653181e5b672f722f3acdda3d",
+        "manifestSha256": "1011993f6f29c53b9e80f4146372a6453f8c100da3f3f50b412f098178ec0dda"
+      },
+      "ffm": {
+        "path": "propagator/ffm",
+        "pluginId": "com.orbpro.ffm",
+        "version": "2.0.0",
+        "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f",
+        "manifestSha256": "cf9c454611fe000f2217c5889a6916f0ace6fbf46af127ecf9857d004851e741"
+      }
+    },
+    "experiments": "40dc19d5cee17e32983e7d2cf02c5ab76af90458"
+  },
+  "opened": {
+    "opened.s0.txt": {
+      "paths": 1621,
+      "sha256": "4a35a680e96285e7dd8530aefb736a55b52bb929ab39a20cdb62bc71ff08a2c5"
+    },
+    "opened.s1.txt": {
+      "paths": 1621,
+      "sha256": "d428b3def5b17f817ba3d970d9f537adfad2732e99f7ee739e326f118c874a70"
+    },
+    "opened.s10.txt": {
+      "paths": 1619,
+      "sha256": "0684f86df23a86978068b85240913febb670535a1d866051a2a81140335d54cb"
+    },
+    "opened.s11.txt": {
+      "paths": 1619,
+      "sha256": "81ce225706c93d8d8c5bf962bce4c55a7e9fd60697e25f02023c9c876dc2913f"
+    },
+    "opened.s12.txt": {
+      "paths": 1619,
+      "sha256": "cc085f7fcc704b748759f9d2a8ecaf3dc4d339cce09a5acd9bf3a9d3dcb577ba"
+    },
+    "opened.s13.txt": {
+      "paths": 1619,
+      "sha256": "d3f5449adc97c9d61ddc11f6b5d294236adcd10d0ca50645182a5284891edfde"
+    },
+    "opened.s14.txt": {
+      "paths": 1617,
+      "sha256": "322abffd8dfd6e5a3d234a058b545cafe343e27978afd313bd48389d31063ccd"
+    },
+    "opened.s15.txt": {
+      "paths": 1617,
+      "sha256": "562d602f3df5aeb35ac56c519dc2b35003eb0155e2955a0caa096f6c57552c9f"
+    },
+    "opened.s16.txt": {
+      "paths": 1625,
+      "sha256": "39502ea82bef80a17e34c58e60fcd5df243d376966cf8d289a24c2cd9f974b71"
+    },
+    "opened.s17.txt": {
+      "paths": 1625,
+      "sha256": "6aeab31b3255ddf0bab68aa32163a01e4a37149c0e520bb5ea99539a44c827b1"
+    },
+    "opened.s18.txt": {
+      "paths": 1617,
+      "sha256": "5d0e7917a87f341baac2f58160449279384b577c767cf03695d0aa4b87fdd551"
+    },
+    "opened.s19.txt": {
+      "paths": 1615,
+      "sha256": "393a33440d10ca696f0b4eefc30cd402a61c68f77de98e2e3c20eea6b1234b84"
+    },
+    "opened.s2.txt": {
+      "paths": 1621,
+      "sha256": "c44a3928424f3782d0d6f9945fb9a329cf708b8478fad6a9c7cb1d3439a33b0c"
+    },
+    "opened.s20.txt": {
+      "paths": 1600,
+      "sha256": "3b414d0f1151fe252a6e11762644c9918b2cb6be4773f71a6c72465ab17e652f"
+    },
+    "opened.s21.txt": {
+      "paths": 1600,
+      "sha256": "160281f7afc4d74c5848aac12205a199bd8692c92ebd6d2c94182557b59eebd5"
+    },
+    "opened.s3.txt": {
+      "paths": 1621,
+      "sha256": "6aa7223cf4ed5b40b361a8484164cc50f8ab8559c007670c95fae20d37368707"
+    },
+    "opened.s4.txt": {
+      "paths": 1621,
+      "sha256": "8e59689937b3291db4a15e4697d3995924abcc0215b0c48d4fc6ae7b84b78601"
+    },
+    "opened.s5.txt": {
+      "paths": 1621,
+      "sha256": "46ea932232041b7f8bd266d8c10a6a0eb139c136b99c01fb4ea76486e4cd41c5"
+    },
+    "opened.s6.txt": {
+      "paths": 1621,
+      "sha256": "4e81c45bcaffe9c532ac263485f7a02b7824f85c3e35d85ccafd358b7ec06bb3"
+    },
+    "opened.s7.txt": {
+      "paths": 1619,
+      "sha256": "d8c3e7cb38e706053a52a84afdfcf56255370def9fda476e4fa4c1ca8a6821fe"
+    },
+    "opened.s8.txt": {
+      "paths": 1619,
+      "sha256": "cc1609ed7d277bb6249c25c04050f22c8278e1ba94bb81decf05a5e6e527886d"
+    },
+    "opened.s9.txt": {
+      "paths": 1619,
+      "sha256": "1e28f0060de12eddedba5670c525b69cce15cda3430784e1177122f22618d304"
+    }
+  },
+  "openedAllBeforeForecastCycle": true
+}
