@@ -50,7 +50,7 @@ function samples(set) {
     }
   } else if (['R1', 'R2', 'R3'].includes(cls)) {
     const allSamples = args.allSamples === 'true';
-    for (const r of rowsOf(`${cls}.${set}.${args.weather === 'O' ? 'O.' : ''}s`)) {
+    for (const r of screenFromM(set, rowsOf(`${cls}.${set}.${args.weather === 'O' ? 'O.' : ''}s`))) {
       if (r.excluded || !r.fit?.ok) { ex(r.excluded ? r.excluded.slice(0, 60) : `fit ${r.fit?.termination ?? r.fit?.error}`); continue; }
       if (!r.leads?.length) { ex('fit converged, no truth at any lead'); continue; }
       if (!allSamples && r.screen?.flagged) { ex('maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)'); continue; }
@@ -63,6 +63,12 @@ function samples(set) {
   return { out, counts };
 }
 
+/** Condition O rows take the maneuver screen of the condition M row of the same window (truth only; read at scoring time). */
+const screenFromM = (set, rows) => {
+  if (args.weather !== 'O') return rows;
+  const m = new Map(rowsOf(`${cls}.${set}.s`).map((r) => [`${r.norad}|${r.E}`, r.screen]));
+  return rows.map((r) => ({ ...r, screen: m.get(`${r.norad}|${r.E}`) ?? null, screenMissing: !m.has(`${r.norad}|${r.E}`) }));
+};
 const unitRtn = { RR: [1, 0, 0, 0, 0, 0], TT: [0, 0, 1, 0, 0, 0], NN: [0, 0, 0, 0, 0, 1] };
 /** Covariance terms of a parameter vector p { k_e, f_R, f_T, f_N, q_T, q_RN, s2, tau } for one sample. */
 function termsOf(p, s) {
@@ -178,7 +184,7 @@ if (args.heldout) {
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
   const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
   const R = ['R1', 'R2', 'R3'].includes(cls);
-  const rowsAll = cls === 'L' ? rowsOf('L.heldOut.s') : R ? rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`) : rowsOf(`heldout.${cls}.`);
+  const rowsAll = cls === 'L' ? rowsOf('L.heldOut.s') : R ? screenFromM('heldOut', rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`)) : rowsOf(`heldout.${cls}.`);
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
