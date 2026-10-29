@@ -80,6 +80,9 @@ if (args.check) {
   const ti = await windowTerms(v3c.ctxFor(Date.parse(fitRow.fit.epoch), wi.E + 72 * HOUR), pairs, fitRow.fit, wi.E, g, issSettings());
   if (!same(ti.leads, it.leads)) failures.push('ISS terms differ from the stored row');
   await fr.destroy();
+  // C2-A9: one SGP4-XP window (L-P calibration, the first stored row) replayed through propagator/sdn-ap and gp-error-model
+  const xpFirst = fs.readFileSync(path.join(store, 'rows-sgp4xp', 'LP.calibration.s0.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((r) => r.leads?.length);
+  execFileSync('node', [path.join(path.dirname(new URL(import.meta.url).pathname), 'sgp4xp/run.mjs'), '--class', 'LP', '--set', 'calibration', '--replay', xpFirst.id], { stdio: 'inherit' });
   // the composed d2 of the frozen constants, recomputed by score.mjs from the rows, is the table's
   execFileSync('node', [path.join(path.dirname(new URL(import.meta.url).pathname), 'table.mjs'), '--check'], { stdio: 'inherit' });
   await pairs.close(); await v3c.close();

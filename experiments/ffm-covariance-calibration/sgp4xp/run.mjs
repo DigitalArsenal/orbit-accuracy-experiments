@@ -26,6 +26,7 @@ const out = path.join(outDir, `${cls}.${set}.s${k}.jsonl`);
 const done = new Set(readJsonl(out).map((r) => r.id));
 
 const { openFits, fitSdnap, sgp4xpCovarianceAt, convert } = await import(b2('lib/fits.mjs'));
+process.env.SDN_MODULES_ROOT ??= '/Users/tj/software/worktrees/space-data-network-modules--experiments-b2-ffm-iss-starlink-20261026'; // C2-A9: B2's modules (c860a072)
 const G1M = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/modules.mjs'));
 const a = await openFits(G1M.modulesRoot()); // B2's modules; openFits refuses any SDN-AP build but B2's registered one
 const { openPairs } = await import('../lib/pairs.mjs');
@@ -100,6 +101,19 @@ if (cls === 'I') {
     const track = back.samples.map((s) => ({ epoch: iso(s.ms), r: s.state.slice(0, 3).map((x) => x / 1000), v: s.state.slice(3, 6).map((x) => x / 1000) }));
     return { norad: q.norad, sphere: t, E: q.cutoff, cluster: q.norad, ...(await sgp4xpWindow({ name: t, norad: q.norad, originator: 'B2 from E6 R' }, track, T, leads, 'GCRF')) };
   } });
+}
+
+if (args.replay) {
+  // E2E: one stored row replayed through the modules and compared bit for bit (the fit's timing excepted)
+  const stored = fs.readdirSync(outDir).filter((f) => f.startsWith(`${cls}.${set}.s`)).flatMap((f) => readJsonl(path.join(outDir, f))).find((r) => r.id === args.replay);
+  const t = tasks.find((x) => x.id === args.replay);
+  if (!stored || !t) { console.error(`no stored row or task ${args.replay}`); process.exit(1); }
+  const row = await t.run();
+  const strip = (r) => JSON.stringify({ leads: r.leads, fit: { ...r.fit, fitMs: undefined } });
+  const same = strip(row) === strip(stored);
+  console.log(same ? `SGP4-XP ${cls} ${args.replay} replayed bit for bit` : `SGP4-XP ${cls} ${args.replay} differs from the stored row`);
+  await pairs.close(); await a.close();
+  process.exit(same ? 0 : 1);
 }
 
 for (let i = 0; i < tasks.length; i += 1) {
