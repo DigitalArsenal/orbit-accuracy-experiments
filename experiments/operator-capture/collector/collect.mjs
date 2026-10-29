@@ -3,6 +3,8 @@ import path from 'node:path';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {gzipSync} from 'node:zlib';
 import {Fetcher,sha} from './transport.mjs';
+import {registeredHead} from './meme.mjs';
+import {registeredRecord} from './products.mjs';
 import {openPhysics} from './physics.mjs';
 export const root=process.env.OPERATOR_CAPTURE_ROOT??'/opt/data/sdn-archive/operator-capture';
 const iso=()=>new Date().toISOString();
@@ -66,7 +68,7 @@ async function main(){
         const manifest=await fetcher.manifest();summary.listed=manifest.names.length;summary.manifestSha256=manifest.sha256;
         write(path.join(cycleDir,'summary.json'),summary);
         let queued=0;
-        const queue=()=>{const name=manifest.names[queued++];pending.push(fetcher.head(name).then(head=>({head}),error=>({error})));};
+        const queue=()=>{const name=manifest.names[queued++];pending.push(fetcher.prefix(name).then(file=>({file}),error=>({error})));};
         while(queued<Math.min(4,manifest.names.length))queue();
         for(const name of manifest.names){
           if(stop()){summary.status='interrupted';break;}
@@ -75,15 +77,12 @@ async function main(){
             const fetched=await pending.shift();
             if(fetched.error)throw fetched.error;
             if(queued<manifest.names.length)queue();
-            const head=fetched.head,derived=await physics.derive(head,weather.rows);
+            const head=registeredHead(fetched.file),derived=await physics.derive(head,weather.rows);
             const truth=selectTruth(reg,head.source.norad,derived.native,derived.samples);
-            const samples=derived.samples.map((p,i)=>({ms:p.ms,energyJkg:p.energyJkg,altitudeKm:p.altitudeKm,meanElements:p.meanElements,
-              cumulativeDragWorkB1Jkg:derived.work.CUMULATIVE_DRAG_WORK_J_KG[i*10]}));
-            if(samples.length!==49||samples.some(p=>!Number.isFinite(p.cumulativeDragWorkB1Jkg)))throw new Error('invalid derived head');
-            const record={version:1,source:head.source,frame:'GCRF',units:{energy:'J/kg',state:'m,m/s',meanElements:'a km,e,i/RAAN/argp/true anomaly deg'},meanTheory:'Brouwer first-order J2',energyEarthOrientation:'UT1=UTC; xp=yp=0 (E13 diagnostic convention)',subsetSha256:reg.sha256,weatherSha256:weather.sha256,samples,truth};
+            const record=registeredRecord({head,derived,truth,reg,weatherSha256:weather.sha256});
             const bytes=gzipSync(JSON.stringify(record)+'\n'),file=path.join(cycleDir,head.source.norad+'.json.gz');
             fs.writeFileSync(file,bytes,{flag:'wx'});
-            summary.files++;summary.samples+=samples.length;summary.truthStates+=truth.length;summary.storedBytes+=bytes.length;
+            summary.files++;summary.samples+=record.samples.length;summary.truthStates+=truth.length;summary.storedBytes+=bytes.length;
           }catch(error){
             summary.failures++;append(path.join(cycleDir,'failures.jsonl'),{name,at:iso(),error:error.message});
             if(error.fatal)throw error;
