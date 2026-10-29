@@ -71,6 +71,7 @@ export const REFERENCE_ROOTS = [
   '/opt/data/sdn-archive/reference-states/reference',
   '/opt/data/sdn-archive/reference-states/reference-leo-pod-2',
   '/opt/data/sdn-archive/e14-covariance-realism/reference',
+  '/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference', // C2-A1 point 2: TerraSAR-X converted at modules 07a5e016e
 ];
 
 /** The named objects of section 3.4 (NORAD numbers as the archive identifies them). GNSS and COSMIC-2 come from P9's selection. */
