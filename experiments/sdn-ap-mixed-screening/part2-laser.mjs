@@ -20,7 +20,7 @@ const { ffmEnvironment } = await import(path.join(root, 'experiments/sdn-ap-base
 const { openFits, fitSdnap, statesAt, scoreBins, iso } = await import('./lib/fits.mjs');
 
 const phase = args.phase ?? 'arms';
-if (!['arms', 'leads', 'gp'].includes(phase)) throw new Error(`unknown phase ${phase}`);
+if (!['arms', 'leads', 'gp', 'leads3'].includes(phase)) throw new Error(`unknown phase ${phase}`);
 const modules = modulesRoot();
 const a = await openFits(modules);
 const g1Context = await FFM.loadEnvironment(modules, { archive: '/opt/data/sdn-archive', store: path.join('/opt/data/sdn-archive', 'sdn-gp-starlink-ffm-match') });
@@ -56,6 +56,26 @@ async function trackOf(p, T, row) {
   const back = await FFM.propagate(modules, ctx, { epoch: iso(T), state: p.state, cdAm: row.b, crAm: row.agom, epochs: trackEpochs, forces });
   return { ctx, track: back.samples.map((s) => ({ epoch: iso(s.ms), r: s.state.slice(0, 3).map((x) => x / 1000), v: s.state.slice(3, 6).map((x) => x / 1000) })) };
 }
+// A13: class L's calibrated FFM records (L-P and R2 beside) and SGP4-XP's (class L), from the registered lead rows' A5 records
+const A13 = phase === 'leads3' ? await import('./lib/a13.mjs') : null, cal = A13 ? await A13.openA13() : null;
+const v3 = phase === 'leads3' ? await (await import('./lib/a12.mjs')).openV3() : null;
+const regLeads = phase === 'leads3' ? new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => /^laser-leads\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [`${r.norad}|${r.cutoff}`, r])) : null;
+async function leads3(p, T, held) {
+  const { leadLines } = await import('./lib/leads.mjs');
+  const leads = leadLines(held, T, config.a5.ca.leadToleranceSeconds.laser);
+  const reg = regLeads.get(`${p.norad}|${p.cutoff}`) ?? {};
+  const out = { leads: leads.map((x) => x.L), sgp4xp: reg.sgp4xp ?? { error: 'no registered lead row' }, ffm: reg.ffm ?? { error: 'no registered lead row' } };
+  const recs = (x) => Object.fromEntries(Object.entries(x).filter(([q]) => /^\d+$/.test(q)));
+  if (!out.ffm.error) {
+    const { conditioned } = await import(path.join(root, 'experiments/e6-public-observations/fit.mjs'));
+    const product = { epoch: p.fitEpoch, state: p.fitState, parameters: p.parameters, covariance: conditioned(p.fitCovariance), reducedChiSquare: 1 };
+    try {
+      Object.assign(out, await cal.ffmCal(v3.ctxFor(Date.parse(p.fitEpoch), T + 72 * 3600e3), product, T, leads, { forces: p.forces, integrator: config.part1.starlink.ffm.integrator, fixed: p.fixed }, recs(out.ffm), { ffmCal: A13.CLASS.laser, ...A13.LASER_BESIDE }));
+    } catch (error) { out.ffmCal = { error: String(error.message).slice(0, 200) }; }
+  } else out.ffmCal = { error: 'no FFM records' };
+  out.sgp4xpCal = out.sgp4xp.error ? { error: 'no SGP4-XP records' } : await cal.xpCal(recs(out.sgp4xp), A13.CLASS.laser);
+  return out;
+}
 const ff = phase === 'leads' ? await (await import('./lib/ffm-fit.mjs')).openFfmFit(modules) : null;
 const G = phase === 'gp' ? await import('./lib/gp-secondary.mjs') : null;
 const gp = G ? await G.openGp() : null;
@@ -79,7 +99,7 @@ async function leadRecords(p, T, row, held, object) {
 }
 
 const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
-const out = path.join(store, 'rows', `${{ arms: 'laser', leads: 'laser-leads', gp: 'laser-gp' }[phase]}.s${k}.jsonl`);
+const out = path.join(store, 'rows', `${{ arms: 'laser', leads: 'laser-leads', gp: 'laser-gp', leads3: 'laser-leads3' }[phase]}.s${k}.jsonl`);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 const done = new Set(readJsonl(out).map((r) => `${r.norad}|${r.cutoff}`));
 let count = 0;
@@ -99,6 +119,7 @@ for (let i = 0; i < products.length; i += 1) {
   const object = { frame: 'GCRF', name: target, norad: p.norad, originator: 'B2 from E6 R' };
   if (phase !== 'arms') {
     if (phase === 'leads') Object.assign(row, await leadRecords(p, T, row, held, object));
+    else if (phase === 'leads3') Object.assign(row, await leads3(p, T, held));
     else {
       const { leadLines } = await import('./lib/leads.mjs');
       const leads = leadLines(held, T, config.a5.ca.leadToleranceSeconds.laser);
@@ -140,4 +161,6 @@ console.error(`laser ${phase} shard ${k}/${n}: ${count} cutoffs (${products.leng
 await a.close();
 await ff?.close();
 await gp?.close();
+await cal?.close();
+await v3?.close();
 process.exit(0);

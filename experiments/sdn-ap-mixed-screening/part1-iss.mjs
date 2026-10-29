@@ -18,18 +18,18 @@ const { modulesRoot } = await import(path.join(g1Dir, 'lib/modules.mjs'));
 const { openFits, fitSdnap, fitSgp4, statesAt, scoreBins, convert } = await import('./lib/fits.mjs');
 
 const phase = args.phase ?? 'arms';
-if (!['arms', 'ffm', 'leads', 'gp', 'ffm3'].includes(phase)) throw new Error(`unknown phase ${phase}`);
+if (!['arms', 'ffm', 'leads', 'gp', 'ffm3', 'ffm3score', 'leads3'].includes(phase)) throw new Error(`unknown phase ${phase}`);
 const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
 // A13's iss-ffm3 (part 1 point 2): fit_batch version 3 on the same GCRF track; --max-evals 60 --only <dates> is the contingency rerun
 const evals60 = phase === 'ffm3' && Number(args['max-evals']) === config.a12.fit.contingencyMaximumIterations;
 const only = args.only ? new Set(String(args.only).split(',')) : null;
-const out = path.join(store, 'rows', `${{ arms: 'iss', ffm: 'iss-ffm', leads: 'iss-leads', gp: 'iss-gp', ffm3: evals60 ? 'iss-ffm3-60' : 'iss-ffm3' }[phase]}.s${k}.jsonl`);
+const out = path.join(store, 'rows', `${{ arms: 'iss', ffm: 'iss-ffm', leads: 'iss-leads', gp: 'iss-gp', ffm3: evals60 ? 'iss-ffm3-60' : 'iss-ffm3', ffm3score: 'iss-ffm3-score', leads3: 'iss-leads3' }[phase]}.s${k}.jsonl`);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 const done = new Set(readJsonl(out).map((r) => r.file));
 const modules = modulesRoot();
 const a = await openFits(modules);
 const ff = ['ffm', 'leads'].includes(phase) ? await (await import('./lib/ffm-fit.mjs')).openFfmFit(modules) : null;
-const v3 = phase === 'ffm3' ? await (await import('./lib/a12.mjs')).openV3() : null;
+const v3 = ['ffm3', 'ffm3score', 'leads3'].includes(phase) ? await (await import('./lib/a12.mjs')).openV3() : null;
 const gp = phase === 'gp' ? await (await import('./lib/gp-secondary.mjs')).openGp() : null;
 const loaded = gp ? gp.load(new Set([object.norad]), Math.min(...headers.map((h) => h.header.startMs).filter(Number.isFinite)), Date.now()) : null;
 const stored = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix) && f.endsWith('.jsonl')).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.file, r]));
@@ -83,6 +83,46 @@ async function ffm3Fit(w) {
     provenance: { estimation: v3.provenance.estimation.wasmSha256, ffm: v3.provenance.ffm.wasmSha256 } };
 }
 
+// A13's iss-ffm3 products of record: the 40-evaluation fit, replaced by its 60-evaluation rerun where one exists (C2-A3 point 3)
+const ffm3Of = ['ffm3score', 'leads3'].includes(phase) ? (() => { const re = stored('iss-ffm3-60.'); return new Map([...stored('iss-ffm3.')].map(([f, r]) => [f, re.get(f) ?? r])); })() : null;
+const issLeadsOf = phase === 'leads3' ? stored('iss-leads.') : null;
+const A13 = phase === 'leads3' ? await import('./lib/a13.mjs') : null, cal = A13 ? await A13.openA13() : null;
+const carry3 = async (product, ms, E, covariance = null) => {
+  const { propagateV3 } = await import('../../harness/ffm-fit-v3.mjs');
+  const { issSettingsV3 } = await import('./lib/a12.mjs');
+  const s = issSettingsV3();
+  const st = await propagateV3(v3.ctxFor(Date.parse(product.epoch), E + 72 * 3600e3), product, ms.map((t) => new Date(t).toISOString()), s, covariance);
+  return st.map((x) => ({ r: x.state.slice(0, 3).map((q) => q / 1000), v: x.state.slice(3, 6).map((q) => q / 1000), ...(covariance ? { covariance: x.covariance, n: x.n } : {}) }));
+};
+/** A13: iss-ffm3's accuracy (labeled in-sample: the planner read A5's ISS rows), the registered scorer and bins. */
+async function ffm3Score(w) {
+  const r = ffm3Of.get(w.row.file);
+  if (!r?.fit?.ok) return { ffm3: { ok: false, error: r ? r.fit?.termination ?? r.fit?.error ?? r.excluded : 'no iss-ffm3 row' } };
+  const back = async (ms) => convert(a, (await carry3(r.fit, ms, w.E)).map((s, i) => ({ epoch: new Date(ms[i]).toISOString(), ...s })), 'GCRF', 'EME2000');
+  try { return { ffm3: { ok: true, label: 'in-sample', bins: await scoreBins(a, await back(w.epochs), w.truth, binOf(w.E)) } }; } catch (error) { return { ffm3: { ok: false, error: `score: ${String(error.message).slice(0, 160)}` } }; }
+}
+/** A13: the lead records of iss-ffm3 (A5's covariance) and their calibrated records (class I), and SGP4-XP's calibrated records (class I)
+ *  beside the registered SGP4-XP and forecast records (rows/iss-leads, A5). */
+async function leads3(w) {
+  const { leadLines, ffmLeads } = await import('./lib/leads.mjs');
+  const leads = leadLines(w.truth, w.E, config.a5.ca.leadToleranceSeconds.iss);
+  const reg = issLeadsOf.get(w.row.file) ?? {};
+  const out = { leads: leads.map((x) => x.L), sgp4xp: reg.sgp4xp ?? { error: 'no registered lead row' }, forecast: reg.forecast ?? {} };
+  const r = ffm3Of.get(w.row.file);
+  if (!r?.fit?.ok) out.ffm3 = { error: r ? r.fit?.termination ?? r.fit?.error ?? r.excluded : 'no iss-ffm3 row' };
+  else {
+    out.ffm3 = await ffmLeads(a, (product, ms, covariance) => carry3(product, ms, w.E, covariance), r.fit, leads, 'EME2000');
+    try {
+      const gcrf = (await convert(a, leads.map(({ line }) => line), 'EME2000', 'GCRF')).map((s, i) => ({ L: leads[i].L, line: { epoch: leads[i].line.epoch, ...s } }));
+      const { issSettingsV3 } = await import('./lib/a12.mjs');
+      const s = issSettingsV3();
+      out.ffm3Cal = (await cal.ffmCal(v3.ctxFor(Date.parse(r.fit.epoch), w.E + 72 * 3600e3), r.fit, w.E, gcrf, { forces: s.forces, integrator: s.integrator, fixed: {} }, out.ffm3, { ffm3Cal: A13.CLASS.iss })).ffm3Cal;
+    } catch (error) { out.ffm3Cal = { error: String(error.message).slice(0, 200) }; }
+  }
+  out.sgp4xpCal = out.sgp4xp.error ? { error: 'no SGP4-XP records' } : await cal.xpCal(Object.fromEntries(Object.entries(out.sgp4xp).filter(([k]) => /^\d+$/.test(k))), A13.CLASS.iss);
+  return out;
+}
+
 /** A5's lead records of one window from its stored fits: SGP4-XP and FFM with covariance, NASA's forecast error only. */
 async function leadRecords(w) {
   const { leadLines, sgp4xpLeads, ffmLeads, stateLeads } = await import('./lib/leads.mjs');
@@ -111,7 +151,7 @@ for (let i = 0; i < headers.length; i += 1) {
   if (i % n !== k || done.has(headers[i].date) || (only && !only.has(headers[i].date))) continue;
   if (args.limit && count >= Number(args.limit)) break;
   const w = windowOf(i);
-  const row = w.excluded ? { ...w.row, excluded: w.excluded } : { ...w.row, truth: { epochs: w.truth.length, files: [...new Set(w.truth.map((t) => t.file))] }, ...(phase === 'arms' ? { arms: await arms(w) } : phase === 'ffm' ? { ffm: await ffmArm(w) } : phase === 'leads' ? await leadRecords(w) : phase === 'ffm3' ? await ffm3Fit(w) : await gpRecord(w)) };
+  const row = w.excluded ? { ...w.row, excluded: w.excluded } : { ...w.row, truth: { epochs: w.truth.length, files: [...new Set(w.truth.map((t) => t.file))] }, ...(phase === 'arms' ? { arms: await arms(w) } : phase === 'ffm' ? { ffm: await ffmArm(w) } : phase === 'leads' ? await leadRecords(w) : phase === 'ffm3' ? await ffm3Fit(w) : phase === 'ffm3score' ? await ffm3Score(w) : phase === 'leads3' ? await leads3(w) : await gpRecord(w)) };
   fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
   count += 1;
   if (count % 20 === 0) console.error(`iss ${phase} shard ${k}/${n}: ${count}`);
@@ -121,4 +161,5 @@ await a.close();
 await ff?.close();
 await gp?.close();
 await v3?.close();
+await cal?.close();
 process.exit(0);

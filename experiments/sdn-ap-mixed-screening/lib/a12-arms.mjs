@@ -92,6 +92,7 @@ export async function openArms() {
   const x = await openXpln(xplnModules());
   const F = config.part1.starlink.ffm;
   return {
+    v3,
     provenance: { v3: v3.provenance, xpln: x.provenance },
     /** The ffm3 product carried to epochs (ms): [{ r, v } km, km/s GCRF], with `covariance` (n x n, m, m/s) each state's covariance too. */
     async ffm3(product, epochsMs, E, covariance = null) {

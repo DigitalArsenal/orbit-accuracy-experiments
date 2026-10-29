@@ -103,6 +103,7 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   // A12's arms (ffm3: fit_batch version 3 with the selected profile; XP-LN) beside the registered ones
   const ffm3Fits = late ? new Map((await import('./lib/a12-arms.mjs')).ffm3Merged((p) => [...rowsOf(p).values()]).map((r) => [r.norad, r])) : null, xplnFits = late ? rowsOf('starlink-xpln.') : null;
   const arms = ['score', 'leads'].includes(phase) ? await (await import('./lib/a12-arms.mjs')).openArms() : null;
+  const A13 = phase === 'leads' ? await import('./lib/a13.mjs') : null, cal = A13 ? await A13.openA13() : null; // A13: the calibrated covariances
   const L5 = late && phase !== 'score' ? await import('./lib/leads.mjs') : null;
   const tolerance = config.a5.ca.leadToleranceSeconds.starlink;
   const fitIdentity = (w) => ({ norad: w.norad, F: w.F, E: iso(w.E), coverage: w.coverage, olderFiles: w.olderFiles, gated: w.gated.track, track: w.track, trackFrom: `the capture cycles before ${forecastCycle}` });
@@ -128,6 +129,15 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
         row.ffm = g && !g.excluded && !changed(w, g) && g.ffm?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => ff.predict(product, norad, ms, w.E, 'starlink', { covariance }), g.ffm, leads, 'GCRF') : { error: g?.ffm?.error ?? g?.excluded ?? 'no FFM fit' };
         const g3 = ffm3Fits.get(norad); // A12: the FFM arm of record for the contrast
         row.ffm3 = g3 && !changed(w, g3) && g3.ffm3?.ok ? await L5.ffmLeads(a, (product, ms, covariance) => arms.ffm3(product, ms, w.E, covariance), g3.ffm3, leads, 'GCRF') : { error: g3?.ffm3?.error ?? 'no ffm3 fit' };
+        // A13: ffm3 and SGP4-XP with C2's R1 (weather M) constants by transfer, on the A5 records' errors
+        const C = A13.CLASS.starlink;
+        if (!row.ffm3.error) {
+          try {
+            const p3 = g3.ffm3, F = config.part1.starlink.ffm;
+            row.ffm3Cal = (await cal.ffmCal(arms.v3.ctxFor(Date.parse(p3.epoch), w.E + 72 * H), p3, w.E, leads, { forces: F.forces, integrator: F.integrator, fixed: p3.fixed ?? {} }, row.ffm3, { ffm3Cal: C })).ffm3Cal;
+          } catch (error) { row.ffm3Cal = { error: String(error.message).slice(0, 200) }; }
+        } else row.ffm3Cal = { error: 'no ffm3 records' };
+        row.sgp4xpCal = row.sgp4xp?.error ? { error: 'no SGP4-XP records' } : await cal.xpCal(row.sgp4xp, C);
         const fcFile = path.join(store, 'forecast', `${norad}.json`);
         if (fs.existsSync(fcFile)) {
           const fc = JSON.parse(fs.readFileSync(fcFile));
@@ -210,5 +220,6 @@ if (process.argv[1] === new URL(import.meta.url).pathname) {
   await ff?.close();
   await gp?.close();
   await arms?.close();
+  await cal?.close();
   process.exit(0);
 }
