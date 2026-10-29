@@ -1,0 +1,150 @@
+{
+ "receipt": "heldout-S",
+ "createdUtc": "2026-10-29T07:59:08.250Z",
+ "experimentsCommit": "bc674b4e4c0e334156ad26fdb8e77868daa7d3de",
+ "class": "S",
+ "variants": {
+  "R1/primary": {
+   "constants": {
+    "chosen": "M3/tau1",
+    "parameters": {
+     "tau": 1,
+     "k_e": 5.305292516976156,
+     "f_R": 0.2843105151053393,
+     "f_T": 26.134262801933524,
+     "f_N": 0.07489481602220313,
+     "q_T": 6.840587227450634e-11,
+     "q_RN": 2.883495985334589e-15,
+     "s2": 0.031061192901856948
+    },
+    "fitReceipt": "fit-R1.json",
+    "fitReceiptSha256": "32ca54b631810773e052cafc1cdba736dea4cbf4f986c792b033670435ec4888",
+    "fitCommit": "4ffd2f6515c16c39a7007d9464e33d6ec800efbe",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T05:24:23.919Z"
+   },
+   "counts": {
+    "windows": 1053,
+    "excluded": {},
+    "failures": [
+     {
+      "failure": "FFM refused the carried covariance (B2 export): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "fit MAXIMUM_ITERATIONS"
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "fit STALLED"
+     },
+     {
+      "failure": "fit STALLED"
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 746,
+     "clusters": 746,
+     "meanD2over3": 62.91359546139234,
+     "medianD2over3": 4.525587720202444,
+     "coverage": 0.3324396782841823,
+     "meanInterval": [
+      42.753620987339076,
+      86.77846288205974
+     ],
+     "coverageInterval": [
+      0.3002680965147453,
+      0.36595174262734587
+     ],
+     "meanZ2Rtn": [
+      112.28151114058201,
+      81.64926307436176,
+      0.7395271295951497
+     ],
+     "oraclePassProbability": 0.98775,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    },
+    "6": {
+     "n": 746,
+     "clusters": 746,
+     "meanD2over3": 103.32020942202253,
+     "medianD2over3": 9.19382378975151,
+     "coverage": 0.27211796246648795,
+     "meanInterval": [
+      72.55002109525647,
+      140.38844322085677
+     ],
+     "coverageInterval": [
+      0.23994638069705093,
+      0.3042895442359249
+     ],
+     "meanZ2Rtn": [
+      67.29265230307486,
+      212.25205756543048,
+      1.6909064041595396
+     ],
+     "oraclePassProbability": 0.98775,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    },
+    "12": {
+     "n": 1053,
+     "clusters": 1053,
+     "meanD2over3": 122.18064928487149,
+     "medianD2over3": 11.993135493715556,
+     "coverage": 0.2611585944919278,
+     "meanInterval": [
+      68.77552655792628,
+      200.88313815448245
+     ],
+     "coverageInterval": [
+      0.2345679012345679,
+      0.28774928774928776
+     ],
+     "meanZ2Rtn": [
+      160.64702464198714,
+      195.09511151553042,
+      2.648591346228718
+     ],
+     "oraclePassProbability": 0.9965,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    },
+    "24": {
+     "n": 695,
+     "clusters": 695,
+     "meanD2over3": 1460.0134503610832,
+     "medianD2over3": 9.173550042166697,
+     "coverage": 0.3122302158273381,
+     "meanInterval": [
+      123.79422987218567,
+      3863.109041518755
+     ],
+     "coverageInterval": [
+      0.2776978417266187,
+      0.34676258992805753
+     ],
+     "meanZ2Rtn": [
+      3551.5225181967508,
+      702.5197276167838,
+      11.872049592923114
+     ],
+     "oraclePassProbability": 0.98475,
+     "inBand": false,
+     "eligible": true,
+     "label": "robustness only (out of band)"
+    }
+   },
+   "eligibleCells": 4,
+   "passingEligibleCells": 0
+  }
+ },
+ "opened": null
+}
