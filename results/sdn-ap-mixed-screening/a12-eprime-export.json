@@ -8,17 +8,25 @@
     "MAXIMUM_ITERATIONS": 1
   },
   "truthStates": 138388,
+  "sgp4xp": {
+    "files": 1058,
+    "fitted": 1058,
+    "temeStates": 138388,
+    "covarianceRefused": [],
+    "build": "62c783262da9e69c54d6f4eb98c97af4208c1b11daec44cc9c28c0252c564d1e",
+    "modulesCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42"
+  },
   "carriedCovarianceRefused": [
     {
       "norad": 66842,
       "error": "propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
     }
   ],
-  "manifestSha256": "a955c700dcd13cc91bad18a788bab447d92c9b8c26dbc300ef21f18b6a08596d",
+  "manifestSha256": "8596af2cab62043d21af7bd2b1cc33119880c17d4331314257471bbf51bc4125",
   "opened": {
-    "paths": 18723,
+    "paths": 37429,
     "distinct": 7766,
-    "sha256": "b27e77a010c05f2a97376564c43a0ea755638f29b64f45fd969fd578af59e9b6",
+    "sha256": "0e307ce4bd0aee1a676146d90bab6e40604da78297ac4bdeed32fa5f37c7209e",
     "list": "results/sdn-ap-mixed-screening/a12-eprime-export-opened.txt",
     "allBeforeForecastCycle": true
   },
@@ -41,7 +49,7 @@
     "modulesLinks": "/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-modules",
     "profile": "P0 (A12 part 2)",
     "covariance": "formal times max(1, reduced chi-square), carried by propagator/ffm, no process noise (A5)",
-    "experiments": "c6ff5329b56638086b0dd87d770ea2c25dd2977d"
+    "experiments": "8a470db50d9ab713f18c29f65ce1ce91e67082b7"
   },
   "rule": "A12 point 7 (E'), the selection sample (V2 excluded); no state after E is read into the export"
 }
