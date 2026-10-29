@@ -187,11 +187,11 @@ if (args.heldout) {
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
   const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
   const R = ['R1', 'R2', 'R3'].includes(cls);
-  const rowsAll = cls === 'L' ? rowsOf('L.heldOut.s') : R ? reflag(screenFromM('heldOut', rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`))) : rowsOf(`heldout.${cls}.`);
+  const rowsAll = cls === 'S' ? rowsOf('S.transfer.s') : cls === 'L' ? rowsOf('L.heldOut.s') : R ? reflag(screenFromM('heldOut', rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`))) : rowsOf(`heldout.${cls}.`);
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
-  for (const key of Object.keys(FZ).filter((x) => x === CK || x === `${CK}-sensitivity`)) {
+  for (const key of cls === 'S' ? ['R1-O'] : Object.keys(FZ).filter((x) => x === CK || x === `${CK}-sensitivity`)) {
     const p = FZ[key].parameters, sens = key.endsWith('-sensitivity');
     for (const [subset, scope] of R ? [['object', 'primary'], ['object', 'allSamples'], ['time', 'primary'], ['time', 'allSamples']] : (cls === 'I' ? [[null, 'primary'], [null, 'allSamples']] : [[null, 'primary']])) {
       const rows = subset ? rowsAll.filter((r) => r.subset === subset) : rowsAll;
@@ -230,11 +230,12 @@ if (args.heldout) {
         for (let b = 0; b < config.bootstrap.resamples; b += 1) { let s1 = 0, s2 = 0, m = 0; for (let j = 0; j < clusters.length; j += 1) { const g = byC.get(clusters[Math.floor(r0() * clusters.length)]); for (const v of g) { s1 += v; if (v <= CHI) s2 += 1; m += 1; } } means.push(s1 / m / 3); covs.push(s2 / m); }
         const qq = (a, f) => { const s0 = [...a].sort((u, v) => u - v); return s0[Math.floor(f * (s0.length - 1))]; };
         const minClusters = cls === 'I' ? BAND.issMin30DayBlocks : BAND.minClusters;
+        // type S: robustness only (D3); its cells are labeled so and never counted toward a class verdict
         const eligible = n >= BAND.minWindows && clusters.length >= minClusters;
         const inBand = mean >= BAND.meanD2over3[0] && mean <= BAND.meanD2over3[1] && cov >= BAND.coverage95[0] && cov <= BAND.coverage95[1];
         const z2 = [0, 1, 2].map((k) => xs.reduce((a, x) => a + x.z[k] ** 2, 0) / n);
         leads[L] = { n, clusters: clusters.length, meanD2over3: mean, medianD2over3: qq(d2, 0.5) / 3, coverage: cov, meanInterval: [qq(means, 0.025), qq(means, 0.975)], coverageInterval: [qq(covs, 0.025), qq(covs, 0.975)],
-          meanZ2Rtn: z2, oraclePassProbability: passProbability(n), inBand, eligible, label: eligible ? (inBand ? 'pass' : 'fail') : `not eligible (${[n < BAND.minWindows ? `n < ${BAND.minWindows}` : null, clusters.length < minClusters ? `clusters < ${minClusters}` : null].filter(Boolean).join(', ')})` };
+          meanZ2Rtn: z2, oraclePassProbability: passProbability(n), inBand, eligible, label: cls === 'S' ? `robustness only (${inBand ? 'in band' : 'out of band'})` : eligible ? (inBand ? 'pass' : 'fail') : `not eligible (${[n < BAND.minWindows ? `n < ${BAND.minWindows}` : null, clusters.length < minClusters ? `clusters < ${minClusters}` : null].filter(Boolean).join(', ')})` };
       }
       table.variants[`${key}/${subset ? `${subset}/` : ''}${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
     }

@@ -8,7 +8,7 @@
 //   node experiments/ffm-covariance-calibration/run.mjs --phase iss-fit [--shard k/n] [--limit n]
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, frozen, Opened, writeReceipt, store, args, HOUR, iso, root, results } from './common.mjs';
+import { config, frozen, Opened, writeReceipt, store, args, HOUR, iso, root, results, sha256 } from './common.mjs';
 import { b2 } from './lib/precise.mjs';
 
 frozen();
@@ -388,6 +388,59 @@ if (phase === 'l-terms') {
     }
     fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
   }
+  await pairs.close();
+}
+
+if (phase === 'starlink-transfer') {
+  // Type S (D3, coordinator ruling Q27): robustness only. R1-O's frozen constants transferred to the B2-supplied export of A12's E' window
+  // products (non-V2 satellites; P0 fits on [E - 48 h, E - 24 h] with the formal covariance; truth over (E', E]). The fit product is carried
+  // by FFM from its epoch with A5's covariance (formal x max(1, reduced chi-square)) x k_e to E' and from E' with PROCESS_NOISE (C2-A5),
+  // the floor and density term added in the composition; weather O at E' (C2-A7 point 3). Only the export directory is read (P10).
+  // Rows: rows/S.transfer.s<k>.jsonl.
+  const EXPORT = '/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-eprime-export';
+  const MANIFEST = 'a955c700dcd13cc91bad18a788bab447d92c9b8c26dbc300ef21f18b6a08596d';
+  const mbytes = opened.read(path.join(EXPORT, 'manifest.json'), `B2-supplied export, manifest ${MANIFEST}`);
+  if (sha256(mbytes) !== MANIFEST) throw new Error('the export manifest is not the coordinator\'s');
+  const manifest = JSON.parse(mbytes);
+  const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
+  const P = FZ['R1-O'].parameters;
+  const { openPairs } = await import('./lib/pairs.mjs');
+  const { windowTerms, ffmNoiseCovariances } = await import('./lib/products.mjs');
+  const WO = await (await import('./lib/weather-o.mjs')).openWeatherO(B2C.a12.modulesLinks);
+  const pairs = await openPairs(B2C.a12.modulesLinks);
+  const out = path.join(rowsDir, `S.transfer.s${k}.jsonl`);
+  const done = new Set(readJsonl(out).map((r) => r.norad));
+  const settings = { forces: F.forces, integrator: F.integrator, fixed: {} };
+  const tol = B2C.a5.ca.leadToleranceSeconds.starlink * 1000;
+  for (let i = 0; i < manifest.files.length; i += 1) {
+    const m = manifest.files[i];
+    if (i % n !== k || done.has(m.norad)) continue;
+    const bytes = opened.read(path.join(EXPORT, m.file), `B2-supplied export, manifest ${MANIFEST}`);
+    if (sha256(bytes) !== m.sha256) throw new Error(`${m.file} differs from the export manifest`);
+    const x = JSON.parse(bytes);
+    const Ep = Date.parse(x.Eprime);
+    const row = { norad: x.norad, E: x.Eprime, cluster: x.norad, label: 'robustness only: R1-O transferred (D3)', termination: x.fit.termination };
+    const truth = x.truth.map((t) => ({ epoch: t.epoch, r: t.rKm, v: t.vKmS, ms: Date.parse(t.epoch) }));
+    const leads = config.model.leads_h.flatMap((L) => { let best = null; for (const t of truth) { const d = Math.abs(t.ms - (Ep + L * HOUR)); if (d <= tol && (!best || d < best.d)) best = { d, t }; } return best ? [{ L, line: best.t }] : []; });
+    const t0 = Date.now();
+    if (!x.fit.ok) row.failed = `fit ${x.fit.termination}`;
+    else if (m.carriedCovarianceError || !x.fit.covarianceFormal) row.failed = `FFM refused the carried covariance (B2 export): ${m.carriedCovarianceError ?? 'none'}`;
+    else if (!leads.length) row.excluded = 'no truth at any lead';
+    else {
+      const fit = { epoch: x.fit.epoch, state: x.fit.stateM, parameters: x.fit.parameters, covariance: x.fit.covarianceFormal, reducedChiSquare: x.fit.reducedChiSquare };
+      try {
+        let ctx = v3.ctxFor(Date.parse(x.fit.epoch), Ep + 72 * HOUR);
+        const o2 = WO.inputsO(ctx.inputs, Ep, Ep + 72 * HOUR);
+        if (o2.excluded) throw new Error(`condition O: ${o2.excluded}`);
+        ctx = { ...ctx, inputs: o2.inputs };
+        Object.assign(row, await windowTerms(ctx, pairs, fit, Ep, leads, settings), { rsga: o2.rsga });
+        row.ffm = { 'R1-O': (await ffmNoiseCovariances(ctx, pairs, fit, Ep, leads, settings, [P.q_RN ?? 0, P.q_T ?? 0, P.q_RN ?? 0], P.k_e)).map((y) => y.rtn) };
+      } catch (error) { row.failed = `FFM refused (a failure): ${String(error.message).slice(0, 200)}`; }
+    }
+    row.seconds = (Date.now() - t0) / 1000;
+    fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
+  }
+  fs.writeFileSync(path.join(store, 'opened', `S.transfer.s${k}.json`), JSON.stringify(opened.list()));
   await pairs.close();
 }
 
