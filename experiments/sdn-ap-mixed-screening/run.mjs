@@ -49,6 +49,13 @@ const issLeadsOld = rowsOf('iss-leads.').find((r) => r.file === issOld.file);
 if (issLeadsOld) {
   step('part1-iss.mjs', ['--phase', 'leads', ...issShard]);
   sameLeads(`iss ${issOld.file} lead records`, rowsOf('iss-leads.', scratch).find((r) => r.file === issOld.file), issLeadsOld);
+  // A13: the same window's iss-ffm3 fit and its lead records with A5's and the calibrated covariances
+  const issL3Old = rowsOf('iss-leads3.').find((r) => r.file === issOld.file);
+  if (issL3Old) {
+    step('part1-iss.mjs', ['--phase', 'ffm3', ...issShard]);
+    step('part1-iss.mjs', ['--phase', 'leads3', ...issShard]);
+    sameLeads(`iss ${issOld.file} A13 lead records`, rowsOf('iss-leads3.', scratch).find((r) => r.file === issOld.file), issL3Old);
+  }
   const gpOld = rowsOf('iss-gp.').filter((r) => r.gp?.leads && Object.keys(r.gp.leads).length).sort((a, b) => (a.file < b.file ? -1 : 1))[0];
   if (gpOld) {
     step('part1-iss.mjs', ['--phase', 'gp', '--shard', `${headers.findIndex((h) => h.date === gpOld.file)}/${headers.length}`, '--limit', '1']);
@@ -62,7 +69,7 @@ if (laserOld) {
   step('part2-laser.mjs', ['--shard', `${all.findIndex((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff)}/${all.length}`, '--limit', '1']);
   compare(`laser ${laserOld.target} ${laserOld.cutoff}`, rowsOf('laser.', scratch).find((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff) ?? {}, laserOld);
   const laserShard = ['--shard', `${all.findIndex((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff)}/${all.length}`, '--limit', '1'];
-  for (const [phase, prefix] of [['leads', 'laser-leads.'], ['gp', 'laser-gp.']]) {
+  for (const [phase, prefix] of [['leads', 'laser-leads.'], ['gp', 'laser-gp.'], ['leads3', 'laser-leads3.']]) {
     const old = rowsOf(prefix).find((r) => r.norad === laserOld.norad && r.cutoff === laserOld.cutoff);
     if (!old) continue;
     step('part2-laser.mjs', ['--phase', phase, ...laserShard]);
@@ -93,11 +100,19 @@ if (starOld) {
     if (!same) { console.error(`B2 check: starlink ${starOld.norad} ${phase} fit differs from the stored row`); bad += 1; } else console.error(`B2 check: starlink ${starOld.norad} ${phase} fit replayed`);
   }
   step('part1-starlink.mjs', ['--phase', 'score', '--through', starOld.through, ...shard]);
+  // the same satellite's lead records (A5, with ffm3 and A13's calibrated covariances)
+  const leadOld = rowsOf('starlink-leads.').find((r) => r.norad === starOld.norad);
+  if (leadOld) {
+    step('part1-starlink.mjs', ['--phase', 'leads', '--through', leadOld.through, ...shard]);
+    sameLeads(`starlink ${starOld.norad} lead records`, rowsOf('starlink-leads.', scratch).find((r) => r.norad === starOld.norad), leadOld);
+  }
   compare(`starlink ${starOld.norad} at ${starOld.through}`, rowsOf(`starlink-score.${starOld.through}.`, scratch).find((r) => r.norad === starOld.norad) ?? {}, starOld);
 } else console.error('B2 check: part 1a has no score pass in the store yet, so the table has no part 1a row to replay');
 // parts 3 and 4 (A5 to A7): each group's summary must rest on the current lead and GP rows, and its first encounters must replay
 // A12: Starlink also with ffm3 in the FFM slot (ca.starlink.ffm3.json; the same draws as the group's)
-const caGroups = [['iss', 'ffm'], ['laser', 'ffm'], ['starlink', 'ffm'], ['starlink', 'ffm3']].map(([g, f]) => ({ g, f, label: f === 'ffm' ? g : `${g}.${f}` })).filter(({ label }) => fs.existsSync(path.join(store, 'rows', `ca.${label}.json`)));
+const { A13RUNS } = await import('./part4-ca.mjs');
+const caGroups = [...[['iss', 'ffm'], ['laser', 'ffm']].map(([g, f]) => ({ g, f, label: g })), ...Object.entries(A13RUNS).map(([label, run]) => ({ g: run.group, f: run.ffm, label, run }))]
+  .filter(({ label }) => fs.existsSync(path.join(store, 'rows', `ca.${label}.json`)));
 if (caGroups.length) {
   const { windowsOf } = await import('./part4-ca.mjs');
   const CA = await import('./lib/ca.mjs');
@@ -105,13 +120,13 @@ if (caGroups.length) {
   const { modulesRoot } = await import(path.join(dir, '../sdn-gp-starlink-ffm-match/lib/modules.mjs'));
   const caModule = await loadModule(modulesRoot(), 'analysis/conjunction-assessment');
   const pc = CA.pcClient(caModule);
-  for (const { g, f, label } of caGroups) {
+  for (const { g, f, label, run } of caGroups) {
     const summary = JSON.parse(fs.readFileSync(path.join(store, 'rows', `ca.${label}.json`), 'utf8'));
-    const { windows, inputs } = windowsOf(g, f);
+    const { windows, inputs } = windowsOf(g, f, run ?? null);
     if (inputs !== summary.inputs) { console.error(`B2 check: part 4 ${g}: the lead rows changed since its summary`); bad += 1; continue; }
     for (const cls of Object.keys(summary.classes)) {
       const stored = new Map(readJsonl(path.join(store, 'rows', `ca-encounters.${label}.${cls}.jsonl`)).map((r) => [r.k, r]));
-      const { rows } = await CA.encounters(g, cls, windows, pc, { limit: 25 });
+      const { rows } = await CA.encounters(g, cls, windows, pc, { limit: 25, extraArms: Object.keys(run?.extras ?? {}) });
       for (const r of rows) for (const [arm, a] of Object.entries(r.arms)) {
         const o = stored.get(r.k)?.arms?.[arm];
         if (!o || !close(a.predictedMissM, o.predictedMissM) || (a.pc != null || o.pc != null) && !(a.pc === o.pc || close(a.pc, o.pc))) { console.error(`B2 check: part 4 ${label} ${cls} encounter ${r.k} ${arm}: ${JSON.stringify(a)} against stored ${JSON.stringify(o)}`); bad += 1; }
