@@ -1,0 +1,59 @@
+{
+ "receipt": "precheck-P8-R1",
+ "createdUtc": "2026-10-29T05:24:23.686Z",
+ "experimentsCommit": "56c91c6a6e57bede1125d004b2f368761fc51ee2",
+ "plan": "3.8 P8; C2-A4 point 1",
+ "class": "R1",
+ "chosen": "M3/tau1",
+ "parameters": {
+  "tau": 1,
+  "k_e": 5.305292516976156,
+  "f_R": 0.2843105151053393,
+  "f_T": 26.134262801933524,
+  "f_N": 0.07489481602220313,
+  "q_T": 6.840587227450634e-11,
+  "q_RN": 2.883495985334589e-15,
+  "s2": 0.031061192901856948
+ },
+ "fitReceipt": "fit-R1.json",
+ "leads": {
+  "1": {
+   "n": 164,
+   "scale": 0.48823340401475956,
+   "shape": 0.7026681036097071,
+   "inBand": false
+  },
+  "6": {
+   "n": 164,
+   "scale": 0.6452522298173814,
+   "shape": 0.7142640677519667,
+   "inBand": false
+  },
+  "12": {
+   "n": 165,
+   "scale": 0.7584088736564144,
+   "shape": 0.5931803497589497,
+   "inBand": false
+  },
+  "24": {
+   "n": 159,
+   "scale": 0.7605368462732885,
+   "shape": 0.6853372722065799,
+   "inBand": false
+  },
+  "48": {
+   "n": 160,
+   "scale": 1.0253304949600934,
+   "shape": 0.5892754127603725,
+   "inBand": false
+  },
+  "72": {
+   "n": 156,
+   "scale": 1.3911485176725567,
+   "shape": 0.6354003553778371,
+   "inBand": false
+  }
+ },
+ "outcome": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+ "opened": null
+}

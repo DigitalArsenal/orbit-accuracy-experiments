@@ -1,0 +1,384 @@
+{
+ "receipt": "precheck-P3-empirical",
+ "createdUtc": "2026-10-28T21:43:34.509Z",
+ "experimentsCommit": "085b7e16b257a83cf4e8f9bda809d2e15f2bc483",
+ "plan": "3.8 P3 (empirical step); C2-A1 point 3; D6",
+ "question": "does the type L along-track bias (+4.0 to +5.65 m) survive a fit to the NSGF orbit itself?",
+ "design": {
+  "spheres": [
+   "lares",
+   "starlette",
+   "larets",
+   "westpac"
+  ],
+  "cutoffs": "every second day, 2025-10-03 to 2026-03-31 (R2 calibration period)",
+  "arcs": "NSGF arcs with statedSigmaM <= 0.3 m only",
+  "fit": "harness/ffm-fit-v3.mjs, one round, 10 m per axis, POSITION_VECTOR GCRF, 24 h at 10 min; state + DRAG_AREA_OVER_MASS (seed E6 b, a priori 30 %), AGOM fixed at E6; a priori 1e5 m, 10 m/s; tolerance 0.01, edit 5, at most 40 evaluations",
+  "forces": {
+   "degree": 70,
+   "order": 70,
+   "thirdBodies": [
+    10,
+    301
+   ],
+   "srp": true,
+   "drag": true,
+   "atmosphere": "NRLMSISE00",
+   "solidTides": true,
+   "relativity": "IERS_2010"
+  },
+  "integrator": {
+   "tolerance": 1e-10,
+   "maxStep": 120,
+   "minStep": 0.0001
+  },
+  "leadToleranceSeconds": 150,
+  "modules": {
+   "links": "/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-modules",
+   "estimation": {
+    "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+    "version": "0.6.0",
+    "wasmSha256": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac"
+   },
+   "ffm": {
+    "modulesCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "version": "2.0.0",
+    "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f"
+   }
+  }
+ },
+ "normalPointBiasInSample_m": {
+  "lares": 4,
+  "starlette": 4.8,
+  "larets": 5,
+  "stella": 5.65
+ },
+ "perSphere": {
+  "lares": {
+   "windows": 90,
+   "excluded": 21,
+   "fitted": 69,
+   "failed": [],
+   "leads": {
+    "1": {
+     "n": 68,
+     "meanT_m": -0.049534093312408434,
+     "medianT_m": -0.02619141065137274,
+     "meanR_m": -0.001012722850450001,
+     "meanN_m": 0.05049598145347683,
+     "rmsR_m": 0.08959446823747447,
+     "rmsN_m": 0.49986385434196906,
+     "meanT_ms": -0.006940190736792386,
+     "speedMs": 7136.8249198866815
+    },
+    "6": {
+     "n": 68,
+     "meanT_m": 0.07388992659910085,
+     "medianT_m": 0.029989816166484648,
+     "meanR_m": 0.0016235740567794954,
+     "meanN_m": -0.010382476626135232,
+     "rmsR_m": 0.09972153595552176,
+     "rmsN_m": 0.5201667922349342,
+     "meanT_ms": 0.010352788683614313,
+     "speedMs": 7136.963158757035
+    },
+    "12": {
+     "n": 68,
+     "meanT_m": 0.15658863609798365,
+     "medianT_m": 0.19626233051980652,
+     "meanR_m": 0.006643687826242154,
+     "meanN_m": 0.04549169952818003,
+     "rmsR_m": 0.09667307589173607,
+     "rmsN_m": 0.5104935935671889,
+     "meanT_ms": 0.021929347556066153,
+     "speedMs": 7137.047533490247
+    },
+    "24": {
+     "n": 68,
+     "meanT_m": 0.2567134695879807,
+     "medianT_m": 0.2070593595461364,
+     "meanR_m": -0.00006876772322454786,
+     "meanN_m": 0.029073468723409095,
+     "rmsR_m": 0.15777909449016092,
+     "rmsN_m": 0.6514852671623299,
+     "meanT_ms": 0.03596619661921788,
+     "speedMs": 7136.737549619664
+    },
+    "48": {
+     "n": 66,
+     "meanT_m": 0.7742783402978392,
+     "medianT_m": 0.9326865515000318,
+     "meanR_m": -0.011676609526363993,
+     "meanN_m": -0.10259780518937857,
+     "rmsR_m": 0.2549032858088338,
+     "rmsN_m": 1.048524915661208,
+     "meanT_ms": 0.10849811319960483,
+     "speedMs": 7137.074791338964
+    },
+    "72": {
+     "n": 66,
+     "meanT_m": 1.5021913314319273,
+     "medianT_m": 1.2475186664702618,
+     "meanR_m": 0.0018823777636453665,
+     "meanN_m": 0.043110818220457994,
+     "rmsR_m": 0.31680763886132945,
+     "rmsN_m": 1.1864660054515799,
+     "meanT_ms": 0.21047032852325118,
+     "speedMs": 7136.4310202454
+    }
+   }
+  },
+  "starlette": {
+   "windows": 90,
+   "excluded": 41,
+   "fitted": 49,
+   "failed": [],
+   "leads": {
+    "1": {
+     "n": 44,
+     "meanT_m": -0.16113304054138589,
+     "medianT_m": -0.16186230000976273,
+     "meanR_m": 0.008422517960717708,
+     "meanN_m": 0.05043765447432615,
+     "rmsR_m": 0.17213791505856996,
+     "rmsN_m": 0.4101235449880516,
+     "meanT_ms": -0.021957039523882407,
+     "speedMs": 7393.1750058189855
+    },
+    "6": {
+     "n": 44,
+     "meanT_m": 0.019700999521101853,
+     "medianT_m": -0.10320493195470987,
+     "meanR_m": 0.018348610337770428,
+     "meanN_m": 0.028127548942612803,
+     "rmsR_m": 0.19724348391944724,
+     "rmsN_m": 0.4160415564775395,
+     "meanT_ms": 0.0024802323239649193,
+     "speedMs": 7399.1914837252725
+    },
+    "12": {
+     "n": 44,
+     "meanT_m": 0.1570489317023947,
+     "medianT_m": 0.13967324746703458,
+     "meanR_m": -0.010865460625359908,
+     "meanN_m": 0.005570893778110476,
+     "rmsR_m": 0.1805342857461588,
+     "rmsN_m": 0.4851243407993293,
+     "meanT_ms": 0.02128751969373537,
+     "speedMs": 7347.237804288891
+    },
+    "24": {
+     "n": 44,
+     "meanT_m": 0.1956750943381965,
+     "medianT_m": -0.11279317435067912,
+     "meanR_m": -0.024199074564750976,
+     "meanN_m": -0.03870379278363963,
+     "rmsR_m": 0.18083957228961006,
+     "rmsN_m": 0.7565496083134133,
+     "meanT_ms": 0.026483092094824526,
+     "speedMs": 7355.534335884924
+    },
+    "48": {
+     "n": 33,
+     "meanT_m": 0.3892497042447494,
+     "medianT_m": -1.0727004162840859,
+     "meanR_m": 0.05371572954958318,
+     "meanN_m": -0.2684758212016124,
+     "rmsR_m": 0.3572037044209282,
+     "rmsN_m": 1.2700907536959996,
+     "meanT_ms": 0.05227358525243633,
+     "speedMs": 7407.913075954189
+    },
+    "72": {
+     "n": 34,
+     "meanT_m": -0.0740547287739715,
+     "medianT_m": -1.6749442265695134,
+     "meanR_m": -0.04745385231835014,
+     "meanN_m": -0.10176198480384047,
+     "rmsR_m": 0.42108600350593606,
+     "rmsN_m": 1.3177709926372794,
+     "meanT_ms": -0.01155098980040368,
+     "speedMs": 7394.492462115666
+    }
+   }
+  },
+  "larets": {
+   "windows": 90,
+   "excluded": 90,
+   "fitted": 0,
+   "failed": [],
+   "leads": {
+    "1": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    },
+    "6": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    },
+    "12": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    },
+    "24": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    },
+    "48": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    },
+    "72": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    }
+   }
+  },
+  "westpac": {
+   "windows": 90,
+   "excluded": 84,
+   "fitted": 6,
+   "failed": [],
+   "leads": {
+    "1": {
+     "n": 5,
+     "meanT_m": -0.5288614471453164,
+     "medianT_m": -0.7048015503909563,
+     "meanR_m": -0.026040972171055256,
+     "meanN_m": -0.019757297799332836,
+     "rmsR_m": 0.14078309172649753,
+     "rmsN_m": 0.16307025491884647,
+     "meanT_ms": -0.0709966118169822,
+     "speedMs": 7442.656406619554
+    },
+    "6": {
+     "n": 5,
+     "meanT_m": -1.199782033966022,
+     "medianT_m": -1.5379340547807623,
+     "meanR_m": -0.028523269375699378,
+     "meanN_m": -0.06869791290286231,
+     "rmsR_m": 0.16359070297946476,
+     "rmsN_m": 0.1738350631616498,
+     "meanT_ms": -0.16106138335974943,
+     "speedMs": 7442.4237602221865
+    },
+    "12": {
+     "n": 5,
+     "meanT_m": -2.1866176814970375,
+     "medianT_m": -1.9011675704490199,
+     "meanR_m": 0.08205957059382096,
+     "meanN_m": 0.12923135911741576,
+     "rmsR_m": 0.26884627088733176,
+     "rmsN_m": 0.3618455579361425,
+     "meanT_ms": -0.2941318942513701,
+     "speedMs": 7438.012117877911
+    },
+    "24": {
+     "n": 4,
+     "meanT_m": -3.043784317444487,
+     "medianT_m": -4.772249251434031,
+     "meanR_m": 0.26722571655340266,
+     "meanN_m": 0.13765553076276618,
+     "rmsR_m": 0.4547512198226957,
+     "rmsN_m": 0.6243502997769697,
+     "meanT_ms": -0.4099364544371846,
+     "speedMs": 7436.721001015648
+    },
+    "48": {
+     "n": 1,
+     "meanT_m": -24.65955676265542,
+     "medianT_m": -24.65955676265542,
+     "meanR_m": 0.8226156694020257,
+     "meanN_m": -0.23753915499347544,
+     "rmsR_m": 0.8226156694020257,
+     "rmsN_m": 0.23753915499347544,
+     "meanT_ms": -3.3179269503412945,
+     "speedMs": 7432.218108394111
+    },
+    "72": {
+     "n": 0,
+     "meanT_m": null,
+     "medianT_m": null,
+     "meanR_m": null,
+     "meanN_m": null,
+     "rmsR_m": 0,
+     "rmsN_m": 0,
+     "meanT_ms": null,
+     "speedMs": null
+    }
+   }
+  }
+ },
+ "timeScaleTrace": {
+  "nsgfSp3": "nsgf.orb.lares.260218.v000.sp3.gz (SHA-256 f75ba3b0..., equal to the archive index): header \"%c L  cc UTC\": UTC; analysis/reference-states writes the $OEM in UTC (index comment), read as UTC",
+  "normalPoints": "CRD v2 (lares_202607.np2): H2 epoch time-scale field 7 (UTC); H4 range type 2 (two-way), station system delay applied 1, troposphere 0, CoM 0; record 11 epoch event 2 (transmit): E6 slr.mjs bounce = t + tof/2 (event 0: t - tof/2; 1: t)",
+  "ffmSamples": "harness/ffm-execution.mjs: EPOCH_TIME_SYSTEM UTC, TARGET_EPOCH and SAMPLE_EPOCHS instant(..., UTC)",
+  "rangeModel": "E6 step 12: one-way range c tof / 2 at the bounce instant against the station GCRF position at that instant (analysis/association, light_time false); E6 fit flags 3; for a two-way range the station-motion terms of the up and down legs cancel to first order",
+  "stationCoordinates": "weekly ILRS SINEX (ilrsa.pos+eop), SITE/ECCENTRICITY all XYZ (21 sites in 260725) and applied by E6 slr.mjs parseSinex"
+ },
+ "outcome": "DEFECT SUSPECTED IN THE NORMAL-POINT PATH (D6: stop and report): fitted to the NSGF orbit itself, FFM shows no common along-track bias (LARES mean T -0.05 to +0.26 m at 1-24 h over 68 windows, Starlette -0.16 to +0.20 m over 44, against +4.0 and +4.8 m on B2 part 2's normal-point fits); every time label traced is UTC and consistent. The bias therefore sits in E6 R's normal-point fit (its measurement model or inputs), not in propagator/ffm and not in the NSGF truth; its root cause is not located.",
+ "opened": {
+  "files": 552,
+  "sha256": "31cc66b52a704e260de485814ba704ebdb6b83c9a349a36a657223b5d2eec0a0",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P3-empirical.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/p3/*",
+    "files": 16,
+    "labels": [
+     "P3 rows and opened logs"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference/*",
+    "files": 536,
+    "labels": [
+     "reference $OEM",
+     "index.json"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "receipt": "a12-part2",
+ "createdUtc": "2026-10-28T22:17:56.728Z",
+ "experimentsCommit": "66356a0ec3fdbf60423fc54d641c71f470db22ae",
+ "plan": "3.3 (R1/R2 fit configuration by reference); coordinator Q2",
+ "b2Commit": "ac8971902dd614341d68bb6b2118a871fbef98a3",
+ "selected": {
+  "part": "A12 part 2",
+  "profile": "P0",
+  "gateFailed": true,
+  "noCandidateEligible": true,
+  "receipt": "results/sdn-ap-mixed-screening/a12-selection.json",
+  "receiptSha256": "05e367bba6fab1b2c3d666ed913187140bacaa778eef42996248e47f6aac3ce3",
+  "selectionCode": "40dc19d",
+  "a13": "pending: part 1a leads, gp and parts 4-5 deferred until A13 is committed"
+ },
+ "profileP0": {
+  "parameters": [
+   "DRAG_AREA_OVER_MASS",
+   "SRP_AREA_OVER_MASS"
+  ],
+  "freeParameters": 8
+ },
+ "fit": {
+  "sigmaM": 10,
+  "rounds": 1,
+  "correctionTolerance": 0.01,
+  "sigmaEditThreshold": 5,
+  "maximumIterations": 40,
+  "contingencyMaximumIterations": 60,
+  "seeds": {
+   "DRAG_AREA_OVER_MASS": 0.03,
+   "SRP_AREA_OVER_MASS": {
+    "belowNorad56000": 0.11,
+    "fromNorad56000": 0.19
+   },
+   "IN_TRACK_ACCELERATION": 0
+  },
+  "apriori": {
+   "positionSigmaM": 100000,
+   "velocitySigmaMS": 10,
+   "parameterFraction": 0.3,
+   "inTrackSigmaMS2": 0.00001
+  }
+ },
+ "rebase": {
+  "needed": false,
+  "reason": "df0621d..ac8971902 changes only experiments/sdn-ap-mixed-screening/PLAN.md, config.json and results/sdn-ap-mixed-screening/a12-selection.json; harness/ffm-fit-v3.mjs and lib/prefit.mjs are unchanged, and C2 reads P0 (parameters, seeds, a priori) from config.a12.candidates and config.a12.fit, identical at both commits",
+  "diffStat": [
+   "experiments/sdn-ap-mixed-screening/PLAN.md        |  19 +",
+   " experiments/sdn-ap-mixed-screening/config.json    |  10 +",
+   " results/sdn-ap-mixed-screening/a12-selection.json | 527 ++++++++++++++++++++++",
+   " 3 files changed, 556 insertions(+)"
+  ]
+ },
+ "r1r2": "released: R1 and R2 fit with P0 (state, B and AGOM, B and AGOM bounded to [0, inf), one round at 10 m, at most 40 evaluations; seeds B 0.03 m^2/kg, AGOM 0.11 below NORAD 56000 and 0.19 from it; a priori 1e5 m, 10 m/s, 30 % of each seed), labeled gate failed as in B2",
+ "selectionReceiptRead": false
+}

@@ -1,0 +1,202 @@
+{
+ "receipt": "heldout-L",
+ "createdUtc": "2026-10-29T02:55:25.477Z",
+ "experimentsCommit": "8f1779eaacd76d0c07e7fcfaee13f871a3e06ea5",
+ "class": "L",
+ "variants": {
+  "L/primary": {
+   "constants": {
+    "chosen": "M2",
+    "parameters": {
+     "k_e": 1.9516758785436588,
+     "f_R": 1.9804750224401257,
+     "f_T": 7.0185456205260435,
+     "f_N": 2.4119377776703086,
+     "q_T": 4.139573739847988e-20,
+     "q_RN": 1.1327773785338313e-15
+    },
+    "fitReceipt": "fit-L.json",
+    "fitReceiptSha256": "5751a904e061bbe6fcd46a72a3335fafb605cd0ff4b451bb9625013501fe3205",
+    "fitCommit": "5a15eea69be98102d9786a2ef4efbf1793394bb0",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T02:15:44.329Z"
+   },
+   "counts": {
+    "windows": 199,
+    "excluded": {},
+    "failures": [
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 198,
+     "clusters": 5,
+     "meanD2over3": 1.0624447891073348,
+     "medianD2over3": 0.8920070214808405,
+     "coverage": 0.9545454545454546,
+     "meanInterval": [
+      0.9077303930956419,
+      1.260444203541331
+     ],
+     "coverageInterval": [
+      0.9195979899497487,
+      0.9855072463768116
+     ],
+     "meanZ2Rtn": [
+      0.8953950925981964,
+      0.7754077219853998,
+      1.546548673143639
+     ],
+     "oraclePassProbability": 0.80925,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "6": {
+     "n": 198,
+     "clusters": 5,
+     "meanD2over3": 1.0965591721136925,
+     "medianD2over3": 0.8866804725972806,
+     "coverage": 0.9545454545454546,
+     "meanInterval": [
+      0.9376446307274158,
+      1.2610453701051543
+     ],
+     "coverageInterval": [
+      0.9153439153439153,
+      0.9903381642512077
+     ],
+     "meanZ2Rtn": [
+      0.8679837071686857,
+      0.8673342523604164,
+      1.598437073675292
+     ],
+     "oraclePassProbability": 0.80925,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "12": {
+     "n": 197,
+     "clusters": 5,
+     "meanD2over3": 1.141496099180962,
+     "medianD2over3": 0.9407675756634905,
+     "coverage": 0.9390862944162437,
+     "meanInterval": [
+      0.9378497393279835,
+      1.35069397135658
+     ],
+     "coverageInterval": [
+      0.8983957219251337,
+      0.9797979797979798
+     ],
+     "meanZ2Rtn": [
+      0.8209201103724921,
+      0.9095431590389655,
+      1.7147314306960055
+     ],
+     "oraclePassProbability": 0.80925,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "24": {
+     "n": 193,
+     "clusters": 5,
+     "meanD2over3": 1.1301910492910925,
+     "medianD2over3": 0.8841888673694781,
+     "coverage": 0.9326424870466321,
+     "meanInterval": [
+      1.0073576171696887,
+      1.26282929573146
+     ],
+     "coverageInterval": [
+      0.8850574712643678,
+      0.9754901960784313
+     ],
+     "meanZ2Rtn": [
+      0.9289426947504507,
+      0.9576634242977098,
+      1.5652671314892563
+     ],
+     "oraclePassProbability": 0.8225,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "48": {
+     "n": 188,
+     "clusters": 5,
+     "meanD2over3": 1.2652482168663934,
+     "medianD2over3": 1.0511333530785565,
+     "coverage": 0.9361702127659575,
+     "meanInterval": [
+      1.1452509107265103,
+      1.390623514750332
+     ],
+     "coverageInterval": [
+      0.8994708994708994,
+      0.9720670391061452
+     ],
+     "meanZ2Rtn": [
+      0.951243978850212,
+      1.1806626554253115,
+      1.7171870101754079
+     ],
+     "oraclePassProbability": 0.809,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "72": {
+     "n": 183,
+     "clusters": 5,
+     "meanD2over3": 1.3522759039825862,
+     "medianD2over3": 1.0969576600912276,
+     "coverage": 0.9016393442622951,
+     "meanInterval": [
+      1.167615719451784,
+      1.5054204196885772
+     ],
+     "coverageInterval": [
+      0.8586387434554974,
+      0.9536082474226805
+     ],
+     "meanZ2Rtn": [
+      0.9231803718321341,
+      1.1794913414422146,
+      1.9992691280628985
+     ],
+     "oraclePassProbability": 0.7625,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    }
+   },
+   "eligibleCells": 6,
+   "passingEligibleCells": 4
+  }
+ },
+ "opened": null
+}

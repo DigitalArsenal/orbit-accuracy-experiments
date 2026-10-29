@@ -1,0 +1,430 @@
+{
+ "receipt": "precheck-P4",
+ "createdUtc": "2026-10-28T21:47:14.782Z",
+ "experimentsCommit": "65ee6ee3d27f2c476ccd4dd43b3ab753d017b038",
+ "plan": "3.8 P4",
+ "environment": {
+  "file": "/opt/data/sdn-archive/sdn-ap-baselines/environment/environment.json",
+  "sha256": "520b825d61e64418d1904a482da49c647cb2f92765c9df736d14d90a6e61dcf6",
+  "created": "2026-10-25T16:02:55.144Z"
+ },
+ "rowsAfterObserved": [
+  {
+   "date": "2026-10-21",
+   "kp": [
+    37,
+    40,
+    17,
+    23,
+    20,
+    33,
+    40,
+    47
+   ],
+   "ap3h": [
+    22,
+    27,
+    6,
+    9,
+    7,
+    18,
+    27,
+    39
+   ],
+   "apDaily": 19,
+   "f107": 115,
+   "f107Type": 0,
+   "f107Centred81": 104.10123443603516,
+   "f107Last81": 112.49629974365234
+  },
+  {
+   "date": "2026-10-22",
+   "kp": [
+    27,
+    30,
+    27,
+    33,
+    37,
+    37,
+    37,
+    30
+   ],
+   "ap3h": [
+    12,
+    15,
+    12,
+    18,
+    22,
+    22,
+    22,
+    15
+   ],
+   "apDaily": 17,
+   "f107": 106.5,
+   "f107Type": 0,
+   "f107Centred81": 103.91604614257812,
+   "f107Last81": 112.24444580078125
+  },
+  {
+   "date": "2026-10-23",
+   "kp": [
+    17,
+    20,
+    20,
+    20,
+    27,
+    23,
+    40,
+    23
+   ],
+   "ap3h": [
+    6,
+    7,
+    7,
+    7,
+    12,
+    9,
+    27,
+    -1
+   ],
+   "apDaily": 13,
+   "f107": 102,
+   "f107Type": 2,
+   "f107Centred81": 103.81111145019531,
+   "f107Last81": 111.95308685302734
+  },
+  {
+   "date": "2026-10-24",
+   "kp": [
+    27,
+    23,
+    20,
+    20,
+    20,
+    17,
+    17,
+    17
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 8,
+   "f107": 102,
+   "f107Type": 2,
+   "f107Centred81": 103.63580322265625,
+   "f107Last81": 111.75555419921875
+  },
+  {
+   "date": "2026-10-25",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 18,
+   "f107": 100,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-10-26",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 8,
+   "f107": 100,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-10-27",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 5,
+   "f107": 95,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-10-28",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 5,
+   "f107": 90,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-10-29",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 5,
+   "f107": 90,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-10-30",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 5,
+   "f107": 105,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-10-31",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 30,
+   "f107": 105,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-11-01",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 25,
+   "f107": 105,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  },
+  {
+   "date": "2026-11-02",
+   "kp": [
+    30,
+    33,
+    37,
+    33,
+    37,
+    30,
+    33,
+    30
+   ],
+   "ap3h": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ],
+   "apDaily": 10,
+   "f107": 105,
+   "f107Type": 2,
+   "f107Centred81": 103.52098846435547,
+   "f107Last81": 111.6629638671875
+  }
+ ],
+ "rule": "B1 rows end observed on 2026-10-23 (F10.7 type 2 from that day; 3-hourly ap -1 from 2026-10-24). From 2026-10-24: daily Ap and F10.7 that change day by day through 2026-11-02 (the NOAA SWPC 27-day outlook form, observed 81-day means held from 2026-10-25), and 3-hourly Kp from the 3-day forecast, its last day held after it",
+ "archive": {
+  "outlooksArchived": [
+   "2026-10-10",
+   "2026-10-26"
+  ],
+  "forecastsArchived": [
+   "2026-10-10",
+   "2026-10-28"
+  ],
+  "rsgaWarehouse": [
+   "2024_RSGA.tar.gz",
+   "2024_RSGA.tar.gz.provenance.json",
+   "2025_RSGA.tar.gz",
+   "2025_RSGA.tar.gz.provenance.json"
+  ]
+ },
+ "outcome": "O' NOT reproducible at C2 cutoffs (2025-10-03 to 2026-05-31): the 27-day outlooks and 3-day forecasts are archived only from 2026-10; per PLAN.md 3.8 P4 the documented alternative is XM's RSGA condition O (RSGA archived yearly). R1/R2 are held for A12 part 2 in any case",
+ "opened": {
+  "files": 4,
+  "sha256": "cf13dbbf22e04559b5c52e53c7fbe49f430c749258e2a7bd67c9b3297c61751f",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P4.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/hac/noaa-swpc/*",
+    "files": 1,
+    "labels": [
+     "listing"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/noaa-swpc/warehouse",
+    "files": 1,
+    "labels": [
+     "listing"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/sdn-ap-baselines/environment/*",
+    "files": 1,
+    "labels": [
+     "B1 environment.json"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "B2 config"
+    ]
+   }
+  ]
+ }
+}

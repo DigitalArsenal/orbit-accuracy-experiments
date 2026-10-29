@@ -1,0 +1,136 @@
+{
+ "receipt": "precheck-P12",
+ "createdUtc": "2026-10-28T22:44:09.064Z",
+ "experimentsCommit": "d938f54ae56d1bfcd8e5fd357c6a67efbc8f83c8",
+ "plan": "3.8 P12",
+ "common": {
+  "driver": {
+   "path": "harness/ffm-fit-v3.mjs",
+   "sha256": "42aa040a6944971e6c314551d7350aad0887bd51025228c1486c50b3a1b8ee9c"
+  },
+  "execution": {
+   "path": "harness/ffm-execution.mjs",
+   "sha256": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e"
+  },
+  "runner": {
+   "path": "experiments/ffm-covariance-calibration/run.mjs",
+   "sha256": "4f194ff216d1af1e4cc53aaa8a8b649dd119458ccec7f9a28e33fe8f9f4d6846"
+  },
+  "sigmaM": 10,
+  "rounds": 1,
+  "frame": "GCRF",
+  "measurement": "POSITION_VECTOR",
+  "track": "24 h at 10 min (precise) or the NASA file's 4-min states (ISS)",
+  "correctionTolerance": 0.01,
+  "sigmaEditThreshold": 5,
+  "maximumIterations": 40,
+  "forces": {
+   "degree": 70,
+   "order": 70,
+   "thirdBodies": [
+    10,
+    301
+   ],
+   "srp": true,
+   "drag": true,
+   "atmosphere": "NRLMSISE00",
+   "solidTides": true,
+   "relativity": "IERS_2010"
+  },
+  "integrator": {
+   "tolerance": 1e-10,
+   "maxStep": 120,
+   "minStep": 0.0001
+  },
+  "modules": {
+   "estimation": {
+    "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+    "version": "0.6.0",
+    "wasmSha256": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac"
+   },
+   "ffm": {
+    "modulesCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "version": "2.0.0",
+    "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f"
+   },
+   "domains": {
+    "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+    "file": "propagator/ffm/catalog-configuration.mjs",
+    "sha256": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6"
+   }
+  }
+ },
+ "classes": {
+  "I": {
+   "parameters": [
+    "DRAG_AREA_OVER_MASS",
+    "SRP_AREA_OVER_MASS"
+   ],
+   "seeds": {
+    "DRAG_AREA_OVER_MASS": 0.01,
+    "SRP_AREA_OVER_MASS": 0.02
+   },
+   "aprioriFraction": 1,
+   "apriori": {
+    "positionSigmaM": 100000,
+    "velocitySigmaMS": 10
+   },
+   "contingency": "C2-A3 point 3: the 9 failed fits once at 60 evaluations"
+  },
+  "LP": {
+   "parameters": [
+    "DRAG_AREA_OVER_MASS"
+   ],
+   "fixed": "AGOM at E6's value",
+   "seeds": "E6 slr.targets b",
+   "aprioriFraction": 0.3,
+   "apriori": {
+    "positionSigmaM": 100000,
+    "velocitySigmaMS": 10
+   }
+  },
+  "R3": {
+   "parameters": [
+    "SRP_AREA_OVER_MASS"
+   ],
+   "seeds": "seeds-R3.json (C2-A4 point 2)",
+   "aprioriFraction": 1,
+   "apriori": {
+    "positionSigmaM": 100000,
+    "velocitySigmaMS": 10
+   }
+  },
+  "R1": {
+   "profile": "P0 (A12 part 2, ac8971902)",
+   "parameters": [
+    "DRAG_AREA_OVER_MASS",
+    "SRP_AREA_OVER_MASS"
+   ],
+   "seeds": "seeds-R1R2.json (C2-A4 point 3)",
+   "aprioriFraction": 0.3,
+   "apriori": {
+    "positionSigmaM": 100000,
+    "velocitySigmaMS": 10
+   }
+  },
+  "R2": {
+   "profile": "P0 (A12 part 2, ac8971902)",
+   "parameters": [
+    "DRAG_AREA_OVER_MASS",
+    "SRP_AREA_OVER_MASS"
+   ],
+   "seeds": "seeds-R1R2.json (C2-A4 point 3)",
+   "aprioriFraction": 0.3,
+   "apriori": {
+    "positionSigmaM": 100000,
+    "velocitySigmaMS": 10
+   }
+  },
+  "L": {
+   "driver": "E6 R steps 12 and 40 unchanged (experiments/e6-public-observations)",
+   "label": "bias-contaminated (C2-A3 point 1)"
+  }
+ },
+ "outcome": "declared: every window of a class uses its row above",
+ "opened": null
+}

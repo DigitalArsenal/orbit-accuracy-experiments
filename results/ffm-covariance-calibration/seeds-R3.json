@@ -1,0 +1,233 @@
+{
+ "receipt": "seeds-R3",
+ "createdUtc": "2026-10-28T23:30:51.841Z",
+ "experimentsCommit": "a703cd9178e675cf184bfdd763817e11c00e2195",
+ "plan": "C2-A4 point 2 (Q17)",
+ "rule": "AGOM = A/m x Cr 1.3, a priori sigma 100 % of the seed, domain [0, inf)",
+ "objects": [
+  {
+   "name": "LAGEOS-1",
+   "norad": 8820,
+   "area": 0.2827433388230814,
+   "arithmetic": "pi x 0.6 m^2 / 4",
+   "mass": 406.965,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/lag1_general.html",
+   "quoted": "RRA Diameter: 60 cm; Weight: 406.965 Kg",
+   "areaM2": 0.282743,
+   "areaOverMassM2kg": 0.000694761,
+   "agomSeed": 0.000903189
+  },
+  {
+   "name": "LAGEOS-2",
+   "norad": 22195,
+   "area": 0.2827433388230814,
+   "arithmetic": "pi x 0.6 m^2 / 4",
+   "mass": 405.38,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/lag1_general.html",
+   "quoted": "RRA Diameter: 60 cm; Weight: 405.38 kg",
+   "areaM2": 0.282743,
+   "areaOverMassM2kg": 0.000697477,
+   "agomSeed": 0.00090672
+  },
+  {
+   "name": "LARES-2",
+   "norad": 53105,
+   "area": 0.14119574022293965,
+   "arithmetic": "pi x 0.424 m^2 / 4",
+   "mass": 297.5,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/lrs2_general.html",
+   "quoted": "Satellite Radius: 212 mm; Weight: 297.5 kg",
+   "areaM2": 0.141196,
+   "areaOverMassM2kg": 0.000474608,
+   "agomSeed": 0.00061699
+  },
+  {
+   "name": "Etalon-1",
+   "norad": 19751,
+   "area": 1.3150989591265698,
+   "arithmetic": "pi x 1.294 m^2 / 4",
+   "mass": 1415,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/eta1_general.html",
+   "quoted": "RRA Diameter: 1.294 m; Weight: 1415 kg",
+   "areaM2": 1.3151,
+   "areaOverMassM2kg": 0.000929399,
+   "agomSeed": 0.00120822
+  },
+  {
+   "name": "Etalon-2",
+   "norad": 20026,
+   "area": 1.3150989591265698,
+   "arithmetic": "pi x 1.294 m^2 / 4",
+   "mass": 1415,
+   "source": "https://ilrs.gsfc.nasa.gov/missions/satellite_missions/current_missions/eta1_general.html",
+   "quoted": "RRA Diameter: 1.294 m; Weight: 1415 kg",
+   "areaM2": 1.3151,
+   "areaOverMassM2kg": 0.000929399,
+   "agomSeed": 0.00120822
+  },
+  {
+   "name": "GLONASS R855 (GLO-M+)",
+   "norad": 40001,
+   "area": 8.2655,
+   "arithmetic": "3.05 m x 2.71 m (the largest face of the Glonass-M body 2.71 x 3.05 x 2.71 m; solar arrays not documented, not included)",
+   "mass": 1415,
+   "source": "https://glonass-iac.ru/en/about_glonass/ (Glonass-M: Mass 1415 kg, Dimensions 2,71x3,05x2,71 m); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) R855 1415.000 kg",
+   "quoted": "Glonass-M Mass, kg 1415; Dimensions, m 2,71x3,05x2,71",
+   "areaM2": 8.2655,
+   "areaOverMassM2kg": 0.00584134,
+   "agomSeed": 0.00759375
+  },
+  {
+   "name": "GLONASS R859 (GLO-M+)",
+   "norad": 44850,
+   "area": 8.2655,
+   "arithmetic": "3.05 m x 2.71 m (the largest face of the Glonass-M body 2.71 x 3.05 x 2.71 m; solar arrays not documented, not included)",
+   "mass": 1415,
+   "source": "https://glonass-iac.ru/en/about_glonass/ (Glonass-M: Mass 1415 kg, Dimensions 2,71x3,05x2,71 m); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) R859 1415.000 kg",
+   "quoted": "Glonass-M Mass, kg 1415; Dimensions, m 2,71x3,05x2,71",
+   "areaM2": 8.2655,
+   "areaOverMassM2kg": 0.00584134,
+   "agomSeed": 0.00759375
+  },
+  {
+   "name": "GLONASS R743 (GLO-M)",
+   "norad": 37869,
+   "area": 8.2655,
+   "arithmetic": "3.05 m x 2.71 m (the largest face of the Glonass-M body 2.71 x 3.05 x 2.71 m; solar arrays not documented, not included)",
+   "mass": 1415,
+   "source": "https://glonass-iac.ru/en/about_glonass/ (Glonass-M: Mass 1415 kg, Dimensions 2,71x3,05x2,71 m); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) R743 1415.000 kg",
+   "quoted": "Glonass-M Mass, kg 1415; Dimensions, m 2,71x3,05x2,71",
+   "areaM2": 8.2655,
+   "areaOverMassM2kg": 0.00584134,
+   "agomSeed": 0.00759375
+  },
+  {
+   "name": "GLONASS R861 (GLO-M+)",
+   "norad": 54377,
+   "area": 8.2655,
+   "arithmetic": "3.05 m x 2.71 m (the largest face of the Glonass-M body 2.71 x 3.05 x 2.71 m; solar arrays not documented, not included)",
+   "mass": 1415,
+   "source": "https://glonass-iac.ru/en/about_glonass/ (Glonass-M: Mass 1415 kg, Dimensions 2,71x3,05x2,71 m); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) R861 1415.000 kg",
+   "quoted": "Glonass-M Mass, kg 1415; Dimensions, m 2,71x3,05x2,71",
+   "areaM2": 8.2655,
+   "areaOverMassM2kg": 0.00584134,
+   "agomSeed": 0.00759375
+  },
+  {
+   "name": "Galileo E220 (FOC)",
+   "norad": 43567,
+   "area": 13.856,
+   "arithmetic": "2 solar arrays x 5.41 m^2 (5.000 m x 1.082 m) + the +/-Z box panel 3.036 m^2",
+   "mass": 710.795,
+   "source": "https://www.gsc-europa.eu/support-to-developers/galileo-satellite-metadata (section 6: each solar array 5.41 m^2; FOC +/-Z panel 3.036 m^2); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) E220 710.795 kg",
+   "quoted": "solar array 5.41 m^2 (= 5.000 m x 1.082 m); +/-Z panel 3.036 m^2",
+   "areaM2": 13.856,
+   "areaOverMassM2kg": 0.0194937,
+   "agomSeed": 0.0253418
+  },
+  {
+   "name": "Galileo E102 (IOV)",
+   "norad": 37847,
+   "area": 13.82,
+   "arithmetic": "2 solar arrays x 5.41 m^2 (5.000 m x 1.082 m) + the +/-Z box panel 3 m^2",
+   "mass": 695.318,
+   "source": "https://www.gsc-europa.eu/support-to-developers/galileo-satellite-metadata (section 6: each solar array 5.41 m^2; IOV +/-Z panel 3.00 m^2); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) E102 695.318 kg",
+   "quoted": "solar array 5.41 m^2 (= 5.000 m x 1.082 m); +/-Z panel 3 m^2",
+   "areaM2": 13.82,
+   "areaOverMassM2kg": 0.0198758,
+   "agomSeed": 0.0258385
+  },
+  {
+   "name": "Galileo E214 (FOC)",
+   "norad": 41862,
+   "area": 13.856,
+   "arithmetic": "2 solar arrays x 5.41 m^2 (5.000 m x 1.082 m) + the +/-Z box panel 3.036 m^2",
+   "mass": 709.755,
+   "source": "https://www.gsc-europa.eu/support-to-developers/galileo-satellite-metadata (section 6: each solar array 5.41 m^2; FOC +/-Z panel 3.036 m^2); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) E214 709.755 kg",
+   "quoted": "solar array 5.41 m^2 (= 5.000 m x 1.082 m); +/-Z panel 3.036 m^2",
+   "areaM2": 13.856,
+   "areaOverMassM2kg": 0.0195222,
+   "agomSeed": 0.0253789
+  },
+  {
+   "name": "Galileo E209 (FOC)",
+   "norad": 41174,
+   "area": 13.856,
+   "arithmetic": "2 solar arrays x 5.41 m^2 (5.000 m x 1.082 m) + the +/-Z box panel 3.036 m^2",
+   "mass": 707.879,
+   "source": "https://www.gsc-europa.eu/support-to-developers/galileo-satellite-metadata (section 6: each solar array 5.41 m^2; FOC +/-Z panel 3.036 m^2); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) E209 707.879 kg",
+   "quoted": "solar array 5.41 m^2 (= 5.000 m x 1.082 m); +/-Z panel 3.036 m^2",
+   "areaM2": 13.856,
+   "areaOverMassM2kg": 0.019574,
+   "agomSeed": 0.0254462
+  },
+  {
+   "name": "Galileo E215 (FOC)",
+   "norad": 43055,
+   "area": 13.856,
+   "arithmetic": "2 solar arrays x 5.41 m^2 (5.000 m x 1.082 m) + the +/-Z box panel 3.036 m^2",
+   "mass": 708.5,
+   "source": "https://www.gsc-europa.eu/support-to-developers/galileo-satellite-metadata (section 6: each solar array 5.41 m^2; FOC +/-Z panel 3.036 m^2); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) E215 708.5 kg",
+   "quoted": "solar array 5.41 m^2 (= 5.000 m x 1.082 m); +/-Z panel 3.036 m^2",
+   "areaM2": 13.856,
+   "areaOverMassM2kg": 0.0195568,
+   "agomSeed": 0.0254239
+  },
+  {
+   "name": "Galileo E208 (FOC)",
+   "norad": 41175,
+   "area": 13.856,
+   "arithmetic": "2 solar arrays x 5.41 m^2 (5.000 m x 1.082 m) + the +/-Z box panel 3.036 m^2",
+   "mass": 709.135,
+   "source": "https://www.gsc-europa.eu/support-to-developers/galileo-satellite-metadata (section 6: each solar array 5.41 m^2; FOC +/-Z panel 3.036 m^2); mass IGS satellite metadata SINEX, SATELLITE/MASS (https://files.igs.org/pub/station/general/igs_satellite_metadata.snx; archive copy /opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx) E208 709.135 kg",
+   "quoted": "solar array 5.41 m^2 (= 5.000 m x 1.082 m); +/-Z panel 3.036 m^2",
+   "areaM2": 13.856,
+   "areaOverMassM2kg": 0.0195393,
+   "agomSeed": 0.0254011
+  }
+ ],
+ "excluded": [
+  {
+   "norad": 40534,
+   "svn": "G071",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 38833,
+   "svn": "G065",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 39741,
+   "svn": "G067",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 35752,
+   "svn": "G050",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 40294,
+   "svn": "G069",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 32260,
+   "svn": "G055",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 40730,
+   "svn": "G072",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  },
+  {
+   "norad": 29601,
+   "svn": "G058",
+   "reason": "no public area or bus dimension retrieved: gps.gov/space-segment lists no dimensions; spaceforce.mil and losangeles.spaceforce.mil fact sheets refuse anonymous requests (HTTP 403); the Boeing GPS page (IGS reference MA04) is rendered client-side with no specification text; IGS metadata has masses only (IIF 1633 kg, IIR-M 1080 kg)"
+  }
+ ],
+ "disclosure": "the 8 GPS satellites of R3 calibration are left out: no public dimension retrieved; GLONASS areas are the documented body only (solar arrays not documented by the IAC page)",
+ "opened": null
+}

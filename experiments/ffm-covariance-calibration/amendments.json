@@ -1,0 +1,259 @@
+{
+ "C2-A1": {
+  "date": "2026-10-28",
+  "before": "any fit",
+  "reasonReceipts": [
+   "results/ffm-covariance-calibration/precheck-P9.json",
+   "results/ffm-covariance-calibration/precheck-P2.json"
+  ],
+  "cosmic2": {
+   "calibration": 4,
+   "heldOutObject": 1,
+   "selection": "lowest SHA-256 of C2|P9|cosmic2|<norad>",
+   "dayCoverageMin": 0.75,
+   "perWindowEpochCoverage": 0.9
+  },
+  "terrasarX": {
+   "source": "/opt/data/sdn-archive/hac/gfz-isdc-rso/RSO/L13",
+   "convertWith": "analysis/reference-states, as GRACE-FO GFZOP",
+   "role": "R1 held out by object"
+  },
+  "nsgfTruthCovariance": {
+   "primary": "per-arc diagonal RTN truth term, sigma = statedSigmaM / sqrt(2) per axis, added in pair_statistics; d2 against combined",
+   "appliesTo": [
+    "R2 NSGF objects",
+    "L"
+   ],
+   "sensitivity": "arcs with statedSigmaM > 0.3 m excluded, no truth term",
+   "p3Arcs": "statedSigmaM <= 0.3 m only"
+  },
+  "definitions": {
+   "gnssTruth": "ESA0OPSFIN only",
+   "dayCoverageMin": 0.9,
+   "heldOutTimeEveryDays": 2
+  }
+ },
+ "C2-A2": {
+  "date": "2026-10-28",
+  "before": "any fit",
+  "ruling": "Q12",
+  "coverageSpan": "24 h fit track [E - 24 h, E], >= 90 %",
+  "leadScored": "where truth holds E + L",
+  "yieldReceipt": "results/ffm-covariance-calibration/precheck-P9.json",
+  "r1ClustersRestOn": [
+   "Swarm A+C",
+   "Swarm B",
+   "GRACE-FO 1+2"
+  ]
+ },
+ "C2-A3": {
+  "date": "2026-10-28",
+  "before": "any calibration fit",
+  "rulings": [
+   "Q13",
+   "Q14",
+   "Q15"
+  ],
+  "npBiasTask": "experiments-e6-normal-point-along-track-bias-20261028",
+  "typeLLabel": "NP along-track bias present (task experiments-e6-normal-point-along-track-bias-20261028)",
+  "classLP": {
+   "objects": [
+    "lares",
+    "starlette",
+    "stella",
+    "larets",
+    "westpac"
+   ],
+   "fit": "harness/ffm-fit-v3.mjs, one round, 10 m, 24 h NSGF at 10 min; state + B (seed E6 b, a priori 30 %), AGOM fixed E6",
+   "cutoffEveryHours": 24,
+   "split": "type L's",
+   "truthCovariance": "C2-A1 point 3",
+   "role": "bias-free measure of the floor"
+  },
+  "issFits": {
+   "dataExclusions": [
+    "2021-05-11",
+    "2025-02-12"
+   ],
+   "rerunAt60": [
+    "2021-02-02",
+    "2021-09-14",
+    "2022-01-29",
+    "2022-10-29",
+    "2023-10-06",
+    "2024-03-21",
+    "2024-03-28",
+    "2024-04-02",
+    "2024-12-17"
+   ],
+   "maximumIterations": 60
+  },
+  "ffmParity": {
+   "accepted": "<= 25 mm over 72 h",
+   "disproved": "2.0.1 changed only covariance validation"
+  },
+  "terrasarX": "results only, not redistributable"
+ },
+ "C2-A4": {
+  "date": "2026-10-28",
+  "before": "any freeze",
+  "rulings": [
+   "Q16",
+   "Q17",
+   "Q18",
+   "Q19",
+   "Q20",
+   "Q21",
+   "Q22",
+   "Q23"
+  ],
+  "disclosure": "type I and L-P fits and choices made before this amendment (b54dd85); unchanged",
+  "p8": {
+   "statistic": "mean d2/3 after scaling each lead to 95 % coverage exactly",
+   "band": [
+    0.8,
+    1.25
+   ],
+   "scope": "every lead of the chosen model on validation"
+  },
+  "r3": {
+   "parameters": "state + AGOM",
+   "agomSeed": "published A/m x Cr 1.3",
+   "aprioriFraction": 1,
+   "domain": [
+    0,
+    "inf"
+   ],
+   "receipt": "seeds-R3.json"
+  },
+  "r1r2": {
+   "structure": "P0",
+   "bSeed": "published A/m x Cd 2.2",
+   "agomSeed": "published A/m x Cr 1.3",
+   "aprioriFraction": 0.3,
+   "receipt": "seeds-R1R2.json"
+  },
+  "maneuverScreen": {
+   "fitSpan_h": [
+    -24,
+    72
+   ],
+   "parameters": "state + B + AGOM",
+   "sigmaM": 10,
+   "flagRms3dM": 5,
+   "gnssNotices": "hac/gnss-notices"
+  },
+  "typeL": {
+   "calibration": [
+    "2026-06-28",
+    "2026-07-07"
+   ],
+   "validation": [
+    "2026-07-08",
+    "2026-07-15"
+   ],
+   "heldOut": [
+    "2026-07-16",
+    "2026-08-30"
+   ],
+   "label": "bias-contaminated"
+  },
+  "m2c": "dropped",
+  "weatherO": "XM libraries read-only from origin/wip/experiments-xp-atmosphere-merit-20261026 at its SHA",
+  "smallCells": "not eligible (n < 100)"
+ },
+ "C2-A5": {
+  "date": "2026-10-29",
+  "before": "held-out run 2",
+  "run1": {
+   "I": {
+    "refusedCovariance": 105,
+    "refusedWeather": 2,
+    "usableSeen": 10,
+    "record": "heldout-I.run1-refused.json"
+   },
+   "LP": {
+    "stoppedAt": 143,
+    "refused": 81,
+    "tableWritten": false
+   }
+  },
+  "fix": "symmetrize the covariance handed to FFM at E, (P + P^T)/2, in lib/products.mjs (conditioning for transport, not physics)",
+  "frozenConstantsSha256": "c50936e5646a6e55ea6c5fec0cab230b078082b4e4e770afd0715ca98c38c803",
+  "run2": "final; any FFM refusal is a failure, listed",
+  "modulesTask": "modules-ffm-covariance-roundtrip-symmetry-20261029"
+ },
+ "C2-A6": {
+  "date": "2026-10-29",
+  "before": "any R1 fit",
+  "restored": {
+   "GRACE-FO": {
+    "areaM2": 0.9551567,
+    "mass": [
+     601.214,
+     601.209
+    ],
+    "source": "GRACE-FO L1 Handbook JPL D-56935, Tables 4-5"
+   },
+   "COSMIC-2": {
+    "areaM2": 1.5625,
+    "mass": 277.8,
+    "source": "eoPortal FORMOSAT-7 (stowed bus 1000 x 1250 x 1250 mm)"
+   }
+  },
+  "r1Clusters": ">= 3: registered rule applies",
+  "gps": "stays out of R3"
+ },
+ "C2-A7": {
+  "date": "2026-10-29",
+  "before": "any R1 fit",
+  "r1Screen": {
+   "rule": "median + 5 x 1.4826 x MAD of R1 calibration screen RMS under M",
+   "median": 56.6055923979269,
+   "mad": 29.796333622108737,
+   "thresholdM": 277.4858135386189,
+   "calibrationScreens": 566,
+   "aboveThreshold": 28,
+   "appliesTo": "R1 calibration, validation, held out; M and O"
+  },
+  "r2": "5 m rule kept; all-sample cells secondary",
+  "r3": "as scored; Galileo flag rate disclosed as SRP artifact",
+  "weatherO": "B1 forecast-day form, confirmed; R2-O held-out rows on disk, no table"
+ },
+ "C2-A8": {
+  "date": "2026-10-29",
+  "before": "the Starlink transfer",
+  "rsgaGap": {
+   "xmRsgaSpan": [
+    "2026-01-01",
+    "2026-10-09"
+   ],
+   "lost": {
+    "R1calibrationO": [
+     318,
+     810
+    ],
+    "R2calibrationO": [
+     236,
+     630
+    ],
+    "R1heldOutO": [
+     71,
+     814
+    ],
+    "R2heldOutO": [
+     24,
+     603
+    ]
+   }
+  },
+  "r1oR2o": "frozen and scored, no refit",
+  "transfer": {
+   "constants": "R1 (M3 tau 1 day)",
+   "weather": "B2 environment table (observed to 2026-10-23, forecast after)",
+   "reason": "no RSGA in the 72 h before any E' cutoff"
+  },
+  "fairness": "SGP4-XP Starlink calibration follows R1-M",
+  "deletedTrialRow": "NORAD 45237, missing input"
+ }
+}

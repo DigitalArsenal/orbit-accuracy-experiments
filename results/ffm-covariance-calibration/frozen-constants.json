@@ -1,0 +1,153 @@
+{
+ "receipt": "frozen-constants",
+ "note": "PLAN.md 3.5 point 4: no change after any held-out score; any later variant is exploratory",
+ "classes": {
+  "I": {
+   "chosen": "M1",
+   "parameters": {
+    "k_e": 33815.04311442945,
+    "f_R": 0.020041705656607373,
+    "f_T": 9.401534204448408,
+    "f_N": 0.34203999033474175
+   },
+   "fitReceipt": "fit-I.json",
+   "fitReceiptSha256": "4499b3482776001129e060fb19cfd0168d48c65e140678340f38a57399a6be6b",
+   "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-28T22:44:27.217Z"
+  },
+  "LP": {
+   "chosen": "M0",
+   "parameters": {
+    "k_e": 1
+   },
+   "fitReceipt": "fit-LP.json",
+   "fitReceiptSha256": "18cb8b39499464edf92a19983cbe19dbad7e802431ecc44b794039171a5d1ae6",
+   "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-28T22:44:27.484Z"
+  },
+  "LP-sensitivity": {
+   "chosen": "M3/tauInf",
+   "parameters": {
+    "tau": "inf",
+    "k_e": 0.034825981391852424,
+    "f_R": 0.17191523755809457,
+    "f_T": 0.0004875830872405324,
+    "f_N": 1.203303166378585,
+    "q_T": 1.8486118151964574e-17,
+    "q_RN": 7.217959781761523e-17,
+    "s2": 0.17850209243128934
+   },
+   "fitReceipt": "fit-LP-sensitivity.json",
+   "fitReceiptSha256": "f8ada4108bd65bfca223857b1da1cbd367503d90dec92bdda16068d447baae83",
+   "fitCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+   "p8": null,
+   "frozenUtc": "2026-10-28T22:44:27.710Z"
+  },
+  "R3": {
+   "chosen": "M2",
+   "parameters": {
+    "k_e": 0.02853272473723102,
+    "f_R": 0.0000017742599034924027,
+    "f_T": 2.643418138356871e-8,
+    "f_N": 2.7420989309141017e-8,
+    "q_T": 3.5222228751886823e-15,
+    "q_RN": 5.197102895121907e-20
+   },
+   "fitReceipt": "fit-R3.json",
+   "fitReceiptSha256": "dd8a5a4cb19813baf1a369f88e45f69060fe3f071e3cd622ceb27c12e0e35dfc",
+   "fitCommit": "3281d0dc2497e5b7f633488063b2c760928b3f52",
+   "p8": "pass",
+   "frozenUtc": "2026-10-29T00:25:23.869Z"
+  },
+  "L": {
+   "chosen": "M2",
+   "parameters": {
+    "k_e": 1.9516758785436588,
+    "f_R": 1.9804750224401257,
+    "f_T": 7.0185456205260435,
+    "f_N": 2.4119377776703086,
+    "q_T": 4.139573739847988e-20,
+    "q_RN": 1.1327773785338313e-15
+   },
+   "fitReceipt": "fit-L.json",
+   "fitReceiptSha256": "5751a904e061bbe6fcd46a72a3335fafb605cd0ff4b451bb9625013501fe3205",
+   "fitCommit": "5a15eea69be98102d9786a2ef4efbf1793394bb0",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T02:15:44.329Z"
+  },
+  "R2": {
+   "chosen": "M3/tauInf",
+   "parameters": {
+    "tau": "inf",
+    "k_e": 0.4990857268060547,
+    "f_R": 0.21759749115831434,
+    "f_T": 0.004977230212429818,
+    "f_N": 3.9886210901571912,
+    "q_T": 3.9190827340118346e-18,
+    "q_RN": 2.214428133599884e-20,
+    "s2": 0.016139164418746597
+   },
+   "fitReceipt": "fit-R2.json",
+   "fitReceiptSha256": "d5e38bb4b1d08c2dad65c85d32958bb97ab7648aced9956240a2db6b7e74c31b",
+   "fitCommit": "2343f34f4e9e798f93502e7b73449cbba2e500dc",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T03:21:10.425Z"
+  },
+  "R2-O": {
+   "chosen": "M3/tauInf",
+   "parameters": {
+    "tau": "inf",
+    "k_e": 0.4093773963103564,
+    "f_R": 0.30853316860862723,
+    "f_T": 0.00816578105933752,
+    "f_N": 0.6991948653149317,
+    "q_T": 3.2570407097399e-19,
+    "q_RN": 2.0827218387940405e-19,
+    "s2": 0.05430922572329374
+   },
+   "fitReceipt": "fit-R2-O.json",
+   "fitReceiptSha256": "cc3a412899ddff94219ef2cfcdbcbcffd54133779799e9351f1aa5acc5e4eec2",
+   "fitCommit": "5a565513d0ecc9aa7732febcbe9d4c745dd9c763",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T03:40:25.392Z"
+  },
+  "R1": {
+   "chosen": "M3/tau1",
+   "parameters": {
+    "tau": 1,
+    "k_e": 5.305292516976156,
+    "f_R": 0.2843105151053393,
+    "f_T": 26.134262801933524,
+    "f_N": 0.07489481602220313,
+    "q_T": 6.840587227450634e-11,
+    "q_RN": 2.883495985334589e-15,
+    "s2": 0.031061192901856948
+   },
+   "fitReceipt": "fit-R1.json",
+   "fitReceiptSha256": "32ca54b631810773e052cafc1cdba736dea4cbf4f986c792b033670435ec4888",
+   "fitCommit": "4ffd2f6515c16c39a7007d9464e33d6ec800efbe",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T05:24:23.919Z"
+  },
+  "R1-O": {
+   "chosen": "M3/tauInf",
+   "parameters": {
+    "tau": "inf",
+    "k_e": 5.103159552251437,
+    "f_R": 0.3429856034216649,
+    "f_T": 23.299606104073284,
+    "f_N": 0.3415460791063316,
+    "q_T": 1.0673061255330429e-10,
+    "q_RN": 1.0506480427912509e-14,
+    "s2": 0.011613273464012057
+   },
+   "fitReceipt": "fit-R1-O.json",
+   "fitReceiptSha256": "705429b00a4dfdb6f8e068377440eb62545a6242c2c9de825c0e4db61e34550f",
+   "fitCommit": "ae6cf6e30cb2f904e51eff7410f39f66403ff22e",
+   "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+   "frozenUtc": "2026-10-29T05:26:45.634Z"
+  }
+ }
+}

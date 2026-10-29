@@ -1,0 +1,124 @@
+{
+ "receipt": "precheck-P5",
+ "createdUtc": "2026-10-28T22:11:08.929Z",
+ "experimentsCommit": "779ab008311eeec4d5c6fda2ca1bfd098095b6e0",
+ "plan": "3.8 P5",
+ "builds": {
+  "v200": {
+   "commit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+   "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f"
+  },
+  "v201": {
+   "commit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+   "wasmSha256": "343c4145a6fa2154b987658dd510f8d1fd1f378ee39c3fc30f3f1d594c7546e3"
+  }
+ },
+ "settings": {
+  "samples": "E to E + 72 h hourly",
+  "integrator": {
+   "tolerance": 1e-10,
+   "maxStep": 120,
+   "minStep": 0.0001
+  },
+  "forces": {
+   "degree": 70,
+   "order": 70,
+   "thirdBodies": [
+    10,
+    301
+   ],
+   "srp": true,
+   "drag": true,
+   "atmosphere": "NRLMSISE00",
+   "solidTides": true,
+   "relativity": "IERS_2010"
+  },
+  "noise": "q = 1e-9 m^2/s^3 R, T, N, 600 s; A5 covariance x 4"
+ },
+ "windows": [
+  {
+   "file": "2021-01-12",
+   "E": "2021-01-12T12:00:00.000Z",
+   "statesIdentical": false,
+   "maxPositionDifferenceM": 0.001066809898475185,
+   "errors": [],
+   "noisyCovariancesMissing": {
+    "v200": 0,
+    "v201": 0
+   },
+   "noisyCovarianceIdentical": false
+  },
+  {
+   "file": "2021-01-15",
+   "E": "2021-01-14T12:00:00.000Z",
+   "statesIdentical": false,
+   "maxPositionDifferenceM": 0.0021511660888791084,
+   "errors": [],
+   "noisyCovariancesMissing": {
+    "v200": 0,
+    "v201": 0
+   },
+   "noisyCovarianceIdentical": false
+  },
+  {
+   "file": "2021-01-26",
+   "E": "2021-01-26T12:00:00.000Z",
+   "statesIdentical": false,
+   "maxPositionDifferenceM": 0.01925057324115187,
+   "errors": [],
+   "noisyCovariancesMissing": {
+    "v200": 0,
+    "v201": 0
+   },
+   "noisyCovarianceIdentical": false
+  },
+  {
+   "file": "2021-02-01",
+   "E": "2021-01-30T12:00:00.000Z",
+   "statesIdentical": false,
+   "maxPositionDifferenceM": 0.015980571042746305,
+   "errors": [],
+   "noisyCovariancesMissing": {
+    "v200": 0,
+    "v201": 0
+   },
+   "noisyCovarianceIdentical": false
+  },
+  {
+   "file": "2021-02-18",
+   "E": "2021-02-18T14:53:53.651Z",
+   "statesIdentical": false,
+   "maxPositionDifferenceM": 0.024642788106575608,
+   "errors": [],
+   "noisyCovariancesMissing": {
+    "v200": 0,
+    "v201": 0
+   },
+   "noisyCovarianceIdentical": false
+  }
+ ],
+ "outcome": "FAIL (not identical)",
+ "ruling": "C2-A3 point 4 (Q15): agreement within 25 mm over 72 h is accepted as parity for C2 (every C2 and B2 run uses 2.0.0); the assumption \"2.0.1 changed only covariance validation\" is DISPROVED: the states differ by 1-25 mm",
+ "maxDifferenceM": 0.024642788106575608,
+ "opened": {
+  "files": 5,
+  "sha256": "2ff65aa34da652f1bc5710e6309c1684906e4627a010324ab73c42fd99ea6797",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P5.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/rows/*",
+    "files": 4,
+    "labels": [
+     "iss-fit rows"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "B2 config"
+    ]
+   }
+  ]
+ }
+}

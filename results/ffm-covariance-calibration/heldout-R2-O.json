@@ -1,0 +1,817 @@
+{
+ "receipt": "heldout-R2-O",
+ "createdUtc": "2026-10-29T05:27:25.966Z",
+ "experimentsCommit": "f98024f7147aa7d3828c0905f1bf3cf8a866f7d2",
+ "class": "R2",
+ "variants": {
+  "R2-O/object/primary": {
+   "constants": {
+    "chosen": "M3/tauInf",
+    "parameters": {
+     "tau": "inf",
+     "k_e": 0.4093773963103564,
+     "f_R": 0.30853316860862723,
+     "f_T": 0.00816578105933752,
+     "f_N": 0.6991948653149317,
+     "q_T": 3.2570407097399e-19,
+     "q_RN": 2.0827218387940405e-19,
+     "s2": 0.05430922572329374
+    },
+    "fitReceipt": "fit-R2-O.json",
+    "fitReceiptSha256": "cc3a412899ddff94219ef2cfcdbcbcffd54133779799e9351f1aa5acc5e4eec2",
+    "fitCommit": "5a565513d0ecc9aa7732febcbe9d4c745dd9c763",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T03:40:25.392Z"
+   },
+   "counts": {
+    "windows": 122,
+    "excluded": {
+     "refused: condition O: no RSGA issued in the 72 h before the ": 24,
+     "fit analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it.": 3,
+     "fit track 0/145 states (< 90 %)": 52,
+     "maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)": 74,
+     "no state at the track start": 3,
+     "fit track 122/145 states (< 90 %)": 3,
+     "fit track 121/145 states (< 90 %)": 2,
+     "fit track 119/145 states (< 90 %)": 1,
+     "fit track 88/145 states (< 90 %)": 1,
+     "fit track 94/145 states (< 90 %)": 1,
+     "fit track 126/145 states (< 90 %)": 4,
+     "fit track 123/145 states (< 90 %)": 3,
+     "fit track 95/145 states (< 90 %)": 2,
+     "fit track 130/145 states (< 90 %)": 2,
+     "fit track 87/145 states (< 90 %)": 2,
+     "fit track 120/145 states (< 90 %)": 2,
+     "fit track 128/145 states (< 90 %)": 2,
+     "fit track 125/145 states (< 90 %)": 5,
+     "fit track 124/145 states (< 90 %)": 2,
+     "fit track 129/145 states (< 90 %)": 5,
+     "fit track 14/145 states (< 90 %)": 4,
+     "fit track 1/145 states (< 90 %)": 1,
+     "fit track 90/145 states (< 90 %)": 1,
+     "fit track 114/145 states (< 90 %)": 1,
+     "fit track 127/145 states (< 90 %)": 1,
+     "maneuver screen: truth fit not converged": 1
+    },
+    "failures": [
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 121,
+     "clusters": 2,
+     "meanD2over3": 0.984157003398228,
+     "medianD2over3": 0.2508359293725591,
+     "coverage": 0.9338842975206612,
+     "meanInterval": [
+      0.9087087470987671,
+      1.2468287105148692
+     ],
+     "coverageInterval": [
+      0.925531914893617,
+      0.9629629629629629
+     ],
+     "meanZ2Rtn": [
+      0.6845440656389999,
+      2.176565187413878,
+      0.08242904258455323
+     ],
+     "oraclePassProbability": 0.695,
+     "inBand": true,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "6": {
+     "n": 119,
+     "clusters": 2,
+     "meanD2over3": 0.7946875167826574,
+     "medianD2over3": 0.24712711845977367,
+     "coverage": 0.9159663865546218,
+     "meanInterval": [
+      0.48187325122117275,
+      1.9708691552938375
+     ],
+     "coverageInterval": [
+      0.72,
+      0.9680851063829787
+     ],
+     "meanZ2Rtn": [
+      1.0327738350987554,
+      1.1613561343869971,
+      0.11360584884793501
+     ],
+     "oraclePassProbability": 0.70875,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "12": {
+     "n": 119,
+     "clusters": 2,
+     "meanD2over3": 1.0389088906948352,
+     "medianD2over3": 0.2881485427913802,
+     "coverage": 0.8739495798319328,
+     "meanInterval": [
+      0.3592890887213489,
+      3.594279346115142
+     ],
+     "coverageInterval": [
+      0.4,
+      1
+     ],
+     "meanZ2Rtn": [
+      2.0449421997823243,
+      0.741233952398453,
+      0.24343314527202956
+     ],
+     "oraclePassProbability": 0.70875,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "24": {
+     "n": 121,
+     "clusters": 2,
+     "meanD2over3": 1.4232862341923356,
+     "medianD2over3": 0.4208438909028149,
+     "coverage": 0.8760330578512396,
+     "meanInterval": [
+      0.46090563035166515,
+      4.773796484600598
+     ],
+     "coverageInterval": [
+      0.4444444444444444,
+      1
+     ],
+     "meanZ2Rtn": [
+      2.3725617452770895,
+      0.8184017865445018,
+      0.36172934518012523
+     ],
+     "oraclePassProbability": 0.695,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "48": {
+     "n": 120,
+     "clusters": 2,
+     "meanD2over3": 2.8153649122501148,
+     "medianD2over3": 0.5900794972865323,
+     "coverage": 0.775,
+     "meanInterval": [
+      0.5859963738780677,
+      10.494300988864941
+     ],
+     "coverageInterval": [
+      0.037037037037037035,
+      0.989247311827957
+     ],
+     "meanZ2Rtn": [
+      3.8345654772196385,
+      0.7249010344293624,
+      0.8650398844597185
+     ],
+     "oraclePassProbability": 0.6995,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "72": {
+     "n": 121,
+     "clusters": 2,
+     "meanD2over3": 4.019259872961823,
+     "medianD2over3": 0.695413321132981,
+     "coverage": 0.8264462809917356,
+     "meanInterval": [
+      0.7328151174180446,
+      15.46095642929942
+     ],
+     "coverageInterval": [
+      0.25925925925925924,
+      0.9893617021276596
+     ],
+     "meanZ2Rtn": [
+      4.5116466698825075,
+      0.6954894038930067,
+      1.7300540778372528
+     ],
+     "oraclePassProbability": 0.695,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    }
+   },
+   "eligibleCells": 0,
+   "passingEligibleCells": 0
+  },
+  "R2-O/object/allSamples": {
+   "constants": {
+    "chosen": "M3/tauInf",
+    "parameters": {
+     "tau": "inf",
+     "k_e": 0.4093773963103564,
+     "f_R": 0.30853316860862723,
+     "f_T": 0.00816578105933752,
+     "f_N": 0.6991948653149317,
+     "q_T": 3.2570407097399e-19,
+     "q_RN": 2.0827218387940405e-19,
+     "s2": 0.05430922572329374
+    },
+    "fitReceipt": "fit-R2-O.json",
+    "fitReceiptSha256": "cc3a412899ddff94219ef2cfcdbcbcffd54133779799e9351f1aa5acc5e4eec2",
+    "fitCommit": "5a565513d0ecc9aa7732febcbe9d4c745dd9c763",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T03:40:25.392Z"
+   },
+   "counts": {
+    "windows": 197,
+    "excluded": {
+     "refused: condition O: no RSGA issued in the 72 h before the ": 24,
+     "fit analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it.": 3,
+     "fit track 0/145 states (< 90 %)": 52,
+     "no state at the track start": 3,
+     "fit track 122/145 states (< 90 %)": 3,
+     "fit track 121/145 states (< 90 %)": 2,
+     "fit track 119/145 states (< 90 %)": 1,
+     "fit track 88/145 states (< 90 %)": 1,
+     "fit track 94/145 states (< 90 %)": 1,
+     "fit track 126/145 states (< 90 %)": 4,
+     "fit track 123/145 states (< 90 %)": 3,
+     "fit track 95/145 states (< 90 %)": 2,
+     "fit track 130/145 states (< 90 %)": 2,
+     "fit track 87/145 states (< 90 %)": 2,
+     "fit track 120/145 states (< 90 %)": 2,
+     "fit track 128/145 states (< 90 %)": 2,
+     "fit track 125/145 states (< 90 %)": 5,
+     "fit track 124/145 states (< 90 %)": 2,
+     "fit track 129/145 states (< 90 %)": 5,
+     "fit track 14/145 states (< 90 %)": 4,
+     "fit track 1/145 states (< 90 %)": 1,
+     "fit track 90/145 states (< 90 %)": 1,
+     "fit track 114/145 states (< 90 %)": 1,
+     "fit track 127/145 states (< 90 %)": 1
+    },
+    "failures": [
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     },
+     {
+      "failure": "FFM refused (a failure): propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 193,
+     "clusters": 2,
+     "meanD2over3": 70.30237428411164,
+     "medianD2over3": 0.6905448708169896,
+     "coverage": 0.844559585492228,
+     "meanInterval": [
+      0.9087087470987671,
+      136.1913092384472
+     ],
+     "coverageInterval": [
+      0.7676767676767676,
+      0.925531914893617
+     ],
+     "meanZ2Rtn": [
+      30.23401499797367,
+      122.85565636615351,
+      64.23499615901513
+     ],
+     "oraclePassProbability": 0.8225,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "6": {
+     "n": 193,
+     "clusters": 2,
+     "meanD2over3": 208.8090225611428,
+     "medianD2over3": 0.7719323892096556,
+     "coverage": 0.7461139896373057,
+     "meanInterval": [
+      0.48187325122117275,
+      406.61459867359366
+     ],
+     "coverageInterval": [
+      0.5353535353535354,
+      0.9680851063829787
+     ],
+     "meanZ2Rtn": [
+      36.70220925447006,
+      546.6255593333149,
+      59.6337758126074
+     ],
+     "oraclePassProbability": 0.8225,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "12": {
+     "n": 193,
+     "clusters": 2,
+     "meanD2over3": 185.11436618718815,
+     "medianD2over3": 0.7654156270616816,
+     "coverage": 0.6839378238341969,
+     "meanInterval": [
+      0.3592890887213489,
+      360.53837878573273
+     ],
+     "coverageInterval": [
+      0.3838383838383838,
+      1
+     ],
+     "meanZ2Rtn": [
+      45.35798015186118,
+      440.68580354997914,
+      96.73478187573686
+     ],
+     "oraclePassProbability": 0.8225,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "24": {
+     "n": 195,
+     "clusters": 2,
+     "meanD2over3": 127.31394519771435,
+     "medianD2over3": 0.6977707568292585,
+     "coverage": 0.6205128205128205,
+     "meanInterval": [
+      0.46090563035166515,
+      245.37518994357663
+     ],
+     "coverageInterval": [
+      0.26732673267326734,
+      1
+     ],
+     "meanZ2Rtn": [
+      36.35640267702199,
+      203.54073520549338,
+      99.41753289170887
+     ],
+     "oraclePassProbability": 0.81175,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "48": {
+     "n": 193,
+     "clusters": 2,
+     "meanD2over3": 140.10233133630706,
+     "medianD2over3": 3.8682427028935886,
+     "coverage": 0.49222797927461137,
+     "meanInterval": [
+      0.5859963738780677,
+      269.85252285136625
+     ],
+     "coverageInterval": [
+      0.03,
+      0.989247311827957
+     ],
+     "meanZ2Rtn": [
+      44.11167250110696,
+      73.55014622658419,
+      269.31511402241443
+     ],
+     "oraclePassProbability": 0.8225,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    },
+    "72": {
+     "n": 195,
+     "clusters": 2,
+     "meanD2over3": 155.2563688281183,
+     "medianD2over3": 2.1572387520439977,
+     "coverage": 0.5128205128205128,
+     "meanInterval": [
+      0.7328151174180446,
+      299.07036931134434
+     ],
+     "coverageInterval": [
+      0.06930693069306931,
+      0.9893617021276596
+     ],
+     "meanZ2Rtn": [
+      31.52753276909974,
+      38.87943994673878,
+      351.6314409697479
+     ],
+     "oraclePassProbability": 0.81175,
+     "inBand": false,
+     "eligible": false,
+     "label": "not eligible (n < 100 or clusters < 3)"
+    }
+   },
+   "eligibleCells": 0,
+   "passingEligibleCells": 0
+  },
+  "R2-O/time/primary": {
+   "constants": {
+    "chosen": "M3/tauInf",
+    "parameters": {
+     "tau": "inf",
+     "k_e": 0.4093773963103564,
+     "f_R": 0.30853316860862723,
+     "f_T": 0.00816578105933752,
+     "f_N": 0.6991948653149317,
+     "q_T": 3.2570407097399e-19,
+     "q_RN": 2.0827218387940405e-19,
+     "s2": 0.05430922572329374
+    },
+    "fitReceipt": "fit-R2-O.json",
+    "fitReceiptSha256": "cc3a412899ddff94219ef2cfcdbcbcffd54133779799e9351f1aa5acc5e4eec2",
+    "fitCommit": "5a565513d0ecc9aa7732febcbe9d4c745dd9c763",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T03:40:25.392Z"
+   },
+   "counts": {
+    "windows": 215,
+    "excluded": {
+     "maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)": 42,
+     "fit track 0/145 states (< 90 %)": 6,
+     "fit track 128/145 states (< 90 %)": 2,
+     "fit track 14/145 states (< 90 %)": 1,
+     "maneuver screen: truth fit not converged": 1,
+     "fit track 1/145 states (< 90 %)": 2,
+     "fit track 125/145 states (< 90 %)": 1,
+     "fit track 93/145 states (< 90 %)": 1,
+     "fit track 7/145 states (< 90 %)": 1
+    },
+    "failures": [
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 214,
+     "clusters": 7,
+     "meanD2over3": 0.1794137337422976,
+     "medianD2over3": 0.06411475717962509,
+     "coverage": 1,
+     "meanInterval": [
+      0.09592028992997213,
+      0.35508642557420655
+     ],
+     "coverageInterval": [
+      1,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.1991593478496651,
+      0.25533769779637766,
+      0.08993902507085552
+     ],
+     "oraclePassProbability": 0.79325,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "6": {
+     "n": 211,
+     "clusters": 7,
+     "meanD2over3": 0.2528375855805625,
+     "medianD2over3": 0.10281709527475691,
+     "coverage": 0.981042654028436,
+     "meanInterval": [
+      0.13635374599315214,
+      0.5185448099182016
+     ],
+     "coverageInterval": [
+      0.9375,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.31631014643435557,
+      0.3370839777261333,
+      0.11354585511536908
+     ],
+     "oraclePassProbability": 0.79875,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "12": {
+     "n": 208,
+     "clusters": 7,
+     "meanD2over3": 0.40279893300773484,
+     "medianD2over3": 0.13714548486844777,
+     "coverage": 0.9615384615384616,
+     "meanInterval": [
+      0.17947092587809885,
+      0.9695140354993325
+     ],
+     "coverageInterval": [
+      0.8461538461538461,
+      1
+     ],
+     "meanZ2Rtn": [
+      0.5877256323915769,
+      0.4108341819184392,
+      0.16948896638324396
+     ],
+     "oraclePassProbability": 0.79625,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "24": {
+     "n": 212,
+     "clusters": 7,
+     "meanD2over3": 0.7895219614739233,
+     "medianD2over3": 0.3700172691195344,
+     "coverage": 0.9433962264150944,
+     "meanInterval": [
+      0.483860840169368,
+      1.4661247445569543
+     ],
+     "coverageInterval": [
+      0.8333333333333334,
+      0.9882352941176471
+     ],
+     "meanZ2Rtn": [
+      0.9079322513259719,
+      0.5408482302773938,
+      0.7842842076055938
+     ],
+     "oraclePassProbability": 0.80075,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "48": {
+     "n": 209,
+     "clusters": 7,
+     "meanD2over3": 1.1573138236885898,
+     "medianD2over3": 0.5751949217572221,
+     "coverage": 0.9330143540669856,
+     "meanInterval": [
+      0.6906157264463868,
+      2.2506344893461843
+     ],
+     "coverageInterval": [
+      0.8333333333333334,
+      0.9814814814814815
+     ],
+     "meanZ2Rtn": [
+      1.1382593445122429,
+      0.5830507030698262,
+      1.3114514610275687
+     ],
+     "oraclePassProbability": 0.80075,
+     "inBand": true,
+     "eligible": true,
+     "label": "pass"
+    },
+    "72": {
+     "n": 210,
+     "clusters": 7,
+     "meanD2over3": 1.6379621540822464,
+     "medianD2over3": 0.7446135053752313,
+     "coverage": 0.9095238095238095,
+     "meanInterval": [
+      0.9987853446617324,
+      3.2976656870072616
+     ],
+     "coverageInterval": [
+      0.7941176470588235,
+      0.9657534246575342
+     ],
+     "meanZ2Rtn": [
+      1.220019647097582,
+      0.6599425175520691,
+      2.2159044714940626
+     ],
+     "oraclePassProbability": 0.79275,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    }
+   },
+   "eligibleCells": 6,
+   "passingEligibleCells": 1
+  },
+  "R2-O/time/allSamples": {
+   "constants": {
+    "chosen": "M3/tauInf",
+    "parameters": {
+     "tau": "inf",
+     "k_e": 0.4093773963103564,
+     "f_R": 0.30853316860862723,
+     "f_T": 0.00816578105933752,
+     "f_N": 0.6991948653149317,
+     "q_T": 3.2570407097399e-19,
+     "q_RN": 2.0827218387940405e-19,
+     "s2": 0.05430922572329374
+    },
+    "fitReceipt": "fit-R2-O.json",
+    "fitReceiptSha256": "cc3a412899ddff94219ef2cfcdbcbcffd54133779799e9351f1aa5acc5e4eec2",
+    "fitCommit": "5a565513d0ecc9aa7732febcbe9d4c745dd9c763",
+    "p8": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+    "frozenUtc": "2026-10-29T03:40:25.392Z"
+   },
+   "counts": {
+    "windows": 258,
+    "excluded": {
+     "fit track 0/145 states (< 90 %)": 6,
+     "fit track 128/145 states (< 90 %)": 2,
+     "fit track 14/145 states (< 90 %)": 1,
+     "fit track 1/145 states (< 90 %)": 2,
+     "fit track 125/145 states (< 90 %)": 1,
+     "fit track 93/145 states (< 90 %)": 1,
+     "fit track 7/145 states (< 90 %)": 1
+    },
+    "failures": [
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     },
+     {
+      "failure": "FFM refused (a failure): analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at the start, and ballisticCoefficient B > 0."
+     }
+    ]
+   },
+   "leads": {
+    "1": {
+     "n": 256,
+     "clusters": 7,
+     "meanD2over3": 20.293575715770505,
+     "medianD2over3": 0.089875253605323,
+     "coverage": 0.94140625,
+     "meanInterval": [
+      0.31615700747871206,
+      58.73118645268331
+     ],
+     "coverageInterval": [
+      0.867579908675799,
+      0.993127147766323
+     ],
+     "meanZ2Rtn": [
+      14.72820387816538,
+      43.92253801397425,
+      1.7515195944813766
+     ],
+     "oraclePassProbability": 0.849,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "6": {
+     "n": 251,
+     "clusters": 7,
+     "meanD2over3": 27474.717615181933,
+     "medianD2over3": 0.1511516287247657,
+     "coverage": 0.8685258964143426,
+     "meanInterval": [
+      0.22517412307557738,
+      88369.83997637867
+     ],
+     "coverageInterval": [
+      0.6434108527131783,
+      0.993103448275862
+     ],
+     "meanZ2Rtn": [
+      44400.76250174939,
+      45913.36263326555,
+      3.428515322601026
+     ],
+     "oraclePassProbability": 0.84975,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "12": {
+     "n": 248,
+     "clusters": 7,
+     "meanD2over3": 111230.23104877271,
+     "medianD2over3": 0.19389389674766,
+     "coverage": 0.842741935483871,
+     "meanInterval": [
+      0.22643965988391182,
+      355140.14811088395
+     ],
+     "coverageInterval": [
+      0.5822222222222222,
+      0.993006993006993
+     ],
+     "meanZ2Rtn": [
+      76331.51190967536,
+      310988.9514169395,
+      10.44798946636095
+     ],
+     "oraclePassProbability": 0.85225,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "24": {
+     "n": 255,
+     "clusters": 7,
+     "meanD2over3": 158765.63587444607,
+     "medianD2over3": 0.4795077185488179,
+     "coverage": 0.807843137254902,
+     "meanInterval": [
+      0.5105975466885001,
+      501868.93731747405
+     ],
+     "coverageInterval": [
+      0.5082644628099173,
+      0.9863013698630136
+     ],
+     "meanZ2Rtn": [
+      294332.4367016124,
+      357002.52782798494,
+      11.348903259220807
+     ],
+     "oraclePassProbability": 0.8465,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "48": {
+     "n": 251,
+     "clusters": 7,
+     "meanD2over3": 1027578.1771100044,
+     "medianD2over3": 0.6509976543566066,
+     "coverage": 0.796812749003984,
+     "meanInterval": [
+      0.6957809929887165,
+      3264818.3427938255
+     ],
+     "coverageInterval": [
+      0.5301724137931034,
+      0.972318339100346
+     ],
+     "meanZ2Rtn": [
+      1762068.6436599626,
+      146754.30486154012,
+      25.86237003797461
+     ],
+     "oraclePassProbability": 0.84975,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    },
+    "72": {
+     "n": 252,
+     "clusters": 7,
+     "meanD2over3": 4344391.484277477,
+     "medianD2over3": 1.036553740304806,
+     "coverage": 0.7658730158730159,
+     "meanInterval": [
+      1.0186446165383665,
+      13858047.694090933
+     ],
+     "coverageInterval": [
+      0.44642857142857145,
+      0.9543859649122807
+     ],
+     "meanZ2Rtn": [
+      6806926.692892585,
+      77450.67976633344,
+      126.91051708621933
+     ],
+     "oraclePassProbability": 0.86075,
+     "inBand": false,
+     "eligible": true,
+     "label": "fail"
+    }
+   },
+   "eligibleCells": 6,
+   "passingEligibleCells": 0
+  }
+ },
+ "opened": null
+}

@@ -1,0 +1,52 @@
+{
+ "receipt": "precheck-P8-LP",
+ "createdUtc": "2026-10-28T22:44:07.292Z",
+ "experimentsCommit": "5fa7b577a9334aee6b3930915da463323f788167",
+ "plan": "3.8 P8; C2-A4 point 1",
+ "class": "LP",
+ "chosen": "M0",
+ "parameters": {
+  "k_e": 1
+ },
+ "fitReceipt": "fit-LP.json",
+ "leads": {
+  "1": {
+   "n": 73,
+   "scale": 1.2133373845212994,
+   "shape": 0.7113997598768095,
+   "inBand": false
+  },
+  "6": {
+   "n": 73,
+   "scale": 0.4850893060000041,
+   "shape": 0.8013531880368774,
+   "inBand": true
+  },
+  "12": {
+   "n": 73,
+   "scale": 0.30778723598530494,
+   "shape": 0.8226727946320528,
+   "inBand": true
+  },
+  "24": {
+   "n": 70,
+   "scale": 0.733075033706053,
+   "shape": 0.6848019138327347,
+   "inBand": false
+  },
+  "48": {
+   "n": 67,
+   "scale": 0.9003132266486784,
+   "shape": 0.7627645778553985,
+   "inBand": false
+  },
+  "72": {
+   "n": 66,
+   "scale": 0.7192786572228822,
+   "shape": 1.1986133776462773,
+   "inBand": true
+  }
+ },
+ "outcome": "FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)",
+ "opened": null
+}

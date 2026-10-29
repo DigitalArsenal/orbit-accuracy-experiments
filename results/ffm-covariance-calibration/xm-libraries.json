@@ -1,0 +1,51 @@
+{
+ "receipt": "xm-libraries",
+ "createdUtc": "2026-10-28T23:31:47.913Z",
+ "experimentsCommit": "cacb12981fe7b91ef8a52e21de744d9be3e466ab",
+ "plan": "C2-A4 point 7 (Q22)",
+ "branch": "origin/wip/experiments-xp-atmosphere-merit-20261026/orbit-accuracy-experiments-1793058310812",
+ "sha": "8f2926174b68e5bc1559cfce6f9ed6256680fbe8",
+ "use": "read-only import of condition O (rowsO: the most recent RSGA issued at or before the cutoff) and its RSGA/GFZ parsers; the branch is not edited",
+ "files": [
+  {
+   "path": "experiments/xp-atmosphere-merit/lib/weather.mjs",
+   "sha256": "c6e674fa3e476a07d97940648c902b572f14e825d89f5ee4ea1a2ca75b210fba",
+   "bytes": 10067
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/lib/truth.mjs",
+   "sha256": "050046df32efbca48e41951056434ff27c080e4d515e921fddf3c5892bc315ba",
+   "bytes": 5706
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/lib/modules.mjs",
+   "sha256": "163c08cb8935f4bbffc2c7403ed3b8d16f4bca7660331e6da8b88053d44a84e7",
+   "bytes": 7084
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/lib/sds.mjs",
+   "sha256": "3a817bc386b6514814c8e32fc32b57967f9e2aa634610012319c7b071c913556",
+   "bytes": 6650
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/lib/dca.mjs",
+   "sha256": "fd11701c35d57ad4ce548d2b5be937f01e66f6a0184137976984e3d68e71524b",
+   "bytes": 5026
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/lib/rso.mjs",
+   "sha256": "74b1ff36bce7ec7697f253bae7ea0b84b4a78d850bc443938e031d0a62ecce4b",
+   "bytes": 11766
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/common.mjs",
+   "sha256": "089c1e3208c53691347ac45754c765caf7a585350b8f6ea3a8c42e91f97cbd9e",
+   "bytes": 4372
+  },
+  {
+   "path": "experiments/xp-atmosphere-merit/config.json",
+   "sha256": "2f631f63494d80be3d1a59c57c32df27f1fd847c07c4d27e8dc669da4ada4597",
+   "bytes": 9800
+  }
+ ]
+}

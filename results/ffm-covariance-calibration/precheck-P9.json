@@ -1,0 +1,2104 @@
+{
+ "receipt": "precheck-P9",
+ "createdUtc": "2026-10-29T05:28:01.927Z",
+ "experimentsCommit": "1f30edb30df0b6b22273536fe04829a9380038c9",
+ "plan": "3.8 P9, 3.4",
+ "rule": "C2-A2: windows counted where the union of the truth spans covers at least 90 % of the 24 h fit track [E - 24 h, E] (the 90 % epoch rule is applied per window at run time); per lead, the windows whose truth holds E + L; cutoffs every second day; held-out by time from 2026-06-01 to the last span minus 72 h every second day",
+ "gnss": {
+  "GPS": {
+   "truthProduct": "ESA0OPSFIN (ESA final, one product per object)",
+   "satellites": 35,
+   "withCoverage": [
+    26407,
+    27663,
+    28190,
+    28474,
+    28874,
+    29486,
+    29601,
+    32260,
+    32384,
+    32711,
+    35752,
+    36585,
+    38833,
+    39166,
+    39533,
+    39741,
+    40105,
+    40294,
+    40534,
+    40730,
+    41019,
+    41328,
+    43873,
+    44506,
+    45854,
+    46826,
+    48859,
+    55268,
+    62339,
+    64202
+   ],
+   "coverage": {
+    "24876": 0.832,
+    "26360": 0.1025,
+    "26407": 0.9959,
+    "27663": 0.9959,
+    "27704": 0,
+    "28190": 0.9918,
+    "28474": 0.9959,
+    "28874": 0.9918,
+    "29486": 0.9959,
+    "29601": 0.9918,
+    "32260": 0.9959,
+    "32384": 0.9959,
+    "32711": 1,
+    "35752": 0.9262,
+    "36585": 1,
+    "38833": 0.9918,
+    "39166": 0.9754,
+    "39533": 1,
+    "39741": 0.9836,
+    "40105": 0.9262,
+    "40294": 1,
+    "40534": 1,
+    "40730": 1,
+    "41019": 0.9959,
+    "41328": 0.9918,
+    "43873": 0.9795,
+    "44506": 0.9959,
+    "45854": 0.9959,
+    "46826": 1,
+    "48859": 0.9795,
+    "55268": 0.9959,
+    "62339": 0.9918,
+    "64202": 0.9959,
+    "67588": 0.4016,
+    "68791": 0.0451
+   }
+  },
+  "GLONASS": {
+   "truthProduct": "ESA0OPSFIN (ESA final, one product per object)",
+   "satellites": 24,
+   "withCoverage": [
+    37867,
+    37868,
+    37869,
+    39155,
+    39620,
+    40001,
+    40315,
+    41330,
+    42939,
+    43508,
+    43687,
+    44299,
+    44850,
+    45358,
+    46805,
+    52984,
+    54031,
+    54377
+   ],
+   "coverage": {
+    "32275": 0,
+    "32276": 0.0574,
+    "36111": 0,
+    "37867": 0.9549,
+    "37868": 1,
+    "37869": 0.9959,
+    "39155": 0.9426,
+    "39620": 1,
+    "40001": 1,
+    "40315": 1,
+    "41330": 1,
+    "42939": 1,
+    "43508": 1,
+    "43687": 1,
+    "44299": 1,
+    "44850": 1,
+    "45358": 1,
+    "46805": 0.9713,
+    "52984": 1,
+    "54031": 0.9877,
+    "54377": 1,
+    "57517": 0.7049,
+    "63130": 0.8566,
+    "65590": 0.7049
+   }
+  },
+  "Galileo": {
+   "truthProduct": "ESA0OPSFIN (ESA final, one product per object)",
+   "satellites": 31,
+   "withCoverage": [
+    37846,
+    37847,
+    38857,
+    40128,
+    40129,
+    40544,
+    40890,
+    41174,
+    41175,
+    41549,
+    41859,
+    41860,
+    41861,
+    41862,
+    43055,
+    43056,
+    43057,
+    43058,
+    43564,
+    43565,
+    43566,
+    43567,
+    49809,
+    49810,
+    59598,
+    59600,
+    61183
+   ],
+   "coverage": {
+    "37846": 0.9959,
+    "37847": 0.9959,
+    "38857": 1,
+    "40128": 1,
+    "40129": 0.9836,
+    "40544": 1,
+    "40889": 0.1025,
+    "40890": 1,
+    "41174": 1,
+    "41175": 1,
+    "41549": 0.9918,
+    "41859": 0.9959,
+    "41860": 0.9918,
+    "41861": 0.9959,
+    "41862": 0.9918,
+    "43055": 1,
+    "43056": 1,
+    "43057": 1,
+    "43058": 1,
+    "43564": 1,
+    "43565": 1,
+    "43566": 1,
+    "43567": 1,
+    "49809": 1,
+    "49810": 1,
+    "59598": 1,
+    "59600": 1,
+    "61182": 0.8648,
+    "61183": 1,
+    "67160": 0.4262,
+    "67162": 0.3975
+   }
+  }
+ },
+ "cosmic": {
+  "truthProduct": "UCAR COSMIC-2 leoOrb (reference-leo-pod-2)",
+  "coverageMin": 0.75,
+  "selection": "lowest SHA-256 of C2|P9|cosmic2|<norad>",
+  "satellites": [
+   44349,
+   44350,
+   44351,
+   44353,
+   44358
+  ],
+  "withCoverage": [
+   44349,
+   44350,
+   44351,
+   44353,
+   44358
+  ],
+  "coverage": {
+   "44349": 0.8033,
+   "44350": 0.7746,
+   "44351": 0.8197,
+   "44353": 0.8607,
+   "44358": 0.8115
+  }
+ },
+ "sample": {
+  "GPS": [
+   {
+    "norad": 40534,
+    "key": "000aee37aec29ab925941e96183c0398b5187f995b007b120cd349076d9d945e"
+   },
+   {
+    "norad": 38833,
+    "key": "187aea9719afb12718f9f96275314d55505f61b97c172165b835bd4165b92f76"
+   },
+   {
+    "norad": 39741,
+    "key": "257c2296c9140f2ff32223904650770f8256eb42e02fd80f7672c07e7b5f854f"
+   },
+   {
+    "norad": 35752,
+    "key": "29cd88f2a7b9004a939e057f6aac743859ba3b1a2154c59f149a6657dd704426"
+   },
+   {
+    "norad": 40294,
+    "key": "32cdedbe0a54d2164eaf4240ddcf524db2ace92e522d9ccbbd4bf99db5479084"
+   },
+   {
+    "norad": 32260,
+    "key": "450ca172aac3460c56ef1c0b26cd84f4fcf5eaf83016ba262fb4d7cf2e57b3c5"
+   },
+   {
+    "norad": 40730,
+    "key": "56fa76cafc5ebff195825210a30bc033f077334aa249e2132a13f2aac8df50ba"
+   },
+   {
+    "norad": 29601,
+    "key": "57a5c21c6d9d9292e3c089a22483c6c458cf4d200a4b6b4d5210764394bbcb6e"
+   }
+  ],
+  "GLONASS": [
+   {
+    "norad": 40001,
+    "key": "1bf50837f17bc6178af83c3c910b0670a0849a1dc6010e99552d9b35327d0cd1"
+   },
+   {
+    "norad": 44850,
+    "key": "22b48fc5f67f601991cb85b09ad19386f9a71e88139bfec2b7f0f8d718ae4365"
+   },
+   {
+    "norad": 37869,
+    "key": "28a386b68e61bbb64be99ffdf475fb0e5f373151f1ac9d0d6d5a256066c200d5"
+   },
+   {
+    "norad": 54377,
+    "key": "2fe5e359c51a0dc67c252bb3c56487f14b528cc3bdf0f2689b816dacd579639e"
+   }
+  ],
+  "Galileo": [
+   {
+    "norad": 43567,
+    "key": "0cb958b3112d896d3da146224392a2038c03118376bc39914800ac8a5523700b"
+   },
+   {
+    "norad": 37847,
+    "key": "0f4dc435b3a50cf467650986e8a6f1010e4f63c4c692595bcac229e2cd7912a1"
+   },
+   {
+    "norad": 41862,
+    "key": "1a625c1302ad86d45a1222f33bdb95de0ff08bfb69b0d9e173a25c6019d009bc"
+   },
+   {
+    "norad": 41174,
+    "key": "22b529ebe02e4ffeaf6c22b57f1c78ac5e834215d9e98851f70a916b7de61684"
+   },
+   {
+    "norad": 43055,
+    "key": "2f25180222b5194f70b57a49e7b197be7e3c415d24750af7e0e26c12fb1a7eab"
+   },
+   {
+    "norad": 41175,
+    "key": "2f40f5d81f92b271156084dde8177ef2ff43e0aa4236344ed201b61694e221a2"
+   }
+  ],
+  "COSMIC-2": [
+   {
+    "norad": 44351,
+    "key": "0cf71fe6c85b6b50969674c190924160859252a1e073c69e3eb7213bd8c6a7b8"
+   },
+   {
+    "norad": 44353,
+    "key": "43b022943af4d7648a0b0f73d8b8e13ea477f37cac039c2d13bf979d422eea70"
+   },
+   {
+    "norad": 44358,
+    "key": "49923b756c2fe6fa80b17a1d8a7cd1c2c473604f9ea1a4609cbe76f2a632e9df"
+   },
+   {
+    "norad": 44349,
+    "key": "7423effd3905085bcfd8d7fd9c643b8451e1945e41104b160f8402fd2a3c7cb3"
+   },
+   {
+    "norad": 44350,
+    "key": "cd19508982709e2eeb0a2fcd8cec94024f63c00dcc4d8749195f8c14d60ef4ce"
+   }
+  ]
+ },
+ "perObject": [
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "Swarm A",
+   "norad": 39452,
+   "cluster": 39452,
+   "products": [
+    "SW"
+   ],
+   "first": "2025-09-30T23:59:42.000Z",
+   "last": "2026-08-19T23:59:32.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 39,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 39,
+     "6": 39,
+     "12": 39,
+     "24": 39,
+     "48": 39,
+     "72": 39
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "Swarm C",
+   "norad": 39453,
+   "cluster": 39452,
+   "products": [
+    "SW"
+   ],
+   "first": "2025-09-30T23:59:42.000Z",
+   "last": "2026-08-19T23:59:32.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 39,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 39,
+     "6": 39,
+     "12": 39,
+     "24": 39,
+     "48": 39,
+     "72": 39
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "Swarm B",
+   "norad": 39451,
+   "cluster": 39451,
+   "products": [
+    "SW"
+   ],
+   "first": "2025-09-30T23:59:42.000Z",
+   "last": "2026-08-19T23:59:32.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 39,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 39,
+     "6": 39,
+     "12": 39,
+     "24": 39,
+     "48": 39,
+     "72": 39
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "GRACE-FO 1",
+   "norad": 43476,
+   "cluster": 43476,
+   "products": [
+    "GFZOP"
+   ],
+   "first": "2025-09-30T21:59:42.000Z",
+   "last": "2026-10-01T12:00:12.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 60,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 60,
+     "6": 60,
+     "12": 60,
+     "24": 60,
+     "48": 60,
+     "72": 60
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "GRACE-FO 2",
+   "norad": 43477,
+   "cluster": 43476,
+   "products": [
+    "GFZOP"
+   ],
+   "first": "2025-09-30T21:59:42.000Z",
+   "last": "2026-10-01T12:00:12.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 60,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 60,
+     "6": 60,
+     "12": 60,
+     "24": 60,
+     "48": 60,
+     "72": 60
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "heldOutObject",
+   "name": "TerraSAR-X",
+   "norad": 31698,
+   "cluster": 31698,
+   "products": [
+    "GFZOP"
+   ],
+   "first": "2025-09-30T21:59:42.000Z",
+   "last": "2026-07-14T00:00:12.000Z",
+   "heldOutObject": 142,
+   "leads": {
+    "heldOutObject": {
+     "1": 142,
+     "6": 142,
+     "12": 142,
+     "24": 142,
+     "48": 142,
+     "72": 142
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "Sentinel-1A",
+   "norad": 39634,
+   "cluster": 39634,
+   "products": [
+    "S"
+   ],
+   "first": "2025-10-01T22:59:42.000Z",
+   "last": "2026-07-01T00:59:42.000Z",
+   "calibration": 86,
+   "validation": 31,
+   "heldOutTime": 14,
+   "leads": {
+    "calibration": {
+     "1": 85,
+     "6": 85,
+     "12": 85,
+     "24": 86,
+     "48": 86,
+     "72": 86
+    },
+    "validation": {
+     "1": 29,
+     "6": 29,
+     "12": 29,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 13,
+     "6": 13,
+     "12": 13,
+     "24": 14,
+     "48": 14,
+     "72": 14
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "Sentinel-1C",
+   "norad": 62261,
+   "cluster": 62261,
+   "products": [
+    "S"
+   ],
+   "first": "2025-10-01T22:59:42.000Z",
+   "last": "2026-08-31T00:59:42.000Z",
+   "calibration": 86,
+   "validation": 31,
+   "heldOutTime": 39,
+   "leads": {
+    "calibration": {
+     "1": 85,
+     "6": 85,
+     "12": 85,
+     "24": 86,
+     "48": 86,
+     "72": 86
+    },
+    "validation": {
+     "1": 29,
+     "6": 29,
+     "12": 29,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 36,
+     "6": 36,
+     "12": 36,
+     "24": 38,
+     "48": 38,
+     "72": 37
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "Ajisai",
+   "norad": 16908,
+   "cluster": 16908,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-10-01T00:00:00.000Z",
+   "last": "2026-08-28T23:52:00.000Z",
+   "calibration": 78,
+   "validation": 27,
+   "heldOutTime": 43,
+   "leads": {
+    "calibration": {
+     "1": 77,
+     "6": 77,
+     "12": 77,
+     "24": 77,
+     "48": 76,
+     "72": 76
+    },
+    "validation": {
+     "1": 27,
+     "6": 27,
+     "12": 27,
+     "24": 27,
+     "48": 27,
+     "72": 27
+    },
+    "heldOutTime": {
+     "1": 43,
+     "6": 43,
+     "12": 43,
+     "24": 43,
+     "48": 43,
+     "72": 43
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "LARES",
+   "norad": 38077,
+   "cluster": 38077,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-10-01T00:00:00.000Z",
+   "last": "2026-08-28T22:21:00.000Z",
+   "calibration": 70,
+   "validation": 24,
+   "heldOutTime": 41,
+   "leads": {
+    "calibration": {
+     "1": 69,
+     "6": 69,
+     "12": 69,
+     "24": 69,
+     "48": 68,
+     "72": 68
+    },
+    "validation": {
+     "1": 24,
+     "6": 24,
+     "12": 24,
+     "24": 24,
+     "48": 24,
+     "72": 24
+    },
+    "heldOutTime": {
+     "1": 41,
+     "6": 41,
+     "12": 41,
+     "24": 40,
+     "48": 40,
+     "72": 39
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "LARETS",
+   "norad": 27944,
+   "cluster": 27944,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-10-01T00:00:00.000Z",
+   "last": "2026-08-27T16:57:00.000Z",
+   "calibration": 61,
+   "validation": 24,
+   "heldOutTime": 41,
+   "leads": {
+    "calibration": {
+     "1": 60,
+     "6": 60,
+     "12": 60,
+     "24": 60,
+     "48": 59,
+     "72": 59
+    },
+    "validation": {
+     "1": 24,
+     "6": 24,
+     "12": 24,
+     "24": 24,
+     "48": 24,
+     "72": 24
+    },
+    "heldOutTime": {
+     "1": 41,
+     "6": 41,
+     "12": 39,
+     "24": 40,
+     "48": 40,
+     "72": 39
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "Starlette",
+   "norad": 7646,
+   "cluster": 7646,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-10-01T00:00:00.000Z",
+   "last": "2026-08-28T21:57:00.000Z",
+   "calibration": 72,
+   "validation": 28,
+   "heldOutTime": 42,
+   "leads": {
+    "calibration": {
+     "1": 72,
+     "6": 72,
+     "12": 72,
+     "24": 72,
+     "48": 71,
+     "72": 71
+    },
+    "validation": {
+     "1": 28,
+     "6": 28,
+     "12": 28,
+     "24": 28,
+     "48": 28,
+     "72": 28
+    },
+    "heldOutTime": {
+     "1": 42,
+     "6": 42,
+     "12": 42,
+     "24": 42,
+     "48": 42,
+     "72": 42
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "calibration",
+   "name": "WESTPAC",
+   "norad": 25398,
+   "cluster": 25398,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-10-01T00:00:00.000Z",
+   "last": "2026-08-27T15:33:00.000Z",
+   "calibration": 61,
+   "validation": 23,
+   "heldOutTime": 41,
+   "leads": {
+    "calibration": {
+     "1": 61,
+     "6": 61,
+     "12": 61,
+     "24": 61,
+     "48": 60,
+     "72": 60
+    },
+    "validation": {
+     "1": 23,
+     "6": 23,
+     "12": 23,
+     "24": 23,
+     "48": 23,
+     "72": 23
+    },
+    "heldOutTime": {
+     "1": 40,
+     "6": 38,
+     "12": 37,
+     "24": 41,
+     "48": 38,
+     "72": 41
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "heldOutObject",
+   "name": "Stella",
+   "norad": 22824,
+   "cluster": 22824,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-10-01T00:00:00.000Z",
+   "last": "2026-08-28T21:03:00.000Z",
+   "heldOutObject": 125,
+   "leads": {
+    "heldOutObject": {
+     "1": 125,
+     "6": 125,
+     "12": 125,
+     "24": 124,
+     "48": 123,
+     "72": 122
+    }
+   }
+  },
+  {
+   "class": "R2",
+   "set": "heldOutObject",
+   "name": "Sentinel-1D",
+   "norad": 66315,
+   "cluster": 66315,
+   "products": [
+    "S"
+   ],
+   "first": "2026-01-09T22:59:42.000Z",
+   "last": "2026-08-31T00:59:42.000Z",
+   "heldOutObject": 113,
+   "leads": {
+    "heldOutObject": {
+     "1": 109,
+     "6": 109,
+     "12": 109,
+     "24": 113,
+     "48": 113,
+     "72": 113
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "LAGEOS-2",
+   "norad": 22195,
+   "cluster": 22195,
+   "products": [
+    "ilrsa"
+   ],
+   "first": "2025-09-28T00:00:00.000Z",
+   "last": "2026-08-29T23:58:00.000Z",
+   "calibration": 89,
+   "validation": 28,
+   "heldOutTime": 44,
+   "leads": {
+    "calibration": {
+     "1": 89,
+     "6": 89,
+     "12": 89,
+     "24": 88,
+     "48": 88,
+     "72": 87
+    },
+    "validation": {
+     "1": 28,
+     "6": 28,
+     "12": 28,
+     "24": 28,
+     "48": 28,
+     "72": 28
+    },
+    "heldOutTime": {
+     "1": 44,
+     "6": 44,
+     "12": 44,
+     "24": 44,
+     "48": 44,
+     "72": 44
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "LARES-2",
+   "norad": 53105,
+   "cluster": 53105,
+   "products": [
+    "nsgf"
+   ],
+   "first": "2025-09-28T00:00:00.000Z",
+   "last": "2026-08-28T23:54:00.000Z",
+   "calibration": 89,
+   "validation": 31,
+   "heldOutTime": 43,
+   "leads": {
+    "calibration": {
+     "1": 88,
+     "6": 88,
+     "12": 88,
+     "24": 89,
+     "48": 87,
+     "72": 89
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 43,
+     "6": 43,
+     "12": 43,
+     "24": 43,
+     "48": 43,
+     "72": 43
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "Etalon-1",
+   "norad": 19751,
+   "cluster": 19751,
+   "products": [
+    "ilrsa"
+   ],
+   "first": "2025-09-28T00:00:00.000Z",
+   "last": "2026-08-29T23:45:00.000Z",
+   "calibration": 89,
+   "validation": 28,
+   "heldOutTime": 44,
+   "leads": {
+    "calibration": {
+     "1": 89,
+     "6": 89,
+     "12": 89,
+     "24": 88,
+     "48": 88,
+     "72": 87
+    },
+    "validation": {
+     "1": 28,
+     "6": 28,
+     "12": 28,
+     "24": 28,
+     "48": 28,
+     "72": 28
+    },
+    "heldOutTime": {
+     "1": 44,
+     "6": 44,
+     "12": 44,
+     "24": 44,
+     "48": 44,
+     "72": 44
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "Etalon-2",
+   "norad": 20026,
+   "cluster": 20026,
+   "products": [
+    "ilrsa"
+   ],
+   "first": "2025-09-28T00:00:00.000Z",
+   "last": "2026-08-29T23:45:00.000Z",
+   "calibration": 89,
+   "validation": 28,
+   "heldOutTime": 44,
+   "leads": {
+    "calibration": {
+     "1": 89,
+     "6": 89,
+     "12": 89,
+     "24": 88,
+     "48": 88,
+     "72": 87
+    },
+    "validation": {
+     "1": 28,
+     "6": 28,
+     "12": 28,
+     "24": 28,
+     "48": 28,
+     "72": 28
+    },
+    "heldOutTime": {
+     "1": 44,
+     "6": 44,
+     "12": 44,
+     "24": 44,
+     "48": 44,
+     "72": 44
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "LAGEOS-1",
+   "norad": 8820,
+   "cluster": 8820,
+   "products": [
+    "ilrsa"
+   ],
+   "first": "2025-09-28T00:00:00.000Z",
+   "last": "2026-08-29T23:58:00.000Z",
+   "heldOutObject": 157,
+   "leads": {
+    "heldOutObject": {
+     "1": 157,
+     "6": 157,
+     "12": 157,
+     "24": 155,
+     "48": 155,
+     "72": 153
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 40534,
+   "cluster": 40534,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 47,
+     "6": 47,
+     "12": 47,
+     "24": 48,
+     "48": 46,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 38833,
+   "cluster": 38833,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 88,
+     "6": 88,
+     "12": 88,
+     "24": 90,
+     "48": 88,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 39741,
+   "cluster": 39741,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 88,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 87,
+     "6": 87,
+     "12": 87,
+     "24": 86,
+     "48": 86,
+     "72": 86
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 35752,
+   "cluster": 35752,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 82,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 76,
+     "6": 76,
+     "12": 76,
+     "24": 78,
+     "48": 75,
+     "72": 76
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 40294,
+   "cluster": 40294,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 48,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 47,
+     "6": 47,
+     "12": 47,
+     "24": 46,
+     "48": 46,
+     "72": 45
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 32260,
+   "cluster": 32260,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 89,
+     "6": 89,
+     "12": 89,
+     "24": 90,
+     "48": 89,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 40730,
+   "cluster": 40730,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GPS",
+   "norad": 29601,
+   "cluster": 29601,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 89,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 88,
+     "6": 88,
+     "12": 88,
+     "24": 88,
+     "48": 88,
+     "72": 88
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GLONASS",
+   "norad": 40001,
+   "cluster": 40001,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 46,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 44,
+     "6": 44,
+     "12": 44,
+     "24": 44,
+     "48": 42,
+     "72": 42
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GLONASS",
+   "norad": 44850,
+   "cluster": 44850,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 45,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 43,
+     "6": 43,
+     "12": 43,
+     "24": 43,
+     "48": 41,
+     "72": 41
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GLONASS",
+   "norad": 37869,
+   "cluster": 37869,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 89,
+     "6": 89,
+     "12": 89,
+     "24": 90,
+     "48": 89,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "calibration",
+   "name": "GLONASS",
+   "norad": 54377,
+   "cluster": 54377,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "calibration": 90,
+   "validation": 31,
+   "heldOutTime": 49,
+   "leads": {
+    "calibration": {
+     "1": 90,
+     "6": 90,
+     "12": 90,
+     "24": 90,
+     "48": 90,
+     "72": 90
+    },
+    "validation": {
+     "1": 31,
+     "6": 31,
+     "12": 31,
+     "24": 31,
+     "48": 31,
+     "72": 31
+    },
+    "heldOutTime": {
+     "1": 48,
+     "6": 48,
+     "12": 48,
+     "24": 48,
+     "48": 47,
+     "72": 47
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "Galileo",
+   "norad": 43567,
+   "cluster": 43567,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "heldOutObject": 170,
+   "leads": {
+    "heldOutObject": {
+     "1": 169,
+     "6": 169,
+     "12": 169,
+     "24": 169,
+     "48": 168,
+     "72": 168
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "Galileo",
+   "norad": 37847,
+   "cluster": 37847,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "heldOutObject": 170,
+   "leads": {
+    "heldOutObject": {
+     "1": 168,
+     "6": 168,
+     "12": 168,
+     "24": 169,
+     "48": 167,
+     "72": 168
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "Galileo",
+   "norad": 41862,
+   "cluster": 41862,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "heldOutObject": 169,
+   "leads": {
+    "heldOutObject": {
+     "1": 167,
+     "6": 167,
+     "12": 167,
+     "24": 167,
+     "48": 166,
+     "72": 166
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "Galileo",
+   "norad": 41174,
+   "cluster": 41174,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "heldOutObject": 170,
+   "leads": {
+    "heldOutObject": {
+     "1": 169,
+     "6": 169,
+     "12": 169,
+     "24": 169,
+     "48": 168,
+     "72": 168
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "Galileo",
+   "norad": 43055,
+   "cluster": 43055,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "heldOutObject": 170,
+   "leads": {
+    "heldOutObject": {
+     "1": 169,
+     "6": 169,
+     "12": 169,
+     "24": 169,
+     "48": 168,
+     "72": 168
+    }
+   }
+  },
+  {
+   "class": "R3",
+   "set": "heldOutObject",
+   "name": "Galileo",
+   "norad": 41175,
+   "cluster": 41175,
+   "products": [
+    "ESA"
+   ],
+   "first": "2024-09-23T23:59:42.000Z",
+   "last": "2026-09-23T23:59:42.000Z",
+   "heldOutObject": 170,
+   "leads": {
+    "heldOutObject": {
+     "1": 169,
+     "6": 169,
+     "12": 169,
+     "24": 169,
+     "48": 168,
+     "72": 168
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44351,
+   "cluster": 44351,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T21:53:42.000Z",
+   "last": "2026-10-07T23:46:42.000Z",
+   "calibration": 8,
+   "validation": 2,
+   "heldOutTime": 12,
+   "leads": {
+    "calibration": {
+     "1": 8,
+     "6": 8,
+     "12": 7,
+     "24": 7,
+     "48": 8,
+     "72": 6
+    },
+    "validation": {
+     "1": 2,
+     "6": 2,
+     "12": 2,
+     "24": 2,
+     "48": 2,
+     "72": 1
+    },
+    "heldOutTime": {
+     "1": 10,
+     "6": 11,
+     "12": 10,
+     "24": 12,
+     "48": 11,
+     "72": 11
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44353,
+   "cluster": 44353,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T23:08:42.000Z",
+   "last": "2026-10-07T22:28:42.000Z",
+   "calibration": 8,
+   "validation": 2,
+   "heldOutTime": 8,
+   "leads": {
+    "calibration": {
+     "1": 8,
+     "6": 7,
+     "12": 7,
+     "24": 8,
+     "48": 7,
+     "72": 7
+    },
+    "validation": {
+     "1": 2,
+     "6": 2,
+     "12": 2,
+     "24": 2,
+     "48": 2,
+     "72": 2
+    },
+    "heldOutTime": {
+     "1": 6,
+     "6": 4,
+     "12": 8,
+     "24": 8,
+     "48": 7,
+     "72": 7
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44358,
+   "cluster": 44358,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T22:02:42.000Z",
+   "last": "2026-10-07T23:10:42.000Z",
+   "calibration": 5,
+   "validation": 1,
+   "heldOutTime": 12,
+   "leads": {
+    "calibration": {
+     "1": 5,
+     "6": 5,
+     "12": 4,
+     "24": 3,
+     "48": 4,
+     "72": 4
+    },
+    "validation": {
+     "1": 1,
+     "6": 1,
+     "12": 1,
+     "24": 1,
+     "48": 1,
+     "72": 0
+    },
+    "heldOutTime": {
+     "1": 10,
+     "6": 12,
+     "12": 8,
+     "24": 9,
+     "48": 9,
+     "72": 9
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "calibration",
+   "name": "COSMIC-2",
+   "norad": 44349,
+   "cluster": 44349,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T22:02:42.000Z",
+   "last": "2026-10-07T22:01:42.000Z",
+   "calibration": 11,
+   "validation": 4,
+   "heldOutTime": 7,
+   "leads": {
+    "calibration": {
+     "1": 10,
+     "6": 10,
+     "12": 8,
+     "24": 7,
+     "48": 9,
+     "72": 8
+    },
+    "validation": {
+     "1": 4,
+     "6": 4,
+     "12": 3,
+     "24": 2,
+     "48": 3,
+     "72": 3
+    },
+    "heldOutTime": {
+     "1": 5,
+     "6": 7,
+     "12": 5,
+     "24": 3,
+     "48": 7,
+     "72": 4
+    }
+   }
+  },
+  {
+   "class": "R1",
+   "set": "heldOutObject",
+   "name": "COSMIC-2",
+   "norad": 44350,
+   "cluster": 44350,
+   "products": [
+    "leoOrb"
+   ],
+   "first": "2025-09-30T21:53:42.000Z",
+   "last": "2026-10-07T21:52:42.000Z",
+   "heldOutObject": 14,
+   "leads": {
+    "heldOutObject": {
+     "1": 11,
+     "6": 9,
+     "12": 12,
+     "24": 12,
+     "48": 12,
+     "72": 13
+    }
+   }
+  }
+ ],
+ "totals": {
+  "R1": {
+   "calibration": 482,
+   "validation": 164,
+   "heldOutTime": 276,
+   "heldOutObject": 156
+  },
+  "R2": {
+   "calibration": 514,
+   "validation": 188,
+   "heldOutTime": 261,
+   "heldOutObject": 238
+  },
+  "R3": {
+   "calibration": 1425,
+   "validation": 487,
+   "heldOutTime": 755,
+   "heldOutObject": 1176
+  }
+ },
+ "leadTotals": {
+  "R1": {
+   "calibration": {
+    "1": 481,
+    "6": 480,
+    "12": 476,
+    "24": 475,
+    "48": 478,
+    "72": 475
+   },
+   "validation": {
+    "1": 164,
+    "6": 164,
+    "12": 163,
+    "24": 162,
+    "48": 163,
+    "72": 161
+   },
+   "heldOutTime": {
+    "1": 268,
+    "6": 271,
+    "12": 268,
+    "24": 269,
+    "48": 271,
+    "72": 268
+   },
+   "heldOutObject": {
+    "1": 153,
+    "6": 151,
+    "12": 154,
+    "24": 154,
+    "48": 154,
+    "72": 155
+   }
+  },
+  "R2": {
+   "calibration": {
+    "1": 509,
+    "6": 509,
+    "12": 509,
+    "24": 511,
+    "48": 506,
+    "72": 506
+   },
+   "validation": {
+    "1": 184,
+    "6": 184,
+    "12": 184,
+    "24": 188,
+    "48": 188,
+    "72": 188
+   },
+   "heldOutTime": {
+    "1": 256,
+    "6": 254,
+    "12": 251,
+    "24": 258,
+    "48": 255,
+    "72": 255
+   },
+   "heldOutObject": {
+    "1": 234,
+    "6": 234,
+    "12": 234,
+    "24": 237,
+    "48": 236,
+    "72": 235
+   }
+  },
+  "R3": {
+   "calibration": {
+    "1": 1412,
+    "6": 1412,
+    "12": 1412,
+    "24": 1415,
+    "48": 1406,
+    "72": 1410
+   },
+   "validation": {
+    "1": 487,
+    "6": 487,
+    "12": 487,
+    "24": 487,
+    "48": 487,
+    "72": 487
+   },
+   "heldOutTime": {
+    "1": 740,
+    "6": 740,
+    "12": 740,
+    "24": 740,
+    "48": 726,
+    "72": 726
+   },
+   "heldOutObject": {
+    "1": 1168,
+    "6": 1168,
+    "12": 1168,
+    "24": 1167,
+    "48": 1160,
+    "72": 1159
+   }
+  }
+ },
+ "clusterCounts": {
+  "R1": {
+   "calibration": 7,
+   "heldOutObject": 2
+  },
+  "R2": {
+   "calibration": 7,
+   "heldOutObject": 2
+  },
+  "R3": {
+   "calibration": 16,
+   "heldOutObject": 7
+  }
+ },
+ "missing": [],
+ "outcome": "pass",
+ "failures": [],
+ "opened": {
+  "files": 24907,
+  "sha256": "b5137ae5ecf776eb86b1edd6b176ad317a092f3bb52195295a99d96f85a34fe5",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P9.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
+    "files": 1825,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference/*",
+    "files": 1722,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2/*",
+    "files": 17909,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference/*",
+    "files": 3446,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "amendments"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,741 @@
+{
+ "receipt": "fit-LP",
+ "createdUtc": "2026-10-28T22:40:22.231Z",
+ "experimentsCommit": "c378c50d54db4e8d21376f5f790b100b0eb0b9ca",
+ "class": "LP",
+ "sensitivity": false,
+ "calibration": {
+  "windows": 106,
+  "excluded": {
+   "fit track 122/145 states (< 90 %)": 3,
+   "fit track 126/145 states (< 90 %)": 1,
+   "fit track 130/145 states (< 90 %)": 1,
+   "fit track 54/145 states (< 90 %)": 1,
+   "fit track 49/145 states (< 90 %)": 1,
+   "fit track 101/145 states (< 90 %)": 2,
+   "fit track 96/145 states (< 90 %)": 1,
+   "fit track 119/145 states (< 90 %)": 1,
+   "fit track 104/145 states (< 90 %)": 1,
+   "fit track 114/145 states (< 90 %)": 1,
+   "fit track 129/145 states (< 90 %)": 1,
+   "fit track 124/145 states (< 90 %)": 1,
+   "fit track 32/145 states (< 90 %)": 1,
+   "fit track 1/145 states (< 90 %)": 1,
+   "fit track 93/145 states (< 90 %)": 1,
+   "fit track 25/145 states (< 90 %)": 1
+  }
+ },
+ "validation": {
+  "windows": 75,
+  "excluded": {
+   "fit track 0/145 states (< 90 %)": 6,
+   "fit track 117/145 states (< 90 %)": 1,
+   "fit track 129/145 states (< 90 %)": 1,
+   "fit track 127/145 states (< 90 %)": 1,
+   "fit track 125/145 states (< 90 %)": 1,
+   "fit track 121/145 states (< 90 %)": 1,
+   "fit track 1/145 states (< 90 %)": 3,
+   "fit track 128/145 states (< 90 %)": 1
+  }
+ },
+ "samples": {
+  "calibration": 625,
+  "validation": 422
+ },
+ "candidates": {
+  "M0": {
+   "parameters": {
+    "k_e": 1
+   },
+   "calibrationCells": {
+    "1": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.08892143781876921,
+     "medianD2over3": 0.03551014007909947,
+     "coverage": 1,
+     "inBand": false,
+     "eligible": true
+    },
+    "6": {
+     "n": 103,
+     "clusters": 5,
+     "meanD2over3": 0.09598259587600812,
+     "medianD2over3": 0.057753083744153,
+     "coverage": 1,
+     "inBand": false,
+     "eligible": true
+    },
+    "12": {
+     "n": 101,
+     "clusters": 5,
+     "meanD2over3": 0.13075523326415553,
+     "medianD2over3": 0.07788337445949078,
+     "coverage": 1,
+     "inBand": false,
+     "eligible": true
+    },
+    "24": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.37728714730602486,
+     "medianD2over3": 0.1585751931524678,
+     "coverage": 0.9809523809523809,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.6183067269654546,
+     "medianD2over3": 0.2827449949795825,
+     "coverage": 0.9619047619047619,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 106,
+     "clusters": 5,
+     "meanD2over3": 0.8813211566588909,
+     "medianD2over3": 0.38010322453774475,
+     "coverage": 0.9433962264150944,
+     "inBand": true,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "1": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 0.8631679239980089,
+     "medianD2over3": 0.09525702705016016,
+     "coverage": 0.9452054794520548,
+     "inBand": true,
+     "eligible": false
+    },
+    "6": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 0.38872786184569974,
+     "medianD2over3": 0.0851287090116949,
+     "coverage": 0.958904109589041,
+     "inBand": false,
+     "eligible": false
+    },
+    "12": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 0.2532081855801059,
+     "medianD2over3": 0.0892247829695989,
+     "coverage": 0.9863013698630136,
+     "inBand": false,
+     "eligible": false
+    },
+    "24": {
+     "n": 70,
+     "clusters": 5,
+     "meanD2over3": 0.5020111860649017,
+     "medianD2over3": 0.29058806480503074,
+     "coverage": 0.9857142857142858,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 67,
+     "clusters": 5,
+     "meanD2over3": 0.6867270382623113,
+     "medianD2over3": 0.48857083323635925,
+     "coverage": 0.9402985074626866,
+     "inBand": false,
+     "eligible": false
+    },
+    "72": {
+     "n": 66,
+     "clusters": 5,
+     "meanD2over3": 0.862137020802798,
+     "medianD2over3": 0.6792825236960632,
+     "coverage": 0.9545454545454546,
+     "inBand": true,
+     "eligible": false
+    }
+   },
+   "validationInBand": 2,
+   "validationLoss": 10.465087824831844,
+   "freeParameters": 0
+  },
+  "M1": {
+   "parameters": {
+    "k_e": 0.197479438800796,
+    "f_R": 0.00035616023879399836,
+    "f_T": 0.001333098103804614,
+    "f_N": 3.2537253871171825
+   },
+   "likelihoodStart": {
+    "k_e": 0.15759478854144562,
+    "f_R": 0.0010231942838440265,
+    "f_T": 0.0023076399334140533,
+    "f_N": 0.7912225080114103
+   },
+   "calibrationLoss": 17.870379984295656,
+   "calibrationCells": {
+    "1": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.2062097706366409,
+     "medianD2over3": 0.08076863734943385,
+     "coverage": 0.9904761904761905,
+     "inBand": false,
+     "eligible": true
+    },
+    "6": {
+     "n": 103,
+     "clusters": 5,
+     "meanD2over3": 0.2645411414914125,
+     "medianD2over3": 0.13834789160593833,
+     "coverage": 0.9902912621359223,
+     "inBand": false,
+     "eligible": true
+    },
+    "12": {
+     "n": 101,
+     "clusters": 5,
+     "meanD2over3": 0.39657862963058793,
+     "medianD2over3": 0.15828434271818517,
+     "coverage": 0.9900990099009901,
+     "inBand": false,
+     "eligible": true
+    },
+    "24": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7067871341450548,
+     "medianD2over3": 0.36683660493890985,
+     "coverage": 0.9428571428571428,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7802196924770244,
+     "medianD2over3": 0.38493836267773673,
+     "coverage": 0.9428571428571428,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 106,
+     "clusters": 5,
+     "meanD2over3": 0.8323528133471334,
+     "medianD2over3": 0.45215202262680226,
+     "coverage": 0.9433962264150944,
+     "inBand": true,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "1": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 2.7584043308798645,
+     "medianD2over3": 0.15887978258930704,
+     "coverage": 0.8767123287671232,
+     "inBand": false,
+     "eligible": false
+    },
+    "6": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 1.3158128232195485,
+     "medianD2over3": 0.1976410706717003,
+     "coverage": 0.9041095890410958,
+     "inBand": false,
+     "eligible": false
+    },
+    "12": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 0.8287947470116492,
+     "medianD2over3": 0.2201816711085365,
+     "coverage": 0.9315068493150684,
+     "inBand": true,
+     "eligible": false
+    },
+    "24": {
+     "n": 70,
+     "clusters": 5,
+     "meanD2over3": 1.3462328865201305,
+     "medianD2over3": 0.6136804219232804,
+     "coverage": 0.8571428571428571,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 67,
+     "clusters": 5,
+     "meanD2over3": 1.2705034899165237,
+     "medianD2over3": 0.9520082756593999,
+     "coverage": 0.8507462686567164,
+     "inBand": false,
+     "eligible": false
+    },
+    "72": {
+     "n": 66,
+     "clusters": 5,
+     "meanD2over3": 1.3255502071394993,
+     "medianD2over3": 0.9752920004646323,
+     "coverage": 0.8787878787878788,
+     "inBand": false,
+     "eligible": false
+    }
+   },
+   "validationInBand": 1,
+   "validationLoss": 79.77506493746289,
+   "freeParameters": 4
+  },
+  "M2": {
+   "parameters": {
+    "k_e": 0.18097434377512578,
+    "f_R": 0.00212275896856461,
+    "f_T": 0.00005146166808775607,
+    "f_N": 6.575304371545775,
+    "q_T": 4.0006512332670413e-25,
+    "q_RN": 1.0902729545920735e-21
+   },
+   "likelihoodStart": {
+    "k_e": 0.1573393164171243,
+    "f_R": 0.0011927892389501232,
+    "f_T": 0.00004189001293669604,
+    "f_N": 0.7919252947005486,
+    "q_T": 7.213021145329573e-25,
+    "q_RN": 2.7539727320521865e-21
+   },
+   "calibrationLoss": 15.733862536230546,
+   "calibrationCells": {
+    "1": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.2170382744680334,
+     "medianD2over3": 0.08454984131151862,
+     "coverage": 0.9809523809523809,
+     "inBand": false,
+     "eligible": true
+    },
+    "6": {
+     "n": 103,
+     "clusters": 5,
+     "meanD2over3": 0.2808954688466823,
+     "medianD2over3": 0.14407823439804893,
+     "coverage": 0.9902912621359223,
+     "inBand": false,
+     "eligible": true
+    },
+    "12": {
+     "n": 101,
+     "clusters": 5,
+     "meanD2over3": 0.4231215813580591,
+     "medianD2over3": 0.16931834439597268,
+     "coverage": 0.9900990099009901,
+     "inBand": false,
+     "eligible": true
+    },
+    "24": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7332234985342964,
+     "medianD2over3": 0.38289505206600705,
+     "coverage": 0.9428571428571428,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7781180776909155,
+     "medianD2over3": 0.3868018219671863,
+     "coverage": 0.9428571428571428,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 106,
+     "clusters": 5,
+     "meanD2over3": 0.7975105329700966,
+     "medianD2over3": 0.4364086920568206,
+     "coverage": 0.9433962264150944,
+     "inBand": false,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "1": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 2.920985368447847,
+     "medianD2over3": 0.16518852925491287,
+     "coverage": 0.8767123287671232,
+     "inBand": false,
+     "eligible": false
+    },
+    "6": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 1.4042754514536202,
+     "medianD2over3": 0.21152734110524404,
+     "coverage": 0.9041095890410958,
+     "inBand": false,
+     "eligible": false
+    },
+    "12": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 0.8846412322200705,
+     "medianD2over3": 0.22641989043273703,
+     "coverage": 0.9178082191780822,
+     "inBand": false,
+     "eligible": false
+    },
+    "24": {
+     "n": 70,
+     "clusters": 5,
+     "meanD2over3": 1.4304078051665614,
+     "medianD2over3": 0.6656751135817119,
+     "coverage": 0.8571428571428571,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 67,
+     "clusters": 5,
+     "meanD2over3": 1.3261344916594775,
+     "medianD2over3": 1.003269105039814,
+     "coverage": 0.835820895522388,
+     "inBand": false,
+     "eligible": false
+    },
+    "72": {
+     "n": 66,
+     "clusters": 5,
+     "meanD2over3": 1.3639386597934424,
+     "medianD2over3": 0.9739767574491179,
+     "coverage": 0.8636363636363636,
+     "inBand": false,
+     "eligible": false
+    }
+   },
+   "validationInBand": 0,
+   "validationLoss": 95.66175247413005,
+   "freeParameters": 6
+  },
+  "M3/tau1": {
+   "parameters": {
+    "tau": 1,
+    "k_e": 0.05825489898095382,
+    "f_R": 0.000029044944103053075,
+    "f_T": 0.00031896990429676193,
+    "f_N": 4.239437866600393,
+    "q_T": 4.508026650089377e-25,
+    "q_RN": 7.351819155060906e-20,
+    "s2": 0.1322527287967408
+   },
+   "likelihoodStart": {
+    "tau": 1,
+    "k_e": 0.08299518631524086,
+    "f_R": 0.00005427396008859032,
+    "f_T": 0.000847240702768222,
+    "f_N": 0.8470494636380117,
+    "q_T": 2.517399834510232e-25,
+    "q_RN": 3.241955612412789e-20,
+    "s2": 0.06208161269684194
+   },
+   "calibrationLoss": 4.298187316605162,
+   "calibrationCells": {
+    "1": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.5147566633956908,
+     "medianD2over3": 0.19536503903895874,
+     "coverage": 0.9714285714285714,
+     "inBand": false,
+     "eligible": true
+    },
+    "6": {
+     "n": 103,
+     "clusters": 5,
+     "meanD2over3": 0.6080357301023653,
+     "medianD2over3": 0.3159982642615874,
+     "coverage": 0.970873786407767,
+     "inBand": false,
+     "eligible": true
+    },
+    "12": {
+     "n": 101,
+     "clusters": 5,
+     "meanD2over3": 0.6465358726615494,
+     "medianD2over3": 0.3027997177423446,
+     "coverage": 0.9603960396039604,
+     "inBand": false,
+     "eligible": true
+    },
+    "24": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7772876155758471,
+     "medianD2over3": 0.37695900097292484,
+     "coverage": 0.9333333333333333,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7640997948080198,
+     "medianD2over3": 0.34456513805497346,
+     "coverage": 0.9523809523809523,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 106,
+     "clusters": 5,
+     "meanD2over3": 0.8041218332809553,
+     "medianD2over3": 0.45139066010379497,
+     "coverage": 0.9528301886792453,
+     "inBand": true,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "1": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 5.7107842025471,
+     "medianD2over3": 0.3556134712696472,
+     "coverage": 0.821917808219178,
+     "inBand": false,
+     "eligible": false
+    },
+    "6": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 2.9127087892052734,
+     "medianD2over3": 0.46391100144224295,
+     "coverage": 0.7808219178082192,
+     "inBand": false,
+     "eligible": false
+    },
+    "12": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 1.257336145189344,
+     "medianD2over3": 0.4364930098327566,
+     "coverage": 0.863013698630137,
+     "inBand": false,
+     "eligible": false
+    },
+    "24": {
+     "n": 70,
+     "clusters": 5,
+     "meanD2over3": 1.289424336841723,
+     "medianD2over3": 0.713908900268749,
+     "coverage": 0.8571428571428571,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 67,
+     "clusters": 5,
+     "meanD2over3": 0.9582897034408892,
+     "medianD2over3": 0.7101571117549895,
+     "coverage": 0.9552238805970149,
+     "inBand": true,
+     "eligible": false
+    },
+    "72": {
+     "n": 66,
+     "clusters": 5,
+     "meanD2over3": 1.1427624250707842,
+     "medianD2over3": 0.7027596572939002,
+     "coverage": 0.9090909090909091,
+     "inBand": false,
+     "eligible": false
+    }
+   },
+   "validationInBand": 1,
+   "validationLoss": 161.60587228969456,
+   "freeParameters": 7
+  },
+  "M3/tauInf": {
+   "parameters": {
+    "tau": "inf",
+    "k_e": 0.030100705418264193,
+    "f_R": 0.10923069728438764,
+    "f_T": 0.03962194823517831,
+    "f_N": 2.667566641755445,
+    "q_T": 2.5423060880285403e-21,
+    "q_RN": 1.4872732375252887e-18,
+    "s2": 0.22479346146628995
+   },
+   "likelihoodStart": {
+    "tau": "inf",
+    "k_e": 0.07803474240714366,
+    "f_R": 0.08656412058361823,
+    "f_T": 0.05226907635667367,
+    "f_N": 0.863253908587692,
+    "q_T": 5.215230277782521e-21,
+    "q_RN": 2.8104744026661988e-18,
+    "s2": 0.05304392714094683
+   },
+   "calibrationLoss": 1.0541419863470711,
+   "calibrationCells": {
+    "1": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7461443617981587,
+     "medianD2over3": 0.3217449869802342,
+     "coverage": 0.9523809523809523,
+     "inBand": false,
+     "eligible": true
+    },
+    "6": {
+     "n": 103,
+     "clusters": 5,
+     "meanD2over3": 0.7910687074177686,
+     "medianD2over3": 0.3964635000619892,
+     "coverage": 0.941747572815534,
+     "inBand": false,
+     "eligible": true
+    },
+    "12": {
+     "n": 101,
+     "clusters": 5,
+     "meanD2over3": 0.672957961323415,
+     "medianD2over3": 0.27435076402652353,
+     "coverage": 0.9603960396039604,
+     "inBand": false,
+     "eligible": true
+    },
+    "24": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7211742065813079,
+     "medianD2over3": 0.3286585513713192,
+     "coverage": 0.9523809523809523,
+     "inBand": false,
+     "eligible": true
+    },
+    "48": {
+     "n": 105,
+     "clusters": 5,
+     "meanD2over3": 0.7310057792625816,
+     "medianD2over3": 0.36680061487462234,
+     "coverage": 0.9523809523809523,
+     "inBand": false,
+     "eligible": true
+    },
+    "72": {
+     "n": 106,
+     "clusters": 5,
+     "meanD2over3": 0.8022116822953994,
+     "medianD2over3": 0.46505896741927694,
+     "coverage": 0.9528301886792453,
+     "inBand": true,
+     "eligible": true
+    }
+   },
+   "validationCells": {
+    "1": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 7.587027885725123,
+     "medianD2over3": 0.5044976519028596,
+     "coverage": 0.7534246575342466,
+     "inBand": false,
+     "eligible": false
+    },
+    "6": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 3.7902984245810782,
+     "medianD2over3": 0.7078534647959599,
+     "coverage": 0.7534246575342466,
+     "inBand": false,
+     "eligible": false
+    },
+    "12": {
+     "n": 73,
+     "clusters": 5,
+     "meanD2over3": 1.2561584430902961,
+     "medianD2over3": 0.5012464784746273,
+     "coverage": 0.8767123287671232,
+     "inBand": false,
+     "eligible": false
+    },
+    "24": {
+     "n": 70,
+     "clusters": 5,
+     "meanD2over3": 1.0961557263451163,
+     "medianD2over3": 0.5846398827037367,
+     "coverage": 0.9142857142857143,
+     "inBand": false,
+     "eligible": false
+    },
+    "48": {
+     "n": 67,
+     "clusters": 5,
+     "meanD2over3": 0.7972096228200368,
+     "medianD2over3": 0.527959232622653,
+     "coverage": 0.9701492537313433,
+     "inBand": false,
+     "eligible": false
+    },
+    "72": {
+     "n": 66,
+     "clusters": 5,
+     "meanD2over3": 1.006966202447105,
+     "medianD2over3": 0.5343786000570712,
+     "coverage": 0.9090909090909091,
+     "inBand": false,
+     "eligible": false
+    }
+   },
+   "validationInBand": 0,
+   "validationLoss": 221.01839420264068,
+   "freeParameters": 7
+  }
+ },
+ "chosen": "M0",
+ "ranking": [
+  {
+   "candidate": "M0",
+   "validationInBand": 2,
+   "validationLoss": 10.465087824831844,
+   "freeParameters": 0
+  },
+  {
+   "candidate": "M1",
+   "validationInBand": 1,
+   "validationLoss": 79.77506493746289,
+   "freeParameters": 4
+  },
+  {
+   "candidate": "M3/tau1",
+   "validationInBand": 1,
+   "validationLoss": 161.60587228969456,
+   "freeParameters": 7
+  },
+  {
+   "candidate": "M2",
+   "validationInBand": 0,
+   "validationLoss": 95.66175247413005,
+   "freeParameters": 6
+  },
+  {
+   "candidate": "M3/tauInf",
+   "validationInBand": 0,
+   "validationLoss": 221.01839420264068,
+   "freeParameters": 7
+  }
+ ],
+ "opened": null
+}

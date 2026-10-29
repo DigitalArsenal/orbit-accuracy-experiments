@@ -1,0 +1,150 @@
+{
+ "receipt": "precheck-P11",
+ "createdUtc": "2026-10-29T05:28:05.479Z",
+ "experimentsCommit": "1f30edb30df0b6b22273536fe04829a9380038c9",
+ "plan": "3.6, 3.8 P11",
+ "method": "independent chi-square(3) draws (Box-Muller on SplitMix32, seed 1), 4,000 trials per size; the scale case multiplies each of 5 objects' draws by exp(N(0, 0.15))",
+ "independent": {
+  "30": 0.55375,
+  "100": 0.754,
+  "200": 0.85925,
+  "300": 0.91925,
+  "500": 0.96675,
+  "1000": 0.99825
+ },
+ "fiveObjectsScale15": {
+  "30": 0.532,
+  "100": 0.67225,
+  "200": 0.749,
+  "300": 0.7755,
+  "500": 0.807,
+  "1000": 0.8455
+ },
+ "perClassCell": {
+  "R1": {
+   "calibration": {
+    "windows": 482,
+    "oracle": 0.95
+   },
+   "validation": {
+    "windows": 164,
+    "oracle": 0.7815
+   },
+   "heldOutTime": {
+    "windows": 276,
+    "oracle": 0.873
+   },
+   "heldOutObject": {
+    "windows": 156,
+    "oracle": 0.7335
+   }
+  },
+  "R2": {
+   "calibration": {
+    "windows": 514,
+    "oracle": 0.9505
+   },
+   "validation": {
+    "windows": 188,
+    "oracle": 0.8
+   },
+   "heldOutTime": {
+    "windows": 261,
+    "oracle": 0.8815
+   },
+   "heldOutObject": {
+    "windows": 238,
+    "oracle": 0.81
+   }
+  },
+  "R3": {
+   "calibration": {
+    "windows": 1425,
+    "oracle": 0.9995
+   },
+   "validation": {
+    "windows": 487,
+    "oracle": 0.9595
+   },
+   "heldOutTime": {
+    "windows": 755,
+    "oracle": 0.983
+   },
+   "heldOutObject": {
+    "windows": 1176,
+    "oracle": 0.9985
+   }
+  }
+ },
+ "note": "per class and set, the cell size is the window count of P9 (each window gives one sample per lead); the per-cell oracle pass count and its 5th percentile are recomputed with the realized cell sizes at scoring",
+ "opened": {
+  "files": 24907,
+  "sha256": "b5137ae5ecf776eb86b1edd6b176ad317a092f3bb52195295a99d96f85a34fe5",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-calibration/opened/precheck-P11.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
+    "files": 1825,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/tsx/reference/*",
+    "files": 1722,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2",
+    "files": 1,
+    "labels": [
+     "reference root (listing)"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference-leo-pod-2/*",
+    "files": 17909,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference/*",
+    "files": 3446,
+    "labels": [
+     "index.json"
+    ]
+   },
+   {
+    "group": "/Users/tj/software/worktrees/*",
+    "files": 1,
+    "labels": [
+     "amendments"
+    ]
+   }
+  ]
+ }
+}
