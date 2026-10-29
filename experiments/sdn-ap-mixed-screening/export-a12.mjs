@@ -74,15 +74,56 @@ if (phase === 'export') {
   process.exit(0);
 }
 
+if (phase === 'xp') {
+  // The SGP4-XP fairness export (coordinator ruling 2026-10-29): B2's registered SGP4-XP arm (propagator/sdn-ap `fit` THEORY SGP4XP, build
+  // config.modules.sdnapWasmSha256) on the same E' fit track, and at every exported truth epoch its TEME state and the module's carried
+  // covariance (sdnap_covariance_at). Files under satellites-xp/, beside the FFM files.
+  const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
+  fs.mkdirSync(path.join(out, 'satellites-xp'), { recursive: true });
+  const log = path.join(out, `opened-xp.s${k}.txt`);
+  const a3 = new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => /^starlink-ffm\.s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
+  const R = prefitReader(A.forecastCycle, (p) => fs.appendFileSync(log, `${p}\n`));
+  const { openFits, fitSdnap, sgp4xpCovarianceAt } = await import('./lib/fits.mjs');
+  const { modulesRoot } = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/modules.mjs'));
+  const a = await openFits(modulesRoot());
+  const list = members();
+  for (let i = 0; i < list.length; i += 1) {
+    const sel = list[i], file = path.join(out, 'satellites-xp', `${sel.norad}.json`);
+    if (i % n !== k || fs.existsSync(file)) continue;
+    if (i % 10 === k) await paced(Number(process.env.B2_LOAD_MAX ?? 26));
+    const row = a3.get(sel.norad);
+    R.trackOf(row);
+    const w = eprimeWindow(row, R);
+    const s = sel.windows.eprime;
+    if (w.skipped || w.fit.length !== s.fitStates || w.held.length !== s.heldStates || iso(w.E) !== s.fitEnd) throw new Error(`E' window of ${sel.norad} differs from the selection's`);
+    if (w.held.some((l) => Date.parse(l.epoch) > Date.parse(row.E))) throw new Error(`E' truth of ${sel.norad} reaches past E`);
+    const f = await fitSdnap(a, { frame: 'GCRF', name: `STARLINK ${sel.norad}`, norad: sel.norad, originator: 'SpaceX via operator-capture' }, w.fit, w.E, 'SGP4XP');
+    const rec = { norad: sel.norad, Eprime: iso(w.E), E: row.E, fitFrom: w.fit[0].epoch, fitStates: w.fit.length, arm: 'SGP4-XP (B2 registered, build ' + config.modules.sdnapWasmSha256.slice(0, 12) + ')', fit: f.ok ? { ok: true, termination: 'fitted', ommBase64: f.omm, epoch: f.epoch, theory: f.theory, moduleFitRmsKm: f.moduleFitRmsKm } : { ok: false, termination: 'refused', error: f.error } };
+    if (f.ok) {
+      try {
+        const c = await sgp4xpCovarianceAt(a, f.omm, w.held.map((l) => Date.parse(l.epoch)));
+        rec.teme = c.map((x, j) => ({ epoch: w.held[j].epoch, rKm: x.r, vKmS: x.v, covarianceKm: x.covariance }));
+      } catch (error) { rec.covarianceError = String(error.message).slice(0, 200); }
+    }
+    write(file, rec);
+  }
+  await a.close();
+  process.exit(0);
+}
+
 if (phase === 'manifest') {
   const list = members();
   const files = fs.readdirSync(path.join(out, 'satellites')).filter((f) => f.endsWith('.json')).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
   if (files.length !== list.length) throw new Error(`${files.length} files for ${list.length} satellites`);
   const entries = files.map((f) => { const b = fs.readFileSync(path.join(out, 'satellites', f)); const r = JSON.parse(b); return { file: `satellites/${f}`, sha256: sha256(b), norad: r.norad, ok: r.fit.ok, termination: r.fit.termination ?? null, truthStates: r.truth.length, carriedCovarianceError: r.carriedCovarianceError ?? null }; });
-  const manifest = { export: 'B2 A12 E\' export for the FFM covariance calibration (C2) Starlink transfer check', satellites: entries.length, files: entries };
+  const xpDir = path.join(out, 'satellites-xp');
+  const xpFiles = fs.existsSync(xpDir) ? fs.readdirSync(xpDir).filter((f) => f.endsWith('.json')).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)) : [];
+  if (xpFiles.length && xpFiles.length !== list.length) throw new Error(`${xpFiles.length} SGP4-XP files for ${list.length} satellites`);
+  const xpEntries = xpFiles.map((f) => { const b = fs.readFileSync(path.join(xpDir, f)); const r = JSON.parse(b); return { file: `satellites-xp/${f}`, sha256: sha256(b), norad: r.norad, ok: r.fit.ok, termination: r.fit.termination, temeStates: r.teme?.length ?? 0, covarianceError: r.covarianceError ?? null }; });
+  const manifest = { export: 'B2 A12 E\' export for the FFM covariance calibration (C2) Starlink transfer check', satellites: entries.length, files: entries, ...(xpEntries.length ? { sgp4xp: { arm: `B2's registered SGP4-XP (build ${config.modules.sdnapWasmSha256})`, files: xpEntries } } : {}) };
   const manifestBytes = Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(path.join(out, 'manifest.json'), manifestBytes);
-  const opened = fs.readdirSync(out).filter((f) => /^opened\.s\d+\.txt$/.test(f)).sort().flatMap((f) => fs.readFileSync(path.join(out, f), 'utf8').split('\n').filter(Boolean));
+  const opened = fs.readdirSync(out).filter((f) => /^opened(-xp)?\.s\d+\.txt$/.test(f)).sort().flatMap((f) => fs.readFileSync(path.join(out, f), 'utf8').split('\n').filter(Boolean));
   const late = opened.filter((p) => !(cycleMs(path.basename(path.dirname(p))) < cycleMs(A.forecastCycle)));
   if (late.length) throw new Error(`${late.length} opened paths are not before the forecast cycle`);
   const openedText = `${opened.join('\n')}\n`;
@@ -90,7 +131,7 @@ if (phase === 'manifest') {
   const experiments = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root }).toString().trim();
   write(path.join(results, 'a12-eprime-export.json'), {
     export: manifest.export, directory: out, satellites: entries.length, terminations: entries.reduce((m, e) => ({ ...m, [e.termination ?? 'fit-failed']: (m[e.termination ?? 'fit-failed'] ?? 0) + 1 }), {}),
-    truthStates: entries.reduce((t, e) => t + e.truthStates, 0), carriedCovarianceRefused: entries.filter((e) => e.carriedCovarianceError).map((e) => ({ norad: e.norad, error: e.carriedCovarianceError })), manifestSha256: sha256(manifestBytes),
+    truthStates: entries.reduce((t, e) => t + e.truthStates, 0), ...(xpEntries.length ? { sgp4xp: { files: xpEntries.length, fitted: xpEntries.filter((e) => e.ok).length, temeStates: xpEntries.reduce((t, e) => t + e.temeStates, 0), covarianceRefused: xpEntries.filter((e) => e.covarianceError).map((e) => ({ norad: e.norad, error: e.covarianceError })), build: config.modules.sdnapWasmSha256, modulesCommit: config.modules.commit } } : {}), carriedCovarianceRefused: entries.filter((e) => e.carriedCovarianceError).map((e) => ({ norad: e.norad, error: e.carriedCovarianceError })), manifestSha256: sha256(manifestBytes),
     opened: { paths: opened.length, distinct: new Set(opened).size, sha256: sha256(Buffer.from(openedText)), list: 'results/sdn-ap-mixed-screening/a12-eprime-export-opened.txt', allBeforeForecastCycle: true },
     pins: { estimation: A.estimation, ffm: A.ffm, domains: A.domains, modulesLinks: A.modulesLinks, profile: 'P0 (A12 part 2)', covariance: 'formal times max(1, reduced chi-square), carried by propagator/ffm, no process noise (A5)', experiments },
     rule: 'A12 point 7 (E\'), the selection sample (V2 excluded); no state after E is read into the export',
