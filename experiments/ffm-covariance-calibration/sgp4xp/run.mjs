@@ -12,7 +12,7 @@ import { b2, truthSeries, windowAt, nearest } from '../lib/precise.mjs';
 
 frozen();
 const cls = args.class, set = args.set;
-if (!['I', 'L', 'LP', 'R1'].includes(cls)) throw new Error('--class I|L|LP|R1');
+if (!['I', 'L', 'LP', 'R1', 'S'].includes(cls)) throw new Error('--class I|L|LP|R1|S');
 if (!['calibration', 'validation', 'heldOut'].includes(set)) throw new Error('--set calibration|validation|heldOut');
 if (set === 'heldOut' && !fs.existsSync(path.join(results, 'sgp4xp/frozen-constants.json'))) throw new Error('SGP4-XP held-out sets are scored only after its freeze');
 const B2C = JSON.parse(fs.readFileSync(b2('config.json')));
@@ -114,6 +114,37 @@ if (args.replay) {
   console.log(same ? `SGP4-XP ${cls} ${args.replay} replayed bit for bit` : `SGP4-XP ${cls} ${args.replay} differs from the stored row`);
   await pairs.close(); await a.close();
   process.exit(same ? 0 : 1);
+}
+
+if (cls === 'S') {
+  // C2-A9 point 4: the Starlink transfer (robustness only) on the B2-extended export: B2's SGP4-XP fit over [E - 48 h, E - 24 h] and its
+  // TEME state and sdnap_covariance_at covariance at every truth epoch; the truth (GCRF) taken to TEME by foundation/frames; R1-M's
+  // SGP4-XP constants at scoring (score.mjs --arm sgp4xp --class S --heldout). Rows use the set name heldOut.
+  if (set !== 'heldOut') throw new Error('--class S runs with --set heldOut');
+  const EXPORT = '/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-eprime-export';
+  const MANIFEST = '8596af2cab62043d21af7bd2b1cc33119880c17d4331314257471bbf51bc4125';
+  const { createHash } = await import('node:crypto');
+  const sha = (b) => createHash('sha256').update(b).digest('hex');
+  const mb = opened.read(path.join(EXPORT, 'manifest.json'), `B2-supplied export, manifest ${MANIFEST}`);
+  if (sha(mb) !== MANIFEST) throw new Error('the export manifest is not the coordinator\'s');
+  const manifest = JSON.parse(mb);
+  const ffmFiles = new Map(manifest.files.map((f) => [f.norad, f]));
+  const FR = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/frames.mjs'));
+  const frames = await G1M.openModule(B2C.a12.modulesLinks, 'foundation/frames');
+  for (const m of manifest.sgp4xp.files) tasks.push({ id: `${m.norad}`, run: async () => {
+    const read = (f) => { const b = opened.read(path.join(EXPORT, f.file), `B2-supplied export, manifest ${MANIFEST}`); if (sha(b) !== f.sha256) throw new Error(`${f.file} differs from the manifest`); return JSON.parse(b); };
+    const xp = read(m), ff = read(ffmFiles.get(m.norad));
+    const Ep = Date.parse(xp.Eprime);
+    if (!xp.fit?.ok) return { norad: m.norad, E: xp.Eprime, cluster: m.norad, failed: `SGP4-XP fit ${xp.fit?.termination}` };
+    if (m.covarianceError) return { norad: m.norad, E: xp.Eprime, cluster: m.norad, failed: `sdnap_covariance_at refused: ${m.covarianceError}` };
+    const temeBy = new Map(xp.teme.map((t) => [t.epoch, t]));
+    const truth = ff.truth.map((t) => ({ epoch: t.epoch, r: t.rKm, v: t.vKmS, ms: Date.parse(t.epoch) }));
+    const leads = config.model.leads_h.flatMap((L) => { let best = null; for (const t of truth) { const d = Math.abs(t.ms - (Ep + L * HOUR)); if (d <= tol.starlink * 1000 && (!best || d < best.d)) best = { d, t }; } return best ? [{ L, line: best.t }] : []; });
+    if (!leads.length) return { norad: m.norad, E: xp.Eprime, cluster: m.norad, excluded: 'no truth at any lead' };
+    const tt = []; for (const x of leads) { const q = await FR.transformState(frames, 'GCRF', 'TEME', x.line.epoch, [...x.line.r, ...x.line.v]); tt.push({ r: q.slice(0, 3), v: q.slice(3, 6) }); }
+    const st = await pairs.stats(leads.map((x, i) => { const p = temeBy.get(x.line.epoch); return { predicted: { position: p.rKm.map((q) => q * 1000), velocity: p.vKmS.map((q) => q * 1000), covariance: p.covarianceKm.map((q) => q * 1e6), covarianceAxes: 'INERTIAL' }, truth: { position: tt[i].r.map((q) => q * 1000), velocity: tt[i].v.map((q) => q * 1000) } }; }), 'predicted');
+    return { norad: m.norad, E: xp.Eprime, cluster: m.norad, label: 'robustness only: SGP4-XP R1 (M) transferred (C2-A9)', fit: { ok: true, moduleFitRmsKm: xp.fit.moduleFitRmsKm }, leads: leads.map((x, i) => ({ L: x.L, epoch: x.line.epoch, errRtnM: st[i].errorRtn, terms: { A: st[i].predictedRtn }, truthSigmaM: null })) };
+  } });
 }
 
 for (let i = 0; i < tasks.length; i += 1) {
