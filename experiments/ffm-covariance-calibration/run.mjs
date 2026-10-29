@@ -392,7 +392,7 @@ if (phase === 'l-terms') {
 }
 
 if (phase === 'starlink-transfer') {
-  // Type S (D3, coordinator ruling Q27): robustness only. R1-O's frozen constants transferred to the B2-supplied export of A12's E' window
+  // Type S (D3, coordinator ruling Q27): robustness only. R1's (weather M) frozen constants transferred (C2-A8) to the B2-supplied export of A12's E' window
   // products (non-V2 satellites; P0 fits on [E - 48 h, E - 24 h] with the formal covariance; truth over (E', E]). The fit product is carried
   // by FFM from its epoch with A5's covariance (formal x max(1, reduced chi-square)) x k_e to E' and from E' with PROCESS_NOISE (C2-A5),
   // the floor and density term added in the composition; R1 under M with B2's environment table (C2-A8; R1-O has no RSGA at E'). Only the export directory is read (P10).
