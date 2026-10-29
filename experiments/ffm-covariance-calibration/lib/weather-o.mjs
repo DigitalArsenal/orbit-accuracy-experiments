@@ -33,6 +33,7 @@ export async function openWeatherO(links) {
       const frame = inputs.find((i) => i.portId === 'space_weather');
       const root = P.PRW.getSizePrefixedRootAsPRW(new fb.ByteBuffer(new Uint8Array(frame.payload))).unpack();
       const rows = root.SPACE_WEATHER.ROWS;
+      const Row = rows[0].constructor; // the table's row type (SPW)
       const o = X.rowsO(Date.parse(`${rows[0].DATE}T00:00:00Z`), cutoffMs);
       if (o.excluded) return { excluded: o.excluded };
       const byDate = new Map(o.rows.map((r) => [r.date, r]));
@@ -42,10 +43,10 @@ export async function openWeatherO(links) {
         const t = Date.parse(`${r.DATE}T00:00:00Z`);
         if (t <= D0 - 3 * DAY) { out.push(r); continue; }
         const q = byDate.get(r.DATE) ?? last;
-        out.push(Object.assign(new P.PRWSpaceWeatherRowT(), { ...r, F107_OBS: q.f107, F107_ADJ: -1, F107_DATA_TYPE: 2, F107_OBS_CENTER81: q.c81, F107_OBS_LAST81: q.c81, F107_ADJ_CENTER81: -1, F107_ADJ_LAST81: -1,
+        out.push(Object.assign(new Row(), { ...r, F107_OBS: q.f107, F107_ADJ: -1, F107_DATA_TYPE: 2, F107_OBS_CENTER81: q.c81, F107_OBS_LAST81: q.c81, F107_ADJ_CENTER81: -1, F107_ADJ_LAST81: -1,
           AP_AVG: q.ap, AP1: -1, AP2: -1, AP3: -1, AP4: -1, AP5: -1, AP6: -1, AP7: -1, AP8: -1 }));
       }
-      for (let t = Date.parse(`${rows.at(-1).DATE}T00:00:00Z`) + DAY; t <= toMs + 2 * DAY; t += DAY) out.push(Object.assign(new P.PRWSpaceWeatherRowT(), { ...out.at(-1), DATE: dateOf(t) }));
+      for (let t = Date.parse(`${rows.at(-1).DATE}T00:00:00Z`) + DAY; t <= toMs + 2 * DAY; t += DAY) out.push(Object.assign(new Row(), { ...out.at(-1), DATE: dateOf(t) }));
       const b = new fb.Builder(1 << 16);
       b.finishSizePrefixed(Object.assign(new P.PRWT(), { SPACE_WEATHER: Object.assign(new P.PRWSpaceWeatherTableT(), { ROWS: out }) }).pack(b), '$PRW');
       return { inputs: inputs.map((i) => (i === frame ? { ...frame, payload: b.asUint8Array().slice() } : i)), rsga: o.rsga };
