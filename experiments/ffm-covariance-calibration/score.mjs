@@ -12,6 +12,7 @@ import { rng } from '../../harness/stats.mjs';
 
 frozen();
 const cls = args.class;
+const CK = `${cls}${args.weather === 'O' ? '-O' : ''}`; // the constants key: class, and weather O for R1/R2
 const B2C = JSON.parse(fs.readFileSync(b2('config.json')));
 const rowsDir = path.join(store, 'rows');
 const readJsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
@@ -43,7 +44,7 @@ function samples(set) {
     }
   } else if (['R1', 'R2', 'R3'].includes(cls)) {
     const allSamples = args.allSamples === 'true';
-    for (const r of rowsOf(`${cls}.${set}.`)) {
+    for (const r of rowsOf(`${cls}.${set}.${args.weather === 'O' ? 'O.' : ''}s`)) {
       if (r.excluded || !r.fit?.ok) { ex(r.excluded ? r.excluded.slice(0, 60) : `fit ${r.fit?.termination ?? r.fit?.error}`); continue; }
       if (!r.leads?.length) { ex('fit converged, no truth at any lead'); continue; }
       if (!allSamples && r.screen?.flagged) { ex('maneuver screen: truth fit 3D RMS above 5 m (C2-A4 point 4)'); continue; }
@@ -159,7 +160,7 @@ if (args.fit) {
   const ranked = Object.entries(report.candidates).filter(([, c]) => c.validationCells).sort(([, a], [, b]) => b.validationInBand - a.validationInBand || a.validationLoss - b.validationLoss || a.freeParameters - b.freeParameters);
   report.chosen = ranked[0][0];
   report.ranking = ranked.map(([n, c]) => ({ candidate: n, validationInBand: c.validationInBand, validationLoss: c.validationLoss, freeParameters: c.freeParameters }));
-  console.log(writeReceipt(`fit-${cls}${report.sensitivity ? '-sensitivity' : ''}`, report));
+  console.log(writeReceipt(`fit-${CK}${report.sensitivity ? '-sensitivity' : ''}`, report));
   await pairs?.close();
   process.exit(0);
 }
@@ -171,11 +172,11 @@ if (args.heldout) {
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
   const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
   const R = ['R1', 'R2', 'R3'].includes(cls);
-  const rowsAll = R ? rowsOf(`${cls}.heldOut.`) : rowsOf(`heldout.${cls}.`);
+  const rowsAll = R ? rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`) : rowsOf(`heldout.${cls}.`);
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
-  for (const key of Object.keys(FZ).filter((x) => x === cls || x === `${cls}-sensitivity`)) {
+  for (const key of Object.keys(FZ).filter((x) => x === CK || x === `${CK}-sensitivity`)) {
     const p = FZ[key].parameters, sens = key.endsWith('-sensitivity');
     for (const [subset, scope] of R ? [['object', 'primary'], ['object', 'allSamples'], ['time', 'primary'], ['time', 'allSamples']] : (cls === 'I' ? [[null, 'primary'], [null, 'allSamples']] : [[null, 'primary']])) {
       const rows = subset ? rowsAll.filter((r) => r.subset === subset) : rowsAll;
@@ -223,7 +224,7 @@ if (args.heldout) {
       table.variants[`${key}/${subset ? `${subset}/` : ''}${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
     }
   }
-  console.log(writeReceipt(`heldout-${cls}`, table));
+  console.log(writeReceipt(`heldout-${CK}`, table));
   await pairs?.close();
   process.exit(0);
 }
@@ -231,7 +232,7 @@ if (args.heldout) {
 if (args.p8) {
   // C2-A4 point 1: per lead of the chosen model on validation, the covariance scaled so that the 95 % coverage is exactly 0.95
   // (s = the type-7 0.95 quantile of d2 / 7.8147), then mean d2 / 3 of the scaled d2; P8 passes when every lead lies in 0.8-1.25.
-  const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${cls}.json`)));
+  const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${CK}.json`)));
   const p = fit.candidates[fit.chosen].parameters;
   const val = samples('validation');
   const d2 = await d2Of(p, val.out);
@@ -240,20 +241,20 @@ if (args.p8) {
   const q = (xs, f) => { const s0 = [...xs].sort((a, b) => a - b); const h = (s0.length - 1) * f, lo = Math.floor(h); return s0[lo] + (s0[Math.ceil(h)] - s0[lo]) * (h - lo); };
   const leads = Object.fromEntries(Object.entries(by).map(([L, xs]) => { const sc = q(xs, 0.95) / CHI; const m = xs.reduce((a, b) => a + b / sc, 0) / xs.length / 3; return [L, { n: xs.length, scale: sc, shape: m, inBand: m >= 0.8 && m <= 1.25 }]; }));
   const pass = Object.values(leads).every((x) => x.inBand);
-  console.log(writeReceipt(`precheck-P8-${cls}`, { plan: '3.8 P8; C2-A4 point 1', class: cls, chosen: fit.chosen, parameters: p, fitReceipt: `fit-${cls}.json`, leads,
+  console.log(writeReceipt(`precheck-P8-${CK}`, { plan: '3.8 P8; C2-A4 point 1', class: CK, chosen: fit.chosen, parameters: p, fitReceipt: `fit-${CK}.json`, leads,
     outcome: pass ? 'pass' : 'FAIL: the class is infeasible for a lead-independent model (C2-A4 point 1)' }));
   await pairs?.close();
   process.exit(0);
 }
 
 if (args.freeze) {
-  const key = `${cls}${args.sensitivity === 'true' ? '-sensitivity' : ''}`;
+  const key = `${CK}${args.sensitivity === 'true' ? '-sensitivity' : ''}`;
   const fitFile = path.join(results, `fit-${key}.json`);
   const fit = JSON.parse(fs.readFileSync(fitFile));
   const file = path.join(results, 'frozen-constants.json');
   const frozenAll = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : { receipt: 'frozen-constants', note: 'PLAN.md 3.5 point 4: no change after any held-out score; any later variant is exploratory', classes: {} };
   if (frozenAll.classes[key]) throw new Error(`${key} is already frozen`);
-  const p8 = path.join(results, `precheck-P8-${cls}.json`);
+  const p8 = path.join(results, `precheck-P8-${CK}.json`);
   frozenAll.classes[key] = { chosen: fit.chosen, parameters: fit.candidates[fit.chosen].parameters, fitReceipt: path.basename(fitFile), fitReceiptSha256: sha256(fs.readFileSync(fitFile)), fitCommit: fit.experimentsCommit,
     p8: fs.existsSync(p8) && !args.sensitivity ? JSON.parse(fs.readFileSync(p8)).outcome : null, frozenUtc: new Date().toISOString() };
   fs.writeFileSync(file, `${JSON.stringify(frozenAll, null, 1)}\n`);

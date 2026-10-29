@@ -267,7 +267,8 @@ if (phase === 'precise') {
   if (!['R3', 'R1', 'R2'].includes(cls)) throw new Error('--class R3|R1|R2');
   if (!['calibration', 'validation', 'heldOut'].includes(set)) throw new Error('--set calibration|validation|heldOut');
   const FZ = fs.existsSync(path.join(results, 'frozen-constants.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes : {};
-  if (set === 'heldOut' && !FZ[cls]) throw new Error(`${cls} is not frozen: held-out sets are scored only after the freeze`);
+  const CK = `${cls}${args.weather === 'O' ? '-O' : ''}`;
+  if (set === 'heldOut' && !FZ[CK]) throw new Error(`${CK} is not frozen: held-out sets are scored only after the freeze`);
   const { truthSeries, windowAt } = await import('./lib/precise.mjs');
   const { openPairs } = await import('./lib/pairs.mjs');
   const { windowTerms } = await import('./lib/products.mjs');
@@ -282,8 +283,13 @@ if (phase === 'precise') {
   // held out (PLAN.md 3.4): by object, every cutoff of every set to the end of the product; by time, calibration objects from 2026-06-01 to the end
   const lastE = (o) => (o.last ? iso(Date.parse(o.last) - 72 * HOUR).slice(0, 10) : config.split.heldOutTime.from);
   const heldTasks = (o) => (o.set === 'heldOutObject' ? every(config.split.calibration.cutoffs.from, lastE(o)).map((E) => [o, E, 'object']) : every(config.split.heldOutTime.from, lastE(o)).map((E) => [o, E, 'time']));
-  const out = path.join(rowsDir, `${cls}.${set}.s${k}.jsonl`);
+  const weather = args.weather ?? 'M';
+  if (!['M', 'O'].includes(weather) || (weather === 'O' && cls === 'R3')) throw new Error('--weather M|O (O for R1/R2 only)');
+  const out = path.join(rowsDir, `${cls}.${set}${weather === 'O' ? '.O' : ''}.s${k}.jsonl`);
   const done = new Set(readJsonl(out).map((r) => `${r.norad}|${r.E}`));
+  const WO = weather === 'O' ? await (await import('./lib/weather-o.mjs')).openWeatherO(B2C.a12.modulesLinks) : null;
+  // condition O reuses condition M's maneuver screen (truth only, weather-independent)
+  const screenM = weather === 'O' ? new Map(fs.readdirSync(rowsDir).filter((f) => f.startsWith(`${cls}.${set}.s`)).flatMap((f) => readJsonl(path.join(rowsDir, f))).map((r) => [`${r.norad}|${r.E}`, r.screen])) : null;
   const frac = cls === 'R3' ? 1 : B2C.a12.fit.apriori.parameterFraction;
   const settingsOf = (o, withB) => {
     const ps = [...(withB ? [{ kind: 'DRAG_AREA_OVER_MASS', value: o.seed.bSeed ?? o.seed.areaOverMassM2kg * 2.2 }] : []), { kind: 'SRP_AREA_OVER_MASS', value: o.seed.agomSeed }];
@@ -299,22 +305,26 @@ if (phase === 'precise') {
     if (args.limit && i / n > Number(args.limit)) break;
     if (series?.norad !== o.norad) series = { norad: o.norad, s: truthSeries(o.norad, prefixOf(o), { opened, from: Date.parse(S.cutoffs.from) - 3 * 24 * HOUR, to: Date.parse(S.cutoffs.to) + 5 * 24 * HOUR }) };
     const w = windowAt(series.s, E, { leadToleranceSeconds: B2C.a5.ca.leadToleranceSeconds.laser });
-    const row = { norad: o.norad, name: o.name, cluster: o.cluster, E: iso(E), set, class: cls, ...(subset ? { subset } : {}) };
+    const row = { norad: o.norad, name: o.name, cluster: o.cluster, E: iso(E), set, class: cls, weather, ...(subset ? { subset } : {}) };
     const t0 = Date.now();
     if (w.excluded) row.excluded = w.excluded;
     else if (Math.abs(Date.parse(w.track[0].epoch) - (E - 24 * HOUR)) > 300e3) row.excluded = 'no state at the track start';
     else {
       try {
         // the maneuver screen on the truth itself
-        const sw = windowAt(series.s, E + 72 * HOUR, { trackHours: 96, leadToleranceSeconds: 0, minCoverage: 0 });
-        const ctxS = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
-        const fs0 = await fitV3(ctxS, fitInput(sw.track).points, fitInput(sw.track).reference, settingsOf(o, true));
-        row.screen = { ok: fs0.ok, termination: fs0.termination ?? null, points: sw.track.length, rms3dM: fs0.weightedRms != null ? Math.sqrt(3) * 10 * fs0.weightedRms : null };
-        row.screen.flagged = fs0.ok && row.screen.rms3dM > 5; // C2-A4 point 4
-        row.screen.failed = !fs0.ok; // a screen fit that does not converge cannot clear the window: counted apart
+        if (screenM) row.screen = screenM.get(id) ? { ...screenM.get(id), from: 'condition M rows' } : null;
+        else {
+          const sw = windowAt(series.s, E + 72 * HOUR, { trackHours: 96, leadToleranceSeconds: 0, minCoverage: 0 });
+          const ctxS = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
+          const fs0 = await fitV3(ctxS, fitInput(sw.track).points, fitInput(sw.track).reference, settingsOf(o, true));
+          row.screen = { ok: fs0.ok, termination: fs0.termination ?? null, points: sw.track.length, rms3dM: fs0.weightedRms != null ? Math.sqrt(3) * 10 * fs0.weightedRms : null };
+          row.screen.flagged = fs0.ok && row.screen.rms3dM > 5; // C2-A4 point 4
+          row.screen.failed = !fs0.ok; // a screen fit that does not converge cannot clear the window: counted apart
+        }
         const settings = cls === 'R3' ? settingsOf(o, false) : settingsOf(o, true);
         const { points, reference } = fitInput(w.track);
-        const ctx = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
+        let ctx = v3.ctxFor(E - 24 * HOUR, E + 72 * HOUR);
+        if (WO) { const o2 = WO.inputsO(ctx.inputs, E, E + 72 * HOUR); if (o2.excluded) throw new Error(`condition O: ${o2.excluded}`); ctx = { ...ctx, inputs: o2.inputs }; row.rsga = o2.rsga; }
         const f = await fitV3(ctx, points, reference, settings);
         row.fit = { ok: f.ok, termination: f.termination ?? null, error: f.error ?? null, epoch: f.epoch, state: f.state, parameters: f.parameters, reducedChiSquare: f.reducedChiSquare, iterations: f.iterations, rejectedTrials: f.rejectedTrials, refusedTrials: f.refusedTrials, covariance: f.covariance };
         row.trackMaxSigmaM = Math.max(...w.track.map((l) => l.sigma ?? 0));
@@ -323,14 +333,14 @@ if (phase === 'precise') {
           // end to end through FFM's PROCESS_NOISE with the frozen constants (C2-A5: the hand-off at E symmetrized); a refusal is a failure
           const { ffmNoiseCovariances } = await import('./lib/products.mjs');
           row.ffm = {};
-          for (const key of Object.keys(FZ).filter((x) => x === cls)) { const p = FZ[key].parameters; row.ffm[key] = (await ffmNoiseCovariances(ctx, pairs, f, E, w.leads, settings, [p.q_RN ?? 0, p.q_T ?? 0, p.q_RN ?? 0], p.k_e)).map((x) => x.rtn); }
+          for (const key of Object.keys(FZ).filter((x) => x === CK)) { const p = FZ[key].parameters; row.ffm[key] = (await ffmNoiseCovariances(ctx, pairs, f, E, w.leads, settings, [p.q_RN ?? 0, p.q_T ?? 0, p.q_RN ?? 0], p.k_e)).map((x) => x.rtn); }
         }
       } catch (error) { if (set === 'heldOut' && row.fit?.ok) row.failed = `FFM refused (a failure): ${String(error.message).slice(0, 200)}`; else row.excluded = `refused: ${String(error.message).slice(0, 200)}`; }
     }
     row.seconds = (Date.now() - t0) / 1000;
     fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
   }
-  fs.writeFileSync(path.join(store, 'opened', `${cls}.${set}.s${k}.json`), JSON.stringify(opened.list()));
+  fs.writeFileSync(path.join(store, 'opened', `${cls}.${set}${weather === 'O' ? '.O' : ''}.s${k}.json`), JSON.stringify(opened.list()));
   await pairs.close();
 }
 
