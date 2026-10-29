@@ -42,6 +42,12 @@ function samples(set) {
       counts.windows += 1;
       for (const l of r.leads) { if (sens && l.truthSigmaM > 0.3) continue; out.push({ L: l.L, err: l.errRtnM, terms: l.terms, truthSigma: sens ? null : l.truthSigmaM, cluster: r.norad, window: `${r.sphere}|${r.E}` }); }
     }
+  } else if (cls === 'L') {
+    for (const r of rowsOf(`L.${set}.s`)) {
+      if (r.excluded || !r.leads?.length) { ex(r.excluded ? r.excluded.slice(0, 60) : 'no truth at any lead'); continue; }
+      counts.windows += 1;
+      for (const l of r.leads) out.push({ L: l.L, err: l.errRtnM, terms: l.terms, truthSigma: l.truthSigmaM, cluster: r.norad, window: `${r.norad}|${r.E}` });
+    }
   } else if (['R1', 'R2', 'R3'].includes(cls)) {
     const allSamples = args.allSamples === 'true';
     for (const r of rowsOf(`${cls}.${set}.${args.weather === 'O' ? 'O.' : ''}s`)) {
@@ -172,7 +178,7 @@ if (args.heldout) {
   // the eligibility label (C2-A4 point 8); for type I the all-sample cells (screened windows kept) as well.
   const FZ = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes;
   const R = ['R1', 'R2', 'R3'].includes(cls);
-  const rowsAll = R ? rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`) : rowsOf(`heldout.${cls}.`);
+  const rowsAll = cls === 'L' ? rowsOf('L.heldOut.s') : R ? rowsOf(`${cls}.heldOut.${args.weather === 'O' ? 'O.' : ''}s`) : rowsOf(`heldout.${cls}.`);
   const screen = cls === 'I' ? new Map(rowsOf('iss-screen.').map((r) => [r.file, r])) : null;
   const passProbability = (n, trials = 4000) => { const r = rng(7); let pass = 0; for (let t = 0; t < trials; t += 1) { let sum = 0, inside = 0; for (let i = 0; i < n; i += 1) { let d = 0; for (let j = 0; j < 3; j += 1) { const u1 = r() || 1e-12, u2 = r(); const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); d += z * z; } sum += d; if (d <= CHI) inside += 1; } const m = sum / n / 3, c = inside / n; if (m >= BAND.meanD2over3[0] && m <= BAND.meanD2over3[1] && c >= BAND.coverage95[0] && c <= BAND.coverage95[1]) pass += 1; } return pass / trials; };
   const table = { class: cls, variants: {} };
@@ -195,7 +201,7 @@ if (args.heldout) {
           const terms = [{ weight: 1, covariance: r.ffm[key][j] }];
           for (const [ax, u] of [['f_R', unitRtn.RR], ['f_T', unitRtn.TT], ['f_N', unitRtn.NN]]) if (p[ax]) terms.push({ weight: p[ax] ** 2, covariance: u });
           if (p.s2) terms.push({ weight: p.s2, covariance: p.tau === 'inf' ? l.terms.Dinf : l.terms.D1 });
-          const nsgfR2 = cls === 'R2' && /^(16908|38077|27944|7646|25398|22824)$/.test(String(r.norad));
+          const nsgfR2 = (cls === 'R2' && /^(16908|38077|27944|7646|25398|22824)$/.test(String(r.norad))) || cls === 'L';
           list.push({ L: l.L, err: l.errRtnM, terms, truthSigma: (cls === 'LP' && !sens) || nsgfR2 ? l.truthSigmaM : null, cluster: cls === 'I' ? Math.floor(Date.parse(r.E) / (30 * DAY)) : (r.cluster ?? r.norad), window: r.id ?? `${r.norad}|${r.E}` });
         });
       }

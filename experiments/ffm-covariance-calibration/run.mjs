@@ -344,6 +344,53 @@ if (phase === 'precise') {
   await pairs.close();
 }
 
+if (phase === 'l-terms') {
+  // Type L (C2-A4 point 5; bias-contaminated, C2-A3 point 1): E6 R products (normal-point fits, E6 steps 12 and 40 unchanged), carried as E6
+  // carries them (from the fit epoch, the scaled fit covariance conditioned, E6's forces and fixed AGOM) to the NSGF truth at E + L with the
+  // C2-A1 truth term. Calibration and validation from E6's dev window run in this worktree (runs/e6-40-slr-fit-dev-*); held out from the
+  // test-window products B2 part 2 used (read-only, the B2 worktree's runs/e6-40-slr-fit-test-*). Rows: rows/L.<set>.s<k>.jsonl.
+  const set = args.set;
+  if (!['calibration', 'validation', 'heldOut'].includes(set)) throw new Error('--set calibration|validation|heldOut');
+  const FZ = fs.existsSync(path.join(results, 'frozen-constants.json')) ? JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json'))).classes : {};
+  if (set === 'heldOut' && !FZ.L) throw new Error('L is not frozen');
+  const A4 = JSON.parse(fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), 'amendments.json')))['C2-A4'].typeL;
+  const [lo, hi] = A4[set];
+  const runsDir = set === 'heldOut' ? '/Users/tj/software/worktrees/orbit-accuracy-experiments--experiments-b2-ffm-iss-starlink-20261026/runs' : path.join(root, 'runs');
+  const prefix = set === 'heldOut' ? 'e6-40-slr-fit-test-' : 'e6-40-slr-fit-dev-';
+  const products = fs.readdirSync(runsDir).filter((d) => d.startsWith(prefix)).flatMap((d) => readJsonl(opened.add(path.join(runsDir, d, 'products.jsonl'), 'E6 R products')))
+    .filter((q) => q.variant === 'R' && q.cutoff.slice(0, 10) >= lo && q.cutoff.slice(0, 10) <= hi).sort((a, b) => a.norad - b.norad || Date.parse(a.cutoff) - Date.parse(b.cutoff));
+  const { truthSeries, nearest } = await import('./lib/precise.mjs');
+  const { openPairs } = await import('./lib/pairs.mjs');
+  const { windowTerms, ffmNoiseCovariances } = await import('./lib/products.mjs');
+  const { conditioned } = await import(path.join(root, 'experiments/e6-public-observations/fit.mjs'));
+  const pairs = await openPairs(B2C.a12.modulesLinks);
+  const E6 = JSON.parse(fs.readFileSync(path.join(root, 'experiments/e6-public-observations/config.json'))).slr.targets;
+  const nameOf = (norad) => Object.keys(E6).find((t) => E6[t].norad === norad);
+  const out = path.join(rowsDir, `L.${set}.s${k}.jsonl`);
+  const done = new Set(readJsonl(out).map((r) => `${r.norad}|${r.E}`));
+  let series = null;
+  for (let i = 0; i < products.length; i += 1) {
+    const q = products[i], E = Date.parse(q.cutoff), id = `${q.norad}|${iso(E)}`;
+    if (i % n !== k || done.has(id)) continue;
+    const t = nameOf(q.norad);
+    if (series?.norad !== q.norad) series = { norad: q.norad, s: truthSeries(q.norad, `nsgf.orb.${t}.`, { opened, from: Date.parse(lo) - 3 * 24 * HOUR, to: Date.parse(hi) + 5 * 24 * HOUR }) };
+    const leads = config.model.leads_h.flatMap((L) => { const line = nearest(series.s, E + L * HOUR, B2C.a5.ca.leadToleranceSeconds.laser * 1000); return line ? [{ L, line }] : []; });
+    const row = { norad: q.norad, sphere: t, cluster: q.norad, E: iso(E), set, measurements: q.measurements, label: 'NP along-track bias present (task experiments-e6-normal-point-along-track-bias-20261028)' };
+    const fit = { epoch: q.fitEpoch, state: q.fitState, parameters: q.parameters, covariance: conditioned(q.fitCovariance), reducedChiSquare: 1 };
+    const settings = { forces: q.forces, integrator: F.integrator, fixed: q.fixed };
+    const ctx = v3.ctxFor(Date.parse(q.fitEpoch), E + 72 * HOUR);
+    if (!leads.length) row.excluded = 'no truth at any lead';
+    else {
+      try {
+        Object.assign(row, await windowTerms(ctx, pairs, fit, E, leads, settings));
+        if (set === 'heldOut') { const p = FZ.L.parameters; row.ffm = { L: (await ffmNoiseCovariances(ctx, pairs, fit, E, leads, settings, [p.q_RN ?? 0, p.q_T ?? 0, p.q_RN ?? 0], p.k_e)).map((x) => x.rtn) }; }
+      } catch (error) { if (set === 'heldOut') row.failed = `FFM refused (a failure): ${String(error.message).slice(0, 200)}`; else row.excluded = `refused: ${String(error.message).slice(0, 200)}`; }
+    }
+    fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
+  }
+  await pairs.close();
+}
+
 if (phase === 'lp-terms') {
   // Class L-P (C2-A3 point 2): FFM fitted to the NSGF positions of a type L sphere, E6 R's parameterization, cutoffs every 24 h on type L's
   // splits; then the terms at each lead (truth: every NSGF arc, its stated sigma kept for the C2-A1 truth covariance).
