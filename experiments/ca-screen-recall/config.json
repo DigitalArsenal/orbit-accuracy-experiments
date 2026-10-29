@@ -1,0 +1,143 @@
+{
+  "id": "ca-screen-recall",
+  "frozen": true,
+  "task": "experiments-ca-screen-recall-allpairs-20261029",
+  "classification": "pre-registered validation of the conjunction screen against a brute-force all-pairs reference; public Space-Track element sets; no truth data; no accuracy claim",
+  "data": {
+    "archiveRoot": "/opt/data/sdn-archive",
+    "snapshot": "spacetrack/gp/2026/2026-10-29.json.gz",
+    "snapshotSha256": "a0ff07183325e857180a822e6799713f66cbbfa28ed82f6d9996e02672020a9d",
+    "snapshotJsonSha256": "db2c924e9317b4aaacfb157f4e5d8b2305280aa6a750b1abd1deb5daf82a54d2",
+    "snapshotRecords": 32823,
+    "licenseId": "space-track"
+  },
+  "modules": {
+    "repository": "space-data-network-modules",
+    "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+    "artifacts": {
+      "analysis/conjunction-assessment/dist/isomorphic/module.wasm": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+      "propagator/sgp4/dist/isomorphic/module.wasm": "d9fdd0575d8dc84fa418d1ec4a5e0f14c9a02683eaeec0904b53a0a18b239a97"
+    },
+    "sources": [
+      "analysis/conjunction-assessment/tests/lib/cqr.mjs",
+      "analysis/conjunction-assessment/tests/lib/conjunctionCommandHarness.mjs",
+      "analysis/conjunction-assessment/tests/lib/wasmedgeWasiThreadsRunner.mjs",
+      "propagator/sgp4/tests/lib"
+    ],
+    "note": "artifacts and manifests are read with git show from this commit, never from the working tree; the helper sources the run imports must equal the commit's"
+  },
+  "window": {
+    "startUtc": "2026-10-30T00:00:00Z",
+    "startJd": 2461343.5,
+    "durationSeconds": 259200
+  },
+  "selection": {
+    "seed": "ca-screen-recall-20261029",
+    "count": 2000,
+    "rank": "ascending SHA-256 hex of seed + ':' + NORAD_CAT_ID (decimal)",
+    "require": {
+      "MEAN_ELEMENT_THEORY": "SGP4",
+      "EPHEMERIS_TYPE": "0",
+      "CENTER_NAME": "EARTH",
+      "REF_FRAME": "TEME",
+      "TIME_SYSTEM": "UTC",
+      "DECAY_DATE": null
+    },
+    "apoapsisMaxKm": 2000,
+    "periapsisMinKm": 300,
+    "epochMaxAgeDays": 7
+  },
+  "screen": {
+    "method": "screen_catalog",
+    "workers": 8,
+    "common": {
+      "coarseStepSeconds": 60,
+      "refinementToleranceSeconds": 0.001,
+      "combinedRadiusM": 10,
+      "useKdTree": true,
+      "useDynamicWindow": true,
+      "usePerigeeFilter": true,
+      "algorithm": "ALFANO_MAXIMUM",
+      "evaluationFrame": "TEME"
+    },
+    "arms": [
+      {
+        "id": "defaults",
+        "thresholdM": 5000,
+        "windowSeconds": null,
+        "fallbackWindowSeconds": 86400,
+        "note": "the request schema's defaults and the 5 km, 60 s run of the Fast Conjunction Screening whitepaper, as one call over the window (three 24 h calls if that call fails, recorded); the pass rule applies to this arm"
+      },
+      {
+        "id": "console",
+        "thresholdM": 15000,
+        "windowSeconds": 86400,
+        "fallbackWindowSeconds": null,
+        "note": "the console's default threshold (15 km) and window (24 h), as three consecutive calls; a single 72 h call at 15 km is known to trap in the module (pre-freeze probe)"
+      }
+    ]
+  },
+  "reference": {
+    "module": "propagator/sgp4",
+    "frame": "TEME",
+    "sampleSeconds": 10,
+    "marginSamples": 3,
+    "chunkIntervals": 90,
+    "maxObjectSpeedKmS": 8.5,
+    "reportBelowM": 5000,
+    "retainBelowM": 5500,
+    "candidateBoundKm": 100,
+    "candidateMarginKm": 2,
+    "stages": [
+      {
+        "id": "s1",
+        "stepSeconds": 1,
+        "lines": 21,
+        "marginKm": 1.0
+      },
+      {
+        "id": "s2",
+        "stepSeconds": 0.05,
+        "lines": 41,
+        "marginKm": 0.5
+      },
+      {
+        "id": "s3",
+        "stepSeconds": 0.001,
+        "lines": 101,
+        "marginKm": 0
+      }
+    ]
+  },
+  "comparison": {
+    "tcaToleranceSeconds": 60,
+    "edgeSeconds": 2,
+    "bandsM": [
+      0,
+      1000,
+      5000
+    ],
+    "confidence": 0.95,
+    "flag": {
+      "tcaSeconds": 1,
+      "missM": 5
+    },
+    "outlierRowsMax": 25
+  },
+  "pass": {
+    "arm": "defaults",
+    "band": "below 1 km",
+    "rule": "recall = 1.0: every reference event below 1 km has a screen event for the same pair at the same encounter; any miss in any band is a defect filed with its pair"
+  },
+  "replay": {
+    "count": 300,
+    "durationSeconds": 21600,
+    "note": "verify.mjs repeats the whole method on the first 300 objects of the ranking for the first six hours and compares the counts with results/ca-screen-recall/replay.json"
+  },
+  "smoke": {
+    "seed": "ca-screen-recall-smoke-not-registered",
+    "count": 600,
+    "durationSeconds": 21600,
+    "note": "development runs only; never written to runs/ or results/"
+  }
+}
