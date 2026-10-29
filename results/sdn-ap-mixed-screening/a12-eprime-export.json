@@ -1,0 +1,47 @@
+{
+  "export": "B2 A12 E' export for the FFM covariance calibration (C2) Starlink transfer check",
+  "directory": "/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-eprime-export",
+  "satellites": 1058,
+  "terminations": {
+    "CONVERGED": 1055,
+    "STALLED": 2,
+    "MAXIMUM_ITERATIONS": 1
+  },
+  "truthStates": 138388,
+  "carriedCovarianceRefused": [
+    {
+      "norad": 66842,
+      "error": "propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term."
+    }
+  ],
+  "manifestSha256": "a955c700dcd13cc91bad18a788bab447d92c9b8c26dbc300ef21f18b6a08596d",
+  "opened": {
+    "paths": 18723,
+    "distinct": 7766,
+    "sha256": "b27e77a010c05f2a97376564c43a0ea755638f29b64f45fd969fd578af59e9b6",
+    "list": "results/sdn-ap-mixed-screening/a12-eprime-export-opened.txt",
+    "allBeforeForecastCycle": true
+  },
+  "pins": {
+    "estimation": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "version": "0.6.0",
+      "wasmSha256": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac"
+    },
+    "ffm": {
+      "modulesCommit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+      "version": "2.0.0",
+      "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f"
+    },
+    "domains": {
+      "modulesCommit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+      "file": "propagator/ffm/catalog-configuration.mjs",
+      "sha256": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6"
+    },
+    "modulesLinks": "/opt/data/sdn-archive/sdn-ap-mixed-screening/a12-modules",
+    "profile": "P0 (A12 part 2)",
+    "covariance": "formal times max(1, reduced chi-square), carried by propagator/ffm, no process noise (A5)",
+    "experiments": "c6ff5329b56638086b0dd87d770ea2c25dd2977d"
+  },
+  "rule": "A12 point 7 (E'), the selection sample (V2 excluded); no state after E is read into the export"
+}
