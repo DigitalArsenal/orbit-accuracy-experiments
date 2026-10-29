@@ -234,7 +234,7 @@ if (args.heldout) {
         const inBand = mean >= BAND.meanD2over3[0] && mean <= BAND.meanD2over3[1] && cov >= BAND.coverage95[0] && cov <= BAND.coverage95[1];
         const z2 = [0, 1, 2].map((k) => xs.reduce((a, x) => a + x.z[k] ** 2, 0) / n);
         leads[L] = { n, clusters: clusters.length, meanD2over3: mean, medianD2over3: qq(d2, 0.5) / 3, coverage: cov, meanInterval: [qq(means, 0.025), qq(means, 0.975)], coverageInterval: [qq(covs, 0.025), qq(covs, 0.975)],
-          meanZ2Rtn: z2, oraclePassProbability: passProbability(n), inBand, eligible, label: eligible ? (inBand ? 'pass' : 'fail') : `not eligible (n < ${BAND.minWindows}${clusters.length < minClusters ? ` or clusters < ${minClusters}` : ''})` };
+          meanZ2Rtn: z2, oraclePassProbability: passProbability(n), inBand, eligible, label: eligible ? (inBand ? 'pass' : 'fail') : `not eligible (${[n < BAND.minWindows ? `n < ${BAND.minWindows}` : null, clusters.length < minClusters ? `clusters < ${minClusters}` : null].filter(Boolean).join(', ')})` };
       }
       table.variants[`${key}/${subset ? `${subset}/` : ''}${scope}`] = { constants: FZ[key], counts, leads, eligibleCells: Object.values(leads).filter((x) => x.eligible).length, passingEligibleCells: Object.values(leads).filter((x) => x.eligible && x.inBand).length };
     }
