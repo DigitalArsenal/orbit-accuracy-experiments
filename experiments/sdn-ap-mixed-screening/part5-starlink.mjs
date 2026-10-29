@@ -181,7 +181,8 @@ if (phase === 'cov') {
     p5 = { A13, cal, b: await A13.openPart5Cal(cal, await openModule(config.a12.modulesLinks, 'foundation/frames')) };
     v3 = await (await import('./lib/a12.mjs')).openV3();
   }
-  for (let i = 0; i < sats.length; i += 1) {
+  // --order reverse walks the same shard from its end (a second worker on a shard; each satellite's file is written once, atomically)
+  for (const i of args.order === 'reverse' ? [...sats.keys()].reverse() : sats.keys()) {
     const norad = sats[i], file = path.join(dir, 'cov', `${norad}.json`);
     if (i % n !== k || fs.existsSync(file)) continue;
     if (i % 50 === k) await paced();
