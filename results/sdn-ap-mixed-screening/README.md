@@ -522,3 +522,549 @@ Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 
 | 48 h | SGP4-XP | 1064 / 330 / 0 | 411 / 420 / 3 | 1 / 765 / 339 | 0.0 % [0.0 %, 0.0 %] | 0.068 % [0.0 %, 0.2 %] |
 | 72 h | FFM | 622 / 5 / 0 | 56 / 5 / 0 | 753 / 1532 / 322 | 0.0 % [0.0 %, 0.0 %] | 52.6 % [50.0 %, 55.2 %] |
 | 72 h | SGP4-XP | 1036 / 363 / 1 | 395 / 463 / 5 | 0 / 716 / 316 | 0.071 % [0.0 %, 0.2 %] | 0.0 % [0.0 %, 0.0 %] |
+
+### Starlink (part 1a), FFM as A3 registered
+
+11163 windows with lead records over 11163 object(s); public-set records: 11136 recorded; 27 no set created and dated before the prediction start.
+
+**Population: A3 written for 5,122 of 11,163 satellites; 6,038 (54.1 %) excluded by A3's own fit refusals and failures (A12); 3 more refused by propagator/ffm at the lead phase (A13 part 6). The ffm3 run below is the primary Starlink contrast (0.12 % lead-phase refusals); this A3 contrast is reported for completeness, and its cells are not comparable with ffm3's without this difference in population.**
+
+Records per arm (A13 parts 6 and 7): windows attempted, records written, lead-phase refusals by propagator/ffm (rate), other failures.
+
+| Arm | Attempted | Written | Refused | Other failures | Refusals by message |
+| --- | --: | --: | --- | --- | --- |
+| FFM | 11163 | 5122 | 3 (0.03 %) | 5 not converged; 2985 A3 fit refused by propagator/ffm (Spacecraft mass, area, Cd and Cr are invalid.; A12); 3048 A3 round 2 refused (counted failed, A12 point 2) | 3: refused by propagator/ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| SGP4-XP | 11163 | 11163 | 0 (0.00 %) | - | - |
+| SGP4-XP calibrated (A13) | 11163 | 11163 | 0 (0.00 %) | - | - |
+
+Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5's rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).
+
+| Covariance | 1 h | 6 h | 12 h | 24 h | 48 h | 72 h |
+| --- | --- | --- | --- | --- | --- | --- |
+| FFM | - | - | 1.10e+5 [2.85e+4, 2.29e+5]; 2.5 %; 5122 / 5122; not realistic | 2.14e+6 [1.12e+5, 5.92e+6]; 2.0 %; 4944 / 4944; not realistic | 4.54e+7 [5.05e+6, 1.15e+8]; 1.5 %; 4162 / 4162; not realistic | 4.79e+5 [1.99e+4, 1.32e+6]; 0.0 %; 19 / 19; insufficient |
+| SGP4-XP | - | - | 56.2 [41.0, 75.3]; 46.0 %; 11163 / 11163; not realistic | 350 [221, 505]; 37.1 %; 10873 / 10873; not realistic | 2.62e+4 [1.50e+4, 3.97e+4]; 38.2 %; 9418 / 9418; not realistic | 1.71e+5 [1.33e+4, 3.95e+5]; 4.3 %; 23 / 23; insufficient |
+| V1c5 frozen (public set, SGP4) | - | - | 4.28e+4 [1.73e+4, 7.71e+4]; 26.3 %; 11136 / 11136; not realistic | 8.17e+4 [5.48e+4, 1.13e+5]; 25.4 %; 10847 / 10847; not realistic | 4.77e+5 [3.39e+5, 6.37e+5]; 24.7 %; 9393 / 9393; not realistic | 8.37e+5 [3.35e+3, 2.13e+6]; 17.4 %; 23 / 23; insufficient |
+| uncalibrated (public set, SGP4) | - | - | 5.84e+5 [1.52e+5, 1.12e+6]; 54.8 %; 11135 / 11135; not realistic | 7.51e+5 [2.90e+5, 1.32e+6]; 49.7 %; 10846 / 10846; not realistic | 1.36e+6 [6.34e+5, 2.26e+6]; 44.3 %; 9393 / 9393; not realistic | 4.39e+3 [15.7, 1.08e+4]; 69.6 %; 23 / 23; insufficient |
+| V1c4 best (public set, SGP4) | - | - | 3.75e+5 [9.96e+4, 7.32e+5]; 62.9 %; 11135 / 11135; not realistic | 5.95e+5 [2.23e+5, 1.05e+6]; 51.4 %; 10846 / 10846; not realistic | 1.43e+6 [6.88e+5, 2.30e+6]; 39.5 %; 9393 / 9393; not realistic | 6.99e+3 [21.2, 1.74e+4]; 60.9 %; 23 / 23; insufficient |
+| SGP4-XP calibrated (A13) | - | - | 3.05 [2.20, 4.07]; 89.1 %; 11163 / 11163; fail | 19.0 [12.1, 27.7]; 83.8 %; 10873 / 10873; fail | 1.42e+3 [807, 2.15e+3]; 81.5 %; 9418 / 9418; fail | 9.27e+3 [723, 2.14e+4]; 56.5 %; 23 / 23; not eligible (n < 100) |
+
+Part 4, GP secondary (public set, V1c5 frozen covariance): 13337 encounters over 4344 primary object(s) (6650 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 31.0 % [30.3 %, 31.8 %], objects [29.8 %, 32.2 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 4.7 % [4.2 %, 5.3 %], objects [4.1 %, 5.5 %] | 95.0 % [92.8 %, 97.0 %], objects [92.8 %, 97.0 %] | 4.18e+4 (2.53e+3 to 1.04e+6) |
+| SGP4-XP | 31.0 % [30.2 %, 31.8 %], objects [29.7 %, 32.1 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 4.7 % [4.1 %, 5.2 %], objects [4.0 %, 5.4 %] | 95.4 % [93.2 %, 97.4 %], objects [93.3 %, 97.4 %] | 4.31e+4 (2.63e+3 to 1.08e+6) |
+| Operator forecast | - | - | - | - | 3.87e+4 (1.82e+3 to 2.96e+5) |
+| FFM - SGP4-XP | 0.060 % [-0.2 %, 0.3 %], objects [-0.3 %, 0.4 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 0.086 % [-0.4 %, 0.6 %], objects [-0.4 %, 0.6 %] | -0.4 % [-2.6 %, 1.8 %], objects [-2.6 %, 1.8 %] | |
+
+Verdict: no demonstrated CA difference.
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 13346 (1329) | 0.0996 [0.0946, 0.1047], objects [0.0945, 0.1050] (n 13346) | 2.5681 [2.4235, 2.7113], objects [2.4233, 2.7066] (n 13346) | 8094 | 1.8436 [1.6983, 1.9922], objects [1.6895, 1.9996] (n 5252) |
+| SGP4-XP | 13341 (1329) | 0.0996 [0.0946, 0.1049], objects [0.0946, 0.1049] (n 13341) | 2.5549 [2.4137, 2.6950], objects [2.4079, 2.7013] (n 13341) | 8006 | 1.8507 [1.7044, 1.9952], objects [1.7008, 2.0056] (n 5335) |
+| SGP4-XP calibrated (A13) | 13340 (1329) | 0.0996 [0.0945, 0.1049], objects [0.0946, 0.1050] (n 13340) | 2.3920 [2.2587, 2.5243], objects [2.2547, 2.5261] (n 13340) | 6387 | 1.6735 [1.5520, 1.7983], objects [1.5511, 1.7992] (n 6953) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 13337 | -9.59e-7 [-1.53e-6, -4.11e-7], objects [-1.57e-6, -4.06e-7] (n 13337) | 0.0141 [-0.0052, 0.0339], objects [-0.0136, 0.0425] (n 13337) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 13331 | 1.07e-6 [7.00e-7, 1.48e-6], objects [6.83e-7, 1.52e-6] (n 13331) | -0.1632 [-0.1854, -0.1417], objects [-0.1883, -0.1390] (n 13331) |
+| SGP4-XP calibrated (A13) - FFM | 13336 | 2.03e-6 [1.40e-6, 2.72e-6], objects [1.38e-6, 2.77e-6] (n 13336) | -0.1773 [-0.2053, -0.1497], objects [-0.2107, -0.1443] (n 13336) |
+
+| Pc decade | FFM | SGP4-XP | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 10447: mean Pc 2.49e-9, hit share 0.0908 | 10365: mean Pc 2.56e-9, hit share 0.0903 | 9384: mean Pc 3.53e-9, hit share 0.0907 |
+| [1.00e-7, 1.00e-6) | 952: mean Pc 4.20e-7, hit share 0.1029 | 956: mean Pc 4.18e-7, hit share 0.1088 | 1183: mean Pc 4.36e-7, hit share 0.1107 |
+| [1.00e-6, 1.00e-5) | 886: mean Pc 3.43e-6, hit share 0.1422 | 904: mean Pc 3.48e-6, hit share 0.1427 | 1271: mean Pc 3.81e-6, hit share 0.1054 |
+| [1.00e-5, 1.00e-4) | 659: mean Pc 4.17e-5, hit share 0.1214 | 722: mean Pc 3.97e-5, hit share 0.1302 | 1321: mean Pc 3.73e-5, hit share 0.1378 |
+| [1.00e-4, 0.0010) | 396: mean Pc 2.75e-4, hit share 0.1919 | 388: mean Pc 2.28e-4, hit share 0.1701 | 181: mean Pc 1.71e-4, hit share 0.1713 |
+| [0.0010, 0.0100) | 6: mean Pc 0.0014, hit share 0.0000 | 6: mean Pc 0.0013, hit share 0.0000 | - |
+| [0.0100, 1.0000) | - | - | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 1 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 12 h | FFM | 126 / 58 / 0 | 453 / 354 / 15 | 854 / 1121 / 314 | 0.0 % [0.0 %, 0.0 %] | 59.6 % [57.0 %, 62.1 %] |
+| 12 h | SGP4-XP | 119 / 57 / 0 | 476 / 364 / 14 | 838 / 1112 / 315 | 0.0 % [0.0 %, 0.0 %] | 58.5 % [55.9 %, 61.0 %] |
+| 24 h | FFM | 110 / 37 / 0 | 464 / 353 / 13 | 862 / 1183 / 334 | 0.0 % [0.0 %, 0.0 %] | 60.0 % [57.5 %, 62.5 %] |
+| 24 h | SGP4-XP | 109 / 39 / 0 | 468 / 371 / 13 | 859 / 1163 / 334 | 0.0 % [0.0 %, 0.0 %] | 59.8 % [57.2 %, 62.3 %] |
+| 48 h | FFM | 34 / 19 / 0 | 325 / 236 / 7 | 1147 / 1296 / 293 | 0.0 % [0.0 %, 0.0 %] | 76.2 % [74.0 %, 78.4 %] |
+| 48 h | SGP4-XP | 39 / 24 / 0 | 313 / 248 / 9 | 1154 / 1279 / 291 | 0.0 % [0.0 %, 0.0 %] | 76.6 % [74.5 %, 78.7 %] |
+| 72 h | FFM | 6 / 12 / 0 | 152 / 119 / 6 | 1278 / 1427 / 329 | 0.0 % [0.0 %, 0.0 %] | 89.0 % [87.4 %, 90.6 %] |
+| 72 h | SGP4-XP | 4 / 3 / 0 | 150 / 152 / 4 | 1282 / 1403 / 331 | 0.0 % [0.0 %, 0.0 %] | 89.3 % [87.7 %, 90.9 %] |
+
+Part 4, precise secondary (another object, the same arm): 13332 encounters over 4344 primary object(s) (6650 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 41.4 % [40.5 %, 42.2 %], objects [40.5 %, 42.3 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 2.3 % [2.0 %, 2.7 %], objects [1.9 %, 2.8 %] | 98.1 % [95.8 %, 100.0 %], objects [95.9 %, 100.0 %] | 6.77e+3 (140 to 5.89e+5) |
+| SGP4-XP | 28.7 % [28.0 %, 29.5 %], objects [27.3 %, 30.1 %] | 0.023 % [0.0 %, 0.053 %], objects [0.0 %, 0.051 %] | 15.4 % [14.5 %, 16.3 %], objects [13.8 %, 17.0 %] | 96.5 % [95.4 %, 97.5 %], objects [95.4 %, 97.5 %] | 8.31e+3 (340 to 6.21e+5) |
+| Operator forecast | - | - | - | - | - (- to -) |
+| FFM - SGP4-XP | 12.7 % [12.1 %, 13.2 %], objects [11.5 %, 13.9 %] | -0.023 % [-0.053 %, 0.0 %], objects [-0.051 %, 0.0 %] | -13.1 % [-14.0 %, -12.1 %], objects [-14.6 %, -11.6 %] | 1.7 % [-0.8 %, 3.7 %], objects [-0.8 %, 3.7 %] | |
+
+Verdict: no demonstrated CA difference.
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 13338 (1375) | 0.1030 [0.0978, 0.1082], objects [0.0980, 0.1082] (n 13338) | 3.3557 [3.1869, 3.5280], objects [3.1882, 3.5240] (n 13338) | 12628 | 3.1570 [2.6194, 3.7195], objects [2.5480, 3.7907] (n 710) |
+| SGP4-XP | 13344 (1380) | 0.1034 [0.0983, 0.1086], objects [0.0984, 0.1085] (n 13344) | 2.5328 [2.3929, 2.6715], objects [2.3775, 2.6779] (n 13344) | 8303 | 2.0454 [1.8896, 2.2052], objects [1.8888, 2.2058] (n 5041) |
+| SGP4-XP calibrated (A13) | 13347 (1380) | 0.1034 [0.0982, 0.1084], objects [0.0984, 0.1085] (n 13347) | 1.6669 [1.5717, 1.7648], objects [1.5293, 1.8074] (n 13347) | 2564 | 1.3457 [1.2681, 1.4247], objects [1.2696, 1.4218] (n 10783) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 13332 | -8.57e-5 [-3.02e-4, 1.13e-4], objects [-3.02e-4, 1.12e-4] (n 13332) | 0.8337 [0.7584, 0.9079], objects [0.7349, 0.9363] (n 13332) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 13341 | 1.71e-5 [1.36e-5, 2.09e-5], objects [1.34e-5, 2.15e-5] (n 13341) | -0.8657 [-0.9336, -0.7990], objects [-0.9460, -0.7868] (n 13341) |
+| SGP4-XP calibrated (A13) - FFM | 13335 | 1.03e-4 [-9.58e-5, 3.15e-4], objects [-9.84e-5, 3.22e-4] (n 13335) | -1.6993 [-1.7994, -1.6017], objects [-1.8409, -1.5633] (n 13335) |
+
+| Pc decade | FFM | SGP4-XP | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 12980: mean Pc 1.56e-10, hit share 0.0992 | 10245: mean Pc 1.52e-9, hit share 0.0888 | 5055: mean Pc 7.06e-9, hit share 0.0750 |
+| [1.00e-7, 1.00e-6) | 53: mean Pc 3.92e-7, hit share 0.1887 | 469: mean Pc 4.08e-7, hit share 0.1471 | 1277: mean Pc 3.97e-7, hit share 0.0893 |
+| [1.00e-6, 1.00e-5) | 72: mean Pc 4.78e-6, hit share 0.1667 | 530: mean Pc 3.97e-6, hit share 0.1226 | 2225: mean Pc 4.51e-6, hit share 0.1043 |
+| [1.00e-5, 1.00e-4) | 72: mean Pc 3.81e-5, hit share 0.2500 | 822: mean Pc 4.26e-5, hit share 0.1411 | 4218: mean Pc 3.82e-5, hit share 0.1323 |
+| [1.00e-4, 0.0010) | 68: mean Pc 4.16e-4, hit share 0.2941 | 1058: mean Pc 3.65e-4, hit share 0.1626 | 572: mean Pc 1.46e-4, hit share 0.1696 |
+| [0.0010, 0.0100) | 47: mean Pc 0.0039, hit share 0.2553 | 220: mean Pc 0.0017, hit share 0.2182 | - |
+| [0.0100, 1.0000) | 46: mean Pc 0.1341, hit share 0.3261 | - | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 1 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 12 h | FFM | 47 / 7 / 0 | 42 / 8 / 0 | 1404 / 1553 / 319 | 0.0 % [0.0 %, 0.0 %] | 94.0 % [92.8 %, 95.2 %] |
+| 12 h | SGP4-XP | 396 / 156 / 1 | 351 / 249 / 2 | 746 / 1163 / 316 | 0.2 % [0.0 %, 0.6 %] | 50.0 % [47.4 %, 52.5 %] |
+| 24 h | FFM | 55 / 10 / 0 | 34 / 17 / 0 | 1379 / 1513 / 337 | 0.0 % [0.0 %, 0.0 %] | 93.9 % [92.7 %, 95.1 %] |
+| 24 h | SGP4-XP | 262 / 106 / 2 | 302 / 213 / 2 | 904 / 1221 / 333 | 0.5 % [0.0 %, 1.4 %] | 61.6 % [59.1 %, 64.1 %] |
+| 48 h | FFM | 29 / 6 / 0 | 51 / 25 / 1 | 1350 / 1562 / 320 | 0.0 % [0.0 %, 0.0 %] | 94.4 % [93.2 %, 95.6 %] |
+| 48 h | SGP4-XP | 153 / 78 / 0 | 319 / 205 / 7 | 958 / 1310 / 314 | 0.0 % [0.0 %, 0.0 %] | 67.0 % [64.5 %, 69.5 %] |
+| 72 h | FFM | 4 / 3 / 0 | 16 / 3 / 0 | 1385 / 1530 / 322 | 0.0 % [0.0 %, 0.0 %] | 98.6 % [97.9 %, 99.2 %] |
+| 72 h | SGP4-XP | 81 / 42 / 0 | 102 / 66 / 2 | 1222 / 1428 / 320 | 0.0 % [0.0 %, 0.0 %] | 87.0 % [85.2 %, 88.7 %] |
+
+### Starlink (part 1a), FFM v3 of A12 in the FFM slot (the FFM arm of record)
+
+11163 windows with lead records over 11163 object(s); public-set records: 11136 recorded; 27 no set created and dated before the prediction start.
+
+Records per arm (A13 parts 6 and 7): windows attempted, records written, lead-phase refusals by propagator/ffm (rate), other failures.
+
+| Arm | Attempted | Written | Refused | Other failures | Refusals by message |
+| --- | --: | --: | --- | --- | --- |
+| FFM | 11163 | 11134 | 13 (0.12 %) | 15 STALLED; 1 MAXIMUM_ITERATIONS | 13: refused by propagator/ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| SGP4-XP | 11163 | 11163 | 0 (0.00 %) | - | - |
+| FFM calibrated (A13) | 11163 | 11129 | 18 (0.16 %) | 15 STALLED; 1 MAXIMUM_ITERATIONS | 18: refused by propagator/ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| SGP4-XP calibrated (A13) | 11163 | 11163 | 0 (0.00 %) | - | - |
+
+Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5's rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).
+
+| Covariance | 1 h | 6 h | 12 h | 24 h | 48 h | 72 h |
+| --- | --- | --- | --- | --- | --- | --- |
+| FFM | - | - | 5.16e+4 [1.41e+4, 1.06e+5]; 11.8 %; 11134 / 11134; not realistic | 9.79e+5 [6.06e+4, 2.72e+6]; 13.1 %; 10846 / 10846; not realistic | 2.02e+7 [2.34e+6, 5.04e+7]; 16.7 %; 9396 / 9396; not realistic | 3.96e+5 [1.40e+4, 1.10e+6]; 8.7 %; 23 / 23; insufficient |
+| SGP4-XP | - | - | 56.2 [41.0, 75.3]; 46.0 %; 11163 / 11163; not realistic | 350 [221, 505]; 37.1 %; 10873 / 10873; not realistic | 2.62e+4 [1.50e+4, 3.97e+4]; 38.2 %; 9418 / 9418; not realistic | 1.71e+5 [1.33e+4, 3.95e+5]; 4.3 %; 23 / 23; insufficient |
+| V1c5 frozen (public set, SGP4) | - | - | 4.28e+4 [1.73e+4, 7.71e+4]; 26.3 %; 11136 / 11136; not realistic | 8.17e+4 [5.48e+4, 1.13e+5]; 25.4 %; 10847 / 10847; not realistic | 4.77e+5 [3.39e+5, 6.37e+5]; 24.7 %; 9393 / 9393; not realistic | 8.37e+5 [3.35e+3, 2.13e+6]; 17.4 %; 23 / 23; insufficient |
+| uncalibrated (public set, SGP4) | - | - | 5.84e+5 [1.52e+5, 1.12e+6]; 54.8 %; 11135 / 11135; not realistic | 7.51e+5 [2.90e+5, 1.32e+6]; 49.7 %; 10846 / 10846; not realistic | 1.36e+6 [6.34e+5, 2.26e+6]; 44.3 %; 9393 / 9393; not realistic | 4.39e+3 [15.7, 1.08e+4]; 69.6 %; 23 / 23; insufficient |
+| V1c4 best (public set, SGP4) | - | - | 3.75e+5 [9.96e+4, 7.32e+5]; 62.9 %; 11135 / 11135; not realistic | 5.95e+5 [2.23e+5, 1.05e+6]; 51.4 %; 10846 / 10846; not realistic | 1.43e+6 [6.88e+5, 2.30e+6]; 39.5 %; 9393 / 9393; not realistic | 6.99e+3 [21.2, 1.74e+4]; 60.9 %; 23 / 23; insufficient |
+| FFM calibrated (A13) | - | - | 487 [143, 936]; 40.0 %; 11129 / 11129; fail | 1.64e+4 [1.71e+3, 4.15e+4]; 40.6 %; 10841 / 10841; fail | 1.90e+6 [2.79e+5, 4.53e+6]; 39.7 %; 9392 / 9392; fail | 7.35e+4 [1.46e+3, 2.05e+5]; 39.1 %; 23 / 23; not eligible (n < 100) |
+| SGP4-XP calibrated (A13) | - | - | 3.05 [2.20, 4.07]; 89.1 %; 11163 / 11163; fail | 19.0 [12.1, 27.7]; 83.8 %; 10873 / 10873; fail | 1.42e+3 [807, 2.15e+3]; 81.5 %; 9418 / 9418; fail | 9.27e+3 [723, 2.14e+4]; 56.5 %; 23 / 23; not eligible (n < 100) |
+
+Part 4, GP secondary (public set, V1c5 frozen covariance): 13329 encounters over 6523 primary object(s) (6650 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 30.7 % [29.9 %, 31.5 %], objects [29.5 %, 31.8 %] | 0.030 % [0.008 %, 0.060 %], objects [0.007 %, 0.062 %] | 5.1 % [4.6 %, 5.7 %], objects [4.4 %, 5.9 %] | 93.3 % [90.9 %, 95.5 %], objects [90.9 %, 95.6 %] | 4.18e+4 (2.24e+3 to 9.55e+5) |
+| SGP4-XP | 30.4 % [29.6 %, 31.2 %], objects [29.3 %, 31.5 %] | 0.015 % [0.0 %, 0.038 %], objects [0.0 %, 0.039 %] | 4.4 % [3.9 %, 5.0 %], objects [3.8 %, 5.1 %] | 94.3 % [91.8 %, 96.5 %], objects [91.9 %, 96.5 %] | 4.20e+4 (2.31e+3 to 9.70e+5) |
+| Operator forecast | - | - | - | - | 1.78e+4 (1.82e+3 to 8.22e+4) |
+| FFM - SGP4-XP | 0.3 % [0.060 %, 0.6 %], objects [-0.024 %, 0.6 %] | 0.015 % [0.0 %, 0.038 %], objects [0.0 %, 0.037 %] | 0.7 % [0.3 %, 1.2 %], objects [0.3 %, 1.2 %] | -1.0 % [-3.4 %, 1.4 %], objects [-3.4 %, 1.4 %] | |
+
+Verdict: no demonstrated CA difference.
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 13341 (1329) | 0.0996 [0.0946, 0.1046], objects [0.0945, 0.1048] (n 13341) | 2.5518 [2.4109, 2.6927], objects [2.4114, 2.6951] (n 13341) | 7980 | 1.8405 [1.6912, 1.9903], objects [1.6889, 1.9962] (n 5361) |
+| SGP4-XP | 13338 (1327) | 0.0995 [0.0943, 0.1046], objects [0.0944, 0.1049] (n 13338) | 2.5404 [2.4002, 2.6834], objects [2.3969, 2.6837] (n 13338) | 7877 | 1.8281 [1.6864, 1.9738], objects [1.6837, 1.9761] (n 5461) |
+| FFM calibrated (A13) | 13344 (1329) | 0.0996 [0.0946, 0.1047], objects [0.0946, 0.1048] (n 13344) | 2.4712 [2.3367, 2.6110], objects [2.3362, 2.6116] (n 13344) | 7444 | 1.8424 [1.7065, 1.9820], objects [1.7032, 1.9830] (n 5900) |
+| SGP4-XP calibrated (A13) | 13342 (1329) | 0.0996 [0.0945, 0.1047], objects [0.0946, 0.1047] (n 13342) | 2.3666 [2.2354, 2.4983], objects [2.2308, 2.4963] (n 13342) | 6119 | 1.6555 [1.5382, 1.7747], objects [1.5373, 1.7759] (n 7223) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 13329 | -6.36e-7 [-1.14e-6, -1.40e-7], objects [-1.14e-6, -1.25e-7] (n 13329) | 0.0068 [-0.0101, 0.0239], objects [-0.0194, 0.0335] (n 13329) |
+| FFM calibrated (A13) - SGP4-XP | 13332 | -4.95e-7 [-9.62e-7, -2.33e-8], objects [-9.64e-7, -2.96e-8] (n 13332) | -0.0734 [-0.0945, -0.0534], objects [-0.1082, -0.0418] (n 13332) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 13330 | 1.46e-6 [9.48e-7, 2.05e-6], objects [9.36e-7, 2.07e-6] (n 13330) | -0.1784 [-0.2030, -0.1553], objects [-0.2040, -0.1541] (n 13330) |
+| FFM calibrated (A13) - FFM | 13336 | 1.41e-7 [2.47e-8, 2.81e-7], objects [1.77e-8, 2.91e-7] (n 13336) | -0.0801 [-0.0975, -0.0640], objects [-0.1062, -0.0564] (n 13336) |
+| SGP4-XP calibrated (A13) - FFM | 13333 | 2.10e-6 [1.41e-6, 2.87e-6], objects [1.39e-6, 2.94e-6] (n 13333) | -0.1851 [-0.2131, -0.1581], objects [-0.2186, -0.1530] (n 13333) |
+
+| Pc decade | FFM | SGP4-XP | FFM calibrated (A13) | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 10357: mean Pc 2.59e-9, hit share 0.0909 | 10221: mean Pc 2.78e-9, hit share 0.0915 | 10100: mean Pc 3.20e-9, hit share 0.0898 | 9167: mean Pc 3.46e-9, hit share 0.0905 |
+| [1.00e-7, 1.00e-6) | 925: mean Pc 4.24e-7, hit share 0.1178 | 1005: mean Pc 4.17e-7, hit share 0.1035 | 967: mean Pc 4.13e-7, hit share 0.1148 | 1178: mean Pc 4.26e-7, hit share 0.1138 |
+| [1.00e-6, 1.00e-5) | 894: mean Pc 3.47e-6, hit share 0.1208 | 927: mean Pc 3.49e-6, hit share 0.1348 | 1025: mean Pc 3.50e-6, hit share 0.1249 | 1366: mean Pc 3.95e-6, hit share 0.1157 |
+| [1.00e-5, 1.00e-4) | 730: mean Pc 4.14e-5, hit share 0.1247 | 798: mean Pc 4.08e-5, hit share 0.1303 | 834: mean Pc 3.98e-5, hit share 0.1283 | 1456: mean Pc 3.49e-5, hit share 0.1223 |
+| [1.00e-4, 0.0010) | 424: mean Pc 2.50e-4, hit share 0.1816 | 379: mean Pc 2.40e-4, hit share 0.1504 | 407: mean Pc 2.43e-4, hit share 0.1794 | 175: mean Pc 1.75e-4, hit share 0.1657 |
+| [0.0010, 0.0100) | 11: mean Pc 0.0013, hit share 0.2727 | 8: mean Pc 0.0012, hit share 0.2500 | 11: mean Pc 0.0013, hit share 0.2727 | - |
+| [0.0100, 1.0000) | - | - | - | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 1 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 12 h | FFM | 139 / 57 / 0 | 450 / 368 / 12 | 842 / 1105 / 314 | 0.0 % [0.0 %, 0.0 %] | 58.8 % [56.3 %, 61.4 %] |
+| 12 h | SGP4-XP | 129 / 61 / 0 | 466 / 388 / 13 | 836 / 1081 / 313 | 0.0 % [0.0 %, 0.0 %] | 58.4 % [55.9 %, 60.9 %] |
+| 24 h | FFM | 106 / 38 / 2 | 476 / 358 / 10 | 854 / 1177 / 331 | 1.4 % [0.0 %, 3.5 %] | 59.5 % [56.9 %, 62.0 %] |
+| 24 h | SGP4-XP | 89 / 43 / 2 | 491 / 377 / 11 | 856 / 1153 / 330 | 1.5 % [0.0 %, 3.8 %] | 59.6 % [57.1 %, 62.1 %] |
+| 48 h | FFM | 45 / 26 / 0 | 330 / 244 / 7 | 1130 / 1283 / 295 | 0.0 % [0.0 %, 0.0 %] | 75.1 % [72.9 %, 77.3 %] |
+| 48 h | SGP4-XP | 34 / 19 / 0 | 361 / 271 / 8 | 1110 / 1263 / 294 | 0.0 % [0.0 %, 0.0 %] | 73.8 % [71.6 %, 76.0 %] |
+| 72 h | FFM | 9 / 11 / 2 | 160 / 128 / 6 | 1268 / 1419 / 327 | 9.1 % [0.0 %, 23.3 %] | 88.2 % [86.5 %, 89.9 %] |
+| 72 h | SGP4-XP | 4 / 6 / 0 | 182 / 157 / 5 | 1251 / 1395 / 330 | 0.0 % [0.0 %, 0.0 %] | 87.1 % [85.3 %, 88.8 %] |
+
+Part 4, precise secondary (another object, the same arm): 13338 encounters over 6535 primary object(s) (6650 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 34.8 % [34.0 %, 35.6 %], objects [33.6 %, 35.9 %] | 0.007 % [0.0 %, 0.022 %], objects [0.0 %, 0.024 %] | 10.4 % [9.6 %, 11.2 %], objects [9.2 %, 11.6 %] | 97.8 % [96.7 %, 98.8 %], objects [96.6 %, 98.8 %] | 5.40e+3 (86.5 to 2.17e+5) |
+| SGP4-XP | 22.9 % [22.2 %, 23.6 %], objects [21.3 %, 24.5 %] | 0.015 % [0.0 %, 0.037 %], objects [0.0 %, 0.039 %] | 22.5 % [21.4 %, 23.6 %], objects [20.5 %, 24.6 %] | 96.7 % [95.8 %, 97.5 %], objects [95.8 %, 97.5 %] | 5.71e+3 (189 to 2.50e+5) |
+| Operator forecast | - | - | - | - | - (- to -) |
+| FFM - SGP4-XP | 11.9 % [11.3 %, 12.5 %], objects [10.9 %, 12.9 %] | -0.007 % [-0.030 %, 0.015 %], objects [-0.035 %, 0.016 %] | -12.1 % [-13.2 %, -11.0 %], objects [-13.7 %, -10.6 %] | 1.1 % [-0.084 %, 2.4 %], objects [-0.1 %, 2.4 %] | |
+
+Verdict: no demonstrated CA difference.
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 13342 (1376) | 0.1030 [0.0978, 0.1082], objects [0.0978, 0.1082] (n 13342) | 2.8914 [2.7394, 3.0467], objects [2.7223, 3.0577] (n 13342) | 10742 | 2.3633 [2.1262, 2.6070], objects [2.1215, 2.6207] (n 2600) |
+| SGP4-XP | 13346 (1380) | 0.1034 [0.0983, 0.1085], objects [0.0982, 0.1085] (n 13346) | 2.1798 [2.0551, 2.3056], objects [2.0237, 2.3312] (n 13346) | 6933 | 1.7305 [1.6108, 1.8564], objects [1.5978, 1.8652] (n 6413) |
+| FFM calibrated (A13) | 13344 (1380) | 0.1033 [0.0982, 0.1084], objects [0.0981, 0.1084] (n 13344) | 2.0677 [1.9459, 2.1891], objects [1.9327, 2.1970] (n 13344) | 7015 | 1.9365 [1.8055, 2.0713], objects [1.7962, 2.0817] (n 6329) |
+| SGP4-XP calibrated (A13) | 13348 (1380) | 0.1034 [0.0983, 0.1085], objects [0.0982, 0.1085] (n 13348) | 1.5445 [1.4556, 1.6367], objects [1.4181, 1.6737] (n 13348) | 2172 | 1.2853 [1.2138, 1.3575], objects [1.2079, 1.3624] (n 11176) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 13338 | -1.12e-4 [-1.84e-4, -5.15e-5], objects [-1.87e-4, -5.10e-5] (n 13338) | 0.7202 [0.6499, 0.7915], objects [0.6353, 0.8066] (n 13338) |
+| FFM calibrated (A13) - SGP4-XP | 13340 | -1.11e-4 [-1.53e-4, -7.47e-5], objects [-1.58e-4, -7.42e-5] (n 13340) | -0.1125 [-0.1712, -0.0549], objects [-0.1955, -0.0325] (n 13340) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 13344 | 2.40e-5 [1.99e-5, 2.84e-5], objects [1.95e-5, 2.91e-5] (n 13344) | -0.6352 [-0.6940, -0.5776], objects [-0.7040, -0.5672] (n 13344) |
+| FFM calibrated (A13) - FFM | 13336 | 5.69e-7 [-5.10e-5, 5.59e-5], objects [-5.11e-5, 5.71e-5] (n 13336) | -0.8290 [-0.8958, -0.7648], objects [-0.9254, -0.7345] (n 13336) |
+| SGP4-XP calibrated (A13) - FFM | 13340 | 1.36e-4 [7.43e-5, 2.09e-4], objects [7.39e-5, 2.10e-4] (n 13340) | -1.3549 [-1.4457, -1.2633], objects [-1.4659, -1.2446] (n 13340) |
+
+| Pc decade | FFM | SGP4-XP | FFM calibrated (A13) | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 11790: mean Pc 7.85e-10, hit share 0.0920 | 9016: mean Pc 2.05e-9, hit share 0.0790 | 9003: mean Pc 2.05e-9, hit share 0.0735 | 4214: mean Pc 7.33e-9, hit share 0.0700 |
+| [1.00e-7, 1.00e-6) | 205: mean Pc 4.10e-7, hit share 0.1415 | 557: mean Pc 4.13e-7, hit share 0.1346 | 586: mean Pc 4.18e-7, hit share 0.1485 | 1067: mean Pc 4.07e-7, hit share 0.0806 |
+| [1.00e-6, 1.00e-5) | 254: mean Pc 3.80e-6, hit share 0.1850 | 805: mean Pc 4.09e-6, hit share 0.1230 | 948: mean Pc 4.11e-6, hit share 0.1350 | 2458: mean Pc 4.91e-6, hit share 0.1005 |
+| [1.00e-5, 1.00e-4) | 365: mean Pc 3.99e-5, hit share 0.1562 | 1168: mean Pc 4.21e-5, hit share 0.1498 | 1186: mean Pc 4.01e-5, hit share 0.1509 | 5024: mean Pc 3.66e-5, hit share 0.1312 |
+| [1.00e-4, 0.0010) | 405: mean Pc 3.84e-4, hit share 0.2025 | 1523: mean Pc 3.58e-4, hit share 0.1714 | 1130: mean Pc 3.59e-4, hit share 0.1708 | 585: mean Pc 1.45e-4, hit share 0.1590 |
+| [0.0010, 0.0100) | 245: mean Pc 0.0032, hit share 0.2204 | 277: mean Pc 0.0017, hit share 0.2094 | 444: mean Pc 0.0030, hit share 0.2410 | - |
+| [0.0100, 1.0000) | 78: mean Pc 0.0307, hit share 0.2821 | - | 47: mean Pc 0.0234, hit share 0.5106 | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 1 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 12 h | FFM | 222 / 32 / 1 | 135 / 36 / 0 | 1138 / 1500 / 318 | 0.4 % [0.0 %, 1.3 %] | 76.1 % [73.9 %, 78.3 %] |
+| 12 h | SGP4-XP | 568 / 196 / 1 | 359 / 314 / 4 | 568 / 1058 / 314 | 0.1 % [0.0 %, 0.4 %] | 38.0 % [35.6 %, 40.4 %] |
+| 24 h | FFM | 197 / 41 / 0 | 172 / 86 / 1 | 1099 / 1413 / 338 | 0.0 % [0.0 %, 0.0 %] | 74.9 % [72.6 %, 77.1 %] |
+| 24 h | SGP4-XP | 397 / 142 / 1 | 382 / 291 / 3 | 689 / 1107 / 335 | 0.2 % [0.0 %, 0.6 %] | 46.9 % [44.3 %, 49.5 %] |
+| 48 h | FFM | 158 / 47 / 0 | 223 / 133 / 2 | 1049 / 1413 / 318 | 0.0 % [0.0 %, 0.0 %] | 73.4 % [71.0 %, 75.6 %] |
+| 48 h | SGP4-XP | 252 / 119 / 0 | 483 / 342 / 6 | 695 / 1132 / 314 | 0.0 % [0.0 %, 0.0 %] | 48.6 % [46.1 %, 51.2 %] |
+| 72 h | FFM | 24 / 6 / 0 | 29 / 7 / 0 | 1351 / 1525 / 324 | 0.0 % [0.0 %, 0.0 %] | 96.2 % [95.2 %, 97.2 %] |
+| 72 h | SGP4-XP | 86 / 38 / 0 | 216 / 128 / 2 | 1102 / 1372 / 322 | 0.0 % [0.0 %, 0.0 %] | 78.5 % [76.3 %, 80.6 %] |
+
+### ISS (part 1b), A13: iss-ffm3 with A5's and class I's calibrated covariance
+
+519 windows with lead records over 1 object(s); public-set records: 335 recorded; 184 prediction start before 2023-01-04; 136 window excluded: a planned burn; 92 window excluded: no newer file starts in the 72 h after the fit; 1 window excluded: the header has no readable START_TIME.
+
+Records per arm (A13 parts 6 and 7): windows attempted, records written, lead-phase refusals by propagator/ffm (rate), other failures.
+
+| Arm | Attempted | Written | Refused | Other failures | Refusals by message |
+| --- | --: | --: | --- | --- | --- |
+| FFM | 519 | 498 | 3 (0.58 %) | 7 no lead epoch; 9 STALLED; 2 analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invok | 3: refused by propagator/ffm: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it. |
+| SGP4-XP | 519 | 512 | 0 (0.00 %) | 7 no lead epoch | - |
+| FFM calibrated (A13) | 519 | 498 | 3 (0.58 %) | 7 no lead epoch; 9 STALLED; 2 analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invok | 3: refused by propagator/ffm: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it. |
+| SGP4-XP calibrated (A13) | 519 | 512 | 0 (0.00 %) | 7 no lead epoch | - |
+
+Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5's rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).
+
+| Covariance | 1 h | 6 h | 12 h | 24 h | 48 h | 72 h |
+| --- | --- | --- | --- | --- | --- | --- |
+| FFM | - | - | - | 4.55e+4; 0.0 %; 282 / 1; insufficient | 6.74e+4; 0.0 %; 409 / 1; insufficient | 1.96e+5; 0.0 %; 256 / 1; insufficient |
+| SGP4-XP | - | - | - | 52.9; 17.4 %; 287 / 1; insufficient | 86.6; 10.5 %; 418 / 1; insufficient | 183; 6.0 %; 266 / 1; insufficient |
+| V1c5 frozen (public set, SGP4) | - | - | - | 42.4; 60.6 %; 198 / 1; insufficient | 85.9; 54.4 %; 285 / 1; insufficient | 286; 47.3 %; 169 / 1; insufficient |
+| uncalibrated (public set, SGP4) | - | - | - | 3.02; 79.8 %; 198 / 1; insufficient | 4.39; 88.4 %; 285 / 1; insufficient | 4.33; 92.9 %; 169 / 1; insufficient |
+| V1c4 best (public set, SGP4) | - | - | - | 2.75; 86.4 %; 198 / 1; insufficient | 5.29; 85.6 %; 285 / 1; insufficient | 6.21; 88.2 %; 169 / 1; insufficient |
+| FFM calibrated (A13) | - | - | - | 1.37; 90.1 %; 282 / 1; not eligible (clusters < 3) | 2.08; 95.4 %; 409 / 1; not eligible (clusters < 3) | 5.41; 94.1 %; 256 / 1; not eligible (clusters < 3) |
+| SGP4-XP calibrated (A13) | - | - | - | 0.55; 99.0 %; 287 / 1; not eligible (clusters < 3) | 0.90; 94.5 %; 418 / 1; not eligible (clusters < 3) | 1.89; 88.0 %; 266 / 1; not eligible (clusters < 3) |
+
+Part 4, GP secondary (public set, V1c5 frozen covariance): 10031 encounters over 1 primary object(s) (9964 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 12.6 % [11.9 %, 13.2 %] | 0.0 % [0.0 %, 0.0 %] | 16.8 % [15.7 %, 17.9 %] | 97.4 % [96.3 %, 98.3 %] | 4.46e+3 (178 to 3.21e+4) |
+| SGP4-XP | 17.3 % [16.5 %, 18.0 %] | 0.040 % [0.010 %, 0.080 %] | 9.5 % [8.6 %, 10.4 %] | 96.0 % [94.4 %, 97.6 %] | 9.03e+3 (437 to 5.90e+4) |
+| Operator forecast | - | - | - | - | 4.02e+3 (149 to 3.10e+4) |
+| FFM - SGP4-XP | -4.7 % [-5.3 %, -4.1 %] | -0.040 % [-0.080 %, -0.010 %] | 7.3 % [6.2 %, 8.5 %] | 1.3 % [-0.3 %, 3.0 %] | |
+
+Verdict: no demonstrated CA difference (one primary object: no object-cluster interval).
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 10034 (1048) | 0.1044 [0.0985, 0.1104] (n 10034) | 1.7445 [1.6323, 1.8619] (n 10034) | 2800 | 1.6462 [1.5377, 1.7597] (n 7234) |
+| SGP4-XP | 10033 (1048) | 0.1044 [0.0985, 0.1105] (n 10033) | 2.0386 [1.9076, 2.1709] (n 10033) | 3424 | 1.6837 [1.5641, 1.8051] (n 6609) |
+| FFM calibrated (A13) | 10034 (1048) | 0.1044 [0.0986, 0.1105] (n 10034) | 1.3588 [1.2746, 1.4456] (n 10034) | 1221 | 1.3981 [1.3148, 1.4841] (n 8813) |
+| SGP4-XP calibrated (A13) | 10036 (1048) | 0.1044 [0.0985, 0.1104] (n 10036) | 1.4227 [1.3370, 1.5104] (n 10036) | 271 | 1.3985 [1.3153, 1.4830] (n 9765) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 10031 | -9.50e-6 [-1.40e-5, -5.59e-6] (n 10031) | -0.2940 [-0.3517, -0.2360] (n 10031) |
+| FFM calibrated (A13) - SGP4-XP | 10031 | -1.32e-6 [-3.50e-6, 9.03e-7] (n 10031) | -0.6798 [-0.7514, -0.6110] (n 10031) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 10033 | 8.33e-6 [6.28e-6, 1.07e-5] (n 10033) | -0.6154 [-0.6836, -0.5487] (n 10033) |
+| FFM calibrated (A13) - FFM | 10032 | 8.18e-6 [5.43e-6, 1.14e-5] (n 10032) | -0.3858 [-0.4359, -0.3386] (n 10032) |
+| SGP4-XP calibrated (A13) - FFM | 10034 | 1.78e-5 [1.39e-5, 2.23e-5] (n 10034) | -0.3215 [-0.3758, -0.2696] (n 10034) |
+
+| Pc decade | FFM | SGP4-XP | FFM calibrated (A13) | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 4541: mean Pc 4.39e-9, hit share 0.0667 | 5195: mean Pc 3.92e-9, hit share 0.0818 | 2651: mean Pc 8.10e-9, hit share 0.0385 | 1645: mean Pc 1.75e-8, hit share 0.0626 |
+| [1.00e-7, 1.00e-6) | 1851: mean Pc 4.54e-7, hit share 0.0999 | 1851: mean Pc 4.54e-7, hit share 0.1005 | 2033: mean Pc 4.48e-7, hit share 0.0939 | 2570: mean Pc 4.24e-7, hit share 0.0957 |
+| [1.00e-6, 1.00e-5) | 1717: mean Pc 3.76e-6, hit share 0.1345 | 1659: mean Pc 3.71e-6, hit share 0.1284 | 2179: mean Pc 4.05e-6, hit share 0.1202 | 3794: mean Pc 4.06e-6, hit share 0.1136 |
+| [1.00e-5, 1.00e-4) | 938: mean Pc 3.85e-5, hit share 0.1546 | 746: mean Pc 3.50e-5, hit share 0.1609 | 2304: mean Pc 3.66e-5, hit share 0.1497 | 2025: mean Pc 2.47e-5, hit share 0.1323 |
+| [1.00e-4, 0.0010) | 847: mean Pc 3.23e-4, hit share 0.1972 | 527: mean Pc 3.32e-4, hit share 0.1784 | 845: mean Pc 2.55e-4, hit share 0.1716 | 2: mean Pc 1.02e-4, hit share 0.0000 |
+| [0.0010, 0.0100) | 140: mean Pc 0.0019, hit share 0.1214 | 55: mean Pc 0.0016, hit share 0.1818 | 22: mean Pc 0.0015, hit share 0.1364 | - |
+| [0.0100, 1.0000) | - | - | - | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 1 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 6 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 12 h | FFM | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 12 h | SGP4-XP | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | - | - |
+| 24 h | FFM | 295 / 102 / 0 | 796 / 664 / 33 | 338 / 781 / 290 | 0.0 % [0.0 %, 0.0 %] | 23.7 % [21.4 %, 25.9 %] |
+| 24 h | SGP4-XP | 211 / 82 / 1 | 800 / 670 / 33 | 418 / 795 / 289 | 0.3 % [0.0 %, 1.1 %] | 29.3 % [26.9 %, 31.6 %] |
+| 48 h | FFM | 270 / 90 / 0 | 818 / 688 / 24 | 419 / 824 / 289 | 0.0 % [0.0 %, 0.0 %] | 27.8 % [25.5 %, 30.1 %] |
+| 48 h | SGP4-XP | 135 / 60 / 2 | 753 / 630 / 23 | 619 / 912 / 288 | 1.0 % [0.0 %, 2.6 %] | 41.1 % [38.6 %, 43.6 %] |
+| 72 h | FFM | 169 / 61 / 0 | 755 / 696 / 32 | 505 / 793 / 299 | 0.0 % [0.0 %, 0.0 %] | 35.3 % [32.8 %, 37.8 %] |
+| 72 h | SGP4-XP | 69 / 21 / 1 | 663 / 651 / 33 | 697 / 878 / 297 | 1.1 % [0.0 %, 3.7 %] | 48.8 % [46.2 %, 51.4 %] |
+
+### Laser spheres (part 2), A13: E6 R with A5's and class L's calibrated covariance (L-P and R2 beside)
+
+206 windows with lead records over 5 object(s); public-set records: 206 recorded.
+
+Records per arm (A13 parts 6 and 7): windows attempted, records written, lead-phase refusals by propagator/ffm (rate), other failures.
+
+| Arm | Attempted | Written | Refused | Other failures | Refusals by message |
+| --- | --: | --: | --- | --- | --- |
+| FFM | 206 | 206 | 0 (0.00 %) | - | - |
+| SGP4-XP | 206 | 206 | 0 (0.00 %) | - | - |
+| FFM calibrated (A13) | 206 | 199 | 7 (3.40 %) | - | 7: refused by propagator/ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| FFM, L-P (beside) | 206 | 199 | 7 (3.40 %) | - | 7: refused by propagator/ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| FFM, R2 (beside) | 206 | 199 | 7 (3.40 %) | - | 7: refused by propagator/ffm: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| SGP4-XP calibrated (A13) | 206 | 206 | 0 (0.00 %) | - | - |
+
+Part 3, covariance realism (mean d²/3 [95 % object-cluster interval]; 95 % coverage; samples / objects; V1c5's rule: mean in [0.8, 1.25], coverage in [0.93, 0.97], at least 30 samples from 3 objects).
+
+| Covariance | 1 h | 6 h | 12 h | 24 h | 48 h | 72 h |
+| --- | --- | --- | --- | --- | --- | --- |
+| FFM | 17.3 [7.77, 26.6]; 13.7 %; 204 / 5; not realistic | 16.9 [7.43, 25.8]; 15.7 %; 204 / 5; not realistic | 17.0 [7.13, 26.3]; 13.8 %; 203 / 5; not realistic | 16.4 [7.08, 25.3]; 18.1 %; 199 / 5; not realistic | 16.8 [7.23, 25.9]; 18.5 %; 195 / 5; not realistic | 16.3 [7.30, 24.8]; 16.3 %; 190 / 5; not realistic |
+| SGP4-XP | 1.91 [1.54, 2.27]; 76.0 %; 204 / 5; not realistic | 1.25 [1.06, 1.43]; 94.1 %; 204 / 5; not realistic | 1.65 [1.22, 2.17]; 91.1 %; 203 / 5; not realistic | 1.84 [1.30, 2.38]; 74.4 %; 199 / 5; not realistic | 1.50 [1.15, 1.85]; 90.8 %; 195 / 5; not realistic | 1.21 [1.02, 1.40]; 97.9 %; 190 / 5; not realistic |
+| V1c5 frozen (public set, SGP4) | 1.20 [0.96, 1.46]; 93.1 %; 204 / 5; realistic | 1.23 [0.82, 1.65]; 89.2 %; 204 / 5; not realistic | 0.96 [0.62, 1.36]; 95.6 %; 203 / 5; realistic | 1.11 [0.87, 1.33]; 97.5 %; 199 / 5; not realistic | 1.23 [0.81, 1.63]; 87.7 %; 195 / 5; not realistic | 1.32 [0.75, 1.87]; 88.4 %; 190 / 5; not realistic |
+| uncalibrated (public set, SGP4) | 4.15 [3.06, 5.20]; 33.3 %; 204 / 5; not realistic | 3.47 [2.18, 4.88]; 50.0 %; 204 / 5; not realistic | 2.28 [1.66, 2.95]; 68.0 %; 203 / 5; not realistic | 2.28 [1.92, 2.68]; 65.3 %; 199 / 5; not realistic | 1.11 [0.93, 1.38]; 92.3 %; 195 / 5; not realistic | 0.69 [0.49, 0.95]; 97.9 %; 190 / 5; not realistic |
+| V1c4 best (public set, SGP4) | 1.15 [0.94, 1.35]; 96.6 %; 204 / 5; realistic | 1.24 [0.84, 1.58]; 89.2 %; 204 / 5; not realistic | 0.96 [0.70, 1.29]; 97.0 %; 203 / 5; not realistic | 1.13 [0.91, 1.33]; 97.5 %; 199 / 5; not realistic | 1.04 [0.86, 1.25]; 95.9 %; 195 / 5; realistic | 1.04 [0.77, 1.41]; 93.2 %; 190 / 5; realistic |
+| FFM calibrated (A13) | 1.09 [0.94, 1.28]; 95.5 %; 198 / 5; pass | 1.12 [0.96, 1.28]; 95.5 %; 198 / 5; pass | 1.17 [0.98, 1.37]; 93.9 %; 197 / 5; pass | 1.16 [1.03, 1.30]; 93.3 %; 193 / 5; pass | 1.29 [1.16, 1.40]; 93.1 %; 188 / 5; fail | 1.38 [1.18, 1.54]; 89.6 %; 183 / 5; fail |
+| FFM, L-P (beside) | 17.8 [7.83, 26.8]; 12.1 %; 198 / 5; fail | 17.3 [7.70, 26.0]; 14.1 %; 198 / 5; fail | 17.3 [7.39, 26.3]; 12.2 %; 197 / 5; fail | 16.8 [7.08, 25.5]; 17.1 %; 193 / 5; fail | 17.4 [7.60, 26.1]; 16.0 %; 188 / 5; fail | 16.8 [7.57, 25.4]; 14.8 %; 183 / 5; fail |
+| FFM, R2 (beside) | 15.8 [7.86, 23.0]; 18.7 %; 198 / 5; fail | 14.8 [7.49, 21.4]; 24.7 %; 198 / 5; fail | 13.8 [7.35, 19.6]; 15.2 %; 197 / 5; fail | 13.0 [7.00, 18.3]; 21.2 %; 193 / 5; fail | 12.6 [7.18, 17.5]; 21.8 %; 188 / 5; fail | 11.4 [7.11, 15.7]; 20.2 %; 183 / 5; fail |
+| SGP4-XP calibrated (A13) | 1.42 [1.14, 1.68]; 96.6 %; 204 / 5; fail | 0.93 [0.78, 1.06]; 99.0 %; 204 / 5; fail | 1.22 [0.90, 1.63]; 96.6 %; 203 / 5; pass | 1.36 [0.96, 1.76]; 93.0 %; 199 / 5; fail | 1.11 [0.85, 1.37]; 99.5 %; 195 / 5; fail | 0.90 [0.76, 1.03]; 99.5 %; 190 / 5; fail |
+
+Part 4, GP secondary (public set, V1c5 frozen covariance): 19997 encounters over 5 primary object(s) (0 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 0.5 % [0.4 %, 0.6 %], objects [0.4 %, 0.7 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 92.4 % [91.8 %, 92.9 %], objects [91.6 %, 93.0 %] | 99.4 % [99.2 %, 99.5 %], objects [99.2 %, 99.6 %] | 139 (-161 to 522) |
+| SGP4-XP | 0.5 % [0.4 %, 0.7 %], objects [0.4 %, 0.6 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 85.3 % [84.5 %, 86.0 %], objects [80.7 %, 89.5 %] | 98.5 % [98.2 %, 98.7 %], objects [98.0 %, 98.9 %] | 318 (-218 to 1.50e+3) |
+| Operator forecast | - | - | - | - | - (- to -) |
+| FFM - SGP4-XP | -0.005 % [-0.030 %, 0.020 %], objects [-0.032 %, 0.024 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 7.1 % [6.4 %, 7.8 %], objects [2.4 %, 12.0 %] | 0.9 % [0.7 %, 1.1 %], objects [0.6 %, 1.3 %] | |
+
+Verdict: no demonstrated CA difference.
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 19999 (1980) | 0.0985 [0.0944, 0.1026], objects [0.0974, 0.0997] (n 19999) | 0.6715 [0.6428, 0.7011], objects [0.6622, 0.6816] (n 19999) | 5765 | 0.9434 [0.9031, 0.9845], objects [0.9320, 0.9549] (n 14234) |
+| SGP4-XP | 19998 (1980) | 0.0988 [0.0947, 0.1030], objects [0.0976, 0.1000] (n 19998) | 0.7663 [0.7341, 0.7995], objects [0.7380, 0.7953] (n 19998) | 4788 | 1.0076 [0.9653, 1.0507], objects [0.9733, 1.0477] (n 15210) |
+| FFM calibrated (A13) | 19346 (1919) | 0.0987 [0.0947, 0.1029], objects [0.0975, 0.0999] (n 19346) | 0.6717 [0.6426, 0.7015], objects [0.6613, 0.6831] (n 19346) | 5564 | 0.9429 [0.9015, 0.9849], objects [0.9300, 0.9548] (n 13782) |
+| FFM, L-P (beside) | 19346 (1919) | 0.0987 [0.0946, 0.1029], objects [0.0975, 0.0999] (n 19346) | 0.6717 [0.6421, 0.7019], objects [0.6612, 0.6831] (n 19346) | 5564 | 0.9429 [0.9028, 0.9842], objects [0.9302, 0.9552] (n 13782) |
+| FFM, R2 (beside) | 19347 (1919) | 0.0987 [0.0946, 0.1029], objects [0.0975, 0.0998] (n 19347) | 0.6717 [0.6422, 0.7010], objects [0.6615, 0.6831] (n 19347) | 5565 | 0.9430 [0.9026, 0.9842], objects [0.9302, 0.9552] (n 13782) |
+| SGP4-XP calibrated (A13) | 19999 (1980) | 0.0988 [0.0946, 0.1031], objects [0.0976, 0.1000] (n 19999) | 0.7623 [0.7298, 0.7955], objects [0.7372, 0.7905] (n 19999) | 4565 | 0.9877 [0.9464, 1.0301], objects [0.9588, 1.0251] (n 15434) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 19997 | -2.70e-4 [-2.90e-4, -2.50e-4], objects [-3.04e-4, -2.38e-4] (n 19997) | -0.0948 [-0.1017, -0.0878], objects [-0.1232, -0.0672] (n 19997) |
+| FFM calibrated (A13) - SGP4-XP | 19344 | -2.72e-4 [-2.93e-4, -2.51e-4], objects [-3.05e-4, -2.38e-4] (n 19344) | -0.0956 [-0.1027, -0.0885], objects [-0.1244, -0.0672] (n 19344) |
+| FFM, L-P (beside) - SGP4-XP | 19344 | -2.72e-4 [-2.93e-4, -2.51e-4], objects [-3.06e-4, -2.39e-4] (n 19344) | -0.0955 [-0.1026, -0.0884], objects [-0.1243, -0.0672] (n 19344) |
+| FFM, R2 (beside) - SGP4-XP | 19345 | -2.72e-4 [-2.93e-4, -2.51e-4], objects [-3.06e-4, -2.39e-4] (n 19345) | -0.0955 [-0.1027, -0.0882], objects [-0.1243, -0.0672] (n 19345) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 19997 | 1.25e-5 [1.11e-5, 1.39e-5], objects [9.74e-6, 1.51e-5] (n 19997) | -0.0040 [-0.0049, -0.0032], objects [-0.0079, -4.05e-4] (n 19997) |
+| FFM calibrated (A13) - FFM | 19345 | 1.86e-7 [1.16e-7, 2.60e-7], objects [7.43e-8, 3.12e-7] (n 19345) | -6.22e-5 [-1.23e-4, -2.19e-5], objects [-1.46e-4, -1.46e-5] (n 19345) |
+| FFM, L-P (beside) - FFM | 19346 | -2.13e-12 [-5.31e-12, 9.87e-13], objects [-6.64e-12, 1.67e-13] (n 19346) | 5.23e-10 [-8.04e-9, 9.44e-9], objects [1.51e-11, 1.50e-9] (n 19346) |
+| FFM, R2 (beside) - FFM | 19346 | -3.84e-8 [-7.42e-8, -6.96e-9], objects [-1.01e-7, 9.23e-9] (n 19346) | 2.27e-5 [1.92e-6, 5.64e-5], objects [5.24e-7, 6.18e-5] (n 19346) |
+| SGP4-XP calibrated (A13) - FFM | 19998 | 2.83e-4 [2.62e-4, 3.03e-4], objects [2.53e-4, 3.14e-4] (n 19998) | 0.0908 [0.0844, 0.0974], objects [0.0667, 0.1156] (n 19998) |
+
+| Pc decade | FFM | SGP4-XP | FFM calibrated (A13) | FFM, L-P (beside) | FFM, R2 (beside) | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 7506: mean Pc 2.04e-9, hit share 0.0041 | 6673: mean Pc 2.77e-9, hit share 0.0046 | 7257: mean Pc 2.07e-9, hit share 0.0040 | 7257: mean Pc 2.05e-9, hit share 0.0040 | 7258: mean Pc 2.05e-9, hit share 0.0040 | 6428: mean Pc 2.63e-9, hit share 0.0048 |
+| [1.00e-7, 1.00e-6) | 416: mean Pc 3.90e-7, hit share 0.0000 | 476: mean Pc 4.29e-7, hit share 0.0084 | 400: mean Pc 3.90e-7, hit share 0.0000 | 401: mean Pc 3.89e-7, hit share 0.0000 | 402: mean Pc 3.90e-7, hit share 0.0000 | 459: mean Pc 4.00e-7, hit share 0.0022 |
+| [1.00e-6, 1.00e-5) | 568: mean Pc 4.24e-6, hit share 0.0000 | 790: mean Pc 4.45e-6, hit share 0.0278 | 540: mean Pc 4.20e-6, hit share 0.0000 | 543: mean Pc 4.23e-6, hit share 0.0000 | 544: mean Pc 4.25e-6, hit share 0.0018 | 747: mean Pc 4.25e-6, hit share 0.0201 |
+| [1.00e-5, 1.00e-4) | 1299: mean Pc 4.65e-5, hit share 0.0701 | 2209: mean Pc 4.77e-5, hit share 0.0951 | 1251: mean Pc 4.64e-5, hit share 0.0703 | 1251: mean Pc 4.66e-5, hit share 0.0703 | 1249: mean Pc 4.66e-5, hit share 0.0697 | 2112: mean Pc 4.84e-5, hit share 0.0819 |
+| [1.00e-4, 0.0010) | 3873: mean Pc 4.79e-4, hit share 0.1472 | 6180: mean Pc 4.36e-4, hit share 0.1573 | 3746: mean Pc 4.81e-4, hit share 0.1468 | 3744: mean Pc 4.80e-4, hit share 0.1472 | 3745: mean Pc 4.80e-4, hit share 0.1471 | 6728: mean Pc 4.41e-4, hit share 0.1577 |
+| [0.0010, 0.0100) | 6288: mean Pc 0.0032, hit share 0.2021 | 3670: mean Pc 0.0021, hit share 0.2019 | 6106: mean Pc 0.0032, hit share 0.2023 | 6102: mean Pc 0.0032, hit share 0.2022 | 6102: mean Pc 0.0032, hit share 0.2022 | 3525: mean Pc 0.0019, hit share 0.1983 |
+| [0.0100, 1.0000) | 49: mean Pc 0.0114, hit share 0.3469 | - | 46: mean Pc 0.0114, hit share 0.3696 | 48: mean Pc 0.0114, hit share 0.3542 | 47: mean Pc 0.0114, hit share 0.3617 | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 1346 / 334 / 0 | 93 / 285 / 2 | 0 / 926 / 309 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 1 h | SGP4-XP | 1250 / 375 / 0 | 189 / 345 / 2 | 0 / 825 / 309 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 6 h | FFM | 1364 / 318 / 0 | 113 / 284 / 1 | 1 / 890 / 320 | 0.0 % [0.0 %, 0.0 %] | 0.068 % [0.0 %, 0.2 %] |
+| 6 h | SGP4-XP | 1358 / 407 / 0 | 120 / 321 / 1 | 0 / 764 / 320 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 12 h | FFM | 1379 / 318 / 0 | 51 / 275 / 0 | 0 / 989 / 330 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 12 h | SGP4-XP | 1319 / 388 / 0 | 111 / 350 / 0 | 0 / 844 / 330 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 24 h | FFM | 1401 / 333 / 0 | 91 / 285 / 2 | 0 / 893 / 295 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 24 h | SGP4-XP | 1230 / 358 / 0 | 261 / 396 / 2 | 1 / 757 / 295 | 0.0 % [0.0 %, 0.0 %] | 0.067 % [0.0 %, 0.2 %] |
+| 48 h | FFM | 1376 / 362 / 0 | 99 / 266 / 2 | 53 / 919 / 323 | 0.0 % [0.0 %, 0.0 %] | 3.5 % [2.6 %, 4.4 %] |
+| 48 h | SGP4-XP | 1236 / 395 / 0 | 236 / 373 / 4 | 56 / 779 / 321 | 0.0 % [0.0 %, 0.0 %] | 3.7 % [2.7 %, 4.6 %] |
+| 72 h | FFM | 1287 / 392 / 0 | 117 / 317 / 0 | 54 / 876 / 326 | 0.0 % [0.0 %, 0.0 %] | 3.7 % [2.8 %, 4.7 %] |
+| 72 h | SGP4-XP | 1135 / 399 / 0 | 271 / 492 / 1 | 52 / 694 / 325 | 0.0 % [0.0 %, 0.0 %] | 3.6 % [2.7 %, 4.5 %] |
+
+Part 4, precise secondary (another object, the same arm): 19997 encounters over 5 primary object(s) (0 draws without a primary, 0 without a secondary).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 25.0 % [24.4 %, 25.6 %], objects [23.3 %, 26.2 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 38.1 % [37.1 %, 39.1 %], objects [35.7 %, 42.1 %] | 100.0 % [99.9 %, 100.0 %], objects [99.9 %, 100.0 %] | 0.83 (-11.8 to 20.7) |
+| SGP4-XP | 0.035 % [0.010 %, 0.065 %], objects [0.015 %, 0.058 %] | 0.005 % [0.0 %, 0.015 %], objects [0.0 %, 0.015 %] | 78.6 % [77.7 %, 79.4 %], objects [68.0 %, 85.3 %] | 98.3 % [98.1 %, 98.6 %], objects [97.9 %, 98.6 %] | 390 (-227 to 2.02e+3) |
+| Operator forecast | - | - | - | - | - (- to -) |
+| FFM - SGP4-XP | 25.0 % [24.4 %, 25.6 %], objects [23.2 %, 26.2 %] | -0.005 % [-0.015 %, 0.0 %], objects [-0.015 %, 0.0 %] | -40.5 % [-41.8 %, -39.1 %], objects [-48.4 %, -30.5 %] | 1.6 % [1.4 %, 1.9 %], objects [1.4 %, 2.0 %] | |
+
+Verdict: no demonstrated CA difference.
+
+A13 proper scores (hit: true miss under 20 m; log score with Pc clipped to [1e-15, 1 - 1e-15]; 95 % intervals over encounters and primary objects).
+
+| Arm | Encounters (hits) | Brier | Log score | Clipped | Log score, unclipped only |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 20000 (1951) | 0.0433 [0.0409, 0.0457], objects [0.0376, 0.0507] (n 20000) | 0.1836 [0.1690, 0.1990], objects [0.1682, 0.2022] (n 20000) | 15874 | 0.8733 [0.8099, 0.9402], objects [0.8484, 0.9080] (n 4126) |
+| SGP4-XP | 19997 (1951) | 0.0974 [0.0933, 0.1015], objects [0.0936, 0.1010] (n 19997) | 0.7668 [0.7340, 0.8010], objects [0.7496, 0.7860] (n 19997) | 5141 | 1.0321 [0.9892, 1.0767], objects [1.0141, 1.0524] (n 14856) |
+| FFM calibrated (A13) | 18721 (1808) | 0.0400 [0.0379, 0.0421], objects [0.0353, 0.0453] (n 18721) | 0.1248 [0.1178, 0.1318], objects [0.1102, 0.1414] (n 18721) | 13727 | 0.4677 [0.4444, 0.4918], objects [0.4261, 0.5119] (n 4994) |
+| FFM, L-P (beside) | 18723 (1808) | 0.0402 [0.0379, 0.0426], objects [0.0356, 0.0453] (n 18723) | 0.1707 [0.1559, 0.1861], objects [0.1577, 0.1819] (n 18723) | 15087 | 0.8598 [0.7927, 0.9324], objects [0.8106, 0.9078] (n 3636) |
+| FFM, R2 (beside) | 18723 (1808) | 0.0398 [0.0375, 0.0422], objects [0.0352, 0.0449] (n 18723) | 0.1810 [0.1646, 0.1988], objects [0.1615, 0.2015] (n 18723) | 15091 | 0.8758 [0.8070, 0.9482], objects [0.7870, 0.9805] (n 3632) |
+| SGP4-XP calibrated (A13) | 19991 (1951) | 0.0974 [0.0933, 0.1015], objects [0.0937, 0.1011] (n 19991) | 0.7542 [0.7221, 0.7865], objects [0.7410, 0.7711] (n 19991) | 4688 | 0.9852 [0.9444, 1.0266], objects [0.9692, 0.9999] (n 15303) |
+
+| Paired difference (arm - reference) | Encounters | Brier | Log score |
+| --- | --- | --- | --- |
+| FFM - SGP4-XP | 19997 | -0.0541 [-0.0573, -0.0509], objects [-0.0596, -0.0482] (n 19997) | -0.5831 [-0.6130, -0.5528], objects [-0.6069, -0.5641] (n 19997) |
+| FFM calibrated (A13) - SGP4-XP | 18718 | -0.0564 [-0.0595, -0.0533], objects [-0.0615, -0.0507] (n 18718) | -0.6346 [-0.6649, -0.6045], objects [-0.6584, -0.6151] (n 18718) |
+| FFM, L-P (beside) - SGP4-XP | 18720 | -0.0562 [-0.0596, -0.0528], objects [-0.0616, -0.0506] (n 18720) | -0.5886 [-0.6208, -0.5564], objects [-0.6081, -0.5732] (n 18720) |
+| FFM, R2 (beside) - SGP4-XP | 18720 | -0.0566 [-0.0600, -0.0532], objects [-0.0620, -0.0509] (n 18720) | -0.5783 [-0.6102, -0.5466], objects [-0.6062, -0.5551] (n 18720) |
+| SGP4-XP calibrated (A13) - SGP4-XP | 19988 | 2.18e-5 [1.92e-5, 2.43e-5], objects [1.26e-5, 2.77e-5] (n 19988) | -0.0128 [-0.0148, -0.0110], objects [-0.0228, -0.0063] (n 19988) |
+| FFM calibrated (A13) - FFM | 18721 | -2.15e-4 [-8.54e-4, 4.10e-4], objects [-9.06e-4, 4.10e-4] (n 18721) | -0.0459 [-0.0569, -0.0359], objects [-0.0570, -0.0351] (n 18721) |
+| FFM, L-P (beside) - FFM | 18723 | 5.64e-9 [-1.23e-8, 2.41e-8], objects [-1.56e-8, 2.15e-8] (n 18723) | 6.49e-7 [-1.76e-7, 1.58e-6], objects [8.94e-9, 1.23e-6] (n 18723) |
+| FFM, R2 (beside) - FFM | 18723 | -4.09e-4 [-7.46e-4, -7.83e-5], objects [-6.09e-4, -1.31e-4] (n 18723) | 0.0103 [0.0034, 0.0168], objects [5.83e-4, 0.0193] (n 18723) |
+| SGP4-XP calibrated (A13) - FFM | 19991 | 0.0541 [0.0509, 0.0573], objects [0.0482, 0.0597] (n 19991) | 0.5705 [0.5415, 0.5995], objects [0.5555, 0.5862] (n 19991) |
+
+| Pc decade | FFM | SGP4-XP | FFM calibrated (A13) | FFM, L-P (beside) | FFM, R2 (beside) | SGP4-XP calibrated (A13) |
+| --- | --- | --- | --- | --- | --- | --- |
+| [0.0000, 1.00e-7) | 16304: mean Pc 2.34e-10, hit share 8.59e-4 | 6936: mean Pc 2.65e-9, hit share 2.88e-4 | 14418: mean Pc 4.05e-10, hit share 0.0000 | 15463: mean Pc 2.27e-10, hit share 9.05e-4 | 15479: mean Pc 2.18e-10, hit share 0.0013 | 6437: mean Pc 2.62e-9, hit share 0.0000 |
+| [1.00e-7, 1.00e-6) | 87: mean Pc 4.19e-7, hit share 0.0690 | 579: mean Pc 4.36e-7, hit share 0.0138 | 132: mean Pc 4.19e-7, hit share 0.0000 | 77: mean Pc 4.20e-7, hit share 0.0779 | 80: mean Pc 3.72e-7, hit share 0.0500 | 493: mean Pc 4.19e-7, hit share 0.0041 |
+| [1.00e-6, 1.00e-5) | 133: mean Pc 4.23e-6, hit share 0.0226 | 1044: mean Pc 4.36e-6, hit share 0.0699 | 181: mean Pc 4.48e-6, hit share 0.0000 | 101: mean Pc 4.17e-6, hit share 0.0297 | 96: mean Pc 3.98e-6, hit share 0.0729 | 887: mean Pc 4.33e-6, hit share 0.0372 |
+| [1.00e-5, 1.00e-4) | 161: mean Pc 4.06e-5, hit share 0.0807 | 2572: mean Pc 4.57e-5, hit share 0.1198 | 177: mean Pc 4.36e-5, hit share 0.0169 | 131: mean Pc 3.76e-5, hit share 0.0992 | 131: mean Pc 3.98e-5, hit share 0.0992 | 2476: mean Pc 4.80e-5, hit share 0.1014 |
+| [1.00e-4, 0.0010) | 261: mean Pc 3.99e-4, hit share 0.1839 | 5512: mean Pc 4.40e-4, hit share 0.1602 | 242: mean Pc 4.20e-4, hit share 0.0083 | 148: mean Pc 4.15e-4, hit share 0.1689 | 179: mean Pc 4.39e-4, hit share 0.2011 | 6550: mean Pc 4.34e-4, hit share 0.1597 |
+| [0.0010, 0.0100) | 294: mean Pc 0.0041, hit share 0.2245 | 3354: mean Pc 0.0022, hit share 0.2018 | 388: mean Pc 0.0042, hit share 0.0670 | 256: mean Pc 0.0041, hit share 0.2266 | 261: mean Pc 0.0043, hit share 0.3027 | 3148: mean Pc 0.0019, hit share 0.1966 |
+| [0.0100, 1.0000) | 2760: mean Pc 0.4604, hit share 0.6525 | - | 3183: mean Pc 0.3572, hit share 0.5583 | 2547: mean Pc 0.4857, hit share 0.6631 | 2497: mean Pc 0.4989, hit share 0.6604 | - |
+
+Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).
+
+| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 h | FFM | 490 / 5 / 0 | 53 / 4 / 0 | 890 / 1577 / 357 | 0.0 % [0.0 %, 0.0 %] | 62.1 % [59.6 %, 64.6 %] |
+| 1 h | SGP4-XP | 1099 / 301 / 0 | 332 / 367 / 0 | 2 / 918 / 357 | 0.0 % [0.0 %, 0.0 %] | 0.1 % [0.0 %, 0.4 %] |
+| 6 h | FFM | 501 / 2 / 0 | 59 / 5 / 0 | 829 / 1508 / 316 | 0.0 % [0.0 %, 0.0 %] | 59.7 % [57.1 %, 62.3 %] |
+| 6 h | SGP4-XP | 1318 / 402 / 0 | 71 / 316 / 0 | 0 / 797 / 316 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 12 h | FFM | 532 / 4 / 0 | 59 / 3 / 0 | 882 / 1606 / 326 | 0.0 % [0.0 %, 0.0 %] | 59.9 % [57.4 %, 62.3 %] |
+| 12 h | SGP4-XP | 1194 / 367 / 0 | 279 / 372 / 0 | 0 / 874 / 326 | 0.0 % [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %] |
+| 24 h | FFM | 558 / 1 / 0 | 63 / 5 / 0 | 825 / 1568 / 341 | 0.0 % [0.0 %, 0.0 %] | 57.1 % [54.5 %, 59.5 %] |
+| 24 h | SGP4-XP | 1083 / 308 / 0 | 359 / 401 / 1 | 4 / 865 / 340 | 0.0 % [0.0 %, 0.0 %] | 0.3 % [0.067 %, 0.6 %] |
+| 48 h | FFM | 592 / 3 / 0 | 62 / 7 / 0 | 822 / 1505 / 342 | 0.0 % [0.0 %, 0.0 %] | 55.7 % [53.2 %, 58.2 %] |
+| 48 h | SGP4-XP | 1064 / 330 / 0 | 411 / 420 / 3 | 1 / 765 / 339 | 0.0 % [0.0 %, 0.0 %] | 0.068 % [0.0 %, 0.2 %] |
+| 72 h | FFM | 622 / 5 / 0 | 56 / 5 / 0 | 753 / 1532 / 322 | 0.0 % [0.0 %, 0.0 %] | 52.6 % [50.0 %, 55.2 %] |
+| 72 h | SGP4-XP | 1036 / 363 / 1 | 395 / 463 / 5 | 0 / 716 / 316 | 0.071 % [0.0 %, 0.2 %] | 0.0 % [0.0 %, 0.0 %] |
+
+## A13: the Starlink transfer validations (robustness only, reported unchanged beside the contrast)
+
+robustness only: R1 (weather M) transferred to the B2 E' export (C2-A8, D3). FFM (R1-M): 1 h: mean d²/3 62.9, coverage 33.2 %, n 746; 6 h: mean d²/3 103, coverage 27.2 %, n 746; 12 h: mean d²/3 122, coverage 26.1 %, n 1053; 24 h: mean d²/3 1.46e+3, coverage 31.2 %, n 695. SGP4-XP (R1-M): 1 h: mean d²/3 0.12, coverage 99.9 %, n 750; 6 h: mean d²/3 0.52, coverage 96.8 %, n 750; 12 h: mean d²/3 1.24, coverage 92.7 %, n 1058; 24 h: mean d²/3 6.46, coverage 88.8 %, n 699. Sources: results/ffm-covariance-calibration/heldout-S.json, results/ffm-covariance-calibration/sgp4xp/heldout-S.json.
+
+## Real Starlink close approaches: FFM against SGP4-XP, with Pc calls (part 5; A4, A5, A8); FFM: FFM as A3 registered; population: the satellites both SGP4-XP and A3 fitted at full weight (A3 written for 5,122 of 11,163 satellites; 6,038 (54.1 %) excluded by A3's own fit refusals and failures (A12); 3 more refused by propagator/ffm at the lead phase (A13 part 6)); reported for completeness, not comparable with the ffm3 run without this difference
+
+Steps. The part 1a satellites both SGP4-XP and FFM fitted; in 1 h windows from the earliest E to the latest E + 72 h, the truth (the newer SpaceX files at their 10-min epochs) and FFM's and SGP4-XP's predictions at the same epochs are each screened all-vs-all by analysis/conjunction-assessment (explicit OEM samples, 5 km threshold, its range sampled every 5 s), a satellite entering a window only where its truth covers it. Events of a pair within 10 min are one encounter; it enters when any set's miss is under 5 km. Each entering encounter is assessed by assess_conjunction over 20 min: the truth's closest approach, and each arm's TCA, miss and Pc (Foster, 20 m combined) from its ephemeris at 60 s steps with its covariance (FFM: fit_batch's formal covariance times max(1, reduced chi-square) carried by propagator/ffm; SGP4-XP: the module's). Screens through the capture cycle 2026-10-28T21-01-35-288Z.
+
+42628 encounters, 42628 entering; 422 set aside (a truth gap at the encounter); 422 whose truth assessment failed. Screens: truth: 76 windows, 15620 events, 416673064 pair-windows, 3002 satellites covered per window; FFM: 76 windows, 19366 events, 455083264 pair-windows, 3002 satellites covered per window; SGP4-XP: 76 windows, 20811 events, 449717464 pair-windows, 3002 satellites covered per window.
+
+Refusals by phase (A13 part 6 point 2; the refused satellites and encounters are listed in the run's summary, rows/ca.part5.json). States phase (each satellite's predictions, before any screen): 0 of 5121 satellites refused. Cov phase: each satellite's covariance at its assessment epochs, 4664 satellites; a refused satellite leaves every encounter it is in without that arm's Pc. Assess phase: the module's Pc of one encounter.
+
+| Arm | Encounters attempted | Pc written | Refused (rate) | Cov phase: satellites; encounters | Assess phase: encounters | Refusals by message |
+| --- | --: | --: | --- | --- | --- | --- |
+| FFM | 42206 | 42124 | 82 (0.19 %) | 3; 82 | 0 | cov phase, 3 satellites: propagator/ffm invoke: invalid-covariance: invalid-covariance: Singular covariance has an inconsistent cross term. |
+| SGP4-XP | 42206 | 42206 | 0 (0.00 %) | 0; 0 | 0 | - |
+
+### Pairs with no maneuver evident
+
+41729 encounters over 4051 primary object(s); 82 left out where an arm's Pc could not be evaluated (A7).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 0.038 % [0.022 %, 0.058 %], objects [0.021 %, 0.057 %] | 0.7 % [0.7 %, 0.8 %], objects [0.6 %, 0.9 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | -1.93e+3 (-6.39e+4 to 1.60e+4) |
+| SGP4-XP | 0.036 % [0.019 %, 0.055 %], objects [0.019 %, 0.055 %] | 3.5 % [3.3 %, 3.7 %], objects [3.2 %, 3.9 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 0.067 % [0.0 %, 0.2 %], objects [0.0 %, 0.2 %] | -1.53e+3 (-6.95e+4 to 2.06e+4) |
+| FFM - SGP4-XP | 0.002 % [0.0 %, 0.007 %], objects [0.0 %, 0.007 %] | -2.8 % [-3.0 %, -2.6 %], objects [-3.1 %, -2.4 %] | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | -0.067 % [-0.2 %, 0.0 %], objects [-0.2 %, 0.0 %] | |
+
+Verdict: no demonstrated CA difference.
+
+| Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 0 / 1 / 309 | 0 / 6 / 1122 | 16 / 15435 / 24840 | 99.7 % [99.0 %, 100.0 %] | 100.0 % [100.0 %, 100.0 %] |
+| SGP4-XP | 0 / 25 / 1465 | 1 / 91 / 4521 | 15 / 15326 / 20285 | 98.3 % [97.6 %, 98.9 %] | 93.8 % [78.6 %, 100.0 %] |
+
+### Pairs with a maneuver evident (either satellite)
+
+395 encounters over 144 primary object(s); 0 left out where an arm's Pc could not be evaluated (A7).
+
+| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 2.8 % [1.3 %, 4.6 %], objects [0.5 %, 5.6 %] | - | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | -4.15e+3 (-6.38e+4 to 2.43e+4) |
+| SGP4-XP | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 2.5 % [1.0 %, 4.3 %], objects [0.0 %, 5.7 %] | - | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | -1.40e+3 (-7.51e+4 to 5.03e+4) |
+| FFM - SGP4-XP | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | 0.3 % [-2.0 %, 2.5 %], objects [-2.5 %, 2.8 %] | - | 0.0 % [0.0 %, 0.0 %], objects [0.0 %, 0.0 %] | |
+
+Verdict: no demonstrated CA difference.
+
+| Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |
+| --- | --- | --- | --- | --- | --- |
+| FFM | 0 / 0 / 11 | 0 / 2 / 26 | 0 / 114 / 242 | 100.0 % [100.0 %, 100.0 %] | - |
+| SGP4-XP | 0 / 1 / 10 | 0 / 3 / 50 | 0 / 112 / 219 | 90.9 % [69.2 %, 100.0 %] | - |
