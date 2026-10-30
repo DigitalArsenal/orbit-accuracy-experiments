@@ -324,6 +324,23 @@ function refusalMarkdown(refusals) {
   o.push('');
   return o;
 }
+/** A5's rates, their paired difference and the verdict of one cell (A4, A5). `name` labels an arm; `listed` picks the arms shown (part 4
+ *  lists every arm, the operator forecast by its miss error alone; part 5 the arms with rates). */
+function ratesMarkdown(s, { name = (arm) => NAMES[arm], listed = () => true, verdict = 'Verdict' } = {}) {
+  const o = ['| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |', '| --- | --- | --- | --- | --- | --- |'];
+  for (const [arm, x] of Object.entries(s.arms)) if (listed(x)) o.push(`| ${name(arm)} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
+  for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => name(a)).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
+  o.push('', `${verdict}: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+  return o;
+}
+/** A5's Pc calls of one cell, counts by true miss: per lead (part 4), or over part 5's 20 min (`whole`: the lead 'all'). */
+function callsMarkdown(calls, { name = (arm) => NAMES[arm], whole = false } = {}) {
+  const cells = (x) => `${['red', 'yellow', 'green'].map((q) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[q]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`;
+  if (whole) return ['| Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- |', ...Object.entries(calls.all ?? {}).map(([arm, x]) => `| ${name(arm)} | ${cells(x)}`), ''];
+  return ['Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).', '',
+    '| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- | --- |',
+    ...Object.entries(calls).flatMap(([L, arms]) => Object.entries(arms).map(([arm, x]) => `| ${L} h | ${name(arm)} | ${cells(x)}`)), ''];
+}
 /** Parts 3 and 4 as prose and tables. */
 function caMarkdown(ca) {
   const o = ['## Conjunction contrast: FFM against SGP4-XP, with Pc calls (parts 3 and 4; A4, A5, A6)', ''];
@@ -340,15 +357,9 @@ function caMarkdown(ca) {
     o.push('');
     for (const [cls, s] of Object.entries(c.classes)) {
       o.push(`Part 4, ${cls === 'gp' ? 'GP secondary (public set, V1c5 frozen covariance)' : 'precise secondary (another object, the same arm)'}: ${s.encounters} encounters over ${s.objects} primary object(s) (${s.counts.noPrimary} draws without a primary, ${s.counts.noSecondary} without a secondary).`, '');
-      o.push('| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |', '| --- | --- | --- | --- | --- | --- |');
-      for (const [arm, x] of Object.entries(s.arms)) o.push(`| ${NAMES[arm]} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
-      for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => NAMES[a]).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
-      o.push('', `Verdict: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+      o.push(...ratesMarkdown(s));
       if (s.a13) o.push(...a13Markdown(s.a13));
-      o.push('Pc calls by lead time (counts by true miss: under 200 m / 200 m to 5 km / above 5 km; red calls with true miss above 5 km; true misses under 200 m called green).', '');
-      o.push('| Lead | Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- | --- |');
-      for (const [L, arms] of Object.entries(s.calls)) for (const [arm, x] of Object.entries(arms)) o.push(`| ${L} h | ${NAMES[arm]} | ${['red', 'yellow', 'green'].map((k) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[k]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`);
-      o.push('');
+      o.push(...callsMarkdown(s.calls));
     }
   }
   return o;
@@ -386,14 +397,9 @@ function partFiveMarkdown(p, ffmLabel = 'FFM') {
     o.push(`### ${cls === 'unmaneuvered' ? 'Pairs with no maneuver evident' : 'Pairs with a maneuver evident (either satellite)'}`, '');
     if (!s.encounters) { o.push('No encounter in this class.', ''); continue; }
     o.push(`${s.encounters} encounters over ${s.objects} primary object(s)${s.encounters < 30 ? ' (a small count: intervals are wide or absent)' : ''}; ${s.counts.leftOut} left out where an arm's Pc could not be evaluated (A7).`, '');
-    o.push('| Arm | Missed alert (Pc < 1e-7, true miss < 200 m) | False alert (Pc >= 1e-4, true miss > 5 km) | Recall | Precision | Miss-distance error, m (p10 to p90) |', '| --- | --- | --- | --- | --- | --- |');
-    for (const [arm, x] of Object.entries(s.arms)) if (x.missedAlert) o.push(`| ${NAMES[arm]} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | ${num(x.missErrorM.median)} (${num(x.missErrorM.p10)} to ${num(x.missErrorM.p90)}) |`);
-    for (const [pair, x] of Object.entries(s.paired)) o.push(`| ${pair.split('-').map((a) => NAMES[a]).join(' - ')} | ${rate(x.missedAlert)} | ${rate(x.falseAlert)} | ${rate(x.recall)} | ${rate(x.precision)} | |`);
-    o.push('', `Verdict: ${s.verdict}${s.verdictReason ? ` (${s.verdictReason})` : ''}.`, '');
+    o.push(...ratesMarkdown(s, { listed: (x) => x.missedAlert }));
     if (s.a13) o.push(...a13Markdown(s.a13));
-    o.push('| Arm | Red | Yellow | Green | Red, true miss > 5 km | Under 200 m, called green |', '| --- | --- | --- | --- | --- | --- |');
-    for (const [arm, x] of Object.entries(s.calls.all ?? {})) o.push(`| ${NAMES[arm]} | ${['red', 'yellow', 'green'].map((q) => ['under 200 m', '200 m to 5 km', 'above 5 km'].map((tc) => x.matrix[q]?.[tc] ?? 0).join(' / ')).join(' | ')} | ${rate(x.redFar)} | ${rate(x.hitGreen)} |`);
-    o.push('');
+    o.push(...callsMarkdown(s.calls, { whole: true }));
   }
   return o;
 }
