@@ -333,6 +333,27 @@ Every call completed; none was split.
 
 **Finding (A0): 27 pair evaluations failed** in 3 calls answered `incomplete-screening` (the module's final result with STATISTICS.FAILED_PAIRS; its events are kept, the failed pairs are unscreened): part 1 unit 21 (block 0, slice 21): 3; part 1 unit 49 (block 1, slice 21): 1; part 1 unit 105 (block 3, slice 21): 23.
 
+## Part 3 (Amendment A1): the console's own path
+
+| Arm | Method | Primaries | Span | Recall against SOCRATES (primary class) | Geometry beyond tolerance (TCA / miss / speed) | Against Part 1, encounter for encounter |
+| --- | --- | ---: | --- | --- | --- | --- |
+| console | SAMPLED_STATES (propagator/sgp4) → prepare_sample_screening_index → screen_window, 30 min windows | 300 (1 block) | 2026-10-28T17:00:00.000Z + 24 h | 590 / 590 (100 %) | 0 / 1 / 0 | equal encounter sets (all differences explained): 3,185 paired, 0 in one arm only |
+| descriptions | SOURCE_DESCRIPTIONS → prepare_screening_index → screen_window, 24 h windows | 600 (2 blocks) | 2026-10-28T17:00:00.000Z + 168 h | 7,317 / 7,319 (99.973 %) | 11 / 237 / 0 | identical: 66,691 paired, 0 in one arm only |
+
+### console: against Part 1's screen_catalog
+
+Part 1 3,185 encounters, console 3,185; paired 3,185. |ΔTCA| max 0.316 s, |Δmiss| max 102 m, |Δspeed| max 1.44 m/s. Rule: encounter-set equality; one-arm encounters explained only by the registered rules.
+
+| BSTAR band (larger of the pair) | Paired | \|ΔTCA\| p99 / max (s) | \|Δmiss\| median / p99 / max (m) | \|Δspeed\| max (m/s) |
+| --- | ---: | --- | --- | ---: |
+| 0.0001 <= |B*| < 0.001 | 2,194 | 0.0000805 / 0.143 | 0.156 / 0.711 / 6.89 | 1.21 |
+| |B*| < 0.0001 | 129 | 0.309 / 0.316 | 0.104 / 0.688 / 0.911 | 1.44 |
+| |B*| >= 0.001 | 862 | 0.00632 / 0.00877 | 0.350 / 57.5 / 102 | 0.460 |
+
+### descriptions: against Part 1's screen_catalog
+
+Part 1 66,691 encounters, descriptions 66,691; paired 66,691. |ΔTCA| max 0.00 s, |Δmiss| max 0.00 m, |Δspeed| max 0.00 m/s. Rule: identical to Part 1: same encounters, |ΔTCA| <= 1 ms, |Δmiss| <= 1 mm, |Δspeed| <= 1 mm/s.
+
 ## Reproduce
 
 ```sh
