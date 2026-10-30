@@ -90,7 +90,7 @@ const workers = Array.from({ length: Math.min(processes, todo.length) }, (_, w) 
     child.on('message', (m) => {
       if (m.failure) { log(`unit ${m.unit} call failed (${m.failure.seconds} s from ${jdToIso(m.failure.startJd)}): ${m.failure.error}; splitting`); return; }
       done++;
-      log(`part ${part.id} unit ${m.unit} done: ${m.events} events, ${(m.elapsedMs / 1000).toFixed(1)} s, ${m.excluded} excluded${m.failures ? `, ${m.failures} failed calls` : ''} (${done}/${units.length}, ${((Date.now() - t0) / 60000).toFixed(1)} min)`);
+      log(`part ${part.id} unit ${m.unit} done: ${m.events} events, ${(m.elapsedMs / 1000).toFixed(1)} s, ${m.excluded} excluded${m.failures ? `, ${m.failures} failed calls` : ''}${m.failedPairs ? `, ${m.failedPairs} failed pairs (incomplete-screening)` : ''} (${done}/${units.length}, ${((Date.now() - t0) / 60000).toFixed(1)} min)`);
     });
     child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`worker ${w} exited ${code}`))));
   });
@@ -107,6 +107,8 @@ const summary = {
   experiment: id, mode: o.probe ? 'probe' : 'registered', part: part.id, window: { ...window, endUtc: jdToIso(window.startJd + (window.slices * window.sliceSeconds) / 86400) },
   catalog: catalogInfo, primaries, units: units.length, events: events.length, excludedObjects: excluded,
   failedCalls: answers.flatMap((x) => (x.failures ?? []).map((f) => ({ unit: x.unit, block: x.block, slice: x.slice, ...f }))),
+  failedPairs: answers.reduce((n, x) => n + Number(x.failedPairs ?? 0), 0),
+  incompleteUnits: answers.filter((x) => Number(x.failedPairs ?? 0) > 0).map((x) => ({ unit: x.unit, block: x.block, slice: x.slice, failedPairs: x.failedPairs })),
   unitElapsedSeconds: { total: answers.reduce((n, x) => n + x.elapsedMs, 0) / 1000, max: Math.max(...answers.map((x) => x.elapsedMs)) / 1000 },
   wallMinutes: (Date.now() - t0) / 60000, processes, threads,
 };

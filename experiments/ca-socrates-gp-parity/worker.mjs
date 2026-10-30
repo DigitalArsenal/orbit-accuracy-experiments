@@ -60,8 +60,13 @@ async function call(k, startJd, seconds) {
   let chunks = 0;
   for (;;) {
     const r = await harness.invoke({ methodId: 'screen_catalog', inputs });
-    if (r.statusCode !== 0) throw new Error(`screen_catalog ${r.errorCode}: ${r.errorMessage}`);
-    const result = decode(r.outputs.find((f) => f.portId === 'result').payload).CATALOG_RESULT;
+    const resultFrame = r.outputs.find((f) => f.portId === 'result');
+    // Amendment A0: incomplete-screening (422) answers a final result whose STATISTICS.FAILED_PAIRS counts the pair
+    // evaluations that failed; the call is complete, its events are kept and its failed pairs are a finding.
+    const incomplete = r.statusCode !== 0 && r.errorCode === 'incomplete-screening' && resultFrame;
+    if (r.statusCode !== 0 && !incomplete) throw new Error(`screen_catalog ${r.errorCode}: ${r.errorMessage}`);
+    const result = decode(resultFrame.payload).CATALOG_RESULT;
+    if (incomplete && !result.FINAL_CHUNK) throw new Error(`screen_catalog ${r.errorCode} before the final chunk: ${r.errorMessage}`);
     for (const e of result.EVENTS ?? []) events.push(event(e));
     for (const f of r.outputs.filter((o) => o.portId === 'excluded')) {
       const omm = JSON.parse(flatc.generateJSON(ommSchema, { path: '/omm.bin', data: f.payload }, { defaultsJson: true }));
@@ -73,7 +78,7 @@ async function call(k, startJd, seconds) {
       const statistics = st && Object.fromEntries(Object.entries(st).map(([key, v]) => [key, typeof v === 'bigint' ? Number(v) : v]));
       const found = Number(result.CONJUNCTIONS_FOUND);
       if (events.length !== found) throw new Error(`CONJUNCTIONS_FOUND ${found} but ${events.length} events returned`);
-      return { calls: [{ startJd, seconds, found, chunks, statistics }], excluded, events, objectsParsed: Number(result.OBJECTS_PARSED), failures: [] };
+      return { calls: [{ startJd, seconds, found, chunks, statistics, incomplete: incomplete ? r.errorCode : null }], excluded, events, objectsParsed: Number(result.OBJECTS_PARSED), failures: [] };
     }
   }
 }
@@ -105,10 +110,10 @@ try {
     const r = await screenSpan(k, startJd, job.window.sliceSeconds);
     const statistics = r.calls.length === 1 ? r.calls[0].statistics : null;
     const answer = { unit: k, slice, block: job.units?.[k]?.block ?? null, startJd, durationSeconds: job.window.sliceSeconds, objectsParsed: r.objectsParsed,
-      found: r.events.length, calls: r.calls, failures: r.failures, statistics, excluded: [...new Map(r.excluded.map((x) => [x.norad, x])).values()], elapsedMs: performance.now() - t0, events: r.events };
+      found: r.events.length, calls: r.calls, failures: r.failures, statistics, failedPairs: r.calls.reduce((n, c) => n + Number(c.statistics?.FAILED_PAIRS ?? 0), 0), excluded: [...new Map(r.excluded.map((x) => [x.norad, x])).values()], elapsedMs: performance.now() - t0, events: r.events };
     fs.writeFileSync(`${out}.part`, `${JSON.stringify(answer)}\n`);
     fs.renameSync(`${out}.part`, out);
-    process.send?.({ unit: k, events: r.events.length, elapsedMs: answer.elapsedMs, excluded: answer.excluded.length, failures: r.failures.length });
+    process.send?.({ unit: k, events: r.events.length, elapsedMs: answer.elapsedMs, excluded: answer.excluded.length, failures: r.failures.length, failedPairs: answer.failedPairs });
   }
 } finally {
   await harness.destroy?.();

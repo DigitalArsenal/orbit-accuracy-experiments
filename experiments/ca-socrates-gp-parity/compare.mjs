@@ -42,14 +42,17 @@ const gpByNorad = new Map(catalog.rows.map((g) => [Number(g.NORAD_CAT_ID), g]));
 const editions = editionClasses(report, catalog.rows);
 const pairKey = (a, b) => (a < b ? `${a}-${b}` : `${b}-${a}`);
 const winStart = summary.window.startJd, winEnd = winStart + (summary.window.slices * summary.window.sliceSeconds) / DAY_S;
-if (!o.dev && (winStart !== config.window.startJd || summary.window.slices * summary.window.sliceSeconds !== config.window.durationSeconds)) throw new Error('the screen run did not cover the registered window');
+// Parts 1 and 2 cover the registered window; an A1 arm may cover its first part (registered in Amendment A1).
+if (!o.dev && summary.amendment !== 'A1' && (winStart !== config.window.startJd || summary.window.slices * summary.window.sliceSeconds !== config.window.durationSeconds)) throw new Error('the screen run did not cover the registered window');
+if (!o.dev && summary.amendment === 'A1' && (winStart !== config.window.startJd || winEnd > config.window.startJd + config.window.durationSeconds / DAY_S + 1e-9)) throw new Error('an A1 arm must lie inside the registered window from its start');
 
 // Excluded objects per slice (an object SGP4 could not propagate somewhere in that slice's call).
-const excludedBySlice = new Map();
+const excludedBySlice = new Map(), failedPairsBySlice = new Map();
 for (const q of parts) for (const f of fs.readdirSync(path.join(q.dir, 'slices')).filter((n) => n.endsWith('.json'))) {
   const u = JSON.parse(fs.readFileSync(path.join(q.dir, 'slices', f), 'utf8'));
   if (!excludedBySlice.has(u.slice)) excludedBySlice.set(u.slice, new Set());
   for (const x of u.excluded) excludedBySlice.get(u.slice).add(x.norad);
+  if (Number(u.failedPairs ?? 0) > 0) failedPairsBySlice.set(u.slice, (failedPairsBySlice.get(u.slice) ?? 0) + Number(u.failedPairs));
 }
 const sliceOf = (jd) => Math.floor(((jd - winStart) * DAY_S) / summary.window.sliceSeconds);
 
@@ -79,7 +82,8 @@ const bandOf = (m) => (m < 1000 ? 'below 1 km' : '1 to 5 km');
 // A SOCRATES row whose TCA lies within windowEdgeSeconds of either end of the window is counted apart and never
 // enters a recall denominator (the window start is read from the report's TCA span), as for the screen's events.
 const nearEdge = (jd) => (jd - winStart) * DAY_S < cmp.windowEdgeSeconds || (winEnd - jd) * DAY_S < cmp.windowEdgeSeconds;
-const reference = report.filter((r) => subset.has(r.a) || subset.has(r.b)).map((r) => ({ ...r, key: pairKey(r.a, r.b), cls: classOf(r.a, r.b), band: bandOf(r.rangeM), edge: nearEdge(r.tcaJd) }));
+// The reference: SOCRATES rows with a screened member whose TCA lies inside the screen's window (every row, for Parts 1 and 2).
+const reference = report.filter((r) => (subset.has(r.a) || subset.has(r.b)) && r.tcaJd >= winStart && r.tcaJd < winEnd).map((r) => ({ ...r, key: pairKey(r.a, r.b), cls: classOf(r.a, r.b), band: bandOf(r.rangeM), edge: nearEdge(r.tcaJd) }));
 
 // ---- matching: same pair, |TCA difference| <= matchSeconds, one to one, nearest first -------------------------
 const byPair = new Map();
@@ -165,12 +169,14 @@ for (const i of missIdx) {
   const absent = [r.a, r.b].filter((n) => !gpByNorad.has(n));
   const d = { pair: [r.a, r.b], names: [r.aName, r.bName], statuses: [r.aStatus, r.bStatus], cls: r.cls, band: r.band, socratesTcaUtc: r.tcaText, socratesRangeM: r.rangeM, socratesSpeedMS: r.speedMS,
     nearestScreenEvent: same && { tcaUtc: jdToIso(same.tcaJd), secondsFromSocrates: (same.tcaJd - r.tcaJd) * DAY_S, missM: same.missM }, excludedInSlice: excluded, absentFromCatalog: absent,
+    failedPairsInSlice: failedPairsBySlice.get(k) ?? 0,
     sliceBoundarySeconds: Math.min(...[k, k + 1].map((b) => Math.abs((r.tcaJd - (winStart + (b * summary.window.sliceSeconds) / DAY_S)) * DAY_S))) };
   if (!absent.length && misses.filter((m) => m.pairMethod).length < cmp.diagnoseMax) d.pairMethod = await pairCheck(gpByNorad.get(r.a), gpByNorad.get(r.b), r.tcaJd);
   d.diagnosis = absent.length ? 'object absent from the catalog' : excluded.length ? 'object excluded: SGP4 could not propagate it in this slice'
     : d.nearestScreenEvent && Math.abs(d.nearestScreenEvent.secondsFromSocrates) <= cmp.matchSeconds ? 'matched to another SOCRATES row of the same pair'
     : d.pairMethod?.missM > config.screen.thresholdM ? 'the module puts this minimum beyond 5 km (threshold edge or geometry difference)'
     : d.pairMethod ? 'the module finds this minimum within 5 km: the screen missed it (screen defect)' : 'not diagnosed (cap reached)';
+  if (d.failedPairsInSlice) d.diagnosis += `; ${d.failedPairsInSlice} pair evaluations failed in this slice (incomplete-screening, A0)`;
   misses.push(d);
 }
 await pairCheck.close();
@@ -229,7 +235,8 @@ const metrics = {
   screenManifests: parts.map((q) => ({ part: q.id, run: q.manifest.run, module: q.manifest.module, outputs: q.manifest.outputs, startedAt: q.manifest.startedAt, finishedAt: q.manifest.finishedAt })),
   editions: { reportObjects: editions.objects, matched: editions.matched.size, mismatched: [...editions.mismatched].map(([n, d]) => ({ norad: n, maxDeltaDays: d })), absent: [...editions.absent] },
   parts: partIds, full,
-  screen: { primaries: parts.map((q) => q.summary.primaries), units: parts.reduce((n, q) => n + q.summary.units, 0), failedCalls: parts.flatMap((q) => q.summary.failedCalls), rawEvents: rawEvents.length, merged, events: events.length, outOfWindow, excludedObjects: new Set(parts.flatMap((q) => q.summary.excludedObjects.map((x) => x.norad))).size, wallMinutes: parts.map((q) => q.summary.wallMinutes), processes: summary.processes, threads: summary.threads },
+  screen: { primaries: parts.map((q) => q.summary.primaries), units: parts.reduce((n, q) => n + q.summary.units, 0), failedCalls: parts.flatMap((q) => q.summary.failedCalls),
+    failedPairs: parts.reduce((n, q) => n + Number(q.summary.failedPairs ?? 0), 0), incompleteUnits: parts.flatMap((q) => (q.summary.incompleteUnits ?? []).map((x) => ({ part: q.id, ...x }))), rawEvents: rawEvents.length, merged, events: events.length, outOfWindow, excludedObjects: new Set(parts.flatMap((q) => q.summary.excludedObjects.map((x) => x.norad))).size, wallMinutes: parts.map((q) => q.summary.wallMinutes), processes: summary.processes, threads: summary.threads },
   reference: { rows: reference.length, byClass: Object.fromEntries(CLASSES.map((c) => [c, reference.filter((r) => r.cls === c).length])) },
   recall, edgeRows, misses, geometry,
   extras: { total: extras.length, byClass: extraCounts, unexplainedOrUnverified: unexplained.length, rows: unexplained.slice(0, cmp.listMax).map(extraRow) },

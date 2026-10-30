@@ -347,3 +347,164 @@ object numbered 100000 or above is reported, not gated.
 `--probe` and `--dev` are development modes. They screen the week after the
 window and compare it with a synthetic reference built from the probe's own
 events. They are never written to `runs/` or `results/`.
+
+## Amendment A0, 2026-10-29: calls answered `incomplete-screening`
+
+**Reason.** The registered run stopped at Part 1 unit 21 (block 0, the 6 h
+slice from 2026-11-02T23:00:00Z). `screen_catalog` answered with status 422,
+`incomplete-screening`: "One or more pair evaluations failed; FAILED_PAIRS
+reports the incomplete result."
+
+That answer is not a trap. Its final chunk carries the complete result: every
+event, the excluded objects, and `STATISTICS.FAILED_PAIRS` (3 in the
+2,700 s span from 2026-11-03T04:15:00Z). The module's README describes
+exactly this.
+
+The registered failure rule treated every non-zero status as a failed call
+and split it. The split recursed down to 2,700 s, could not go further, and
+stopped the worker. The 141 units finished before this had no failure and
+no failed pair.
+
+**Rule.**
+
+- **Accepted calls.** A call answered with `incomplete-screening` whose
+  final chunk is present is a completed call, and its events are kept.
+- **Findings.** Its failed pair evaluations (`FAILED_PAIRS`) are recorded
+  per unit, summed for each part, and reported. The pairs they name were
+  not screened in that call.
+- **Misses.** A SOCRATES row the screen misses, in a slice with failed
+  pairs, is flagged with that count in its diagnosis.
+- **Splitting.** The split rule applies only to calls with no final result.
+
+**Code and data.** The code change is in `worker.mjs` (accept the final 422
+result), `screen.mjs` (sum the failed pairs) and `compare.mjs` (flag misses);
+nothing else changes. Units completed before this amendment ran `worker.mjs`
+at `de66600`, which behaves identically on every call answered with status 0.
+Their files are kept, and the run resumes from them.
+
+## Amendment A1, 2026-10-29: Part 3, the console's own screening path
+
+**Reason.** The console does not screen with `screen_catalog`. It screens
+with `screen_window` on a resident index of states the engine sampled, and
+the owner's question is about our screen. This amendment is registered after
+the freeze (`de66600`) and before Part 3 runs. Parts 1 and 2 and their rules
+are unchanged.
+
+### How the console screens
+
+spaceaware-ui `88a29fc5`, read-only:
+
+| Step | What the console does | Where |
+| --- | --- | --- |
+| Settings | 24 h window (0.25–168 h), 15 km threshold, 10 m combined radius | `src/orbital-console/modes/cnj/surface.ts:104-106`, `:500` |
+| Controls | 60 s coarse step for a catalog screen (10 s for a pair), 1 ms refinement tolerance | `surface.ts:300-301` |
+| Batches | Primaries are the selected objects. Secondaries are the catalog in batches of 512. One index per batch holds every primary and the batch. Events are merged by id (`primary:secondary:tcaIso`). | `surface.ts:349-378`, `:416`; `cqrCodec.ts:312` |
+| Sampling | 60 s grid over the window ± 300 s, starting on a whole UTC second | `residentSamples.ts:9`, `:78-79`, `:22-31` |
+| Propagator | The states come from `propagatePathStateVectors` of `ctx.propagatorPlugin`, which in SGP4 mode is `"sgp4"` | `residentSamples.ts:45`, `:71`; `engine/propagatorPort.ts:2`; `modeSurfaceHost.svelte.ts:305` |
+| Same platform | Association-key pre-filter, then a coincident-state filter on a sample at the window start (1e-6 km, 1e-9 km/s), then a same-platform event filter | `residentSamples.ts:81`, `:88`, `:104`; `samePlatform.ts:6-7`, `:64-112` |
+| Index | `prepare_sample_screening_index` with INDEX_CONTENT `SAMPLED_STATES`, REFINEMENT_MODE `EXACT_ONLY` and `PRIMARY_SOURCE_HANDLES`. Each source is one OEM block: TEME, UTC, `HERMITE` degree 3, `STEP_SIZE` 60 s, [x y z vx vy vz] in km and km/s. | `cqrCodec.ts:127-151`, `:153-165`; `analysisWorker.ts:87` |
+| Windows | `screen_window` per 30-minute window, each followed by one coarse step of overlap except the last, drained to `FINAL_CHUNK`. Events are merged by id, then `destroy_screening_index`. | `analysisWorker.ts:94-136`, `:152` |
+
+OrbPro's `"sgp4"` plugin is the modules' `propagator/sgp4` artifact
+(`browser-shared` build). The references are OrbPro `219aa12c`,
+`packages/orbpro-integration/propagator.sgp4/index.js:146-148`.
+
+### Main arm, "console"
+
+- **States.** The states are made with `propagator/sgp4` at the pinned
+  modules commit `44ce9d27a`: its `isomorphic` artifact (the same source as
+  the console's `browser-shared` build, for a Node host), method
+  `propagate_ephemeris` in TEME. Each object is sampled on the console's grid
+  over 2026-10-28T17:00:00Z + 7 days ± 300 s at 60 s, 10,092 samples. JS
+  only arranges the module's lines into the console's OEM blocks.
+- **Index and windows.** Exactly as the console:
+  - one sampled index per batch of 512 secondaries plus the block's
+    primaries;
+  - 30-minute `screen_window` windows with 60 s of overlap;
+  - events merged by id, then by the 1 s rule.
+- **Same platform.** The coincident-state filter and the same-platform event
+  filter are applied. The association-key pre-filter needs the engine's
+  catalog records (StandardsLoader association and parent keys), which a GP
+  record does not carry, so it is not applied. This is stated in the report.
+- **Settings.** Parts 1 and 2's settings: 5 km, 60 s, 1 ms, `ALFANO_MAXIMUM`,
+  10 m. The console's default threshold is 15 km; 5 km is SOCRATES's.
+- **CA module.** If CA 0.10.0 (the sampled-source fix) is on modules
+  origin/main when Part 3 starts, its commit and artifact SHA-256 are pinned
+  and registered here before the run. Otherwise 0.9.0 at `44ce9d27a` is used,
+  and the result is labeled as the pre-fix console path.
+- **Population and span.**
+  - Part 1's block 0 (K = 1, its 300 primaries) against order positions
+    [300, N) in 64 batches of 512 (Part 1's pair set for block 0), over the
+    console's default window of 24 h.
+  - The span is the first day of the registered window,
+    2026-10-28T17:00:00Z to 2026-10-29T17:00:00Z, sampled over that day
+    ± 300 s.
+  - The timing probe (the week after the window, block 0, one batch, 2 h,
+    load about 50) measured:
+    - sampling: 0.3 s;
+    - index: 0.2 s;
+    - each 30-minute `screen_window`: about 3.2 s on 4 threads. The
+      sampled-state screen costs pairs × time.
+  - So one block over 7 days would take about 165 minutes on 7 processes,
+    beyond the 45-minute budget. Over 24 h it takes about 25 minutes.
+- **Sampling details.** `propagate_ephemeris` refuses a whole call when one
+  object fails ("SGP4 fails for NORAD n"). The named object is left out and
+  the call asked again, as the console skips an object it cannot sample.
+  The window-start identity state is the first of two lines, because the
+  module needs its stop after its start.
+
+### Spot arm, "descriptions"
+
+- **Method.** `prepare_screening_index` with SOURCE_DESCRIPTIONS and
+  EXACT_ONLY: SGP4 mean elements, so the module evaluates SGP4 itself, with
+  `PRIMARY_SOURCE_HANDLES`. Then `screen_window` per window and
+  `destroy_screening_index`.
+- **Origin.** The pattern is `residentWindow` in the module's
+  `analysis/conjunction-assessment/tests/screeningWindowUnion.test.mjs:102-110`
+  at `44ce9d27a`, read with `git show`.
+- **Scope.** Part 1's blocks 0 and 1, each index over order positions [p0, N),
+  seven 24 h windows from 17:00Z on the 60 s grid. Same settings and the same
+  pinned artifact.
+
+### Both arms
+
+A failed call is recorded as a finding. The index is prepared again on a new
+instance, and the span is screened in two halves, down to 900 s. Outputs use
+Part 1's run layout, so `compare.mjs --parts 1` reads them.
+
+### Comparisons
+
+1. **Against SOCRATES.** The SOCRATES rows with a member among the arm's
+   primaries whose TCA lies inside the arm's span, under exactly Part 1's
+   rules (matching, the 60 s edge rule at the span's ends, recall by class
+   and band, geometry and its tail). Labeled as a subset.
+   `compare.mjs` gains one filter, the reference rows inside the screen's
+   window. Every SOCRATES row already lies inside Parts 1 and 2's window, so
+   for them the filter changes nothing.
+2. **Against Part 1's `screen_catalog` events.** The arm is compared with
+   Part 1's events for the same blocks inside the arm's span, so the pair
+   sets are equal.
+   Encounters are paired by NORAD pair and TCA within 1 s, one to one.
+   - **Descriptions** must be identical to Part 1: the same encounters, with
+     |ΔTCA| ≤ 1 ms, |Δmiss| ≤ 1 mm and |Δspeed| ≤ 1 mm/s. The module's
+     README claims this for SGP4 with `ALFANO_MAXIMUM`; any difference is a
+     defect.
+   - **Console** is gated on encounter-set equality only. Its states come from
+     a different SGP4 implementation than Part 1's built-in, which is under
+     arbitration elsewhere (up to about 107 m at high BSTAR). Geometry
+     differences are reported by BSTAR band of the pair's larger |BSTAR|:
+     below 1e-4, from 1e-4 to 1e-3, and 1e-3 or above. An encounter found by
+     one arm only counts as explained in three cases:
+     - its miss lies within its band's largest matched |Δmiss| of 5 km, so
+       it crosses the threshold by less than the propagators differ;
+     - it involves an object the console path could not sample over the
+       span (the console skips such an object);
+     - it lies within 60 s of the span's ends.
+
+     Each explained encounter is listed. Any other encounter in one arm
+     only is a defect.
+
+### Schedule and fallback
+
+Part 3 runs straight after Part 2. If the 01:40Z target slips, Parts 1 and 2
+land first and Part 3 lands after them.

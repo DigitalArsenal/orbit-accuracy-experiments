@@ -113,6 +113,45 @@ if (m.extras.rows.length) {
 {
   const failed = m.screen.failedCalls ?? [];
   L.push('## Calls', '', failed.length ? `${failed.length} calls failed and were split (findings): ${failed.slice(0, 20).map((x) => `unit ${x.unit} (${x.seconds} s): ${x.error}`).join('; ')}.` : 'Every call completed; none was split.', '');
+  const inc = m.screen.incompleteUnits ?? [];
+  L.push(inc.length ? `**Finding (A0): ${m.screen.failedPairs} pair evaluations failed** in ${inc.length} calls answered \`incomplete-screening\` (the module's final result with STATISTICS.FAILED_PAIRS; its events are kept, the failed pairs are unscreened): ${inc.slice(0, 30).map((x) => `part ${x.part} unit ${x.unit} (block ${x.block}, slice ${x.slice}): ${x.failedPairs}`).join('; ')}.` : 'No call reported failed pair evaluations.', '');
+}
+// ---- Part 3 (Amendment A1): the console's own path ----------------------------------------------------------
+const a1 = ['console', 'descriptions'].map((armName) => {
+  const armRun = path.join(path.dirname(dir), `${path.basename(dir)}-${armName}`);
+  const mf = path.join(armRun, 'metrics.part1.json'), cf = path.join(armRun, `compare-a1.${armName}.json`);
+  return fs.existsSync(mf) && fs.existsSync(cf) ? { armName, armRun, metrics: JSON.parse(fs.readFileSync(mf, 'utf8')), cmp: JSON.parse(fs.readFileSync(cf, 'utf8')) } : null;
+}).filter(Boolean);
+if (a1.length) {
+  L.push('## Part 3 (Amendment A1): the console\'s own path', '');
+  L.push('| Arm | Method | Primaries | Span | Recall against SOCRATES (primary class) | Geometry beyond tolerance (TCA / miss / speed) | Against Part 1, encounter for encounter |', '| --- | --- | ---: | --- | --- | --- | --- |');
+  for (const x of a1) {
+    const sm = JSON.parse(fs.readFileSync(path.join(x.armRun, 'part1', 'screen-summary.json'), 'utf8'));
+    const g = x.metrics.geometry.primary.beyondTolerance;
+    const method = x.armName === 'console' ? 'SAMPLED_STATES (propagator/sgp4) → prepare_sample_screening_index → screen_window, 30 min windows' : 'SOURCE_DESCRIPTIONS → prepare_screening_index → screen_window, 24 h windows';
+    L.push(`| ${x.armName} | ${method} | ${sm.primaries.count} (${sm.primaries.blocks} block${sm.primaries.blocks === 1 ? '' : 's'}) | ${sm.window.startUtc} + ${(sm.window.slices * sm.window.sliceSeconds) / 3600} h | ${pct(x.metrics.recall.primary.all)} | ${g.tcaNlrv} / ${g.miss} / ${g.speed} | ${x.cmp.verdict.status}: ${x.cmp.paired.toLocaleString('en-US')} paired, ${x.cmp.onlyOneArm.total} in one arm only |`);
+    fs.writeFileSync(path.join(out, `a1-${x.armName}.metrics.json`), `${JSON.stringify(x.metrics, null, 2)}\n`);
+    fs.writeFileSync(path.join(out, `a1-${x.armName}.compare.json`), `${JSON.stringify(x.cmp, null, 2)}\n`);
+  }
+  L.push('');
+  for (const x of a1) {
+    L.push(`### ${x.armName}: against Part 1's screen_catalog`, '');
+    L.push(`Part 1 ${x.cmp.part1.events.toLocaleString('en-US')} encounters, ${x.armName} ${x.cmp.armEvents.events.toLocaleString('en-US')}; paired ${x.cmp.paired.toLocaleString('en-US')}. |ΔTCA| max ${f(x.cmp.all.tcaSeconds.max)} s, |Δmiss| max ${f(x.cmp.all.missM.max)} m, |Δspeed| max ${f(x.cmp.all.speedMS.max)} m/s. Rule: ${x.cmp.verdict.rule}.`, '');
+    if (x.armName === 'console') {
+      L.push('| BSTAR band (larger of the pair) | Paired | \\|ΔTCA\\| p99 / max (s) | \\|Δmiss\\| median / p99 / max (m) | \\|Δspeed\\| max (m/s) |', '| --- | ---: | --- | --- | ---: |');
+      for (const [b, q] of Object.entries(x.cmp.bands)) L.push(`| ${b} | ${q.paired.toLocaleString('en-US')} | ${f(q.tcaSeconds.p99)} / ${f(q.tcaSeconds.max)} | ${f(q.missM.median)} / ${f(q.missM.p99)} / ${f(q.missM.max)} | ${f(q.speedMS.max)} |`);
+      L.push('');
+    }
+    const byWhy = Object.entries(x.cmp.onlyOneArm.byExplanation);
+    if (byWhy.length) {
+      L.push('| Encounters in one arm only | Count |', '| --- | ---: |');
+      for (const [k, n] of byWhy) L.push(`| ${k} | ${n} |`);
+      L.push('');
+      L.push('| Side | Pair | TCA (UTC) | Miss (m) | Speed (m/s) | BSTAR band | Explanation |', '| --- | --- | --- | ---: | ---: | --- | --- |');
+      for (const r of x.cmp.onlyOneArm.rows.slice(0, 40)) L.push(`| ${r.side} | ${r.pair.join(' × ')} | ${r.tcaUtc} | ${f(r.missM, 5)} | ${f(r.speedMS, 5)} | ${r.band} | ${r.why ?? 'unexplained (defect)'} |`);
+      L.push('');
+    }
+  }
 }
 L.push('## Reproduce', '', '```sh', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 1', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 2 --run <run-id>', `node experiments/ca-socrates-gp-parity/compare.mjs --run runs/ca-socrates-gp-parity/${m.run} --parts ${m.parts.join(',')}`, `node experiments/ca-socrates-gp-parity/report.mjs --run runs/ca-socrates-gp-parity/${m.run} --tag ${m.tag}`, 'node experiments/ca-socrates-gp-parity/verify.mjs   # re-screens unit 0 and checks replay.json', '```', '');
 L.push('SOCRATES data: CelesTrak (T. S. Kelso), https://celestrak.org; cited by URL and SHA-256, not reproduced. GP element sets: Space-Track.org, kept on this machine.', '');
