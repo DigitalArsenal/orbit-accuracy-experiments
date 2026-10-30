@@ -1,0 +1,233 @@
+#!/usr/bin/env node
+// ca-socrates-gp-parity, step 3: results/ca-socrates-gp-parity/ from a registered run's metrics (generated, never typed).
+//   node experiments/ca-socrates-gp-parity/report.mjs --run runs/ca-socrates-gp-parity/<run-id> [--tag full|part1]
+// --tag part1 renders Part 1 alone, labeled as a subset (used only when Part 2 cannot finish).
+// Writes metrics.json (the comparison's aggregates and listed rows), manifest.json (both steps' manifests and the
+// hashes of what they read and wrote), replay.json (the digest verify.mjs re-derives) and README.md.
+import fs from 'node:fs';
+import path from 'node:path';
+import { parseArgs } from 'node:util';
+import { repo, id, sha256, config, a2 } from './common.mjs';
+
+const { values: o } = parseArgs({ options: { run: { type: 'string' }, tag: { type: 'string', default: 'full' }, dev: { type: 'boolean', default: false }, out: { type: 'string' }, amendment: { type: 'string' } } });
+// --amendment A2: the run is Amendment A2's; its files carry the prefix a2- and its report becomes README.md, the
+// 0.9.0 report kept beside it as README-0.9.0.md.
+const amend = o.amendment ?? null, prefix = amend ? `${amend.toLowerCase()}-` : '';
+if (amend && amend !== 'A2') throw new Error(`unknown amendment ${amend}`);
+// --dev renders a dev comparison (metrics.dev-<tag>.json) into --out, never into results/.
+const dir = path.resolve(o.run);
+const read = (f) => fs.readFileSync(path.join(dir, f));
+const tagFile = o.dev ? `dev-${o.tag}` : o.tag;
+const m = JSON.parse(read(`metrics.${tagFile}.json`));
+const metrics0 = m;
+if (!o.dev && m.mode !== 'registered') throw new Error('report renders only a registered run');
+if (o.dev && !o.out) throw new Error('--dev needs --out');
+const screenManifest = m.screenManifests[0];
+const out = o.dev ? path.resolve(o.out) : path.join(repo, 'results', id);
+fs.mkdirSync(out, { recursive: true });
+
+// The replay digest: unit 0 (block 0, slice 0), events sorted by pair and TCA, rounded to 1e-9 d, 1 mm and 1 mm/s.
+const unit0 = JSON.parse(read('part1/slices/slice-0000.json'));
+const canon = unit0.events.map((e) => [Math.min(e.a, e.b), Math.max(e.a, e.b), Math.round(e.tcaJd * 1e9), Math.round(e.missM * 1000), Math.round(e.speedMS * 1000)])
+  .sort((x, y) => x[0] - y[0] || x[1] - y[1] || x[2] - y[2]);
+const replay = { unit: 0, block: unit0.block, slice: unit0.slice, startJd: unit0.startJd, seconds: unit0.durationSeconds, events: canon.length,
+  digest: sha256(canon.map((r) => r.join(',')).join('\n')), rounding: 'TCA 1e-9 d, miss 1 mm, speed 1 mm/s; sorted by pair then TCA' };
+fs.writeFileSync(path.join(out, amend ? `replay.${amend.toLowerCase()}.json` : 'replay.json'), `${JSON.stringify(replay, null, 2)}\n`);
+if (amend && m.amendment !== amend) throw new Error(`metrics are not Amendment ${amend}'s`);
+fs.writeFileSync(path.join(out, `metrics.${prefix}${m.tag}.json`), `${JSON.stringify(m, null, 2)}\n`);
+const manifest = { experiment: id, run: m.run, tag: m.tag, plan: m.plan, screens: m.screenManifests.map((x) => ({ ...x, manifest: JSON.parse(read(`part${x.part}/manifest.screen.json`)) })),
+  compare: { finishedAt: m.runtime.finishedAt, node: m.runtime.node, outputs: Object.fromEntries(['metrics', 'extras', 'matches'].map((k) => [`${k}.${tagFile}.json`, sha256(read(`${k}.${tagFile}.json`))])) } };
+fs.writeFileSync(path.join(out, `manifest.${prefix}${m.tag}.json`), `${JSON.stringify(manifest, null, 2)}\n`);
+
+// ---- README ---------------------------------------------------------------------------------------------------
+const f = (x, d = 3) => (x === null || x === undefined ? '–' : typeof x === 'number' ? (Math.abs(x) >= 1000 ? x.toLocaleString('en-US', { maximumFractionDigits: 0 }) : x.toPrecision(d)) : String(x));
+const pct = (r) => (r.reference ? `${r.found.toLocaleString('en-US')} / ${r.reference.toLocaleString('en-US')} (${(100 * r.recall).toFixed(r.recall === 1 ? 0 : 3)} %)` : '–');
+const CLS = { primary: 'Both numbered below 100000, editions matched (GP on GP)', editionMismatch: 'Edition mismatch', numbered100000: 'An object numbered 100000 or above' };
+const L = [];
+// Labels from the SGP4 lane's per-row arbitration (annotate-tle.mjs), when present: beside the registered diagnosis.
+const annFile = path.join(dir, `annotations.${tagFile}.json`);
+const ann = fs.existsSync(annFile) ? JSON.parse(fs.readFileSync(annFile, 'utf8')) : null;
+const annLabel = new Map((ann?.misses.rows ?? []).map((r) => [`${r.pair.join('-')}|${r.socratesTcaUtc}`, r.label]));
+if (ann) fs.writeFileSync(path.join(out, `annotations.${m.tag}.json`), `${JSON.stringify({ ...ann, misses: { ...ann.misses, rows: ann.misses.rows.map(({ perRow, ...r }) => ({ ...r, fullRangeM: perRow?.full ?? null, caRangeM: perRow?.ca ?? null })) }, tailNotAttributable: ann.tailNotAttributable.map(({ perRow, ...r }) => r) }, null, 2)}\n`);
+L.push(`# CA-SOCRATES results: our screen against one full SOCRATES run, GP on GP`, '');
+// The headline in plain words first (Amendment A2's run), computed from the metrics.
+if (amend) {
+  const baseMisses = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.metrics), 'utf8')).misses.length;
+  const p = m.recall.primary.all, g = m.geometry.primary;
+  const headline = p.found === p.reference && m.misses.length === 0
+    ? `**Our conjunction screen finds every SOCRATES event: ${p.found.toLocaleString('en-US')} of ${p.reference.toLocaleString('en-US')} GP-on-GP events, 0 misses, and every matched event agrees with SOCRATES within its print rounding (miss distance within ${f(g.missM.max)} m, relative speed within ${f(g.speedMS.max)} m/s). The ${baseMisses} misses of the 0.9.0 run are gone.**`
+    : `**Our conjunction screen finds ${p.found.toLocaleString('en-US')} of ${p.reference.toLocaleString('en-US')} GP-on-GP SOCRATES events, with ${m.misses.length} misses in all classes (the 0.9.0 run had ${baseMisses}).**`;
+  L.push(headline, '', `CelesTrak SOCRATES Plus, the full report of the run starting 2026-10-28T17:00Z (193,952 events over 7 days), against our production screen (\`screen_catalog\`, CA ${m.module.version}) on the same GP editions, the same population and the same window.`, '');
+}
+L.push(`Plan: [PLAN.md](../../experiments/${id}/PLAN.md) (commit \`${m.plan?.planCommit.slice(0, 10) ?? 'unregistered'}\`). Run \`${m.run}\`. Generated by \`report.mjs\` from the run's \`metrics.${m.tag}.json\`.`, '');
+const v = m.verdict;
+L.push(`**Coverage: ${v.coverage}.**${m.full ? '' : ' This is a subset of the population, not the whole of it.'}`, '');
+L.push(`**Verdict: ${v.status}.** Recall over the primary class: ${pct(m.recall.primary.all)}, ${v.recall.status}. Geometry within the registered tolerances: ${v.geometry.status} (beyond tolerance: NLRV TCA ${v.geometry.beyondTolerance.tcaNlrv}, miss ${v.geometry.beyondTolerance.miss}, speed ${v.geometry.beyondTolerance.speed}).`, '');
+// ---- Amendment A2: both verdicts, the hypotheses and the comparison with the 0.9.0 run ----------------------------
+if (amend) {
+  const base = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.metrics), 'utf8'));
+  const baseAnn = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.annotations), 'utf8'));
+  const keyOf = (x) => `${x.pair.join('-')}|${x.socratesTcaUtc}`;
+  const missedNow = new Set(m.misses.map(keyOf)), missedBefore = new Set(base.misses.map(keyOf));
+  const pairLevel = new Set(m.secondary.vlrvPairLevel.map(keyOf));
+  const byLabel = (label) => baseAnn.misses.rows.filter((r) => r.label === label);
+  const remain = (rows) => rows.filter((r) => missedNow.has(keyOf(r))).length;
+  const tle = byLabel(baseAnn.labels.tleRounding), pre = byLabel(baseAnn.labels.altitudePrefilter), slow = byLabel(baseAnn.labels.vlrvFound);
+  const pr = a2.printRounding, mt = JSON.parse(read(`matches.${tagFile}.json`)).filter((x) => Math.max(...x.pair) < 100000);
+  const overMiss = mt.filter((x) => Math.abs(x.dMissM) > pr.missM + pr.slack).length, overSpeed = mt.filter((x) => Math.abs(x.dSpeedMS) > pr.speedMS + pr.slack).length;
+  const H = [
+    ['H1', a2.hypotheses.H1, remain(tle) === 0, `${tle.length - remain(tle)} of ${tle.length} found`],
+    ['H2', a2.hypotheses.H2, remain(pre) === 0, `${pre.length - remain(pre)} of ${pre.length} found`],
+    ['H3', a2.hypotheses.H3, remain(slow) === slow.length && slow.every((r) => pairLevel.has(keyOf(r)) || !missedNow.has(keyOf(r))), `${remain(slow)} of ${slow.length} still missed under the primary rule; ${slow.filter((r) => pairLevel.has(keyOf(r))).length} found at pair level`],
+    ['H4', a2.hypotheses.H4, overMiss === 0 && overSpeed === 0, `${overMiss.toLocaleString('en-US')} of ${mt.length.toLocaleString('en-US')} matched primary-class events beyond 0.5 m, ${overSpeed} beyond 0.5 m/s; |Δmiss| max ${f(m.geometry.primary.missM.max)} m`],
+  ];
+  const sv = m.secondary.verdict;
+  L.push(`**Amendment A2: CA ${m.module.version} (\`${m.module.commit.slice(0, 9)}\`, SHA-256 \`${m.module.wasmSha256.slice(0, 12)}…\`), Parts 1 and 2 unchanged.** The 0.9.0 result is in [README-0.9.0.md](README-0.9.0.md).`, '');
+  L.push('| Verdict | Rule | Recall over the primary class | Geometry | Status |', '| --- | --- | --- | --- | --- |');
+  L.push(`| Primary | registered, unchanged | ${pct(m.recall.primary.all)} | beyond tolerance: NLRV TCA ${m.verdict.geometry.beyondTolerance.tcaNlrv}, miss ${m.verdict.geometry.beyondTolerance.miss}, speed ${m.verdict.geometry.beyondTolerance.speed} | **${m.verdict.status}** |`);
+  L.push(`| Secondary | ${a2.secondary.rule} | ${pct(m.secondary.recall.primary.all)} | as the primary | **${sv.status}** |`, '');
+  L.push('| Hypothesis (not a rule) | Result | Supported |', '| --- | --- | --- |');
+  for (const [k, text, ok, detail] of H) L.push(`| ${k}: ${text.replace(/\|/g, '\\|')} | ${detail.replace(/\|/g, '\\|')} | ${ok ? 'yes' : 'no'} |`);
+  L.push('', `Misses against the 0.9.0 run: ${[...missedBefore].filter((k) => !missedNow.has(k)).length} disappear, ${[...missedNow].filter((k) => !missedBefore.has(k)).length} appear, ${[...missedNow].filter((k) => missedBefore.has(k)).length} remain. Rows beyond a gated tolerance (primary class): ${Object.values(base.geometry.primary.beyondTolerance).join(' / ')} before (NLRV TCA / miss / speed), ${Object.values(m.geometry.primary.beyondTolerance).join(' / ')} now.`, '');
+}
+// The misses by cause, in the top lines (from the labels; the verdict above stays as registered).
+if (ann) {
+  const rows = ann.misses.rows, by = (label) => rows.filter((r) => r.label === label);
+  const pre = by(ann.labels.altitudePrefilter), slow = by(ann.labels.vlrvFound), tle = by(ann.labels.tleRounding);
+  const prePairs = [...new Map(pre.map((r) => [r.pair.join(' × '), r])).values()];
+  const dt = slow.map((r) => Math.abs(metrics0.misses.find((x) => x.pair.join('-') === r.pair.join('-') && x.socratesTcaUtc === r.socratesTcaUtc)?.nearestScreenEvent?.secondsFromSocrates ?? NaN)).filter(Number.isFinite);
+  L.push(`**The ${rows.length} misses by cause:** ${tle.length} from TLE rounding of OMM values, near the threshold (SOCRATES ${Math.round(Math.min(...tle.map((r) => r.socratesRangeM)))}–${Math.round(Math.max(...tle.map((r) => r.socratesRangeM)))} m); ${pre.length} from the altitude-prefilter screen defect, ${prePairs.length} pairs (primary class: ${prePairs.filter((r) => r.cls === 'primary').map((r) => r.pair.join(' × ')).join(' and ') || 'none'}); ${slow.length} formation pairs whose screen TCA is ${dt.length ? `${Math.round(Math.min(...dt))}–${Math.round(Math.max(...dt))} s` : 'more than 60 s'} from SOCRATES's, outside the 60 s match (below 10 m/s, here 0–2 m/s, the TCA of a flat minimum is ill-conditioned); ${rows.length - tle.length - pre.length - slow.length} other.`, '');
+  L.push(`**Tail:** ${Object.values(ann.tail).reduce((n, t) => n + t.attributableToTleRounding, 0).toLocaleString('en-US')} of ${Object.values(ann.tail).reduce((n, t) => n + t.beyondTolerance, 0).toLocaleString('en-US')} matched events beyond a registered tolerance are attributable to TLE rounding. **Incomplete screening:** ${m.screen.failedPairs} pair evaluations failed in ${(m.screen.incompleteUnits ?? []).length} calls.`, '');
+}
+// Module findings first (coordinator 2026-10-30: report the failed pair evaluations prominently).
+{
+  const inc = m.screen.incompleteUnits ?? [];
+  const F = [];
+  F.push(inc.length
+    ? `- **Failed pair evaluations (incomplete-screening).** \`screen_catalog\` answered ${inc.length} of its ${m.screen.units} calls with status 422 \`incomplete-screening\`: ${m.screen.failedPairs} pair evaluations failed and those pairs were not screened in those calls (Amendment A0 keeps each call's other events). Calls: ${inc.map((x) => `part ${x.part} block ${x.block} slice ${x.slice} (${x.failedPairs})`).join('; ')}.`
+    : `- **No failed pair evaluations.** None of the ${m.screen.units} \`screen_catalog\` calls answered \`incomplete-screening\`; every pair evaluation completed${amend ? ' (the 0.9.0 run had 27 failed evaluations in 3 calls, all in the slice from 2026-11-02T23:00Z)' : ''}.`);
+  if (ann) {
+    const pre = ann.misses.rows.filter((r) => r.label === ann.labels.altitudePrefilter);
+    F.push(`- **Altitude prefilter misses decaying objects.** ${pre.length} SOCRATES events (${new Set(pre.map((r) => r.pair.join('-'))).size} pairs; ${pre.filter((r) => r.cls === 'primary').length} in the primary class) have no screen event for their pair at all, though the module's own pair method puts each inside 5 km. In each pair the epoch perigee/apogee bands lie ${pre.map((r) => `${Math.round(r.bandGapKm)} km`).join(', ')} apart, beyond the screen's 50 km prefilter margin, and one object decays fast (|BSTAR| 0.03–0.09), crossing the other's altitude within the week: ${pre.map((r) => `${r.pair.join(' × ')} at ${r.socratesTcaUtc} (${Math.round(r.socratesRangeM)} m)`).join('; ')}.`);
+    F.push(`- **TLE rounding.** The CA module rebuilds each OMM as TLE text (BSTAR to 5 significant digits, eccentricity to 7 decimals); SOCRATES propagates the OMM at full precision. ${ann.misses.tleRounding} misses (threshold crossings) and ${Object.values(ann.tail).reduce((n, t) => n + t.attributableToTleRounding, 0).toLocaleString('en-US')} of ${Object.values(ann.tail).reduce((n, t) => n + t.beyondTolerance, 0).toLocaleString('en-US')} geometry-tail rows are ${ann.labels.tleRounding}.`);
+    if (ann.misses.vlrvFound) F.push(`- **Slow pairs.** ${ann.misses.vlrvFound} misses are formation pairs below 10 m/s whose minimum the screen reports more than 60 s from SOCRATES's TCA (a flat minimum): found, not matched by the registered rule.`);
+  }
+  L.push('## Findings', '', ...F, '');
+}
+L.push('## Inputs', '');
+L.push('| Item | Value |', '| --- | --- |');
+L.push(`| SOCRATES | \`${m.socrates.url}\`, ${m.socrates.rows.toLocaleString('en-US')} rows, SHA-256 \`${m.socrates.sha256}\`, Last-Modified ${m.socrates.lastModified} |`);
+L.push(`| Window | ${m.socrates.window.startUtc} + ${m.socrates.window.durationSeconds / 86400} d, 5 km |`);
+L.push(`| Catalog | \`${m.catalog.snapshot}\` (SHA-256 \`${m.catalog.snapshotSha256}\`), cut ${m.catalog.cutUtc}Z, ${m.catalog.replaced.length} editions replaced from gp_history (${m.catalog.replaced.join(', ')}); ${m.catalog.objects.toLocaleString('en-US')} objects, $OMM stream \`${m.catalog.ommStreamSha256}\` |`);
+L.push(`| Editions | ${m.editions.matched.toLocaleString('en-US')} of ${m.editions.reportObjects.toLocaleString('en-US')} report objects matched; ${m.editions.mismatched.length} mismatched; ${m.editions.absent.length} absent |`);
+L.push(`| Module | \`${screenManifest.module.path}\` at \`${screenManifest.module.commit}\`, SHA-256 \`${screenManifest.module.wasmSha256}\` |`);
+L.push(`| Screen | \`screen_catalog\`, SGP4 (analytic, no integrator step), coarse step ${config.screen.coarseStepSeconds} s, refinement tolerance ${config.screen.refinementToleranceSeconds * 1000} ms, ${config.screen.algorithm}, ${config.screen.combinedRadiusM} m combined radius |`);
+for (const q of m.screen.primaries) L.push(`| Part ${q.part} | primaries ${q.from.toLocaleString('en-US')}–${q.to.toLocaleString('en-US')} of ${q.eligible.toLocaleString('en-US')} active payloads ranked by SHA-256 of \`${q.seed}:<NORAD>\` (list SHA-256 \`${q.listSha256}\`), ${q.blockSize}-primary blocks against the whole catalog |`);
+L.push(`| Calls | ${m.screen.units.toLocaleString('en-US')} calls of ${config.screen.sliceSeconds / 3600} h on ${m.screen.processes} processes × ${m.screen.threads} threads; wall ${m.screen.wallMinutes.map((x) => f(x)).join(' + ')} min for the invocation that finished each part (Part 1's first invocation stopped at unit 21 after 483 units, Amendment A0) |`);
+L.push(`| Screen output | ${m.screen.rawEvents.toLocaleString('en-US')} events, ${m.screen.merged} merged across calls, ${m.screen.outOfWindow} outside the window, ${m.screen.excludedObjects} objects excluded somewhere (SGP4 could not propagate them) |`, '');
+L.push('## Recall', '');
+L.push('| Class | Below 1 km | 1 to 5 km | All |', '| --- | --- | --- | --- |');
+for (const [c, name] of Object.entries(CLS)) L.push(`| ${name} | ${pct(m.recall[c]['below 1 km'])} | ${pct(m.recall[c]['1 to 5 km'])} | ${pct(m.recall[c].all)} |`);
+L.push('', `SOCRATES rows within ${config.comparison.windowEdgeSeconds} s of either end of the window are counted apart and never enter a recall denominator: ${m.edgeRows.reference}, of which the screen reports ${m.edgeRows.found}.`, '');
+const missBy = {};
+for (const x of m.misses) { missBy[x.cls] ??= {}; missBy[x.cls][x.diagnosis] = (missBy[x.cls][x.diagnosis] ?? 0) + 1; }
+L.push(`### SOCRATES events the screen does not report (${m.misses.length.toLocaleString('en-US')})`, '');
+if (m.misses.length) {
+  L.push('| Class | First diagnosis | Count |', '| --- | --- | ---: |');
+  for (const [c, d] of Object.entries(missBy)) for (const [k, n] of Object.entries(d)) L.push(`| ${CLS[c]} | ${k} | ${n} |`);
+  L.push('', `Each miss (first ${Math.min(m.misses.length, 200)}; all are in \`metrics.json\`):`, '');
+  if (ann) L.push(`Labels from the SGP4 lane's arbitration of every SOCRATES row (full-precision SGP4 against the CA module's TLE-text path; per-row file SHA-256 \`${ann.perRowSource.sha256}\`, not reproduced): ${ann.misses.tleRounding} misses ${ann.labels.tleRounding}; ${ann.misses.altitudePrefilter} from the ${ann.labels.altitudePrefilter.split(':')[0]}; ${ann.misses.vlrvFound} found at a slow pair's flat minimum outside the match window; ${ann.misses.other} other.`, '');
+  L.push('| Pair | Names | SOCRATES TCA (UTC) | Range (m) | Speed (m/s) | Nearest screen event of the pair | Module minimum near SOCRATES TCA | Diagnosis | Label |', '| --- | --- | --- | ---: | ---: | --- | --- | --- | --- |');
+  for (const x of [...m.misses].sort((a, b) => (a.cls === 'primary' ? 0 : 1) - (b.cls === 'primary' ? 0 : 1) || a.socratesRangeM - b.socratesRangeM).slice(0, 200)) {
+    const near = x.nearestScreenEvent ? `${f(x.nearestScreenEvent.secondsFromSocrates, 4)} s, ${f(x.nearestScreenEvent.missM, 5)} m` : 'none';
+    const pm = x.pairMethod ? (x.pairMethod.error ? x.pairMethod.error : `${f(x.pairMethod.missM, 5)} m at ${f(x.pairMethod.secondsFromSocrates, 3)} s`) : '–';
+    L.push(`| ${x.pair.join(' × ')} | ${x.names.join(' × ')} | ${x.socratesTcaUtc} | ${f(x.socratesRangeM, 4)} | ${f(x.socratesSpeedMS, 5)} | ${near} | ${pm} | ${x.diagnosis} | ${annLabel.get(`${x.pair.join('-')}|${x.socratesTcaUtc}`) ?? '–'} |`);
+  }
+  L.push('');
+}
+L.push('## Geometry of matched events', '');
+L.push(`Absolute differences, screen minus SOCRATES. Tolerances (\`caParityTolerances.mjs\`): NLRV TCA ≤ ${m.tolerances.tcaNlrvSeconds * 1000} ms, miss ≤ ${m.tolerances.missM} m, speed ≤ ${m.tolerances.speedMS} m/s; LRV and VLRV TCA recorded, not gated. SOCRATES reports range to 1 m, speed to 1 m/s and TCA to 1 ms.`, '');
+L.push('| Class | Stratum | Matched | \\|ΔTCA\\| median / p99 / max (ms) | Beyond 10 ms | \\|Δmiss\\| median / p99 / max (m) | Beyond 5 m | \\|Δspeed\\| p99 / max (m/s) | Beyond 5 m/s |', '| --- | --- | ---: | --- | ---: | --- | ---: | --- | ---: |');
+for (const [c, name] of Object.entries(CLS)) {
+  const g = m.geometry[c];
+  for (const st of ['NLRV', 'LRV', 'VLRV']) {
+    const b = g.byStratum?.[st];
+    if (!b?.matched) continue;
+    L.push(`| ${name} | ${st}${b.tcaGated ? '' : ' (TCA not gated)'} | ${b.matched.toLocaleString('en-US')} | ${f(b.tcaSeconds.median * 1000)} / ${f(b.tcaSeconds.p99 * 1000)} / ${f(b.tcaSeconds.max * 1000)} | ${b.beyond.tca} | ${f(b.missM.median)} / ${f(b.missM.p99)} / ${f(b.missM.max)} | ${b.beyond.miss} | ${f(b.speedMS.p99)} / ${f(b.speedMS.max)} | ${b.beyond.speed} |`);
+  }
+}
+if (ann) L.push('', `**The tail is TLE rounding.** Rows beyond any gated tolerance, and how many the SGP4 lane's per-row arbitration attributes to ${ann.labels.tleRounding} (full precision reproduces SOCRATES within 1 m and the as-shipped CA path reproduces our screen within 1 m): ${Object.entries(ann.tail).map(([c, t]) => `${CLS[c]}: ${t.attributableToTleRounding.toLocaleString('en-US')} of ${t.beyondTolerance.toLocaleString('en-US')}`).join('; ')}.`);
+L.push('', `Days since epoch, module against SOCRATES (each matched object), largest difference: ${Object.entries(CLS).map(([c, name]) => `${name} ${f(m.geometry[c].dseDays.max)} d`).join('; ')}.`, '');
+for (const [c, name] of Object.entries(CLS)) {
+  const w = m.geometry[c]?.worst;
+  if (!w) continue;
+  for (const [k, label] of [['tcaNlrv', 'NLRV TCA beyond 10 ms'], ['miss', 'miss beyond 5 m'], ['speed', 'speed beyond 5 m/s']]) {
+    if (!w[k]?.length) continue;
+    L.push(`Largest ${label}, ${name} (first ${w[k].length} of ${m.geometry[c].beyondTolerance[k]}):`, '');
+    L.push('| Pair | SOCRATES TCA | Range (m) | Speed (m/s) | ΔTCA (s) | Δmiss (m) | Δspeed (m/s) |', '| --- | --- | ---: | ---: | ---: | ---: | ---: |');
+    for (const x of w[k].slice(0, 20)) L.push(`| ${x.pair.join(' × ')} | ${x.socratesTcaUtc} | ${f(x.socratesRangeM, 4)} | ${f(x.socratesSpeedMS, 5)} | ${f(x.dtSeconds, 3)} | ${f(x.dMissM, 3)} | ${f(x.dSpeedMS, 3)} |`);
+    L.push('');
+  }
+}
+L.push('Maximum probability (information only; SOCRATES does not publish its radii, ours is 10 m combined):', '');
+L.push('| Class | Compared | log10(ours / SOCRATES) median / p95 / max | Ours lower |', '| --- | ---: | --- | ---: |');
+for (const [c, name] of Object.entries(CLS)) { const g = m.geometry[c]; if (g.pcCompared) L.push(`| ${name} | ${g.pcCompared.toLocaleString('en-US')} | ${f(g.log10PcRatio.median)} / ${f(g.log10PcRatio.p95)} / ${f(g.log10PcRatio.max)} | ${g.pcRatioBelowOne.toLocaleString('en-US')} |`); }
+L.push('');
+L.push(`## Screen events SOCRATES does not list (${m.extras.total.toLocaleString('en-US')})`, '');
+L.push('| Class | Explanation | Count |', '| --- | --- | ---: |');
+for (const [c, d] of Object.entries(m.extras.byClass)) for (const [k, n] of Object.entries(d).sort((a, b) => b[1] - a[1])) L.push(`| ${CLS[c]} | ${k} | ${n.toLocaleString('en-US')} |`);
+L.push('');
+if (m.extras.rows.length) {
+  L.push(`Unexplained or unverified (${m.extras.unexplainedOrUnverified.toLocaleString('en-US')}; the ${m.extras.rows.length} closest):`, '');
+  L.push('| Pair | Names | Statuses | TCA (UTC) | Miss (m) | Speed (m/s) | Class | Explanation |', '| --- | --- | --- | --- | ---: | ---: | --- | --- |');
+  for (const x of m.extras.rows) L.push(`| ${x.pair.join(' × ')} | ${x.names.join(' × ')} | ${x.statuses.map((s) => s ?? '–').join(' / ')} | ${x.tcaUtc} | ${f(x.missM, 5)} | ${f(x.speedMS, 5)} | ${x.cls} | ${x.why} |`);
+  L.push('');
+}
+{
+  const failed = m.screen.failedCalls ?? [];
+  L.push('## Calls', '', failed.length ? `${failed.length} calls failed and were split (findings): ${failed.slice(0, 20).map((x) => `unit ${x.unit} (${x.seconds} s): ${x.error}`).join('; ')}.` : 'Every call completed; none was split.', '');
+  const inc = m.screen.incompleteUnits ?? [];
+  L.push(inc.length ? `**Finding (A0): ${m.screen.failedPairs} pair evaluations failed** in ${inc.length} calls answered \`incomplete-screening\` (the module's final result with STATISTICS.FAILED_PAIRS; its events are kept, the failed pairs are unscreened): ${inc.slice(0, 30).map((x) => `part ${x.part} unit ${x.unit} (block ${x.block}, slice ${x.slice}): ${x.failedPairs}`).join('; ')}.` : 'No call reported failed pair evaluations.', '');
+}
+// ---- Part 3 (Amendment A1): the console's own path ----------------------------------------------------------
+const a1 = ['console', 'descriptions'].map((armName) => {
+  const armRun = path.join(path.dirname(dir), `${path.basename(dir)}-${armName}`);
+  const mf = path.join(armRun, 'metrics.part1.json'), cf = path.join(armRun, `compare-a1.${armName}.json`);
+  return fs.existsSync(mf) && fs.existsSync(cf) ? { armName, armRun, metrics: JSON.parse(fs.readFileSync(mf, 'utf8')), cmp: JSON.parse(fs.readFileSync(cf, 'utf8')) } : null;
+}).filter(Boolean);
+if (a1.length) {
+  L.push('## Part 3 (Amendment A1): the console\'s own path', '');
+  L.push('| Arm | Method | Primaries | Span | Recall against SOCRATES (primary class) | Geometry beyond tolerance (TCA / miss / speed) | Against Part 1, encounter for encounter |', '| --- | --- | ---: | --- | --- | --- | --- |');
+  for (const x of a1) {
+    const sm = JSON.parse(fs.readFileSync(path.join(x.armRun, 'part1', 'screen-summary.json'), 'utf8'));
+    const g = x.metrics.geometry.primary.beyondTolerance;
+    const method = x.armName === 'console' ? 'SAMPLED_STATES (propagator/sgp4) → prepare_sample_screening_index → screen_window, 30 min windows' : 'SOURCE_DESCRIPTIONS → prepare_screening_index → screen_window, 24 h windows';
+    L.push(`| ${x.armName} | ${method} | ${sm.primaries.count} (${sm.primaries.blocks} block${sm.primaries.blocks === 1 ? '' : 's'}) | ${sm.window.startUtc} + ${(sm.window.slices * sm.window.sliceSeconds) / 3600} h | ${pct(x.metrics.recall.primary.all)} | ${g.tcaNlrv} / ${g.miss} / ${g.speed} | ${x.cmp.verdict.status}: ${x.cmp.paired.toLocaleString('en-US')} paired, ${x.cmp.onlyOneArm.total} in one arm only |`);
+    fs.writeFileSync(path.join(out, `a1-${x.armName}.metrics.json`), `${JSON.stringify(x.metrics, null, 2)}\n`);
+    fs.writeFileSync(path.join(out, `a1-${x.armName}.compare.json`), `${JSON.stringify(x.cmp, null, 2)}\n`);
+  }
+  L.push('');
+  for (const x of a1) {
+    L.push(`### ${x.armName}: against Part 1's screen_catalog`, '');
+    L.push(`Part 1 ${x.cmp.part1.events.toLocaleString('en-US')} encounters, ${x.armName} ${x.cmp.armEvents.events.toLocaleString('en-US')}; paired ${x.cmp.paired.toLocaleString('en-US')}. |ΔTCA| max ${f(x.cmp.all.tcaSeconds.max)} s, |Δmiss| max ${f(x.cmp.all.missM.max)} m, |Δspeed| max ${f(x.cmp.all.speedMS.max)} m/s. Rule: ${x.cmp.verdict.rule}.`, '');
+    if (x.armName === 'console') {
+      L.push('| BSTAR band (larger of the pair) | Paired | \\|ΔTCA\\| p99 / max (s) | \\|Δmiss\\| median / p99 / max (m) | \\|Δspeed\\| max (m/s) |', '| --- | ---: | --- | --- | ---: |');
+      for (const [b, q] of Object.entries(x.cmp.bands)) L.push(`| ${b} | ${q.paired.toLocaleString('en-US')} | ${f(q.tcaSeconds.p99)} / ${f(q.tcaSeconds.max)} | ${f(q.missM.median)} / ${f(q.missM.p99)} / ${f(q.missM.max)} | ${f(q.speedMS.max)} |`);
+      L.push('');
+    }
+    const byWhy = Object.entries(x.cmp.onlyOneArm.byExplanation);
+    if (byWhy.length) {
+      L.push('| Encounters in one arm only | Count |', '| --- | ---: |');
+      for (const [k, n] of byWhy) L.push(`| ${k} | ${n} |`);
+      L.push('');
+      L.push('| Side | Pair | TCA (UTC) | Miss (m) | Speed (m/s) | BSTAR band | Explanation |', '| --- | --- | --- | ---: | ---: | --- | --- |');
+      for (const r of x.cmp.onlyOneArm.rows.slice(0, 40)) L.push(`| ${r.side} | ${r.pair.join(' × ')} | ${r.tcaUtc} | ${f(r.missM, 5)} | ${f(r.speedMS, 5)} | ${r.band} | ${r.why ?? 'unexplained (defect)'} |`);
+      L.push('');
+    }
+  }
+}
+L.push('## Reproduce', '', '```sh', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 1', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 2 --run <run-id>', `node experiments/ca-socrates-gp-parity/compare.mjs --run runs/ca-socrates-gp-parity/${m.run} --parts ${m.parts.join(',')}`, `node experiments/ca-socrates-gp-parity/report.mjs --run runs/ca-socrates-gp-parity/${m.run} --tag ${m.tag}`, 'node experiments/ca-socrates-gp-parity/verify.mjs   # re-screens unit 0 and checks replay.json', '```', '');
+L.push('SOCRATES data: CelesTrak (T. S. Kelso), https://celestrak.org; cited by URL and SHA-256, not reproduced. GP element sets: Space-Track.org, kept on this machine.', '');
+if (amend && fs.existsSync(path.join(out, 'README.md')) && !fs.existsSync(path.join(out, 'README-0.9.0.md'))) fs.copyFileSync(path.join(out, 'README.md'), path.join(out, 'README-0.9.0.md'));
+fs.writeFileSync(path.join(out, 'README.md'), L.join('\n'));
+console.log(JSON.stringify({ out, verdict: m.verdict.status, replay }));

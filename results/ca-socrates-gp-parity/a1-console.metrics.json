@@ -1,0 +1,633 @@
+{
+  "experiment": "ca-socrates-gp-parity",
+  "run": "ca-socrates-gp-parity-screen-20261029T215308Z-console",
+  "plan": {
+    "planCommit": "e899a118a38a744b3706910fb551a253eab88764",
+    "sourceHashes": {
+      "PLAN.md": "214b228ad993f5ca2cea66776ecf56fde841bcd2ff205951dbb5a87a7643aac3",
+      "config.json": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+      "common.mjs": "5538abc04b1742a9b129929209ad81de5bd64bc8017e00e5108612f740156ee6",
+      "screen.mjs": "de176c281da60cfcc7244b722fe0119a658b00086e08ab2db08ab4aefc9ee201",
+      "worker.mjs": "3f053ca78766a3dced548081ae527671637b2f2eab08062d0d501d11cb629f3d",
+      "compare.mjs": "a2aeb1e9a58ad9aa3d766f781fb31caeb9c79221e595569bb8d31129b878234a"
+    },
+    "experimentCommit": "3c15fe10fe6afd2e8ef97bf5641cec8f57f9209d"
+  },
+  "tag": "part1",
+  "mode": "registered",
+  "socrates": {
+    "url": "https://celestrak.org/SOCRATES/sort-minRange.csv",
+    "sha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+    "rows": 193952,
+    "lastModified": "Thu, 29 Oct 2026 08:04:08 GMT",
+    "window": {
+      "startUtc": "2026-10-28T17:00:00Z",
+      "startJd": 2461342.2083333335,
+      "durationSeconds": 604800,
+      "basis": "the report's TCAs run from 2026-10-28 17:00:08.230 to 2026-11-04 16:59:51.001 UTC; CelesTrak's page states 7 days and 5 km"
+    }
+  },
+  "catalog": {
+    "snapshot": "spacetrack/gp/2026/2026-10-28.json.gz",
+    "snapshotSha256": "36730df1d9a5845ceed7388ecf40f448b93567bfb69bbfacb638accc8cb38ac8",
+    "cutUtc": "2026-10-28T16:06:35",
+    "replaced": [
+      41882,
+      60182,
+      64062,
+      64393
+    ],
+    "objects": 32815,
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d"
+  },
+  "screenManifests": [
+    {
+      "part": 1,
+      "run": "ca-socrates-gp-parity-screen-20261029T215308Z-console",
+      "module": {
+        "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+        "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+        "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+        "packages": {
+          "space-data-module-sdk": "0.9.12",
+          "spacedatastandards.org": "1.271.0",
+          "flatbuffers": "25.9.23",
+          "flatc-wasm": "26.1.38"
+        }
+      },
+      "outputs": {
+        "screen-events.json": "1fbdbc58af88a5a1e15d6395cb0e077d5d88c21c3c31e822ee4b6fbb875bca8d",
+        "screen-summary.json": "ae849ec9a97d1ed6989605c367a11ac23cc203deb6791898da5ee4f40bfb9499",
+        "primaries.json": "e7c7a33c253a35f13798175103b1d74b1a4107f446f28c8232b94fe7637348eb"
+      },
+      "startedAt": "2026-10-30T02:51:32.436Z",
+      "finishedAt": "2026-10-30T03:18:43.130Z"
+    }
+  ],
+  "editions": {
+    "reportObjects": 24391,
+    "matched": 24391,
+    "mismatched": [],
+    "absent": []
+  },
+  "parts": [
+    1
+  ],
+  "full": false,
+  "screen": {
+    "primaries": [
+      {
+        "seed": "ca-socrates-gp-parity-20261029",
+        "eligible": 16818,
+        "part": 1,
+        "from": 0,
+        "to": 300,
+        "count": 300,
+        "blockSize": 300,
+        "listSha256": "566dc5a986702b0d86221f08183170075fd7eb92fd6e7da516cb6bac3adb4e7c",
+        "blocks": 1
+      }
+    ],
+    "units": 64,
+    "failedCalls": [],
+    "failedPairs": 0,
+    "incompleteUnits": [],
+    "rawEvents": 4193,
+    "merged": 1008,
+    "events": 3185,
+    "outOfWindow": 0,
+    "excludedObjects": 7,
+    "wallMinutes": [
+      26.36835
+    ],
+    "processes": 7,
+    "threads": 4
+  },
+  "reference": {
+    "rows": 786,
+    "byClass": {
+      "primary": 590,
+      "editionMismatch": 0,
+      "numbered100000": 196
+    }
+  },
+  "recall": {
+    "primary": {
+      "below 1 km": {
+        "reference": 26,
+        "found": 26,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 564,
+        "found": 564,
+        "recall": 1
+      },
+      "all": {
+        "reference": 590,
+        "found": 590,
+        "recall": 1
+      }
+    },
+    "editionMismatch": {
+      "below 1 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "1 to 5 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "all": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      }
+    },
+    "numbered100000": {
+      "below 1 km": {
+        "reference": 9,
+        "found": 9,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 187,
+        "found": 187,
+        "recall": 1
+      },
+      "all": {
+        "reference": 196,
+        "found": 196,
+        "recall": 1
+      }
+    }
+  },
+  "edgeRows": {
+    "reference": 0,
+    "found": 0,
+    "rows": []
+  },
+  "misses": [],
+  "geometry": {
+    "primary": {
+      "matched": 590,
+      "byStratum": {
+        "NLRV": {
+          "matched": 575,
+          "tcaSeconds": {
+            "n": 575,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.0008448958396911621
+          },
+          "missM": {
+            "n": 575,
+            "median": 0.24775796959784202,
+            "p95": 0.5170811168009095,
+            "p99": 0.7881487693128975,
+            "max": 6.484468986580396
+          },
+          "speedMS": {
+            "n": 575,
+            "median": 0.25753715619430295,
+            "p95": 0.48726805128899287,
+            "p99": 0.5293652191830915,
+            "max": 1.412830035902516
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 1,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 15,
+          "tcaSeconds": {
+            "n": 15,
+            "median": 0.007081031799316406,
+            "p95": 0.01754164695739746,
+            "p99": 0.01754164695739746,
+            "max": 0.01754164695739746
+          },
+          "missM": {
+            "n": 15,
+            "median": 0.22210182068101858,
+            "p95": 0.46029169221264965,
+            "p99": 0.46029169221264965,
+            "max": 0.46029169221264965
+          },
+          "speedMS": {
+            "n": 15,
+            "median": 0.2977108753682498,
+            "p95": 0.483080631960763,
+            "p99": 0.483080631960763,
+            "max": 0.483080631960763
+          },
+          "beyond": {
+            "tca": 5,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 590,
+        "median": 0.24775796959784202,
+        "p95": 0.5142838124058926,
+        "p99": 0.7881487693128975,
+        "max": 6.484468986580396
+      },
+      "speedMS": {
+        "n": 590,
+        "median": 0.26112580793324014,
+        "p95": 0.48629850208999414,
+        "p99": 0.5293652191830915,
+        "max": 1.412830035902516
+      },
+      "dseDays": {
+        "n": 1180,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "log10PcRatio": {
+        "n": 590,
+        "median": 0.42857038727814256,
+        "p95": 1.276304713386171,
+        "p99": 1.3833640088871844,
+        "max": 1.6031539170541138
+      },
+      "pcRatioBelowOne": 441,
+      "pcCompared": 590,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 1,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [
+          {
+            "pair": [
+              68439,
+              13609
+            ],
+            "names": [
+              "TRANSPORTER-16 OBJECT Z",
+              "SL-12 R/B(AUX MOTOR)"
+            ],
+            "socratesTcaUtc": "2026-10-29 01:15:18.715",
+            "socratesRangeM": 4890,
+            "socratesSpeedMS": 8716,
+            "screenTcaUtc": "2026-10-29T01:15:18.716Z",
+            "dtSeconds": 0.0006437301635742188,
+            "dMissM": -6.484468986580396,
+            "dSpeedMS": 1.412830035902516,
+            "stratum": "NLRV"
+          }
+        ],
+        "speed": []
+      }
+    },
+    "editionMismatch": {
+      "matched": 0,
+      "byStratum": {
+        "NLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 0
+      },
+      "speedMS": {
+        "n": 0
+      },
+      "dseDays": {
+        "n": 0
+      },
+      "log10PcRatio": {
+        "n": 0
+      },
+      "pcRatioBelowOne": 0,
+      "pcCompared": 0,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    },
+    "numbered100000": {
+      "matched": 196,
+      "byStratum": {
+        "NLRV": {
+          "matched": 193,
+          "tcaSeconds": {
+            "n": 193,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.0005230307579040527,
+            "max": 0.0005230307579040527
+          },
+          "missM": {
+            "n": 193,
+            "median": 0.2659363722350463,
+            "p95": 0.48868170777404885,
+            "p99": 0.7738566632090169,
+            "max": 1.4465062407562073
+          },
+          "speedMS": {
+            "n": 193,
+            "median": 0.27527270828613837,
+            "p95": 0.45882760099902953,
+            "p99": 0.48617553984513506,
+            "max": 0.5132740277276753
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 3,
+          "tcaSeconds": {
+            "n": 3,
+            "median": 0.04634857177734375,
+            "p95": 0.11196881532669067,
+            "p99": 0.11196881532669067,
+            "max": 0.11196881532669067
+          },
+          "missM": {
+            "n": 3,
+            "median": 0.16836226700070256,
+            "p95": 0.4092774755117716,
+            "p99": 0.4092774755117716,
+            "max": 0.4092774755117716
+          },
+          "speedMS": {
+            "n": 3,
+            "median": 0.1548944432192334,
+            "p95": 0.19277813876139716,
+            "p99": 0.19277813876139716,
+            "max": 0.19277813876139716
+          },
+          "beyond": {
+            "tca": 3,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 196,
+        "median": 0.2659363722350463,
+        "p95": 0.48868170777404885,
+        "p99": 0.7738566632090169,
+        "max": 1.4465062407562073
+      },
+      "speedMS": {
+        "n": 196,
+        "median": 0.2748723427666846,
+        "p95": 0.45882760099902953,
+        "p99": 0.48617553984513506,
+        "max": 0.5132740277276753
+      },
+      "dseDays": {
+        "n": 392,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "log10PcRatio": {
+        "n": 196,
+        "median": 0.9088496116296609,
+        "p95": 1.322903334832582,
+        "p99": 1.3978412982722141,
+        "max": 1.4987818425646724
+      },
+      "pcRatioBelowOne": 169,
+      "pcCompared": 196,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    }
+  },
+  "extras": {
+    "total": 2399,
+    "byClass": {
+      "primary": {
+        "unexplained": 2,
+        "population: intra-fleet (operational members of one constellation)": 2351,
+        "window edge": 6,
+        "threshold edge": 4
+      },
+      "editionMismatch": {
+        "population: intra-fleet (operational members of one constellation)": 35,
+        "unverified: an object never appears in the report": 1
+      }
+    },
+    "unexplainedOrUnverified": 3,
+    "rows": [
+      {
+        "pair": [
+          52737,
+          67093
+        ],
+        "names": [
+          "GHGSAT-C3",
+          "STARLINK-35784"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-28T22:54:29.353Z",
+        "missM": 3834.9599436430713,
+        "speedMS": 7485.846535985306,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          68206,
+          34037
+        ],
+        "names": [
+          "OBJECT J",
+          "COSMOS 2251 DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-29T14:31:32.296Z",
+        "missM": 4587.663080063128,
+        "speedMS": 14699.136792292282,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          58987,
+          45635
+        ],
+        "names": [
+          "CE-SAT-IE",
+          "FREGAT DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-29T12:21:11.094Z",
+        "missM": 4772.053811838284,
+        "speedMS": 14562.278691808657,
+        "cls": "primary",
+        "why": "unexplained"
+      }
+    ]
+  },
+  "tolerances": {
+    "source": "space-data-network-modules analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs (a2.8b-2026-07-13) at the pinned commit",
+    "sourceSha256": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae",
+    "strata": {
+      "nlrvMinMS": 50,
+      "lrvMinMS": 10
+    },
+    "tcaNlrvSeconds": 0.01,
+    "tcaLrvVlrv": "recorded, not gated (flat minimum)",
+    "missM": 5,
+    "speedMS": 5,
+    "pc": "information only (SOCRATES's radii are not published)"
+  },
+  "verdict": {
+    "coverage": "subset: part 1 only (300 of 16818 active primaries)",
+    "recall": {
+      "reference": 590,
+      "found": 590,
+      "status": "pass"
+    },
+    "geometry": {
+      "status": "fail",
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 1,
+        "speed": 0
+      }
+    },
+    "status": "fail"
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "cpus": 28,
+    "finishedAt": "2026-10-30T03:19:30.625Z"
+  }
+}

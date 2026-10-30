@@ -1,0 +1,76 @@
+{
+  "amendment": "A1",
+  "date": "2026-10-29",
+  "arms": {
+    "console": {
+      "blocks": 1,
+      "hours": 24,
+      "note": "Part 1's block 0 against the whole catalog in console batches of 512, over the console's default 24 h window (the first day of the registered window); 7 days would take about 165 minutes on 7 processes (probe), beyond the 45-minute budget"
+    },
+    "descriptions": {
+      "blocks": 2,
+      "hours": 168
+    }
+  },
+  "consoleBatchSize": 512,
+  "descriptionsWindowSeconds": 86400,
+  "sampleGroup": 64,
+  "processes": 7,
+  "threadsPerProcess": 4,
+  "caModule": {
+    "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+    "version": "0.9.0",
+    "label": "pre-fix console path (CA 0.10.0 not on modules origin/main when Part 3 was registered)"
+  },
+  "sgp4Module": {
+    "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+    "wasmPath": "propagator/sgp4/dist/isomorphic/module.wasm",
+    "wasmSha256": "d9fdd0575d8dc84fa418d1ec4a5e0f14c9a02683eaeec0904b53a0a18b239a97",
+    "manifestPath": "propagator/sgp4/plugin-manifest.json",
+    "pluginId": "com.orbpro.sgp4",
+    "version": "1.3.1",
+    "hostFiles": {
+      "propagator/sgp4/tests/lib/payloadEncoders.mjs": "73716100576358b57b3607b0c3423a4ebf988117fb934b81511660c09f5bbb99"
+    }
+  },
+  "consoleSource": {
+    "spaceaware-ui": "88a29fc5e71f51b4589142cf84bc3e9d0ca269d3",
+    "OrbPro": "219aa12c804b502d18e3cb746fc55777d2ca5cfa"
+  },
+  "comparison": {
+    "descriptionsBounds": {
+      "tcaSeconds": 0.001,
+      "missM": 0.001,
+      "speedMS": 0.001
+    },
+    "pairSeconds": 1,
+    "bstarBands": [
+      0.0001,
+      0.001
+    ]
+  },
+  "runSources": [
+    "part3.mjs",
+    "console-worker.mjs",
+    "window-worker.mjs",
+    "compare-a1.mjs",
+    "config.a1.json"
+  ],
+  "probe": {
+    "console": {
+      "window": "2026-11-05T17:00Z + 2 h",
+      "units": 1,
+      "sampleSeconds": 0.3,
+      "indexSeconds": 0.2,
+      "windowSeconds": 3.15,
+      "threads": 4,
+      "load": 50
+    },
+    "descriptions": {
+      "window": "2026-11-05T17:00Z + 6 h",
+      "seconds": 6.8,
+      "events": 1412,
+      "equalToScreenCatalogProbe": "1412 of 1412 encounters, dTCA 0, dmiss 0, dspeed 0 (development check, not registered)"
+    }
+  }
+}

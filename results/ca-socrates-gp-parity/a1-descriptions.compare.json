@@ -1,0 +1,130 @@
+{
+  "experiment": "ca-socrates-gp-parity",
+  "amendment": "A1",
+  "comparison": "ii",
+  "arm": "descriptions",
+  "run": "ca-socrates-gp-parity-screen-20261029T215308Z",
+  "blocks": 2,
+  "caModule": {
+    "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+    "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+    "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+    "packages": {
+      "space-data-module-sdk": "0.9.12",
+      "spacedatastandards.org": "1.271.0",
+      "flatbuffers": "25.9.23",
+      "flatc-wasm": "26.1.38"
+    }
+  },
+  "sgp4Module": null,
+  "part1": {
+    "events": 66691,
+    "mergedWithin1s": 0
+  },
+  "armEvents": {
+    "events": 66691,
+    "mergedWithin1s": 0,
+    "samePlatformDropped": 0,
+    "unsampledObjects": 41,
+    "skippedCoincident": 0
+  },
+  "paired": 66691,
+  "all": {
+    "tcaSeconds": {
+      "n": 66691,
+      "median": 0,
+      "p99": 0,
+      "max": 0
+    },
+    "missM": {
+      "n": 66691,
+      "median": 0,
+      "p99": 0,
+      "max": 0
+    },
+    "speedMS": {
+      "n": 66691,
+      "median": 0,
+      "p99": 0,
+      "max": 0
+    }
+  },
+  "bands": {
+    "0.0001 <= |B*| < 0.001": {
+      "paired": 47912,
+      "tcaSeconds": {
+        "n": 47912,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "missM": {
+        "n": 47912,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "speedMS": {
+        "n": 47912,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      }
+    },
+    "|B*| < 0.0001": {
+      "paired": 2332,
+      "tcaSeconds": {
+        "n": 2332,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "missM": {
+        "n": 2332,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "speedMS": {
+        "n": 2332,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      }
+    },
+    "|B*| >= 0.001": {
+      "paired": 16447,
+      "tcaSeconds": {
+        "n": 16447,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "missM": {
+        "n": 16447,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "speedMS": {
+        "n": 16447,
+        "median": 0,
+        "p99": 0,
+        "max": 0
+      }
+    }
+  },
+  "beyondDescriptionsBounds": 0,
+  "beyondRows": [],
+  "onlyOneArm": {
+    "total": 0,
+    "byExplanation": {},
+    "rows": []
+  },
+  "verdict": {
+    "rule": "identical to Part 1: same encounters, |ΔTCA| <= 1 ms, |Δmiss| <= 1 mm, |Δspeed| <= 1 mm/s",
+    "status": "identical",
+    "onlyOneArm": 0,
+    "beyondBounds": 0
+  }
+}

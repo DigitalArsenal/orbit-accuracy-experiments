@@ -1,0 +1,949 @@
+{
+  "experiment": "ca-screen-recall",
+  "mode": "registered",
+  "window": {
+    "startUtc": "2026-10-30T00:00:00Z",
+    "startJd": 2461343.5,
+    "durationSeconds": 259200
+  },
+  "subset": {
+    "seed": "ca-screen-recall-20261029",
+    "requested": 2000,
+    "eligible": 27685,
+    "selected": 2000,
+    "listSha256": "1c339a56875a9a3d0889a671b9d6928b82ea81c1a3718a60a2b7c41e1b42a83c"
+  },
+  "timeGrid": {
+    "maxLineVersusStateM": 4.547473508864641e-10
+  },
+  "reference": {
+    "events": 2525,
+    "inWindow": 2525,
+    "atWindowEdge": 0,
+    "outsideWindow": 0,
+    "belowOneKm": 132,
+    "oneToFiveKm": 1948,
+    "nearThreshold": 445,
+    "stats": {
+      "objects": 2000,
+      "samples": 25927,
+      "flaggedPairSamples": 815132,
+      "maxObjectSpeedKmS": 7.973986890953007,
+      "maxDuplicateSampleDiffKm": 0.0003207739496969367,
+      "brackets": 297766,
+      "kept": {
+        "s1": 8227,
+        "s2": 3031,
+        "s3": 2525
+      },
+      "moduleCalls": 309313,
+      "denseMs": 187108.731041,
+      "refineMs": 36408.78425,
+      "merged": 0
+    }
+  },
+  "arms": {
+    "defaults": {
+      "id": "defaults",
+      "thresholdM": 5000,
+      "elapsedMs": 22383.038583999994,
+      "chunks": 17,
+      "statistics": {
+        "TOTAL_OBJECTS": 2000,
+        "PAIRS_SCREENED": 1999000,
+        "PAIRS_PREFILTERED": 0,
+        "KD_TREE_CANDIDATES": 384424,
+        "TCA_REFINED": 5045127,
+        "CONJUNCTIONS_FOUND": 2080,
+        "PROPAGATIONS": 8642000,
+        "FAILED_PAIRS": 0
+      },
+      "excludedObjects": [],
+      "recall": {
+        "below 1 km": {
+          "reference": 132,
+          "found": 132,
+          "recall": 1,
+          "lowerBound": 0.9775606515105933
+        },
+        "1 to 5 km": {
+          "reference": 1948,
+          "found": 1948,
+          "recall": 1,
+          "lowerBound": 0.9984633316426555
+        },
+        "all": {
+          "reference": 2080,
+          "found": 2080,
+          "recall": 1,
+          "lowerBound": 0.9985607807700326
+        }
+      },
+      "misses": [],
+      "edge": {
+        "reference": 0,
+        "found": 0
+      },
+      "nearThreshold": {
+        "reference": 445,
+        "found": 0
+      },
+      "screenEvents": {
+        "total": 2080,
+        "outOfWindow": 0,
+        "matched": 2080,
+        "nearThreshold": 0,
+        "edge": 0,
+        "beyondReference": 0,
+        "duplicates": 0,
+        "falseEvents": []
+      },
+      "differences": {
+        "below 1 km": {
+          "matched": 132,
+          "tcaSeconds": {
+            "count": 132,
+            "median": 0.00024139881134033203,
+            "p95": 0.0005230307579040527,
+            "p99": 0.0010058283805847168,
+            "max": 0.0010460615158081055
+          },
+          "missM": {
+            "count": 132,
+            "median": 0.34310102009186494,
+            "p95": 3.039985945531953,
+            "p99": 6.016680238943877,
+            "max": 12.817270173911083
+          },
+          "signedMissMeanM": -0.023426992922923,
+          "signedTcaMeanSeconds": 0.000005486336621371183
+        },
+        "1 to 5 km": {
+          "matched": 1948,
+          "tcaSeconds": {
+            "count": 1948,
+            "median": 0.00024139881134033203,
+            "p95": 0.0006839632987976074,
+            "p99": 0.0010460615158081055,
+            "max": 0.8024901151657104
+          },
+          "missM": {
+            "count": 1948,
+            "median": 0.31447533780124104,
+            "p95": 3.815592783203101,
+            "p99": 10.43346064841353,
+            "max": 57.961238773343666
+          },
+          "signedMissMeanM": 0.0059765848435714,
+          "signedTcaMeanSeconds": -0.0004389501144264268
+        },
+        "all": {
+          "matched": 2080,
+          "tcaSeconds": {
+            "count": 2080,
+            "median": 0.00024139881134033203,
+            "p95": 0.0006839632987976074,
+            "p99": 0.0010460615158081055,
+            "max": 0.8024901151657104
+          },
+          "missM": {
+            "count": 2080,
+            "median": 0.31587474737909815,
+            "p95": 3.7411098868578847,
+            "p99": 10.43346064841353,
+            "max": 57.961238773343666
+          },
+          "signedMissMeanM": 0.004110588562236179,
+          "signedTcaMeanSeconds": -0.0004107454934945473
+        }
+      },
+      "outliers": {
+        "flagThresholds": {
+          "tcaSeconds": 1,
+          "missM": 5
+        },
+        "flagged": 61,
+        "rows": [
+          {
+            "pair": [
+              51126,
+              67024
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T01:23:31.055Z",
+            "referenceMissM": 4106.455004017998,
+            "dtSeconds": -0.006598234176635742,
+            "dMissM": -57.961238773343666
+          },
+          {
+            "pair": [
+              62555,
+              63059
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T19:30:32.193Z",
+            "referenceMissM": 2503.6881851883472,
+            "dtSeconds": -0.0008046627044677734,
+            "dMissM": -17.514351762792103
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T23:37:59.443Z",
+            "referenceMissM": 3541.3658319159113,
+            "dtSeconds": 0.0002816319465637207,
+            "dMissM": 16.53312978954682
+          },
+          {
+            "pair": [
+              59897,
+              67034
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T18:10:54.124Z",
+            "referenceMissM": 4022.911525954189,
+            "dtSeconds": -0.00024139881134033203,
+            "dMissM": 15.753621939686582
+          },
+          {
+            "pair": [
+              100558,
+              101004
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T20:34:53.333Z",
+            "referenceMissM": 4137.96449608114,
+            "dtSeconds": -0.0009655952453613281,
+            "dMissM": 15.424220514349145
+          },
+          {
+            "pair": [
+              100558,
+              101004
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T21:20:57.398Z",
+            "referenceMissM": 4371.206107249234,
+            "dtSeconds": -0.00048279762268066406,
+            "dMissM": -15.134013573296215
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T18:55:34.359Z",
+            "referenceMissM": 3557.7791788600407,
+            "dtSeconds": 0.00020116567611694336,
+            "dMissM": -14.938810393978656
+          },
+          {
+            "pair": [
+              59897,
+              67034
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T20:32:05.314Z",
+            "referenceMissM": 3010.176892454357,
+            "dtSeconds": -0.0010460615158081055,
+            "dMissM": 14.772908287025984
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T15:00:13.623Z",
+            "referenceMissM": 3684.9251403217954,
+            "dtSeconds": -0.0002816319465637207,
+            "dMissM": 14.754569583190914
+          },
+          {
+            "pair": [
+              100558,
+              101004
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T19:48:49.431Z",
+            "referenceMissM": 3429.1150570658897,
+            "dtSeconds": -0.00048279762268066406,
+            "dMissM": 14.378303378285182
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T13:26:05.184Z",
+            "referenceMissM": 1553.51083486903,
+            "dtSeconds": -0.0001609325408935547,
+            "dMissM": 14.16729324282096
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T22:03:51.098Z",
+            "referenceMissM": 1329.1737146770308,
+            "dtSeconds": 0.00012069940567016602,
+            "dMissM": 13.73907531656323
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T20:29:42.737Z",
+            "referenceMissM": 1413.304346284872,
+            "dtSeconds": 0.00012069940567016602,
+            "dMissM": -13.397214721053615
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T10:17:48.253Z",
+            "referenceMissM": 2626.461105056576,
+            "dtSeconds": -0.00036209821701049805,
+            "dMissM": -13.283637526471011
+          },
+          {
+            "pair": [
+              62099,
+              63059
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T08:39:23.573Z",
+            "referenceMissM": 4813.587554007283,
+            "dtSeconds": -0.0007644295692443848,
+            "dMissM": -13.05016057080229
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T08:43:39.762Z",
+            "referenceMissM": 4638.486192021659,
+            "dtSeconds": 0.00024139881134033203,
+            "dMissM": -12.858384059753007
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "below 1 km",
+            "referenceTcaUtc": "2026-11-01T11:51:56.726Z",
+            "referenceMissM": 600.4187586245139,
+            "dtSeconds": 0.00020116567611694336,
+            "dMissM": -12.817270173911083
+          },
+          {
+            "pair": [
+              62041,
+              66608
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T18:01:43.922Z",
+            "referenceMissM": 3441.9193131904535,
+            "dtSeconds": 0.00004023313522338867,
+            "dMissM": -12.445857582507415
+          },
+          {
+            "pair": [
+              62041,
+              66608
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T14:53:27.385Z",
+            "referenceMissM": 3462.5808010696933,
+            "dtSeconds": 0.00020116567611694336,
+            "dMissM": 11.73075765504882
+          },
+          {
+            "pair": [
+              61927,
+              63848
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T17:24:54.791Z",
+            "referenceMissM": 1840.6728315478078,
+            "dtSeconds": -0.00004023313522338867,
+            "dMissM": -10.750260931771209
+          },
+          {
+            "pair": [
+              53018,
+              58903
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-31T02:06:05.749Z",
+            "referenceMissM": 3804.4562754299864,
+            "dtSeconds": 0.0022932887077331543,
+            "dMissM": -10.43346064841353
+          },
+          {
+            "pair": [
+              61927,
+              63848
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T15:50:46.848Z",
+            "referenceMissM": 1973.6979727857222,
+            "dtSeconds": 0.0004023313522338867,
+            "dMissM": 10.38726357519181
+          },
+          {
+            "pair": [
+              61542,
+              101024
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T06:21:05.198Z",
+            "referenceMissM": 1993.458027262772,
+            "dtSeconds": -0.0015288591384887695,
+            "dMissM": 9.87026214380785
+          },
+          {
+            "pair": [
+              59270,
+              59391
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T20:40:33.358Z",
+            "referenceMissM": 3937.032759354305,
+            "dtSeconds": 0.0008448958396911621,
+            "dMissM": 9.813564775176928
+          },
+          {
+            "pair": [
+              59270,
+              59391
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T16:46:06.253Z",
+            "referenceMissM": 3822.3131608447907,
+            "dtSeconds": 0.0003218650817871094,
+            "dMissM": 9.416162020620959
+          }
+        ]
+      },
+      "probability": {
+        "compared": 2080,
+        "missing": 0,
+        "relativeDifferenceAtScreenMiss": {
+          "count": 2080,
+          "median": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "relativeDifferenceAtReferenceMiss": {
+          "count": 2080,
+          "median": 0.0002228385308366951,
+          "p95": 0.003277696016391223,
+          "p99": 0.009743523778595721,
+          "max": 0.04721301048358115
+        }
+      },
+      "parity": {
+        "objects": 4160,
+        "unmatchedOrOtherFrame": 0,
+        "positionM": {
+          "count": 4160,
+          "median": 0.4039385464942956,
+          "p95": 5.439122846275176,
+          "p99": 9.22499620445461,
+          "max": 107.1966519952538
+        },
+        "velocityMS": {
+          "count": 4160,
+          "median": 0.00036537291582577463,
+          "p95": 0.006052901578427328,
+          "p99": 0.010185288101386495,
+          "max": 0.11949798665836567
+        },
+        "largest": [
+          {
+            "norad": 67024,
+            "positionM": 107.1966519952538,
+            "velocityMS": 0.11949798665836567,
+            "tcaUtc": "2026-10-30T01:23:31.049Z"
+          },
+          {
+            "norad": 67087,
+            "positionM": 105.549819434618,
+            "velocityMS": 0.11788818468846897,
+            "tcaUtc": "2026-10-30T11:24:00.684Z"
+          },
+          {
+            "norad": 53018,
+            "positionM": 29.9960314822216,
+            "velocityMS": 0.03394029679127158,
+            "tcaUtc": "2026-10-31T02:06:05.752Z"
+          },
+          {
+            "norad": 61542,
+            "positionM": 24.58509397546693,
+            "velocityMS": 0.02820362940312055,
+            "tcaUtc": "2026-11-01T08:38:44.616Z"
+          },
+          {
+            "norad": 61542,
+            "positionM": 23.75902791460796,
+            "velocityMS": 0.02692651005446234,
+            "tcaUtc": "2026-11-01T06:21:05.196Z"
+          }
+        ]
+      },
+      "gate": {
+        "reference": 132,
+        "found": 132,
+        "status": "pass"
+      },
+      "windows": 1,
+      "mergedAcrossEdges": 0,
+      "fallback": null
+    },
+    "console": {
+      "id": "console",
+      "thresholdM": 15000,
+      "elapsedMs": 369044.303125,
+      "chunks": 119,
+      "statistics": {
+        "TOTAL_OBJECTS": 6000,
+        "PAIRS_SCREENED": 5997000,
+        "PAIRS_PREFILTERED": 0,
+        "KD_TREE_CANDIDATES": 966666,
+        "TCA_REFINED": 15370085,
+        "CONJUNCTIONS_FOUND": 15004,
+        "PROPAGATIONS": 8646000,
+        "FAILED_PAIRS": 0
+      },
+      "excludedObjects": [],
+      "recall": {
+        "below 1 km": {
+          "reference": 132,
+          "found": 132,
+          "recall": 1,
+          "lowerBound": 0.9775606515105933
+        },
+        "1 to 5 km": {
+          "reference": 1948,
+          "found": 1948,
+          "recall": 1,
+          "lowerBound": 0.9984633316426555
+        },
+        "all": {
+          "reference": 2080,
+          "found": 2080,
+          "recall": 1,
+          "lowerBound": 0.9985607807700326
+        }
+      },
+      "misses": [],
+      "edge": {
+        "reference": 0,
+        "found": 0
+      },
+      "nearThreshold": {
+        "reference": 445,
+        "found": 445
+      },
+      "screenEvents": {
+        "total": 15004,
+        "outOfWindow": 0,
+        "matched": 2080,
+        "nearThreshold": 0,
+        "edge": 0,
+        "beyondReference": 12924,
+        "duplicates": 0,
+        "falseEvents": []
+      },
+      "differences": {
+        "below 1 km": {
+          "matched": 132,
+          "tcaSeconds": {
+            "count": 132,
+            "median": 0.00024139881134033203,
+            "p95": 0.0005230307579040527,
+            "p99": 0.0010058283805847168,
+            "max": 0.0010460615158081055
+          },
+          "missM": {
+            "count": 132,
+            "median": 0.34310102009186494,
+            "p95": 3.039985945531953,
+            "p99": 6.016680238943877,
+            "max": 12.817270173911083
+          },
+          "signedMissMeanM": -0.023426992922923,
+          "signedTcaMeanSeconds": 0.000005486336621371183
+        },
+        "1 to 5 km": {
+          "matched": 1948,
+          "tcaSeconds": {
+            "count": 1948,
+            "median": 0.00024139881134033203,
+            "p95": 0.0006839632987976074,
+            "p99": 0.0010460615158081055,
+            "max": 0.8024901151657104
+          },
+          "missM": {
+            "count": 1948,
+            "median": 0.31447533780124104,
+            "p95": 3.815592783203101,
+            "p99": 10.43346064841353,
+            "max": 57.961238773343666
+          },
+          "signedMissMeanM": 0.0059765848435714,
+          "signedTcaMeanSeconds": -0.0004389501144264268
+        },
+        "all": {
+          "matched": 2080,
+          "tcaSeconds": {
+            "count": 2080,
+            "median": 0.00024139881134033203,
+            "p95": 0.0006839632987976074,
+            "p99": 0.0010460615158081055,
+            "max": 0.8024901151657104
+          },
+          "missM": {
+            "count": 2080,
+            "median": 0.31587474737909815,
+            "p95": 3.7411098868578847,
+            "p99": 10.43346064841353,
+            "max": 57.961238773343666
+          },
+          "signedMissMeanM": 0.004110588562236179,
+          "signedTcaMeanSeconds": -0.0004107454934945473
+        }
+      },
+      "outliers": {
+        "flagThresholds": {
+          "tcaSeconds": 1,
+          "missM": 5
+        },
+        "flagged": 61,
+        "rows": [
+          {
+            "pair": [
+              51126,
+              67024
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T01:23:31.055Z",
+            "referenceMissM": 4106.455004017998,
+            "dtSeconds": -0.006598234176635742,
+            "dMissM": -57.961238773343666
+          },
+          {
+            "pair": [
+              62555,
+              63059
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T19:30:32.193Z",
+            "referenceMissM": 2503.6881851883472,
+            "dtSeconds": -0.0008046627044677734,
+            "dMissM": -17.514351762792103
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T23:37:59.443Z",
+            "referenceMissM": 3541.3658319159113,
+            "dtSeconds": 0.0002816319465637207,
+            "dMissM": 16.53312978954682
+          },
+          {
+            "pair": [
+              59897,
+              67034
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T18:10:54.124Z",
+            "referenceMissM": 4022.911525954189,
+            "dtSeconds": -0.00024139881134033203,
+            "dMissM": 15.753621939686582
+          },
+          {
+            "pair": [
+              100558,
+              101004
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T20:34:53.333Z",
+            "referenceMissM": 4137.96449608114,
+            "dtSeconds": -0.0009655952453613281,
+            "dMissM": 15.424220514349145
+          },
+          {
+            "pair": [
+              100558,
+              101004
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T21:20:57.398Z",
+            "referenceMissM": 4371.206107249234,
+            "dtSeconds": -0.00048279762268066406,
+            "dMissM": -15.134013573296215
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T18:55:34.359Z",
+            "referenceMissM": 3557.7791788600407,
+            "dtSeconds": 0.00020116567611694336,
+            "dMissM": -14.938810393978656
+          },
+          {
+            "pair": [
+              59897,
+              67034
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T20:32:05.314Z",
+            "referenceMissM": 3010.176892454357,
+            "dtSeconds": -0.0010460615158081055,
+            "dMissM": 14.772908287025984
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T15:00:13.623Z",
+            "referenceMissM": 3684.9251403217954,
+            "dtSeconds": -0.0002816319465637207,
+            "dMissM": 14.754569583190914
+          },
+          {
+            "pair": [
+              100558,
+              101004
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T19:48:49.431Z",
+            "referenceMissM": 3429.1150570658897,
+            "dtSeconds": -0.00048279762268066406,
+            "dMissM": 14.378303378285182
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T13:26:05.184Z",
+            "referenceMissM": 1553.51083486903,
+            "dtSeconds": -0.0001609325408935547,
+            "dMissM": 14.16729324282096
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T22:03:51.098Z",
+            "referenceMissM": 1329.1737146770308,
+            "dtSeconds": 0.00012069940567016602,
+            "dMissM": 13.73907531656323
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T20:29:42.737Z",
+            "referenceMissM": 1413.304346284872,
+            "dtSeconds": 0.00012069940567016602,
+            "dMissM": -13.397214721053615
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T10:17:48.253Z",
+            "referenceMissM": 2626.461105056576,
+            "dtSeconds": -0.00036209821701049805,
+            "dMissM": -13.283637526471011
+          },
+          {
+            "pair": [
+              62099,
+              63059
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-30T08:39:23.573Z",
+            "referenceMissM": 4813.587554007283,
+            "dtSeconds": -0.0007644295692443848,
+            "dMissM": -13.05016057080229
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T08:43:39.762Z",
+            "referenceMissM": 4638.486192021659,
+            "dtSeconds": 0.00024139881134033203,
+            "dMissM": -12.858384059753007
+          },
+          {
+            "pair": [
+              58873,
+              59554
+            ],
+            "band": "below 1 km",
+            "referenceTcaUtc": "2026-11-01T11:51:56.726Z",
+            "referenceMissM": 600.4187586245139,
+            "dtSeconds": 0.00020116567611694336,
+            "dMissM": -12.817270173911083
+          },
+          {
+            "pair": [
+              62041,
+              66608
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T18:01:43.922Z",
+            "referenceMissM": 3441.9193131904535,
+            "dtSeconds": 0.00004023313522338867,
+            "dMissM": -12.445857582507415
+          },
+          {
+            "pair": [
+              62041,
+              66608
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T14:53:27.385Z",
+            "referenceMissM": 3462.5808010696933,
+            "dtSeconds": 0.00020116567611694336,
+            "dMissM": 11.73075765504882
+          },
+          {
+            "pair": [
+              61927,
+              63848
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T17:24:54.791Z",
+            "referenceMissM": 1840.6728315478078,
+            "dtSeconds": -0.00004023313522338867,
+            "dMissM": -10.750260931771209
+          },
+          {
+            "pair": [
+              53018,
+              58903
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-10-31T02:06:05.749Z",
+            "referenceMissM": 3804.4562754299864,
+            "dtSeconds": 0.0022932887077331543,
+            "dMissM": -10.43346064841353
+          },
+          {
+            "pair": [
+              61927,
+              63848
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T15:50:46.848Z",
+            "referenceMissM": 1973.6979727857222,
+            "dtSeconds": 0.0004023313522338867,
+            "dMissM": 10.38726357519181
+          },
+          {
+            "pair": [
+              61542,
+              101024
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T06:21:05.198Z",
+            "referenceMissM": 1993.458027262772,
+            "dtSeconds": -0.0015288591384887695,
+            "dMissM": 9.87026214380785
+          },
+          {
+            "pair": [
+              59270,
+              59391
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T20:40:33.358Z",
+            "referenceMissM": 3937.032759354305,
+            "dtSeconds": 0.0008448958396911621,
+            "dMissM": 9.813564775176928
+          },
+          {
+            "pair": [
+              59270,
+              59391
+            ],
+            "band": "1 to 5 km",
+            "referenceTcaUtc": "2026-11-01T16:46:06.253Z",
+            "referenceMissM": 3822.3131608447907,
+            "dtSeconds": 0.0003218650817871094,
+            "dMissM": 9.416162020620959
+          }
+        ]
+      },
+      "probability": {
+        "compared": 2080,
+        "missing": 0,
+        "relativeDifferenceAtScreenMiss": {
+          "count": 2080,
+          "median": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "relativeDifferenceAtReferenceMiss": {
+          "count": 2080,
+          "median": 0.0002228385308366951,
+          "p95": 0.003277696016391223,
+          "p99": 0.009743523778595721,
+          "max": 0.04721301048358115
+        }
+      },
+      "parity": null,
+      "gate": null,
+      "windows": 3,
+      "mergedAcrossEdges": 0,
+      "fallback": null
+    }
+  },
+  "verdict": {
+    "reference": 132,
+    "found": 132,
+    "status": "pass"
+  }
+}

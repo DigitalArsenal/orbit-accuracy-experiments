@@ -1,0 +1,1967 @@
+{
+  "experiment": "ca-socrates-gp-parity",
+  "run": "ca-socrates-gp-parity-a2-screen-20261030T040914Z",
+  "plan": {
+    "planCommit": "742c7a216344c34d9a4dd6ab32192007964502b6",
+    "sourceHashes": {
+      "PLAN.md": "ecea8642822d0063878e36609181b89ab81795adf7b9534bb7682fdb5aec9e3b",
+      "config.json": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+      "config.a2.json": "5631ef77ded851092f4e2d26acce75ee24ff4e7ae53d38db7c9956225bebd029",
+      "common.mjs": "778452a3b5ac2ec8f1aeec4cf8742849657b17206bbb14dcb6fc911db3b54c65",
+      "screen.mjs": "63f653ec1684cf6d900e8d00c6b954199d6858d0cc7bc9105392321646a81feb",
+      "worker.mjs": "3f053ca78766a3dced548081ae527671637b2f2eab08062d0d501d11cb629f3d",
+      "compare.mjs": "fc2039b8e1a7819e21f8ffd60d5181ed6608eadca2643ca6091768abf933df8c"
+    },
+    "experimentCommit": "742c7a216344c34d9a4dd6ab32192007964502b6"
+  },
+  "tag": "full",
+  "mode": "registered",
+  "socrates": {
+    "url": "https://celestrak.org/SOCRATES/sort-minRange.csv",
+    "sha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+    "rows": 193952,
+    "lastModified": "Thu, 29 Oct 2026 08:04:08 GMT",
+    "window": {
+      "startUtc": "2026-10-28T17:00:00Z",
+      "startJd": 2461342.2083333335,
+      "durationSeconds": 604800,
+      "basis": "the report's TCAs run from 2026-10-28 17:00:08.230 to 2026-11-04 16:59:51.001 UTC; CelesTrak's page states 7 days and 5 km"
+    }
+  },
+  "catalog": {
+    "snapshot": "spacetrack/gp/2026/2026-10-28.json.gz",
+    "snapshotSha256": "36730df1d9a5845ceed7388ecf40f448b93567bfb69bbfacb638accc8cb38ac8",
+    "cutUtc": "2026-10-28T16:06:35",
+    "replaced": [
+      41882,
+      60182,
+      64062,
+      64393
+    ],
+    "objects": 32815,
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d"
+  },
+  "screenManifests": [
+    {
+      "part": 1,
+      "run": "ca-socrates-gp-parity-a2-screen-20261030T040914Z",
+      "module": {
+        "commit": "d575cd8cf9c336b3f1720797584a9558e2febcce",
+        "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+        "version": "0.12.0",
+        "wasmSha256": "91a3351f7ef9ffdd1ae60420bc4f8623bcb25f38d792a05547233880e290c036",
+        "packages": {
+          "space-data-module-sdk": "0.9.12",
+          "spacedatastandards.org": "1.271.0",
+          "flatbuffers": "25.9.23",
+          "flatc-wasm": "26.1.38"
+        },
+        "modulesCheckoutHead": "d575cd8cf9c336b3f1720797584a9558e2febcce"
+      },
+      "outputs": {
+        "screen-events.json": "9f90a69187ba6f769d16f0c4c62fc8dae7622d5da9493fdd2681d53e18f95dc8",
+        "screen-summary.json": "b7b97fcb848eb6421234744ec940b1430fbf13772fffd7d8507b156e76b40af1",
+        "primaries.json": "a19dd7e29d767f5c8600fff2c8acae4098a8f8cd2700a6b0719f6a064300eebf"
+      },
+      "startedAt": "2026-10-30T04:09:14.067Z",
+      "finishedAt": "2026-10-30T04:34:00.314Z"
+    },
+    {
+      "part": 2,
+      "run": "ca-socrates-gp-parity-a2-screen-20261030T040914Z",
+      "module": {
+        "commit": "d575cd8cf9c336b3f1720797584a9558e2febcce",
+        "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+        "version": "0.12.0",
+        "wasmSha256": "91a3351f7ef9ffdd1ae60420bc4f8623bcb25f38d792a05547233880e290c036",
+        "packages": {
+          "space-data-module-sdk": "0.9.12",
+          "spacedatastandards.org": "1.271.0",
+          "flatbuffers": "25.9.23",
+          "flatc-wasm": "26.1.38"
+        },
+        "modulesCheckoutHead": "d575cd8cf9c336b3f1720797584a9558e2febcce"
+      },
+      "outputs": {
+        "screen-events.json": "c1d471e596c7ebc0b9fac7240921da5755a73aa0fb837c1f408648868f868370",
+        "screen-summary.json": "1211805305f5a37fc00f9f286038f015445c53825e572eeff64bd5520f3df2d3",
+        "primaries.json": "56a8c795ec808d994c92ee776bdfc2c182ec2a67296d9c6e4e10bf65ab326783"
+      },
+      "startedAt": "2026-10-30T04:34:00.594Z",
+      "finishedAt": "2026-10-30T05:00:24.253Z"
+    }
+  ],
+  "editions": {
+    "reportObjects": 24391,
+    "matched": 24391,
+    "mismatched": [],
+    "absent": []
+  },
+  "parts": [
+    1,
+    2
+  ],
+  "full": true,
+  "screen": {
+    "primaries": [
+      {
+        "seed": "ca-socrates-gp-parity-20261029",
+        "eligible": 16818,
+        "part": 1,
+        "from": 0,
+        "to": 6000,
+        "count": 6000,
+        "blockSize": 300,
+        "listSha256": "597ae128c821bd013793968372b467e340230459092f1b5c34a19af1e0a3f2b6"
+      },
+      {
+        "seed": "ca-socrates-gp-parity-20261029",
+        "eligible": 16818,
+        "part": 2,
+        "from": 6000,
+        "to": 16818,
+        "count": 10818,
+        "blockSize": 300,
+        "listSha256": "d3d2c866cd8fb6e1d65fce7079090e99b34498463faa8581336d231bd7c91323"
+      }
+    ],
+    "units": 1596,
+    "failedCalls": [],
+    "failedPairs": 0,
+    "incompleteUnits": [],
+    "rawEvents": 958800,
+    "merged": 0,
+    "events": 958800,
+    "outOfWindow": 0,
+    "excludedObjects": 41,
+    "wallMinutes": [
+      24.05605,
+      25.691383333333334
+    ],
+    "processes": 7,
+    "threads": 4
+  },
+  "reference": {
+    "rows": 193952,
+    "byClass": {
+      "primary": 126104,
+      "editionMismatch": 0,
+      "numbered100000": 67848
+    }
+  },
+  "recall": {
+    "primary": {
+      "below 1 km": {
+        "reference": 5395,
+        "found": 5395,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 120682,
+        "found": 120682,
+        "recall": 1
+      },
+      "all": {
+        "reference": 126077,
+        "found": 126077,
+        "recall": 1
+      }
+    },
+    "editionMismatch": {
+      "below 1 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "1 to 5 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "all": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      }
+    },
+    "numbered100000": {
+      "below 1 km": {
+        "reference": 4006,
+        "found": 4006,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 63838,
+        "found": 63838,
+        "recall": 1
+      },
+      "all": {
+        "reference": 67844,
+        "found": 67844,
+        "recall": 1
+      }
+    }
+  },
+  "edgeRows": {
+    "reference": 31,
+    "found": 31,
+    "rows": [
+      {
+        "pair": [
+          50842,
+          58321
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:43.275",
+        "socratesRangeM": 914,
+        "found": true
+      },
+      {
+        "pair": [
+          100755,
+          101011
+        ],
+        "cls": "numbered100000",
+        "socratesTcaUtc": "2026-10-28 17:00:46.939",
+        "socratesRangeM": 1230,
+        "found": true
+      },
+      {
+        "pair": [
+          62368,
+          30088
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:54.237",
+        "socratesRangeM": 1715,
+        "found": true
+      },
+      {
+        "pair": [
+          56054,
+          21656
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:52.800",
+        "socratesRangeM": 1941,
+        "found": true
+      },
+      {
+        "pair": [
+          57014,
+          59392
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:17.484",
+        "socratesRangeM": 2196,
+        "found": true
+      },
+      {
+        "pair": [
+          48113,
+          49261
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:23.043",
+        "socratesRangeM": 2321,
+        "found": true
+      },
+      {
+        "pair": [
+          64874,
+          40794
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:16.322",
+        "socratesRangeM": 2472,
+        "found": true
+      },
+      {
+        "pair": [
+          52685,
+          58299
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:30.692",
+        "socratesRangeM": 2507,
+        "found": true
+      },
+      {
+        "pair": [
+          65489,
+          67251
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:08.845",
+        "socratesRangeM": 2660,
+        "found": true
+      },
+      {
+        "pair": [
+          100137,
+          60672
+        ],
+        "cls": "numbered100000",
+        "socratesTcaUtc": "2026-10-28 17:00:31.820",
+        "socratesRangeM": 2782,
+        "found": true
+      },
+      {
+        "pair": [
+          53216,
+          13771
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:24.595",
+        "socratesRangeM": 2833,
+        "found": true
+      },
+      {
+        "pair": [
+          65793,
+          100225
+        ],
+        "cls": "numbered100000",
+        "socratesTcaUtc": "2026-11-04 16:59:39.383",
+        "socratesRangeM": 3068,
+        "found": true
+      },
+      {
+        "pair": [
+          52760,
+          55280
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:41.108",
+        "socratesRangeM": 3188,
+        "found": true
+      },
+      {
+        "pair": [
+          58701,
+          58795
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:51.001",
+        "socratesRangeM": 3229,
+        "found": true
+      },
+      {
+        "pair": [
+          56124,
+          58701
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:25.506",
+        "socratesRangeM": 3622,
+        "found": true
+      },
+      {
+        "pair": [
+          49740,
+          58663
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:28.764",
+        "socratesRangeM": 3632,
+        "found": true
+      },
+      {
+        "pair": [
+          54752,
+          65397
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:04.022",
+        "socratesRangeM": 3925,
+        "found": true
+      },
+      {
+        "pair": [
+          63984,
+          23279
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:42.118",
+        "socratesRangeM": 3957,
+        "found": true
+      },
+      {
+        "pair": [
+          59106,
+          38341
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:12.552",
+        "socratesRangeM": 3998,
+        "found": true
+      },
+      {
+        "pair": [
+          61903,
+          66072
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:17.659",
+        "socratesRangeM": 4009.0000000000005,
+        "found": true
+      },
+      {
+        "pair": [
+          43572,
+          34028
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:43.634",
+        "socratesRangeM": 4051.9999999999995,
+        "found": true
+      },
+      {
+        "pair": [
+          58291,
+          67498
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:35.251",
+        "socratesRangeM": 4067,
+        "found": true
+      },
+      {
+        "pair": [
+          58258,
+          62391
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:08.230",
+        "socratesRangeM": 4418,
+        "found": true
+      },
+      {
+        "pair": [
+          57193,
+          62433
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:18.571",
+        "socratesRangeM": 4445,
+        "found": true
+      },
+      {
+        "pair": [
+          42825,
+          66308
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:21.061",
+        "socratesRangeM": 4459,
+        "found": true
+      },
+      {
+        "pair": [
+          69514,
+          100224
+        ],
+        "cls": "numbered100000",
+        "socratesTcaUtc": "2026-11-04 16:59:18.049",
+        "socratesRangeM": 4518,
+        "found": true
+      },
+      {
+        "pair": [
+          55988,
+          63216
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:58.906",
+        "socratesRangeM": 4550,
+        "found": true
+      },
+      {
+        "pair": [
+          53702,
+          54686
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:29.590",
+        "socratesRangeM": 4595,
+        "found": true
+      },
+      {
+        "pair": [
+          64597,
+          14818
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:26.581",
+        "socratesRangeM": 4677,
+        "found": true
+      },
+      {
+        "pair": [
+          37765,
+          4579
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-10-28 17:00:50.698",
+        "socratesRangeM": 4797,
+        "found": true
+      },
+      {
+        "pair": [
+          64775,
+          47436
+        ],
+        "cls": "primary",
+        "socratesTcaUtc": "2026-11-04 16:59:47.452",
+        "socratesRangeM": 4989,
+        "found": true
+      }
+    ]
+  },
+  "misses": [],
+  "geometry": {
+    "primary": {
+      "matched": 126077,
+      "byStratum": {
+        "NLRV": {
+          "matched": 124873,
+          "tcaSeconds": {
+            "n": 124873,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.0021323561668395996
+          },
+          "missM": {
+            "n": 124873,
+            "median": 0.25010572059818514,
+            "p95": 0.47554197969452616,
+            "p99": 0.49510515775000385,
+            "max": 0.5000706066818807
+          },
+          "speedMS": {
+            "n": 124873,
+            "median": 0.2507062791637509,
+            "p95": 0.4750089840563305,
+            "p99": 0.49514963628280384,
+            "max": 0.4999989627249306
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 216,
+          "tcaSeconds": {
+            "n": 216,
+            "median": 0.0005632638931274414,
+            "p95": 0.0031381845474243164,
+            "p99": 0.004787743091583252,
+            "max": 0.005391240119934082
+          },
+          "missM": {
+            "n": 216,
+            "median": 0.26045598694418004,
+            "p95": 0.4745402382186512,
+            "p99": 0.49784915816417197,
+            "max": 0.4991718382725594
+          },
+          "speedMS": {
+            "n": 216,
+            "median": 0.2454871148089559,
+            "p95": 0.47969801649583843,
+            "p99": 0.48934638080588044,
+            "max": 0.4957142994381911
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 988,
+          "tcaSeconds": {
+            "n": 988,
+            "median": 0.004667043685913086,
+            "p95": 0.03399699926376343,
+            "p99": 0.08803009986877441,
+            "max": 0.15393197536468506
+          },
+          "missM": {
+            "n": 988,
+            "median": 0.2455291035839764,
+            "p95": 0.4731006281662644,
+            "p99": 0.49661565419478393,
+            "max": 0.499827510621742
+          },
+          "speedMS": {
+            "n": 988,
+            "median": 0.2515282631163447,
+            "p95": 0.46447236095541866,
+            "p99": 0.4951502189949162,
+            "max": 0.49988145125730377
+          },
+          "beyond": {
+            "tca": 272,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 126077,
+        "median": 0.25010061993975796,
+        "p95": 0.475525689924325,
+        "p99": 0.4951105029628593,
+        "max": 0.5000706066818807
+      },
+      "speedMS": {
+        "n": 126077,
+        "median": 0.2507094360225892,
+        "p95": 0.47499455508477695,
+        "p99": 0.49514008004007337,
+        "max": 0.4999989627249306
+      },
+      "dseDays": {
+        "n": 252154,
+        "median": 0.00024947062507241213,
+        "p95": 0.00047488144040119806,
+        "p99": 0.0004947903305292378,
+        "max": 0.0004999995604157981
+      },
+      "log10PcRatio": {
+        "n": 126077,
+        "median": 0.4793157420517532,
+        "p95": 1.3633904978037454,
+        "p99": 1.396324979668295,
+        "max": 3.522594627703021
+      },
+      "pcRatioBelowOne": 86306,
+      "pcCompared": 126077,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    },
+    "editionMismatch": {
+      "matched": 0,
+      "byStratum": {
+        "NLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 0
+      },
+      "speedMS": {
+        "n": 0
+      },
+      "dseDays": {
+        "n": 0
+      },
+      "log10PcRatio": {
+        "n": 0
+      },
+      "pcRatioBelowOne": 0,
+      "pcCompared": 0,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    },
+    "numbered100000": {
+      "matched": 67844,
+      "byStratum": {
+        "NLRV": {
+          "matched": 67347,
+          "tcaSeconds": {
+            "n": 67347,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.0012472271919250488
+          },
+          "missM": {
+            "n": 67347,
+            "median": 0.2488305100036996,
+            "p95": 0.4750038174011024,
+            "p99": 0.4949144142574369,
+            "max": 0.4999812548724094
+          },
+          "speedMS": {
+            "n": 67347,
+            "median": 0.25137639192871575,
+            "p95": 0.4749415770165797,
+            "p99": 0.4950085916007083,
+            "max": 0.499998722251803
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 22,
+          "tcaSeconds": {
+            "n": 22,
+            "median": 0.0007241964340209961,
+            "p95": 0.0027358531951904297,
+            "p99": 0.0033393502235412598,
+            "max": 0.0033393502235412598
+          },
+          "missM": {
+            "n": 22,
+            "median": 0.27425055073626936,
+            "p95": 0.44254018613582957,
+            "p99": 0.47485119639986806,
+            "max": 0.47485119639986806
+          },
+          "speedMS": {
+            "n": 22,
+            "median": 0.2747630391620852,
+            "p95": 0.4598758827720282,
+            "p99": 0.48735225382302616,
+            "max": 0.48735225382302616
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 475,
+          "tcaSeconds": {
+            "n": 475,
+            "median": 0.005029141902923584,
+            "p95": 0.027720630168914795,
+            "p99": 0.053791701793670654,
+            "max": 0.09257644414901733
+          },
+          "missM": {
+            "n": 475,
+            "median": 0.25362428784092117,
+            "p95": 0.4766399207237555,
+            "p99": 0.4922543914599373,
+            "max": 0.4979266489692691
+          },
+          "speedMS": {
+            "n": 475,
+            "median": 0.25496500241569997,
+            "p95": 0.48065403374254423,
+            "p99": 0.49668367892445886,
+            "max": 0.4999663945884052
+          },
+          "beyond": {
+            "tca": 149,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 67844,
+        "median": 0.24890828575109936,
+        "p95": 0.4750038174011024,
+        "p99": 0.4948991601459056,
+        "max": 0.4999812548724094
+      },
+      "speedMS": {
+        "n": 67844,
+        "median": 0.25145381307993375,
+        "p95": 0.47501137630388257,
+        "p99": 0.4950422645506478,
+        "max": 0.499998722251803
+      },
+      "dseDays": {
+        "n": 135688,
+        "median": 0.00024920448288323627,
+        "p95": 0.0004747063219543435,
+        "p99": 0.0004949713610109541,
+        "max": 0.0005001365728676266
+      },
+      "log10PcRatio": {
+        "n": 67844,
+        "median": 0.9098020406622074,
+        "p95": 1.1220548493876807,
+        "p99": 1.3939640039269345,
+        "max": 3.553782846480465
+      },
+      "pcRatioBelowOne": 61485,
+      "pcCompared": 67844,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    }
+  },
+  "extras": {
+    "total": 764848,
+    "byClass": {
+      "primary": {
+        "unexplained": 638,
+        "population: intra-fleet (operational members of one constellation)": 760202,
+        "threshold edge": 1491,
+        "window edge": 127,
+        "unexplained: SOCRATES lists the pair at other times": 2
+      },
+      "numbered100000": {
+        "unexplained: SOCRATES lists the pair at other times": 3,
+        "unexplained": 37,
+        "unverified: an object never appears in the report": 32
+      },
+      "editionMismatch": {
+        "unverified: an object never appears in the report": 434,
+        "population: intra-fleet (operational members of one constellation)": 1876,
+        "threshold edge": 5,
+        "window edge": 1
+      }
+    },
+    "unexplainedOrUnverified": 1146,
+    "rows": [
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T21:48:10.544Z",
+        "missM": 13.700005137738438,
+        "speedMS": 0.39330172903481964,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T20:13:21.490Z",
+        "missM": 13.731688498601585,
+        "speedMS": 0.39304771274611994,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T23:22:59.637Z",
+        "missM": 13.746593653835363,
+        "speedMS": 0.3935677610917822,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T18:38:32.431Z",
+        "missM": 13.840999097198997,
+        "speedMS": 0.39280590360387185,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T00:57:48.743Z",
+        "missM": 13.870786993510114,
+        "speedMS": 0.39384596392905735,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T17:03:43.404Z",
+        "missM": 14.026049639217735,
+        "speedMS": 0.39257606354155383,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T02:32:37.864Z",
+        "missM": 14.070682350471191,
+        "speedMS": 0.39413633508535695,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T15:28:54.388Z",
+        "missM": 14.283844600932031,
+        "speedMS": 0.39235831341206096,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T04:07:26.991Z",
+        "missM": 14.343283949975232,
+        "speedMS": 0.394438857863089,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T13:54:05.395Z",
+        "missM": 14.610503529284374,
+        "speedMS": 0.39215253309839715,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T05:42:16.153Z",
+        "missM": 14.684737082922888,
+        "speedMS": 0.3947536507313539,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T12:19:16.423Z",
+        "missM": 15.001519047935195,
+        "speedMS": 0.39195870502830066,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T07:17:05.337Z",
+        "missM": 15.090582724015961,
+        "speedMS": 0.39508075393671027,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T10:44:27.477Z",
+        "missM": 15.452018500619369,
+        "speedMS": 0.3917766803650235,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T08:51:54.513Z",
+        "missM": 15.556012193276622,
+        "speedMS": 0.39541993404757814,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T09:09:38.545Z",
+        "missM": 15.956990612891458,
+        "speedMS": 0.3916066630049528,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T10:26:43.715Z",
+        "missM": 16.076098935685625,
+        "speedMS": 0.395771467907478,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T07:34:49.632Z",
+        "missM": 16.511481342542677,
+        "speedMS": 0.39144853135982177,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T12:01:32.935Z",
+        "missM": 16.645988598059464,
+        "speedMS": 0.3961353166790352,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T06:00:00.736Z",
+        "missM": 17.11073856359877,
+        "speedMS": 0.39130232799525483,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T13:36:22.152Z",
+        "missM": 17.26102655326889,
+        "speedMS": 0.39651121767592756,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T04:25:11.873Z",
+        "missM": 17.750294141731707,
+        "speedMS": 0.39116764337945825,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T15:11:11.409Z",
+        "missM": 17.916857223374475,
+        "speedMS": 0.39689981490931625,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T02:50:23.037Z",
+        "missM": 18.426034222806795,
+        "speedMS": 0.3910445640138031,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T16:46:00.665Z",
+        "missM": 18.60947554589598,
+        "speedMS": 0.3973004931235717,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T01:15:34.208Z",
+        "missM": 19.134215240043257,
+        "speedMS": 0.39093357325445394,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T23:40:45.409Z",
+        "missM": 19.87146560594942,
+        "speedMS": 0.3908340619521616,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T22:05:56.640Z",
+        "missM": 20.63477563229809,
+        "speedMS": 0.3907459438585105,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T20:31:07.880Z",
+        "missM": 21.42146787308488,
+        "speedMS": 0.3906698525179499,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T18:56:19.155Z",
+        "missM": 22.22917564739095,
+        "speedMS": 0.3906049618027974,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T17:21:30.460Z",
+        "missM": 23.055809317703048,
+        "speedMS": 0.39055135602188323,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T15:46:41.777Z",
+        "missM": 23.899526632174304,
+        "speedMS": 0.3905096298324573,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T14:11:53.122Z",
+        "missM": 24.75870647438639,
+        "speedMS": 0.3904792008430126,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T12:37:04.485Z",
+        "missM": 25.63192020440041,
+        "speedMS": 0.3904604810010507,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T11:02:15.877Z",
+        "missM": 26.51791039833342,
+        "speedMS": 0.3904529691707062,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T09:27:27.300Z",
+        "missM": 27.415566400884906,
+        "speedMS": 0.3904565759776661,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T07:52:38.741Z",
+        "missM": 28.323909823666938,
+        "speedMS": 0.39047178463424886,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T06:17:50.216Z",
+        "missM": 29.24207525749442,
+        "speedMS": 0.3904979437794494,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T04:43:01.709Z",
+        "missM": 30.1692956532539,
+        "speedMS": 0.3905356574488949,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T03:08:13.230Z",
+        "missM": 31.10489138820782,
+        "speedMS": 0.3905845666116637,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T01:33:24.779Z",
+        "missM": 32.04825852286598,
+        "speedMS": 0.390644634375861,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T23:58:36.353Z",
+        "missM": 32.998859292702605,
+        "speedMS": 0.3907159375788081,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T22:23:47.957Z",
+        "missM": 33.95621429504515,
+        "speedMS": 0.39079823552737897,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T20:48:59.584Z",
+        "missM": 34.9198947595642,
+        "speedMS": 0.39089192414875346,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T19:14:11.235Z",
+        "missM": 35.88951705786865,
+        "speedMS": 0.39099685714724286,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T17:39:22.921Z",
+        "missM": 36.864736725332826,
+        "speedMS": 0.39111257487681067,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T16:04:34.632Z",
+        "missM": 37.84524436752244,
+        "speedMS": 0.391239484069563,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T14:29:46.368Z",
+        "missM": 38.830761133372945,
+        "speedMS": 0.39137764996408275,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          100109,
+          67098
+        ],
+        "names": [
+          "STARLINK-37712",
+          "STARLINK-36205"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T23:18:25.551Z",
+        "missM": 39.63093818512591,
+        "speedMS": 15304.162595908107,
+        "cls": "numbered100000",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          36605,
+          31698
+        ],
+        "names": [
+          "TANDEM X",
+          "TERRA SAR X"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T12:54:58.131Z",
+        "missM": 39.82103545059812,
+        "speedMS": 0.39152699899557775,
+        "cls": "primary",
+        "why": "unexplained"
+      }
+    ]
+  },
+  "tolerances": {
+    "source": "space-data-network-modules analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs (a2.8b-2026-07-13) at the pinned commit",
+    "sourceSha256": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae",
+    "strata": {
+      "nlrvMinMS": 50,
+      "lrvMinMS": 10
+    },
+    "tcaNlrvSeconds": 0.01,
+    "tcaLrvVlrv": "recorded, not gated (flat minimum)",
+    "missM": 5,
+    "speedMS": 5,
+    "pc": "information only (SOCRATES's radii are not published)"
+  },
+  "verdict": {
+    "coverage": "the whole SOCRATES population: every active primary (Parts 1 and 2)",
+    "recall": {
+      "reference": 126077,
+      "found": 126077,
+      "status": "pass"
+    },
+    "geometry": {
+      "status": "pass",
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      }
+    },
+    "status": "pass"
+  },
+  "secondary": {
+    "rule": "below 10 m/s (VLRV) the TCA of a flat minimum is ill-conditioned: a VLRV SOCRATES row counts as found when the screen reports any event of the same pair inside the window; its TCA difference is reported, not gated; otherwise as the primary verdict",
+    "recall": {
+      "primary": {
+        "below 1 km": {
+          "reference": 5395,
+          "found": 5395,
+          "recall": 1
+        },
+        "1 to 5 km": {
+          "reference": 120682,
+          "found": 120682,
+          "recall": 1
+        },
+        "all": {
+          "reference": 126077,
+          "found": 126077,
+          "recall": 1
+        }
+      },
+      "editionMismatch": {
+        "below 1 km": {
+          "reference": 0,
+          "found": 0,
+          "recall": null
+        },
+        "1 to 5 km": {
+          "reference": 0,
+          "found": 0,
+          "recall": null
+        },
+        "all": {
+          "reference": 0,
+          "found": 0,
+          "recall": null
+        }
+      },
+      "numbered100000": {
+        "below 1 km": {
+          "reference": 4006,
+          "found": 4006,
+          "recall": 1
+        },
+        "1 to 5 km": {
+          "reference": 63838,
+          "found": 63838,
+          "recall": 1
+        },
+        "all": {
+          "reference": 67844,
+          "found": 67844,
+          "recall": 1
+        }
+      }
+    },
+    "vlrvPairLevel": [],
+    "verdict": {
+      "recall": {
+        "reference": 126077,
+        "found": 126077,
+        "status": "pass"
+      },
+      "geometry": {
+        "status": "pass",
+        "beyondTolerance": {
+          "tcaNlrv": 0,
+          "miss": 0,
+          "speed": 0
+        }
+      },
+      "status": "pass"
+    }
+  },
+  "amendment": "A2",
+  "module": {
+    "commit": "d575cd8cf9c336b3f1720797584a9558e2febcce",
+    "version": "0.12.0",
+    "wasmSha256": "91a3351f7ef9ffdd1ae60420bc4f8623bcb25f38d792a05547233880e290c036"
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "cpus": 28,
+    "finishedAt": "2026-10-30T05:00:44.846Z"
+  }
+}

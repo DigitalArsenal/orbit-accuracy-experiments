@@ -99,3 +99,10 @@ node experiments/operator-capture/collector/count-cycle.mjs <cycle-id>
 record and a sidecar, states per sidecar, covariance values per state (21), hours
 retained, the frame and ordering labels, and the cycle's counters. It never
 prints a state or a covariance value.
+
+A full cycle with the sidecar shows: `files.json`, `files.sidecars` and `files.paired`
+equal (every record has its sidecar); `recordsPerFile.sidecarStates` 97 for every
+source file of 16 hours or more (fewer only for a shorter source file, which
+`hoursRetained.filesBelow16` counts); `covariancePerState` 21 for every file;
+`hoursRetained.max` 16; the labels UVW, LTM, GCRF and `$OCM`;
+`recordsPerFile.registeredSamples` 49; and `ledger.sidecarFailures` 0.

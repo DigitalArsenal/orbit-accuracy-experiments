@@ -1,0 +1,236 @@
+{
+  "id": "ca-socrates-gp-parity",
+  "frozen": true,
+  "task": "experiments-ca-socrates-gp-parity-20261029",
+  "classification": "pre-registered recall and geometry parity of the production conjunction screen (screen_catalog, SGP4 on GP) against one full CelesTrak SOCRATES Plus run, on the GP editions SOCRATES used; no truth data; no accuracy claim; Pc is information only",
+  "socrates": {
+    "url": "https://celestrak.org/SOCRATES/sort-minRange.csv",
+    "file": "/opt/data/sdn-archive/ca-socrates-gp-parity/raw/socrates-20261029T210829Z/sort-minRange.csv",
+    "sha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+    "rows": 193952,
+    "lastModified": "Thu, 29 Oct 2026 08:04:08 GMT",
+    "fetchedAt": "2026-10-29T21:09:17.433Z",
+    "page": {
+      "url": "https://celestrak.org/SOCRATES/",
+      "file": "/opt/data/sdn-archive/ca-socrates-gp-parity/raw/socrates-20261029T210829Z/index.html",
+      "sha256": "a03abef3cd2721dc6980405b8ae67cd771d40fc80934b659603b618d1f56bce4"
+    },
+    "licenseId": "celestrak"
+  },
+  "satcat": {
+    "url": "https://celestrak.org/pub/satcat.csv",
+    "file": "/opt/data/sdn-archive/ca-socrates-gp-parity/raw/satcat-20261029T211622Z/satcat.csv",
+    "sha256": "8abf66b2db5b86ca6a99899cc7d133ee3bb9d4f9aefe6a631ba48a416a02fd58",
+    "fetchedAt": "2026-10-29T21:16:38.154Z"
+  },
+  "window": {
+    "startUtc": "2026-10-28T17:00:00Z",
+    "startJd": 2461342.2083333335,
+    "durationSeconds": 604800,
+    "basis": "the report's TCAs run from 2026-10-28 17:00:08.230 to 2026-11-04 16:59:51.001 UTC; CelesTrak's page states 7 days and 5 km"
+  },
+  "catalog": {
+    "archiveRoot": "/opt/data/sdn-archive",
+    "snapshot": "spacetrack/gp/2026/2026-10-28.json.gz",
+    "snapshotSha256": "36730df1d9a5845ceed7388ecf40f448b93567bfb69bbfacb638accc8cb38ac8",
+    "snapshotJsonSha256": "4b44036efc62db2f1f2d4230c880be03297ff43b3e09adbf41862d46d7ed2e5b",
+    "snapshotRecords": 32815,
+    "snapshotRetrievedAt": "2026-10-28T17:10:09Z",
+    "cutUtc": "2026-10-28T16:06:35",
+    "cutBasis": "the latest CREATION_DATE among editions SOCRATES verifiably used (16:06:35); the earliest it verifiably did not use is 16:46:20",
+    "replacements": {
+      "41882": {
+        "gpId": "354940158",
+        "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+        "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+      },
+      "60182": {
+        "gpId": "354950601",
+        "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+        "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+      },
+      "64062": {
+        "gpId": "354953253",
+        "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+        "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+      },
+      "64393": {
+        "gpId": "354953411",
+        "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+        "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+      }
+    },
+    "licenseId": "space-track",
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d",
+    "objects": 32815
+  },
+  "editions": {
+    "dseToleranceDays": 0.00050002,
+    "note": "0.0005 d is the rounding of SOCRATES's three-decimal days since epoch; 2e-8 d (1.7 ms) covers the TCA's millisecond text"
+  },
+  "module": {
+    "repository": "space-data-network-modules",
+    "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+    "wasmPath": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+    "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+    "version": "0.9.0",
+    "hostFiles": {
+      "analysis/conjunction-assessment/tests/lib/cqr.mjs": "df0e968326a662c041ce3fc7bf465468b68e41d23936b67c2c7f832f6390c9f0",
+      "analysis/conjunction-assessment/tests/lib/conjunctionCommandHarness.mjs": "e981819d1020137039045bede35cc73e3c1cc01f664f5918ff1d7f0160219c91",
+      "analysis/conjunction-assessment/tests/lib/wasmedgeWasiThreadsRunner.mjs": "8fd2501452bddbcfb7705631b47777af99bc9db0f4cc0e77bc749361360428cf",
+      "analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae"
+    },
+    "packages": {
+      "space-data-module-sdk": "0.9.12",
+      "spacedatastandards.org": "1.271.0",
+      "flatbuffers": "25.9.23",
+      "flatc-wasm": "26.1.38"
+    }
+  },
+  "screen": {
+    "method": "screen_catalog",
+    "pairs": "every pair with a subset primary: the subset first in catalog order, block b's primaries [p0, p1) against order positions [p0, N), so each pair is screened exactly once; SOCRATES's population is applied in the comparison",
+    "thresholdM": 5000,
+    "coarseStepSeconds": 60,
+    "refinementToleranceSeconds": 0.001,
+    "combinedRadiusM": 10,
+    "useKdTree": true,
+    "useDynamicWindow": true,
+    "usePerigeeFilter": true,
+    "algorithm": "ALFANO_MAXIMUM",
+    "evaluationFrame": "TEME",
+    "sliceSeconds": 21600,
+    "processes": 7,
+    "threadsPerProcess": 4,
+    "budgetMinutes": 90
+  },
+  "primaries": {
+    "seed": "ca-socrates-gp-parity-20261029",
+    "rank": "ascending SHA-256 hex of seed + ':' + NORAD_CAT_ID (decimal)",
+    "objectType": "PAY",
+    "statusCodes": [
+      "+",
+      "P",
+      "B",
+      "S",
+      "X"
+    ],
+    "eligibility": "payloads that CelesTrak's SATCAT (fetched 2026-10-29) lists as active, present in the catalog",
+    "eligible": 16818,
+    "rankedListSha256": "b5d7c9e9dda258e62ef0835ca2b195cf7ef2a3f2b8b96604c2edef112a2aa096",
+    "order": "every eligible primary in rank order, then every other catalog object in catalog order; a block's primaries are order positions [p0, p1) and its secondaries [p0, N), so across both parts each pair with an active primary is screened exactly once",
+    "blockSize": 300,
+    "parts": [
+      {
+        "id": 1,
+        "from": 0,
+        "to": 6000,
+        "listSha256": "597ae128c821bd013793968372b467e340230459092f1b5c34a19af1e0a3f2b6",
+        "note": "reported first; alone it is a subset (36 % of active primaries)"
+      },
+      {
+        "id": 2,
+        "from": 6000,
+        "to": 16818,
+        "listSha256": "d3d2c866cd8fb6e1d65fce7079090e99b34498463faa8581336d231bd7c91323",
+        "note": "the remaining active primaries, same rules and settings, run straight after Part 1; Parts 1 and 2 together are the whole SOCRATES population"
+      }
+    ],
+    "reason": "one 7-day call cannot hold the catalog, and the whole population in one run exceeds the 90-minute budget (PLAN.md, Budget); the population is screened in two registered parts"
+  },
+  "probe": {
+    "startUtc": "2026-11-05T17:00:00Z",
+    "startJd": 2461350.2083333335,
+    "note": "timing probes only, after the registered window; never written to runs/ or results/"
+  },
+  "comparison": {
+    "matchSeconds": 60,
+    "matchRule": "same unordered NORAD pair and |TCA difference| <= 60 s, one to one, nearest first (distinct encounters of a fast pair are about half an orbit apart)",
+    "mergeSeconds": 1,
+    "mergeRule": "screen events of one pair within 1 s of each other (across a slice boundary or within one) are one encounter",
+    "windowEdgeSeconds": 60,
+    "listMax": 50,
+    "diagnoseMax": 500,
+    "classes": {
+      "primary": "both objects numbered below 100000 and both editions matched (GP on GP)",
+      "editionMismatch": "both numbered below 100000, an object's edition not matched",
+      "numbered100000": "an object numbered 100000 or above, reported separately"
+    },
+    "bands": [
+      "below 1 km",
+      "1 to 5 km"
+    ],
+    "population": {
+      "statement": "CelesTrak's SOCRATES Plus page: three runs a day screen all active payloads against all objects (analyst 8xxxx and 27xxxx included) over seven days, 5 km, SGP4 in STK 12.2 CAT; operational members of one constellation are not screened against each other; docked objects form one constellation",
+      "activeStatusCodes": [
+        "+",
+        "P",
+        "B",
+        "S",
+        "X"
+      ],
+      "statusSource": "the ops status SOCRATES printed in the report for an object it lists; CelesTrak's SATCAT of 2026-10-29 for the others",
+      "fleetRule": "a name prefix with at least 30 operational ([+]) payloads numbered below 100000 in the SATCAT and no report row between two of them both numbered below 100000",
+      "fleets": [
+        "STARLINK",
+        "ONEWEB",
+        "KUIPER",
+        "USA",
+        "QIANFAN",
+        "HULIANWANG DIGUI",
+        "IRIDIUM",
+        "GEESAT",
+        "BEIDOU",
+        "GSAT",
+        "SHIYAN",
+        "NAVSTAR",
+        "OBJECT C"
+      ],
+      "dockedComplexes": {
+        "ISS": [
+          "ISS ("
+        ],
+        "CSS": [
+          "CSS ("
+        ],
+        "MEV-1": [
+          "MEV-1",
+          "INTELSAT 901"
+        ],
+        "MEV-2": [
+          "MEV-2",
+          "INTELSAT 10-02"
+        ]
+      },
+      "visitingVehicles": [
+        "PROGRESS",
+        "SOYUZ",
+        "DRAGON",
+        "CYGNUS",
+        "SHENZHOU",
+        "TIANZHOU",
+        "HTV",
+        "STARLINER"
+      ],
+      "dockedSpeedMS": 1
+    },
+    "edgeRule": "a SOCRATES row or a screen event whose TCA lies within windowEdgeSeconds of either end of the window is counted apart; SOCRATES's never enter a recall denominator"
+  },
+  "tolerances": {
+    "source": "space-data-network-modules analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs (a2.8b-2026-07-13) at the pinned commit",
+    "sourceSha256": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae",
+    "strata": {
+      "nlrvMinMS": 50,
+      "lrvMinMS": 10
+    },
+    "tcaNlrvSeconds": 0.01,
+    "tcaLrvVlrv": "recorded, not gated (flat minimum)",
+    "missM": 5.0,
+    "speedMS": 5.0,
+    "pc": "information only (SOCRATES's radii are not published)"
+  },
+  "pass": {
+    "rule": "over Parts 1 and 2 together (every active primary): recall = 1.0 over the primary class (both bands, rows at a window edge apart) and every matched primary-class event within the gated tolerances (NLRV TCA <= 10 ms, miss <= 5 m, speed <= 5 m/s); every miss in any class is a defect listed with its pair, TCA and range; the tail beyond each tolerance is reported per class and stratum with p99 and maximum",
+    "fallback": "if Part 2 cannot finish, Part 1 is reported alone, labeled as a subset"
+  }
+}

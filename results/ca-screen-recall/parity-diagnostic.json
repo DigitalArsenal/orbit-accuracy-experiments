@@ -1,0 +1,573 @@
+{
+  "note": "post-hoc diagnostic written after the registered results were read; not part of PLAN.md",
+  "run": "ca-screen-recall-registered-20261029",
+  "objectStates": 4160,
+  "positionM": {
+    "count": 4160,
+    "median": 0.4039385464942956,
+    "p95": 5.439122846275176,
+    "p99": 9.22499620445461,
+    "max": 107.1966519952538
+  },
+  "velocityMS": {
+    "count": 4160,
+    "median": 0.00036537291582577463,
+    "p95": 0.006052901578427328,
+    "p99": 0.010185288101386495,
+    "max": 0.11949798665836567
+  },
+  "byBstar": [
+    {
+      "bin": "BSTAR under 0.001",
+      "objectStates": 3155,
+      "objects": 854,
+      "positionM": {
+        "count": 3155,
+        "median": 0.31937034450301954,
+        "p95": 0.9922459508788294,
+        "p99": 1.4378939336586616,
+        "max": 4.80975018191574
+      },
+      "velocityMS": {
+        "count": 3155,
+        "median": 0.00029122192844145385,
+        "p95": 0.0009955818584019345,
+        "p99": 0.001425043429454436,
+        "max": 0.005510071345978658
+      }
+    },
+    {
+      "bin": "BSTAR 0.001 to 0.01",
+      "objectStates": 987,
+      "objects": 205,
+      "positionM": {
+        "count": 987,
+        "median": 2.2998365486623884,
+        "p95": 8.672887458850274,
+        "p99": 14.528776758775491,
+        "max": 24.58509397546693
+      },
+      "velocityMS": {
+        "count": 987,
+        "median": 0.0025134942424699298,
+        "p95": 0.00975129134080654,
+        "p99": 0.015987321114621457,
+        "max": 0.02820362940312055
+      }
+    },
+    {
+      "bin": "BSTAR 0.01 to 0.1",
+      "objectStates": 15,
+      "objects": 8,
+      "positionM": {
+        "count": 15,
+        "median": 4.66011695366212,
+        "p95": 29.9960314822216,
+        "p99": 29.9960314822216,
+        "max": 29.9960314822216
+      },
+      "velocityMS": {
+        "count": 15,
+        "median": 0.004699481392340027,
+        "p95": 0.03394029679127158,
+        "p99": 0.03394029679127158,
+        "max": 0.03394029679127158
+      }
+    },
+    {
+      "bin": "BSTAR 0.1 or more",
+      "objectStates": 3,
+      "objects": 3,
+      "positionM": {
+        "count": 3,
+        "median": 105.549819434618,
+        "p95": 107.1966519952538,
+        "p99": 107.1966519952538,
+        "max": 107.1966519952538
+      },
+      "velocityMS": {
+        "count": 3,
+        "median": 0.11788818468846897,
+        "p95": 0.11949798665836567,
+        "p99": 0.11949798665836567,
+        "max": 0.11949798665836567
+      }
+    }
+  ],
+  "byAgeAtEvent": [
+    {
+      "bin": "0 to 1 day",
+      "objectStates": 0,
+      "objects": 0,
+      "positionM": {
+        "count": 0,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "velocityMS": {
+        "count": 0,
+        "median": null,
+        "p95": null,
+        "p99": null,
+        "max": null
+      }
+    },
+    {
+      "bin": "1 to 2 days",
+      "objectStates": 645,
+      "objects": 335,
+      "positionM": {
+        "count": 645,
+        "median": 0.32523785977080844,
+        "p95": 1.5716107184459347,
+        "p99": 2.351023306747896,
+        "max": 107.1966519952538
+      },
+      "velocityMS": {
+        "count": 645,
+        "median": 0.00028566417816484847,
+        "p95": 0.0016902313737933807,
+        "p99": 0.0026388936449534715,
+        "max": 0.11949798665836567
+      }
+    },
+    {
+      "bin": "2 to 3 days",
+      "objectStates": 1295,
+      "objects": 527,
+      "positionM": {
+        "count": 1295,
+        "median": 0.3426917740150435,
+        "p95": 3.4710002412541354,
+        "p99": 9.578680247317878,
+        "max": 29.9960314822216
+      },
+      "velocityMS": {
+        "count": 1295,
+        "median": 0.0003033670214487556,
+        "p95": 0.003933270341028578,
+        "p99": 0.010837982378538495,
+        "max": 0.03394029679127158
+      }
+    },
+    {
+      "bin": "3 to 4 days",
+      "objectStates": 1569,
+      "objects": 602,
+      "positionM": {
+        "count": 1569,
+        "median": 0.4693221815528438,
+        "p95": 6.431603249411622,
+        "p99": 8.977102591121172,
+        "max": 24.58509397546693
+      },
+      "velocityMS": {
+        "count": 1569,
+        "median": 0.0004710824208796501,
+        "p95": 0.007082580210505046,
+        "p99": 0.009973413219223038,
+        "max": 0.02820362940312055
+      }
+    },
+    {
+      "bin": "4 days and more",
+      "objectStates": 651,
+      "objects": 347,
+      "positionM": {
+        "count": 651,
+        "median": 0.5880260650414525,
+        "p95": 8.136908355146089,
+        "p99": 11.169090279054252,
+        "max": 14.636433055824408
+      },
+      "velocityMS": {
+        "count": 651,
+        "median": 0.0005690465287796462,
+        "p95": 0.009036173595557983,
+        "p99": 0.012445342414277945,
+        "max": 0.015987321114621457
+      }
+    }
+  ],
+  "largest": [
+    {
+      "norad": 67024,
+      "name": "STARLINK-36192",
+      "positionM": 107.1966519952538,
+      "velocityMS": 0.11949798665836567,
+      "bstar": "BSTAR 0.1 or more",
+      "ageAtEvent": "1 to 2 days",
+      "tcaUtc": "2026-10-30T01:23:31.049Z"
+    },
+    {
+      "norad": 67087,
+      "name": "STARLINK-35842",
+      "positionM": 105.549819434618,
+      "velocityMS": 0.11788818468846897,
+      "bstar": "BSTAR 0.1 or more",
+      "ageAtEvent": "1 to 2 days",
+      "tcaUtc": "2026-10-30T11:24:00.684Z"
+    },
+    {
+      "norad": 53018,
+      "name": "STARLINK-4279",
+      "positionM": 29.9960314822216,
+      "velocityMS": 0.03394029679127158,
+      "bstar": "BSTAR 0.01 to 0.1",
+      "ageAtEvent": "2 to 3 days",
+      "tcaUtc": "2026-10-31T02:06:05.752Z"
+    },
+    {
+      "norad": 61542,
+      "name": "STARLINK-11322",
+      "positionM": 24.58509397546693,
+      "velocityMS": 0.02820362940312055,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "3 to 4 days",
+      "tcaUtc": "2026-11-01T08:38:44.616Z"
+    },
+    {
+      "norad": 61542,
+      "name": "STARLINK-11322",
+      "positionM": 23.75902791460796,
+      "velocityMS": 0.02692651005446234,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "3 to 4 days",
+      "tcaUtc": "2026-11-01T06:21:05.196Z"
+    },
+    {
+      "norad": 63059,
+      "name": "STARLINK-11509",
+      "positionM": 22.14720005502457,
+      "velocityMS": 0.02531728670124094,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "3 to 4 days",
+      "tcaUtc": "2026-10-30T19:30:32.192Z"
+    },
+    {
+      "norad": 100756,
+      "name": "STARLINK-38321",
+      "positionM": 17.15388263705878,
+      "velocityMS": 0.019504211663624663,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "2 to 3 days",
+      "tcaUtc": "2026-10-31T18:40:31.805Z"
+    },
+    {
+      "norad": 63556,
+      "name": "STARLINK-11626",
+      "positionM": 16.335678339496162,
+      "velocityMS": 0.018596762049313806,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "2 to 3 days",
+      "tcaUtc": "2026-10-31T01:18:59.859Z"
+    },
+    {
+      "norad": 63556,
+      "name": "STARLINK-11626",
+      "positionM": 16.32445295508314,
+      "velocityMS": 0.01881416254424662,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "2 to 3 days",
+      "tcaUtc": "2026-10-31T02:04:43.909Z"
+    },
+    {
+      "norad": 63059,
+      "name": "STARLINK-11509",
+      "positionM": 16.132943106725303,
+      "velocityMS": 0.018478728648072765,
+      "bstar": "BSTAR 0.001 to 0.01",
+      "ageAtEvent": "2 to 3 days",
+      "tcaUtc": "2026-10-30T08:39:23.573Z"
+    }
+  ],
+  "flaggedEvents": {
+    "count": 61,
+    "withAnObjectOf": "BSTAR 0.01 or more",
+    "withHeavyDrag": 6
+  },
+  "tcaDifferencesAbove10ms": [
+    {
+      "pair": [
+        69529,
+        69530
+      ],
+      "band": "1 to 5 km",
+      "referenceMissM": 4489.615864142951,
+      "relativeSpeedMS": 2.9124951790568514,
+      "dtSeconds": -0.8024901151657104,
+      "dMissM": -0.45722555912379903
+    }
+  ],
+  "missDifferenceVersusStateDifferences": {
+    "slackM": 1,
+    "events": 2080,
+    "withinStateDifferences": 2080,
+    "eventsWithMissDifferenceAbove": 5,
+    "largeMissDifferenceEvents": 61,
+    "largeWithAnObjectOfBstar0001OrMore": 61,
+    "largeRatioToStateDifferences": {
+      "count": 61,
+      "median": 0.7392863266559504,
+      "p95": 0.9408832019129219,
+      "p99": 0.9789493202579891,
+      "max": 0.9789493202579891
+    },
+    "largest": [
+      {
+        "pair": [
+          51126,
+          67024
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-10-30T01:23:31.049Z",
+        "referenceMissM": 4106.455004017998,
+        "missDifferenceM": -57.961238773343666,
+        "objects": [
+          {
+            "norad": 67024,
+            "name": "STARLINK-36192",
+            "bstar": "BSTAR 0.1 or more",
+            "positionM": 107.1966519952538
+          },
+          {
+            "norad": 51126,
+            "name": "STARLINK-3386",
+            "bstar": "BSTAR under 0.001",
+            "positionM": 0.21778080132019953
+          }
+        ],
+        "sumOfStateDifferencesM": 107.414432796574
+      },
+      {
+        "pair": [
+          62555,
+          63059
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-10-30T19:30:32.192Z",
+        "referenceMissM": 2503.6881851883472,
+        "missDifferenceM": -17.514351762792103,
+        "objects": [
+          {
+            "norad": 62555,
+            "name": "STARLINK-11534",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 9.578680247317878
+          },
+          {
+            "norad": 63059,
+            "name": "STARLINK-11509",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 22.14720005502457
+          }
+        ],
+        "sumOfStateDifferencesM": 31.725880302342446
+      },
+      {
+        "pair": [
+          58873,
+          59554
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-11-01T23:37:59.443Z",
+        "referenceMissM": 3541.3658319159113,
+        "missDifferenceM": 16.53312978954682,
+        "objects": [
+          {
+            "norad": 59554,
+            "name": "STARLINK-31724",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 8.983643806376406
+          },
+          {
+            "norad": 58873,
+            "name": "STARLINK-31177",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 8.917599636023164
+          }
+        ],
+        "sumOfStateDifferencesM": 17.90124344239957
+      },
+      {
+        "pair": [
+          59897,
+          67034
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-11-01T18:10:54.124Z",
+        "referenceMissM": 4022.911525954189,
+        "missDifferenceM": 15.753621939686582,
+        "objects": [
+          {
+            "norad": 59897,
+            "name": "STARLINK-31928",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 13.067828949125143
+          },
+          {
+            "norad": 67034,
+            "name": "STARLINK-36140",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 5.097140288890117
+          }
+        ],
+        "sumOfStateDifferencesM": 18.16496923801526
+      },
+      {
+        "pair": [
+          100558,
+          101004
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-10-30T20:34:53.333Z",
+        "referenceMissM": 4137.96449608114,
+        "missDifferenceM": 15.424220514349145,
+        "objects": [
+          {
+            "norad": 101004,
+            "name": "STARLINK-38435",
+            "bstar": "BSTAR 0.01 to 0.1",
+            "positionM": 12.813185356263684
+          },
+          {
+            "norad": 100558,
+            "name": "STARLINK-38349",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 3.129704132197631
+          }
+        ],
+        "sumOfStateDifferencesM": 15.942889488461315
+      },
+      {
+        "pair": [
+          100558,
+          101004
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-10-30T21:20:57.397Z",
+        "referenceMissM": 4371.206107249234,
+        "missDifferenceM": -15.134013573296215,
+        "objects": [
+          {
+            "norad": 101004,
+            "name": "STARLINK-38435",
+            "bstar": "BSTAR 0.01 to 0.1",
+            "positionM": 13.139463247159378
+          },
+          {
+            "norad": 100558,
+            "name": "STARLINK-38349",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 3.348735898205141
+          }
+        ],
+        "sumOfStateDifferencesM": 16.48819914536452
+      },
+      {
+        "pair": [
+          58873,
+          59554
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-11-01T18:55:34.360Z",
+        "referenceMissM": 3557.7791788600407,
+        "missDifferenceM": -14.938810393978656,
+        "objects": [
+          {
+            "norad": 59554,
+            "name": "STARLINK-31724",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 8.14077046068919
+          },
+          {
+            "norad": 58873,
+            "name": "STARLINK-31177",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 8.108021145583242
+          }
+        ],
+        "sumOfStateDifferencesM": 16.248791606272434
+      },
+      {
+        "pair": [
+          59897,
+          67034
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-11-01T20:32:05.313Z",
+        "referenceMissM": 3010.176892454357,
+        "missDifferenceM": 14.772908287025984,
+        "objects": [
+          {
+            "norad": 59897,
+            "name": "STARLINK-31928",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 14.636433055824408
+          },
+          {
+            "norad": 67034,
+            "name": "STARLINK-36140",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 5.627241679084471
+          }
+        ],
+        "sumOfStateDifferencesM": 20.26367473490888
+      },
+      {
+        "pair": [
+          58873,
+          59554
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-11-01T15:00:13.623Z",
+        "referenceMissM": 3684.9251403217954,
+        "missDifferenceM": 14.754569583190914,
+        "objects": [
+          {
+            "norad": 59554,
+            "name": "STARLINK-31724",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 8.151118361339952
+          },
+          {
+            "norad": 58873,
+            "name": "STARLINK-31177",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 7.530498180642313
+          }
+        ],
+        "sumOfStateDifferencesM": 15.681616541982265
+      },
+      {
+        "pair": [
+          100558,
+          101004
+        ],
+        "band": "1 to 5 km",
+        "tcaUtc": "2026-10-30T19:48:49.430Z",
+        "referenceMissM": 3429.1150570658897,
+        "missDifferenceM": 14.378303378285182,
+        "objects": [
+          {
+            "norad": 101004,
+            "name": "STARLINK-38435",
+            "bstar": "BSTAR 0.01 to 0.1",
+            "positionM": 12.517052900882039
+          },
+          {
+            "norad": 100558,
+            "name": "STARLINK-38349",
+            "bstar": "BSTAR 0.001 to 0.01",
+            "positionM": 3.148508016997187
+          }
+        ],
+        "sumOfStateDifferencesM": 15.665560917879226
+      }
+    ]
+  },
+  "matchedEventsWithHeavyDragObject": 18,
+  "matchedEvents": 2080
+}

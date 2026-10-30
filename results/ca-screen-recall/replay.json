@@ -1,0 +1,65 @@
+{
+  "objects": 2000,
+  "durationSeconds": 43200,
+  "reference": {
+    "events": 291,
+    "inWindow": 290,
+    "atWindowEdge": 0,
+    "belowOneKm": 14,
+    "oneToFiveKm": 220,
+    "nearThreshold": 56
+  },
+  "arms": {
+    "defaults": {
+      "recall": {
+        "below 1 km": {
+          "reference": 14,
+          "found": 14
+        },
+        "1 to 5 km": {
+          "reference": 220,
+          "found": 220
+        },
+        "all": {
+          "reference": 234,
+          "found": 234
+        }
+      },
+      "screenEvents": {
+        "total": 234,
+        "matched": 234,
+        "nearThreshold": 0,
+        "edge": 0,
+        "beyondReference": 0,
+        "falseEvents": 0
+      },
+      "excludedObjects": 0
+    },
+    "console": {
+      "recall": {
+        "below 1 km": {
+          "reference": 14,
+          "found": 14
+        },
+        "1 to 5 km": {
+          "reference": 220,
+          "found": 220
+        },
+        "all": {
+          "reference": 234,
+          "found": 234
+        }
+      },
+      "screenEvents": {
+        "total": 2386,
+        "matched": 234,
+        "nearThreshold": 0,
+        "edge": 0,
+        "beyondReference": 2152,
+        "falseEvents": 0
+      },
+      "excludedObjects": 0
+    }
+  },
+  "verdict": "pass"
+}

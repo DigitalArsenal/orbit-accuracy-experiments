@@ -1,0 +1,10 @@
+{
+  "unit": 0,
+  "block": 0,
+  "slice": 0,
+  "startJd": 2461342.2083333335,
+  "seconds": 21600,
+  "events": 648,
+  "digest": "c588c2c0cfa647b3fc9519abd6013275f81e905e60aba1aaa5531901342eb319",
+  "rounding": "TCA 1e-9 d, miss 1 mm, speed 1 mm/s; sorted by pair then TCA"
+}

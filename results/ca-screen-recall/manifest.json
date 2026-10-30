@@ -1,0 +1,83 @@
+{
+  "experiment": "ca-screen-recall",
+  "mode": "registered",
+  "startedAt": "2026-10-29T21:29:04.072Z",
+  "finishedAt": "2026-10-29T21:42:04.021Z",
+  "command": [
+    "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+    "/Users/tj/software/spacedatanetwork-stack/repos/ancillary-packages/orbit-accuracy-experiments/experiments/ca-screen-recall/run.mjs",
+    "--run",
+    "ca-screen-recall-registered-20261029"
+  ],
+  "plan": {
+    "planCommit": "532bd3d4ec60f0e77bfb8d39af2fe84c0a7a06e0",
+    "sourceHashes": {
+      "PLAN.md": "98b191b674ef787348f7932b450c91300d10e2df84d17422987b152ae19d75aa",
+      "config.json": "29f61ff9428b9bc5b158102ee0b9e7cfcfa98082b2fda7c305b22137a6711da7",
+      "common.mjs": "c152c6086cc7d4d14f2ac4d2b51eacc899c73281a05e417918ccb418dc24ccab",
+      "access.mjs": "090e17a4818f6aae984f4c0cac016882e5f2e4c7150d0842278937b301e21a31",
+      "reference.mjs": "71b71f9d88b66eb3a23ab718c7f4f0bc7ae56be875dae9d2d9ed2a6913093718",
+      "compare.mjs": "685cea16de5f240ed9e4dbc8cb52bcb90d01f1616e23be40901a53af1ead7c9e",
+      "run.mjs": "5b0da75b6adf6cef6bf5d00a77091df430cb73c24e950432421eeaa5b4e09763"
+    },
+    "experimentCommit": "532bd3d4ec60f0e77bfb8d39af2fe84c0a7a06e0"
+  },
+  "configSha256": "29f61ff9428b9bc5b158102ee0b9e7cfcfa98082b2fda7c305b22137a6711da7",
+  "modulesRepository": {
+    "path": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules",
+    "pinnedCommit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+    "checkoutHead": {
+      "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+      "dirty": true
+    }
+  },
+  "modules": {
+    "analysis/conjunction-assessment": {
+      "pluginId": "conjunction-assessment",
+      "version": "0.9.0",
+      "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+      "packages": {
+        "space-data-module-sdk": "0.9.12",
+        "spacedatastandards.org": "1.271.0"
+      }
+    },
+    "propagator/sgp4": {
+      "pluginId": "com.orbpro.sgp4",
+      "version": "1.3.1",
+      "wasmSha256": "d9fdd0575d8dc84fa418d1ec4a5e0f14c9a02683eaeec0904b53a0a18b239a97",
+      "packages": {
+        "space-data-module-sdk": "0.9.12",
+        "spacedatastandards.org": "1.140.0"
+      }
+    }
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "platform": "darwin 25.3.0 arm64",
+    "cpus": 28,
+    "model": "Apple M3 Ultra",
+    "loadAverageStart": [
+      23.79296875,
+      31.71337890625,
+      36.27685546875
+    ],
+    "loadAverageEnd": [
+      54.25048828125,
+      52.4296875,
+      44.8447265625
+    ]
+  },
+  "inputs": {
+    "snapshot": {
+      "path": "spacetrack/gp/2026/2026-10-29.json.gz",
+      "sha256": "a0ff07183325e857180a822e6799713f66cbbfa28ed82f6d9996e02672020a9d",
+      "jsonSha256": "db2c924e9317b4aaacfb157f4e5d8b2305280aa6a750b1abd1deb5daf82a54d2",
+      "records": 32823
+    }
+  },
+  "outputs": {
+    "metrics.json": "5009f6c468d3aae25f1dd6c551348f1b87814c79d7cfb9e7b935a9362dd90c4e",
+    "reference-events.json": "8a8f862cbd3796e43733d0605ed20ba031fe11b95deb1fe98d860ce1a0f08fa3",
+    "subset.json": "173731c3cee76622baee414f289a0cc8e1e56debc1ddc0eed5a4dbb0f8b4d579"
+  }
+}

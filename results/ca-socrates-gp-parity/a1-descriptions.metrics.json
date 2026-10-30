@@ -1,0 +1,3809 @@
+{
+  "experiment": "ca-socrates-gp-parity",
+  "run": "ca-socrates-gp-parity-screen-20261029T215308Z-descriptions",
+  "plan": {
+    "planCommit": "e899a118a38a744b3706910fb551a253eab88764",
+    "sourceHashes": {
+      "PLAN.md": "214b228ad993f5ca2cea66776ecf56fde841bcd2ff205951dbb5a87a7643aac3",
+      "config.json": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+      "common.mjs": "5538abc04b1742a9b129929209ad81de5bd64bc8017e00e5108612f740156ee6",
+      "screen.mjs": "de176c281da60cfcc7244b722fe0119a658b00086e08ab2db08ab4aefc9ee201",
+      "worker.mjs": "3f053ca78766a3dced548081ae527671637b2f2eab08062d0d501d11cb629f3d",
+      "compare.mjs": "a2aeb1e9a58ad9aa3d766f781fb31caeb9c79221e595569bb8d31129b878234a"
+    },
+    "experimentCommit": "3c15fe10fe6afd2e8ef97bf5641cec8f57f9209d"
+  },
+  "tag": "part1",
+  "mode": "registered",
+  "socrates": {
+    "url": "https://celestrak.org/SOCRATES/sort-minRange.csv",
+    "sha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+    "rows": 193952,
+    "lastModified": "Thu, 29 Oct 2026 08:04:08 GMT",
+    "window": {
+      "startUtc": "2026-10-28T17:00:00Z",
+      "startJd": 2461342.2083333335,
+      "durationSeconds": 604800,
+      "basis": "the report's TCAs run from 2026-10-28 17:00:08.230 to 2026-11-04 16:59:51.001 UTC; CelesTrak's page states 7 days and 5 km"
+    }
+  },
+  "catalog": {
+    "snapshot": "spacetrack/gp/2026/2026-10-28.json.gz",
+    "snapshotSha256": "36730df1d9a5845ceed7388ecf40f448b93567bfb69bbfacb638accc8cb38ac8",
+    "cutUtc": "2026-10-28T16:06:35",
+    "replaced": [
+      41882,
+      60182,
+      64062,
+      64393
+    ],
+    "objects": 32815,
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d"
+  },
+  "screenManifests": [
+    {
+      "part": 1,
+      "run": "ca-socrates-gp-parity-screen-20261029T215308Z-descriptions",
+      "module": {
+        "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+        "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+        "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+        "packages": {
+          "space-data-module-sdk": "0.9.12",
+          "spacedatastandards.org": "1.271.0",
+          "flatbuffers": "25.9.23",
+          "flatc-wasm": "26.1.38"
+        }
+      },
+      "outputs": {
+        "screen-events.json": "319813945419c2b20830c11e37f64a4cba895f1908ac0a9d9f7f8e4a604ff4eb",
+        "screen-summary.json": "90e99bc5133674ff18a35fdbfd663d7ceb5ade8d8ed7a09d317f65532aa51c53",
+        "primaries.json": "0afcbc0a438cfdc2ec56f4f4fe252d399b193cfe7616c9c7608268e7cf8cb4b7"
+      },
+      "startedAt": "2026-10-30T02:51:32.436Z",
+      "finishedAt": "2026-10-30T02:56:22.959Z"
+    }
+  ],
+  "editions": {
+    "reportObjects": 24391,
+    "matched": 24391,
+    "mismatched": [],
+    "absent": []
+  },
+  "parts": [
+    1
+  ],
+  "full": false,
+  "screen": {
+    "primaries": [
+      {
+        "seed": "ca-socrates-gp-parity-20261029",
+        "eligible": 16818,
+        "part": 1,
+        "from": 0,
+        "to": 600,
+        "count": 600,
+        "blockSize": 300,
+        "listSha256": "58ad95261866695047471b173b1024426609e79c3d44379639feba2b475130aa",
+        "blocks": 2
+      }
+    ],
+    "units": 14,
+    "failedCalls": [],
+    "failedPairs": 0,
+    "incompleteUnits": [],
+    "rawEvents": 66691,
+    "merged": 0,
+    "events": 66691,
+    "outOfWindow": 0,
+    "excludedObjects": 41,
+    "wallMinutes": [
+      4.0274
+    ],
+    "processes": 2,
+    "threads": 4
+  },
+  "reference": {
+    "rows": 12008,
+    "byClass": {
+      "primary": 7319,
+      "editionMismatch": 0,
+      "numbered100000": 4689
+    }
+  },
+  "recall": {
+    "primary": {
+      "below 1 km": {
+        "reference": 486,
+        "found": 486,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 6833,
+        "found": 6831,
+        "recall": 0.9997073027952583
+      },
+      "all": {
+        "reference": 7319,
+        "found": 7317,
+        "recall": 0.9997267386254953
+      }
+    },
+    "editionMismatch": {
+      "below 1 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "1 to 5 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "all": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      }
+    },
+    "numbered100000": {
+      "below 1 km": {
+        "reference": 308,
+        "found": 308,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 4381,
+        "found": 4379,
+        "recall": 0.9995434832230085
+      },
+      "all": {
+        "reference": 4689,
+        "found": 4687,
+        "recall": 0.99957346982299
+      }
+    }
+  },
+  "edgeRows": {
+    "reference": 0,
+    "found": 0,
+    "rows": []
+  },
+  "misses": [
+    {
+      "pair": [
+        45695,
+        48667
+      ],
+      "names": [
+        "STARLINK-1420",
+        "STARLINK-2735"
+      ],
+      "statuses": [
+        "P",
+        "+"
+      ],
+      "cls": "primary",
+      "band": "1 to 5 km",
+      "socratesTcaUtc": "2026-11-04 04:42:17.641",
+      "socratesRangeM": 4280,
+      "socratesSpeedMS": 12406,
+      "nearestScreenEvent": null,
+      "excludedInSlice": [],
+      "absentFromCatalog": [],
+      "failedPairsInSlice": 0,
+      "sliceBoundarySeconds": 42137.64096647501,
+      "pairMethod": {
+        "secondsFromSocrates": 0.030094385147094727,
+        "missM": 4104.662652516773,
+        "speedMS": 12405.536580101405
+      },
+      "diagnosis": "the module finds this minimum within 5 km: the screen missed it (screen defect)"
+    },
+    {
+      "pair": [
+        68857,
+        100281
+      ],
+      "names": [
+        "STARLINK-37468",
+        "STARLINK-37973"
+      ],
+      "statuses": [
+        "+",
+        "+"
+      ],
+      "cls": "numbered100000",
+      "band": "1 to 5 km",
+      "socratesTcaUtc": "2026-11-03 20:28:44.801",
+      "socratesRangeM": 4988,
+      "socratesSpeedMS": 11212,
+      "nearestScreenEvent": null,
+      "excludedInSlice": [],
+      "absentFromCatalog": [],
+      "failedPairsInSlice": 0,
+      "sliceBoundarySeconds": 12524.800984561443,
+      "pairMethod": {
+        "secondsFromSocrates": 0.0013276934623718262,
+        "missM": 5000.887268856315,
+        "speedMS": 11212.070109065562
+      },
+      "diagnosis": "the module puts this minimum beyond 5 km (threshold edge or geometry difference)"
+    },
+    {
+      "pair": [
+        54255,
+        63752
+      ],
+      "names": [
+        "JILIN-1 GAOFEN 03D52",
+        "STARLINK-11702"
+      ],
+      "statuses": [
+        "+",
+        "+"
+      ],
+      "cls": "primary",
+      "band": "1 to 5 km",
+      "socratesTcaUtc": "2026-11-02 15:45:05.953",
+      "socratesRangeM": 4998,
+      "socratesSpeedMS": 14386,
+      "nearestScreenEvent": null,
+      "excludedInSlice": [],
+      "absentFromCatalog": [],
+      "failedPairsInSlice": 0,
+      "sliceBoundarySeconds": 4494.046998023987,
+      "pairMethod": {
+        "secondsFromSocrates": 0.00008046627044677734,
+        "missM": 5000.111238729619,
+        "speedMS": 14386.395268626278
+      },
+      "diagnosis": "the module puts this minimum beyond 5 km (threshold edge or geometry difference)"
+    },
+    {
+      "pair": [
+        54209,
+        100300
+      ],
+      "names": [
+        "STARLINK-5259",
+        "STARLINK-37874"
+      ],
+      "statuses": [
+        "+",
+        "+"
+      ],
+      "cls": "numbered100000",
+      "band": "1 to 5 km",
+      "socratesTcaUtc": "2026-10-30 08:24:15.572",
+      "socratesRangeM": 5000,
+      "socratesSpeedMS": 7631,
+      "nearestScreenEvent": {
+        "tcaUtc": "2026-10-30T09:58:03.156Z",
+        "secondsFromSocrates": 5627.584362030029,
+        "missM": 2997.459734511063
+      },
+      "excludedInSlice": [],
+      "absentFromCatalog": [],
+      "failedPairsInSlice": 0,
+      "sliceBoundarySeconds": 30944.428011775017,
+      "pairMethod": {
+        "secondsFromSocrates": 0.00020116567611694336,
+        "missM": 5000.105474967641,
+        "speedMS": 7631.47710579332
+      },
+      "diagnosis": "the module puts this minimum beyond 5 km (threshold edge or geometry difference)"
+    }
+  ],
+  "geometry": {
+    "primary": {
+      "matched": 7317,
+      "byStratum": {
+        "NLRV": {
+          "matched": 7009,
+          "tcaSeconds": {
+            "n": 7009,
+            "median": 0.0002816319465637207,
+            "p95": 0.0008046627044677734,
+            "p99": 0.0027358531951904297,
+            "max": 0.02667456865310669
+          },
+          "missM": {
+            "n": 7009,
+            "median": 0.367347557175151,
+            "p95": 3.2975296563377015,
+            "p99": 14.665989070823343,
+            "max": 271.52302542247617
+          },
+          "speedMS": {
+            "n": 7009,
+            "median": 0.25381936552003026,
+            "p95": 0.4761509144009324,
+            "p99": 0.4953264227606269,
+            "max": 0.5000875553851074
+          },
+          "beyond": {
+            "tca": 11,
+            "miss": 237,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 8,
+          "tcaSeconds": {
+            "n": 8,
+            "median": 0.005270540714263916,
+            "p95": 0.17139315605163574,
+            "p99": 0.17139315605163574,
+            "max": 0.17139315605163574
+          },
+          "missM": {
+            "n": 8,
+            "median": 0.7921368825009267,
+            "p95": 1.8774045715158536,
+            "p99": 1.8774045715158536,
+            "max": 1.8774045715158536
+          },
+          "speedMS": {
+            "n": 8,
+            "median": 0.29980348415537605,
+            "p95": 0.4765293266970403,
+            "p99": 0.4765293266970403,
+            "max": 0.4765293266970403
+          },
+          "beyond": {
+            "tca": 3,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 300,
+          "tcaSeconds": {
+            "n": 300,
+            "median": 0.10995715856552124,
+            "p95": 0.3103986382484436,
+            "p99": 0.34145861864089966,
+            "max": 0.42132139205932617
+          },
+          "missM": {
+            "n": 300,
+            "median": 0.24219759372726912,
+            "p95": 0.5025480504504003,
+            "p99": 0.5707098379551212,
+            "max": 0.6235579935600981
+          },
+          "speedMS": {
+            "n": 300,
+            "median": 0.07140139465730422,
+            "p95": 0.4182531793237354,
+            "p99": 0.49504326821098843,
+            "max": 0.49984290633038597
+          },
+          "beyond": {
+            "tca": 285,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 7317,
+        "median": 0.35759259887936423,
+        "p95": 3.1240689023488812,
+        "p99": 14.443592926440942,
+        "max": 271.52302542247617
+      },
+      "speedMS": {
+        "n": 7317,
+        "median": 0.24581393466905865,
+        "p95": 0.47584561453345486,
+        "p99": 0.49529773914036923,
+        "max": 0.5000875553851074
+      },
+      "dseDays": {
+        "n": 14634,
+        "median": 0.00025336863845559776,
+        "p95": 0.0004744621887802225,
+        "p99": 0.0004947736412286297,
+        "max": 0.0005007175020872445
+      },
+      "log10PcRatio": {
+        "n": 7317,
+        "median": 0.4684717019085064,
+        "p95": 1.3632832000663007,
+        "p99": 1.3881244326727442,
+        "max": 1.794357585639898
+      },
+      "pcRatioBelowOne": 5186,
+      "pcCompared": 7317,
+      "beyondTolerance": {
+        "tcaNlrv": 11,
+        "miss": 237,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [
+          {
+            "pair": [
+              53598,
+              67253
+            ],
+            "names": [
+              "STARLINK-4676",
+              "AIST-2T 1"
+            ],
+            "socratesTcaUtc": "2026-11-03 09:57:00.369",
+            "socratesRangeM": 3159,
+            "socratesSpeedMS": 14237,
+            "screenTcaUtc": "2026-11-03T09:57:00.396Z",
+            "dtSeconds": 0.02667456865310669,
+            "dMissM": 140.8342266201662,
+            "dSpeedMS": -0.3124348304718296,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53598,
+              67253
+            ],
+            "names": [
+              "STARLINK-4676",
+              "AIST-2T 1"
+            ],
+            "socratesTcaUtc": "2026-11-03 10:43:10.490",
+            "socratesRangeM": 3225,
+            "socratesSpeedMS": 14269,
+            "screenTcaUtc": "2026-11-03T10:43:10.517Z",
+            "dtSeconds": 0.026553869247436523,
+            "dMissM": -14.472399741140634,
+            "dSpeedMS": 0.47236528967914637,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53790,
+              59878
+            ],
+            "names": [
+              "STARLINK-4734",
+              "STARLINK-31943"
+            ],
+            "socratesTcaUtc": "2026-11-04 07:21:28.376",
+            "socratesRangeM": 2476,
+            "socratesSpeedMS": 7209,
+            "screenTcaUtc": "2026-11-04T07:21:28.402Z",
+            "dtSeconds": 0.02578943967819214,
+            "dMissM": 271.52302542247617,
+            "dSpeedMS": 0.13036754842141818,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              65412,
+              33687
+            ],
+            "names": [
+              "STARLINK-34992",
+              "FENGYUN 1C DEB"
+            ],
+            "socratesTcaUtc": "2026-11-01 16:54:35.190",
+            "socratesRangeM": 2353,
+            "socratesSpeedMS": 14778,
+            "screenTcaUtc": "2026-11-01T16:54:35.173Z",
+            "dtSeconds": -0.017058849334716797,
+            "dMissM": 36.70861776972379,
+            "dSpeedMS": -0.3796504636084137,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-04 12:19:19.788",
+            "socratesRangeM": 2854,
+            "socratesSpeedMS": 9757,
+            "screenTcaUtc": "2026-11-04T12:19:19.803Z",
+            "dtSeconds": 0.015248358249664307,
+            "dMissM": 168.651168652068,
+            "dSpeedMS": 0.24641701326618204,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              45695,
+              37734
+            ],
+            "names": [
+              "STARLINK-1420",
+              "CZ-2C DEB"
+            ],
+            "socratesTcaUtc": "2026-11-02 07:48:33.907",
+            "socratesRangeM": 1245,
+            "socratesSpeedMS": 7456,
+            "screenTcaUtc": "2026-11-02T07:48:33.892Z",
+            "dtSeconds": -0.014926493167877197,
+            "dMissM": 166.22054670260536,
+            "dSpeedMS": 0.4766139444282089,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-04 09:57:02.076",
+            "socratesRangeM": 1935,
+            "socratesSpeedMS": 9778,
+            "screenTcaUtc": "2026-11-04T09:57:02.090Z",
+            "dtSeconds": 0.014121830463409424,
+            "dMissM": 151.09875213831447,
+            "dSpeedMS": -0.4146453644862049,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52638,
+              59134
+            ],
+            "names": [
+              "STARLINK-3941",
+              "JACKAL X-1L-002"
+            ],
+            "socratesTcaUtc": "2026-11-01 18:29:36.415",
+            "socratesRangeM": 2549,
+            "socratesSpeedMS": 14696,
+            "screenTcaUtc": "2026-11-01T18:29:36.428Z",
+            "dtSeconds": 0.012874603271484375,
+            "dMissM": -53.4386560418302,
+            "dSpeedMS": 0.3657732145184127,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53902,
+              60494
+            ],
+            "names": [
+              "STARLINK-5021",
+              "FLOCK 4BE-22"
+            ],
+            "socratesTcaUtc": "2026-11-04 10:09:27.456",
+            "socratesRangeM": 4764,
+            "socratesSpeedMS": 13860,
+            "screenTcaUtc": "2026-11-04T10:09:27.444Z",
+            "dtSeconds": -0.012311339378356934,
+            "dMissM": 10.695531790857785,
+            "dSpeedMS": -0.21828199447190855,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-03 22:52:44.443",
+            "socratesRangeM": 1511,
+            "socratesSpeedMS": 9930,
+            "screenTcaUtc": "2026-11-03T22:52:44.455Z",
+            "dtSeconds": 0.012150406837463379,
+            "dMissM": 110.52937849072373,
+            "dSpeedMS": 0.4341093761504453,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-03 20:30:20.300",
+            "socratesRangeM": 3033,
+            "socratesSpeedMS": 9976,
+            "screenTcaUtc": "2026-11-03T20:30:20.312Z",
+            "dtSeconds": 0.011949241161346436,
+            "dMissM": 96.87881339311525,
+            "dSpeedMS": 0.2754863032623689,
+            "stratum": "NLRV"
+          }
+        ],
+        "miss": [
+          {
+            "pair": [
+              53790,
+              59878
+            ],
+            "names": [
+              "STARLINK-4734",
+              "STARLINK-31943"
+            ],
+            "socratesTcaUtc": "2026-11-04 07:21:28.376",
+            "socratesRangeM": 2476,
+            "socratesSpeedMS": 7209,
+            "screenTcaUtc": "2026-11-04T07:21:28.402Z",
+            "dtSeconds": 0.02578943967819214,
+            "dMissM": 271.52302542247617,
+            "dSpeedMS": 0.13036754842141818,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-04 12:19:19.788",
+            "socratesRangeM": 2854,
+            "socratesSpeedMS": 9757,
+            "screenTcaUtc": "2026-11-04T12:19:19.803Z",
+            "dtSeconds": 0.015248358249664307,
+            "dMissM": 168.651168652068,
+            "dSpeedMS": 0.24641701326618204,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              45695,
+              37734
+            ],
+            "names": [
+              "STARLINK-1420",
+              "CZ-2C DEB"
+            ],
+            "socratesTcaUtc": "2026-11-02 07:48:33.907",
+            "socratesRangeM": 1245,
+            "socratesSpeedMS": 7456,
+            "screenTcaUtc": "2026-11-02T07:48:33.892Z",
+            "dtSeconds": -0.014926493167877197,
+            "dMissM": 166.22054670260536,
+            "dSpeedMS": 0.4766139444282089,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-04 09:57:02.076",
+            "socratesRangeM": 1935,
+            "socratesSpeedMS": 9778,
+            "screenTcaUtc": "2026-11-04T09:57:02.090Z",
+            "dtSeconds": 0.014121830463409424,
+            "dMissM": 151.09875213831447,
+            "dSpeedMS": -0.4146453644862049,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53598,
+              67253
+            ],
+            "names": [
+              "STARLINK-4676",
+              "AIST-2T 1"
+            ],
+            "socratesTcaUtc": "2026-11-03 09:57:00.369",
+            "socratesRangeM": 3159,
+            "socratesSpeedMS": 14237,
+            "screenTcaUtc": "2026-11-03T09:57:00.396Z",
+            "dtSeconds": 0.02667456865310669,
+            "dMissM": 140.8342266201662,
+            "dSpeedMS": -0.3124348304718296,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-03 22:52:44.443",
+            "socratesRangeM": 1511,
+            "socratesSpeedMS": 9930,
+            "screenTcaUtc": "2026-11-03T22:52:44.455Z",
+            "dtSeconds": 0.012150406837463379,
+            "dMissM": 110.52937849072373,
+            "dSpeedMS": 0.4341093761504453,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              46082,
+              49949
+            ],
+            "names": [
+              "STARLINK-1578",
+              "GLOBAL-17"
+            ],
+            "socratesTcaUtc": "2026-10-31 13:15:20.048",
+            "socratesRangeM": 4424,
+            "socratesSpeedMS": 10291,
+            "screenTcaUtc": "2026-10-31T13:15:20.039Z",
+            "dtSeconds": -0.009253621101379395,
+            "dMissM": 99.23834653806534,
+            "dSpeedMS": 0.018675790684937965,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              59418,
+              35484
+            ],
+            "names": [
+              "STARLINK-31414",
+              "IRIDIUM 33 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-03 02:57:44.116",
+            "socratesRangeM": 832,
+            "socratesSpeedMS": 7508,
+            "screenTcaUtc": "2026-11-03T02:57:44.124Z",
+            "dtSeconds": 0.00756382942199707,
+            "dMissM": 98.35007636399052,
+            "dSpeedMS": 0.05343181834814459,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57037,
+              67079
+            ],
+            "names": [
+              "OBJECT AK",
+              "STARLINK-36159"
+            ],
+            "socratesTcaUtc": "2026-11-03 20:30:20.300",
+            "socratesRangeM": 3033,
+            "socratesSpeedMS": 9976,
+            "screenTcaUtc": "2026-11-03T20:30:20.312Z",
+            "dtSeconds": 0.011949241161346436,
+            "dMissM": 96.87881339311525,
+            "dSpeedMS": 0.2754863032623689,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              56866,
+              67450
+            ],
+            "names": [
+              "OBJECT W",
+              "STARLINK-36525"
+            ],
+            "socratesTcaUtc": "2026-11-01 16:27:11.798",
+            "socratesRangeM": 4368,
+            "socratesSpeedMS": 9271,
+            "screenTcaUtc": "2026-11-01T16:27:11.793Z",
+            "dtSeconds": -0.005471706390380859,
+            "dMissM": -61.774992787753035,
+            "dSpeedMS": -0.41349435641132004,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64549,
+              67450
+            ],
+            "names": [
+              "ROADS 2",
+              "STARLINK-36525"
+            ],
+            "socratesTcaUtc": "2026-11-02 13:54:34.760",
+            "socratesRangeM": 4521,
+            "socratesSpeedMS": 12917,
+            "screenTcaUtc": "2026-11-02T13:54:34.753Z",
+            "dtSeconds": -0.007121264934539795,
+            "dMissM": -59.18868851425668,
+            "dSpeedMS": 0.3558492851607298,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53902,
+              60494
+            ],
+            "names": [
+              "STARLINK-5021",
+              "FLOCK 4BE-22"
+            ],
+            "socratesTcaUtc": "2026-11-03 10:52:35.591",
+            "socratesRangeM": 4928,
+            "socratesSpeedMS": 13611,
+            "screenTcaUtc": "2026-11-03T10:52:35.583Z",
+            "dtSeconds": -0.008368492126464844,
+            "dMissM": -56.37946569916221,
+            "dSpeedMS": 0.13750228797653108,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53902,
+              60494
+            ],
+            "names": [
+              "STARLINK-5021",
+              "FLOCK 4BE-22"
+            ],
+            "socratesTcaUtc": "2026-11-03 08:32:49.827",
+            "socratesRangeM": 4820,
+            "socratesSpeedMS": 13559,
+            "screenTcaUtc": "2026-11-03T08:32:49.818Z",
+            "dtSeconds": -0.008529424667358398,
+            "dMissM": -55.99770418230764,
+            "dSpeedMS": -0.2953109305635735,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64297,
+              35484
+            ],
+            "names": [
+              "STARLINK-34369",
+              "IRIDIUM 33 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-03 09:34:10.661",
+            "socratesRangeM": 4721,
+            "socratesSpeedMS": 12172,
+            "screenTcaUtc": "2026-11-03T09:34:10.669Z",
+            "dtSeconds": 0.007604062557220459,
+            "dMissM": 54.96500667370583,
+            "dSpeedMS": 0.4240622610759601,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52638,
+              59134
+            ],
+            "names": [
+              "STARLINK-3941",
+              "JACKAL X-1L-002"
+            ],
+            "socratesTcaUtc": "2026-11-01 18:29:36.415",
+            "socratesRangeM": 2549,
+            "socratesSpeedMS": 14696,
+            "screenTcaUtc": "2026-11-01T18:29:36.428Z",
+            "dtSeconds": 0.012874603271484375,
+            "dMissM": -53.4386560418302,
+            "dSpeedMS": 0.3657732145184127,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64297,
+              35484
+            ],
+            "names": [
+              "STARLINK-34369",
+              "IRIDIUM 33 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-03 05:38:52.924",
+            "socratesRangeM": 1634,
+            "socratesSpeedMS": 12216,
+            "screenTcaUtc": "2026-11-03T05:38:52.931Z",
+            "dtSeconds": 0.007241964340209961,
+            "dMissM": 52.753363101791365,
+            "dSpeedMS": -0.20513654538626724,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48143,
+              59758
+            ],
+            "names": [
+              "STARLINK-2486",
+              "STARLINK-11105"
+            ],
+            "socratesTcaUtc": "2026-10-31 09:53:46.491",
+            "socratesRangeM": 4887,
+            "socratesSpeedMS": 5901,
+            "screenTcaUtc": "2026-10-31T09:53:46.488Z",
+            "dtSeconds": -0.003057718276977539,
+            "dMissM": 48.62935144995026,
+            "dSpeedMS": -0.30827852345100837,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64550,
+              67450
+            ],
+            "names": [
+              "BRO-18",
+              "STARLINK-36525"
+            ],
+            "socratesTcaUtc": "2026-11-01 18:12:22.679",
+            "socratesRangeM": 3530,
+            "socratesSpeedMS": 12576,
+            "screenTcaUtc": "2026-11-01T18:12:22.674Z",
+            "dtSeconds": -0.005511939525604248,
+            "dMissM": -46.001233888071965,
+            "dSpeedMS": -0.20230333986000915,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              62143,
+              35484
+            ],
+            "names": [
+              "STARLINK-32485",
+              "IRIDIUM 33 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-02 01:32:22.599",
+            "socratesRangeM": 4813,
+            "socratesSpeedMS": 8715,
+            "screenTcaUtc": "2026-11-02T01:32:22.606Z",
+            "dtSeconds": 0.006759166717529297,
+            "dMissM": 43.69643711585286,
+            "dSpeedMS": -0.43902666515168676,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47916,
+              65870
+            ],
+            "names": [
+              "STARLINK-2378",
+              "STARLINK-35433"
+            ],
+            "socratesTcaUtc": "2026-11-04 11:39:20.861",
+            "socratesRangeM": 4002,
+            "socratesSpeedMS": 4099,
+            "screenTcaUtc": "2026-11-04T11:39:20.858Z",
+            "dtSeconds": -0.0034600496292114258,
+            "dMissM": 42.95469865313771,
+            "dSpeedMS": 0.18223566022970772,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52638,
+              62677
+            ],
+            "names": [
+              "STARLINK-3941",
+              "ELEVATION-1"
+            ],
+            "socratesTcaUtc": "2026-10-31 14:56:13.053",
+            "socratesRangeM": 2539,
+            "socratesSpeedMS": 13420,
+            "screenTcaUtc": "2026-10-31T14:56:13.060Z",
+            "dtSeconds": 0.007081031799316406,
+            "dMissM": 42.522581863342566,
+            "dSpeedMS": 0.2831485773258464,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              54255,
+              62886
+            ],
+            "names": [
+              "JILIN-1 GAOFEN 03D52",
+              "STARLINK-11365"
+            ],
+            "socratesTcaUtc": "2026-11-01 10:30:27.969",
+            "socratesRangeM": 3497,
+            "socratesSpeedMS": 11642,
+            "screenTcaUtc": "2026-11-01T10:30:27.965Z",
+            "dtSeconds": -0.004063546657562256,
+            "dMissM": -38.0965570981848,
+            "dSpeedMS": 0.4721073340242583,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              60052,
+              35484
+            ],
+            "names": [
+              "STARLINK-31775",
+              "IRIDIUM 33 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-02 04:13:35.256",
+            "socratesRangeM": 4125,
+            "socratesSpeedMS": 13729,
+            "screenTcaUtc": "2026-11-02T04:13:35.262Z",
+            "dtSeconds": 0.0064373016357421875,
+            "dMissM": -37.28200150684552,
+            "dSpeedMS": 0.496026556709694,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              65412,
+              33687
+            ],
+            "names": [
+              "STARLINK-34992",
+              "FENGYUN 1C DEB"
+            ],
+            "socratesTcaUtc": "2026-11-01 16:54:35.190",
+            "socratesRangeM": 2353,
+            "socratesSpeedMS": 14778,
+            "screenTcaUtc": "2026-11-01T16:54:35.173Z",
+            "dtSeconds": -0.017058849334716797,
+            "dMissM": 36.70861776972379,
+            "dSpeedMS": -0.3796504636084137,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              63661,
+              35484
+            ],
+            "names": [
+              "STARLINK-33823",
+              "IRIDIUM 33 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-02 05:02:29.205",
+            "socratesRangeM": 1981,
+            "socratesSpeedMS": 10701,
+            "screenTcaUtc": "2026-11-02T05:02:29.212Z",
+            "dtSeconds": 0.006517767906188965,
+            "dMissM": 35.40038770443084,
+            "dSpeedMS": -0.05902336517101503,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52132,
+              63983
+            ],
+            "names": [
+              "STARLINK-3718",
+              "SCS-01 B"
+            ],
+            "socratesTcaUtc": "2026-10-30 16:58:30.532",
+            "socratesRangeM": 2478,
+            "socratesSpeedMS": 8697,
+            "screenTcaUtc": "2026-10-30T16:58:30.529Z",
+            "dtSeconds": -0.0030174851417541504,
+            "dMissM": 34.7794526466746,
+            "dSpeedMS": 0.265839505203985,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52638,
+              60207
+            ],
+            "names": [
+              "STARLINK-3941",
+              "R5-S2"
+            ],
+            "socratesTcaUtc": "2026-10-31 07:51:21.041",
+            "socratesRangeM": 4607,
+            "socratesSpeedMS": 12673,
+            "screenTcaUtc": "2026-10-31T07:51:21.047Z",
+            "dtSeconds": 0.006155669689178467,
+            "dMissM": 34.47271167594954,
+            "dSpeedMS": 0.16454595508366765,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              63318,
+              68373
+            ],
+            "names": [
+              "STARLINK-11593",
+              "RASSVET-3 14"
+            ],
+            "socratesTcaUtc": "2026-11-01 21:19:05.213",
+            "socratesRangeM": 4264,
+            "socratesSpeedMS": 7767,
+            "screenTcaUtc": "2026-11-01T21:19:05.209Z",
+            "dtSeconds": -0.004385411739349365,
+            "dMissM": 32.86229019686107,
+            "dSpeedMS": 0.24876174320525024,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53668,
+              57418
+            ],
+            "names": [
+              "STARLINK-4458",
+              "STARLINK-30221"
+            ],
+            "socratesTcaUtc": "2026-11-01 23:42:51.427",
+            "socratesRangeM": 2999,
+            "socratesSpeedMS": 13615,
+            "screenTcaUtc": "2026-11-01T23:42:51.421Z",
+            "dtSeconds": -0.006397068500518799,
+            "dMissM": 32.73419692113339,
+            "dSpeedMS": 0.046096899335680064,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53668,
+              57418
+            ],
+            "names": [
+              "STARLINK-4458",
+              "STARLINK-30221"
+            ],
+            "socratesTcaUtc": "2026-11-01 14:42:19.442",
+            "socratesRangeM": 3058,
+            "socratesSpeedMS": 13719,
+            "screenTcaUtc": "2026-11-01T14:42:19.437Z",
+            "dtSeconds": -0.005230307579040527,
+            "dMissM": 32.71593879384727,
+            "dSpeedMS": -0.00889977970837208,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              51813,
+              38302
+            ],
+            "names": [
+              "STARLINK-3552",
+              "CZ-2D DEB"
+            ],
+            "socratesTcaUtc": "2026-11-04 09:03:30.024",
+            "socratesRangeM": 4102,
+            "socratesSpeedMS": 6991,
+            "screenTcaUtc": "2026-11-04T09:03:30.027Z",
+            "dtSeconds": 0.0027760863304138184,
+            "dMissM": 32.64044822075084,
+            "dSpeedMS": 0.36756649616381765,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52464,
+              35073
+            ],
+            "names": [
+              "STARLINK-3904",
+              "COSMOS 2251 DEB"
+            ],
+            "socratesTcaUtc": "2026-11-04 14:02:34.094",
+            "socratesRangeM": 2129,
+            "socratesSpeedMS": 5032,
+            "screenTcaUtc": "2026-11-04T14:02:34.091Z",
+            "dtSeconds": -0.0026553869247436523,
+            "dMissM": -32.381119578010384,
+            "dSpeedMS": -0.4115819994458434,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              51813,
+              38302
+            ],
+            "names": [
+              "STARLINK-3552",
+              "CZ-2D DEB"
+            ],
+            "socratesTcaUtc": "2026-11-04 04:21:48.469",
+            "socratesRangeM": 4304,
+            "socratesSpeedMS": 6920,
+            "screenTcaUtc": "2026-11-04T04:21:48.472Z",
+            "dtSeconds": 0.0027358531951904297,
+            "dMissM": -32.26103263614823,
+            "dSpeedMS": -0.11953517358233512,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              51813,
+              38302
+            ],
+            "names": [
+              "STARLINK-3552",
+              "CZ-2D DEB"
+            ],
+            "socratesTcaUtc": "2026-11-04 05:55:42.365",
+            "socratesRangeM": 1429,
+            "socratesSpeedMS": 6944,
+            "screenTcaUtc": "2026-11-04T05:55:42.367Z",
+            "dtSeconds": 0.002212822437286377,
+            "dMissM": -31.709713764102162,
+            "dSpeedMS": -0.4458614876048159,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              51813,
+              38302
+            ],
+            "names": [
+              "STARLINK-3552",
+              "CZ-2D DEB"
+            ],
+            "socratesTcaUtc": "2026-11-04 07:29:36.216",
+            "socratesRangeM": 1513,
+            "socratesSpeedMS": 6967,
+            "screenTcaUtc": "2026-11-04T07:29:36.219Z",
+            "dtSeconds": 0.002816319465637207,
+            "dMissM": 29.727053477782874,
+            "dSpeedMS": 0.3841022683409392,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47916,
+              59385
+            ],
+            "names": [
+              "STARLINK-2378",
+              "STARLINK-31717"
+            ],
+            "socratesTcaUtc": "2026-11-03 01:15:22.248",
+            "socratesRangeM": 2785,
+            "socratesSpeedMS": 115,
+            "screenTcaUtc": "2026-11-03T01:15:22.249Z",
+            "dtSeconds": 0.0008046627044677734,
+            "dMissM": -29.281447565968392,
+            "dSpeedMS": 0.40741281829185994,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              39469,
+              69145
+            ],
+            "names": [
+              "SMDC ONE 2.4",
+              "STARLINK-37657"
+            ],
+            "socratesTcaUtc": "2026-11-03 21:00:56.000",
+            "socratesRangeM": 2486,
+            "socratesSpeedMS": 4827,
+            "screenTcaUtc": "2026-11-03T21:00:56.001Z",
+            "dtSeconds": 0.0010058283805847168,
+            "dMissM": -27.82850385556594,
+            "dSpeedMS": 0.3199157104754704,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              43808,
+              48304
+            ],
+            "names": [
+              "POLAR SCOUT YUKON",
+              "STARLINK-2524"
+            ],
+            "socratesTcaUtc": "2026-11-04 12:58:19.839",
+            "socratesRangeM": 4697,
+            "socratesSpeedMS": 7236,
+            "screenTcaUtc": "2026-11-04T12:58:19.836Z",
+            "dtSeconds": -0.003057718276977539,
+            "dMissM": -27.793288075296005,
+            "dSpeedMS": 0.12699115304894804,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              51148,
+              56600
+            ],
+            "names": [
+              "STARLINK-3359",
+              "CZ-6A DEB"
+            ],
+            "socratesTcaUtc": "2026-11-03 02:34:50.473",
+            "socratesRangeM": 1364,
+            "socratesSpeedMS": 11257,
+            "screenTcaUtc": "2026-11-03T02:34:50.482Z",
+            "dtSeconds": 0.009012222290039062,
+            "dMissM": -27.409408073184295,
+            "dSpeedMS": -0.16353439962404082,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53668,
+              57418
+            ],
+            "names": [
+              "STARLINK-4458",
+              "STARLINK-30221"
+            ],
+            "socratesTcaUtc": "2026-11-01 19:12:36.205",
+            "socratesRangeM": 2058,
+            "socratesSpeedMS": 13668,
+            "screenTcaUtc": "2026-11-01T19:12:36.200Z",
+            "dtSeconds": -0.005230307579040527,
+            "dMissM": -24.7609484866814,
+            "dSpeedMS": -0.2837752065515815,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47911,
+              66638
+            ],
+            "names": [
+              "STARLINK-2371",
+              "STARLINK-35972"
+            ],
+            "socratesTcaUtc": "2026-11-04 04:51:29.972",
+            "socratesRangeM": 4002,
+            "socratesSpeedMS": 11528,
+            "screenTcaUtc": "2026-11-04T04:51:29.974Z",
+            "dtSeconds": 0.002333521842956543,
+            "dMissM": 24.745627939964834,
+            "dSpeedMS": -0.3666755611611734,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47911,
+              66638
+            ],
+            "names": [
+              "STARLINK-2371",
+              "STARLINK-35972"
+            ],
+            "socratesTcaUtc": "2026-11-04 03:17:45.851",
+            "socratesRangeM": 3578,
+            "socratesSpeedMS": 11528,
+            "screenTcaUtc": "2026-11-04T03:17:45.854Z",
+            "dtSeconds": 0.0030174851417541504,
+            "dMissM": -24.2052169676831,
+            "dSpeedMS": -0.3771741839045717,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48301,
+              49949
+            ],
+            "names": [
+              "STARLINK-2537",
+              "GLOBAL-17"
+            ],
+            "socratesTcaUtc": "2026-11-01 08:26:06.975",
+            "socratesRangeM": 4909,
+            "socratesSpeedMS": 9926,
+            "screenTcaUtc": "2026-11-01T08:26:06.972Z",
+            "dtSeconds": -0.0029772520065307617,
+            "dMissM": -23.403364755145958,
+            "dSpeedMS": -0.4336106409373315,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              56960,
+              63368
+            ],
+            "names": [
+              "ORBITER SN3",
+              "STARLINK-33578"
+            ],
+            "socratesTcaUtc": "2026-11-03 20:24:18.138",
+            "socratesRangeM": 3713,
+            "socratesSpeedMS": 10425,
+            "screenTcaUtc": "2026-11-03T20:24:18.140Z",
+            "dtSeconds": 0.0020518898963928223,
+            "dMissM": 23.227168621240708,
+            "dSpeedMS": 0.3384909148408042,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48557,
+              12465
+            ],
+            "names": [
+              "STARLINK-2155",
+              "SL-3 R/B"
+            ],
+            "socratesTcaUtc": "2026-11-03 02:51:08.352",
+            "socratesRangeM": 1083,
+            "socratesSpeedMS": 10569,
+            "screenTcaUtc": "2026-11-03T02:51:08.350Z",
+            "dtSeconds": -0.0015288591384887695,
+            "dMissM": 22.897008834111375,
+            "dSpeedMS": -0.40299680170028296,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48557,
+              62677
+            ],
+            "names": [
+              "STARLINK-2155",
+              "ELEVATION-1"
+            ],
+            "socratesTcaUtc": "2026-11-04 11:32:00.303",
+            "socratesRangeM": 4890,
+            "socratesSpeedMS": 8381,
+            "screenTcaUtc": "2026-11-04T11:32:00.300Z",
+            "dtSeconds": -0.0027358531951904297,
+            "dMissM": 22.581261613256174,
+            "dSpeedMS": 0.2762895529249363,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              43808,
+              48644
+            ],
+            "names": [
+              "POLAR SCOUT YUKON",
+              "STARLINK-2695"
+            ],
+            "socratesTcaUtc": "2026-11-04 11:22:47.848",
+            "socratesRangeM": 2923,
+            "socratesSpeedMS": 8364,
+            "screenTcaUtc": "2026-11-04T11:22:47.851Z",
+            "dtSeconds": 0.0030979514122009277,
+            "dMissM": -22.077786015542188,
+            "dSpeedMS": 0.14211397027793282,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48644,
+              59587
+            ],
+            "names": [
+              "STARLINK-2695",
+              "NEONSAT-1"
+            ],
+            "socratesTcaUtc": "2026-11-03 22:10:15.369",
+            "socratesRangeM": 3695,
+            "socratesSpeedMS": 7934,
+            "screenTcaUtc": "2026-11-03T22:10:15.371Z",
+            "dtSeconds": 0.0022932887077331543,
+            "dMissM": -21.417132331954235,
+            "dSpeedMS": 0.0028423391540854936,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              56832,
+              56964
+            ],
+            "names": [
+              "STARLINK-30128",
+              "AFR-1"
+            ],
+            "socratesTcaUtc": "2026-11-04 12:40:48.887",
+            "socratesRangeM": 4537,
+            "socratesSpeedMS": 10524,
+            "screenTcaUtc": "2026-11-04T12:40:48.885Z",
+            "dtSeconds": -0.0022530555725097656,
+            "dMissM": -20.327755430431353,
+            "dSpeedMS": -0.3627626081251947,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              57414,
+              62402
+            ],
+            "names": [
+              "STARLINK-30193",
+              "DJIBOUTI-1B"
+            ],
+            "socratesTcaUtc": "2026-11-03 23:51:39.811",
+            "socratesRangeM": 4530,
+            "socratesSpeedMS": 9969,
+            "screenTcaUtc": "2026-11-03T23:51:39.811Z",
+            "dtSeconds": 0.0004425644874572754,
+            "dMissM": 19.827727060015604,
+            "dSpeedMS": 0.07333387029029836,
+            "stratum": "NLRV"
+          }
+        ],
+        "speed": []
+      }
+    },
+    "editionMismatch": {
+      "matched": 0,
+      "byStratum": {
+        "NLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 0
+      },
+      "speedMS": {
+        "n": 0
+      },
+      "dseDays": {
+        "n": 0
+      },
+      "log10PcRatio": {
+        "n": 0
+      },
+      "pcRatioBelowOne": 0,
+      "pcCompared": 0,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    },
+    "numbered100000": {
+      "matched": 4687,
+      "byStratum": {
+        "NLRV": {
+          "matched": 4646,
+          "tcaSeconds": {
+            "n": 4646,
+            "median": 0.0002816319465637207,
+            "p95": 0.0012069940567016602,
+            "p99": 0.0024944543838500977,
+            "max": 0.016294419765472412
+          },
+          "missM": {
+            "n": 4646,
+            "median": 0.49108484519911144,
+            "p95": 6.84621461454708,
+            "p99": 16.604857568792795,
+            "max": 140.6229062243192
+          },
+          "speedMS": {
+            "n": 4646,
+            "median": 0.24604536265542265,
+            "p95": 0.47547166813637887,
+            "p99": 0.49496565292156447,
+            "max": 0.5001271256442124
+          },
+          "beyond": {
+            "tca": 8,
+            "miss": 325,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 1,
+          "tcaSeconds": {
+            "n": 1,
+            "median": 0.043813884258270264,
+            "p95": 0.043813884258270264,
+            "p99": 0.043813884258270264,
+            "max": 0.043813884258270264
+          },
+          "missM": {
+            "n": 1,
+            "median": 0.34837712864282366,
+            "p95": 0.34837712864282366,
+            "p99": 0.34837712864282366,
+            "max": 0.34837712864282366
+          },
+          "speedMS": {
+            "n": 1,
+            "median": 0.3633648634759421,
+            "p95": 0.3633648634759421,
+            "p99": 0.3633648634759421,
+            "max": 0.3633648634759421
+          },
+          "beyond": {
+            "tca": 1,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 40,
+          "tcaSeconds": {
+            "n": 40,
+            "median": 0.19830912351608276,
+            "p95": 1.1599212884902954,
+            "p99": 3.449387848377228,
+            "max": 3.449387848377228
+          },
+          "missM": {
+            "n": 40,
+            "median": 0.6567713248782638,
+            "p95": 2.1523684497105933,
+            "p99": 2.190889086715515,
+            "max": 2.190889086715515
+          },
+          "speedMS": {
+            "n": 40,
+            "median": 0.23065953291043328,
+            "p95": 0.4822864963488537,
+            "p99": 0.4956692639906306,
+            "max": 0.4956692639906306
+          },
+          "beyond": {
+            "tca": 39,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 4687,
+        "median": 0.4915256061449327,
+        "p95": 6.833983719620164,
+        "p99": 16.604857568792795,
+        "max": 140.6229062243192
+      },
+      "speedMS": {
+        "n": 4687,
+        "median": 0.24602586213040922,
+        "p95": 0.47547166813637887,
+        "p99": 0.4949857773917756,
+        "max": 0.5001271256442124
+      },
+      "dseDays": {
+        "n": 9374,
+        "median": 0.0002456672154362849,
+        "p95": 0.0004749230742453481,
+        "p99": 0.0004961074851452807,
+        "max": 0.0005007587037981764
+      },
+      "log10PcRatio": {
+        "n": 4687,
+        "median": 0.9191752778981754,
+        "p95": 1.0788109621903155,
+        "p99": 1.3660211675290812,
+        "max": 1.883471772979797
+      },
+      "pcRatioBelowOne": 4334,
+      "pcCompared": 4687,
+      "beyondTolerance": {
+        "tcaNlrv": 8,
+        "miss": 325,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [
+          {
+            "pair": [
+              47788,
+              100764
+            ],
+            "names": [
+              "STARLINK-2314",
+              "STARLINK-38451"
+            ],
+            "socratesTcaUtc": "2026-10-31 20:15:42.098",
+            "socratesRangeM": 1237,
+            "socratesSpeedMS": 13322,
+            "screenTcaUtc": "2026-10-31T20:15:42.114Z",
+            "dtSeconds": 0.016294419765472412,
+            "dMissM": -108.52842544974965,
+            "dSpeedMS": 0.42958279105369,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47788,
+              100764
+            ],
+            "names": [
+              "STARLINK-2314",
+              "STARLINK-38451"
+            ],
+            "socratesTcaUtc": "2026-10-31 17:58:01.100",
+            "socratesRangeM": 4427,
+            "socratesSpeedMS": 13310,
+            "screenTcaUtc": "2026-10-31T17:58:01.116Z",
+            "dtSeconds": 0.01573115587234497,
+            "dMissM": -43.39581995356002,
+            "dSpeedMS": 0.06335370941087604,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              61586,
+              100858
+            ],
+            "names": [
+              "STARLINK-11360",
+              "STARLINK-40099"
+            ],
+            "socratesTcaUtc": "2026-11-03 07:38:08.705",
+            "socratesRangeM": 4102,
+            "socratesSpeedMS": 9046,
+            "screenTcaUtc": "2026-11-03T07:38:08.691Z",
+            "dtSeconds": -0.013558566570281982,
+            "dMissM": 8.325816074405338,
+            "dSpeedMS": 0.32878346550569404,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48597,
+              100505
+            ],
+            "names": [
+              "STARLINK-2255",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-03 04:27:45.802",
+            "socratesRangeM": 3973,
+            "socratesSpeedMS": 11069,
+            "screenTcaUtc": "2026-11-03T04:27:45.815Z",
+            "dtSeconds": 0.013116002082824707,
+            "dMissM": -64.61464962463106,
+            "dSpeedMS": -0.17306459834435373,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              68548,
+              100003
+            ],
+            "names": [
+              "STARLINK-37145",
+              "STARLINK-38123"
+            ],
+            "socratesTcaUtc": "2026-11-03 15:01:25.437",
+            "socratesRangeM": 3063,
+            "socratesSpeedMS": 11052,
+            "screenTcaUtc": "2026-11-03T15:01:25.450Z",
+            "dtSeconds": 0.012512505054473877,
+            "dMissM": -126.42179558786665,
+            "dSpeedMS": -0.0019821078203676734,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              60747,
+              100505
+            ],
+            "names": [
+              "OBJECT C",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-02 03:29:07.918",
+            "socratesRangeM": 3281,
+            "socratesSpeedMS": 11488,
+            "screenTcaUtc": "2026-11-02T03:29:07.931Z",
+            "dtSeconds": 0.012512505054473877,
+            "dMissM": 110.74056282890933,
+            "dSpeedMS": 0.12657597020734102,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              65382,
+              100313
+            ],
+            "names": [
+              "STARLINK-35032",
+              "STARLINK-38289"
+            ],
+            "socratesTcaUtc": "2026-11-03 14:03:52.257",
+            "socratesRangeM": 4927,
+            "socratesSpeedMS": 123,
+            "screenTcaUtc": "2026-11-03T14:03:52.245Z",
+            "dtSeconds": -0.011949241161346436,
+            "dMissM": -25.937762901722635,
+            "dSpeedMS": 0.14921230219117376,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              100505,
+              13819
+            ],
+            "names": [
+              "STARLINK-38371",
+              "SL-3 R/B"
+            ],
+            "socratesTcaUtc": "2026-11-01 07:22:51.131",
+            "socratesRangeM": 4802,
+            "socratesSpeedMS": 8253,
+            "screenTcaUtc": "2026-11-01T07:22:51.142Z",
+            "dtSeconds": 0.010862946510314941,
+            "dMissM": 140.6229062243192,
+            "dSpeedMS": 0.3319348466502561,
+            "stratum": "NLRV"
+          }
+        ],
+        "miss": [
+          {
+            "pair": [
+              100505,
+              13819
+            ],
+            "names": [
+              "STARLINK-38371",
+              "SL-3 R/B"
+            ],
+            "socratesTcaUtc": "2026-11-01 07:22:51.131",
+            "socratesRangeM": 4802,
+            "socratesSpeedMS": 8253,
+            "screenTcaUtc": "2026-11-01T07:22:51.142Z",
+            "dtSeconds": 0.010862946510314941,
+            "dMissM": 140.6229062243192,
+            "dSpeedMS": 0.3319348466502561,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              68548,
+              100003
+            ],
+            "names": [
+              "STARLINK-37145",
+              "STARLINK-38123"
+            ],
+            "socratesTcaUtc": "2026-11-03 15:01:25.437",
+            "socratesRangeM": 3063,
+            "socratesSpeedMS": 11052,
+            "screenTcaUtc": "2026-11-03T15:01:25.450Z",
+            "dtSeconds": 0.012512505054473877,
+            "dMissM": -126.42179558786665,
+            "dSpeedMS": -0.0019821078203676734,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              60747,
+              100505
+            ],
+            "names": [
+              "OBJECT C",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-02 03:29:07.918",
+            "socratesRangeM": 3281,
+            "socratesSpeedMS": 11488,
+            "screenTcaUtc": "2026-11-02T03:29:07.931Z",
+            "dtSeconds": 0.012512505054473877,
+            "dMissM": 110.74056282890933,
+            "dSpeedMS": 0.12657597020734102,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47788,
+              100764
+            ],
+            "names": [
+              "STARLINK-2314",
+              "STARLINK-38451"
+            ],
+            "socratesTcaUtc": "2026-10-31 20:15:42.098",
+            "socratesRangeM": 1237,
+            "socratesSpeedMS": 13322,
+            "screenTcaUtc": "2026-10-31T20:15:42.114Z",
+            "dtSeconds": 0.016294419765472412,
+            "dMissM": -108.52842544974965,
+            "dSpeedMS": 0.42958279105369,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              60119,
+              101020
+            ],
+            "names": [
+              "STARLINK-11127",
+              "STARLINK-38466"
+            ],
+            "socratesTcaUtc": "2026-11-04 13:51:27.954",
+            "socratesRangeM": 3274,
+            "socratesSpeedMS": 8794,
+            "screenTcaUtc": "2026-11-04T13:51:27.947Z",
+            "dtSeconds": -0.007402896881103516,
+            "dMissM": 89.64489108235239,
+            "dSpeedMS": -0.3086301771163562,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              63983,
+              100512
+            ],
+            "names": [
+              "SCS-01 B",
+              "STARLINK-38362"
+            ],
+            "socratesTcaUtc": "2026-11-02 12:07:23.250",
+            "socratesRangeM": 2257,
+            "socratesSpeedMS": 4736,
+            "screenTcaUtc": "2026-11-02T12:07:23.245Z",
+            "dtSeconds": -0.005230307579040527,
+            "dMissM": -79.12464222952667,
+            "dSpeedMS": -0.48500824003440357,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53168,
+              100505
+            ],
+            "names": [
+              "STARLINK-4105",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-01 01:30:34.170",
+            "socratesRangeM": 2912,
+            "socratesSpeedMS": 13360,
+            "screenTcaUtc": "2026-11-01T01:30:34.174Z",
+            "dtSeconds": 0.0038623809814453125,
+            "dMissM": 77.0144602342657,
+            "dSpeedMS": 0.37678485079413804,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              58334,
+              100858
+            ],
+            "names": [
+              "OUTPOST MISSION 2",
+              "STARLINK-40099"
+            ],
+            "socratesTcaUtc": "2026-11-03 15:19:47.616",
+            "socratesRangeM": 3271,
+            "socratesSpeedMS": 8933,
+            "screenTcaUtc": "2026-11-03T15:19:47.609Z",
+            "dtSeconds": -0.0069200992584228516,
+            "dMissM": 73.57007957051883,
+            "dSpeedMS": 0.13948017432812776,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48597,
+              100505
+            ],
+            "names": [
+              "STARLINK-2255",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-03 04:27:45.802",
+            "socratesRangeM": 3973,
+            "socratesSpeedMS": 11069,
+            "screenTcaUtc": "2026-11-03T04:27:45.815Z",
+            "dtSeconds": 0.013116002082824707,
+            "dMissM": -64.61464962463106,
+            "dSpeedMS": -0.17306459834435373,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53168,
+              100505
+            ],
+            "names": [
+              "STARLINK-4105",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-01 03:49:53.660",
+            "socratesRangeM": 2607,
+            "socratesSpeedMS": 13350,
+            "screenTcaUtc": "2026-11-01T03:49:53.663Z",
+            "dtSeconds": 0.0033795833587646484,
+            "dMissM": 55.25633554695514,
+            "dSpeedMS": 0.13393163934597396,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              63553,
+              100858
+            ],
+            "names": [
+              "STARLINK-11697",
+              "STARLINK-40099"
+            ],
+            "socratesTcaUtc": "2026-11-03 17:27:12.572",
+            "socratesRangeM": 1454,
+            "socratesSpeedMS": 5852,
+            "screenTcaUtc": "2026-11-03T17:27:12.565Z",
+            "dtSeconds": -0.007402896881103516,
+            "dMissM": 54.67441649817897,
+            "dSpeedMS": 0.1304230658852248,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53168,
+              100505
+            ],
+            "names": [
+              "STARLINK-4105",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-01 14:39:58.727",
+            "socratesRangeM": 3405,
+            "socratesSpeedMS": 13336,
+            "screenTcaUtc": "2026-11-01T14:39:58.730Z",
+            "dtSeconds": 0.003057718276977539,
+            "dMissM": 45.54168591226562,
+            "dSpeedMS": -0.07533457482531958,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              47788,
+              100764
+            ],
+            "names": [
+              "STARLINK-2314",
+              "STARLINK-38451"
+            ],
+            "socratesTcaUtc": "2026-10-31 17:58:01.100",
+            "socratesRangeM": 4427,
+            "socratesSpeedMS": 13310,
+            "screenTcaUtc": "2026-10-31T17:58:01.116Z",
+            "dtSeconds": 0.01573115587234497,
+            "dMissM": -43.39581995356002,
+            "dSpeedMS": 0.06335370941087604,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              60119,
+              101020
+            ],
+            "names": [
+              "STARLINK-11127",
+              "STARLINK-38466"
+            ],
+            "socratesTcaUtc": "2026-11-02 09:08:04.073",
+            "socratesRangeM": 4093,
+            "socratesSpeedMS": 9210,
+            "screenTcaUtc": "2026-11-02T09:08:04.069Z",
+            "dtSeconds": -0.004425644874572754,
+            "dMissM": 38.570497653765415,
+            "dSpeedMS": 0.2782817815968883,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52996,
+              100490
+            ],
+            "names": [
+              "STARLINK-4295",
+              "STARLINK-37709"
+            ],
+            "socratesTcaUtc": "2026-11-04 15:35:47.111",
+            "socratesRangeM": 4564,
+            "socratesSpeedMS": 4407,
+            "screenTcaUtc": "2026-11-04T15:35:47.113Z",
+            "dtSeconds": 0.002092123031616211,
+            "dMissM": 29.58133703864405,
+            "dSpeedMS": 0.2494267754327666,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              55410,
+              100291
+            ],
+            "names": [
+              "STARLINK-5633",
+              "STARLINK-37827"
+            ],
+            "socratesTcaUtc": "2026-11-04 00:22:58.604",
+            "socratesRangeM": 4938,
+            "socratesSpeedMS": 12908,
+            "screenTcaUtc": "2026-11-04T00:22:58.604Z",
+            "dtSeconds": 0.0004425644874572754,
+            "dMissM": -29.13843301232191,
+            "dSpeedMS": 0.46568964195103035,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              58899,
+              100036
+            ],
+            "names": [
+              "LEMUR-2-NIMBUS2000",
+              "STARLINK-37560"
+            ],
+            "socratesTcaUtc": "2026-10-31 03:58:01.216",
+            "socratesRangeM": 4532,
+            "socratesSpeedMS": 5916,
+            "screenTcaUtc": "2026-10-31T03:58:01.211Z",
+            "dtSeconds": -0.005109608173370361,
+            "dMissM": -26.95079006374999,
+            "dSpeedMS": -0.27998507210122625,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              62964,
+              100306
+            ],
+            "names": [
+              "STARLINK-32887",
+              "STARLINK-38147"
+            ],
+            "socratesTcaUtc": "2026-11-03 10:07:18.187",
+            "socratesRangeM": 1056,
+            "socratesSpeedMS": 6427,
+            "screenTcaUtc": "2026-11-03T10:07:18.189Z",
+            "dtSeconds": 0.0020518898963928223,
+            "dMissM": 26.910038486228586,
+            "dSpeedMS": -0.047015457389534276,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              65382,
+              100313
+            ],
+            "names": [
+              "STARLINK-35032",
+              "STARLINK-38289"
+            ],
+            "socratesTcaUtc": "2026-11-03 14:03:52.257",
+            "socratesRangeM": 4927,
+            "socratesSpeedMS": 123,
+            "screenTcaUtc": "2026-11-03T14:03:52.245Z",
+            "dtSeconds": -0.011949241161346436,
+            "dMissM": -25.937762901722635,
+            "dSpeedMS": 0.14921230219117376,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              69755,
+              100313
+            ],
+            "names": [
+              "STARLINK-38006",
+              "STARLINK-38289"
+            ],
+            "socratesTcaUtc": "2026-11-02 23:11:56.641",
+            "socratesRangeM": 3811,
+            "socratesSpeedMS": 3414,
+            "screenTcaUtc": "2026-11-02T23:11:56.638Z",
+            "dtSeconds": -0.0024944543838500977,
+            "dMissM": 25.241381821107097,
+            "dSpeedMS": 0.27811213584482175,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              63983,
+              100512
+            ],
+            "names": [
+              "SCS-01 B",
+              "STARLINK-38362"
+            ],
+            "socratesTcaUtc": "2026-11-03 23:51:44.346",
+            "socratesRangeM": 2534,
+            "socratesSpeedMS": 5206,
+            "screenTcaUtc": "2026-11-03T23:51:44.343Z",
+            "dtSeconds": -0.0030174851417541504,
+            "dMissM": 24.904160896952362,
+            "dSpeedMS": 0.16702634057401156,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64371,
+              100102
+            ],
+            "names": [
+              "STARLINK-11731",
+              "STARLINK-37740"
+            ],
+            "socratesTcaUtc": "2026-11-02 08:42:57.067",
+            "socratesRangeM": 2869,
+            "socratesSpeedMS": 13249,
+            "screenTcaUtc": "2026-11-02T08:42:57.070Z",
+            "dtSeconds": 0.0028565526008605957,
+            "dMissM": 24.208674398414587,
+            "dSpeedMS": -0.3127621383882797,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              66364,
+              100425
+            ],
+            "names": [
+              "STARLINK-35797",
+              "STARLINK-37681"
+            ],
+            "socratesTcaUtc": "2026-11-04 04:09:08.494",
+            "socratesRangeM": 3864,
+            "socratesSpeedMS": 9398,
+            "screenTcaUtc": "2026-11-04T04:09:08.493Z",
+            "dtSeconds": -0.0014886260032653809,
+            "dMissM": -23.715723710133716,
+            "dSpeedMS": -0.09518057209061226,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64069,
+              100858
+            ],
+            "names": [
+              "STARLINK-11649",
+              "STARLINK-40099"
+            ],
+            "socratesTcaUtc": "2026-10-31 06:51:22.207",
+            "socratesRangeM": 4041.0000000000005,
+            "socratesSpeedMS": 2194,
+            "screenTcaUtc": "2026-10-31T06:51:22.205Z",
+            "dtSeconds": -0.002092123031616211,
+            "dMissM": -23.41057306554012,
+            "dSpeedMS": 0.2957634891754424,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              69145,
+              100186
+            ],
+            "names": [
+              "STARLINK-37657",
+              "STARLINK-38159"
+            ],
+            "socratesTcaUtc": "2026-11-04 14:26:43.923",
+            "socratesRangeM": 3457,
+            "socratesSpeedMS": 1012,
+            "screenTcaUtc": "2026-11-04T14:26:43.925Z",
+            "dtSeconds": 0.001850724220275879,
+            "dMissM": -22.15726246314034,
+            "dSpeedMS": -0.09880897628033836,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52996,
+              100222
+            ],
+            "names": [
+              "STARLINK-4295",
+              "STARLINK-38254"
+            ],
+            "socratesTcaUtc": "2026-11-04 14:56:18.085",
+            "socratesRangeM": 4184,
+            "socratesSpeedMS": 9999,
+            "screenTcaUtc": "2026-11-04T14:56:18.088Z",
+            "dtSeconds": 0.0026151537895202637,
+            "dMissM": 21.048457853118634,
+            "dSpeedMS": -0.2907663534660969,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              66638,
+              100275
+            ],
+            "names": [
+              "STARLINK-35972",
+              "STARLINK-37750"
+            ],
+            "socratesTcaUtc": "2026-11-02 08:46:26.874",
+            "socratesRangeM": 4493,
+            "socratesSpeedMS": 5698,
+            "screenTcaUtc": "2026-11-02T08:46:26.876Z",
+            "dtSeconds": 0.0014886260032653809,
+            "dMissM": -20.842956954256806,
+            "dSpeedMS": 0.0978510967006514,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              48368,
+              100055
+            ],
+            "names": [
+              "STARLINK-2623",
+              "STARLINK-37605"
+            ],
+            "socratesTcaUtc": "2026-11-04 03:31:33.990",
+            "socratesRangeM": 3829,
+            "socratesSpeedMS": 12125,
+            "screenTcaUtc": "2026-11-04T03:31:33.992Z",
+            "dtSeconds": 0.0024139881134033203,
+            "dMissM": 20.701596082621563,
+            "dSpeedMS": -0.43317492602727725,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64021,
+              100007
+            ],
+            "names": [
+              "STARLINK-34062",
+              "STARLINK-38054"
+            ],
+            "socratesTcaUtc": "2026-11-03 21:38:38.924",
+            "socratesRangeM": 4656,
+            "socratesSpeedMS": 3720,
+            "screenTcaUtc": "2026-11-03T21:38:38.926Z",
+            "dtSeconds": 0.0020116567611694336,
+            "dMissM": 20.526257682626238,
+            "dSpeedMS": 0.4783994716822235,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              66947,
+              100222
+            ],
+            "names": [
+              "STARLINK-36089",
+              "STARLINK-38254"
+            ],
+            "socratesTcaUtc": "2026-11-03 14:15:26.115",
+            "socratesRangeM": 3176,
+            "socratesSpeedMS": 6988,
+            "screenTcaUtc": "2026-11-03T14:15:26.117Z",
+            "dtSeconds": 0.0017300248146057129,
+            "dMissM": -20.335187180807225,
+            "dSpeedMS": 0.10631647088939644,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              66638,
+              100275
+            ],
+            "names": [
+              "STARLINK-35972",
+              "STARLINK-37750"
+            ],
+            "socratesTcaUtc": "2026-11-02 04:52:00.890",
+            "socratesRangeM": 4506,
+            "socratesSpeedMS": 5687,
+            "screenTcaUtc": "2026-11-02T04:52:00.891Z",
+            "dtSeconds": 0.0009253621101379395,
+            "dMissM": 20.111347458089767,
+            "dSpeedMS": -0.15304435684265627,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64153,
+              100159
+            ],
+            "names": [
+              "STARLINK-34345",
+              "STARLINK-38162"
+            ],
+            "socratesTcaUtc": "2026-11-03 22:11:18.560",
+            "socratesRangeM": 4972,
+            "socratesSpeedMS": 1924,
+            "screenTcaUtc": "2026-11-03T22:11:18.561Z",
+            "dtSeconds": 0.0012874603271484375,
+            "dMissM": 20.034050136235237,
+            "dSpeedMS": -0.15622318975624694,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              45072,
+              100505
+            ],
+            "names": [
+              "STARLINK-1168",
+              "STARLINK-38371"
+            ],
+            "socratesTcaUtc": "2026-11-03 13:19:22.863",
+            "socratesRangeM": 4754,
+            "socratesSpeedMS": 12795,
+            "screenTcaUtc": "2026-11-03T13:19:22.871Z",
+            "dtSeconds": 0.007684528827667236,
+            "dMissM": -19.86327758198877,
+            "dSpeedMS": -0.058906360380206024,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52737,
+              100291
+            ],
+            "names": [
+              "GHGSAT-C3",
+              "STARLINK-37827"
+            ],
+            "socratesTcaUtc": "2026-11-04 03:07:34.720",
+            "socratesRangeM": 4903,
+            "socratesSpeedMS": 8206,
+            "screenTcaUtc": "2026-11-04T03:07:34.718Z",
+            "dtSeconds": -0.0023737549781799316,
+            "dMissM": -19.71028748265053,
+            "dSpeedMS": -0.060834240288386354,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              65674,
+              100281
+            ],
+            "names": [
+              "STARLINK-35254",
+              "STARLINK-37973"
+            ],
+            "socratesTcaUtc": "2026-11-04 13:46:43.791",
+            "socratesRangeM": 4011,
+            "socratesSpeedMS": 8824,
+            "screenTcaUtc": "2026-11-04T13:46:43.792Z",
+            "dtSeconds": 0.0010862946510314941,
+            "dMissM": -19.070330686050966,
+            "dSpeedMS": -0.12926269032141136,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53992,
+              100056
+            ],
+            "names": [
+              "STARLINK-5108",
+              "STARLINK-37650"
+            ],
+            "socratesTcaUtc": "2026-11-03 10:44:54.925",
+            "socratesRangeM": 1995,
+            "socratesSpeedMS": 5582,
+            "screenTcaUtc": "2026-11-03T10:44:54.927Z",
+            "dtSeconds": 0.001850724220275879,
+            "dMissM": -19.00031448515665,
+            "dSpeedMS": 0.33338800049750716,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              52646,
+              100426
+            ],
+            "names": [
+              "STARLINK-3832",
+              "STARLINK-37684"
+            ],
+            "socratesTcaUtc": "2026-11-04 13:14:57.182",
+            "socratesRangeM": 3856,
+            "socratesSpeedMS": 11698,
+            "screenTcaUtc": "2026-11-04T13:14:57.184Z",
+            "dtSeconds": 0.0017702579498291016,
+            "dMissM": -18.931613444856794,
+            "dSpeedMS": -0.09587380360608222,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53819,
+              100492
+            ],
+            "names": [
+              "STARLINK-4738",
+              "STARLINK-37846"
+            ],
+            "socratesTcaUtc": "2026-11-04 00:40:13.597",
+            "socratesRangeM": 1010,
+            "socratesSpeedMS": 9697,
+            "screenTcaUtc": "2026-11-04T00:40:13.595Z",
+            "dtSeconds": -0.001850724220275879,
+            "dMissM": 18.69023712465173,
+            "dSpeedMS": 0.4416340774860146,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              69131,
+              100041
+            ],
+            "names": [
+              "STARLINK-37530",
+              "STARLINK-37448"
+            ],
+            "socratesTcaUtc": "2026-11-04 10:44:55.642",
+            "socratesRangeM": 3753,
+            "socratesSpeedMS": 5757,
+            "screenTcaUtc": "2026-11-04T10:44:55.643Z",
+            "dtSeconds": 0.0010058283805847168,
+            "dMissM": -18.29249421190616,
+            "dSpeedMS": 0.2706785104546725,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64296,
+              100456
+            ],
+            "names": [
+              "STARLINK-34443",
+              "STARLINK-38205"
+            ],
+            "socratesTcaUtc": "2026-11-02 11:31:07.438",
+            "socratesRangeM": 4803,
+            "socratesSpeedMS": 1706,
+            "screenTcaUtc": "2026-11-02T11:31:07.436Z",
+            "dtSeconds": -0.0015288591384887695,
+            "dMissM": 18.023801474818356,
+            "dSpeedMS": -0.09224147145073402,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              53992,
+              100056
+            ],
+            "names": [
+              "STARLINK-5108",
+              "STARLINK-37650"
+            ],
+            "socratesTcaUtc": "2026-11-03 13:05:33.994",
+            "socratesRangeM": 1551,
+            "socratesSpeedMS": 5593,
+            "screenTcaUtc": "2026-11-03T13:05:33.995Z",
+            "dtSeconds": 0.0014081597328186035,
+            "dMissM": 17.578230581545995,
+            "dSpeedMS": -0.16252827611515386,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              66364,
+              100272
+            ],
+            "names": [
+              "STARLINK-35797",
+              "STARLINK-37697"
+            ],
+            "socratesTcaUtc": "2026-11-03 21:46:38.945",
+            "socratesRangeM": 2343,
+            "socratesSpeedMS": 11761,
+            "screenTcaUtc": "2026-11-03T21:46:38.943Z",
+            "dtSeconds": -0.0022530555725097656,
+            "dMissM": 17.421912709984554,
+            "dSpeedMS": -0.1399479023002641,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              66364,
+              100272
+            ],
+            "names": [
+              "STARLINK-35797",
+              "STARLINK-37697"
+            ],
+            "socratesTcaUtc": "2026-11-03 20:12:53.150",
+            "socratesRangeM": 3936,
+            "socratesSpeedMS": 11761,
+            "screenTcaUtc": "2026-11-03T20:12:53.148Z",
+            "dtSeconds": -0.002092123031616211,
+            "dMissM": -17.418275635074224,
+            "dSpeedMS": -0.15434647504116583,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              65499,
+              100409
+            ],
+            "names": [
+              "STARLINK-35166",
+              "STARLINK-38022"
+            ],
+            "socratesTcaUtc": "2026-11-04 09:11:09.442",
+            "socratesRangeM": 3101,
+            "socratesSpeedMS": 11417,
+            "screenTcaUtc": "2026-11-04T09:11:09.444Z",
+            "dtSeconds": 0.0020518898963928223,
+            "dMissM": 17.307787423920672,
+            "dSpeedMS": -0.14274035341804847,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64180,
+              100440
+            ],
+            "names": [
+              "STARLINK-34000",
+              "STARLINK-38204"
+            ],
+            "socratesTcaUtc": "2026-11-03 13:18:44.509",
+            "socratesRangeM": 3550,
+            "socratesSpeedMS": 10578,
+            "screenTcaUtc": "2026-11-03T13:18:44.507Z",
+            "dtSeconds": -0.0019311904907226562,
+            "dMissM": -17.223235621213917,
+            "dSpeedMS": 0.19744827841532242,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              67667,
+              100258
+            ],
+            "names": [
+              "STARLINK-36622",
+              "STARLINK-38154"
+            ],
+            "socratesTcaUtc": "2026-11-02 23:57:32.982",
+            "socratesRangeM": 3013,
+            "socratesSpeedMS": 1657,
+            "screenTcaUtc": "2026-11-02T23:57:32.981Z",
+            "dtSeconds": -0.0006437301635742188,
+            "dMissM": 16.641175349221612,
+            "dSpeedMS": 0.16424275573945124,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              64180,
+              100440
+            ],
+            "names": [
+              "STARLINK-34000",
+              "STARLINK-38204"
+            ],
+            "socratesTcaUtc": "2026-11-03 08:36:26.083",
+            "socratesRangeM": 4629,
+            "socratesSpeedMS": 10606,
+            "screenTcaUtc": "2026-11-03T08:36:26.081Z",
+            "dtSeconds": -0.001971423625946045,
+            "dMissM": 16.604857568792795,
+            "dSpeedMS": -0.2420327135023399,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              100223,
+              100281
+            ],
+            "names": [
+              "STARLINK-38238",
+              "STARLINK-37973"
+            ],
+            "socratesTcaUtc": "2026-11-03 23:43:09.488",
+            "socratesRangeM": 1928,
+            "socratesSpeedMS": 8245,
+            "screenTcaUtc": "2026-11-03T23:43:09.489Z",
+            "dtSeconds": 0.0009655952453613281,
+            "dMissM": -16.511324951299457,
+            "dSpeedMS": -0.24016142972141097,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              63509,
+              100281
+            ],
+            "names": [
+              "STARLINK-33678",
+              "STARLINK-37973"
+            ],
+            "socratesTcaUtc": "2026-11-04 03:34:24.694",
+            "socratesRangeM": 4249,
+            "socratesSpeedMS": 5769,
+            "screenTcaUtc": "2026-11-04T03:34:24.695Z",
+            "dtSeconds": 0.0012874603271484375,
+            "dMissM": 16.407846472822712,
+            "dSpeedMS": 0.0636904214088645,
+            "stratum": "NLRV"
+          },
+          {
+            "pair": [
+              100223,
+              100281
+            ],
+            "names": [
+              "STARLINK-38238",
+              "STARLINK-37973"
+            ],
+            "socratesTcaUtc": "2026-11-03 21:22:13.916",
+            "socratesRangeM": 3909,
+            "socratesSpeedMS": 8273,
+            "screenTcaUtc": "2026-11-03T21:22:13.918Z",
+            "dtSeconds": 0.0016495585441589355,
+            "dMissM": 16.367271333483586,
+            "dSpeedMS": 0.045852239016312524,
+            "stratum": "NLRV"
+          }
+        ],
+        "speed": []
+      }
+    }
+  },
+  "extras": {
+    "total": 54687,
+    "byClass": {
+      "primary": {
+        "unexplained": 17,
+        "population: intra-fleet (operational members of one constellation)": 54344,
+        "threshold edge": 115,
+        "unexplained: SOCRATES lists the pair at other times": 1,
+        "window edge": 5
+      },
+      "editionMismatch": {
+        "unverified: an object never appears in the report": 83,
+        "population: intra-fleet (operational members of one constellation)": 116,
+        "threshold edge": 2
+      },
+      "numbered100000": {
+        "threshold edge": 1,
+        "unexplained": 2,
+        "unverified: an object never appears in the report": 1
+      }
+    },
+    "unexplainedOrUnverified": 104,
+    "rows": [
+      {
+        "pair": [
+          51855,
+          21012
+        ],
+        "names": [
+          "STARLINK-3545",
+          "SL-12 R/B(AUX MOTOR)"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-10-31T02:50:28.111Z",
+        "missM": 907.5983617968851,
+        "speedMS": 2857.3081275246946,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          66947,
+          51102
+        ],
+        "names": [
+          "STARLINK-36089",
+          "SHIYAN 13 (SY-13)"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T17:58:23.267Z",
+        "missM": 1627.5522772893362,
+        "speedMS": 5955.90697340966,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          59317,
+          26389
+        ],
+        "names": [
+          "STARLINK-31349",
+          "ATLAS 2A CENTAUR R/B"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-31T03:19:07.100Z",
+        "missM": 1683.3458251019892,
+        "speedMS": 9554.653263566466,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          59925,
+          39036
+        ],
+        "names": [
+          "STARLINK-31959",
+          "ARIANE 5 R/B"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-11-01T21:27:11.122Z",
+        "missM": 2217.005340438624,
+        "speedMS": 6981.705345828776,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          100069,
+          30110
+        ],
+        "names": [
+          "PRAETORIAN SDA_511",
+          "FENGYUN 1C DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-11-02T14:52:31.047Z",
+        "missM": 2301.5804863839003,
+        "speedMS": 14799.206237701106,
+        "cls": "numbered100000",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          66955,
+          26122
+        ],
+        "names": [
+          "HULIANWANG DIGUI-116",
+          "CZ-4 DEB"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-10-31T01:57:40.931Z",
+        "missM": 2306.5814983744453,
+        "speedMS": 14464.386606678218,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          48271,
+          25442
+        ],
+        "names": [
+          "TYVAK-182A",
+          "PEGASUS DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-11-02T03:15:00.031Z",
+        "missM": 2910.386468488315,
+        "speedMS": 15243.784113081061,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T06:46:49.324Z",
+        "missM": 3005.4866932497307,
+        "speedMS": 1.7969709557044846,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T01:58:50.121Z",
+        "missM": 3005.4974749377375,
+        "speedMS": 1.7965444662816252,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T11:34:48.547Z",
+        "missM": 3005.6510769931474,
+        "speedMS": 1.7973987660853177,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T21:10:50.899Z",
+        "missM": 3005.6829105277284,
+        "speedMS": 1.7961267075771163,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T16:22:47.753Z",
+        "missM": 3005.9911552122185,
+        "speedMS": 1.7978340867658351,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T16:22:51.673Z",
+        "missM": 3006.0425004606022,
+        "speedMS": 1.7957149008295843,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T21:10:46.956Z",
+        "missM": 3006.5074849526327,
+        "speedMS": 1.79827394205861,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T11:34:52.454Z",
+        "missM": 3006.575755092856,
+        "speedMS": 1.7953078074392002,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T01:58:46.154Z",
+        "missM": 3007.200665316063,
+        "speedMS": 1.7987182795979484,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T06:46:53.221Z",
+        "missM": 3007.282199360732,
+        "speedMS": 1.79490859981584,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T06:46:45.350Z",
+        "missM": 3008.071352298968,
+        "speedMS": 1.7991656174029773,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T01:58:53.994Z",
+        "missM": 3008.161381224246,
+        "speedMS": 1.7945144189895064,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T11:34:44.526Z",
+        "missM": 3009.120274397659,
+        "speedMS": 1.799618794951682,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T21:10:54.759Z",
+        "missM": 3009.2128851413804,
+        "speedMS": 1.794127275758534,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T16:22:43.710Z",
+        "missM": 3010.3482454008013,
+        "speedMS": 1.8000710071347517,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T16:22:55.528Z",
+        "missM": 3010.4363483801512,
+        "speedMS": 1.793745216418192,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T21:10:42.879Z",
+        "missM": 3011.7561726373597,
+        "speedMS": 1.8005255757253906,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T11:34:56.302Z",
+        "missM": 3011.8314804759293,
+        "speedMS": 1.7933679905103352,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T01:58:42.043Z",
+        "missM": 3013.345058789404,
+        "speedMS": 1.80097903694292,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T06:46:57.068Z",
+        "missM": 3013.3980826218585,
+        "speedMS": 1.7929971256256085,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T06:46:41.202Z",
+        "missM": 3015.115994544716,
+        "speedMS": 1.8014294108001188,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T01:58:57.855Z",
+        "missM": 3015.1360678920337,
+        "speedMS": 1.7926279198756898,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T21:10:58.636Z",
+        "missM": 3017.0454780820437,
+        "speedMS": 1.7922635789974626,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T11:34:40.346Z",
+        "missM": 3017.0701418169206,
+        "speedMS": 1.8018769737465572,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T16:22:59.420Z",
+        "missM": 3019.1264986779433,
+        "speedMS": 1.7919017805345892,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T16:22:39.487Z",
+        "missM": 3019.208705075388,
+        "speedMS": 1.8023168698012686,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T11:35:00.220Z",
+        "missM": 3021.379467752344,
+        "speedMS": 1.7915397868669785,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T21:10:38.613Z",
+        "missM": 3021.53289139094,
+        "speedMS": 1.8027488387643502,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T06:47:01.029Z",
+        "missM": 3023.804879478624,
+        "speedMS": 1.7911772584255277,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T01:58:37.726Z",
+        "missM": 3024.043861095437,
+        "speedMS": 1.8031703233527485,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T01:59:01.839Z",
+        "missM": 3026.4033797981106,
+        "speedMS": 1.7908132998722714,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T06:46:36.836Z",
+        "missM": 3026.7426677441836,
+        "speedMS": 1.8035758887793945,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-28T21:11:02.672Z",
+        "missM": 3029.175754397106,
+        "speedMS": 1.7904434078088731,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T11:34:35.939Z",
+        "missM": 3029.6301934016387,
+        "speedMS": 1.8039635222400436,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T16:22:35.034Z",
+        "missM": 3032.7070793403527,
+        "speedMS": 1.8043304082391995,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          64335,
+          26967
+        ],
+        "names": [
+          "STARLINK-33855",
+          "DELTA 2 DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-30T15:45:11.906Z",
+        "missM": 3037.1744417927935,
+        "speedMS": 7936.155270567357,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          67338,
+          37747
+        ],
+        "names": [
+          "STARLINK-36413",
+          "PSLV R/B"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-10-31T14:09:38.955Z",
+        "missM": 3144.544981021149,
+        "speedMS": 8872.8685866067,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          53567,
+          13007
+        ],
+        "names": [
+          "STARLINK-4585",
+          "ATLAS CENTAUR R/B"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-31T14:33:37.379Z",
+        "missM": 3333.7004674152745,
+        "speedMS": 4258.201624117715,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          64297,
+          42663
+        ],
+        "names": [
+          "STARLINK-34369",
+          "CZ-3B R/B"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-11-03T16:12:23.606Z",
+        "missM": 3375.5416123324303,
+        "speedMS": 8447.301198063491,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T13:31:44.511Z",
+        "missM": 3479.621848940394,
+        "speedMS": 1.7781420848370457,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T08:43:58.738Z",
+        "missM": 3483.0420941421644,
+        "speedMS": 1.777469751844342,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T03:56:12.958Z",
+        "missM": 3486.400555072568,
+        "speedMS": 1.7767946960632652,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T23:08:27.156Z",
+        "missM": 3489.699866318943,
+        "speedMS": 1.7761139682308664,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      }
+    ]
+  },
+  "tolerances": {
+    "source": "space-data-network-modules analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs (a2.8b-2026-07-13) at the pinned commit",
+    "sourceSha256": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae",
+    "strata": {
+      "nlrvMinMS": 50,
+      "lrvMinMS": 10
+    },
+    "tcaNlrvSeconds": 0.01,
+    "tcaLrvVlrv": "recorded, not gated (flat minimum)",
+    "missM": 5,
+    "speedMS": 5,
+    "pc": "information only (SOCRATES's radii are not published)"
+  },
+  "verdict": {
+    "coverage": "subset: part 1 only (600 of 16818 active primaries)",
+    "recall": {
+      "reference": 7319,
+      "found": 7317,
+      "status": "fail"
+    },
+    "geometry": {
+      "status": "fail",
+      "beyondTolerance": {
+        "tcaNlrv": 11,
+        "miss": 237,
+        "speed": 0
+      }
+    },
+    "status": "fail"
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "cpus": 28,
+    "finishedAt": "2026-10-30T02:58:40.838Z"
+  }
+}
