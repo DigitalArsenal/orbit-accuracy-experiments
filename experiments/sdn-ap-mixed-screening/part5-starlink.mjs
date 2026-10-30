@@ -163,6 +163,8 @@ if (phase === 'encounters') {
 
 const enc = () => JSON.parse(fs.readFileSync(path.join(dir, 'encounters.json'), 'utf8')).list;
 const assessEpochs = (timeMs) => Array.from({ length: 21 }, (_, j) => Math.round(timeMs / 1000) * 1000 - 10 * MIN + j * MIN);
+// a satellite's covariances: cov/<norad>.json, or the same bytes gzipped once the run is done (cov/<norad>.json.gz; the store's disk)
+const covOf = (norad) => { const f = path.join(dir, 'cov', `${norad}.json`); return JSON.parse(fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : zlib.gunzipSync(fs.readFileSync(`${f}.gz`)).toString('utf8')); };
 
 if (phase === 'cov') {
   // FFM's carried covariance and SGP4-XP's at the 21 epochs of each entering encounter, one propagation per satellite (A8 point 5)
@@ -216,8 +218,6 @@ if (phase === 'assess') {
   const only = args.only != null ? Number(args.only) : null;
   const cache = new Map();
   const statesOf = (norad) => { if (!cache.has(norad)) { if (cache.size > 2000) cache.delete(cache.keys().next().value); cache.set(norad, readStates(norad)); } return cache.get(norad); };
-  // a satellite's covariances: cov/<norad>.json, or the same bytes gzipped once the run is done (cov/<norad>.json.gz; the store's disk)
-  const covOf = (norad) => { const f = path.join(dir, 'cov', `${norad}.json`); return JSON.parse(fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : zlib.gunzipSync(fs.readFileSync(`${f}.gz`)).toString('utf8')); };
   const man = new Map(index().map((r) => [r.norad, r.maneuverEvident]));
   for (const e of enc()) {
     if (only != null ? e.id !== only : e.id % n !== k || done.has(e.id)) continue;
@@ -264,6 +264,23 @@ if (phase === 'summary') {
   const summary = { through, forecastCycle, ffmArm: FFM, noMinimum, encounters: JSON.parse(fs.readFileSync(path.join(dir, 'encounters.json'), 'utf8')).encounters, entering: rows.length, setAside: rows.filter((r) => r.setAside).length, truthFailed: rows.filter((r) => r.truth?.error).length,
     screens: { windows: new Set(screens.map((s) => s.window)).size, bySet: Object.fromEntries(SETS.map((s) => [s, { windows: screens.filter((x) => x.set === s).length, events: screens.filter((x) => x.set === s).reduce((t, x) => t + x.events, 0), pairsScreened: screens.filter((x) => x.set === s).reduce((t, x) => t + x.pairs, 0), meanCovered: screens.filter((x) => x.set === s).reduce((t, x) => t + x.covered, 0) / Math.max(1, screens.filter((x) => x.set === s).length) }])) },
     classes: {} };
+  // A13 part 6 point 2: per arm, the encounters attempted (A7's population: an encounter with the truth's closest approach), the Pc
+  // records written and the refusals by phase and message, with the refused satellites and encounters listed (the receipt). States phase:
+  // a satellite's predictions, before any screen; cov phase: its covariance at the assessment epochs (every encounter of that satellite
+  // has no Pc for the arm); assess phase: the module's Pc of one encounter
+  const tally = (list) => { const m = {}; for (const x of list) m[x] = (m[x] ?? 0) + 1; return m; };
+  const covErrors = new Map();
+  const covErrorOf = (norad, arm) => { if (!covErrors.has(norad)) covErrors.set(norad, Object.fromEntries(Object.entries(covOf(norad)).filter(([key]) => key.endsWith('Error')))); return covErrors.get(norad)[`${arm}Error`] ?? null; };
+  const population = index(), statesRefused = population.filter((r) => r.error);
+  summary.refusals = { states: { satellites: population.length, refused: statesRefused.length, byMessage: tally(statesRefused.map((r) => r.error)), refusedSatellites: statesRefused.map((r) => r.norad) },
+    covSatellites: fs.readdirSync(path.join(dir, 'cov')).length, arms: {} };
+  for (const arm of ['ffm', 'sgp4xp', ...CAL.map(([x]) => x)]) {
+    const failed = ok.filter((r) => r.arms?.[arm]?.pcError), cov = failed.filter((r) => covErrorOf(r.a, arm) || covErrorOf(r.b, arm)), assess = failed.filter((r) => !cov.includes(r));
+    const sats = [...new Set(cov.flatMap((r) => [r.a, r.b].filter((x) => covErrorOf(x, arm))))].sort((x, y) => x - y);
+    summary.refusals.arms[arm] = { attempted: ok.length, written: ok.length - failed.length, refused: failed.length, refusalRate: ok.length ? failed.length / ok.length : 0,
+      covPhase: { satellites: sats.length, encounters: cov.length, byMessage: tally(sats.map((x) => covErrorOf(x, arm))), refusedSatellites: sats, refusedEncounters: cov.map((r) => r.id) },
+      assessPhase: { encounters: assess.length, byMessage: tally(assess.map((r) => r.arms[arm].pcError)), refusedEncounters: assess.map((r) => r.id) } };
+  }
   for (const [cls, f] of [['unmaneuvered', (r) => !r.maneuvered], ['maneuvered', (r) => r.maneuvered]]) {
     const list = ok.filter(f).map(asEncounter);
     summary.classes[cls] = list.length ? summarize('starlink-part5', cls, list, { attempted: list.length, noPrimary: 0, noSecondary: 0 }, { leads: ['all'] }) : { encounters: 0, note: 'no encounter' };
