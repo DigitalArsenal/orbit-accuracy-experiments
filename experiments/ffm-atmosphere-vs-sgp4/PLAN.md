@@ -171,3 +171,26 @@ one worker, two runs (the second gave the same fitted parameters to the last dig
 
 The first forecast check compared each sample's label with its UTC request and failed: propagator/ffm labels samples in TDB
 (prw_execution.cpp:87). The check now requires the TDB label one constant offset from its request.
+
+## Amendment A1 (2026-10-30, during the run; ruled by the coordinator before any cell was computed)
+
+- **Found during the run.** propagator/ffm refused the F arms of P|39452|2026-05-13 with `space-weather-out-of-range: The SPW
+  rows must cover every day of the arc and the day before it`. The GFZ file reports no F10.7 for 2026-05-09, so XM's rows skip that
+  day; sdn-ap reads "the last row at or before its day" (SPEC.md 15.2, lines 1654-1657), so X2 read the 2026-05-08 row for it,
+  while propagator/ffm needs a row for every day (prw_dynamics.cpp:1188-1191) and refused.
+- **Gaps found.** Every registered cutoff's span, from the day before the arc's first day (D0 - 4) through D0 + 8, was checked under
+  O (XM rowsO; past its last row the registered hold-last) and M (XM rowsM through D0 + 8). The only missing day is 2026-05-09: in
+  the span of the O cutoffs 2026-05-11 to 2026-05-13 (21 windows: 15 in group P, 6 in S1) and of the M cutoffs 2026-05-01 to
+  2026-05-13.
+- **The rule.** Every day from the rows' first day through D0 + 8 that has no row takes the last row at or before it, every value:
+  the drivers sdn-ap reads for X2 on every day. The registered hold-last is this rule past the last row. It applies uniformly to
+  every window and condition; a window without a missing day reads exactly the rows it read before. Input preparation only.
+- **The rerun.** Only the F arms of the windows whose F arm was refused for that reason are rerun under A1, into a separate rows
+  file (`<store>/rows/<condition>.A1.jsonl`); the refusal rows stay in the registered rows as evidence. P and X2 are not rerun:
+  they read sdn-ap's own rule already.
+- **Ruling.** The coordinator ruled A1 the primary rule on 2026-10-30, before any cell was computed: it implements the registered
+  intent (the F arms read exactly the drivers X2 reads), which the text above did not spell out for a day missing inside the rows.
+- **Both verdicts.** The table reports every cell twice: primary (A1) and as written (the refused windows as F losses). The README
+  states which is primary and why.
+- Unchanged: a fit that does not end CONVERGED (STALLED, MAXIMUM_ITERATIONS) stays a loss of its arm (rule 3); the fit's settings
+  are not changed. The table reports rules 1, 2 and 3 separately for every cell, and the STALLED share per arm and group.
