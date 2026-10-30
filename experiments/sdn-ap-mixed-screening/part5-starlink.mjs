@@ -11,8 +11,8 @@
 // JavaScript routes records, groups satellites by the module's own states and counts; screening, TCA, miss and Pc are the module's.
 import fs from 'node:fs';
 import path from 'node:path';
-import zlib from 'node:zlib';
 import { config, store, args, frozen, readJsonl, write, g1Dir, paced } from './common.mjs';
+import { SETS, statesFile, readStates, covOf, assessEpochs, armsOf, truthCall, armCall } from './lib/part5-calls.mjs';
 
 frozen();
 const { windowOf, completeBins, forecastCycle } = await import('./part1-starlink.mjs');
@@ -31,18 +31,6 @@ const CAL = FFM === 'ffm3' ? [['ffmCal', 'GCRF'], ['sgp4xpCal', 'TEME']] : [];
 const dir = path.join(store, FFM === 'ffm' ? 'part5' : `part5-${FFM}`, through);
 fs.mkdirSync(path.join(dir, 'states'), { recursive: true });
 const rowsOf = (prefix) => new Map(fs.readdirSync(path.join(store, 'rows')).filter((f) => f.startsWith(prefix)).flatMap((f) => readJsonl(path.join(store, 'rows', f))).map((r) => [r.norad, r]));
-const SETS = ['truth', 'ffm', 'sgp4xp'];
-const statesFile = (norad) => path.join(dir, 'states', `${norad}.f64`);
-/** A satellite's stored states: { ms: Float64Array, truth|ffm|sgp4xp: [{ r, v }] by epoch index }. */
-function readStates(norad) {
-  const a = new Float64Array(fs.readFileSync(statesFile(norad)).buffer.slice(0));
-  const count = a.length / 19, ms = new Float64Array(count), sets = { truth: [], ffm: [], sgp4xp: [] };
-  for (let i = 0; i < count; i += 1) {
-    const o = 19 * i; ms[i] = a[o];
-    SETS.forEach((s, j) => sets[s].push({ r: [a[o + 1 + 6 * j], a[o + 2 + 6 * j], a[o + 3 + 6 * j]], v: [a[o + 4 + 6 * j], a[o + 5 + 6 * j], a[o + 6 + 6 * j]] }));
-  }
-  return { ms, ...sets };
-}
 const ffmRowsOf = async () => (FFM === 'ffm' ? rowsOf('starlink-ffm.') : new Map((await import('./lib/a12-arms.mjs')).ffm3Merged((p) => [...rowsOf(p).values()]).map((r) => [r.norad, r]))); // ffm3: with A12's contingency rows merged
 /** The FFM slot's predictor: A3's (lib/ffm-fit.mjs) or ffm3's (lib/a12-arms.mjs): carry(row, norad, epochs, E, covariance) -> [{ r, v, covariance?, n? }]. */
 async function openFfmSlot() {
@@ -78,7 +66,7 @@ if (phase === 'states') {
       const fm = await ff.carry(f[FFM], norad, epochs, w.E), xp = await statesAt(a, g.sgp4xp.omm, epochs, 'GCRF');
       const buf = new Float64Array(19 * epochs.length);
       epochs.forEach((t, j) => { buf.set([t, ...w.truth[j].r, ...w.truth[j].v, ...fm[j].r, ...fm[j].v, ...xp[j].r, ...xp[j].v], 19 * j); });
-      fs.writeFileSync(statesFile(norad), Buffer.from(buf.buffer));
+      fs.writeFileSync(statesFile(dir, norad), Buffer.from(buf.buffer));
     } catch (error) { row = { ...row, error: String(error.message).slice(0, 160) }; }
     fs.appendFileSync(out, `${JSON.stringify(row)}\n`);
   }
@@ -91,7 +79,7 @@ if (phase === 'screen') {
   if (!SETS.includes(set)) throw new Error('--set truth|ffm|sgp4xp');
   const { openCqr } = await import('./lib/cqr.mjs');
   const cqr = await openCqr(modules);
-  const sats = index().filter((r) => !r.error).map((r) => ({ norad: r.norad, E: Date.parse(r.E), ...readStates(r.norad) }));
+  const sats = index().filter((r) => !r.error).map((r) => ({ norad: r.norad, E: Date.parse(r.E), ...readStates(dir, r.norad) }));
   const first = Math.min(...sats.map((s) => s.E)), last = Math.max(...sats.map((s) => s.E)) + 72 * H;
   const windows = Math.ceil((last - first) / H);
   const workers = Number(args.workers ?? 4);
@@ -162,9 +150,6 @@ if (phase === 'encounters') {
 }
 
 const enc = () => JSON.parse(fs.readFileSync(path.join(dir, 'encounters.json'), 'utf8')).list;
-const assessEpochs = (timeMs) => Array.from({ length: 21 }, (_, j) => Math.round(timeMs / 1000) * 1000 - 10 * MIN + j * MIN);
-// a satellite's covariances: cov/<norad>.json, or the same bytes gzipped once the run is done (cov/<norad>.json.gz; the store's disk)
-const covOf = (norad) => { const f = path.join(dir, 'cov', `${norad}.json`); return JSON.parse(fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : zlib.gunzipSync(fs.readFileSync(`${f}.gz`)).toString('utf8')); };
 
 if (phase === 'cov') {
   // FFM's carried covariance and SGP4-XP's at the 21 epochs of each entering encounter, one propagation per satellite (A8 point 5)
@@ -217,33 +202,24 @@ if (phase === 'assess') {
   const done = new Set(readJsonl(out).map((r) => r.id));
   const only = args.only != null ? Number(args.only) : null;
   const cache = new Map();
-  const statesOf = (norad) => { if (!cache.has(norad)) { if (cache.size > 2000) cache.delete(cache.keys().next().value); cache.set(norad, readStates(norad)); } return cache.get(norad); };
+  const statesOf = (norad) => { if (!cache.has(norad)) { if (cache.size > 2000) cache.delete(cache.keys().next().value); cache.set(norad, readStates(dir, norad)); } return cache.get(norad); };
   const man = new Map(index().map((r) => [r.norad, r.maneuverEvident]));
   for (const e of enc()) {
     if (only != null ? e.id !== only : e.id % n !== k || done.has(e.id)) continue;
     if (only == null && e.id % 200 === k) await paced();
-    const epochs = assessEpochs(e.timeMs);
-    const ctl = (algorithm, from, to) => ({ startMs: from, seconds: (to - from) / 1000, thresholdM: 1e6, algorithm, coarseStepSeconds: 10 });
     const row = { id: e.id, a: e.a, b: e.b, timeMs: e.timeMs, maneuvered: Boolean(man.get(e.a) || man.get(e.b)), sets: Object.fromEntries(e.events.map((x) => [x.set, { tcaMs: x.tcaMs, missM: x.missM }])) };
-    // the truth's closest approach: the truth states within 30 min either side, no gap over 11 min
-    const truthSource = (norad, h) => {
-      const s = statesOf(norad), idx = [];
-      for (let i = 0; i < s.ms.length; i += 1) if (Math.abs(s.ms[i] - e.timeMs) <= 30 * MIN) idx.push(i);
-      const t = idx.map((i) => s.ms[i]);
-      if (!t.length || t[0] > e.timeMs - 10 * MIN || t.at(-1) < e.timeMs + 10 * MIN || !t.slice(1).every((x, i) => x - t[i] <= 11 * MIN)) return null;
-      return { source: cqr.source(h, norad, idx.map((i) => ({ ms: s.ms[i], ...s.truth[i] }))), from: t[0], to: t.at(-1) };
-    };
-    const ta = truthSource(e.a, 1), tb = truthSource(e.b, 2);
-    if (!ta || !tb) row.setAside = 'a truth gap at the encounter';
+    // the truth's closest approach (lib/part5-calls.mjs): the truth states within 30 min either side, no gap over 11 min
+    const truth = truthCall(cqr, e, statesOf);
+    if (!truth) row.setAside = 'a truth gap at the encounter';
     else {
-      row.truth = await cqr.closest(ta.source, tb.source, ctl('ALFANO_MAXIMUM', Math.max(ta.from, tb.from), Math.min(ta.to, tb.to)));
+      row.truth = await truth();
       if (row.truth.error === 'no minimum in the window') row.setAside = 'no true minimum within 30 min (A9)';
-      const ca = covOf(e.a), cb = covOf(e.b);
+      const ca = covOf(dir, e.a), cb = covOf(dir, e.b);
       row.arms = {};
-      for (const [arm, frame, covFrame] of [['ffm', 'GCRF'], ['sgp4xp', 'TEME'], ...CAL.map(([x, f]) => [x, f, 'RTN'])]) {
-        if (!ca[arm] || !cb[arm]) { row.arms[arm] = { pcError: ca[`${arm}Error`] ?? cb[`${arm}Error`] ?? 'no covariance' }; continue; }
-        const pick = (c) => epochs.map((t) => { const j = c.epochs.indexOf(t); return { ms: t, ...c[arm][j] }; });
-        const r = await cqr.closest(cqr.source(1, e.a, pick(ca), frame, covFrame ?? null), cqr.source(2, e.b, pick(cb), frame, covFrame ?? null), ctl('FOSTER', epochs[0], epochs.at(-1)), frame);
+      for (const a of armsOf(CAL)) {
+        const arm = a[0], call = armCall(cqr, e, a, ca, cb);
+        if (typeof call !== 'function') { row.arms[arm] = call; continue; }
+        const r = await call();
         // no minimum in the 20 min: the arm predicts no close approach there, a green call (A9 point 3)
         row.arms[arm] = r.error === 'no minimum in the window' ? { noMinimum: true, predictedMissM: null, pc: 0 } : r.error ? { pcError: r.error } : { tcaMs: r.tcaMs, predictedMissM: r.missM, pc: r.pc, pcConverged: r.pcConverged };
       }
@@ -270,7 +246,7 @@ if (phase === 'summary') {
   // has no Pc for the arm); assess phase: the module's Pc of one encounter
   const tally = (list) => { const m = {}; for (const x of list) m[x] = (m[x] ?? 0) + 1; return m; };
   const covErrors = new Map();
-  const covErrorOf = (norad, arm) => { if (!covErrors.has(norad)) covErrors.set(norad, Object.fromEntries(Object.entries(covOf(norad)).filter(([key]) => key.endsWith('Error')))); return covErrors.get(norad)[`${arm}Error`] ?? null; };
+  const covErrorOf = (norad, arm) => { if (!covErrors.has(norad)) covErrors.set(norad, Object.fromEntries(Object.entries(covOf(dir, norad)).filter(([key]) => key.endsWith('Error')))); return covErrors.get(norad)[`${arm}Error`] ?? null; };
   const population = index(), statesRefused = population.filter((r) => r.error);
   summary.refusals = { states: { satellites: population.length, refused: statesRefused.length, byMessage: tally(statesRefused.map((r) => r.error)), refusedSatellites: statesRefused.map((r) => r.norad) },
     covSatellites: fs.readdirSync(path.join(dir, 'cov')).length, arms: {} };
