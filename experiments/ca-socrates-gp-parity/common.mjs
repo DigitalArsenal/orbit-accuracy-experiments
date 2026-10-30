@@ -18,7 +18,15 @@ export const importFile = (file) => import(pathToFileURL(file).href);
 const gitIn = (dir, ...args) => execFileSync('git', ['-C', dir, ...args], { maxBuffer: 256 << 20, stdio: ['ignore', 'pipe', 'pipe'] });
 
 // The files that define a registered run; report.mjs only reads a run's outputs.
-export const RUN_SOURCES = ['PLAN.md', 'config.json', 'common.mjs', 'screen.mjs', 'worker.mjs', 'compare.mjs'];
+export const RUN_SOURCES = ['PLAN.md', 'config.json', 'config.a2.json', 'common.mjs', 'screen.mjs', 'worker.mjs', 'compare.mjs'];
+
+// Amendment A2 (PLAN.md): Parts 1 and 2 again on another pinned CA artifact; nothing else changes.
+export const a2 = JSON.parse(fs.readFileSync(path.join(here, 'config.a2.json'), 'utf8'));
+export function modulePin(amendment) {
+  if (amendment == null) return config.module;
+  if (amendment === 'A2') return a2.module;
+  throw new Error(`unknown amendment ${amendment}`);
+}
 
 // Registration is machine-enforced: the plan, configuration and run sources equal their committed content and the
 // plan's commit is on origin/main before a registered run screens the SOCRATES window or reads its events.
@@ -49,8 +57,8 @@ export function modulesRoot(flag) {
 // The screen's artifact is read from the registered commit (git show), never from the working tree, and its
 // SHA-256 must be the registered one. The host-side helpers the run imports from the module's tests/lib must equal
 // their content at that commit too; the installed packages are recorded.
-export function pinnedModule(modules, workDir) {
-  const m = config.module;
+export function pinnedModule(modules, workDir, pin = config.module) {
+  const m = pin;
   const wasm = gitIn(modules, 'show', `${m.commit}:${m.wasmPath}`);
   if (sha256(wasm) !== m.wasmSha256) throw new Error(`${m.wasmPath} at ${m.commit} is ${sha256(wasm)}, not ${m.wasmSha256}`);
   for (const [rel, hash] of Object.entries(m.hostFiles)) {

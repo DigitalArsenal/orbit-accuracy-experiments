@@ -508,3 +508,92 @@ Part 1's run layout, so `compare.mjs --parts 1` reads them.
 
 Part 3 runs straight after Part 2. If the 01:40Z target slips, Parts 1 and 2
 land first and Part 3 lands after them.
+
+## Amendment A2, 2026-10-30: Parts 1 and 2 again, on CA 0.12.0
+
+**Reason.** Parts 1 and 2 on CA 0.9.0 (results `3c15fe1`) traced their misses
+and their geometry tail to two module causes:
+
+- **TLE rounding.** The CA module rebuilt each OMM as TLE text, rounding
+  BSTAR and eccentricity. That accounts for 55 misses and all 9,016 rows
+  beyond a tolerance (modules task
+  `modules-sgp4-implementation-parity-bstar-20261029`).
+- **The altitude prefilter.** The epoch perigee/apogee bands dropped pairs
+  with a fast-decaying object, accounting for 8 misses (6 pairs;
+  `modules-ca-altitude-prefilter-decay-20261030`).
+
+CA 0.11.0 (`653b981e7`) propagates the OMM values at full precision through
+sgp4-str3 in AFSPC mode. CA 0.12.0 (`d575cd8cf`) adds the radial gate, so the
+epoch bands never drop a pair alone.
+
+This amendment re-runs Parts 1 and 2 unchanged on 0.12.0. It is registered
+before that run. The 0.9.0 results (Parts 1, 2 and 3) stand as reported.
+
+**What changes: the CA artifact and one host helper, nothing else.**
+
+- **Artifact.** space-data-network-modules
+  `d575cd8cf9c336b3f1720797584a9558e2febcce`,
+  `analysis/conjunction-assessment` 0.12.0. `dist/isomorphic/module.wasm` is
+  read with `git show` at that commit and must have SHA-256
+  `91a3351f7ef9ffdd1ae60420bc4f8623bcb25f38d792a05547233880e290c036`.
+- **Host files** at that commit, each hash-checked:
+
+  | File | SHA-256 | State |
+  | --- | --- | --- |
+  | `cqr.mjs` | `df0e9683…` | unchanged |
+  | `conjunctionCommandHarness.mjs` | `c96a13d4…` | changed in 0.10.0 |
+  | `wasmedgeWasiThreadsRunner.mjs` | `8fd25014…` | unchanged |
+  | `caParityTolerances.mjs` | `a87ca94f…` | unchanged, so the gated tolerances are the registered ones |
+
+- **Packages.** Unchanged: space-data-module-sdk 0.9.12, spacedatastandards.org
+  1.271.0, flatbuffers 25.9.23, flatc-wasm 26.1.38.
+- **Checkout.** The host files are read from a private sparse clone of the
+  modules checkout at that commit, because the shared checkout keeps moving.
+
+Everything else is exactly Parts 1 and 2:
+
+- the SOCRATES report and window;
+- the catalog (`$OMM` stream `2842351b…`) and its 24,391 matched editions;
+- the population, the ranked primaries (`b5d7c9e9…`) and the two parts;
+- production settings, 6 h calls on 7 processes × 4 threads;
+- matching, merging, the edge rule, classes, bands and tolerances;
+- the A0 rule and the miss diagnosis, which uses the same pinned 0.12.0
+  module.
+
+The run is a new run directory.
+
+**Verdicts, reported side by side.**
+
+- **Primary, the registered rule unchanged.** Recall = 1.0 over the primary
+  class, both bands, rows at a window edge apart. Every matched primary-class
+  event must lie within the gated tolerances.
+- **Secondary, declared here.** Below 10 m/s (VLRV) the TCA of a flat minimum
+  is ill-conditioned: a minimum range changes by centimetres over minutes. So
+  a VLRV SOCRATES row counts as found when the screen reports any event of the
+  same pair inside the window. The TCA difference of such a row is reported,
+  not gated. The rest is as the primary verdict.
+
+**Hypotheses.** These are expectations, not rules; each is reported as
+supported or not.
+
+- **H1.** The 55 TLE-rounding misses do not recur.
+- **H2.** The 8 altitude-prefilter misses do not recur.
+- **H3.** The 6 VLRV formation pairs remain misses under the primary rule and
+  are found under the secondary one.
+- **H4.** The geometry tail collapses to SOCRATES's print rounding: |Δmiss|
+  within 0.5 m and |Δspeed| within 0.5 m/s, plus the TCA's 1 ms text.
+
+**Reporting.** As Parts 1 and 2, plus:
+
+- every call answered `incomplete-screening`, with its failed-pair count;
+- the comparison with the 0.9.0 result: misses that disappear, appear or
+  remain, and the tail before and after.
+
+**Steps.**
+
+1. `screen.mjs --amendment A2 --part 1`, then
+   `--amendment A2 --part 2 --run <id>`.
+2. `compare.mjs --amendment A2 --run … --parts 1,2`.
+3. `report.mjs --amendment A2 …`.
+4. `verify.mjs --amendment A2`, the E2E: it re-screens A2's unit 0 against
+   `replay.a2.json`.

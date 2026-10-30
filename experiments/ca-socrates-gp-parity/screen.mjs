@@ -11,10 +11,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { fork, execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
-import { config, repo, id, here, sha256, frozenPlan, modulesRoot, pinnedModule, readCatalog, readSatcat, ommBytes, importFile, jdToIso } from './common.mjs';
+import { config, repo, id, here, sha256, frozenPlan, modulesRoot, pinnedModule, modulePin, readCatalog, readSatcat, ommBytes, importFile, jdToIso } from './common.mjs';
 
 const { values: o } = parseArgs({ options: {
-  modules: { type: 'string' }, run: { type: 'string' }, out: { type: 'string' }, probe: { type: 'boolean', default: false }, part: { type: 'string' },
+  modules: { type: 'string' }, run: { type: 'string' }, out: { type: 'string' }, probe: { type: 'boolean', default: false }, part: { type: 'string' }, amendment: { type: 'string' },
   slices: { type: 'string' }, units: { type: 'string' }, processes: { type: 'string' }, threads: { type: 'string' }, 'slice-seconds': { type: 'string' },
 } });
 const log = (m) => process.stderr.write(`${new Date().toISOString()} ${m}\n`);
@@ -31,7 +31,9 @@ const window = o.probe
   ? { startUtc: config.probe.startUtc, startJd: config.probe.startJd, sliceSeconds: s.sliceSeconds, slices: Number(o.slices ?? 1) }
   : { startUtc: config.window.startUtc, startJd: config.window.startJd, sliceSeconds: s.sliceSeconds, slices: config.window.durationSeconds / s.sliceSeconds };
 if (!Number.isInteger(window.slices) || s.sliceSeconds % s.coarseStepSeconds !== 0) throw new Error('slices must tile the window on the coarse-step grid');
-const runId = o.run ?? `${id}-screen-${startedAt.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}`;
+// Amendment A2 screens with another pinned CA artifact into its own run (the registered window and numbers unchanged).
+const pin = modulePin(o.amendment);
+const runId = o.run ?? `${id}-${o.amendment ? `${o.amendment.toLowerCase()}-` : ''}screen-${startedAt.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}`;
 const dir = o.probe ? path.resolve(o.out) : path.join(repo, 'runs', id, runId);
 const partDir = path.join(dir, `part${part.id}`);
 const slicesDir = path.join(partDir, 'slices');
@@ -39,7 +41,7 @@ fs.mkdirSync(slicesDir, { recursive: true });
 
 // Inputs: the pinned artifact and the catalog, as the bytes every worker reads.
 const modules = modulesRoot(o.modules);
-const pinned = pinnedModule(modules, dir);
+const pinned = pinnedModule(modules, dir, pin);
 const catalog = readCatalog();
 const cqr = await importFile(path.join(modules, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
 const flatc = await cqr.initCqrFlatc();
@@ -104,7 +106,7 @@ const excluded = [...new Map(answers.flatMap((x) => x.excluded).map((e) => [e.no
 const eventsFile = path.join(partDir, 'screen-events.json');
 fs.writeFileSync(eventsFile, `${JSON.stringify(events)}\n`);
 const summary = {
-  experiment: id, mode: o.probe ? 'probe' : 'registered', part: part.id, window: { ...window, endUtc: jdToIso(window.startJd + (window.slices * window.sliceSeconds) / 86400) },
+  experiment: id, mode: o.probe ? 'probe' : 'registered', amendment: o.amendment ?? null, part: part.id, window: { ...window, endUtc: jdToIso(window.startJd + (window.slices * window.sliceSeconds) / 86400) },
   catalog: catalogInfo, primaries, units: units.length, events: events.length, excludedObjects: excluded,
   failedCalls: answers.flatMap((x) => (x.failures ?? []).map((f) => ({ unit: x.unit, block: x.block, slice: x.slice, ...f }))),
   failedPairs: answers.reduce((n, x) => n + Number(x.failedPairs ?? 0), 0),
@@ -115,9 +117,9 @@ const summary = {
 fs.writeFileSync(path.join(partDir, 'screen-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
 const gitState = (d) => { try { return { commit: execFileSync('git', ['-C', d, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim() }; } catch { return { commit: null }; } };
 const manifest = {
-  experiment: id, step: 'screen', mode: summary.mode, part: part.id, run: runId, startedAt, finishedAt: new Date().toISOString(), command: [process.execPath, ...process.argv.slice(1)], plan,
+  experiment: id, step: 'screen', mode: summary.mode, amendment: o.amendment ?? null, part: part.id, run: runId, startedAt, finishedAt: new Date().toISOString(), command: [process.execPath, ...process.argv.slice(1)], plan,
   configSha256: sha256(fs.readFileSync(path.join(here, 'config.json'))), repository: gitState(repo),
-  module: { commit: pinned.commit, path: config.module.wasmPath, wasmSha256: pinned.wasmSha256, packages: pinned.packages, modulesCheckoutHead: gitState(modules).commit },
+  module: { commit: pinned.commit, path: pin.wasmPath, version: pin.version, wasmSha256: pinned.wasmSha256, packages: pinned.packages, modulesCheckoutHead: gitState(modules).commit },
   runtime: { node: process.version, platform: `${os.platform()} ${os.release()} ${os.arch()}`, cpus: os.availableParallelism(), model: os.cpus()[0]?.model, loadAverageStart: loadStart, loadAverageEnd: os.loadavg() },
   inputs: { snapshot: { path: config.catalog.snapshot, sha256: config.catalog.snapshotSha256, jsonSha256: config.catalog.snapshotJsonSha256 }, replacements: config.catalog.replacements, ommStreamSha256: catalogInfo.ommStreamSha256, satcatSha256: config.satcat.sha256 },
   outputs: { 'screen-events.json': sha256(fs.readFileSync(eventsFile)), 'screen-summary.json': sha256(fs.readFileSync(path.join(partDir, 'screen-summary.json'))), 'primaries.json': sha256(fs.readFileSync(path.join(partDir, 'primaries.json'))) },

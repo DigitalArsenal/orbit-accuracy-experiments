@@ -1,0 +1,36 @@
+{
+  "amendment": "A2",
+  "date": "2026-10-30",
+  "reason": "re-run Parts 1 and 2 unchanged on CA 0.12.0: 0.11.0 (653b981e7) propagates OMM values at full precision through sgp4-str3 AFSPC (no TLE rounding); 0.12.0 (d575cd8cf) adds the radial gate (the epoch altitude bands never drop a pair alone)",
+  "module": {
+    "repository": "space-data-network-modules",
+    "commit": "d575cd8cf9c336b3f1720797584a9558e2febcce",
+    "wasmPath": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+    "wasmSha256": "91a3351f7ef9ffdd1ae60420bc4f8623bcb25f38d792a05547233880e290c036",
+    "version": "0.12.0",
+    "hostFiles": {
+      "analysis/conjunction-assessment/tests/lib/cqr.mjs": "df0e968326a662c041ce3fc7bf465468b68e41d23936b67c2c7f832f6390c9f0",
+      "analysis/conjunction-assessment/tests/lib/conjunctionCommandHarness.mjs": "c96a13d43af9c569677cb46a34c2d578ef77ef1d2bfe16fca1e1392f7c4ec022",
+      "analysis/conjunction-assessment/tests/lib/wasmedgeWasiThreadsRunner.mjs": "8fd2501452bddbcfb7705631b47777af99bc9db0f4cc0e77bc749361360428cf",
+      "analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae"
+    },
+    "packages": {
+      "space-data-module-sdk": "0.9.12",
+      "spacedatastandards.org": "1.271.0",
+      "flatbuffers": "25.9.23",
+      "flatc-wasm": "26.1.38"
+    }
+  },
+  "secondary": {
+    "speedBelowMS": 10,
+    "rule": "below 10 m/s (VLRV) the TCA of a flat minimum is ill-conditioned: a VLRV SOCRATES row counts as found when the screen reports any event of the same pair inside the window; its TCA difference is reported, not gated; otherwise as the primary verdict"
+  },
+  "hypotheses": {
+    "H1": "the 55 TLE-rounding misses of the 0.9.0 run do not recur",
+    "H2": "the 8 altitude-prefilter misses of the 0.9.0 run do not recur",
+    "H3": "the 6 VLRV formation pairs remain misses under the primary rule and are found under the secondary rule",
+    "H4": "the geometry tail collapses to SOCRATES's print rounding: |dmiss| within 0.5 m and |dspeed| within 0.5 m/s (primary class)"
+  },
+  "printRounding": { "missM": 0.5, "speedMS": 0.5, "slack": 0.001 },
+  "baseline": { "commit": "3c15fe10fe6afd2e8ef97bf5641cec8f57f9209d", "metrics": "results/ca-socrates-gp-parity/metrics.full.json", "annotations": "results/ca-socrates-gp-parity/annotations.full.json" }
+}

@@ -7,9 +7,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { config, here, repo, id, sha256, frozenPlan, readSocrates, readSatcat, readCatalog, editionClasses, modulesRoot, pinnedModule, importFile, jdToIso, utcMs, msToJd, DAY_S } from './common.mjs';
+import { config, a2, here, repo, id, sha256, frozenPlan, readSocrates, readSatcat, readCatalog, editionClasses, modulesRoot, pinnedModule, modulePin, importFile, jdToIso, utcMs, msToJd, DAY_S } from './common.mjs';
 
-const { values: o } = parseArgs({ options: { run: { type: 'string' }, parts: { type: 'string', default: '1,2' }, modules: { type: 'string' }, dev: { type: 'boolean', default: false } } });
+const { values: o } = parseArgs({ options: { run: { type: 'string' }, parts: { type: 'string', default: '1,2' }, modules: { type: 'string' }, dev: { type: 'boolean', default: false }, amendment: { type: 'string' } } });
+const pin = modulePin(o.amendment);
 const log = (m) => process.stderr.write(`${new Date().toISOString()} ${m}\n`);
 // --dev exercises this file on a timing probe (the week after the window) against a synthetic reference made from
 // the probe's own events; it never reads SOCRATES's events. Only a registered run is compared with SOCRATES.
@@ -29,6 +30,8 @@ const parts = partIds.map((p) => {
   return { id: p, dir: pd, manifest, summary: JSON.parse(read('screen-summary.json')), primaries: JSON.parse(read('primaries.json')), events: JSON.parse(read('screen-events.json')) };
 });
 const summary = parts[0].summary;
+// Every part was screened with the artifact this comparison diagnoses with (Amendment A2 pins another one).
+for (const q of parts) if (!o.dev && q.manifest.module.wasmSha256 !== pin.wasmSha256) throw new Error(`part ${q.id} was screened with ${q.manifest.module.wasmSha256}, not ${pin.wasmSha256}`);
 for (const q of parts) if (JSON.stringify(q.summary.window) !== JSON.stringify(summary.window)) throw new Error('parts screened different windows');
 const subset = new Set(parts.flatMap((q) => q.primaries));
 const rawEvents = parts.flatMap((q) => q.events);
@@ -114,6 +117,25 @@ for (const cls of CLASSES) {
 const edgeIdx = reference.map((r, i) => i).filter((i) => reference[i].edge);
 const edgeRows = { reference: edgeIdx.length, found: edgeIdx.filter((i) => refTo[i] >= 0).length,
   rows: edgeIdx.map((i) => ({ pair: [reference[i].a, reference[i].b], cls: reference[i].cls, socratesTcaUtc: reference[i].tcaText, socratesRangeM: reference[i].rangeM, found: refTo[i] >= 0 })) };
+
+// ---- the secondary verdict (Amendment A2, declared before its run) ------------------------------------------------
+// Below secondary.speedBelowMS the TCA of a flat minimum is ill-conditioned: a VLRV row counts as found when the screen
+// reports any event of its pair inside the window; the primary verdict and its rule are unchanged.
+const vlrvBelow = a2.secondary.speedBelowMS;
+const pairFound = (i) => (byPair.get(reference[i].key) ?? []).some((n) => inWindow(events[n].tcaJd));
+const secondaryRecall = {};
+for (const cls of CLASSES) {
+  secondaryRecall[cls] = {};
+  for (const band of [...BANDS, 'all']) {
+    const rows = reference.map((r, i) => i).filter((i) => !reference[i].edge && reference[i].cls === cls && (band === 'all' || reference[i].band === band));
+    const found = rows.filter((i) => refTo[i] >= 0 || (reference[i].speedMS < vlrvBelow && pairFound(i))).length;
+    secondaryRecall[cls][band] = { reference: rows.length, found, recall: rows.length ? found / rows.length : null };
+  }
+}
+const vlrvPairLevel = reference.map((r, i) => i).filter((i) => !reference[i].edge && refTo[i] < 0 && reference[i].speedMS < vlrvBelow && pairFound(i)).map((i) => {
+  const r = reference[i], near = (byPair.get(r.key) ?? []).map((n) => events[n]).sort((x, y) => Math.abs(x.tcaJd - r.tcaJd) - Math.abs(y.tcaJd - r.tcaJd))[0];
+  return { pair: [r.a, r.b], cls: r.cls, socratesTcaUtc: r.tcaText, socratesRangeM: r.rangeM, socratesSpeedMS: r.speedMS, nearestScreenEvent: { tcaUtc: jdToIso(near.tcaJd), secondsFromSocrates: (near.tcaJd - r.tcaJd) * DAY_S, missM: near.missM } };
+});
 
 // ---- geometry of matched events ------------------------------------------------------------------------------
 const tol = config.tolerances;
@@ -226,6 +248,10 @@ const verdict = {
   geometry: { status: g.matched === 0 ? 'inconclusive' : Object.values(g.beyondTolerance).every((v) => v === 0) ? 'pass' : 'fail', beyondTolerance: g.beyondTolerance },
 };
 verdict.status = verdict.recall.status === 'pass' && verdict.geometry.status === 'pass' ? 'pass' : verdict.recall.status === 'inconclusive' ? 'inconclusive' : 'fail';
+const sp = secondaryRecall.primary.all;
+const secondary = { rule: a2.secondary.rule, recall: secondaryRecall, vlrvPairLevel,
+  verdict: { recall: { reference: sp.reference, found: sp.found, status: sp.reference === 0 ? 'inconclusive' : sp.found === sp.reference ? 'pass' : 'fail' }, geometry: verdict.geometry } };
+secondary.verdict.status = secondary.verdict.recall.status === 'pass' && verdict.geometry.status === 'pass' ? 'pass' : secondary.verdict.recall.status === 'inconclusive' ? 'inconclusive' : 'fail';
 
 const metrics = {
   experiment: id, run: path.basename(dir), plan, tag: null,
@@ -240,7 +266,7 @@ const metrics = {
   reference: { rows: reference.length, byClass: Object.fromEntries(CLASSES.map((c) => [c, reference.filter((r) => r.cls === c).length])) },
   recall, edgeRows, misses, geometry,
   extras: { total: extras.length, byClass: extraCounts, unexplainedOrUnverified: unexplained.length, rows: unexplained.slice(0, cmp.listMax).map(extraRow) },
-  tolerances: tol, verdict,
+  tolerances: tol, verdict, secondary, amendment: o.amendment ?? null, module: { commit: pin.commit, version: pin.version, wasmSha256: pin.wasmSha256 },
   runtime: { node: process.version, cpus: os.availableParallelism(), finishedAt: new Date().toISOString() },
 };
 metrics.tag = `${o.dev ? 'dev-' : ''}${full ? 'full' : `part${partIds.join('-')}`}`;
@@ -256,7 +282,7 @@ console.log(JSON.stringify({ dir, recall: recall.primary, verdict }));
 // a minimum beyond 5 km is still reported): its minimum range and TCA for a missed row's pair.
 async function openPairCheck() {
   const modules = modulesRoot(o.modules);
-  const pinned = pinnedModule(modules, path.join(dir, 'compare'));
+  const pinned = pinnedModule(modules, path.join(dir, 'compare'), pin);
   const ca = path.join(modules, 'analysis/conjunction-assessment');
   const cqr = await importFile(path.join(ca, 'tests/lib/cqr.mjs'));
   const hz = await importFile(path.join(ca, 'tests/lib/conjunctionCommandHarness.mjs'));

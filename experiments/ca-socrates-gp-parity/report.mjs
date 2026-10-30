@@ -7,9 +7,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { repo, id, sha256, config } from './common.mjs';
+import { repo, id, sha256, config, a2 } from './common.mjs';
 
-const { values: o } = parseArgs({ options: { run: { type: 'string' }, tag: { type: 'string', default: 'full' }, dev: { type: 'boolean', default: false }, out: { type: 'string' } } });
+const { values: o } = parseArgs({ options: { run: { type: 'string' }, tag: { type: 'string', default: 'full' }, dev: { type: 'boolean', default: false }, out: { type: 'string' }, amendment: { type: 'string' } } });
+// --amendment A2: the run is Amendment A2's; its files carry the prefix a2- and its report becomes README.md, the
+// 0.9.0 report kept beside it as README-0.9.0.md.
+const amend = o.amendment ?? null, prefix = amend ? `${amend.toLowerCase()}-` : '';
+if (amend && amend !== 'A2') throw new Error(`unknown amendment ${amend}`);
 // --dev renders a dev comparison (metrics.dev-<tag>.json) into --out, never into results/.
 const dir = path.resolve(o.run);
 const read = (f) => fs.readFileSync(path.join(dir, f));
@@ -28,11 +32,12 @@ const canon = unit0.events.map((e) => [Math.min(e.a, e.b), Math.max(e.a, e.b), M
   .sort((x, y) => x[0] - y[0] || x[1] - y[1] || x[2] - y[2]);
 const replay = { unit: 0, block: unit0.block, slice: unit0.slice, startJd: unit0.startJd, seconds: unit0.durationSeconds, events: canon.length,
   digest: sha256(canon.map((r) => r.join(',')).join('\n')), rounding: 'TCA 1e-9 d, miss 1 mm, speed 1 mm/s; sorted by pair then TCA' };
-fs.writeFileSync(path.join(out, 'replay.json'), `${JSON.stringify(replay, null, 2)}\n`);
-fs.writeFileSync(path.join(out, `metrics.${m.tag}.json`), `${JSON.stringify(m, null, 2)}\n`);
+fs.writeFileSync(path.join(out, amend ? `replay.${amend.toLowerCase()}.json` : 'replay.json'), `${JSON.stringify(replay, null, 2)}\n`);
+if (amend && m.amendment !== amend) throw new Error(`metrics are not Amendment ${amend}'s`);
+fs.writeFileSync(path.join(out, `metrics.${prefix}${m.tag}.json`), `${JSON.stringify(m, null, 2)}\n`);
 const manifest = { experiment: id, run: m.run, tag: m.tag, plan: m.plan, screens: m.screenManifests.map((x) => ({ ...x, manifest: JSON.parse(read(`part${x.part}/manifest.screen.json`)) })),
   compare: { finishedAt: m.runtime.finishedAt, node: m.runtime.node, outputs: Object.fromEntries(['metrics', 'extras', 'matches'].map((k) => [`${k}.${tagFile}.json`, sha256(read(`${k}.${tagFile}.json`))])) } };
-fs.writeFileSync(path.join(out, `manifest.${m.tag}.json`), `${JSON.stringify(manifest, null, 2)}\n`);
+fs.writeFileSync(path.join(out, `manifest.${prefix}${m.tag}.json`), `${JSON.stringify(manifest, null, 2)}\n`);
 
 // ---- README ---------------------------------------------------------------------------------------------------
 const f = (x, d = 3) => (x === null || x === undefined ? '–' : typeof x === 'number' ? (Math.abs(x) >= 1000 ? x.toLocaleString('en-US', { maximumFractionDigits: 0 }) : x.toPrecision(d)) : String(x));
@@ -49,6 +54,33 @@ L.push(`Plan: [PLAN.md](../../experiments/${id}/PLAN.md) (commit \`${m.plan?.pla
 const v = m.verdict;
 L.push(`**Coverage: ${v.coverage}.**${m.full ? '' : ' This is a subset of the population, not the whole of it.'}`, '');
 L.push(`**Verdict: ${v.status}.** Recall over the primary class: ${pct(m.recall.primary.all)}, ${v.recall.status}. Geometry within the registered tolerances: ${v.geometry.status} (beyond tolerance: NLRV TCA ${v.geometry.beyondTolerance.tcaNlrv}, miss ${v.geometry.beyondTolerance.miss}, speed ${v.geometry.beyondTolerance.speed}).`, '');
+// ---- Amendment A2: both verdicts, the hypotheses and the comparison with the 0.9.0 run ----------------------------
+if (amend) {
+  const base = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.metrics), 'utf8'));
+  const baseAnn = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.annotations), 'utf8'));
+  const keyOf = (x) => `${x.pair.join('-')}|${x.socratesTcaUtc}`;
+  const missedNow = new Set(m.misses.map(keyOf)), missedBefore = new Set(base.misses.map(keyOf));
+  const pairLevel = new Set(m.secondary.vlrvPairLevel.map(keyOf));
+  const byLabel = (label) => baseAnn.misses.rows.filter((r) => r.label === label);
+  const remain = (rows) => rows.filter((r) => missedNow.has(keyOf(r))).length;
+  const tle = byLabel(baseAnn.labels.tleRounding), pre = byLabel(baseAnn.labels.altitudePrefilter), slow = byLabel(baseAnn.labels.vlrvFound);
+  const pr = a2.printRounding, mt = JSON.parse(read(`matches.${tagFile}.json`)).filter((x) => Math.max(...x.pair) < 100000);
+  const overMiss = mt.filter((x) => Math.abs(x.dMissM) > pr.missM + pr.slack).length, overSpeed = mt.filter((x) => Math.abs(x.dSpeedMS) > pr.speedMS + pr.slack).length;
+  const H = [
+    ['H1', a2.hypotheses.H1, remain(tle) === 0, `${tle.length - remain(tle)} of ${tle.length} found`],
+    ['H2', a2.hypotheses.H2, remain(pre) === 0, `${pre.length - remain(pre)} of ${pre.length} found`],
+    ['H3', a2.hypotheses.H3, remain(slow) === slow.length && slow.every((r) => pairLevel.has(keyOf(r)) || !missedNow.has(keyOf(r))), `${remain(slow)} of ${slow.length} still missed under the primary rule; ${slow.filter((r) => pairLevel.has(keyOf(r))).length} found at pair level`],
+    ['H4', a2.hypotheses.H4, overMiss === 0 && overSpeed === 0, `${overMiss.toLocaleString('en-US')} of ${mt.length.toLocaleString('en-US')} matched primary-class events beyond 0.5 m, ${overSpeed} beyond 0.5 m/s; |Δmiss| max ${f(m.geometry.primary.missM.max)} m`],
+  ];
+  const sv = m.secondary.verdict;
+  L.push(`**Amendment A2: CA ${m.module.version} (\`${m.module.commit.slice(0, 9)}\`, SHA-256 \`${m.module.wasmSha256.slice(0, 12)}…\`), Parts 1 and 2 unchanged.** The 0.9.0 result is in [README-0.9.0.md](README-0.9.0.md).`, '');
+  L.push('| Verdict | Rule | Recall over the primary class | Geometry | Status |', '| --- | --- | --- | --- | --- |');
+  L.push(`| Primary | registered, unchanged | ${pct(m.recall.primary.all)} | beyond tolerance: NLRV TCA ${m.verdict.geometry.beyondTolerance.tcaNlrv}, miss ${m.verdict.geometry.beyondTolerance.miss}, speed ${m.verdict.geometry.beyondTolerance.speed} | **${m.verdict.status}** |`);
+  L.push(`| Secondary | ${a2.secondary.rule} | ${pct(m.secondary.recall.primary.all)} | as the primary | **${sv.status}** |`, '');
+  L.push('| Hypothesis (not a rule) | Result | Supported |', '| --- | --- | --- |');
+  for (const [k, text, ok, detail] of H) L.push(`| ${k}: ${text.replace(/\|/g, '\\|')} | ${detail.replace(/\|/g, '\\|')} | ${ok ? 'yes' : 'no'} |`);
+  L.push('', `Misses against the 0.9.0 run: ${[...missedBefore].filter((k) => !missedNow.has(k)).length} disappear, ${[...missedNow].filter((k) => !missedBefore.has(k)).length} appear, ${[...missedNow].filter((k) => missedBefore.has(k)).length} remain. Rows beyond a gated tolerance (primary class): ${Object.values(base.geometry.primary.beyondTolerance).join(' / ')} before (NLRV TCA / miss / speed), ${Object.values(m.geometry.primary.beyondTolerance).join(' / ')} now.`, '');
+}
 // The misses by cause, in the top lines (from the labels; the verdict above stays as registered).
 if (ann) {
   const rows = ann.misses.rows, by = (label) => rows.filter((r) => r.label === label);
@@ -185,5 +217,6 @@ if (a1.length) {
 }
 L.push('## Reproduce', '', '```sh', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 1', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 2 --run <run-id>', `node experiments/ca-socrates-gp-parity/compare.mjs --run runs/ca-socrates-gp-parity/${m.run} --parts ${m.parts.join(',')}`, `node experiments/ca-socrates-gp-parity/report.mjs --run runs/ca-socrates-gp-parity/${m.run} --tag ${m.tag}`, 'node experiments/ca-socrates-gp-parity/verify.mjs   # re-screens unit 0 and checks replay.json', '```', '');
 L.push('SOCRATES data: CelesTrak (T. S. Kelso), https://celestrak.org; cited by URL and SHA-256, not reproduced. GP element sets: Space-Track.org, kept on this machine.', '');
+if (amend && fs.existsSync(path.join(out, 'README.md')) && !fs.existsSync(path.join(out, 'README-0.9.0.md'))) fs.copyFileSync(path.join(out, 'README.md'), path.join(out, 'README-0.9.0.md'));
 fs.writeFileSync(path.join(out, 'README.md'), L.join('\n'));
 console.log(JSON.stringify({ out, verdict: m.verdict.status, replay }));

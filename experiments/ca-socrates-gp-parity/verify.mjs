@@ -11,11 +11,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fork, execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
-import { config, repo, id, here, sha256, modulesRoot, pinnedModule, readCatalog, readSatcat, readSocrates, editionClasses, ommBytes, importFile } from './common.mjs';
+import { config, repo, id, here, sha256, modulesRoot, pinnedModule, modulePin, readCatalog, readSatcat, readSocrates, editionClasses, ommBytes, importFile } from './common.mjs';
 
-const { values: o } = parseArgs({ options: { modules: { type: 'string' } } });
+const { values: o } = parseArgs({ options: { modules: { type: 'string' }, amendment: { type: 'string' } } });
+// --amendment A2: the same checks for Amendment A2's run (its pinned artifact and replay.a2.json).
+const pin = modulePin(o.amendment);
 const ok = (m) => console.log(`ok   ${m}`);
-const replay = JSON.parse(fs.readFileSync(path.join(repo, 'results', id, 'replay.json'), 'utf8'));
+const replayFile = o.amendment ? `replay.${o.amendment.toLowerCase()}.json` : 'replay.json';
+const replay = JSON.parse(fs.readFileSync(path.join(repo, 'results', id, replayFile), 'utf8'));
 fs.mkdirSync(path.join(repo, 'runs', id), { recursive: true });
 const work = fs.mkdtempSync(path.join(repo, 'runs', id, 'verify-'));
 try {
@@ -36,10 +39,10 @@ try {
   const git = (...a) => execFileSync('git', a, { stdio: ['ignore', 'pipe', 'pipe'] });
   git('clone', '-q', '--shared', '--no-checkout', live, modules);
   git('-C', modules, 'sparse-checkout', 'set', 'analysis/conjunction-assessment');
-  git('-C', modules, '-c', 'advice.detachedHead=false', 'checkout', '-q', config.module.commit);
+  git('-C', modules, '-c', 'advice.detachedHead=false', 'checkout', '-q', pin.commit);
   fs.symlinkSync(path.join(live, 'analysis/conjunction-assessment/node_modules'), path.join(modules, 'analysis/conjunction-assessment/node_modules'));
-  const pinned = pinnedModule(modules, work);
-  ok(`module ${config.module.commit.slice(0, 10)} ${pinned.wasmSha256.slice(0, 12)}`);
+  const pinned = pinnedModule(modules, work, pin);
+  ok(`module ${pin.commit.slice(0, 10)} ${pin.version} ${pinned.wasmSha256.slice(0, 12)}`);
   const cqr = await importFile(path.join(modules, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
   const flatc = await cqr.initCqrFlatc();
   const ommSchema = cqr.publishedSchema('OMM');
@@ -75,7 +78,7 @@ try {
     .sort((x, y) => x[0] - y[0] || x[1] - y[1] || x[2] - y[2]);
   const digest = sha256(canon.map((r) => r.join(',')).join('\n'));
   if (canon.length !== replay.events || digest !== replay.digest) throw new Error(`unit 0: ${canon.length} events, digest ${digest}; registered ${replay.events}, ${replay.digest}`);
-  ok(`unit 0 re-screened: ${canon.length} events, digest ${digest.slice(0, 12)} equals results/${id}/replay.json`);
+  ok(`unit 0 re-screened: ${canon.length} events, digest ${digest.slice(0, 12)} equals results/${id}/${replayFile}`);
 } finally {
   fs.rmSync(work, { recursive: true, force: true });
 }
