@@ -1,7 +1,8 @@
 // B2's E2E (PLAN.md, Outputs): `node experiments/sdn-ap-mixed-screening/run.mjs --check` reruns the first scored window of every part (the ISS
 // file with its FFM arm, A5; the laser cutoff; the Starlink satellite of the latest score pass, its SGP4-XP and FFM fits and its score at the
 // same capture cycle, A5) through its own step into a scratch store, compares every bin with the stored row, and regenerates the table to
-// compare with the committed table.json. Without the local records it says so and fails.
+// compare with the committed table.json; A13 part 9's calibrated A5 figures are replayed on part 5's maneuvered cell. Without the local records
+// it says so and fails.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -161,7 +162,10 @@ for (const ffm of ['ffm', 'ffm3']) {
 };
 // the table, regenerated from the stored rows by table.mjs --check (its own process), against the committed table.json
 const tableCheck = () => run([path.join(dir, 'table.mjs'), '--check'], process.env).catch(() => { console.error('B2 check: the table regenerated from the stored rows differs from the committed table.json'); bad += 1; });
-await Promise.all([issCheck(), laserCheck(), starlinkCheck(), caCheck(), part5Check(), tableCheck()].map((x) => x.catch((error) => { console.error(`B2 check: ${error.message}`); bad += 1; })));
+// A13 part 9: the inputs' hashes and part 5's maneuvered cell of the calibrated covariance's A5 figures, recomputed from the stored rows by
+// a13-a5.mjs --check against rows/ca.a13-a5.json (the whole file takes over 7 min, against the gauntlet's 5)
+const a13a5Check = () => (fs.existsSync(path.join(store, 'rows', 'ca.part5.ffm3.json')) ? run([path.join(dir, 'a13-a5.mjs'), '--check'], process.env).catch(() => { console.error('B2 check: A13 part 9: the calibrated A5 figures differ from rows/ca.a13-a5.json'); bad += 1; }) : Promise.resolve());
+await Promise.all([issCheck(), laserCheck(), starlinkCheck(), caCheck(), part5Check(), tableCheck(), a13a5Check()].map((x) => x.catch((error) => { console.error(`B2 check: ${error.message}`); bad += 1; })));
 fs.rmSync(scratch, { recursive: true, force: true });
 console.error(bad ? `B2 check: FAIL (${bad})` : 'B2 check: PASS');
 process.exit(bad ? 1 : 0);
