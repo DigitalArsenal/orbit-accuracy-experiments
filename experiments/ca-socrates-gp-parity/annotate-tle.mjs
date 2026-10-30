@@ -44,10 +44,12 @@ const gapKm = (a, b) => { const x = band.get(a), y = band.get(b); return x && y 
 const missLabels = metrics.misses.map((m) => {
   const p = perRow.get(key(m.pair[0], m.pair[1], m.socratesTcaUtc));
   const gap = gapKm(m.pair[0], m.pair[1]);
+  // Order matters: a slow pair's TCA is ill-conditioned, so it is judged as one before the TLE path, which may find no
+  // interior minimum for it at all; TLE rounding needs the CA path's own minimum beyond 5 km.
   let label = null;
-  if (p && p.full !== null && p.full <= 5000 && (p.ca === null || p.ca > 5000)) label = TLE;
+  if (m.socratesSpeedMS < 10 && m.nearestScreenEvent && Math.abs(m.nearestScreenEvent.secondsFromSocrates) > 60 && m.nearestScreenEvent.missM <= 5000) label = VLRV;
+  else if (p && p.full !== null && p.full <= 5000 && p.ca !== null && p.ca > 5000) label = TLE;
   else if (!m.nearestScreenEvent && m.pairMethod?.missM <= 5000 && gap !== null && gap > 50) label = PREFILTER;
-  else if (m.socratesSpeedMS < 10 && m.nearestScreenEvent && Math.abs(m.nearestScreenEvent.secondsFromSocrates) > 60 && m.nearestScreenEvent.missM <= 5000) label = VLRV;
   return { pair: m.pair, socratesTcaUtc: m.socratesTcaUtc, cls: m.cls, socratesRangeM: m.socratesRangeM, socratesSpeedMS: m.socratesSpeedMS, perRow: p ?? null, bandGapKm: gap, label };
 });
 const tail = {};

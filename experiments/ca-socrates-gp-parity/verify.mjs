@@ -9,7 +9,7 @@
 // It needs this machine's archive; without it, it fails rather than skips (a skip is never a pass).
 import fs from 'node:fs';
 import path from 'node:path';
-import { fork } from 'node:child_process';
+import { fork, execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
 import { config, repo, id, here, sha256, modulesRoot, pinnedModule, readCatalog, readSatcat, readSocrates, editionClasses, ommBytes, importFile } from './common.mjs';
 
@@ -29,7 +29,15 @@ try {
   const ed = editionClasses(report, catalog.rows);
   if (ed.matched.size !== ed.objects || ed.mismatched.size || ed.absent.size) throw new Error(`editions: ${ed.matched.size} of ${ed.objects} matched`);
   ok(`editions: all ${ed.objects} SOCRATES objects match`);
-  const modules = modulesRoot(o.modules);
+  // The pinned commit's own tree: a private sparse clone of the modules checkout at config.module.commit (its node_modules
+  // linked), so later commits or uncommitted work in the shared checkout cannot change what is verified.
+  const live = modulesRoot(o.modules);
+  const modules = path.join(work, 'modules');
+  const git = (...a) => execFileSync('git', a, { stdio: ['ignore', 'pipe', 'pipe'] });
+  git('clone', '-q', '--shared', '--no-checkout', live, modules);
+  git('-C', modules, 'sparse-checkout', 'set', 'analysis/conjunction-assessment');
+  git('-C', modules, '-c', 'advice.detachedHead=false', 'checkout', '-q', config.module.commit);
+  fs.symlinkSync(path.join(live, 'analysis/conjunction-assessment/node_modules'), path.join(modules, 'analysis/conjunction-assessment/node_modules'));
   const pinned = pinnedModule(modules, work);
   ok(`module ${config.module.commit.slice(0, 10)} ${pinned.wasmSha256.slice(0, 12)}`);
   const cqr = await importFile(path.join(modules, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
