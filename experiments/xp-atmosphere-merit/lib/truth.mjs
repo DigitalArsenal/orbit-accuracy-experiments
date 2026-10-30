@@ -37,6 +37,16 @@ export function productFiles(o) {
   return list;
 }
 
+/** A product file's gated states, the last 32 files read kept in memory (consecutive cutoffs share most of their files). */
+const fileCache = new Map();
+function readCached(file) {
+  if (fileCache.has(file)) { const v = fileCache.get(file); fileCache.delete(file); fileCache.set(file, v); return v; }
+  const ref = SRC.readReference(file);
+  fileCache.set(file, ref);
+  if (fileCache.size > 32) fileCache.delete(fileCache.keys().next().value);
+  return ref;
+}
+
 /** The object's states in [fromMs, toMs] (GCRF, UTC, km, km/s): [{epoch, r, v}], each epoch from the newest file that starts at or
  *  before it; the files read. */
 export function series(o, fromMs, toMs) {
@@ -44,7 +54,7 @@ export function series(o, fromMs, toMs) {
   let merged = [];
   const used = [];
   for (const f of files) {
-    const ref = SRC.readReference(f.file);
+    const ref = readCached(f.file);
     const lines = ref.lines.filter((l) => { const t = ms(l.epoch); return t >= fromMs && t <= toMs; });
     if (!lines.length) continue;
     const start = ms(ref.lines[0].epoch);
