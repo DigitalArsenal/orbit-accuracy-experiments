@@ -94,7 +94,9 @@ if (ann) {
 {
   const inc = m.screen.incompleteUnits ?? [];
   const F = [];
-  F.push(`- **Failed pair evaluations (incomplete-screening).** \`screen_catalog\` answered ${inc.length} of its ${m.screen.units} calls with status 422 \`incomplete-screening\`: ${m.screen.failedPairs} pair evaluations failed and those pairs were not screened in those calls (Amendment A0 keeps each call's other events). Calls: ${inc.map((x) => `part ${x.part} block ${x.block} slice ${x.slice} (${x.failedPairs})`).join('; ') || 'none'}.`);
+  F.push(inc.length
+    ? `- **Failed pair evaluations (incomplete-screening).** \`screen_catalog\` answered ${inc.length} of its ${m.screen.units} calls with status 422 \`incomplete-screening\`: ${m.screen.failedPairs} pair evaluations failed and those pairs were not screened in those calls (Amendment A0 keeps each call's other events). Calls: ${inc.map((x) => `part ${x.part} block ${x.block} slice ${x.slice} (${x.failedPairs})`).join('; ')}.`
+    : `- **No failed pair evaluations.** None of the ${m.screen.units} \`screen_catalog\` calls answered \`incomplete-screening\`; every pair evaluation completed${amend ? ' (the 0.9.0 run had 27 failed evaluations in 3 calls, all in the slice from 2026-11-02T23:00Z)' : ''}.`);
   if (ann) {
     const pre = ann.misses.rows.filter((r) => r.label === ann.labels.altitudePrefilter);
     F.push(`- **Altitude prefilter misses decaying objects.** ${pre.length} SOCRATES events (${new Set(pre.map((r) => r.pair.join('-'))).size} pairs; ${pre.filter((r) => r.cls === 'primary').length} in the primary class) have no screen event for their pair at all, though the module's own pair method puts each inside 5 km. In each pair the epoch perigee/apogee bands lie ${pre.map((r) => `${Math.round(r.bandGapKm)} km`).join(', ')} apart, beyond the screen's 50 km prefilter margin, and one object decays fast (|BSTAR| 0.03–0.09), crossing the other's altitude within the week: ${pre.map((r) => `${r.pair.join(' × ')} at ${r.socratesTcaUtc} (${Math.round(r.socratesRangeM)} m)`).join('; ')}.`);
