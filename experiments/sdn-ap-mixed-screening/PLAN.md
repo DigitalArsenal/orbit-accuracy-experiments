@@ -835,3 +835,41 @@ B sensitivity at E and at the epoch, from one propagator/ffm run from the fit ep
 steps of at most 120 s) sampled at E and the epochs only (lib/a13.mjs densityTerms). The lead records keep windowTerms. On two Starlink
 lead records the composed calibrated covariance differs between the two paths by at most 2.4e-4 relative per element and d2 agrees to
 six digits (the integrator's sampling); part 5's records are not otherwise affected.
+
+### A13 - 2026-10-30, part 9 (the calibrated covariance's A5 figures, and what was read before them), committed before any of those figures is computed
+
+Coordinator rulings of 2026-10-30.
+1. **The calibrated covariance's A5 figures.** Part 1 point 4 registers A5's rates, calls, confusion matrices and verdict, unchanged, for
+   both covariances. No run computed them for the calibrated covariance: lib/ca.mjs summarize covers A5's pair (FFM, SGP4-XP), and the A13
+   runs (part4-ca.mjs --a13 and part 5's ffm3 summary) added only the proper scores and the reliability table. This part implements part 1
+   point 4 for the calibrated covariance. No Pc is recomputed and no stored row is rewritten.
+   - Inputs: the stored encounter rows. Part 4: rows/ca-encounters.<run>.<class>.jsonl of the runs iss.a13, laser.a13 and starlink.ffm3.
+     Part 5: the assessed rows of the ffm3 run, formed into encounters as part 5's summary forms them (the encounters with the truth's
+     closest approach; pairs with no maneuver evident, and pairs with one evident).
+   - Method: summarize unchanged, with FFM-cal in A5's FFM slot and SGP4-XP-cal in its SGP4-XP slot. An encounter where either has no Pc
+     is counted and left out (A7's rule per pair, part 5 point 1).
+   - Seeds: the identical registered strings (`B2|A4|<group>|<class>|<metric>|<kind>` and `B2|A5|<group>|<class>|<lead>|<arm>|<metric>`,
+     with the slots' names ffm and sgp4xp). This is the literal reading of part 4's "A4's and A5's own intervals keep their registered
+     seeds", and it gives the two covariances the same resamples, as a paired comparison wants.
+   - Laser's L-P and R2 (never in a verdict) and A3's runs (no calibrated FFM covariance) get none. The proper scores stay the calibrated
+     contrast's primary verdict (part 1 point 4, D8).
+   - Where: a13-a5.mjs computes them once and writes one new file, rows/ca.a13-a5.json, with the SHA-256 of its inputs. It fails unless its
+     forming of part 5's encounters reproduces the stored summary's counts (encounters formed and left out per class). table.mjs only
+     renders the file. Part 5's unmaneuvered cell (172,256 encounters, 10,000 resamples per interval) takes over 7 minutes, against the
+     gauntlet's 5, so the E2E (run.mjs --check) does not recompute the file: it recomputes part 5's maneuvered cell (1,492 encounters) from
+     the stored rows and compares it with the file, beside table.mjs --check.
+2. **Disclosed: what was read before this part.**
+   - While part 5's ffm3 assess phase ran (2026-10-30, 01:03 to 03:36 UTC), two of its 22 shards (9 and 13) ran on for an hour or more
+     after the rest (done by 02:22 UTC), each stalled on single encounters. Between 02:00 and 03:05 UTC the stopped lanes read single
+     encounters for diagnosis. Encounter 65001: a re-run of its calls, timed one by one and printing each result as it
+     returned, stopped before it finished. Encounters 118369 and 144641: each of their five calls made as the assess phase makes it, each
+     in its own process; the truth's, FFM's, SGP4-XP's and SGP4-XP-cal's calls returned in 0.02 to 0.6 s, with their TCA, miss and Pc
+     printed, and FFM-cal's had not returned when it was stopped (after 134 s and 600 s). The stored covariance inputs of the encounters
+     then left in shards 9 and 13 were also read: recent launches by NORAD number, and FFM-cal's along-track sigma at TCA above 100 and
+     300 km. No aggregate, rate, score or verdict of the ffm3 run existed before its summary phase ran at completion (04:03 UTC). The
+     method was not changed, and the run completed as registered. A3's run had completed on 2026-10-29 (21:49 UTC), and its part 5
+     figures were read then; its summary was written again at 02:39 UTC with part 6 point 2's refusal accounting, equal apart from it.
+   - Before this part was written, this lane regenerated the table (2026-10-30, 11:19 UTC). It read A5's figures for A5's covariance,
+     and the proper scores and reliability tables of the A13 runs (part 4's iss.a13, laser.a13 and starlink.ffm3; part 5's ffm3). It also
+     started a recomputation of A5's figures for A5's covariance on part 5's encounters that reports only whether they equal the stored
+     summary (a check of its forming). No figure of point 1 had been computed.
