@@ -5,7 +5,7 @@
 // and every worker stops before its next window while that file exists.
 //   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --launch 8 --condition O|M   detached workers, PIDs in <store>/logs/<condition>.pids.json
 //   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --condition O|M [--shard k/n] [--limit n]   score windows (committed sources only)
-//   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --amend A1 --condition O [--group P]   amendment A1: the F arms of the windows
+//   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --amend A1 --condition O [--group P] [--key K]   amendment A1: the F arms of the windows
 //                                                             propagator/ffm refused for a missing weather day, rerun into
 //                                                             <store>/rows/<condition>.A1.jsonl (the refusal rows stay)
 //   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --check   the E2E: config.check's windows re-run and compared exactly; the table
@@ -63,12 +63,12 @@ if (args.launch) {
   const tag = args.amend ? `${condition}.${args.amend}` : condition;
   for (let i = 0; i < count; i += 1) {
     const log = fs.openSync(path.join(logsDir, `${tag}.s${i}.log`), 'a');
-    const extra = [...(args.amend ? ['--amend', args.amend] : []), ...(args.group ? ['--group', args.group] : [])];
+    const extra = [...(args.amend ? ['--amend', args.amend] : []), ...(args.group ? ['--group', args.group] : []), ...(args.key ? ['--key', args.key] : [])];
     const child = spawn(process.execPath, ['--max-old-space-size=6144', path.join(dir, 'run.mjs'), '--condition', condition, ...extra, '--shard', `${i}/${count}`], { cwd: root, detached: true, stdio: ['ignore', log, log], env: process.env });
     child.unref();
     pids.push(child.pid);
   }
-  write(path.join(logsDir, `${tag}.pids.json`), { started: new Date().toISOString(), condition, amendment: args.amend ?? null, group: args.group ?? null, pids, shards: count });
+  write(path.join(logsDir, `${tag}${args.key ? `.${args.key.replaceAll('|', '_')}` : args.group ? `.${args.group}` : ''}.pids.json`), { started: new Date().toISOString(), condition, amendment: args.amend ?? null, group: args.group ?? null, key: args.key ?? null, pids, shards: count });
   console.error(`XM2 ${tag}: ${count} workers, PIDs ${pids.join(' ')} (${path.join(logsDir, `${tag}.pids.json`)})`);
   process.exit(0);
 }
@@ -255,7 +255,7 @@ if (args.amend) {
   const reg = stored(condition), file = path.join(rowsDir, `${condition}.A1.jsonl`);
   const doneA1 = new Set(readJsonl(file).map((r) => r.key));
   const refused = (x) => /space-weather-out-of-range/.test(String(x?.error ?? ''));
-  const todo = windows().filter((w) => (!args.group || w.group === args.group) && reg.has(w.key) && !doneA1.has(w.key) && (refused(reg.get(w.key).arms?.F2) || refused(reg.get(w.key).arms?.F3)));
+  const todo = windows().filter((w) => (!args.group || w.group === args.group) && (!args.key || w.key === args.key) && reg.has(w.key) && !doneA1.has(w.key) && (refused(reg.get(w.key).arms?.F2) || refused(reg.get(w.key).arms?.F3)));
   const mineA1 = todo.filter((_, i) => i % n === k);
   for (const w of mineA1) {
     const old = reg.get(w.key);
