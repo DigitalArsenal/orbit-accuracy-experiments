@@ -5,6 +5,9 @@
 // and every worker stops before its next window while that file exists.
 //   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --launch 8 --condition O|M   detached workers, PIDs in <store>/logs/<condition>.pids.json
 //   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --condition O|M [--shard k/n] [--limit n]   score windows (committed sources only)
+//   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --amend A1 --condition O [--group P]   amendment A1: the F arms of the windows
+//                                                             propagator/ffm refused for a missing weather day, rerun into
+//                                                             <store>/rows/<condition>.A1.jsonl (the refusal rows stay)
 //   node experiments/ffm-atmosphere-vs-sgp4/run.mjs --check   the E2E: config.check's windows re-run and compared exactly; the table
 //                                                             rebuilt against the committed table.json
 import fs from 'node:fs';
@@ -51,20 +54,22 @@ if (args.launch) {
   if (fs.existsSync(DEFECT)) throw new Error(`${DEFECT} exists: resolve the defect first`);
   const { extraction } = await import(path.join(root, config.xm.dir, 'lib/public.mjs'));
   if (extraction().missing.length) throw new Error("XM's public extraction is incomplete");
-  if (condition === 'M') {
+  if (condition === 'M' && !args.amend) {
     const o = stored('O').size, registered = windows().length;
     if (o < registered) throw new Error(`condition M runs only after every O window is stored (${o} of ${registered})`);
   }
   fs.mkdirSync(logsDir, { recursive: true });
   const pids = [];
+  const tag = args.amend ? `${condition}.${args.amend}` : condition;
   for (let i = 0; i < count; i += 1) {
-    const log = fs.openSync(path.join(logsDir, `${condition}.s${i}.log`), 'a');
-    const child = spawn(process.execPath, ['--max-old-space-size=6144', path.join(dir, 'run.mjs'), '--condition', condition, '--shard', `${i}/${count}`], { cwd: root, detached: true, stdio: ['ignore', log, log], env: process.env });
+    const log = fs.openSync(path.join(logsDir, `${tag}.s${i}.log`), 'a');
+    const extra = [...(args.amend ? ['--amend', args.amend] : []), ...(args.group ? ['--group', args.group] : [])];
+    const child = spawn(process.execPath, ['--max-old-space-size=6144', path.join(dir, 'run.mjs'), '--condition', condition, ...extra, '--shard', `${i}/${count}`], { cwd: root, detached: true, stdio: ['ignore', log, log], env: process.env });
     child.unref();
     pids.push(child.pid);
   }
-  write(path.join(logsDir, `${condition}.pids.json`), { started: new Date().toISOString(), condition, pids, shards: count });
-  console.error(`XM2 ${condition}: ${count} workers, PIDs ${pids.join(' ')} (${path.join(logsDir, `${condition}.pids.json`)})`);
+  write(path.join(logsDir, `${tag}.pids.json`), { started: new Date().toISOString(), condition, amendment: args.amend ?? null, group: args.group ?? null, pids, shards: count });
+  console.error(`XM2 ${tag}: ${count} workers, PIDs ${pids.join(' ')} (${path.join(logsDir, `${tag}.pids.json`)})`);
   process.exit(0);
 }
 
@@ -76,7 +81,7 @@ const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
 const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const { publicSetAt, extraction } = await import(path.join(root, config.xm.dir, 'lib/public.mjs'));
 const { config: XMC } = await import(path.join(root, config.xm.dir, 'common.mjs'));
-const { openFfm, heldRows, cachedDcl } = await import('./lib/ffm.mjs');
+const { openFfm, driverRows, cachedDcl } = await import('./lib/ffm.mjs');
 if (extraction().missing.length) throw new Error("XM's public extraction is incomplete");
 const PCF_X2 = S.pcfBytes({ forces: XMC.arms.X2.forces, fit: { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior } });
 const spacingSeconds = (lines) => {   // XM's
@@ -103,8 +108,9 @@ function againstXm(row, x) {
   return differ;
 }
 
-/** One window: P and X2 as XM scores them, then F2 and F3 (PLAN.md, Arms, Fit, Environment, Conditions, Scoring). */
-async function scoreWindow(m, F, w) {
+/** One window: P and X2 as XM scores them, then F2 and F3 (PLAN.md, Arms, Fit, Environment, Conditions, Scoring). With `registered`
+ *  (amendment A1), P and X2 are taken from that row and only the F arms are run. */
+async function scoreWindow(m, F, w, registered = null) {
   const { o, group, cutoffMs: D0 } = w;
   const timing = {};
   const row = { group, key: w.key, norad: o.norad, name: o.name, cluster: o.cluster, cutoff: iso(D0), isoWeek: isoWeek(D0), condition };
@@ -134,8 +140,9 @@ async function scoreWindow(m, F, w) {
   };
 
   // P: the public set at or before the cutoff under propagator/sgp4 (XM's)
-  const set = publicSetAt(o.norad, D0);
-  if (!set) row.P = { ok: false, notRun: 'no public set at or before the cutoff' };
+  const set = registered ? null : publicSetAt(o.norad, D0);
+  if (registered) row.P = registered.P;
+  else if (!set) row.P = { ok: false, notRun: 'no public set at or before the cutoff' };
   else {
     const p = { setEpoch: set.epoch, setCreation: set.creationDate, gpId: set.gpId };
     let states = null;
@@ -176,7 +183,8 @@ async function scoreWindow(m, F, w) {
   }
 
   // X2 (XM's arm, its condition's rows, no $DCL)
-  {
+  if (registered) row.arms.X2 = registered.arms?.X2;
+  else {
     const oem = S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId ?? '', norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
     const extra = { rows: S.spwBytes(rows) };
     const f = await m.fit(oem, PCF_X2, extra);
@@ -192,8 +200,9 @@ async function scoreWindow(m, F, w) {
   }
 
   // F2 and F3: propagator/ffm fitted by analysis/estimation on the same arc, the rows held as PLAN.md states (O) and F3's $DCL
-  const held = heldRows(rows, condition, D0);
+  const held = driverRows(rows, D0);
   if (held.held.length) row.held = { from: held.held[0], to: held.held.at(-1), days: held.held.length };
+  if (held.filled.length) row.filled = held.filled;
   const ffmArm = async (name, d) => {
     const a = await F.arm(o.norad, thin, epochs, held.rows, d);
     timing[name] = { fitMs: a.fitMs ?? null, forecastMs: a.forecastMs ?? null };
@@ -209,10 +218,10 @@ async function scoreWindow(m, F, w) {
 const m = await openModules();
 let F = await openFfm();
 const trapped = (x) => /RuntimeError|unreachable|out of bounds|memory access/i.test(String(x?.error ?? ''));
-const run = async (w) => {
+const run = async (w, registered = null) => {
   const t0 = Date.now();
   let out;
-  try { out = await scoreWindow(m, F, w); } catch (error) { out = { row: { group: w.group, key: w.key, norad: w.o.norad, cluster: w.o.cluster, cutoff: iso(w.cutoffMs), condition, error: String(error?.stack ?? error).slice(0, 600) }, timing: {} }; }
+  try { out = await scoreWindow(m, F, w, registered); } catch (error) { out = { row: { group: w.group, key: w.key, norad: w.o.norad, cluster: w.o.cluster, cutoff: iso(w.cutoffMs), condition, error: String(error?.stack ?? error).slice(0, 600) }, timing: {} }; }
   const row = { ...out.row, build: build.modulesCommit.slice(0, 12), timing: { ...out.timing, wallSeconds: (Date.now() - t0) / 1000 } };
   // a module trap leaves the instance unusable: the next window gets fresh FFM modules
   if (trapped(row.arms?.F2) || trapped(row.arms?.F3)) { try { await F.close(); } catch { /* the trapped instance */ } F = await openFfm(); }
@@ -237,6 +246,36 @@ if (args.check) {
   if (!sameAsCommitted(buildTable())) { console.error('XM2 check: the table rebuilt from the stored rows differs from the committed table.json'); bad += 1; }
   console.error(bad ? `XM2 check: FAIL (${bad})` : 'XM2 check: PASS');
   process.exit(bad ? 1 : 0);
+}
+
+if (args.amend) {
+  // amendment A1 (PLAN.md): the windows of this condition whose F arm propagator/ffm refused for a missing weather day; the F arms
+  // rerun with the rows A1 prepares, P and X2 taken from the registered row; the same truth, arc, rows' days and $DCL required
+  if (args.amend !== 'A1') throw new Error('--amend A1');
+  const reg = stored(condition), file = path.join(rowsDir, `${condition}.A1.jsonl`);
+  const doneA1 = new Set(readJsonl(file).map((r) => r.key));
+  const refused = (x) => /space-weather-out-of-range/.test(String(x?.error ?? ''));
+  const todo = windows().filter((w) => (!args.group || w.group === args.group) && reg.has(w.key) && !doneA1.has(w.key) && (refused(reg.get(w.key).arms?.F2) || refused(reg.get(w.key).arms?.F3)));
+  const mineA1 = todo.filter((_, i) => i % n === k);
+  for (const w of mineA1) {
+    const old = reg.get(w.key);
+    const row = await run(w, old);
+    row.sources = sources;
+    row.amendment = { id: 'A1', registered: { F2: { ok: old.arms?.F2?.ok ?? null, error: old.arms?.F2?.error ?? null }, F3: { ok: old.arms?.F3?.ok ?? null, error: old.arms?.F3?.error ?? null } } };
+    const differ = row.error ? ['error'] : [...againstXm(row, XM.get(w.key)), ...['binEpochs', 'entered', condition, 'dca', 'arc'].filter((f) => !same(row[f], old[f]))];
+    if (differ.length) row.defect = differ;
+    appendJsonl(file, row);
+    if (row.defect) {
+      write(DEFECT, { key: row.key, condition, amendment: 'A1', defect: row.defect, error: row.error ?? null, at: new Date().toISOString(), shard: `${k}/${n}` });
+      console.error(`XM2 A1 ${k}/${n}: ${row.key} differs in ${row.defect.join(', ')}: a software defect; stopping`);
+      await m.close(); await F.close();
+      process.exit(3);
+    }
+    console.error(`XM2 A1 ${k}/${n}: ${row.key} F2 ${row.arms?.F2?.ok} F3 ${row.arms?.F3?.ok} (${row.timing.wallSeconds} s)`);
+  }
+  console.error(`XM2 A1 ${k}/${n}: ${mineA1.length} windows`);
+  await m.close(); await F.close();
+  process.exit(0);
 }
 
 const all = windows(), done = stored(condition);

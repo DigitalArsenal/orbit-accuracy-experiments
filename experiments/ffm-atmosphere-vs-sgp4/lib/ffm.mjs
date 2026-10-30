@@ -3,8 +3,8 @@
 // by the experiments' space-data-module-sdk browser-module harness (as C2 and B2 A12 host them); the environment frames:
 //   kernel             DE440s (harness/prw.mjs kernelFrame), SHA-256 checked
 //   earth_orientation  B1's IERS finals rows (sdn-ap-baselines environment.json), sliced to the arc as B1's forArc slices them
-//   space_weather      XM's $SPW rows of the condition as SDS SPW rows in one PRW SPACE_WEATHER table; condition O's last row held
-//                      through D0 + 8 (the values sdn-ap's HOLD_LAST holds for X2)
+//   space_weather      XM's $SPW rows of the condition as SDS SPW rows in one PRW SPACE_WEATHER table; a day without a row takes the
+//                      last row at or before it through D0 + 8 (sdn-ap's rule for X2: the registered hold-last and amendment A1)
 //   density_correction XM's cached $DCL (F3 only)
 // Encoding, decoding and routing only: the fit is analysis/estimation's, the dynamics propagator/ffm's.
 import fs from 'node:fs';
@@ -57,13 +57,23 @@ function environment() {
   return { eop, kernel: kernelFrame(kernelBytes) };
 }
 
-/** The rows of a condition as FFM reads them: O's last row repeated, every value, on each later day through D0 + 8 (PLAN.md). */
-export function heldRows(rows, condition, cutoffMs) {
-  if (condition !== 'O') return { rows, held: [] };
-  const last = rows.at(-1), end = Date.parse(`${dateOf(cutoffMs)}T00:00:00Z`) + 8 * DAY;
-  const out = [...rows], held = [];
-  for (let t = Date.parse(`${last.date}T00:00:00Z`) + DAY; t <= end; t += DAY) { out.push({ ...last, date: dateOf(t) }); held.push(dateOf(t)); }
-  return { rows: out, held };
+/** The rows of a condition as FFM reads them (PLAN.md, Environment, and amendment A1): every day from the rows' first day through
+ *  D0 + 8 that has no row takes the last row at or before it, every value: the drivers sdn-ap reads for X2 (SPEC 15.2, "the last row
+ *  at or before its day (past the last row that row holds)"). Past the last row this is the registered hold-last; inside the rows it
+ *  fills a day the GFZ file does not report (A1). { rows, held: the days after the last row, filled: the days inside it }. */
+export function driverRows(rows, cutoffMs) {
+  const first = Date.parse(`${rows[0].date}T00:00:00Z`), lastRow = Date.parse(`${rows.at(-1).date}T00:00:00Z`);
+  const end = Math.max(lastRow, Date.parse(`${dateOf(cutoffMs)}T00:00:00Z`) + 8 * DAY);
+  const byDate = new Map(rows.map((r) => [r.date, r]));
+  const out = [], held = [], filled = [];
+  let last = null;
+  for (let t = first; t <= end; t += DAY) {
+    const date = dateOf(t), r = byDate.get(date);
+    if (r) { out.push(r); last = r; continue; }
+    out.push({ ...last, date });
+    (t > lastRow ? held : filled).push(date);
+  }
+  return { rows: out, held, filled };
 }
 
 /** XM's cached $DCL issued at `issueMs` (XM lib/dca.mjs dclAt's cache, read only): { ok, dcl, sha256 } or { ok: false, error }. */

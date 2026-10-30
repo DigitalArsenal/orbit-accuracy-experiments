@@ -1,6 +1,8 @@
-// XM2 table (PLAN.md, Decision rule and Statistics): every registered cell from the stored rows, the cluster bootstrap (XM-fast's
-// code), the verdicts, the CONVERGED shares and the window counts, written to results/ffm-atmosphere-vs-sgp4/table.json; the cost
-// (fit and forecast seconds) printed beside it, never in the table (the table is deterministic). Statistics only.
+// XM2 table (PLAN.md, Decision rule, Statistics and amendment A1): every registered cell from the stored rows, twice: primary (A1:
+// the rows of <store>/rows/<condition>.A1.jsonl in place of the refused windows' rows) and as written (the registered rows, the
+// refusals as F losses); the cluster bootstrap (XM-fast's code), rules 1, 2 and 3 apart, the verdicts, the CONVERGED and STALLED
+// shares and the window counts, written to results/ffm-atmosphere-vs-sgp4/table.json; the cost (fit and forecast seconds) printed
+// beside it, never in the table (the table is deterministic). Statistics only.
 //   node experiments/ffm-atmosphere-vs-sgp4/table.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -120,7 +122,8 @@ function pairsOf(rows, group, { cond, clusters }, arm, ref, lead) {
   return out.sort((x, y) => (x.key < y.key ? -1 : 1));
 }
 
-/** The F fits per group, condition and arm: windows, fits attempted, CONVERGED (its share of the fits), terminations, failures by kind. */
+/** The F fits per group, condition and arm: windows, fits attempted, CONVERGED and STALLED (their shares of the fits), terminations,
+ *  failures by kind. */
 function fits(rows) {
   const out = {};
   for (const g of Object.keys(config.groups)) for (const c of ['O', 'M']) for (const a of ['F2', 'F3']) {
@@ -132,7 +135,9 @@ function fits(rows) {
     for (const x of fitted) { const t = x.fit?.termination ?? 'fit-failed'; terminations[t] = (terminations[t] ?? 0) + 1; }
     for (const x of arms) if (!x.ok) { const kind = String(x.error ?? '').split(':')[0]; failures[kind] = (failures[kind] ?? 0) + 1; }
     const converged = fitted.filter((x) => x.fit?.termination === 'CONVERGED').length;
-    out[`${g}|${c}|${a}`] = { windows: arms.length, fitted: fitted.length, converged, convergedShare: fitted.length ? converged / fitted.length : null, ok: arms.filter((x) => x.ok).length, terminations, failures,
+    const stalled = terminations.STALLED ?? 0;
+    out[`${g}|${c}|${a}`] = { windows: arms.length, fitted: fitted.length, converged, convergedShare: fitted.length ? converged / fitted.length : null,
+      stalled, stalledShare: fitted.length ? stalled / fitted.length : null, ok: arms.filter((x) => x.ok).length, terminations, failures,
       medianIterations: median(arms.map((x) => x.fit?.iterations).filter(Number.isFinite)), medianFfmCalls: median(arms.map((x) => x.fit?.ffmCalls).filter(Number.isFinite)) };
   }
   return out;
@@ -156,24 +161,31 @@ function counts(rows) {
 }
 
 const rowsDir = path.join(store, 'rows');
-/** The stored rows of both conditions, one per condition and key. */
-export function storedRows() {
+/** The stored rows of both conditions, one per condition and key: as written (the registered rows) or A1 (each window of
+ *  <condition>.A1.jsonl in place of its registered row). */
+export function storedRows(variant = 'A1') {
+  if (!['A1', 'asWritten'].includes(variant)) throw new Error(`no variant ${variant}`);
   const files = fs.existsSync(rowsDir) ? fs.readdirSync(rowsDir).filter((f) => /^[OM]\.s\d+\.jsonl$/.test(f)).sort() : [];
   const byKey = new Map();
   for (const f of files) for (const r of readJsonl(path.join(rowsDir, f))) { const id = `${r.condition}|${r.key}`; if (!byKey.has(id)) byKey.set(id, r); }
+  if (variant === 'A1') for (const c of ['O', 'M']) for (const r of readJsonl(path.join(rowsDir, `${c}.A1.jsonl`))) { const id = `${r.condition}|${r.key}`; if (byKey.has(id)) byKey.set(id, r); }
   return [...byKey.values()].sort((x, y) => (`${x.condition}|${x.key}` < `${y.condition}|${y.key}` ? -1 : 1));
 }
 
-/** The table of the stored rows (deterministic: no times, the rows' digest). */
-export function buildTable(rows = storedRows()) {
-  const digest = sha256(rows.map((r) => JSON.stringify({ ...r, timing: undefined, sources: undefined, build: undefined })).join('\n'));
-  const conditions = [...new Set(rows.map((r) => r.condition))].sort();
+const digestOf = (rows) => sha256(rows.map((r) => JSON.stringify({ ...r, timing: undefined, sources: undefined, build: undefined })).join('\n'));
+const VARIANTS = { primary: 'A1', asWritten: 'asWritten' };
+
+/** The table of the stored rows (deterministic: no times, the rows' digests): every cell primary (A1) and as written. */
+export function buildTable(rowsBy = { primary: storedRows('A1'), asWritten: storedRows('asWritten') }) {
+  const conditions = [...new Set(rowsBy.asWritten.map((r) => r.condition))].sort();
   const cells = [];
   for (const group of Object.keys(config.groups)) for (const c of CONFIGS) {
     if (!conditions.includes(c.cond)) continue;
     for (const [arm, ref] of CONTRASTS) for (const lead of LEADS) {
       const seed = `XM2|${group}|${config.fit.arcHours}|${c.cond}|${arm}/${ref}|${lead}|${c.clusters}`;
-      cells.push({ group, cond: c.cond, clusters: c.clusters, role: c.role, arm, ref, lead, seed, ...cellStats(pairsOf(rows, group, c, arm, ref, lead), seed) });
+      const cell = { group, cond: c.cond, clusters: c.clusters, role: c.role, arm, ref, lead, seed };
+      for (const v of Object.keys(VARIANTS)) cell[v] = cellStats(pairsOf(rowsBy[v], group, c, arm, ref, lead), seed);
+      cells.push(cell);
     }
   }
   const verdicts = {};
@@ -183,12 +195,16 @@ export function buildTable(rows = storedRows()) {
     verdicts[name] = { role: c.role };
     for (const group of Object.keys(config.groups)) for (const [arm, ref] of CONTRASTS) {
       const v = LEADS.map((lead) => cells.find((x) => x.group === group && x.cond === c.cond && x.clusters === c.clusters && x.arm === arm && x.ref === ref && x.lead === lead));
-      verdicts[name][`${group}|${arm} beats ${ref}`] = { pass: v.every((x) => x?.pass), failing: v.filter((x) => !x?.pass).map((x) => ({ lead: x.lead, rules: x.rules ?? null, why: x.why ?? null })) };
+      verdicts[name][`${group}|${arm} beats ${ref}`] = Object.fromEntries(Object.keys(VARIANTS).map((k) => [k, { pass: v.every((x) => x?.[k]?.pass),
+        failing: v.filter((x) => !x?.[k]?.pass).map((x) => ({ lead: x.lead, rules: x[k].rules ?? null, why: x[k].why ?? null })) }]));
     }
   }
   return {
-    experiment: config.experiment, id: config.id, task: config.task, modulesCommit: build.modulesCommit, xmCommit: config.xm.commit, rowsDigest: digest, rows: rows.length, conditions,
-    rule: config.verdict.rule, counts: counts(rows), fits: fits(rows), verdicts, cells,
+    experiment: config.experiment, id: config.id, task: config.task, modulesCommit: build.modulesCommit, xmCommit: config.xm.commit,
+    primary: 'A1: a day missing from the weather rows takes the last row at or before it (PLAN.md, amendment A1)', asWritten: 'the registered rows: the refused windows are F losses',
+    rowsDigest: { primary: digestOf(rowsBy.primary), asWritten: digestOf(rowsBy.asWritten) }, rows: rowsBy.asWritten.length,
+    amended: rowsBy.primary.filter((r) => r.amendment?.id === 'A1').map((r) => `${r.condition}|${r.key}`), conditions,
+    rule: config.verdict.rule, counts: counts(rowsBy.asWritten), fits: { primary: fits(rowsBy.primary), asWritten: fits(rowsBy.asWritten) }, verdicts, cells,
   };
 }
 
@@ -217,13 +233,13 @@ export function cost(rows) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
-  const rows = storedRows();
+  const rows = storedRows('A1');
   const t0 = Date.now();
-  const table = buildTable(rows);
+  const table = buildTable({ primary: rows, asWritten: storedRows('asWritten') });
   fs.mkdirSync(results, { recursive: true });
   fs.writeFileSync(TABLE, tableText(table));
   console.error(`XM2 table: ${table.rows} rows, ${table.cells.length} cells, ${((Date.now() - t0) / 1000).toFixed(1)} s -> ${TABLE}`);
-  for (const [name, v] of Object.entries(table.verdicts)) for (const [contrast, x] of Object.entries(v)) if (contrast !== 'role') console.error(`${name} ${contrast}: ${x.pass ? 'PASS' : 'no'}`);
+  for (const [name, v] of Object.entries(table.verdicts)) for (const [contrast, x] of Object.entries(v)) if (contrast !== 'role') console.error(`${name} ${contrast}: primary ${x.primary.pass ? 'PASS' : 'no'}, as written ${x.asWritten.pass ? 'PASS' : 'no'}`);
   console.error(`fits: ${JSON.stringify(table.fits)}`);
   console.error(`cost: ${JSON.stringify(cost(rows))}`);
 }
