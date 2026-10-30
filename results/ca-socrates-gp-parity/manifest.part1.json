@@ -1,0 +1,148 @@
+{
+  "experiment": "ca-socrates-gp-parity",
+  "run": "ca-socrates-gp-parity-screen-20261029T215308Z",
+  "tag": "part1",
+  "plan": {
+    "planCommit": "e899a118a38a744b3706910fb551a253eab88764",
+    "sourceHashes": {
+      "PLAN.md": "214b228ad993f5ca2cea66776ecf56fde841bcd2ff205951dbb5a87a7643aac3",
+      "config.json": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+      "common.mjs": "5538abc04b1742a9b129929209ad81de5bd64bc8017e00e5108612f740156ee6",
+      "screen.mjs": "de176c281da60cfcc7244b722fe0119a658b00086e08ab2db08ab4aefc9ee201",
+      "worker.mjs": "3f053ca78766a3dced548081ae527671637b2f2eab08062d0d501d11cb629f3d",
+      "compare.mjs": "a2aeb1e9a58ad9aa3d766f781fb31caeb9c79221e595569bb8d31129b878234a"
+    },
+    "experimentCommit": "e899a118a38a744b3706910fb551a253eab88764"
+  },
+  "screens": [
+    {
+      "part": 1,
+      "run": "ca-socrates-gp-parity-screen-20261029T215308Z",
+      "module": {
+        "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+        "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+        "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+        "packages": {
+          "space-data-module-sdk": "0.9.12",
+          "spacedatastandards.org": "1.271.0",
+          "flatbuffers": "25.9.23",
+          "flatc-wasm": "26.1.38"
+        },
+        "modulesCheckoutHead": "cfdf320baa29a84ef81ef211a3ea9225df4c78e5"
+      },
+      "outputs": {
+        "screen-events.json": "6ead92e770761a30c63570300f1d36b7c794ae0cb5ee4de24ec56255b950d56c",
+        "screen-summary.json": "8f5182c4aa747741e84c25e925e458368dc8b9a1fbe719801fc67bed81993357",
+        "primaries.json": "a19dd7e29d767f5c8600fff2c8acae4098a8f8cd2700a6b0719f6a064300eebf"
+      },
+      "startedAt": "2026-10-30T02:00:01.200Z",
+      "finishedAt": "2026-10-30T02:05:40.644Z",
+      "manifest": {
+        "experiment": "ca-socrates-gp-parity",
+        "step": "screen",
+        "mode": "registered",
+        "part": 1,
+        "run": "ca-socrates-gp-parity-screen-20261029T215308Z",
+        "startedAt": "2026-10-30T02:00:01.200Z",
+        "finishedAt": "2026-10-30T02:05:40.644Z",
+        "command": [
+          "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+          "/Users/tj/software/spacedatanetwork-stack/repos/ancillary-packages/orbit-accuracy-experiments/experiments/ca-socrates-gp-parity/screen.mjs",
+          "--part",
+          "1",
+          "--run",
+          "ca-socrates-gp-parity-screen-20261029T215308Z"
+        ],
+        "plan": {
+          "planCommit": "e899a118a38a744b3706910fb551a253eab88764",
+          "sourceHashes": {
+            "PLAN.md": "214b228ad993f5ca2cea66776ecf56fde841bcd2ff205951dbb5a87a7643aac3",
+            "config.json": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+            "common.mjs": "5538abc04b1742a9b129929209ad81de5bd64bc8017e00e5108612f740156ee6",
+            "screen.mjs": "de176c281da60cfcc7244b722fe0119a658b00086e08ab2db08ab4aefc9ee201",
+            "worker.mjs": "3f053ca78766a3dced548081ae527671637b2f2eab08062d0d501d11cb629f3d",
+            "compare.mjs": "a2aeb1e9a58ad9aa3d766f781fb31caeb9c79221e595569bb8d31129b878234a"
+          },
+          "experimentCommit": "e899a118a38a744b3706910fb551a253eab88764"
+        },
+        "configSha256": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+        "repository": {
+          "commit": "e899a118a38a744b3706910fb551a253eab88764"
+        },
+        "module": {
+          "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+          "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+          "wasmSha256": "15e7e8df0225ebf0fa5d6cbe22fdebe612b022bfcae1631594924e3239b090bd",
+          "packages": {
+            "space-data-module-sdk": "0.9.12",
+            "spacedatastandards.org": "1.271.0",
+            "flatbuffers": "25.9.23",
+            "flatc-wasm": "26.1.38"
+          },
+          "modulesCheckoutHead": "cfdf320baa29a84ef81ef211a3ea9225df4c78e5"
+        },
+        "runtime": {
+          "node": "v25.4.0",
+          "platform": "darwin 25.3.0 arm64",
+          "cpus": 28,
+          "model": "Apple M3 Ultra",
+          "loadAverageStart": [
+            10.0791015625,
+            13.40966796875,
+            15.7177734375
+          ],
+          "loadAverageEnd": [
+            33.36767578125,
+            27.0244140625,
+            21.3525390625
+          ]
+        },
+        "inputs": {
+          "snapshot": {
+            "path": "spacetrack/gp/2026/2026-10-28.json.gz",
+            "sha256": "36730df1d9a5845ceed7388ecf40f448b93567bfb69bbfacb638accc8cb38ac8",
+            "jsonSha256": "4b44036efc62db2f1f2d4230c880be03297ff43b3e09adbf41862d46d7ed2e5b"
+          },
+          "replacements": {
+            "41882": {
+              "gpId": "354940158",
+              "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+              "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+            },
+            "60182": {
+              "gpId": "354950601",
+              "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+              "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+            },
+            "64062": {
+              "gpId": "354953253",
+              "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+              "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+            },
+            "64393": {
+              "gpId": "354953411",
+              "file": "spacetrack/gp_history/by-creation/2026/2026-10-28T014700Z--2026-10-28T030200Z.json.gz",
+              "fileSha256": "99b51ba8c0db523be303a691b80230963a4d9811386513349d4596842b3ba7b6"
+            }
+          },
+          "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d",
+          "satcatSha256": "8abf66b2db5b86ca6a99899cc7d133ee3bb9d4f9aefe6a631ba48a416a02fd58"
+        },
+        "outputs": {
+          "screen-events.json": "6ead92e770761a30c63570300f1d36b7c794ae0cb5ee4de24ec56255b950d56c",
+          "screen-summary.json": "8f5182c4aa747741e84c25e925e458368dc8b9a1fbe719801fc67bed81993357",
+          "primaries.json": "a19dd7e29d767f5c8600fff2c8acae4098a8f8cd2700a6b0719f6a064300eebf"
+        }
+      }
+    }
+  ],
+  "compare": {
+    "finishedAt": "2026-10-30T02:06:13.487Z",
+    "node": "v25.4.0",
+    "outputs": {
+      "metrics.part1.json": "bf9a1acc4997e870f0ba63937eb8b432b5829363d4bbed7df88a363b93b30e2c",
+      "extras.part1.json": "5e56fb609cc75b61bae8a0918bfe0d0b481ee488e0b10d127bc7e013e0003196",
+      "matches.part1.json": "ac50c5fc5e003d6f1092eb3b93b0e5f61f26a614362d53a5893b9d397b311b7d"
+    }
+  }
+}
