@@ -122,20 +122,24 @@ function pairsOf(rows, group, { arc, cond, clusters }, arm, ref, lead) {
   return out.sort((x, y) => (x.key < y.key ? -1 : 1));
 }
 
-/** The GN control: X2 and X3 equal X0 bit for bit (the propagated TEME states' SHA-256) in every GN window and arc. */
+/** The GN control (PLAN.md): X2 and X3 equal X0 bit for bit, every propagated coordinate at every scored epoch (the TEME
+ *  states' SHA-256), in every GN window and arc where both ran; an arm that produced no states is listed with its reason. */
 function control(rows) {
-  let compared = 0;
-  const differ = [];
+  let comparisons = 0;
+  const differ = [], noStates = [];
   for (const row of rows.filter((r) => r.group === 'GN' && !r.error && !r.excluded)) for (const [arc, a] of Object.entries(row.arcs ?? {})) {
     if (!a.arms) continue;
     for (const name of ['X2O', 'X2M', 'X3O', 'X3M']) {
       const x = a.arms[name];
       if (!x || x.notRun) continue;
-      compared += 1;
-      if (x.ok !== a.arms.X0.ok || x.temeSha256 !== a.arms.X0.temeSha256) differ.push(`${row.key}|${arc}|${name}`);
+      if (x.ok && a.arms.X0.ok) { comparisons += 1; if (x.temeSha256 !== a.arms.X0.temeSha256) differ.push(`${row.key}|${arc}|${name}`); }
+      else noStates.push({ arm: `${row.key}|${arc}|${name}`, armOk: Boolean(x.ok), x0Ok: Boolean(a.arms.X0.ok), reason: String(x.error ?? a.arms.X0.error ?? '').split(':')[0] });
     }
   }
-  return { compared, differ: differ.length, examples: differ.slice(0, 10), pass: compared > 0 && differ.length === 0 };
+  const byReason = {};
+  for (const s of noStates) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1;
+  return { stateComparisons: comparisons, stateDifferences: differ.length, differExamples: differ.slice(0, 10), statesIdentical: comparisons > 0 && differ.length === 0,
+    armsWithoutStates: noStates.length, withoutStatesByReason: byReason, withoutStates: noStates.filter((s) => !/^no \$DCL/.test(s.reason)) };
 }
 
 /** Counts of the windows: registered, stored, errors, excluded, arcs below coverage, O without an RSGA, P without a set. */
