@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, args, registered, Opened, writeReceipt, results, sha256 } from './common.mjs';
 import { AXES, axesMleRef, logScore } from './lib/model.mjs';
-import { loadClass, samplesOf, CLASSES, groupOf } from './lib/windows.mjs';
+import { loadClass, samplesOf, CLASSES, groupOf, clusterMap } from './lib/windows.mjs';
 import { compose, d2Of } from './lib/compose.mjs';
 
 registered();
@@ -147,7 +147,9 @@ if (args.extract) {
   const c = compose(all, arm), d2 = await d2Of(c);
   const rows = c.map((s, i) => ({ o: s.w.norad, cl: s.w.cluster, set: s.w.set, E: new Date(s.w.E).toISOString(), t: s.w.tIn / 86400e3, L: s.l.L, d2: d2[i], z: [0, 1, 2].map((k) => s.l.err[k] / Math.sqrt(s.m[AXES[k]] + s.l.C)), storm: s.l.storm, notice: s.w.notice, primary: s.primary, u: s.u, g: s.g, nHist: s.w.hist.get(s.l.L)?.length ?? 0, screen: Boolean(s.w.screen?.flagged) }));
   fs.mkdirSync(path.join(store, 'extract'), { recursive: true });
-  fs.writeFileSync(path.join(store, 'extract', `${cls}.json`), JSON.stringify({ cls, rows }));
+  const P = config.population.judged, everyone = [...Object.values(P.ilrsa), ...Object.values(P.nsgf), ...P.glonass.c2, ...P.glonass.new, ...P.galileo.new, ...P.galileo.c2Six];
+  const clusterOf = clusterMap(D.sinex);
+  fs.writeFileSync(path.join(store, 'extract', `${cls}.json`), JSON.stringify({ cls, rows, clusters: Object.fromEntries(everyone.map((n) => [n, clusterOf(n)])), stormDaysCalVal: [...D.storms].filter((d) => d >= '2025-10-03').sort() }));
   console.log(rows.length);
   process.exit(0);
 }
