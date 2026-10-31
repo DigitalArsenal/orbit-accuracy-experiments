@@ -506,14 +506,26 @@
   "maneuverShapes": [
    "d2 x20-200 (registered)",
    "the measured event: d2/3 about 5"
-  ]
+  ],
+  "decemberPlane2": {
+   "amendment": "C3-A6",
+   "design": "R3 to 2026-12-31",
+   "event": "measured on 54377 at the same beta, carried by all four plane 2 satellites (54377, 42939, 43687, 44299)",
+   "minAbsBetaDeg": 75,
+   "rules": [
+    "a",
+    "b"
+   ],
+   "windowsCount": true
+  }
  },
  "amendments": [
   "C3-A1 2026-10-31",
   "C3-A2 2026-10-31",
   "C3-A3 2026-10-31",
   "C3-A4 2026-10-31",
-  "C3-A5 2026-10-31"
+  "C3-A5 2026-10-31",
+  "C3-A6 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
@@ -618,5 +630,11 @@
    "over": "satellites"
   },
   "besideReportOnly": "c plus the mean squared ESA minus GFZ difference over the history"
+ },
+ "reported": {
+  "amendment": "C3-A6",
+  "highBetaBinMinAbsDeg": 75,
+  "tables": "N against beta per class at every lead",
+  "rule": "none"
  }
 }

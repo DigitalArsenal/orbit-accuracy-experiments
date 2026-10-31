@@ -1,0 +1,521 @@
+{
+ "receipt": "gfz-ops",
+ "createdUtc": "2026-10-31T07:15:35.835Z",
+ "experimentsCommit": "fad64c5d308ad0b6382167fb37f24d6d1eaa99d5",
+ "plan": "C3-A5 point 3",
+ "dates": [
+  "2025-10-12",
+  "2025-11-16",
+  "2025-12-21",
+  "2026-01-04",
+  "2026-01-25",
+  "2026-03-01",
+  "2026-03-22"
+ ],
+ "server": "https://isdc-data.gfz.de/gnss/products/rapid",
+ "coverage": [
+  {
+   "date": "2025-10-12",
+   "name": "GFZ0OPSRAP_20252850000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2388/GFZ0OPSRAP_20252850000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 31,
+    "GLONASS": 20,
+    "Galileo": 28,
+    "other": 0
+   },
+   "missing": [],
+   "minEpochs": 288
+  },
+  {
+   "date": "2025-11-16",
+   "name": "GFZ0OPSRAP_20253200000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2393/GFZ0OPSRAP_20253200000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 31,
+    "GLONASS": 19,
+    "Galileo": 27,
+    "other": 0
+   },
+   "missing": [
+    39155
+   ],
+   "minEpochs": 288
+  },
+  {
+   "date": "2025-12-21",
+   "name": "GFZ0OPSRAP_20253550000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2398/GFZ0OPSRAP_20253550000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 31,
+    "GLONASS": 20,
+    "Galileo": 28,
+    "other": 0
+   },
+   "missing": [],
+   "minEpochs": 288
+  },
+  {
+   "date": "2026-01-04",
+   "name": "GFZ0OPSRAP_20260040000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2400/GFZ0OPSRAP_20260040000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 31,
+    "GLONASS": 21,
+    "Galileo": 27,
+    "other": 0
+   },
+   "missing": [],
+   "minEpochs": 288
+  },
+  {
+   "date": "2026-01-25",
+   "name": "GFZ0OPSRAP_20260250000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2403/GFZ0OPSRAP_20260250000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 30,
+    "GLONASS": 20,
+    "Galileo": 27,
+    "other": 0
+   },
+   "missing": [],
+   "minEpochs": 288
+  },
+  {
+   "date": "2026-03-01",
+   "name": "GFZ0OPSRAP_20260600000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2408/GFZ0OPSRAP_20260600000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 31,
+    "GLONASS": 21,
+    "Galileo": 28,
+    "other": 0
+   },
+   "missing": [],
+   "minEpochs": 289
+  },
+  {
+   "date": "2026-03-22",
+   "name": "GFZ0OPSRAP_20260810000_01D_05M_ORB.SP3.gz",
+   "url": "https://isdc-data.gfz.de/gnss/products/rapid/w2411/GFZ0OPSRAP_20260810000_01D_05M_ORB.SP3.gz",
+   "header": {
+    "GPS": 31,
+    "GLONASS": 21,
+    "Galileo": 28,
+    "other": 0
+   },
+   "missing": [],
+   "minEpochs": 289
+  }
+ ],
+ "perSatellite": [
+  {
+   "norad": 40001,
+   "prn": "R21",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 44850,
+   "prn": "R04",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 37869,
+   "prn": "R08",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 54377,
+   "prn": "R16",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 43508,
+   "prn": "R05",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 37867,
+   "prn": "R03",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 37868,
+   "prn": "R07",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 39155,
+   "prn": "R02",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 44299,
+   "prn": "R12",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 42939,
+   "prn": "R14",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 43687,
+   "prn": "R15",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 45358,
+   "prn": "R24",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 39620,
+   "prn": "R18",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 41330,
+   "prn": "R17",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "GLONASS"
+  },
+  {
+   "norad": 41859,
+   "prn": "E07",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 49810,
+   "prn": "E10",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 38857,
+   "prn": "E19",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 41861,
+   "prn": "E04",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 61183,
+   "prn": "E23",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43565,
+   "prn": "E33",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 40544,
+   "prn": "E26",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 59600,
+   "prn": "E06",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 49809,
+   "prn": "E34",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 41549,
+   "prn": "E02",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43058,
+   "prn": "E31",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43056,
+   "prn": "E25",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43564,
+   "prn": "E15",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43566,
+   "prn": "E36",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 37846,
+   "prn": "E11",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 59598,
+   "prn": "E29",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 41860,
+   "prn": "E03",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43057,
+   "prn": "E27",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 40890,
+   "prn": "E30",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43567,
+   "prn": "E13",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 37847,
+   "prn": "E12",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 41862,
+   "prn": "E05",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 41174,
+   "prn": "E09",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 43055,
+   "prn": "E21",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  },
+  {
+   "norad": 41175,
+   "prn": "E08",
+   "epochs": 288,
+   "listed": true,
+   "constellation": "Galileo"
+  }
+ ],
+ "allCarried": false,
+ "differences": {
+  "GLONASS": {
+   "opsMgx": {
+    "n": 27964,
+    "rmsRtnM": [
+     0.023981458730113592,
+     0.03258581839419138,
+     0.027357521683748835
+    ],
+    "meanRtnM": [
+     -0.0022639345064496053,
+     0.007846476235226565,
+     0.0030058047673951335
+    ]
+   },
+   "esaMgx": {
+    "n": 27964,
+    "rmsRtnM": [
+     0.03283441955686564,
+     0.04127897138995787,
+     0.040339268186249985
+    ],
+    "meanRtnM": [
+     -0.0016933258193705118,
+     0.012606956762064024,
+     -0.0059034474154331254
+    ]
+   },
+   "esaOps": {
+    "n": 27964,
+    "rmsRtnM": [
+     0.027006830760705466,
+     0.03827546798587327,
+     0.03962460662599287
+    ],
+    "meanRtnM": [
+     0.0005706087167657268,
+     0.004760480524019817,
+     -0.008909252178371387
+    ]
+   }
+  },
+  "Galileo": {
+   "opsMgx": {
+    "n": 50450,
+    "rmsRtnM": [
+     0.027394081630584797,
+     0.01558943708902054,
+     0.01584684087689842
+    ],
+    "meanRtnM": [
+     -0.002193119686163942,
+     0.0003462623459447671,
+     -0.0032138690962819926
+    ]
+   },
+   "esaMgx": {
+    "n": 50450,
+    "rmsRtnM": [
+     0.02443567989332731,
+     0.013841643338794866,
+     0.013573799160329508
+    ],
+    "meanRtnM": [
+     0.018324750339397875,
+     -0.00011255487551773896,
+     -0.006641053857484736
+    ]
+   },
+   "esaOps": {
+    "n": 50450,
+    "rmsRtnM": [
+     0.037772494146714,
+     0.016190574517026542,
+     0.01609200622711576
+    ],
+    "meanRtnM": [
+     0.020517870036362476,
+     -0.00045881721931253724,
+     -0.003427184761231127
+    ]
+   }
+  }
+ },
+ "opened": {
+  "files": 832,
+  "sha256": "3189a912d76be2404b8a52361b482135ce2fb1fb1033d0e16c1f405a4dca0807",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/gfz-ops.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/e14-covariance-realism/reference/*",
+    "files": 272,
+    "labels": [
+     "GFZ0MGXRAP"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/gfz-ops/products/*",
+    "files": 7,
+    "labels": [
+     "GFZ0OPSRAP"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/gfz-ops/reference/*",
+    "files": 272,
+    "labels": [
+     "GFZ0OPSRAP conversion"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/nsgf/products/*",
+    "files": 1,
+    "labels": [
+     "C04"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/igs-metadata/*",
+    "files": 1,
+    "labels": [
+     "IGS SINEX"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/reference-states/reference/*",
+    "files": 279,
+    "labels": [
+     "reference $OEM",
+     "index.json"
+    ]
+   }
+  ]
+ }
+}
