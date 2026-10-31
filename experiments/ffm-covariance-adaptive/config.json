@@ -2,7 +2,7 @@
  "experiment": "ffm-covariance-adaptive",
  "id": "C3-small",
  "registered": "2026-10-31",
- "frozen": true,
+ "frozen": false,
  "freezeBy": "2026-11-09",
  "store": "/opt/data/sdn-archive/ffm-covariance-adaptive",
  "workers": 12,
@@ -565,7 +565,8 @@
   "C3-A7 2026-10-31",
   "C3-A8 2026-10-31",
   "C3-A9 2026-10-31",
-  "C3-A10 2026-10-31"
+  "C3-A10 2026-10-31",
+  "C3-A11 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
@@ -677,8 +678,6 @@
   "tables": "N against beta per class at every lead",
   "rule": "none"
  },
- "frozenOn": "2026-10-31",
- "judgedEnd": "2026-11-30",
  "fetchManifest": {
   "access": "anonymous, no credentials, at most one request per second",
   "sources": {
@@ -696,5 +695,77 @@
  "check260926": {
   "checkedUtc": "2026-10-31T10:01Z",
   "result": "still a stub at EDC: 307-308 B, Last-Modified 2026-10-07, on all four spheres; cutoffs 09-20 and 09-27 are lost unless it is reissued"
+ },
+ "firstFreeze": {
+  "commit": "b192efc",
+  "landed": "e4d54fb",
+  "date": "2026-10-31",
+  "note": "re-based by C3-A11; frozen again by 2026-11-09"
+ },
+ "rebase": {
+  "amendment": "C3-A11",
+  "glonass": {
+   "norads": [
+    40001,
+    44850,
+    37869,
+    54377,
+    43508,
+    37867,
+    37868,
+    39155,
+    44299,
+    42939,
+    43687,
+    45358,
+    39620,
+    41330
+   ],
+   "sinexBlocks": [
+    "GLO-M",
+    "GLO-M+"
+   ],
+   "agomSeed": 0.0325046,
+   "source": "A1, experiments 25c938d results/ffm-srp-seed-high-beta: Duan et al. 2020, J. Geod. 94:72, Table 5: arrays 30.85 + largest body surface 4.53 = 35.38 m2 / 1415 kg x 1.3",
+   "prior": "sigma 100 % of the seed, unchanged",
+   "c2Receipt": "left alone"
+  },
+  "galileoFoc": {
+   "norads": [
+    41859,
+    49810,
+    41861,
+    61183,
+    43565,
+    40544,
+    59600,
+    49809,
+    41549,
+    43058,
+    43056,
+    43564,
+    43566,
+    59598,
+    41860,
+    43057,
+    40890,
+    43567,
+    41862,
+    41174,
+    43055,
+    41175
+   ],
+   "sinexBlock": "GAL-2",
+   "y0M_S2": 6.85e-10,
+   "field": "FORCES.ECOM2.Y0_M_S2, fixed, in FFM's axes (eY = unit(eD x r)), in the request from this identity table",
+   "adapter": "experiments/ffm-galileo-y-bias/lib/y0.mjs",
+   "source": "experiments 63c015e results/ffm-galileo-y-bias: the value from the dev span 2025-10-03..12-29"
+  },
+  "notApplied": "GLONASS -0.086 nm/s2, IOV -0.043 nm/s2",
+  "unchanged": [
+   "Galileo IOV 38857, 37846, 37847",
+   "the spheres",
+   "R2"
+  ]
  }
 }
