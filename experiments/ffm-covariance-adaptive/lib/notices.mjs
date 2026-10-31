@@ -64,11 +64,12 @@ export function parseSinex(text) {
   const block = (name) => { const m = new RegExp(`\\+${name}[^\\n]*\\n([\\s\\S]*?)-${name}`).exec(text); return (m ? m[1] : '').split('\n').filter((l) => l.trim() && !l.startsWith('*')); };
   const doy = (s) => { const [y, d, sec] = s.split(':').map(Number); return y === 0 ? Infinity : Date.UTC(y, 0, 1) + (d - 1) * 86400e3 + sec * 1000; };
   const identifier = new Map(), prn = [], plane = [];
-  for (const l of block('SATELLITE/IDENTIFIER')) { const t = l.trim().split(/\s+/); identifier.set(t[0], { svn: t[0], cospar: t[1], norad: Number(t[2]), block: t[3] }); }
+  const svnOfCosmos = new Map();
+  for (const l of block('SATELLITE/IDENTIFIER')) { const t = l.trim().split(/\s+/), c = /COSMOS (\d+)/.exec(l); identifier.set(t[0], { svn: t[0], cospar: t[1], norad: Number(t[2]), block: t[3] }); if (c) svnOfCosmos.set(c[1], t[0]); }
   for (const l of block('SATELLITE/PRN')) { const t = l.trim().split(/\s+/); prn.push({ svn: t[0], from: doy(t[1]), to: doy(t[2]), prn: t[3] }); }
   for (const l of block('SATELLITE/PLANE')) { const t = l.trim().split(/\s+/); plane.push({ svn: t[0], from: doy(t[1]), to: doy(t[2]), plane: t[3], slot: t[4] }); }
   return {
-    identifier, prn, plane,
+    identifier, prn, plane, svnOfCosmos,
     noradOfSvn: (svn) => identifier.get(svn)?.norad ?? null,
     svnOfPrn: (p, t) => prn.find((x) => x.prn === p && t >= x.from && t < x.to)?.svn ?? null,
     svnOfNorad: (n) => [...identifier.values()].find((x) => x.norad === n)?.svn ?? null,
@@ -92,10 +93,13 @@ export function iacInterval(line) {
   if (/FREQ-CHNG/.test(s)) return { from: times[0] ?? issued, to: times[0] ?? issued, rts: false };
   return { from: times[0] ?? issued, to: null, rts: false };
 }
-/** The spacecraft a line or its NAGU text names: an SVN like R744, else the slot's PRN at the issue time. */
-export function iacSvn(line, text, sinex) {
+/**
+ * The spacecraft a line or its NAGU text names. IAC numbers its spacecraft by GLONASS number (755), which is not always the IGS SVN (R855): the bulletins' status tables give the Cosmos number of each
+ * GLONASS number, and the SINEX comment the SVN of each Cosmos number. A line whose text names no number falls back on its slot's PRN at the issue time.
+ */
+export function iacSvn(line, text, sinex, cosmosOfSc) {
   const m = /\((\d{3})\)/.exec(text ?? '') ?? /\bSC (\d{3})\b/.exec(text ?? '') ?? /\bКА (\d{3})\b/.exec(text ?? '');
-  if (m) return `R${m[1]}`;
+  if (m) { const c = cosmosOfSc.get(m[1]), svn = c ? sinex.svnOfCosmos.get(c) : null; return svn ?? null; }
   const slot = /^(\d\d)\//.exec(line.place);
   return slot ? sinex.svnOfPrn(`R${slot[1]}`, Date.parse(line.issuedUtc)) : null;
 }
@@ -126,13 +130,14 @@ export function gscInterval(row, detail) {
 export function loadNotices(base, sinex, seal, opened) {
   const read = (f, label) => (opened ? opened.read(f, label) : fs.readFileSync(f));
   const iacDir = path.join(base, 'iac');
-  const bulletins = new Map(), lines = new Map(), texts = new Map();
+  const bulletins = new Map(), lines = new Map(), texts = new Map(), cosmosOfSc = new Map();
   for (const y of fs.readdirSync(iacDir).sort()) for (const f of fs.readdirSync(path.join(iacDir, y)).sort()) {
     if (!f.endsWith('en.txt')) continue;
     const day = `${y}-${f.slice(0, 2)}-${f.slice(2, 4)}`;
     if (day >= seal) throw new Error(`a bulletin at or after the seal: ${f}`);
     const b = parseIacBulletin(read(path.join(iacDir, y, f), 'IAC bulletin').toString());
     bulletins.set(day, b);
+    for (const r of b.status) cosmosOfSc.set(r.sc, r.cosmos);
     for (const l of b.lines) if (l.issuedUtc.slice(0, 10) < seal && !lines.has(l.id)) lines.set(l.id, l);
     for (const [id, t] of Object.entries(b.notices)) if (!texts.has(id)) texts.set(id, t);
   }
@@ -142,7 +147,7 @@ export function loadNotices(base, sinex, seal, opened) {
   const details = new Map();
   for (const x of gscRows) { const f = path.join(base, 'gsc', `nagu-${x.number}.html`); if (fs.existsSync(f)) details.set(x.number, parseGscDetail(read(f, 'GSC NAGU').toString())); }
   const notices = [];
-  for (const l of iacList) { const text = texts.get(l.id), svn = iacSvn(l, text, sinex), iv = iacInterval(l); notices.push({ source: 'IAC', id: l.id, svn, norad: sinex.noradOfSvn(svn), kind: l.kind, summary: l.summary, issued: Date.parse(l.issuedUtc), ...iv }); }
+  for (const l of iacList) { const text = texts.get(l.id), svn = iacSvn(l, text, sinex, cosmosOfSc), iv = iacInterval(l); notices.push({ source: 'IAC', id: l.id, svn, norad: sinex.noradOfSvn(svn), kind: l.kind, summary: l.summary, issued: Date.parse(l.issuedUtc), ...iv }); }
   for (const x of gscRows) { const d = details.get(x.number), iv = gscInterval(x, d), svns = gscSvns(x.satellite); for (const svn of svns.length ? svns : [null]) notices.push({ source: 'GSC', id: x.number, svn, norad: svn ? sinex.noradOfSvn(svn) : null, kind: x.type, summary: x.subject, issued: iv.published, from: iv.from, to: iv.to, rts: iv.rts }); }
   const byNorad = new Map();
   for (const n of notices) if (n.norad) { if (!byNorad.has(n.norad)) byNorad.set(n.norad, []); byNorad.get(n.norad).push(n); }
