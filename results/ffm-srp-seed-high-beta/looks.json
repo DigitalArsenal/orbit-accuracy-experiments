@@ -1,0 +1,598 @@
+{
+ "rule": "A look, not a test: chosen after the table, no rule attaches; every converged window of G0 (and of A0, A1 on the 3-day grid), no sample filter.",
+ "g": {
+  "2": 0.105,
+  "5": 0.213,
+  "10": 0.349,
+  "15": 0.456,
+  "20": 0.545,
+  "30": 0.686,
+  "45": 0.835,
+  "60": 0.929,
+  "75": 0.983,
+  "85": 0.998
+ },
+ "perSatellite": [
+  {
+   "norad": 37846,
+   "svn": "E101",
+   "block": "IOV",
+   "plane": "2",
+   "slot": "B05",
+   "txPowerW": 135.0,
+   "n": 60,
+   "t24MedianM": 0.1944,
+   "t48MedianM": 0.7191,
+   "t72MedianM": 1.323,
+   "t72RmsM": 2.973,
+   "agomOverSeed": 0.9701,
+   "residualRmsM": 0.09812,
+   "K72M": 0.921,
+   "R2": -0.02431,
+   "residual72RmsM": 2.927
+  },
+  {
+   "norad": 38857,
+   "svn": "E103",
+   "block": "IOV",
+   "plane": "3",
+   "slot": "C04",
+   "txPowerW": 95.0,
+   "n": 60,
+   "t24MedianM": 1.177,
+   "t48MedianM": 3.944,
+   "t72MedianM": 6.024,
+   "t72RmsM": 8.696,
+   "agomOverSeed": 0.9542,
+   "residualRmsM": 0.09604,
+   "K72M": -10.74,
+   "R2": 0.8619,
+   "residual72RmsM": 3.197
+  },
+  {
+   "norad": 43058,
+   "svn": "E218",
+   "block": "FOC",
+   "plane": "1",
+   "slot": "A01",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -11.51,
+   "t48MedianM": -35.85,
+   "t72MedianM": -66.32,
+   "t72RmsM": 63.85,
+   "agomOverSeed": 0.9436,
+   "residualRmsM": 0.2017,
+   "K72M": 83.53,
+   "R2": 0.9923,
+   "residual72RmsM": 3.702
+  },
+  {
+   "norad": 61183,
+   "svn": "E226",
+   "block": "FOC",
+   "plane": "1",
+   "slot": "A02",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -12.86,
+   "t48MedianM": -41.18,
+   "t72MedianM": -73.49,
+   "t72RmsM": 72.12,
+   "agomOverSeed": 0.9387,
+   "residualRmsM": 0.2251,
+   "K72M": 94.36,
+   "R2": 0.9947,
+   "residual72RmsM": 3.47
+  },
+  {
+   "norad": 43057,
+   "svn": "E217",
+   "block": "FOC",
+   "plane": "1",
+   "slot": "A04",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -12.85,
+   "t48MedianM": -40.34,
+   "t72MedianM": -75.58,
+   "t72RmsM": 70.58,
+   "agomOverSeed": 0.9437,
+   "residualRmsM": 0.2208,
+   "K72M": 92.37,
+   "R2": 0.9941,
+   "residual72RmsM": 3.586
+  },
+  {
+   "norad": 40890,
+   "svn": "E206",
+   "block": "FOC",
+   "plane": "1",
+   "slot": "A05",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -12.38,
+   "t48MedianM": -38.65,
+   "t72MedianM": -72.25,
+   "t72RmsM": 68.39,
+   "agomOverSeed": 0.9548,
+   "residualRmsM": 0.2128,
+   "K72M": 89.54,
+   "R2": 0.9942,
+   "residual72RmsM": 3.444
+  },
+  {
+   "norad": 41549,
+   "svn": "E211",
+   "block": "FOC",
+   "plane": "1",
+   "slot": "A06",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -14.41,
+   "t48MedianM": -43.57,
+   "t72MedianM": -81.08,
+   "t72RmsM": 80.58,
+   "agomOverSeed": 0.9543,
+   "residualRmsM": 0.2441,
+   "K72M": 105.4,
+   "R2": 0.9919,
+   "residual72RmsM": 4.815
+  },
+  {
+   "norad": 43056,
+   "svn": "E216",
+   "block": "FOC",
+   "plane": "1",
+   "slot": "A07",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -12.75,
+   "t48MedianM": -40.43,
+   "t72MedianM": -72.31,
+   "t72RmsM": 70.6,
+   "agomOverSeed": 0.9434,
+   "residualRmsM": 0.2046,
+   "K72M": 91.98,
+   "R2": 0.975,
+   "residual72RmsM": 7.602
+  },
+  {
+   "norad": 43564,
+   "svn": "E221",
+   "block": "FOC",
+   "plane": "2",
+   "slot": "B02",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": 9.232,
+   "t48MedianM": 28.9,
+   "t72MedianM": 53.22,
+   "t72RmsM": 51.14,
+   "agomOverSeed": 0.9498,
+   "residualRmsM": 0.1677,
+   "K72M": 89.99,
+   "R2": 0.9921,
+   "residual72RmsM": 3.068
+  },
+  {
+   "norad": 49809,
+   "svn": "E223",
+   "block": "FOC",
+   "plane": "2",
+   "slot": "B03",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": 9.73,
+   "t48MedianM": 30.62,
+   "t72MedianM": 54.43,
+   "t72RmsM": 53.71,
+   "agomOverSeed": 0.9465,
+   "residualRmsM": 0.1802,
+   "K72M": 94.49,
+   "R2": 0.9919,
+   "residual72RmsM": 3.269
+  },
+  {
+   "norad": 43566,
+   "svn": "E219",
+   "block": "FOC",
+   "plane": "2",
+   "slot": "B04",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": 9.352,
+   "t48MedianM": 30.63,
+   "t72MedianM": 54.87,
+   "t72RmsM": 54.66,
+   "agomOverSeed": 0.9494,
+   "residualRmsM": 0.183,
+   "K72M": 95.54,
+   "R2": 0.9687,
+   "residual72RmsM": 7.152
+  },
+  {
+   "norad": 43565,
+   "svn": "E222",
+   "block": "FOC",
+   "plane": "2",
+   "slot": "B07",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": 10.2,
+   "t48MedianM": 31.56,
+   "t72MedianM": 57.19,
+   "t72RmsM": 55.93,
+   "agomOverSeed": 0.9495,
+   "residualRmsM": 0.1871,
+   "K72M": 98.37,
+   "R2": 0.9898,
+   "residual72RmsM": 3.807
+  },
+  {
+   "norad": 40544,
+   "svn": "E203",
+   "block": "FOC",
+   "plane": "2",
+   "slot": "B08",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": 7.887,
+   "t48MedianM": 25.42,
+   "t72MedianM": 46.18,
+   "t72RmsM": 44.42,
+   "agomOverSeed": 0.9626,
+   "residualRmsM": 0.1575,
+   "K72M": 78.3,
+   "R2": 0.9762,
+   "residual72RmsM": 4.639
+  },
+  {
+   "norad": 49810,
+   "svn": "E224",
+   "block": "FOC",
+   "plane": "2",
+   "slot": "B15",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": 9.557,
+   "t48MedianM": 30.99,
+   "t72MedianM": 58.15,
+   "t72RmsM": 54.95,
+   "agomOverSeed": 0.9462,
+   "residualRmsM": 0.1809,
+   "K72M": 96.71,
+   "R2": 0.9936,
+   "residual72RmsM": 3.01
+  },
+  {
+   "norad": 41861,
+   "svn": "E213",
+   "block": "FOC",
+   "plane": "3",
+   "slot": "C03",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -6.48,
+   "t48MedianM": -20.38,
+   "t72MedianM": -40.94,
+   "t72RmsM": 58.96,
+   "agomOverSeed": 0.9558,
+   "residualRmsM": 0.1884,
+   "K72M": 78.25,
+   "R2": 0.9952,
+   "residual72RmsM": 4.499
+  },
+  {
+   "norad": 59598,
+   "svn": "E225",
+   "block": "FOC",
+   "plane": "3",
+   "slot": "C05",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -8.731,
+   "t48MedianM": -25.69,
+   "t72MedianM": -43.62,
+   "t72RmsM": 75.77,
+   "agomOverSeed": 0.9418,
+   "residualRmsM": 0.2383,
+   "K72M": 100.8,
+   "R2": 0.9962,
+   "residual72RmsM": 4.858
+  },
+  {
+   "norad": 41859,
+   "svn": "E207",
+   "block": "FOC",
+   "plane": "3",
+   "slot": "C06",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -7.474,
+   "t48MedianM": -24.15,
+   "t72MedianM": -40.77,
+   "t72RmsM": 67.43,
+   "agomOverSeed": 0.9567,
+   "residualRmsM": 0.2193,
+   "K72M": 89.53,
+   "R2": 0.9961,
+   "residual72RmsM": 4.649
+  },
+  {
+   "norad": 41860,
+   "svn": "E212",
+   "block": "FOC",
+   "plane": "3",
+   "slot": "C08",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -7.923,
+   "t48MedianM": -24.63,
+   "t72MedianM": -40.83,
+   "t72RmsM": 70.61,
+   "agomOverSeed": 0.9595,
+   "residualRmsM": 0.2225,
+   "K72M": 94.14,
+   "R2": 0.9958,
+   "residual72RmsM": 5.012
+  },
+  {
+   "norad": 59600,
+   "svn": "E227",
+   "block": "FOC",
+   "plane": "3",
+   "slot": "C12",
+   "txPowerW": 265.0,
+   "n": 60,
+   "t24MedianM": -8.394,
+   "t48MedianM": -29.44,
+   "t72MedianM": -51.33,
+   "t72RmsM": 72.99,
+   "agomOverSeed": 0.9403,
+   "residualRmsM": 0.2224,
+   "K72M": 96.48,
+   "R2": 0.9821,
+   "residual72RmsM": 9.433
+  }
+ ],
+ "shape": {
+  "FOC": [
+   {
+    "L": 24,
+    "n": 1018,
+    "K_m": 15.97,
+    "R2": 0.9805,
+    "residualRmsM": 1.55,
+    "tRmsM": 11.23,
+    "impliedYAccelerationNmS2": 0.713
+   },
+   {
+    "L": 48,
+    "n": 1019,
+    "K_m": 50.4,
+    "R2": 0.9874,
+    "residualRmsM": 3.935,
+    "tRmsM": 35.32,
+    "impliedYAccelerationNmS2": 0.75
+   },
+   {
+    "L": 72,
+    "n": 1019,
+    "K_m": 92.36,
+    "R2": 0.988,
+    "residualRmsM": 7.005,
+    "tRmsM": 64.67,
+    "impliedYAccelerationNmS2": 0.687
+   }
+  ],
+  "IOV": [
+   {
+    "L": 24,
+    "n": 120,
+    "K_m": -1.157,
+    "R2": 0.5807,
+    "residualRmsM": 0.8637,
+    "tRmsM": 1.157,
+    "impliedYAccelerationNmS2": -0.0517
+   },
+   {
+    "L": 48,
+    "n": 120,
+    "K_m": -3.618,
+    "R2": 0.6522,
+    "residualRmsM": 2.549,
+    "tRmsM": 3.507,
+    "impliedYAccelerationNmS2": -0.0538
+   },
+   {
+    "L": 72,
+    "n": 120,
+    "K_m": -6.532,
+    "R2": 0.5857,
+    "residualRmsM": 4.828,
+    "tRmsM": 6.498,
+    "impliedYAccelerationNmS2": -0.0486
+   }
+  ],
+  "FOC by plane, 72 h": {
+   "1": {
+    "L": 72,
+    "n": 360,
+    "K_m": 92.86,
+    "R2": 0.9792,
+    "residualRmsM": 6.852,
+    "tRmsM": 71.2,
+    "impliedYAccelerationNmS2": 0.691
+   },
+   "2": {
+    "L": 72,
+    "n": 360,
+    "K_m": 92.26,
+    "R2": 0.9739,
+    "residualRmsM": 5.823,
+    "tRmsM": 52.62,
+    "impliedYAccelerationNmS2": 0.687
+   },
+   "3": {
+    "L": 72,
+    "n": 299,
+    "K_m": 91.82,
+    "R2": 0.9854,
+    "residualRmsM": 8.339,
+    "tRmsM": 69.39,
+    "impliedYAccelerationNmS2": 0.683
+   }
+  },
+  "GLONASS A0, grid": [
+   {
+    "L": 24,
+    "n": 240,
+    "K_m": -2.525,
+    "R2": 0.07432,
+    "residualRmsM": 6.637,
+    "tRmsM": 6.894,
+    "impliedYAccelerationNmS2": -0.113
+   },
+   {
+    "L": 48,
+    "n": 240,
+    "K_m": -6.912,
+    "R2": 0.1137,
+    "residualRmsM": 14.27,
+    "tRmsM": 15.15,
+    "impliedYAccelerationNmS2": -0.103
+   },
+   {
+    "L": 72,
+    "n": 240,
+    "K_m": -13.27,
+    "R2": 0.1539,
+    "residualRmsM": 22.91,
+    "tRmsM": 24.91,
+    "impliedYAccelerationNmS2": -0.0987
+   }
+  ],
+  "GLONASS A1, grid": [
+   {
+    "L": 24,
+    "n": 240,
+    "K_m": -2.536,
+    "R2": 0.0801,
+    "residualRmsM": 6.401,
+    "tRmsM": 6.669,
+    "impliedYAccelerationNmS2": -0.113
+   },
+   {
+    "L": 48,
+    "n": 240,
+    "K_m": -6.935,
+    "R2": 0.1206,
+    "residualRmsM": 13.84,
+    "tRmsM": 14.76,
+    "impliedYAccelerationNmS2": -0.103
+   },
+   {
+    "L": 72,
+    "n": 240,
+    "K_m": -13.29,
+    "R2": 0.1595,
+    "residualRmsM": 22.46,
+    "tRmsM": 24.51,
+    "impliedYAccelerationNmS2": -0.0989
+   }
+  ]
+ },
+ "focByPlaneAndMonth": [
+  {
+   "month": "2025-10",
+   "plane1": {
+    "t72MedianM": 43.25,
+    "betaMedianDeg": 15.8
+   },
+   "plane2": {
+    "t72MedianM": 53.58,
+    "betaMedianDeg": 21.7
+   },
+   "plane3": {
+    "t72MedianM": -87.62,
+    "betaMedianDeg": -63.8
+   }
+  },
+  {
+   "month": "2025-11",
+   "plane1": {
+    "t72MedianM": -40.51,
+    "betaMedianDeg": -13.4
+   },
+   "plane2": {
+    "t72MedianM": 65.87,
+    "betaMedianDeg": 32.5
+   },
+   "plane3": {
+    "t72MedianM": -83.02,
+    "betaMedianDeg": -55.8
+   }
+  },
+  {
+   "month": "2025-12",
+   "plane1": {
+    "t72MedianM": -75.57,
+    "betaMedianDeg": -42.5
+   },
+   "plane2": {
+    "t72MedianM": 66.4,
+    "betaMedianDeg": 33.4
+   },
+   "plane3": {
+    "t72MedianM": -61.94,
+    "betaMedianDeg": -31.3
+   }
+  },
+  {
+   "month": "2026-01",
+   "plane1": {
+    "t72MedianM": -87.55,
+    "betaMedianDeg": -69.0
+   },
+   "plane2": {
+    "t72MedianM": 52.91,
+    "betaMedianDeg": 22.9
+   },
+   "plane3": {
+    "t72MedianM": -3.513,
+    "betaMedianDeg": -2.08
+   }
+  },
+  {
+   "month": "2026-02",
+   "plane1": {
+    "t72MedianM": -86.46,
+    "betaMedianDeg": -64.6
+   },
+   "plane2": {
+    "t72MedianM": 28.43,
+    "betaMedianDeg": 6.49
+   },
+   "plane3": {
+    "t72MedianM": 58.0,
+    "betaMedianDeg": 25.7
+   }
+  },
+  {
+   "month": "2026-03",
+   "plane1": {
+    "t72MedianM": -71.32,
+    "betaMedianDeg": -39.6
+   },
+   "plane2": {
+    "t72MedianM": -32.79,
+    "betaMedianDeg": -10.4
+   },
+   "plane3": {
+    "t72MedianM": 80.7,
+    "betaMedianDeg": 49.4
+   }
+  }
+ ]
+}
