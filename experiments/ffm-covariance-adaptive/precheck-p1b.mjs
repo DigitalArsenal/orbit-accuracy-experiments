@@ -114,7 +114,7 @@ if (args.evaluate) {
   const cpuHours = rows.reduce((p, r) => p + (r.seconds ?? 0), 0) / 3600;
   const widest = Math.max(...judged.map((x) => x.halfWidth));
   const outcome = keep ? 'keep the GNSS 1, 6 and 12 h cells with the label' : stop.length ? 'stop and ask: r_high wholly below 0.90' : 'between: stop and ask, with the table';
-  const out = { plan: 'C3-A2 point 1', rule: R, windows: rows.length, withLeads: ok.length, excluded: rows.filter((r) => r.excluded).length, cpuHours, widestHalfWidth: widest, sampling: widest <= R.stopSampling.halfWidth ? 'half-width reached' : cpuHours >= R.stopSampling.cpuHours ? '1 CPU-h cap stopped it' : 'continuing', table, outcome, gfzDisclosure: 'GFZ shares the station network with ESA, so an error common to the network cannot show up in this check' };
+  const out = { plan: 'C3-A2 point 1', rule: R, windows: rows.length, withLeads: ok.length, excluded: rows.filter((r) => r.excluded).length, cpuHours, widestHalfWidth: widest, sampling: widest <= R.stopSampling.halfWidth ? 'half-width reached' : cpuHours >= R.stopSampling.cpuHours ? 'the CPU cap stopped it' : rows.length >= pop.length * cutoffs.length ? 'the calibration windows ran out' : 'continuing', table, outcome, gfzDisclosure: 'GFZ shares the station network with ESA, so an error common to the network cannot show up in this check' };
   // before the end only the half-width and the CPU spent are shown: the stop reads nothing else (C3-A3)
   if (!args.final) { console.log(JSON.stringify({ windows: out.windows, withLeads: out.withLeads, cpuHours, widest, sampling: out.sampling })); process.exit(0); }
   console.log(writeReceipt('precheck-P1b', out, opened));

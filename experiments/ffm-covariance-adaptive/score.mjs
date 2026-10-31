@@ -1,11 +1,12 @@
 // C3-small's statistics on cal/val (PLAN.md sections 2, 3, 5). Every d2 is gp-error-model pair_statistics on the composed covariance; JavaScript composes the arithmetic of section 2 and fits the constants.
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref                 P-REF: k_ref per class, axis and lead group; corr(forecast - truth, reference - truth)
 //   node experiments/ffm-covariance-adaptive/score.mjs --fit --class R3       the constants by calibration log score; C3-0, C3-a, C3-b, C3-ab; validation cells and contrasts (needs --pref)
+//   node experiments/ffm-covariance-adaptive/score.mjs --pref2                P-REF's second check: reference-based e^u against truth-based, at the fitted constants
 //   node experiments/ffm-covariance-adaptive/score.mjs --extract --class R3   C3-ab's primary samples for P7 and P8 (under <store>/extract/)
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, args, registered, Opened, writeReceipt, results, sha256 } from './common.mjs';
-import { AXES, axesMleRef, logScore } from './lib/model.mjs';
+import { AXES, axesMleRef, gOf, logScore, median } from './lib/model.mjs';
 import { loadClass, samplesOf, CLASSES, groupOf, clusterMap } from './lib/windows.mjs';
 import { compose, d2Of } from './lib/compose.mjs';
 
@@ -135,6 +136,32 @@ if (args.fit) {
   report.seconds = (Date.now() - t0) / 1000;
   console.log(writeReceipt(`fit-${cls}`, report, opened));
   console.log(JSON.stringify({ cls, a: { a0: report.arms['C3-a'].a0, a1: report.arms['C3-a'].a1 }, b: report.arms['C3-b'].n0, ab: { a0: report.arms['C3-ab'].a0, a1: report.arms['C3-ab'].a1, n0: report.arms['C3-ab'].n0 }, scores: Object.fromEntries(Object.entries(report.arms).map(([k, v]) => [k, v.calibrationLogScore])), contrasts: { ab0: { mean: report.validationContrasts['C3-ab - C3-0'].mean, lo: report.validationContrasts['C3-ab - C3-0'].lo, hi: report.validationContrasts['C3-ab - C3-0'].hi }, aba: { mean: report.validationContrasts['C3-ab - C3-a'].mean, lo: report.validationContrasts['C3-ab - C3-a'].lo, hi: report.validationContrasts['C3-ab - C3-a'].hi } }, stop: report.stop }));
+  process.exit(0);
+}
+
+if (args.pref2) {
+  // P-REF's second stop: per class, axis and lead, the reference-based e^u against the truth-based e^u (the same history, the error against truth, c = the truth term alone), at the frozen a0, a1, n0 and k_ref; |median ratio - 1| above 10 % stops
+  const out = { plan: 'section 5 P-REF', limit: 0.1, classes: {} };
+  for (const cls of Object.keys(CLASSES)) {
+    const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`))), ab = fit.arms['C3-ab'], kRef = fit.kRef;
+    const D = loadClass(cls, { opened }), rows = [];
+    for (const L of LEADS) for (let k = 0; k < 3; k += 1) {
+      const ratios = [];
+      for (const w of [...D.windows.values()].flat()) {
+        const H = (w.hist.get(L) ?? []).filter(({ l }) => l.err);
+        if (H.length < 5) continue;
+        const a = H.map(({ j, l }) => gOf(j.chi, j.chiRef, ab.a0, ab.a1, L) * l.P[AXES[k]]);
+        const uRef = axesMleRef(H.map(({ l }, i) => ({ e: l.ref.errRtnM[k], a: a[i], c: kRef[groupOf(L)][k] * l.ref.covRtn[AXES[k]] + l.C })), ab.n0);
+        const uTruth = axesMleRef(H.map(({ l }, i) => ({ e: l.err[k], a: a[i], c: l.C })), ab.n0);
+        ratios.push(Math.exp(uRef - uTruth));
+      }
+      if (ratios.length) { const m = median(ratios); rows.push({ L, axis: 'RTN'[k], windows: ratios.length, medianRatio: m, off: m - 1, stop: Math.abs(m - 1) > 0.1 }); }
+    }
+    out.classes[cls] = { rows, stops: rows.filter((r) => r.stop), worst: rows.length ? rows.reduce((p, q) => (Math.abs(q.off) > Math.abs(p.off) ? q : p)) : null };
+    console.error(cls, 'worst', JSON.stringify(out.classes[cls].worst), 'stops', out.classes[cls].stops.length);
+  }
+  out.pass = Object.values(out.classes).every((c) => !c.stops.length);
+  console.log(writeReceipt('precheck-P-REF2', out, opened));
   process.exit(0);
 }
 
