@@ -1,0 +1,66 @@
+{
+  "experiment": "ffm-tail-cause",
+  "id": "XM5",
+  "frozen": true,
+  "task": "experiments-ffm-tail-cause-20261031",
+  "store": "/opt/data/sdn-archive/ffm-tail-cause",
+  "wipRefPrefix": "refs/remotes/origin/wip/experiments-ffm-tail-cause-20261031",
+  "xm3": {
+    "dir": "experiments/ffm-atmosphere-xm3",
+    "commit": "22313bf8c5065f2ed873401e472a5dbc6d039306",
+    "registration": "c56dbd1242a6c5855414da662601c1524b7c0daf",
+    "runner": "3af42a8a559dc7ccbdaa66366e53717b7a003483",
+    "amendment1": "ee2a513611eabf9de49972e8fe3e086125f10bfe",
+    "store": "/opt/data/sdn-archive/ffm-atmosphere-xm3",
+    "rowsDigest": "1af3adb87236",
+    "table": { "path": "results/ffm-atmosphere-xm3/table.json", "sha256": "31232c03c8dd48757ef1dea26b75b001ac0e48b3280890932d011ff3ad13b0ae" },
+    "uses": "XM3's config.json, common.mjs, table.mjs storedRows and lib/ffm.mjs imported unchanged at the commit (git diff --quiet): the groups, period, scoring, fit, environment, conditions and bootstrap; through them XM's code at 2c7b326 and the wasm pinned at modules 9a05d899b"
+  },
+  "weather": {
+    "condition": "M",
+    "rows": "XM's lib/weather.mjs rowsM through XM3's lib/ffm.mjs driverRows: observed F10.7, daily Ap and the true centered 81-day mean of F10.7; a day through D0 + 8 with no row takes the last row at or before it",
+    "gfz": { "file": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt", "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e" }
+  },
+  "arms": {
+    "F2M": "XM3's F2 with condition M's rows in the fit and the forecast: run here",
+    "F2O": "XM3's F2 under condition O: XM3's stored rows, read only; the sample rerun to equality first",
+    "P": "XM3's P: XM3's stored rows, read only; the same sample",
+    "F2H": "F2M with the 3-hourly ap history: not run, it needs a module change"
+  },
+  "groups": { "primary": "P", "report": "S1" },
+  "workers": 8,
+  "guard": {
+    "againstXm3": ["binEpochs", "entered", "excluded", "arc"],
+    "againstXm": ["M"],
+    "rule": "every M row against XM3's row and XM's stored M row; a difference is a software defect and stops the run"
+  },
+  "sample": {
+    "condition": "O",
+    "xm3Check": ["P|39452|2026-03-10", "S1|39634|2026-03-10", "P|43476|2026-02-13"],
+    "hashLabel": "XM5|sample|<key>",
+    "hashed": ["P|43477|2026-04-20", "S1|39634|2026-01-19", "S1|62261|2026-01-17", "S1|39634|2026-01-20", "P|39453|2026-05-31", "S1|62261|2026-01-24", "S1|39634|2026-02-13", "P|43477|2026-04-11", "S1|39634|2026-04-19"],
+    "equalFields": ["binEpochs", "entered", "excluded", "P", "O", "arc", "held", "F2"],
+    "filled": "compared on the days propagator/ffm reads, D0 - 4 through D0 + 8 (XM3's amendment 1)"
+  },
+  "cells": {
+    "C1": { "arm": "F2M", "ref": "P", "clusters": "orbit", "seed": "XM2|<group>|72|M|F2/P|<lead>|orbit", "role": "decides the outcome" },
+    "C2": { "arm": "F2M", "ref": "P", "clusters": "satellite", "seed": "XM2|<group>|72|M|F2/P|<lead>|satellite", "role": "report" },
+    "C3": { "arm": "F2M", "ref": "F2O", "clusters": "orbit", "seed": "XM5|<group>|72|M/O|F2|<lead>|orbit", "role": "the weather's own effect" },
+    "C4": { "arm": "F2O", "ref": "P", "clusters": ["orbit", "satellite"], "seed": "XM2|<group>|72|O|F2/P|<lead>|<clusters>", "role": "must equal XM3's committed cell in every number" },
+    "C5": { "arms": ["F2O", "F2M"], "ref": "P", "clusters": "orbit", "seed": "XM5|<group>|72|<O or M>|F2/P|<lead>|orbit|noW04", "without": "2026-W04", "windows": { "P": 35, "S1": 14 }, "role": "report" }
+  },
+  "closes": { "group": "P", "days": [1, 2, 3], "bound": 1.1, "cell": "C1's upper bound of the p95 ratio" },
+  "worst": {
+    "share": 0.05,
+    "rule": "the ceil(0.05 n) windows of largest e; a failure is largest; ties by key",
+    "xm3Published": { "F2": { "1": 19, "2": 23, "3": 22 }, "P": { "1": 10, "2": 12, "3": 11 }, "of": 38, "week": "2026-W04" }
+  },
+  "apBins": [[0, 14], [15, 29], [30, 49], [50, null]],
+  "overlap": { "sharedAtLeast": 0.5, "specificAtMost": 0.15, "chance": 0.05 },
+  "check": {
+    "M": ["P|39452|2026-01-20", "S1|39634|2026-03-10", "P|43476|2026-02-13"],
+    "O": ["P|39452|2026-03-10"],
+    "rule": "each window rerun and compared exactly, under M with the stored row and under O with XM3's; the table rebuilt equal to the committed table.json"
+  },
+  "integrity": "XM3's cuts, unchanged: C2's time cut and held-out objects, ISS out, no laser spheres, GPCV P0's truth span. Never read: C2's held-out row files, B2 part 1a and part 5 files, census results, operator-capture content, C3-small's rows"
+}
