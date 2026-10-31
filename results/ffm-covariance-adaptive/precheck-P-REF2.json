@@ -1,0 +1,645 @@
+{
+ "receipt": "precheck-P-REF2",
+ "createdUtc": "2026-10-31T09:24:04.738Z",
+ "experimentsCommit": "2e8333b82357d92b07c3813688c0df05f3bc606b",
+ "plan": "section 5 P-REF, a report (C3-A8)",
+ "limit": 0.1,
+ "classes": {
+  "R3": {
+   "rows": [
+    {
+     "L": 1,
+     "axis": "R",
+     "windows": 1667,
+     "medianRatio": 1.599692802962656,
+     "off": 0.599692802962656,
+     "stop": true
+    },
+    {
+     "L": 1,
+     "axis": "T",
+     "windows": 1667,
+     "medianRatio": 0.38606178912413014,
+     "off": -0.6139382108758699,
+     "stop": true
+    },
+    {
+     "L": 1,
+     "axis": "N",
+     "windows": 1667,
+     "medianRatio": 0.7430502358198059,
+     "off": -0.2569497641801941,
+     "stop": true
+    },
+    {
+     "L": 6,
+     "axis": "R",
+     "windows": 1718,
+     "medianRatio": 1.1035233117114491,
+     "off": 0.10352331171144913,
+     "stop": true
+    },
+    {
+     "L": 6,
+     "axis": "T",
+     "windows": 1718,
+     "medianRatio": 1.0021275676386887,
+     "off": 0.00212756763868871,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "N",
+     "windows": 1718,
+     "medianRatio": 0.7743393234136846,
+     "off": -0.2256606765863154,
+     "stop": true
+    },
+    {
+     "L": 12,
+     "axis": "R",
+     "windows": 1727,
+     "medianRatio": 0.8819765525055351,
+     "off": -0.11802344749446492,
+     "stop": true
+    },
+    {
+     "L": 12,
+     "axis": "T",
+     "windows": 1727,
+     "medianRatio": 1.1120535368841717,
+     "off": 0.11205353688417174,
+     "stop": true
+    },
+    {
+     "L": 12,
+     "axis": "N",
+     "windows": 1727,
+     "medianRatio": 0.677603529729157,
+     "off": -0.32239647027084295,
+     "stop": true
+    },
+    {
+     "L": 24,
+     "axis": "R",
+     "windows": 1729,
+     "medianRatio": 0.958881547041272,
+     "off": -0.04111845295872796,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "T",
+     "windows": 1729,
+     "medianRatio": 1.0433093923156223,
+     "off": 0.04330939231562225,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "N",
+     "windows": 1729,
+     "medianRatio": 0.7952544740046135,
+     "off": -0.20474552599538653,
+     "stop": true
+    },
+    {
+     "L": 48,
+     "axis": "R",
+     "windows": 1730,
+     "medianRatio": 0.9663094621019238,
+     "off": -0.03369053789807619,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "T",
+     "windows": 1730,
+     "medianRatio": 1.0147300940178243,
+     "off": 0.014730094017824324,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "N",
+     "windows": 1730,
+     "medianRatio": 0.8321370473391734,
+     "off": -0.16786295266082663,
+     "stop": true
+    },
+    {
+     "L": 72,
+     "axis": "R",
+     "windows": 1729,
+     "medianRatio": 0.9957412073586233,
+     "off": -0.004258792641376741,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "T",
+     "windows": 1729,
+     "medianRatio": 1.0075590255931073,
+     "off": 0.0075590255931072825,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "N",
+     "windows": 1729,
+     "medianRatio": 0.8644555037457142,
+     "off": -0.13554449625428577,
+     "stop": true
+    }
+   ],
+   "stops": [
+    {
+     "L": 1,
+     "axis": "R",
+     "windows": 1667,
+     "medianRatio": 1.599692802962656,
+     "off": 0.599692802962656,
+     "stop": true
+    },
+    {
+     "L": 1,
+     "axis": "T",
+     "windows": 1667,
+     "medianRatio": 0.38606178912413014,
+     "off": -0.6139382108758699,
+     "stop": true
+    },
+    {
+     "L": 1,
+     "axis": "N",
+     "windows": 1667,
+     "medianRatio": 0.7430502358198059,
+     "off": -0.2569497641801941,
+     "stop": true
+    },
+    {
+     "L": 6,
+     "axis": "R",
+     "windows": 1718,
+     "medianRatio": 1.1035233117114491,
+     "off": 0.10352331171144913,
+     "stop": true
+    },
+    {
+     "L": 6,
+     "axis": "N",
+     "windows": 1718,
+     "medianRatio": 0.7743393234136846,
+     "off": -0.2256606765863154,
+     "stop": true
+    },
+    {
+     "L": 12,
+     "axis": "R",
+     "windows": 1727,
+     "medianRatio": 0.8819765525055351,
+     "off": -0.11802344749446492,
+     "stop": true
+    },
+    {
+     "L": 12,
+     "axis": "T",
+     "windows": 1727,
+     "medianRatio": 1.1120535368841717,
+     "off": 0.11205353688417174,
+     "stop": true
+    },
+    {
+     "L": 12,
+     "axis": "N",
+     "windows": 1727,
+     "medianRatio": 0.677603529729157,
+     "off": -0.32239647027084295,
+     "stop": true
+    },
+    {
+     "L": 24,
+     "axis": "N",
+     "windows": 1729,
+     "medianRatio": 0.7952544740046135,
+     "off": -0.20474552599538653,
+     "stop": true
+    },
+    {
+     "L": 48,
+     "axis": "N",
+     "windows": 1730,
+     "medianRatio": 0.8321370473391734,
+     "off": -0.16786295266082663,
+     "stop": true
+    },
+    {
+     "L": 72,
+     "axis": "N",
+     "windows": 1729,
+     "medianRatio": 0.8644555037457142,
+     "off": -0.13554449625428577,
+     "stop": true
+    }
+   ],
+   "worst": {
+    "L": 1,
+    "axis": "T",
+    "windows": 1667,
+    "medianRatio": 0.38606178912413014,
+    "off": -0.6139382108758699,
+    "stop": true
+   }
+  },
+  "R2-M": {
+   "rows": [
+    {
+     "L": 1,
+     "axis": "R",
+     "windows": 34,
+     "medianRatio": 1.4721514670173554,
+     "off": 0.47215146701735544,
+     "stop": true
+    },
+    {
+     "L": 1,
+     "axis": "T",
+     "windows": 34,
+     "medianRatio": 0.9274779277788383,
+     "off": -0.07252207222116169,
+     "stop": false
+    },
+    {
+     "L": 1,
+     "axis": "N",
+     "windows": 34,
+     "medianRatio": 1.0625767401836224,
+     "off": 0.06257674018362236,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "R",
+     "windows": 278,
+     "medianRatio": 1.0505495921329544,
+     "off": 0.0505495921329544,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "T",
+     "windows": 278,
+     "medianRatio": 0.9673013720473003,
+     "off": -0.03269862795269973,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "N",
+     "windows": 278,
+     "medianRatio": 1.002330023973395,
+     "off": 0.00233002397339499,
+     "stop": false
+    },
+    {
+     "L": 12,
+     "axis": "R",
+     "windows": 344,
+     "medianRatio": 0.9654441266923341,
+     "off": -0.03455587330766585,
+     "stop": false
+    },
+    {
+     "L": 12,
+     "axis": "T",
+     "windows": 344,
+     "medianRatio": 1.003165975750805,
+     "off": 0.003165975750804906,
+     "stop": false
+    },
+    {
+     "L": 12,
+     "axis": "N",
+     "windows": 344,
+     "medianRatio": 0.9908200358977715,
+     "off": -0.009179964102228544,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "R",
+     "windows": 355,
+     "medianRatio": 1.0103193507083288,
+     "off": 0.01031935070832879,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "T",
+     "windows": 355,
+     "medianRatio": 1.0058287958114978,
+     "off": 0.005828795811497756,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "N",
+     "windows": 355,
+     "medianRatio": 1.0778370291408756,
+     "off": 0.07783702914087565,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "R",
+     "windows": 355,
+     "medianRatio": 1.0181813179590034,
+     "off": 0.01818131795900335,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "T",
+     "windows": 355,
+     "medianRatio": 0.9963718773811727,
+     "off": -0.0036281226188272786,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "N",
+     "windows": 355,
+     "medianRatio": 1.0871492401817877,
+     "off": 0.08714924018178771,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "R",
+     "windows": 355,
+     "medianRatio": 1.0023174455777961,
+     "off": 0.002317445577796118,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "T",
+     "windows": 355,
+     "medianRatio": 0.9978188453131859,
+     "off": -0.002181154686814124,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "N",
+     "windows": 355,
+     "medianRatio": 1.026327425965358,
+     "off": 0.026327425965358087,
+     "stop": false
+    }
+   ],
+   "stops": [
+    {
+     "L": 1,
+     "axis": "R",
+     "windows": 34,
+     "medianRatio": 1.4721514670173554,
+     "off": 0.47215146701735544,
+     "stop": true
+    }
+   ],
+   "worst": {
+    "L": 1,
+    "axis": "R",
+    "windows": 34,
+    "medianRatio": 1.4721514670173554,
+    "off": 0.47215146701735544,
+    "stop": true
+   }
+  },
+  "R2-O": {
+   "rows": [
+    {
+     "L": 1,
+     "axis": "R",
+     "windows": 19,
+     "medianRatio": 1.3210161799217242,
+     "off": 0.32101617992172415,
+     "stop": true
+    },
+    {
+     "L": 1,
+     "axis": "T",
+     "windows": 19,
+     "medianRatio": 0.9126604504550211,
+     "off": -0.08733954954497891,
+     "stop": false
+    },
+    {
+     "L": 1,
+     "axis": "N",
+     "windows": 19,
+     "medianRatio": 1.0606115035296169,
+     "off": 0.06061150352961686,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "R",
+     "windows": 154,
+     "medianRatio": 0.9967726783478834,
+     "off": -0.003227321652116588,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "T",
+     "windows": 154,
+     "medianRatio": 0.9533703144915344,
+     "off": -0.04662968550846558,
+     "stop": false
+    },
+    {
+     "L": 6,
+     "axis": "N",
+     "windows": 154,
+     "medianRatio": 0.997427539416399,
+     "off": -0.002572460583601055,
+     "stop": false
+    },
+    {
+     "L": 12,
+     "axis": "R",
+     "windows": 196,
+     "medianRatio": 0.9598329770023996,
+     "off": -0.04016702299760044,
+     "stop": false
+    },
+    {
+     "L": 12,
+     "axis": "T",
+     "windows": 196,
+     "medianRatio": 0.9970320692058381,
+     "off": -0.0029679307941619104,
+     "stop": false
+    },
+    {
+     "L": 12,
+     "axis": "N",
+     "windows": 196,
+     "medianRatio": 0.9832890380991766,
+     "off": -0.01671096190082344,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "R",
+     "windows": 205,
+     "medianRatio": 1.0176874189714582,
+     "off": 0.017687418971458202,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "T",
+     "windows": 205,
+     "medianRatio": 0.9874303935883347,
+     "off": -0.012569606411665268,
+     "stop": false
+    },
+    {
+     "L": 24,
+     "axis": "N",
+     "windows": 205,
+     "medianRatio": 1.0990436926728877,
+     "off": 0.0990436926728877,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "R",
+     "windows": 205,
+     "medianRatio": 1.038104412665243,
+     "off": 0.038104412665243004,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "T",
+     "windows": 205,
+     "medianRatio": 1.0029867574755367,
+     "off": 0.002986757475536672,
+     "stop": false
+    },
+    {
+     "L": 48,
+     "axis": "N",
+     "windows": 205,
+     "medianRatio": 1.1034384050314752,
+     "off": 0.10343840503147517,
+     "stop": true
+    },
+    {
+     "L": 72,
+     "axis": "R",
+     "windows": 201,
+     "medianRatio": 1.0152403682996325,
+     "off": 0.01524036829963249,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "T",
+     "windows": 201,
+     "medianRatio": 1.0061023377015437,
+     "off": 0.00610233770154367,
+     "stop": false
+    },
+    {
+     "L": 72,
+     "axis": "N",
+     "windows": 201,
+     "medianRatio": 1.0448174048842016,
+     "off": 0.044817404884201606,
+     "stop": false
+    }
+   ],
+   "stops": [
+    {
+     "L": 1,
+     "axis": "R",
+     "windows": 19,
+     "medianRatio": 1.3210161799217242,
+     "off": 0.32101617992172415,
+     "stop": true
+    },
+    {
+     "L": 48,
+     "axis": "N",
+     "windows": 205,
+     "medianRatio": 1.1034384050314752,
+     "off": 0.10343840503147517,
+     "stop": true
+    }
+   ],
+   "worst": {
+    "L": 1,
+    "axis": "R",
+    "windows": 19,
+    "medianRatio": 1.3210161799217242,
+    "off": 0.32101617992172415,
+    "stop": true
+   }
+  }
+ },
+ "withinLimit": false,
+ "opened": {
+  "files": 411,
+  "sha256": "af81be597eb1ee0c58330bbf61d0c0dbde82122f231d6be2b8659d9957f8dca3",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/precheck-P-REF2.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/*",
+    "files": 1,
+    "labels": [
+     "GSC rows"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/gsc/*",
+    "files": 123,
+    "labels": [
+     "GSC NAGU"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/iac/*",
+    "files": 273,
+    "labels": [
+     "IAC bulletin"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/rows/*",
+    "files": 12,
+    "labels": [
+     "C3 rows"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/gfz-kp/*",
+    "files": 1,
+    "labels": [
+     "GFZ Ap, lines to 2026-05-31"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/igs-metadata/*",
+    "files": 1,
+    "labels": [
+     "IGS SINEX"
+    ]
+   }
+  ]
+ }
+}

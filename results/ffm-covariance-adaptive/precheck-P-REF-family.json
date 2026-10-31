@@ -1,0 +1,2318 @@
+{
+ "receipt": "precheck-P-REF-family",
+ "createdUtc": "2026-10-31T09:24:00.833Z",
+ "experimentsCommit": "2e8333b82357d92b07c3813688c0df05f3bc606b",
+ "plan": "C3-A8 point 1",
+ "intervalNote": "The interval in precheck-P-REF.json is the two-way bootstrap of the mean standardized product, which is why its bounds pass +/-1. The rule does not change.",
+ "varianceRatio": "mean square of forecast minus reference over mean square of forecast minus truth, pooled",
+ "classes": {
+  "R3": {
+   "calibration": [
+    {
+     "family": "Galileo",
+     "L": 1,
+     "axis": "R",
+     "n": 852,
+     "r": -0.8428952795850526,
+     "rmsForecastTruthM": 0.5885776277724547,
+     "rmsReferenceTruthM": 0.37474146406789655,
+     "rmsForecastReferenceM": 0.9258868826438124,
+     "varianceRatio": 2.474619108724741
+    },
+    {
+     "family": "Galileo",
+     "L": 1,
+     "axis": "T",
+     "n": 852,
+     "r": 0.8695896168571857,
+     "rmsForecastTruthM": 1.0847717007346793,
+     "rmsReferenceTruthM": 0.43425788512324137,
+     "rmsForecastReferenceM": 0.738431057326585,
+     "varianceRatio": 0.463386326502707
+    },
+    {
+     "family": "Galileo",
+     "L": 1,
+     "axis": "N",
+     "n": 852,
+     "r": 0.47087464594749767,
+     "rmsForecastTruthM": 0.15548725933859445,
+     "rmsReferenceTruthM": 0.12165196487095015,
+     "rmsForecastReferenceM": 0.14525441724919544,
+     "varianceRatio": 0.8727082457999431
+    },
+    {
+     "family": "Galileo",
+     "L": 6,
+     "axis": "R",
+     "n": 852,
+     "r": -0.32831954502041893,
+     "rmsForecastTruthM": 0.49452750165352183,
+     "rmsReferenceTruthM": 0.11530411337808709,
+     "rmsForecastReferenceM": 0.5383158978117449,
+     "varianceRatio": 1.1849322356167187
+    },
+    {
+     "family": "Galileo",
+     "L": 6,
+     "axis": "T",
+     "n": 852,
+     "r": -0.13311239605505162,
+     "rmsForecastTruthM": 3.152420535942378,
+     "rmsReferenceTruthM": 0.15274479158631485,
+     "rmsForecastReferenceM": 3.1766702921035903,
+     "varianceRatio": 1.0154440218808247
+    },
+    {
+     "family": "Galileo",
+     "L": 6,
+     "axis": "N",
+     "n": 852,
+     "r": 0.1838915953242823,
+     "rmsForecastTruthM": 0.18580742283360452,
+     "rmsReferenceTruthM": 0.09558597177219184,
+     "rmsForecastReferenceM": 0.19246764457673707,
+     "varianceRatio": 1.0729743586294025
+    },
+    {
+     "family": "Galileo",
+     "L": 12,
+     "axis": "R",
+     "n": 852,
+     "r": 0.06321313449446,
+     "rmsForecastTruthM": 0.644632222826301,
+     "rmsReferenceTruthM": 0.0828755749632845,
+     "rmsForecastReferenceM": 0.6413071800295668,
+     "varianceRatio": 0.9897105130116267
+    },
+    {
+     "family": "Galileo",
+     "L": 12,
+     "axis": "T",
+     "n": 852,
+     "r": -0.9256493198968997,
+     "rmsForecastTruthM": 3.9518322445362144,
+     "rmsReferenceTruthM": 0.29491516339428003,
+     "rmsForecastReferenceM": 4.2263469041460775,
+     "varianceRatio": 1.1437557286973863
+    },
+    {
+     "family": "Galileo",
+     "L": 12,
+     "axis": "N",
+     "n": 852,
+     "r": 0.4397547920145636,
+     "rmsForecastTruthM": 0.16872368369276397,
+     "rmsReferenceTruthM": 0.15498949746542345,
+     "rmsForecastReferenceM": 0.17159047961530013,
+     "varianceRatio": 1.0342708364869238
+    },
+    {
+     "family": "Galileo",
+     "L": 24,
+     "axis": "R",
+     "n": 852,
+     "r": 0.18702618284241246,
+     "rmsForecastTruthM": 0.6057783127318463,
+     "rmsReferenceTruthM": 0.08350669725691293,
+     "rmsForecastReferenceM": 0.5916495935809547,
+     "varianceRatio": 0.9538974736085563
+    },
+    {
+     "family": "Galileo",
+     "L": 24,
+     "axis": "T",
+     "n": 852,
+     "r": -0.953240245632463,
+     "rmsForecastTruthM": 10.639942904992532,
+     "rmsReferenceTruthM": 0.29145294709876446,
+     "rmsForecastReferenceM": 10.918353053268275,
+     "varianceRatio": 1.0530177015878446
+    },
+    {
+     "family": "Galileo",
+     "L": 24,
+     "axis": "N",
+     "n": 852,
+     "r": 0.14541001661416908,
+     "rmsForecastTruthM": 0.24281381837446142,
+     "rmsReferenceTruthM": 0.14201049133244342,
+     "rmsForecastReferenceM": 0.26276129189332526,
+     "varianceRatio": 1.1710514599924846
+    },
+    {
+     "family": "Galileo",
+     "L": 48,
+     "axis": "R",
+     "n": 778,
+     "r": 0.2990612968817694,
+     "rmsForecastTruthM": 1.7676428153359294,
+     "rmsReferenceTruthM": 0.08430347244877126,
+     "rmsForecastReferenceM": 1.7410438391780563,
+     "varianceRatio": 0.9701310139227026
+    },
+    {
+     "family": "Galileo",
+     "L": 48,
+     "axis": "T",
+     "n": 778,
+     "r": -0.9577127142993491,
+     "rmsForecastTruthM": 33.54370176038189,
+     "rmsReferenceTruthM": 0.29407608809418223,
+     "rmsForecastReferenceM": 33.825529323046915,
+     "varianceRatio": 1.01687419560724
+    },
+    {
+     "family": "Galileo",
+     "L": 48,
+     "axis": "N",
+     "n": 778,
+     "r": 0.17024583792231054,
+     "rmsForecastTruthM": 0.41963732036182844,
+     "rmsReferenceTruthM": 0.13999591958792235,
+     "rmsForecastReferenceM": 0.41906369010700784,
+     "varianceRatio": 0.9972679351417548
+    },
+    {
+     "family": "Galileo",
+     "L": 72,
+     "axis": "R",
+     "n": 778,
+     "r": -0.006188933225819349,
+     "rmsForecastTruthM": 3.7379313781482537,
+     "rmsReferenceTruthM": 0.08389447709990419,
+     "rmsForecastReferenceM": 3.7356727114972306,
+     "varianceRatio": 0.998791853559415
+    },
+    {
+     "family": "Galileo",
+     "L": 72,
+     "axis": "T",
+     "n": 778,
+     "r": -0.9476844673046809,
+     "rmsForecastTruthM": 61.41975243385423,
+     "rmsReferenceTruthM": 0.2967303822290989,
+     "rmsForecastReferenceM": 61.701283749972895,
+     "varianceRatio": 1.009188462543194
+    },
+    {
+     "family": "Galileo",
+     "L": 72,
+     "axis": "N",
+     "n": 778,
+     "r": 0.19471109741463818,
+     "rmsForecastTruthM": 0.5475469243329327,
+     "rmsReferenceTruthM": 0.14329913014642814,
+     "rmsForecastReferenceM": 0.5383579949736567,
+     "varianceRatio": 0.9667176467465538
+    },
+    {
+     "family": "GLONASS other",
+     "L": 1,
+     "axis": "R",
+     "n": 137,
+     "r": -0.913183833768728,
+     "rmsForecastTruthM": 0.24399916373991987,
+     "rmsReferenceTruthM": 0.21583200130183855,
+     "rmsForecastReferenceM": 0.448453198636548,
+     "varianceRatio": 3.3779839072671694
+    },
+    {
+     "family": "GLONASS other",
+     "L": 1,
+     "axis": "T",
+     "n": 137,
+     "r": -0.4447131284059162,
+     "rmsForecastTruthM": 0.507326833130194,
+     "rmsReferenceTruthM": 0.2535364989387004,
+     "rmsForecastReferenceM": 0.6603510223238099,
+     "varianceRatio": 1.6942365339660204
+    },
+    {
+     "family": "GLONASS other",
+     "L": 1,
+     "axis": "N",
+     "n": 137,
+     "r": 0.8991218430505968,
+     "rmsForecastTruthM": 0.09251208223246525,
+     "rmsReferenceTruthM": 0.08256077345760496,
+     "rmsForecastReferenceM": 0.03933323187809158,
+     "varianceRatio": 0.18076833283955562
+    },
+    {
+     "family": "GLONASS other",
+     "L": 6,
+     "axis": "R",
+     "n": 137,
+     "r": -0.966571302129604,
+     "rmsForecastTruthM": 0.30183067368300565,
+     "rmsReferenceTruthM": 0.115038073946176,
+     "rmsForecastReferenceM": 0.40950509577053334,
+     "varianceRatio": 1.8407375621016824
+    },
+    {
+     "family": "GLONASS other",
+     "L": 6,
+     "axis": "T",
+     "n": 137,
+     "r": -0.6532684929071048,
+     "rmsForecastTruthM": 0.9437146651563777,
+     "rmsReferenceTruthM": 0.2436434408437801,
+     "rmsForecastReferenceM": 1.1182054658160103,
+     "varianceRatio": 1.403982884948518
+    },
+    {
+     "family": "GLONASS other",
+     "L": 6,
+     "axis": "N",
+     "n": 137,
+     "r": 0.910271782378295,
+     "rmsForecastTruthM": 0.11046227491615676,
+     "rmsReferenceTruthM": 0.11106435123826129,
+     "rmsForecastReferenceM": 0.04475039043451334,
+     "varianceRatio": 0.16412158080744668
+    },
+    {
+     "family": "GLONASS other",
+     "L": 12,
+     "axis": "R",
+     "n": 137,
+     "r": -0.09314606849868308,
+     "rmsForecastTruthM": 0.43080546792541163,
+     "rmsReferenceTruthM": 0.038553696430003385,
+     "rmsForecastReferenceM": 0.43515817499631904,
+     "varianceRatio": 1.02030938095269
+    },
+    {
+     "family": "GLONASS other",
+     "L": 12,
+     "axis": "T",
+     "n": 137,
+     "r": -0.5701328414288377,
+     "rmsForecastTruthM": 1.2988217896271501,
+     "rmsReferenceTruthM": 0.15100513819794098,
+     "rmsForecastReferenceM": 1.3904560124441745,
+     "varianceRatio": 1.1460811691430486
+    },
+    {
+     "family": "GLONASS other",
+     "L": 12,
+     "axis": "N",
+     "n": 137,
+     "r": 0.9232747946675014,
+     "rmsForecastTruthM": 0.10547596926604706,
+     "rmsReferenceTruthM": 0.09099824616798975,
+     "rmsForecastReferenceM": 0.0401886793081033,
+     "varianceRatio": 0.1451778695791297
+    },
+    {
+     "family": "GLONASS other",
+     "L": 24,
+     "axis": "R",
+     "n": 137,
+     "r": -0.1367162229014789,
+     "rmsForecastTruthM": 0.6266965950711312,
+     "rmsReferenceTruthM": 0.03765937412749026,
+     "rmsForecastReferenceM": 0.6325621924055097,
+     "varianceRatio": 1.0188066986571565
+    },
+    {
+     "family": "GLONASS other",
+     "L": 24,
+     "axis": "T",
+     "n": 137,
+     "r": -0.67602589333962,
+     "rmsForecastTruthM": 2.8153150609812307,
+     "rmsReferenceTruthM": 0.16149854719367226,
+     "rmsForecastReferenceM": 2.926926083764136,
+     "varianceRatio": 1.0808601434237475
+    },
+    {
+     "family": "GLONASS other",
+     "L": 24,
+     "axis": "N",
+     "n": 137,
+     "r": 0.8599326618900341,
+     "rmsForecastTruthM": 0.10988176228708908,
+     "rmsReferenceTruthM": 0.08548380526927504,
+     "rmsForecastReferenceM": 0.05605500076524172,
+     "varianceRatio": 0.2602420633362207
+    },
+    {
+     "family": "GLONASS other",
+     "L": 48,
+     "axis": "R",
+     "n": 125,
+     "r": -0.09748061368603778,
+     "rmsForecastTruthM": 1.0154578856764371,
+     "rmsReferenceTruthM": 0.04667864782288765,
+     "rmsForecastReferenceM": 1.0203980474459675,
+     "varianceRatio": 1.009753587388576
+    },
+    {
+     "family": "GLONASS other",
+     "L": 48,
+     "axis": "T",
+     "n": 125,
+     "r": -0.7150212271504843,
+     "rmsForecastTruthM": 7.450903641954156,
+     "rmsReferenceTruthM": 0.17775031710754252,
+     "rmsForecastReferenceM": 7.5787311469262715,
+     "varianceRatio": 1.0346062743010564
+    },
+    {
+     "family": "GLONASS other",
+     "L": 48,
+     "axis": "N",
+     "n": 125,
+     "r": 0.7740281175320761,
+     "rmsForecastTruthM": 0.1337703403564431,
+     "rmsReferenceTruthM": 0.0876480588055758,
+     "rmsForecastReferenceM": 0.08486553977554291,
+     "varianceRatio": 0.4024788760763776
+    },
+    {
+     "family": "GLONASS other",
+     "L": 72,
+     "axis": "R",
+     "n": 125,
+     "r": -0.1497310952302449,
+     "rmsForecastTruthM": 1.466195853933026,
+     "rmsReferenceTruthM": 0.049014169796820675,
+     "rmsForecastReferenceM": 1.4739883085193377,
+     "varianceRatio": 1.0106577330896713
+    },
+    {
+     "family": "GLONASS other",
+     "L": 72,
+     "axis": "T",
+     "n": 125,
+     "r": -0.8317086423623545,
+     "rmsForecastTruthM": 14.13935433353697,
+     "rmsReferenceTruthM": 0.1561168723960812,
+     "rmsForecastReferenceM": 14.26945670797629,
+     "varianceRatio": 1.018487539917343
+    },
+    {
+     "family": "GLONASS other",
+     "L": 72,
+     "axis": "N",
+     "n": 125,
+     "r": 0.6595272176922968,
+     "rmsForecastTruthM": 0.1629994789852716,
+     "rmsReferenceTruthM": 0.09299664697252431,
+     "rmsForecastReferenceM": 0.12075261998132668,
+     "varianceRatio": 0.548808327288944
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 1,
+     "axis": "R",
+     "n": 46,
+     "r": -0.9852547466096283,
+     "rmsForecastTruthM": 0.3381287410799818,
+     "rmsReferenceTruthM": 0.29566422998892655,
+     "rmsForecastReferenceM": 0.6306431912029824,
+     "varianceRatio": 3.4785900252828847
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 1,
+     "axis": "T",
+     "n": 46,
+     "r": -0.7137379376916192,
+     "rmsForecastTruthM": 0.6224234857668866,
+     "rmsReferenceTruthM": 0.3106814019497011,
+     "rmsForecastReferenceM": 0.869465878500796,
+     "varianceRatio": 1.9513408818962856
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 1,
+     "axis": "N",
+     "n": 46,
+     "r": 0.9754778147903632,
+     "rmsForecastTruthM": 0.2731385728973142,
+     "rmsReferenceTruthM": 0.26928558032314065,
+     "rmsForecastReferenceM": 0.05011025097520502,
+     "varianceRatio": 0.03365790527686154
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 6,
+     "axis": "R",
+     "n": 46,
+     "r": -0.9750966683880006,
+     "rmsForecastTruthM": 0.44586415023160914,
+     "rmsReferenceTruthM": 0.1608735627729491,
+     "rmsForecastReferenceM": 0.601418354260938,
+     "varianceRatio": 1.8194840268579375
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 6,
+     "axis": "T",
+     "n": 46,
+     "r": -0.8524392999347379,
+     "rmsForecastTruthM": 1.030105531584173,
+     "rmsReferenceTruthM": 0.32466479203019116,
+     "rmsForecastReferenceM": 1.3129943498801355,
+     "varianceRatio": 1.6246592061762126
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 6,
+     "axis": "N",
+     "n": 46,
+     "r": 0.988871054479875,
+     "rmsForecastTruthM": 0.3259963103333364,
+     "rmsReferenceTruthM": 0.33836799215029045,
+     "rmsForecastReferenceM": 0.04323904959995259,
+     "varianceRatio": 0.017592473668793955
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 12,
+     "axis": "R",
+     "n": 46,
+     "r": -0.11391396195492674,
+     "rmsForecastTruthM": 0.6226262294894616,
+     "rmsReferenceTruthM": 0.03422581310669665,
+     "rmsForecastReferenceM": 0.628625577751967,
+     "varianceRatio": 1.0193639506245233
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 12,
+     "axis": "T",
+     "n": 46,
+     "r": 0.04490778824102733,
+     "rmsForecastTruthM": 1.1777351167797028,
+     "rmsReferenceTruthM": 0.1330744559306212,
+     "rmsForecastReferenceM": 1.205276438458192,
+     "varianceRatio": 1.0473168338469636
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 12,
+     "axis": "N",
+     "n": 46,
+     "r": 0.9762430277148242,
+     "rmsForecastTruthM": 0.2742643057210319,
+     "rmsReferenceTruthM": 0.2704337069459108,
+     "rmsForecastReferenceM": 0.04964408848182304,
+     "varianceRatio": 0.0327639687035242
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 24,
+     "axis": "R",
+     "n": 46,
+     "r": -0.290798822702319,
+     "rmsForecastTruthM": 0.8823503690594122,
+     "rmsReferenceTruthM": 0.03227847002043327,
+     "rmsForecastReferenceM": 0.8924798100581038,
+     "varianceRatio": 1.0230919251230763
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 24,
+     "axis": "T",
+     "n": 46,
+     "r": -0.1073243285344054,
+     "rmsForecastTruthM": 2.3848072688466884,
+     "rmsReferenceTruthM": 0.16882363915602605,
+     "rmsForecastReferenceM": 2.4508891795523655,
+     "varianceRatio": 1.0561868971394694
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 24,
+     "axis": "N",
+     "n": 46,
+     "r": 0.9524917227319534,
+     "rmsForecastTruthM": 0.29450196237732296,
+     "rmsReferenceTruthM": 0.2700239236542163,
+     "rmsForecastReferenceM": 0.07730071704311206,
+     "varianceRatio": 0.06889546868547804
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 48,
+     "axis": "R",
+     "n": 42,
+     "r": -0.38401832159792904,
+     "rmsForecastTruthM": 1.3109058989823412,
+     "rmsReferenceTruthM": 0.036129250018825276,
+     "rmsForecastReferenceM": 1.3252124939272776,
+     "varianceRatio": 1.0219461405976535
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 48,
+     "axis": "T",
+     "n": 42,
+     "r": -0.2271011230273048,
+     "rmsForecastTruthM": 6.011424053482382,
+     "rmsReferenceTruthM": 0.1680556258430543,
+     "rmsForecastReferenceM": 6.086431601706759,
+     "varianceRatio": 1.0251106895547717
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 48,
+     "axis": "N",
+     "n": 42,
+     "r": 0.9062048725109433,
+     "rmsForecastTruthM": 0.3495136803158505,
+     "rmsReferenceTruthM": 0.28630281048598594,
+     "rmsForecastReferenceM": 0.1309012188009461,
+     "varianceRatio": 0.1402681348385483
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 72,
+     "axis": "R",
+     "n": 42,
+     "r": -0.03896323023395548,
+     "rmsForecastTruthM": 1.968855485710206,
+     "rmsReferenceTruthM": 0.11248370746669004,
+     "rmsForecastReferenceM": 1.9764511077708673,
+     "varianceRatio": 1.0077306573710947
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 72,
+     "axis": "T",
+     "n": 42,
+     "r": -0.5530008891351685,
+     "rmsForecastTruthM": 10.809716669601489,
+     "rmsReferenceTruthM": 0.1749180432307651,
+     "rmsForecastReferenceM": 10.927528114315054,
+     "varianceRatio": 1.021916104163021
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 72,
+     "axis": "N",
+     "n": 42,
+     "r": 0.9058684894190473,
+     "rmsForecastTruthM": 0.36616184349065867,
+     "rmsReferenceTruthM": 0.2865491253570423,
+     "rmsForecastReferenceM": 0.1413315286404871,
+     "varianceRatio": 0.14898136214665864
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "R",
+     "n": 68,
+     "r": -0.1865366073172745,
+     "rmsForecastTruthM": 0.05114723714797927,
+     "rmsReferenceTruthM": 0.039326603113526704,
+     "rmsForecastReferenceM": 0.07029779880276717,
+     "varianceRatio": 1.8890310416159246
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "T",
+     "n": 68,
+     "r": -0.2509514273109967,
+     "rmsForecastTruthM": 0.2298854731148322,
+     "rmsReferenceTruthM": 0.060737730192380296,
+     "rmsForecastReferenceM": 0.25205510850231116,
+     "varianceRatio": 1.202175716756276
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "N",
+     "n": 68,
+     "r": 0.2075910742586772,
+     "rmsForecastTruthM": 0.2244769461889153,
+     "rmsReferenceTruthM": 0.03927328101799893,
+     "rmsForecastReferenceM": 0.21905249622497194,
+     "varianceRatio": 0.952254255357219
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "R",
+     "n": 93,
+     "r": -0.39920141474897564,
+     "rmsForecastTruthM": 0.06557657474668867,
+     "rmsReferenceTruthM": 0.027826419853808106,
+     "rmsForecastReferenceM": 0.08363632293552564,
+     "varianceRatio": 1.6266435847698928
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "T",
+     "n": 93,
+     "r": -0.20195160188209674,
+     "rmsForecastTruthM": 0.20294126877311214,
+     "rmsReferenceTruthM": 0.058326997073190924,
+     "rmsForecastReferenceM": 0.2218426853870004,
+     "varianceRatio": 1.1949493158946274
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "N",
+     "n": 93,
+     "r": 0.2567980368109867,
+     "rmsForecastTruthM": 0.34251711195012435,
+     "rmsReferenceTruthM": 0.03739995467532279,
+     "rmsForecastReferenceM": 0.3331869052184754,
+     "varianceRatio": 0.9462617869772261
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "R",
+     "n": 100,
+     "r": -0.003647228701824951,
+     "rmsForecastTruthM": 0.08472945341715697,
+     "rmsReferenceTruthM": 0.0156517067577035,
+     "rmsForecastReferenceM": 0.08677082792407777,
+     "varianceRatio": 1.0487661773907275
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "T",
+     "n": 100,
+     "r": -0.09411454503708083,
+     "rmsForecastTruthM": 0.28343267187387317,
+     "rmsReferenceTruthM": 0.05237352600687427,
+     "rmsForecastReferenceM": 0.29368970456165133,
+     "varianceRatio": 1.0736868228011653
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "N",
+     "n": 100,
+     "r": 0.09574250248900608,
+     "rmsForecastTruthM": 0.29065658318457416,
+     "rmsReferenceTruthM": 0.03079252486433501,
+     "rmsForecastReferenceM": 0.29035056780672214,
+     "varianceRatio": 0.9978954250296201
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "R",
+     "n": 100,
+     "r": 0.20527631514926645,
+     "rmsForecastTruthM": 0.10941373762328743,
+     "rmsReferenceTruthM": 0.010515800782140528,
+     "rmsForecastReferenceM": 0.10752636961898977,
+     "varianceRatio": 0.9657979032703403
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "T",
+     "n": 100,
+     "r": 0.11034354824462377,
+     "rmsForecastTruthM": 0.41680097198957367,
+     "rmsReferenceTruthM": 0.06395127515379359,
+     "rmsForecastReferenceM": 0.41341320752930716,
+     "varianceRatio": 0.9838100350660873
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "N",
+     "n": 100,
+     "r": -0.13686924743634826,
+     "rmsForecastTruthM": 0.26624730759058407,
+     "rmsReferenceTruthM": 0.03312495828527325,
+     "rmsForecastReferenceM": 0.2725234614322424,
+     "varianceRatio": 1.0477009640335482
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "R",
+     "n": 92,
+     "r": 0.12406296875808583,
+     "rmsForecastTruthM": 0.18447392236522575,
+     "rmsReferenceTruthM": 0.01038325787169681,
+     "rmsForecastReferenceM": 0.18421810577330802,
+     "varianceRatio": 0.9972284514404288
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "T",
+     "n": 92,
+     "r": 0.03957048234341965,
+     "rmsForecastTruthM": 0.5275124360498215,
+     "rmsReferenceTruthM": 0.04583829987471412,
+     "rmsForecastReferenceM": 0.5277392192100803,
+     "varianceRatio": 1.0008600059183201
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "N",
+     "n": 92,
+     "r": -0.14688669080207314,
+     "rmsForecastTruthM": 0.28801176276709867,
+     "rmsReferenceTruthM": 0.0342786311116015,
+     "rmsForecastReferenceM": 0.295788786138821,
+     "varianceRatio": 1.0547340333628579
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "R",
+     "n": 93,
+     "r": 0.05109391238649772,
+     "rmsForecastTruthM": 0.25596924708488494,
+     "rmsReferenceTruthM": 0.008820410839579535,
+     "rmsForecastReferenceM": 0.2544179262087182,
+     "varianceRatio": 0.9879155801304287
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "T",
+     "n": 93,
+     "r": 0.24250924492049092,
+     "rmsForecastTruthM": 0.9768808983520962,
+     "rmsReferenceTruthM": 0.04959932305878114,
+     "rmsForecastReferenceM": 0.9659676421540008,
+     "varianceRatio": 0.9777817391637358
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "N",
+     "n": 93,
+     "r": -0.2265752697607066,
+     "rmsForecastTruthM": 0.35828186087377334,
+     "rmsReferenceTruthM": 0.03725779390703603,
+     "rmsForecastReferenceM": 0.3716205573010434,
+     "varianceRatio": 1.075845278201852
+    }
+   ],
+   "validation": [
+    {
+     "family": "Galileo",
+     "L": 1,
+     "axis": "R",
+     "n": 297,
+     "r": -0.8413981445392845,
+     "rmsForecastTruthM": 0.5807968942194288,
+     "rmsReferenceTruthM": 0.3788211334494817,
+     "rmsForecastReferenceM": 0.9207005726081197,
+     "varianceRatio": 2.5129755077270333
+    },
+    {
+     "family": "Galileo",
+     "L": 1,
+     "axis": "T",
+     "n": 297,
+     "r": 0.8805454724467375,
+     "rmsForecastTruthM": 1.087668807154311,
+     "rmsReferenceTruthM": 0.4359047593414981,
+     "rmsForecastReferenceM": 0.733494399274867,
+     "varianceRatio": 0.4547788473832643
+    },
+    {
+     "family": "Galileo",
+     "L": 1,
+     "axis": "N",
+     "n": 297,
+     "r": 0.4643211281182814,
+     "rmsForecastTruthM": 0.15802804636317633,
+     "rmsReferenceTruthM": 0.12833812630279762,
+     "rmsForecastReferenceM": 0.150363900122212,
+     "varianceRatio": 0.9053548271175224
+    },
+    {
+     "family": "Galileo",
+     "L": 6,
+     "axis": "R",
+     "n": 297,
+     "r": -0.30777582369044026,
+     "rmsForecastTruthM": 0.4984826404689449,
+     "rmsReferenceTruthM": 0.10932449466175638,
+     "rmsForecastReferenceM": 0.5389619743681517,
+     "varianceRatio": 1.1690044736089418
+    },
+    {
+     "family": "Galileo",
+     "L": 6,
+     "axis": "T",
+     "n": 297,
+     "r": -0.15527781004103497,
+     "rmsForecastTruthM": 3.1237570089298066,
+     "rmsReferenceTruthM": 0.1587256085124053,
+     "rmsForecastReferenceM": 3.152727753574763,
+     "varianceRatio": 1.0186346675778704
+    },
+    {
+     "family": "Galileo",
+     "L": 6,
+     "axis": "N",
+     "n": 297,
+     "r": 0.05921798119762532,
+     "rmsForecastTruthM": 0.17183387588119214,
+     "rmsReferenceTruthM": 0.09907508039604185,
+     "rmsForecastReferenceM": 0.1929983958015103,
+     "varianceRatio": 1.2615074686575236
+    },
+    {
+     "family": "Galileo",
+     "L": 12,
+     "axis": "R",
+     "n": 297,
+     "r": -0.01621665338978767,
+     "rmsForecastTruthM": 0.6344284725945066,
+     "rmsReferenceTruthM": 0.08856638848552896,
+     "rmsForecastReferenceM": 0.6436433265197622,
+     "varianceRatio": 1.029260273167874
+    },
+    {
+     "family": "Galileo",
+     "L": 12,
+     "axis": "T",
+     "n": 297,
+     "r": -0.9420837426072898,
+     "rmsForecastTruthM": 3.936641568593178,
+     "rmsReferenceTruthM": 0.2841912677854206,
+     "rmsForecastReferenceM": 4.20549791842504,
+     "varianceRatio": 1.1412560599033155
+    },
+    {
+     "family": "Galileo",
+     "L": 12,
+     "axis": "N",
+     "n": 297,
+     "r": 0.5063578937886217,
+     "rmsForecastTruthM": 0.17423874932476408,
+     "rmsReferenceTruthM": 0.1345915672662153,
+     "rmsForecastReferenceM": 0.15697117966468724,
+     "varianceRatio": 0.8116155402228488
+    },
+    {
+     "family": "Galileo",
+     "L": 24,
+     "axis": "R",
+     "n": 297,
+     "r": 0.1934861903239951,
+     "rmsForecastTruthM": 0.5902896570742638,
+     "rmsReferenceTruthM": 0.07975239848369206,
+     "rmsForecastReferenceM": 0.5819785701725532,
+     "varianceRatio": 0.9720388859979586
+    },
+    {
+     "family": "Galileo",
+     "L": 24,
+     "axis": "T",
+     "n": 297,
+     "r": -0.9564865490616075,
+     "rmsForecastTruthM": 10.588755224599197,
+     "rmsReferenceTruthM": 0.2819852126596703,
+     "rmsForecastReferenceM": 10.8586705688929,
+     "varianceRatio": 1.051631284543901
+    },
+    {
+     "family": "Galileo",
+     "L": 24,
+     "axis": "N",
+     "n": 297,
+     "r": 0.28321020916717493,
+     "rmsForecastTruthM": 0.25701020794655266,
+     "rmsReferenceTruthM": 0.1357287563291296,
+     "rmsForecastReferenceM": 0.2542504086212234,
+     "varianceRatio": 0.9786391221004773
+    },
+    {
+     "family": "Galileo",
+     "L": 48,
+     "axis": "R",
+     "n": 279,
+     "r": 0.32444074388901223,
+     "rmsForecastTruthM": 1.7653599804525155,
+     "rmsReferenceTruthM": 0.08058472719665646,
+     "rmsForecastReferenceM": 1.7426026474031624,
+     "varianceRatio": 0.9743840911658219
+    },
+    {
+     "family": "Galileo",
+     "L": 48,
+     "axis": "T",
+     "n": 279,
+     "r": -0.9659352147721333,
+     "rmsForecastTruthM": 33.255871055025096,
+     "rmsReferenceTruthM": 0.2834242880843331,
+     "rmsForecastReferenceM": 33.52962011903573,
+     "varianceRatio": 1.0165309614113527
+    },
+    {
+     "family": "Galileo",
+     "L": 48,
+     "axis": "N",
+     "n": 279,
+     "r": 0.27903511412383514,
+     "rmsForecastTruthM": 0.4365350305463023,
+     "rmsReferenceTruthM": 0.13663999563655166,
+     "rmsForecastReferenceM": 0.4196825282856164,
+     "varianceRatio": 0.9242800491222989
+    },
+    {
+     "family": "Galileo",
+     "L": 72,
+     "axis": "R",
+     "n": 241,
+     "r": -0.0018616205321744248,
+     "rmsForecastTruthM": 3.7227789222662504,
+     "rmsReferenceTruthM": 0.08066930163697542,
+     "rmsForecastReferenceM": 3.725438725090984,
+     "varianceRatio": 1.0014294445364675
+    },
+    {
+     "family": "Galileo",
+     "L": 72,
+     "axis": "T",
+     "n": 241,
+     "r": -0.9572745163584376,
+     "rmsForecastTruthM": 60.971926999957184,
+     "rmsReferenceTruthM": 0.2849873443235575,
+     "rmsForecastReferenceM": 61.24489591225193,
+     "varianceRatio": 1.008973964290872
+    },
+    {
+     "family": "Galileo",
+     "L": 72,
+     "axis": "N",
+     "n": 241,
+     "r": 0.33054095758572394,
+     "rmsForecastTruthM": 0.5843166703201713,
+     "rmsReferenceTruthM": 0.13746885652427798,
+     "rmsForecastReferenceM": 0.5544127592266332,
+     "varianceRatio": 0.9002639913429012
+    },
+    {
+     "family": "GLONASS other",
+     "L": 1,
+     "axis": "R",
+     "n": 48,
+     "r": -0.9411453783983565,
+     "rmsForecastTruthM": 0.23909776841806618,
+     "rmsReferenceTruthM": 0.21239811123564398,
+     "rmsForecastReferenceM": 0.44318177406616527,
+     "varianceRatio": 3.4356802460583813
+    },
+    {
+     "family": "GLONASS other",
+     "L": 1,
+     "axis": "T",
+     "n": 48,
+     "r": -0.5901739321206697,
+     "rmsForecastTruthM": 0.520343686838017,
+     "rmsReferenceTruthM": 0.24922774254063834,
+     "rmsForecastReferenceM": 0.6901504041344475,
+     "varianceRatio": 1.7591663687617622
+    },
+    {
+     "family": "GLONASS other",
+     "L": 1,
+     "axis": "N",
+     "n": 48,
+     "r": 0.9174910421291693,
+     "rmsForecastTruthM": 0.13218170988426114,
+     "rmsReferenceTruthM": 0.11666247131410604,
+     "rmsForecastReferenceM": 0.04990817941411725,
+     "varianceRatio": 0.14256099709146242
+    },
+    {
+     "family": "GLONASS other",
+     "L": 6,
+     "axis": "R",
+     "n": 48,
+     "r": -0.9742040786089123,
+     "rmsForecastTruthM": 0.30972057114386425,
+     "rmsReferenceTruthM": 0.10753017905141601,
+     "rmsForecastReferenceM": 0.4108016748061611,
+     "varianceRatio": 1.7592368284387032
+    },
+    {
+     "family": "GLONASS other",
+     "L": 6,
+     "axis": "T",
+     "n": 48,
+     "r": -0.7436426199112409,
+     "rmsForecastTruthM": 0.875386576610373,
+     "rmsReferenceTruthM": 0.2583536978182878,
+     "rmsForecastReferenceM": 1.0758515901704777,
+     "varianceRatio": 1.510445176803441
+    },
+    {
+     "family": "GLONASS other",
+     "L": 6,
+     "axis": "N",
+     "n": 48,
+     "r": 0.9425484084318331,
+     "rmsForecastTruthM": 0.13741474085065963,
+     "rmsReferenceTruthM": 0.13812176555558628,
+     "rmsForecastReferenceM": 0.04328614991640387,
+     "varianceRatio": 0.09922732236648217
+    },
+    {
+     "family": "GLONASS other",
+     "L": 12,
+     "axis": "R",
+     "n": 48,
+     "r": -0.0940596206315227,
+     "rmsForecastTruthM": 0.43711570186559023,
+     "rmsReferenceTruthM": 0.039990733030980406,
+     "rmsForecastReferenceM": 0.44023464156554865,
+     "varianceRatio": 1.0143214573584252
+    },
+    {
+     "family": "GLONASS other",
+     "L": 12,
+     "axis": "T",
+     "n": 48,
+     "r": -0.6369556146197801,
+     "rmsForecastTruthM": 1.1808485693656992,
+     "rmsReferenceTruthM": 0.12571542093718235,
+     "rmsForecastReferenceM": 1.267324970311225,
+     "varianceRatio": 1.151827831987608
+    },
+    {
+     "family": "GLONASS other",
+     "L": 12,
+     "axis": "N",
+     "n": 48,
+     "r": 0.911945995545907,
+     "rmsForecastTruthM": 0.12350680933484696,
+     "rmsReferenceTruthM": 0.10339676395841729,
+     "rmsForecastReferenceM": 0.04892319118050541,
+     "varianceRatio": 0.1569089624107583
+    },
+    {
+     "family": "GLONASS other",
+     "L": 24,
+     "axis": "R",
+     "n": 48,
+     "r": -0.12868596272157495,
+     "rmsForecastTruthM": 0.6361203299182294,
+     "rmsReferenceTruthM": 0.03703611212972237,
+     "rmsForecastReferenceM": 0.6401613755811792,
+     "varianceRatio": 1.0127456430284243
+    },
+    {
+     "family": "GLONASS other",
+     "L": 24,
+     "axis": "T",
+     "n": 48,
+     "r": -0.6281969357707659,
+     "rmsForecastTruthM": 2.5447831047361764,
+     "rmsReferenceTruthM": 0.13290211581471228,
+     "rmsForecastReferenceM": 2.632354082703479,
+     "varianceRatio": 1.0700081058839395
+    },
+    {
+     "family": "GLONASS other",
+     "L": 24,
+     "axis": "N",
+     "n": 48,
+     "r": 0.8337334874810978,
+     "rmsForecastTruthM": 0.14010967898001359,
+     "rmsReferenceTruthM": 0.1113607315405261,
+     "rmsForecastReferenceM": 0.07360260819053321,
+     "varianceRatio": 0.2759625393677817
+    },
+    {
+     "family": "GLONASS other",
+     "L": 48,
+     "axis": "R",
+     "n": 45,
+     "r": -0.07100434053293796,
+     "rmsForecastTruthM": 1.006812411182761,
+     "rmsReferenceTruthM": 0.03151729707188846,
+     "rmsForecastReferenceM": 1.0079021025272454,
+     "varianceRatio": 1.0021658077090303
+    },
+    {
+     "family": "GLONASS other",
+     "L": 48,
+     "axis": "T",
+     "n": 45,
+     "r": -0.7004962514669636,
+     "rmsForecastTruthM": 6.586581289066265,
+     "rmsReferenceTruthM": 0.1351473923257413,
+     "rmsForecastReferenceM": 6.682147456707741,
+     "varianceRatio": 1.0292289607521008
+    },
+    {
+     "family": "GLONASS other",
+     "L": 48,
+     "axis": "N",
+     "n": 45,
+     "r": 0.668646526004211,
+     "rmsForecastTruthM": 0.14464121764708804,
+     "rmsReferenceTruthM": 0.1099889392214363,
+     "rmsForecastReferenceM": 0.10425997582976818,
+     "varianceRatio": 0.5195784157766135
+    },
+    {
+     "family": "GLONASS other",
+     "L": 72,
+     "axis": "R",
+     "n": 39,
+     "r": -0.22925226831714787,
+     "rmsForecastTruthM": 1.424459565937841,
+     "rmsReferenceTruthM": 0.04063097013000213,
+     "rmsForecastReferenceM": 1.431938330196055,
+     "varianceRatio": 1.0105280586638246
+    },
+    {
+     "family": "GLONASS other",
+     "L": 72,
+     "axis": "T",
+     "n": 39,
+     "r": -0.7019628473081385,
+     "rmsForecastTruthM": 12.403691881642288,
+     "rmsReferenceTruthM": 0.13124059931473878,
+     "rmsForecastReferenceM": 12.496443163157204,
+     "varianceRatio": 1.01501134763105
+    },
+    {
+     "family": "GLONASS other",
+     "L": 72,
+     "axis": "N",
+     "n": 39,
+     "r": 0.6403097037463537,
+     "rmsForecastTruthM": 0.19197960021198052,
+     "rmsReferenceTruthM": 0.10351752440166195,
+     "rmsForecastReferenceM": 0.14510323741244574,
+     "varianceRatio": 0.5712734470217288
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 1,
+     "axis": "R",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 1,
+     "axis": "T",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 1,
+     "axis": "N",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 6,
+     "axis": "R",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 6,
+     "axis": "T",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 6,
+     "axis": "N",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 12,
+     "axis": "R",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 12,
+     "axis": "T",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 12,
+     "axis": "N",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 24,
+     "axis": "R",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 24,
+     "axis": "T",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 24,
+     "axis": "N",
+     "n": 16
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 48,
+     "axis": "R",
+     "n": 15
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 48,
+     "axis": "T",
+     "n": 15
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 48,
+     "axis": "N",
+     "n": 15
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 72,
+     "axis": "R",
+     "n": 13
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 72,
+     "axis": "T",
+     "n": 13
+    },
+    {
+     "family": "GLONASS plane 2",
+     "L": 72,
+     "axis": "N",
+     "n": 13
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "R",
+     "n": 15
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "T",
+     "n": 15
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "N",
+     "n": 15
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "R",
+     "n": 30,
+     "r": -0.7128385249212639,
+     "rmsForecastTruthM": 0.03755629808304981,
+     "rmsReferenceTruthM": 0.023150575365500713,
+     "rmsForecastReferenceM": 0.05387673542650146,
+     "varianceRatio": 2.0579602887974366
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "T",
+     "n": 30,
+     "r": 0.30519220608456293,
+     "rmsForecastTruthM": 0.19103120305503934,
+     "rmsReferenceTruthM": 0.05436441728264293,
+     "rmsForecastReferenceM": 0.1931905489924938,
+     "varianceRatio": 1.0227350309888508
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "N",
+     "n": 30,
+     "r": 0.11018910189580883,
+     "rmsForecastTruthM": 0.2941971294614685,
+     "rmsReferenceTruthM": 0.02999483508933932,
+     "rmsForecastReferenceM": 0.29270824254102956,
+     "varianceRatio": 0.989903916411107
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "R",
+     "n": 31,
+     "r": -0.43451978925858753,
+     "rmsForecastTruthM": 0.047040336427712943,
+     "rmsReferenceTruthM": 0.011611499927627698,
+     "rmsForecastReferenceM": 0.051825318954065364,
+     "varianceRatio": 1.2137888088707394
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "T",
+     "n": 31,
+     "r": -0.10064577231924007,
+     "rmsForecastTruthM": 0.26329818777025576,
+     "rmsReferenceTruthM": 0.042033512036269274,
+     "rmsForecastReferenceM": 0.2657872599145705,
+     "varianceRatio": 1.0189962362111415
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "N",
+     "n": 31,
+     "r": 0.26068584617799573,
+     "rmsForecastTruthM": 0.2519796175224067,
+     "rmsReferenceTruthM": 0.018592343955122513,
+     "rmsForecastReferenceM": 0.24629674726087605,
+     "varianceRatio": 0.9554028399276697
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "R",
+     "n": 32,
+     "r": -0.12818089320169876,
+     "rmsForecastTruthM": 0.08404087849232604,
+     "rmsReferenceTruthM": 0.011974832654285384,
+     "rmsForecastReferenceM": 0.08554379027239707,
+     "varianceRatio": 1.0360860136446457
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "T",
+     "n": 32,
+     "r": 0.29921381786075835,
+     "rmsForecastTruthM": 0.3020253180647754,
+     "rmsReferenceTruthM": 0.06029804876021437,
+     "rmsForecastReferenceM": 0.2985799627013401,
+     "varianceRatio": 0.9773151209249338
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "N",
+     "n": 32,
+     "r": -0.6107519778785021,
+     "rmsForecastTruthM": 0.3131442436029758,
+     "rmsReferenceTruthM": 0.03644724156070709,
+     "rmsForecastReferenceM": 0.33674964437481303,
+     "varianceRatio": 1.1564461808120334
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "R",
+     "n": 31,
+     "r": 0.3014824447031466,
+     "rmsForecastTruthM": 0.12722093733156337,
+     "rmsReferenceTruthM": 0.01008794866882517,
+     "rmsForecastReferenceM": 0.12537120672774799,
+     "varianceRatio": 0.9711323693993462
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "T",
+     "n": 31,
+     "r": -0.15735922635466135,
+     "rmsForecastTruthM": 0.41636307227864705,
+     "rmsReferenceTruthM": 0.06564935518769269,
+     "rmsForecastReferenceM": 0.43540282952160464,
+     "varianceRatio": 1.0935485904543893
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "N",
+     "n": 31,
+     "r": -0.5427970126137454,
+     "rmsForecastTruthM": 0.23378172802594446,
+     "rmsReferenceTruthM": 0.033451610121130404,
+     "rmsForecastReferenceM": 0.25380111991130716,
+     "varianceRatio": 1.178598650046036
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "R",
+     "n": 28,
+     "r": 0.11925508925851758,
+     "rmsForecastTruthM": 0.1522277249433044,
+     "rmsReferenceTruthM": 0.008181383649107903,
+     "rmsForecastReferenceM": 0.15101324101308755,
+     "varianceRatio": 0.9841075032839205
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "T",
+     "n": 28,
+     "r": 0.024210102140100147,
+     "rmsForecastTruthM": 0.8865638362009975,
+     "rmsReferenceTruthM": 0.06069908741749493,
+     "rmsForecastReferenceM": 0.8900316718657967,
+     "varianceRatio": 1.0078383931830688
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "N",
+     "n": 28,
+     "r": -0.28470919832392927,
+     "rmsForecastTruthM": 0.24982583205849374,
+     "rmsReferenceTruthM": 0.03286299324195121,
+     "rmsForecastReferenceM": 0.26203997458422995,
+     "varianceRatio": 1.1001715554326004
+    }
+   ]
+  },
+  "R2-M": {
+   "calibration": [
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "R",
+     "n": 37,
+     "r": -0.25666886454464055,
+     "rmsForecastTruthM": 0.24403897252020013,
+     "rmsReferenceTruthM": 0.11915829602687364,
+     "rmsForecastReferenceM": 0.31995494603943975,
+     "varianceRatio": 1.7189343116369846
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "T",
+     "n": 37,
+     "r": 0.21395667469700522,
+     "rmsForecastTruthM": 1.192241553003014,
+     "rmsReferenceTruthM": 0.2972230949096949,
+     "rmsForecastReferenceM": 1.0923508894749479,
+     "varianceRatio": 0.8394519165770894
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "N",
+     "n": 37,
+     "r": -0.09149111737245676,
+     "rmsForecastTruthM": 0.9766723933190553,
+     "rmsReferenceTruthM": 0.1525965159940749,
+     "rmsForecastReferenceM": 0.9999653236111427,
+     "varianceRatio": 1.04826734168964
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "R",
+     "n": 186,
+     "r": 0.3230723973079347,
+     "rmsForecastTruthM": 0.8101325312602369,
+     "rmsReferenceTruthM": 0.11659873490169231,
+     "rmsForecastReferenceM": 0.781376023044992,
+     "varianceRatio": 0.9302678615198481
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "T",
+     "n": 186,
+     "r": 0.15009917402591472,
+     "rmsForecastTruthM": 7.299792566002388,
+     "rmsReferenceTruthM": 0.3703243668349054,
+     "rmsForecastReferenceM": 7.237105600040046,
+     "varianceRatio": 0.9828987458891564
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "N",
+     "n": 186,
+     "r": 0.0026137893056873986,
+     "rmsForecastTruthM": 1.0181235250550664,
+     "rmsReferenceTruthM": 0.14209187903908604,
+     "rmsForecastReferenceM": 1.0256685893586484,
+     "varianceRatio": 1.0148764298826891
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "R",
+     "n": 217,
+     "r": 0.3012868745802994,
+     "rmsForecastTruthM": 0.8777253640393101,
+     "rmsReferenceTruthM": 0.08123533100341604,
+     "rmsForecastReferenceM": 0.8553223105255608,
+     "varianceRatio": 0.9496034938451097
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "T",
+     "n": 217,
+     "r": -0.04165798194809566,
+     "rmsForecastTruthM": 8.89628933062785,
+     "rmsReferenceTruthM": 0.30366514177699094,
+     "rmsForecastReferenceM": 8.91308523349609,
+     "varianceRatio": 1.0037794989125643
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "N",
+     "n": 217,
+     "r": 0.07014312574184847,
+     "rmsForecastTruthM": 1.045677291338142,
+     "rmsReferenceTruthM": 0.10961615054597555,
+     "rmsForecastReferenceM": 1.0436691477832558,
+     "varianceRatio": 0.9961628404323806
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "R",
+     "n": 228,
+     "r": -0.04973478162699671,
+     "rmsForecastTruthM": 0.8021404177059909,
+     "rmsReferenceTruthM": 0.22620687453008936,
+     "rmsForecastReferenceM": 0.8507051520079293,
+     "varianceRatio": 1.124753430109884
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "T",
+     "n": 228,
+     "r": 0.1353350180453214,
+     "rmsForecastTruthM": 18.52058000796457,
+     "rmsReferenceTruthM": 2.434866643913885,
+     "rmsForecastReferenceM": 18.37297236247231,
+     "varianceRatio": 0.9841236684326601
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "N",
+     "n": 228,
+     "r": 0.11912297754930441,
+     "rmsForecastTruthM": 0.997448862290946,
+     "rmsReferenceTruthM": 0.2864571581149235,
+     "rmsForecastReferenceM": 1.0095419800506935,
+     "varianceRatio": 1.0243950882878248
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "R",
+     "n": 206,
+     "r": -0.3987482473672838,
+     "rmsForecastTruthM": 1.0012202243959358,
+     "rmsReferenceTruthM": 0.36953020926372476,
+     "rmsForecastReferenceM": 1.197467546380991,
+     "varianceRatio": 1.430435490228276
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "T",
+     "n": 206,
+     "r": 0.10011369463843219,
+     "rmsForecastTruthM": 45.678991726707075,
+     "rmsReferenceTruthM": 3.107033390784688,
+     "rmsForecastReferenceM": 45.4329802077781,
+     "varianceRatio": 0.989257685318563
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "N",
+     "n": 206,
+     "r": -0.024156194212071127,
+     "rmsForecastTruthM": 1.2489387172633202,
+     "rmsReferenceTruthM": 0.23793833660787453,
+     "rmsForecastReferenceM": 1.2775624556585397,
+     "varianceRatio": 1.0463621534675438
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "R",
+     "n": 208,
+     "r": 0.31059593851692163,
+     "rmsForecastTruthM": 1.2128110750936778,
+     "rmsReferenceTruthM": 0.31142265127469776,
+     "rmsForecastReferenceM": 1.159703110141294,
+     "varianceRatio": 0.9143391914498991
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "T",
+     "n": 208,
+     "r": 0.08984253664781648,
+     "rmsForecastTruthM": 85.17475546024168,
+     "rmsReferenceTruthM": 2.1083025472360144,
+     "rmsForecastReferenceM": 84.99775252124829,
+     "varianceRatio": 0.9958480885139139
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "N",
+     "n": 208,
+     "r": -0.01325299652025396,
+     "rmsForecastTruthM": 1.630386568272585,
+     "rmsReferenceTruthM": 0.19619226668612874,
+     "rmsForecastReferenceM": 1.6452392323760445,
+     "varianceRatio": 1.018302797092718
+    }
+   ],
+   "validation": [
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "R",
+     "n": 5
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "T",
+     "n": 5
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "N",
+     "n": 5
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "R",
+     "n": 59,
+     "r": 0.37557561025814484,
+     "rmsForecastTruthM": 0.570894766893984,
+     "rmsReferenceTruthM": 0.11611372760205008,
+     "rmsForecastReferenceM": 0.531071417978413,
+     "varianceRatio": 0.8653538553580024
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "T",
+     "n": 59,
+     "r": 0.5502205717589798,
+     "rmsForecastTruthM": 5.155367368180477,
+     "rmsReferenceTruthM": 0.34304077422542284,
+     "rmsForecastReferenceM": 4.957206879353191,
+     "varianceRatio": 0.9246020476272818
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "N",
+     "n": 59,
+     "r": 0.0774249896643218,
+     "rmsForecastTruthM": 0.893193368967119,
+     "rmsReferenceTruthM": 0.1422520136656108,
+     "rmsForecastReferenceM": 0.8954296645943847,
+     "varianceRatio": 1.005013685101103
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "R",
+     "n": 79,
+     "r": 0.45304287884994177,
+     "rmsForecastTruthM": 0.79245612681961,
+     "rmsReferenceTruthM": 0.08795362790182776,
+     "rmsForecastReferenceM": 0.7621816672510158,
+     "varianceRatio": 0.9250528425665101
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "T",
+     "n": 79,
+     "r": -0.2603493529148659,
+     "rmsForecastTruthM": 6.367944800406499,
+     "rmsReferenceTruthM": 0.2369152012148622,
+     "rmsForecastReferenceM": 6.440159755473528,
+     "varianceRatio": 1.0228093773087168
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "N",
+     "n": 79,
+     "r": -0.12619492285273587,
+     "rmsForecastTruthM": 0.7643779271470948,
+     "rmsReferenceTruthM": 0.12958063826533261,
+     "rmsForecastReferenceM": 0.791113024070151,
+     "varianceRatio": 1.0711759015636062
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "R",
+     "n": 79,
+     "r": -0.1736422866508525,
+     "rmsForecastTruthM": 0.7179954145397431,
+     "rmsReferenceTruthM": 0.1167652370819035,
+     "rmsForecastReferenceM": 0.7466837705522636,
+     "varianceRatio": 1.081508862084877
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "T",
+     "n": 79,
+     "r": -0.1015512000769889,
+     "rmsForecastTruthM": 12.853944028179917,
+     "rmsReferenceTruthM": 0.6650015931163455,
+     "rmsForecastReferenceM": 12.946876561522936,
+     "varianceRatio": 1.01451204064516
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "N",
+     "n": 79,
+     "r": -0.1760633653157012,
+     "rmsForecastTruthM": 0.8357207456165757,
+     "rmsReferenceTruthM": 0.11243850895767042,
+     "rmsForecastReferenceM": 0.8656619822931295,
+     "varianceRatio": 1.072937250492664
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "R",
+     "n": 74,
+     "r": -0.11964912177110026,
+     "rmsForecastTruthM": 0.8894910316851545,
+     "rmsReferenceTruthM": 0.08652356693966502,
+     "rmsForecastReferenceM": 0.9075450309849382,
+     "varianceRatio": 1.0410059678182437
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "T",
+     "n": 74,
+     "r": 0.143261552266145,
+     "rmsForecastTruthM": 29.549748800040156,
+     "rmsReferenceTruthM": 0.49858528845611344,
+     "rmsForecastReferenceM": 29.483895163240124,
+     "varianceRatio": 0.9955478296903489
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "N",
+     "n": 74,
+     "r": -0.1951104422008503,
+     "rmsForecastTruthM": 1.186509237542464,
+     "rmsReferenceTruthM": 0.1821987204331093,
+     "rmsForecastReferenceM": 1.233108442186665,
+     "varianceRatio": 1.0800908689995332
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "R",
+     "n": 65,
+     "r": -0.19982990531749845,
+     "rmsForecastTruthM": 0.9612985426407238,
+     "rmsReferenceTruthM": 0.1517719748961868,
+     "rmsForecastReferenceM": 0.9993913475467441,
+     "varianceRatio": 1.080823060955397
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "T",
+     "n": 65,
+     "r": 0.19477682463389825,
+     "rmsForecastTruthM": 54.21625943628368,
+     "rmsReferenceTruthM": 0.41497651069808955,
+     "rmsForecastReferenceM": 54.141979696515236,
+     "varianceRatio": 0.9972617492779726
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "N",
+     "n": 65,
+     "r": 0.16590660827894216,
+     "rmsForecastTruthM": 1.4430522764270663,
+     "rmsReferenceTruthM": 0.15629777318809165,
+     "rmsForecastReferenceM": 1.4224799633317229,
+     "varianceRatio": 0.971691015160163
+    }
+   ]
+  },
+  "R2-O": {
+   "calibration": [
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "R",
+     "n": 21,
+     "r": -0.09374159162546371,
+     "rmsForecastTruthM": 0.28671986158148743,
+     "rmsReferenceTruthM": 0.13682987776622246,
+     "rmsForecastReferenceM": 0.37423323352010146,
+     "varianceRatio": 1.7036059473741945
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "T",
+     "n": 21,
+     "r": 0.17188699678061634,
+     "rmsForecastTruthM": 1.015767510042268,
+     "rmsReferenceTruthM": 0.2978368299975464,
+     "rmsForecastReferenceM": 0.9114753558027929,
+     "varianceRatio": 0.8051952914262605
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "N",
+     "n": 21,
+     "r": -0.1498003350851161,
+     "rmsForecastTruthM": 0.9625202841440742,
+     "rmsReferenceTruthM": 0.1436653835583996,
+     "rmsForecastReferenceM": 0.9815250113376331,
+     "varianceRatio": 1.0398793653512894
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "R",
+     "n": 87,
+     "r": 0.2914982280209854,
+     "rmsForecastTruthM": 0.667137272151407,
+     "rmsReferenceTruthM": 0.1030183944064772,
+     "rmsForecastReferenceM": 0.6450739262977138,
+     "varianceRatio": 0.9349503891405289
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "T",
+     "n": 87,
+     "r": 0.23472008956902438,
+     "rmsForecastTruthM": 6.733267323320072,
+     "rmsReferenceTruthM": 0.3267657469333863,
+     "rmsForecastReferenceM": 6.640049246353022,
+     "varianceRatio": 0.9725028583788445
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "N",
+     "n": 87,
+     "r": 0.07089704548571349,
+     "rmsForecastTruthM": 1.1004551461728793,
+     "rmsReferenceTruthM": 0.13743982387545745,
+     "rmsForecastReferenceM": 1.098538458485168,
+     "varianceRatio": 0.9965195882355369
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "R",
+     "n": 105,
+     "r": 0.31042037698279396,
+     "rmsForecastTruthM": 0.8248453798007238,
+     "rmsReferenceTruthM": 0.0909337860188402,
+     "rmsForecastReferenceM": 0.8011398892426094,
+     "varianceRatio": 0.9433473197298106
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "T",
+     "n": 105,
+     "r": -0.05932120701591937,
+     "rmsForecastTruthM": 8.23397363316651,
+     "rmsReferenceTruthM": 0.27323924091731133,
+     "rmsForecastReferenceM": 8.25550073561598,
+     "varianceRatio": 1.0052356842277805
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "N",
+     "n": 105,
+     "r": 0.18343923560048184,
+     "rmsForecastTruthM": 1.2097889473863366,
+     "rmsReferenceTruthM": 0.11039204460793811,
+     "rmsForecastReferenceM": 1.194808366292711,
+     "varianceRatio": 0.9753877230972163
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "R",
+     "n": 111,
+     "r": 0.03150587469334546,
+     "rmsForecastTruthM": 0.8348957364490938,
+     "rmsReferenceTruthM": 0.2450237801543541,
+     "rmsForecastReferenceM": 0.8670996130574943,
+     "varianceRatio": 1.078632491474654
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "T",
+     "n": 111,
+     "r": 0.28229390418566686,
+     "rmsForecastTruthM": 16.849157134824857,
+     "rmsReferenceTruthM": 2.643956019322084,
+     "rmsForecastReferenceM": 16.31197956255212,
+     "varianceRatio": 0.9372532956964449
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "N",
+     "n": 111,
+     "r": 0.015557976402136188,
+     "rmsForecastTruthM": 1.036378523713861,
+     "rmsReferenceTruthM": 0.21815193121304316,
+     "rmsForecastReferenceM": 1.061953056982287,
+     "varianceRatio": 1.049962599261282
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "R",
+     "n": 105,
+     "r": -0.5741724353293679,
+     "rmsForecastTruthM": 0.9957697686856812,
+     "rmsReferenceTruthM": 0.48498904909906837,
+     "rmsForecastReferenceM": 1.334445703324101,
+     "varianceRatio": 1.7959074050993409
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "T",
+     "n": 105,
+     "r": 0.10380482533476326,
+     "rmsForecastTruthM": 43.528628179721515,
+     "rmsReferenceTruthM": 4.13926589832537,
+     "rmsForecastReferenceM": 43.24258145096019,
+     "varianceRatio": 0.9869002599865565
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "N",
+     "n": 105,
+     "r": -0.0672809128203687,
+     "rmsForecastTruthM": 1.2519567629799166,
+     "rmsReferenceTruthM": 0.24923320352527015,
+     "rmsForecastReferenceM": 1.2905640487810734,
+     "varianceRatio": 1.0626260652350032
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "R",
+     "n": 103,
+     "r": 0.46904780753798325,
+     "rmsForecastTruthM": 1.3734554442941853,
+     "rmsReferenceTruthM": 0.4017889380593951,
+     "rmsForecastReferenceM": 1.2420803846195128,
+     "varianceRatio": 0.8178435937779706
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "T",
+     "n": 103,
+     "r": 0.07104930994727714,
+     "rmsForecastTruthM": 84.11310330554572,
+     "rmsReferenceTruthM": 1.7856187651372861,
+     "rmsForecastReferenceM": 83.99906651004113,
+     "varianceRatio": 0.9972903272373874
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "N",
+     "n": 103,
+     "r": -0.06146947418363733,
+     "rmsForecastTruthM": 1.6850837512843375,
+     "rmsReferenceTruthM": 0.24260844332232773,
+     "rmsForecastReferenceM": 1.7171186383938797,
+     "varianceRatio": 1.0383831277492195
+    }
+   ],
+   "validation": [
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "R",
+     "n": 5
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "T",
+     "n": 5
+    },
+    {
+     "family": "spheres",
+     "L": 1,
+     "axis": "N",
+     "n": 5
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "R",
+     "n": 59,
+     "r": 0.3723380919371071,
+     "rmsForecastTruthM": 0.568912496531029,
+     "rmsReferenceTruthM": 0.11611372760205008,
+     "rmsForecastReferenceM": 0.5295884180165025,
+     "varianceRatio": 0.8665348034079084
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "T",
+     "n": 59,
+     "r": 0.5430394686789214,
+     "rmsForecastTruthM": 5.287075329736968,
+     "rmsReferenceTruthM": 0.34304077422542284,
+     "rmsForecastReferenceM": 5.089592164418089,
+     "varianceRatio": 0.9266910526070713
+    },
+    {
+     "family": "spheres",
+     "L": 6,
+     "axis": "N",
+     "n": 59,
+     "r": 0.07743361787653516,
+     "rmsForecastTruthM": 0.893180729572998,
+     "rmsReferenceTruthM": 0.1422520136656108,
+     "rmsForecastReferenceM": 0.8954159497034003,
+     "varianceRatio": 1.0050113418700797
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "R",
+     "n": 79,
+     "r": 0.44758099258624845,
+     "rmsForecastTruthM": 0.7962965897771311,
+     "rmsReferenceTruthM": 0.08795362790182776,
+     "rmsForecastReferenceM": 0.7666774336334339,
+     "varianceRatio": 0.9269912807896339
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "T",
+     "n": 79,
+     "r": -0.19623445841129533,
+     "rmsForecastTruthM": 6.951160607011016,
+     "rmsReferenceTruthM": 0.2369152012148622,
+     "rmsForecastReferenceM": 7.009217047786404,
+     "varianceRatio": 1.0167738566891853
+    },
+    {
+     "family": "spheres",
+     "L": 12,
+     "axis": "N",
+     "n": 79,
+     "r": -0.12618805174136413,
+     "rmsForecastTruthM": 0.7643041153400171,
+     "rmsReferenceTruthM": 0.12958063826533261,
+     "rmsForecastReferenceM": 0.7910391277541883,
+     "varianceRatio": 1.0711826645752642
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "R",
+     "n": 79,
+     "r": -0.17599428681087562,
+     "rmsForecastTruthM": 0.7107922770709151,
+     "rmsReferenceTruthM": 0.1167652370819035,
+     "rmsForecastReferenceM": 0.7399581534230647,
+     "varianceRatio": 1.0837495221003512
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "T",
+     "n": 79,
+     "r": -0.05585863708380412,
+     "rmsForecastTruthM": 14.178414130555348,
+     "rmsReferenceTruthM": 0.6650015931163455,
+     "rmsForecastReferenceM": 14.241407216540516,
+     "varianceRatio": 1.008905512418001
+    },
+    {
+     "family": "spheres",
+     "L": 24,
+     "axis": "N",
+     "n": 79,
+     "r": -0.17582984749220462,
+     "rmsForecastTruthM": 0.8357950456489291,
+     "rmsReferenceTruthM": 0.11243850895767042,
+     "rmsForecastReferenceM": 0.8657120273610961,
+     "varianceRatio": 1.0728705336238926
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "R",
+     "n": 74,
+     "r": -0.1431371343692269,
+     "rmsForecastTruthM": 0.9142357705067964,
+     "rmsReferenceTruthM": 0.08652356693966502,
+     "rmsForecastReferenceM": 0.9340717302623203,
+     "varianceRatio": 1.0438642820437816
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "T",
+     "n": 74,
+     "r": 0.1129036805916368,
+     "rmsForecastTruthM": 34.355691319270505,
+     "rmsReferenceTruthM": 0.49858528845611344,
+     "rmsForecastReferenceM": 34.304031984830914,
+     "varianceRatio": 0.9969949377597649
+    },
+    {
+     "family": "spheres",
+     "L": 48,
+     "axis": "N",
+     "n": 74,
+     "r": -0.19528898007803308,
+     "rmsForecastTruthM": 1.1862660435603902,
+     "rmsReferenceTruthM": 0.1821987204331093,
+     "rmsForecastReferenceM": 1.2329078326206537,
+     "varianceRatio": 1.0801822218601573
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "R",
+     "n": 65,
+     "r": -0.20285208475457245,
+     "rmsForecastTruthM": 1.0092970107590338,
+     "rmsReferenceTruthM": 0.1517719748961868,
+     "rmsForecastReferenceM": 1.0477145100111087,
+     "varianceRatio": 1.0775760819802653
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "T",
+     "n": 65,
+     "r": 0.21948223344533768,
+     "rmsForecastTruthM": 63.80253019701867,
+     "rmsReferenceTruthM": 0.41497651069808955,
+     "rmsForecastReferenceM": 63.7177376846896,
+     "varianceRatio": 0.9973437991207909
+    },
+    {
+     "family": "spheres",
+     "L": 72,
+     "axis": "N",
+     "n": 65,
+     "r": 0.1654594982049249,
+     "rmsForecastTruthM": 1.4435285722548055,
+     "rmsReferenceTruthM": 0.15629777318809165,
+     "rmsForecastReferenceM": 1.4230199078467518,
+     "varianceRatio": 0.9717872187958273
+    }
+   ]
+  }
+ },
+ "opened": {
+  "files": 411,
+  "sha256": "af81be597eb1ee0c58330bbf61d0c0dbde82122f231d6be2b8659d9957f8dca3",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/precheck-P-REF-family.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/*",
+    "files": 1,
+    "labels": [
+     "GSC rows"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/gsc/*",
+    "files": 123,
+    "labels": [
+     "GSC NAGU"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/iac/*",
+    "files": 273,
+    "labels": [
+     "IAC bulletin"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/rows/*",
+    "files": 12,
+    "labels": [
+     "C3 rows"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/gfz-kp/*",
+    "files": 1,
+    "labels": [
+     "GFZ Ap, lines to 2026-05-31"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/igs-metadata/*",
+    "files": 1,
+    "labels": [
+     "IGS SINEX"
+    ]
+   }
+  ]
+ }
+}
