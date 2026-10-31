@@ -11,6 +11,7 @@ import { config, store, args, registered, Opened, writeReceipt, c2Results, root,
 import { pC2, AXES } from './lib/model.mjs';
 import { stormDays, isStorm } from './lib/windows.mjs';
 import { parseSinex, loadNotices } from './lib/notices.mjs';
+import { openGfz } from './lib/gfz.mjs';
 
 registered();
 const opened = new Opened();
@@ -30,19 +31,9 @@ if (args.run) {
   const { windowOf } = await import('./lib/chain.mjs');
   const { settingsFor } = await import('./lib/open.mjs');
   const { windowTermsRef } = await import('./lib/terms.mjs');
-  const SRC = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs'));
   const S = await openSession(opened, { fromMs: Date.parse('2025-09-20T00:00:00Z'), toMs: Date.parse('2026-04-15T00:00:00Z'), allowedToMs: Date.parse('2026-06-15T00:00:00Z') });
   const FZ = JSON.parse(fs.readFileSync(path.join(c2Results, 'frozen-constants.json'))).classes.R3.parameters;
-  const IDENTITY = Array.from({ length: 36 }, (_, i) => (i % 7 === 0 ? 1 : 0));
-  /** GFZ's state at an epoch: the daily file that holds it, read through the truth gate; nothing else of E14's. */
-  const gfzCache = new Map();
-  const gfzAt = (norad, epochIso) => {
-    const t = Date.parse(/Z$/.test(epochIso) ? epochIso : `${epochIso}Z`) + 18e3, d = new Date(t), y = d.getUTCFullYear(), doy = Math.floor((Date.UTC(y, d.getUTCMonth(), d.getUTCDate()) - Date.UTC(y, 0, 1)) / DAY) + 1;
-    const name = `${R.gfz.prefix}${y}${String(doy).padStart(3, '0')}0000_01D_05M_ORB`, file = path.join(R.gfz.root, name, `${norad}.oem`), key = file;
-    if (!gfzCache.has(key)) { if (gfzCache.size > 32) gfzCache.delete(gfzCache.keys().next().value); if (!fs.existsSync(file)) gfzCache.set(key, null); else { opened.add(file, 'GFZ0MGXRAP'); gfzCache.set(key, new Map(SRC.readReference(file).lines.map((l) => [Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`), l]))); } }
-    const m = gfzCache.get(key), l = m?.get(t - 18e3);
-    return l ? { state: [...l.r, ...l.v].map((x) => x * 1000), covariance: IDENTITY } : null;
-  };
+  const gfzAt = openGfz(opened);
   const fitInput = (lines) => ({ points: lines.map((l) => ({ time: l.epoch, position: l.r.map((x) => x * 1000) })), reference: { epoch: lines[0].epoch, state: [...lines[0].r, ...lines[0].v].map((x) => x * 1000) } });
   const tasks = [];
   for (let r = a; r < b; r += 1) for (const norad of pop) tasks.push({ round: r, norad, E: orderOf(norad)[r] });

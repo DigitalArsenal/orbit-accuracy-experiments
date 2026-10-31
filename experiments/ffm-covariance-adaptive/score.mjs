@@ -2,6 +2,7 @@
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref                 P-REF: k_ref per class, axis and lead group; corr(forecast - truth, reference - truth)
 //   node experiments/ffm-covariance-adaptive/score.mjs --fit --class R3       the constants by calibration log score; C3-0, C3-a, C3-b, C3-ab; validation cells and contrasts (needs --pref)
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref2                P-REF's second check: reference-based e^u against truth-based, at the fitted constants
+//   node experiments/ffm-covariance-adaptive/score.mjs --pref-gfz             C3-A5: e^u against the registered reference and against GFZ, GNSS calibration windows
 //   node experiments/ffm-covariance-adaptive/score.mjs --extract --class R3   C3-ab's primary samples for P7 and P8 (under <store>/extract/)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -162,6 +163,46 @@ if (args.pref2) {
   }
   out.pass = Object.values(out.classes).every((c) => !c.stops.length);
   console.log(writeReceipt('precheck-P-REF2', out, opened));
+  process.exit(0);
+}
+
+if (args['pref-gfz']) {
+  // C3-A5: on calibration windows of R3's GNSS satellites, e^u_hat with the registered reference and with GFZ's positions in its place, on the same history, at the fitted constants. a and c as registered; only the error changes.
+  const R = config.pRefGfz, fit = JSON.parse(fs.readFileSync(pathOf('fit-R3'))), ab = fit.arms['C3-ab'], kRef = fit.kRef;
+  const D = loadClass('R3', { opened }), P = config.population.judged;
+  const CL = { GLONASS: [...P.glonass.c2, ...P.glonass.new], Galileo: [...P.galileo.new, ...P.galileo.c2Six] };
+  const out = { plan: 'section 5 P-REF against GFZ, C3-A5', rule: R, classes: {} };
+  const medianIn = (v) => median(v);
+  for (const [cls, list] of Object.entries(CL)) {
+    const rows = [];
+    for (const L of LEADS) for (let k = 0; k < 3; k += 1) {
+      const per = [];
+      for (const o of list) {
+        const ratios = [], beside = [];
+        for (const w of (D.windows.get(o) ?? []).filter((x) => x.set === 'calibration')) {
+          const H = (w.hist.get(L) ?? []).filter(({ l }) => l.gfz?.errRtnM && l.err);
+          if (H.length < R.minHistory) continue;
+          const a = H.map(({ j, l }) => gOf(j.chi, j.chiRef, ab.a0, ab.a1, L) * l.P[AXES[k]]), c = H.map(({ l }) => kRef[groupOf(L)][k] * l.ref.covRtn[AXES[k]] + l.C);
+          const uEsa = axesMleRef(H.map(({ l }, i) => ({ e: l.ref.errRtnM[k], a: a[i], c: c[i] })), ab.n0);
+          const uGfz = axesMleRef(H.map(({ l }, i) => ({ e: l.gfz.errRtnM[k], a: a[i], c: c[i] })), ab.n0);
+          const extra = H.reduce((p, { l }) => p + (l.gfz.errRtnM[k] - l.err[k]) ** 2, 0) / H.length;
+          const uBeside = axesMleRef(H.map(({ l }, i) => ({ e: l.gfz.errRtnM[k], a: a[i], c: c[i] + extra })), ab.n0);
+          ratios.push(Math.exp(uEsa - uGfz)); beside.push(Math.exp(uEsa - uBeside));
+        }
+        if (ratios.length) per.push({ o, windows: ratios.length, ratio: medianIn(ratios), beside: medianIn(beside) });
+      }
+      if (!per.length) continue;
+      const m = medianIn(per.map((x) => x.ratio)), rand = rngOf(seedOf(`C3S|pref-gfz|${cls}|${'RTN'[k]}|${L}`)), boots = new Float64Array(R.bootstrap.resamples);
+      for (let b = 0; b < boots.length; b += 1) boots[b] = medianIn(Array.from({ length: per.length }, () => per[Math.floor(rand() * per.length)].ratio));
+      const sorted = [...boots].sort((x, y) => x - y);
+      rows.push({ L, axis: 'RTN'[k], satellites: per.length, medianRatio: m, interval95: [sorted[Math.floor(sorted.length * 0.025)], sorted[Math.floor(sorted.length * 0.975)]], medianBeside: medianIn(per.map((x) => x.beside)), below090: per.filter((x) => x.ratio < 0.9).map((x) => ({ norad: x.o, ratio: x.ratio, beside: x.beside })), perSatellite: per, stop: m < R.stop.medianBelow });
+    }
+    out.classes[cls] = { rows, stops: rows.filter((r) => r.stop).map((r) => `${r.axis} ${r.L} h`) };
+    for (const r of rows) console.error(cls, r.axis, r.L, 'median', r.medianRatio.toFixed(3), `[${r.interval95[0].toFixed(3)}, ${r.interval95[1].toFixed(3)}]`, 'beside', r.medianBeside.toFixed(3), 'below 0.90:', r.below090.map((x) => `${x.norad} ${x.ratio.toFixed(2)}`).join(', '));
+  }
+  out.pass = Object.values(out.classes).every((c) => !c.stops.length);
+  console.log(writeReceipt('precheck-P-REF-GFZ', out, opened));
+  console.log(JSON.stringify({ pass: out.pass, stops: Object.fromEntries(Object.entries(out.classes).map(([k, v]) => [k, v.stops])) }));
   process.exit(0);
 }
 

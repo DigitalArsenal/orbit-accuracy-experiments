@@ -196,7 +196,15 @@
    "2027-01-20"
   ],
   "R2": "2027-02-10",
-  "lateFiles": "missing"
+  "lateFiles": "missing",
+  "independentTruth": {
+   "amendment": "C3-A5",
+   "windows": "R3's GNSS fresh windows",
+   "report": "every cell against GFZ rapid orbits beside ESA next file, per class, axis and lead; scored once, at the same time and the same way",
+   "verdict": "no change; adds no cell and no rule",
+   "wording": "A pass against ESA's next-day file with any R3 GNSS cell out of band against GFZ is reported as exactly that, in the same sentence as the verdict.",
+   "route": "GFZ0OPSRAP from https://isdc-data.gfz.de/gnss/products/rapid/w<week>/, no credentials; checked before the freeze"
+  }
  },
  "leads_h": [
   1,
@@ -504,7 +512,8 @@
   "C3-A1 2026-10-31",
   "C3-A2 2026-10-31",
   "C3-A3 2026-10-31",
-  "C3-A4 2026-10-31"
+  "C3-A4 2026-10-31",
+  "C3-A5 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
@@ -578,5 +587,36 @@
   "requestsPerSecond": 1,
   "manifest": "<store>/nsgf/manifest.jsonl",
   "eop": "C04, the same converter"
+ },
+ "pRefGfz": {
+  "amendment": "C3-A5",
+  "windows": "calibration",
+  "classes": [
+   "GLONASS",
+   "Galileo"
+  ],
+  "minHistory": 5,
+  "product": "GFZ0MGXRAP, as C3-A2",
+  "error": "forecast minus GFZ at the lead epoch",
+  "a": "as registered",
+  "c": "as registered",
+  "stop": {
+   "medianBelow": 0.9,
+   "leads_h": [
+    1,
+    6,
+    12,
+    24,
+    48,
+    72
+   ],
+   "axes": "all"
+  },
+  "bootstrap": {
+   "resamples": 10000,
+   "seed": "SHA-256 of C3S|pref-gfz|<class>|<axis>|<L>",
+   "over": "satellites"
+  },
+  "besideReportOnly": "c plus the mean squared ESA minus GFZ difference over the history"
  }
 }

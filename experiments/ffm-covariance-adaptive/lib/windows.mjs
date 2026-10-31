@@ -66,7 +66,7 @@ export function loadClass(cls, { rowsDir = path.join(store, 'rows'), opened, sea
       const leads = new Map();
       for (const l of r.leads) {
         const center = l.L <= 12 ? 12 : l.L;
-        leads.set(l.L, { L: l.L, err: l.errRtnM ?? null, terms: l.terms, P: pC2(p, l.terms), C: cls === 'R3' ? 0 : truthTerm(l.truthSigmaM), truthSigmaM: l.truthSigmaM ?? null, ref: l.ref ?? null, refAvail: stops.get(center) ?? Infinity });
+        leads.set(l.L, { L: l.L, err: l.errRtnM ?? null, terms: l.terms, P: pC2(p, l.terms), C: cls === 'R3' ? 0 : truthTerm(l.truthSigmaM), truthSigmaM: l.truthSigmaM ?? null, ref: l.ref ?? null, gfz: l.gfz ?? null, refAvail: stops.get(center) ?? Infinity });
       }
       const w = { norad: r.norad, name: r.name, cls, set: r.set, E, tIn, family, cluster: clusterOf(r.norad), chi: r.fit.reducedChiSquare, leads, fitAvail: availableAt(family, tIn), screen: r.screen, notice: N.overlap(r.norad, tIn - 24 * HOUR, tIn + 84 * HOUR, Date.parse(`${seal}T00:00:00Z`)).length > 0 };
       for (const l of leads.values()) l.storm = isStorm(storms, tIn, l.L);

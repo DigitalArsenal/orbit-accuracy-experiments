@@ -23,7 +23,7 @@ export async function carry(ctx, fit, epochs, settings) {
 }
 
 /**
- * The terms of one window. leads [{ L, epochMs, line | null, ref: { state, covariance } | null }]; E is t_in. Returns { leads: [{ L, epoch, truthSigmaM, errRtnM | null, terms, ref: { errRtnM, covRtn, minusTruthRtnM } | null }], cov0Scale, samples }.
+ * The terms of one window. leads [{ L, epochMs, line | null, ref: { state, covariance } | null, gfz: { state } | null }]; E is t_in. Returns { leads: [{ L, epoch, truthSigmaM, errRtnM | null, terms, ref: { errRtnM, covRtn, minusTruthRtnM } | null, gfz: { errRtnM } | absent }], cov0Scale, samples }.
  * A lead with neither truth nor reference is left out. With no reference this returns what C2's windowTerms returns, field for field, and the same module calls in the same order.
  */
 export async function windowTermsRef(ctx, pairs, fit, E, allLeads, settings) {
@@ -64,6 +64,7 @@ export async function windowTermsRef(ctx, pairs, fit, E, allLeads, settings) {
     for (const [name, m] of Object.entries(terms)) { pairList.push({ predicted: { ...predicted, covariance: m, covarianceAxes: 'INERTIAL' }, truth }); keys.push([i, name]); }
     if (x.ref) { pairList.push({ predicted: { ...predicted, covariance: x.ref.covariance, covarianceAxes: 'INERTIAL' }, truth: refTruth }); keys.push([i, 'ref']); }
     if (x.ref && x.line) { pairList.push({ predicted: { ...refTruth, covariance: x.ref.covariance, covarianceAxes: 'INERTIAL' }, truth }); keys.push([i, 'refTruth']); }
+    if (x.gfz) { pairList.push({ predicted: { ...predicted, covariance: terms.A, covarianceAxes: 'INERTIAL' }, truth: { position: x.gfz.state.slice(0, 3), velocity: x.gfz.state.slice(3, 6) } }); keys.push([i, 'gfz']); }
   });
   const stats = pairList.length ? await pairs.stats(pairList, 'predicted') : [];
   const out = leads.map((x, i) => ({ L: x.L, epoch: x.line ? x.line.epoch : iso(leadMs[i]), truthSigmaM: x.line ? (x.line.sigma ?? null) : null, errRtnM: null, terms: {}, ...(x.ref ? { ref: {} } : {}) }));
@@ -71,6 +72,7 @@ export async function windowTermsRef(ctx, pairs, fit, E, allLeads, settings) {
     const [i, name] = keys[k];
     if (name === 'ref') { out[i].ref.errRtnM = s.errorRtn; out[i].ref.covRtn = s.predictedRtn; return; }
     if (name === 'refTruth') { out[i].ref.minusTruthRtnM = s.errorRtn; return; }
+    if (name === 'gfz') { out[i].gfz = { errRtnM: s.errorRtn }; return; }
     out[i].terms[name] = s.predictedRtn;
     if (leads[i].line) out[i].errRtnM ??= s.errorRtn;
   });

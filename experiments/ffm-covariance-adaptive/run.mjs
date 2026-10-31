@@ -14,6 +14,7 @@ import { openChain, settingsFor } from './lib/open.mjs';
 import { openSeeds } from './lib/seeds.mjs';
 import { openWeatherO } from './lib/weather-o.mjs';
 import { carry, windowTermsRef } from './lib/terms.mjs';
+import { openGfz } from './lib/gfz.mjs';
 
 const rowsDir = path.join(store, 'rows');
 const fitInput = (lines) => ({ points: lines.map((l) => ({ time: l.epoch, position: l.r.map((x) => x * 1000) })), reference: { epoch: lines[0].epoch, state: [...lines[0].r, ...lines[0].v].map((x) => x * 1000) } });
@@ -87,7 +88,8 @@ export async function runWindow(S, norad, E, setName) {
       row.seconds.fit = (Date.now() - t0) / 1000;
       if (f.ok) {
         t0 = Date.now();
-        const leads = win.leads.map((l) => ({ ...l, ref: refByLead.get(l.L) ?? null }));
+        // the forecast minus GFZ at each GNSS lead's epoch, from the same FFM run (C3-A5); no extra fit
+        const leads = win.leads.map((l) => ({ ...l, ref: refByLead.get(l.L) ?? null, gfz: family === 'gnss' && l.line ? S.gfzAt(norad, l.line.epoch) : null }));
         const t = await windowTermsRef(ctx, S.pairs, f, tIn, leads, settings);
         row.leads = t.leads; row.cov0Scale = t.cov0Scale;
         row.seconds.terms = (Date.now() - t0) / 1000;
@@ -104,7 +106,7 @@ export async function openSession(opened, { fromMs, toMs, allowedToMs }) {
   const B2C = JSON.parse(fs.readFileSync(b2('config.json')));
   const chain = await openChain('pin', { opened });
   const arcsCache = new Map();
-  return { chain, pairs: chain.pairs, B2C, fitV3, WO: await openWeatherO(), seedOf: openSeeds(opened),
+  return { chain, pairs: chain.pairs, B2C, fitV3, WO: await openWeatherO(), seedOf: openSeeds(opened), gfzAt: openGfz(opened),
     arcsFor: (norad) => { if (!arcsCache.has(norad)) { if (arcsCache.size > 8) arcsCache.delete(arcsCache.keys().next().value); arcsCache.set(norad, arcsOf(norad, { fromMs, toMs, allowedToMs, opened })); } return arcsCache.get(norad); } };
 }
 
