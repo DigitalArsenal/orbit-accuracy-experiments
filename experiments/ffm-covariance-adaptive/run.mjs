@@ -10,7 +10,8 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { config, store, args, registered, Opened, grid, root, dir, readJsonl, c2Results, DAY, HOUR, iso, sha256, build, gitHead } from './common.mjs';
 import { arcsOf, windowOf, referenceTrack, screenTrack, familyOf, msOf } from './lib/chain.mjs';
-import { openChain, settingsFor } from './lib/open.mjs';
+import { openChain } from './lib/open.mjs';
+import { settingsOf, rebased } from './lib/rebase.mjs';
 import { openSeeds } from './lib/seeds.mjs';
 import { openWeatherO } from './lib/weather-o.mjs';
 import { carry, windowTermsRef } from './lib/terms.mjs';
@@ -38,11 +39,12 @@ export async function runWindow(S, norad, E, setName) {
   const cls = classOf(norad), family = familyOf(norad);
   const arcs = S.arcsFor(norad);
   const win = windowOf(norad, arcs, E, { leadToleranceSeconds: B2C.a5.ca.leadToleranceSeconds.laser });
-  const head = { norad, name: NAMES[norad] ?? seedOf(norad).name, family, set: setName, E: iso(E), tIn: win.tIn ?? null, product: win.product ?? null, coverage: win.coverage ?? null };
+  // a re-based window names what changed in its fits (C3-A11); the unchanged satellites' rows keep the form they had
+  const head = { norad, name: NAMES[norad] ?? seedOf(norad).name, family, set: setName, E: iso(E), tIn: win.tIn ?? null, product: win.product ?? null, coverage: win.coverage ?? null, ...(seedOf(norad).rebased ? { rebased: seedOf(norad).rebased } : {}) };
   const classes = cls === 'R3' ? [{ cls: 'R3', weather: 'M' }] : [{ cls: 'R2-M', weather: 'M' }, { cls: 'R2-O', weather: 'O' }];
   if (win.excluded) return classes.map((c) => ({ ...head, cls: c.cls, excluded: win.excluded }));
   const tIn = win.tInMs, seconds = {};
-  const seed = seedOf(norad), settings = settingsFor(cls, seed, cls !== 'R3', B2C), settingsB = settingsFor(cls, seed, true, B2C);
+  const seed = seedOf(norad), settings = settingsOf(cls, seed, cls !== 'R3', B2C), settingsB = settingsOf(cls, seed, true, B2C);
   // C2's screen (C2-A4 point 4): reported stratum
   let screen = null;
   let t0 = Date.now();
@@ -104,7 +106,7 @@ export async function openSession(opened, { fromMs, toMs, allowedToMs }) {
   const { b2 } = await import(path.join(root, 'experiments/ffm-covariance-calibration/lib/precise.mjs'));
   const { fitV3 } = await import(path.join(root, 'harness/ffm-fit-v3.mjs'));
   const B2C = JSON.parse(fs.readFileSync(b2('config.json')));
-  const chain = await openChain('pin', { opened });
+  const chain = rebased(await openChain('pin', { opened }));
   const arcsCache = new Map();
   return { chain, pairs: chain.pairs, B2C, fitV3, WO: await openWeatherO(), seedOf: openSeeds(opened), gfzAt: openGfz(opened),
     arcsFor: (norad) => { if (!arcsCache.has(norad)) { if (arcsCache.size > 8) arcsCache.delete(arcsCache.keys().next().value); arcsCache.set(norad, arcsOf(norad, { fromMs, toMs, allowedToMs, opened })); } return arcsCache.get(norad); } };

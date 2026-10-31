@@ -29,7 +29,7 @@ if (args.run) {
   const done = new Set(fs.readdirSync(dirOut).filter((f) => f.startsWith('rows.')).flatMap((f) => readJsonl(path.join(dirOut, f))).map((r) => `${r.norad}|${r.E}`));
   const { openSession } = await import('./run.mjs');
   const { windowOf } = await import('./lib/chain.mjs');
-  const { settingsFor } = await import('./lib/open.mjs');
+  const { settingsOf } = await import('./lib/rebase.mjs');
   const { windowTermsRef } = await import('./lib/terms.mjs');
   const S = await openSession(opened, { fromMs: Date.parse('2025-09-20T00:00:00Z'), toMs: Date.parse('2026-04-15T00:00:00Z'), allowedToMs: Date.parse('2026-06-15T00:00:00Z') });
   const FZ = JSON.parse(fs.readFileSync(path.join(c2Results, 'frozen-constants.json'))).classes.R3.parameters;
@@ -46,7 +46,7 @@ if (args.run) {
     else {
       rec.tIn = win.tIn;
       try {
-        const ctx = S.chain.ctxFor(win.tInMs - 24 * HOUR, win.tInMs + 72 * HOUR), settings = settingsFor('R3', S.seedOf(norad), false, S.B2C), fi = fitInput(win.track);
+        const ctx = S.chain.ctxFor(win.tInMs - 24 * HOUR, win.tInMs + 72 * HOUR), settings = settingsOf('R3', S.seedOf(norad), false, S.B2C), fi = fitInput(win.track);
         const f = await S.fitV3(ctx, fi.points, fi.reference, settings);
         if (!f.ok) rec.excluded = `fit ${f.termination ?? f.error}`;
         else {

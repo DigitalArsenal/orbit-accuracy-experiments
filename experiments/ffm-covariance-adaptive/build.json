@@ -88,7 +88,8 @@
    "harness/ffm-execution.mjs": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e",
    "harness/truth-gate.mjs": "925d2a92170e0a34cbd2b08c6f3d663cce452b8d3e973a7576d3c0ff55f9329e",
    "experiments/ffm-covariance-calibration/lib/products.mjs": "a3d4289b028177feff08dd44328652dbb4877ed66c15adba870994777c3e8b36",
-   "experiments/ffm-covariance-calibration/lib/precise.mjs": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa"
+   "experiments/ffm-covariance-calibration/lib/precise.mjs": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa",
+   "experiments/ffm-galileo-y-bias/lib/y0.mjs": "dfe1fe3c09d843501f1e2dfb3eca9fb25f03d1b25dab68f926ff01bb81858303"
   }
  },
  "packages": {

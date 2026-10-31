@@ -1,9 +1,10 @@
 // Per-object seeds (PLAN.md section 2, C2's chain): C2's receipts seeds-R3.json and seeds-R1R2.json where they list the object; the new GLONASS and Galileo by C2's rule (seeds.mjs, C2-A4 points 2
 // and 3): AGOM = A/m x Cr 1.3, B = A/m x Cd 2.2; GLONASS-M the documented body's largest face, 3.05 m x 2.71 m; Galileo the two solar arrays of 5.41 m^2 plus the +/-Z panel, 3.00 m^2 (IOV) or
-// 3.036 m^2 (FOC); masses from the IGS satellite metadata SINEX. Arithmetic only.
+// 3.036 m^2 (FOC); masses from the IGS satellite metadata SINEX. C3-A11 re-bases GNSS over those seeds, leaving C2's receipts alone: GLONASS takes the published seed that includes the arrays, and Galileo FOC its fixed Y acceleration, by
+// the identity table in config.json, checked against the SINEX block. Arithmetic only.
 import fs from 'node:fs';
 import path from 'node:path';
-import { c2Results } from '../common.mjs';
+import { c2Results, config } from '../common.mjs';
 
 const toPrecision6 = (x) => Number(x.toPrecision(6));
 const SINEX = '/opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx';
@@ -18,8 +19,20 @@ export function openSeeds(opened) {
   const ident = new Map(), mass = new Map();
   for (const l of block(text, 'SATELLITE/IDENTIFIER')) { const t = l.trim().split(/\s+/); if (/^\d+$/.test(t[2])) ident.set(Number(t[2]), { svn: t[0], block: t[3] }); }
   for (const l of block(text, 'SATELLITE/MASS')) { const t = l.trim().split(/\s+/); mass.set(t[0], Number(t[3])); } // the last row of an SVN: its current mass
+  const RB = config.rebase;
+  const rebase = (norad, seed) => {
+    if (RB.glonass.norads.includes(norad)) {
+      if (!RB.glonass.sinexBlocks.includes(ident.get(norad)?.block)) throw new Error(`${norad} is not GLONASS-M in the SINEX`);
+      return { ...seed, agomSeed: RB.glonass.agomSeed, rebased: { agomSeed: RB.glonass.agomSeed } };
+    }
+    if (RB.galileoFoc.norads.includes(norad)) {
+      if (ident.get(norad)?.block !== RB.galileoFoc.sinexBlock) throw new Error(`${norad} is not Galileo FOC in the SINEX`);
+      return { ...seed, y0: RB.galileoFoc.y0M_S2, rebased: { y0: RB.galileoFoc.y0M_S2 } };
+    }
+    return seed;
+  };
   return (norad) => {
-    if (known.has(norad)) return known.get(norad);
+    if (known.has(norad)) return rebase(norad, known.get(norad));
     const id = ident.get(norad);
     if (!id) throw new Error(`no SINEX identity for ${norad}`);
     const m = mass.get(id.svn);
@@ -29,6 +42,6 @@ export function openSeeds(opened) {
     else if (id.block === 'GAL-2') area = 2 * 5.41 + 3.036;
     else throw new Error(`no seed rule for ${norad} (${id.svn}, ${id.block})`);
     const am = area / m;
-    return { name: `${id.svn} (${id.block})`, norad, area, mass: m, areaM2: toPrecision6(area), areaOverMassM2kg: toPrecision6(am), agomSeed: toPrecision6(am * 1.3) };
+    return rebase(norad, { name: `${id.svn} (${id.block})`, norad, area, mass: m, areaM2: toPrecision6(area), areaOverMassM2kg: toPrecision6(am), agomSeed: toPrecision6(am * 1.3) });
   };
 }

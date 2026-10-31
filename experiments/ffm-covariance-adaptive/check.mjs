@@ -12,12 +12,19 @@ export async function check({ openSession, runWindow }) {
   const opened = new Opened();
   const rowsDir = path.join(store, 'rows');
   const rows = fs.readdirSync(rowsDir).filter((f) => f.startsWith('validation.')).sort().flatMap((f) => readJsonl(path.join(rowsDir, f)));
-  const pick = (cls) => rows.filter((r) => r.cls === cls && r.fit?.ok && r.leads?.filter((l) => l.errRtnM && l.ref).length >= 3).sort((a, b) => (a.E < b.E ? -1 : a.E > b.E ? 1 : a.norad - b.norad))[0];
+  // C3-A11: on R3 one window of each kind of fit: GLONASS on the published seed, Galileo FOC with its Y force, and a satellite that did not change; R2-M's window also gives R2-O's
+  const RB = config.rebase, kindOf = (norad) => (RB.glonass.norads.includes(norad) ? 'GLONASS' : RB.galileoFoc.norads.includes(norad) ? 'FOC' : 'unchanged');
+  const pick = (cls, kind) => rows.filter((r) => r.cls === cls && (!kind || kindOf(r.norad) === kind) && r.fit?.ok && r.leads?.filter((l) => l.errRtnM && l.ref).length >= 3).sort((a, b) => (a.E < b.E ? -1 : a.E > b.E ? 1 : a.norad - b.norad))[0];
+  const WINDOWS = [['R3', 'GLONASS'], ['R3', 'FOC'], ['R3', 'unchanged'], ['R2-M'], ['R2-O']];
   const S = await openSession(opened, { fromMs: Date.parse('2026-03-20T00:00:00Z'), toMs: Date.parse('2026-06-15T00:00:00Z'), allowedToMs: Date.parse('2026-06-15T00:00:00Z') });
   const failures = [];
   const seen = new Set();
-  for (const cls of ['R3', 'R2-M']) {
-    const r = pick(cls), got = await runWindow(S, r.norad, Date.parse(r.E), 'validation');
+  for (const [cls, kind] of WINDOWS.slice(0, 4)) {
+    const r = pick(cls, kind), got = await runWindow(S, r.norad, Date.parse(r.E), 'validation');
+    // the re-base is in the row or it is not, as the identity table says
+    if (kind === 'GLONASS' && r.rebased?.agomSeed !== RB.glonass.agomSeed) failures.push(`${r.norad}: the stored row is not on the published seed`);
+    if (kind === 'FOC' && r.rebased?.y0 !== RB.galileoFoc.y0M_S2) failures.push(`${r.norad}: the stored row does not carry the Y force`);
+    if (kind === 'unchanged' && r.rebased) failures.push(`${r.norad}: the stored row says it was re-based`);
     for (const g of got) {
       const stored = rows.find((x) => x.cls === g.cls && x.norad === g.norad && x.E === g.E);
       seen.add(g.cls);
@@ -27,12 +34,12 @@ export async function check({ openSession, runWindow }) {
   const frozen = JSON.parse(fs.readFileSync(path.join(results, 'frozen-constants.json')));
   const expectedFile = path.join(results, 'e2e-expected.json');
   const out = {};
-  for (const cls of ['R3', 'R2-M', 'R2-O']) {
-    const K = frozen.classes[cls], D = loadClass(cls), r = pick(cls);
+  for (const [cls, kind] of WINDOWS) {
+    const K = frozen.classes[cls], D = loadClass(cls), r = pick(cls, kind);
     const all = samplesOf(D).filter((s) => s.w.norad === r.norad && iso(s.w.E) === r.E);
     const c = compose(all, { a0: K.a0, a1: K.a1, n0: K.n0, useG: true, useU: true, history: K.history }), d2 = await d2Of(c);
     const A = K.referenceArm, cr = compose(all, { a0: A.a0, a1: A.a1, n0: A.n0, useG: true, useU: true, kRef: A.kRef, history: 'reference' }), d2r = await d2Of(cr);
-    out[cls] = { norad: r.norad, E: r.E, leads: c.map((s, i) => ({ L: s.l.L, d2: d2[i], g: s.g, u: s.u, reference: { d2: d2r[i], g: cr[i].g, u: cr[i].u } })) };
+    out[kind ? `${cls} ${kind}` : cls] = { norad: r.norad, E: r.E, leads: c.map((s, i) => ({ L: s.l.L, d2: d2[i], g: s.g, u: s.u, reference: { d2: d2r[i], g: cr[i].g, u: cr[i].u } })) };
   }
   if (args.write) { fs.writeFileSync(expectedFile, `${JSON.stringify(out, null, 1)}\n`); console.log(`wrote ${expectedFile}`); }
   else if (JSON.stringify(out) !== JSON.stringify(JSON.parse(fs.readFileSync(expectedFile)))) failures.push('d2, g or u differ from e2e-expected.json');

@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, args, registered, Opened, writeReceipt, c2Results, root, sha256, iso, readJsonl, HOUR } from './common.mjs';
 import { arcsOf, windowOf } from './lib/chain.mjs';
-import { settingsFor } from './lib/open.mjs';
+import { settingsOf } from './lib/rebase.mjs';
 import { pC2, scaled } from './lib/model.mjs';
 
 registered();
@@ -55,7 +55,7 @@ for (let i = 0; i < tasks.length; i += 1) {
   if (i % n !== k || done.has(`${cls}|${norad}|${iso(E)}`)) continue;
   const c = CL[cls], win = windowOf(norad, arcsFor(norad), E, { leadToleranceSeconds: 150 });
   const rec = { cls, norad, E: iso(E), tIn: win.tIn };
-  const settings = settingsFor(c.fit, S.seedOf(norad), c.fit !== 'R3', S.B2C), p = FZ[c.key].parameters, fi = fitInput(win.track);
+  const settings = settingsOf(c.fit, S.seedOf(norad), c.fit !== 'R3', S.B2C), p = FZ[c.key].parameters, fi = fitInput(win.track);
   try {
     let ctx = S.chain.ctxFor(win.tInMs - 24 * HOUR, win.tInMs + 72 * HOUR);
     if (c.weather === 'O') { const o = S.WO.inputsO(ctx.inputs, E, win.tInMs + 72 * HOUR); if (o.excluded) { rec.excluded = o.excluded; fs.appendFileSync(out, `${JSON.stringify(rec)}\n`); continue; } ctx = { ...ctx, inputs: o.inputs }; }
