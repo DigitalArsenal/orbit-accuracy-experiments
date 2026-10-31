@@ -2,7 +2,7 @@
 // every arc rather than one in four: files/orbit-products read_container, data-source/eop-parser parse_c04 on the C04 file C2's conversions read, analysis/reference-states reference_states with the sphere's identity and the stated
 // sigma (the per-axis RMS of the arc's overlap with the next day's arc). The wasm is the pin's (build.json). No network. Hosted by the experiments' SDK; --compare checks the result against C2's conversions of the same products,
 // the seven 260829 products excepted (C2-A11: not compared). Records and encoding only; every frame and orbit computation is a module's.
-//   node experiments/ffm-covariance-adaptive/convert-nsgf.mjs --shard k/n
+//   node experiments/ffm-covariance-adaptive/convert-nsgf.mjs --shard k/n [--to 2026-06-20]
 //   node experiments/ffm-covariance-adaptive/convert-nsgf.mjs --compare
 import fs from 'node:fs';
 import path from 'node:path';
@@ -21,7 +21,7 @@ const EOP_URL = 'https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now', C04_S
 const IDENTITY = { ajisai: { norad: 16908, objectId: '1986-061A', name: 'AJISAI' }, starlette: { norad: 7646, objectId: '1975-010A', name: 'STARLETTE' }, stella: { norad: 22824, objectId: '1993-061B', name: 'STELLA' }, larets: { norad: 27944, objectId: '2003-042F', name: 'LARETS' }, westpac: { norad: 25398, objectId: '1998-043E', name: 'WESTPAC' }, lares: { norad: 38077, objectId: '2012-006A', name: 'LARES' }, lares2: { norad: 53105, objectId: '2022-080A', name: 'LARES-2' } };
 const yymmdd = (t) => new Date(t).toISOString().slice(2, 10).replaceAll('-', '');
 const typeRef = (code) => ({ schemaName: `${code}.fbs`, fileIdentifier: `$${code}`, rootTypeName: code, wireFormat: 'flatbuffer' });
-const days = []; for (let t = Date.parse(`${C.from}T00:00:00Z`); t <= Date.parse(`${C.to}T00:00:00Z`); t += DAY) days.push(t);
+const days = []; for (let t = Date.parse(`${C.from}T00:00:00Z`); t <= Date.parse(`${args.to ?? C.to}T00:00:00Z`); t += DAY) days.push(t);
 
 if (args.compare) {
   const C2_REF = '/opt/data/sdn-archive/reference-states/reference';

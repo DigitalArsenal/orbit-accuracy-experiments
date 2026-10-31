@@ -1,0 +1,256 @@
+{
+ "receipt": "precheck-P1-nsgf",
+ "createdUtc": "2026-10-31T07:21:14.963Z",
+ "experimentsCommit": "1acaf4cd1bba650f426a497a2ace976ebcbaf9f4",
+ "plan": "C3-A2 point 2: P1 on the daily arcs",
+ "rule": {
+  "minLeads": 3,
+  "minWindows": 0.8,
+  "elseR2": "consistency check"
+ },
+ "perClass": {
+  "R2": {
+   "windows": 405,
+   "excluded": {},
+   "leadCounts": {
+    "1": 5,
+    "3": 15,
+    "4": 65,
+    "5": 264,
+    "6": 56
+   },
+   "leadsAvailable": {
+    "1": 56,
+    "6": 320,
+    "12": 385,
+    "24": 400,
+    "48": 400,
+    "72": 405
+   },
+   "atLeast3": 400,
+   "nextAllowedGapH": {
+    "min": 0,
+    "median": 3.25,
+    "max": 51.15,
+    "n": 405
+   },
+   "yield": 0.9876543209876543
+  },
+  "LARES-2": {
+   "windows": 81,
+   "excluded": {},
+   "leadCounts": {
+    "1": 1,
+    "3": 1,
+    "4": 10,
+    "5": 52,
+    "6": 17
+   },
+   "leadsAvailable": {
+    "1": 17,
+    "6": 69,
+    "12": 79,
+    "24": 80,
+    "48": 80,
+    "72": 81
+   },
+   "atLeast3": 80,
+   "nextAllowedGapH": {
+    "min": 0.06666666666666667,
+    "median": 2.3,
+    "max": 48.93333333333333,
+    "n": 81
+   },
+   "yield": 0.9876543209876543
+  }
+ },
+ "perObject": {
+  "7646": {
+   "family": "nsgf",
+   "arcs": 264,
+   "arcHours": {
+    "min": 79.9,
+    "median": 93.35,
+    "max": 111.65,
+    "n": 264
+   },
+   "stopStepHours": {
+    "min": 9.1,
+    "median": 24.3,
+    "max": 95.35,
+    "n": 263
+   },
+   "sigmaM": {
+    "min": 0.06876793187539672,
+    "median": 0.23697962289707514,
+    "max": 2.935529562771913,
+    "n": 264
+   },
+   "windows": 81,
+   "excluded": {},
+   "atLeast3": 80,
+   "unique": 0,
+   "yield": 0.9876543209876543
+  },
+  "16908": {
+   "family": "nsgf",
+   "arcs": 264,
+   "arcHours": {
+    "min": 85.46666666666667,
+    "median": 93.93333333333334,
+    "max": 113,
+    "n": 264
+   },
+   "stopStepHours": {
+    "min": 5.533333333333333,
+    "median": 23.666666666666668,
+    "max": 94.33333333333333,
+    "n": 263
+   },
+   "sigmaM": {
+    "min": 0.056623828734150644,
+    "median": 0.17353004863292132,
+    "max": 0.9089200891249514,
+    "n": 264
+   },
+   "windows": 81,
+   "excluded": {},
+   "atLeast3": 80,
+   "unique": 0,
+   "yield": 0.9876543209876543
+  },
+  "25398": {
+   "family": "nsgf",
+   "arcs": 262,
+   "arcHours": {
+    "min": 57.25,
+    "median": 92.7,
+    "max": 125.15,
+    "n": 262
+   },
+   "stopStepHours": {
+    "min": 0,
+    "median": 23.65,
+    "max": 94.5,
+    "n": 261
+   },
+   "sigmaM": {
+    "min": 0.028885882417281128,
+    "median": 0.9455105951876693,
+    "max": 19.00094232352135,
+    "n": 262
+   },
+   "windows": 81,
+   "excluded": {},
+   "atLeast3": 80,
+   "unique": 0,
+   "yield": 0.9876543209876543
+  },
+  "27944": {
+   "family": "nsgf",
+   "arcs": 264,
+   "arcHours": {
+    "min": 69.9,
+    "median": 92.45,
+    "max": 106.8,
+    "n": 264
+   },
+   "stopStepHours": {
+    "min": 0,
+    "median": 24.55,
+    "max": 95.4,
+    "n": 263
+   },
+   "sigmaM": {
+    "min": 0.1069470589382116,
+    "median": 2.19029592122545,
+    "max": 39.21771866238696,
+    "n": 264
+   },
+   "windows": 81,
+   "excluded": {},
+   "atLeast3": 80,
+   "unique": 0,
+   "yield": 0.9876543209876543
+  },
+  "38077": {
+   "family": "nsgf",
+   "arcs": 262,
+   "arcHours": {
+    "min": 80.9,
+    "median": 93.15,
+    "max": 110.55,
+    "n": 262
+   },
+   "stopStepHours": {
+    "min": 7.95,
+    "median": 24.45,
+    "max": 94.35,
+    "n": 261
+   },
+   "sigmaM": {
+    "min": 0.04024184176877893,
+    "median": 0.13914288258547902,
+    "max": 0.41124974162493305,
+    "n": 262
+   },
+   "windows": 81,
+   "excluded": {},
+   "atLeast3": 80,
+   "unique": 0,
+   "yield": 0.9876543209876543
+  },
+  "53105": {
+   "family": "nsgf",
+   "arcs": 264,
+   "arcHours": {
+    "min": 140.73333333333332,
+    "median": 165.06666666666666,
+    "max": 186.1,
+    "n": 264
+   },
+   "stopStepHours": {
+    "min": 0,
+    "median": 23.266666666666666,
+    "max": 93.2,
+    "n": 263
+   },
+   "sigmaM": {
+    "min": 0.00542843583866168,
+    "median": 0.041232191429688085,
+    "max": 0.13912808028680318,
+    "n": 264
+   },
+   "windows": 81,
+   "excluded": {},
+   "atLeast3": 80,
+   "unique": 0,
+   "yield": 0.9876543209876543
+  }
+ },
+ "yield": {
+  "R2": 0.9876543209876543,
+  "LARES-2": 0.9876543209876543,
+  "r2Outcome": "R2 reported as registered",
+  "lares2Passes": true
+ },
+ "onC2sThinnedArcs": {
+  "R2": 0.9296636085626911,
+  "LARES-2": 0.12307692307692308
+ },
+ "opened": {
+  "files": 3017,
+  "sha256": "65e911884272a496c8ae0f97169a68a74864a175130a29a244f1e7f5584f174c",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/precheck-P1-nsgf.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/nsgf/reference/*",
+    "files": 3017,
+    "labels": [
+     "index.json",
+     "reference $OEM"
+    ]
+   }
+  ]
+ }
+}

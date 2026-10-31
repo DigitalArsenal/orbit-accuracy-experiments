@@ -1,0 +1,275 @@
+{
+ "receipt": "nsgf-arcs",
+ "createdUtc": "2026-10-31T07:21:23.601Z",
+ "experimentsCommit": "1acaf4cd1bba650f426a497a2ace976ebcbaf9f4",
+ "plan": "C3-A2 point 2",
+ "comparison": {
+  "compared": 585,
+  "identical": 585,
+  "different": [],
+  "sigmaDifferent": [],
+  "notCompared260829": 0,
+  "differentCount": 0,
+  "sigmaDifferentCount": 0
+ },
+ "fetch": {
+  "files": 2147,
+  "bytes": 208742997,
+  "absent": [
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2025/251130/nsgf.orb.stella.251130.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/westpac/2025/251130/nsgf.orb.westpac.251130.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/ajisai/2025/251201/nsgf.orb.ajisai.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2025/251201/nsgf.orb.lares.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares2/2025/251201/nsgf.orb.lares2.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/larets/2025/251201/nsgf.orb.larets.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/starlette/2025/251201/nsgf.orb.starlette.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2025/251201/nsgf.orb.stella.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/westpac/2025/251201/nsgf.orb.westpac.251201.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/westpac/2026/260416/nsgf.orb.westpac.260416.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2026/260422/nsgf.orb.lares.260422.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/ajisai/2026/260531/nsgf.orb.ajisai.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2026/260531/nsgf.orb.lares.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares2/2026/260531/nsgf.orb.lares2.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/larets/2026/260531/nsgf.orb.larets.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/starlette/2026/260531/nsgf.orb.starlette.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2026/260531/nsgf.orb.stella.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/westpac/2026/260531/nsgf.orb.westpac.260531.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2026/260711/nsgf.orb.lares.260711.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/starlette/2026/260711/nsgf.orb.starlette.260711.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2026/260711/nsgf.orb.stella.260711.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2026/260712/nsgf.orb.lares.260712.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares2/2026/260712/nsgf.orb.lares2.260712.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/larets/2026/260712/nsgf.orb.larets.260712.v000.sp3.gz",
+   "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2026/260712/nsgf.orb.stella.260712.v000.sp3.gz"
+  ],
+  "failures": [
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/ajisai/2025/251130/nsgf.orb.ajisai.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 835 bytes",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/ajisai/2025/251130/nsgf.orb.ajisai.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 835 bytes",
+    "attempt": 2
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2025/251130/nsgf.orb.lares.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 833 bytes",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares/2025/251130/nsgf.orb.lares.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 833 bytes",
+    "attempt": 2
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares2/2025/251130/nsgf.orb.lares2.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 835 bytes",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/lares2/2025/251130/nsgf.orb.lares2.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 835 bytes",
+    "attempt": 2
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/larets/2025/251130/nsgf.orb.larets.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 835 bytes",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/larets/2025/251130/nsgf.orb.larets.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 835 bytes",
+    "attempt": 2
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/starlette/2025/251130/nsgf.orb.starlette.251130.v000.sp3.gz",
+    "failed": "HTTP 200, 841 bytes",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/starlette/2025/251130/nsgf.orb.starlette.251130.v000.sp3.gz",
+    "failed": "UND_ERR_CONNECT_TIMEOUT",
+    "attempt": 2
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2025/251130/nsgf.orb.stella.251130.v000.sp3.gz",
+    "failed": "UND_ERR_CONNECT_TIMEOUT",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/larets/2026/260719/nsgf.orb.larets.260719.v000.sp3.gz",
+    "failed": "UND_ERR_SOCKET",
+    "attempt": 1
+   },
+   {
+    "url": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2026/260719/nsgf.orb.stella.260719.v000.sp3.gz",
+    "failed": "UND_ERR_SOCKET",
+    "attempt": 1
+   }
+  ],
+  "first": "2026-10-31T06:31:55.545Z",
+  "last": "2026-10-31T07:21:22.763Z"
+ },
+ "converted": 1879,
+ "skipped": [
+  {
+   "name": "nsgf.orb.ajisai.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.starlette.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.stella.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.larets.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.westpac.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares2.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.ajisai.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.starlette.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.stella.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.larets.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.westpac.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares2.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.ajisai.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.starlette.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.stella.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.larets.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.westpac.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares2.251130.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.westpac.260415.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.westpac.260416.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.260422.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.260421.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.ajisai.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.starlette.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.stella.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.larets.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.westpac.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares2.260530.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.ajisai.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.starlette.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.stella.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.larets.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.westpac.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares2.260531.v000.sp3.gz",
+   "why": "not published"
+  }
+ ],
+ "opened": null
+}
