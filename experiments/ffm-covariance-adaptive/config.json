@@ -516,7 +516,8 @@
     "a",
     "b"
    ],
-   "windowsCount": true
+   "windowsCount": true,
+   "gate": "no: the gate is the heavy-tail arm as resampled from the rows, nothing added or removed for the event; this figure is reported beside it (C3-A7)"
   }
  },
  "amendments": [
@@ -525,7 +526,8 @@
   "C3-A3 2026-10-31",
   "C3-A4 2026-10-31",
   "C3-A5 2026-10-31",
-  "C3-A6 2026-10-31"
+  "C3-A6 2026-10-31",
+  "C3-A7 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
