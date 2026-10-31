@@ -1,0 +1,32 @@
+{
+  "experiment": "ffm-agom-prior-leo",
+  "id": "XM6",
+  "frozen": true,
+  "exploratory": "every window here was scored in XM2, XM3 and XM5; every result is a lead for a registration",
+  "task": "experiments-ffm-agom-prior-leo-20261031",
+  "store": "/opt/data/sdn-archive/ffm-agom-prior-leo",
+  "wipRefPrefix": "refs/remotes/origin/wip/experiments-ffm-agom-prior-leo-20261031",
+  "xm5Dir": "experiments/ffm-tail-cause",
+  "arms": {
+    "A12": { "arcHours": 12, "agomPriorFraction": null, "label": "F2 with a 12 h arc" },
+    "A24": { "arcHours": 24, "agomPriorFraction": null, "label": "F2 with a 24 h arc" },
+    "A36": { "arcHours": 36, "agomPriorFraction": null, "label": "F2 with a 36 h arc" },
+    "W72": { "arcHours": 72, "agomPriorFraction": 10, "label": "F2 with AGOM's prior sigma at 1000 % of its seed" }
+  },
+  "proofArm": { "arcHours": 72, "agomPriorFraction": null, "windows": ["P|39452|2026-03-10", "S1|39634|2026-03-10", "P|43476|2026-02-13"], "rule": "F2 through this experiment's code equals XM3's stored row byte for byte" },
+  "workers": 8,
+  "guard": { "againstXm3": ["binEpochs", "entered", "excluded", "O", "held"], "filled": "compared on the days propagator/ffm reads, D0 - 4 through D0 + 8 (XM3's amendment 1)" },
+  "week": "2026-W04",
+  "postStorm": { "from": "2026-01-22", "to": "2026-01-26" },
+  "worst": { "share": 0.05, "f2oWeek": { "1": 19, "2": 23, "3": 22, "7": 16 }, "f2oStormArc": { "1": 24, "2": 25, "3": 21, "7": 16 }, "halfOf": { "1": 9, "2": 11, "3": 11 } },
+  "reading": { "group": "P", "days": [1, 2, 3], "bound": 1.1 },
+  "check": {
+    "windows": [
+      { "key": "P|39452|2026-01-22", "arms": ["A12", "A24"] },
+      { "key": "S1|39634|2026-03-10", "arms": ["A36"] },
+      { "key": "P|43476|2026-02-13", "arms": ["W72"] }
+    ],
+    "proof": ["P|39452|2026-03-10"],
+    "rule": "each named arm rerun and compared exactly with the stored row; the proof window equal to XM3's F2; the table rebuilt equal to the committed table.json"
+  }
+}
