@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawn, execFileSync } from 'node:child_process';
-import { config, store, args, dir, root, results, guardRef, frozen, readJsonl, appendJsonl, write, iso, ms, DAY, daysOf, dateOf, sha256 } from './common.mjs';
+import { config, store, args, dir, root, results, guardRef, frozen, readJsonl, appendJsonl, write, iso, ms, DAY, daysOf, dateOf, sha256, median, xm3Rows } from './common.mjs';
 
 frozen();
 const REL = 'experiments/open-dca-ffm-regression';
@@ -85,7 +85,8 @@ function cell(group, lead, pts) {
   const intervals = Object.fromEntries(Object.entries(draws).map(([name, v]) => [name, interval(v.filter(Number.isFinite))]));
   const g = intervals.gamma2, d = intervals.difference;
   const reading = g[1] < 0 ? 'wrong way' : g[0] <= 0 ? 'no signal' : d[0] > 0 ? 'date-specific signal' : 'signal, not date-specific';
-  return { group, lead, windows: pts.length, weeks: weeks.length, reading, ...point, intervals, spearmanDraws: draws.spearman2.length, meanYKm: mean(pts.map((q) => q.y)), meanX2Km: mean(pts.map((q) => q.x2)), meanX3Km: mean(pts.map((q) => q.x3)) };
+  return { group, lead, windows: pts.length, weeks: weeks.length, reading, ...point, intervals, spearmanDraws: draws.spearman2.length, meanYKm: mean(pts.map((q) => q.y)), meanX2Km: mean(pts.map((q) => q.x2)), meanX3Km: mean(pts.map((q) => q.x3)),
+    truthAheadShare: pts.filter((q) => q.y > 0).length / pts.length, sdYKm: Math.sqrt(mean(pts.map((q) => (q.y - mean(pts.map((u) => u.y))) ** 2))) };
 }
 
 if (args.table) {
@@ -95,7 +96,19 @@ if (args.table) {
     const pts = rows.filter((r) => r.group === group && r.bins[lead]).map((r) => ({ week: r.isoWeek, ...r.bins[lead] }));
     if (pts.length) cells.push(cell(group, lead, pts));
   }
-  const table = { experiment: config.experiment, label: 'exploratory, not registered (SIGNED.md); it moves no registered cell', rows: rows.length, convention: [...new Set(rows.map((r) => r.convention))], rowsDigest: sha256(rows.map((r) => JSON.stringify({ ...r, timing: undefined })).join('\n')), cells };
+  // Descriptive, added after reading the cells: the flown B against XM3's F2 fitted B on the same windows (XM3's stored rows, read only).
+  const xm3 = xm3Rows(), flown = rowsOf(path.join(store, 'rows'), /^O\.s\d+\.jsonl$/).filter((r) => r.seed);
+  const flownAgainstFitted = {};
+  for (const r of flown.sort((a, b) => (a.key < b.key ? -1 : 1))) {
+    const f = xm3.get(r.key)?.arms?.F2;
+    if (!f?.ok) continue;
+    const b = f.fit.parameters.find((q) => q.kind === 'DRAG_AREA_OVER_MASS')?.value;
+    (flownAgainstFitted[r.name] ??= { name: r.name, flownB: [], fittedB: [], ratios: [], fittedAtZero: 0 });
+    if (!(b > 0)) { flownAgainstFitted[r.name].fittedAtZero += 1; continue; }
+    flownAgainstFitted[r.name].flownB.push(r.seed.dragAreaOverMass); flownAgainstFitted[r.name].fittedB.push(b); flownAgainstFitted[r.name].ratios.push(r.seed.dragAreaOverMass / b);
+  }
+  const bTable = Object.values(flownAgainstFitted).map((o) => ({ name: o.name, windows: o.ratios.length, fittedAtZero: o.fittedAtZero, medianFlownB: median(o.flownB), medianFittedB: median(o.fittedB), medianRatio: median(o.ratios) }));
+  const table = { experiment: config.experiment, label: 'exploratory, not registered (SIGNED.md); it moves no registered cell', rows: rows.length, convention: [...new Set(rows.map((r) => r.convention))], rowsDigest: sha256(rows.map((r) => JSON.stringify({ ...r, timing: undefined })).join('\n')), cells, flownAgainstFittedB: bTable };
   fs.mkdirSync(results, { recursive: true });
   fs.writeFileSync(path.join(results, 'signed.json'), `${JSON.stringify(table, null, 1)}\n`);
   for (const c of cells) console.error(`${c.group} day ${c.lead}: n ${c.windows} weeks ${c.weeks} ${c.reading}; gamma2 ${c.gamma2.toFixed(4)} [${c.intervals.gamma2.map((v) => v.toFixed(4))}] gamma3 ${c.gamma3.toFixed(4)} [${c.intervals.gamma3.map((v) => v.toFixed(4))}] diff ${c.difference.toFixed(4)} [${c.intervals.difference.map((v) => v.toFixed(4))}]`);
