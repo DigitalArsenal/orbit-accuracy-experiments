@@ -6,6 +6,7 @@
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --dependence [--from <date>]   dependence, marginal and keep from the extract (writes <store>/p7/inputs.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm <name> [--end 2026-11-30] [--trials 2000]     one arm (writes <store>/p7/<end>.<name>.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm plane2 --end 2026-12-31 ; --arm q6plane2 --end 2026-12-31     C3-A6: December with plane 2's event, heavy-tail arm, and both Q6 rules
+#   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm realized ; --arm realizedK1     report only: the marginal at its realized mean, at the fitted kappa and at kappa = 1
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --summary               the table and the judged rule
 import hashlib, json, math, os, sys
 import numpy as np
@@ -357,7 +358,7 @@ def design(end):
 STRICT = dayi('2026-10-26')
 
 
-def simulate(des, plane, arm, trials, scale=None, one=None, manv=0.0, shape='registered', axes=False, bias=0.0, event=None):
+def simulate(des, plane, arm, trials, scale=None, one=None, manv=0.0, shape='registered', axes=False, bias=0.0, event=None, lead_scale=None):
     S = len(des)
     T = 1 + max(int(c['days'].max()) for c in des)
     cl = sorted(set(c['cluster'] for c in des))
@@ -392,6 +393,8 @@ def simulate(des, plane, arm, trials, scale=None, one=None, manv=0.0, shape='reg
         if one:
             mult[rng.integers(S)] *= one
         D2 = D2 * mult[:, None, None]
+        if lead_scale is not None:
+            D2 = D2 * lead_scale[None, None, :]
         if axes:
             Z = Z * np.sqrt(mult)[None, :, None, None]
         if manv:
@@ -491,6 +494,16 @@ else:
         pl = kw.pop('plane', plane)
         res = simulate(des, pl, arm, TR, **kw)
         R['pass'] = rate(res, neff)
+    elif ARM in ('realized', 'realizedK1'):
+        # Report only, for the coordinator's ruling on kappa and the band: the marginal at its realized mean, not rescaled to 1, at the fitted kappa and at kappa = 1 (on R3 C_w is 0, so d2 at kappa = 1 is d2 x kappa exactly). Feeds no gate.
+        kappa = json.load(open(os.path.join(ROOT, 'results/ffm-covariance-adaptive/fit-R3.json')))['arms']['C3-ab']['kappa']
+        raw = np.array([IN['marginal'][str(L)]['rawMean'] for L in LEADS])
+        s_ = raw * (kappa if ARM == 'realizedK1' else 1.0)
+        res = simulate(des, plane, 'heavy', TR, lead_scale=s_)
+        m = np.array([o['mean'] for o in res])
+        own = (2 / 3) / np.maximum(m.var(axis=0), 1e-12)
+        counts = [int((o['inb']).sum()) for o in res]
+        R.update(kappa=kappa, leadScale=[float(x) for x in s_], nEffOwn=[float(x) for x in own], meanCov=[[float(np.mean([o['mean'][l] for o in res])), float(np.mean([o['cov'][l] for o in res])), float(np.mean([o['inb'][l] for o in res]))] for l in range(6)], inBandCount={str(c): counts.count(c) / len(counts) for c in range(7)}, passOwnNEff=rate(res, own), **{'pass': rate(res, neff)})
     elif ARM == 'plane2':
         # C3-A6: the December design with plane 2's event, heavy-tail arm; eligibility on the base arm's n_eff and, beside it, on this arm's own
         res = simulate(des, plane, 'heavy', TR, event=IN['plane2Event']['days'])
