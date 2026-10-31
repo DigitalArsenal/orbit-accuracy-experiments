@@ -157,3 +157,7 @@ Before any fresh window: the spent-window control runs the runner on XM's window
 ## Amendment 1, 2026-10-31, during the run, before any cell was read
 
 A corrigendum; no number changes. config.json `spaceWeather.condition` says rows from cutoff - 75 d. The code, as XM and XM3 have it, reads cutoff - 72 h - 3 d, 6 days. One consequence, for report-only arms: R17c and RF17c fit a 72 h arc ending at the set's creation, and where the set is over about 3 days old that arc starts before the cutoff's rows, so the module refuses, the arm fails and the window counts as its loss, as the rule says. RFa12c (F3) cannot reach this: its 12 h arc would need a set over 5 days old, and the oldest is 79 h. Seen in the failure counts of the run; no score was read.
+
+## Amendment 2, 2026-10-31, during the run, before any cell was read
+
+Amendment 1 misstated the threshold; this corrects it. From the failed arms' set ages, no score read: the modules need rows from the day before the earliest state, so the refusal comes where the set was created about 46 to 49 h before the cutoff, not about 3 days. So far that is the five windows of 2025-11-11, where the archive holds no set created on 11-09 or 11-10, and Swarm B on 12-20 and 12-21. RFa12c's 12 h arc would need a set created over 4.5 days before the cutoff, and the oldest set in these spans is 79 h, so F3 cannot reach it. The table's README gains the failure counts by arm and cause and one disclosure line on two days without F10.7; no cell, rule or statistic changes.

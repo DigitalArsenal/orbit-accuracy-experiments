@@ -306,6 +306,10 @@ const daysDir = path.join(store, 'public/days'), noSetDays = [];
 for (const f of fs.readdirSync(daysDir).filter((n) => n.endsWith('.json')).sort()) { const d = f.slice(0, 10); if (d < config.spans.extension.from || d > config.spans.primary.to) continue; const sets = JSON.parse(fs.readFileSync(path.join(daysDir, f), 'utf8')).sets; if (!sets.length) noSetDays.push(d); }
 const rsga = JSON.parse(fs.readFileSync(path.join(store, 'inputs/rsga-normalization.json'), 'utf8')).counts;
 const staleWeather = rows.filter((r) => r.rsga && (Date.parse(r.cutoff) - Date.parse(r.rsga.issued)) / 3600000 > 26).length;
+// the failures and arms not run, by arm and cause: counts only
+const failures = {};
+for (const r of rows) for (const [n, a] of Object.entries({ ...(r.arms ?? {}), ...(r.P ? { P: r.P } : {}) })) if (!a.ok) { const why = a.notRun ? `not run: ${a.notRun}` : String(a.error).replace(/^XP 72 h: /, '').split(':').slice(0, 2).join(':').slice(0, 70); ((failures[n] ??= {})[why] ??= 0); failures[n][why] += 1; }
+const refused = rows.filter((r) => /space-weather-out-of-range|refuses/.test(String(r.arms?.R17c?.error ?? '') + String(r.arms?.RF17c?.error ?? ''))).map((r) => r.set.creationAgeHours);
 
 // ---- cost: every figure names its steps, output step and tolerance -------------------------------------------------------------
 const times = (get) => { const v = rows.map(get).filter((x) => Number.isFinite(x)); return v.length ? { n: v.length, median: +(quantile(v, 0.5) / 1000).toFixed(2), p90: +(quantile(v, 0.9) / 1000).toFixed(2), mean: +(v.reduce((a, b) => a + b, 0) / v.length / 1000).toFixed(2) } : null; };
@@ -313,7 +317,7 @@ const cost = { ffmSeconds: Object.fromEntries(['RF17', 'RFa24', 'RFa12', 'RFa12c
 
 const table = {
   experiment: config.id, task: config.task, registration: C.REGISTRATION, modulesCommit: build.modulesCommit, rowsDigest: digest, windows: counts, levels: { verdict: '97.5 %', beside: '95 %' }, clusters: { verdict: 'ISO week', beside: 'orbit group x ISO week' },
-  verdicts, matchedInputs, parity, calibrator, dataAgeSharePct: dataAge, publicAge, publicDaysWithoutASet: noSetDays, rsgaNormalization: { extension: { changed: rsga.extension.changed, spacesOnly: rsga.extension.spacesOnly, apNotNumber: rsga.extension.apNotNumber, afrStandsInForAp: rsga.extension.afrStandsInForAp }, primary: { changed: rsga.primary.changed } }, windowsWithABulletinOver26h: staleWeather, cost, cells,
+  verdicts, matchedInputs, parity, calibrator, dataAgeSharePct: dataAge, publicAge, publicDaysWithoutASet: noSetDays, rsgaNormalization: { extension: { changed: rsga.extension.changed, spacesOnly: rsga.extension.spacesOnly, apNotNumber: rsga.extension.apNotNumber, afrStandsInForAp: rsga.extension.afrStandsInForAp }, primary: { changed: rsga.primary.changed } }, windowsWithABulletinOver26h: staleWeather, failures, parityRefusals: { windows: refused.length, youngestSetCreatedHoursBeforeCutoff: refused.length ? +Math.min(...refused).toFixed(1) : null }, cost, cells,
 };
 
 // ---- the README ----------------------------------------------------------------------------------------------------------------
@@ -421,6 +425,12 @@ ${line('RFa12 + term / P', 'RFa12*/P')}
 ## Data preparation
 
 RSGA bulletins of the extension (2024-12-28 to 2025-09-30), normalized before any score: ${rsga.extension.changed} failed XM's parser; ${rsga.extension.spacesOnly} held only spaces after the slash; ${rsga.extension.apNotNumber} held an observed Ap that is not a number (36 NA, one garbled N60), each taking the previous bulletin's estimate. Afr stands in for Ap on ${rsga.extension.afrStandsInForAp.length} line: ${rsga.extension.afrStandsInForAp.map((a) => `${a.bulletin} "${a.line}"`).join('; ')}. On the primary span ${rsga.primary.changed} bulletins changed. Windows reading a bulletin over 26 h old: ${staleWeather}. Swarm truth for the extension: ESA reduced-dynamic SP3 COM, newest baseline, file start days 2024-12-27 to 2025-09-29, converted by \`fetch-swarm.mjs\`, byte-identical to the archive's conversion on a spent day.
+
+The GFZ file holds no F10.7 for 2025-02-12 and 2025-02-17; by XM3's rule a day without a row takes the last row at or before it.
+
+## Failures and arms not run
+
+${Object.entries(failures).sort().map(([n, v]) => `${n}: ${Object.entries(v).map(([w, c]) => `${c} ${w}`).join('; ')}`).join('. ') || 'None'}. A failure is a loss in its cells; an arm not run leaves them, counted. The space-weather refusals of R17c and RF17c (${refused.length} windows, sets created ${refused.length ? Math.min(...refused).toFixed(1) : 'none'} h or more before the cutoff) come from their 72 h arcs starting before the cutoff's rows (PLAN.md, Amendments 1 and 2): report-only arms, not fit failures, and RFa12c cannot reach them.
 
 ## Cost
 
