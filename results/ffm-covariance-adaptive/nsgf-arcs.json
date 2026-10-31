@@ -1,11 +1,11 @@
 {
  "receipt": "nsgf-arcs",
- "createdUtc": "2026-10-31T07:21:23.601Z",
- "experimentsCommit": "1acaf4cd1bba650f426a497a2ace976ebcbaf9f4",
+ "createdUtc": "2026-10-31T07:26:14.312Z",
+ "experimentsCommit": "347e70c1915e4d94da227368ba4936d1fe35763c",
  "plan": "C3-A2 point 2",
  "comparison": {
-  "compared": 585,
-  "identical": 585,
+  "compared": 723,
+  "identical": 723,
   "different": [],
   "sigmaDifferent": [],
   "notCompared260829": 0,
@@ -13,8 +13,8 @@
   "sigmaDifferentCount": 0
  },
  "fetch": {
-  "files": 2147,
-  "bytes": 208742997,
+  "files": 2378,
+  "bytes": 231154356,
   "absent": [
    "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/stella/2025/251130/nsgf.orb.stella.251130.v000.sp3.gz",
    "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/westpac/2025/251130/nsgf.orb.westpac.251130.v000.sp3.gz",
@@ -110,66 +110,10 @@
    }
   ],
   "first": "2026-10-31T06:31:55.545Z",
-  "last": "2026-10-31T07:21:22.763Z"
+  "last": "2026-10-31T07:25:39.807Z"
  },
- "converted": 1879,
+ "converted": 2348,
  "skipped": [
-  {
-   "name": "nsgf.orb.ajisai.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.starlette.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.stella.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.larets.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.westpac.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.lares.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.lares2.251129.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
-  },
-  {
-   "name": "nsgf.orb.ajisai.251201.v000.sp3.gz",
-   "why": "not published"
-  },
-  {
-   "name": "nsgf.orb.starlette.251201.v000.sp3.gz",
-   "why": "not published"
-  },
-  {
-   "name": "nsgf.orb.stella.251201.v000.sp3.gz",
-   "why": "not published"
-  },
-  {
-   "name": "nsgf.orb.larets.251201.v000.sp3.gz",
-   "why": "not published"
-  },
-  {
-   "name": "nsgf.orb.westpac.251201.v000.sp3.gz",
-   "why": "not published"
-  },
-  {
-   "name": "nsgf.orb.lares.251201.v000.sp3.gz",
-   "why": "not published"
-  },
-  {
-   "name": "nsgf.orb.lares2.251201.v000.sp3.gz",
-   "why": "not published"
-  },
   {
    "name": "nsgf.orb.ajisai.251130.v000.sp3.gz",
    "why": "not published"
@@ -203,6 +147,66 @@
    "why": "its successor is not published: no sigma"
   },
   {
+   "name": "nsgf.orb.ajisai.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.ajisai.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.starlette.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.stella.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.larets.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.westpac.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares2.251129.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.starlette.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.stella.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.larets.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.westpac.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares2.251201.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.260421.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
    "name": "nsgf.orb.westpac.260416.v000.sp3.gz",
    "why": "not published"
   },
@@ -211,12 +215,36 @@
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.lares.260421.v000.sp3.gz",
-   "why": "its successor is not published: no sigma"
+   "name": "nsgf.orb.ajisai.260531.v000.sp3.gz",
+   "why": "not published"
   },
   {
    "name": "nsgf.orb.ajisai.260530.v000.sp3.gz",
    "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.starlette.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.stella.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.larets.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.westpac.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares.260531.v000.sp3.gz",
+   "why": "not published"
+  },
+  {
+   "name": "nsgf.orb.lares2.260531.v000.sp3.gz",
+   "why": "not published"
   },
   {
    "name": "nsgf.orb.starlette.260530.v000.sp3.gz",
@@ -243,31 +271,59 @@
    "why": "its successor is not published: no sigma"
   },
   {
-   "name": "nsgf.orb.ajisai.260531.v000.sp3.gz",
+   "name": "nsgf.orb.ajisai.260710.v000.sp3.gz",
+   "why": "reference_states: L50: the SP3 states no accuracy and none was stated for the product; no default is assumed."
+  },
+  {
+   "name": "nsgf.orb.starlette.260710.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.stella.260710.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.starlette.260711.v000.sp3.gz",
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.starlette.260531.v000.sp3.gz",
+   "name": "nsgf.orb.stella.260711.v000.sp3.gz",
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.stella.260531.v000.sp3.gz",
+   "name": "nsgf.orb.larets.260711.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.lares.260710.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.stella.260709.v000.sp3.gz",
+   "why": "reference_states: L56: the SP3 states no accuracy and none was stated for the product; no default is assumed."
+  },
+  {
+   "name": "nsgf.orb.lares.260711.v000.sp3.gz",
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.larets.260531.v000.sp3.gz",
+   "name": "nsgf.orb.lares2.260711.v000.sp3.gz",
+   "why": "its successor is not published: no sigma"
+  },
+  {
+   "name": "nsgf.orb.stella.260712.v000.sp3.gz",
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.westpac.260531.v000.sp3.gz",
+   "name": "nsgf.orb.larets.260712.v000.sp3.gz",
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.lares.260531.v000.sp3.gz",
+   "name": "nsgf.orb.lares.260712.v000.sp3.gz",
    "why": "not published"
   },
   {
-   "name": "nsgf.orb.lares2.260531.v000.sp3.gz",
+   "name": "nsgf.orb.lares2.260712.v000.sp3.gz",
    "why": "not published"
   }
  ],
