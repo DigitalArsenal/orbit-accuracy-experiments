@@ -1,6 +1,6 @@
 // C3-A2: the daily NSGF arcs of C3's seven spheres from EDC, anonymously, serially, at most one request per second, into <store>/nsgf/products/ where the modules' converter reads its cache
 // (analysis/reference-states scripts/fetch-reference-products.mjs, product slr-daily). A manifest records url, SHA-256, bytes and retrieval time per file. A file present is not fetched again. A failure is listed,
-// and tried once more after 60 s; it is not hammered. The converter's sigma needs the next day's arc, so each sphere's range runs one day past the last arc. Nothing is committed or republished.
+// and tried once more after 60 s; it is not hammered. A 404, or the server's not-found page with status 200, is recorded as absent and not asked again. The converter's sigma needs the next day's arc, so each sphere's range runs one day past the last arc. Nothing is committed or republished.
 //   node experiments/ffm-covariance-adaptive/fetch-nsgf.mjs          (stop: touch <store>/nsgf/stop)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,7 +10,7 @@ import { config, store, registered, sha256, DAY } from './common.mjs';
 registered();
 const C = config.nsgfArcs, base = path.join(store, 'nsgf'), products = path.join(base, 'products'), manifest = path.join(base, 'manifest.jsonl');
 fs.mkdirSync(products, { recursive: true });
-const seen = new Set(fs.existsSync(manifest) ? fs.readFileSync(manifest, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => r.sha256 || r.status === 404).map((r) => r.url) : []);
+const seen = new Set(fs.existsSync(manifest) ? fs.readFileSync(manifest, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => r.sha256 || r.status === 404 || r.absent || /^HTTP 200/.test(r.failed ?? '')).map((r) => r.url) : []);
 const log = (r) => fs.appendFileSync(manifest, `${JSON.stringify(r)}\n`);
 const yymmdd = (t) => new Date(t).toISOString().slice(2, 10).replaceAll('-', '');
 let last = 0, got = 0, absent = 0, failed = 0, had = 0;
@@ -33,7 +33,8 @@ for (let t = from; t <= to; t += DAY) for (const sat of Object.keys(C.spheres)) 
   for (let attempt = 1; attempt <= 2 && !result; attempt += 1) {
     try {
       const r = await get(url), retrieved = new Date().toISOString();
-      if (r.status === 404) { log({ url, retrieved, status: 404, absent: true }); absent += 1; result = 'absent'; break; }
+      // the server's "not found" page comes with status 200: not the product, and asking again will not change that
+      if (r.status === 404 || (r.status === 200 && !(r.bytes[0] === 0x1f && r.bytes[1] === 0x8b))) { log({ url, retrieved, status: r.status, absent: true, bytes: r.bytes.length }); absent += 1; result = 'absent'; break; }
       if (r.status === 200 && r.bytes[0] === 0x1f && r.bytes[1] === 0x8b) { const tmp = `${file}.${process.pid}.part`; fs.writeFileSync(tmp, r.bytes); fs.renameSync(tmp, file); log({ url, path: `products/${name}`, retrieved, status: 200, sha256: sha256(r.bytes), bytes: r.bytes.length }); got += 1; result = 'ok'; break; }
       log({ url, retrieved, status: r.status, failed: `HTTP ${r.status}, ${r.bytes.length} bytes`, attempt });
     } catch (error) { log({ url, retrieved: new Date().toISOString(), failed: String(error.cause?.code ?? error.message).slice(0, 120), attempt }); }
