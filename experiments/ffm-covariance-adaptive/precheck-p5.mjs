@@ -16,9 +16,15 @@ const opened = new Opened();
 const dirOut = path.join(store, 'p5');
 fs.mkdirSync(dirOut, { recursive: true });
 
+// Exclusion 5 (section 1): a window that meets B1's dropped day, 2026-05-09, is refused and counted, with no fill: FFM needs a space-weather row for every day of the arc and the day before it, and the arc runs t_in - 24 h to t_in + 72 h.
+// It is outside the hand-off this check tests, so it does not take one of the 20 places, and a refusal of that kind is listed apart.
+const GAP = Date.parse('2026-05-09T00:00:00Z');
+const hitsGap = (tInMs) => { const from = Math.floor((tInMs - 24 * HOUR) / (24 * HOUR)) - 1, to = Math.floor((tInMs + 72 * HOUR) / (24 * HOUR)), day = GAP / (24 * HOUR); return day >= from && day <= to; };
+
 if (args.receipt) {
   const rows = fs.readdirSync(dirOut).filter((f) => f.startsWith('rows.s')).sort().flatMap((f) => readJsonl(path.join(dirOut, f)));
-  const per = Object.fromEntries(['R3', 'R2-M', 'R2-O'].map((cls) => { const x = rows.filter((r) => r.cls === cls), ok = x.filter((r) => !r.refused && !r.excluded); return [cls, { windows: x.length, refused: x.filter((r) => r.refused).map((r) => `${r.norad} ${r.E}: ${r.refused}`), excluded: x.filter((r) => r.excluded).length, maxAbsDeltaD2over3: ok.length ? Math.max(...ok.flatMap((r) => r.absDelta)) : null, maxRelVariance: ok.length ? Math.max(...ok.flatMap((r) => r.relVariance)) : null }]; }));
+  const gapRefusal = (r) => r.refused && /space-weather-out-of-range/.test(r.refused) && r.tIn && hitsGap(Date.parse(r.tIn));
+  const per = Object.fromEntries(['R3', 'R2-M', 'R2-O'].map((cls) => { const x = rows.filter((r) => r.cls === cls), ok = x.filter((r) => !r.refused && !r.excluded); return [cls, { windows: x.length - x.filter(gapRefusal).length, refused: x.filter((r) => r.refused && !gapRefusal(r)).map((r) => `${r.norad} ${r.E}: ${r.refused}`), exclusion5: x.filter(gapRefusal).map((r) => `${r.norad} ${r.E}: ${r.refused}`), excluded: x.filter((r) => r.excluded).length, maxAbsDeltaD2over3: ok.length ? Math.max(...ok.flatMap((r) => r.absDelta)) : null, maxRelVariance: ok.length ? Math.max(...ok.flatMap((r) => r.relVariance)) : null }]; }));
   const refused = Object.values(per).reduce((a, x) => a + x.refused.length, 0);
   console.log(writeReceipt('precheck-P5', { plan: 'section 5 P5', perClass: per, outcome: refused === 0 ? 'pass: 0 refusals' : `FAIL: ${refused} refusals` }, opened));
   console.log(JSON.stringify(per));
@@ -27,7 +33,7 @@ if (args.receipt) {
 
 const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
 const out = path.join(dirOut, `rows.s${k}.jsonl`);
-const done = new Set(readJsonl(out).map((r) => `${r.cls}|${r.norad}|${r.E}`));
+const done = new Set(fs.readdirSync(dirOut).filter((f) => f.startsWith('rows.s')).flatMap((f) => readJsonl(path.join(dirOut, f))).map((r) => `${r.cls}|${r.norad}|${r.E}`));
 const { openSession, cutoffsOf } = await import('./run.mjs');
 const { ffmNoiseCovariances } = await import(path.join(root, 'experiments/ffm-covariance-calibration/lib/products.mjs'));
 const { windowTermsRef } = await import('./lib/terms.mjs');
@@ -38,11 +44,11 @@ const fitInput = (lines) => ({ points: lines.map((l) => ({ time: l.epoch, positi
 const CL = { R3: { norads: config.population.calVal.R3, key: 'R3', fit: 'R3', weather: 'M' }, 'R2-M': { norads: config.population.calVal.R2, key: 'R2', fit: 'R2', weather: 'M' }, 'R2-O': { norads: config.population.calVal.R2, key: 'R2-O', fit: 'R2', weather: 'O' } };
 const arcsCache = new Map();
 const arcsFor = (norad) => { if (!arcsCache.has(norad)) arcsCache.set(norad, arcsOf(norad, { ...SPAN, opened })); return arcsCache.get(norad); };
-const tasks = [];
+const tasks = [], gapWindows = [];
 for (const [cls, c] of Object.entries(CL)) {
   const cand = c.norads.flatMap((norad) => ['calibration', 'validation'].flatMap((set) => cutoffsOf(norad, set)).map((E) => ({ cls, norad, E, h: sha256(Buffer.from(`C3S|p5|${cls}|${norad}|${iso(E)}`)) }))).sort((a, b) => (a.h < b.h ? -1 : 1));
   let used = 0;
-  for (const t of cand) { if (used >= 20) break; const w = windowOf(t.norad, arcsFor(t.norad), t.E, { leadToleranceSeconds: 150 }); if (w.excluded || w.leads.filter((l) => l.line).length < 3) continue; tasks.push(t); used += 1; }
+  for (const t of cand) { if (used >= 20) break; const w = windowOf(t.norad, arcsFor(t.norad), t.E, { leadToleranceSeconds: 150 }); if (w.excluded || w.leads.filter((l) => l.line).length < 3) continue; if (hitsGap(w.tInMs)) { gapWindows.push(`${t.cls} ${t.norad} ${iso(t.E)}`); continue; } tasks.push(t); used += 1; }
 }
 for (let i = 0; i < tasks.length; i += 1) {
   const { cls, norad, E } = tasks[i];
