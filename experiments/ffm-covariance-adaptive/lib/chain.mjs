@@ -13,7 +13,8 @@ const SRC = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/
 const W = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/windows.mjs'));
 export { nearest, windowAt };
 
-export const REFERENCE_ROOTS = [...C2_ROOTS, path.join(store, 'reference')];
+/** The reference roots of a family: ilrsa and GNSS as C2 converted them; NSGF the daily arcs in C3's store (C3-A2). */
+const ROOTS = { nsgf: [path.join(store, 'nsgf', 'reference')], ilrsa: C2_ROOTS, gnss: C2_ROOTS };
 const SPHERE = { 22195: 'lageos2', 8820: 'lageos1', 19751: 'etalon1', 20026: 'etalon2', 53105: 'lares2', 16908: 'ajisai', 38077: 'lares', 27944: 'larets', 7646: 'starlette', 25398: 'westpac', 22824: 'stella' };
 const P = config.population;
 const ILRSA = new Set(Object.values(P.judged.ilrsa));
@@ -32,7 +33,7 @@ export function productDate(name) {
 export function arcsOf(norad, { fromMs, toMs, allowedToMs, opened }) {
   if (toMs > allowedToMs) throw new Error(`P10: arcs to ${iso(toMs)} are past the phase's allowed ${iso(allowedToMs)}`);
   const items = [], prefix = prefixOf(norad);
-  for (const r of REFERENCE_ROOTS) {
+  for (const r of ROOTS[familyOf(norad)]) {
     if (!fs.existsSync(r)) continue;
     for (const product of fs.readdirSync(r).filter((p) => p.startsWith(prefix)).sort()) {
       const d = productDate(product);
