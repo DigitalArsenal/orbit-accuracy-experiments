@@ -160,3 +160,7 @@ Everything below is already in the sections above; this records what moved.
    GFZ shares the station network with ESA, so an error common to the network cannot show up in this check.
 2. **NSGF daily arcs.** C2's reference directory holds pairs of arcs every 4 days, which gave LARES-2 a yield of 0.12 and would calibrate on a different arc structure from the fresh windows. Cal/val and history use the daily arcs of C3's seven spheres (Ajisai, LARES, LARES-2, LARETS, Starlette, Stella, WESTPAC), 2025-09-20 to 2026-08-28, fetched from EDC and converted into C3's store with the same converter and C04. A manifest records SHA-256 and retrieval time per file. No credentials, at most one request per second, failures listed and not hammered. P4 stays on C2's own arcs. P1 re-runs for R2 and LARES-2 on the new arcs, and the 0.80 gate applies. C2-A11 point 5 covers the arcs inside C2's span as history; nothing inside that span is scored.
 3. **260926:** cutoffs 09-20 and 09-27 are lost unless it is reissued, as registered. It is checked once more just before the freeze and the result recorded.
+
+### C3-A3 - 2026-10-31, before C3-A2's rule judges anything
+
+C3-A2's sampling cap is 4 CPU-h, not 1, and the half-width target stays 0.05: the coordinator set it knowing the half-width at 138 windows (0.27) and no value of r; this lane printed the interim table at 138 windows and did not send it, and the stop reads only the half-width and the CPU spent.

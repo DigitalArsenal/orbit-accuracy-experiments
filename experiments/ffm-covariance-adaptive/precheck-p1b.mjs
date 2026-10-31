@@ -3,7 +3,8 @@
 // satellites only, in the order of the lowest SHA-256 of C3S|p1|<norad>|<E>, one round across every satellite at a time. Paired bootstrap over satellites and windows, 10,000 resamples, seed SHA-256 C3S|p1b|<class>|<axis>|<L>.
 // GFZ's products are read from E14's reference directory; E14's results are not. No fresh file. FFM: RK78, relative tolerance 1e-10, steps up to 120 s; fit track 600 s; outputs at the four leads and the 600 s noise grid.
 //   node experiments/ffm-covariance-adaptive/precheck-p1b.mjs --run --rounds a:b --shard k/n     rows under <store>/p1b/
-//   node experiments/ffm-covariance-adaptive/precheck-p1b.mjs --evaluate [--receipt]              the table, the half-widths, the CPU spent and the rule's outcome
+//   node experiments/ffm-covariance-adaptive/precheck-p1b.mjs --evaluate                          the widest half-width and the CPU spent, nothing else
+//   node experiments/ffm-covariance-adaptive/precheck-p1b.mjs --evaluate --final                  the end: the table, the rule's outcome and the receipt
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, args, registered, Opened, writeReceipt, c2Results, root, sha256, iso, readJsonl, grid, HOUR, DAY } from './common.mjs';
@@ -114,7 +115,9 @@ if (args.evaluate) {
   const widest = Math.max(...judged.map((x) => x.halfWidth));
   const outcome = keep ? 'keep the GNSS 1, 6 and 12 h cells with the label' : stop.length ? 'stop and ask: r_high wholly below 0.90' : 'between: stop and ask, with the table';
   const out = { plan: 'C3-A2 point 1', rule: R, windows: rows.length, withLeads: ok.length, excluded: rows.filter((r) => r.excluded).length, cpuHours, widestHalfWidth: widest, sampling: widest <= R.stopSampling.halfWidth ? 'half-width reached' : cpuHours >= R.stopSampling.cpuHours ? '1 CPU-h cap stopped it' : 'continuing', table, outcome, gfzDisclosure: 'GFZ shares the station network with ESA, so an error common to the network cannot show up in this check' };
-  if (args.receipt) console.log(writeReceipt('precheck-P1b', out, opened));
+  // before the end only the half-width and the CPU spent are shown: the stop reads nothing else (C3-A3)
+  if (!args.final) { console.log(JSON.stringify({ windows: out.windows, withLeads: out.withLeads, cpuHours, widest, sampling: out.sampling })); process.exit(0); }
+  console.log(writeReceipt('precheck-P1b', out, opened));
   console.log(JSON.stringify({ windows: out.windows, withLeads: out.withLeads, cpuHours, widest, sampling: out.sampling, outcome }));
   for (const x of table) console.log(x.cls.padEnd(8), x.axis, String(x.L).padStart(2), 'n', String(x.n).padStart(4), 'A', x.A.toFixed(3), 'B', x.B.toFixed(3), 'C', x.C.toFixed(3), 'rLow', x.rLow.toFixed(3), `[${x.rLow95[0].toFixed(3)}, ${x.rLow95[1].toFixed(3)}]`, 'hw', x.halfWidth.toFixed(3), 'rHigh', x.rHigh.toFixed(3), `[${x.rHigh95[0].toFixed(3)}, ${x.rHigh95[1].toFixed(3)}]`);
   process.exit(0);

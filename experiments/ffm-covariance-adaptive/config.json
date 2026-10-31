@@ -502,7 +502,8 @@
  },
  "amendments": [
   "C3-A1 2026-10-31",
-  "C3-A2 2026-10-31"
+  "C3-A2 2026-10-31",
+  "C3-A3 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
@@ -533,7 +534,7 @@
   },
   "stopSampling": {
    "halfWidth": 0.05,
-   "cpuHours": 1
+   "cpuHours": 4
   },
   "gfz": {
    "root": "/opt/data/sdn-archive/e14-covariance-realism/reference",
