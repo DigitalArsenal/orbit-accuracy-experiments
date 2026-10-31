@@ -1,0 +1,300 @@
+{
+ "experiment": "ffm-srp-seed-high-beta",
+ "task": "experiments-ffm-srp-seed-high-beta-20261031",
+ "registered": "2026-10-31",
+ "store": "/opt/data/sdn-archive/ffm-srp-seed-high-beta",
+ "workers": 8,
+ "satellites": {
+  "glonass": {
+   "40001": "R855",
+   "44850": "R859",
+   "37869": "R743",
+   "54377": "R861"
+  },
+  "galileoIov": [
+   38857,
+   37846
+  ],
+  "galileo": [
+   41859,
+   49810,
+   38857,
+   41861,
+   61183,
+   43565,
+   40544,
+   59600,
+   49809,
+   41549,
+   43058,
+   43056,
+   43564,
+   43566,
+   37846,
+   59598,
+   41860,
+   43057,
+   40890
+  ]
+ },
+ "seeds": {
+  "glonass": {
+   "current": 0.00759375,
+   "published": 0.0325046
+  },
+  "galileo": {
+   "41859": 0.0254907,
+   "49810": 0.0253462,
+   "38857": 0.0257528,
+   "41861": 0.0254143,
+   "61183": 0.0253308,
+   "43565": 0.025388,
+   "40544": 0.0255253,
+   "59600": 0.025431,
+   "49809": 0.0253199,
+   "41549": 0.025455,
+   "43058": 0.0253162,
+   "43056": 0.0253532,
+   "43564": 0.025345,
+   "43566": 0.0253811,
+   "37846": 0.0257835,
+   "59598": 0.025347,
+   "41860": 0.0253752,
+   "43057": 0.0253614,
+   "40890": 0.0254514
+  }
+ },
+ "seedArithmetic": {
+  "rule": "AGOM = A/m x Cr 1.3 (C2-A4)",
+  "glonassCurrent": "3.05 m x 2.71 m = 8.2655 m2; / 1415 kg = 0.00584134; x 1.3 = 0.00759375",
+  "glonassPublished": "Duan, Hugentobler, Hofacker, Selmke (2020), J. Geod. 94:72, doi:10.1007/s00190-020-01400-9, Table 5: arrays 30.85 m2 + largest body surface +/-x 4.53 m2 = 35.38 m2; / 1415 kg = 0.0250035; x 1.3 = 0.0325046",
+  "galileoCurrent": "GSC satellite metadata section 6: 2 x 5.41 m2 + +/-Z (3.036 m2 FOC, 3.00 m2 IOV); IGS SINEX mass (last row); x 1.3"
+ },
+ "arms": {
+  "A0": {
+   "family": "glonass",
+   "seed": "current",
+   "priorFraction": 1
+  },
+  "A1": {
+   "family": "glonass",
+   "seed": "published",
+   "priorFraction": 1
+  },
+  "A2": {
+   "family": "glonass",
+   "seed": "current",
+   "priorFraction": 10
+  },
+  "G0": {
+   "family": "galileo",
+   "seed": "current",
+   "priorFraction": 1
+  },
+  "G2": {
+   "family": "galileo",
+   "seed": "current",
+   "priorFraction": 10
+  }
+ },
+ "fit": {
+  "form": "C3's settingsFor('R3') with the arm's seed; the arm's prior sigma on AGOM",
+  "sigmaM": 10,
+  "fixed": {
+   "b": 0
+  },
+  "maximumIterations": 40,
+  "correctionTolerance": 0.01,
+  "sigmaEditThreshold": 5,
+  "apriori": {
+   "positionSigmaM": 100000,
+   "velocitySigmaMS": 10
+  },
+  "forces": {
+   "degree": 70,
+   "order": 70,
+   "thirdBodies": [
+    10,
+    301
+   ],
+   "srp": true,
+   "drag": true,
+   "atmosphere": "NRLMSISE00",
+   "solidTides": true,
+   "relativity": "IERS_2010"
+  },
+  "integrator": {
+   "tolerance": 1e-10,
+   "maxStep": 120,
+   "minStep": 0.0001
+  },
+  "trackHours": 24,
+  "trackStepSeconds": 600
+ },
+ "grid": {
+  "from": "2025-10-03",
+  "to": "2026-03-29",
+  "everyDays": 3
+ },
+ "daily": [
+  {
+   "norads": [
+    54377
+   ],
+   "from": "2025-10-03",
+   "to": "2026-03-29"
+  },
+  {
+   "norads": [
+    40001,
+    44850,
+    37869
+   ],
+   "from": "2025-12-24",
+   "to": "2026-01-20"
+  }
+ ],
+ "leads_h": [
+  1,
+  6,
+  12,
+  24,
+  48,
+  72
+ ],
+ "truth": {
+  "arcsFrom": "2025-09-20",
+  "arcsTo": "2026-04-15",
+  "allowedTo": "2026-05-31",
+  "leadToleranceSeconds": 150,
+  "minCoverage": 0.9,
+  "esa": "ESA0OPSFIN_",
+  "gfz": {
+   "root": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+   "prefix": "GFZ0MGXRAP_"
+  }
+ },
+ "sun": {
+  "module": "propagator/solar-system-bodies",
+  "kernel": "/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de440s.bsp",
+  "kernelSha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2",
+  "taiMinusUtcSeconds": 37
+ },
+ "primary": {
+  "noticesDir": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices",
+  "sinex": "/opt/data/sdn-archive/hac/igs-metadata/20261009/igs_satellite_metadata.snx",
+  "noticeSeal": "2026-06-01",
+  "noticeBeforeHours": 24,
+  "noticeAfterHours": 84,
+  "gfzFile": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+  "gfzThrough": "2026-05-31",
+  "stormAp": 30
+ },
+ "bins": [
+  [
+   0,
+   15
+  ],
+  [
+   15,
+   30
+  ],
+  [
+   30,
+   60
+  ],
+  [
+   60,
+   75
+  ],
+  [
+   75,
+   90
+  ]
+ ],
+ "cells": {
+  "H": {
+   "norads": [
+    54377
+   ],
+   "minAbsBeta": 75,
+   "windows": 28,
+   "from": "2025-12-24",
+   "to": "2026-01-20"
+  },
+  "M1": {
+   "norads": [
+    40001,
+    44850,
+    37869
+   ],
+   "windows": 84,
+   "from": "2025-12-24",
+   "to": "2026-01-20"
+  },
+  "M2": {
+   "norads": [
+    54377
+   ],
+   "maxAbsBeta": 30,
+   "windows": 63
+  }
+ },
+ "rules": {
+  "primaryLead_h": 6,
+  "control": {
+   "sA0": [
+    0.4,
+    1.0
+   ],
+   "agomOverCurrentBelow": 4.0,
+   "atAbsBetaAtLeast": 80
+  },
+  "removedAtMost": 0.2,
+  "reducedFraction": 0.7,
+  "sagGoneAtLeast": 0.95,
+  "lowBetaBand": [
+   0.95,
+   1.05
+  ],
+  "galileoTLeads_h": [
+   24,
+   48,
+   72
+  ],
+  "galileoBand": [
+   0.95,
+   1.05
+  ],
+  "largestListed": 10
+ },
+ "bootstrap": {
+  "resamples": 10000,
+  "level": 0.95,
+  "seed": "SHA-256 of the cell's name"
+ },
+ "looks": {
+  "glonassMedianN6h": {
+   "under30": 0.0,
+   "30to60": 0.1,
+   "60to75": 0.19,
+   "above75": 0.68,
+   "peak": -1.1
+  },
+  "agomOverCurrent": {
+   "everyBeta": [
+    4.17,
+    4.28
+   ],
+   "at54377BetaMinus87": 3.67,
+   "formalSigma": 0.45
+  },
+  "tRms72h": {
+   "galileo": 61,
+   "glonass": [
+    10,
+    14
+   ]
+  }
+ }
+}
