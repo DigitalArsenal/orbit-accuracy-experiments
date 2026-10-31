@@ -214,3 +214,27 @@ From XM2's measured cost at the same settings: a fit round is one propagator/ffm
 median 3 rounds (19.5 s, group P); a forecast of 10 days at the same settings, no STM, output at the 1,152 scored epochs (300 s),
 took 17.4 s (P) and 12.0 s (S1). XM2's 156 failed group-P fits took 9.8 worker-hours with no forecast; under 0.7.0 the three
 examples took 7 to 16 rounds. Expected: about 24 worker-hours, about 1.7 h on 16 workers.
+
+## Amendment 1 (2026-10-31, during the run; ruled by the coordinator before any cell was computed)
+
+- **Found during the run.** The equality check stopped the run at P|39452|2026-05-14 (01:35:30Z; 147 windows stored, no cell
+  computed): the row's `filled` lists 2026-05-09 and XM2's lists none. Every other compared field is equal (the bins, P, the
+  condition's rows, the held days, the `$DCL` digest, the arc and X2), and its F2 and F3 equal XM2's arms byte for byte (fit, GCRF
+  digest and errors; both XM2 fits CONVERGED with no rejected trial).
+- **Why.** The condition's rows begin at the cutoff - 72 h - 3 d. For the cutoff 2026-05-14 they begin on 2026-05-08, so the
+  registered drivers rule (every day from the rows' first day through D0 + 8 that has no row takes the last row at or before it)
+  fills 2026-05-09. propagator/ffm reads only from the day before the arc's first day (2026-05-10), so that row is inert. XM2 reran
+  under A1 only the windows propagator/ffm refused; the windows of the cutoff 2026-05-14 were not refused, so XM2's rows predate A1
+  and list no filled day. The registration's equality list named "the held and filled days", and `filled` describes the F arms'
+  input preparation, which XM3 computes itself.
+- **Scope.** Every cutoff was checked: exactly the 7 windows of the cutoff 2026-05-14 (group P: 39452, 39451, 39453, 43476, 43477;
+  S1: 39634, 62261). The 21 windows XM2 reran under A1 agree.
+- **The rule.** The equality check compares `filled` on the days propagator/ffm reads, the span XM2's A1 defined: from the day
+  before the arc's first day (D0 - 4) through D0 + 8. Data preparation, every other compared field, the decision rule and the arms
+  are unchanged.
+- **The rerun.** The flagged row stays in the store as evidence; a flagged row is not a stored window for the runner, so that
+  window is rerun under the amended check, and the table takes the rerun row for its key and lists the flagged rows.
+  `DEFECT.json` is kept as `DEFECT.amendment-1.json`.
+- **Ruling.** The coordinator approved this scoped version on 2026-10-31, before any cell was computed: it corrects a bookkeeping
+  field the registration listed by mistake, it is outcome-blind (no cell computed; P, X2 and the F results equal XM2's byte for
+  byte), and the guard stays armed for every other field.

@@ -116,10 +116,13 @@ const spacingSeconds = (lines) => {   // XM's
 };
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
-/** Condition O: the fields of a window that XM2 stored (its primary row), compared with this run's: the differing fields. */
+/** Condition O: the fields of a window that XM2 stored (its primary row), compared with this run's: the differing fields. The
+ *  filled days are compared on the days propagator/ffm reads, D0 - 4 through D0 + 8 (PLAN.md, amendment 1). */
 function againstXm2(row, x) {
   if (!x) return ['no XM2 row'];
-  const differ = ['binEpochs', 'entered', 'excluded', 'P', 'O', 'dca', 'arc', 'held', 'filled'].filter((f) => !same(row[f], x[f]));
+  const D0 = ms(row.cutoff), read = (days) => (days ?? []).filter((d) => { const t = Date.parse(`${d}T00:00:00Z`); return t >= D0 - 4 * DAY && t <= D0 + 8 * DAY; });
+  const differ = ['binEpochs', 'entered', 'excluded', 'P', 'O', 'dca', 'arc', 'held'].filter((f) => !same(row[f], x[f]));
+  if (!same(read(row.filled), read(x.filled))) differ.push('filled');
   if (!same(row.arms?.X2, x.arms?.X2)) differ.push('X2');
   return differ;
 }
@@ -276,7 +279,7 @@ if (args.check) {
   process.exit(bad ? 1 : 0);
 }
 
-const all = windows(), done = stored(condition);
+const all = windows(), done = new Map([...stored(condition)].filter(([, r]) => !r.defect));   // a flagged row is rerun (amendment 1)
 const mine = all.filter((w, i) => Math.floor(i / CHUNK) % n === k && !done.has(w.key));
 const limit = args.limit ? Number(args.limit) : Infinity;
 let count = 0;

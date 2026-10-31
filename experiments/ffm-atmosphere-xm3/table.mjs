@@ -233,13 +233,15 @@ function invariance(rows, xm2) {
 }
 
 const rowsDir = path.join(store, 'rows');
-/** The stored rows of both conditions, one per condition and key. */
+const allRows = () => (fs.existsSync(rowsDir) ? fs.readdirSync(rowsDir).filter((f) => /^[OM]\.s\d+\.jsonl$/.test(f)).sort() : []).flatMap((f) => readJsonl(path.join(rowsDir, f)));
+/** The stored rows of both conditions, one per condition and key: the first unflagged row (a flagged row's rerun, amendment 1). */
 export function storedRows() {
-  const files = fs.existsSync(rowsDir) ? fs.readdirSync(rowsDir).filter((f) => /^[OM]\.s\d+\.jsonl$/.test(f)).sort() : [];
   const byKey = new Map();
-  for (const f of files) for (const r of readJsonl(path.join(rowsDir, f))) { const id = `${r.condition}|${r.key}`; if (!byKey.has(id)) byKey.set(id, r); }
+  for (const r of allRows()) { const id = `${r.condition}|${r.key}`; if (!byKey.has(id) || byKey.get(id).defect) byKey.set(id, r); }
   return [...byKey.values()].sort((x, y) => (`${x.condition}|${x.key}` < `${y.condition}|${y.key}` ? -1 : 1));
 }
+/** The flagged rows kept as evidence (amendment 1): key, condition and the fields flagged. */
+const flaggedRows = () => allRows().filter((r) => r.defect).map((r) => ({ key: r.key, condition: r.condition, defect: r.defect })).sort((x, y) => (`${x.condition}|${x.key}` < `${y.condition}|${y.key}` ? -1 : 1));
 
 const digestOf = (rows) => sha256(rows.map(comparable).join('\n'));
 /** XM2's primary cell for an XM3 cell (the same group, condition, clusters, contrast and lead), or null. */
@@ -277,6 +279,7 @@ export function buildTable(rows = storedRows()) {
   return {
     experiment: config.experiment, id: config.id, task: config.task, modulesCommit: build.modulesCommit, xmCommit: config.xm.commit, xm2Commit: config.xm2.commit,
     rowsDigest: digestOf(rows), rows: rows.length, conditions, rule: config.verdict.rule, inputAvailability: config.verdict.inputAvailability,
+    amendment1: { rule: 'filled days compared on the days propagator/ffm reads, D0 - 4 through D0 + 8 (PLAN.md)', flagged: flaggedRows() },
     counts: counts(rows), fits: fits(rows), verdicts, cells,
     comparison: {
       xm2RowsDigest: X2T.rowsDigest?.primary ?? null,
