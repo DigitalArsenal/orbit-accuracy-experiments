@@ -2,7 +2,7 @@
  "experiment": "ffm-covariance-adaptive",
  "id": "C3-small",
  "registered": "2026-10-31",
- "frozen": false,
+ "frozen": true,
  "freezeBy": "2026-11-09",
  "store": "/opt/data/sdn-archive/ffm-covariance-adaptive",
  "workers": 12,
@@ -694,7 +694,7 @@
   "sealed": "no fresh file's states are opened before scoring"
  },
  "check260926": {
-  "checkedUtc": "2026-10-31T10:01Z",
+  "checkedUtc": "2026-10-31T16:30Z",
   "result": "still a stub at EDC: 307-308 B, Last-Modified 2026-10-07, on all four spheres; cutoffs 09-20 and 09-27 are lost unless it is reissued"
  },
  "firstFreeze": {
@@ -768,5 +768,7 @@
    "the spheres",
    "R2"
   ]
- }
+ },
+ "frozenOn": "2026-10-31",
+ "judgedEnd": "2026-11-30"
 }

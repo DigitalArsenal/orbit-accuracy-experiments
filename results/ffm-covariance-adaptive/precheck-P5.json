@@ -1,17 +1,15 @@
 {
  "receipt": "precheck-P5",
- "createdUtc": "2026-10-31T07:25:53.774Z",
- "experimentsCommit": "c63e92eb972767d133ac09f78d75962c97bed1f2",
+ "createdUtc": "2026-10-31T15:49:17.257Z",
+ "experimentsCommit": "a0d1c37188adb8be28e137006740792141c0a272",
  "plan": "section 5 P5",
  "perClass": {
   "R3": {
    "windows": 20,
    "refused": [],
-   "exclusion5": [
-    "43058 2026-05-10T00:00:00.000Z: fit analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every day of the arc and the day before it."
-   ],
+   "exclusion5": [],
    "excluded": 0,
-   "maxAbsDeltaD2over3": 0.00728313747542586,
+   "maxAbsDeltaD2over3": 0.0010016043533553898,
    "maxRelVariance": 0.0012593449380745054
   },
   "R2-M": {
