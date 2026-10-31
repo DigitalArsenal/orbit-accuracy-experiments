@@ -1,0 +1,25 @@
+{
+ "rule": "y = - sum(s T0) / sum(s^2) over a block's dev windows' primary samples, against ESA; T0 base's along-track error; s = T(Yt) - T0 per +1 nm/s^2; rounded to 0.001 nm/s^2",
+ "valuesNmS2": {
+  "FOC": 0.685,
+  "IOV": -0.043,
+  "GLONASS": -0.086
+ },
+ "detail": {
+  "FOC": {
+   "windows": 372,
+   "samples": 1018,
+   "unrounded": 0.685378
+  },
+  "IOV": {
+   "windows": 45,
+   "samples": 123,
+   "unrounded": -0.0427147
+  },
+  "GLONASS": {
+   "windows": 92,
+   "samples": 252,
+   "unrounded": -0.0862036
+  }
+ }
+}
