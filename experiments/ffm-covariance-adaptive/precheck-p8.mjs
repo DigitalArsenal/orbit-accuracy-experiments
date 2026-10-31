@@ -45,6 +45,7 @@ for (const cls of Object.keys(CLASSES)) {
     const m = median(ratios);
     rows.push({ L, axis: 'RTN'[k], trueU: label, u0, windows: ratios.length, medianHistory: median(lengths), medianRatio: m, off: m - 1, pass: Math.abs(m - 1) <= 0.1 });
   }
+  if (!rows.length) { out.classes[cls] = { rhoAt3Days: rho, rows, failures: [], worst: null }; continue; }
   out.classes[cls] = { rhoAt3Days: rho, rows, failures: rows.filter((r) => !r.pass), worst: rows.reduce((p, q) => (Math.abs(q.off) > Math.abs(p.off) ? q : p)) };
   console.error(cls, 'worst', JSON.stringify(out.classes[cls].worst), 'failures', out.classes[cls].failures.length);
 }

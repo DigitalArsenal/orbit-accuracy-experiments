@@ -4,6 +4,7 @@
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref2                P-REF's second check: reference-based e^u against truth-based, at the fitted constants
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref-gfz             C3-A5: e^u against the registered reference and against GFZ, GNSS calibration windows
 //   node experiments/ffm-covariance-adaptive/score.mjs --extract --class R3   C3-ab's primary samples for P7 and P8 (under <store>/extract/)
+//   node experiments/ffm-covariance-adaptive/score.mjs --freeze [--judged <end>]     results/.../frozen-constants.json, once, from the fit receipts and P7's summary
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, args, registered, Opened, writeReceipt, results, sha256 } from './common.mjs';
@@ -203,6 +204,22 @@ if (args['pref-gfz']) {
   out.pass = Object.values(out.classes).every((c) => !c.stops.length);
   console.log(writeReceipt('precheck-P-REF-GFZ', out, opened));
   console.log(JSON.stringify({ pass: out.pass, stops: Object.fromEntries(Object.entries(out.classes).map(([k, v]) => [k, v.stops])) }));
+  process.exit(0);
+}
+
+if (args.freeze) {
+  // What the freeze commit holds (PLAN.md section 6): the constants, k_ref, gate thresholds, dependence parameters and the fetch manifest rule. Written once, from the receipts; run.mjs --check reads it.
+  const inputs = JSON.parse(fs.readFileSync(path.join(store, 'p7', 'inputs.json'))), summary = JSON.parse(fs.readFileSync(path.join(store, 'p7', 'summary.json')));
+  const classes = Object.fromEntries(Object.keys(CLASSES).map((cls) => { const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`))), ab = fit.arms['C3-ab']; return [cls, { a0: ab.a0, a1: ab.a1, n0: ab.n0, kRef: fit.kRef, kRefGroups: ['1-12 h', '24-72 h'], classMedianChi: fit.classMedianChi, fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}`))) }]; }));
+  const heavy = Object.fromEntries(Object.entries(summary).filter(([k]) => k.endsWith('.base-heavy')).map(([k, v]) => [k.split('.')[0], { nEff: v.nEff, n: v.n, meanCov: v.meanCov }]));
+  const body = { experiment: config.id, frozenUtc: new Date().toISOString(), c2ConstantsSha256: config.c2.constantsSha256, classes,
+    gate: { verdict: config.verdict, nEffHeavy: heavy, judged: args.judged ?? null, q6: config.q6 },
+    dependence: { d2: inputs.d2, z: inputs.z, samePlaneByConstellation: inputs.samePlaneByConstellation, marginal: Object.fromEntries(Object.entries(inputs.marginal).map(([L, m]) => [L, { n: m.n, rawMean: m.rawMean, covAtMean1: m.covAtMean1, varPerWindow: m.varPerWindow }])) },
+    fetchManifest: config.fetchManifest };
+  const file = pathOf('frozen-constants');
+  if (fs.existsSync(file)) throw new Error(`${file} exists: the freeze is written once`);
+  fs.writeFileSync(file, `${JSON.stringify(body, null, 1)}\n`);
+  console.log(file, sha256(fs.readFileSync(file)));
   process.exit(0);
 }
 
