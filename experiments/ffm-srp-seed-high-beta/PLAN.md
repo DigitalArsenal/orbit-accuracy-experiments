@@ -111,3 +111,13 @@ No tuning on scored windows. A deviation is an amendment at the end of this file
 ## 10. Cost
 
 Measured on one core, machine load 8-14: fit 2.2 s (2 FFM rounds with STM over the 24 h arc, 145 points at 600 s), forecast 3.6 s (96 h from the fit epoch, covariance carried, outputs at the six leads); RK78, relative tolerance 1e-10, steps up to 120 s, 70 x 70. 3525 x 5.8 s = 5.7 CPU-h; about 45-60 min on 8 workers. Store /opt/data/sdn-archive/ffm-srp-seed-high-beta: about 0.02 GB.
+
+## Amendment 1, 2026-10-31, after the table: report-only additions, no rule changed
+
+Nothing in sections 2 to 8 changes. After the table existed the coordinator asked for three report-only additions, and the results label them so:
+
+1. **The fit itself:** reduced chi-square of each arm over its control and the move of the fitted state, per cell, with intervals, on every window of a set (score.mjs).
+2. **The consumer list's fitted-over-seed column (consumers.mjs):** the coordinator approved reading C2's R1 and R2 calibration and validation rows, iss-fit*, and XM2's and XM3's rows: file names checked first, a row's date read first, rows after 2026-05-31 skipped, only the satellite's number, fit.parameters and fit.termination used, every file in the integrity log. C3-small's rows and results, B2's rows and C2's R3 rows stay unread and are marked "not read".
+3. **Galileo FOC against IOV per satellite, and the along-track error against one shape (looks.py):** a look chosen after the table, no rule attached.
+
+report.mjs generates the results README from these and from the table.

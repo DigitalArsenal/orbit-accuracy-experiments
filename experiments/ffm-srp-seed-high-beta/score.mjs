@@ -118,6 +118,16 @@ function ratioCells(rowsA, control, name, cellName, axes, leads, keep, truth = '
 }
 const classify = (cells, [lo, hi]) => (cells.some((c) => c.ratioInterval && c.ratioInterval[0] > hi) ? 'HARM' : cells.some((c) => c.ratioInterval && c.ratioInterval[1] < lo) ? 'HELP' : 'NO CHANGE');
 
+/** Report only (coordinator's request, 2026-10-31; no rule attaches): the fit itself, arm against control, on every window of a set with no sample filter. Residual RMS per axis = 10 m x sqrt(median reduced chi-square). */
+function fitQualityCell(rowsA, control, name, cell) {
+  const p = [...rowsA.values()].filter(cell).flatMap((r) => { const c = control.get(key(r)); return r.fit?.ok && c?.fit?.ok ? [[r, c]] : []; });
+  const ratio = p.map(([r, c]) => r.fit.reducedChiSquare / c.fit.reducedChiSquare);
+  const move = p.map(([r, c]) => Math.hypot(r.fit.state[0] - c.fit.state[0], r.fit.state[1] - c.fit.state[1], r.fit.state[2] - c.fit.state[2]));
+  const vel = p.map(([r, c]) => Math.hypot(r.fit.state[3] - c.fit.state[3], r.fit.state[4] - c.fit.state[4], r.fit.state[5] - c.fit.state[5]));
+  const dA = p.map(([r, c]) => (r.fit.agom - c.fit.agom) / c.seed);
+  return { n: p.length, chi2Ratio: sig(median(ratio)), chi2RatioInterval: medianCI(ratio, `${name}|chi2`), residualRmsM: sig(10 * Math.sqrt(median(p.map(([r]) => r.fit.reducedChiSquare)))), residualRmsControlM: sig(10 * Math.sqrt(median(p.map(([, c]) => c.fit.reducedChiSquare)))), stateMoveM: sig(median(move)), stateMoveIntervalM: medianCI(move, `${name}|move`), velocityMoveMS: sig(median(vel)), agomMoveOverControlSeed: sig(median(dA)), agomMoveInterval: medianCI(dA, `${name}|dA`) };
+}
+
 const counts = (rows) => {
   const out = {};
   for (const r of rows) {
@@ -130,8 +140,10 @@ const counts = (rows) => {
   return out;
 };
 
+// PLAN.md section 9, disclosure 8: the one known unlisted event, named wherever it appears among the largest errors.
+const KNOWN_UNLISTED = [{ norad: 40001, at: Date.parse('2026-02-16T12:00:00Z'), note: 'R855 event 2026-02-16, no notice lists it (public in C3\'s P2)' }];
 const largest = (rowsA, keep, L = 72, topN = R.largestListed) => [...rowsA.values()].filter((r) => r.fit?.ok && lead(r, L)).sort((a, b) => Math.abs(errOf(b, L, 'T')) - Math.abs(errOf(a, L, 'T'))).slice(0, topN)
-  .map((r) => ({ norad: r.norad, E: r.E.slice(0, 10), betaDeg: sig(r.betaDeg, 3), t72h_m: sig(errOf(r, L, 'T')), t72h_gfz_m: sig(errOf(r, L, 'T', 'gfz')), primary: keep(r, L), agomOverSeed: sig(r.fit.agom / r.seed, 4) }));
+  .map((r) => ({ norad: r.norad, E: r.E.slice(0, 10), betaDeg: sig(r.betaDeg, 3), t72h_m: sig(errOf(r, L, 'T')), t72h_gfz_m: sig(errOf(r, L, 'T', 'gfz')), primary: keep(r, L), agomOverSeed: sig(r.fit.agom / r.seed, 4), note: KNOWN_UNLISTED.some((k) => k.norad === r.norad && Date.parse(r.tIn) <= k.at && k.at <= Date.parse(r.tIn) + L * HOUR) ? KNOWN_UNLISTED.find((k) => k.norad === r.norad).note : '' }));
 
 /** Everything PLAN.md section 7 asks of a full set of rows. */
 export function buildTable(rows, opened) {
@@ -161,10 +173,15 @@ export function buildTable(rows, opened) {
   const galileoAll = ratioCells(A.G2, A.G0, 'G2|allSamples', onGrid, ['T'], R.galileoTLeads_h, all);
   const inBand = galileo.all.every((c) => c.ratioInterval && c.ratioInterval[0] >= R.galileoBand[0] && c.ratioInterval[1] <= R.galileoBand[1]);
   const falls = galileo.all.some((c) => c.ratioInterval && c.ratioInterval[1] < R.galileoBand[0]), rises = galileo.all.some((c) => c.ratioInterval && c.ratioInterval[0] > R.galileoBand[1]);
+  const lowAll = (r) => r.betaDeg != null && absBeta(r) < 30, midAll = (r) => r.betaDeg != null && absBeta(r) >= 30 && absBeta(r) < 75;
+  const fitQuality = {};
+  for (const X of ['A1', 'A2']) fitQuality[X] = Object.fromEntries([['H', CELLS.H], ['M1', CELLS.M1], ['M2', CELLS.M2], ['|beta| < 30, every GLONASS window', lowAll], ['30 <= |beta| < 75, every GLONASS window', midAll]].map(([c, cell]) => [c, fitQualityCell(A[X], A.A0, `${X}|fit|${c}`, cell)]));
+  fitQuality.G2 = { 'every Galileo window': fitQualityCell(A.G2, A.G0, 'G2|fit|all', () => true) };
   const glonassT = { A1: ratioCells(A.A1, A.A0, 'A1|grid', onGrid, ['T'], R.galileoTLeads_h, primary), A2: ratioCells(A.A2, A.A0, 'A2|grid', onGrid, ['T'], R.galileoTLeads_h, primary) };
   return {
     experiment: config.experiment, counts: counts(rows), control, cellWindows,
-    high, agomControl: { H: fH0, M2: fM0, sagRatio: sig(fH0.agomMedian / fM0.agomMedian) }, hByDate, lowBeta, bins, satellites,
+    cost: { fitSecondsMedian: sig(median(rows.map((r) => r.seconds?.fit).filter(Number.isFinite))), forecastSecondsMedian: sig(median(rows.map((r) => r.seconds?.forecast).filter(Number.isFinite))), ffmRoundsMedian: median(rows.map((r) => r.fit?.ffmCalls).filter(Number.isFinite)), totalCpuHours: sig(rows.reduce((s, r) => s + (r.seconds?.fit ?? 0) + (r.seconds?.forecast ?? 0), 0) / 3600) },
+    fitQuality, high, agomControl: { H: fH0, M2: fM0, sagRatio: sig(fH0.agomMedian / fM0.agomMedian) }, hByDate, lowBeta, bins, satellites,
     galileo: { outcome: falls && rises ? 'T CHANGES, both ways' : falls ? 'T CHANGES, falls' : rises ? 'T CHANGES, rises' : 'T NO CHANGE', insideBand: inBand, cells: galileo, gfz: galileoGfz, allSamples: galileoAll, largestG0: largest(A.G0, primary), looks: config.looks.tRms72h },
     glonassT, largestA0: largest(A.A0, primary),
   };
@@ -190,6 +207,8 @@ export function renderTable(t) {
   for (const r of t.hByDate) o.push(`| ${r.E} | ${r.betaDeg} | ${r.primary ? 'yes' : 'no'} | ${r.n6h_A0} | ${r.n6h_A1} | ${r.n6h_A2} | ${r.n6h_gfz_A0} | ${r.agom_A0} | ${r.agom_A1} | ${r.agom_A2} |`);
   o.push('', '## Low beta: M1 (same dates, other planes) and M2 (54377 at |beta| < 30)', '', `Outcomes: ${Object.entries(t.lowBeta).map(([X, v]) => `${X}: M1 ${v.M1.outcome}, M2 ${v.M2.outcome}`).join('; ')}.`, '', '| arm | cell | axis | L, h | n | RMS, m | RMS A0, m | ratio | interval |', '| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |');
   for (const [X, v] of Object.entries(t.lowBeta)) for (const c of ['M1', 'M2']) for (const k of v[c].cells) o.push(`| ${X} | ${c} | ${k.axis} | ${k.L} | ${k.n} | ${k.rms_m} | ${k.rmsControl_m} | ${k.ratio} | ${fmtCI(k.ratioInterval)} |`);
+  o.push('', '## The fit itself, report only (every window of the set, no sample filter)', '', 'Reduced chi-square of the arm over its control, paired; residual RMS per axis = 10 m x sqrt(median reduced chi-square); the move of the fitted state at the fit epoch; AGOM\'s move in units of the control\'s seed.', '', '| arm | set | n | chi2 ratio | interval | residual RMS, m | control, m | state move, m | interval, m | velocity move, m/s | AGOM move | interval |', '| --- | --- | ---: | ---: | --- | ---: | ---: | ---: | --- | ---: | ---: | --- |');
+  for (const [X, cells] of Object.entries(t.fitQuality)) for (const [c, k] of Object.entries(cells)) o.push(`| ${X} | ${c} | ${k.n} | ${k.chi2Ratio} | ${fmtCI(k.chi2RatioInterval)} | ${k.residualRmsM} | ${k.residualRmsControlM} | ${k.stateMoveM} | ${fmtCI(k.stateMoveIntervalM)} | ${k.velocityMoveMS} | ${k.agomMoveOverControlSeed} | ${fmtCI(k.agomMoveInterval)} |`);
   o.push('', '## N per beta bin at 6 h, 3-day grid', '', '| arm | |beta| | n | S, m | interval, m | S GFZ, m | RMS N, m | median abs N, m | AGOM/seed | sigma AGOM/seed | sigma N, m | mean z^2 N |', '| --- | --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |');
   for (const a of ['A0', 'A1', 'A2', 'G0', 'G2']) for (const b of t.bins[a]) if (b.n) o.push(`| ${a} | ${b.bin[0]}-${b.bin[1]} | ${b.n} | ${b.S6h_m} | ${fmtCI(b.S6h_interval_m)} | ${b.S6h_gfz_m} | ${b.rmsN6h_m} | ${b.medianAbsN6h_m} | ${b.agomOverSeed} | ${b.agomSigmaOverSeed} | ${b.sigmaN6h_m} | ${b.z2N6h} |`);
   o.push('', 'A0 and G0 with all samples (notices and storms in):', '', '| arm | |beta| | n | S, m | RMS N, m |', '| --- | --- | ---: | ---: | ---: |');
@@ -203,8 +222,8 @@ export function renderTable(t) {
   for (const k of t.galileo.allSamples) row('G2/G0', 'all samples', k);
   for (const [X, cells] of Object.entries(t.glonassT)) for (const k of cells) row(`${X}/A0`, 'GLONASS grid', k);
   for (const [name, list] of [['G0', t.galileo.largestG0], ['A0', t.largestA0]]) {
-    o.push('', `Ten largest |T| at 72 h, ${name}:`, '', '| NORAD | cutoff | beta | T, m | T GFZ, m | primary | AGOM/seed |', '| ---: | --- | ---: | ---: | ---: | --- | ---: |');
-    for (const r of list) o.push(`| ${r.norad} | ${r.E} | ${r.betaDeg} | ${r.t72h_m} | ${r.t72h_gfz_m} | ${r.primary ? 'yes' : 'no'} | ${r.agomOverSeed} |`);
+    o.push('', `Ten largest |T| at 72 h, ${name}:`, '', '| NORAD | cutoff | beta | T, m | T GFZ, m | primary | AGOM/seed | note |', '| ---: | --- | ---: | ---: | ---: | --- | ---: | --- |');
+    for (const r of list) o.push(`| ${r.norad} | ${r.E} | ${r.betaDeg} | ${r.t72h_m} | ${r.t72h_gfz_m} | ${r.primary ? 'yes' : 'no'} | ${r.agomOverSeed} | ${r.note} |`);
   }
   return `${o.join('\n')}\n`;
 }
