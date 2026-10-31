@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, args, registered, Opened, writeReceipt, c2RowsOf, c2Results, sha256, grid, DAY, HOUR, iso } from './common.mjs';
-import { parseSinex, loadNotices } from './lib/notices.mjs';
+import { parseSinex, loadNotices, gscSvns } from './lib/notices.mjs';
 import { openPairs } from './lib/modules.mjs';
 
 registered();
@@ -93,20 +93,38 @@ const keepOf = (list) => { let total = 0, kept = 0; const per = {}; for (const n
 const noticeKeep = { glonass: keepOf([...P.glonass.c2, ...P.glonass.new]), galileo: keepOf([...P.galileo.new, ...P.galileo.c2Six]) };
 const noStorm = windows.filter((w) => !w.inStorm), flaggedNoStorm = noStorm.filter((w) => w.flag || w.large), unlistedNoStorm = flaggedNoStorm.filter((w) => !w.listed);
 const mapped = { IAC: notices.filter((n) => n.source === 'IAC'), GSC: notices.filter((n) => n.source === 'GSC') };
+// IAC numbers its NAGU in sequence within a year: a hole in the span would be a notice no bulletin carried
+const iacNumbers = {};
+for (const l of iacList) (iacNumbers[`20${l.id.slice(4, 6)}`] ??= []).push(Number(l.id.slice(0, 3)));
+const iacNumbering = Object.fromEntries(Object.entries(iacNumbers).map(([y, v]) => { const u = [...new Set(v)].sort((a, c) => a - c), holes = []; for (let i = 1; i < u.length; i += 1) for (let k = u[i - 1] + 1; k < u[i]; k += 1) holes.push(k); return [y, { first: u[0], last: u[u.length - 1], holes }]; }));
+const iacHoles = Object.values(iacNumbering).flatMap((x) => x.holes);
+const issuedBeforeSpan = iacList.filter((l) => l.issuedUtc.slice(0, 7) < months[0]);
+const issuedInSpan = iacList.filter((l) => l.issuedUtc.slice(0, 7) >= months[0]);
+// the IAC notices that map to no satellite: the spacecraft each names, through the bulletins' status tables, and whether it is one of the 14
+const P14 = new Set([...config.population.judged.glonass.c2, ...config.population.judged.glonass.new]);
+const statusOf = (sc) => { for (const b of bulletins.values()) { const r = b.status.find((x) => x.sc === sc); if (r) return r; } return null; };
+const cosmos14 = new Set([...sinex.svnOfCosmos.entries()].filter(([, svn]) => P14.has(sinex.noradOfSvn(svn))).map(([c]) => c));
+const iacUnmappedDetail = mapped.IAC.filter((n) => !n.norad).map((n) => { const sc = (/\((\d{3})\)/.exec(texts.get(n.id) ?? '') ?? [])[1] ?? null, st = sc ? statusOf(sc) : null; return { id: n.id, summary: n.summary, spacecraft: sc, cosmos: st?.cosmos ?? null, launch: st?.launch ?? null, slot: st ? `${st.plane}/${st.slot}` : null, oneOfThe14: st ? cosmos14.has(st.cosmos) : null, why: st && !sinex.svnOfCosmos.has(st.cosmos) ? `Cosmos ${st.cosmos} has no entry in the IGS SINEX of 2026-10-09` : null }; });
+// GSC rows inside the span that map to no satellite, and any population satellite among their names
+const popAll = new Set([...P14, ...config.population.judged.galileo.new, ...config.population.judged.galileo.c2Six, ...config.population.reported.alsoReported.galileoEccentric]);
+const gscSpan = gscRows.filter((x) => x.published.slice(0, 7) >= months[0]);
+const gscUnmappedInSpan = gscSpan.flatMap((x) => { const v = gscSvns(x.satellite); return (v.length ? v.filter((q) => !sinex.noradOfSvn(q)) : [null]).map((q) => ({ number: x.number, named: x.satellite, svn: q, type: x.type })); });
+const gscNamesPopulation = gscUnmappedInSpan.filter((u) => gscSvns(u.named).some((q) => popAll.has(sinex.noradOfSvn(q))));
 const pop = new Set([...config.population.judged.glonass.c2, ...config.population.judged.glonass.new, ...config.population.judged.galileo.new, ...config.population.judged.galileo.c2Six]);
 const receipt = {
   plan: 'section 5 P2', seal: SEAL, months, perMonth,
-  archives: { IAC: { bulletins: bulletins.size, absentDays: absentIac, notices: iacList.length, withFullText: iacList.filter((l) => texts.has(l.id)).length, failedMonths: iacFail },
+  archives: { IAC: { bulletins: bulletins.size, absentDays: absentIac, noticesSeen: iacList.length, issuedInSpan: issuedInSpan.length, issuedBeforeSpanAndRepeated: issuedBeforeSpan.map((l) => `${l.id} ${l.issuedUtc.slice(0, 16)}`), numbering: iacNumbering, withFullText: iacList.filter((l) => texts.has(l.id)).length, failedMonths: iacFail },
     GSC: { rows: gscRows.length, rowsFrom: gscRows[0]?.published, numbering: gaps, detailPages: details.size, failedMonths: gscFail } },
-  mapping: { iacMapped: mapped.IAC.filter((n) => n.norad).length, iacTotal: mapped.IAC.length, iacUnmapped: mapped.IAC.filter((n) => !n.norad).map((n) => `${n.id} ${n.summary}`).slice(0, 40), gscMapped: mapped.GSC.filter((n) => n.norad).length, gscTotal: mapped.GSC.length,
+  mapping: { iacMapped: mapped.IAC.filter((n) => n.norad).length, iacTotal: mapped.IAC.length, iacUnmapped: iacUnmappedDetail, gscMapped: mapped.GSC.filter((n) => n.norad).length, gscTotal: mapped.GSC.length,
+    gscSpan: { rows: gscSpan.length, unmapped: gscUnmappedInSpan.length, unmappedNames: [...new Set(gscUnmappedInSpan.map((u) => u.named))], unmappedRows: gscUnmappedInSpan, namingAPopulationSatellite: gscNamesPopulation.length },
     inPopulationInSpan: notices.filter((n) => pop.has(n.norad) && n.issued >= Date.parse('2025-09-01T00:00:00Z')).length },
   unlisted: { rule: 'C2-screen flag or d2/3 > 30 at any lead, C2 R3 constants, on the four GLONASS of C2 (cal/val); no notice over [E - 24 h, E + 84 h] issued before the seal', windows: windows.length, flagged: flagged.length, unlisted: unlisted.length, upper95: clopper(unlisted.length, windows.length), perWindow: unlisted.length / windows.length,
     nonStorm: { windows: noStorm.length, flagged: flaggedNoStorm.length, unlisted: unlistedNoStorm.length, upper95: clopper(unlistedNoStorm.length, noStorm.length) },
     flaggedWindows: flagged.map((w) => ({ norad: w.norad, E: w.E, flag: w.flag, maxD2over3: w.maxD2over3, inStorm: w.inStorm, listed: w.listed, notices: w.notices })) },
   noticeKeep, stormDaysInSpan: [...storm].filter((d) => d >= '2025-10-02').length,
   crossCheck: { iacStatusMessages: JSON.parse(opened.read(path.join(base, 'iac-news.json'), 'IAC status messages')).length },
-  outcome: iacFail.length || gscFail.length ? `FAIL: months ${[...iacFail, ...gscFail].join(', ')}` : 'pass: both archives give dated entries for every month',
+  outcome: iacFail.length || gscFail.length || iacHoles.length || gscNamesPopulation.length || iacUnmappedDetail.some((u) => u.oneOfThe14 !== false) ? `FAIL: months ${[...iacFail, ...gscFail].join(', ')}; IAC holes ${iacHoles.join(', ')}; unmapped population ${gscNamesPopulation.length}` : 'pass: both archives give dated entries for every month',
 };
 console.log(writeReceipt('precheck-P2', receipt, opened));
-console.log(JSON.stringify({ outcome: receipt.outcome, unlisted: receipt.unlisted, archives: receipt.archives, mapping: { ...receipt.mapping, iacUnmapped: receipt.mapping.iacUnmapped.length }, noticeKeep, perMonth }));
+console.log(JSON.stringify({ outcome: receipt.outcome, unlisted: receipt.unlisted, archives: receipt.archives, mapping: receipt.mapping, noticeKeep }));
 process.exit(0);
