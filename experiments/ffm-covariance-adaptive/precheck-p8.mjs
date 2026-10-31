@@ -1,4 +1,4 @@
-// P8 (PLAN.md section 5): axes-mle-ref recovers a known per-axis scale on synthetic histories built from the measured a, c, history lengths (latencies) and dependence: |median e^u_hat / e^u - 1| <= 10 % per class, axis and lead.
+// P8 (PLAN.md section 5): axes-mle-ref recovers a known per-axis scale on synthetic histories built from the measured a, c = C_j (C3-A8), history lengths (latencies) and dependence: |median e^u_hat / e^u - 1| <= 10 % per class, axis and lead.
 // For each window and lead of the class, with the frozen a0, a1, n0 and k_ref, each history's errors are drawn N(0, e^u a_j + c_j) with the serial correlation measured on the class's z (exponential in time, fitted to the 3-day lag), and
 // u_hat is the module-free statistic of lib/model.mjs. True scales: u = -0.7, 0 and +0.7, and the class's measured median u per axis and lead. Seed SHA-256 C3S|p8|<class>|<axis>|<L>|<u>. Statistics only; no FFM.
 //   node experiments/ffm-covariance-adaptive/precheck-p8.mjs
@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, store, registered, Opened, writeReceipt, results, sha256, DAY } from './common.mjs';
 import { axesMleRef, gOf, AXES, median } from './lib/model.mjs';
-import { loadClass, groupOf, CLASSES } from './lib/windows.mjs';
+import { loadClass, CLASSES } from './lib/windows.mjs';
 
 registered();
 const opened = new Opened();
@@ -15,7 +15,7 @@ const normal = (r) => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI *
 const out = { plan: 'section 5 P8', limit: 0.1, classes: {} };
 for (const cls of Object.keys(CLASSES)) {
   const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${cls}.json`)));
-  const ab = fit.arms['C3-ab'], kRef = fit.kRef;
+  const ab = fit.arms['C3-ab'];
   const ex = JSON.parse(fs.readFileSync(path.join(store, 'extract', `${cls}.json`))).rows;
   const D = loadClass(cls, { opened });
   // the measured serial correlation of z at the 3-day lag, per axis (not demeaned), for an exponential in time
@@ -32,9 +32,9 @@ for (const cls of Object.keys(CLASSES)) {
     const rand = rngOf(parseInt(sha256(Buffer.from(`C3S|p8|${cls}|${'RTN'[k]}|${L}|${label}`)).slice(0, 8), 16));
     const ratios = [], lengths = [], fullHistory = [];
     for (const w of windows) {
-      const H = w.hist.get(L);
-      if (!H?.length) continue;
-      const list = H.map(({ j, l }) => ({ day: j.tIn / DAY, a: gOf(j.chi, j.chiRef, ab.a0, ab.a1, L) * l.P[AXES[k]], c: kRef[groupOf(L)][k] * l.ref.covRtn[AXES[k]] + l.C })).sort((x, y) => x.day - y.day);
+      const H = (w.hist.get(L) ?? []).filter(({ l }) => l.err);
+      if (!H.length) continue;
+      const list = H.map(({ j, l }) => ({ day: j.tIn / DAY, a: gOf(j.chi, j.chiRef, ab.a0, ab.a1, L) * l.P[AXES[k]], c: l.C })).sort((x, y) => x.day - y.day);
       const tau = rho[k] > 0 ? -3 / Math.log(Math.min(rho[k], 0.999)) : 1e-9;
       let prev = normal(rand), prevDay = list[0].day;
       const samples = list.map((s, i) => { if (i) { const r = Math.exp(-(s.day - prevDay) / tau); prev = r * prev + Math.sqrt(Math.max(0, 1 - r * r)) * normal(rand); prevDay = s.day; } return { e: prev * Math.sqrt(Math.exp(u0) * s.a + s.c), a: s.a, c: s.c }; });

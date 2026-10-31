@@ -276,8 +276,22 @@
      72
     ]
    ],
-   "reportedAlso": 1
-  }
+   "reportedAlso": 1,
+   "use": "reference arm only, report only (C3-A8)"
+  },
+  "reportOnlyArms": [
+   "C3-b-ref",
+   "C3-ab-ref"
+  ],
+  "history": {
+   "amendment": "C3-A8",
+   "error": "forecast minus truth at E_j + L, the same arc-disjoint truth the score uses",
+   "c": "C_j (0 on R3)",
+   "a": "(g_j P_C2,j)_kk",
+   "membership": "unchanged: same cutoffs, same availability through the fit's and the reference's files, same notice rule; a sample with no truth drops out",
+   "switch": "none by class, axis, lead or family"
+  },
+  "stopAlso": "ask if the validation interval of C3-ab minus C3-ab-ref is wholly below 0; it does not switch back"
  },
  "availability": {
   "rule": "max(last epoch + lambda, Last-Modified) <= E",
@@ -527,7 +541,8 @@
   "C3-A4 2026-10-31",
   "C3-A5 2026-10-31",
   "C3-A6 2026-10-31",
-  "C3-A7 2026-10-31"
+  "C3-A7 2026-10-31",
+  "C3-A8 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
@@ -611,9 +626,9 @@
   ],
   "minHistory": 5,
   "product": "GFZ0MGXRAP, as C3-A2",
-  "error": "forecast minus GFZ at the lead epoch",
+  "error": "ESA truth against GFZ positions at the same epochs (C3-A8); the registered reference in ESA's place is reported",
   "a": "as registered",
-  "c": "as registered",
+  "c": "C_j, as in the model",
   "stop": {
    "medianBelow": 0.9,
    "leads_h": [

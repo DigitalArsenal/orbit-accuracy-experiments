@@ -16,7 +16,7 @@ export async function d2Of(list) {
   return out;
 }
 /** The covariance of arm (a0, a1, n0, useG, useU) for every sample. */
-export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = false, kRef = null }) {
+export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = false, kRef = null, history = 'reference' }) {
   const memo = new Map();
   return samples.map((s) => {
     const { w, l } = s, L = l.L;
@@ -26,8 +26,15 @@ export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = 
       const key = `${w.norad}|${w.tIn}|${L}`;
       if (memo.has(key)) u = memo.get(key);
       else {
-        const H = w.hist.get(L) ?? [], k_ = kRef[groupOf(L)];
-        u = [0, 1, 2].map((k) => axesMleRef(H.map(({ j, l: jl }) => ({ e: jl.ref.errRtnM[k], a: (useG ? gOf(j.chi, j.chiRef, a0, a1, L) : 1) * jl.P[AXES[k]], c: k_[k] * jl.ref.covRtn[AXES[k]] + jl.C })), n0));
+        const H = w.hist.get(L) ?? [];
+        if (history === 'truth') {
+          // the forecast against the later file's truth at the lead epoch, the same history and availability; no reference fit
+          const T = H.filter(({ l: jl }) => jl.err);
+          u = [0, 1, 2].map((k) => axesMleRef(T.map(({ j, l: jl }) => ({ e: jl.err[k], a: (useG ? gOf(j.chi, j.chiRef, a0, a1, L) : 1) * jl.P[AXES[k]], c: jl.C })), n0));
+        } else {
+          const k_ = kRef[groupOf(L)];
+          u = [0, 1, 2].map((k) => axesMleRef(H.map(({ j, l: jl }) => ({ e: jl.ref.errRtnM[k], a: (useG ? gOf(j.chi, j.chiRef, a0, a1, L) : 1) * jl.P[AXES[k]], c: k_[k] * jl.ref.covRtn[AXES[k]] + jl.C })), n0));
+        }
         memo.set(key, u);
       }
     }

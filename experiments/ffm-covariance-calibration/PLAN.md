@@ -508,3 +508,5 @@ releases.
 5. **C3's history inside C2's spans.** C3's per-satellite history (the 90 days before each C3 cutoff) may run C3's own forecasts against
    C3's own later fits on products inside C2's held-out spans, for the objects of points 3 and 4. No C2 row is read, nothing inside those
    spans is scored, and C3 discloses it.
+
+   (C3-A8, 2026-10-31: C3's primary history runs those forecasts against the same products directly, at the lead epoch; the later fits stay as a report-only arm. Same files and objects; no C2 row is read and nothing inside those spans is scored.)

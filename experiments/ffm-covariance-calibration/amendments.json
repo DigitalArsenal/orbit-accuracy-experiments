@@ -304,7 +304,8 @@
     "LAGEOS-1",
     "the six Galileo of P9's sample"
    ],
-   "historyInsideC2Spans": "C3's own forecasts against C3's own later fits; no C2 row read; nothing inside those spans scored"
+   "historyInsideC2Spans": "C3's own forecasts against C3's own later fits; no C2 row read; nothing inside those spans scored",
+   "historyNoteC3A8": "2026-10-31: C3's primary history runs its forecasts against the same products directly, at the lead epoch; the later fits stay as a report-only arm. Same files and objects; no C2 row is read and nothing inside those spans is scored."
   },
   "stayHeldOut": [
    "Sentinel-1D",
