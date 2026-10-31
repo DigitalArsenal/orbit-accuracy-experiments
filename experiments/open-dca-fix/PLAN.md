@@ -156,6 +156,6 @@ All 316 parse after it and none is unresolved. No test cutoff is excluded, and n
 
 **One rule for all fresh-date rows.** Every row reads the normalized text. An arc fit before this amendment keeps its row only where its weather input, the rows its space-weather frame encodes, hashes the same under both readings. All others are refit, including an arc that fit on an older bulletin because the newer one was refused. Each row carries its hash, and the test stops on any row whose hash is not its publication's normalized one. The count is in the internal plan.
 
-A refit arc starts from the last accepted arc before it, as on any resume. A kept arc that follows a refit arc keeps the solution it reached from its earlier start. Its weather did not change, so it is not refit; the size of this effect is measured on a sample before the test and reported with the result.
+A refit arc starts from the last accepted arc before it, as on any resume. A kept arc that follows a refit arc keeps the solution it reached from its earlier start. Its weather did not change, so it is not refit. Measured before the test on a sample of 40 such arcs: refitting from the new start moved ln B by at most 3e-8.
 
 **Selection is not reopened.** Its cutoffs read bulletins 20251031 to 20251231, none of them rewritten, and at all 183 cutoffs (61 dates at 3 ages) the rows hash the same under both readings. The W_N step's drag work reads condition M, with no bulletin. E13's arcs are read as stored. Selection's numbers stand as recorded.

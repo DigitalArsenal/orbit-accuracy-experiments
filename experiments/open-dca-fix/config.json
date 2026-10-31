@@ -2,7 +2,7 @@
   "experiment": "open-dca-fix",
   "task": "experiments-open-dca-fix-test-20261031",
   "plan": "experiments/open-dca-fix/PLAN.md",
-  "internalPlan": { "file": "PLAN-internal.md", "sha256": "73171fd51987a28fe436ce6ce064ec036e9af598eb854559b1033922cc56eaec" },
+  "internalPlan": { "file": "PLAN-internal.md", "sha256": "682e9be02592a4869364f86d524b20fc596919f444f06979a0244f038431f9ed" },
   "store": "/opt/data/sdn-archive/open-dca-fix",
   "statistic": { "trim": 0.1, "draws": 10000, "seed": 20261031, "familyLevel": 0.025, "tieBand": 0.02 },
   "modules": {
