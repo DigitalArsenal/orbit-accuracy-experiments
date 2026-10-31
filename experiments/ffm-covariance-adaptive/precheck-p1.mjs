@@ -2,9 +2,10 @@
 // listed by name, size and recorded Last-Modified only, never opened; the 260926 reissue is one HEAD request per sphere. Yield: at least 3 leads under the arc-disjoint rule in at least 80 % of
 // cal/val windows. ESA's arc structure: the position jump at the epoch two consecutive daily files share. Records and statistics only.
 //   node experiments/ffm-covariance-adaptive/precheck-p1.mjs
+//   node experiments/ffm-covariance-adaptive/precheck-p1.mjs --nsgf      C3-A2 point 2: the yield and lead coverage of R2 and LARES-2 on the daily arcs, nothing else
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, args, registered, Opened, writeReceipt, grid, store, readJsonl, c2Results, sha256, iso, DAY, HOUR } from './common.mjs';
+import { config, args, registered, Opened, writeReceipt, grid, store, readJsonl, c2Results, results, sha256, iso, DAY, HOUR } from './common.mjs';
 import { arcsOf, windowOf, familyOf, arcLines } from './lib/chain.mjs';
 
 registered();
@@ -20,6 +21,7 @@ const perObject = {}, perClass = {};
 for (const [cls, list] of Object.entries(config.population.calVal)) {
   perClass[cls] = { windows: 0, excluded: {}, leadCounts: {}, leadsAvailable: Object.fromEntries(config.leads_h.map((L) => [L, 0])), atLeast3: 0, nextAllowedGapH: [] };
   for (const norad of list) {
+    if (args.nsgf && familyOf(norad) !== 'nsgf') continue;
     const arcs = arcsOf(norad, { fromMs: Date.parse('2025-09-15T00:00:00Z'), toMs: Date.parse('2026-06-15T00:00:00Z'), allowedToMs: ALLOWED, opened });
     const lengths = arcs.map((a) => (a.stop - a.start) / HOUR), stepsH = arcs.slice(1).map((a, i) => (a.stop - arcs[i].stop) / HOUR);
     const r = { family: familyOf(norad), arcs: arcs.length, arcHours: quantiles(lengths), stopStepHours: quantiles(stepsH), sigmaM: quantiles(arcs.map((a) => a.sigma).filter((x) => x !== null)), windows: 0, excluded: {}, atLeast3: 0, unique: 0 };
@@ -41,6 +43,17 @@ for (const [cls, list] of Object.entries(config.population.calVal)) {
   }
   perClass[cls].nextAllowedGapH = quantiles(perClass[cls].nextAllowedGapH);
   perClass[cls].yield = perClass[cls].windows ? perClass[cls].atLeast3 / perClass[cls].windows : null;
+}
+
+if (args.nsgf) {
+  const before = JSON.parse(fs.readFileSync(path.join(results, 'precheck-P1.json')));
+  const yieldR2 = perClass.R2.yield, lares2 = perObject[53105];
+  const receipt = { plan: 'C3-A2 point 2: P1 on the daily arcs', rule: config.p1Yield, perClass: { R2: perClass.R2, 'LARES-2': perClass.R3 }, perObject,
+    yield: { R2: yieldR2, 'LARES-2': lares2.yield, r2Outcome: yieldR2 >= config.p1Yield.minWindows ? 'R2 reported as registered' : 'R2 is a consistency check', lares2Passes: lares2.yield >= config.p1Yield.minWindows },
+    onC2sThinnedArcs: { R2: before.yield.R2, 'LARES-2': before.perObject[53105].yield } };
+  console.log(writeReceipt('precheck-P1-nsgf', receipt, opened));
+  console.log(JSON.stringify({ yield: receipt.yield, before: receipt.onC2sThinnedArcs, R2: { windows: perClass.R2.windows, leads: perClass.R2.leadsAvailable, leadCounts: perClass.R2.leadCounts, gap: perClass.R2.nextAllowedGapH, excluded: perClass.R2.excluded }, lares2: { windows: lares2.windows, leads: perClass.R3.leadsAvailable, leadCounts: perClass.R3.leadCounts, gap: perClass.R3.nextAllowedGapH, excluded: lares2.excluded } }));
+  process.exit(0);
 }
 
 // ---- ESA's arc structure: the jump at the epoch two consecutive daily files share, per axis in the earlier file's RTN (gp-error-model pair_statistics), cal/val days, the whole GNSS population. Truth only: no forecast

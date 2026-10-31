@@ -12,6 +12,7 @@ export const DOMAINS_SHA256 = '7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7
 export const SCHEMA_SHA256 = '38c771916ffe63b1c404bc4d1826d7a85ddf50979d16a5f986f06b002b273aba';
 
 export async function openChain(chain = 'pin', { opened } = {}) {
+  for (const [rel, want] of Object.entries(build.harness.sha256)) if (sha256(fs.readFileSync(path.join(root, rel))) !== want) throw new Error(`${rel} is not build.json's`);
   const dir = materialize(chain);
   const { loadModule } = await import(path.join(root, 'harness/modules.mjs'));
   const { estimationCodecV3 } = await import(path.join(root, 'harness/ffm-fit-v3.mjs'));
