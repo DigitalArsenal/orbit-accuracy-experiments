@@ -1,6 +1,9 @@
 // C3-small's operator notices (PLAN.md section 1, exclusion 4; P2): parsing of the GSC NAGU pages and the IAC daily bulletins, the IGS SINEX mapping
 // from slot, PRN or spacecraft number to NORAD, and each notice's stated interval. Text parsing only; dates are read before anything else, and a row
 // at or after the seal is dropped before any other field of it is looked at.
+import fs from 'node:fs';
+import path from 'node:path';
+
 const MSK_MS = 3 * 3600e3;
 const msk = (d, hm) => { const [dd, mm, yy] = d.split('.'); return Date.parse(`20${yy}-${mm}-${dd}T${hm.slice(0, 2)}:${hm.slice(2, 4)}:00Z`) - MSK_MS; };
 const stripTags = (s) => s.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
@@ -73,13 +76,13 @@ export function parseSinex(text) {
   };
 }
 
-const TIME = /(\d\d\.\d\d\.\d\d)\/(\d{4})/g;
+const TIME = /(\d\d\.\d\d\.\d\d)[/ ](\d\d):?(\d\d)/g;
 /**
  * An IAC line's stated interval: { from, to (null when open), rts } in ms UTC. The summary's times are MSK. Return to service: PUT INTO OPERATION. A stated range gives both ends;
  * FURTHER NOTICE, or a state change with one time (a put-into-diagnostics, an unusable), is open; a frequency or point change with no FURTHER NOTICE is instantaneous.
  */
 export function iacInterval(line) {
-  const times = [...line.summary.matchAll(TIME)].map((m) => msk(m[1], m[2]));
+  const times = [...line.summary.matchAll(TIME)].map((m) => msk(m[1], `${m[2]}${m[3]}`));
   const s = line.summary.toUpperCase();
   const rts = /PUT[ -]INTO[ -]OPERATION/.test(s) || /\bRESTORED\b/.test(s);
   const issued = Date.parse(line.issuedUtc);
@@ -98,11 +101,54 @@ export function iacSvn(line, text, sinex) {
 }
 /** A GSC row's satellite: GSAT0218 to E218. */
 export const gscSvn = (name) => { const m = /^GSAT0?(\d{3})$/.exec(name ?? ''); return m ? `E${m[1]}` : null; };
+/** Every satellite a GSC row names (a row may name several): GSAT0216, GSAT0221 AND GSAT0223 to E216, E221, E223. "ALL" names none. */
+export const gscSvns = (name) => [...String(name ?? '').matchAll(/GSAT0?(\d{3})/g)].map((m) => `E${m[1]}`);
 const utc = (s) => (s && /^\d{4}-\d\d-\d\d/.test(s) ? Date.parse(`${s.replace(' ', 'T').slice(0, 16)}:00Z`) : null);
-/** A GSC NAGU's stated interval. Return to service is its USABLE types; an end date gives both ends; otherwise open. */
+/**
+ * A GSC NAGU's stated interval. Return to service: its USABLE and AVAILABLE types (never UNAVAILABLE). The end comes from the page, else the subject's UNTIL date; UNTIL FURTHER NOTICE is open;
+ * a notice that states no end (a launch, a recovered short outage, a general notice with END N/A) is instantaneous.
+ */
 export function gscInterval(row, detail) {
-  const type = String(detail?.type ?? row.type ?? '').toUpperCase(), rowType = String(row.type ?? '').toUpperCase();
-  const rts = /^(USABLE|AVAILABLE_FOR_SERVICE)/.test(type) || /^USABLE/.test(rowType);
-  const from = utc(detail?.start) ?? utc(row.start), to = utc(detail?.end);
-  return { from, to: rts ? from : to, rts, published: utc(detail?.generated) ?? utc(row.published) };
+  const type = String(row.type ?? '').toUpperCase();
+  const rts = /(^|\s)USABLE/.test(type) || /(^|\s)AVAILABLE/.test(type);
+  const from = utc(detail?.start) ?? utc(row.start);
+  const text = `${detail?.end ?? ''} ${row.subject ?? ''} ${type}`.toUpperCase();
+  const open = /UNTIL FURTHER NOTICE/.test(text);
+  const until = /UNTIL (\d{4}-\d\d-\d\d)/.exec(String(row.subject ?? '').toUpperCase());
+  const to = rts ? from : open ? null : utc(detail?.end) ?? (until ? Date.parse(`${until[1]}T24:00:00Z`) : from);
+  return { from, to, rts, published: utc(detail?.generated) ?? utc(row.published) };
+}
+
+/**
+ * Every fetched notice of the two archives: { notices [{ source, id, svn, norad, kind, summary, issued, from, to, rts }], overlap(norad, fromMs, toMs, asOfMs), iacList, gscRows, bulletins, texts, details }.
+ * Exclusion 4: a notice naming the satellite, except return to service, over its stated interval (open: to the next return to service), issued by asOfMs.
+ */
+export function loadNotices(base, sinex, seal, opened) {
+  const read = (f, label) => (opened ? opened.read(f, label) : fs.readFileSync(f));
+  const iacDir = path.join(base, 'iac');
+  const bulletins = new Map(), lines = new Map(), texts = new Map();
+  for (const y of fs.readdirSync(iacDir).sort()) for (const f of fs.readdirSync(path.join(iacDir, y)).sort()) {
+    if (!f.endsWith('en.txt')) continue;
+    const day = `${y}-${f.slice(0, 2)}-${f.slice(2, 4)}`;
+    if (day >= seal) throw new Error(`a bulletin at or after the seal: ${f}`);
+    const b = parseIacBulletin(read(path.join(iacDir, y, f), 'IAC bulletin').toString());
+    bulletins.set(day, b);
+    for (const l of b.lines) if (l.issuedUtc.slice(0, 10) < seal && !lines.has(l.id)) lines.set(l.id, l);
+    for (const [id, t] of Object.entries(b.notices)) if (!texts.has(id)) texts.set(id, t);
+  }
+  const iacList = [...lines.values()].sort((a, b) => (a.issuedUtc < b.issuedUtc ? -1 : 1));
+  const gscRows = JSON.parse(read(path.join(base, 'gsc-rows.json'), 'GSC rows'));
+  for (const x of gscRows) if (x.published.slice(0, 10) >= seal) throw new Error(`a GSC row at or after the seal: ${x.number}`);
+  const details = new Map();
+  for (const x of gscRows) { const f = path.join(base, 'gsc', `nagu-${x.number}.html`); if (fs.existsSync(f)) details.set(x.number, parseGscDetail(read(f, 'GSC NAGU').toString())); }
+  const notices = [];
+  for (const l of iacList) { const text = texts.get(l.id), svn = iacSvn(l, text, sinex), iv = iacInterval(l); notices.push({ source: 'IAC', id: l.id, svn, norad: sinex.noradOfSvn(svn), kind: l.kind, summary: l.summary, issued: Date.parse(l.issuedUtc), ...iv }); }
+  for (const x of gscRows) { const d = details.get(x.number), iv = gscInterval(x, d), svns = gscSvns(x.satellite); for (const svn of svns.length ? svns : [null]) notices.push({ source: 'GSC', id: x.number, svn, norad: svn ? sinex.noradOfSvn(svn) : null, kind: x.type, summary: x.subject, issued: iv.published, from: iv.from, to: iv.to, rts: iv.rts }); }
+  const byNorad = new Map();
+  for (const n of notices) if (n.norad) { if (!byNorad.has(n.norad)) byNorad.set(n.norad, []); byNorad.get(n.norad).push(n); }
+  for (const v of byNorad.values()) v.sort((a, b) => a.from - b.from);
+  // an open notice closes at the next return to service, or at the stated end of a later notice of the same event (same start or later): IAC's SC-SRV T-T after SC-SRV T-FURTHER NOTICE, GSC's EXTENSION
+  const closeOf = (n, own) => { let c = Infinity; for (const r of own) { if (r === n || r.issued < n.issued) continue; if (r.rts && r.from > n.from) c = Math.min(c, r.from); else if (!r.rts && r.to != null && r.from >= n.from) c = Math.min(c, r.to); } return c; };
+  const spans = (norad, asOf) => { const own = (byNorad.get(norad) ?? []).filter((n) => n.issued <= asOf); return own.filter((n) => !n.rts).map((n) => ({ ...n, closeMs: n.to ?? closeOf(n, own) })); };
+  return { notices, iacList, gscRows, bulletins, texts, details, spans, overlap: (norad, fromMs, toMs, asOf) => spans(norad, asOf).filter((n) => n.from <= toMs && n.closeMs >= fromMs) };
 }
