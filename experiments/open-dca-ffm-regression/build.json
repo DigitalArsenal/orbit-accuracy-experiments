@@ -1,0 +1,64 @@
+{
+ "modulesCommit": "9a05d899b95242b358939ab1d68a776170a6b167",
+ "modulesCommitNote": "XM3's modules commit; space-data-network-modules main on 2026-10-31",
+ "wasmFrom": "git show <modulesCommit>:<module>/dist/isomorphic/module.wasm and plugin-manifest.json, SHA-256 checked; held in memory, never from a working tree",
+ "wasmSha256": {
+  "propagator/ffm": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+  "propagator/sgp4": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643"
+ },
+ "manifestSha256": {
+  "propagator/ffm": "165fd160fdd9ec2f398bea2cd0554de5c9c083698616c460ecf8a268598844b7",
+  "propagator/sgp4": "8dd8399bfb20e4ac1246508c86a07a50055f74e9ad2516a6d8c049f8a1a098de"
+ },
+ "xmWasmSha256": {
+  "note": "XM's build.json (experiments/xp-atmosphere-merit/build.json at 2c7b326, modules fbda89450); XM's lib/modules.mjs loads them at that commit, SHA-256 checked; byte-identical at 9a05d899b",
+  "propagator/sdn-ap": "49fa4b0f65887a7b69232e19fe2c8de5d790e7e91818539d9f1cbdd3c2ffca77",
+  "propagator/sgp4": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643",
+  "analysis/gp-error-model": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19",
+  "foundation/frames": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+  "analysis/density-calibration": "5d284078821dd80cabd499bce10b174bf635a2456cda261d641a6219b4df3719"
+ },
+ "versions": {
+  "propagator/ffm": "com.orbpro.ffm 2.0.4",
+  "propagator/sgp4": "1.4.1"
+ },
+ "hostFiles": {
+  "paths": [
+   "propagator/ffm/catalog.mjs",
+   "propagator/ffm/catalog-configuration.mjs",
+   "propagator/sgp4/tests/lib/payloadEncoders.mjs"
+  ],
+  "sha256": {
+   "propagator/ffm/catalog.mjs": "a1064d0ee2fb2f0f8c519ad8fde5eb1cec85c272c1ccb11059533caf708d5aec",
+   "propagator/ffm/catalog-configuration.mjs": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6",
+   "propagator/sgp4/tests/lib/payloadEncoders.mjs": "73716100576358b57b3607b0c3423a4ebf988117fb934b81511660c09f5bbb99"
+  },
+  "rule": "the modules checkout's copy equals modulesCommit (git diff) and the SHA-256 above: the catalog request and record encoding (propagator/ffm's installed SDS 1.271.0, the version OrbPro's bundle vendors) and the OMM and request encoding P and the seeds share"
+ },
+ "console": {
+  "chain": "stack origin/main 2026-10-31 pins OrbPro 8d815e2246, which pins modules 9a05d899b; OrbPro packages propagator/ffm dist/isomorphic/module.wasm unchanged (propagator.ffm/build.js), so the console vendors c36f1b14; the deployed release plaintext cannot be read from here",
+  "sgp4BrowserShared": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "sha256": "49e26b464c28395a95b401b8c7fded9dd17e3a8043cd3da19219b6ba00d0e136",
+   "note": "the console's SGP4 bytes; --smoke compares their Earth-fixed seeds with the isomorphic bytes"
+  },
+  "ffmPrevious": {
+   "commit": "9119c99c6a3e0d98e87821a045d2e859aaa891e2",
+   "sha256": "6fdc530917d59c30542fef88cf281f04bf473c702ea715590ae72f3ee32282e0",
+   "note": "FFM 2.0.3, the previous pin; --smoke compares its states on K2 records"
+  }
+ },
+ "hosts": {
+  "propagator/ffm": "the experiments' space-data-module-sdk 0.9.7 host/browser-module harness, its native exports called directly, a fresh instance per arm (V1c's way)",
+  "propagator/sgp4": "the same harness, a fresh instance per seed: ingest_omm, then propagate_state in ECEF (plugin_propagate, the function plugin_propagate_batch calls)",
+  "xm": "XM's lib/modules.mjs for P and the scorer, its wasm at XM's commit, SHA-256 checked"
+ },
+ "packages": {
+  "experiments": {
+   "space-data-module-sdk": "0.9.7",
+   "spacedatastandards.org": "1.243.0",
+   "flatbuffers": "25.9.23",
+   "flatc-wasm": "26.1.38"
+  }
+ }
+}
