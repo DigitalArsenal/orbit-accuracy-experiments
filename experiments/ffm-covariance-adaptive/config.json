@@ -206,7 +206,7 @@
   48,
   72
  ],
- "arcDisjoint": "fit track = the last 24 h of the latest arc ending (t_in) by the cutoff; leads run from t_in; truth and references only from arcs starting after t_in",
+ "arcDisjoint": "fit track = the last 24 h of the latest arc ending (t_in) by the cutoff; leads run from t_in; truth and references only from arcs starting at or after t_in, excluding the fit's own arc",
  "p1Yield": {
   "minLeads": 3,
   "minWindows": 0.8,
@@ -302,8 +302,11 @@
   "weatherGap": "validation windows that hit B1's dropped day 2026-05-09 are refused and counted; no fill; a fresh window refused for missing weather is uncovered"
  },
  "earthOrientation": {
-  "calVal": "C2's file (hac/iers-eop/20261009, B1's environment)",
-  "fresh": "P3: as issued at E if a dated archive exists, otherwise final values with the data-rule sentence narrowed; recorded in a dated commit before any score"
+  "rule": "measured, never predicted, in every window",
+  "calVal": "C2's file (hac/iers-eop/20261009, B1's environment; the reference states as C2 converted them)",
+  "later": "the first archived file whose values are flagged measured through E + 84 h; named in the window's row; the window waits for that file",
+  "reportOnly": "UT1 as issued minus measured, median and p95 per lead, in meters at each R3 class's radius, beside C2's along-track sigma per lead; no FFM run",
+  "ifFlagsCannotShow": "stop and ask"
  },
  "verdict": {
   "k": 3,
@@ -464,5 +467,40 @@
  "network": {
   "pacingSeconds": 5,
   "credentials": "none"
- }
+ },
+ "p1Esa": {
+  "statistic": "p95 boundary jump / sqrt(2) / C2's forecast sigma, whole population, per axis",
+  "leads_h": [
+   1,
+   6,
+   12
+  ],
+  "stopAbove": 0.05,
+  "cellLabel": "GNSS 1, 6 and 12 h: truth is the next daily file, which may share tracking data with the fit's"
+ },
+ "p7": {
+  "trials": 2000,
+  "gate": "heavy-tail arm",
+  "unlistedRate": {
+   "primary": {
+    "rule": "non-storm",
+    "unlisted": 1,
+    "windows": 332,
+    "upper95": 0.0142
+   },
+   "beside": {
+    "rule": "all windows",
+    "unlisted": 1,
+    "windows": 472,
+    "upper95": 0.01
+   }
+  },
+  "maneuverShapes": [
+   "d2 x20-200 (registered)",
+   "the measured event: d2/3 about 5"
+  ]
+ },
+ "amendments": [
+  "C3-A1 2026-10-31"
+ ]
 }

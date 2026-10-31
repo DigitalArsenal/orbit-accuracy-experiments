@@ -1,6 +1,6 @@
 // C3-small's arc-disjoint chain (PLAN.md section 1): C2's chain (ffm-covariance-calibration lib/precise.mjs) restricted. A window at cutoff E: the fit track is the last 24 h of the latest arc
-// ending (t_in) by E; leads run from t_in; truth and references come only from arcs that start after t_in. ESA0OPSFIN's daily arcs start at the previous arc's last epoch and share that one
-// epoch only (P1): "after" there excludes the fit's own arc and starts at t_in. A product is read only inside the phase's allowed span, by the date in its name, before its index is opened.
+// ending (t_in) by E; leads run from t_in; truth and references come only from arcs that start at or after t_in, excluding the fit's own arc (C3-A1). ESA0OPSFIN's next daily file starts at t_in
+// exactly. A product is read only inside the phase's allowed span, by the date in its name, before its index is opened.
 // Records only: every orbit computation is the modules'.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -67,15 +67,14 @@ export function seriesOf(norad, arcs) {
   return W.withT({ norad, lines, products: arcs.map((a) => ({ product: a.product, sigma: a.sigma })) });
 }
 
-/** The arcs allowed after t_in for a family. */
-export const arcsAfter = (arcs, inArc, family) => arcs.filter((a) => a !== inArc && (family === 'gnss' ? a.start >= inArc.stop : a.start > inArc.stop));
+/** The arcs allowed after t_in: starting at or after it, excluding the fit's own arc. */
+export const arcsAfter = (arcs, inArc) => arcs.filter((a) => a !== inArc && a.start >= inArc.stop);
 
 /**
  * The window at cutoff E: { E, tIn, product, track, coverage, leads [{ L, epochMs, line | null }], after (the allowed series), firstAllowed } or { E, excluded }.
  * leadToleranceSeconds as C2's laser tolerance (150 s).
  */
 export function windowOf(norad, arcs, E, { leadToleranceSeconds = 150, leads_h = config.leads_h, minCoverage = config.exclusions.coverage } = {}) {
-  const family = familyOf(norad);
   let inArc = null;
   for (const a of arcs) if (a.stop <= E && (!inArc || a.stop > inArc.stop || (a.stop === inArc.stop && a.start > inArc.start))) inArc = a;
   if (!inArc) return { E: iso(E), excluded: 'no arc ends by the cutoff' };
@@ -85,7 +84,7 @@ export function windowOf(norad, arcs, E, { leadToleranceSeconds = 150, leads_h =
   const w = windowAt(fit, tIn, { leadToleranceSeconds, minCoverage, trackHours: 24 });
   if (w.excluded) return { E: iso(E), tIn: iso(tIn), product: inArc.product, excluded: w.excluded, coverage: w.coverage };
   if (Math.abs(W.ms(w.track[0].epoch) - (tIn - 24 * HOUR)) > 300e3) return { E: iso(E), tIn: iso(tIn), product: inArc.product, excluded: 'no state at the track start', coverage: w.coverage };
-  const afterArcs = arcsAfter(arcs, inArc, family).filter((a) => a.start <= tIn + 120 * HOUR);
+  const afterArcs = arcsAfter(arcs, inArc).filter((a) => a.start <= tIn + 120 * HOUR);
   const after = seriesOf(norad, afterArcs);
   const firstAllowed = after.t.find((t) => t >= tIn) ?? null;
   const leads = leads_h.map((L) => ({ L, epochMs: tIn + L * HOUR, line: after.t.length ? nearest(after, tIn + L * HOUR, leadToleranceSeconds * 1000) : null }));

@@ -12,11 +12,9 @@ compared with later fits, and widened or narrowed each day by how well that day'
 
 It is judged on 44 non-maneuvering high-orbit satellites (5 laser spheres, 14 GLONASS, 25 Galileo), pooled, on days C2 never scored,
 without operator-notice spans or storm days (1 forecast in 5). The 6 lower spheres are only reported (too few, errors move together).
-Forecasts use only data published before them, against truth sharing none of their data, with these limits. Earth orientation: P3 names the
-source for each fresh cutoff, as issued at E if a dated archive exists; otherwise final values, and this sentence is then narrowed and the
-effect stated here before any score. Cal/val keeps C2's finals file of 2026-10-09 so P4 reproduces. Weather: R2-M takes observed weather
-and is labeled; R2-O takes what was issued by E; R3 has no drag and its weather rows are inert (P3 checks this). Answer 2026-12-21, or
-2027-01-20 if the freeze check needs December.
+History and the daily chi-square reference use only files published before the cutoff. The fit track is the latest arc ending by the cutoff, as if available at once. Earth orientation is measured, not predicted, in every window, so predicted Earth-orientation error is not in this test; its size per lead is reported. Truth comes from arcs starting at or after the fit's end, excluding the fit's own arc; for GNSS that is the next daily file, which may share tracking data with the fit's. A pass does not mean real time.
+
+Weather: R2-M takes observed weather and is labeled; R2-O takes what was issued by E; R3 has no drag and its weather rows are inert (P3 checks this). Answer 2026-12-21, or 2027-01-20 if the freeze check needs December.
 
 ## What a pass means
 
@@ -24,7 +22,7 @@ and is labeled; R2-O takes what was issued by E; R3 has no drag and its weather 
 passes 89 %), radar or GP data, maneuvering objects or real time.
 
 With C2's error shapes a correct covariance passes 80 % (85 % with December), one 40 % too large or 30 % too small 0-1 %, one 20 % too
-small (the band's edge) about 20 %. One unannounced maneuver can sink a correct one (38 % at the worst rate C2's data allow).
+small (the band's edge) about 20 %. An unannounced maneuver can sink a correct one; P7 gives the figure at the rate P2 measured (a planning figure of 38 % used a rate P2 has replaced).
 
 ## 1. Population, truth, dates
 
@@ -36,7 +34,7 @@ small (the band's edge) about 20 %. One unannounced maneuver can sink a correct 
 **Out:** drag-LEO, active, altimetry, ISS, Starlink, GPS, GLONASS-K1, Sentinel-1D, TerraSAR-X, COSMIC-2. Galileo 40128 and 40129 (e 0.17) are reported.
 
 **Arc-disjoint rule.** Fit track = the last 24 h of the latest arc ending (t_in) by the cutoff. Leads run from t_in. Truth and references
-come only from arcs starting after t_in (C2's chain, `lib/precise.mjs:20-39`, restricted). NSGF daily arcs (3.8 d; LARES-2 6.6 d) end 5-10 h
+come only from arcs starting at or after t_in, excluding the fit's own arc (C2's chain, `lib/precise.mjs:20-39`, restricted). ESA0OPSFIN's next daily file starts at t_in and may share tracking data with the fit's: the GNSS 1, 6 and 12 h cells carry that label, and P1 bounds its effect. NSGF daily arcs (3.8 d; LARES-2 6.6 d) end 5-10 h
 before the next allowed one: R2 loses 1 h (some 6 h), LARES-2 1-6 h. ilrsa gives Sundays. ESA0OPSFIN per ESA's arcs (P1). P1 yield: at
 least 3 leads in at least 80 % of cal/val windows, else R2 is a consistency check.
 
@@ -69,7 +67,7 @@ planner read none of their results.
 
 - **(a)** `g_w(L) = (chi2nu_w / chi2nu~_o(E))^(a0 + a1 log10 L)`, unclamped; chi2nu~_o(E) is the median chi2nu of o's fits available at E within 90 d (at least 5, else the class median).
 - **(b)** `D_o = diag(e^(u_k/2))` (RTN, per lead), `û_k = argmin 1/2 sum_j [ẽ_jk^2 / (e^u a_jk + c_jk) + ln(e^u a_jk + c_jk)] + (n0/4) u^2`, with a_jk = (g_j P_C2,j)_kk and c_jk = (P_ref,j + C_j)_kk. New code `axes-mle-ref` (gp-error-model's axes-mle lacks c and the prior), in the E2E.
-- **History** j: cutoffs in (E - 90 d, E - 3 d]. ẽ_j = forecast minus a later FFM fit to the same product over the 24 h centered on E_j + L, shifted to the first allowed epoch (mid-arc from 12 h; no shared data). Usable if each file meets max(last epoch + lambda, Last-Modified) <= E: lambda NSGF 3 d, ilrsa 11 d (Last-Modified 10.5 d after span end, 260912-261003), ESA0OPSFIN 14 d after its GPS-week batch.
+- **History** j: cutoffs in (E - 90 d, E - 3 d]. ẽ_j = forecast minus a later FFM fit to the same product over the 24 h centered on E_j + L, shifted to the first allowed epoch (mid-arc from 12 h; no state of the fit's own arc). Usable if each file meets max(last epoch + lambda, Last-Modified) <= E: lambda NSGF 3 d, ilrsa 11 d (Last-Modified 10.5 d after span end, 260912-261003), ESA0OPSFIN 14 d after its GPS-week batch.
 - **P_ref,j** = k_ref x the reference fit's a posteriori covariance at E_j + L; k_ref per class, axis and lead group (1-12 h, 24-72 h) by maximum likelihood of reference minus truth (P-REF). k_ref = 1 is reported.
 - **Constants** by calibration log score: a0 -0.2 to 1.2 (step 0.1), a1 -0.8 to 0.8 (0.2), refined; n0 in {0.5, 1, 2, 5, 10, 20, 50}. C3-0 (C2's constants alone), C3-a, C3-b and C3-ab are reported. Stop if the validation interval of C3-ab minus C3-0 is below 0.
 - **Sets:** calibration 2025-10-03 to 2026-03-29, validation 04-01 to 05-31: R3 LAGEOS-2, LARES-2, Etalon-1/2, GLONASS 40001, 44850, 37869, 54377, the 19 new Galileo; R2's five spheres. History-only windows from 06-03 run sealed after the freeze. Pooled verdict over all 44; Galileo calibrated on the 19 new ones (QS2). R2 reported only (QS3).
@@ -94,21 +92,21 @@ Copula on C3-ab's non-storm dependence, resampled cal/val storm days, GNSS keep 
 | 12-31 (920-1,080) | 62-106 (76-91) | 0.85 (0.90); 0.97 | 0.00 / 0.02 (0.07-0.09) / 0.30-0.33 (0.45-0.48) / 0.01 (0.04) |
 
 - Heavy-tailed, x1.25 sits on the band's edge (mean 1.25, coverage about 0.94): no error rate.
-- **Risks (11-30):** unlisted GNSS maneuvers at the 95 % bound, 0.0064 per window (0 of 472 GLONASS cal/val windows) -> 0.38; same-plane correlation 0.3 -> 0.71; storms kept -> 0.67; one satellite x3 passes 0.89. Q6 (per-axis model, measured z dependence): perfect 0.998 either way; a 0.7-sigma along-track bias passes 0.18 under (a), 0.004 under (b).
+- **Risks (11-30):** unlisted GNSS maneuvers: the planning figure, 0.0064 per window from a count of 0 of 472 -> 0.38, is replaced by P2's count and P7's two shapes (section 5); same-plane correlation 0.3 -> 0.71; storms kept -> 0.67; one satellite x3 passes 0.89. Q6 (per-axis model, measured z dependence): perfect 0.998 either way; a 0.7-sigma along-track bias passes 0.18 under (a), 0.004 under (b).
 - **Not testable** (n_eff < 60 in at least 4 cells): Galileo alone (25, 3 planes) 35-57; spheres + GLONASS (19) 39-66, also to 2027-01-02; R2 21-39 (Gaussian 46-50), also to 05-01; without C2's six Galileo the 1 h cell drops (P 0.77); strict R3 48-76.
 
 ## 5. Pre-checks (cal/val; fail = stop and ask)
 
-- **P1** names, spans, arcs, Last-Modified, 260926 reissue, yield.
+- **P1** names, spans, arcs, Last-Modified, 260926 reissue, yield. ESA0OPSFIN: over the whole population and per axis, p95 boundary jump / sqrt(2) divided by C2's forecast sigma at 1, 6 and 12 h. If truth and forecast share an error of size s, d2 can shift by up to about 2s/sigma_f, so above 0.05 at any lead the shift could exceed 10 %: stop and ask.
 - **P2 (freeze gate):** both archives give dated entries for every month 2025-09 to 2026-05 (per month: count, types, issue times; later entries sealed). Unlisted rate = C2-screen flags or d2/3 > 30 on C2's GLONASS cal/val without a notice -> P7. A failed archive drops its constellation: R3 not testable (n_eff <= 66).
-- **P3** RSGA/SGARF to 2027-02-05, GFZ Ap to scoring. Names the Earth-orientation source for each fresh cutoff: as issued at E if a dated archive exists; otherwise final values, disclosed where "What this tests" states the data rule, with that sentence narrowed so it stays true, and the expected effect on the GNSS along-track axis reported from numbers. Checks that R3's weather rows are inert.
+- **P3** RSGA/SGARF to 2027-02-05, GFZ Ap to scoring. Shows that the archived files' flags can name, for each later window, the first file flagged measured through E + 84 h (section 6); if they cannot, stop and ask. Report only, no FFM run: UT1 as issued minus measured, median and p95 per lead (finals.daily since 2026-10-10, Bulletin A), in meters at each R3 class's radius, beside C2's along-track sigma per lead. Checks that R3's weather rows are inert.
 - **P4** C3-0 under C2's chain reproduces `fit-R*.json`, errors, terms, and bridges to the pin (section 6):
   - **P4a, on C2's exact chain:** the frozen candidate's cells in `fit-R3`, `fit-R2` and `fit-R2-O` recomputed from stored rows equal the receipts; 20 windows per class replayed bit for bit. R2-O's 238 refused calibration windows: the count per reason is reported; a reason that bears on P_C2 for R2-O stops the run.
   - **P4b, the same windows on the pin:** R3 state and errors bit-identical, |delta(d2/3)| <= 1e-9. R2 |delta(d2/3)| <= 1e-3 + 1e-3 x d2/3. A class-fit termination may change only to CONVERGED. `pair_statistics`, `noise_responses` and `dcp_covariance` on gp-error-model 0.11.0 are bit-identical to 0.10.0 on the same inputs. Any failure is stop and ask; the limits do not move.
   - **Windows:** per class (R3, R2-M, R2-O) the 20 stored windows of C3's calibration satellites, with a converged fit and stored terms, that have the lowest SHA-256 of `C3S|p4|<class>|<norad>|<E>`, excluding the 16 windows replayed in this lane's step 0; those 16 are reported separately.
 - **P5** hand-off, 0 refusals.
 - **P-REF** (class, axis, lead): k_ref; stop if |corr(forecast - truth, reference - truth)| >= 0.2 (interval excludes 0) or reference-based e^û is more than 10 % off truth-based.
-- **P7** on C3's chain: dependence, marginal, same-plane (Galileo's own; C2's GLONASS pairs: ln d2 -0.34 to 0.12), 2,000 trials, storms, P2's rate, realized keep. **P8** û on synthetic histories (measured a, c, latencies, dependence): |median e^û/e^u - 1| <= 10 % per class, axis, lead.
+- **P7** on C3's chain: dependence, marginal, same-plane (Galileo's own; C2's GLONASS pairs: ln d2 -0.34 to 0.12), 2,000 trials, storms, realized keep. P2's rate: the non-storm rate, 1 of 332, bound 0.0142, because the primary cells drop storms; the all-window rate, 1 of 472, bound 0.0100, reported beside it. The maneuver arm runs in two shapes: the registered d2 x20-200 and the measured event's shape (d2/3 about 5). The gate stays the heavy-tail arm. **P8** û on synthetic histories (measured a, c, latencies, dependence): |median e^û/e^u - 1| <= 10 % per class, axis, lead.
 - **P10** integrity. **P11** 2026-01-19 (R743, Etalon-1, plane 1): IAC notices, ilrsa 260124 vs the centers, EOP, frames. **P12** hashes.
 
 ## 6. Schedule and compute
@@ -116,7 +114,7 @@ Copula on C3-ab's non-storm dependence, resampled cal/val storm days, GNSS keep 
 - **Freeze 2026-11-09**, then sealed. The freeze commit holds the constants, k_ref, gate thresholds, dependence parameters and the fetch manifest rule. **Scored once:** R3 2026-12-21 (ESA batch 12-05 + 14 d; ilrsa 261205 + 11 d) or 2027-01-20; R2 2027-02-10; late files are missing. This task lands at the freeze; scoring is a separate task.
 - About 5,500 windows (cal/val 2,592 with Galileo, history about 1,450, fresh about 1,450) at 45-80 s each: 70-110 CPU-h, 35-50 before the freeze, at most 12 workers. FFM: RK78, relative tolerance 1e-10, steps up to 120 s; cal/val forecast outputs at the six leads; noise grid 600 s; fit tracks at 600 s.
 - **Modules:** modules 9a05d899b for all C3 windows (cal/val, history, fresh): analysis/estimation 0.7.0 7a555ca5, propagator/ffm 2.0.4 c36f1b14, analysis/gp-error-model 0.11.0 8e13eddb, read with `git show` and SHA-256 checked (`build.json`). Later module bytes are outside the verdict. C2's chain (estimation 0.6.0 0e7b4f6a at f54b5107; FFM 2.0.0 d0b04935 and gp-error-model 0.10.0 a7a0e218 at c860a072) is snapshotted the same way, for P4 only. XM's libraries: `git archive 8f2926174 experiments/xp-atmosphere-merit` into the C3 store, SHA-256 checked against `xm-libraries.json`, with C3's own copy of C2's `weather-o`; C2's code is not edited.
-- **Earth orientation:** cal/val keeps C2's file (hac/iers-eop/20261009, B1's environment) so P4 reproduces. Fresh cutoffs: P3's ruling, recorded in a dated commit before any score.
+- **Earth orientation:** every C3 window (cal/val, history, fresh) uses measured values, never predicted. Cal/val keeps C2's file (hac/iers-eop/20261009, B1's environment; its fit tracks and truth are the reference states as C2 converted them). Each later window uses the first archived file whose values are flagged measured through E + 84 h; the window's row names the file, and a window waits for that file.
 - **E2E:** `node experiments/ffm-covariance-adaptive/run.mjs --check`: a cal/val window per class through the arc-disjoint chain, P_ref, `axes-mle-ref`; d2, û, g bit for bit.
 
 ## 7. Disclosures
@@ -125,7 +123,19 @@ Copula on C3-ab's non-storm dependence, resampled cal/val storm days, GNSS keep 
 - **Authorship of C2-A11:** written by this lane, which benefits from it, after C2's held-out summaries were published. Its file-name receipt: 427 NSGF extension files, 0 named in C2's 156 opened-file logs; 7 share product names with conversions C2 read, count as opened whatever their bytes, are not compared and are not released.
 - **P4b's limits came from the sample they would describe:** they were set after this lane's step 0 replayed 16 stored C2 windows (6 R3, 10 R2 M; largest measured |delta(d2/3)| 5.7e-13 on R3, 2.3e-4 on LARETS, 2.2e-3 on Sentinel-1C at d2/3 near 1e4). P4 therefore tests them on 20 other windows per class, chosen by the hash rule in section 5, and reports the 16 separately.
 - **Planner integrity:** nothing barred opened (C2 held-out rows, B2 files, fresh truth, others' results, ids files, Vallado or USSF SGP4). Ap read to 2026-05-31 only. Earlier fresh-weather reads disclosed: RSGA 10-08, SGARF 10-11.
+- **Earth orientation, reversed before any score:** the coordinator first asked for as-issued values at each fresh cutoff (2026-10-31) and reversed that the same day, before any C3 score, on this lane's finding that dated sources exist and, by Bulletin A's own prediction formula, can differ by meters at the Galileo radius. Three reasons: P_C2 was fitted under measured Earth orientation, so as-issued values in fresh windows only would add an error source that was in neither the calibration nor the model, and a fail could come from that alone; the fit track is already not real-time, so as-issued values would not make the test operational; and the choice of source alone moves the answer by meters, a second experiment hidden inside this one. The size is reported instead (P3).
 - **Sealed:** `dl/ids-man` (ten IDS maneuver lists of altimetry satellites, fetched by an earlier planner for the removed H-O R2 class; 36 later-entry counts in its cadence receipt). No C3 step reads either; none of C3's satellites is on those lists.
 - **Unresolved at registration:** S-B6 (a) closed by the seal above; unlisted GNSS maneuvers stay a registered risk (P2, P7).
 - **Practice.** CARA: 90 days at 3-day spacing against a definitive orbit plus its covariance, Rosner outliers dropped, re-tune below 60 %, D C_SE D plus a bias shift. C3 keeps C2's correlations and outliers and drops storms a priori. JSpOC: factor distributions over a year for Monte Carlo Pc.
 - **Step 0 of this lane** read: C2's R2 and R3 calibration and validation rows (terminations, rejected trials, 16 windows replayed under three module chains, d2 of those windows with C2's constants); C2's opened-file logs (names); a pre-seal IAC bulletin, pre-seal GSC rows and one 2023 NAGU, only to establish the archives' form; XM3's `build.json` and the plan lines on its pins. `git log` printed XM2's and XM3's result subjects; no results file of theirs was opened. No C3 score existed.
+
+## Amendments
+
+### C3-A1 - 2026-10-31, before any C3 score (coordinator's rulings on P2's report)
+
+Everything below is already in the sections above; this records what moved.
+
+1. **Earth orientation:** measured, never predicted, in every window; the first archived file flagged measured through E + 84 h for each later window, named in its row (section 6). The as-issued rule is withdrawn (section 7). P3 reports the size of the predicted error instead, with no FFM run.
+2. **The data sentence** of "What this tests" replaces "use only data published before them, against truth sharing none of their data", which was false for the fit track and for GNSS truth. "No shared data" in the history rule (section 2) became "no state of the fit's own arc".
+3. **ESA0OPSFIN arcs:** "at or after t_in, excluding the fit's own arc" (section 1), with P1's bound and the label on the GNSS 1, 6 and 12 h cells. A position jump at every boundary shows separate solutions; it does not show independent tracking data.
+4. **P7's maneuver arm:** P2 found 1 unlisted window of 472, 1 of 332 outside storms, where the plan had counted 0 of 472. The rate is the non-storm one; two shapes run; the gate is unchanged (section 5). The plan's 38 % is withdrawn until P7 gives its replacement.
