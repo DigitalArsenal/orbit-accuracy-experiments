@@ -1,0 +1,444 @@
+{
+ "receipt": "precheck-P2",
+ "createdUtc": "2026-10-31T06:06:39.196Z",
+ "experimentsCommit": "32197bf8f900a9e4f7dbadb8565089bf06a7804f",
+ "plan": "section 5 P2",
+ "seal": "2026-06-01",
+ "months": [
+  "2025-09",
+  "2025-10",
+  "2025-11",
+  "2025-12",
+  "2026-01",
+  "2026-02",
+  "2026-03",
+  "2026-04",
+  "2026-05"
+ ],
+ "perMonth": [
+  {
+   "month": "2025-09",
+   "iac": {
+    "bulletins": 30,
+    "ofDays": 30,
+    "notices": 0,
+    "kinds": {},
+    "firstIssued": null,
+    "lastIssued": null
+   },
+   "gsc": {
+    "rows": 4,
+    "types": {
+     "PLANNED OUTAGE": 2,
+     "USABLE FOR SERVICE PROVISION": 2
+    },
+    "withDetail": 4,
+    "firstPublished": "2025-09-12 12:10:00",
+    "lastPublished": "2025-09-26 23:45:00"
+   }
+  },
+  {
+   "month": "2025-10",
+   "iac": {
+    "bulletins": 31,
+    "ofDays": 31,
+    "notices": 8,
+    "kinds": {
+     "ADVS": 4,
+     "GNRL": 3,
+     "FCST": 1
+    },
+    "firstIssued": "2025-10-16T08:54:00.000Z",
+    "lastIssued": "2025-10-27T09:54:00.000Z"
+   },
+   "gsc": {
+    "rows": 8,
+    "types": {
+     "PLANNED OUTAGE": 4,
+     "USABLE FOR SERVICE PROVISION": 3,
+     "UNPLANNED UNAVAILABLE UNTIL FURTHER NOTICE": 1
+    },
+    "withDetail": 8,
+    "firstPublished": "2025-10-10 19:00:00",
+    "lastPublished": "2025-10-31 13:30:00"
+   }
+  },
+  {
+   "month": "2025-11",
+   "iac": {
+    "bulletins": 30,
+    "ofDays": 30,
+    "notices": 5,
+    "kinds": {
+     "ADVS": 4,
+     "FCST": 1
+    },
+    "firstIssued": "2025-11-03T12:23:00.000Z",
+    "lastIssued": "2025-11-25T09:05:00.000Z"
+   },
+   "gsc": {
+    "rows": 9,
+    "types": {
+     "USABLE FOR SERVICE PROVISION": 5,
+     "PLANNED OUTAGE": 4
+    },
+    "withDetail": 9,
+    "firstPublished": "2025-11-06 15:45:00",
+    "lastPublished": "2025-11-27 00:15:00"
+   }
+  },
+  {
+   "month": "2025-12",
+   "iac": {
+    "bulletins": 31,
+    "ofDays": 31,
+    "notices": 9,
+    "kinds": {
+     "ADVS": 4,
+     "FCST": 1,
+     "GNRL": 4
+    },
+    "firstIssued": "2025-12-03T09:58:00.000Z",
+    "lastIssued": "2025-12-24T14:00:00.000Z"
+   },
+   "gsc": {
+    "rows": 13,
+    "types": {
+     "PLANNED OUTAGE": 4,
+     "USABLE FOR SERVICE PROVISION": 4,
+     "PUBLIC KEY RENEWAL": 1,
+     "SATELLITE DECOMMISSIONED": 1,
+     "GENERAL NOTICE": 1,
+     "LAUNCH": 1,
+     "PLANNED MANOEUVRE": 1
+    },
+    "withDetail": 13,
+    "firstPublished": "2025-12-01 11:15:00",
+    "lastPublished": "2025-12-23 14:30:00"
+   }
+  },
+  {
+   "month": "2026-01",
+   "iac": {
+    "bulletins": 31,
+    "ofDays": 31,
+    "notices": 3,
+    "kinds": {
+     "FCST": 2,
+     "ADVS": 1
+    },
+    "firstIssued": "2026-01-02T11:42:00.000Z",
+    "lastIssued": "2026-01-19T13:05:00.000Z"
+   },
+   "gsc": {
+    "rows": 8,
+    "types": {
+     "PLANNED OUTAGE HAS": 1,
+     "OSNMA PLANNED OUTAGE": 2,
+     "AVAILABILITY OF HAS": 1,
+     "OSNMA USABLE": 2,
+     "TESLA CHAIN RENEWAL": 1,
+     "PLANNED OUTAGE": 1
+    },
+    "withDetail": 8,
+    "firstPublished": "2026-01-09 10:45:00",
+    "lastPublished": "2026-01-29 11:15:00"
+   }
+  },
+  {
+   "month": "2026-02",
+   "iac": {
+    "bulletins": 28,
+    "ofDays": 28,
+    "notices": 2,
+    "kinds": {
+     "ADVS": 2
+    },
+    "firstIssued": "2026-02-09T08:57:00.000Z",
+    "lastIssued": "2026-02-14T14:12:00.000Z"
+   },
+   "gsc": {
+    "rows": 3,
+    "types": {
+     "USABLE FOR SERVICE PROVISION": 2,
+     "EXTENSION": 1
+    },
+    "withDetail": 3,
+    "firstPublished": "2026-02-01 13:45:00",
+    "lastPublished": "2026-02-04 17:25:00"
+   }
+  },
+  {
+   "month": "2026-03",
+   "iac": {
+    "bulletins": 31,
+    "ofDays": 31,
+    "notices": 2,
+    "kinds": {
+     "ADVS": 2
+    },
+    "firstIssued": "2026-03-13T08:46:00.000Z",
+    "lastIssued": "2026-03-21T08:27:00.000Z"
+   },
+   "gsc": {
+    "rows": 10,
+    "types": {
+     "SHORT TERM OUTAGE RECOVERED HAS": 1,
+     "PLANNED OUTAGE": 5,
+     "USABLE FOR SERVICE PROVISION": 4
+    },
+    "withDetail": 10,
+    "firstPublished": "2026-03-12 17:00:00",
+    "lastPublished": "2026-03-30 20:45:00"
+   }
+  },
+  {
+   "month": "2026-04",
+   "iac": {
+    "bulletins": 30,
+    "ofDays": 30,
+    "notices": 3,
+    "kinds": {
+     "FCST": 1,
+     "ADVS": 2
+    },
+    "firstIssued": "2026-04-22T08:17:00.000Z",
+    "lastIssued": "2026-04-30T08:08:00.000Z"
+   },
+   "gsc": {
+    "rows": 8,
+    "types": {
+     "PLANNED OUTAGE": 3,
+     "USABLE FOR SERVICE PROVISION": 4,
+     "GENERAL NOTICE": 1
+    },
+    "withDetail": 8,
+    "firstPublished": "2026-04-01 13:30:00",
+    "lastPublished": "2026-04-29 10:30:00"
+   }
+  },
+  {
+   "month": "2026-05",
+   "iac": {
+    "bulletins": 31,
+    "ofDays": 31,
+    "notices": 5,
+    "kinds": {
+     "FCST": 4,
+     "ADVS": 1
+    },
+    "firstIssued": "2026-05-03T19:10:00.000Z",
+    "lastIssued": "2026-05-28T08:56:00.000Z"
+   },
+   "gsc": {
+    "rows": 4,
+    "types": {
+     "PLANNED OUTAGE": 1,
+     "USABLE FOR SERVICE PROVISION": 1,
+     "SHORT TERM OUTAGE RECOVERED HAS": 1,
+     "SATELLITE FIRST TIME USABLE": 1
+    },
+    "withDetail": 4,
+    "firstPublished": "2026-05-04 10:30:00",
+    "lastPublished": "2026-05-21 11:15:00"
+   }
+  }
+ ],
+ "archives": {
+  "IAC": {
+   "bulletins": 273,
+   "absentDays": [],
+   "notices": 43,
+   "withFullText": 43,
+   "failedMonths": []
+  },
+  "GSC": {
+   "rows": 557,
+   "rowsFrom": "2013-06-18 17:00:00",
+   "numbering": {
+    "2025": {
+     "first": 1,
+     "last": 64,
+     "missing": []
+    },
+    "2026": {
+     "first": 1,
+     "last": 33,
+     "missing": []
+    }
+   },
+   "detailPages": 123,
+   "failedMonths": []
+  }
+ },
+ "mapping": {
+  "iacMapped": 38,
+  "iacTotal": 43,
+  "iacUnmapped": [
+   "054-251016 SC-STAGE-INPUT 16.10.25/0000",
+   "055-251016 PUT INTO OPERATION 16.10.25/1320",
+   "058-251103 SC-SRV 03.11.25/0920-FURTHER NOTICE",
+   "059-251106 SC-SRV 03.11.25/0920-06.11.25/1443",
+   "063-251203 SC-SRV 03.12.25/1032-03.12.25/1133"
+  ],
+  "gscMapped": 537,
+  "gscTotal": 647,
+  "inPopulationInSpan": 69
+ },
+ "unlisted": {
+  "rule": "C2-screen flag or d2/3 > 30 at any lead, C2 R3 constants, on the four GLONASS of C2 (cal/val); no notice over [E - 24 h, E + 84 h] issued before the seal",
+  "windows": 472,
+  "flagged": 3,
+  "unlisted": 1,
+  "upper95": 0.010010788208807353,
+  "perWindow": 0.00211864406779661,
+  "nonStorm": {
+   "windows": 332,
+   "flagged": 1,
+   "unlisted": 1,
+   "upper95": 0.014208435960076204
+  },
+  "flaggedWindows": [
+   {
+    "norad": 37869,
+    "E": "2026-01-19T00:00:00.000Z",
+    "flag": true,
+    "maxD2over3": 441.1334071682293,
+    "inStorm": true,
+    "listed": true,
+    "notices": [
+     "IAC 003-260119"
+    ]
+   },
+   {
+    "norad": 40001,
+    "E": "2026-02-16T00:00:00.000Z",
+    "flag": true,
+    "maxD2over3": 5.147195040889899,
+    "inStorm": false,
+    "listed": false,
+    "notices": []
+   },
+   {
+    "norad": 37869,
+    "E": "2026-01-17T00:00:00.000Z",
+    "flag": false,
+    "maxD2over3": 35.89129223340932,
+    "inStorm": true,
+    "listed": true,
+    "notices": [
+     "IAC 003-260119"
+    ]
+   }
+  ]
+ },
+ "noticeKeep": {
+  "glonass": {
+   "windows": 1134,
+   "keep": 0.9841269841269841,
+   "lowest": [
+    [
+     "37867",
+     0.8888888888888888
+    ],
+    [
+     "39155",
+     0.9135802469135802
+    ],
+    [
+     "37869",
+     0.9753086419753086
+    ],
+    [
+     "37868",
+     1
+    ],
+    [
+     "39620",
+     1
+    ]
+   ]
+  },
+  "galileo": {
+   "windows": 2025,
+   "keep": 0.9738271604938271,
+   "lowest": [
+    [
+     "41862",
+     0.9259259259259259
+    ],
+    [
+     "41860",
+     0.9382716049382716
+    ],
+    [
+     "41861",
+     0.9506172839506173
+    ],
+    [
+     "43056",
+     0.9506172839506173
+    ],
+    [
+     "43564",
+     0.9506172839506173
+    ]
+   ]
+  }
+ },
+ "stormDaysInSpan": 26,
+ "crossCheck": {
+  "iacStatusMessages": 18
+ },
+ "outcome": "pass: both archives give dated entries for every month",
+ "opened": {
+  "files": 412,
+  "sha256": "d1aa5d41fa8ef2de25005b33b063835ce7984a07d3430e13b0cab8168421bbe4",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/precheck-P2.json",
+  "groups": [
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/*",
+    "files": 2,
+    "labels": [
+     "GSC rows",
+     "IAC status messages"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/gsc/*",
+    "files": 123,
+    "labels": [
+     "GSC NAGU"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-adaptive/notices/iac/*",
+    "files": 273,
+    "labels": [
+     "IAC bulletin"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/ffm-covariance-calibration/rows/*",
+    "files": 12,
+    "labels": [
+     "C2 cal/val rows"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/gfz-kp/*",
+    "files": 1,
+    "labels": [
+     "GFZ Ap, lines to 2026-05-31"
+    ]
+   },
+   {
+    "group": "/opt/data/sdn-archive/hac/igs-metadata/*",
+    "files": 1,
+    "labels": [
+     "IGS SINEX"
+    ]
+   }
+  ]
+ }
+}
