@@ -39,6 +39,12 @@
     "version": "0.2.0",
     "wasmSha256": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
     "manifestSha256": "c909a9fa03ced3cf6415f53994d9eb393d661c92d961911206afef7384a56e18"
+   },
+   "files/orbit-products": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "0.2.0",
+    "wasmSha256": "688f22ee2dba278d19e4029e8aedf1aa46fffd9910428f7d7ed40c9eeb583ad3",
+    "manifestSha256": "5937726d9154025bad604589c77e98a8c97afd8c90ff2478aa73e2c4effcf953"
    }
   }
  },
