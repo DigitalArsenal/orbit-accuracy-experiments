@@ -364,6 +364,17 @@ async function check() {
   const chosen = await openDensity(CHOSEN()), final = await issueRecord(chosen, C.fresh, arcs);
   if (!final.ok || !final.lineage.includes('hold-to-issue-then-tau168h; lag9h; shrink-off')) throw new Error('the chosen config did not reach the record');
   await off.destroy(); await on.destroy(); await chosen.destroy();
+  // One window of a spent date (XM's), through the fit and the forecast: F2 and F4 converge and fly. Nothing is compared.
+  const { openFit } = await import('./lib/ffm.mjs'), { series } = await import('./lib/truth.mjs');
+  const spent = '20260201', SC = cutoffsOf(spent, nextDay(spent)), F = await openFit(), spentRows = rowsAt(SC.fresh), density = await openDensity(CHOSEN()), record = await issueRecord(density, SC.fresh, arcs), lines = series(config.test.satellites.even, SC.fresh - 72 * HOUR, SC.fresh);
+  if (!record.ok) throw new Error(`the product refused: ${record.error}`);
+  for (const dcl of [null, record.dcl]) {
+    const fit = await F.fit(config.test.satellites.even, lines, spentRows, dcl, SC.fresh + 8 * DAY);
+    if (!fit.ok || fit.termination !== 'CONVERGED') throw new Error(`fit: ${fit.termination} ${fit.error}`);
+    const truth = series(config.test.satellites.even, SC.fresh + 1, SC.fresh + DAY), at = await F.forecast(config.test.satellites.even, fit, Date.parse(/Z$/.test(lines[0].epoch) ? lines[0].epoch : `${lines[0].epoch}Z`), truth.slice(0, 3).map((l) => l.epoch), spentRows, dcl, SC.fresh + 8 * DAY);
+    if (at.length !== 3 || !at.flat().every(Number.isFinite)) throw new Error('the forecast');
+  }
+  await F.close(); await density.destroy();
   console.log(`PASS open-dca-fix check: the pinned product, the publication rule, the hold, the typed config, the moved record and the bins, on ${day}`);
   process.exit(0);
 }
