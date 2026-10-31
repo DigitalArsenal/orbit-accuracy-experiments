@@ -1,16 +1,15 @@
-// P3 (PLAN.md section 5): the inputs fresh windows need. Names and status only for fresh-period files, never their values.
+// P3 (PLAN.md section 5; C3-A1): the inputs fresh windows need. Names and status only for fresh-period weather and truth files, never their values.
 //   --archives   RSGA, GFZ Ap and Earth-orientation archives: names, last days, statuses.
-//   --inert      R3's weather rows are inert: three R3 windows refitted with Ap and F10.7 doubled must be bit-identical (fit state, covariance, errors, terms).
-//   --eop        Earth orientation as issued against what the chain uses, on calibration and validation cutoffs: UT1-UTC and the pole from the IERS Bulletin A at or before each cutoff (dated weekly,
-//                datacenter.iers.org) and from the IGS ultra-rapid ERP (dated 6-hourly, BKG) against the C04 the reference states were converted with; and, on 12 GNSS windows chosen by the lowest
-//                SHA-256 of C3S|p3|<norad>|<E>, the change in forecast error when the fit arc's SP3 is converted with the Bulletin's rows (analysis/reference-states) and FFM reads them too, and when only
-//                FFM reads them. FFM: RK78, relative tolerance 1e-10, steps up to 120 s; fit track 600 s; outputs at the six leads and the 600 s noise grid.
+//   --measured   Earth orientation: each archived file's flags, the last day it flags measured, and the first file flagged measured through E + 84 h for every later window that can be named today.
+//   --table      Report only, no FFM run: UT1 as issued minus measured, median and p95 per lead, from Bulletin A (dated weekly, on cal/val cutoffs, against C04) and finals.daily (daily since 2026-10-10, against
+//                the newest archived file's measured rows); in meters at each R3 class's radius, beside C2's along-track sigma per lead (P1).
+//   --inert      R3's weather rows are inert: four R3 windows refitted with Ap and F10.7 doubled must be bit-identical (fit state, covariance, errors, terms). FFM: RK78, relative tolerance 1e-10, steps up to 120 s; fit
+//                track 600 s; outputs at the six leads and the 600 s noise grid.
 //   --receipt    results/ffm-covariance-adaptive/precheck-P3.json from the parts.
 import fs from 'node:fs';
 import path from 'node:path';
-import zlib from 'node:zlib';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { config, store, args, registered, Opened, writeReceipt, c2Results, root, sha256, grid, DAY, HOUR, iso } from './common.mjs';
+import { config, store, args, registered, Opened, writeReceipt, root, grid, DAY, HOUR, iso } from './common.mjs';
 
 registered();
 const opened = new Opened();
@@ -18,8 +17,6 @@ const A = '/opt/data/sdn-archive';
 const part = path.join(store, 'p3');
 fs.mkdirSync(part, { recursive: true });
 const UA = 'orbit-accuracy-experiments (research; paced)';
-const RAD = Math.PI / (180 * 3600);
-const quant = (v) => { const s = [...v].sort((a, b) => a - b); return s.length ? { n: s.length, median: s[Math.floor(s.length / 2)], p95: s[Math.floor(s.length * 0.95)], max: s.at(-1) } : null; };
 
 if (args.archives) {
   const list = (d) => (fs.existsSync(d) ? fs.readdirSync(d).sort() : []);
@@ -71,13 +68,13 @@ if (args.inert) {
 }
 
 const MONTH = { January: 1, February: 2, March: 3, April: 4, May: 5, June: 6, July: 7, August: 8, September: 9, October: 10, November: 11, December: 12 };
-/** One Bulletin A: { issued (ms, end of its date), rows: Map mjd -> { x, y, ut1 } (arcsec, s) }. */
+/** One Bulletin A: { issued (ms, the end of its date), rows: Map mjd -> { ut1 } (s) }. */
 function parseBulletin(text) {
   const head = /(\d{1,2})\s+([A-Z][a-z]+)\s+(\d{4})\s+Vol\.\s+[XLVIC]+\s+No\.\s+(\d+)/.exec(text);
   if (!head) return null;
   const issued = Date.UTC(Number(head[3]), MONTH[head[2]] - 1, Number(head[1]) + 1);
   const rows = new Map(), cut = text.indexOf('CELESTIAL POLE OFFSET');
-  for (const m of text.slice(0, cut < 0 ? undefined : cut).matchAll(/^\s+(\d{4})\s+(\d{1,2})\s+(\d{1,2})\s+(\d{5})\s+(-?\d*\.\d+)\s+(?:\.\d+\s+)?(-?\d*\.\d+)\s+(?:\.\d+\s+)?(-?\d*\.\d+)/gm)) rows.set(Number(m[4]), { x: Number(m[5]), y: Number(m[6]), ut1: Number(m[7]) });
+  for (const m of text.slice(0, cut < 0 ? undefined : cut).matchAll(/^\s+(\d{4})\s+(\d{1,2})\s+(\d{1,2})\s+(\d{5})\s+(-?\d*\.\d+)\s+(?:\.\d+\s+)?(-?\d*\.\d+)\s+(?:\.\d+\s+)?(-?\d*\.\d+)/gm)) rows.set(Number(m[4]), { ut1: Number(m[7]) });
   return { issued, number: head[4], rows };
 }
 async function get(url, file) {
@@ -89,89 +86,87 @@ async function get(url, file) {
   fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, b);
   return b;
 }
+/** A finals2000A text: Map mjd -> { ut1 (A column), measured (pole and UT1 flagged I) }, and the last MJD flagged measured with every earlier row too. */
+function parseFinals(text) {
+  const rows = new Map();
+  let lastMeasured = null, broken = false;
+  for (const l of text.split('\n')) {
+    if (l.length < 68) continue;
+    const mjd = Math.round(Number(l.slice(7, 15))), pole = l[16], ut = l[57], u = Number(l.slice(58, 68));
+    if (!Number.isFinite(mjd) || !Number.isFinite(u) || l.slice(58, 68).trim() === '') continue;
+    const measured = pole === 'I' && ut === 'I';
+    rows.set(mjd, { ut1: u, measured, pole, ut });
+    if (measured && !broken) lastMeasured = mjd; else if (!measured) broken = true;
+  }
+  return { rows, lastMeasured };
+}
+const mjdOf = (t) => t / DAY + 40587;
+const interp = (rows, mjd) => { const a = rows.get(Math.floor(mjd)), b = rows.get(Math.floor(mjd) + 1); if (!a || !b) return null; const f = mjd - Math.floor(mjd); return a.ut1 + f * (b.ut1 - a.ut1); };
+const eopRoot = path.join(A, 'hac/iers-eop');
+/** The archived files in date order: the file of 2026-10-09 (B1's), then the daily ones; a day's finals.all and finals.daily both count. */
+function archived() {
+  const out = [{ day: '2026-10-09', name: 'finals.all.iau2000.txt', file: path.join(eopRoot, '20261009/finals.all.iau2000.txt') }];
+  for (const d of fs.readdirSync(path.join(eopRoot, '2026')).sort()) for (const name of ['finals.daily.iau2000.txt', 'finals.all.iau2000.txt']) { const f = path.join(eopRoot, '2026', d, name); if (fs.existsSync(f)) out.push({ day: d, name, file: f }); }
+  return out;
+}
 
-if (args.eop) {
-  // the Bulletins of the cal/val span
+if (args.measured) {
+  const files = archived().map((f) => { const p = parseFinals(opened.read(f.file, 'finals').toString('latin1')); const flags = [...p.rows.values()]; return { ...f, file: undefined, rows: p.rows.size, lastMeasuredMjd: p.lastMeasured, lastMeasuredDate: p.lastMeasured ? iso((p.lastMeasured - 40587) * DAY).slice(0, 10) : null, predictedRows: flags.filter((x) => x.pole === 'P' || x.ut === 'P').length, mixed: flags.filter((x) => x.pole !== x.ut).length }; });
+  const firstFor = (E) => { const need = Math.ceil(mjdOf(E + 84 * HOUR)); return files.find((f) => f.lastMeasuredMjd !== null && f.lastMeasuredMjd >= need) ?? null; };
+  // history-only windows from 06-03 and every fresh cutoff that the archive can name today
+  const windows = [];
+  for (const E of grid('2026-06-03', '2026-11-30', 3)) { const f = firstFor(E); windows.push({ E: iso(E).slice(0, 10), throughMjd: Math.ceil(mjdOf(E + 84 * HOUR)), file: f ? `${f.day}/${f.name}` : null, waits: !f }); }
+  const out = { rule: config.earthOrientation.later, flags: 'finals2000A columns 17 (pole) and 58 (UT1): I measured, P predicted; a parser reads Bulletin A columns only', files, windows, flagsCanShow: files.every((f) => f.lastMeasuredMjd !== null) };
+  fs.writeFileSync(path.join(part, 'measured.json'), JSON.stringify(out, null, 1));
+  console.log(JSON.stringify({ flagsCanShow: out.flagsCanShow, files: files.map((f) => [f.day, f.name.slice(7, 12), f.lastMeasuredDate, f.predictedRows, f.mixed]), windows: windows.filter((w, i) => i % 6 === 0 || w.waits).map((w) => [w.E, w.file, w.waits]) }));
+  process.exit(0);
+}
+
+if (args.table) {
+  const LEADS = config.leads_h;
+  // Bulletin A at or before each cal/val cutoff, against C04
   const issues = [];
-  for (const [vol, year, a, b] of [['xxxviii', 2025, 32, 53], ['xxxix', 2026, 1, 24]]) for (let n = a; n <= b; n += 1) {
+  for (const [vol, a, b] of [['xxxviii', 32, 53], ['xxxix', 1, 24]]) for (let n = a; n <= b; n += 1) {
     const name = `bulletina-${vol}-${String(n).padStart(3, '0')}.txt`;
     const bytes = await get(`https://datacenter.iers.org/data/6/${name}`, path.join(store, 'eop/bulletina', name));
     if (!bytes) continue;
     const p = parseBulletin(bytes.toString('utf8'));
-    if (p) issues.push({ ...p, name, year });
+    if (p) issues.push({ ...p, name });
   }
   issues.sort((x, y) => x.issued - y.issued);
-  // what the chain's reference states were converted with: C04; what FFM reads in cal/val: B1's finals rows
   const c04 = new Map();
-  for (const l of opened.read(path.join(A, 'reference-states/products/eopc04.1962-now'), 'C04').toString().split('\n')) { if (!l || l.startsWith('#')) continue; const t = l.trim().split(/\s+/); c04.set(Math.round(Number(t[4])), { x: Number(t[5]), y: Number(t[6]), ut1: Number(t[7]) }); }
-  const bulletinAt = (E) => { let best = null; for (const i of issues) if (i.issued <= E) best = i; return best; };
-  const interp = (table, mjd) => { const a = table.get(Math.floor(mjd)), b = table.get(Math.floor(mjd) + 1); if (!a || !b) return null; const f = mjd - Math.floor(mjd); return { x: a.x + f * (b.x - a.x), y: a.y + f * (b.y - a.y), ut1: a.ut1 + f * (b.ut1 - a.ut1) }; };
-  const mjdOf = (t) => t / DAY + 40587;
-  // UT1-UTC as issued minus C04 at the fit epoch, every cal/val cutoff
+  for (const l of opened.read(path.join(A, 'reference-states/products/eopc04.1962-now'), 'C04').toString().split('\n')) { if (!l || l.startsWith('#')) continue; const t = l.trim().split(/\s+/); c04.set(Math.round(Number(t[4])), { ut1: Number(t[7]) }); }
   const cutoffs = [...grid(config.sets.calibration.from, config.sets.calibration.to, 3), ...grid(config.sets.validation.from, config.sets.validation.to, 3)];
-  const series = cutoffs.map((E) => { const i = bulletinAt(E), m = mjdOf(E), q = i && interp(i.rows, m), c = interp(c04, m); return q && c ? { E: iso(E).slice(0, 10), ageDays: (E - i.issued) / DAY + 1, dUt1Ms: (q.ut1 - c.ut1) * 1000, dXmas: (q.x - c.x) * 1000, dYmas: (q.y - c.y) * 1000 } : null; }).filter(Boolean);
-  // the IGS ultra-rapid ERP issued just before a cutoff, on the sample's dates
-  const S = await openSession(opened, SPAN);
-  const pop = [...config.population.judged.glonass.c2, ...config.population.judged.galileo.new];
-  const candidates = [];
-  for (const norad of pop) for (const E of cutoffs) candidates.push({ norad, E, h: sha256(Buffer.from(`C3S|p3|${norad}|${iso(E)}`)) });
-  candidates.sort((a, b) => (a.h < b.h ? -1 : 1));
-  const { openConverter } = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/refstates.mjs'));
-  const { MODULES } = await import('./lib/modules.mjs');
-  const { parseSinex } = await import('./lib/notices.mjs');
-  const sinex = parseSinex(fs.readFileSync(path.join(A, 'hac/igs-metadata/20261009/igs_satellite_metadata.snx'), 'utf8'));
-  const SRC = await import(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs'));
-  const finalsBase = fs.readFileSync(path.join(A, 'hac/iers-eop/20261009/finals.all.iau2000.txt'), 'latin1').split('\n');
-  const FZ = JSON.parse(fs.readFileSync(path.join(c2Results, 'frozen-constants.json'))).classes.R3.parameters;
-  const { pC2 } = await import('./lib/model.mjs');
-  const fmt = (v, w, d) => v.toFixed(d).padStart(w);
-  /** A finals text with the Bulletin's x, y, UT1-UTC in the A columns and only the arc's days. */
-  const finalsAsIssued = (issue, loMjd, hiMjd) => finalsBase.filter((l) => { const m = Number(l.slice(7, 15)); return m >= loMjd - 40 && m <= hiMjd + 40; }).map((l) => {
-    const m = Math.round(Number(l.slice(7, 15))), q = issue.rows.get(m);
-    if (!q || m < loMjd || m > hiMjd) return l;
-    return `${l.slice(0, 16)}I${l.slice(17, 18)}${fmt(q.x, 9, 6)}${l.slice(27, 37)}${fmt(q.y, 9, 6)}${l.slice(46, 57)}I${fmt(q.ut1, 10, 7)}${l.slice(68)}`;
-  }).join('\n');
-  const rows = [], picked = [];
-  const seenSat = new Map();
-  for (const c of candidates) { if ((seenSat.get(c.norad) ?? 0) >= 1 || picked.length >= 12) continue; picked.push(c); seenSat.set(c.norad, 1); }
-  for (const c of picked) {
-    const { norad, E } = c, Ems = E, win = windowOf(norad, S.arcsFor(norad), Ems, { leadToleranceSeconds: 150 });
-    if (win.excluded) { rows.push({ norad, E: iso(E), excluded: win.excluded }); continue; }
-    const issue = bulletinAt(Ems);
-    const settings = settingsFor('R3', S.seedOf(norad), false, S.B2C);
-    const leads = win.leads.filter((l) => l.line).map((l) => ({ ...l, ref: null }));
-    const ctx0 = S.chain.ctxFor(win.tInMs - 24 * HOUR, win.tInMs + 72 * HOUR);
-    const editEop = (inputs) => editPort(inputs, 'earth_orientation', 'EARTH_ORIENTATION', (r) => { const q = issue.rows.get(r.MJD); if (q) { r.X_POLE_WANDER_RADIANS = q.x * RAD; r.Y_POLE_WANDER_RADIANS = q.y * RAD; r.UT1_MINUS_UTC_SECONDS = q.ut1; } return r; });
-    const run = async (track, inputs) => { const fi = fitInput(track), ctx = { ...ctx0, inputs }; const f = await S.fitV3(ctx, fi.points, fi.reference, settings); return { f, t: await windowTermsRef(ctx, S.pairs, f, win.tInMs, leads, settings) }; };
-    const base = await run(win.track, ctx0.inputs);
-    const ffmOnly = await run(win.track, editEop(ctx0.inputs));
-    // the fit arc's SP3 converted with the Bulletin's rows
-    const product = win.product, sp3 = zlib.gunzipSync(opened.read(path.join(A, 'reference-states/products', `${product}.SP3.gz`), 'SP3, cal/val'));
-    const mjdLo = Math.floor(mjdOf(win.tInMs)) - 2, mjdHi = Math.ceil(mjdOf(win.tInMs)) + 1;
-    const fFile = path.join(store, 'eop', 'tmp', `finals-${issue.name}-${mjdLo}.txt`);
-    fs.mkdirSync(path.dirname(fFile), { recursive: true }); fs.writeFileSync(fFile, finalsAsIssued(issue, mjdLo, mjdHi), 'latin1');
-    const conv = await openConverter(MODULES, { finalsFile: fFile });
-    const svn = sinex.svnOfNorad(norad), prn = sinex.prn.find((x) => x.svn === svn && win.tInMs >= x.from && win.tInMs < x.to)?.prn;
-    const id = sinex.identifier.get(svn);
-    const got = await conv.convert(sp3, { product: `${product}.SP3.gz`, source: 'as-issued test (P3)', satellites: { [prn]: { norad, objectId: id.cospar, name: `${svn} ${id.block}` } } });
-    await conv.destroy();
-    if (got.error) { rows.push({ norad, E: iso(E), excluded: got.error }); continue; }
-    const dirT = path.join(store, 'eop', 'tmp', product); fs.mkdirSync(dirT, { recursive: true });
-    const f1 = path.join(dirT, `${norad}.oem`); fs.writeFileSync(f1, got[0].bytes);
-    const asLines = new Map(SRC.readReference(f1).lines.map((l) => [l.epoch, l]));
-    const track2 = win.track.map((l) => ({ ...l, ...(asLines.get(l.epoch) ? { r: asLines.get(l.epoch).r, v: asLines.get(l.epoch).v } : {}) }));
-    const trackShift = track2.map((l, i) => Math.hypot(...l.r.map((x, k) => (x - win.track[i].r[k]) * 1000)));
-    const both = await run(track2, editEop(ctx0.inputs));
-    const d = (x) => base.t.leads.map((l, i) => { const P = pC2(FZ, l.terms); return { L: l.L, dR: x.t.leads[i].errRtnM[0] - l.errRtnM[0], dT: x.t.leads[i].errRtnM[1] - l.errRtnM[1], dN: x.t.leads[i].errRtnM[2] - l.errRtnM[2], sigmaT: Math.sqrt(P[2]), errT: l.errRtnM[1] }; });
-    rows.push({ norad, E: iso(E), issue: issue.name, ageDays: (Ems - issue.issued) / DAY + 1, dUt1Ms: (interp(issue.rows, mjdOf(win.tInMs)).ut1 - interp(c04, mjdOf(win.tInMs)).ut1) * 1000, trackShiftM: quant(trackShift), ffmOnly: d(ffmOnly), both: d(both) });
-    console.error(JSON.stringify({ norad, E: iso(E).slice(0, 10), dUt1Ms: rows.at(-1).dUt1Ms, age: rows.at(-1).ageDays, track: rows.at(-1).trackShiftM.median, both72: rows.at(-1).both.at(-1).dT, ffm72: rows.at(-1).ffmOnly.at(-1).dT }));
+  const bulletin = Object.fromEntries(LEADS.map((L) => [L, []]));
+  for (const E of cutoffs) { let i = null; for (const q of issues) if (q.issued <= E) i = q; if (!i) continue; for (const L of LEADS) { const m = mjdOf(E + L * HOUR), a = interp(i.rows, m), c = interp(c04, m); if (a !== null && c !== null) bulletin[L].push(Math.abs(a - c) * 1000); } }
+  // finals.daily issued on day D (taken at noon UTC of D, the archive's fetch hour), against the newest file's measured rows
+  const files = archived().filter((f) => f.name === 'finals.daily.iau2000.txt');
+  const newest = parseFinals(opened.read(files.at(-1).file, 'finals').toString('latin1'));
+  const daily = Object.fromEntries(LEADS.map((L) => [L, []]));
+  for (const f of files) {
+    const p = parseFinals(opened.read(f.file, 'finals').toString('latin1')), E = Date.parse(`${f.day}T12:00:00Z`);
+    for (const L of LEADS) { const m = mjdOf(E + L * HOUR); if (Math.ceil(m) > newest.lastMeasured) continue; const a = interp(p.rows, m), c = interp(newest.rows, m); if (a !== null && c !== null) daily[L].push(Math.abs(a - c) * 1000); }
   }
-  fs.writeFileSync(path.join(part, 'eop.json'), JSON.stringify({ issues: issues.length, series, stats: { dUt1Ms: quant(series.map((x) => Math.abs(x.dUt1Ms))), dXmas: quant(series.map((x) => Math.abs(x.dXmas))), dYmas: quant(series.map((x) => Math.abs(x.dYmas))), ageDays: quant(series.map((x) => x.ageDays)) }, rows }, null, 1));
+  const stat = (v) => { const s = [...v].sort((a, b) => a - b); return s.length ? { n: s.length, medianMs: s[Math.floor(s.length / 2)], p95Ms: s[Math.floor(s.length * 0.95)] } : null; };
+  // meters: Earth rotation times radius, the class's median radius in cal/val; C2's along-track sigma per lead from P1
+  const P1 = JSON.parse(fs.readFileSync(path.join(root, 'results/ffm-covariance-adaptive/precheck-P1.json')));
+  const { arcsOf, arcLines } = await import('./lib/chain.mjs');
+  const OMEGA = 7.292115e-5;
+  const radiusOf = (norad) => { const arcs = arcsOf(norad, { fromMs: Date.parse('2026-01-01T00:00:00Z'), toMs: Date.parse('2026-01-12T00:00:00Z'), allowedToMs: Date.parse('2026-06-15T00:00:00Z'), opened }); return Math.hypot(...arcLines(arcs[0])[0].r) * 1000; };
+  const classes = { 'LAGEOS-2': 22195, 'LARES-2': 53105, Etalon: 19751, GLONASS: 40001, Galileo: 41859 };
+  const table = {};
+  for (const [name, norad] of Object.entries(classes)) {
+    const r = radiusOf(norad);
+    table[name] = { radiusKm: r / 1000, leads: Object.fromEntries(LEADS.map((L) => { const b = stat(bulletin[L]), d = stat(daily[L]), s = P1.sigmaPerLead?.[name]?.[L]?.[1] ?? null, m = (x) => (x === null || x === undefined ? null : OMEGA * r * x / 1000); return [L, { bulletinMedianM: m(b?.medianMs), bulletinP95M: m(b?.p95Ms), dailyMedianM: m(d?.medianMs), dailyP95M: m(d?.p95Ms), c2AlongTrackSigmaM: s, bulletinP95OverSigma: s && b ? m(b.p95Ms) / s : null, dailyP95OverSigma: s && d ? m(d.p95Ms) / s : null }]; })) };
+  }
+  const out = { reportOnly: true, noFfmRun: true, sources: { bulletin: `IERS Bulletin A at or before each of ${cutoffs.length} cal/val cutoffs, ${issues.length} issues, against C04`, daily: `finals.daily of ${files.length} days from ${files[0].day} to ${files.at(-1).day}, taken at noon UTC, against ${files.at(-1).day}'s measured rows (through MJD ${newest.lastMeasured})` }, convert: 'meters = 7.292115e-5 rad/s x class radius x |UT1 difference|: the displacement of a point at that radius on the equator; the along-track part is at most this', ut1Ms: { bulletin: Object.fromEntries(LEADS.map((L) => [L, stat(bulletin[L])])), daily: Object.fromEntries(LEADS.map((L) => [L, stat(daily[L])])) }, table };
+  fs.writeFileSync(path.join(part, 'table.json'), JSON.stringify(out, null, 1));
+  console.log(JSON.stringify(out));
   process.exit(0);
 }
 
 if (args.receipt) {
   const read = (n) => (fs.existsSync(path.join(part, n)) ? JSON.parse(fs.readFileSync(path.join(part, n))) : null);
-  console.log(writeReceipt('precheck-P3', { plan: 'section 5 P3; coordinator addition A', archives: read('archives.json'), inert: read('inert.json'), eop: read('eop.json') }, opened));
+  console.log(writeReceipt('precheck-P3', { plan: 'section 5 P3; C3-A1', archives: read('archives.json'), measured: read('measured.json'), inert: read('inert.json'), eopTable: read('table.json') }, opened));
   process.exit(0);
 }

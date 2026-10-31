@@ -1,0 +1,153 @@
+// C3-small's statistics on cal/val (PLAN.md sections 2, 3, 5). Every d2 is gp-error-model pair_statistics on the composed covariance; JavaScript composes the arithmetic of section 2 and fits the constants.
+//   node experiments/ffm-covariance-adaptive/score.mjs --pref                 P-REF: k_ref per class, axis and lead group; corr(forecast - truth, reference - truth)
+//   node experiments/ffm-covariance-adaptive/score.mjs --fit --class R3       the constants by calibration log score; C3-0, C3-a, C3-b, C3-ab; validation cells and contrasts (needs --pref)
+//   node experiments/ffm-covariance-adaptive/score.mjs --extract --class R3   C3-ab's primary samples for P7 and P8 (under <store>/extract/)
+import fs from 'node:fs';
+import path from 'node:path';
+import { config, store, args, registered, Opened, writeReceipt, results, sha256 } from './common.mjs';
+import { AXES, axesMleRef, logScore } from './lib/model.mjs';
+import { loadClass, samplesOf, CLASSES, groupOf } from './lib/windows.mjs';
+import { compose, d2Of } from './lib/compose.mjs';
+
+registered();
+const opened = new Opened();
+const LEADS = config.leads_h, V = config.verdict, CHI = V.band.chi2_3_95;
+const seedOf = (label) => parseInt(sha256(Buffer.from(label)).slice(0, 8), 16);
+function rngOf(seed) { let s = seed >>> 0; return () => { s = (s + 0x9e3779b9) >>> 0; let z = s; z = Math.imul(z ^ (z >>> 16), 0x85ebca6b) >>> 0; z = Math.imul(z ^ (z >>> 13), 0xc2b2ae35) >>> 0; return ((z ^ (z >>> 16)) >>> 0) / 4294967296; }; }
+
+/** Two-way interval: clusters x moving blocks of `blockDates` grid dates (12 days on the 3-day grid); samples [{ cluster, day, value }]; weights multiply. */
+function twoWay(samples, { resamples = V.interval.resamples, label, blockDays = V.interval.blocksDays } = {}) {
+  const clusters = [...new Set(samples.map((s) => s.cluster))].sort(), days = [...new Set(samples.map((s) => s.day))].sort((a, b) => a - b);
+  if (!samples.length) return null;
+  const ci = new Map(clusters.map((c, i) => [c, i])), di = new Map(days.map((d, i) => [d, i]));
+  const C = clusters.length, T = days.length, S = Array.from({ length: C }, () => new Float64Array(T)), N = Array.from({ length: C }, () => new Float64Array(T));
+  for (const s of samples) { const a = ci.get(s.cluster), b = di.get(s.day); S[a][b] += s.value; N[a][b] += 1; }
+  const first = days[0], last = days[T - 1], span = last - first + 1, blocks = Math.ceil(span / blockDays), starts = Math.max(1, span - blockDays + 1);
+  const random = rngOf(seedOf(label));
+  const out = new Float64Array(resamples);
+  for (let b = 0; b < resamples; b += 1) {
+    const wc = new Float64Array(C), wt = new Float64Array(T);
+    for (let i = 0; i < C; i += 1) wc[Math.floor(random() * C)] += 1;
+    for (let i = 0; i < blocks; i += 1) { const s0 = first + Math.floor(random() * starts); for (let t = 0; t < T; t += 1) if (days[t] >= s0 && days[t] < s0 + blockDays) wt[t] += 1; }
+    let num = 0, den = 0;
+    for (let c = 0; c < C; c += 1) { if (!wc[c]) continue; for (let t = 0; t < T; t += 1) { const w = wc[c] * wt[t]; if (w) { num += w * S[c][t]; den += w * N[c][t]; } } }
+    out[b] = den ? num / den : NaN;
+  }
+  const v = [...out].filter(Number.isFinite).sort((a, b) => a - b);
+  return { lo: v[Math.floor(v.length * 0.025)], hi: v[Math.floor(v.length * 0.975)], resamples: v.length, sd: Math.sqrt(v.reduce((a, x) => a + (x - v.reduce((p, q) => p + q, 0) / v.length) ** 2, 0) / v.length) };
+}
+
+async function meanLogScore(samples, arm) {
+  const c = compose(samples, arm), d2 = await d2Of(c);
+  let sum = 0;
+  c.forEach((s, i) => { sum += logScore(d2[i], s.m, s.l.C); });
+  return sum / c.length;
+}
+/** Cells of composed samples: band, per-axis z, and the two-way interval of mean d2/3 and coverage. */
+async function cellsOf(samples, arm, label, { intervals = false } = {}) {
+  const c = compose(samples, arm), d2 = await d2Of(c), by = {};
+  c.forEach((s, i) => { (by[s.l.L] ??= []).push({ s, d2: d2[i] }); });
+  const out = {};
+  for (const [L, list] of Object.entries(by)) {
+    const n = list.length, mean = list.reduce((a, x) => a + x.d2, 0) / n / 3, cov = list.filter((x) => x.d2 <= CHI).length / n;
+    const z = [0, 1, 2].map((k) => list.map(({ s }) => s.l.err[k] / Math.sqrt(s.m[AXES[k]] + s.l.C)));
+    const cell = { n, clusters: new Set(list.map((x) => x.s.w.cluster)).size, satellites: new Set(list.map((x) => x.s.w.norad)).size, meanD2over3: mean, coverage: cov, inBand: mean >= V.band.meanD2over3[0] && mean <= V.band.meanD2over3[1] && cov >= V.band.coverage95[0] && cov <= V.band.coverage95[1],
+      meanZ2: z.map((a) => a.reduce((p, q) => p + q * q, 0) / n), meanZ: z.map((a) => a.reduce((p, q) => p + q, 0) / n) };
+    if (intervals) {
+      cell.mean95 = twoWay(list.map((x) => ({ cluster: x.s.w.cluster, day: Math.floor(x.s.w.tIn / 86400e3), value: x.d2 / 3 })), { label: `${label}|mean|${L}` });
+      cell.coverage95 = twoWay(list.map((x) => ({ cluster: x.s.w.cluster, day: Math.floor(x.s.w.tIn / 86400e3), value: x.d2 <= CHI ? 1 : 0 })), { label: `${label}|coverage|${L}` });
+    }
+    out[L] = cell;
+  }
+  return out;
+}
+async function contrast(samples, a, b, label) {
+  const ca = compose(samples, a), cb = compose(samples, b), da = await d2Of(ca), db = await d2Of(cb);
+  const list = ca.map((s, i) => ({ cluster: s.w.cluster, day: Math.floor(s.w.tIn / 86400e3), L: s.l.L, value: logScore(da[i], s.m, s.l.C) - logScore(db[i], cb[i].m, s.l.C) }));
+  const mean = list.reduce((x, y) => x + y.value, 0) / list.length;
+  return { n: list.length, mean, ...twoWay(list, { label }), byLead: Object.fromEntries(LEADS.map((L) => { const x = list.filter((q) => q.L === L); return [L, x.length ? { n: x.length, mean: x.reduce((p, q) => p + q.value, 0) / x.length, ...twoWay(x, { label: `${label}|${L}`, resamples: 2000 }) } : null]; })) };
+}
+
+const pathOf = (name) => path.join(results, `${name}.json`);
+
+if (args.pref) {
+  const out = { plan: 'section 2 P_ref, section 5 P-REF', classes: {} };
+  for (const cls of Object.keys(CLASSES)) {
+    const D = loadClass(cls, { opened });
+    const cal = samplesOf(D, 'calibration').filter((s) => s.primary && s.l.ref?.minusTruthRtnM);
+    const kRef = [0, 1].map((g) => [0, 1, 2].map((k) => { const x = cal.filter((s) => groupOf(s.l.L) === g); return x.length ? Math.exp(axesMleRef(x.map((s) => ({ e: s.l.ref.minusTruthRtnM[k], a: s.l.ref.covRtn[AXES[k]], c: s.l.C })), 0)) : 1; }));
+    // |corr(forecast - truth, reference - truth)| per axis and lead: Pearson, with the two-way interval of the mean of the standardized product
+    const all = samplesOf(D).filter((s) => s.primary && s.l.ref?.minusTruthRtnM);
+    const corr = {};
+    for (const L of LEADS) for (let k = 0; k < 3; k += 1) {
+      const x = all.filter((s) => s.l.L === L);
+      if (x.length < 30) continue;
+      const a = x.map((s) => s.l.err[k]), b = x.map((s) => s.l.ref.minusTruthRtnM[k]), ma = a.reduce((p, q) => p + q, 0) / a.length, mb = b.reduce((p, q) => p + q, 0) / b.length;
+      const sa = Math.sqrt(a.reduce((p, q) => p + (q - ma) ** 2, 0) / a.length), sb = Math.sqrt(b.reduce((p, q) => p + (q - mb) ** 2, 0) / b.length);
+      const r = a.reduce((p, q, i) => p + (q - ma) * (b[i] - mb), 0) / a.length / (sa * sb);
+      const iv = twoWay(x.map((s, i) => ({ cluster: s.w.cluster, day: Math.floor(s.w.tIn / 86400e3), value: ((a[i] - ma) * (b[i] - mb)) / (sa * sb) })), { label: `C3S|pref|${cls}|${L}|${k}`, resamples: 2000 });
+      corr[`${L}|${'RTN'[k]}`] = { n: x.length, r, lo: iv.lo, hi: iv.hi, stop: Math.abs(r) >= 0.2 && (iv.lo > 0 || iv.hi < 0) };
+    }
+    out.classes[cls] = { counts: D.counts, classMedianChi: D.classMedian, kRef: { groups: ['1-12 h', '24-72 h'], axes: 'RTN', values: kRef }, samples: cal.length, corr, corrStops: Object.entries(corr).filter(([, v]) => v.stop).map(([k]) => k) };
+  }
+  console.log(writeReceipt('precheck-P-REF', out, opened));
+  console.log(JSON.stringify(Object.fromEntries(Object.entries(out.classes).map(([k, v]) => [k, { counts: v.counts, kRef: v.kRef.values, corrStops: v.corrStops, maxCorr: Math.max(...Object.values(v.corr).map((x) => Math.abs(x.r))) }]))));
+  process.exit(0);
+}
+
+if (args.fit) {
+  const cls = args.class;
+  const pref = JSON.parse(fs.readFileSync(pathOf('precheck-P-REF')));
+  const kRef = pref.classes[cls].kRef.values;
+  const D = loadClass(cls, { opened });
+  const cal = samplesOf(D, 'calibration').filter((s) => s.primary), val = samplesOf(D, 'validation').filter((s) => s.primary);
+  const M = config.model;
+  const axis = (a) => { const o = []; for (let x = a.min; x <= a.max + 1e-9; x += a.step) o.push(Math.round(x * 1e6) / 1e6); return o; };
+  const A0 = axis(M.a0), A1 = axis(M.a1);
+  const t0 = Date.now();
+  const arms = {};
+  arms['C3-0'] = { useG: false, useU: false };
+  // C3-a: the grid, then refined
+  const best = (list) => list.reduce((p, q) => (q.score > p.score ? q : p));
+  const scan = async (grid, f) => { const out = []; for (const g of grid) out.push({ ...g, score: await f(g) }); return out; };
+  const refine = async (p, f) => { const out = []; for (let i = -4; i <= 4; i += 1) for (let j = -4; j <= 4; j += 1) out.push({ ...p, a0: Math.round((p.a0 + i * 0.025) * 1e6) / 1e6, a1: Math.round((p.a1 + j * 0.05) * 1e6) / 1e6 }); return best(await scan(out, f)); };
+  const gridA = A0.flatMap((a0) => A1.map((a1) => ({ a0, a1 })));
+  const fA = (g) => meanLogScore(cal, { ...g, useG: true });
+  const a1st = best(await scan(gridA, fA));
+  arms['C3-a'] = { ...(await refine(a1st, fA)), useG: true };
+  console.error(cls, 'C3-a', JSON.stringify(arms['C3-a']), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
+  const bList = await scan(M.n0.map((n0) => ({ n0 })), (g) => meanLogScore(cal, { ...g, useU: true, kRef }));
+  arms['C3-b'] = { ...best(bList), useU: true, kRef };
+  console.error(cls, 'C3-b', JSON.stringify(bList), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
+  const fAB = (g) => meanLogScore(cal, { ...g, useG: true, useU: true, kRef });
+  const gridAB = M.n0.flatMap((n0) => gridA.map((g) => ({ ...g, n0 })));
+  const ab1st = best(await scan(gridAB, fAB));
+  arms['C3-ab'] = { ...(await refine(ab1st, fAB)), useG: true, useU: true, kRef };
+  console.error(cls, 'C3-ab', JSON.stringify({ ...arms['C3-ab'], kRef: undefined }), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
+  const zero = await meanLogScore(cal, arms['C3-0']);
+  const report = { class: cls, kRef, counts: D.counts, classMedianChi: D.classMedian, samples: { calibration: cal.length, validation: val.length }, arms: {} };
+  for (const [name, arm] of Object.entries(arms)) {
+    report.arms[name] = { a0: arm.a0 ?? null, a1: arm.a1 ?? null, n0: arm.n0 ?? null, calibrationLogScore: arm.score ?? zero,
+      calibration: await cellsOf(cal, arm, `C3S|boot|${cls}|${name}|cal`, { intervals: false }), validation: await cellsOf(val, arm, `C3S|boot|${cls}|${name}|val`, { intervals: true }) };
+  }
+  report.validationContrasts = { 'C3-ab - C3-0': await contrast(val, arms['C3-ab'], arms['C3-0'], `C3S|boot|${cls}|contrast|ab-0`), 'C3-ab - C3-a': await contrast(val, arms['C3-ab'], arms['C3-a'], `C3S|boot|${cls}|contrast|ab-a`) };
+  report.stop = report.validationContrasts['C3-ab - C3-0'].hi < 0;
+  report.seconds = (Date.now() - t0) / 1000;
+  console.log(writeReceipt(`fit-${cls}`, report, opened));
+  console.log(JSON.stringify({ cls, a: { a0: report.arms['C3-a'].a0, a1: report.arms['C3-a'].a1 }, b: report.arms['C3-b'].n0, ab: { a0: report.arms['C3-ab'].a0, a1: report.arms['C3-ab'].a1, n0: report.arms['C3-ab'].n0 }, scores: Object.fromEntries(Object.entries(report.arms).map(([k, v]) => [k, v.calibrationLogScore])), contrasts: { ab0: { mean: report.validationContrasts['C3-ab - C3-0'].mean, lo: report.validationContrasts['C3-ab - C3-0'].lo, hi: report.validationContrasts['C3-ab - C3-0'].hi }, aba: { mean: report.validationContrasts['C3-ab - C3-a'].mean, lo: report.validationContrasts['C3-ab - C3-a'].lo, hi: report.validationContrasts['C3-ab - C3-a'].hi } }, stop: report.stop }));
+  process.exit(0);
+}
+
+if (args.extract) {
+  const cls = args.class;
+  const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`)));
+  const ab = fit.arms['C3-ab'], arm = { a0: ab.a0, a1: ab.a1, n0: ab.n0, useG: true, useU: true, kRef: fit.kRef };
+  const D = loadClass(cls, { opened });
+  const all = samplesOf(D);
+  const c = compose(all, arm), d2 = await d2Of(c);
+  const rows = c.map((s, i) => ({ o: s.w.norad, cl: s.w.cluster, set: s.w.set, E: new Date(s.w.E).toISOString(), t: s.w.tIn / 86400e3, L: s.l.L, d2: d2[i], z: [0, 1, 2].map((k) => s.l.err[k] / Math.sqrt(s.m[AXES[k]] + s.l.C)), storm: s.l.storm, notice: s.w.notice, primary: s.primary, u: s.u, g: s.g, nHist: s.w.hist.get(s.l.L)?.length ?? 0, screen: Boolean(s.w.screen?.flagged) }));
+  fs.mkdirSync(path.join(store, 'extract'), { recursive: true });
+  fs.writeFileSync(path.join(store, 'extract', `${cls}.json`), JSON.stringify({ cls, rows }));
+  console.log(rows.length);
+  process.exit(0);
+}
