@@ -1,0 +1,49 @@
+{
+ "note": "Modules by git show at the pin, SHA-256 checked, written once to <store>/build; never a working tree. Experiment files this one imports read-only are pinned in sha256; a change refuses every step (coordinator's ruling 2026-10-31).",
+ "pin": {
+  "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+  "modules": {
+   "analysis/estimation": {
+    "version": "0.7.0",
+    "wasmSha256": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd",
+    "manifestSha256": "f3c63ac7c9d32aa6f85bc71ba79d11beffa26d9567a537330b24ac6e0056d05b"
+   },
+   "propagator/ffm": {
+    "version": "2.0.4",
+    "wasmSha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+    "manifestSha256": "165fd160fdd9ec2f398bea2cd0554de5c9c083698616c460ecf8a268598844b7"
+   },
+   "analysis/gp-error-model": {
+    "version": "0.11.0",
+    "wasmSha256": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19",
+    "manifestSha256": "1120b5dff8f5cbaf9dda10fcc3afc0a601e24fceb23d8b250580b7550aab3748"
+   },
+   "propagator/solar-system-bodies": {
+    "version": "0.5.2",
+    "wasmSha256": "9d32a15d9333b8324c34bf3701d076f4aa6c27434bff7efeae067b7619002982",
+    "manifestSha256": "9ab8f408ee26ff941169c846b4db4c8ba2bd2d00f0cfbf821806b13512c577f9"
+   }
+  }
+ },
+ "sha256": {
+  "experiments/ffm-covariance-adaptive/common.mjs": "0fcfc797d37cfca423736e9ec0c649ebf1d91955115f1510752516f568b3ceaf",
+  "experiments/ffm-covariance-adaptive/lib/chain.mjs": "fd2d1f22c10cce51a8fa8cfe4b28b8811289f0315d64768434fcd62a0a35ff42",
+  "experiments/ffm-covariance-adaptive/lib/open.mjs": "7faba59ba479ed0b9ac86266286dacf86eb2a5446dd58e5b66c8695e007c2255",
+  "experiments/ffm-covariance-adaptive/lib/modules.mjs": "8c03050eff72f203261f060325654075206b047d0c5a5876881bc604cc99c059",
+  "experiments/ffm-covariance-adaptive/lib/environment.mjs": "3c62fec9daa13b587d262ca4ccb98d962397c73d5260f5962f5ab07cee02c8c6",
+  "experiments/ffm-covariance-adaptive/lib/gfz.mjs": "1b0a70f04fac14949edf658cff83fa32bf46d798d96ef06d3d5f2d2f80ecdc49",
+  "experiments/ffm-covariance-adaptive/lib/notices.mjs": "40fe1b376ffc7d3992de0506d454aaac45764474d66b3e54b96c9317d20bc224",
+  "experiments/ffm-covariance-adaptive/lib/terms.mjs": "ac1adb9c1c4de5dc79afdb9584210f905a1841cd5576b3c64cf325032bab7536",
+  "experiments/ffm-covariance-calibration/common.mjs": "a03dd2f21f4f1631083104fb84732fb2d6162aaef759e079fffe076247ca0eda",
+  "experiments/ffm-covariance-calibration/lib/precise.mjs": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa",
+  "experiments/ffm-covariance-calibration/lib/products.mjs": "a3d4289b028177feff08dd44328652dbb4877ed66c15adba870994777c3e8b36",
+  "harness/ffm-fit-v3.mjs": "42aa040a6944971e6c314551d7350aad0887bd51025228c1486c50b3a1b8ee9c",
+  "harness/ffm-execution.mjs": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e",
+  "harness/modules.mjs": "10e7d5a6144006c136af7ab946d0d3609df314faf4f25c59e489f3d1e5af3c76",
+  "harness/prw.mjs": "f7c1ca85bdad35bce35c9a4808c3456f794293505bc6b9bea21f078d88f84985",
+  "harness/truth-gate.mjs": "925d2a92170e0a34cbd2b08c6f3d663cce452b8d3e973a7576d3c0ff55f9329e",
+  "experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs": "62dfdc28e526dab312d6017bcebb78ff7a23569a39ee7dccaaff08d48c4d5aca",
+  "experiments/sdn-gp-starlink-ffm-match/lib/windows.mjs": "91c8a90e643fcff89a7be8ab2712fe7aaeff01c022bbdb098a2e91c5aeff0e55",
+  "experiments/sdn-gp-starlink-ffm-match/lib/modules.mjs": "ffddb616fe892f8b8a1824385e7d2e135a670c8559c49abe40f19fd7133e69f1"
+ }
+}
