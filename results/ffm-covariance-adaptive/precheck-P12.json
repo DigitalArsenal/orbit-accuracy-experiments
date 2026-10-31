@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P12",
- "createdUtc": "2026-10-31T11:21:11.635Z",
- "experimentsCommit": "3e88e95e547c7dcdf8a1ff503b7e7186b36539cd",
+ "createdUtc": "2026-10-31T16:31:22.645Z",
+ "experimentsCommit": "36339cefdb89f09bd201047230c39be7f7de8ae0",
  "plan": "section 5 P12",
  "modules": {
   "pin:analysis/estimation": {
@@ -95,6 +95,10 @@
   "experiments/ffm-covariance-calibration/lib/precise.mjs": {
    "committed": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa",
    "disk": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa"
+  },
+  "experiments/ffm-galileo-y-bias/lib/y0.mjs": {
+   "committed": "dfe1fe3c09d843501f1e2dfb3eca9fb25f03d1b25dab68f926ff01bb81858303",
+   "disk": "dfe1fe3c09d843501f1e2dfb3eca9fb25f03d1b25dab68f926ff01bb81858303"
   }
  },
  "xm": {
@@ -109,9 +113,9 @@
   "flatc-wasm": "26.1.38"
  },
  "registration": {
-  "PLAN.md": "d6b39c3ab9b3374b1ad6fc362700fd520fe038d763971bc64ff70d4fa4d08772",
-  "config.json": "9c997230a83472ce812b04d99525af61e97c15efbeadc4bc5e6784002ff2d3b2",
-  "build.json": "52c212bee1abec7f1e907a6722f2c0f7dcf5171b486a87049011212bc789da28"
+  "PLAN.md": "e915417770be48305fde9368840653f0ebd0baa3ac857540d9aec43c35b2ca53",
+  "config.json": "21a6c12f284f76096feb73a18eabf846b43dc4b77e6822b9084e72be2a6c8b1c",
+  "build.json": "de29cd55d436bd6c207e5f45bae6275f6a34a397c70fb602d80ba36b00f1c1a0"
  },
  "bad": [],
  "pass": true,
