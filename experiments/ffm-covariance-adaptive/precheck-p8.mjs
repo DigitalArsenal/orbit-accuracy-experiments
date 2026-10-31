@@ -30,7 +30,7 @@ for (const cls of Object.keys(CLASSES)) {
   const windows = [...D.windows.values()].flat();
   for (const L of config.leads_h) for (let k = 0; k < 3; k += 1) for (const [label, u0] of [['-0.7', -0.7], ['0', 0], ['+0.7', 0.7], ['measured', medU[L]?.[k] ?? 0]]) {
     const rand = rngOf(parseInt(sha256(Buffer.from(`C3S|p8|${cls}|${'RTN'[k]}|${L}|${label}`)).slice(0, 8), 16));
-    const ratios = [], lengths = [];
+    const ratios = [], lengths = [], fullHistory = [];
     for (const w of windows) {
       const H = w.hist.get(L);
       if (!H?.length) continue;
@@ -39,11 +39,12 @@ for (const cls of Object.keys(CLASSES)) {
       let prev = normal(rand), prevDay = list[0].day;
       const samples = list.map((s, i) => { if (i) { const r = Math.exp(-(s.day - prevDay) / tau); prev = r * prev + Math.sqrt(Math.max(0, 1 - r * r)) * normal(rand); prevDay = s.day; } return { e: prev * Math.sqrt(Math.exp(u0) * s.a + s.c), a: s.a, c: s.c }; });
       ratios.push(Math.exp(axesMleRef(samples, ab.n0) - u0));
+      if (w.set === 'validation') fullHistory.push(ratios.at(-1)); // these windows have the whole 90 days behind them, as the fresh ones will
       lengths.push(list.length);
     }
     if (!ratios.length) continue;
     const m = median(ratios);
-    rows.push({ L, axis: 'RTN'[k], trueU: label, u0, windows: ratios.length, medianHistory: median(lengths), medianRatio: m, off: m - 1, pass: Math.abs(m - 1) <= 0.1 });
+    rows.push({ L, axis: 'RTN'[k], trueU: label, u0, windows: ratios.length, medianHistory: median(lengths), medianRatio: m, meanRatio: ratios.reduce((p, q) => p + q, 0) / ratios.length, medianRatioFullHistory: fullHistory.length ? median(fullHistory) : null, shrinkByPrior: Math.exp(-ab.n0 * u0 / (median(lengths) + ab.n0)), off: m - 1, pass: Math.abs(m - 1) <= 0.1 });
   }
   if (!rows.length) { out.classes[cls] = { rhoAt3Days: rho, rows, failures: [], worst: null }; continue; }
   out.classes[cls] = { rhoAt3Days: rho, rows, failures: rows.filter((r) => !r.pass), worst: rows.reduce((p, q) => (Math.abs(q.off) > Math.abs(p.off) ? q : p)) };
