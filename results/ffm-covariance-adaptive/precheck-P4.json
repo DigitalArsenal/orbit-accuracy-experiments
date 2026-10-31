@@ -1,0 +1,342 @@
+{
+ "receipt": "precheck-P4",
+ "createdUtc": "2026-10-31T06:36:06.142Z",
+ "experimentsCommit": "fa2275b540a79937216c6073744597cb5088362a",
+ "plan": "section 5 P4; coordinator rulings 1 and additions B, C of 2026-10-31",
+ "limits": {
+  "R3": {
+   "stateAndErrors": "bit-identical",
+   "absDeltaD2over3": 1e-9
+  },
+  "R2": {
+   "absDeltaD2over3": "1e-3 + 1e-3 x d2/3"
+  },
+  "termination": "a class fit may change only to CONVERGED",
+  "gem": "pair_statistics, noise_responses, dcp_covariance bit-identical on 0.11.0 and 0.10.0 on the same inputs"
+ },
+ "rule": "lowest SHA-256 of C3S|p4|<class>|<norad>|<E>",
+ "build": {
+  "pin": "9a05d899b95242b358939ab1d68a776170a6b167",
+  "c2": "f54b5107 (estimation), c860a072 (FFM, gp-error-model)"
+ },
+ "cells": {
+  "R3": {
+   "chosen": "M2",
+   "calibration": {
+    "samples": 4269,
+    "wantSamples": 4269,
+    "identical": true,
+    "differences": []
+   },
+   "validation": {
+    "samples": 1272,
+    "wantSamples": 1272,
+    "identical": true,
+    "differences": []
+   }
+  },
+  "R2-M": {
+   "chosen": "M3/tauInf",
+   "calibration": {
+    "samples": 2017,
+    "wantSamples": 2017,
+    "identical": true,
+    "differences": []
+   },
+   "validation": {
+    "samples": 746,
+    "wantSamples": 746,
+    "identical": true,
+    "differences": []
+   }
+  },
+  "R2-O": {
+   "chosen": "M3/tauInf",
+   "calibration": {
+    "samples": 1151,
+    "wantSamples": 1151,
+    "identical": true,
+    "differences": []
+   },
+   "validation": {
+    "samples": 746,
+    "wantSamples": 746,
+    "identical": true,
+    "differences": []
+   }
+  }
+ },
+ "reasons": {
+  "R3.calibration": {},
+  "R3.validation": {
+   "propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every d": {
+    "windows": 12,
+    "cutoffs": 2,
+    "first": "2026-05-07",
+    "last": "2026-05-09",
+    "objects": [
+     "Etalon-1",
+     "Etalon-2",
+     "GLONASS",
+     "LAGEOS-2",
+     "LARES-2"
+    ]
+   },
+   "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator": {
+    "windows": 12,
+    "cutoffs": 2,
+    "first": "2026-05-09",
+    "last": "2026-05-11",
+    "objects": [
+     "Etalon-1",
+     "Etalon-2",
+     "GLONASS",
+     "LAGEOS-2",
+     "LARES-2"
+    ]
+   }
+  },
+  "R2-M.calibration": {
+   "analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at t": {
+    "windows": 4,
+    "cutoffs": 4,
+    "first": "2025-11-08",
+    "last": "2026-02-12",
+    "objects": [
+     "Sentinel-1A",
+     "Sentinel-1C"
+    ]
+   }
+  },
+  "R2-M.validation": {
+   "propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every d": {
+    "windows": 7,
+    "cutoffs": 1,
+    "first": "2026-05-07",
+    "last": "2026-05-07",
+    "objects": [
+     "Ajisai",
+     "LARES",
+     "LARETS",
+     "Sentinel-1A",
+     "Sentinel-1C",
+     "Starlette",
+     "WESTPAC"
+    ]
+   },
+   "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator": {
+    "windows": 9,
+    "cutoffs": 2,
+    "first": "2026-05-09",
+    "last": "2026-05-11",
+    "objects": [
+     "Ajisai",
+     "LARES",
+     "LARETS",
+     "Sentinel-1A",
+     "Sentinel-1C",
+     "Starlette",
+     "WESTPAC"
+    ]
+   },
+   "analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at t": {
+    "windows": 1,
+    "cutoffs": 1,
+    "first": "2026-05-13",
+    "last": "2026-05-13",
+    "objects": [
+     "Sentinel-1C"
+    ]
+   }
+  },
+  "R2-O.calibration": {
+   "condition O: no RSGA issued in the 72 h before the cutoff": {
+    "windows": 236,
+    "cutoffs": 45,
+    "first": "2025-10-03",
+    "last": "2026-01-01",
+    "objects": [
+     "Ajisai",
+     "LARES",
+     "LARETS",
+     "Sentinel-1A",
+     "Sentinel-1C",
+     "Starlette",
+     "WESTPAC"
+    ]
+   },
+   "analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at t": {
+    "windows": 2,
+    "cutoffs": 2,
+    "first": "2026-02-10",
+    "last": "2026-02-12",
+    "objects": [
+     "Sentinel-1C"
+    ]
+   }
+  },
+  "R2-O.validation": {
+   "propagator/ffm invoke: space-weather-out-of-range: space-weather-out-of-range: The SPW rows must cover every d": {
+    "windows": 7,
+    "cutoffs": 1,
+    "first": "2026-05-07",
+    "last": "2026-05-07",
+    "objects": [
+     "Ajisai",
+     "LARES",
+     "LARETS",
+     "Sentinel-1A",
+     "Sentinel-1C",
+     "Starlette",
+     "WESTPAC"
+    ]
+   },
+   "analysis/estimation fit_batch: fit-failed: the propagator refuses the initial state and parameters: propagator": {
+    "windows": 9,
+    "cutoffs": 2,
+    "first": "2026-05-09",
+    "last": "2026-05-11",
+    "objects": [
+     "Ajisai",
+     "LARES",
+     "LARETS",
+     "Sentinel-1A",
+     "Sentinel-1C",
+     "Starlette",
+     "WESTPAC"
+    ]
+   },
+   "analysis/gp-error-model dcp_covariance: invalid-request: startSample needs stm [36] and s [6] (dx/dB, SI) at t": {
+    "windows": 1,
+    "cutoffs": 1,
+    "first": "2026-05-13",
+    "last": "2026-05-13",
+    "objects": [
+     "Sentinel-1C"
+    ]
+   }
+  }
+ },
+ "replay": {
+  "R3": {
+   "windows": 20,
+   "errors": [],
+   "c2BitForBit": 20,
+   "termsLibEqual": 20,
+   "pinPass": 20,
+   "pinFailures": [],
+   "stateIdentical": 20,
+   "errorsIdentical": 20,
+   "maxAbsDeltaD2over3": 8.93507490218326e-13,
+   "maxErrChangeM": 0,
+   "maxStateChange": 0,
+   "terminationsChanged": 0
+  },
+  "R2-M": {
+   "windows": 20,
+   "errors": [],
+   "c2BitForBit": 20,
+   "termsLibEqual": 20,
+   "pinPass": 20,
+   "pinFailures": [],
+   "stateIdentical": 20,
+   "errorsIdentical": 17,
+   "maxAbsDeltaD2over3": 0.000020895245208735203,
+   "maxErrChangeM": 0.0004578203786707036,
+   "maxStateChange": 0,
+   "terminationsChanged": 0
+  },
+  "R2-O": {
+   "windows": 20,
+   "errors": [],
+   "c2BitForBit": 20,
+   "termsLibEqual": 20,
+   "pinPass": 20,
+   "pinFailures": [],
+   "stateIdentical": 14,
+   "errorsIdentical": 14,
+   "maxAbsDeltaD2over3": 0.0002512235488270065,
+   "maxErrChangeM": 0.03193254373337595,
+   "maxStateChange": 0.00007793540135025978,
+   "terminationsChanged": 0
+  }
+ },
+ "step0Replay": {
+  "R3": {
+   "windows": 6,
+   "errors": [],
+   "c2BitForBit": 6,
+   "termsLibEqual": 6,
+   "pinPass": 6,
+   "pinFailures": [],
+   "stateIdentical": 6,
+   "errorsIdentical": 6,
+   "maxAbsDeltaD2over3": 5.733006661993537e-13,
+   "maxErrChangeM": 0,
+   "maxStateChange": 0,
+   "terminationsChanged": 0
+  },
+  "R2-M": {
+   "windows": 10,
+   "errors": [
+    "62261 2026-02-10T00:00:00.000Z: Cannot read properties of undefined (reading 'map')",
+    "62261 2025-12-26T00:00:00.000Z: Cannot read properties of undefined (reading 'map')"
+   ],
+   "c2BitForBit": 8,
+   "termsLibEqual": 8,
+   "pinPass": 8,
+   "pinFailures": [],
+   "stateIdentical": 3,
+   "errorsIdentical": 2,
+   "maxAbsDeltaD2over3": 0.002230311331610816,
+   "maxErrChangeM": 0.19156019595741114,
+   "maxStateChange": 0.0009020883589982986,
+   "terminationsChanged": 0
+  },
+  "R2-O": {
+   "windows": 0,
+   "errors": [],
+   "c2BitForBit": 0,
+   "termsLibEqual": 0,
+   "pinPass": 0,
+   "pinFailures": [],
+   "stateIdentical": 0,
+   "errorsIdentical": 0,
+   "maxAbsDeltaD2over3": null,
+   "maxErrChangeM": null,
+   "maxStateChange": null,
+   "terminationsChanged": 0
+  }
+ },
+ "gem": {
+  "calls": {
+   "pair_statistics": 76,
+   "noise_responses": 76,
+   "dcp_covariance": 96
+  },
+  "differ": {
+   "pair_statistics": 0,
+   "noise_responses": 0,
+   "dcp_covariance": 0
+  }
+ },
+ "xm": {
+  "ruling": "ruling 3, 2026-10-31",
+  "commit": "8f2926174b68e5bc1559cfce6f9ed6256680fbe8",
+  "path": "experiments/xp-atmosphere-merit",
+  "snapshot": "git archive into <store>/xm-8f2926174",
+  "receipt": "results/ffm-covariance-calibration/xm-libraries.json"
+ },
+ "outcome": {
+  "cells": true,
+  "replay": true,
+  "gem": true,
+  "pass": true
+ },
+ "opened": {
+  "files": 0,
+  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/precheck-P4.json",
+  "groups": []
+ }
+}

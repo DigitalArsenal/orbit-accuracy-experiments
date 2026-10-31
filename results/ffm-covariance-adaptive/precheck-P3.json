@@ -1,0 +1,1102 @@
+{
+ "receipt": "precheck-P3",
+ "createdUtc": "2026-10-31T06:32:24.407Z",
+ "experimentsCommit": "fa2275b540a79937216c6073744597cb5088362a",
+ "plan": "section 5 P3; C3-A1",
+ "archives": {
+  "rsga": {
+   "warehouse": {
+    "first": "20260101RSGA.txt",
+    "last": "20261008RSGA.txt"
+   },
+   "dailyDays": {
+    "first": "2026-10-08",
+    "last": "2026-10-30",
+    "count": 22
+   },
+   "lastDayNames": [
+    "3-day-forecast.txt",
+    "45-day-forecast.txt",
+    "daily-geomagnetic-indices.txt",
+    "daily-solar-indices.txt",
+    "sgarf.txt"
+   ],
+   "fetchLog": {
+    "requests": 2,
+    "byStatus": {
+     "226": 2
+    },
+    "firstOk": null,
+    "lastOk": null
+   }
+  },
+  "gfz": {
+   "dirs": [
+    "2026",
+    "20261009"
+   ],
+   "fetchLog": {
+    "requests": 20,
+    "byStatus": {
+     "200": 19,
+     "null": 1
+    },
+    "firstOk": "2026-10-10",
+    "lastOk": "2026-10-30"
+   }
+  },
+  "earthOrientation": {
+   "dailyDays": {
+    "first": "2026-10-10",
+    "last": "2026-10-30",
+    "count": 16,
+    "days": [
+     "2026-10-10",
+     "2026-10-11",
+     "2026-10-12",
+     "2026-10-13",
+     "2026-10-14",
+     "2026-10-15",
+     "2026-10-16",
+     "2026-10-17",
+     "2026-10-18",
+     "2026-10-19",
+     "2026-10-20",
+     "2026-10-21",
+     "2026-10-27",
+     "2026-10-28",
+     "2026-10-29",
+     "2026-10-30"
+    ]
+   },
+   "fetchLog": {
+    "daily": {
+     "requests": 20,
+     "byStatus": {
+      "200": 16,
+      "400": 4
+     },
+     "firstOk": "2026-10-10",
+     "lastOk": "2026-10-30"
+    },
+    "all": {
+     "requests": 20,
+     "byStatus": {
+      "200": 4,
+      "304": 12,
+      "400": 4
+     },
+     "firstOk": "2026-10-10",
+     "lastOk": "2026-10-30"
+    }
+   },
+   "c04LastRow": "2026   9   1   0"
+  },
+  "swpcRoutes": {
+   "https://services.swpc.noaa.gov/text/3-day-forecast.txt": {
+    "status": 200,
+    "lastModified": "Sat, 31 Oct 2026 06:24:15 GMT"
+   },
+   "https://services.swpc.noaa.gov/text/": {
+    "status": 200,
+    "lastModified": null
+   },
+   "https://www.swpc.noaa.gov/products/3-day-forecast": {
+    "status": 200,
+    "lastModified": "Sat, 31 Oct 2026 02:28:51 GMT"
+   },
+   "https://kp.gfz-potsdam.de/app/files/Kp_ap_Ap_SN_F107_since_1932.txt": {
+    "status": 200,
+    "lastModified": "Fri, 30 Oct 2026 23:46:21 GMT"
+   },
+   "https://datacenter.iers.org/data/6/bulletina-xxxix-041.txt": {
+    "status": 200,
+    "lastModified": "Thu, 08 Oct 2026 18:10:10 GMT"
+   },
+   "https://datacenter.iers.org/data/latestVersion/finals.daily.iau2000.txt": {
+    "status": 200,
+    "lastModified": "Fri, 30 Oct 2026 17:08:36 GMT"
+   },
+   "https://igs.bkg.bund.de/root_ftp/IGS/products/2438/": {
+    "status": 200,
+    "lastModified": null
+   }
+  }
+ },
+ "measured": {
+  "rule": "the first archived file whose values are flagged measured through E + 84 h; named in the window's row; the window waits for that file",
+  "flags": "finals2000A columns 17 (pole) and 58 (UT1): I measured, P predicted; a parser reads Bulletin A columns only",
+  "files": [
+   {
+    "day": "2026-10-09",
+    "name": "finals.all.iau2000.txt",
+    "rows": 19999,
+    "lastMeasuredMjd": 61321,
+    "lastMeasuredDate": "2026-10-08",
+    "predictedRows": 361,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-10",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61322,
+    "lastMeasuredDate": "2026-10-09",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-10",
+    "name": "finals.all.iau2000.txt",
+    "rows": 19999,
+    "lastMeasuredMjd": 61321,
+    "lastMeasuredDate": "2026-10-08",
+    "predictedRows": 361,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-11",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61323,
+    "lastMeasuredDate": "2026-10-10",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-12",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61324,
+    "lastMeasuredDate": "2026-10-11",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-13",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61325,
+    "lastMeasuredDate": "2026-10-12",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-14",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61326,
+    "lastMeasuredDate": "2026-10-13",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-15",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61327,
+    "lastMeasuredDate": "2026-10-14",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-16",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61328,
+    "lastMeasuredDate": "2026-10-15",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-16",
+    "name": "finals.all.iau2000.txt",
+    "rows": 19999,
+    "lastMeasuredMjd": 61328,
+    "lastMeasuredDate": "2026-10-15",
+    "predictedRows": 354,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-17",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61329,
+    "lastMeasuredDate": "2026-10-16",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-18",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61330,
+    "lastMeasuredDate": "2026-10-17",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-19",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61331,
+    "lastMeasuredDate": "2026-10-18",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-20",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61332,
+    "lastMeasuredDate": "2026-10-19",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-21",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61333,
+    "lastMeasuredDate": "2026-10-20",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-27",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61339,
+    "lastMeasuredDate": "2026-10-26",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-27",
+    "name": "finals.all.iau2000.txt",
+    "rows": 20024,
+    "lastMeasuredMjd": 61335,
+    "lastMeasuredDate": "2026-10-22",
+    "predictedRows": 372,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-28",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61340,
+    "lastMeasuredDate": "2026-10-27",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-29",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61341,
+    "lastMeasuredDate": "2026-10-28",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-30",
+    "name": "finals.daily.iau2000.txt",
+    "rows": 181,
+    "lastMeasuredMjd": 61342,
+    "lastMeasuredDate": "2026-10-29",
+    "predictedRows": 91,
+    "mixed": 0
+   },
+   {
+    "day": "2026-10-30",
+    "name": "finals.all.iau2000.txt",
+    "rows": 20031,
+    "lastMeasuredMjd": 61342,
+    "lastMeasuredDate": "2026-10-29",
+    "predictedRows": 372,
+    "mixed": 0
+   }
+  ],
+  "windows": [
+   {
+    "E": "2026-06-03",
+    "throughMjd": 61198,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-06",
+    "throughMjd": 61201,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-09",
+    "throughMjd": 61204,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-12",
+    "throughMjd": 61207,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-15",
+    "throughMjd": 61210,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-18",
+    "throughMjd": 61213,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-21",
+    "throughMjd": 61216,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-24",
+    "throughMjd": 61219,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-27",
+    "throughMjd": 61222,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-06-30",
+    "throughMjd": 61225,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-03",
+    "throughMjd": 61228,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-06",
+    "throughMjd": 61231,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-09",
+    "throughMjd": 61234,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-12",
+    "throughMjd": 61237,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-15",
+    "throughMjd": 61240,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-18",
+    "throughMjd": 61243,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-21",
+    "throughMjd": 61246,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-24",
+    "throughMjd": 61249,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-27",
+    "throughMjd": 61252,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-07-30",
+    "throughMjd": 61255,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-02",
+    "throughMjd": 61258,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-05",
+    "throughMjd": 61261,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-08",
+    "throughMjd": 61264,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-11",
+    "throughMjd": 61267,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-14",
+    "throughMjd": 61270,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-17",
+    "throughMjd": 61273,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-20",
+    "throughMjd": 61276,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-23",
+    "throughMjd": 61279,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-26",
+    "throughMjd": 61282,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-08-29",
+    "throughMjd": 61285,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-01",
+    "throughMjd": 61288,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-04",
+    "throughMjd": 61291,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-07",
+    "throughMjd": 61294,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-10",
+    "throughMjd": 61297,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-13",
+    "throughMjd": 61300,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-16",
+    "throughMjd": 61303,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-19",
+    "throughMjd": 61306,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-22",
+    "throughMjd": 61309,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-25",
+    "throughMjd": 61312,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-09-28",
+    "throughMjd": 61315,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-01",
+    "throughMjd": 61318,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-04",
+    "throughMjd": 61321,
+    "file": "2026-10-09/finals.all.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-07",
+    "throughMjd": 61324,
+    "file": "2026-10-12/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-10",
+    "throughMjd": 61327,
+    "file": "2026-10-15/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-13",
+    "throughMjd": 61330,
+    "file": "2026-10-18/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-16",
+    "throughMjd": 61333,
+    "file": "2026-10-21/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-19",
+    "throughMjd": 61336,
+    "file": "2026-10-27/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-22",
+    "throughMjd": 61339,
+    "file": "2026-10-27/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-25",
+    "throughMjd": 61342,
+    "file": "2026-10-30/finals.daily.iau2000.txt",
+    "waits": false
+   },
+   {
+    "E": "2026-10-28",
+    "throughMjd": 61345,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-10-31",
+    "throughMjd": 61348,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-03",
+    "throughMjd": 61351,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-06",
+    "throughMjd": 61354,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-09",
+    "throughMjd": 61357,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-12",
+    "throughMjd": 61360,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-15",
+    "throughMjd": 61363,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-18",
+    "throughMjd": 61366,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-21",
+    "throughMjd": 61369,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-24",
+    "throughMjd": 61372,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-27",
+    "throughMjd": 61375,
+    "file": null,
+    "waits": true
+   },
+   {
+    "E": "2026-11-30",
+    "throughMjd": 61378,
+    "file": null,
+    "waits": true
+   }
+  ],
+  "flagsCanShow": true
+ },
+ "inert": {
+  "rule": "Ap and F10.7 doubled on every row of the arc",
+  "windows": [
+   {
+    "norad": 22195,
+    "E": "2026-01-11",
+    "state": true,
+    "covariance": true,
+    "terms": true
+   },
+   {
+    "norad": 41859,
+    "E": "2026-01-14",
+    "state": true,
+    "covariance": true,
+    "terms": true
+   },
+   {
+    "norad": 37869,
+    "E": "2026-03-04",
+    "state": true,
+    "covariance": true,
+    "terms": true
+   },
+   {
+    "norad": 53105,
+    "E": "2026-02-02",
+    "state": true,
+    "covariance": true,
+    "terms": true
+   }
+  ],
+  "pass": true
+ },
+ "eopTable": {
+  "reportOnly": true,
+  "noFfmRun": true,
+  "sources": {
+   "bulletin": "IERS Bulletin A at or before each of 81 cal/val cutoffs, 45 issues, against C04",
+   "daily": "finals.daily of 16 days from 2026-10-10 to 2026-10-30, taken at noon UTC, against 2026-10-30's measured rows (through MJD 61342)"
+  },
+  "convert": "meters = 7.292115e-5 rad/s x class radius x |UT1 difference|: the displacement of a point at that radius on the equator; the along-track part is at most this",
+  "ut1Ms": {
+   "bulletin": {
+    "1": {
+     "n": 81,
+     "medianMs": 0.12717500000024307,
+     "p95Ms": 0.49623333333376207
+    },
+    "6": {
+     "n": 81,
+     "medianMs": 0.13420000000000099,
+     "p95Ms": 0.5153999999999992
+    },
+    "12": {
+     "n": 81,
+     "medianMs": 0.1480499999999968,
+     "p95Ms": 0.5383999999999944
+    },
+    "24": {
+     "n": 81,
+     "medianMs": 0.17260000000000886,
+     "p95Ms": 0.5891000000000022
+    },
+    "48": {
+     "n": 81,
+     "medianMs": 0.22459999999999147,
+     "p95Ms": 0.7313000000000042
+    },
+    "72": {
+     "n": 81,
+     "medianMs": 0.2740000000000034,
+     "p95Ms": 0.8907000000000012
+    }
+   },
+   "daily": {
+    "1": {
+     "n": 14,
+     "medianMs": 0.03050833333335945,
+     "p95Ms": 0.10686666666662181
+    },
+    "6": {
+     "n": 14,
+     "medianMs": 0.031549999999998246,
+     "p95Ms": 0.10470000000000618
+    },
+    "12": {
+     "n": 14,
+     "medianMs": 0.03550000000000081,
+     "p95Ms": 0.1021000000000008
+    },
+    "24": {
+     "n": 13,
+     "medianMs": 0.03954999999999931,
+     "p95Ms": 0.11509999999999299
+    },
+    "48": {
+     "n": 12,
+     "medianMs": 0.07695000000000618,
+     "p95Ms": 0.18010000000000248
+    },
+    "72": {
+     "n": 12,
+     "medianMs": 0.12335000000000124,
+     "p95Ms": 0.2832499999999988
+    }
+   }
+  },
+  "table": {
+   "LAGEOS-2": {
+    "radiusKm": 12268.416408778376,
+    "leads": {
+     "1": {
+      "bulletinMedianM": 0.1137741929483163,
+      "bulletinP95M": 0.4439437547787985,
+      "dailyMedianM": 0.02729357973811326,
+      "dailyP95M": 0.09560580894868011,
+      "c2AlongTrackSigmaM": 0.38684411726700574,
+      "bulletinP95OverSigma": 1.1476037374309656,
+      "dailyP95OverSigma": 0.24714298261563458
+     },
+     "6": {
+      "bulletinMedianM": 0.12005894785637883,
+      "bulletinP95M": 0.4610907729148815,
+      "dailyMedianM": 0.02822548289767894,
+      "dailyP95M": 0.09366745037677729,
+      "c2AlongTrackSigmaM": 0.5385781354079217,
+      "bulletinP95OverSigma": 0.8561260522870078,
+      "dailyP95OverSigma": 0.17391617709440269
+     },
+     "12": {
+      "bulletinMedianM": 0.13244953226629186,
+      "bulletinP95M": 0.481667194678638,
+      "dailyMedianM": 0.031759259678848836,
+      "dailyP95M": 0.0913414200904343,
+      "c2AlongTrackSigmaM": 1.11014326041182,
+      "bulletinP95OverSigma": 0.4338784117826002,
+      "dailyP95OverSigma": 0.08227894844540172
+     },
+     "24": {
+      "bulletinMedianM": 0.15441262593153426,
+      "bulletinP95M": 0.5270247852622392,
+      "dailyMedianM": 0.0353824991633358,
+      "dailyP95M": 0.10297157152211818,
+      "c2AlongTrackSigmaM": 2.7456596013407633,
+      "bulletinP95OverSigma": 0.19194833365537442,
+      "dailyP95OverSigma": 0.037503400447686595
+     },
+     "48": {
+      "bulletinMedianM": 0.2009332316582821,
+      "bulletinP95M": 0.6542407493842749,
+      "dailyMedianM": 0.06884155020528335,
+      "dailyP95M": 0.161122328680581,
+      "c2AlongTrackSigmaM": 7.406529598756014,
+      "bulletinP95OverSigma": 0.088332968991869,
+      "dailyP95OverSigma": 0.02175409232248836
+     },
+     "72": {
+      "bulletinMedianM": 0.2451278070987181,
+      "bulletinP95M": 0.7968442984774663,
+      "dailyMedianM": 0.11035224454608321,
+      "dailyP95M": 0.2534031071558786,
+      "c2AlongTrackSigmaM": 13.816985858720715,
+      "bulletinP95OverSigma": 0.05767135514396802,
+      "dailyP95OverSigma": 0.018339970073570057
+     }
+    }
+   },
+   "LARES-2": {
+    "radiusKm": 12257.948544127346,
+    "leads": {
+     "1": {
+      "bulletinMedianM": 0.11367711661728219,
+      "bulletinP95M": 0.4435649656194765,
+      "dailyMedianM": 0.027270291850824385,
+      "dailyP95M": 0.09552423455190542,
+      "c2AlongTrackSigmaM": null,
+      "bulletinP95OverSigma": null,
+      "dailyP95OverSigma": null
+     },
+     "6": {
+      "bulletinMedianM": 0.11995650914102791,
+      "bulletinP95M": 0.46069735328826555,
+      "dailyMedianM": 0.028201399876298005,
+      "dailyP95M": 0.0935875298589141,
+      "c2AlongTrackSigmaM": null,
+      "bulletinP95OverSigma": null,
+      "dailyP95OverSigma": null
+     },
+     "12": {
+      "bulletinMedianM": 0.1323365214480527,
+      "bulletinP95M": 0.4812562184912689,
+      "dailyMedianM": 0.03173216150899073,
+      "dailyP95M": 0.09126348422726495,
+      "c2AlongTrackSigmaM": null,
+      "bulletinP95OverSigma": null,
+      "dailyP95OverSigma": null
+     },
+     "24": {
+      "bulletinMedianM": 0.15428087539301288,
+      "bulletinP95M": 0.5265751083083404,
+      "dailyMedianM": 0.03535230951212769,
+      "dailyP95M": 0.10288371238547965,
+      "c2AlongTrackSigmaM": null,
+      "bulletinP95OverSigma": null,
+      "dailyP95OverSigma": null
+     },
+     "48": {
+      "bulletinMedianM": 0.20076178802588412,
+      "bulletinP95M": 0.653682527085198,
+      "dailyMedianM": 0.06878281205963317,
+      "dailyP95M": 0.16098485317659664,
+      "c2AlongTrackSigmaM": 7.475391944883696,
+      "bulletinP95OverSigma": 0.08744458242521867,
+      "dailyP95OverSigma": 0.021535306023221675
+     },
+     "72": {
+      "bulletinMedianM": 0.24491865502713722,
+      "bulletinP95M": 0.7961644015790829,
+      "dailyMedianM": 0.11025808794743541,
+      "dailyP95M": 0.25318689429356006,
+      "c2AlongTrackSigmaM": 13.657831217233852,
+      "bulletinP95OverSigma": 0.058293618431487074,
+      "dailyP95OverSigma": 0.0185378549688095
+     }
+    }
+   },
+   "Etalon": {
+    "radiusKm": 25553.04131079926,
+    "leads": {
+     "1": {
+      "bulletinMedianM": 0.23697244661755526,
+      "bulletinP95M": 0.9246599338947252,
+      "dailyMedianM": 0.05684792130698868,
+      "dailyP95M": 0.1991307683255648,
+      "c2AlongTrackSigmaM": 0.4149726931828155,
+      "bulletinP95OverSigma": 2.2282428436498782,
+      "dailyP95OverSigma": 0.47986475157737213
+     },
+     "6": {
+      "bulletinMedianM": 0.2500625306547306,
+      "bulletinP95M": 0.9603742794295604,
+      "dailyMedianM": 0.05878891834691695,
+      "dailyP95M": 0.1950934944825011,
+      "c2AlongTrackSigmaM": 0.5409294146992624,
+      "bulletinP95OverSigma": 1.775415152757952,
+      "dailyP95OverSigma": 0.3606634972715732
+     },
+     "12": {
+      "bulletinMedianM": 0.2758700272982995,
+      "bulletinP95M": 1.0032314940723144,
+      "dailyMedianM": 0.06614917912252663,
+      "dailyP95M": 0.1902487658707005,
+      "c2AlongTrackSigmaM": 1.188204265854609,
+      "bulletinP95OverSigma": 0.8443257804252587,
+      "dailyP95OverSigma": 0.16011452856876016
+     },
+     "24": {
+      "bulletinMedianM": 0.3216154455365753,
+      "bulletinP95M": 1.0977037020022449,
+      "dailyMedianM": 0.07369577561396684,
+      "dailyP95M": 0.2144724089296388,
+      "c2AlongTrackSigmaM": 2.8460992559642406,
+      "bulletinP95OverSigma": 0.38568707668993424,
+      "dailyP95OverSigma": 0.07535661607029123
+     },
+     "48": {
+      "bulletinMedianM": 0.4185100177723543,
+      "bulletinP95M": 1.3626730899240254,
+      "dailyMedianM": 0.14338533333742864,
+      "dailyP95M": 0.3355906242244208,
+      "c2AlongTrackSigmaM": 7.692016219508159,
+      "bulletinP95OverSigma": 0.177154214322647,
+      "dailyP95OverSigma": 0.0436284342944195
+     },
+     "72": {
+      "bulletinMedianM": 0.5105598613963974,
+      "bulletinP95M": 1.6596922209699494,
+      "dailyMedianM": 0.22984510548629733,
+      "dailyP95M": 0.527795915111413,
+      "c2AlongTrackSigmaM": 13.87718101170993,
+      "bulletinP95OverSigma": 0.11959865765024305,
+      "dailyP95OverSigma": 0.03803336676707214
+     }
+    }
+   },
+   "GLONASS": {
+    "radiusKm": 25523.338156597492,
+    "leads": {
+     "1": {
+      "bulletinMedianM": 0.2366969870729226,
+      "bulletinP95M": 0.9235850983686281,
+      "dailyMedianM": 0.05678184061811515,
+      "dailyP95M": 0.19889929639054346,
+      "c2AlongTrackSigmaM": 0.4778889036723397,
+      "bulletinP95OverSigma": 1.9326355796741328,
+      "dailyP95OverSigma": 0.4162040483930487
+     },
+     "6": {
+      "bulletinMedianM": 0.24977185504325328,
+      "bulletinP95M": 0.9592579291303398,
+      "dailyMedianM": 0.05872058142037366,
+      "dailyP95M": 0.19486671552183288,
+      "c2AlongTrackSigmaM": 0.588419990543002,
+      "bulletinP95OverSigma": 1.6302266145735864,
+      "dailyP95OverSigma": 0.3311694345088569
+     },
+     "12": {
+      "bulletinMedianM": 0.27554935275076436,
+      "bulletinP95M": 1.0020653260453443,
+      "dailyMedianM": 0.0660722865427394,
+      "dailyP95M": 0.19002761847925614,
+      "c2AlongTrackSigmaM": 1.230458665875987,
+      "bulletinP95OverSigma": 0.814383574056878,
+      "dailyP95OverSigma": 0.154436409567624
+     },
+     "24": {
+      "bulletinMedianM": 0.321241595979638,
+      "bulletinP95M": 1.0964277183754096,
+      "dailyMedianM": 0.07361011078211939,
+      "dailyP95M": 0.2142231036920752,
+      "c2AlongTrackSigmaM": 2.9097106427544994,
+      "bulletinP95OverSigma": 0.3768167536196892,
+      "dailyP95OverSigma": 0.07362350762455173
+     },
+     "48": {
+      "bulletinMedianM": 0.41802353683093996,
+      "bulletinP95M": 1.3610891027804086,
+      "dailyMedianM": 0.14321866054828422,
+      "dailyP95M": 0.33520052975626086,
+      "c2AlongTrackSigmaM": 7.650190808006103,
+      "bulletinP95OverSigma": 0.17791570654107047,
+      "dailyP95OverSigma": 0.043815969845544984
+     },
+     "72": {
+      "bulletinMedianM": 0.5099663806397299,
+      "bulletinP95M": 1.6577629753131473,
+      "dailyMedianM": 0.2295779308463888,
+      "dailyP95M": 0.5271823989642375,
+      "c2AlongTrackSigmaM": 13.74028437964212,
+      "bulletinP95OverSigma": 0.12064983005514225,
+      "dailyP95OverSigma": 0.03836764832504642
+     }
+    }
+   },
+   "Galileo": {
+    "radiusKm": 29600.80251034199,
+    "leads": {
+     "1": {
+      "bulletinMedianM": 0.27451036091560277,
+      "bulletinP95M": 1.071131837480191,
+      "dailyMedianM": 0.0658529867840221,
+      "dailyP95M": 0.2306743246427812,
+      "c2AlongTrackSigmaM": 0.465375213752446,
+      "bulletinP95OverSigma": 2.3016520988373355,
+      "dailyP95OverSigma": 0.49567385160630245
+     },
+     "6": {
+      "bulletinMedianM": 0.28967399594891885,
+      "bulletinP95M": 1.1125035582121567,
+      "dailyMedianM": 0.06810144986727135,
+      "dailyP95M": 0.22599752142960783,
+      "c2AlongTrackSigmaM": 0.5990817382786808,
+      "bulletinP95OverSigma": 1.8570146394524922,
+      "dailyP95OverSigma": 0.377239877281117
+     },
+     "12": {
+      "bulletinMedianM": 0.31956956110459156,
+      "bulletinP95M": 1.162149623091618,
+      "dailyMedianM": 0.07662762187918612,
+      "dailyP95M": 0.22038535757365593,
+      "c2AlongTrackSigmaM": 1.2117786810095021,
+      "bulletinP95OverSigma": 0.9590444536649717,
+      "dailyP95OverSigma": 0.18186931411440452
+     },
+     "24": {
+      "bulletinMedianM": 0.3725613390520536,
+      "bulletinP95M": 1.2715868182824699,
+      "dailyMedianM": 0.08536964634708982,
+      "dailyP95M": 0.24844617685334042,
+      "c2AlongTrackSigmaM": 2.767692213333981,
+      "bulletinP95OverSigma": 0.45943938858385835,
+      "dailyP95OverSigma": 0.0897665483381407
+     },
+     "48": {
+      "bulletinMedianM": 0.4848046161708213,
+      "bulletinP95M": 1.578529010711207,
+      "dailyMedianM": 0.1660984648902454,
+      "dailyP95M": 0.3887502732518675,
+      "c2AlongTrackSigmaM": 7.535750991101775,
+      "bulletinP95OverSigma": 0.20947202376712504,
+      "dailyP95OverSigma": 0.051587462710870405
+     },
+     "72": {
+      "bulletinMedianM": 0.5914357294337121,
+      "bulletinP95M": 1.9225978255715384,
+      "dailyMedianM": 0.26625400447316866,
+      "dailyP95M": 0.6114020816134896,
+      "c2AlongTrackSigmaM": 13.898755042757825,
+      "bulletinP95OverSigma": 0.13832877978328997,
+      "dailyP95OverSigma": 0.04398970121658995
+     }
+    }
+   }
+  }
+ },
+ "opened": {
+  "files": 0,
+  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "fullList": "/opt/data/sdn-archive/ffm-covariance-adaptive/opened/precheck-P3.json",
+  "groups": []
+ }
+}
