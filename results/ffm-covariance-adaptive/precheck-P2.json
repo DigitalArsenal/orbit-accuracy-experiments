@@ -1,7 +1,7 @@
 {
  "receipt": "precheck-P2",
- "createdUtc": "2026-10-31T06:06:39.196Z",
- "experimentsCommit": "32197bf8f900a9e4f7dbadb8565089bf06a7804f",
+ "createdUtc": "2026-10-31T06:11:42.219Z",
+ "experimentsCommit": "474b634afdbfea5fa0fa3d8f5519dff9166714fc",
  "plan": "section 5 P2",
  "seal": "2026-06-01",
  "months": [
@@ -248,7 +248,28 @@
   "IAC": {
    "bulletins": 273,
    "absentDays": [],
-   "notices": 43,
+   "noticesSeen": 43,
+   "issuedInSpan": 37,
+   "issuedBeforeSpanAndRepeated": [
+    "044-250801 2025-08-01T08:30",
+    "045-250804 2025-08-04T09:03",
+    "046-250806 2025-08-06T08:27",
+    "047-250807 2025-08-07T14:16",
+    "048-250812 2025-08-12T09:25",
+    "049-250824 2025-08-24T09:05"
+   ],
+   "numbering": {
+    "2025": {
+     "first": 44,
+     "last": 71,
+     "holes": []
+    },
+    "2026": {
+     "first": 1,
+     "last": 15,
+     "holes": []
+    }
+   },
    "withFullText": 43,
    "failedMonths": []
   },
@@ -275,14 +296,129 @@
   "iacMapped": 38,
   "iacTotal": 43,
   "iacUnmapped": [
-   "054-251016 SC-STAGE-INPUT 16.10.25/0000",
-   "055-251016 PUT INTO OPERATION 16.10.25/1320",
-   "058-251103 SC-SRV 03.11.25/0920-FURTHER NOTICE",
-   "059-251106 SC-SRV 03.11.25/0920-06.11.25/1443",
-   "063-251203 SC-SRV 03.12.25/1032-03.12.25/1133"
+   {
+    "id": "054-251016",
+    "summary": "SC-STAGE-INPUT 16.10.25/0000",
+    "spacecraft": "708",
+    "cosmos": "2596",
+    "launch": "13.09.2025",
+    "slot": "3/20",
+    "oneOfThe14": false,
+    "why": "Cosmos 2596 has no entry in the IGS SINEX of 2026-10-09"
+   },
+   {
+    "id": "055-251016",
+    "summary": "PUT INTO OPERATION 16.10.25/1320",
+    "spacecraft": "708",
+    "cosmos": "2596",
+    "launch": "13.09.2025",
+    "slot": "3/20",
+    "oneOfThe14": false,
+    "why": "Cosmos 2596 has no entry in the IGS SINEX of 2026-10-09"
+   },
+   {
+    "id": "058-251103",
+    "summary": "SC-SRV 03.11.25/0920-FURTHER NOTICE",
+    "spacecraft": "708",
+    "cosmos": "2596",
+    "launch": "13.09.2025",
+    "slot": "3/20",
+    "oneOfThe14": false,
+    "why": "Cosmos 2596 has no entry in the IGS SINEX of 2026-10-09"
+   },
+   {
+    "id": "059-251106",
+    "summary": "SC-SRV 03.11.25/0920-06.11.25/1443",
+    "spacecraft": "708",
+    "cosmos": "2596",
+    "launch": "13.09.2025",
+    "slot": "3/20",
+    "oneOfThe14": false,
+    "why": "Cosmos 2596 has no entry in the IGS SINEX of 2026-10-09"
+   },
+   {
+    "id": "063-251203",
+    "summary": "SC-SRV 03.12.25/1032-03.12.25/1133",
+    "spacecraft": "708",
+    "cosmos": "2596",
+    "launch": "13.09.2025",
+    "slot": "3/20",
+    "oneOfThe14": false,
+    "why": "Cosmos 2596 has no entry in the IGS SINEX of 2026-10-09"
+   }
   ],
   "gscMapped": 537,
   "gscTotal": 647,
+  "gscSpan": {
+   "rows": 67,
+   "unmapped": 10,
+   "unmappedNames": [
+    "ALL"
+   ],
+   "unmappedRows": [
+    {
+     "number": "2025054",
+     "named": "ALL",
+     "svn": null,
+     "type": "PUBLIC KEY RENEWAL"
+    },
+    {
+     "number": "2026001",
+     "named": "ALL",
+     "svn": null,
+     "type": "PLANNED OUTAGE HAS"
+    },
+    {
+     "number": "2026002",
+     "named": "ALL",
+     "svn": null,
+     "type": "OSNMA PLANNED OUTAGE"
+    },
+    {
+     "number": "2026003",
+     "named": "ALL",
+     "svn": null,
+     "type": "AVAILABILITY OF HAS"
+    },
+    {
+     "number": "2026004",
+     "named": "ALL",
+     "svn": null,
+     "type": "OSNMA USABLE"
+    },
+    {
+     "number": "2026005",
+     "named": "ALL",
+     "svn": null,
+     "type": "OSNMA PLANNED OUTAGE"
+    },
+    {
+     "number": "2026006",
+     "named": "ALL",
+     "svn": null,
+     "type": "OSNMA USABLE"
+    },
+    {
+     "number": "2026007",
+     "named": "ALL",
+     "svn": null,
+     "type": "TESLA CHAIN RENEWAL"
+    },
+    {
+     "number": "2026012",
+     "named": "ALL",
+     "svn": null,
+     "type": "SHORT TERM OUTAGE RECOVERED HAS"
+    },
+    {
+     "number": "2026032",
+     "named": "ALL",
+     "svn": null,
+     "type": "SHORT TERM OUTAGE RECOVERED HAS"
+    }
+   ],
+   "namingAPopulationSatellite": 0
+  },
   "inPopulationInSpan": 69
  },
  "unlisted": {
