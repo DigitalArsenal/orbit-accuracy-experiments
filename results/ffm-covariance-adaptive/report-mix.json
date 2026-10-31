@@ -1,14 +1,13 @@
 {
- "plan": "report only, for the ruling on kappa and the band; feeds no gate",
+ "plan": "report only; feeds no gate",
  "fitFrom": "2026-01-01",
  "mix": {
   "Galileo": 0.5681818181818182,
   "GLONASS": 0.3181818181818182,
   "spheres": 0.11363636363636363
  },
- "kappa": 1.169419049717509,
  "tables": {
-  "gate subset | fitted kappa | as they stand": [
+  "gate subset | as they stand": [
    {
     "L": 1,
     "n": 934,
@@ -17,156 +16,8 @@
      "GLONASS": 0.166,
      "spheres": 0.05
     },
-    "mean": 0.9346939694072854,
-    "coverage": 0.9796573875802996,
-    "inBand": false
-   },
-   {
-    "L": 6,
-    "n": 963,
-    "familyShare": {
-     "Galileo": 0.76,
-     "GLONASS": 0.161,
-     "spheres": 0.079
-    },
-    "mean": 0.932224109284842,
-    "coverage": 0.9854620976116301,
-    "inBand": false
-   },
-   {
-    "L": 12,
-    "n": 966,
-    "familyShare": {
-     "Galileo": 0.758,
-     "GLONASS": 0.16,
-     "spheres": 0.082
-    },
-    "mean": 0.991970021154567,
-    "coverage": 0.9751552795031054,
-    "inBand": false
-   },
-   {
-    "L": 24,
-    "n": 967,
-    "familyShare": {
-     "Galileo": 0.757,
-     "GLONASS": 0.16,
-     "spheres": 0.083
-    },
-    "mean": 1.1111245914244707,
-    "coverage": 0.9503619441571869,
-    "inBand": true
-   },
-   {
-    "L": 48,
-    "n": 916,
-    "familyShare": {
-     "Galileo": 0.759,
-     "GLONASS": 0.16,
-     "spheres": 0.081
-    },
-    "mean": 0.9870293047853249,
-    "coverage": 0.9748908296943228,
-    "inBand": false
-   },
-   {
-    "L": 72,
-    "n": 868,
-    "familyShare": {
-     "Galileo": 0.757,
-     "GLONASS": 0.16,
-     "spheres": 0.083
-    },
-    "mean": 1.0635412121138548,
-    "coverage": 0.9504608294930876,
-    "inBand": true
-   }
-  ],
-  "gate subset | fitted kappa | fresh mix": [
-   {
-    "L": 1,
-    "n": 934,
-    "familyShare": {
-     "Galileo": 0.784,
-     "GLONASS": 0.166,
-     "spheres": 0.05
-    },
-    "mean": 0.9270816630499477,
-    "coverage": 0.9726678528480457,
-    "inBand": false
-   },
-   {
-    "L": 6,
-    "n": 963,
-    "familyShare": {
-     "Galileo": 0.76,
-     "GLONASS": 0.161,
-     "spheres": 0.079
-    },
-    "mean": 0.9309829768478708,
-    "coverage": 0.983307798967155,
-    "inBand": false
-   },
-   {
-    "L": 12,
-    "n": 966,
-    "familyShare": {
-     "Galileo": 0.758,
-     "GLONASS": 0.16,
-     "spheres": 0.082
-    },
-    "mean": 0.9574433798516333,
-    "coverage": 0.9749881816579333,
-    "inBand": false
-   },
-   {
-    "L": 24,
-    "n": 967,
-    "familyShare": {
-     "Galileo": 0.757,
-     "GLONASS": 0.16,
-     "spheres": 0.083
-    },
-    "mean": 1.059344864150651,
-    "coverage": 0.9544384384564846,
-    "inBand": true
-   },
-   {
-    "L": 48,
-    "n": 916,
-    "familyShare": {
-     "Galileo": 0.759,
-     "GLONASS": 0.16,
-     "spheres": 0.081
-    },
-    "mean": 0.954195550920435,
-    "coverage": 0.9750908644793534,
-    "inBand": false
-   },
-   {
-    "L": 72,
-    "n": 868,
-    "familyShare": {
-     "Galileo": 0.757,
-     "GLONASS": 0.16,
-     "spheres": 0.083
-    },
-    "mean": 1.0373297892731919,
-    "coverage": 0.9514162642488746,
-    "inBand": true
-   }
-  ],
-  "gate subset | kappa 1 | as they stand": [
-   {
-    "L": 1,
-    "n": 934,
-    "familyShare": {
-     "Galileo": 0.784,
-     "GLONASS": 0.166,
-     "spheres": 0.05
-    },
-    "mean": 1.0930489334809543,
-    "coverage": 0.9603854389721624,
+    "mean": 1.090805170937517,
+    "coverage": 0.9593147751605993,
     "inBand": true
    },
    {
@@ -177,8 +28,8 @@
      "GLONASS": 0.161,
      "spheres": 0.079
     },
-    "mean": 1.0901606320036312,
-    "coverage": 0.9636552440290755,
+    "mean": 1.0905384261619122,
+    "coverage": 0.965732087227414,
     "inBand": true
    },
    {
@@ -189,8 +40,8 @@
      "GLONASS": 0.16,
      "spheres": 0.082
     },
-    "mean": 1.1600286394868309,
-    "coverage": 0.9461697722567286,
+    "mean": 1.157869158581471,
+    "coverage": 0.9492753623188404,
     "inBand": true
    },
    {
@@ -201,8 +52,8 @@
      "GLONASS": 0.16,
      "spheres": 0.083
     },
-    "mean": 1.2993702638213602,
-    "coverage": 0.9224405377456047,
+    "mean": 1.295092799569714,
+    "coverage": 0.9234746639089967,
     "inBand": false
    },
    {
@@ -213,8 +64,8 @@
      "GLONASS": 0.16,
      "spheres": 0.081
     },
-    "mean": 1.154250871645388,
-    "coverage": 0.9530567685589516,
+    "mean": 1.1536283858877487,
+    "coverage": 0.9563318777292573,
     "inBand": true
    },
    {
@@ -225,12 +76,12 @@
      "GLONASS": 0.16,
      "spheres": 0.083
     },
-    "mean": 1.2437253536055919,
-    "coverage": 0.9320276497695852,
+    "mean": 1.2399041385425478,
+    "coverage": 0.935483870967742,
     "inBand": true
    }
   ],
-  "gate subset | kappa 1 | fresh mix": [
+  "gate subset | fresh mix": [
    {
     "L": 1,
     "n": 934,
@@ -239,8 +90,8 @@
      "GLONASS": 0.166,
      "spheres": 0.05
     },
-    "mean": 1.0841469574143976,
-    "coverage": 0.9548664250320753,
+    "mean": 1.0836689349222857,
+    "coverage": 0.9528136391083217,
     "inBand": true
    },
    {
@@ -251,8 +102,8 @@
      "GLONASS": 0.161,
      "spheres": 0.079
     },
-    "mean": 1.0887092280886148,
-    "coverage": 0.9611821652467789,
+    "mean": 1.091535883379799,
+    "coverage": 0.9627345745860735,
     "inBand": true
    },
    {
@@ -263,8 +114,8 @@
      "GLONASS": 0.16,
      "spheres": 0.082
     },
-    "mean": 1.119652527424417,
-    "coverage": 0.9500390580865049,
+    "mean": 1.1197917156661612,
+    "coverage": 0.9523676720954467,
     "inBand": true
    },
    {
@@ -275,8 +126,8 @@
      "GLONASS": 0.16,
      "spheres": 0.083
     },
-    "mean": 1.238818064358178,
-    "coverage": 0.9322043311219013,
+    "mean": 1.2376528890584453,
+    "coverage": 0.9329805357915486,
     "inBand": true
    },
    {
@@ -287,8 +138,8 @@
      "GLONASS": 0.16,
      "spheres": 0.081
     },
-    "mean": 1.1158544544020501,
-    "coverage": 0.9553282610836566,
+    "mean": 1.1171070709060942,
+    "coverage": 0.9591278188400487,
     "inBand": true
    },
    {
@@ -299,12 +150,12 @@
      "GLONASS": 0.16,
      "spheres": 0.083
     },
-    "mean": 1.21307321641552,
-    "coverage": 0.9375792641105046,
+    "mean": 1.211949986006893,
+    "coverage": 0.938749436316451,
     "inBand": true
    }
   ],
-  "validation | fitted kappa | as they stand": [
+  "validation | as they stand": [
    {
     "L": 1,
     "n": 376,
@@ -313,8 +164,8 @@
      "GLONASS": 0.17,
      "spheres": 0.04
     },
-    "mean": 0.9366699689952924,
-    "coverage": 0.9893617021276595,
+    "mean": 1.0946751592191282,
+    "coverage": 0.9707446808510638,
     "inBand": false
    },
    {
@@ -325,155 +176,7 @@
      "GLONASS": 0.164,
      "spheres": 0.077
     },
-    "mean": 0.9190447553122141,
-    "coverage": 0.9872122762148335,
-    "inBand": false
-   },
-   {
-    "L": 12,
-    "n": 392,
-    "familyShare": {
-     "Galileo": 0.758,
-     "GLONASS": 0.163,
-     "spheres": 0.079
-    },
-    "mean": 1.0069700034283249,
-    "coverage": 0.971938775510204,
-    "inBand": false
-   },
-   {
-    "L": 24,
-    "n": 393,
-    "familyShare": {
-     "Galileo": 0.756,
-     "GLONASS": 0.163,
-     "spheres": 0.081
-    },
-    "mean": 1.1401731310276095,
-    "coverage": 0.9516539440203565,
-    "inBand": true
-   },
-   {
-    "L": 48,
-    "n": 370,
-    "familyShare": {
-     "Galileo": 0.754,
-     "GLONASS": 0.162,
-     "spheres": 0.084
-    },
-    "mean": 0.979027928844842,
-    "coverage": 0.9783783783783784,
-    "inBand": false
-   },
-   {
-    "L": 72,
-    "n": 322,
-    "familyShare": {
-     "Galileo": 0.748,
-     "GLONASS": 0.161,
-     "spheres": 0.09
-    },
-    "mean": 1.0686773202764348,
-    "coverage": 0.9565217391304346,
-    "inBand": true
-   }
-  ],
-  "validation | fitted kappa | fresh mix": [
-   {
-    "L": 1,
-    "n": 376,
-    "familyShare": {
-     "Galileo": 0.79,
-     "GLONASS": 0.17,
-     "spheres": 0.04
-    },
-    "mean": 0.9203229961358125,
-    "coverage": 0.9892891988062444,
-    "inBand": false
-   },
-   {
-    "L": 6,
-    "n": 391,
-    "familyShare": {
-     "Galileo": 0.76,
-     "GLONASS": 0.164,
-     "spheres": 0.077
-    },
-    "mean": 0.8850630296212048,
-    "coverage": 0.9904346495255585,
-    "inBand": false
-   },
-   {
-    "L": 12,
-    "n": 392,
-    "familyShare": {
-     "Galileo": 0.758,
-     "GLONASS": 0.163,
-     "spheres": 0.079
-    },
-    "mean": 0.954931500758065,
-    "coverage": 0.9758977081420264,
-    "inBand": false
-   },
-   {
-    "L": 24,
-    "n": 393,
-    "familyShare": {
-     "Galileo": 0.756,
-     "GLONASS": 0.163,
-     "spheres": 0.081
-    },
-    "mean": 1.063130450535195,
-    "coverage": 0.9589550811141722,
-    "inBand": true
-   },
-   {
-    "L": 48,
-    "n": 370,
-    "familyShare": {
-     "Galileo": 0.754,
-     "GLONASS": 0.162,
-     "spheres": 0.084
-    },
-    "mean": 0.9079008608508122,
-    "coverage": 0.9837080482241771,
-    "inBand": false
-   },
-   {
-    "L": 72,
-    "n": 322,
-    "familyShare": {
-     "Galileo": 0.748,
-     "GLONASS": 0.161,
-     "spheres": 0.09
-    },
-    "mean": 1.0064701273905428,
-    "coverage": 0.9632323071119753,
-    "inBand": true
-   }
-  ],
-  "validation | kappa 1 | as they stand": [
-   {
-    "L": 1,
-    "n": 376,
-    "familyShare": {
-     "Galileo": 0.79,
-     "GLONASS": 0.17,
-     "spheres": 0.04
-    },
-    "mean": 1.0953597050414032,
-    "coverage": 0.9680851063829786,
-    "inBand": true
-   },
-   {
-    "L": 6,
-    "n": 391,
-    "familyShare": {
-     "Galileo": 0.76,
-     "GLONASS": 0.164,
-     "spheres": 0.077
-    },
-    "mean": 1.0747484444050701,
+    "mean": 1.075747577760936,
     "coverage": 0.9744245524296674,
     "inBand": false
    },
@@ -485,8 +188,8 @@
      "GLONASS": 0.163,
      "spheres": 0.079
     },
-    "mean": 1.1775699045031887,
-    "coverage": 0.9464285714285714,
+    "mean": 1.1761602726830298,
+    "coverage": 0.9515306122448979,
     "inBand": true
    },
    {
@@ -497,7 +200,7 @@
      "GLONASS": 0.163,
      "spheres": 0.081
     },
-    "mean": 1.333340179399744,
+    "mean": 1.3308339473259543,
     "coverage": 0.9160305343511452,
     "inBand": false
    },
@@ -509,8 +212,8 @@
      "GLONASS": 0.162,
      "spheres": 0.084
     },
-    "mean": 1.1448939101966362,
-    "coverage": 0.9594594594594595,
+    "mean": 1.1454909850343402,
+    "coverage": 0.9621621621621622,
     "inBand": true
    },
    {
@@ -521,12 +224,12 @@
      "GLONASS": 0.161,
      "spheres": 0.09
     },
-    "mean": 1.2497316163323222,
-    "coverage": 0.9316770186335401,
+    "mean": 1.2455249931716919,
+    "coverage": 0.9378881987577639,
     "inBand": true
    }
   ],
-  "validation | kappa 1 | fresh mix": [
+  "validation | fresh mix": [
    {
     "L": 1,
     "n": 376,
@@ -535,8 +238,8 @@
      "GLONASS": 0.17,
      "spheres": 0.04
     },
-    "mean": 1.0762432435743123,
-    "coverage": 0.9648090756045302,
+    "mean": 1.0740601817190063,
+    "coverage": 0.9667221456994185,
     "inBand": true
    },
    {
@@ -547,7 +250,7 @@
      "GLONASS": 0.164,
      "spheres": 0.077
     },
-    "mean": 1.0350095670397288,
+    "mean": 1.0345748429336905,
     "coverage": 0.9808692990511171,
     "inBand": false
    },
@@ -559,8 +262,8 @@
      "GLONASS": 0.163,
      "spheres": 0.079
     },
-    "mean": 1.116715088161811,
-    "coverage": 0.9537084863789409,
+    "mean": 1.1151038405123563,
+    "coverage": 0.9575346265687175,
     "inBand": true
    },
    {
@@ -571,7 +274,7 @@
      "GLONASS": 0.163,
      "spheres": 0.081
     },
-    "mean": 1.2432450011906147,
+    "mean": 1.2405559479960744,
     "coverage": 0.9321720997857362,
     "inBand": true
    },
@@ -583,9 +286,9 @@
      "GLONASS": 0.162,
      "spheres": 0.084
     },
-    "mean": 1.0617165619338653,
-    "coverage": 0.9694525904203323,
-    "inBand": true
+    "mean": 1.0609974822079904,
+    "coverage": 0.9714890843923101,
+    "inBand": false
    },
    {
     "L": 72,
@@ -595,8 +298,8 @@
      "GLONASS": 0.161,
      "spheres": 0.09
     },
-    "mean": 1.1769853399421089,
-    "coverage": 0.9443714998694253,
+    "mean": 1.17262172416466,
+    "coverage": 0.9490867016800627,
     "inBand": true
    }
   ]
