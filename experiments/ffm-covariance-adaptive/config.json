@@ -501,6 +501,62 @@
   ]
  },
  "amendments": [
-  "C3-A1 2026-10-31"
- ]
+  "C3-A1 2026-10-31",
+  "C3-A2 2026-10-31"
+ ],
+ "p1b": {
+  "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
+  "keep": "the 95 % paired interval of r_low at or above 0.90 at 1, 6 and 12 h, both classes, all axes",
+  "stop": "r_high's interval wholly below 0.90 at any of those",
+  "otherwise": "stop and ask, with the table",
+  "reportedOnly": [
+   "r above 1",
+   "the 24 h row"
+  ],
+  "limit": 0.9,
+  "judgedLeads_h": [
+   1,
+   6,
+   12
+  ],
+  "leads_h": [
+   1,
+   6,
+   12,
+   24
+  ],
+  "order": "calibration windows, lowest SHA-256 of C3S|p1|<norad>|<E>, one round across every satellite at a time",
+  "bootstrap": {
+   "resamples": 10000,
+   "seed": "SHA-256 of C3S|p1b|<class>|<axis>|<L>",
+   "over": "satellites and windows, one resample for A, B and C"
+  },
+  "stopSampling": {
+   "halfWidth": 0.05,
+   "cpuHours": 1
+  },
+  "gfz": {
+   "root": "/opt/data/sdn-archive/e14-covariance-realism/reference",
+   "prefix": "GFZ0MGXRAP_",
+   "readOnly": "products, never E14's results"
+  }
+ },
+ "nsgfArcs": {
+  "rule": "cal/val and history use the daily arcs in <store>/reference; P4 stays on C2's own arcs",
+  "spheres": {
+   "ajisai": 16908,
+   "lares": 38077,
+   "lares2": 53105,
+   "larets": 27944,
+   "starlette": 7646,
+   "stella": 22824,
+   "westpac": 25398
+  },
+  "from": "2025-09-20",
+  "to": "2026-08-28",
+  "source": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/",
+  "requestsPerSecond": 1,
+  "manifest": "<store>/nsgf/manifest.jsonl",
+  "eop": "C04, the same converter"
+ }
 }

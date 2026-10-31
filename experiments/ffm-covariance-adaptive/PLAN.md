@@ -97,7 +97,7 @@ Copula on C3-ab's non-storm dependence, resampled cal/val storm days, GNSS keep 
 
 ## 5. Pre-checks (cal/val; fail = stop and ask)
 
-- **P1** names, spans, arcs, Last-Modified, 260926 reissue, yield. ESA0OPSFIN: over the whole population and per axis, p95 boundary jump / sqrt(2) divided by C2's forecast sigma at 1, 6 and 12 h. If truth and forecast share an error of size s, d2 can shift by up to about 2s/sigma_f, so above 0.05 at any lead the shift could exceed 10 %: stop and ask.
+- **P1** names, spans, arcs, Last-Modified, 260926 reissue, yield. ESA0OPSFIN: over the whole population and per axis, p95 boundary jump / sqrt(2) divided by C2's forecast sigma at 1, 6 and 12 h, a worst-case guard of 0.05 (if truth and forecast share an error of size s, d2 can shift by up to about 2s/sigma_f). It was exceeded, so C3-A2's measurement decides. NSGF yield on the daily arcs (C3-A2).
 - **P2 (freeze gate):** both archives give dated entries for every month 2025-09 to 2026-05 (per month: count, types, issue times; later entries sealed). Unlisted rate = C2-screen flags or d2/3 > 30 on C2's GLONASS cal/val without a notice -> P7. A failed archive drops its constellation: R3 not testable (n_eff <= 66).
 - **P3** RSGA/SGARF to 2027-02-05, GFZ Ap to scoring. Shows that the archived files' flags can name, for each later window, the first file flagged measured through E + 84 h (section 6); if they cannot, stop and ask. Report only, no FFM run: UT1 as issued minus measured, median and p95 per lead (finals.daily since 2026-10-10, Bulletin A), in meters at each R3 class's radius, beside C2's along-track sigma per lead. Checks that R3's weather rows are inert.
 - **P4** C3-0 under C2's chain reproduces `fit-R*.json`, errors, terms, and bridges to the pin (section 6):
@@ -124,6 +124,7 @@ Copula on C3-ab's non-storm dependence, resampled cal/val storm days, GNSS keep 
 - **P4b's limits came from the sample they would describe:** they were set after this lane's step 0 replayed 16 stored C2 windows (6 R3, 10 R2 M; largest measured |delta(d2/3)| 5.7e-13 on R3, 2.3e-4 on LARETS, 2.2e-3 on Sentinel-1C at d2/3 near 1e4). P4 therefore tests them on 20 other windows per class, chosen by the hash rule in section 5, and reports the 16 separately.
 - **Planner integrity:** nothing barred opened (C2 held-out rows, B2 files, fresh truth, others' results, ids files, Vallado or USSF SGP4). Ap read to 2026-05-31 only. Earlier fresh-weather reads disclosed: RSGA 10-08, SGARF 10-11.
 - **Earth orientation, reversed before any score:** the coordinator first asked for as-issued values at each fresh cutoff (2026-10-31) and reversed that the same day, before any C3 score, on this lane's finding that dated sources exist and, by Bulletin A's own prediction formula, can differ by meters at the Galileo radius. Three reasons: P_C2 was fitted under measured Earth orientation, so as-issued values in fresh windows only would add an error source that was in neither the calibration nor the model, and a fail could come from that alone; the fit track is already not real-time, so as-issued values would not make the test operational; and the choice of source alone moves the answer by meters, a second experiment hidden inside this one. The size is reported instead (P3).
+- **GFZ in C3-A2's check** shares the station network with ESA, so an error common to the network cannot show up in that check.
 - **Sealed:** `dl/ids-man` (ten IDS maneuver lists of altimetry satellites, fetched by an earlier planner for the removed H-O R2 class; 36 later-entry counts in its cadence receipt). No C3 step reads either; none of C3's satellites is on those lists.
 - **Unresolved at registration:** S-B6 (a) closed by the seal above; unlisted GNSS maneuvers stay a registered risk (P2, P7).
 - **Practice.** CARA: 90 days at 3-day spacing against a definitive orbit plus its covariance, Rosner outliers dropped, re-tune below 60 %, D C_SE D plus a bias shift. C3 keeps C2's correlations and outliers and drops storms a priori. JSpOC: factor distributions over a year for Monte Carlo Pc.
@@ -139,3 +140,22 @@ Everything below is already in the sections above; this records what moved.
 2. **The data sentence** of "What this tests" replaces "use only data published before them, against truth sharing none of their data", which was false for the fit track and for GNSS truth. "No shared data" in the history rule (section 2) became "no state of the fit's own arc".
 3. **ESA0OPSFIN arcs:** "at or after t_in, excluding the fit's own arc" (section 1), with P1's bound and the label on the GNSS 1, 6 and 12 h cells. A position jump at every boundary shows separate solutions; it does not show independent tracking data.
 4. **P7's maneuver arm:** P2 found 1 unlisted window of 472, 1 of 332 outside storms, where the plan had counted 0 of 472. The rate is the non-storm one; two shapes run; the gate is unchanged (section 5). The plan's 38 % is withdrawn until P7 gives its replacement.
+
+### C3-A2 - 2026-10-31, before anything it judges (coordinator's rulings on P1)
+
+1. **GNSS truth and the fit: a measurement decides.** P1's guard was exceeded in 25 of 27 cells, largest 0.26, but a boundary jump gives only a scale for a shared error. Per class (GLONASS, Galileo), axis and lead (1, 6, 12, 24 h), mean z^2 under C2's P, with the primary cells' exclusions (storm samples, notices, truth gate):
+   - A = forecast against ESA's next file.
+   - B = forecast against GFZ (GFZ0MGXRAP).
+   - C = ESA's next file against GFZ, scaled by the same P.
+
+   If GFZ is independent of the forecast, the forecast's own value lies between B - C and B. So r_low = A / B and r_high = A / (B - C). Only sharing that makes A too small hides a covariance that is too tight, so the limit is one-sided:
+   - Keep the GNSS 1, 6 and 12 h cells with their label if the 95 % paired interval of r_low is at or above 0.90 at 1, 6 and 12 h, in both classes and on all axes.
+   - Stop and ask if r_high's interval is wholly below 0.90 at any of those.
+   - Anything between those two: stop and ask, with the table.
+   - r above 1 is only reported. The 24 h row is only reported.
+
+   Sampling: calibration windows of C3's calibration satellites only, in the order of the lowest SHA-256 of `C3S|p1|<norad>|<E>`, one round across every satellite at a time. Paired bootstrap over satellites and windows (one resample serves A, B and C), 10,000 resamples, seed SHA-256 `C3S|p1b|<class>|<axis>|<L>`. Windows are added until the half-width of every judged r_low interval is at most 0.05 or 1 CPU-h is spent, whichever comes first; if the cap stops it, that is said, with the intervals. No fresh file is read and no cell is added to the verdict. GFZ's products are read from E14's reference directory; E14's results are not read. FFM: RK78, relative tolerance 1e-10, steps up to 120 s; fit track 600 s; outputs at the leads and the 600 s noise grid.
+
+   GFZ shares the station network with ESA, so an error common to the network cannot show up in this check.
+2. **NSGF daily arcs.** C2's reference directory holds pairs of arcs every 4 days, which gave LARES-2 a yield of 0.12 and would calibrate on a different arc structure from the fresh windows. Cal/val and history use the daily arcs of C3's seven spheres (Ajisai, LARES, LARES-2, LARETS, Starlette, Stella, WESTPAC), 2025-09-20 to 2026-08-28, fetched from EDC and converted into C3's store with the same converter and C04. A manifest records SHA-256 and retrieval time per file. No credentials, at most one request per second, failures listed and not hammered. P4 stays on C2's own arcs. P1 re-runs for R2 and LARES-2 on the new arcs, and the 0.80 gate applies. C2-A11 point 5 covers the arcs inside C2's span as history; nothing inside that span is scored.
+3. **260926:** cutoffs 09-20 and 09-27 are lost unless it is reissued, as registered. It is checked once more just before the freeze and the result recorded.
