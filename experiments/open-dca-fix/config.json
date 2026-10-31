@@ -9,7 +9,7 @@
     "density": { "commit": "c84c7f396", "wasmSha256": "55eb9a35fccd2f162b99cff0f519e0d22d7f614199f5af46c4adfc87e4ce4642", "note": "analysis/density-calibration 0.7.0" },
     "legacyDensity": { "commit": "9a05d899b95242b358939ab1d68a776170a6b167", "wasmSha256": "5d284078821dd80cabd499bce10b174bf635a2456cda261d641a6219b4df3719", "note": "0.6.0, the flat rule and the decay: the selection's control" }
   },
-  "product": { "historyDays": 30, "legacyLatencyHours": 6, "noiseSigma": 0.065 },
+  "product": { "historyDays": 30, "legacyLatencyHours": 6, "noiseSigma": 0.065, "forecastTauHours": 168 },
   "planet": {
     "publishedFile": "planet-published.json",
     "dirs": ["/opt/data/sdn-archive/hac/planet-ephemerides/history", "/opt/data/sdn-archive/e13-open-dca/planet-live"],
@@ -32,6 +32,8 @@
   },
   "test": {
     "days": ["2025-01-01", "2025-09-30"],
+    "planetFrom": "2024-12-01",
+    "planetTo": "2025-09-30",
     "satellites": { "even": 39451, "odd": 39452 },
     "reportEveryIndexMod4": [0, 1]
   },

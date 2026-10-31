@@ -116,3 +116,17 @@ and failures are reported and gated below.
   of the lag on density only.
 
 A pass here changes nothing live. The console's own path is a separate decision, and rollout is the owner's.
+
+## Amendments
+
+### A1, 2026-10-31: step 1 chose a decay, before any lag, shrink or test statistic
+
+Step 1 ran on the development dates. By the registered rule tau 168 h won: it beat the hold by more than the band, and its interval against the
+hold excludes 1. Tau 48 h was the other candidate, and no other value is considered. Against no correction its interval holds 1, so no gain is
+established, and this is a density proxy, not an orbit score. The values are in the store.
+
+`analysis/density-calibration` gains the typed config `open_dca_forecast_tau_hours`, default 0 meaning held. When set, the record holds its last value
+from the last solve epoch to the issue, then decays from the issue, with nodes every 6 h through issue + 10 days. The owner's item 2 holds at the issue.
+**A consumer whose cutoff falls after the issue meets a slow ramp from the issue to its cutoff:** about 13 % of the held value at 24 h for tau 168 h. So
+the mid and stale arms of the test read the record issued at the fresh cutoff, as a live consumer would. The lag and shrink steps read only times at or
+before their cutoffs and do not depend on this.

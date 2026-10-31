@@ -1,6 +1,7 @@
 // open-dca-fix: PLAN.md's selection and test.
 //   node experiments/open-dca-fix/run.mjs --check     the mechanics on one development date: the pinned product, the publication rule, D, under a minute
 //   node experiments/open-dca-fix/run.mjs select      the development selection (density only); rows and summary in the store
+//   node experiments/open-dca-fix/run.mjs fetch-planet the fresh dates' Planet files, local only, at the source's polite rate
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -106,7 +107,7 @@ async function select() {
   summary.tail.chosen = bestTau[1] < T.null * (1 - config.statistic.tieBand) ? bestTau[0] : 'held';
   writeJson(path.join(dir, 'summary.json'), summary);
   console.log('tail step done');
-  if (summary.tail.chosen !== 'held') { console.log('STOP: a decay beat the hold by more than the band; PLAN.md step 1 needs an amendment'); process.exit(3); }
+  if (summary.tail.chosen !== String(config.product.forecastTauHours)) { console.log(`STOP: step 1 chose ${summary.tail.chosen}, the registered amendment says ${config.product.forecastTauHours}`); process.exit(3); }
   // Step 2: lag. The legacy record is reported beside.
   const lagRows = path.join(dir, 'lag-rows.jsonl');
   fs.rmSync(lagRows, { force: true });
@@ -115,6 +116,8 @@ async function select() {
   writeJson(path.join(dir, 'summary.json'), { ...summary, lag: lagTable(readJsonl(lagRows)) });
   console.log('lag step done');
   await density.destroy();
+  const table = lagTable(readJsonl(lagRows));
+  if (table.chosen === null) { console.log('STOP: no lag passed; PLAN.md step 2 says selection has failed'); process.exit(4); }
   process.exit(0);
 }
 const pairItems = (rows, name, base, field = 'now', baseField = 'now') => { const by = new Map(rows.filter((r) => r.name === base && r.age === 'fresh').map((r) => [`${r.sat}|${r.day}`, r])); return rows.filter((r) => r.name === name && r.age === 'fresh' && Number.isFinite(r[field]) && Number.isFinite(by.get(`${r.sat}|${r.day}`)?.[baseField])).map((r) => ({ week: r.week, value: r[field] - by.get(`${r.sat}|${r.day}`)[baseField] })); };
@@ -131,6 +134,30 @@ function lagTable(rows) {
   let chosen = null;
   if (ranked.length) { const best = out.byLag[ranked[0]].now.value; chosen = ranked.filter((lag) => Math.exp(out.byLag[lag].now.value) <= Math.exp(best) * (1 + config.statistic.tieBand)).sort((a, b) => a - b)[0]; }
   return { ...out, holmPassed: holm(ps, config.statistic.familyLevel), passed, chosen };
+}
+
+// ---- the fresh dates' inputs: fetched once, at the source's polite rate, kept in the store ------------------------------------------
+/** Planet's file of each day from `from` to `to`: its bytes in <store>/planet, its Last-Modified in the publication table. */
+async function fetchPlanet() {
+  const [from, to] = [args.from ?? config.test.planetFrom, args.to ?? config.test.planetTo];
+  const dir = path.join(store, 'planet'), tableFile = path.join(store, config.planet.publishedFile);
+  fs.mkdirSync(dir, { recursive: true });
+  for (const day of daysOf(from, to)) {
+    const file = path.join(dir, `planet_${day}.states`), table = JSON.parse(fs.readFileSync(tableFile));
+    if (fs.existsSync(file) && table.days[day]) continue;
+    const url = `${config.planet.server}planet_${day}.states`, response = await fetch(url, { signal: AbortSignal.timeout(60000) });
+    if (response.status !== 200) throw new Error(`${url}: ${response.status}`);
+    const bytes = Buffer.from(await response.arrayBuffer()), modified = response.headers.get('last-modified');
+    if (!modified) throw new Error(`${url}: no Last-Modified`);
+    fs.writeFileSync(file, bytes);
+    table.days[day] = modified;
+    table.days = Object.fromEntries(Object.entries(table.days).sort());
+    writeJson(tableFile, table);
+    appendJsonl(path.join(dir, 'index.jsonl'), { url, retrieved: iso(Date.now()), bytes: bytes.length, sha256: sha256(bytes), lastModified: modified, etag: response.headers.get('etag') });
+    await new Promise((r) => setTimeout(r, config.planet.politeSeconds * 1000));
+  }
+  console.log(`Planet files ${from} to ${to} in the store`);
+  process.exit(0);
 }
 
 // ---- the check -------------------------------------------------------------------------------------------------------------------
@@ -154,4 +181,5 @@ async function check() {
 
 if (args.check) await check();
 else if (process.argv[2] === 'select') await select();
+else if (process.argv[2] === 'fetch-planet') await fetchPlanet();
 else { console.error('usage: run.mjs --check | select'); process.exit(1); }
