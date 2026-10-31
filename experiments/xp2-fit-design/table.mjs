@@ -330,9 +330,25 @@ const fpLine = (v) => { const w = v.falsePositive.wk, g = v.falsePositive.gw; re
 const own = (v) => Object.entries(v.ownCells).map(([k, p]) => `${k} ${p ? 'meets' : 'misses'}`).join('; ');
 const statementRows = [...verdicts.M, ...verdicts.F].map((v) => `| ${v.id} | ${v.arm} / ${v.ref} | ${v.form === 'xm' ? "XM's rule" : 'rule 1, 4 leads'} | ${verdictWord(v)} | ${v.beside.wk95 ? 'meets' : 'misses'}, ${v.beside.gw975 ? 'meets' : 'misses'} | ${fpLine(v)} | ${own(v)} |`).join('\n');
 const subTable = (key, title) => `**${title}**\n\n${head}\n${FULL.filter((s) => s !== 'pool' && cells[key]?.[s]).map((s) => line(s, key, s)).join('\n')}\n`;
+const med = (key, sub = 'pool') => LEADS.map((l) => Math.abs(cells[key][sub].wk[l].medianPct).toFixed(1)).join(', ');
+const signed = (key, sub = 'pool') => LEADS.map((l) => f1(cells[key][sub].wk[l].medianPct)).join(', ');
+const storm = cells['RFa12/P']['Ap at least 40 in the arc'].wk, young = cells['RFa12/P']['P age, youngest third'].wk;
+const reading = `## Reading
+
+On ${(counts.primary.stored + counts.extension.stored).toLocaleString('en-US')} windows where none of these fits had been scored before, every registered statement passed. Drag from a 12 h full-force fit with elements from the last 17 h (RFa12) beat the public element set by ${med('RFa12/P')} % at days 1, 2, 3 and 7. It still beat it by ${med('RFa12c/P')} % with its arcs ending when the public set was created, so the two had the same data age. SGP4-XP with NRLMSISE-00 beat SGP4 refit to the same truth and the same 72 h arc by ${med('X2/S72L')} %, and RFa12 beat plain SGP4 fitted to the same 17 h by ${med('RFa12/S17LP')} %.
+
+What it means: on these satellites the redesigned fit beats the public set and a matched SGP4 refit, and the old 72 h design was the problem. The same module with the old fit (X2) stands at ${signed('X2/P')} % against the public set, and changing only the fit (RF17 against X2) moved it by ${signed('RF17/X2')} %.
+
+What it does not mean: every fitted arm read precise products, which are not real-time, so this says nothing about a console fed by anything else. The pool is 87 % Swarm, and on GRACE-FO alone (${cells['RFa12/P']['GRACE-FO'].wk[7].n} windows) RFa12's day-7 interval holds 0. No console default and no catalog claim follows.
+
+The early leads are flattered by older public sets on these dates: the set's median age is ${publicAge.pool.median} h here against ${publicAge.xmWindowsMedian} h on the windows of the diagnosis. In the youngest third of windows, a set under ${publicAge.cutHours[0]} h old, RFa12 stands at ${LEADS.map((l) => leadCell(young[l])).join(', ')} %, and at day 7 its interval holds 0. There plain SGP4 on the same 17 h ties the public set, so that lead is not data age. R17 passes on the pool, but at days 1 and 2 its lead is nearly all data age (${dataAge.R17[1]} and ${dataAge.R17[2]} % of it), and neither span alone meets the rule.
+
+Windows with Ap at least 40 in the arc (n ${storm[3].n}) still miss the tail rule at days 3 and 7: RFa12's upper bounds on the p95 ratio are ${Number(storm[3].ub975).toFixed(2)} and ${Number(storm[7].ub975).toFixed(2)} against 1.10.
+
+`;
 const readme = `# XP2 fit design on unseen dates
 
-Task \`${config.task}\`. Registered before any score: commit ${C.REGISTRATION.slice(0, 10)} (\`experiments/xp2-fit-design/PLAN.md\`). Modules ${build.modulesCommit.slice(0, 9)}, every wasm SHA-256 checked; no module changed. ${counts.primary.stored} windows on Swarm A, B, C and GRACE-FO 1, 2 (cutoffs ${config.spans.primary.from} to ${config.spans.primary.to}) and ${counts.extension.stored} on Swarm A, B, C (${config.spans.extension.from} to ${config.spans.extension.to}); ${counts.primary.excluded + counts.extension.excluded} excluded by XM's rules, ${counts.primary.errors + counts.extension.errors} with a row error. Rows digest ${digest}. Medians are percent change in the 3D RMS position error at days 1, 2, 3, 7, with 97.5 % percentile intervals on ISO-week clusters unless marked.
+${reading}Task \`${config.task}\`. Registered before any score: commit ${C.REGISTRATION.slice(0, 10)} (\`experiments/xp2-fit-design/PLAN.md\`). Modules ${build.modulesCommit.slice(0, 9)}, every wasm SHA-256 checked; no module changed. ${counts.primary.stored} windows on Swarm A, B, C and GRACE-FO 1, 2 (cutoffs ${config.spans.primary.from} to ${config.spans.primary.to}) and ${counts.extension.stored} on Swarm A, B, C (${config.spans.extension.from} to ${config.spans.extension.to}); ${counts.primary.excluded + counts.extension.excluded} excluded by XM's rules, ${counts.primary.errors + counts.extension.errors} with a row error. Rows digest ${digest}. Medians are percent change in the 3D RMS position error at days 1, 2, 3, 7, with 97.5 % percentile intervals on ISO-week clusters unless marked.
 
 ## What a pass means
 

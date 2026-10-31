@@ -161,3 +161,7 @@ A corrigendum; no number changes. config.json `spaceWeather.condition` says rows
 ## Amendment 2, 2026-10-31, during the run, before any cell was read
 
 Amendment 1 misstated the threshold; this corrects it. From the failed arms' set ages, no score read: the modules need rows from the day before the earliest state, so the refusal comes where the set was created about 46 to 49 h before the cutoff, not about 3 days. So far that is the five windows of 2025-11-11, where the archive holds no set created on 11-09 or 11-10, and Swarm B on 12-20 and 12-21. RFa12c's 12 h arc would need a set created over 4.5 days before the cutoff, and the oldest set in these spans is 79 h, so F3 cannot reach it. The table's README gains the failure counts by arm and cause and one disclosure line on two days without F10.7; no cell, rule or statistic changes.
+
+## Amendment 3, 2026-10-31, after the table
+
+Report only; no cell, rule or statistic changes. At the coordinator's request the generated README opens with a plain-words reading: what passed and against what, what it means and does not mean, the youngest-third numbers beside the early leads, and the storm windows' tail. The table's cells, verdicts and rows digest (e4cff2a36484) are unchanged by it.
