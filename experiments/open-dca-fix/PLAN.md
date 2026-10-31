@@ -141,3 +141,21 @@ Lag 9 h, tail tau 168 h from the issue, no shrink. These are F4's typed config. 
 - **Age.** On this density proxy the gain is at the fresh age. At mid and stale ages it is gone or reversed, which the test's report-only cells measure.
 
 The module pin in `config.json` moved to the wasm that holds the flow's stack and the decay. The solve and the in-arc record are unchanged from the wasm selection first ran on; `select` reruns on the pinned wasm before any test score to confirm that.
+
+### A3, 2026-10-31: the fresh dates' bulletins, before any test score
+
+**The fact.** XM's parser refuses 93 of the 316 NOAA RSGA bulletins of this experiment's span, 2024-11-28 to 2025-10-09: 56 hold a space after a slash and 37 hold an Ap that is not a number (36 `NA`, one `N60`). A refused bulletin sends a cutoff to the bulletin before it, and three in a row leave the cutoff excluded. The repair below is causal, so no date is excluded.
+
+**The rule.** These bulletins are normalized by `experiments/xp2-fit-design/lib/rsga.mjs`, taken by `git show` at the commit in `config.json` with its SHA-256 checked, from the two NOAA bundles whose SHA-256 are also there. So the two tests on these dates read the same weather by the same rule. XM's parser is unchanged and reads the normalized text.
+
+- A space after a slash is removed.
+- An Observed Ap that is not a number takes the previous day's bulletin's Estimated Ap for that day, which was public then. All 37 resolve this way.
+- A Predicted Ap that is not a number takes that item's Afr. One line of the span: bulletin 20250516, `Predicted Afr/Ap 17 May-19 May  013/ NA-021/ NA-021/ 10` reads `013/013-021/021-021/10`.
+
+All 316 parse after it and none is unresolved. No test cutoff is excluded, and no bulletin read is older than 26 h at its cutoff's day start. No later value enters an as-issued input. The first rewrite in the span is 20250123 and the last is 20250924. The bundles hold 3 more rewrites in early 2024, by the same rule, which no row here reads.
+
+**One rule for all fresh-date rows.** Every row reads the normalized text. An arc fit before this amendment keeps its row only where its weather input, the rows its space-weather frame encodes, hashes the same under both readings. All others are refit, including an arc that fit on an older bulletin because the newer one was refused. Each row carries its hash, and the test stops on any row whose hash is not its publication's normalized one. The count is in the internal plan.
+
+A refit arc starts from the last accepted arc before it, as on any resume. A kept arc that follows a refit arc keeps the solution it reached from its earlier start. Its weather did not change, so it is not refit; the size of this effect is measured on a sample before the test and reported with the result.
+
+**Selection is not reopened.** Its cutoffs read bulletins 20251031 to 20251231, none of them rewritten, and at all 183 cutoffs (61 dates at 3 ages) the rows hash the same under both readings. The W_N step's drag work reads condition M, with no bulletin. E13's arcs are read as stored. Selection's numbers stand as recorded.

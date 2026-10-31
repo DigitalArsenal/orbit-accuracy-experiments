@@ -3,12 +3,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
-import { config, root, store, DAY, HOUR, dateOf, dayName } from '../common.mjs';
+import { config, root, store, args, sha256, DAY, HOUR, dateOf, dayName } from '../common.mjs';
 import { DCL, DCL_TYPE, flatbuffers } from './product.mjs';
+import { normalizedDir } from './rsga.mjs';
 
 const C = config.selection.truth;
 const xmCommon = await import(path.join(root, 'experiments/xp-atmosphere-merit/common.mjs'));
-xmCommon.config.spaceWeather.rsgaDirs.push(path.join(store, 'rsga'));
+// Amendment A3: every row reads the normalized bulletins. --reading raw exists only to compare what an arc read before them.
+xmCommon.config.spaceWeather.rsgaDirs.push(args.reading === 'raw' ? path.join(store, 'rsga') : normalizedDir);
 export const W = await import(path.join(root, 'experiments/xp-atmosphere-merit/lib/weather.mjs'));
 const cache = new Map();
 function day(k, d) {
@@ -45,6 +47,8 @@ export function rowsAt(cutoff) {
   for (let t = Date.parse(`${O.rows[0].date}T00:00:00Z`); t <= Date.parse(`${dateOf(cutoff)}T00:00:00Z`) + 8 * DAY; t += DAY) { const r = byDate.get(dateOf(t)); if (r) { out.push(r); last = r; } else out.push({ ...last, date: dateOf(t) }); }
   return out;
 }
+/** An arc's weather input: the rows are all that the space-weather frame encodes. */
+export const weatherOf = (rows) => sha256(JSON.stringify(rows));
 const T = (name, fields) => Object.assign(new DCL[`${name}T`](), fields);
 /** ln(rho_obs / rho_model) of points. */
 export async function anomalies(density, points, rows) {

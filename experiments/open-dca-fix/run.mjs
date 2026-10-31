@@ -2,15 +2,19 @@
 //   node experiments/open-dca-fix/run.mjs --check     the mechanics on one development date: the pinned product, the publication rule, D, under a minute
 //   node experiments/open-dca-fix/run.mjs select      the development selection (density only); rows and summary in the store
 //   node experiments/open-dca-fix/run.mjs fetch-planet                  the fresh dates' Planet files, local only, at the source's polite rate
+//   node experiments/open-dca-fix/run.mjs prepare-weather               amendment A3: the normalized bulletins from the registered bundles, and their counts
+//   node experiments/open-dca-fix/run.mjs weather-inputs [--reading raw]  what each arc and cutoff reads under a reading
+//   node experiments/open-dca-fix/run.mjs arc-plan                      amendment A3: keep each arc whose weather input did not change; the rest are refit
 //   node experiments/open-dca-fix/run.mjs fit-arcs --shard k/n          the fresh dates' arcs
 //   node experiments/open-dca-fix/run.mjs test --shard k/n | table      the registered test
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { config, root, store, args, DAY, HOUR, MINUTE, iso, dateOf, dayStart, daysOf, isoWeek, sha256, trimmed, median, bootstrap, holm, appendJsonl, readJsonl, writeJson } from './common.mjs';
+import { config, root, store, args, DAY, HOUR, MINUTE, iso, dateOf, dayName, dayStart, daysOf, isoWeek, sha256, trimmed, median, bootstrap, holm, appendJsonl, readJsonl, writeJson } from './common.mjs';
 import { publishedMs, firstFiles } from './lib/planet.mjs';
 import { openDensity, issueRecord, movedRecord, publicArcs, issueRequest, sOf, DCL, flatbuffers } from './lib/product.mjs';
-import { arcBins, rowsAt, samples, anomalies, statD } from './lib/density.mjs';
+import { arcBins, rowsAt, weatherOf, samples, anomalies, statD, W } from './lib/density.mjs';
+import { weatherStore, prepareWeather, verifyWeather } from './lib/rsga.mjs';
 
 // ---- arcs -----------------------------------------------------------------------------------------------------------------------
 /** E13's stored NRLMSISE-00 arcs of the calibration Doves, each with the file day that first held its newest state. */
@@ -236,12 +240,63 @@ async function fetchPlanet() {
   process.exit(0);
 }
 
+// ---- amendment A3: the normalized bulletins ----------------------------------------------------------------------------------------------
+async function runPrepareWeather() {
+  const { counts, stopped, rewritten } = await prepareWeather(W.parseRsga), print = (name, c) => console.log(`${name}: ${c.bulletins} bulletins, ${c.changed} rewritten: ${c.spacesOnly} spaces only, ${c.apNotNumber} an Ap not a number, ${c.afrInAfrSlot} Ap in the Afr slot; unparsed after: ${c.unparsedAfter.length}`);
+  print('bundles', counts.bundles); print(`span ${config.weather.span.join('..')}`, counts.span);
+  console.log(`span hash ${counts.spanHash}`);
+  for (const r of rewritten) for (const a of r.actions) if (a.how !== 'space removed') console.log(`${r.name} [${a.how ?? 'UNRESOLVED'}] ${a.line.trim()} -> ${a.to ?? ''}`);
+  console.log(`Afr stands in, span: ${counts.span.afrStandsInForAp.length}; bundles: ${counts.bundles.afrStandsInForAp.length}`);
+  if (stopped.length) { console.log(`STOP: unresolved or unparsed: ${stopped.join(' ')}`); process.exit(1); }
+  process.exit(0);
+}
+/** What the rows read under this reading at each publication an arc takes and at each cutoff of the test and of selection: { weather, bulletin, ageH at the cutoff's day start }. */
+function weatherInputs() {
+  const reading = args.reading ?? 'normalized', entry = (cutoff) => { const rows = rowsAt(cutoff), D0 = dayStart(dayName(cutoff)), R = W.rsgaAt(D0); return { weather: rows ? weatherOf(rows) : null, bulletin: R?.name ?? null, ageH: R ? (D0 - R.issuedMs) / HOUR : null }; };
+  const ages = (days) => Object.fromEntries(days.flatMap((d) => Object.entries(cutoffsOf(d, nextDay(d))).map(([age, c]) => [`${d}|${age}`, entry(c)])));
+  writeJson(path.join(weatherStore, `inputs-${reading}.json`), { reading, unparsed: W.rsgas().unparsed, arcs: Object.fromEntries(daysOf(config.test.arcs.fromDay, config.test.arcs.toDay).filter((d) => publishedMs(d)).map((d) => [d, entry(publishedMs(d))])), test: ages(daysOf(...config.test.days)), selection: ages(daysOf(...config.selection.days)) });
+  process.exit(0);
+}
+const inputsOf = (reading) => JSON.parse(fs.readFileSync(path.join(weatherStore, `inputs-${reading}.json`)));
+const ARC_SHARDS = 6, arcDir = path.join(store, 'arcs-a3');
+/** One rule for every fresh-date row: an arc keeps its row only where its weather input is byte for byte the normalized one. The rows kept carry the input's hash into arcs-a3; fit-arcs fits the rest. */
+async function arcPlan() {
+  if (fs.existsSync(arcDir)) throw new Error(`${arcDir} exists`);
+  const { planetSeries } = await import('./lib/arcs.mjs');
+  const raw = inputsOf('raw'), now = inputsOf('normalized'), before = new Map();
+  for (const f of fs.readdirSync(path.join(store, 'arcs'))) if (/^s\d+\.jsonl$/.test(f)) for (const r of readJsonl(path.join(store, 'arcs', f))) before.set(`${r.dove}|${r.ttB}`, r);
+  const series = planetSeries(daysOf(config.test.arcs.fromDay, config.test.arcs.toDay).filter((d) => publishedMs(d))), doves = [...series.keys()].sort(), kept = Array.from({ length: ARC_SHARDS }, () => []), seen = new Set();
+  const n = { arcs: 0, kept: 0, keptNotOk: 0, refit: 0, refitNoRsga: 0, refitOlderBulletin: 0, refitFailedBefore: 0, refitNotAttempted: 0, byDayChanged: 0 };
+  for (const [index, dove] of doves.entries()) {
+    const states = series.get(dove);
+    for (let j = 1; j < states.length; j += 1) {
+      const a = states[j - 1], b = states[j], hours = (b.ttMs - a.ttMs) / HOUR, key = `${dove}|${b.ttMs}`;
+      if (hours < 20 || hours > 28) continue;
+      const row = before.get(key), was = raw.arcs[b.file].weather, is = now.arcs[b.file].weather;
+      if (!is) throw new Error(`no weather at the publication of ${b.file} under the normalized bulletins`);
+      n.arcs += 1; seen.add(key);
+      if (row && was === is) { kept[index % ARC_SHARDS].push({ ...row, weather: is }); n.kept += 1; if (!row.ok) n.keptNotOk += 1; continue; }
+      n.refit += 1;
+      if (!row) n.refitNotAttempted += 1; else if (/^no RSGA/.test(row.error ?? '')) n.refitNoRsga += 1; else if (row.ok) n.refitOlderBulletin += 1; else n.refitFailedBefore += 1;
+    }
+  }
+  const stray = [...before.keys()].filter((k) => !seen.has(k)).length;
+  if (stray) throw new Error(`${stray} rows are no arc of the series`);
+  const days = Object.keys(now.arcs), changed = days.filter((d) => raw.arcs[d].weather !== now.arcs[d].weather);
+  n.byDayChanged = changed.length;
+  kept.forEach((rows, k) => { if (rows.length) fs.mkdirSync(arcDir, { recursive: true }); fs.writeFileSync(path.join(arcDir, `s${k}.jsonl`), rows.map((r) => `${JSON.stringify(r)}\n`).join('')); });
+  writeJson(path.join(weatherStore, 'refit.json'), { ...n, fileDays: days.length, changedDays: changed, sameBulletinChanged: changed.filter((d) => raw.arcs[d].bulletin === now.arcs[d].bulletin), otherBulletinSameWeather: days.filter((d) => raw.arcs[d].bulletin !== now.arcs[d].bulletin && raw.arcs[d].weather === now.arcs[d].weather) });
+  console.log(JSON.stringify(n));
+  process.exit(0);
+}
+
 // ---- the fresh dates' arcs ---------------------------------------------------------------------------------------------------------------
 /** The energy fit of every 20-28 h pair of each calibration Dove over the test's history, by the product's own fit_energy_arcs, weather as released at the arc's publication. Shard by Dove. */
 async function fitArcs() {
   const { openFit } = await import('./lib/ffm.mjs');
   const { planetSeries, fitArc } = await import('./lib/arcs.mjs');
-  const [k, n] = (args.shard ?? '0/1').split('/').map(Number), out = path.join(store, 'arcs', `s${k}.jsonl`), done = new Map();
+  const [k, n] = (args.shard ?? '0/1').split('/').map(Number), out = path.join(arcDir, `s${k}.jsonl`), done = new Map();
+  if (n !== ARC_SHARDS || !fs.existsSync(out)) throw new Error('run arc-plan first; the shards are its own');
   for (const r of readJsonl(out)) done.set(`${r.dove}|${r.ttB}`, r);
   const series = planetSeries(daysOf(config.test.arcs.fromDay, config.test.arcs.toDay).filter((d) => publishedMs(d))), F = await openFit(), density = await openDensity(), doves = [...series.keys()].sort();
   for (const [index, dove] of doves.entries()) {
@@ -254,18 +309,23 @@ async function fitArcs() {
       if (done.has(key)) { if (done.get(key).ok) seed = done.get(key).B; continue; }
       while (os.loadavg()[0] > config.compute.pauseAboveLoad1m) await new Promise((r) => setTimeout(r, 60000));
       const publishedAt = publishedMs(b.file), rows = rowsAt(publishedAt);
-      if (!rows) { appendJsonl(out, { dove, ttA: a.ttMs, ttB: b.ttMs, ok: false, error: 'no RSGA at the publication' }); continue; }
+      if (!rows) throw new Error(`no RSGA at the publication of ${b.file}: amendment A3 leaves none`);
       let row;
       try { row = await fitArc(density, F, dove, a, b, publishedAt, rows, seed); } catch (error) { row = { ok: false, error: String(error?.message ?? error).slice(0, 200) }; await F.reopen(); }
       if (row.ok) seed = row.B;
-      appendJsonl(out, { dove, ttA: a.ttMs, ttB: b.ttMs, file: b.file, ...row });
+      appendJsonl(out, { dove, ttA: a.ttMs, ttB: b.ttMs, file: b.file, weather: weatherOf(rows), ...row });
     }
   }
   await F.close();
   console.log(`shard ${k}/${n} done`);
   process.exit(0);
 }
-const testArcs = () => fs.readdirSync(path.join(store, 'arcs')).filter((f) => /^s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(store, 'arcs', f))).filter((r) => r.ok);
+/** The accepted arcs of the fresh dates. A row whose weather is not its publication's normalized weather stops the test: no fresh-date row keeps the raw reading. */
+function testArcs() {
+  const now = inputsOf('normalized').arcs, all = fs.readdirSync(arcDir).filter((f) => /^s\d+\.jsonl$/.test(f)).flatMap((f) => readJsonl(path.join(arcDir, f))), wrong = all.filter((r) => r.weather !== now[r.file]?.weather);
+  if (wrong.length) throw new Error(`${wrong.length} arcs do not read the normalized weather`);
+  return all.filter((r) => r.ok);
+}
 
 // ---- the test ------------------------------------------------------------------------------------------------------------------------------
 const CHOSEN = () => { const c = config.product.chosen; if (!c) throw new Error('config.product.chosen is not set'); return c; };
@@ -349,6 +409,11 @@ function testTable() {
 
 // ---- the check -------------------------------------------------------------------------------------------------------------------
 async function check() {
+  // Amendment A3: the store holds what the registered reader writes, and an Observed Ap that is no number reads the previous bulletin's estimate for that day, the value public then.
+  await verifyWeather(W.parseRsga);
+  const { day: naDay, previous, next: naNext } = config.weather.example, estimate = W.parseRsga(fs.readFileSync(path.join(weatherStore, 'rsga/raw', `${previous.slice(0, 4)}_RSGA`, `${previous}RSGA.txt`), 'utf8')).ap.estimated, read = W.rsgaAt(dayStart(naNext));
+  if (read.name !== `${naDay}RSGA.txt` || read.ap.observed.day !== estimate.day || read.ap.observed.value !== estimate.value) throw new Error('the rewritten Observed Ap is not the previous estimate');
+  if (W.rowsO(dayStart(naNext) - 3 * DAY, dayStart(naNext)).rows.find((r) => Date.parse(`${r.date}T00:00:00Z`) === estimate.day)?.ap !== estimate.value) throw new Error('the rows do not read the rewritten Ap');
   const arcs = storedArcs(), day = '20251201', C = cutoffsOf(day, nextDay(day));
   const off = await openDensity(), on = await openDensity(publicationOf(9, 168));
   const before = await issueRecord(off, publishedMs(day) - MINUTE, arcs), after = await issueRecord(off, C.fresh, arcs), lagged = await issueRecord(on, C.fresh, arcs);
@@ -375,7 +440,7 @@ async function check() {
     if (at.length !== 3 || !at.flat().every(Number.isFinite)) throw new Error('the forecast');
   }
   await F.close(); await density.destroy();
-  console.log(`PASS open-dca-fix check: the pinned product, the publication rule, the hold, the typed config, the moved record and the bins, on ${day}`);
+  console.log(`PASS open-dca-fix check: the normalized bulletins, the pinned product, the publication rule, the hold, the typed config, the moved record and the bins, on ${day}`);
   process.exit(0);
 }
 
@@ -385,6 +450,9 @@ else if (process.argv[2] === 'select-shrink') await shrinkStep();
 else if (process.argv[2] === 'select-wn') await wnArcs();
 else if (process.argv[2] === 'select-wn-table') await wnTable();
 else if (process.argv[2] === 'fetch-planet') await fetchPlanet();
+else if (process.argv[2] === 'prepare-weather') await runPrepareWeather();
+else if (process.argv[2] === 'weather-inputs') weatherInputs();
+else if (process.argv[2] === 'arc-plan') await arcPlan();
 else if (process.argv[2] === 'fit-arcs') await fitArcs();
 else if (process.argv[2] === 'test') await runTest();
 else if (process.argv[2] === 'table') testTable();
