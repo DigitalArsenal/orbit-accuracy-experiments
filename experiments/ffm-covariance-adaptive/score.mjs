@@ -104,8 +104,26 @@ if (args.fit) {
   const pref = JSON.parse(fs.readFileSync(pathOf('precheck-P-REF')));
   const kRef = pref.classes[cls].kRef.values;
   const D = loadClass(cls, { opened });
-  const cal = samplesOf(D, 'calibration').filter((s) => s.primary), val = samplesOf(D, 'validation').filter((s) => s.primary);
+  // C3-A9: every constant by the log score of calibration windows with the whole 90 days behind them; earlier windows serve as history and are reported
+  const FROM = Date.parse(`${config.model.fitFrom}T00:00:00Z`), calAll = samplesOf(D, 'calibration').filter((s) => s.primary), cal = calAll.filter((s) => s.w.E >= FROM), calEarly = calAll.filter((s) => s.w.E < FROM), val = samplesOf(D, 'validation').filter((s) => s.primary);
   const M = config.model;
+  // the score of an arm at its best kappa: in closed form where C_w is 0 (R3: d2 scales by 1/kappa and the log determinant by 3 ln kappa), else a fixed golden section on ln kappa
+  const scoreK = async (arm, iterations = 10) => {
+    const c = compose(cal, { ...arm, kappa: 1 });
+    if (cal.every((s) => !s.l.C)) {
+      const d2 = await d2Of(c), kappa = d2.reduce((p, q) => p + q, 0) / d2.length / 3;
+      let sum = 0;
+      c.forEach((s, i) => { sum += logScore(d2[i] / kappa, s.m.map((x) => x * kappa), 0); });
+      return { kappa, score: sum / c.length };
+    }
+    const at = async (x) => { const kappa = Math.exp(x), k = c.map((s) => ({ ...s, m: s.m.map((q) => q * kappa) })), d2 = await d2Of(k); let sum = 0; k.forEach((s, i) => { sum += logScore(d2[i], s.m, s.l.C); }); return sum / k.length; };
+    const R = (Math.sqrt(5) - 1) / 2;
+    let lo = -1.6, hi = 1.6, x1 = hi - R * (hi - lo), x2 = lo + R * (hi - lo), f1 = await at(x1), f2 = await at(x2);
+    for (let i = 0; i < iterations; i += 1) {
+      if (f1 >= f2) { hi = x2; x2 = x1; f2 = f1; x1 = hi - R * (hi - lo); f1 = await at(x1); } else { lo = x1; x1 = x2; f1 = f2; x2 = lo + R * (hi - lo); f2 = await at(x2); }
+    }
+    return f1 >= f2 ? { kappa: Math.exp(x1), score: f1 } : { kappa: Math.exp(x2), score: f2 };
+  };
   const axis = (a) => { const o = []; for (let x = a.min; x <= a.max + 1e-9; x += a.step) o.push(Math.round(x * 1e6) / 1e6); return o; };
   const A0 = axis(M.a0), A1 = axis(M.a1);
   const t0 = Date.now();
@@ -113,41 +131,46 @@ if (args.fit) {
   arms['C3-0'] = { useG: false, useU: false };
   // C3-a: the grid, then refined
   const best = (list) => list.reduce((p, q) => (q.score > p.score ? q : p));
-  const scan = async (grid, f) => { const out = []; for (const g of grid) out.push({ ...g, score: await f(g) }); return out; };
+  const scan = async (grid, f) => { const out = []; for (const g of grid) out.push({ ...g, ...(await f(g)) }); return out; };
   const refine = async (p, f) => { const out = []; for (let i = -4; i <= 4; i += 1) for (let j = -4; j <= 4; j += 1) out.push({ ...p, a0: Math.round((p.a0 + i * 0.025) * 1e6) / 1e6, a1: Math.round((p.a1 + j * 0.05) * 1e6) / 1e6 }); return best(await scan(out, f)); };
   const gridA = A0.flatMap((a0) => A1.map((a1) => ({ a0, a1 })));
-  const fA = (g) => meanLogScore(cal, { ...g, useG: true });
+  const fA = (g) => scoreK({ ...g, useG: true });
   const a1st = best(await scan(gridA, fA));
   arms['C3-a'] = { ...(await refine(a1st, fA)), useG: true };
   console.error(cls, 'C3-a', JSON.stringify(arms['C3-a']), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
-  const bList = await scan(M.n0.map((n0) => ({ n0 })), (g) => meanLogScore(cal, { ...g, useU: true, kRef, history }));
+  const bList = await scan(M.n0.map((n0) => ({ n0 })), (g) => scoreK({ ...g, useU: true, kRef, history }));
   arms['C3-b'] = { ...best(bList), useU: true, kRef, history };
   console.error(cls, 'C3-b', JSON.stringify(bList), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
-  const fAB = (g) => meanLogScore(cal, { ...g, useG: true, useU: true, kRef, history });
+  const fAB = (g) => scoreK({ ...g, useG: true, useU: true, kRef, history });
   const gridAB = M.n0.flatMap((n0) => gridA.map((g) => ({ ...g, n0 })));
   const ab1st = best(await scan(gridAB, fAB));
   arms['C3-ab'] = { ...(await refine(ab1st, fAB)), useG: true, useU: true, kRef, history };
   console.error(cls, 'C3-ab', JSON.stringify({ ...arms['C3-ab'], kRef: undefined }), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
-  // the report-only arm's own constants, beside the model's
+  // each arm's kappa to full precision
+  for (const name of ['C3-a', 'C3-b', 'C3-ab']) Object.assign(arms[name], await scoreK(arms[name], 30));
+  // the report-only arm's own constants, beside the model's; and C3-ab without kappa, for the stop
   if (history === 'truth') {
     const ref = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}.reference`)));
-    arms['C3-b-ref'] = { n0: ref.arms['C3-b'].n0, useU: true, kRef, history: 'reference' };
-    arms['C3-ab-ref'] = { a0: ref.arms['C3-ab'].a0, a1: ref.arms['C3-ab'].a1, n0: ref.arms['C3-ab'].n0, useG: true, useU: true, kRef, history: 'reference' };
+    arms['C3-b-ref'] = { n0: ref.arms['C3-b'].n0, kappa: ref.arms['C3-b'].kappa, useU: true, kRef, history: 'reference' };
+    arms['C3-ab-ref'] = { a0: ref.arms['C3-ab'].a0, a1: ref.arms['C3-ab'].a1, n0: ref.arms['C3-ab'].n0, kappa: ref.arms['C3-ab'].kappa, useG: true, useU: true, kRef, history: 'reference' };
+    arms['C3-ab, kappa 1'] = { ...arms['C3-ab'], kappa: 1, score: undefined };
   }
-  const report = { class: cls, history, kRef, counts: D.counts, classMedianChi: D.classMedian, samples: { calibration: cal.length, validation: val.length }, arms: {} };
+  const report = { class: cls, history, fitFrom: config.model.fitFrom, kRef, counts: D.counts, classMedianChi: D.classMedian, samples: { calibrationFitted: cal.length, calibrationEarly: calEarly.length, validation: val.length }, arms: {} };
   for (const [name, arm] of Object.entries(arms)) {
-    report.arms[name] = { a0: arm.a0 ?? null, a1: arm.a1 ?? null, n0: arm.n0 ?? null, calibrationLogScore: arm.score ?? await meanLogScore(cal, arm),
-      calibration: await cellsOf(cal, arm, `C3S|boot|${cls}|${name}|cal`, { intervals: false }), validation: await cellsOf(val, arm, `C3S|boot|${cls}|${name}|val`, { intervals: true }) };
+    report.arms[name] = { a0: arm.a0 ?? null, a1: arm.a1 ?? null, n0: arm.n0 ?? null, kappa: arm.kappa ?? 1, calibrationLogScore: arm.score ?? await meanLogScore(cal, arm),
+      calibration: await cellsOf(cal, arm, `C3S|boot|${cls}|${name}|cal`, { intervals: false }), calibrationEarly: calEarly.length ? await cellsOf(calEarly, arm, `C3S|boot|${cls}|${name}|early`, { intervals: false }) : {}, validation: await cellsOf(val, arm, `C3S|boot|${cls}|${name}|val`, { intervals: true }) };
   }
   report.validationContrasts = { 'C3-ab - C3-0': await contrast(val, arms['C3-ab'], arms['C3-0'], `C3S|boot|${cls}|contrast|ab-0`), 'C3-ab - C3-a': await contrast(val, arms['C3-ab'], arms['C3-a'], `C3S|boot|${cls}|contrast|ab-a`) };
   report.stop = report.validationContrasts['C3-ab - C3-0'].hi < 0;
   if (history === 'truth') {
     report.validationContrasts['C3-ab - C3-ab-ref'] = await contrast(val, arms['C3-ab'], arms['C3-ab-ref'], `C3S|boot|${cls}|contrast|ab-abref`);
     report.stopAgainstReference = report.validationContrasts['C3-ab - C3-ab-ref'].hi < 0;
+    report.validationContrasts['C3-ab - C3-ab, kappa 1'] = await contrast(val, arms['C3-ab'], arms['C3-ab, kappa 1'], `C3S|boot|${cls}|contrast|ab-abk1`);
+    report.stopAgainstNoKappa = report.validationContrasts['C3-ab - C3-ab, kappa 1'].hi < 0;
   }
   report.seconds = (Date.now() - t0) / 1000;
   console.log(writeReceipt(history === 'truth' ? `fit-${cls}` : `fit-${cls}.${history}`, report, opened));
-  console.log(JSON.stringify({ cls, a: { a0: report.arms['C3-a'].a0, a1: report.arms['C3-a'].a1 }, b: report.arms['C3-b'].n0, ab: { a0: report.arms['C3-ab'].a0, a1: report.arms['C3-ab'].a1, n0: report.arms['C3-ab'].n0 }, scores: Object.fromEntries(Object.entries(report.arms).map(([k, v]) => [k, v.calibrationLogScore])), contrasts: { ab0: { mean: report.validationContrasts['C3-ab - C3-0'].mean, lo: report.validationContrasts['C3-ab - C3-0'].lo, hi: report.validationContrasts['C3-ab - C3-0'].hi }, aba: { mean: report.validationContrasts['C3-ab - C3-a'].mean, lo: report.validationContrasts['C3-ab - C3-a'].lo, hi: report.validationContrasts['C3-ab - C3-a'].hi }, ...(history === 'truth' ? { abRef: { mean: report.validationContrasts['C3-ab - C3-ab-ref'].mean, lo: report.validationContrasts['C3-ab - C3-ab-ref'].lo, hi: report.validationContrasts['C3-ab - C3-ab-ref'].hi } } : {}) }, stop: report.stop, stopAgainstReference: report.stopAgainstReference ?? null }));
+  console.log(JSON.stringify({ cls, a: { a0: report.arms['C3-a'].a0, a1: report.arms['C3-a'].a1, kappa: report.arms['C3-a'].kappa }, b: { n0: report.arms['C3-b'].n0, kappa: report.arms['C3-b'].kappa }, ab: { a0: report.arms['C3-ab'].a0, a1: report.arms['C3-ab'].a1, n0: report.arms['C3-ab'].n0, kappa: report.arms['C3-ab'].kappa }, scores: Object.fromEntries(Object.entries(report.arms).map(([k, v]) => [k, v.calibrationLogScore])), contrasts: { ab0: { mean: report.validationContrasts['C3-ab - C3-0'].mean, lo: report.validationContrasts['C3-ab - C3-0'].lo, hi: report.validationContrasts['C3-ab - C3-0'].hi }, aba: { mean: report.validationContrasts['C3-ab - C3-a'].mean, lo: report.validationContrasts['C3-ab - C3-a'].lo, hi: report.validationContrasts['C3-ab - C3-a'].hi }, ...(history === 'truth' ? { abRef: { mean: report.validationContrasts['C3-ab - C3-ab-ref'].mean, lo: report.validationContrasts['C3-ab - C3-ab-ref'].lo, hi: report.validationContrasts['C3-ab - C3-ab-ref'].hi }, abK1: { mean: report.validationContrasts['C3-ab - C3-ab, kappa 1'].mean, lo: report.validationContrasts['C3-ab - C3-ab, kappa 1'].lo, hi: report.validationContrasts['C3-ab - C3-ab, kappa 1'].hi } } : {}) }, stop: report.stop, stopAgainstReference: report.stopAgainstReference ?? null, stopAgainstNoKappa: report.stopAgainstNoKappa ?? null }));
   process.exit(0);
 }
 
@@ -222,7 +245,7 @@ if (args['pref-gfz']) {
 if (args.freeze) {
   // What the freeze commit holds (PLAN.md section 6): the constants, k_ref, gate thresholds, dependence parameters and the fetch manifest rule. Written once, from the receipts; run.mjs --check reads it.
   const inputs = JSON.parse(fs.readFileSync(path.join(store, 'p7', 'inputs.json'))), summary = JSON.parse(fs.readFileSync(path.join(store, 'p7', 'summary.json')));
-  const classes = Object.fromEntries(Object.keys(CLASSES).map((cls) => { const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`))), ab = fit.arms['C3-ab'], ref = fit.arms['C3-ab-ref'], refB = fit.arms['C3-b-ref']; return [cls, { history: fit.history, a0: ab.a0, a1: ab.a1, n0: ab.n0, classMedianChi: fit.classMedianChi, fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}`))), referenceArm: { reportOnly: true, a0: ref.a0, a1: ref.a1, n0: ref.n0, n0B: refB.n0, kRef: fit.kRef, kRefGroups: ['1-12 h', '24-72 h'], fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}.reference`))) } }]; }));
+  const classes = Object.fromEntries(Object.keys(CLASSES).map((cls) => { const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`))), ab = fit.arms['C3-ab'], ref = fit.arms['C3-ab-ref'], refB = fit.arms['C3-b-ref']; return [cls, { history: fit.history, fitFrom: fit.fitFrom, a0: ab.a0, a1: ab.a1, n0: ab.n0, kappa: ab.kappa, classMedianChi: fit.classMedianChi, fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}`))), referenceArm: { reportOnly: true, a0: ref.a0, a1: ref.a1, n0: ref.n0, kappa: ref.kappa, n0B: refB.n0, kappaB: refB.kappa, kRef: fit.kRef, kRefGroups: ['1-12 h', '24-72 h'], fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}.reference`))) } }]; }));
   const heavy = Object.fromEntries(Object.entries(summary).filter(([k]) => k.endsWith('.base-heavy')).map(([k, v]) => [k.split('.')[0], { nEff: v.nEff, n: v.n, meanCov: v.meanCov }]));
   const body = { experiment: config.id, frozenUtc: new Date().toISOString(), c2ConstantsSha256: config.c2.constantsSha256, classes,
     gate: { verdict: config.verdict, nEffHeavy: heavy, judged: args.judged ?? null, q6: config.q6 },
@@ -238,7 +261,7 @@ if (args.freeze) {
 if (args.extract) {
   const cls = args.class;
   const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`)));
-  const ab = fit.arms['C3-ab'], arm = { a0: ab.a0, a1: ab.a1, n0: ab.n0, useG: true, useU: true, kRef: fit.kRef, history: fit.history };
+  const ab = fit.arms['C3-ab'], arm = { a0: ab.a0, a1: ab.a1, n0: ab.n0, kappa: ab.kappa, useG: true, useU: true, kRef: fit.kRef, history: fit.history };
   const D = loadClass(cls, { opened });
   const all = samplesOf(D);
   const c = compose(all, arm), d2 = await d2Of(c);

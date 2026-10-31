@@ -31,8 +31,8 @@ export async function check() {
   for (const cls of ['R3', 'R2-M', 'R2-O']) {
     const K = frozen.classes[cls], D = loadClass(cls), r = pick(cls);
     const all = samplesOf(D).filter((s) => s.w.norad === r.norad && iso(s.w.E) === r.E);
-    const c = compose(all, { a0: K.a0, a1: K.a1, n0: K.n0, useG: true, useU: true, history: K.history }), d2 = await d2Of(c);
-    const A = K.referenceArm, cr = compose(all, { a0: A.a0, a1: A.a1, n0: A.n0, useG: true, useU: true, kRef: A.kRef, history: 'reference' }), d2r = await d2Of(cr);
+    const c = compose(all, { a0: K.a0, a1: K.a1, n0: K.n0, kappa: K.kappa, useG: true, useU: true, history: K.history }), d2 = await d2Of(c);
+    const A = K.referenceArm, cr = compose(all, { a0: A.a0, a1: A.a1, n0: A.n0, kappa: A.kappa, useG: true, useU: true, kRef: A.kRef, history: 'reference' }), d2r = await d2Of(cr);
     out[cls] = { norad: r.norad, E: r.E, leads: c.map((s, i) => ({ L: s.l.L, d2: d2[i], g: s.g, u: s.u, reference: { d2: d2r[i], g: cr[i].g, u: cr[i].u } })) };
   }
   if (args.write) { fs.writeFileSync(expectedFile, `${JSON.stringify(out, null, 1)}\n`); console.log(`wrote ${expectedFile}`); }

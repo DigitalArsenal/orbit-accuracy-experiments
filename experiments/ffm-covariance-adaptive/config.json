@@ -226,7 +226,7 @@
   "R2": "state + B + AGOM"
  },
  "model": {
-  "formula": "P_w(L) = D_o g_w(L) P_C2(L) D_o + C_w",
+  "formula": "P_w(L) = kappa D_o g_w(L) P_C2(L) D_o + C_w",
   "chi2Median": {
    "withinDays": 90,
    "minFits": 5,
@@ -291,7 +291,24 @@
    "membership": "unchanged: same cutoffs, same availability through the fit's and the reference's files, same notice rule; a sample with no truth drops out",
    "switch": "none by class, axis, lead or family"
   },
-  "stopAlso": "ask if the validation interval of C3-ab minus C3-ab-ref is wholly below 0; it does not switch back"
+  "stopAlso": "ask if the validation interval of C3-ab minus C3-ab-ref is wholly below 0; it does not switch back",
+  "kappa": {
+   "amendment": "C3-A9",
+   "per": "class",
+   "switch": "none by axis, lead or family",
+   "uHat": "estimated without kappa",
+   "arms": [
+    "C3-a",
+    "C3-b",
+    "C3-ab",
+    "C3-ab-ref"
+   ],
+   "c30": "C2 constants alone, no kappa",
+   "search": "golden section on ln kappa where C_w is not 0; closed form on R3"
+  },
+  "fitFrom": "2026-01-01",
+  "fitRule": "a0, a1, n0 and kappa by calibration log score on calibration windows with E >= fitFrom; earlier windows serve as history and are reported, not fitted",
+  "stopNoKappa": "ask if the validation interval of C3-ab minus C3-ab without kappa is wholly below 0"
  },
  "availability": {
   "rule": "max(last epoch + lambda, Last-Modified) <= E",
@@ -542,7 +559,8 @@
   "C3-A5 2026-10-31",
   "C3-A6 2026-10-31",
   "C3-A7 2026-10-31",
-  "C3-A8 2026-10-31"
+  "C3-A8 2026-10-31",
+  "C3-A9 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",

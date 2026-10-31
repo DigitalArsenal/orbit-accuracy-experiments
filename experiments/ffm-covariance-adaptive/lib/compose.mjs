@@ -15,8 +15,8 @@ export async function d2Of(list) {
   }
   return out;
 }
-/** The covariance of arm (a0, a1, n0, useG, useU) for every sample. */
-export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = false, kRef = null, history = 'reference' }) {
+/** The covariance of arm (a0, a1, n0, useG, useU, kappa) for every sample. */
+export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = false, kRef = null, history = 'reference', kappa = 1 }) {
   const memo = new Map();
   return samples.map((s) => {
     const { w, l } = s, L = l.L;
@@ -38,6 +38,6 @@ export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = 
         memo.set(key, u);
       }
     }
-    return { ...s, g, u, m: scaled(l.P, g, u) };
+    return { ...s, g, u, m: scaled(l.P, kappa * g, u) }; // u is estimated without kappa (C3-A9)
   });
 }
