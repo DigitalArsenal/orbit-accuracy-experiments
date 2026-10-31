@@ -3,7 +3,7 @@
 # common field, a same-plane field and a unit field, Toeplitz in time with the measured lag profile, the measured lead-lead matrix, resampled storm days, realized keep and lead masks, and the registered verdict with a two-way
 # bootstrap over clusters and moving 12-day blocks. Arms: 'heavy' (C3-ab's non-storm d2/3 per lead, mean 1: the gate) and 'gauss'. Maneuver arm in two shapes (C3-A1): the registered d2 x20-200 and the measured event, d2/3 about 5,
 # at the non-storm rate's bound 0.0142 and, beside it, the all-window bound 0.0100 and the point estimate 1/332. Statistics only.
-#   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --dependence            dependence, marginal and keep from the extract (writes <store>/p7/inputs.json)
+#   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --dependence [--from <date>]   dependence, marginal and keep from the extract (writes <store>/p7/inputs.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm <name> [--end 2026-11-30] [--trials 2000]     one arm (writes <store>/p7/<end>.<name>.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm plane2 --end 2026-12-31 ; --arm q6plane2 --end 2026-12-31     C3-A6: December with plane 2's event, heavy-tail arm, and both Q6 rules
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --summary               the table and the judged rule
@@ -11,7 +11,7 @@ import hashlib, json, math, os, sys
 import numpy as np
 
 STORE = os.environ.get('C3_STORE', '/opt/data/sdn-archive/ffm-covariance-adaptive')
-P7 = os.path.join(STORE, 'p7')
+P7 = os.environ.get('C3_P7', os.path.join(STORE, 'p7'))  # the gate's inputs; C3_P7 points the all-windows report elsewhere
 os.makedirs(P7, exist_ok=True)
 LEADS = [1, 6, 12, 24, 48, 72]
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -165,8 +165,10 @@ def plane2_event(rows, norad=54377, limit=75.0):
 
 if '--dependence' in sys.argv:
     ex = json.load(open(os.path.join(STORE, 'extract', 'R3.json')))
-    prim = [r for r in ex['rows'] if r['primary'] and math.isfinite(r['d2'])]
-    out = dict(samples=len(prim), clusters=ex['clusters'])
+    # the gate reads windows with the whole 90 days behind them, as fresh windows will (C3-A9's subset); --from 2025-01-01 gives the all-windows report
+    FROM = opt('--from', CONFIG['model']['fitFrom'])
+    prim = [r for r in ex['rows'] if r['primary'] and math.isfinite(r['d2']) and r['E'][:10] >= FROM]
+    out = dict(samples=len(prim), fromCutoff=FROM, clusters=ex['clusters'])
     marg = {}
     for L in LEADS:
         x = np.array([r['d2'] / 3 for r in prim if r['L'] == L])

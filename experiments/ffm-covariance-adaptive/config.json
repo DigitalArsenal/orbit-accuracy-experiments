@@ -549,6 +549,12 @@
    ],
    "windowsCount": true,
    "gate": "no: the gate is the heavy-tail arm as resampled from the rows, nothing added or removed for the event; this figure is reported beside it (C3-A7)"
+  },
+  "gateSamples": {
+   "amendment": "C3-A9",
+   "rule": "primary samples with E >= 2026-01-01, calibration and validation",
+   "chosenAfter": "the stale all-windows figure: n_eff 19 to 40, every trial not testable, on the old constants",
+   "reportedBeside": "all windows"
   }
  },
  "amendments": [
