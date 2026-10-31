@@ -163,7 +163,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
   if (args.check) {
     const { check } = await import('./check.mjs');
-    await check();
+    await check({ openSession, runWindow });
     process.exit(0);
   }
   console.error('--launch | --phase window | --check');

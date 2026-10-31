@@ -1,0 +1,119 @@
+{
+ "receipt": "precheck-P12",
+ "createdUtc": "2026-10-31T11:21:11.635Z",
+ "experimentsCommit": "3e88e95e547c7dcdf8a1ff503b7e7186b36539cd",
+ "plan": "section 5 P12",
+ "modules": {
+  "pin:analysis/estimation": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "0.7.0",
+   "wasm": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd",
+   "manifest": "f3c63ac7c9d32aa6f85bc71ba79d11beffa26d9567a537330b24ac6e0056d05b",
+   "store": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd"
+  },
+  "pin:propagator/ffm": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "2.0.4",
+   "wasm": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+   "manifest": "165fd160fdd9ec2f398bea2cd0554de5c9c083698616c460ecf8a268598844b7",
+   "store": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2"
+  },
+  "pin:analysis/gp-error-model": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "0.11.0",
+   "wasm": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19",
+   "manifest": "1120b5dff8f5cbaf9dda10fcc3afc0a601e24fceb23d8b250580b7550aab3748",
+   "store": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19"
+  },
+  "pin:analysis/reference-states": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "0.3.0",
+   "wasm": "77e16becd0167651219e11f1caaceacf352be535b8de56640ebe108cd7c3492f",
+   "manifest": "bf09040b75017643e58b89b1e8f4da28db577f98bbb7a06dba94678db2997a15",
+   "store": "77e16becd0167651219e11f1caaceacf352be535b8de56640ebe108cd7c3492f"
+  },
+  "pin:data-source/eop-parser": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "0.2.0",
+   "wasm": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+   "manifest": "4233ae0a5e586840e5f8d2d37f9cf15739eda286c2e4dabfed758c2650f3c449",
+   "store": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1"
+  },
+  "pin:foundation/frames": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "0.2.0",
+   "wasm": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+   "manifest": "c909a9fa03ced3cf6415f53994d9eb393d661c92d961911206afef7384a56e18",
+   "store": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4"
+  },
+  "pin:files/orbit-products": {
+   "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+   "version": "0.2.0",
+   "wasm": "688f22ee2dba278d19e4029e8aedf1aa46fffd9910428f7d7ed40c9eeb583ad3",
+   "manifest": "5937726d9154025bad604589c77e98a8c97afd8c90ff2478aa73e2c4effcf953",
+   "store": "688f22ee2dba278d19e4029e8aedf1aa46fffd9910428f7d7ed40c9eeb583ad3"
+  },
+  "c2:analysis/estimation": {
+   "commit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+   "version": "0.6.0",
+   "wasm": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac",
+   "manifest": "b9020228780ce48f8ab1b71ebe2dfe096444e32eb0a61ca2ac70525e1c4a176e",
+   "store": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac"
+  },
+  "c2:propagator/ffm": {
+   "commit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+   "version": "2.0.0",
+   "wasm": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f",
+   "manifest": "b9f7a57271b0c6245dc37872e6ad54ca611bfda2f9d9428cd1cbf2cff26f91ba",
+   "store": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f"
+  },
+  "c2:analysis/gp-error-model": {
+   "commit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+   "version": "0.10.0",
+   "wasm": "a7a0e21805d50737b6f0c84b89a9ee6e7b981668d8cbe321c36217228f1d76f7",
+   "manifest": "b171f37c0f553ce6c47d1bd8183857d0eb61b0f8ab908b83965b05b97e2f455e",
+   "store": "a7a0e21805d50737b6f0c84b89a9ee6e7b981668d8cbe321c36217228f1d76f7"
+  }
+ },
+ "harness": {
+  "harness/ffm-fit-v3.mjs": {
+   "committed": "42aa040a6944971e6c314551d7350aad0887bd51025228c1486c50b3a1b8ee9c",
+   "disk": "42aa040a6944971e6c314551d7350aad0887bd51025228c1486c50b3a1b8ee9c"
+  },
+  "harness/ffm-execution.mjs": {
+   "committed": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e",
+   "disk": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e"
+  },
+  "harness/truth-gate.mjs": {
+   "committed": "925d2a92170e0a34cbd2b08c6f3d663cce452b8d3e973a7576d3c0ff55f9329e",
+   "disk": "925d2a92170e0a34cbd2b08c6f3d663cce452b8d3e973a7576d3c0ff55f9329e"
+  },
+  "experiments/ffm-covariance-calibration/lib/products.mjs": {
+   "committed": "a3d4289b028177feff08dd44328652dbb4877ed66c15adba870994777c3e8b36",
+   "disk": "a3d4289b028177feff08dd44328652dbb4877ed66c15adba870994777c3e8b36"
+  },
+  "experiments/ffm-covariance-calibration/lib/precise.mjs": {
+   "committed": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa",
+   "disk": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa"
+  }
+ },
+ "xm": {
+  "commit": "8f2926174b68e5bc1559cfce6f9ed6256680fbe8",
+  "checked": "against results/ffm-covariance-calibration/xm-libraries.json"
+ },
+ "c2Constants": "7806980c7e3d655eaf7da31a32a4cb760293be53488a468e99b761b98726c837",
+ "packages": {
+  "space-data-module-sdk": "0.9.7",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23",
+  "flatc-wasm": "26.1.38"
+ },
+ "registration": {
+  "PLAN.md": "d6b39c3ab9b3374b1ad6fc362700fd520fe038d763971bc64ff70d4fa4d08772",
+  "config.json": "9c997230a83472ce812b04d99525af61e97c15efbeadc4bc5e6784002ff2d3b2",
+  "build.json": "52c212bee1abec7f1e907a6722f2c0f7dcf5171b486a87049011212bc789da28"
+ },
+ "bad": [],
+ "pass": true,
+ "opened": null
+}

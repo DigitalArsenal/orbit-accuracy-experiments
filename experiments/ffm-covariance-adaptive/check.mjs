@@ -8,9 +8,8 @@ import { loadClass, samplesOf } from './lib/windows.mjs';
 import { compose, d2Of } from './lib/compose.mjs';
 
 const strip = (r) => { const { seconds, secondsTotal, ...rest } = r; return rest; };
-export async function check() {
+export async function check({ openSession, runWindow }) {
   const opened = new Opened();
-  const { openSession, runWindow } = await import('./run.mjs');
   const rowsDir = path.join(store, 'rows');
   const rows = fs.readdirSync(rowsDir).filter((f) => f.startsWith('validation.')).sort().flatMap((f) => readJsonl(path.join(rowsDir, f)));
   const pick = (cls) => rows.filter((r) => r.cls === cls && r.fit?.ok && r.leads?.filter((l) => l.errRtnM && l.ref).length >= 3).sort((a, b) => (a.E < b.E ? -1 : a.E > b.E ? 1 : a.norad - b.norad))[0];
