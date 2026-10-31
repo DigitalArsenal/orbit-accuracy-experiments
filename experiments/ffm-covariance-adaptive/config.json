@@ -503,7 +503,8 @@
  "amendments": [
   "C3-A1 2026-10-31",
   "C3-A2 2026-10-31",
-  "C3-A3 2026-10-31"
+  "C3-A3 2026-10-31",
+  "C3-A4 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
@@ -540,6 +541,24 @@
    "root": "/opt/data/sdn-archive/e14-covariance-realism/reference",
    "prefix": "GFZ0MGXRAP_",
    "readOnly": "products, never E14's results"
+  },
+  "poolAdded": {
+   "amendment": "C3-A4",
+   "norads": [
+    43508,
+    37867,
+    37868,
+    39155,
+    44299,
+    42939,
+    43687,
+    45358,
+    39620,
+    41330
+   ],
+   "dates": "calibration only",
+   "use": "this check only: no fit, no verdict, no cell",
+   "missing": "files or seeds missing: dropped and listed"
   }
  },
  "nsgfArcs": {

@@ -1,6 +1,6 @@
 // C3-A2 point 1: does GNSS truth from ESA's next file hide a covariance that is too tight? Per class (GLONASS, Galileo), axis and lead (1, 6, 12, 24 h), mean z^2 under C2's P with the primary cells' exclusions (storm samples,
 // notices, truth gate): A = forecast against ESA's next file, B = forecast against GFZ0MGXRAP, C = ESA's next file against GFZ scaled by the same P. r_low = A / B, r_high = A / (B - C). Calibration windows of C3's calibration
-// satellites only, in the order of the lowest SHA-256 of C3S|p1|<norad>|<E>, one round across every satellite at a time. Paired bootstrap over satellites and windows, 10,000 resamples, seed SHA-256 C3S|p1b|<class>|<axis>|<L>.
+// satellites and, by C3-A4 and for this check only, the 10 other GLONASS satellites of R3's judged population, in the order of the lowest SHA-256 of C3S|p1|<norad>|<E>, one round across every satellite at a time. Paired bootstrap over satellites and windows, 10,000 resamples, seed SHA-256 C3S|p1b|<class>|<axis>|<L>.
 // GFZ's products are read from E14's reference directory; E14's results are not. No fresh file. FFM: RK78, relative tolerance 1e-10, steps up to 120 s; fit track 600 s; outputs at the four leads and the 600 s noise grid.
 //   node experiments/ffm-covariance-adaptive/precheck-p1b.mjs --run --rounds a:b --shard k/n     rows under <store>/p1b/
 //   node experiments/ffm-covariance-adaptive/precheck-p1b.mjs --evaluate                          the widest half-width and the CPU spent, nothing else
@@ -17,8 +17,8 @@ const opened = new Opened();
 const R = config.p1b, dirOut = path.join(store, 'p1b');
 fs.mkdirSync(dirOut, { recursive: true });
 const P = config.population.judged;
-const pop = config.population.calVal.R3.filter((n) => P.glonass.c2.includes(n) || P.galileo.new.includes(n));
-const classOf = (n) => (P.glonass.c2.includes(n) ? 'GLONASS' : 'Galileo');
+const pop = [...config.population.calVal.R3.filter((n) => P.glonass.c2.includes(n) || P.galileo.new.includes(n)), ...R.poolAdded.norads]; // C3-A4: the 10 added GLONASS, here and nowhere else
+const classOf = (n) => (P.glonass.c2.includes(n) || R.poolAdded.norads.includes(n) ? 'GLONASS' : 'Galileo');
 const cutoffs = grid(config.sets.calibration.from, config.sets.calibration.to, config.sets.calibration.everyDays);
 const orderOf = (norad) => cutoffs.map((E) => ({ E, h: sha256(Buffer.from(`C3S|p1|${norad}|${iso(E)}`)) })).sort((a, b) => (a.h < b.h ? -1 : 1)).map((x) => x.E);
 

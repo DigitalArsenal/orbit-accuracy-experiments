@@ -164,3 +164,7 @@ Everything below is already in the sections above; this records what moved.
 ### C3-A3 - 2026-10-31, before C3-A2's rule judges anything
 
 C3-A2's sampling cap is 4 CPU-h, not 1, and the half-width target stays 0.05: the coordinator set it knowing the half-width at 138 windows (0.27) and no value of r; this lane printed the interim table at 138 windows and did not send it, and the stop reads only the half-width and the CPU spent.
+
+### C3-A4 - 2026-10-31, before C3-A2's rule judges anything
+
+C3-A2's pool adds the 10 GLONASS satellites in R3's judged population that are not in C2's calibration (43508, 37867, 37868, 39155, 44299, 42939, 43687, 45358, 39620, 41330), over the calibration dates only and for this check only, because 4 satellites are too few clusters for a satellite-level interval and more windows on them will not fix that: the coordinator set it knowing half-widths only (0.207 at 920 windows) and no value of r; those windows enter no fit and no verdict (not C3's constants, not its validation, not any cell), no validation window is added, and a satellite whose files or seeds are missing is dropped and listed.
