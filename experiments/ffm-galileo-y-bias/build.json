@@ -1,0 +1,19 @@
+{
+ "note": "The modules, C3's libraries and the harness are pinned through SRP's build.json, which experiments/ffm-srp-seed-high-beta/common.mjs checks at import. This file pins SRP's own files and its stored rows; a change refuses every step here until the coordinator rules.",
+ "sha256": {
+  "experiments/ffm-srp-seed-high-beta/common.mjs": "65c84ca08ff3ef259097506c63314db1b3f8d3d99d7615924ae172be1e541910",
+  "experiments/ffm-srp-seed-high-beta/run.mjs": "443bb31e48874ed19cb5c157de35f25a7053dc9c19e7e1ac7a5e2a121dc293b2",
+  "experiments/ffm-srp-seed-high-beta/config.json": "3daff608ee68e909e4e77bbf442ad3091a57475c4c7f5e91137f3800e1ccd593",
+  "experiments/ffm-srp-seed-high-beta/build.json": "adebb9919d2da64f01a9d43dbd013aa757356714c4da6549661f903490681858"
+ },
+ "baseRows": {
+  "s0.jsonl": "b2b1b8fdf28e30087680b929e3c4636d10aac9f6435c908b3e3bad61f8ef1036",
+  "s1.jsonl": "7f4856d95fb5013b8b01aba0a73ef8e468a6944a0c3cd772a1120b1cb5610fa3",
+  "s2.jsonl": "500936de0aa2ec546406c48b29717797632ab7bb25785002f42b30e04c053b90",
+  "s3.jsonl": "1aaf7929769d373ddb04866f3e6360751d89c3601f06f2ab72862c377897ef97",
+  "s4.jsonl": "adaab4fa4790bc971ead2c60bc7dc341befa020488a07424b5c059babbcb1bf7",
+  "s5.jsonl": "d1f3e484b5c7b68a1a6e7f8294513e04863e54e8cf839464269b260d2d3fb034",
+  "s6.jsonl": "2c1028e4c8d79d127c94132def961898eef48e0eff2db86d4cf27fca7312847d",
+  "s7.jsonl": "9ed489d5dd434d53e800f184369b838bfa1affe05ecd2f8fe62128f5727613d8"
+ }
+}

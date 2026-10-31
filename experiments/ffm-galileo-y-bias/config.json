@@ -1,0 +1,257 @@
+{
+ "experiment": "ffm-galileo-y-bias",
+ "task": "experiments-ffm-galileo-y-bias-20261031",
+ "registered": "2026-10-31",
+ "store": "/opt/data/sdn-archive/ffm-galileo-y-bias",
+ "workers": 8,
+ "base": {
+  "rowsDir": "/opt/data/sdn-archive/ffm-srp-seed-high-beta/rows",
+  "arms": {
+   "FOC": "G0",
+   "IOV": "G0",
+   "GLONASS": "A1"
+  },
+  "why": "the stored SRP rows at the same pin; GLONASS on its published seed, since SRP showed A0's prior distorts that fit (coordinator's ruling Q3)"
+ },
+ "blocks": {
+  "FOC": [
+   41859,
+   49810,
+   41861,
+   61183,
+   43565,
+   40544,
+   59600,
+   49809,
+   41549,
+   43058,
+   43056,
+   43564,
+   43566,
+   59598,
+   41860,
+   43057,
+   40890
+  ],
+  "IOV": [
+   38857,
+   37846
+  ],
+  "GLONASS": [
+   40001,
+   44850,
+   37869,
+   54377
+  ]
+ },
+ "split": {
+  "everyDays": 3,
+  "dev": {
+   "from": "2025-10-03",
+   "to": "2025-12-29"
+  },
+  "test": {
+   "from": "2026-01-01",
+   "to": "2026-03-29"
+  }
+ },
+ "arms": {
+  "Yt": {
+   "phase": "dev",
+   "spans": [
+    "dev"
+   ],
+   "blocks": [
+    "FOC",
+    "IOV",
+    "GLONASS"
+   ],
+   "y0": 1e-09,
+   "form": "fixed +1 nm/s^2, only to choose Y2's value"
+  },
+  "Y1": {
+   "phase": "arms",
+   "spans": [
+    "dev",
+    "test"
+   ],
+   "blocks": [
+    "FOC",
+    "IOV",
+    "GLONASS"
+   ],
+   "y0Seed": 0,
+   "y0PriorSigma": 1e-07,
+   "form": "fitted per window, seed 0, prior sigma 100 nm/s^2"
+  },
+  "Y2": {
+   "phase": "arms",
+   "spans": [
+    "dev",
+    "test"
+   ],
+   "blocks": [
+    "FOC",
+    "IOV",
+    "GLONASS"
+   ],
+   "form": "fixed at the block's value from dev-values.json"
+  },
+  "Yx": {
+   "phase": "arms",
+   "spans": [
+    "dev",
+    "test"
+   ],
+   "blocks": [
+    "IOV",
+    "GLONASS"
+   ],
+   "form": "fixed at FOC's value, negative control (coordinator's ruling Q2)"
+  }
+ },
+ "leads_h": [
+  1,
+  6,
+  12,
+  24,
+  48,
+  72
+ ],
+ "devValue": {
+  "leads_h": [
+   24,
+   48,
+   72
+  ],
+  "rule": "y = - sum(s T0) / sum(s^2) over a block's dev windows' primary samples, against ESA; T0 base's along-track error; s = T(Yt) - T0 per +1 nm/s^2; rounded to 0.001 nm/s^2"
+ },
+ "bins": [
+  [
+   -90,
+   -60
+  ],
+  [
+   -60,
+   -30
+  ],
+  [
+   -30,
+   -15
+  ],
+  [
+   -15,
+   15
+  ],
+  [
+   15,
+   30
+  ],
+  [
+   30,
+   60
+  ],
+  [
+   60,
+   90
+  ]
+ ],
+ "absBins": [
+  [
+   0,
+   15
+  ],
+  [
+   15,
+   30
+  ],
+  [
+   30,
+   60
+  ],
+  [
+   60,
+   90
+  ]
+ ],
+ "rules": {
+  "primaryBlock": "FOC",
+  "primarySpan": "test",
+  "control": {
+   "lead_h": 72,
+   "K": [
+    80,
+    105
+   ],
+   "r2AtLeast": 0.9
+  },
+  "removed": {
+   "rmsAtMost": {
+    "24": 3,
+    "48": 8,
+    "72": 15
+   },
+   "ratioIntervalBelow": 0.5,
+   "anchor": "GLONASS under its published seed in SRP: 2.3, 6.6, 12.9 m"
+  },
+  "reduced": {
+   "lead_h": 72,
+   "ratioIntervalBelow": 0.75
+  },
+  "harm": {
+   "above": 1.05,
+   "axes": {
+    "R": [
+     1,
+     6,
+     12,
+     24,
+     48,
+     72
+    ],
+    "N": [
+     1,
+     6,
+     12,
+     24,
+     48,
+     72
+    ],
+    "T": [
+     1,
+     6,
+     12
+    ]
+   }
+  },
+  "controls": {
+   "valueAtMostNmS2": 0.35,
+   "tRatioBand": [
+    0.6,
+    1.2
+   ],
+   "lead_h": 72
+  },
+  "yx": {
+   "block": "IOV",
+   "lead_h": 72,
+   "lowerBoundAtLeast": 2
+  },
+  "design": {
+   "y1BetterBy": 0.2,
+   "lead_h": 72
+  }
+ },
+ "bootstrap": {
+  "resamples": 10000,
+  "level": 0.95,
+  "seed": "SHA-256 of the cell's name"
+ },
+ "published": {
+  "source": "Bury, Sosnica, Zajdel, Strugarek (2020), J. Geod. 94:16, doi:10.1007/s00190-020-01342-2",
+  "pdfSha256": "1db2d50d98259cdf9962735b33e1d5dc5dbb7356ec1a20ac4980257f0d9c91ba",
+  "valueNmS2": -0.7,
+  "sigmaNmS2": 0.06,
+  "axis": "CODE's ECOM Y; the relation to FFM's eY is open"
+ }
+}
