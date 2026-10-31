@@ -274,5 +274,42 @@
  "C2-A10": {
   "date": "2026-10-29",
   "disclosure": "first SGP4-XP held-out scoring used FFM constants by a scorer path bug; I and L tables seen and deleted; rescored with sgp4xp/frozen-constants.json (3f21116c...); rows unchanged, no refit"
+ },
+ "C2-A11": {
+  "date": "2026-10-31",
+  "after": "every C2 held-out summary at origin/main 68510a4 was published",
+  "writtenBy": "the C3 lane (experiments/ffm-covariance-adaptive), which benefits from it; coordinator ruling QS7; committed before any C3 score",
+  "closure": "cutoffs to last - 72 h, truth through last (results/ffm-covariance-calibration/precheck-P9.json perObject[].last)",
+  "nsgfExtension": "withdrawn; fetch-d10.mjs's NSGF branch serves no C2 analysis",
+  "verdicts": "stand on the span C2 scored; no C2 number, constant or rule changes",
+  "nsgfReceipt": {
+   "files": 427,
+   "products": "260829-261028, 7 spheres",
+   "namedInOpenedLogs": 0,
+   "logs": 156,
+   "logEntries": 1658163,
+   "countedAsOpened": "the seven 260829 products, whatever their bytes; not compared; not released",
+   "released": "products after 260829 (420 files)"
+  },
+  "c3": {
+   "scoresNsgfAfter": "260829",
+   "c30Label": "not C2's registered analysis",
+   "scoredAfterClosure": [
+    "Stella",
+    "LAGEOS-1",
+    "the six Galileo of P9's sample"
+   ],
+   "neverInC3CalVal": [
+    "Stella",
+    "LAGEOS-1",
+    "the six Galileo of P9's sample"
+   ],
+   "historyInsideC2Spans": "C3's own forecasts against C3's own later fits; no C2 row read; nothing inside those spans scored"
+  },
+  "stayHeldOut": [
+   "Sentinel-1D",
+   "TerraSAR-X",
+   "COSMIC-2 44350"
+  ]
  }
 }

@@ -1,0 +1,468 @@
+{
+ "experiment": "ffm-covariance-adaptive",
+ "id": "C3-small",
+ "registered": "2026-10-31",
+ "frozen": false,
+ "freezeBy": "2026-11-09",
+ "store": "/opt/data/sdn-archive/ffm-covariance-adaptive",
+ "workers": 12,
+ "c2": {
+  "constants": "results/ffm-covariance-calibration/frozen-constants.json",
+  "constantsSha256": "7806980c7e3d655eaf7da31a32a4cb760293be53488a468e99b761b98726c837",
+  "classes": {
+   "R3": "R3",
+   "R2-M": "R2",
+   "R2-O": "R2-O"
+  },
+  "amendment": "C2-A11"
+ },
+ "build": "experiments/ffm-covariance-adaptive/build.json",
+ "population": {
+  "judged": {
+   "cls": "R3",
+   "count": 44,
+   "ilrsa": {
+    "LAGEOS-2": 22195,
+    "Etalon-1": 19751,
+    "Etalon-2": 20026,
+    "LAGEOS-1": 8820
+   },
+   "nsgf": {
+    "LARES-2": 53105
+   },
+   "glonass": {
+    "c2": [
+     40001,
+     44850,
+     37869,
+     54377
+    ],
+    "new": [
+     43508,
+     37867,
+     37868,
+     39155,
+     44299,
+     42939,
+     43687,
+     45358,
+     39620,
+     41330
+    ]
+   },
+   "galileo": {
+    "new": [
+     41859,
+     49810,
+     38857,
+     41861,
+     61183,
+     43565,
+     40544,
+     59600,
+     49809,
+     41549,
+     43058,
+     43056,
+     43564,
+     43566,
+     37846,
+     59598,
+     41860,
+     43057,
+     40890
+    ],
+    "c2Six": [
+     43567,
+     37847,
+     41862,
+     41174,
+     43055,
+     41175
+    ]
+   }
+  },
+  "reported": {
+   "cls": "R2",
+   "nsgf": {
+    "Ajisai": 16908,
+    "LARES": 38077,
+    "LARETS": 27944,
+    "Starlette": 7646,
+    "WESTPAC": 25398,
+    "Stella": 22824
+   },
+   "alsoReported": {
+    "galileoEccentric": [
+     40128,
+     40129
+    ]
+   }
+  },
+  "calVal": {
+   "R3": [
+    22195,
+    53105,
+    19751,
+    20026,
+    40001,
+    44850,
+    37869,
+    54377,
+    41859,
+    49810,
+    38857,
+    41861,
+    61183,
+    43565,
+    40544,
+    59600,
+    49809,
+    41549,
+    43058,
+    43056,
+    43564,
+    43566,
+    37846,
+    59598,
+    41860,
+    43057,
+    40890
+   ],
+   "R2": [
+    16908,
+    38077,
+    27944,
+    7646,
+    25398
+   ]
+  },
+  "out": "drag-LEO, active, altimetry, ISS, Starlink, GPS, GLONASS-K1, Sentinel-1D, TerraSAR-X, COSMIC-2"
+ },
+ "sets": {
+  "calibration": {
+   "from": "2025-10-03",
+   "to": "2026-03-29",
+   "everyDays": 3
+  },
+  "validation": {
+   "from": "2026-04-01",
+   "to": "2026-05-31",
+   "everyDays": 3
+  },
+  "historyOnlyFrom": "2026-06-03",
+  "historyRule": "cutoffs in (E - 90 d, E - 3 d]; run sealed after the freeze"
+ },
+ "fresh": {
+  "gridAnchor": "2026-09-01",
+  "everyDays": 3,
+  "ilrsa": {
+   "rule": "Sundays 00:00 UTC",
+   "from": "2026-09-06",
+   "to": "2026-11-29",
+   "stub": "260926 (307-308 B): reissue sought, else the cutoffs 09-20 and 09-27 are lost"
+  },
+  "lares2": {
+   "from": "2026-09-01",
+   "to": "2026-11-30",
+   "leads_h": [
+    12,
+    24,
+    48,
+    72
+   ]
+  },
+  "gnss": {
+   "from": "2026-09-25",
+   "to": "2026-11-30"
+  },
+  "r2": {
+   "from": "2026-09-04",
+   "to": "2027-02-01",
+   "leads_h": [
+    6,
+    12,
+    24,
+    48,
+    72
+   ]
+  },
+  "extensionOnce": "R3 to 2026-12-31"
+ },
+ "scoring": {
+  "once": true,
+  "R3": [
+   "2026-12-21",
+   "2027-01-20"
+  ],
+  "R2": "2027-02-10",
+  "lateFiles": "missing"
+ },
+ "leads_h": [
+  1,
+  6,
+  12,
+  24,
+  48,
+  72
+ ],
+ "arcDisjoint": "fit track = the last 24 h of the latest arc ending (t_in) by the cutoff; leads run from t_in; truth and references only from arcs starting after t_in",
+ "p1Yield": {
+  "minLeads": 3,
+  "minWindows": 0.8,
+  "elseR2": "consistency check"
+ },
+ "fit": {
+  "common": "C2's: fit_batch version 3, one round, sigma 10 m per axis, GCRF, track at 600 s, RK78, relative tolerance 1e-10, steps up to 120 s",
+  "R3": "state + AGOM",
+  "R2": "state + B + AGOM"
+ },
+ "model": {
+  "formula": "P_w(L) = D_o g_w(L) P_C2(L) D_o + C_w",
+  "chi2Median": {
+   "withinDays": 90,
+   "minFits": 5,
+   "elseClassMedian": true
+  },
+  "a0": {
+   "min": -0.2,
+   "max": 1.2,
+   "step": 0.1
+  },
+  "a1": {
+   "min": -0.8,
+   "max": 0.8,
+   "step": 0.2
+  },
+  "n0": [
+   0.5,
+   1,
+   2,
+   5,
+   10,
+   20,
+   50
+  ],
+  "arms": [
+   "C3-0",
+   "C3-a",
+   "C3-b",
+   "C3-ab"
+  ],
+  "stopIf": "the validation interval of C3-ab minus C3-0 is below 0",
+  "kRef": {
+   "per": [
+    "class",
+    "axis",
+    "leadGroup"
+   ],
+   "leadGroups": [
+    [
+     1,
+     6,
+     12
+    ],
+    [
+     24,
+     48,
+     72
+    ]
+   ],
+   "reportedAlso": 1
+  }
+ },
+ "availability": {
+  "rule": "max(last epoch + lambda, Last-Modified) <= E",
+  "lambdaDays": {
+   "nsgf": 3,
+   "ilrsa": 11,
+   "ESA0OPSFIN": "14 after its GPS-week batch"
+  }
+ },
+ "exclusions": {
+  "coverage": 0.9,
+  "truthGate": {
+   "inline": "harness/truth-gate.mjs",
+   "scan": "experiments/truth-gate/scan.mjs --products <dirs> --out <sealed>"
+  },
+  "storm": {
+   "rule": "[E - 24 h, E + L) meets a UTC day with GFZ Ap >= 30",
+   "source": "hac/gfz-kp",
+   "effect": "out of primary cells, into a stratum"
+  },
+  "notices": {
+   "archives": [
+    "GSC NAGU",
+    "IAC NAGU"
+   ],
+   "rule": "any notice naming the satellite, except return-to-service, over its stated interval (open: to the next return-to-service), overlapping [E - 24 h, E + 84 h], issued by the scoring date (by E in history)",
+   "mapping": "IGS SINEX SATELLITE/PRN validity",
+   "sealFrom": "2026-06-01"
+  },
+  "weatherGap": "validation windows that hit B1's dropped day 2026-05-09 are refused and counted; no fill; a fresh window refused for missing weather is uncovered"
+ },
+ "earthOrientation": {
+  "calVal": "C2's file (hac/iers-eop/20261009, B1's environment)",
+  "fresh": "P3: as issued at E if a dated archive exists, otherwise final values with the data-rule sentence narrowed; recorded in a dated commit before any score"
+ },
+ "verdict": {
+  "k": 3,
+  "band": {
+   "meanD2over3": [
+    0.8,
+    1.25
+   ],
+   "coverage95": [
+    0.93,
+    0.97
+   ],
+   "chi2_3_95": 7.8147
+  },
+  "perAxis": {
+   "meanZ2": [
+    0.5,
+    2.0
+   ],
+   "absMeanZMax": 0.5
+  },
+  "refusalsUncoveredMaxFraction": 0.01,
+  "eligible": {
+   "minN": 100,
+   "minClusters": 3,
+   "minNEff": 60,
+   "nEff": "(2/3)/Var(cell mean d2/3) under P7's heavy-tail arm, on realized counts"
+  },
+  "interval": {
+   "level": 0.95,
+   "resamples": 10000,
+   "blocksDays": 12,
+   "twoWay": "clusters x blocks",
+   "seed": "SHA-256 of C3S|boot|<class>|<lead>"
+  },
+  "judgedIf": {
+   "perfectMin": 0.8,
+   "wrongMax": 0.1,
+   "alternatives": [
+    0.7,
+    1.4
+   ],
+   "arm": "heavy-tail",
+   "otherwise": "one month once (R3 to 2026-12-31), else reported"
+  }
+ },
+ "q6": {
+  "question": "must each direction pass too?",
+  "a": "the band decides, per-axis reported, |mean z| > 0.5 labeled biased",
+  "b": "a cell counts only with band and all axes in range, and every eligible per-axis interval overlaps",
+  "rule": "Q6 is the owner's. A yes by 2026-11-09 23:59 UTC -> (b). A no, or no answer by then -> (a). The answer is recorded in a dated commit, whether or not the freeze commit has landed, and before any fresh file is scored.",
+  "answer": null
+ },
+ "p4": {
+  "windowsPerClass": 20,
+  "classes": [
+   "R3",
+   "R2-M",
+   "R2-O"
+  ],
+  "rank": "lowest SHA-256 of C3S|p4|<class>|<norad>|<E>",
+  "eligible": "stored windows of population.calVal with a converged fit and stored terms",
+  "excludedStep0": [
+   {
+    "cls": "R3",
+    "norad": 22195,
+    "E": "2025-10-03T00:00:00.000Z"
+   },
+   {
+    "cls": "R3",
+    "norad": 19751,
+    "E": "2026-01-01T00:00:00.000Z"
+   },
+   {
+    "cls": "R3",
+    "norad": 53105,
+    "E": "2026-02-02T00:00:00.000Z"
+   },
+   {
+    "cls": "R3",
+    "norad": 40001,
+    "E": "2026-03-04T00:00:00.000Z"
+   },
+   {
+    "cls": "R3",
+    "norad": 44850,
+    "E": "2026-04-03T00:00:00.000Z"
+   },
+   {
+    "cls": "R3",
+    "norad": 20026,
+    "E": "2026-05-01T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 27944,
+    "E": "2026-03-08T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 27944,
+    "E": "2026-03-14T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 27944,
+    "E": "2025-11-04T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 27944,
+    "E": "2026-01-15T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 27944,
+    "E": "2026-03-22T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 62261,
+    "E": "2025-12-26T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 62261,
+    "E": "2026-02-04T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 62261,
+    "E": "2026-02-10T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 38077,
+    "E": "2025-12-02T00:00:00.000Z"
+   },
+   {
+    "cls": "R2",
+    "norad": 16908,
+    "E": "2026-04-03T00:00:00.000Z"
+   }
+  ],
+  "limits": {
+   "R3": {
+    "stateAndErrors": "bit-identical",
+    "absDeltaD2over3": 1e-09
+   },
+   "R2": {
+    "absDeltaD2over3": "1e-3 + 1e-3 x d2/3"
+   },
+   "termination": "a class fit may change only to CONVERGED",
+   "gem": "pair_statistics, noise_responses, dcp_covariance bit-identical on 0.11.0 and 0.10.0 on the same inputs"
+  },
+  "onFailure": "stop and ask; the limits do not move"
+ },
+ "network": {
+  "pacingSeconds": 5,
+  "credentials": "none"
+ }
+}

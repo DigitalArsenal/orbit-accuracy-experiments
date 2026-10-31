@@ -1,0 +1,94 @@
+{
+ "note": "Every wasm and manifest is read with git show at the named commit, SHA-256 checked, and copied to <store>/build/<chain>/; never from a working tree.",
+ "pin": {
+  "ruling": "coordinator ruling 1, 2026-10-31: all C3 windows (cal/val, history, fresh); later module bytes are outside the verdict",
+  "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+  "modules": {
+   "analysis/estimation": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "0.7.0",
+    "wasmSha256": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd",
+    "manifestSha256": "f3c63ac7c9d32aa6f85bc71ba79d11beffa26d9567a537330b24ac6e0056d05b"
+   },
+   "propagator/ffm": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "2.0.4",
+    "wasmSha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+    "manifestSha256": "165fd160fdd9ec2f398bea2cd0554de5c9c083698616c460ecf8a268598844b7"
+   },
+   "analysis/gp-error-model": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "0.11.0",
+    "wasmSha256": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19",
+    "manifestSha256": "1120b5dff8f5cbaf9dda10fcc3afc0a601e24fceb23d8b250580b7550aab3748"
+   },
+   "analysis/reference-states": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "0.3.0",
+    "wasmSha256": "77e16becd0167651219e11f1caaceacf352be535b8de56640ebe108cd7c3492f",
+    "manifestSha256": "bf09040b75017643e58b89b1e8f4da28db577f98bbb7a06dba94678db2997a15"
+   },
+   "data-source/eop-parser": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "0.2.0",
+    "wasmSha256": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "manifestSha256": "4233ae0a5e586840e5f8d2d37f9cf15739eda286c2e4dabfed758c2650f3c449"
+   },
+   "foundation/frames": {
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "version": "0.2.0",
+    "wasmSha256": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+    "manifestSha256": "c909a9fa03ced3cf6415f53994d9eb393d661c92d961911206afef7384a56e18"
+   }
+  }
+ },
+ "c2": {
+  "ruling": "addition B, 2026-10-31: P4 only; C2's A12 links are not depended on",
+  "modules": {
+   "analysis/estimation": {
+    "commit": "f54b5107efc06ff1090e3c48681e28c35b732ff2",
+    "version": "0.6.0",
+    "wasmSha256": "0e7b4f6ad359f7be07a1d1e88685d65642ba0e8cadbf18777e3aee7ee1bfceac",
+    "manifestSha256": "b9020228780ce48f8ab1b71ebe2dfe096444e32eb0a61ca2ac70525e1c4a176e"
+   },
+   "propagator/ffm": {
+    "commit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "version": "2.0.0",
+    "wasmSha256": "d0b0493575245f29d9465aa76c861f62c384e426669da2345832ccb18d5bb42f",
+    "manifestSha256": "b9f7a57271b0c6245dc37872e6ad54ca611bfda2f9d9428cd1cbf2cff26f91ba"
+   },
+   "analysis/gp-error-model": {
+    "commit": "c860a0720f84024b4af383f8fdc0d74a7450bd42",
+    "version": "0.10.0",
+    "wasmSha256": "a7a0e21805d50737b6f0c84b89a9ee6e7b981668d8cbe321c36217228f1d76f7",
+    "manifestSha256": "b171f37c0f553ce6c47d1bd8183857d0eb61b0f8ab908b83965b05b97e2f455e"
+   }
+  }
+ },
+ "notLoaded": [
+  "propagator/sgp4-xp (C2's lib/pairs.mjs opened it as a side effect; C3 opens gp-error-model directly)"
+ ],
+ "xm": {
+  "ruling": "ruling 3, 2026-10-31",
+  "commit": "8f2926174b68e5bc1559cfce6f9ed6256680fbe8",
+  "path": "experiments/xp-atmosphere-merit",
+  "snapshot": "git archive into <store>/xm-8f2926174",
+  "receipt": "results/ffm-covariance-calibration/xm-libraries.json"
+ },
+ "harness": {
+  "rule": "the experiments' committed copies, SHA-256 checked at every run",
+  "sha256": {
+   "harness/ffm-fit-v3.mjs": "42aa040a6944971e6c314551d7350aad0887bd51025228c1486c50b3a1b8ee9c",
+   "harness/ffm-execution.mjs": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e",
+   "harness/truth-gate.mjs": "925d2a92170e0a34cbd2b08c6f3d663cce452b8d3e973a7576d3c0ff55f9329e",
+   "experiments/ffm-covariance-calibration/lib/products.mjs": "a3d4289b028177feff08dd44328652dbb4877ed66c15adba870994777c3e8b36",
+   "experiments/ffm-covariance-calibration/lib/precise.mjs": "50e1a613d3f047b78d95df8f5a54bed165df8036ceead6551c44d6803a4e32fa"
+  }
+ },
+ "packages": {
+  "space-data-module-sdk": "0.9.7",
+  "spacedatastandards.org": "1.243.0",
+  "flatbuffers": "25.9.23",
+  "flatc-wasm": "26.1.38"
+ }
+}

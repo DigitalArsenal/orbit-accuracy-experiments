@@ -476,3 +476,35 @@ switched by the SGP4-XP arm). Its I and L tables were printed and seen (I: mean 
 to A_xp); LP and R1 failed to compose. Those tables were deleted and never committed. The scorer was fixed and the held-out sets scored
 with the SGP4-XP frozen constants (SHA-256 3f21116ca436d8edb38c47a9ab4661137b618f95e9cce9e52da7523bd9d04992, frozen before any
 SGP4-XP held-out row existed); the held-out rows themselves (errors and A_xp) are unchanged and no constant was refitted.
+
+### C2-A11 - 2026-10-31, after C2's held-out results were published: closure of the held-out sets; the NSGF extension withdrawn
+
+Written by the C3 lane (experiments/ffm-covariance-adaptive), which benefits from it; committed on the coordinator's instruction (QS7,
+2026-10-31) before any C3 score, not with C3's freeze. Disclosed: written after every C2 held-out summary at origin/main 68510a4 was
+published.
+
+Reason: C2's registration extends R2's held-out-by-time set with the NSGF daily fitted arcs after 2026-08-28 "to the end of each
+product" (this PLAN 162-163; config.json `d10.nsgf`; fetch-d10.mjs:3). C2 never scored them: its held-out windows take cutoffs to each
+object's last span minus 72 h and truth through that last span (run.mjs `lastE`; results/ffm-covariance-calibration/precheck-P9.json,
+`perObject[].last`: NSGF spheres 2026-08-27/28), and the published heldout-R2.json, heldout-R2-O.json and heldout-LP.json were computed
+on that span.
+
+Receipt (file names only; no extension file opened): fetch-d10.mjs stored 427 files under <store>/hac/ilrs-edc/nsgf-rapid/ (7 spheres x
+61 products, 260829 to 261028, retrieved 2026-10-28T21:37Z to 21:54Z). None is named in C2's 156 opened-file logs (<store>/opened/,
+1,658,163 entries), and REFERENCE_ROOTS does not include that directory. Seven of the 427 (the seven 260829 products) carry the names
+of reference-states conversions C2 did read (reference-states/reference/nsgf.orb.<sphere>.260829.v000, index and $OEM named in C2's
+logs). They lie inside C2's span, count as opened whatever their bytes (they were not compared), and are not part of what this amendment
+releases.
+
+1. **Closure.** C2's held-out sets close at the dates C2 scored: cutoffs to last - 72 h, truth through last (precheck-P9.json `last`).
+   The extension is withdrawn: no window after those dates is a C2 held-out window, and fetch-d10.mjs's NSGF branch serves no C2 analysis.
+2. **Verdicts stand.** C2's R2 and L-P held-out-by-time verdicts stand on the span C2 scored. No C2 number, constant or rule changes.
+3. **Use by C3.** C3 may score the NSGF arcs after product 260829, with this disclosure. C3-0 (C2's frozen constants) run by C3 on these
+   arcs is not C2's registered analysis (different grid, gate and weather) and is labeled so wherever shown.
+4. **Held out by object.** Those sets close at the same dates, and C2's by-object verdicts stand on the span C2 scored. Sentinel-1D,
+   TerraSAR-X and COSMIC-2 44350 stay held out. Stella, LAGEOS-1 and the six Galileo of P9's sample may be scored by C3 after those dates
+   (coordinator ruling QS1, with this disclosure) and are never in C3's calibration or validation sets. C2-A1 point 1 holds one COSMIC-2
+   out (44350); it supersedes the "2 COSMIC-2 held out" of this PLAN 152.
+5. **C3's history inside C2's spans.** C3's per-satellite history (the 90 days before each C3 cutoff) may run C3's own forecasts against
+   C3's own later fits on products inside C2's held-out spans, for the objects of points 3 and 4. No C2 row is read, nothing inside those
+   spans is scored, and C3 discloses it.
