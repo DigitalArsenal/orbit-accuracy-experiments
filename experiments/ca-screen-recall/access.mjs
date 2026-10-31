@@ -22,8 +22,8 @@ const packageVersion = (dir) => JSON.parse(fs.readFileSync(path.join(dir, 'packa
 
 // ---- the screen -----------------------------------------------------------
 
-export async function openScreen({ modules, pinned, workDir }) {
-  const ca = path.join(modules, 'analysis/conjunction-assessment');
+export async function openScreen({ pinned, workDir }) {
+  const ca = path.join(pinned.root, 'analysis/conjunction-assessment');
   const cqr = await importFile(path.join(ca, 'tests/lib/cqr.mjs'));
   const hz = await importFile(path.join(ca, 'tests/lib/conjunctionCommandHarness.mjs'));
   // The artifact comes from the pinned commit; the harness reads the copy made here, so the hash is of the bytes it loads.
@@ -70,7 +70,7 @@ export async function openScreen({ modules, pinned, workDir }) {
         for (const e of result.EVENTS ?? []) events.push(event(e));
         for (const f of r.outputs.filter((o) => o.portId === 'excluded')) {
           const omm = JSON.parse(flatc.generateJSON(ommSchema, { path: '/omm.bin', data: f.payload }, { defaultsJson: true }));
-          excluded.push(Number(omm.NORAD_CAT_ID));
+          excluded.push({ norad: Number(omm.NORAD_CAT_ID), comment: omm.COMMENT ?? null, windowStartJd: startJd, windowSeconds: durationSeconds });
         }
         statistics = Object.fromEntries(Object.entries(result.STATISTICS ?? {}).map(([k, v]) => [k, Number(v)])); found = result.CONJUNCTIONS_FOUND; chunks++;
         if (result.FINAL_CHUNK) break;
@@ -99,7 +99,7 @@ export async function openScreen({ modules, pinned, workDir }) {
       }
       const sum = {};
       for (const p of parts) for (const [k, v] of Object.entries(p.statistics ?? {})) sum[k] = (sum[k] ?? 0) + v;
-      return { events, excluded: [...new Set(parts.flatMap((p) => p.excluded))], statistics: sum, windows: parts.length, mergedAcrossEdges: merged.length - events.length,
+      return { events, listings: parts.flatMap((p) => p.excluded), statistics: sum, windows: parts.length, mergedAcrossEdges: merged.length - events.length,
         chunks: parts.reduce((n, p) => n + p.chunks, 0), elapsedMs: parts.reduce((t, p) => t + p.elapsedMs, 0) };
     },
     // The module's Alfano maximum probability for a miss distance and a combined hard-body radius.
@@ -114,9 +114,9 @@ export async function openScreen({ modules, pinned, workDir }) {
 
 // ---- the reference's propagator ---------------------------------------------
 
-export async function openSgp4({ modules, pinned }) {
-  const ca = path.join(modules, 'analysis/conjunction-assessment');
-  const sgp4Dir = path.join(modules, 'propagator/sgp4');
+export async function openSgp4({ pinned }) {
+  const ca = path.join(pinned.root, 'analysis/conjunction-assessment');
+  const sgp4Dir = path.join(pinned.root, 'propagator/sgp4');
   // The conjunction module's installed SDK loads both artifacts, so one SDK reads every answer.
   const sdk = await importFile(path.join(ca, 'node_modules/space-data-module-sdk/src/host/browserModuleHarness.js'));
   const codec = await importFile(path.join(ca, 'node_modules/space-data-module-sdk/src/invoke/codec.js'));

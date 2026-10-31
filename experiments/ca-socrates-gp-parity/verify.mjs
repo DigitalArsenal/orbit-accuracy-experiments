@@ -32,16 +32,10 @@ try {
   const ed = editionClasses(report, catalog.rows);
   if (ed.matched.size !== ed.objects || ed.mismatched.size || ed.absent.size) throw new Error(`editions: ${ed.matched.size} of ${ed.objects} matched`);
   ok(`editions: all ${ed.objects} SOCRATES objects match`);
-  // The pinned commit's own tree: a private sparse clone of the modules checkout at config.module.commit (its node_modules
-  // linked), so later commits or uncommitted work in the shared checkout cannot change what is verified.
-  const live = modulesRoot(o.modules);
-  const modules = path.join(work, 'modules');
-  const git = (...a) => execFileSync('git', a, { stdio: ['ignore', 'pipe', 'pipe'] });
-  git('clone', '-q', '--shared', '--no-checkout', live, modules);
-  git('-C', modules, 'sparse-checkout', 'set', 'analysis/conjunction-assessment');
-  git('-C', modules, '-c', 'advice.detachedHead=false', 'checkout', '-q', pin.commit);
-  fs.symlinkSync(path.join(live, 'analysis/conjunction-assessment/node_modules'), path.join(modules, 'analysis/conjunction-assessment/node_modules'));
-  const pinned = pinnedModule(modules, work, pin);
+  // The pinned commit's own tree (git archive, its node_modules linked), so later commits or uncommitted work in the shared
+  // checkout cannot change what is verified.
+  const pinned = pinnedModule(modulesRoot(o.modules), work, pin);
+  const modules = pinned.root;
   ok(`module ${pin.commit.slice(0, 10)} ${pin.version} ${pinned.wasmSha256.slice(0, 12)}`);
   const cqr = await importFile(path.join(modules, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
   const flatc = await cqr.initCqrFlatc();
@@ -79,6 +73,13 @@ try {
   const digest = sha256(canon.map((r) => r.join(',')).join('\n'));
   if (canon.length !== replay.events || digest !== replay.digest) throw new Error(`unit 0: ${canon.length} events, digest ${digest}; registered ${replay.events}, ${replay.digest}`);
   ok(`unit 0 re-screened: ${canon.length} events, digest ${digest.slice(0, 12)} equals results/${id}/${replayFile}`);
+  // 4 (Amendment A3): the fabricated listing, through the real compare.mjs and compare-a1.mjs.
+  if (o.amendment === 'A3') {
+    const proof = JSON.parse(execFileSync(process.execPath, [path.join(here, 'listing-proof.mjs')], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 1 << 26 }));
+    const storedProof = JSON.parse(fs.readFileSync(path.join(repo, 'results', id, 'listing-proof.a3.json'), 'utf8'));
+    if (JSON.stringify(proof) !== JSON.stringify(storedProof)) throw new Error('the fabricated listing differs from results/.../listing-proof.a3.json');
+    ok(`fabricated listing: ${proof.compare.found} of ${proof.compare.reference} found, ${proof.compare.misses} misses counted, none excused; an excused encounter SOCRATES lists is a miss in comparison (i)`);
+  }
 } finally {
   fs.rmSync(work, { recursive: true, force: true });
 }

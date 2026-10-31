@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { NOT_SAMPLED } from './common.mjs';
 
 const job = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const load = (file) => import(pathToFileURL(file).href);
@@ -170,7 +171,7 @@ async function screenWindow(index, cursor, durationDays) {
     for (const e of result.EVENTS ?? []) events.push(event(e));
     for (const f of r.outputs.filter((o) => o.portId === 'excluded')) {
       const omm = JSON.parse(flatc.generateJSON(ommSchema, { path: '/omm.bin', data: f.payload }, { defaultsJson: true }));
-      excluded.push(Number(omm.NORAD_CAT_ID));
+      excluded.push({ norad: Number(omm.NORAD_CAT_ID), comment: omm.COMMENT ?? null });
     }
     if (result.FINAL_CHUNK) {
       const st = result.STATISTICS;
@@ -211,7 +212,7 @@ try {
     process.send?.({ progress: `unit ${u.unit}: index ${(built.bytes.length / 1048576).toFixed(0)} MiB encoded in ${(encodeMs / 1000).toFixed(1)} s, prepared in ${((prepareMs - encodeMs) / 1000).toFixed(1)} s` });
     // The console's windows (analysisWorker.ts:94-136).
     const windowDays = 0.5 / 24, overlapDays = s.coarseStepSeconds / 86400, endJd = job.window.startJd + job.window.durationDays;
-    const byId = new Map(), moduleExcluded = new Set(), failures = [];
+    const byId = new Map(), moduleListed = new Map(), failures = [];
     let windows = 0, failedPairs = 0;
     const span = async (cursor, durationDays) => {
       try {
@@ -234,7 +235,7 @@ try {
       if (windows % job.progressWindows === 0) process.send?.({ progress: `unit ${u.unit}: ${windows} windows, ${byId.size} events, ${((performance.now() - t0 - prepareMs - sampleMs) / 1000).toFixed(1)} s in windows` });
       failedPairs += Number(r.stats?.FAILED_PAIRS ?? 0);
       for (const e of r.events) byId.set(e.id, e);
-      for (const n of r.excluded) moduleExcluded.add(n);
+      for (const x of r.excluded) moduleListed.set(`${x.norad}|${x.comment}`, x);
     }
     await harness.invoke({ methodId: 'destroy_screening_index', inputs: cqrIn(cqr.encodeCqr(flatc, { DESTROY_REQUEST: {
       INSTANCE: { MODULE_ID: index.instance.moduleId, INSTANCE_ID: index.instance.instanceId, GENERATION: index.instance.generation }, SCREENING_INDEX_HANDLE: index.handle } })) });
@@ -242,7 +243,7 @@ try {
     const answer = { unit: u.unit, slice: 0, block: u.block, batch: u.batch, startJd: job.window.startJd, durationSeconds: job.window.durationDays * 86400,
       index: { sources: kept.length, primaries: primaryHandles.length, sourceCount: index.sourceCount, candidatePairs: index.candidatePairs },
       windows, found: events.length, failures, failedPairs, sampleMs, prepareMs, elapsedMs: performance.now() - t0, skippedCoincident: skipped,
-      excluded: [...new Set([...failed, ...moduleExcluded])].map((n) => ({ norad: n, comment: failed.includes(n) ? 'propagator/sgp4 could not sample it over the window' : 'excluded by the module' })), events };
+      excluded: [...new Set(failed)].map((n) => ({ norad: n, comment: NOT_SAMPLED })).concat([...moduleListed.values()]), events };
     fs.writeFileSync(`${out}.part`, `${JSON.stringify(answer)}\n`);
     fs.renameSync(`${out}.part`, out);
     process.send?.({ unit: u.unit, block: u.block, events: events.length, elapsedMs: answer.elapsedMs, sampleMs, prepareMs, windows, excluded: answer.excluded.length, failures: failures.length });

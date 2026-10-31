@@ -597,3 +597,150 @@ supported or not.
 3. `report.mjs --amendment A2 …`.
 4. `verify.mjs --amendment A2`, the E2E: it re-screens A2's unit 0 against
    `replay.a2.json`.
+
+## Amendment A3, 2026-10-31: Parts 1, 2 and 3 again, on CA 0.17.0
+
+Task `experiments-ca-validation-on-0-17-20261031`. Owner, 2026-10-29: "the
+conjunction assessment validated", and "we're not missing any". Registered on
+origin `wip/experiments-ca-validation-on-0-17-20261031/registration` before any
+result on this build exists.
+
+**Reason.** A2 passed on CA 0.12.0, and Part 3 last ran on 0.9.0. The build to
+publish is CA 0.17.0. Between them:
+
+- 0.13.0: an object SGP4 refuses part-way through a call is screened up to its
+  last valid instant.
+- 0.14.0: partial coverage of a sampled source.
+- 0.15.0: slow Pc.
+- 0.16.0: the memory budget and chunked fallback.
+- 0.17.0: a CSM for covariance events.
+
+Nothing has re-proved that these left recall and geometry intact. The console
+flies `screen_window`, Part 3's path, so a build unproven there is unproven on
+the console's own path.
+
+**The rules do not change.** The SOCRATES report, the window, the catalog
+(`$OMM` stream `2842351b…`), the population, the ranked primaries, the parts
+and blocks, production settings, matching, merging, the edge rule, classes,
+bands, tolerances, A0, the A1 rules and the A2 secondary verdict all stand.
+
+**What changes.**
+
+1. **The CA build.** `analysis/conjunction-assessment` 0.17.0 at modules
+   `fbda894501f32210b77c74b53bcad036ce7a1b07`, `dist/isomorphic/module.wasm`
+   SHA-256 `0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a`
+   (the same blob at modules main `cfd7ee626`). `cqr.mjs`,
+   `conjunctionCommandHarness.mjs`, `wasmedgeWasiThreadsRunner.mjs` and
+   `caParityTolerances.mjs` are byte-identical to A2's, so the gated tolerances
+   are the registered ones. Packages are unchanged.
+2. **Part 3's console arm samples with propagator/sgp4 1.4.1**, isomorphic
+   artifact SHA-256
+   `2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643`, at the
+   same commit. A1 registered 1.3.1 (`d9fdd057…`) as the console's source. It no
+   longer is: OrbPro main `e199dbb` pins modules `cfd7ee626`, CA 0.17.0 and
+   propagator/sgp4 1.4.1. 1.3.1 runs in improved mode and 1.4.1 in AFSPC mode,
+   as CA does, and the two differ by up to 4.2 km on low-inclination,
+   node-crossing deep-space sets. The purpose of the arm is to prove what the
+   console will fly, so it pairs what the console pairs (coordinator's ruling,
+   2026-10-31). This is a second change beside the build, stated here because
+   it is one.
+3. **The harness, for how CA 0.13.0 and later report an object.** The `excluded`
+   port now lists an object screened in part as well as one excluded, once per
+   call, in a fixed COMMENT form (the module's README, "Objects screened in part
+   or excluded"). The old harness read every record as "excluded":
+   - `compare.mjs` keeps every row in its denominator, as registered, so it
+     could not give a false pass, but it labeled a miss "object excluded" for an
+     object still screened at the row's TCA. A listing now labels a miss only
+     when it says the object was not screened at that TCA.
+   - `compare-a1.mjs` excused a one-arm encounter of any listed object. Rule (ii)
+     is about the console path's own skip, so now only that excuses; a record of
+     the module's port does not.
+   - `console-worker.mjs` wrote "excluded by the module" over the module's own
+     COMMENT; it now keeps it. `report.mjs` worded every record "SGP4 could not
+     propagate them"; it now reports each form and reason.
+   - A COMMENT of no known form stops `compare.mjs`. It is never read as an
+     exclusion.
+
+   `listing-proof.mjs` proves this by a fabricated listing through the real
+   `compare.mjs` and `compare-a1.mjs`, and is part of the E2E.
+4. **Registration and checkout.** Other lanes have running code and unlanded work
+   in the shared checkouts. So the run works in a `git archive` snapshot of
+   origin/main, the guard compares the sources with the registration commit on
+   origin (`EXPERIMENTS_GIT` names the git store), and host files come from
+   `git archive` at the pinned commit with the installed packages linked
+   read-only. `verify.mjs` no longer clones.
+5. **Compute.** 4 processes × 4 threads under `nice -n 10`, where A2 had 7 × 4. The
+   threads per call are the registered 4, and the process count enters no result.
+   The screen starts only when the 1-minute load is below 45, because a registered
+   test elsewhere pauses above that. If 4 processes hold the load above 45, the run
+   resumes from its finished units on 2 processes, and the report says so.
+
+**Order.** Part 1, Part 2, the comparison and the answer first. Then Part 3, once
+its cost has been measured on 0.17.0 by a probe of one unit and given to the
+coordinator; over about 2 h it does not start without a word.
+
+**Part 3 under this build.** Parts 1 and 2's rules for comparison (i), and A1's for
+comparison (ii), unchanged:
+
+- The console arm samples the true UTC window. The console today starts 37 s late
+  (`ui-ca-window-utc-time-scale-20261031`, being fixed), so the arm tests the
+  console as it will be after that fix.
+- The console's `modes/cnj` code on UI main `28638614` has no difference from
+  `88a29fc5`, the revision A1 read.
+- A1 explains the ungated console geometry by "a different SGP4 implementation".
+  On this build both sides are `sgp4-str3` in AFSPC mode, and what remains is
+  Hermite interpolation of 60 s samples. The gate stays encounter-set equality.
+- **Excuses.** Comparison (ii) excuses one-arm encounters under A1's three rules.
+  The report gives each rule's count, every excused row, the threshold rule's width
+  per band, and whether SOCRATES lists the row. Comparison (i) has no excuse path: a
+  SOCRATES row the arm lacks is a miss whatever (ii) says. `compare-a1.mjs` stops if
+  an excused encounter SOCRATES lists is neither found, a miss nor an edge row in (i).
+- **Rule (ii) is also a finding.** Part 1 on this build reports an object's encounters
+  up to its refusal, while the console skips an object it cannot sample to the span's
+  end, for the whole span. Those are real encounters the console does not show. The
+  report gives the objects, the count and the rows, as a console defect.
+
+**Verdicts, reported side by side, as in A2.**
+
+- **Primary, the registered rule unchanged.** Recall = 1.0 over the primary class,
+  both bands, rows at a window edge apart. Every matched primary-class event within
+  the gated tolerances.
+- **Secondary, as A2 declared it.**
+
+**Expectation, not a rule.** Every event of the A2 run recurs with identical TCA, miss
+and speed. The only new events belong to objects listed as screened in part. The same
+41 objects are on the port, and no new one.
+
+**Reporting.** As A2, plus:
+
+- every call answered `incomplete-screening`, with its failed pairs as the module now
+  names them;
+- objects on the port by form and by reason, beside the 0.12.0 list;
+- what moved between builds, event by event (`diff-builds.mjs`): against the A2 run for
+  Parts 1 and 2, against the 0.9.0 arms for Part 3, where the SGP4 differs, so values may
+  move and an encounter that appears or disappears is the result to read;
+- the 0.9.0 and 0.12.0 rows beside this one. The 0.12.0 report stays as
+  `README-0.12.0.md`.
+
+A difference is a result. Any miss, any event beyond a tolerance or any new exclusion
+goes to the coordinator with its rows' identifiers, and no rule is amended to pass.
+
+**Disclosure.** Before this registration, with this harness on 0.17.0: one probe unit
+each of Part 1, the console arm and the descriptions arm, one thread, in the probe week
+after the window (A1's Part 3 probe rules), and `compare.mjs --dev`, `diff-builds.mjs` and
+`report.mjs --dev` on that probe. They read no SOCRATES event and no registered slice.
+`listing-proof.mjs` ran on invented events, reading one SOCRATES row of the A0 to
+A2 runs' report as its fabricated excuse. A2 and A0's results on this report are known.
+
+**Steps.** With `EXPERIMENTS_GIT` and `SDN_MODULES_ROOT` set when working in a snapshot:
+
+1. `screen.mjs --amendment A3 --part 1`, then `--amendment A3 --part 2 --run <id>`.
+2. `compare.mjs --amendment A3 --run … --parts 1,2`; `diff-builds.mjs --run … --baseline
+   <A2 run> --parts 1,2 --version 0.12.0 --out <run>/moved.full.json`.
+3. The answer goes to the coordinator.
+4. `part3.mjs --amendment A3 --arm console --probe …` for the cost, then `--arm console` and
+   `--arm descriptions --run <id>`; `compare.mjs --amendment A3 --run <arm dir> --parts 1`,
+   `compare-a1.mjs --run <id> --arm …`, and `diff-builds.mjs` against each 0.9.0 arm.
+5. `listing-proof.mjs > <run>/listing-proof.json`; `report.mjs --amendment A3 --run … --tag full`.
+6. `verify.mjs --amendment A3`, the E2E: inputs, unit 0 against `replay.a3.json`, the
+   fabricated listing against `listing-proof.a3.json`.

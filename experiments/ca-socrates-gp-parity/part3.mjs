@@ -12,10 +12,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { fork, execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
-import { config, repo, id, here, sha256, frozenPlan, modulesRoot, pinnedModule, readCatalog, readSatcat, ommBytes, importFile, jdToIso } from './common.mjs';
+import { config, a3, repo, id, here, sha256, frozenPlan, registeredFile, modulesRoot, pinnedModule, pinnedTree, modulePin, readCatalog, readSatcat, ommBytes, importFile, jdToIso } from './common.mjs';
 
 const { values: o } = parseArgs({ options: {
-  arm: { type: 'string' }, run: { type: 'string' }, modules: { type: 'string' }, probe: { type: 'boolean', default: false }, out: { type: 'string' },
+  arm: { type: 'string' }, run: { type: 'string' }, amendment: { type: 'string' }, modules: { type: 'string' }, probe: { type: 'boolean', default: false }, out: { type: 'string' },
   hours: { type: 'string' }, units: { type: 'string' }, blocks: { type: 'string' }, processes: { type: 'string' }, threads: { type: 'string' },
 } });
 const A1 = JSON.parse(fs.readFileSync(path.join(here, 'config.a1.json'), 'utf8'));
@@ -23,23 +23,20 @@ const arm = A1.arms[o.arm];
 if (!arm) throw new Error(`--arm must be one of ${Object.keys(A1.arms).join(', ')}`);
 const log = (m) => process.stderr.write(`${new Date().toISOString()} ${m}\n`);
 const gitIn = (dir, ...a) => execFileSync('git', ['-C', dir, ...a], { maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'pipe'] });
-// Registered: Part 1's guard, and Part 3's own sources committed and pushed with A1.
+// Registered: Part 1's guard, and Part 3's own sources in the same registration. Amendment A3 pins the build; A1's rules stand.
+if (o.amendment !== a3.amendment) throw new Error(`Part 3 runs under Amendment ${a3.amendment}: pass --amendment ${a3.amendment}`);
+const pin = modulePin(o.amendment), sgp4Pin = a3.sgp4Module;
 let plan = null;
 if (!o.probe) {
   plan = frozenPlan();
-  for (const f of A1.runSources) {
-    const rel = `experiments/${id}/${f}`;
-    let committed;
-    try { committed = gitIn(repo, 'show', `HEAD:${rel}`); } catch { throw new Error(`${rel} is not committed`); }
-    if (!committed.equals(fs.readFileSync(path.join(here, f)))) throw new Error(`${rel} differs from HEAD`);
-  }
+  for (const f of A1.runSources) registeredFile(plan.experimentCommit, f);
   if (!fs.readFileSync(path.join(here, 'PLAN.md'), 'utf8').includes('## Amendment A1')) throw new Error('PLAN.md lacks Amendment A1');
   if (!o.run) throw new Error('--run <part-1-run-id> is required');
 }
 if (o.probe && !o.out) throw new Error('a probe needs --out');
 const startedAt = new Date().toISOString(), loadStart = os.loadavg();
 const s = config.screen;
-const processes = Number(o.processes ?? A1.processes), threads = Number(o.threads ?? A1.threadsPerProcess);
+const processes = Number(o.processes ?? a3.compute.processes), threads = Number(o.threads ?? a3.compute.threadsPerProcess);
 const durationDays = o.probe ? Number(o.hours ?? 1) / 24 : arm.hours / 24;
 if (!o.probe && !(arm.hours > 0 && arm.hours * 3600 <= config.window.durationSeconds)) throw new Error('an arm spans the registered window from its start, or its first part');
 const startJd = o.probe ? config.probe.startJd : config.window.startJd;
@@ -49,16 +46,16 @@ fs.mkdirSync(slicesDir, { recursive: true });
 
 // Inputs: the pinned artifacts, the catalog and Part 1's order.
 const modules = modulesRoot(o.modules);
-const ca = pinnedModule(modules, dir);
-if (A1.caModule.commit !== config.module.commit) throw new Error('A1 pins another CA commit: register its artifact and host files first');
-const showAt = (rel) => gitIn(modules, 'show', `${A1.sgp4Module.commit}:${rel}`);
-const sgp4Wasm = showAt(A1.sgp4Module.wasmPath);
-if (sha256(sgp4Wasm) !== A1.sgp4Module.wasmSha256) throw new Error('propagator/sgp4 artifact differs from the registered one');
-for (const [rel, hash] of Object.entries(A1.sgp4Module.hostFiles)) if (sha256(fs.readFileSync(path.join(modules, rel))) !== hash) throw new Error(`${rel} differs from ${A1.sgp4Module.commit}`);
+const ca = pinnedModule(modules, dir, pin);
+const showAt = (rel) => gitIn(modules, 'show', `${sgp4Pin.commit}:${rel}`);
+const sgp4Wasm = showAt(sgp4Pin.wasmPath);
+if (sha256(sgp4Wasm) !== sgp4Pin.wasmSha256) throw new Error('propagator/sgp4 artifact differs from the registered one');
+pinnedTree(modules, ca.root, sgp4Pin.commit, 'propagator/sgp4');
+for (const [rel, hash] of Object.entries(sgp4Pin.hostFiles)) if (sha256(fs.readFileSync(path.join(ca.root, rel))) !== hash) throw new Error(`${rel} differs from ${sgp4Pin.commit}`);
 fs.writeFileSync(path.join(dir, 'sgp4.module.wasm'), sgp4Wasm);
-fs.writeFileSync(path.join(dir, 'sgp4.plugin-manifest.json'), showAt(A1.sgp4Module.manifestPath));
+fs.writeFileSync(path.join(dir, 'sgp4.plugin-manifest.json'), showAt(sgp4Pin.manifestPath));
 const catalog = readCatalog();
-const cqr = await importFile(path.join(modules, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
+const cqr = await importFile(path.join(ca.root, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
 const flatc = await cqr.initCqrFlatc();
 const ommSchema = cqr.publishedSchema('OMM');
 const records = catalog.rows.map((g) => ommBytes(flatc, ommSchema, g));
@@ -101,7 +98,7 @@ if (o.arm === 'console') {
   window = { startUtc: jdToIso(startJd), startJd, sliceSeconds: durationDays * 86400, slices: 1 };
   const catalogMeta = catalog.rows.map((g) => [Number(g.NORAD_CAT_ID), String(g.OBJECT_ID), String(g.OBJECT_NAME)]);
   const todo = units.filter((u) => !fs.existsSync(path.join(slicesDir, `slice-${String(u.unit).padStart(4, '0')}.json`)));
-  for (let w = 0; w < Math.min(processes, todo.length); w++) jobs.push({ worker: 'console-worker.mjs', job: { modules, caWasm: ca.file, sgp4Wasm: path.join(dir, 'sgp4.module.wasm'),
+  for (let w = 0; w < Math.min(processes, todo.length); w++) jobs.push({ worker: 'console-worker.mjs', job: { modules: ca.root, caWasm: ca.file, sgp4Wasm: path.join(dir, 'sgp4.module.wasm'),
     sgp4Manifest: path.join(dir, 'sgp4.plugin-manifest.json'), ommStream, catalog: catalogMeta, order, plan: samplePlan, window: { startJd, durationDays }, screen: s, threads,
     sampleGroup: A1.sampleGroup, progressWindows: 4, outDir: slicesDir, units: todo.filter((_, n) => n % processes === w) } });
   log(`console: ${K} blocks, ${unitCount} units (batches of ${A1.consoleBatchSize}), ${samplePlan.count} samples from ${samplePlan.startIso}; ${todo.length} to do`);
@@ -115,7 +112,7 @@ if (o.arm === 'console') {
   fs.writeFileSync(catalogJson, JSON.stringify(gps));
   const blocks = Array.from({ length: K }, (_, b) => ({ block: b, p0: b * B, p1: Math.min(N, (b + 1) * B), unitBase: b * windows, windows: Array.from({ length: windows }, (_, k) => k) }));
   unitCount = K * windows;
-  for (let w = 0; w < Math.min(processes, blocks.length); w++) jobs.push({ worker: 'window-worker.mjs', job: { modules, wasmFile: ca.file, catalogJson, screen: s, threads,
+  for (let w = 0; w < Math.min(processes, blocks.length); w++) jobs.push({ worker: 'window-worker.mjs', job: { modules: ca.root, wasmFile: ca.file, catalogJson, screen: s, threads,
     window: { startJd, sliceSeconds }, outDir: slicesDir, blocks: blocks.filter((_, n) => n % processes === w) } });
   log(`descriptions: ${K} blocks x ${windows} windows of ${sliceSeconds} s`);
 }
@@ -145,7 +142,7 @@ const excluded = [...new Map(answers.flatMap((x) => x.excluded).map((e) => [e.no
 const eventsFile = path.join(partDir, 'screen-events.json');
 fs.writeFileSync(eventsFile, `${JSON.stringify(events)}\n`);
 const summary = {
-  experiment: id, mode: o.probe ? 'probe' : 'registered', arm: o.arm, amendment: 'A1', part: 1, window, catalog: { objects: records.length, replaced: catalog.replaced, ommStreamSha256: sha256(stream) },
+  experiment: id, mode: o.probe ? 'probe' : 'registered', arm: o.arm, amendment: 'A1', rerunUnder: o.amendment, part: 1, window, catalog: { objects: records.length, replaced: catalog.replaced, ommStreamSha256: sha256(stream) },
   primaries: { seed: P.seed, eligible: ranked.length, part: 1, from: 0, to: K * B, count: primaries.length, blockSize: B, listSha256: sha256(primaries.join('\n')), blocks: K },
   units: unitCount, events: events.length, excludedObjects: excluded,
   failedCalls: answers.flatMap((x) => (x.failures ?? []).map((f) => ({ unit: x.unit, block: x.block, slice: x.slice, ...f }))),
@@ -158,8 +155,8 @@ fs.writeFileSync(path.join(partDir, 'screen-summary.json'), `${JSON.stringify(su
 const manifest = {
   experiment: id, step: `part3-${o.arm}`, mode: summary.mode, part: 1, run: path.basename(dir), startedAt, finishedAt: new Date().toISOString(), command: [process.execPath, ...process.argv.slice(1)], plan,
   configSha256: sha256(fs.readFileSync(path.join(here, 'config.json'))), a1ConfigSha256: sha256(fs.readFileSync(path.join(here, 'config.a1.json'))),
-  module: { commit: ca.commit, path: config.module.wasmPath, wasmSha256: ca.wasmSha256, packages: ca.packages },
-  sgp4Module: o.arm === 'console' ? { commit: A1.sgp4Module.commit, path: A1.sgp4Module.wasmPath, wasmSha256: A1.sgp4Module.wasmSha256 } : null,
+  module: { commit: ca.commit, path: pin.wasmPath, version: pin.version, wasmSha256: ca.wasmSha256, packages: ca.packages },
+  sgp4Module: o.arm === 'console' ? { commit: sgp4Pin.commit, path: sgp4Pin.wasmPath, version: sgp4Pin.version, wasmSha256: sgp4Pin.wasmSha256 } : null,
   runtime: { node: process.version, platform: `${os.platform()} ${os.release()} ${os.arch()}`, cpus: os.availableParallelism(), loadAverageStart: loadStart, loadAverageEnd: os.loadavg() },
   outputs: { 'screen-events.json': sha256(fs.readFileSync(eventsFile)), 'screen-summary.json': sha256(fs.readFileSync(path.join(partDir, 'screen-summary.json'))), 'primaries.json': sha256(fs.readFileSync(path.join(partDir, 'primaries.json'))) },
 };

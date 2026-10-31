@@ -16,34 +16,44 @@ export const DAY_S = 86400;
 export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 export const importFile = (file) => import(pathToFileURL(file).href);
 const gitIn = (dir, ...args) => execFileSync('git', ['-C', dir, ...args], { maxBuffer: 256 << 20, stdio: ['ignore', 'pipe', 'pipe'] });
+// The git store of this repository: the checkout, or EXPERIMENTS_GIT when the run works in a snapshot outside it.
+export const gitStore = (...args) => gitIn(process.env.EXPERIMENTS_GIT ?? repo, ...args);
 
 // The files that define a registered run; report.mjs only reads a run's outputs.
-export const RUN_SOURCES = ['PLAN.md', 'config.json', 'config.a2.json', 'common.mjs', 'screen.mjs', 'worker.mjs', 'compare.mjs'];
+export const RUN_SOURCES = ['PLAN.md', 'config.json', 'config.a2.json', 'config.a3.json', 'common.mjs', 'screen.mjs', 'worker.mjs', 'compare.mjs'];
 
 // Amendment A2 (PLAN.md): Parts 1 and 2 again on another pinned CA artifact; nothing else changes.
 export const a2 = JSON.parse(fs.readFileSync(path.join(here, 'config.a2.json'), 'utf8'));
+// Amendment A3 (PLAN.md): Parts 1 and 2 again, then Part 3, on the build to publish.
+export const a3 = JSON.parse(fs.readFileSync(path.join(here, 'config.a3.json'), 'utf8'));
 export function modulePin(amendment) {
   if (amendment == null) return config.module;
   if (amendment === 'A2') return a2.module;
+  if (amendment === 'A3') return a3.module;
   throw new Error(`unknown amendment ${amendment}`);
 }
 
-// Registration is machine-enforced: the plan, configuration and run sources equal their committed content and the
-// plan's commit is on origin/main before a registered run screens the SOCRATES window or reads its events.
+// Registration is machine-enforced: the plan, configuration and run sources equal their content at the registration
+// commit (Amendment A3), and that commit is on origin, before a registered run screens the SOCRATES window or reads its events.
 export function frozenPlan() {
   if (config.frozen !== true) throw new Error('config.json is not frozen; refusing the registered window');
+  const ref = a3.registration.ref;
+  const experimentCommit = gitStore('rev-parse', `refs/remotes/origin/${ref}`).toString().trim();
+  const onOrigin = gitStore('ls-remote', 'origin', `refs/heads/${ref}`).toString().split(/\s/)[0];
+  if (onOrigin !== experimentCommit) throw new Error(`origin ${ref} is ${onOrigin}, not ${experimentCommit}; push the registration first`);
   const sourceHashes = {};
-  for (const file of RUN_SOURCES) {
-    const rel = `experiments/${id}/${file}`;
-    const bytes = fs.readFileSync(path.join(here, file));
-    let committed;
-    try { committed = gitIn(repo, 'show', `HEAD:${rel}`); } catch { throw new Error(`${rel} is not committed`); }
-    if (!committed.equals(bytes)) throw new Error(`${rel} differs from HEAD; commit it before the run`);
-    sourceHashes[file] = sha256(bytes);
-  }
-  const planCommit = gitIn(repo, 'log', '-1', '--format=%H', '--', `experiments/${id}/PLAN.md`).toString().trim();
-  try { gitIn(repo, 'merge-base', '--is-ancestor', planCommit, 'origin/main'); } catch { throw new Error(`plan commit ${planCommit} is not on origin/main; push PLAN.md first`); }
-  return { planCommit, sourceHashes, experimentCommit: gitIn(repo, 'rev-parse', 'HEAD').toString().trim() };
+  for (const file of RUN_SOURCES) sourceHashes[file] = sha256(registeredFile(experimentCommit, file));
+  const planCommit = gitStore('log', '-1', '--format=%H', experimentCommit, '--', `experiments/${id}/PLAN.md`).toString().trim();
+  return { planCommit, sourceHashes, experimentCommit };
+}
+// This folder's file, which must equal its content at the registration commit.
+export function registeredFile(commit, file) {
+  const rel = `experiments/${id}/${file}`;
+  const bytes = fs.readFileSync(path.join(here, file));
+  let committed;
+  try { committed = gitStore('show', `${commit}:${rel}`); } catch { throw new Error(`${rel} is not in the registration ${commit}`); }
+  if (!committed.equals(bytes)) throw new Error(`${rel} differs from the registration ${commit}`);
+  return bytes;
 }
 
 // ---- the modules checkout, pinned by commit -----------------------------------------------------------------
@@ -54,26 +64,80 @@ export function modulesRoot(flag) {
   return root;
 }
 
-// The screen's artifact is read from the registered commit (git show), never from the working tree, and its
-// SHA-256 must be the registered one. The host-side helpers the run imports from the module's tests/lib must equal
-// their content at that commit too; the installed packages are recorded.
-export function pinnedModule(modules, workDir, pin = config.module) {
-  const m = pin;
-  const wasm = gitIn(modules, 'show', `${m.commit}:${m.wasmPath}`);
-  if (sha256(wasm) !== m.wasmSha256) throw new Error(`${m.wasmPath} at ${m.commit} is ${sha256(wasm)}, not ${m.wasmSha256}`);
-  for (const [rel, hash] of Object.entries(m.hostFiles)) {
-    const live = fs.readFileSync(path.join(modules, rel));
-    if (sha256(live) !== hash) throw new Error(`${rel} in the modules checkout differs from ${m.commit}`);
+// The artifact is read with git show at the registered commit, never from the working tree, and its SHA-256 must be the
+// registered one. The host helpers come from git archive at that commit into workDir/modules (no clone, no worktree), with the
+// checkout's installed packages linked read-only: later commits or uncommitted work in the shared checkout cannot change what
+// runs. The helpers' hashes and the packages' versions must be the registered ones.
+export function pinnedTree(checkout, root, commit, tree) {
+  fs.mkdirSync(root, { recursive: true });
+  if (!fs.existsSync(path.join(root, tree))) {
+    execFileSync('tar', ['-x', '-C', root], { input: gitIn(checkout, 'archive', commit, tree), maxBuffer: 256 << 20 });
+    fs.symlinkSync(path.join(checkout, tree, 'node_modules'), path.join(root, tree, 'node_modules'));
   }
-  fs.mkdirSync(workDir, { recursive: true });
+  return root;
+}
+export function pinnedModule(checkout, workDir, pin = config.module) {
+  const m = pin;
+  const wasm = gitIn(checkout, 'show', `${m.commit}:${m.wasmPath}`);
+  if (sha256(wasm) !== m.wasmSha256) throw new Error(`${m.wasmPath} at ${m.commit} is ${sha256(wasm)}, not ${m.wasmSha256}`);
+  const root = pinnedTree(checkout, path.join(workDir, 'modules'), m.commit, 'analysis/conjunction-assessment');
+  for (const [rel, hash] of Object.entries(m.hostFiles)) {
+    if (sha256(fs.readFileSync(path.join(root, rel))) !== hash) throw new Error(`${rel} at ${m.commit} is not the registered file`);
+  }
   const file = path.join(workDir, 'conjunction-assessment.module.wasm');
   fs.writeFileSync(file, wasm);
-  const ca = path.join(modules, 'analysis/conjunction-assessment');
+  const ca = path.join(root, 'analysis/conjunction-assessment');
   const packages = Object.fromEntries(['space-data-module-sdk', 'spacedatastandards.org', 'flatbuffers', 'flatc-wasm']
     .map((p) => [p, JSON.parse(fs.readFileSync(path.join(ca, 'node_modules', p, 'package.json'), 'utf8')).version]));
   for (const [p, v] of Object.entries(m.packages)) if (packages[p] !== v) throw new Error(`${p} is ${packages[p]}, registered ${v}`);
-  return { file, wasmSha256: m.wasmSha256, commit: m.commit, packages };
+  return { file, wasmSha256: m.wasmSha256, commit: m.commit, packages, root };
 }
+
+// ---- the excluded port -----------------------------------------------------------------------------------------
+
+// The console arm's own record of an object propagator/sgp4 could not sample over the span (the console skips it).
+export const NOT_SAMPLED = 'propagator/sgp4 could not sample it over the window';
+
+// One record of the module's `excluded` port, read from its COMMENT, the contract of CA 0.13.0 and later (the module's
+// README, "Objects screened in part or excluded"). The port lists an object screened in part as well as one excluded, so
+// a listed object is not an excluded object. A COMMENT of no known form stops the run: it is never read as an exclusion.
+const ISO = '(\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z)';
+const COVERAGE = `COVERAGE_START=${ISO}; COVERAGE_END=${ISO}$`;
+const coverage = (m) => ({ coverageStart: m[1], coverageEnd: m[2] });
+const FORMS = [
+  ['refused-from-start', new RegExp(`^Excluded from conjunction screening; SGP4 refuses it from the window start\\. LAST_VALID=NONE; FIRST_REFUSAL=${ISO}; REFUSAL=([\\s\\S]+)$`), (m) => ({ firstRefusal: m[1], refusal: m[2] })],
+  ['refused-part-way', new RegExp(`^Screened until LAST_VALID; SGP4 refuses it from FIRST_REFUSAL\\. LAST_VALID=${ISO}; FIRST_REFUSAL=${ISO}; REFUSAL=([\\s\\S]+)$`), (m) => ({ lastValid: m[1], firstRefusal: m[2], refusal: m[3] })],
+  ['no-coverage', new RegExp(`^Excluded from conjunction screening; its trajectory does not cover the window\\. ${COVERAGE}`), coverage],
+  ['coverage-ends', new RegExp(`^Screened until COVERAGE_END; its trajectory ends inside the window\\. ${COVERAGE}`), coverage],
+  ['coverage-starts', new RegExp(`^Screened from COVERAGE_START; its trajectory starts inside the window\\. ${COVERAGE}`), coverage],
+  ['coverage-part', new RegExp(`^Screened from COVERAGE_START until COVERAGE_END; its trajectory covers part of the window\\. ${COVERAGE}`), coverage],
+];
+export function parseListing(comment) {
+  if (comment === NOT_SAMPLED) return { form: 'not-sampled' };
+  for (const [form, pattern, fields] of FORMS) {
+    const m = pattern.exec(comment ?? '');
+    if (m) return { form, ...fields(m) };
+  }
+  throw new Error(`an excluded record of no known form: ${comment}`);
+}
+
+// Whether the listing says its object was not screened at this Julian date, inside the listing's own call. Before
+// LAST_VALID (or inside its coverage) the object was screened.
+export function notScreenedAt(listing, jd) {
+  const ms = (jd - 2440587.5) * DAY_S * 1000;
+  switch (listing.form) {
+    case 'refused-part-way': return ms >= Date.parse(listing.firstRefusal);
+    case 'coverage-ends': case 'coverage-starts': case 'coverage-part': return ms < Date.parse(listing.coverageStart) || ms > Date.parse(listing.coverageEnd);
+    default: return true;
+  }
+}
+export const listingWords = (l) => ({
+  'refused-from-start': `SGP4 refuses it from the call's start (${l.refusal})`,
+  'refused-part-way': `SGP4 refuses it from ${l.firstRefusal} (${l.refusal})`,
+  'no-coverage': 'its trajectory does not cover the call',
+  'coverage-ends': `its trajectory ends at ${l.coverageEnd}`, 'coverage-starts': `its trajectory starts at ${l.coverageStart}`, 'coverage-part': `its trajectory covers ${l.coverageStart} to ${l.coverageEnd}`,
+  'not-sampled': 'the console path could not sample it over the span',
+}[l.form]);
 
 // ---- time bookkeeping -----------------------------------------------------------------------------------------
 

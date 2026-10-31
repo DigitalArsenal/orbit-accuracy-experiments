@@ -7,13 +7,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { repo, id, sha256, config, a2 } from './common.mjs';
+import { repo, id, sha256, config, a2, a3 } from './common.mjs';
 
 const { values: o } = parseArgs({ options: { run: { type: 'string' }, tag: { type: 'string', default: 'full' }, dev: { type: 'boolean', default: false }, out: { type: 'string' }, amendment: { type: 'string' } } });
-// --amendment A2: the run is Amendment A2's; its files carry the prefix a2- and its report becomes README.md, the
-// 0.9.0 report kept beside it as README-0.9.0.md.
+// --amendment A2 or A3: the run is that amendment's; its files carry the prefix a2- or a3- and its report becomes README.md,
+// the report before it kept beside it (README-0.9.0.md, README-0.12.0.md).
 const amend = o.amendment ?? null, prefix = amend ? `${amend.toLowerCase()}-` : '';
-if (amend && amend !== 'A2') throw new Error(`unknown amendment ${amend}`);
+if (amend && !['A2', 'A3'].includes(amend)) throw new Error(`unknown amendment ${amend}`);
 // --dev renders a dev comparison (metrics.dev-<tag>.json) into --out, never into results/.
 const dir = path.resolve(o.run);
 const read = (f) => fs.readFileSync(path.join(dir, f));
@@ -39,6 +39,14 @@ const manifest = { experiment: id, run: m.run, tag: m.tag, plan: m.plan, screens
   compare: { finishedAt: m.runtime.finishedAt, node: m.runtime.node, outputs: Object.fromEntries(['metrics', 'extras', 'matches'].map((k) => [`${k}.${tagFile}.json`, sha256(read(`${k}.${tagFile}.json`))])) } };
 fs.writeFileSync(path.join(out, `manifest.${prefix}${m.tag}.json`), `${JSON.stringify(manifest, null, 2)}\n`);
 
+// Amendment A3: what moved between builds and the fabricated listing, copied beside the metrics (diff-builds.mjs, listing-proof.mjs).
+const movedFile = (name) => { const f = path.join(dir, name); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+const moved = amend === 'A3' ? { full: movedFile('moved.full.json'), console: movedFile('moved.console.json'), descriptions: movedFile('moved.descriptions.json') } : {};
+const proof = amend === 'A3' ? JSON.parse(read('listing-proof.json')) : null;
+if (amend === 'A3') {
+  for (const [k, v] of Object.entries(moved)) if (v) fs.writeFileSync(path.join(out, `moved.a3-${k}.json`), `${JSON.stringify(v, null, 2)}\n`);
+  fs.writeFileSync(path.join(out, 'listing-proof.a3.json'), `${JSON.stringify(proof, null, 2)}\n`);
+}
 // ---- README ---------------------------------------------------------------------------------------------------
 const f = (x, d = 3) => (x === null || x === undefined ? '–' : typeof x === 'number' ? (Math.abs(x) >= 1000 ? x.toLocaleString('en-US', { maximumFractionDigits: 0 }) : x.toPrecision(d)) : String(x));
 const pct = (r) => (r.reference ? `${r.found.toLocaleString('en-US')} / ${r.reference.toLocaleString('en-US')} (${(100 * r.recall).toFixed(r.recall === 1 ? 0 : 3)} %)` : '–');
@@ -50,8 +58,14 @@ const ann = fs.existsSync(annFile) ? JSON.parse(fs.readFileSync(annFile, 'utf8')
 const annLabel = new Map((ann?.misses.rows ?? []).map((r) => [`${r.pair.join('-')}|${r.socratesTcaUtc}`, r.label]));
 if (ann) fs.writeFileSync(path.join(out, `annotations.${m.tag}.json`), `${JSON.stringify({ ...ann, misses: { ...ann.misses, rows: ann.misses.rows.map(({ perRow, ...r }) => ({ ...r, fullRangeM: perRow?.full ?? null, caRangeM: perRow?.ca ?? null })) }, tailNotAttributable: ann.tailNotAttributable.map(({ perRow, ...r }) => r) }, null, 2)}\n`);
 L.push(`# CA-SOCRATES results: our screen against one full SOCRATES run, GP on GP`, '');
-// The headline in plain words first (Amendment A2's run), computed from the metrics.
-if (amend) {
+// The headline in plain words first (the amendment's run), computed from the metrics.
+if (amend === 'A3') {
+  const p = m.recall.primary.all, g = m.geometry.primary, yes = p.found === p.reference && m.misses.length === 0;
+  L.push(`**Does CA ${m.module.version}, the build to publish, find every SOCRATES event, GP on GP? ${yes ? 'Yes' : 'No'}.** ${yes
+    ? `${p.found.toLocaleString('en-US')} of ${p.reference.toLocaleString('en-US')} GP-on-GP events found, 0 misses in any class, and every matched GP-on-GP event within the registered tolerances, |Δmiss| at most ${f(g.missM.max)} m, |Δspeed| at most ${f(g.speedMS.max)} m/s.`
+    : `${p.found.toLocaleString('en-US')} of ${p.reference.toLocaleString('en-US')} GP-on-GP events found, ${m.misses.length} misses in all classes.`}`, '',
+    `CelesTrak SOCRATES Plus, the full report of the run starting 2026-10-28T17:00Z (193,952 events over 7 days), against our production screen (\`screen_catalog\`, CA ${m.module.version}) on the same GP editions, the same population and the same window. The earlier results are in [README-0.12.0.md](README-0.12.0.md) and [README-0.9.0.md](README-0.9.0.md).`, '');
+} else if (amend) {
   const baseMisses = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.metrics), 'utf8')).misses.length;
   const p = m.recall.primary.all, g = m.geometry.primary;
   const headline = p.found === p.reference && m.misses.length === 0
@@ -63,8 +77,49 @@ L.push(`Plan: [PLAN.md](../../experiments/${id}/PLAN.md) (commit \`${m.plan?.pla
 const v = m.verdict;
 L.push(`**Coverage: ${v.coverage}.**${m.full ? '' : ' This is a subset of the population, not the whole of it.'}`, '');
 L.push(`**Verdict: ${v.status}.** Recall over the primary class: ${pct(m.recall.primary.all)}, ${v.recall.status}. Geometry within the registered tolerances: ${v.geometry.status} (beyond tolerance: NLRV TCA ${v.geometry.beyondTolerance.tcaNlrv}, miss ${v.geometry.beyondTolerance.miss}, speed ${v.geometry.beyondTolerance.speed}).`, '');
+// ---- Amendment A3: both verdicts, the builds side by side, what moved and the excluded port ------------------------
+if (amend === 'A3') {
+  const readRepo = (x) => JSON.parse(fs.readFileSync(path.join(repo, x), 'utf8'));
+  const base = readRepo(a3.baseline.metrics), base9 = readRepo(a3.baseline090.metrics);
+  const sv = m.secondary.verdict, mv = moved.full, ls = m.screen.listings;
+  if (!o.dev) for (const sc of readRepo(a3.baseline.manifest).screens) if (mv.baselineEventsSha256[`part${sc.part}`] !== sc.outputs['screen-events.json']) throw new Error(`part ${sc.part}: the baseline events are not the A2 run's`);
+  L.push(`**Amendment A3: CA ${m.module.version} (\`${m.module.commit.slice(0, 9)}\`, SHA-256 \`${m.module.wasmSha256.slice(0, 12)}…\`), Parts 1 and 2 unchanged, then Part 3.** The rules are the registered ones.`, '');
+  L.push('| Verdict | Rule | Recall over the primary class | Geometry | Status |', '| --- | --- | --- | --- | --- |');
+  L.push(`| Primary | registered, unchanged | ${pct(m.recall.primary.all)} | beyond tolerance: NLRV TCA ${m.verdict.geometry.beyondTolerance.tcaNlrv}, miss ${m.verdict.geometry.beyondTolerance.miss}, speed ${m.verdict.geometry.beyondTolerance.speed} | **${m.verdict.status}** |`);
+  L.push(`| Secondary | ${a2.secondary.rule} | ${pct(m.secondary.recall.primary.all)} | as the primary | **${sv.status}** |`, '');
+  const buildRow = (label, x) => { const b = x.geometry.primary.beyondTolerance; return `| ${label} | ${pct(x.recall.primary['below 1 km'])} | ${pct(x.recall.primary['1 to 5 km'])} | ${pct(x.recall.numbered100000.all)} | ${x.misses.length} | ${b.tcaNlrv} / ${b.miss} / ${b.speed} | ${(x.screen.incompleteUnits ?? []).length} calls, ${x.screen.failedPairs} pairs | ${x.screen.listings ? x.screen.listings.objects : x.screen.excludedObjects} |`; };
+  L.push('| Build | GP on GP, below 1 km | GP on GP, 1 to 5 km | An object numbered 100000 or above | Misses, all classes | Beyond tolerance, GP on GP (NLRV TCA / miss / speed) | Incomplete screening | Objects on the excluded port |', '| --- | --- | --- | --- | ---: | --- | --- | ---: |');
+  L.push(buildRow(a3.baseline090.version, base9), buildRow(a3.baseline.version, base), buildRow(m.module.version, m), '');
+  L.push('## What moved between builds, event by event', '');
+  L.push(`Every screen event on ${m.module.version} against ${mv.baselineVersion}, paired one to one by NORAD pair and TCA within ${config.comparison.mergeSeconds} s: ${mv.baselineEvents.toLocaleString('en-US')} events on ${mv.baselineVersion}, ${mv.events.toLocaleString('en-US')} on ${m.module.version}; ${mv.paired.toLocaleString('en-US')} paired, ${mv.identicalValues.toLocaleString('en-US')} with identical TCA, miss and speed, ${mv.changedValues.toLocaleString('en-US')} with any value changed (largest |ΔTCA| ${f(mv.tcaSeconds.max)} s, |Δmiss| ${f(mv.missM.max)} m, |Δspeed| ${f(mv.speedMS.max)} m/s); ${mv.onlyBaseline.count.toLocaleString('en-US')} only on ${mv.baselineVersion}; ${mv.onlyThisBuild.count.toLocaleString('en-US')} only on ${m.module.version}. Event files' SHA-256 are in \`moved.a3-full.json\`.`, '');
+  const standing = (x) => x.listedNowInThisSlice.length ? x.listedNowInThisSlice.map((l) => `${l.norad}: ${l.form}${l.lastValid ? `, last valid ${l.lastValid}` : ''}, ${l.screenedAtThisTca ? 'screened at this TCA' : 'not screened at this TCA'}`).join('; ') : 'not listed';
+  const movedRows = [...mv.onlyBaseline.rows.map((x) => ['only on ' + mv.baselineVersion, x]), ...mv.onlyThisBuild.rows.map((x) => ['only on ' + m.module.version, x])];
+  if (movedRows.length) {
+    L.push('| Side | Pair | TCA (UTC) | Miss (m) | Speed (m/s) | Listed in this slice on the earlier build | Listed in this slice now |', '| --- | --- | --- | ---: | ---: | --- | --- |');
+    for (const [side, x] of movedRows.slice(0, 200)) L.push(`| ${side} | ${x.pair.join(' × ')} | ${x.tcaUtc} | ${f(x.missM, 5)} | ${f(x.speedMS, 5)} | ${x.listedOnBaselineInThisSlice.join(', ') || 'no'} | ${standing(x)} |`);
+    L.push('');
+    if (movedRows.length > 200) L.push(`The first 200 rows of ${movedRows.length}; the rest are in \`moved.a3-full.json\`.`, '');
+  }
+  if (mv.largestChanges.length) {
+    L.push('Largest changed values:', '', '| Pair | TCA on the earlier build | ΔTCA (s) | Δmiss (m) | Δspeed (m/s) |', '| --- | --- | ---: | ---: | ---: |');
+    for (const x of mv.largestChanges) L.push(`| ${x.pair.join(' × ')} | ${x.baselineTcaUtc} | ${f(x.dtSeconds, 4)} | ${f(x.dMissM, 4)} | ${f(x.dSpeedMS, 4)} |`);
+    L.push('');
+  }
+  L.push('## Objects on the excluded port', '');
+  L.push(`Since CA 0.13.0 the port lists an object screened in part as well as one excluded, once per call. A listing labels a miss and changes no count: every SOCRATES row stays in its denominator. ${ls.objects} objects are listed on ${m.module.version}, ${mv.listings.baselineObjects} on ${mv.baselineVersion}; new: ${mv.listings.newObjects.join(', ') || 'none'}; gone: ${mv.listings.goneObjects.join(', ') || 'none'}.`, '');
+  L.push('| Form | Objects | Object-slices |', '| --- | ---: | ---: |');
+  for (const [k, v] of Object.entries(ls.byForm)) L.push(`| ${k} | ${v.objects} | ${v.objectSlices} |`);
+  L.push('', `| Reason on ${m.module.version} | Objects | Object-slices |`, '| --- | ---: | ---: |');
+  for (const [k, v] of Object.entries(ls.byRefusal)) L.push(`| ${k} | ${v.objects} | ${v.objectSlices} |`);
+  L.push('', `| Reason on ${mv.baselineVersion} (all listed as excluded from the whole call) | Objects |`, '| --- | ---: |');
+  for (const [k, v] of Object.entries(mv.listings.baselineByRefusal)) L.push(`| ${k} | ${v} |`);
+  L.push('', '| NORAD | Last valid | First refusal | Slices screened in part | Slices refused from the start | Reason |', '| ---: | --- | --- | --- | ---: | --- |');
+  for (const x of ls.perObject) L.push(`| ${x.norad} | ${x.lastValid ?? '–'} | ${x.firstRefusal ?? '–'} | ${(x.slicesByForm['refused-part-way'] ?? []).join(', ') || '–'} | ${(x.slicesByForm['refused-from-start'] ?? []).length} | ${x.refusal ?? '–'} |`);
+  L.push('');
+  L.push(`**Proof by a fabricated listing** (\`listing-proof.mjs\`, part of the E2E), through the real \`compare.mjs\`: ${proof.compare.reference} invented rows, ${proof.compare.misses} dropped by the screen, one for each thing the port can say about an object: recall ${proof.compare.found} of ${proof.compare.reference}, ${proof.compare.recallStatus}, ${proof.compare.misses} misses; only the label differs. The proof for the recall experiment's harness, which did drop a listed object's events, is in \`results/ca-screen-recall\`.`, '');
+}
 // ---- Amendment A2: both verdicts, the hypotheses and the comparison with the 0.9.0 run ----------------------------
-if (amend) {
+if (amend === 'A2') {
   const base = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.metrics), 'utf8'));
   const baseAnn = JSON.parse(fs.readFileSync(path.join(repo, a2.baseline.annotations), 'utf8'));
   const keyOf = (x) => `${x.pair.join('-')}|${x.socratesTcaUtc}`;
@@ -123,8 +178,8 @@ L.push(`| Editions | ${m.editions.matched.toLocaleString('en-US')} of ${m.editio
 L.push(`| Module | \`${screenManifest.module.path}\` at \`${screenManifest.module.commit}\`, SHA-256 \`${screenManifest.module.wasmSha256}\` |`);
 L.push(`| Screen | \`screen_catalog\`, SGP4 (analytic, no integrator step), coarse step ${config.screen.coarseStepSeconds} s, refinement tolerance ${config.screen.refinementToleranceSeconds * 1000} ms, ${config.screen.algorithm}, ${config.screen.combinedRadiusM} m combined radius |`);
 for (const q of m.screen.primaries) L.push(`| Part ${q.part} | primaries ${q.from.toLocaleString('en-US')}–${q.to.toLocaleString('en-US')} of ${q.eligible.toLocaleString('en-US')} active payloads ranked by SHA-256 of \`${q.seed}:<NORAD>\` (list SHA-256 \`${q.listSha256}\`), ${q.blockSize}-primary blocks against the whole catalog |`);
-L.push(`| Calls | ${m.screen.units.toLocaleString('en-US')} calls of ${config.screen.sliceSeconds / 3600} h on ${m.screen.processes} processes × ${m.screen.threads} threads; wall ${m.screen.wallMinutes.map((x) => f(x)).join(' + ')} min for the invocation that finished each part (Part 1's first invocation stopped at unit 21 after 483 units, Amendment A0) |`);
-L.push(`| Screen output | ${m.screen.rawEvents.toLocaleString('en-US')} events, ${m.screen.merged} merged across calls, ${m.screen.outOfWindow} outside the window, ${m.screen.excludedObjects} objects excluded somewhere (SGP4 could not propagate them) |`, '');
+L.push(`| Calls | ${m.screen.units.toLocaleString('en-US')} calls of ${config.screen.sliceSeconds / 3600} h on ${m.screen.processes} processes × ${m.screen.threads} threads; wall ${m.screen.wallMinutes.map((x) => f(x)).join(' + ')} min for the invocation that finished each part${amend === 'A3' ? '' : " (Part 1's first invocation stopped at unit 21 after 483 units, Amendment A0)"} |`);
+L.push(`| Screen output | ${m.screen.rawEvents.toLocaleString('en-US')} events, ${m.screen.merged} merged across calls, ${m.screen.outOfWindow} outside the window, ${m.screen.listings ? `${m.screen.listings.objects} objects on the excluded port (below)` : `${m.screen.excludedObjects} objects excluded somewhere (SGP4 could not propagate them)`} |`, '');
 L.push('## Recall', '');
 L.push('| Class | Below 1 km | 1 to 5 km | All |', '| --- | --- | --- | --- |');
 for (const [c, name] of Object.entries(CLS)) L.push(`| ${name} | ${pct(m.recall[c]['below 1 km'])} | ${pct(m.recall[c]['1 to 5 km'])} | ${pct(m.recall[c].all)} |`);
@@ -201,12 +256,43 @@ if (a1.length) {
   for (const x of a1) {
     const sm = JSON.parse(fs.readFileSync(path.join(x.armRun, 'part1', 'screen-summary.json'), 'utf8'));
     const g = x.metrics.geometry.primary.beyondTolerance;
-    const method = x.armName === 'console' ? 'SAMPLED_STATES (propagator/sgp4) → prepare_sample_screening_index → screen_window, 30 min windows' : 'SOURCE_DESCRIPTIONS → prepare_screening_index → screen_window, 24 h windows';
+    const method = x.armName === 'console' ? `SAMPLED_STATES (propagator/sgp4${amend === 'A3' ? ` ${a3.sgp4Module.version}` : ''}) → prepare_sample_screening_index → screen_window, 30 min windows` : 'SOURCE_DESCRIPTIONS → prepare_screening_index → screen_window, 24 h windows';
     L.push(`| ${x.armName} | ${method} | ${sm.primaries.count} (${sm.primaries.blocks} block${sm.primaries.blocks === 1 ? '' : 's'}) | ${sm.window.startUtc} + ${(sm.window.slices * sm.window.sliceSeconds) / 3600} h | ${pct(x.metrics.recall.primary.all)} | ${g.tcaNlrv} / ${g.miss} / ${g.speed} | ${x.cmp.verdict.status}: ${x.cmp.paired.toLocaleString('en-US')} paired, ${x.cmp.onlyOneArm.total} in one arm only |`);
-    fs.writeFileSync(path.join(out, `a1-${x.armName}.metrics.json`), `${JSON.stringify(x.metrics, null, 2)}\n`);
-    fs.writeFileSync(path.join(out, `a1-${x.armName}.compare.json`), `${JSON.stringify(x.cmp, null, 2)}\n`);
+    const armPrefix = amend === 'A3' ? 'a3' : 'a1';
+    fs.writeFileSync(path.join(out, `${armPrefix}-${x.armName}.metrics.json`), `${JSON.stringify(x.metrics, null, 2)}\n`);
+    fs.writeFileSync(path.join(out, `${armPrefix}-${x.armName}.compare.json`), `${JSON.stringify(x.cmp, null, 2)}\n`);
   }
   L.push('');
+  if (amend === 'A3') {
+    const readRepo = (x) => JSON.parse(fs.readFileSync(path.join(repo, x), 'utf8'));
+    L.push(`The same arms on ${a3.baseline090.version}, the last time they ran:`, '', '| Arm | Recall against SOCRATES (primary class) | Misses, all classes | Geometry beyond tolerance (TCA / miss / speed) | Against Part 1, encounter for encounter |', '| --- | --- | ---: | --- | --- |');
+    for (const x of a1) {
+      const bm = readRepo(a3.baseline090[x.armName].metrics), bc = readRepo(a3.baseline090[x.armName].compare), g = bm.geometry.primary.beyondTolerance;
+      L.push(`| ${x.armName} | ${pct(bm.recall.primary.all)} | ${bm.misses.length} | ${g.tcaNlrv} / ${g.miss} / ${g.speed} | ${bc.verdict.status}: ${bc.paired.toLocaleString('en-US')} paired, ${bc.onlyOneArm.total} in one arm only |`);
+    }
+    L.push('', `Each arm's misses, all classes, on ${m.module.version}: ${a1.map((x) => `${x.armName} ${x.metrics.misses.length}`).join(', ')}. ${a3.sgp4Module.reason}. The arm samples the true UTC window, as the console will once its 37 s window defect is fixed (\`ui-ca-window-utc-time-scale-20261031\`).`, '');
+    for (const x of a1) {
+      const mv = moved[x.armName];
+      if (mv) L.push(`What moved in ${x.armName} against ${mv.baselineVersion}: ${mv.baselineEvents.toLocaleString('en-US')} encounters then, ${mv.events.toLocaleString('en-US')} now, ${mv.paired.toLocaleString('en-US')} paired within ${config.comparison.mergeSeconds} s, ${mv.onlyBaseline.count} only then, ${mv.onlyThisBuild.count} only now; |Δmiss| at most ${f(mv.missM.max)} m (rows in \`moved.a3-${x.armName}.json\`).`, '');
+    }
+    const cons = a1.find((x) => x.armName === 'console');
+    if (cons) {
+      const e = cons.cmp.excuses, sk = cons.cmp.consoleSkipFinding;
+      L.push('### Excuses in comparison (ii), and why none can hide a miss', '');
+      L.push(`A1 explains a one-arm encounter in three cases. On this run they excuse ${e.total} encounters: ${Object.entries(cons.cmp.onlyOneArm.byExplanation).filter(([k]) => !k.startsWith('unexplained')).map(([k, n]) => `${n}, ${k}`).join('; ') || 'none'}. Unexplained, each a defect: ${cons.cmp.onlyOneArm.byExplanation['unexplained (defect)'] ?? 0}. The threshold excuse's width per BSTAR band: ${Object.entries(e.widthByBand).map(([k, v]) => `${k} ${f(v)} m`).join('; ')}.`, '');
+      L.push(`SOCRATES lists ${e.listedBySocrates} of the ${e.total} excused encounters${e.listedBySocrates ? `: ${Object.entries(e.outcomes).map(([k, n]) => `${n}, ${k}`).join('; ')}` : ''}. An excuse changes only comparison (ii). Comparison (i), against SOCRATES, has no excuse path: a SOCRATES row the arm lacks is a miss whatever (ii) says. \`compare-a1.mjs\` stops if an excused encounter SOCRATES lists is neither found, a miss nor an edge row in (i). The fabricated listing shows it (\`listing-proof.mjs\`): ${proof.excuse.oneArmEncounters} one-arm encounters, ${proof.excuse.excused} excused, ${proof.excuse.defects} defects, and the excused one SOCRATES lists is ${Object.keys(proof.excuse.itsOutcome).join(', ')}.`, '');
+      L.push('### Finding: the console skips an object for the whole span, and does not show its earlier encounters', '');
+      L.push(`The console samples each object over the whole span and skips one that cannot be sampled to its end, while \`screen_catalog\` screens the object up to its last valid instant. In this arm (Part 1's block 0, ${sk.objects.length} objects skipped over the first 24 h) that leaves **${sk.encountersNotShown} encounters** Part 1 reports and the console does not show. This is a console defect, not only a test excuse.`, '');
+      L.push('| Skipped object | First refusal per Part 1 | Form in Part 1 | Reason | Encounters not shown |', '| ---: | --- | --- | --- | ---: |');
+      for (const o of sk.objects) L.push(`| ${o.norad} | ${o.inPart1Listing?.firstRefusal ?? '–'} | ${o.inPart1Listing?.form ?? '–'} | ${o.inPart1Listing?.refusal ?? '–'} | ${o.part1EncountersNotShown} |`);
+      L.push('');
+      if (sk.rows.length) {
+        L.push('| Pair | TCA (UTC) | Miss (m) | Speed (m/s) | BSTAR band | SOCRATES row |', '| --- | --- | ---: | ---: | --- | --- |');
+        for (const r of sk.rows) L.push(`| ${r.pair.join(' × ')} | ${r.tcaUtc} | ${f(r.missM, 5)} | ${f(r.speedMS, 5)} | ${r.band} | ${r.socrates.length ? r.socrates.map((x) => `${x.tcaUtc}, ${x.outcome}`).join('; ') : 'not listed'} |`);
+        L.push('');
+      }
+    }
+  }
   for (const x of a1) {
     L.push(`### ${x.armName}: against Part 1's screen_catalog`, '');
     L.push(`Part 1 ${x.cmp.part1.events.toLocaleString('en-US')} encounters, ${x.armName} ${x.cmp.armEvents.events.toLocaleString('en-US')}; paired ${x.cmp.paired.toLocaleString('en-US')}. |ΔTCA| max ${f(x.cmp.all.tcaSeconds.max)} s, |Δmiss| max ${f(x.cmp.all.missM.max)} m, |Δspeed| max ${f(x.cmp.all.speedMS.max)} m/s. Rule: ${x.cmp.verdict.rule}.`, '');
@@ -226,8 +312,10 @@ if (a1.length) {
     }
   }
 }
-L.push('## Reproduce', '', '```sh', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 1', 'node experiments/ca-socrates-gp-parity/screen.mjs --part 2 --run <run-id>', `node experiments/ca-socrates-gp-parity/compare.mjs --run runs/ca-socrates-gp-parity/${m.run} --parts ${m.parts.join(',')}`, `node experiments/ca-socrates-gp-parity/report.mjs --run runs/ca-socrates-gp-parity/${m.run} --tag ${m.tag}`, 'node experiments/ca-socrates-gp-parity/verify.mjs   # re-screens unit 0 and checks replay.json', '```', '');
+const amendFlag = amend ? ` --amendment ${amend}` : '';
+L.push('## Reproduce', '', '```sh', `node experiments/ca-socrates-gp-parity/screen.mjs${amendFlag} --part 1`, `node experiments/ca-socrates-gp-parity/screen.mjs${amendFlag} --part 2 --run <run-id>`, `node experiments/ca-socrates-gp-parity/compare.mjs${amendFlag} --run runs/ca-socrates-gp-parity/${m.run} --parts ${m.parts.join(',')}`, `node experiments/ca-socrates-gp-parity/report.mjs${amendFlag} --run runs/ca-socrates-gp-parity/${m.run} --tag ${m.tag}`, `node experiments/ca-socrates-gp-parity/verify.mjs${amendFlag}   # re-screens unit 0 and checks the replay file`, '```', '');
 L.push('SOCRATES data: CelesTrak (T. S. Kelso), https://celestrak.org; cited by URL and SHA-256, not reproduced. GP element sets: Space-Track.org, kept on this machine.', '');
-if (amend && fs.existsSync(path.join(out, 'README.md')) && !fs.existsSync(path.join(out, 'README-0.9.0.md'))) fs.copyFileSync(path.join(out, 'README.md'), path.join(out, 'README-0.9.0.md'));
+const keptReport = amend === 'A3' ? a3.baseline.readme : amend ? 'README-0.9.0.md' : null;
+if (keptReport && fs.existsSync(path.join(out, 'README.md')) && !fs.existsSync(path.join(out, keptReport))) fs.copyFileSync(path.join(out, 'README.md'), path.join(out, keptReport));
 fs.writeFileSync(path.join(out, 'README.md'), L.join('\n'));
 console.log(JSON.stringify({ out, verdict: m.verdict.status, replay }));

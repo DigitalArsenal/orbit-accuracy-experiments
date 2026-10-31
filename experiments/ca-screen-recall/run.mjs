@@ -7,20 +7,25 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
-import { config, repo, id, sha256, frozenPlan, readSnapshot, selectSubset, ommBytes, modulesRoot, pinnedModules, DAY_S } from './common.mjs';
+import { config, a2, repo, id, sha256, frozenPlan, readSnapshot, selectSubset, ommBytes, modulesRoot, pinnedModules, DAY_S } from './common.mjs';
 import { openScreen, openSgp4 } from './access.mjs';
 import { bruteForce } from './reference.mjs';
-import { matchEvents, bandOf, placeInWindow, distribution, lowerBound, screenPair } from './compare.mjs';
+import { matchEvents, bandOf, placeInWindow, distribution, lowerBound, screenPair, parseListing, notScreenedAt } from './compare.mjs';
 
 const BANDS = ['below 1 km', '1 to 5 km'];
 const iso = (jd) => new Date((jd - 2440587.5) * DAY_S * 1000).toISOString();
 const mean = (v) => (v.length ? v.reduce((a, b) => a + b, 0) / v.length : null);
 
 // One arm: the reference's events against one screen answer.
-async function assessArm({ arm, answer, reference, window, screenModule, sgp4, withParity }) {
+export async function assessArm({ arm, answer, reference, window, screenModule, sgp4, withParity }) {
   const cmp = config.comparison, reportM = config.reference.reportBelowM;
-  const excluded = new Set(answer.excluded);
-  const refPlaced = reference.map((e) => ({ ...e, place: placeInWindow(e.tcaJd, window), skip: excluded.has(e.a) || excluded.has(e.b), band: bandOf(e.missM) }));
+  // Amendment A2: the excluded port lists an object screened in part as well as one excluded, per call. A reference event
+  // leaves the denominator only when a listing of its own call says its object was not screened at its TCA; each one
+  // removed is counted by reason and listed. Before LAST_VALID the object was screened, so a missing event there is a miss.
+  const listings = answer.listings.map((x) => ({ ...x, ...parseListing(x.comment) }));
+  const inCall = (l, jd) => { const t = (jd - l.windowStartJd) * DAY_S; return t >= 0 && t <= l.windowSeconds; };
+  const refusedBy = (e) => listings.filter((l) => (l.norad === e.a || l.norad === e.b) && inCall(l, e.tcaJd) && notScreenedAt(l, e.tcaJd));
+  const refPlaced = reference.map((e) => { const by = refusedBy(e); return { ...e, place: placeInWindow(e.tcaJd, window), refusedBy: by, skip: by.length > 0, band: bandOf(e.missM) }; });
   const scPlaced = answer.events.map((e) => ({ ...e, place: placeInWindow(e.tcaJd, window) }));
   const refIdx = refPlaced.map((_, n) => n).filter((n) => refPlaced[n].place !== 'out' && !refPlaced[n].skip);
   const scIdx = scPlaced.map((_, n) => n).filter((n) => scPlaced[n].place !== 'out');
@@ -47,8 +52,8 @@ async function assessArm({ arm, answer, reference, window, screenModule, sgp4, w
   }
   const total = BANDS.reduce((s, b) => s + recall[b].reference, 0), foundAll = BANDS.reduce((s, b) => s + recall[b].found, 0);
   recall.all = { reference: total, found: foundAll, recall: total ? foundAll / total : null, lowerBound: lowerBound(foundAll, total, cmp.confidence) };
-  const tally = (pick) => { const rows = refIdx.filter(pick); return { reference: rows.length, found: rows.filter((n) => refMatch.get(n) >= 0).length }; };
-  const edge = tally((n) => refPlaced[n].place === 'edge' && refPlaced[n].band), nearThreshold = tally((n) => refPlaced[n].place === 'in' && refPlaced[n].band === null);
+  const tallyRef = (pick) => { const rows = refIdx.filter(pick); return { reference: rows.length, found: rows.filter((n) => refMatch.get(n) >= 0).length }; };
+  const edge = tallyRef((n) => refPlaced[n].place === 'edge' && refPlaced[n].band), nearThreshold = tallyRef((n) => refPlaced[n].place === 'in' && refPlaced[n].band === null);
 
   // The screen's events: matched, near the threshold, at a window edge, beyond the reference's scope, or false.
   const sc = { total: scPlaced.length, outOfWindow: scPlaced.filter((e) => e.place === 'out').length, matched: 0, nearThreshold: 0, edge: 0, beyondReference: 0, duplicates: 0, falseEvents: [] };
@@ -103,9 +108,16 @@ async function assessArm({ arm, answer, reference, window, screenModule, sgp4, w
     parity = { objects: dr.length, unmatchedOrOtherFrame: frames, positionM: distribution(dr), velocityMS: distribution(dv), largest: rows.sort((a, b) => b.positionM - a.positionM).slice(0, 5) };
   }
   const gate = arm.id === config.pass.arm ? recall['below 1 km'] : null;
+  const reasonOf = (l) => `${l.form}${l.refusal ? `: ${l.refusal}` : ''}`;
+  const removed = refPlaced.filter((r) => r.skip && r.place !== 'out' && r.band);
+  const tally = (rows) => rows.reduce((m, k) => ({ ...m, [k]: (m[k] ?? 0) + 1 }), {});
+  const listingRow = ({ norad, form, lastValid, firstRefusal, refusal, coverageStart, coverageEnd, windowStartJd }) => ({ norad, form, lastValid, firstRefusal, refusal, coverageStart, coverageEnd, callStartUtc: iso(windowStartJd) });
   return {
     id: arm.id, thresholdM: arm.thresholdM, elapsedMs: answer.elapsedMs, chunks: answer.chunks, statistics: answer.statistics,
-    excludedObjects: answer.excluded, recall, misses, edge, nearThreshold, screenEvents: sc, differences: diffs, outliers,
+    listings: { objects: new Set(listings.map((l) => l.norad)).size, records: listings.length, byReason: tally(listings.map(reasonOf)), rows: listings.map(listingRow) },
+    exclusions: { events: removed.length, byReason: tally(removed.map((r) => reasonOf(r.refusedBy[0]))),
+      rows: removed.map((r) => ({ pair: [r.a, r.b], band: r.band, referenceTcaUtc: iso(r.tcaJd), referenceMissM: r.missM, listings: r.refusedBy.map(listingRow) })) },
+    recall, misses, edge, nearThreshold, screenEvents: sc, differences: diffs, outliers,
     probability: { compared: pcSelf.length, missing: pcMissing, relativeDifferenceAtScreenMiss: distribution(pcSelf), relativeDifferenceAtReferenceMiss: distribution(pcRef) },
     parity,
     gate: gate && { reference: gate.reference, found: gate.found, status: gate.reference === 0 ? 'inconclusive: no reference event below 1 km' : gate.found === gate.reference ? 'pass' : 'fail' },
@@ -117,20 +129,21 @@ export async function execute({ mode = 'registered', modules: modulesFlag, archi
   const startedAt = new Date().toISOString(), loadStart = os.loadavg();
   const plan = mode === 'registered' ? frozenPlan() : null;
   if (mode !== 'registered' && !outDir) throw new Error(`${mode} runs need --out`);
-  const modules = modulesRoot(modulesFlag), pinned = pinnedModules(modules);
+  const modules = modulesRoot(modulesFlag);
   if (smokeSize && mode !== 'smoke') throw new Error('--count and --seconds are for --smoke runs');
   const selection = mode === 'smoke' ? { seed: config.smoke.seed, count: smokeSize?.count ?? config.smoke.count } : { seed: config.selection.seed, count: mode === 'replay' ? config.replay.count : config.selection.count };
   const window = { startJd: config.window.startJd, durationSeconds: mode === 'smoke' ? smokeSize?.seconds ?? config.smoke.durationSeconds : mode === 'replay' ? config.replay.durationSeconds : config.window.durationSeconds };
   const dir = outDir ?? path.join(repo, 'runs', id, runId ?? `${id}-${startedAt.replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')}`);
   fs.mkdirSync(dir, { recursive: true });
+  const pinned = pinnedModules(modules, dir);
 
   const snapshot = readSnapshot(archive);
   const subset = selectSubset(snapshot.rows, selection);
   const numbers = subset.objects.map((r) => Number(r.NORAD_CAT_ID));
   log(`${mode}: ${subset.eligible} eligible, ${numbers.length} selected, window ${window.durationSeconds} s`);
 
-  const screenModule = await openScreen({ modules, pinned, workDir: dir });
-  const sgp4 = await openSgp4({ modules, pinned });
+  const screenModule = await openScreen({ pinned, workDir: dir });
+  const sgp4 = await openSgp4({ pinned });
   try {
     const omms = subset.objects.map((gp) => ommBytes(screenModule.flatc, screenModule.ommSchema, gp));
     await sgp4.ingest(omms);
@@ -163,7 +176,7 @@ export async function execute({ mode = 'registered', modules: modulesFlag, archi
         answer = await request(windowsOf(arm.fallbackWindowSeconds));
       }
       answer.combinedRadiusM = config.screen.common.combinedRadiusM;
-      log(`screen arm ${arm.id}: ${answer.events.length} events in ${(answer.elapsedMs / 1000).toFixed(1)} s, ${answer.excluded.length} excluded`);
+      log(`screen arm ${arm.id}: ${answer.events.length} events in ${(answer.elapsedMs / 1000).toFixed(1)} s, ${answer.listings.length} records on the excluded port`);
       const result = await assessArm({ arm, answer, reference: reference.events, window, screenModule, sgp4, withParity: arm.id === config.pass.arm });
       result.windows = answer.windows; result.mergedAcrossEdges = answer.mergedAcrossEdges; result.fallback = fallback;
       fs.writeFileSync(path.join(dir, `screen-events.${arm.id}.json`), `${JSON.stringify(answer.events)}\n`);
@@ -174,7 +187,7 @@ export async function execute({ mode = 'registered', modules: modulesFlag, archi
 
     const placed = reference.events.map((e) => placeInWindow(e.tcaJd, window));
     const metrics = {
-      experiment: id, mode, window: { startUtc: config.window.startUtc, startJd: window.startJd, durationSeconds: window.durationSeconds },
+      experiment: id, amendment: a2.amendment, mode, window: { startUtc: config.window.startUtc, startJd: window.startJd, durationSeconds: window.durationSeconds },
       subset: { seed: selection.seed, requested: selection.count, eligible: subset.eligible, selected: numbers.length, listSha256: sha256(numbers.join('\n')) },
       timeGrid: { maxLineVersusStateM: gridMaxM },
       reference: { events: reference.events.length, inWindow: placed.filter((p) => p === 'in').length, atWindowEdge: placed.filter((p) => p === 'edge').length, outsideWindow: placed.filter((p) => p === 'out').length,
@@ -189,7 +202,7 @@ export async function execute({ mode = 'registered', modules: modulesFlag, archi
     const manifest = {
       experiment: id, mode, startedAt, finishedAt: new Date().toISOString(), command: [process.execPath, ...process.argv.slice(1)],
       plan, configSha256: sha256(fs.readFileSync(new URL('./config.json', import.meta.url))),
-      modulesRepository: { path: modules, pinnedCommit: pinned.commit, checkoutHead: pinned.head },
+      amendment: a2.amendment, modulesRepository: { path: modules, pins: pinned.pins, checkoutHead: pinned.head },
       modules: { 'analysis/conjunction-assessment': { ...screenModule.plugin, wasmSha256: screenModule.wasmSha256, packages: screenModule.packages }, 'propagator/sgp4': { ...sgp4.plugin, wasmSha256: sgp4.wasmSha256, packages: sgp4.packages } },
       runtime: { node: process.version, platform: `${os.platform()} ${os.release()} ${os.arch()}`, cpus: os.availableParallelism(), model: os.cpus()[0]?.model, loadAverageStart: loadStart, loadAverageEnd: os.loadavg() },
       inputs: { snapshot: { path: config.data.snapshot, sha256: snapshot.sha256, jsonSha256: config.data.snapshotJsonSha256, records: config.data.snapshotRecords } },

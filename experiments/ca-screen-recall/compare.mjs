@@ -55,6 +55,38 @@ export const bandOf = (missM) => {
   return missM < split ? 'below 1 km' : missM < top ? '1 to 5 km' : null;
 };
 
+// One record of the screen's `excluded` port, read from its COMMENT, the contract of CA 0.13.0 and later (the module's
+// README, "Objects screened in part or excluded"). The port lists an object screened in part as well as one excluded, so
+// a listed object is not an excluded object. A COMMENT of no known form stops the run: it is never read as an exclusion.
+const ISO = '(\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z)';
+const COVERAGE = `COVERAGE_START=${ISO}; COVERAGE_END=${ISO}$`;
+const FORMS = [
+  ['refused-from-start', new RegExp(`^Excluded from conjunction screening; SGP4 refuses it from the window start\\. LAST_VALID=NONE; FIRST_REFUSAL=${ISO}; REFUSAL=([\\s\\S]+)$`), (m) => ({ firstRefusal: m[1], refusal: m[2] })],
+  ['refused-part-way', new RegExp(`^Screened until LAST_VALID; SGP4 refuses it from FIRST_REFUSAL\\. LAST_VALID=${ISO}; FIRST_REFUSAL=${ISO}; REFUSAL=([\\s\\S]+)$`), (m) => ({ lastValid: m[1], firstRefusal: m[2], refusal: m[3] })],
+  ['no-coverage', new RegExp(`^Excluded from conjunction screening; its trajectory does not cover the window\\. ${COVERAGE}`), (m) => ({ coverageStart: m[1], coverageEnd: m[2] })],
+  ['coverage-ends', new RegExp(`^Screened until COVERAGE_END; its trajectory ends inside the window\\. ${COVERAGE}`), (m) => ({ coverageStart: m[1], coverageEnd: m[2] })],
+  ['coverage-starts', new RegExp(`^Screened from COVERAGE_START; its trajectory starts inside the window\\. ${COVERAGE}`), (m) => ({ coverageStart: m[1], coverageEnd: m[2] })],
+  ['coverage-part', new RegExp(`^Screened from COVERAGE_START until COVERAGE_END; its trajectory covers part of the window\\. ${COVERAGE}`), (m) => ({ coverageStart: m[1], coverageEnd: m[2] })],
+];
+export function parseListing(comment) {
+  for (const [form, pattern, fields] of FORMS) {
+    const m = pattern.exec(comment ?? '');
+    if (m) return { form, ...fields(m) };
+  }
+  throw new Error(`an excluded record of no known form: ${comment}`);
+}
+
+// Whether the listing says its object was not screened at this Julian date, inside the listing's own call. Before
+// LAST_VALID (or inside its coverage) the object was screened, so its events there stay in every denominator.
+export function notScreenedAt(listing, jd) {
+  const ms = (jd - 2440587.5) * DAY_S * 1000;
+  switch (listing.form) {
+    case 'refused-part-way': return ms >= Date.parse(listing.firstRefusal);
+    case 'coverage-ends': case 'coverage-starts': case 'coverage-part': return ms < Date.parse(listing.coverageStart) || ms > Date.parse(listing.coverageEnd);
+    default: return true;
+  }
+}
+
 // Where an event's TCA sits against the window: 'in', 'edge' (within edgeSeconds of an end, either side) or 'out'.
 export function placeInWindow(tcaJd, window) {
   const edge = config.comparison.edgeSeconds, t = (tcaJd - window.startJd) * DAY_S;

@@ -11,7 +11,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fork, execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
-import { config, repo, id, here, sha256, frozenPlan, modulesRoot, pinnedModule, modulePin, readCatalog, readSatcat, ommBytes, importFile, jdToIso } from './common.mjs';
+import { config, a3, repo, id, here, sha256, frozenPlan, modulesRoot, pinnedModule, modulePin, readCatalog, readSatcat, ommBytes, importFile, jdToIso } from './common.mjs';
 
 const { values: o } = parseArgs({ options: {
   modules: { type: 'string' }, run: { type: 'string' }, out: { type: 'string' }, probe: { type: 'boolean', default: false }, part: { type: 'string' }, amendment: { type: 'string' },
@@ -19,6 +19,7 @@ const { values: o } = parseArgs({ options: {
 } });
 const log = (m) => process.stderr.write(`${new Date().toISOString()} ${m}\n`);
 const startedAt = new Date().toISOString(), loadStart = os.loadavg();
+if (!o.probe && o.amendment !== a3.amendment) throw new Error(`a registered run is Amendment ${a3.amendment}'s: pass --amendment ${a3.amendment}`);
 const plan = o.probe ? null : frozenPlan();
 if (o.probe && !o.out) throw new Error('a probe needs --out (outside runs/ and results/)');
 const P = config.primaries;
@@ -26,7 +27,7 @@ const part = P.parts.find((x) => x.id === Number(o.part));
 if (!part) throw new Error(`--part must be one of ${P.parts.map((x) => x.id).join(', ')}`);
 if (!o.probe && part.id !== 1 && !o.run) throw new Error(`part ${part.id} continues the run of part 1: pass --run <run-id>`);
 const s = { ...config.screen, ...(o.probe && o['slice-seconds'] ? { sliceSeconds: Number(o['slice-seconds']) } : {}) };
-const processes = Number(o.processes ?? s.processes), threads = Number(o.threads ?? s.threadsPerProcess);
+const processes = Number(o.processes ?? (o.amendment === a3.amendment ? a3.compute.processes : s.processes)), threads = Number(o.threads ?? s.threadsPerProcess);
 const window = o.probe
   ? { startUtc: config.probe.startUtc, startJd: config.probe.startJd, sliceSeconds: s.sliceSeconds, slices: Number(o.slices ?? 1) }
   : { startUtc: config.window.startUtc, startJd: config.window.startJd, sliceSeconds: s.sliceSeconds, slices: config.window.durationSeconds / s.sliceSeconds };
@@ -43,7 +44,7 @@ fs.mkdirSync(slicesDir, { recursive: true });
 const modules = modulesRoot(o.modules);
 const pinned = pinnedModule(modules, dir, pin);
 const catalog = readCatalog();
-const cqr = await importFile(path.join(modules, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
+const cqr = await importFile(path.join(pinned.root, 'analysis/conjunction-assessment/tests/lib/cqr.mjs'));
 const flatc = await cqr.initCqrFlatc();
 const ommSchema = cqr.publishedSchema('OMM');
 const records = catalog.rows.map((g) => ommBytes(flatc, ommSchema, g));
@@ -85,7 +86,7 @@ const t0 = Date.now();
 let done = units.length - todo.length;
 const workers = Array.from({ length: Math.min(processes, todo.length) }, (_, w) => {
   const jobFile = path.join(partDir, `job-${w}.json`);
-  fs.writeFileSync(jobFile, JSON.stringify({ modules, wasmFile: pinned.file, ommStream, outDir: slicesDir, threads, screen: s,
+  fs.writeFileSync(jobFile, JSON.stringify({ modules: pinned.root, wasmFile: pinned.file, ommStream, outDir: slicesDir, threads, screen: s,
     window: { startJd: window.startJd, sliceSeconds: window.sliceSeconds }, order, units, slices: todo.filter((_, n) => n % processes === w) }));
   return new Promise((resolve, reject) => {
     const child = fork(path.join(here, 'worker.mjs'), [jobFile], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
@@ -102,7 +103,7 @@ await Promise.all(workers);
 // Merge: every unit present, events in unit order.
 const answers = units.map((_, k) => JSON.parse(fs.readFileSync(unitFile(k), 'utf8')));
 const events = answers.flatMap((x) => x.events);
-const excluded = [...new Map(answers.flatMap((x) => x.excluded).map((e) => [e.norad, e])).values()];
+const excluded = [...new Map(answers.flatMap((x) => x.excluded).map((e) => [e.norad, e])).values()]; // the last record of each object; compare.mjs reads every call's
 const eventsFile = path.join(partDir, 'screen-events.json');
 fs.writeFileSync(eventsFile, `${JSON.stringify(events)}\n`);
 const summary = {
@@ -110,12 +111,12 @@ const summary = {
   catalog: catalogInfo, primaries, units: units.length, events: events.length, excludedObjects: excluded,
   failedCalls: answers.flatMap((x) => (x.failures ?? []).map((f) => ({ unit: x.unit, block: x.block, slice: x.slice, ...f }))),
   failedPairs: answers.reduce((n, x) => n + Number(x.failedPairs ?? 0), 0),
-  incompleteUnits: answers.filter((x) => Number(x.failedPairs ?? 0) > 0).map((x) => ({ unit: x.unit, block: x.block, slice: x.slice, failedPairs: x.failedPairs })),
+  incompleteUnits: answers.filter((x) => Number(x.failedPairs ?? 0) > 0).map((x) => ({ unit: x.unit, block: x.block, slice: x.slice, failedPairs: x.failedPairs, messages: x.calls.map((c) => c.incompleteMessage).filter(Boolean) })),
   unitElapsedSeconds: { total: answers.reduce((n, x) => n + x.elapsedMs, 0) / 1000, max: Math.max(...answers.map((x) => x.elapsedMs)) / 1000 },
   wallMinutes: (Date.now() - t0) / 60000, processes, threads,
 };
 fs.writeFileSync(path.join(partDir, 'screen-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-const gitState = (d) => { try { return { commit: execFileSync('git', ['-C', d, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim() }; } catch { return { commit: null }; } };
+const gitState = (d) => { try { return { commit: execFileSync('git', ['-C', d, 'rev-parse', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() }; } catch { return { commit: null }; } }; // a snapshot has none; plan.experimentCommit names the registration
 const manifest = {
   experiment: id, step: 'screen', mode: summary.mode, amendment: o.amendment ?? null, part: part.id, run: runId, startedAt, finishedAt: new Date().toISOString(), command: [process.execPath, ...process.argv.slice(1)], plan,
   configSha256: sha256(fs.readFileSync(path.join(here, 'config.json'))), repository: gitState(repo),

@@ -7,13 +7,13 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { config, a2, here, repo, id, sha256, frozenPlan, readSocrates, readSatcat, readCatalog, editionClasses, modulesRoot, pinnedModule, modulePin, importFile, jdToIso, utcMs, msToJd, DAY_S } from './common.mjs';
+import { config, a2, here, repo, id, sha256, frozenPlan, readSocrates, readSatcat, readCatalog, editionClasses, modulesRoot, pinnedModule, modulePin, importFile, jdToIso, utcMs, msToJd, DAY_S, parseListing, notScreenedAt, listingWords } from './common.mjs';
 
-const { values: o } = parseArgs({ options: { run: { type: 'string' }, parts: { type: 'string', default: '1,2' }, modules: { type: 'string' }, dev: { type: 'boolean', default: false }, amendment: { type: 'string' } } });
+const { values: o } = parseArgs({ options: { run: { type: 'string' }, parts: { type: 'string', default: '1,2' }, modules: { type: 'string' }, dev: { type: 'boolean', default: false }, 'dev-reference': { type: 'string' }, amendment: { type: 'string' } } });
 const pin = modulePin(o.amendment);
 const log = (m) => process.stderr.write(`${new Date().toISOString()} ${m}\n`);
 // --dev exercises this file on a timing probe (the week after the window) against a synthetic reference made from
-// the probe's own events; it never reads SOCRATES's events. Only a registered run is compared with SOCRATES.
+// the probe's own events, or a fabricated one (--dev-reference, listing-proof.mjs); it never reads SOCRATES's events. Only a registered run is compared with SOCRATES.
 const plan = o.dev ? null : frozenPlan();
 const cmp = config.comparison;
 const dir = path.resolve(o.run);
@@ -38,7 +38,7 @@ const rawEvents = parts.flatMap((q) => q.events);
 const screenManifest = parts[0].manifest;
 
 // ---- inputs ---------------------------------------------------------------------------------------------------
-const report = o.dev ? syntheticReference(rawEvents) : readSocrates();
+const report = o.dev ? (o['dev-reference'] ? JSON.parse(fs.readFileSync(o['dev-reference'], 'utf8')) : syntheticReference(rawEvents)) : readSocrates();
 const satcat = readSatcat();
 const catalog = readCatalog();
 const gpByNorad = new Map(catalog.rows.map((g) => [Number(g.NORAD_CAT_ID), g]));
@@ -49,13 +49,41 @@ const winStart = summary.window.startJd, winEnd = winStart + (summary.window.sli
 if (!o.dev && summary.amendment !== 'A1' && (winStart !== config.window.startJd || summary.window.slices * summary.window.sliceSeconds !== config.window.durationSeconds)) throw new Error('the screen run did not cover the registered window');
 if (!o.dev && summary.amendment === 'A1' && (winStart !== config.window.startJd || winEnd > config.window.startJd + config.window.durationSeconds / DAY_S + 1e-9)) throw new Error('an A1 arm must lie inside the registered window from its start');
 
-// Excluded objects per slice (an object SGP4 could not propagate somewhere in that slice's call).
-const excludedBySlice = new Map(), failedPairsBySlice = new Map();
+// The excluded port, per slice: since CA 0.13.0 it lists an object screened in part as well as one excluded. A listing
+// labels a miss; it never changes a count: every SOCRATES row stays in its denominator whatever the port says.
+const listingsBySlice = new Map(), failedPairsBySlice = new Map(), listingRows = [];
 for (const q of parts) for (const f of fs.readdirSync(path.join(q.dir, 'slices')).filter((n) => n.endsWith('.json'))) {
   const u = JSON.parse(fs.readFileSync(path.join(q.dir, 'slices', f), 'utf8'));
-  if (!excludedBySlice.has(u.slice)) excludedBySlice.set(u.slice, new Set());
-  for (const x of u.excluded) excludedBySlice.get(u.slice).add(x.norad);
+  if (!listingsBySlice.has(u.slice)) listingsBySlice.set(u.slice, new Map());
+  const bySlice = listingsBySlice.get(u.slice);
+  for (const x of u.excluded) {
+    const l = { norad: x.norad, ...parseListing(x.comment) };
+    if (!bySlice.has(x.norad)) bySlice.set(x.norad, []);
+    bySlice.get(x.norad).push(l);
+    listingRows.push({ slice: u.slice, ...l });
+  }
   if (Number(u.failedPairs ?? 0) > 0) failedPairsBySlice.set(u.slice, (failedPairsBySlice.get(u.slice) ?? 0) + Number(u.failedPairs));
+}
+// Per object: the slices it is listed in, in which form, and the instant SGP4 first refuses it.
+function listingSummary(rows) {
+  const objects = new Map(), byForm = {}, byRefusal = {};
+  for (const r of rows) {
+    if (!objects.has(r.norad)) objects.set(r.norad, { norad: r.norad, slicesByForm: {}, refusal: r.refusal ?? null });
+    const o = objects.get(r.norad);
+    (o.slicesByForm[r.form] ??= new Set()).add(r.slice);
+    if (r.form === 'refused-part-way' && (!o.lastValid || r.lastValid < o.lastValid)) o.lastValid = r.lastValid;
+    if (r.firstRefusal && (!o.firstRefusal || r.firstRefusal < o.firstRefusal)) { o.firstRefusal = r.firstRefusal; o.refusal = r.refusal; }
+  }
+  const perObject = [...objects.values()].map((o) => ({ ...o, slicesByForm: Object.fromEntries(Object.entries(o.slicesByForm).map(([k, v]) => [k, [...v].sort((x, y) => x - y)])) }))
+    .sort((x, y) => (x.firstRefusal ?? '').localeCompare(y.firstRefusal ?? '') || x.norad - y.norad);
+  for (const o of perObject) {
+    for (const [form, slices] of Object.entries(o.slicesByForm)) {
+      byForm[form] ??= { objects: 0, objectSlices: 0 }; byForm[form].objects++; byForm[form].objectSlices += slices.length;
+      const key = o.refusal ?? form;
+      byRefusal[key] ??= { objects: new Set(), objectSlices: 0 }; byRefusal[key].objects.add(o.norad); byRefusal[key].objectSlices += slices.length;
+    }
+  }
+  return { objects: perObject.length, records: rows.length, byForm, byRefusal: Object.fromEntries(Object.entries(byRefusal).map(([k, v]) => [k, { objects: v.objects.size, objectSlices: v.objectSlices }])), perObject };
 }
 const sliceOf = (jd) => Math.floor(((jd - winStart) * DAY_S) / summary.window.sliceSeconds);
 
@@ -187,14 +215,15 @@ for (const i of missIdx) {
   const r = reference[i];
   const same = (byPair.get(r.key) ?? []).map((n) => events[n]).sort((x, y) => Math.abs(x.tcaJd - r.tcaJd) - Math.abs(y.tcaJd - r.tcaJd))[0] ?? null;
   const k = sliceOf(r.tcaJd);
-  const excluded = [r.a, r.b].filter((n) => excludedBySlice.get(k)?.has(n));
+  const listed = [r.a, r.b].flatMap((n) => listingsBySlice.get(k)?.get(n) ?? []);
+  const unscreened = listed.filter((l) => notScreenedAt(l, r.tcaJd));
   const absent = [r.a, r.b].filter((n) => !gpByNorad.has(n));
   const d = { pair: [r.a, r.b], names: [r.aName, r.bName], statuses: [r.aStatus, r.bStatus], cls: r.cls, band: r.band, socratesTcaUtc: r.tcaText, socratesRangeM: r.rangeM, socratesSpeedMS: r.speedMS,
-    nearestScreenEvent: same && { tcaUtc: jdToIso(same.tcaJd), secondsFromSocrates: (same.tcaJd - r.tcaJd) * DAY_S, missM: same.missM }, excludedInSlice: excluded, absentFromCatalog: absent,
+    nearestScreenEvent: same && { tcaUtc: jdToIso(same.tcaJd), secondsFromSocrates: (same.tcaJd - r.tcaJd) * DAY_S, missM: same.missM }, listedInSlice: listed, absentFromCatalog: absent,
     failedPairsInSlice: failedPairsBySlice.get(k) ?? 0,
     sliceBoundarySeconds: Math.min(...[k, k + 1].map((b) => Math.abs((r.tcaJd - (winStart + (b * summary.window.sliceSeconds) / DAY_S)) * DAY_S))) };
   if (!absent.length && misses.filter((m) => m.pairMethod).length < cmp.diagnoseMax) d.pairMethod = await pairCheck(gpByNorad.get(r.a), gpByNorad.get(r.b), r.tcaJd);
-  d.diagnosis = absent.length ? 'object absent from the catalog' : excluded.length ? 'object excluded: SGP4 could not propagate it in this slice'
+  d.diagnosis = absent.length ? 'object absent from the catalog' : unscreened.length ? `object not screened at this TCA: ${[...new Set(unscreened.map((l) => `${l.norad}, ${listingWords(l)}`))].join('; ')}`
     : d.nearestScreenEvent && Math.abs(d.nearestScreenEvent.secondsFromSocrates) <= cmp.matchSeconds ? 'matched to another SOCRATES row of the same pair'
     : d.pairMethod?.missM > config.screen.thresholdM ? 'the module puts this minimum beyond 5 km (threshold edge or geometry difference)'
     : d.pairMethod ? 'the module finds this minimum within 5 km: the screen missed it (screen defect)' : 'not diagnosed (cap reached)';
@@ -262,7 +291,7 @@ const metrics = {
   editions: { reportObjects: editions.objects, matched: editions.matched.size, mismatched: [...editions.mismatched].map(([n, d]) => ({ norad: n, maxDeltaDays: d })), absent: [...editions.absent] },
   parts: partIds, full,
   screen: { primaries: parts.map((q) => q.summary.primaries), units: parts.reduce((n, q) => n + q.summary.units, 0), failedCalls: parts.flatMap((q) => q.summary.failedCalls),
-    failedPairs: parts.reduce((n, q) => n + Number(q.summary.failedPairs ?? 0), 0), incompleteUnits: parts.flatMap((q) => (q.summary.incompleteUnits ?? []).map((x) => ({ part: q.id, ...x }))), rawEvents: rawEvents.length, merged, events: events.length, outOfWindow, excludedObjects: new Set(parts.flatMap((q) => q.summary.excludedObjects.map((x) => x.norad))).size, wallMinutes: parts.map((q) => q.summary.wallMinutes), processes: summary.processes, threads: summary.threads },
+    failedPairs: parts.reduce((n, q) => n + Number(q.summary.failedPairs ?? 0), 0), incompleteUnits: parts.flatMap((q) => (q.summary.incompleteUnits ?? []).map((x) => ({ part: q.id, ...x }))), rawEvents: rawEvents.length, merged, events: events.length, outOfWindow, listings: listingSummary(listingRows), wallMinutes: parts.map((q) => q.summary.wallMinutes), processes: summary.processes, threads: summary.threads },
   reference: { rows: reference.length, byClass: Object.fromEntries(CLASSES.map((c) => [c, reference.filter((r) => r.cls === c).length])) },
   recall, edgeRows, misses, geometry,
   extras: { total: extras.length, byClass: extraCounts, unexplainedOrUnverified: unexplained.length, rows: unexplained.slice(0, cmp.listMax).map(extraRow) },
@@ -283,7 +312,7 @@ console.log(JSON.stringify({ dir, recall: recall.primary, verdict }));
 async function openPairCheck() {
   const modules = modulesRoot(o.modules);
   const pinned = pinnedModule(modules, path.join(dir, 'compare'), pin);
-  const ca = path.join(modules, 'analysis/conjunction-assessment');
+  const ca = path.join(pinned.root, 'analysis/conjunction-assessment');
   const cqr = await importFile(path.join(ca, 'tests/lib/cqr.mjs'));
   const hz = await importFile(path.join(ca, 'tests/lib/conjunctionCommandHarness.mjs'));
   const harness = await hz.createConjunctionCommandHarness({ runtimeKind: 'browser', wasmSource: pinned.file });
