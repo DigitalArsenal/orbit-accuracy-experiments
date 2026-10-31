@@ -2,7 +2,7 @@
  "experiment": "ffm-covariance-adaptive",
  "id": "C3-small",
  "registered": "2026-10-31",
- "frozen": false,
+ "frozen": true,
  "freezeBy": "2026-11-09",
  "store": "/opt/data/sdn-archive/ffm-covariance-adaptive",
  "workers": 12,
@@ -388,7 +388,8 @@
   "a": "the band decides, per-axis reported, |mean z| > 0.5 labeled biased",
   "b": "a cell counts only with band and all axes in range, and every eligible per-axis interval overlaps",
   "rule": "Q6 is the owner's. A yes by 2026-11-09 23:59 UTC -> (b). A no, or no answer by then -> (a). The answer is recorded in a dated commit, whether or not the freeze commit has landed, and before any fresh file is scored.",
-  "answer": null
+  "answer": null,
+  "atFreeze": "no answer yet: (a) stands unless a yes is recorded by 2026-11-09 23:59 UTC"
  },
  "p4": {
   "windowsPerClass": 20,
@@ -675,5 +676,25 @@
   "highBetaBinMinAbsDeg": 75,
   "tables": "N against beta per class at every lead",
   "rule": "none"
+ },
+ "frozenOn": "2026-10-31",
+ "judgedEnd": "2026-11-30",
+ "fetchManifest": {
+  "access": "anonymous, no credentials, at most one request per second",
+  "sources": {
+   "ESA0OPSFIN": "https://navigation-office.esa.int/products/gnss-products/<GPS week>/",
+   "ilrsa": "https://edc.dgfi.tum.de/pub/slr/products/orbits/TRF/<sat>/<yyyy>/<yymmdd>/",
+   "nsgf": "https://edc.dgfi.tum.de/pub/slr/products/orbits/rapid/<sat>/<yyyy>/<yymmdd>/",
+   "GFZ0OPSRAP": "https://isdc-data.gfz.de/gnss/products/rapid/w<GPS week>/"
+  },
+  "row": "url, SHA-256, bytes, retrieval time, Last-Modified",
+  "reissue": "a file is used as first retrieved; a later reissue is recorded beside it and not used, except 260926, whose reissue the plan seeks",
+  "late": "a file not published by the scoring date is missing; the cutoffs that need it are lost and counted",
+  "onDisk": "a file on disk from an earlier fetch keeps that fetch's record",
+  "sealed": "no fresh file's states are opened before scoring"
+ },
+ "check260926": {
+  "checkedUtc": "2026-10-31T10:01Z",
+  "result": "still a stub at EDC: 307-308 B, Last-Modified 2026-10-07, on all four spheres; cutoffs 09-20 and 09-27 are lost unless it is reissued"
  }
 }
