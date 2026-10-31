@@ -213,6 +213,13 @@ if '--summary' in sys.argv:
         if f.endswith('.json') and f != 'inputs.json' and not f.startswith('summary'):
             res[f[:-5]] = json.load(open(os.path.join(P7, f)))
     json.dump(res, open(os.path.join(P7, 'summary.json'), 'w'), indent=1)
+    # the receipt: every arm, with the event's samples left in the store; the inputs without their quantiles
+    IN_ = json.load(open(os.path.join(P7, 'inputs.json')))
+    IN_['marginal'] = {L: {k: v for k, v in m.items() if k != 'q'} for L, m in IN_['marginal'].items()}
+    IN_.pop('clusters', None)
+    RESULTS = os.environ.get('C3_RESULTS', os.path.join(ROOT, 'results/ffm-covariance-adaptive'))
+    label = 'precheck-P7-all' if P7.rstrip('/').endswith('-all') else 'precheck-P7'
+    json.dump(dict(plan='section 5 P7; C3-A6, C3-A7, C3-A9', samples='primary samples of all cal/val windows, a report' if label.endswith('all') else 'the gate: primary samples with E >= 2026-01-01 (C3-A9)', inputs=IN_, arms={k: {x: y for x, y in v.items() if x not in ('event', 'clusters')} for k, v in res.items()}), open(os.path.join(RESULTS, label + '.json'), 'w'), indent=1)
     for end in sorted(set(k.split('.')[0] for k in res)):
         print(end)
         for k, v in sorted(res.items()):
@@ -494,11 +501,14 @@ else:
         pl = kw.pop('plane', plane)
         res = simulate(des, pl, arm, TR, **kw)
         R['pass'] = rate(res, neff)
-    elif ARM in ('realized', 'realizedK1'):
-        # Report only, for the coordinator's ruling on kappa and the band: the marginal at its realized mean, not rescaled to 1, at the fitted kappa and at kappa = 1 (on R3 C_w is 0, so d2 at kappa = 1 is d2 x kappa exactly). Feeds no gate.
+    elif ARM in ('realized', 'realizedK1', 'coverage95'):
+        # Report only, for the coordinator's ruling on kappa and the band: the marginal at its realized mean, not rescaled to 1, at the fitted kappa and at kappa = 1 (on R3 C_w is 0, so d2 at kappa = 1 is d2 x kappa exactly);
+        # and at the scale per lead where its own coverage is 0.95. Feeds no gate.
         kappa = json.load(open(os.path.join(ROOT, 'results/ffm-covariance-adaptive/fit-R3.json')))['arms']['C3-ab']['kappa']
         raw = np.array([IN['marginal'][str(L)]['rawMean'] for L in LEADS])
         s_ = raw * (kappa if ARM == 'realizedK1' else 1.0)
+        if ARM == 'coverage95':
+            s_ = np.array([7.8147 / (3 * float(np.interp(0.95, U401, MARG[l]))) for l in range(6)])
         res = simulate(des, plane, 'heavy', TR, lead_scale=s_)
         m = np.array([o['mean'] for o in res])
         own = (2 / 3) / np.maximum(m.var(axis=0), 1e-12)
