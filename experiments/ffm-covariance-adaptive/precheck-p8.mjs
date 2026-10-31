@@ -1,6 +1,6 @@
 // P8 (PLAN.md section 5): axes-mle-ref recovers a known per-axis scale on synthetic histories built from the measured a, c = C_j (C3-A8), history lengths (latencies) and dependence: |median e^u_hat / e^u - 1| <= 10 % per class, axis and lead.
 // For each window and lead of the class, with the frozen a0, a1, n0 and k_ref, each history's errors are drawn N(0, e^u a_j + c_j) with the serial correlation measured on the class's z (exponential in time, fitted to the 3-day lag), and
-// u_hat is the module-free statistic of lib/model.mjs. Report-only column (C3-A9): E[e^(u - u_hat)] at the measured scale, beside kappa. True scales: u = -0.7, 0 and +0.7, and the class's measured median u per axis and lead. Seed SHA-256 C3S|p8|<class>|<axis>|<L>|<u>. Statistics only; no FFM.
+// u_hat is the module-free statistic of lib/model.mjs. Report-only column: E[e^(u - u_hat)] at the measured scale. True scales: u = -0.7, 0 and +0.7, and the class's measured median u per axis and lead. Seed SHA-256 C3S|p8|<class>|<axis>|<L>|<u>. Statistics only; no FFM.
 //   node experiments/ffm-covariance-adaptive/precheck-p8.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -47,8 +47,8 @@ for (const cls of Object.keys(CLASSES)) {
     const m = median(ratios);
     rows.push({ L, axis: 'RTN'[k], trueU: label, u0, windows: ratios.length, medianHistory: median(lengths), medianRatio: m, meanRatio: ratios.reduce((p, q) => p + q, 0) / ratios.length, meanInverseRatio: inverse.reduce((p, q) => p + q, 0) / inverse.length, medianRatioFullHistory: fullHistory.length ? median(fullHistory) : null, shrinkByPrior: Math.exp(-ab.n0 * u0 / (median(lengths) + ab.n0)), off: m - 1, pass: Math.abs(m - 1) <= 0.1 });
   }
-  if (!rows.length) { out.classes[cls] = { kappa: ab.kappa, rhoAt3Days: rho, rows, failures: [], worst: null }; continue; }
-  out.classes[cls] = { kappa: ab.kappa, plugInBiasAtMeasuredScale: rows.filter((r) => r.trueU === 'measured').map((r) => ({ L: r.L, axis: r.axis, u0: r.u0, meanEUMinusUHat: r.meanInverseRatio })), rhoAt3Days: rho, rows, failures: rows.filter((r) => !r.pass), worst: rows.reduce((p, q) => (Math.abs(q.off) > Math.abs(p.off) ? q : p)) };
+  if (!rows.length) { out.classes[cls] = { rhoAt3Days: rho, rows, failures: [], worst: null }; continue; }
+  out.classes[cls] = { plugInBiasAtMeasuredScale: rows.filter((r) => r.trueU === 'measured').map((r) => ({ L: r.L, axis: r.axis, u0: r.u0, meanEUMinusUHat: r.meanInverseRatio })), rhoAt3Days: rho, rows, failures: rows.filter((r) => !r.pass), worst: rows.reduce((p, q) => (Math.abs(q.off) > Math.abs(p.off) ? q : p)) };
   console.error(cls, 'worst', JSON.stringify(out.classes[cls].worst), 'failures', out.classes[cls].failures.length);
 }
 out.pass = Object.values(out.classes).every((c) => !c.failures.length);

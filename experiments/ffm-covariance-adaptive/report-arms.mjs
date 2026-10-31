@@ -11,7 +11,7 @@ import { AXES } from './lib/model.mjs';
 registered();
 const opened = new Opened();
 const familyOf = (s) => { const c = constellationOf(s.w.norad); if (c === 'sphere') return 'spheres'; if (c === 'Galileo') return 'Galileo'; return s.w.cluster === 'GLO-P2' ? 'GLONASS plane 2' : 'GLONASS other'; };
-const armOf = (fit, name) => { const a = fit.arms[name]; return { a0: a.a0, a1: a.a1, n0: a.n0, kappa: a.kappa, useG: true, useU: true, kRef: fit.kRef, history: name === 'C3-ab' ? 'truth' : 'reference' }; };
+const armOf = (fit, name) => { const a = fit.arms[name]; return { a0: a.a0, a1: a.a1, n0: a.n0, useG: true, useU: true, kRef: fit.kRef, history: name === 'C3-ab' ? 'truth' : 'reference' }; };
 const out = { plan: 'C3-A8, report only', classes: {}, satellite54377: [] };
 for (const cls of ['R3', 'R2-M', 'R2-O']) {
   const fit = JSON.parse(fs.readFileSync(path.join(results, `fit-${cls}.json`))), D = loadClass(cls, { opened });

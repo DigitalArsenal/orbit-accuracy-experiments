@@ -38,6 +38,6 @@ export function compose(samples, { a0 = 0, a1 = 0, n0 = 1, useG = false, useU = 
         memo.set(key, u);
       }
     }
-    return { ...s, g, u, m: scaled(l.P, kappa * g, u) }; // u is estimated without kappa (C3-A9)
+    return { ...s, g, u, m: scaled(l.P, kappa * g, u) }; // kappa only for C3-a-k, the class-scale comparator (C3-A10)
   });
 }

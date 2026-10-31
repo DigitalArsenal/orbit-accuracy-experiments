@@ -1,7 +1,7 @@
 // C3-small's statistics on cal/val (PLAN.md sections 2, 3, 5). Every d2 is gp-error-model pair_statistics on the composed covariance; JavaScript composes the arithmetic of section 2 and fits the constants.
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref                 P-REF: k_ref per class, axis and lead group; corr(forecast - truth, reference - truth)
 //   node experiments/ffm-covariance-adaptive/score.mjs --fit --class R3 --history reference     the report-only arm's constants, on its own (needs --pref); fit-<class>.reference.json
-//   node experiments/ffm-covariance-adaptive/score.mjs --fit --class R3       the model (C3-A8): constants by calibration log score; C3-0, C3-a, C3-b, C3-ab, with C3-b-ref and C3-ab-ref beside; validation cells and contrasts (needs the reference arm's fit)
+//   node experiments/ffm-covariance-adaptive/score.mjs --fit --class R3       the model (C3-A8, C3-A10): constants by calibration log score; C3-0, C3-a, C3-a-k, C3-b, C3-ab, with C3-b-ref and C3-ab-ref beside; validation cells and contrasts (needs the reference arm's fit)
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref2                P-REF's second check, a report: reference-based e^u against truth-based, at the reference arm's constants
 //   node experiments/ffm-covariance-adaptive/score.mjs --pref-gfz [--arm reference]             C3-A5, C3-A8: e^u against ESA's truth and against GFZ, GNSS calibration windows (the stop); with the registered reference in ESA's place (a report)
 //   node experiments/ffm-covariance-adaptive/score.mjs --extract --class R3   C3-ab's primary samples for P7 and P8 (under <store>/extract/)
@@ -134,43 +134,43 @@ if (args.fit) {
   const scan = async (grid, f) => { const out = []; for (const g of grid) out.push({ ...g, ...(await f(g)) }); return out; };
   const refine = async (p, f) => { const out = []; for (let i = -4; i <= 4; i += 1) for (let j = -4; j <= 4; j += 1) out.push({ ...p, a0: Math.round((p.a0 + i * 0.025) * 1e6) / 1e6, a1: Math.round((p.a1 + j * 0.05) * 1e6) / 1e6 }); return best(await scan(out, f)); };
   const gridA = A0.flatMap((a0) => A1.map((a1) => ({ a0, a1 })));
-  const fA = (g) => scoreK({ ...g, useG: true });
+  const fA = async (g) => ({ score: await meanLogScore(cal, { ...g, useG: true }) });
   const a1st = best(await scan(gridA, fA));
   arms['C3-a'] = { ...(await refine(a1st, fA)), useG: true };
   console.error(cls, 'C3-a', JSON.stringify(arms['C3-a']), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
-  const bList = await scan(M.n0.map((n0) => ({ n0 })), (g) => scoreK({ ...g, useU: true, kRef, history }));
+  // C3-a with its own class scale: a comparator for attribution and nothing else (C3-A10)
+  const fAK = (g) => scoreK({ ...g, useG: true });
+  arms['C3-a-k'] = { ...(await refine(best(await scan(gridA, fAK)), fAK)), useG: true };
+  Object.assign(arms['C3-a-k'], await scoreK(arms['C3-a-k'], 30));
+  console.error(cls, 'C3-a-k', JSON.stringify(arms['C3-a-k']), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
+  const bList = await scan(M.n0.map((n0) => ({ n0 })), async (g) => ({ score: await meanLogScore(cal, { ...g, useU: true, kRef, history }) }));
   arms['C3-b'] = { ...best(bList), useU: true, kRef, history };
   console.error(cls, 'C3-b', JSON.stringify(bList), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
-  const fAB = (g) => scoreK({ ...g, useG: true, useU: true, kRef, history });
+  const fAB = async (g) => ({ score: await meanLogScore(cal, { ...g, useG: true, useU: true, kRef, history }) });
   const gridAB = M.n0.flatMap((n0) => gridA.map((g) => ({ ...g, n0 })));
   const ab1st = best(await scan(gridAB, fAB));
   arms['C3-ab'] = { ...(await refine(ab1st, fAB)), useG: true, useU: true, kRef, history };
   console.error(cls, 'C3-ab', JSON.stringify({ ...arms['C3-ab'], kRef: undefined }), `${((Date.now() - t0) / 1000).toFixed(0)} s`);
-  // each arm's kappa to full precision
-  for (const name of ['C3-a', 'C3-b', 'C3-ab']) Object.assign(arms[name], await scoreK(arms[name], 30));
-  // the report-only arm's own constants, beside the model's; and C3-ab without kappa, for the stop
+  // the report-only arm's own constants, beside the model's
   if (history === 'truth') {
     const ref = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}.reference`)));
-    arms['C3-b-ref'] = { n0: ref.arms['C3-b'].n0, kappa: ref.arms['C3-b'].kappa, useU: true, kRef, history: 'reference' };
-    arms['C3-ab-ref'] = { a0: ref.arms['C3-ab'].a0, a1: ref.arms['C3-ab'].a1, n0: ref.arms['C3-ab'].n0, kappa: ref.arms['C3-ab'].kappa, useG: true, useU: true, kRef, history: 'reference' };
-    arms['C3-ab, kappa 1'] = { ...arms['C3-ab'], kappa: 1, score: undefined };
+    arms['C3-b-ref'] = { n0: ref.arms['C3-b'].n0, useU: true, kRef, history: 'reference' };
+    arms['C3-ab-ref'] = { a0: ref.arms['C3-ab'].a0, a1: ref.arms['C3-ab'].a1, n0: ref.arms['C3-ab'].n0, useG: true, useU: true, kRef, history: 'reference' };
   }
   const report = { class: cls, history, fitFrom: config.model.fitFrom, kRef, counts: D.counts, classMedianChi: D.classMedian, samples: { calibrationFitted: cal.length, calibrationEarly: calEarly.length, validation: val.length }, arms: {} };
   for (const [name, arm] of Object.entries(arms)) {
     report.arms[name] = { a0: arm.a0 ?? null, a1: arm.a1 ?? null, n0: arm.n0 ?? null, kappa: arm.kappa ?? 1, calibrationLogScore: arm.score ?? await meanLogScore(cal, arm),
       calibration: await cellsOf(cal, arm, `C3S|boot|${cls}|${name}|cal`, { intervals: false }), calibrationEarly: calEarly.length ? await cellsOf(calEarly, arm, `C3S|boot|${cls}|${name}|early`, { intervals: false }) : {}, validation: await cellsOf(val, arm, `C3S|boot|${cls}|${name}|val`, { intervals: true }) };
   }
-  report.validationContrasts = { 'C3-ab - C3-0': await contrast(val, arms['C3-ab'], arms['C3-0'], `C3S|boot|${cls}|contrast|ab-0`), 'C3-ab - C3-a': await contrast(val, arms['C3-ab'], arms['C3-a'], `C3S|boot|${cls}|contrast|ab-a`) };
+  report.validationContrasts = { 'C3-ab - C3-0': await contrast(val, arms['C3-ab'], arms['C3-0'], `C3S|boot|${cls}|contrast|ab-0`), 'C3-ab - C3-a-k': await contrast(val, arms['C3-ab'], arms['C3-a-k'], `C3S|boot|${cls}|contrast|ab-ak`), 'C3-ab - C3-a': await contrast(val, arms['C3-ab'], arms['C3-a'], `C3S|boot|${cls}|contrast|ab-a`) };
   report.stop = report.validationContrasts['C3-ab - C3-0'].hi < 0;
   if (history === 'truth') {
     report.validationContrasts['C3-ab - C3-ab-ref'] = await contrast(val, arms['C3-ab'], arms['C3-ab-ref'], `C3S|boot|${cls}|contrast|ab-abref`);
     report.stopAgainstReference = report.validationContrasts['C3-ab - C3-ab-ref'].hi < 0;
-    report.validationContrasts['C3-ab - C3-ab, kappa 1'] = await contrast(val, arms['C3-ab'], arms['C3-ab, kappa 1'], `C3S|boot|${cls}|contrast|ab-abk1`);
-    report.stopAgainstNoKappa = report.validationContrasts['C3-ab - C3-ab, kappa 1'].hi < 0;
   }
   report.seconds = (Date.now() - t0) / 1000;
   console.log(writeReceipt(history === 'truth' ? `fit-${cls}` : `fit-${cls}.${history}`, report, opened));
-  console.log(JSON.stringify({ cls, a: { a0: report.arms['C3-a'].a0, a1: report.arms['C3-a'].a1, kappa: report.arms['C3-a'].kappa }, b: { n0: report.arms['C3-b'].n0, kappa: report.arms['C3-b'].kappa }, ab: { a0: report.arms['C3-ab'].a0, a1: report.arms['C3-ab'].a1, n0: report.arms['C3-ab'].n0, kappa: report.arms['C3-ab'].kappa }, scores: Object.fromEntries(Object.entries(report.arms).map(([k, v]) => [k, v.calibrationLogScore])), contrasts: { ab0: { mean: report.validationContrasts['C3-ab - C3-0'].mean, lo: report.validationContrasts['C3-ab - C3-0'].lo, hi: report.validationContrasts['C3-ab - C3-0'].hi }, aba: { mean: report.validationContrasts['C3-ab - C3-a'].mean, lo: report.validationContrasts['C3-ab - C3-a'].lo, hi: report.validationContrasts['C3-ab - C3-a'].hi }, ...(history === 'truth' ? { abRef: { mean: report.validationContrasts['C3-ab - C3-ab-ref'].mean, lo: report.validationContrasts['C3-ab - C3-ab-ref'].lo, hi: report.validationContrasts['C3-ab - C3-ab-ref'].hi }, abK1: { mean: report.validationContrasts['C3-ab - C3-ab, kappa 1'].mean, lo: report.validationContrasts['C3-ab - C3-ab, kappa 1'].lo, hi: report.validationContrasts['C3-ab - C3-ab, kappa 1'].hi } } : {}) }, stop: report.stop, stopAgainstReference: report.stopAgainstReference ?? null, stopAgainstNoKappa: report.stopAgainstNoKappa ?? null }));
+  console.log(JSON.stringify({ cls, a: { a0: report.arms['C3-a'].a0, a1: report.arms['C3-a'].a1 }, ak: { a0: report.arms['C3-a-k'].a0, a1: report.arms['C3-a-k'].a1, kappa: report.arms['C3-a-k'].kappa }, b: report.arms['C3-b'].n0, ab: { a0: report.arms['C3-ab'].a0, a1: report.arms['C3-ab'].a1, n0: report.arms['C3-ab'].n0 }, scores: Object.fromEntries(Object.entries(report.arms).map(([k, v]) => [k, v.calibrationLogScore])), contrasts: Object.fromEntries(Object.entries(report.validationContrasts).map(([k, v]) => [k, { mean: v.mean, lo: v.lo, hi: v.hi }])), stop: report.stop, stopAgainstReference: report.stopAgainstReference ?? null }));
   process.exit(0);
 }
 
@@ -245,7 +245,7 @@ if (args['pref-gfz']) {
 if (args.freeze) {
   // What the freeze commit holds (PLAN.md section 6): the constants, k_ref, gate thresholds, dependence parameters and the fetch manifest rule. Written once, from the receipts; run.mjs --check reads it.
   const inputs = JSON.parse(fs.readFileSync(path.join(store, 'p7', 'inputs.json'))), summary = JSON.parse(fs.readFileSync(path.join(store, 'p7', 'summary.json')));
-  const classes = Object.fromEntries(Object.keys(CLASSES).map((cls) => { const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`))), ab = fit.arms['C3-ab'], ref = fit.arms['C3-ab-ref'], refB = fit.arms['C3-b-ref']; return [cls, { history: fit.history, fitFrom: fit.fitFrom, a0: ab.a0, a1: ab.a1, n0: ab.n0, kappa: ab.kappa, classMedianChi: fit.classMedianChi, fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}`))), referenceArm: { reportOnly: true, a0: ref.a0, a1: ref.a1, n0: ref.n0, kappa: ref.kappa, n0B: refB.n0, kappaB: refB.kappa, kRef: fit.kRef, kRefGroups: ['1-12 h', '24-72 h'], fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}.reference`))) } }]; }));
+  const classes = Object.fromEntries(Object.keys(CLASSES).map((cls) => { const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`))), ab = fit.arms['C3-ab'], ref = fit.arms['C3-ab-ref'], constants = (a) => ({ a0: a.a0, a1: a.a1, n0: a.n0, kappa: a.kappa }); return [cls, { history: fit.history, fitFrom: fit.fitFrom, a0: ab.a0, a1: ab.a1, n0: ab.n0, classMedianChi: fit.classMedianChi, fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}`))), reportedArms: Object.fromEntries(['C3-a', 'C3-a-k', 'C3-b'].map((n) => [n, constants(fit.arms[n])])), referenceArm: { reportOnly: true, a0: ref.a0, a1: ref.a1, n0: ref.n0, n0B: fit.arms['C3-b-ref'].n0, kRef: fit.kRef, kRefGroups: ['1-12 h', '24-72 h'], fitReceiptSha256: sha256(fs.readFileSync(pathOf(`fit-${cls}.reference`))) } }]; }));
   const heavy = Object.fromEntries(Object.entries(summary).filter(([k]) => k.endsWith('.base-heavy')).map(([k, v]) => [k.split('.')[0], { nEff: v.nEff, n: v.n, meanCov: v.meanCov }]));
   const body = { experiment: config.id, frozenUtc: new Date().toISOString(), c2ConstantsSha256: config.c2.constantsSha256, classes,
     gate: { verdict: config.verdict, nEffHeavy: heavy, judged: args.judged ?? null, q6: config.q6 },
@@ -261,7 +261,7 @@ if (args.freeze) {
 if (args.extract) {
   const cls = args.class;
   const fit = JSON.parse(fs.readFileSync(pathOf(`fit-${cls}`)));
-  const ab = fit.arms['C3-ab'], arm = { a0: ab.a0, a1: ab.a1, n0: ab.n0, kappa: ab.kappa, useG: true, useU: true, kRef: fit.kRef, history: fit.history };
+  const ab = fit.arms['C3-ab'], arm = { a0: ab.a0, a1: ab.a1, n0: ab.n0, useG: true, useU: true, kRef: fit.kRef, history: fit.history };
   const D = loadClass(cls, { opened });
   const all = samplesOf(D);
   const c = compose(all, arm), d2 = await d2Of(c);

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # P7 (PLAN.md section 5, C3-A1): power on C3's chain. Inputs: C3-ab's samples on cal/val (score.mjs --extract), P1's lead coverage, P2's notice keep and unlisted rates. The machinery is the planner's oracle: a Gaussian copula with a
 # common field, a same-plane field and a unit field, Toeplitz in time with the measured lag profile, the measured lead-lead matrix, resampled storm days, realized keep and lead masks, and the registered verdict with a two-way
-# bootstrap over clusters and moving 12-day blocks. Arms: 'heavy' (C3-ab's non-storm d2/3 per lead, mean 1: the gate) and 'gauss'. Maneuver arm in two shapes (C3-A1): the registered d2 x20-200 and the measured event, d2/3 about 5,
+# bootstrap over clusters and moving 12-day blocks. Arms: 'heavy' (C3-ab's non-storm d2/3 per lead at the scale where its own coverage is 0.95: the gate, C3-A10; 'mean1' beside it) and 'gauss'. Maneuver arm in two shapes (C3-A1): the registered d2 x20-200 and the measured event, d2/3 about 5,
 # at the non-storm rate's bound 0.0142 and, beside it, the all-window bound 0.0100 and the point estimate 1/332. Statistics only.
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --dependence [--from <date>]   dependence, marginal and keep from the extract (writes <store>/p7/inputs.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm <name> [--end 2026-11-30] [--trials 2000]     one arm (writes <store>/p7/<end>.<name>.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm plane2 --end 2026-12-31 ; --arm q6plane2 --end 2026-12-31     C3-A6: December with plane 2's event, heavy-tail arm, and both Q6 rules
-#   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm realized ; --arm realizedK1     report only: the marginal at its realized mean, at the fitted kappa and at kappa = 1
+#   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm realized ; --arm mean1     report only: the marginal at its realized mean, and at mean 1
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --summary               the table and the judged rule
 import hashlib, json, math, os, sys
 import numpy as np
@@ -485,8 +485,11 @@ samePlane = IN['samePlaneByConstellation'].get('Galileo', 0.1)
 plane = max(0.0, samePlane)
 base = os.path.join(P7, '%s.base-heavy.json' % END)
 R = dict(end=END, arm=ARM, trials=TR, seed=SEED, satellites=len(des), clusters=sorted(set(c['cluster'] for c in des)), plane=plane)
+# C3-A10: perfect is the marginal at the per-lead scale where its own coverage is 0.95, the center of the band's coverage condition; x0.7 and x1.4 are of that scale; the mean-1 figure is reported beside the gate
+COV95 = np.array([7.8147 / (3 * float(np.interp(0.95, U401, MARG[l]))) for l in range(6)])
+R['coverage95Scale'] = [float(x) for x in COV95]
 if ARM == 'base-heavy':
-    h = simulate(des, plane, 'heavy', TR)
+    h = simulate(des, plane, 'heavy', TR, lead_scale=COV95)
     m = np.array([o['mean'] for o in h])
     neff = (2 / 3) / np.maximum(m.var(axis=0), 1e-12)
     R.update(nEff=[float(x) for x in neff], n=[float(x) for x in np.mean([o['n'] for o in h], axis=0)], meanCov=[[float(np.mean([o['mean'][l] for o in h])), float(np.mean([o['cov'][l] for o in h]))] for l in range(6)], perfect=rate(h, neff), **{'pass': rate(h, neff)})
@@ -495,28 +498,26 @@ else:
     A = dict(gauss=dict(arm='gauss'), x07=dict(arm='heavy', scale=0.7), x08=dict(arm='heavy', scale=0.8), x125=dict(arm='heavy', scale=1.25), x14=dict(arm='heavy', scale=1.4), one3=dict(arm='heavy', one=3.0),
              plane03=dict(arm='heavy', plane=0.3), manv0142reg=dict(arm='heavy', manv=0.0142, shape='registered'), manv0142meas=dict(arm='heavy', manv=0.0142, shape='measured'),
              manv0100reg=dict(arm='heavy', manv=0.0100, shape='registered'), manv0100meas=dict(arm='heavy', manv=0.0100, shape='measured'), manv0030reg=dict(arm='heavy', manv=1 / 332, shape='registered'), manv0030meas=dict(arm='heavy', manv=1 / 332, shape='measured'))
+    for name_, kw_ in A.items():
+        if kw_['arm'] == 'heavy':
+            kw_['lead_scale'] = COV95
     if ARM in A:
         kw = dict(A[ARM])
         arm = kw.pop('arm')
         pl = kw.pop('plane', plane)
         res = simulate(des, pl, arm, TR, **kw)
         R['pass'] = rate(res, neff)
-    elif ARM in ('realized', 'realizedK1', 'coverage95'):
-        # Report only, for the coordinator's ruling on kappa and the band: the marginal at its realized mean, not rescaled to 1, at the fitted kappa and at kappa = 1 (on R3 C_w is 0, so d2 at kappa = 1 is d2 x kappa exactly);
-        # and at the scale per lead where its own coverage is 0.95. Feeds no gate.
-        kappa = json.load(open(os.path.join(ROOT, 'results/ffm-covariance-adaptive/fit-R3.json')))['arms']['C3-ab']['kappa']
-        raw = np.array([IN['marginal'][str(L)]['rawMean'] for L in LEADS])
-        s_ = raw * (kappa if ARM == 'realizedK1' else 1.0)
-        if ARM == 'coverage95':
-            s_ = np.array([7.8147 / (3 * float(np.interp(0.95, U401, MARG[l]))) for l in range(6)])
+    elif ARM in ('realized', 'mean1'):
+        # Report only: the marginal at its realized mean, not rescaled (the plain question of how often this model passes if fresh windows look like these), and at mean 1, the registered arm's scale. Feeds no gate.
+        s_ = np.array([IN['marginal'][str(L)]['rawMean'] for L in LEADS]) if ARM == 'realized' else np.ones(6)
         res = simulate(des, plane, 'heavy', TR, lead_scale=s_)
         m = np.array([o['mean'] for o in res])
         own = (2 / 3) / np.maximum(m.var(axis=0), 1e-12)
         counts = [int((o['inb']).sum()) for o in res]
-        R.update(kappa=kappa, leadScale=[float(x) for x in s_], nEffOwn=[float(x) for x in own], meanCov=[[float(np.mean([o['mean'][l] for o in res])), float(np.mean([o['cov'][l] for o in res])), float(np.mean([o['inb'][l] for o in res]))] for l in range(6)], inBandCount={str(c): counts.count(c) / len(counts) for c in range(7)}, passOwnNEff=rate(res, own), **{'pass': rate(res, neff)})
+        R.update(leadScale=[float(x) for x in s_], nEffOwn=[float(x) for x in own], meanCov=[[float(np.mean([o['mean'][l] for o in res])), float(np.mean([o['cov'][l] for o in res])), float(np.mean([o['inb'][l] for o in res]))] for l in range(6)], inBandCount={str(c): counts.count(c) / len(counts) for c in range(7)}, passOwnNEff=rate(res, own), **{'pass': rate(res, neff)})
     elif ARM == 'plane2':
         # C3-A6: the December design with plane 2's event, heavy-tail arm; eligibility on the base arm's n_eff and, beside it, on this arm's own
-        res = simulate(des, plane, 'heavy', TR, event=IN['plane2Event']['days'])
+        res = simulate(des, plane, 'heavy', TR, event=IN['plane2Event']['days'], lead_scale=COV95)
         m = np.array([o['mean'] for o in res])
         own = (2 / 3) / np.maximum(m.var(axis=0), 1e-12)
         R.update(event=IN['plane2Event'], nEffOwn=[float(x) for x in own], meanCov=[[float(np.mean([o['mean'][l] for o in res])), float(np.mean([o['cov'][l] for o in res]))] for l in range(6)], passOwnNEff=rate(res, own), **{'pass': rate(res, neff)})

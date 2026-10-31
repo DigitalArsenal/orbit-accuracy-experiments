@@ -226,7 +226,7 @@
   "R2": "state + B + AGOM"
  },
  "model": {
-  "formula": "P_w(L) = kappa D_o g_w(L) P_C2(L) D_o + C_w",
+  "formula": "P_w(L) = D_o g_w(L) P_C2(L) D_o + C_w",
   "chi2Median": {
    "withinDays": 90,
    "minFits": 5,
@@ -254,6 +254,7 @@
   "arms": [
    "C3-0",
    "C3-a",
+   "C3-a-k",
    "C3-b",
    "C3-ab"
   ],
@@ -293,22 +294,11 @@
   },
   "stopAlso": "ask if the validation interval of C3-ab minus C3-ab-ref is wholly below 0; it does not switch back",
   "kappa": {
-   "amendment": "C3-A9",
-   "per": "class",
-   "switch": "none by axis, lead or family",
-   "uHat": "estimated without kappa",
-   "arms": [
-    "C3-a",
-    "C3-b",
-    "C3-ab",
-    "C3-ab-ref"
-   ],
-   "c30": "C2 constants alone, no kappa",
-   "search": "golden section on ln kappa where C_w is not 0; closed form on R3"
+   "amendment": "C3-A9, withdrawn by C3-A10",
+   "comparator": "C3-a-k: C3-a with its own class scale, for attribution only"
   },
   "fitFrom": "2026-01-01",
-  "fitRule": "a0, a1, n0 and kappa by calibration log score on calibration windows with E >= fitFrom; earlier windows serve as history and are reported, not fitted",
-  "stopNoKappa": "ask if the validation interval of C3-ab minus C3-ab without kappa is wholly below 0"
+  "fitRule": "a0, a1 and n0 at kappa = 1 by calibration log score on calibration windows with E >= fitFrom; earlier windows serve as history and are reported, not fitted"
  },
  "availability": {
   "rule": "max(last epoch + lambda, Last-Modified) <= E",
@@ -389,7 +379,8 @@
     1.4
    ],
    "arm": "heavy-tail",
-   "otherwise": "one month once (R3 to 2026-12-31), else reported"
+   "otherwise": "one month once (R3 to 2026-12-31), else reported",
+   "perfect": "the marginal at the per-lead scale where its own coverage is 0.95 (C3-A10)"
   }
  },
  "q6": {
@@ -555,6 +546,12 @@
    "rule": "primary samples with E >= 2026-01-01, calibration and validation",
    "chosenAfter": "the stale all-windows figure: n_eff 19 to 40, every trial not testable, on the old constants",
    "reportedBeside": "all windows"
+  },
+  "perfect": {
+   "amendment": "C3-A10",
+   "rule": "the marginal at the per-lead scale where its own coverage is 0.95",
+   "thresholds": "at least 0.80, and at most 0.10 at x0.7 and x1.4 of that scale",
+   "besideTheGate": "the mean-1 figure, wherever the gate is quoted"
   }
  },
  "amendments": [
@@ -566,7 +563,8 @@
   "C3-A6 2026-10-31",
   "C3-A7 2026-10-31",
   "C3-A8 2026-10-31",
-  "C3-A9 2026-10-31"
+  "C3-A9 2026-10-31",
+  "C3-A10 2026-10-31"
  ],
  "p1b": {
   "rule": "r_low = A / B, r_high = A / (B - C); per class, axis and lead; mean z^2 under C2's P; primary exclusions",
