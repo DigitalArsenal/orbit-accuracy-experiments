@@ -78,8 +78,8 @@ The chosen lag, tail and shrink go in an amendment here before any test score. T
 
 ## Test on the fresh dates
 
-One satellite per file day, by the day's index in the set: Swarm B on even, Swarm A on odd. Truth: ESA's reduced-dynamic Swarm SP3 COM,
-gated, every 300 s. Arcs: this product's own `fit_energy_arcs` on Planet's states, with the 36 calibration Doves the module names, once
+One satellite per file day, by the day's index in the set: Swarm B on even, Swarm A on odd. Truth: ESA's reduced-dynamic Swarm SP3 COM in
+the archive's reference states, gated, every 300 s (XM's reader). Arcs: this product's own `fit_energy_arcs` on Planet's states, with the 36 calibration Doves the module names, once
 per arc, on weather as released at the arc's publication.
 
 | Arm | What | Where |
@@ -130,3 +130,14 @@ from the last solve epoch to the issue, then decays from the issue, with nodes e
 **A consumer whose cutoff falls after the issue meets a slow ramp from the issue to its cutoff:** about 13 % of the held value at 24 h for tau 168 h. So
 the mid and stale arms of the test read the record issued at the fresh cutoff, as a live consumer would. The lag and shrink steps read only times at or
 before their cutoffs and do not depend on this.
+
+### A2, 2026-10-31: the selection's result, before any test score
+
+Lag 9 h, tail tau 168 h from the issue, no shrink. These are F4's typed config. F4a keeps all three off except the hold, as registered. The numbers are in the internal plan, whose SHA-256 is in `config.json`.
+
+- **Lag.** 6 h and 9 h passed Holm and beat their own wrong-date nulls; 12 h did not pass Holm. The registered statistic at the fresh age chose 9 h; 6 h lies outside the 2 % band. Selection did not fail.
+- **W_N.** The rule said "beats the plain lag by more than 2 %" and did not say on which reading. By the step's own statistic W_N does not beat the plain lag. Paired per window, the point estimate clears 2 %, with an interval that holds 1. The code, written before the run and not committed before it, used the paired reading. I stopped rather than chose, and the coordinator ruled for the step's own statistic. W_N is not used.
+- **Shrink.** Neither window passes: each helps the quietest quarter and raises the other three quarters beyond the +2 % limit. The sigma stays registered and unused.
+- **Age.** On this density proxy the gain is at the fresh age. At mid and stale ages it is gone or reversed, which the test's report-only cells measure.
+
+The module pin in `config.json` moved to the wasm that holds the flow's stack and the decay. The solve and the in-arc record are unchanged from the wasm selection first ran on; `select` reruns on the pinned wasm before any test score to confirm that.

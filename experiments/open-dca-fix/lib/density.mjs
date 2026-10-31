@@ -38,7 +38,7 @@ export function samples(k, fromMs, toMs) {
 }
 /** Condition O at a cutoff, every day through the cutoff's day + 8 (XM3's drivers rule). */
 export function rowsAt(cutoff) {
-  const O = W.rowsO(cutoff - 72 * HOUR - 3 * DAY, cutoff);
+  const O = W.rowsO(cutoff - 72 * HOUR - 7 * DAY, cutoff);  // an arc ending at a lagged node starts days before the cutoff's arc
   if (O.excluded) return null;
   const byDate = new Map(O.rows.map((r) => [r.date, r])), out = [];
   let last = null;

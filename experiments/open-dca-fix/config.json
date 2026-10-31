@@ -2,14 +2,14 @@
   "experiment": "open-dca-fix",
   "task": "experiments-open-dca-fix-test-20261031",
   "plan": "experiments/open-dca-fix/PLAN.md",
-  "internalPlan": { "file": "PLAN-internal.md", "sha256": "3bf8fbdab6814d24636fa96479191665b271de8d300835f45cdff615d129d765" },
+  "internalPlan": { "file": "PLAN-internal.md", "sha256": "c607288f805367f8aa10a20dbd18615b14b3ba26123c9526a005e26fe82c48d9" },
   "store": "/opt/data/sdn-archive/open-dca-fix",
   "statistic": { "trim": 0.1, "draws": 10000, "seed": 20261031, "familyLevel": 0.025, "tieBand": 0.02 },
   "modules": {
-    "density": { "commit": "c84c7f396", "wasmSha256": "55eb9a35fccd2f162b99cff0f519e0d22d7f614199f5af46c4adfc87e4ce4642", "note": "analysis/density-calibration 0.7.0" },
+    "density": { "commit": "4b123d9f088deec48498bb4e19130a0e6f2cba4b", "wasmSha256": "5f1f6a24505314a9d54347342061d93cba12f478d1beb64251e9b1b12a6d2938", "note": "analysis/density-calibration 0.7.0, the commit before its landing; the wasm hash is the pin" },
     "legacyDensity": { "commit": "9a05d899b95242b358939ab1d68a776170a6b167", "wasmSha256": "5d284078821dd80cabd499bce10b174bf635a2456cda261d641a6219b4df3719", "note": "0.6.0, the flat rule and the decay: the selection's control" }
   },
-  "product": { "historyDays": 30, "legacyLatencyHours": 6, "noiseSigma": 0.065, "forecastTauHours": 168 },
+  "product": { "historyDays": 30, "legacyLatencyHours": 6, "noiseSigma": 0.065, "forecastTauHours": 168, "chosen": { "open_dca_lag_hours": 9, "open_dca_forecast_tau_hours": 168 } },
   "planet": {
     "publishedFile": "planet-published.json",
     "dirs": ["/opt/data/sdn-archive/hac/planet-ephemerides/history", "/opt/data/sdn-archive/e13-open-dca/planet-live"],
@@ -35,7 +35,15 @@
     "planetFrom": "2024-12-01",
     "planetTo": "2025-09-30",
     "satellites": { "even": 39451, "odd": 39452 },
-    "reportEveryIndexMod4": [0, 1]
+    "reportEveryIndexMod4": [0, 1],
+    "leadDays": [1, 2, 3, 7],
+    "arcs": { "fromDay": "2024-12-01", "toDay": "2025-10-09" },
+    "truth": {
+      "satellites": {
+        "A": { "norad": 39452, "product": "SW_OPER_SP3ACOM_2__" },
+        "B": { "norad": 39451, "product": "SW_OPER_SP3BCOM_2__" }
+      }
+    }
   },
   "prospective": { "from": "2026-11-29", "fileDays": 148 },
   "compute": { "maxWorkers": 8, "pauseAboveLoad1m": 45 }
