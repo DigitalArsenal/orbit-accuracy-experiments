@@ -180,3 +180,9 @@ failures, median e and along-track RMS of each arm, the median ratio as a percen
 One K arm of 7 days: GJ8 PEC at 12 to 24 s, RK78 startup at relative 1e-14 and absolute 1e-11 m and m/s, 300 s Chebyshev segments,
 1,152 outputs at 300 s: 0.13 s setup and 0.55 s coverage and reads. P: SGP4 to 7 days at 300 s 0.02 s, TEME to GCRF 0.34 s. One scoring
 0.08 s. Seven K arms and P: about 6 s per window, 1.7 worker-hours, about 15 min on 8 workers. Store about 0.02 GB.
+
+## Amendment 1 (2026-10-31, before any score; bookkeeping)
+
+- The registration above is commit 16ff820 on `wip/experiments-open-dca-ffm-regression-20261031/registration`, built on origin/main 22313bf.
+- The runner on top of it adds one report-only column, the share of a cell's pairs where the arm is closer than its reference, and one
+  smoke check, that a record with its node times moved is accepted and flies differently (K3's form). No rule, arm, window or input changes.
