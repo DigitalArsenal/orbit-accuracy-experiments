@@ -213,7 +213,7 @@ if (args.extract) {
   const D = loadClass(cls, { opened });
   const all = samplesOf(D);
   const c = compose(all, arm), d2 = await d2Of(c);
-  const rows = c.map((s, i) => ({ o: s.w.norad, cl: s.w.cluster, set: s.w.set, E: new Date(s.w.E).toISOString(), t: s.w.tIn / 86400e3, L: s.l.L, d2: d2[i], z: [0, 1, 2].map((k) => s.l.err[k] / Math.sqrt(s.m[AXES[k]] + s.l.C)), storm: s.l.storm, notice: s.w.notice, primary: s.primary, u: s.u, g: s.g, nHist: s.w.hist.get(s.l.L)?.length ?? 0, screen: Boolean(s.w.screen?.flagged) }));
+  const rows = c.map((s, i) => ({ o: s.w.norad, cl: s.w.cluster, set: s.w.set, E: new Date(s.w.E).toISOString(), t: s.w.tIn / 86400e3, L: s.l.L, d2: d2[i], e: s.l.err, st: s.w.state.slice(0, 6), z: [0, 1, 2].map((k) => s.l.err[k] / Math.sqrt(s.m[AXES[k]] + s.l.C)), storm: s.l.storm, notice: s.w.notice, primary: s.primary, u: s.u, g: s.g, nHist: s.w.hist.get(s.l.L)?.length ?? 0, screen: Boolean(s.w.screen?.flagged) }));
   fs.mkdirSync(path.join(store, 'extract'), { recursive: true });
   const P = config.population.judged, everyone = [...Object.values(P.ilrsa), ...Object.values(P.nsgf), ...P.glonass.c2, ...P.glonass.new, ...P.galileo.new, ...P.galileo.c2Six];
   const clusterOf = clusterMap(D.sinex);

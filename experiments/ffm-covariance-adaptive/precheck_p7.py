@@ -5,6 +5,7 @@
 # at the non-storm rate's bound 0.0142 and, beside it, the all-window bound 0.0100 and the point estimate 1/332. Statistics only.
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --dependence            dependence, marginal and keep from the extract (writes <store>/p7/inputs.json)
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm <name> [--end 2026-11-30] [--trials 2000]     one arm (writes <store>/p7/<end>.<name>.json)
+#   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --arm plane2 --end 2026-12-31 ; --arm q6plane2 --end 2026-12-31     C3-A6: December with plane 2's event, heavy-tail arm, and both Q6 rules
 #   python3 experiments/ffm-covariance-adaptive/precheck_p7.py --summary               the table and the judged rule
 import hashlib, json, math, os, sys
 import numpy as np
@@ -109,6 +110,59 @@ def dependence(rows, value):
     return dict(lag=lag, cross=max(0.0, cross[0] / cross[1]) if cross[1] else 0.0, samePlane=plane[0] / plane[1] if plane[1] else 0.0, lead=M)
 
 
+def sun_of(n):
+    """Low-precision solar direction of the Astronomical Almanac, days from J2000; good to about 0.4 deg here, of date against GCRF. A label only."""
+    L = math.radians((280.460 + 0.9856474 * n) % 360)
+    g = math.radians((357.528 + 0.9856003 * n) % 360)
+    lam = L + math.radians(1.915) * math.sin(g) + math.radians(0.020) * math.sin(2 * g)
+    eps = math.radians(23.439 - 4e-7 * n)
+    return np.array([math.cos(lam), math.cos(eps) * math.sin(lam), math.sin(eps) * math.sin(lam)])
+
+
+def j2000(date):
+    return float((np.datetime64(date) - np.datetime64('2000-01-01')).astype(int)) - 0.5
+
+
+def plane2_event(rows, norad=54377, limit=75.0):
+    """The samples of 54377 under C3-ab, with the December days of the design whose projected |beta| reaches the limit, each mapped to the measured cutoff at the same phase of the peak."""
+    mine = [r for r in rows if r['o'] == norad and r.get('st')]
+    normals = {}
+    for r in mine:
+        h = np.cross(r['st'][:3], r['st'][3:6])
+        normals[r['E'][:10]] = h / np.linalg.norm(h)
+    dates = sorted(normals)
+    H = np.array([normals[x] for x in dates])
+    t = np.array([j2000(x) for x in dates])
+    node = np.unwrap(np.arctan2(H[:, 0], -H[:, 1]))
+    inc = float(np.median(np.arccos(H[:, 2])))
+    k, c = np.polyfit(t, node, 1)
+
+    def beta(date):
+        n = j2000(date)
+        O = k * n + c
+        v = np.array([math.sin(O) * math.sin(inc), -math.cos(O) * math.sin(inc), math.cos(inc)])
+        return math.degrees(math.asin(float(np.clip(sun_of(n) @ v, -1, 1))))
+
+    def days(a, b):
+        return [str(np.datetime64(a) + i) for i in range(int((np.datetime64(b) - np.datetime64(a)).astype(int)) + 1)]
+    measured = min(days('2025-12-01', '2026-02-15'), key=lambda x: beta(x))
+    fresh = min(days('2026-11-15', '2027-01-31'), key=lambda x: beta(x))
+    shift = int((np.datetime64(measured) - np.datetime64(fresh)).astype(int))
+    by = {}
+    for r in mine:
+        by.setdefault(r['E'][:10], {})[r['L']] = r
+    out = []
+    for date in days('2026-11-15', '2026-12-31'):
+        if abs(beta(date)) < limit:
+            continue
+        target = np.datetime64(date) + shift
+        near = min(dates, key=lambda x: abs(int((np.datetime64(x) - target).astype(int))))
+        samples = by[near]
+        out.append(dict(date=date, beta=beta(date), measuredE=near, measuredBeta=math.degrees(math.asin(float(np.clip(sun_of(j2000(near)) @ normals[near], -1, 1)))),
+                        d2=[samples[L]['d2'] if L in samples else None for L in LEADS], z=[samples[L]['z'] if L in samples else None for L in LEADS]))
+    return dict(norad=norad, limitDeg=limit, peakMeasured=measured, peakFresh=fresh, shiftDays=shift, nodeRateDegPerDay=math.degrees(k), days=out)
+
+
 if '--dependence' in sys.argv:
     ex = json.load(open(os.path.join(STORE, 'extract', 'R3.json')))
     prim = [r for r in ex['rows'] if r['primary'] and math.isfinite(r['d2'])]
@@ -144,6 +198,8 @@ if '--dependence' in sys.argv:
     notices = sum(1 for r in ex['rows'] if r['notice'] and r['L'] == 24) / max(1, sum(1 for r in ex['rows'] if r['L'] == 24))
     out['noticeShareOfWindows'] = notices
     out['stormDaysCalVal'] = ex['stormDaysCalVal']
+    # C3-A6: plane 2's event as measured on 54377 under C3-ab, by beta, and mapped by beta onto the December grid
+    out['plane2Event'] = plane2_event(ex['rows'])
     json.dump(out, open(os.path.join(P7, 'inputs.json'), 'w'), indent=1)
     print(json.dumps(dict(samples=out['samples'], crossD2=out['d2']['cross'], samePlaneD2=out['d2']['samePlane'], samePlaneBy=out['samePlaneByConstellation'], lagD2=out['d2']['lag'], varPerWindow={k: v['varPerWindow'] for k, v in marg.items()}, rawMean={k: v['rawMean'] for k, v in marg.items()}, leadCoverage=out['leadCoverage'], noticeShare=notices), indent=0))
     sys.exit(0)
@@ -299,7 +355,7 @@ def design(end):
 STRICT = dayi('2026-10-26')
 
 
-def simulate(des, plane, arm, trials, scale=None, one=None, manv=0.0, shape='registered', axes=False, bias=0.0):
+def simulate(des, plane, arm, trials, scale=None, one=None, manv=0.0, shape='registered', axes=False, bias=0.0, event=None):
     S = len(des)
     T = 1 + max(int(c['days'].max()) for c in des)
     cl = sorted(set(c['cluster'] for c in des))
@@ -344,6 +400,17 @@ def simulate(des, plane, arm, trials, scale=None, one=None, manv=0.0, shape='reg
                 for l, L in enumerate(LEADS):
                     if L > tau:
                         D2[s, t, l] *= F
+        if event:
+            # C3-A6: the event as measured, on every plane 2 satellite, on the December days it reaches
+            for e in event:
+                for i, c in enumerate(des):
+                    if c['cluster'] == 'GLO-P2' and dayi(e['date']) in c['days']:
+                        t = dayi(e['date'])
+                        for l in range(6):
+                            if e['d2'][l] is not None:
+                                D2[i, t, l] = e['d2'][l]
+                                if axes:
+                                    Z[:, i, t, l] = e['z'][l]
         st = storm_days(T + 4)
         STM = np.zeros((T, 6), bool)
         for t in range(T):
@@ -422,6 +489,16 @@ else:
         pl = kw.pop('plane', plane)
         res = simulate(des, pl, arm, TR, **kw)
         R['pass'] = rate(res, neff)
+    elif ARM == 'plane2':
+        # C3-A6: the December design with plane 2's event, heavy-tail arm; eligibility on the base arm's n_eff and, beside it, on this arm's own
+        res = simulate(des, plane, 'heavy', TR, event=IN['plane2Event']['days'])
+        m = np.array([o['mean'] for o in res])
+        own = (2 / 3) / np.maximum(m.var(axis=0), 1e-12)
+        R.update(event=IN['plane2Event'], nEffOwn=[float(x) for x in own], meanCov=[[float(np.mean([o['mean'][l] for o in res])), float(np.mean([o['cov'][l] for o in res]))] for l in range(6)], passOwnNEff=rate(res, own), **{'pass': rate(res, neff)})
+    elif ARM == 'q6plane2':
+        # C3-A6: the same, on the per-axis model, under both Q6 rules
+        res = simulate(des, plane, 'gauss', TR, axes=True, event=IN['plane2Event']['days'])
+        R['pass'] = dict(a=rate(res, neff), b=rate(res, neff, q6b=True))
     elif ARM.startswith('q6'):
         kw = dict(q6=dict(), q6bias07=dict(bias=0.7), q6x08=dict(scale=0.8), q6x125=dict(scale=1.25))[ARM]
         res = simulate(des, plane, 'gauss', TR, axes=True, **kw)
