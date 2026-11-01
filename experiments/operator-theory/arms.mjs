@@ -16,6 +16,7 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { openFfmHost, openAxes, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
+import { vendorFiles } from './lib/vendors.mjs';
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
@@ -122,11 +123,13 @@ async function cssFiles() {
     return parseKvn(Buffer.from(firstZipMember(zip).bytes).toString('utf8'));
   } }];
 }
-const FILES = SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : await starlinkFiles();
-const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? 12;
+// The forward test's four sources (PLAN.md), or a vendor added by VENDORS.md. Nothing below changes for the four.
+const VENDOR = !['starlink', 'iss', 'planet', 'css'].includes(SOURCE);
+const FILES = SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
+const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? (VENDOR ? 24 : 12);
 const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 240], [240, 360]],
   css: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168]],
-  planet: [[0, 12], [12, 24], [24, 48], [48, 72], [72, 96], [96, 120]] }[SOURCE] ?? [[0, 6], [6, 12], [12, 24], [24, 36], [36, 48], [48, 60], [60, 72]];
+  planet: [[0, 12], [12, 24], [24, 48], [48, 72], [72, 96], [96, 120]] }[SOURCE] ?? (VENDOR ? [[0, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 336]] : null) ?? [[0, 6], [6, 12], [12, 24], [24, 36], [36, 48], [48, 60], [60, 72]];
 
 // ---- weather in force today, as issued
 const today = args.weather ?? new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10);
@@ -150,13 +153,18 @@ for (const file of FILES) {
   const started = Date.now();
   const row = { source: SOURCE, norad: file.norad, object: file.object, name: file.name, fetchedAt: isoMs(started), arms: {}, weatherObservedThrough: weather.observedThrough, costNote: COST_NOTE };
   try {
-    const { lines: raw, meta } = await file.read();
+    const { lines: raw, meta, frame: rawFrame } = await file.read();
     row.meta = meta;
+    row.norad = file.norad;
+    const leo = Math.hypot(...raw[0].r) < 8400;
+    const label = file.label ?? (VENDOR ? `${SOURCE}-${leo ? 'leo' : 'high'}` : SOURCE);
+    row.source = label;
     const t0 = Date.parse(raw[0].epoch), tEnd = Date.parse(raw.at(-1).epoch);
     row.states = raw.length; row.start = raw[0].epoch; row.stop = raw.at(-1).epoch;
     // The scoring and fit grid: every 300 s from the file's first state.
-    const thin = raw.filter((l) => (Date.parse(l.epoch) - t0) % THIN_MS === 0);
-    const gcrf = await axes.convert(thin, 'EME2000', 'GCRF');
+    let lastKept = -Infinity;
+    const thin = VENDOR ? raw.filter((l) => { const t = Date.parse(l.epoch); if (t - lastKept < THIN_MS) return false; lastKept = t; return true; }) : raw.filter((l) => (Date.parse(l.epoch) - t0) % THIN_MS === 0);
+    const gcrf = rawFrame === 'GCRF' ? thin : await axes.convert(thin, 'EME2000', 'GCRF');
     const epochs = gcrf.map((l) => l.epoch), epochsMs = epochs.map((e) => Date.parse(e)), truth = gcrf.map((l) => ({ r: l.r, v: l.v }));
     const hours = epochsMs.map((t) => (t - t0) / HOUR);
     const score = async (states) => {
@@ -195,8 +203,13 @@ for (const file of FILES) {
       row.arms[`S${SUPGP_WINDOW_H}`] = a;
     }
     const ffmSettings = (overrides = {}, variantAgom) => {
-      const seedB = meta.statedB ?? (SOURCE === 'planet' ? 0.01 : 0.03);
-      const agom = variantAgom ?? (SOURCE === 'iss' || SOURCE === 'css' ? 0 : SOURCE === 'planet' ? 0.02 : (file.norad < 56000 ? 0.11 : 0.19));
+      if (VENDOR && !leo) return {
+        forces: { gravity: 'SPHERICAL_HARMONICS', degree: 70, order: 70, thirdBodies: [10, 301], srp: true, drag: false, solidTides: true, relativity: 'IERS_2010' },
+        integrator, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
+        parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]),
+      };
+      const seedB = meta.statedB ?? (SOURCE === 'planet' || VENDOR ? 0.01 : 0.03);
+      const agom = variantAgom ?? (SOURCE === 'iss' || SOURCE === 'css' ? 0 : SOURCE === 'planet' || VENDOR ? 0.02 : (file.norad < 56000 ? 0.11 : 0.19));
       return {
         forces: { gravity: 'SPHERICAL_HARMONICS', degree: 70, order: 70, thirdBodies: [10, 301], srp: !['iss', 'css'].includes(SOURCE), drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: 'IERS_2010', ...overrides },
         integrator, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
@@ -204,7 +217,8 @@ for (const file of FILES) {
       };
     };
     for (const arc of ARCS) {
-      if (SOURCE === 'starlink' && arc >= 48 && Date.parse(epochs.at(-1)) - t0 < arc * HOUR) continue;
+      if ((SOURCE === 'starlink' || VENDOR) && arc >= 48 && Date.parse(epochs.at(-1)) - t0 < arc * HOUR) continue;
+      if (VENDOR && Date.parse(epochs.at(-1)) - t0 < arc * HOUR) continue;
       // Never across SpaceX's 48 h join: the fit's last state is before it.
       const { arc: states, oem } = block(SOURCE === 'starlink' && arc >= 48 ? 47.9 : arc);
       for (const name of ['X0', 'X2']) {
@@ -223,7 +237,7 @@ for (const file of FILES) {
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`${name}@${arc}`] = a;
       }
-      for (const variant of FFM_VARIANTS) {
+      for (const variant of (VENDOR && !leo ? [{ name: 'NO-DRAG' }] : FFM_VARIANTS)) {
         const a = { fitHours: arc, states: states.length };
         const { name: variantName, agom: variantAgom, ...overrides } = variant;
         const settings = ffmSettings(overrides, variantAgom);
@@ -242,7 +256,7 @@ for (const file of FILES) {
         row.arms[`F-${variantName}@${arc}`] = a;
       }
       // RFa12: XP2's front-page recipe (experiments/xp2-fit-design): drag from an FFM fit of the arc's last 12 h, elements from its last 17 h with that drag held.
-      {
+      if (!VENDOR || leo) {
         const a = { fitHours: arc };
         const end = t0 + (SOURCE === 'starlink' && arc >= 48 ? 47.9 : arc) * HOUR;
         const last = (h) => gcrf.filter((l) => { const t = Date.parse(l.epoch); return t >= end - h * HOUR && t <= end; });
@@ -273,7 +287,7 @@ for (const file of FILES) {
   } catch (error) { row.error = short(error); }
   row.wallSeconds = (Date.now() - started) / 1000;
   const products = Object.fromEntries(Object.entries(row.arms).filter(([, a]) => a.product).map(([k, a]) => [k, a.product]));
-  fs.writeFileSync(path.join(OUT, 'products', `${SOURCE}-${file.norad}-${started}.json`), JSON.stringify({ name: file.name, norad: file.norad, object: file.object, source: SOURCE, fetchedAt: row.fetchedAt, start: row.start, stop: row.stop, weatherDay: today, forecastOem: row.forecastOem ?? null, products }));
+  fs.writeFileSync(path.join(OUT, 'products', `${SOURCE}-${file.norad}-${started}.json`), JSON.stringify({ name: file.name, norad: file.norad, object: file.object, source: row.source, fetchedAt: row.fetchedAt, start: row.start, stop: row.stop, weatherDay: today, forecastOem: row.forecastOem ?? null, products }));
   delete row.forecastOem;
   for (const a of Object.values(row.arms)) delete a.product;
   fs.appendFileSync(path.join(OUT, `arms-${SOURCE}.jsonl`), `${JSON.stringify(row)}\n`);
