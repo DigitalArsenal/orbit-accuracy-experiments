@@ -102,7 +102,8 @@ async function planetFiles() {
   const tle = (await (await fetch(`${PLANET}planet_mc.tle`, { headers: UA })).text()).split(/\r?\n/);
   const sats = [];
   for (let i = 0; i + 1 < tle.length; i += 1) if (tle[i].startsWith('0 ') && tle[i + 1].startsWith('1 ')) sats.push({ norad: Number(tle[i + 1].slice(2, 7)), hw: tle[i].trim().split(/\s+/).at(-1).toLowerCase() });
-  const chosen = sats.sort((a, b) => sha(`operator-theory-20261101:${a.hw}`).localeCompare(sha(`operator-theory-20261101:${b.hw}`))).slice(0, Number(args.count ?? 12));
+  const [shardK, shardN] = (args.shard ?? '0/1').split('/').map(Number);
+  const chosen = sats.sort((a, b) => sha(`operator-theory-20261101:${a.hw}`).localeCompare(sha(`operator-theory-20261101:${b.hw}`))).slice(0, Number(args.count ?? 12)).filter((_, i) => i % shardN === shardK);
   return chosen.map((x) => ({ name: `${x.hw}_oem.txt`, norad: x.norad, object: x.hw, async read() {
     const r = await fetch(`${PLANET}${x.hw}_oem.txt`, { headers: UA });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);

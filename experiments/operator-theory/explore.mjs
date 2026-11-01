@@ -27,6 +27,7 @@ const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const HOUR = 3600000, DAY = 86400000, TRUTH_H = 3;
 const FIRST = '2026-10-30T05-01-35-297Z';
 const CONFIRM = args.confirm === 'true';
+const LADDER = args.ladder === 'true';   // exploratory: how cheap FFM can go before its accuracy falls
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
 const short = (e) => String(e?.message ?? e).slice(0, 160);
 const cycleMs = (id) => Date.parse(id.replace(/T(\d\d)-(\d\d)-(\d\d)-(\d+)Z$/, 'T$1:$2:$3.$4Z'));
@@ -70,6 +71,10 @@ const lite = { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 };
 const agomOf = (n) => (n < 56000 ? 0.11 : 0.19);
 const fullForces = (atmosphere) => ({ gravity: 'SPHERICAL_HARMONICS', degree: 70, order: 70, thirdBodies: [10, 301], srp: true, drag: true, atmosphere, solidTides: true, relativity: 'IERS_2010' });
 const base = { sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01 };
+const ladderArms = (norad, rows) => [
+  ['L20', 20, true, 'NRLMSISE00', 1e-8], ['L12', 12, true, 'NRLMSISE00', 1e-8], ['L8', 8, true, 'NRLMSISE00', 1e-8], ['L4', 4, true, 'NRLMSISE00', 1e-8],
+  ['L12-1e6', 12, true, 'NRLMSISE00', 1e-6], ['L8-1e6', 8, true, 'NRLMSISE00', 1e-6], ['L12-no-bodies', 12, false, 'NRLMSISE00', 1e-8], ['L12-exponential', 12, true, 'EXPONENTIAL', 1e-8],
+].map(([name, degree, bodies, atmosphere, tolerance]) => [name, { ...base, forces: { gravity: 'SPHERICAL_HARMONICS', degree, order: degree, thirdBodies: bodies ? [10, 301] : [], srp: true, drag: true, atmosphere }, integrator: { tolerance, maxStep: 300, minStep: 1e-3 }, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) }, rows]);
 const M = await openModules();
 const F = await openFfmHost();
 const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
@@ -101,10 +106,10 @@ for (const norad of mine) {
         cost[name] = { fitMs: Math.round(performance.now() - t), bterm: S.readFitOmm(f.omm).bterm };
       } catch (error) { arms[name] = { error: short(error) }; }
     };
-    await xp('X2flat', lines, PCF.X2, w.flatSpw);
-    if (CONFIRM) { await xp('X0@16', lines, PCF.X0); await xp('X2@16', lines, PCF.X2, w.spw); }
+    if (!LADDER) await xp('X2flat', lines, PCF.X2, w.flatSpw);
+    if (LADDER) { /* FFM only */ } else if (CONFIRM) { await xp('X0@16', lines, PCF.X0); await xp('X2@16', lines, PCF.X2, w.spw); }
     else { await xp('X2seen', lines, PCF.X2, seenSpw); await xp('X0s', lines, PCF.X0s); await xp('X2s', lines, PCF.X2s, w.spw); }
-    if (stitched) { await xp('X0st', stitched, PCF.X0); await xp('X2st', stitched, PCF.X2, w.spw); }
+    if (stitched && !LADDER) { await xp('X0st', stitched, PCF.X0); await xp('X2st', stitched, PCF.X2, w.spw); }
     const ffmFit = async (name, arc, settings, rows) => {
       const t = performance.now();
       try {
@@ -115,7 +120,7 @@ for (const norad of mine) {
       } catch (error) { cost[name] = { error: short(error) }; return { error }; }
     };
     // RFz: drag from FFM on the last 12 h, all 16 h for the elements, no refusal.
-    {
+    if (!LADDER) {
       const drag = lines.filter((l) => Date.parse(l.epoch) >= end - 12 * HOUR);
       const settings = { ...base, forces: fullForces('NRLMSISE00'), integrator, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) };
       const g = await ffmFit('RFz.drag', drag, settings, w.rows);
@@ -123,7 +128,7 @@ for (const norad of mine) {
       else { const b = Math.max(g.parameters[0].value, 1e-4); await xp('RFz', lines, pinned(b), w.spw); }
     }
     const flights = {};
-    for (const [name, settings, rows] of [
+    for (const [name, settings, rows] of LADDER ? ladderArms(norad, w.rows) : [
       CONFIRM
         ? ['F-NRLMSISE00@16', { ...base, forces: fullForces('NRLMSISE00'), integrator, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) }, w.rows]
         : ['F-A', { ...base, forces: { ...fullForces('NRLMSISE00'), drag: false }, integrator, parameters: [{ kind: 'IN_TRACK_ACCELERATION', value: 0 }], fixed: { agom: agomOf(norad) }, apriori: apriori([1e-5]) }, w.rows],
