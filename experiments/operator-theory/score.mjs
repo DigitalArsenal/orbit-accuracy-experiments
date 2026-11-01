@@ -101,7 +101,7 @@ for (const [key, list] of items) {
           const flown = await M.propagate(Buffer.from(product.omm, 'base64'), S.gridBytes(epochs), pinned(product.b), { rows: w.spw }, epochs.length);
           row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
         } else if (name.startsWith('F-')) {
-          const settings = { forces: product.forces, fixed: product.fixed, integrator };
+          const settings = { forces: product.forces, fixed: product.fixed, integrator: product.integrator ?? integrator };
           const flown = await F.forecast({ epoch: product.epoch, state: product.state, parameters: product.parameters }, epochs, settings, w.rows);
           row.arms[name] = await score(flown);
         }

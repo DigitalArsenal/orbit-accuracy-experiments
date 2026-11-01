@@ -126,6 +126,8 @@ async function cssFiles() {
 }
 // The forward test's four sources (PLAN.md), or a vendor added by VENDORS.md. Nothing below changes for the four.
 const VENDOR = !['starlink', 'iss', 'planet', 'css'].includes(SOURCE);
+// Exploratory (--lite): only cheaper FFM, 20x20, no tides or relativity, tolerance 1e-8, steps to 300 s; rows are read beside the store's by pair.
+const LITE = args.lite === 'true';
 const FILES = SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
 const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? (VENDOR ? 24 : 12);
 const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 240], [240, 360]],
@@ -186,7 +188,7 @@ for (const file of FILES) {
     };
 
     // S: our SupGP recipe, CelesTrak's window
-    {
+    if (!LITE) {
       const { oem } = block(SUPGP_WINDOW_H);
       const a = { fitHours: SUPGP_WINDOW_H };
       try {
@@ -222,7 +224,7 @@ for (const file of FILES) {
       if (VENDOR && Date.parse(epochs.at(-1)) - t0 < arc * HOUR) continue;
       // Never across SpaceX's 48 h join: the fit's last state is before it.
       const { arc: states, oem } = block(SOURCE === 'starlink' && arc >= 48 ? 47.9 : arc);
-      for (const name of ['X0', 'X2']) {
+      for (const name of LITE ? [] : ['X0', 'X2']) {
         const a = { fitHours: arc, states: states.length };
         const t1 = performance.now();
         const f = await M.fit(oem, PCF[name], EXTRA[name]);
@@ -238,10 +240,11 @@ for (const file of FILES) {
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`${name}@${arc}`] = a;
       }
-      for (const variant of (VENDOR && !leo ? [{ name: 'NO-DRAG' }] : FFM_VARIANTS)) {
+      for (const variant of (LITE ? [{ name: 'lite' }] : VENDOR && !leo ? [{ name: 'NO-DRAG' }] : FFM_VARIANTS)) {
         const a = { fitHours: arc, states: states.length };
         const { name: variantName, agom: variantAgom, ...overrides } = variant;
         const settings = ffmSettings(overrides, variantAgom);
+        if (LITE) { settings.forces = { ...settings.forces, degree: 20, order: 20, solidTides: false, relativity: undefined }; settings.integrator = { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }; }
         const t1 = performance.now();
         try {
           const f = await F.fit(states, [...states[0].r, ...states[0].v], settings, weather.rows, Date.parse(states.at(-1).epoch));
@@ -252,12 +255,12 @@ for (const file of FILES) {
           const t2 = performance.now();
           const flown = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, weather.rows);
           a.flyMs = performance.now() - t2;
-          a.ok = !!f.ok; a.bins = await score(flown); a.product = { epoch: f.epoch, state: f.state, parameters: f.parameters, forces: settings.forces, fixed: settings.fixed };
+          a.ok = !!f.ok; a.bins = await score(flown); a.product = { epoch: f.epoch, state: f.state, parameters: f.parameters, forces: settings.forces, fixed: settings.fixed, ...(LITE ? { integrator: settings.integrator } : {}) };
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`F-${variantName}@${arc}`] = a;
       }
       // RFa12: XP2's front-page recipe (experiments/xp2-fit-design): drag from an FFM fit of the arc's last 12 h, elements from its last 17 h with that drag held.
-      if (!VENDOR || leo) {
+      if (!LITE && (!VENDOR || leo)) {
         const a = { fitHours: arc };
         const end = t0 + (SOURCE === 'starlink' && arc >= 48 ? 47.9 : arc) * HOUR;
         const last = (h) => gcrf.filter((l) => { const t = Date.parse(l.epoch); return t >= end - h * HOUR && t <= end; });
