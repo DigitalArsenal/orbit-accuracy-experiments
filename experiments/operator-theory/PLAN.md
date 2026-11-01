@@ -85,3 +85,7 @@ An operator's theory is called "identified" only if one candidate's in-file medi
 ## Limits
 
 Two weeks of late 2026. A quiet fortnight says nothing about storms. Starlink's objects are a fixed draw, Planet's sample is small, and ISS and the China station are one object each. The reference is not independent of the forecast it scores.
+
+## Amendments
+
+1. 2026-11-01, after the first interim table: `check.mjs` added for the landing gate. It re-scores stored pairs and compares them with the stored rows. No arm, fit, bin or rule changes.
