@@ -46,12 +46,11 @@ const mine = chosen.filter((n) => parseInt(sha(`shard:${n}`).slice(0, 8), 16) % 
 function readHead(cycle, norad) {
   const file = path.join(cyclesRoot, cycle, `${norad}.ocm`);
   if (!fs.existsSync(file)) return null;
-  const o = O.OCM.getSizePrefixedRootAsOCM(new flatbuffers.ByteBuffer(new Uint8Array(fs.readFileSync(file))));
-  const meta = o.METADATA();
-  const t0 = Date.parse(meta.START_TIME()), step = o.STATE_STEP_SIZE() * 1000, count = o.STATE_DATALength() / 6;
+  const o = O.OCM.getSizePrefixedRootAsOCM(new flatbuffers.ByteBuffer(new Uint8Array(fs.readFileSync(file)))).unpack();
+  const t0 = Date.parse(o.METADATA.START_TIME), step = o.STATE_STEP_SIZE * 1000, data = o.STATE_DATA;
   const lines = [];
-  for (let i = 0; i < count; i += 1) lines.push({ epoch: isoMs(t0 + i * step), r: [o.STATE_DATA(6 * i), o.STATE_DATA(6 * i + 1), o.STATE_DATA(6 * i + 2)], v: [o.STATE_DATA(6 * i + 3), o.STATE_DATA(6 * i + 4), o.STATE_DATA(6 * i + 5)] });
-  return { cycle, norad, object: meta.OBJECT_NAME(), start: isoMs(t0), t0, lines };
+  for (let i = 0; i * 6 < data.length; i += 1) lines.push({ epoch: isoMs(t0 + i * step), r: [data[6 * i], data[6 * i + 1], data[6 * i + 2]], v: [data[6 * i + 3], data[6 * i + 4], data[6 * i + 5]] });
+  return { cycle, norad, object: o.METADATA.OBJECT_NAME, start: isoMs(t0), t0, lines };
 }
 
 /** The older head's own state at t: Hermite on the eight nearest states for position (about 2 mm at 600 s in low orbit), degree 7 for the velocity that only names the RTN axes. A data step. */
