@@ -29,7 +29,7 @@ export async function eopRows(parser, finalsBytes) {
 }
 
 // The block as SP3-shaped lines under `key`, UTC epochs shifted by shiftMs (0 unless the file's clock is known to be offset).
-function asLines(oemBytes, key, shiftMs) {
+export function asLines(oemBytes, key, shiftMs) {
   const oem = unpackOem(oemBytes);
   const block = oem.EPHEMERIS_DATA_BLOCK[0];
   const parse = (t) => Date.parse(/[zZ]$/.test(t) ? t : `${t}Z`);
@@ -55,7 +55,7 @@ function asLines(oemBytes, key, shiftMs) {
   return { bytes: packOem(oem), firstMs: first, lastMs: last, stepSeconds: lines.length > 1 ? (parse(lines[1].EPOCH) - first) / 1000 : 0, timeSystem: block.TIME_SYSTEM };
 }
 
-function sp3Descriptor({ key, stepSeconds, count, agency, frameLabel }) {
+export function sp3Descriptor({ key, stepSeconds, count, agency, frameLabel }) {
   const h = Object.assign(new NCDs.NCDSP3HeaderT(), {
     FILE_TYPE: 'P', SATELLITE_SYSTEM: 'M', ORBIT_TYPE: 'FIT', DATA_USED: 'operator ephemeris', COORDINATE_SYSTEM: frameLabel, AGENCY: agency,
     TIME_SYSTEM: 'UTC', EPOCH_INTERVAL_SECONDS: stepSeconds, NUMBER_OF_EPOCHS: count, SATELLITE_IDS: [key], SATELLITE_ACCURACY_EXPONENTS: [0],

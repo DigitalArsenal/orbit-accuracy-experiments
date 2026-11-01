@@ -163,7 +163,7 @@ for (const file of FILES) {
     row.states = raw.length; row.start = raw[0].epoch; row.stop = raw.at(-1).epoch;
     // The scoring and fit grid: every 300 s from the file's first state.
     let lastKept = -Infinity;
-    const thin = VENDOR ? raw.filter((l) => { const t = Date.parse(l.epoch); if (t - lastKept < THIN_MS) return false; lastKept = t; return true; }) : raw.filter((l) => (Date.parse(l.epoch) - t0) % THIN_MS === 0);
+    const thin = VENDOR ? raw.filter((l) => { const t = Date.parse(l.epoch); if (t - lastKept < 200000) return false; lastKept = t; return true; }) : raw.filter((l) => (Date.parse(l.epoch) - t0) % THIN_MS === 0);
     const gcrf = rawFrame === 'GCRF' ? thin : await axes.convert(thin, 'EME2000', 'GCRF');
     const epochs = gcrf.map((l) => l.epoch), epochsMs = epochs.map((e) => Date.parse(e)), truth = gcrf.map((l) => ({ r: l.r, v: l.v }));
     const hours = epochsMs.map((t) => (t - t0) / HOUR);
@@ -193,7 +193,7 @@ for (const file of FILES) {
         const { fr, el, bstar } = await G.fit(oem, { from: raw[0].epoch, to: isoMs(t0 + SUPGP_WINDOW_H * HOUR), epoch: 'first', fitBstar: true }, { name: file.object, objectId: '' });
         a.fitMs = performance.now() - t1;
         const t2 = performance.now();
-        const flown = await M.propagateSgp4(el, file.norad, epochsMs, THIN_MS / 1000);
+        const flown = await M.propagateSgp4(el, file.norad, epochsMs, VENDOR ? (epochsMs[1] - epochsMs[0]) / 1000 : THIN_MS / 1000);
         a.flyMs = performance.now() - t2;
         const missing = flown.filter((x) => !x).length;
         if (missing) throw new Error(`${missing} states absent`);

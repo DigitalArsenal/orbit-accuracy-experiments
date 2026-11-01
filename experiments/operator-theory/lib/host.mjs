@@ -74,11 +74,11 @@ export async function openFfmHost() {
     const lo = mjd(fromMs - 2 * DAY) - 1, hi = mjd(toMs + 2 * DAY) + 1;
     const eop = eopRows.filter((r) => r.MJD >= lo && r.MJD <= hi);
     if (!eop.length || eop.at(-1).MJD < mjd(toMs)) throw new Error(`Earth orientation ends before ${isoMs(toMs)} (last MJD ${eopRows.at(-1)?.MJD})`);
-    const spw = rows.map((r) => Object.assign(new P.SPWT(), r));
+    const spw = (rows ?? []).map((r) => Object.assign(new P.SPWT(), r));
     return [
       kernel,
       { portId: 'earth_orientation', typeRef: PRW_TYPE, payload: encode('EARTH_ORIENTATION', Object.assign(new P.PRWEarthOrientationT(), { ROWS: eop })) },
-      { portId: 'space_weather', typeRef: PRW_TYPE, payload: encode('SPACE_WEATHER', Object.assign(new P.PRWSpaceWeatherTableT(), { ROWS: spw })) },
+      ...(rows ? [{ portId: 'space_weather', typeRef: PRW_TYPE, payload: encode('SPACE_WEATHER', Object.assign(new P.PRWSpaceWeatherTableT(), { ROWS: spw })) }] : []),
     ];
   };
   return {
@@ -88,7 +88,8 @@ export async function openFfmHost() {
      * sigmaEditThreshold, maximumIterations, correctionTolerance }. `spanEndMs` bounds the environment frames.
      */
     async fit(lines, seed, settings, rows, spanEndMs) {
-      const ctx = { estimation, ffm, codec, domains, inputs: inputs(Date.parse(lines[0].epoch), spanEndMs, rows) };
+      // FFM takes no space weather when drag is off (the orbits above 8,400 km of VENDORS.md).
+      const ctx = { estimation, ffm, codec, domains, inputs: inputs(Date.parse(lines[0].epoch), spanEndMs, settings.forces?.drag === false ? null : rows) };
       const points = lines.map((l) => ({ time: l.epoch, position: l.r.map((x) => x * 1000) }));
       const reference = { epoch: lines[0].epoch, state: seed.map((x) => x * 1000) };
       return fitV3(ctx, points, reference, settings);
@@ -97,7 +98,7 @@ export async function openFfmHost() {
     async forecast(product, epochs, settings, rows) {
       const response = await ffm.invoke('invoke', [
         executionFrame({ epoch: product.epoch, state: product.state, samples: epochs, forces: settings.forces, parameters: product.parameters, fixed: settings.fixed ?? {}, stm: false, covariance: null, noise: null, integrator: settings.integrator }),
-        ...inputs(Date.parse(product.epoch), Date.parse(epochs.at(-1)), rows),
+        ...inputs(Date.parse(product.epoch), Date.parse(epochs.at(-1)), settings.forces?.drag === false ? null : rows),
       ]);
       const samples = decodeSamples(response);
       if (samples.length !== epochs.length) throw new Error(`forecast: ${samples.length} of ${epochs.length} states`);
