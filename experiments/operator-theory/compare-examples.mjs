@@ -101,6 +101,111 @@ if (MODE === 'next') {
     write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
   }
   await F.close(); await M.close();
+} else if (MODE === 'regimes') {
+  // AP6.md's regimes: for each satellite named, the 72 h forecast whose AP error on day 3 is nearest AP's median for that satellite. Data E's orbits are not republished, so that group has no example.
+  const { config, root, iso, ms, XM } = await import('../xp2-fit-design/common.mjs');
+  const { pathToFileURL } = await import('node:url');
+  const { openSgp4Fit } = await import('../xp2-fit-design/lib/sgp4fit.mjs');
+  const { driverRows } = await import('../ffm-atmosphere-xm3/lib/ffm.mjs');
+  const { openAp, apForces } = await import('./lib/ap.mjs');
+  const { openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
+  const { STATIC, TESS, GROUPS } = await import('./lib/regimes.mjs');
+  const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
+  const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
+  const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
+  const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
+  const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
+  const m = await openModules(), A = await openAp(path.join(NEW, 'module.wasm')), G = await openSgp4Fit(), F = await openFfmHost();
+  const ATM = XM.config.arms.X2.forces, GRID = XM.config.scoring.gridSeconds * 1000;
+  const PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+  const ffmSettings = (high) => (high ? {
+    forces: { gravity: 'SPHERICAL_HARMONICS', degree: 20, order: 20, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined },
+    integrator: { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
+    parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]),
+  } : {
+    forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined },
+    integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
+    parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.01 }], fixed: { agom: 0.02 }, apriori: apriori([0.1]),
+  });
+  const rows = rowsIn(path.join(NEW, 'regimes')).filter((r) => !r.error);
+  const NAMED = { LS: ['AJISAI', 'STARLETTE', 'LARES'], GD: ['LAGEOS 2', 'ETALON 1', 'LARES-2'] };
+  const picks = [];
+  for (const group of ['LS', 'GD', 'IG', 'GE', 'HE']) {
+    const names = [...new Set(rows.filter((r) => r.group === group).map((r) => r.name))];
+    const chosen = NAMED[group] ? names.filter((n) => NAMED[group].includes(n)) : names.slice(0, group === 'HE' ? 1 : 2);
+    for (const name of chosen) picks.push([group, name]);
+  }
+  const seriesOf = async (group, name) => {
+    if (group === 'HE') {
+      const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
+      const files = fs.readdirSync(TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(TESS.dir, f));
+      const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files, source: 'ap6-heo', id: 'TESS (-95)', name: TESS.name, norad: TESS.norad, fromUtc: TESS.from, toUtc: TESS.to, stride: 1 });
+      const axes = await openAxes();
+      const norm = s.lines.map((l) => ({ ...l, epoch: new Date(Math.round(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`) / 1000) * 1000).toISOString() }));
+      const first = ms(norm[0].epoch);
+      const lines = await axes.convert(norm.filter((l) => (ms(l.epoch) - first) % GRID === 0), 'EME2000', 'GCRF');
+      await axes.close();
+      return { norad: TESS.norad, objectId: TESS.objectId, lines };
+    }
+    if (group === 'IG' || group === 'GE') {
+      const o = SRC.mgex({ klass: group === 'IG' ? 'igso' : 'geo' }).find((x) => x.name === name);
+      return { norad: o.norad, objectId: o.objectId ?? '', lines: o.lines };
+    }
+    for (const o of STATIC.filter((x) => x.group === group)) { const s = SRC.chain(o.files()); if ((s.name || o.name) === name) return { norad: s.norad, objectId: s.objectId ?? '', lines: s.lines }; }
+    throw new Error(`no series for ${name}`);
+  };
+  for (const [group, name] of picks) {
+    const id = `truth-${GROUPS[group].label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    const vacuum = group === 'HE', arc = 72, D3 = '3';
+    const ranked = nearestMedian(rows.filter((r) => r.group === group && r.name === name), (r) => r.arms.AP72?.days?.[D3]?.e);
+    const o = await seriesOf(group, name);
+    const times = o.lines.map((l) => ms(l.epoch));
+    const between = (a, b) => o.lines.filter((_, i) => times[i] >= a && times[i] <= b);
+    const stepNative = times[1] - times[0];
+    let done = false;
+    for (const pick of ranked.slice(0, 8)) {
+      try {
+        const D0 = Date.parse(pick.cutoff.length === 10 ? `${pick.cutoff}T00:00:00Z` : pick.cutoff);
+        const from = D0 - arc * HOUR, to = D0 + 7 * DAY;
+        const raw = between(from, D0);
+        const thin = T.thinned(raw).chosen;
+        const high = Math.hypot(...thin[0].r) >= 8400;
+        const want = (high ? 300 : 120) * 1000, step = Math.max(want, Math.ceil(want / stepNative) * stepNative);
+        const whole = between(from, to), t0 = ms(whole[0].epoch);
+        const grid = whole.filter((l) => (ms(l.epoch) - t0) % step === 0 && ms(l.epoch) > t0);
+        const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
+        let ex, spw;
+        if (!vacuum) {
+          const R = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
+          if (R.excluded) continue;
+          ex = { rows: S.spwBytes(R.rows) };
+          spw = driverRows(R.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
+        }
+        const pcfAp = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20, atmosphere: !vacuum }), fit: null });
+        const oem = S.oemBytes({ frame: 'GCRF', object: { name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
+        const fa = await A.fit(oem, pcfAp, ex); if (!fa.ok) continue;
+        const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
+        const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name, objectId: o.objectId });
+        const settings = ffmSettings(high);
+        const ff = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0); if (!ff.state) continue;
+        const sg = await m.propagateSgp4(el, o.norad, epochsMs, step / 1000);
+        if (sg.some((s) => !s)) continue;
+        if (epochsMs.some((t) => t <= Date.parse(ff.epoch))) continue;
+        const tracks = {
+          reference: grid.map((l) => l.r),
+          AP: (await m.toAxes(await A.propagate(fa.omm, gridB, pcfAp, ex, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+          XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+          SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
+          FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((s) => s.r),
+        };
+        write({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider, satellite: name, fitHours: arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+        done = true;
+        break;
+      } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
+    }
+    if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
+  }
+  await F.close();
 } else {
   const ON_XM = MODE === 'truth2';
   const { config, root, iso, ms, XM, windows } = await import('../xp2-fit-design/common.mjs');

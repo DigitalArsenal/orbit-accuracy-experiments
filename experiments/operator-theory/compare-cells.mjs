@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { binOf, pct, asc } from './lib/compare.mjs';
+import { GROUPS } from './lib/regimes.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, 'b040');
@@ -74,6 +75,25 @@ for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf
       if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
     }
     out.push({ reference: 'truth', level, regime: cut.regime, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms });
+  }
+}
+
+// AP6.md's regimes, the same way.
+if (fs.existsSync(path.join(NEW, 'regimes')) && !argOf('--only')) {
+  const live = rowsIn(path.join(NEW, 'regimes')).filter((r) => !r.error);
+  for (const [group, g] of Object.entries(GROUPS)) {
+    const inGroup = live.filter((r) => r.group === group);
+    const arcs = [...new Set(inGroup.flatMap((r) => Object.keys(r.arms).map((a) => Number(a.replace(/^\D+/, '')))))].sort((a, b) => a - b);
+    const ffm = group === 'LS' || group === 'DO' ? 'FFM40' : 'FFM20';
+    const levels = [['regime', 'All', 'All', inGroup], ['provider', g.provider, 'All', inGroup], ...[...new Set(inGroup.map((r) => r.name))].map((name) => ['satellite', g.provider, name, inGroup.filter((r) => r.name === name)])];
+    for (const [level, provider, satellite, list] of levels) for (const fit of arcs) for (const day of ['1', '2', '3', '7']) {
+      const arms = {};
+      for (const [column, code] of [['SGP4', 'S'], ['XP', 'XP'], ['AP', 'AP'], [ffm, 'F']]) {
+        const v = list.map((r) => e(r, `${code}${fit}`, day)).filter(Number.isFinite).sort(asc);
+        if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
+      }
+      out.push({ reference: 'truth', level, regime: g.label, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms });
+    }
   }
 }
 

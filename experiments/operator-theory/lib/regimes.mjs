@@ -21,7 +21,7 @@ const ALT = { group: 'DO', arcs: [24, 72], cutoffs: every('2025-10-10', '2025-12
 const GEOD = { group: 'GD', arcs: [72], cutoffs: every('2025-10-11', '2025-12-21', 7) };
 export const GROUPS = {
   LS: { label: 'Low orbit, laser spheres', provider: 'ILRS (NSGF)' },
-  DO: { label: 'Low orbit, altimetry', provider: 'Data F' },
+  DO: { label: 'Low orbit, altimetry', provider: 'Data E' },
   GD: { label: 'Laser geodetic', provider: 'ILRS' },
   IG: { label: 'Inclined geosynchronous', provider: 'GFZ' },
   GE: { label: 'Geostationary', provider: 'GFZ' },
