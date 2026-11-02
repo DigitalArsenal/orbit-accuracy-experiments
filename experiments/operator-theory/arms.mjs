@@ -19,6 +19,7 @@ import { weatherRows } from './lib/weather.mjs';
 import { vendorFiles } from './lib/vendors.mjs';
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
+import { apForces, openAp } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
@@ -149,6 +150,9 @@ const integrator = { tolerance: 1e-10, maxStep: 120, minStep: 1e-4 };
 const COST_NOTE = { ffm: { integrator: 'RK78', tolerance: integrator.tolerance, maxStepSeconds: integrator.maxStep, gravity: '70x70', outputSeconds: THIN_MS / 1000 }, xp: 'the theory\'s own grid; output at 300 s', sgp4: 'analytic; output at 300 s' };
 
 const M = await openModules();
+// --ap-arms '[{name, tesseral, zonal, atmosphere}]' --ap-wasm <file>: AP (SGP4XP with parts replaced) from a build not yet pinned; exploratory.
+const AP_ARMS = args['ap-arms'] ? JSON.parse(args['ap-arms']) : null;
+const A = AP_ARMS ? await openAp(args['ap-wasm']) : null;
 const G = await openSgp4Fit();
 const F = await openFfmHost();
 const axes = await openAxes();
@@ -164,7 +168,7 @@ for (const file of FILES) {
     const leo = Math.hypot(...raw[0].r) < 8400;
     const label = file.label ?? (VENDOR ? `${SOURCE}-${leo ? 'leo' : 'high'}` : SOURCE);
     row.source = label;
-    if (LADDER && !leo && !LADDER.some((v) => v.regime === 'high')) throw new Error('not a low orbit: outside the ladder');
+    if (LADDER && !AP_ARMS && !leo && !LADDER.some((v) => v.regime === 'high')) throw new Error('not a low orbit: outside the ladder');
     const t0 = Date.parse(raw[0].epoch), tEnd = Date.parse(raw.at(-1).epoch);
     row.states = raw.length; row.start = raw[0].epoch; row.stop = raw.at(-1).epoch;
     // The scoring and fit grid: every 300 s from the file's first state.
@@ -242,6 +246,26 @@ for (const file of FILES) {
           a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = Buffer.from(f.omm).toString('base64');
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`${name}@${arc}`] = a;
+      }
+      for (const spec of AP_ARMS ?? []) {
+        const a = { fitHours: arc, states: states.length };
+        const forces = apForces(XMC.arms.X2.forces, spec);
+        // spec.fit: 'module' the module's own priors, or { dragPrior, srpPrior }; else the registered XM priors (AGOM held at 0.01).
+        const fitOf = spec.fit === 'module' ? null : spec.fit ?? FIT;
+        const pcf = S.pcfBytes({ forces, fit: fitOf }), extra = spec.atmosphere === false ? undefined : EXTRA.X2;
+        const t1 = performance.now();
+        const f = await A.fit(oem, pcf, extra);
+        a.fitMs = performance.now() - t1;
+        if (!f.ok) { a.ok = false; a.error = f.error; row.arms[`A-${spec.name}@${arc}`] = a; continue; }
+        const info = S.readFitOmm(f.omm);
+        a.bterm = info.bterm; a.agom = info.agom; a.iterations = info.iterations; a.reportedRmsKm = info.fitRmsKm;
+        try {
+          const t2 = performance.now();
+          const flown = await A.propagate(f.omm, S.gridBytes(epochs), pcf, extra, epochs.length);
+          a.flyMs = performance.now() - t2;
+          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = { omm: Buffer.from(f.omm).toString('base64'), forces, atmosphere: spec.atmosphere !== false };
+        } catch (error) { a.ok = false; a.error = short(error); }
+        row.arms[`A-${spec.name}@${arc}`] = a;
       }
       for (const variant of (LADDER?.filter((v) => (v.regime ?? 'leo') === (leo ? 'leo' : 'high')) ?? (LITE ? [{ name: 'lite' }] : VENDOR && !leo ? [{ name: 'NO-DRAG' }] : FFM_VARIANTS))) {
         const a = { fitHours: arc, states: states.length };

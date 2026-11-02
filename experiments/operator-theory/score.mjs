@@ -8,6 +8,7 @@ import crypto from 'node:crypto';
 import { openFfmHost, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
+import { openAp } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
@@ -61,6 +62,7 @@ function weather(day) {
   return weatherOf.get(day);
 }
 const M = await openModules();
+const A = args['ap-wasm'] ? await openAp(args['ap-wasm']) : null;
 const F = await openFfmHost();
 const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
 let added = 0;
@@ -92,6 +94,10 @@ for (const [key, list] of items) {
           // An SGP4 set flies on SGP4, on a grid from the first truth epoch.
           const flown = await M.propagateSgp4(product, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
           if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
+          row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
+        } else if (name.startsWith('A-')) {
+          const pcf = S.pcfBytes({ forces: product.forces, fit: FIT });
+          const flown = await A.propagate(Buffer.from(product.omm, 'base64'), S.gridBytes(epochs), pcf, product.atmosphere ? { rows: w.spw } : undefined, epochs.length);
           row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
         } else if (name.startsWith('X')) {
           const kind = name.split('@')[0];

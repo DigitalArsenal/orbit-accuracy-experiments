@@ -18,6 +18,7 @@ import * as O from 'spacedatastandards.org/lib/js/OCM/main.js';
 import { openFfmHost, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
+import { apForces, openAp } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
@@ -28,6 +29,8 @@ const HOUR = 3600000, DAY = 86400000, TRUTH_H = 3;
 const FIRST = '2026-10-30T05-01-35-297Z';
 const CONFIRM = args.confirm === 'true';
 const LADDER = args.ladder === 'true';   // exploratory: how cheap FFM can go before its accuracy falls
+// --ap-arms '[{name, tesseral, zonal, atmosphere, fit, stitched}]' --ap-wasm <file>: AP's fits only, from a build not yet pinned.
+const AP_ARMS = args['ap-arms'] ? JSON.parse(args['ap-arms']) : null;
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
 const short = (e) => String(e?.message ?? e).slice(0, 160);
 const cycleMs = (id) => Date.parse(id.replace(/T(\d\d)-(\d\d)-(\d\d)-(\d+)Z$/, 'T$1:$2:$3.$4Z'));
@@ -76,6 +79,7 @@ const ladderArms = (norad, rows) => [
   ['L12-1e6', 12, true, 'NRLMSISE00', 1e-6], ['L8-1e6', 8, true, 'NRLMSISE00', 1e-6], ['L12-no-bodies', 12, false, 'NRLMSISE00', 1e-8], ['L12-exponential', 12, true, 'EXPONENTIAL', 1e-8],
 ].map(([name, degree, bodies, atmosphere, tolerance]) => [name, { ...base, forces: { gravity: 'SPHERICAL_HARMONICS', degree, order: degree, thirdBodies: bodies ? [10, 301] : [], srp: true, drag: true, atmosphere }, integrator: { tolerance, maxStep: 300, minStep: 1e-3 }, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) }, rows]);
 const M = await openModules();
+const A = AP_ARMS ? await openAp(args['ap-wasm']) : null;
 const F = await openFfmHost();
 const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
 fs.mkdirSync(OUT, { recursive: true });
@@ -106,10 +110,20 @@ for (const norad of mine) {
         cost[name] = { fitMs: Math.round(performance.now() - t), bterm: S.readFitOmm(f.omm).bterm };
       } catch (error) { arms[name] = { error: short(error) }; }
     };
-    if (!LADDER) await xp('X2flat', lines, PCF.X2, w.flatSpw);
-    if (LADDER) { /* FFM only */ } else if (CONFIRM) { await xp('X0@16', lines, PCF.X0); await xp('X2@16', lines, PCF.X2, w.spw); }
+    for (const spec of AP_ARMS ?? []) {
+      const arc = spec.stitched ? stitched : lines;
+      if (!arc) continue;
+      const name = `A-${spec.name}`, t = performance.now();
+      const pcf = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, spec), fit: spec.fit === 'module' ? null : spec.fit ?? FIT }), extra = spec.atmosphere === false ? undefined : { rows: w.spw };
+      const f = await A.fit(oem(arc), pcf, extra);
+      if (!f.ok) { arms[name] = { error: f.error }; continue; }
+      arms[name] = { omm: f.omm, pcf, extra, host: A };
+      cost[name] = { fitMs: Math.round(performance.now() - t), bterm: S.readFitOmm(f.omm).bterm, rms: S.readFitOmm(f.omm).fitRmsKm };
+    }
+    if (!LADDER && !AP_ARMS) await xp('X2flat', lines, PCF.X2, w.flatSpw);
+    if (LADDER || AP_ARMS) { /* FFM or AP only */ } else if (CONFIRM) { await xp('X0@16', lines, PCF.X0); await xp('X2@16', lines, PCF.X2, w.spw); }
     else { await xp('X2seen', lines, PCF.X2, seenSpw); await xp('X0s', lines, PCF.X0s); await xp('X2s', lines, PCF.X2s, w.spw); }
-    if (stitched && !LADDER) { await xp('X0st', stitched, PCF.X0); await xp('X2st', stitched, PCF.X2, w.spw); }
+    if (stitched && !LADDER && !AP_ARMS) { await xp('X0st', stitched, PCF.X0); await xp('X2st', stitched, PCF.X2, w.spw); }
     const ffmFit = async (name, arc, settings, rows) => {
       const t = performance.now();
       try {
@@ -120,7 +134,7 @@ for (const norad of mine) {
       } catch (error) { cost[name] = { error: short(error) }; return { error }; }
     };
     // RFz: drag from FFM on the last 12 h, all 16 h for the elements, no refusal.
-    if (!LADDER) {
+    if (!LADDER && !AP_ARMS) {
       const drag = lines.filter((l) => Date.parse(l.epoch) >= end - 12 * HOUR);
       const settings = { ...base, forces: fullForces('NRLMSISE00'), integrator, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) };
       const g = await ffmFit('RFz.drag', drag, settings, w.rows);
@@ -128,7 +142,7 @@ for (const norad of mine) {
       else { const b = Math.max(g.parameters[0].value, 1e-4); await xp('RFz', lines, pinned(b), w.spw); }
     }
     const flights = {};
-    for (const [name, settings, rows] of LADDER ? ladderArms(norad, w.rows) : [
+    for (const [name, settings, rows] of LADDER ? ladderArms(norad, w.rows) : AP_ARMS ? [] : [
       CONFIRM
         ? ['F-NRLMSISE00@16', { ...base, forces: fullForces('NRLMSISE00'), integrator, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) }, w.rows]
         : ['F-A', { ...base, forces: { ...fullForces('NRLMSISE00'), drag: false }, integrator, parameters: [{ kind: 'IN_TRACK_ACCELERATION', value: 0 }], fixed: { agom: agomOf(norad) }, apriori: apriori([1e-5]) }, w.rows],
@@ -149,7 +163,7 @@ for (const norad of mine) {
       const score = async (states) => { const e = await M.rtn(states, ref.states); return { km: Math.hypot(rmsOf(e.map((x) => x[0])), rmsOf(e.map((x) => x[1])), rmsOf(e.map((x) => x[2]))), r: rmsOf(e.map((x) => x[0])), t: rmsOf(e.map((x) => x[1])), n: rmsOf(e.map((x) => x[2])) }; };
       for (const [name, a] of Object.entries(arms)) {
         if (a.error) { row.arms[name] = { error: a.error }; continue; }
-        try { row.arms[name] = await score(await M.toAxes(await M.propagate(a.omm, S.gridBytes(ref.epochs), a.pcf, a.extra, ref.epochs.length), ref.epochs, 'GCRF')); } catch (error) { row.arms[name] = { error: short(error) }; }
+        try { row.arms[name] = await score(await M.toAxes(await (a.host ?? M).propagate(a.omm, S.gridBytes(ref.epochs), a.pcf, a.extra, ref.epochs.length), ref.epochs, 'GCRF')); } catch (error) { row.arms[name] = { error: short(error) }; }
       }
       for (const [name, map] of Object.entries(flights)) {
         if (map.error) { row.arms[name] = { error: map.error }; continue; }
