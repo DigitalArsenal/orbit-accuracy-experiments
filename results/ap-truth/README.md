@@ -55,6 +55,28 @@ AP.md's Parts L and H: 19,399 pairs on the 54 days of `experiments/operator-theo
 
 So above the drag regime AP adds nothing on navigation satellites and costs nothing there. On the geodetic group it looks better, too few objects to claim. Fit and flight per file in that run under load: AP 0.59 and 0.20 s, XP 0.18 and 0.06 s on low orbits. FFM on the same pairs is in `results/operator-theory/cheaper`.
 
+## AP fitted to FFM's forecast
+
+`experiments/operator-theory/AP3.md`, registered at ec1b796 before any fit of this kind on these days. A node fits the cheaper FFM to the operator's 48 h and carries it to 180 h; AP is fitted to those states and the consumer flies AP. The control is AP fitted to the operator's own 72 h. Same 19,399 pairs, reference and weather as above. Table: `table-apf.md`. Medians over pairs, km.
+
+| Group | Arm | 24 h | 72 h | 120 h | 168 h |
+|---|---|---:|---:|---:|---:|
+| Low, 17 satellites | AP on FFM's forecast | 0.059 | 0.072 | 0.108 | 0.189 |
+| Low | AP on the operator's 72 h | 0.058 | 0.072 | 0.177 | 0.370 |
+| Low | `F-M40`, the FFM it follows | 0.007 | 0.035 | 0.088 | 0.173 |
+| Navigation, 28 satellites | AP on FFM's forecast | 0.047 | 0.033 | 0.058 | 0.114 |
+| Navigation | AP on the operator's 72 h | 0.027 | 0.037 | 0.079 | 0.143 |
+| Navigation | `F-H20`, the FFM it follows | 0.001 | 0.011 | 0.051 | 0.119 |
+
+| Statement | Result |
+|---|---|
+| Low: beats AP on the operator's 72 h at 120 h and 168 h | FAIL: paired median 0.001 km [-0.044, 0.012] at 120 h, -0.015 km [-0.145, 0.009] at 168 h |
+| Navigation: the same | PASS: -0.022 km [-0.031, -0.014] at 120 h, -0.032 km [-0.045, -0.022] at 168 h |
+
+The low-orbit medians above make this look like a win, and the registered paired test says it is not one. The pool splits by satellite: at 168 h it is closer on 75 to 94 % of pairs for HY-2B, C, D, Sentinel-6B, Westpac and BeaconC, about even on Ajisai, Starlette, Larets and CryoSat-2, and worse on LARES and PAZ. That split is report only and chooses nothing. On navigation it gives up 0.020 km at 24 h for that gain: the fit spreads AP's residual over the week, so it only suits a set flown for days.
+
+Cost per file, medians under load: FFM to 180 h 6.8 s on low orbits and 1.0 s on navigation, AP's fit to it 1.7 and 0.8 s, on top of FFM's own fit.
+
 ## Corrections
 
 - The verdict script first counted a window with under 90 % of its arc's states as a failure. The registered rule says it leaves the cell and is counted, so I corrected the script before these tables were committed. The two tests' failures are then 0. Near 700 km this moved the first reading of the median interval at day 7 from holding 0 to below 0; the statement fails on rule 2 either way.
