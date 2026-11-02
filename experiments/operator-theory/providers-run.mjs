@@ -9,6 +9,7 @@ import crypto from 'node:crypto';
 import { isoMs, openFfmHost, openAxes, apriori } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { apForces, openAp } from './lib/ap.mjs';
+import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
@@ -17,6 +18,8 @@ import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const OUT = args.out, ISS = args.iss === 'true';
+// --arms U: the Space Force's SGP4-XP alone, in its own store, on the same files and pairs.
+const ONLY_U = args.arms === 'U';
 if (!OUT || !args.wasm) throw new Error('--out and --wasm');
 const STORE = '/opt/data/sdn-archive/operator-theory', HOUR = 3600000, DAY = 86400000, TRUTH_H = 3, MAX_LEAD_H = 180, MIN_GAP_H = 6, ARCS = [24, 48];
 const FROM_FORWARD = new Set(['starlink', 'iss', 'css']), FROM_VENDORS = new Set(['gps', 'glonass', 'planet', 'intelsat', 'ses']);
@@ -34,8 +37,8 @@ function interpolate(table, t) {
   return { r: mix((l) => l.r), v: mix((l) => l.v) };
 }
 
-const M = await openModules(), A = await openAp(args.wasm), G = await openSgp4Fit();
-const F = ISS ? await openFfmHost() : null;
+const M = await openModules(), A = ONLY_U ? null : await openAp(args.wasm), G = ONLY_U ? null : await openSgp4Fit(), U = ONLY_U ? await openUssfXp() : null;
+const F = ISS && !ONLY_U ? await openFfmHost() : null;
 const axes = ISS ? await openAxes() : null;
 const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
 const { driverRows } = ISS ? await import('../ffm-atmosphere-xm3/lib/ffm.mjs') : {};
@@ -103,6 +106,7 @@ async function fitsOf(item) {
     const seg = all.filter((l) => Date.parse(l.epoch) <= t0 + (item.source === 'starlink' && arc >= 48 ? 47.9 : arc) * HOUR);
     if (seg.length < 5) continue;
     const oem = S.oemBytes({ frame: 'GCRF', object, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+    if (ONLY_U) { const u = await U.fit(oem); out.arms[`U-XP@${arc}`] = u.ok ? { omm: u.omm, ussf: true } : { error: u.error }; continue; }
     const f = await A.fit(oem, PCF_AP, extra);
     out.arms[`A-APn@${arc}`] = f.ok ? { omm: f.omm, pcf: PCF_AP, extra } : { error: f.error };
     const x = await A.fit(oem, PCF_XP, undefined);
@@ -143,11 +147,13 @@ for (const [key, list] of items()) {
       const score = async (states) => { const e = await M.rtn(states, truthStates); const r = rmsOf(e.map((x) => x[0])), t = rmsOf(e.map((x) => x[1])), n = rmsOf(e.map((x) => x[2])); return { km: Math.hypot(r, t, n), r, t, n }; };
       const fits = await fitsOf(older);
       row.truthStates = truth.length;
-      if (ISS) { const table = await linesOf(older); const states = epochsMs.map((t) => interpolate(table, t)); if (states.every(Boolean)) row.arms.operator = await score(states); }
+      if (ISS && !ONLY_U) { const table = await linesOf(older); const states = epochsMs.map((t) => interpolate(table, t)); if (states.every(Boolean)) row.arms.operator = await score(states); }
       for (const [name, f] of Object.entries(fits.arms)) {
         if (f.error) { row.arms[name] = { error: f.error }; continue; }
         try {
-          if (f.el) {
+          if (f.ussf) {
+            row.arms[name] = await score(await M.toAxes(await U.propagate(f.omm, S.gridBytes(epochs), epochs.length), epochs, 'GCRF'));
+          } else if (f.el) {
             const flown = await M.propagateSgp4(f.el, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
             if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
             row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));

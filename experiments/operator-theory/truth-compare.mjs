@@ -8,15 +8,18 @@ import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { openAp } from './lib/ap.mjs';
 import { openFfmHost, apriori } from './lib/host.mjs';
+import { openUssfXp } from './lib/ussf-xp.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const OUT = args.out, FROM = args.from, TO = args.to, ON_XM = args.xm === 'true';
+// --arms U: the Space Force's SGP4-XP alone, in its own store. Without it, this file's registered arms, unchanged.
+const ONLY_U = args.arms === 'U';
 const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
 const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
 const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-const m = await openModules(), A = await openAp(args.wasm), G = await openSgp4Fit(), F = await openFfmHost();
+const m = await openModules(), A = ONLY_U ? null : await openAp(args.wasm), G = ONLY_U ? null : await openSgp4Fit(), F = ONLY_U ? null : await openFfmHost(), U = ONLY_U ? await openUssfXp() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ARCS = ON_XM ? [24, 72] : [24];
 const PCF_XP = S.pcfBytes({ forces: {}, fit: null });
@@ -71,6 +74,14 @@ for (const w of list) {
         row.arms[`${name}${hours}`] = a;
       };
       const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId ?? '', norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
+      if (ONLY_U) {
+        await run('U', async () => {
+          const f = await U.fit(oem);
+          if (!f.ok) throw new Error(f.error);
+          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
+        });
+        continue;
+      }
       await run('XP', async () => {
         const f = await A.fit(oem, PCF_XP, undefined);
         if (!f.ok) throw new Error(f.error);
@@ -96,5 +107,5 @@ for (const w of list) {
   fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
 }
 console.error(`shard ${SHARD}/${SHARDS}: ${list.length} windows`);
-await F.close();
+await F?.close();
 process.exit(0);

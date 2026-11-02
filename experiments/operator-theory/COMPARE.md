@@ -32,6 +32,28 @@ SGP4's fit and its flight are two implementations: `analysis/gp-error-model` fit
 - `AP5.md` and `AP6.md` run XP beside AP against precise orbits. This file's reference is not that.
 - These are 17 low satellites that do not thrust. Nothing here covers other orbits, maneuvering fleets or debris.
 
+## Two versions of XP
+
+The owner, 2026-11-02, verbatim: "the XP needs to be done using our whiteroom version of XP and the Space Force version of XP separately, and we need to document that we used the SPace Force version as prescribed in the instructions".
+
+Registered before this arm was run on these windows, apart from one window of AP5's used to test the code path. Report only: AP5's and AP6's statements stay against the whiteroom XP, as they were registered.
+
+- **XP, whiteroom:** the AP module with FORCES and FIT unset, `propagator/sdn-ap`, our clean-room implementation. It is every "XP" this work reported before this section.
+- **XP, Space Force:** `propagator/sgp4-xp`, `lib/ussf-xp.mjs`. Its library is the US Space Force's Sgp4Prop 9.1.1.0 XP build, unmodified, SHA-256 `9f061110f12ac85a76ad80dc76cdb8a33ddad64e54d8dab3b6778602e16cbeb7`. Same arcs and same states, fitted with `fit` and flown with `propagate`, stores `U<arc>` and `U-XP@<arc>`.
+
+What the package prescribes, and how this arm meets it:
+
+- It reads two-line element text: every set reaches the library at two-line digits, and the fit searches that lattice, so the set scored is the set published.
+- It is optimized for times continuing away from the epoch (its release notes): each flight asks for increasing times from a fresh satellite.
+- Its XP sets are ephemeris type 4, BTERM in BSTAR and AGOM in MEAN_MOTION_DDOT.
+- The module's tests require every position and velocity to be the same double as the library through its own runtime, on 640 element sets (`tests/ussf_parity.test.mjs`).
+
+Where it departs from what the package states:
+
+- The Agreement states the propagator's intended purpose as propagating 18 SDS element sets, "solely". No public XP set exists, so these sets are fitted here by the module's own fitter, each evaluation running the library. The owner ruled that the Agreement's section 1.L governs (`third_party/ussf-sgp4/NOTICE.md`).
+- The library has no fitter, so nothing about the fit comes from the Space Force, and it neither wrote, reviewed nor approved this work.
+- Its release notes say certain XP results of this C build do not match the Fortran baseline, which they attribute to SHADOW calculations. This arm is the C build.
+
 `compare-examples-publish.mjs` writes what the site's globe reads: each forecast's positions and, at each time, its radial, in-track and cross-track distance from the reference. The reference's own positions go out only where its source's terms allow them to be redrawn.
 
 `providers-run.mjs` adds AP, XP and SGP4 to every other provider this work stores forecasts of, and `compare-cells.mjs` and `compare-sigma.mjs` write the site's tables and ellipsoids. All report only.

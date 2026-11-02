@@ -6,6 +6,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { isoMs } from './lib/host.mjs';
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 
@@ -30,8 +31,10 @@ for (const c of cycles) for (const f of fs.readdirSync(path.join(ROOT, c, 'produ
 const done = new Set();
 if (fs.existsSync(OUT)) for (const line of fs.readFileSync(OUT, 'utf8').split('\n')) if (line) { const r = JSON.parse(line); done.add(`${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`); }
 
+// --arms U: the Space Force's SGP4-XP on the same files and pairs, in place of SGP4.
+const ONLY_U = args.arms === 'U';
 const M = await openModules();
-const G = await openSgp4Fit();
+const G = ONLY_U ? null : await openSgp4Fit(), U = ONLY_U ? await openUssfXp() : null;
 const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
 const lines = (b64) => S.oemLines(Buffer.from(b64, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(l.epoch)) }));
 
@@ -46,6 +49,7 @@ async function fitsOf(ref) {
     if (tEnd - t0 < arc * HOUR) continue;
     const seg = all.filter((l) => Date.parse(l.epoch) <= t0 + arc * HOUR);
     const oem = S.oemBytes({ frame: 'GCRF', object: { name: p.object, id: '', norad: p.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+    if (ONLY_U) { const f = await U.fit(oem); out[`U-XP@${arc}`] = f.ok ? { omm: f.omm } : { error: f.error }; continue; }
     try {
       const { el } = await G.fit(oem, { from: seg[0].epoch, to: isoMs(t0 + arc * HOUR), epoch: 'first', fitBstar: true }, { name: p.object, objectId: '' });
       out[`S@${arc}`] = { el };
@@ -72,7 +76,7 @@ for (const [, list] of items) {
     for (const [name, f] of Object.entries(await fitsOf(older))) {
       if (f.error) { row.arms[name] = { error: f.error }; continue; }
       try {
-        const flown = await M.propagateSgp4(f.el, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
+        const flown = f.omm ? await U.propagate(f.omm, S.gridBytes(epochs), epochs.length) : await M.propagateSgp4(f.el, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
         if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
         const e = await M.rtn(await M.toAxes(flown, epochs, 'GCRF'), truthStates);
         const r = rmsOf(e.map((x) => x[0])), t = rmsOf(e.map((x) => x[1])), n = rmsOf(e.map((x) => x[2]));

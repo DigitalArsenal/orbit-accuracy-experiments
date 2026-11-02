@@ -8,8 +8,9 @@ import { config, root, HOUR, DAY, iso, ms, rms, XM } from '../xp2-fit-design/com
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { apForces, openAp } from './lib/ap.mjs';
+import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
-import { STATIC, MGEX_CUTOFFS, TESS, windowKey } from './lib/regimes.mjs';
+import { HX, STATIC, MGEX_CUTOFFS, TESS, windowKey } from './lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
@@ -19,7 +20,9 @@ const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
 const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-const m = await openModules(), A = await openAp(args.wasm), G = await openSgp4Fit(), F = await openFfmHost();
+// --arms U: the Space Force's SGP4-XP alone, in its own store. Without it, this file's registered arms, unchanged.
+const ONLY_U = args.arms === 'U';
+const m = await openModules(), A = ONLY_U ? null : await openAp(args.wasm), G = ONLY_U ? null : await openSgp4Fit(), F = ONLY_U ? null : await openFfmHost(), U = ONLY_U ? await openUssfXp() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ATM = XM.config.arms.X2.forces;
 const PCF_AP = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20 }), fit: null });
@@ -41,6 +44,14 @@ const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
 
 /** Every object of the groups asked for: { group, name, norad, objectId, lines, arcs, cutoffs, vacuum }. */
+/** A kernel's states on the fit's grid, whole seconds, in GCRF. */
+async function spkOnGrid(lines, axes) {
+  const norm = lines.map((l) => ({ ...l, epoch: new Date(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)).toISOString() }));
+  const first = Math.round(ms(norm[0].epoch) / 1000) * 1000;
+  const thin = norm.filter((l) => (Math.round(ms(l.epoch) / 1000) * 1000 - first) % GRID === 0).map((l) => ({ ...l, epoch: new Date(Math.round(ms(l.epoch) / 1000) * 1000).toISOString() }));
+  return axes.convert(thin, 'EME2000', 'GCRF');
+}
+
 async function objects() {
   const out = [];
   for (const o of STATIC.filter((x) => GROUPS.includes(x.group))) {
@@ -58,10 +69,18 @@ async function objects() {
     const files = fs.readdirSync(TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(TESS.dir, f));
     const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files, source: 'ap6-heo', id: 'TESS (-95)', name: TESS.name, norad: TESS.norad, fromUtc: TESS.from, toUtc: TESS.to, stride: 1 });
     const axes = await openAxes();
-    const norm = s.lines.map((l) => ({ ...l, epoch: new Date(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)).toISOString() }));
-    const first = Math.round(ms(norm[0].epoch) / 1000) * 1000;
-    const thin = norm.filter((l) => (Math.round(ms(l.epoch) / 1000) * 1000 - first) % GRID === 0).map((l) => ({ ...l, epoch: new Date(Math.round(ms(l.epoch) / 1000) * 1000).toISOString() }));
-    out.push({ group: 'HE', name: TESS.name, norad: TESS.norad, objectId: TESS.objectId, lines: await axes.convert(thin, 'EME2000', 'GCRF'), arcs: TESS.arcs, cutoffs: TESS.cutoffs, vacuum: true });
+    out.push({ group: 'HE', name: TESS.name, norad: TESS.norad, objectId: TESS.objectId, lines: await spkOnGrid(s.lines, axes), arcs: TESS.arcs, cutoffs: TESS.cutoffs, vacuum: true });
+    await axes.close();
+  }
+  // Report only, added 2026-11-02 so that highly elliptical orbits do not rest on one satellite: THEMIS and Chandra, from NAIF's public kernels, read as TESS is.
+  if (GROUPS.includes('HX')) {
+    const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
+    const axes = await openAxes();
+    for (const h of HX) {
+      if (!h.cutoffs.some((t) => inShard(windowKey('HX', h.name, t)))) continue;
+      const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files: [h.file], source: 'ap6-heo', id: h.id, name: h.name, norad: h.norad, fromUtc: h.from, toUtc: h.to, stride: 1 });
+      out.push({ group: 'HX', name: h.name, norad: h.norad, objectId: h.objectId, lines: await spkOnGrid(s.lines, axes), arcs: h.arcs, cutoffs: h.cutoffs, vacuum: true });
+    }
     await axes.close();
   }
   return out;
@@ -107,6 +126,14 @@ for (const o of await objects()) {
           row.arms[`${name}${hours}`] = a;
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
+        if (ONLY_U) {
+          await run('U', async () => {
+            const f = await U.fit(oem);
+            if (!f.ok) throw new Error(f.error);
+            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
+          });
+          continue;
+        }
         await run('AP', async () => {
           const f = await A.fit(oem, pcfAp, ex);
           if (!f.ok) throw new Error(f.error);
@@ -139,5 +166,5 @@ for (const o of await objects()) {
   }
 }
 console.error(`shard ${SHARD}/${SHARDS}: done`);
-await F.close();
+await F?.close();
 process.exit(0);

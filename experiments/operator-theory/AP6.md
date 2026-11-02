@@ -35,6 +35,10 @@ As `AP5.md`: `AP`, `XP`, `S`, `F`, with the hours of the arc after the name. `HE
 
 Report only: `IG`, `GE` and `HE`, which are few satellites over a short span; every contrast with `S` and `F`; every other arc.
 
+## Added 2026-11-02, report only
+
+`HX`: THEMIS A, D and E over 2013-02-08 to 2013-02-24, every 2 days from 2013-02-11 to 2013-02-17, 72 h; Chandra over 2018-03-01 to 2018-04-30, every 7 days from 2018-03-08 to 2018-04-19, 72 h and 168 h. From NAIF's public kernels, read as TESS is, the same arms, added so that highly elliptical orbits do not rest on one satellite. It joins no statement above. The owner, 2026-11-02: "ALso we don't seem to have GEO or HEO orbits, are we just missing satellites in those regimes?"
+
 ## Limits
 
 - Every fit reads precise products, published after the fact.
