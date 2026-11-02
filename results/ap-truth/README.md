@@ -50,7 +50,7 @@ On CHEAPER.md's 54 days, against each center's next prediction, not independent 
 | Laser-ranging, low, 48 h fits, at 24 h and 72 h | PASS: -0.031 km [-0.036, -0.029], -0.021 km [-0.025, -0.014] |
 | Laser-ranging, navigation, 72 h fits, at 72 h and 168 h | PASS: -0.011 km [-0.014, -0.009], -0.038 km [-0.048, -0.028] |
 
-So the site moved to 0.4.0, as AP4.md set out. The near-700 km tail did not move with these terms, so they are not what limits it. Cost per file in that run under load: fit about 1.0 s and flight 0.23 s on low orbits, about twice 0.3.0 at fit and flight; 0.11 s and 0.02 s on navigation, with fit RMS 18.6 m on low orbits and 21.3 m on navigation against 57.9 m and 30.2 m read before. Part S, on Starlink, is report only and still to be read.
+So the site moved to 0.4.0, as AP4.md set out. The near-700 km tail did not move with these terms, so they are not what limits it. On those 54 days, median fit RMS against each file: low at 48 h fits 54.1 m to 18.6 m, navigation at 72 h 30.5 m to 21.3 m, geodetic at 72 h 28.2 m to 12.3 m. Cost per file on low orbits at 48 h fits: fit 1.04 s and flight 0.23 s, against 0.58 s and 0.20 s for 0.3.0; the two ran under different loads, so read that as a rough ratio. Part S, on Starlink, is report only and still to be read.
 
 The first build of these terms was worse above 8,400 km. It counted the half-day resonance class's terms twice, once in the rates and once at output time, and exploratory forward errors on read days showed it: fit RMS 30 m to 70 to 110 m on GLONASS and Etalon. That was fixed before this build was frozen, and `propagator/sdn-ap/test/ap-terms.e2e.mjs` now holds a fixture at 19,100 km that fails if it returns (74.8 m against the bound of 25 m).
 
