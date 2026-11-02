@@ -1,6 +1,6 @@
 // COMPARE.md, report only: SGP4 on Part L's low-orbit pairs, beside AP, XP and FFM. The same stored files, fit arcs from each file's first state, reference (the first 3 h of a
 // newer file) and pair rule as score.mjs. An SGP4 set flies on SGP4 and nothing else.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-sgp4.mjs --root <store with cycles> --out <rows file> [--shard k/n]
+//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-sgp4.mjs --root <store with cycles> --out <rows file> [--shard k/n] [--arcs 24,48] [--regime leo|high|all]
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -13,14 +13,14 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) =>
 const ROOT = args.root, OUT = args.out;
 if (!ROOT || !OUT) throw new Error('--root and --out');
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
-const ARCS = [24, 48], HOUR = 3600000, TRUTH_H = 3, MAX_LEAD_H = 180, MIN_GAP_H = 6;
+const ARCS = (args.arcs ?? "24,48").split(",").map(Number), REGIME = args.regime ?? "leo", HOUR = 3600000, TRUTH_H = 3, MAX_LEAD_H = 180, MIN_GAP_H = 6;
 
 const cycles = fs.readdirSync(ROOT).filter((d) => /^c\d{8}T\d{4}$/.test(d) && fs.existsSync(path.join(ROOT, d, 'products'))).sort();
 const items = new Map();
 for (const c of cycles) for (const f of fs.readdirSync(path.join(ROOT, c, 'products'))) {
   const file = path.join(ROOT, c, 'products', f);
   const p = JSON.parse(fs.readFileSync(file, 'utf8'));
-  if (!p.start || !p.forecastOem || !String(p.source).endsWith('-leo')) continue;
+  if (!p.start || !p.forecastOem || (REGIME !== 'all' && !String(p.source).endsWith(`-${REGIME}`))) continue;
   const key = `${p.source}|${p.norad}`;
   if (parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS !== SHARD) continue;
   const list = items.get(key) ?? items.set(key, []).get(key);
