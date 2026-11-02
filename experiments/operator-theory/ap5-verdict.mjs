@@ -62,9 +62,11 @@ const STATEMENTS = [
   { id: 3, label: 'Part N, S1: AP72 beats XP72', ap: 'AP72', other: 'XP72', one: ['1', '3'], rows: [ap2, cmp2], keep: groupsOf('S1') },
   { id: 4, label: 'Part N, GN: AP72 beats XP72', ap: 'AP72', other: 'XP72', one: ['1', '3'], rows: [ap2, cmp2], keep: groupsOf('GN') },
 ];
-say(`# AP beside XP, SGP4 and FFM against precise orbits: ${cmp1.length + cmp2.length} windows\n`);
+// --only T: the finished part alone, while the others still run; a partial part is never read out.
+const ONLY = argOf('--only');
+say(`# AP beside XP, SGP4 and FFM against precise orbits: ${cmp1.length + (ONLY ? 0 : cmp2.length)} windows\n`);
 out.statements = {};
-for (const s of STATEMENTS) {
+for (const s of STATEMENTS.filter((x) => !ONLY || x.id === 1)) {
   const c = cell(`s${s.id}`, s.ap, s.other, s.one, s.rows[0], s.rows[1], s.keep);
   say(`## ${s.id}. ${s.label}: ${c.passes ? 'PASS' : 'FAIL'}\n`);
   for (const k of LEADS) say(show(k, c.contrasts[k]));
@@ -80,7 +82,7 @@ const CUTS = [
   { group: 'GN', label: 'Medium Earth orbit, 2026', ap: ap2, cmp: cmp2, keep: groupsOf('GN'), arcs: [24, 72] },
 ];
 out.cells = [];
-for (const cut of CUTS) {
+for (const cut of CUTS.filter((x) => !ONLY || x.group === ONLY)) {
   const inCut = cut.ap.filter(cut.keep), byKey = new Map(cut.cmp.map((r) => [r.key, r]));
   const names = ['all', ...new Set(inCut.map((r) => r.name))];
   say(`## ${cut.label}: ${inCut.length} windows\n`);
