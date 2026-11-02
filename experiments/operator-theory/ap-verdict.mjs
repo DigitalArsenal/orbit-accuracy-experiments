@@ -33,6 +33,7 @@ function truth() {
       if (ee !== undefined && ee < 260) continue;
       const x = day(r, a, k), y = day(r, b, k);
       if (!y) continue;
+      if (!x && r.arms[a]?.error === 'coverage') continue;  // under 90 % of the arc's states: the window leaves the cell (xp2-fit-design's rule)
       if (!x) failed += 1;
       pairs.push({ d: x ? Math.log(x.e / y.e) : Infinity, ax: x?.e ?? Infinity, by: y.e, cluster: stored.get(r.key)?.isoWeek });
     }
@@ -101,12 +102,13 @@ function truth2() {
   };
   const contrast = (group, a, b, k) => {
     const pairs = [];
-    let failed = 0;
+    let failed = 0, left = 0;
     for (const r of rows.filter((q) => q.group === group && !q.error)) {
       const y = eOf(r, b, k);
       if (y === null) continue;
       if (!(stored.get(r.key)?.entered ?? []).includes(Number(k))) continue;
       const x = eOf(r, a, k);
+      if (x === null && r.arms[a]?.error === 'coverage') { left += 1; continue; }  // under 90 % of the arc's states: the window leaves the cell, counted (xp-atmosphere-merit's rule)
       if (x === null) failed += 1;
       pairs.push({ d: x === null ? 1e9 : Math.log(x / y), ax: x ?? 1e12, by: y, cluster: stored.get(r.key)?.isoWeek });
     }
@@ -120,7 +122,7 @@ function truth2() {
       p95s.push(Math.log(pct(draw.map((p) => p.ax).sort(asc), 0.95) / pct(draw.map((p) => p.by).sort(asc), 0.95)));
     }
     meds.sort(asc); p95s.sort(asc);
-    return { n: pairs.length, clusters: clusters.length, failedShare: pairs.length ? failed / pairs.length : 1, medianD: median(pairs.map((p) => p.d)), interval: [pct(meds, 1 - LEVEL), pct(meds, LEVEL)], p95Upper: pct(p95s, LEVEL) };
+    return { n: pairs.length, clusters: clusters.length, failedShare: pairs.length ? failed / pairs.length : 1, leftForCoverage: left, medianD: median(pairs.map((p) => p.d)), interval: [pct(meds, 1 - LEVEL), pct(meds, LEVEL)], p95Upper: pct(p95s, LEVEL) };
   };
   const pctOf = (d) => `${(100 * (Math.exp(d) - 1)).toFixed(1)} %`;
   const out = { registered: 'experiments/operator-theory/AP2.md', windows: rows.length, groups: {} };
@@ -141,7 +143,7 @@ function truth2() {
     for (const [a, b] of [['AP72', 'P'], ['AP24', 'P'], ['AP72', 'X2']]) {
       say(`### ${a} against ${b}`);
       claims[`${a}/${b}`] = {};
-      for (const k of LEADS) { const c = contrast(group, a, b, k); claims[`${a}/${b}`][k] = c; say(`- day ${k}: ${pctOf(c.medianD)} [${pctOf(c.interval[0])}, ${pctOf(c.interval[1])}], p95 upper ${pctOf(c.p95Upper)}, failed ${(100 * c.failedShare).toFixed(2)} %, n ${c.n}, weeks ${c.clusters}`); }
+      for (const k of LEADS) { const c = contrast(group, a, b, k); claims[`${a}/${b}`][k] = c; say(`- day ${k}: ${pctOf(c.medianD)} [${pctOf(c.interval[0])}, ${pctOf(c.interval[1])}], p95 upper ${pctOf(c.p95Upper)}, failed ${(100 * c.failedShare).toFixed(2)} %, left for coverage ${c.leftForCoverage}, n ${c.n}, weeks ${c.clusters}`); }
       say('');
     }
     let verdict = null;
