@@ -1,0 +1,390 @@
+{
+ "registered": "experiments/operator-theory/COMPARE.md",
+ "reading": "report only",
+ "pairs": 7404,
+ "objects": 17,
+ "startDays": 60,
+ "firstStart": "2026-02-27",
+ "lastStart": "2026-05-01",
+ "leads": {
+  "24": {
+   "pairs": 1256,
+   "arms": {
+    "SGP4": {
+     "n": 1256,
+     "failed": 0,
+     "median": 0.42825405107160175,
+     "p95": 0.9577772659982159
+    },
+    "XP": {
+     "n": 1256,
+     "failed": 0,
+     "median": 0.4102474057939598,
+     "p95": 0.9296807516956779
+    },
+    "AP": {
+     "n": 1256,
+     "failed": 0,
+     "median": 0.01819479422349781,
+     "p95": 0.3684718429429747
+    },
+    "FFM20": {
+     "n": 1256,
+     "failed": 0,
+     "median": 0.008988744136256438,
+     "p95": 0.32138423175237973
+    },
+    "FFM40": {
+     "n": 1256,
+     "failed": 0,
+     "median": 0.006478892832090356,
+     "p95": 0.3158785523807851
+    }
+   },
+   "apLess": {
+    "SGP4": {
+     "median": -0.384,
+     "interval": [
+      -0.518,
+      -0.326
+     ]
+    },
+    "XP": {
+     "median": -0.366,
+     "interval": [
+      -0.536,
+      -0.319
+     ]
+    },
+    "FFM20": {
+     "median": 0.009,
+     "interval": [
+      0.008,
+      0.011
+     ]
+    },
+    "FFM40": {
+     "median": 0.011,
+     "interval": [
+      0.009,
+      0.012
+     ]
+    }
+   }
+  },
+  "72": {
+   "pairs": 1072,
+   "arms": {
+    "SGP4": {
+     "n": 1072,
+     "failed": 0,
+     "median": 0.6211160396611679,
+     "p95": 3.6281640595466707
+    },
+    "XP": {
+     "n": 1072,
+     "failed": 0,
+     "median": 0.6191141959892881,
+     "p95": 2.521600474593043
+    },
+    "AP": {
+     "n": 1072,
+     "failed": 0,
+     "median": 0.06009854979060301,
+     "p95": 1.9726323636935
+    },
+    "FFM20": {
+     "n": 1072,
+     "failed": 0,
+     "median": 0.06480119847320961,
+     "p95": 2.534496352611885
+    },
+    "FFM40": {
+     "n": 1072,
+     "failed": 0,
+     "median": 0.03463624819240438,
+     "p95": 2.4954241674630624
+    }
+   },
+   "apLess": {
+    "SGP4": {
+     "median": -0.499,
+     "interval": [
+      -0.598,
+      -0.425
+     ]
+    },
+    "XP": {
+     "median": -0.456,
+     "interval": [
+      -0.639,
+      -0.389
+     ]
+    },
+    "FFM20": {
+     "median": -0.008,
+     "interval": [
+      -0.02,
+      0.004
+     ]
+    },
+    "FFM40": {
+     "median": 0.002,
+     "interval": [
+      -0.004,
+      0.018
+     ]
+    }
+   }
+  },
+  "120": {
+   "pairs": 1009,
+   "arms": {
+    "SGP4": {
+     "n": 1009,
+     "failed": 0,
+     "median": 1.5690181133807488,
+     "p95": 14.316169896501009
+    },
+    "XP": {
+     "n": 1009,
+     "failed": 0,
+     "median": 0.8650760957335951,
+     "p95": 6.682549988988762
+    },
+    "AP": {
+     "n": 1009,
+     "failed": 0,
+     "median": 0.21338756479565898,
+     "p95": 5.624089106983327
+    },
+    "FFM20": {
+     "n": 1009,
+     "failed": 0,
+     "median": 0.2510205266733854,
+     "p95": 6.890537629866788
+    },
+    "FFM40": {
+     "n": 1009,
+     "failed": 0,
+     "median": 0.08837217914518314,
+     "p95": 6.5180403837718135
+    }
+   },
+   "apLess": {
+    "SGP4": {
+     "median": -1.195,
+     "interval": [
+      -1.534,
+      -0.909
+     ]
+    },
+    "XP": {
+     "median": -0.578,
+     "interval": [
+      -0.75,
+      -0.497
+     ]
+    },
+    "FFM20": {
+     "median": -0.021,
+     "interval": [
+      -0.101,
+      0.009
+     ]
+    },
+    "FFM40": {
+     "median": 0.015,
+     "interval": [
+      -0.004,
+      0.107
+     ]
+    }
+   }
+  },
+  "168": {
+   "pairs": 952,
+   "arms": {
+    "SGP4": {
+     "n": 952,
+     "failed": 0,
+     "median": 3.5031414098161893,
+     "p95": 34.770397529361546
+    },
+    "XP": {
+     "n": 952,
+     "failed": 0,
+     "median": 1.2524692104909683,
+     "p95": 16.468708984290814
+    },
+    "AP": {
+     "n": 952,
+     "failed": 0,
+     "median": 0.48384295494973995,
+     "p95": 12.175417903721874
+    },
+    "FFM20": {
+     "n": 952,
+     "failed": 0,
+     "median": 0.538986273505984,
+     "p95": 14.018841119562003
+    },
+    "FFM40": {
+     "n": 952,
+     "failed": 0,
+     "median": 0.1727412463686822,
+     "p95": 13.45593909854979
+    }
+   },
+   "apLess": {
+    "SGP4": {
+     "median": -2.595,
+     "interval": [
+      -3.687,
+      -1.996
+     ]
+    },
+    "XP": {
+     "median": -0.716,
+     "interval": [
+      -0.953,
+      -0.546
+     ]
+    },
+    "FFM20": {
+     "median": -0.039,
+     "interval": [
+      -0.25,
+      0.043
+     ]
+    },
+    "FFM40": {
+     "median": 0.037,
+     "interval": [
+      -0.002,
+      0.243
+     ]
+    }
+   }
+  }
+ },
+ "sgp4Fit24h": {
+  "24": {
+   "n": 1256,
+   "median": 0.5918146095291477,
+   "p95": 1.0414375897535
+  },
+  "72": {
+   "n": 1072,
+   "median": 7.754532971105606,
+   "p95": 18.903354857571852
+  },
+  "120": {
+   "n": 1009,
+   "median": 24.143563126161613,
+   "p95": 62.097552842377084
+  },
+  "168": {
+   "n": 952,
+   "median": 48.71947208015609,
+   "p95": 130.2318004398746
+  }
+ },
+ "costs": {
+  "files": 37,
+  "leftOut": 3,
+  "flightDays": 5,
+  "flightStates": 1440,
+  "fitStates": 481,
+  "arms": {
+   "SGP4": {
+    "fitSeconds": 0.08512391699998989,
+    "flightSeconds": 0.036415208999998866
+   },
+   "XP": {
+    "fitSeconds": 0.11507579199998873,
+    "flightSeconds": 0.038577625000034456
+   },
+   "AP": {
+    "fitSeconds": 0.9874695840000058,
+    "flightSeconds": 0.22462899999995717
+   },
+   "FFM20": {
+    "fitSeconds": 2.773709124999994,
+    "flightSeconds": 2.2892107499999694
+   },
+   "FFM40": {
+    "fitSeconds": 4.302114916999999,
+    "flightSeconds": 4.530107375000007
+   }
+  }
+ },
+ "builds": {
+  "SGP4": [
+   {
+    "role": "Flight",
+    "module": "propagator/sgp4",
+    "version": "1.4.1",
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "sha256": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/fbda894501f32210b77c74b53bcad036ce7a1b07/propagator/sgp4"
+   },
+   {
+    "role": "Fit",
+    "module": "analysis/gp-error-model",
+    "version": "0.11.0",
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "sha256": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/fbda894501f32210b77c74b53bcad036ce7a1b07/analysis/gp-error-model"
+   }
+  ],
+  "XP": [
+   {
+    "role": "Fit and flight, FORCES and FIT unset",
+    "module": "propagator/sdn-ap",
+    "version": "0.3.0",
+    "commit": "783133149abb8949e30cac32398bb624369f3a8f",
+    "sha256": "0b021c575466642cd661cd39dcb911de89b63c8430ae9ac2d94c84c7539f8c6a",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/783133149abb8949e30cac32398bb624369f3a8f/propagator/sdn-ap"
+   }
+  ],
+  "AP": [
+   {
+    "role": "Fit and flight",
+    "module": "propagator/sdn-ap",
+    "version": "0.4.0",
+    "commit": "148f3b9f20b8c62d57dce677b1049464a71049df",
+    "sha256": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/148f3b9f20b8c62d57dce677b1049464a71049df/propagator/sdn-ap"
+   }
+  ],
+  "FFM": [
+   {
+    "role": "Flight",
+    "module": "propagator/ffm",
+    "version": "2.0.4",
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "sha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/9a05d899b95242b358939ab1d68a776170a6b167/propagator/ffm"
+   },
+   {
+    "role": "Fit",
+    "module": "analysis/estimation",
+    "version": "0.7.0",
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "sha256": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/9a05d899b95242b358939ab1d68a776170a6b167/analysis/estimation"
+   }
+  ],
+  "Frames": [
+   {
+    "role": "Frames, every arm",
+    "module": "foundation/frames",
+    "version": "0.2.0",
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "sha256": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4",
+    "source": "https://github.com/DigitalArsenal/space-data-network-modules/tree/fbda894501f32210b77c74b53bcad036ce7a1b07/foundation/frames"
+   }
+  ]
+ }
+}
