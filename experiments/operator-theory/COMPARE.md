@@ -29,7 +29,9 @@ SGP4's fit and its flight are two implementations: `analysis/gp-error-model` fit
 - The reference is the center's next prediction. Agreement with it may partly mean sharing a force model with that center.
 - AP 0.4.0 against XP is not a registered contrast. `AP.md` registered AP 0.3.0 against XP on these pairs, and `AP4.md` registered 0.4.0 against 0.3.0.
 - AP and FFM read observed weather for the whole stretch they fly. SGP4 and XP read no weather at all. That favors AP and FFM, more at long leads, and no real forecast has it.
-- XP has not been run beside AP against independent precise orbits.
+- `AP5.md` and `AP6.md` run XP beside AP against precise orbits. This file's reference is not that.
 - These are 17 low satellites that do not thrust. Nothing here covers other orbits, maneuvering fleets or debris.
+
+`providers-run.mjs` adds AP, XP and SGP4 to every other provider this work stores forecasts of, and `compare-cells.mjs` and `compare-sigma.mjs` write the site's tables and ellipsoids. All report only.
 
 To rebuild: `compare-sgp4.mjs` with 8 shards into `<store>/ap/b040/laser-sgp4`, `compare-costs.mjs` into `<store>/ap/b040/compare-costs/rows.jsonl`, then `compare-table.mjs --out results/ap-truth/compare`.

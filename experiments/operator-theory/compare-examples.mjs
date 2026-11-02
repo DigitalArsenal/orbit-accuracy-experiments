@@ -101,6 +101,116 @@ if (MODE === 'next') {
     write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
   }
   await F.close(); await M.close();
+} else if (MODE === 'providers') {
+  // Every provider whose terms let its positions be redrawn here: of its pairs with every arm present, the one whose AP error is nearest AP's median. Planet's are not redrawn: its terms are non-commercial.
+  const ISS = args.only === 'iss';
+  const { isoMs, openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
+  const { weatherRows } = await import('./lib/weather.mjs');
+  const { openAp, apForces } = await import('./lib/ap.mjs');
+  const { openModules } = await import('../xp-atmosphere-merit/lib/modules.mjs');
+  const { openSgp4Fit } = await import('../xp2-fit-design/lib/sgp4fit.mjs');
+  const S = await import('../xp-atmosphere-merit/lib/sds.mjs');
+  const { config: XMC } = await import('../xp-atmosphere-merit/common.mjs');
+  const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
+  const { driverRows } = ISS ? await import('../ffm-atmosphere-xm3/lib/ffm.mjs') : {};
+  const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp(path.join(NEW, 'module.wasm'));
+  const axes = ISS ? await openAxes() : null;
+  const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+  const LABEL = { starlink: ['SpaceX', 'Low orbit, maneuvering'], iss: ['NASA ISS', 'Low orbit, crewed'], gps: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], glonass: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], intelsat: ['Intelsat', 'Geostationary, station-kept'], ses: ['SES', 'Geostationary, station-kept'] };
+  const rows = fs.readdirSync(path.join(NEW, 'providers')).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(NEW, 'providers', f))).filter((r) => !r.error);
+  const lines = (b64) => S.oemLines(Buffer.from(b64, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(l.epoch)) }));
+  const roots = [STORE, path.join(STORE, 'vendors')];
+  const findStored = (source, norad, start) => {
+    for (const root of roots) for (const c of fs.readdirSync(root).filter((d) => /^c\d{8}T\d{4}$/.test(d))) {
+      const dir = path.join(root, c, 'products');
+      if (!fs.existsSync(dir)) continue;
+      for (const f of fs.readdirSync(dir).filter((n) => n.startsWith(`${source}-`) && n.includes(`-${norad}-`))) { const p = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); if (p.start === start && p.forecastOem) return p; }
+    }
+    return null;
+  };
+  const ISS_ARCHIVE = '/opt/data/sdn-archive/hac/nasa-iss-oem-archive';
+  const issFile = async (start) => {
+    for (const d of fs.readdirSync(ISS_ARCHIVE).filter((n) => /^2026-0[1-5]-\d\d$/.test(n)).sort()) {
+      const file = path.join(ISS_ARCHIVE, d, 'ISS.OEM_J2K_EPH.txt');
+      if (!fs.existsSync(file)) continue;
+      const text = fs.readFileSync(file, 'utf8');
+      const first = /^(\d{4}-\d{2}-\d{2}T[\d:.]+)\s/m.exec(text.slice(0, 20000))?.[1];
+      if (first && isoMs(Date.parse(`${first}Z`)) === start) {
+        const raw = [];
+        for (const line of text.split('\n')) { const t = line.trim().split(/\s+/); if (t.length === 7 && /^\d{4}-\d\d-\d\dT/.test(t[0])) raw.push({ epoch: isoMs(Date.parse(`${t[0]}Z`)), r: t.slice(1, 4).map(Number), v: t.slice(4, 7).map(Number) }); }
+        const num = (name) => Number(new RegExp(`COMMENT ${name}=([0-9.]+)`).exec(text)?.[1]);
+        const gcrf = await axes.convert(raw, 'EME2000', 'GCRF');
+        gcrf.statedB = (num('DRAG_COEFF') * num('DRAG_AREA')) / num('MASS');
+        return gcrf;
+      }
+    }
+    return null;
+  };
+  function interpolate(table, t) {
+    const ts = table.map((l) => Date.parse(l.epoch));
+    const i = ts.findIndex((x) => x >= t);
+    if (i < 0 || t < ts[0]) return null;
+    const lo = Math.max(0, Math.min(ts.length - 8, i - 4)), idx = Array.from({ length: 8 }, (_, k) => lo + k);
+    const w = idx.map((a) => idx.reduce((acc, b) => (a === b ? acc : (acc * (t - ts[b])) / (ts[a] - ts[b])), 1));
+    const mix = (get) => [0, 1, 2].map((c) => idx.reduce((s, a, k) => s + w[k] * get(table[a])[c], 0));
+    return { r: mix((l) => l.r), v: mix((l) => l.v) };
+  }
+  for (const source of Object.keys(LABEL).filter((k) => (ISS ? k === 'iss' : k !== 'iss'))) {
+    const [provider, regime] = LABEL[source];
+    const ranked = nearestMedian(rows.filter((r) => r.source === source && Number.isFinite(r.arms['S@48']?.km) && Number.isFinite(r.arms['A-XP@48']?.km)), (r) => r.arms['A-APn@48']?.km);
+    const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
+    let done = false;
+    for (const pick of ranked.slice(0, 8)) {
+      try {
+        const oldP = ISS ? null : findStored(source, pick.norad, pick.olderStart);
+        const newP = ISS ? null : findStored(source, pick.norad, pick.newerStart);
+        const older = ISS ? await issFile(pick.olderStart) : oldP && lines(oldP.forecastOem);
+        const next = ISS ? await issFile(pick.newerStart) : newP && lines(newP.forecastOem);
+        if (!older || !next) continue;
+        const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), leo = Math.hypot(...older[0].r) < 8400;
+        const step = (leo ? 120 : 300) * 1000, end = tn + 3 * HOUR;
+        const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
+        const refs = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
+        const epochsMs = ms.filter((_, i) => refs[i]), epochs = epochsMs.map(isoMs), reference = refs.filter(Boolean), gridB = S.gridBytes(epochs);
+        let extra, spw;
+        if (ISS) {
+          const O = W.rowsO(t0 - 72 * HOUR - XMC.conditions.rowsMarginDays * DAY, t0);
+          if (O.excluded) continue;
+          extra = { rows: S.spwBytes(O.rows) };
+          spw = driverRows(O.rows, t0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
+        } else {
+          const w = weatherRows(oldP.weatherDay, '2026-07-15', '2026-12-14');
+          spw = w.rows;
+          extra = { rows: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) };
+        }
+        const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + (source === 'starlink' ? 47.9 : 48) * HOUR);
+        const oem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+        const fa = await A.fit(oem, PCF_AP, extra); if (!fa.ok) continue;
+        const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
+        const { el } = await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
+        const sg = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
+        if (sg.some((x) => !x)) continue;
+        const seed = older.statedB ?? 0.01;
+        const settings = leo
+          ? { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: !ISS, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: seed }], fixed: { agom: ISS ? 0 : 0.02 }, apriori: apriori([seed * 10]) }
+          : { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 20, order: 20, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]) };
+        const ff = await F.fit(seg, [...seg[0].r, ...seg[0].v], settings, spw, Date.parse(seg.at(-1).epoch));
+        if (!ff.state) continue;
+        const tracks = {
+          reference: reference.map((x) => x.r),
+          AP: (await M.toAxes(await A.propagate(fa.omm, gridB, PCF_AP, extra, epochs.length), epochs, 'GCRF')).map((x) => x.r),
+          XP: (await M.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((x) => x.r),
+          SGP4: (await M.toAxes(sg, epochs, 'GCRF')).map((x) => x.r),
+          FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((x) => x.r),
+        };
+        write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+        done = true;
+        break;
+      } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
+    }
+    if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
+  }
+  await F.close();
 } else if (MODE === 'regimes') {
   // AP6.md's regimes: for each satellite named, the 72 h forecast whose AP error on day 3 is nearest AP's median for that satellite. Data E's orbits are not republished, so that group has no example.
   const { config, root, iso, ms, XM } = await import('../xp2-fit-design/common.mjs');

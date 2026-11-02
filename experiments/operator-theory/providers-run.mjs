@@ -1,0 +1,168 @@
+// COMPARE.md, report only: AP, XP and SGP4 on every provider this work stores forecasts of, by the pair rule of score.mjs: fitted to the start of an older file, flown to the first
+// 3 h of a newer file of the same object from the same provider. The stored rows of the forward test and the vendor test give FFM and the provider's own forecast. The ISS has its own
+// archive here, read with NASA's stated drag and as-issued weather, and flies FFM in this file. A newer file is the provider's own later solution, not truth. Module calls only.
+//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/providers-run.mjs --wasm <AP 0.4.0> --out <dir> --shard k/n            the stored forecasts
+//   XP2F_CONTROL=1 SDN_MODULES_ROOT=<modules> node experiments/operator-theory/providers-run.mjs --wasm <AP 0.4.0> --out <dir> --iss --shard k/n
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { isoMs, openFfmHost, openAxes, apriori } from './lib/host.mjs';
+import { weatherRows } from './lib/weather.mjs';
+import { apForces, openAp } from './lib/ap.mjs';
+import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
+import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
+import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
+
+const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
+const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
+const OUT = args.out, ISS = args.iss === 'true';
+if (!OUT || !args.wasm) throw new Error('--out and --wasm');
+const STORE = '/opt/data/sdn-archive/operator-theory', HOUR = 3600000, DAY = 86400000, TRUTH_H = 3, MAX_LEAD_H = 180, MIN_GAP_H = 6, ARCS = [24, 48];
+const FROM_FORWARD = new Set(['starlink', 'iss', 'css']), FROM_VENDORS = new Set(['gps', 'glonass', 'planet', 'intelsat', 'ses']);
+const ISS_ARCHIVE = '/opt/data/sdn-archive/hac/nasa-iss-oem-archive';
+const lines = (b64) => S.oemLines(Buffer.from(b64, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(l.epoch)) }));
+const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
+const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
+function interpolate(table, t) {
+  const ts = table.map((l) => Date.parse(l.epoch));
+  const i = ts.findIndex((x) => x >= t);
+  if (i < 0 || t < ts[0]) return null;
+  const lo = Math.max(0, Math.min(ts.length - 8, i - 4)), idx = Array.from({ length: 8 }, (_, k) => lo + k);
+  const w = idx.map((a) => idx.reduce((acc, b) => (a === b ? acc : (acc * (t - ts[b])) / (ts[a] - ts[b])), 1));
+  const mix = (get) => [0, 1, 2].map((c) => idx.reduce((s, a, k) => s + w[k] * get(table[a])[c], 0));
+  return { r: mix((l) => l.r), v: mix((l) => l.v) };
+}
+
+const M = await openModules(), A = await openAp(args.wasm), G = await openSgp4Fit();
+const F = ISS ? await openFfmHost() : null;
+const axes = ISS ? await openAxes() : null;
+const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
+const { driverRows } = ISS ? await import('../ffm-atmosphere-xm3/lib/ffm.mjs') : {};
+const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+
+/** The forecasts of one object, oldest first: { source, norad, object, start, read() => { lines (GCRF), spw, rows, statedB } }. */
+function items() {
+  const out = new Map();
+  const put = (key, item) => { if (!inShard(key)) return; const list = out.get(key) ?? out.set(key, []).get(key); if (!list.some((x) => x.start === item.start)) list.push(item); };
+  if (ISS) {
+    for (const d of fs.readdirSync(ISS_ARCHIVE).filter((n) => /^2026-0[1-5]-\d\d$/.test(n)).sort()) {
+      const file = path.join(ISS_ARCHIVE, d, 'ISS.OEM_J2K_EPH.txt');
+      if (!fs.existsSync(file)) continue;
+      const first = /^(\d{4}-\d{2}-\d{2}T[\d:.]+)\s/m.exec(fs.readFileSync(file, 'utf8').slice(0, 20000))?.[1];
+      if (first) put('iss|25544', { source: 'iss', norad: 25544, object: 'ISS', start: isoMs(Date.parse(`${first}Z`)), file });
+    }
+    return out;
+  }
+  for (const [root, keep] of [[STORE, FROM_FORWARD], [path.join(STORE, 'vendors'), FROM_VENDORS]]) {
+    for (const c of fs.readdirSync(root).filter((d) => /^c\d{8}T\d{4}$/.test(d) && fs.existsSync(path.join(root, d, 'products'))).sort()) {
+      for (const f of fs.readdirSync(path.join(root, c, 'products'))) {
+        if (!keep.has(f.split('-')[0])) continue;
+        const file = path.join(root, c, 'products', f);
+        const p = JSON.parse(fs.readFileSync(file, 'utf8'));
+        if (!p.start || !p.forecastOem) continue;
+        put(`${p.source}|${p.norad ?? p.object}`, { source: p.source, norad: p.norad, object: p.object, start: p.start, file, weatherDay: p.weatherDay, stored: true });
+      }
+    }
+  }
+  return out;
+}
+const issCache = new Map();
+async function linesOf(item) {
+  if (item.stored) return lines(JSON.parse(fs.readFileSync(item.file, 'utf8')).forecastOem);
+  if (issCache.has(item.file)) return issCache.get(item.file);
+  const text = fs.readFileSync(item.file, 'utf8');
+  const raw = [];
+  for (const line of text.split('\n')) { const t = line.trim().split(/\s+/); if (t.length === 7 && /^\d{4}-\d\d-\d\dT/.test(t[0])) raw.push({ epoch: isoMs(Date.parse(`${t[0]}Z`)), r: t.slice(1, 4).map(Number), v: t.slice(4, 7).map(Number) }); }
+  const num = (name) => Number(new RegExp(`COMMENT ${name}=([0-9.]+)`).exec(text)?.[1]);
+  const gcrf = await axes.convert(raw, 'EME2000', 'GCRF');
+  gcrf.statedB = (num('DRAG_COEFF') * num('DRAG_AREA')) / num('MASS');
+  if (issCache.size > 12) issCache.delete(issCache.keys().next().value);
+  issCache.set(item.file, gcrf);
+  return gcrf;
+}
+const fitsCache = new Map();
+async function fitsOf(item) {
+  if (fitsCache.has(item.start)) return fitsCache.get(item.start);
+  const all = await linesOf(item);
+  const t0 = Date.parse(all[0].epoch), tEnd = Date.parse(all.at(-1).epoch);
+  const object = { name: item.object, id: '', norad: item.norad };
+  let extra, spw;
+  if (ISS) {
+    const O = W.rowsO(t0 - 72 * HOUR - XMC.conditions.rowsMarginDays * DAY, t0);
+    if (O.excluded) throw new Error(O.excluded);
+    extra = { rows: S.spwBytes(O.rows) };
+    spw = driverRows(O.rows, t0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
+  } else {
+    const w = weatherRows(item.weatherDay, '2026-07-15', '2026-12-14');
+    extra = { rows: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) };
+  }
+  const out = { extra, spw, arms: {} };
+  for (const arc of ARCS) {
+    if (tEnd - t0 < arc * HOUR) continue;
+    const seg = all.filter((l) => Date.parse(l.epoch) <= t0 + (item.source === 'starlink' && arc >= 48 ? 47.9 : arc) * HOUR);
+    if (seg.length < 5) continue;
+    const oem = S.oemBytes({ frame: 'GCRF', object, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+    const f = await A.fit(oem, PCF_AP, extra);
+    out.arms[`A-APn@${arc}`] = f.ok ? { omm: f.omm, pcf: PCF_AP, extra } : { error: f.error };
+    const x = await A.fit(oem, PCF_XP, undefined);
+    out.arms[`A-XP@${arc}`] = x.ok ? { omm: x.omm, pcf: PCF_XP } : { error: x.error };
+    if (item.norad) {
+      try { out.arms[`S@${arc}`] = { el: (await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: item.object, objectId: '' })).el }; } catch (error) { out.arms[`S@${arc}`] = { error: String(error.message).slice(0, 120) }; }
+    }
+    if (ISS) {
+      const seed = all.statedB ?? 0.01;
+      const settings = { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: false, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: seed }], fixed: { agom: 0 }, apriori: apriori([seed * 10]) };
+      try {
+        const ff = await F.fit(seg, [...seg[0].r, ...seg[0].v], settings, spw, Date.parse(seg.at(-1).epoch));
+        out.arms[`F-M40@${arc}`] = ff.state ? { ffm: { epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, settings } : { error: String(ff.error ?? ff.termination).slice(0, 120) };
+      } catch (error) { out.arms[`F-M40@${arc}`] = { error: String(error.message).slice(0, 120) }; }
+    }
+  }
+  fitsCache.set(item.start, out);
+  return out;
+}
+
+fs.mkdirSync(OUT, { recursive: true });
+const outFile = path.join(OUT, `rows${ISS ? '-iss' : ''}-${SHARD}.jsonl`);
+const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.key}|${r.olderStart}|${r.newerStart}`; }) : []);
+let added = 0;
+for (const [key, list] of items()) {
+  list.sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+  fitsCache.clear();
+  for (let i = 0; i < list.length; i += 1) for (let j = i + 1; j < list.length; j += 1) {
+    const older = list[i], newerRef = list[j];
+    const leadHours = (Date.parse(newerRef.start) - Date.parse(older.start)) / HOUR;
+    if (leadHours <= MIN_GAP_H || leadHours > MAX_LEAD_H || done.has(`${key}|${older.start}|${newerRef.start}`)) continue;
+    const row = { key, source: older.source, norad: older.norad, object: older.object, olderStart: older.start, newerStart: newerRef.start, leadHours, arms: {} };
+    try {
+      const nl = await linesOf(newerRef);
+      const t0 = Date.parse(nl[0].epoch);
+      const truth = nl.filter((l) => Date.parse(l.epoch) <= t0 + TRUTH_H * HOUR);
+      const epochs = truth.map((l) => l.epoch), epochsMs = epochs.map((e) => Date.parse(e)), truthStates = truth.map((l) => ({ r: l.r, v: l.v }));
+      const score = async (states) => { const e = await M.rtn(states, truthStates); const r = rmsOf(e.map((x) => x[0])), t = rmsOf(e.map((x) => x[1])), n = rmsOf(e.map((x) => x[2])); return { km: Math.hypot(r, t, n), r, t, n }; };
+      const fits = await fitsOf(older);
+      row.truthStates = truth.length;
+      if (ISS) { const table = await linesOf(older); const states = epochsMs.map((t) => interpolate(table, t)); if (states.every(Boolean)) row.arms.operator = await score(states); }
+      for (const [name, f] of Object.entries(fits.arms)) {
+        if (f.error) { row.arms[name] = { error: f.error }; continue; }
+        try {
+          if (f.el) {
+            const flown = await M.propagateSgp4(f.el, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
+            if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
+            row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
+          } else if (f.ffm) {
+            row.arms[name] = await score(await F.forecast(f.ffm, epochs, f.settings, fits.spw));
+          } else {
+            row.arms[name] = await score(await M.toAxes(await A.propagate(f.omm, S.gridBytes(epochs), f.pcf, f.extra, epochs.length), epochs, 'GCRF'));
+          }
+        } catch (error) { row.arms[name] = { error: String(error.message).slice(0, 120) }; }
+      }
+    } catch (error) { row.error = String(error.message).slice(0, 160); }
+    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    added += 1;
+  }
+}
+console.error(`${added} pairs added, shard ${SHARD}/${SHARDS}${ISS ? ', ISS' : ''}`);
+await M.close();
+process.exit(0);

@@ -97,6 +97,38 @@ if (fs.existsSync(path.join(NEW, 'regimes')) && !argOf('--only')) {
   }
 }
 
+// Every other provider that publishes states: SpaceX, NASA's ISS, the China Space Station, Planet, ESA's ultra-rapid orbits, Intelsat, SES. The reference is the provider's next file.
+const PROVIDERS = { starlink: ['SpaceX', 'Low orbit, maneuvering'], iss: ['NASA ISS', 'Low orbit, crewed'], css: ['China Space Station', 'Low orbit, crewed'], planet: ['Planet (Flock)', 'Low orbit, imaging fleet'], gps: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], glonass: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], intelsat: ['Intelsat', 'Geostationary, station-kept'], ses: ['SES', 'Geostationary, station-kept'] };
+const providerLeftOut = {};
+if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
+  const pairKey = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
+  const stored = new Map([...rowsIn(path.join(ROOT, 'forward')), ...rowsIn(path.join(ROOT, 'vendors', 'forward'))].map((r) => [pairKey(r), r]));
+  const all = fs.readdirSync(path.join(NEW, 'providers')).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(NEW, 'providers', f))).filter((r) => !r.error && PROVIDERS[r.source]);
+  // A Planet object with no catalog number: its successive files disagree by thousands of km for every arm, Planet's own forecast included, so it says nothing about a propagator.
+  const live = all.filter((r) => r.source !== 'planet' || r.norad);
+  providerLeftOut.planetPairsWithoutCatalogNumber = all.length - live.length;
+  const kmOf = (r, arm) => r.arms[arm]?.km ?? stored.get(pairKey(r))?.arms[arm]?.km;
+  const cell = (list, fit) => {
+    const arms = {};
+    for (const [column, names] of [['SGP4', [`S@${fit}`]], ['XP', [`A-XP@${fit}`]], ['AP', [`A-APn@${fit}`]], ['FFM40', [`F-M40@${fit}`]], ['FFMfull', [`F-NRLMSISE00@${fit}`, `F-NO-DRAG@${fit}`]], ['Center', ['operator']]]) {
+      const v = list.map((r) => names.map((n) => kmOf(r, n)).find(Number.isFinite)).filter(Number.isFinite).sort(asc);
+      if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
+    }
+    return arms;
+  };
+  const buckets = new Map();
+  for (const r of live) {
+    const lead = binOf(r.leadHours);
+    if (lead === null) continue;
+    const [provider, regime] = PROVIDERS[r.source];
+    for (const k of [`regime|${regime}|All|All|${lead}`, `provider|${regime}|${provider}|All|${lead}`, `satellite|${regime}|${provider}|${r.object}|${lead}`]) (buckets.get(k) ?? buckets.set(k, []).get(k)).push(r);
+  }
+  for (const [k, list] of buckets) {
+    const [level, regime, provider, satellite, lead] = k.split('|');
+    for (const fit of [24, 48]) { const arms = cell(list, fit); if (Object.keys(arms).length) out.push({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms }); }
+  }
+}
+
 // Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's.
 if (argOf('--examples')) {
   const dir = argOf('--examples');
@@ -113,6 +145,7 @@ const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md',
   columns: { SGP4: 'SGP4', XP: 'XP', AP: 'AP 0.4.0', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
   fields: 'arms: column to [median km, 95th percentile km, forecasts]',
+  leftOut: providerLeftOut,
   rows: out,
 };
 fs.writeFileSync(argOf('--out'), `${JSON.stringify(doc)}\n`);

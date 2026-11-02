@@ -20,7 +20,15 @@ On 7,404 pairs of 17 low satellites that do not thrust, every arm fitted to the 
 
 What it means: by pair, AP is closer than SGP4 and XP at every lead. Against FFM it is behind at 24 h, by about 0.01 km; past that the intervals against both FFM settings include zero, though 40x40 FFM's pooled medians are lower. AP costs about 3 to 4 times less than these FFM settings to fit and about 10 to 20 times less to fly, and about 6 to 12 times more than SGP4 and XP. SGP4 fitted to 48 h is level with XP through 72 h; XP pulls ahead at 120 and 168 h. Fitted to 24 h, SGP4 is 7.75 km off at 72 h and 48.7 km at 168 h.
 
-What it does not mean: this is a report, not a test, and no claim rests on it. The reference is each center's next prediction, not independent truth, and agreeing with it may partly mean sharing a force model with that center. AP and FFM read observed weather for the whole stretch they fly, which no real forecast has and which SGP4 and XP do not read at all, so the gap at long leads is wider here than it would be in a real forecast. AP 0.4.0 against XP was not registered, and XP has not been run beside AP against independent precise orbits. For AP against truth, on forecast weather, see `../README.md`.
+What it does not mean: this is a report, not a test, and no claim rests on it. The reference is each center's next prediction, not independent truth, and agreeing with it may partly mean sharing a force model with that center. AP and FFM read observed weather for the whole stretch they fly, which no real forecast has and which SGP4 and XP do not read at all, so the gap at long leads is wider here than it would be in a real forecast. AP 0.4.0 against XP was not registered on this reference; it is registered against precise orbits, in `AP5.md` and `AP6.md`, above.
+
+## Every other provider that publishes states
+
+`experiments/operator-theory/providers-run.mjs`, report only: SpaceX, NASA's ISS, the China Space Station, Planet's Flock, ESA's ultra-rapid GPS and GLONASS orbits, Intelsat and SES. Each arm is fitted to the start of an older file and flown to the first 3 hours of the same provider's newer file, so the reference is the provider's own later solution, not truth, and the provider's own forecast is a column beside them. The spans are short: the forward test began 2026-10-24, the China Space Station has one pair, and the ISS archive is read over 2026-01 to 2026-05. FFM on these is the forward and vendor tests' stored 70x70 arm, except the ISS, which flies 40x40 here. Pairs of Planet objects with no catalog number are left out and counted in `cells.json`: their successive files disagree by thousands of km for every arm, Planet's own forecast included. Providers that publish no states cannot be tested: OneWeb, Telesat, EUMETSAT, Kuiper, Iridium, Orbcomm and AST (`experiments/operator-theory/VENDORS.md`).
+
+## The ellipsoids on the site's globe
+
+`sigma.json`, from `compare-sigma.mjs`: for each arm and lead, the root mean square of its radial, in-track and cross-track errors over every forecast of that example's satellite, or provider and regime. It is what the forecasts did, not a filter's formal covariance.
 
 ## The table
 
