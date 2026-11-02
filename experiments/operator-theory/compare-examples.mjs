@@ -14,10 +14,12 @@ const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const HOUR = 3600000, DAY = 86400000, MU = 398600.4418;
-const int32 = (positions) => Buffer.from(Int32Array.from(positions.flatMap((p) => p.map((x) => Math.round(x * 1000)))).buffer);
-const TRACKS = ['reference', 'AP', 'XP', 'SGP4', 'FFM'];
+const encode = (positions) => Buffer.from(Float64Array.from(positions.flat()).buffer);
+const TRACKS = ['reference', 'AP', 'XP', 'XPU', 'SGP4', 'FFM'];
 const meanMotion = (s) => { const r = Math.hypot(...s.r), v = Math.hypot(...s.v), a = 1 / (2 / r - (v * v) / MU); return 86400 / (2 * Math.PI * Math.sqrt((a * a * a) / MU)); };
-// <id>.json describes the example; <id>.bin holds its positions, Int32 meters, little endian, in TRACKS order.
+// <id>.json describes the example; <id>.bin holds its positions, Float64 km, little endian, in TRACKS order. compare-examples-publish.mjs writes what the site reads.
+const { openUssfXp } = await import('./lib/ussf-xp.mjs');
+const U = await openUssfXp();
 const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.bin`), Buffer.concat(TRACKS.map((k) => doc.tracks[k])));
   fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, tracks: TRACKS })}\n`);
@@ -93,12 +95,15 @@ if (MODE === 'next') {
     tracks.AP = (await M.toAxes(await A040.propagate(Buffer.from(a.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: a.forces, fit: FIT }), { rows: spw }, epochs.length), epochs, 'GCRF')).map((s) => s.r);
     tracks.XP = (await M.toAxes(await A030.propagate(Buffer.from(x.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: x.forces, fit: FIT }), undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r);
     const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
+    const fu = await U.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }));
+    if (!fu.ok) { console.error(`${id}: ${fu.error}`); continue; }
+    tracks.XPU = (await M.toAxes(await U.propagate(fu.omm, S.gridBytes(epochs), epochs.length), epochs, 'GCRF')).map((s) => s.r);
     const { el } = await G.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }), { from: seg[0].epoch, to: isoMs(t0 + 48 * HOUR), epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
     const flown = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
     if (flown.some((s) => !s)) { console.error(`${id}: SGP4 returned no state at some epochs`); continue; }
     tracks.SGP4 = (await M.toAxes(flown, epochs, 'GCRF')).map((s) => s.r);
     tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
-    write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+    write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
   }
   await F.close(); await M.close();
 } else if (MODE === 'providers') {
@@ -190,6 +195,7 @@ if (MODE === 'next') {
         const oem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
         const fa = await A.fit(oem, PCF_AP, extra); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
+        const fu = await U.fit(oem); if (!fu.ok) continue;
         const { el } = await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
         const sg = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
         if (sg.some((x) => !x)) continue;
@@ -203,10 +209,11 @@ if (MODE === 'next') {
           reference: reference.map((x) => x.r),
           AP: (await M.toAxes(await A.propagate(fa.omm, gridB, PCF_AP, extra, epochs.length), epochs, 'GCRF')).map((x) => x.r),
           XP: (await M.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((x) => x.r),
+          XPU: (await M.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((x) => x.r),
           SGP4: (await M.toAxes(sg, epochs, 'GCRF')).map((x) => x.r),
           FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((x) => x.r),
         };
-        write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: FIT_H, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + FIT_H * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+        write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: FIT_H, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + FIT_H * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
         done = true;
         break;
       } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
@@ -222,7 +229,7 @@ if (MODE === 'next') {
   const { driverRows } = await import('../ffm-atmosphere-xm3/lib/ffm.mjs');
   const { openAp, apForces } = await import('./lib/ap.mjs');
   const { openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
-  const { STATIC, TESS, GROUPS } = await import('./lib/regimes.mjs');
+  const { STATIC, TESS, GROUPS, HX } = await import('./lib/regimes.mjs');
   const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
   const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
@@ -243,12 +250,23 @@ if (MODE === 'next') {
   const rows = rowsIn(path.join(NEW, 'regimes')).filter((r) => !r.error);
   const NAMED = { LS: ['AJISAI', 'STARLETTE', 'LARES'], GD: ['LAGEOS 2', 'ETALON 1', 'LARES-2'] };
   const picks = [];
-  for (const group of ['LS', 'GD', 'IG', 'GE', 'HE']) {
+  for (const group of ['LS', 'GD', 'IG', 'GE', 'HE', 'HX']) {
     const names = [...new Set(rows.filter((r) => r.group === group).map((r) => r.name))];
-    const chosen = NAMED[group] ? names.filter((n) => NAMED[group].includes(n)) : names.slice(0, group === 'HE' ? 1 : 2);
+    const chosen = NAMED[group] ? names.filter((n) => NAMED[group].includes(n)) : group === 'HX' ? names.filter((n) => n === 'THEMIS A' || n === 'CHANDRA') : names.slice(0, group === 'HE' ? 1 : 2);
     for (const name of chosen) picks.push([group, name]);
   }
   const seriesOf = async (group, name) => {
+    if (group === 'HX') {
+      const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
+      const h = HX.find((x) => x.name === name);
+      const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files: [h.file], source: 'ap6-heo', id: h.id, name: h.name, norad: h.norad, fromUtc: h.from, toUtc: h.to, stride: 1 });
+      const axes = await openAxes();
+      const norm = s.lines.map((l) => ({ ...l, epoch: new Date(Math.round(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`) / 1000) * 1000).toISOString() }));
+      const first = ms(norm[0].epoch);
+      const lines = await axes.convert(norm.filter((l) => (ms(l.epoch) - first) % GRID === 0), 'EME2000', 'GCRF');
+      await axes.close();
+      return { norad: h.norad, objectId: h.objectId, lines };
+    }
     if (group === 'HE') {
       const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
       const files = fs.readdirSync(TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(TESS.dir, f));
@@ -269,7 +287,7 @@ if (MODE === 'next') {
   };
   for (const [group, name] of picks) {
     const id = `truth-${GROUPS[group].label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-    const vacuum = group === 'HE', arc = 72, D3 = '3';
+    const vacuum = group === 'HE' || group === 'HX', arc = 72, D3 = '3';
     const ranked = nearestMedian(rows.filter((r) => r.group === group && r.name === name), (r) => r.arms.AP72?.days?.[D3]?.e);
     const o = await seriesOf(group, name);
     const times = o.lines.map((l) => ms(l.epoch));
@@ -298,6 +316,7 @@ if (MODE === 'next') {
         const oem = S.oemBytes({ frame: 'GCRF', object: { name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
         const fa = await A.fit(oem, pcfAp, ex); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
+        const fu = await U.fit(oem); if (!fu.ok) continue;
         const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name, objectId: o.objectId });
         const settings = ffmSettings(high);
         const ff = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0); if (!ff.state) continue;
@@ -308,10 +327,11 @@ if (MODE === 'next') {
           reference: grid.map((l) => l.r),
           AP: (await m.toAxes(await A.propagate(fa.omm, gridB, pcfAp, ex, epochs.length), epochs, 'GCRF')).map((s) => s.r),
           XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+          XPU: (await m.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((s) => s.r),
           SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
           FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((s) => s.r),
         };
-        write({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider, satellite: name, fitHours: arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+        write({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider, satellite: name, fitHours: arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
         done = true;
         break;
       } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
@@ -376,6 +396,7 @@ if (MODE === 'next') {
           const oem = S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId ?? '', norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
           const fa = await A.fit(oem, PCF_AP, ex); if (!fa.ok) continue;
           const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
+          const fu = await U.fit(oem); if (!fu.ok) continue;
           const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: o.name, objectId: o.objectId ?? '' });
           const settings = ffmSettings(high);
           const ff = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0); if (!ff.state) continue;
@@ -387,11 +408,12 @@ if (MODE === 'next') {
             reference: grid.map((l) => l.r),
             AP: (await m.toAxes(await A.propagate(fa.omm, gridB, PCF_AP, ex, epochs.length), epochs, 'GCRF')).map((s) => s.r),
             XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+            XPU: (await m.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((s) => s.r),
             SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
             FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((s) => s.r),
           };
           const publicName = name;
-          write({ id, reference: 'truth', regime: cut.regime, provider: cut.provider, satellite: publicName, fitHours: cut.arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+          write({ id, reference: 'truth', regime: cut.regime, provider: cut.provider, satellite: publicName, fitHours: cut.arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
           done = true;
           break;
         } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }

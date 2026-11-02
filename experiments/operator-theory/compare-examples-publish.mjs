@@ -20,16 +20,43 @@ function axesAt(reference, count, i) {
   return { p, R, I: [C[1] * R[2] - C[2] * R[1], C[2] * R[0] - C[0] * R[2], C[0] * R[1] - C[1] * R[0]], C };
 }
 
-/** Radial, in-track, cross-track distance of one track from the reference at each time, Int32 meters. */
+/** Radial, in-track, cross-track distance of one track from the reference at each time, Float32 meters, positions in km. */
 function offsetsOf(track, reference, count) {
-  const out = new Int32Array(3 * count);
+  const out = new Float32Array(3 * count);
   for (let i = 0; i < count; i += 1) {
     const k = 3 * i, { p, R, I, C } = axesAt(reference, count, i);
-    const d = [track[k] - p[0], track[k + 1] - p[1], track[k + 2] - p[2]];
+    const d = [(track[k] - p[0]) * 1000, (track[k + 1] - p[1]) * 1000, (track[k + 2] - p[2]) * 1000];
     const dot = (a) => a[0] * d[0] + a[1] * d[1] + a[2] * d[2];
-    out[k] = Math.round(dot(R)); out[k + 1] = Math.round(dot(I)); out[k + 2] = Math.round(dot(C));
+    out[k] = dot(R); out[k + 1] = dot(I); out[k + 2] = dot(C);
   }
   return out;
+}
+
+/**
+ * Where the reference's orbit steps: a burn the forecast does not know about moves the forecast's orbit-mean radial distance from the reference at once, and drag and fit error move it slowly.
+ * At each sample, the mean over the orbit after less the mean over the orbit before, against the median absolute size of that difference for this example; a step is at least 8 of those and
+ * at least 5 m. Hours from the first state. On next-prediction examples, only before the newer file starts, since the reference changes source there.
+ */
+function stepsOf(d, offsets) {
+  const t = d.epochsSeconds, period = 86400 / d.meanMotion, lastT = d.reference === 'next' ? (d.scoreFromMs - Date.parse(d.start)) / 1000 : Infinity;
+  const stepS = t[1] - t[0], stride = Math.max(1, Math.round(period / 4 / stepS));
+  const mean = (from, to) => { let s = 0, n = 0; for (let i = 0; i < t.length; i += 1) if (t[i] >= from && t[i] < to) { s += offsets[3 * i]; n += 1; } return n >= (period / stepS) / 2 ? s / n : NaN; };
+  const jumps = [];
+  for (let i = 0; i < t.length; i += stride) {
+    if (t[i] - period < t[0] || t[i] + period > Math.min(t.at(-1), lastT)) continue;
+    const j = mean(t[i], t[i] + period) - mean(t[i] - period, t[i]);
+    if (Number.isFinite(j)) jumps.push({ at: t[i], j });
+  }
+  if (!jumps.length) return [];
+  const sizes = jumps.map((x) => Math.abs(x.j)).sort((p, q) => p - q), typical = sizes[sizes.length >> 1], floor = Math.max(5, 8 * typical);
+  const events = [];
+  for (const x of jumps) {
+    if (Math.abs(x.j) < floor) continue;
+    const last = events.at(-1);
+    if (last && x.at - last.at < 2 * period) { if (Math.abs(x.j) > Math.abs(last.j)) { last.at = x.at; last.j = x.j; } } else events.push({ ...x });
+  }
+  const passive = /laser spheres|geodetic/i.test(d.regime) || /ajisai|starlette|stella|lares|larets|westpac|beacon|lageos|etalon/i.test(d.satellite);
+  return events.map((e) => ({ hour: Math.round((e.at / 3600) * 10) / 10, radialM: Math.round(e.j * 10) / 10, kind: passive ? 'reference-step' : 'maneuver' }));
 }
 
 /** The rotation from the axes in-track, cross-track, radial to GCRF at each time, Float32 quaternions x, y, z, w. The site reads these and builds no axes of its own. */
@@ -54,15 +81,18 @@ for (const dir of argOf('--in').split(',')) {
     const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
     const raw = fs.readFileSync(path.join(dir, f.replace(/\.json$/, '.bin')));
     const size = 3 * d.count;
-    const all = new Int32Array(raw.buffer, raw.byteOffset, raw.length / 4);
+    const all = new Float64Array(raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.length));
     const section = (name) => all.subarray(size * d.tracks.indexOf(name), size * (d.tracks.indexOf(name) + 1));
     const arms = d.tracks.filter((t) => t !== 'reference');
     const referenceDrawn = !NOT_REDRAWN.has(d.provider);
-    const tracks = referenceDrawn ? d.tracks : arms;
     const reference = section('reference');
-    const parts = [...tracks.map(section), ...arms.map((a) => offsetsOf(section(a), reference, d.count)), framesOf(reference, d.count)];
+    const offsets = Object.fromEntries(arms.map((a) => [a, offsetsOf(section(a), reference, d.count)]));
+    // One Float64 track in km, the reference where it may be drawn and AP elsewhere, then each arm's Float32 distances from the reference, then the Float32 rotations: little endian.
+    const center = section(referenceDrawn ? 'reference' : 'AP');
+    const parts = [center, ...arms.map((a) => offsets[a]), framesOf(reference, d.count)];
     fs.writeFileSync(path.join(OUT, `${d.id}.bin`), Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength))));
-    fs.writeFileSync(path.join(OUT, `${d.id}.json`), `${JSON.stringify({ ...d, tracks, offsets: arms, referenceDrawn })}\n`);
+    const { tracks: _, ...rest } = d;
+    fs.writeFileSync(path.join(OUT, `${d.id}.json`), `${JSON.stringify({ ...rest, center: referenceDrawn ? 'reference' : 'AP', offsets: arms, referenceDrawn, steps: stepsOf(d, offsets.FFM) })}\n`);
     index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite });
   }
 }

@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import { openFfmHost, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { openAp, apForces } from './lib/ap.mjs';
+import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
@@ -32,7 +33,7 @@ const spw = S.spwBytes(weather.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS
 const M = await openModules();
 const G = await openSgp4Fit();
 const F = await openFfmHost();
-const A030 = await openAp(args.ap030), A040 = await openAp(args.ap040);
+const A030 = await openAp(args.ap030), A040 = await openAp(args.ap040), U = await openUssfXp();
 const pcfXp = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { atmosphere: false, noTerms: true }), fit: null });
 const pcfAp = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null });
 const ffm = (degree, tides) => ({
@@ -55,6 +56,12 @@ const ARMS = {
     const [, flightSeconds] = await timed(() => A030.propagate(fit.omm, S.gridBytes(epochs), pcfXp, undefined, epochs.length));
     return { fitSeconds, flightSeconds };
   },
+  XPU: async ({ oem, epochs }) => {
+    const [fit, fitSeconds] = await timed(() => U.fit(oem));
+    if (!fit.ok) throw new Error(fit.error);
+    const [, flightSeconds] = await timed(() => U.propagate(fit.omm, S.gridBytes(epochs), epochs.length));
+    return { fitSeconds, flightSeconds };
+  },
   AP: async ({ oem, epochs }) => {
     const [fit, fitSeconds] = await timed(() => A040.fit(oem, pcfAp, { rows: spw }));
     if (!fit.ok) throw new Error(fit.error);
@@ -72,7 +79,8 @@ for (const [name, degree, tides] of [['FFM20', 20, false], ['FFM40', 40, true]])
   };
 }
 
-const NAMES = Object.keys(ARMS);
+// --only XP,XPU: the two versions of XP head to head. Without it, this file's registered arms.
+const NAMES = args.only ? args.only.split(',') : Object.keys(ARMS).filter((n) => n !== 'XPU');
 for (let k = 0; k < chosen.length; k += 1) {
   const p = JSON.parse(fs.readFileSync(chosen[k], 'utf8'));
   const all = S.oemLines(Buffer.from(p.forecastOem, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(l.epoch)) }));

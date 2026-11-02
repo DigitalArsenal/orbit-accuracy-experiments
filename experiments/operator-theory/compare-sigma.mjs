@@ -12,7 +12,7 @@ const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(
 const rowsIn = (dir, re = /^rows-\d+\.jsonl$/) => fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const rms = (v) => Math.sqrt(v.reduce((s, x) => s + x * x, 0) / v.length);
 const DAY_HOURS = { 1: 12, 2: 36, 3: 60, 7: 156 };
-const ARMS = ['AP', 'XP', 'SGP4', 'FFM'];
+const ARMS = ['AP', 'XP', 'XPU', 'SGP4', 'FFM'];
 
 const dir = argOf('--examples');
 const examples = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
@@ -21,21 +21,23 @@ const out = {};
 // Precise orbits: from the cutoff.
 const ap1 = rowsIn(path.join(NEW, 'truth')), ap2 = rowsIn(path.join(NEW, 'truth2')), cmp1 = new Map(rowsIn(path.join(NEW, 'compare-truth')).map((r) => [r.key, r])), cmp2 = new Map(rowsIn(path.join(NEW, 'compare-truth2')).map((r) => [r.key, r]));
 const regimes = rowsIn(path.join(NEW, 'regimes'));
-const FIVE = { 'Strong drag, 2025': [ap1, cmp1, null], 'Strong drag, 2026': [ap2, cmp2, 'P'], 'Near 700 km': [ap2, cmp2, 'S1'], 'Medium Earth orbit': [ap2, cmp2, 'GN'] };
-const code = { AP: 'AP', XP: 'XP', SGP4: 'S', FFM: 'F' };
+const windowsIn = (d) => new Map(rowsIn(d).map((r) => [r.key, r]));
+const u1 = windowsIn(path.join(NEW, 'ussf-truth')), u2 = windowsIn(path.join(NEW, 'ussf-truth2')), uSix = windowsIn(path.join(NEW, 'ussf-regimes'));
+const FIVE = { 'Strong drag, 2025': [ap1, cmp1, null, u1], 'Strong drag, 2026': [ap2, cmp2, 'P', u2], 'Near 700 km': [ap2, cmp2, 'S1', u2], 'Medium Earth orbit': [ap2, cmp2, 'GN', u2] };
+const code = { AP: 'AP', XP: 'XP', XPU: 'U', SGP4: 'S', FFM: 'F' };
 const sixGroup = Object.fromEntries(Object.entries(GROUPS).map(([g, v]) => [v.label, g]));
 for (const e of examples.filter((x) => x.reference === 'truth')) {
   const five = FIVE[e.regime];
   const arc = e.fitHours;
   let windows, read;
   if (five) {
-    const [ap, cmp, group] = five;
+    const [ap, cmp, group, u] = five;
     windows = ap.filter((r) => !r.error && r.name === e.satellite && (!group || r.group === group));
-    read = (w, arm) => (arm === 'AP' ? w.arms[`AP${arc}`] : cmp.get(w.key)?.arms[`${code[arm]}${arc}`]);
+    read = (w, arm) => (arm === 'AP' ? w.arms[`AP${arc}`] : arm === 'XPU' ? u.get(w.key)?.arms[`U${arc}`] : cmp.get(w.key)?.arms[`${code[arm]}${arc}`]);
   } else {
     const g = sixGroup[e.regime];
     windows = regimes.filter((r) => !r.error && r.group === g && r.name === e.satellite);
-    read = (w, arm) => w.arms[`${code[arm]}${arc}`];
+    read = (w, arm) => (arm === 'XPU' ? uSix.get(w.key)?.arms[`U${arc}`] : w.arms[`${code[arm]}${arc}`]);
   }
   const arms = {};
   for (const arm of ARMS) {
@@ -59,12 +61,14 @@ const NAV = /^(beidou|compass|galileo|glonass|gps|irnss|qzs)/;
 const regimeOf = (r) => (r.source.endsWith('-leo') ? 'Low orbit' : NAV.test(r.object) ? 'Navigation' : 'Geodetic');
 const LEADS = [12, 24, 36, 48, 60, 72, 96, 120, 144, 168];
 const providerRows = fs.existsSync(path.join(NEW, 'providers')) ? rowsIn(path.join(NEW, 'providers'), /^rows(-iss)?-\d+\.jsonl$/) : [];
+const uProviders = new Map(rowsIn(path.join(NEW, 'ussf-providers'), /^rows(-iss)?-\d+\.jsonl$/).map((r) => [key(r), r])), uLaser = load(path.join(NEW, 'ussf-laser'));
 const PROVIDER = { starlink: 'SpaceX', iss: 'NASA ISS', css: 'China Space Station', planet: 'Planet', gps: 'ESA ultra-rapid', glonass: 'ESA ultra-rapid', intelsat: 'Intelsat', ses: 'SES' };
 for (const e of examples.filter((x) => x.reference === 'next')) {
   const fromProviders = Object.values(PROVIDER).includes(e.provider);
   const cell = fromProviders ? providerRows.filter((r) => PROVIDER[r.source] === e.provider && !r.error) : laser.filter((r) => regimeOf(r) === e.regime && r.source.split('-')[1] === e.provider);
   const leo = e.regime === 'Low orbit';
   const read = (r, arm) => {
+    if (arm === 'XPU') return (fromProviders ? uProviders : uLaser).get(key(r))?.arms[`U-XP@${e.fitHours}`];
     if (fromProviders) return r.arms[{ AP: `A-APn@${e.fitHours}`, XP: `A-XP@${e.fitHours}`, SGP4: `S@${e.fitHours}`, FFM: `F-M40@${e.fitHours}` }[arm]];
     return { AP: r.arms['A-APn@48'], XP: xp.get(key(r))?.arms['A-XP@48'], SGP4: sg.map((s) => s.get(key(r))?.arms['S@48']).find((a) => a && Number.isFinite(a.r)), FFM: ffm.get(key(r))?.arms[leo ? 'F-M40@48' : 'F-H20@48'] }[arm];
   };

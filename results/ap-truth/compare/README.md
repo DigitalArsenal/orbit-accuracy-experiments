@@ -26,6 +26,14 @@ What it does not mean: this is a report, not a test, and no claim rests on it. T
 
 ## Every other provider that publishes states
 
+## Two versions of XP
+
+`xp-versions.md` and `xp-versions.json`, report only, registered in `experiments/operator-theory/COMPARE.md`. Every "XP" in this work before this section is our whiteroom version. The Space Force version is its unmodified Sgp4Prop 9.1.1.0 XP build through `propagator/sgp4-xp`, fitted by that module's own fitter and flown on the same arcs and times. They share a theory, not a fitter.
+
+By window, the Space Force version's error over the whiteroom version's, one day ahead: 1.06 in strong drag in 2025 and 1.07 in 2026 from a 24 h fit, 1.00 in 2026 from a 72 h fit, 1.10 near 700 km from a 24 h fit and 1.01 from a 72 h fit, 0.74 in medium Earth orbit, 5.6 in geostationary orbit and 4.5 in inclined geosynchronous orbit. At day 7 those last two are 1.15 and 1.27. The library reads two-line text, whose angles carry 1e-4 degree, about 74 m at geostationary radius, which may be part of that; this was not tested. On TESS from a 72 h fit the ratio is 2.9 at day 1 and 5.1 at day 7, and from a 336 h fit it is 1.08 and 0.99. On 40 low-orbit files, one process, one call at a time, a fit took 0.116 s on the whiteroom version and 0.318 s on the Space Force version, and a flight 0.039 s and 0.008 s.
+
+## The providers
+
 `experiments/operator-theory/providers-run.mjs`, report only: SpaceX, NASA's ISS, the China Space Station, Planet's Flock, ESA's ultra-rapid GPS and GLONASS orbits, Intelsat and SES. Each arm is fitted to the start of an older file and flown to the first 3 hours of the same provider's newer file, so the reference is the provider's own later solution, not truth, and the provider's own forecast is a column beside them. The spans are short: the forward test began 2026-10-24, the China Space Station has one pair, and the ISS archive is read over 2026-01 to 2026-05. FFM on these is the forward and vendor tests' stored 70x70 arm, except the ISS, which flies 40x40 here. Pairs of Planet objects with no catalog number are left out and counted in `cells.json`: their successive files disagree by thousands of km for every arm, Planet's own forecast included. Providers that publish no states cannot be tested: OneWeb, Telesat, EUMETSAT, Kuiper, Iridium, Orbcomm and AST (`experiments/operator-theory/VENDORS.md`).
 
 ## The ellipsoids on the site's globe

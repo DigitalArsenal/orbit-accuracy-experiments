@@ -1,4 +1,4 @@
-# AP beside XP, SGP4 and FFM against precise orbits, the other regimes: 407 windows, 12 left out for no truth or no weather
+# AP beside XP, SGP4 and FFM against precise orbits, the other regimes: 426 windows, 12 left out for no truth or no weather
 
 ## 1. Low orbit, laser spheres: AP72 beats XP72: PASS
 
@@ -113,4 +113,24 @@
 | XP | 1.792 (8.17) | 4.348 (14.17) | 6.955 (21.34) | 26.251 (88.06) |
 | SGP4 | 5762.532 (8020.45) | 8931.08 (12573.48) | 10547.464 (16283.31) | 16655.955 (55812.54) |
 | FFM | 1.7 (6.67) | 2.442 (9.78) | 3.129 (14.25) | 11.758 (67.11) |
+
+## Highly elliptical, THEMIS and Chandra: 19 windows, 4 satellites
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.564 (2.96) | 1.319 (3.93) | 2.506 (6.07) | 12.25 (22.53) |
+| XP | 0.629 (2.9) | 1.291 (4.05) | 2.182 (4.95) | 9.579 (23.28) |
+| SGP4 | 17.722 (105.67) | 33.344 (273.9) | 56.381 (374.6) | 247.832 (1050.79) |
+| FFM | 0.028 (2.82) | 0.046 (3.62) | 0.062 (3.44) | 0.199 (20.97) |
+
+### Fit 168 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 2.12 (11.25) | 6.798 (17.52) | 3.656 (14.18) | 17.741 (45.51) |
+| XP | 2.074 (11.18) | 6.843 (17.45) | 3.498 (14.25) | 17.991 (45.28) |
+| SGP4 | 66.841 (101.85) | 64.605 (102.1) | 66.225 (154.9) | 174.493 (258.22) |
+| FFM | 2.237 (10.25) | 5.64 (16.39) | 3.56 (13.26) | 16.707 (42.56) |
 
