@@ -14,11 +14,14 @@ const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const HOUR = 3600000, DAY = 86400000, MU = 398600.4418;
-const int32 = (positions) => Buffer.from(Int32Array.from(positions.flatMap((p) => p.map((x) => Math.round(x * 1000)))).buffer).toString('base64');
+const int32 = (positions) => Buffer.from(Int32Array.from(positions.flatMap((p) => p.map((x) => Math.round(x * 1000)))).buffer);
+const TRACKS = ['reference', 'AP', 'XP', 'SGP4', 'FFM'];
 const meanMotion = (s) => { const r = Math.hypot(...s.r), v = Math.hypot(...s.v), a = 1 / (2 / r - (v * v) / MU); return 86400 / (2 * Math.PI * Math.sqrt((a * a * a) / MU)); };
+// <id>.json describes the example; <id>.bin holds its positions, Int32 meters, little endian, in TRACKS order.
 const write = (doc) => {
-  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify(doc)}\n`);
-  console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.json`)).size / 1024)} KB`);
+  fs.writeFileSync(path.join(OUT, `${doc.id}.bin`), Buffer.concat(TRACKS.map((k) => doc.tracks[k])));
+  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, tracks: TRACKS })}\n`);
+  console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
 const nearestMedian = (list, value) => { const v = list.map(value).filter(Number.isFinite).sort((a, b) => a - b); if (!v.length) return []; const m = v[Math.floor((v.length - 1) / 2)]; return [...list].filter((r) => Number.isFinite(value(r))).sort((a, b) => Math.abs(value(a) - m) - Math.abs(value(b) - m) || String(a.key).localeCompare(String(b.key))); };
 
