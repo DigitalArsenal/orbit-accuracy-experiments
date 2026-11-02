@@ -1,6 +1,20 @@
 # AP beside SGP4, XP and FFM
 
-## Reading
+## Against precise orbits
+
+`experiments/operator-theory/AP5.md`, registered before XP with solar pressure free was run on these windows: strong drag, near 700 km and medium Earth orbit. AP beats XP in all four statements. Figures and every interval: `truth.md`, the same as data in `truth.json`. The windows had been read for AP, and for an XP arm with solar pressure held.
+
+## In every other regime with truth
+
+`experiments/operator-theory/AP6.md`, registered at 48b01e3 before the full run. Figures and every interval: `regimes.md`, the same as data in `regimes.json`.
+
+What it means: on the laser spheres and the laser geodetic satellites AP beats XP as registered, about 90 % closer one day ahead. On the altimetry satellites AP's medians are far closer, 85.5 % one day ahead, but the statement fails: the upper bound of its 95th percentile at day 2 is +10.7 % against a limit of +10 %. Every arm has about the same tail there.
+
+Report only: in inclined geosynchronous orbit AP is a little closer than XP at every lead; in geostationary orbit it is closer through day 3 and level at day 7. On TESS, from a 72 h fit XP is closer than AP at days 1, 2, 3 and 7, and from a 336 h fit AP is closer. So the gain above the laser-ranged satellites is not established. FFM at `CHEAPER.md`'s settings is closest in nearly every cell. SGP4 from a short arc is far off in these high orbits, and thousands of kilometers off on TESS.
+
+What it does not mean: the windows run from 2025-10 to 2025-12, and for TESS 2026-07 to 2026-09. The geosynchronous groups span 20 days and TESS is one satellite. The geostationary tails, about 112 km at day 7, are the same for every arm; they look like station-keeping maneuvers, which was not checked. A smoke test of 19 windows was read before registration, to check the readers, and is disclosed in the plan.
+
+## Against each center's next prediction
 
 On 7,404 pairs of 17 low satellites that do not thrust, every arm fitted to the same 48 h of the same file and flown to the same later times, AP 0.4.0's median difference from the center's next prediction at 24, 72, 120 and 168 h is 0.018, 0.060, 0.213 and 0.484 km. SGP4's is 0.428, 0.621, 1.57 and 3.50 km, XP's 0.410, 0.619, 0.865 and 1.25 km, and 40x40 FFM's 0.006, 0.035, 0.088 and 0.173 km. On one machine, in one process, AP takes about 1 s to fit and 0.22 s to fly a file, 40x40 FFM about 4.3 s and 4.5 s, and SGP4 and XP about 0.1 s and 0.04 s.
 

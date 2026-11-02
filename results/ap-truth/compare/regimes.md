@@ -1,11 +1,116 @@
-# AP beside XP, SGP4 and FFM in every other regime with truth
+# AP beside XP, SGP4 and FFM against precise orbits, the other regimes: 407 windows, 12 left out for no truth or no weather
 
-## Reading
+## 1. Low orbit, laser spheres: AP72 beats XP72: PASS
 
-`experiments/operator-theory/AP6.md`, registered at 48b01e3 before the full run. Figures and every interval: `regimes.md`, the same as data in `regimes.json`.
+- day 1: -94.6 % [-95.3 %, -94.2 %], p95 upper -83.2 %, failed 0.00 %, n 65, weeks 11
+- day 2: -90.9 % [-92.2 %, -89.7 %], p95 upper -67.5 %, failed 0.00 %, n 63, weeks 10
+- day 3: -86.2 % [-89.4 %, -82.9 %], p95 upper -59.8 %, failed 0.00 %, n 57, weeks 8
+- day 7: -75.6 % [-81.5 %, -66.1 %], p95 upper -66.2 %, failed 0.00 %, n 64, weeks 10
 
-What it means: on the laser spheres and the laser geodetic satellites AP beats XP as registered, about 90 % closer one day ahead. On the altimetry satellites AP's medians are far closer, 85.5 % one day ahead, but the statement fails: the upper bound of its 95th percentile at day 2 is +10.7 % against a limit of +10 %. Every arm has about the same tail there.
+## 2. Low orbit, altimetry: AP72 beats XP72: FAIL
 
-Report only: in inclined geosynchronous orbit AP is a little closer than XP at every lead; in geostationary orbit it is closer through day 3 and level at day 7. On TESS, from a 72 h fit XP is closer than AP at days 1, 2, 3 and 7, and from a 336 h fit AP is closer. So the gain above the laser-ranged satellites is not established. FFM at `CHEAPER.md`'s settings is closest in nearly every cell. SGP4 from a short arc is far off in these high orbits, and thousands of kilometers off on TESS.
+- day 1: -85.5 % [-88.2 %, -78.3 %], p95 upper 7.9 %, failed 0.00 %, n 136, weeks 11
+- day 2: -69.0 % [-74.0 %, -50.2 %], p95 upper 10.7 %, failed 0.00 %, n 132, weeks 11
+- day 3: -45.4 % [-54.0 %, -29.6 %], p95 upper 1.6 %, failed 0.00 %, n 121, weeks 11
+- day 7: -21.3 % [-36.1 %, -15.5 %], p95 upper 2.0 %, failed 0.00 %, n 103, weeks 11
 
-What it does not mean: the windows run from 2025-10 to 2025-12, and for TESS 2026-07 to 2026-09. The geosynchronous groups span 20 days and TESS is one satellite. The geostationary tails, about 112 km at day 7, are the same for every arm; they look like station-keeping maneuvers, which was not checked. A smoke test of 19 windows was read before registration, to check the readers, and is disclosed in the plan.
+## 3. Laser geodetic: AP72 beats XP72: PASS
+
+- day 1: -90.2 % [-91.0 %, -89.3 %], p95 upper -79.6 %, failed 0.00 %, n 54, weeks 11
+- day 2: -89.1 % [-89.5 %, -88.2 %], p95 upper -71.8 %, failed 0.00 %, n 54, weeks 11
+- day 3: -86.9 % [-87.6 %, -86.5 %], p95 upper -62.8 %, failed 0.00 %, n 54, weeks 11
+- day 7: -81.8 % [-85.1 %, -77.6 %], p95 upper -37.7 %, failed 0.00 %, n 54, weeks 11
+
+## Low orbit, laser spheres: 90 windows, 6 satellites
+
+### Fit 24 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.02 (0.05) | 0.035 (0.18) | 0.054 (0.35) | 0.237 (1.82) |
+| XP | 0.67 (0.93) | 0.918 (2.3) | 1.314 (2.55) | 2.761 (6.82) |
+| SGP4 | 1.164 (3.11) | 3.777 (11.78) | 7.009 (27.32) | 40.884 (143.07) |
+| FFM | 0.012 (0.02) | 0.027 (0.08) | 0.043 (0.16) | 0.182 (0.88) |
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.027 (0.1) | 0.045 (0.25) | 0.08 (0.46) | 0.283 (1.86) |
+| XP | 0.462 (0.68) | 0.551 (1.07) | 0.624 (1.85) | 1.01 (6.66) |
+| SGP4 | 0.571 (0.8) | 0.681 (1.26) | 0.824 (2.18) | 2.885 (7.97) |
+| FFM | 0.024 (0.04) | 0.039 (0.11) | 0.053 (0.26) | 0.117 (1.08) |
+
+## Low orbit, altimetry: 138 windows, 10 satellites
+
+### Fit 24 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.062 (0.42) | 0.275 (1.6) | 0.652 (5.28) | 4.081 (23.09) |
+| XP | 0.767 (1.18) | 1.368 (2.55) | 1.995 (5.13) | 5.581 (34.09) |
+| SGP4 | 1.179 (3.57) | 3.938 (12.58) | 7.946 (32.24) | 38.188 (175.21) |
+| FFM | 0.008 (0.44) | 0.022 (1.77) | 0.058 (5.63) | 0.659 (28.07) |
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.077 (2.54) | 0.225 (4.98) | 0.498 (7.48) | 2.261 (28.11) |
+| XP | 0.586 (2.56) | 0.702 (5.08) | 0.96 (7.48) | 3.597 (30.1) |
+| SGP4 | 0.614 (1.44) | 0.829 (4.35) | 1.221 (10.44) | 5.179 (49.63) |
+| FFM | 0.014 (2.54) | 0.038 (4.92) | 0.095 (7.43) | 0.843 (28.25) |
+
+## Laser geodetic: 55 windows, 5 satellites
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.011 (0.03) | 0.013 (0.03) | 0.016 (0.05) | 0.024 (0.12) |
+| XP | 0.104 (0.14) | 0.106 (0.15) | 0.108 (0.16) | 0.146 (0.24) |
+| SGP4 | 0.208 (0.36) | 0.284 (0.59) | 0.417 (0.94) | 1.088 (5.34) |
+| FFM | 0.002 (0.01) | 0.003 (0.01) | 0.003 (0.02) | 0.017 (0.04) |
+
+## Inclined geosynchronous: 60 windows, 12 satellites
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.027 (0.04) | 0.032 (0.06) | 0.037 (0.08) | 0.064 (0.42) |
+| XP | 0.038 (0.06) | 0.057 (0.08) | 0.079 (0.13) | 0.164 (0.5) |
+| SGP4 | 1.919 (3.03) | 3.311 (5.76) | 5.764 (9.22) | 23.333 (45.87) |
+| FFM | 0.002 (0.02) | 0.004 (0.05) | 0.007 (0.1) | 0.03 (0.4) |
+
+## Geostationary: 45 windows, 9 satellites
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.028 (0.04) | 0.038 (1.46) | 0.052 (4.71) | 0.237 (112.07) |
+| XP | 0.037 (0.05) | 0.051 (1.46) | 0.07 (4.7) | 0.225 (112.03) |
+| SGP4 | 2.439 (3.65) | 3.892 (6.52) | 5.527 (10.03) | 14.757 (101.35) |
+| FFM | 0.015 (0.02) | 0.035 (1.44) | 0.064 (4.67) | 0.28 (112.09) |
+
+## Highly elliptical: 7 windows, 1 satellites
+
+### Fit 72 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 0.766 (1.09) | 1.451 (1.77) | 2.009 (2.39) | 7.605 (13.8) |
+| XP | 0.66 (0.88) | 1.061 (1.46) | 1.386 (2.43) | 6.541 (12.25) |
+| SGP4 | 1909.356 (3501.48) | 4803.6 (7943.61) | 7707.62 (13168.56) | 28191.724 (43368.69) |
+| FFM | 1.003 (1.29) | 1.727 (2.16) | 2.21 (2.7) | 5.115 (11.34) |
+
+### Fit 336 h, median km (95th)
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP | 1.63 (8.07) | 3.628 (12.89) | 5.309 (19.21) | 22.439 (84.85) |
+| XP | 1.792 (8.17) | 4.348 (14.17) | 6.955 (21.34) | 26.251 (88.06) |
+| SGP4 | 5762.532 (8020.45) | 8931.08 (12573.48) | 10547.464 (16283.31) | 16655.955 (55812.54) |
+| FFM | 1.7 (6.67) | 2.442 (9.78) | 3.129 (14.25) | 11.758 (67.11) |
+
