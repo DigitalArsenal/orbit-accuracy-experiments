@@ -102,7 +102,7 @@ if (MODE === 'next') {
   }
   await F.close(); await M.close();
 } else if (MODE === 'providers') {
-  // Every provider whose terms let its positions be redrawn here, on the site table's 24 h fit: of its pairs with every arm present and a target at least 6 h past the fit where it has any, the one whose AP error is nearest AP's median. Planet's are not redrawn: its terms are non-commercial.
+  // Every provider, on the site table's 24 h fit: of its pairs with every arm present and a target at least 6 h past the fit where it has any, the one whose AP error is nearest AP's median. compare-examples-publish.mjs decides whose reference is redrawn.
   const FIT_H = 24;
   const ISS = args.only === 'iss';
   const { isoMs, openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
@@ -117,7 +117,7 @@ if (MODE === 'next') {
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp(path.join(NEW, 'module.wasm'));
   const axes = ISS ? await openAxes() : null;
   const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
-  const LABEL = { starlink: ['SpaceX', 'Low orbit, maneuvering'], iss: ['NASA ISS', 'Low orbit, crewed'], gps: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], glonass: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], intelsat: ['Intelsat', 'Geostationary, station-kept'], ses: ['SES', 'Geostationary, station-kept'] };
+  const LABEL = { starlink: ['SpaceX', 'Low orbit, maneuvering'], iss: ['NASA ISS', 'Low orbit, crewed'], css: ['China Space Station', 'Low orbit, crewed'], planet: ['Planet (Flock)', 'Low orbit, imaging fleet'], gps: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], glonass: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], intelsat: ['Intelsat', 'Geostationary, station-kept'], ses: ['SES', 'Geostationary, station-kept'] };
   const rows = fs.readdirSync(path.join(NEW, 'providers')).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(NEW, 'providers', f))).filter((r) => !r.error);
   const lines = (b64) => S.oemLines(Buffer.from(b64, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(l.epoch)) }));
   const roots = [STORE, path.join(STORE, 'vendors')];

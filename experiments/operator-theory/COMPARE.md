@@ -32,6 +32,8 @@ SGP4's fit and its flight are two implementations: `analysis/gp-error-model` fit
 - `AP5.md` and `AP6.md` run XP beside AP against precise orbits. This file's reference is not that.
 - These are 17 low satellites that do not thrust. Nothing here covers other orbits, maneuvering fleets or debris.
 
+`compare-examples-publish.mjs` writes what the site's globe reads: each forecast's positions and, at each time, its radial, in-track and cross-track distance from the reference. The reference's own positions go out only where its source's terms allow them to be redrawn.
+
 `providers-run.mjs` adds AP, XP and SGP4 to every other provider this work stores forecasts of, and `compare-cells.mjs` and `compare-sigma.mjs` write the site's tables and ellipsoids. All report only.
 
 To rebuild: `compare-sgp4.mjs` with 8 shards into `<store>/ap/b040/laser-sgp4`, `compare-costs.mjs` into `<store>/ap/b040/compare-costs/rows.jsonl`, then `compare-table.mjs --out results/ap-truth/compare`.
