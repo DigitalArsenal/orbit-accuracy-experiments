@@ -57,7 +57,7 @@ const load = (d) => new Map(rowsIn(d).map((r) => [key(r), r]));
 const laser = rowsIn(path.join(NEW, 'laser', 'forward')), xp = load(path.join(AP, 'laser', 'forward')), ffm = load(path.join(ROOT, 'cheaper', 'forward')), sg = [load(path.join(NEW, 'laser-sgp4')), load(path.join(NEW, 'laser-sgp4-high'))];
 const NAV = /^(beidou|compass|galileo|glonass|gps|irnss|qzs)/;
 const regimeOf = (r) => (r.source.endsWith('-leo') ? 'Low orbit' : NAV.test(r.object) ? 'Navigation' : 'Geodetic');
-const LEADS = [24, 48, 72, 96, 120, 144, 168];
+const LEADS = [12, 24, 36, 48, 60, 72, 96, 120, 144, 168];
 const providerRows = fs.existsSync(path.join(NEW, 'providers')) ? rowsIn(path.join(NEW, 'providers'), /^rows(-iss)?-\d+\.jsonl$/) : [];
 const PROVIDER = { starlink: 'SpaceX', iss: 'NASA ISS', css: 'China Space Station', planet: 'Planet', gps: 'ESA ultra-rapid', glonass: 'ESA ultra-rapid', intelsat: 'Intelsat', ses: 'SES' };
 for (const e of examples.filter((x) => x.reference === 'next')) {
@@ -65,7 +65,7 @@ for (const e of examples.filter((x) => x.reference === 'next')) {
   const cell = fromProviders ? providerRows.filter((r) => PROVIDER[r.source] === e.provider && !r.error) : laser.filter((r) => regimeOf(r) === e.regime && r.source.split('-')[1] === e.provider);
   const leo = e.regime === 'Low orbit';
   const read = (r, arm) => {
-    if (fromProviders) return r.arms[{ AP: 'A-APn@48', XP: 'A-XP@48', SGP4: 'S@48', FFM: 'F-M40@48' }[arm]];
+    if (fromProviders) return r.arms[{ AP: `A-APn@${e.fitHours}`, XP: `A-XP@${e.fitHours}`, SGP4: `S@${e.fitHours}`, FFM: `F-M40@${e.fitHours}` }[arm]];
     return { AP: r.arms['A-APn@48'], XP: xp.get(key(r))?.arms['A-XP@48'], SGP4: sg.map((s) => s.get(key(r))?.arms['S@48']).find((a) => a && Number.isFinite(a.r)), FFM: ffm.get(key(r))?.arms[leo ? 'F-M40@48' : 'F-H20@48'] }[arm];
   };
   const arms = {}, hours = [];

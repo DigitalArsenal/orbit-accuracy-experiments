@@ -102,7 +102,8 @@ if (MODE === 'next') {
   }
   await F.close(); await M.close();
 } else if (MODE === 'providers') {
-  // Every provider whose terms let its positions be redrawn here: of its pairs with every arm present, the one whose AP error is nearest AP's median. Planet's are not redrawn: its terms are non-commercial.
+  // Every provider whose terms let its positions be redrawn here, on the site table's 24 h fit: of its pairs with every arm present and a target at least 6 h past the fit where it has any, the one whose AP error is nearest AP's median. Planet's are not redrawn: its terms are non-commercial.
+  const FIT_H = 24;
   const ISS = args.only === 'iss';
   const { isoMs, openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
   const { weatherRows } = await import('./lib/weather.mjs');
@@ -157,7 +158,9 @@ if (MODE === 'next') {
   }
   for (const source of Object.keys(LABEL).filter((k) => (ISS ? k === 'iss' : k !== 'iss'))) {
     const [provider, regime] = LABEL[source];
-    const ranked = nearestMedian(rows.filter((r) => r.source === source && Number.isFinite(r.arms['S@48']?.km) && Number.isFinite(r.arms['A-XP@48']?.km)), (r) => r.arms['A-APn@48']?.km);
+    const usable = rows.filter((r) => r.source === source && Number.isFinite(r.arms[`S@${FIT_H}`]?.km) && Number.isFinite(r.arms[`A-XP@${FIT_H}`]?.km));
+    const past = usable.filter((r) => r.leadHours >= FIT_H + 6);
+    const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`A-APn@${FIT_H}`]?.km);
     const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
     let done = false;
     for (const pick of ranked.slice(0, 8)) {
@@ -183,7 +186,7 @@ if (MODE === 'next') {
           spw = w.rows;
           extra = { rows: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) };
         }
-        const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + (source === 'starlink' ? 47.9 : 48) * HOUR);
+        const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + FIT_H * HOUR);
         const oem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
         const fa = await A.fit(oem, PCF_AP, extra); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
@@ -203,7 +206,7 @@ if (MODE === 'next') {
           SGP4: (await M.toAxes(sg, epochs, 'GCRF')).map((x) => x.r),
           FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((x) => x.r),
         };
-        write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
+        write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: FIT_H, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + FIT_H * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, int32(v)])) });
         done = true;
         break;
       } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
