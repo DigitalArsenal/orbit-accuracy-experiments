@@ -6,7 +6,7 @@ The owner, 2026-11-02, verbatim: "OK publish this with the code and versions for
 
 ## The pairs
 
-`CHEAPER.md`'s 54 days and centers, group `low`: 7,404 pairs of 17 satellites. A forecast is fitted to the first 48 h of a center's prediction file and flown to the first 3 h of a newer file of the same object from the same center. That newer file is the center's later solution, not independent truth. Weather is observed history.
+`CHEAPER.md`'s 54 days and centers, group `low`: 7,404 pairs of 17 satellites. A forecast is fitted to the first 48 h of a center's prediction file and flown to the first 3 h of a newer file of the same object from the same center. A next-file lead runs from the start of the older file to the start of the newer, so with a 48 h fit a 24 h lead lies inside the fit, 72 h lies one day past its end, and a lead equal to the fit starts at its end. A truth lead runs from the end of the fit. That newer file is the center's later solution, not independent truth. Weather is observed history.
 
 ## The arms
 

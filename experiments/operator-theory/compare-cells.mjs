@@ -144,7 +144,7 @@ out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - or
 const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md',
   columns: { SGP4: 'SGP4', XP: 'XP', AP: 'AP 0.4.0', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
-  fields: 'arms: column to [median km, 95th percentile km, forecasts]',
+  fields: 'arms: column to [median km, 95th percentile km, forecasts]. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   leftOut: providerLeftOut,
   rows: out,
 };
