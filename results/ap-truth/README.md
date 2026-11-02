@@ -6,7 +6,7 @@ AP is SGP4-XP with parts replaced: NRLMSISE-00 for the atmosphere, tesseral grav
 
 What it means: in low orbit AP's gain is largest early, where XP's tesseral floor dominates. It is 69 % below the earlier recipe at day 1 and 21 % at day 2, from its own 24 h fit. By day 7 the error is the density forecast and gravity no longer matters: with FFM drag it is 2 % below the earlier recipe, and the 95th percentile does not move.
 
-What it does not mean: every fit reads precise products, which are not real-time, so this says nothing about a service fed by anything else. The pool is 83 % Swarm. The two tests' windows were read for other arms before AP, though never for AP. In medium Earth orbit AP's gain over `X2` comes from fitting solar pressure, which `X2` held fixed, not from its gravity terms: on laser-ranging files with both free, AP and XP are level there (`experiments/operator-theory`, exploratory). In the storm cut, day 7 is about 17 km for every arm in it.
+What it does not mean: every fit reads precise products, which are not real-time, so this says nothing about a service fed by anything else. The pool is 83 % Swarm. The two tests' windows were read for other arms before AP, though never for AP. In medium Earth orbit AP's gain over `X2` comes from fitting solar pressure, which `X2` held fixed, not from its gravity terms: on laser-ranging files with both free, AP and XP are level there (below). In the storm cut, day 7 is about 17 km for every arm in it.
 
 ## Tests
 
@@ -33,7 +33,30 @@ Registered before any AP fit of their windows: `experiments/operator-theory/AP.m
 
 Near 700 km the 24 h fit is closer than the registered 72 h fit at every lead, and meets every rule there, but it was not the registered arm, so that is report only.
 
+## Laser-ranging orbits
+
+AP.md's Parts L and H: 19,399 pairs on the 54 days of `experiments/operator-theory/CHEAPER.md`, 2026-03-01 to 05-03, AP and XP from the same build with the same priors, so both fit solar pressure. The reference is the first 3 h of a newer prediction of the same object from the same center: the center's later solution, not independent truth. Weather is observed history. Table: `table-l.md`. Medians over pairs, km, 95th in brackets.
+
+| Group | Fit | Arm | 72 h | 120 h | 168 h |
+|---|---|---|---:|---:|---:|
+| Low, 17 satellites | 48 h | AP | 0.086 (1.93) | 0.224 (5.66) | 0.484 (12.3) |
+| Low | 48 h | XP | 0.619 (2.52) | 0.865 (6.68) | 1.253 (16.5) |
+| Low | 72 h | AP | 0.072 (2.23) | 0.177 (5.32) | 0.370 (11.8) |
+| Low | 72 h | XP | 0.477 (2.67) | 0.682 (7.31) | 0.997 (15.2) |
+| Navigation, 28 satellites | 72 h | AP | 0.037 (0.08) | 0.079 (0.18) | 0.143 (0.40) |
+| Navigation | 72 h | XP | 0.038 (0.08) | 0.080 (0.20) | 0.145 (0.42) |
+| Geodetic, 4 satellites, report only | 72 h | AP | 0.030 (0.06) | 0.040 (0.08) | 0.064 (0.13) |
+| Geodetic | 72 h | XP | 0.057 (0.17) | 0.078 (0.20) | 0.119 (0.24) |
+
+| Statement | Result |
+|---|---|
+| Part L: AP beats XP at 48 h fits on low orbits, at 72 h and 168 h | PASS: AP less XP -0.430 km [-0.626, -0.370] and -0.685 km [-0.927, -0.519] |
+| Part H: AP does not lose to XP at 72 h fits on navigation satellites | PASS: top of the interval 0.001 km of 0.005 at 72 h, 0.002 km of 0.020 at 168 h |
+
+So above the drag regime AP adds nothing on navigation satellites and costs nothing there. On the geodetic group it looks better, too few objects to claim. Fit and flight per file in that run under load: AP 0.59 and 0.20 s, XP 0.18 and 0.06 s on low orbits. FFM on the same pairs is in `results/operator-theory/cheaper`.
+
 ## Corrections
 
 - The verdict script first counted a window with under 90 % of its arc's states as a failure. The registered rule says it leaves the cell and is counted, so I corrected the script before these tables were committed. The two tests' failures are then 0. Near 700 km this moved the first reading of the median interval at day 7 from holding 0 to below 0; the statement fails on rule 2 either way.
 - `X2` here is the older pinned build, which holds AGOM at 0.01 m^2/kg.
+- `cycle-ap.sh laser` exited with a syntax error at its last line, after its scoring workers had started, because the script was edited while bash was running it: bash reads a running script by byte offset. The added lines were for another part. The workers ran on and finished with empty logs, with all 19,399 pairs.
