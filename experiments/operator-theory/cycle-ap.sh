@@ -1,6 +1,6 @@
 #!/bin/bash
-# The registered runs of AP.md. A rerun adds only what is missing.
-#   cycle-ap.sh truth | laser | starlink
+# The registered runs of AP.md and AP2.md. A rerun adds only what is missing.
+#   cycle-ap.sh truth | truth2 | laser | starlink
 set -u
 ROOT=/opt/data/sdn-archive/operator-theory/ap
 W=$ROOT/module.wasm
@@ -13,6 +13,10 @@ case "${1:-}" in
   truth)
     O=$ROOT/truth; mkdir -p "$O/logs"
     for k in 0 1 2 3 4 5 6 7; do nice -n 10 node --max-old-space-size=3072 experiments/operator-theory/ap-truth.mjs --wasm "$W" --arms registered --out "$O" --from 2025-04-01 --to 2025-12-21 --shard "$k/8" >> "$O/logs/shard-$k.log" 2>&1 & PIDS+=($!); done
+    ;;
+  truth2)
+    O=$ROOT/truth2; mkdir -p "$O/logs"
+    for k in 0 1 2 3 4 5 6 7; do XP2F_CONTROL=1 nice -n 10 node --max-old-space-size=3072 experiments/operator-theory/ap-truth.mjs --wasm "$W" --xm --out "$O" --from 2026-01-01 --to 2026-05-31 --shard "$k/8" >> "$O/logs/shard-$k.log" 2>&1 & PIDS+=($!); done
     ;;
   laser)
     C0=/opt/data/sdn-archive/operator-theory/cheaper; O=$ROOT/laser; mkdir -p "$O/forward"
@@ -39,7 +43,7 @@ case "${1:-}" in
     ARMS='[{"name":"AP","tesseral":31,"zonal":20,"fit":"module"}]'
     for k in 0 1 2 3 4 5 6 7; do nice -n 10 node --max-old-space-size=3072 experiments/operator-theory/explore.mjs --confirm --ap-wasm "$W" --ap-arms "$ARMS" --out "$O" --shard "$k/8" >> "$O/logs/shard-$k.log" 2>&1 & PIDS+=($!); done
     ;;
-  *) echo "truth, laser or starlink" >&2; exit 2 ;;
+  *) echo "truth, truth2, laser or starlink" >&2; exit 2 ;;
 esac
 F=0; for p in "${PIDS[@]}"; do wait "$p" || F=$((F + 1)); done
 echo "AP $1 finished $(date -u +%FT%TZ): $F workers failed"

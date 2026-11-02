@@ -1,5 +1,5 @@
 // The registered verdicts of AP.md from stored rows. Statistics only; no physics.
-//   node experiments/operator-theory/ap-verdict.mjs truth | laser | starlink [--md <file>]
+//   node experiments/operator-theory/ap-verdict.mjs truth | truth2 | laser | starlink [--md <file>] [--json <file>]
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -68,6 +68,11 @@ function truth() {
   say(`**Statement 2, AP24 beats RFa12 at days 1 and 2:** ${s1 ? (s2 ? 'PASS' : 'fail') : 'not tested'}`);
   say(`**Statement 3, APRa12 beats AP24 at days 1 and 2:** ${s2 ? (s3 ? 'PASS' : 'fail') : 'not tested'}`);
   say(`**The site's figures come from:** ${s3 ? 'APRa12' : 'AP24'}\n`);
+  const figures = (a, f = () => true) => Object.fromEntries(LEADS.map((k) => { const v = windowsIn(f).map((r) => day(r, a, k)?.e).filter(Number.isFinite).sort(asc); return [k, { n: v.length, median: pct(v, 0.5), p95: pct(v, 0.95) }]; }));
+  const jsonAt = process.argv.indexOf('--json');
+  if (jsonAt > 0) fs.writeFileSync(process.argv[jsonAt + 1], JSON.stringify({ registered: 'experiments/operator-theory/AP.md, Part T', windows: rows.length, statements: { 1: s1, 2: s2, 3: s3 }, siteArm: s3 ? 'APRa12' : 'AP24',
+    arms: { AP24: figures('AP24'), APRa12: figures('APRa12'), RFa12: figures('RFa12'), X2: figures('X2'), P: figures('P') }, storm: { windows: windowsIn((r) => (stored.get(r.key)?.apArc ?? 0) >= 40).length, AP24: figures('AP24', (r) => (stored.get(r.key)?.apArc ?? 0) >= 40), APRa12: figures('APRa12', (r) => (stored.get(r.key)?.apArc ?? 0) >= 40) },
+    contrasts: Object.fromEntries(Object.entries(cells).map(([k, c]) => [k, { n: c.n, clusters: c.clusters, failedShare: c.failedShare, medianD: c.medianD, interval: c.interval, p95Upper: c.p95Upper }])) }, null, 1));
   const med = (a, k, filter) => { const v = windowsIn(filter).map((r) => day(r, a, k)?.e).filter(Number.isFinite).sort(asc); return { m: round(pct(v, 0.5), 3), p95: round(pct(v, 0.95), 2), n: v.length }; };
   const groups = { pool: () => true, primary: (r) => stored.get(r.key)?.span === 'primary', extension: (r) => stored.get(r.key)?.span === 'extension',
     'Swarm A+C': (r) => stored.get(r.key)?.cluster === 'Swarm A+C', 'Swarm B': (r) => stored.get(r.key)?.cluster === 'Swarm B', 'GRACE-FO': (r) => stored.get(r.key)?.cluster === 'GRACE-FO',
@@ -79,6 +84,75 @@ function truth() {
     for (const a of ['AP24', 'APRa12', 'RFa12', 'X2', 'P']) { const c = LEADS.map((k) => med(a, k, f)); say(`| ${a} | ${c[0].n} | ${c.map((x) => `${x.m} (${x.p95})`).join(' | ')} |`); }
     say('');
   }
+}
+
+// AP2.md: xp-atmosphere-merit's windows, same statistics as Part T. Also writes the table the site reads.
+function truth2() {
+  const rows = rowsIn(path.join(AP, 'truth2'));
+  const store = '/opt/data/sdn-archive/xp-atmosphere-merit/rows';
+  const stored = new Map(fs.readdirSync(store).filter((f) => f.endsWith('.jsonl')).flatMap((f) => jsonl(path.join(store, f))).map((r) => [r.key, r]));
+  const LEADS = ['1', '2', '3', '7'], DRAWS = 10000, LEVEL = 0.975, MAXP95 = Math.log(1.1), MAXFAIL = 0.01;
+  const eOf = (r, a, k) => {
+    const s = stored.get(r.key);
+    if (a === 'P') return s?.P?.ok ? s.P.days?.[k]?.rmsKm ?? null : null;
+    if (a === 'X2') { const x = s?.arcs?.['72']?.arms?.X2O; return x?.ok ? x.days?.[k]?.rmsKm ?? null : null; }
+    const x = r.arms[a];
+    return x?.ok ? x.days?.[k]?.e ?? null : null;
+  };
+  const contrast = (group, a, b, k) => {
+    const pairs = [];
+    let failed = 0;
+    for (const r of rows.filter((q) => q.group === group && !q.error)) {
+      const y = eOf(r, b, k);
+      if (y === null) continue;
+      if (!(stored.get(r.key)?.entered ?? []).includes(Number(k))) continue;
+      const x = eOf(r, a, k);
+      if (x === null) failed += 1;
+      pairs.push({ d: x === null ? 1e9 : Math.log(x / y), ax: x ?? 1e12, by: y, cluster: stored.get(r.key)?.isoWeek });
+    }
+    const clusters = [...new Set(pairs.map((p) => p.cluster))];
+    const random = rand(parseInt(crypto.createHash('sha256').update(`AP2|${group}|${a}/${b}|${k}|${clusters.length}`).digest('hex').slice(0, 8), 16));
+    const byCluster = new Map(clusters.map((c) => [c, pairs.filter((p) => p.cluster === c)])), meds = [], p95s = [];
+    for (let t = 0; t < DRAWS; t += 1) {
+      const draw = [];
+      for (let i = 0; i < clusters.length; i += 1) draw.push(...byCluster.get(clusters[Math.floor(random() * clusters.length)]));
+      meds.push(median(draw.map((p) => p.d)));
+      p95s.push(Math.log(pct(draw.map((p) => p.ax).sort(asc), 0.95) / pct(draw.map((p) => p.by).sort(asc), 0.95)));
+    }
+    meds.sort(asc); p95s.sort(asc);
+    return { n: pairs.length, clusters: clusters.length, failedShare: pairs.length ? failed / pairs.length : 1, medianD: median(pairs.map((p) => p.d)), interval: [pct(meds, 1 - LEVEL), pct(meds, LEVEL)], p95Upper: pct(p95s, LEVEL) };
+  };
+  const pctOf = (d) => `${(100 * (Math.exp(d) - 1)).toFixed(1)} %`;
+  const out = { registered: 'experiments/operator-theory/AP2.md', windows: rows.length, groups: {} };
+  say(`# AP against precise orbits, AP2.md: ${rows.length} windows, ${rows.filter((r) => r.error).length} with no entry\n`);
+  for (const group of ['S1', 'GN', 'P']) {
+    const inG = rows.filter((r) => r.group === group && !r.error);
+    say(`## ${group}: ${inG.length} windows, ${new Set(inG.map((r) => r.name)).size} satellites\n`);
+    say('| Arm | n | Day 1 | Day 2 | Day 3 | Day 7 |');
+    say('|---|---:|---:|---:|---:|---:|');
+    const arms = {};
+    for (const a of ['AP72', 'AP24', 'X2', 'P']) {
+      const cells = LEADS.map((k) => { const v = inG.filter((r) => (stored.get(r.key)?.entered ?? []).includes(Number(k))).map((r) => eOf(r, a, k)).filter(Number.isFinite).sort(asc); return { n: v.length, median: pct(v, 0.5), p95: pct(v, 0.95) }; });
+      arms[a] = Object.fromEntries(LEADS.map((k, i) => [k, cells[i]]));
+      say(`| ${a} | ${cells[0].n} | ${cells.map((c) => `${round(c.median, 3)} (${round(c.p95, 2)})`).join(' | ')} |`);
+    }
+    say('');
+    const claims = {};
+    for (const [a, b] of [['AP72', 'P'], ['AP24', 'P'], ['AP72', 'X2']]) {
+      say(`### ${a} against ${b}`);
+      claims[`${a}/${b}`] = {};
+      for (const k of LEADS) { const c = contrast(group, a, b, k); claims[`${a}/${b}`][k] = c; say(`- day ${k}: ${pctOf(c.medianD)} [${pctOf(c.interval[0])}, ${pctOf(c.interval[1])}], p95 upper ${pctOf(c.p95Upper)}, failed ${(100 * c.failedShare).toFixed(2)} %, n ${c.n}, weeks ${c.clusters}`); }
+      say('');
+    }
+    let verdict = null;
+    if (group !== 'P') {
+      verdict = LEADS.every((k) => { const c = claims['AP72/P'][k]; return c.interval[1] < 0 && c.p95Upper < MAXP95 && c.failedShare <= MAXFAIL; });
+      say(`**${group}, AP72 beats P:** ${verdict ? 'PASS' : 'fail'}\n`);
+    }
+    out.groups[group] = { windows: inG.length, arms, claims, verdict };
+  }
+  const jsonAt = process.argv.indexOf('--json');
+  if (jsonAt > 0) fs.writeFileSync(process.argv[jsonAt + 1], JSON.stringify(out, null, 1));
 }
 
 function laser() {
@@ -146,5 +220,5 @@ function starlink() {
   say(`**Part S, AP beats XP at both 24 h and 48 h:** ${ready ? (cells.every((x) => x.c.interval[1] < 0 && x.failed <= MAX_FAILED) ? 'PASS' : 'fail') : 'report only'}`);
 }
 
-({ truth, laser, starlink }[part] ?? (() => { throw new Error('truth, laser or starlink'); }))();
+({ truth, truth2, laser, starlink }[part] ?? (() => { throw new Error('truth, truth2, laser or starlink'); }))();
 finish();

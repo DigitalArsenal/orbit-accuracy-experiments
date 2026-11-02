@@ -23,7 +23,13 @@ const REGISTERED = [
   { name: 'AP24', hours: 24, fit: null, terms: TERMS },
   { name: 'APRa12', hours: 17, drag: 'stored', terms: TERMS },
 ];
-const ARMS = args.arms === 'registered' ? REGISTERED : [
+const REGISTERED_XM = [
+  { name: 'AP72', hours: 72, fit: null, terms: TERMS },
+  { name: 'AP24', hours: 24, fit: null, terms: TERMS },
+];
+// --xm, with XP2F_CONTROL=1: AP2.md, xp-atmosphere-merit's own windows, store and truth.
+const ON_XM = args.xm === 'true';
+const ARMS = ON_XM ? REGISTERED_XM : args.arms === 'registered' ? REGISTERED : [
   { name: 'T72x', hours: 72, fit: FIT, terms: {} },
   { name: 'AP72x', hours: 72, fit: FIT, terms: TERMS },
   { name: 'AP48x', hours: 48, fit: FIT, terms: TERMS },
@@ -42,10 +48,11 @@ for (const f of fs.readdirSync(path.join(store, 'rows')).filter((n) => n.endsWit
 fs.mkdirSync(OUT, { recursive: true });
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
-const list = Object.keys(config.spans).flatMap((s) => windows(s)).filter((w) => w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
+const xmWindows = () => Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, date: XM.dateOf(t), key: `${group}|${o.norad}|${XM.dateOf(t)}` }))));
+const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
 for (const w of list) {
   const { o, cutoffMs: D0, key } = w;
-  const row = { key, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
+  const row = { key, group: w.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
   try {
     const after = T.series(o, D0 + 1, D0 + 7 * DAY).lines;
     const first = after.length ? ms(after[0].epoch) : 0;
