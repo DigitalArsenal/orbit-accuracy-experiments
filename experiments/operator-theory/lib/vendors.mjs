@@ -178,7 +178,8 @@ async function cpfFiles(source, args, asOfMs, excludeTargets) {
   const centre = source.split('-')[1];
   const http = new PoliteHttp({ perHost: 2 });
   const asOf = new Date(asOfMs), year = asOf.getUTCFullYear();
-  const listing = await cpfListing(http, year, args['cache-dir'] ?? path.join(args.out, '..'));
+  // --cpf-listing: a stored listing, so a back-test over many workers asks EDC for no listing at all.
+  const listing = args['cpf-listing'] ? JSON.parse(fs.readFileSync(args['cpf-listing'], 'utf8')) : await cpfListing(http, year, args['cache-dir'] ?? path.join(args.out, '..'));
   const yymmdd = `${String(year).slice(2)}${String(asOf.getUTCMonth() + 1).padStart(2, '0')}${String(asOf.getUTCDate()).padStart(2, '0')}`;
   const sampled = new Set();
   for (const [family, n] of Object.entries(GNSS_SAMPLE)) Object.keys(listing).filter((t) => t.startsWith(family)).sort((a, b) => sha(`operator-theory-vendors:${a}`).localeCompare(sha(`operator-theory-vendors:${b}`))).slice(0, n).forEach((t) => sampled.add(t));

@@ -127,7 +127,9 @@ async function cssFiles() {
 // The forward test's four sources (PLAN.md), or a vendor added by VENDORS.md. Nothing below changes for the four.
 const VENDOR = !['starlink', 'iss', 'planet', 'css'].includes(SOURCE);
 // Exploratory (--lite): only cheaper FFM, 20x20, no tides or relativity, tolerance 1e-8, steps to 300 s; rows are read beside the store's by pair.
-const LITE = args.lite === 'true';
+// --ffm-ladder '[{name, degree, tides, rel, tolerance, maxStep, minStep, regime}]': those FFM settings, on low orbits unless regime is 'high'. --with-xp adds X0 beside them. --weather-from: the first weather day, for files before the default.
+const LADDER = args['ffm-ladder'] ? JSON.parse(args['ffm-ladder']) : null;
+const LITE = args.lite === 'true' || !!LADDER;
 const FILES = SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
 const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? (VENDOR ? 24 : 12);
 const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 240], [240, 360]],
@@ -136,7 +138,7 @@ const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [
 
 // ---- weather in force today, as issued
 const today = args.weather ?? new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10);
-const weather = weatherRows(today, '2026-07-15', '2026-12-14');
+const weather = weatherRows(today, args['weather-from'] ?? '2026-07-15', '2026-12-14');
 const spw = S.spwBytes(weather.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG })));
 const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
 const PCF = { X0: S.pcfBytes({ forces: XMC.arms.X0.forces, fit: FIT }), X2: S.pcfBytes({ forces: XMC.arms.X2.forces, fit: FIT }) };
@@ -162,6 +164,7 @@ for (const file of FILES) {
     const leo = Math.hypot(...raw[0].r) < 8400;
     const label = file.label ?? (VENDOR ? `${SOURCE}-${leo ? 'leo' : 'high'}` : SOURCE);
     row.source = label;
+    if (LADDER && !leo && !LADDER.some((v) => v.regime === 'high')) throw new Error('not a low orbit: outside the ladder');
     const t0 = Date.parse(raw[0].epoch), tEnd = Date.parse(raw.at(-1).epoch);
     row.states = raw.length; row.start = raw[0].epoch; row.stop = raw.at(-1).epoch;
     // The scoring and fit grid: every 300 s from the file's first state.
@@ -224,7 +227,7 @@ for (const file of FILES) {
       if (VENDOR && Date.parse(epochs.at(-1)) - t0 < arc * HOUR) continue;
       // Never across SpaceX's 48 h join: the fit's last state is before it.
       const { arc: states, oem } = block(SOURCE === 'starlink' && arc >= 48 ? 47.9 : arc);
-      for (const name of LITE ? [] : ['X0', 'X2']) {
+      for (const name of LITE ? (args['with-xp'] ? ['X0'] : []) : ['X0', 'X2']) {
         const a = { fitHours: arc, states: states.length };
         const t1 = performance.now();
         const f = await M.fit(oem, PCF[name], EXTRA[name]);
@@ -240,11 +243,11 @@ for (const file of FILES) {
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`${name}@${arc}`] = a;
       }
-      for (const variant of (LITE ? [{ name: 'lite' }] : VENDOR && !leo ? [{ name: 'NO-DRAG' }] : FFM_VARIANTS)) {
+      for (const variant of (LADDER?.filter((v) => (v.regime ?? 'leo') === (leo ? 'leo' : 'high')) ?? (LITE ? [{ name: 'lite' }] : VENDOR && !leo ? [{ name: 'NO-DRAG' }] : FFM_VARIANTS))) {
         const a = { fitHours: arc, states: states.length };
-        const { name: variantName, agom: variantAgom, ...overrides } = variant;
+        const { name: variantName, agom: variantAgom, degree: ladderDegree, tides: ladderTides, rel: ladderRel, tolerance: ladderTolerance, maxStep: ladderMaxStep, minStep: ladderMinStep, regime: _regime, ...overrides } = variant;
         const settings = ffmSettings(overrides, variantAgom);
-        if (LITE) { settings.forces = { ...settings.forces, degree: 20, order: 20, solidTides: false, relativity: undefined }; settings.integrator = { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }; }
+        if (LITE) { settings.forces = { ...settings.forces, degree: ladderDegree ?? 20, order: ladderDegree ?? 20, solidTides: !!ladderTides, relativity: ladderRel ? 'IERS_2010' : undefined }; settings.integrator = { tolerance: ladderTolerance ?? 1e-8, maxStep: ladderMaxStep ?? 300, minStep: ladderMinStep ?? 1e-3 }; }
         const t1 = performance.now();
         try {
           const f = await F.fit(states, [...states[0].r, ...states[0].v], settings, weather.rows, Date.parse(states.at(-1).epoch));

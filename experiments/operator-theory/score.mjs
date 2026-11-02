@@ -55,7 +55,7 @@ function interpolate(lines, t) {
 const weatherOf = new Map();
 function weather(day) {
   if (!weatherOf.has(day)) {
-    const w = weatherRows(day, '2026-07-15', '2026-12-14');
+    const w = weatherRows(day, args['weather-from'] ?? '2026-07-15', '2026-12-14');
     weatherOf.set(day, { rows: w.rows, spw: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) });
   }
   return weatherOf.get(day);
