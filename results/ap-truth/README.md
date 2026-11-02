@@ -2,11 +2,57 @@
 
 ## Reading
 
-AP is SGP4-XP with parts replaced: NRLMSISE-00 for the atmosphere, tesseral gravity, the zonal tail to J20. On 944 forecasts it was never tuned on, in low orbit with strong drag, its median error against precise orbits is 0.16, 0.60, 1.45 and 11.5 km at days 1, 2, 3 and 7, with drag from a 12 h full-force fit and elements from the last 17 h; with everything from a 24 h fit of its own it is 0.23, 0.88, 2.12 and 13.5 km. Every registered statement of that test passed.
+AP is SGP4-XP with parts replaced: NRLMSISE-00 for the atmosphere, tesseral gravity, the zonal tail to J20, and since version 0.4.0 every first-order tesseral term to degree 12, near-resonant terms and states carried to TEME of their date. Against precise orbits, on forecasts it was never tuned on, its median error at days 1, 2, 3 and 7 is 0.13, 0.60, 1.44 and 11.7 km in low orbit with strong drag, and 0.022, 0.028, 0.038 and 0.093 km in medium Earth orbit.
 
-What it means: in low orbit AP's gain is largest early, where XP's tesseral floor dominates. It is 69 % below the earlier recipe at day 1 and 21 % at day 2, from its own 24 h fit. By day 7 the error is the density forecast and gravity no longer matters: with FFM drag it is 2 % below the earlier recipe, and the 95th percentile does not move.
+What it means: in low orbit AP's gain is largest early. Against AP 0.3.0, 0.4.0 is 21.5 % closer at day 1, 2.2 % at day 2, and level after that, because by then the error is the density forecast. In medium Earth orbit 0.4.0 is 43 % closer at days 1 to 3 and 34 % at day 7, so the gravity terms and the frame now pay there, where 0.3.0 added nothing over XP with solar pressure free.
 
-What it does not mean: every fit reads precise products, which are not real-time, so this says nothing about a service fed by anything else. The pool is 83 % Swarm. The two tests' windows were read for other arms before AP, though never for AP. In medium Earth orbit AP's gain over `X2` comes from fitting solar pressure, which `X2` held fixed, not from its gravity terms: on laser-ranging files with both free, AP and XP are level there (below). In the storm cut, day 7 is about 17 km for every arm in it.
+What it does not mean: every fit reads precise products, which are not real-time, so this says nothing about a service fed by anything else. The strong-drag pool is 83 % Swarm. The windows were read for AP 0.3.0 and for other arms before 0.4.0, though never for 0.4.0. Near 700 km its 72 h fit still fails its registered statement, on the 95th percentile. In the storm cut, day 7 is about 17 km for every arm in it.
+
+Everything below `## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b021c575466.
+
+## AP 0.4.0
+
+`experiments/operator-theory/AP4.md`, registered at 2e59d1d before any fit of this build on these data: modules 148f3b9f20, wasm 715ef2fee512, `FORCES` 31, 20, NRLMSISE-00 on the same weather, the module's own priors. Each statement is this build against the same arm of 0.3.0, by pair, or against the public set where said. Tables: `table-t-040.md`, `table-t2-040.md`, `table-l-040.md`, the same as JSON beside them.
+
+An exploration found what to replace: the spectrum of AP against FFM's own trajectory (read days, one file each of a few CPF targets, not a test) showed radial at 2 cycles per day, 26 to 47 m on every low satellite; in-track at n plus or minus whole cycles per day; lines at the integer nearest n; and cross-track once per orbit at about one microradian on every orbit from LEO to GPS. The first three are Kaula terms AP had left out. The last is the theory's mean elements read as TEME of date, though they hold the axes of the epoch.
+
+Against precise orbits, median km, 95th in brackets:
+
+| Orbit | Satellites | Fit | Build | Forecasts | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---|---|---|---:|---:|---:|---:|---:|
+| Low, strong drag, 2025 | Swarm A, B, C; GRACE-FO 1, 2 | Drag from a 12 h FFM fit, elements from the last 17 h | 0.4.0 | 944 | 0.126 (0.53) | 0.596 (2.94) | 1.441 (7.84) | 11.65 (52.3) |
+| | | | 0.3.0 | | 0.162 (0.54) | 0.598 (2.96) | 1.454 (7.85) | 11.48 (51.8) |
+| Low, strong drag, 2025 | the same | Everything from the last 24 h | 0.4.0 | 944 | 0.196 (0.70) | 0.880 (3.29) | 2.132 (8.58) | 13.10 (50.9) |
+| | | | 0.3.0 | | 0.226 (0.74) | 0.875 (3.43) | 2.122 (8.40) | 13.53 (51.3) |
+| Near 700 km, 2026 | Sentinel-1A, 1C | Everything from the last 72 h | 0.4.0 | 257 to 259 | 0.185 (1.11) | 0.491 (2.40) | 0.910 (4.47) | 3.135 (12.8) |
+| | | | 0.3.0 | | 0.192 (1.11) | 0.502 (2.40) | 0.906 (4.45) | 3.026 (12.8) |
+| Near 700 km, 2026 | the same | Everything from the last 24 h, report only | 0.4.0 | 274 to 276 | 0.105 (0.72) | 0.368 (2.34) | 0.749 (3.12) | 2.044 (12.2) |
+| Medium Earth orbit, 2026 | GPS, GLONASS, Galileo (5) | Everything from the last 72 h | 0.4.0 | 746 to 749 | 0.022 (0.04) | 0.028 (0.07) | 0.038 (0.12) | 0.093 (0.41) |
+| | | | 0.3.0 | | 0.038 (0.07) | 0.054 (0.10) | 0.070 (0.14) | 0.143 (0.45) |
+
+On CHEAPER.md's 54 days, against each center's next prediction, not independent truth, hindsight weather, 19,399 pairs, median km:
+
+| Group | Fit | Build | 24 h | 72 h | 120 h | 168 h |
+|---|---|---|---:|---:|---:|---:|
+| Low, 17 satellites | 48 h | 0.4.0 | 0.018 | 0.060 | 0.213 | 0.484 |
+| | | 0.3.0 | 0.056 | 0.086 | 0.224 | 0.484 |
+| Navigation, 28 satellites | 72 h | 0.4.0 | 0.020 | 0.025 | 0.056 | 0.104 |
+| | | 0.3.0 | 0.027 | 0.037 | 0.079 | 0.143 |
+| Geodetic, 4 satellites, report only | 72 h | 0.4.0 | 0.013 | 0.014 | 0.018 | 0.023 |
+| | | 0.3.0 | 0.026 | 0.030 | 0.040 | 0.064 |
+
+| Statement | Result |
+|---|---|
+| 1. `APRa12` at 0.4.0 beats 0.3.0: rule 1 at day 1; rules 2 and 3 at days 1, 2, 3, 7 | PASS: -21.5 % [-26.6, -15.6] at day 1 |
+| 2. `AP24` at 0.4.0 beats 0.3.0: the same | PASS: -18.8 % [-24.1, -13.5] at day 1 |
+| Near 700 km, `AP72` at 0.4.0 beats the public set: rules 1, 2, 3 at days 1, 2, 3, 7 | FAIL: rule 2 at days 1 and 2, the 95th percentile's upper bound +17.4 % and +39.5 % against +10 %; rule 1 holds at every lead |
+| Medium Earth orbit, `AP72` at 0.4.0 beats 0.3.0: rule 1 at days 1 and 3; rules 2 and 3 at days 1, 2, 3, 7 | PASS: -42.7 % [-45.2, -41.5], -42.8 % [-45.3, -40.1] |
+| Laser-ranging, low, 48 h fits, at 24 h and 72 h | PASS: -0.031 km [-0.036, -0.029], -0.021 km [-0.025, -0.014] |
+| Laser-ranging, navigation, 72 h fits, at 72 h and 168 h | PASS: -0.011 km [-0.014, -0.009], -0.038 km [-0.048, -0.028] |
+
+So the site moved to 0.4.0, as AP4.md set out. The near-700 km tail did not move with these terms, so they are not what limits it. Cost per file in that run under load: fit about 1.0 s and flight 0.23 s on low orbits, about twice 0.3.0 at fit and flight; 0.11 s and 0.02 s on navigation, with fit RMS 18.6 m on low orbits and 21.3 m on navigation against 57.9 m and 30.2 m read before. Part S, on Starlink, is report only and still to be read.
+
+The first build of these terms was worse above 8,400 km. It counted the half-day resonance class's terms twice, once in the rates and once at output time, and exploratory forward errors on read days showed it: fit RMS 30 m to 70 to 110 m on GLONASS and Etalon. That was fixed before this build was frozen, and `propagator/sdn-ap/test/ap-terms.e2e.mjs` now holds a fixture at 19,100 km that fails if it returns (74.8 m against the bound of 25 m).
 
 ## Tests
 
@@ -82,3 +128,4 @@ Cost per file, medians under load: FFM to 180 h 6.8 s on low orbits and 1.0 s on
 - The verdict script first counted a window with under 90 % of its arc's states as a failure. The registered rule says it leaves the cell and is counted, so I corrected the script before these tables were committed. The two tests' failures are then 0. Near 700 km this moved the first reading of the median interval at day 7 from holding 0 to below 0; the statement fails on rule 2 either way.
 - `X2` here is the older pinned build, which holds AGOM at 0.01 m^2/kg.
 - `cycle-ap.sh laser` exited with a syntax error at its last line, after its scoring workers had started, because the script was edited while bash was running it: bash reads a running script by byte offset. The added lines were for another part. The workers ran on and finished with empty logs, with all 19,399 pairs.
+- `ap4-verdict.mjs`'s JSON changed shape after AP4.md's registration, so the site can read it as it read AP.md's: `arms` at this build, `arms030`, `siteArm`, `storm`. No arm, window, rule or statistic changed, and the statements read the same before and after.

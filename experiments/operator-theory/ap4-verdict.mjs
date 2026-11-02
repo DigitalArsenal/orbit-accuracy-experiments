@@ -70,13 +70,17 @@ function truth() {
   say(`**Statement 2, AP24 at 0.4.0 beats 0.3.0:** ${s1 ? (s2 ? 'PASS' : 'fail') : 'not tested'}\n`);
   say('| Arm | Build | Day 1 | Day 2 | Day 3 | Day 7 |');
   say('|---|---|---:|---:|---:|---:|');
-  const arms = {};
-  for (const a of ['APRa12', 'AP24']) for (const [build, m] of [['0.4.0', fresh], ['0.3.0', old]]) {
+  const arms = {}, arms030 = {};
+  for (const a of ['APRa12', 'AP24']) for (const [build, m, into] of [['0.4.0', fresh, arms], ['0.3.0', old, arms030]]) {
     const f = Object.fromEntries(LEADS.map((k) => [k, figures([...fresh.keys()].map((key) => eOf(m, key, a, k) ?? NaN))]));
-    (arms[a] ??= {})[build] = f;
+    into[a] = f;
     say(`| ${a} | ${build} | ${LEADS.map((k) => cell(f[k])).join(' | ')} |`);
   }
-  Object.assign(out, { windows: fresh.size, statements: { 1: s1, 2: s2 }, arms, contrasts: cells });
+  const stormKeys = [...fresh.keys()].filter((key) => (stored.get(key)?.apArc ?? 0) >= 40);
+  const storm = { windows: stormKeys.length };
+  for (const a of ['APRa12', 'AP24']) storm[a] = Object.fromEntries(LEADS.map((k) => [k, figures(stormKeys.map((key) => eOf(fresh, key, a, k) ?? NaN))]));
+  // The shape of AP.md's table, read by the site: `arms` at this build.
+  Object.assign(out, { windows: fresh.size, statements: { 1: s1, 2: s2 }, siteArm: 'APRa12', arms, arms030, storm, contrasts: cells });
 }
 
 function truth2() {
@@ -106,8 +110,9 @@ function truth2() {
     say('|---|---:|---:|---:|---:|');
     const entered = (key, k) => (stored.get(key)?.entered ?? []).includes(Number(k));
     const fig = (get) => Object.fromEntries(LEADS.map((k) => [k, figures(inG.filter((r) => entered(r.key, k)).map((r) => get(r, k) ?? NaN))]));
-    const arms = { 'AP72 0.4.0': fig((r, k) => armE(r, 'AP72', k)), 'AP72 0.3.0': fig((r, k) => armE(old.get(r.key), 'AP72', k)), 'AP24 0.4.0': fig((r, k) => armE(r, 'AP24', k)), 'AP24 0.3.0': fig((r, k) => armE(old.get(r.key), 'AP24', k)), P: fig((r, k) => pE(r.key, k)) };
-    for (const [name, f] of Object.entries(arms)) say(`| ${name} | ${LEADS.map((k) => cell(f[k])).join(' | ')} |`);
+    const arms = { AP72: fig((r, k) => armE(r, 'AP72', k)), AP24: fig((r, k) => armE(r, 'AP24', k)), P: fig((r, k) => pE(r.key, k)) };
+    const arms030 = { AP72: fig((r, k) => armE(old.get(r.key), 'AP72', k)), AP24: fig((r, k) => armE(old.get(r.key), 'AP24', k)) };
+    for (const [name, f] of [['AP72 0.4.0', arms.AP72], ['AP72 0.3.0', arms030.AP72], ['AP24 0.4.0', arms.AP24], ['AP24 0.3.0', arms030.AP24], ['P', arms.P]]) say(`| ${name} | ${LEADS.map((k) => cell(f[k])).join(' | ')} |`);
     say('');
     const cells = {};
     say(`### ${a} at 0.4.0 against ${ref === 'P' ? 'P' : `${ref} at 0.3.0`}`);
@@ -118,7 +123,7 @@ function truth2() {
       verdict = ones.every((k) => rule1(cells[k])) && LEADS.every((k) => rule23(cells[k]));
       say(`**${group}, ${a} at 0.4.0 beats ${ref === 'P' ? 'P' : `${ref} at 0.3.0`}:** ${verdict ? 'PASS' : 'fail'}\n`);
     }
-    out.groups[group] = { windows: inG.length, arms, contrasts: cells, verdict };
+    out.groups[group] = { windows: inG.length, arms, arms030, contrasts: cells, verdict };
   }
 }
 

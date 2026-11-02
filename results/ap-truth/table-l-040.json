@@ -1,0 +1,635 @@
+{
+ "registered": "experiments/operator-theory/AP4.md",
+ "part": "laser",
+ "pairs": 19399,
+ "claims": {
+  "low": "PASS",
+  "navigation": "PASS"
+ },
+ "cells": {
+  "low/A-APn@48/24": {
+   "c": {
+    "n": 1256,
+    "objects": 17,
+    "days": 55,
+    "median": -0.031,
+    "interval": [
+     -0.036,
+     -0.029
+    ]
+   },
+   "failed": 0,
+   "median": 0.0182,
+   "p95": 0.368
+  },
+  "low/A-AP@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0555,
+   "p95": 0.38
+  },
+  "low/A-APn@72/24": {
+   "c": {
+    "n": 1256,
+    "objects": 17,
+    "days": 55,
+    "median": -0.031,
+    "interval": [
+     -0.036,
+     -0.029
+    ]
+   },
+   "failed": 0,
+   "median": 0.0187,
+   "p95": 0.444
+  },
+  "low/A-AP@72/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0575,
+   "p95": 0.449
+  },
+  "low/F-full@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0065,
+   "p95": 0.316
+  },
+  "low/F-M40@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0065,
+   "p95": 0.316
+  },
+  "low/A-APn@48/72": {
+   "c": {
+    "n": 1072,
+    "objects": 17,
+    "days": 53,
+    "median": -0.021,
+    "interval": [
+     -0.025,
+     -0.014
+    ]
+   },
+   "failed": 0,
+   "median": 0.0601,
+   "p95": 1.973
+  },
+  "low/A-AP@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0857,
+   "p95": 1.931
+  },
+  "low/A-APn@72/72": {
+   "c": {
+    "n": 1072,
+    "objects": 17,
+    "days": 53,
+    "median": -0.024,
+    "interval": [
+     -0.028,
+     -0.017
+    ]
+   },
+   "failed": 0,
+   "median": 0.0449,
+   "p95": 2.23
+  },
+  "low/A-AP@72/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0721,
+   "p95": 2.231
+  },
+  "low/F-full@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0342,
+   "p95": 2.495
+  },
+  "low/F-M40@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0346,
+   "p95": 2.495
+  },
+  "low/A-APn@48/120": {
+   "c": {
+    "n": 1009,
+    "objects": 17,
+    "days": 52,
+    "median": -0.013,
+    "interval": [
+     -0.019,
+     -0.007
+    ]
+   },
+   "failed": 0,
+   "median": 0.2134,
+   "p95": 5.624
+  },
+  "low/A-AP@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.2239,
+   "p95": 5.655
+  },
+  "low/A-APn@72/120": {
+   "c": {
+    "n": 1009,
+    "objects": 17,
+    "days": 52,
+    "median": -0.015,
+    "interval": [
+     -0.019,
+     -0.009
+    ]
+   },
+   "failed": 0,
+   "median": 0.1649,
+   "p95": 5.223
+  },
+  "low/A-AP@72/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1765,
+   "p95": 5.32
+  },
+  "low/F-full@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.087,
+   "p95": 6.517
+  },
+  "low/F-M40@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0884,
+   "p95": 6.518
+  },
+  "low/A-APn@48/168": {
+   "c": {
+    "n": 952,
+    "objects": 17,
+    "days": 49,
+    "median": -0.008,
+    "interval": [
+     -0.016,
+     0.003
+    ]
+   },
+   "failed": 0,
+   "median": 0.4838,
+   "p95": 12.175
+  },
+  "low/A-AP@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.4835,
+   "p95": 12.307
+  },
+  "low/A-APn@72/168": {
+   "c": {
+    "n": 952,
+    "objects": 17,
+    "days": 49,
+    "median": -0.01,
+    "interval": [
+     -0.017,
+     -0.002
+    ]
+   },
+   "failed": 0,
+   "median": 0.3591,
+   "p95": 11.512
+  },
+  "low/A-AP@72/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.3698,
+   "p95": 11.801
+  },
+  "low/F-full@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1693,
+   "p95": 13.463
+  },
+  "low/F-M40@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1727,
+   "p95": 13.456
+  },
+  "navigation/A-APn@48/24": {
+   "c": {
+    "n": 1504,
+    "objects": 28,
+    "days": 52,
+    "median": -0.004,
+    "interval": [
+     -0.006,
+     -0.003
+    ]
+   },
+   "failed": 0,
+   "median": 0.0202,
+   "p95": 0.043
+  },
+  "navigation/A-AP@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0241,
+   "p95": 0.045
+  },
+  "navigation/A-APn@72/24": {
+   "c": {
+    "n": 1504,
+    "objects": 28,
+    "days": 52,
+    "median": -0.006,
+    "interval": [
+     -0.008,
+     -0.004
+    ]
+   },
+   "failed": 0,
+   "median": 0.0204,
+   "p95": 0.044
+  },
+  "navigation/A-AP@72/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0269,
+   "p95": 0.051
+  },
+  "navigation/F-Hfull@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.001,
+   "p95": 0.022
+  },
+  "navigation/F-H20@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.001,
+   "p95": 0.022
+  },
+  "navigation/A-APn@48/72": {
+   "c": {
+    "n": 1257,
+    "objects": 28,
+    "days": 47,
+    "median": -0.014,
+    "interval": [
+     -0.018,
+     -0.009
+    ]
+   },
+   "failed": 0,
+   "median": 0.0431,
+   "p95": 0.101
+  },
+  "navigation/A-AP@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0581,
+   "p95": 0.138
+  },
+  "navigation/A-APn@72/72": {
+   "c": {
+    "n": 1257,
+    "objects": 28,
+    "days": 47,
+    "median": -0.011,
+    "interval": [
+     -0.014,
+     -0.009
+    ]
+   },
+   "failed": 0,
+   "median": 0.0253,
+   "p95": 0.056
+  },
+  "navigation/A-AP@72/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0373,
+   "p95": 0.081
+  },
+  "navigation/F-Hfull@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.011,
+   "p95": 0.049
+  },
+  "navigation/F-H20@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0113,
+   "p95": 0.048
+  },
+  "navigation/A-APn@48/120": {
+   "c": {
+    "n": 1200,
+    "objects": 28,
+    "days": 48,
+    "median": -0.023,
+    "interval": [
+     -0.03,
+     -0.014
+    ]
+   },
+   "failed": 0,
+   "median": 0.0927,
+   "p95": 0.275
+  },
+  "navigation/A-AP@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1226,
+   "p95": 0.316
+  },
+  "navigation/A-APn@72/120": {
+   "c": {
+    "n": 1200,
+    "objects": 28,
+    "days": 48,
+    "median": -0.022,
+    "interval": [
+     -0.028,
+     -0.015
+    ]
+   },
+   "failed": 0,
+   "median": 0.0563,
+   "p95": 0.158
+  },
+  "navigation/A-AP@72/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0793,
+   "p95": 0.182
+  },
+  "navigation/F-Hfull@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.051,
+   "p95": 0.125
+  },
+  "navigation/F-H20@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0512,
+   "p95": 0.126
+  },
+  "navigation/A-APn@48/168": {
+   "c": {
+    "n": 1182,
+    "objects": 28,
+    "days": 48,
+    "median": -0.033,
+    "interval": [
+     -0.043,
+     -0.019
+    ]
+   },
+   "failed": 0,
+   "median": 0.1605,
+   "p95": 0.465
+  },
+  "navigation/A-AP@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1942,
+   "p95": 0.566
+  },
+  "navigation/A-APn@72/168": {
+   "c": {
+    "n": 1182,
+    "objects": 28,
+    "days": 48,
+    "median": -0.038,
+    "interval": [
+     -0.048,
+     -0.028
+    ]
+   },
+   "failed": 0,
+   "median": 0.1041,
+   "p95": 0.349
+  },
+  "navigation/A-AP@72/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1426,
+   "p95": 0.397
+  },
+  "navigation/F-Hfull@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1183,
+   "p95": 0.275
+  },
+  "navigation/F-H20@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.1185,
+   "p95": 0.277
+  },
+  "geodetic/A-APn@48/24": {
+   "c": {
+    "n": 526,
+    "objects": 4,
+    "days": 54,
+    "median": -0.011,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0131,
+   "p95": 0.03
+  },
+  "geodetic/A-AP@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0245,
+   "p95": 0.044
+  },
+  "geodetic/A-APn@72/24": {
+   "c": {
+    "n": 526,
+    "objects": 4,
+    "days": 54,
+    "median": -0.013,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0132,
+   "p95": 0.032
+  },
+  "geodetic/A-AP@72/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0256,
+   "p95": 0.046
+  },
+  "geodetic/F-Hfull@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0004,
+   "p95": 0.021
+  },
+  "geodetic/F-H20@48/24": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0006,
+   "p95": 0.021
+  },
+  "geodetic/A-APn@48/72": {
+   "c": {
+    "n": 450,
+    "objects": 4,
+    "days": 52,
+    "median": -0.02,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0151,
+   "p95": 0.047
+  },
+  "geodetic/A-AP@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0373,
+   "p95": 0.073
+  },
+  "geodetic/A-APn@72/72": {
+   "c": {
+    "n": 450,
+    "objects": 4,
+    "days": 52,
+    "median": -0.016,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0142,
+   "p95": 0.045
+  },
+  "geodetic/A-AP@72/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0303,
+   "p95": 0.059
+  },
+  "geodetic/F-Hfull@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0009,
+   "p95": 0.043
+  },
+  "geodetic/F-H20@48/72": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0042,
+   "p95": 0.043
+  },
+  "geodetic/A-APn@48/120": {
+   "c": {
+    "n": 427,
+    "objects": 4,
+    "days": 50,
+    "median": -0.041,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0206,
+   "p95": 0.067
+  },
+  "geodetic/A-AP@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0667,
+   "p95": 0.113
+  },
+  "geodetic/A-APn@72/120": {
+   "c": {
+    "n": 427,
+    "objects": 4,
+    "days": 50,
+    "median": -0.021,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.018,
+   "p95": 0.059
+  },
+  "geodetic/A-AP@72/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0399,
+   "p95": 0.084
+  },
+  "geodetic/F-Hfull@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0017,
+   "p95": 0.056
+  },
+  "geodetic/F-H20@48/120": {
+   "c": null,
+   "failed": 0,
+   "median": 0.01,
+   "p95": 0.058
+  },
+  "geodetic/A-APn@48/168": {
+   "c": {
+    "n": 406,
+    "objects": 4,
+    "days": 48,
+    "median": -0.058,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0271,
+   "p95": 0.092
+  },
+  "geodetic/A-AP@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0973,
+   "p95": 0.182
+  },
+  "geodetic/A-APn@72/168": {
+   "c": {
+    "n": 406,
+    "objects": 4,
+    "days": 48,
+    "median": -0.034,
+    "interval": null
+   },
+   "failed": 0,
+   "median": 0.0232,
+   "p95": 0.088
+  },
+  "geodetic/A-AP@72/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0641,
+   "p95": 0.133
+  },
+  "geodetic/F-Hfull@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0026,
+   "p95": 0.059
+  },
+  "geodetic/F-H20@48/168": {
+   "c": null,
+   "failed": 0,
+   "median": 0.0177,
+   "p95": 0.06
+  }
+ }
+}
