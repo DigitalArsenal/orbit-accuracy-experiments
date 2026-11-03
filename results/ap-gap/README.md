@@ -4,6 +4,21 @@ Exploratory on previously read AP5/AP6 windows. Errors are forward 3D RMS in met
 
 The inherited MGEX selector decoded six held Galileo files before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation with filename exclusions; resumed runs use the guarded selector.
 
+## Named-cause summary
+
+| Group | Diagnosis | Paired day-3 gap m (n) | Tested AP/XP gain m | Proposed module change |
+| --- | --- | ---: | ---: | --- |
+| GD | Candidate: solar radiation pressure contribution | 10.714 (54) | — | Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change. |
+| IG | Unresolved | 23.697 (60) | — | Unresolved: no production change justified by these ablations. |
+| GE | AP leads FFM in group medians; paired-window effects vary | 9.311 (30) | — | Preserve GE as a nonregression control for proposed module changes. |
+| LS | Unresolved | 18.130 (57) | — | Unresolved: no production change justified by these ablations. |
+| DO | Unresolved | 164.839 (121) | — | Unresolved: no production change justified by these ablations. |
+| HX | Unresolved | 988.393 (19) | — | Unresolved: no production change justified by these ablations. |
+| HE | Candidate: epoch/date frame correction | 420.106 (7) | 420.103 | Check the mean-element epoch frame and date-frame conversion jointly in fit and propagation. |
+| GN | Candidate: short-arc prior constants | 56.107 (748) | 58.054 | Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation. |
+
+A subtraction identifies a candidate term, not a unique physical cause. Unresolved entries have no measured module gain. Draft tasks remain for the coordinator; no graph task was filed by this lane.
+
 ## GD
 
 | Batch / arm | Control | Day 1 m (n) | Day 3 m (n) | Day 7 m (n) | Δ day 1 m (n) | Δ day 3 m (n) | Δ day 7 m (n) |
@@ -34,8 +49,12 @@ The inherited MGEX selector decoded six held Galileo files before filtering. No 
 | resume-ffm/O3172 | F72 | 2.220 (54) | 3.242 (54) | 17.411 (54) | 0.000 (54) | 0.000 (54) | 0.000 (54) |
 | resume-ffm/TESS1272 | F72 | 2.208 (54) | 3.259 (54) | 18.265 (54) | 0.000 (54) | 0.000 (54) | 0.000 (54) |
 | resume-ffm/TESS3172 | F72 | 2.220 (54) | 3.242 (54) | 17.411 (54) | 0.000 (54) | 0.000 (54) | 0.000 (54) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 2.269 (54) | 3.240 (54) | 18.576 (54) | 0.000 (54) | 0.000 (54) | 0.000 (54) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 2.220 (54) | 3.242 (54) | 17.411 (54) | 0.000 (54) | 0.000 (54) | 0.000 (54) |
 
-Candidate: solar radiation pressure (shadow not isolated). Refine AP solar radiation pressure and shadow after separating their contributions. Expected gain is unmeasured; paired AP–FFM gap 10.714 m (n=54). This gap is a target ceiling, not a promised gain.
+Largest FFM subtraction closure: solar radiation pressure contribution, 55.215% of the median absolute day-3 AP–FFM error distance (n=54); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 0.000 m (n=54) and 0.000 m (n=54), respectively.
+
+Candidate: solar radiation pressure contribution. Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change. Expected gain is unmeasured; paired AP–FFM gap 10.714 m (n=54). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## IG
 
@@ -67,12 +86,16 @@ Candidate: solar radiation pressure (shadow not isolated). Refine AP solar radia
 | resume-ffm/O3172 | F72 | 2.002 (60) | 7.488 (60) | 29.873 (59) | 0.000 (60) | 0.000 (60) | 0.000 (59) |
 | resume-ffm/TESS1272 | F72 | 2.002 (60) | 7.488 (60) | 29.873 (59) | -0.000 (60) | 0.000 (60) | -0.000 (59) |
 | resume-ffm/TESS3172 | F72 | 2.002 (60) | 7.488 (60) | 29.873 (59) | 0.000 (60) | 0.000 (60) | 0.000 (59) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 2.002 (60) | 7.488 (60) | 29.873 (59) | 0.000 (60) | 0.000 (60) | 0.000 (59) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 2.002 (60) | 7.488 (60) | 29.873 (59) | 0.000 (60) | 0.000 (60) | 0.000 (59) |
 | resume-frame/XP72 | XP72 | 37.937 (60) | 78.656 (60) | 164.231 (59) | 0.000 (60) | 0.000 (60) | 0.000 (59) |
 | resume-frame/FRAME72 | XP72 | 26.194 (60) | 39.142 (60) | 74.711 (59) | -9.758 (60) | -39.350 (60) | -82.924 (59) |
 | resume-frame/RESONANCE72 | XP72 | 26.088 (60) | 41.368 (60) | 76.334 (59) | -9.509 (60) | -39.975 (60) | -77.279 (59) |
 | resume-frame/AP72 | XP72 | 26.605 (60) | 37.134 (60) | 64.314 (59) | -13.910 (60) | -41.238 (60) | -87.788 (59) |
 
-Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 23.697 m (n=60). This gap is a target ceiling, not a promised gain.
+Largest FFM subtraction closure: eclipse modulation of solar radiation pressure, 0.000% of the median absolute day-3 AP–FFM error distance (n=60); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 0.000 m (n=60) and 0.000 m (n=60), respectively.
+
+Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 23.697 m (n=60). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## GE
 
@@ -104,12 +127,16 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/O3172 | F72 | 15.444 (32) | 64.251 (30) | 280.212 (32) | 0.000 (32) | 0.000 (30) | 0.000 (32) |
 | resume-ffm/TESS1272 | F72 | 15.444 (32) | 64.251 (30) | 280.212 (32) | 0.000 (32) | 0.000 (30) | 0.000 (32) |
 | resume-ffm/TESS3172 | F72 | 15.444 (32) | 64.251 (30) | 280.212 (32) | 0.000 (32) | 0.000 (30) | 0.000 (32) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 15.677 (32) | 68.770 (30) | 309.317 (32) | 0.801 (32) | 3.876 (30) | 15.473 (32) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 15.444 (32) | 64.251 (30) | 280.212 (32) | 0.000 (32) | 0.000 (30) | 0.000 (32) |
 | resume-frame/XP72 | XP72 | 37.014 (32) | 69.854 (30) | 225.383 (32) | 0.000 (32) | 0.000 (30) | 0.000 (32) |
 | resume-frame/FRAME72 | XP72 | 32.041 (32) | 56.961 (30) | 183.603 (32) | -3.559 (32) | -9.621 (30) | -5.872 (32) |
 | resume-frame/RESONANCE72 | XP72 | 32.038 (32) | 56.982 (30) | 183.597 (32) | -3.558 (32) | -10.766 (30) | -5.305 (32) |
 | resume-frame/AP72 | XP72 | 28.254 (32) | 51.874 (30) | 236.585 (32) | -6.204 (32) | -13.097 (30) | -17.111 (32) |
 
-Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 9.311 m (n=30). This gap is a target ceiling, not a promised gain.
+Largest FFM subtraction closure: eclipse modulation of solar radiation pressure, 21.761% of the median absolute day-3 AP–FFM error distance (n=30); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 3.876 m (n=30) and 0.000 m (n=30), respectively.
+
+AP leads FFM in group medians; paired-window effects vary. Preserve GE as a nonregression control for proposed module changes. Expected gain is unmeasured; paired AP–FFM gap 9.311 m (n=30). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## LS
 
@@ -133,16 +160,20 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/F72 | F72 | 23.744 (65) | 53.125 (57) | 117.010 (64) | 0.000 (65) | 0.000 (57) | 0.000 (64) |
 | resume-ffm/NO_SRP72 | F72 | 5.990 (65) | 18.649 (57) | 46.838 (64) | -14.427 (65) | -24.548 (57) | -46.165 (64) |
 | resume-ffm/NO_BODIES72 | F72 | 64.237 (65) | 180.608 (57) | 528.504 (64) | 38.003 (65) | 99.381 (57) | 380.936 (64) |
-| resume-ffm/NO_SUN72 | F72 | 34.323 (42) | 76.782 (37) | 169.199 (42) | 11.179 (42) | 23.647 (37) | 55.598 (42) |
-| resume-ffm/NO_MOON72 | F72 | 55.130 (42) | 140.968 (37) | 419.654 (42) | 30.703 (42) | 77.556 (37) | 305.105 (42) |
+| resume-ffm/NO_SUN72 | F72 | 34.363 (65) | 76.575 (57) | 174.409 (64) | 11.241 (65) | 20.364 (57) | 41.761 (64) |
+| resume-ffm/NO_MOON72 | F72 | 52.651 (65) | 149.028 (57) | 469.277 (64) | 26.299 (65) | 77.357 (57) | 339.485 (64) |
 | resume-ffm/NO_TIDES72 | F72 | 25.306 (65) | 62.787 (57) | 185.198 (64) | 1.157 (65) | 4.561 (57) | 13.205 (64) |
 | resume-ffm/D2072 | F72 | 30.253 (65) | 102.342 (57) | 284.623 (64) | 3.844 (65) | 27.242 (57) | 84.337 (64) |
 | resume-ffm/O1272 | F72 | 71.213 (34) | 107.452 (24) | 224.442 (29) | 45.196 (34) | 50.301 (24) | 122.282 (29) |
 | resume-ffm/O3172 | F72 | 22.863 (34) | 46.363 (24) | 102.518 (29) | 0.000 (34) | -0.000 (24) | 0.002 (29) |
 | resume-ffm/TESS1272 | F72 | 143.340 (65) | 384.372 (57) | 1445.866 (64) | 127.068 (65) | 304.394 (57) | 1256.163 (64) |
 | resume-ffm/TESS3172 | F72 | 23.777 (65) | 57.134 (57) | 143.768 (64) | 0.038 (65) | 2.518 (57) | 11.445 (64) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 30.283 (65) | 65.244 (57) | 136.766 (64) | 4.635 (65) | 4.738 (57) | 7.990 (64) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 25.157 (65) | 56.007 (57) | 118.395 (64) | 1.016 (65) | 1.915 (57) | 3.009 (64) |
 
-Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 18.130 m (n=57). This gap is a target ceiling, not a promised gain.
+Largest FFM subtraction closure: solid Earth tides, 1.643% of the median absolute day-3 AP–FFM error distance (n=57); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 4.738 m (n=57) and 1.915 m (n=57), respectively.
+
+Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 18.130 m (n=57). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## DO
 
@@ -170,10 +201,14 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/D2072 | F72 | 32.454 (136) | 190.003 (121) | 1210.460 (103) | 10.539 (136) | 37.739 (121) | 92.252 (103) |
 | resume-ffm/TESS1272 | F72 | 180.859 (136) | 790.991 (121) | 3694.026 (103) | 125.124 (136) | 420.345 (121) | 1011.281 (103) |
 | resume-ffm/TESS3172 | F72 | 16.087 (136) | 140.786 (121) | 1029.607 (103) | 0.101 (136) | 1.222 (121) | 2.807 (103) |
-| resume-ffm/NO_SUN72 | F72 | 27.405 (21) | 125.940 (19) | 532.466 (19) | 5.863 (21) | 8.925 (19) | 17.280 (19) |
-| resume-ffm/NO_MOON72 | F72 | 66.967 (21) | 212.765 (19) | 1081.494 (19) | 26.185 (21) | 106.639 (19) | 555.216 (19) |
+| resume-ffm/NO_SUN72 | F72 | 27.233 (136) | 102.578 (121) | 843.874 (103) | 9.669 (136) | 9.441 (121) | 6.594 (103) |
+| resume-ffm/NO_MOON72 | F72 | 55.538 (136) | 202.043 (121) | 1281.324 (103) | 28.226 (136) | 73.386 (121) | 196.158 (103) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 17.498 (136) | 100.111 (121) | 849.186 (103) | 1.726 (136) | 0.893 (121) | 0.934 (103) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 15.071 (136) | 95.838 (121) | 847.898 (103) | 0.273 (136) | 0.353 (121) | 0.006 (103) |
 
-Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 164.839 m (n=121). This gap is a target ceiling, not a promised gain.
+Largest FFM subtraction closure: gravity harmonics above degree 20 (not zonals alone), 25.080% of the median absolute day-3 AP–FFM error distance (n=121); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 0.893 m (n=121) and 0.353 m (n=121), respectively.
+
+Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 164.839 m (n=121). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## HX
 
@@ -188,6 +223,11 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-H03/AP72 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-H05/AP72 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-H07/AP72 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
+| resume-HEO12/AP72 | AP72 | — (0) | — (0) | — (0) | — (0) | — (0) | — (0) |
+| resume-HEO12-heap/AP72 | AP72 | 594.540 (19) | 2857.790 (19) | 12477.196 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
+| resume-HEO20-heap/AP72 | AP72 | 600.752 (19) | 2779.168 (19) | 12339.201 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
+| resume-HEO20-q16/AP72 | AP72 | 631.127 (10) | 2838.012 (10) | 12722.326 (10) | 0.102 (10) | 29.848 (10) | 0.361 (10) |
+| resume-HEO20-q4/AP72 | AP72 | 600.752 (19) | 2779.168 (19) | 12339.201 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
 | resume-NOFRAME/AP72 | AP72 | 522.909 (19) | 2460.516 (19) | 12114.505 (19) | -6.285 (19) | -34.302 (19) | -51.989 (19) |
 | resume-ffm/F72 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-ffm/NO_SRP72 | F72 | 251.393 (19) | 474.814 (19) | 1036.787 (19) | 203.917 (19) | 391.644 (19) | 700.579 (19) |
@@ -196,15 +236,19 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/D2072 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-ffm/TESS1272 | F72 | 33.770 (19) | 74.397 (19) | 324.104 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-ffm/TESS3172 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
-| resume-ffm/NO_SUN72 | F72 | 32208.247 (4) | 37434.516 (4) | 155734.654 (4) | 30549.327 (4) | 36353.265 (4) | 144925.938 (4) |
-| resume-ffm/NO_MOON72 | F72 | 82985.326 (4) | 119171.213 (4) | 547042.646 (4) | 82929.170 (4) | 118089.962 (4) | 536233.931 (4) |
+| resume-ffm/NO_SUN72 | F72 | 12896.469 (19) | 25664.139 (19) | 51695.597 (19) | 12846.450 (19) | 25592.965 (19) | 51529.634 (19) |
+| resume-ffm/NO_MOON72 | F72 | 44402.837 (19) | 114933.449 (19) | 277181.535 (19) | 44374.653 (19) | 114871.191 (19) | 277039.011 (19) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 9.571 (19) | 72.081 (19) | 444.393 (19) | 0.000 (19) | 0.000 (19) | 138.152 (19) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-heo/AP72 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-heo/J7072 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-heo/T072 | AP72 | 627.019 (19) | 2135.369 (19) | 9941.434 (19) | -0.162 (19) | 7.635 (19) | 19.370 (19) |
 | resume-heo/T1272 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-heo/Z072 | AP72 | 498.065 (19) | 2444.732 (19) | 12068.923 (19) | -0.021 (19) | -0.031 (19) | -0.081 (19) |
 
-Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 988.393 m (n=19). This gap is a target ceiling, not a promised gain.
+Largest FFM subtraction closure: eclipse modulation of solar radiation pressure, 0.000% of the median absolute day-3 AP–FFM error distance (n=19); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 0.000 m (n=19) and 0.000 m (n=19), respectively.
+
+Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 988.393 m (n=19). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## HE
 
@@ -219,6 +263,11 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-H03/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-H05/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-H07/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
+| resume-HEO12/AP72 | AP72 | — (0) | — (0) | — (0) | — (0) | — (0) | — (0) |
+| resume-HEO12-heap/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
+| resume-HEO20-heap/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
+| resume-HEO20-q16/AP72 | AP72 | 663.054 (2) | 1740.233 (2) | 11591.532 (2) | -0.000 (2) | -0.000 (2) | -0.000 (2) |
+| resume-HEO20-q4/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
 | resume-NOFRAME/AP72 | AP72 | 660.391 (7) | 1385.637 (7) | 6540.730 (7) | -210.249 (7) | -420.103 (7) | -1669.688 (7) |
 | resume-ffm/F72 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-ffm/NO_SRP72 | F72 | 1526.168 (7) | 6445.142 (7) | 42567.761 (7) | 596.466 (7) | 4325.698 (7) | 33898.286 (7) |
@@ -227,8 +276,10 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/D2072 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-ffm/TESS1272 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-ffm/TESS3172 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
-| resume-ffm/NO_SUN72 | F72 | 179514.565 (1) | 843572.701 (1) | 2022224.880 (1) | 179219.960 (1) | 841950.599 (1) | 2010277.119 (1) |
-| resume-ffm/NO_MOON72 | F72 | 301231.990 (1) | 1266684.473 (1) | 10409006.282 (1) | 300937.385 (1) | 1265062.370 (1) | 10397058.521 (1) |
+| resume-ffm/NO_SUN72 | F72 | 93414.701 (7) | 682553.767 (7) | 1302662.104 (7) | 92391.292 (7) | 681094.438 (7) | 1292752.430 (7) |
+| resume-ffm/NO_MOON72 | F72 | 301231.990 (7) | 1242784.287 (7) | 5299790.985 (7) | 300937.385 (7) | 1240345.106 (7) | 5296628.000 (7) |
+| resume-ffm-isolated/NO_SHADOW72 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
+| resume-ffm-isolated/ZONAL2072 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-heo/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-heo/J7072 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-heo/T072 | AP72 | 766.199 (7) | 2009.247 (7) | 7604.416 (7) | -0.003 (7) | -0.002 (7) | -0.001 (7) |
@@ -237,9 +288,11 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | historical-regimes/XP72 | AP72 | 660.389 (7) | 1385.641 (7) | 6540.730 (7) | -210.241 (7) | -420.106 (7) | -1668.729 (7) |
 | historical-ussf-regimes/U72 | AP72 | 1805.956 (7) | 7123.779 (7) | 42419.370 (7) | 1128.849 (7) | 4627.249 (7) | 31733.523 (7) |
 
-Archived XP rows provide the AP6 comparison. The resonant extension arm remains unmeasured.
+Largest FFM subtraction closure: eclipse modulation of solar radiation pressure, 0.000% of the median absolute day-3 AP–FFM error distance (n=7); the registered candidate threshold is 50%. Isolated shadow and zonal-tail median paired changes are 0.000 m (n=7) and 0.000 m (n=7), respectively.
 
-Candidate: epoch/date frame correction. Check the mean-element epoch frame and date-frame conversion jointly in fit and propagation. Expected gain 420.103 m (exploratory); paired AP–whiteroom XP gap 420.106 m (n=7). This gap is a target ceiling, not a promised gain.
+Archived XP rows provide the AP6 comparison. HEO12-heap and HEO20-heap test the registered higher-degree term sets.
+
+Candidate: epoch/date frame correction. Check the mean-element epoch frame and date-frame conversion jointly in fit and propagation. Expected gain 420.103 m (exploratory); paired AP–whiteroom XP gap 420.106 m (n=7). The production fix gain is unmeasured; this paired gap is a target, not a promise.
 
 ## GN
 
@@ -262,7 +315,23 @@ Candidate: epoch/date frame correction. Check the mean-element epoch frame and d
 | resume-gn/XP_FIXED24 | XP24 | 142.842 (748) | 413.933 (748) | 949.016 (748) | 72.001 (748) | 214.828 (748) | 493.072 (748) |
 | resume-gn/U_FIXED24 | U_REBUILT24 | 142.930 (748) | 420.610 (748) | 963.464 (748) | 86.956 (748) | 261.446 (748) | 600.321 (748) |
 
-Candidate: short-arc prior constants. Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation. Expected gain 58.054 m (exploratory); paired XP–Space Force gap 56.107 m (n=748). This gap is a target ceiling, not a promised gain.
+Candidate: short-arc prior constants. Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation. Expected gain 58.054 m (exploratory); paired XP–Space Force gap 56.107 m (n=748). The production fix gain is unmeasured; this paired gap is a target, not a promise.
+
+## P
+
+| Registered AP arm | Day 1 m (n) | Day 3 m (n) | Day 7 m (n) |
+| --- | ---: | ---: | ---: |
+| None | — (0) | — (0) | — (0) |
+
+The task record lists drag LEO as context with no AP arm. It is outside the registered ablation groups; no cause or module gain was measured here.
+
+## HEO quadrature check
+
+Fourfold sampling changes only the added degree-6–20 terms. Maximum paired forward-error differences, in meters: day 1: 1.798 (n=26); day 3: 2.996 (n=26); day 7: 5.831 (n=26). Criterion: ≤0.001 m on all 26 windows at every lead. Complete: true; passed: false. A failed check prevents attributing a higher-term gain to converged numerics.
+
+Sixteenfold versus fourfold sampling: day 1: 0.000 m (n=12); day 3: 0.000 m (n=12); day 7: 0.000 m (n=12). Criterion unchanged at 0.001 m. Complete: false; passed: false.
+
+Registered measurement methods attempted completely: 5/5. This counts recorded exclusions and failed historical attempts separately; it does not certify numerical convergence or identify every cause.
 
 ## Fit and coverage outcomes
 
@@ -277,9 +346,15 @@ Candidate: short-arc prior constants. Use the tested Space Force wrapper prior c
 | resume-H03 | 426 | 12 | 45 | 0 | 0 |
 | resume-H05 | 426 | 12 | 45 | 0 | 0 |
 | resume-H07 | 426 | 12 | 45 | 0 | 0 |
+| resume-HEO12 | 26 | 0 | 40 | 0 | 0 |
+| resume-HEO12-heap | 26 | 0 | 0 | 0 | 0 |
+| resume-HEO20-heap | 26 | 0 | 0 | 0 | 0 |
+| resume-HEO20-q16 | 12 | 0 | 0 | 0 | 0 |
+| resume-HEO20-q4 | 26 | 0 | 0 | 0 | 0 |
 | resume-NOFRAME | 426 | 12 | 45 | 0 | 0 |
 | resume-ap | 400 | 12 | 225 | 0 | 0 |
-| resume-ffm | 426 | 12 | 251 | 3545 | 0 |
+| resume-ffm | 426 | 12 | 263 | 3873 | 0 |
+| resume-ffm-isolated | 426 | 12 | 50 | 778 | 0 |
 | resume-frame | 860 | 740 | 40 | 0 | 0 |
 | resume-frame-gn | 755 | 5 | 12 | 0 | 0 |
 | resume-gn | 755 | 5 | 8 | 0 | 0 |
@@ -303,12 +378,11 @@ Candidate: short-arc prior constants. Use the tested Space Force wrapper prior c
 
 ## Coverage
 
-- Method 2: partial: shadow and zonal-only isolation unavailable
-- Method 4: partial: extended resonant terms not implemented
+- Higher-degree HEO numerical convergence is unconfirmed; no production gain is attributed to these terms.
 - Unique causes and measured module gains are not established for every gap; follow-up tasks remain coordinator drafts.
 
-DO labels: {"event":0,"quiet":78,"unknown":72}. Labels use the same gated truth as the fits; no event-versus-quiet contrast was measured. Historical interrupted LS rows are excluded from aggregates. The initial mixed frame batch used the wrong weather store for GN; its failed attempt is retained, and resume-frame-gn is the corrected GN frame comparison. NO_SUN and NO_MOON include the finite completion queue; their exact coverage is shown in the tables. Optional O12 and O31 arms cover the initial FFM prefix only. Original FFM arms before that merge remain under ffm-bodies/before. Four identical FFM scheduling repeats are preserved but counted once. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.
+DO labels: {"event":0,"quiet":78,"unknown":72}. Labels use the same gated truth as the fits; no event-versus-quiet contrast was measured. Historical interrupted LS rows are excluded from aggregates. The initial mixed frame batch used the wrong weather store for GN; its failed attempt is retained, and resume-frame-gn is the corrected GN frame comparison. NO_SUN and NO_MOON include the finite completion queue; their exact coverage is shown in the tables. Optional O12 and O31 arms cover the initial FFM prefix only. Original FFM arms before that merge remain under ffm-bodies/before. Four identical FFM scheduling repeats are preserved but counted once. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Build hashes and changed-source hashes are in builds.json, ffm-builds.json, heo-builds.json, heo-heap-builds.json, heo-quadrature-builds.json, heo-refinement-builds.json, and ussf-builds.json; scratch manifests retain full source provenance. The first HEO12 batch trapped because native term workspaces exceeded the wasm stack. Corrected HEO12-heap and HEO20-heap batches use thread-local workspaces and remain separate. HEO results cover the registered finite harmonic set; they do not prove convergence of every high-eccentricity harmonic. Full measurement coverage and resolved physical causes are separate claims; the E2E reports its scope explicitly.
 
 ## E2E
 
-Verdict: FAIL on committed daab05800bc264b93a932a869643b3e9f66c82f9. Forward day-3 errors 18.112 and 18.112 m; repeat difference 0.000 m against 0.001 m. Excluded rows 0 of 8037; maximum fixed AGOM 0 across 2247 fits; rebuilt control maximum state difference 0.000 m. Methods complete 3/5. Numeric checks passed; full coverage failed. No gauntlet run, receipt, or main push.
+Pending on this aggregate; the retained prior check belongs to an earlier report.
