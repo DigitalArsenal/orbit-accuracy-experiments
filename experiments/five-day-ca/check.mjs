@@ -1,5 +1,8 @@
 // One E2E: real archive, pinned modules, registration provenance, and complete tables.
 import fs from 'node:fs';
+import crypto from 'node:crypto';
+import {rand} from '../operator-theory/lib/compare.mjs';
+import {describe,contrast,week} from './lib/statistics.mjs';
 import assert from 'node:assert/strict';
 import {spawnSync,execFileSync} from 'node:child_process';
 import {aggregate,report} from './table.mjs';
@@ -23,6 +26,13 @@ assert.equal(run.status,0,run.stderr);
 const replay=JSON.parse(fs.readFileSync(`${out}/rows-0.jsonl`,'utf8').trim());
 let scalars=0;
 for(const [arm,a] of Object.entries(selected.arms))for(const [day,values]of Object.entries(a.days??{}))for(const [field,value]of Object.entries(values)){assert.equal(replay.arms[arm].days[day][field],value,`${arm}/${day}/${field}`);scalars++;}
+// Independent expanded-draw reference on real archive windows for the weighted bootstrap.
+const real=readRows(`${config.store}/cheap/regimes`).filter(r=>r.group==='LS'&&Number.isFinite(r.arms.AP72?.days?.[5]?.e)&&Number.isFinite(r.arms.XP72?.days?.[5]?.e)).map(r=>({cutoff:r.cutoff,e:r.arms.AP72.days[5].e,r:r.arms.AP72.days[5].r,t:r.arms.AP72.days[5].t,n:r.arms.AP72.days[5].n,x:r.arms.AP72.days[5].e,y:r.arms.XP72.days[5].e}));
+const percentile=(values,q)=>{const a=values.sort((a,b)=>a-b),at=(a.length-1)*q,lo=Math.floor(at),hi=Math.ceil(at);return lo===hi||a[lo]===a[hi]?a[lo]:a[lo]+(a[hi]-a[lo])*(at-lo);};
+const expanded=(fn,label)=>{const units=[...Map.groupBy(real,r=>week(r.cutoff)).values()],rng=rand(parseInt(crypto.createHash('sha256').update(`20261103|${label}`).digest('hex').slice(0,8),16)),v=[];for(let k=0;k<10000;k++){const draw=[];for(let i=0;i<units.length;i++)draw.push(...units[Math.floor(rng()*units.length)]);v.push(fn(draw));}return [percentile([...v],.025),percentile([...v],.975)];};
+const fastDescription=describe(real,'E2E median'),fastContrast=contrast(real,'E2E contrast');
+const references=[expanded(r=>percentile(r.map(x=>x.e),.5),'E2E median'),expanded(r=>percentile(r.map(x=>Math.log(x.x/x.y)),.5),'E2E contrastmedian'),expanded(r=>Math.log(percentile(r.map(x=>x.x),.95)/percentile(r.map(x=>x.y),.95)),'E2E contrastp95')];
+assert.deepEqual([fastDescription.ci95,fastContrast.ci95,fastContrast.p95CI95],references,'bootstrap differs from expanded cluster draws');
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 const registrationCommit='eb143664cad7ab97133184d4d0b217592f81b5a8';
 const registrationMs=Date.parse(git('show','-s','--format=%cI',registrationCommit));
@@ -38,13 +48,13 @@ for(const file of ['statistics.json','ca-reach.json','encounters.json'])check(fs
 if(fs.existsSync('results/five-day-ca/encounters.json')){const e=JSON.parse(fs.readFileSync('results/five-day-ca/encounters.json'));check(e.complete===true,'synthetic arms and paired scores incomplete');for(const [file,pin]of Object.entries(e.inputs))assert.equal(hash(fs.readFileSync(file)),pin,'synthetic input snapshot');for(const c of e.cells){assert.equal(c.draws,c.n+c.noPrimary+c.noSecondary+c.pcFailed);assert(c.hits<=c.n&&c.missed<=c.hits&&c.falseAlerts<=c.n-c.hits);}}
 let statisticalCells=0,pairedCells=0,reachCells=0,reachExclusions=0;
 if(fs.existsSync('results/five-day-ca/statistics.json')){
- const s=JSON.parse(fs.readFileSync('results/five-day-ca/statistics.json'));assert.deepEqual(s.inputs,now.inputs,'statistics input snapshot');statisticalCells=s.cells.length;pairedCells=s.paired.length;
+ const s=JSON.parse(fs.readFileSync('results/five-day-ca/statistics.json'));assert.equal(s.snapshotStable,true,'statistics snapshot must be stable');assert.deepEqual(s.inputs,now.inputs,'statistics input snapshot');statisticalCells=s.cells.length;pairedCells=s.paired.length;
  for(const c of s.cells){const m=now.armDayCoverage.find(x=>x.group===c.group&&x.arm+String(x.arc)===c.arm&&x.day===c.day);assert(m);assert.equal(c.n,m.scored,'statistical denominator');if(['LS','DO'].includes(c.group)&&[4,5].includes(c.day))assert.equal(c.disclosure,'read before the statements were registered');}
 }
 if(fs.existsSync('results/five-day-ca/ca-reach.json')){
  const c=JSON.parse(fs.readFileSync('results/five-day-ca/ca-reach.json'));assert.equal(c.snapshotStable,true,'CA snapshot must be stable');assert.deepEqual(c.inputs,now.inputs,'CA input snapshot');reachCells=c.cells.length;reachExclusions=c.cells.reduce((n,c)=>n+c.excluded,0);check(reachExclusions===0,'CA reach exclusions unresolved');assert.equal(c.alfanoAtZero,1,'Alfano maximum at zero miss');
  for(const x of c.cells){if(x.day===5&&x.pair!=='fit x fit')assert.deepEqual(x.gpAgeDays,[5,7],'GP five-day age bin');assert.equal(x.n+x.excluded,x.attempted);if(['LS','DO'].includes(x.group)&&[4,5].includes(x.day))assert.equal(x.disclosure,'read before the statements were registered');}
 }
-const result={verdict:failures.length?'FAIL':'PASS',testedCommit:git('rev-parse','HEAD'),replayedScalars:scalars,oldLeadScalars:now.reproduction.compared,oldLeadDifferences:now.reproduction.different,completeGroupPhases:now.coverage.filter(c=>c.expected>0&&c.completed===c.expected).length,totalGroupPhases:now.coverage.length,armDayCells:now.armDayCoverage.length,missingArmDays:now.armDayCoverage.reduce((n,c)=>n+c.missing,0),registrationManifests:manifests,statisticalCells,pairedCells,reachCells,reachExclusions,disclosedPriorReads:true,pcOracleAbsoluteError:oracleError,failures};
+const result={verdict:failures.length?'FAIL':'PASS',testedCommit:git('rev-parse','HEAD'),replayedScalars:scalars,oldLeadScalars:now.reproduction.compared,oldLeadDifferences:now.reproduction.different,completeGroupPhases:now.coverage.filter(c=>c.expected>0&&c.completed===c.expected).length,totalGroupPhases:now.coverage.length,armDayCells:now.armDayCoverage.length,missingArmDays:now.armDayCoverage.reduce((n,c)=>n+c.missing,0),registrationManifests:manifests,statisticalCells,pairedCells,reachCells,reachExclusions,disclosedPriorReads:true,pcOracleAbsoluteError:oracleError,bootstrapReferenceScalars:6,bootstrapReferenceMaxAbs:0,failures};
 console.log(JSON.stringify(result,null,2));
 if(failures.length)process.exitCode=1;

@@ -11,6 +11,7 @@ const cacheFile=`${config.store}/statistics-cache-${hash(fs.readFileSync(new URL
 const cache=fs.existsSync(cacheFile)?JSON.parse(fs.readFileSync(cacheFile),(_,v)=>v==='Infinity'?Infinity:v==='-Infinity'?-Infinity:v):{};
 const memo=(kind,rows,label,calculate)=>{const key=hash(JSON.stringify([kind,label,rows]));return cache[key]??(cache[key]=calculate());};
 export function statistics(){
+ const inputSnapshot=inputHashes();
  const rows=mergedRows(),cells=[],paired=[];
  for(const [group,rs] of Map.groupBy(rows,r=>r.group)){
   const arms=[...new Set(rs.flatMap(r=>Object.keys(r.arms)))].sort();
@@ -25,6 +26,6 @@ export function statistics(){
   }
  }
  fs.writeFileSync(cacheFile,JSON.stringify(cache,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v)+'\n');
- return {provenance:analysisProvenance(),scope:'available rows; completed-group tables are selected using metrics.json coverage',inputs:inputHashes(),units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
+ return {provenance:analysisProvenance(),scope:'available rows; completed-group tables are selected using metrics.json coverage',snapshotStable:JSON.stringify(inputSnapshot)===JSON.stringify(inputHashes()),inputs:inputSnapshot,units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const result=statistics();fs.writeFileSync('results/five-day-ca/statistics.json',JSON.stringify(result,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v,2)+'\n');console.log(JSON.stringify({cells:result.cells.length,paired:result.paired.length}));}
