@@ -1,0 +1,25 @@
+{
+  "manifestSha256": "15d66ab0147008b5dc9d1bee32caefa995602e49f02024f4b879aaa1c8034b18",
+  "variants": {
+    "HEO12_HEAP": {
+      "returncode": 0,
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/HEO12_HEAP/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "6bdd78b4df2761f88d15de038733655666d402f8ec2cb6cc303c74483fd8381a",
+      "degree": 12,
+      "changedSources": {
+        "src/tesseral.inc": "bec7f09f8c58edfc16e9156cbfec93f98a1bf94a3fad862b6bb16101695af1e8",
+        "src/xp_theory.inc": "402ab5ba7edffcb2bccc047fd2f1066b9672b8b65a1a69258ec9521b4eb1fc7b"
+      }
+    },
+    "HEO20_HEAP": {
+      "returncode": 0,
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/HEO20_HEAP/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "0c9ddf028b6e36dda9754e7c268d5e8c78be73c81e56bf562e9221868ded96b9",
+      "degree": 20,
+      "changedSources": {
+        "src/tesseral.inc": "e1e4751e3f9d110d7be22e23f43fb89cdba3ec437e36bc24e8d6db426c5c801d",
+        "src/xp_theory.inc": "402ab5ba7edffcb2bccc047fd2f1066b9672b8b65a1a69258ec9521b4eb1fc7b"
+      }
+    }
+  }
+}
