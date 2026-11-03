@@ -1,0 +1,34 @@
+{
+  "frozen": true,
+  "leads": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+  ],
+  "store": "/opt/data/sdn-archive/operator-theory/five-day-ca",
+  "modulesRoot": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules",
+  "pins": {
+    "/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
+    "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/propagator/sgp4-xp/dist/isomorphic/module.wasm": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb",
+    "results/ffm-covariance-calibration/frozen-constants.json": "7806980c7e3d655eaf7da31a32a4cb760293be53488a468e99b761b98726c837",
+    "results/ffm-covariance-calibration/sgp4xp/frozen-constants.json": "3f21116ca436d8edb38c47a9ab4661137b618f95e9cce9e52da7523bd9d04992",
+    "/opt/data/sdn-archive/gp-error-model/2026-08/model.json": "fc3d69a77ebc5e0067bce18ea54b6adb22f2219bed07fafff0deb471b49cb82d",
+    "/opt/data/sdn-archive/gp-error-model/2026-08/calibration.json": "a0ff58f87553da5ae27e1b06700fa36e42f8f72ec5042dd1778137770f26458f"
+  },
+  "excludedNorads": [
+    31698,
+    66315,
+    22824,
+    8820,
+    43567,
+    37847,
+    41862,
+    41174,
+    43055,
+    41175
+  ],
+  "workers": 12
+}
