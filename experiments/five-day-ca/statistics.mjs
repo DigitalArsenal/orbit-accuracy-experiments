@@ -20,9 +20,9 @@ export function statistics(){
    cells.push({group,arm,day,disclosure:disclosure(group,day),...memo('describe',values,`${group}|${arm}|${day}`,()=>describe(values,`${group}|${arm}|${day}`))});
   }
   for(const arc of new Set(arms.map(a=>a.match(/\d+/)[0])))for(const [a,b] of [['AP','XP'],['F','XP'],['XP','S']])for(const day of [4,5]){
-   const A=a+arc,B=b+arc,pairs=[];let secondFailed=0,sparse=0,unrun=0;
-   for(const r of rs){const x=r.arms[A],y=r.arms[B];if(!x||!y){unrun++;continue;}if(r.error||x.error==='coverage'||y.error==='coverage'||(x.ok&&!x.days?.[day])||(y.ok&&!y.days?.[day])){sparse++;continue;}if(!Number.isFinite(y.days?.[day]?.e)){secondFailed++;continue;}pairs.push({cutoff:r.cutoff,x:Number.isFinite(x.days?.[day]?.e)?x.days[day].e:null,y:y.days[day].e});}
-   paired.push({group,arc:+arc,contrast:`${a}-${b}`,day,disclosure:disclosure(group,day),secondFailed,sparse,unrun,...memo('contrast',pairs,`${group}|${A}-${B}|${day}`,()=>contrast(pairs,`${group}|${A}-${B}|${day}`))});
+   const A=a+arc,B=b+arc,pairs=[];let secondFailed=0,sparse=0,windowExcluded=0,unrun=0;
+   for(const r of rs){if(r.error){windowExcluded++;continue;}const x=r.arms[A],y=r.arms[B];if(!x||!y){unrun++;continue;}if(x.error==='coverage'||y.error==='coverage'||(x.ok&&!x.days?.[day])||(y.ok&&!y.days?.[day])){sparse++;continue;}if(!Number.isFinite(y.days?.[day]?.e)){secondFailed++;continue;}pairs.push({cutoff:r.cutoff,x:Number.isFinite(x.days?.[day]?.e)?x.days[day].e:null,y:y.days[day].e});}
+   paired.push({group,arc:+arc,contrast:`${a}-${b}`,day,disclosure:disclosure(group,day),secondFailed,sparse,windowExcluded,unrun,...memo('contrast',pairs,`${group}|${A}-${B}|${day}`,()=>contrast(pairs,`${group}|${A}-${B}|${day}`))});
   }
  }
  fs.writeFileSync(cacheFile,JSON.stringify(cache,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v)+'\n');
