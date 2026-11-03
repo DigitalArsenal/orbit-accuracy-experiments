@@ -28,3 +28,7 @@ Build CONTROL from the current module source copy, H03/H05/H07 changing only kSe
 ## Amendment 2026-11-03: GN fitter details
 
 GN uses AP5's five named objects and January–May 2026 cutoffs, 24 h fits. AP and whiteroom XP use their baseline priors; XP_PRIOR selects zero means and Gaussian sigmas 0.05 (BTERM) and 0.1 (AGOM) from the Space Force wrapper's fitter. Its residual weighting and bounds still differ, so this tests the prior constants only. AP_FIXED and XP_FIXED use a scratch build with opt.fit_agom=0, preserving the seed. U_FIXED removes parameter 7 from the Space Force wrapper's active fit vector, preserving its zero seed. No third-party library internals are read or changed.
+
+## Amendment 2026-11-03: FFM switch mapping
+
+NO_SUN retains Moon; NO_MOON retains Sun. TESS12/TESS31 select the tesseral degree cap, distinct from O12/O31's maximum order. D20 caps all harmonics, so it cannot uniquely attribute an effect to zonals above 20. High-orbit FFM already has degree 20 and no tides; its corresponding subtraction is an identity control. NO_SRP also removes the inactive fitted SRP parameter in high orbit.
