@@ -29,3 +29,11 @@ before each existing window cutoff and the GP model's exact regime bounds.
 An identity factor is only transport for that classifier; its covariance is
 not used in CA. No model is fitted. Input hashes and per-window regime labels
 stay in the archive. Windows lacking a permitted state remain excluded.
+
+The same per-window module classification is required for GD (its objects
+span two MEO bands) and P/Part T (drag-LEO objects can cross altitude bins).
+It replaces the provisional group mappings for those groups before any
+archive-based Pc is computed. Read the registered truth object's last state
+in the two hours ending at the cutoff; missing states are counted. The
+remaining homogeneous bands stay as listed above. No covariance scale is
+estimated from these states.

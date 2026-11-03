@@ -9,7 +9,7 @@ const rel='experiments/five-day-ca/CA-PLAN.md';
 if(execFileSync('git',['show',`df37015:${rel}`],{encoding:'utf8'}).trim()!==fs.readFileSync(rel,'utf8').trim())throw Error('CA plan changed');
 const model=JSON.parse(fs.readFileSync('/opt/data/sdn-archive/gp-error-model/2026-08/model.json'));
 const cal=JSON.parse(fs.readFileSync('/opt/data/sdn-archive/gp-error-model/2026-08/calibration.json'));
-const band={P:0,T:0,S1:2,GN:6,GD:5,IG:7,GE:7,HE:9,HX:9};
+const band={S1:2,GN:6,IG:7,GE:7,HE:9,HX:9};
 const mapping=JSON.parse(fs.readFileSync(`${config.store}/gp-regimes.json`));
 const rows=mergedRows(),pc=await openPc(),cells=new Map(),cache=new Map();
 const out=`${config.store}/ca`;fs.mkdirSync(out,{recursive:true});
