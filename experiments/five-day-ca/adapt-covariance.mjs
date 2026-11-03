@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import path from 'node:path';
+import {STATIC} from '../operator-theory/lib/regimes.mjs';
 import {config,registration,analysisProvenance,hash} from './guard.mjs';
 import {readRows} from './statistics.mjs';
 import {gOf,scaled,axesMleRef,median,truthTerm} from '../ffm-covariance-adaptive/lib/model.mjs';
@@ -6,6 +8,9 @@ registration();
 const constants=JSON.parse(fs.readFileSync('results/ffm-covariance-adaptive/frozen-constants.json')).classes;
 const rows=['regimes','truth2','truth'].flatMap(label=>readRows(`${config.store}/covariance/${label}`).map(r=>({...r,labelSource:label}))),inputs={};
 for(const label of ['regimes','truth2','truth']){const dir=`${config.store}/covariance/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
+// NSGF's uncertainty is reference metadata, not a fitted residual or a C2 row.
+const sigmaFiles=new Map();for(const object of STATIC.filter(o=>['LS','GD'].includes(o.group))){for(const file of object.files().filter(f=>/nsgf/i.test(f))){const metaFile=path.join(path.dirname(file),'index.json');if(!fs.existsSync(metaFile))continue;const data=fs.readFileSync(metaFile),meta=JSON.parse(data);inputs[metaFile]=hash(data);for(const o of meta.objects??[]){if(!rows.some(r=>r.norad===o.norad))continue;if(!sigmaFiles.has(o.norad))sigmaFiles.set(o.norad,[]);sigmaFiles.get(o.norad).push({file,start:Date.parse(o.start),stop:Date.parse(o.stop),sigma:meta.statedSigmaM});}}}
+for(const r of rows)if(r.class==='R2-O')for(const [arm,a]of Object.entries(r.arms).filter(([arm])=>arm.startsWith('F')))for(const v of Object.values(a.days??{})){const epoch=Date.parse(v.epoch),metadata=(sigmaFiles.get(r.norad)??[]).filter(x=>x.start<=epoch&&x.stop>=epoch).sort((a,b)=>a.file.localeCompare(b.file)).at(-1);if(Number.isFinite(metadata?.sigma)){v.truthSigmaM=metadata.sigma;v.truthSigmaSource=metadata.file.replace(/[^/]+$/,'index.json');}}
 const histories=Map.groupBy(rows,r=>`${r.norad}|${r.class}`),counts={adapted:0,emptyHistory:0,classMedian:0,historySamples:0};
 const D=86400000,axes=[0,2,5];
 for(const r of rows){const p=constants[r.class];if(!p)continue;const E=Date.parse(r.cutoff);for(const [arm,a]of Object.entries(r.arms).filter(([arm])=>arm.startsWith('F'))){const prior=(histories.get(`${r.norad}|${r.class}`)??[]).filter(h=>h.key!==r.key&&Date.parse(h.cutoff)>E-90*D&&Date.parse(h.cutoff)<E&&Number.isFinite(h.fitAvailableAt)&&h.fitAvailableAt<=E).map(h=>h.arms[arm]?.chi).filter(v=>Number.isFinite(v)&&v>0);a.chiRef=prior.length>=5?median(prior):p.classMedianChi;a.fitHistory=prior.length;}}
