@@ -1,0 +1,793 @@
+{
+ "task": "experiments-ap-heo-frame-confirm-20261103",
+ "title": "Registered confirmation on unread HEO windows of the sdn-ap 0.4.6 frame fix",
+ "frozen": true,
+ "store": "/opt/data/sdn-archive/operator-theory/ap/confirm/experiments-ap-heo-frame-confirm-20261103",
+ "modulesRoot": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules",
+ "weatherDirs": [
+  "/opt/data/sdn-archive/xp2-fit-design/rsga/normalized",
+  "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA",
+  "/opt/data/sdn-archive/hac/noaa-swpc/2026"
+ ],
+ "builds": {
+  "0.4.5": {
+   "commit": "c1d5d218b16f5bbb3ea184582f3c08fddd81657a",
+   "file": "/opt/data/sdn-archive/operator-theory/ap/confirm/build/sdn-ap-0.4.5.wasm",
+   "sha256": "04169197971b5e15db8b7a7762e7cb4500a5d43617be60d0e8f6aaf99d287360"
+  },
+  "0.4.6": {
+   "commit": "8a5a9df96a0c3778313b4b9006394d01ca3a2414",
+   "file": "/opt/data/sdn-archive/operator-theory/ap/confirm/build/sdn-ap-0.4.6.wasm",
+   "sha256": "b881f337d95718aafeaf78dbd60a4926eb199935eae7467da1345d5ee456e3f7"
+  },
+  "0.4.7": {
+   "commit": "dcae6361375f0af27dc82859e29c5632df8af401",
+   "file": "/opt/data/sdn-archive/operator-theory/ap/confirm/build/sdn-ap-0.4.7.wasm",
+   "sha256": "c2bf019f84e5fb35af052723d45ff12a41e25ee1126fea13cbb0459ac02e177f"
+  },
+  "ussf": {
+   "file": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/propagator/sgp4-xp/dist/isomorphic/module.wasm",
+   "sha256": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb"
+  }
+ },
+ "sources": [
+  "experiments/ap-heo-frame-confirm/lib/confirm-runner.mjs",
+  "experiments/ap-heo-frame-confirm/lib/cutoffs.mjs",
+  "experiments/ap-heo-frame-confirm/run.mjs",
+  "experiments/operator-theory/lib/ap.mjs",
+  "experiments/operator-theory/lib/ussf-xp.mjs",
+  "experiments/operator-theory/lib/host.mjs",
+  "experiments/operator-theory/lib/frame.mjs",
+  "experiments/xp2-fit-design/common.mjs",
+  "experiments/xp-atmosphere-merit/common.mjs",
+  "experiments/xp-atmosphere-merit/lib/modules.mjs",
+  "experiments/xp-atmosphere-merit/lib/sds.mjs",
+  "experiments/xp-atmosphere-merit/lib/truth.mjs",
+  "experiments/xp-atmosphere-merit/lib/weather.mjs",
+  "experiments/ffm-atmosphere-xm3/lib/ffm.mjs",
+  "experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs",
+  "experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs",
+  "experiments/xp2-fit-design/config.json",
+  "experiments/xp2-fit-design/build.json",
+  "experiments/xp-atmosphere-merit/config.json",
+  "experiments/xp-atmosphere-merit/build.json",
+  "experiments/ffm-atmosphere-xm3/config.json",
+  "experiments/ffm-atmosphere-xm3/build.json",
+  "harness/truth-gate.mjs",
+  "harness/ffm-fit-v3.mjs",
+  "harness/ffm-execution.mjs",
+  "harness/prw.mjs"
+ ],
+ "arms": {
+  "AP": {
+   "kind": "ap",
+   "build": "0.4.7",
+   "forces": "ap",
+   "note": "AP forces: tesseral 31, zonal 20, NRLMSISE-00 on as-issued weather (none in vacuum groups)"
+  },
+  "A46": {
+   "kind": "ap",
+   "build": "0.4.6",
+   "forces": "ap"
+  },
+  "A45": {
+   "kind": "ap",
+   "build": "0.4.5",
+   "forces": "ap"
+  },
+  "XP": {
+   "kind": "ap",
+   "build": "0.4.7",
+   "forces": "xp",
+   "note": "whiteroom XP: the same wasm, FORCES and FIT unset"
+  },
+  "U": {
+   "kind": "ussf",
+   "note": "Space Force XP, propagator/sgp4-xp"
+  },
+  "F": {
+   "kind": "ffm",
+   "note": "FFM at CHEAPER.md's settings by altitude (AP6)"
+  }
+ },
+ "holds": {
+  "noTruthFrom": "2026-06-01",
+  "note": "C2's time hold-out (heldOutTime from 2026-06-01): no group reads truth on or after it unless exempt (TESS is not a C2 object)",
+  "norads": [
+   43567,
+   37847,
+   41862,
+   41174,
+   43055,
+   41175,
+   31698,
+   66315,
+   22824,
+   8820,
+   39451,
+   39452,
+   39453,
+   43476,
+   43477
+  ],
+  "names": [
+   "six held Galileo (P9)",
+   "TerraSAR-X",
+   "Sentinel-1D",
+   "Stella",
+   "LAGEOS-1",
+   "Swarm A/B/C and GRACE-FO 1/2 (barred after 2026-10-31; no Swarm or GRACE-FO is read at all)"
+  ]
+ },
+ "groups": {
+  "HE": {
+   "label": "TESS definitive ephemeris, unread cutoffs",
+   "source": {
+    "kind": "spk",
+    "objects": [
+     {
+      "name": "TESS",
+      "norad": 43435,
+      "objectId": "2018-038A",
+      "id": "TESS (-95)",
+      "dir": "/opt/data/sdn-archive/hac/mast-tess/models",
+      "pattern": "^TESS_EPH_DEF_.*\\.bsp$",
+      "from": "2026-06-29T13:00:00Z",
+      "to": "2026-09-17T13:00:00Z"
+     }
+    ]
+   },
+   "cutoffs": {
+    "dates": [
+     "2026-07-03",
+     "2026-07-04",
+     "2026-07-05",
+     "2026-07-06",
+     "2026-09-10",
+     "2026-09-11",
+     "2026-09-12",
+     "2026-09-13",
+     "2026-09-14"
+    ]
+   },
+   "arcs": [
+    72
+   ],
+   "vacuum": true,
+   "exemptFromTimeHold": true,
+   "arms": [
+    "AP",
+    "A46",
+    "A45",
+    "XP",
+    "U",
+    "F"
+   ]
+  },
+  "HX": {
+   "label": "Chandra, NAIF merged kernel, 2014-12 to 2015-07",
+   "source": {
+    "kind": "spk",
+    "objects": [
+     {
+      "name": "CHANDRA",
+      "norad": 25867,
+      "objectId": "1999-040B",
+      "id": "Chandra (-151)",
+      "file": "/opt/data/sdn-archive/hac/naif-kernels/spk/missions/chandra/chandra_merged.bsp",
+      "from": "2014-12-01T13:00:00Z",
+      "to": "2015-08-05T00:00:00Z"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2014-12-05",
+    "to": "2015-07-29",
+    "everyDays": 3
+   },
+   "arcs": [
+    72
+   ],
+   "vacuum": true,
+   "arms": [
+    "AP",
+    "A46",
+    "A45",
+    "XP",
+    "U",
+    "F"
+   ]
+  },
+  "HEr": {
+   "label": "TESS, AP6's seven windows (read): replay control, report only",
+   "source": {
+    "kind": "spk",
+    "objects": [
+     {
+      "name": "TESS",
+      "norad": 43435,
+      "objectId": "2018-038A",
+      "id": "TESS (-95)",
+      "dir": "/opt/data/sdn-archive/hac/mast-tess/models",
+      "pattern": "^TESS_EPH_DEF_.*\\.bsp$",
+      "from": "2026-07-10T00:00:00Z",
+      "to": "2026-09-17T12:00:00Z"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-07-27",
+    "to": "2026-09-10",
+    "everyDays": 7
+   },
+   "arcs": [
+    72
+   ],
+   "vacuum": true,
+   "exemptFromTimeHold": true,
+   "arms": [
+    "AP",
+    "A46",
+    "A45",
+    "XP"
+   ]
+  },
+  "GD": {
+   "label": "Laser geodetic, ILRS combined and NSGF orbits, 2026-01 to 2026-03",
+   "source": {
+    "kind": "laser",
+    "objects": [
+     {
+      "name": "lageos2",
+      "target": "lageos2",
+      "product": "ilrsa"
+     },
+     {
+      "name": "etalon1",
+      "target": "etalon1",
+      "product": "ilrsa"
+     },
+     {
+      "name": "etalon2",
+      "target": "etalon2",
+      "product": "ilrsa"
+     },
+     {
+      "name": "lares2",
+      "target": "lares2",
+      "product": "nsgf"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-01-08",
+    "to": "2026-03-12",
+    "everyDays": 7
+   },
+   "arcs": [
+    72
+   ],
+   "arms": [
+    "AP",
+    "A46",
+    "A45"
+   ]
+  },
+  "LS": {
+   "label": "Low orbit laser spheres, NSGF orbits, 2026-01 to 2026-03",
+   "source": {
+    "kind": "laser",
+    "objects": [
+     {
+      "name": "ajisai",
+      "target": "ajisai",
+      "product": "nsgf"
+     },
+     {
+      "name": "starlette",
+      "target": "starlette",
+      "product": "nsgf"
+     },
+     {
+      "name": "westpac",
+      "target": "westpac",
+      "product": "nsgf"
+     },
+     {
+      "name": "lares",
+      "target": "lares",
+      "product": "nsgf"
+     },
+     {
+      "name": "larets",
+      "target": "larets",
+      "product": "nsgf"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-01-08",
+    "to": "2026-03-09",
+    "everyDays": 5
+   },
+   "arcs": [
+    72
+   ],
+   "arms": [
+    "AP",
+    "A46",
+    "A45"
+   ]
+  },
+  "DO": {
+   "label": "Low orbit altimetry, CNES DORIS orbits, 2026-01 to 2026-03",
+   "source": {
+    "kind": "doris",
+    "objects": [
+     {
+      "name": "Jason-3",
+      "codes": [
+       "ja330"
+      ]
+     },
+     {
+      "name": "Sentinel-3A",
+      "codes": [
+       "s3a30"
+      ]
+     },
+     {
+      "name": "Sentinel-3B",
+      "codes": [
+       "s3b30"
+      ]
+     },
+     {
+      "name": "Sentinel-6A",
+      "codes": [
+       "s6a30"
+      ]
+     },
+     {
+      "name": "Sentinel-6B",
+      "codes": [
+       "s6b30"
+      ]
+     },
+     {
+      "name": "SARAL",
+      "codes": [
+       "srl20"
+      ]
+     },
+     {
+      "name": "SWOT",
+      "codes": [
+       "swo20",
+       "swo30"
+      ]
+     },
+     {
+      "name": "CryoSat-2",
+      "codes": [
+       "cs220",
+       "cs230"
+      ]
+     },
+     {
+      "name": "HY-2C",
+      "codes": [
+       "h2c20",
+       "h2c30"
+      ]
+     },
+     {
+      "name": "HY-2D",
+      "codes": [
+       "h2d20",
+       "h2d30"
+      ]
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-01-08",
+    "to": "2026-03-09",
+    "everyDays": 5
+   },
+   "arcs": [
+    72
+   ],
+   "arms": [
+    "AP",
+    "A46",
+    "A45"
+   ]
+  },
+  "GN": {
+   "label": "GPS, GLONASS and Galileo, ESA final orbits, 2025-01 to 2025-06",
+   "source": {
+    "kind": "esa-final",
+    "constellations": [
+     "G",
+     "R",
+     "E"
+    ]
+   },
+   "cutoffs": {
+    "from": "2025-01-08",
+    "to": "2025-06-25",
+    "everyDays": 14
+   },
+   "arcs": [
+    72
+   ],
+   "arms": [
+    "AP",
+    "A46",
+    "A45"
+   ]
+  },
+  "IG": {
+   "label": "Inclined geosynchronous, GFZ rapid, AP6's windows (read): report only",
+   "source": {
+    "kind": "mgex",
+    "klass": "igso"
+   },
+   "cutoffs": {
+    "from": "2025-10-04",
+    "to": "2025-10-13",
+    "everyDays": 2
+   },
+   "arcs": [
+    72
+   ],
+   "arms": [
+    "AP",
+    "A46",
+    "A45"
+   ]
+  },
+  "GE": {
+   "label": "Geostationary, GFZ rapid, AP6's windows (read): report only",
+   "source": {
+    "kind": "mgex",
+    "klass": "geo"
+   },
+   "cutoffs": {
+    "from": "2025-10-04",
+    "to": "2025-10-13",
+    "everyDays": 2
+   },
+   "arcs": [
+    72
+   ],
+   "arms": [
+    "AP",
+    "A46",
+    "A45"
+   ]
+  }
+ },
+ "statements": [
+  {
+   "id": "H1",
+   "kind": "closeness",
+   "label": "Paired day-3 AP less XP on unread HEO windows within 50 m of zero",
+   "criterion": "Median over the pooled unread HEO windows (HE and HX) of AP less XP forward error at day 3, within +-50 m.",
+   "groups": [
+    "HE",
+    "HX"
+   ],
+   "a": "AP72",
+   "b": "XP72",
+   "day": 3,
+   "marginM": 50
+  },
+  {
+   "id": "H2",
+   "kind": "notWorse",
+   "label": "AP not worse than XP at days 1, 3 and 7 on unread HEO windows",
+   "criterion": "AP5 rule 1 reversed: AP is worse at a day when the 97.5 % interval of the median ln(e_AP / e_XP) lies wholly above 0 and the median AP less XP exceeds 50 m.",
+   "groups": [
+    "HE",
+    "HX"
+   ],
+   "a": "AP72",
+   "b": "XP72",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "materialityM": 50
+  },
+  {
+   "id": "H3.GD",
+   "kind": "regression",
+   "label": "GD: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over GD windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "GD"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": false
+  },
+  {
+   "id": "H3.LS",
+   "kind": "regression",
+   "label": "LS: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over LS windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "LS"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": false
+  },
+  {
+   "id": "H3.DO",
+   "kind": "regression",
+   "label": "DO: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over DO windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "DO"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": false
+  },
+  {
+   "id": "H3.GN",
+   "kind": "regression",
+   "label": "GN: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over GN windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "GN"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": false
+  },
+  {
+   "id": "H3.HX",
+   "kind": "regression",
+   "label": "HX: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over HX windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "HX"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": false
+  },
+  {
+   "id": "H3.IG",
+   "kind": "regression",
+   "label": "IG: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over IG windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7. REPORT ONLY: no unread truth exists, the windows are AP6's (read).",
+   "groups": [
+    "IG"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": true
+  },
+  {
+   "id": "H3.GE",
+   "kind": "regression",
+   "label": "GE: 0.4.6 frame fix does not regress the median forward error by more than 5 %",
+   "criterion": "Median over GE windows of e(0.4.6) / e(0.4.5), 72 h fits, at most 1.05 at days 1, 3 and 7. REPORT ONLY: no unread truth exists, the windows are AP6's (read).",
+   "groups": [
+    "GE"
+   ],
+   "new": "A4672",
+   "old": "A4572",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05,
+   "reportOnly": true
+  }
+ ],
+ "reportOnly": {
+  "contrasts": [
+   {
+    "id": "c-he",
+    "label": "HE: AP less XP, day 3",
+    "groups": [
+     "HE"
+    ],
+    "a": "AP72",
+    "b": "XP72",
+    "days": [
+     3
+    ]
+   },
+   {
+    "id": "c-hx",
+    "label": "HX (Chandra): AP less XP, day 3",
+    "groups": [
+     "HX"
+    ],
+    "a": "AP72",
+    "b": "XP72",
+    "days": [
+     3
+    ]
+   },
+   {
+    "id": "c-old",
+    "label": "HE and HX: 0.4.5 less XP (before the fix), days 1, 3, 7",
+    "groups": [
+     "HE",
+     "HX"
+    ],
+    "a": "A4572",
+    "b": "XP72",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-her-new",
+    "label": "HEr (AP6's seven windows, read): AP less XP, day 3 (the module's table: -0.000784 m)",
+    "groups": [
+     "HEr"
+    ],
+    "a": "AP72",
+    "b": "XP72",
+    "days": [
+     3
+    ]
+   },
+   {
+    "id": "c-her-old",
+    "label": "HEr: 0.4.5 less XP, day 3 (the module's table: +420.105792 m)",
+    "groups": [
+     "HEr"
+    ],
+    "a": "A4572",
+    "b": "XP72",
+    "days": [
+     3
+    ]
+   },
+   {
+    "id": "c-id",
+    "label": "0.4.7 less 0.4.6 on 72 h arcs, every group (expected 0 m)",
+    "groups": [
+     "HE",
+     "HX",
+     "HEr",
+     "GD",
+     "LS",
+     "DO",
+     "GN",
+     "IG",
+     "GE"
+    ],
+    "a": "AP72",
+    "b": "A4672",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-u",
+    "label": "HE and HX: AP less Space Force XP, days 1, 3, 7",
+    "groups": [
+     "HE",
+     "HX"
+    ],
+    "a": "AP72",
+    "b": "U72",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-f",
+    "label": "HE and HX: AP less FFM, days 1, 3, 7",
+    "groups": [
+     "HE",
+     "HX"
+    ],
+    "a": "AP72",
+    "b": "F72",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   }
+  ],
+  "figures": [
+   {
+    "groups": [
+     "HE",
+     "HX",
+     "HEr"
+    ],
+    "arms": [
+     "AP72",
+     "A4672",
+     "A4572",
+     "XP72",
+     "U72",
+     "F72"
+    ],
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "groups": [
+     "GD",
+     "LS",
+     "DO",
+     "GN",
+     "IG",
+     "GE"
+    ],
+    "arms": [
+     "AP72",
+     "A4672",
+     "A4572"
+    ],
+    "days": [
+     1,
+     3,
+     7
+    ]
+   }
+  ]
+ }
+}
