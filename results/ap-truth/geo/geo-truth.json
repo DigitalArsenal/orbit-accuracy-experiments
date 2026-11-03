@@ -4170,6 +4170,7 @@
  ],
  "files": [
   {
+   "noBurn": false,
    "object": "GALAXY 30 (G-30)",
    "start": "2026-10-26T00:00:00.000Z",
    "fitHours": 24,
@@ -4225,6 +4226,7 @@
    }
   },
   {
+   "noBurn": false,
    "object": "GALAXY 30 (G-30)",
    "start": "2026-10-26T00:00:00.000Z",
    "fitHours": 48,
@@ -4274,6 +4276,7 @@
    }
   },
   {
+   "noBurn": false,
    "object": "GALAXY 30 (G-30)",
    "start": "2026-10-29T00:00:00.000Z",
    "fitHours": 24,
@@ -4311,6 +4314,7 @@
    }
   },
   {
+   "noBurn": false,
    "object": "GALAXY 30 (G-30)",
    "start": "2026-10-29T00:00:00.000Z",
    "fitHours": 48,
