@@ -1,0 +1,34 @@
+{
+  "uniqueWindows": 426,
+  "groups": {
+    "GD": 55,
+    "IG": 60,
+    "GE": 45,
+    "LS": 90,
+    "DO": 150,
+    "HX": 19,
+    "HE": 7
+  },
+  "rowExclusions": {
+    "no lead bin": 12
+  },
+  "armOutcomes": {
+    "CONVERGED": 778,
+    "coverage": 50
+  },
+  "files": [
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/rows-0.jsonl",
+      "sha256": "923c8cfda5eb7cf49db726ff4003d7e48d62d8c3dc34ba898d931b158b2702b2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/rows-1.jsonl",
+      "sha256": "6f134fe178cd7d0c95ca438127a11192d758f7155cc5606575603288cf9c69fc"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/rows-2.jsonl",
+      "sha256": "2fd470c96705ffe280877c411640560a36b660bebdebe31f181ce7597de4d896"
+    }
+  ],
+  "interruption": "First 270 windows retained; the three interrupted workers did not flush end-of-process input audits. Tail input audits are flushed per completed row."
+}
