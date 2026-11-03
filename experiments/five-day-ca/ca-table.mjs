@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {config,registration,hash} from './guard.mjs';
-import {mergedRows,disclosure} from './statistics.mjs';
+import {mergedRows,disclosure,inputHashes} from './statistics.mjs';
 import {openPc,wasmSha256} from './lib/ca-reach.mjs';
 import {quantile} from './lib/statistics.mjs';
 registration();
@@ -20,6 +20,7 @@ const gp=(row,day)=>{
  const s=model.strata.find(s=>s.regime===regime&&day>s.ageDays[0]&&day<=s.ageDays[1]);
  if(!s)return null;
  const c=cal.strata.find(c=>c.regimeIndex===s.regimeIndex&&c.ageIndex===s.ageIndex),p=s.clipped.covariance;
+ if(!p)return null;
  const scale=c?.label==='CALIBRATED'?c.scaleFactors:[1,1,1];
  return {cov:[p[0]*scale[0]**2*1e6,p[1]*scale[0]*scale[1]*1e6,p[2]*scale[1]**2*1e6],label:c?.label??'UNCALIBRATED',regime:s.regime};
 };
@@ -31,8 +32,8 @@ try{
   const day=+d,G=gp(r,day),fit=[v.r*v.r*1e6,0,v.t*v.t*1e6];
   for(const pair of ['fit x fit','fit x GP','GP x GP'])for(const hbr of [10,20,50,100]){
    const k=[r.group,arm,day,pair,hbr].join('|');
-   if(!cells.has(k))cells.set(k,{group:r.group,arm,day,pair,hbr,disclosure:disclosure(r.group,day),gpLabel:pair==='fit x fit'?null:G?.label??'MISSING ALTITUDE MAPPING',attempted:0,excluded:0,errors:{},values:[]});
-   const c=cells.get(k);c.attempted++;
+   if(!cells.has(k))cells.set(k,{group:r.group,arm,day,pair,hbr,disclosure:disclosure(r.group,day),gpLabel:pair==='fit x fit'?null:G?.label??'MISSING ALTITUDE MAPPING',gpLabels:{},regimeCounts:{},attempted:0,excluded:0,errors:{},values:[]});
+   const c=cells.get(k);c.attempted++;if(pair!=='fit x fit'){const label=G?.label??'MISSING';c.gpLabels[label]=(c.gpLabels[label]??0)+1;if(G)c.regimeCounts[G.regime]=(c.regimeCounts[G.regime]??0)+1;}
    try{
     if(pair!=='fit x fit'&&!G)throw Error('missing GP altitude mapping');
     const cov=project(pair==='GP x GP'?G.cov:fit,pair==='fit x fit'?fit:G.cov);
@@ -43,7 +44,7 @@ try{
   }
  }
  const alfanoAtZero=await pc.pc([10000,0,10000],10,[0,0],true);
- const result={wasmSha256,regimeMappingSha256:hash(fs.readFileSync(`${config.store}/gp-regimes.json`)),planCommit:'df37015',oracle,alfanoAtZero,geometry:'90 degree crossing; R/T plane; independent members',cells:[...cells.values()].map(({values,...c})=>({...c,n:values.length,medianCeiling:quantile(values,.5),p10:quantile(values,.1),p90:quantile(values,.9),reach1e4:values.length?values.filter(x=>x>=1e-4).length/values.length:null,reach1e5:values.length?values.filter(x=>x>=1e-5).length/values.length:null,alfanoMaximumAtZero:alfanoAtZero}))};
+ const result={inputs:inputHashes(),wasmSha256,regimeMappingSha256:hash(fs.readFileSync(`${config.store}/gp-regimes.json`)),planCommit:'df37015',oracle,alfanoAtZero,geometry:'90 degree crossing; R/T plane; independent members',cells:[...cells.values()].map(({values,...c})=>({...c,gpLabel:c.pair==='fit x fit'?null:Object.keys(c.gpLabels).sort().join('/'),n:values.length,medianCeiling:quantile(values,.5),p10:quantile(values,.1),p90:quantile(values,.9),reach1e4:values.length?values.filter(x=>x>=1e-4).length/values.length:null,reach1e5:values.length?values.filter(x=>x>=1e-5).length/values.length:null,alfanoMaximumAtZero:alfanoAtZero}))};
  fs.writeFileSync('results/five-day-ca/ca-reach.json',JSON.stringify(result,null,2)+'\n');
  console.log(JSON.stringify({cells:result.cells.length,oracle,alfanoAtZero}));
 }finally{fs.closeSync(raw);await pc.close();}

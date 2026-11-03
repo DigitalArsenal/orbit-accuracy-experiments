@@ -4,6 +4,7 @@ import {config,registration,allowed,hash} from './guard.mjs';
 import {describe,contrast} from './lib/statistics.mjs';
 registration();
 export function readRows(dir){return fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)).sort().flatMap(f=>fs.readFileSync(path.join(dir,f),'utf8').split('\n').filter(Boolean).map(JSON.parse)).filter(r=>allowed(r.norad,r.name,Date.parse(r.cutoff))):[];}
+export function inputHashes(){const out={};for(const phase of ['cheap','ffm'])for(const label of ['regimes','truth2','truth']){const d=`${config.store}/${phase}/${label}`;if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^rows-\d+\.jsonl$/.test(f)))out[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}return out;}
 export function mergedRows(){const rows=new Map();for(const phase of ['cheap','ffm'])for(const label of ['regimes','truth2','truth'])for(const r of readRows(`${config.store}/${phase}/${label}`)){const key=label+'|'+r.key;if(!rows.has(key))rows.set(key,{...r,group:label==='truth'?'T':r.group,arms:{}});Object.assign(rows.get(key).arms,r.arms);}return [...rows.values()];}
 export function disclosure(group,day){return [4,5].includes(day)&&['LS','DO'].includes(group)?'read before the statements were registered':null;}
 export function statistics(){
@@ -20,6 +21,6 @@ export function statistics(){
    paired.push({group,arc:+arc,contrast:`${a}-${b}`,day,disclosure:disclosure(group,day),secondFailed,sparse,unrun,...contrast(pairs,`${group}|${A}-${B}|${day}`)});
   }
  }
- return {units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
+ return {inputs:inputHashes(),units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const result=statistics();fs.writeFileSync('results/five-day-ca/statistics.json',JSON.stringify(result,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v,2)+'\n');console.log(JSON.stringify({cells:result.cells.length,paired:result.paired.length}));}
