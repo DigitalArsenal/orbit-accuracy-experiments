@@ -81,13 +81,16 @@ export async function xm3Rows() {
   return new Map(rows.filter((r) => r.condition === 'O').map((r) => [r.key, r]));
 }
 
-/** XM6's stored rows by key (its store, read only), digest checked as XM6's table computes it (comparable rows joined by newline). */
+/** XM6's stored rows by key (its store, read only), deduplicated, sorted and digested as XM6's table.mjs does (storedRows and comparableArms:
+ *  JSON of { key, arms, binEpochs, entered } per row, joined by newline). */
 export function xm6Rows() {
   const d = '/opt/data/sdn-archive/ffm-agom-prior-leo/rows';
-  const rows = fs.readdirSync(d).filter((f) => /^O\.s\d+\.jsonl$/.test(f)).sort().flatMap((f) => readJsonl(path.join(d, f))).filter((r) => !r.defect);
-  const digest = sha256(rows.map(XM3.comparable).join('\n'));
+  const byKey = new Map();
+  for (const f of fs.readdirSync(d).filter((x) => /^O\.s\d+\.jsonl$/.test(x)).sort()) for (const r of readJsonl(path.join(d, f))) if (!byKey.has(r.key) || byKey.get(r.key).defect) byKey.set(r.key, r);
+  const rows = [...byKey.values()].sort((x, y) => (x.key < y.key ? -1 : 1));
+  const digest = sha256(rows.map((r) => JSON.stringify({ key: r.key, arms: r.arms, binEpochs: r.binEpochs, entered: r.entered })).join('\n'));
   if (!digest.startsWith(build.inputs.storedRows.xm6)) throw new Error(`XM6's stored rows digest ${digest.slice(0, 12)} is not the registered ${build.inputs.storedRows.xm6}`);
-  return new Map(rows.map((r) => [r.key, r]));
+  return byKey;
 }
 
 /** XP2's stored rows by key (its store, read only), deduplicated, sorted and digested as XP2's table.mjs does (lines 133-138). */
