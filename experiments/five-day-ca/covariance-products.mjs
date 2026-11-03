@@ -21,7 +21,7 @@ const band={S1:2,GN:6,IG:7,GE:7,HE:9,HX:9};
 const c2=JSON.parse(fs.readFileSync('results/ffm-covariance-calibration/frozen-constants.json')).classes;
 const xp=JSON.parse(fs.readFileSync('results/ffm-covariance-calibration/sgp4xp/frozen-constants.json')).classes;
 const pairs=await openPairStatistics(),ap=await openApCovariance(),fm=await openFfmCovariance(pairs);
-try{for(const base of baseline){if(completed.has(base.key)||parseInt(crypto.createHash('sha256').update(base.key).digest('hex').slice(0,8),16)%nshards!==shard)continue;
+try{for(const base of baseline){if((args.key&&base.key!==args.key)||completed.has(base.key)||parseInt(crypto.createHash('sha256').update(base.key).digest('hex').slice(0,8),16)%nshards!==shard)continue;
  const group=label==='truth'?'T':base.group,endpoint=endpoints.get(base.key),regime=mapping[base.key]??model.regimes[band[group]]?.id,ri=model.regimes.findIndex(r=>r.id===regime),cls=ri>=0&&ri<2?'R1-O':ri>=2&&ri<5?'R2-O':'R3';
  const row={key:base.key,group,norad:base.norad,name:base.name,cutoff:base.cutoff,regime,class:cls,label:'frozen covariance transfer; seven-day extrapolation',fitAvailableAt:endpoint?.fitAvailableAt??null,arms:{}};
  if(!endpoint){row.error=base.error??'endpoint products not run';fs.appendFileSync(`${out}/rows-${shard}.jsonl`,JSON.stringify(row)+'\n');continue;}
