@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-31T15:38:10.648Z",
+  "sources": {
+    "run.mjs": "fa13e17c11f368d287504125057043e5d7c08a5403e627e4bd2d871a25c263ea",
+    "table.mjs": "0a5a2f1c602c18eea83cafe4e2cabd084ce3600a6f25563089c1234dd62f18d6",
+    "common.mjs": "e75bc462ce946e218f66a795c7fe3c9d049345c529af2fb25cd45d3c73e76a53",
+    "lib/ffm.mjs": "f2c1088b307af25e513b0ade8c52d5e583351227dbf83cbd014610416ace6458"
+  },
+  "modulesCommit": "9a05d899b95242b358939ab1d68a776170a6b167",
+  "testBuild": "d7fdba626d36e0ca0f8d35bf13c7aaa1c67c3e83",
+  "checks": [
+    {
+      "label": "test wasm, O rows without AP1-8, against XM3",
+      "key": "P|39452|2026-03-10",
+      "equal": true,
+      "differ": [],
+      "rounds": 3,
+      "wallSeconds": 41.741,
+      "error": null
+    },
+    {
+      "label": "test wasm, O rows without AP1-8, against XM3",
+      "key": "P|43476|2026-02-13",
+      "equal": true,
+      "differ": [],
+      "rounds": 7,
+      "wallSeconds": 91.906,
+      "error": null
+    },
+    {
+      "label": "test wasm, O rows without AP1-8, against XM3",
+      "key": "P|39451|2026-01-21",
+      "equal": true,
+      "differ": [],
+      "rounds": 3,
+      "wallSeconds": 63.16,
+      "error": null
+    },
+    {
+      "label": "test wasm, M rows without AP1-8, against XM5",
+      "key": "P|39452|2026-01-20",
+      "equal": true,
+      "differ": [],
+      "rounds": 3,
+      "wallSeconds": 44.501,
+      "error": null
+    },
+    {
+      "label": "test wasm, M rows without AP1-8, against XM5",
+      "key": "P|43476|2026-02-13",
+      "equal": true,
+      "differ": [],
+      "rounds": 3,
+      "wallSeconds": 50.762,
+      "error": null
+    },
+    {
+      "label": "test wasm, M rows without AP1-8, against XM5",
+      "key": "P|43477|2026-04-11",
+      "equal": true,
+      "differ": [],
+      "rounds": 4,
+      "wallSeconds": 53.53,
+      "error": null
+    },
+    {
+      "label": "pinned wasm, O rows, against XM3",
+      "key": "P|39453|2026-02-10",
+      "equal": true,
+      "differ": [],
+      "rounds": 3,
+      "wallSeconds": 47.248,
+      "error": null
+    },
+    {
+      "label": "test wasm, M rows with AP1-8, differs from XM5",
+      "key": "P|39452|2026-01-20",
+      "equal": true,
+      "rounds": 3,
+      "wallSeconds": 48.866,
+      "error": null
+    }
+  ]
+}
