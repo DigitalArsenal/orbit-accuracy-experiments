@@ -35,7 +35,15 @@ assert(manifests>0,'no resumed registration manifests');
 const pc=await openPc();let oracleError=0;
 try{for(const [v,h]of [[10000,10],[2500,100]])oracleError=Math.max(oracleError,Math.abs(await pc.pc([v,0,v],h)+Math.expm1(-h*h/(2*v))));assert(oracleError<=1e-12);}finally{await pc.close();}
 for(const file of ['statistics.json','ca-reach.json','encounters.json'])check(fs.existsSync(`results/five-day-ca/${file}`),`${file} unmeasured`);
-if(fs.existsSync('results/five-day-ca/ca-reach.json')){const c=JSON.parse(fs.readFileSync('results/five-day-ca/ca-reach.json'));check(c.cells.every(c=>c.excluded===0),'CA reach exclusions unresolved');}
-const result={verdict:failures.length?'FAIL':'PASS',testedCommit:git('rev-parse','HEAD'),replayedScalars:scalars,oldLeadScalars:now.reproduction.compared,oldLeadDifferences:now.reproduction.different,completeGroupPhases:now.coverage.filter(c=>c.expected>0&&c.completed===c.expected).length,totalGroupPhases:now.coverage.length,armDayCells:now.armDayCoverage.length,missingArmDays:now.armDayCoverage.reduce((n,c)=>n+c.missing,0),registrationManifests:manifests,disclosedPriorReads:true,pcOracleAbsoluteError:oracleError,failures};
+let statisticalCells=0,pairedCells=0,reachCells=0,reachExclusions=0;
+if(fs.existsSync('results/five-day-ca/statistics.json')){
+ const s=JSON.parse(fs.readFileSync('results/five-day-ca/statistics.json'));assert.deepEqual(s.inputs,now.inputs,'statistics input snapshot');statisticalCells=s.cells.length;pairedCells=s.paired.length;
+ for(const c of s.cells){const m=now.armDayCoverage.find(x=>x.group===c.group&&x.arm+String(x.arc)===c.arm&&x.day===c.day);assert(m);assert.equal(c.n,m.scored,'statistical denominator');if(['LS','DO'].includes(c.group)&&[4,5].includes(c.day))assert.equal(c.disclosure,'read before the statements were registered');}
+}
+if(fs.existsSync('results/five-day-ca/ca-reach.json')){
+ const c=JSON.parse(fs.readFileSync('results/five-day-ca/ca-reach.json'));assert.deepEqual(c.inputs,now.inputs,'CA input snapshot');reachCells=c.cells.length;reachExclusions=c.cells.reduce((n,c)=>n+c.excluded,0);check(reachExclusions===0,'CA reach exclusions unresolved');assert.equal(c.alfanoAtZero,1,'Alfano maximum at zero miss');
+ for(const x of c.cells){assert.equal(x.n+x.excluded,x.attempted);if(['LS','DO'].includes(x.group)&&[4,5].includes(x.day))assert.equal(x.disclosure,'read before the statements were registered');}
+}
+const result={verdict:failures.length?'FAIL':'PASS',testedCommit:git('rev-parse','HEAD'),replayedScalars:scalars,oldLeadScalars:now.reproduction.compared,oldLeadDifferences:now.reproduction.different,completeGroupPhases:now.coverage.filter(c=>c.expected>0&&c.completed===c.expected).length,totalGroupPhases:now.coverage.length,armDayCells:now.armDayCoverage.length,missingArmDays:now.armDayCoverage.reduce((n,c)=>n+c.missing,0),registrationManifests:manifests,statisticalCells,pairedCells,reachCells,reachExclusions,disclosedPriorReads:true,pcOracleAbsoluteError:oracleError,failures};
 console.log(JSON.stringify(result,null,2));
 if(failures.length)process.exitCode=1;
