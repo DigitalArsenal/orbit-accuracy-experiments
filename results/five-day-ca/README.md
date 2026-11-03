@@ -1,10 +1,10 @@
 # Five-day forecast
 
+Five-day answer. A pair class can show a Pc at day 5 when its zero-miss ceiling reaches 1e-4 in at least half of a group's windows, for at least one registered fit arc (GP age bin [5,7] d); the 1e-5 fractions, every arc and every arm are in the CA-reach table. At 10 m: fit x fit, with XP, 1e-4 is reached in most windows for DO, GD, GE, GN, IG, LS, S1 and in some but under half for HE, HX, P, T; relative to XP, AP adds P, T; F adds HX, P, T; S drops DO, GE, GN, IG, S1; U drops S1. fit x GP, with XP, 1e-4 is reached in most windows for GD, GN, LS and in some but under half for DO; relative to XP, F adds DO; S drops GN. GP x GP 1e-4 is reached in most windows for no group and in some but under half for DO, GD, LS (a GP covariance on both objects, the same for every arm; median ceilings span 1.7e-10 (P) to 8.1e-5 (LS)). At 20 m: fit x fit, with XP, 1e-4 is reached in most windows for DO, GD, GE, GN, IG, LS, S1 and in some but under half for HE, HX, P, T; relative to XP, AP adds P, T; F adds HX, P, T; S drops GE, IG. fit x GP, with XP, 1e-4 is reached in most windows for DO, GD, GN, LS, S1 and in some but under half for no group; relative to XP, no arm changes this. GP x GP 1e-4 is reached in most windows for DO, GD, GN, LS, S1 and in some but under half for no group (a GP covariance on both objects, the same for every arm; median ceilings span 6.7e-10 (P) to 3.2e-4 (LS)). At 50 m: fit x fit, with XP, 1e-4 is reached in most windows for DO, GD, GE, GN, HE, IG, LS, P, S1 and in some but under half for HX, T; relative to XP, AP adds T; F adds HX, T; S drops GE, HE, IG; U drops HE. fit x GP, with XP, 1e-4 is reached in most windows for DO, GD, GE, GN, IG, LS, S1 and in some but under half for no group; relative to XP, S drops GE, IG. GP x GP 1e-4 is reached in most windows for DO, GD, GE, GN, IG, LS, S1 and in some but under half for no group (a GP covariance on both objects, the same for every arm; median ceilings span 4.2e-9 (P) to 2.0e-3 (LS)). At 100 m: fit x fit, with XP, 1e-4 is reached in most windows for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T and in some but under half for no group; relative to XP, S drops HE, HX; U drops HE. fit x GP, with XP, 1e-4 is reached in most windows for DO, GD, GE, GN, HE, HX, IG, LS, S1 and in some but under half for no group; relative to XP, S drops HE, HX; U drops HE. GP x GP 1e-4 is reached in most windows for DO, GD, GE, GN, IG, LS, S1 and in some but under half for no group (a GP covariance on both objects, the same for every arm; median ceilings span 1.7e-8 (P) to 8.0e-3 (LS)). Every finite nonsingular covariance has positive zero-miss Pc, so these are threshold-reach results, not alert rates. A fit's sigma here is its own window's realized R/T error, not a forecast covariance. Unfinished runs are not evidence of zero reach. The synthetic encounter rates below describe an artificial population and cannot establish operational five-day CA rates.
+
 Forecast coverage: 22/22 group/phase cells complete. Old-lead reproduction: 398392 scalar comparisons, 0 differences, maximum 0 km. Incomplete runs do not support a group conclusion.
 
-At five days (across the registered fit arcs), 10 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GN, LS; GP x GP reaches 1e-4 in at least one window for DO, GD, LS; arms changing a reachable fraction relative to XP (AP: DO, HE, LS, P, S1, T; F: DO, HE, HX, LS, P, S1, T; S: DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; U: DO, GN, HE, HX, LS, P, S1, T). 20 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GN, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GN, LS, S1; arms changing a reachable fraction relative to XP (AP: DO, HE, HX, P, S1, T; F: DO, HE, HX, P, S1, T; S: DO, GE, GN, HE, HX, IG, LS, P, S1, T; U: DO, HE, LS, P, S1, T). 50 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; arms changing a reachable fraction relative to XP (AP: HX, P, S1, T; F: HE, HX, P, S1, T; S: DO, GE, GN, HE, HX, IG, LS, P, S1, T; U: DO, HE, HX, LS, P, S1, T). 100 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; arms changing a reachable fraction relative to XP (AP: P, S1, T; F: HE, HX, P, S1, T; S: DO, GE, GN, HE, HX, IG, P, S1, T; U: DO, HE, HX, P, S1, T). Every finite nonsingular covariance has positive zero-miss Pc; these are threshold-reach results, not measured alert rates. The table gives each fraction at 1e-4 and 1e-5, including how arms differ. Missing mappings and unfinished runs are not evidence of zero reach. Synthetic encounter rates below describe the registered artificial population and cannot establish operational five-day CA rates.
-
-Arms: AP is the operator-theory propagator, XP is the whiteroom XP fit, U is Space Force XP, S is the SGP4 fit, F is FFM, and GP is a public SGP4 set. AP fits and forecast states use 0.4.0; only its synthetic covariance process-noise table uses shipped 0.4.1, labeled UNVERIFIED. Frozen builds and hashes are in experiments/five-day-ca/config.json, builds.json and covariance-config.json.
+Arms: AP is the operator-theory propagator, XP is the whiteroom XP fit, U is Space Force XP, S is the SGP4 fit, F is FFM, and GP is a public SGP4 set; the hours of the fit arc follow the arm name. Groups: P and T are strong-drag low orbit (Swarm and GRACE-FO; T is the 944 windows of 2025 in AP.md), S1 is Sentinel-1A and 1C, GN is GPS, Galileo and GLONASS in medium Earth orbit, LS laser spheres, DO altimetry satellites, GD laser geodetic satellites above 5,000 km, IG inclined geosynchronous, GE geostationary, HE TESS, HX THEMIS and Chandra. AP fits and forecast states use 0.4.0; only its synthetic covariance process-noise table uses shipped 0.4.1, labeled UNVERIFIED. Frozen builds and hashes are in experiments/five-day-ca/config.json, builds.json and covariance-config.json.
 
 LS and DO day-4/day-5 rows are descriptive: read before the statements were registered. FIVE-DAY.md also discloses earlier partial rows in other groups. Subsequent registration does not turn those rows into prospective evidence. All paired results include these disclosed reads; they are descriptive pending separate provenance accounting. Only aggregates are redistributed.
 
@@ -37,7 +37,7 @@ Every expected arm/arc/day cell, including missing work and counted exclusion re
 
 Six-day replay: 120 scalars, 0 differences, maximum 0 m, 0 rejected. U accepts at most 1 m per scalar because of the library's documented query-order dependence; AP, XP, S and F require exact equality.
 
-E2E FAIL: 540 forecast-statistics cells, 108 AP5 paired cells, 6480 CA-reach cells, 0 synthetic rate cells and 0 paired proper-score cells; 0 missing forecast arm-days. Incomplete: covariance.json unmeasured; encounters.json unmeasured.
+E2E PASS: 540 forecast-statistics cells, 108 AP5 paired cells, 6480 CA-reach cells, 1080 synthetic rate cells and 2160 paired proper-score cells; 0 missing forecast arm-days. All acceptance checks passed.
 
 Staged U replay: 1010 windows, 6032 differing scalars, maximum 0.6253305 m against the 1 m allowance; 0 old-lead differences. Installation provenance is in ussf-install.json.
 
@@ -7182,4 +7182,3329 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | T | F24 | 7 | GP x GP | 50 | 944 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
 | T | F24 | 7 | GP x GP | 100 | 944 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
 
-The synthetic covariance products or paired scores remain incomplete; missing work prevents task acceptance.
+Synthetic fit x fit and fit x GP pairs (GP primary is the repeated GP x GP reference): AP 0.4.1 shipped table UNVERIFIED, XP C2 fairness, FFM C3-small R2/R3 and C2 elsewhere, S RMS STAND-IN, GP age-bin error model. Frozen class constants are transferred to these groups and seven-day leads as documented in COVARIANCE.md. All errors and completed covariances are in common truth RTN axes, rotated by gp-error-model after C2/C3 scaling. Same primary, secondary, angle and miss draws across arms. True miss is log-uniform 10 m–5 km, HBR 20 m, alert at Pc >=1e-4. Missing products and numerical failures are counted, never assigned zero Pc. GP covariance uses actual age since the selected set epoch; ages beyond seven days are outside the frozen model and are excluded. Product coverage: 3156/3156 fitted windows and 3156/3156 GP windows. Complete: true.
+
+| Group | Arc h | Pair class | Arm | Day | Draws | No primary / secondary | Pc failures | n | Hits | Missed per encounter | Missed given hit | False per encounter | False given non-hit | Brier loss | Log loss | Disclosure |
+|---|---:|---|---|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| LS | 24 | fit x fit | AP | 1 | 3359 | 1059/685 | 0 | 1615 | 180 | 0.1114551 | 1 | 0 | 0 | 0.1114551 | 1.865055 |  |
+| LS | 24 | fit x fit | XP | 1 | 3359 | 1059/685 | 0 | 1615 | 180 | 0.008049536 | 0.07222222 | 0.4513932 | 0.5080139 | 0.1111701 | 0.8035879 |  |
+| LS | 24 | fit x fit | F | 1 | 3359 | 1059/685 | 0 | 1615 | 180 | 0.004334365 | 0.03888889 | 0.1164087 | 0.1310105 | 0.06181632 | 0.2776353 |  |
+| LS | 24 | fit x fit | S | 1 | 3359 | 1059/685 | 0 | 1615 | 180 | 0.03839009 | 0.3444444 | 0.3250774 | 0.3658537 | 0.1113453 | 0.9529502 |  |
+| LS | 24 | fit x fit | GP | 1 | 3359 | 682/478 | 0 | 2199 | 260 | 0.01091405 | 0.09230769 | 0.4306503 | 0.4883961 | 0.1177014 | 0.8276056 |  |
+| LS | 24 | fit x fit | AP | 2 | 3298 | 1144/747 | 0 | 1407 | 159 | 0.1130064 | 1 | 0 | 0 | 0.1130064 | 2.047434 |  |
+| LS | 24 | fit x fit | XP | 2 | 3298 | 1144/747 | 0 | 1407 | 159 | 0.007818053 | 0.06918239 | 0.4811656 | 0.5424679 | 0.1128365 | 0.8523506 |  |
+| LS | 24 | fit x fit | F | 2 | 3298 | 1144/747 | 0 | 1407 | 159 | 0.01066098 | 0.09433962 | 0.1464108 | 0.1650641 | 0.0895026 | 0.4760704 |  |
+| LS | 24 | fit x fit | S | 2 | 3298 | 1144/747 | 0 | 1407 | 159 | 0.06680881 | 0.591195 | 0.2046908 | 0.2307692 | 0.1129651 | 1.066256 |  |
+| LS | 24 | fit x fit | GP | 2 | 3298 | 508/441 | 1 | 2348 | 249 | 0.002129472 | 0.02008032 | 0.5212947 | 0.5831348 | 0.105722 | 0.7176252 |  |
+| LS | 24 | fit x fit | AP | 3 | 3362 | 1409/817 | 0 | 1136 | 111 | 0.09771127 | 1 | 0 | 0 | 0.09771127 | 1.84666 |  |
+| LS | 24 | fit x fit | XP | 3 | 3362 | 1409/817 | 0 | 1136 | 111 | 0.009683099 | 0.0990991 | 0.4427817 | 0.4907317 | 0.09762659 | 0.7899983 |  |
+| LS | 24 | fit x fit | F | 3 | 3362 | 1409/817 | 0 | 1136 | 111 | 0.01320423 | 0.1351351 | 0.1734155 | 0.1921951 | 0.08534918 | 0.7607606 |  |
+| LS | 24 | fit x fit | S | 3 | 3362 | 1409/817 | 0 | 1136 | 111 | 0.07306338 | 0.7477477 | 0.1038732 | 0.115122 | 0.09769745 | 0.9945849 |  |
+| LS | 24 | fit x fit | GP | 3 | 3362 | 799/603 | 0 | 1960 | 210 | 0.0005102041 | 0.004761905 | 0.555102 | 0.6217143 | 0.1069478 | 0.7730383 |  |
+| LS | 24 | fit x fit | AP | 4 | 3377 | 989/696 | 0 | 1692 | 181 | 0.106974 | 1 | 0 | 0 | 0.106974 | 2.079621 | read before the statements were registered |
+| LS | 24 | fit x fit | XP | 4 | 3377 | 989/696 | 0 | 1692 | 181 | 0.009456265 | 0.08839779 | 0.4674941 | 0.5234944 | 0.1069033 | 0.8832473 | read before the statements were registered |
+| LS | 24 | fit x fit | F | 4 | 3377 | 989/696 | 0 | 1692 | 181 | 0.01891253 | 0.1767956 | 0.1820331 | 0.2038385 | 0.1006405 | 1.284546 | read before the statements were registered |
+| LS | 24 | fit x fit | S | 4 | 3377 | 989/696 | 0 | 1692 | 181 | 0.09515366 | 0.8895028 | 0.04255319 | 0.04765056 | 0.1069641 | 1.176351 | read before the statements were registered |
+| LS | 24 | fit x fit | GP | 4 | 3377 | 582/486 | 0 | 2309 | 245 | 0.0004330879 | 0.004081633 | 0.5508878 | 0.6162791 | 0.1059306 | 0.7742811 | read before the statements were registered |
+| LS | 24 | fit x fit | AP | 5 | 3296 | 1488/785 | 0 | 1023 | 116 | 0.113392 | 1 | 0 | 0 | 0.113392 | 2.261693 | read before the statements were registered |
+| LS | 24 | fit x fit | XP | 5 | 3296 | 1488/785 | 0 | 1023 | 116 | 0.02346041 | 0.2068966 | 0.4154448 | 0.4685777 | 0.1133409 | 0.9874636 | read before the statements were registered |
+| LS | 24 | fit x fit | F | 5 | 3296 | 1488/785 | 0 | 1023 | 116 | 0.03225806 | 0.2844828 | 0.1798631 | 0.2028666 | 0.1091428 | 1.404599 | read before the statements were registered |
+| LS | 24 | fit x fit | S | 5 | 3296 | 1488/785 | 0 | 1023 | 116 | 0.1085044 | 0.9568966 | 0.02150538 | 0.02425579 | 0.1133867 | 1.329904 | read before the statements were registered |
+| LS | 24 | fit x fit | GP | 5 | 3296 | 902/631 | 0 | 1763 | 209 | 0.00226886 | 0.01913876 | 0.5757232 | 0.6531532 | 0.1184562 | 0.9575359 | read before the statements were registered |
+| LS | 24 | fit x fit | AP | 7 | 3308 | 1184/805 | 0 | 1319 | 137 | 0.1038666 | 1 | 0 | 0 | 0.1038666 | 2.14762 |  |
+| LS | 24 | fit x fit | XP | 7 | 3308 | 1184/805 | 0 | 1319 | 137 | 0.06216831 | 0.5985401 | 0.2289613 | 0.2554992 | 0.1038437 | 0.9721931 |  |
+| LS | 24 | fit x fit | F | 7 | 3308 | 1184/805 | 0 | 1319 | 137 | 0.030326 | 0.2919708 | 0.2001516 | 0.2233503 | 0.1015627 | 1.455981 |  |
+| LS | 24 | fit x fit | S | 7 | 3308 | 1184/805 | 0 | 1319 | 137 | 0.1023503 | 0.9854015 | 0.006065201 | 0.00676819 | 0.1038646 | 1.353497 |  |
+| LS | 24 | fit x fit | GP | 7 | 3308 | 3308/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 24 | fit x GP | AP | 1 | 3359 | 1059/411 | 0 | 1889 | 218 | 0.115405 | 1 | 0 | 0 | 0.1154049 | 1.853467 |  |
+| LS | 24 | fit x GP | XP | 1 | 3359 | 1059/411 | 0 | 1889 | 218 | 0.01005823 | 0.08715596 | 0.4399153 | 0.497307 | 0.1150251 | 0.8195866 |  |
+| LS | 24 | fit x GP | F | 1 | 3359 | 1059/411 | 0 | 1889 | 218 | 0.008999471 | 0.07798165 | 0.3668608 | 0.4147217 | 0.1143263 | 0.7591471 |  |
+| LS | 24 | fit x GP | S | 1 | 3359 | 1059/411 | 0 | 1889 | 218 | 0.02276337 | 0.1972477 | 0.4017999 | 0.454219 | 0.115183 | 0.912998 |  |
+| LS | 24 | fit x GP | GP | 1 | 3359 | 682/478 | 0 | 2199 | 260 | 0.01091405 | 0.09230769 | 0.4306503 | 0.4883961 | 0.1177014 | 0.8276056 |  |
+| LS | 24 | fit x GP | AP | 2 | 3298 | 1144/342 | 0 | 1812 | 203 | 0.1120309 | 1 | 0 | 0 | 0.1120309 | 1.955432 |  |
+| LS | 24 | fit x GP | XP | 2 | 3298 | 1144/342 | 0 | 1812 | 203 | 0.003311258 | 0.02955665 | 0.4966887 | 0.5593536 | 0.1118234 | 0.8145954 |  |
+| LS | 24 | fit x GP | F | 2 | 3298 | 1144/342 | 0 | 1812 | 203 | 0.0005518764 | 0.004926108 | 0.4779249 | 0.5382225 | 0.1113594 | 0.689303 |  |
+| LS | 24 | fit x GP | S | 2 | 3298 | 1144/342 | 0 | 1812 | 203 | 0.03145695 | 0.2807882 | 0.3029801 | 0.3412057 | 0.1119588 | 0.9754195 |  |
+| LS | 24 | fit x GP | GP | 2 | 3298 | 508/441 | 1 | 2348 | 249 | 0.002129472 | 0.02008032 | 0.5212947 | 0.5831348 | 0.105722 | 0.7176252 |  |
+| LS | 24 | fit x GP | AP | 3 | 3362 | 1409/459 | 0 | 1494 | 154 | 0.103079 | 1 | 0 | 0 | 0.103079 | 1.881984 |  |
+| LS | 24 | fit x GP | XP | 3 | 3362 | 1409/459 | 0 | 1494 | 154 | 0.004016064 | 0.03896104 | 0.5100402 | 0.5686567 | 0.1029744 | 0.8118607 |  |
+| LS | 24 | fit x GP | F | 3 | 3362 | 1409/459 | 0 | 1494 | 154 | 0 | 0 | 0.521419 | 0.5813433 | 0.1026708 | 0.663692 |  |
+| LS | 24 | fit x GP | S | 3 | 3362 | 1409/459 | 0 | 1494 | 154 | 0.06425703 | 0.6233766 | 0.1941098 | 0.2164179 | 0.1030423 | 0.9799753 |  |
+| LS | 24 | fit x GP | GP | 3 | 3362 | 799/603 | 0 | 1960 | 210 | 0.0005102041 | 0.004761905 | 0.555102 | 0.6217143 | 0.1069478 | 0.7730383 |  |
+| LS | 24 | fit x GP | AP | 4 | 3377 | 989/410 | 0 | 1978 | 212 | 0.107179 | 1 | 0 | 0 | 0.107179 | 2.0084 | read before the statements were registered |
+| LS | 24 | fit x GP | XP | 4 | 3377 | 989/410 | 0 | 1978 | 212 | 0.003538928 | 0.03301887 | 0.4994944 | 0.5594564 | 0.1070977 | 0.8689998 | read before the statements were registered |
+| LS | 24 | fit x GP | F | 4 | 3377 | 989/410 | 0 | 1978 | 212 | 0.001011122 | 0.009433962 | 0.5293225 | 0.5928652 | 0.1067939 | 0.7084485 | read before the statements were registered |
+| LS | 24 | fit x GP | S | 4 | 3377 | 989/410 | 0 | 1978 | 212 | 0.07886754 | 0.7358491 | 0.1122346 | 0.1257078 | 0.1071579 | 1.081636 | read before the statements were registered |
+| LS | 24 | fit x GP | GP | 4 | 3377 | 582/486 | 0 | 2309 | 245 | 0.0004330879 | 0.004081633 | 0.5508878 | 0.6162791 | 0.1059306 | 0.7742811 | read before the statements were registered |
+| LS | 24 | fit x GP | AP | 5 | 3296 | 1488/465 | 0 | 1343 | 159 | 0.1183917 | 1 | 0 | 0 | 0.1183917 | 2.278197 | read before the statements were registered |
+| LS | 24 | fit x GP | XP | 5 | 3296 | 1488/465 | 0 | 1343 | 159 | 0.01712584 | 0.1446541 | 0.4549516 | 0.5160473 | 0.1183356 | 1.015055 | read before the statements were registered |
+| LS | 24 | fit x GP | F | 5 | 3296 | 1488/465 | 0 | 1343 | 159 | 0.0007446016 | 0.006289308 | 0.5547282 | 0.629223 | 0.1181777 | 0.8616757 | read before the statements were registered |
+| LS | 24 | fit x GP | S | 5 | 3296 | 1488/465 | 0 | 1343 | 159 | 0.1012658 | 0.8553459 | 0.07222636 | 0.08192568 | 0.1183766 | 1.275425 | read before the statements were registered |
+| LS | 24 | fit x GP | GP | 5 | 3296 | 902/631 | 0 | 1763 | 209 | 0.00226886 | 0.01913876 | 0.5757232 | 0.6531532 | 0.1184562 | 0.9575359 | read before the statements were registered |
+| LS | 24 | fit x GP | AP | 7 | 3308 | 1184/2124 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 24 | fit x GP | XP | 7 | 3308 | 1184/2124 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 24 | fit x GP | F | 7 | 3308 | 1184/2124 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 24 | fit x GP | S | 7 | 3308 | 1184/2124 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 24 | fit x GP | GP | 7 | 3308 | 3308/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 72 | fit x fit | AP | 1 | 3330 | 22/25 | 0 | 3283 | 376 | 0.1145294 | 1 | 0 | 0 | 0.1145294 | 1.90863 |  |
+| P | 72 | fit x fit | XP | 1 | 3330 | 22/25 | 0 | 3283 | 376 | 0.08406945 | 0.7340426 | 0.1465123 | 0.1654627 | 0.1145106 | 1.095038 |  |
+| P | 72 | fit x fit | F | 1 | 3330 | 22/25 | 0 | 3283 | 376 | 0.01218398 | 0.106383 | 0.1602193 | 0.1809426 | 0.1116694 | 0.7118458 |  |
+| P | 72 | fit x fit | S | 1 | 3330 | 22/25 | 0 | 3283 | 376 | 0.04325312 | 0.3776596 | 0.3706975 | 0.4186447 | 0.1144643 | 1.027434 |  |
+| P | 72 | fit x fit | GP | 1 | 3330 | 9/13 | 0 | 3308 | 378 | 0.1139661 | 0.9973545 | 0.006348247 | 0.007167235 | 0.114266 | 1.365246 |  |
+| P | 72 | fit x fit | AP | 2 | 3267 | 19/16 | 0 | 3232 | 382 | 0.1181931 | 1 | 0 | 0 | 0.1181931 | 2.13259 |  |
+| P | 72 | fit x fit | XP | 2 | 3267 | 19/16 | 0 | 3232 | 382 | 0.1045792 | 0.8848168 | 0.04610149 | 0.0522807 | 0.1181817 | 1.225846 |  |
+| P | 72 | fit x fit | F | 2 | 3267 | 19/16 | 0 | 3232 | 382 | 0.01516089 | 0.1282723 | 0.1834777 | 0.2080702 | 0.117097 | 0.8615917 |  |
+| P | 72 | fit x fit | S | 2 | 3267 | 19/16 | 0 | 3232 | 382 | 0.08168317 | 0.6910995 | 0.2038985 | 0.2312281 | 0.1181658 | 1.178527 |  |
+| P | 72 | fit x fit | GP | 2 | 3267 | 19/21 | 0 | 3227 | 382 | 0.1183762 | 1 | 0 | 0 | 0.1183758 | 1.769747 |  |
+| P | 72 | fit x fit | AP | 3 | 3468 | 25/22 | 0 | 3421 | 398 | 0.1163403 | 1 | 0 | 0 | 0.1163402 | 2.196863 |  |
+| P | 72 | fit x fit | XP | 3 | 3468 | 25/22 | 0 | 3421 | 398 | 0.1140018 | 0.9798995 | 0.01344636 | 0.01521667 | 0.1163338 | 1.275973 |  |
+| P | 72 | fit x fit | F | 3 | 3468 | 25/22 | 0 | 3421 | 398 | 0.02016954 | 0.1733668 | 0.1897106 | 0.2146874 | 0.1159134 | 0.9045683 |  |
+| P | 72 | fit x fit | S | 3 | 3468 | 25/22 | 0 | 3421 | 398 | 0.1034785 | 0.8894472 | 0.07892429 | 0.08931525 | 0.1163291 | 1.24471 |  |
+| P | 72 | fit x fit | GP | 3 | 3468 | 21/23 | 0 | 3424 | 398 | 0.1162383 | 1 | 0 | 0 | 0.1162382 | 1.984414 |  |
+| P | 72 | fit x fit | AP | 4 | 3400 | 24/16 | 0 | 3360 | 368 | 0.1095238 | 1 | 0 | 0 | 0.1095238 | 2.131026 |  |
+| P | 72 | fit x fit | XP | 4 | 3400 | 24/16 | 0 | 3360 | 368 | 0.1095238 | 1 | 0.0005952381 | 0.0006684492 | 0.1095204 | 1.327167 |  |
+| P | 72 | fit x fit | F | 4 | 3400 | 24/16 | 0 | 3360 | 368 | 0.03154762 | 0.2880435 | 0.172619 | 0.1938503 | 0.1093558 | 0.9803516 |  |
+| P | 72 | fit x fit | S | 4 | 3400 | 24/16 | 0 | 3360 | 368 | 0.1053571 | 0.9619565 | 0.03571429 | 0.04010695 | 0.1095188 | 1.262196 |  |
+| P | 72 | fit x fit | GP | 4 | 3400 | 19/31 | 0 | 3350 | 363 | 0.1083582 | 1 | 0 | 0 | 0.1083581 | 1.858928 |  |
+| P | 72 | fit x fit | AP | 5 | 3349 | 25/20 | 0 | 3304 | 386 | 0.1168281 | 1 | 0 | 0 | 0.1168281 | 2.326912 |  |
+| P | 72 | fit x fit | XP | 5 | 3349 | 25/20 | 0 | 3304 | 386 | 0.1168281 | 1 | 0 | 0 | 0.1168254 | 1.445026 |  |
+| P | 72 | fit x fit | F | 5 | 3349 | 25/20 | 0 | 3304 | 386 | 0.03753027 | 0.3212435 | 0.1646489 | 0.1864291 | 0.1167193 | 1.096771 |  |
+| P | 72 | fit x fit | S | 5 | 3349 | 25/20 | 0 | 3304 | 386 | 0.1156174 | 0.9896373 | 0.01059322 | 0.01199452 | 0.1168246 | 1.381018 |  |
+| P | 72 | fit x fit | GP | 5 | 3349 | 21/36 | 0 | 3292 | 384 | 0.1166464 | 1 | 0 | 0 | 0.1166464 | 2.30773 |  |
+| P | 72 | fit x fit | AP | 7 | 3186 | 18/23 | 0 | 3145 | 359 | 0.1141494 | 1 | 0 | 0 | 0.1141494 | 2.3557 |  |
+| P | 72 | fit x fit | XP | 7 | 3186 | 18/23 | 0 | 3145 | 359 | 0.1141494 | 1 | 0 | 0 | 0.1141483 | 1.674014 |  |
+| P | 72 | fit x fit | F | 7 | 3186 | 18/23 | 0 | 3145 | 359 | 0.07027027 | 0.6155989 | 0.1192369 | 0.1346016 | 0.1141137 | 1.250862 |  |
+| P | 72 | fit x fit | S | 7 | 3186 | 18/23 | 0 | 3145 | 359 | 0.1138315 | 0.9972145 | 0.00190779 | 0.002153625 | 0.1141481 | 1.482498 |  |
+| P | 72 | fit x fit | GP | 7 | 3186 | 3186/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 72 | fit x GP | AP | 1 | 3330 | 22/13 | 0 | 3295 | 377 | 0.1144158 | 1 | 0 | 0 | 0.1144158 | 1.833671 |  |
+| P | 72 | fit x GP | XP | 1 | 3330 | 22/13 | 0 | 3295 | 377 | 0.1107739 | 0.9681698 | 0.01942337 | 0.02193283 | 0.1144105 | 1.291473 |  |
+| P | 72 | fit x GP | F | 1 | 3330 | 22/13 | 0 | 3295 | 377 | 0.1004552 | 0.8779841 | 0.04886191 | 0.05517478 | 0.1144058 | 1.243309 |  |
+| P | 72 | fit x GP | S | 1 | 3330 | 22/13 | 0 | 3295 | 377 | 0.106525 | 0.9310345 | 0.03034901 | 0.03427005 | 0.1144086 | 1.271846 |  |
+| P | 72 | fit x GP | GP | 1 | 3330 | 9/13 | 0 | 3308 | 378 | 0.1139661 | 0.9973545 | 0.006348247 | 0.007167235 | 0.114266 | 1.365246 |  |
+| P | 72 | fit x GP | AP | 2 | 3267 | 19/21 | 0 | 3227 | 382 | 0.1183762 | 1 | 0 | 0 | 0.1183762 | 2.071899 |  |
+| P | 72 | fit x GP | XP | 2 | 3267 | 19/21 | 0 | 3227 | 382 | 0.1183762 | 1 | 0 | 0 | 0.1183747 | 1.62019 |  |
+| P | 72 | fit x GP | F | 2 | 3267 | 19/21 | 0 | 3227 | 382 | 0.116207 | 0.9816754 | 0.007127363 | 0.008084359 | 0.1183737 | 1.598031 |  |
+| P | 72 | fit x GP | S | 2 | 3267 | 19/21 | 0 | 3227 | 382 | 0.1177564 | 0.9947644 | 0.002479083 | 0.002811951 | 0.1183745 | 1.61706 |  |
+| P | 72 | fit x GP | GP | 2 | 3267 | 19/21 | 0 | 3227 | 382 | 0.1183762 | 1 | 0 | 0 | 0.1183758 | 1.769747 |  |
+| P | 72 | fit x GP | AP | 3 | 3468 | 25/23 | 0 | 3420 | 400 | 0.1169591 | 1 | 0 | 0 | 0.1169591 | 2.161736 |  |
+| P | 72 | fit x GP | XP | 3 | 3468 | 25/23 | 0 | 3420 | 400 | 0.1169591 | 1 | 0 | 0 | 0.1169585 | 1.780171 |  |
+| P | 72 | fit x GP | F | 3 | 3468 | 25/23 | 0 | 3420 | 400 | 0.1169591 | 1 | 0 | 0 | 0.1169583 | 1.767215 |  |
+| P | 72 | fit x GP | S | 3 | 3468 | 25/23 | 0 | 3420 | 400 | 0.1169591 | 1 | 0 | 0 | 0.1169585 | 1.78001 |  |
+| P | 72 | fit x GP | GP | 3 | 3468 | 21/23 | 0 | 3424 | 398 | 0.1162383 | 1 | 0 | 0 | 0.1162382 | 1.984414 |  |
+| P | 72 | fit x GP | AP | 4 | 3400 | 24/29 | 0 | 3347 | 365 | 0.1090529 | 1 | 0 | 0 | 0.1090529 | 2.068992 |  |
+| P | 72 | fit x GP | XP | 4 | 3400 | 24/29 | 0 | 3347 | 365 | 0.1090529 | 1 | 0 | 0 | 0.1090524 | 1.693794 |  |
+| P | 72 | fit x GP | F | 4 | 3400 | 24/29 | 0 | 3347 | 365 | 0.1090529 | 1 | 0 | 0 | 0.1090523 | 1.680835 |  |
+| P | 72 | fit x GP | S | 4 | 3400 | 24/29 | 0 | 3347 | 365 | 0.1090529 | 1 | 0 | 0 | 0.1090525 | 1.697201 |  |
+| P | 72 | fit x GP | GP | 4 | 3400 | 19/31 | 0 | 3350 | 363 | 0.1083582 | 1 | 0 | 0 | 0.1083581 | 1.858928 |  |
+| P | 72 | fit x GP | AP | 5 | 3349 | 25/36 | 0 | 3288 | 384 | 0.1167883 | 1 | 0 | 0 | 0.1167883 | 2.346222 |  |
+| P | 72 | fit x GP | XP | 5 | 3349 | 25/36 | 0 | 3288 | 384 | 0.1167883 | 1 | 0 | 0 | 0.1167882 | 2.088436 |  |
+| P | 72 | fit x GP | F | 5 | 3349 | 25/36 | 0 | 3288 | 384 | 0.1167883 | 1 | 0 | 0 | 0.1167882 | 2.086564 |  |
+| P | 72 | fit x GP | S | 5 | 3349 | 25/36 | 0 | 3288 | 384 | 0.1167883 | 1 | 0 | 0 | 0.1167882 | 2.089071 |  |
+| P | 72 | fit x GP | GP | 5 | 3349 | 21/36 | 0 | 3292 | 384 | 0.1166464 | 1 | 0 | 0 | 0.1166464 | 2.30773 |  |
+| P | 72 | fit x GP | AP | 7 | 3186 | 18/3168 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 72 | fit x GP | XP | 7 | 3186 | 18/3168 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 72 | fit x GP | F | 7 | 3186 | 18/3168 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 72 | fit x GP | S | 7 | 3186 | 18/3168 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 72 | fit x GP | GP | 7 | 3186 | 3186/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 72 | fit x fit | AP | 1 | 3326 | 789/626 | 0 | 1911 | 208 | 0.1088435 | 1 | 0 | 0 | 0.1088435 | 1.820027 |  |
+| LS | 72 | fit x fit | XP | 1 | 3326 | 789/626 | 0 | 1911 | 208 | 0.003139717 | 0.02884615 | 0.4599686 | 0.516148 | 0.1085584 | 0.7620604 |  |
+| LS | 72 | fit x fit | F | 1 | 3326 | 789/626 | 0 | 1911 | 208 | 0.005232862 | 0.04807692 | 0.1083203 | 0.1215502 | 0.07806627 | 0.3560363 |  |
+| LS | 72 | fit x fit | S | 1 | 3326 | 789/626 | 0 | 1911 | 208 | 0.007849294 | 0.07211538 | 0.4563056 | 0.5120376 | 0.1085554 | 0.7770107 |  |
+| LS | 72 | fit x fit | GP | 1 | 3326 | 609/546 | 0 | 2171 | 231 | 0.009672962 | 0.09090909 | 0.4058038 | 0.4541237 | 0.105945 | 0.7795875 |  |
+| LS | 72 | fit x fit | AP | 2 | 3444 | 980/700 | 0 | 1764 | 205 | 0.1162132 | 1 | 0 | 0 | 0.1162131 | 2.106313 |  |
+| LS | 72 | fit x fit | XP | 2 | 3444 | 980/700 | 0 | 1764 | 205 | 0.002834467 | 0.02439024 | 0.4954649 | 0.5606158 | 0.1160192 | 0.8573179 |  |
+| LS | 72 | fit x fit | F | 2 | 3444 | 980/700 | 0 | 1764 | 205 | 0.0260771 | 0.2243902 | 0.154195 | 0.1744708 | 0.102867 | 0.992179 |  |
+| LS | 72 | fit x fit | S | 2 | 3444 | 980/700 | 0 | 1764 | 205 | 0.01247166 | 0.1073171 | 0.4824263 | 0.5458627 | 0.1159986 | 0.8707681 |  |
+| LS | 72 | fit x fit | GP | 2 | 3444 | 559/466 | 0 | 2419 | 282 | 0.001653576 | 0.0141844 | 0.5150889 | 0.5830604 | 0.1162311 | 0.7995256 |  |
+| LS | 72 | fit x fit | AP | 3 | 3288 | 1102/706 | 0 | 1480 | 169 | 0.1141892 | 1 | 0 | 0 | 0.1141892 | 2.159585 |  |
+| LS | 72 | fit x fit | XP | 3 | 3288 | 1102/706 | 0 | 1480 | 169 | 0.008108108 | 0.07100592 | 0.475 | 0.5362319 | 0.1140606 | 0.8923765 |  |
+| LS | 72 | fit x fit | F | 3 | 3288 | 1102/706 | 0 | 1480 | 169 | 0.02567568 | 0.2248521 | 0.1486486 | 0.1678108 | 0.1027414 | 1.607885 |  |
+| LS | 72 | fit x fit | S | 3 | 3288 | 1102/706 | 0 | 1480 | 169 | 0.01081081 | 0.09467456 | 0.4466216 | 0.5041953 | 0.1140412 | 0.8971841 |  |
+| LS | 72 | fit x fit | GP | 3 | 3288 | 777/572 | 0 | 1939 | 226 | 0.00103146 | 0.008849558 | 0.5492522 | 0.6217163 | 0.1163442 | 0.8406854 |  |
+| LS | 72 | fit x fit | AP | 4 | 3400 | 964/727 | 0 | 1709 | 186 | 0.1088356 | 1 | 0 | 0 | 0.1088356 | 2.119074 | read before the statements were registered |
+| LS | 72 | fit x fit | XP | 4 | 3400 | 964/727 | 0 | 1709 | 186 | 0.007606788 | 0.06989247 | 0.497952 | 0.5587656 | 0.1087436 | 0.8744189 | read before the statements were registered |
+| LS | 72 | fit x fit | F | 4 | 3400 | 964/727 | 0 | 1709 | 186 | 0.02457578 | 0.2258065 | 0.2059684 | 0.2311228 | 0.1013786 | 1.119927 | read before the statements were registered |
+| LS | 72 | fit x fit | S | 4 | 3400 | 964/727 | 0 | 1709 | 186 | 0.01989468 | 0.1827957 | 0.4318315 | 0.4845699 | 0.1087225 | 0.8847449 | read before the statements were registered |
+| LS | 72 | fit x fit | GP | 4 | 3400 | 561/488 | 0 | 2351 | 262 | 0.002126755 | 0.01908397 | 0.549128 | 0.617999 | 0.1112376 | 0.8069761 | read before the statements were registered |
+| LS | 72 | fit x fit | AP | 5 | 3233 | 1179/709 | 0 | 1345 | 149 | 0.1107807 | 1 | 0 | 0 | 0.1107807 | 2.217528 | read before the statements were registered |
+| LS | 72 | fit x fit | XP | 5 | 3233 | 1179/709 | 0 | 1345 | 149 | 0.02081784 | 0.1879195 | 0.467658 | 0.5259197 | 0.1107264 | 0.9553768 | read before the statements were registered |
+| LS | 72 | fit x fit | F | 5 | 3233 | 1179/709 | 0 | 1345 | 149 | 0.04089219 | 0.3691275 | 0.1866171 | 0.2098662 | 0.1088041 | Infinity | read before the statements were registered |
+| LS | 72 | fit x fit | S | 5 | 3233 | 1179/709 | 0 | 1345 | 149 | 0.03791822 | 0.3422819 | 0.3977695 | 0.4473244 | 0.1107181 | 0.968551 | read before the statements were registered |
+| LS | 72 | fit x fit | GP | 5 | 3233 | 807/612 | 0 | 1814 | 209 | 0.003858875 | 0.03349282 | 0.5826902 | 0.658567 | 0.1151337 | 0.9369233 | read before the statements were registered |
+| LS | 72 | fit x fit | AP | 7 | 3309 | 819/616 | 0 | 1874 | 215 | 0.1147279 | 1 | 0 | 0 | 0.1147279 | 2.36569 |  |
+| LS | 72 | fit x fit | XP | 7 | 3309 | 819/616 | 0 | 1874 | 215 | 0.03788687 | 0.3302326 | 0.3500534 | 0.3954189 | 0.1146913 | 1.035694 |  |
+| LS | 72 | fit x fit | F | 7 | 3309 | 819/616 | 0 | 1874 | 215 | 0.05602988 | 0.4883721 | 0.1504803 | 0.1699819 | 0.1126859 | 2.564512 |  |
+| LS | 72 | fit x fit | S | 7 | 3309 | 819/616 | 0 | 1874 | 215 | 0.05923159 | 0.5162791 | 0.266809 | 0.3013864 | 0.1146864 | 1.051604 |  |
+| LS | 72 | fit x fit | GP | 7 | 3309 | 3309/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 72 | fit x GP | AP | 1 | 3326 | 789/507 | 0 | 2030 | 217 | 0.1068966 | 1 | 0 | 0 | 0.1068965 | 1.713633 |  |
+| LS | 72 | fit x GP | XP | 1 | 3326 | 789/507 | 0 | 2030 | 217 | 0.00591133 | 0.05529954 | 0.4374384 | 0.4897959 | 0.1065601 | 0.7458942 |  |
+| LS | 72 | fit x GP | F | 1 | 3326 | 789/507 | 0 | 2030 | 217 | 0.01477833 | 0.1382488 | 0.3448276 | 0.3861004 | 0.1059764 | 0.7856772 |  |
+| LS | 72 | fit x GP | S | 1 | 3326 | 789/507 | 0 | 2030 | 217 | 0.008374384 | 0.07834101 | 0.4300493 | 0.4815223 | 0.1065483 | 0.7571389 |  |
+| LS | 72 | fit x GP | GP | 1 | 3326 | 609/546 | 0 | 2171 | 231 | 0.009672962 | 0.09090909 | 0.4058038 | 0.4541237 | 0.105945 | 0.7795875 |  |
+| LS | 72 | fit x GP | AP | 2 | 3444 | 980/411 | 0 | 2053 | 229 | 0.1115441 | 1 | 0 | 0 | 0.1115441 | 1.945295 |  |
+| LS | 72 | fit x GP | XP | 2 | 3444 | 980/411 | 0 | 2053 | 229 | 0.00243546 | 0.02183406 | 0.5124208 | 0.5767544 | 0.1113183 | 0.8023254 |  |
+| LS | 72 | fit x GP | F | 2 | 3444 | 980/411 | 0 | 2053 | 229 | 0.001461276 | 0.01310044 | 0.4783244 | 0.5383772 | 0.1108304 | 0.6864085 |  |
+| LS | 72 | fit x GP | S | 2 | 3444 | 980/411 | 0 | 2053 | 229 | 0.004870921 | 0.04366812 | 0.4987823 | 0.5614035 | 0.1112754 | 0.80025 |  |
+| LS | 72 | fit x GP | GP | 2 | 3444 | 559/466 | 0 | 2419 | 282 | 0.001653576 | 0.0141844 | 0.5150889 | 0.5830604 | 0.1162311 | 0.7995256 |  |
+| LS | 72 | fit x GP | AP | 3 | 3288 | 1102/490 | 0 | 1696 | 196 | 0.115566 | 1 | 0 | 0 | 0.115566 | 2.108742 |  |
+| LS | 72 | fit x GP | XP | 3 | 3288 | 1102/490 | 0 | 1696 | 196 | 0.004716981 | 0.04081633 | 0.5147406 | 0.582 | 0.1154222 | 0.8809226 |  |
+| LS | 72 | fit x GP | F | 3 | 3288 | 1102/490 | 0 | 1696 | 196 | 0 | 0 | 0.5165094 | 0.584 | 0.1151037 | 0.7437052 |  |
+| LS | 72 | fit x GP | S | 3 | 3288 | 1102/490 | 0 | 1696 | 196 | 0.002948113 | 0.0255102 | 0.5123821 | 0.5793333 | 0.1153828 | 0.8633467 |  |
+| LS | 72 | fit x GP | GP | 3 | 3288 | 777/572 | 0 | 1939 | 226 | 0.00103146 | 0.008849558 | 0.5492522 | 0.6217163 | 0.1163442 | 0.8406854 |  |
+| LS | 72 | fit x GP | AP | 4 | 3400 | 964/418 | 0 | 2018 | 223 | 0.1105055 | 1 | 0 | 0 | 0.1105054 | 2.075769 | read before the statements were registered |
+| LS | 72 | fit x GP | XP | 4 | 3400 | 964/418 | 0 | 2018 | 223 | 0.009415263 | 0.08520179 | 0.5113974 | 0.5749304 | 0.110397 | 0.8715564 | read before the statements were registered |
+| LS | 72 | fit x GP | F | 4 | 3400 | 964/418 | 0 | 2018 | 223 | 0 | 0 | 0.5287413 | 0.594429 | 0.1101109 | 0.7303919 | read before the statements were registered |
+| LS | 72 | fit x GP | S | 4 | 3400 | 964/418 | 0 | 2018 | 223 | 0.009910803 | 0.0896861 | 0.4985134 | 0.5604457 | 0.1103631 | 0.857602 | read before the statements were registered |
+| LS | 72 | fit x GP | GP | 4 | 3400 | 561/488 | 0 | 2351 | 262 | 0.002126755 | 0.01908397 | 0.549128 | 0.617999 | 0.1112376 | 0.8069761 | read before the statements were registered |
+| LS | 72 | fit x GP | AP | 5 | 3233 | 1179/517 | 0 | 1537 | 183 | 0.1190631 | 1 | 0 | 0 | 0.1190631 | 2.302384 | read before the statements were registered |
+| LS | 72 | fit x GP | XP | 5 | 3233 | 1179/517 | 0 | 1537 | 183 | 0.01366298 | 0.1147541 | 0.5237476 | 0.5945347 | 0.1190017 | 1.010176 | read before the statements were registered |
+| LS | 72 | fit x GP | F | 5 | 3233 | 1179/517 | 0 | 1537 | 183 | 0.001301236 | 0.01092896 | 0.5849057 | 0.6639586 | 0.1188708 | 0.8754141 | read before the statements were registered |
+| LS | 72 | fit x GP | S | 5 | 3233 | 1179/517 | 0 | 1537 | 183 | 0.02537411 | 0.2131148 | 0.4723487 | 0.5361891 | 0.1189884 | 1.003025 | read before the statements were registered |
+| LS | 72 | fit x GP | GP | 5 | 3233 | 807/612 | 0 | 1814 | 209 | 0.003858875 | 0.03349282 | 0.5826902 | 0.658567 | 0.1151337 | 0.9369233 | read before the statements were registered |
+| LS | 72 | fit x GP | AP | 7 | 3309 | 819/2490 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 72 | fit x GP | XP | 7 | 3309 | 819/2490 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 72 | fit x GP | F | 7 | 3309 | 819/2490 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 72 | fit x GP | S | 7 | 3309 | 819/2490 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| LS | 72 | fit x GP | GP | 7 | 3309 | 3309/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 24 | fit x fit | AP | 1 | 3387 | 287/256 | 0 | 2844 | 333 | 0.1170886 | 1 | 0 | 0 | 0.1170886 | 1.960774 |  |
+| S1 | 24 | fit x fit | XP | 1 | 3387 | 287/256 | 0 | 2844 | 333 | 0.004571027 | 0.03903904 | 0.5098453 | 0.5774592 | 0.1168275 | 0.8459856 |  |
+| S1 | 24 | fit x fit | F | 1 | 3387 | 287/256 | 0 | 2844 | 333 | 0.05098453 | 0.4354354 | 0.05344585 | 0.06053365 | 0.092431 | Infinity |  |
+| S1 | 24 | fit x fit | S | 1 | 3387 | 287/256 | 0 | 2844 | 333 | 0.00281294 | 0.02402402 | 0.5256681 | 0.5953803 | 0.1169737 | 0.92227 |  |
+| S1 | 24 | fit x fit | GP | 1 | 3387 | 146/140 | 0 | 3101 | 363 | 0.01902612 | 0.1625344 | 0.4559819 | 0.5164354 | 0.1168776 | 1.049093 |  |
+| S1 | 24 | fit x fit | AP | 2 | 3240 | 299/301 | 0 | 2640 | 296 | 0.1121212 | 1 | 0 | 0 | 0.1121212 | 2.031148 |  |
+| S1 | 24 | fit x fit | XP | 2 | 3240 | 299/301 | 0 | 2640 | 296 | 0.01666667 | 0.1486486 | 0.4424242 | 0.4982935 | 0.1120083 | 0.9560878 |  |
+| S1 | 24 | fit x fit | F | 2 | 3240 | 299/301 | 0 | 2640 | 296 | 0.05909091 | 0.527027 | 0.05909091 | 0.0665529 | 0.1072014 | Infinity |  |
+| S1 | 24 | fit x fit | S | 2 | 3240 | 299/301 | 0 | 2640 | 296 | 0.06704545 | 0.597973 | 0.219697 | 0.2474403 | 0.1120918 | 1.03796 |  |
+| S1 | 24 | fit x fit | GP | 2 | 3240 | 150/141 | 0 | 2949 | 322 | 0.03221431 | 0.2950311 | 0.3574093 | 0.4012181 | 0.1090813 | 1.088808 |  |
+| S1 | 24 | fit x fit | AP | 3 | 3389 | 307/265 | 0 | 2817 | 324 | 0.115016 | 1 | 0 | 0 | 0.115016 | 2.171932 |  |
+| S1 | 24 | fit x fit | XP | 3 | 3389 | 307/265 | 0 | 2817 | 324 | 0.02910898 | 0.2530864 | 0.3564075 | 0.4027276 | 0.114952 | 0.9997716 |  |
+| S1 | 24 | fit x fit | F | 3 | 3389 | 307/265 | 0 | 2817 | 324 | 0.05005325 | 0.4351852 | 0.07561235 | 0.08543923 | 0.1121024 | Infinity |  |
+| S1 | 24 | fit x fit | S | 3 | 3389 | 307/265 | 0 | 2817 | 324 | 0.1075612 | 0.9351852 | 0.03549876 | 0.04011231 | 0.1150069 | 1.200718 |  |
+| S1 | 24 | fit x fit | GP | 3 | 3389 | 157/123 | 0 | 3109 | 353 | 0.04631714 | 0.407932 | 0.3345127 | 0.3773585 | 0.1134848 | 1.098085 |  |
+| S1 | 24 | fit x fit | AP | 4 | 3300 | 291/300 | 0 | 2709 | 315 | 0.1162791 | 1 | 0 | 0 | 0.1162791 | 2.267 |  |
+| S1 | 24 | fit x fit | XP | 4 | 3300 | 291/300 | 0 | 2709 | 315 | 0.06127722 | 0.5269841 | 0.2465855 | 0.2790309 | 0.1162496 | 1.126489 |  |
+| S1 | 24 | fit x fit | F | 4 | 3300 | 291/300 | 0 | 2709 | 315 | 0.04835733 | 0.415873 | 0.08194906 | 0.09273183 | 0.1146436 | Infinity |  |
+| S1 | 24 | fit x fit | S | 4 | 3300 | 291/300 | 0 | 2709 | 315 | 0.1155408 | 0.9936508 | 0.004060539 | 0.00459482 | 0.1162749 | 1.296269 |  |
+| S1 | 24 | fit x fit | GP | 4 | 3300 | 148/148 | 0 | 3004 | 344 | 0.07057257 | 0.6162791 | 0.2473369 | 0.2793233 | 0.1144828 | 1.347412 |  |
+| S1 | 24 | fit x fit | AP | 5 | 3289 | 308/272 | 0 | 2709 | 320 | 0.1181248 | 1 | 0 | 0 | 0.1181248 | 2.355371 |  |
+| S1 | 24 | fit x fit | XP | 5 | 3289 | 308/272 | 0 | 2709 | 320 | 0.09043928 | 0.765625 | 0.1229236 | 0.1393889 | 0.1181046 | 1.235081 |  |
+| S1 | 24 | fit x fit | F | 5 | 3289 | 308/272 | 0 | 2709 | 320 | 0.05131045 | 0.434375 | 0.08822444 | 0.1000419 | 0.1168305 | Infinity |  |
+| S1 | 24 | fit x fit | S | 5 | 3289 | 308/272 | 0 | 2709 | 320 | 0.1181248 | 1 | 0 | 0 | 0.1181228 | 1.430727 |  |
+| S1 | 24 | fit x fit | GP | 5 | 3289 | 152/147 | 0 | 2990 | 354 | 0.07324415 | 0.6186441 | 0.2060201 | 0.2336874 | 0.1183694 | 1.295738 |  |
+| S1 | 24 | fit x fit | AP | 7 | 3395 | 297/290 | 0 | 2808 | 333 | 0.1185897 | 1 | 0 | 0 | 0.1185897 | 2.444354 |  |
+| S1 | 24 | fit x fit | XP | 7 | 3395 | 297/290 | 0 | 2808 | 333 | 0.1125356 | 0.9489489 | 0.03098291 | 0.03515152 | 0.1185824 | 1.344808 |  |
+| S1 | 24 | fit x fit | F | 7 | 3395 | 297/290 | 0 | 2808 | 333 | 0.05021368 | 0.4234234 | 0.08760684 | 0.09939394 | 0.1179279 | Infinity |  |
+| S1 | 24 | fit x fit | S | 7 | 3395 | 297/290 | 0 | 2808 | 333 | 0.1185897 | 1 | 0 | 0 | 0.1185893 | 1.592259 |  |
+| S1 | 24 | fit x fit | GP | 7 | 3395 | 3395/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 24 | fit x GP | AP | 1 | 3387 | 287/128 | 0 | 2972 | 352 | 0.1184388 | 1 | 0 | 0 | 0.1184387 | 1.90176 |  |
+| S1 | 24 | fit x GP | XP | 1 | 3387 | 287/128 | 0 | 2972 | 352 | 0.09690444 | 0.8181818 | 0.1053163 | 0.1194656 | 0.1184074 | 1.554362 |  |
+| S1 | 24 | fit x GP | F | 1 | 3387 | 287/128 | 0 | 2972 | 352 | 0.02018843 | 0.1704545 | 0.4158816 | 0.4717557 | 0.1180753 | 0.9935526 |  |
+| S1 | 24 | fit x GP | S | 1 | 3387 | 287/128 | 0 | 2972 | 352 | 0.05652759 | 0.4772727 | 0.2765814 | 0.3137405 | 0.1183905 | 1.079727 |  |
+| S1 | 24 | fit x GP | GP | 1 | 3387 | 146/140 | 0 | 3101 | 363 | 0.01902612 | 0.1625344 | 0.4559819 | 0.5164354 | 0.1168776 | 1.049093 |  |
+| S1 | 24 | fit x GP | AP | 2 | 3240 | 299/132 | 0 | 2809 | 313 | 0.1114276 | 1 | 0 | 0 | 0.1114275 | 1.941459 |  |
+| S1 | 24 | fit x GP | XP | 2 | 3240 | 299/132 | 0 | 2809 | 313 | 0.1089356 | 0.9776358 | 0.01851193 | 0.02083333 | 0.111425 | 2.28991 |  |
+| S1 | 24 | fit x GP | F | 2 | 3240 | 299/132 | 0 | 2809 | 313 | 0.03702385 | 0.3322684 | 0.3317907 | 0.3733974 | 0.1112442 | 1.176784 |  |
+| S1 | 24 | fit x GP | S | 2 | 3240 | 299/132 | 0 | 2809 | 313 | 0.09362763 | 0.8402556 | 0.09291563 | 0.1045673 | 0.1114131 | 1.124991 |  |
+| S1 | 24 | fit x GP | GP | 2 | 3240 | 150/141 | 0 | 2949 | 322 | 0.03221431 | 0.2950311 | 0.3574093 | 0.4012181 | 0.1090813 | 1.088808 |  |
+| S1 | 24 | fit x GP | AP | 3 | 3389 | 307/117 | 0 | 2965 | 338 | 0.1139966 | 1 | 0 | 0 | 0.1139966 | 2.075033 |  |
+| S1 | 24 | fit x GP | XP | 3 | 3389 | 307/117 | 0 | 2965 | 338 | 0.1136594 | 0.9970414 | 0.01045531 | 0.01180053 | 0.1139963 | 2.720576 |  |
+| S1 | 24 | fit x GP | F | 3 | 3389 | 307/117 | 0 | 2965 | 338 | 0.02934233 | 0.2573964 | 0.3524452 | 0.3977922 | 0.1138925 | 1.068696 |  |
+| S1 | 24 | fit x GP | S | 3 | 3389 | 307/117 | 0 | 2965 | 338 | 0.1099494 | 0.964497 | 0.01989882 | 0.02245908 | 0.1139906 | 1.251691 |  |
+| S1 | 24 | fit x GP | GP | 3 | 3389 | 157/123 | 0 | 3109 | 353 | 0.04631714 | 0.407932 | 0.3345127 | 0.3773585 | 0.1134848 | 1.098085 |  |
+| S1 | 24 | fit x GP | AP | 4 | 3300 | 291/139 | 0 | 2870 | 330 | 0.1149826 | 1 | 0 | 0 | 0.1149826 | 2.162614 |  |
+| S1 | 24 | fit x GP | XP | 4 | 3300 | 291/139 | 0 | 2870 | 330 | 0.1146341 | 0.9969697 | 0.001393728 | 0.001574803 | 0.1149825 | 3.153791 |  |
+| S1 | 24 | fit x GP | F | 4 | 3300 | 291/139 | 0 | 2870 | 330 | 0.05749129 | 0.5 | 0.2721254 | 0.3074803 | 0.114924 | 1.326583 |  |
+| S1 | 24 | fit x GP | S | 4 | 3300 | 291/139 | 0 | 2870 | 330 | 0.1149826 | 1 | 0.001393728 | 0.001574803 | 0.1149799 | 1.356922 |  |
+| S1 | 24 | fit x GP | GP | 4 | 3300 | 148/148 | 0 | 3004 | 344 | 0.07057257 | 0.6162791 | 0.2473369 | 0.2793233 | 0.1144828 | 1.347412 |  |
+| S1 | 24 | fit x GP | AP | 5 | 3289 | 308/145 | 0 | 2836 | 334 | 0.1177715 | 1 | 0 | 0 | 0.1177715 | 2.267135 |  |
+| S1 | 24 | fit x GP | XP | 5 | 3289 | 308/145 | 0 | 2836 | 334 | 0.1177715 | 1 | 0 | 0 | 0.1177715 | 3.298835 |  |
+| S1 | 24 | fit x GP | F | 5 | 3289 | 308/145 | 0 | 2836 | 334 | 0.05888575 | 0.5 | 0.2782087 | 0.3153477 | 0.11773 | 1.263755 |  |
+| S1 | 24 | fit x GP | S | 5 | 3289 | 308/145 | 0 | 2836 | 334 | 0.1177715 | 1 | 0 | 0 | 0.11777 | 1.477098 |  |
+| S1 | 24 | fit x GP | GP | 5 | 3289 | 152/147 | 0 | 2990 | 354 | 0.07324415 | 0.6186441 | 0.2060201 | 0.2336874 | 0.1183694 | 1.295738 |  |
+| S1 | 24 | fit x GP | AP | 7 | 3395 | 297/3098 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 24 | fit x GP | XP | 7 | 3395 | 297/3098 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 24 | fit x GP | F | 7 | 3395 | 297/3098 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 24 | fit x GP | S | 7 | 3395 | 297/3098 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 24 | fit x GP | GP | 7 | 3395 | 3395/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 24 | fit x fit | AP | 1 | 3400 | 316/299 | 0 | 2785 | 302 | 0.1084381 | 1 | 0 | 0 | 0.108438 | 1.831717 |  |
+| DO | 24 | fit x fit | XP | 1 | 3400 | 316/299 | 0 | 2785 | 302 | 0.01508079 | 0.1390728 | 0.4129264 | 0.4631494 | 0.1082146 | Infinity |  |
+| DO | 24 | fit x fit | F | 1 | 3400 | 316/299 | 0 | 2785 | 302 | 0.01220826 | 0.1125828 | 0.09012567 | 0.1010874 | 0.0557001 | Infinity |  |
+| DO | 24 | fit x fit | S | 1 | 3400 | 316/299 | 0 | 2785 | 302 | 0.03734291 | 0.3443709 | 0.3385996 | 0.3797825 | 0.1083309 | 0.9606297 |  |
+| DO | 24 | fit x fit | GP | 1 | 3400 | 315/303 | 0 | 2782 | 302 | 0.02659957 | 0.2450331 | 0.36844 | 0.4133065 | 0.1082265 | Infinity |  |
+| DO | 24 | fit x fit | AP | 2 | 3305 | 393/354 | 0 | 2558 | 311 | 0.1215794 | 1 | 0 | 0 | 0.1215794 | 2.254344 |  |
+| DO | 24 | fit x fit | XP | 2 | 3305 | 393/354 | 0 | 2558 | 311 | 0.03401095 | 0.2797428 | 0.3815481 | 0.4343569 | 0.1214533 | Infinity |  |
+| DO | 24 | fit x fit | F | 2 | 3305 | 393/354 | 0 | 2558 | 311 | 0.02423769 | 0.1993569 | 0.09929633 | 0.1130396 | 0.09609761 | Infinity |  |
+| DO | 24 | fit x fit | S | 2 | 3305 | 393/354 | 0 | 2558 | 311 | 0.08717748 | 0.7170418 | 0.1790461 | 0.2038273 | 0.1215477 | 1.274102 |  |
+| DO | 24 | fit x fit | GP | 2 | 3305 | 394/356 | 0 | 2555 | 313 | 0.03483366 | 0.284345 | 0.3796477 | 0.4326494 | 0.1223066 | Infinity |  |
+| DO | 24 | fit x fit | AP | 3 | 3398 | 646/553 | 0 | 2199 | 242 | 0.11005 | 1 | 0 | 0 | 0.11005 | 2.100094 |  |
+| DO | 24 | fit x fit | XP | 3 | 3398 | 646/553 | 0 | 2199 | 242 | 0.03728968 | 0.338843 | 0.3460664 | 0.3888605 | 0.1099814 | Infinity |  |
+| DO | 24 | fit x fit | F | 3 | 3398 | 646/553 | 0 | 2199 | 242 | 0.03456116 | 0.3140496 | 0.09004093 | 0.1011753 | 0.09954883 | Infinity |  |
+| DO | 24 | fit x fit | S | 3 | 3398 | 646/553 | 0 | 2199 | 242 | 0.09276944 | 0.8429752 | 0.07457935 | 0.08380174 | 0.1100345 | 1.20369 |  |
+| DO | 24 | fit x fit | GP | 3 | 3398 | 644/558 | 0 | 2196 | 239 | 0.02959927 | 0.2719665 | 0.3875228 | 0.4348493 | 0.1087283 | Infinity |  |
+| DO | 24 | fit x fit | AP | 4 | 3302 | 860/640 | 0 | 1802 | 215 | 0.1193119 | 1 | 0 | 0 | 0.1193119 | 2.386959 | read before the statements were registered |
+| DO | 24 | fit x fit | XP | 4 | 3302 | 860/640 | 0 | 1802 | 215 | 0.05438402 | 0.455814 | 0.3174251 | 0.3604285 | 0.1192701 | Infinity | read before the statements were registered |
+| DO | 24 | fit x fit | F | 4 | 3302 | 860/640 | 0 | 1802 | 215 | 0.04328524 | 0.3627907 | 0.09933407 | 0.1127914 | 0.1134975 | Infinity | read before the statements were registered |
+| DO | 24 | fit x fit | S | 4 | 3302 | 860/640 | 0 | 1802 | 215 | 0.1126526 | 0.944186 | 0.03052164 | 0.03465658 | 0.1193054 | 1.406626 | read before the statements were registered |
+| DO | 24 | fit x fit | GP | 4 | 3302 | 882/651 | 0 | 1769 | 210 | 0.04974562 | 0.4190476 | 0.3663086 | 0.4156511 | 0.1186389 | Infinity | read before the statements were registered |
+| DO | 24 | fit x fit | AP | 5 | 3277 | 831/675 | 0 | 1771 | 216 | 0.121965 | 1 | 0 | 0 | 0.121965 | 2.465571 | read before the statements were registered |
+| DO | 24 | fit x fit | XP | 5 | 3277 | 831/675 | 0 | 1771 | 216 | 0.06662902 | 0.5462963 | 0.2089215 | 0.2379421 | 0.121934 | Infinity | read before the statements were registered |
+| DO | 24 | fit x fit | F | 5 | 3277 | 831/675 | 0 | 1771 | 216 | 0.05420666 | 0.4444444 | 0.08413326 | 0.09581994 | 0.1191097 | Infinity | read before the statements were registered |
+| DO | 24 | fit x fit | S | 5 | 3277 | 831/675 | 0 | 1771 | 216 | 0.1197064 | 0.9814815 | 0.01411632 | 0.01607717 | 0.1219614 | 1.483615 | read before the statements were registered |
+| DO | 24 | fit x fit | GP | 5 | 3277 | 853/681 | 0 | 1743 | 214 | 0.06081469 | 0.4953271 | 0.296615 | 0.3381295 | 0.1227411 | Infinity | read before the statements were registered |
+| DO | 24 | fit x fit | AP | 7 | 3318 | 992/753 | 0 | 1573 | 179 | 0.1137953 | 1 | 0 | 0 | 0.1137953 | 2.386262 |  |
+| DO | 24 | fit x fit | XP | 7 | 3318 | 992/753 | 0 | 1573 | 179 | 0.093452 | 0.8212291 | 0.1093452 | 0.1233859 | 0.1137811 | Infinity |  |
+| DO | 24 | fit x fit | F | 7 | 3318 | 992/753 | 0 | 1573 | 179 | 0.06675143 | 0.5865922 | 0.09090909 | 0.1025825 | 0.1126748 | Infinity |  |
+| DO | 24 | fit x fit | S | 7 | 3318 | 992/753 | 0 | 1573 | 179 | 0.1137953 | 1 | 0.001907184 | 0.00215208 | 0.1137939 | 1.52239 |  |
+| DO | 24 | fit x fit | GP | 7 | 3318 | 3318/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 24 | fit x GP | AP | 1 | 3400 | 316/302 | 0 | 2782 | 303 | 0.1089145 | 1 | 0 | 0 | 0.1089144 | 1.78885 |  |
+| DO | 24 | fit x GP | XP | 1 | 3400 | 316/302 | 0 | 2782 | 303 | 0.01617541 | 0.1485149 | 0.3986341 | 0.4473578 | 0.1086685 | Infinity |  |
+| DO | 24 | fit x GP | F | 1 | 3400 | 316/302 | 0 | 2782 | 303 | 0.02408339 | 0.2211221 | 0.3378864 | 0.3791852 | 0.1081994 | Infinity |  |
+| DO | 24 | fit x GP | S | 1 | 3400 | 316/302 | 0 | 2782 | 303 | 0.02875629 | 0.2640264 | 0.3562185 | 0.399758 | 0.1087599 | Infinity |  |
+| DO | 24 | fit x GP | GP | 1 | 3400 | 315/303 | 0 | 2782 | 302 | 0.02659957 | 0.2450331 | 0.36844 | 0.4133065 | 0.1082265 | Infinity |  |
+| DO | 24 | fit x GP | AP | 2 | 3305 | 393/356 | 0 | 2556 | 312 | 0.1220657 | 1 | 0 | 0 | 0.1220657 | 2.298803 |  |
+| DO | 24 | fit x GP | XP | 2 | 3305 | 393/356 | 0 | 2556 | 312 | 0.0301252 | 0.2467949 | 0.3928013 | 0.4474153 | 0.1219389 | Infinity |  |
+| DO | 24 | fit x GP | F | 2 | 3305 | 393/356 | 0 | 2556 | 312 | 0.02973396 | 0.2435897 | 0.3822379 | 0.4353832 | 0.1216876 | Infinity |  |
+| DO | 24 | fit x GP | S | 2 | 3305 | 393/356 | 0 | 2556 | 312 | 0.06259781 | 0.5128205 | 0.2378717 | 0.2709447 | 0.1219941 | Infinity |  |
+| DO | 24 | fit x GP | GP | 2 | 3305 | 394/356 | 0 | 2555 | 313 | 0.03483366 | 0.284345 | 0.3796477 | 0.4326494 | 0.1223066 | Infinity |  |
+| DO | 24 | fit x GP | AP | 3 | 3398 | 646/558 | 0 | 2194 | 239 | 0.1089335 | 1 | 0 | 0 | 0.1089335 | 2.070548 |  |
+| DO | 24 | fit x GP | XP | 3 | 3398 | 646/558 | 0 | 2194 | 239 | 0.03783045 | 0.3472803 | 0.3582498 | 0.402046 | 0.1088627 | Infinity |  |
+| DO | 24 | fit x GP | F | 3 | 3398 | 646/558 | 0 | 2194 | 239 | 0.023701 | 0.2175732 | 0.3837739 | 0.4306905 | 0.1086845 | Infinity |  |
+| DO | 24 | fit x GP | S | 3 | 3398 | 646/558 | 0 | 2194 | 239 | 0.08249772 | 0.7573222 | 0.1453965 | 0.1631714 | 0.1089073 | Infinity |  |
+| DO | 24 | fit x GP | GP | 3 | 3398 | 644/558 | 0 | 2196 | 239 | 0.02959927 | 0.2719665 | 0.3875228 | 0.4348493 | 0.1087283 | Infinity |  |
+| DO | 24 | fit x GP | AP | 4 | 3302 | 860/658 | 0 | 1784 | 213 | 0.1193946 | 1 | 0 | 0 | 0.1193946 | 2.712681 | read before the statements were registered |
+| DO | 24 | fit x GP | XP | 4 | 3302 | 860/658 | 0 | 1784 | 213 | 0.05661435 | 0.4741784 | 0.3122197 | 0.3545512 | 0.1193518 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | F | 4 | 3302 | 860/658 | 0 | 1784 | 213 | 0.03811659 | 0.3192488 | 0.3699552 | 0.4201146 | 0.1192431 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | S | 4 | 3302 | 860/658 | 0 | 1784 | 213 | 0.1059417 | 0.8873239 | 0.09192825 | 0.1043921 | 0.1193814 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | GP | 4 | 3302 | 882/651 | 0 | 1769 | 210 | 0.04974562 | 0.4190476 | 0.3663086 | 0.4156511 | 0.1186389 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | AP | 5 | 3277 | 831/688 | 0 | 1758 | 214 | 0.1217292 | 1 | 0 | 0 | 0.1217292 | 2.705261 | read before the statements were registered |
+| DO | 24 | fit x GP | XP | 5 | 3277 | 831/688 | 0 | 1758 | 214 | 0.0705347 | 0.5794393 | 0.2189989 | 0.2493523 | 0.1217002 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | F | 5 | 3277 | 831/688 | 0 | 1758 | 214 | 0.04948805 | 0.4065421 | 0.3282139 | 0.3737047 | 0.1216569 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | S | 5 | 3277 | 831/688 | 0 | 1758 | 214 | 0.1143345 | 0.9392523 | 0.0403868 | 0.04598446 | 0.1217231 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | GP | 5 | 3277 | 853/681 | 0 | 1743 | 214 | 0.06081469 | 0.4953271 | 0.296615 | 0.3381295 | 0.1227411 | Infinity | read before the statements were registered |
+| DO | 24 | fit x GP | AP | 7 | 3318 | 992/2326 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 24 | fit x GP | XP | 7 | 3318 | 992/2326 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 24 | fit x GP | F | 7 | 3318 | 992/2326 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 24 | fit x GP | S | 7 | 3318 | 992/2326 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 24 | fit x GP | GP | 7 | 3318 | 3318/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 72 | fit x fit | AP | 1 | 3322 | 438/401 | 0 | 2483 | 259 | 0.1043093 | 1 | 0 | 0 | 0.1043093 | 1.741585 |  |
+| S1 | 72 | fit x fit | XP | 1 | 3322 | 438/401 | 0 | 2483 | 259 | 0.007249295 | 0.06949807 | 0.5114781 | 0.5710432 | 0.1040275 | 0.7540453 |  |
+| S1 | 72 | fit x fit | F | 1 | 3322 | 438/401 | 0 | 2483 | 259 | 0.07289569 | 0.6988417 | 0.05678615 | 0.06339928 | 0.09764509 | Infinity |  |
+| S1 | 72 | fit x fit | S | 1 | 3322 | 438/401 | 0 | 2483 | 259 | 0.006443818 | 0.06177606 | 0.5191301 | 0.5795863 | 0.1041304 | 0.7819708 |  |
+| S1 | 72 | fit x fit | GP | 1 | 3322 | 133/144 | 0 | 3045 | 310 | 0.01740558 | 0.1709677 | 0.4646962 | 0.5173675 | 0.1016389 | 0.882882 |  |
+| S1 | 72 | fit x fit | AP | 2 | 3323 | 475/429 | 0 | 2419 | 284 | 0.1174039 | 1 | 0 | 0 | 0.1174039 | 2.127288 |  |
+| S1 | 72 | fit x fit | XP | 2 | 3323 | 475/429 | 0 | 2419 | 284 | 0.008267879 | 0.07042254 | 0.4782968 | 0.5419204 | 0.1172123 | 0.9728759 |  |
+| S1 | 72 | fit x fit | F | 2 | 3323 | 475/429 | 0 | 2419 | 284 | 0.05952873 | 0.5070423 | 0.07771807 | 0.08805621 | 0.1136429 | 3.709082 |  |
+| S1 | 72 | fit x fit | S | 2 | 3323 | 475/429 | 0 | 2419 | 284 | 0.02149649 | 0.1830986 | 0.4340637 | 0.4918033 | 0.1172902 | 0.956637 |  |
+| S1 | 72 | fit x fit | GP | 2 | 3323 | 164/164 | 0 | 2995 | 353 | 0.03739566 | 0.3172805 | 0.3626043 | 0.4110522 | 0.117757 | 1.218546 |  |
+| S1 | 72 | fit x fit | AP | 3 | 3270 | 472/422 | 0 | 2376 | 243 | 0.1022727 | 1 | 0 | 0 | 0.1022727 | 1.938985 |  |
+| S1 | 72 | fit x fit | XP | 3 | 3270 | 472/422 | 0 | 2376 | 243 | 0.01010101 | 0.09876543 | 0.4558081 | 0.5077356 | 0.1021693 | 0.9412809 |  |
+| S1 | 72 | fit x fit | F | 3 | 3270 | 472/422 | 0 | 2376 | 243 | 0.03998316 | 0.3909465 | 0.1228956 | 0.1368964 | 0.1002619 | 1.418061 |  |
+| S1 | 72 | fit x fit | S | 3 | 3270 | 472/422 | 0 | 2376 | 243 | 0.03829966 | 0.3744856 | 0.3501684 | 0.3900609 | 0.102227 | 0.916107 |  |
+| S1 | 72 | fit x fit | GP | 3 | 3270 | 138/129 | 0 | 3003 | 311 | 0.04395604 | 0.4244373 | 0.3479853 | 0.3881872 | 0.1035162 | 1.018925 |  |
+| S1 | 72 | fit x fit | AP | 4 | 3323 | 496/388 | 0 | 2439 | 263 | 0.1078311 | 1 | 0 | 0 | 0.1078311 | 2.095873 |  |
+| S1 | 72 | fit x fit | XP | 4 | 3323 | 496/388 | 0 | 2439 | 263 | 0.01845018 | 0.1711027 | 0.3899139 | 0.4370404 | 0.1077504 | 1.081629 |  |
+| S1 | 72 | fit x fit | F | 4 | 3323 | 496/388 | 0 | 2439 | 263 | 0.03198032 | 0.2965779 | 0.1266913 | 0.1420037 | 0.1062857 | 1.376339 |  |
+| S1 | 72 | fit x fit | S | 4 | 3323 | 496/388 | 0 | 2439 | 263 | 0.05863059 | 0.5437262 | 0.2181222 | 0.2444853 | 0.1077973 | 1.026971 |  |
+| S1 | 72 | fit x fit | GP | 4 | 3323 | 143/137 | 0 | 3043 | 327 | 0.05849491 | 0.5443425 | 0.23628 | 0.2647275 | 0.1074165 | 1.295564 |  |
+| S1 | 72 | fit x fit | AP | 5 | 3370 | 504/395 | 0 | 2471 | 283 | 0.1145285 | 1 | 0 | 0 | 0.1145285 | 2.280257 |  |
+| S1 | 72 | fit x fit | XP | 5 | 3370 | 504/395 | 0 | 2471 | 283 | 0.03278025 | 0.2862191 | 0.3715095 | 0.4195612 | 0.1144715 | 1.211467 |  |
+| S1 | 72 | fit x fit | F | 5 | 3370 | 504/395 | 0 | 2471 | 283 | 0.0441117 | 0.385159 | 0.1335492 | 0.1508227 | 0.1135701 | 1.4517 |  |
+| S1 | 72 | fit x fit | S | 5 | 3370 | 504/395 | 0 | 2471 | 283 | 0.08619992 | 0.7526502 | 0.1582355 | 0.178702 | 0.1145072 | 1.143703 |  |
+| S1 | 72 | fit x fit | GP | 5 | 3370 | 160/128 | 0 | 3082 | 351 | 0.07462687 | 0.6552707 | 0.2057106 | 0.2321494 | 0.1138639 | 1.244992 |  |
+| S1 | 72 | fit x fit | AP | 7 | 3392 | 513/437 | 0 | 2442 | 263 | 0.1076986 | 1 | 0 | 0 | 0.1076986 | 2.209481 |  |
+| S1 | 72 | fit x fit | XP | 7 | 3392 | 513/437 | 0 | 2442 | 263 | 0.05364455 | 0.4980989 | 0.2678133 | 0.3001377 | 0.1076653 | 1.284313 |  |
+| S1 | 72 | fit x fit | F | 7 | 3392 | 513/437 | 0 | 2442 | 263 | 0.03726454 | 0.3460076 | 0.1425061 | 0.1597063 | 0.1071356 | 1.385837 |  |
+| S1 | 72 | fit x fit | S | 7 | 3392 | 513/437 | 0 | 2442 | 263 | 0.09213759 | 0.8555133 | 0.05733006 | 0.06424966 | 0.1076873 | 1.152717 |  |
+| S1 | 72 | fit x fit | GP | 7 | 3392 | 3392/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 72 | fit x GP | AP | 1 | 3322 | 438/128 | 0 | 2756 | 275 | 0.09978229 | 1 | 0 | 0 | 0.09978227 | 1.597198 |  |
+| S1 | 72 | fit x GP | XP | 1 | 3322 | 438/128 | 0 | 2756 | 275 | 0.01124819 | 0.1127273 | 0.4793179 | 0.5324466 | 0.09957727 | 0.7949337 |  |
+| S1 | 72 | fit x GP | F | 1 | 3322 | 438/128 | 0 | 2756 | 275 | 0.0203193 | 0.2036364 | 0.4002177 | 0.4445788 | 0.0994726 | 0.8686794 |  |
+| S1 | 72 | fit x GP | S | 1 | 3322 | 438/128 | 0 | 2756 | 275 | 0.01088534 | 0.1090909 | 0.4934688 | 0.5481661 | 0.09961739 | 0.7961993 |  |
+| S1 | 72 | fit x GP | GP | 1 | 3322 | 133/144 | 0 | 3045 | 310 | 0.01740558 | 0.1709677 | 0.4646962 | 0.5173675 | 0.1016389 | 0.882882 |  |
+| S1 | 72 | fit x GP | AP | 2 | 3323 | 475/143 | 0 | 2705 | 325 | 0.1201479 | 1 | 0 | 0 | 0.1201479 | 2.09506 |  |
+| S1 | 72 | fit x GP | XP | 2 | 3323 | 475/143 | 0 | 2705 | 325 | 0.02033272 | 0.1692308 | 0.4107209 | 0.4668067 | 0.1200092 | 1.125203 |  |
+| S1 | 72 | fit x GP | F | 2 | 3323 | 475/143 | 0 | 2705 | 325 | 0.03770795 | 0.3138462 | 0.3290203 | 0.3739496 | 0.1199621 | 1.243218 |  |
+| S1 | 72 | fit x GP | S | 2 | 3323 | 475/143 | 0 | 2705 | 325 | 0.02772643 | 0.2307692 | 0.3985213 | 0.4529412 | 0.1200373 | 1.136372 |  |
+| S1 | 72 | fit x GP | GP | 2 | 3323 | 164/164 | 0 | 2995 | 353 | 0.03739566 | 0.3172805 | 0.3626043 | 0.4110522 | 0.117757 | 1.218546 |  |
+| S1 | 72 | fit x GP | AP | 3 | 3270 | 472/117 | 0 | 2681 | 273 | 0.1018277 | 1 | 0 | 0 | 0.1018277 | 1.858888 |  |
+| S1 | 72 | fit x GP | XP | 3 | 3270 | 472/117 | 0 | 2681 | 273 | 0.0305856 | 0.3003663 | 0.4032078 | 0.4489203 | 0.1017574 | 1.006911 |  |
+| S1 | 72 | fit x GP | F | 3 | 3270 | 472/117 | 0 | 2681 | 273 | 0.03468855 | 0.3406593 | 0.3681462 | 0.4098837 | 0.1017298 | 0.9327817 |  |
+| S1 | 72 | fit x GP | S | 3 | 3270 | 472/117 | 0 | 2681 | 273 | 0.03953749 | 0.3882784 | 0.3651623 | 0.4065615 | 0.101776 | 0.9269739 |  |
+| S1 | 72 | fit x GP | GP | 3 | 3270 | 138/129 | 0 | 3003 | 311 | 0.04395604 | 0.4244373 | 0.3479853 | 0.3881872 | 0.1035162 | 1.018925 |  |
+| S1 | 72 | fit x GP | AP | 4 | 3323 | 496/118 | 0 | 2709 | 291 | 0.1074197 | 1 | 0 | 0 | 0.1074197 | 2.013854 |  |
+| S1 | 72 | fit x GP | XP | 4 | 3323 | 496/118 | 0 | 2709 | 291 | 0.03949797 | 0.3676976 | 0.3001107 | 0.3362283 | 0.1073663 | 1.183433 |  |
+| S1 | 72 | fit x GP | F | 4 | 3323 | 496/118 | 0 | 2709 | 291 | 0.04724991 | 0.4398625 | 0.2631968 | 0.2948718 | 0.1073477 | 1.255663 |  |
+| S1 | 72 | fit x GP | S | 4 | 3323 | 496/118 | 0 | 2709 | 291 | 0.05574013 | 0.5189003 | 0.2399409 | 0.2688172 | 0.1073804 | 1.15621 |  |
+| S1 | 72 | fit x GP | GP | 4 | 3323 | 143/137 | 0 | 3043 | 327 | 0.05849491 | 0.5443425 | 0.23628 | 0.2647275 | 0.1074165 | 1.295564 |  |
+| S1 | 72 | fit x GP | AP | 5 | 3370 | 504/117 | 0 | 2749 | 314 | 0.1142234 | 1 | 0 | 0 | 0.1142234 | 2.195964 |  |
+| S1 | 72 | fit x GP | XP | 5 | 3370 | 504/117 | 0 | 2749 | 314 | 0.06002183 | 0.5254777 | 0.2786468 | 0.3145791 | 0.114191 | 1.330098 |  |
+| S1 | 72 | fit x GP | F | 5 | 3370 | 504/117 | 0 | 2749 | 314 | 0.05856675 | 0.5127389 | 0.2822845 | 0.3186858 | 0.114183 | 1.216508 |  |
+| S1 | 72 | fit x GP | S | 5 | 3370 | 504/117 | 0 | 2749 | 314 | 0.07675518 | 0.6719745 | 0.1775191 | 0.2004107 | 0.1142004 | 1.198002 |  |
+| S1 | 72 | fit x GP | GP | 5 | 3370 | 160/128 | 0 | 3082 | 351 | 0.07462687 | 0.6552707 | 0.2057106 | 0.2321494 | 0.1138639 | 1.244992 |  |
+| S1 | 72 | fit x GP | AP | 7 | 3392 | 513/2879 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 72 | fit x GP | XP | 7 | 3392 | 513/2879 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 72 | fit x GP | F | 7 | 3392 | 513/2879 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 72 | fit x GP | S | 7 | 3392 | 513/2879 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| S1 | 72 | fit x GP | GP | 7 | 3392 | 3392/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 72 | fit x fit | AP | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.1120531 | 1 | 0 | 0 | 0.1120531 | 1.887338 |  |
+| DO | 72 | fit x fit | XP | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.01806119 | 0.1611842 | 0.443052 | 0.4989622 | 0.1118286 | Infinity |  |
+| DO | 72 | fit x fit | F | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.03206782 | 0.2861842 | 0.08735717 | 0.09838107 | 0.08268126 | Infinity |  |
+| DO | 72 | fit x fit | S | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.01916697 | 0.1710526 | 0.458533 | 0.5163968 | 0.1118713 | 0.9005013 |  |
+| DO | 72 | fit x fit | GP | 1 | 3298 | 313/279 | 0 | 2706 | 302 | 0.03104213 | 0.2781457 | 0.3813747 | 0.4292845 | 0.1112662 | Infinity |  |
+| DO | 72 | fit x fit | AP | 2 | 3345 | 408/364 | 0 | 2573 | 300 | 0.1165954 | 1 | 0 | 0 | 0.1165954 | 2.137477 |  |
+| DO | 72 | fit x fit | XP | 2 | 3345 | 408/364 | 0 | 2573 | 300 | 0.03186941 | 0.2733333 | 0.3929265 | 0.4447866 | 0.1164646 | Infinity |  |
+| DO | 72 | fit x fit | F | 2 | 3345 | 408/364 | 0 | 2573 | 300 | 0.04080839 | 0.35 | 0.1095997 | 0.1240651 | 0.101276 | Infinity |  |
+| DO | 72 | fit x fit | S | 2 | 3345 | 408/364 | 0 | 2573 | 300 | 0.03847649 | 0.33 | 0.3804897 | 0.4307083 | 0.1164879 | 1.078736 |  |
+| DO | 72 | fit x fit | GP | 2 | 3345 | 398/358 | 0 | 2589 | 304 | 0.0405562 | 0.3453947 | 0.3738895 | 0.4236324 | 0.1172409 | Infinity |  |
+| DO | 72 | fit x fit | AP | 3 | 3414 | 685/565 | 0 | 2164 | 254 | 0.1173752 | 1 | 0 | 0 | 0.1173752 | 2.240358 |  |
+| DO | 72 | fit x fit | XP | 3 | 3414 | 685/565 | 0 | 2164 | 254 | 0.03789279 | 0.3228346 | 0.3562847 | 0.4036649 | 0.1172969 | Infinity |  |
+| DO | 72 | fit x fit | F | 3 | 3414 | 685/565 | 0 | 2164 | 254 | 0.04574861 | 0.3897638 | 0.1058226 | 0.1198953 | 0.1105846 | Infinity |  |
+| DO | 72 | fit x fit | S | 3 | 3414 | 685/565 | 0 | 2164 | 254 | 0.04898336 | 0.4173228 | 0.3336414 | 0.3780105 | 0.1173154 | 1.106937 |  |
+| DO | 72 | fit x fit | GP | 3 | 3414 | 689/572 | 0 | 2153 | 252 | 0.0320483 | 0.2738095 | 0.3734324 | 0.4229353 | 0.116947 | Infinity |  |
+| DO | 72 | fit x fit | AP | 4 | 3301 | 833/651 | 0 | 1817 | 191 | 0.1051183 | 1 | 0 | 0 | 0.1051183 | 2.062282 | read before the statements were registered |
+| DO | 72 | fit x fit | XP | 4 | 3301 | 833/651 | 0 | 1817 | 191 | 0.04237755 | 0.4031414 | 0.3219593 | 0.3597786 | 0.105067 | Infinity | read before the statements were registered |
+| DO | 72 | fit x fit | F | 4 | 3301 | 833/651 | 0 | 1817 | 191 | 0.04127683 | 0.3926702 | 0.1133737 | 0.1266913 | 0.1018893 | Infinity | read before the statements were registered |
+| DO | 72 | fit x fit | S | 4 | 3301 | 833/651 | 0 | 1817 | 191 | 0.05833792 | 0.5549738 | 0.2581178 | 0.2884379 | 0.1050836 | 1.022915 | read before the statements were registered |
+| DO | 72 | fit x fit | GP | 4 | 3301 | 867/658 | 0 | 1776 | 188 | 0.04222973 | 0.3989362 | 0.3412162 | 0.3816121 | 0.1057843 | Infinity | read before the statements were registered |
+| DO | 72 | fit x fit | AP | 5 | 3306 | 809/657 | 0 | 1840 | 201 | 0.1092391 | 1 | 0 | 0 | 0.1092391 | 2.20175 | read before the statements were registered |
+| DO | 72 | fit x fit | XP | 5 | 3306 | 809/657 | 0 | 1840 | 201 | 0.06413043 | 0.5870647 | 0.2554348 | 0.2867602 | 0.1092058 | Infinity | read before the statements were registered |
+| DO | 72 | fit x fit | F | 5 | 3306 | 809/657 | 0 | 1840 | 201 | 0.05543478 | 0.5074627 | 0.1086957 | 0.1220256 | 0.1075653 | Infinity | read before the statements were registered |
+| DO | 72 | fit x fit | S | 5 | 3306 | 809/657 | 0 | 1840 | 201 | 0.07934783 | 0.7263682 | 0.1657609 | 0.1860891 | 0.1092187 | 1.167335 | read before the statements were registered |
+| DO | 72 | fit x fit | GP | 5 | 3306 | 830/674 | 0 | 1802 | 198 | 0.05771365 | 0.5252525 | 0.3257492 | 0.3659601 | 0.109845 | Infinity | read before the statements were registered |
+| DO | 72 | fit x fit | AP | 7 | 3336 | 1042/762 | 0 | 1532 | 178 | 0.116188 | 1 | 0 | 0 | 0.116188 | 2.465709 |  |
+| DO | 72 | fit x fit | XP | 7 | 3336 | 1042/762 | 0 | 1532 | 178 | 0.09073107 | 0.7808989 | 0.1592689 | 0.1802068 | 0.116173 | Infinity |  |
+| DO | 72 | fit x fit | F | 7 | 3336 | 1042/762 | 0 | 1532 | 178 | 0.06331593 | 0.5449438 | 0.1103133 | 0.1248154 | 0.1154529 | Infinity |  |
+| DO | 72 | fit x fit | S | 7 | 3336 | 1042/762 | 0 | 1532 | 178 | 0.1057441 | 0.9101124 | 0.07245431 | 0.08197932 | 0.1161791 | 1.37265 |  |
+| DO | 72 | fit x fit | GP | 7 | 3336 | 3336/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 72 | fit x GP | AP | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.1120531 | 1 | 0 | 0 | 0.112053 | 1.830115 |  |
+| DO | 72 | fit x GP | XP | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.01990417 | 0.1776316 | 0.4205676 | 0.4736405 | 0.111788 | Infinity |  |
+| DO | 72 | fit x GP | F | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.02948765 | 0.2631579 | 0.3269443 | 0.3682026 | 0.1114172 | Infinity |  |
+| DO | 72 | fit x GP | S | 1 | 3298 | 306/279 | 0 | 2713 | 304 | 0.02211574 | 0.1973684 | 0.4316255 | 0.4860938 | 0.1118191 | Infinity |  |
+| DO | 72 | fit x GP | GP | 1 | 3298 | 313/279 | 0 | 2706 | 302 | 0.03104213 | 0.2781457 | 0.3813747 | 0.4292845 | 0.1112662 | Infinity |  |
+| DO | 72 | fit x GP | AP | 2 | 3345 | 408/356 | 0 | 2581 | 302 | 0.1170089 | 1 | 0 | 0 | 0.1170089 | 2.124115 |  |
+| DO | 72 | fit x GP | XP | 2 | 3345 | 408/356 | 0 | 2581 | 302 | 0.03448276 | 0.294702 | 0.3909337 | 0.442738 | 0.1168668 | Infinity |  |
+| DO | 72 | fit x GP | F | 2 | 3345 | 408/356 | 0 | 2581 | 302 | 0.03680744 | 0.3145695 | 0.3471523 | 0.3931549 | 0.1166523 | Infinity |  |
+| DO | 72 | fit x GP | S | 2 | 3345 | 408/356 | 0 | 2581 | 302 | 0.03835723 | 0.3278146 | 0.3796978 | 0.4300132 | 0.1168692 | Infinity |  |
+| DO | 72 | fit x GP | GP | 2 | 3345 | 398/358 | 0 | 2589 | 304 | 0.0405562 | 0.3453947 | 0.3738895 | 0.4236324 | 0.1172409 | Infinity |  |
+| DO | 72 | fit x GP | AP | 3 | 3414 | 685/569 | 0 | 2160 | 255 | 0.1180556 | 1 | 0 | 0 | 0.1180556 | 2.216391 |  |
+| DO | 72 | fit x GP | XP | 3 | 3414 | 685/569 | 0 | 2160 | 255 | 0.03472222 | 0.2941176 | 0.3712963 | 0.4209974 | 0.1179761 | Infinity |  |
+| DO | 72 | fit x GP | F | 3 | 3414 | 685/569 | 0 | 2160 | 255 | 0.0337963 | 0.2862745 | 0.362963 | 0.4115486 | 0.1178723 | Infinity |  |
+| DO | 72 | fit x GP | S | 3 | 3414 | 685/569 | 0 | 2160 | 255 | 0.03796296 | 0.3215686 | 0.3532407 | 0.4005249 | 0.1179815 | Infinity |  |
+| DO | 72 | fit x GP | GP | 3 | 3414 | 689/572 | 0 | 2153 | 252 | 0.0320483 | 0.2738095 | 0.3734324 | 0.4229353 | 0.116947 | Infinity |  |
+| DO | 72 | fit x GP | AP | 4 | 3301 | 833/666 | 0 | 1802 | 189 | 0.1048835 | 1 | 0 | 0 | 0.1048835 | 2.048027 | read before the statements were registered |
+| DO | 72 | fit x GP | XP | 4 | 3301 | 833/666 | 0 | 1802 | 189 | 0.04550499 | 0.4338624 | 0.3235294 | 0.3614383 | 0.1048291 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | F | 4 | 3301 | 833/666 | 0 | 1802 | 189 | 0.03940067 | 0.3756614 | 0.3257492 | 0.3639182 | 0.1047707 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | S | 4 | 3301 | 833/666 | 0 | 1802 | 189 | 0.04883463 | 0.4656085 | 0.2952275 | 0.3298202 | 0.1048348 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | GP | 4 | 3301 | 867/658 | 0 | 1776 | 188 | 0.04222973 | 0.3989362 | 0.3412162 | 0.3816121 | 0.1057843 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | AP | 5 | 3306 | 809/677 | 0 | 1820 | 199 | 0.1093407 | 1 | 0 | 0 | 0.1093407 | 2.451377 | read before the statements were registered |
+| DO | 72 | fit x GP | XP | 5 | 3306 | 809/677 | 0 | 1820 | 199 | 0.06208791 | 0.5678392 | 0.2791209 | 0.3133868 | 0.1093086 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | F | 5 | 3306 | 809/677 | 0 | 1820 | 199 | 0.0521978 | 0.4773869 | 0.3263736 | 0.3664405 | 0.1092793 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | S | 5 | 3306 | 809/677 | 0 | 1820 | 199 | 0.07087912 | 0.6482412 | 0.2269231 | 0.254781 | 0.1093142 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | GP | 5 | 3306 | 830/674 | 0 | 1802 | 198 | 0.05771365 | 0.5252525 | 0.3257492 | 0.3659601 | 0.109845 | Infinity | read before the statements were registered |
+| DO | 72 | fit x GP | AP | 7 | 3336 | 1042/2294 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 72 | fit x GP | XP | 7 | 3336 | 1042/2294 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 72 | fit x GP | F | 7 | 3336 | 1042/2294 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 72 | fit x GP | S | 7 | 3336 | 1042/2294 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| DO | 72 | fit x GP | GP | 7 | 3336 | 3336/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 24 | fit x fit | AP | 1 | 3461 | 32/20 | 0 | 3409 | 410 | 0.003226753 | 0.02682927 | 0.3467292 | 0.3941314 | 0.1195848 | 0.76416 |  |
+| GN | 24 | fit x fit | XP | 1 | 3461 | 32/20 | 0 | 3409 | 410 | 0.02610736 | 0.2170732 | 0.2144324 | 0.2437479 | 0.1137224 | 0.8214604 |  |
+| GN | 24 | fit x fit | F | 1 | 3461 | 32/20 | 0 | 3409 | 410 | 0 | 0 | 0.03754767 | 0.04268089 | 0.01380293 | 0.04315547 |  |
+| GN | 24 | fit x fit | S | 1 | 3461 | 266/245 | 0 | 2950 | 352 | 0.03118644 | 0.2613636 | 0.3698305 | 0.4199384 | 0.1190363 | 0.9565143 |  |
+| GN | 24 | fit x fit | GP | 1 | 3461 | 16/16 | 0 | 3429 | 411 | 0.08982211 | 0.7493917 | 0.1449402 | 0.1646786 | 0.1198044 | Infinity |  |
+| GN | 24 | fit x fit | AP | 2 | 3289 | 32/35 | 0 | 3222 | 363 | 0.005896958 | 0.0523416 | 0.4081316 | 0.459951 | 0.1124865 | 0.8520396 |  |
+| GN | 24 | fit x fit | XP | 2 | 3289 | 32/35 | 0 | 3222 | 363 | 0.04096834 | 0.3636364 | 0.2290503 | 0.2581322 | 0.110782 | 1.156159 |  |
+| GN | 24 | fit x fit | F | 2 | 3289 | 32/35 | 0 | 3222 | 363 | 0.0003103662 | 0.002754821 | 0.07697083 | 0.08674362 | 0.03750374 | 0.1147936 |  |
+| GN | 24 | fit x fit | S | 2 | 3289 | 281/251 | 0 | 2757 | 311 | 0.04787813 | 0.4244373 | 0.3119333 | 0.3515944 | 0.1127222 | 1.023888 |  |
+| GN | 24 | fit x fit | GP | 2 | 3289 | 39/52 | 0 | 3198 | 360 | 0.07692308 | 0.6833333 | 0.1869919 | 0.2107118 | 0.1125316 | Infinity |  |
+| GN | 24 | fit x fit | AP | 3 | 3262 | 29/38 | 0 | 3195 | 361 | 0.0143975 | 0.1274238 | 0.4090767 | 0.4611856 | 0.1129047 | 0.9364999 |  |
+| GN | 24 | fit x fit | XP | 3 | 3262 | 29/38 | 0 | 3195 | 361 | 0.057277 | 0.5069252 | 0.2381847 | 0.2685251 | 0.1120092 | 1.381022 |  |
+| GN | 24 | fit x fit | F | 3 | 3262 | 29/38 | 0 | 3195 | 361 | 0.0006259781 | 0.005540166 | 0.09890454 | 0.1115032 | 0.05047828 | 0.2193679 |  |
+| GN | 24 | fit x fit | S | 3 | 3262 | 260/269 | 0 | 2733 | 310 | 0.06769118 | 0.5967742 | 0.2272228 | 0.2562939 | 0.1133878 | 1.091101 |  |
+| GN | 24 | fit x fit | GP | 3 | 3262 | 101/110 | 0 | 3051 | 339 | 0.07899049 | 0.7109145 | 0.2097673 | 0.2359882 | 0.111079 | Infinity |  |
+| GN | 24 | fit x fit | AP | 4 | 3300 | 25/30 | 0 | 3245 | 369 | 0.02989214 | 0.2628726 | 0.3602465 | 0.4064673 | 0.1136666 | 1.008907 |  |
+| GN | 24 | fit x fit | XP | 4 | 3300 | 25/30 | 0 | 3245 | 369 | 0.05146379 | 0.4525745 | 0.2191063 | 0.2472184 | 0.1130551 | 1.406935 |  |
+| GN | 24 | fit x fit | F | 4 | 3300 | 25/30 | 0 | 3245 | 369 | 0.001848998 | 0.01626016 | 0.1066256 | 0.120306 | 0.06881266 | 0.3508235 |  |
+| GN | 24 | fit x fit | S | 4 | 3300 | 250/236 | 0 | 2814 | 317 | 0.09026297 | 0.8012618 | 0.1197584 | 0.134962 | 0.1126344 | 1.167159 |  |
+| GN | 24 | fit x fit | GP | 4 | 3300 | 221/220 | 0 | 2859 | 319 | 0.07380203 | 0.661442 | 0.204617 | 0.230315 | 0.1115518 | 1.417178 |  |
+| GN | 24 | fit x fit | AP | 5 | 3276 | 33/31 | 0 | 3212 | 353 | 0.05697385 | 0.5184136 | 0.264944 | 0.2976565 | 0.1098701 | 1.015899 |  |
+| GN | 24 | fit x fit | XP | 5 | 3276 | 33/31 | 0 | 3212 | 353 | 0.05417186 | 0.4929178 | 0.2549813 | 0.2864638 | 0.1094831 | 1.52022 |  |
+| GN | 24 | fit x fit | F | 5 | 3276 | 33/31 | 0 | 3212 | 353 | 0.00249066 | 0.02266289 | 0.1239103 | 0.1392095 | 0.07523055 | 0.2768708 |  |
+| GN | 24 | fit x fit | S | 5 | 3276 | 249/260 | 0 | 2767 | 304 | 0.1011926 | 0.9210526 | 0.06794362 | 0.07632968 | 0.1098586 | 1.224832 |  |
+| GN | 24 | fit x fit | GP | 5 | 3276 | 667/520 | 0 | 2089 | 239 | 0.07898516 | 0.6903766 | 0.2048827 | 0.2313514 | 0.1143893 | Infinity |  |
+| GN | 24 | fit x fit | AP | 7 | 3412 | 26/22 | 0 | 3364 | 364 | 0.08947681 | 0.8269231 | 0.1028537 | 0.1153333 | 0.1081901 | 1.074131 |  |
+| GN | 24 | fit x fit | XP | 7 | 3412 | 26/22 | 0 | 3364 | 364 | 0.05766944 | 0.532967 | 0.2422711 | 0.2716667 | 0.1079755 | 1.516572 |  |
+| GN | 24 | fit x fit | F | 7 | 3412 | 26/22 | 0 | 3364 | 364 | 0.002675386 | 0.02472527 | 0.1483353 | 0.1663333 | 0.08473169 | 0.326963 |  |
+| GN | 24 | fit x fit | S | 7 | 3412 | 292/254 | 0 | 2866 | 310 | 0.1057223 | 0.9774194 | 0.02442428 | 0.02738654 | 0.1081612 | 1.294974 |  |
+| GN | 24 | fit x fit | GP | 7 | 3412 | 3412/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 24 | fit x GP | AP | 1 | 3461 | 32/16 | 0 | 3413 | 409 | 0.05684149 | 0.4743276 | 0.2836214 | 0.322237 | 0.1197375 | Infinity |  |
+| GN | 24 | fit x GP | XP | 1 | 3461 | 32/16 | 0 | 3413 | 409 | 0.08116027 | 0.6772616 | 0.1678875 | 0.1907457 | 0.1197166 | Infinity |  |
+| GN | 24 | fit x GP | F | 1 | 3461 | 32/16 | 0 | 3413 | 409 | 0.08233226 | 0.6870416 | 0.1675945 | 0.1904128 | 0.1197165 | Infinity |  |
+| GN | 24 | fit x GP | S | 1 | 3461 | 266/13 | 0 | 3182 | 383 | 0.07479573 | 0.6214099 | 0.1992458 | 0.2265095 | 0.120285 | Infinity |  |
+| GN | 24 | fit x GP | GP | 1 | 3461 | 16/16 | 0 | 3429 | 411 | 0.08982211 | 0.7493917 | 0.1449402 | 0.1646786 | 0.1198044 | Infinity |  |
+| GN | 24 | fit x GP | AP | 2 | 3289 | 32/52 | 0 | 3205 | 358 | 0.05148206 | 0.4608939 | 0.3145086 | 0.3540569 | 0.111645 | Infinity |  |
+| GN | 24 | fit x GP | XP | 2 | 3289 | 32/52 | 0 | 3205 | 358 | 0.06302652 | 0.5642458 | 0.226209 | 0.254654 | 0.1115904 | Infinity |  |
+| GN | 24 | fit x GP | F | 2 | 3289 | 32/52 | 0 | 3205 | 358 | 0.06053042 | 0.5418994 | 0.2287051 | 0.257464 | 0.1115966 | Infinity |  |
+| GN | 24 | fit x GP | S | 2 | 3289 | 281/47 | 0 | 2961 | 332 | 0.06889564 | 0.6144578 | 0.2222222 | 0.2502853 | 0.1120746 | Infinity |  |
+| GN | 24 | fit x GP | GP | 2 | 3289 | 39/52 | 0 | 3198 | 360 | 0.07692308 | 0.6833333 | 0.1869919 | 0.2107118 | 0.1125316 | Infinity |  |
+| GN | 24 | fit x GP | AP | 3 | 3262 | 29/109 | 0 | 3124 | 350 | 0.05889885 | 0.5257143 | 0.2912932 | 0.3280461 | 0.1120007 | Infinity |  |
+| GN | 24 | fit x GP | XP | 3 | 3262 | 29/109 | 0 | 3124 | 350 | 0.06145967 | 0.5485714 | 0.2695262 | 0.3035328 | 0.1119488 | Infinity |  |
+| GN | 24 | fit x GP | F | 3 | 3262 | 29/109 | 0 | 3124 | 350 | 0.05985915 | 0.5342857 | 0.2640845 | 0.2974045 | 0.1119437 | Infinity |  |
+| GN | 24 | fit x GP | S | 3 | 3262 | 260/104 | 1 | 2897 | 323 | 0.07490507 | 0.6718266 | 0.2050397 | 0.2307692 | 0.1114639 | Infinity |  |
+| GN | 24 | fit x GP | GP | 3 | 3262 | 101/110 | 0 | 3051 | 339 | 0.07899049 | 0.7109145 | 0.2097673 | 0.2359882 | 0.111079 | Infinity |  |
+| GN | 24 | fit x GP | AP | 4 | 3300 | 25/226 | 0 | 3049 | 341 | 0.07445064 | 0.6656891 | 0.2197442 | 0.2474151 | 0.1118181 | 1.291785 |  |
+| GN | 24 | fit x GP | XP | 4 | 3300 | 25/226 | 0 | 3049 | 341 | 0.06034765 | 0.5395894 | 0.2833716 | 0.3190547 | 0.1117846 | 1.385964 |  |
+| GN | 24 | fit x GP | F | 4 | 3300 | 25/226 | 0 | 3049 | 341 | 0.06133158 | 0.5483871 | 0.2869793 | 0.3231167 | 0.1117826 | 1.403446 |  |
+| GN | 24 | fit x GP | S | 4 | 3300 | 250/213 | 0 | 2837 | 313 | 0.08600634 | 0.7795527 | 0.1610857 | 0.1810618 | 0.1103093 | 1.255539 |  |
+| GN | 24 | fit x GP | GP | 4 | 3300 | 221/220 | 0 | 2859 | 319 | 0.07380203 | 0.661442 | 0.204617 | 0.230315 | 0.1115518 | 1.417178 |  |
+| GN | 24 | fit x GP | AP | 5 | 3276 | 33/631 | 0 | 2612 | 291 | 0.08767228 | 0.7869416 | 0.131317 | 0.1477811 | 0.1113938 | 1.432862 |  |
+| GN | 24 | fit x GP | XP | 5 | 3276 | 33/631 | 0 | 2612 | 291 | 0.05742726 | 0.5154639 | 0.3281011 | 0.3692374 | 0.1113619 | Infinity |  |
+| GN | 24 | fit x GP | F | 5 | 3276 | 33/631 | 0 | 2612 | 291 | 0.05398162 | 0.4845361 | 0.3330781 | 0.3748384 | 0.1113585 | Infinity |  |
+| GN | 24 | fit x GP | S | 5 | 3276 | 249/598 | 0 | 2429 | 271 | 0.0930424 | 0.8339483 | 0.1115685 | 0.1255792 | 0.1115537 | 1.530343 |  |
+| GN | 24 | fit x GP | GP | 5 | 3276 | 667/520 | 0 | 2089 | 239 | 0.07898516 | 0.6903766 | 0.2048827 | 0.2313514 | 0.1143893 | Infinity |  |
+| GN | 24 | fit x GP | AP | 7 | 3412 | 26/3386 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 24 | fit x GP | XP | 7 | 3412 | 26/3386 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 24 | fit x GP | F | 7 | 3412 | 26/3386 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 24 | fit x GP | S | 7 | 3412 | 292/3120 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 24 | fit x GP | GP | 7 | 3412 | 3412/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GD | 72 | fit x fit | AP | 1 | 3365 | 67/77 | 0 | 3221 | 341 | 0 | 0 | 0.3346787 | 0.3743056 | 0.1048613 | 0.5895441 |  |
+| GD | 72 | fit x fit | XP | 1 | 3365 | 67/77 | 0 | 3221 | 341 | 0 | 0 | 0.3129463 | 0.35 | 0.09828977 | 0.3935067 |  |
+| GD | 72 | fit x fit | F | 1 | 3365 | 67/77 | 0 | 3221 | 341 | 0 | 0 | 0.0431543 | 0.04826389 | 0.01024113 | 0.03466578 |  |
+| GD | 72 | fit x fit | S | 1 | 3365 | 67/77 | 0 | 3221 | 341 | 0.0003104626 | 0.002932551 | 0.4625893 | 0.5173611 | 0.1048554 | 0.6337043 |  |
+| GD | 72 | fit x fit | GP | 1 | 3365 | 1041/873 | 0 | 1451 | 147 | 0.03376981 | 0.3333333 | 0.3694004 | 0.4110429 | 0.1011203 | 1.361312 |  |
+| GD | 72 | fit x fit | AP | 2 | 3284 | 84/75 | 0 | 3125 | 345 | 0 | 0 | 0.4192 | 0.471223 | 0.1100895 | 0.7524852 |  |
+| GD | 72 | fit x fit | XP | 2 | 3284 | 84/75 | 0 | 3125 | 345 | 0 | 0 | 0.34496 | 0.3877698 | 0.1050068 | 0.4485969 |  |
+| GD | 72 | fit x fit | F | 2 | 3284 | 84/75 | 0 | 3125 | 345 | 0 | 0 | 0.06944 | 0.07805755 | 0.0177557 | 0.05685593 |  |
+| GD | 72 | fit x fit | S | 2 | 3284 | 84/75 | 1 | 3124 | 345 | 0.002240717 | 0.02028986 | 0.4862356 | 0.5465995 | 0.1098118 | 0.7245569 |  |
+| GD | 72 | fit x fit | GP | 2 | 3284 | 1099/848 | 0 | 1337 | 161 | 0.02094241 | 0.173913 | 0.433807 | 0.4931973 | 0.1202264 | 1.283773 |  |
+| GD | 72 | fit x fit | AP | 3 | 3330 | 76/83 | 0 | 3171 | 345 | 0 | 0 | 0.4452854 | 0.4996461 | 0.1086819 | 0.8401998 |  |
+| GD | 72 | fit x fit | XP | 3 | 3330 | 76/83 | 0 | 3171 | 345 | 0 | 0 | 0.3620309 | 0.4062279 | 0.1057318 | 0.4935853 |  |
+| GD | 72 | fit x fit | F | 3 | 3330 | 76/83 | 0 | 3171 | 345 | 0 | 0 | 0.08420057 | 0.09447983 | 0.03130057 | 0.08988954 |  |
+| GD | 72 | fit x fit | S | 3 | 3330 | 76/83 | 0 | 3171 | 345 | 0.006307159 | 0.05797101 | 0.4900662 | 0.5498938 | 0.1083925 | 0.768486 |  |
+| GD | 72 | fit x fit | GP | 3 | 3330 | 1210/905 | 0 | 1215 | 157 | 0.02057613 | 0.1592357 | 0.4880658 | 0.5604915 | 0.1290613 | 1.202481 |  |
+| GD | 72 | fit x fit | AP | 4 | 3375 | 66/64 | 0 | 3245 | 378 | 0 | 0 | 0.4261941 | 0.4823858 | 0.1164082 | 0.9567389 |  |
+| GD | 72 | fit x fit | XP | 4 | 3375 | 66/64 | 0 | 3245 | 378 | 0 | 0 | 0.3657935 | 0.4140216 | 0.1139314 | 0.5536846 |  |
+| GD | 72 | fit x fit | F | 4 | 3375 | 66/64 | 0 | 3245 | 378 | 0 | 0 | 0.09953775 | 0.1126613 | 0.03997124 | 0.1137757 |  |
+| GD | 72 | fit x fit | S | 4 | 3375 | 66/64 | 0 | 3245 | 378 | 0.01109399 | 0.0952381 | 0.440678 | 0.4987792 | 0.1162233 | 0.8756634 |  |
+| GD | 72 | fit x fit | GP | 4 | 3375 | 1215/956 | 0 | 1204 | 128 | 0.01578073 | 0.1484375 | 0.4966777 | 0.5557621 | 0.1061914 | 0.9113838 |  |
+| GD | 72 | fit x fit | AP | 5 | 3317 | 153/148 | 0 | 3016 | 320 | 0.00994695 | 0.09375 | 0.3547745 | 0.3968843 | 0.1060557 | 0.9189439 |  |
+| GD | 72 | fit x fit | XP | 5 | 3317 | 153/148 | 0 | 3016 | 320 | 0 | 0 | 0.3998674 | 0.4473294 | 0.1042464 | 0.5254199 |  |
+| GD | 72 | fit x fit | F | 5 | 3317 | 153/148 | 0 | 3016 | 320 | 0 | 0 | 0.09714854 | 0.1086795 | 0.04763283 | 0.1312156 |  |
+| GD | 72 | fit x fit | S | 5 | 3317 | 153/148 | 0 | 3016 | 320 | 0.01359416 | 0.128125 | 0.4525862 | 0.5063056 | 0.1059048 | 0.8263852 |  |
+| GD | 72 | fit x fit | GP | 5 | 3317 | 1358/998 | 0 | 961 | 116 | 0.003121748 | 0.02586207 | 0.5827263 | 0.6627219 | 0.1206166 | 0.9719539 |  |
+| GD | 72 | fit x fit | AP | 7 | 3329 | 73/85 | 0 | 3171 | 345 | 0.0734784 | 0.6753623 | 0.1463261 | 0.1641897 | 0.1087744 | 1.014854 |  |
+| GD | 72 | fit x fit | XP | 7 | 3329 | 73/85 | 0 | 3171 | 345 | 0 | 0 | 0.4276254 | 0.4798301 | 0.1075916 | 0.5869758 |  |
+| GD | 72 | fit x fit | F | 7 | 3329 | 73/85 | 0 | 3171 | 345 | 0 | 0 | 0.1116367 | 0.1252654 | 0.06114866 | 0.1685786 |  |
+| GD | 72 | fit x fit | S | 7 | 3329 | 73/85 | 0 | 3171 | 345 | 0.03153579 | 0.2898551 | 0.3818985 | 0.4285209 | 0.1086822 | 0.9112653 |  |
+| GD | 72 | fit x fit | GP | 7 | 3329 | 3329/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GD | 72 | fit x GP | AP | 1 | 3365 | 67/1082 | 0 | 2216 | 236 | 0.003610108 | 0.03389831 | 0.4444946 | 0.4974747 | 0.1062216 | 0.9333239 |  |
+| GD | 72 | fit x GP | XP | 1 | 3365 | 67/1082 | 0 | 2216 | 236 | 0.02030686 | 0.190678 | 0.3628159 | 0.4060606 | 0.1059544 | 1.19501 |  |
+| GD | 72 | fit x GP | F | 1 | 3365 | 67/1082 | 0 | 2216 | 236 | 0.02211191 | 0.2076271 | 0.3537906 | 0.3959596 | 0.1059706 | 1.259576 |  |
+| GD | 72 | fit x GP | S | 1 | 3365 | 67/1082 | 0 | 2216 | 236 | 0.02256318 | 0.2118644 | 0.3853791 | 0.4313131 | 0.1061315 | 1.133332 |  |
+| GD | 72 | fit x GP | GP | 1 | 3365 | 1041/873 | 0 | 1451 | 147 | 0.03376981 | 0.3333333 | 0.3694004 | 0.4110429 | 0.1011203 | 1.361312 |  |
+| GD | 72 | fit x GP | AP | 2 | 3284 | 84/1076 | 0 | 2124 | 253 | 0.006591337 | 0.05533597 | 0.4835217 | 0.5489043 | 0.1189658 | 1.23817 |  |
+| GD | 72 | fit x GP | XP | 2 | 3284 | 84/1076 | 0 | 2124 | 253 | 0.007062147 | 0.05928854 | 0.4708098 | 0.5344735 | 0.1186038 | 1.251524 |  |
+| GD | 72 | fit x GP | F | 2 | 3284 | 84/1076 | 0 | 2124 | 253 | 0.01129944 | 0.09486166 | 0.4609228 | 0.5232496 | 0.1185649 | 1.286998 |  |
+| GD | 72 | fit x GP | S | 2 | 3284 | 84/1076 | 0 | 2124 | 253 | 0.01129944 | 0.09486166 | 0.4811676 | 0.546232 | 0.1188254 | 0.9773461 |  |
+| GD | 72 | fit x GP | GP | 2 | 3284 | 1099/848 | 0 | 1337 | 161 | 0.02094241 | 0.173913 | 0.433807 | 0.4931973 | 0.1202264 | 1.283773 |  |
+| GD | 72 | fit x GP | AP | 3 | 3330 | 76/1186 | 0 | 2068 | 237 | 0.01547389 | 0.1350211 | 0.4584139 | 0.5177499 | 0.1145375 | 1.10566 |  |
+| GD | 72 | fit x GP | XP | 3 | 3330 | 76/1186 | 0 | 2068 | 237 | 0.00483559 | 0.04219409 | 0.5183752 | 0.5854724 | 0.1142379 | 1.006285 |  |
+| GD | 72 | fit x GP | F | 3 | 3330 | 76/1186 | 0 | 2068 | 237 | 0.00483559 | 0.04219409 | 0.5145068 | 0.5811032 | 0.114202 | 1.016565 |  |
+| GD | 72 | fit x GP | S | 3 | 3330 | 76/1186 | 0 | 2068 | 237 | 0.007253385 | 0.06329114 | 0.5087041 | 0.5745494 | 0.1143951 | 0.9528127 |  |
+| GD | 72 | fit x GP | GP | 3 | 3330 | 1210/905 | 0 | 1215 | 157 | 0.02057613 | 0.1592357 | 0.4880658 | 0.5604915 | 0.1290613 | 1.202481 |  |
+| GD | 72 | fit x GP | AP | 4 | 3375 | 66/1222 | 0 | 2087 | 238 | 0.03737422 | 0.3277311 | 0.3267849 | 0.368848 | 0.1139917 | 1.007611 |  |
+| GD | 72 | fit x GP | XP | 4 | 3375 | 66/1222 | 0 | 2087 | 238 | 0.005270724 | 0.04621849 | 0.5103019 | 0.575987 | 0.1137679 | 0.9238151 |  |
+| GD | 72 | fit x GP | F | 4 | 3375 | 66/1222 | 0 | 2087 | 238 | 0.004791567 | 0.04201681 | 0.5055103 | 0.5705787 | 0.1137261 | 0.9688618 |  |
+| GD | 72 | fit x GP | S | 4 | 3375 | 66/1222 | 0 | 2087 | 238 | 0.009103977 | 0.07983193 | 0.4901773 | 0.553272 | 0.1138702 | 0.9517163 |  |
+| GD | 72 | fit x GP | GP | 4 | 3375 | 1215/956 | 0 | 1204 | 128 | 0.01578073 | 0.1484375 | 0.4966777 | 0.5557621 | 0.1061914 | 0.9113838 |  |
+| GD | 72 | fit x GP | AP | 5 | 3317 | 153/1315 | 0 | 1849 | 215 | 0.06273661 | 0.5395349 | 0.2320173 | 0.2625459 | 0.1162439 | 1.057418 |  |
+| GD | 72 | fit x GP | XP | 5 | 3317 | 153/1315 | 0 | 1849 | 215 | 0 | 0 | 0.5830178 | 0.6597307 | 0.1160616 | 0.8509192 |  |
+| GD | 72 | fit x GP | F | 5 | 3317 | 153/1315 | 0 | 1849 | 215 | 0 | 0 | 0.5846403 | 0.6615667 | 0.1160415 | 0.8442371 |  |
+| GD | 72 | fit x GP | S | 5 | 3317 | 153/1315 | 0 | 1849 | 215 | 0.006489995 | 0.05581395 | 0.546782 | 0.6187271 | 0.1161655 | 0.9255398 |  |
+| GD | 72 | fit x GP | GP | 5 | 3317 | 1358/998 | 0 | 961 | 116 | 0.003121748 | 0.02586207 | 0.5827263 | 0.6627219 | 0.1206166 | 0.9719539 |  |
+| GD | 72 | fit x GP | AP | 7 | 3329 | 73/3256 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GD | 72 | fit x GP | XP | 7 | 3329 | 73/3256 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GD | 72 | fit x GP | F | 7 | 3329 | 73/3256 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GD | 72 | fit x GP | S | 7 | 3329 | 73/3256 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GD | 72 | fit x GP | GP | 7 | 3329 | 3329/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 72 | fit x fit | AP | 1 | 3290 | 34/51 | 0 | 3205 | 360 | 0 | 0 | 0.3840874 | 0.4326889 | 0.1112934 | 0.6289705 |  |
+| GN | 72 | fit x fit | XP | 1 | 3290 | 34/51 | 0 | 3205 | 360 | 0.0003120125 | 0.002777778 | 0.248986 | 0.2804921 | 0.09769982 | 0.355127 |  |
+| GN | 72 | fit x fit | F | 1 | 3290 | 34/51 | 1 | 3204 | 360 | 0.003121099 | 0.02777778 | 0.0571161 | 0.06434599 | 0.03621502 | 0.1568623 |  |
+| GN | 72 | fit x fit | S | 1 | 3290 | 38/53 | 0 | 3199 | 360 | 0.01437949 | 0.1277778 | 0.4829634 | 0.5442057 | 0.1123 | 0.8562596 |  |
+| GN | 72 | fit x fit | GP | 1 | 3290 | 25/19 | 1 | 3245 | 369 | 0.08844376 | 0.7777778 | 0.1559322 | 0.1759388 | 0.1136693 | Infinity |  |
+| GN | 72 | fit x fit | AP | 2 | 3383 | 37/40 | 0 | 3306 | 352 | 0 | 0 | 0.446461 | 0.4996615 | 0.1062111 | 0.7358045 |  |
+| GN | 72 | fit x fit | XP | 2 | 3383 | 37/40 | 0 | 3306 | 352 | 0 | 0 | 0.3018754 | 0.337847 | 0.09977882 | 0.4003271 |  |
+| GN | 72 | fit x fit | F | 2 | 3383 | 37/40 | 0 | 3306 | 352 | 0.004234725 | 0.03977273 | 0.07743497 | 0.08666215 | 0.04910125 | 0.2101641 |  |
+| GN | 72 | fit x fit | S | 2 | 3383 | 42/48 | 0 | 3293 | 351 | 0.0285454 | 0.2678063 | 0.4369875 | 0.489123 | 0.1064821 | 0.8922572 |  |
+| GN | 72 | fit x fit | GP | 2 | 3383 | 37/39 | 0 | 3307 | 356 | 0.07559722 | 0.7022472 | 0.1771999 | 0.1985768 | 0.1076195 | Infinity |  |
+| GN | 72 | fit x fit | AP | 3 | 3317 | 32/44 | 0 | 3241 | 355 | 0 | 0 | 0.478556 | 0.537422 | 0.1094075 | 0.8415588 |  |
+| GN | 72 | fit x fit | XP | 3 | 3317 | 32/44 | 0 | 3241 | 355 | 0.0006170935 | 0.005633803 | 0.3613082 | 0.4057519 | 0.1051935 | 0.4595167 |  |
+| GN | 72 | fit x fit | F | 3 | 3317 | 32/44 | 0 | 3241 | 355 | 0.005245295 | 0.04788732 | 0.1039803 | 0.1167706 | 0.05996008 | 0.2601211 |  |
+| GN | 72 | fit x fit | S | 3 | 3317 | 35/47 | 0 | 3235 | 353 | 0.03925811 | 0.3597734 | 0.3876352 | 0.4351145 | 0.109061 | 0.9744123 |  |
+| GN | 72 | fit x fit | GP | 3 | 3317 | 124/102 | 0 | 3091 | 343 | 0.07538014 | 0.6793003 | 0.1915238 | 0.2154294 | 0.1109383 | Infinity |  |
+| GN | 72 | fit x fit | AP | 4 | 3326 | 41/31 | 0 | 3254 | 342 | 0 | 0 | 0.4723417 | 0.5278159 | 0.1050312 | 0.8666428 |  |
+| GN | 72 | fit x fit | XP | 4 | 3326 | 41/31 | 0 | 3254 | 342 | 0.0003073141 | 0.002923977 | 0.3721573 | 0.4158654 | 0.1025485 | 0.4908658 |  |
+| GN | 72 | fit x fit | F | 4 | 3326 | 41/31 | 0 | 3254 | 342 | 0.00676091 | 0.06432749 | 0.1167793 | 0.1304945 | 0.06956818 | 0.3168541 |  |
+| GN | 72 | fit x fit | S | 4 | 3326 | 45/33 | 0 | 3248 | 341 | 0.05141626 | 0.4897361 | 0.333436 | 0.372549 | 0.1049488 | 0.9686103 |  |
+| GN | 72 | fit x fit | GP | 4 | 3326 | 255/211 | 0 | 2860 | 300 | 0.07062937 | 0.6733333 | 0.2157343 | 0.2410156 | 0.104873 | Infinity |  |
+| GN | 72 | fit x fit | AP | 5 | 3334 | 41/37 | 0 | 3256 | 382 | 0.01781327 | 0.1518325 | 0.3617936 | 0.4098817 | 0.117273 | 1.01953 |  |
+| GN | 72 | fit x fit | XP | 5 | 3334 | 41/37 | 0 | 3256 | 382 | 0.0006142506 | 0.005235602 | 0.39957 | 0.4526792 | 0.1153963 | 0.5922121 |  |
+| GN | 72 | fit x fit | F | 5 | 3334 | 41/37 | 0 | 3256 | 382 | 0.006449631 | 0.05497382 | 0.1197789 | 0.1356994 | 0.0851729 | 0.380366 |  |
+| GN | 72 | fit x fit | S | 5 | 3334 | 45/43 | 0 | 3246 | 381 | 0.07270487 | 0.6194226 | 0.241528 | 0.2736475 | 0.1173455 | 1.124287 |  |
+| GN | 72 | fit x fit | GP | 5 | 3334 | 666/541 | 0 | 2127 | 242 | 0.07475317 | 0.6570248 | 0.212976 | 0.2403183 | 0.1137518 | Infinity |  |
+| GN | 72 | fit x fit | AP | 7 | 3350 | 45/39 | 0 | 3266 | 355 | 0.07868953 | 0.7239437 | 0.1359461 | 0.1525249 | 0.1086729 | 1.020372 |  |
+| GN | 72 | fit x fit | XP | 7 | 3350 | 45/39 | 0 | 3266 | 355 | 0 | 0 | 0.4347826 | 0.4878049 | 0.1077094 | 0.6102841 |  |
+| GN | 72 | fit x fit | F | 7 | 3350 | 45/39 | 0 | 3266 | 355 | 0.007042254 | 0.06478873 | 0.1347214 | 0.1511508 | 0.0897333 | 0.4133388 |  |
+| GN | 72 | fit x fit | S | 7 | 3350 | 52/44 | 0 | 3254 | 355 | 0.09188691 | 0.8422535 | 0.1087892 | 0.1221111 | 0.1090836 | 1.137282 |  |
+| GN | 72 | fit x fit | GP | 7 | 3350 | 3350/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 72 | fit x GP | AP | 1 | 3290 | 34/19 | 1 | 3236 | 366 | 0.05562423 | 0.4918033 | 0.2951174 | 0.3327526 | 0.1130092 | Infinity |  |
+| GN | 72 | fit x GP | XP | 1 | 3290 | 34/19 | 0 | 3237 | 366 | 0.08186593 | 0.7240437 | 0.1822675 | 0.2055033 | 0.1129535 | Infinity |  |
+| GN | 72 | fit x GP | F | 1 | 3290 | 34/19 | 0 | 3237 | 366 | 0.08217485 | 0.726776 | 0.1785604 | 0.2013236 | 0.1129499 | Infinity |  |
+| GN | 72 | fit x GP | S | 1 | 3290 | 38/19 | 0 | 3233 | 366 | 0.07021342 | 0.6202186 | 0.2264151 | 0.2553191 | 0.1131424 | 1.976306 |  |
+| GN | 72 | fit x GP | GP | 1 | 3290 | 25/19 | 1 | 3245 | 369 | 0.08844376 | 0.7777778 | 0.1559322 | 0.1759388 | 0.1136693 | Infinity |  |
+| GN | 72 | fit x GP | AP | 2 | 3383 | 37/39 | 0 | 3307 | 354 | 0.048987 | 0.4576271 | 0.3223465 | 0.3609888 | 0.1069972 | Infinity |  |
+| GN | 72 | fit x GP | XP | 2 | 3383 | 37/39 | 0 | 3307 | 354 | 0.06017539 | 0.5621469 | 0.2361657 | 0.2644768 | 0.1069751 | Infinity |  |
+| GN | 72 | fit x GP | F | 2 | 3383 | 37/39 | 0 | 3307 | 354 | 0.06108255 | 0.5706215 | 0.2334442 | 0.2614291 | 0.1069743 | Infinity |  |
+| GN | 72 | fit x GP | S | 2 | 3383 | 42/39 | 0 | 3302 | 354 | 0.06208359 | 0.579096 | 0.2610539 | 0.2924016 | 0.1071602 | Infinity |  |
+| GN | 72 | fit x GP | GP | 2 | 3383 | 37/39 | 0 | 3307 | 356 | 0.07559722 | 0.7022472 | 0.1771999 | 0.1985768 | 0.1076195 | Infinity |  |
+| GN | 72 | fit x GP | AP | 3 | 3317 | 32/106 | 1 | 3178 | 347 | 0.06041536 | 0.5533141 | 0.3058527 | 0.3433416 | 0.1091562 | Infinity |  |
+| GN | 72 | fit x GP | XP | 3 | 3317 | 32/106 | 0 | 3179 | 347 | 0.06165461 | 0.5648415 | 0.2871972 | 0.322387 | 0.109077 | Infinity |  |
+| GN | 72 | fit x GP | F | 3 | 3317 | 32/106 | 0 | 3179 | 347 | 0.06165461 | 0.5648415 | 0.2812205 | 0.315678 | 0.1090747 | Infinity |  |
+| GN | 72 | fit x GP | S | 3 | 3317 | 35/106 | 0 | 3176 | 346 | 0.06423174 | 0.5895954 | 0.2764484 | 0.3102473 | 0.1088993 | Infinity |  |
+| GN | 72 | fit x GP | GP | 3 | 3317 | 124/102 | 0 | 3091 | 343 | 0.07538014 | 0.6793003 | 0.1915238 | 0.2154294 | 0.1109383 | Infinity |  |
+| GN | 72 | fit x GP | AP | 4 | 3326 | 41/217 | 0 | 3068 | 320 | 0.06421121 | 0.615625 | 0.2278357 | 0.2543668 | 0.1042797 | 1.359496 |  |
+| GN | 72 | fit x GP | XP | 4 | 3326 | 41/217 | 0 | 3068 | 320 | 0.05280313 | 0.50625 | 0.2988918 | 0.3336972 | 0.1042426 | Infinity |  |
+| GN | 72 | fit x GP | F | 4 | 3326 | 41/217 | 0 | 3068 | 320 | 0.05378096 | 0.515625 | 0.291721 | 0.3256914 | 0.1042416 | Infinity |  |
+| GN | 72 | fit x GP | S | 4 | 3326 | 45/217 | 0 | 3064 | 319 | 0.06331593 | 0.6081505 | 0.2699086 | 0.301275 | 0.1040846 | 1.332871 |  |
+| GN | 72 | fit x GP | GP | 4 | 3326 | 255/211 | 0 | 2860 | 300 | 0.07062937 | 0.6733333 | 0.2157343 | 0.2410156 | 0.104873 | Infinity |  |
+| GN | 72 | fit x GP | AP | 5 | 3334 | 41/656 | 0 | 2637 | 304 | 0.08797876 | 0.7631579 | 0.1319681 | 0.1491642 | 0.1152642 | 1.45966 |  |
+| GN | 72 | fit x GP | XP | 5 | 3334 | 41/656 | 0 | 2637 | 304 | 0.05271141 | 0.4572368 | 0.3375047 | 0.3814831 | 0.1152234 | Infinity |  |
+| GN | 72 | fit x GP | F | 5 | 3334 | 41/656 | 0 | 2637 | 304 | 0.05119454 | 0.4440789 | 0.3371255 | 0.3810544 | 0.1152209 | Infinity |  |
+| GN | 72 | fit x GP | S | 5 | 3334 | 45/655 | 0 | 2634 | 304 | 0.07213364 | 0.625 | 0.2308276 | 0.2609442 | 0.1153868 | Infinity |  |
+| GN | 72 | fit x GP | GP | 5 | 3334 | 666/541 | 0 | 2127 | 242 | 0.07475317 | 0.6570248 | 0.212976 | 0.2403183 | 0.1137518 | Infinity |  |
+| GN | 72 | fit x GP | AP | 7 | 3350 | 45/3305 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 72 | fit x GP | XP | 7 | 3350 | 45/3305 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 72 | fit x GP | F | 7 | 3350 | 45/3305 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 72 | fit x GP | S | 7 | 3350 | 52/3298 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GN | 72 | fit x GP | GP | 7 | 3350 | 3350/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| IG | 72 | fit x fit | AP | 1 | 3234 | 0/0 | 0 | 3234 | 375 | 0 | 0 | 0.4335189 | 0.4903813 | 0.1150892 | 0.6731435 |  |
+| IG | 72 | fit x fit | XP | 1 | 3234 | 0/0 | 0 | 3234 | 375 | 0 | 0 | 0.2748918 | 0.3109479 | 0.09835664 | 0.3123355 |  |
+| IG | 72 | fit x fit | F | 1 | 3234 | 0/0 | 0 | 3234 | 375 | 0 | 0 | 0.08101422 | 0.09164043 | 0.03064845 | 0.09078438 |  |
+| IG | 72 | fit x fit | S | 1 | 3234 | 576/492 | 0 | 2166 | 246 | 0.1001847 | 0.8821138 | 0.06694367 | 0.07552083 | 0.1135621 | 1.183211 |  |
+| IG | 72 | fit x fit | GP | 1 | 3234 | 123/106 | 0 | 3005 | 348 | 0.09617304 | 0.8304598 | 0.1271215 | 0.1437712 | 0.1157959 | 1.800933 |  |
+| IG | 72 | fit x fit | AP | 2 | 3356 | 0/0 | 0 | 3356 | 410 | 0 | 0 | 0.5041716 | 0.5743381 | 0.1219364 | 0.8738205 |  |
+| IG | 72 | fit x fit | XP | 2 | 3356 | 0/0 | 0 | 3356 | 410 | 0 | 0 | 0.3498212 | 0.3985064 | 0.1143012 | 0.4288763 |  |
+| IG | 72 | fit x fit | F | 2 | 3356 | 0/0 | 0 | 3356 | 410 | 0 | 0 | 0.1123361 | 0.1279701 | 0.04520106 | 0.1332832 |  |
+| IG | 72 | fit x fit | S | 2 | 3356 | 601/495 | 0 | 2260 | 276 | 0.1212389 | 0.9927536 | 0.008849558 | 0.01008065 | 0.122118 | 1.356649 |  |
+| IG | 72 | fit x fit | GP | 2 | 3356 | 114/132 | 0 | 3110 | 382 | 0.1125402 | 0.9162304 | 0.06495177 | 0.07404692 | 0.1228222 | 1.526219 |  |
+| IG | 72 | fit x fit | AP | 3 | 3341 | 0/0 | 0 | 3341 | 381 | 0 | 0 | 0.5228973 | 0.5902027 | 0.113942 | 0.9099985 |  |
+| IG | 72 | fit x fit | XP | 3 | 3341 | 0/0 | 0 | 3341 | 381 | 0 | 0 | 0.4025741 | 0.4543919 | 0.1102514 | 0.4754838 |  |
+| IG | 72 | fit x fit | F | 3 | 3341 | 0/0 | 0 | 3341 | 381 | 0 | 0 | 0.1343909 | 0.1516892 | 0.05830184 | 0.1752276 |  |
+| IG | 72 | fit x fit | S | 3 | 3341 | 606/506 | 0 | 2229 | 257 | 0.1152983 | 1 | 0.0004486317 | 0.0005070994 | 0.1152948 | 1.343069 |  |
+| IG | 72 | fit x fit | GP | 3 | 3341 | 223/207 | 0 | 2911 | 339 | 0.1116455 | 0.9587021 | 0.03091721 | 0.03499222 | 0.1164489 | 1.425342 |  |
+| IG | 72 | fit x fit | AP | 4 | 3293 | 0/0 | 0 | 3293 | 342 | 0.006680838 | 0.06432749 | 0.4834497 | 0.5394781 | 0.1038072 | 0.8875075 |  |
+| IG | 72 | fit x fit | XP | 4 | 3293 | 0/0 | 0 | 3293 | 342 | 0 | 0 | 0.4342545 | 0.4845815 | 0.101716 | 0.4812616 |  |
+| IG | 72 | fit x fit | F | 4 | 3293 | 0/0 | 0 | 3293 | 342 | 0 | 0 | 0.141816 | 0.1582514 | 0.06210371 | 0.1860378 |  |
+| IG | 72 | fit x fit | S | 4 | 3293 | 596/487 | 0 | 2210 | 229 | 0.1036199 | 1 | 0.0004524887 | 0.0005047956 | 0.103618 | 1.256139 |  |
+| IG | 72 | fit x fit | GP | 4 | 3293 | 575/461 | 0 | 2257 | 230 | 0.09924679 | 0.973913 | 0.02126717 | 0.02368032 | 0.1019002 | 1.167631 |  |
+| IG | 72 | fit x fit | AP | 5 | 3396 | 68/57 | 0 | 3271 | 362 | 0.05166616 | 0.4668508 | 0.2610822 | 0.2935717 | 0.1106356 | 0.9939336 |  |
+| IG | 72 | fit x fit | XP | 5 | 3396 | 68/57 | 0 | 3271 | 362 | 0 | 0 | 0.4539896 | 0.5104847 | 0.1091467 | 0.5578868 |  |
+| IG | 72 | fit x fit | F | 5 | 3396 | 68/57 | 0 | 3271 | 362 | 0 | 0 | 0.1549985 | 0.1742867 | 0.07513704 | 0.2379004 |  |
+| IG | 72 | fit x fit | S | 5 | 3396 | 673/552 | 0 | 2171 | 242 | 0.1114694 | 1 | 0 | 0 | 0.1114682 | 1.424817 |  |
+| IG | 72 | fit x fit | GP | 5 | 3396 | 977/715 | 0 | 1704 | 207 | 0.1214789 | 1 | 0 | 0 | 0.1214747 | 1.412088 |  |
+| IG | 72 | fit x fit | AP | 7 | 3380 | 57/51 | 3 | 3269 | 356 | 0.08412359 | 0.7724719 | 0.1012542 | 0.1136286 | 0.108884 | Infinity |  |
+| IG | 72 | fit x fit | XP | 7 | 3380 | 57/51 | 0 | 3272 | 357 | 0.003361858 | 0.03081232 | 0.4621027 | 0.5186964 | 0.1083322 | Infinity |  |
+| IG | 72 | fit x fit | F | 7 | 3380 | 57/51 | 0 | 3272 | 357 | 0.003361858 | 0.03081232 | 0.1595355 | 0.1790738 | 0.08558539 | Infinity |  |
+| IG | 72 | fit x fit | S | 7 | 3380 | 667/544 | 0 | 2169 | 236 | 0.1088059 | 1 | 0 | 0 | 0.1088053 | 1.480275 |  |
+| IG | 72 | fit x fit | GP | 7 | 3380 | 3380/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| IG | 72 | fit x GP | AP | 1 | 3234 | 0/106 | 0 | 3128 | 364 | 0.09111253 | 0.782967 | 0.1480179 | 0.1675109 | 0.1163487 | 1.740318 |  |
+| IG | 72 | fit x GP | XP | 1 | 3234 | 0/106 | 0 | 3128 | 364 | 0.09143223 | 0.7857143 | 0.1400256 | 0.158466 | 0.1163485 | 1.855416 |  |
+| IG | 72 | fit x GP | F | 1 | 3234 | 0/106 | 0 | 3128 | 364 | 0.09079284 | 0.7802198 | 0.1390665 | 0.1573806 | 0.1163482 | 1.858343 |  |
+| IG | 72 | fit x GP | S | 1 | 3234 | 576/80 | 0 | 2578 | 303 | 0.09930178 | 0.8448845 | 0.09542281 | 0.1081319 | 0.1175218 | 1.350437 |  |
+| IG | 72 | fit x GP | GP | 1 | 3234 | 123/106 | 0 | 3005 | 348 | 0.09617304 | 0.8304598 | 0.1271215 | 0.1437712 | 0.1157959 | 1.800933 |  |
+| IG | 72 | fit x GP | AP | 2 | 3356 | 0/132 | 0 | 3224 | 400 | 0.1076303 | 0.8675 | 0.09739454 | 0.1111898 | 0.1240592 | 1.534837 |  |
+| IG | 72 | fit x GP | XP | 2 | 3356 | 0/132 | 0 | 3224 | 400 | 0.1057692 | 0.8525 | 0.1187965 | 0.1356232 | 0.1240587 | 1.594012 |  |
+| IG | 72 | fit x GP | F | 2 | 3356 | 0/132 | 0 | 3224 | 400 | 0.1054591 | 0.85 | 0.1156948 | 0.1320822 | 0.1240587 | 1.596575 |  |
+| IG | 72 | fit x GP | S | 2 | 3356 | 601/104 | 0 | 2651 | 320 | 0.1173142 | 0.971875 | 0.02753678 | 0.03131703 | 0.1207025 | 1.390982 |  |
+| IG | 72 | fit x GP | GP | 2 | 3356 | 114/132 | 0 | 3110 | 382 | 0.1125402 | 0.9162304 | 0.06495177 | 0.07404692 | 0.1228222 | 1.526219 |  |
+| IG | 72 | fit x GP | AP | 3 | 3341 | 0/220 | 0 | 3121 | 357 | 0.1076578 | 0.9411765 | 0.03748798 | 0.04232996 | 0.1143786 | 1.325504 |  |
+| IG | 72 | fit x GP | XP | 3 | 3341 | 0/220 | 0 | 3121 | 357 | 0.1025312 | 0.8963585 | 0.07305351 | 0.08248915 | 0.1143774 | 1.369066 |  |
+| IG | 72 | fit x GP | F | 3 | 3341 | 0/220 | 0 | 3121 | 357 | 0.1028517 | 0.8991597 | 0.07561679 | 0.0853835 | 0.1143775 | 1.371173 |  |
+| IG | 72 | fit x GP | S | 3 | 3341 | 606/177 | 0 | 2558 | 297 | 0.1153245 | 0.993266 | 0.008209539 | 0.009287926 | 0.116102 | 1.365345 |  |
+| IG | 72 | fit x GP | GP | 3 | 3341 | 223/207 | 0 | 2911 | 339 | 0.1116455 | 0.9587021 | 0.03091721 | 0.03499222 | 0.1164489 | 1.425342 |  |
+| IG | 72 | fit x GP | AP | 4 | 3293 | 0/550 | 0 | 2743 | 289 | 0.1028071 | 0.9757785 | 0.02114473 | 0.02363488 | 0.105354 | 1.204208 |  |
+| IG | 72 | fit x GP | XP | 4 | 3293 | 0/550 | 0 | 2743 | 289 | 0.1024426 | 0.9723183 | 0.03973751 | 0.04441728 | 0.1053534 | 1.199903 |  |
+| IG | 72 | fit x GP | F | 4 | 3293 | 0/550 | 0 | 2743 | 289 | 0.102078 | 0.9688581 | 0.03937295 | 0.04400978 | 0.1053534 | 1.201047 |  |
+| IG | 72 | fit x GP | S | 4 | 3293 | 596/446 | 0 | 2251 | 232 | 0.1026211 | 0.9956897 | 0.003998223 | 0.004457652 | 0.1030625 | 1.220543 |  |
+| IG | 72 | fit x GP | GP | 4 | 3293 | 575/461 | 0 | 2257 | 230 | 0.09924679 | 0.973913 | 0.02126717 | 0.02368032 | 0.1019002 | 1.167631 |  |
+| IG | 72 | fit x GP | AP | 5 | 3396 | 68/965 | 0 | 2363 | 273 | 0.1146847 | 0.992674 | 0.007194245 | 0.008133971 | 0.1155263 | 1.312982 |  |
+| IG | 72 | fit x GP | XP | 5 | 3396 | 68/965 | 0 | 2363 | 273 | 0.1138383 | 0.985348 | 0.01438849 | 0.01626794 | 0.115525 | 1.304533 |  |
+| IG | 72 | fit x GP | F | 5 | 3396 | 68/965 | 0 | 2363 | 273 | 0.1138383 | 0.985348 | 0.01523487 | 0.01722488 | 0.115525 | 1.305468 |  |
+| IG | 72 | fit x GP | S | 5 | 3396 | 673/784 | 0 | 1939 | 230 | 0.1186178 | 1 | 0 | 0 | 0.118616 | 1.474933 |  |
+| IG | 72 | fit x GP | GP | 5 | 3396 | 977/715 | 0 | 1704 | 207 | 0.1214789 | 1 | 0 | 0 | 0.1214747 | 1.412088 |  |
+| IG | 72 | fit x GP | AP | 7 | 3380 | 57/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| IG | 72 | fit x GP | XP | 7 | 3380 | 57/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| IG | 72 | fit x GP | F | 7 | 3380 | 57/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| IG | 72 | fit x GP | S | 7 | 3380 | 667/2713 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| IG | 72 | fit x GP | GP | 7 | 3380 | 3380/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| T | 24 | fit x fit | AP | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1129794 | 1 | 0 | 0 | 0.1129793 | 1.88452 |  |
+| T | 24 | fit x fit | XP | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.0879056 | 0.7780679 | 0.1339233 | 0.150981 | 0.1129618 | 1.089235 |  |
+| T | 24 | fit x fit | F | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.001179941 | 0.01044386 | 0.2061947 | 0.2324576 | 0.1081761 | 0.4958955 |  |
+| T | 24 | fit x fit | S | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.04513274 | 0.3994778 | 0.320354 | 0.3611573 | 0.112907 | 1.022095 |  |
+| T | 24 | fit x fit | GP | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1123894 | 0.9947781 | 0.00560472 | 0.00631859 | 0.1129771 | 1.381524 |  |
+| T | 24 | fit x fit | AP | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1179118 | 1 | 0 | 0 | 0.1179118 | 2.138775 |  |
+| T | 24 | fit x fit | XP | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1125113 | 0.9541985 | 0.02970297 | 0.03367347 | 0.1179049 | 1.269621 |  |
+| T | 24 | fit x fit | F | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.00510051 | 0.043257 | 0.2109211 | 0.2391156 | 0.1167498 | 0.7055205 |  |
+| T | 24 | fit x fit | S | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.09870987 | 0.8371501 | 0.1056106 | 0.1197279 | 0.1178997 | 1.251459 |  |
+| T | 24 | fit x fit | GP | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1179118 | 1 | 0 | 0 | 0.1179115 | 1.800818 |  |
+| T | 24 | fit x fit | AP | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006042 | 1.898452 |  |
+| T | 24 | fit x fit | XP | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006011 | 1.151463 |  |
+| T | 24 | fit x fit | F | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.008761329 | 0.08708709 | 0.2090634 | 0.2324488 | 0.1001633 | 0.7009817 |  |
+| T | 24 | fit x fit | S | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.09667674 | 0.960961 | 0.02960725 | 0.03291905 | 0.1005996 | 1.147053 |  |
+| T | 24 | fit x fit | GP | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006042 | 1.740751 |  |
+| T | 24 | fit x fit | AP | 4 | 3290 | 0/0 | 0 | 3290 | 348 | 0.1057751 | 1 | 0 | 0 | 0.1057751 | 2.056241 |  |
+| T | 24 | fit x fit | XP | 4 | 3290 | 0/0 | 0 | 3290 | 348 | 0.1057751 | 1 | 0 | 0 | 0.1057733 | 1.290732 |  |
+| T | 24 | fit x fit | F | 4 | 3290 | 0/0 | 0 | 3290 | 348 | 0.01793313 | 0.1695402 | 0.2066869 | 0.2311353 | 0.1055503 | 0.8474628 |  |
+| T | 24 | fit x fit | S | 4 | 3290 | 0/0 | 0 | 3290 | 348 | 0.1045593 | 0.9885057 | 0.004863222 | 0.005438477 | 0.1057728 | 1.294188 |  |
+| T | 24 | fit x fit | GP | 4 | 3290 | 5/2 | 0 | 3283 | 346 | 0.1053914 | 1 | 0 | 0 | 0.1053913 | 1.840321 |  |
+| T | 24 | fit x fit | AP | 5 | 3288 | 0/0 | 0 | 3288 | 391 | 0.1189173 | 1 | 0 | 0 | 0.1189173 | 2.363477 |  |
+| T | 24 | fit x fit | XP | 5 | 3288 | 0/0 | 0 | 3288 | 391 | 0.1189173 | 1 | 0 | 0 | 0.118916 | 1.505719 |  |
+| T | 24 | fit x fit | F | 5 | 3288 | 0/0 | 0 | 3288 | 391 | 0.02858881 | 0.2404092 | 0.1943431 | 0.220573 | 0.1187798 | 1.022269 |  |
+| T | 24 | fit x fit | S | 5 | 3288 | 0/0 | 0 | 3288 | 391 | 0.118309 | 0.9948849 | 0.001216545 | 0.001380739 | 0.1189156 | 1.512664 |  |
+| T | 24 | fit x fit | GP | 5 | 3288 | 41/37 | 0 | 3210 | 387 | 0.1205607 | 1 | 0 | 0 | 0.1205607 | 2.403651 |  |
+| T | 24 | fit x fit | AP | 7 | 3389 | 0/0 | 0 | 3389 | 359 | 0.105931 | 1 | 0 | 0 | 0.105931 | 2.179828 |  |
+| T | 24 | fit x fit | XP | 7 | 3389 | 0/0 | 0 | 3389 | 359 | 0.105931 | 1 | 0 | 0 | 0.1059305 | 1.449967 |  |
+| T | 24 | fit x fit | F | 7 | 3389 | 0/0 | 0 | 3389 | 359 | 0.06196518 | 0.5849582 | 0.1150782 | 0.1287129 | 0.1058887 | 1.053369 |  |
+| T | 24 | fit x fit | S | 7 | 3389 | 0/0 | 0 | 3389 | 359 | 0.105931 | 1 | 0 | 0 | 0.1059305 | 1.470353 |  |
+| T | 24 | fit x fit | GP | 7 | 3389 | 3389/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| T | 24 | fit x GP | AP | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1129794 | 1 | 0 | 0 | 0.1129793 | 1.814839 |  |
+| T | 24 | fit x GP | XP | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1094395 | 0.9686684 | 0.02418879 | 0.0272697 | 0.1129741 | 1.286964 |  |
+| T | 24 | fit x GP | F | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1011799 | 0.8955614 | 0.05663717 | 0.06385101 | 0.1129695 | 1.244799 |  |
+| T | 24 | fit x GP | S | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1050147 | 0.9295039 | 0.04542773 | 0.05121383 | 0.1129714 | 1.260842 |  |
+| T | 24 | fit x GP | GP | 1 | 3390 | 0/0 | 0 | 3390 | 383 | 0.1123894 | 0.9947781 | 0.00560472 | 0.00631859 | 0.1129771 | 1.381524 |  |
+| T | 24 | fit x GP | AP | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1179118 | 1 | 0 | 0 | 0.1179118 | 2.077011 |  |
+| T | 24 | fit x GP | XP | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1179118 | 1 | 0 | 0 | 0.1179104 | 1.628301 |  |
+| T | 24 | fit x GP | F | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1167117 | 0.9898219 | 0.00630063 | 0.007142857 | 0.1179096 | 1.607535 |  |
+| T | 24 | fit x GP | S | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1179118 | 1 | 0.00330033 | 0.003741497 | 0.1179101 | 1.621106 |  |
+| T | 24 | fit x GP | GP | 2 | 3333 | 0/0 | 0 | 3333 | 393 | 0.1179118 | 1 | 0 | 0 | 0.1179115 | 1.800818 |  |
+| T | 24 | fit x GP | AP | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006042 | 1.861324 |  |
+| T | 24 | fit x GP | XP | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006037 | 1.552467 |  |
+| T | 24 | fit x GP | F | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006036 | 1.539345 |  |
+| T | 24 | fit x GP | S | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006037 | 1.551196 |  |
+| T | 24 | fit x GP | GP | 3 | 3310 | 0/0 | 0 | 3310 | 333 | 0.1006042 | 1 | 0 | 0 | 0.1006042 | 1.740751 |  |
+| T | 24 | fit x GP | AP | 4 | 3290 | 0/2 | 0 | 3288 | 347 | 0.1055353 | 1 | 0 | 0 | 0.1055353 | 2.004221 |  |
+| T | 24 | fit x GP | XP | 4 | 3290 | 0/2 | 0 | 3288 | 347 | 0.1055353 | 1 | 0 | 0 | 0.1055349 | 1.651585 |  |
+| T | 24 | fit x GP | F | 4 | 3290 | 0/2 | 0 | 3288 | 347 | 0.1055353 | 1 | 0 | 0 | 0.1055347 | 1.634626 |  |
+| T | 24 | fit x GP | S | 4 | 3290 | 0/2 | 0 | 3288 | 347 | 0.1055353 | 1 | 0 | 0 | 0.1055349 | 1.651863 |  |
+| T | 24 | fit x GP | GP | 4 | 3290 | 5/2 | 0 | 3283 | 346 | 0.1053914 | 1 | 0 | 0 | 0.1053913 | 1.840321 |  |
+| T | 24 | fit x GP | AP | 5 | 3288 | 0/38 | 0 | 3250 | 390 | 0.12 | 1 | 0 | 0 | 0.12 | 2.398812 |  |
+| T | 24 | fit x GP | XP | 5 | 3288 | 0/38 | 0 | 3250 | 390 | 0.12 | 1 | 0 | 0 | 0.1199999 | 2.118112 |  |
+| T | 24 | fit x GP | F | 5 | 3288 | 0/38 | 0 | 3250 | 390 | 0.12 | 1 | 0 | 0 | 0.1199999 | 2.110598 |  |
+| T | 24 | fit x GP | S | 5 | 3288 | 0/38 | 0 | 3250 | 390 | 0.12 | 1 | 0 | 0 | 0.1199999 | 2.11829 |  |
+| T | 24 | fit x GP | GP | 5 | 3288 | 41/37 | 0 | 3210 | 387 | 0.1205607 | 1 | 0 | 0 | 0.1205607 | 2.403651 |  |
+| T | 24 | fit x GP | AP | 7 | 3389 | 0/3389 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| T | 24 | fit x GP | XP | 7 | 3389 | 0/3389 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| T | 24 | fit x GP | F | 7 | 3389 | 0/3389 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| T | 24 | fit x GP | S | 7 | 3389 | 0/3389 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| T | 24 | fit x GP | GP | 7 | 3389 | 3389/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GE | 72 | fit x fit | AP | 1 | 3311 | 947/738 | 0 | 1626 | 187 | 0 | 0 | 0.4065191 | 0.4593468 | 0.1141321 | 0.6627477 |  |
+| GE | 72 | fit x fit | XP | 1 | 3311 | 947/738 | 0 | 1626 | 187 | 0 | 0 | 0.297048 | 0.3356498 | 0.1017255 | 0.3429579 |  |
+| GE | 72 | fit x fit | F | 1 | 3311 | 947/738 | 0 | 1626 | 187 | 0 | 0 | 0.1174662 | 0.1327311 | 0.03741912 | 0.1106297 |  |
+| GE | 72 | fit x fit | S | 1 | 3311 | 947/738 | 0 | 1626 | 187 | 0.1125461 | 0.9786096 | 0.03382534 | 0.03822099 | 0.1149988 | 1.24252 |  |
+| GE | 72 | fit x fit | GP | 1 | 3311 | 208/214 | 0 | 2889 | 333 | 0.09172724 | 0.7957958 | 0.1277259 | 0.1443662 | 0.1152493 | 2.266826 |  |
+| GE | 72 | fit x fit | AP | 2 | 3297 | 866/707 | 0 | 1724 | 189 | 0.007540603 | 0.06878307 | 0.4727378 | 0.5309446 | 0.1094313 | Infinity |  |
+| GE | 72 | fit x fit | XP | 2 | 3297 | 866/707 | 0 | 1724 | 189 | 0.01392111 | 0.1269841 | 0.3230858 | 0.3628664 | 0.1044673 | Infinity |  |
+| GE | 72 | fit x fit | F | 2 | 3297 | 866/707 | 0 | 1724 | 189 | 0.01392111 | 0.1269841 | 0.1334107 | 0.1498371 | 0.06781966 | Infinity |  |
+| GE | 72 | fit x fit | S | 2 | 3297 | 866/707 | 0 | 1724 | 189 | 0.1061485 | 0.968254 | 0.008700696 | 0.009771987 | 0.1096241 | 1.245796 |  |
+| GE | 72 | fit x fit | GP | 2 | 3297 | 140/155 | 0 | 3002 | 339 | 0.0946036 | 0.8377581 | 0.09660227 | 0.1088997 | 0.1129159 | 3.51378 |  |
+| GE | 72 | fit x fit | AP | 3 | 3314 | 1137/775 | 3 | 1399 | 149 | 0.01215154 | 0.114094 | 0.4731951 | 0.5296 | 0.1064227 | Infinity |  |
+| GE | 72 | fit x fit | XP | 3 | 3314 | 1137/775 | 0 | 1402 | 150 | 0.0128388 | 0.12 | 0.3730385 | 0.4177316 | 0.1041646 | Infinity |  |
+| GE | 72 | fit x fit | F | 3 | 3314 | 1137/775 | 0 | 1402 | 150 | 0.0128388 | 0.12 | 0.1554922 | 0.1741214 | 0.07919845 | Infinity |  |
+| GE | 72 | fit x fit | S | 3 | 3314 | 1137/775 | 0 | 1402 | 150 | 0.10699 | 1 | 0 | 0 | 0.1069875 | 1.258133 |  |
+| GE | 72 | fit x fit | GP | 3 | 3314 | 392/343 | 0 | 2579 | 278 | 0.1035285 | 0.9604317 | 0.01938736 | 0.02172968 | 0.1077885 | 2.706973 |  |
+| GE | 72 | fit x fit | AP | 4 | 3402 | 893/723 | 0 | 1786 | 198 | 0.02631579 | 0.2373737 | 0.3706607 | 0.4168766 | 0.1108179 | Infinity |  |
+| GE | 72 | fit x fit | XP | 4 | 3402 | 893/723 | 1 | 1785 | 198 | 0.0302521 | 0.2727273 | 0.3053221 | 0.3434152 | 0.1094179 | Infinity |  |
+| GE | 72 | fit x fit | F | 4 | 3402 | 893/723 | 0 | 1786 | 198 | 0.03023516 | 0.2727273 | 0.1231803 | 0.138539 | 0.09349476 | Infinity |  |
+| GE | 72 | fit x fit | S | 4 | 3402 | 893/723 | 0 | 1786 | 198 | 0.1108623 | 1 | 0 | 0 | 0.1108608 | 1.387179 |  |
+| GE | 72 | fit x fit | GP | 4 | 3402 | 150/147 | 1 | 3104 | 342 | 0.1079253 | 0.9795322 | 0.01095361 | 0.01230992 | 0.1101772 | Infinity |  |
+| GE | 72 | fit x fit | AP | 5 | 3356 | 941/739 | 0 | 1676 | 190 | 0.06861575 | 0.6052632 | 0.1957041 | 0.2207268 | 0.1133394 | Infinity |  |
+| GE | 72 | fit x fit | XP | 5 | 3356 | 941/739 | 0 | 1676 | 190 | 0.03460621 | 0.3052632 | 0.3001193 | 0.3384926 | 0.1123562 | Infinity |  |
+| GE | 72 | fit x fit | F | 5 | 3356 | 941/739 | 0 | 1676 | 190 | 0.03520286 | 0.3105263 | 0.1199284 | 0.1352624 | 0.1010882 | Infinity |  |
+| GE | 72 | fit x fit | S | 5 | 3356 | 941/739 | 0 | 1676 | 190 | 0.1133652 | 1 | 0 | 0 | 0.113364 | 1.45675 |  |
+| GE | 72 | fit x fit | GP | 5 | 3356 | 283/263 | 0 | 2810 | 327 | 0.1163701 | 1 | 0 | 0 | 0.1163682 | 3.400313 |  |
+| GE | 72 | fit x fit | AP | 7 | 3320 | 957/732 | 0 | 1631 | 194 | 0.1103617 | 0.9278351 | 0.06560392 | 0.07446068 | 0.1189358 | 6.916373 |  |
+| GE | 72 | fit x fit | XP | 7 | 3320 | 957/732 | 1 | 1630 | 194 | 0.06441718 | 0.5412371 | 0.2417178 | 0.2743733 | 0.1186441 | Infinity |  |
+| GE | 72 | fit x fit | F | 7 | 3320 | 957/732 | 0 | 1631 | 194 | 0.06805641 | 0.5721649 | 0.08277131 | 0.09394572 | 0.1143875 | Infinity |  |
+| GE | 72 | fit x fit | S | 7 | 3320 | 957/732 | 0 | 1631 | 194 | 0.1189454 | 1 | 0 | 0 | 0.1189449 | 1.623861 |  |
+| GE | 72 | fit x fit | GP | 7 | 3320 | 3320/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GE | 72 | fit x GP | AP | 1 | 3311 | 947/165 | 0 | 2199 | 249 | 0.09367894 | 0.8273092 | 0.1364256 | 0.1538462 | 0.1132168 | 2.163298 |  |
+| GE | 72 | fit x GP | XP | 1 | 3311 | 947/165 | 0 | 2199 | 249 | 0.09549795 | 0.8433735 | 0.1141428 | 0.1287179 | 0.1132145 | 2.650331 |  |
+| GE | 72 | fit x GP | F | 1 | 3311 | 947/165 | 0 | 2199 | 249 | 0.09640746 | 0.8514056 | 0.1150523 | 0.1297436 | 0.1132147 | 2.660527 |  |
+| GE | 72 | fit x GP | S | 1 | 3311 | 947/165 | 0 | 2199 | 249 | 0.09731696 | 0.8594378 | 0.08412915 | 0.09487179 | 0.1132223 | 1.27107 |  |
+| GE | 72 | fit x GP | GP | 1 | 3311 | 208/214 | 0 | 2889 | 333 | 0.09172724 | 0.7957958 | 0.1277259 | 0.1443662 | 0.1152493 | 2.266826 |  |
+| GE | 72 | fit x GP | AP | 2 | 3297 | 866/122 | 0 | 2309 | 260 | 0.1004764 | 0.8923077 | 0.07925509 | 0.08931186 | 0.1125942 | 3.326113 |  |
+| GE | 72 | fit x GP | XP | 2 | 3297 | 866/122 | 2 | 2307 | 260 | 0.09579541 | 0.85 | 0.08972692 | 0.1011236 | 0.1126914 | Infinity |  |
+| GE | 72 | fit x GP | F | 2 | 3297 | 866/122 | 0 | 2309 | 260 | 0.09527934 | 0.8461538 | 0.08834994 | 0.09956076 | 0.1125937 | Infinity |  |
+| GE | 72 | fit x GP | S | 2 | 3297 | 866/122 | 0 | 2309 | 260 | 0.1043742 | 0.9269231 | 0.03074924 | 0.03465105 | 0.112596 | 1.492136 |  |
+| GE | 72 | fit x GP | GP | 2 | 3297 | 140/155 | 0 | 3002 | 339 | 0.0946036 | 0.8377581 | 0.09660227 | 0.1088997 | 0.1129159 | 3.51378 |  |
+| GE | 72 | fit x GP | AP | 3 | 3314 | 1137/272 | 0 | 1905 | 206 | 0.1060367 | 0.9805825 | 0.02362205 | 0.02648617 | 0.1081321 | 2.399354 |  |
+| GE | 72 | fit x GP | XP | 3 | 3314 | 1137/272 | 1 | 1904 | 206 | 0.102416 | 0.9466019 | 0.05094538 | 0.05712603 | 0.1081885 | Infinity |  |
+| GE | 72 | fit x GP | F | 3 | 3314 | 1137/272 | 1 | 1904 | 205 | 0.1018908 | 0.9463415 | 0.05042017 | 0.05650383 | 0.1076633 | Infinity |  |
+| GE | 72 | fit x GP | S | 3 | 3314 | 1137/272 | 0 | 1905 | 206 | 0.1070866 | 0.9902913 | 0.001574803 | 0.001765745 | 0.108133 | 1.822504 |  |
+| GE | 72 | fit x GP | GP | 3 | 3314 | 392/343 | 0 | 2579 | 278 | 0.1035285 | 0.9604317 | 0.01938736 | 0.02172968 | 0.1077885 | 2.706973 |  |
+| GE | 72 | fit x GP | AP | 4 | 3402 | 893/119 | 0 | 2390 | 268 | 0.1108787 | 0.988806 | 0.009205021 | 0.01036758 | 0.1121308 | 4.340827 |  |
+| GE | 72 | fit x GP | XP | 4 | 3402 | 893/119 | 2 | 2388 | 268 | 0.1059464 | 0.9440299 | 0.03936348 | 0.04433962 | 0.1122242 | Infinity |  |
+| GE | 72 | fit x GP | F | 4 | 3402 | 893/119 | 1 | 2389 | 268 | 0.1063206 | 0.9477612 | 0.04018418 | 0.04526167 | 0.1121772 | Infinity |  |
+| GE | 72 | fit x GP | S | 4 | 3402 | 893/119 | 0 | 2390 | 268 | 0.1121339 | 1 | 0 | 0 | 0.1121314 | 2.390542 |  |
+| GE | 72 | fit x GP | GP | 4 | 3402 | 150/147 | 1 | 3104 | 342 | 0.1079253 | 0.9795322 | 0.01095361 | 0.01230992 | 0.1101772 | Infinity |  |
+| GE | 72 | fit x GP | AP | 5 | 3356 | 941/216 | 0 | 2199 | 255 | 0.1159618 | 1 | 0.0009095043 | 0.001028807 | 0.1159598 | 3.527125 |  |
+| GE | 72 | fit x GP | XP | 5 | 3356 | 941/216 | 0 | 2199 | 255 | 0.1159618 | 1 | 0.005457026 | 0.00617284 | 0.1159594 | Infinity |  |
+| GE | 72 | fit x GP | F | 5 | 3356 | 941/216 | 1 | 2198 | 255 | 0.1160146 | 1 | 0.005459509 | 0.006176016 | 0.1160122 | Infinity |  |
+| GE | 72 | fit x GP | S | 5 | 3356 | 941/216 | 0 | 2199 | 255 | 0.1159618 | 1 | 0 | 0 | 0.1159602 | 1.717316 |  |
+| GE | 72 | fit x GP | GP | 5 | 3356 | 283/263 | 0 | 2810 | 327 | 0.1163701 | 1 | 0 | 0 | 0.1163682 | 3.400313 |  |
+| GE | 72 | fit x GP | AP | 7 | 3320 | 957/2363 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GE | 72 | fit x GP | XP | 7 | 3320 | 957/2363 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GE | 72 | fit x GP | F | 7 | 3320 | 957/2363 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GE | 72 | fit x GP | S | 7 | 3320 | 957/2363 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| GE | 72 | fit x GP | GP | 7 | 3320 | 3320/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | AP | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | XP | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | F | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | S | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | GP | 1 | 3306 | 3306/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | AP | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | XP | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | F | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | S | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | GP | 2 | 3282 | 3282/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | AP | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | XP | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | F | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | S | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | GP | 3 | 3439 | 3439/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | AP | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | XP | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | F | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | S | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | GP | 4 | 3431 | 3431/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | AP | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | XP | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | F | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | S | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | GP | 5 | 3232 | 3232/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | AP | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | XP | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | F | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | S | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x fit | GP | 7 | 3310 | 3310/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | AP | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | XP | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | F | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | S | 1 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | GP | 1 | 3306 | 3306/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | AP | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | XP | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | F | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | S | 2 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | GP | 2 | 3282 | 3282/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | AP | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | XP | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | F | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | S | 3 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | GP | 3 | 3439 | 3439/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | AP | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | XP | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | F | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | S | 4 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | GP | 4 | 3431 | 3431/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | AP | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | XP | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | F | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | S | 5 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | GP | 5 | 3232 | 3232/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | AP | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | XP | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | F | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | S | 7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 72 | fit x GP | GP | 7 | 3310 | 3310/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | AP | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | XP | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | F | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | S | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | GP | 1 | 3366 | 3366/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | AP | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | XP | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | F | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | S | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | GP | 2 | 3415 | 3415/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | AP | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | XP | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | F | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | S | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | GP | 3 | 3284 | 3284/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | AP | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | XP | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | F | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | S | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | GP | 4 | 3285 | 3285/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | AP | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | XP | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | F | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | S | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | GP | 5 | 3392 | 3392/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | AP | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | XP | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | F | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | S | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x fit | GP | 7 | 3258 | 3258/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | AP | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | XP | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | F | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | S | 1 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | GP | 1 | 3366 | 3366/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | AP | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | XP | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | F | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | S | 2 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | GP | 2 | 3415 | 3415/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | AP | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | XP | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | F | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | S | 3 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | GP | 3 | 3284 | 3284/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | AP | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | XP | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | F | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | S | 4 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | GP | 4 | 3285 | 3285/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | AP | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | XP | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | F | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | S | 5 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | GP | 5 | 3392 | 3392/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | AP | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | XP | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | F | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | S | 7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HE | 336 | fit x GP | GP | 7 | 3258 | 3258/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x fit | AP | 1 | 3378 | 0/0 | 0 | 3378 | 377 | 0.1116045 | 1 | 0 | 0 | 0.1116045 | 2.083836 |  |
+| HX | 72 | fit x fit | XP | 1 | 3378 | 0/0 | 0 | 3378 | 377 | 0.0500296 | 0.4482759 | 0.3398461 | 0.3825392 | 0.1115408 | 1.662014 |  |
+| HX | 72 | fit x fit | F | 1 | 3378 | 0/0 | 0 | 3378 | 377 | 0.02249852 | 0.2015915 | 0.1030195 | 0.1159613 | 0.07884969 | 0.5925206 |  |
+| HX | 72 | fit x fit | S | 1 | 3378 | 0/0 | 0 | 3378 | 377 | 0.1116045 | 1 | 0 | 0 | 0.1116044 | 1.865873 |  |
+| HX | 72 | fit x fit | GP | 1 | 3378 | 3378/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x fit | AP | 2 | 3259 | 0/0 | 0 | 3259 | 372 | 0.1141454 | 1 | 0 | 0 | 0.1141454 | 2.295334 |  |
+| HX | 72 | fit x fit | XP | 2 | 3259 | 0/0 | 0 | 3259 | 372 | 0.08162013 | 0.7150538 | 0.1905492 | 0.2151022 | 0.1141269 | 1.372771 |  |
+| HX | 72 | fit x fit | F | 2 | 3259 | 0/0 | 0 | 3259 | 372 | 0.03037742 | 0.266129 | 0.1175207 | 0.1326637 | 0.08832937 | 0.6013553 |  |
+| HX | 72 | fit x fit | S | 2 | 3259 | 0/0 | 0 | 3259 | 372 | 0.1141454 | 1 | 0 | 0 | 0.1141454 | 2.033971 |  |
+| HX | 72 | fit x fit | GP | 2 | 3259 | 3259/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x fit | AP | 3 | 3351 | 0/0 | 0 | 3351 | 403 | 0.1202626 | 1 | 0 | 0 | 0.1202626 | 2.497554 |  |
+| HX | 72 | fit x fit | XP | 3 | 3351 | 0/0 | 0 | 3351 | 403 | 0.09937332 | 0.8263027 | 0.113399 | 0.1289009 | 0.120252 | 1.644015 |  |
+| HX | 72 | fit x fit | F | 3 | 3351 | 0/0 | 0 | 3351 | 403 | 0.04327067 | 0.3598015 | 0.08683975 | 0.09871099 | 0.09702837 | 0.7694879 |  |
+| HX | 72 | fit x fit | S | 3 | 3351 | 0/0 | 0 | 3351 | 403 | 0.1202626 | 1 | 0 | 0 | 0.1202626 | 2.106341 |  |
+| HX | 72 | fit x fit | GP | 3 | 3351 | 3351/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x fit | AP | 4 | 3380 | 0/0 | 0 | 3380 | 384 | 0.1136095 | 1 | 0 | 0 | 0.1136095 | 2.423262 |  |
+| HX | 72 | fit x fit | XP | 4 | 3380 | 0/0 | 0 | 3380 | 384 | 0.1106509 | 0.9739583 | 0.01686391 | 0.01902537 | 0.113606 | 5.945451 |  |
+| HX | 72 | fit x fit | F | 4 | 3380 | 0/0 | 0 | 3380 | 384 | 0.07366864 | 0.6484375 | 0.07366864 | 0.08311081 | 0.1034125 | Infinity |  |
+| HX | 72 | fit x fit | S | 4 | 3380 | 0/0 | 0 | 3380 | 384 | 0.1136095 | 1 | 0 | 0 | 0.1136095 | 2.112717 |  |
+| HX | 72 | fit x fit | GP | 4 | 3380 | 3380/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x fit | AP | 5 | 3309 | 0/0 | 0 | 3309 | 387 | 0.1169538 | 1 | 0 | 0 | 0.1169538 | 2.538352 |  |
+| HX | 72 | fit x fit | XP | 5 | 3309 | 0/0 | 2 | 3307 | 387 | 0.1161173 | 0.9922481 | 0.004535833 | 0.005136986 | 0.1170219 | 5.956058 |  |
+| HX | 72 | fit x fit | F | 5 | 3309 | 0/0 | 0 | 3309 | 387 | 0.08038682 | 0.6873385 | 0.06195225 | 0.07015743 | 0.1092552 | Infinity |  |
+| HX | 72 | fit x fit | S | 5 | 3309 | 0/0 | 0 | 3309 | 387 | 0.1169538 | 1 | 0 | 0 | 0.1169538 | 2.210948 |  |
+| HX | 72 | fit x fit | GP | 5 | 3309 | 3309/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x fit | AP | 7 | 3323 | 0/0 | 0 | 3323 | 400 | 0.1203732 | 1 | 0 | 0 | 0.1203732 | 2.699691 |  |
+| HX | 72 | fit x fit | XP | 7 | 3323 | 0/0 | 0 | 3323 | 400 | 0.1200722 | 0.9975 | 0 | 0 | 0.120372 | 3.097652 |  |
+| HX | 72 | fit x fit | F | 7 | 3323 | 0/0 | 0 | 3323 | 400 | 0.08907614 | 0.74 | 0.07071923 | 0.08039685 | 0.1163553 | Infinity |  |
+| HX | 72 | fit x fit | S | 7 | 3323 | 0/0 | 0 | 3323 | 400 | 0.1203732 | 1 | 0 | 0 | 0.1203732 | 2.475192 |  |
+| HX | 72 | fit x fit | GP | 7 | 3323 | 3323/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | AP | 1 | 3378 | 0/3378 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | XP | 1 | 3378 | 0/3378 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | F | 1 | 3378 | 0/3378 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | S | 1 | 3378 | 0/3378 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | GP | 1 | 3378 | 3378/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | AP | 2 | 3259 | 0/3259 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | XP | 2 | 3259 | 0/3259 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | F | 2 | 3259 | 0/3259 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | S | 2 | 3259 | 0/3259 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | GP | 2 | 3259 | 3259/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | AP | 3 | 3351 | 0/3351 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | XP | 3 | 3351 | 0/3351 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | F | 3 | 3351 | 0/3351 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | S | 3 | 3351 | 0/3351 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | GP | 3 | 3351 | 3351/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | AP | 4 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | XP | 4 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | F | 4 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | S | 4 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | GP | 4 | 3380 | 3380/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | AP | 5 | 3309 | 0/3309 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | XP | 5 | 3309 | 0/3309 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | F | 5 | 3309 | 0/3309 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | S | 5 | 3309 | 0/3309 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | GP | 5 | 3309 | 3309/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | AP | 7 | 3323 | 0/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | XP | 7 | 3323 | 0/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | F | 7 | 3323 | 0/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | S | 7 | 3323 | 0/3323 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 72 | fit x GP | GP | 7 | 3323 | 3323/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | AP | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | XP | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | F | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | S | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | GP | 1 | 3380 | 3380/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | AP | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | XP | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | F | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | S | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | GP | 2 | 3331 | 3331/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | AP | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | XP | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | F | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | S | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | GP | 3 | 3243 | 3243/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | AP | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | XP | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | F | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | S | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | GP | 4 | 3329 | 3329/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | AP | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | XP | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | F | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | S | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | GP | 5 | 3424 | 3424/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | AP | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | XP | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | F | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | S | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x fit | GP | 7 | 3293 | 3293/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | AP | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | XP | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | F | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | S | 1 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | GP | 1 | 3380 | 3380/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | AP | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | XP | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | F | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | S | 2 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | GP | 2 | 3331 | 3331/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | AP | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | XP | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | F | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | S | 3 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | GP | 3 | 3243 | 3243/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | AP | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | XP | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | F | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | S | 4 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | GP | 4 | 3329 | 3329/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | AP | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | XP | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | F | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | S | 5 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | GP | 5 | 3424 | 3424/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | AP | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | XP | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | F | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | S | 7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| HX | 168 | fit x GP | GP | 7 | 3293 | 3293/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 24 | fit x fit | AP | 1 | 3373 | 28/24 | 0 | 3321 | 347 | 0.1044866 | 1 | 0 | 0 | 0.1044866 | 1.746343 |  |
+| P | 24 | fit x fit | XP | 1 | 3373 | 28/24 | 0 | 3321 | 347 | 0.08190304 | 0.7838617 | 0.1312858 | 0.1466039 | 0.1044708 | 1.009287 |  |
+| P | 24 | fit x fit | F | 1 | 3373 | 28/24 | 0 | 3321 | 347 | 0.003613369 | 0.03458213 | 0.1948208 | 0.2175521 | 0.100241 | 0.6290807 |  |
+| P | 24 | fit x fit | S | 1 | 3373 | 28/24 | 0 | 3321 | 347 | 0.04125263 | 0.3948127 | 0.3197832 | 0.3570948 | 0.1044283 | 0.9418102 |  |
+| P | 24 | fit x fit | GP | 1 | 3373 | 14/20 | 0 | 3339 | 348 | 0.1030249 | 0.9885057 | 0.006289308 | 0.007021063 | 0.1042205 | 1.254007 |  |
+| P | 24 | fit x fit | AP | 2 | 3303 | 25/26 | 0 | 3252 | 357 | 0.1097786 | 1 | 0 | 0 | 0.1097786 | 1.978263 |  |
+| P | 24 | fit x fit | XP | 2 | 3303 | 25/26 | 0 | 3252 | 357 | 0.1054736 | 0.9607843 | 0.02429274 | 0.02728843 | 0.1097713 | 1.164081 |  |
+| P | 24 | fit x fit | F | 2 | 3303 | 25/26 | 0 | 3252 | 357 | 0.005227552 | 0.04761905 | 0.1940344 | 0.217962 | 0.1086179 | 0.6956581 |  |
+| P | 24 | fit x fit | S | 2 | 3303 | 25/26 | 0 | 3252 | 357 | 0.08886839 | 0.8095238 | 0.09102091 | 0.1022453 | 0.1097629 | 1.147894 |  |
+| P | 24 | fit x fit | GP | 2 | 3303 | 20/17 | 0 | 3266 | 356 | 0.1090018 | 1 | 0 | 0 | 0.1090014 | 1.63735 |  |
+| P | 24 | fit x fit | AP | 3 | 3393 | 24/26 | 0 | 3343 | 371 | 0.1109782 | 1 | 0 | 0 | 0.1109782 | 2.095524 |  |
+| P | 24 | fit x fit | XP | 3 | 3393 | 24/26 | 0 | 3343 | 371 | 0.1109782 | 1 | 0.001495663 | 0.001682369 | 0.1109747 | 1.275364 |  |
+| P | 24 | fit x fit | F | 3 | 3393 | 24/26 | 0 | 3343 | 371 | 0.009572241 | 0.08625337 | 0.2022136 | 0.2274563 | 0.1104895 | 0.8084692 |  |
+| P | 24 | fit x fit | S | 3 | 3393 | 24/26 | 0 | 3343 | 371 | 0.1040981 | 0.9380054 | 0.02512713 | 0.0282638 | 0.110972 | 1.271889 |  |
+| P | 24 | fit x fit | GP | 3 | 3393 | 15/28 | 0 | 3350 | 375 | 0.1119403 | 1 | 0 | 0 | 0.1119402 | 1.924938 |  |
+| P | 24 | fit x fit | AP | 4 | 3339 | 31/18 | 0 | 3290 | 345 | 0.1048632 | 1 | 0 | 0 | 0.1048632 | 2.033291 |  |
+| P | 24 | fit x fit | XP | 4 | 3339 | 31/18 | 0 | 3290 | 345 | 0.1048632 | 1 | 0 | 0 | 0.1048613 | 1.264472 |  |
+| P | 24 | fit x fit | F | 4 | 3339 | 31/18 | 0 | 3290 | 345 | 0.01854103 | 0.1768116 | 0.1826748 | 0.2040747 | 0.1046142 | 0.9630962 |  |
+| P | 24 | fit x fit | S | 4 | 3339 | 31/18 | 0 | 3290 | 345 | 0.1036474 | 0.9884058 | 0.004863222 | 0.005432937 | 0.1048605 | 1.262143 |  |
+| P | 24 | fit x fit | GP | 4 | 3339 | 23/28 | 0 | 3288 | 346 | 0.1052311 | 1 | 0 | 0 | 0.105231 | 1.797632 |  |
+| P | 24 | fit x fit | AP | 5 | 3267 | 20/18 | 0 | 3229 | 360 | 0.1114896 | 1 | 0 | 0 | 0.1114896 | 2.221323 |  |
+| P | 24 | fit x fit | XP | 5 | 3267 | 20/18 | 0 | 3229 | 360 | 0.1114896 | 1 | 0 | 0 | 0.1114886 | 1.418062 |  |
+| P | 24 | fit x fit | F | 5 | 3267 | 20/18 | 0 | 3229 | 360 | 0.03096934 | 0.2777778 | 0.1820997 | 0.2049495 | 0.1113842 | 1.057462 |  |
+| P | 24 | fit x fit | S | 5 | 3267 | 20/18 | 0 | 3229 | 360 | 0.1114896 | 1 | 0.00185816 | 0.002091321 | 0.1114884 | 1.419465 |  |
+| P | 24 | fit x fit | GP | 5 | 3267 | 35/8 | 0 | 3224 | 361 | 0.1119727 | 1 | 0 | 0 | 0.1119727 | 2.223223 |  |
+| P | 24 | fit x fit | AP | 7 | 3325 | 25/23 | 0 | 3277 | 372 | 0.1135185 | 1 | 0 | 0 | 0.1135185 | 2.337505 |  |
+| P | 24 | fit x fit | XP | 7 | 3325 | 25/23 | 0 | 3277 | 372 | 0.1135185 | 1 | 0 | 0 | 0.113518 | 1.552514 |  |
+| P | 24 | fit x fit | F | 7 | 3325 | 25/23 | 0 | 3277 | 372 | 0.0662191 | 0.5833333 | 0.122368 | 0.1380379 | 0.1134751 | 1.230518 |  |
+| P | 24 | fit x fit | S | 7 | 3325 | 25/23 | 0 | 3277 | 372 | 0.1135185 | 1 | 0 | 0 | 0.113518 | 1.56803 |  |
+| P | 24 | fit x fit | GP | 7 | 3325 | 3325/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 24 | fit x GP | AP | 1 | 3373 | 28/19 | 0 | 3326 | 346 | 0.1040289 | 1 | 0 | 0 | 0.1040288 | 1.673357 |  |
+| P | 24 | fit x GP | XP | 1 | 3373 | 28/19 | 0 | 3326 | 346 | 0.1010222 | 0.9710983 | 0.02345159 | 0.0261745 | 0.1040243 | 1.183816 |  |
+| P | 24 | fit x GP | F | 1 | 3373 | 28/19 | 0 | 3326 | 346 | 0.09651233 | 0.9277457 | 0.0499098 | 0.0557047 | 0.1040206 | 1.146958 |  |
+| P | 24 | fit x GP | S | 1 | 3373 | 28/19 | 0 | 3326 | 346 | 0.0983163 | 0.9450867 | 0.03848467 | 0.04295302 | 0.1040221 | 1.159245 |  |
+| P | 24 | fit x GP | GP | 1 | 3373 | 14/20 | 0 | 3339 | 348 | 0.1030249 | 0.9885057 | 0.006289308 | 0.007021063 | 0.1042205 | 1.254007 |  |
+| P | 24 | fit x GP | AP | 2 | 3303 | 25/17 | 0 | 3261 | 355 | 0.1088623 | 1 | 0 | 0 | 0.1088623 | 1.901904 |  |
+| P | 24 | fit x GP | XP | 2 | 3303 | 25/17 | 0 | 3261 | 355 | 0.1088623 | 1 | 0 | 0 | 0.1088607 | 1.474067 |  |
+| P | 24 | fit x GP | F | 2 | 3303 | 25/17 | 0 | 3261 | 355 | 0.107329 | 0.9859155 | 0.007053051 | 0.007914659 | 0.1088597 | 1.453098 |  |
+| P | 24 | fit x GP | S | 2 | 3303 | 25/17 | 0 | 3261 | 355 | 0.1085557 | 0.9971831 | 0.004293162 | 0.004817619 | 0.1088603 | 1.46732 |  |
+| P | 24 | fit x GP | GP | 2 | 3303 | 20/17 | 0 | 3266 | 356 | 0.1090018 | 1 | 0 | 0 | 0.1090014 | 1.63735 |  |
+| P | 24 | fit x GP | AP | 3 | 3393 | 24/28 | 0 | 3341 | 374 | 0.1119425 | 1 | 0 | 0 | 0.1119425 | 2.072754 |  |
+| P | 24 | fit x GP | XP | 3 | 3393 | 24/28 | 0 | 3341 | 374 | 0.1119425 | 1 | 0 | 0 | 0.111942 | 1.746436 |  |
+| P | 24 | fit x GP | F | 3 | 3393 | 24/28 | 0 | 3341 | 374 | 0.1119425 | 1 | 0 | 0 | 0.1119419 | 1.734857 |  |
+| P | 24 | fit x GP | S | 3 | 3393 | 24/28 | 0 | 3341 | 374 | 0.1119425 | 1 | 0 | 0 | 0.111942 | 1.744959 |  |
+| P | 24 | fit x GP | GP | 3 | 3393 | 15/28 | 0 | 3350 | 375 | 0.1119403 | 1 | 0 | 0 | 0.1119402 | 1.924938 |  |
+| P | 24 | fit x GP | AP | 4 | 3339 | 31/28 | 0 | 3280 | 346 | 0.1054878 | 1 | 0 | 0 | 0.1054878 | 1.992724 |  |
+| P | 24 | fit x GP | XP | 4 | 3339 | 31/28 | 0 | 3280 | 346 | 0.1054878 | 1 | 0 | 0 | 0.1054873 | 1.62314 |  |
+| P | 24 | fit x GP | F | 4 | 3339 | 31/28 | 0 | 3280 | 346 | 0.1054878 | 1 | 0 | 0 | 0.105487 | 1.608764 |  |
+| P | 24 | fit x GP | S | 4 | 3339 | 31/28 | 0 | 3280 | 346 | 0.1054878 | 1 | 0 | 0 | 0.1054873 | 1.622751 |  |
+| P | 24 | fit x GP | GP | 4 | 3339 | 23/28 | 0 | 3288 | 346 | 0.1052311 | 1 | 0 | 0 | 0.105231 | 1.797632 |  |
+| P | 24 | fit x GP | AP | 5 | 3267 | 20/8 | 0 | 3239 | 361 | 0.1114542 | 1 | 0 | 0 | 0.1114542 | 2.235309 |  |
+| P | 24 | fit x GP | XP | 5 | 3267 | 20/8 | 0 | 3239 | 361 | 0.1114542 | 1 | 0 | 0 | 0.1114541 | 1.981472 |  |
+| P | 24 | fit x GP | F | 5 | 3267 | 20/8 | 0 | 3239 | 361 | 0.1114542 | 1 | 0 | 0 | 0.1114541 | 1.974949 |  |
+| P | 24 | fit x GP | S | 5 | 3267 | 20/8 | 0 | 3239 | 361 | 0.1114542 | 1 | 0 | 0 | 0.1114541 | 1.981563 |  |
+| P | 24 | fit x GP | GP | 5 | 3267 | 35/8 | 0 | 3224 | 361 | 0.1119727 | 1 | 0 | 0 | 0.1119727 | 2.223223 |  |
+| P | 24 | fit x GP | AP | 7 | 3325 | 25/3300 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 24 | fit x GP | XP | 7 | 3325 | 25/3300 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 24 | fit x GP | F | 7 | 3325 | 25/3300 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 24 | fit x GP | S | 7 | 3325 | 25/3300 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+| P | 24 | fit x GP | GP | 7 | 3325 | 3325/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured |  |
+
+Paired proper-score differences (first minus second; negative favors first). Intervals use 10,000 primary-object cluster draws and do not model additional secondary-object dependence. Infinite log loss is retained; Infinity minus Infinity is undefined and counted. JSON includes all-encounter alert rates, covariance labels, exclusion reasons, and finite/infinite paired-score counts.
+
+| Group | Arc h | Pair class | Day | Pair | Paired n / draws | Brier difference | Brier 95% CI | Log difference | Log 95% CI | Undefined log pairs | Disclosure |
+|---|---:|---|---:|---|---:|---:|---|---:|---|---:|---|
+| LS | 24 | fit x fit | 1 | AP-XP | 1615/3359 | 0.0002849603 | 0.0001907214 to 0.0003755498 | 1.061467 | 0.8287797 to 1.342392 | 0 |  |
+| LS | 24 | fit x fit | 1 | AP-F | 1615/3359 | 0.04963877 | 0.03334558 to 0.06539488 | 1.58742 | 1.234468 to 2.003316 | 0 |  |
+| LS | 24 | fit x fit | 1 | AP-S | 1615/3359 | 0.0001098163 | 0.00006425046 to 0.0001605164 | 0.9121048 | 0.7278661 to 1.152579 | 0 |  |
+| LS | 24 | fit x fit | 1 | AP-GP | 1615/3359 | 0.0005632698 | 0.0003630816 to 0.000748426 | 1.099971 | 0.8990652 to 1.330771 | 0 |  |
+| LS | 24 | fit x fit | 1 | XP-F | 1615/3359 | 0.04935381 | 0.03313225 to 0.06688355 | 0.5259525 | 0.393051 to 0.6662276 | 0 |  |
+| LS | 24 | fit x fit | 1 | XP-S | 1615/3359 | -0.0001751439 | -0.0002202792 to -0.0001193212 | -0.1493623 | -0.2005191 to -0.1006181 | 0 |  |
+| LS | 24 | fit x fit | 1 | XP-GP | 1615/3359 | 0.0002783096 | 0.0001723602 to 0.0003763032 | 0.03850385 | -0.01877195 to 0.08248507 | 0 |  |
+| LS | 24 | fit x fit | 1 | F-S | 1615/3359 | -0.04952896 | -0.06562022 to -0.03325693 | -0.6753149 | -0.8561722 to -0.5011494 | 0 |  |
+| LS | 24 | fit x fit | 1 | F-GP | 1615/3359 | -0.0490755 | -0.06474975 to -0.03291125 | -0.4874487 | -0.6725454 to -0.3354026 | 0 |  |
+| LS | 24 | fit x fit | 1 | S-GP | 1615/3359 | 0.0004534535 | 0.0002988312 to 0.0005964653 | 0.1878662 | 0.1574338 to 0.2168436 | 0 |  |
+| LS | 24 | fit x fit | 2 | AP-XP | 1407/3298 | 0.000169893 | 0.0001414499 to 0.0002043874 | 1.195084 | 1.056812 to 1.329596 | 0 |  |
+| LS | 24 | fit x fit | 2 | AP-F | 1407/3298 | 0.02350379 | 0.01951101 to 0.02772234 | 1.571364 | 1.458227 to 1.681689 | 0 |  |
+| LS | 24 | fit x fit | 2 | AP-S | 1407/3298 | 0.0000413324 | 0.00002493398 to 0.00005287852 | 0.9811786 | 0.8705668 to 1.087021 | 0 |  |
+| LS | 24 | fit x fit | 2 | AP-GP | 1406/3298 | 0.0003489301 | 0.0002520753 to 0.0004416061 | 1.283708 | 1.125128 to 1.435446 | 0 |  |
+| LS | 24 | fit x fit | 2 | XP-F | 1407/3298 | 0.0233339 | 0.01936645 to 0.02753786 | 0.3762802 | 0.3114609 to 0.457513 | 0 |  |
+| LS | 24 | fit x fit | 2 | XP-S | 1407/3298 | -0.0001285606 | -0.0001659113 to -0.00009847408 | -0.213905 | -0.2670427 to -0.1565166 | 0 |  |
+| LS | 24 | fit x fit | 2 | XP-GP | 1406/3298 | 0.0001789163 | 0.0001105225 to 0.0002443592 | 0.08777442 | 0.0656276 to 0.1083504 | 0 |  |
+| LS | 24 | fit x fit | 2 | F-S | 1407/3298 | -0.02346246 | -0.02769217 to -0.01946624 | -0.5901852 | -0.7064443 to -0.5029419 | 0 |  |
+| LS | 24 | fit x fit | 2 | F-GP | 1406/3298 | -0.02317158 | -0.02737555 to -0.0192519 | -0.2887734 | -0.3826876 to -0.2035421 | 0 |  |
+| LS | 24 | fit x fit | 2 | S-GP | 1406/3298 | 0.0003075683 | 0.0002143378 to 0.0003922746 | 0.3018316 | 0.2289973 to 0.3629313 | 0 |  |
+| LS | 24 | fit x fit | 3 | AP-XP | 1136/3362 | 0.00008467758 | 0.0000767104 to 0.0000927152 | 1.056662 | 0.9677025 to 1.139497 | 0 |  |
+| LS | 24 | fit x fit | 3 | AP-F | 1136/3362 | 0.01236208 | 0.008342582 to 0.01689648 | 1.085899 | 0.8031986 to 1.420102 | 0 |  |
+| LS | 24 | fit x fit | 3 | AP-S | 1136/3362 | 0.00001381872 | 0.000008256533 to 0.0000198279 | 0.8520751 | 0.7571953 to 0.9471221 | 0 |  |
+| LS | 24 | fit x fit | 3 | AP-GP | 1136/3362 | 0.0001707596 | 0.0001351773 to 0.0002064047 | 1.137854 | 1.043528 to 1.233869 | 0 |  |
+| LS | 24 | fit x fit | 3 | XP-F | 1136/3362 | 0.01227741 | 0.008259592 to 0.01680881 | 0.02923774 | -0.2762753 to 0.3063345 | 0 |  |
+| LS | 24 | fit x fit | 3 | XP-S | 1136/3362 | -0.00007085886 | -0.00007600986 to -0.00006471669 | -0.2045866 | -0.2475826 to -0.17158 | 0 |  |
+| LS | 24 | fit x fit | 3 | XP-GP | 1136/3362 | 0.00008608205 | 0.00005624723 to 0.0001159694 | 0.0811922 | 0.06729941 to 0.09802217 | 0 |  |
+| LS | 24 | fit x fit | 3 | F-S | 1136/3362 | -0.01234826 | -0.01687969 to -0.008327601 | -0.2338243 | -0.4933115 to 0.08541469 | 0 |  |
+| LS | 24 | fit x fit | 3 | F-GP | 1136/3362 | -0.01219132 | -0.0166934 to -0.008178346 | 0.05195445 | -0.2172718 to 0.3742549 | 0 |  |
+| LS | 24 | fit x fit | 3 | S-GP | 1136/3362 | 0.0001569409 | 0.0001261915 to 0.0001877445 | 0.2857788 | 0.256871 to 0.3170905 | 0 |  |
+| LS | 24 | fit x fit | 4 | AP-XP | 1692/3377 | 0.00007070797 | 0.00006539212 to 0.00007709354 | 1.196374 | 1.080502 to 1.39418 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | AP-F | 1692/3377 | 0.006333494 | 0.005246181 to 0.007597279 | 0.7950751 | 0.04367008 to 1.174772 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | AP-S | 1692/3377 | 0.000009860418 | 0.000006159793 to 0.00001410125 | 0.9032707 | 0.845825 to 1.022989 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | AP-GP | 1692/3377 | 0.0001716467 | 0.0001548384 to 0.0001932763 | 1.2951 | 1.179529 to 1.494117 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | XP-F | 1692/3377 | 0.006262786 | 0.005176318 to 0.007525589 | -0.4012989 | -1.128832 to 0.06067075 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | XP-S | 1692/3377 | -0.00006084755 | -0.00006892683 to -0.00005529469 | -0.2931033 | -0.3699563 to -0.2300001 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | XP-GP | 1692/3377 | 0.0001009387 | 0.00008297661 to 0.0001210797 | 0.09872615 | 0.09222278 to 0.1059276 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | F-S | 1692/3377 | -0.006323634 | -0.007589477 to -0.00523455 | 0.1081955 | -0.3254218 to 0.8614272 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | F-GP | 1692/3377 | -0.006161848 | -0.00743346 to -0.0050678 | 0.500025 | 0.03589484 to 1.230216 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 4 | S-GP | 1692/3377 | 0.0001617863 | 0.000147902 to 0.0001789023 | 0.3918295 | 0.3290265 to 0.4737924 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | AP-XP | 1023/3296 | 0.00005105857 | 0.00004099224 to 0.00006122378 | 1.27423 | 1.137425 to 1.408123 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | AP-F | 1023/3296 | 0.004249207 | 0.002878376 to 0.005579611 | 0.8570944 | 0.07399915 to 1.355705 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | AP-S | 1023/3296 | 0.000005291696 | 0.000002603939 to 0.000008142643 | 0.9317888 | 0.8363643 to 1.028151 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | AP-GP | 1023/3296 | 0.0000862397 | 0.00006338865 to 0.0001093152 | 1.344429 | 1.197234 to 1.488493 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | XP-F | 1023/3296 | 0.004198149 | 0.002848532 to 0.005520995 | -0.4171352 | -1.169965 to 0.0324709 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | XP-S | 1023/3296 | -0.00004576687 | -0.00005374434 to -0.000037867 | -0.3424408 | -0.4036182 to -0.2798564 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | XP-GP | 1023/3296 | 0.00003518114 | 0.00002153031 to 0.00004877898 | 0.07019944 | 0.05345741 to 0.08578693 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | F-S | 1023/3296 | -0.004243915 | -0.00557388 to -0.002874894 | 0.07469438 | -0.3622519 to 0.7993651 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | F-GP | 1023/3296 | -0.004162967 | -0.00547801 to -0.002827766 | 0.4873346 | 0.0413733 to 1.257903 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 5 | S-GP | 1023/3296 | 0.00008094801 | 0.00006026341 to 0.0001018358 | 0.4126403 | 0.3420327 to 0.4739034 | 0 | read before the statements were registered |
+| LS | 24 | fit x fit | 7 | AP-XP | 1319/3308 | 0.00002283349 | 0.00001813785 to 0.00002859526 | 1.175426 | 1.06234 to 1.281695 | 0 |  |
+| LS | 24 | fit x fit | 7 | AP-F | 1319/3308 | 0.002303845 | 0.001697831 to 0.0028882 | 0.691639 | 0.5047255 to 0.8639835 | 0 |  |
+| LS | 24 | fit x fit | 7 | AP-S | 1319/3308 | 0.000002013483 | 8.077011e-7 to 0.000003402333 | 0.7941226 | 0.6693089 to 0.905824 | 0 |  |
+| LS | 24 | fit x fit | 7 | AP-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x fit | 7 | XP-F | 1319/3308 | 0.002281012 | 0.001679248 to 0.002861268 | -0.4837874 | -0.7654328 to -0.2235068 | 0 |  |
+| LS | 24 | fit x fit | 7 | XP-S | 1319/3308 | -0.00002082001 | -0.00002539274 to -0.0000168926 | -0.3813039 | -0.4314602 to -0.3438956 | 0 |  |
+| LS | 24 | fit x fit | 7 | XP-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x fit | 7 | F-S | 1319/3308 | -0.002301832 | -0.002885514 to -0.001696514 | 0.1024836 | -0.135272 to 0.3650921 | 0 |  |
+| LS | 24 | fit x fit | 7 | F-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x fit | 7 | S-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 1 | AP-XP | 1889/3359 | 0.0003798175 | 0.0002272428 to 0.0005327593 | 1.03388 | 0.8305425 to 1.270363 | 0 |  |
+| LS | 24 | fit x GP | 1 | AP-F | 1889/3359 | 0.001078634 | 0.0007852932 to 0.001375964 | 1.09432 | 0.9165441 to 1.333664 | 0 |  |
+| LS | 24 | fit x GP | 1 | AP-S | 1889/3359 | 0.0002219328 | 0.00009444631 to 0.0003356546 | 0.9404688 | 0.7565353 to 1.147649 | 0 |  |
+| LS | 24 | fit x GP | 1 | AP-GP | 1889/3359 | 0.0005472628 | 0.0003739101 to 0.0007087396 | 1.052953 | 0.9011001 to 1.240075 | 0 |  |
+| LS | 24 | fit x GP | 1 | XP-F | 1889/3359 | 0.0006988162 | 0.0004758674 to 0.0009341375 | 0.06043946 | 0.02025329 to 0.1088151 | 0 |  |
+| LS | 24 | fit x GP | 1 | XP-S | 1889/3359 | -0.0001578847 | -0.0002188823 to -0.0001110985 | -0.09341136 | -0.1261978 to -0.06022084 | 0 |  |
+| LS | 24 | fit x GP | 1 | XP-GP | 1889/3359 | 0.0001674453 | 0.0001243169 to 0.0002181689 | 0.01907272 | -0.04285313 to 0.08974548 | 0 |  |
+| LS | 24 | fit x GP | 1 | F-S | 1889/3359 | -0.0008567009 | -0.001133095 to -0.0005948388 | -0.1538508 | -0.1999775 to -0.1101493 | 0 |  |
+| LS | 24 | fit x GP | 1 | F-GP | 1889/3359 | -0.0005313709 | -0.0007668964 to -0.0003082287 | -0.04136673 | -0.1025891 to -0.001838937 | 0 |  |
+| LS | 24 | fit x GP | 1 | S-GP | 1889/3359 | 0.00032533 | 0.0002494463 to 0.0003912985 | 0.1124841 | 0.07962398 to 0.1495913 | 0 |  |
+| LS | 24 | fit x GP | 2 | AP-XP | 1812/3298 | 0.0002074885 | 0.0001595095 to 0.0002587483 | 1.140837 | 0.9790939 to 1.304375 | 0 |  |
+| LS | 24 | fit x GP | 2 | AP-F | 1812/3298 | 0.0006715426 | 0.0005426168 to 0.0007994761 | 1.266129 | 1.110891 to 1.42309 | 0 |  |
+| LS | 24 | fit x GP | 2 | AP-S | 1812/3298 | 0.00007208676 | 0.00003065587 to 0.0001225747 | 0.9800128 | 0.8144118 to 1.151885 | 0 |  |
+| LS | 24 | fit x GP | 2 | AP-GP | 1811/3298 | 0.0003375409 | 0.0002424495 to 0.0004336882 | 1.19595 | 1.027069 to 1.366707 | 0 |  |
+| LS | 24 | fit x GP | 2 | XP-F | 1812/3298 | 0.0004640541 | 0.0003776132 to 0.0005498297 | 0.1252924 | 0.1113549 to 0.144792 | 0 |  |
+| LS | 24 | fit x GP | 2 | XP-S | 1812/3298 | -0.0001354017 | -0.0001671417 to -0.0001009514 | -0.1608241 | -0.2081872 to -0.1100677 | 0 |  |
+| LS | 24 | fit x GP | 2 | XP-GP | 1811/3298 | 0.0001299378 | 0.00008173999 to 0.0001791233 | 0.05448361 | 0.03910121 to 0.069456 | 0 |  |
+| LS | 24 | fit x GP | 2 | F-S | 1812/3298 | -0.0005994558 | -0.0007131639 to -0.0004801965 | -0.2861165 | -0.352985 to -0.2271837 | 0 |  |
+| LS | 24 | fit x GP | 2 | F-GP | 1811/3298 | -0.0003343725 | -0.0004073698 to -0.000254155 | -0.07087793 | -0.09037064 to -0.05240501 | 0 |  |
+| LS | 24 | fit x GP | 2 | S-GP | 1811/3298 | 0.0002654143 | 0.0001834734 to 0.0003382164 | 0.2153966 | 0.1559429 to 0.2753682 | 0 |  |
+| LS | 24 | fit x GP | 3 | AP-XP | 1494/3362 | 0.0001046261 | 0.00008500213 to 0.0001237456 | 1.070124 | 0.9460295 to 1.192896 | 0 |  |
+| LS | 24 | fit x GP | 3 | AP-F | 1494/3362 | 0.0004081506 | 0.0003488212 to 0.0004800589 | 1.218292 | 1.068051 to 1.372405 | 0 |  |
+| LS | 24 | fit x GP | 3 | AP-S | 1494/3362 | 0.00003669019 | 0.00001530567 to 0.00006616365 | 0.902009 | 0.7852556 to 1.021658 | 0 |  |
+| LS | 24 | fit x GP | 3 | AP-GP | 1494/3362 | 0.0001790256 | 0.0001395471 to 0.0002174095 | 1.133978 | 1.001123 to 1.265419 | 0 |  |
+| LS | 24 | fit x GP | 3 | XP-F | 1494/3362 | 0.0003035245 | 0.0002335009 to 0.0003852349 | 0.1481688 | 0.1027619 to 0.2035117 | 0 |  |
+| LS | 24 | fit x GP | 3 | XP-S | 1494/3362 | -0.00006793595 | -0.00007781634 to -0.00005757579 | -0.1681145 | -0.2466545 to -0.1056142 | 0 |  |
+| LS | 24 | fit x GP | 3 | XP-GP | 1494/3362 | 0.00007439943 | 0.00005206235 to 0.00009611726 | 0.06385487 | 0.05218405 to 0.07708856 | 0 |  |
+| LS | 24 | fit x GP | 3 | F-S | 1494/3362 | -0.0003714604 | -0.0004549912 to -0.0002942126 | -0.3162833 | -0.4501661 to -0.2122059 | 0 |  |
+| LS | 24 | fit x GP | 3 | F-GP | 1494/3362 | -0.000229125 | -0.0003231964 to -0.0001615121 | -0.0843139 | -0.1343347 to -0.04923393 | 0 |  |
+| LS | 24 | fit x GP | 3 | S-GP | 1494/3362 | 0.0001423354 | 0.0001170513 to 0.0001694468 | 0.2319694 | 0.1591422 to 0.3117446 | 0 |  |
+| LS | 24 | fit x GP | 4 | AP-XP | 1978/3377 | 0.00008124286 | 0.00006985952 to 0.00009296237 | 1.1394 | 1.042872 to 1.29287 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | AP-F | 1978/3377 | 0.000385032 | 0.0003183752 to 0.0004972664 | 1.299951 | 1.155979 to 1.531171 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | AP-S | 1978/3377 | 0.00002109967 | 0.00001027329 to 0.00003369768 | 0.9267638 | 0.890272 to 0.9810178 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | AP-GP | 1978/3377 | 0.000174058 | 0.0001577222 to 0.0001926171 | 1.223783 | 1.113967 to 1.396281 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | XP-F | 1978/3377 | 0.0003037891 | 0.0002292916 to 0.0004177216 | 0.1605513 | 0.1131809 to 0.2316878 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | XP-S | 1978/3377 | -0.00006014318 | -0.00006495535 to -0.00005572051 | -0.2126363 | -0.3159534 to -0.1466705 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | XP-GP | 1978/3377 | 0.00009281513 | 0.00008050385 to 0.0001046025 | 0.08438265 | 0.06929055 to 0.1012741 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | F-S | 1978/3377 | -0.0003639323 | -0.000481165 to -0.0002890991 | -0.3731876 | -0.5476412 to -0.2557785 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | F-GP | 1978/3377 | -0.000210974 | -0.0003293535 to -0.0001365146 | -0.07616867 | -0.1356268 to -0.04201208 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 4 | S-GP | 1978/3377 | 0.0001529583 | 0.0001442191 to 0.0001613256 | 0.297019 | 0.2148743 to 0.4125568 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | AP-XP | 1343/3296 | 0.00005609221 | 0.0000424433 to 0.00007159066 | 1.263142 | 1.137535 to 1.40053 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | AP-F | 1343/3296 | 0.0002139205 | 0.0001785568 to 0.0002526079 | 1.416521 | 1.285685 to 1.534945 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | AP-S | 1343/3296 | 0.00001502549 | 0.000004540012 to 0.00002963846 | 1.002771 | 0.8471131 to 1.172281 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | AP-GP | 1343/3296 | 0.00009560532 | 0.00006817002 to 0.0001204827 | 1.327418 | 1.201756 to 1.46548 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | XP-F | 1343/3296 | 0.0001578283 | 0.0001199715 to 0.0001986602 | 0.1533791 | 0.1243214 to 0.183584 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | XP-S | 1343/3296 | -0.00004106672 | -0.00004535111 to -0.00003644118 | -0.2603705 | -0.3421455 to -0.2092711 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | XP-GP | 1343/3296 | 0.00003951311 | 0.00002712371 to 0.00005154145 | 0.06427604 | 0.05456491 to 0.07564082 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | F-S | 1343/3296 | -0.0001988951 | -0.0002401871 to -0.0001583407 | -0.4137495 | -0.5194757 to -0.3401409 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | F-GP | 1343/3296 | -0.0001183152 | -0.0001583176 to -0.00007815249 | -0.08910302 | -0.1180677 to -0.05635369 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 5 | S-GP | 1343/3296 | 0.00008057983 | 0.00006301784 to 0.00009587283 | 0.3246465 | 0.2719053 to 0.4051229 | 0 | read before the statements were registered |
+| LS | 24 | fit x GP | 7 | AP-XP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | AP-F | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | AP-S | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | AP-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | XP-F | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | XP-S | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | XP-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | F-S | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | F-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 24 | fit x GP | 7 | S-GP | 0/3308 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x fit | 1 | AP-XP | 3283/3330 | 0.00001874832 | 0.00001723515 to 0.00002015813 | 0.8135923 | 0.7548462 to 0.8484976 | 0 |  |
+| P | 72 | fit x fit | 1 | AP-F | 3283/3330 | 0.002859948 | 0.002419872 to 0.003396817 | 1.196784 | 1.098806 to 1.262594 | 0 |  |
+| P | 72 | fit x fit | 1 | AP-S | 3283/3330 | 0.00006507502 | 0.00005578033 to 0.00007380955 | 0.8811966 | 0.8145915 to 0.9256199 | 0 |  |
+| P | 72 | fit x fit | 1 | AP-GP | 3267/3330 | 0.000002432166 | 0.000001741397 to 0.00000314528 | 0.5415271 | 0.5134901 to 0.565781 | 0 |  |
+| P | 72 | fit x fit | 1 | XP-F | 3283/3330 | 0.0028412 | 0.002401915 to 0.003380525 | 0.3831922 | 0.339542 to 0.4181622 | 0 |  |
+| P | 72 | fit x fit | 1 | XP-S | 3283/3330 | 0.0000463267 | 0.00003853224 to 0.00005365142 | 0.06760436 | 0.05241696 to 0.08507073 | 0 |  |
+| P | 72 | fit x fit | 1 | XP-GP | 3267/3330 | -0.00001637724 | -0.00001823097 to -0.00001440765 | -0.2738539 | -0.3072858 to -0.2369991 | 0 |  |
+| P | 72 | fit x fit | 1 | F-S | 3283/3330 | -0.002794873 | -0.00333218 to -0.002361321 | -0.3155878 | -0.3524439 to -0.2732778 | 0 |  |
+| P | 72 | fit x fit | 1 | F-GP | 3267/3330 | -0.002871223 | -0.003408266 to -0.002432106 | -0.6580379 | -0.7253609 to -0.5738101 | 0 |  |
+| P | 72 | fit x fit | 1 | S-GP | 3267/3330 | -0.00006293379 | -0.00007167479 to -0.00005360083 | -0.3418148 | -0.3689172 to -0.2981091 | 0 |  |
+| P | 72 | fit x fit | 2 | AP-XP | 3232/3267 | 0.00001135588 | 0.000009620483 to 0.00001308807 | 0.9067446 | 0.8277799 to 0.9921843 | 0 |  |
+| P | 72 | fit x fit | 2 | AP-F | 3232/3267 | 0.001096045 | 0.0008134175 to 0.001414638 | 1.270999 | 1.103708 to 1.466232 | 0 |  |
+| P | 72 | fit x fit | 2 | AP-S | 3232/3267 | 0.00002729408 | 0.00001976792 to 0.00003538688 | 0.9540635 | 0.8686865 to 1.055589 | 0 |  |
+| P | 72 | fit x fit | 2 | AP-GP | 3199/3267 | 4.35423e-7 | 1.397608e-7 to 7.503713e-7 | 0.3651439 | 0.2951829 to 0.4350176 | 0 |  |
+| P | 72 | fit x fit | 2 | XP-F | 3232/3267 | 0.001084689 | 0.000803797 to 0.001401595 | 0.364254 | 0.2664782 to 0.4724257 | 0 |  |
+| P | 72 | fit x fit | 2 | XP-S | 3232/3267 | 0.0000159382 | 0.00001014744 to 0.00002246755 | 0.0473189 | 0.02827165 to 0.06237288 | 0 |  |
+| P | 72 | fit x fit | 2 | XP-GP | 3199/3267 | -0.00001090218 | -0.00001229858 to -0.000009504026 | -0.5413148 | -0.578812 to -0.5000185 | 0 |  |
+| P | 72 | fit x fit | 2 | F-S | 3232/3267 | -0.001068751 | -0.001381103 to -0.0007936496 | -0.3169351 | -0.4220576 to -0.2167638 | 0 |  |
+| P | 72 | fit x fit | 2 | F-GP | 3199/3267 | -0.001089036 | -0.001395511 to -0.0008177028 | -0.9045246 | -1.041584 to -0.7886399 | 0 |  |
+| P | 72 | fit x fit | 2 | S-GP | 3199/3267 | -0.00002649941 | -0.00003351562 to -0.00001955966 | -0.5883177 | -0.6378004 to -0.5292093 | 0 |  |
+| P | 72 | fit x fit | 3 | AP-XP | 3421/3468 | 0.000006471249 | 0.000006049448 to 0.00000689478 | 0.9208896 | 0.8407538 to 1.017311 | 0 |  |
+| P | 72 | fit x fit | 3 | AP-F | 3421/3468 | 0.0004268698 | 0.0003140489 to 0.0005415673 | 1.292295 | 1.165226 to 1.449602 | 0 |  |
+| P | 72 | fit x fit | 3 | AP-S | 3421/3468 | 0.00001118835 | 0.000009774025 to 0.00001269981 | 0.9521528 | 0.8689116 to 1.058797 | 0 |  |
+| P | 72 | fit x fit | 3 | AP-GP | 3386/3468 | 1.181007e-7 | 3.511661e-8 to 2.011828e-7 | 0.2100075 | 0.1413904 to 0.2787056 | 0 |  |
+| P | 72 | fit x fit | 3 | XP-F | 3421/3468 | 0.0004203986 | 0.0003078844 to 0.0005347368 | 0.3714049 | 0.3176035 to 0.4346329 | 0 |  |
+| P | 72 | fit x fit | 3 | XP-S | 3421/3468 | 0.000004717096 | 0.000003600312 to 0.000005842826 | 0.03126319 | 0.01571138 to 0.0474458 | 0 |  |
+| P | 72 | fit x fit | 3 | XP-GP | 3386/3468 | -0.000006356218 | -0.000006722136 to -0.000005993742 | -0.7104243 | -0.7874427 to -0.6321491 | 0 |  |
+| P | 72 | fit x fit | 3 | F-S | 3421/3468 | -0.0004156815 | -0.0005292352 to -0.0003042749 | -0.3401417 | -0.4044323 to -0.283633 | 0 |  |
+| P | 72 | fit x fit | 3 | F-GP | 3386/3468 | -0.0004273239 | -0.0005452625 to -0.0003110684 | -1.081308 | -1.200636 to -0.9681935 | 0 |  |
+| P | 72 | fit x fit | 3 | S-GP | 3386/3468 | -0.00001107734 | -0.00001254958 to -0.000009763802 | -0.741527 | -0.8348 to -0.6511824 | 0 |  |
+| P | 72 | fit x fit | 4 | AP-XP | 3360/3400 | 0.000003448394 | 0.000002825044 to 0.000004007227 | 0.8038596 | 0.6754453 to 0.9110647 | 0 |  |
+| P | 72 | fit x fit | 4 | AP-F | 3360/3400 | 0.0001680268 | 0.0001271947 to 0.0002069479 | 1.150675 | 1.001827 to 1.268147 | 0 |  |
+| P | 72 | fit x fit | 4 | AP-S | 3360/3400 | 0.000005054773 | 0.000003790609 to 0.000006365979 | 0.8688307 | 0.7657774 to 0.9686833 | 0 |  |
+| P | 72 | fit x fit | 4 | AP-GP | 3318/3400 | 1.090361e-7 | 2.973325e-8 to 1.865431e-7 | 0.2502625 | 0.1829464 to 0.3165719 | 0 |  |
+| P | 72 | fit x fit | 4 | XP-F | 3360/3400 | 0.0001645784 | 0.000128747 to 0.0002055763 | 0.3468153 | 0.3137703 to 0.3858609 | 0 |  |
+| P | 72 | fit x fit | 4 | XP-S | 3360/3400 | 0.000001606379 | 8.393065e-7 to 0.000002341311 | 0.06497108 | 0.0291476 to 0.1002234 | 0 |  |
+| P | 72 | fit x fit | 4 | XP-GP | 3318/3400 | -0.000003289343 | -0.000003767206 to -0.000002771336 | -0.545563 | -0.6197055 to -0.4692437 | 0 |  |
+| P | 72 | fit x fit | 4 | F-S | 3360/3400 | -0.000162972 | -0.0002038759 to -0.0001273839 | -0.2818442 | -0.3294828 to -0.225061 | 0 |  |
+| P | 72 | fit x fit | 4 | F-GP | 3318/3400 | -0.0001668452 | -0.0002062536 to -0.0001275772 | -0.8901453 | -0.9585018 to -0.8000181 | 0 |  |
+| P | 72 | fit x fit | 4 | S-GP | 3318/3400 | -0.000004818699 | -0.000005930089 to -0.000003540621 | -0.6103059 | -0.6694938 to -0.5493803 | 0 |  |
+| P | 72 | fit x fit | 5 | AP-XP | 3304/3349 | 0.000002734621 | 0.000002362213 to 0.0000030649 | 0.8818861 | 0.8003849 to 0.9700333 | 0 |  |
+| P | 72 | fit x fit | 5 | AP-F | 3304/3349 | 0.0001087477 | 0.00007743605 to 0.0001400593 | 1.230141 | 1.115625 to 1.348805 | 0 |  |
+| P | 72 | fit x fit | 5 | AP-S | 3304/3349 | 0.00000351131 | 0.000002858502 to 0.00000409974 | 0.9458938 | 0.8682539 to 1.032572 | 0 |  |
+| P | 72 | fit x fit | 5 | AP-GP | 3255/3349 | 1.240794e-8 | 3.245043e-9 to 2.161032e-8 | 0.01498949 | -0.05676223 to 0.08399207 | 0 |  |
+| P | 72 | fit x fit | 5 | XP-F | 3304/3349 | 0.0001060131 | 0.00007496372 to 0.0001370624 | 0.3482549 | 0.3039949 to 0.3923718 | 0 |  |
+| P | 72 | fit x fit | 5 | XP-S | 3304/3349 | 7.766894e-7 | 4.461866e-7 to 0.000001064909 | 0.06400763 | 0.0367124 to 0.08886262 | 0 |  |
+| P | 72 | fit x fit | 5 | XP-GP | 3255/3349 | -0.000002687633 | -0.000002971837 to -0.000002361838 | -0.8692429 | -0.9485045 to -0.8086816 | 0 |  |
+| P | 72 | fit x fit | 5 | F-S | 3304/3349 | -0.0001052364 | -0.0001360905 to -0.00007438221 | -0.2842472 | -0.3482427 to -0.2225109 | 0 |  |
+| P | 72 | fit x fit | 5 | F-GP | 3255/3349 | -0.0001097654 | -0.0001417557 to -0.00007791245 | -1.220057 | -1.320487 to -1.123857 | 0 |  |
+| P | 72 | fit x fit | 5 | S-GP | 3255/3349 | -0.000003350753 | -0.000003819224 to -0.000002774612 | -0.9333144 | -1.028933 to -0.8592849 | 0 |  |
+| P | 72 | fit x fit | 7 | AP-XP | 3145/3186 | 0.000001172705 | 8.786498e-7 to 0.000001466386 | 0.6816859 | 0.5447879 to 0.8189325 | 0 |  |
+| P | 72 | fit x fit | 7 | AP-F | 3145/3186 | 0.00003579265 | 0.00002948473 to 0.00004281151 | 1.104839 | 0.9849175 to 1.220667 | 0 |  |
+| P | 72 | fit x fit | 7 | AP-S | 3145/3186 | 0.000001302793 | 9.423829e-7 to 0.000001685288 | 0.8732027 | 0.8183729 to 0.9202798 | 0 |  |
+| P | 72 | fit x fit | 7 | AP-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x fit | 7 | XP-F | 3145/3186 | 0.00003461994 | 0.00002819704 to 0.00004172485 | 0.4231527 | 0.3672144 to 0.4792334 | 0 |  |
+| P | 72 | fit x fit | 7 | XP-S | 3145/3186 | 1.300882e-7 | -4.033803e-8 to 3.025056e-7 | 0.1915169 | 0.1004661 to 0.2814574 | 0 |  |
+| P | 72 | fit x fit | 7 | XP-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x fit | 7 | F-S | 3145/3186 | -0.00003448985 | -0.0000412138 to -0.0000285407 | -0.2316358 | -0.3037963 to -0.1348073 | 0 |  |
+| P | 72 | fit x fit | 7 | F-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x fit | 7 | S-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 1 | AP-XP | 3295/3330 | 0.000005204658 | 0.000003692715 to 0.000006612824 | 0.5421974 | 0.4815887 to 0.5884215 | 0 |  |
+| P | 72 | fit x GP | 1 | AP-F | 3295/3330 | 0.000009936049 | 0.000006777393 to 0.00001292493 | 0.5903616 | 0.5178039 to 0.6455884 | 0 |  |
+| P | 72 | fit x GP | 1 | AP-S | 3295/3330 | 0.000007120405 | 0.000004860755 to 0.000009060485 | 0.5618252 | 0.4977679 to 0.6096522 | 0 |  |
+| P | 72 | fit x GP | 1 | AP-GP | 3290/3330 | 0.000002404288 | 0.000001718265 to 0.000003111484 | 0.4661492 | 0.4427244 to 0.4930283 | 0 |  |
+| P | 72 | fit x GP | 1 | XP-F | 3295/3330 | 0.000004731391 | 0.000003076719 to 0.000006297124 | 0.04816416 | 0.03889833 to 0.05722459 | 0 |  |
+| P | 72 | fit x GP | 1 | XP-S | 3295/3330 | 0.000001915746 | 0.000001213726 to 0.000002515989 | 0.01962784 | 0.01617922 to 0.02233445 | 0 |  |
+| P | 72 | fit x GP | 1 | XP-GP | 3290/3330 | -0.000002806116 | -0.000004698315 to -8.001706e-7 | -0.07567297 | -0.1261068 to -0.02477049 | 0 |  |
+| P | 72 | fit x GP | 1 | F-S | 3295/3330 | -0.000002815645 | -0.000003887904 to -0.000001707274 | -0.02853632 | -0.03690232 to -0.01993864 | 0 |  |
+| P | 72 | fit x GP | 1 | F-GP | 3290/3330 | -0.000007544086 | -0.00001099544 to -0.000003885263 | -0.123836 | -0.1838316 to -0.06391691 | 0 |  |
+| P | 72 | fit x GP | 1 | S-GP | 3290/3330 | -0.00000472467 | -0.000007130999 to -0.000002173689 | -0.09531668 | -0.1466478 to -0.04372283 | 0 |  |
+| P | 72 | fit x GP | 2 | AP-XP | 3227/3267 | 0.000001527063 | 0.000001101305 to 0.000001757363 | 0.4517089 | 0.3988192 to 0.4963636 | 0 |  |
+| P | 72 | fit x GP | 2 | AP-F | 3227/3267 | 0.000002526086 | 0.000001816282 to 0.000002898492 | 0.4738688 | 0.4145365 to 0.5205795 | 0 |  |
+| P | 72 | fit x GP | 2 | AP-S | 3227/3267 | 0.000001731122 | 0.000001215637 to 0.000002050381 | 0.4548392 | 0.3987073 to 0.5008168 | 0 |  |
+| P | 72 | fit x GP | 2 | AP-GP | 3211/3267 | 4.308179e-7 | 1.363854e-7 to 7.443848e-7 | 0.3009197 | 0.2350582 to 0.3666583 | 0 |  |
+| P | 72 | fit x GP | 2 | XP-F | 3227/3267 | 9.99023e-7 | 7.009475e-7 to 0.000001192742 | 0.02215991 | 0.01720532 to 0.02514368 | 0 |  |
+| P | 72 | fit x GP | 2 | XP-S | 3227/3267 | 2.040588e-7 | 1.097387e-7 to 3.077674e-7 | 0.003130254 | 0.001264135 to 0.005348628 | 0 |  |
+| P | 72 | fit x GP | 2 | XP-GP | 3211/3267 | -0.000001103678 | -0.000001583515 to -5.705164e-7 | -0.1515273 | -0.2185115 to -0.07807502 | 0 |  |
+| P | 72 | fit x GP | 2 | F-S | 3227/3267 | -7.949642e-7 | -9.681821e-7 to -5.634228e-7 | -0.01902966 | -0.02216828 to -0.01564256 | 0 |  |
+| P | 72 | fit x GP | 2 | F-GP | 3211/3267 | -0.000002107678 | -0.000002757073 to -0.000001317657 | -0.1737946 | -0.2434522 to -0.09553494 | 0 |  |
+| P | 72 | fit x GP | 2 | S-GP | 3211/3267 | -0.000001308753 | -0.000001788891 to -7.218933e-7 | -0.1546717 | -0.2214615 to -0.08101599 | 0 |  |
+| P | 72 | fit x GP | 3 | AP-XP | 3420/3468 | 5.589452e-7 | 4.443175e-7 to 6.650146e-7 | 0.3815645 | 0.3273918 to 0.4337281 | 0 |  |
+| P | 72 | fit x GP | 3 | AP-F | 3420/3468 | 7.232093e-7 | 5.845308e-7 to 8.585489e-7 | 0.3945211 | 0.3376866 to 0.4491117 | 0 |  |
+| P | 72 | fit x GP | 3 | AP-S | 3420/3468 | 5.742339e-7 | 4.482768e-7 to 6.775231e-7 | 0.381726 | 0.3269143 to 0.4336817 | 0 |  |
+| P | 72 | fit x GP | 3 | AP-GP | 3403/3468 | 1.173152e-7 | 3.398266e-8 to 2.009422e-7 | 0.1649546 | 0.09325431 to 0.2375189 | 0 |  |
+| P | 72 | fit x GP | 3 | XP-F | 3420/3468 | 1.642641e-7 | 1.413086e-7 to 2.050753e-7 | 0.01295661 | 0.01017426 to 0.01623553 | 0 |  |
+| P | 72 | fit x GP | 3 | XP-S | 3420/3468 | 1.528868e-8 | -5.066723e-9 to 3.573954e-8 | 0.000161537 | -0.00117853 to 0.001507888 | 0 |  |
+| P | 72 | fit x GP | 3 | XP-GP | 3403/3468 | -4.418843e-7 | -5.951104e-7 to -2.572705e-7 | -0.2163369 | -0.3226609 to -0.1120744 | 0 |  |
+| P | 72 | fit x GP | 3 | F-S | 3420/3468 | -1.489754e-7 | -2.025371e-7 to -1.126936e-7 | -0.01279507 | -0.01732778 to -0.009253892 | 0 |  |
+| P | 72 | fit x GP | 3 | F-GP | 3403/3468 | -6.063434e-7 | -8.018423e-7 to -3.988959e-7 | -0.2292933 | -0.3385094 to -0.1226342 | 0 |  |
+| P | 72 | fit x GP | 3 | S-GP | 3403/3468 | -4.573768e-7 | -6.148209e-7 to -2.614322e-7 | -0.2165144 | -0.3221186 to -0.1119459 | 0 |  |
+| P | 72 | fit x GP | 4 | AP-XP | 3347/3400 | 4.394368e-7 | 3.557107e-7 to 5.240683e-7 | 0.3751978 | 0.3295375 to 0.4073409 | 0 |  |
+| P | 72 | fit x GP | 4 | AP-F | 3347/3400 | 5.909498e-7 | 4.810547e-7 to 7.020332e-7 | 0.3881574 | 0.3428506 to 0.4221287 | 0 |  |
+| P | 72 | fit x GP | 4 | AP-S | 3347/3400 | 4.27586e-7 | 3.436914e-7 to 5.123878e-7 | 0.3717912 | 0.3287346 to 0.4046149 | 0 |  |
+| P | 72 | fit x GP | 4 | AP-GP | 3330/3400 | 1.080644e-7 | 2.901795e-8 to 1.852807e-7 | 0.1977506 | 0.1290062 to 0.2653485 | 0 |  |
+| P | 72 | fit x GP | 4 | XP-F | 3347/3400 | 1.51513e-7 | 1.149574e-7 to 1.872058e-7 | 0.01295958 | 0.009063506 to 0.01650682 | 0 |  |
+| P | 72 | fit x GP | 4 | XP-S | 3347/3400 | -1.185085e-8 | -3.985505e-8 to 1.198599e-8 | -0.003406556 | -0.006277229 to -0.0009442693 | 0 |  |
+| P | 72 | fit x GP | 4 | XP-GP | 3330/3400 | -3.335989e-7 | -4.747708e-7 to -1.947812e-7 | -0.178382 | -0.2644105 to -0.08641134 | 0 |  |
+| P | 72 | fit x GP | 4 | F-S | 3347/3400 | -1.633638e-7 | -2.226232e-7 to -1.077975e-7 | -0.01636614 | -0.02241387 to -0.01051746 | 0 |  |
+| P | 72 | fit x GP | 4 | F-GP | 3330/3400 | -4.858853e-7 | -6.619766e-7 to -3.078817e-7 | -0.1914073 | -0.2798909 to -0.09661157 | 0 |  |
+| P | 72 | fit x GP | 4 | S-GP | 3330/3400 | -3.216875e-7 | -4.488421e-7 to -1.865325e-7 | -0.1749579 | -0.2610516 to -0.08308744 | 0 |  |
+| P | 72 | fit x GP | 5 | AP-XP | 3288/3349 | 7.343864e-8 | 5.339379e-8 to 9.213485e-8 | 0.2577863 | 0.1798736 to 0.3256646 | 0 |  |
+| P | 72 | fit x GP | 5 | AP-F | 3288/3349 | 7.666022e-8 | 5.409811e-8 to 9.620988e-8 | 0.2596582 | 0.1839654 to 0.3279853 | 0 |  |
+| P | 72 | fit x GP | 5 | AP-S | 3288/3349 | 7.265178e-8 | 4.96756e-8 to 9.091494e-8 | 0.2571512 | 0.1827505 to 0.3247664 | 0 |  |
+| P | 72 | fit x GP | 5 | AP-GP | 3270/3349 | 1.231237e-8 | 3.117449e-9 to 2.155239e-8 | 0.03420813 | -0.04374472 to 0.1125433 | 0 |  |
+| P | 72 | fit x GP | 5 | XP-F | 3288/3349 | 3.221585e-9 | 2.157613e-9 to 4.276726e-9 | 0.001871945 | 0.001177594 to 0.002426413 | 0 |  |
+| P | 72 | fit x GP | 5 | XP-S | 3288/3349 | -7.868532e-10 | -1.538726e-9 to -7.155513e-11 | -0.0006350707 | -0.001164938 to -0.0001578497 | 0 |  |
+| P | 72 | fit x GP | 5 | XP-GP | 3270/3349 | -6.15302e-8 | -8.67127e-8 to -3.647769e-8 | -0.2248766 | -0.3475888 to -0.1049104 | 0 |  |
+| P | 72 | fit x GP | 5 | F-S | 3288/3349 | -4.008438e-9 | -5.803215e-9 to -2.272717e-9 | -0.002507015 | -0.003587338 to -0.001350889 | 0 |  |
+| P | 72 | fit x GP | 5 | F-GP | 3270/3349 | -6.476952e-8 | -9.183542e-8 to -3.867065e-8 | -0.2267588 | -0.3500142 to -0.1062616 | 0 |  |
+| P | 72 | fit x GP | 5 | S-GP | 3270/3349 | -6.073901e-8 | -8.606718e-8 to -3.611593e-8 | -0.224238 | -0.3464603 to -0.1047507 | 0 |  |
+| P | 72 | fit x GP | 7 | AP-XP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | AP-F | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | AP-S | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | AP-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | XP-F | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | XP-S | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | XP-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | F-S | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | F-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 72 | fit x GP | 7 | S-GP | 0/3186 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x fit | 1 | AP-XP | 1911/3326 | 0.0002851005 | 0.0002158086 to 0.0003423886 | 1.057966 | 0.9508255 to 1.188008 | 0 |  |
+| LS | 72 | fit x fit | 1 | AP-F | 1911/3326 | 0.03077725 | 0.02249337 to 0.04020528 | 1.46399 | 1.296434 to 1.658598 | 0 |  |
+| LS | 72 | fit x fit | 1 | AP-S | 1911/3326 | 0.0002880738 | 0.0001885529 to 0.0003759015 | 1.043016 | 0.92599 to 1.196803 | 0 |  |
+| LS | 72 | fit x fit | 1 | AP-GP | 1911/3326 | 0.0004721701 | 0.0003202306 to 0.0005926821 | 1.024556 | 0.9357193 to 1.143993 | 0 |  |
+| LS | 72 | fit x fit | 1 | XP-F | 1911/3326 | 0.03049215 | 0.02225992 to 0.03988621 | 0.4060241 | 0.3352646 to 0.4741642 | 0 |  |
+| LS | 72 | fit x fit | 1 | XP-S | 1911/3326 | 0.000002973242 | -0.00002499012 to 0.00003472434 | -0.01495023 | -0.03646454 to 0.007209365 | 0 |  |
+| LS | 72 | fit x fit | 1 | XP-GP | 1911/3326 | 0.0001870695 | 0.0001089128 to 0.0002519174 | -0.03341021 | -0.06414206 to -0.00136392 | 0 |  |
+| LS | 72 | fit x fit | 1 | F-S | 1911/3326 | -0.03048918 | -0.039242 to -0.02227787 | -0.4209744 | -0.4902789 to -0.3415394 | 0 |  |
+| LS | 72 | fit x fit | 1 | F-GP | 1911/3326 | -0.03030508 | -0.0396678 to -0.02211693 | -0.4394344 | -0.5231691 to -0.3597966 | 0 |  |
+| LS | 72 | fit x fit | 1 | S-GP | 1911/3326 | 0.0001840963 | 0.0001318674 to 0.0002180118 | -0.01845998 | -0.06399672 to 0.0295363 | 0 |  |
+| LS | 72 | fit x fit | 2 | AP-XP | 1764/3444 | 0.0001939943 | 0.0001452645 to 0.000236645 | 1.248995 | 1.113145 to 1.388181 | 0 |  |
+| LS | 72 | fit x fit | 2 | AP-F | 1764/3444 | 0.01334618 | 0.009667276 to 0.01809744 | 1.114134 | 0.7281655 to 1.584276 | 0 |  |
+| LS | 72 | fit x fit | 2 | AP-S | 1764/3444 | 0.0002145046 | 0.0001441301 to 0.0002739531 | 1.235545 | 1.088707 to 1.389313 | 0 |  |
+| LS | 72 | fit x fit | 2 | AP-GP | 1764/3444 | 0.0003568661 | 0.0002496774 to 0.0004471701 | 1.312225 | 1.162327 to 1.460308 | 0 |  |
+| LS | 72 | fit x fit | 2 | XP-F | 1764/3444 | 0.01315218 | 0.009426118 to 0.01788547 | -0.1348612 | -0.4746383 to 0.2115288 | 0 |  |
+| LS | 72 | fit x fit | 2 | XP-S | 1764/3444 | 0.00002051029 | -0.000003610863 to 0.0000437728 | -0.01345026 | -0.03291736 to 0.001924748 | 0 |  |
+| LS | 72 | fit x fit | 2 | XP-GP | 1764/3444 | 0.0001628718 | 0.0001058919 to 0.0002137532 | 0.06322977 | 0.04961195 to 0.07621899 | 0 |  |
+| LS | 72 | fit x fit | 2 | F-S | 1764/3444 | -0.01313167 | -0.01783847 to -0.009428236 | 0.1214109 | -0.2152838 to 0.451678 | 0 |  |
+| LS | 72 | fit x fit | 2 | F-GP | 1764/3444 | -0.01298931 | -0.01729797 to -0.009329214 | 0.1980909 | -0.1386964 to 0.5284488 | 0 |  |
+| LS | 72 | fit x fit | 2 | S-GP | 1764/3444 | 0.0001423615 | 0.0001055473 to 0.0001769234 | 0.07668002 | 0.06934116 to 0.08418903 | 0 |  |
+| LS | 72 | fit x fit | 3 | AP-XP | 1480/3288 | 0.0001285604 | 0.0001010682 to 0.0001550675 | 1.267209 | 1.053487 to 1.415823 | 0 |  |
+| LS | 72 | fit x fit | 3 | AP-F | 1480/3288 | 0.01144775 | 0.007065463 to 0.01584785 | 0.5517003 | -0.6178897 to 1.3731 | 0 |  |
+| LS | 72 | fit x fit | 3 | AP-S | 1480/3288 | 0.0001479971 | 0.00009897183 to 0.0002030488 | 1.262401 | 1.044873 to 1.416113 | 0 |  |
+| LS | 72 | fit x fit | 3 | AP-GP | 1480/3288 | 0.0002059306 | 0.0001603103 to 0.0002538563 | 1.33404 | 1.118953 to 1.477347 | 0 |  |
+| LS | 72 | fit x fit | 3 | XP-F | 1480/3288 | 0.01131919 | 0.006938916 to 0.01571727 | -0.7155086 | -1.892231 to -0.02050099 | 0 |  |
+| LS | 72 | fit x fit | 3 | XP-S | 1480/3288 | 0.00001943671 | -0.00002448893 to 0.00006525952 | -0.00480759 | -0.04177988 to 0.03779235 | 0 |  |
+| LS | 72 | fit x fit | 3 | XP-GP | 1480/3288 | 0.00007737021 | 0.00004486674 to 0.0001074371 | 0.06683118 | 0.0404379 to 0.09563615 | 0 |  |
+| LS | 72 | fit x fit | 3 | F-S | 1480/3288 | -0.01129976 | -0.01565373 to -0.006963405 | 0.710701 | -0.004505558 to 1.913255 | 0 |  |
+| LS | 72 | fit x fit | 3 | F-GP | 1480/3288 | -0.01124182 | -0.01560993 to -0.006891396 | 0.7823398 | 0.07164183 to 1.985617 | 0 |  |
+| LS | 72 | fit x fit | 3 | S-GP | 1480/3288 | 0.00005793349 | 0.00002836943 to 0.0000877294 | 0.07163877 | 0.05535901 to 0.08941388 | 0 |  |
+| LS | 72 | fit x fit | 4 | AP-XP | 1709/3400 | 0.00009202538 | 0.00007367047 to 0.0001082745 | 1.244655 | 1.042627 to 1.452552 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | AP-F | 1709/3400 | 0.007457012 | 0.004228188 to 0.01087365 | 0.9991476 | 0.7801703 to 1.308879 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | AP-S | 1709/3400 | 0.0001130965 | 0.00007379783 to 0.0001511587 | 1.234329 | 1.040907 to 1.441318 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | AP-GP | 1709/3400 | 0.0002043716 | 0.0001480726 to 0.0002574487 | 1.332411 | 1.112447 to 1.566164 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | XP-F | 1709/3400 | 0.007364986 | 0.004139082 to 0.01076736 | -0.2455078 | -0.458215 to -0.02312629 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | XP-S | 1709/3400 | 0.00002107117 | -0.00001156807 to 0.00004678697 | -0.010326 | -0.05137729 to 0.01757564 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | XP-GP | 1709/3400 | 0.0001123462 | 0.00005803539 to 0.0001514668 | 0.08775551 | 0.04703453 to 0.1212991 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | F-S | 1709/3400 | -0.007343915 | -0.01073603 to -0.004105401 | 0.2351818 | 0.03806455 to 0.4237238 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | F-GP | 1709/3400 | -0.00725264 | -0.01061053 to -0.004040833 | 0.3332633 | 0.1241515 to 0.5330572 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 4 | S-GP | 1709/3400 | 0.00009127501 | 0.00006007118 to 0.0001240896 | 0.09808151 | 0.071243 to 0.1295609 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | AP-XP | 1345/3233 | 0.0000542911 | 0.00004675009 to 0.00006117171 | 1.262151 | 1.131248 to 1.359624 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | AP-F | 1345/3233 | 0.001976524 | 0.0003425571 to 0.00335558 | -Infinity | -Infinity to 0.6099773 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | AP-S | 1345/3233 | 0.00006259266 | 0.00004114007 to 0.00008434851 | 1.248977 | 1.112443 to 1.359228 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | AP-GP | 1345/3233 | 0.00007624107 | 0.00006199696 to 0.00009134641 | 1.314541 | 1.197682 to 1.418437 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | XP-F | 1345/3233 | 0.001922233 | 0.0002789006 to 0.003309784 | -Infinity | -Infinity to -0.559724 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | XP-S | 1345/3233 | 0.00000830156 | -0.00001241105 to 0.00002784684 | -0.01317422 | -0.05342066 to 0.02400926 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | XP-GP | 1345/3233 | 0.00002194997 | 0.00000750013 to 0.00003467906 | 0.05239017 | 0.02117625 to 0.08167009 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | F-S | 1345/3233 | -0.001913931 | -0.003327843 to -0.0003219826 | Infinity | 0.5250169 to Infinity | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | F-GP | 1345/3233 | -0.001900283 | -0.003286043 to -0.0002542339 | Infinity | 0.5955492 to Infinity | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 5 | S-GP | 1345/3233 | 0.00001364841 | 0.00000392072 to 0.00002382456 | 0.06556439 | 0.0550766 to 0.07944213 | 0 | read before the statements were registered |
+| LS | 72 | fit x fit | 7 | AP-XP | 1874/3309 | 0.00003652404 | 0.00003129942 to 0.00004160165 | 1.329996 | 1.263031 to 1.399553 | 0 |  |
+| LS | 72 | fit x fit | 7 | AP-F | 1874/3309 | 0.002041943 | 0.001085129 to 0.003129509 | -0.1988225 | -0.9208285 to 0.2863818 | 0 |  |
+| LS | 72 | fit x fit | 7 | AP-S | 1874/3309 | 0.00004144789 | 0.0000269415 to 0.0000549489 | 1.314086 | 1.231718 to 1.396459 | 0 |  |
+| LS | 72 | fit x fit | 7 | AP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x fit | 7 | XP-F | 1874/3309 | 0.002005419 | 0.001050466 to 0.003093582 | -1.528819 | -2.230396 to -1.104123 | 0 |  |
+| LS | 72 | fit x fit | 7 | XP-S | 1874/3309 | 0.000004923848 | -0.000009104058 to 0.00001940868 | -0.01591039 | -0.0598317 to 0.0162023 | 0 |  |
+| LS | 72 | fit x fit | 7 | XP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x fit | 7 | F-S | 1874/3309 | -0.002000495 | -0.003107952 to -0.001040427 | 1.512908 | 1.110077 to 2.179979 | 0 |  |
+| LS | 72 | fit x fit | 7 | F-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x fit | 7 | S-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 1 | AP-XP | 2030/3326 | 0.000336462 | 0.0002415264 to 0.0004157825 | 0.9677391 | 0.8737058 to 1.081528 | 0 |  |
+| LS | 72 | fit x GP | 1 | AP-F | 2030/3326 | 0.0009201324 | 0.000716762 to 0.001280368 | 0.9279561 | 0.8277874 to 1.046062 | 0 |  |
+| LS | 72 | fit x GP | 1 | AP-S | 2030/3326 | 0.0003481805 | 0.0002240239 to 0.0004557227 | 0.9564943 | 0.8588174 to 1.091066 | 0 |  |
+| LS | 72 | fit x GP | 1 | AP-GP | 2030/3326 | 0.0004569351 | 0.0003313995 to 0.000573168 | 0.9320041 | 0.8464477 to 1.037502 | 0 |  |
+| LS | 72 | fit x GP | 1 | XP-F | 2030/3326 | 0.0005836704 | 0.0003518731 to 0.0008961956 | -0.03978299 | -0.09175218 to 0.02777506 | 0 |  |
+| LS | 72 | fit x GP | 1 | XP-S | 2030/3326 | 0.00001171854 | -0.00001750256 to 0.00003994027 | -0.01124473 | -0.03143453 to 0.009538079 | 0 |  |
+| LS | 72 | fit x GP | 1 | XP-GP | 2030/3326 | 0.0001204732 | 0.000078024 to 0.0001651356 | -0.03573496 | -0.07310765 to 0.01101774 | 0 |  |
+| LS | 72 | fit x GP | 1 | F-S | 2030/3326 | -0.0005719519 | -0.0008654844 to -0.0003302256 | 0.02853826 | -0.06294443 to 0.09178386 | 0 |  |
+| LS | 72 | fit x GP | 1 | F-GP | 2030/3326 | -0.0004631973 | -0.0007527622 to -0.0002352624 | 0.004048035 | -0.03524005 to 0.03926235 | 0 |  |
+| LS | 72 | fit x GP | 1 | S-GP | 2030/3326 | 0.0001087546 | 0.00007025863 to 0.0001442965 | -0.02449023 | -0.07078477 to 0.04059987 | 0 |  |
+| LS | 72 | fit x GP | 2 | AP-XP | 2053/3444 | 0.0002258093 | 0.0001731886 to 0.0002754518 | 1.142969 | 1.040577 to 1.289429 | 0 |  |
+| LS | 72 | fit x GP | 2 | AP-F | 2053/3444 | 0.0007136428 | 0.0006284642 to 0.0007981155 | 1.258886 | 1.171671 to 1.408761 | 0 |  |
+| LS | 72 | fit x GP | 2 | AP-S | 2053/3444 | 0.0002686848 | 0.0001775739 to 0.0003513713 | 1.145045 | 1.019613 to 1.299437 | 0 |  |
+| LS | 72 | fit x GP | 2 | AP-GP | 2053/3444 | 0.0003381396 | 0.0002440753 to 0.0004261881 | 1.1805 | 1.074812 to 1.331092 | 0 |  |
+| LS | 72 | fit x GP | 2 | XP-F | 2053/3444 | 0.0004878335 | 0.0004037604 to 0.0005460388 | 0.1159168 | 0.08962783 to 0.1404722 | 0 |  |
+| LS | 72 | fit x GP | 2 | XP-S | 2053/3444 | 0.00004287553 | -0.000002474514 to 0.00009110116 | 0.002075347 | -0.02792786 to 0.02476392 | 0 |  |
+| LS | 72 | fit x GP | 2 | XP-GP | 2053/3444 | 0.0001123303 | 0.00006415832 to 0.0001561086 | 0.03753078 | 0.03039464 to 0.04514355 | 0 |  |
+| LS | 72 | fit x GP | 2 | F-S | 2053/3444 | -0.000444958 | -0.0005127786 to -0.000320529 | -0.1138415 | -0.1641122 to -0.06763003 | 0 |  |
+| LS | 72 | fit x GP | 2 | F-GP | 2053/3444 | -0.0003755032 | -0.0004421857 to -0.000288583 | -0.07838606 | -0.1034671 to -0.05153434 | 0 |  |
+| LS | 72 | fit x GP | 2 | S-GP | 2053/3444 | 0.0000694548 | 0.00003146129 to 0.0001082022 | 0.03545543 | 0.01188453 to 0.06106999 | 0 |  |
+| LS | 72 | fit x GP | 3 | AP-XP | 1696/3288 | 0.0001438835 | 0.0001182702 to 0.0001678214 | 1.22782 | 1.044823 to 1.330348 | 0 |  |
+| LS | 72 | fit x GP | 3 | AP-F | 1696/3288 | 0.0004623053 | 0.0004203043 to 0.00050191 | 1.365037 | 1.172128 to 1.484858 | 0 |  |
+| LS | 72 | fit x GP | 3 | AP-S | 1696/3288 | 0.0001832609 | 0.0001207429 to 0.000248819 | 1.245396 | 1.046771 to 1.379951 | 0 |  |
+| LS | 72 | fit x GP | 3 | AP-GP | 1696/3288 | 0.0002125855 | 0.0001664453 to 0.0002569645 | 1.276911 | 1.093826 to 1.386812 | 0 |  |
+| LS | 72 | fit x GP | 3 | XP-F | 1696/3288 | 0.0003184218 | 0.0002776273 to 0.0003578446 | 0.1372174 | 0.1127857 to 0.1612028 | 0 |  |
+| LS | 72 | fit x GP | 3 | XP-S | 1696/3288 | 0.00003937746 | -0.000008012853 to 0.00008549961 | 0.01757589 | -0.01737296 to 0.05253292 | 0 |  |
+| LS | 72 | fit x GP | 3 | XP-GP | 1696/3288 | 0.00006870206 | 0.00003342648 to 0.00009503415 | 0.04909122 | 0.0286732 to 0.06466508 | 0 |  |
+| LS | 72 | fit x GP | 3 | F-S | 1696/3288 | -0.0002790443 | -0.0003455088 to -0.0002019774 | -0.1196415 | -0.1604422 to -0.07517701 | 0 |  |
+| LS | 72 | fit x GP | 3 | F-GP | 1696/3288 | -0.0002497197 | -0.0003197076 to -0.0001919673 | -0.08812622 | -0.1208413 to -0.05850662 | 0 |  |
+| LS | 72 | fit x GP | 3 | S-GP | 1696/3288 | 0.0000293246 | -9.401794e-7 to 0.00005916412 | 0.03151532 | 0.01026259 to 0.05254661 | 0 |  |
+| LS | 72 | fit x GP | 4 | AP-XP | 2018/3400 | 0.0001084968 | 0.0000852963 to 0.0001320506 | 1.204213 | 1.033572 to 1.357642 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | AP-F | 2018/3400 | 0.0003945038 | 0.0003548207 to 0.0004400557 | 1.345377 | 1.179911 to 1.504142 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | AP-S | 2018/3400 | 0.0001423242 | 0.00008946222 to 0.0001929428 | 1.218167 | 1.057124 to 1.381947 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | AP-GP | 2018/3400 | 0.0002050435 | 0.0001455106 to 0.0002592849 | 1.275983 | 1.111465 to 1.452939 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | XP-F | 2018/3400 | 0.000286007 | 0.0002623676 to 0.0003150131 | 0.1411645 | 0.1175623 to 0.1716805 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | XP-S | 2018/3400 | 0.0000338274 | -0.000003681054 to 0.00006965188 | 0.01395448 | -0.02294608 to 0.03970748 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | XP-GP | 2018/3400 | 0.00009654677 | 0.00004908646 to 0.0001331693 | 0.07177047 | 0.0434201 to 0.1081039 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | F-S | 2018/3400 | -0.0002521796 | -0.0002857815 to -0.0002280923 | -0.12721 | -0.1880831 to -0.07805908 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | F-GP | 2018/3400 | -0.0001894602 | -0.0002179232 to -0.0001705715 | -0.06939405 | -0.1074326 to -0.04279854 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 4 | S-GP | 2018/3400 | 0.00006271937 | 0.00004335025 to 0.00009511023 | 0.05781599 | 0.03057733 to 0.09559431 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | AP-XP | 1537/3233 | 0.00006136171 | 0.0000564843 to 0.00006923132 | 1.292207 | 1.200252 to 1.383092 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | AP-F | 1537/3233 | 0.0001923077 | 0.0001591401 to 0.0002324914 | 1.42697 | 1.307231 to 1.551899 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | AP-S | 1537/3233 | 0.00007472517 | 0.00004911214 to 0.00010004 | 1.299358 | 1.199216 to 1.428151 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | AP-GP | 1537/3233 | 0.00008372535 | 0.0000671714 to 0.00009340783 | 1.333738 | 1.243281 to 1.433696 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | XP-F | 1537/3233 | 0.000130946 | 0.00009810873 to 0.0001706598 | 0.1347622 | 0.100316 to 0.1721228 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | XP-S | 1537/3233 | 0.00001336346 | -0.00001443377 to 0.00004215475 | 0.007151025 | -0.04138079 to 0.0571467 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | XP-GP | 1537/3233 | 0.00002236364 | 0.000007455071 to 0.00003408449 | 0.0415307 | 0.01722036 to 0.06499222 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | F-S | 1537/3233 | -0.0001175826 | -0.0001445545 to -0.00007745727 | -0.1276111 | -0.1758835 to -0.07757187 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | F-GP | 1537/3233 | -0.0001085824 | -0.0001445542 to -0.00007026221 | -0.09323146 | -0.1287569 to -0.05728749 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 5 | S-GP | 1537/3233 | 0.000009000181 | -0.00001185315 to 0.0000318887 | 0.03437968 | 0.002692515 to 0.06661705 | 0 | read before the statements were registered |
+| LS | 72 | fit x GP | 7 | AP-XP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | AP-F | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | AP-S | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | AP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | XP-F | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | XP-S | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | XP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | F-S | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | F-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| LS | 72 | fit x GP | 7 | S-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x fit | 1 | AP-XP | 2844/3387 | 0.0002610973 | 0.000258461 to 0.0002635718 | 1.114788 | 1.109631 to 1.119629 | 0 |  |
+| S1 | 24 | fit x fit | 1 | AP-F | 2844/3387 | 0.02465759 | 0.02274632 to 0.02645161 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 1 | AP-S | 2844/3387 | 0.0001149415 | 0.0001137467 to 0.0001160629 | 1.038504 | 1.026263 to 1.049994 | 0 |  |
+| S1 | 24 | fit x fit | 1 | AP-GP | 2844/3387 | 0.0001847985 | 0.0001800447 to 0.0001898631 | 0.9102042 | 0.8362208 to 0.9796487 | 0 |  |
+| S1 | 24 | fit x fit | 1 | XP-F | 2844/3387 | 0.02439649 | 0.02248786 to 0.02618803 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 1 | XP-S | 2844/3387 | -0.0001461558 | -0.0001475089 to -0.0001447143 | -0.07628434 | -0.08336768 to -0.06963557 | 0 |  |
+| S1 | 24 | fit x fit | 1 | XP-GP | 2844/3387 | -0.00007629877 | -0.00008352713 to -0.00006859796 | -0.204584 | -0.2734099 to -0.1399804 | 0 |  |
+| S1 | 24 | fit x fit | 1 | F-S | 2844/3387 | -0.02454265 | -0.02633554 to -0.02263257 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 1 | F-GP | 2844/3387 | -0.02447279 | -0.02627156 to -0.02255645 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 1 | S-GP | 2844/3387 | 0.00006985706 | 0.00006398177 to 0.00007611636 | -0.1282996 | -0.1900423 to -0.07034487 | 0 |  |
+| S1 | 24 | fit x fit | 2 | AP-XP | 2640/3240 | 0.0001128791 | 0.0001094816 to 0.0001163077 | 1.07506 | 1.015946 to 1.133639 | 0 |  |
+| S1 | 24 | fit x fit | 2 | AP-F | 2640/3240 | 0.004919838 | 0.00327509 to 0.006579606 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 2 | AP-S | 2640/3240 | 0.00002942411 | 0.00002932984 to 0.00002951753 | 0.9931883 | 0.9835547 to 1.002735 | 0 |  |
+| S1 | 24 | fit x fit | 2 | AP-GP | 2640/3240 | 0.0001108179 | 0.0001078048 to 0.0001138585 | 0.9021617 | 0.9004099 to 0.9038976 | 0 |  |
+| S1 | 24 | fit x fit | 2 | XP-F | 2640/3240 | 0.004806959 | 0.003165609 to 0.006463299 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 2 | XP-S | 2640/3240 | -0.000083455 | -0.00008697784 to -0.00007996403 | -0.08187184 | -0.1309048 to -0.03239106 | 0 |  |
+| S1 | 24 | fit x fit | 2 | XP-GP | 2640/3240 | -0.000002061179 | -0.000002449142 to -0.000001676727 | -0.1728984 | -0.2297419 to -0.1155358 | 0 |  |
+| S1 | 24 | fit x fit | 2 | F-S | 2640/3240 | -0.004890414 | -0.006550277 to -0.003245573 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 2 | F-GP | 2640/3240 | -0.00480902 | -0.006465748 to -0.003167285 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 2 | S-GP | 2640/3240 | 0.00008139382 | 0.0000782873 to 0.0000845287 | -0.09102657 | -0.09883706 to -0.08314475 | 0 |  |
+| S1 | 24 | fit x fit | 3 | AP-XP | 2817/3389 | 0.00006397963 | 0.00006264575 to 0.00006534514 | 1.172161 | 1.163389 to 1.180729 | 0 |  |
+| S1 | 24 | fit x fit | 3 | AP-F | 2817/3389 | 0.002913573 | 0.00272164 to 0.003110055 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 3 | AP-S | 2817/3389 | 0.00000906382 | 0.000009057159 to 0.000009070638 | 0.9712145 | 0.9576567 to 0.9844583 | 0 |  |
+| S1 | 24 | fit x fit | 3 | AP-GP | 2817/3389 | 0.00005988336 | 0.00005919504 to 0.000060588 | 1.066319 | 1.049822 to 1.083208 | 0 |  |
+| S1 | 24 | fit x fit | 3 | XP-F | 2817/3389 | 0.002849593 | 0.002658994 to 0.00304471 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 3 | XP-S | 2817/3389 | -0.00005491581 | -0.0000562745 to -0.00005358859 | -0.200946 | -0.2057325 to -0.1962704 | 0 |  |
+| S1 | 24 | fit x fit | 3 | XP-GP | 2817/3389 | -0.000004096275 | -0.000004757145 to -0.000003450709 | -0.1058413 | -0.130907 to -0.08018132 | 0 |  |
+| S1 | 24 | fit x fit | 3 | F-S | 2817/3389 | -0.002904509 | -0.003100984 to -0.002712583 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 3 | F-GP | 2817/3389 | -0.002853689 | -0.003049467 to -0.002662445 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 3 | S-GP | 2817/3389 | 0.00005081954 | 0.00005013788 to 0.00005151736 | 0.09510474 | 0.06536336 to 0.1255512 | 0 |  |
+| S1 | 24 | fit x fit | 4 | AP-XP | 2709/3300 | 0.00002950761 | 0.00002939539 to 0.00002962023 | 1.140511 | 1.105667 to 1.175484 | 0 |  |
+| S1 | 24 | fit x fit | 4 | AP-F | 2709/3300 | 0.001635499 | 0.001371827 to 0.001898199 | -Infinity | -Infinity to -0.7550775 | 0 |  |
+| S1 | 24 | fit x fit | 4 | AP-S | 2709/3300 | 0.000004216674 | 0.00000420388 to 0.000004229422 | 0.9707315 | 0.9335986 to 1.008002 | 0 |  |
+| S1 | 24 | fit x fit | 4 | AP-GP | 2709/3300 | 0.00003295093 | 0.00003052523 to 0.00003536768 | 0.90536 | 0.8649851 to 0.9458843 | 0 |  |
+| S1 | 24 | fit x fit | 4 | XP-F | 2709/3300 | 0.001605991 | 0.001342207 to 0.001868803 | -Infinity | -Infinity to -1.930562 | 0 |  |
+| S1 | 24 | fit x fit | 4 | XP-S | 2709/3300 | -0.00002529093 | -0.00002541635 to -0.00002516597 | -0.1697795 | -0.1720684 to -0.1674823 | 0 |  |
+| S1 | 24 | fit x fit | 4 | XP-GP | 2709/3300 | 0.000003443319 | 9.049993e-7 to 0.000005972287 | -0.2351511 | -0.2406819 to -0.2295998 | 0 |  |
+| S1 | 24 | fit x fit | 4 | F-S | 2709/3300 | -0.001631282 | -0.001893969 to -0.001367624 | Infinity | 1.763079 to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 4 | F-GP | 2709/3300 | -0.001602548 | -0.001862831 to -0.001341302 | Infinity | 1.700962 to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 4 | S-GP | 2709/3300 | 0.00002873425 | 0.00002632135 to 0.00003113826 | -0.06537151 | -0.06861348 to -0.06211756 | 0 |  |
+| S1 | 24 | fit x fit | 5 | AP-XP | 2709/3289 | 0.00002015026 | 0.00001877978 to 0.00002151368 | 1.120289 | 1.082855 to 1.157531 | 0 |  |
+| S1 | 24 | fit x fit | 5 | AP-F | 2709/3289 | 0.001294279 | 0.001171566 to 0.00141636 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 5 | AP-S | 2709/3289 | 0.000001921774 | 0.000001733061 to 0.000002109514 | 0.9246431 | 0.9073091 to 0.9418878 | 0 |  |
+| S1 | 24 | fit x fit | 5 | AP-GP | 2691/3289 | 0.00002548309 | 0.00002532694 to 0.00002564029 | 1.068329 | 1.04589 to 1.090619 | 0 |  |
+| S1 | 24 | fit x fit | 5 | XP-F | 2709/3289 | 0.001274129 | 0.001152786 to 0.001394846 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 24 | fit x fit | 5 | XP-S | 2709/3289 | -0.00001822849 | -0.00001940417 to -0.00001704672 | -0.1956464 | -0.2156429 to -0.1755462 | 0 |  |
+| S1 | 24 | fit x fit | 5 | XP-GP | 2691/3289 | 0.000005368 | 0.000004024554 to 0.000006720462 | -0.05549947 | -0.06588852 to -0.04504069 | 0 |  |
+| S1 | 24 | fit x fit | 5 | F-S | 2709/3289 | -0.001292358 | -0.001414251 to -0.001169833 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 5 | F-GP | 2691/3289 | -0.001277474 | -0.001399329 to -0.001154801 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 5 | S-GP | 2691/3289 | 0.00002356913 | 0.00002324613 to 0.00002389431 | 0.1406729 | 0.1318147 to 0.1494719 | 0 |  |
+| S1 | 24 | fit x fit | 7 | AP-XP | 2808/3395 | 0.000007376869 | 0.000006810056 to 0.000007951814 | 1.099546 | 1.047393 to 1.152447 | 0 |  |
+| S1 | 24 | fit x fit | 7 | AP-F | 2808/3395 | 0.0006618104 | 0.0005599094 to 0.0007651735 | -Infinity | -Infinity to -0.7057103 | 0 |  |
+| S1 | 24 | fit x fit | 7 | AP-S | 2808/3395 | 4.721789e-7 | 4.451803e-7 to 4.995649e-7 | 0.8520942 | 0.8012827 to 0.9036348 | 0 |  |
+| S1 | 24 | fit x fit | 7 | AP-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x fit | 7 | XP-F | 2808/3395 | 0.0006544336 | 0.0005530993 to 0.0007572217 | -Infinity | -Infinity to -1.858157 | 0 |  |
+| S1 | 24 | fit x fit | 7 | XP-S | 2808/3395 | -0.00000690469 | -0.000007452249 to -0.000006364875 | -0.2474516 | -0.248812 to -0.2461105 | 0 |  |
+| S1 | 24 | fit x fit | 7 | XP-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x fit | 7 | F-S | 2808/3395 | -0.0006613383 | -0.000764674 to -0.0005594642 | Infinity | 1.609345 to Infinity | 0 |  |
+| S1 | 24 | fit x fit | 7 | F-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x fit | 7 | S-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 1 | AP-XP | 2972/3387 | 0.00003129058 | 0.00002503866 to 0.00003726282 | 0.3473988 | 0.2224503 to 0.4667574 | 0 |  |
+| S1 | 24 | fit x GP | 1 | AP-F | 2972/3387 | 0.0003634058 | 0.0002438274 to 0.0004776346 | 0.9082077 | 0.8621301 to 0.952224 | 0 |  |
+| S1 | 24 | fit x GP | 1 | AP-S | 2972/3387 | 0.00004827751 | 0.00003915741 to 0.0000569896 | 0.8220329 | 0.7914904 to 0.8512089 | 0 |  |
+| S1 | 24 | fit x GP | 1 | AP-GP | 2972/3387 | 0.0001871261 | 0.0001842026 to 0.0001901864 | 0.8459547 | 0.7872598 to 0.9020238 | 0 |  |
+| S1 | 24 | fit x GP | 1 | XP-F | 2972/3387 | 0.0003321152 | 0.0002187888 to 0.0004403718 | 0.560809 | 0.4854666 to 0.6396797 | 0 |  |
+| S1 | 24 | fit x GP | 1 | XP-S | 2972/3387 | 0.00001698692 | 0.00001411875 to 0.00001972678 | 0.4746341 | 0.3844515 to 0.5690401 | 0 |  |
+| S1 | 24 | fit x GP | 1 | XP-GP | 2972/3387 | 0.0001558355 | 0.0001469398 to 0.0001651477 | 0.4985559 | 0.4352663 to 0.5648095 | 0 |  |
+| S1 | 24 | fit x GP | 1 | F-S | 2972/3387 | -0.0003151283 | -0.000420645 to -0.00020467 | -0.08617488 | -0.1010151 to -0.07063964 | 0 |  |
+| S1 | 24 | fit x GP | 1 | F-GP | 2972/3387 | -0.0001762797 | -0.0002934319 to -0.00005364104 | -0.06225302 | -0.07487025 to -0.05020025 | 0 |  |
+| S1 | 24 | fit x GP | 1 | S-GP | 2972/3387 | 0.0001388486 | 0.0001272131 to 0.000151029 | 0.02392186 | -0.004230616 to 0.05081488 | 0 |  |
+| S1 | 24 | fit x GP | 2 | AP-XP | 2809/3240 | 0.000002588029 | 0.000002376015 to 0.00000280232 | -0.3484509 | -0.5041098 to -0.1911207 | 0 |  |
+| S1 | 24 | fit x GP | 2 | AP-F | 2809/3240 | 0.000183393 | 0.0001400258 to 0.000227226 | 0.7646753 | 0.7317962 to 0.7979075 | 0 |  |
+| S1 | 24 | fit x GP | 2 | AP-S | 2809/3240 | 0.00001443549 | 0.00001260847 to 0.00001628213 | 0.8164683 | 0.8086159 to 0.824405 | 0 |  |
+| S1 | 24 | fit x GP | 2 | AP-GP | 2809/3240 | 0.0001101857 | 0.0001088213 to 0.0001115648 | 0.8277461 | 0.814374 to 0.8409761 | 0 |  |
+| S1 | 24 | fit x GP | 2 | XP-F | 2809/3240 | 0.000180805 | 0.0001376497 to 0.0002244236 | 1.113126 | 0.9890282 to 1.235906 | 0 |  |
+| S1 | 24 | fit x GP | 2 | XP-S | 2809/3240 | 0.00001184746 | 0.00001023245 to 0.00001347981 | 1.164919 | 1.015526 to 1.312726 | 0 |  |
+| S1 | 24 | fit x GP | 2 | XP-GP | 2809/3240 | 0.0001075977 | 0.0001064452 to 0.0001087625 | 1.176197 | 1.005495 to 1.345086 | 0 |  |
+| S1 | 24 | fit x GP | 2 | F-S | 2809/3240 | -0.0001689575 | -0.0002109438 to -0.0001274173 | 0.05179295 | 0.02649749 to 0.0768197 | 0 |  |
+| S1 | 24 | fit x GP | 2 | F-GP | 2809/3240 | -0.00007320731 | -0.0001156611 to -0.0000312045 | 0.06307076 | 0.01646653 to 0.1091799 | 0 |  |
+| S1 | 24 | fit x GP | 2 | S-GP | 2809/3240 | 0.00009575023 | 0.0000952827 to 0.00009621279 | 0.0112778 | -0.01003096 to 0.0323602 | 0 |  |
+| S1 | 24 | fit x GP | 3 | AP-XP | 2965/3389 | 3.513821e-7 | 1.177895e-7 to 5.938046e-7 | -0.6455431 | -0.7805524 to -0.5054304 | 0 |  |
+| S1 | 24 | fit x GP | 3 | AP-F | 2965/3389 | 0.0001041466 | 0.00008000132 to 0.0001292047 | 1.006337 | 0.999959 to 1.012957 | 0 |  |
+| S1 | 24 | fit x GP | 3 | AP-S | 2965/3389 | 0.00000604808 | 0.0000054094 to 0.000006710902 | 0.8233423 | 0.8205131 to 0.8260685 | 0 |  |
+| S1 | 24 | fit x GP | 3 | AP-GP | 2965/3389 | 0.00005812764 | 0.00005793217 to 0.00005833049 | 0.9773175 | 0.973179 to 0.9816126 | 0 |  |
+| S1 | 24 | fit x GP | 3 | XP-F | 2965/3389 | 0.0001037953 | 0.00007988353 to 0.0001286109 | 1.65188 | 1.518387 to 1.780511 | 0 |  |
+| S1 | 24 | fit x GP | 3 | XP-S | 2965/3389 | 0.000005696698 | 0.00000529161 to 0.000006117097 | 1.468885 | 1.325943 to 1.606621 | 0 |  |
+| S1 | 24 | fit x GP | 3 | XP-GP | 2965/3389 | 0.00005777625 | 0.00005773669 to 0.00005781438 | 1.622861 | 1.487043 to 1.753731 | 0 |  |
+| S1 | 24 | fit x GP | 3 | F-S | 2965/3389 | -0.00009809856 | -0.0001224938 to -0.00007459192 | -0.1829949 | -0.1924435 to -0.1738905 | 0 |  |
+| S1 | 24 | fit x GP | 3 | F-GP | 2965/3389 | -0.000046019 | -0.00007087418 to -0.00002206915 | -0.02901971 | -0.03134406 to -0.02678002 | 0 |  |
+| S1 | 24 | fit x GP | 3 | S-GP | 2965/3389 | 0.00005207956 | 0.00005161959 to 0.00005252277 | 0.1539752 | 0.1471105 to 0.1610995 | 0 |  |
+| S1 | 24 | fit x GP | 4 | AP-XP | 2870/3300 | 1.157829e-7 | 1.572682e-8 to 2.166791e-7 | -0.9911772 | -1.077043 to -0.90459 | 0 |  |
+| S1 | 24 | fit x GP | 4 | AP-F | 2870/3300 | 0.00005858008 | 0.00004431851 to 0.0000729614 | 0.836031 | 0.7775822 to 0.8939931 | 0 |  |
+| S1 | 24 | fit x GP | 4 | AP-S | 2870/3300 | 0.000002649816 | 0.000002501845 to 0.000002799029 | 0.8056918 | 0.7796984 to 0.8314688 | 0 |  |
+| S1 | 24 | fit x GP | 4 | AP-GP | 2870/3300 | 0.00003166218 | 0.00002954789 to 0.00003379423 | 0.8118897 | 0.7639462 to 0.859434 | 0 |  |
+| S1 | 24 | fit x GP | 4 | XP-F | 2870/3300 | 0.00005846429 | 0.00004430279 to 0.00007274472 | 1.827208 | 1.682172 to 1.971036 | 0 |  |
+| S1 | 24 | fit x GP | 4 | XP-S | 2870/3300 | 0.000002534033 | 0.000002486119 to 0.00000258235 | 1.796869 | 1.684288 to 1.908512 | 0 |  |
+| S1 | 24 | fit x GP | 4 | XP-GP | 2870/3300 | 0.0000315464 | 0.00002953216 to 0.00003357755 | 1.803067 | 1.668536 to 1.936477 | 0 |  |
+| S1 | 24 | fit x GP | 4 | F-S | 2870/3300 | -0.00005593026 | -0.00007016237 to -0.00004181667 | -0.03033918 | -0.0625243 to 0.002116221 | 0 |  |
+| S1 | 24 | fit x GP | 4 | F-GP | 2870/3300 | -0.0000269179 | -0.00003916717 to -0.00001477063 | -0.02414134 | -0.03455914 to -0.01363605 | 0 |  |
+| S1 | 24 | fit x GP | 4 | S-GP | 2870/3300 | 0.00002901236 | 0.00002704604 to 0.0000309952 | 0.006197841 | -0.01575227 to 0.02796516 | 0 |  |
+| S1 | 24 | fit x GP | 5 | AP-XP | 2836/3289 | 1.43223e-8 | 1.0975e-8 to 1.772672e-8 | -1.0317 | -1.12347 to -0.938363 | 0 |  |
+| S1 | 24 | fit x GP | 5 | AP-F | 2836/3289 | 0.00004150335 | 0.00003635262 to 0.000046742 | 1.00338 | 0.9790477 to 1.027304 | 0 |  |
+| S1 | 24 | fit x GP | 5 | AP-S | 2836/3289 | 0.000001484619 | 0.000001465758 to 0.000001503802 | 0.790037 | 0.786435 to 0.7935786 | 0 |  |
+| S1 | 24 | fit x GP | 5 | AP-GP | 2826/3289 | 0.00002470836 | 0.00002441291 to 0.00002500675 | 0.9765484 | 0.9535411 to 0.9993289 | 0 |  |
+| S1 | 24 | fit x GP | 5 | XP-F | 2836/3289 | 0.00004148902 | 0.00003634164 to 0.00004672427 | 2.03508 | 1.917411 to 2.150774 | 0 |  |
+| S1 | 24 | fit x GP | 5 | XP-S | 2836/3289 | 0.000001470297 | 0.000001454783 to 0.000001486076 | 1.821737 | 1.724798 to 1.917049 | 0 |  |
+| S1 | 24 | fit x GP | 5 | XP-GP | 2826/3289 | 0.000024694 | 0.00002440188 to 0.00002498902 | 2.012102 | 1.891904 to 2.131114 | 0 |  |
+| S1 | 24 | fit x GP | 5 | F-S | 2836/3289 | -0.00004001873 | -0.00004523819 to -0.00003488686 | -0.2133429 | -0.2337252 to -0.1926128 | 0 |  |
+| S1 | 24 | fit x GP | 5 | F-GP | 2826/3289 | -0.00001655012 | -0.00002173525 to -0.00001141611 | -0.02276992 | -0.02550669 to -0.02006014 | 0 |  |
+| S1 | 24 | fit x GP | 5 | S-GP | 2826/3289 | 0.00002323547 | 0.00002297064 to 0.00002350294 | 0.1890716 | 0.1671061 to 0.2108205 | 0 |  |
+| S1 | 24 | fit x GP | 7 | AP-XP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | AP-F | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | AP-S | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | AP-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | XP-F | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | XP-S | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | XP-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | F-S | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | F-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 24 | fit x GP | 7 | S-GP | 0/3395 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x fit | 1 | AP-XP | 2785/3400 | 0.0002234784 | 0.0001869325 to 0.0002580863 | -Infinity | -Infinity to 0.9406001 | 0 |  |
+| DO | 24 | fit x fit | 1 | AP-F | 2785/3400 | 0.05273795 | 0.04593494 to 0.05903217 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 1 | AP-S | 2785/3400 | 0.0001071428 | 0.00008908731 to 0.000124195 | 0.8710869 | 0.7810128 to 0.9532251 | 0 |  |
+| DO | 24 | fit x fit | 1 | AP-GP | 2740/3400 | 0.0003334615 | 0.0002731879 to 0.000388212 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 1 | XP-F | 2785/3400 | 0.05251447 | 0.0455899 to 0.05887092 | -Infinity | -Infinity to 0.03745169 | 6 |  |
+| DO | 24 | fit x fit | 1 | XP-S | 2785/3400 | -0.0001163356 | -0.0001572384 to -0.00007905208 | Infinity | -0.08677557 to Infinity | 0 |  |
+| DO | 24 | fit x fit | 1 | XP-GP | 2740/3400 | 0.0001102586 | 0.00005454093 to 0.000158841 | -Infinity | -Infinity to -Infinity | 6 |  |
+| DO | 24 | fit x fit | 1 | F-S | 2785/3400 | -0.0526308 | -0.0590271 to -0.04584234 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 1 | F-GP | 2740/3400 | -0.05292148 | -0.05917154 to -0.04606711 | unmeasured | -Infinity to -Infinity | 6 |  |
+| DO | 24 | fit x fit | 1 | S-GP | 2740/3400 | 0.0002256485 | 0.000158094 to 0.0002902447 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 2 | AP-XP | 2558/3305 | 0.0001260751 | 0.0001112994 to 0.0001429672 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 2 | AP-F | 2558/3305 | 0.02548174 | 0.02112096 to 0.03025424 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 2 | AP-S | 2558/3305 | 0.00003162247 | 0.0000240662 to 0.00004219248 | 0.9802419 | 0.8923374 to 1.074784 | 0 |  |
+| DO | 24 | fit x fit | 2 | AP-GP | 2525/3305 | 0.0002006426 | 0.0001673356 to 0.0002321316 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 2 | XP-F | 2558/3305 | 0.02535567 | 0.02102703 to 0.03010132 | -Infinity | -Infinity to -Infinity | 13 |  |
+| DO | 24 | fit x fit | 2 | XP-S | 2558/3305 | -0.00009445267 | -0.0001138815 to -0.00007427889 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 2 | XP-GP | 2525/3305 | 0.00007397649 | 0.0000459696 to 0.0001000394 | -Infinity | -Infinity to -0.9184692 | 13 |  |
+| DO | 24 | fit x fit | 2 | F-S | 2558/3305 | -0.02545012 | -0.03013905 to -0.0211176 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 2 | F-GP | 2525/3305 | -0.02521178 | -0.03007697 to -0.02087675 | unmeasured | Infinity to Infinity | 13 |  |
+| DO | 24 | fit x fit | 2 | S-GP | 2525/3305 | 0.0001699822 | 0.0001358378 to 0.0002024641 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 3 | AP-XP | 2199/3398 | 0.00006864404 | 0.00004960995 to 0.00008720524 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 3 | AP-F | 2199/3398 | 0.01050119 | 0.006972732 to 0.01482022 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 3 | AP-S | 2199/3398 | 0.00001556332 | 0.00001099192 to 0.00002123707 | 0.8964041 | 0.7054906 to 1.057966 | 0 |  |
+| DO | 24 | fit x fit | 3 | AP-GP | 2155/3398 | 0.000107755 | 0.00008000581 to 0.000139271 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 3 | XP-F | 2199/3398 | 0.01043255 | 0.006912912 to 0.01477401 | -Infinity | -Infinity to -Infinity | 9 |  |
+| DO | 24 | fit x fit | 3 | XP-S | 2199/3398 | -0.00005308072 | -0.00006878981 to -0.0000373091 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 3 | XP-GP | 2155/3398 | 0.00003976484 | 0.0000263975 to 0.00005730827 | -Infinity | -Infinity to -0.1899603 | 9 |  |
+| DO | 24 | fit x fit | 3 | F-S | 2199/3398 | -0.01048563 | -0.01474963 to -0.007053967 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 3 | F-GP | 2155/3398 | -0.01042598 | -0.01476473 to -0.006992919 | Infinity | 3.391866 to Infinity | 11 |  |
+| DO | 24 | fit x fit | 3 | S-GP | 2155/3398 | 0.00009221935 | 0.00006703524 to 0.0001195372 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 4 | AP-XP | 1802/3302 | 0.00004180465 | 0.00003310226 to 0.00005300964 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | AP-F | 1802/3302 | 0.00581433 | 0.004200527 to 0.007927212 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | AP-S | 1802/3302 | 0.000006517949 | 0.000005073817 to 0.000007869738 | 0.9803324 | 0.9052751 to 1.058833 | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | AP-GP | 1769/3302 | 0.00007221721 | 0.00005732194 to 0.00009108884 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | XP-F | 1802/3302 | 0.005772525 | 0.004148025 to 0.007940277 | -Infinity | -Infinity to -Infinity | 13 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | XP-S | 1802/3302 | -0.0000352867 | -0.00004673608 to -0.00002629802 | Infinity | Infinity to Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | XP-GP | 1769/3302 | 0.00003156308 | 0.00002273809 to 0.00004076256 | -0.9521786 | -1.633924 to -0.3665316 | 13 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | F-S | 1802/3302 | -0.005807812 | -0.007985769 to -0.004203588 | Infinity | Infinity to Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | F-GP | 1769/3302 | -0.005258553 | -0.007044722 to -0.003840463 | Infinity | Infinity to Infinity | 13 | read before the statements were registered |
+| DO | 24 | fit x fit | 4 | S-GP | 1769/3302 | 0.00006570372 | 0.00005054812 to 0.00008439642 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | AP-XP | 1771/3277 | 0.00003100128 | 0.0000228382 to 0.00003937021 | -Infinity | -Infinity to 1.049055 | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | AP-F | 1771/3277 | 0.002855291 | 0.001479493 to 0.004364675 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | AP-S | 1771/3277 | 0.000003567406 | 0.000002382271 to 0.000004711919 | 0.9819558 | 0.8241755 to 1.118424 | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | AP-GP | 1743/3277 | 0.00003572513 | 0.00002330562 to 0.00004966945 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | XP-F | 1771/3277 | 0.00282429 | 0.00145007 to 0.004349924 | -Infinity | -Infinity to -Infinity | 6 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | XP-S | 1771/3277 | -0.00002743387 | -0.00003529396 to -0.00002012973 | Infinity | -0.1878903 to Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | XP-GP | 1743/3277 | 0.000005485749 | -0.000001841876 to 0.00001310757 | -0.3673761 | -0.6309472 to -0.190035 | 6 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | F-S | 1771/3277 | -0.002851724 | -0.004389278 to -0.001456601 | Infinity | Infinity to Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | F-GP | 1743/3277 | -0.002493819 | -0.003797771 to -0.001382567 | Infinity | Infinity to Infinity | 6 | read before the statements were registered |
+| DO | 24 | fit x fit | 5 | S-GP | 1743/3277 | 0.00003221639 | 0.00002062232 to 0.00004621575 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x fit | 7 | AP-XP | 1573/3318 | 0.00001414949 | 0.000009713821 to 0.00001869014 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 7 | AP-F | 1573/3318 | 0.001120461 | 0.0005954103 to 0.001819988 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x fit | 7 | AP-S | 1573/3318 | 0.000001377709 | 9.04861e-7 to 0.000001873439 | 0.8638712 | 0.7727395 to 0.9721002 | 0 |  |
+| DO | 24 | fit x fit | 7 | AP-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x fit | 7 | XP-F | 1573/3318 | 0.001106311 | 0.0005974974 to 0.001779622 | -Infinity | -Infinity to -4.66026 | 9 |  |
+| DO | 24 | fit x fit | 7 | XP-S | 1573/3318 | -0.00001277178 | -0.00001717136 to -0.000008608994 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 7 | XP-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x fit | 7 | F-S | 1573/3318 | -0.001119083 | -0.001797905 to -0.000597382 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 24 | fit x fit | 7 | F-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x fit | 7 | S-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 1 | AP-XP | 2782/3400 | 0.0002459194 | 0.0002113293 to 0.0002812306 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 1 | AP-F | 2782/3400 | 0.0007150554 | 0.0005966266 to 0.0008316415 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 1 | AP-S | 2782/3400 | 0.0001545034 | 0.0001044353 to 0.0002054141 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 1 | AP-GP | 2763/3400 | 0.0003306686 | 0.0002701413 to 0.000383681 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 1 | XP-F | 2782/3400 | 0.000469136 | 0.0003280735 to 0.0006110134 | -0.5552923 | -0.9827145 to -0.1922296 | 11 |  |
+| DO | 24 | fit x GP | 1 | XP-S | 2782/3400 | -0.00009141602 | -0.000170688 to -0.00001660532 | Infinity | -0.03951787 to Infinity | 8 |  |
+| DO | 24 | fit x GP | 1 | XP-GP | 2763/3400 | 0.00008646874 | 0.00004384528 to 0.0001235328 | -0.7116288 | -1.36605 to -0.2034958 | 11 |  |
+| DO | 24 | fit x GP | 1 | F-S | 2782/3400 | -0.000560552 | -0.0006525387 to -0.0004733819 | Infinity | 0.2722881 to Infinity | 8 |  |
+| DO | 24 | fit x GP | 1 | F-GP | 2763/3400 | -0.0003885018 | -0.0005194628 to -0.0002496678 | -0.1529293 | -1.013639 to 0.5048104 | 11 |  |
+| DO | 24 | fit x GP | 1 | S-GP | 2763/3400 | 0.0001754946 | 0.00009720837 to 0.000261916 | -Infinity | -Infinity to -0.3094937 | 8 |  |
+| DO | 24 | fit x GP | 2 | AP-XP | 2556/3305 | 0.0001267992 | 0.0001173477 to 0.0001373017 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 2 | AP-F | 2556/3305 | 0.0003781412 | 0.0003253501 to 0.0004290518 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 2 | AP-S | 2556/3305 | 0.00007161022 | 0.00004189846 to 0.0001109174 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 2 | AP-GP | 2542/3305 | 0.0001992989 | 0.0001675611 to 0.000229697 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 2 | XP-F | 2556/3305 | 0.0002513419 | 0.0001968343 to 0.0002991977 | -0.3626352 | -0.7153972 to -0.05258495 | 15 |  |
+| DO | 24 | fit x GP | 2 | XP-S | 2556/3305 | -0.00005518901 | -0.00009001808 to -0.00001053217 | Infinity | -0.1004774 to Infinity | 9 |  |
+| DO | 24 | fit x GP | 2 | XP-GP | 2542/3305 | 0.0000722164 | 0.0000427809 to 0.00009843774 | -Infinity | -Infinity to -0.09431804 | 15 |  |
+| DO | 24 | fit x GP | 2 | F-S | 2556/3305 | -0.0003065309 | -0.0003566451 to -0.0002526361 | Infinity | 0.05571708 to Infinity | 9 |  |
+| DO | 24 | fit x GP | 2 | F-GP | 2542/3305 | -0.0001807909 | -0.0002235335 to -0.0001359038 | -Infinity | -Infinity to 0.3519933 | 15 |  |
+| DO | 24 | fit x GP | 2 | S-GP | 2542/3305 | 0.0001286512 | 0.0000773613 to 0.0001772571 | -Infinity | -Infinity to -0.02381882 | 9 |  |
+| DO | 24 | fit x GP | 3 | AP-XP | 2194/3398 | 0.00007077483 | 0.0000497703 to 0.00009163648 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 3 | AP-F | 2194/3398 | 0.0002489541 | 0.000174729 to 0.0003241087 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 3 | AP-S | 2194/3398 | 0.00002611826 | 0.00001763738 to 0.00003427345 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 3 | AP-GP | 2171/3398 | 0.0001069592 | 0.0000794179 to 0.0001382889 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 24 | fit x GP | 3 | XP-F | 2194/3398 | 0.0001781793 | 0.0001234821 to 0.0002355186 | -0.2843499 | -0.5163181 to -0.08298638 | 11 |  |
+| DO | 24 | fit x GP | 3 | XP-S | 2194/3398 | -0.00004465657 | -0.00006639602 to -0.00002277526 | Infinity | -0.1342588 to Infinity | 6 |  |
+| DO | 24 | fit x GP | 3 | XP-GP | 2171/3398 | 0.00003572991 | 0.00002250773 to 0.00005385687 | -0.2401433 | -0.5004926 to -0.04121887 | 11 |  |
+| DO | 24 | fit x GP | 3 | F-S | 2194/3398 | -0.0002228359 | -0.0003010492 to -0.000148205 | Infinity | 0.03155734 to Infinity | 6 |  |
+| DO | 24 | fit x GP | 3 | F-GP | 2171/3398 | -0.0001442896 | -0.0002057111 to -0.00008541459 | 0.04730728 | -0.2384849 to 0.271393 | 11 |  |
+| DO | 24 | fit x GP | 3 | S-GP | 2171/3398 | 0.00008057724 | 0.00005148616 to 0.0001111011 | -Infinity | -Infinity to 0.02212922 | 6 |  |
+| DO | 24 | fit x GP | 4 | AP-XP | 1784/3302 | 0.00004283216 | 0.00003295096 to 0.00005684307 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | AP-F | 1784/3302 | 0.0001515279 | 0.0001216128 to 0.000186109 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | AP-S | 1784/3302 | 0.00001324352 | 0.000006589787 to 0.00002034141 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | AP-GP | 1769/3302 | 0.00007221635 | 0.00005687932 to 0.00009072931 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | XP-F | 1784/3302 | 0.0001086958 | 0.00008579233 to 0.0001364134 | -1.335589 | -2.427431 to -0.4770555 | 13 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | XP-S | 1784/3302 | -0.00002958864 | -0.00004675769 to -0.00001544495 | Infinity | -0.1042378 to Infinity | 7 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | XP-GP | 1769/3302 | 0.00002972295 | 0.00001838453 to 0.00003979963 | -0.837353 | -1.439661 to -0.3044206 | 13 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | F-S | 1784/3302 | -0.0001382844 | -0.0001759605 to -0.0001072405 | Infinity | 0.6031101 to Infinity | 7 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | F-GP | 1769/3302 | -0.00007997055 | -0.0001094828 to -0.00005743829 | 0.5087822 | -0.05534807 to 1.099748 | 13 | read before the statements were registered |
+| DO | 24 | fit x GP | 4 | S-GP | 1769/3302 | 0.00005892814 | 0.00004289973 to 0.00008018737 | -Infinity | -Infinity to -0.3606107 | 7 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | AP-XP | 1758/3277 | 0.0000290553 | 0.00002045315 to 0.00003923252 | -Infinity | -Infinity to 1.010428 | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | AP-F | 1758/3277 | 0.00007238026 | 0.00005457509 to 0.00008935279 | -Infinity | -Infinity to 0.3874969 | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | AP-S | 1758/3277 | 0.000006119063 | 0.000004478657 to 0.00000751251 | -Infinity | -Infinity to 1.415492 | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | AP-GP | 1743/3277 | 0.00003572448 | 0.00002418581 to 0.00004986858 | -Infinity | -Infinity to 0.6616474 | 0 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | XP-F | 1758/3277 | 0.00004332496 | 0.00003009941 to 0.00005481831 | -0.3626575 | -0.5529109 to -0.1811179 | 6 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | XP-S | 1758/3277 | -0.00002293624 | -0.00003390294 to -0.00001426404 | Infinity | -0.1851695 to Infinity | 2 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | XP-GP | 1743/3277 | 0.000006418173 | 0.000001091953 to 0.00001229088 | -0.3092963 | -0.5680941 to -0.1406418 | 6 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | F-S | 1758/3277 | -0.00006626119 | -0.00008401957 to -0.00004819442 | Infinity | 0.06327457 to Infinity | 2 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | F-GP | 1743/3277 | -0.00003728014 | -0.00004737409 to -0.00002621324 | 0.05649238 | -0.3363561 to 0.3271782 | 6 | read before the statements were registered |
+| DO | 24 | fit x GP | 5 | S-GP | 1743/3277 | 0.00002955275 | 0.00001725452 to 0.00004474776 | -Infinity | -Infinity to -0.01076009 | 2 | read before the statements were registered |
+| DO | 24 | fit x GP | 7 | AP-XP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | AP-F | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | AP-S | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | AP-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | XP-F | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | XP-S | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | XP-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | F-S | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | F-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 24 | fit x GP | 7 | S-GP | 0/3318 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x fit | 1 | AP-XP | 2483/3322 | 0.0002818145 | 0.0002398488 to 0.0003250497 | 0.9875399 | 0.8485505 to 1.130734 | 0 |  |
+| S1 | 72 | fit x fit | 1 | AP-F | 2483/3322 | 0.0066642 | 0.005334923 to 0.008033692 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 72 | fit x fit | 1 | AP-S | 2483/3322 | 0.0001788813 | 0.0001422886 to 0.000216581 | 0.9596145 | 0.8040624 to 1.119873 | 0 |  |
+| S1 | 72 | fit x fit | 1 | AP-GP | 2483/3322 | 0.0001664899 | 0.0001507353 to 0.0001827211 | 0.8182939 | 0.6755308 to 0.965376 | 0 |  |
+| S1 | 72 | fit x fit | 1 | XP-F | 2483/3322 | 0.006382385 | 0.005095075 to 0.007708642 | -Infinity | -Infinity to -Infinity | 0 |  |
+| S1 | 72 | fit x fit | 1 | XP-S | 2483/3322 | -0.0001029332 | -0.0001084687 to -0.00009756018 | -0.02792544 | -0.04448801 to -0.01086178 | 0 |  |
+| S1 | 72 | fit x fit | 1 | XP-GP | 2483/3322 | -0.0001153246 | -0.0001423287 to -0.00008911354 | -0.1692461 | -0.1730196 to -0.1653584 | 0 |  |
+| S1 | 72 | fit x fit | 1 | F-S | 2483/3322 | -0.006485319 | -0.007817111 to -0.005192635 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 72 | fit x fit | 1 | F-GP | 2483/3322 | -0.00649771 | -0.007850971 to -0.005184188 | Infinity | Infinity to Infinity | 0 |  |
+| S1 | 72 | fit x fit | 1 | S-GP | 2483/3322 | -0.00001239145 | -0.00003385997 to 0.000008446644 | -0.1413207 | -0.1544966 to -0.1285316 | 0 |  |
+| S1 | 72 | fit x fit | 2 | AP-XP | 2419/3323 | 0.0001915659 | 0.0001638114 to 0.0002206119 | 1.154413 | 1.032365 to 1.282139 | 0 |  |
+| S1 | 72 | fit x fit | 2 | AP-F | 2419/3323 | 0.003760974 | 0.002061091 to 0.005539955 | -1.581793 | -1.718512 to -1.451154 | 0 |  |
+| S1 | 72 | fit x fit | 2 | AP-S | 2419/3323 | 0.0001136485 | 0.000100823 to 0.0001270708 | 1.170651 | 1.089615 to 1.255459 | 0 |  |
+| S1 | 72 | fit x fit | 2 | AP-GP | 2419/3323 | 0.0001148069 | 0.00009741474 to 0.0001330084 | 1.040001 | 0.9856099 to 1.096923 | 0 |  |
+| S1 | 72 | fit x fit | 2 | XP-F | 2419/3323 | 0.003569408 | 0.00189728 to 0.005319343 | -2.736206 | -3.000651 to -2.483519 | 0 |  |
+| S1 | 72 | fit x fit | 2 | XP-S | 2419/3323 | -0.00007791738 | -0.00009354109 to -0.00006298833 | 0.01623885 | -0.02668049 to 0.0572499 | 0 |  |
+| S1 | 72 | fit x fit | 2 | XP-GP | 2419/3323 | -0.00007675897 | -0.00008760348 to -0.00006639663 | -0.1144117 | -0.1852166 to -0.04675493 | 0 |  |
+| S1 | 72 | fit x fit | 2 | F-S | 2419/3323 | -0.003647326 | -0.005412884 to -0.001960268 | 2.752445 | 2.540769 to 2.973971 | 0 |  |
+| S1 | 72 | fit x fit | 2 | F-GP | 2419/3323 | -0.003646167 | -0.005406946 to -0.001963677 | 2.621794 | 2.436764 to 2.815435 | 0 |  |
+| S1 | 72 | fit x fit | 2 | S-GP | 2419/3323 | 0.000001158408 | -0.000003408299 to 0.00000593761 | -0.1306505 | -0.1585361 to -0.1040048 | 0 |  |
+| S1 | 72 | fit x fit | 3 | AP-XP | 2376/3270 | 0.0001033953 | 0.00009195466 to 0.0001146071 | 0.9977038 | 0.8730729 to 1.119842 | 0 |  |
+| S1 | 72 | fit x fit | 3 | AP-F | 2376/3270 | 0.002010852 | 0.001641032 to 0.002373275 | 0.5209239 | 0.4363822 to 0.6037747 | 0 |  |
+| S1 | 72 | fit x fit | 3 | AP-S | 2376/3270 | 0.00004571573 | 0.0000390158 to 0.00005228167 | 1.022878 | 0.929739 to 1.114153 | 0 |  |
+| S1 | 72 | fit x fit | 3 | AP-GP | 2376/3270 | 0.00004585888 | 0.00003910554 to 0.00005247715 | 0.9365663 | 0.8357051 to 1.03541 | 0 |  |
+| S1 | 72 | fit x fit | 3 | XP-F | 2376/3270 | 0.001907457 | 0.001549078 to 0.002258668 | -0.4767799 | -0.5160673 to -0.4366907 | 0 |  |
+| S1 | 72 | fit x fit | 3 | XP-S | 2376/3270 | -0.00005767957 | -0.00006232547 to -0.00005293886 | 0.02517382 | -0.005688591 to 0.05666609 | 0 |  |
+| S1 | 72 | fit x fit | 3 | XP-GP | 2376/3270 | -0.00005753642 | -0.00006212999 to -0.00005284912 | -0.06113745 | -0.08443174 to -0.03736777 | 0 |  |
+| S1 | 72 | fit x fit | 3 | F-S | 2376/3270 | -0.001965136 | -0.002320994 to -0.001602017 | 0.5019537 | 0.4933568 to 0.5103787 | 0 |  |
+| S1 | 72 | fit x fit | 3 | F-GP | 2376/3270 | -0.001964993 | -0.002320798 to -0.001601927 | 0.4156424 | 0.3993229 to 0.4316356 | 0 |  |
+| S1 | 72 | fit x fit | 3 | S-GP | 2376/3270 | 1.431461e-7 | 8.974061e-8 to 1.954835e-7 | -0.08631128 | -0.09403386 to -0.07874315 | 0 |  |
+| S1 | 72 | fit x fit | 4 | AP-XP | 2439/3323 | 0.00008072089 | 0.00007583228 to 0.00008610215 | 1.014244 | 0.9929173 to 1.037721 | 0 |  |
+| S1 | 72 | fit x fit | 4 | AP-F | 2439/3323 | 0.001545367 | 0.00124985 to 0.001870666 | 0.7195335 | 0.6973855 to 0.7439135 | 0 |  |
+| S1 | 72 | fit x fit | 4 | AP-S | 2439/3323 | 0.00003378492 | 0.0000322271 to 0.00003520011 | 1.068902 | 1.016338 to 1.126763 | 0 |  |
+| S1 | 72 | fit x fit | 4 | AP-GP | 2439/3323 | 0.00004771563 | 0.00004432812 to 0.00005144452 | 0.8351629 | 0.8120987 to 0.8605514 | 0 |  |
+| S1 | 72 | fit x fit | 4 | XP-F | 2439/3323 | 0.001464647 | 0.001174018 to 0.001784564 | -0.2947108 | -0.2955317 to -0.2938071 | 0 |  |
+| S1 | 72 | fit x fit | 4 | XP-S | 2439/3323 | -0.00004693597 | -0.00005387504 to -0.00004063217 | 0.05465753 | 0.0234204 to 0.08904258 | 0 |  |
+| S1 | 72 | fit x fit | 4 | XP-GP | 2439/3323 | -0.00003300526 | -0.00003465763 to -0.00003150416 | -0.1790815 | -0.1808186 to -0.1771693 | 0 |  |
+| S1 | 72 | fit x fit | 4 | F-S | 2439/3323 | -0.001511583 | -0.001838439 to -0.00121465 | 0.3493683 | 0.3189521 to 0.3828497 | 0 |  |
+| S1 | 72 | fit x fit | 4 | F-GP | 2439/3323 | -0.001497652 | -0.001819221 to -0.001205522 | 0.1156293 | 0.1147131 to 0.1166378 | 0 |  |
+| S1 | 72 | fit x fit | 4 | S-GP | 2439/3323 | 0.00001393072 | 0.000009128009 to 0.00001921742 | -0.233739 | -0.2662119 to -0.204239 | 0 |  |
+| S1 | 72 | fit x fit | 5 | AP-XP | 2471/3370 | 0.00005704442 | 0.00005670573 to 0.00005737204 | 1.06879 | 0.8532607 to 1.277283 | 0 |  |
+| S1 | 72 | fit x fit | 5 | AP-F | 2471/3370 | 0.0009584074 | 0.0008949711 to 0.001023984 | 0.8285574 | 0.7775895 to 0.8778616 | 0 |  |
+| S1 | 72 | fit x fit | 5 | AP-S | 2471/3370 | 0.00002134815 | 0.00002112535 to 0.00002156368 | 1.136554 | 1.095779 to 1.175998 | 0 |  |
+| S1 | 72 | fit x fit | 5 | AP-GP | 2452/3370 | 0.00002486626 | 0.00002378004 to 0.00002591077 | 1.057058 | 1.002479 to 1.109541 | 0 |  |
+| S1 | 72 | fit x fit | 5 | XP-F | 2471/3370 | 0.000901363 | 0.000837599 to 0.0009672787 | -0.2402321 | -0.3994213 to -0.07567115 | 0 |  |
+| S1 | 72 | fit x fit | 5 | XP-S | 2471/3370 | -0.00003569626 | -0.00003580837 to -0.00003558038 | 0.06776404 | -0.1012852 to 0.2425179 | 0 |  |
+| S1 | 72 | fit x fit | 5 | XP-GP | 2452/3370 | -0.00003234604 | -0.00003312261 to -0.00003159928 | -0.006535507 | -0.1652625 to 0.15853 | 0 |  |
+| S1 | 72 | fit x fit | 5 | F-S | 2471/3370 | -0.0009370593 | -0.001002859 to -0.0008734074 | 0.3079962 | 0.298136 to 0.318189 | 0 |  |
+| S1 | 72 | fit x fit | 5 | F-GP | 2452/3370 | -0.0009287533 | -0.000987185 to -0.0008725654 | 0.2394281 | 0.2377998 to 0.2411214 | 0 |  |
+| S1 | 72 | fit x fit | 5 | S-GP | 2452/3370 | 0.000003415801 | 0.000002536377 to 0.000004261456 | -0.07688987 | -0.0891276 to -0.06512207 | 0 |  |
+| S1 | 72 | fit x fit | 7 | AP-XP | 2442/3392 | 0.00003331168 | 0.00003306162 to 0.00003356546 | 0.9251684 | 0.8863402 to 0.9634283 | 0 |  |
+| S1 | 72 | fit x fit | 7 | AP-F | 2442/3392 | 0.0005630233 | 0.0005420977 to 0.0005842596 | 0.8236443 | 0.6336392 to 1.016471 | 0 |  |
+| S1 | 72 | fit x fit | 7 | AP-S | 2442/3392 | 0.00001128976 | 0.00001056285 to 0.00001202747 | 1.056765 | 1.050547 to 1.062891 | 0 |  |
+| S1 | 72 | fit x fit | 7 | AP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x fit | 7 | XP-F | 2442/3392 | 0.0005297116 | 0.0005090361 to 0.0005506941 | -0.101524 | -0.3297891 to 0.130131 | 0 |  |
+| S1 | 72 | fit x fit | 7 | XP-S | 2442/3392 | -0.00002202192 | -0.00002249877 to -0.00002153799 | 0.1315961 | 0.09946267 to 0.1642068 | 0 |  |
+| S1 | 72 | fit x fit | 7 | XP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x fit | 7 | F-S | 2442/3392 | -0.0005517335 | -0.0005722321 to -0.0005315349 | 0.2331202 | 0.03407579 to 0.4292517 | 0 |  |
+| S1 | 72 | fit x fit | 7 | F-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x fit | 7 | S-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 1 | AP-XP | 2756/3322 | 0.0002049925 | 0.0001546064 to 0.0002563384 | 0.8022638 | 0.6711587 to 0.9358662 | 0 |  |
+| S1 | 72 | fit x GP | 1 | AP-F | 2756/3322 | 0.0003096613 | 0.0001935563 to 0.0004279778 | 0.7285182 | 0.5879065 to 0.8718081 | 0 |  |
+| S1 | 72 | fit x GP | 1 | AP-S | 2756/3322 | 0.0001648743 | 0.0001319137 to 0.0001984628 | 0.8009983 | 0.7110179 to 0.8926927 | 0 |  |
+| S1 | 72 | fit x GP | 1 | AP-GP | 2756/3322 | 0.0001615038 | 0.0001528339 to 0.0001703388 | 0.7159533 | 0.6136189 to 0.820237 | 0 |  |
+| S1 | 72 | fit x GP | 1 | XP-F | 2756/3322 | 0.0001046688 | 0.00003894991 to 0.0001716394 | -0.07374568 | -0.08325219 to -0.06405809 | 0 |  |
+| S1 | 72 | fit x GP | 1 | XP-S | 2756/3322 | -0.0000401182 | -0.00005787555 to -0.00002269276 | -0.00126551 | -0.04317354 to 0.03985919 | 0 |  |
+| S1 | 72 | fit x GP | 1 | XP-GP | 2756/3322 | -0.00004348876 | -0.00008599959 to -0.000001772526 | -0.08631049 | -0.1156293 to -0.05753972 | 0 |  |
+| S1 | 72 | fit x GP | 1 | F-S | 2756/3322 | -0.000144787 | -0.000229515 to -0.00006164267 | 0.07248017 | 0.02088455 to 0.1231114 | 0 |  |
+| S1 | 72 | fit x GP | 1 | F-GP | 2756/3322 | -0.0001481575 | -0.000257639 to -0.00004072244 | -0.01256482 | -0.05157119 to 0.02571247 | 0 |  |
+| S1 | 72 | fit x GP | 1 | S-GP | 2756/3322 | -0.000003370561 | -0.00002812404 to 0.00002092023 | -0.08504498 | -0.09739891 to -0.07245574 | 0 |  |
+| S1 | 72 | fit x GP | 2 | AP-XP | 2705/3323 | 0.0001386273 | 0.0001002164 to 0.0001779871 | 0.9698568 | 0.8593831 to 1.083059 | 0 |  |
+| S1 | 72 | fit x GP | 2 | AP-F | 2705/3323 | 0.000185748 | 0.0001101169 to 0.0002632473 | 0.8518418 | 0.8441403 to 0.8593578 | 0 |  |
+| S1 | 72 | fit x GP | 2 | AP-S | 2705/3323 | 0.0001105675 | 0.00008781304 to 0.0001338841 | 0.9586877 | 0.9392479 to 0.9776589 | 0 |  |
+| S1 | 72 | fit x GP | 2 | AP-GP | 2705/3323 | 0.0001078829 | 0.00009540769 to 0.0001206662 | 0.9019136 | 0.8866297 to 0.9168291 | 0 |  |
+| S1 | 72 | fit x GP | 2 | XP-F | 2705/3323 | 0.00004712065 | 0.000009900453 to 0.00008526021 | -0.1180149 | -0.238919 to -0.00002531291 | 0 |  |
+| S1 | 72 | fit x GP | 2 | XP-S | 2705/3323 | -0.0000280598 | -0.00004410295 to -0.00001240337 | -0.01116907 | -0.1438113 to 0.1182758 | 0 |  |
+| S1 | 72 | fit x GP | 2 | XP-GP | 2705/3323 | -0.00003074447 | -0.00005732085 to -0.000004808722 | -0.06794319 | -0.1964295 to 0.05744598 | 0 |  |
+| S1 | 72 | fit x GP | 2 | F-S | 2705/3323 | -0.00007518045 | -0.0001293632 to -0.00002230383 | 0.1068459 | 0.09510766 to 0.1183011 | 0 |  |
+| S1 | 72 | fit x GP | 2 | F-GP | 2705/3323 | -0.00007786512 | -0.0001425811 to -0.00001470917 | 0.05007174 | 0.04248943 to 0.05747129 | 0 |  |
+| S1 | 72 | fit x GP | 2 | S-GP | 2705/3323 | -0.00000268467 | -0.0000132179 to 0.00000759465 | -0.05677412 | -0.06082983 to -0.05261823 | 0 |  |
+| S1 | 72 | fit x GP | 3 | AP-XP | 2681/3270 | 0.0000703092 | 0.00004660961 to 0.00009329485 | 0.8519774 | 0.6339063 to 1.063479 | 0 |  |
+| S1 | 72 | fit x GP | 3 | AP-F | 2681/3270 | 0.00009787626 | 0.00005814606 to 0.0001364096 | 0.9261062 | 0.8091214 to 1.039567 | 0 |  |
+| S1 | 72 | fit x GP | 3 | AP-S | 2681/3270 | 0.00005170068 | 0.00003848496 to 0.00006451827 | 0.931914 | 0.8643224 to 0.9974695 | 0 |  |
+| S1 | 72 | fit x GP | 3 | AP-GP | 2681/3270 | 0.00004622827 | 0.00003938951 to 0.000052861 | 0.8651477 | 0.7970438 to 0.9311999 | 0 |  |
+| S1 | 72 | fit x GP | 3 | XP-F | 2681/3270 | 0.00002756706 | 0.00001153645 to 0.00004311475 | 0.07412879 | -0.02391231 to 0.1752151 | 0 |  |
+| S1 | 72 | fit x GP | 3 | XP-S | 2681/3270 | -0.00001860853 | -0.00002877658 to -0.000008124647 | 0.07993661 | -0.06600965 to 0.2304161 | 0 |  |
+| S1 | 72 | fit x GP | 3 | XP-GP | 2681/3270 | -0.00002408094 | -0.00004043385 to -0.000007220093 | 0.01317026 | -0.1322792 to 0.1631375 | 0 |  |
+| S1 | 72 | fit x GP | 3 | F-S | 2681/3270 | -0.00004617559 | -0.00007189133 to -0.0000196611 | 0.005807826 | -0.04209733 to 0.05520095 | 0 |  |
+| S1 | 72 | fit x GP | 3 | F-GP | 2681/3270 | -0.000051648 | -0.0000835486 to -0.00001875654 | -0.06095853 | -0.1083669 to -0.0120776 | 0 |  |
+| S1 | 72 | fit x GP | 3 | S-GP | 2681/3270 | -0.00000547241 | -0.00001165727 to 9.04554e-7 | -0.06676636 | -0.06727855 to -0.06626959 | 0 |  |
+| S1 | 72 | fit x GP | 4 | AP-XP | 2709/3323 | 0.00005339308 | 0.00004949517 to 0.00005693664 | 0.8304216 | 0.7757447 to 0.8801278 | 0 |  |
+| S1 | 72 | fit x GP | 4 | AP-F | 2709/3323 | 0.00007197525 | 0.0000622567 to 0.0000808103 | 0.758191 | 0.6961384 to 0.8264488 | 0 |  |
+| S1 | 72 | fit x GP | 4 | AP-S | 2709/3323 | 0.00003933618 | 0.00003699049 to 0.00004146863 | 0.8576443 | 0.7946183 to 0.926973 | 0 |  |
+| S1 | 72 | fit x GP | 4 | AP-GP | 2709/3323 | 0.0000452205 | 0.00004009504 to 0.00005085849 | 0.7466719 | 0.6821212 to 0.8176776 | 0 |  |
+| S1 | 72 | fit x GP | 4 | XP-F | 2709/3323 | 0.00001858217 | 0.00001276152 to 0.00002387367 | -0.07223058 | -0.1839894 to 0.05070416 | 0 |  |
+| S1 | 72 | fit x GP | 4 | XP-S | 2709/3323 | -0.0000140569 | -0.00001546801 to -0.00001250468 | 0.02722279 | -0.08550955 to 0.1512284 | 0 |  |
+| S1 | 72 | fit x GP | 4 | XP-GP | 2709/3323 | -0.000008172586 | -0.00001684159 to 0.000001363322 | -0.08374968 | -0.1980066 to 0.04193298 | 0 |  |
+| S1 | 72 | fit x GP | 4 | F-S | 2709/3323 | -0.00003263907 | -0.00003934168 to -0.00002526621 | 0.09945337 | 0.09847989 to 0.1005242 | 0 |  |
+| S1 | 72 | fit x GP | 4 | F-GP | 2709/3323 | -0.00002675476 | -0.00004071526 to -0.0000113982 | -0.0115191 | -0.0140172 to -0.008771178 | 0 |  |
+| S1 | 72 | fit x GP | 4 | S-GP | 2709/3323 | 0.000005884316 | -0.000001373585 to 0.00001386801 | -0.1109725 | -0.1124971 to -0.1092954 | 0 |  |
+| S1 | 72 | fit x GP | 5 | AP-XP | 2749/3370 | 0.00003238488 | 0.00002680313 to 0.0000379141 | 0.865866 | 0.6423563 to 1.087272 | 0 |  |
+| S1 | 72 | fit x GP | 5 | AP-F | 2749/3370 | 0.00004037499 | 0.00003191389 to 0.00004875644 | 0.9794554 | 0.9566075 to 1.002088 | 0 |  |
+| S1 | 72 | fit x GP | 5 | AP-S | 2749/3370 | 0.00002297677 | 0.00002059872 to 0.00002533245 | 0.9979617 | 0.9565622 to 1.038971 | 0 |  |
+| S1 | 72 | fit x GP | 5 | AP-GP | 2736/3370 | 0.00002459246 | 0.00002383011 to 0.00002534045 | 0.9563786 | 0.90292 to 1.008831 | 0 |  |
+| S1 | 72 | fit x GP | 5 | XP-F | 2749/3370 | 0.000007990105 | 0.000005110761 to 0.00001084234 | 0.1135894 | -0.08518344 to 0.3142511 | 0 |  |
+| S1 | 72 | fit x GP | 5 | XP-S | 2749/3370 | -0.000009408109 | -0.00001258165 to -0.000006204409 | 0.1320957 | -0.04830016 to 0.3142058 | 0 |  |
+| S1 | 72 | fit x GP | 5 | XP-GP | 2736/3370 | -0.000007906421 | -0.00001257364 to -0.000003149642 | 0.09258603 | -0.07844093 to 0.2668947 | 0 |  |
+| S1 | 72 | fit x GP | 5 | F-S | 2749/3370 | -0.00001739821 | -0.00002342399 to -0.00001131517 | 0.01850631 | -0.00004530996 to 0.03688328 | 0 |  |
+| S1 | 72 | fit x GP | 5 | F-GP | 2736/3370 | -0.0000158808 | -0.00002341599 to -0.000008201032 | -0.02088932 | -0.04905135 to 0.006742507 | 0 |  |
+| S1 | 72 | fit x GP | 5 | S-GP | 2736/3370 | 0.000001536155 | 8.005098e-9 to 0.000003093627 | -0.04014183 | -0.05033478 to -0.03014078 | 0 |  |
+| S1 | 72 | fit x GP | 7 | AP-XP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | AP-F | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | AP-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | AP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | XP-F | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | XP-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | XP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | F-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | F-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| S1 | 72 | fit x GP | 7 | S-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x fit | 1 | AP-XP | 2713/3298 | 0.0002244834 | 0.0001881665 to 0.0002590423 | -Infinity | -Infinity to 0.9459526 | 0 |  |
+| DO | 72 | fit x fit | 1 | AP-F | 2713/3298 | 0.0293718 | 0.02171877 to 0.03855572 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 1 | AP-S | 2713/3298 | 0.0001818022 | 0.0001558486 to 0.0002040938 | 0.986837 | 0.895682 to 1.091921 | 0 |  |
+| DO | 72 | fit x fit | 1 | AP-GP | 2669/3298 | 0.0003399189 | 0.0002801943 to 0.0004014967 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 1 | XP-F | 2713/3298 | 0.02914732 | 0.02154587 to 0.03806879 | -Infinity | -Infinity to -3.921517 | 6 |  |
+| DO | 72 | fit x fit | 1 | XP-S | 2713/3298 | -0.0000426812 | -0.00005992259 to -0.00002539112 | Infinity | 0.005348423 to Infinity | 0 |  |
+| DO | 72 | fit x fit | 1 | XP-GP | 2669/3298 | 0.0001148131 | 0.00006353272 to 0.0001684918 | -Infinity | -Infinity to -1.339357 | 6 |  |
+| DO | 72 | fit x fit | 1 | F-S | 2713/3298 | -0.02919 | -0.03841909 to -0.02159354 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 72 | fit x fit | 1 | F-GP | 2669/3298 | -0.02950099 | -0.03888162 to -0.0217038 | unmeasured | -Infinity to Infinity | 6 |  |
+| DO | 72 | fit x fit | 1 | S-GP | 2669/3298 | 0.0001558646 | 0.0001064869 to 0.0002092861 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 2 | AP-XP | 2573/3345 | 0.0001307851 | 0.00009664858 to 0.0001635549 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 2 | AP-F | 2573/3345 | 0.01531938 | 0.01007581 to 0.02042286 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 2 | AP-S | 2573/3345 | 0.000107489 | 0.00007607412 to 0.0001386188 | 1.058742 | 0.9012692 to 1.185089 | 0 |  |
+| DO | 72 | fit x fit | 2 | AP-GP | 2541/3345 | 0.0001823127 | 0.0001346585 to 0.0002303517 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 2 | XP-F | 2573/3345 | 0.01518859 | 0.01001061 to 0.02048616 | -Infinity | -Infinity to -Infinity | 13 |  |
+| DO | 72 | fit x fit | 2 | XP-S | 2573/3345 | -0.0000232961 | -0.00003178477 to -0.00001500173 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 72 | fit x fit | 2 | XP-GP | 2541/3345 | 0.00005110596 | 0.00002816554 to 0.00007408415 | -Infinity | -Infinity to -Infinity | 13 |  |
+| DO | 72 | fit x fit | 2 | F-S | 2573/3345 | -0.01521189 | -0.02035826 to -0.009921891 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 72 | fit x fit | 2 | F-GP | 2541/3345 | -0.01532725 | -0.02048628 to -0.01007929 | unmeasured | -Infinity to Infinity | 13 |  |
+| DO | 72 | fit x fit | 2 | S-GP | 2541/3345 | 0.00007364352 | 0.00005250007 to 0.00009440327 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 3 | AP-XP | 2164/3414 | 0.00007830446 | 0.0000630782 to 0.00009593493 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 3 | AP-F | 2164/3414 | 0.006790645 | 0.004373034 to 0.009562193 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 3 | AP-S | 2164/3414 | 0.00005979816 | 0.00004861857 to 0.00007067599 | 1.133421 | 1.024895 to 1.251524 | 0 |  |
+| DO | 72 | fit x fit | 3 | AP-GP | 2116/3414 | 0.0001003024 | 0.00007831454 to 0.0001270205 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 3 | XP-F | 2164/3414 | 0.006712341 | 0.004294427 to 0.009365893 | -Infinity | -Infinity to -Infinity | 7 |  |
+| DO | 72 | fit x fit | 3 | XP-S | 2164/3414 | -0.0000185063 | -0.00002842389 to -0.00001022747 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 72 | fit x fit | 3 | XP-GP | 2116/3414 | 0.0000224886 | 0.00001390728 to 0.00003431727 | -Infinity | -Infinity to -0.7105974 | 7 |  |
+| DO | 72 | fit x fit | 3 | F-S | 2164/3414 | -0.006730847 | -0.009435025 to -0.004402176 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 72 | fit x fit | 3 | F-GP | 2116/3414 | -0.006841448 | -0.009542166 to -0.004446585 | unmeasured | -Infinity to Infinity | 7 |  |
+| DO | 72 | fit x fit | 3 | S-GP | 2116/3414 | 0.00003955317 | 0.00002461965 to 0.00005978504 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 4 | AP-XP | 1817/3301 | 0.00005129541 | 0.00003644362 to 0.00006812155 | -Infinity | -Infinity to 1.107732 | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | AP-F | 1817/3301 | 0.003229057 | 0.002162367 to 0.004753706 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | AP-S | 1817/3301 | 0.00003473964 | 0.00002504244 to 0.00004633481 | 1.039368 | 0.9179869 to 1.192135 | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | AP-GP | 1776/3301 | 0.00007156173 | 0.0000552664 to 0.00009282708 | -Infinity | -Infinity to 0.3914521 | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | XP-F | 1817/3301 | 0.003177762 | 0.00214019 to 0.004673305 | -Infinity | -Infinity to -Infinity | 1 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | XP-S | 1817/3301 | -0.00001655577 | -0.00002389814 to -0.000009644764 | Infinity | -0.003423348 to Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | XP-GP | 1776/3301 | 0.00001958168 | 0.00001078894 to 0.00003064223 | -Infinity | -Infinity to -0.6349885 | 1 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | F-S | 1817/3301 | -0.003194317 | -0.004724875 to -0.002129367 | Infinity | Infinity to Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | F-GP | 1776/3301 | -0.003231496 | -0.0047774 to -0.002138709 | unmeasured | -Infinity to Infinity | 1 | read before the statements were registered |
+| DO | 72 | fit x fit | 4 | S-GP | 1776/3301 | 0.00003611367 | 0.00002814833 to 0.00004718986 | -Infinity | -Infinity to -0.6756672 | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | AP-XP | 1840/3306 | 0.00003330835 | 0.00002533382 to 0.00004409808 | -Infinity | -Infinity to -0.4347141 | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | AP-F | 1840/3306 | 0.001673829 | 0.001111847 to 0.002279688 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | AP-S | 1840/3306 | 0.00002043528 | 0.0000152894 to 0.00002647032 | 1.034415 | 0.8737296 to 1.178907 | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | AP-GP | 1802/3306 | 0.00003287801 | 0.00002573479 to 0.00003970056 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | XP-F | 1840/3306 | 0.00164052 | 0.001084137 to 0.002238217 | -Infinity | -Infinity to -0.2214274 | 3 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | XP-S | 1840/3306 | -0.00001287308 | -0.00001796157 to -0.000008878758 | Infinity | 1.483244 to Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | XP-GP | 1802/3306 | -8.314638e-7 | -0.000007709395 to 0.000005212248 | -Infinity | -Infinity to -Infinity | 3 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | F-S | 1840/3306 | -0.001653394 | -0.00224186 to -0.001096496 | Infinity | Infinity to Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | F-GP | 1802/3306 | -0.001675955 | -0.002276429 to -0.001120657 | unmeasured | -Infinity to Infinity | 3 | read before the statements were registered |
+| DO | 72 | fit x fit | 5 | S-GP | 1802/3306 | 0.00001203881 | 0.000007441421 to 0.00001629526 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x fit | 7 | AP-XP | 1532/3336 | 0.00001499716 | 0.00001095029 to 0.00002012082 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x fit | 7 | AP-F | 1532/3336 | 0.0007350649 | 0.0003544779 to 0.001237795 | -Infinity | -Infinity to -2.036002 | 0 |  |
+| DO | 72 | fit x fit | 7 | AP-S | 1532/3336 | 0.000008860693 | 0.000005976631 to 0.00001190979 | 1.093059 | 0.9514657 to 1.240056 | 0 |  |
+| DO | 72 | fit x fit | 7 | AP-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x fit | 7 | XP-F | 1532/3336 | 0.0007200678 | 0.0003323098 to 0.00121515 | Infinity | Infinity to Infinity | 7 |  |
+| DO | 72 | fit x fit | 7 | XP-S | 1532/3336 | -0.000006136471 | -0.000009230016 to -0.000004140062 | Infinity | Infinity to Infinity | 0 |  |
+| DO | 72 | fit x fit | 7 | XP-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x fit | 7 | F-S | 1532/3336 | -0.0007262042 | -0.001210774 to -0.0003442868 | Infinity | 2.536952 to Infinity | 0 |  |
+| DO | 72 | fit x fit | 7 | F-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x fit | 7 | S-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 1 | AP-XP | 2713/3298 | 0.0002650861 | 0.0002290077 to 0.000296077 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 1 | AP-F | 2713/3298 | 0.0006358503 | 0.0004922303 to 0.0007839539 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 1 | AP-S | 2713/3298 | 0.000233906 | 0.0001929325 to 0.0002703963 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 1 | AP-GP | 2691/3298 | 0.0003394553 | 0.0002809581 to 0.0003990102 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 1 | XP-F | 2713/3298 | 0.0003707643 | 0.0002403416 to 0.0005066847 | -0.8477505 | -1.110637 to -0.5872401 | 8 |  |
+| DO | 72 | fit x GP | 1 | XP-S | 2713/3298 | -0.00003118004 | -0.00005049054 to -0.000003756015 | Infinity | -0.08146115 to Infinity | 4 |  |
+| DO | 72 | fit x GP | 1 | XP-GP | 2691/3298 | 0.00007302663 | 0.00002778516 to 0.0001223483 | -Infinity | -Infinity to -0.2763483 | 8 |  |
+| DO | 72 | fit x GP | 1 | F-S | 2713/3298 | -0.0004019443 | -0.0005378265 to -0.0002592925 | Infinity | 0.6625609 to Infinity | 4 |  |
+| DO | 72 | fit x GP | 1 | F-GP | 2691/3298 | -0.000300347 | -0.0004727821 to -0.0001350049 | -Infinity | -Infinity to 0.5385672 | 8 |  |
+| DO | 72 | fit x GP | 1 | S-GP | 2691/3298 | 0.0001041483 | 0.00006052106 to 0.0001581515 | -Infinity | -Infinity to -0.2424333 | 4 |  |
+| DO | 72 | fit x GP | 2 | AP-XP | 2581/3345 | 0.0001420726 | 0.0001088985 to 0.0001761731 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 2 | AP-F | 2581/3345 | 0.0003565708 | 0.0002664252 to 0.0004321527 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 2 | AP-S | 2581/3345 | 0.0001397524 | 0.0001022369 to 0.000174938 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 2 | AP-GP | 2563/3345 | 0.000180744 | 0.0001328741 to 0.000229115 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 2 | XP-F | 2581/3345 | 0.0002144982 | 0.0001519818 to 0.0002718597 | -0.4095535 | -0.6437118 to -0.1738748 | 18 |  |
+| DO | 72 | fit x GP | 2 | XP-S | 2581/3345 | -0.000002320257 | -0.00001265764 to 0.000009766255 | Infinity | -0.1327573 to Infinity | 9 |  |
+| DO | 72 | fit x GP | 2 | XP-GP | 2563/3345 | 0.00003867368 | 0.00002117524 to 0.0000561463 | -Infinity | -Infinity to -0.1690999 | 18 |  |
+| DO | 72 | fit x GP | 2 | F-S | 2581/3345 | -0.0002168184 | -0.0002700239 to -0.0001608707 | Infinity | 0.2423624 to Infinity | 9 |  |
+| DO | 72 | fit x GP | 2 | F-GP | 2563/3345 | -0.0001771519 | -0.0002252011 to -0.0001277664 | -Infinity | -Infinity to 0.3059178 | 18 |  |
+| DO | 72 | fit x GP | 2 | S-GP | 2563/3345 | 0.00004007739 | 0.00002517891 to 0.00005751284 | -Infinity | -Infinity to -0.09345494 | 9 |  |
+| DO | 72 | fit x GP | 3 | AP-XP | 2160/3414 | 0.00007940467 | 0.00006497299 to 0.00009517549 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 3 | AP-F | 2160/3414 | 0.0001832306 | 0.0001430287 to 0.0002219813 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 3 | AP-S | 2160/3414 | 0.00007403298 | 0.00005612381 to 0.00009550766 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 3 | AP-GP | 2132/3414 | 0.00009999458 | 0.00007817745 to 0.0001259645 | -Infinity | -Infinity to -Infinity | 0 |  |
+| DO | 72 | fit x GP | 3 | XP-F | 2160/3414 | 0.000103826 | 0.00007264584 to 0.0001313823 | -0.3417176 | -0.5448581 to -0.06323414 | 9 |  |
+| DO | 72 | fit x GP | 3 | XP-S | 2160/3414 | -0.000005371681 | -0.00001260161 to 0.000001757827 | Infinity | -0.08334414 to Infinity | 7 |  |
+| DO | 72 | fit x GP | 3 | XP-GP | 2132/3414 | 0.00002113562 | 0.00001132051 to 0.00003366921 | -Infinity | -Infinity to -0.1098591 | 9 |  |
+| DO | 72 | fit x GP | 3 | F-S | 2160/3414 | -0.0001091976 | -0.0001361032 to -0.00007925813 | Infinity | 0.2488404 to Infinity | 7 |  |
+| DO | 72 | fit x GP | 3 | F-GP | 2132/3414 | -0.00008479815 | -0.0001145198 to -0.00005281881 | -Infinity | -Infinity to 0.3652212 | 9 |  |
+| DO | 72 | fit x GP | 3 | S-GP | 2132/3414 | 0.00002530468 | 0.0000159524 to 0.00003823229 | -Infinity | -Infinity to -0.06445823 | 7 |  |
+| DO | 72 | fit x GP | 4 | AP-XP | 1802/3301 | 0.00005431739 | 0.00003778721 to 0.00007244965 | -Infinity | -Infinity to 0.8941797 | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | AP-F | 1802/3301 | 0.0001127783 | 0.00008242188 to 0.0001487008 | -Infinity | -Infinity to 0.06801541 | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | AP-S | 1802/3301 | 0.00004869898 | 0.00003801015 to 0.00006200612 | -Infinity | -Infinity to 1.008603 | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | AP-GP | 1776/3301 | 0.00007156089 | 0.00005555743 to 0.00009250088 | -Infinity | -Infinity to 0.3217828 | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | XP-F | 1802/3301 | 0.00005846086 | 0.0000400762 to 0.00008090202 | -0.68045 | -1.804778 to 0.6208853 | 3 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | XP-S | 1802/3301 | -0.000005618412 | -0.00001644367 to 0.000004158984 | Infinity | -0.0889176 to Infinity | 2 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | XP-GP | 1776/3301 | 0.00001645947 | 0.000004010362 to 0.00002944617 | -Infinity | -Infinity to -0.4991196 | 3 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | F-S | 1802/3301 | -0.00006407927 | -0.00008850087 to -0.00004346421 | Infinity | 0.63923 to Infinity | 2 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | F-GP | 1776/3301 | -0.00004284024 | -0.00007178421 to -0.00001908997 | -Infinity | -Infinity to 0.7275716 | 3 | read before the statements were registered |
+| DO | 72 | fit x GP | 4 | S-GP | 1776/3301 | 0.00002215306 | 0.00001083108 to 0.00003925337 | -Infinity | -Infinity to -0.5037826 | 2 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | AP-XP | 1820/3306 | 0.00003206562 | 0.00002546121 to 0.00004073531 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | AP-F | 1820/3306 | 0.0000613289 | 0.00004612004 to 0.0000762836 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | AP-S | 1820/3306 | 0.00002647849 | 0.00002080438 to 0.00003324355 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | AP-GP | 1802/3306 | 0.0000328774 | 0.0000255723 to 0.00003967898 | -Infinity | -Infinity to -Infinity | 0 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | XP-F | 1820/3306 | 0.00002926327 | 0.00001785263 to 0.00003855579 | 0.7853454 | -0.2737989 to 3.38087 | 8 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | XP-S | 1820/3306 | -0.000005587132 | -0.000008588176 to -0.000002404585 | Infinity | -0.04429378 to Infinity | 6 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | XP-GP | 1802/3306 | 6.356854e-7 | -0.000004772243 to 0.000005060822 | -Infinity | -Infinity to -0.06247619 | 8 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | F-S | 1820/3306 | -0.0000348504 | -0.00004448824 to -0.00002303859 | Infinity | 0.08398293 to Infinity | 6 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | F-GP | 1802/3306 | -0.00002899866 | -0.00003907258 to -0.00001816305 | -Infinity | -Infinity to 0.1439556 | 8 | read before the statements were registered |
+| DO | 72 | fit x GP | 5 | S-GP | 1802/3306 | 0.000006147387 | 0.000001466513 to 0.00001046914 | -Infinity | -Infinity to -0.06351939 | 6 | read before the statements were registered |
+| DO | 72 | fit x GP | 7 | AP-XP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | AP-F | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | AP-S | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | AP-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | XP-F | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | XP-S | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | XP-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | F-S | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | F-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| DO | 72 | fit x GP | 7 | S-GP | 0/3336 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x fit | 1 | AP-XP | 3409/3461 | 0.005862412 | 0.004906699 to 0.007167846 | -0.0573004 | -0.1273793 to 0.0167963 | 0 |  |
+| GN | 24 | fit x fit | 1 | AP-F | 3409/3461 | 0.1057819 | 0.09571656 to 0.1183972 | 0.7210045 | 0.648073 to 0.7967713 | 0 |  |
+| GN | 24 | fit x fit | 1 | AP-S | 2950/3461 | -0.0003981767 | -0.000529124 to -0.0003024145 | -0.1943368 | -0.2278932 to -0.1627449 | 0 |  |
+| GN | 24 | fit x fit | 1 | AP-GP | 3382/3461 | -0.0006296761 | -0.0007151229 to -0.000547549 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 1 | XP-F | 3409/3461 | 0.0999195 | 0.09040218 to 0.1113162 | 0.7783049 | 0.6569919 to 0.8872459 | 0 |  |
+| GN | 24 | fit x fit | 1 | XP-S | 2950/3461 | -0.006181351 | -0.007647701 to -0.005074556 | -0.1253151 | -0.2094688 to -0.04528003 | 0 |  |
+| GN | 24 | fit x fit | 1 | XP-GP | 3382/3461 | -0.006538866 | -0.007964512 to -0.005544746 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 1 | F-S | 2950/3461 | -0.1065064 | -0.1191404 to -0.09427687 | -0.9171266 | -1.039054 to -0.799103 | 0 |  |
+| GN | 24 | fit x fit | 1 | F-GP | 3382/3461 | -0.1062937 | -0.118844 to -0.09622792 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 1 | S-GP | 2926/3461 | -0.0002269845 | -0.0002582885 to -0.000198171 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 2 | AP-XP | 3222/3289 | 0.001704566 | 0.001502479 to 0.001959154 | -0.3041193 | -0.4348411 to -0.1731538 | 0 |  |
+| GN | 24 | fit x fit | 2 | AP-F | 3222/3289 | 0.0749828 | 0.06304507 to 0.08695765 | 0.737246 | 0.6502577 to 0.8149454 | 0 |  |
+| GN | 24 | fit x fit | 2 | AP-S | 2757/3289 | -0.0000903028 | -0.0001179712 to -0.00006991776 | -0.1694331 | -0.2043171 to -0.1494933 | 0 |  |
+| GN | 24 | fit x fit | 2 | AP-GP | 3143/3289 | -0.0001379459 | -0.0001615061 to -0.0001132555 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 2 | XP-F | 3222/3289 | 0.07327824 | 0.06115151 to 0.08544266 | 1.041365 | 0.8377736 to 1.244578 | 0 |  |
+| GN | 24 | fit x fit | 2 | XP-S | 2757/3289 | -0.001769592 | -0.002219841 to -0.001455115 | 0.1234357 | -0.03978074 to 0.2868032 | 0 |  |
+| GN | 24 | fit x fit | 2 | XP-GP | 3143/3289 | -0.001866541 | -0.002104714 to -0.001700476 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 2 | F-S | 2757/3289 | -0.07761275 | -0.08960398 to -0.06436748 | -0.91805 | -0.9972917 to -0.8305988 | 0 |  |
+| GN | 24 | fit x fit | 2 | F-GP | 3143/3289 | -0.07499426 | -0.08674473 to -0.06341452 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 2 | S-GP | 2685/3289 | -0.00004314779 | -0.00005568285 to -0.00002877113 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 3 | AP-XP | 3195/3262 | 0.0008955658 | 0.0008681929 to 0.0009219363 | -0.4445224 | -0.5688907 to -0.2813028 | 0 |  |
+| GN | 24 | fit x fit | 3 | AP-F | 3195/3262 | 0.06242644 | 0.05201885 to 0.0721909 | 0.7171319 | 0.6631059 to 0.7737909 | 0 |  |
+| GN | 24 | fit x fit | 3 | AP-S | 2733/3262 | -0.00004218255 | -0.00005176089 to -0.00003319521 | -0.1473211 | -0.1813336 to -0.1181626 | 0 |  |
+| GN | 24 | fit x fit | 3 | AP-GP | 2997/3262 | -0.00005143514 | -0.00005863579 to -0.00004364888 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 3 | XP-F | 3195/3262 | 0.06153087 | 0.05112082 to 0.07128286 | 1.161654 | 0.9859964 to 1.302826 | 0 |  |
+| GN | 24 | fit x fit | 3 | XP-S | 2733/3262 | -0.0009373801 | -0.001058302 to -0.0008518001 | 0.3003063 | 0.104569 to 0.4834253 | 0 |  |
+| GN | 24 | fit x fit | 3 | XP-GP | 2997/3262 | -0.000970292 | -0.001032309 to -0.0009240008 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 3 | F-S | 2733/3262 | -0.06504116 | -0.07335756 to -0.05621029 | -0.9125184 | -1.010357 to -0.8136526 | 0 |  |
+| GN | 24 | fit x fit | 3 | F-GP | 2997/3262 | -0.06092236 | -0.07028648 to -0.05086294 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 3 | S-GP | 2563/3262 | -0.00000823826 | -0.00001847744 to 0.000003419799 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 24 | fit x fit | 4 | AP-XP | 3245/3300 | 0.0006114352 | 0.0004829438 to 0.0007377624 | -0.3980287 | -0.6260586 to -0.2069956 | 0 |  |
+| GN | 24 | fit x fit | 4 | AP-F | 3245/3300 | 0.0448539 | 0.03501843 to 0.05442693 | 0.6580832 | 0.5986161 to 0.7167856 | 0 |  |
+| GN | 24 | fit x fit | 4 | AP-S | 2814/3300 | -0.00003040159 | -0.00003461074 to -0.00002662303 | -0.1664257 | -0.1940177 to -0.1407549 | 0 |  |
+| GN | 24 | fit x fit | 4 | AP-GP | 2827/3300 | -0.00002046501 | -0.00002760721 to -0.00001264529 | -0.4280928 | -0.6136234 to -0.2790954 | 0 |  |
+| GN | 24 | fit x fit | 4 | XP-F | 3245/3300 | 0.04424247 | 0.03436646 to 0.0538408 | 1.056112 | 0.9033519 to 1.230655 | 0 |  |
+| GN | 24 | fit x fit | 4 | XP-S | 2814/3300 | -0.0006424299 | -0.000782596 to -0.0005269793 | 0.2782839 | 0.04824878 to 0.5201888 | 0 |  |
+| GN | 24 | fit x fit | 4 | XP-GP | 2827/3300 | -0.0006316904 | -0.0007732035 to -0.000518321 | -0.05102337 | -0.1452343 to 0.04459768 | 0 |  |
+| GN | 24 | fit x fit | 4 | F-S | 2814/3300 | -0.04791896 | -0.05750363 to -0.03713534 | -0.9200498 | -1.015508 to -0.8565966 | 0 |  |
+| GN | 24 | fit x fit | 4 | F-GP | 2827/3300 | -0.04434078 | -0.05552687 to -0.03334423 | -1.053477 | -1.213712 to -0.9418882 | 0 |  |
+| GN | 24 | fit x fit | 4 | S-GP | 2472/3300 | 0.000008229405 | 0.000003852039 to 0.00001269117 | -0.2580001 | -0.458206 to -0.08577224 | 0 |  |
+| GN | 24 | fit x fit | 5 | AP-XP | 3212/3276 | 0.0003869679 | 0.0003239505 to 0.0004801049 | -0.5043212 | -0.6750132 to -0.3177503 | 0 |  |
+| GN | 24 | fit x fit | 5 | AP-F | 3212/3276 | 0.03463955 | 0.02507327 to 0.04262158 | 0.7390277 | 0.6747598 to 0.8002599 | 0 |  |
+| GN | 24 | fit x fit | 5 | AP-S | 2767/3276 | -0.00002121797 | -0.00002355315 to -0.00001899571 | -0.2059528 | -0.2281703 to -0.1863525 | 0 |  |
+| GN | 24 | fit x fit | 5 | AP-GP | 2051/3276 | -0.000009809222 | -0.0000142748 to -0.000005257938 | -Infinity | -Infinity to -0.2141674 | 0 |  |
+| GN | 24 | fit x fit | 5 | XP-F | 3212/3276 | 0.03425259 | 0.02472557 to 0.0417047 | 1.243349 | 1.091027 to 1.408557 | 0 |  |
+| GN | 24 | fit x fit | 5 | XP-S | 2767/3276 | -0.0003932435 | -0.0004499484 to -0.0003455453 | 0.3379723 | 0.1124493 to 0.5799578 | 0 |  |
+| GN | 24 | fit x fit | 5 | XP-GP | 2051/3276 | -0.0003804261 | -0.0004921245 to -0.0002758848 | -Infinity | -Infinity to 0.4447853 | 0 |  |
+| GN | 24 | fit x fit | 5 | F-S | 2767/3276 | -0.0368726 | -0.0437828 to -0.02766133 | -0.9563308 | -1.028958 to -0.8710132 | 0 |  |
+| GN | 24 | fit x fit | 5 | F-GP | 2051/3276 | -0.03608784 | -0.04296587 to -0.02759718 | -Infinity | -Infinity to -0.9311055 | 0 |  |
+| GN | 24 | fit x fit | 5 | S-GP | 1840/3276 | 0.00001243511 | 0.000008542418 to 0.00001654531 | -Infinity | -Infinity to 0.009369541 | 0 |  |
+| GN | 24 | fit x fit | 7 | AP-XP | 3364/3412 | 0.0002145994 | 0.0001575811 to 0.0002719105 | -0.4424405 | -0.6767608 to -0.2064693 | 0 |  |
+| GN | 24 | fit x fit | 7 | AP-F | 3364/3412 | 0.02345837 | 0.01388762 to 0.03247708 | 0.7471685 | 0.6316303 to 0.830038 | 0 |  |
+| GN | 24 | fit x fit | 7 | AP-S | 2866/3412 | -0.00001073336 | -0.000011773 to -0.00001001405 | -0.2185225 | -0.2423005 to -0.1992227 | 0 |  |
+| GN | 24 | fit x fit | 7 | AP-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x fit | 7 | XP-F | 3364/3412 | 0.02324377 | 0.01360327 to 0.03229171 | 1.189609 | 0.8593486 to 1.490303 | 0 |  |
+| GN | 24 | fit x fit | 7 | XP-S | 2866/3412 | -0.0002292265 | -0.0003116187 to -0.0001620904 | 0.2592997 | -0.00547981 to 0.4912576 | 0 |  |
+| GN | 24 | fit x fit | 7 | XP-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x fit | 7 | F-S | 2866/3412 | -0.02513639 | -0.03436702 to -0.01422315 | -0.9782935 | -1.051951 to -0.8663683 | 0 |  |
+| GN | 24 | fit x fit | 7 | F-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x fit | 7 | S-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 1 | AP-XP | 3413/3461 | 0.00002089112 | 0.00001367889 to 0.00003066357 | -Infinity | -Infinity to -0.7899725 | 4 |  |
+| GN | 24 | fit x GP | 1 | AP-F | 3413/3461 | 0.00002100811 | 0.000005064194 to 0.00003745082 | -Infinity | -Infinity to -0.8561778 | 4 |  |
+| GN | 24 | fit x GP | 1 | AP-S | 3182/3461 | -0.00001979452 | -0.00003671033 to -0.000001007302 | -Infinity | -Infinity to -0.2199794 | 4 |  |
+| GN | 24 | fit x GP | 1 | AP-GP | 3399/3461 | -0.00004190752 | -0.00006405559 to -0.00002137649 | -Infinity | -Infinity to -0.7699785 | 4 |  |
+| GN | 24 | fit x GP | 1 | XP-F | 3413/3461 | 1.169872e-7 | -0.0000117752 to 0.00000990508 | -0.07379778 | -0.1087873 to -0.03842629 | 5 |  |
+| GN | 24 | fit x GP | 1 | XP-S | 3182/3461 | -0.00004437257 | -0.00006346818 to -0.00002232649 | 0.7641282 | 0.485509 to 1.084611 | 5 |  |
+| GN | 24 | fit x GP | 1 | XP-GP | 3399/3461 | -0.00006234788 | -0.00008388879 to -0.00004339995 | -Infinity | -Infinity to 0.1262281 | 5 |  |
+| GN | 24 | fit x GP | 1 | F-S | 3182/3461 | -0.00004520128 | -0.00007211096 to -0.00002302907 | 0.8358346 | 0.5322143 to 1.185075 | 5 |  |
+| GN | 24 | fit x GP | 1 | F-GP | 3399/3461 | -0.00006199585 | -0.00007852184 to -0.00004309862 | -Infinity | -Infinity to 0.1663064 | 5 |  |
+| GN | 24 | fit x GP | 1 | S-GP | 3168/3461 | -0.00002196629 | -0.00004291703 to 3.361126e-7 | -Infinity | -Infinity to -0.4002462 | 5 |  |
+| GN | 24 | fit x GP | 2 | AP-XP | 3205/3289 | 0.00005465092 | 0.00003590506 to 0.00007275704 | -Infinity | -Infinity to -0.500241 | 1 |  |
+| GN | 24 | fit x GP | 2 | AP-F | 3205/3289 | 0.00004839395 | 0.00002938476 to 0.00006677682 | -Infinity | -Infinity to -Infinity | 1 |  |
+| GN | 24 | fit x GP | 2 | AP-S | 2961/3289 | -0.000005877982 | -0.00001443871 to 0.000001699277 | -Infinity | -Infinity to 0.2336847 | 1 |  |
+| GN | 24 | fit x GP | 2 | AP-GP | 3170/3289 | -0.00001639822 | -0.00003269371 to -3.070585e-7 | -Infinity | -Infinity to -0.8507783 | 1 |  |
+| GN | 24 | fit x GP | 2 | XP-F | 3205/3289 | -0.000006256965 | -0.00001321089 to 0.000002470701 | -Infinity | -Infinity to -0.0009150901 | 3 |  |
+| GN | 24 | fit x GP | 2 | XP-S | 2961/3289 | -0.00005910671 | -0.00008168054 to -0.00003827476 | Infinity | 0.31764 to Infinity | 2 |  |
+| GN | 24 | fit x GP | 2 | XP-GP | 3170/3289 | -0.00006982624 | -0.00009891105 to -0.0000441147 | -0.3606957 | -1.320129 to 0.2906543 | 3 |  |
+| GN | 24 | fit x GP | 2 | F-S | 2961/3289 | -0.00005481589 | -0.00007685995 to -0.0000299351 | Infinity | 0.320477 to Infinity | 2 |  |
+| GN | 24 | fit x GP | 2 | F-GP | 3170/3289 | -0.0000638976 | -0.00008766926 to -0.00003735549 | Infinity | -1.203376 to Infinity | 3 |  |
+| GN | 24 | fit x GP | 2 | S-GP | 2926/3289 | -0.00001019904 | -0.00003148784 to 0.000009086505 | -Infinity | -Infinity to -0.2937785 | 2 |  |
+| GN | 24 | fit x GP | 3 | AP-XP | 3124/3262 | 0.00005196339 | 0.00003676567 to 0.00006581123 | -Infinity | -Infinity to -0.2548823 | 1 |  |
+| GN | 24 | fit x GP | 3 | AP-F | 3124/3262 | 0.00005702591 | 0.0000411264 to 0.00007092212 | -Infinity | -Infinity to -0.2687295 | 1 |  |
+| GN | 24 | fit x GP | 3 | AP-S | 2897/3262 | -0.000003699065 | -0.00001153223 to 0.000004410006 | -Infinity | -Infinity to 0.1455204 | 1 |  |
+| GN | 24 | fit x GP | 3 | AP-GP | 3029/3262 | -0.000003388239 | -0.00001322194 to 0.000008191582 | -Infinity | -Infinity to -0.1600733 | 1 |  |
+| GN | 24 | fit x GP | 3 | XP-F | 3124/3262 | 0.000005062527 | 0.000004043778 to 0.000006162404 | -0.01279532 | -0.02980351 to 0.001661593 | 3 |  |
+| GN | 24 | fit x GP | 3 | XP-S | 2897/3262 | -0.00005586551 | -0.00007637085 to -0.00003587487 | 0.3088637 | 0.1732017 to 0.4462337 | 2 |  |
+| GN | 24 | fit x GP | 3 | XP-GP | 3029/3262 | -0.00005699033 | -0.00008316252 to -0.00002821661 | unmeasured | -0.2163437 to 0.149365 | 2 |  |
+| GN | 24 | fit x GP | 3 | F-S | 2897/3262 | -0.00006146391 | -0.00008282435 to -0.00004162502 | 0.3208798 | 0.1770349 to 0.4553365 | 2 |  |
+| GN | 24 | fit x GP | 3 | F-GP | 3029/3262 | -0.00006180379 | -0.00008787752 to -0.0000336602 | unmeasured | -0.2225682 to 0.1753004 | 2 |  |
+| GN | 24 | fit x GP | 3 | S-GP | 2807/3262 | 0.000001136431 | -0.000009697228 to 0.00001548805 | -Infinity | -Infinity to -0.2105244 | 2 |  |
+| GN | 24 | fit x GP | 4 | AP-XP | 3049/3300 | 0.00003351214 | 0.00002227608 to 0.00004334499 | -0.09417905 | -0.1715215 to -0.03055711 | 0 |  |
+| GN | 24 | fit x GP | 4 | AP-F | 3049/3300 | 0.00003553962 | 0.00002486983 to 0.00004577839 | -0.1116611 | -0.183753 to -0.05402409 | 0 |  |
+| GN | 24 | fit x GP | 4 | AP-S | 2837/3300 | -0.000002834539 | -0.000005306249 to -9.266081e-7 | 0.02957214 | -0.00336841 to 0.06459994 | 0 |  |
+| GN | 24 | fit x GP | 4 | AP-GP | 2846/3300 | 0.000004325049 | -0.000001797088 to 0.00001009615 | -0.1200752 | -0.2401 to -0.01214499 | 0 |  |
+| GN | 24 | fit x GP | 4 | XP-F | 3049/3300 | 0.000002027477 | -0.000002515384 to 0.00000632869 | -0.01748204 | -0.02803604 to -0.007525732 | 0 |  |
+| GN | 24 | fit x GP | 4 | XP-S | 2837/3300 | -0.00003405722 | -0.00004102596 to -0.00002641219 | 0.1220185 | 0.03937841 to 0.2135526 | 0 |  |
+| GN | 24 | fit x GP | 4 | XP-GP | 2846/3300 | -0.00002748796 | -0.00003493753 to -0.00001797349 | -0.01872701 | -0.07754813 to 0.03781553 | 0 |  |
+| GN | 24 | fit x GP | 4 | F-S | 2837/3300 | -0.00003531025 | -0.00004519149 to -0.00002656994 | 0.1393676 | 0.05120155 to 0.2318244 | 0 |  |
+| GN | 24 | fit x GP | 4 | F-GP | 2846/3300 | -0.00003080763 | -0.00003864739 to -0.00002201985 | -0.002283574 | -0.05558303 to 0.04866075 | 0 |  |
+| GN | 24 | fit x GP | 4 | S-GP | 2656/3300 | 0.000006392807 | 1.339193e-7 to 0.00001194885 | -0.1383596 | -0.2963348 to 0.001875761 | 0 |  |
+| GN | 24 | fit x GP | 5 | AP-XP | 2612/3276 | 0.00003189687 | 0.00002567421 to 0.00003795962 | -Infinity | -Infinity to 0.07247263 | 0 |  |
+| GN | 24 | fit x GP | 5 | AP-F | 2612/3276 | 0.00003533424 | 0.00002801932 to 0.00004193524 | -Infinity | -Infinity to 0.08621678 | 0 |  |
+| GN | 24 | fit x GP | 5 | AP-S | 2429/3276 | -5.052297e-7 | -0.000003086612 to 0.000001727344 | -0.08759273 | -0.3089 to 0.0149345 | 0 |  |
+| GN | 24 | fit x GP | 5 | AP-GP | 2070/3276 | 0.000005362079 | 4.78676e-7 to 0.000009689285 | -Infinity | -Infinity to 0.05910569 | 0 |  |
+| GN | 24 | fit x GP | 5 | XP-F | 2612/3276 | 0.000003437363 | 2.06409e-7 to 0.000006342829 | 0.0120123 | 0.005387306 to 0.01881295 | 1 |  |
+| GN | 24 | fit x GP | 5 | XP-S | 2429/3276 | -0.00003312982 | -0.00004182117 to -0.00002594205 | Infinity | -0.07408694 to Infinity | 0 |  |
+| GN | 24 | fit x GP | 5 | XP-GP | 2070/3276 | -0.00002694813 | -0.00003840075 to -0.00001679992 | -Infinity | -Infinity to 0.05251218 | 0 |  |
+| GN | 24 | fit x GP | 5 | F-S | 2429/3276 | -0.0000369045 | -0.00004645422 to -0.00002821619 | Infinity | -0.08835958 to Infinity | 0 |  |
+| GN | 24 | fit x GP | 5 | F-GP | 2070/3276 | -0.00002935209 | -0.00004152339 to -0.00001916216 | -Infinity | -Infinity to 0.04390741 | 0 |  |
+| GN | 24 | fit x GP | 5 | S-GP | 1960/3276 | 0.000005287662 | -0.000001448412 to 0.00001132528 | -Infinity | -Infinity to 0.04489363 | 0 |  |
+| GN | 24 | fit x GP | 7 | AP-XP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | AP-F | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | AP-S | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | AP-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | XP-F | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | XP-S | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | XP-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | F-S | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | F-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 24 | fit x GP | 7 | S-GP | 0/3412 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x fit | 1 | AP-XP | 3221/3365 | 0.006571529 | 0.005309687 to 0.007750765 | 0.1960374 | 0.1818826 to 0.2090859 | 0 |  |
+| GD | 72 | fit x fit | 1 | AP-F | 3221/3365 | 0.09462017 | 0.08963126 to 0.09995855 | 0.5548783 | 0.521245 to 0.5908676 | 0 |  |
+| GD | 72 | fit x fit | 1 | AP-S | 3221/3365 | 0.000005893538 | -0.0003314004 to 0.0003668153 | -0.04416025 | -0.07442747 to -0.01177277 | 0 |  |
+| GD | 72 | fit x fit | 1 | AP-GP | 1451/3365 | -0.0007427341 | -0.0008771788 to -0.000633482 | -0.7949303 | -1.657888 to -0.3271875 | 0 |  |
+| GD | 72 | fit x fit | 1 | XP-F | 3221/3365 | 0.08804864 | 0.0818805 to 0.09464887 | 0.3588409 | 0.3205713 to 0.3997912 | 0 |  |
+| GD | 72 | fit x fit | 1 | XP-S | 3221/3365 | -0.006565636 | -0.008082165 to -0.004942871 | -0.2401977 | -0.2772004 to -0.2028492 | 0 |  |
+| GD | 72 | fit x fit | 1 | XP-GP | 1451/3365 | -0.009054725 | -0.01014157 to -0.006800439 | -1.010964 | -1.859206 to -0.5262997 | 0 |  |
+| GD | 72 | fit x fit | 1 | F-S | 3221/3365 | -0.09461428 | -0.09959174 to -0.08996266 | -0.5990385 | -0.6116765 to -0.5818067 | 0 |  |
+| GD | 72 | fit x fit | 1 | F-GP | 1451/3365 | -0.09418426 | -0.1082509 to -0.08311785 | -1.338805 | -2.246126 to -0.8109846 | 0 |  |
+| GD | 72 | fit x fit | 1 | S-GP | 1451/3365 | -0.0004669541 | -0.0007191079 to -0.0003453846 | -0.7187553 | -1.616759 to -0.2449232 | 0 |  |
+| GD | 72 | fit x fit | 2 | AP-XP | 3125/3284 | 0.005082697 | 0.004341386 to 0.005937404 | 0.3038883 | 0.2959356 to 0.311928 | 0 |  |
+| GD | 72 | fit x fit | 2 | AP-F | 3125/3284 | 0.0923338 | 0.09096621 to 0.09353231 | 0.6956293 | 0.6849741 to 0.7073633 | 0 |  |
+| GD | 72 | fit x fit | 2 | AP-S | 3124/3284 | 0.0003129266 | 0.00005467839 to 0.000586496 | 0.02816915 | -0.009134014 to 0.06768542 | 0 |  |
+| GD | 72 | fit x fit | 2 | AP-GP | 1337/3284 | -0.0001440931 | -0.0001970836 to -0.00009712718 | -0.4577992 | -0.8404683 to -0.1409811 | 0 |  |
+| GD | 72 | fit x fit | 2 | XP-F | 3125/3284 | 0.0872511 | 0.08572477 to 0.08826963 | 0.391741 | 0.3730461 to 0.4102335 | 0 |  |
+| GD | 72 | fit x fit | 2 | XP-S | 3124/3284 | -0.004771397 | -0.005868169 to -0.003719574 | -0.2758164 | -0.3112925 to -0.2326734 | 0 |  |
+| GD | 72 | fit x fit | 2 | XP-GP | 1337/3284 | -0.005946304 | -0.006752393 to -0.00447477 | -0.799092 | -1.146728 to -0.4721424 | 0 |  |
+| GD | 72 | fit x fit | 2 | F-S | 3124/3284 | -0.09205043 | -0.09347763 to -0.09053856 | -0.6676828 | -0.6993022 to -0.6341875 | 0 |  |
+| GD | 72 | fit x fit | 2 | F-GP | 1337/3284 | -0.1020703 | -0.1125618 to -0.09054119 | -1.224118 | -1.599828 to -0.8707647 | 0 |  |
+| GD | 72 | fit x fit | 2 | S-GP | 1337/3284 | -0.0002667514 | -0.000403995 to -0.0002047608 | -0.4628586 | -0.9194384 to -0.1430683 | 0 |  |
+| GD | 72 | fit x fit | 3 | AP-XP | 3171/3330 | 0.002950049 | 0.002418518 to 0.003379244 | 0.3466145 | 0.3154404 to 0.3693661 | 0 |  |
+| GD | 72 | fit x fit | 3 | AP-F | 3171/3330 | 0.07738129 | 0.06705745 to 0.08568115 | 0.7503102 | 0.6992228 to 0.7981777 | 0 |  |
+| GD | 72 | fit x fit | 3 | AP-S | 3171/3330 | 0.0002893212 | 0.0001028969 to 0.0004830585 | 0.07171373 | 0.03041007 to 0.1146377 | 0 |  |
+| GD | 72 | fit x fit | 3 | AP-GP | 1215/3330 | 0.00002411225 | 0.000001749431 to 0.00007602222 | -0.2005999 | -0.460913 to -0.09296784 | 0 |  |
+| GD | 72 | fit x fit | 3 | XP-F | 3171/3330 | 0.07443124 | 0.06459424 to 0.08247798 | 0.4036957 | 0.3751729 to 0.4322006 | 0 |  |
+| GD | 72 | fit x fit | 3 | XP-S | 3171/3330 | -0.002660728 | -0.003276347 to -0.00195616 | -0.2749008 | -0.3328222 to -0.2107326 | 0 |  |
+| GD | 72 | fit x fit | 3 | XP-GP | 1215/3330 | -0.004004465 | -0.004431396 to -0.003305086 | -0.6414729 | -0.9065944 to -0.5302384 | 0 |  |
+| GD | 72 | fit x fit | 3 | F-S | 3171/3330 | -0.07709197 | -0.08550087 to -0.06660304 | -0.6785965 | -0.754951 to -0.5834408 | 0 |  |
+| GD | 72 | fit x fit | 3 | F-GP | 1215/3330 | -0.09984714 | -0.1024672 to -0.09436755 | -1.116533 | -1.416448 to -0.9767327 | 0 |  |
+| GD | 72 | fit x fit | 3 | S-GP | 1215/3330 | -0.0002087845 | -0.0004567699 to -0.0001120305 | -0.2632161 | -0.5868668 to -0.1206749 | 0 |  |
+| GD | 72 | fit x fit | 4 | AP-XP | 3245/3375 | 0.002476797 | 0.002234743 to 0.00272352 | 0.4030543 | 0.386652 to 0.419773 | 0 |  |
+| GD | 72 | fit x fit | 4 | AP-F | 3245/3375 | 0.076437 | 0.07319419 to 0.07974237 | 0.8429632 | 0.8095368 to 0.8770343 | 0 |  |
+| GD | 72 | fit x fit | 4 | AP-S | 3245/3375 | 0.0001848975 | 0.0000690698 to 0.000308167 | 0.08107552 | 0.03777369 to 0.1271595 | 0 |  |
+| GD | 72 | fit x fit | 4 | AP-GP | 1204/3375 | 0.00004632982 | 0.00003063909 to 0.00007071411 | -0.04374517 | -0.1526325 to 0.001725569 | 0 |  |
+| GD | 72 | fit x fit | 4 | XP-F | 3245/3375 | 0.07396021 | 0.07095945 to 0.07701885 | 0.4399089 | 0.4228848 to 0.4572613 | 0 |  |
+| GD | 72 | fit x fit | 4 | XP-S | 3245/3375 | -0.0022919 | -0.002563134 to -0.001999926 | -0.3219788 | -0.3633135 to -0.2779884 | 0 |  |
+| GD | 72 | fit x fit | 4 | XP-GP | 1204/3375 | -0.002407298 | -0.002627184 to -0.00203723 | -0.4107593 | -0.5030964 to -0.3669028 | 0 |  |
+| GD | 72 | fit x fit | 4 | F-S | 3245/3375 | -0.07625211 | -0.07958199 to -0.07298525 | -0.7618876 | -0.8037717 to -0.7050521 | 0 |  |
+| GD | 72 | fit x fit | 4 | F-GP | 1204/3375 | -0.07671984 | -0.0819432 to -0.06836232 | -0.8231106 | -0.9066891 to -0.7730817 | 0 |  |
+| GD | 72 | fit x fit | 4 | S-GP | 1204/3375 | -0.00007593646 | -0.0002167011 to -0.00001940118 | -0.09072081 | -0.2440958 to -0.02478916 | 0 |  |
+| GD | 72 | fit x fit | 5 | AP-XP | 3016/3317 | 0.001809354 | 0.001705927 to 0.001907432 | 0.393524 | 0.3672094 to 0.430091 | 0 |  |
+| GD | 72 | fit x fit | 5 | AP-F | 3016/3317 | 0.05842291 | 0.05160138 to 0.06669528 | 0.7877283 | 0.7233735 to 0.8710506 | 0 |  |
+| GD | 72 | fit x fit | 5 | AP-S | 3016/3317 | 0.0001509101 | 0.00006397861 to 0.000275914 | 0.09255865 | 0.0581697 to 0.1369571 | 0 |  |
+| GD | 72 | fit x fit | 5 | AP-GP | 961/3317 | 0.00004057288 | 0.0000330798 to 0.00004876137 | 0.0720376 | 0.06034975 to 0.08184243 | 0 |  |
+| GD | 72 | fit x fit | 5 | XP-F | 3016/3317 | 0.05661355 | 0.04969395 to 0.06490891 | 0.3942043 | 0.3529891 to 0.4426208 | 0 |  |
+| GD | 72 | fit x fit | 5 | XP-S | 3016/3317 | -0.001658444 | -0.001780748 to -0.001434704 | -0.3009654 | -0.36085 to -0.2415217 | 0 |  |
+| GD | 72 | fit x fit | 5 | XP-GP | 961/3317 | -0.002091397 | -0.002286396 to -0.001674016 | -0.379541 | -0.4204219 to -0.3112378 | 0 |  |
+| GD | 72 | fit x fit | 5 | F-S | 3016/3317 | -0.058272 | -0.06657144 to -0.05147206 | -0.6951696 | -0.8041272 to -0.6240482 | 0 |  |
+| GD | 72 | fit x fit | 5 | F-GP | 961/3317 | -0.07774533 | -0.09271589 to -0.05469889 | -0.8486442 | -0.9607073 to -0.6825603 | 0 |  |
+| GD | 72 | fit x fit | 5 | S-GP | 961/3317 | -0.00001810063 | -0.00005978447 to 0.000002137708 | 0.02907114 | -0.00615183 to 0.04520005 | 0 |  |
+| GD | 72 | fit x fit | 7 | AP-XP | 3171/3329 | 0.001182798 | 0.001097862 to 0.001291144 | 0.4278777 | 0.3848209 to 0.4708531 | 0 |  |
+| GD | 72 | fit x fit | 7 | AP-F | 3171/3329 | 0.04762578 | 0.04399727 to 0.05097233 | 0.8462749 | 0.7670729 to 0.9253272 | 0 |  |
+| GD | 72 | fit x fit | 7 | AP-S | 3171/3329 | 0.00009226383 | 0.00004316938 to 0.0001410189 | 0.1035883 | 0.05687354 to 0.14998 | 0 |  |
+| GD | 72 | fit x fit | 7 | AP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x fit | 7 | XP-F | 3171/3329 | 0.04644298 | 0.04285356 to 0.0496966 | 0.4183972 | 0.382252 to 0.4544741 | 0 |  |
+| GD | 72 | fit x fit | 7 | XP-S | 3171/3329 | -0.001090534 | -0.001176868 to -0.001004037 | -0.3242894 | -0.3704143 to -0.2755801 | 0 |  |
+| GD | 72 | fit x fit | 7 | XP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x fit | 7 | F-S | 3171/3329 | -0.04753351 | -0.05084933 to -0.043887 | -0.7426866 | -0.8095125 to -0.6757342 | 0 |  |
+| GD | 72 | fit x fit | 7 | F-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x fit | 7 | S-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 1 | AP-XP | 2216/3365 | 0.0002672298 | 0.0002549926 to 0.0002869617 | -0.2616864 | -0.4548426 to -0.05197752 | 0 |  |
+| GD | 72 | fit x GP | 1 | AP-F | 2216/3365 | 0.0002509546 | 0.0002206986 to 0.0002891842 | -0.3262521 | -0.5451013 to -0.08278492 | 0 |  |
+| GD | 72 | fit x GP | 1 | AP-S | 2216/3365 | 0.00009005355 | -0.00007763957 to 0.0002227711 | -0.2000076 | -0.309004 to -0.07875039 | 0 |  |
+| GD | 72 | fit x GP | 1 | AP-GP | 1451/3365 | -0.0001026738 | -0.0001610739 to 0.00001845712 | -0.5082852 | -1.409 to -0.1118939 | 0 |  |
+| GD | 72 | fit x GP | 1 | XP-F | 2216/3365 | -0.00001627511 | -0.00003629836 to 0.000009074953 | -0.06456567 | -0.1153544 to -0.01970235 | 0 |  |
+| GD | 72 | fit x GP | 1 | XP-S | 2216/3365 | -0.0001771762 | -0.000360284 to -0.00003225902 | 0.06167886 | -0.02677287 to 0.1699352 | 0 |  |
+| GD | 72 | fit x GP | 1 | XP-GP | 1451/3365 | -0.0003739002 | -0.0004437184 to -0.0002290867 | -0.2095211 | -1.31534 to 0.3743092 | 0 |  |
+| GD | 72 | fit x GP | 1 | F-S | 2216/3365 | -0.0001609011 | -0.0003668238 to 0.000002072465 | 0.1262445 | 0.00403453 to 0.2360974 | 0 |  |
+| GD | 72 | fit x GP | 1 | F-GP | 1451/3365 | -0.0003673887 | -0.0004502581 to -0.000195505 | -0.1566529 | -1.27133 to 0.4503778 | 0 |  |
+| GD | 72 | fit x GP | 1 | S-GP | 1451/3365 | -0.0001158152 | -0.0001829779 to -0.00003201121 | -0.2745742 | -1.283328 to 0.2074536 | 0 |  |
+| GD | 72 | fit x GP | 2 | AP-XP | 2124/3284 | 0.0003619407 | 0.000265715 to 0.0005419564 | -0.01335334 | -0.2029601 to 0.1059167 | 0 |  |
+| GD | 72 | fit x GP | 2 | AP-F | 2124/3284 | 0.0004008924 | 0.0002818372 to 0.0005956431 | -0.04882746 | -0.2902144 to 0.09485094 | 0 |  |
+| GD | 72 | fit x GP | 2 | AP-S | 2124/3284 | 0.0001404197 | 0.00004058965 to 0.0002168482 | 0.2608241 | 0.08529054 to 0.5955634 | 0 |  |
+| GD | 72 | fit x GP | 2 | AP-GP | 1337/3284 | 0.0000202736 | -0.00004564106 to 0.000112177 | 0.1343314 | -0.5027068 to 0.4982584 | 0 |  |
+| GD | 72 | fit x GP | 2 | XP-F | 2124/3284 | 0.00003895165 | 0.000006702439 to 0.00007447687 | -0.03547412 | -0.08725429 to -0.006811502 | 0 |  |
+| GD | 72 | fit x GP | 2 | XP-S | 2124/3284 | -0.000221521 | -0.0004853556 to -0.00005323497 | 0.2741774 | -0.02062615 to 0.7969434 | 0 |  |
+| GD | 72 | fit x GP | 2 | XP-GP | 1337/3284 | -0.0003880049 | -0.0006400116 to -0.0001330546 | 0.2161022 | -0.5569956 to 0.7488237 | 0 |  |
+| GD | 72 | fit x GP | 2 | F-S | 2124/3284 | -0.0002604727 | -0.0005485187 to -0.00006498902 | 0.3096515 | -0.009560407 to 0.8841977 | 0 |  |
+| GD | 72 | fit x GP | 2 | F-GP | 1337/3284 | -0.0004459588 | -0.0007144719 to -0.0001544275 | 0.2666651 | -0.5403645 to 0.8405015 | 0 |  |
+| GD | 72 | fit x GP | 2 | S-GP | 1337/3284 | -0.00007072981 | -0.0001033001 to -0.00004991961 | -0.2299849 | -0.7018822 to -0.01040233 | 0 |  |
+| GD | 72 | fit x GP | 3 | AP-XP | 2068/3330 | 0.000299606 | 0.0002201896 to 0.0003894609 | 0.09937517 | 0.02517831 to 0.1536868 | 0 |  |
+| GD | 72 | fit x GP | 3 | AP-F | 2068/3330 | 0.0003354676 | 0.0002477469 to 0.0004542054 | 0.08909568 | 0.01026324 to 0.1468672 | 0 |  |
+| GD | 72 | fit x GP | 3 | AP-S | 2068/3330 | 0.0001423809 | 0.00008122072 to 0.0002212985 | 0.1528475 | 0.1146759 to 0.1975279 | 0 |  |
+| GD | 72 | fit x GP | 3 | AP-GP | 1215/3330 | 0.000076401 | 0.00004321338 to 0.0001487122 | 0.08335875 | -0.2883871 to 0.2678059 | 0 |  |
+| GD | 72 | fit x GP | 3 | XP-F | 2068/3330 | 0.00003586154 | 0.0000147194 to 0.00006474452 | -0.01027949 | -0.016889 to -0.006306082 | 0 |  |
+| GD | 72 | fit x GP | 3 | XP-S | 2068/3330 | -0.0001572251 | -0.0003082401 to -0.00004668312 | 0.05347235 | -0.01201579 to 0.1736731 | 0 |  |
+| GD | 72 | fit x GP | 3 | XP-GP | 1215/3330 | -0.0002702891 | -0.0003412728 to -0.00008835444 | 0.01134928 | -0.4433077 to 0.240328 | 0 |  |
+| GD | 72 | fit x GP | 3 | F-S | 2068/3330 | -0.0001930866 | -0.0003729846 to -0.00006140252 | 0.06375184 | -0.005129505 to 0.1902874 | 0 |  |
+| GD | 72 | fit x GP | 3 | F-GP | 1215/3330 | -0.000319684 | -0.0004060173 to -0.00009840748 | 0.02848133 | -0.4342375 to 0.2657932 | 0 |  |
+| GD | 72 | fit x GP | 3 | S-GP | 1215/3330 | -0.00003683372 | -0.00005961393 to -0.00002340206 | -0.09184912 | -0.4557094 to 0.05672078 | 0 |  |
+| GD | 72 | fit x GP | 4 | AP-XP | 2087/3375 | 0.000223818 | 0.0002110361 to 0.0002425074 | 0.08379545 | -0.04691758 to 0.1840025 | 0 |  |
+| GD | 72 | fit x GP | 4 | AP-F | 2087/3375 | 0.0002656325 | 0.0002464227 to 0.0002930942 | 0.03874877 | -0.1270489 to 0.1719646 | 0 |  |
+| GD | 72 | fit x GP | 4 | AP-S | 2087/3375 | 0.0001215305 | 0.00005226913 to 0.0001721092 | 0.05589432 | -0.08279475 to 0.1529089 | 0 |  |
+| GD | 72 | fit x GP | 4 | AP-GP | 1204/3375 | 0.00006939919 | 0.00004657905 to 0.0001022997 | 0.008870655 | -0.11108 to 0.06018283 | 0 |  |
+| GD | 72 | fit x GP | 4 | XP-F | 2087/3375 | 0.00004181448 | 0.00002629472 to 0.00005808958 | -0.04504668 | -0.08128022 to -0.01250016 | 0 |  |
+| GD | 72 | fit x GP | 4 | XP-S | 2087/3375 | -0.0001022875 | -0.0001875151 to -0.00004266984 | -0.02790113 | -0.0920848 to 0.02137284 | 0 |  |
+| GD | 72 | fit x GP | 4 | XP-GP | 1204/3375 | -0.000154517 | -0.0001979402 to -0.00008751685 | 0.007235422 | -0.2238788 to 0.1354354 | 0 |  |
+| GD | 72 | fit x GP | 4 | F-S | 2087/3375 | -0.000144102 | -0.0002408251 to -0.0000764431 | 0.01714555 | -0.04540899 to 0.09997013 | 0 |  |
+| GD | 72 | fit x GP | 4 | F-GP | 1204/3375 | -0.0001965586 | -0.0002392269 to -0.0001015016 | 0.0778034 | -0.1894861 to 0.2262827 | 0 |  |
+| GD | 72 | fit x GP | 4 | S-GP | 1204/3375 | -0.00001416524 | -0.00006459483 to 0.00001223104 | 0.04735801 | -0.1527817 to 0.1297373 | 0 |  |
+| GD | 72 | fit x GP | 5 | AP-XP | 1849/3317 | 0.0001823465 | 0.0001429096 to 0.0002392356 | 0.2064991 | 0.1953677 to 0.2253735 | 0 |  |
+| GD | 72 | fit x GP | 5 | AP-F | 1849/3317 | 0.0002024205 | 0.0001606736 to 0.0002626419 | 0.2131812 | 0.2002709 to 0.2318898 | 0 |  |
+| GD | 72 | fit x GP | 5 | AP-S | 1849/3317 | 0.00007840359 | 0.00004885006 to 0.0001227202 | 0.1318785 | 0.07579536 to 0.1767773 | 0 |  |
+| GD | 72 | fit x GP | 5 | AP-GP | 961/3317 | 0.00005114729 | 0.00004440263 to 0.00006066699 | 0.1104212 | 0.0924043 to 0.1592585 | 0 |  |
+| GD | 72 | fit x GP | 5 | XP-F | 1849/3317 | 0.00002007399 | 0.00001776401 to 0.00002340623 | 0.006682139 | 0.004921075 to 0.007764591 | 0 |  |
+| GD | 72 | fit x GP | 5 | XP-S | 1849/3317 | -0.0001039429 | -0.0001903856 to -0.00002824248 | -0.07462057 | -0.138385 to -0.02435425 | 0 |  |
+| GD | 72 | fit x GP | 5 | XP-GP | 961/3317 | -0.0001573435 | -0.0002056127 to -0.00003373631 | -0.09822841 | -0.1232251 to -0.02886745 | 0 |  |
+| GD | 72 | fit x GP | 5 | F-S | 1849/3317 | -0.0001240169 | -0.0002137918 to -0.00004691151 | -0.0813027 | -0.1441011 to -0.03046201 | 0 |  |
+| GD | 72 | fit x GP | 5 | F-GP | 961/3317 | -0.0001773647 | -0.0002283671 to -0.00004119653 | -0.1043282 | -0.1297414 to -0.03639137 | 0 |  |
+| GD | 72 | fit x GP | 5 | S-GP | 961/3317 | -0.000002251203 | -0.00001462221 to 0.00001160077 | 0.01403394 | -0.01354075 to 0.02898469 | 0 |  |
+| GD | 72 | fit x GP | 7 | AP-XP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | AP-F | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | AP-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | AP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | XP-F | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | XP-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | XP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | F-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | F-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GD | 72 | fit x GP | 7 | S-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x fit | 1 | AP-XP | 3205/3290 | 0.01359361 | 0.01227883 to 0.01485219 | 0.2738436 | 0.2490514 to 0.3014388 | 0 |  |
+| GN | 72 | fit x fit | 1 | AP-F | 3204/3290 | 0.07511315 | 0.05917457 to 0.0879039 | 0.4723037 | 0.3859399 to 0.559154 | 0 |  |
+| GN | 72 | fit x fit | 1 | AP-S | 3199/3290 | -0.0007978872 | -0.0009010825 to -0.0006893533 | -0.2261145 | -0.2487013 to -0.2035035 | 0 |  |
+| GN | 72 | fit x fit | 1 | AP-GP | 3166/3290 | -0.0009752656 | -0.001086388 to -0.0008605742 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 1 | XP-F | 3204/3290 | 0.06151499 | 0.04658388 to 0.07378429 | 0.1983656 | 0.1236528 to 0.2734993 | 0 |  |
+| GN | 72 | fit x fit | 1 | XP-S | 3199/3290 | -0.01441704 | -0.01567889 to -0.01309708 | -0.5004754 | -0.5369629 to -0.4616861 | 0 |  |
+| GN | 72 | fit x fit | 1 | XP-GP | 3166/3290 | -0.01463235 | -0.01588233 to -0.01330436 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 1 | F-S | 3198/3290 | -0.07605383 | -0.08886396 to -0.06096995 | -0.6993945 | -0.8029374 to -0.5915452 | 0 |  |
+| GN | 72 | fit x fit | 1 | F-GP | 3165/3290 | -0.07555153 | -0.08807775 to -0.06031674 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 1 | S-GP | 3160/3290 | -0.0001916944 | -0.0002057788 to -0.0001729116 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 2 | AP-XP | 3306/3383 | 0.006432323 | 0.005520597 to 0.007220461 | 0.3354774 | 0.2991547 to 0.3716886 | 0 |  |
+| GN | 72 | fit x fit | 2 | AP-F | 3306/3383 | 0.0571099 | 0.04664947 to 0.06660111 | 0.5256405 | 0.4367055 to 0.6429779 | 0 |  |
+| GN | 72 | fit x fit | 2 | AP-S | 3293/3383 | -0.0001546681 | -0.0001953023 to -0.0001180949 | -0.1556082 | -0.1867389 to -0.1243068 | 0 |  |
+| GN | 72 | fit x fit | 2 | AP-GP | 3244/3383 | -0.0002313902 | -0.0002953386 to -0.0001809414 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 2 | XP-F | 3306/3383 | 0.05067758 | 0.04056569 to 0.06004528 | 0.190163 | 0.108762 to 0.2790394 | 0 |  |
+| GN | 72 | fit x fit | 2 | XP-S | 3293/3383 | -0.006608074 | -0.007436842 to -0.005660852 | -0.491801 | -0.5533467 to -0.4291931 | 0 |  |
+| GN | 72 | fit x fit | 2 | XP-GP | 3244/3383 | -0.006648592 | -0.007599099 to -0.005519873 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 2 | F-S | 3293/3383 | -0.05734052 | -0.06690091 to -0.04708977 | -0.6816403 | -0.820786 to -0.5898993 | 0 |  |
+| GN | 72 | fit x fit | 2 | F-GP | 3244/3383 | -0.05720167 | -0.06758235 to -0.04717559 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 2 | S-GP | 3231/3383 | -0.00007415434 | -0.00009455112 to -0.00005865715 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x fit | 3 | AP-XP | 3241/3317 | 0.004214009 | 0.00363145 to 0.004699546 | 0.3820421 | 0.3235364 to 0.4436761 | 0 |  |
+| GN | 72 | fit x fit | 3 | AP-F | 3241/3317 | 0.04944747 | 0.04002912 to 0.05933124 | 0.5814377 | 0.5016634 to 0.6757477 | 0 |  |
+| GN | 72 | fit x fit | 3 | AP-S | 3235/3317 | -0.00006722104 | -0.00008299664 to -0.00005206761 | -0.1356144 | -0.1673774 to -0.1038887 | 0 |  |
+| GN | 72 | fit x fit | 3 | AP-GP | 3028/3317 | -0.00009751979 | -0.0001108934 to -0.00008728096 | -Infinity | -Infinity to -0.9657918 | 0 |  |
+| GN | 72 | fit x fit | 3 | XP-F | 3241/3317 | 0.04523346 | 0.03535379 to 0.05512034 | 0.1993956 | 0.1133905 to 0.2845557 | 0 |  |
+| GN | 72 | fit x fit | 3 | XP-S | 3235/3317 | -0.004275488 | -0.004782904 to -0.003681614 | -0.5170473 | -0.6079231 to -0.4314444 | 0 |  |
+| GN | 72 | fit x fit | 3 | XP-GP | 3028/3317 | -0.004383048 | -0.004883065 to -0.003844311 | -Infinity | -Infinity to -1.367203 | 0 |  |
+| GN | 72 | fit x fit | 3 | F-S | 3235/3317 | -0.04913659 | -0.05889162 to -0.03926618 | -0.7142163 | -0.8111458 to -0.6105134 | 0 |  |
+| GN | 72 | fit x fit | 3 | F-GP | 3028/3317 | -0.05005841 | -0.06104136 to -0.0392051 | -Infinity | -Infinity to -1.594974 | 0 |  |
+| GN | 72 | fit x fit | 3 | S-GP | 3022/3317 | -0.00002695668 | -0.00003300323 to -0.00001879586 | -Infinity | -Infinity to -0.8295378 | 0 |  |
+| GN | 72 | fit x fit | 4 | AP-XP | 3254/3326 | 0.002482604 | 0.002332184 to 0.002632144 | 0.3757769 | 0.3406782 to 0.4074295 | 0 |  |
+| GN | 72 | fit x fit | 4 | AP-F | 3254/3326 | 0.03546297 | 0.03022622 to 0.04073578 | 0.5497887 | 0.4907428 to 0.6034572 | 0 |  |
+| GN | 72 | fit x fit | 4 | AP-S | 3248/3326 | -0.00003111283 | -0.00003890447 to -0.00002272295 | -0.1026137 | -0.1233421 to -0.0864798 | 0 |  |
+| GN | 72 | fit x fit | 4 | AP-GP | 2806/3326 | -0.00004481961 | -0.00005521735 to -0.0000359564 | -Infinity | -Infinity to -0.3917595 | 0 |  |
+| GN | 72 | fit x fit | 4 | XP-F | 3254/3326 | 0.03298037 | 0.02763505 to 0.03827285 | 0.1740118 | 0.08669368 to 0.2437344 | 0 |  |
+| GN | 72 | fit x fit | 4 | XP-S | 3248/3326 | -0.002517616 | -0.002673651 to -0.00236187 | -0.4787835 | -0.5240984 to -0.4312837 | 0 |  |
+| GN | 72 | fit x fit | 4 | XP-GP | 2806/3326 | -0.002495147 | -0.002722021 to -0.002265516 | -Infinity | -Infinity to -0.7722693 | 0 |  |
+| GN | 72 | fit x fit | 4 | F-S | 3248/3326 | -0.03527571 | -0.04083214 to -0.02949634 | -0.6512837 | -0.713622 to -0.5973122 | 0 |  |
+| GN | 72 | fit x fit | 4 | F-GP | 2806/3326 | -0.03491302 | -0.04013514 to -0.02983011 | -Infinity | -Infinity to -0.972159 | 0 |  |
+| GN | 72 | fit x fit | 4 | S-GP | 2801/3326 | -0.00001641061 | -0.00002109792 to -0.00001126788 | -Infinity | -Infinity to -0.2955745 | 0 |  |
+| GN | 72 | fit x fit | 5 | AP-XP | 3256/3334 | 0.0018767 | 0.001739879 to 0.002008084 | 0.4273184 | 0.3957065 to 0.4584513 | 0 |  |
+| GN | 72 | fit x fit | 5 | AP-F | 3256/3334 | 0.03210009 | 0.02258678 to 0.04147418 | 0.6391645 | 0.546589 to 0.7323217 | 0 |  |
+| GN | 72 | fit x fit | 5 | AP-S | 3246/3334 | -0.00001919527 | -0.00002636063 to -0.00001383836 | -0.1044586 | -0.1277883 to -0.08688862 | 0 |  |
+| GN | 72 | fit x fit | 5 | AP-GP | 2082/3334 | -0.00002476831 | -0.00002783886 to -0.0000220051 | -Infinity | -Infinity to -0.2955161 | 0 |  |
+| GN | 72 | fit x fit | 5 | XP-F | 3256/3334 | 0.03022339 | 0.02075829 to 0.04048495 | 0.2118461 | 0.09794174 to 0.2999982 | 0 |  |
+| GN | 72 | fit x fit | 5 | XP-S | 3246/3334 | -0.001899806 | -0.002038982 to -0.00175521 | -0.532025 | -0.5846007 to -0.4831937 | 0 |  |
+| GN | 72 | fit x fit | 5 | XP-GP | 2082/3334 | -0.001975386 | -0.002171789 to -0.001800593 | -Infinity | -Infinity to -0.7121556 | 0 |  |
+| GN | 72 | fit x fit | 5 | F-S | 3246/3334 | -0.03216313 | -0.04249728 to -0.02271863 | -0.7434794 | -0.8264372 to -0.6664166 | 0 |  |
+| GN | 72 | fit x fit | 5 | F-GP | 2082/3334 | -0.03420902 | -0.04233561 to -0.02539063 | -Infinity | -Infinity to -0.9693588 | 0 |  |
+| GN | 72 | fit x fit | 5 | S-GP | 2073/3334 | -0.000005837321 | -0.00001096715 to -8.704892e-7 | -Infinity | -Infinity to -0.2018282 | 0 |  |
+| GN | 72 | fit x fit | 7 | AP-XP | 3266/3350 | 0.0009635551 | 0.0008357597 to 0.001050492 | 0.4100878 | 0.3766322 to 0.4457657 | 0 |  |
+| GN | 72 | fit x fit | 7 | AP-F | 3266/3350 | 0.01893964 | 0.01186987 to 0.02447464 | 0.6070331 | 0.4756231 to 0.7152645 | 0 |  |
+| GN | 72 | fit x fit | 7 | AP-S | 3254/3350 | -0.000009887414 | -0.00001142785 to -0.000007756593 | -0.1131471 | -0.1298031 to -0.09867697 | 0 |  |
+| GN | 72 | fit x fit | 7 | AP-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x fit | 7 | XP-F | 3266/3350 | 0.01797608 | 0.01103411 to 0.02342788 | 0.1969453 | 0.09045629 to 0.2850369 | 0 |  |
+| GN | 72 | fit x fit | 7 | XP-S | 3254/3350 | -0.0009769985 | -0.001062019 to -0.0008492926 | -0.5247491 | -0.5777259 to -0.4796634 | 0 |  |
+| GN | 72 | fit x fit | 7 | XP-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x fit | 7 | F-S | 3254/3350 | -0.01901984 | -0.02452238 to -0.01196437 | -0.7224389 | -0.8404312 to -0.5926739 | 0 |  |
+| GN | 72 | fit x fit | 7 | F-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x fit | 7 | S-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 1 | AP-XP | 3236/3290 | 0.00002085124 | 0.000007951002 to 0.00003437618 | -0.9237033 | -1.223092 to -0.6324184 | 1 |  |
+| GN | 72 | fit x GP | 1 | AP-F | 3236/3290 | 0.00002443431 | 0.00001685839 to 0.0000347206 | -0.9839597 | -1.303243 to -0.6761678 | 1 |  |
+| GN | 72 | fit x GP | 1 | AP-S | 3232/3290 | -0.00002829815 | -0.00004032361 to -0.00001714062 | Infinity | -0.4958623 to Infinity | 0 |  |
+| GN | 72 | fit x GP | 1 | AP-GP | 3211/3290 | -0.00004651695 | -0.00007231013 to -0.00001654348 | -Infinity | -Infinity to -1.000368 | 1 |  |
+| GN | 72 | fit x GP | 1 | XP-F | 3237/3290 | 0.00000358196 | -0.000007276077 to 0.00001297944 | -0.06023781 | -0.08051776 to -0.04372278 | 1 |  |
+| GN | 72 | fit x GP | 1 | XP-S | 3233/3290 | -0.00004915839 | -0.00007225394 to -0.0000270828 | Infinity | 0.5491772 to Infinity | 0 |  |
+| GN | 72 | fit x GP | 1 | XP-GP | 3212/3290 | -0.0000704251 | -0.0001051385 to -0.00003733251 | -Infinity | -Infinity to -0.3677249 | 1 |  |
+| GN | 72 | fit x GP | 1 | F-S | 3233/3290 | -0.00005274479 | -0.00006984749 to -0.00003639738 | Infinity | 0.6042638 to Infinity | 0 |  |
+| GN | 72 | fit x GP | 1 | F-GP | 3212/3290 | -0.0000732751 | -0.0001086435 to -0.00003497137 | -Infinity | -Infinity to -0.3240021 | 1 |  |
+| GN | 72 | fit x GP | 1 | S-GP | 3208/3290 | -0.00002025081 | -0.00004161283 to 0.000001062014 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GN | 72 | fit x GP | 2 | AP-XP | 3307/3383 | 0.00002213646 | 0.00001537743 to 0.00002902759 | -0.3175617 | -0.4533339 to -0.1851415 | 3 |  |
+| GN | 72 | fit x GP | 2 | AP-F | 3307/3383 | 0.00002293888 | 0.00001479507 to 0.0000309445 | -0.3471632 | -0.5034604 to -0.2002432 | 3 |  |
+| GN | 72 | fit x GP | 2 | AP-S | 3302/3383 | -0.000001010153 | -0.000008282189 to 0.00000461805 | -0.01817895 | -0.1052944 to 0.07533024 | 3 |  |
+| GN | 72 | fit x GP | 2 | AP-GP | 3276/3383 | -0.00001766387 | -0.00002457857 to -0.000009918949 | -Infinity | -Infinity to -0.1866264 | 3 |  |
+| GN | 72 | fit x GP | 2 | XP-F | 3307/3383 | 8.024152e-7 | -0.000001050115 to 0.000002482385 | -0.02960154 | -0.04790212 to -0.01309288 | 3 |  |
+| GN | 72 | fit x GP | 2 | XP-S | 3302/3383 | -0.00002318013 | -0.00003265012 to -0.00001316952 | 0.2998641 | 0.137833 to 0.5093174 | 3 |  |
+| GN | 72 | fit x GP | 2 | XP-GP | 3276/3383 | -0.00003979181 | -0.00005050746 to -0.00002878848 | -Infinity | -Infinity to 0.1212973 | 3 |  |
+| GN | 72 | fit x GP | 2 | F-S | 3302/3383 | -0.00002398376 | -0.00003527808 to -0.00001337701 | 0.3295105 | 0.1517808 to 0.5537827 | 3 |  |
+| GN | 72 | fit x GP | 2 | F-GP | 3276/3383 | -0.00004069861 | -0.0000526386 to -0.00002743084 | -Infinity | -Infinity to 0.1626076 | 3 |  |
+| GN | 72 | fit x GP | 2 | S-GP | 3271/3383 | -0.00001561774 | -0.00001952119 to -0.00001095066 | -Infinity | -Infinity to -0.1789582 | 3 |  |
+| GN | 72 | fit x GP | 3 | AP-XP | 3178/3317 | 0.00004482969 | 0.000032965 to 0.00005664222 | -0.1332354 | -0.1929125 to -0.07306769 | 2 |  |
+| GN | 72 | fit x GP | 3 | AP-F | 3178/3317 | 0.00004714548 | 0.00003707619 to 0.00005885159 | -0.1486194 | -0.214364 to -0.08169227 | 2 |  |
+| GN | 72 | fit x GP | 3 | AP-S | 3175/3317 | 0.00001079111 | 0.000005137407 to 0.00001635172 | 0.1052833 | 0.04257806 to 0.2197251 | 2 |  |
+| GN | 72 | fit x GP | 3 | AP-GP | 3063/3317 | -0.00000288254 | -0.00001031777 to 0.000002547286 | -0.3687247 | -0.6838565 to -0.1008926 | 2 |  |
+| GN | 72 | fit x GP | 3 | XP-F | 3179/3317 | 0.000002315059 | -9.063756e-8 to 0.000006509358 | -0.01537919 | -0.02322591 to -0.00749285 | 2 |  |
+| GN | 72 | fit x GP | 3 | XP-S | 3176/3317 | -0.00003407021 | -0.00004771247 to -0.00002327822 | 0.2358672 | 0.1216312 to 0.3850292 | 2 |  |
+| GN | 72 | fit x GP | 3 | XP-GP | 3064/3317 | -0.00004755777 | -0.0000649388 to -0.00003116868 | -0.2294948 | -0.5386747 to 0.03018563 | 2 |  |
+| GN | 72 | fit x GP | 3 | F-S | 3176/3317 | -0.00003638745 | -0.00004898229 to -0.00002868634 | 0.2508796 | 0.1302531 to 0.4100631 | 2 |  |
+| GN | 72 | fit x GP | 3 | F-GP | 3064/3317 | -0.00004974472 | -0.00006546641 to -0.00003503143 | -0.2135948 | -0.4986 to 0.04604327 | 2 |  |
+| GN | 72 | fit x GP | 3 | S-GP | 3061/3317 | -0.0000132465 | -0.00002447339 to -0.000004869193 | -0.4792328 | -0.7953316 to -0.171294 | 2 |  |
+| GN | 72 | fit x GP | 4 | AP-XP | 3068/3326 | 0.00003712948 | 0.00003339633 to 0.00004191412 | -Infinity | -Infinity to -0.06414349 | 0 |  |
+| GN | 72 | fit x GP | 4 | AP-F | 3068/3326 | 0.00003809527 | 0.00003633921 to 0.00003978442 | -Infinity | -Infinity to -0.08042227 | 0 |  |
+| GN | 72 | fit x GP | 4 | AP-S | 3064/3326 | 0.000005185143 | 0.000002299209 to 0.000008445047 | 0.02584111 | -0.04344709 to 0.07129729 | 0 |  |
+| GN | 72 | fit x GP | 4 | AP-GP | 2830/3326 | -2.147147e-7 | -0.000006871516 to 0.000004625937 | -Infinity | -Infinity to -0.03697835 | 0 |  |
+| GN | 72 | fit x GP | 4 | XP-F | 3068/3326 | 9.657958e-7 | -0.00000251012 to 0.000003332561 | -0.01975415 | -0.02398811 to -0.01601528 | 1 |  |
+| GN | 72 | fit x GP | 4 | XP-S | 3064/3326 | -0.0000312434 | -0.00003521745 to -0.00002702062 | Infinity | 0.1226271 to Infinity | 0 |  |
+| GN | 72 | fit x GP | 4 | XP-GP | 2830/3326 | -0.00003578464 | -0.0000448137 to -0.00002894657 | -Infinity | -Infinity to 0.04428229 | 1 |  |
+| GN | 72 | fit x GP | 4 | F-S | 3064/3326 | -0.00003228937 | -0.00003519009 to -0.00002915812 | Infinity | 0.1445798 to Infinity | 0 |  |
+| GN | 72 | fit x GP | 4 | F-GP | 2830/3326 | -0.00003811944 | -0.00004763991 to -0.00003126295 | -Infinity | -Infinity to 0.06284272 | 1 |  |
+| GN | 72 | fit x GP | 4 | S-GP | 2826/3326 | -0.000005531356 | -0.00001630065 to 0.000001833538 | -Infinity | -Infinity to -0.1046335 | 0 |  |
+| GN | 72 | fit x GP | 5 | AP-XP | 2637/3334 | 0.00004089113 | 0.00002734195 to 0.00005219243 | -Infinity | -Infinity to 0.06511928 | 0 |  |
+| GN | 72 | fit x GP | 5 | AP-F | 2637/3334 | 0.00004339461 | 0.00002936982 to 0.00005586221 | -Infinity | -Infinity to 0.06538416 | 0 |  |
+| GN | 72 | fit x GP | 5 | AP-S | 2634/3334 | 0.000008773473 | 0.000004335054 to 0.00001346563 | -Infinity | -Infinity to 0.05181792 | 0 |  |
+| GN | 72 | fit x GP | 5 | AP-GP | 2103/3334 | 0.000006364275 | 0.000002398215 to 0.000009828565 | -Infinity | -Infinity to -0.06613575 | 0 |  |
+| GN | 72 | fit x GP | 5 | XP-F | 2637/3334 | 0.000002503483 | 0.000001191519 to 0.000004327178 | -0.005198432 | -0.01148763 to 0.0002648804 | 1 |  |
+| GN | 72 | fit x GP | 5 | XP-S | 2634/3334 | -0.00003216428 | -0.00004642833 to -0.00001945334 | -0.01547588 | -0.04200366 to 0.01281725 | 1 |  |
+| GN | 72 | fit x GP | 5 | XP-GP | 2103/3334 | -0.00003194717 | -0.00004467609 to -0.00001953398 | -Infinity | -Infinity to -0.02863105 | 1 |  |
+| GN | 72 | fit x GP | 5 | F-S | 2634/3334 | -0.0000346706 | -0.00004919936 to -0.00002086682 | -0.01027152 | -0.0386219 to 0.02006251 | 1 |  |
+| GN | 72 | fit x GP | 5 | F-GP | 2103/3334 | -0.00003376587 | -0.00004662794 to -0.000020499 | -Infinity | -Infinity to -0.02120896 | 1 |  |
+| GN | 72 | fit x GP | 5 | S-GP | 2100/3334 | -0.000001931638 | -0.000008598956 to 0.000004838551 | -Infinity | -Infinity to -0.03437896 | 1 |  |
+| GN | 72 | fit x GP | 7 | AP-XP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | AP-F | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | AP-S | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | AP-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | XP-F | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | XP-S | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | XP-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | F-S | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | F-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GN | 72 | fit x GP | 7 | S-GP | 0/3350 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x fit | 1 | AP-XP | 3234/3234 | 0.01673258 | 0.01478114 to 0.01857923 | 0.360808 | 0.3147675 to 0.4099684 | 0 |  |
+| IG | 72 | fit x fit | 1 | AP-F | 3234/3234 | 0.08444077 | 0.07516312 to 0.09419018 | 0.5823591 | 0.5202097 to 0.644957 | 0 |  |
+| IG | 72 | fit x fit | 1 | AP-S | 2166/3234 | -0.000832851 | -0.0009287008 to -0.0007370054 | -0.5233179 | -0.5862808 to -0.4610851 | 0 |  |
+| IG | 72 | fit x fit | 1 | AP-GP | 3005/3234 | -0.0008374812 | -0.0009336986 to -0.0007410335 | -1.127132 | -1.614926 to -0.781236 | 0 |  |
+| IG | 72 | fit x fit | 1 | XP-F | 3234/3234 | 0.06770819 | 0.05909436 to 0.07624481 | 0.2215511 | 0.1998019 to 0.2443303 | 0 |  |
+| IG | 72 | fit x fit | 1 | XP-S | 2166/3234 | -0.01753463 | -0.01941699 to -0.01524166 | -0.8796274 | -0.9823178 to -0.7741007 | 0 |  |
+| IG | 72 | fit x fit | 1 | XP-GP | 3005/3234 | -0.01759151 | -0.01963484 to -0.01550935 | -1.489159 | -2.034507 to -1.107118 | 0 |  |
+| IG | 72 | fit x fit | 1 | F-S | 2166/3234 | -0.08494594 | -0.09565006 to -0.0739138 | -1.097872 | -1.214382 to -0.9766426 | 0 |  |
+| IG | 72 | fit x fit | 1 | F-GP | 3005/3234 | -0.08619107 | -0.09600159 to -0.0762912 | -1.712441 | -2.254223 to -1.325853 | 0 |  |
+| IG | 72 | fit x fit | 1 | S-GP | 1981/3234 | 9.990011e-7 | -0.000002393548 to 0.000004455651 | -0.6240907 | -1.113683 to -0.2786978 | 0 |  |
+| IG | 72 | fit x fit | 2 | AP-XP | 3356/3356 | 0.007635234 | 0.00693205 to 0.0084315 | 0.4449442 | 0.4061962 to 0.4878809 | 0 |  |
+| IG | 72 | fit x fit | 2 | AP-F | 3356/3356 | 0.07673534 | 0.06372043 to 0.08906835 | 0.7405374 | 0.6659559 to 0.8223631 | 0 |  |
+| IG | 72 | fit x fit | 2 | AP-S | 2260/3356 | -0.0002268733 | -0.0002469374 to -0.0002067819 | -0.4826383 | -0.530422 to -0.4390877 | 0 |  |
+| IG | 72 | fit x fit | 2 | AP-GP | 3110/3356 | -0.0002259761 | -0.0002479143 to -0.000201841 | -0.6473726 | -0.7350053 to -0.5596933 | 0 |  |
+| IG | 72 | fit x fit | 2 | XP-F | 3356/3356 | 0.06910011 | 0.05641385 to 0.08114998 | 0.2955931 | 0.2531199 to 0.3384103 | 0 |  |
+| IG | 72 | fit x fit | 2 | XP-S | 2260/3356 | -0.007992948 | -0.008979538 to -0.007184601 | -0.9313924 | -1.030485 to -0.8400507 | 0 |  |
+| IG | 72 | fit x fit | 2 | XP-GP | 3110/3356 | -0.007881341 | -0.008805045 to -0.0069818 | -1.094609 | -1.231957 to -0.9685416 | 0 |  |
+| IG | 72 | fit x fit | 2 | F-S | 2260/3356 | -0.07794682 | -0.08977307 to -0.06558718 | -1.226916 | -1.366943 to -1.101963 | 0 |  |
+| IG | 72 | fit x fit | 2 | F-GP | 3110/3356 | -0.07914249 | -0.0918586 to -0.06459819 | -1.396993 | -1.5665 to -1.238057 | 0 |  |
+| IG | 72 | fit x fit | 2 | S-GP | 2070/3356 | 0.000001993742 | 5.022077e-7 to 0.000003237511 | -0.145725 | -0.2152505 to -0.08268862 | 0 |  |
+| IG | 72 | fit x fit | 3 | AP-XP | 3341/3341 | 0.003690653 | 0.003250764 to 0.004120809 | 0.4345147 | 0.3903396 to 0.4768668 | 0 |  |
+| IG | 72 | fit x fit | 3 | AP-F | 3341/3341 | 0.0556402 | 0.04533704 to 0.06486164 | 0.7347708 | 0.6727581 to 0.7920524 | 0 |  |
+| IG | 72 | fit x fit | 3 | AP-S | 2229/3341 | -0.00009746576 | -0.0001119959 to -0.00008296895 | -0.4284056 | -0.4635179 to -0.3905816 | 0 |  |
+| IG | 72 | fit x fit | 3 | AP-GP | 2911/3341 | -0.00009183352 | -0.0001014271 to -0.00008394008 | -0.4960174 | -0.6010037 to -0.4145366 | 0 |  |
+| IG | 72 | fit x fit | 3 | XP-F | 3341/3341 | 0.05194954 | 0.04169082 to 0.06109776 | 0.3002561 | 0.2669424 to 0.3316257 | 0 |  |
+| IG | 72 | fit x fit | 3 | XP-S | 2229/3341 | -0.003930742 | -0.00448631 to -0.003333548 | -0.8650514 | -0.9416536 to -0.782678 | 0 |  |
+| IG | 72 | fit x fit | 3 | XP-GP | 2911/3341 | -0.003841471 | -0.004268114 to -0.003397046 | -0.93916 | -1.08666 to -0.8200293 | 0 |  |
+| IG | 72 | fit x fit | 3 | F-S | 2229/3341 | -0.06024849 | -0.0707382 to -0.0477007 | -1.178417 | -1.276889 to -1.062832 | 0 |  |
+| IG | 72 | fit x fit | 3 | F-GP | 2911/3341 | -0.05761643 | -0.0659649 to -0.0472837 | -1.247313 | -1.378218 to -1.122304 | 0 |  |
+| IG | 72 | fit x fit | 3 | S-GP | 1959/3341 | 0.000003317603 | 0.000002126405 to 0.000004504336 | -0.0005083701 | -0.04158318 to 0.03354123 | 0 |  |
+| IG | 72 | fit x fit | 4 | AP-XP | 3293/3293 | 0.002091234 | 0.001833426 to 0.002355077 | 0.406246 | 0.35361 to 0.4619931 | 0 |  |
+| IG | 72 | fit x fit | 4 | AP-F | 3293/3293 | 0.0417035 | 0.03548081 to 0.04791247 | 0.7014697 | 0.6251174 to 0.7798626 | 0 |  |
+| IG | 72 | fit x fit | 4 | AP-S | 2210/3293 | -0.00005085576 | -0.00005813996 to -0.00004522029 | -0.3756935 | -0.4236419 to -0.3354218 | 0 |  |
+| IG | 72 | fit x fit | 4 | AP-GP | 2257/3293 | -0.00004646002 | -0.00005272307 to -0.00003980242 | -0.3020694 | -0.3479121 to -0.2612725 | 0 |  |
+| IG | 72 | fit x fit | 4 | XP-F | 3293/3293 | 0.03961226 | 0.03337911 to 0.0456174 | 0.2952238 | 0.262575 to 0.3290672 | 0 |  |
+| IG | 72 | fit x fit | 4 | XP-S | 2210/3293 | -0.002188956 | -0.002503911 to -0.001909646 | -0.7780456 | -0.8817241 to -0.692854 | 0 |  |
+| IG | 72 | fit x fit | 4 | XP-GP | 2257/3293 | -0.002076322 | -0.002340004 to -0.001835044 | -0.6943329 | -0.783427 to -0.61977 | 0 |  |
+| IG | 72 | fit x fit | 4 | F-S | 2210/3293 | -0.04360385 | -0.04985552 to -0.03732558 | -1.077655 | -1.200033 to -0.9698686 | 0 |  |
+| IG | 72 | fit x fit | 4 | F-GP | 2257/3293 | -0.0448396 | -0.05083196 to -0.03897885 | -1.002049 | -1.122157 to -0.901779 | 0 |  |
+| IG | 72 | fit x fit | 4 | S-GP | 1627/3293 | 0.000003307447 | 0.000002481276 to 0.000004185194 | 0.0853669 | 0.06184409 to 0.1054672 | 0 |  |
+| IG | 72 | fit x fit | 5 | AP-XP | 3271/3396 | 0.00148881 | 0.001383788 to 0.001601569 | 0.4360468 | 0.40688 to 0.4682441 | 0 |  |
+| IG | 72 | fit x fit | 5 | AP-F | 3271/3396 | 0.03549852 | 0.02782072 to 0.04225748 | 0.7560332 | 0.6955664 to 0.8193412 | 0 |  |
+| IG | 72 | fit x fit | 5 | AP-S | 2171/3396 | -0.0000325511 | -0.00003626399 to -0.00002848242 | -0.4240502 | -0.4719374 to -0.3798278 | 0 |  |
+| IG | 72 | fit x fit | 5 | AP-GP | 1704/3396 | -0.00003367545 | -0.00004004493 to -0.00002830023 | -0.3258725 | -0.3790856 to -0.2806217 | 0 |  |
+| IG | 72 | fit x fit | 5 | XP-F | 3271/3396 | 0.03400971 | 0.02604428 to 0.04067577 | 0.3199864 | 0.2744089 to 0.3617992 | 0 |  |
+| IG | 72 | fit x fit | 5 | XP-S | 2171/3396 | -0.001552148 | -0.001680002 to -0.001402896 | -0.8646329 | -0.958992 to -0.7764012 | 0 |  |
+| IG | 72 | fit x fit | 5 | XP-GP | 1704/3396 | -0.001713541 | -0.001920816 to -0.001509409 | -0.8030358 | -0.8954515 to -0.7224588 | 0 |  |
+| IG | 72 | fit x fit | 5 | F-S | 2171/3396 | -0.03658986 | -0.04330417 to -0.0286252 | -1.191621 | -1.331834 to -1.056348 | 0 |  |
+| IG | 72 | fit x fit | 5 | F-GP | 1704/3396 | -0.04369993 | -0.05275566 to -0.03413699 | -1.180629 | -1.322098 to -1.05224 | 0 |  |
+| IG | 72 | fit x fit | 5 | S-GP | 1193/3396 | 0.000002877401 | 0.000002130859 to 0.000003602382 | 0.1585909 | 0.1261749 to 0.1877876 | 0 |  |
+| IG | 72 | fit x fit | 7 | AP-XP | 3269/3380 | 0.0007582509 | 0.0006543734 to 0.0008569348 | -Infinity | -Infinity to -Infinity | 4 |  |
+| IG | 72 | fit x fit | 7 | AP-F | 3269/3380 | 0.02352598 | 0.01712164 to 0.02953413 | -Infinity | -Infinity to -Infinity | 4 |  |
+| IG | 72 | fit x fit | 7 | AP-S | 2166/3380 | -0.00001717079 | -0.00001961078 to -0.0000146802 | Infinity | -0.2287546 to Infinity | 0 |  |
+| IG | 72 | fit x fit | 7 | AP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x fit | 7 | XP-F | 3272/3380 | 0.02274685 | 0.01652424 to 0.02861774 | 0.3250491 | 0.2719164 to 0.3741336 | 11 |  |
+| IG | 72 | fit x fit | 7 | XP-S | 2169/3380 | -0.0007722024 | -0.000894888 to -0.0006397136 | Infinity | Infinity to Infinity | 0 |  |
+| IG | 72 | fit x fit | 7 | XP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x fit | 7 | F-S | 2169/3380 | -0.02465195 | -0.03163645 to -0.01736006 | Infinity | Infinity to Infinity | 0 |  |
+| IG | 72 | fit x fit | 7 | F-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x fit | 7 | S-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 1 | AP-XP | 3128/3234 | 2.621099e-7 | -8.317215e-7 to 0.000001374804 | -0.115098 | -0.1505421 to -0.08145207 | 0 |  |
+| IG | 72 | fit x GP | 1 | AP-F | 3128/3234 | 5.628938e-7 | -5.570097e-7 to 0.000001672177 | -0.1180243 | -0.1538497 to -0.08402572 | 0 |  |
+| IG | 72 | fit x GP | 1 | AP-S | 2578/3234 | -0.00001007088 | -0.00001741256 to -0.00000409275 | 0.3595538 | 0.1999656 to 0.549417 | 0 |  |
+| IG | 72 | fit x GP | 1 | AP-GP | 3005/3234 | -0.000008676983 | -0.00001613628 to -0.000001556463 | -0.05571939 | -0.4179948 to 0.2419954 | 0 |  |
+| IG | 72 | fit x GP | 1 | XP-F | 3128/3234 | 3.007839e-7 | 2.416042e-8 to 5.794794e-7 | -0.002926279 | -0.006067571 to 0.0001795003 | 0 |  |
+| IG | 72 | fit x GP | 1 | XP-S | 2578/3234 | -0.00001052048 | -0.00001864887 to -0.000003590862 | 0.466217 | 0.2818548 to 0.689349 | 0 |  |
+| IG | 72 | fit x GP | 1 | XP-GP | 3005/3234 | -0.000009078892 | -0.00001711705 to -0.000001199611 | 0.06161905 | -0.2809101 to 0.352654 | 0 |  |
+| IG | 72 | fit x GP | 1 | F-S | 2578/3234 | -0.00001090889 | -0.00001910173 to -0.000003994346 | 0.4689399 | 0.2843689 to 0.6896209 | 0 |  |
+| IG | 72 | fit x GP | 1 | F-GP | 3005/3234 | -0.000009371011 | -0.00001741028 to -0.000001698381 | 0.06481525 | -0.284995 to 0.36005 | 0 |  |
+| IG | 72 | fit x GP | 1 | S-GP | 2455/3234 | 0.000001371431 | -0.000001952348 to 0.000004437954 | -0.4938779 | -1.049996 to -0.144927 | 0 |  |
+| IG | 72 | fit x GP | 2 | AP-XP | 3224/3356 | 4.929619e-7 | 2.135676e-7 to 7.606543e-7 | -0.05917478 | -0.07535053 to -0.04191672 | 0 |  |
+| IG | 72 | fit x GP | 2 | AP-F | 3224/3356 | 5.073524e-7 | 2.458571e-7 to 8.090172e-7 | -0.06173826 | -0.07957023 to -0.04355269 | 0 |  |
+| IG | 72 | fit x GP | 2 | AP-S | 2651/3356 | -0.000004064568 | -0.000005839567 to -0.00000240039 | 0.07371833 | 0.01628287 to 0.1310664 | 0 |  |
+| IG | 72 | fit x GP | 2 | AP-GP | 3110/3356 | -0.000002768227 | -0.000005289792 to -4.205544e-7 | -0.004390062 | -0.09443625 to 0.07438871 | 0 |  |
+| IG | 72 | fit x GP | 2 | XP-F | 3224/3356 | 1.439054e-8 | -1.429593e-7 to 1.690687e-7 | -0.00256348 | -0.003818201 to -0.001282769 | 0 |  |
+| IG | 72 | fit x GP | 2 | XP-S | 2651/3356 | -0.000004724177 | -0.000006514526 to -0.000003054974 | 0.1243004 | 0.06303198 to 0.1874806 | 0 |  |
+| IG | 72 | fit x GP | 2 | XP-GP | 3110/3356 | -0.000003281279 | -0.000005849971 to -9.169004e-7 | 0.05288038 | -0.04767182 to 0.1377463 | 0 |  |
+| IG | 72 | fit x GP | 2 | F-S | 2651/3356 | -0.000004789082 | -0.000006606106 to -0.000003048603 | 0.1261058 | 0.06395128 to 0.1879768 | 0 |  |
+| IG | 72 | fit x GP | 2 | F-GP | 3110/3356 | -0.000003292743 | -0.000005943943 to -8.61266e-7 | 0.0555036 | -0.04735898 to 0.1434212 | 0 |  |
+| IG | 72 | fit x GP | 2 | S-GP | 2537/3356 | 9.453986e-7 | -4.205044e-7 to 0.000002243713 | -0.09778271 | -0.1665772 to -0.0355379 | 0 |  |
+| IG | 72 | fit x GP | 3 | AP-XP | 3121/3341 | 0.000001171481 | 7.964208e-7 to 0.000001537982 | -0.04356224 | -0.06636143 to -0.02256412 | 0 |  |
+| IG | 72 | fit x GP | 3 | AP-F | 3121/3341 | 0.000001060072 | 6.222811e-7 to 0.000001486209 | -0.04566996 | -0.06795185 to -0.02399146 | 0 |  |
+| IG | 72 | fit x GP | 3 | AP-S | 2558/3341 | -0.000003698797 | -0.000005229638 to -0.000002131782 | -0.01478066 | -0.05594208 to 0.0317033 | 0 |  |
+| IG | 72 | fit x GP | 3 | AP-GP | 2911/3341 | -0.000002005304 | -0.000003813084 to -3.076142e-7 | -0.07039986 | -0.1759721 to 0.0133047 | 0 |  |
+| IG | 72 | fit x GP | 3 | XP-F | 3121/3341 | -1.114085e-7 | -2.549611e-7 to 9.763308e-9 | -0.00210772 | -0.003256364 to -0.001108313 | 0 |  |
+| IG | 72 | fit x GP | 3 | XP-S | 2558/3341 | -0.000004874715 | -0.000006598484 to -0.000003177889 | 0.02607992 | -0.03024327 to 0.07723814 | 0 |  |
+| IG | 72 | fit x GP | 3 | XP-GP | 2911/3341 | -0.000003103549 | -0.000005095275 to -0.000001188654 | -0.02392924 | -0.1345165 to 0.06239195 | 0 |  |
+| IG | 72 | fit x GP | 3 | F-S | 2558/3341 | -0.000004734738 | -0.000006414811 to -0.000003091006 | 0.02850561 | -0.0260705 to 0.08052658 | 0 |  |
+| IG | 72 | fit x GP | 3 | F-GP | 2911/3341 | -0.000002978551 | -0.000005045261 to -9.851109e-7 | -0.02156011 | -0.1336951 to 0.06433241 | 0 |  |
+| IG | 72 | fit x GP | 3 | S-GP | 2401/3341 | 0.000002048821 | 0.000001178911 to 0.000003042492 | -0.0255827 | -0.07316578 to 0.01181338 | 0 |  |
+| IG | 72 | fit x GP | 4 | AP-XP | 2743/3293 | 5.930798e-7 | 3.87558e-7 to 8.206836e-7 | 0.004305249 | -0.000933346 to 0.009740961 | 0 |  |
+| IG | 72 | fit x GP | 4 | AP-F | 2743/3293 | 5.83e-7 | 3.483282e-7 to 8.540366e-7 | 0.003161151 | -0.002214298 to 0.008948542 | 0 |  |
+| IG | 72 | fit x GP | 4 | AP-S | 2251/3293 | -0.000002504694 | -0.000003353303 to -0.000001656201 | -0.04815054 | -0.08397206 to -0.01581115 | 0 |  |
+| IG | 72 | fit x GP | 4 | AP-GP | 2257/3293 | -1.742763e-7 | -0.000001432425 to 0.000001012348 | -0.006955738 | -0.04104293 to 0.02078622 | 0 |  |
+| IG | 72 | fit x GP | 4 | XP-F | 2743/3293 | -1.007979e-8 | -9.053444e-8 to 6.645502e-8 | -0.001144098 | -0.00205214 to -0.0001098605 | 0 |  |
+| IG | 72 | fit x GP | 4 | XP-S | 2251/3293 | -0.000003106704 | -0.000004015636 to -0.000002192556 | -0.05183156 | -0.0884347 to -0.01924257 | 0 |  |
+| IG | 72 | fit x GP | 4 | XP-GP | 2257/3293 | -7.633376e-7 | -0.000002091427 to 4.982285e-7 | -0.01022825 | -0.04766788 to 0.01839318 | 0 |  |
+| IG | 72 | fit x GP | 4 | F-S | 2251/3293 | -0.000003083426 | -0.000004046098 to -0.000002175327 | -0.05039809 | -0.08935875 to -0.01760553 | 0 |  |
+| IG | 72 | fit x GP | 4 | F-GP | 2257/3293 | -7.437038e-7 | -0.000002076257 to 5.114525e-7 | -0.008830717 | -0.04608572 to 0.01984859 | 0 |  |
+| IG | 72 | fit x GP | 4 | S-GP | 1916/3293 | 0.000002257979 | 0.000001711875 to 0.000002876753 | 0.0441245 | 0.02895198 to 0.05869791 | 0 |  |
+| IG | 72 | fit x GP | 5 | AP-XP | 2363/3396 | 0.000001366362 | 0.000001152368 to 0.000001616909 | 0.008449287 | -0.007271012 to 0.02121021 | 0 |  |
+| IG | 72 | fit x GP | 5 | AP-F | 2363/3396 | 0.000001366468 | 0.000001129564 to 0.000001651727 | 0.007514102 | -0.008513482 to 0.02037153 | 0 |  |
+| IG | 72 | fit x GP | 5 | AP-S | 1939/3396 | -0.00000295679 | -0.000003833869 to -0.000002257827 | -0.1295039 | -0.1717292 to -0.09636386 | 0 |  |
+| IG | 72 | fit x GP | 5 | AP-GP | 1704/3396 | -0.000001057212 | -0.000001928126 to -1.775219e-7 | -0.03586521 | -0.08396657 to 0.002169683 | 0 |  |
+| IG | 72 | fit x GP | 5 | XP-F | 2363/3396 | 1.062195e-10 | -4.37237e-8 to 5.558408e-8 | -0.0009351854 | -0.001738599 to -0.0002013985 | 0 |  |
+| IG | 72 | fit x GP | 5 | XP-S | 1939/3396 | -0.000004391714 | -0.000005484576 to -0.000003507043 | -0.1421579 | -0.1875925 to -0.1053935 | 0 |  |
+| IG | 72 | fit x GP | 5 | XP-GP | 1704/3396 | -0.000002533612 | -0.000003634123 to -0.000001458282 | -0.04586053 | -0.09710099 to -0.00006798296 | 0 |  |
+| IG | 72 | fit x GP | 5 | F-S | 1939/3396 | -0.000004382882 | -0.000005477487 to -0.000003486846 | -0.14143 | -0.1873692 to -0.1045121 | 0 |  |
+| IG | 72 | fit x GP | 5 | F-GP | 1704/3396 | -0.000002556026 | -0.000003677985 to -0.000001472787 | -0.0450634 | -0.09914906 to 0.0004466017 | 0 |  |
+| IG | 72 | fit x GP | 5 | S-GP | 1432/3396 | 0.000002427501 | 0.000001825703 to 0.000002988093 | 0.1109396 | 0.08680781 to 0.1321801 | 0 |  |
+| IG | 72 | fit x GP | 7 | AP-XP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | AP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | AP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | AP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | XP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | XP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | XP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | F-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | F-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| IG | 72 | fit x GP | 7 | S-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x fit | 1 | AP-XP | 3390/3390 | 0.0000175306 | 0.00001527314 to 0.00001871093 | 0.7952856 | 0.7135516 to 0.8460813 | 0 |  |
+| T | 24 | fit x fit | 1 | AP-F | 3390/3390 | 0.004803244 | 0.003968565 to 0.005306638 | 1.388625 | 1.261713 to 1.487282 | 0 |  |
+| T | 24 | fit x fit | 1 | AP-S | 3390/3390 | 0.00007233918 | 0.00005885967 to 0.0000799852 | 0.862425 | 0.781174 to 0.9127941 | 0 |  |
+| T | 24 | fit x fit | 1 | AP-GP | 3390/3390 | 0.000002209416 | 0.000001285097 to 0.000003496417 | 0.5029957 | 0.4459951 to 0.5700572 | 0 |  |
+| T | 24 | fit x fit | 1 | XP-F | 3390/3390 | 0.004785713 | 0.003952584 to 0.005288284 | 0.593339 | 0.5392988 to 0.6361111 | 0 |  |
+| T | 24 | fit x fit | 1 | XP-S | 3390/3390 | 0.00005480858 | 0.00004350193 to 0.00006146725 | 0.06713946 | 0.05923802 to 0.07273511 | 0 |  |
+| T | 24 | fit x fit | 1 | XP-GP | 3390/3390 | -0.00001532118 | -0.00001626278 to -0.00001290583 | -0.2922899 | -0.317954 to -0.2359547 | 0 |  |
+| T | 24 | fit x fit | 1 | F-S | 3390/3390 | -0.004730905 | -0.0052285 to -0.003905059 | -0.5261996 | -0.5699523 to -0.4788562 | 0 |  |
+| T | 24 | fit x fit | 1 | F-GP | 3390/3390 | -0.004801034 | -0.005289359 to -0.003966283 | -0.885629 | -0.9310574 to -0.7935637 | 0 |  |
+| T | 24 | fit x fit | 1 | S-GP | 3390/3390 | -0.00007012976 | -0.00007734418 to -0.00005662891 | -0.3594294 | -0.3873978 to -0.2980358 | 0 |  |
+| T | 24 | fit x fit | 2 | AP-XP | 3333/3333 | 0.000006888279 | 0.000005966248 to 0.000007612464 | 0.8691535 | 0.8039922 to 0.9224784 | 0 |  |
+| T | 24 | fit x fit | 2 | AP-F | 3333/3333 | 0.001162026 | 0.0009989761 to 0.001385664 | 1.433254 | 1.336644 to 1.518006 | 0 |  |
+| T | 24 | fit x fit | 2 | AP-S | 3333/3333 | 0.00001211124 | 0.00001033546 to 0.00001341341 | 0.8873155 | 0.8294745 to 0.9382092 | 0 |  |
+| T | 24 | fit x fit | 2 | AP-GP | 3333/3333 | 2.93037e-7 | 7.645432e-8 to 6.616469e-7 | 0.3379571 | 0.2849198 to 0.420847 | 0 |  |
+| T | 24 | fit x fit | 2 | XP-F | 3333/3333 | 0.001155138 | 0.0009963223 to 0.00137817 | 0.5641008 | 0.5313159 to 0.6056444 | 0 |  |
+| T | 24 | fit x fit | 2 | XP-S | 3333/3333 | 0.000005222965 | 0.000004369211 to 0.00000584467 | 0.01816195 | 0.009935167 to 0.02738511 | 0 |  |
+| T | 24 | fit x fit | 2 | XP-GP | 3333/3333 | -0.000006595242 | -0.000007203364 to -0.000005734617 | -0.5311964 | -0.5730468 to -0.4567326 | 0 |  |
+| T | 24 | fit x fit | 2 | F-S | 3333/3333 | -0.001149915 | -0.001372483 to -0.0009919325 | -0.5459388 | -0.590864 to -0.5062503 | 0 |  |
+| T | 24 | fit x fit | 2 | F-GP | 3333/3333 | -0.001161733 | -0.001385032 to -0.0009989019 | -1.095297 | -1.14065 to -1.00355 | 0 |  |
+| T | 24 | fit x fit | 2 | S-GP | 3333/3333 | -0.00001181821 | -0.0000130296 to -0.00001010383 | -0.5493584 | -0.5850798 to -0.4783513 | 0 |  |
+| T | 24 | fit x fit | 3 | AP-XP | 3310/3310 | 0.000003117279 | 0.000002903504 to 0.000003530639 | 0.7469884 | 0.6906699 to 0.8565583 | 0 |  |
+| T | 24 | fit x fit | 3 | AP-F | 3310/3310 | 0.0004408945 | 0.0003621454 to 0.0005669816 | 1.19747 | 1.101687 to 1.385943 | 0 |  |
+| T | 24 | fit x fit | 3 | AP-S | 3310/3310 | 0.000004628835 | 0.000003929214 to 0.000005629345 | 0.751399 | 0.6920064 to 0.8538353 | 0 |  |
+| T | 24 | fit x fit | 3 | AP-GP | 3310/3310 | 6.515737e-8 | 1.665342e-8 to 1.752688e-7 | 0.1577008 | 0.1123806 to 0.2535489 | 0 |  |
+| T | 24 | fit x fit | 3 | XP-F | 3310/3310 | 0.0004377772 | 0.0003583377 to 0.0005635105 | 0.4504815 | 0.402386 to 0.5367374 | 0 |  |
+| T | 24 | fit x fit | 3 | XP-S | 3310/3310 | 0.000001511556 | 9.556172e-7 to 0.000002263493 | 0.004410607 | -0.01308038 to 0.0154891 | 0 |  |
+| T | 24 | fit x fit | 3 | XP-GP | 3310/3310 | -0.000003052122 | -0.000003384081 to -0.000002872779 | -0.5892876 | -0.6529786 to -0.5335935 | 0 |  |
+| T | 24 | fit x fit | 3 | F-S | 3310/3310 | -0.0004362657 | -0.0005623178 to -0.0003563909 | -0.4460709 | -0.5520175 to -0.395655 | 0 |  |
+| T | 24 | fit x fit | 3 | F-GP | 3310/3310 | -0.0004408293 | -0.0005668064 to -0.0003613174 | -1.039769 | -1.15488 to -0.9661172 | 0 |  |
+| T | 24 | fit x fit | 3 | S-GP | 3310/3310 | -0.000004563678 | -0.000005538755 to -0.000003867499 | -0.5936982 | -0.6641673 to -0.5280078 | 0 |  |
+| T | 24 | fit x fit | 4 | AP-XP | 3290/3290 | 0.000001769647 | 0.000001561845 to 0.000002019454 | 0.765509 | 0.7213698 to 0.7990811 | 0 |  |
+| T | 24 | fit x fit | 4 | AP-F | 3290/3290 | 0.0002247536 | 0.0001827374 to 0.0002756271 | 1.208778 | 1.131916 to 1.278586 | 0 |  |
+| T | 24 | fit x fit | 4 | AP-S | 3290/3290 | 0.000002229768 | 0.000001928944 to 0.000002474746 | 0.7620524 | 0.7220627 to 0.795292 | 0 |  |
+| T | 24 | fit x fit | 4 | AP-GP | 3283/3290 | 6.601089e-8 | 1.210531e-8 to 1.574444e-7 | 0.2084271 | 0.1632211 to 0.2822111 | 0 |  |
+| T | 24 | fit x fit | 4 | XP-F | 3290/3290 | 0.000222984 | 0.0001811077 to 0.0002736451 | 0.4432689 | 0.4094259 to 0.4871013 | 0 |  |
+| T | 24 | fit x fit | 4 | XP-S | 3290/3290 | 4.601207e-7 | 3.099561e-7 to 5.789015e-7 | -0.003456577 | -0.01402078 to 0.003667082 | 0 |  |
+| T | 24 | fit x fit | 4 | XP-GP | 3283/3290 | -0.00000169421 | -0.000001879442 to -0.000001524743 | -0.5538312 | -0.5960002 to -0.502997 | 0 |  |
+| T | 24 | fit x fit | 4 | F-S | 3290/3290 | -0.0002225238 | -0.0002732103 to -0.0001807652 | -0.4467255 | -0.4964397 to -0.4064496 | 0 |  |
+| T | 24 | fit x fit | 4 | F-GP | 3283/3290 | -0.000223215 | -0.0002746618 to -0.0001820697 | -0.9949757 | -1.045121 to -0.9516879 | 0 |  |
+| T | 24 | fit x fit | 4 | S-GP | 3283/3290 | -0.000002153028 | -0.000002359569 to -0.000001863726 | -0.5502611 | -0.5978093 to -0.4918883 | 0 |  |
+| T | 24 | fit x fit | 5 | AP-XP | 3288/3288 | 0.000001293684 | 0.00000117048 to 0.00000138009 | 0.8577581 | 0.7990097 to 0.9300995 | 0 |  |
+| T | 24 | fit x fit | 5 | AP-F | 3288/3288 | 0.0001374461 | 0.0001306244 to 0.0001468817 | 1.341208 | 1.253589 to 1.464826 | 0 |  |
+| T | 24 | fit x fit | 5 | AP-S | 3288/3288 | 0.000001694807 | 0.000001234606 to 0.000002023049 | 0.850813 | 0.7926543 to 0.9178557 | 0 |  |
+| T | 24 | fit x fit | 5 | AP-GP | 3210/3288 | 9.43238e-9 | 1.078399e-9 to 2.357347e-8 | -0.007368137 | -0.06483981 to 0.08732523 | 0 |  |
+| T | 24 | fit x fit | 5 | XP-F | 3288/3288 | 0.0001361524 | 0.0001293615 to 0.0001456328 | 0.48345 | 0.449962 to 0.534726 | 0 |  |
+| T | 24 | fit x fit | 5 | XP-S | 3288/3288 | 4.011238e-7 | 3.394759e-8 to 7.336689e-7 | -0.006945114 | -0.01323928 to -0.00348453 | 0 |  |
+| T | 24 | fit x fit | 5 | XP-GP | 3210/3288 | -0.000001303947 | -0.000001395948 to -0.000001153236 | -0.8776454 | -0.9774187 to -0.7898006 | 0 |  |
+| T | 24 | fit x fit | 5 | F-S | 3288/3288 | -0.0001357513 | -0.0001450091 to -0.0001291313 | -0.4903951 | -0.5476305 to -0.4534466 | 0 |  |
+| T | 24 | fit x fit | 5 | F-GP | 3210/3288 | -0.0001391154 | -0.0001496146 to -0.0001313365 | -1.365862 | -1.492741 to -1.271969 | 0 |  |
+| T | 24 | fit x fit | 5 | S-GP | 3210/3288 | -0.000001718313 | -0.000002064521 to -0.000001229188 | -0.8704893 | -0.9673809 to -0.7795258 | 0 |  |
+| T | 24 | fit x fit | 7 | AP-XP | 3389/3389 | 4.234651e-7 | 3.908496e-7 to 4.61954e-7 | 0.7298614 | 0.686558 to 0.7747589 | 0 |  |
+| T | 24 | fit x fit | 7 | AP-F | 3389/3389 | 0.00004223503 | 0.00003471559 to 0.00005624758 | 1.126459 | 1.053434 to 1.182112 | 0 |  |
+| T | 24 | fit x fit | 7 | AP-S | 3389/3389 | 4.715758e-7 | 3.927867e-7 to 6.105282e-7 | 0.7094753 | 0.6603018 to 0.7535792 | 0 |  |
+| T | 24 | fit x fit | 7 | AP-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x fit | 7 | XP-F | 3389/3389 | 0.00004181156 | 0.00003429499 to 0.00005580963 | 0.3965978 | 0.361992 to 0.4317126 | 0 |  |
+| T | 24 | fit x fit | 7 | XP-S | 3389/3389 | 4.811065e-8 | -2.45265e-8 to 1.709288e-7 | -0.02038606 | -0.03092035 to -0.004241335 | 0 |  |
+| T | 24 | fit x fit | 7 | XP-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x fit | 7 | F-S | 3389/3389 | -0.00004176345 | -0.00005572337 to -0.00003423292 | -0.4169839 | -0.4440972 to -0.385066 | 0 |  |
+| T | 24 | fit x fit | 7 | F-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x fit | 7 | S-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 1 | AP-XP | 3390/3390 | 0.000005262436 | 0.000003644234 to 0.000006473102 | 0.5278756 | 0.4763622 to 0.5531355 | 0 |  |
+| T | 24 | fit x GP | 1 | AP-F | 3390/3390 | 0.000009827677 | 0.00000616743 to 0.00001236613 | 0.5700408 | 0.5152533 to 0.5999475 | 0 |  |
+| T | 24 | fit x GP | 1 | AP-S | 3390/3390 | 0.000007938834 | 0.000005096195 to 0.00001003928 | 0.553998 | 0.506994 to 0.5843379 | 0 |  |
+| T | 24 | fit x GP | 1 | AP-GP | 3390/3390 | 0.000002195507 | 0.000001270547 to 0.0000034834 | 0.433315 | 0.376583 to 0.5016008 | 0 |  |
+| T | 24 | fit x GP | 1 | XP-F | 3390/3390 | 0.00000456524 | 0.000002591277 to 0.000005919671 | 0.0421652 | 0.03203335 to 0.04911714 | 0 |  |
+| T | 24 | fit x GP | 1 | XP-S | 3390/3390 | 0.000002676397 | 0.000001520043 to 0.000003649418 | 0.02612234 | 0.02117258 to 0.0317649 | 0 |  |
+| T | 24 | fit x GP | 1 | XP-GP | 3390/3390 | -0.000003066929 | -0.000005053885 to -3.18057e-7 | -0.09456063 | -0.1547779 to -0.01056132 | 0 |  |
+| T | 24 | fit x GP | 1 | F-S | 3390/3390 | -0.000001888843 | -0.000002521645 to -0.000001071235 | -0.01604286 | -0.02141109 to -0.01086077 | 0 |  |
+| T | 24 | fit x GP | 1 | F-GP | 3390/3390 | -0.00000763217 | -0.00001104535 to -0.000002924993 | -0.1367258 | -0.2029738 to -0.04259467 | 0 |  |
+| T | 24 | fit x GP | 1 | S-GP | 3390/3390 | -0.000005743327 | -0.00000873647 to -0.000001853759 | -0.120683 | -0.1849181 to -0.0317339 | 0 |  |
+| T | 24 | fit x GP | 2 | AP-XP | 3333/3333 | 0.000001391788 | 8.517891e-7 to 0.000001792562 | 0.44871 | 0.3776395 to 0.4993393 | 0 |  |
+| T | 24 | fit x GP | 2 | AP-F | 3333/3333 | 0.000002210009 | 0.000001415666 to 0.000002834006 | 0.4694762 | 0.3902553 to 0.5252604 | 0 |  |
+| T | 24 | fit x GP | 2 | AP-S | 3333/3333 | 0.000001642902 | 9.741251e-7 to 0.000002152981 | 0.4559045 | 0.381448 to 0.5081071 | 0 |  |
+| T | 24 | fit x GP | 2 | AP-GP | 3333/3333 | 2.903069e-7 | 7.358681e-8 to 6.591773e-7 | 0.2761932 | 0.2207702 to 0.3628116 | 0 |  |
+| T | 24 | fit x GP | 2 | XP-F | 3333/3333 | 8.182215e-7 | 4.933125e-7 to 0.000001050273 | 0.02076628 | 0.01261581 to 0.02603879 | 0 |  |
+| T | 24 | fit x GP | 2 | XP-S | 3333/3333 | 2.51114e-7 | 1.120086e-7 to 3.601117e-7 | 0.007194561 | 0.003474334 to 0.009574957 | 0 |  |
+| T | 24 | fit x GP | 2 | XP-GP | 3333/3333 | -0.000001101481 | -0.000001666126 to -2.760586e-7 | -0.1725168 | -0.2663551 to -0.02626408 | 0 |  |
+| T | 24 | fit x GP | 2 | F-S | 3333/3333 | -5.671075e-7 | -7.490272e-7 to -3.709765e-7 | -0.01357172 | -0.01715337 to -0.00880729 | 0 |  |
+| T | 24 | fit x GP | 2 | F-GP | 3333/3333 | -0.000001919702 | -0.000002678126 to -7.693711e-7 | -0.1932831 | -0.2925151 to -0.03887989 | 0 |  |
+| T | 24 | fit x GP | 2 | S-GP | 3333/3333 | -0.000001352595 | -0.000002008847 to -3.983946e-7 | -0.1797113 | -0.2758813 to -0.0300726 | 0 |  |
+| T | 24 | fit x GP | 3 | AP-XP | 3310/3310 | 4.913128e-7 | 2.523134e-7 to 7.568839e-7 | 0.308857 | 0.2116972 to 0.4137182 | 0 |  |
+| T | 24 | fit x GP | 3 | AP-F | 3310/3310 | 6.745026e-7 | 3.394476e-7 to 0.000001056063 | 0.3219793 | 0.2186693 to 0.4325921 | 0 |  |
+| T | 24 | fit x GP | 3 | AP-S | 3310/3310 | 5.184268e-7 | 2.62154e-7 to 8.002198e-7 | 0.3101288 | 0.2119153 to 0.4099839 | 0 |  |
+| T | 24 | fit x GP | 3 | AP-GP | 3310/3310 | 6.433089e-8 | 1.569845e-8 to 1.744227e-7 | 0.1205735 | 0.07267052 to 0.2162649 | 0 |  |
+| T | 24 | fit x GP | 3 | XP-F | 3310/3310 | 1.831897e-7 | 8.715881e-8 to 2.879832e-7 | 0.01312226 | 0.006732347 to 0.01914528 | 0 |  |
+| T | 24 | fit x GP | 3 | XP-S | 3310/3310 | 2.7114e-8 | 9.208738e-9 to 4.329831e-8 | 0.001271755 | -0.00008993818 to 0.002448549 | 0 |  |
+| T | 24 | fit x GP | 3 | XP-GP | 3310/3310 | -4.269819e-7 | -6.336223e-7 to -1.790871e-7 | -0.1882835 | -0.285348 to -0.05222839 | 0 |  |
+| T | 24 | fit x GP | 3 | F-S | 3310/3310 | -1.560757e-7 | -2.495507e-7 to -7.9401e-8 | -0.01185051 | -0.01805962 to -0.006181521 | 0 |  |
+| T | 24 | fit x GP | 3 | F-GP | 3310/3310 | -6.101717e-7 | -9.225117e-7 to -2.669567e-7 | -0.2014058 | -0.3027954 to -0.06012002 | 0 |  |
+| T | 24 | fit x GP | 3 | S-GP | 3310/3310 | -4.540959e-7 | -6.75978e-7 to -1.882958e-7 | -0.1895553 | -0.2883136 to -0.0521959 | 0 |  |
+| T | 24 | fit x GP | 4 | AP-XP | 3288/3290 | 3.754902e-7 | 2.737428e-7 to 4.635294e-7 | 0.3526359 | 0.2741905 to 0.4145151 | 0 |  |
+| T | 24 | fit x GP | 4 | AP-F | 3288/3290 | 5.669954e-7 | 3.961741e-7 to 7.13559e-7 | 0.3695947 | 0.2824187 to 0.4371671 | 0 |  |
+| T | 24 | fit x GP | 4 | AP-S | 3288/3290 | 3.959527e-7 | 3.051147e-7 to 4.763855e-7 | 0.352358 | 0.2746346 to 0.4153258 | 0 |  |
+| T | 24 | fit x GP | 4 | AP-GP | 3283/3290 | 6.542539e-8 | 1.148466e-8 to 1.56886e-7 | 0.1610308 | 0.1103483 to 0.2404418 | 0 |  |
+| T | 24 | fit x GP | 4 | XP-F | 3288/3290 | 1.915052e-7 | 1.181798e-7 to 2.536651e-7 | 0.01695875 | 0.008228247 to 0.02265199 | 0 |  |
+| T | 24 | fit x GP | 4 | XP-S | 3288/3290 | 2.046251e-8 | 5.881069e-9 to 3.111648e-8 | -0.0002779414 | -0.001042475 to 0.0005481331 | 0 |  |
+| T | 24 | fit x GP | 4 | XP-GP | 3283/3290 | -3.106276e-7 | -4.384045e-7 to -1.341693e-7 | -0.191645 | -0.2996811 to -0.03668231 | 0 |  |
+| T | 24 | fit x GP | 4 | F-S | 3288/3290 | -1.710427e-7 | -2.385188e-7 to -9.105942e-8 | -0.01723669 | -0.0232738 to -0.007784135 | 0 |  |
+| T | 24 | fit x GP | 4 | F-GP | 3283/3290 | -5.024243e-7 | -6.911148e-7 to -2.528063e-7 | -0.2086264 | -0.3130512 to -0.04493459 | 0 |  |
+| T | 24 | fit x GP | 4 | S-GP | 3283/3290 | -3.311213e-7 | -4.544926e-7 to -1.586958e-7 | -0.191367 | -0.2920953 to -0.03712921 | 0 |  |
+| T | 24 | fit x GP | 5 | AP-XP | 3250/3288 | 8.739657e-8 | 4.518247e-8 to 1.170414e-7 | 0.2806998 | 0.1658698 to 0.3599985 | 0 |  |
+| T | 24 | fit x GP | 5 | AP-F | 3250/3288 | 1.005011e-7 | 5.128997e-8 to 1.345721e-7 | 0.2882145 | 0.1696183 to 0.3711972 | 0 |  |
+| T | 24 | fit x GP | 5 | AP-S | 3250/3288 | 8.803797e-8 | 4.532569e-8 to 1.184022e-7 | 0.2805217 | 0.1651654 to 0.3603109 | 0 |  |
+| T | 24 | fit x GP | 5 | AP-GP | 3210/3288 | 9.322854e-9 | 8.294962e-10 to 2.362014e-8 | 0.006526172 | -0.07114013 to 0.1279283 | 0 |  |
+| T | 24 | fit x GP | 5 | XP-F | 3250/3288 | 1.310452e-8 | 6.107501e-9 to 1.779174e-8 | 0.007514641 | 0.003748525 to 0.0100308 | 0 |  |
+| T | 24 | fit x GP | 5 | XP-S | 3250/3288 | 6.414019e-10 | 7.602138e-12 to 1.290048e-9 | -0.0001781177 | -0.0007043538 to 0.0002882519 | 0 |  |
+| T | 24 | fit x GP | 5 | XP-GP | 3210/3288 | -7.79014e-8 | -1.166913e-7 to -2.231653e-8 | -0.2758852 | -0.4350155 to -0.04534019 | 0 |  |
+| T | 24 | fit x GP | 5 | F-S | 3250/3288 | -1.246311e-8 | -1.68295e-8 to -5.964278e-9 | -0.007692758 | -0.009860999 to -0.004452879 | 0 |  |
+| T | 24 | fit x GP | 5 | F-GP | 3210/3288 | -9.099612e-8 | -1.331356e-7 to -2.808844e-8 | -0.283451 | -0.4394163 to -0.04904698 | 0 |  |
+| T | 24 | fit x GP | 5 | S-GP | 3210/3288 | -7.852965e-8 | -1.162046e-7 to -2.240912e-8 | -0.2757003 | -0.4352371 to -0.0446122 | 0 |  |
+| T | 24 | fit x GP | 7 | AP-XP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | AP-F | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | AP-S | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | AP-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | XP-F | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | XP-S | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | XP-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | F-S | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | F-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| T | 24 | fit x GP | 7 | S-GP | 0/3389 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x fit | 1 | AP-XP | 1626/3311 | 0.01240662 | 0.008839319 to 0.01547056 | 0.3197897 | 0.2428279 to 0.3892653 | 0 |  |
+| GE | 72 | fit x fit | 1 | AP-F | 1626/3311 | 0.076713 | 0.05982543 to 0.09508242 | 0.552118 | 0.4377597 to 0.6666999 | 0 |  |
+| GE | 72 | fit x fit | 1 | AP-S | 1626/3311 | -0.0008666974 | -0.001004872 to -0.0007140186 | -0.5797726 | -0.6955271 to -0.4591075 | 0 |  |
+| GE | 72 | fit x fit | 1 | AP-GP | 1626/3311 | -0.0008565517 | -0.0009959795 to -0.0007033474 | -1.100062 | -1.416484 to -0.8183947 | 0 |  |
+| GE | 72 | fit x fit | 1 | XP-F | 1626/3311 | 0.06430638 | 0.05050322 to 0.07933953 | 0.2323282 | 0.18698 to 0.285633 | 0 |  |
+| GE | 72 | fit x fit | 1 | XP-S | 1626/3311 | -0.01327332 | -0.01649956 to -0.009620377 | -0.8995623 | -1.077615 to -0.7086894 | 0 |  |
+| GE | 72 | fit x fit | 1 | XP-GP | 1626/3311 | -0.01326317 | -0.01645652 to -0.009661234 | -1.419852 | -1.760622 to -1.096506 | 0 |  |
+| GE | 72 | fit x fit | 1 | F-S | 1626/3311 | -0.0775797 | -0.09499266 to -0.06034645 | -1.131891 | -1.356605 to -0.9002601 | 0 |  |
+| GE | 72 | fit x fit | 1 | F-GP | 1626/3311 | -0.07756955 | -0.09548109 to -0.06048192 | -1.65218 | -2.00698 to -1.291962 | 0 |  |
+| GE | 72 | fit x fit | 1 | S-GP | 1626/3311 | 0.00001014573 | 0.000003902359 to 0.00001737716 | -0.5202898 | -0.8111974 to -0.3201123 | 0 |  |
+| GE | 72 | fit x fit | 2 | AP-XP | 1724/3297 | 0.004964002 | 0.004007982 to 0.005838351 | -0.8584616 | -2.643776 to 0.2829824 | 13 |  |
+| GE | 72 | fit x fit | 2 | AP-F | 1724/3297 | 0.04161166 | 0.03433395 to 0.04870025 | -Infinity | -Infinity to 0.4526562 | 13 |  |
+| GE | 72 | fit x fit | 2 | AP-S | 1724/3297 | -0.0001928267 | -0.0002337429 to -0.0001547819 | Infinity | -0.413082 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 2 | AP-GP | 1724/3297 | -0.0001880044 | -0.0002269848 to -0.0001516407 | Infinity | -0.5542587 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 2 | XP-F | 1724/3297 | 0.03664766 | 0.03016562 to 0.04302896 | -Infinity | -Infinity to -Infinity | 13 |  |
+| GE | 72 | fit x fit | 2 | XP-S | 1724/3297 | -0.005156828 | -0.006073777 to -0.004165365 | Infinity | 1.772821 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 2 | XP-GP | 1724/3297 | -0.005152006 | -0.006052812 to -0.0041627 | Infinity | 2.322038 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 2 | F-S | 1724/3297 | -0.04180449 | -0.04883438 to -0.03442938 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 2 | F-GP | 1724/3297 | -0.04179967 | -0.04873503 to -0.03450491 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 2 | S-GP | 1724/3297 | 0.000004822288 | 0.000002512106 to 0.000007029867 | -2.75917 | -7.049403 to -0.2798901 | 0 |  |
+| GE | 72 | fit x fit | 3 | AP-XP | 1399/3314 | 0.002749535 | 0.00228265 to 0.003127485 | -Infinity | -Infinity to -9.363294 | 1 |  |
+| GE | 72 | fit x fit | 3 | AP-F | 1399/3314 | 0.02776923 | 0.02311768 to 0.03240177 | -Infinity | -Infinity to -Infinity | 1 |  |
+| GE | 72 | fit x fit | 3 | AP-S | 1399/3314 | -0.00007943059 | -0.00009528525 to -0.00006115519 | Infinity | -0.280627 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 3 | AP-GP | 1399/3314 | -0.00007717954 | -0.00009312324 to -0.00005899733 | Infinity | -0.5882136 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 3 | XP-F | 1402/3314 | 0.02496616 | 0.02059983 to 0.02927767 | -Infinity | -Infinity to -Infinity | 6 |  |
+| GE | 72 | fit x fit | 3 | XP-S | 1402/3314 | -0.00282291 | -0.0032128 to -0.002314647 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 3 | XP-GP | 1402/3314 | -0.002820666 | -0.003209172 to -0.002325813 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 3 | F-S | 1402/3314 | -0.02778907 | -0.03227372 to -0.02314679 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 3 | F-GP | 1402/3314 | -0.02778682 | -0.03238807 to -0.02316913 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 3 | S-GP | 1402/3314 | 0.000002244582 | 6.812951e-7 to 0.000003804151 | -1.588464 | -2.925824 to -0.5206075 | 0 |  |
+| GE | 72 | fit x fit | 4 | AP-XP | 1785/3402 | 0.001462135 | 0.001064348 to 0.001827357 | -Infinity | -Infinity to -Infinity | 1 |  |
+| GE | 72 | fit x fit | 4 | AP-F | 1786/3402 | 0.01732315 | 0.01376517 to 0.02089984 | -Infinity | -Infinity to -Infinity | 1 |  |
+| GE | 72 | fit x fit | 4 | AP-S | 1786/3402 | -0.00004288545 | -0.00005281768 to -0.0000326893 | Infinity | 2.941498 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 4 | AP-GP | 1785/3402 | -0.00004141777 | -0.00005099742 to -0.00003163823 | -Infinity | -Infinity to 1.742878 | 1 |  |
+| GE | 72 | fit x fit | 4 | XP-F | 1785/3402 | 0.01587072 | 0.01262752 to 0.019164 | -Infinity | -Infinity to -Infinity | 39 |  |
+| GE | 72 | fit x fit | 4 | XP-S | 1785/3402 | -0.001505045 | -0.001876285 to -0.001112709 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 4 | XP-GP | 1784/3402 | -0.001504396 | -0.001872171 to -0.001110342 | Infinity | Infinity to Infinity | 2 |  |
+| GE | 72 | fit x fit | 4 | F-S | 1786/3402 | -0.01736603 | -0.02090758 to -0.01388184 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 4 | F-GP | 1785/3402 | -0.01737427 | -0.02082471 to -0.01383313 | Infinity | Infinity to Infinity | 2 |  |
+| GE | 72 | fit x fit | 4 | S-GP | 1785/3402 | 0.000001491707 | 7.570563e-7 to 0.000002160975 | -Infinity | -Infinity to -2.637791 | 0 |  |
+| GE | 72 | fit x fit | 5 | AP-XP | 1676/3356 | 0.0009831484 | 0.0006749896 to 0.001231028 | -Infinity | -Infinity to -Infinity | 2 |  |
+| GE | 72 | fit x fit | 5 | AP-F | 1676/3356 | 0.01225119 | 0.008094826 to 0.0158 | -Infinity | -Infinity to -Infinity | 2 |  |
+| GE | 72 | fit x fit | 5 | AP-S | 1676/3356 | -0.00002467819 | -0.0000303525 to -0.00001780827 | Infinity | 1.41136 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 5 | AP-GP | 1676/3356 | -0.00002398219 | -0.00002946835 to -0.00001737534 | Infinity | 0.7391434 to Infinity | 0 |  |
+| GE | 72 | fit x fit | 5 | XP-F | 1676/3356 | 0.01126804 | 0.00739327 to 0.01458048 | -Infinity | -Infinity to -Infinity | 45 |  |
+| GE | 72 | fit x fit | 5 | XP-S | 1676/3356 | -0.001007827 | -0.001264764 to -0.0006913346 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 5 | XP-GP | 1676/3356 | -0.001007131 | -0.001262238 to -0.0006945206 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 5 | F-S | 1676/3356 | -0.01227586 | -0.01574103 to -0.008102197 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 5 | F-GP | 1676/3356 | -0.01227517 | -0.01577462 to -0.008194717 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 5 | S-GP | 1676/3356 | 6.959964e-7 | 2.313377e-7 to 0.000001137407 | -2.132039 | -4.813986 to -0.6002739 | 0 |  |
+| GE | 72 | fit x fit | 7 | AP-XP | 1630/3320 | 0.0003647019 | 0.0001883907 to 0.0005243029 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GE | 72 | fit x fit | 7 | AP-F | 1631/3320 | 0.004548314 | 0.002090987 to 0.00724527 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GE | 72 | fit x fit | 7 | AP-S | 1631/3320 | -0.00000906426 | -0.00001200948 to -0.000005513576 | 5.292512 | 1.603947 to 11.24593 | 0 |  |
+| GE | 72 | fit x fit | 7 | AP-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x fit | 7 | XP-F | 1630/3320 | 0.004186403 | 0.001814118 to 0.006719903 | -Infinity | -Infinity to -Infinity | 65 |  |
+| GE | 72 | fit x fit | 7 | XP-S | 1630/3320 | -0.0003737717 | -0.0005388347 to -0.0001968851 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 7 | XP-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x fit | 7 | F-S | 1631/3320 | -0.004557378 | -0.0072705 to -0.002070004 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x fit | 7 | F-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x fit | 7 | S-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 1 | AP-XP | 2199/3311 | 0.000002254983 | 2.378793e-7 to 0.000004857436 | -0.4870327 | -0.6398268 to -0.326346 | 0 |  |
+| GE | 72 | fit x GP | 1 | AP-F | 2199/3311 | 0.000002131318 | 3.915693e-8 to 0.000004902646 | -0.4972292 | -0.6580477 to -0.32736 | 0 |  |
+| GE | 72 | fit x GP | 1 | AP-S | 2199/3311 | -0.000005467195 | -0.00001046549 to -2.627439e-7 | 0.8922276 | 0.6718587 to 1.063074 | 0 |  |
+| GE | 72 | fit x GP | 1 | AP-GP | 2199/3311 | 4.611755e-7 | -0.000008407846 to 0.000009821051 | 0.2379786 | -0.0706061 to 0.4866705 | 0 |  |
+| GE | 72 | fit x GP | 1 | XP-F | 2199/3311 | -1.236653e-7 | -4.208518e-7 to 2.478864e-7 | -0.01019647 | -0.02361547 to 0.0008980482 | 0 |  |
+| GE | 72 | fit x GP | 1 | XP-S | 2199/3311 | -0.000007722179 | -0.00001467936 to -0.000001070232 | 1.37926 | 1.024742 to 1.65941 | 0 |  |
+| GE | 72 | fit x GP | 1 | XP-GP | 2199/3311 | -0.000001793808 | -0.00001238374 to 0.000008663973 | 0.7250113 | 0.4524631 to 0.9727917 | 0 |  |
+| GE | 72 | fit x GP | 1 | F-S | 2199/3311 | -0.000007598514 | -0.00001485941 to -0.000001061524 | 1.389457 | 1.040514 to 1.676758 | 0 |  |
+| GE | 72 | fit x GP | 1 | F-GP | 2199/3311 | -0.000001670143 | -0.00001240313 to 0.000008752982 | 0.7352078 | 0.4642817 to 0.979526 | 0 |  |
+| GE | 72 | fit x GP | 1 | S-GP | 2199/3311 | 0.000005928371 | 0.000001471154 to 0.00001052236 | -0.654249 | -0.9514989 to -0.4128225 | 0 |  |
+| GE | 72 | fit x GP | 2 | AP-XP | 2307/3297 | 4.186523e-7 | -3.807735e-7 to 0.000001180862 | -Infinity | -Infinity to -0.5597219 | 0 |  |
+| GE | 72 | fit x GP | 2 | AP-F | 2309/3297 | 5.148387e-7 | -3.988057e-7 to 0.000001379764 | -Infinity | -Infinity to -0.5749172 | 0 |  |
+| GE | 72 | fit x GP | 2 | AP-S | 2309/3297 | -0.000001713714 | -0.000004339709 to 0.000001125924 | 1.833977 | 0.3469708 to 4.829975 | 0 |  |
+| GE | 72 | fit x GP | 2 | AP-GP | 2309/3297 | 0.000001414703 | -0.00000123362 to 0.000004011875 | -0.4758137 | -1.162167 to 0.02985461 | 0 |  |
+| GE | 72 | fit x GP | 2 | XP-F | 2307/3297 | 9.663272e-8 | -5.775103e-8 to 2.39292e-7 | -0.02925655 | -0.06118027 to -0.009717123 | 9 |  |
+| GE | 72 | fit x GP | 2 | XP-S | 2307/3297 | -0.000002133852 | -0.000005062976 to 9.724265e-7 | Infinity | 0.9311971 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 2 | XP-GP | 2307/3297 | 9.972775e-7 | -0.000001936769 to 0.000003799979 | Infinity | 0.4513592 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 2 | F-S | 2309/3297 | -0.000002228553 | -0.000005280968 to 9.354682e-7 | Infinity | 0.9538902 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 2 | F-GP | 2309/3297 | 8.998647e-7 | -0.000002048224 to 0.000003784232 | Infinity | 0.455861 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 2 | S-GP | 2309/3297 | 0.000003128417 | 0.000001600022 to 0.000004372747 | -2.309791 | -6.011626 to -0.3669544 | 0 |  |
+| GE | 72 | fit x GP | 3 | AP-XP | 1904/3314 | 3.69022e-7 | -2.209245e-7 to 9.448233e-7 | -Infinity | -Infinity to -0.4705726 | 0 |  |
+| GE | 72 | fit x GP | 3 | AP-F | 1904/3314 | 4.180521e-7 | -1.956289e-7 to 9.836698e-7 | -Infinity | -Infinity to -0.4871379 | 0 |  |
+| GE | 72 | fit x GP | 3 | AP-S | 1905/3314 | -8.561198e-7 | -0.000001992046 to 4.223403e-7 | 0.5768499 | -0.1546779 to 1.625889 | 0 |  |
+| GE | 72 | fit x GP | 3 | AP-GP | 1905/3314 | 8.156543e-7 | -0.000001008907 to 0.00000274232 | -0.3846404 | -0.769135 to -0.06762822 | 0 |  |
+| GE | 72 | fit x GP | 3 | XP-F | 1903/3314 | 4.905588e-8 | -1.417894e-8 to 1.1561e-7 | -0.01486881 | -0.02181724 to -0.007337463 | 3 |  |
+| GE | 72 | fit x GP | 3 | XP-S | 1904/3314 | -0.000001225591 | -0.000002736622 to 2.732652e-7 | Infinity | 0.7800754 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 3 | XP-GP | 1904/3314 | 4.470607e-7 | -0.00000170087 to 0.000002446591 | Infinity | 0.348612 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 3 | F-S | 1904/3314 | -0.000001274622 | -0.000002751452 to 2.087861e-7 | Infinity | 0.7142555 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 3 | F-GP | 1904/3314 | 3.980306e-7 | -0.000001764461 to 0.000002376974 | Infinity | 0.2961228 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 3 | S-GP | 1905/3314 | 0.000001671774 | 4.308219e-7 to 0.000002911158 | -0.9614903 | -2.236811 to -0.2952937 | 0 |  |
+| GE | 72 | fit x GP | 4 | AP-XP | 2388/3402 | 5.940665e-7 | 1.804815e-7 to 0.000001093081 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GE | 72 | fit x GP | 4 | AP-F | 2389/3402 | 5.64186e-7 | 1.492333e-7 to 0.000001046047 | -Infinity | -Infinity to -Infinity | 0 |  |
+| GE | 72 | fit x GP | 4 | AP-S | 2390/3402 | -5.151937e-7 | -0.000001561007 to 3.681103e-7 | 1.950286 | -0.1885013 to 5.422629 | 0 |  |
+| GE | 72 | fit x GP | 4 | AP-GP | 2389/3402 | 3.329983e-7 | -0.000001080985 to 0.000001601754 | -Infinity | -Infinity to -1.024395 | 0 |  |
+| GE | 72 | fit x GP | 4 | XP-F | 2387/3402 | -2.965665e-8 | -9.132961e-8 to 2.932588e-8 | -0.05119332 | -0.09124777 to -0.02548388 | 15 |  |
+| GE | 72 | fit x GP | 4 | XP-S | 2388/3402 | -0.000001109692 | -0.000002583434 to 8.094215e-8 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x GP | 4 | XP-GP | 2387/3402 | -2.610381e-7 | -0.000002066372 to 0.000001201004 | Infinity | Infinity to Infinity | 2 |  |
+| GE | 72 | fit x GP | 4 | F-S | 2389/3402 | -0.000001079595 | -0.000002509518 to 7.087708e-8 | Infinity | Infinity to Infinity | 0 |  |
+| GE | 72 | fit x GP | 4 | F-GP | 2388/3402 | -2.312845e-7 | -0.00000193456 to 0.000001238655 | Infinity | Infinity to Infinity | 2 |  |
+| GE | 72 | fit x GP | 4 | S-GP | 2389/3402 | 8.484076e-7 | 3.306703e-7 to 0.000001381648 | -Infinity | -Infinity to -1.188156 | 0 |  |
+| GE | 72 | fit x GP | 5 | AP-XP | 2199/3356 | 3.434139e-7 | 1.661246e-7 to 5.090151e-7 | -Infinity | -Infinity to -0.6423807 | 0 |  |
+| GE | 72 | fit x GP | 5 | AP-F | 2198/3356 | 3.254346e-7 | 1.384817e-7 to 5.062525e-7 | -Infinity | -Infinity to -0.6561401 | 0 |  |
+| GE | 72 | fit x GP | 5 | AP-S | 2199/3356 | -4.178944e-7 | -7.514697e-7 to -3.047061e-8 | 1.809809 | 0.325288 to 4.807107 | 0 |  |
+| GE | 72 | fit x GP | 5 | AP-GP | 2199/3356 | -2.41632e-7 | -6.447725e-7 to 1.424387e-7 | -0.09264765 | -0.2349642 to 0.0388733 | 0 |  |
+| GE | 72 | fit x GP | 5 | XP-F | 2198/3356 | -1.813559e-8 | -4.269236e-8 to 6.218219e-9 | -0.03320907 | -0.07673736 to -0.01043421 | 1 |  |
+| GE | 72 | fit x GP | 5 | XP-S | 2199/3356 | -7.613083e-7 | -0.000001151155 to -3.256311e-7 | Infinity | 0.9748438 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 5 | XP-GP | 2199/3356 | -5.85046e-7 | -9.397694e-7 to -2.365353e-7 | Infinity | 0.5989526 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 5 | F-S | 2198/3356 | -7.435191e-7 | -0.000001121373 to -3.258709e-7 | Infinity | 0.9958602 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 5 | F-GP | 2198/3356 | -5.671765e-7 | -9.103585e-7 to -2.257606e-7 | Infinity | 0.6071285 to Infinity | 0 |  |
+| GE | 72 | fit x GP | 5 | S-GP | 2199/3356 | 1.762623e-7 | -1.10937e-7 to 4.726868e-7 | -1.902457 | -4.915423 to -0.3142698 | 0 |  |
+| GE | 72 | fit x GP | 7 | AP-XP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | AP-F | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | AP-S | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | AP-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | XP-F | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | XP-S | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | XP-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | F-S | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | F-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| GE | 72 | fit x GP | 7 | S-GP | 0/3320 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | AP-XP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | AP-F | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | AP-S | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | AP-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | XP-F | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | XP-S | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | XP-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | F-S | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | F-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 1 | S-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | AP-XP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | AP-F | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | AP-S | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | AP-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | XP-F | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | XP-S | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | XP-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | F-S | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | F-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 2 | S-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | AP-XP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | AP-F | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | AP-S | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | AP-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | XP-F | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | XP-S | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | XP-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | F-S | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | F-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 3 | S-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | AP-XP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | AP-F | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | AP-S | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | AP-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | XP-F | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | XP-S | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | XP-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | F-S | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | F-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 4 | S-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | AP-XP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | AP-F | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | AP-S | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | AP-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | XP-F | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | XP-S | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | XP-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | F-S | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | F-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 5 | S-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | AP-XP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | AP-F | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | AP-S | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | AP-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | XP-F | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | XP-S | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | XP-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | F-S | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | F-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x fit | 7 | S-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | AP-XP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | AP-F | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | AP-S | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | AP-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | XP-F | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | XP-S | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | XP-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | F-S | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | F-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 1 | S-GP | 0/3306 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | AP-XP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | AP-F | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | AP-S | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | AP-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | XP-F | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | XP-S | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | XP-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | F-S | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | F-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 2 | S-GP | 0/3282 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | AP-XP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | AP-F | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | AP-S | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | AP-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | XP-F | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | XP-S | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | XP-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | F-S | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | F-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 3 | S-GP | 0/3439 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | AP-XP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | AP-F | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | AP-S | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | AP-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | XP-F | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | XP-S | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | XP-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | F-S | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | F-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 4 | S-GP | 0/3431 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | AP-XP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | AP-F | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | AP-S | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | AP-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | XP-F | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | XP-S | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | XP-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | F-S | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | F-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 5 | S-GP | 0/3232 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | AP-XP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | AP-F | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | AP-S | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | AP-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | XP-F | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | XP-S | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | XP-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | F-S | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | F-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 72 | fit x GP | 7 | S-GP | 0/3310 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | AP-XP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | AP-F | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | AP-S | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | AP-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | XP-F | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | XP-S | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | XP-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | F-S | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | F-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 1 | S-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | AP-XP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | AP-F | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | AP-S | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | AP-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | XP-F | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | XP-S | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | XP-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | F-S | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | F-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 2 | S-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | AP-XP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | AP-F | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | AP-S | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | AP-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | XP-F | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | XP-S | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | XP-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | F-S | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | F-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 3 | S-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | AP-XP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | AP-F | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | AP-S | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | AP-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | XP-F | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | XP-S | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | XP-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | F-S | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | F-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 4 | S-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | AP-XP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | AP-F | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | AP-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | AP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | XP-F | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | XP-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | XP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | F-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | F-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 5 | S-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | AP-XP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | AP-F | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | AP-S | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | AP-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | XP-F | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | XP-S | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | XP-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | F-S | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | F-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x fit | 7 | S-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | AP-XP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | AP-F | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | AP-S | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | AP-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | XP-F | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | XP-S | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | XP-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | F-S | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | F-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 1 | S-GP | 0/3366 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | AP-XP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | AP-F | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | AP-S | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | AP-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | XP-F | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | XP-S | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | XP-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | F-S | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | F-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 2 | S-GP | 0/3415 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | AP-XP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | AP-F | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | AP-S | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | AP-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | XP-F | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | XP-S | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | XP-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | F-S | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | F-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 3 | S-GP | 0/3284 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | AP-XP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | AP-F | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | AP-S | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | AP-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | XP-F | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | XP-S | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | XP-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | F-S | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | F-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 4 | S-GP | 0/3285 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | AP-XP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | AP-F | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | AP-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | AP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | XP-F | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | XP-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | XP-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | F-S | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | F-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 5 | S-GP | 0/3392 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | AP-XP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | AP-F | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | AP-S | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | AP-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | XP-F | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | XP-S | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | XP-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | F-S | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | F-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HE | 336 | fit x GP | 7 | S-GP | 0/3258 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 1 | AP-XP | 3378/3378 | 0.00006370909 | 0.0000456251 to 0.00007629163 | 0.4218218 | 0.2626602 to 0.6526702 | 0 |  |
+| HX | 72 | fit x fit | 1 | AP-F | 3378/3378 | 0.03275481 | 0.02338875 to 0.04026873 | 1.491316 | 1.311499 to 1.642751 | 0 |  |
+| HX | 72 | fit x fit | 1 | AP-S | 3378/3378 | 8.639235e-8 | 3.329015e-8 to 1.509274e-7 | 0.2179629 | 0.1085458 to 0.3344935 | 0 |  |
+| HX | 72 | fit x fit | 1 | AP-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 1 | XP-F | 3378/3378 | 0.0326911 | 0.02333666 to 0.04018922 | 1.069494 | 0.8061235 to 1.264478 | 0 |  |
+| HX | 72 | fit x fit | 1 | XP-S | 3378/3378 | -0.0000636227 | -0.00007621581 to -0.00004552351 | -0.2038589 | -0.3108267 to -0.1060458 | 0 |  |
+| HX | 72 | fit x fit | 1 | XP-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 1 | F-S | 3378/3378 | -0.03275472 | -0.04026861 to -0.0233887 | -1.273353 | -1.391159 to -1.076768 | 0 |  |
+| HX | 72 | fit x fit | 1 | F-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 1 | S-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 2 | AP-XP | 3259/3259 | 0.00001851831 | 0.00001374728 to 0.00002509675 | 0.9225627 | 0.7734398 to 1.128178 | 0 |  |
+| HX | 72 | fit x fit | 2 | AP-F | 3259/3259 | 0.02581607 | 0.01884778 to 0.03542419 | 1.693978 | 1.446542 to 1.976195 | 0 |  |
+| HX | 72 | fit x fit | 2 | AP-S | 3259/3259 | 6.327169e-8 | 2.90786e-8 to 1.104182e-7 | 0.2613623 | 0.1431331 to 0.4243805 | 0 |  |
+| HX | 72 | fit x fit | 2 | AP-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 2 | XP-F | 3259/3259 | 0.02579756 | 0.01883403 to 0.03539909 | 0.7714156 | 0.6711145 to 0.8598195 | 0 |  |
+| HX | 72 | fit x fit | 2 | XP-S | 3259/3259 | -0.00001845504 | -0.00002498634 to -0.0000137182 | -0.6612004 | -0.7369383 to -0.5859544 | 0 |  |
+| HX | 72 | fit x fit | 2 | XP-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 2 | F-S | 3259/3259 | -0.02581601 | -0.03542408 to -0.01884775 | -1.432616 | -1.59467 to -1.259886 | 0 |  |
+| HX | 72 | fit x fit | 2 | F-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 2 | S-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 3 | AP-XP | 3351/3351 | 0.0000106124 | 0.000007287158 to 0.00001327062 | 0.8535391 | 0.782387 to 0.9523306 | 0 |  |
+| HX | 72 | fit x fit | 3 | AP-F | 3351/3351 | 0.02323423 | 0.01848214 to 0.02889657 | 1.728066 | 1.629866 to 1.864413 | 0 |  |
+| HX | 72 | fit x fit | 3 | AP-S | 3351/3351 | 3.182219e-8 | 1.400484e-8 to 4.871645e-8 | 0.3912134 | 0.3142343 to 0.475053 | 0 |  |
+| HX | 72 | fit x fit | 3 | AP-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 3 | XP-F | 3351/3351 | 0.02322362 | 0.01847449 to 0.02888714 | 0.8745273 | 0.8344193 to 0.916167 | 0 |  |
+| HX | 72 | fit x fit | 3 | XP-S | 3351/3351 | -0.00001058058 | -0.0000132555 to -0.000007239784 | -0.4623257 | -0.5161789 to -0.3893609 | 0 |  |
+| HX | 72 | fit x fit | 3 | XP-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 3 | F-S | 3351/3351 | -0.0232342 | -0.02889653 to -0.01848209 | -1.336853 | -1.392635 to -1.271527 | 0 |  |
+| HX | 72 | fit x fit | 3 | F-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 3 | S-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 4 | AP-XP | 3380/3380 | 0.000003494213 | 0.000002463584 to 0.00000448511 | -3.522189 | -4.690004 to -1.984877 | 0 |  |
+| HX | 72 | fit x fit | 4 | AP-F | 3380/3380 | 0.01019699 | 0.002724553 to 0.0194764 | -Infinity | -Infinity to -Infinity | 0 |  |
+| HX | 72 | fit x fit | 4 | AP-S | 3380/3380 | 1.432741e-8 | 4.374941e-9 to 2.517126e-8 | 0.3105452 | 0.2008775 to 0.4064415 | 0 |  |
+| HX | 72 | fit x fit | 4 | AP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 4 | XP-F | 3380/3380 | 0.01019349 | 0.00272106 to 0.01947205 | -Infinity | -Infinity to -Infinity | 0 |  |
+| HX | 72 | fit x fit | 4 | XP-S | 3380/3380 | -0.000003479886 | -0.000004471874 to -0.000002451615 | 3.832734 | 2.38378 to 4.890342 | 0 |  |
+| HX | 72 | fit x fit | 4 | XP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 4 | F-S | 3380/3380 | -0.01019697 | -0.01947637 to -0.002724547 | Infinity | Infinity to Infinity | 0 |  |
+| HX | 72 | fit x fit | 4 | F-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 4 | S-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 5 | AP-XP | 3307/3309 | 0.000002587442 | 0.00000183996 to 0.000003094743 | -3.416171 | -4.472083 to -1.640407 | 0 |  |
+| HX | 72 | fit x fit | 5 | AP-F | 3309/3309 | 0.007698542 | 0.001809794 to 0.01429775 | -Infinity | -Infinity to -Infinity | 0 |  |
+| HX | 72 | fit x fit | 5 | AP-S | 3309/3309 | 1.03026e-8 | 3.878436e-9 to 1.964814e-8 | 0.3274043 | 0.2093581 to 0.4618842 | 0 |  |
+| HX | 72 | fit x fit | 5 | AP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 5 | XP-F | 3307/3309 | 0.00770061 | 0.001806937 to 0.01430582 | -Infinity | -Infinity to -Infinity | 0 |  |
+| HX | 72 | fit x fit | 5 | XP-S | 3307/3309 | -0.000002577133 | -0.000003086395 to -0.000001826761 | 3.743773 | 2.023571 to 4.68976 | 0 |  |
+| HX | 72 | fit x fit | 5 | XP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 5 | F-S | 3309/3309 | -0.007698532 | -0.01429773 to -0.00180979 | Infinity | Infinity to Infinity | 0 |  |
+| HX | 72 | fit x fit | 5 | F-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 5 | S-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 7 | AP-XP | 3323/3323 | 0.000001173288 | 5.510184e-7 to 0.000001498341 | -0.397961 | -0.765799 to -0.03676779 | 0 |  |
+| HX | 72 | fit x fit | 7 | AP-F | 3323/3323 | 0.004017835 | 0.001017396 to 0.00752244 | -Infinity | -Infinity to -Infinity | 0 |  |
+| HX | 72 | fit x fit | 7 | AP-S | 3323/3323 | 2.752378e-9 | 1.162878e-9 to 4.497764e-9 | 0.2244993 | 0.1157321 to 0.3676666 | 0 |  |
+| HX | 72 | fit x fit | 7 | AP-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 7 | XP-F | 3323/3323 | 0.004016661 | 0.001015965 to 0.007521221 | -Infinity | -Infinity to -Infinity | 0 |  |
+| HX | 72 | fit x fit | 7 | XP-S | 3323/3323 | -0.000001170535 | -0.000001496073 to -5.474137e-7 | 0.6224603 | 0.351964 to 0.8783031 | 0 |  |
+| HX | 72 | fit x fit | 7 | XP-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 7 | F-S | 3323/3323 | -0.004017832 | -0.007522435 to -0.001017395 | Infinity | Infinity to Infinity | 0 |  |
+| HX | 72 | fit x fit | 7 | F-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x fit | 7 | S-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | AP-XP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | AP-F | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | AP-S | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | AP-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | XP-F | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | XP-S | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | XP-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | F-S | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | F-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 1 | S-GP | 0/3378 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | AP-XP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | AP-F | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | AP-S | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | AP-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | XP-F | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | XP-S | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | XP-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | F-S | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | F-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 2 | S-GP | 0/3259 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | AP-XP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | AP-F | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | AP-S | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | AP-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | XP-F | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | XP-S | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | XP-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | F-S | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | F-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 3 | S-GP | 0/3351 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | AP-XP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | AP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | AP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | AP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | XP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | XP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | XP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | F-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | F-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 4 | S-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | AP-XP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | AP-F | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | AP-S | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | AP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | XP-F | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | XP-S | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | XP-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | F-S | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | F-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 5 | S-GP | 0/3309 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | AP-XP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | AP-F | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | AP-S | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | AP-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | XP-F | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | XP-S | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | XP-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | F-S | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | F-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 72 | fit x GP | 7 | S-GP | 0/3323 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | AP-XP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | AP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | AP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | AP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | XP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | XP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | XP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | F-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | F-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 1 | S-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | AP-XP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | AP-F | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | AP-S | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | AP-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | XP-F | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | XP-S | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | XP-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | F-S | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | F-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 2 | S-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | AP-XP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | AP-F | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | AP-S | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | AP-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | XP-F | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | XP-S | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | XP-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | F-S | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | F-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 3 | S-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | AP-XP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | AP-F | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | AP-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | AP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | XP-F | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | XP-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | XP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | F-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | F-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 4 | S-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | AP-XP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | AP-F | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | AP-S | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | AP-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | XP-F | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | XP-S | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | XP-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | F-S | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | F-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 5 | S-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | AP-XP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | AP-F | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | AP-S | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | AP-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | XP-F | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | XP-S | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | XP-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | F-S | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | F-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x fit | 7 | S-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | AP-XP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | AP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | AP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | AP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | XP-F | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | XP-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | XP-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | F-S | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | F-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 1 | S-GP | 0/3380 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | AP-XP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | AP-F | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | AP-S | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | AP-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | XP-F | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | XP-S | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | XP-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | F-S | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | F-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 2 | S-GP | 0/3331 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | AP-XP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | AP-F | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | AP-S | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | AP-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | XP-F | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | XP-S | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | XP-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | F-S | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | F-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 3 | S-GP | 0/3243 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | AP-XP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | AP-F | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | AP-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | AP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | XP-F | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | XP-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | XP-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | F-S | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | F-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 4 | S-GP | 0/3329 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | AP-XP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | AP-F | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | AP-S | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | AP-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | XP-F | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | XP-S | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | XP-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | F-S | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | F-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 5 | S-GP | 0/3424 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | AP-XP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | AP-F | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | AP-S | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | AP-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | XP-F | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | XP-S | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | XP-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | F-S | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | F-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| HX | 168 | fit x GP | 7 | S-GP | 0/3293 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x fit | 1 | AP-XP | 3321/3373 | 0.00001574863 | 0.00001370971 to 0.00001850212 | 0.7370557 | 0.6705206 to 0.830829 | 0 |  |
+| P | 24 | fit x fit | 1 | AP-F | 3321/3373 | 0.004245573 | 0.003270997 to 0.005300198 | 1.117262 | 0.9097153 to 1.366315 | 0 |  |
+| P | 24 | fit x fit | 1 | AP-S | 3321/3373 | 0.00005830834 | 0.00004820588 to 0.00007515152 | 0.8045328 | 0.7201489 to 0.9273036 | 0 |  |
+| P | 24 | fit x fit | 1 | AP-GP | 3305/3373 | 0.000002341122 | 0.000001300978 to 0.00000333576 | 0.4898223 | 0.4287714 to 0.5589171 | 0 |  |
+| P | 24 | fit x fit | 1 | XP-F | 3321/3373 | 0.004229824 | 0.003257287 to 0.005281515 | 0.3802067 | 0.2261762 to 0.5434827 | 0 |  |
+| P | 24 | fit x fit | 1 | XP-S | 3321/3373 | 0.00004255971 | 0.00003356443 to 0.00005724373 | 0.06747716 | 0.04314535 to 0.09721172 | 0 |  |
+| P | 24 | fit x fit | 1 | XP-GP | 3305/3373 | -0.0000134251 | -0.00001552754 to -0.00001219584 | -0.2485894 | -0.2776171 to -0.2168598 | 0 |  |
+| P | 24 | fit x fit | 1 | F-S | 3321/3373 | -0.004187264 | -0.005169141 to -0.003220379 | -0.3127296 | -0.4705049 to -0.1649105 | 0 |  |
+| P | 24 | fit x fit | 1 | F-GP | 3305/3373 | -0.004240727 | -0.00532432 to -0.003257503 | -0.628828 | -0.819925 to -0.4680739 | 0 |  |
+| P | 24 | fit x fit | 1 | S-GP | 3305/3373 | -0.00005584537 | -0.00007236742 to -0.00004591782 | -0.3158096 | -0.3771262 to -0.2618232 | 0 |  |
+| P | 24 | fit x fit | 2 | AP-XP | 3252/3303 | 0.000007317683 | 0.00000643119 to 0.000008309085 | 0.8141825 | 0.7251941 to 0.9056682 | 0 |  |
+| P | 24 | fit x fit | 2 | AP-F | 3252/3303 | 0.001160701 | 0.0009905844 to 0.001446566 | 1.282605 | 1.151981 to 1.407497 | 0 |  |
+| P | 24 | fit x fit | 2 | AP-S | 3252/3303 | 0.00001570191 | 0.00001298581 to 0.00001846349 | 0.8303694 | 0.7438787 to 0.9192873 | 0 |  |
+| P | 24 | fit x fit | 2 | AP-GP | 3226/3303 | 3.902533e-7 | 1.038673e-7 to 6.784202e-7 | 0.3279668 | 0.2932108 to 0.3768632 | 0 |  |
+| P | 24 | fit x fit | 2 | XP-F | 3252/3303 | 0.001153383 | 0.0009833235 to 0.001439078 | 0.4684225 | 0.4185825 to 0.5136901 | 0 |  |
+| P | 24 | fit x fit | 2 | XP-S | 3252/3303 | 0.000008384225 | 0.000006258752 to 0.00001043836 | 0.01618695 | 0.007832716 to 0.02384904 | 0 |  |
+| P | 24 | fit x fit | 2 | XP-GP | 3226/3303 | -0.000006929494 | -0.000008011735 to -0.000005845795 | -0.4834224 | -0.5796316 to -0.3924075 | 0 |  |
+| P | 24 | fit x fit | 2 | F-S | 3252/3303 | -0.001144999 | -0.001429494 to -0.0009738649 | -0.4522356 | -0.5034277 to -0.3936196 | 0 |  |
+| P | 24 | fit x fit | 2 | F-GP | 3226/3303 | -0.001155751 | -0.001438499 to -0.0009898094 | -0.9488123 | -1.076867 to -0.8233512 | 0 |  |
+| P | 24 | fit x fit | 2 | S-GP | 3226/3303 | -0.00001531196 | -0.00001812758 to -0.00001268289 | -0.4992314 | -0.5998388 to -0.4089765 | 0 |  |
+| P | 24 | fit x fit | 3 | AP-XP | 3343/3393 | 0.000003488549 | 0.000003134901 to 0.000003884886 | 0.8201605 | 0.7463204 to 0.8924273 | 0 |  |
+| P | 24 | fit x fit | 3 | AP-F | 3343/3393 | 0.0004886433 | 0.0003738331 to 0.0006057428 | 1.287055 | 1.16929 to 1.422837 | 0 |  |
+| P | 24 | fit x fit | 3 | AP-S | 3343/3393 | 0.000006127422 | 0.000005732497 to 0.000006538993 | 0.8236348 | 0.7562559 to 0.889578 | 0 |  |
+| P | 24 | fit x fit | 3 | AP-GP | 3310/3393 | 1.122561e-7 | 2.327577e-8 to 2.034134e-7 | 0.1885548 | 0.118694 to 0.2736945 | 0 |  |
+| P | 24 | fit x fit | 3 | XP-F | 3343/3393 | 0.0004851548 | 0.0003706242 to 0.0006019691 | 0.4668945 | 0.4113253 to 0.5290221 | 0 |  |
+| P | 24 | fit x fit | 3 | XP-S | 3343/3393 | 0.000002638872 | 0.000001839547 to 0.000003335989 | 0.003474262 | -0.01019421 to 0.01267008 | 0 |  |
+| P | 24 | fit x fit | 3 | XP-GP | 3310/3393 | -0.000003401746 | -0.000003759489 to -0.000003101839 | -0.6353375 | -0.6790941 to -0.5933267 | 0 |  |
+| P | 24 | fit x fit | 3 | F-S | 3343/3393 | -0.0004825159 | -0.0005996583 to -0.0003676636 | -0.4634203 | -0.5372594 to -0.4031968 | 0 |  |
+| P | 24 | fit x fit | 3 | F-GP | 3310/3393 | -0.0004914223 | -0.0006093164 to -0.0003763435 | -1.103684 | -1.156713 to -1.049554 | 0 |  |
+| P | 24 | fit x fit | 3 | S-GP | 3310/3393 | -0.000006066441 | -0.000006480566 to -0.000005618111 | -0.6389955 | -0.684039 to -0.5912611 | 0 |  |
+| P | 24 | fit x fit | 4 | AP-XP | 3290/3339 | 0.000001950014 | 0.000001748271 to 0.000002255784 | 0.7688193 | 0.6990528 to 0.8473337 | 0 |  |
+| P | 24 | fit x fit | 4 | AP-F | 3290/3339 | 0.0002489913 | 0.0002076725 to 0.0003203595 | 1.070195 | 0.9424562 to 1.218583 | 0 |  |
+| P | 24 | fit x fit | 4 | AP-S | 3290/3339 | 0.000002756363 | 0.000002477206 to 0.00000312204 | 0.7711484 | 0.704934 to 0.8392647 | 0 |  |
+| P | 24 | fit x fit | 4 | AP-GP | 3248/3339 | 1.140545e-7 | 2.11567e-8 to 2.105941e-7 | 0.2371535 | 0.1811478 to 0.3110587 | 0 |  |
+| P | 24 | fit x fit | 4 | XP-F | 3290/3339 | 0.0002470412 | 0.0002059122 to 0.0003183411 | 0.3013759 | 0.1190212 to 0.4309681 | 0 |  |
+| P | 24 | fit x fit | 4 | XP-S | 3290/3339 | 8.063493e-7 | 6.102438e-7 to 9.827435e-7 | 0.00232913 | -0.008069077 to 0.0168342 | 0 |  |
+| P | 24 | fit x fit | 4 | XP-GP | 3248/3339 | -0.000001843101 | -0.000002211051 to -0.000001609288 | -0.5280386 | -0.6131999 to -0.4720043 | 0 |  |
+| P | 24 | fit x fit | 4 | F-S | 3290/3339 | -0.0002462349 | -0.0003175967 to -0.0002047879 | -0.2990467 | -0.4233137 to -0.1261629 | 0 |  |
+| P | 24 | fit x fit | 4 | F-GP | 3248/3339 | -0.0002495379 | -0.0003240723 to -0.0002079809 | -0.8260495 | -0.9211513 to -0.7250477 | 0 |  |
+| P | 24 | fit x fit | 4 | S-GP | 3248/3339 | -0.000002662777 | -0.000003100608 to -0.000002321702 | -0.5311185 | -0.6071861 to -0.475603 | 0 |  |
+| P | 24 | fit x fit | 5 | AP-XP | 3229/3267 | 0.000001039293 | 9.627365e-7 to 0.000001124321 | 0.8032613 | 0.7433165 to 0.8637792 | 0 |  |
+| P | 24 | fit x fit | 5 | AP-F | 3229/3267 | 0.0001054475 | 0.0000835405 to 0.0001279594 | 1.163862 | 1.093888 to 1.243781 | 0 |  |
+| P | 24 | fit x fit | 5 | AP-S | 3229/3267 | 0.000001209362 | 9.848062e-7 to 0.000001514057 | 0.8018582 | 0.7338361 to 0.8700429 | 0 |  |
+| P | 24 | fit x fit | 5 | AP-GP | 3192/3267 | 9.213664e-9 | 1.670896e-9 to 1.793824e-8 | 0.007904848 | -0.05170396 to 0.06761819 | 0 |  |
+| P | 24 | fit x fit | 5 | XP-F | 3229/3267 | 0.0001044082 | 0.00008161982 to 0.0001268436 | 0.3606005 | 0.3237741 to 0.409933 | 0 |  |
+| P | 24 | fit x fit | 5 | XP-S | 3229/3267 | 1.700682e-7 | 2.206971e-8 to 3.859411e-7 | -0.001403108 | -0.009220219 to 0.009976668 | 0 |  |
+| P | 24 | fit x fit | 5 | XP-GP | 3192/3267 | -0.000001041418 | -0.000001124232 to -9.712177e-7 | -0.8025537 | -0.8702354 to -0.7351615 | 0 |  |
+| P | 24 | fit x fit | 5 | F-S | 3229/3267 | -0.0001042381 | -0.0001265346 to -0.0000825376 | -0.3620036 | -0.4123838 to -0.3184491 | 0 |  |
+| P | 24 | fit x fit | 5 | F-GP | 3192/3267 | -0.0001065966 | -0.0001293845 to -0.00008282007 | -1.165917 | -1.233481 to -1.099984 | 0 |  |
+| P | 24 | fit x fit | 5 | S-GP | 3192/3267 | -0.000001213908 | -0.000001501398 to -0.000001000556 | -0.8014492 | -0.8687334 to -0.7290328 | 0 |  |
+| P | 24 | fit x fit | 7 | AP-XP | 3277/3325 | 4.304623e-7 | 3.399002e-7 to 5.187727e-7 | 0.7849914 | 0.7012424 to 0.8686762 | 0 |  |
+| P | 24 | fit x fit | 7 | AP-F | 3277/3325 | 0.0000433479 | 0.00002871379 to 0.00006029668 | 1.106987 | 0.9448289 to 1.260862 | 0 |  |
+| P | 24 | fit x fit | 7 | AP-S | 3277/3325 | 4.536914e-7 | 3.765612e-7 to 5.280657e-7 | 0.7694754 | 0.6924581 to 0.8445435 | 0 |  |
+| P | 24 | fit x fit | 7 | AP-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x fit | 7 | XP-F | 3277/3325 | 0.00004291743 | 0.00002837389 to 0.00005979564 | 0.3219956 | 0.219885 to 0.403219 | 0 |  |
+| P | 24 | fit x fit | 7 | XP-S | 3277/3325 | 2.322902e-8 | -4.528161e-8 to 8.181878e-8 | -0.01551599 | -0.02590646 to -0.006873899 | 0 |  |
+| P | 24 | fit x fit | 7 | XP-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x fit | 7 | F-S | 3277/3325 | -0.0000428942 | -0.00005986854 to -0.00002830873 | -0.3375115 | -0.4281398 to -0.225099 | 0 |  |
+| P | 24 | fit x fit | 7 | F-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x fit | 7 | S-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 1 | AP-XP | 3326/3373 | 0.000004536453 | 0.000004164024 to 0.000004987785 | 0.4895414 | 0.4538989 to 0.5467935 | 0 |  |
+| P | 24 | fit x GP | 1 | AP-F | 3326/3373 | 0.00000824097 | 0.000007700839 to 0.000008814744 | 0.526399 | 0.4896527 to 0.5866495 | 0 |  |
+| P | 24 | fit x GP | 1 | AP-S | 3326/3373 | 0.000006716187 | 0.00000590639 to 0.000007546593 | 0.5141125 | 0.4748536 to 0.5759863 | 0 |  |
+| P | 24 | fit x GP | 1 | AP-GP | 3320/3373 | 0.000002318085 | 0.000001285803 to 0.000003344785 | 0.4221073 | 0.3662352 to 0.4835144 | 0 |  |
+| P | 24 | fit x GP | 1 | XP-F | 3326/3373 | 0.000003704517 | 0.000003433456 to 0.000004007249 | 0.03685759 | 0.03346432 to 0.0402775 | 0 |  |
+| P | 24 | fit x GP | 1 | XP-S | 3326/3373 | 0.000002179734 | 0.000001595445 to 0.000002595746 | 0.02457108 | 0.01987743 to 0.02845657 | 0 |  |
+| P | 24 | fit x GP | 1 | XP-GP | 3320/3373 | -0.000002226567 | -0.000003132952 to -0.000001347215 | -0.06831881 | -0.09907799 to -0.03590078 | 0 |  |
+| P | 24 | fit x GP | 1 | F-S | 3326/3373 | -0.000001524783 | -0.000002110228 to -9.682494e-7 | -0.01228652 | -0.01475686 to -0.009789716 | 0 |  |
+| P | 24 | fit x GP | 1 | F-GP | 3320/3373 | -0.00000593778 | -0.000007127939 to -0.000004935185 | -0.105243 | -0.1380804 to -0.06963189 | 0 |  |
+| P | 24 | fit x GP | 1 | S-GP | 3320/3373 | -0.00000441024 | -0.000005457684 to -0.000003016724 | -0.0929343 | -0.1255418 to -0.05542621 | 0 |  |
+| P | 24 | fit x GP | 2 | AP-XP | 3261/3303 | 0.00000162231 | 0.00000107056 to 0.000002263496 | 0.4278376 | 0.3590783 to 0.5015963 | 0 |  |
+| P | 24 | fit x GP | 2 | AP-F | 3261/3303 | 0.000002598744 | 0.000001742752 to 0.000003560758 | 0.4488056 | 0.3748691 to 0.5277898 | 0 |  |
+| P | 24 | fit x GP | 2 | AP-S | 3261/3303 | 0.000001982317 | 0.000001299843 to 0.000002777978 | 0.4345838 | 0.3634369 to 0.5117802 | 0 |  |
+| P | 24 | fit x GP | 2 | AP-GP | 3247/3303 | 3.847233e-7 | 9.967733e-8 to 6.725924e-7 | 0.2660602 | 0.229578 to 0.3170164 | 0 |  |
+| P | 24 | fit x GP | 2 | XP-F | 3261/3303 | 9.764342e-7 | 6.72192e-7 to 0.000001324226 | 0.02096807 | 0.01579083 to 0.02612051 | 0 |  |
+| P | 24 | fit x GP | 2 | XP-S | 3261/3303 | 3.600069e-7 | 2.292837e-7 to 5.144823e-7 | 0.006746218 | 0.004121575 to 0.009755238 | 0 |  |
+| P | 24 | fit x GP | 2 | XP-GP | 3247/3303 | -0.000001244389 | -0.00000209263 to -4.546607e-7 | -0.162125 | -0.2574418 to -0.06586418 | 0 |  |
+| P | 24 | fit x GP | 2 | F-S | 3261/3303 | -6.164272e-7 | -8.036497e-7 to -4.429082e-7 | -0.01422185 | -0.01784542 to -0.01088865 | 0 |  |
+| P | 24 | fit x GP | 2 | F-GP | 3247/3303 | -0.000002225033 | -0.000003435664 to -0.000001161887 | -0.1831807 | -0.2833514 to -0.08201794 | 0 |  |
+| P | 24 | fit x GP | 2 | S-GP | 3247/3303 | -0.000001605947 | -0.000002629533 to -7.132866e-7 | -0.1688985 | -0.2664038 to -0.07103684 | 0 |  |
+| P | 24 | fit x GP | 3 | AP-XP | 3341/3393 | 4.946833e-7 | 3.918713e-7 to 5.944036e-7 | 0.3263183 | 0.2748719 to 0.3731488 | 0 |  |
+| P | 24 | fit x GP | 3 | AP-F | 3341/3393 | 6.51188e-7 | 5.191392e-7 to 7.792659e-7 | 0.3378974 | 0.2849077 to 0.3855985 | 0 |  |
+| P | 24 | fit x GP | 3 | AP-S | 3341/3393 | 5.373604e-7 | 4.166165e-7 to 6.544735e-7 | 0.327795 | 0.2784445 to 0.3760764 | 0 |  |
+| P | 24 | fit x GP | 3 | AP-GP | 3330/3393 | 1.107709e-7 | 2.226917e-8 to 2.016427e-7 | 0.1479397 | 0.07688726 to 0.2322905 | 0 |  |
+| P | 24 | fit x GP | 3 | XP-F | 3341/3393 | 1.565047e-7 | 1.272679e-7 to 1.909251e-7 | 0.01157909 | 0.009678424 to 0.01332893 | 0 |  |
+| P | 24 | fit x GP | 3 | XP-S | 3341/3393 | 4.267716e-8 | 1.905459e-8 to 6.094066e-8 | 0.001476698 | -0.0002777342 to 0.002906541 | 0 |  |
+| P | 24 | fit x GP | 3 | XP-GP | 3330/3393 | -3.855389e-7 | -5.610738e-7 to -2.053032e-7 | -0.1790839 | -0.2827566 to -0.08226522 | 0 |  |
+| P | 24 | fit x GP | 3 | F-S | 3341/3393 | -1.138276e-7 | -1.362996e-7 to -9.168882e-8 | -0.01010239 | -0.01214682 to -0.008128825 | 0 |  |
+| P | 24 | fit x GP | 3 | F-GP | 3330/3393 | -5.425606e-7 | -7.457736e-7 to -3.374367e-7 | -0.1907006 | -0.2958243 to -0.09248455 | 0 |  |
+| P | 24 | fit x GP | 3 | S-GP | 3330/3393 | -4.283571e-7 | -6.215866e-7 to -2.299528e-7 | -0.1805654 | -0.2857355 to -0.08257932 | 0 |  |
+| P | 24 | fit x GP | 4 | AP-XP | 3280/3339 | 5.126663e-7 | 3.459558e-7 to 7.181822e-7 | 0.3695845 | 0.3199524 to 0.4444897 | 0 |  |
+| P | 24 | fit x GP | 4 | AP-F | 3280/3339 | 7.589265e-7 | 5.242083e-7 to 0.0000010833 | 0.38396 | 0.3344939 to 0.4566232 | 0 |  |
+| P | 24 | fit x GP | 4 | AP-S | 3280/3339 | 5.376022e-7 | 3.6164e-7 to 7.374775e-7 | 0.3699737 | 0.3218401 to 0.4448868 | 0 |  |
+| P | 24 | fit x GP | 4 | AP-GP | 3262/3339 | 1.174031e-7 | 2.038945e-8 to 2.143642e-7 | 0.1905148 | 0.1325493 to 0.2651537 | 0 |  |
+| P | 24 | fit x GP | 4 | XP-F | 3280/3339 | 2.462602e-7 | 1.64466e-7 to 3.723638e-7 | 0.01437548 | 0.01222902 to 0.0169366 | 0 |  |
+| P | 24 | fit x GP | 4 | XP-S | 3280/3339 | 2.493588e-8 | 1.117864e-8 to 4.023052e-8 | 0.0003892083 | -0.000771688 to 0.001245375 | 0 |  |
+| P | 24 | fit x GP | 4 | XP-GP | 3262/3339 | -3.96311e-7 | -6.681938e-7 to -1.584418e-7 | -0.1786386 | -0.285401 to -0.07679075 | 0 |  |
+| P | 24 | fit x GP | 4 | F-S | 3280/3339 | -2.213243e-7 | -3.519901e-7 to -1.402681e-7 | -0.01398627 | -0.01677496 to -0.01108659 | 0 |  |
+| P | 24 | fit x GP | 4 | F-GP | 3262/3339 | -6.428227e-7 | -0.000001048266 to -3.364515e-7 | -0.1929402 | -0.3176094 to -0.09061515 | 0 |  |
+| P | 24 | fit x GP | 4 | S-GP | 3262/3339 | -4.216049e-7 | -7.219417e-7 to -1.747282e-7 | -0.1790711 | -0.3018993 to -0.07702264 | 0 |  |
+| P | 24 | fit x GP | 5 | AP-XP | 3239/3267 | 6.034012e-8 | 3.640977e-8 to 8.014576e-8 | 0.2538366 | 0.1719576 to 0.3181837 | 0 |  |
+| P | 24 | fit x GP | 5 | AP-F | 3239/3267 | 6.970991e-8 | 4.234645e-8 to 9.200498e-8 | 0.2603596 | 0.1758521 to 0.3267169 | 0 |  |
+| P | 24 | fit x GP | 5 | AP-S | 3239/3267 | 6.071245e-8 | 3.620874e-8 to 8.110221e-8 | 0.2537463 | 0.1670727 to 0.3184025 | 0 |  |
+| P | 24 | fit x GP | 5 | AP-GP | 3209/3267 | 9.139677e-9 | 1.615649e-9 to 1.705338e-8 | 0.02259113 | -0.04492041 to 0.0918663 | 0 |  |
+| P | 24 | fit x GP | 5 | XP-F | 3239/3267 | 9.369785e-9 | 5.47364e-9 to 1.185922e-8 | 0.006523049 | 0.00399695 to 0.008533127 | 0 |  |
+| P | 24 | fit x GP | 5 | XP-S | 3239/3267 | 3.723279e-10 | -2.420527e-10 to 1.012367e-9 | -0.00009022208 | -0.0005372187 to 0.0003035839 | 0 |  |
+| P | 24 | fit x GP | 5 | XP-GP | 3209/3267 | -5.176455e-8 | -7.18135e-8 to -2.556757e-8 | -0.2336185 | -0.3540844 to -0.1058741 | 0 |  |
+| P | 24 | fit x GP | 5 | F-S | 3239/3267 | -8.997457e-9 | -1.091873e-8 to -5.773016e-9 | -0.006613271 | -0.008315209 to -0.004459089 | 0 |  |
+| P | 24 | fit x GP | 5 | F-GP | 3209/3267 | -6.122193e-8 | -8.350153e-8 to -3.182073e-8 | -0.2402025 | -0.3623577 to -0.1096247 | 0 |  |
+| P | 24 | fit x GP | 5 | S-GP | 3209/3267 | -5.214036e-8 | -7.25828e-8 to -2.522338e-8 | -0.2335274 | -0.354207 to -0.1053105 | 0 |  |
+| P | 24 | fit x GP | 7 | AP-XP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | AP-F | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | AP-S | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | AP-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | XP-F | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | XP-S | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | XP-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | F-S | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | F-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+| P | 24 | fit x GP | 7 | S-GP | 0/3325 | unmeasured | unmeasured | unmeasured | unmeasured | 0 |  |
+
+C3-small: 15243 arm-days adapted; 6811 have no cutoff-available history and use the specified u=0 penalty solution; 7149 use the frozen class chi-square median. Forecast covariance excludes reference measurement variance.
+
+
+Synthetic AP, XP and F errors come from the module states returned with carried covariance/STM on the endpoint/noise grid. The nominal forecast table uses its original state-only grid. Both start from the same saved fit; their numerical endpoint differences are measured below. Encounter scoring uses each carried state with its own covariance.
+
+| Arm | Compared endpoint scalars | Different | Maximum absolute difference m | Missing reference scalars |
+|---|---:|---:|---:|---:|
+| AP | 89721 | 89721 | 63.61107 | 0 |
+| XP | 89721 | 89721 | 63.61128 | 0 |
+| S | 88518 | 0 | 0 | 0 |
+| F | 89721 | 89721 | 28.06758 | 0 |
+
+Endpoint-request differences by group, maximum over all six leads (m). These describe the synthetic carried-state requests, not a tolerance change to nominal forecast replay.
+
+| Group | Arm | Compared scalars | Different | Maximum absolute difference m |
+|---|---|---:|---:|---:|
+| LS | AP | 1815 | 1815 | 2.03887 |
+| LS | XP | 1815 | 1815 | 2.038917 |
+| LS | S | 1815 | 0 | 0 |
+| DO | AP | 4296 | 4296 | 1.976617 |
+| DO | XP | 4296 | 4296 | 1.976606 |
+| DO | S | 4296 | 0 | 0 |
+| GD | AP | 771 | 771 | 6.411926 |
+| GD | XP | 771 | 771 | 6.411924 |
+| GD | S | 771 | 0 | 0 |
+| IG | AP | 1074 | 1074 | 9.256842 |
+| IG | XP | 1074 | 1074 | 9.256835 |
+| IG | S | 876 | 0 | 0 |
+| GE | AP | 576 | 576 | 11.63086 |
+| GE | XP | 576 | 576 | 11.63086 |
+| GE | S | 576 | 0 | 0 |
+| HE | AP | 252 | 252 | 63.61107 |
+| HE | XP | 252 | 252 | 63.61128 |
+| HE | S | 252 | 0 | 0 |
+| HX | AP | 468 | 468 | 14.45704 |
+| HX | XP | 468 | 468 | 14.45707 |
+| HX | S | 468 | 0 | 0 |
+| LS | F | 1815 | 1815 | 5.024252 |
+| DO | F | 4296 | 4296 | 7.68072 |
+| GD | F | 771 | 771 | 8.470424 |
+| IG | F | 1074 | 1074 | 0.00005696817 |
+| GE | F | 576 | 576 | 0.0009384697 |
+| HE | F | 252 | 252 | 0.000009279058 |
+| HX | F | 468 | 468 | 26.24561 |
+| P | AP | 27000 | 27000 | 1.943403 |
+| P | XP | 27000 | 27000 | 1.943751 |
+| P | S | 27000 | 0 | 0 |
+| S1 | AP | 9585 | 9585 | 1.988691 |
+| S1 | XP | 9585 | 9585 | 1.988641 |
+| S1 | S | 9585 | 0 | 0 |
+| GN | AP | 26892 | 26892 | 6.874165 |
+| GN | XP | 26892 | 26892 | 6.874163 |
+| GN | S | 25887 | 0 | 0 |
+| P | F | 27000 | 27000 | 26.33328 |
+| S1 | F | 9585 | 9585 | 10.24569 |
+| GN | F | 26892 | 26892 | 0.002906159 |
+| T | AP | 16992 | 16992 | 1.903684 |
+| T | XP | 16992 | 16992 | 1.903651 |
+| T | S | 16992 | 0 | 0 |
+| T | F | 16992 | 16992 | 28.06758 |
+
+Carried-covariance coverage by group. Fit arm-days include AP, XP, F and S at every registered arc; GP arm-days count each public-set forecast once. Exclusions are separate from missing work.
+
+| Group | Carried / expected windows | GP / expected windows | Fit scored / expected arm-days | Fit excluded / missing | GP scored / expected arm-days | GP excluded / missing |
+|---|---:|---:|---:|---:|---:|---:|
+| LS | 75/75 | 75/75 | 2420/3600 | 1180/0 | 298/450 | 152/0 |
+| DO | 150/150 | 150/150 | 5728/7200 | 1472/0 | 611/900 | 289/0 |
+| GD | 44/44 | 44/44 | 1028/1056 | 28/0 | 141/264 | 123/0 |
+| IG | 60/60 | 60/60 | 1366/1440 | 74/0 | 265/360 | 95/0 |
+| GE | 45/45 | 45/45 | 768/1080 | 312/0 | 209/270 | 61/0 |
+| HE | 7/7 | 7/7 | 336/336 | 0/0 | 0/42 | 42/0 |
+| HX | 19/19 | 19/19 | 624/624 | 0/0 | 0/114 | 114/0 |
+| P | 755/755 | 755/755 | 36000/36240 | 240/0 | 3750/4530 | 780/0 |
+| S1 | 302/302 | 302/302 | 12780/14496 | 1716/0 | 1444/1812 | 368/0 |
+| GN | 755/755 | 755/755 | 35521/36240 | 719/0 | 3527/4530 | 1003/0 |
+| T | 944/944 | 944/944 | 22656/22656 | 0/0 | 4706/5664 | 958/0 |

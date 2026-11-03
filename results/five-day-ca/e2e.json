@@ -1,6 +1,6 @@
 {
-  "verdict": "FAIL",
-  "testedCommit": "66a6fb002d1f6d5cf7301bb477aaced8cf71de8c",
+  "verdict": "PASS",
+  "testedCommit": "ea289f2200f71d62eb0cb98e45d9823b30667455",
   "replayedScalars": 120,
   "replayDifferences": 0,
   "replayMaxAbsKm": 0,
@@ -37,7 +37,8 @@
       "toleranceKm": 0
     }
   },
-  "productReplayScalars": 165868,
+  "productReplayScalars": 357280,
+  "expectedProductReplayScalars": 357280,
   "productReplayDifferences": 0,
   "oldLeadScalars": 398392,
   "oldLeadDifferences": 0,
@@ -48,14 +49,42 @@
   "scoredArmDays": 149134,
   "excludedArmDays": 7076,
   "registrationManifests": 144,
-  "syntheticCells": 0,
-  "syntheticEncounters": 0,
-  "syntheticPcFailures": 0,
-  "syntheticPairedCells": 0,
-  "syntheticReplayScalars": 0,
+  "syntheticCells": 1080,
+  "syntheticEncounters": 2064413,
+  "syntheticPcFailures": 29,
+  "syntheticPairedCells": 2160,
+  "syntheticReplayScalars": 5,
   "syntheticReplayMaxAbs": 0,
-  "adaptedArmDays": 0,
-  "availableHistoryArmDays": 0,
+  "carriedEndpointComparison": {
+    "AP": {
+      "scalars": 89721,
+      "different": 89721,
+      "maxAbsM": 63.61106731162925,
+      "missing": 0
+    },
+    "XP": {
+      "scalars": 89721,
+      "different": 89721,
+      "maxAbsM": 63.61128404971555,
+      "missing": 0
+    },
+    "S": {
+      "scalars": 88518,
+      "different": 0,
+      "maxAbsM": 0,
+      "missing": 0
+    },
+    "F": {
+      "scalars": 89721,
+      "different": 89721,
+      "maxAbsM": 28.067584351520054,
+      "missing": 0
+    }
+  },
+  "adaptedArmDays": 15243,
+  "availableHistoryArmDays": 8432,
+  "commonAxesReplayScalars": 27,
+  "commonAxesReplayMaxAbs": 0,
   "statisticalCells": 540,
   "pairedCells": 108,
   "reachCells": 6480,
@@ -64,8 +93,5 @@
   "pcOracleAbsoluteError": 2.220446049250313e-16,
   "bootstrapReferenceScalars": 6,
   "bootstrapReferenceMaxAbs": 0,
-  "failures": [
-    "covariance.json unmeasured",
-    "encounters.json unmeasured"
-  ]
+  "failures": []
 }
