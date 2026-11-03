@@ -22,6 +22,7 @@ export async function openPc(){
   const p=C.CQR.getRootAsCQR(new fb.ByteBuffer(new Uint8Array(r.outputs[0].payload))).unpack().PROBABILITY_RESULT;
   const value=maximum?p.MAXIMUM_PROBABILITY:p.PROBABILITY;
   if(!p.CONVERGED||!Number.isFinite(value))throw Error('Pc did not converge');
+  if(value<0||value>1)throw Error('Pc outside probability bounds');
   return value;
  }};
 }
