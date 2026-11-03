@@ -302,3 +302,7 @@ Candidate: short-arc prior constants. Use the tested Space Force wrapper prior c
 - Unique causes and measured module gains are not established for every gap; follow-up tasks remain coordinator drafts.
 
 DO labels: {"event":0,"quiet":78,"unknown":72}. Historical interrupted LS rows are excluded from aggregates. The initial mixed frame batch used the wrong weather store for GN; its failed attempt is retained, and resume-frame-gn is the corrected GN frame comparison. Optional NO_SUN, NO_MOON, O12 and O31 arms cover the initial FFM prefix only. Four identical FFM scheduling repeats are preserved but counted once. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.
+
+## E2E
+
+Verdict: FAIL on committed f33a3334a7ee7310f3ecd8873f3323cafa1b91ac. Forward day-3 errors 18.112 and 18.112 m; repeat difference 0.000 m against 0.001 m. Excluded rows 0 of 7569; maximum fixed AGOM 0 across 2247 fits; rebuilt control maximum state difference 0.000 m. Methods complete 3/5. Numeric checks passed; full coverage failed. No gauntlet run, receipt, or main push.
