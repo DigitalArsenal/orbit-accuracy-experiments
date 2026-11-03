@@ -12,7 +12,7 @@ noise coefficients with the shipped AP 0.4.1 table from modules commit
 using the OMM's module-issued SDNAP_COV_REGIME; preserve its noise start epoch.
 The original module carries that covariance with its original forces and
 weather. Label AP UNVERIFIED. XP uses its own carried covariance multiplied
-by C2 fairness k_e, plus the frozen diagonal RTN floors: R1 for perigee below
+by C2 fairness k_e, plus the frozen diagonal RTN floors: R1 for the module altitude band below
 600 km, LP elsewhere (LP is the frozen M0 fairness arm). Label transfers.
 
 FFM uses its saved fit posterior, scaled by max(1, reduced chi-square), and
@@ -44,6 +44,10 @@ covariance, and absent truth are counted exclusions, not zero Pc.
 Report missed and false alerts with both event and conditional denominators,
 Brier and un-clipped log loss by day, every arm and every pair of arms.
 Paired score differences use identical draws. Bootstrap 10,000 times over
-primary-window ISO-week clusters, preserving paired scores; state that this
-interval does not model additional dependence through secondary windows.
+primary-object clusters as A13, preserving paired scores; state that this
+interval does not model additional dependence through secondary objects.
 This artificial encounter population cannot establish operational rates.
+
+C2 defines its original classes by perigee. Applying them by the available
+GP altitude bands here is a labeled transfer, not a new calibration or a
+claim that C2 validated these groups, fits, or seven-day leads.
