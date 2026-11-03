@@ -1,0 +1,22 @@
+{
+  "complete": true,
+  "days": [
+    {
+      "day": 1,
+      "n": 26,
+      "maxDifferenceM": 0
+    },
+    {
+      "day": 3,
+      "n": 26,
+      "maxDifferenceM": 0
+    },
+    {
+      "day": 7,
+      "n": 26,
+      "maxDifferenceM": 0
+    }
+  ],
+  "toleranceM": 0.001,
+  "passed": true
+}

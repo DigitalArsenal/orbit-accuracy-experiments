@@ -1,0 +1,56 @@
+{
+  "windows": 755,
+  "rowErrors": {
+    "no RSGA issued in the 72 h before the cutoff": 5
+  },
+  "files": [
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-0.jsonl",
+      "sha256": "1ada80f4c7eebffea6fd94cd851e8fbe10670c3d0aa66491e63520f3a64c991b"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-1.jsonl",
+      "sha256": "c44055d57177e19a5a810849f5a1164c1b99a789558d28c1b34d399f4af94b38"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-10.jsonl",
+      "sha256": "e10ccc6634c3d7cca416b2f4b1f3dad8a8119f6020811952e20e15b041c7f01f"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-11.jsonl",
+      "sha256": "34f3d10fd84159e2faf32fd493d52b636ec47d7643abd2b134c7af523480db22"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-2.jsonl",
+      "sha256": "dba065e397c37d808a32dd7a5845a902132da23030ed66b4dd086c2cc1075e4b"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-3.jsonl",
+      "sha256": "ff0d3f0e70956850a0a06f7cd63779a547c62f78cbc0ad7567f58e737418eaa6"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-4.jsonl",
+      "sha256": "71775147bcf5fe0a51e338043b7f29eb7d1474989c139e064dc1bf5694e3cea8"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-5.jsonl",
+      "sha256": "146c3ff590fd1d904e5b5413c4b466ac07059a2810da796820236ebc3112b8b9"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-6.jsonl",
+      "sha256": "5504bdb36493a5499f89e7f0d4fe0b72a97dbe9294f31e9e166f70aaf8fd4370"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-7.jsonl",
+      "sha256": "51cc72a006c26d02d75608da6788d52cadd691839b14d620edae232e7e5f0200"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-8.jsonl",
+      "sha256": "cbb2c9bee3b2b1d61c7bc3d40de4c0b38cf37efdeac79a4512b59863a2f2583f"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame-gn/rows-9.jsonl",
+      "sha256": "4c247d4b1128bb4cf60f330486c6903422fc563f1c9ce7664487e0b15d5d166d"
+    }
+  ]
+}

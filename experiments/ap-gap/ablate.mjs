@@ -1,3 +1,5 @@
+import {openFfmHost} from './lib/ffm-host.mjs';
+import { writeAudit, pinFile } from './audit.mjs';
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
 //   node experiments/operator-theory/all-regimes.mjs --wasm <AP 0.4.0> --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
 import fs from 'node:fs';
@@ -8,14 +10,15 @@ import { config, root, HOUR, DAY, iso, ms, rms, XM } from '../xp2-fit-design/com
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { apForces, openAp } from '../operator-theory/lib/ap.mjs';
-import { openUssfXp } from '../operator-theory/lib/ussf-xp.mjs';
-import { openFfmHost, openAxes, apriori } from '../operator-theory/lib/host.mjs';
+import { openUssfXp } from './ussf-xp.mjs';
+import { openAxes, apriori } from '../operator-theory/lib/host.mjs';
 import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operator-theory/lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
+if(args.verification==='true'&&!args.key)throw new Error('verification requires one registered window key');
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
-throw new Error('AP-gap run blocked: held Galileo files were decoded by the inherited MGEX selector; coordinator disposition required (results/ap-gap/README.md)');
 const frozen = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url))); if (!frozen.frozen) throw new Error('registration is not frozen');
+const resume = JSON.parse(fs.readFileSync(new URL('./resume-config.json',import.meta.url))); if (!resume.frozen) throw new Error('resume registration is not frozen');
 const hash = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 if (args.wasm === frozen.baselineWasm && hash(args.wasm) !== frozen.baselineSha256) throw new Error('AP build mismatch');
 const OUT = args.out, GROUPS = (args.groups ?? 'LS,DO,GD,IG,GE,HE').split(',');
@@ -25,7 +28,18 @@ const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
 // --arms U: the Space Force's SGP4-XP alone, in its own store. Without it, this file's registered arms, unchanged.
+const skipKeys = new Set(args['skip-keys'] ? JSON.parse(fs.readFileSync(args['skip-keys'])) : []);
 const ONLY_U = false; const method = args.method ?? 'ap';
+const U = method === 'gn' ? await openUssfXp() : null;
+const UF = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed']) : null;
+const UR = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed'].replace('/FIXED/','/CONTROL/')) : null;
+const AF = method === 'gn' && args['ap-fixed'] ? await openAp(args['ap-fixed']) : null;
+const isolated = {};
+if(args['isolated-ffm']) {
+ const builds=JSON.parse(fs.readFileSync(args['isolated-ffm']));
+ if(builds.CONTROL.sha256!=='c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2'||hash(builds.CONTROL.path)!==builds.CONTROL.sha256)throw new Error('FFM rebuild mismatch');
+ for(const name of ['NO_SHADOW','ZONAL20']){if(hash(builds[name].path)!==builds[name].sha256)throw new Error('FFM variant mismatch');isolated[name]=await openFfmHost(builds[name].path);}
+}
 const m = await openModules(), A = await openAp(args.wasm), F = method === 'ffm' ? await openFfmHost() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ATM = XM.config.arms.X2.forces;
@@ -44,7 +58,9 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}.json`), JSON.stringify({ command: process.argv, created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, skipKeysSha256: args['skip-keys'] ? hash(args['skip-keys']) : undefined, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), resume: hash(new URL('./resume-config.json',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, isolatedFfm: Object.fromEntries(Object.entries(isolated).map(([k,v])=>[k,v.provenance])), ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
+process.on('exit', () => writeAudit(OUT, SHARD));
+process.on('SIGTERM',()=>process.exit(143));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
 
@@ -59,7 +75,7 @@ async function spkOnGrid(lines, axes) {
 
 // Reject held objects by filename before opening any OEM bytes.
 function safeMgex({ klass }) {
-  const held = new Set([43567,37847,41862,41174,43055,41175]);
+  const held = new Set(frozen.EXCLUDE_NORADS);
   const base = '/opt/data/sdn-archive/e14-covariance-realism/reference';
   const dirs = Array.from({length:20},(_,k)=>`GFZ0MGXRAP_2025${274+k}0000_01D_05M_ORB`).filter(d=>fs.existsSync(path.join(base,d)));
   if (!dirs.length) return [];
@@ -71,7 +87,14 @@ function safeMgex({ klass }) {
 
 async function objects() {
   const out = [];
-  for (const o of STATIC.filter((x) => GROUPS.includes(x.group))) {
+  if (GROUPS.includes('GN')) {
+    const cutoffs=XM.daysOf(XM.config.period.from,XM.config.period.to);
+    for (const o of XM.config.groups.GN.objects) {
+      if(frozen.EXCLUDE_NORADS.includes(o.norad)) throw new Error('excluded GN object');
+      out.push({...o,group:'GN',objectId:'',lines:T.series(o,cutoffs[0]-3*DAY,cutoffs.at(-1)+7*DAY).lines,cutoffs,arcs:method==='gn'?[24]:[72]});
+    }
+  }
+  for (const o of STATIC.filter((x) => GROUPS.includes(x.group)).sort((a,b)=>GROUPS.indexOf(a.group)-GROUPS.indexOf(b.group))) {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);
@@ -92,6 +115,7 @@ async function objects() {
   if (GROUPS.includes('HE') && TESS.cutoffs.some((t) => inShard(windowKey('HE', TESS.name, t)))) {
     const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
     const files = fs.readdirSync(TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(TESS.dir, f));
+    for (const file of files) await pinFile(file);
     const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files, source: 'ap6-heo', id: 'TESS (-95)', name: TESS.name, norad: TESS.norad, fromUtc: TESS.from, toUtc: TESS.to, stride: 1 });
     const axes = await openAxes();
     out.push({ group: 'HE', name: TESS.name, norad: TESS.norad, objectId: TESS.objectId, lines: await spkOnGrid(s.lines, axes), arcs: TESS.arcs, cutoffs: TESS.cutoffs, vacuum: true });
@@ -103,12 +127,14 @@ async function objects() {
     const axes = await openAxes();
     for (const h of HX) {
       if (!h.cutoffs.some((t) => inShard(windowKey('HX', h.name, t)))) continue;
+      await pinFile(h.file);
       const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files: [h.file], source: 'ap6-heo', id: h.id, name: h.name, norad: h.norad, fromUtc: h.from, toUtc: h.to, stride: 1 });
       out.push({ group: 'HX', name: h.name, norad: h.norad, objectId: h.objectId, lines: await spkOnGrid(s.lines, axes), arcs: h.arcs, cutoffs: h.cutoffs, vacuum: true });
     }
     await axes.close();
   }
-  return out;
+  for (const o of out) if (frozen.EXCLUDE_NORADS.includes(Number(o.norad)) || /STARLINK/i.test(o.name)) throw new Error('excluded object');
+  return out.sort((a,b)=>GROUPS.indexOf(a.group)-GROUPS.indexOf(b.group));
 }
 
 for (const o of await objects()) {
@@ -120,7 +146,8 @@ for (const o of await objects()) {
   const between = (a, b) => { const out = []; for (let i = 0; i < times.length; i += 1) if (times[i] >= a && times[i] <= b) out.push(o.lines[i]); return out; };
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0);
-    if (!inShard(key) || done.has(key) || (args.key && key !== args.key)) continue;
+    if (args.verification !== 'true' && Date.now() >= Date.parse(resume.deadline)) { await F?.close(); process.exit(0); }
+    if (!inShard(key) || done.has(key) || skipKeys.has(key) || (args.key && key !== args.key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
       const after = between(D0 + 1, D0 + 7 * DAY);
@@ -142,8 +169,9 @@ for (const o of await objects()) {
       const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
+      if(method==='ffm')row.ffmGravityDegree=high?20:40;
       const pcfAp = o.vacuum ? PCF_AP_VACUUM : PCF_AP;
-      for (const hours of o.arcs) {
+      for (const hours of (method === 'ffm' || args['primary-only'] === 'true' ? o.arcs.filter(h=>h===72) : o.arcs)) {
         const thin = arc(hours);
         const run = async (name, fn) => {
           const a = { ok: false };
@@ -151,35 +179,61 @@ for (const o of await objects()) {
           row.arms[`${name}${hours}`] = a;
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
-        if (method === 'ap') {
-          const specs = args.arm ? [args.arm] : ['AP','J70','T0','T12','Z0'];
+        if (method === 'gn') {
+          let originalUStates;
+          for (const name of ['AP','XP','XP_PRIOR','U','U_REBUILT','AP_FIXED','XP_FIXED','U_FIXED']) await run(name,async()=>{
+            const ussf=name.startsWith('U');
+            const host=ussf?(name==='U'?U:name==='U_REBUILT'?UR:UF):(name.endsWith('FIXED')?AF:A);
+            if(!host) throw new Error('fixed build unavailable');
+            const forces=name.startsWith('AP')?apForces(ATM,{tesseral:31,zonal:20}):{};
+            const fit=name==='XP_PRIOR'?{dragPrior:{mean:0,sigma:0.05},srpPrior:{mean:0,sigma:0.1}}:null;
+            const pcf=S.pcfBytes({forces,fit});
+            const extra=name.startsWith('AP')?ex:undefined;
+            const f=ussf?await host.fit(oem):await host.fit(oem,pcf,extra);
+            if(!f.ok) throw new Error(f.error);
+            const st=ussf?await host.propagate(f.omm,gridB,epochs.length):await host.propagate(f.omm,gridB,pcf,extra,epochs.length);
+            const agom=S.readFitOmm(f.omm).agom;
+            if(name.endsWith('FIXED')&&(!Number.isFinite(agom)||Math.abs(agom)>1e-15)) throw new Error('fixed AGOM left zero seed');
+            const gcrf=await m.toAxes(st,epochs,'GCRF');
+            let rebuildDeltaM;
+            if(name==='U') originalUStates=gcrf;
+            if(name==='U_REBUILT'&&originalUStates) rebuildDeltaM=Math.max(...(await m.rtn(gcrf,originalUStates)).map(v=>Math.hypot(...v)*1000));
+            return {agom,rebuildDeltaM,days:score(await m.rtn(gcrf,truth))};
+          });
+        } else if (method === 'ap') {
+          const specs = args.arm === 'FRAME,RESONANCE' ? ['XP','FRAME','RESONANCE','AP'] : args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];
           for (const name of specs) await run(name, async () => {
             const degrees = { tesseral: name === 'T0' || name === 'FRAME' ? 0 : name === 'T12' ? 12 : name === 'RESONANCE' ? 1 : 31,
               zonal: name === 'Z0' || name === 'RESONANCE' ? 0 : name === 'FRAME' ? 1 : 20, atmosphere: !o.vacuum && name !== 'J70' };
-            const pcf = S.pcfBytes({ forces: apForces(ATM, degrees), fit: null });
-            const extra = name === 'J70' ? undefined : ex;
+            const pcf = name === 'XP' ? PCF_XP : S.pcfBytes({ forces: apForces(ATM, degrees), fit: null });
+            const extra = name === 'J70' || name === 'XP' ? undefined : ex;
             const f = await A.fit(oem, pcf, extra);
             if (!f.ok) throw new Error(f.error);
             const st = await A.propagate(f.omm, gridB, pcf, extra, epochs.length);
             return { days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
           });
         } else {
-          for (const name of ['F','NO_SRP','NO_BODIES','NO_TIDES','D20','O12','O31']) await run(name, async () => {
+          for (const name of (args.arm ? args.arm.split(',') : ['F','NO_SRP','NO_BODIES','NO_TIDES','D20','TESS12','TESS31'])) await run(name, async () => {
             const settings = high ? ffmHigh() : ffmLow();
-            if (name === 'NO_SRP') settings.forces.srp = false;
+            if (name === 'NO_SRP') { settings.forces.srp = false; if (high) { settings.parameters = []; settings.apriori = apriori([]); } }
             if (name === 'NO_BODIES') settings.forces.thirdBodies = [];
+            if (name === 'NO_SUN') settings.forces.thirdBodies = [301];
+            if (name === 'NO_MOON') settings.forces.thirdBodies = [10];
             if (name === 'NO_TIDES') settings.forces.solidTides = false;
             if (name === 'D20') { settings.forces.degree = 20; settings.forces.order = Math.min(20, settings.forces.order); }
+            if (name === 'TESS12') settings.forces.tesseral = 12;
+            if (name === 'TESS31') settings.forces.tesseral = Math.min(31,settings.forces.degree);
             if (name === 'O12') settings.forces.order = 12;
             if (name === 'O31') settings.forces.order = Math.min(31,settings.forces.order);
-            const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
+            const activeFfm=isolated[name]??F;
+            const f = await activeFfm.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
             if (!f.state) throw new Error(f.error ?? f.termination);
-            return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw), truth)) };
+            return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(await activeFfm.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw), truth)) };
           });
         }
       }
     } catch (error) { row.error = String(error?.message ?? error).slice(0, 180); }
-    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`); console.error(key);
+    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`); writeAudit(OUT, SHARD); console.error(key);
   }
 }
 console.error(`shard ${SHARD}/${SHARDS}: done`);

@@ -16,3 +16,13 @@ A subtraction is a candidate explanation if its paired errors approach AP; this 
 Raw rows and input manifests: /opt/data/sdn-archive/operator-theory/ap-gap. Only aggregates in results/ap-gap. Scratch: /Users/tj/software/terrain-work/body-look/codex-apgap-d9. Maximum 12 workers. Stop by 2026-11-03T03:48:49Z; retain and report partial work.
 
 E2E: run the real module on a registered archive window twice; forward day-3 error must be finite and repeat within 0.001 m. Require every registered method and group to have completed or explicit missing status; incomplete coverage is not a full-task pass. Pin registration, runner, inputs, module bytes and aggregate inputs by SHA-256. No acceptance claim may be manufactured from the task's rounded reference numbers.
+
+## Amendment 2026-11-03: coordinator disposition
+
+The inherited MGEX selector decoded all six held Galileo files in memory before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation; the replacement selector filters NORAD filenames before decoding. EXCLUDE_NORADS now also excludes Swarm and GRACE-FO at every date; closed source selection and a name guard exclude every Starlink. Fresh results use resume-* stores; the interrupted five LS rows remain historical.
+
+Build amendment: CONTROL, H03/H05/H07, NOFRAME, CLASS0–CLASS4 follow the dated PLAN amendment; each variant is compared to the source-matched CONTROL.
+
+Candidate ranking, specified before reading FFM subtraction results: require at least five paired day-3 windows and a positive median paired AP–FFM gap. Flag a candidate when removal of the term reduces the median absolute FFM-to-AP error distance by at least 50%. This is an exploratory ranking, not unique causal identification. The gap is a target ceiling; an actual module gain remains unmeasured.
+
+AP candidate ranking was added after the AP runs but before inspecting their ablation error values: require at least five paired windows and a positive baseline gap to FFM (HE: whiteroom XP). Flag an AP perturbation that recovers at least half that median paired gap. Report its observed paired gain as exploratory; forced resonance classes are diagnostics, never proposed production defaults.

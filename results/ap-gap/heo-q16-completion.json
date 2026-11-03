@@ -1,0 +1,56 @@
+{
+  "windows": 26,
+  "groups": {
+    "HX": 19,
+    "HE": 7
+  },
+  "armOutcomes": {
+    "OK": 26
+  },
+  "files": [
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-0.jsonl",
+      "sha256": "772821445af17095f3e8cae03d218a82c4b061df5aff45c0266b51c61fcc8065"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-1.jsonl",
+      "sha256": "137e40f099d198c2c86fe4fe041185b4e866f6c9d37c025949d4dd9d9c0dcb57"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-10.jsonl",
+      "sha256": "5f8c66ce8670e2dd3bcd33976e8eb788803ab382fbd8cac3ef70f85203e83be4"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-11.jsonl",
+      "sha256": "f18497b80e568f9192f8cd4649b50be14fb9f4409f0bd16867c96873626ada88"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-2.jsonl",
+      "sha256": "ac3194c585ef464e00445a8147e4a736fb4d344e91a070c84daadbb31b902c41"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-3.jsonl",
+      "sha256": "8b7cd4d79406f66caa878846bfc6c841deded58629c4df902cd94beadef68ee2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-4.jsonl",
+      "sha256": "d7ecc09807f492ec259109985ac66e0322c3af43e24d06c09ecbf3f03ff9720f"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-5.jsonl",
+      "sha256": "a51268d185ad1714215e1ad4585146cd0dae3cf43a8d088db399eac00b7c3482"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-7.jsonl",
+      "sha256": "6a5079d9f4040b2e7736abb97f1b9b151f4fe9944b3be31d1a2dfec7cac967c8"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-8.jsonl",
+      "sha256": "eb375a677006b3f7ce08f74f34130ae4cf4e2df84b093f2518baca1b2884cd11"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-9.jsonl",
+      "sha256": "8952fb9672c6914c21e8fa436d2bf501e6096f10875938cb05b587e276e45602"
+    }
+  ]
+}

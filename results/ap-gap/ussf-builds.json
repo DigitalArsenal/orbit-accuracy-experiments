@@ -1,0 +1,17 @@
+{
+  "CONTROL": {
+    "sourceCommit": "1b905d16f68fc56e7da66c6392315970f9e7e6d0",
+    "returncode": 0,
+    "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ussf/CONTROL/propagator/sgp4-xp/dist/isomorphic/module.wasm",
+    "sha256": "c37b3b3ca709b7b0f86cc90569d0bb2bfe0d67b58b2014e28f5b8699f15db969",
+    "fitSha256": "43e51fb867dd72b31146ce8ff6c8891730475d84ad2740baad820ecd28378bc8",
+    "controlMismatch": true
+  },
+  "FIXED": {
+    "sourceCommit": "1b905d16f68fc56e7da66c6392315970f9e7e6d0",
+    "returncode": 0,
+    "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ussf/FIXED/propagator/sgp4-xp/dist/isomorphic/module.wasm",
+    "sha256": "ddafb5b0b42a8d28cb2abaa3c204491cdd21f916e2d35a41a35211b5054487bf",
+    "fitSha256": "48b15c43363012d18616d5e92006d14d58783513cb474f59b4f7789f86dc4041"
+  }
+}
