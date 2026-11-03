@@ -90,10 +90,28 @@ function simulate(shardIndex, shardCount) {
   const mySpans = Math.floor(spansTotal / shardCount) + (shardIndex < spansTotal % shardCount ? 1 : 0);
   const myNullSpans = Math.floor(nullSpansTotal / shardCount) + (shardIndex < nullSpansTotal % shardCount ? 1 : 0);
   const out = { shard: `${shardIndex}/${shardCount}`, draws, rowsWithP: rows.length, weeks: { P: weeksP.length, S1: weeksS1.length }, designs: {} };
+  // The null for the false-positive rows is fixed once per design from every window its spans are drawn from (XP2's construction): the
+  // A12 errors at lead L scaled so the whole set's median d is 0 (rule 1's null) or its p95 ratio is 1.10 (rule 2's null); the simulated
+  // spans are then drawn from the scaled set. Scaling each simulated span to its own median made a pass impossible by construction and the
+  // rate 0 in the first version (amendment 2).
+  const nullFactors = (parts) => {
+    const seen = new Set(), all = []; for (const [pool] of parts) for (const week of pool) for (const w of week) if (!seen.has(w.key)) { seen.add(w.key); all.push(w); }
+    const f = {};
+    for (const L of LEADS) {
+      const D = [], EA = [], ER = [];
+      for (const w of all) { const a = w.A12, r = w.P; if (!w.entered.has(L) || !r || !Number.isFinite(r[L])) continue; const ea = a && Number.isFinite(a[L]) ? a[L] : Infinity; D.push(Math.log(ea / r[L])); EA.push(ea); ER.push(r[L]); }
+      if (D.length < 10) continue;
+      sortNum(D); sortNum(EA); sortNum(ER);
+      const med = quantileSorted(D, 0.5), lr = Math.log(quantileSorted(EA, 0.95) / quantileSorted(ER, 0.95));
+      f[L] = { r1: Math.exp(-med), r2: Math.exp(LN110 - lr), medianD: med, lnP95Ratio: lr };
+    }
+    return f;
+  };
   for (const [name, d] of Object.entries(designs)) {
     const rand = rng(1_000_003 * (shardIndex + 1) + name.length * 7919 + 17);
     const counts = Object.fromEntries(Object.keys(STATEMENTS).map((k) => [k, 0]));
     const nulls = {}; const d7ub = [];
+    const factors = nullFactors(d.parts);
     for (let s = 0; s < mySpans; s += 1) {
       const span = drawSpan(rand, d.parts);
       const ev = {
@@ -105,15 +123,17 @@ function simulate(shardIndex, shardCount) {
       for (const [k, f] of Object.entries(STATEMENTS)) if (f(ev)) counts[k] += 1;
       if (ev.A12P['7']) d7ub.push(ev.A12P['7'].ub[0.975].lr);
       if (s < myNullSpans) for (const L of LEADS) {
-        if (!ev.A12P[L]) continue;
+        if (!factors[L]) continue;
         for (const type of ['r1', 'r2']) {
-          const factor = type === 'r1' ? Math.exp(-ev.A12P[L].med) : Math.exp(LN110 - ev.A12P[L].lr);
+          const factor = factors[L][type];
+          if (!Number.isFinite(factor) || factor <= 0) continue;
           const evN = evaluate(span, 'A12', 'P', { [L]: factor }, draws, rand, [0.975]);
           const k = `${type}@day${L}`; nulls[k] = nulls[k] || { n: 0, pass: 0 }; nulls[k].n += 1; if (xm(evN, 0.975)) nulls[k].pass += 1;
+          if (type === 'r1') { const k1 = `single-rule1@day${L}`; nulls[k1] = nulls[k1] || { n: 0, pass: 0 }; nulls[k1].n += 1; if (evN[L] && evN[L].ub[0.975].med < 0) nulls[k1].pass += 1; }
         }
       }
     }
-    out.designs[name] = { label: d.label, spans: mySpans, counts, nulls, d7ub };
+    out.designs[name] = { label: d.label, spans: mySpans, counts, nulls, nullFactors: factors, d7ub };
     console.error(`power ${out.shard} ${name}: ${mySpans} spans done`);
   }
   return out;
@@ -129,7 +149,8 @@ function merge(files) {
     sortNum(d7);
     out.designs[name] = { label: shards[0].designs[name].label, spans, percentPassing: Object.fromEntries(Object.entries(counts).map(([k, v]) => [k, pct(v, spans)])),
       falsePositivePercent: Object.fromEntries(Object.entries(nulls).map(([k, v]) => [k, { percent: pct(v.pass, v.n), of: v.n }])),
-      leastFavorableNullPercent: Math.max(...Object.values(nulls).map((v) => pct(v.pass, v.n) ?? 0)),
+      leastFavorableNullPercent: Math.max(...Object.entries(nulls).filter(([k]) => !k.startsWith('single-')).map(([, v]) => pct(v.pass, v.n) ?? 0)),
+      singleLeadRule1Percent: Object.fromEntries(Object.entries(nulls).filter(([k]) => k.startsWith('single-')).map(([k, v]) => [k, pct(v.pass, v.n)])),
       a12pDay7P95UpperBound: d7.length ? { median: quantileSorted(d7, 0.5), p10: quantileSorted(d7, 0.1), p90: quantileSorted(d7, 0.9), threshold: LN110 } : null };
   }
   fs.writeFileSync(path.join(dir, 'power.json'), JSON.stringify(out, null, 1) + '\n');

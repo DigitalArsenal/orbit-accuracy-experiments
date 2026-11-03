@@ -210,3 +210,28 @@ group. `lib/sgp4fit.mjs` is XP2's with one import line resolved to this experime
 weather), nothing else. `common.mjs` sets `XM_STORE` to this store and points XM's public-set days and RSGA directory at this
 experiment's (XP2's pattern); in proof mode it redirects nothing, so F2, A12 and A24 run in the environment XM3 and XM6 ran in. No cell,
 rule, arm or statistic changes.
+
+## Amendment 2, 2026-11-03, after the run and before any verdict was read: the null construction of the false-positive rates
+
+Found when `fpr.mjs` first ran on the stored rows: every rate came out exactly 0, including the single-lead rule-1 rates that should sit
+near the nominal 1.25 % at 97.5 %. The cause was the construction, not the data: the first `fpr.mjs` and the null rows of `power.mjs`
+scaled each simulated span so that its own median d was exactly 0, and a bootstrap centered on that span's point estimate can then never
+put its upper bound below 0, so a pass was impossible by construction. The registered description ("the arm's errors at the lead scaled so
+the span's median d is 0") means XP2's construction, which `fpr.mjs` and `power.mjs` now follow: the scale is fixed once from the full set
+of windows the spans are drawn from (every scored window of the statement; every spent window of the design), and the simulated spans are
+drawn from that scaled set, so their medians vary around the null as real spans would. `power.json` is regenerated with the same spans and
+draws: its power rows (the percent passing at the measured and half effect) are unchanged in definition; only its false-positive rows change.
+No verdict was read before this correction; no cell, rule, tolerance, arm or statement changes.
+
+The defect, by line: `fpr.mjs` (942fe49) computed `factor = exp(-base[L].med)` (rule 1) or `exp(ln 1.10 - base[L].lr)` (rule 2) from
+`base = evaluate(span, ...)`, the simulated span's own point statistics, inside the spans loop; `power.mjs` (6381ffb) did the same from
+`ev.A12P[L].med` and `ev.A12P[L].lr`. Corrected: `factors[L]` is computed once from every window of the statement (or of the design's
+source rows) before the spans loop, and each simulated span is evaluated with that fixed scale. The rule the rate serves (rule 1 at 0, rule 2
+at ln 1.10, the levels, the clusters) is unchanged.
+
+`table.mjs` also changed after the rows were read (ea70019 to the landed version): it reads `false-positive.json` and prints the rates beside
+every statement; it reads `verdicts-registered.json`, the verdicts of the table code exactly as registered at ea70019 run unchanged on the
+same rows, and prints both verdict sets side by side, where the registered code's verdict is the one on record and a differing corrected
+verdict is labeled exploratory; it opens the README with a plain-words reading generated from the verdicts; the cluster-split cells take a
+subset of rows through the same `pairsOf`. `cellStats`, `pairsOf`, the seeds, the rules, the levels, the family logic and the statement
+definitions are unchanged. Reason: the first version had no rows to run on; the date is 2026-11-03.

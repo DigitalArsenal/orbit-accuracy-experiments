@@ -50,28 +50,44 @@
      "percent": 0,
      "of": 100
     },
-    "r2@day1": {
+    "single-rule1@day1": {
      "percent": 0,
+     "of": 100
+    },
+    "r2@day1": {
+     "percent": 4,
      "of": 100
     },
     "r1@day2": {
      "percent": 0,
      "of": 100
     },
-    "r2@day2": {
+    "single-rule1@day2": {
      "percent": 0,
+     "of": 100
+    },
+    "r2@day2": {
+     "percent": 1,
      "of": 100
     },
     "r1@day3": {
      "percent": 0,
      "of": 100
     },
-    "r2@day3": {
+    "single-rule1@day3": {
      "percent": 0,
      "of": 100
     },
+    "r2@day3": {
+     "percent": 1,
+     "of": 100
+    },
     "r1@day7": {
-     "percent": 0,
+     "percent": 1,
+     "of": 100
+    },
+    "single-rule1@day7": {
+     "percent": 1,
      "of": 100
     },
     "r2@day7": {
@@ -79,7 +95,13 @@
      "of": 100
     }
    },
-   "leastFavorableNullPercent": 0,
+   "leastFavorableNullPercent": 4,
+   "singleLeadRule1Percent": {
+    "single-rule1@day1": 0,
+    "single-rule1@day2": 0,
+    "single-rule1@day3": 0,
+    "single-rule1@day7": 1
+   },
    "a12pDay7P95UpperBound": {
     "median": -0.10048027796348047,
     "p10": -0.19443571676643545,
@@ -117,36 +139,58 @@
      "percent": 0,
      "of": 100
     },
+    "single-rule1@day1": {
+     "percent": 4,
+     "of": 100
+    },
     "r2@day1": {
-     "percent": 0,
+     "percent": 4,
      "of": 100
     },
     "r1@day2": {
      "percent": 0,
      "of": 100
     },
+    "single-rule1@day2": {
+     "percent": 3,
+     "of": 100
+    },
     "r2@day2": {
-     "percent": 0,
+     "percent": 4,
      "of": 100
     },
     "r1@day3": {
-     "percent": 0,
+     "percent": 2,
+     "of": 100
+    },
+    "single-rule1@day3": {
+     "percent": 6,
      "of": 100
     },
     "r2@day3": {
-     "percent": 0,
+     "percent": 3,
      "of": 100
     },
     "r1@day7": {
-     "percent": 0,
+     "percent": 3,
+     "of": 100
+    },
+    "single-rule1@day7": {
+     "percent": 6,
      "of": 100
     },
     "r2@day7": {
-     "percent": 0,
+     "percent": 2,
      "of": 100
     }
    },
-   "leastFavorableNullPercent": 0,
+   "leastFavorableNullPercent": 4,
+   "singleLeadRule1Percent": {
+    "single-rule1@day1": 4,
+    "single-rule1@day2": 3,
+    "single-rule1@day3": 6,
+    "single-rule1@day7": 6
+   },
    "a12pDay7P95UpperBound": {
     "median": 0.05557571485300055,
     "p10": -0.13240928975558314,
@@ -184,12 +228,20 @@
      "percent": 0,
      "of": 100
     },
+    "single-rule1@day1": {
+     "percent": 7,
+     "of": 100
+    },
     "r2@day1": {
      "percent": 0,
      "of": 100
     },
     "r1@day2": {
      "percent": 0,
+     "of": 100
+    },
+    "single-rule1@day2": {
+     "percent": 5,
      "of": 100
     },
     "r2@day2": {
@@ -200,6 +252,10 @@
      "percent": 0,
      "of": 100
     },
+    "single-rule1@day3": {
+     "percent": 3,
+     "of": 100
+    },
     "r2@day3": {
      "percent": 0,
      "of": 100
@@ -208,12 +264,22 @@
      "percent": 0,
      "of": 100
     },
+    "single-rule1@day7": {
+     "percent": 1,
+     "of": 100
+    },
     "r2@day7": {
      "percent": 0,
      "of": 100
     }
    },
    "leastFavorableNullPercent": 0,
+   "singleLeadRule1Percent": {
+    "single-rule1@day1": 7,
+    "single-rule1@day2": 5,
+    "single-rule1@day3": 3,
+    "single-rule1@day7": 1
+   },
    "a12pDay7P95UpperBound": {
     "median": 0.32033777814270115,
     "p10": 0.0010706268442570153,

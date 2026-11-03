@@ -1,9 +1,9 @@
 // FSA false-positive rates on the scored rows (PLAN.md, False-positive rate and power, after the run): XP2's computation. For each
-// registered statement, ISO weeks are drawn with replacement to the span's own week count (every window of a drawn week; each drawn week
-// its own cluster); the null of rule 1 scales the arm's errors at one lead so the simulated span's median d is 0, the null of rule 2 so
-// its p95 ratio is 1.10, the other leads as scored; the statement is evaluated with the same bootstrap at 97.5 % and 95 %; the rate is the
-// percent of simulated spans that pass; the whole statement's rate is the largest over leads and nulls (the least favorable null). Single-lead
-// rule-1 rates are printed per lead. Statistics only; nothing here changes a verdict.
+// registered statement and each clustering (ISO week; orbit group x ISO week), clusters are drawn with replacement to the span's own count
+// (every window of a drawn cluster; each drawn cluster its own cluster); the null of rule 1 scales the arm's errors at one lead so the
+// simulated span's median d is 0, the null of rule 2 so its p95 ratio is 1.10, the other leads as scored; the statement is evaluated with the
+// same bootstrap at 97.5 % and 95 %; the rate is the percent of simulated spans that pass; the whole statement's rate is the largest over
+// leads and nulls (the least favorable null). Single-lead rule-1 rates are printed per lead. Statistics only; nothing here changes a verdict.
 //   node experiments/ffm-short-arc/fpr.mjs --shard k/n --out <file> [--spans S --draws D]   one shard's counts
 //   node experiments/ffm-short-arc/fpr.mjs --merge <file...>                               results/ffm-short-arc/false-positive.json
 import fs from 'node:fs';
@@ -16,6 +16,7 @@ frozen();
 const LEADS = config.scoring.leadDays.map(String);
 const LN110 = Math.log(1.10);
 const LEVELS = [0.975, 0.95];
+const CLUSTERINGS = ['week', 'orbit'];
 
 function quantileSorted(a, q) { const n = a.length; const p = q * (n - 1), lo = Math.floor(p), f = p - lo; if (f === 0 || lo + 1 >= n) return a[lo]; return a[lo] + f * (a[lo + 1] - a[lo]); }
 const sortNum = (a) => a.sort((x, y) => x - y);
@@ -23,7 +24,7 @@ function rng(label) { const d = crypto.createHash('sha256').update(label).digest
   return () => { let x = s0, y = s1; s0 = y; x ^= (x << 23n) & 0xFFFFFFFFFFFFFFFFn; x ^= x >> 17n; x ^= y ^ (y >> 26n); s1 = x; return Number(((x + y) & 0xFFFFFFFFFFFFFFFFn) >> 11n) / 9007199254740992; }; }
 const armOf = (row, name) => (name === 'P' ? row.P : row.arms?.[name]);
 
-/** The windows of a statement's group and spans as {week, e: {arm: {L: e}, ref: {L: e}}, entered}; a failed arm is +Infinity. */
+/** The windows of a statement's group and spans: {week, orbit, entered, A: {L: e}, R: {L: e}}; a failed arm is +Infinity. */
 function windowsOf(rows, group, spans, arm, ref) {
   const out = [];
   for (const row of rows) {
@@ -31,16 +32,16 @@ function windowsOf(rows, group, spans, arm, ref) {
     const a = armOf(row, arm), r = armOf(row, ref);
     if (!r || r.notRun || !a || a.notRun) continue;
     const e = (x, L) => (!x.ok || !x.days?.[L] ? Infinity : x.days[L].rmsKm);
-    out.push({ week: row.isoWeek, entered: new Set((row.entered ?? []).map(String)), A: Object.fromEntries(LEADS.map((L) => [L, e(a, L)])), R: Object.fromEntries(LEADS.map((L) => [L, e(r, L)])) });
+    out.push({ week: row.isoWeek, orbit: `${row.cluster}|${row.isoWeek}`, entered: new Set((row.entered ?? []).map(String)), A: Object.fromEntries(LEADS.map((L) => [L, e(a, L)])), R: Object.fromEntries(LEADS.map((L) => [L, e(r, L)])) });
   }
   return out;
 }
-/** One contrast on a span (array of clusters of windows) with a per-lead scale on the arm: per lead the bounds at every level. */
+/** One contrast on a span (array of clusters of windows) with a per-lead scale on the arm: per lead the point statistics and the bounds. */
 function evaluate(clusters, scale, draws, rand) {
   const perLead = {};
   for (const L of LEADS) {
     const cl = []; let N = 0;
-    for (const c of clusters) { const pairs = []; for (const w of c) { if (!w.entered.has(L) || !Number.isFinite(w.R[L]) && w.R[L] !== Infinity) continue; pairs.push([(scale[L] ?? 1) * w.A[L], w.R[L]]); } if (pairs.length) { cl.push(pairs); N += pairs.length; } }
+    for (const c of clusters) { const pairs = []; for (const w of c) { if (!w.entered.has(L)) continue; pairs.push([(scale[L] ?? 1) * w.A[L], w.R[L]]); } if (pairs.length) { cl.push(pairs); N += pairs.length; } }
     if (N < 10 || cl.length < 2) { perLead[L] = null; continue; }
     const stat = (list) => { const D = [], EA = [], ER = []; let fails = 0; for (const pairs of list) for (const [ea, er] of pairs) { if (ea === Infinity) fails += 1; D.push(ea === Infinity ? Infinity : er === Infinity ? -Infinity : Math.log(ea / er)); EA.push(ea); ER.push(er); } sortNum(D); sortNum(EA); sortNum(ER); const m = quantileSorted(D, 0.5), lr = Math.log(quantileSorted(EA, 0.95) / quantileSorted(ER, 0.95)); return [Number.isNaN(m) ? Infinity : m, Number.isNaN(lr) ? Infinity : lr, fails, D.length]; };
     const point = stat(cl);
@@ -69,41 +70,56 @@ function simulate(k, n) {
     const group = fam === 'P' ? 'P' : 'S1', spanNames = config.verdictPool[group];
     for (const s of statements) {
       const ws = windowsOf(rows, group, spanNames, s.arm, s.ref);
-      const byWeek = new Map(); for (const w of ws) { if (!byWeek.has(w.week)) byWeek.set(w.week, []); byWeek.get(w.week).push(w); }
-      const weeks = [...byWeek.values()], W = weeks.length;
       const leads = s.leads.map(String);
-      const rand = rng(`FSA|fpr|${s.id}|${k}/${n}`);
-      const counts = {};
+      const nulls = s.form === 'xm' ? ['r1', 'r2'] : ['r1'];
+      const counts = {}, clusterCounts = {}, factors = {};
       const bump = (key, lv, pass) => { counts[key] = counts[key] || { n: 0, pass: { 0.975: 0, 0.95: 0 } }; if (lv === 0.975) counts[key].n += 1; if (pass) counts[key].pass[lv] += 1; };
-      for (let i = 0; i < mine; i += 1) {
-        const span = []; for (let j = 0; j < W; j += 1) span.push(weeks[Math.floor(rand() * W)]);
-        const base = evaluate(span, {}, draws, rand);
-        for (const L of leads) {
-          if (!base[L]) continue;
-          const nulls = s.form === 'xm' ? ['r1', 'r2'] : s.form === 'rule1' ? ['r1'] : ['r1'];
-          for (const type of nulls) {
-            const factor = type === 'r1' ? Math.exp(-base[L].med) : Math.exp(LN110 - base[L].lr);
-            if (!Number.isFinite(factor) || factor <= 0) continue;
-            const ev = evaluate(span, { [L]: factor }, draws, rand);
-            for (const lv of LEVELS) { bump(`${type}@day${L}`, lv, forms[s.form](ev, lv, leads)); bump(`single-rule1@day${L}`, lv, type === 'r1' && ev[L] && ev[L].ub[lv].med < 0); }
+      // The null is fixed once from every scored window of the statement (XP2's construction): the arm's errors at lead L scaled so the
+      // whole set's median d is 0 (rule 1's null) or its p95 ratio is 1.10 (rule 2's null); the simulated spans are then drawn from that
+      // scaled set, so their medians vary around the null as real spans would. Scaling each simulated span to its own median would make a
+      // pass impossible by construction and the rate 0 (the defect of the first version, amendment 2).
+      for (const L of leads) {
+        const D = [], EA = [], ER = [];
+        for (const w of ws) { if (!w.entered.has(L)) continue; D.push(w.A[L] === Infinity ? Infinity : w.R[L] === Infinity ? -Infinity : Math.log(w.A[L] / w.R[L])); EA.push(w.A[L]); ER.push(w.R[L]); }
+        if (D.length < 10) continue;
+        sortNum(D); sortNum(EA); sortNum(ER);
+        const med = quantileSorted(D, 0.5), lr = Math.log(quantileSorted(EA, 0.95) / quantileSorted(ER, 0.95));
+        factors[L] = { r1: Number.isFinite(med) ? Math.exp(-med) : null, r2: Number.isFinite(lr) ? Math.exp(LN110 - lr) : null, medianD: med, lnP95Ratio: lr };
+      }
+      for (const clustering of CLUSTERINGS) {
+        const byCluster = new Map(); for (const w of ws) { const c = w[clustering]; if (!byCluster.has(c)) byCluster.set(c, []); byCluster.get(c).push(w); }
+        const clusters = [...byCluster.values()], W = clusters.length;
+        clusterCounts[clustering] = W;
+        const rand = rng(`FSA|fpr|${s.id}|${clustering}|${k}/${n}`);
+        for (let i = 0; i < mine; i += 1) {
+          const span = []; for (let j = 0; j < W; j += 1) span.push(clusters[Math.floor(rand() * W)]);
+          for (const L of leads) {
+            if (!factors[L]) continue;
+            for (const type of nulls) {
+              const factor = factors[L][type];
+              if (!Number.isFinite(factor) || factor <= 0) continue;
+              const ev = evaluate(span, { [L]: factor }, draws, rand);
+              for (const lv of LEVELS) { bump(`${clustering}|${type}@day${L}`, lv, forms[s.form](ev, lv, leads)); if (type === 'r1') bump(`${clustering}|single-rule1@day${L}`, lv, !!(ev[L] && ev[L].ub[lv].med < 0)); }
+            }
           }
         }
       }
-      out.statements[s.id] = { group, arm: s.arm, ref: s.ref, form: s.form, leads: s.leads, windows: ws.length, weeks: W, spans: mine, counts };
-      console.error(`fpr ${k}/${n} ${s.id}: ${mine} spans`);
+      out.statements[s.id] = { group, arm: s.arm, ref: s.ref, form: s.form, leads: s.leads, windows: ws.length, clusters: clusterCounts, spans: mine, nullFactors: factors, counts };
+      console.error(`fpr ${k}/${n} ${s.id}: ${mine} spans per clustering`);
     }
   }
   return out;
 }
 function merge(files) {
   const shards = files.map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
-  const out = { method: 'XP2: ISO weeks drawn with replacement to the span\'s own weeks; null of rule 1 scales the arm so the median d is 0, of rule 2 so the p95 ratio is 1.10, one lead at a time, the others as scored; the whole statement at the least favorable null', draws: shards[0].draws, statements: {} };
+  const out = { method: 'XP2: clusters (ISO weeks; orbit group x ISO week) drawn with replacement to the span\'s own count; the null of rule 1 scales the arm so the median d is 0, of rule 2 so the p95 ratio is 1.10, one lead at a time, the others as scored; the whole statement at the least favorable null; single-lead rule-1 rates per lead', draws: shards[0].draws, statements: {} };
   for (const id of Object.keys(shards[0].statements)) {
     const first = shards[0].statements[id]; let spans = 0; const counts = {};
     for (const sh of shards) { const s = sh.statements[id]; spans += s.spans; for (const [key, v] of Object.entries(s.counts)) { counts[key] = counts[key] || { n: 0, pass: { 0.975: 0, 0.95: 0 } }; counts[key].n += v.n; for (const lv of LEVELS) counts[key].pass[lv] += v.pass[lv]; } }
     const rates = Object.fromEntries(Object.entries(counts).map(([key, v]) => [key, { n: v.n, percent: Object.fromEntries(LEVELS.map((lv) => [lv, v.n ? Number((100 * v.pass[lv] / v.n).toFixed(2)) : null])) }]));
-    const whole = Object.entries(rates).filter(([key]) => !key.startsWith('single-'));
-    out.statements[id] = { ...first, spans, rates, leastFavorable: Object.fromEntries(LEVELS.map((lv) => [lv, whole.length ? Math.max(...whole.map(([, r]) => r.percent[lv] ?? 0)) : null])) };
+    const leastFavorable = {};
+    for (const clustering of CLUSTERINGS) { const whole = Object.entries(rates).filter(([key]) => key.startsWith(`${clustering}|`) && !key.includes('single-')); leastFavorable[clustering] = Object.fromEntries(LEVELS.map((lv) => [lv, whole.length ? Math.max(...whole.map(([, r]) => r.percent[lv] ?? 0)) : null])); }
+    out.statements[id] = { ...first, spans, rates, leastFavorable };
   }
   fs.mkdirSync(results, { recursive: true });
   fs.writeFileSync(path.join(results, 'false-positive.json'), `${JSON.stringify(out, null, 1)}\n`);
