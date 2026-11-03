@@ -35,6 +35,8 @@ LS and DO day-4/day-5 rows are descriptive: read before the statements were regi
 
 Every expected arm/arc/day cell, including missing work and counted exclusion reasons, is in metrics.json armDayCoverage. A missing run is not a scientific exclusion. Summaries weight windows equally; R/T/N RMS is the square root of the mean squared window axis RMS. Intervals resample ISO weeks 10,000 times.
 
+Six-day replay: 120 scalars, 0 differences, maximum 0 m, 0 rejected. U accepts at most 1 m per scalar because of the library's documented query-order dependence; AP, XP, S and F require exact equality.
+
 Staged U replay: 1010 windows, 6032 differing scalars, maximum 0.6253305 m against the 1 m allowance; 0 old-lead differences. Installation provenance is in ussf-install.json.
 
 | Group | Arm | Day | n | Median km | p10–p90 km | Median 95% CI km | R/T/N RMS km | Disclosure |
