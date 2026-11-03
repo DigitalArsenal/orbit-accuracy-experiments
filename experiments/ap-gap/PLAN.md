@@ -44,3 +44,7 @@ AP6's openFfmHost pins FFM 2.0.4 and estimation 0.7.0. Its fit_batch propagation
 ## Amendment 2026-11-03: FFM time allocation
 
 After 200 completed FFM windows, observed low-orbit throughput threatened the later registered methods. Stop this lane's workers by exact PID and resume incomplete windows with the seven primary arms: F, NO_SRP, NO_BODIES, NO_TIDES, D20, TESS12, TESS31. Retain every completed row, including the extra NO_SUN, NO_MOON, O12, O31 arms; their smaller n is reported. This scheduling change is based on throughput and fit status, before reading ablation error ratios. Original manifests are preserved; the resumed run writes a timestamped manifest. Interrupted workers did not flush their end-of-process input audits; disclose that provenance limit.
+
+## Amendment 2026-11-03: frame controls
+
+Before method 4, include XP (0,0) and full AP (31,20) controls alongside FRAME (0,1) and RESONANCE (1,0), at the same 72 h fit windows on GN/IG/GE. The frame table's paired changes use XP as control. This allows GN's frame contribution to be measured without importing unrelated AP5 row files.

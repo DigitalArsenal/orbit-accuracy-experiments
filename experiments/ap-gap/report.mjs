@@ -28,8 +28,8 @@ for(const g of groups) for(const batch of [...new Set(all.map(r=>r.batch))]) {
   if(!arm.endsWith(g==='GN'&&batch==='resume-gn'?'24':'72'))continue;
   for(const day of [1,3,7]) {
    const pairs=rows.map(r=>{
-    const base=all.find(b=>b.key===r.key&&(batch==='resume-gn'?b.batch===batch:batch==='resume-ffm'?b.batch===batch:batch==='resume-ap'||batch==='resume-heo'?b.batch===batch:b.batch==='resume-CONTROL'));
-    const control=batch==='resume-ffm'?'F72':g==='GN'&&batch==='resume-gn'?'XP24':'AP72';
+    const base=all.find(b=>b.key===r.key&&(batch==='resume-gn'||batch==='resume-frame'?b.batch===batch:batch==='resume-ffm'?b.batch===batch:batch==='resume-ap'||batch==='resume-heo'?b.batch===batch:b.batch==='resume-CONTROL'));
+    const control=batch==='resume-frame'?'XP72':batch==='resume-ffm'?'F72':g==='GN'&&batch==='resume-gn'?'XP24':'AP72';
     return {v:r.arms[arm]?.ok?r.arms[arm]?.days?.[day]?.e:undefined,b:base?.arms[control]?.ok?base?.arms[control]?.days?.[day]?.e:undefined};
    });
    const values=pairs.filter(p=>Number.isFinite(p.v));const paired=values.filter(p=>Number.isFinite(p.b));

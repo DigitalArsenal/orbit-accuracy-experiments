@@ -182,12 +182,12 @@ for (const o of await objects()) {
             return {days:score(await m.rtn(await m.toAxes(st,epochs,'GCRF'),truth))};
           });
         } else if (method === 'ap') {
-          const specs = args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];
+          const specs = args.arm === 'FRAME,RESONANCE' ? ['XP','FRAME','RESONANCE','AP'] : args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];
           for (const name of specs) await run(name, async () => {
             const degrees = { tesseral: name === 'T0' || name === 'FRAME' ? 0 : name === 'T12' ? 12 : name === 'RESONANCE' ? 1 : 31,
               zonal: name === 'Z0' || name === 'RESONANCE' ? 0 : name === 'FRAME' ? 1 : 20, atmosphere: !o.vacuum && name !== 'J70' };
-            const pcf = S.pcfBytes({ forces: apForces(ATM, degrees), fit: null });
-            const extra = name === 'J70' ? undefined : ex;
+            const pcf = name === 'XP' ? PCF_XP : S.pcfBytes({ forces: apForces(ATM, degrees), fit: null });
+            const extra = name === 'J70' || name === 'XP' ? undefined : ex;
             const f = await A.fit(oem, pcf, extra);
             if (!f.ok) throw new Error(f.error);
             const st = await A.propagate(f.omm, gridB, pcf, extra, epochs.length);
