@@ -20,7 +20,7 @@ try{for(const base of readRows(`${config.store}/cheap/${label}`)){if((args.key&&
    if(!stratum?.clipped?.covariance){d.error='GP covariance age/regime outside model';continue;}
    const c=cal.strata.find(c=>c.regimeIndex===stratum.regimeIndex&&c.ageIndex===stratum.ageIndex),p=stratum.clipped.covariance,scale=c?.label==='CALIBRATED'?c.scaleFactors:[1,1,1];d.label=c?.label??'UNCALIBRATED';d.ageBin=stratum.ageDays;
    d.covarianceM2=[p[0]*scale[0]**2,p[1]*scale[0]*scale[1],p[2]*scale[1]**2,p[3]*scale[0]*scale[2],p[4]*scale[1]*scale[2],p[5]*scale[2]**2].map(x=>x*1e6);
-   try{const [state]=await modules.propagateSgp4(set,base.norad,[Date.parse(e.epoch)],300);if(!state)throw Error('SGP4 no endpoint');const gcrf=await modules.toAxes([state],[e.epoch],'GCRF');d.errorM=(await modules.rtn(gcrf,[e]))[0].map(x=>x*1000);}catch(error){d.error=String(error.message).slice(0,300);}
+   try{const [,state]=await modules.propagateSgp4(set,base.norad,[Date.parse(e.epoch)-300000,Date.parse(e.epoch)],300);if(!state)throw Error('SGP4 no endpoint');const gcrf=await modules.toAxes([state],[e.epoch],'GCRF');d.errorM=(await modules.rtn(gcrf,[e]))[0].map(x=>x*1000);}catch(error){d.error=String(error.message).slice(0,300);}
   }
  }
  fs.appendFileSync(`${out}/rows-${shard}.jsonl`,JSON.stringify(row)+'\n');
