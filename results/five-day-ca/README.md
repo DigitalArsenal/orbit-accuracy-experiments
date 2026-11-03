@@ -33,6 +33,8 @@ LS and DO day-4/day-5 rows are descriptive: read before the statements were regi
 
 Every expected arm/arc/day cell, including missing work and counted exclusion reasons, is in metrics.json armDayCoverage. A missing run is not a scientific exclusion. Summaries weight windows equally; R/T/N RMS is the square root of the mean squared window axis RMS. Intervals resample ISO weeks 10,000 times.
 
+Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937228 km. Old-lead reproduction remains exact. The saved U day-4/day-5 rows require reconciliation with the runner before acceptance.
+
 | Group | Arm | Day | n | Median km | p10–p90 km | Median 95% CI km | R/T/N RMS km | Disclosure |
 |---|---|---:|---:|---:|---|---|---|---|
 | LS | AP24 | 1 | 51 | 0.01876474 | 0.01237332 to 0.0369511 | 0.01804078 to 0.02206298 | 0.007783825/0.02599244/0.009022293 |  |
