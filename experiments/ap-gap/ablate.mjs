@@ -179,7 +179,9 @@ for (const o of await objects()) {
             const f=ussf?await host.fit(oem):await host.fit(oem,pcf,extra);
             if(!f.ok) throw new Error(f.error);
             const st=ussf?await host.propagate(f.omm,gridB,epochs.length):await host.propagate(f.omm,gridB,pcf,extra,epochs.length);
-            return {days:score(await m.rtn(await m.toAxes(st,epochs,'GCRF'),truth))};
+            const agom=S.readFitOmm(f.omm).agom;
+            if(name.endsWith('FIXED')&&(!Number.isFinite(agom)||Math.abs(agom)>1e-15)) throw new Error('fixed AGOM left zero seed');
+            return {agom,days:score(await m.rtn(await m.toAxes(st,epochs,'GCRF'),truth))};
           });
         } else if (method === 'ap') {
           const specs = args.arm === 'FRAME,RESONANCE' ? ['XP','FRAME','RESONANCE','AP'] : args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];

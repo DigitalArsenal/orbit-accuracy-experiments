@@ -52,3 +52,5 @@ Before method 4, include XP (0,0) and full AP (31,20) controls alongside FRAME (
 ## Amendment 2026-11-03: GN control environment
 
 Method 3 sets XP2F_CONTROL=1 before importing the shared readers, exactly as cycle-ap5.sh truth2 does. AP6 regime arms retain cycle-ap6.sh's environment. The manifest records this switch. No GN fitter row had been run when this routing correction was made.
+
+Fixed-AGOM validation: both native fitters initialize AGOM at zero for these Gaussian-prior arms. Decode the fitted OMM and require |AGOM| ≤ 1e-15 for each successful fixed arm. A failure remains an arm failure, never a fixed-seed measurement.
