@@ -1,0 +1,886 @@
+{
+ "task": "experiments-ap-short-arc-priors-confirm-20261103",
+ "title": "Registered confirmation on unread 24 h windows of the sdn-ap 0.4.7 short-arc AGOM prior",
+ "frozen": true,
+ "store": "/opt/data/sdn-archive/operator-theory/ap/confirm/experiments-ap-short-arc-priors-confirm-20261103",
+ "modulesRoot": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules",
+ "weatherDirs": [
+  "/opt/data/sdn-archive/xp2-fit-design/rsga/normalized",
+  "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA",
+  "/opt/data/sdn-archive/hac/noaa-swpc/2026"
+ ],
+ "builds": {
+  "0.4.5": {
+   "commit": "c1d5d218b16f5bbb3ea184582f3c08fddd81657a",
+   "file": "/opt/data/sdn-archive/operator-theory/ap/confirm/build/sdn-ap-0.4.5.wasm",
+   "sha256": "04169197971b5e15db8b7a7762e7cb4500a5d43617be60d0e8f6aaf99d287360"
+  },
+  "0.4.7": {
+   "commit": "dcae6361375f0af27dc82859e29c5632df8af401",
+   "file": "/opt/data/sdn-archive/operator-theory/ap/confirm/build/sdn-ap-0.4.7.wasm",
+   "sha256": "c2bf019f84e5fb35af052723d45ff12a41e25ee1126fea13cbb0459ac02e177f"
+  },
+  "ussf": {
+   "file": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/propagator/sgp4-xp/dist/isomorphic/module.wasm",
+   "sha256": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb"
+  }
+ },
+ "sources": [
+  "experiments/ap-short-arc-priors-confirm/lib/confirm-runner.mjs",
+  "experiments/ap-short-arc-priors-confirm/run.mjs",
+  "experiments/ap-heo-frame-confirm/lib/cutoffs.mjs",
+  "experiments/operator-theory/lib/ap.mjs",
+  "experiments/operator-theory/lib/ussf-xp.mjs",
+  "experiments/operator-theory/lib/host.mjs",
+  "experiments/operator-theory/lib/frame.mjs",
+  "experiments/xp2-fit-design/common.mjs",
+  "experiments/xp-atmosphere-merit/common.mjs",
+  "experiments/xp-atmosphere-merit/lib/modules.mjs",
+  "experiments/xp-atmosphere-merit/lib/sds.mjs",
+  "experiments/xp-atmosphere-merit/lib/truth.mjs",
+  "experiments/xp-atmosphere-merit/lib/weather.mjs",
+  "experiments/ffm-atmosphere-xm3/lib/ffm.mjs",
+  "experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs",
+  "experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs",
+  "experiments/xp2-fit-design/config.json",
+  "experiments/xp2-fit-design/build.json",
+  "experiments/xp-atmosphere-merit/config.json",
+  "experiments/xp-atmosphere-merit/build.json",
+  "experiments/ffm-atmosphere-xm3/config.json",
+  "experiments/ffm-atmosphere-xm3/build.json",
+  "harness/truth-gate.mjs",
+  "harness/ffm-fit-v3.mjs",
+  "harness/ffm-execution.mjs",
+  "harness/prw.mjs"
+ ],
+ "arms": {
+  "AP": {
+   "kind": "ap",
+   "build": "0.4.7",
+   "forces": "ap",
+   "note": "AP forces: tesseral 31, zonal 20, NRLMSISE-00 on as-issued weather (none in the vacuum group HC)"
+  },
+  "A45": {
+   "kind": "ap",
+   "build": "0.4.5",
+   "forces": "ap"
+  },
+  "XP": {
+   "kind": "ap",
+   "build": "0.4.7",
+   "forces": "xp",
+   "note": "whiteroom XP: the same wasm, FORCES and FIT unset"
+  },
+  "X45": {
+   "kind": "ap",
+   "build": "0.4.5",
+   "forces": "xp",
+   "note": "whiteroom XP of 0.4.5, the fitter before the short-arc prior"
+  },
+  "U": {
+   "kind": "ussf",
+   "note": "Space Force XP, propagator/sgp4-xp"
+  }
+ },
+ "holds": {
+  "noTruthFrom": "2026-06-01",
+  "note": "C2's time hold-out (heldOutTime from 2026-06-01): no group reads truth on or after it",
+  "norads": [
+   43567,
+   37847,
+   41862,
+   41174,
+   43055,
+   41175,
+   31698,
+   66315,
+   22824,
+   8820,
+   39451,
+   39452,
+   39453,
+   43476,
+   43477
+  ],
+  "names": [
+   "six held Galileo (P9)",
+   "TerraSAR-X",
+   "Sentinel-1D",
+   "Stella",
+   "LAGEOS-1",
+   "Swarm A/B/C and GRACE-FO 1/2 (barred after 2026-10-31; no Swarm or GRACE-FO is read at all)"
+  ]
+ },
+ "groups": {
+  "NG": {
+   "label": "GPS, ESA final orbits, 2025-07 to 2025-12",
+   "source": {
+    "kind": "esa-final",
+    "constellations": [
+     "G"
+    ]
+   },
+   "cutoffs": {
+    "from": "2025-07-04",
+    "to": "2025-12-20",
+    "everyDays": 5
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45",
+    "U"
+   ]
+  },
+  "NR": {
+   "label": "GLONASS, ESA final orbits, 2025-07 to 2025-12",
+   "source": {
+    "kind": "esa-final",
+    "constellations": [
+     "R"
+    ]
+   },
+   "cutoffs": {
+    "from": "2025-07-04",
+    "to": "2025-12-20",
+    "everyDays": 5
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45",
+    "U"
+   ]
+  },
+  "NE": {
+   "label": "Galileo, ESA final orbits, 2025-07 to 2025-12, the held excluded",
+   "source": {
+    "kind": "esa-final",
+    "constellations": [
+     "E"
+    ]
+   },
+   "cutoffs": {
+    "from": "2025-07-04",
+    "to": "2025-12-20",
+    "everyDays": 5
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45",
+    "U"
+   ]
+  },
+  "GNr": {
+   "label": "GNSS, AP5's five satellites, daily 2026-01-01 to 05-24 (read): control, report only",
+   "source": {
+    "kind": "esa-final",
+    "constellations": [
+     "G",
+     "R",
+     "E"
+    ],
+    "norads": [
+     28874,
+     41019,
+     43058,
+     37869,
+     44850
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-01-01",
+    "to": "2026-05-24",
+    "everyDays": 1
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "XP",
+    "X45",
+    "U"
+   ]
+  },
+  "S1": {
+   "label": "Sentinel-1A and 1C, Copernicus POEORB, 2025-10 to 2025-12",
+   "source": {
+    "kind": "xm-truth",
+    "truth": "sentinel1",
+    "stepSeconds": 10,
+    "objects": [
+     {
+      "name": "Sentinel-1A",
+      "norad": 39634,
+      "product": "S1A_OPER_AUX_POEORB_OPOD_"
+     },
+     {
+      "name": "Sentinel-1C",
+      "norad": 62261,
+      "product": "S1C_OPER_AUX_POEORB_OPOD_"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2025-10-04",
+    "to": "2025-12-20",
+    "everyDays": 3
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45"
+   ]
+  },
+  "LS": {
+   "label": "Low orbit laser spheres, NSGF orbits, 2026-03 to 2026-05",
+   "source": {
+    "kind": "laser",
+    "objects": [
+     {
+      "name": "ajisai",
+      "target": "ajisai",
+      "product": "nsgf"
+     },
+     {
+      "name": "starlette",
+      "target": "starlette",
+      "product": "nsgf"
+     },
+     {
+      "name": "westpac",
+      "target": "westpac",
+      "product": "nsgf"
+     },
+     {
+      "name": "lares",
+      "target": "lares",
+      "product": "nsgf"
+     },
+     {
+      "name": "larets",
+      "target": "larets",
+      "product": "nsgf"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-03-20",
+    "to": "2026-05-24",
+    "everyDays": 5
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45"
+   ]
+  },
+  "DO": {
+   "label": "Low orbit altimetry, CNES DORIS orbits, 2026-03 to 2026-05",
+   "source": {
+    "kind": "doris",
+    "objects": [
+     {
+      "name": "Jason-3",
+      "codes": [
+       "ja330"
+      ]
+     },
+     {
+      "name": "Sentinel-3A",
+      "codes": [
+       "s3a30"
+      ]
+     },
+     {
+      "name": "Sentinel-3B",
+      "codes": [
+       "s3b30"
+      ]
+     },
+     {
+      "name": "Sentinel-6A",
+      "codes": [
+       "s6a30"
+      ]
+     },
+     {
+      "name": "Sentinel-6B",
+      "codes": [
+       "s6b30"
+      ]
+     },
+     {
+      "name": "SARAL",
+      "codes": [
+       "srl20"
+      ]
+     },
+     {
+      "name": "SWOT",
+      "codes": [
+       "swo20",
+       "swo30"
+      ]
+     },
+     {
+      "name": "CryoSat-2",
+      "codes": [
+       "cs220",
+       "cs230"
+      ]
+     },
+     {
+      "name": "HY-2C",
+      "codes": [
+       "h2c20",
+       "h2c30"
+      ]
+     },
+     {
+      "name": "HY-2D",
+      "codes": [
+       "h2d20",
+       "h2d30"
+      ]
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2026-03-20",
+    "to": "2026-05-24",
+    "everyDays": 5
+   },
+   "arcs": [
+    24
+   ],
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45"
+   ]
+  },
+  "HC": {
+   "label": "Chandra, NAIF merged kernel, 2018-10 to 2019-01",
+   "source": {
+    "kind": "spk",
+    "objects": [
+     {
+      "name": "CHANDRA",
+      "norad": 25867,
+      "objectId": "1999-040B",
+      "id": "Chandra (-151)",
+      "file": "/opt/data/sdn-archive/hac/naif-kernels/spk/missions/chandra/chandra_merged.bsp",
+      "from": "2018-10-14T13:00:00Z",
+      "to": "2019-01-18T00:00:00Z"
+     }
+    ]
+   },
+   "cutoffs": {
+    "from": "2018-10-18",
+    "to": "2019-01-10",
+    "everyDays": 2
+   },
+   "arcs": [
+    24
+   ],
+   "vacuum": true,
+   "arms": [
+    "AP",
+    "A45",
+    "XP",
+    "X45"
+   ]
+  }
+ },
+ "statements": [
+  {
+   "id": "G1",
+   "kind": "gain",
+   "label": "Paired day-3 whiteroom XP less Space Force XP within 10 m of zero on unread GNSS, a gain of at least 29 m against the 0.4.5 fitter",
+   "criterion": "Pooled NG, NR, NE, 24 h fits, day 3: the median over windows of XP less U is within +-10 m of zero, and median(X45 less U) less median(XP less U) is at least 29 m. Both must hold.",
+   "groups": [
+    "NG",
+    "NR",
+    "NE"
+   ],
+   "reference": "U24",
+   "old": "X4524",
+   "new": "XP24",
+   "day": 3,
+   "marginM": 10,
+   "minGainM": 29
+  },
+  {
+   "id": "G1.NG",
+   "kind": "gain",
+   "label": "GPS alone",
+   "criterion": "As G1 on NG alone. REPORT ONLY.",
+   "groups": [
+    "NG"
+   ],
+   "reference": "U24",
+   "old": "X4524",
+   "new": "XP24",
+   "day": 3,
+   "marginM": 10,
+   "minGainM": 29,
+   "reportOnly": true
+  },
+  {
+   "id": "G1.NR",
+   "kind": "gain",
+   "label": "GLONASS alone",
+   "criterion": "As G1 on NR alone. REPORT ONLY.",
+   "groups": [
+    "NR"
+   ],
+   "reference": "U24",
+   "old": "X4524",
+   "new": "XP24",
+   "day": 3,
+   "marginM": 10,
+   "minGainM": 29,
+   "reportOnly": true
+  },
+  {
+   "id": "G1.NE",
+   "kind": "gain",
+   "label": "Galileo alone",
+   "criterion": "As G1 on NE alone. REPORT ONLY.",
+   "groups": [
+    "NE"
+   ],
+   "reference": "U24",
+   "old": "X4524",
+   "new": "XP24",
+   "day": 3,
+   "marginM": 10,
+   "minGainM": 29,
+   "reportOnly": true
+  },
+  {
+   "id": "G0",
+   "kind": "gain",
+   "label": "Control on AP5's read GNSS windows, cutoffs to 2026-05-24 (the module's figures on its 748 windows to 2026-05-31: +56.107 m and -4.097 m)",
+   "criterion": "As G1 on GNr, 24 h fits, day 3. REPORT ONLY: AP5's windows are read.",
+   "groups": [
+    "GNr"
+   ],
+   "reference": "U24",
+   "old": "X4524",
+   "new": "XP24",
+   "day": 3,
+   "marginM": 10,
+   "minGainM": 29,
+   "reportOnly": true
+  },
+  {
+   "id": "G2.GNSS",
+   "kind": "regression",
+   "label": "GNSS: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over NG+NR+NE windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "NG",
+    "NR",
+    "NE"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.NG",
+   "kind": "regression",
+   "label": "NG: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over NG windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "NG"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.NR",
+   "kind": "regression",
+   "label": "NR: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over NR windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "NR"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.NE",
+   "kind": "regression",
+   "label": "NE: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over NE windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "NE"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.S1",
+   "kind": "regression",
+   "label": "S1: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over S1 windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "S1"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.LS",
+   "kind": "regression",
+   "label": "LS: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over LS windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "LS"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.DO",
+   "kind": "regression",
+   "label": "DO: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over DO windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "DO"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G2.HC",
+   "kind": "regression",
+   "label": "HC: AP 0.4.7 not worse than AP 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over HC windows of e(AP) / e(A45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "HC"
+   ],
+   "new": "AP24",
+   "old": "A4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G3.S1",
+   "kind": "regression",
+   "label": "S1: whiteroom XP 0.4.7 not worse than 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over S1 windows of e(XP) / e(X45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "S1"
+   ],
+   "new": "XP24",
+   "old": "X4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G3.LS",
+   "kind": "regression",
+   "label": "LS: whiteroom XP 0.4.7 not worse than 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over LS windows of e(XP) / e(X45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "LS"
+   ],
+   "new": "XP24",
+   "old": "X4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G3.DO",
+   "kind": "regression",
+   "label": "DO: whiteroom XP 0.4.7 not worse than 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over DO windows of e(XP) / e(X45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "DO"
+   ],
+   "new": "XP24",
+   "old": "X4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  },
+  {
+   "id": "G3.HC",
+   "kind": "regression",
+   "label": "HC: whiteroom XP 0.4.7 not worse than 0.4.5 by more than 5 % in the median",
+   "criterion": "Median over HC windows of e(XP) / e(X45), 24 h fits, at most 1.05 at days 1, 3 and 7.",
+   "groups": [
+    "HC"
+   ],
+   "new": "XP24",
+   "old": "X4524",
+   "days": [
+    1,
+    3,
+    7
+   ],
+   "maxRatio": 1.05
+  }
+ ],
+ "reportOnly": {
+  "contrasts": [
+   {
+    "id": "c-ap-u",
+    "label": "GNSS: AP less Space Force XP, days 1, 3, 7",
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "a": "AP24",
+    "b": "U24",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-a45-u",
+    "label": "GNSS: AP 0.4.5 less Space Force XP, days 1, 3, 7",
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "a": "A4524",
+    "b": "U24",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-xp-u",
+    "label": "GNSS: whiteroom XP less Space Force XP, days 1, 3, 7",
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "a": "XP24",
+    "b": "U24",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-x45-u",
+    "label": "GNSS: whiteroom XP 0.4.5 less Space Force XP, days 1, 3, 7",
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "a": "X4524",
+    "b": "U24",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-xp-x45",
+    "label": "GNSS: whiteroom XP 0.4.7 less 0.4.5, days 1, 3, 7",
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "a": "XP24",
+    "b": "X4524",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-ap-a45",
+    "label": "GNSS: AP 0.4.7 less 0.4.5, days 1, 3, 7",
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "a": "AP24",
+    "b": "A4524",
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "id": "c-g0-xp-u",
+    "label": "GNr (read): XP less U, day 3 (the module: -4.097 m)",
+    "groups": [
+     "GNr"
+    ],
+    "a": "XP24",
+    "b": "U24",
+    "days": [
+     3
+    ]
+   },
+   {
+    "id": "c-g0-x45-u",
+    "label": "GNr (read): X45 less U, day 3 (the module: +56.107 m)",
+    "groups": [
+     "GNr"
+    ],
+    "a": "X4524",
+    "b": "U24",
+    "days": [
+     3
+    ]
+   }
+  ],
+  "figures": [
+   {
+    "groups": [
+     "NG",
+     "NR",
+     "NE"
+    ],
+    "arms": [
+     "AP24",
+     "A4524",
+     "XP24",
+     "X4524",
+     "U24"
+    ],
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "groups": [
+     "GNr"
+    ],
+    "arms": [
+     "XP24",
+     "X4524",
+     "U24"
+    ],
+    "days": [
+     1,
+     3,
+     7
+    ]
+   },
+   {
+    "groups": [
+     "S1",
+     "LS",
+     "DO",
+     "HC"
+    ],
+    "arms": [
+     "AP24",
+     "A4524",
+     "XP24",
+     "X4524"
+    ],
+    "days": [
+     1,
+     3,
+     7
+    ]
+   }
+  ]
+ }
+}
