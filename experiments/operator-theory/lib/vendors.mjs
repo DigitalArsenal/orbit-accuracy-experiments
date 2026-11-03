@@ -80,7 +80,7 @@ async function referenceStates(ephemeris, descriptor, identities, firstMs, lastM
   return r.outputs.filter((o) => o.portId === 'reference').map((o) => Buffer.from(o.payload));
 }
 /** An Earth-fixed $OEM to GCRF, in the SP3 shape reference_states reads. */
-async function earthFixedToGcrf(oemBytes, key, norad, name, agency) {
+export async function earthFixedToGcrf(oemBytes, key, norad, name, agency) {
   const lines = asLines(oemBytes, key, 0);
   const count = unpackOem(lines.bytes).EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES.length;
   const identities = { product: agency, source: 'operator ephemeris, Earth-fixed', statedSigmaM: 1, statedSigmaBasis: 'placeholder: the covariance is not used here', satellites: { [key]: { norad, objectId: '', name } } };

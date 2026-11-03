@@ -10,7 +10,7 @@ import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { apForces, openAp } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
-import { HX, STATIC, MGEX_CUTOFFS, TESS, windowKey } from './lib/regimes.mjs';
+import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
@@ -59,6 +59,14 @@ async function objects() {
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);
     out.push({ group: o.group, name: series.name || o.name, norad: series.norad, objectId: series.objectId ?? '', lines: series.lines, arcs: o.arcs, cutoffs: o.cutoffs });
+  }
+  // GEO-TRUTH.md part W: the three WAAS geostationary satellites, truth from the broadcast.
+  if (GROUPS.includes('WA')) {
+    const { SBAS, series } = await import('./lib/sbas.mjs');
+    for (const [prn, sat] of Object.entries(SBAS)) {
+      if (!WA_CUTOFFS.some((t) => inShard(windowKey('WA', sat.name, t)))) continue;
+      out.push({ group: 'WA', name: sat.name, norad: sat.norad, objectId: '', lines: await series(Number(prn), WA_CUTOFFS[0] - 3 * DAY, WA_CUTOFFS.at(-1) + 7 * DAY + DAY), arcs: [24, 72], cutoffs: WA_CUTOFFS });
+    }
   }
   for (const [group, klass] of [['IG', 'igso'], ['GE', 'geo']]) {
     if (!GROUPS.includes(group)) continue;

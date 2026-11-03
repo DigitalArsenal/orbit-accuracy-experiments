@@ -27,6 +27,7 @@ export const GROUPS = {
   GE: { label: 'Geostationary', provider: 'GFZ' },
   HE: { label: 'Highly elliptical', provider: 'NASA TESS' },
   HX: { label: 'Highly elliptical, THEMIS and Chandra', provider: 'NASA NAIF' },
+  WA: { label: 'Geostationary, commercial', provider: 'WAAS broadcast' },
 };
 export const STATIC = [
   ...['ajisai', 'starlette', 'stella', 'westpac', 'lares', 'larets'].map((t) => ({ ...LOW, name: t, files: () => laserFiles('nsgf', t) })),
@@ -41,4 +42,5 @@ export const HX = [
   ...[['A', -650, 30580], ['D', -653, 30797], ['E', -654, 30798]].map(([letter, code, norad]) => ({ name: `THEMIS ${letter}`, id: `THEMIS ${letter} (${code})`, norad, objectId: '', file: `${NAIF}/themis/THEMIS_${letter}_2013_039_055.bsp`, from: '2013-02-08T00:00:00Z', to: '2013-02-24T00:00:00Z', arcs: [72], cutoffs: every('2013-02-11', '2013-02-17', 2) })),
   { name: 'CHANDRA', id: 'Chandra (-151)', norad: 25867, objectId: '1999-040B', file: `${NAIF}/chandra/chandra_merged.bsp`, from: '2018-03-01T00:00:00Z', to: '2018-04-30T00:00:00Z', arcs: [72, 168], cutoffs: every('2018-03-08', '2018-04-19', 7) },
 ];
+export const WA_CUTOFFS = every('2026-09-02', '2026-10-26', 2);
 export const windowKey = (group, name, t) => `${group}|${name}|${iso(t)}`;
