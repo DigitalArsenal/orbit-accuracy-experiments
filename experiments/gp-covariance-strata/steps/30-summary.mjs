@@ -42,7 +42,7 @@ for (const f of fs.readdirSync(sdir).filter((x) => /^sets-.*\.json\.gz$/.test(x)
 const heldPaths = [...read].filter((p) => HELD_PATH.test(p));
 const truthAudit = JSON.parse(fs.readFileSync(path.join(sdir, 'truth-hold-audit.json'), 'utf8'));
 fs.writeFileSync(out, `${JSON.stringify({
-  rows: n, builder: counts,
+  rows: n, builder: { ...counts, ageOutsideBinDropped: d.ageOutside },
   s4: { setRecordsDroppedByName: { starlink: setAudit['name-starlink'], galileoGsat: setAudit['name-galileo-gsat'] },
     truthObjectBlocksDropped: { sp3PrnE: truthAudit.dropped['sp3-prn-E'], c2HeldObject: truthAudit.dropped['norad-c2-held'] },
     truthTargetsDroppedByTime: { c2Calibration20260601: dropped['c2-calibration-2026-06-01'], swarmGracefo20261031: dropped['swarm-gracefo-2026-10-31'], iss2025: dropped['iss-state-2025'] },

@@ -1,5 +1,5 @@
 {
- "rows": 2287092,
+ "rows": 2287057,
  "builder": {
   "objects": 114,
   "sets": 68001,
@@ -7,7 +7,8 @@
   "rows": 2287092,
   "missing": 394,
   "noSpan": 862015,
-  "held": 366459
+  "held": 366459,
+  "ageOutsideBinDropped": 35
  },
  "s4": {
   "setRecordsDroppedByName": {
@@ -156,127 +157,127 @@
    "days": 3
   },
   "LEO-H|6": {
-   "rows": 33724,
+   "rows": 33723,
    "objects": 6,
    "clusters": 4,
    "days": 345
   },
   "LEO-H|5": {
-   "rows": 33802,
+   "rows": 33801,
    "objects": 6,
    "clusters": 4,
    "days": 345
   },
   "LEO-H|4": {
-   "rows": 33853,
+   "rows": 33852,
    "objects": 6,
    "clusters": 4,
    "days": 345
   },
   "LEO-H|3": {
-   "rows": 33895,
+   "rows": 33894,
    "objects": 6,
    "clusters": 4,
    "days": 345
   },
   "LEO-H|2": {
-   "rows": 33947,
+   "rows": 33946,
    "objects": 6,
    "clusters": 4,
    "days": 345
   },
   "LEO-H|1": {
-   "rows": 33982,
+   "rows": 33981,
    "objects": 6,
    "clusters": 4,
    "days": 344
   },
   "LEO-H|0": {
-   "rows": 34021,
+   "rows": 34020,
    "objects": 6,
    "clusters": 4,
    "days": 345
   },
   "LEO-M|6": {
-   "rows": 33015,
+   "rows": 33006,
    "objects": 6,
    "clusters": 4,
    "days": 340
   },
   "LEO-M|5": {
-   "rows": 33088,
+   "rows": 33086,
    "objects": 6,
    "clusters": 4,
    "days": 341
   },
   "LEO-M|4": {
-   "rows": 33242,
+   "rows": 33240,
    "objects": 6,
    "clusters": 4,
    "days": 341
   },
   "LEO-M|3": {
-   "rows": 33306,
+   "rows": 33304,
    "objects": 6,
    "clusters": 4,
    "days": 341
   },
   "LEO-M|2": {
-   "rows": 33309,
+   "rows": 33307,
    "objects": 6,
    "clusters": 4,
    "days": 340
   },
   "LEO-M|1": {
-   "rows": 33316,
+   "rows": 33314,
    "objects": 6,
    "clusters": 4,
    "days": 339
   },
   "LEO-M|0": {
-   "rows": 33351,
+   "rows": 33349,
    "objects": 6,
    "clusters": 4,
    "days": 341
   },
   "LEO-L|6": {
-   "rows": 33649,
+   "rows": 33648,
    "objects": 5,
    "clusters": 3,
    "days": 520
   },
   "LEO-L|5": {
-   "rows": 33700,
+   "rows": 33699,
    "objects": 5,
    "clusters": 3,
    "days": 520
   },
   "LEO-L|4": {
-   "rows": 33805,
+   "rows": 33804,
    "objects": 5,
    "clusters": 3,
    "days": 520
   },
   "LEO-L|3": {
-   "rows": 33850,
+   "rows": 33849,
    "objects": 5,
    "clusters": 3,
    "days": 520
   },
   "LEO-L|2": {
-   "rows": 33890,
+   "rows": 33889,
    "objects": 5,
    "clusters": 3,
    "days": 518
   },
   "LEO-L|1": {
-   "rows": 33908,
+   "rows": 33907,
    "objects": 5,
    "clusters": 3,
    "days": 517
   },
   "LEO-L|0": {
-   "rows": 33911,
+   "rows": 33910,
    "objects": 5,
    "clusters": 3,
    "days": 518

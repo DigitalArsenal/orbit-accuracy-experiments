@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import readline from 'node:readline';
-import { REGIMES } from './bins.mjs';
+import { REGIMES, BINS } from './bins.mjs';
 import { FIXED, gnssClusters } from './clusters.mjs';
 import { auditRetained, HoldAudit } from './holds.mjs';
 
@@ -23,8 +23,13 @@ export async function loadRows(dirs) {
   const planeInput = JSON.parse(fs.readFileSync(path.join(scratch, 'plane-input.json'), 'utf8'));
   const gc = gnssClusters(planeInput.map((p) => ({ ...p, sys: sp3Of.get(p.norad) })).filter((p) => p.sys));
   const clusterNames = []; const cid = (n) => { let i = clusterNames.indexOf(n); if (i < 0) { clusterNames.push(n); i = clusterNames.length - 1; } return i; };
-  const out = Object.fromEntries(COLS.map((c) => [c, new Array(rows.length)]));
-  rows.forEach((r, i) => {
+  // PLAN.md acceptance (f): every evaluated age lies inside its bin, both edges included. The module's age differs from the grid by
+  // up to seconds (epoch rounding) on a few rows; those are dropped and counted.
+  const inside = (r) => r.age >= BINS[r.b][0] && (r.age < BINS[r.b][1] || (r.b === BINS.length - 1 && r.age <= BINS[r.b][1]));
+  const kept = rows.filter(inside), ageOutside = rows.length - kept.length;
+  const out = Object.fromEntries(COLS.map((c) => [c, new Array(kept.length)]));
+  out.ageOutside = ageOutside;
+  kept.forEach((r, i) => {
     out.norad[i] = r.norad; out.setMs[i] = r.setMs; out.t[i] = r.t; out.b[i] = r.b; out.k[i] = r.k; out.age[i] = r.age;
     [out.eR[i], out.eT[i], out.eN[i], out.vR[i], out.vT[i], out.vN[i]] = r.rtn;
     out.regime[i] = r.regime ? REGIMES.indexOf(r.regime) : -1;

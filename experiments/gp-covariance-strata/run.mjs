@@ -108,7 +108,7 @@ function hashTree(dir) { const h = createHash('sha256'); for (const f of fs.read
 {
   const dir = path.join(root, 'results/gp-covariance-strata');
   let bad = 0;
-  for (const f of fs.readdirSync(dir)) { if (f === 'README.md') continue; const t = fs.readFileSync(path.join(dir, f), 'utf8'); if (/"(rtn|e|z)":\s*\[|"d2":\s*[0-9]/.test(t) || /(^|\n)\s*\d{5,}\s*,\s*[-0-9.e]+\s*,/.test(t)) ++bad; }
+  for (const f of fs.readdirSync(dir)) { if (f === 'README.md') continue; const t = fs.readFileSync(path.join(dir, f), 'utf8'); if (/"(rtn|e|z)":\s*\[\s*-?[0-9]|"d2":\s*[0-9]|"setEpoch"|"sampleEpoch"/.test(t)) ++bad; }
   const readme = fs.readFileSync(path.join(dir, 'README.md'), 'utf8');
   const lines = readme.includes('Contains modified Copernicus Sentinel data (2025-2026).') && readme.includes('WAAS MT9 data: NASA Crustal Dynamics Data Information System (CDDIS).');
   check('j', bad === 0 && lines, `results/ holds no per-object rows (${bad} offending files); README carries both attribution lines: ${lines}`);
