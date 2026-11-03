@@ -3,7 +3,7 @@
 // the leads; then gp-error-model:
 //   - A(t): FFM's carried covariance at each lead;
 //   - U_R, U_T, U_N: noise_responses from E (600 s discretization, the STM's own Phi(t) Phi(t_j)^-1);
-//   - D_tau (tau = 1 day, infinite): dcp_covariance from E with unit sigma_delta, lead-day covariance exp(-|i-j|/tau) over K = 3 days,
+//   - D_tau (tau = 1 day, infinite): dcp_covariance from E with unit sigma_delta, lead-day covariance exp(-|i-j|/tau) over K = 7 days (registered extrapolation),
 //     the start-relative B sensitivity from the STM's B column (only when B is a dynamic parameter);
 //   - every term and the error taken to the predicted state's RTN axes by pair_statistics (position blocks, lower triangle, m^2).
 // The composition P_cal = k_e A + diag(f^2) + q_T U_T + q_RN (U_R + U_N) + sigma_delta^2 D_tau is pair_statistics' covarianceTerms
