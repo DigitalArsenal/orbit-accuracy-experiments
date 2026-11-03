@@ -1,0 +1,17 @@
+{
+  "manifestSha256": "d7c066725d7a6a77f3220c191c2819d11f84fcf8a17b4c5c6a8127d2396d06ac",
+  "variants": {
+    "HEO20_Q4": {
+      "returncode": 0,
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/HEO20_Q4/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "29ae9b41022f6117dd5e9eb537c80ac71603be1ab9a2ffa9196ecf74fa02ac60",
+      "degree": 20,
+      "quadratureMultiplier": 4,
+      "changedSources": {
+        "src/resonance.inc": "9df27ed7bea6dea5986764a882654ea6694956ab4b643508357abc3422048743",
+        "src/tesseral.inc": "59d089a2c5827c693642760d0e21d46f77db31879656f788c3e04783195e6ea8",
+        "src/xp_theory.inc": "402ab5ba7edffcb2bccc047fd2f1066b9672b8b65a1a69258ec9521b4eb1fc7b"
+      }
+    }
+  }
+}
