@@ -20,3 +20,5 @@ E2E: run the real module on a registered archive window twice; forward day-3 err
 ## Amendment 2026-11-03: coordinator disposition
 
 The inherited MGEX selector decoded all six held Galileo files in memory before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation; the replacement selector filters NORAD filenames before decoding. EXCLUDE_NORADS now also excludes Swarm and GRACE-FO at every date; closed source selection and a name guard exclude every Starlink. Fresh results use resume-* stores; the interrupted five LS rows remain historical.
+
+Build amendment: CONTROL, H03/H05/H07, NOFRAME, CLASS0–CLASS4 follow the dated PLAN amendment; each variant is compared to the source-matched CONTROL.

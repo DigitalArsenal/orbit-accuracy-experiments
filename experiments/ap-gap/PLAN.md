@@ -20,3 +20,7 @@ E2E: run the real module on a registered archive window twice; forward day-3 err
 ## Amendment 2026-11-03: coordinator disposition
 
 The inherited MGEX selector decoded all six held Galileo files in memory before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation; the replacement selector filters NORAD filenames before decoding. EXCLUDE_NORADS now also excludes Swarm and GRACE-FO at every date; closed source selection and a name guard exclude every Starlink. Fresh results use resume-* stores; the interrupted five LS rows remain historical.
+
+## Amendment 2026-11-03: isolated builds
+
+Build CONTROL from the current module source copy, H03/H05/H07 changing only kSeriesE, NOFRAME changing only ap_frame to zero, and CLASS0 through CLASS4 forcing band_of to that class at both initialization and evaluation. Compare variants to CONTROL; do not attribute a difference from archived AP 0.4.0 to the changed constant until the rebuild control agrees. Source and wasm hashes stay in the scratch build manifest. Forced classes are diagnostic perturbations, not proposed defaults.
