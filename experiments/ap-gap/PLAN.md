@@ -64,3 +64,5 @@ Even the artifact commit and recorded dependency versions did not reproduce the 
 ## Amendment 2026-11-03: finite FFM tail queue
 
 After most shards finished, pause this lane's stage supervisor and terminate its remaining workers by exact PID. Enumerate only unfinished keys against the completed AP control, run that finite list with at most 12 workers, and append each result once to its original shard. Keep each task's original row, command manifest, and input audit under ap-gap/ffm-tail; tail-index.json records the merge. No arm or window changes, no error-ratio selection, and no self-spawning workers. Resume the stage supervisor only after all tail jobs exit.
+
+Tail merge audit: four original rows completed after the pending-key snapshot. Preserve the merged files with repeats under ffm-tail/merged-with-repeats, retain the first row per window in the canonical shards, and record the repeat comparison in ffm-tail/repeats.json. This selection uses execution order, not error values. The canonical FFM set has 426 unique windows.
