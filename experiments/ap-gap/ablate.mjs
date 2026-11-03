@@ -1,4 +1,4 @@
-import { writeAudit } from './audit.mjs';
+import { writeAudit, pinFile } from './audit.mjs';
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
 //   node experiments/operator-theory/all-regimes.mjs --wasm <AP 0.4.0> --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
 import fs from 'node:fs';
@@ -103,6 +103,7 @@ async function objects() {
   if (GROUPS.includes('HE') && TESS.cutoffs.some((t) => inShard(windowKey('HE', TESS.name, t)))) {
     const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
     const files = fs.readdirSync(TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(TESS.dir, f));
+    for (const file of files) await pinFile(file);
     const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files, source: 'ap6-heo', id: 'TESS (-95)', name: TESS.name, norad: TESS.norad, fromUtc: TESS.from, toUtc: TESS.to, stride: 1 });
     const axes = await openAxes();
     out.push({ group: 'HE', name: TESS.name, norad: TESS.norad, objectId: TESS.objectId, lines: await spkOnGrid(s.lines, axes), arcs: TESS.arcs, cutoffs: TESS.cutoffs, vacuum: true });
@@ -114,6 +115,7 @@ async function objects() {
     const axes = await openAxes();
     for (const h of HX) {
       if (!h.cutoffs.some((t) => inShard(windowKey('HX', h.name, t)))) continue;
+      await pinFile(h.file);
       const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files: [h.file], source: 'ap6-heo', id: h.id, name: h.name, norad: h.norad, fromUtc: h.from, toUtc: h.to, stride: 1 });
       out.push({ group: 'HX', name: h.name, norad: h.norad, objectId: h.objectId, lines: await spkOnGrid(s.lines, axes), arcs: h.arcs, cutoffs: h.cutoffs, vacuum: true });
     }
