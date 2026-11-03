@@ -191,3 +191,63 @@ few to guard recall. `verify.mjs` therefore repeats the method on the unregister
 `config.json` keeps its `replay` block, now unused. `parity-diagnostic.mjs`, added after the registered results were read,
 bins the propagator comparison by BSTAR and by time since epoch; its output is labelled post-hoc in the report and is not
 part of the pre-registered analysis.
+
+### A2 (2026-10-31, registered before the run on this build): the same test on CA 0.17.0, the harness fixed
+
+Task `experiments-ca-validation-on-0-17-20261031`. Registered on origin
+`wip/experiments-ca-validation-on-0-17-20261031/registration` before any result on this build exists.
+
+**Reason.** The result above is on CA 0.9.0. The build to publish is CA 0.17.0, and nothing has re-proved that the releases
+between them left recall intact: 0.10.0 pair minima on sampled sources; 0.11.0 full-precision OMMs through `sgp4-str3`;
+0.12.0 the radial gate; 0.13.0 an object SGP4 refuses part-way is screened up to its last valid instant; 0.14.0 partial
+coverage; 0.15.0 slow Pc; 0.16.0 the memory budget and chunked fallback; 0.17.0 a CSM for covariance events.
+
+**The rules do not change.** The snapshot, the subset, the window, the two arms, the reference and its method, placement,
+matching, recall, false events, differences, Pc, parity and the decision rule stand. The pass rule is the same: on arm
+*defaults*, every reference event below 1 km has a matched screen event; any miss in any band or arm is a defect.
+
+**What changes.**
+
+1. **The CA build, the one change under test.** `analysis/conjunction-assessment` 0.17.0 at modules
+   `fbda894501f32210b77c74b53bcad036ce7a1b07`, `dist/isomorphic/module.wasm` SHA-256
+   `0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a` (the same blob at modules main `cfd7ee626`). The
+   reference stays on the registered `propagator/sgp4` 1.3.1, `d9fdd057…` at `44ce9d27a`, so its events must be byte-identical
+   to the 0.9.0 run's (SHA-256 `8a8f862c…`); that is checked. `propagator/sgp4` 1.3.1 runs improved mode and CA 0.17.0 AFSPC
+   mode. Near-Earth sets are reported to agree between the modes to micrometers (modules task `modules-sgp4-one-mode-20261031`); the
+   registered parity measure reports what this subset shows.
+2. **The harness, for how CA 0.13.0 and later report an object.** The `excluded` port now lists an object screened in part as
+   well as one excluded, once per call, in a fixed COMMENT form (the module's README, "Objects screened in part or excluded").
+   `run.mjs` dropped every reference event of a listed object, so an unchanged run on 0.13.0 or later could report a false pass:
+   an object screened up to its refusal would lose all its reference events, those the screen must find included. The section
+   "Comparison", Exclusions, now reads: a reference event leaves the denominator only when a listing **of its own call** says its
+   object was not screened at its TCA (TCA at or after FIRST_REFUSAL, or the object refused from the call's start). Each one is
+   counted by reason and listed. A COMMENT of no known form stops the run. `listing-proof.mjs` proves this by a fabricated listing:
+   a reference event the screen drops while its object is still screened is a miss here and a false pass in the harness of `5612dc1`.
+3. **Registration and checkout.** Other lanes have running code and unlanded work in the shared checkouts. So the run works in a
+   `git archive` snapshot of origin/main, the guard compares the sources with the registration commit on origin
+   (`EXPERIMENTS_GIT` names the git store), and helper sources come from `git archive` at the pinned commits with the installed
+   packages linked read-only.
+4. **Compute.** The screen starts only when the 1-minute load is below 45, under `nice -n 10`; 8 module threads as registered.
+
+The console arm stays 24 h calls, as registered, though CA 0.16.0 removed the trap that was its reason.
+
+**Reporting.** As before, plus:
+
+- the 0.9.0 row beside this one;
+- failed pair evaluations, and objects on the port and reference events out of the denominator per reason;
+- what moved between builds, event by event (`diff-builds.mjs`). The screen's SGP4 changed in 0.11.0, so values may move, and an
+  event that appears or disappears is the result to read.
+
+The 0.9.0 report stays as `README-0.9.0.md`, unchanged. A difference is a result. Any miss, any false event or any new exclusion
+goes to the coordinator with its rows' identifiers, and no rule is amended to pass. A1's E2E slice stands, with its own
+`replay.a2.json`.
+
+**Disclosure.** Before this registration, with this harness on 0.17.0: one smoke run of 300 objects of the unregistered smoke
+ranking for 1 hour (1 reference event, found). No reference was enumerated for the registered subset on this build.
+
+**Steps.** With `EXPERIMENTS_GIT` and `SDN_MODULES_ROOT` set when working in a snapshot:
+
+1. `run.mjs --run <id>`;
+2. `diff-builds.mjs --run <run> --baseline <0.9.0 run>`;
+3. `listing-proof.mjs > <file>`, `report.mjs --proof-from <file>`; `run.mjs --smoke --count 2000 --seconds 43200 --out <dir>`, `report.mjs --replay-from <dir>`; `report.mjs --run <run>`;
+4. `verify.mjs`, the E2E.

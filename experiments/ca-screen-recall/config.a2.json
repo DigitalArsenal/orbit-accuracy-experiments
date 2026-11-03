@@ -1,0 +1,36 @@
+{
+  "amendment": "A2",
+  "date": "2026-10-31",
+  "task": "experiments-ca-validation-on-0-17-20261031",
+  "reason": "re-prove recall on CA 0.17.0, the build to publish; the same test, data and pass rule, with one change of build and the harness fixed for how CA 0.13.0 and later report an object on the excluded port",
+  "modules": {
+    "repository": "space-data-network-modules",
+    "pins": {
+      "analysis/conjunction-assessment": {
+        "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+        "version": "0.17.0",
+        "artifact": "dist/isomorphic/module.wasm",
+        "sha256": "0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a"
+      },
+      "propagator/sgp4": {
+        "commit": "44ce9d27a1214c8a4740b5f30d831b0e6a7248f0",
+        "version": "1.3.1",
+        "artifact": "dist/isomorphic/module.wasm",
+        "sha256": "d9fdd0575d8dc84fa418d1ec4a5e0f14c9a02683eaeec0904b53a0a18b239a97"
+      }
+    },
+    "note": "the reference's SGP4 is the registered one; the screen under test is the one change. Artifacts and manifests are read with git show; the helper sources come from git archive at the same commits, so the shared checkout's working tree is never read. node_modules are linked read-only"
+  },
+  "registration": {
+    "ref": "wip/experiments-ca-validation-on-0-17-20261031/registration",
+    "reason": "local main carries other lanes' unlanded commits, so the registration is a commit on origin built on origin/main, holding only this task's files"
+  },
+  "baseline": {
+    "version": "0.9.0",
+    "commit": "5612dc1539296389ab5041605fc91126f6754f20",
+    "run": "ca-screen-recall-registered-20261029",
+    "metrics": "results/ca-screen-recall/metrics.json",
+    "manifest": "results/ca-screen-recall/manifest.json",
+    "readme": "README-0.9.0.md"
+  }
+}
