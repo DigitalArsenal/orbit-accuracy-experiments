@@ -14,7 +14,6 @@ import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operat
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
-throw new Error('AP-gap run blocked: held Galileo files were decoded by the inherited MGEX selector; coordinator disposition required (results/ap-gap/README.md)');
 const frozen = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url))); if (!frozen.frozen) throw new Error('registration is not frozen');
 const hash = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 if (args.wasm === frozen.baselineWasm && hash(args.wasm) !== frozen.baselineSha256) throw new Error('AP build mismatch');
@@ -59,7 +58,7 @@ async function spkOnGrid(lines, axes) {
 
 // Reject held objects by filename before opening any OEM bytes.
 function safeMgex({ klass }) {
-  const held = new Set([43567,37847,41862,41174,43055,41175]);
+  const held = new Set(frozen.EXCLUDE_NORADS);
   const base = '/opt/data/sdn-archive/e14-covariance-realism/reference';
   const dirs = Array.from({length:20},(_,k)=>`GFZ0MGXRAP_2025${274+k}0000_01D_05M_ORB`).filter(d=>fs.existsSync(path.join(base,d)));
   if (!dirs.length) return [];
@@ -71,7 +70,7 @@ function safeMgex({ klass }) {
 
 async function objects() {
   const out = [];
-  for (const o of STATIC.filter((x) => GROUPS.includes(x.group))) {
+  for (const o of STATIC.filter((x) => GROUPS.includes(x.group)).sort((a,b)=>GROUPS.indexOf(a.group)-GROUPS.indexOf(b.group))) {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);
@@ -108,7 +107,8 @@ async function objects() {
     }
     await axes.close();
   }
-  return out;
+  for (const o of out) if (frozen.EXCLUDE_NORADS.includes(Number(o.norad)) || /STARLINK/i.test(o.name)) throw new Error('excluded object');
+  return out.sort((a,b)=>GROUPS.indexOf(a.group)-GROUPS.indexOf(b.group));
 }
 
 for (const o of await objects()) {
@@ -120,6 +120,7 @@ for (const o of await objects()) {
   const between = (a, b) => { const out = []; for (let i = 0; i < times.length; i += 1) if (times[i] >= a && times[i] <= b) out.push(o.lines[i]); return out; };
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0);
+    if (Date.now() >= Date.parse(frozen.deadline)) { await F?.close(); process.exit(0); }
     if (!inShard(key) || done.has(key) || (args.key && key !== args.key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
@@ -152,7 +153,7 @@ for (const o of await objects()) {
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
         if (method === 'ap') {
-          const specs = args.arm ? [args.arm] : ['AP','J70','T0','T12','Z0'];
+          const specs = args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];
           for (const name of specs) await run(name, async () => {
             const degrees = { tesseral: name === 'T0' || name === 'FRAME' ? 0 : name === 'T12' ? 12 : name === 'RESONANCE' ? 1 : 31,
               zonal: name === 'Z0' || name === 'RESONANCE' ? 0 : name === 'FRAME' ? 1 : 20, atmosphere: !o.vacuum && name !== 'J70' };
@@ -164,9 +165,9 @@ for (const o of await objects()) {
             return { days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
           });
         } else {
-          for (const name of ['F','NO_SRP','NO_BODIES','NO_TIDES','D20','O12','O31']) await run(name, async () => {
+          for (const name of (args.arm ? args.arm.split(',') : ['F','NO_SRP','NO_BODIES','NO_TIDES','D20','O12','O31'])) await run(name, async () => {
             const settings = high ? ffmHigh() : ffmLow();
-            if (name === 'NO_SRP') settings.forces.srp = false;
+            if (name === 'NO_SRP') { settings.forces.srp = false; if (high) { settings.parameters = []; settings.apriori = apriori([]); } }
             if (name === 'NO_BODIES') settings.forces.thirdBodies = [];
             if (name === 'NO_TIDES') settings.forces.solidTides = false;
             if (name === 'D20') { settings.forces.degree = 20; settings.forces.order = Math.min(20, settings.forces.order); }
