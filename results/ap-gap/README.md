@@ -133,8 +133,8 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/F72 | F72 | 23.744 (65) | 53.125 (57) | 117.010 (64) | 0.000 (65) | 0.000 (57) | 0.000 (64) |
 | resume-ffm/NO_SRP72 | F72 | 5.990 (65) | 18.649 (57) | 46.838 (64) | -14.427 (65) | -24.548 (57) | -46.165 (64) |
 | resume-ffm/NO_BODIES72 | F72 | 64.237 (65) | 180.608 (57) | 528.504 (64) | 38.003 (65) | 99.381 (57) | 380.936 (64) |
-| resume-ffm/NO_SUN72 | F72 | 33.856 (34) | 75.439 (24) | 167.854 (29) | 11.179 (34) | 25.196 (24) | 59.210 (29) |
-| resume-ffm/NO_MOON72 | F72 | 53.685 (34) | 152.326 (24) | 411.524 (29) | 30.703 (34) | 86.431 (24) | 229.785 (29) |
+| resume-ffm/NO_SUN72 | F72 | 34.323 (42) | 76.782 (37) | 169.199 (42) | 11.179 (42) | 23.647 (37) | 55.598 (42) |
+| resume-ffm/NO_MOON72 | F72 | 55.130 (42) | 140.968 (37) | 419.654 (42) | 30.703 (42) | 77.556 (37) | 305.105 (42) |
 | resume-ffm/NO_TIDES72 | F72 | 25.306 (65) | 62.787 (57) | 185.198 (64) | 1.157 (65) | 4.561 (57) | 13.205 (64) |
 | resume-ffm/D2072 | F72 | 30.253 (65) | 102.342 (57) | 284.623 (64) | 3.844 (65) | 27.242 (57) | 84.337 (64) |
 | resume-ffm/O1272 | F72 | 71.213 (34) | 107.452 (24) | 224.442 (29) | 45.196 (34) | 50.301 (24) | 122.282 (29) |
@@ -170,6 +170,8 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/D2072 | F72 | 32.454 (136) | 190.003 (121) | 1210.460 (103) | 10.539 (136) | 37.739 (121) | 92.252 (103) |
 | resume-ffm/TESS1272 | F72 | 180.859 (136) | 790.991 (121) | 3694.026 (103) | 125.124 (136) | 420.345 (121) | 1011.281 (103) |
 | resume-ffm/TESS3172 | F72 | 16.087 (136) | 140.786 (121) | 1029.607 (103) | 0.101 (136) | 1.222 (121) | 2.807 (103) |
+| resume-ffm/NO_SUN72 | F72 | 27.405 (21) | 125.940 (19) | 532.466 (19) | 5.863 (21) | 8.925 (19) | 17.280 (19) |
+| resume-ffm/NO_MOON72 | F72 | 66.967 (21) | 212.765 (19) | 1081.494 (19) | 26.185 (21) | 106.639 (19) | 555.216 (19) |
 
 Unresolved. No module change established. Expected gain is unmeasured; paired AP–FFM gap 164.839 m (n=121). This gap is a target ceiling, not a promised gain.
 
@@ -194,6 +196,8 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/D2072 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-ffm/TESS1272 | F72 | 33.770 (19) | 74.397 (19) | 324.104 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-ffm/TESS3172 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
+| resume-ffm/NO_SUN72 | F72 | 32208.247 (4) | 37434.516 (4) | 155734.654 (4) | 30549.327 (4) | 36353.265 (4) | 144925.938 (4) |
+| resume-ffm/NO_MOON72 | F72 | 82985.326 (4) | 119171.213 (4) | 547042.646 (4) | 82929.170 (4) | 118089.962 (4) | 536233.931 (4) |
 | resume-heo/AP72 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-heo/J7072 | AP72 | 563.557 (19) | 2506.156 (19) | 12249.504 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
 | resume-heo/T072 | AP72 | 627.019 (19) | 2135.369 (19) | 9941.434 (19) | -0.162 (19) | 7.635 (19) | 19.370 (19) |
@@ -223,6 +227,8 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-ffm/D2072 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-ffm/TESS1272 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-ffm/TESS3172 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
+| resume-ffm/NO_SUN72 | F72 | 179514.565 (1) | 843572.701 (1) | 2022224.880 (1) | 179219.960 (1) | 841950.599 (1) | 2010277.119 (1) |
+| resume-ffm/NO_MOON72 | F72 | 301231.990 (1) | 1266684.473 (1) | 10409006.282 (1) | 300937.385 (1) | 1265062.370 (1) | 10397058.521 (1) |
 | resume-heo/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-heo/J7072 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
 | resume-heo/T072 | AP72 | 766.199 (7) | 2009.247 (7) | 7604.416 (7) | -0.003 (7) | -0.002 (7) | -0.001 (7) |
@@ -273,7 +279,7 @@ Candidate: short-arc prior constants. Use the tested Space Force wrapper prior c
 | resume-H07 | 426 | 12 | 45 | 0 | 0 |
 | resume-NOFRAME | 426 | 12 | 45 | 0 | 0 |
 | resume-ap | 400 | 12 | 225 | 0 | 0 |
-| resume-ffm | 426 | 12 | 251 | 3467 | 0 |
+| resume-ffm | 426 | 12 | 251 | 3545 | 0 |
 | resume-frame | 860 | 740 | 40 | 0 | 0 |
 | resume-frame-gn | 755 | 5 | 12 | 0 | 0 |
 | resume-gn | 755 | 5 | 8 | 0 | 0 |
@@ -301,7 +307,7 @@ Candidate: short-arc prior constants. Use the tested Space Force wrapper prior c
 - Method 4: partial: extended resonant terms not implemented
 - Unique causes and measured module gains are not established for every gap; follow-up tasks remain coordinator drafts.
 
-DO labels: {"event":0,"quiet":78,"unknown":72}. Historical interrupted LS rows are excluded from aggregates. The initial mixed frame batch used the wrong weather store for GN; its failed attempt is retained, and resume-frame-gn is the corrected GN frame comparison. Optional NO_SUN, NO_MOON, O12 and O31 arms cover the initial FFM prefix only. Four identical FFM scheduling repeats are preserved but counted once. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.
+DO labels: {"event":0,"quiet":78,"unknown":72}. Labels use the same gated truth as the fits; no event-versus-quiet contrast was measured. Historical interrupted LS rows are excluded from aggregates. The initial mixed frame batch used the wrong weather store for GN; its failed attempt is retained, and resume-frame-gn is the corrected GN frame comparison. NO_SUN and NO_MOON include the finite completion queue; their exact coverage is shown in the tables. Optional O12 and O31 arms cover the initial FFM prefix only. Original FFM arms before that merge remain under ffm-bodies/before. Four identical FFM scheduling repeats are preserved but counted once. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.
 
 ## E2E
 
