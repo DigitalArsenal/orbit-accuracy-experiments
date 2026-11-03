@@ -56,3 +56,7 @@ Method 3 sets XP2F_CONTROL=1 before importing the shared readers, exactly as cyc
 Fixed-AGOM validation: both native fitters initialize AGOM at zero for these Gaussian-prior arms. Decode the fitted OMM and require |AGOM| ≤ 1e-15 for each successful fixed arm. A failure remains an arm failure, never a fixed-seed measurement.
 
 Space Force build correction: the current checkout's root dependencies did not reproduce the prescribed wasm. Build from artifact commit `1b905d16f68fc56e7da66c6392315970f9e7e6d0`, including its frame headers and package lock, in scratch. Attach that lock's dependencies and require byte identity for CONTROL before using FIXED. The initial mismatching build was never fitted or scored.
+
+## Amendment 2026-11-03: separate Space Force rebuild control
+
+Even the artifact commit and recorded dependency versions did not reproduce the prescribed binary hash; the unmodified Space Force library hash still matches exactly. Before any GN row is run, add U_REBUILT beside the unchanged prescribed U. Compare U_FIXED to this source-matched rebuild, not directly to U. Measure maximum state separation between U and U_REBUILT through the module at every forecast epoch. Attribution to the prescribed build requires ≤0.001 m on every paired window; otherwise method 3 remains partial and the rebuilt pair is reported separately. This replaces the stricter byte-identity gate with an explicit measured control, without replacing the prescribed baseline.

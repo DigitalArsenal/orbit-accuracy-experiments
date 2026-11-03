@@ -19,9 +19,9 @@ export function diagnose(all,groups){return groups.map(group=>{
 
 export function diagnoseGn(all) {
  const rows=all.filter(r=>r.group==='GN'&&r.batch==='resume-gn');
- const triples=rows.map(r=>({x:error(r,'XP24'),u:error(r,'U24'),fixed:error(r,'XP_FIXED24'),prior:error(r,'XP_PRIOR24'),ufixed:error(r,'U_FIXED24')})).filter(p=>Number.isFinite(p.x)&&Number.isFinite(p.u));
+ const triples=rows.map(r=>({x:error(r,'XP24'),u:error(r,'U24'),rebuilt:error(r,'U_REBUILT24'),fixed:error(r,'XP_FIXED24'),prior:error(r,'XP_PRIOR24'),ufixed:error(r,'U_FIXED24')})).filter(p=>Number.isFinite(p.x)&&Number.isFinite(p.u));
  const gap=median(triples.map(p=>(p.x-p.u)*1000));
- const effects=['fixed','prior','ufixed'].map(arm=>{const pairs=triples.filter(p=>Number.isFinite(p[arm]));return {arm,n:pairs.length,gainM:median(pairs.map(p=>((arm==='ufixed'?p.u:p.x)-p[arm])*1000))};});
+ const effects=['fixed','prior','ufixed'].map(arm=>{const pairs=triples.filter(p=>Number.isFinite(p[arm])&&(arm!=='ufixed'||Number.isFinite(p.rebuilt)));return {arm,n:pairs.length,gainM:median(pairs.map(p=>((arm==='ufixed'?p.rebuilt:p.x)-p[arm])*1000))};});
  const best=effects.filter(e=>e.arm!=='ufixed'&&e.n>=5&&e.gainM>0).sort((a,b)=>b.gainM-a.gainM)[0];
  const supported=gap>0&&best?.gainM>=0.5*gap;
  return {group:'GN',n:triples.length,pairedGapM:gap,effects,cause:supported?`Candidate: ${best.arm==='fixed'?'short-arc AGOM estimation':'short-arc prior constants'}`:'Unresolved',candidate:supported?best:null,proposedChange:supported?best.arm==='fixed'?'Hold AGOM at its seed on 24 h GNSS arcs, subject to unread-window confirmation.':'Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation.':null,expectedGainM:supported?best.gainM:null,gainTargetCeilingM:gap>0?gap:null,interpretation:'Expected gain is the exploratory paired day-3 improvement of the tested arm; no independent confirmation.'};
