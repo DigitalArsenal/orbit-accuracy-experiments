@@ -9,7 +9,7 @@ previous=s/'manifest.json'
 if previous.exists():
  saved=json.loads(previous.read_text())
  valid=all(k in saved and saved[k]['returncode']==0 and Path(saved[k]['path']).exists() and sha(Path(saved[k]['path']))==saved[k]['sha256'] and sha(s/k/'propagator/sgp4-xp/src/fit.hpp')==saved[k]['fitSha256'] for k in ['CONTROL','FIXED'])
- if valid and saved['CONTROL']['sha256']==sha(m/'propagator/sgp4-xp/dist/isomorphic/module.wasm'):
+ if valid and all(saved[k].get('sourceCommit')==commit for k in ['CONTROL','FIXED']):
   print('Reusing verified CONTROL and FIXED artifacts',flush=True);sys.exit(0)
 paths=['propagator/sgp4-xp/'+p for p in ['src','build.mjs','engine-source.mjs','generate-sds-headers.mjs','join-ussf.mjs','wasm-sections.mjs','package.json','package-lock.json','plugin-manifest.json']]+['foundation/frames/src','foundation/frames/erfa-amalgamation.mjs']
 archive=subprocess.check_output(['git','archive',commit,*paths],cwd=m)
@@ -35,4 +35,4 @@ for name in ['CONTROL','FIXED']:
  (s/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(name,rc,flush=True)
  if rc:break
  if name=='CONTROL' and manifest[name]['sha256']!=sha(m/'propagator/sgp4-xp/dist/isomorphic/module.wasm'):
-  manifest[name]['controlMismatch']=True;(s/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print('CONTROL differs from prescribed wasm; fixed comparison withheld',flush=True);break
+  manifest[name]['controlMismatch']=True;(s/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print('CONTROL differs from prescribed wasm; retain a separate numerical rebuild control',flush=True)

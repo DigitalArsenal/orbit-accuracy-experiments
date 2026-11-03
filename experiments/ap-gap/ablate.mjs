@@ -28,6 +28,7 @@ const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules
 const ONLY_U = false; const method = args.method ?? 'ap';
 const U = method === 'gn' ? await openUssfXp() : null;
 const UF = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed']) : null;
+const UR = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed'].replace('/FIXED/','/CONTROL/')) : null;
 const AF = method === 'gn' && args['ap-fixed'] ? await openAp(args['ap-fixed']) : null;
 const m = await openModules(), A = await openAp(args.wasm), F = method === 'ffm' ? await openFfmHost() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
@@ -47,7 +48,7 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, ussf: U?.provenance, ussfFixed: UF?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
 process.on('exit', () => writeAudit(OUT, SHARD));
 process.on('SIGTERM',()=>process.exit(143));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
@@ -168,9 +169,10 @@ for (const o of await objects()) {
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
         if (method === 'gn') {
-          for (const name of ['AP','XP','XP_PRIOR','U','AP_FIXED','XP_FIXED','U_FIXED']) await run(name,async()=>{
+          let originalUStates;
+          for (const name of ['AP','XP','XP_PRIOR','U','U_REBUILT','AP_FIXED','XP_FIXED','U_FIXED']) await run(name,async()=>{
             const ussf=name.startsWith('U');
-            const host=ussf?(name==='U'?U:UF):(name.endsWith('FIXED')?AF:A);
+            const host=ussf?(name==='U'?U:name==='U_REBUILT'?UR:UF):(name.endsWith('FIXED')?AF:A);
             if(!host) throw new Error('fixed build unavailable');
             const forces=name.startsWith('AP')?apForces(ATM,{tesseral:31,zonal:20}):{};
             const fit=name==='XP_PRIOR'?{dragPrior:{mean:0,sigma:0.05},srpPrior:{mean:0,sigma:0.1}}:null;
@@ -181,7 +183,11 @@ for (const o of await objects()) {
             const st=ussf?await host.propagate(f.omm,gridB,epochs.length):await host.propagate(f.omm,gridB,pcf,extra,epochs.length);
             const agom=S.readFitOmm(f.omm).agom;
             if(name.endsWith('FIXED')&&(!Number.isFinite(agom)||Math.abs(agom)>1e-15)) throw new Error('fixed AGOM left zero seed');
-            return {agom,days:score(await m.rtn(await m.toAxes(st,epochs,'GCRF'),truth))};
+            const gcrf=await m.toAxes(st,epochs,'GCRF');
+            let rebuildDeltaM;
+            if(name==='U') originalUStates=gcrf;
+            if(name==='U_REBUILT'&&originalUStates) rebuildDeltaM=Math.max(...(await m.rtn(gcrf,originalUStates)).map(v=>Math.hypot(...v)*1000));
+            return {agom,rebuildDeltaM,days:score(await m.rtn(gcrf,truth))};
           });
         } else if (method === 'ap') {
           const specs = args.arm === 'FRAME,RESONANCE' ? ['XP','FRAME','RESONANCE','AP'] : args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];
