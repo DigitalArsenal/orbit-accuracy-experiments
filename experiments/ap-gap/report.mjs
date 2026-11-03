@@ -1,3 +1,4 @@
+import {diagnose} from './diagnose.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -29,6 +30,7 @@ for(const g of groups) for(const batch of [...new Set(all.map(r=>r.batch))]) {
 const labels=Object.fromEntries(events.map(e=>[`${e.norad}|${e.cutoff}`,e.label]));
 const eventSplit=['event','quiet','unknown'].map(label=>{const rows=all.filter(r=>r.group==='DO'&&r.batch==='resume-ap'&&labels[`${r.norad}|${r.cutoff}`]===label);return {label,windows:rows.length,days:[1,3,7].map(day=>{const pairs=rows.map(r=>{const f=all.find(x=>x.batch==='resume-ffm'&&x.key===r.key);return {a:r.arms.AP72?.days?.[day]?.e,f:f?.arms.F72?.days?.[day]?.e};}).filter(x=>Number.isFinite(x.a)&&Number.isFinite(x.f));return {day,n:pairs.length,apM:med(pairs.map(p=>p.a*1000)),ffmM:med(pairs.map(p=>p.f*1000)),medianRatio:med(pairs.map(p=>p.a/p.f))};})};});
 const status={status:'partial',methodsComplete:0,methodsRequired:5,completedRows:all.length,eventSplit,groups:Object.fromEntries(groups.map(g=>[g,all.filter(r=>r.group===g).length])),eventCounts:Object.fromEntries(['event','quiet','unknown'].map(x=>[x,events.filter(e=>e.label===x).length])),rowFiles:files.map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))})),missing:['Method 1 completeness and variant control review pending','Method 2 isolated shadow and zonal-only subtraction unavailable in current wrapper','Method 3 pending full fitter coverage','Method 4 resonant terms above degree 5 not implemented in scratch','Method 5 paired event analysis pending'],cells};
+status.diagnoses=diagnose(all,groups);
 status.builds={};
 for(const kind of ['variants','ussf']){const file=`/Users/tj/software/terrain-work/body-look/codex-apgap-d9/${kind}/manifest.json`;if(fs.existsSync(file))status.builds[kind]={manifestSha256:hash(file),variants:Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(file))).map(([k,v])=>[k,{sha256:v.sha256,returncode:v.returncode,path:v.path}]))};}
 status.inputManifests=fs.readdirSync(root,{recursive:true}).filter(p=>/^resume-[^/]+\/inputs-\d+\.json$/.test(p)).map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))}));
@@ -44,8 +46,10 @@ for(const g of groups){
  const keys=[...new Set(cells.filter(c=>c.group===g).map(c=>c.batch+'/'+c.arm))];
  for(const key of keys){const cs=cells.filter(c=>c.group===g&&c.batch+'/'+c.arm===key);const d=cs.find(c=>c.day===3);text+=`| ${key} | ${[1,3,7].map(day=>{const c=cs.find(c=>c.day===day);return `${fmt(c.medianM)} (${c.n})`;}).join(' | ')} | ${fmt(d.pairedDeltaM)} (${d.pairedN}) |\n`;}
  if(!keys.length)text+='| Not measured | — | — | — | — |\n';
- text+='\nCause unresolved; no module change or expected gain established by these partial arms.\n\n';
+ const diagnosis=status.diagnoses.find(d=>d.group===g);
+ text+=`\n${diagnosis.cause}. ${diagnosis.proposedChange??'No module change established.'} Expected gain is unmeasured; paired AP–FFM gap ${fmt(diagnosis.pairedGapM)} m (n=${diagnosis.n}). This gap is a target ceiling, not a promised gain.\n\n`;
 }
 text+='## DO event split\n\n| Class | Day | AP m | FFM m | Median paired ratio | n |\n| --- | ---: | ---: | ---: | ---: | ---: |\n';for(const s of eventSplit)for(const d of s.days)text+=`| ${s.label} | ${d.day} | ${fmt(d.apM)} | ${fmt(d.ffmM)} | ${fmt(d.medianRatio)} | ${d.n} |\n`;
 text+='\n## Coverage\n\n'+status.missing.map(x=>'- '+x).join('\n')+'\n\nDO labels: '+JSON.stringify(status.eventCounts)+'. Historical interrupted LS rows are excluded from aggregates. First resumed batch predates the archive-read audit; later batches pin synchronous archive reads. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.\n';
+fs.writeFileSync(new URL('proposed-tasks.json',dest),JSON.stringify(status.diagnoses.filter(d=>d.candidate).map(d=>({group:d.group,parent:'mode-conjunction',needs:['experiments-ap-gap-diagnosis-20261103'],status:'draft for coordinator; not filed',hypothesis:d.cause,change:d.proposedChange,expectedGainM:null,gainTargetCeilingM:d.gainTargetCeilingM,confirmation:'Register an E2E on unread eligible windows before reading them; compare forward errors at days 1, 3, and 7.'})),null,2)+'\n');
 fs.writeFileSync(new URL('README.md',dest),text);console.log(JSON.stringify({rows:all.length,eventCounts:status.eventCounts}));
