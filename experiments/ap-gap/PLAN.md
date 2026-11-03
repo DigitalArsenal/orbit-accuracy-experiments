@@ -40,3 +40,7 @@ Before the first FFM subtraction, restrict method 2 to the task's primary 72 h f
 ## Amendment 2026-11-03: pinned FFM wire format
 
 AP6's openFfmHost pins FFM 2.0.4 and estimation 0.7.0. Its fit_batch propagation answers encode the force fields in PRWForceConfiguration, the predecessor of the current module's PCFForceModel. Keep that pinned AP6 baseline for comparability; report this deviation from the requested literal PCF interface. The pinned wrapper exposes no isolated shadow-model switch. No claim is made that SRP-off isolates shadow, or that degree-20 isolates zonals alone.
+
+## Amendment 2026-11-03: FFM time allocation
+
+After 200 completed FFM windows, observed low-orbit throughput threatened the later registered methods. Stop this lane's workers by exact PID and resume incomplete windows with the seven primary arms: F, NO_SRP, NO_BODIES, NO_TIDES, D20, TESS12, TESS31. Retain every completed row, including the extra NO_SUN, NO_MOON, O12, O31 arms; their smaller n is reported. This scheduling change is based on throughput and fit status, before reading ablation error ratios. Original manifests are preserved; the resumed run writes a timestamped manifest. Interrupted workers did not flush their end-of-process input audits; disclose that provenance limit.
