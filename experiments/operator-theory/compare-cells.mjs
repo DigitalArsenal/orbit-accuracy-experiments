@@ -4,9 +4,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { binOf, pct, asc } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
+import { BUILD, AP_ARM, AP_VERSION } from './lib/build.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
-const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, 'b040');
+const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD);
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
@@ -16,13 +17,13 @@ const providerOf = (r) => r.source.split('-')[1];
 const round = (x) => (x === null || x === undefined ? null : Number(x >= 100 ? x.toFixed(1) : x >= 1 ? x.toFixed(3) : x.toFixed(4)));
 
 const rows = rowsIn(path.join(NEW, 'laser', 'forward'));
-const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(AP, 'laser', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4'), path.join(NEW, 'laser-sgp4-high'), path.join(NEW, 'laser-sgp4-72'), path.join(NEW, 'ussf-laser')].map((d) => new Map(rowsIn(d).map((r) => [key(r), r])))];
+const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(NEW, 'laser-xp', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4'), path.join(NEW, 'laser-sgp4-high'), path.join(NEW, 'laser-sgp4-72'), path.join(NEW, 'ussf-laser')].map((d) => new Map(rowsIn(d).map((r) => [key(r), r])))];
 const km = (r, arm) => { for (const s of stores) { const v = s.get(key(r))?.arms[arm]?.km; if (Number.isFinite(v)) return v; } return undefined; };
 
 /** The stored arm behind each column, by fit; a column with no arm for that fit or regime stays empty. */
 const armsOf = (regime, fit) => (regime === 'Low orbit'
-  ? { SGP4: `S@${fit}`, XP: `A-XP@${fit}`, XPU: `U-XP@${fit}`, AP: `A-APn@${fit}`, FFM20: fit === 48 ? 'F-M20@48' : null, FFM40: fit === 48 ? 'F-M40@48' : null, FFMfull: fit === 48 ? 'F-full@48' : null, Center: 'operator' }
-  : { SGP4: `S@${fit}`, XP: `A-XP@${fit}`, XPU: `U-XP@${fit}`, AP: `A-APn@${fit}`, FFM20: fit === 48 ? 'F-H20@48' : null, FFM40: null, FFMfull: fit === 48 ? 'F-Hfull@48' : null, Center: 'operator' });
+  ? { SGP4: `S@${fit}`, XP: `A-XP@${fit}`, XPU: `U-XP@${fit}`, AP: `${AP_ARM}@${fit}`, FFM20: fit === 48 ? 'F-M20@48' : null, FFM40: fit === 48 ? 'F-M40@48' : null, FFMfull: fit === 48 ? 'F-full@48' : null, Center: 'operator' }
+  : { SGP4: `S@${fit}`, XP: `A-XP@${fit}`, XPU: `U-XP@${fit}`, AP: `${AP_ARM}@${fit}`, FFM20: fit === 48 ? 'F-H20@48' : null, FFM40: null, FFMfull: fit === 48 ? 'F-Hfull@48' : null, Center: 'operator' });
 
 const cellOf = (list, regime, fit) => {
   const out = {};
@@ -113,7 +114,7 @@ if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
   const kmOf = (r, arm) => r.arms[arm]?.km ?? stored.get(pairKey(r))?.arms[arm]?.km ?? uProviders.get(pairKey(r))?.arms[arm]?.km;
   const cell = (list, fit) => {
     const arms = {};
-    for (const [column, names] of [['SGP4', [`S@${fit}`]], ['XP', [`A-XP@${fit}`]], ['XPU', [`U-XP@${fit}`]], ['AP', [`A-APn@${fit}`]], ['FFM40', [`F-M40@${fit}`]], ['FFMfull', [`F-NRLMSISE00@${fit}`, `F-NO-DRAG@${fit}`]], ['Center', ['operator']]]) {
+    for (const [column, names] of [['SGP4', [`S@${fit}`]], ['XP', [`A-XP@${fit}`]], ['XPU', [`U-XP@${fit}`]], ['AP', [`${AP_ARM}@${fit}`]], ['FFM40', [`F-M40@${fit}`]], ['FFMfull', [`F-NRLMSISE00@${fit}`, `F-NO-DRAG@${fit}`]], ['Center', ['operator']]]) {
       const v = list.map((r) => names.map((n) => kmOf(r, n)).find(Number.isFinite)).filter(Number.isFinite).sort(asc);
       if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
     }
@@ -146,7 +147,7 @@ const order = { regime: 0, provider: 1, satellite: 2 };
 out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - order[b.level] || a.regime.localeCompare(b.regime) || a.provider.localeCompare(b.provider) || a.satellite.localeCompare(b.satellite) || a.fit - b.fit || a.lead - b.lead);
 const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md',
-  columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP 0.4.0', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
+  columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: `AP ${AP_VERSION}`, FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
   fields: 'arms: column to [median km, 95th percentile km, forecasts]. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   leftOut: providerLeftOut,
   rows: out,

@@ -62,4 +62,6 @@ Showcase examples, added 2026-11-03 at the owner's word ("we want examples where
 
 `providers-run.mjs` adds AP, XP and SGP4 to every other provider this work stores forecasts of, and `compare-cells.mjs` and `compare-sigma.mjs` write the site's tables and ellipsoids. All report only.
 
-To rebuild: `compare-sgp4.mjs` with 8 shards into `<store>/ap/b040/laser-sgp4`, `compare-costs.mjs` into `<store>/ap/b040/compare-costs/rows.jsonl`, then `compare-table.mjs --out results/ap-truth/compare`.
+Since AP7.md passed, every AP and whiteroom XP figure is AP 0.4.11's: `cycle-ap7-site.sh` reruns those arms on the same windows, pairs and files, `ap7-merge.mjs` joins the arms that do not depend on the AP build from 0.4.0's store by key, and `lib/build.mjs` names the build the tools read.
+
+To rebuild: `compare-sgp4.mjs` with 8 shards into `<store>/ap/b040/laser-sgp4`, `cycle-ap7-site.sh costs` into `<store>/ap/b0411/compare-costs`, then `compare-table.mjs --out results/ap-truth/compare`.

@@ -20,9 +20,10 @@ const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
 const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-// --arms U: the Space Force's SGP4-XP alone, in its own store. Without it, this file's registered arms, unchanged.
-const ONLY_U = args.arms === 'U';
-const m = await openModules(), A = ONLY_U ? null : await openAp(args.wasm), G = ONLY_U ? null : await openSgp4Fit(), F = ONLY_U ? null : await openFfmHost(), U = ONLY_U ? await openUssfXp() : null;
+// --arms U: the Space Force's SGP4-XP alone, in its own store. --arms AP,XP (any of AP, XP, S, F): only those, in their own store, as for a
+// later AP build (AP7.md). Without it, this file's registered arms, unchanged.
+const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.includes('U'), has = (a) => !ONLY_U && ARMS.includes(a);
+const m = await openModules(), A = has('AP') || has('XP') ? await openAp(args.wasm) : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null, U = ONLY_U ? await openUssfXp() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ATM = XM.config.arms.X2.forces;
 const PCF_AP = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20 }), fit: null });
@@ -129,6 +130,7 @@ for (const o of await objects()) {
       for (const hours of o.arcs) {
         const thin = arc(hours);
         const run = async (name, fn) => {
+          if (!ONLY_U && !has(name)) return;
           const a = { ok: false };
           try { if (!thin) throw new Error('coverage'); Object.assign(a, await fn()); a.ok = true; } catch (error) { a.error = String(error?.message ?? error).slice(0, 180); }
           row.arms[`${name}${hours}`] = a;

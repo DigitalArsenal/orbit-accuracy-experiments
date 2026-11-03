@@ -5,9 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { binOf } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
+import { BUILD, AP_ARM } from './lib/build.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
-const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, 'b040');
+const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD);
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir, re = /^rows-\d+\.jsonl$/) => fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const rms = (v) => Math.sqrt(v.reduce((s, x) => s + x * x, 0) / v.length);
@@ -56,7 +57,7 @@ for (const e of examples.filter((x) => x.reference === 'truth')) {
 // The next prediction: from the file's start, by lead.
 const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
 const load = (d) => new Map(rowsIn(d).map((r) => [key(r), r]));
-const laser = rowsIn(path.join(NEW, 'laser', 'forward')), xp = load(path.join(AP, 'laser', 'forward')), ffm = load(path.join(ROOT, 'cheaper', 'forward')), sg = [load(path.join(NEW, 'laser-sgp4')), load(path.join(NEW, 'laser-sgp4-high'))];
+const laser = rowsIn(path.join(NEW, 'laser', 'forward')), xp = load(path.join(NEW, 'laser-xp', 'forward')), ffm = load(path.join(ROOT, 'cheaper', 'forward')), sg = [load(path.join(NEW, 'laser-sgp4')), load(path.join(NEW, 'laser-sgp4-high'))];
 const NAV = /^(beidou|compass|galileo|glonass|gps|irnss|qzs)/;
 const regimeOf = (r) => (r.source.endsWith('-leo') ? 'Low orbit' : NAV.test(r.object) ? 'Navigation' : 'Geodetic');
 const LEADS = [12, 24, 36, 48, 60, 72, 96, 120, 144, 168];
@@ -69,8 +70,8 @@ for (const e of examples.filter((x) => x.reference === 'next')) {
   const leo = e.regime === 'Low orbit';
   const read = (r, arm) => {
     if (arm === 'XPU') return (fromProviders ? uProviders : uLaser).get(key(r))?.arms[`U-XP@${e.fitHours}`];
-    if (fromProviders) return r.arms[{ AP: `A-APn@${e.fitHours}`, XP: `A-XP@${e.fitHours}`, SGP4: `S@${e.fitHours}`, FFM: `F-M40@${e.fitHours}` }[arm]];
-    return { AP: r.arms['A-APn@48'], XP: xp.get(key(r))?.arms['A-XP@48'], SGP4: sg.map((s) => s.get(key(r))?.arms['S@48']).find((a) => a && Number.isFinite(a.r)), FFM: ffm.get(key(r))?.arms[leo ? 'F-M40@48' : 'F-H20@48'] }[arm];
+    if (fromProviders) return r.arms[{ AP: `${AP_ARM}@${e.fitHours}`, XP: `A-XP@${e.fitHours}`, SGP4: `S@${e.fitHours}`, FFM: `F-M40@${e.fitHours}` }[arm]];
+    return { AP: r.arms[`${AP_ARM}@48`], XP: xp.get(key(r))?.arms['A-XP@48'], SGP4: sg.map((s) => s.get(key(r))?.arms['S@48']).find((a) => a && Number.isFinite(a.r)), FFM: ffm.get(key(r))?.arms[leo ? 'F-M40@48' : 'F-H20@48'] }[arm];
   };
   const arms = {}, hours = [];
   for (const lead of LEADS) {

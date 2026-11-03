@@ -3,8 +3,9 @@
 //   node experiments/operator-theory/geo-truth-table.mjs --out results/ap-truth/geo
 import fs from 'node:fs';
 import path from 'node:path';
+import { BUILD } from './lib/build.mjs';
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
-const OUT = argOf('--out'), B = '/opt/data/sdn-archive/operator-theory/ap/b040', DAY = 86400000;
+const OUT = argOf('--out'), B = `/opt/data/sdn-archive/operator-theory/ap/${BUILD}`, DAY = 86400000;
 const jsonl = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []);
 const rowsIn = (d) => fs.readdirSync(d).filter((f) => /^rows(-\d+)?\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(d, f)));
 const byKey = (d) => new Map(rowsIn(d).map((r) => [r.key, r]));

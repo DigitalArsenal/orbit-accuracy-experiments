@@ -3,15 +3,16 @@
 // median for that cell, ties broken by key. Lead: 72 h on next-prediction pairs, day 3 on precise-orbit windows. Module calls only; interpolation of a 300 s table is a data step, as in score.mjs.
 //   node experiments/operator-theory/compare-examples.mjs --mode next --out <dir>
 //   node experiments/operator-theory/compare-examples.mjs --mode truth --out <dir>          (XP2F_CONTROL=1 and --mode truth2 for AP2.md's windows)
-// --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default b040).
+// --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default lib/build.mjs's).
 import fs from 'node:fs';
 import path from 'node:path';
+import { BUILD, AP_ARM } from './lib/build.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
 if (!MODE || !OUT) throw new Error('--mode and --out');
 fs.mkdirSync(OUT, { recursive: true });
-const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, args.build ?? 'b040');
+const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, args.build ?? BUILD);
 const SHOWCASE = args.pick === 'showcase';
 let EXTRA = {};
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
@@ -75,7 +76,8 @@ if (MODE === 'next') {
   const { config: XMC } = await import('../xp-atmosphere-merit/common.mjs');
   const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost();
-  const A040 = await openAp(path.join(NEW, 'module.wasm')), A030 = await openAp(path.join(AP, 'module.wasm'));
+  // AP and XP from the same build: XP is that module with its atmosphere and added terms off.
+  const A = await openAp(path.join(NEW, 'module.wasm'));
   const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
   const rows = rowsIn(path.join(NEW, 'laser', 'forward')).filter((r) => binOf(r.leadHours) === 72);
   const stores = ['laser-sgp4', 'laser-sgp4-high'].map((d) => new Map(rowsIn(path.join(NEW, d)).map((r) => [key(r), r])));
@@ -110,12 +112,12 @@ if (MODE === 'next') {
     const [regime, provider] = cell.split('|');
     const leo = regime === 'Low orbit';
     const ffmName = leo ? 'F-M40@48' : 'F-H20@48';
-    const ranked = nearestMedian(list.filter((r) => Number.isFinite(sgp(r)) && Number.isFinite(ffmRows.get(key(r))?.arms[ffmName]?.km)), (r) => r.arms['A-APn@48']?.km);
+    const ranked = nearestMedian(list.filter((r) => Number.isFinite(sgp(r)) && Number.isFinite(ffmRows.get(key(r))?.arms[ffmName]?.km)), (r) => r.arms[`${AP_ARM}@48`]?.km);
     const id = `next-${provider}-${regime.toLowerCase().replace(/\s+/g, '-')}`;
     if (!ranked.length) { console.error(`${id}: no forecast has every arm`); continue; }
     const pick = ranked[0];
     const apP = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.olderStart);
-    const xpP = findProduct(path.join(AP, 'laser'), pick.source, pick.norad, pick.olderStart);
+    const xpP = findProduct(path.join(NEW, 'laser-xp'), pick.source, pick.norad, pick.olderStart);
     const ffP = findProduct(path.join(STORE, 'cheaper'), pick.source, pick.norad, pick.olderStart);
     const newer = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.newerStart);
     if (!apP || !xpP || !ffP || !newer) { console.error(`${id}: a stored product is missing`); continue; }
@@ -128,9 +130,9 @@ if (MODE === 'next') {
     const w = weatherRows(apP.weatherDay, '2026-02-20', '2026-12-14');
     const spw = S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG })));
     const tracks = { reference: refs.map((s) => s.r) };
-    const a = apP.products['A-APn@48'], x = xpP.products['A-XP@48'], f = ffP.products[ffmName];
-    tracks.AP = (await M.toAxes(await A040.propagate(Buffer.from(a.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: a.forces, fit: FIT }), { rows: spw }, epochs.length), epochs, 'GCRF')).map((s) => s.r);
-    tracks.XP = (await M.toAxes(await A030.propagate(Buffer.from(x.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: x.forces, fit: FIT }), undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+    const a = apP.products[`${AP_ARM}@48`], x = xpP.products['A-XP@48'], f = ffP.products[ffmName];
+    tracks.AP = (await M.toAxes(await A.propagate(Buffer.from(a.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: a.forces, fit: FIT }), { rows: spw }, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+    tracks.XP = (await M.toAxes(await A.propagate(Buffer.from(x.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: x.forces, fit: FIT }), undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r);
     const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
     const fu = await U.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }));
     if (!fu.ok) { console.error(`${id}: ${fu.error}`); continue; }
@@ -202,7 +204,7 @@ if (MODE === 'next') {
     const [provider, regime] = LABEL[source];
     const usable = rows.filter((r) => r.source === source && Number.isFinite(r.arms[`S@${FIT_H}`]?.km) && Number.isFinite(r.arms[`A-XP@${FIT_H}`]?.km));
     const past = usable.filter((r) => r.leadHours >= FIT_H + 6);
-    const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`A-APn@${FIT_H}`]?.km);
+    const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`${AP_ARM}@${FIT_H}`]?.km);
     const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
     let done = false;
     for (const pick of ranked.slice(0, 8)) {

@@ -18,8 +18,9 @@ import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const OUT = args.out, ISS = args.iss === 'true';
-// --arms U: the Space Force's SGP4-XP alone, in its own store, on the same files and pairs.
-const ONLY_U = args.arms === 'U';
+// --arms U: the Space Force's SGP4-XP alone, in its own store, on the same files and pairs. --arms AP,XP (any of AP, XP, S, F): only those, in their
+// own store, as for a later AP build (AP7.md); --ap-name names that build's AP arm (default APn, AP 0.4.0's).
+const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.includes('U'), has = (a) => !ONLY_U && ARMS.includes(a), AP_NAME = `A-${args['ap-name'] ?? 'APn'}`;
 if (!OUT || !args.wasm) throw new Error('--out and --wasm');
 const STORE = '/opt/data/sdn-archive/operator-theory', HOUR = 3600000, DAY = 86400000, TRUTH_H = 3, MAX_LEAD_H = 180, MIN_GAP_H = 6, ARCS = [24, 48];
 const FROM_FORWARD = new Set(['starlink', 'iss', 'css']), FROM_VENDORS = new Set(['gps', 'glonass', 'planet', 'intelsat', 'ses']);
@@ -37,8 +38,8 @@ function interpolate(table, t) {
   return { r: mix((l) => l.r), v: mix((l) => l.v) };
 }
 
-const M = await openModules(), A = ONLY_U ? null : await openAp(args.wasm), G = ONLY_U ? null : await openSgp4Fit(), U = ONLY_U ? await openUssfXp() : null;
-const F = ISS && !ONLY_U ? await openFfmHost() : null;
+const M = await openModules(), A = has('AP') || has('XP') ? await openAp(args.wasm) : null, G = has('S') ? await openSgp4Fit() : null, U = ONLY_U ? await openUssfXp() : null;
+const F = ISS && has('F') ? await openFfmHost() : null;
 const axes = ISS ? await openAxes() : null;
 const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
 const { driverRows } = ISS ? await import('../ffm-atmosphere-xm3/lib/ffm.mjs') : {};
@@ -107,14 +108,12 @@ async function fitsOf(item) {
     if (seg.length < 5) continue;
     const oem = S.oemBytes({ frame: 'GCRF', object, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
     if (ONLY_U) { const u = await U.fit(oem); out.arms[`U-XP@${arc}`] = u.ok ? { omm: u.omm, ussf: true } : { error: u.error }; continue; }
-    const f = await A.fit(oem, PCF_AP, extra);
-    out.arms[`A-APn@${arc}`] = f.ok ? { omm: f.omm, pcf: PCF_AP, extra } : { error: f.error };
-    const x = await A.fit(oem, PCF_XP, undefined);
-    out.arms[`A-XP@${arc}`] = x.ok ? { omm: x.omm, pcf: PCF_XP } : { error: x.error };
-    if (item.norad) {
+    if (has('AP')) { const f = await A.fit(oem, PCF_AP, extra); out.arms[`${AP_NAME}@${arc}`] = f.ok ? { omm: f.omm, pcf: PCF_AP, extra } : { error: f.error }; }
+    if (has('XP')) { const x = await A.fit(oem, PCF_XP, undefined); out.arms[`A-XP@${arc}`] = x.ok ? { omm: x.omm, pcf: PCF_XP } : { error: x.error }; }
+    if (item.norad && has('S')) {
       try { out.arms[`S@${arc}`] = { el: (await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: item.object, objectId: '' })).el }; } catch (error) { out.arms[`S@${arc}`] = { error: String(error.message).slice(0, 120) }; }
     }
-    if (ISS) {
+    if (ISS && has('F')) {
       const seed = all.statedB ?? 0.01;
       const settings = { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: false, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: seed }], fixed: { agom: 0 }, apriori: apriori([seed * 10]) };
       try {
@@ -147,7 +146,7 @@ for (const [key, list] of items()) {
       const score = async (states) => { const e = await M.rtn(states, truthStates); const r = rmsOf(e.map((x) => x[0])), t = rmsOf(e.map((x) => x[1])), n = rmsOf(e.map((x) => x[2])); return { km: Math.hypot(r, t, n), r, t, n }; };
       const fits = await fitsOf(older);
       row.truthStates = truth.length;
-      if (ISS && !ONLY_U) { const table = await linesOf(older); const states = epochsMs.map((t) => interpolate(table, t)); if (states.every(Boolean)) row.arms.operator = await score(states); }
+      if (ISS && has('F')) { const table = await linesOf(older); const states = epochsMs.map((t) => interpolate(table, t)); if (states.every(Boolean)) row.arms.operator = await score(states); }
       for (const [name, f] of Object.entries(fits.arms)) {
         if (f.error) { row.arms[name] = { error: f.error }; continue; }
         try {

@@ -6,10 +6,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { binOf, pct, asc, round } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
+import { BUILD } from './lib/build.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const OUT = argOf('--out');
-const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, 'b040');
+const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD);
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const byKey = (dir) => new Map(rowsIn(dir).map((r) => [r.key, r]));
@@ -48,7 +49,7 @@ for (const [group, label, rows, u, arcs] of groups) {
 
 // Against the next file: the laser centers' low-orbit pairs of compare-table.mjs, 48 h fit.
 const laser = rowsIn(path.join(NEW, 'laser', 'forward')).filter((r) => r.source.endsWith('-leo'));
-const xpLaser = byPair(path.join(AP, 'laser', 'forward')), uLaser = byPair(path.join(NEW, 'ussf-laser'));
+const xpLaser = byPair(path.join(NEW, 'laser-xp', 'forward')), uLaser = byPair(path.join(NEW, 'ussf-laser'));
 for (const lead of [24, 72, 120, 168]) {
   const cell = laser.filter((r) => binOf(r.leadHours) === lead);
   const x = cell.map((r) => r.arms['A-XP@48']?.km ?? xpLaser.get(pairKey(r))?.arms['A-XP@48']?.km), su = cell.map((r) => uLaser.get(pairKey(r))?.arms['U-XP@48']?.km);

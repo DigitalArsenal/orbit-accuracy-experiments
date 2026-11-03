@@ -6,11 +6,12 @@ import crypto from 'node:crypto';
 import { rand, pct, asc, median, round } from './lib/compare.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
-const NEW = '/opt/data/sdn-archive/operator-theory/ap/b040';
+// --build b0411: the same statistics on a later AP build's store, report only (AP7.md). Without it, the registered build.
+const BUILD = argOf('--build') ?? 'b040', NEW = `/opt/data/sdn-archive/operator-theory/ap/${BUILD}`;
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const LEADS = ['1', '2', '3', '7'], DRAWS = 10000, LEVEL = 0.975, MAXP95 = Math.log(1.1), MAXFAIL = 0.01;
-const lines = [], out = { registered: 'experiments/operator-theory/AP5.md' };
+const lines = [], out = { build: BUILD, reading: BUILD === 'b040' ? 'registered' : 'report only', registered: 'experiments/operator-theory/AP5.md' };
 const say = (s) => { lines.push(s); console.log(s); };
 const pctOf = (d) => `${(100 * (Math.exp(d) - 1)).toFixed(1)} %`;
 const isoWeek = (d) => { const t = new Date(`${d}T00:00:00Z`); const day = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - day + 3); const first = new Date(Date.UTC(t.getUTCFullYear(), 0, 4)); return `${t.getUTCFullYear()}-W${1 + Math.round((t - first) / (7 * 86400000))}`; };

@@ -1,6 +1,7 @@
 // COMPARE.md: what each propagator costs on the same files, in one process, one call at a time. Each file's five arms run in an order that rotates by file, so a change of
 // load on the machine falls on all of them alike. The first file is a warm-up and is not counted. Fit: the file's first 48 h. Flight: every state of the file.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-costs.mjs --root <store> --ap030 <wasm> --ap040 <wasm> --out <file> [--files 40]
+//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-costs.mjs --root <store> --wasm <AP build> --out <file> [--files 40]
+// AP and XP (the same module, forces off) both come from --wasm, the build the site shows.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -15,7 +16,7 @@ import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const ROOT = args.root, OUT = args.out, COUNT = Number(args.files ?? 40), HOUR = 3600000;
-if (!ROOT || !OUT || !args.ap030 || !args.ap040) throw new Error('--root, --ap030, --ap040 and --out');
+if (!ROOT || !OUT || !args.wasm) throw new Error('--root, --wasm and --out');
 
 const cycles = fs.readdirSync(ROOT).filter((d) => /^c\d{8}T\d{4}$/.test(d) && fs.existsSync(path.join(ROOT, d, 'products'))).sort();
 const refs = [];
@@ -33,7 +34,7 @@ const spw = S.spwBytes(weather.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS
 const M = await openModules();
 const G = await openSgp4Fit();
 const F = await openFfmHost();
-const A030 = await openAp(args.ap030), A040 = await openAp(args.ap040), U = await openUssfXp();
+const A = await openAp(args.wasm), U = await openUssfXp();
 const pcfXp = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { atmosphere: false, noTerms: true }), fit: null });
 const pcfAp = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null });
 const ffm = (degree, tides) => ({
@@ -51,9 +52,9 @@ const ARMS = {
     return { fitSeconds, flightSeconds };
   },
   XP: async ({ oem, epochs }) => {
-    const [fit, fitSeconds] = await timed(() => A030.fit(oem, pcfXp, undefined));
+    const [fit, fitSeconds] = await timed(() => A.fit(oem, pcfXp, undefined));
     if (!fit.ok) throw new Error(fit.error);
-    const [, flightSeconds] = await timed(() => A030.propagate(fit.omm, S.gridBytes(epochs), pcfXp, undefined, epochs.length));
+    const [, flightSeconds] = await timed(() => A.propagate(fit.omm, S.gridBytes(epochs), pcfXp, undefined, epochs.length));
     return { fitSeconds, flightSeconds };
   },
   XPU: async ({ oem, epochs }) => {
@@ -63,9 +64,9 @@ const ARMS = {
     return { fitSeconds, flightSeconds };
   },
   AP: async ({ oem, epochs }) => {
-    const [fit, fitSeconds] = await timed(() => A040.fit(oem, pcfAp, { rows: spw }));
+    const [fit, fitSeconds] = await timed(() => A.fit(oem, pcfAp, { rows: spw }));
     if (!fit.ok) throw new Error(fit.error);
-    const [, flightSeconds] = await timed(() => A040.propagate(fit.omm, S.gridBytes(epochs), pcfAp, { rows: spw }, epochs.length));
+    const [, flightSeconds] = await timed(() => A.propagate(fit.omm, S.gridBytes(epochs), pcfAp, { rows: spw }, epochs.length));
     return { fitSeconds, flightSeconds };
   },
 };

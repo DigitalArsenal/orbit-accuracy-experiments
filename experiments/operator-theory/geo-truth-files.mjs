@@ -44,7 +44,9 @@ for (const c of fs.readdirSync(STORE).filter((d) => /^c\d{8}T\d{4}$/.test(d)).so
     files.set(`${p.norad}|${p.start}`, p);
   }
 }
-const M = await openModules(), A = await openAp(args.wasm), G = await openSgp4Fit(), U = await openUssfXp(), F = await openFfmHost();
+// --arms AP,XP (any of AP, XP, U, S, F, operator): only those, in their own store, as for a later AP build (AP7.md). Without it, every arm.
+const ARMS = (args.arms ?? 'AP,XP,U,S,F,operator').split(','), has = (a) => ARMS.includes(a);
+const M = await openModules(), A = has('AP') || has('XP') ? await openAp(args.wasm) : null, G = has('S') ? await openSgp4Fit() : null, U = has('U') ? await openUssfXp() : null, F = has('F') ? await openFfmHost() : null;
 const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
 fs.mkdirSync(OUT, { recursive: true });
 const outFile = path.join(OUT, 'rows.jsonl');
@@ -71,7 +73,7 @@ for (const [key, p] of files) {
     const w = weatherRows(p.weatherDay, '2026-07-15', '2026-12-14');
     const extra = { rows: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) };
     const grid = S.gridBytes(epochs);
-    const run = async (name, fn) => { try { row.arms[name] = { days: await score(await fn()) }; } catch (error) { row.arms[name] = { error: String(error?.message ?? error).slice(0, 160) }; } };
+    const run = async (name, fn) => { if (!has(name)) return; try { row.arms[name] = { days: await score(await fn()) }; } catch (error) { row.arms[name] = { error: String(error?.message ?? error).slice(0, 160) }; } };
     await run('AP', async () => { const f = await A.fit(oem, PCF_AP, extra); if (!f.ok) throw new Error(f.error); return M.toAxes(await A.propagate(f.omm, grid, PCF_AP, extra, epochs.length), epochs, 'GCRF'); });
     await run('XP', async () => { const f = await A.fit(oem, PCF_XP, undefined); if (!f.ok) throw new Error(f.error); return M.toAxes(await A.propagate(f.omm, grid, PCF_XP, undefined, epochs.length), epochs, 'GCRF'); });
     await run('U', async () => { const f = await U.fit(oem); if (!f.ok) throw new Error(f.error); return M.toAxes(await U.propagate(f.omm, grid, epochs.length), epochs, 'GCRF'); });
@@ -96,5 +98,5 @@ for (const [key, p] of files) {
     console.error(`${rowKey}: days ${row.days.join(',')}`);
   }
 }
-await F.close();
+await F?.close();
 process.exit(0);

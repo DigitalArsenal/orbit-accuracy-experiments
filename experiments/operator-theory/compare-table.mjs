@@ -5,22 +5,23 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { SEED, binOf, rand, pct, asc, round, compare } from './lib/compare.mjs';
+import { BUILD, AP_ARM, AP_VERSION, AP_MODULE } from './lib/build.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const OUT = argOf('--out');
 const MODULES = process.env.SDN_MODULES_ROOT;
 if (!OUT || !MODULES) throw new Error('--out and SDN_MODULES_ROOT');
-const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, 'b040');
+const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD);
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
 const low = (r) => r.source.endsWith('-leo');
 
 const rows = rowsIn(path.join(NEW, 'laser', 'forward')).filter(low);
-const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(AP, 'laser', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4')].map((d) => new Map(rowsIn(d).filter(low).map((r) => [key(r), r])))];
+const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(NEW, 'laser-xp', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4')].map((d) => new Map(rowsIn(d).filter(low).map((r) => [key(r), r])))];
 const km = (r, arm) => { for (const s of stores) { const v = s.get(key(r))?.arms[arm]?.km; if (Number.isFinite(v)) return v; } return undefined; };
 
-const ARMS = { SGP4: 'S@48', XP: 'A-XP@48', AP: 'A-APn@48', FFM20: 'F-M20@48', FFM40: 'F-M40@48' };
+const ARMS = { SGP4: 'S@48', XP: 'A-XP@48', AP: `${AP_ARM}@48`, FFM20: 'F-M20@48', FFM40: 'F-M40@48' };
 const CONTRASTS = ['SGP4', 'XP', 'FFM20', 'FFM40'];
 const random = rand(SEED);
 const leads = {};
@@ -61,8 +62,11 @@ const build = (role, rel, commit, sha256) => {
 const XM = 'fbda894501f32210b77c74b53bcad036ce7a1b07', XM3 = '9a05d899b95242b358939ab1d68a776170a6b167';
 const builds = {
   SGP4: [build('Flight', 'propagator/sgp4', XM, '2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643'), build('Fit', 'analysis/gp-error-model', XM, '8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19')],
-  XP: [build('Fit and flight, FORCES and FIT unset', 'propagator/sdn-ap', '783133149abb8949e30cac32398bb624369f3a8f', '0b021c575466642cd661cd39dcb911de89b63c8430ae9ac2d94c84c7539f8c6a')],
-  AP: [build('Fit and flight', 'propagator/sdn-ap', '148f3b9f20b8c62d57dce677b1049464a71049df', '715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0')],
+  XP: [build('Fit and flight, its atmosphere and added terms off', 'propagator/sdn-ap', AP_MODULE.commit, AP_MODULE.sha256)],
+  AP: [build('Fit and flight', 'propagator/sdn-ap', AP_MODULE.commit, AP_MODULE.sha256)],
+  // The builds earlier experiments ran, linked from the experiments that read them.
+  AP040: [build('AP4.md to AP6.md, and AP7.md\'s control', 'propagator/sdn-ap', '148f3b9f20b8c62d57dce677b1049464a71049df', '715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0')],
+  AP030: [build('AP.md to AP3.md, and AP4.md\'s control', 'propagator/sdn-ap', '783133149abb8949e30cac32398bb624369f3a8f', '0b021c575466642cd661cd39dcb911de89b63c8430ae9ac2d94c84c7539f8c6a')],
   FFM: [build('Flight', 'propagator/ffm', XM3, 'c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2'), build('Fit', 'analysis/estimation', XM3, '7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd')],
   Frames: [build('Frames, every arm', 'foundation/frames', XM, '486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4')],
 };
@@ -72,7 +76,7 @@ fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'table.json'), `${JSON.stringify(table, null, 1)}\n`);
 
 const fig = (x) => (x >= 10 ? round(x, 1) : x >= 1 ? round(x, 2) : round(x, 3));
-const md = ['# AP beside SGP4, XP and FFM, low orbit, 48 h fits', '', `${rows.length} pairs, ${table.objects} objects, ${table.startDays} start days. Median km, 95th in brackets.`, '', '| Lead | SGP4 | XP | AP 0.4.0 | FFM 20x20 | FFM 40x40 |', '|---|---:|---:|---:|---:|---:|'];
+const md = ['# AP beside SGP4, XP and FFM, low orbit, 48 h fits', '', `${rows.length} pairs, ${table.objects} objects, ${table.startDays} start days. Median km, 95th in brackets.`, '', `| Lead | SGP4 | XP | AP ${AP_VERSION} | FFM 20x20 | FFM 40x40 |`, '|---|---:|---:|---:|---:|---:|'];
 for (const [lead, c] of Object.entries(leads)) md.push(`| ${lead} h | ${Object.keys(ARMS).map((a) => `${fig(c.arms[a].median)} (${fig(c.arms[a].p95)})`).join(' | ')} |`);
 md.push(`| Fit, s | ${Object.keys(ARMS).map((a) => round(costs.arms[a].fitSeconds, 3)).join(' | ')} |`, `| Flight, s | ${Object.keys(ARMS).map((a) => round(costs.arms[a].flightSeconds, 3)).join(' | ')} |`, '', '## AP less each, by pair: median km, interval', '', '| Lead | SGP4 | XP | FFM 20x20 | FFM 40x40 |', '|---|---|---|---|---|');
 for (const [lead, c] of Object.entries(leads)) md.push(`| ${lead} h | ${CONTRASTS.map((o) => `${c.apLess[o].median} ${c.apLess[o].interval ? `[${c.apLess[o].interval[0]}, ${c.apLess[o].interval[1]}]` : '(too few)'}`).join(' | ')} |`);
