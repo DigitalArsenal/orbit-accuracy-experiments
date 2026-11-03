@@ -388,4 +388,4 @@ DO labels: {"event":0,"quiet":78,"unknown":72}. Labels use the same gated truth 
 
 ## E2E
 
-Pending on this aggregate; the retained prior check belongs to an earlier report.
+Verdict: PASS_SCOPED on committed 8484da29aa376b90454abee272f29b324a7e9aa0. Forward day-3 errors 18.112 and 18.112 m; repeat difference 0.000 m against 0.001 m. Excluded rows 0 of 10044; maximum fixed AGOM 0 across 2247 fits; rebuilt control maximum state difference 0.000 m. Methods complete 5/5. Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation. Variant repeat maximum 0.000 m; high-orbit zonal identity maximum 0.000 m across 456 paired leads. The AP and FFM rebuild controls match their pinned binaries. The landing verdict and receipt are reported by the gauntlet separately.
