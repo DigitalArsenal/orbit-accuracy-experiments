@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { config, registration, allowed, hash } from './guard.mjs';
+import { disclosure } from './statistics.mjs';
 import { coverage as detailedCoverage } from './coverage.mjs';
 import { pct } from '../operator-theory/lib/compare.mjs';
 registration();
@@ -44,7 +45,7 @@ export function aggregate(){
   }
   coverage.push(...counts.values());
  }
- const output=[...cells.values()].map(({values,...cell})=>({...cell,n:values.length,km:Object.fromEntries(['e','r','t','n'].map(f=>{const v=values.map(x=>x[f]).sort((a,b)=>a-b);return[f,{median:pct(v,.5),p95:pct(v,.95)}];}))})).sort((a,b)=>a.group.localeCompare(b.group)||a.arm.localeCompare(b.arm)||a.day-b.day);
+ const output=[...cells.values()].map(({values,...cell})=>({...cell,disclosure:disclosure(cell.group,cell.day),n:values.length,km:Object.fromEntries(['e','r','t','n'].map(f=>{const v=values.map(x=>x[f]).sort((a,b)=>a-b);return[f,{median:pct(v,.5),p95:pct(v,.95)}];}))})).sort((a,b)=>a.group.localeCompare(b.group)||a.arm.localeCompare(b.arm)||a.day-b.day);
  return {leads:config.leads,coverage,armDayCoverage:detailedCoverage(),reproduction,inputs,cells:output};
 }
 export function report(d){
@@ -61,7 +62,7 @@ export function report(d){
  if(stats){lines.push('| Group | Arm | Day | n | Median km | p10–p90 km | Median 95% CI km | R/T/N RMS km | Disclosure |','|---|---|---:|---:|---:|---|---|---|---|');for(const c of stats.cells.filter(c=>completed(c.group,c.arm)))lines.push(`| ${c.group} | ${c.arm} | ${c.day} | ${c.n} | ${fmt(c.median)} | ${fmt([c.p10,c.p90])} | ${fmt(c.ci95)} | ${['r','t','n'].map(k=>fmt(c.rtnRms[k])).join('/')} | ${c.disclosure??''} |`);
  lines.push('','Paired AP5 rules, days 4 and 5. Log ratios use first arm / second arm; negative favors the first. Failures of the first arm count as +Infinity. Exclusion and unrun counts are in statistics.json.','','| Group | Arc h | Pair | Day | n | Median log ratio | 95% CI | p95 log ratio upper | Failed share | Rules 1/2/3 | Disclosure |','|---|---:|---|---:|---:|---:|---|---:|---:|---|---|');for(const c of stats.paired.filter(c=>completed(c.group,c.contrast.split('-')[0])&&completed(c.group,c.contrast.split('-')[1])))lines.push(`| ${c.group} | ${c.arc} | ${c.contrast} | ${c.day} | ${c.n} | ${fmt(c.medianLogRatio)} | ${fmt(c.ci95)} | ${fmt(c.p95CI95?.[1])} | ${fmt(c.failedShare)} | ${[c.rule1,c.rule2,c.rule3].map(fmt).join('/')} | ${c.disclosure??''} |`);}
  if(ca){lines.push('','Zero-miss reach: independent members, 90-degree crossing, full projected R/T covariance, Foster disk integral in the module. GP uses clipped covariance and calibrated axis scales only where labeled CALIBRATED. Alfano maximum at zero miss is reported separately. LS/DO GP mapping remains unmeasured.','','| Group | Arm | Day | Pair | HBR m | n | Excluded | Median ceiling | Fraction >=1e-4 | Fraction >=1e-5 | Alfano maximum | GP label | Disclosure |','|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|---|---|');for(const c of ca.cells.filter(c=>completed(c.group,c.arm)))lines.push(`| ${c.group} | ${c.arm} | ${c.day} | ${c.pair} | ${c.hbr} | ${c.n} | ${c.excluded} | ${fmt(c.medianCeiling)} | ${fmt(c.reach1e4)} | ${fmt(c.reach1e5)} | ${fmt(c.alfanoMaximumAtZero)} | ${c.gpLabel??''} | ${c.disclosure??''} |`);}
- lines.push('','Synthetic encounters: unmeasured. The forecast stores contain daily RMS values, not the signed per-epoch error vectors or carried covariance needed by A13. C2 and C3 constants alone cannot reconstruct those products. No RMS surrogate is substituted for XP, FFM, or AP carried covariance. No encounter count, missed-alert rate, false-alert rate, log score, Brier score, or paired score interval is claimed.','');
+ lines.push('','Synthetic encounters: unmeasured. Earlier forecast rows contain daily RMS only. New flights retain signed endpoint errors and FFM fit covariance in the archive, but the registered carried covariance and C3 history terms have not yet been produced. C2 and C3 constants alone cannot reconstruct those products. No RMS surrogate is substituted for XP, FFM, or AP carried covariance. No encounter count, missed-alert rate, false-alert rate, log score, Brier score, or paired score interval is claimed.','');
  return lines.join('\n');
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const d=aggregate();fs.writeFileSync('results/five-day-ca/metrics.json',JSON.stringify(d,null,2)+'\n');fs.writeFileSync('results/five-day-ca/README.md',report(d));console.log(JSON.stringify({coverage:d.coverage,reproduction:d.reproduction}));}
