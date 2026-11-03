@@ -33,7 +33,7 @@ for(const g of groups) for(const batch of [...new Set(all.map(r=>r.batch))]) {
     return {v:r.arms[arm]?.ok?r.arms[arm]?.days?.[day]?.e:undefined,b:base?.arms[control]?.ok?base?.arms[control]?.days?.[day]?.e:undefined};
    });
    const values=pairs.filter(p=>Number.isFinite(p.v));const paired=values.filter(p=>Number.isFinite(p.b));
-   cells.push({group:g,batch,arm,day,n:values.length,attempted:rows.length,medianM:med(values.map(p=>p.v*1000)),pairedN:paired.length,pairedDeltaM:med(paired.map(p=>(p.v-p.b)*1000))});
+   cells.push({group:g,batch,arm,day,n:values.length,attempted:rows.filter(r=>Object.hasOwn(r.arms,arm)).length,medianM:med(values.map(p=>p.v*1000)),pairedN:paired.length,pairedDeltaM:med(paired.map(p=>(p.v-p.b)*1000))});
   }
  }
 }
@@ -66,6 +66,6 @@ for(const g of groups){
 }
 text+='## Fit and coverage outcomes\n\n| Batch | Window attempts | Row exclusions | Arm failures | FFM converged | FFM stalled / iteration limit |\n| --- | ---: | ---: | ---: | ---: | ---: |\n';for(const [batch,v] of Object.entries(status.failures))text+=`| ${batch} | ${v.attemptedRows} | ${Object.values(v.rowErrors).reduce((a,b)=>a+b,0)} | ${Object.values(v.armErrors).reduce((a,b)=>a+b,0)} | ${v.fitTerminations.CONVERGED??0} | ${(v.fitTerminations.STALLED??0)+(v.fitTerminations.MAXIMUM_ITERATIONS??0)} |\n`;
 text+='\n## DO event split\n\n| Class | Day | AP m | FFM m | Median paired ratio | n |\n| --- | ---: | ---: | ---: | ---: | ---: |\n';for(const s of eventSplit)for(const d of s.days)text+=`| ${s.label} | ${d.day} | ${fmt(d.apM)} | ${fmt(d.ffmM)} | ${fmt(d.medianRatio)} | ${d.n} |\n`;
-text+='\n## Coverage\n\n'+status.missing.map(x=>'- '+x).join('\n')+'\n\nDO labels: '+JSON.stringify(status.eventCounts)+'. Historical interrupted LS rows are excluded from aggregates. First resumed batch predates the archive-read audit; later batches pin synchronous archive reads. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.\n';
+text+='\n## Coverage\n\n'+status.missing.map(x=>'- '+x).join('\n')+'\n\nDO labels: '+JSON.stringify(status.eventCounts)+'. Historical interrupted LS rows are excluded from aggregates. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.\n';
 fs.writeFileSync(new URL('proposed-tasks.json',dest),JSON.stringify(status.diagnoses.filter(d=>d.candidate).map(d=>({group:d.group,parent:'mode-conjunction',needs:['experiments-ap-gap-diagnosis-20261103'],status:'draft for coordinator; not filed',hypothesis:d.cause,change:d.proposedChange,expectedGainM:d.expectedGainM,gainTargetCeilingM:d.gainTargetCeilingM,confirmation:'Register an E2E on unread eligible windows before reading them; compare forward errors at days 1, 3, and 7.'})),null,2)+'\n');
 fs.writeFileSync(new URL('README.md',dest),text);console.log(JSON.stringify({rows:all.length,eventCounts:status.eventCounts}));
