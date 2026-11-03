@@ -47,7 +47,7 @@ export async function openFfmCovariance(pairs){
   const fit=record.fit,settings=record.settings,lo=Date.parse(fit.epoch)/86400000+40587-3,hi=Date.parse(ends.at(-1).epoch)/86400000+40587+3;
   const rows=eop.filter(r=>r.MJD>=lo&&r.MJD<=hi);if(!rows.length||rows.at(-1).MJD<hi-3)throw Error('no FFM Earth orientation');
   const typeRef={schemaName:'PRW.fbs',fileIdentifier:'$PRW',rootTypeName:'PRW'};
-  const inputs=[kernel,{portId:'earth_orientation',typeRef,payload:encode('EARTH_ORIENTATION',Object.assign(new P.PRWEarthOrientationT(),{ROWS:rows}))},...(settings.forces.drag===false?[]:[{portId:'space_weather',typeRef,payload:encode('SPACE_WEATHER',Object.assign(new P.PRWSpaceWeatherTableT(),{ROWS:record.spw.map(r=>Object.assign(new P.SPWT(),r))}))}])];
+  const inputs=[kernel,{portId:'earth_orientation',typeRef,payload:encode('EARTH_ORIENTATION',Object.assign(new P.PRWEarthOrientationT(),{ROWS:rows}))},...(settings.forces.drag===false||!record.spw?[]:[{portId:'space_weather',typeRef,payload:encode('SPACE_WEATHER',Object.assign(new P.PRWSpaceWeatherTableT(),{ROWS:record.spw.map(r=>Object.assign(new P.SPWT(),r))}))}])];
   return windowTerms({ffm:{invoke},inputs},pairs,fit,Date.parse(cutoff),ends.map(l=>({L:l.day*24,line:l})),settings);
  },close:()=>h.destroy()};
 }

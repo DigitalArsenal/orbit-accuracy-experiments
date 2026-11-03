@@ -32,7 +32,7 @@ try{for(const base of baseline){if((args.key&&base.key!==args.key)||completed.ha
    for(let i=0;i<ends.length;i++){const k=ends[i].day,p=arm.startsWith('XP')?xp[cls==='R1-O'?'R1':'LP'].parameters:null;const cov=p?pC2(p,{A:stats[i].predictedRtn}):stats[i].predictedRtn;record.days[k]={epoch:ends[i].epoch,errorM:stats[i].errorRtn,covarianceM2:cov,availableAt:ends[i].availableAt,label:p?`C2 fairness ${cls==='R1-O'?'R1':'LP'} transfer`:`AP ${covarianceConfig.apNoise.version} UNVERIFIED`};}
   }else if(arm.startsWith('S')){const errors=signed.get(base.key+'|'+arm);for(const e of ends){const v=errors?.days?.[e.day];if(!v)throw Error('signed S endpoint not run');record.days[e.day]={epoch:e.epoch,errorM:v.rtnKm.map(x=>x*1000),covarianceM2:[a.days[e.day].r**2,0,a.days[e.day].t**2,0,0,a.days[e.day].n**2].map(x=>x*1e6),label:'RMS STAND-IN'};}}
   else if(arm.startsWith('F')){const product=fits.get(base.key+'|'+arm);if(!product)throw Error('FFM fit product not run');const terms=await fm.terms(product,base.cutoff,ends);record.chi=product.fit.reducedChiSquare;for(let i=0;i<ends.length;i++){const e=ends[i],t=terms.leads[i];record.days[e.day]={epoch:e.epoch,errorM:t.errRtnM,covarianceM2:pC2(c2[cls].parameters,t.terms),terms:t.terms,truthSigmaM:e.sigma??null,availableAt:e.availableAt,label:`C2 ${cls}; C3 adaptation pending`};}}
- }catch(error){record.error=String(error.message).slice(0,300);}
+ }catch(error){record.error=String(error.message).slice(0,300);console.error(JSON.stringify({key:base.key,arm,error:String(error.stack??error)}));}
  }
  fs.appendFileSync(`${out}/rows-${shard}.jsonl`,JSON.stringify(row)+'\n');
 }}finally{await ap.close();await fm.close();await pairs.close();}
