@@ -1,5 +1,17 @@
 {
-  "rows": 8037,
+  "reportStatusSha256": "0111dc5758138e1929374e5ff977e36e90cdf7c49a87bd30d3926d6c14c89524",
+  "verdict": "PASS_SCOPED",
+  "binaryControlsMatched": true,
+  "hxMixedGravityDegree": 40,
+  "zonalIdentityGroups": [
+    "GD",
+    "IG",
+    "GE",
+    "HE"
+  ],
+  "zonalIdentityPairs": 456,
+  "maxZonalIdentityDeltaM": 0,
+  "rows": 10044,
   "excludedRows": 0,
   "fixedArms": 2247,
   "maxFixedAgom": 0,
@@ -10,11 +22,50 @@
   ],
   "repeatDeltaM": 0,
   "repeatToleranceM": 0.001,
-  "methodsComplete": 3,
+  "maxVariantRepeatDeltaM": 0,
+  "verifiedRowFiles": 215,
+  "verifiedInputManifests": 433,
+  "verifiedExecutionManifests": 230,
+  "methodStatus": {
+    "1": "complete",
+    "2": "complete",
+    "3": "complete",
+    "4": "complete",
+    "5": "complete"
+  },
+  "methodsComplete": 5,
   "methodsRequired": 5,
-  "verdict": "FAIL",
-  "exitCode": 1,
-  "testedCommit": "daab05800bc264b93a932a869643b3e9f66c82f9",
-  "command": "env SDN_MODULES_ROOT=/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules node experiments/ap-gap/check.mjs",
-  "reason": "Only 3 of 5 methods complete; numeric repeatability, exclusion, fixed-AGOM and rebuilt-control checks passed."
+  "ffmBodyMissing": 0,
+  "isolatedWindows": 426,
+  "heoWindows": [
+    26,
+    26
+  ],
+  "heoRuntimeFailures": [
+    0,
+    0
+  ],
+  "eventContrastMeasured": false,
+  "unresolvedGroups": [
+    "IG",
+    "LS",
+    "DO",
+    "HX"
+  ],
+  "reason": "Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.",
+  "variantReplaySummary": {
+    "arms": [
+      "NO_SHADOW",
+      "ZONAL20",
+      "HX_ZONAL20",
+      "HEO12",
+      "HEO20",
+      "HEO20_Q16"
+    ],
+    "count": 6,
+    "maxDeltaM": 0
+  },
+  "testedCommit": "8484da29aa376b90454abee272f29b324a7e9aa0",
+  "exitCode": 0,
+  "command": "env SDN_MODULES_ROOT=/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules node experiments/ap-gap/check.mjs"
 }
