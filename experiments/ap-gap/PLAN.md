@@ -54,3 +54,5 @@ Before method 4, include XP (0,0) and full AP (31,20) controls alongside FRAME (
 Method 3 sets XP2F_CONTROL=1 before importing the shared readers, exactly as cycle-ap5.sh truth2 does. AP6 regime arms retain cycle-ap6.sh's environment. The manifest records this switch. No GN fitter row had been run when this routing correction was made.
 
 Fixed-AGOM validation: both native fitters initialize AGOM at zero for these Gaussian-prior arms. Decode the fitted OMM and require |AGOM| ≤ 1e-15 for each successful fixed arm. A failure remains an arm failure, never a fixed-seed measurement.
+
+Space Force build correction: the current checkout's root dependencies did not reproduce the prescribed wasm. Build from artifact commit `1b905d16f68fc56e7da66c6392315970f9e7e6d0`, including its frame headers and package lock, in scratch. Attach that lock's dependencies and require byte identity for CONTROL before using FIXED. The initial mismatching build was never fitted or scored.
