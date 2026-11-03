@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {config,registration,hash} from './guard.mjs';
+import {config,registration,analysisProvenance,hash} from './guard.mjs';
 import {mergedRows,disclosure,inputHashes} from './statistics.mjs';
 import {openPc,wasmSha256} from './lib/ca-reach.mjs';
 import {quantile} from './lib/statistics.mjs';
@@ -44,7 +44,7 @@ try{
   }
  }
  const alfanoAtZero=await pc.pc([10000,0,10000],10,[0,0],true);
- const result={inputs:inputHashes(),wasmSha256,regimeMappingSha256:hash(fs.readFileSync(`${config.store}/gp-regimes.json`)),planCommit:'d3c15e2',oracle,alfanoAtZero,geometry:'90 degree crossing; R/T plane; independent members',cells:[...cells.values()].map(({values,...c})=>({...c,gpLabel:c.pair==='fit x fit'?null:Object.keys(c.gpLabels).sort().join('/'),n:values.length,medianCeiling:quantile(values,.5),p10:quantile(values,.1),p90:quantile(values,.9),reach1e4:values.length?values.filter(x=>x>=1e-4).length/values.length:null,reach1e5:values.length?values.filter(x=>x>=1e-5).length/values.length:null,alfanoMaximumAtZero:alfanoAtZero}))};
+ const result={provenance:analysisProvenance(),inputs:inputHashes(),wasmSha256,regimeMappingSha256:hash(fs.readFileSync(`${config.store}/gp-regimes.json`)),planCommit:'d3c15e2',oracle,alfanoAtZero,geometry:'90 degree crossing; R/T plane; independent members',cells:[...cells.values()].map(({values,...c})=>({...c,gpLabel:c.pair==='fit x fit'?null:Object.keys(c.gpLabels).sort().join('/'),n:values.length,medianCeiling:quantile(values,.5),p10:quantile(values,.1),p90:quantile(values,.9),reach1e4:values.length?values.filter(x=>x>=1e-4).length/values.length:null,reach1e5:values.length?values.filter(x=>x>=1e-5).length/values.length:null,alfanoMaximumAtZero:alfanoAtZero}))};
  fs.writeFileSync('results/five-day-ca/ca-reach.json',JSON.stringify(result,null,2)+'\n');
  console.log(JSON.stringify({cells:result.cells.length,oracle,alfanoAtZero}));
 }finally{fs.closeSync(raw);await pc.close();}

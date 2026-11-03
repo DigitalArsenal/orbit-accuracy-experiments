@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {config,registration,hash} from './guard.mjs';
+import {config,registration,analysisProvenance,hash} from './guard.mjs';
 import {readRows,disclosure} from './statistics.mjs';
 import {rand} from '../operator-theory/lib/compare.mjs';
 import {openPc,wasmSha256} from './lib/ca-reach.mjs';
@@ -39,6 +39,6 @@ try{
   }
   for(const {brierSum,logSum,...c}of byDay.values())cells.push({...c,missedPerEncounter:c.n?c.missed/c.n:null,falsePerEncounter:c.n?c.falseAlerts/c.n:null,missedGivenHit:c.hits?c.missed/c.hits:null,falseGivenNonHit:c.n>c.hits?c.falseAlerts/(c.n-c.hits):null,brier:c.n?brierSum/c.n:null,log:c.n?(Number.isFinite(logSum)?logSum/c.n:'Infinity'):null});
  }
- const result={complete:false,planCommit:'663355c',inputs,wasmSha256,unmeasuredArms:['AP','XP','F','U','GP'],pairedScoreIntervals:'unmeasured: no paired carried covariance products',scope:'S fit x fit; only windows with archived signed module errors; missing windows explicitly counted',cells};
+ const result={provenance:analysisProvenance(),complete:false,planCommit:'663355c',inputs,wasmSha256,unmeasuredArms:['AP','XP','F','U','GP'],pairedScoreIntervals:'unmeasured: no paired carried covariance products',scope:'S fit x fit; only windows with archived signed module errors; missing windows explicitly counted',cells};
  fs.writeFileSync('results/five-day-ca/encounters.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({cells:cells.length,encounters:cells.reduce((n,c)=>n+c.n,0),pcFailures:cells.reduce((n,c)=>n+c.pcFailed,0),complete:false}));
 }finally{fs.closeSync(raw);await pc.close();}

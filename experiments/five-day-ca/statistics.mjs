@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {config,registration,allowed,hash} from './guard.mjs';
+import {config,registration,analysisProvenance,allowed,hash} from './guard.mjs';
 import {describe,contrast} from './lib/statistics.mjs';
 registration();
 export function readRows(dir){return fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)).sort().flatMap(f=>fs.readFileSync(path.join(dir,f),'utf8').split('\n').filter(Boolean).map(JSON.parse)).filter(r=>allowed(r.norad,r.name,Date.parse(r.cutoff))):[];}
@@ -21,6 +21,6 @@ export function statistics(){
    paired.push({group,arc:+arc,contrast:`${a}-${b}`,day,disclosure:disclosure(group,day),secondFailed,sparse,unrun,...contrast(pairs,`${group}|${A}-${B}|${day}`)});
   }
  }
- return {inputs:inputHashes(),units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
+ return {provenance:analysisProvenance(),inputs:inputHashes(),units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const result=statistics();fs.writeFileSync('results/five-day-ca/statistics.json',JSON.stringify(result,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v,2)+'\n');console.log(JSON.stringify({cells:result.cells.length,paired:result.paired.length}));}

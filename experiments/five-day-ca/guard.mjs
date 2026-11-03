@@ -33,3 +33,14 @@ export function manifest(out, shard) {
   };
   fs.writeFileSync(path.join(out,`manifest-${shard}-${Date.now()}.json`),JSON.stringify({started:new Date().toISOString(),command:process.argv,commit:git('rev-parse','HEAD'),modulesCommit:execFileSync('git',['-C',config.modulesRoot,'rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,host:os.hostname(),load:os.loadavg(),pins:config.pins,sources},null,2)+'\n');
 }
+
+export function analysisProvenance() {
+  const sources = {};
+  const visit = dir => { for (const entry of fs.readdirSync(path.join(root, dir), {withFileTypes:true})) {
+    const rel = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) visit(rel);
+    else if (/\.(mjs|json|md)$/.test(entry.name)) sources[rel] = hash(fs.readFileSync(path.join(root, rel)));
+  }};
+  visit('experiments/five-day-ca');
+  return { command:process.argv, commit:git('rev-parse','HEAD'), node:process.version, host:os.hostname(), registrationCommit:'eb143664cad7ab97133184d4d0b217592f81b5a8', modulesCommit:execFileSync('git',['-C',config.modulesRoot,'rev-parse','HEAD'],{encoding:'utf8'}).trim(), pins:config.pins, sources };
+}
