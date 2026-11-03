@@ -4,11 +4,11 @@
       "/opt/homebrew/Cellar/node/25.4.0/bin/node",
       "/Users/tj/software/private/coordinator-d9/orbit-accuracy-experiments-fiveday/experiments/five-day-ca/statistics.mjs"
     ],
-    "commit": "94244f21abc24ce7abd695c92d5ac09416205331",
+    "commit": "96129492cbc3265d4f52999d797405a2a8ea5db9",
     "node": "v25.4.0",
     "host": "claude.local",
     "registrationCommit": "eb143664cad7ab97133184d4d0b217592f81b5a8",
-    "modulesCommit": "2aa8d03965e31ddbb5edada49a3f9adf035ae202",
+    "modulesCommit": "f662a3e6726fedfd58214674a49ac5fb4100355b",
     "pins": {
       "/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
       "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/propagator/sgp4-xp/dist/isomorphic/module.wasm": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb",
@@ -25,7 +25,7 @@
       "experiments/five-day-ca/PLAN.md": "ffee0315a15f45830494aff0fbdac2952d162f57555f151659692156a4b7c99b",
       "experiments/five-day-ca/builds.json": "a5b207dd57d1d66669b525cf87299693879ff7c926e8ceec19e8f89a134137b7",
       "experiments/five-day-ca/ca-table.mjs": "3e08dff0c535b2a6b1ad31adb5b5caedb8e5d3e133c857a9367baf7a5a98f288",
-      "experiments/five-day-ca/check.mjs": "4a02716b9539325b0d76c0ecde14ecdcb681575daa173a782d49891a81fa8ee2",
+      "experiments/five-day-ca/check.mjs": "46dd495047313761fd2bc62f126fd257ac28727699463ce6a666320870adc64f",
       "experiments/five-day-ca/config.json": "bd344de1f25bb98ca8dbec3ffa7fce2b962b212b953110357439681ec154b3fb",
       "experiments/five-day-ca/coverage.mjs": "9a7831e82e6b5f90950473f04d4e9f07765af7b55aa778d81ad91f974d932814",
       "experiments/five-day-ca/encounters.mjs": "6c7e164badbb3aefaef3b47f35d97966332c6130dc02056d28a533fa610c787b",
@@ -37,13 +37,13 @@
       "experiments/five-day-ca/map-truth-regimes.mjs": "7f0733284430b7641ce9c5457f17c51028537cbbb1c36659fb91ce5b9c72cf72",
       "experiments/five-day-ca/regimes.mjs": "a9c408510c1b5cef30e94b7baf780d0fbbc754061c75e95164655ead79ca0378",
       "experiments/five-day-ca/repair-ussf.mjs": "4a62acdeaa85bcf60c22f305a3707f896b30ea15c76ede2ac048a4fdcbcb7b18",
-      "experiments/five-day-ca/statistics.mjs": "c3cc54ad09fcf7f8257076005d2c131915a4eef9b6d137f25d07411fc37a2f02",
-      "experiments/five-day-ca/table.mjs": "fe82be9b3e71781afb12525d9016eb1336fe95d90ed6f97402dcee9568051c3b",
+      "experiments/five-day-ca/statistics.mjs": "39439a5e8caf7a13ffdd0f7769fdfaa3c30756595eac1083a954d8e4251a7e59",
+      "experiments/five-day-ca/table.mjs": "383c0202b3cfb9ac43f80e78b9a743ae85922f2b79f623ad08d2e1248c70facc",
       "experiments/five-day-ca/truth.mjs": "b1c394c9eb0a11b369165dffb9d50d00c08c1797db98d7829b16ecebfbb96f2c"
     }
   },
   "scope": "available rows; completed-group tables are selected using metrics.json coverage",
-  "snapshotStable": false,
+  "snapshotStable": true,
   "inputs": {
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "e264afe91e6bf9395c871b03b84cc6a92df5be58975d64a3d4e9d3ec3bd72268",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "13b6ac40e7443e569ba45f8f386cda143777c50d507173bca45020dbd74e7551",
@@ -93,18 +93,30 @@
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-7.jsonl": "3fc949438fabe73abb07b89331d125371737e18cfbdc342e2d6a7da5b008dd9d",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-8.jsonl": "c4afdec62039f9c145e1efc3bddb87c28e6138bbd01cd2a6f9bd8d992d778df0",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-9.jsonl": "6d10f94ce6e25a4ddf1141e873b8285ed2a02331b41898c76907b85b389425a8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "8e2c01cb93f5c12285f4b68a00d7ce8e6570d906ea551fe986a28445d9609994",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "e5e13446cdd0bbdbefc19ed3d90262aadf4ed277f9c9668b906bf094f810186e",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "929a3d716bab5b785f4b0725b793390506e22fef791c53943d8ebc0f7bc5b4d5",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "faa24ca3a2f331f05e89a26d437bafb29245d34e90c2bca7ca035ab865eaac66",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "0ee4e7085d7a975bcf22b9a9c9fc3cd88581cc114313806aadbd546f9d74f512",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "4efcd4e65e523d99eab597e7bae575ff44f87341d9515e2143361d02ea604aed",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "a2e1438d5d97ecaa8646f634a70b29bee897309371bfeb1184fee1a8c0a53c7a",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "8976e264eeceada1b34bc2a19d6edb4d1dd7180f74e8bbc3da18dbb671b08a69",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "72aeb48053d1978e5d9ae3929c604553db002c088d802a4b2b9dc5b52d2e4a58",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "156ea0d5a3679b9a7a4d6c361bd06063ce0839b36d9a553ecda5e81f9b4db4a5",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "b3a07e9131224b6678327a842acd85718f68bd14e31ed52112b7c0714d6ac596",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "625aaa08b03006af75e130ac4d8752f5c06167deb3e42fd7909706bee233479b"
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "fed9b2983f1df83bfa9fd93e7deea5e7d7b9b8d43b91c31dff9836b03af99297",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "fef303cac0293e08b7492481288a71acca0ae17b3ff357f0b6f09bd6b0d110b1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "81dcd32137516b495537f22c93701522f9a69ab876eca56b2d3a755392191a58",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "92435be976e5fa82b2b54e3c8e6d24d59b709d57f2dddb78b94f27b36671a078",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "8e8179e2dbb27d736c81198d5f9b75383aff1e8ef5afffad689a5921814fbf7d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "ccce659874e9c00821e0b7305a742cc016604e02bf7ceb5ed0ee9fe5fc1e8b5d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "d278045fba7bbf6446cba8408335d3588fdb53eb253cf07870de3c8d6c165a9e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "f0efd0bbc3747a64704258f985105ead35ef29dee3f7080100df8a4a9ccc7b67",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "ea271cec9000ee592a3648119fefe96266ab3261742195876eab550e8fef9552",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "3e38157e80db9bc5756fed654aa9701cfcf4cd4238e5a8017d27a97eb982039e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "407871c5ea360227a8403b280c6046dc1b635994954a8dcbd371966bb0c67e6b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "a5ebf0c4b5633ea2fb436ede1656c4eab13bedbd770173322da240f405c39ff8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-0.jsonl": "9fd4f3d115d6f61d2a8bdaab04cbf05aac11670edd49f8aa6979c28527fc80ee",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-1.jsonl": "cabbfa421dba89f594f3e6b5568fd4b3fa45bbb53364c9fbb72535d4f6f676c9",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-10.jsonl": "aad35ef31a94896818b5bce3f4b4ccd6112e40550f08401d0f5be6f7efcd4199",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-11.jsonl": "35bdabac499cfa7d7525a4db1b2799908296353fd2dbe6f24e8bc0148e0cc647",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-2.jsonl": "6687beb31315c849856c4385151ba8494c056291f0219c27d1471d224e3c24a1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-3.jsonl": "36f525b5244aaa4abcbac5f5695c7d69a0676fd73702c39e4c2d11a098e8f1ca",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-4.jsonl": "a9e1358c7000673677b53eec9a237117f3d28b499fd073bfe9b06ef7992d01a2",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-5.jsonl": "5d89f89683dc34d1f8a969ea3f455e13251ed91b88c566c4b0502d22b40ec0be",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-6.jsonl": "e413b34883bb5881443f8c4da2585400880471392b74ef1356d7ed04c4fc2ec3",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-7.jsonl": "bcff4bd8ac091d681a90c28877e5d8c17db3fb4f9a0c48fa6a951f0ee47697ed",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-8.jsonl": "99016f1b1754bf30a3f8598b10778d8865bc2a89f358af20d41a1f94e55196fe",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-9.jsonl": "b27c98be309bb42c4c0b4d9d98b50f43ea362dd8eda5e011fb8f34eb94cdccac"
   },
   "units": "km",
   "bootstrap": {
@@ -7760,18 +7772,18 @@
       "arm": "F24",
       "day": 1,
       "disclosure": null,
-      "n": 20,
-      "median": 0.024851766708385077,
-      "p10": 0.003377126942690278,
-      "p90": 0.7311218062624066,
+      "n": 276,
+      "median": 0.019545321750053014,
+      "p10": 0.0040695580639634014,
+      "p90": 0.593424071376891,
       "ci95": [
-        0.005502486626237138,
-        0.2705710577282671
+        0.014437072406684575,
+        0.024608320967902345
       ],
       "rtnRms": {
-        "r": 0.0055648108484310215,
-        "t": 0.4112648311227713,
-        "n": 0.0008703290590126693
+        "r": 0.010546847472943335,
+        "t": 0.6857635650115869,
+        "n": 0.0075173136380777645
       }
     },
     {
@@ -7779,18 +7791,18 @@
       "arm": "F24",
       "day": 2,
       "disclosure": null,
-      "n": 22,
-      "median": 0.5429902468538111,
-      "p10": 0.014648230062667918,
-      "p90": 1.9498498253379215,
+      "n": 274,
+      "median": 0.23167749381892577,
+      "p10": 0.018299325832660644,
+      "p90": 1.7972886994001707,
       "ci95": [
-        0.10625736638332763,
-        1.0666835553071032
+        0.1283484673670126,
+        0.38270898634595785
       ],
       "rtnRms": {
-        "r": 0.008687304773547424,
-        "t": 1.1331944619229846,
-        "n": 0.0013699437610814815
+        "r": 0.012139149393996266,
+        "t": 1.573311536699681,
+        "n": 0.01204726323807929
       }
     },
     {
@@ -7798,18 +7810,18 @@
       "arm": "F24",
       "day": 3,
       "disclosure": null,
-      "n": 21,
-      "median": 0.8333524313521257,
-      "p10": 0.12339690445882705,
-      "p90": 3.225622216370926,
+      "n": 275,
+      "median": 0.7055972924186481,
+      "p10": 0.06896414825842932,
+      "p90": 2.8674714045625995,
       "ci95": [
-        0.27296259370416,
-        2.1600263843538636
+        0.5284898277201372,
+        0.9194848211034269
       ],
       "rtnRms": {
-        "r": 0.009835058385250717,
-        "t": 2.1769664897981866,
-        "n": 0.001847510191389189
+        "r": 0.01322099849921861,
+        "t": 2.1956835131968573,
+        "n": 0.015293858751880756
       }
     },
     {
@@ -7817,18 +7829,18 @@
       "arm": "F24",
       "day": 4,
       "disclosure": null,
-      "n": 21,
-      "median": 2.542916210287005,
-      "p10": 0.36407430095058557,
-      "p90": 4.62629172733142,
+      "n": 275,
+      "median": 1.3710670560009584,
+      "p10": 0.23698208821264874,
+      "p90": 4.532442580622959,
       "ci95": [
-        0.6635981411869487,
-        3.901450132740403
+        1.101099041440503,
+        1.8026655611573335
       ],
       "rtnRms": {
-        "r": 0.012869446619248057,
-        "t": 3.473948925062229,
-        "n": 0.002144309860437866
+        "r": 0.016212898944206133,
+        "t": 3.7781646217348324,
+        "n": 0.017632197355868563
       }
     },
     {
@@ -7836,18 +7848,18 @@
       "arm": "F24",
       "day": 5,
       "disclosure": null,
-      "n": 22,
-      "median": 3.6061724954222214,
-      "p10": 0.47978839006058566,
-      "p90": 6.49922468738268,
+      "n": 274,
+      "median": 2.2261624831381406,
+      "p10": 0.4106010244424028,
+      "p90": 6.6263647798227545,
       "ci95": [
-        1.0089157989440738,
-        4.806544782722199
+        1.8372652574960058,
+        2.630061163787506
       ],
       "rtnRms": {
-        "r": 0.014833559976260957,
-        "t": 4.857892035832656,
-        "n": 0.002541046530133608
+        "r": 0.019006666952243425,
+        "t": 5.143569882051377,
+        "n": 0.020545578598624763
       }
     },
     {
@@ -7855,18 +7867,18 @@
       "arm": "F24",
       "day": 7,
       "disclosure": null,
-      "n": 22,
-      "median": 7.015145896544629,
-      "p10": 1.0930064998725808,
-      "p90": 11.267116282176056,
+      "n": 274,
+      "median": 4.451370874985768,
+      "p10": 1.077209358785204,
+      "p90": 11.674743838632486,
       "ci95": [
-        1.9213865079459564,
-        8.757951384489457
+        3.787569477615166,
+        5.478449751288706
       ],
       "rtnRms": {
-        "r": 0.02263909298559538,
-        "t": 8.269952200107106,
-        "n": 0.003157077142406458
+        "r": 0.02737938150048525,
+        "t": 8.252250426794856,
+        "n": 0.025743973659606904
       }
     },
     {
@@ -7874,18 +7886,18 @@
       "arm": "F72",
       "day": 1,
       "disclosure": null,
-      "n": 16,
-      "median": 0.1573804810858339,
-      "p10": 0.01514347344179963,
-      "p90": 0.7596695155265889,
+      "n": 259,
+      "median": 0.18200209092889744,
+      "p10": 0.014946673257250001,
+      "p90": 0.7564353140181128,
       "ci95": [
-        0.03238590967167389,
-        0.7460579138268822
+        0.14596602579603285,
+        0.23394327380132546
       ],
       "rtnRms": {
-        "r": 0.005261263635176286,
-        "t": 0.43351343383095303,
-        "n": 0.0014134689085576603
+        "r": 0.011022597292361545,
+        "t": 0.7889875658484006,
+        "n": 0.011366564729286778
       }
     },
     {
@@ -7893,18 +7905,18 @@
       "arm": "F72",
       "day": 2,
       "disclosure": null,
-      "n": 18,
-      "median": 0.6028413122342191,
-      "p10": 0.08133187678188289,
-      "p90": 1.9568957041362107,
+      "n": 258,
+      "median": 0.49085698322723614,
+      "p10": 0.07790702315760431,
+      "p90": 1.7728759975306183,
       "ci95": [
-        0.09761931432945173,
-        1.3881160019135943
+        0.4027109949306312,
+        0.6301617976562454
       ],
       "rtnRms": {
-        "r": 0.00811012895515227,
-        "t": 1.0513878212577865,
-        "n": 0.0015770599235227104
+        "r": 0.013359333068618374,
+        "t": 1.694977929091902,
+        "n": 0.0146278332894881
       }
     },
     {
@@ -7912,18 +7924,18 @@
       "arm": "F72",
       "day": 3,
       "disclosure": null,
-      "n": 18,
-      "median": 1.0808597086764324,
-      "p10": 0.2854289260248091,
-      "p90": 3.327750451918594,
+      "n": 258,
+      "median": 0.9302959962937205,
+      "p10": 0.17511793480497717,
+      "p90": 2.9936202018038918,
       "ci95": [
-        0.41111330718915673,
-        2.3272936813455467
+        0.8129588515731124,
+        1.2232805576575903
       ],
       "rtnRms": {
-        "r": 0.008723557039957796,
-        "t": 1.9595512700795927,
-        "n": 0.002001287557275004
+        "r": 0.017009808675746457,
+        "t": 2.8809191703796784,
+        "n": 0.017233945902356735
       }
     },
     {
@@ -7931,18 +7943,18 @@
       "arm": "F72",
       "day": 4,
       "disclosure": null,
-      "n": 17,
-      "median": 1.8672455463839137,
-      "p10": 0.5979299073963292,
-      "p90": 4.87661774087241,
+      "n": 258,
+      "median": 1.458912617560751,
+      "p10": 0.24036849530472393,
+      "p90": 4.782506002096394,
       "ci95": [
-        0.7241744515317744,
-        3.8246113728508444
+        1.189522472181538,
+        1.7585542671083383
       ],
       "rtnRms": {
-        "r": 0.010730991731238052,
-        "t": 3.1058296539620653,
-        "n": 0.0024759215729657875
+        "r": 0.02568034465177501,
+        "t": 4.509762520591116,
+        "n": 0.020191558158645272
       }
     },
     {
@@ -7950,18 +7962,18 @@
       "arm": "F72",
       "day": 5,
       "disclosure": null,
-      "n": 18,
-      "median": 2.469737596912003,
-      "p10": 0.906879629432814,
-      "p90": 6.735980591364845,
+      "n": 257,
+      "median": 1.9319157813782988,
+      "p10": 0.37620638386423394,
+      "p90": 6.895360133949289,
       "ci95": [
-        1.1227397575467235,
-        4.770856586922505
+        1.66461441485437,
+        2.5461074799542205
       ],
       "rtnRms": {
-        "r": 0.011871791282667896,
-        "t": 4.192960181964144,
-        "n": 0.0028770219696942073
+        "r": 0.03929075748149527,
+        "t": 6.483705133999877,
+        "n": 0.022955414695176445
       }
     },
     {
@@ -7969,18 +7981,18 @@
       "arm": "F72",
       "day": 7,
       "disclosure": null,
-      "n": 18,
-      "median": 3.572671570730914,
-      "p10": 0.8572204878417299,
-      "p90": 10.846852711774222,
+      "n": 257,
+      "median": 3.3364549262841368,
+      "p10": 0.7234272721085594,
+      "p90": 10.821182584591309,
       "ci95": [
-        2.1594125315793153,
-        8.179933814813838
+        2.6518944125642863,
+        4.1429339939823375
       ],
       "rtnRms": {
-        "r": 0.016487327496188732,
-        "t": 6.602436756547694,
-        "n": 0.0034338057564714326
+        "r": 0.09367401729242908,
+        "t": 11.42023174634478,
+        "n": 0.029114428565907558
       }
     },
     {
@@ -8900,18 +8912,18 @@
       "arm": "F24",
       "day": 1,
       "disclosure": null,
-      "n": 708,
-      "median": 0.001093012243866624,
-      "p10": 0.0004208409820755602,
-      "p90": 0.006324527167439822,
+      "n": 748,
+      "median": 0.0011162097798368374,
+      "p10": 0.00042228823624789575,
+      "p90": 0.0065369238478334875,
       "ci95": [
-        0.0009736154256009472,
-        0.0013052629816557601
+        0.000983769092045179,
+        0.001323338844908933
       ],
       "rtnRms": {
-        "r": 0.00037922868576386844,
-        "t": 0.0029782778612908825,
-        "n": 0.00024325283191543485
+        "r": 0.00038300992580494407,
+        "t": 0.0030128600460789952,
+        "n": 0.00024203548787458986
       }
     },
     {
@@ -8919,18 +8931,18 @@
       "arm": "F24",
       "day": 2,
       "disclosure": null,
-      "n": 708,
-      "median": 0.0037995202619040274,
-      "p10": 0.0010921722153019763,
-      "p90": 0.021844324965873175,
+      "n": 748,
+      "median": 0.003904296158099169,
+      "p10": 0.0010950213608760032,
+      "p90": 0.022146901540827844,
       "ci95": [
-        0.0031284704459322195,
-        0.0045678627944311535
+        0.00317755963675291,
+        0.004724190859067934
       ],
       "rtnRms": {
-        "r": 0.0008201957453914913,
-        "t": 0.01193789156683492,
-        "n": 0.0004455837575869431
+        "r": 0.0008265615194668791,
+        "t": 0.0119609434836048,
+        "n": 0.00044185016136805806
       }
     },
     {
@@ -8938,18 +8950,18 @@
       "arm": "F24",
       "day": 3,
       "disclosure": null,
-      "n": 708,
-      "median": 0.008267897655757904,
-      "p10": 0.0022011380952636213,
-      "p90": 0.046720533442131826,
+      "n": 748,
+      "median": 0.008467884821682016,
+      "p10": 0.0022123813060531323,
+      "p90": 0.04864141321512509,
       "ci95": [
-        0.006779096780249723,
-        0.010011498307231154
+        0.00684213155261257,
+        0.010285287254171473
       ],
       "rtnRms": {
-        "r": 0.0011229682237431902,
-        "t": 0.02535216692953298,
-        "n": 0.0006502703502823506
+        "r": 0.0011297865470868554,
+        "t": 0.025435500478539447,
+        "n": 0.0006448800521795875
       }
     },
     {
@@ -8957,18 +8969,18 @@
       "arm": "F24",
       "day": 4,
       "disclosure": null,
-      "n": 708,
-      "median": 0.014630380751940522,
-      "p10": 0.00365108140591141,
-      "p90": 0.08336109434141276,
+      "n": 748,
+      "median": 0.014837509838373968,
+      "p10": 0.003675823969298662,
+      "p90": 0.08718492086503739,
       "ci95": [
-        0.011905373132404943,
-        0.017900146086403407
+        0.011953789796368993,
+        0.01824401951616112
       ],
       "rtnRms": {
-        "r": 0.0014957663034698566,
-        "t": 0.044055183951281406,
-        "n": 0.0008489259876579062
+        "r": 0.001505011151102541,
+        "t": 0.04426327655700491,
+        "n": 0.0008421297740584463
       }
     },
     {
@@ -8976,18 +8988,18 @@
       "arm": "F24",
       "day": 5,
       "disclosure": null,
-      "n": 708,
-      "median": 0.022380494265996958,
-      "p10": 0.005643452607907872,
-      "p90": 0.13070377256524482,
+      "n": 748,
+      "median": 0.022958291456015398,
+      "p10": 0.0057102984349315326,
+      "p90": 0.13517507812176743,
       "ci95": [
-        0.018234753680448416,
-        0.02824034785262547
+        0.018433772408279873,
+        0.028544978792316975
       ],
       "rtnRms": {
-        "r": 0.0020024494155506368,
-        "t": 0.06735002368546823,
-        "n": 0.0010387482174120711
+        "r": 0.0020172357692558197,
+        "t": 0.06773082492122047,
+        "n": 0.00102990587731054
       }
     },
     {
@@ -8995,18 +9007,18 @@
       "arm": "F24",
       "day": 7,
       "disclosure": null,
-      "n": 708,
-      "median": 0.04503923472189112,
-      "p10": 0.010930051447415698,
-      "p90": 0.25258173578147924,
+      "n": 748,
+      "median": 0.045353970378102806,
+      "p10": 0.011116662311136515,
+      "p90": 0.2632498959636503,
       "ci95": [
-        0.03482183983600811,
-        0.05458866835510315
+        0.03508058057008823,
+        0.05576587638918589
       ],
       "rtnRms": {
-        "r": 0.002555540741144844,
-        "t": 0.12886183251365055,
-        "n": 0.0013982012562015467
+        "r": 0.002574284461795853,
+        "t": 0.12973662060009902,
+        "n": 0.0013845086513339273
       }
     },
     {
@@ -9014,18 +9026,18 @@
       "arm": "F72",
       "day": 1,
       "disclosure": null,
-      "n": 706,
-      "median": 0.0031774171541937763,
-      "p10": 0.0010010408453151446,
-      "p90": 0.018298168827021094,
+      "n": 746,
+      "median": 0.003231597056950677,
+      "p10": 0.0010204316383562529,
+      "p90": 0.019062499042412168,
       "ci95": [
-        0.002654041161137852,
-        0.00395809349129954
+        0.00266822668264675,
+        0.00403231043336022
       ],
       "rtnRms": {
-        "r": 0.0006799176773709088,
-        "t": 0.008767864786322624,
-        "n": 0.0004433821349739802
+        "r": 0.0006867340173426479,
+        "t": 0.008846152959335477,
+        "n": 0.0004394252584950203
       }
     },
     {
@@ -9033,18 +9045,18 @@
       "arm": "F72",
       "day": 2,
       "disclosure": null,
-      "n": 706,
-      "median": 0.007427141895442838,
-      "p10": 0.0021058887073607292,
-      "p90": 0.044255499623753566,
+      "n": 746,
+      "median": 0.00763990942738218,
+      "p10": 0.0021632252616600282,
+      "p90": 0.04605762831915704,
       "ci95": [
-        0.006290160164770512,
-        0.009269417859322837
+        0.006340837869198309,
+        0.009656451093998684
       ],
       "rtnRms": {
-        "r": 0.0011198407206355514,
-        "t": 0.02202396031314797,
-        "n": 0.000646231790088968
+        "r": 0.0011311953975627826,
+        "t": 0.02216741756651337,
+        "n": 0.0006398722762162697
       }
     },
     {
@@ -9052,18 +9064,18 @@
       "arm": "F72",
       "day": 3,
       "disclosure": null,
-      "n": 706,
-      "median": 0.01375499074402782,
-      "p10": 0.003730416273221836,
-      "p90": 0.08014374313024564,
+      "n": 746,
+      "median": 0.014010387287685448,
+      "p10": 0.0038398380801781093,
+      "p90": 0.08335523273609022,
       "ci95": [
-        0.011146314774666715,
-        0.017187147152021444
+        0.011326090834277484,
+        0.017564695215322886
       ],
       "rtnRms": {
-        "r": 0.0014813728194219185,
-        "t": 0.039974847344018634,
-        "n": 0.0008440038474856309
+        "r": 0.0014974837000373198,
+        "t": 0.04022803896341142,
+        "n": 0.0008358323543788398
       }
     },
     {
@@ -9071,18 +9083,18 @@
       "arm": "F72",
       "day": 4,
       "disclosure": null,
-      "n": 706,
-      "median": 0.021986286990551746,
-      "p10": 0.005648940446363854,
-      "p90": 0.12898856750396598,
+      "n": 746,
+      "median": 0.022389767016556046,
+      "p10": 0.005872902522977808,
+      "p90": 0.13253527335378346,
       "ci95": [
-        0.017839208854387105,
-        0.027097069823128758
+        0.01798992771523331,
+        0.027819197904250425
       ],
       "rtnRms": {
-        "r": 0.0017174917791674457,
-        "t": 0.06326921783168125,
-        "n": 0.001035575446245541
+        "r": 0.0017358230556097788,
+        "t": 0.06368448921804835,
+        "n": 0.0010258819206338014
       }
     },
     {
@@ -9090,18 +9102,18 @@
       "arm": "F72",
       "day": 5,
       "disclosure": null,
-      "n": 706,
-      "median": 0.03195365024456186,
-      "p10": 0.008128547720766394,
-      "p90": 0.18940243253905498,
+      "n": 746,
+      "median": 0.03264431664427971,
+      "p10": 0.00845374263504743,
+      "p90": 0.1937649255723022,
       "ci95": [
-        0.025399991576976925,
-        0.03914386236774086
+        0.025733495677605456,
+        0.04011257892588
       ],
       "rtnRms": {
-        "r": 0.00220317665244913,
-        "t": 0.09172624234919952,
-        "n": 0.001218982332080828
+        "r": 0.002228675506263848,
+        "t": 0.09235924052875137,
+        "n": 0.001207263355593611
       }
     },
     {
@@ -9109,18 +9121,18 @@
       "arm": "F72",
       "day": 7,
       "disclosure": null,
-      "n": 706,
-      "median": 0.0579143738146221,
-      "p10": 0.01466570565175749,
-      "p90": 0.3319452211280358,
+      "n": 746,
+      "median": 0.05857148044278082,
+      "p10": 0.014828022191738907,
+      "p90": 0.3420522031706186,
       "ci95": [
-        0.044080329910561745,
-        0.06929769963355592
+        0.04458920213869922,
+        0.07218215946918108
       ],
       "rtnRms": {
-        "r": 0.002820613426676459,
-        "t": 0.1624470645007556,
-        "n": 0.0015676347771487462
+        "r": 0.002857678502785525,
+        "t": 0.16364608055922875,
+        "n": 0.0015511005510530208
       }
     },
     {
@@ -9923,6 +9935,120 @@
     },
     {
       "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "disclosure": null,
+      "n": 632,
+      "median": 0.14242360108215874,
+      "p10": 0.0293306667476356,
+      "p90": 0.5084978240840933,
+      "ci95": [
+        0.12528218460098187,
+        0.18157014909185745
+      ],
+      "rtnRms": {
+        "r": 0.00639721477218523,
+        "t": 0.34843325010809495,
+        "n": 0.0017693770490466872
+      }
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "disclosure": null,
+      "n": 632,
+      "median": 0.7179454338667327,
+      "p10": 0.13736069973594214,
+      "p90": 2.340499634000481,
+      "ci95": [
+        0.5408531330723887,
+        0.9855244492182738
+      ],
+      "rtnRms": {
+        "r": 0.014780579480874509,
+        "t": 1.6405361927212905,
+        "n": 0.0027339143715804917
+      }
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "disclosure": null,
+      "n": 632,
+      "median": 1.9394309331746715,
+      "p10": 0.3635128078486429,
+      "p90": 6.1552750999444115,
+      "ci95": [
+        1.4700547680367981,
+        2.5512431455821627
+      ],
+      "rtnRms": {
+        "r": 0.02363103707308452,
+        "t": 4.037294090854643,
+        "n": 0.0036687540003037867
+      }
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "disclosure": null,
+      "n": 632,
+      "median": 3.737426228316478,
+      "p10": 0.6940786668095787,
+      "p90": 11.877999481326462,
+      "ci95": [
+        2.757395701522859,
+        4.7694932469832105
+      ],
+      "rtnRms": {
+        "r": 0.03338412039885169,
+        "t": 7.463510026305161,
+        "n": 0.0047876484013747635
+      }
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "disclosure": null,
+      "n": 632,
+      "median": 5.948483973773605,
+      "p10": 1.0707174709579372,
+      "p90": 19.86478675326678,
+      "ci95": [
+        4.708893587641811,
+        7.446945009130967
+      ],
+      "rtnRms": {
+        "r": 0.047374106857993675,
+        "t": 11.912383828610757,
+        "n": 0.00593813043519693
+      }
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "disclosure": null,
+      "n": 632,
+      "median": 12.498977291773961,
+      "p10": 2.550605400779724,
+      "p90": 39.548748862943185,
+      "ci95": [
+        10.02696346412242,
+        15.127891612673835
+      ],
+      "rtnRms": {
+        "r": 0.1140428849938346,
+        "t": 24.024756974065806,
+        "n": 0.008325809559943158
+      }
+    },
+    {
+      "group": "T",
       "arm": "S24",
       "day": 1,
       "disclosure": null,
@@ -10273,6 +10399,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 22,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 53,
       "failed": 0,
@@ -10299,6 +10426,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 32,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 43,
       "failed": 0,
@@ -10325,6 +10453,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 22,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 53,
       "failed": 0,
@@ -10351,6 +10480,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 32,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 43,
       "failed": 0,
@@ -10377,6 +10507,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 22,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 53,
       "failed": 0,
@@ -10403,6 +10534,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 32,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 43,
       "failed": 0,
@@ -10429,6 +10561,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 22,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 53,
       "failed": 0,
@@ -10455,6 +10588,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 27,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 48,
       "failed": 0,
@@ -10481,6 +10615,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 22,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 53,
       "failed": 0,
@@ -10507,6 +10642,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 27,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 48,
       "failed": 0,
@@ -10533,6 +10669,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 22,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 53,
       "failed": 0,
@@ -10559,6 +10696,7 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 27,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 48,
       "failed": 0,
@@ -10585,7 +10723,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10611,7 +10750,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10637,7 +10777,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10663,7 +10804,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10689,7 +10831,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10715,7 +10858,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10741,7 +10885,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10767,7 +10912,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10793,7 +10939,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10819,7 +10966,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10845,7 +10993,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10871,7 +11020,8 @@
       "disclosure": "read before the statements were registered",
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 12,
+      "windowExcluded": 12,
+      "unrun": 0,
       "n": 112,
       "failed": 0,
       "failedShare": 0,
@@ -10897,6 +11047,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 1,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 43,
       "failed": 0,
@@ -10923,6 +11074,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 42,
       "failed": 0,
@@ -10949,6 +11101,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 1,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 43,
       "failed": 0,
@@ -10975,6 +11128,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 42,
       "failed": 0,
@@ -11001,6 +11155,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 1,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 43,
       "failed": 0,
@@ -11027,6 +11182,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 42,
       "failed": 0,
@@ -11053,6 +11209,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 60,
       "failed": 0,
@@ -11079,6 +11236,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 1,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 59,
       "failed": 0,
@@ -11105,6 +11263,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 60,
       "failed": 0,
@@ -11131,6 +11290,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 1,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 59,
       "failed": 0,
@@ -11157,6 +11317,7 @@
       "disclosure": null,
       "secondFailed": 11,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 49,
       "failed": 0,
@@ -11183,6 +11344,7 @@
       "disclosure": null,
       "secondFailed": 11,
       "sparse": 1,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 48,
       "failed": 0,
@@ -11209,6 +11371,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 12,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 33,
       "failed": 0,
@@ -11235,6 +11398,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 13,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 32,
       "failed": 0,
@@ -11261,6 +11425,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 12,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 33,
       "failed": 0,
@@ -11287,6 +11452,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 13,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 32,
       "failed": 0,
@@ -11313,6 +11479,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 12,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 33,
       "failed": 0,
@@ -11339,6 +11506,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 13,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 32,
       "failed": 0,
@@ -11365,6 +11533,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11391,6 +11560,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11417,6 +11587,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11443,6 +11614,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11469,6 +11641,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11495,6 +11668,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11521,6 +11695,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11547,6 +11722,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11573,6 +11749,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11599,6 +11776,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11625,6 +11803,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11651,6 +11830,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 7,
       "failed": 0,
@@ -11677,6 +11857,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 12,
       "n": 7,
       "failed": 0,
@@ -11703,6 +11884,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 12,
       "n": 7,
       "failed": 0,
@@ -11729,6 +11911,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 12,
       "n": 7,
       "failed": 0,
@@ -11755,6 +11938,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 12,
       "n": 7,
       "failed": 0,
@@ -11781,6 +11965,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 12,
       "n": 7,
       "failed": 0,
@@ -11807,6 +11992,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 12,
       "n": 7,
       "failed": 0,
@@ -11833,6 +12019,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 19,
       "failed": 0,
@@ -11859,6 +12046,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 19,
       "failed": 0,
@@ -11885,6 +12073,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 19,
       "failed": 0,
@@ -11911,6 +12100,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 19,
       "failed": 0,
@@ -11937,6 +12127,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 19,
       "failed": 0,
@@ -11963,6 +12154,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 19,
       "failed": 0,
@@ -11989,7 +12181,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12015,7 +12208,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12041,7 +12235,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 480,
+      "windowExcluded": 5,
+      "unrun": 475,
       "n": 275,
       "failed": 0,
       "failedShare": 0,
@@ -12067,7 +12262,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 480,
+      "windowExcluded": 5,
+      "unrun": 475,
       "n": 275,
       "failed": 0,
       "failedShare": 0,
@@ -12093,7 +12289,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12119,7 +12316,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12145,7 +12343,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12171,7 +12370,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12197,7 +12397,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 480,
+      "windowExcluded": 5,
+      "unrun": 475,
       "n": 275,
       "failed": 0,
       "failedShare": 0,
@@ -12223,7 +12424,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 480,
+      "windowExcluded": 5,
+      "unrun": 475,
       "n": 275,
       "failed": 0,
       "failedShare": 0,
@@ -12249,7 +12451,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12275,7 +12478,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 750,
       "failed": 0,
       "failedShare": 0,
@@ -12301,7 +12505,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 25,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 275,
       "failed": 0,
       "failedShare": 0,
@@ -12327,7 +12532,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 274,
       "failed": 0,
       "failedShare": 0,
@@ -12352,20 +12558,21 @@
       "day": 4,
       "disclosure": null,
       "secondFailed": 0,
-      "sparse": 3,
-      "unrun": 278,
-      "n": 21,
+      "sparse": 25,
+      "windowExcluded": 2,
+      "unrun": 0,
+      "n": 275,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -2.5877865320057505,
+      "medianLogRatio": -2.996765350241212,
       "ci95": [
-        -3.6392727552402313,
-        -2.082708585794115
+        -3.312334926814018,
+        -2.7718207899163336
       ],
-      "p95LogRatio": -1.9065731195229363,
+      "p95LogRatio": -1.8230863612041008,
       "p95CI95": [
-        -2.1681464289447097,
-        -1.5281316469646655
+        -2.1368397205675533,
+        -1.4600803417632597
       ],
       "rule1": true,
       "rule2": true,
@@ -12378,20 +12585,21 @@
       "day": 5,
       "disclosure": null,
       "secondFailed": 0,
-      "sparse": 2,
-      "unrun": 278,
-      "n": 22,
+      "sparse": 26,
+      "windowExcluded": 2,
+      "unrun": 0,
+      "n": 274,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -2.5875592048683353,
+      "medianLogRatio": -3.0072860621434225,
       "ci95": [
-        -3.665396770920543,
-        -2.2467142498368062
+        -3.2057617290354536,
+        -2.797173817196251
       ],
-      "p95LogRatio": -1.9593707503522682,
+      "p95LogRatio": -1.8435134976881098,
       "p95CI95": [
-        -2.2601481483348196,
-        -1.6121275786147464
+        -2.222877127420755,
+        -1.577040709639021
       ],
       "rule1": true,
       "rule2": true,
@@ -12405,7 +12613,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 25,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 275,
       "failed": 0,
       "failedShare": 0,
@@ -12431,7 +12640,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 26,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 274,
       "failed": 0,
       "failedShare": 0,
@@ -12457,7 +12667,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 42,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 258,
       "failed": 0,
       "failedShare": 0,
@@ -12483,7 +12694,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 43,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 257,
       "failed": 0,
       "failedShare": 0,
@@ -12508,20 +12720,21 @@
       "day": 4,
       "disclosure": null,
       "secondFailed": 0,
-      "sparse": 7,
-      "unrun": 278,
-      "n": 17,
+      "sparse": 42,
+      "windowExcluded": 2,
+      "unrun": 0,
+      "n": 258,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -0.08878474175920152,
+      "medianLogRatio": -0.32193797799986285,
       "ci95": [
-        -0.3542551262900035,
-        -0.04585820430337157
+        -0.38656945001906634,
+        -0.23389559485872313
       ],
-      "p95LogRatio": -0.18807164907129595,
+      "p95LogRatio": -0.10338142441497225,
       "p95CI95": [
-        -0.2571755135475112,
-        0.04558319819796332
+        -0.3049833909708842,
+        0.045747286876772555
       ],
       "rule1": true,
       "rule2": true,
@@ -12534,22 +12747,23 @@
       "day": 5,
       "disclosure": null,
       "secondFailed": 0,
-      "sparse": 6,
-      "unrun": 278,
-      "n": 18,
+      "sparse": 43,
+      "windowExcluded": 2,
+      "unrun": 0,
+      "n": 257,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -0.046790373676733485,
+      "medianLogRatio": -0.27450945739525134,
       "ci95": [
-        -0.27178679501996195,
-        0.09622399523773538
+        -0.3654359110545282,
+        -0.2077970154915658
       ],
-      "p95LogRatio": -0.24937179358202946,
+      "p95LogRatio": -0.20134323409542726,
       "p95CI95": [
-        -0.40316235335985545,
-        0.05770169811769108
+        -0.29135181023067375,
+        -0.08363423258802814
       ],
-      "rule1": false,
+      "rule1": true,
       "rule2": true,
       "rule3": true
     },
@@ -12561,7 +12775,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 42,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 258,
       "failed": 0,
       "failedShare": 0,
@@ -12587,7 +12802,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 43,
-      "unrun": 2,
+      "windowExcluded": 2,
+      "unrun": 0,
       "n": 257,
       "failed": 0,
       "failedShare": 0,
@@ -12613,7 +12829,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 748,
       "failed": 0,
       "failedShare": 0,
@@ -12639,7 +12856,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 748,
       "failed": 0,
       "failedShare": 0,
@@ -12665,19 +12883,20 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
-      "unrun": 45,
-      "n": 708,
+      "windowExcluded": 5,
+      "unrun": 0,
+      "n": 748,
       "failed": 0,
       "failedShare": 0,
       "medianLogRatio": -2.844517176027517,
       "ci95": [
         -2.9602172487768543,
-        -2.7539342257751094
+        -2.7598261894012
       ],
-      "p95LogRatio": -1.448510856615375,
+      "p95LogRatio": -1.4575274184542435,
       "p95CI95": [
-        -1.5853590969458333,
-        -1.427211327719687
+        -1.5849947164911926,
+        -1.4303392322125288
       ],
       "rule1": true,
       "rule2": true,
@@ -12691,19 +12910,20 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 2,
-      "unrun": 45,
-      "n": 708,
+      "windowExcluded": 5,
+      "unrun": 0,
+      "n": 748,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -2.634003152137315,
+      "medianLogRatio": -2.6317514772857784,
       "ci95": [
-        -2.737830034976832,
-        -2.5372797644261698
+        -2.7388060053220853,
+        -2.5423073109430545
       ],
-      "p95LogRatio": -1.229877097967713,
+      "p95LogRatio": -1.2283468802713713,
       "p95CI95": [
-        -1.3654818684056496,
-        -1.2107525366103413
+        -1.3628802808680793,
+        -1.2126520638020144
       ],
       "rule1": true,
       "rule2": true,
@@ -12717,7 +12937,8 @@
       "disclosure": null,
       "secondFailed": 55,
       "sparse": 2,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 693,
       "failed": 0,
       "failedShare": 0,
@@ -12743,7 +12964,8 @@
       "disclosure": null,
       "secondFailed": 55,
       "sparse": 2,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 693,
       "failed": 0,
       "failedShare": 0,
@@ -12769,7 +12991,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 4,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 746,
       "failed": 0,
       "failedShare": 0,
@@ -12795,7 +13018,8 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 4,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 746,
       "failed": 0,
       "failedShare": 0,
@@ -12821,19 +13045,20 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 4,
-      "unrun": 45,
-      "n": 706,
+      "windowExcluded": 5,
+      "unrun": 0,
+      "n": 746,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -1.2497903602825307,
+      "medianLogRatio": -1.2457045440897467,
       "ci95": [
-        -1.4210432002235718,
-        -1.1588755227961822
+        -1.4135779723353208,
+        -1.1475024944860748
       ],
-      "p95LogRatio": -0.28283761139042085,
+      "p95LogRatio": -0.29781107952750663,
       "p95CI95": [
-        -0.396608081011655,
-        -0.18626127581862909
+        -0.3954443061646066,
+        -0.19205388283264313
       ],
       "rule1": true,
       "rule2": true,
@@ -12847,19 +13072,20 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 4,
-      "unrun": 45,
-      "n": 706,
+      "windowExcluded": 5,
+      "unrun": 0,
+      "n": 746,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -1.0841681715634635,
+      "medianLogRatio": -1.0752942654252013,
       "ci95": [
-        -1.2339896556126064,
-        -0.9853164414586155
+        -1.228952634924413,
+        -0.9698344853827022
       ],
-      "p95LogRatio": -0.22916587238153402,
+      "p95LogRatio": -0.2510849684737501,
       "p95CI95": [
-        -0.35017172469061386,
-        -0.10067905919204731
+        -0.3445917777082444,
+        -0.13134797942832138
       ],
       "rule1": true,
       "rule2": true,
@@ -12873,7 +13099,8 @@
       "disclosure": null,
       "secondFailed": 1,
       "sparse": 4,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 745,
       "failed": 0,
       "failedShare": 0,
@@ -12899,7 +13126,8 @@
       "disclosure": null,
       "secondFailed": 1,
       "sparse": 4,
-      "unrun": 5,
+      "windowExcluded": 5,
+      "unrun": 0,
       "n": 745,
       "failed": 0,
       "failedShare": 0,
@@ -12925,6 +13153,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 944,
       "failed": 0,
@@ -12951,6 +13180,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 944,
       "failed": 0,
@@ -12977,17 +13207,24 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 944,
-      "n": 0,
+      "windowExcluded": 0,
+      "unrun": 312,
+      "n": 632,
       "failed": 0,
-      "failedShare": null,
-      "medianLogRatio": null,
-      "ci95": null,
-      "p95LogRatio": null,
-      "p95CI95": null,
-      "rule1": null,
-      "rule2": null,
-      "rule3": null
+      "failedShare": 0,
+      "medianLogRatio": -1.479052017294129,
+      "ci95": [
+        -1.8754117982291865,
+        -1.1605503797936176
+      ],
+      "p95LogRatio": -1.0201467396956023,
+      "p95CI95": [
+        -1.30157320248037,
+        -0.776909294617374
+      ],
+      "rule1": true,
+      "rule2": true,
+      "rule3": true
     },
     {
       "group": "T",
@@ -12997,17 +13234,24 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
-      "unrun": 944,
-      "n": 0,
+      "windowExcluded": 0,
+      "unrun": 312,
+      "n": 632,
       "failed": 0,
-      "failedShare": null,
-      "medianLogRatio": null,
-      "ci95": null,
-      "p95LogRatio": null,
-      "p95CI95": null,
-      "rule1": null,
-      "rule2": null,
-      "rule3": null
+      "failedShare": 0,
+      "medianLogRatio": -1.4820457522297041,
+      "ci95": [
+        -1.8162284785197913,
+        -1.1177688191300854
+      ],
+      "p95LogRatio": -1.05394949398679,
+      "p95CI95": [
+        -1.2576914473909313,
+        -0.7121411363895236
+      ],
+      "rule1": true,
+      "rule2": true,
+      "rule3": true
     },
     {
       "group": "T",
@@ -13017,6 +13261,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 944,
       "failed": 0,
@@ -13043,6 +13288,7 @@
       "disclosure": null,
       "secondFailed": 0,
       "sparse": 0,
+      "windowExcluded": 0,
       "unrun": 0,
       "n": 944,
       "failed": 0,

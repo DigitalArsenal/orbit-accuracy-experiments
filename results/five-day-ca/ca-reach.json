@@ -4,11 +4,11 @@
       "/opt/homebrew/Cellar/node/25.4.0/bin/node",
       "/Users/tj/software/private/coordinator-d9/orbit-accuracy-experiments-fiveday/experiments/five-day-ca/ca-table.mjs"
     ],
-    "commit": "8efdac12f8c996f8137a4441157109e8b4b15b19",
+    "commit": "96129492cbc3265d4f52999d797405a2a8ea5db9",
     "node": "v25.4.0",
     "host": "claude.local",
     "registrationCommit": "eb143664cad7ab97133184d4d0b217592f81b5a8",
-    "modulesCommit": "4eb88dbb497d4dd5931255e3e2ddcbf8c14f4b6d",
+    "modulesCommit": "f662a3e6726fedfd58214674a49ac5fb4100355b",
     "pins": {
       "/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
       "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/propagator/sgp4-xp/dist/isomorphic/module.wasm": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb",
@@ -25,7 +25,7 @@
       "experiments/five-day-ca/PLAN.md": "ffee0315a15f45830494aff0fbdac2952d162f57555f151659692156a4b7c99b",
       "experiments/five-day-ca/builds.json": "a5b207dd57d1d66669b525cf87299693879ff7c926e8ceec19e8f89a134137b7",
       "experiments/five-day-ca/ca-table.mjs": "3e08dff0c535b2a6b1ad31adb5b5caedb8e5d3e133c857a9367baf7a5a98f288",
-      "experiments/five-day-ca/check.mjs": "4a02716b9539325b0d76c0ecde14ecdcb681575daa173a782d49891a81fa8ee2",
+      "experiments/five-day-ca/check.mjs": "46dd495047313761fd2bc62f126fd257ac28727699463ce6a666320870adc64f",
       "experiments/five-day-ca/config.json": "bd344de1f25bb98ca8dbec3ffa7fce2b962b212b953110357439681ec154b3fb",
       "experiments/five-day-ca/coverage.mjs": "9a7831e82e6b5f90950473f04d4e9f07765af7b55aa778d81ad91f974d932814",
       "experiments/five-day-ca/encounters.mjs": "6c7e164badbb3aefaef3b47f35d97966332c6130dc02056d28a533fa610c787b",
@@ -37,12 +37,12 @@
       "experiments/five-day-ca/map-truth-regimes.mjs": "7f0733284430b7641ce9c5457f17c51028537cbbb1c36659fb91ce5b9c72cf72",
       "experiments/five-day-ca/regimes.mjs": "a9c408510c1b5cef30e94b7baf780d0fbbc754061c75e95164655ead79ca0378",
       "experiments/five-day-ca/repair-ussf.mjs": "4a62acdeaa85bcf60c22f305a3707f896b30ea15c76ede2ac048a4fdcbcb7b18",
-      "experiments/five-day-ca/statistics.mjs": "c3cc54ad09fcf7f8257076005d2c131915a4eef9b6d137f25d07411fc37a2f02",
-      "experiments/five-day-ca/table.mjs": "fe82be9b3e71781afb12525d9016eb1336fe95d90ed6f97402dcee9568051c3b",
+      "experiments/five-day-ca/statistics.mjs": "39439a5e8caf7a13ffdd0f7769fdfaa3c30756595eac1083a954d8e4251a7e59",
+      "experiments/five-day-ca/table.mjs": "383c0202b3cfb9ac43f80e78b9a743ae85922f2b79f623ad08d2e1248c70facc",
       "experiments/five-day-ca/truth.mjs": "b1c394c9eb0a11b369165dffb9d50d00c08c1797db98d7829b16ecebfbb96f2c"
     }
   },
-  "snapshotStable": false,
+  "snapshotStable": true,
   "inputs": {
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "e264afe91e6bf9395c871b03b84cc6a92df5be58975d64a3d4e9d3ec3bd72268",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "13b6ac40e7443e569ba45f8f386cda143777c50d507173bca45020dbd74e7551",
@@ -92,18 +92,30 @@
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-7.jsonl": "3fc949438fabe73abb07b89331d125371737e18cfbdc342e2d6a7da5b008dd9d",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-8.jsonl": "c4afdec62039f9c145e1efc3bddb87c28e6138bbd01cd2a6f9bd8d992d778df0",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-9.jsonl": "6d10f94ce6e25a4ddf1141e873b8285ed2a02331b41898c76907b85b389425a8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "889f5e1b58d7be31b6f037d562f4f35ccceae0e39e8e48906016bd88df863e19",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "6d860402e7f78e7f95241df01ba45fb89a904fad123767dbee51107245c6509b",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "634b9b7d6f81916c5f787bdcd935b76e6f0cd0b64949d099d94af5edabda741d",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "4bcf8d35e0b89e6933b4aade34ab5ecfcbf5fc09bbe7ee01f124ec6fa42daac4",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "b79707666505477cddfad0c1a4eae0d8b7f864d6addf0a7b4c79be22fa404f6b",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "a4769ab71380796da18a462941fd37a2c3fd3c2c5f6f911307ba967cf753ade2",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "017f8ea778820b18710d4202ed2c71ad3d759310cccce3d673bfaf9cb305aefe",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "c6b3efd31b6ea574e02b83493aef323f051026a08366f43cdfe825575977a0de",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "e2f1ae3e886976bb3a163e11489758a75cede50fdf1cd1f78ff20e42ff045c54",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "bf6389f34c67e51fa17f0e9efc9fe93620c4148349d9f058320746c145357d47",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "09a9e06aea737315d0bf1cce87df8f7ff16d400b0fc30b4795aeabd1d487590e",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "84c33b012e43e24532ae77f74429739d7a50ae9bd0e81ed82e14339a33f158f0"
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "fed9b2983f1df83bfa9fd93e7deea5e7d7b9b8d43b91c31dff9836b03af99297",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "fef303cac0293e08b7492481288a71acca0ae17b3ff357f0b6f09bd6b0d110b1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "81dcd32137516b495537f22c93701522f9a69ab876eca56b2d3a755392191a58",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "92435be976e5fa82b2b54e3c8e6d24d59b709d57f2dddb78b94f27b36671a078",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "8e8179e2dbb27d736c81198d5f9b75383aff1e8ef5afffad689a5921814fbf7d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "ccce659874e9c00821e0b7305a742cc016604e02bf7ceb5ed0ee9fe5fc1e8b5d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "d278045fba7bbf6446cba8408335d3588fdb53eb253cf07870de3c8d6c165a9e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "f0efd0bbc3747a64704258f985105ead35ef29dee3f7080100df8a4a9ccc7b67",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "ea271cec9000ee592a3648119fefe96266ab3261742195876eab550e8fef9552",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "3e38157e80db9bc5756fed654aa9701cfcf4cd4238e5a8017d27a97eb982039e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "407871c5ea360227a8403b280c6046dc1b635994954a8dcbd371966bb0c67e6b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "a5ebf0c4b5633ea2fb436ede1656c4eab13bedbd770173322da240f405c39ff8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-0.jsonl": "9fd4f3d115d6f61d2a8bdaab04cbf05aac11670edd49f8aa6979c28527fc80ee",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-1.jsonl": "cabbfa421dba89f594f3e6b5568fd4b3fa45bbb53364c9fbb72535d4f6f676c9",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-10.jsonl": "aad35ef31a94896818b5bce3f4b4ccd6112e40550f08401d0f5be6f7efcd4199",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-11.jsonl": "35bdabac499cfa7d7525a4db1b2799908296353fd2dbe6f24e8bc0148e0cc647",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-2.jsonl": "6687beb31315c849856c4385151ba8494c056291f0219c27d1471d224e3c24a1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-3.jsonl": "36f525b5244aaa4abcbac5f5695c7d69a0676fd73702c39e4c2d11a098e8f1ca",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-4.jsonl": "a9e1358c7000673677b53eec9a237117f3d28b499fd073bfe9b06ef7992d01a2",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-5.jsonl": "5d89f89683dc34d1f8a969ea3f455e13251ed91b88c566c4b0502d22b40ec0be",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-6.jsonl": "e413b34883bb5881443f8c4da2585400880471392b74ef1356d7ed04c4fc2ec3",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-7.jsonl": "bcff4bd8ac091d681a90c28877e5d8c17db3fb4f9a0c48fa6a951f0ee47697ed",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-8.jsonl": "99016f1b1754bf30a3f8598b10778d8865bc2a89f358af20d41a1f94e55196fe",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-9.jsonl": "b27c98be309bb42c4c0b4d9d98b50f43ea362dd8eda5e011fb8f34eb94cdccac"
   },
   "wasmSha256": "0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a",
   "regimeMappingSha256": "dd6187b7b29b73bc3ebfd5f0b461c1ac5bce63da26651a3009cc54d0f88c66a9",
@@ -143894,14 +143906,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.4494229739655706,
-      "p10": 0.0054169255431912346,
-      "p90": 0.998408878249344,
-      "reach1e4": 0.9928571428571429,
+      "n": 276,
+      "medianCeiling": 0.39055333713954576,
+      "p10": 0.005876408839453829,
+      "p90": 0.9885334773444303,
+      "reach1e4": 0.9927536231884058,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -143916,13 +143928,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.7692076070493585,
-      "p10": 0.018031245464865116,
-      "p90": 0.9999999997406224,
+      "n": 276,
+      "medianCeiling": 0.6943413059160599,
+      "p10": 0.019060464011724065,
+      "p90": 0.9999997758523946,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -143938,12 +143950,12 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.9972609170468578,
-      "p10": 0.05836923815950057,
+      "n": 276,
+      "medianCeiling": 0.9896204150904337,
+      "p10": 0.06279062831084176,
       "p90": 1,
       "reach1e4": 1,
       "reach1e5": 1,
@@ -143960,12 +143972,12 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.9999999976155596,
-      "p10": 0.127330366485369,
+      "n": 276,
+      "medianCeiling": 0.9999997043653801,
+      "p10": 0.13273891784970854,
       "p90": 1,
       "reach1e4": 1,
       "reach1e5": 1,
@@ -143984,19 +143996,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.000830330588863555,
-      "p10": 0.0006297551815925065,
-      "p90": 0.0008305642241394657,
-      "reach1e4": 0.9928571428571429,
+      "n": 276,
+      "medianCeiling": 0.0008302427534363794,
+      "p10": 0.0006408185158940885,
+      "p90": 0.0008305605837628366,
+      "reach1e4": 0.9927536231884058,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144013,18 +144025,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.0033118354333541047,
-      "p10": 0.002512015080300503,
-      "p90": 0.0033127668379402614,
+      "n": 276,
+      "medianCeiling": 0.0033114870005878467,
+      "p10": 0.002556144211096515,
+      "p90": 0.003312752384317726,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144042,18 +144054,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.020292677029990963,
-      "p10": 0.015400061762896402,
-      "p90": 0.020298364136015552,
+      "n": 276,
+      "medianCeiling": 0.02029062206143717,
+      "p10": 0.015670541402887723,
+      "p90": 0.020298278357826667,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144071,18 +144083,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
-      "medianCeiling": 0.07583172471126656,
-      "p10": 0.05765757646373066,
-      "p90": 0.07585277503351812,
+      "n": 276,
+      "medianCeiling": 0.07582508194905957,
+      "p10": 0.058669079293965254,
+      "p90": 0.07585248860569657,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144100,15 +144112,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
+      "n": 276,
       "medianCeiling": 0.00041548994611966705,
       "p10": 0.00041548994611966705,
       "p90": 0.00041548994611966705,
@@ -144129,15 +144141,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
+      "n": 276,
       "medianCeiling": 0.0016595818699783032,
       "p10": 0.0016595818699783032,
       "p90": 0.0016595818699783032,
@@ -144158,15 +144170,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
+      "n": 276,
       "medianCeiling": 0.01026946052251569,
       "p10": 0.01026946052251569,
       "p90": 0.01026946052251569,
@@ -144187,15 +144199,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 140
+        "CALIBRATED": 276
       },
       "regimeCounts": {
-        "LEO 600-800 km": 140
+        "LEO 600-800 km": 276
       },
-      "attempted": 140,
+      "attempted": 276,
       "excluded": 0,
       "errors": {},
-      "n": 140,
+      "n": 276,
       "medianCeiling": 0.03966846803274644,
       "p10": 0.03966846803274644,
       "p90": 0.03966846803274644,
@@ -144214,14 +144226,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.05928763991583345,
-      "p10": 0.0016760669948268417,
-      "p90": 0.4846141575105594,
-      "reach1e4": 0.9929577464788732,
+      "n": 274,
+      "medianCeiling": 0.027645948814713845,
+      "p10": 0.001676799044108488,
+      "p90": 0.41536184209807303,
+      "reach1e4": 0.9890510948905109,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144236,13 +144248,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.12071469714825042,
-      "p10": 0.005786228739376386,
-      "p90": 0.8091588801917666,
+      "n": 274,
+      "medianCeiling": 0.06294902758762044,
+      "p10": 0.00578883302123001,
+      "p90": 0.7286461380099504,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144258,13 +144270,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.2973616244037245,
-      "p10": 0.020142773451137908,
-      "p90": 0.9989438494466315,
+      "n": 274,
+      "medianCeiling": 0.164249344366166,
+      "p10": 0.02054691178281967,
+      "p90": 0.9935709275975434,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144280,13 +144292,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.5551486161538419,
-      "p10": 0.04187969760371108,
-      "p90": 0.9999999999429218,
+      "n": 274,
+      "medianCeiling": 0.32322326505106147,
+      "p10": 0.04244996297429408,
+      "p90": 0.9999998585067179,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144304,19 +144316,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.0006081412830343984,
-      "p10": 0.0002497041430815097,
-      "p90": 0.0006154534213439505,
-      "reach1e4": 0.9788732394366197,
+      "n": 274,
+      "medianCeiling": 0.0005915917936945517,
+      "p10": 0.0002577169189051502,
+      "p90": 0.0006153958151457709,
+      "reach1e4": 0.9817518248175182,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144333,18 +144345,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.0024274597902402455,
-      "p10": 0.0009968180216270823,
-      "p90": 0.0024566404326301417,
+      "n": 274,
+      "medianCeiling": 0.002361417794020748,
+      "p10": 0.001028804310808801,
+      "p90": 0.0024564105104623534,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144362,18 +144374,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.01495174260599064,
-      "p10": 0.006144044849457696,
-      "p90": 0.01513119612178971,
+      "n": 274,
+      "medianCeiling": 0.014545696277100426,
+      "p10": 0.006341167327256056,
+      "p90": 0.015129780786462198,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144391,18 +144403,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
-      "medianCeiling": 0.0568541115441763,
-      "p10": 0.023420762790696777,
-      "p90": 0.05753243245168744,
+      "n": 274,
+      "medianCeiling": 0.0553200750162114,
+      "p10": 0.024178292057214425,
+      "p90": 0.05752723375847592,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144420,15 +144432,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
+      "n": 274,
       "medianCeiling": 0.0003078895621542888,
       "p10": 0.0003078895621542888,
       "p90": 0.0003078895621542888,
@@ -144449,15 +144461,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
+      "n": 274,
       "medianCeiling": 0.0012302624444319905,
       "p10": 0.0012302624444319905,
       "p90": 0.0012302624444319905,
@@ -144478,15 +144490,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
+      "n": 274,
       "medianCeiling": 0.007632893064357846,
       "p10": 0.007632893064357846,
       "p90": 0.007632893064357846,
@@ -144507,15 +144519,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 142
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 142
+        "LEO 600-800 km": 274
       },
-      "attempted": 142,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 142,
+      "n": 274,
       "medianCeiling": 0.02975274450039097,
       "p10": 0.02975274450039097,
       "p90": 0.02975274450039097,
@@ -144534,14 +144546,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.010660704784637477,
-      "p10": 0.0008558085172087014,
-      "p90": 0.12035023716646756,
-      "reach1e4": 0.9861111111111112,
+      "n": 275,
+      "medianCeiling": 0.007207288048357071,
+      "p10": 0.0008612538653607663,
+      "p90": 0.10116285290810358,
+      "reach1e4": 0.9854545454545455,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144556,13 +144568,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.026688225523432935,
-      "p10": 0.0030964226430601834,
-      "p90": 0.24427938475249888,
+      "n": 275,
+      "medianCeiling": 0.018774882429092844,
+      "p10": 0.003108526236836558,
+      "p90": 0.22533883846396446,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144578,13 +144590,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.07522897667992551,
-      "p10": 0.012217055154174379,
-      "p90": 0.5667970477937003,
+      "n": 275,
+      "medianCeiling": 0.054355005185200984,
+      "p10": 0.012315758587567234,
+      "p90": 0.5330879567235671,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144600,13 +144612,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.15154670682826957,
-      "p10": 0.025545497964166403,
-      "p90": 0.882601428121805,
+      "n": 275,
+      "medianCeiling": 0.11255427214269345,
+      "p10": 0.02724960337172394,
+      "p90": 0.855325436304297,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144624,19 +144636,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.000233737704227656,
-      "p10": 0.00011329084719477085,
-      "p90": 0.0002457154632846121,
-      "reach1e4": 0.9444444444444444,
+      "n": 275,
+      "medianCeiling": 0.00022506046354758602,
+      "p10": 0.00011985704582391027,
+      "p90": 0.00024566798603667915,
+      "reach1e4": 0.9454545454545454,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144653,19 +144665,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0009338328145177856,
-      "p10": 0.0004526336877269299,
-      "p90": 0.0009816821504856459,
-      "reach1e4": 0.9930555555555556,
+      "n": 275,
+      "medianCeiling": 0.0008991666071583363,
+      "p10": 0.0004788670720156822,
+      "p90": 0.0009814928852404587,
+      "reach1e4": 0.9963636363636363,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144682,18 +144694,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.005787994190149819,
-      "p10": 0.002805999982602484,
-      "p90": 0.0060843785009165,
+      "n": 275,
+      "medianCeiling": 0.005573184064463513,
+      "p10": 0.00296859721703019,
+      "p90": 0.006083223324786078,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144711,18 +144723,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.022484680685237235,
-      "p10": 0.010907830765204771,
-      "p90": 0.023633419279210626,
+      "n": 275,
+      "medianCeiling": 0.021650986584591587,
+      "p10": 0.01153947814696773,
+      "p90": 0.02362917111745129,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144740,15 +144752,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.00012298637365537406,
       "p10": 0.00012298637365537406,
       "p90": 0.00012298637365537406,
@@ -144769,15 +144781,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.0004916499903127854,
       "p10": 0.0004916499903127854,
       "p90": 0.0004916499903127854,
@@ -144798,15 +144810,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.0030599441133599085,
       "p10": 0.0030599441133599085,
       "p90": 0.0030599441133599085,
@@ -144827,15 +144839,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.012059316582112914,
       "p10": 0.012059316582112914,
       "p90": 0.012059316582112914,
@@ -144854,14 +144866,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0037249644263467815,
-      "p10": 0.0004123391502695272,
-      "p90": 0.03617668557950397,
-      "reach1e4": 0.9791666666666666,
+      "n": 275,
+      "medianCeiling": 0.0030444233010724843,
+      "p10": 0.0004308686215083749,
+      "p90": 0.024823697283016342,
+      "reach1e4": 0.9745454545454545,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144876,13 +144888,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.011081952389803425,
-      "p10": 0.0015471462070039694,
-      "p90": 0.07448764274689923,
+      "n": 275,
+      "medianCeiling": 0.008853083642456572,
+      "p10": 0.0016684019396715287,
+      "p90": 0.06318772991358115,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144898,13 +144910,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.03275570928992385,
-      "p10": 0.007405233742130904,
-      "p90": 0.19011670097888778,
+      "n": 275,
+      "medianCeiling": 0.02739498831708735,
+      "p10": 0.007554653829374495,
+      "p90": 0.16407697216766004,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144920,13 +144932,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.06885125834356723,
-      "p10": 0.016240237499147363,
-      "p90": 0.37096757219166476,
+      "n": 275,
+      "medianCeiling": 0.05639210077815906,
+      "p10": 0.01691561551480671,
+      "p90": 0.3273151951241723,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -144944,19 +144956,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.00019953378039283895,
-      "p10": 0.00007887596475315377,
-      "p90": 0.00024385464113628816,
-      "reach1e4": 0.8194444444444444,
+      "n": 275,
+      "medianCeiling": 0.00018527531557425454,
+      "p10": 0.00008179568868305745,
+      "p90": 0.00024312531292504274,
+      "reach1e4": 0.8327272727272728,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -144973,19 +144985,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0007971870143291971,
-      "p10": 0.00031513769136130534,
-      "p90": 0.0009742486426104845,
-      "reach1e4": 0.9930555555555556,
+      "n": 275,
+      "medianCeiling": 0.0007402230604787023,
+      "p10": 0.00032680279259955034,
+      "p90": 0.0009713348211105119,
+      "reach1e4": 0.9854545454545455,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145002,18 +145014,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0049413226159183855,
-      "p10": 0.001953738049410571,
-      "p90": 0.00603834289615812,
+      "n": 275,
+      "medianCeiling": 0.0045883281461155416,
+      "p10": 0.0020260470304890687,
+      "p90": 0.00602028293946984,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145031,18 +145043,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.019199427219018517,
-      "p10": 0.007596358148737396,
-      "p90": 0.023455105502025318,
+      "n": 275,
+      "medianCeiling": 0.017829182020987357,
+      "p10": 0.007877362943244183,
+      "p90": 0.02338495580118383,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145060,15 +145072,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.00012298637365537406,
       "p10": 0.00012298637365537406,
       "p90": 0.00012298637365537406,
@@ -145089,15 +145101,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.0004916499903127854,
       "p10": 0.0004916499903127854,
       "p90": 0.0004916499903127854,
@@ -145118,15 +145130,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.0030599441133599085,
       "p10": 0.0030599441133599085,
       "p90": 0.0030599441133599085,
@@ -145147,15 +145159,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 275
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 275
       },
-      "attempted": 144,
+      "attempted": 275,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 275,
       "medianCeiling": 0.012059316582112914,
       "p10": 0.012059316582112914,
       "p90": 0.012059316582112914,
@@ -145174,14 +145186,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0017810427517874461,
-      "p10": 0.00020684328407466688,
-      "p90": 0.021305800814459874,
-      "reach1e4": 0.9583333333333334,
+      "n": 274,
+      "medianCeiling": 0.001598186968096909,
+      "p10": 0.00022874675796182782,
+      "p90": 0.013462128548960646,
+      "reach1e4": 0.9525547445255474,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145196,14 +145208,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.005889933616203127,
-      "p10": 0.0007986942887569489,
-      "p90": 0.04594348397449462,
-      "reach1e4": 0.9930555555555556,
+      "n": 274,
+      "medianCeiling": 0.005152441034423796,
+      "p10": 0.0009002587753050066,
+      "p90": 0.03609063266065185,
+      "reach1e4": 0.9927007299270073,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145218,13 +145230,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.01857033229226181,
-      "p10": 0.003979615542207175,
-      "p90": 0.12107051512542812,
+      "n": 274,
+      "medianCeiling": 0.016536379838475883,
+      "p10": 0.004590086906672106,
+      "p90": 0.09716884712098213,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145240,13 +145252,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.03897172044360232,
-      "p10": 0.010153795082443217,
-      "p90": 0.23971515481338537,
+      "n": 274,
+      "medianCeiling": 0.034350649680113976,
+      "p10": 0.011341936516734971,
+      "p90": 0.194824756470491,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145264,20 +145276,20 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0000811549575326972,
-      "p10": 0.000038594577823636015,
-      "p90": 0.00009685453585360642,
+      "n": 274,
+      "medianCeiling": 0.00007856609231392756,
+      "p10": 0.000040641606695471855,
+      "p90": 0.00009654054725843347,
       "reach1e4": 0,
-      "reach1e5": 1,
+      "reach1e5": 0.9963503649635036,
       "alfanoMaximumAtZero": 1
     },
     {
@@ -145293,19 +145305,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0003244010409849022,
-      "p10": 0.00015427654680376897,
-      "p90": 0.0003871549061693555,
-      "reach1e4": 0.9652777777777778,
+      "n": 274,
+      "medianCeiling": 0.00031405254497892613,
+      "p10": 0.00016245881646387877,
+      "p90": 0.00038589996529812966,
+      "reach1e4": 0.9635036496350365,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145322,18 +145334,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.0020179853501571367,
-      "p10": 0.0009597995578600057,
-      "p90": 0.002408262961945187,
+      "n": 274,
+      "medianCeiling": 0.001953610381015959,
+      "p10": 0.0010106844250161806,
+      "p90": 0.002400463653776324,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145351,18 +145363,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
-      "medianCeiling": 0.007938779020066802,
-      "p10": 0.0037772385391006994,
-      "p90": 0.009472852385426018,
+      "n": 274,
+      "medianCeiling": 0.007685520784210446,
+      "p10": 0.003977225425134282,
+      "p90": 0.009442269712441331,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145380,15 +145392,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 274,
       "medianCeiling": 0.000048712107477630844,
       "p10": 0.000048712107477630844,
       "p90": 0.000048712107477630844,
@@ -145409,15 +145421,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 274,
       "medianCeiling": 0.0001947821826123115,
       "p10": 0.0001947821826123115,
       "p90": 0.0001947821826123115,
@@ -145438,15 +145450,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 274,
       "medianCeiling": 0.001214498070116695,
       "p10": 0.001214498070116695,
       "p90": 0.001214498070116695,
@@ -145467,15 +145479,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 144
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 144
+        "LEO 600-800 km": 274
       },
-      "attempted": 144,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 144,
+      "n": 274,
       "medianCeiling": 0.004817137094199241,
       "p10": 0.004817137094199241,
       "p90": 0.004817137094199241,
@@ -145494,15 +145506,15 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.0004877147278164232,
-      "p10": 0.00007577888250122283,
-      "p90": 0.004521326680319486,
-      "reach1e4": 0.8776978417266187,
-      "reach1e5": 0.9928057553956835,
+      "n": 274,
+      "medianCeiling": 0.0004978147014487468,
+      "p10": 0.0000996569583235036,
+      "p90": 0.0037433647408894187,
+      "reach1e4": 0.8978102189781022,
+      "reach1e5": 0.9890510948905109,
       "alfanoMaximumAtZero": 1
     },
     {
@@ -145516,14 +145528,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.0018188252105991595,
-      "p10": 0.0002989450833104367,
-      "p90": 0.012359406672297058,
-      "reach1e4": 0.9784172661870504,
+      "n": 274,
+      "medianCeiling": 0.001874781143312672,
+      "p10": 0.0003906415361709508,
+      "p90": 0.011269272704084643,
+      "reach1e4": 0.9708029197080292,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145538,13 +145550,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.00790196730377084,
-      "p10": 0.0017047515198957417,
-      "p90": 0.03695808149002708,
+      "n": 274,
+      "medianCeiling": 0.007860795914604299,
+      "p10": 0.0021720882027720604,
+      "p90": 0.034170013910716404,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145560,13 +145572,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.01741814853405859,
-      "p10": 0.005162211216696988,
-      "p90": 0.07840867335625262,
+      "n": 274,
+      "medianCeiling": 0.017354298357655472,
+      "p10": 0.00607985644051035,
+      "p90": 0.07356337960613858,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145584,20 +145596,20 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.00005497218536289743,
-      "p10": 0.00002197498293804598,
-      "p90": 0.00009256373496924156,
+      "n": 274,
+      "medianCeiling": 0.00005504230604601815,
+      "p10": 0.00002449194546483579,
+      "p90": 0.00009182928722390226,
       "reach1e4": 0,
-      "reach1e5": 0.9928057553956835,
+      "reach1e5": 0.9890510948905109,
       "alfanoMaximumAtZero": 1
     },
     {
@@ -145613,19 +145625,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.00021974204947774686,
-      "p10": 0.00008784270314514006,
-      "p90": 0.00037000601281810935,
-      "reach1e4": 0.8705035971223022,
+      "n": 274,
+      "medianCeiling": 0.00022002234144034713,
+      "p10": 0.00009790352623003513,
+      "p90": 0.0003670683305215989,
+      "reach1e4": 0.8941605839416058,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145642,18 +145654,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.0013670039920014075,
-      "p10": 0.0005465261279684664,
-      "p90": 0.002301704560425604,
+      "n": 274,
+      "medianCeiling": 0.0013687475153424927,
+      "p10": 0.0006091005388872442,
+      "p90": 0.002283349233910771,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145671,18 +145683,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
-      "medianCeiling": 0.005378723986614306,
-      "p10": 0.0021512510234251475,
-      "p90": 0.009055289494921489,
+      "n": 274,
+      "medianCeiling": 0.005385581998763725,
+      "p10": 0.0023972763062327035,
+      "p90": 0.008981966125225366,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145700,15 +145712,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
+      "n": 274,
       "medianCeiling": 0.000048712107477630844,
       "p10": 0.000048712107477630844,
       "p90": 0.000048712107477630844,
@@ -145729,15 +145741,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
+      "n": 274,
       "medianCeiling": 0.0001947821826123115,
       "p10": 0.0001947821826123115,
       "p90": 0.0001947821826123115,
@@ -145758,15 +145770,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
+      "n": 274,
       "medianCeiling": 0.001214498070116695,
       "p10": 0.001214498070116695,
       "p90": 0.001214498070116695,
@@ -145787,15 +145799,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 139
+        "CALIBRATED": 274
       },
       "regimeCounts": {
-        "LEO 600-800 km": 139
+        "LEO 600-800 km": 274
       },
-      "attempted": 139,
+      "attempted": 274,
       "excluded": 0,
       "errors": {},
-      "n": 139,
+      "n": 274,
       "medianCeiling": 0.004817137094199241,
       "p10": 0.004817137094199241,
       "p90": 0.004817137094199241,
@@ -145814,14 +145826,14 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.04747626483326574,
-      "p10": 0.004350910598612987,
-      "p90": 0.5487236979352523,
-      "reach1e4": 0.9923076923076923,
+      "n": 259,
+      "medianCeiling": 0.03936678601805432,
+      "p10": 0.004127177784354507,
+      "p90": 0.49750517313768633,
+      "reach1e4": 0.9961389961389961,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145836,13 +145848,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.09846977293439374,
-      "p10": 0.01501853017392061,
-      "p90": 0.8728124658736202,
+      "n": 259,
+      "medianCeiling": 0.0834927497065584,
+      "p10": 0.014175764518021534,
+      "p90": 0.8213305398622428,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145858,13 +145870,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.24503789823318928,
-      "p10": 0.050568553679709416,
-      "p90": 0.9998685252156407,
+      "n": 259,
+      "medianCeiling": 0.21604161190088944,
+      "p10": 0.049837552373997465,
+      "p90": 0.9991813916192382,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145880,13 +145892,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.4680115345493828,
-      "p10": 0.10426673441509947,
-      "p90": 0.9999999999999785,
+      "n": 259,
+      "medianCeiling": 0.4171808907637632,
+      "p10": 0.10255207193471276,
+      "p90": 0.9999999999687827,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145904,19 +145916,19 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.0008109424174829725,
-      "p10": 0.0005730291679580357,
-      "p90": 0.0008304060629497837,
-      "reach1e4": 0.9923076923076923,
+      "n": 259,
+      "medianCeiling": 0.0008047385330820296,
+      "p10": 0.0005725515301095043,
+      "p90": 0.0008303755980539391,
+      "reach1e4": 0.9961389961389961,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
     },
@@ -145933,18 +145945,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.0032345278720251995,
-      "p10": 0.0022857846446934084,
-      "p90": 0.0033121368376165116,
+      "n": 259,
+      "medianCeiling": 0.0032097901863717697,
+      "p10": 0.0022838807606890424,
+      "p90": 0.0033120150957391087,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145962,18 +145974,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.019820004610083243,
-      "p10": 0.014014969113356137,
-      "p90": 0.020294539243808293,
+      "n": 259,
+      "medianCeiling": 0.019668729079992894,
+      "p10": 0.014003354357075696,
+      "p90": 0.020293783678830873,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -145991,18 +146003,18 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
-      "medianCeiling": 0.07407917324704508,
-      "p10": 0.052496222838193156,
-      "p90": 0.07583892285439979,
+      "n": 259,
+      "medianCeiling": 0.07354286159849376,
+      "p10": 0.05245345091126841,
+      "p90": 0.07583710452096028,
       "reach1e4": 1,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -146020,15 +146032,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
+      "n": 259,
       "medianCeiling": 0.00041548994611966705,
       "p10": 0.00041548994611966705,
       "p90": 0.00041548994611966705,
@@ -146049,15 +146061,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
+      "n": 259,
       "medianCeiling": 0.0016595818699783032,
       "p10": 0.0016595818699783032,
       "p90": 0.0016595818699783032,
@@ -146078,15 +146090,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
+      "n": 259,
       "medianCeiling": 0.01026946052251569,
       "p10": 0.01026946052251569,
       "p90": 0.01026946052251569,
@@ -146107,15 +146119,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 130
+        "CALIBRATED": 259
       },
       "regimeCounts": {
-        "LEO 600-800 km": 130
+        "LEO 600-800 km": 259
       },
-      "attempted": 130,
+      "attempted": 259,
       "excluded": 0,
       "errors": {},
-      "n": 130,
+      "n": 259,
       "medianCeiling": 0.03966846803274644,
       "p10": 0.03966846803274644,
       "p90": 0.03966846803274644,
@@ -146134,1475 +146146,13 @@
       "gpLabel": null,
       "gpLabels": {},
       "regimeCounts": {},
-      "attempted": 132,
+      "attempted": 258,
       "excluded": 0,
       "errors": {},
-      "n": 132,
-      "medianCeiling": 0.01675594920753454,
-      "p10": 0.0015790088929337252,
-      "p90": 0.107007166165401,
-      "reach1e4": 0.9848484848484849,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x fit",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.040625002633589,
-      "p10": 0.0054493375835948515,
-      "p90": 0.21587029190710186,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x fit",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.10794959690001328,
-      "p10": 0.021450081288190707,
-      "p90": 0.5086044255850125,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x fit",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.21462987926009194,
-      "p10": 0.043407466806989245,
-      "p90": 0.8313670760169508,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.00056367981123946,
-      "p10": 0.0002639184606323353,
-      "p90": 0.0006132253201336028,
-      "reach1e4": 0.9696969696969697,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.0022500229120328277,
-      "p10": 0.0010535580879493702,
-      "p90": 0.0024477488006791593,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.013860380661892826,
-      "p10": 0.0064936232687587666,
-      "p90": 0.01507651824597042,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "fit x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.052725434151084036,
-      "p10": 0.02475134301503545,
-      "p90": 0.05732591651076133,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "GP x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.0003078895621542888,
-      "p10": 0.0003078895621542888,
-      "p90": 0.0003078895621542888,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "GP x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.0012302624444319905,
-      "p10": 0.0012302624444319905,
-      "p90": 0.0012302624444319905,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "GP x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.007632893064357846,
-      "p10": 0.007632893064357846,
-      "p90": 0.007632893064357846,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 2,
-      "pair": "GP x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        2,
-        3
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 132
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 132
-      },
-      "attempted": 132,
-      "excluded": 0,
-      "errors": {},
-      "n": 132,
-      "medianCeiling": 0.02975274450039097,
-      "p10": 0.02975274450039097,
-      "p90": 0.02975274450039097,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x fit",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.007368790685806588,
-      "p10": 0.000874635370295329,
-      "p90": 0.0416755428210841,
-      "reach1e4": 0.9851851851851852,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x fit",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.01750825086809557,
-      "p10": 0.003129014631432749,
-      "p90": 0.09042845430588409,
-      "reach1e4": 0.9851851851851852,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x fit",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.04586458369808454,
-      "p10": 0.012245034752263443,
-      "p90": 0.2390436299843283,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x fit",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.0922088940200569,
-      "p10": 0.026416271417429395,
-      "p90": 0.45896766156438706,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.00021655883804346513,
-      "p10": 0.00011663715635199076,
-      "p90": 0.000244587867587857,
-      "reach1e4": 0.9259259259259259,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.000865202386013782,
-      "p10": 0.00046600379172307885,
-      "p90": 0.0009771797289157345,
-      "reach1e4": 0.9851851851851852,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.0053627405110461554,
-      "p10": 0.00288890688803592,
-      "p90": 0.006056582503403062,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "fit x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.02083445691133181,
-      "p10": 0.011230405493930678,
-      "p90": 0.02352696026597771,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "GP x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.00012298637365537406,
-      "p10": 0.00012298637365537406,
-      "p90": 0.00012298637365537406,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "GP x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.0004916499903127854,
-      "p10": 0.0004916499903127854,
-      "p90": 0.0004916499903127854,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "GP x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.0030599441133599085,
-      "p10": 0.0030599441133599085,
-      "p90": 0.0030599441133599085,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 3,
-      "pair": "GP x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 135
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 135
-      },
-      "attempted": 135,
-      "excluded": 0,
-      "errors": {},
-      "n": 135,
-      "medianCeiling": 0.012059316582112914,
-      "p10": 0.012059316582112914,
-      "p90": 0.012059316582112914,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x fit",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.004213300898530749,
-      "p10": 0.00039971336984927225,
-      "p90": 0.02332306838816843,
-      "reach1e4": 0.9626865671641791,
-      "reach1e5": 0.9850746268656716,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x fit",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.0105165951092345,
-      "p10": 0.0015108108793602292,
-      "p90": 0.057001768609460955,
-      "reach1e4": 0.9850746268656716,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x fit",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.029811529764328534,
-      "p10": 0.006794894717729537,
-      "p90": 0.15821185747129357,
-      "reach1e4": 0.9925373134328358,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x fit",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.06303220273853892,
-      "p10": 0.016013440445226533,
-      "p90": 0.31524113862988556,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.00019317124922937294,
-      "p10": 0.00007702412320772198,
-      "p90": 0.00024290459440505025,
-      "reach1e4": 0.8134328358208955,
-      "reach1e5": 0.9850746268656716,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.0007717678712264741,
-      "p10": 0.00030773915741120025,
-      "p90": 0.0009704543697420277,
-      "reach1e4": 0.9850746268656716,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.004783796070637404,
-      "p10": 0.0019078799974597029,
-      "p90": 0.006014884577299927,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "fit x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.018587824735232114,
-      "p10": 0.007418193734905077,
-      "p90": 0.023364770649359094,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "GP x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.00012298637365537406,
-      "p10": 0.00012298637365537406,
-      "p90": 0.00012298637365537406,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "GP x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.0004916499903127854,
-      "p10": 0.0004916499903127854,
-      "p90": 0.0004916499903127854,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "GP x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.0030599441133599085,
-      "p10": 0.0030599441133599085,
-      "p90": 0.0030599441133599085,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 4,
-      "pair": "GP x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        3,
-        5
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.012059316582112914,
-      "p10": 0.012059316582112914,
-      "p90": 0.012059316582112914,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x fit",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.002200749063359728,
-      "p10": 0.00026797020019374377,
-      "p90": 0.013476330959905348,
-      "reach1e4": 0.9477611940298507,
-      "reach1e5": 0.9850746268656716,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x fit",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.006876522784687748,
-      "p10": 0.0010145044491882778,
-      "p90": 0.03424258344437536,
-      "reach1e4": 0.9850746268656716,
-      "reach1e5": 0.9925373134328358,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x fit",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.021551995249181603,
-      "p10": 0.00465602438260529,
-      "p90": 0.10212558856641865,
-      "reach1e4": 0.9850746268656716,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x fit",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.04589888121490561,
-      "p10": 0.010944485280001711,
-      "p90": 0.204071432401087,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.00008481034232679886,
-      "p10": 0.0000391951059703445,
-      "p90": 0.00009662575636438668,
-      "reach1e4": 0,
-      "reach1e5": 0.9850746268656716,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.00033901227076668904,
-      "p10": 0.00015667654927261306,
-      "p90": 0.000386240522370731,
-      "reach1e4": 0.9626865671641791,
-      "reach1e5": 0.9925373134328358,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.0021088569513949243,
-      "p10": 0.0009747078588582525,
-      "p90": 0.002402579988857051,
-      "reach1e4": 0.9850746268656716,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "fit x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.008295994529905941,
-      "p10": 0.0038355952710193274,
-      "p90": 0.009450565726525943,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "GP x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.000048712107477630844,
-      "p10": 0.000048712107477630844,
-      "p90": 0.000048712107477630844,
-      "reach1e4": 0,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "GP x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.0001947821826123115,
-      "p10": 0.0001947821826123115,
-      "p90": 0.0001947821826123115,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "GP x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.001214498070116695,
-      "p10": 0.001214498070116695,
-      "p90": 0.001214498070116695,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 5,
-      "pair": "GP x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 134
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 134
-      },
-      "attempted": 134,
-      "excluded": 0,
-      "errors": {},
-      "n": 134,
-      "medianCeiling": 0.004817137094199241,
-      "p10": 0.004817137094199241,
-      "p90": 0.004817137094199241,
-      "reach1e4": 1,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x fit",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.001027818945027501,
-      "p10": 0.00012576851139812665,
-      "p90": 0.006316420005603739,
-      "reach1e4": 0.9147286821705426,
-      "reach1e5": 0.9767441860465116,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x fit",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.0033791087019958603,
-      "p10": 0.0004888970380261644,
-      "p90": 0.01970397171680479,
-      "reach1e4": 0.9612403100775194,
-      "reach1e5": 0.9844961240310077,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x fit",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.01190350904714559,
-      "p10": 0.0025447801722662524,
-      "p90": 0.05311503943335774,
-      "reach1e4": 0.9844961240310077,
-      "reach1e5": 0.9922480620155039,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x fit",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": null,
-      "gpLabel": null,
-      "gpLabels": {},
-      "regimeCounts": {},
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.024073809903555683,
-      "p10": 0.006495429385139345,
-      "p90": 0.10630113008388245,
-      "reach1e4": 0.9844961240310077,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x GP",
-      "hbr": 10,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 129
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 129
-      },
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.00006618034944289761,
-      "p10": 0.00002532255090594072,
-      "p90": 0.00009460550379450369,
-      "reach1e4": 0,
-      "reach1e5": 0.9767441860465116,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x GP",
-      "hbr": 20,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 129
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 129
-      },
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.00026454359326477905,
-      "p10": 0.00010122365734520911,
-      "p90": 0.00037816515335137416,
-      "reach1e4": 0.8992248062015504,
-      "reach1e5": 0.9844961240310077,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x GP",
-      "hbr": 50,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 129
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 129
-      },
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.00164565985808805,
-      "p10": 0.000629751690387458,
-      "p90": 0.0023523544231523826,
-      "reach1e4": 0.9844961240310077,
-      "reach1e5": 1,
-      "alfanoMaximumAtZero": 1
-    },
-    {
-      "group": "S1",
-      "arm": "F72",
-      "day": 7,
-      "pair": "fit x GP",
-      "hbr": 100,
-      "disclosure": null,
-      "gpAgeDays": [
-        5,
-        7
-      ],
-      "gpLabel": "CALIBRATED",
-      "gpLabels": {
-        "CALIBRATED": 129
-      },
-      "regimeCounts": {
-        "LEO 600-800 km": 129
-      },
-      "attempted": 129,
-      "excluded": 0,
-      "errors": {},
-      "n": 129,
-      "medianCeiling": 0.006474422205030885,
-      "p10": 0.0024784878130030526,
-      "p90": 0.009253096732750562,
+      "n": 258,
+      "medianCeiling": 0.011622585637449716,
+      "p10": 0.0014294978528700765,
+      "p90": 0.09264980917583128,
       "reach1e4": 0.9922480620155039,
       "reach1e5": 1,
       "alfanoMaximumAtZero": 1
@@ -147610,6 +146160,1468 @@
     {
       "group": "S1",
       "arm": "F72",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.029700373964748346,
+      "p10": 0.005245400572090913,
+      "p90": 0.19814227688054709,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.07946394939939252,
+      "p10": 0.020353650072776026,
+      "p90": 0.4756466061339848,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.16110178685941384,
+      "p10": 0.0440159232437921,
+      "p90": 0.8002448074097867,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0005308156703216658,
+      "p10": 0.0002624667348611681,
+      "p90": 0.0006127741804312142,
+      "reach1e4": 0.9806201550387597,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.002118864689443354,
+      "p10": 0.0010477631431663134,
+      "p90": 0.002445951501607817,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.013053492013989577,
+      "p10": 0.006457919835768885,
+      "p90": 0.015065595489363802,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.049670509715853586,
+      "p10": 0.0246154419286205,
+      "p90": 0.05728627333064084,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0003078895621542888,
+      "p10": 0.0003078895621542888,
+      "p90": 0.0003078895621542888,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0012302624444319905,
+      "p10": 0.0012302624444319905,
+      "p90": 0.0012302624444319905,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.007632893064357846,
+      "p10": 0.007632893064357846,
+      "p90": 0.007632893064357846,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.02975274450039097,
+      "p10": 0.02975274450039097,
+      "p90": 0.02975274450039097,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.005226087275662849,
+      "p10": 0.0008610801297324595,
+      "p90": 0.03977313460852088,
+      "reach1e4": 0.9883720930232558,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.014177178563608783,
+      "p10": 0.003150781525579454,
+      "p90": 0.08814399576618133,
+      "reach1e4": 0.9922480620155039,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.041821845270516564,
+      "p10": 0.012060737995315537,
+      "p90": 0.22486002600269342,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.08527808841426544,
+      "p10": 0.025995143581891162,
+      "p90": 0.43238374099542476,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.00021260204273872976,
+      "p10": 0.00011584246318470673,
+      "p90": 0.0002444527776670276,
+      "reach1e4": 0.9302325581395349,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0008493956431635368,
+      "p10": 0.00046282827538545796,
+      "p90": 0.0009766391464064213,
+      "reach1e4": 0.9922480620155039,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0052648339935063675,
+      "p10": 0.0028692012706080313,
+      "p90": 0.006053194592759911,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.02045500979860702,
+      "p10": 0.011153540928042086,
+      "p90": 0.023512785833770367,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.00012298637365537406,
+      "p10": 0.00012298637365537406,
+      "p90": 0.00012298637365537406,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0004916499903127854,
+      "p10": 0.0004916499903127854,
+      "p90": 0.0004916499903127854,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0030599441133599085,
+      "p10": 0.0030599441133599085,
+      "p90": 0.0030599441133599085,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.012059316582112914,
+      "p10": 0.012059316582112914,
+      "p90": 0.012059316582112914,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0032678379742796275,
+      "p10": 0.0003856497495040209,
+      "p90": 0.023257374695445223,
+      "reach1e4": 0.9728682170542635,
+      "reach1e5": 0.9922480620155039,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.009170782817580502,
+      "p10": 0.0014422791482948433,
+      "p90": 0.0579708892214203,
+      "reach1e4": 0.9922480620155039,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.026806490216428794,
+      "p10": 0.006568628798281148,
+      "p90": 0.16104503740412873,
+      "reach1e4": 0.9961240310077519,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.054394018709971556,
+      "p10": 0.016089321919995857,
+      "p90": 0.32270689280784465,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.00018179879480699327,
+      "p10": 0.00007758767183483329,
+      "p90": 0.000242844625363483,
+      "reach1e4": 0.8255813953488372,
+      "reach1e5": 0.9922480620155039,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0007263347503492976,
+      "p10": 0.0003099942617576528,
+      "p90": 0.0009702144222410425,
+      "reach1e4": 0.9922480620155039,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.004502296283784268,
+      "p10": 0.0019220124352333228,
+      "p90": 0.006013381973834349,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.01749564165563163,
+      "p10": 0.007475171269009577,
+      "p90": 0.02335872855628163,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.00012298637365537406,
+      "p10": 0.00012298637365537406,
+      "p90": 0.00012298637365537406,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0004916499903127854,
+      "p10": 0.0004916499903127854,
+      "p90": 0.0004916499903127854,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.0030599441133599085,
+      "p10": 0.0030599441133599085,
+      "p90": 0.0030599441133599085,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 258
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 258
+      },
+      "attempted": 258,
+      "excluded": 0,
+      "errors": {},
+      "n": 258,
+      "medianCeiling": 0.012059316582112914,
+      "p10": 0.012059316582112914,
+      "p90": 0.012059316582112914,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.002032369565883437,
+      "p10": 0.0002658565010182697,
+      "p90": 0.013403501801199485,
+      "reach1e4": 0.953307392996109,
+      "reach1e5": 0.9922178988326849,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.006334253956786684,
+      "p10": 0.0010112200732330092,
+      "p90": 0.03562720491431183,
+      "reach1e4": 0.9922178988326849,
+      "reach1e5": 0.9961089494163424,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.01963802977212684,
+      "p10": 0.004724669569630286,
+      "p90": 0.10336911519524442,
+      "reach1e4": 0.9922178988326849,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.04117658852508569,
+      "p10": 0.011142445343508112,
+      "p90": 0.20949285013082244,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.00008234256356510389,
+      "p10": 0.00003939066772058015,
+      "p90": 0.00009664809983783273,
+      "reach1e4": 0,
+      "reach1e5": 0.9922178988326849,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.0003291478108311062,
+      "p10": 0.00015745801925537843,
+      "p90": 0.00038632974930681547,
+      "reach1e4": 0.9727626459143969,
+      "reach1e5": 0.9961089494163424,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.0020474937270380427,
+      "p10": 0.0009795582900256586,
+      "p90": 0.0024031312823116473,
+      "reach1e4": 0.9922178988326849,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.00805459469133973,
+      "p10": 0.0038545280776534825,
+      "p90": 0.009452682867453073,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.000048712107477630844,
+      "p10": 0.000048712107477630844,
+      "p90": 0.000048712107477630844,
+      "reach1e4": 0,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.0001947821826123115,
+      "p10": 0.0001947821826123115,
+      "p90": 0.0001947821826123115,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.001214498070116695,
+      "p10": 0.001214498070116695,
+      "p90": 0.001214498070116695,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.004817137094199241,
+      "p10": 0.004817137094199241,
+      "p90": 0.004817137094199241,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.0009085369987476288,
+      "p10": 0.00012887890531589167,
+      "p90": 0.006899274209958936,
+      "reach1e4": 0.9299610894941635,
+      "reach1e5": 0.9883268482490273,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.0032249893175372944,
+      "p10": 0.0005013102116916654,
+      "p90": 0.019780240847617193,
+      "reach1e4": 0.9727626459143969,
+      "reach1e5": 0.9922178988326849,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.010862711205386217,
+      "p10": 0.002611666920343316,
+      "p90": 0.052589419976646075,
+      "reach1e4": 0.9922178988326849,
+      "reach1e5": 0.9961089494163424,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.023527190009658028,
+      "p10": 0.006865159073411443,
+      "p90": 0.1053457862323444,
+      "reach1e4": 0.9922178988326849,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.00006555625739809175,
+      "p10": 0.000026372730418660157,
+      "p90": 0.00009456758335552046,
+      "reach1e4": 0,
+      "reach1e5": 0.9883268482490273,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.000262048984589518,
+      "p10": 0.0001054212678553681,
+      "p90": 0.0003780135908123189,
+      "reach1e4": 0.9260700389105059,
+      "reach1e5": 0.9922178988326849,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.001630145109169702,
+      "p10": 0.0006558515907796435,
+      "p90": 0.0023514123420386246,
+      "reach1e4": 0.9922178988326849,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "CALIBRATED",
+      "gpLabels": {
+        "CALIBRATED": 257
+      },
+      "regimeCounts": {
+        "LEO 600-800 km": 257
+      },
+      "attempted": 257,
+      "excluded": 0,
+      "errors": {},
+      "n": 257,
+      "medianCeiling": 0.006413433138302023,
+      "p10": 0.0025810007192908616,
+      "p90": 0.00924940074135337,
+      "reach1e4": 0.9961089494163424,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "S1",
+      "arm": "F72",
       "day": 7,
       "pair": "GP x GP",
       "hbr": 10,
@@ -147620,15 +147632,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 129
+        "CALIBRATED": 257
       },
       "regimeCounts": {
-        "LEO 600-800 km": 129
+        "LEO 600-800 km": 257
       },
-      "attempted": 129,
+      "attempted": 257,
       "excluded": 0,
       "errors": {},
-      "n": 129,
+      "n": 257,
       "medianCeiling": 0.000048712107477630844,
       "p10": 0.000048712107477630844,
       "p90": 0.000048712107477630844,
@@ -147649,15 +147661,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 129
+        "CALIBRATED": 257
       },
       "regimeCounts": {
-        "LEO 600-800 km": 129
+        "LEO 600-800 km": 257
       },
-      "attempted": 129,
+      "attempted": 257,
       "excluded": 0,
       "errors": {},
-      "n": 129,
+      "n": 257,
       "medianCeiling": 0.0001947821826123115,
       "p10": 0.0001947821826123115,
       "p90": 0.0001947821826123115,
@@ -147678,15 +147690,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 129
+        "CALIBRATED": 257
       },
       "regimeCounts": {
-        "LEO 600-800 km": 129
+        "LEO 600-800 km": 257
       },
-      "attempted": 129,
+      "attempted": 257,
       "excluded": 0,
       "errors": {},
-      "n": 129,
+      "n": 257,
       "medianCeiling": 0.001214498070116695,
       "p10": 0.001214498070116695,
       "p90": 0.001214498070116695,
@@ -147707,15 +147719,15 @@
       ],
       "gpLabel": "CALIBRATED",
       "gpLabels": {
-        "CALIBRATED": 129
+        "CALIBRATED": 257
       },
       "regimeCounts": {
-        "LEO 600-800 km": 129
+        "LEO 600-800 km": 257
       },
-      "attempted": 129,
+      "attempted": 257,
       "excluded": 0,
       "errors": {},
-      "n": 129,
+      "n": 257,
       "medianCeiling": 0.004817137094199241,
       "p10": 0.004817137094199241,
       "p90": 0.004817137094199241,
@@ -174788,6 +174800,1974 @@
       "excluded": 0,
       "errors": {},
       "n": 944,
+      "medianCeiling": 1.668234508957837e-8,
+      "p10": 1.668234508957837e-8,
+      "p90": 0.000007442346649144041,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.04590731637883257,
+      "p10": 0.00796092094425415,
+      "p90": 0.24381385462937216,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.10642478555120682,
+      "p10": 0.02515324665789781,
+      "p90": 0.504043038496543,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.2726173929988134,
+      "p10": 0.07564307999598699,
+      "p90": 0.9125949751633704,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.5170483040450535,
+      "p10": 0.15438513773606785,
+      "p90": 0.9993747613287913,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0000014426814381478153,
+      "p10": 0.0000014424804434028326,
+      "p90": 0.000018176919328920377,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.000005770330901108337,
+      "p10": 0.000005769527070549713,
+      "p90": 0.00007267060179984602,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.000036047302828898604,
+      "p10": 0.00003604228537555273,
+      "p90": 0.0004525758002163134,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.00014394310307799048,
+      "p10": 0.0001439231256154526,
+      "p90": 0.0017875966929505524,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 7.213549788404357e-7,
+      "p10": 7.213549788404357e-7,
+      "p90": 0.000009089710134649361,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0000028853211945077282,
+      "p10": 0.0000028853211945077282,
+      "p90": 0.000036349566709181725,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.00001802893960986206,
+      "p10": 0.00001802893960986206,
+      "p90": 0.0002267798878807873,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 1,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        1,
+        2
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.00007205414223878836,
+      "p10": 0.00007205414223878836,
+      "p90": 0.0009013820780114268,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.005578987214375369,
+      "p10": 0.0007089425436247678,
+      "p90": 0.041841417645277906,
+      "reach1e4": 0.9920886075949367,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.017661073148929805,
+      "p10": 0.002729281687832532,
+      "p90": 0.10856879140299822,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.05418096137224698,
+      "p10": 0.01322127437388427,
+      "p90": 0.2797291678633521,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.11032403485446059,
+      "p10": 0.03214431330153656,
+      "p90": 0.5319726730083282,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 5.1707691642840216e-8,
+      "p10": 5.170138204892198e-8,
+      "p90": 0.000005301210730211211,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.0683056911726187e-7,
+      "p10": 2.0680533079200194e-7,
+      "p90": 0.000021199557399856856,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0000012926824184318833,
+      "p10": 0.000001292524681104557,
+      "p90": 0.00013226645255177584,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0000051706062696176995,
+      "p10": 0.000005169975351814758,
+      "p90": 0.0005257950620977132,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.5853888637426143e-8,
+      "p10": 2.5853888637426143e-8,
+      "p90": 0.0000026511018068176743,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.0341550518597694e-7,
+      "p10": 1.0341550518597694e-7,
+      "p90": 0.000010603085081507859,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 6.463447477575005e-7,
+      "p10": 6.463447477575005e-7,
+      "p90": 0.00006621149551970073,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 2,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        2,
+        3
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0000025853481392879957,
+      "p10": 0.0000025853481392879957,
+      "p90": 0.0002640237466737653,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0013379775824295375,
+      "p10": 0.00015388310903007778,
+      "p90": 0.011728651398629423,
+      "reach1e4": 0.9604430379746836,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.00480957644179315,
+      "p10": 0.000607007803670748,
+      "p90": 0.03416448551212405,
+      "reach1e4": 0.9968354430379747,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.018802696049853976,
+      "p10": 0.003461308777542591,
+      "p90": 0.107000023854036,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.04014648336423905,
+      "p10": 0.01055605761058279,
+      "p90": 0.21538040620977644,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 5.313232469844936e-9,
+      "p10": 5.312428197422629e-9,
+      "p90": 0.0000015710885988309402,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.1252928869156623e-8,
+      "p10": 2.124971177977821e-8,
+      "p90": 0.0000062838592866283155,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.3283076123498384e-7,
+      "p10": 1.3281065443996696e-7,
+      "p90": 0.00003925247317858176,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 5.313224135516718e-7,
+      "p10": 5.312419865658644e-7,
+      "p90": 0.0001567014225638535,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.6566214159566866e-9,
+      "p10": 2.6566214159566866e-9,
+      "p90": 7.856960094027555e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.0626485411269952e-8,
+      "p10": 1.0626485411269952e-8,
+      "p90": 0.0000031426601944167637,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 6.641552277107953e-8,
+      "p10": 6.641552277107953e-8,
+      "p90": 0.000019636209782527083,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 3,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.656619332364702e-7,
+      "p10": 2.656619332364702e-7,
+      "p90": 0.00007846755896888669,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.000495421832128042,
+      "p10": 0.0000652143860510796,
+      "p90": 0.004826393352421234,
+      "reach1e4": 0.8354430379746836,
+      "reach1e5": 0.9968354430379747,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0018935442939337168,
+      "p10": 0.00025889042364616167,
+      "p90": 0.015559287846098434,
+      "reach1e4": 0.9746835443037974,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.008713178160753843,
+      "p10": 0.0015168157922146415,
+      "p90": 0.05292347421157333,
+      "reach1e4": 0.9968354430379747,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.02038888801405468,
+      "p10": 0.004858563596007714,
+      "p90": 0.11391662513799979,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 5.313208902341708e-9,
+      "p10": 5.310244018828377e-9,
+      "p90": 0.0000015705520683426513,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.125283459915301e-8,
+      "p10": 2.124097506624358e-8,
+      "p90": 0.000006281713567739689,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.328301720478681e-7,
+      "p10": 1.3275605001722979e-7,
+      "p90": 0.000039239080052051964,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 5.313200568090209e-7,
+      "p10": 5.310235694014029e-7,
+      "p90": 0.00015664810072252766,
+      "reach1e4": 0.4224683544303797,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.6566214159566866e-9,
+      "p10": 2.6566214159566866e-9,
+      "p90": 7.856960094027555e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.0626485411269952e-8,
+      "p10": 1.0626485411269952e-8,
+      "p90": 0.0000031426601944167637,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 6.641552277107953e-8,
+      "p10": 6.641552277107953e-8,
+      "p90": 0.000019636209782527083,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 4,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        3,
+        5
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 2.656619332364702e-7,
+      "p10": 2.656619332364702e-7,
+      "p90": 0.00007846755896888669,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.000268249103148852,
+      "p10": 0.00003438437076401115,
+      "p90": 0.0024509103464549755,
+      "reach1e4": 0.7088607594936709,
+      "reach1e5": 0.9857594936708861,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.001031451763635097,
+      "p10": 0.0001370419509832385,
+      "p90": 0.007710450608858355,
+      "reach1e4": 0.9430379746835443,
+      "reach1e5": 0.9968354430379747,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.004959211849222923,
+      "p10": 0.0008233294514217108,
+      "p90": 0.02999675434567386,
+      "reach1e4": 0.9968354430379747,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.012383862095736817,
+      "p10": 0.0028167551135265365,
+      "p90": 0.07129323118208732,
+      "reach1e4": 1,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 3.336460693697226e-10,
+      "p10": 3.335726569988149e-10,
+      "p90": 1.4881514415699593e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.334584275881273e-9,
+      "p10": 1.3342906263983285e-9,
+      "p90": 5.952583333673375e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 8.341151654362196e-9,
+      "p10": 8.33931634512383e-9,
+      "p90": 0.000003720266443847898,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 3.3364605618937964e-8,
+      "p10": 3.335726438241356e-8,
+      "p90": 0.00001487966394856396,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.668234541908857e-10,
+      "p10": 1.668234541908857e-10,
+      "p90": 7.442809567001113e-8,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 6.672938163641364e-10,
+      "p10": 6.672938163641364e-10,
+      "p90": 2.9771182153368584e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 4.170586334801827e-9,
+      "p10": 4.170586334801827e-9,
+      "p90": 0.0000018606743348020994,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 5,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.668234508957837e-8,
+      "p10": 1.668234508957837e-8,
+      "p90": 0.000007442346649144041,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.00008256602533454824,
+      "p10": 0.000008970788753776572,
+      "p90": 0.0008247722845876394,
+      "reach1e4": 0.4572784810126582,
+      "reach1e5": 0.8892405063291139,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.00032329609721798897,
+      "p10": 0.00003584477368345537,
+      "p90": 0.003032951651517197,
+      "reach1e4": 0.7515822784810127,
+      "reach1e5": 0.9667721518987342,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0018037291212103894,
+      "p10": 0.00022236503876245915,
+      "p90": 0.01258510770311229,
+      "reach1e4": 0.9572784810126582,
+      "reach1e5": 0.9968354430379747,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x fit",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": null,
+      "gpLabel": null,
+      "gpLabels": {},
+      "regimeCounts": {},
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 0.0053971172712638,
+      "p10": 0.0008601782787118567,
+      "p90": 0.029143698946736823,
+      "reach1e4": 0.9936708860759493,
+      "reach1e5": 1,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 3.336435695898284e-10,
+      "p10": 3.3332314399453135e-10,
+      "p90": 1.4870934915886374e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.3345742767617197e-9,
+      "p10": 1.3332925743835257e-9,
+      "p90": 5.948351567399009e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 8.341089159866013e-9,
+      "p10": 8.333078520133314e-9,
+      "p90": 0.0000037176217371424347,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "fit x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 3.336435564096784e-8,
+      "p10": 3.333231308390866e-8,
+      "p90": 0.00001486908722444158,
+      "reach1e4": 0,
+      "reach1e5": 0.4224683544303797,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "GP x GP",
+      "hbr": 10,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 1.668234541908857e-10,
+      "p10": 1.668234541908857e-10,
+      "p90": 7.442809567001113e-8,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "GP x GP",
+      "hbr": 20,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 6.672938163641364e-10,
+      "p10": 6.672938163641364e-10,
+      "p90": 2.9771182153368584e-7,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "GP x GP",
+      "hbr": 50,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
+      "medianCeiling": 4.170586334801827e-9,
+      "p10": 4.170586334801827e-9,
+      "p90": 0.0000018606743348020994,
+      "reach1e4": 0,
+      "reach1e5": 0,
+      "alfanoMaximumAtZero": 1
+    },
+    {
+      "group": "T",
+      "arm": "F24",
+      "day": 7,
+      "pair": "GP x GP",
+      "hbr": 100,
+      "disclosure": null,
+      "gpAgeDays": [
+        5,
+        7
+      ],
+      "gpLabel": "UNCALIBRATED",
+      "gpLabels": {
+        "UNCALIBRATED": 632
+      },
+      "regimeCounts": {
+        "LEO below 450 km": 365,
+        "LEO 450-600 km": 267
+      },
+      "attempted": 632,
+      "excluded": 0,
+      "errors": {},
+      "n": 632,
       "medianCeiling": 1.668234508957837e-8,
       "p10": 1.668234508957837e-8,
       "p90": 0.000007442346649144041,
