@@ -1,0 +1,158 @@
+{
+  "coverage": [
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "LS",
+      "expected": 75,
+      "completed": 75,
+      "windowErrors": 0
+    },
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "DO",
+      "expected": 150,
+      "completed": 150,
+      "windowErrors": 12
+    },
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "GD",
+      "expected": 44,
+      "completed": 44,
+      "windowErrors": 0
+    },
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "IG",
+      "expected": 60,
+      "completed": 60,
+      "windowErrors": 0
+    },
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "GE",
+      "expected": 45,
+      "completed": 45,
+      "windowErrors": 0
+    },
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "HE",
+      "expected": 7,
+      "completed": 7,
+      "windowErrors": 0
+    },
+    {
+      "phase": "cheap",
+      "source": "regimes",
+      "group": "HX",
+      "expected": 19,
+      "completed": 19,
+      "windowErrors": 0
+    },
+    {
+      "phase": "cheap",
+      "source": "truth2",
+      "group": "P",
+      "expected": 755,
+      "completed": 755,
+      "windowErrors": 5
+    },
+    {
+      "phase": "cheap",
+      "source": "truth2",
+      "group": "S1",
+      "expected": 302,
+      "completed": 302,
+      "windowErrors": 2
+    },
+    {
+      "phase": "cheap",
+      "source": "truth2",
+      "group": "GN",
+      "expected": 755,
+      "completed": 755,
+      "windowErrors": 5
+    },
+    {
+      "phase": "cheap",
+      "source": "truth",
+      "group": "T",
+      "expected": 944,
+      "completed": 944,
+      "windowErrors": 0
+    }
+  ],
+  "reproduction": {
+    "compared": 318500,
+    "different": 0,
+    "maxAbsKm": 0,
+    "byArm": {
+      "U": {
+        "compared": 79892,
+        "different": 0,
+        "maxAbsKm": 0
+      },
+      "AP": {
+        "compared": 79892,
+        "different": 0,
+        "maxAbsKm": 0
+      },
+      "XP": {
+        "compared": 79892,
+        "different": 0,
+        "maxAbsKm": 0
+      },
+      "S": {
+        "compared": 78824,
+        "different": 0,
+        "maxAbsKm": 0
+      }
+    },
+    "missingReference": 0
+  },
+  "inputs": {
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "e264afe91e6bf9395c871b03b84cc6a92df5be58975d64a3d4e9d3ec3bd72268",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "13b6ac40e7443e569ba45f8f386cda143777c50d507173bca45020dbd74e7551",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-10.jsonl": "9c102d4b26a9e1eb9388b9d0ba8c4cd578a2d38c5493373b44bc017aad1845aa",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-11.jsonl": "b87c1bf9cc85cc21f9020f6775dc578629ed2a955cd877de8e0127b3340735d1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-2.jsonl": "dff4b1fcd9f76c93c8815a30d160e09b7f17eb97a684e8b2323ff32e17c6befd",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-3.jsonl": "e5ea6d021fef79666f4545c6cf18d8d1bb44a1a2b8f83eaf6906ed338ab964dc",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-4.jsonl": "c28be9964a7dadd041c97a8b3cdb770dbe50a58fde0a93fb1655f4f7a1c77747",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-5.jsonl": "2f51c6f0894c562e156d928eb95c15aa5c6df1aef56d01824c514567099efe34",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-6.jsonl": "601119095d40f4bd8ca5e34a25d46384c9d357168ebf4193a8603e6c8c240d05",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-7.jsonl": "a835e841b7a4984e22a1ffc8ba309e0afa18a13e8cf4ca4040f5fc602f7107a6",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-8.jsonl": "ec1748b8175bf5d289e25fb951c430fcf8b6636d439bd9b6673d0e10f9350b66",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-9.jsonl": "cb156c899810886b38e2af2b7aeb9104d4886528838286c4d56dde7779a074d9",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-0.jsonl": "5d3d5cfb8e71392878a93f3c376fafc302b902294ebb9f71c78e3339ffece283",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-1.jsonl": "d4a71277ae226fe5c5d0cc3afe86fbd07dd62e106ea3cac1e53df958fa7cc0ce",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-10.jsonl": "3ec629fcc0b0ece714d77b281a2bf0f9f2f316c22f5ddaad5e5d9a0f8fa76e59",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-11.jsonl": "d8a511a784850812b43ef737cf19330fc3f2897818bd4202a4657e6667846c46",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-2.jsonl": "54fa2476db234440bdc2567fcfb341a2cc9dd6441fcb6e3c59d6bd51651c38f5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-3.jsonl": "c731f690dacd510190dc6096065c8367435363152247fa6226ab71ba1ae5bd30",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-4.jsonl": "4dbf7b5d62f8b5fea972fc951224ea2fca7bb916eb06e31974b9ed06abf0fedc",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-5.jsonl": "3520a0a9c12b9fbfa72491072b09630bfd89c7c1e089c0d0697a550650b1b2d1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-6.jsonl": "1c6da14821233be36abe9d82cfaa0b5c5446e70b524086ccae3205194ce585c8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-7.jsonl": "017d827c5406d62816e4c9c6bf2060b6bf9afbb608c6751c3ee34b2911b3dffb",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-8.jsonl": "01b978618c172ffc8cb0516a99bfe4e1ffe72c72be947952effe8ba7bfdfbcb4",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-9.jsonl": "d205fbb11db85620e58b6f6cf3814ffcc2e9a663e12d0c7295e875c3920830b5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-0.jsonl": "1467d26bbfbe9c428b165bd8f7db1952bd29c73369b1fda1f76eee4abc72e08a",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-1.jsonl": "43ba1688f7de3ee81d40b34171a7118c9de1b441224d894b71ae01ae76263a53",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-10.jsonl": "d7339d9ff2d124678f4f5489d0b6a2e19937e06352cf69c97afe023714f3ae0e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-11.jsonl": "0af65820a3c119b6bdf89ecaa07449d90d0bc1ee044b60178520b823164d087f",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-2.jsonl": "dd07aa61702e8eee1f1d5e2b979c1a932e8931c00dde7b03bb183b60571c0de4",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-3.jsonl": "241a600b77be5887a01b550e557ea08d8e711fa50ec533d42ad1dd9fd8f07e88",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-4.jsonl": "ff3c504fe321ca38771ffeb3f72539a275c1a768fdaa612d1440a4beaaa3f8d5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-5.jsonl": "901a36cd6bba1debd7c246ee6a4b090e2e7e43a06998a1c96095f02723af72d3",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-6.jsonl": "da3ebfbf9adf45023f90c652f157c3f8d400b0aad201a9105fe0dabc69accf8b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-7.jsonl": "80bf2e779c7b45f6a1f023daacb06c85701a68cd0bb9929bb08ff766b1f1f645",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-8.jsonl": "eda643d68e95280e8b1532b48b25d0b2b905e7753be9dbc104fd2755bf074d7d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-9.jsonl": "2f85767ba643cf322750408e512c393d996659735afc345a32370aa5026f48e3"
+  }
+}
