@@ -1,0 +1,16 @@
+{
+  "windows": 26,
+  "groups": {
+    "HX": 19,
+    "HE": 7
+  },
+  "armOutcomes": {
+    "OK": 40
+  },
+  "files": [
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO12-heap/rows-0.jsonl",
+      "sha256": "6925444852899117f51525fc383c7df247bae4a31b04c94fece411ba22f28818"
+    }
+  ]
+}
