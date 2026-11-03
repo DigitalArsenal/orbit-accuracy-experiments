@@ -33,11 +33,14 @@ const results = []; const check = (id, ok, msg) => { results.push([id, ok]); con
   const tally = {}; for (const k of keys) tally[fc.strata[k].outcome] = (tally[fc.strata[k].outcome] ?? 0) + 1;
   check('a', ok, `42 strata, outcomes ${JSON.stringify(tally)} (owner answers: o4 ${fc.owner.o4}, o5 ${fc.owner.o5})`);
 }
-// (b) operating characteristics of every TESTABLE stratum
+// (b) operating characteristics of every TESTABLE stratum, under S1 and under the powered rule S1p
 {
-  const testable = Object.values(fc.strata).filter((s) => s.outcome === 'TESTABLE');
-  const ok = testable.every((s) => s.oc[0] >= 0.8 && s.oc[1] <= 0.05 && s.oc[2] <= 0.1) && Object.values(fc.strata).every((s) => s.oc === null || s.ocPass === (s.oc[0] >= 0.8 && s.oc[1] <= 0.05 && s.oc[2] <= 0.1));
-  check('b', ok, `${testable.length} TESTABLE strata; every recorded OC row is consistent with its pass flag (seed ${fc.seed}, ${fc.trials} trials). Reproducing a row needs the dev rows in AR (${fc.devRows.files} files, manifest SHA-256 ${fc.devRows.manifestSha256.slice(0, 12)}); none is TESTABLE, so no row needs it`);
+  const rows = Object.values(fc.strata);
+  const t1 = rows.filter((s) => s.outcome === 'TESTABLE'), tp = rows.filter((s) => s.s1p?.outcome === 'TESTABLE');
+  const ok1 = t1.every((s) => s.oc[0] >= 0.8 && s.oc[1] <= 0.05 && s.oc[2] <= 0.1) && rows.every((s) => s.oc === null || s.ocPass === (s.oc[0] >= 0.8 && s.oc[1] <= 0.05 && s.oc[2] <= 0.1));
+  const okp = tp.every((s) => s.s1p.oc[0] >= 0.8 && s.s1p.oc[1] <= 0.05) && rows.every((s) => !s.s1p || s.s1p.ocPass === (s.s1p.oc[0] >= 0.8 && s.s1p.oc[1] <= 0.05));
+  const tc = fc.testableCounts;
+  check('b', ok1 && okp && tc.S1.default === t1.length && tc.S1p.default === tp.length, `TESTABLE under S1: ${tc.S1.default} (with O5 granted ${tc.S1.ifO5}); under S1p: ${tc.S1p.default} (with O5 granted ${tc.S1p.ifO5}); every recorded OC row is consistent with its pass flag (seed ${fc.seed}, ${fc.trials} trials). Reproducing a row needs the dev rows in AR (${fc.devRows.files} files, manifest SHA-256 ${fc.devRows.manifestSha256.slice(0, 12)})`);
 }
 // (c) S5
 {
@@ -100,6 +103,7 @@ function hashTree(dir) { const h = createHash('sha256'); for (const f of fs.read
     if (s.outcome === 'TESTABLE') { ++testable; if (s.state === 'PENDING') ++pending; else if (['LABELED', 'NOT REALISTIC', 'NOT TESTABLE'].includes(s.state)) ++scored; else ++bad; }
     const again = outcomeOf(regime, s.dev ? s : null, fc.owner);
     if (again.outcome !== s.outcome) ++bad;
+    if (s.s1p) { if (outcomeOf(regime, s, fc.owner, 'S1p').outcome !== s.s1p.outcome || outcomeOf(regime, s, { ...fc.owner, o5: true }, 'S1p').outcome !== s.s1p.outcomeIfO5) ++bad; if (s.s1p.outcome === 'TESTABLE' && s.s1p.state !== 'PENDING' && !['LABELED', 'NOT REALISTIC', 'NOT TESTABLE'].includes(s.s1p.state)) ++bad; }
   }
   if (today >= '2026-12-21' && scored + pending !== testable) ++bad;
   check('i', bad === 0, `open dates match the formula; ${testable} TESTABLE = ${pending} PENDING + ${scored} scored; outcomes recomputed from the stored records and owner answers agree`);
@@ -143,9 +147,13 @@ function hashTree(dir) { const h = createHash('sha256'); for (const f of fs.read
 }
 // (d) S3 last
 const s3 = fc.s3;
-console.log(`S3: ${Object.entries(s3).map(([r, s]) => `${r} Pc(HBR 20 m) ${s.pc20.pc.toExponential(2)} at ${s.pc20.angleDeg} deg, s_lo ${s.sLo.toFixed(3)}`).join('; ')}`);
-const s3ok = Object.values(s3).every((s) => s.pc20.pc < 1e-4);
+const s3r = ['LEO-L', 'LEO-M'].map((r) => [r, s3[r]]);
+console.log(`S3: ${s3r.map(([r, x]) => `${r} Pc(HBR 20 m) ${x.pc20.pc.toExponential(2)} at ${x.pc20.angleDeg} deg, s_lo ${x.sLo.toFixed(3)}, HBR 10 m ${x.pc10.pc.toExponential(2)}, 30 m ${x.pc30.pc.toExponential(2)}`).join('; ')}`);
+const s3ok = s3r.every(([, x]) => x.pc20.pc < 1e-4);
 const failed = results.filter(([, ok]) => !ok).length;
 if (failed) { console.log(`${failed} check(s) failed`); process.exit(1); }
-if (!s3ok) { console.log('S3 FAILED: owner ruling required'); process.exit(2); }
+if (!s3ok) {
+  if (s3.ruling && s3.ruling.words && s3.ruling.date) { console.log(`S3 FAILED-WITHDRAWN: ${s3.statement} (owner ruling ${s3.ruling.date}: ${s3.ruling.words})`); console.log('all other checks passed'); process.exit(0); }
+  console.log('S3 FAILED: owner ruling required'); process.exit(2);
+}
 console.log('all checks passed');

@@ -27,15 +27,17 @@ export function openDate(regime, b) {
 }
 
 export const OUTCOMES = ['TESTABLE', 'NOT TESTABLE', 'NO LAWFUL TRUTH'];
-// The freeze-time outcome of a stratum record under owner answers {o4, o5}: {outcome, reasons}.
-export function outcomeOf(regime, rec, owner) {
+// The freeze-time outcome of a stratum record under owner answers {o4, o5} and a label rule ('S1' registered, 'S1p' powered
+// rule of amendment 1): {outcome, reasons}.
+export function outcomeOf(regime, rec, owner, rule = 'S1') {
   if ((regime === 'LEO-L' && !owner.o4) || regime === 'HEO') return { outcome: 'NO LAWFUL TRUTH', reasons: [regime === 'HEO' ? 'no usable dev truth (one object, 5 rows)' : 'Swarm, GRACE-FO and ISS truth are held (O4 default no)'] };
+  if (!rec || rec.oc === undefined || rec.oc === null) return { outcome: 'NOT TESTABLE', reasons: ['no frozen cell'] };
+  const v = rule === 'S1p' ? { oc: rec.s1p.oc, ocPass: rec.s1p.ocPass, cMin: rec.s1p.cMin } : { oc: rec.oc, ocPass: rec.ocPass, cMin: rec.cMin };
   const reasons = [];
-  if (!rec || !rec.cMin === undefined || rec.oc === undefined) return { outcome: 'NOT TESTABLE', reasons: ['no frozen cell'] };
   if (!owner.o5) reasons.push('O5 not granted: no lawful fresh truth for the regime\'s products');
-  if (!rec.ocPass) reasons.push(`operating characteristics fail: P(label | correct) ${rec.oc[0]}, x0.7 ${rec.oc[1]}, x1.4 ${rec.oc[2]}`);
-  if (rec.cMin === null) reasons.push('no cluster count up to the available passes the operating characteristics (C_min undefined)');
-  else if (rec.clusters < rec.cMin) reasons.push(`clusters ${rec.clusters} < C_min ${rec.cMin}`);
+  if (!v.ocPass) reasons.push(`operating characteristics fail under ${rule}: P(label | correct) ${v.oc[0]}, x0.7 ${v.oc[1]}${rule === 'S1' ? `, x1.4 ${v.oc[2]}` : ''}`);
+  if (v.cMin === null) reasons.push('no cluster count up to the available passes the operating characteristics (C_min undefined)');
+  else if (rec.clusters < v.cMin) reasons.push(`clusters ${rec.clusters} < C_min ${v.cMin}`);
   if (rec.nFresh < 100) reasons.push(`expected n ${rec.nFresh} < 100`);
   if (rec.nEff < 60) reasons.push(`n_eff ${Math.round(rec.nEff)} < 60`);
   if (rec.timeBlocks < 6) reasons.push(`time blocks ${rec.timeBlocks} < 6`);

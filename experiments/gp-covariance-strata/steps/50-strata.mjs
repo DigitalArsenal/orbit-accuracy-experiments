@@ -86,20 +86,39 @@ for (const regime of REGIMES) {
           }
         }
       }
-      return acc.map((A) => {
-        if (A.n < 30 || A.n0 === 0 || A.n1 === 0) return false;
-        const inb = (x) => x >= 0.93 && x <= 0.97;
-        return inb(A.c95 / A.n) && inb(A.h0 / A.n0) && inb(A.h1 / A.n1) && A.c99 / A.n >= 0.975 && A.ax.every((v, a) => inb(v / A.n) && Math.abs(A.mz[a] / A.n) <= 0.5);
-      });
+      return acc;
     }
-    const oc = (Cdraw, T) => { const h = [0, 0, 0]; for (let t = 0; t < T; t++) trial(Cdraw).forEach((x, f) => { if (x) h[f]++; }); return h.map((x) => x / T); };
+    // S1: the registered label rule (bands 0.93-0.97). S1p: the powered rule of amendment 1 (PLAN.md).
+    const inb = (x) => x >= 0.93 && x <= 0.97;
+    const usable = (A) => A.n >= 30 && A.n0 > 0 && A.n1 > 0;
+    const labelS1 = (A) => usable(A) && inb(A.c95 / A.n) && inb(A.h0 / A.n0) && inb(A.h1 / A.n1) && A.c99 / A.n >= 0.975 && A.ax.every((v, a) => inb(v / A.n) && Math.abs(A.mz[a] / A.n) <= 0.5);
+    const pooled = (A) => (A.ax[0] + A.ax[1] + A.ax[2]) / (3 * A.n);
+    const labelP = (A, band) => usable(A) && Math.abs(A.c95 / A.n - 0.95) <= 2 * band.se95 && A.c99 / A.n >= 0.975 && A.h0 / A.n0 >= 0.9 && A.h1 / A.n1 >= 0.9 && Math.abs(pooled(A) - 0.95) <= 2 * band.sePool;
+    const sd = (xs) => { const m = xs.reduce((u, v) => u + v, 0) / xs.length; return Math.sqrt(xs.reduce((u, v) => u + (v - m) ** 2, 0) / Math.max(1, xs.length - 1)); };
+    const runTrials = (Cdraw, T) => Array.from({ length: T }, () => trial(Cdraw));
+    const share = (accs, f, fn) => accs.filter((t) => fn(t[f])).length / accs.length;
+    const rates = (accs, fn) => [0, 1, 2].map((f) => share(accs, f, fn));
     const ocPass = (p) => p[0] >= 0.8 && p[1] <= 0.05 && p[2] <= 0.1;
-    const ocExp = oc(Cexp, TRIALS);
-    let cMin = null; const scan = {};
-    for (let c = 2; c <= Math.max(Cexp, 8); c++) { const p = oc(c, TRIALS_C); scan[c] = p.map((x) => Number(x.toFixed(3))); if (ocPass(p)) { cMin = Math.max(3, c); break; } }
+    const ocPassP = (p) => p[0] >= 0.8 && p[1] <= 0.05;
+    const accsExp = runTrials(Cexp, TRIALS);
+    // the frozen bands: SE of the coverage point estimates from the cluster-block bootstrap at the expected design (n_eff as frozen)
+    const okA = accsExp.map((t) => t[0]).filter(usable);
+    const band = { se95: okA.length > 1 ? sd(okA.map((A) => A.c95 / A.n)) : NaN, sePool: okA.length > 1 ? sd(okA.map(pooled)) : NaN };
+    const ocExp = rates(accsExp, labelS1), ocExpP = rates(accsExp, (A) => labelP(A, band));
+    // S1 L3 under (b) reported beside the powered rule's pooled condition (a)
+    const l3b = share(accsExp, 0, (A) => usable(A) && A.ax.every((v, a) => inb(v / A.n) && Math.abs(A.mz[a] / A.n) <= 0.5));
+    let cMin = null, cMinP = null; const scan = {}, scanP = {};
+    for (let c = 2; c <= Math.max(Cexp, 8); c++) {
+      const accs = runTrials(c, TRIALS_C);
+      const p = rates(accs, labelS1), pp = rates(accs, (A) => labelP(A, band));
+      scan[c] = p.map((x) => Number(x.toFixed(3))); scanP[c] = pp.map((x) => Number(x.toFixed(3)));
+      if (cMin === null && ocPass(p)) cMin = Math.max(3, c);
+      if (cMinP === null && ocPassP(pp)) cMinP = Math.max(3, c);
+    }
     result.strata[key] = { ...base, devRows: n, objects: new Set(ids.map((i) => tab.norad[i])).size, clusters: Cexp,
       dev: { c95: dev.c95, c99: dev.c99, h0: dev.h0, h1: dev.h1, axisShare: dev.ax.map((a) => a.share), axisMeanZ: dev.ax.map((a) => a.mean), L1: dev.L1, L2: dev.L2, L3: dev.L3, label: dev.label, stepLookupC95: stepCov, meanD2Over3: mean / 3, tailShare: d2.reduce((a, x) => a + (x > 16.27 ? 1 : 0), 0) / n },
-      s0, blockDays: bl.L, blockCapped: bl.capped, timeBlocks: nb, icc, nFresh, nEff, oc: ocExp.map((x) => Number(x.toFixed(3))), ocPass: ocPass(ocExp), cMin, cScan: scan, clusterNames: C.map((c) => tab.clusterNames[c]) };
+      s0, blockDays: bl.L, blockCapped: bl.capped, timeBlocks: nb, icc, nFresh, nEff, oc: ocExp.map((x) => Number(x.toFixed(3))), ocPass: ocPass(ocExp), cMin, cScan: scan,
+      s1p: { band, oc: ocExpP.map((x) => Number(x.toFixed(3))), ocPass: ocPassP(ocExpP), cMin: cMinP, cScan: scanP, l3bRate: Number(l3b.toFixed(3)) }, clusterNames: C.map((c) => tab.clusterNames[c]) };
     console.log(key, JSON.stringify({ n, C: Cexp, s0: Number(s0.toFixed(2)), L: bl.L, nFresh, nEff: Math.round(nEff), oc: ocExp, cMin }));
     fs.writeFileSync(out, `${JSON.stringify(result, null, 1)}\n`);
   }

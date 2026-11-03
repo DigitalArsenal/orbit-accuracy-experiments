@@ -2,7 +2,7 @@
  "version": 1,
  "plan": {
   "file": "experiments/gp-covariance-strata/PLAN.md",
-  "sha256": "2d8d1b0161cb33adf8e9fc322ca6747dcdb74fd311c10feff025eca552329bac"
+  "sha256": "f320abf8a6b48ae1c7e20dc46c22777c050821b6d04a518fe065c4424f664aba"
  },
  "owner": {
   "o1": "b",
@@ -16,9 +16,9 @@
  "seed": 20261103,
  "trials": 1500,
  "code": {
-  "libSha256": "f86c4b22241a1b5ed372e5cf91e5542323718e7c0dac41b2caca572d69816b7f",
-  "stepsSha256": "3f67eb0f216dda3bcbda80b7864569114a9d3e21fa6bdee083f0ec625d80fcea",
-  "runSha256": "0a970b069f55622e63828a2d2df09b92c3fdf2ffb90d5a26fba0d302a03cdea0"
+  "libSha256": "2812d1d3a508c3a1766988c4bd6fc343cb2276e7d0e0cb28f25f2bd9d8e04f78",
+  "stepsSha256": "ba5a2f9f55d819e2a6f66bb85d6081a2bcd3986691e69cb74a8d7ae00afc2faf",
+  "runSha256": "dbf71301d189566cd3c0fff1b30dca6043479a0dec549d2726710e95d4f91b79"
  },
  "pins": {
   "recorded": "2026-11-03",
@@ -2064,7 +2064,9 @@
    },
    "pass": false,
    "wording": "for payload-class error; debris holds only if debris error >= payload error (V10)"
-  }
+  },
+  "statement": "the honest limit as stated is withdrawn: at the smallest covariance the truth does not reject, a zero-miss pair at 5 days in drag LEO can exceed Pc 1e-4",
+  "ruling": null
  },
  "s5": {
   "LEO-L|0": {
@@ -4667,6 +4669,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.010013833300480796,
+     "sePool": 0.005112486605064923
+    },
+    "oc": [
+     0,
+     0,
+     0
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0,
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ],
+     "4": [
+      0,
+      0,
+      0
+     ],
+     "5": [
+      0,
+      0,
+      0
+     ],
+     "6": [
+      0,
+      0,
+      0
+     ],
+     "7": [
+      0,
+      0,
+      0
+     ],
+     "8": [
+      0,
+      0,
+      0
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -4776,6 +4838,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.008860512421328669,
+     "sePool": 0.0045478534722608885
+    },
+    "oc": [
+     0,
+     0,
+     0.001
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0,
+      0,
+      0.006
+     ],
+     "3": [
+      0,
+      0,
+      0.002
+     ],
+     "4": [
+      0,
+      0,
+      0
+     ],
+     "5": [
+      0,
+      0,
+      0
+     ],
+     "6": [
+      0,
+      0,
+      0
+     ],
+     "7": [
+      0,
+      0,
+      0
+     ],
+     "8": [
+      0,
+      0,
+      0
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -4885,6 +5007,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.01659008869837123,
+     "sePool": 0.00671740511278074
+    },
+    "oc": [
+     0.62,
+     0,
+     0.043
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.624,
+      0,
+      0.062
+     ],
+     "3": [
+      0.618,
+      0,
+      0.064
+     ],
+     "4": [
+      0.666,
+      0,
+      0.038
+     ],
+     "5": [
+      0.648,
+      0,
+      0.02
+     ],
+     "6": [
+      0.66,
+      0,
+      0.012
+     ],
+     "7": [
+      0.666,
+      0,
+      0.008
+     ],
+     "8": [
+      0.698,
+      0,
+      0.002
+     ]
+    },
+    "l3bRate": 0.006,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -4994,6 +5176,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.025781329486969894,
+     "sePool": 0.012947922111138013
+    },
+    "oc": [
+     0.751,
+     0.001,
+     0.229
+    ],
+    "ocPass": false,
+    "cMin": 4,
+    "cScan": {
+     "2": [
+      0.734,
+      0.002,
+      0.23
+     ],
+     "3": [
+      0.744,
+      0,
+      0.244
+     ],
+     "4": [
+      0.806,
+      0,
+      0.2
+     ],
+     "5": [
+      0.782,
+      0,
+      0.234
+     ],
+     "6": [
+      0.83,
+      0,
+      0.214
+     ],
+     "7": [
+      0.818,
+      0,
+      0.204
+     ],
+     "8": [
+      0.85,
+      0,
+      0.192
+     ]
+    },
+    "l3bRate": 0.319,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -5103,6 +5345,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.027719386814609708,
+     "sePool": 0.01665302315466196
+    },
+    "oc": [
+     0.751,
+     0.263,
+     0.421
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.758,
+      0.346,
+      0.352
+     ],
+     "3": [
+      0.762,
+      0.282,
+      0.422
+     ],
+     "4": [
+      0.79,
+      0.23,
+      0.454
+     ],
+     "5": [
+      0.83,
+      0.21,
+      0.476
+     ],
+     "6": [
+      0.846,
+      0.18,
+      0.472
+     ],
+     "7": [
+      0.832,
+      0.146,
+      0.498
+     ],
+     "8": [
+      0.872,
+      0.13,
+      0.524
+     ]
+    },
+    "l3bRate": 0.022,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -5212,6 +5514,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.026112780378869733,
+     "sePool": 0.01550196267298114
+    },
+    "oc": [
+     0.779,
+     0.323,
+     0.318
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.672,
+      0.338,
+      0.336
+     ],
+     "3": [
+      0.786,
+      0.304,
+      0.342
+     ],
+     "4": [
+      0.802,
+      0.264,
+      0.348
+     ],
+     "5": [
+      0.86,
+      0.204,
+      0.384
+     ],
+     "6": [
+      0.89,
+      0.21,
+      0.33
+     ],
+     "7": [
+      0.876,
+      0.202,
+      0.348
+     ],
+     "8": [
+      0.898,
+      0.194,
+      0.33
+     ]
+    },
+    "l3bRate": 0.002,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -5321,6 +5683,66 @@
    "reasonsIfO5": [
     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.03080122979663943,
+     "sePool": 0.018943451992633434
+    },
+    "oc": [
+     0.628,
+     0.397,
+     0.438
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.568,
+      0.472,
+      0.356
+     ],
+     "3": [
+      0.63,
+      0.404,
+      0.416
+     ],
+     "4": [
+      0.654,
+      0.36,
+      0.502
+     ],
+     "5": [
+      0.71,
+      0.32,
+      0.538
+     ],
+     "6": [
+      0.73,
+      0.276,
+      0.614
+     ],
+     "7": [
+      0.75,
+      0.276,
+      0.606
+     ],
+     "8": [
+      0.776,
+      0.25,
+      0.656
+     ]
+    },
+    "l3bRate": 0.003,
+    "outcome": "NO LAWFUL TRUTH",
+    "reasons": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "outcomeIfO5": "NO LAWFUL TRUTH",
+    "reasonsIfO5": [
+     "Swarm, GRACE-FO and ISS truth are held (O4 default no)"
+    ],
+    "state": "NO LAWFUL TRUTH"
+   },
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -5425,14 +5847,72 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.017, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.017, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.017, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.017, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.015197068014824656,
+     "sePool": 0.012512456392211203
+    },
+    "oc": [
+     0.863,
+     0,
+     0.191
+    ],
+    "ocPass": true,
+    "cMin": 3,
+    "cScan": {
+     "2": [
+      0.758,
+      0,
+      0.208
+     ],
+     "3": [
+      0.818,
+      0,
+      0.192
+     ],
+     "4": [
+      0.864,
+      0,
+      0.178
+     ],
+     "5": [
+      0.878,
+      0,
+      0.168
+     ],
+     "6": [
+      0.898,
+      0,
+      0.178
+     ],
+     "7": [
+      0.932,
+      0,
+      0.144
+     ],
+     "8": [
+      0.956,
+      0,
+      0.138
+     ]
+    },
+    "l3bRate": 0.017,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products"
+    ],
+    "outcomeIfO5": "TESTABLE",
+    "reasonsIfO5": [],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-26",
     "parts": [
@@ -5563,14 +6043,72 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.305, x0.7 0, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.305, x0.7 0, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.305, x0.7 0, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.305, x0.7 0, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.019242622076142187,
+     "sePool": 0.009757738237444294
+    },
+    "oc": [
+     0.851,
+     0,
+     0.097
+    ],
+    "ocPass": true,
+    "cMin": 3,
+    "cScan": {
+     "2": [
+      0.736,
+      0.002,
+      0.158
+     ],
+     "3": [
+      0.844,
+      0,
+      0.094
+     ],
+     "4": [
+      0.848,
+      0,
+      0.114
+     ],
+     "5": [
+      0.91,
+      0,
+      0.064
+     ],
+     "6": [
+      0.928,
+      0,
+      0.054
+     ],
+     "7": [
+      0.934,
+      0,
+      0.046
+     ],
+     "8": [
+      0.966,
+      0,
+      0.024
+     ]
+    },
+    "l3bRate": 0.397,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products"
+    ],
+    "outcomeIfO5": "TESTABLE",
+    "reasonsIfO5": [],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-26",
     "parts": [
@@ -5701,14 +6239,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.032, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.032, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.032, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.032, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.016863239493056785,
+     "sePool": 0.008532302452333782
+    },
+    "oc": [
+     0.286,
+     0.06,
+     0.006
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.238,
+      0.142,
+      0.01
+     ],
+     "3": [
+      0.236,
+      0.086,
+      0
+     ],
+     "4": [
+      0.282,
+      0.058,
+      0.002
+     ],
+     "5": [
+      0.286,
+      0.042,
+      0
+     ],
+     "6": [
+      0.288,
+      0.024,
+      0
+     ],
+     "7": [
+      0.324,
+      0.014,
+      0.002
+     ],
+     "8": [
+      0.266,
+      0.012,
+      0
+     ]
+    },
+    "l3bRate": 0.089,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.286, x0.7 0.06",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.286, x0.7 0.06",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-27",
     "parts": [
@@ -5839,14 +6440,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.023, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.023, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.023, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.023, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.020283195291753587,
+     "sePool": 0.009524227778247928
+    },
+    "oc": [
+     0.053,
+     0.111,
+     0
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.076,
+      0.118,
+      0.002
+     ],
+     "3": [
+      0.07,
+      0.118,
+      0
+     ],
+     "4": [
+      0.058,
+      0.102,
+      0
+     ],
+     "5": [
+      0.048,
+      0.064,
+      0
+     ],
+     "6": [
+      0.036,
+      0.068,
+      0
+     ],
+     "7": [
+      0.03,
+      0.032,
+      0
+     ],
+     "8": [
+      0.022,
+      0.04,
+      0
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.111",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.111",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-28",
     "parts": [
@@ -5977,14 +6641,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.024490766810736878,
+     "sePool": 0.011505357747050067
+    },
+    "oc": [
+     0.013,
+     0.093,
+     0.002
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.024,
+      0.152,
+      0.014
+     ],
+     "3": [
+      0.012,
+      0.094,
+      0.014
+     ],
+     "4": [
+      0.008,
+      0.084,
+      0.002
+     ],
+     "5": [
+      0.008,
+      0.092,
+      0.004
+     ],
+     "6": [
+      0.004,
+      0.068,
+      0
+     ],
+     "7": [
+      0.004,
+      0.072,
+      0
+     ],
+     "8": [
+      0.008,
+      0.054,
+      0
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.013, x0.7 0.093",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.013, x0.7 0.093",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-30",
     "parts": [
@@ -6115,14 +6842,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.027487185161699283,
+     "sePool": 0.013439191757839935
+    },
+    "oc": [
+     0.069,
+     0.163,
+     0.076
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.07,
+      0.154,
+      0.08
+     ],
+     "3": [
+      0.058,
+      0.148,
+      0.086
+     ],
+     "4": [
+      0.092,
+      0.148,
+      0.072
+     ],
+     "5": [
+      0.074,
+      0.122,
+      0.06
+     ],
+     "6": [
+      0.056,
+      0.128,
+      0.06
+     ],
+     "7": [
+      0.06,
+      0.116,
+      0.068
+     ],
+     "8": [
+      0.052,
+      0.096,
+      0.088
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.069, x0.7 0.163",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.069, x0.7 0.163",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-01",
     "parts": [
@@ -6253,18 +7043,85 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.001, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "n_eff 56 < 60",
     "time blocks 5 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.001, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "n_eff 56 < 60",
     "time blocks 5 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.03192214246301534,
+     "sePool": 0.014958677128646378
+    },
+    "oc": [
+     0.217,
+     0.204,
+     0.18
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.2,
+      0.238,
+      0.168
+     ],
+     "3": [
+      0.174,
+      0.224,
+      0.18
+     ],
+     "4": [
+      0.204,
+      0.27,
+      0.176
+     ],
+     "5": [
+      0.208,
+      0.204,
+      0.19
+     ],
+     "6": [
+      0.24,
+      0.144,
+      0.206
+     ],
+     "7": [
+      0.32,
+      0.13,
+      0.226
+     ],
+     "8": [
+      0.234,
+      0.106,
+      0.182
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.217, x0.7 0.204",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 56 < 60",
+     "time blocks 5 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.217, x0.7 0.204",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 56 < 60",
+     "time blocks 5 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-03",
     "parts": [
@@ -6395,14 +7252,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.169, x0.7 0.002, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.169, x0.7 0.002, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.169, x0.7 0.002, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.169, x0.7 0.002, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.030123721476941537,
+     "sePool": 0.02788964357497312
+    },
+    "oc": [
+     0.819,
+     0.109,
+     1
+    ],
+    "ocPass": false,
+    "cMin": 8,
+    "cScan": {
+     "2": [
+      0.672,
+      0.176,
+      1
+     ],
+     "3": [
+      0.762,
+      0.134,
+      1
+     ],
+     "4": [
+      0.804,
+      0.096,
+      1
+     ],
+     "5": [
+      0.844,
+      0.124,
+      1
+     ],
+     "6": [
+      0.878,
+      0.074,
+      1
+     ],
+     "7": [
+      0.912,
+      0.054,
+      1
+     ],
+     "8": [
+      0.9,
+      0.032,
+      1
+     ]
+    },
+    "l3bRate": 0.258,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.819, x0.7 0.109",
+     "clusters 4 < C_min 8"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.819, x0.7 0.109",
+     "clusters 4 < C_min 8"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-23",
     "parts": [
@@ -6525,14 +7445,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.129, x0.7 0.001, x1.4 0.002",
+    "operating characteristics fail under S1: P(label | correct) 0.129, x0.7 0.001, x1.4 0.002",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.129, x0.7 0.001, x1.4 0.002",
+    "operating characteristics fail under S1: P(label | correct) 0.129, x0.7 0.001, x1.4 0.002",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.027215360983423552,
+     "sePool": 0.02303095098707033
+    },
+    "oc": [
+     0.815,
+     0.116,
+     0.991
+    ],
+    "ocPass": false,
+    "cMin": 7,
+    "cScan": {
+     "2": [
+      0.66,
+      0.196,
+      0.93
+     ],
+     "3": [
+      0.76,
+      0.142,
+      0.984
+     ],
+     "4": [
+      0.824,
+      0.138,
+      0.994
+     ],
+     "5": [
+      0.866,
+      0.122,
+      0.996
+     ],
+     "6": [
+      0.88,
+      0.088,
+      0.996
+     ],
+     "7": [
+      0.902,
+      0.048,
+      0.998
+     ],
+     "8": [
+      0.912,
+      0.064,
+      1
+     ]
+    },
+    "l3bRate": 0.27,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.815, x0.7 0.116",
+     "clusters 4 < C_min 7"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.815, x0.7 0.116",
+     "clusters 4 < C_min 7"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-23",
     "parts": [
@@ -6655,14 +7638,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.048, x0.7 0.015, x1.4 0.003",
+    "operating characteristics fail under S1: P(label | correct) 0.048, x0.7 0.015, x1.4 0.003",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.048, x0.7 0.015, x1.4 0.003",
+    "operating characteristics fail under S1: P(label | correct) 0.048, x0.7 0.015, x1.4 0.003",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.025890998503262822,
+     "sePool": 0.024060275267811078
+    },
+    "oc": [
+     0.697,
+     0.147,
+     0.941
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.552,
+      0.2,
+      0.832
+     ],
+     "3": [
+      0.66,
+      0.172,
+      0.898
+     ],
+     "4": [
+      0.708,
+      0.142,
+      0.946
+     ],
+     "5": [
+      0.694,
+      0.098,
+      0.952
+     ],
+     "6": [
+      0.73,
+      0.092,
+      0.958
+     ],
+     "7": [
+      0.786,
+      0.068,
+      0.962
+     ],
+     "8": [
+      0.792,
+      0.068,
+      0.972
+     ]
+    },
+    "l3bRate": 0.178,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.697, x0.7 0.147",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.697, x0.7 0.147",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-24",
     "parts": [
@@ -6785,14 +7831,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.001, x0.7 0.005, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.001, x0.7 0.005, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.02427824064253058,
+     "sePool": 0.017869705353169417
+    },
+    "oc": [
+     0.362,
+     0.092,
+     0.384
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.324,
+      0.112,
+      0.33
+     ],
+     "3": [
+      0.344,
+      0.124,
+      0.344
+     ],
+     "4": [
+      0.338,
+      0.072,
+      0.354
+     ],
+     "5": [
+      0.362,
+      0.072,
+      0.39
+     ],
+     "6": [
+      0.382,
+      0.06,
+      0.44
+     ],
+     "7": [
+      0.346,
+      0.068,
+      0.464
+     ],
+     "8": [
+      0.364,
+      0.04,
+      0.496
+     ]
+    },
+    "l3bRate": 0.003,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.362, x0.7 0.092",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.362, x0.7 0.092",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-25",
     "parts": [
@@ -6915,14 +8024,77 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.002, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.002, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.002, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.002, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.026475425035959153,
+     "sePool": 0.015669198658035902
+    },
+    "oc": [
+     0.284,
+     0.102,
+     0.183
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.304,
+      0.164,
+      0.16
+     ],
+     "3": [
+      0.266,
+      0.112,
+      0.182
+     ],
+     "4": [
+      0.276,
+      0.094,
+      0.17
+     ],
+     "5": [
+      0.266,
+      0.092,
+      0.202
+     ],
+     "6": [
+      0.29,
+      0.07,
+      0.218
+     ],
+     "7": [
+      0.272,
+      0.06,
+      0.222
+     ],
+     "8": [
+      0.262,
+      0.062,
+      0.238
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.284, x0.7 0.102",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.284, x0.7 0.102",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-27",
     "parts": [
@@ -7045,16 +8217,81 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.005, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.005, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.029250140160376897,
+     "sePool": 0.01608735985634322
+    },
+    "oc": [
+     0.253,
+     0.134,
+     0.197
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.256,
+      0.152,
+      0.192
+     ],
+     "3": [
+      0.248,
+      0.202,
+      0.174
+     ],
+     "4": [
+      0.256,
+      0.162,
+      0.182
+     ],
+     "5": [
+      0.274,
+      0.116,
+      0.206
+     ],
+     "6": [
+      0.218,
+      0.1,
+      0.244
+     ],
+     "7": [
+      0.288,
+      0.062,
+      0.206
+     ],
+     "8": [
+      0.21,
+      0.076,
+      0.216
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.253, x0.7 0.134",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 4 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.253, x0.7 0.134",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 4 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-29",
     "parts": [
@@ -7177,18 +8414,85 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.005, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "n_eff 53 < 60",
     "time blocks 3 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.005, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "n_eff 53 < 60",
     "time blocks 3 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.03154762736839974,
+     "sePool": 0.017570475516392438
+    },
+    "oc": [
+     0.338,
+     0.189,
+     0.361
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.306,
+      0.19,
+      0.29
+     ],
+     "3": [
+      0.334,
+      0.212,
+      0.3
+     ],
+     "4": [
+      0.318,
+      0.184,
+      0.35
+     ],
+     "5": [
+      0.348,
+      0.17,
+      0.358
+     ],
+     "6": [
+      0.334,
+      0.142,
+      0.424
+     ],
+     "7": [
+      0.322,
+      0.116,
+      0.398
+     ],
+     "8": [
+      0.354,
+      0.114,
+      0.45
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.338, x0.7 0.189",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 53 < 60",
+     "time blocks 3 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.338, x0.7 0.189",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 53 < 60",
+     "time blocks 3 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2026-12-31",
     "parts": [
@@ -7311,14 +8615,142 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.204, x0.7 0.001, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.204, x0.7 0.001, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.204, x0.7 0.001, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.204, x0.7 0.001, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.013766846948648295,
+     "sePool": 0.008403494158406223
+    },
+    "oc": [
+     0.518,
+     0.003,
+     0.017
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.24,
+      0.15,
+      0.068
+     ],
+     "3": [
+      0.278,
+      0.124,
+      0.06
+     ],
+     "4": [
+      0.308,
+      0.106,
+      0.064
+     ],
+     "5": [
+      0.336,
+      0.11,
+      0.06
+     ],
+     "6": [
+      0.336,
+      0.066,
+      0.058
+     ],
+     "7": [
+      0.346,
+      0.076,
+      0.042
+     ],
+     "8": [
+      0.358,
+      0.062,
+      0.054
+     ],
+     "9": [
+      0.428,
+      0.05,
+      0.042
+     ],
+     "10": [
+      0.422,
+      0.028,
+      0.042
+     ],
+     "11": [
+      0.462,
+      0.02,
+      0.032
+     ],
+     "12": [
+      0.45,
+      0.028,
+      0.032
+     ],
+     "13": [
+      0.486,
+      0.016,
+      0.03
+     ],
+     "14": [
+      0.442,
+      0.024,
+      0.018
+     ],
+     "15": [
+      0.478,
+      0.014,
+      0.038
+     ],
+     "16": [
+      0.5,
+      0.01,
+      0.028
+     ],
+     "17": [
+      0.472,
+      0.01,
+      0.012
+     ],
+     "18": [
+      0.51,
+      0.014,
+      0.012
+     ],
+     "19": [
+      0.494,
+      0.004,
+      0.008
+     ],
+     "20": [
+      0.526,
+      0.002,
+      0.012
+     ],
+     "21": [
+      0.48,
+      0.006,
+      0.016
+     ]
+    },
+    "l3bRate": 0.423,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.518, x0.7 0.003",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.518, x0.7 0.003",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -7624,14 +9056,142 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.186, x0.7 0.003, x1.4 0.003",
+    "operating characteristics fail under S1: P(label | correct) 0.186, x0.7 0.003, x1.4 0.003",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.186, x0.7 0.003, x1.4 0.003",
+    "operating characteristics fail under S1: P(label | correct) 0.186, x0.7 0.003, x1.4 0.003",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.01367281915513017,
+     "sePool": 0.00815542740000066
+    },
+    "oc": [
+     0.485,
+     0.009,
+     0.017
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.184,
+      0.154,
+      0.04
+     ],
+     "3": [
+      0.258,
+      0.14,
+      0.042
+     ],
+     "4": [
+      0.276,
+      0.128,
+      0.066
+     ],
+     "5": [
+      0.304,
+      0.108,
+      0.058
+     ],
+     "6": [
+      0.334,
+      0.094,
+      0.038
+     ],
+     "7": [
+      0.332,
+      0.072,
+      0.034
+     ],
+     "8": [
+      0.352,
+      0.064,
+      0.05
+     ],
+     "9": [
+      0.344,
+      0.06,
+      0.036
+     ],
+     "10": [
+      0.372,
+      0.048,
+      0.036
+     ],
+     "11": [
+      0.396,
+      0.024,
+      0.024
+     ],
+     "12": [
+      0.382,
+      0.046,
+      0.042
+     ],
+     "13": [
+      0.42,
+      0.024,
+      0.028
+     ],
+     "14": [
+      0.42,
+      0.02,
+      0.022
+     ],
+     "15": [
+      0.412,
+      0.022,
+      0.038
+     ],
+     "16": [
+      0.44,
+      0.016,
+      0.028
+     ],
+     "17": [
+      0.466,
+      0.018,
+      0.022
+     ],
+     "18": [
+      0.43,
+      0.018,
+      0.01
+     ],
+     "19": [
+      0.532,
+      0.014,
+      0.012
+     ],
+     "20": [
+      0.472,
+      0.012,
+      0.028
+     ],
+     "21": [
+      0.434,
+      0.018,
+      0.01
+     ]
+    },
+    "l3bRate": 0.393,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.485, x0.7 0.009",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.485, x0.7 0.009",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -7937,14 +9497,142 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.141, x0.7 0.002, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.141, x0.7 0.002, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.141, x0.7 0.002, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.141, x0.7 0.002, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.013585010634985696,
+     "sePool": 0.008166183878709418
+    },
+    "oc": [
+     0.381,
+     0.005,
+     0.008
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.19,
+      0.13,
+      0.07
+     ],
+     "3": [
+      0.238,
+      0.146,
+      0.042
+     ],
+     "4": [
+      0.262,
+      0.136,
+      0.036
+     ],
+     "5": [
+      0.296,
+      0.104,
+      0.028
+     ],
+     "6": [
+      0.286,
+      0.078,
+      0.044
+     ],
+     "7": [
+      0.294,
+      0.036,
+      0.032
+     ],
+     "8": [
+      0.276,
+      0.084,
+      0.028
+     ],
+     "9": [
+      0.342,
+      0.056,
+      0.034
+     ],
+     "10": [
+      0.324,
+      0.056,
+      0.034
+     ],
+     "11": [
+      0.326,
+      0.038,
+      0.03
+     ],
+     "12": [
+      0.34,
+      0.028,
+      0.026
+     ],
+     "13": [
+      0.304,
+      0.02,
+      0.03
+     ],
+     "14": [
+      0.346,
+      0.034,
+      0.02
+     ],
+     "15": [
+      0.374,
+      0.024,
+      0.004
+     ],
+     "16": [
+      0.344,
+      0.024,
+      0.026
+     ],
+     "17": [
+      0.376,
+      0.01,
+      0.02
+     ],
+     "18": [
+      0.356,
+      0.012,
+      0.012
+     ],
+     "19": [
+      0.366,
+      0.014,
+      0.006
+     ],
+     "20": [
+      0.398,
+      0.008,
+      0.012
+     ],
+     "21": [
+      0.362,
+      0.014,
+      0.008
+     ]
+    },
+    "l3bRate": 0.425,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.381, x0.7 0.005",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.381, x0.7 0.005",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -8250,16 +9938,146 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.105, x0.7 0.006, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.105, x0.7 0.006, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 5 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.105, x0.7 0.006, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.105, x0.7 0.006, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 5 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.01565668445621966,
+     "sePool": 0.009206110581817356
+    },
+    "oc": [
+     0.43,
+     0.035,
+     0.031
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.2,
+      0.176,
+      0.042
+     ],
+     "3": [
+      0.234,
+      0.19,
+      0.044
+     ],
+     "4": [
+      0.236,
+      0.17,
+      0.048
+     ],
+     "5": [
+      0.276,
+      0.178,
+      0.05
+     ],
+     "6": [
+      0.266,
+      0.184,
+      0.052
+     ],
+     "7": [
+      0.322,
+      0.128,
+      0.054
+     ],
+     "8": [
+      0.352,
+      0.148,
+      0.038
+     ],
+     "9": [
+      0.344,
+      0.116,
+      0.048
+     ],
+     "10": [
+      0.32,
+      0.082,
+      0.046
+     ],
+     "11": [
+      0.384,
+      0.094,
+      0.052
+     ],
+     "12": [
+      0.366,
+      0.078,
+      0.034
+     ],
+     "13": [
+      0.36,
+      0.104,
+      0.042
+     ],
+     "14": [
+      0.362,
+      0.08,
+      0.034
+     ],
+     "15": [
+      0.402,
+      0.078,
+      0.022
+     ],
+     "16": [
+      0.38,
+      0.046,
+      0.036
+     ],
+     "17": [
+      0.43,
+      0.048,
+      0.034
+     ],
+     "18": [
+      0.436,
+      0.038,
+      0.038
+     ],
+     "19": [
+      0.42,
+      0.03,
+      0.03
+     ],
+     "20": [
+      0.436,
+      0.024,
+      0.032
+     ],
+     "21": [
+      0.394,
+      0.03,
+      0.05
+     ]
+    },
+    "l3bRate": 0.281,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.43, x0.7 0.035",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 5 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.43, x0.7 0.035",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 5 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -8565,16 +10383,146 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.11, x0.7 0.015, x1.4 0.008",
+    "operating characteristics fail under S1: P(label | correct) 0.11, x0.7 0.015, x1.4 0.008",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.11, x0.7 0.015, x1.4 0.008",
+    "operating characteristics fail under S1: P(label | correct) 0.11, x0.7 0.015, x1.4 0.008",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.01691613256889231,
+     "sePool": 0.009927597684463297
+    },
+    "oc": [
+     0.438,
+     0.058,
+     0.073
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.21,
+      0.218,
+      0.07
+     ],
+     "3": [
+      0.264,
+      0.242,
+      0.074
+     ],
+     "4": [
+      0.29,
+      0.238,
+      0.07
+     ],
+     "5": [
+      0.258,
+      0.258,
+      0.104
+     ],
+     "6": [
+      0.318,
+      0.202,
+      0.11
+     ],
+     "7": [
+      0.308,
+      0.204,
+      0.082
+     ],
+     "8": [
+      0.326,
+      0.18,
+      0.084
+     ],
+     "9": [
+      0.332,
+      0.162,
+      0.078
+     ],
+     "10": [
+      0.352,
+      0.156,
+      0.092
+     ],
+     "11": [
+      0.36,
+      0.136,
+      0.1
+     ],
+     "12": [
+      0.362,
+      0.102,
+      0.092
+     ],
+     "13": [
+      0.378,
+      0.126,
+      0.086
+     ],
+     "14": [
+      0.404,
+      0.086,
+      0.07
+     ],
+     "15": [
+      0.37,
+      0.098,
+      0.098
+     ],
+     "16": [
+      0.404,
+      0.094,
+      0.094
+     ],
+     "17": [
+      0.382,
+      0.108,
+      0.082
+     ],
+     "18": [
+      0.432,
+      0.084,
+      0.078
+     ],
+     "19": [
+      0.434,
+      0.076,
+      0.07
+     ],
+     "20": [
+      0.438,
+      0.072,
+      0.066
+     ],
+     "21": [
+      0.406,
+      0.054,
+      0.058
+     ]
+    },
+    "l3bRate": 0.379,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.438, x0.7 0.058",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 4 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.438, x0.7 0.058",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 4 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -8880,16 +10828,146 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.038, x0.7 0.027, x1.4 0.005",
+    "operating characteristics fail under S1: P(label | correct) 0.038, x0.7 0.027, x1.4 0.005",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.038, x0.7 0.027, x1.4 0.005",
+    "operating characteristics fail under S1: P(label | correct) 0.038, x0.7 0.027, x1.4 0.005",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.019932373636311198,
+     "sePool": 0.011250753860616825
+    },
+    "oc": [
+     0.252,
+     0.057,
+     0.141
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.15,
+      0.258,
+      0.102
+     ],
+     "3": [
+      0.172,
+      0.254,
+      0.094
+     ],
+     "4": [
+      0.19,
+      0.244,
+      0.096
+     ],
+     "5": [
+      0.188,
+      0.242,
+      0.118
+     ],
+     "6": [
+      0.212,
+      0.214,
+      0.092
+     ],
+     "7": [
+      0.212,
+      0.192,
+      0.13
+     ],
+     "8": [
+      0.2,
+      0.174,
+      0.112
+     ],
+     "9": [
+      0.252,
+      0.164,
+      0.094
+     ],
+     "10": [
+      0.236,
+      0.176,
+      0.114
+     ],
+     "11": [
+      0.23,
+      0.15,
+      0.122
+     ],
+     "12": [
+      0.224,
+      0.1,
+      0.122
+     ],
+     "13": [
+      0.254,
+      0.126,
+      0.12
+     ],
+     "14": [
+      0.228,
+      0.102,
+      0.148
+     ],
+     "15": [
+      0.25,
+      0.11,
+      0.126
+     ],
+     "16": [
+      0.286,
+      0.118,
+      0.146
+     ],
+     "17": [
+      0.278,
+      0.068,
+      0.136
+     ],
+     "18": [
+      0.244,
+      0.092,
+      0.138
+     ],
+     "19": [
+      0.234,
+      0.082,
+      0.144
+     ],
+     "20": [
+      0.25,
+      0.056,
+      0.138
+     ],
+     "21": [
+      0.256,
+      0.066,
+      0.126
+     ]
+    },
+    "l3bRate": 0.278,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.252, x0.7 0.057",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 4 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.252, x0.7 0.057",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 4 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -9195,16 +11273,146 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.009, x0.7 0.044, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.009, x0.7 0.044, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 1 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.009, x0.7 0.044, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.009, x0.7 0.044, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 1 < 6"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.027669707079217325,
+     "sePool": 0.01597846248254059
+    },
+    "oc": [
+     0.381,
+     0.196,
+     0.371
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.232,
+      0.25,
+      0.106
+     ],
+     "3": [
+      0.278,
+      0.372,
+      0.098
+     ],
+     "4": [
+      0.302,
+      0.348,
+      0.126
+     ],
+     "5": [
+      0.344,
+      0.4,
+      0.162
+     ],
+     "6": [
+      0.316,
+      0.362,
+      0.178
+     ],
+     "7": [
+      0.32,
+      0.404,
+      0.174
+     ],
+     "8": [
+      0.382,
+      0.338,
+      0.202
+     ],
+     "9": [
+      0.326,
+      0.338,
+      0.212
+     ],
+     "10": [
+      0.376,
+      0.308,
+      0.236
+     ],
+     "11": [
+      0.388,
+      0.322,
+      0.226
+     ],
+     "12": [
+      0.368,
+      0.286,
+      0.274
+     ],
+     "13": [
+      0.354,
+      0.274,
+      0.278
+     ],
+     "14": [
+      0.406,
+      0.3,
+      0.314
+     ],
+     "15": [
+      0.372,
+      0.254,
+      0.3
+     ],
+     "16": [
+      0.374,
+      0.278,
+      0.342
+     ],
+     "17": [
+      0.36,
+      0.24,
+      0.388
+     ],
+     "18": [
+      0.364,
+      0.22,
+      0.346
+     ],
+     "19": [
+      0.404,
+      0.244,
+      0.342
+     ],
+     "20": [
+      0.36,
+      0.19,
+      0.424
+     ],
+     "21": [
+      0.38,
+      0.198,
+      0.39
+     ]
+    },
+    "l3bRate": 0.053,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.381, x0.7 0.196",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 1 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.381, x0.7 0.196",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 1 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -9510,15 +11718,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0.003, x0.7 0.007, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.003, x0.7 0.007, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0.003, x0.7 0.007, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.003, x0.7 0.007, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.05149693422345747,
+     "sePool": 0.022813040896389327
+    },
+    "oc": [
+     0.369,
+     0.241,
+     0.367
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.464,
+      0.406,
+      0.416
+     ],
+     "3": [
+      0.462,
+      0.394,
+      0.424
+     ],
+     "4": [
+      0.5,
+      0.388,
+      0.432
+     ],
+     "5": [
+      0.472,
+      0.36,
+      0.436
+     ],
+     "6": [
+      0.45,
+      0.31,
+      0.404
+     ],
+     "7": [
+      0.432,
+      0.304,
+      0.382
+     ],
+     "8": [
+      0.4,
+      0.292,
+      0.374
+     ]
+    },
+    "l3bRate": 0.029,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.369, x0.7 0.241",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.369, x0.7 0.241",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -9662,15 +11934,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.003, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0.003, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.05015520581029299,
+     "sePool": 0.02263100488488127
+    },
+    "oc": [
+     0.305,
+     0.241,
+     0.293
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.378,
+      0.396,
+      0.288
+     ],
+     "3": [
+      0.444,
+      0.376,
+      0.376
+     ],
+     "4": [
+      0.442,
+      0.39,
+      0.37
+     ],
+     "5": [
+      0.378,
+      0.326,
+      0.344
+     ],
+     "6": [
+      0.356,
+      0.288,
+      0.314
+     ],
+     "7": [
+      0.332,
+      0.27,
+      0.302
+     ],
+     "8": [
+      0.302,
+      0.222,
+      0.294
+     ]
+    },
+    "l3bRate": 0.031,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.305, x0.7 0.241",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.305, x0.7 0.241",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -9814,15 +12150,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.044092658300514544,
+     "sePool": 0.021018938614786833
+    },
+    "oc": [
+     0.195,
+     0.189,
+     0.191
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.242,
+      0.344,
+      0.184
+     ],
+     "3": [
+      0.264,
+      0.344,
+      0.22
+     ],
+     "4": [
+      0.24,
+      0.334,
+      0.19
+     ],
+     "5": [
+      0.246,
+      0.28,
+      0.202
+     ],
+     "6": [
+      0.244,
+      0.278,
+      0.192
+     ],
+     "7": [
+      0.21,
+      0.22,
+      0.176
+     ],
+     "8": [
+      0.212,
+      0.216,
+      0.194
+     ]
+    },
+    "l3bRate": 0.029,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.195, x0.7 0.189",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.195, x0.7 0.189",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -9966,15 +12366,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.032588982354408706,
+     "sePool": 0.017255271907914396
+    },
+    "oc": [
+     0.053,
+     0.032,
+     0.094
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.058,
+      0.046,
+      0.064
+     ],
+     "3": [
+      0.042,
+      0.04,
+      0.048
+     ],
+     "4": [
+      0.052,
+      0.042,
+      0.078
+     ],
+     "5": [
+      0.064,
+      0.038,
+      0.082
+     ],
+     "6": [
+      0.04,
+      0.03,
+      0.098
+     ],
+     "7": [
+      0.056,
+      0.026,
+      0.104
+     ],
+     "8": [
+      0.04,
+      0.026,
+      0.074
+     ]
+    },
+    "l3bRate": 0.017,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.032",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.032",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -10118,15 +12582,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.03009278703047735,
+     "sePool": 0.01553944054126034
+    },
+    "oc": [
+     0.065,
+     0.028,
+     0.065
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.046,
+      0.028,
+      0.06
+     ],
+     "3": [
+      0.058,
+      0.032,
+      0.048
+     ],
+     "4": [
+      0.064,
+      0.036,
+      0.052
+     ],
+     "5": [
+      0.066,
+      0.026,
+      0.052
+     ],
+     "6": [
+      0.062,
+      0.026,
+      0.072
+     ],
+     "7": [
+      0.062,
+      0.032,
+      0.056
+     ],
+     "8": [
+      0.06,
+      0.024,
+      0.056
+     ]
+    },
+    "l3bRate": 0.07,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.065, x0.7 0.028",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.065, x0.7 0.028",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -10270,15 +12798,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.029931619297773483,
+     "sePool": 0.014452689086707193
+    },
+    "oc": [
+     0.031,
+     0.044,
+     0.005
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.03,
+      0.032,
+      0.004
+     ],
+     "3": [
+      0.03,
+      0.038,
+      0.002
+     ],
+     "4": [
+      0.024,
+      0.05,
+      0.008
+     ],
+     "5": [
+      0.028,
+      0.064,
+      0.002
+     ],
+     "6": [
+      0.036,
+      0.044,
+      0.006
+     ],
+     "7": [
+      0.044,
+      0.038,
+      0.008
+     ],
+     "8": [
+      0.026,
+      0.042,
+      0.002
+     ]
+    },
+    "l3bRate": 0.055,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.031, x0.7 0.044",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.031, x0.7 0.044",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -10422,15 +13014,79 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
+   "s1p": {
+    "band": {
+     "se95": 0.027075457048528078,
+     "sePool": 0.014437057001248345
+    },
+    "oc": [
+     0.048,
+     0.029,
+     0.09
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.046,
+      0.03,
+      0.086
+     ],
+     "3": [
+      0.056,
+      0.028,
+      0.088
+     ],
+     "4": [
+      0.056,
+      0.04,
+      0.084
+     ],
+     "5": [
+      0.05,
+      0.032,
+      0.074
+     ],
+     "6": [
+      0.038,
+      0.028,
+      0.092
+     ],
+     "7": [
+      0.058,
+      0.026,
+      0.094
+     ],
+     "8": [
+      0.06,
+      0.026,
+      0.09
+     ]
+    },
+    "l3bRate": 0.039,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "O5 not granted: no lawful fresh truth for the regime's products",
+     "operating characteristics fail under S1p: P(label | correct) 0.048, x0.7 0.029",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.048, x0.7 0.029",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
+    "state": "NOT TESTABLE"
+   },
    "open": {
     "date": "2027-01-20",
     "parts": [
@@ -10579,6 +13235,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10622,6 +13279,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10665,6 +13323,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10708,6 +13367,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10751,6 +13411,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10794,6 +13455,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10837,6 +13499,7 @@
    "reasonsIfO5": [
     "no usable dev truth (one object, 5 rows)"
    ],
+   "s1p": null,
    "open": {
     "date": "2026-12-21",
     "parts": [
@@ -10871,5 +13534,15 @@
   "files": 114,
   "manifestSha256": "0fdd682d569a71c353bece7acaa9b30bc29007c7b3a5bdd16b07d3b5d4338279",
   "format": "one gzip JSON-lines file per NORAD: {norad, setEpoch, sampleEpoch, ageDays, bin, half, regime, cluster, block, e:[R,T,N] km unrounded, z:[3], d2}; z and d2 under the frozen P_strat (interpolation lookup); block = floor(days since 2024-01-01 / stratum block length)"
+ },
+ "testableCounts": {
+  "S1": {
+   "default": 0,
+   "ifO5": 0
+  },
+  "S1p": {
+   "default": 0,
+   "ifO5": 2
+  }
  }
 }

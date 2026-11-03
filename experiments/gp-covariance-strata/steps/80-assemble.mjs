@@ -45,11 +45,12 @@ const out = { version: 1, plan: { file: 'experiments/gp-covariance-strata/PLAN.m
   pTruth: 0, sampleAgeRangeDays: ageRange,
   candidates: Object.fromEntries(Object.entries(cand).map(([r, c]) => [r, { clusters: c.clusters, rows: c.rows, folds: c.folds, passRate: c.passRate, pick: c.pick, why: c.why, c: c.c, r0: c.r0 ?? null, r2: c.r2 ?? null, note: c.note ?? null }])),
   pStrat: Object.fromEntries(Object.entries(cand).map(([r, c]) => [r, c.cells ?? null])),
-  s3: s3s5.s3, s5: {}, strata: {}, devRows: { dir: 'AR/gp-covariance-strata/dev-rows', files: Object.keys(manifest.files).length, manifestSha256: sha(fs.readFileSync(path.join(scratch, 'dev-rows-manifest.json'))), format: manifest.format } };
+  s3: { ...s3s5.s3, statement: 'the honest limit as stated is withdrawn: at the smallest covariance the truth does not reject, a zero-miss pair at 5 days in drag LEO can exceed Pc 1e-4', ruling: null }, s5: {}, strata: {}, devRows: { dir: 'AR/gp-covariance-strata/dev-rows', files: Object.keys(manifest.files).length, manifestSha256: sha(fs.readFileSync(path.join(scratch, 'dev-rows-manifest.json'))), format: manifest.format } };
 for (const regime of REGIMES) for (let b = 0; b < BINS.length; b++) {
   const key = `${regime}|${b}`, s = strata[key] ?? { regime, bin: b };
   const o = outcomeOf(regime, s.dev ? s : null, owner), oAlt = outcomeOf(regime, s.dev ? s : null, { ...owner, o5: true });
-  out.strata[key] = { regime, bin: b, binDays: BINS[b], outcome: o.outcome, reasons: o.reasons, outcomeIfO5: oAlt.outcome, reasonsIfO5: oAlt.reasons, open: openDate(regime, b), products: PRODUCTS[regime], devRows: s.devRows ?? 0,
+  const op = outcomeOf(regime, s.dev ? s : null, owner, 'S1p'), opAlt = outcomeOf(regime, s.dev ? s : null, { ...owner, o5: true }, 'S1p');
+  out.strata[key] = { regime, bin: b, binDays: BINS[b], outcome: o.outcome, reasons: o.reasons, outcomeIfO5: oAlt.outcome, reasonsIfO5: oAlt.reasons, s1p: s.s1p ? { ...s.s1p, outcome: op.outcome, reasons: op.reasons, outcomeIfO5: opAlt.outcome, reasonsIfO5: opAlt.reasons, state: op.outcome === 'TESTABLE' ? 'PENDING' : op.outcome } : null, open: openDate(regime, b), products: PRODUCTS[regime], devRows: s.devRows ?? 0,
     clusters: s.clusters ?? 0, objects: s.objects ?? 0, dev: s.dev ?? null, s0: s.s0 ?? null, blockDays: s.blockDays ?? null, timeBlocks: s.timeBlocks ?? null, nFresh: s.nFresh ?? null, nEff: s.nEff ?? null, icc: s.icc ?? null,
     oc: s.oc ?? null, ocPass: s.ocPass ?? null, cMin: s.cMin ?? null, cScan: s.cScan ?? null, clusterNames: s.clusterNames ?? null,
     state: o.outcome === 'TESTABLE' ? 'PENDING' : o.outcome, noradList: o.outcome === 'NO LAWFUL TRUTH' ? [] : lists[regime] };
@@ -58,4 +59,8 @@ for (const regime of REGIMES) for (let b = 0; b < BINS.length; b++) {
 }
 // replaced-model blocks for the committed S5 audit
 fs.writeFileSync(path.join(root, 'results/gp-covariance-strata/frozen-constants.json'), `${JSON.stringify(out, null, 1)}\n`);
+const count = (f) => Object.values(out.strata).filter(f).length;
+out.testableCounts = { S1: { default: count((x) => x.outcome === 'TESTABLE'), ifO5: count((x) => x.outcomeIfO5 === 'TESTABLE') }, S1p: { default: count((x) => x.s1p?.outcome === 'TESTABLE'), ifO5: count((x) => x.s1p?.outcomeIfO5 === 'TESTABLE') } };
+fs.writeFileSync(path.join(root, 'results/gp-covariance-strata/frozen-constants.json'), `${JSON.stringify(out, null, 1)}\n`);
+console.log(JSON.stringify(out.testableCounts));
 console.log(JSON.stringify(Object.fromEntries(Object.entries(out.strata).map(([k, v]) => [k, v.outcome])), null, 0).slice(0, 600));
