@@ -19,3 +19,10 @@ fs.readFileSync = function(file, ...args) {
 export function writeAudit(out, shard) {
   fs.writeFileSync(`${out}/inputs-${shard}.json`, JSON.stringify([...seen.values()],null,2)+'\n');
 }
+
+export async function pinFile(file) {
+  if(seen.has(file))return;
+  const h=crypto.createHash('sha256');
+  for await(const chunk of fs.createReadStream(file))h.update(chunk);
+  seen.set(file,{path:file,sha256:h.digest('hex')});
+}
