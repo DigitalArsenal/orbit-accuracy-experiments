@@ -28,3 +28,7 @@ The dev truth objects are Part 1's 113 placements. Against this file's earlier t
 - `admission.json`: cell-level SD of ln(pair moment / truth moment) over clusters, per regime, age bin and axis.
 - `n0-rows.json`: the n0 simulation with Part 1's block length (median over strata with an admitted bin) and the admitted bins.
 - `dev-s2.json`: S2.1 null and power, and the S2.1 to S2.3 evaluators on Part 1's dev rows. These are dev numbers for the freeze record; the states for the test read PENDING until each stratum's open date.
+
+## Reading of the dev results
+
+On Part 1's dev rows the set-to-set consistency signal does not track error: flagged object-days show no visibly lower coverage than unflagged ones (S2.1 interval spans 0), inflation overshoots on the days it flags (S2.2), and no n0 keeps the false-flag rate near 0.05 with unbiased recovery, so Part 2 freezes report-only. Pair moments are carried by a few pairs in most strata (see `top10` in `denominators.json`), and the module README predicted that successive sets share error and that maneuvers inflate the signal. These are results of the registered tests, not tuned.
