@@ -1,13 +1,13 @@
 # Five-day forecast
 
-The forecast comparison is incomplete: 0 of 22 group/phase cells have every expected window. There are 1568 comparable old-lead scalar values; 0 differ, with maximum absolute difference 0 km. Day-4/day-5 accuracy is descriptive. CA reach, synthetic alerts and proper scores have not been measured, so these results cannot establish a five-day CA capability. Frozen covariance failures remain unresolved; no covariance was refitted.
+The forecast comparison is incomplete: 0 of 22 group/phase cells have every expected window. There are 6080 comparable old-lead scalar values; 0 differ, with maximum absolute difference 0 km. Day-4/day-5 accuracy is descriptive. CA reach, synthetic alerts and proper scores have not been measured, so these results cannot establish a five-day CA capability. Frozen covariance failures remain unresolved; no covariance was refitted.
 
 Only aggregates are published. Rows and input hashes remain in the archive. Incomplete cells are progress counts, not completed-group estimates.
 
 | Phase | Group | Completed / expected | Window errors |
 |---|---|---:|---:|
-| cheap | LS | 21 / 75 | 0 |
-| cheap | DO | 0 / 150 | 0 |
+| cheap | LS | 61 / 75 | 0 |
+| cheap | DO | 9 / 150 | 0 |
 | cheap | GD | 0 / 44 | 0 |
 | cheap | IG | 0 / 60 | 0 |
 | cheap | GE | 0 / 45 | 0 |
