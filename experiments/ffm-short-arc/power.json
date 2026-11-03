@@ -1,0 +1,225 @@
+{
+ "registered": {
+  "spans": 400,
+  "draws": 1000,
+  "nullSpans": 100
+ },
+ "shards": [
+  "0/8",
+  "1/8",
+  "2/8",
+  "3/8",
+  "4/8",
+  "5/8",
+  "6/8",
+  "7/8"
+ ],
+ "rowsWithP": 1020,
+ "weeks": {
+  "P": 22,
+  "S1": 21
+ },
+ "designs": {
+  "pool": {
+   "label": "group P pool: 12 weeks x 5 objects + 39 Swarm-only weeks",
+   "spans": 400,
+   "percentPassing": {
+    "P1": 93.5,
+    "P1_95": 97.3,
+    "P1_half": 95.3,
+    "P2": 100,
+    "P2_95": 100,
+    "P4": 66.3,
+    "P4_95": 76.5,
+    "P4_half": 73.5,
+    "P5": 50.8,
+    "P5_95": 61,
+    "S1": 100,
+    "S1_r2_d123": 97.5,
+    "S2": 100,
+    "S2_d7_noloss": 98,
+    "S3": 0,
+    "A12P_r2_d1": 100,
+    "A12P_r2_d2": 100,
+    "A12P_r2_d3": 99.8,
+    "A12P_r2_d7": 97.8,
+    "A12F2_r1_d7_95": 61
+   },
+   "falsePositivePercent": {
+    "r1@day1": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day1": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day2": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day2": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day3": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day3": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day7": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day7": {
+     "percent": 0,
+     "of": 100
+    }
+   },
+   "leastFavorableNullPercent": 0,
+   "a12pDay7P95UpperBound": {
+    "median": -0.10048027796348047,
+    "p10": -0.19443571676643545,
+    "p90": 0.028645254036173122,
+    "threshold": 0.09531017980432493
+   }
+  },
+  "primary": {
+   "label": "group P primary span alone: 12 weeks x 5 objects",
+   "spans": 400,
+   "percentPassing": {
+    "P1": 38,
+    "P1_95": 49.8,
+    "P1_half": 43.5,
+    "P2": 83.5,
+    "P2_95": 89.5,
+    "P4": 18.3,
+    "P4_95": 25.8,
+    "P4_half": 21.5,
+    "P5": 19.3,
+    "P5_95": 26,
+    "S1": 90.8,
+    "S1_r2_d123": 75.3,
+    "S2": 77.3,
+    "S2_d7_noloss": 50.8,
+    "S3": 0.3,
+    "A12P_r2_d1": 99.8,
+    "A12P_r2_d2": 98,
+    "A12P_r2_d3": 91.3,
+    "A12P_r2_d7": 58,
+    "A12F2_r1_d7_95": 26
+   },
+   "falsePositivePercent": {
+    "r1@day1": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day1": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day2": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day2": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day3": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day3": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day7": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day7": {
+     "percent": 0,
+     "of": 100
+    }
+   },
+   "leastFavorableNullPercent": 0,
+   "a12pDay7P95UpperBound": {
+    "median": 0.05557571485300055,
+    "p10": -0.13240928975558314,
+    "p90": 0.2643528458827022,
+    "threshold": 0.09531017980432493
+   }
+  },
+  "s1": {
+   "label": "Sentinel-1: 11 weeks x 2 satellites",
+   "spans": 400,
+   "percentPassing": {
+    "P1": 0,
+    "P1_95": 0.3,
+    "P1_half": 0,
+    "P2": 11.8,
+    "P2_95": 16.5,
+    "P4": 0.8,
+    "P4_95": 1.3,
+    "P4_half": 1,
+    "P5": 0,
+    "P5_95": 0,
+    "S1": 100,
+    "S1_r2_d123": 22,
+    "S2": 92,
+    "S2_d7_noloss": 51,
+    "S3": 83.3,
+    "A12P_r2_d1": 68.3,
+    "A12P_r2_d2": 37.3,
+    "A12P_r2_d3": 80.8,
+    "A12P_r2_d7": 25,
+    "A12F2_r1_d7_95": 0
+   },
+   "falsePositivePercent": {
+    "r1@day1": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day1": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day2": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day2": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day3": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day3": {
+     "percent": 0,
+     "of": 100
+    },
+    "r1@day7": {
+     "percent": 0,
+     "of": 100
+    },
+    "r2@day7": {
+     "percent": 0,
+     "of": 100
+    }
+   },
+   "leastFavorableNullPercent": 0,
+   "a12pDay7P95UpperBound": {
+    "median": 0.32033777814270115,
+    "p10": 0.0010706268442570153,
+    "p90": 1.8359082366537336,
+    "threshold": 0.09531017980432493
+   }
+  }
+ }
+}
