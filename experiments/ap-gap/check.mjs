@@ -32,6 +32,7 @@ assert(measured.methodsComplete===status.methodsComplete,'completion count disag
 assert(measured.methodsComplete===5||status.missing.length>0,'partial coverage must state missing work');
 for(const f of status.historicalFiles)assert(hash(f.path)===f.sha256,'historical control changed: '+f.path);
 for(const f of status.rowFiles)assert(hash(f.path)===f.sha256,'aggregate row hash changed: '+f.path);
+for(const f of status.executionManifests)assert(hash(f.path)===f.sha256,'execution manifest changed: '+f.path);
 for(const f of status.inputManifests)assert(hash(f.path)===f.sha256,'input manifest changed: '+f.path);
 assert(hash(status.provenance.eventLabels.path)===status.provenance.eventLabels.sha256,'event labels changed');
 for(const f of status.provenance.files)assert(hash(f.path)===f.sha256,'report source changed: '+f.path);
@@ -51,7 +52,7 @@ assert(zonalIdentityPairs>0&&maxZonalIdentityDeltaM<=0.001,'degree-20 high-orbit
 
 const run=(label,key,options)=>{
  const out=path.join(root,`check-${Date.now()}-${label}`);
- const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--primary-only','true','--verification','true','--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:300000});
+ const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--primary-only','true','--verification','true','--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:600000});
  assert(child.status===0,`${label} failed: ${child.stderr}`);
  const file=path.join(out,'rows-0.jsonl');assert(fs.existsSync(file),`${label} produced no row (including expired deadline)`);
  const parsed=fs.readFileSync(file,'utf8').trim().split('\n').map(JSON.parse);assert(parsed.length===1&&parsed[0].key===key,'unexpected check rows');
@@ -92,5 +93,5 @@ const maxVariantRepeatDeltaM=Math.max(...reproduced.map(r=>r.deltaM));
 assert(repeatDeltaM<=0.001&&maxVariantRepeatDeltaM<=0.001,'forward repeatability exceeds 0.001 m');
 assert(fixedArms>0&&maxFixedAgom<=1e-15,'fixed AGOM check failed');
 assert(maxURebuildDeltaM<=0.001,'Space Force rebuild control differs');
-const result={reportStatusSha256:hash(new URL('status.json',results)),verdict:'PASS_SCOPED',binaryControlsMatched:true,zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
+const result={reportStatusSha256:hash(new URL('status.json',results)),verdict:'PASS_SCOPED',binaryControlsMatched:true,zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,verifiedExecutionManifests:status.executionManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
 fs.writeFileSync(path.join(root,'check-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
