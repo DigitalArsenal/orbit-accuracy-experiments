@@ -71,4 +71,4 @@ export function report(d){
  lines.push('','The complete synthetic comparison remains unfinished. Earlier forecast rows contain daily RMS only. New flights retain signed endpoint errors and FFM fit covariance in the archive, but the registered carried covariance and C3 history terms have not yet been produced. C2 and C3 constants alone cannot reconstruct those products. No RMS surrogate is substituted for XP, FFM, or AP carried covariance. Missing arms and paired score intervals prevent task acceptance.','');
  return lines.join('\n');
 }
-if(process.argv[1]===new URL(import.meta.url).pathname){const d=aggregate();fs.writeFileSync('results/five-day-ca/metrics.json',JSON.stringify(d,null,2)+'\n');fs.writeFileSync('results/five-day-ca/README.md',report(d));console.log(JSON.stringify({coverage:d.coverage,reproduction:d.reproduction}));}
+if(process.argv[1]===new URL(import.meta.url).pathname){const d=aggregate(),markdown=report(d);fs.writeFileSync('results/five-day-ca/metrics.json',JSON.stringify(d,null,2)+'\n');fs.writeFileSync('results/five-day-ca/README.md',markdown);console.log(JSON.stringify({coverage:d.coverage,reproduction:d.reproduction}));}
