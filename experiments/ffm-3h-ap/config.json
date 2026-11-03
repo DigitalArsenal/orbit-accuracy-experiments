@@ -1,0 +1,45 @@
+{
+  "experiment": "ffm-3h-ap",
+  "id": "XM7",
+  "frozen": true,
+  "exploratory": "every window here was scored in XM2, XM3, XM5 and XM6; every result is a lead for a registration",
+  "task": "experiments-ffm-3h-ap-centered-f107-20261031",
+  "store": "/opt/data/sdn-archive/ffm-3h-ap",
+  "wipRefPrefix": "refs/remotes/origin/wip/experiments-ffm-3h-ap-centered-f107-20261031",
+  "xm5": { "dir": "experiments/ffm-tail-cause", "commit": "732dd1e6386a6204a3f2ac8c948e6e560acc0cb6", "rowsDigest": "8134ce0a14d3", "table": "results/ffm-tail-cause/table.json" },
+  "testBuild": {
+    "ref": "wip/experiments-ffm-3h-ap-centered-f107-20261031/build",
+    "commit": "d7fdba626d36e0ca0f8d35bf13c7aaa1c67c3e83",
+    "basedOn": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "wasmSha256": "f470c8611f106b90b202e787bebb7085d29990c894c01af9edb6a58b7d6b2b1f",
+    "note": "read with git show from the modules repo, SHA-256 checked; a test build, never on modules main"
+  },
+  "weather": { "gfz": { "file": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt", "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e" } },
+  "group": "P",
+  "arms": {
+    "F2H": { "pass": "H", "wasm": "test", "rows": "M", "ap3h": true, "label": "F2M with AP1 to AP8 in the rows, so NRLMSISE-00's 3-hourly branch: test wasm, condition M" },
+    "F2C": { "pass": "C", "wasm": "pinned", "rows": "O", "f107a": "centered", "label": "F2O with F10.7a the true centered 81-day mean: a sensitivity" },
+    "F2E": { "pass": "C", "wasm": "pinned", "rows": "O", "f107a": "estimate", "label": "F2O with F10.7a a centered mean buildable at the cutoff: observed days, the RSGA's predicted days, hold-last for the rest" }
+  },
+  "base": { "F2H": "F2M", "F2C": "F2O", "F2E": "F2O" },
+  "passes": { "H": ["F2H"], "C": ["F2C", "F2E"] },
+  "workers": 8,
+  "proof": {
+    "testWasmO": ["P|39452|2026-03-10", "P|43476|2026-02-13", "P|39451|2026-01-21"],
+    "testWasmM": ["P|39452|2026-01-20", "P|43476|2026-02-13", "P|43477|2026-04-11"],
+    "pinnedO": ["P|39453|2026-02-10"],
+    "branchActive": "P|39452|2026-01-20",
+    "rule": "the test wasm on rows without AP1 to AP8 equals XM3's F2 under O and XM5's F2M under M byte for byte; this code on the pinned wasm equals XM3's F2; F2H on the branch window differs from F2M"
+  },
+  "week": "2026-W04",
+  "postStorm": { "from": "2026-01-22", "to": "2026-01-26" },
+  "worst": { "share": 0.05 },
+  "reading": { "days": [1, 2, 3], "bound": 1.1 },
+  "check": {
+    "windows": [
+      { "key": "P|39452|2026-01-20", "arms": ["F2H"] },
+      { "key": "P|43476|2026-02-13", "arms": ["F2C", "F2E"] }
+    ],
+    "rule": "each named arm rerun and compared exactly with the stored row; the table rebuilt equal to the committed table.json"
+  }
+}
