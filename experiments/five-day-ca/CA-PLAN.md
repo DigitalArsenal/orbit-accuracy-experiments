@@ -20,3 +20,12 @@ Report Alfano maximum separately at zero miss (a supremum of one); this is
 not a fixed-covariance ceiling. No synthetic encounter score can be inferred
 from these RMS covariances. A separate encounter stage requires real error
 vectors and the registered carried covariance, including C3 history terms.
+
+## Altitude mapping amendment — before archive CA integration
+
+LS/DO mappings are supplied by gp-error-model calibrate_covariance's
+osculating-state classifier, using the last permitted truth state at or
+before each existing window cutoff and the GP model's exact regime bounds.
+An identity factor is only transport for that classifier; its covariance is
+not used in CA. No model is fitted. Input hashes and per-window regime labels
+stay in the archive. Windows lacking a permitted state remain excluded.
