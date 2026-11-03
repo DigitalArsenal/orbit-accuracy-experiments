@@ -12,10 +12,10 @@
   "note": "read with git show from the modules repo, SHA-256 checked; a test build, never on modules main"
  },
  "plan": "c26f2e182630ab4242ba429fb4367759172d7b31",
- "rowsDigest": "e1640043890779e2ee87bad562a355cc1e3bef4a905f1c9a894eaee15e8884a1",
+ "rowsDigest": "ee41fb671ba9e8c0d5dfcae54028effb8e6fd52f3509c1314bc8d95babcf43e4",
  "rows": {
   "H": 750,
-  "C": 0
+  "C": 750
  },
  "reproduction": {
   "cells": 8,
@@ -46,6 +46,51 @@
     "3": 0.7446300271815794,
     "7": 0.640336579362736
    }
+  },
+  "F2C": {
+   "holdsAt": [
+    2,
+    3
+   ],
+   "aboveBaseAt": [],
+   "closesAt": [],
+   "p95BelowBaseAt": [],
+   "p95AboveBaseAt": [],
+   "bounds": {
+    "1": 1.254710170971684,
+    "2": 1.3137353512563177,
+    "3": 1.1925039187476953,
+    "7": 1.0418246492442884
+   },
+   "boundsNoWeek": {
+    "1": 0.9514352349664855,
+    "2": 1.0212109020537,
+    "3": 0.9866637751396196,
+    "7": 0.8575433087531888
+   }
+  },
+  "F2E": {
+   "holdsAt": [
+    1,
+    2,
+    3
+   ],
+   "aboveBaseAt": [],
+   "closesAt": [],
+   "p95BelowBaseAt": [],
+   "p95AboveBaseAt": [],
+   "bounds": {
+    "1": 1.2369198293906778,
+    "2": 1.3039994194126074,
+    "3": 1.1664384923811557,
+    "7": 1.0865175087665933
+   },
+   "boundsNoWeek": {
+    "1": 0.9626944263673,
+    "2": 1.0069373512785613,
+    "3": 0.9717898989693903,
+    "7": 0.8467066863860375
+   }
   }
  },
  "tail": {
@@ -57,16 +102,22 @@
     "F2O": 19,
     "F2M": 20,
     "P": 10,
-    "F2H": 21
+    "F2H": 21,
+    "F2C": 19,
+    "F2E": 19
    },
    "stormArc": {
     "F2O": 24,
     "F2M": 25,
     "P": 12,
-    "F2H": 27
+    "F2H": 27,
+    "F2C": 25,
+    "F2E": 25
    },
    "stayWithBase": {
-    "F2H": 29
+    "F2H": 29,
+    "F2C": 37,
+    "F2E": 37
    },
    "postStorm": {
     "windows": 25,
@@ -74,7 +125,9 @@
      "F2O": 1.0576083949844124,
      "F2M": 1.1671529062326338,
      "P": 0.69531418488506,
-     "F2H": 1.1559654524755687
+     "F2H": 1.1559654524755687,
+     "F2C": 1.0388140226555707,
+     "F2E": 1.045716186652667
     }
    },
    "change": {
@@ -87,6 +140,26 @@
       "windows": 145,
       "medianPercent": -1.4625488853191815
      }
+    },
+    "F2C": {
+     "noStormContact": {
+      "windows": 605,
+      "medianPercent": -1.0341214328687842
+     },
+     "withStormContact": {
+      "windows": 145,
+      "medianPercent": -0.9681359304085313
+     }
+    },
+    "F2E": {
+     "noStormContact": {
+      "windows": 605,
+      "medianPercent": -2.1047545286955405
+     },
+     "withStormContact": {
+      "windows": 145,
+      "medianPercent": -0.49656980448172794
+     }
     }
    }
   },
@@ -98,16 +171,22 @@
     "F2O": 23,
     "F2M": 21,
     "P": 12,
-    "F2H": 16
+    "F2H": 16,
+    "F2C": 23,
+    "F2E": 23
    },
    "stormArc": {
     "F2O": 25,
     "F2M": 27,
     "P": 12,
-    "F2H": 21
+    "F2H": 21,
+    "F2C": 25,
+    "F2E": 25
    },
    "stayWithBase": {
-    "F2H": 28
+    "F2H": 28,
+    "F2C": 38,
+    "F2E": 37
    },
    "postStorm": {
     "windows": 25,
@@ -115,7 +194,9 @@
      "F2O": 3.8776801911928884,
      "F2M": 3.7274852831250773,
      "P": 0.9692059878137259,
-     "F2H": 3.382698585038869
+     "F2H": 3.382698585038869,
+     "F2C": 3.8230850278604063,
+     "F2E": 3.7628283110945877
     }
    },
    "change": {
@@ -128,6 +209,26 @@
       "windows": 175,
       "medianPercent": -9.725203021909245
      }
+    },
+    "F2C": {
+     "noStormContact": {
+      "windows": 575,
+      "medianPercent": -2.10585153441204
+     },
+     "withStormContact": {
+      "windows": 175,
+      "medianPercent": -0.861694128313728
+     }
+    },
+    "F2E": {
+     "noStormContact": {
+      "windows": 575,
+      "medianPercent": -3.3241919228132244
+     },
+     "withStormContact": {
+      "windows": 175,
+      "medianPercent": -0.6719685855827939
+     }
     }
    }
   },
@@ -139,16 +240,22 @@
     "F2O": 22,
     "F2M": 21,
     "P": 11,
-    "F2H": 17
+    "F2H": 17,
+    "F2C": 24,
+    "F2E": 23
    },
    "stormArc": {
     "F2O": 21,
     "F2M": 24,
     "P": 12,
-    "F2H": 21
+    "F2H": 21,
+    "F2C": 23,
+    "F2E": 22
    },
    "stayWithBase": {
-    "F2H": 28
+    "F2H": 28,
+    "F2C": 35,
+    "F2E": 36
    },
    "postStorm": {
     "windows": 25,
@@ -156,7 +263,9 @@
      "F2O": 7.556332748782314,
      "F2M": 8.210711756331515,
      "P": 1.7695471972022845,
-     "F2H": 7.607278245878632
+     "F2H": 7.607278245878632,
+     "F2C": 7.488579859565972,
+     "F2E": 7.461076524240242
     }
    },
    "change": {
@@ -169,6 +278,26 @@
       "windows": 205,
       "medianPercent": -13.418153971276858
      }
+    },
+    "F2C": {
+     "noStormContact": {
+      "windows": 545,
+      "medianPercent": -3.199124389840746
+     },
+     "withStormContact": {
+      "windows": 205,
+      "medianPercent": -1.5522918019900689
+     }
+    },
+    "F2E": {
+     "noStormContact": {
+      "windows": 545,
+      "medianPercent": -3.7459810203161137
+     },
+     "withStormContact": {
+      "windows": 205,
+      "medianPercent": -1.0462639636944382
+     }
     }
    }
   },
@@ -180,16 +309,22 @@
     "F2O": 16,
     "F2M": 16,
     "P": 6,
-    "F2H": 14
+    "F2H": 14,
+    "F2C": 18,
+    "F2E": 18
    },
    "stormArc": {
     "F2O": 16,
     "F2M": 17,
     "P": 10,
-    "F2H": 17
+    "F2H": 17,
+    "F2C": 16,
+    "F2E": 16
    },
    "stayWithBase": {
-    "F2H": 27
+    "F2H": 27,
+    "F2C": 36,
+    "F2E": 35
    },
    "postStorm": {
     "windows": 25,
@@ -197,7 +332,9 @@
      "F2O": 34.41682520902696,
      "F2M": 33.204572991383635,
      "P": 8.22483534273233,
-     "F2H": 33.729095616762855
+     "F2H": 33.729095616762855,
+     "F2C": 33.717359808192924,
+     "F2E": 32.822309448613915
     }
    },
    "change": {
@@ -209,6 +346,26 @@
      "withStormContact": {
       "windows": 315,
       "medianPercent": -4.096238735670266
+     }
+    },
+    "F2C": {
+     "noStormContact": {
+      "windows": 435,
+      "medianPercent": -5.599337098005098
+     },
+     "withStormContact": {
+      "windows": 315,
+      "medianPercent": -3.0327075873428644
+     }
+    },
+    "F2E": {
+     "noStormContact": {
+      "windows": 435,
+      "medianPercent": -3.7100039153083464
+     },
+     "withStormContact": {
+      "windows": 315,
+      "medianPercent": -4.8654825441321385
      }
     }
    }
@@ -249,6 +406,28 @@
     "maxRounds": 16,
     "medianBOverSeed": 1.2772201456463153,
     "medianAgomOverSeed": 2.4952438860735207
+   },
+   "F2C": {
+    "windows": 150,
+    "ok": 150,
+    "terminations": {
+     "CONVERGED": 150
+    },
+    "medianRounds": 3,
+    "maxRounds": 15,
+    "medianBOverSeed": 1.2810886018751195,
+    "medianAgomOverSeed": 2.4954288405081484
+   },
+   "F2E": {
+    "windows": 150,
+    "ok": 150,
+    "terminations": {
+     "CONVERGED": 150
+    },
+    "medianRounds": 3,
+    "maxRounds": 16,
+    "medianBOverSeed": 1.2924450997117571,
+    "medianAgomOverSeed": 2.4822812622479216
    }
   },
   "Swarm A+C": {
@@ -284,6 +463,28 @@
     "maxRounds": 17,
     "medianBOverSeed": 1.325383575093959,
     "medianAgomOverSeed": 3.0678888061863328
+   },
+   "F2C": {
+    "windows": 300,
+    "ok": 300,
+    "terminations": {
+     "CONVERGED": 300
+    },
+    "medianRounds": 3,
+    "maxRounds": 17,
+    "medianBOverSeed": 1.3276861681746466,
+    "medianAgomOverSeed": 3.089507961869052
+   },
+   "F2E": {
+    "windows": 300,
+    "ok": 300,
+    "terminations": {
+     "CONVERGED": 300
+    },
+    "medianRounds": 3,
+    "maxRounds": 18,
+    "medianBOverSeed": 1.311141134016014,
+    "medianAgomOverSeed": 3.071532932679572
    }
   },
   "GRACE-FO": {
@@ -319,6 +520,28 @@
     "maxRounds": 17,
     "medianBOverSeed": 1.558798725986798,
     "medianAgomOverSeed": 1.8408218648648411
+   },
+   "F2C": {
+    "windows": 300,
+    "ok": 300,
+    "terminations": {
+     "CONVERGED": 300
+    },
+    "medianRounds": 3,
+    "maxRounds": 15,
+    "medianBOverSeed": 1.5663050160616536,
+    "medianAgomOverSeed": 1.836854187434723
+   },
+   "F2E": {
+    "windows": 300,
+    "ok": 300,
+    "terminations": {
+     "CONVERGED": 300
+    },
+    "medianRounds": 3,
+    "maxRounds": 17,
+    "medianBOverSeed": 1.5521111180774279,
+    "medianAgomOverSeed": 1.8448439275563036
    }
   }
  },
@@ -457,12 +680,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2C/F2O|1|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.010059045191894322,
+   "medianRatioPercent": -1.0008622207462015,
+   "ciMedianD": [
+    -0.019384465943595604,
+    0.00023359812391238188
+   ],
+   "lnP95Ratio": -0.053828749065187864,
+   "ciLnP95Ratio": [
+    -0.06935262775813926,
+    0.030904033519689914
+   ],
+   "medianEArmKm": 0.30354672392782983,
+   "medianERefKm": 0.3102259559357644,
+   "medianAtArmKm": 0.30348926147939126,
+   "medianAtRefKm": 0.3101941568698101,
+   "rules": {
+    "medianBelow0": false,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 1,
@@ -470,12 +712,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2C/F2O|1|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.011695355157753662,
+   "medianRatioPercent": -1.1627230331603289,
+   "ciMedianD": [
+    -0.022029011087180497,
+    0.0005488496931575493
+   ],
+   "lnP95Ratio": -0.00024272484456216992,
+   "ciLnP95Ratio": [
+    -0.04749928479208146,
+    0.050717305995284685
+   ],
+   "medianEArmKm": 0.293234202632001,
+   "medianERefKm": 0.2900898011336403,
+   "medianAtArmKm": 0.29318340331567705,
+   "medianAtRefKm": 0.2900654969720908,
+   "rules": {
+    "medianBelow0": false,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 1,
@@ -483,12 +744,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2C/P|1|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.9713273759673119,
+   "medianRatioPercent": -62.14198138003968,
+   "ciMedianD": [
+    -1.1350450958792258,
+    -0.8130972270292112
+   ],
+   "lnP95Ratio": -0.12095465492504442,
+   "ciLnP95Ratio": [
+    -0.4940113010536258,
+    0.22690460644832905
+   ],
+   "medianEArmKm": 0.30354672392782983,
+   "medianERefKm": 0.7626043580345967,
+   "medianAtArmKm": 0.30348926147939126,
+   "medianAtRefKm": 0.7314729602258272,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": false,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 1,
@@ -496,12 +776,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2C/P|1|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -1.010574908035043,
+   "medianRatioPercent": -63.599035266718886,
+   "ciMedianD": [
+    -1.1768004981179048,
+    -0.8757878097763817
+   ],
+   "lnP95Ratio": -0.28211606190692423,
+   "ciLnP95Ratio": [
+    -0.49607381638340453,
+    -0.04978366080901316
+   ],
+   "medianEArmKm": 0.293234202632001,
+   "medianERefKm": 0.7583698491951506,
+   "medianAtArmKm": 0.29318340331567705,
+   "medianAtRefKm": 0.7290541082898395,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 1,
@@ -509,12 +808,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2E/F2O|1|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.015846301953946873,
+   "medianRatioPercent": -1.5721409873895476,
+   "ciMedianD": [
+    -0.027886500470228448,
+    -0.0014720886148942292
+   ],
+   "lnP95Ratio": -0.02871143707758489,
+   "ciLnP95Ratio": [
+    -0.06670611926390382,
+    0.03496120885560656
+   ],
+   "medianEArmKm": 0.3043524732741152,
+   "medianERefKm": 0.3102259559357644,
+   "medianAtArmKm": 0.3043269027964679,
+   "medianAtRefKm": 0.3101941568698101,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 1,
@@ -522,12 +840,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2E/F2O|1|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.01814117999883691,
+   "medianRatioPercent": -1.7977619347451124,
+   "ciMedianD": [
+    -0.028633070144503003,
+    -0.004799548052990432
+   ],
+   "lnP95Ratio": 0.025124557568959593,
+   "ciLnP95Ratio": [
+    -0.05094071991939371,
+    0.04192747503189845
+   ],
+   "medianEArmKm": 0.295432799365429,
+   "medianERefKm": 0.2900898011336403,
+   "medianAtArmKm": 0.2954048860735775,
+   "medianAtRefKm": 0.2900654969720908,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 1,
@@ -535,12 +872,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2E/P|1|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.9893728921249451,
+   "medianRatioPercent": -62.8190217229631,
+   "ciMedianD": [
+    -1.1174816647272516,
+    -0.8312923403330059
+   ],
+   "lnP95Ratio": -0.09583734293744145,
+   "ciLnP95Ratio": [
+    -0.49293005363024767,
+    0.21262428079322565
+   ],
+   "medianEArmKm": 0.3043524732741152,
+   "medianERefKm": 0.7626043580345967,
+   "medianAtArmKm": 0.3043269027964679,
+   "medianAtRefKm": 0.7314729602258272,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": false,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 1,
@@ -548,12 +904,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2E/P|1|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -1.025104886862259,
+   "medianRatioPercent": -64.1241165655958,
+   "ciMedianD": [
+    -1.143944092762047,
+    -0.8959957940596106
+   ],
+   "lnP95Ratio": -0.25674877949340247,
+   "ciLnP95Ratio": [
+    -0.48655711505938637,
+    -0.03801923179916625
+   ],
+   "medianEArmKm": 0.295432799365429,
+   "medianERefKm": 0.7583698491951506,
+   "medianAtArmKm": 0.2954048860735775,
+   "medianAtRefKm": 0.7290541082898395,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 2,
@@ -689,12 +1064,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2C/F2O|2|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.017569359907872138,
+   "medianRatioPercent": -1.7415918639847483,
+   "ciMedianD": [
+    -0.026634641537746428,
+    -0.006335837446468151
+   ],
+   "lnP95Ratio": 0.008463700473868796,
+   "ciLnP95Ratio": [
+    -0.07589583253776055,
+    0.01543727709876115
+   ],
+   "medianEArmKm": 1.03726286116152,
+   "medianERefKm": 1.0254857995649347,
+   "medianAtArmKm": 1.037217434737228,
+   "medianAtRefKm": 1.0254542232417991,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 2,
@@ -702,12 +1096,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2C/F2O|2|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.01937887303115646,
+   "medianRatioPercent": -1.9192309743583102,
+   "ciMedianD": [
+    -0.029934068585534657,
+    -0.004911152504765759
+   ],
+   "lnP95Ratio": -0.013057466610704838,
+   "ciLnP95Ratio": [
+    -0.04990291205903159,
+    0.05336935805946116
+   ],
+   "medianEArmKm": 0.9819336459869611,
+   "medianERefKm": 0.9809995912214834,
+   "medianAtArmKm": 0.9819223958929918,
+   "medianAtRefKm": 0.9809659134198079,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 2,
@@ -715,12 +1128,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2C/P|2|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.35926806506447706,
+   "medianRatioPercent": -30.181283332399367,
+   "ciMedianD": [
+    -0.4589766918588283,
+    -0.2617389551845424
+   ],
+   "lnP95Ratio": -0.06120758732840881,
+   "ciLnP95Ratio": [
+    -0.3416973562809314,
+    0.2728744928186511
+   ],
+   "medianEArmKm": 1.03726286116152,
+   "medianERefKm": 1.3094428715990793,
+   "medianAtArmKm": 1.037217434737228,
+   "medianAtRefKm": 1.2859996045967819,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": false,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 2,
@@ -728,12 +1160,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2C/P|2|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.4001374523800503,
+   "medianRatioPercent": -32.97720847181429,
+   "ciMedianD": [
+    -0.5090352172310627,
+    -0.2908494817563476
+   ],
+   "lnP95Ratio": -0.16425892081505356,
+   "ciLnP95Ratio": [
+    -0.34232750113736743,
+    0.020989082056467354
+   ],
+   "medianEArmKm": 0.9819336459869611,
+   "medianERefKm": 1.2983412627078945,
+   "medianAtArmKm": 0.9819223958929918,
+   "medianAtRefKm": 1.2732467420394633,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 2,
@@ -741,12 +1192,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2E/F2O|2|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.01985096019439042,
+   "medianRatioPercent": -1.965522718646573,
+   "ciMedianD": [
+    -0.0313942641904259,
+    -0.012210280761163816
+   ],
+   "lnP95Ratio": 0.033879414074682535,
+   "ciLnP95Ratio": [
+    -0.06370992604340847,
+    0.056662326590528604
+   ],
+   "medianEArmKm": 1.0407817043610692,
+   "medianERefKm": 1.0254857995649347,
+   "medianAtArmKm": 1.0407552356813503,
+   "medianAtRefKm": 1.0254542232417991,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 2,
@@ -754,12 +1224,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2E/F2O|2|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.021697861829298448,
+   "medianRatioPercent": -2.1464156578627547,
+   "ciMedianD": [
+    -0.034629584886579634,
+    -0.014006081715139729
+   ],
+   "lnP95Ratio": -0.025363074151232734,
+   "ciLnP95Ratio": [
+    -0.06865989271872688,
+    0.03637675742390949
+   ],
+   "medianEArmKm": 0.9693661430600665,
+   "medianERefKm": 0.9809995912214834,
+   "medianAtArmKm": 0.9693431944998271,
+   "medianAtRefKm": 0.9809659134198079,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 2,
@@ -767,12 +1256,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2E/P|2|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.36671311165462556,
+   "medianRatioPercent": -30.699156742933333,
+   "ciMedianD": [
+    -0.460091155068209,
+    -0.24723691136845782
+   ],
+   "lnP95Ratio": -0.03579187372759507,
+   "ciLnP95Ratio": [
+    -0.34512438162378756,
+    0.26543601826863167
+   ],
+   "medianEArmKm": 1.0407817043610692,
+   "medianERefKm": 1.3094428715990793,
+   "medianAtArmKm": 1.0407552356813503,
+   "medianAtRefKm": 1.2859996045967819,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": false,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 2,
@@ -780,12 +1288,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2E/P|2|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.39452674960614675,
+   "medianRatioPercent": -32.600106595463465,
+   "ciMedianD": [
+    -0.4998285569645576,
+    -0.28761587417011714
+   ],
+   "lnP95Ratio": -0.17656452835558145,
+   "ciLnP95Ratio": [
+    -0.3605841799804568,
+    0.006913398572265139
+   ],
+   "medianEArmKm": 0.9693661430600665,
+   "medianERefKm": 1.2983412627078945,
+   "medianAtArmKm": 0.9693431944998271,
+   "medianAtRefKm": 1.2732467420394633,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 3,
@@ -921,12 +1448,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2C/F2O|3|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.027491582282284877,
+   "medianRatioPercent": -2.7117128027628,
+   "ciMedianD": [
+    -0.038606723533391674,
+    -0.01609863736436834
+   ],
+   "lnP95Ratio": -0.041998918653020745,
+   "ciLnP95Ratio": [
+    -0.08654939625025637,
+    0.016757240266333184
+   ],
+   "medianEArmKm": 2.0592538079301494,
+   "medianERefKm": 2.161167748173068,
+   "medianAtArmKm": 2.059231147170725,
+   "medianAtRefKm": 2.1611398633873673,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 3,
@@ -934,12 +1480,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2C/F2O|3|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.03043651858711871,
+   "medianRatioPercent": -2.9977991519664737,
+   "ciMedianD": [
+    -0.042566242923667286,
+    -0.018399042223724127
+   ],
+   "lnP95Ratio": -0.020904277341369237,
+   "ciLnP95Ratio": [
+    -0.06800370185478055,
+    0.050383420023704766
+   ],
+   "medianEArmKm": 1.925245930585254,
+   "medianERefKm": 2.0473867133933927,
+   "medianAtArmKm": 1.9252149470441222,
+   "medianAtRefKm": 2.0473579702417877,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 3,
@@ -947,12 +1512,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2C/P|3|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.20037305633845084,
+   "medianRatioPercent": -18.157462265422065,
+   "ciMedianD": [
+    -0.34593421113095624,
+    -0.10473609698195842
+   ],
+   "lnP95Ratio": -0.1439477430470446,
+   "ciLnP95Ratio": [
+    -0.3913756928502632,
+    0.17605522993654915
+   ],
+   "medianEArmKm": 2.0592538079301494,
+   "medianERefKm": 2.4535584615776553,
+   "medianAtArmKm": 2.059231147170725,
+   "medianAtRefKm": 2.429131079256986,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": false,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 3,
@@ -960,12 +1544,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2C/P|3|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.24356995629842948,
+   "medianRatioPercent": -21.617535935622236,
+   "ciMedianD": [
+    -0.37196430608789666,
+    -0.14059895409649004
+   ],
+   "lnP95Ratio": -0.2411184995612885,
+   "ciLnP95Ratio": [
+    -0.4331773015009221,
+    -0.01342595093817187
+   ],
+   "medianEArmKm": 1.925245930585254,
+   "medianERefKm": 2.417645083225669,
+   "medianAtArmKm": 1.9252149470441222,
+   "medianAtRefKm": 2.391014945300893,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 3,
@@ -973,12 +1576,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2E/F2O|3|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.030086096792402706,
+   "medianRatioPercent": -2.9638015102444792,
+   "ciMedianD": [
+    -0.03863089352073856,
+    -0.018005153315951983
+   ],
+   "lnP95Ratio": -0.021653898189400778,
+   "ciLnP95Ratio": [
+    -0.07711261121084201,
+    0.044935338815873305
+   ],
+   "medianEArmKm": 2.173616324886697,
+   "medianERefKm": 2.161167748173068,
+   "medianAtArmKm": 2.1735763173710185,
+   "medianAtRefKm": 2.1611398633873673,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 3,
@@ -986,12 +1608,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2E/F2O|3|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.03226723001417353,
+   "medianRatioPercent": -3.175219737010071,
+   "ciMedianD": [
+    -0.0444459279869647,
+    -0.021118073450771213
+   ],
+   "lnP95Ratio": -0.014140104845187906,
+   "ciLnP95Ratio": [
+    -0.07647419671725539,
+    0.04628542418777677
+   ],
+   "medianEArmKm": 1.9961269784194189,
+   "medianERefKm": 2.0473867133933927,
+   "medianAtArmKm": 1.996090471859791,
+   "medianAtRefKm": 2.0473579702417877,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 3,
@@ -999,12 +1640,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2E/P|3|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.21892453280997198,
+   "medianRatioPercent": -19.661765512598063,
+   "ciMedianD": [
+    -0.3263152826485338,
+    -0.10936722594255222
+   ],
+   "lnP95Ratio": -0.12360272258342464,
+   "ciLnP95Ratio": [
+    -0.387619270092324,
+    0.1539550827403859
+   ],
+   "medianEArmKm": 2.173616324886697,
+   "medianERefKm": 2.4535584615776553,
+   "medianAtArmKm": 2.1735763173710185,
+   "medianAtRefKm": 2.429131079256986,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": false,
+    "failuresAtMost1pc": true
+   },
+   "pass": false
   },
   {
    "lead": 3,
@@ -1012,12 +1672,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2E/P|3|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.25162255087364827,
+   "medianRatioPercent": -22.246183621055092,
+   "ciMedianD": [
+    -0.367625955280831,
+    -0.143154265930249
+   ],
+   "lnP95Ratio": -0.23435432706510717,
+   "ciLnP95Ratio": [
+    -0.43787316063844106,
+    -0.028615651209867133
+   ],
+   "medianEArmKm": 1.9961269784194189,
+   "medianERefKm": 2.417645083225669,
+   "medianAtArmKm": 1.996090471859791,
+   "medianAtRefKm": 2.391014945300893,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1153,12 +1832,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2C/F2O|7|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.04585468340400259,
+   "medianRatioPercent": -4.481924427804762,
+   "ciMedianD": [
+    -0.07215864260676597,
+    -0.028542461106113644
+   ],
+   "lnP95Ratio": -0.026634844818089753,
+   "ciLnP95Ratio": [
+    -0.11707280621275555,
+    0.030689034274872018
+   ],
+   "medianEArmKm": 11.621903182054393,
+   "medianERefKm": 11.954967190226803,
+   "medianAtArmKm": 11.621869776233353,
+   "medianAtRefKm": 11.95496136874204,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1166,12 +1864,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2C/F2O|7|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.055781132101303754,
+   "medianRatioPercent": -5.425389329698915,
+   "ciMedianD": [
+    -0.07498902625000703,
+    -0.03475930528981879
+   ],
+   "lnP95Ratio": 0.004915991796097696,
+   "ciLnP95Ratio": [
+    -0.1222957415188769,
+    0.039394990195534885
+   ],
+   "medianEArmKm": 11.054562618711545,
+   "medianERefKm": 11.52057337655632,
+   "medianAtArmKm": 11.054489919003974,
+   "medianAtRefKm": 11.520546544571816,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1179,12 +1896,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2C/P|7|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.18950794762461287,
+   "medianRatioPercent": -17.263385872418226,
+   "ciMedianD": [
+    -0.31730599890635913,
+    -0.06560520495441935
+   ],
+   "lnP95Ratio": -0.24993799546981688,
+   "ciLnP95Ratio": [
+    -0.4937589340804149,
+    0.0409736462950602
+   ],
+   "medianEArmKm": 11.621903182054393,
+   "medianERefKm": 15.347999670324242,
+   "medianAtArmKm": 11.621869776233353,
+   "medianAtRefKm": 15.332170491570235,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1192,12 +1928,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2C/P|7|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.2418572205064642,
+   "medianRatioPercent": -21.483172452229038,
+   "ciMedianD": [
+    -0.3527402804803148,
+    -0.10293538386205503
+   ],
+   "lnP95Ratio": -0.3492124736891329,
+   "ciLnP95Ratio": [
+    -0.5882541015830142,
+    -0.15368359538279622
+   ],
+   "medianEArmKm": 11.054562618711545,
+   "medianERefKm": 14.955834790637429,
+   "medianAtArmKm": 11.054489919003974,
+   "medianAtRefKm": 14.93755751742675,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1205,12 +1960,31 @@
    "ref": "F2O",
    "without": null,
    "seed": "XM7|F2E/F2O|7|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.04653111343346783,
+   "medianRatioPercent": -4.546513874894941,
+   "ciMedianD": [
+    -0.0629299194829791,
+    -0.00871093824766115
+   ],
+   "lnP95Ratio": -0.05053189335237995,
+   "ciLnP95Ratio": [
+    -0.08889572546752343,
+    0.08149654915824249
+   ],
+   "medianEArmKm": 11.635053838781328,
+   "medianERefKm": 11.954967190226803,
+   "medianAtArmKm": 11.635038166624078,
+   "medianAtRefKm": 11.95496136874204,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1218,12 +1992,31 @@
    "ref": "F2O",
    "without": "2026-W04",
    "seed": "XM7|F2E/F2O|7|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.046474631545170286,
+   "medianRatioPercent": -4.541122329493108,
+   "ciMedianD": [
+    -0.070025737381065,
+    -0.009088590551033837
+   ],
+   "lnP95Ratio": 0.020322259333440673,
+   "ciLnP95Ratio": [
+    -0.09582827935775105,
+    0.07396571936116136
+   ],
+   "medianEArmKm": 11.243745323488344,
+   "medianERefKm": 11.52057337655632,
+   "medianAtArmKm": 11.243671087194038,
+   "medianAtRefKm": 11.520546544571816,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1231,12 +2024,31 @@
    "ref": "P",
    "without": null,
    "seed": "XM7|F2E/P|7|orbit",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 750,
+   "clusterCount": 66,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.15962254892423222,
+   "medianRatioPercent": -14.753450773412569,
+   "ciMedianD": [
+    -0.2711727881698671,
+    -0.07231721222278985
+   ],
+   "lnP95Ratio": -0.2738350440041071,
+   "ciLnP95Ratio": [
+    -0.4698983939269355,
+    0.08297763541800052
+   ],
+   "medianEArmKm": 11.635053838781328,
+   "medianERefKm": 15.347999670324242,
+   "medianAtArmKm": 11.635038166624078,
+   "medianAtRefKm": 15.332170491570235,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   },
   {
    "lead": 7,
@@ -1244,12 +2056,31 @@
    "ref": "P",
    "without": "2026-W04",
    "seed": "XM7|F2E/P|7|orbit|noW04",
-   "pairs": 0,
-   "clusterCount": 0,
+   "pairs": 715,
+   "clusterCount": 63,
    "armFailures": 0,
    "refFailures": 0,
-   "pass": false,
-   "why": "no pairs"
+   "medianD": -0.1779278403949296,
+   "medianRatioPercent": -16.299718089745063,
+   "ciMedianD": [
+    -0.2888131288557314,
+    -0.08422352601989891
+   ],
+   "lnP95Ratio": -0.3338062061517899,
+   "ciLnP95Ratio": [
+    -0.5756953016292985,
+    -0.1664009413696485
+   ],
+   "medianEArmKm": 11.243745323488344,
+   "medianERefKm": 14.955834790637429,
+   "medianAtArmKm": 11.243671087194038,
+   "medianAtRefKm": 14.93755751742675,
+   "rules": {
+    "medianBelow0": true,
+    "p95RatioBelow110": true,
+    "failuresAtMost1pc": true
+   },
+   "pass": true
   }
  ]
 }
