@@ -45,7 +45,7 @@ const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest
 fs.mkdirSync(OUT, { recursive: true });
 manifest(OUT, SHARD);
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
-const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
+const done = new Set(fs.readdirSync(OUT).filter(f=>/^rows-\d+\.jsonl$/.test(f)).flatMap(f=>fs.readFileSync(path.join(OUT,f),'utf8').split('\n').filter(Boolean).map(l=>JSON.parse(l).key)));
 const xmWindows = () => Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, date: XM.dateOf(t), key: `${group}|${o.norad}|${XM.dateOf(t)}` }))));
 const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => (!args.key || w.key === args.key) && (!args.groups || args.groups.split(',').includes(w.group ?? 'T')) && allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
 
