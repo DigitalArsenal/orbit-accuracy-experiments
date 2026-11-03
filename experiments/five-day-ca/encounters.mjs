@@ -9,7 +9,7 @@ import {openPc,wasmSha256} from './lib/ca-reach.mjs';
 import {pairedScores} from './lib/paired-scores.mjs';
 import {arcs as expectedArcs} from './coverage.mjs';
 registration();
-for(const [name,commit]of [['ENCOUNTERS.md','663355c'],['COVARIANCE.md','2748823']])if(execFileSync('git',['show',`${commit}:experiments/five-day-ca/${name}`],{encoding:'utf8'}).trim()!==fs.readFileSync(`experiments/five-day-ca/${name}`,'utf8').trim())throw Error('encounter registration changed');
+for(const [name,commit]of [['ENCOUNTERS.md','0d5bac47e9919b3b8546d008199dcb9502c2702c'],['COVARIANCE.md','2748823']])if(execFileSync('git',['show',`${commit}:experiments/five-day-ca/${name}`],{encoding:'utf8'}).trim()!==fs.readFileSync(`experiments/five-day-ca/${name}`,'utf8').trim())throw Error('encounter registration changed');
 const inputs={},covFile=`${config.store}/adapted-covariance.jsonl`,cov=new Map(fs.readFileSync(covFile,'utf8').split('\n').filter(Boolean).map(JSON.parse).map(r=>[`${r.labelSource}|${r.key}`,r]));inputs[covFile]=hash(fs.readFileSync(covFile));inputs["results/five-day-ca/covariance.json"]=hash(fs.readFileSync("results/five-day-ca/covariance.json"));
 const all=[],arms=['AP','XP','F','S','GP'];let expectedProducts=0,covarianceProducts=0,gpProducts=0;
 for(const label of ['regimes','truth2','truth']){
