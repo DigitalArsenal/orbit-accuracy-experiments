@@ -46,7 +46,7 @@ manifest(OUT, SHARD);
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
 const xmWindows = () => Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, date: XM.dateOf(t), key: `${group}|${o.norad}|${XM.dateOf(t)}` }))));
-const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => (!args.key || w.key === args.key) && allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
+const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => (!args.key || w.key === args.key) && (!args.groups || args.groups.split(',').includes(w.group ?? 'T')) && allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
 
 for (const w of list) {
   const { o, cutoffMs: D0, key } = w;

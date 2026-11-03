@@ -9,11 +9,12 @@ const workers = phase === 'samples' ? 2 : 12;
 const children = new Set();
 let stopping = false;
 process.on('SIGTERM',()=>{stopping=true;for(const child of children) child.kill('SIGTERM');});
-const jobs = [
- ['regimes', 'regimes.mjs', ['--groups','LS,DO,GD,IG,GE,HE,HX']],
- ['truth2', 'truth.mjs', ['--xm','--from','2026-01-01','--to','2026-05-31']],
- ['truth', 'truth.mjs', ['--from','2025-04-01','--to','2025-12-21']],
-];
+const regimeJob = ['regimes', 'regimes.mjs', ['--groups','LS,DO,GD,IG,GE,HE,HX']];
+const truth2Job = groups => ['truth2','truth.mjs',['--xm','--from','2026-01-01','--to','2026-05-31',...(groups?['--groups',groups]:[])]];
+const truthJob = ['truth','truth.mjs',['--from','2025-04-01','--to','2025-12-21']];
+const jobs = phase === 'ffm'
+ ? [...(process.argv.includes('--remaining')?[]:[regimeJob]),truth2Job('GN'),truth2Job('S1'),truthJob,truth2Job('P')]
+ : [regimeJob,truth2Job(),truthJob];
 await Promise.all(Array.from({length:workers}, async (_,k)=>{
  for(const [label,script,extra] of jobs){
   if(stopping) break;
