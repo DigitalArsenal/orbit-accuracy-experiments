@@ -65,13 +65,15 @@ for (const w of list) {
     if (O.excluded) throw new Error(O.excluded);
     const gridB = S.gridBytes(epochs);
     const spw = driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
-    const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
+    let scoringArm = null;
+    const score = (e) => { const days = {}; const encounterErrors = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; encounterErrors[k] = { epoch: bins[k].at(-1).epoch, rtnKm: s.at(-1) }; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); fs.appendFileSync(path.join(OUT, `encounter-errors-${SHARD}.jsonl`), JSON.stringify({ key, group: row.group, arm: scoringArm, days: encounterErrors })+'\n'); return days; };
     const arc = (hours) => { const raw = T.series(o, D0 - hours * HOUR, D0).lines; const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
     const high = Math.hypot(...scored[0].r) >= 8400;
     for (const hours of ARCS) {
       const thin = arc(hours);
       const run = async (name, fn) => {
         if (!ARMS.has(name)) return;
+        scoringArm = `${name}${hours}`;
           const a = { ok: false }; const started = performance.now();
         try {
           if (!thin) throw new Error('coverage');
@@ -126,6 +128,7 @@ for (const w of list) {
         const settings = high ? ffmHigh() : ffmLow();
         const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
         if (!f.state) throw new Error(f.error ?? f.termination);
+        fs.appendFileSync(path.join(OUT, `fit-products-${SHARD}.jsonl`),JSON.stringify({key,group:row.group,arm:scoringArm,fit:f,settings,spw})+'\n');
         const st = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw);
         return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(st, truth)) };
       });
