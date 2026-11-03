@@ -1,7 +1,7 @@
 """Finite completion of the preregistered individual-body FFM subtractions."""
 from pathlib import Path
 import json,subprocess,os,hashlib,concurrent.futures,time,datetime,shutil
-root=Path('/opt/data/sdn-archive/operator-theory/ap-gap');out=root/'resume-ffm';work=root/'ffm-bodies-resume3';work.mkdir(exist_ok=True)
+root=Path('/opt/data/sdn-archive/operator-theory/ap-gap');out=root/'resume-ffm';work=root/'ffm-bodies-resume3-active';work.mkdir(exist_ok=True)
 deadline=datetime.datetime.fromisoformat('2026-11-03T04:30:00+00:00').timestamp()
 files=list(out.glob('rows-*.jsonl')); original={f:[json.loads(l) for l in f.read_text().splitlines()] for f in files}
 pending=[r for rows in original.values() for r in rows if not r.get('error') and ('NO_SUN72' not in r['arms'] or 'NO_MOON72' not in r['arms'])]
