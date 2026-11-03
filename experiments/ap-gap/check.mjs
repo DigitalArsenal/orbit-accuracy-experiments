@@ -27,6 +27,7 @@ const events=JSON.parse(fs.readFileSync(path.join(root,'events/labels.json')));
 const measured=coverage(all,events);
 assert(JSON.stringify(measured.methodStatus)===JSON.stringify(status.methodStatus),'coverage claims disagree with raw attempts');
 assert(JSON.stringify(quadrature(all))===JSON.stringify(status.quadrature),'quadrature claim disagrees');
+assert(JSON.stringify(quadrature(all,'resume-HEO20-q4','resume-HEO20-q16'))===JSON.stringify(status.heoRefinement),'refined quadrature claim disagrees');
 assert(measured.methodsComplete===status.methodsComplete,'completion count disagrees');
 assert(measured.methodsComplete===5||status.missing.length>0,'partial coverage must state missing work');
 for(const f of status.rowFiles)assert(hash(f.path)===f.sha256,'aggregate row hash changed: '+f.path);
@@ -39,7 +40,7 @@ for(const v of [...Object.values(ffm),...Object.values(heo)])assert(v.returncode
 assert(ffm.CONTROL.sha256==='c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2','FFM control differs from AP6');
 const run=(label,key,options)=>{
  const out=path.join(root,`check-${Date.now()}-${label}`);
- const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:300000});
+ const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--primary-only','true','--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:300000});
  assert(child.status===0,`${label} failed: ${child.stderr}`);
  const file=path.join(out,'rows-0.jsonl');assert(fs.existsSync(file),`${label} produced no row (including expired deadline)`);
  const parsed=fs.readFileSync(file,'utf8').trim().split('\n').map(JSON.parse);assert(parsed.length===1&&parsed[0].key===key,'unexpected check rows');
@@ -65,6 +66,14 @@ for(const degree of [12,20]){
  const e=r.arms.AP72?.days?.[3]?.e*1000;assert(Number.isFinite(e),`nonfinite ${name} forward error`);
  reproduced.push({arm:name,key:reference.key,forwardDay3M:e,referenceDay3M:reference.arms.AP72.days[3].e*1000,deltaM:Math.abs(e-reference.arms.AP72.days[3].e*1000)});
 }
+const refined=JSON.parse(fs.readFileSync(new URL('heo-refinement-builds.json',results))).variants.HEO20_Q16;
+assert(refined.returncode===0&&hash(refined.path)===refined.sha256,'refined variant artifact mismatch');
+const refinedReference=all.find(r=>r.batch==='resume-HEO20-q16'&&r.key==='HE|TESS|2026-07-27');
+assert(Number.isFinite(refinedReference?.arms.AP72?.days?.[3]?.e),'missing refined TESS forward reference');
+const refinedRow=run('HEO20_Q16',refinedReference.key,['--wasm',refined.path,'--arm','AP']);
+const refinedError=refinedRow.arms.AP72?.days?.[3]?.e*1000;
+assert(Number.isFinite(refinedError),'nonfinite refined TESS error');
+reproduced.push({arm:'HEO20_Q16',key:refinedReference.key,forwardDay3M:refinedError,referenceDay3M:refinedReference.arms.AP72.days[3].e*1000,deltaM:Math.abs(refinedError-refinedReference.arms.AP72.days[3].e*1000)});
 const maxVariantRepeatDeltaM=Math.max(...reproduced.map(r=>r.deltaM));
 assert(repeatDeltaM<=0.001&&maxVariantRepeatDeltaM<=0.001,'forward repeatability exceeds 0.001 m');
 assert(fixedArms>0&&maxFixedAgom<=1e-15,'fixed AGOM check failed');

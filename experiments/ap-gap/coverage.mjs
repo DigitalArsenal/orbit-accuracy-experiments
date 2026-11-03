@@ -20,8 +20,8 @@ export function coverage(all,events){
  return {methodStatus,methodsComplete:Object.values(methodStatus).filter(x=>x==='complete').length,methodsRequired:5,ffmBodyMissing:f.filter(r=>!r.error&&(!r.arms.NO_SUN72||!r.arms.NO_MOON72)).length,isolatedWindows:isolated.length,heoWindows:heo.map(r=>r.length),heoRuntimeFailures:heo.map(runtimeFailures),eventContrastMeasured:events.some(e=>e.label==='event')&&events.some(e=>e.label==='quiet')};
 }
 
-export function quadrature(all){
- const base=all.filter(r=>r.batch==='resume-HEO20-heap'),fine=new Map(all.filter(r=>r.batch==='resume-HEO20-q4').map(r=>[r.key,r]));
+export function quadrature(all,baseBatch='resume-HEO20-heap',fineBatch='resume-HEO20-q4'){
+ const base=all.filter(r=>r.batch===baseBatch),fine=new Map(all.filter(r=>r.batch===fineBatch).map(r=>[r.key,r]));
  const days=[1,3,7].map(day=>{const differences=base.map(r=>{const a=r.arms.AP72?.days?.[day]?.e,b=fine.get(r.key)?.arms.AP72?.days?.[day]?.e;return Number.isFinite(a)&&Number.isFinite(b)?Math.abs(a-b)*1000:null;}).filter(x=>x!==null);return {day,n:differences.length,maxDifferenceM:differences.length?Math.max(...differences):null};});
  const complete=base.length===26&&fine.size===26&&days.every(d=>d.n===26);
  return {complete,days,toleranceM:0.001,passed:complete&&days.every(d=>d.maxDifferenceM<=0.001)};
