@@ -15,6 +15,7 @@ import { openAxes, apriori } from '../operator-theory/lib/host.mjs';
 import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operator-theory/lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
+if(args.verification==='true'&&!args.key)throw new Error('verification requires one registered window key');
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const frozen = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url))); if (!frozen.frozen) throw new Error('registration is not frozen');
 const resume = JSON.parse(fs.readFileSync(new URL('./resume-config.json',import.meta.url))); if (!resume.frozen) throw new Error('resume registration is not frozen');
@@ -145,7 +146,7 @@ for (const o of await objects()) {
   const between = (a, b) => { const out = []; for (let i = 0; i < times.length; i += 1) if (times[i] >= a && times[i] <= b) out.push(o.lines[i]); return out; };
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0);
-    if (Date.now() >= Date.parse(resume.deadline)) { await F?.close(); process.exit(0); }
+    if (args.verification !== 'true' && Date.now() >= Date.parse(resume.deadline)) { await F?.close(); process.exit(0); }
     if (!inShard(key) || done.has(key) || skipKeys.has(key) || (args.key && key !== args.key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
