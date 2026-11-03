@@ -27,6 +27,7 @@ const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
 // --arms U: the Space Force's SGP4-XP alone, in its own store. Without it, this file's registered arms, unchanged.
+const skipKeys = new Set(args['skip-keys'] ? JSON.parse(fs.readFileSync(args['skip-keys'])) : []);
 const ONLY_U = false; const method = args.method ?? 'ap';
 const U = method === 'gn' ? await openUssfXp() : null;
 const UF = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed']) : null;
@@ -56,7 +57,7 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), resume: hash(new URL('./resume-config.json',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, isolatedFfm: Object.fromEntries(Object.entries(isolated).map(([k,v])=>[k,v.provenance])), ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, skipKeysSha256: args['skip-keys'] ? hash(args['skip-keys']) : undefined, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), resume: hash(new URL('./resume-config.json',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, isolatedFfm: Object.fromEntries(Object.entries(isolated).map(([k,v])=>[k,v.provenance])), ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
 process.on('exit', () => writeAudit(OUT, SHARD));
 process.on('SIGTERM',()=>process.exit(143));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
@@ -145,7 +146,7 @@ for (const o of await objects()) {
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0);
     if (Date.now() >= Date.parse(resume.deadline)) { await F?.close(); process.exit(0); }
-    if (!inShard(key) || done.has(key) || (args.key && key !== args.key)) continue;
+    if (!inShard(key) || done.has(key) || skipKeys.has(key) || (args.key && key !== args.key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
       const after = between(D0 + 1, D0 + 7 * DAY);
