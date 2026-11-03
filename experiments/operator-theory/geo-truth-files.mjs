@@ -57,7 +57,8 @@ for (const [key, p] of files) {
     const truthAll = await series(PRN[p.norad], fitEnd + 1, fitEnd + 7 * DAY);
     const days = [1, 2, 3, 4, 5, 6, 7].map((k) => truthAll.filter((l) => { const t = Date.parse(l.epoch); return t > fitEnd + (k - 1) * DAY && t <= fitEnd + k * DAY; })).map((s, i) => [i + 1, s]).filter(([, s]) => s.length >= MIN_DAY);
     const row = { key: rowKey, source: p.source, norad: p.norad, object: p.object, start: p.start, fitHours: arc, fileEnd: all.at(-1).epoch, days: days.map(([k]) => k), arms: {} };
-    if (!days.length) { row.error = 'no truth yet'; fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`); continue; }
+    // No truth yet: nothing is written, so a later run scores it.
+    if (!days.length) continue;
     const truth = days.flatMap(([, s]) => s), epochs = truth.map((l) => l.epoch), epochsMs = epochs.map((e) => Date.parse(e)), sizes = days.map(([, s]) => s.length), states = truth.map((l) => ({ r: l.r, v: l.v }));
     const score = async (flown) => {
       const e = await M.rtn(flown, states), out = {};

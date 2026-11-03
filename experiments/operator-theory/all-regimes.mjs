@@ -65,7 +65,7 @@ async function objects() {
     const { SBAS, series } = await import('./lib/sbas.mjs');
     for (const [prn, sat] of Object.entries(SBAS)) {
       if (!WA_CUTOFFS.some((t) => inShard(windowKey('WA', sat.name, t)))) continue;
-      out.push({ group: 'WA', name: sat.name, norad: sat.norad, objectId: '', lines: await series(Number(prn), WA_CUTOFFS[0] - 3 * DAY, WA_CUTOFFS.at(-1) + 7 * DAY + DAY), arcs: [24, 72], cutoffs: WA_CUTOFFS });
+      out.push({ group: 'WA', name: sat.name, norad: sat.norad, objectId: '', lines: await series(Number(prn), WA_CUTOFFS[0] - 3 * DAY, WA_CUTOFFS.at(-1) + 7 * DAY + DAY), arcs: [24, 72], cutoffs: WA_CUTOFFS, vacuum: true });
     }
   }
   for (const [group, klass] of [['IG', 'igso'], ['GE', 'geo']]) {

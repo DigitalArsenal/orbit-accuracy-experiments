@@ -1,0 +1,120 @@
+{
+ "set": "beidou",
+ "medianBreakM": 7.485894665122032,
+ "medianBreakMdeg": 1.0863342870600194,
+ "satellites": [
+  {
+   "name": "C006 BDS-2G",
+   "burns": []
+  },
+  {
+   "name": "C011 BDS-2G",
+   "burns": [
+    {
+     "day": "2025-10-14T23:04:39.267Z",
+     "afterGap": true,
+     "semimajorAxisM": 2327,
+     "planeMdeg": 2.8
+    },
+    {
+     "day": "2025-10-15T23:00:43.357Z",
+     "afterGap": false,
+     "semimajorAxisM": -1198,
+     "planeMdeg": 1.3
+    }
+   ]
+  },
+  {
+   "name": "C016 BDS-2G",
+   "burns": []
+  },
+  {
+   "name": "C018 BDS-2G",
+   "burns": [
+    {
+     "day": "2025-10-10T23:20:22.905Z",
+     "afterGap": true,
+     "semimajorAxisM": -3619,
+     "planeMdeg": 3.3
+    },
+    {
+     "day": "2025-10-11T23:16:26.995Z",
+     "afterGap": false,
+     "semimajorAxisM": 1774,
+     "planeMdeg": 1.7
+    }
+   ]
+  },
+  {
+   "name": "J003 QZS-2G",
+   "burns": [
+    {
+     "day": "2025-10-18T22:48:55.629Z",
+     "afterGap": true,
+     "semimajorAxisM": -3032,
+     "planeMdeg": 103.5
+    },
+    {
+     "day": "2025-10-19T22:44:59.719Z",
+     "afterGap": false,
+     "semimajorAxisM": 1029,
+     "planeMdeg": 33.3
+    }
+   ]
+  },
+  {
+   "name": "C217 BDS-3G",
+   "burns": []
+  },
+  {
+   "name": "C020 BDS-2G",
+   "burns": []
+  },
+  {
+   "name": "C229 BDS-3G",
+   "burns": [
+    {
+     "day": "2025-10-08T23:28:14.724Z",
+     "afterGap": true,
+     "semimajorAxisM": -601,
+     "planeMdeg": 3.4
+    },
+    {
+     "day": "2025-10-09T23:24:18.814Z",
+     "afterGap": false,
+     "semimajorAxisM": 269,
+     "planeMdeg": 1.6
+    }
+   ]
+  },
+  {
+   "name": "C231 BDS-3G",
+   "burns": [
+    {
+     "day": "2025-10-03T23:47:54.271Z",
+     "afterGap": true,
+     "semimajorAxisM": 639,
+     "planeMdeg": 2.2
+    },
+    {
+     "day": "2025-10-04T23:43:58.362Z",
+     "afterGap": false,
+     "semimajorAxisM": -301,
+     "planeMdeg": 1.3
+    },
+    {
+     "day": "2025-10-15T23:00:43.357Z",
+     "afterGap": true,
+     "semimajorAxisM": -1408,
+     "planeMdeg": 5.4
+    },
+    {
+     "day": "2025-10-16T22:56:47.448Z",
+     "afterGap": false,
+     "semimajorAxisM": 500,
+     "planeMdeg": 1.6
+    }
+   ]
+  }
+ ]
+}

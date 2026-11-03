@@ -12,7 +12,7 @@ A check made while writing the reader, before this registration: on 2026-10-29 t
 
 ## Part W: fitted to the broadcast
 
-As `AP6.md`, group `WA`: each of the three satellites, cutoffs every 2 days from 2026-09-02 to 2026-10-26, fits of 24 h and 72 h ending at the cutoff, scored on days 1, 2, 3 and 7 after it. Arms `AP`, `XP` (whiteroom), `U` (Space Force XP), `S` (SGP4), `F` (FFM 20x20, no drag, solar-pressure area over mass fitted), at `CHEAPER.md`'s settings above 8,400 km.
+As `AP6.md`, group `WA`: each of the three satellites, cutoffs every 2 days from 2026-09-02 to 2026-10-26, fits of 24 h and 72 h ending at the cutoff, scored on days 1, 2, 3 and 7 after it. Arms `AP`, `XP` (whiteroom), `U` (Space Force XP), `S` (SGP4), `F` (FFM 20x20, no drag, solar-pressure area over mass fitted), at `CHEAPER.md`'s settings above 8,400 km. Amended before any window was scored: the weather store holds no forecast issued in this period, so every window was refused, and at geostationary altitude no atmosphere model gives any density; these windows run without one and read no weather, as `AP6.md`'s highly elliptical group does.
 
 ## Part F: fitted to the operators' files
 
