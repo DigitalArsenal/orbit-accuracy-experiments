@@ -1,4 +1,4 @@
-import {diagnose,diagnoseGn} from './diagnose.mjs';
+import {diagnose,diagnoseGn,diagnoseAp} from './diagnose.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -42,7 +42,7 @@ const eventSplit=['event','quiet','unknown'].map(label=>{const rows=all.filter(r
 const status={status:'partial',methodsComplete:0,methodsRequired:5,completedRows:all.filter(r=>r.batch.startsWith('resume-')).length,historicalFiles,eventSplit,groups:Object.fromEntries(groups.map(g=>[g,all.filter(r=>r.group===g).length])),eventCounts:Object.fromEntries(['event','quiet','unknown'].map(x=>[x,events.filter(e=>e.label===x).length])),rowFiles:files.map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))})),missing:['Method 1 completeness and variant control review pending','Method 2 isolated shadow and zonal-only subtraction unavailable in current wrapper','Method 3 pending full fitter coverage','Method 4 resonant terms above degree 5 not implemented in scratch','Method 5 paired event analysis pending'],cells};
 const counts=xs=>Object.fromEntries([...new Set(xs)].map(x=>[x,xs.filter(v=>v===x).length]));
 status.failures=Object.fromEntries([...new Set(all.map(r=>r.batch))].map(batch=>{const rows=all.filter(r=>r.batch===batch),arms=rows.flatMap(r=>Object.values(r.arms));return [batch,{attemptedRows:rows.length,rowErrors:counts(rows.filter(r=>r.error).map(r=>r.error)),armErrors:counts(arms.filter(a=>a.error).map(a=>a.error)),fitTerminations:counts(arms.filter(a=>a.termination).map(a=>a.termination))}];}));
-status.diagnoses=diagnose(all,groups.filter(g=>g!=='GN')).concat(diagnoseGn(all));
+status.diagnoses=diagnose(all,groups.filter(g=>g!=='GN')).map(d=>diagnoseAp(all,d)).concat(diagnoseGn(all));
 status.builds={};
 for(const kind of ['variants','ussf']){const file=`/Users/tj/software/terrain-work/body-look/codex-apgap-d9/${kind}/manifest.json`;if(fs.existsSync(file))status.builds[kind]={manifestSha256:hash(file),variants:Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(file))).map(([k,v])=>[k,{sha256:v.sha256,returncode:v.returncode,path:v.path}]))};}
 status.inputManifests=fs.readdirSync(root,{recursive:true}).filter(p=>/^resume-[^/]+\/inputs-\d+\.json$/.test(p)).map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))}));
@@ -61,8 +61,8 @@ for(const g of groups){
  for(const key of keys){const cs=cells.filter(c=>c.group===g&&c.batch+'/'+c.arm===key);const d=cs.find(c=>c.day===3);text+=`| ${key} | ${[1,3,7].map(day=>{const c=cs.find(c=>c.day===day);return `${fmt(c.medianM)} (${c.n})`;}).join(' | ')} | ${fmt(d.pairedDeltaM)} (${d.pairedN}) |\n`;}
  if(!keys.length)text+='| Not measured | — | — | — | — |\n';
  const diagnosis=status.diagnoses.find(d=>d.group===g);
- if(g==='HE')text+='\nArchived XP rows provide the AP6 comparison; the AP–XP cause remains unresolved until the resonant extension arm is measured.\n';
- text+=`\n${diagnosis.cause}. ${diagnosis.proposedChange??'No module change established.'} Expected gain ${diagnosis.expectedGainM===null?'is unmeasured':fmt(diagnosis.expectedGainM)+' m (exploratory)'}; paired ${g==='GN'?'XP–Space Force':'AP–FFM'} gap ${fmt(diagnosis.pairedGapM)} m (n=${diagnosis.n}). This gap is a target ceiling, not a promised gain.\n\n`;
+ if(g==='HE')text+='\nArchived XP rows provide the AP6 comparison. The resonant extension arm remains unmeasured.\n';
+ text+=`\n${diagnosis.cause}. ${diagnosis.proposedChange??'No module change established.'} Expected gain ${diagnosis.expectedGainM===null?'is unmeasured':fmt(diagnosis.expectedGainM)+' m (exploratory)'}; paired ${g==='GN'?'XP–Space Force':diagnosis.reference==='whiteroom XP'?'AP–whiteroom XP':'AP–FFM'} gap ${fmt(diagnosis.pairedGapM)} m (n=${diagnosis.n}). This gap is a target ceiling, not a promised gain.\n\n`;
 }
 text+='## Fit and coverage outcomes\n\n| Batch | Window attempts | Row exclusions | Arm failures | FFM converged | FFM stalled / iteration limit |\n| --- | ---: | ---: | ---: | ---: | ---: |\n';for(const [batch,v] of Object.entries(status.failures))text+=`| ${batch} | ${v.attemptedRows} | ${Object.values(v.rowErrors).reduce((a,b)=>a+b,0)} | ${Object.values(v.armErrors).reduce((a,b)=>a+b,0)} | ${v.fitTerminations.CONVERGED??0} | ${(v.fitTerminations.STALLED??0)+(v.fitTerminations.MAXIMUM_ITERATIONS??0)} |\n`;
 text+='\n## DO event split\n\n| Class | Day | AP m | FFM m | Median paired ratio | n |\n| --- | ---: | ---: | ---: | ---: | ---: |\n';for(const s of eventSplit)for(const d of s.days)text+=`| ${s.label} | ${d.day} | ${fmt(d.apM)} | ${fmt(d.ffmM)} | ${fmt(d.medianRatio)} | ${d.n} |\n`;
