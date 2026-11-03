@@ -49,3 +49,12 @@ GP x GP reference. Report the class beside every rate and paired score;
 its repeated GP reference is identified, not pooled as independent data.
 The old partial S table covered fit x fit only. This completes the requested
 A13 comparison without changing windows, geometry, seeds or thresholds.
+
+## Common comparison axes — 2026-11-03, before calibrated encounter draws
+
+Form C2/C3 covariance in the predicted state's RTN axes, as calibrated.
+Retain the module's predicted and truth states, then use gp-error-model
+pair_statistics to rotate the completed covariance and signed error into
+truth RTN before applying the common encounter geometry. This matches A13's
+lead-record convention and keeps every paired arm in the same frame. S and
+GP already use truth RTN. No JavaScript frame rotation is introduced.
