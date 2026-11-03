@@ -169,6 +169,7 @@ for (const o of await objects()) {
       const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
+      if(method==='ffm')row.ffmGravityDegree=high?20:40;
       const pcfAp = o.vacuum ? PCF_AP_VACUUM : PCF_AP;
       for (const hours of (method === 'ffm' || args['primary-only'] === 'true' ? o.arcs.filter(h=>h===72) : o.arcs)) {
         const thin = arc(hours);
