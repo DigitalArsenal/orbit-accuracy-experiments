@@ -50,7 +50,7 @@ On CHEAPER.md's 54 days, against each center's next prediction, not independent 
 | Laser-ranging, low, 48 h fits, at 24 h and 72 h | PASS: -0.031 km [-0.036, -0.029], -0.021 km [-0.025, -0.014] |
 | Laser-ranging, navigation, 72 h fits, at 72 h and 168 h | PASS: -0.011 km [-0.014, -0.009], -0.038 km [-0.048, -0.028] |
 
-So the site moved to 0.4.0, as AP4.md set out. The near-700 km tail did not move with these terms, so they are not what limits it. On those 54 days, median fit RMS against each file: low at 48 h fits 54.1 m to 18.6 m, navigation at 72 h 30.5 m to 21.3 m, geodetic at 72 h 28.2 m to 12.3 m. Cost per file on low orbits at 48 h fits: fit 1.04 s and flight 0.23 s, against 0.58 s and 0.20 s for 0.3.0; the two ran under different loads, so read that as a rough ratio. Part S, on Starlink, is report only and still to be read.
+So the site moved to 0.4.0, as AP4.md set out. The near-700 km tail did not move with these terms, so they are not what limits it. On those 54 days, median fit RMS against each file: low at 48 h fits 54.1 m to 18.6 m, navigation at 72 h 30.5 m to 21.3 m, geodetic at 72 h 28.2 m to 12.3 m. Cost per file on low orbits at 48 h fits: fit 1.04 s and flight 0.23 s, against 0.58 s and 0.20 s for 0.3.0; the two ran under different loads, so read that as a rough ratio. On Starlink, Part S, report only, 0.4.0 is level with 0.3.0 at every lead (-0.004 km [-0.013, 0.006] at 24 h); see `## Starlink`.
 
 The first build of these terms was worse above 8,400 km. It counted the half-day resonance class's terms twice, once in the rates and once at output time, and exploratory forward errors on read days showed it: fit RMS 30 m to 70 to 110 m on GLONASS and Etalon. That was fixed before this build was frozen, and `propagator/sdn-ap/test/ap-terms.e2e.mjs` now holds a fixture at 19,100 km that fails if it returns (74.8 m against the bound of 25 m).
 
@@ -100,6 +100,23 @@ AP.md's Parts L and H: 19,399 pairs on the 54 days of `experiments/operator-theo
 | Part H: AP does not lose to XP at 72 h fits on navigation satellites | PASS: top of the interval 0.001 km of 0.005 at 72 h, 0.002 km of 0.020 at 168 h |
 
 So above the drag regime AP adds nothing on navigation satellites and costs nothing there. On the geodetic group it looks better, too few objects to claim. Fit and flight per file in that run under load: AP 0.59 and 0.20 s, XP 0.18 and 0.06 s on low orbits. FFM on the same pairs is in `results/operator-theory/cheaper`.
+
+## Starlink
+
+AP.md's Part S: CONFIRM.md's satellites 401 to 800, every capture from 2026-10-30 to the 11-03 05:00 capture, 18,823 pairs. 16 h fits on each file's `.ocm` states, as-issued weather. The reference is SpaceX's next file for the same satellite: the operator's later solution, not independent truth. Lead counts from the older file's start, so 24 h is 8 h past the fit. Table: `table-s.md`; 0.4.0's report-only rows `table-s-040.md`. Medians over pairs, km, 95th in brackets.
+
+| Arm | 24 h | 36 h | 48 h | 72 h, report only |
+|---|---:|---:|---:|---:|
+| AP 0.3.0 (`A-AP`) | 1.71 (11.7) | 3.53 (29.7) | 8.24 (51.4) | 17.8 (121) |
+| AP 0.4.0 (`A-APn`), report only | 1.70 (11.7) | 3.50 (29.5) | 8.25 (50.6) | 17.7 (120) |
+| XP, public-set recipe (`X0@16`) | 2.40 (13.6) | 5.33 (34.8) | 10.96 (62.7) | 22.4 (154) |
+| FFM, NRLMSISE-00 (`F-NRLMSISE00@16`) | 1.75 (11.7) | 3.63 (29.9) | 8.52 (51.4) | 17.5 (124) |
+
+| Statement | Result |
+|---|---|
+| Part S: `A-AP` less `X0@16` below zero at 24 h and 48 h | PASS: -0.455 km [-0.603, -0.324] at 24 h, -0.969 km [-1.624, -0.064] at 48 h |
+
+The 48 h pass is thin. It rests on three start days, 2026-10-30 to 11-01. Its upper bound, -0.064 km, is smaller than the spread between resamplings: `ap4-verdict.mjs` draws the same pairs with its own seed and puts the same comparison at [-1.599, +0.087]. Read it as AP ahead of XP on Starlink at 24 h, and probably at 48 h. AP and FFM are level at every lead: what is left is SpaceX's thrust, which no arm knows. One operator, one storm stretch.
 
 ## AP fitted to FFM's forecast
 
