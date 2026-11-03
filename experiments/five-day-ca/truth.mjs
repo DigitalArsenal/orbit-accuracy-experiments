@@ -129,7 +129,14 @@ for (const w of list) {
         const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
         if (!f.state) throw new Error(f.error ?? f.termination);
         fs.appendFileSync(path.join(OUT, `fit-products-${SHARD}.jsonl`),JSON.stringify({key,group:row.group,arm:scoringArm,fit:f,settings,spw})+'\n');
-        const st = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw);
+        const byTime = new Map();
+        for (const leads of [[1,2,3,7],[4,5]]) {
+          const times=entered.filter(k=>leads.includes(k)).flatMap(k=>bins[k]).map(l=>l.epoch);
+          if(!times.length)continue;
+          const states=await F.forecast({epoch:f.epoch,state:f.state,parameters:f.parameters},times,settings,spw);
+          times.forEach((t,i)=>byTime.set(t,states[i]));
+        }
+        const st=epochs.map(t=>byTime.get(t));
         return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(st, truth)) };
       });
     }

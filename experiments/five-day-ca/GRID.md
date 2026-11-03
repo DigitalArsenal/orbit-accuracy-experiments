@@ -11,3 +11,6 @@ The interrupted diagnostic rows remain in the archive at diagnostic-grid-v1.
 up to 0.0000020110402893513957 km. U now preserves the original [1,2,3,7]
 request grid, just as S does, and flies [4,5] separately from the same fit.
 Affected prior rows must be replayed and reproduce exactly before acceptance.
+
+Before the first FFM flight, its original and added grids are also requested
+separately from the identical fit, preserving the old integrator query path.
