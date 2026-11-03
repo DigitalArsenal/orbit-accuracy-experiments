@@ -17,3 +17,5 @@ for name in ['CONTROL','FIXED']:
  wasm=p/'dist/isomorphic/module.wasm';manifest[name]={'returncode':rc,'path':str(wasm),'sha256':hashlib.sha256(wasm.read_bytes()).hexdigest() if wasm.exists() else None,'fitSha256':hashlib.sha256((p/'src/fit.hpp').read_bytes()).hexdigest()}
  (s/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(name,rc,flush=True)
  if rc:break
+ if name=='CONTROL' and manifest[name]['sha256']!=hashlib.sha256((m/'propagator/sgp4-xp/dist/isomorphic/module.wasm').read_bytes()).hexdigest():
+  manifest[name]['controlMismatch']=True;(s/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print('CONTROL differs from prescribed wasm; fixed comparison withheld',flush=True);break

@@ -47,6 +47,8 @@ status.inputManifests=fs.readdirSync(root,{recursive:true}).filter(p=>/^resume-[
 const completeBatch=(batch,n)=>all.filter(r=>r.batch===batch).length===n;
 status.methodStatus={1:['CONTROL','H03','H05','H07','NOFRAME','CLASS0','CLASS1','CLASS2','CLASS3','CLASS4'].every(v=>completeBatch('resume-'+v,426))?'complete':'partial',2:'partial: shadow and zonal-only isolation unavailable',3:completeBatch('resume-gn',755)&&status.builds.variants?.variants.AGOM_FIXED?.returncode===0&&status.builds.ussf?.variants.FIXED?.returncode===0?'complete':'partial',4:'partial: extended resonant terms not implemented',5:events.length===150&&eventSplit.some(s=>s.days.some(d=>d.n>0))?'complete':'partial'};
 status.methodsComplete=Object.values(status.methodStatus).filter(v=>v==='complete').length;
+status.missing=Object.entries(status.methodStatus).filter(([k,v])=>v!=='complete').map(([k,v])=>`Method ${k}: ${v}`);
+status.missing.push('Unique causes and measured module gains are not established for every gap; follow-up tasks remain coordinator drafts.');
 const dest=new URL('../../results/ap-gap/',import.meta.url);
 fs.writeFileSync(new URL('status.json',dest),JSON.stringify(status,null,2)+'\n');
 const fmt=x=>x===null?'—':x.toFixed(3);
