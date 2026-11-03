@@ -1,3 +1,4 @@
+import {openFfmHost} from './lib/ffm-host.mjs';
 import { writeAudit, pinFile } from './audit.mjs';
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
 //   node experiments/operator-theory/all-regimes.mjs --wasm <AP 0.4.0> --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
@@ -10,7 +11,7 @@ import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { apForces, openAp } from '../operator-theory/lib/ap.mjs';
 import { openUssfXp } from './ussf-xp.mjs';
-import { openFfmHost, openAxes, apriori } from '../operator-theory/lib/host.mjs';
+import { openAxes, apriori } from '../operator-theory/lib/host.mjs';
 import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operator-theory/lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
@@ -31,6 +32,12 @@ const U = method === 'gn' ? await openUssfXp() : null;
 const UF = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed']) : null;
 const UR = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed'].replace('/FIXED/','/CONTROL/')) : null;
 const AF = method === 'gn' && args['ap-fixed'] ? await openAp(args['ap-fixed']) : null;
+const isolated = {};
+if(args['isolated-ffm']) {
+ const builds=JSON.parse(fs.readFileSync(args['isolated-ffm']));
+ if(builds.CONTROL.sha256!=='c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2'||hash(builds.CONTROL.path)!==builds.CONTROL.sha256)throw new Error('FFM rebuild mismatch');
+ for(const name of ['NO_SHADOW','ZONAL20']){if(hash(builds[name].path)!==builds[name].sha256)throw new Error('FFM variant mismatch');isolated[name]=await openFfmHost(builds[name].path);}
+}
 const m = await openModules(), A = await openAp(args.wasm), F = method === 'ffm' ? await openFfmHost() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ATM = XM.config.arms.X2.forces;
@@ -49,7 +56,7 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), resume: hash(new URL('./resume-config.json',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), resume: hash(new URL('./resume-config.json',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, isolatedFfm: Object.fromEntries(Object.entries(isolated).map(([k,v])=>[k,v.provenance])), ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
 process.on('exit', () => writeAudit(OUT, SHARD));
 process.on('SIGTERM',()=>process.exit(143));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
@@ -215,9 +222,10 @@ for (const o of await objects()) {
             if (name === 'TESS31') settings.forces.tesseral = Math.min(31,settings.forces.degree);
             if (name === 'O12') settings.forces.order = 12;
             if (name === 'O31') settings.forces.order = Math.min(31,settings.forces.order);
-            const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
+            const activeFfm=isolated[name]??F;
+            const f = await activeFfm.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
             if (!f.state) throw new Error(f.error ?? f.termination);
-            return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw), truth)) };
+            return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(await activeFfm.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw), truth)) };
           });
         }
       }

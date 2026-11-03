@@ -4,7 +4,7 @@ import subprocess,shutil,hashlib,json,os,tarfile,io,concurrent.futures,re
 modules=Path('/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules')
 scratch=Path('/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ffm-variants');scratch.mkdir(exist_ok=True)
 commit='9a05d899b95242b358939ab1d68a776170a6b167'
-paths=['propagator/events','propagator/ffm','foundation/frames','higherpop/third_party/erfa','third_party/hwm14','third_party/nrlmsise00','scripts/lib','scripts/emsdk-pin.json']
+paths=['files/orbit-products/src','propagator/events','propagator/ffm','foundation/frames','higherpop/third_party/erfa','third_party/hwm14','third_party/nrlmsise00','scripts/lib','scripts/emsdk-pin.json']
 base=scratch/'source'
 if not base.exists():
  base.mkdir();data=subprocess.check_output(['git','archive',commit,*paths],cwd=modules)
