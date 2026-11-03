@@ -12,17 +12,17 @@
   "repeatedWindows": 4,
   "identicalRepeats": 4,
   "fitTerminations": {
-    "CONVERGED": 3545,
-    "unattempted": 251
+    "CONVERGED": 3873,
+    "unattempted": 263
   },
   "files": [
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-0.jsonl",
-      "sha256": "f0fc24a91da8bc18cd2a85feb01864950b4d6e34ae447f44a032bf7d790e97c8"
+      "sha256": "beed87e212325e91ac802dcb11076841f27ee4c0f8980ba328949a9dae3778a7"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-1.jsonl",
-      "sha256": "83c347e62268697ddbca4d2950c79abf8ae219c704db9f647e61dac351e7de4d"
+      "sha256": "72c6cb50a811c12ca83060a1bfa1392a18db8894bf8aa5c12294ea327c7fa299"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-10.jsonl",
@@ -30,35 +30,35 @@
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-11.jsonl",
-      "sha256": "835e1ac6975a18ccee94ef74294ff13c984330928aa1f19541e3681921a4e2bc"
+      "sha256": "0c503cdbd110943b4b557da124dc638829ba7941a2332a48c8fed33ac7dc12b4"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-2.jsonl",
-      "sha256": "41111e25015217b4cd85a7bb8eb33b71ab9a6744fe675ba27e8168b55a9facdf"
+      "sha256": "4328d0123a05811bb067a4b0c17c3605957b77547d90d97b71871aba73fb1369"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-3.jsonl",
-      "sha256": "9d8256c7feba83acc511bc3bc4a1fa00a0ab3d8fa6b015605a9db48186056107"
+      "sha256": "c0748ee53ebb9f87494143bf61493ed1f207a080379fdcee8e9547f04287ee29"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-4.jsonl",
-      "sha256": "cbde22d184defca5e5b36aeeffc664c4b40be85329577c3921254aa2dc6442d6"
+      "sha256": "be887dc112e3bb3ff9e991c85650ab73530b12adc1f984fe2fe40d4e8879c805"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-5.jsonl",
-      "sha256": "2d4128aa6b8c5094e911143388d9fb07ca947ba27a708612e2c6b44287d0a9ab"
+      "sha256": "60b1c71784d0efa224815af426f07c8c522dd87fa9d1e68f1a76b18dfb13b34c"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-6.jsonl",
-      "sha256": "31524dca865bbfb84402a81eb7e0e391d1f9bd1eac88795aaf470c747148c21a"
+      "sha256": "b4eb5670b1ce731dded0944a82fd7a014823a863fe82462177a8af0865f7b5fe"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-7.jsonl",
-      "sha256": "ef16913d207ca37115dca362d78fd7e309ea9489a2b8ac8af1ada3c4c4ce7c6b"
+      "sha256": "297314cb0ff367b3288959c17617ff6f2c7c07316b69375bc0dd9d2b8a211225"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-8.jsonl",
-      "sha256": "5916f66dc3c9bd51a0056bf8adef43ad5b938e9c5eeda22a09132122b516569c"
+      "sha256": "5de06367b505848c01cc13c3aff78ddd79c634371c44f94fcddd7568c13dcf4a"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-9.jsonl",
@@ -99,5 +99,10 @@
         "NO_MOON72": 58
       }
     }
+  },
+  "resumedBodyCompletion": {
+    "queued": 170,
+    "completed": 170,
+    "stillMissing": 0
   }
 }
