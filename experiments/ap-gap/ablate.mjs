@@ -14,6 +14,7 @@ import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operat
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
+throw new Error('AP-gap run blocked: held Galileo files were decoded by the inherited MGEX selector; coordinator disposition required (results/ap-gap/README.md)');
 const frozen = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url))); if (!frozen.frozen) throw new Error('registration is not frozen');
 const hash = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 if (args.wasm === frozen.baselineWasm && hash(args.wasm) !== frozen.baselineSha256) throw new Error('AP build mismatch');
@@ -56,6 +57,18 @@ async function spkOnGrid(lines, axes) {
   return axes.convert(thin, 'EME2000', 'GCRF');
 }
 
+// Reject held objects by filename before opening any OEM bytes.
+function safeMgex({ klass }) {
+  const held = new Set([43567,37847,41862,41174,43055,41175]);
+  const base = '/opt/data/sdn-archive/e14-covariance-realism/reference';
+  const dirs = Array.from({length:20},(_,k)=>`GFZ0MGXRAP_2025${274+k}0000_01D_05M_ORB`).filter(d=>fs.existsSync(path.join(base,d)));
+  if (!dirs.length) return [];
+  const wanted = klass === 'geo' ? /\dG$/ : /\dI$/;
+  return fs.readdirSync(path.join(base,dirs[0])).filter(f=>/^\d+\.oem$/.test(f) && !held.has(Number(f.slice(0,-4))))
+    .map(f=>({f,head:SRC.readReference(path.join(base,dirs[0],f))})).filter(x=>wanted.test(x.head.name))
+    .map(({f})=>SRC.chain(dirs.map(d=>path.join(base,d,f)).filter(f=>fs.existsSync(f))));
+}
+
 async function objects() {
   const out = [];
   for (const o of STATIC.filter((x) => GROUPS.includes(x.group))) {
@@ -74,7 +87,7 @@ async function objects() {
   }
   for (const [group, klass] of [['IG', 'igso'], ['GE', 'geo']]) {
     if (!GROUPS.includes(group)) continue;
-    for (const o of SRC.mgex({ klass })) out.push({ group, name: o.name, norad: o.norad, objectId: o.objectId ?? '', lines: o.lines, arcs: [72], cutoffs: MGEX_CUTOFFS });
+    for (const o of safeMgex({ klass })) out.push({ group, name: o.name, norad: o.norad, objectId: o.objectId ?? '', lines: o.lines, arcs: [72], cutoffs: MGEX_CUTOFFS });
   }
   if (GROUPS.includes('HE') && TESS.cutoffs.some((t) => inShard(windowKey('HE', TESS.name, t)))) {
     const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);

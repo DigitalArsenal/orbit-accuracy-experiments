@@ -1,0 +1,29 @@
+{
+  "status": "blocked",
+  "reason": "Held Galileo files decoded during MGEX metadata selection; no held objects fitted or scored.",
+  "methodsComplete": 0,
+  "methodsRequired": 5,
+  "repeatabilityMeasured": false,
+  "completedRows": 5,
+  "scoredHeldRows": 0,
+  "groups": {
+    "GD": 0,
+    "IG": 0,
+    "GE": 0,
+    "LS": 5,
+    "DO": 0,
+    "HX": 0,
+    "HE": 0,
+    "GN": 0
+  },
+  "rowFiles": [
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/ap/rows-0.jsonl",
+      "sha256": "c7847b862d5b9ce52efa93f6f7fa4beb8aa067d538a18bbe1920b93d68103148"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/ap/rows-11.jsonl",
+      "sha256": "4e9a7fd6a1d93cb8c63da8e804439e55eb39a93b3b151ec95b3c13b7cd346dd4"
+    }
+  ]
+}
