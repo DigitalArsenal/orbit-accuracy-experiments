@@ -43,9 +43,12 @@ fs.writeFileSync(path.join(out, `manifest.${prefix}${m.tag}.json`), `${JSON.stri
 const movedFile = (name) => { const f = path.join(dir, name); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
 const moved = amend === 'A3' ? { full: movedFile('moved.full.json'), console: movedFile('moved.console.json'), descriptions: movedFile('moved.descriptions.json') } : {};
 const proof = amend === 'A3' ? JSON.parse(read('listing-proof.json')) : null;
+// How the screen was run, parsed from its logs into invocations.json: a part resumed on fewer processes says so (A3, Compute).
+const invocations = amend === 'A3' ? movedFile('invocations.json') : null;
 if (amend === 'A3') {
   for (const [k, v] of Object.entries(moved)) if (v) fs.writeFileSync(path.join(out, `moved.a3-${k}.json`), `${JSON.stringify(v, null, 2)}\n`);
   fs.writeFileSync(path.join(out, 'listing-proof.a3.json'), `${JSON.stringify(proof, null, 2)}\n`);
+  if (invocations) fs.writeFileSync(path.join(out, 'invocations.a3.json'), `${JSON.stringify(invocations, null, 2)}\n`);
 }
 // ---- README ---------------------------------------------------------------------------------------------------
 const f = (x, d = 3) => (x === null || x === undefined ? '–' : typeof x === 'number' ? (Math.abs(x) >= 1000 ? x.toLocaleString('en-US', { maximumFractionDigits: 0 }) : x.toPrecision(d)) : String(x));
@@ -178,7 +181,8 @@ L.push(`| Editions | ${m.editions.matched.toLocaleString('en-US')} of ${m.editio
 L.push(`| Module | \`${screenManifest.module.path}\` at \`${screenManifest.module.commit}\`, SHA-256 \`${screenManifest.module.wasmSha256}\` |`);
 L.push(`| Screen | \`screen_catalog\`, SGP4 (analytic, no integrator step), coarse step ${config.screen.coarseStepSeconds} s, refinement tolerance ${config.screen.refinementToleranceSeconds * 1000} ms, ${config.screen.algorithm}, ${config.screen.combinedRadiusM} m combined radius |`);
 for (const q of m.screen.primaries) L.push(`| Part ${q.part} | primaries ${q.from.toLocaleString('en-US')}–${q.to.toLocaleString('en-US')} of ${q.eligible.toLocaleString('en-US')} active payloads ranked by SHA-256 of \`${q.seed}:<NORAD>\` (list SHA-256 \`${q.listSha256}\`), ${q.blockSize}-primary blocks against the whole catalog |`);
-L.push(`| Calls | ${m.screen.units.toLocaleString('en-US')} calls of ${config.screen.sliceSeconds / 3600} h on ${m.screen.processes} processes × ${m.screen.threads} threads; wall ${m.screen.wallMinutes.map((x) => f(x)).join(' + ')} min for the invocation that finished each part${amend === 'A3' ? '' : " (Part 1's first invocation stopped at unit 21 after 483 units, Amendment A0)"} |`);
+const invocationText = (x) => `Part ${x.part}, ${x.ended === 'finished' ? (x.first ? 'one invocation' : 'the invocation that finished it') : 'first invocation, stopped'}: ${x.processes} processes × ${x.threads} threads, ${x.unitsFinished.toLocaleString('en-US')} of ${x.unitsToDo.toLocaleString('en-US')} units${x.wallMinutes ? `, ${f(x.wallMinutes)} min` : ''}`;
+L.push(`| Calls | ${m.screen.units.toLocaleString('en-US')} calls of ${config.screen.sliceSeconds / 3600} h; ${invocations ? invocations.invocations.map(invocationText).join('; ') : `on ${m.screen.processes} processes × ${m.screen.threads} threads; wall ${m.screen.wallMinutes.map((x) => f(x)).join(' + ')} min for the invocation that finished each part${amend === 'A3' ? '' : " (Part 1's first invocation stopped at unit 21 after 483 units, Amendment A0)"}`} |`);
 L.push(`| Screen output | ${m.screen.rawEvents.toLocaleString('en-US')} events, ${m.screen.merged} merged across calls, ${m.screen.outOfWindow} outside the window, ${m.screen.listings ? `${m.screen.listings.objects} objects on the excluded port (below)` : `${m.screen.excludedObjects} objects excluded somewhere (SGP4 could not propagate them)`} |`, '');
 L.push('## Recall', '');
 L.push('| Class | Below 1 km | 1 to 5 km | All |', '| --- | --- | --- | --- |');
@@ -243,6 +247,7 @@ if (m.extras.rows.length) {
   L.push('## Calls', '', failed.length ? `${failed.length} calls failed and were split (findings): ${failed.slice(0, 20).map((x) => `unit ${x.unit} (${x.seconds} s): ${x.error}`).join('; ')}.` : 'Every call completed; none was split.', '');
   const inc = m.screen.incompleteUnits ?? [];
   L.push(inc.length ? `**Finding (A0): ${m.screen.failedPairs} pair evaluations failed** in ${inc.length} calls answered \`incomplete-screening\` (the module's final result with STATISTICS.FAILED_PAIRS; its events are kept, the failed pairs are unscreened): ${inc.slice(0, 30).map((x) => `part ${x.part} unit ${x.unit} (block ${x.block}, slice ${x.slice}): ${x.failedPairs}`).join('; ')}.` : 'No call reported failed pair evaluations.', '');
+  for (const r of invocations?.resumes ?? []) L.push(`Part ${r.part} was resumed from its ${r.unitsDone.toLocaleString('en-US')} finished units (of ${r.units.toLocaleString('en-US')}) on ${r.toProcesses} processes × ${r.threads} threads. Its first invocation, on ${r.fromProcesses} processes, was stopped after its last unit at ${r.lastUnitAt}: the 1-minute load stood at ${r.load1} at ${r.loadAt} (5-minute average ${r.load5}), above the 45 that Amendment A3 allows, while other jobs on the host held ${r.otherJobsCores} cores. Amendment A3 registers 2 processes for this case; the process count enters no result.`, '');
 }
 // ---- Part 3 (Amendment A1): the console's own path ----------------------------------------------------------
 const a1 = ['console', 'descriptions'].map((armName) => {

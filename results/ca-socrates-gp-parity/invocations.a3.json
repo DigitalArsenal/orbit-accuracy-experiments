@@ -1,0 +1,59 @@
+{
+  "source": "the screen logs of each invocation; decision: uptime and ps readings taken by the lane when it stopped the first invocation",
+  "invocations": [
+    {
+      "part": 1,
+      "first": true,
+      "processes": 4,
+      "threads": 4,
+      "unitsOfPart": 560,
+      "unitsToDo": 560,
+      "unitsFinished": 560,
+      "start": "2026-11-03T09:30:24.473Z",
+      "lastUnit": "2026-11-03T10:12:41.882Z",
+      "wallMinutes": 42.30446666666667,
+      "ended": "finished"
+    },
+    {
+      "part": 2,
+      "first": true,
+      "processes": 4,
+      "threads": 4,
+      "unitsOfPart": 1036,
+      "unitsToDo": 1036,
+      "unitsFinished": 309,
+      "start": "2026-11-03T10:13:28.128Z",
+      "lastUnit": "2026-11-03T10:36:45.583Z",
+      "wallMinutes": null,
+      "ended": "stopped"
+    },
+    {
+      "part": 2,
+      "first": false,
+      "processes": 3,
+      "threads": 4,
+      "unitsOfPart": 1036,
+      "unitsToDo": 727,
+      "unitsFinished": 727,
+      "start": "2026-11-03T10:37:55.084Z",
+      "lastUnit": "2026-11-03T11:20:05.428Z",
+      "wallMinutes": 42.18991666666667,
+      "ended": "finished"
+    }
+  ],
+  "resumes": [
+    {
+      "part": 2,
+      "units": 1036,
+      "unitsDone": 309,
+      "fromProcesses": 4,
+      "toProcesses": 3,
+      "threads": 4,
+      "lastUnitAt": "10:36:45Z",
+      "load1": 48.34,
+      "load5": 48.09,
+      "loadAt": "10:35:00Z",
+      "otherJobsCores": "at least 9"
+    }
+  ]
+}

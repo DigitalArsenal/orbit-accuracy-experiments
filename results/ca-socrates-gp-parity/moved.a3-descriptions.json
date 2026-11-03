@@ -1,0 +1,1014 @@
+{
+  "baselineVersion": "0.9.0",
+  "baseline": "ca-socrates-gp-parity-screen-20261029T215308Z-descriptions",
+  "run": "ca-socrates-gp-parity-a3-screen-20261103T092938Z-descriptions",
+  "parts": [
+    1
+  ],
+  "baselineEventsSha256": {
+    "part1": "319813945419c2b20830c11e37f64a4cba895f1908ac0a9d9f7f8e4a604ff4eb"
+  },
+  "eventsSha256": {
+    "part1": "d93537202f7e5dd83b24054d95c7d0e77d0a1023aa5b660c691ead36fe9de931"
+  },
+  "baselineEvents": 66691,
+  "events": 66685,
+  "paired": 66656,
+  "identicalValues": 0,
+  "changedValues": 66656,
+  "tcaSeconds": {
+    "n": 66656,
+    "median": 0.00008046627044677734,
+    "p99": 0.0029772520065307617,
+    "max": 0.6869807839393616
+  },
+  "missM": {
+    "n": 66656,
+    "median": 0.4546829886389787,
+    "p99": 18.488899955516445,
+    "max": 273.6620839211723
+  },
+  "speedMS": {
+    "n": 66656,
+    "median": 0.0000811418594821589,
+    "p99": 0.00044753702240996063,
+    "max": 0.05062474750734225
+  },
+  "largestChanges": [
+    {
+      "pair": [
+        63718,
+        64804
+      ],
+      "baselineTcaUtc": "2026-10-31T16:00:23.804Z",
+      "dtSeconds": 0.01999586820602417,
+      "dMissM": 273.6620839211723,
+      "dSpeedMS": 0.00014832800388830947
+    },
+    {
+      "pair": [
+        59878,
+        53790
+      ],
+      "baselineTcaUtc": "2026-11-04T07:21:28.402Z",
+      "dtSeconds": -0.026111304759979248,
+      "dMissM": -271.8251879839372,
+      "dSpeedMS": -0.0003822614862656337
+    },
+    {
+      "pair": [
+        67093,
+        53662
+      ],
+      "baselineTcaUtc": "2026-10-29T11:57:10.466Z",
+      "dtSeconds": 0.01392066478729248,
+      "dMissM": -186.51277841447882,
+      "dSpeedMS": -0.0008957775953604141
+    },
+    {
+      "pair": [
+        52377,
+        64805
+      ],
+      "baselineTcaUtc": "2026-10-30T00:48:15.347Z",
+      "dtSeconds": 0.014041364192962646,
+      "dMissM": -185.62447349845115,
+      "dSpeedMS": -0.0005045296629759832
+    },
+    {
+      "pair": [
+        66364,
+        64805
+      ],
+      "baselineTcaUtc": "2026-10-30T00:00:41.441Z",
+      "dtSeconds": 0.013719499111175537,
+      "dMissM": 180.22706098163553,
+      "dSpeedMS": -0.00009734020113683073
+    },
+    {
+      "pair": [
+        52377,
+        64805
+      ],
+      "baselineTcaUtc": "2026-10-30T02:22:04.407Z",
+      "dtSeconds": 0.015047192573547363,
+      "dMissM": -178.42888514151718,
+      "dSpeedMS": -0.0004621428688551532
+    },
+    {
+      "pair": [
+        63965,
+        64807
+      ],
+      "baselineTcaUtc": "2026-10-29T17:33:51.586Z",
+      "dtSeconds": -0.012190639972686768,
+      "dMissM": -175.41912702248646,
+      "dSpeedMS": 0.00016189547386602499
+    },
+    {
+      "pair": [
+        57037,
+        67079
+      ],
+      "baselineTcaUtc": "2026-11-04T12:19:19.803Z",
+      "dtSeconds": -0.014966726303100586,
+      "dMissM": -169.04363702987075,
+      "dSpeedMS": 0.00010952232332783751
+    },
+    {
+      "pair": [
+        45695,
+        37734
+      ],
+      "baselineTcaUtc": "2026-11-02T07:48:33.892Z",
+      "dtSeconds": 0.015409290790557861,
+      "dMissM": -166.56846869998049,
+      "dSpeedMS": 0.0000685158865962876
+    },
+    {
+      "pair": [
+        67450,
+        50198
+      ],
+      "baselineTcaUtc": "2026-11-04T15:25:02.398Z",
+      "dtSeconds": 0.01090317964553833,
+      "dMissM": -158.23506853751678,
+      "dSpeedMS": 0.0003104954403170268
+    },
+    {
+      "pair": [
+        57037,
+        67079
+      ],
+      "baselineTcaUtc": "2026-11-04T09:57:02.090Z",
+      "dtSeconds": -0.01452416181564331,
+      "dMissM": -151.45623513054238,
+      "dSpeedMS": -0.0001590019546711119
+    },
+    {
+      "pair": [
+        100505,
+        13819
+      ],
+      "baselineTcaUtc": "2026-11-01T07:22:51.142Z",
+      "dtSeconds": -0.010742247104644775,
+      "dMissM": -141.08674209365472,
+      "dSpeedMS": 0.00041901867916749325
+    },
+    {
+      "pair": [
+        53598,
+        67253
+      ],
+      "baselineTcaUtc": "2026-11-03T09:57:00.396Z",
+      "dtSeconds": -0.02631247043609619,
+      "dMissM": -140.85707367496798,
+      "dSpeedMS": 0.001231333375471877
+    },
+    {
+      "pair": [
+        56534,
+        55425
+      ],
+      "baselineTcaUtc": "2026-11-03T15:47:41.282Z",
+      "dtSeconds": 0.012271106243133545,
+      "dMissM": -140.42461005227483,
+      "dSpeedMS": -0.0005998777924105525
+    },
+    {
+      "pair": [
+        63965,
+        67010
+      ],
+      "baselineTcaUtc": "2026-11-02T06:10:20.024Z",
+      "dtSeconds": -0.01001805067062378,
+      "dMissM": 135.63241942691548,
+      "dSpeedMS": 0.0002869335503419279
+    },
+    {
+      "pair": [
+        63965,
+        67010
+      ],
+      "baselineTcaUtc": "2026-11-02T06:57:25.631Z",
+      "dtSeconds": -0.010098516941070557,
+      "dMissM": -128.91653234711794,
+      "dSpeedMS": 0.0002845853414328303
+    },
+    {
+      "pair": [
+        100003,
+        68548
+      ],
+      "baselineTcaUtc": "2026-11-03T15:01:25.450Z",
+      "dtSeconds": -0.0124320387840271,
+      "dMissM": 126.89528577960982,
+      "dSpeedMS": 0.000557484561795718
+    },
+    {
+      "pair": [
+        57617,
+        67010
+      ],
+      "baselineTcaUtc": "2026-11-02T02:36:35.210Z",
+      "dtSeconds": -0.009937584400177002,
+      "dMissM": 118.83831198454754,
+      "dSpeedMS": -0.000011213755897188094
+    },
+    {
+      "pair": [
+        63318,
+        61689
+      ],
+      "baselineTcaUtc": "2026-11-01T05:53:33.847Z",
+      "dtSeconds": -0.0006437301635742188,
+      "dMissM": -113.81699635305449,
+      "dSpeedMS": -0.00014024889833308407
+    },
+    {
+      "pair": [
+        61574,
+        61951
+      ],
+      "baselineTcaUtc": "2026-11-04T16:38:11.344Z",
+      "dtSeconds": 0.0002816319465637207,
+      "dMissM": -111.89518862593468,
+      "dSpeedMS": -0.00012059196069458267
+    },
+    {
+      "pair": [
+        57037,
+        67079
+      ],
+      "baselineTcaUtc": "2026-11-03T22:52:44.455Z",
+      "dtSeconds": -0.012633204460144043,
+      "dMissM": -111.01373986146518,
+      "dSpeedMS": -0.00011768585318350233
+    },
+    {
+      "pair": [
+        100505,
+        60747
+      ],
+      "baselineTcaUtc": "2026-11-02T03:29:07.931Z",
+      "dtSeconds": -0.012150406837463379,
+      "dMissM": -110.96129329110772,
+      "dSpeedMS": 0.00026625607642927207
+    },
+    {
+      "pair": [
+        57073,
+        28947
+      ],
+      "baselineTcaUtc": "2026-10-30T22:00:18.158Z",
+      "dtSeconds": 0.009857118129730225,
+      "dMissM": 110.53313281634064,
+      "dSpeedMS": -0.02117250906121626
+    },
+    {
+      "pair": [
+        100764,
+        47788
+      ],
+      "baselineTcaUtc": "2026-10-31T20:15:42.114Z",
+      "dtSeconds": -0.01637488603591919,
+      "dMissM": 108.04415349544297,
+      "dSpeedMS": 0.0005388790596043691
+    },
+    {
+      "pair": [
+        61533,
+        60312
+      ],
+      "baselineTcaUtc": "2026-11-04T09:28:20.620Z",
+      "dtSeconds": -0.007925927639007568,
+      "dMissM": -107.93554710901344,
+      "dSpeedMS": 0.00019871644326485693
+    }
+  ],
+  "onlyBaseline": {
+    "count": 35,
+    "rows": [
+      {
+        "pair": [
+          101099,
+          100928
+        ],
+        "tcaUtc": "2026-11-02T21:14:11.409Z",
+        "missM": 334.34322867512174,
+        "speedMS": 0.5177135036511463,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          101099,
+          100928
+        ],
+        "tcaUtc": "2026-11-02T22:24:36.932Z",
+        "missM": 636.7985057164891,
+        "speedMS": 0.4523804234873387,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          100692,
+          27535
+        ],
+        "tcaUtc": "2026-11-02T18:50:32.868Z",
+        "missM": 4999.312234985852,
+        "speedMS": 14465.988394476439,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          58870,
+          38302
+        ],
+        "tcaUtc": "2026-11-03T14:10:27.054Z",
+        "missM": 4978.2769626549325,
+        "speedMS": 7018.632217011308,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          59758,
+          48143
+        ],
+        "tcaUtc": "2026-10-31T12:11:17.506Z",
+        "missM": 4994.108875047747,
+        "speedMS": 5889.823339505041,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          63518,
+          49451
+        ],
+        "tcaUtc": "2026-11-04T16:43:56.516Z",
+        "missM": 4999.400495192305,
+        "speedMS": 9505.792616643821,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64456,
+          50175
+        ],
+        "tcaUtc": "2026-10-31T15:35:43.122Z",
+        "missM": 4999.776987252661,
+        "speedMS": 12224.001033709956,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          52373,
+          51768
+        ],
+        "tcaUtc": "2026-11-02T20:36:40.086Z",
+        "missM": 4999.778318091061,
+        "speedMS": 11900.431395973417,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          55410,
+          51788
+        ],
+        "tcaUtc": "2026-11-04T04:00:09.939Z",
+        "missM": 4998.987523135404,
+        "speedMS": 12422.18689715577,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          53419,
+          53547
+        ],
+        "tcaUtc": "2026-11-02T00:15:30.252Z",
+        "missM": 4999.318150830673,
+        "speedMS": 5587.253048354618,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          53498,
+          64217
+        ],
+        "tcaUtc": "2026-10-30T23:11:30.201Z",
+        "missM": 4996.513435769198,
+        "speedMS": 7280.639191222722,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          68123,
+          53887
+        ],
+        "tcaUtc": "2026-11-04T09:31:59.335Z",
+        "missM": 4997.940862589302,
+        "speedMS": 7881.314375744757,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          54255,
+          62621
+        ],
+        "tcaUtc": "2026-10-30T14:04:39.838Z",
+        "missM": 4998.31641238151,
+        "speedMS": 8351.844328747004,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          55319,
+          58806
+        ],
+        "tcaUtc": "2026-11-04T00:09:10.391Z",
+        "missM": 4999.836264250223,
+        "speedMS": 11929.476189148678,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          56534,
+          62510
+        ],
+        "tcaUtc": "2026-11-03T08:57:27.699Z",
+        "missM": 4999.636701052489,
+        "speedMS": 7403.980031224409,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          57530,
+          63079
+        ],
+        "tcaUtc": "2026-11-02T19:44:47.454Z",
+        "missM": 4999.613188677653,
+        "speedMS": 3717.920440352484,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67517,
+          57910
+        ],
+        "tcaUtc": "2026-11-03T12:52:58.473Z",
+        "missM": 4983.153125023224,
+        "speedMS": 290.9236770274702,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          68054,
+          58102
+        ],
+        "tcaUtc": "2026-11-02T10:22:06.183Z",
+        "missM": 4999.445522272625,
+        "speedMS": 10455.013794520859,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          58480,
+          58484
+        ],
+        "tcaUtc": "2026-11-02T09:41:21.750Z",
+        "missM": 2587.149395517344,
+        "speedMS": 2.2140655616441656,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          60052,
+          63050
+        ],
+        "tcaUtc": "2026-11-01T22:12:52.470Z",
+        "missM": 4997.9695723491395,
+        "speedMS": 12172.681573706006,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          61261,
+          61709
+        ],
+        "tcaUtc": "2026-11-01T23:01:31.357Z",
+        "missM": 4991.653886442034,
+        "speedMS": 8790.570163581482,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          63172,
+          62249
+        ],
+        "tcaUtc": "2026-11-03T14:22:36.113Z",
+        "missM": 4999.620651397322,
+        "speedMS": 9657.353762457657,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          65526,
+          62306
+        ],
+        "tcaUtc": "2026-11-03T19:51:42.039Z",
+        "missM": 4999.588740661137,
+        "speedMS": 14172.311497070852,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          66382,
+          62871
+        ],
+        "tcaUtc": "2026-11-01T15:54:32.750Z",
+        "missM": 4995.4989452807695,
+        "speedMS": 8532.577111807816,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64005,
+          64017
+        ],
+        "tcaUtc": "2026-11-04T04:13:58.088Z",
+        "missM": 2419.353518328686,
+        "speedMS": 1.9198858034802524,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          68721,
+          64498
+        ],
+        "tcaUtc": "2026-11-03T11:22:16.661Z",
+        "missM": 4999.093568722649,
+        "speedMS": 8163.442671822313,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64925,
+          64923
+        ],
+        "tcaUtc": "2026-11-02T02:10:31.124Z",
+        "missM": 3513.7420014044774,
+        "speedMS": 2.1168421102566457,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64925,
+          65078
+        ],
+        "tcaUtc": "2026-11-02T11:56:24.052Z",
+        "missM": 4997.349421827027,
+        "speedMS": 4193.508246933658,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          65447,
+          65444
+        ],
+        "tcaUtc": "2026-11-03T23:03:24.473Z",
+        "missM": 4882.961587741452,
+        "speedMS": 3.6986719994189463,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          65645,
+          67724
+        ],
+        "tcaUtc": "2026-11-02T22:43:37.454Z",
+        "missM": 4999.832818634544,
+        "speedMS": 10428.265171401988,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          66513,
+          66503
+        ],
+        "tcaUtc": "2026-10-31T16:34:28.374Z",
+        "missM": 4519.460099860712,
+        "speedMS": 3.7074921494105464,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          66947,
+          66933
+        ],
+        "tcaUtc": "2026-11-01T02:03:31.535Z",
+        "missM": 3676.3439694319686,
+        "speedMS": 1.9204387929068154,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67093,
+          100555
+        ],
+        "tcaUtc": "2026-10-30T00:20:14.344Z",
+        "missM": 4957.131472189961,
+        "speedMS": 12385.646644678447,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67913,
+          67928
+        ],
+        "tcaUtc": "2026-11-03T18:25:10.408Z",
+        "missM": 2291.766473170868,
+        "speedMS": 1.416751345835641,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          69145,
+          69144
+        ],
+        "tcaUtc": "2026-11-02T03:32:23.958Z",
+        "missM": 4988.298032122728,
+        "speedMS": 3.4874434030390455,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      }
+    ]
+  },
+  "onlyThisBuild": {
+    "count": 29,
+    "rows": [
+      {
+        "pair": [
+          63965,
+          64807
+        ],
+        "tcaUtc": "2026-10-29T23:03:35.740Z",
+        "missM": 4975.14895185201,
+        "speedMS": 4759.661914488486,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          54209,
+          100300
+        ],
+        "tcaUtc": "2026-10-30T08:24:15.572Z",
+        "missM": 4999.921756703645,
+        "speedMS": 7631.477177098953,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67093,
+          61058
+        ],
+        "tcaUtc": "2026-10-30T14:27:47.426Z",
+        "missM": 3987.909660885033,
+        "speedMS": 9875.055047040227,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          58862,
+          67470
+        ],
+        "tcaUtc": "2026-10-31T16:25:37.415Z",
+        "missM": 4999.985544175597,
+        "speedMS": 3881.58508026784,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          66513,
+          66503
+        ],
+        "tcaUtc": "2026-10-31T16:34:26.903Z",
+        "missM": 4517.116607723572,
+        "speedMS": 3.704671737460716,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67338,
+          63794
+        ],
+        "tcaUtc": "2026-11-01T01:57:22.656Z",
+        "missM": 4997.677768356835,
+        "speedMS": 10397.246166960767,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          66947,
+          66933
+        ],
+        "tcaUtc": "2026-11-01T02:03:33.012Z",
+        "missM": 3673.3915120502206,
+        "speedMS": 1.9169064977282193,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67815,
+          65191
+        ],
+        "tcaUtc": "2026-11-01T15:02:38.052Z",
+        "missM": 4990.1562976757505,
+        "speedMS": 5489.044176365131,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64925,
+          69157
+        ],
+        "tcaUtc": "2026-11-01T21:41:29.978Z",
+        "missM": 4988.239233964488,
+        "speedMS": 8781.14675337491,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64925,
+          64923
+        ],
+        "tcaUtc": "2026-11-02T02:10:34.291Z",
+        "missM": 3510.6778789611467,
+        "speedMS": 2.1132713866290445,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          69145,
+          69144
+        ],
+        "tcaUtc": "2026-11-02T03:32:25.890Z",
+        "missM": 4988.345450622309,
+        "speedMS": 3.4875995284708954,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          58480,
+          58484
+        ],
+        "tcaUtc": "2026-11-02T09:41:23.799Z",
+        "missM": 2586.5232250774347,
+        "speedMS": 2.212477732188293,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          54255,
+          63752
+        ],
+        "tcaUtc": "2026-11-02T15:45:05.953Z",
+        "missM": 4997.619942832528,
+        "speedMS": 14386.395052536047,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          101099,
+          100928
+        ],
+        "tcaUtc": "2026-11-02T21:14:10.231Z",
+        "missM": 335.20818384124203,
+        "speedMS": 0.517581411809131,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          101099,
+          100928
+        ],
+        "tcaUtc": "2026-11-02T22:24:33.487Z",
+        "missM": 636.5081807866509,
+        "speedMS": 0.45223341947944595,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          52697,
+          58886
+        ],
+        "tcaUtc": "2026-11-02T23:59:01.780Z",
+        "missM": 4996.631299404838,
+        "speedMS": 11687.64183388462,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          66826,
+          45673
+        ],
+        "tcaUtc": "2026-11-03T03:49:05.985Z",
+        "missM": 2655.3835469928126,
+        "speedMS": 13006.830823065866,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          60057,
+          65410
+        ],
+        "tcaUtc": "2026-11-03T05:12:10.951Z",
+        "missM": 4998.749121957001,
+        "speedMS": 11940.317990807871,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          57054,
+          64009
+        ],
+        "tcaUtc": "2026-11-03T09:05:15.315Z",
+        "missM": 4999.45444422161,
+        "speedMS": 8657.115074937794,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          53147,
+          68863
+        ],
+        "tcaUtc": "2026-11-03T16:33:00.477Z",
+        "missM": 4999.6030557167605,
+        "speedMS": 14639.82068799749,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          67913,
+          67928
+        ],
+        "tcaUtc": "2026-11-03T18:25:07.102Z",
+        "missM": 2288.473134347362,
+        "speedMS": 1.4137856439230725,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          65069,
+          65208
+        ],
+        "tcaUtc": "2026-11-03T19:32:38.730Z",
+        "missM": 4999.830122228285,
+        "speedMS": 11743.268918621368,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          100281,
+          68857
+        ],
+        "tcaUtc": "2026-11-03T20:28:44.801Z",
+        "missM": 4987.7243108203165,
+        "speedMS": 11212.069893820624,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          65447,
+          65444
+        ],
+        "tcaUtc": "2026-11-03T23:03:21.092Z",
+        "missM": 4883.754733408936,
+        "speedMS": 3.6995436125215333,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          62205,
+          66869
+        ],
+        "tcaUtc": "2026-11-04T01:09:41.217Z",
+        "missM": 4999.797718077971,
+        "speedMS": 7168.031683586629,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          64005,
+          64017
+        ],
+        "tcaUtc": "2026-11-04T04:13:50.819Z",
+        "missM": 2420.388512544662,
+        "speedMS": 1.9226842285083614,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          45695,
+          48667
+        ],
+        "tcaUtc": "2026-11-04T04:42:17.641Z",
+        "missM": 4280.024776463898,
+        "speedMS": 12405.536795520273,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          52697,
+          61010
+        ],
+        "tcaUtc": "2026-11-04T09:07:27.356Z",
+        "missM": 4999.599183400342,
+        "speedMS": 10010.567664694565,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      },
+      {
+        "pair": [
+          58877,
+          69482
+        ],
+        "tcaUtc": "2026-11-04T14:12:17.965Z",
+        "missM": 4999.472349511564,
+        "speedMS": 7553.0595591164,
+        "listedOnBaselineInThisSlice": [],
+        "listedNowInThisSlice": []
+      }
+    ]
+  },
+  "listings": {
+    "baselineObjects": 41,
+    "objects": 41,
+    "newObjects": [],
+    "goneObjects": [],
+    "baselineByRefusal": {
+      "Error: (e <= -0.001)": 9,
+      "Satellite has decayed": 32
+    },
+    "changedSlices": []
+  }
+}

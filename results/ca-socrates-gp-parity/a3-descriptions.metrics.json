@@ -1,0 +1,2227 @@
+{
+  "experiment": "ca-socrates-gp-parity",
+  "run": "ca-socrates-gp-parity-a3-screen-20261103T092938Z-descriptions",
+  "plan": {
+    "planCommit": "63f98fd0821787c1cd6ffcabf9eaa7609aaca3e4",
+    "sourceHashes": {
+      "PLAN.md": "afeb9f19dad453fda7af4969e47354fe2095f573a1ec214b2d03220676a8c38a",
+      "config.json": "00f428637a308f078aff1e2918c5b93959734b730599f346b273cd42a23fca28",
+      "config.a2.json": "5631ef77ded851092f4e2d26acce75ee24ff4e7ae53d38db7c9956225bebd029",
+      "config.a3.json": "a4b3c0bb065ef5383b3c0b6d173a162ed9f91836d9d81dd43a739e41d927718d",
+      "common.mjs": "e972381772d18822e3faf34e3816a1aa272e926c7a51dc8875b49a507c11657e",
+      "screen.mjs": "dee05638d11b9a7ac4bf0ea9b9b6df7f57352c079a7ab1417968c3f7e16c0b31",
+      "worker.mjs": "47e0aea0447fdf67d5fef0a4fa7b96d34681277cfd45065e3d8d014c6820d43b",
+      "compare.mjs": "b7b0cd5a3193c5a13d32b7c8ebe2e79769b8c778080c7436bb8e3f8d5d60a4be"
+    },
+    "experimentCommit": "63f98fd0821787c1cd6ffcabf9eaa7609aaca3e4"
+  },
+  "tag": "part1",
+  "mode": "registered",
+  "socrates": {
+    "url": "https://celestrak.org/SOCRATES/sort-minRange.csv",
+    "sha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+    "rows": 193952,
+    "lastModified": "Thu, 29 Oct 2026 08:04:08 GMT",
+    "window": {
+      "startUtc": "2026-10-28T17:00:00Z",
+      "startJd": 2461342.2083333335,
+      "durationSeconds": 604800,
+      "basis": "the report's TCAs run from 2026-10-28 17:00:08.230 to 2026-11-04 16:59:51.001 UTC; CelesTrak's page states 7 days and 5 km"
+    }
+  },
+  "catalog": {
+    "snapshot": "spacetrack/gp/2026/2026-10-28.json.gz",
+    "snapshotSha256": "36730df1d9a5845ceed7388ecf40f448b93567bfb69bbfacb638accc8cb38ac8",
+    "cutUtc": "2026-10-28T16:06:35",
+    "replaced": [
+      41882,
+      60182,
+      64062,
+      64393
+    ],
+    "objects": 32815,
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d"
+  },
+  "screenManifests": [
+    {
+      "part": 1,
+      "run": "ca-socrates-gp-parity-a3-screen-20261103T092938Z-descriptions",
+      "module": {
+        "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+        "path": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+        "version": "0.17.0",
+        "wasmSha256": "0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a",
+        "packages": {
+          "space-data-module-sdk": "0.9.12",
+          "spacedatastandards.org": "1.271.0",
+          "flatbuffers": "25.9.23",
+          "flatc-wasm": "26.1.38"
+        }
+      },
+      "outputs": {
+        "screen-events.json": "d93537202f7e5dd83b24054d95c7d0e77d0a1023aa5b660c691ead36fe9de931",
+        "screen-summary.json": "e442d9585a079fb2ebd20f913af6c9f184b016c8d8fb6b25485c25d6734fb4b9",
+        "primaries.json": "0afcbc0a438cfdc2ec56f4f4fe252d399b193cfe7616c9c7608268e7cf8cb4b7"
+      },
+      "startedAt": "2026-11-03T11:05:44.480Z",
+      "finishedAt": "2026-11-03T11:08:58.933Z"
+    }
+  ],
+  "editions": {
+    "reportObjects": 24391,
+    "matched": 24391,
+    "mismatched": [],
+    "absent": []
+  },
+  "parts": [
+    1
+  ],
+  "full": false,
+  "screen": {
+    "primaries": [
+      {
+        "seed": "ca-socrates-gp-parity-20261029",
+        "eligible": 16818,
+        "part": 1,
+        "from": 0,
+        "to": 600,
+        "count": 600,
+        "blockSize": 300,
+        "listSha256": "58ad95261866695047471b173b1024426609e79c3d44379639feba2b475130aa",
+        "blocks": 2
+      }
+    ],
+    "units": 14,
+    "failedCalls": [],
+    "failedPairs": 0,
+    "incompleteUnits": [],
+    "rawEvents": 66685,
+    "merged": 0,
+    "events": 66685,
+    "outOfWindow": 0,
+    "listings": {
+      "objects": 41,
+      "records": 270,
+      "byForm": {
+        "refused-from-start": {
+          "objects": 29,
+          "objectSlices": 97
+        },
+        "refused-part-way": {
+          "objects": 35,
+          "objectSlices": 38
+        }
+      },
+      "byRefusal": {
+        "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)": {
+          "objects": 9,
+          "objectSlices": 55
+        },
+        "Non-finite or decayed SGP4 state": {
+          "objects": 32,
+          "objectSlices": 80
+        }
+      },
+      "perObject": [
+        {
+          "norad": 101037,
+          "slicesByForm": {
+            "refused-from-start": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "firstRefusal": "2026-10-28T17:00:00.000Z"
+        },
+        {
+          "norad": 101038,
+          "slicesByForm": {
+            "refused-from-start": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "firstRefusal": "2026-10-28T17:00:00.000Z"
+        },
+        {
+          "norad": 101040,
+          "slicesByForm": {
+            "refused-from-start": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "firstRefusal": "2026-10-28T17:00:00.000Z"
+        },
+        {
+          "norad": 101041,
+          "slicesByForm": {
+            "refused-from-start": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "firstRefusal": "2026-10-28T17:00:00.000Z"
+        },
+        {
+          "norad": 101042,
+          "slicesByForm": {
+            "refused-from-start": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "firstRefusal": "2026-10-28T17:00:00.000Z"
+        },
+        {
+          "norad": 101047,
+          "slicesByForm": {
+            "refused-from-start": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "firstRefusal": "2026-10-28T17:00:00.000Z"
+        },
+        {
+          "norad": 43834,
+          "slicesByForm": {
+            "refused-part-way": [
+              0
+            ],
+            "refused-from-start": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-10-29T00:13:29.806Z",
+          "firstRefusal": "2026-10-29T00:13:29.808Z"
+        },
+        {
+          "norad": 44741,
+          "slicesByForm": {
+            "refused-part-way": [
+              1
+            ],
+            "refused-from-start": [
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "lastValid": "2026-10-29T18:26:03.794Z",
+          "firstRefusal": "2026-10-29T18:26:03.795Z"
+        },
+        {
+          "norad": 57302,
+          "slicesByForm": {
+            "refused-part-way": [
+              1
+            ],
+            "refused-from-start": [
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "lastValid": "2026-10-30T04:01:16.505Z",
+          "firstRefusal": "2026-10-30T04:01:16.507Z"
+        },
+        {
+          "norad": 7003,
+          "slicesByForm": {
+            "refused-part-way": [
+              2
+            ],
+            "refused-from-start": [
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-10-30T21:03:02.362Z",
+          "firstRefusal": "2026-10-30T21:03:02.363Z"
+        },
+        {
+          "norad": 100089,
+          "slicesByForm": {
+            "refused-part-way": [
+              3
+            ],
+            "refused-from-start": [
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-10-31T22:36:34.254Z",
+          "firstRefusal": "2026-10-31T22:36:34.256Z"
+        },
+        {
+          "norad": 63212,
+          "slicesByForm": {
+            "refused-part-way": [
+              3
+            ],
+            "refused-from-start": [
+              4,
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-01T10:30:58.108Z",
+          "firstRefusal": "2026-11-01T10:30:58.110Z"
+        },
+        {
+          "norad": 64806,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T02:27:32.076Z",
+          "firstRefusal": "2026-11-02T02:27:32.078Z"
+        },
+        {
+          "norad": 67093,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T03:35:43.049Z",
+          "firstRefusal": "2026-11-02T03:35:43.050Z"
+        },
+        {
+          "norad": 66823,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T06:00:31.691Z",
+          "firstRefusal": "2026-11-02T06:00:31.693Z"
+        },
+        {
+          "norad": 67212,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T08:11:37.748Z",
+          "firstRefusal": "2026-11-02T08:11:37.750Z"
+        },
+        {
+          "norad": 67098,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T09:00:47.345Z",
+          "firstRefusal": "2026-11-02T09:00:47.347Z"
+        },
+        {
+          "norad": 66842,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T09:09:23.834Z",
+          "firstRefusal": "2026-11-02T09:09:23.835Z"
+        },
+        {
+          "norad": 66834,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T09:24:07.340Z",
+          "firstRefusal": "2026-11-02T09:24:07.342Z"
+        },
+        {
+          "norad": 66831,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T10:48:46.223Z",
+          "firstRefusal": "2026-11-02T10:48:46.225Z"
+        },
+        {
+          "norad": 62636,
+          "slicesByForm": {
+            "refused-part-way": [
+              4,
+              5
+            ],
+            "refused-from-start": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T12:02:01.182Z",
+          "firstRefusal": "2026-11-02T12:02:01.184Z"
+        },
+        {
+          "norad": 64794,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T12:59:19.504Z",
+          "firstRefusal": "2026-11-02T12:59:19.506Z"
+        },
+        {
+          "norad": 67216,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T13:34:12.030Z",
+          "firstRefusal": "2026-11-02T13:34:12.031Z"
+        },
+        {
+          "norad": 67218,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T13:50:51.819Z",
+          "firstRefusal": "2026-11-02T13:50:51.821Z"
+        },
+        {
+          "norad": 66825,
+          "slicesByForm": {
+            "refused-part-way": [
+              4
+            ],
+            "refused-from-start": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T16:14:40.737Z",
+          "firstRefusal": "2026-11-02T16:14:40.739Z"
+        },
+        {
+          "norad": 64797,
+          "slicesByForm": {
+            "refused-part-way": [
+              4,
+              5
+            ],
+            "refused-from-start": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T16:23:29.686Z",
+          "firstRefusal": "2026-11-02T16:23:29.687Z"
+        },
+        {
+          "norad": 67215,
+          "slicesByForm": {
+            "refused-part-way": [
+              5
+            ],
+            "refused-from-start": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-02T18:26:35.082Z",
+          "firstRefusal": "2026-11-02T18:26:35.083Z"
+        },
+        {
+          "norad": 66840,
+          "slicesByForm": {
+            "refused-part-way": [
+              5
+            ],
+            "refused-from-start": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T05:00:09.425Z",
+          "firstRefusal": "2026-11-03T05:00:09.427Z"
+        },
+        {
+          "norad": 60520,
+          "slicesByForm": {
+            "refused-part-way": [
+              5,
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T15:24:17.138Z",
+          "firstRefusal": "2026-11-03T15:24:17.140Z"
+        },
+        {
+          "norad": 67197,
+          "slicesByForm": {
+            "refused-part-way": [
+              5
+            ],
+            "refused-from-start": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T16:11:40.144Z",
+          "firstRefusal": "2026-11-03T16:11:40.145Z"
+        },
+        {
+          "norad": 67024,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T20:19:18.309Z",
+          "firstRefusal": "2026-11-03T20:19:18.311Z"
+        },
+        {
+          "norad": 65834,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T20:35:22.050Z",
+          "firstRefusal": "2026-11-03T20:35:22.052Z"
+        },
+        {
+          "norad": 67008,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T22:26:13.595Z",
+          "firstRefusal": "2026-11-03T22:26:13.597Z"
+        },
+        {
+          "norad": 67087,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-03T23:13:15.160Z",
+          "firstRefusal": "2026-11-03T23:13:15.162Z"
+        },
+        {
+          "norad": 67029,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-04T01:07:17.883Z",
+          "firstRefusal": "2026-11-04T01:07:17.885Z"
+        },
+        {
+          "norad": 64791,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-04T01:29:39.421Z",
+          "firstRefusal": "2026-11-04T01:29:39.423Z"
+        },
+        {
+          "norad": 67209,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-04T02:36:03.203Z",
+          "firstRefusal": "2026-11-04T02:36:03.205Z"
+        },
+        {
+          "norad": 48737,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-04T03:10:14.905Z",
+          "firstRefusal": "2026-11-04T03:10:14.907Z"
+        },
+        {
+          "norad": 64805,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-04T04:13:26.725Z",
+          "firstRefusal": "2026-11-04T04:13:26.727Z"
+        },
+        {
+          "norad": 67009,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "Non-finite or decayed SGP4 state",
+          "lastValid": "2026-11-04T10:44:14.481Z",
+          "firstRefusal": "2026-11-04T10:44:14.483Z"
+        },
+        {
+          "norad": 101147,
+          "slicesByForm": {
+            "refused-part-way": [
+              6
+            ]
+          },
+          "refusal": "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)",
+          "lastValid": "2026-11-04T15:54:35.588Z",
+          "firstRefusal": "2026-11-04T15:54:35.590Z"
+        }
+      ]
+    },
+    "wallMinutes": [
+      2.4271
+    ],
+    "processes": 2,
+    "threads": 4
+  },
+  "reference": {
+    "rows": 12008,
+    "byClass": {
+      "primary": 7319,
+      "editionMismatch": 0,
+      "numbered100000": 4689
+    }
+  },
+  "recall": {
+    "primary": {
+      "below 1 km": {
+        "reference": 486,
+        "found": 486,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 6833,
+        "found": 6833,
+        "recall": 1
+      },
+      "all": {
+        "reference": 7319,
+        "found": 7319,
+        "recall": 1
+      }
+    },
+    "editionMismatch": {
+      "below 1 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "1 to 5 km": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      },
+      "all": {
+        "reference": 0,
+        "found": 0,
+        "recall": null
+      }
+    },
+    "numbered100000": {
+      "below 1 km": {
+        "reference": 308,
+        "found": 308,
+        "recall": 1
+      },
+      "1 to 5 km": {
+        "reference": 4381,
+        "found": 4381,
+        "recall": 1
+      },
+      "all": {
+        "reference": 4689,
+        "found": 4689,
+        "recall": 1
+      }
+    }
+  },
+  "edgeRows": {
+    "reference": 0,
+    "found": 0,
+    "rows": []
+  },
+  "misses": [],
+  "geometry": {
+    "primary": {
+      "matched": 7319,
+      "byStratum": {
+        "NLRV": {
+          "matched": 7011,
+          "tcaSeconds": {
+            "n": 7011,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.0009253621101379395
+          },
+          "missM": {
+            "n": 7011,
+            "median": 0.25193121851543765,
+            "p95": 0.47360963647679455,
+            "p99": 0.49404029323841314,
+            "max": 0.49991983910626914
+          },
+          "speedMS": {
+            "n": 7011,
+            "median": 0.254024759477943,
+            "p95": 0.47623627703978855,
+            "p99": 0.4954009728407982,
+            "max": 0.49993693821488705
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 8,
+          "tcaSeconds": {
+            "n": 8,
+            "median": 0.0010862946510314941,
+            "p95": 0.001971423625946045,
+            "p99": 0.001971423625946045,
+            "max": 0.001971423625946045
+          },
+          "missM": {
+            "n": 8,
+            "median": 0.3734027351665645,
+            "p95": 0.49878493299411275,
+            "p99": 0.49878493299411275,
+            "max": 0.49878493299411275
+          },
+          "speedMS": {
+            "n": 8,
+            "median": 0.30003710694824903,
+            "p95": 0.4755425983337247,
+            "p99": 0.4755425983337247,
+            "max": 0.4755425983337247
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 300,
+          "tcaSeconds": {
+            "n": 300,
+            "median": 0.003419816493988037,
+            "p95": 0.03210604190826416,
+            "p99": 0.04518181085586548,
+            "max": 0.06602257490158081
+          },
+          "missM": {
+            "n": 300,
+            "median": 0.2454671222366187,
+            "p95": 0.47114365586418216,
+            "p99": 0.4981537966646101,
+            "max": 0.499827510621742
+          },
+          "speedMS": {
+            "n": 300,
+            "median": 0.07143288490902222,
+            "p95": 0.4181817113167172,
+            "p99": 0.4951502189949162,
+            "max": 0.49988145125730377
+          },
+          "beyond": {
+            "tca": 64,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 7319,
+        "median": 0.2516970920696622,
+        "p95": 0.4732722016842672,
+        "p99": 0.49422963698634703,
+        "max": 0.49991983910626914
+      },
+      "speedMS": {
+        "n": 7319,
+        "median": 0.24577191956905153,
+        "p95": 0.475754732346104,
+        "p99": 0.49534259916799783,
+        "max": 0.49993693821488705
+      },
+      "dseDays": {
+        "n": 14638,
+        "median": 0.00025349269807328767,
+        "p95": 0.0004745578356084579,
+        "p99": 0.000494772709906055,
+        "max": 0.0004999786615371704
+      },
+      "log10PcRatio": {
+        "n": 7319,
+        "median": 0.46841226594730445,
+        "p95": 1.3633243255599143,
+        "p99": 1.3881650433794397,
+        "max": 1.7942994367188356
+      },
+      "pcRatioBelowOne": 5188,
+      "pcCompared": 7319,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    },
+    "editionMismatch": {
+      "matched": 0,
+      "byStratum": {
+        "NLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 0,
+          "tcaSeconds": {
+            "n": 0
+          },
+          "missM": {
+            "n": 0
+          },
+          "speedMS": {
+            "n": 0
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 0
+      },
+      "speedMS": {
+        "n": 0
+      },
+      "dseDays": {
+        "n": 0
+      },
+      "log10PcRatio": {
+        "n": 0
+      },
+      "pcRatioBelowOne": 0,
+      "pcCompared": 0,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    },
+    "numbered100000": {
+      "matched": 4689,
+      "byStratum": {
+        "NLRV": {
+          "matched": 4648,
+          "tcaSeconds": {
+            "n": 4648,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.0008448958396911621
+          },
+          "missM": {
+            "n": 4648,
+            "median": 0.24720026013801544,
+            "p95": 0.4734901917431671,
+            "p99": 0.4945330790119442,
+            "max": 0.49992148076216836
+          },
+          "speedMS": {
+            "n": 4648,
+            "median": 0.24591957788652508,
+            "p95": 0.47552320160866657,
+            "p99": 0.4948758632326644,
+            "max": 0.499998722251803
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": true
+        },
+        "LRV": {
+          "matched": 1,
+          "tcaSeconds": {
+            "n": 1,
+            "median": 0.0033393502235412598,
+            "p95": 0.0033393502235412598,
+            "p99": 0.0033393502235412598,
+            "max": 0.0033393502235412598
+          },
+          "missM": {
+            "n": 1,
+            "median": 0.3353453306326628,
+            "p95": 0.3353453306326628,
+            "p99": 0.3353453306326628,
+            "max": 0.3353453306326628
+          },
+          "speedMS": {
+            "n": 1,
+            "median": 0.3635143703036654,
+            "p95": 0.3635143703036654,
+            "p99": 0.3635143703036654,
+            "max": 0.3635143703036654
+          },
+          "beyond": {
+            "tca": 0,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        },
+        "VLRV": {
+          "matched": 40,
+          "tcaSeconds": {
+            "n": 40,
+            "median": 0.009816884994506836,
+            "p95": 0.0333935022354126,
+            "p99": 0.041359663009643555,
+            "max": 0.041359663009643555
+          },
+          "missM": {
+            "n": 40,
+            "median": 0.27304086341791844,
+            "p95": 0.47972620956670653,
+            "p99": 0.4918192133491175,
+            "max": 0.4918192133491175
+          },
+          "speedMS": {
+            "n": 40,
+            "median": 0.23089155975682107,
+            "p95": 0.482418588190869,
+            "p99": 0.49668367892445886,
+            "max": 0.49668367892445886
+          },
+          "beyond": {
+            "tca": 18,
+            "miss": 0,
+            "speed": 0
+          },
+          "tcaGated": false
+        }
+      },
+      "missM": {
+        "n": 4689,
+        "median": 0.24754878331168584,
+        "p95": 0.4734901917431671,
+        "p99": 0.4945330790119442,
+        "max": 0.49992148076216836
+      },
+      "speedMS": {
+        "n": 4689,
+        "median": 0.24588012834828987,
+        "p95": 0.47558668239616964,
+        "p99": 0.4949454639427131,
+        "max": 0.499998722251803
+      },
+      "dseDays": {
+        "n": 9378,
+        "median": 0.00024568211659747874,
+        "p95": 0.00047494837641703924,
+        "p99": 0.000496107950806568,
+        "max": 0.0004999904707074787
+      },
+      "log10PcRatio": {
+        "n": 4689,
+        "median": 0.9183670935432162,
+        "p95": 1.078716671390012,
+        "p99": 1.3660238538384464,
+        "max": 1.8832920548110976
+      },
+      "pcRatioBelowOne": 4336,
+      "pcCompared": 4689,
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      },
+      "worst": {
+        "tcaNlrv": [],
+        "miss": [],
+        "speed": []
+      }
+    }
+  },
+  "extras": {
+    "total": 54677,
+    "byClass": {
+      "primary": {
+        "unexplained": 16,
+        "population: intra-fleet (operational members of one constellation)": 54350,
+        "threshold edge": 101,
+        "window edge": 5
+      },
+      "editionMismatch": {
+        "unverified: an object never appears in the report": 84,
+        "population: intra-fleet (operational members of one constellation)": 117,
+        "threshold edge": 2
+      },
+      "numbered100000": {
+        "unexplained": 2
+      }
+    },
+    "unexplainedOrUnverified": 102,
+    "rows": [
+      {
+        "pair": [
+          51855,
+          21012
+        ],
+        "names": [
+          "STARLINK-3545",
+          "SL-12 R/B(AUX MOTOR)"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-10-31T02:50:28.111Z",
+        "missM": 907.9783819465931,
+        "speedMS": 2857.3079980893945,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          66947,
+          51102
+        ],
+        "names": [
+          "STARLINK-36089",
+          "SHIYAN 13 (SY-13)"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T17:58:23.267Z",
+        "missM": 1628.8610272351136,
+        "speedMS": 5955.906769631719,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          59317,
+          26389
+        ],
+        "names": [
+          "STARLINK-31349",
+          "ATLAS 2A CENTAUR R/B"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-31T03:19:07.100Z",
+        "missM": 1685.098306339076,
+        "speedMS": 9554.653118053615,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          59925,
+          39036
+        ],
+        "names": [
+          "STARLINK-31959",
+          "ARIANE 5 R/B"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-11-01T21:27:11.122Z",
+        "missM": 2217.2952566774934,
+        "speedMS": 6981.7052023689575,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          100069,
+          30110
+        ],
+        "names": [
+          "PRAETORIAN SDA_511",
+          "FENGYUN 1C DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-11-02T14:52:31.047Z",
+        "missM": 2301.691586201744,
+        "speedMS": 14799.206132067287,
+        "cls": "numbered100000",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          66955,
+          26122
+        ],
+        "names": [
+          "HULIANWANG DIGUI-116",
+          "CZ-4 DEB"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-10-31T01:57:40.931Z",
+        "missM": 2306.581999429445,
+        "speedMS": 14464.386585274578,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          66826,
+          45673
+        ],
+        "names": [
+          "STARLINK-35898",
+          "STARLINK-1456"
+        ],
+        "statuses": [
+          "+",
+          "P"
+        ],
+        "tcaUtc": "2026-11-03T03:49:05.985Z",
+        "missM": 2655.3835469928126,
+        "speedMS": 13006.830823065866,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          48271,
+          25442
+        ],
+        "names": [
+          "TYVAK-182A",
+          "PEGASUS DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-11-02T03:15:00.031Z",
+        "missM": 2910.0594278672033,
+        "speedMS": 15243.783946666828,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T06:46:49.337Z",
+        "missM": 3005.070931357652,
+        "speedMS": 1.7968788466053607,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T01:58:50.115Z",
+        "missM": 3005.081422913073,
+        "speedMS": 1.7964555977219447,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T11:34:48.537Z",
+        "missM": 3005.235637490987,
+        "speedMS": 1.7973107244437232,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T21:10:50.895Z",
+        "missM": 3005.266600633989,
+        "speedMS": 1.7960373154550742,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T16:22:47.752Z",
+        "missM": 3005.5760702791367,
+        "speedMS": 1.7977445883852332,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T16:22:51.673Z",
+        "missM": 3005.625964562851,
+        "speedMS": 1.7956248176568186,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-01T21:10:46.962Z",
+        "missM": 3006.0927874369027,
+        "speedMS": 1.7981832542956875,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T11:34:52.461Z",
+        "missM": 3006.159025180568,
+        "speedMS": 1.795216431413731,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T01:58:46.151Z",
+        "missM": 3006.7863875047865,
+        "speedMS": 1.7986294347431515,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T06:46:53.226Z",
+        "missM": 3006.8653071428553,
+        "speedMS": 1.7948175195537484,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T06:46:45.348Z",
+        "missM": 3007.657527157035,
+        "speedMS": 1.7990766926016206,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T01:58:53.999Z",
+        "missM": 3007.7443581536522,
+        "speedMS": 1.794423155363885,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T11:34:44.531Z",
+        "missM": 3008.7069346202825,
+        "speedMS": 1.799528623388422,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T21:10:54.759Z",
+        "missM": 3008.795762817154,
+        "speedMS": 1.7940366565514674,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T16:22:43.703Z",
+        "missM": 3009.935423904057,
+        "speedMS": 1.7999833876968883,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T16:22:55.532Z",
+        "missM": 3010.019157878642,
+        "speedMS": 1.793653968637911,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-02T21:10:42.880Z",
+        "missM": 3011.343902353738,
+        "speedMS": 1.8004365032810172,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T11:34:56.307Z",
+        "missM": 3011.414253142106,
+        "speedMS": 1.793276480551592,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T01:58:42.037Z",
+        "missM": 3012.9333726877485,
+        "speedMS": 1.8008914710572845,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T06:46:57.080Z",
+        "missM": 3012.9808493494443,
+        "speedMS": 1.7929045465942308,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T06:46:41.196Z",
+        "missM": 3014.704925916576,
+        "speedMS": 1.801342005495594,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-30T01:58:57.860Z",
+        "missM": 3014.718859549065,
+        "speedMS": 1.7925361452370019,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T21:10:58.636Z",
+        "missM": 3016.6283254744994,
+        "speedMS": 1.792172469817243,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T11:34:40.343Z",
+        "missM": 3016.659723732227,
+        "speedMS": 1.8017891505159127,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T16:22:59.427Z",
+        "missM": 3018.709432525415,
+        "speedMS": 1.7918096416726512,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T16:22:39.477Z",
+        "missM": 3018.798970654337,
+        "speedMS": 1.802230500609937,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T11:35:00.223Z",
+        "missM": 3020.962518642527,
+        "speedMS": 1.7914481103041922,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-03T21:10:38.607Z",
+        "missM": 3021.123873899746,
+        "speedMS": 1.802662020303193,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T06:47:01.030Z",
+        "missM": 3023.3880779956366,
+        "speedMS": 1.791085715046818,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T01:58:37.729Z",
+        "missM": 3023.6355936258296,
+        "speedMS": 1.8030814099679406,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-29T01:59:01.849Z",
+        "missM": 3025.9867564329047,
+        "speedMS": 1.7907205750859612,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T06:46:36.830Z",
+        "missM": 3026.335183521522,
+        "speedMS": 1.803489269385074,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-28T21:11:02.679Z",
+        "missM": 3028.7593398682075,
+        "speedMS": 1.7903509435451637,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T11:34:35.931Z",
+        "missM": 3029.223525399328,
+        "speedMS": 1.8038774936989395,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T16:22:35.023Z",
+        "missM": 3032.3012603942643,
+        "speedMS": 1.8042453113325412,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          64335,
+          26967
+        ],
+        "names": [
+          "STARLINK-33855",
+          "DELTA 2 DEB"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-30T15:45:11.905Z",
+        "missM": 3036.4465346316474,
+        "speedMS": 7936.15451002728,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          67338,
+          37747
+        ],
+        "names": [
+          "STARLINK-36413",
+          "PSLV R/B"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-10-31T14:09:38.955Z",
+        "missM": 3141.1266100931084,
+        "speedMS": 8872.86787496323,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          53567,
+          13007
+        ],
+        "names": [
+          "STARLINK-4585",
+          "ATLAS CENTAUR R/B"
+        ],
+        "statuses": [
+          "+",
+          "-"
+        ],
+        "tcaUtc": "2026-10-31T14:33:37.379Z",
+        "missM": 3334.2412881272603,
+        "speedMS": 4258.201278398032,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          64297,
+          42663
+        ],
+        "names": [
+          "STARLINK-34369",
+          "CZ-3B R/B"
+        ],
+        "statuses": [
+          "+",
+          null
+        ],
+        "tcaUtc": "2026-11-03T16:12:23.611Z",
+        "missM": 3380.255105769266,
+        "speedMS": 8447.31181234082,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          60494,
+          67013
+        ],
+        "names": [
+          "FLOCK 4BE 22",
+          "STARLINK-35856"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-10-31T12:09:36.412Z",
+        "missM": 3453.101340063413,
+        "speedMS": 15154.85851595545,
+        "cls": "primary",
+        "why": "unexplained"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T13:31:44.427Z",
+        "missM": 3479.3605312675186,
+        "speedMS": 1.7780495073491502,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      },
+      {
+        "pair": [
+          40080,
+          43234
+        ],
+        "names": [
+          "O3B FM7",
+          "O3B FM13"
+        ],
+        "statuses": [
+          "+",
+          "+"
+        ],
+        "tcaUtc": "2026-11-04T08:43:58.647Z",
+        "missM": 3482.7801614985246,
+        "speedMS": 1.7773748547111645,
+        "cls": "editionMismatch",
+        "why": "unverified: an object never appears in the report"
+      }
+    ]
+  },
+  "tolerances": {
+    "source": "space-data-network-modules analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs (a2.8b-2026-07-13) at the pinned commit",
+    "sourceSha256": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae",
+    "strata": {
+      "nlrvMinMS": 50,
+      "lrvMinMS": 10
+    },
+    "tcaNlrvSeconds": 0.01,
+    "tcaLrvVlrv": "recorded, not gated (flat minimum)",
+    "missM": 5,
+    "speedMS": 5,
+    "pc": "information only (SOCRATES's radii are not published)"
+  },
+  "verdict": {
+    "coverage": "subset: part 1 only (600 of 16818 active primaries)",
+    "recall": {
+      "reference": 7319,
+      "found": 7319,
+      "status": "pass"
+    },
+    "geometry": {
+      "status": "pass",
+      "beyondTolerance": {
+        "tcaNlrv": 0,
+        "miss": 0,
+        "speed": 0
+      }
+    },
+    "status": "pass"
+  },
+  "secondary": {
+    "rule": "below 10 m/s (VLRV) the TCA of a flat minimum is ill-conditioned: a VLRV SOCRATES row counts as found when the screen reports any event of the same pair inside the window; its TCA difference is reported, not gated; otherwise as the primary verdict",
+    "recall": {
+      "primary": {
+        "below 1 km": {
+          "reference": 486,
+          "found": 486,
+          "recall": 1
+        },
+        "1 to 5 km": {
+          "reference": 6833,
+          "found": 6833,
+          "recall": 1
+        },
+        "all": {
+          "reference": 7319,
+          "found": 7319,
+          "recall": 1
+        }
+      },
+      "editionMismatch": {
+        "below 1 km": {
+          "reference": 0,
+          "found": 0,
+          "recall": null
+        },
+        "1 to 5 km": {
+          "reference": 0,
+          "found": 0,
+          "recall": null
+        },
+        "all": {
+          "reference": 0,
+          "found": 0,
+          "recall": null
+        }
+      },
+      "numbered100000": {
+        "below 1 km": {
+          "reference": 308,
+          "found": 308,
+          "recall": 1
+        },
+        "1 to 5 km": {
+          "reference": 4381,
+          "found": 4381,
+          "recall": 1
+        },
+        "all": {
+          "reference": 4689,
+          "found": 4689,
+          "recall": 1
+        }
+      }
+    },
+    "vlrvPairLevel": [],
+    "verdict": {
+      "recall": {
+        "reference": 7319,
+        "found": 7319,
+        "status": "pass"
+      },
+      "geometry": {
+        "status": "pass",
+        "beyondTolerance": {
+          "tcaNlrv": 0,
+          "miss": 0,
+          "speed": 0
+        }
+      },
+      "status": "pass"
+    }
+  },
+  "amendment": "A3",
+  "module": {
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "version": "0.17.0",
+    "wasmSha256": "0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a"
+  },
+  "runtime": {
+    "node": "v25.4.0",
+    "cpus": 28,
+    "finishedAt": "2026-11-03T11:09:12.179Z"
+  }
+}
