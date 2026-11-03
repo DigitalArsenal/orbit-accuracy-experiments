@@ -1,8 +1,23 @@
 {
   "status": "partial",
-  "methodsComplete": 3,
+  "scope": {
+    "measuredGroups": [
+      "GD",
+      "IG",
+      "GE",
+      "LS",
+      "DO",
+      "HX",
+      "HE",
+      "GN"
+    ],
+    "contextOnlyGroups": {
+      "P": "No AP arm was registered for drag LEO; no new P measurement is claimed."
+    }
+  },
+  "methodsComplete": 5,
   "methodsRequired": 5,
-  "completedRows": 7482,
+  "completedRows": 8024,
   "historicalFiles": [
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap/b040/regimes/rows-0.jsonl",
@@ -209,13 +224,13 @@
     }
   ],
   "groups": {
-    "GD": 660,
-    "IG": 780,
-    "GE": 585,
-    "LS": 1080,
-    "DO": 1800,
-    "HX": 228,
-    "HE": 98,
+    "GD": 715,
+    "IG": 840,
+    "GE": 630,
+    "LS": 1170,
+    "DO": 1950,
+    "HX": 333,
+    "HE": 135,
     "GN": 2265
   },
   "eventCounts": {
@@ -657,6 +672,82 @@
       "sha256": "66a267b8b3b2828aeeed0e6b9020153d4044cee11c4e7c7a50dfc424eef31c6d"
     },
     {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO12/rows-0.jsonl",
+      "sha256": "16c776024fbd03696e3d0b0277dcbe77decae18ca05875f0a9f1001751134dc0"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO12-heap/rows-0.jsonl",
+      "sha256": "6925444852899117f51525fc383c7df247bae4a31b04c94fece411ba22f28818"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-heap/rows-0.jsonl",
+      "sha256": "da204bee33d21fa50367cc931c1068d382dbf48ee108f69345d5d47ffa6e9260"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-0.jsonl",
+      "sha256": "772821445af17095f3e8cae03d218a82c4b061df5aff45c0266b51c61fcc8065"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-1.jsonl",
+      "sha256": "8233a7ce35bacd69c7e41117036f6c702cd90637420a396a9aa3d10a312465b6"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-10.jsonl",
+      "sha256": "ef31623031f160aaf1f0354486c207786919514591619fbf06b948e06645d5e3"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-2.jsonl",
+      "sha256": "ac3194c585ef464e00445a8147e4a736fb4d344e91a070c84daadbb31b902c41"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-4.jsonl",
+      "sha256": "835823f8bd3f56a5cf071701c5e0238997c77267a486f2b64a5d12e461982e5c"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-5.jsonl",
+      "sha256": "a51268d185ad1714215e1ad4585146cd0dae3cf43a8d088db399eac00b7c3482"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-7.jsonl",
+      "sha256": "bc4aced80791b94030ac123d26976361936353c64c99b68f575724c0b4a7e371"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-8.jsonl",
+      "sha256": "eb375a677006b3f7ce08f74f34130ae4cf4e2df84b093f2518baca1b2884cd11"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/rows-9.jsonl",
+      "sha256": "8952fb9672c6914c21e8fa436d2bf501e6096f10875938cb05b587e276e45602"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-0.jsonl",
+      "sha256": "8e433a44ba154922932c1ea7c3d2433ac2184e32a0e3c3f5652f2f31d8a21b40"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-1.jsonl",
+      "sha256": "3fa427879a8a79681ecb5aec652def8af7984c206da40dce889254a2c8f17a9e"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-2.jsonl",
+      "sha256": "f34e5aa6d1d3a7a04484373b4d1f0827c935b0a14946843a2d2011ed567334d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-3.jsonl",
+      "sha256": "56d3dd20ce5680c2db570feadc878de66714aef07533964b6c1da3a792ab0861"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-4.jsonl",
+      "sha256": "6d69e752022140d7fa6219a5659bfabf370d9f0fea1886ed6e37866af3597cf6"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-5.jsonl",
+      "sha256": "9cccc7d0950109c674c60cca155331a49d2825e4e20f5d4566112ecc1238fce6"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/rows-7.jsonl",
+      "sha256": "f21d3dc3e668b5d3c0a64396ce60008daa3e7e633aa7bc6c53096bc6b67debc0"
+    },
+    {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-NOFRAME/rows-0.jsonl",
       "sha256": "fece0446a9e82c5b450b9a97bef5a2227de986163552abc200df40d07da7b689"
     },
@@ -754,11 +845,11 @@
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-0.jsonl",
-      "sha256": "f0fc24a91da8bc18cd2a85feb01864950b4d6e34ae447f44a032bf7d790e97c8"
+      "sha256": "beed87e212325e91ac802dcb11076841f27ee4c0f8980ba328949a9dae3778a7"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-1.jsonl",
-      "sha256": "83c347e62268697ddbca4d2950c79abf8ae219c704db9f647e61dac351e7de4d"
+      "sha256": "72c6cb50a811c12ca83060a1bfa1392a18db8894bf8aa5c12294ea327c7fa299"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-10.jsonl",
@@ -766,39 +857,51 @@
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-11.jsonl",
-      "sha256": "835e1ac6975a18ccee94ef74294ff13c984330928aa1f19541e3681921a4e2bc"
+      "sha256": "0c503cdbd110943b4b557da124dc638829ba7941a2332a48c8fed33ac7dc12b4"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-2.jsonl",
-      "sha256": "41111e25015217b4cd85a7bb8eb33b71ab9a6744fe675ba27e8168b55a9facdf"
+      "sha256": "4328d0123a05811bb067a4b0c17c3605957b77547d90d97b71871aba73fb1369"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-3.jsonl",
-      "sha256": "9d8256c7feba83acc511bc3bc4a1fa00a0ab3d8fa6b015605a9db48186056107"
+      "sha256": "c0748ee53ebb9f87494143bf61493ed1f207a080379fdcee8e9547f04287ee29"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-4.jsonl",
-      "sha256": "cbde22d184defca5e5b36aeeffc664c4b40be85329577c3921254aa2dc6442d6"
+      "sha256": "be887dc112e3bb3ff9e991c85650ab73530b12adc1f984fe2fe40d4e8879c805"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-5.jsonl",
-      "sha256": "2d4128aa6b8c5094e911143388d9fb07ca947ba27a708612e2c6b44287d0a9ab"
+      "sha256": "60b1c71784d0efa224815af426f07c8c522dd87fa9d1e68f1a76b18dfb13b34c"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-6.jsonl",
-      "sha256": "31524dca865bbfb84402a81eb7e0e391d1f9bd1eac88795aaf470c747148c21a"
+      "sha256": "b4eb5670b1ce731dded0944a82fd7a014823a863fe82462177a8af0865f7b5fe"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-7.jsonl",
-      "sha256": "ef16913d207ca37115dca362d78fd7e309ea9489a2b8ac8af1ada3c4c4ce7c6b"
+      "sha256": "297314cb0ff367b3288959c17617ff6f2c7c07316b69375bc0dd9d2b8a211225"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-8.jsonl",
-      "sha256": "5916f66dc3c9bd51a0056bf8adef43ad5b938e9c5eeda22a09132122b516569c"
+      "sha256": "5de06367b505848c01cc13c3aff78ddd79c634371c44f94fcddd7568c13dcf4a"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/rows-9.jsonl",
       "sha256": "efc613451a19bad60a5c062b77f56a70b281dc93c2f6ab3869b0f3ec4b6f6717"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/rows-0.jsonl",
+      "sha256": "923c8cfda5eb7cf49db726ff4003d7e48d62d8c3dc34ba898d931b158b2702b2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/rows-1.jsonl",
+      "sha256": "6f134fe178cd7d0c95ca438127a11192d758f7155cc5606575603288cf9c69fc"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/rows-2.jsonl",
+      "sha256": "2fd470c96705ffe280877c411640560a36b660bebdebe31f181ce7597de4d896"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame/rows-0.jsonl",
@@ -990,8 +1093,7 @@
     }
   ],
   "missing": [
-    "Method 2: partial: shadow and zonal-only isolation unavailable",
-    "Method 4: partial: extended resonant terms not implemented",
+    "Higher-degree HEO numerical convergence is unconfirmed; no production gain is attributed to these terms.",
     "Unique causes and measured module gains are not established for every gap; follow-up tasks remain coordinator drafts."
   ],
   "cells": [
@@ -1932,6 +2034,78 @@
       "pairedDeltaM": 0
     },
     {
+      "group": "GD",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 54,
+      "attempted": 55,
+      "medianM": 2.2686958144283977,
+      "pairedN": 54,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GD",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 54,
+      "attempted": 55,
+      "medianM": 3.2399695739187147,
+      "pairedN": 54,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GD",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 54,
+      "attempted": 55,
+      "medianM": 18.57642502642925,
+      "pairedN": 54,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GD",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 54,
+      "attempted": 55,
+      "medianM": 2.2195437541500276,
+      "pairedN": 54,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GD",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 54,
+      "attempted": 55,
+      "medianM": 3.2416273278911945,
+      "pairedN": 54,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GD",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 7,
+      "n": 54,
+      "attempted": 55,
+      "medianM": 17.411042171771882,
+      "pairedN": 54,
+      "pairedDeltaM": 0
+    },
+    {
       "group": "IG",
       "batch": "resume-CLASS0",
       "arm": "AP72",
@@ -2859,6 +3033,78 @@
       "group": "IG",
       "batch": "resume-ffm",
       "arm": "TESS3172",
+      "control": "F72",
+      "day": 7,
+      "n": 59,
+      "attempted": 60,
+      "medianM": 29.872948112368544,
+      "pairedN": 59,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "IG",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 60,
+      "attempted": 60,
+      "medianM": 2.0021588825193612,
+      "pairedN": 60,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "IG",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 60,
+      "attempted": 60,
+      "medianM": 7.488096092989711,
+      "pairedN": 60,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "IG",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 59,
+      "attempted": 60,
+      "medianM": 29.872948112368544,
+      "pairedN": 59,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "IG",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 60,
+      "attempted": 60,
+      "medianM": 2.0021588825193612,
+      "pairedN": 60,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "IG",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 60,
+      "attempted": 60,
+      "medianM": 7.488096092989711,
+      "pairedN": 60,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "IG",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
       "control": "F72",
       "day": 7,
       "n": 59,
@@ -3949,6 +4195,78 @@
     },
     {
       "group": "GE",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 32,
+      "attempted": 45,
+      "medianM": 15.67713680828909,
+      "pairedN": 32,
+      "pairedDeltaM": 0.8008443649124186
+    },
+    {
+      "group": "GE",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 30,
+      "attempted": 45,
+      "medianM": 68.77048414794291,
+      "pairedN": 30,
+      "pairedDeltaM": 3.8755790356230087
+    },
+    {
+      "group": "GE",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 32,
+      "attempted": 45,
+      "medianM": 309.31730278683665,
+      "pairedN": 32,
+      "pairedDeltaM": 15.473466138695464
+    },
+    {
+      "group": "GE",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 32,
+      "attempted": 45,
+      "medianM": 15.444373204079096,
+      "pairedN": 32,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GE",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 30,
+      "attempted": 45,
+      "medianM": 64.25123896754104,
+      "pairedN": 30,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GE",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 7,
+      "n": 32,
+      "attempted": 45,
+      "medianM": 280.2117473947368,
+      "pairedN": 32,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "GE",
       "batch": "resume-frame",
       "arm": "XP72",
       "control": "XP72",
@@ -4745,11 +5063,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 1,
-      "n": 42,
-      "attempted": 58,
-      "medianM": 34.32315450858322,
-      "pairedN": 42,
-      "pairedDeltaM": 11.179275318837014
+      "n": 65,
+      "attempted": 90,
+      "medianM": 34.363092345080744,
+      "pairedN": 65,
+      "pairedDeltaM": 11.241398130685896
     },
     {
       "group": "LS",
@@ -4757,11 +5075,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 3,
-      "n": 37,
-      "attempted": 58,
-      "medianM": 76.78151400490471,
-      "pairedN": 37,
-      "pairedDeltaM": 23.646937250513382
+      "n": 57,
+      "attempted": 90,
+      "medianM": 76.5752322446676,
+      "pairedN": 57,
+      "pairedDeltaM": 20.363873065557232
     },
     {
       "group": "LS",
@@ -4769,11 +5087,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 7,
-      "n": 42,
-      "attempted": 58,
-      "medianM": 169.19944963293264,
-      "pairedN": 42,
-      "pairedDeltaM": 55.59805053546234
+      "n": 64,
+      "attempted": 90,
+      "medianM": 174.40856129468324,
+      "pairedN": 64,
+      "pairedDeltaM": 41.760597129780734
     },
     {
       "group": "LS",
@@ -4781,11 +5099,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 1,
-      "n": 42,
-      "attempted": 58,
-      "medianM": 55.13020606559729,
-      "pairedN": 42,
-      "pairedDeltaM": 30.70312016423695
+      "n": 65,
+      "attempted": 90,
+      "medianM": 52.651270899079115,
+      "pairedN": 65,
+      "pairedDeltaM": 26.299021862422677
     },
     {
       "group": "LS",
@@ -4793,11 +5111,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 3,
-      "n": 37,
-      "attempted": 58,
-      "medianM": 140.96758699533618,
-      "pairedN": 37,
-      "pairedDeltaM": 77.55596612036926
+      "n": 57,
+      "attempted": 90,
+      "medianM": 149.02794449498944,
+      "pairedN": 57,
+      "pairedDeltaM": 77.35661620069675
     },
     {
       "group": "LS",
@@ -4805,11 +5123,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 7,
-      "n": 42,
-      "attempted": 58,
-      "medianM": 419.65391339898815,
-      "pairedN": 42,
-      "pairedDeltaM": 305.1053459614686
+      "n": 64,
+      "attempted": 90,
+      "medianM": 469.2769669183578,
+      "pairedN": 64,
+      "pairedDeltaM": 339.48493474975896
     },
     {
       "group": "LS",
@@ -5026,6 +5344,78 @@
       "medianM": 143.76785443528775,
       "pairedN": 64,
       "pairedDeltaM": 11.444651453799054
+    },
+    {
+      "group": "LS",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 65,
+      "attempted": 90,
+      "medianM": 30.283251838354307,
+      "pairedN": 65,
+      "pairedDeltaM": 4.635486052343922
+    },
+    {
+      "group": "LS",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 57,
+      "attempted": 90,
+      "medianM": 65.24373348680628,
+      "pairedN": 57,
+      "pairedDeltaM": 4.7381669953383065
+    },
+    {
+      "group": "LS",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 64,
+      "attempted": 90,
+      "medianM": 136.7657270719049,
+      "pairedN": 64,
+      "pairedDeltaM": 7.990121490552927
+    },
+    {
+      "group": "LS",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 65,
+      "attempted": 90,
+      "medianM": 25.15710278271455,
+      "pairedN": 65,
+      "pairedDeltaM": 1.0162756868605274
+    },
+    {
+      "group": "LS",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 57,
+      "attempted": 90,
+      "medianM": 56.007301253229,
+      "pairedN": 57,
+      "pairedDeltaM": 1.9151766998041357
+    },
+    {
+      "group": "LS",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 7,
+      "n": 64,
+      "attempted": 90,
+      "medianM": 118.39457816422154,
+      "pairedN": 64,
+      "pairedDeltaM": 3.0086479371826815
     },
     {
       "group": "DO",
@@ -5825,11 +6215,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 1,
-      "n": 21,
-      "attempted": 21,
-      "medianM": 27.40476876451989,
-      "pairedN": 21,
-      "pairedDeltaM": 5.863197287888672
+      "n": 136,
+      "attempted": 138,
+      "medianM": 27.23328572476476,
+      "pairedN": 136,
+      "pairedDeltaM": 9.669496915761584
     },
     {
       "group": "DO",
@@ -5837,11 +6227,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 3,
-      "n": 19,
-      "attempted": 21,
-      "medianM": 125.93961603691106,
-      "pairedN": 19,
-      "pairedDeltaM": 8.925041723075704
+      "n": 121,
+      "attempted": 138,
+      "medianM": 102.57772922838382,
+      "pairedN": 121,
+      "pairedDeltaM": 9.440976382256515
     },
     {
       "group": "DO",
@@ -5849,11 +6239,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 7,
-      "n": 19,
-      "attempted": 21,
-      "medianM": 532.4662127419068,
-      "pairedN": 19,
-      "pairedDeltaM": 17.280204297718925
+      "n": 103,
+      "attempted": 138,
+      "medianM": 843.8742377195869,
+      "pairedN": 103,
+      "pairedDeltaM": 6.593915947955553
     },
     {
       "group": "DO",
@@ -5861,11 +6251,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 1,
-      "n": 21,
-      "attempted": 21,
-      "medianM": 66.9665058341491,
-      "pairedN": 21,
-      "pairedDeltaM": 26.18534307167187
+      "n": 136,
+      "attempted": 138,
+      "medianM": 55.53763875254206,
+      "pairedN": 136,
+      "pairedDeltaM": 28.225614740862618
     },
     {
       "group": "DO",
@@ -5873,11 +6263,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 3,
-      "n": 19,
-      "attempted": 21,
-      "medianM": 212.76514720094613,
-      "pairedN": 19,
-      "pairedDeltaM": 106.6388585881446
+      "n": 121,
+      "attempted": 138,
+      "medianM": 202.0432910153244,
+      "pairedN": 121,
+      "pairedDeltaM": 73.38561450055172
     },
     {
       "group": "DO",
@@ -5885,11 +6275,83 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 7,
-      "n": 19,
-      "attempted": 21,
-      "medianM": 1081.4943321881565,
-      "pairedN": 19,
-      "pairedDeltaM": 555.2158807499717
+      "n": 103,
+      "attempted": 138,
+      "medianM": 1281.324397948774,
+      "pairedN": 103,
+      "pairedDeltaM": 196.15821329229513
+    },
+    {
+      "group": "DO",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 136,
+      "attempted": 138,
+      "medianM": 17.49766497121092,
+      "pairedN": 136,
+      "pairedDeltaM": 1.7264793720889842
+    },
+    {
+      "group": "DO",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 121,
+      "attempted": 138,
+      "medianM": 100.11087083866363,
+      "pairedN": 121,
+      "pairedDeltaM": 0.8927406005332372
+    },
+    {
+      "group": "DO",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 103,
+      "attempted": 138,
+      "medianM": 849.1862323028722,
+      "pairedN": 103,
+      "pairedDeltaM": 0.9339005062349304
+    },
+    {
+      "group": "DO",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 136,
+      "attempted": 138,
+      "medianM": 15.071342547221654,
+      "pairedN": 136,
+      "pairedDeltaM": 0.27336004421647275
+    },
+    {
+      "group": "DO",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 121,
+      "attempted": 138,
+      "medianM": 95.83799015789725,
+      "pairedN": 121,
+      "pairedDeltaM": 0.35306913727112255
+    },
+    {
+      "group": "DO",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 7,
+      "n": 103,
+      "attempted": 138,
+      "medianM": 847.8984302225291,
+      "pairedN": 103,
+      "pairedDeltaM": 0.005861840373544425
     },
     {
       "group": "HX",
@@ -6217,6 +6679,186 @@
     },
     {
       "group": "HX",
+      "batch": "resume-HEO12",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 0,
+      "attempted": 19,
+      "medianM": null,
+      "pairedN": 0,
+      "pairedDeltaM": null
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO12",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 0,
+      "attempted": 19,
+      "medianM": null,
+      "pairedN": 0,
+      "pairedDeltaM": null
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO12",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 0,
+      "attempted": 19,
+      "medianM": null,
+      "pairedN": 0,
+      "pairedDeltaM": null
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO12-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 594.5402443754282,
+      "pairedN": 19,
+      "pairedDeltaM": -0.004148630114095275
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO12-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 2857.7904101028507,
+      "pairedN": 19,
+      "pairedDeltaM": 0.8865778144837577
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO12-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 12477.195644159492,
+      "pairedN": 19,
+      "pairedDeltaM": -0.4221442975449463
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 600.752168426832,
+      "pairedN": 19,
+      "pairedDeltaM": -0.004150112754550128
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 2779.168230765502,
+      "pairedN": 19,
+      "pairedDeltaM": 0.8866002860550282
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 12339.200607192322,
+      "pairedN": 19,
+      "pairedDeltaM": -0.42216250814597345
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-q16",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 10,
+      "attempted": 10,
+      "medianM": 631.1267898241728,
+      "pairedN": 10,
+      "pairedDeltaM": 0.10175277099134378
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-q16",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 10,
+      "attempted": 10,
+      "medianM": 2838.01199085402,
+      "pairedN": 10,
+      "pairedDeltaM": 29.848309844682785
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-q16",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 10,
+      "attempted": 10,
+      "medianM": 12722.326039384565,
+      "pairedN": 10,
+      "pairedDeltaM": 0.36079171271197197
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-q4",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 600.752168426832,
+      "pairedN": 19,
+      "pairedDeltaM": -0.004150112754550128
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-q4",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 2779.168230765502,
+      "pairedN": 19,
+      "pairedDeltaM": 0.8866002860550282
+    },
+    {
+      "group": "HX",
+      "batch": "resume-HEO20-q4",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 12339.200607192322,
+      "pairedN": 19,
+      "pairedDeltaM": -0.42216250814597345
+    },
+    {
+      "group": "HX",
       "batch": "resume-NOFRAME",
       "arm": "AP72",
       "control": "AP72",
@@ -6509,11 +7151,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 1,
-      "n": 4,
-      "attempted": 4,
-      "medianM": 32208.247079543107,
-      "pairedN": 4,
-      "pairedDeltaM": 30549.326522906507
+      "n": 19,
+      "attempted": 19,
+      "medianM": 12896.469187884628,
+      "pairedN": 19,
+      "pairedDeltaM": 12846.450084819748
     },
     {
       "group": "HX",
@@ -6521,11 +7163,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 3,
-      "n": 4,
-      "attempted": 4,
-      "medianM": 37434.5155916878,
-      "pairedN": 4,
-      "pairedDeltaM": 36353.264660575616
+      "n": 19,
+      "attempted": 19,
+      "medianM": 25664.1385721308,
+      "pairedN": 19,
+      "pairedDeltaM": 25592.96543228301
     },
     {
       "group": "HX",
@@ -6533,11 +7175,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 7,
-      "n": 4,
-      "attempted": 4,
-      "medianM": 155734.65362744918,
-      "pairedN": 4,
-      "pairedDeltaM": 144925.93837277655
+      "n": 19,
+      "attempted": 19,
+      "medianM": 51695.597225480895,
+      "pairedN": 19,
+      "pairedDeltaM": 51529.63353624338
     },
     {
       "group": "HX",
@@ -6545,11 +7187,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 1,
-      "n": 4,
-      "attempted": 4,
-      "medianM": 82985.32625927322,
-      "pairedN": 4,
-      "pairedDeltaM": 82929.17000552564
+      "n": 19,
+      "attempted": 19,
+      "medianM": 44402.836534012094,
+      "pairedN": 19,
+      "pairedDeltaM": 44374.653430715625
     },
     {
       "group": "HX",
@@ -6557,11 +7199,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 3,
-      "n": 4,
-      "attempted": 4,
-      "medianM": 119171.21255845939,
-      "pairedN": 4,
-      "pairedDeltaM": 118089.9616273472
+      "n": 19,
+      "attempted": 19,
+      "medianM": 114933.44871297483,
+      "pairedN": 19,
+      "pairedDeltaM": 114871.19062149734
     },
     {
       "group": "HX",
@@ -6569,11 +7211,83 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 7,
-      "n": 4,
-      "attempted": 4,
-      "medianM": 547042.6462241517,
-      "pairedN": 4,
-      "pairedDeltaM": 536233.930969479
+      "n": 19,
+      "attempted": 19,
+      "medianM": 277181.53542058065,
+      "pairedN": 19,
+      "pairedDeltaM": 277039.01053688035
+    },
+    {
+      "group": "HX",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 9.570682402111105,
+      "pairedN": 19,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HX",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 72.0814835438269,
+      "pairedN": 19,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HX",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 444.39330449563613,
+      "pairedN": 19,
+      "pairedDeltaM": 138.15237052526138
+    },
+    {
+      "group": "HX",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 28.183103296471874,
+      "pairedN": 19,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HX",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 62.25809147748966,
+      "pairedN": 19,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HX",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 7,
+      "n": 19,
+      "attempted": 19,
+      "medianM": 199.08024410005686,
+      "pairedN": 19,
+      "pairedDeltaM": 0
     },
     {
       "group": "HX",
@@ -7081,6 +7795,186 @@
     },
     {
       "group": "HE",
+      "batch": "resume-HEO12",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 0,
+      "attempted": 7,
+      "medianM": null,
+      "pairedN": 0,
+      "pairedDeltaM": null
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO12",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 0,
+      "attempted": 7,
+      "medianM": null,
+      "pairedN": 0,
+      "pairedDeltaM": null
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO12",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 0,
+      "attempted": 7,
+      "medianM": null,
+      "pairedN": 0,
+      "pairedDeltaM": null
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO12-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 766.2028938763332,
+      "pairedN": 7,
+      "pairedDeltaM": -2.5348612098241574e-8
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO12-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 2009.2491794388768,
+      "pairedN": 7,
+      "pairedDeltaM": -3.822275829179489e-9
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO12-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 7605.137081337788,
+      "pairedN": 7,
+      "pairedDeltaM": -3.581046570388935e-8
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 766.2028938763332,
+      "pairedN": 7,
+      "pairedDeltaM": -2.5348612098241574e-8
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 2009.2491794388768,
+      "pairedN": 7,
+      "pairedDeltaM": -3.822275829179489e-9
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-heap",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 7605.137081337788,
+      "pairedN": 7,
+      "pairedDeltaM": -3.581046570388935e-8
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-q16",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 2,
+      "attempted": 2,
+      "medianM": 663.0538802748583,
+      "pairedN": 2,
+      "pairedDeltaM": -2.2551677192339525e-7
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-q16",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 2,
+      "attempted": 2,
+      "medianM": 1740.2333706774336,
+      "pairedN": 2,
+      "pairedDeltaM": -6.167134580792322e-7
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-q16",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 2,
+      "attempted": 2,
+      "medianM": 11591.53201663422,
+      "pairedN": 2,
+      "pairedDeltaM": -0.0000038058569629129124
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-q4",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 1,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 766.2028938763332,
+      "pairedN": 7,
+      "pairedDeltaM": -2.5348612098241574e-8
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-q4",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 3,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 2009.2491794388768,
+      "pairedN": 7,
+      "pairedDeltaM": -3.822275829179489e-9
+    },
+    {
+      "group": "HE",
+      "batch": "resume-HEO20-q4",
+      "arm": "AP72",
+      "control": "AP72",
+      "day": 7,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 7605.137081337788,
+      "pairedN": 7,
+      "pairedDeltaM": -3.581046570388935e-8
+    },
+    {
+      "group": "HE",
       "batch": "resume-NOFRAME",
       "arm": "AP72",
       "control": "AP72",
@@ -7373,11 +8267,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 1,
-      "n": 1,
-      "attempted": 1,
-      "medianM": 179514.56464826147,
-      "pairedN": 1,
-      "pairedDeltaM": 179219.96035338272
+      "n": 7,
+      "attempted": 7,
+      "medianM": 93414.70088218119,
+      "pairedN": 7,
+      "pairedDeltaM": 92391.29193308334
     },
     {
       "group": "HE",
@@ -7385,11 +8279,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 3,
-      "n": 1,
-      "attempted": 1,
-      "medianM": 843572.7012643393,
-      "pairedN": 1,
-      "pairedDeltaM": 841950.5988383143
+      "n": 7,
+      "attempted": 7,
+      "medianM": 682553.7671633833,
+      "pairedN": 7,
+      "pairedDeltaM": 681094.438377123
     },
     {
       "group": "HE",
@@ -7397,11 +8291,11 @@
       "arm": "NO_SUN72",
       "control": "F72",
       "day": 7,
-      "n": 1,
-      "attempted": 1,
-      "medianM": 2022224.8797919292,
-      "pairedN": 1,
-      "pairedDeltaM": 2010277.1186060417
+      "n": 7,
+      "attempted": 7,
+      "medianM": 1302662.1042906616,
+      "pairedN": 7,
+      "pairedDeltaM": 1292752.4296559824
     },
     {
       "group": "HE",
@@ -7409,10 +8303,10 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 1,
-      "n": 1,
-      "attempted": 1,
+      "n": 7,
+      "attempted": 7,
       "medianM": 301231.9895898311,
-      "pairedN": 1,
+      "pairedN": 7,
       "pairedDeltaM": 300937.3852949523
     },
     {
@@ -7421,11 +8315,11 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 3,
-      "n": 1,
-      "attempted": 1,
-      "medianM": 1266684.4729083441,
-      "pairedN": 1,
-      "pairedDeltaM": 1265062.3704823193
+      "n": 7,
+      "attempted": 7,
+      "medianM": 1242784.2867463822,
+      "pairedN": 7,
+      "pairedDeltaM": 1240345.1057013567
     },
     {
       "group": "HE",
@@ -7433,11 +8327,83 @@
       "arm": "NO_MOON72",
       "control": "F72",
       "day": 7,
-      "n": 1,
-      "attempted": 1,
-      "medianM": 10409006.281923324,
-      "pairedN": 1,
-      "pairedDeltaM": 10397058.520737438
+      "n": 7,
+      "attempted": 7,
+      "medianM": 5299790.98545025,
+      "pairedN": 7,
+      "pairedDeltaM": 5296627.9996453915
+    },
+    {
+      "group": "HE",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 1,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 1003.3606629280789,
+      "pairedN": 7,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HE",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 3,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 2209.874396122431,
+      "pairedN": 7,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HE",
+      "batch": "resume-ffm-isolated",
+      "arm": "NO_SHADOW72",
+      "control": "F72",
+      "day": 7,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 5115.058244905418,
+      "pairedN": 7,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HE",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 1,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 1003.3606629280789,
+      "pairedN": 7,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HE",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 3,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 2209.874396122431,
+      "pairedN": 7,
+      "pairedDeltaM": 0
+    },
+    {
+      "group": "HE",
+      "batch": "resume-ffm-isolated",
+      "arm": "ZONAL2072",
+      "control": "F72",
+      "day": 7,
+      "n": 7,
+      "attempted": 7,
+      "medianM": 5115.058244905418,
+      "pairedN": 7,
+      "pairedDeltaM": 0
     },
     {
       "group": "HE",
@@ -8359,6 +9325,38 @@
       },
       "fitTerminations": {}
     },
+    "resume-HEO12": {
+      "attemptedRows": 26,
+      "rowErrors": {},
+      "armErrors": {
+        "memory access out of bounds": 40
+      },
+      "fitTerminations": {}
+    },
+    "resume-HEO12-heap": {
+      "attemptedRows": 26,
+      "rowErrors": {},
+      "armErrors": {},
+      "fitTerminations": {}
+    },
+    "resume-HEO20-heap": {
+      "attemptedRows": 26,
+      "rowErrors": {},
+      "armErrors": {},
+      "fitTerminations": {}
+    },
+    "resume-HEO20-q16": {
+      "attemptedRows": 12,
+      "rowErrors": {},
+      "armErrors": {},
+      "fitTerminations": {}
+    },
+    "resume-HEO20-q4": {
+      "attemptedRows": 26,
+      "rowErrors": {},
+      "armErrors": {},
+      "fitTerminations": {}
+    },
     "resume-NOFRAME": {
       "attemptedRows": 426,
       "rowErrors": {
@@ -8385,10 +9383,22 @@
         "no lead bin": 12
       },
       "armErrors": {
-        "coverage": 251
+        "coverage": 263
       },
       "fitTerminations": {
-        "CONVERGED": 3545
+        "CONVERGED": 3873
+      }
+    },
+    "resume-ffm-isolated": {
+      "attemptedRows": 426,
+      "rowErrors": {
+        "no lead bin": 12
+      },
+      "armErrors": {
+        "coverage": 50
+      },
+      "fitTerminations": {
+        "CONVERGED": 778
       }
     },
     "resume-frame": {
@@ -8440,28 +9450,72 @@
       "fitTerminations": {}
     }
   },
+  "quadrature": {
+    "complete": true,
+    "days": [
+      {
+        "day": 1,
+        "n": 26,
+        "maxDifferenceM": 1.79792021765246
+      },
+      {
+        "day": 3,
+        "n": 26,
+        "maxDifferenceM": 2.9960195191489625
+      },
+      {
+        "day": 7,
+        "n": 26,
+        "maxDifferenceM": 5.831210369216855
+      }
+    ],
+    "toleranceM": 0.001,
+    "passed": false
+  },
+  "heoRefinement": {
+    "complete": false,
+    "days": [
+      {
+        "day": 1,
+        "n": 12,
+        "maxDifferenceM": 0
+      },
+      {
+        "day": 3,
+        "n": 12,
+        "maxDifferenceM": 0
+      },
+      {
+        "day": 7,
+        "n": 12,
+        "maxDifferenceM": 0
+      }
+    ],
+    "toleranceM": 0.001,
+    "passed": false
+  },
   "diagnoses": [
     {
       "group": "GD",
       "n": 54,
       "pairedGapM": 10.714167065924617,
-      "cause": "Candidate: solar radiation pressure (shadow not isolated)",
+      "cause": "Candidate: solar radiation pressure contribution",
       "candidate": {
         "arm": "NO_SRP",
-        "term": "solar radiation pressure (shadow not isolated)",
+        "term": "solar radiation pressure contribution",
         "n": 54,
         "closure": 0.5521473428447163,
         "subtractionDeltaM": 3.0384116494361955,
-        "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+        "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
       },
       "candidates": [
         {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 54,
           "closure": 0.5521473428447163,
           "subtractionDeltaM": 3.0384116494361955,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
         },
         {
           "arm": "O12",
@@ -8478,6 +9532,22 @@
           "closure": 0.034542566681176834,
           "subtractionDeltaM": 0.000011247477163447029,
           "proposedChange": "Refine AP tesseral degrees above 12."
+        },
+        {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 54,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
+        },
+        {
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 54,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
         },
         {
           "arm": "NO_TIDES",
@@ -8536,7 +9606,7 @@
           "proposedChange": "Refine AP lunar perturbations."
         }
       ],
-      "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions.",
+      "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change.",
       "expectedGainM": null,
       "gainTargetCeilingM": 10.714167065924617,
       "interpretation": "The AP–FFM gap is a target ceiling, not a measured gain from a module change. A matching subtraction is not a unique causal identification.",
@@ -8647,6 +9717,22 @@
       "candidate": null,
       "candidates": [
         {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 60,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
+        },
+        {
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 60,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
+        },
+        {
           "arm": "NO_TIDES",
           "term": "solid Earth tides",
           "n": 60,
@@ -8696,11 +9782,11 @@
         },
         {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 60,
           "closure": -44.35039708311063,
           "subtractionDeltaM": 1125.7945979720575,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
         },
         {
           "arm": "NO_SUN",
@@ -8834,9 +9920,17 @@
       "group": "GE",
       "n": 30,
       "pairedGapM": 9.310711284121883,
-      "cause": "Unresolved",
+      "cause": "AP leads FFM in group medians; paired-window effects vary",
       "candidate": null,
       "candidates": [
+        {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 30,
+          "closure": 0.2176072278836112,
+          "subtractionDeltaM": 3.8755790356230087,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
+        },
         {
           "arm": "O12",
           "term": "gravity orders above 12",
@@ -8844,6 +9938,14 @@
           "closure": 3.0007348350569174e-7,
           "subtractionDeltaM": 0.000002029586362688185,
           "proposedChange": "Refine the high-order gravity terms in AP."
+        },
+        {
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 30,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
         },
         {
           "arm": "NO_TIDES",
@@ -8887,11 +9989,11 @@
         },
         {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 30,
           "closure": -52.73588100740164,
           "subtractionDeltaM": 1103.925202689241,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
         },
         {
           "arm": "NO_SUN",
@@ -8918,7 +10020,7 @@
           "proposedChange": "Refine AP solar and lunar perturbations."
         }
       ],
-      "proposedChange": null,
+      "proposedChange": "Preserve GE as a nonregression control for proposed module changes.",
       "expectedGainM": null,
       "gainTargetCeilingM": 9.310711284121883,
       "interpretation": "The AP–FFM gap is a target ceiling, not a measured gain from a module change. A matching subtraction is not a unique causal identification.",
@@ -9053,6 +10155,14 @@
           "proposedChange": "Evaluate tesseral degrees above 31 in AP."
         },
         {
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 57,
+          "closure": -0.050339142077880705,
+          "subtractionDeltaM": 1.9151766998041357,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
+        },
+        {
           "arm": "D20",
           "term": "gravity harmonics above degree 20 (not zonals alone)",
           "n": 57,
@@ -9061,11 +10171,19 @@
           "proposedChange": "Isolate the high-degree zonal and tesseral contributions before changing AP."
         },
         {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 57,
+          "closure": -0.28655569187113716,
+          "subtractionDeltaM": 4.7381669953383065,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
+        },
+        {
           "arm": "NO_SUN",
           "term": "solar gravitational perturbations",
-          "n": 37,
-          "closure": -0.25608999476853245,
-          "subtractionDeltaM": 23.646937250513382,
+          "n": 57,
+          "closure": -0.32722503106200596,
+          "subtractionDeltaM": 20.363873065557232,
           "proposedChange": "Refine AP solar perturbations."
         },
         {
@@ -9078,11 +10196,19 @@
         },
         {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 57,
           "closure": -0.720148513386843,
           "subtractionDeltaM": -24.54798704005515,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
+        },
+        {
+          "arm": "NO_MOON",
+          "term": "lunar gravitational perturbations",
+          "n": 57,
+          "closure": -2.451978209178084,
+          "subtractionDeltaM": 77.35661620069675,
+          "proposedChange": "Refine AP lunar perturbations."
         },
         {
           "arm": "NO_BODIES",
@@ -9091,14 +10217,6 @@
           "closure": -2.862598860266211,
           "subtractionDeltaM": 99.38085581936987,
           "proposedChange": "Refine AP solar and lunar perturbations."
-        },
-        {
-          "arm": "NO_MOON",
-          "term": "lunar gravitational perturbations",
-          "n": 37,
-          "closure": -2.950442307780882,
-          "subtractionDeltaM": 77.55596612036926,
-          "proposedChange": "Refine AP lunar perturbations."
         },
         {
           "arm": "TESS12",
@@ -9244,28 +10362,44 @@
           "proposedChange": "Evaluate tesseral degrees above 31 in AP."
         },
         {
+          "arm": "NO_MOON",
+          "term": "lunar gravitational perturbations",
+          "n": 121,
+          "closure": 0.06405482834936727,
+          "subtractionDeltaM": 73.38561450055172,
+          "proposedChange": "Refine AP lunar perturbations."
+        },
+        {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 121,
           "closure": 0.04689352941581659,
           "subtractionDeltaM": 3.4033637635686316,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
         },
         {
           "arm": "NO_SUN",
           "term": "solar gravitational perturbations",
-          "n": 19,
-          "closure": 0.027870030496046527,
-          "subtractionDeltaM": 8.925041723075704,
+          "n": 121,
+          "closure": 0.021362056721310974,
+          "subtractionDeltaM": 9.440976382256515,
           "proposedChange": "Refine AP solar perturbations."
         },
         {
-          "arm": "NO_MOON",
-          "term": "lunar gravitational perturbations",
-          "n": 19,
-          "closure": -0.020082798731377194,
-          "subtractionDeltaM": 106.6388585881446,
-          "proposedChange": "Refine AP lunar perturbations."
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 121,
+          "closure": -0.0018685045774755604,
+          "subtractionDeltaM": 0.35306913727112255,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
+        },
+        {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 121,
+          "closure": -0.005553327726077528,
+          "subtractionDeltaM": 0.8927406005332372,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
         },
         {
           "arm": "NO_TIDES",
@@ -9395,6 +10529,22 @@
       "candidate": null,
       "candidates": [
         {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 19,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
+        },
+        {
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 19,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
+        },
+        {
           "arm": "NO_TIDES",
           "term": "solid Earth tides",
           "n": 19,
@@ -9428,11 +10578,27 @@
         },
         {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 19,
           "closure": -0.2520935629302343,
           "subtractionDeltaM": 391.6444457765955,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
+        },
+        {
+          "arm": "NO_SUN",
+          "term": "solar gravitational perturbations",
+          "n": 19,
+          "closure": -23.779291615496817,
+          "subtractionDeltaM": 25592.96543228301,
+          "proposedChange": "Refine AP solar perturbations."
+        },
+        {
+          "arm": "NO_MOON",
+          "term": "lunar gravitational perturbations",
+          "n": 19,
+          "closure": -114.74545561174283,
+          "subtractionDeltaM": 114871.19062149734,
+          "proposedChange": "Refine AP lunar perturbations."
         },
         {
           "arm": "NO_BODIES",
@@ -9521,6 +10687,22 @@
           "gapM": 988.3926595094841
         },
         {
+          "arm": "HEO12",
+          "term": "higher-degree near-resonant tesserals",
+          "change": "Evaluate integrating the tested degree-6–12 HEO terms with convergence and epoch-expansion checks.",
+          "n": 19,
+          "gainM": -0.8865778144837577,
+          "gapM": 988.3926595094841
+        },
+        {
+          "arm": "HEO20",
+          "term": "higher-degree near-resonant tesserals",
+          "change": "Evaluate integrating the tested degree-6–20 HEO terms with harmonic and eccentricity convergence checks.",
+          "n": 19,
+          "gainM": -0.8866002860550282,
+          "gapM": 988.3926595094841
+        },
+        {
           "arm": "CLASS4",
           "term": "resonance-class selection",
           "change": "Review resonance bands and class transitions; a globally forced class is not a production fix.",
@@ -9543,6 +10725,14 @@
           "n": 19,
           "gainM": -7.63546566515938,
           "gapM": 988.3926595094841
+        },
+        {
+          "arm": "HEO20_Q16",
+          "term": "higher-degree near-resonant tesserals",
+          "change": "Evaluate the refined degree-6–20 HEO term set after harmonic and epoch-expansion convergence checks.",
+          "n": 10,
+          "gainM": -29.848309844682785,
+          "gapM": 2041.5365665069753
         }
       ]
     },
@@ -9560,6 +10750,22 @@
         "gapM": 420.1057917410532
       },
       "candidates": [
+        {
+          "arm": "NO_SHADOW",
+          "term": "eclipse modulation of solar radiation pressure",
+          "n": 7,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Review AP eclipse geometry and shadow averaging in its SRP contribution."
+        },
+        {
+          "arm": "ZONAL20",
+          "term": "zonal harmonics above degree 20",
+          "n": 7,
+          "closure": 0,
+          "subtractionDeltaM": 0,
+          "proposedChange": "Refine the AP averaged zonal tail above degree 20 while retaining tesseral terms."
+        },
         {
           "arm": "NO_TIDES",
           "term": "solid Earth tides",
@@ -9594,11 +10800,19 @@
         },
         {
           "arm": "NO_SRP",
-          "term": "solar radiation pressure (shadow not isolated)",
+          "term": "solar radiation pressure contribution",
           "n": 7,
           "closure": -9.079514753114527,
           "subtractionDeltaM": 4325.6979186874105,
-          "proposedChange": "Refine AP solar radiation pressure and shadow after separating their contributions."
+          "proposedChange": "Review AP averaged SRP rates and coefficient fitting; use the isolated shadow result to constrain the change."
+        },
+        {
+          "arm": "NO_SUN",
+          "term": "solar gravitational perturbations",
+          "n": 7,
+          "closure": -1500.5107503024876,
+          "subtractionDeltaM": 681094.438377123,
+          "proposedChange": "Refine AP solar perturbations."
         },
         {
           "arm": "NO_BODIES",
@@ -9607,6 +10821,14 @@
           "closure": -2267.085482138776,
           "subtractionDeltaM": 1028305.5365676326,
           "proposedChange": "Refine AP solar and lunar perturbations."
+        },
+        {
+          "arm": "NO_MOON",
+          "term": "lunar gravitational perturbations",
+          "n": 7,
+          "closure": -2734.565167748105,
+          "subtractionDeltaM": 1240345.1057013567,
+          "proposedChange": "Refine AP lunar perturbations."
         }
       ],
       "proposedChange": "Check the mean-element epoch frame and date-frame conversion jointly in fit and propagation.",
@@ -9653,6 +10875,22 @@
           "change": "Check the averaged zonal tail above degree 5.",
           "n": 7,
           "gainM": 2.3931434611768054e-7,
+          "gapM": 420.1057917410532
+        },
+        {
+          "arm": "HEO12",
+          "term": "higher-degree near-resonant tesserals",
+          "change": "Evaluate integrating the tested degree-6–12 HEO terms with convergence and epoch-expansion checks.",
+          "n": 7,
+          "gainM": 3.822275829179489e-9,
+          "gapM": 420.1057917410532
+        },
+        {
+          "arm": "HEO20",
+          "term": "higher-degree near-resonant tesserals",
+          "change": "Evaluate integrating the tested degree-6–20 HEO terms with harmonic and eccentricity convergence checks.",
+          "n": 7,
+          "gainM": 3.822275829179489e-9,
           "gapM": 420.1057917410532
         },
         {
@@ -9758,15 +10996,31 @@
       },
       {
         "path": "experiments/ap-gap/PLAN.md",
-        "sha256": "b278feb83e0c9b4d6fe0024bd897d729d9747d4b3120ea23e6587b962a3a1267"
+        "sha256": "bc0a090da5b03e8d7597986a408374d3f2f90aeec03f6f00078eada6ecb7f135"
       },
       {
         "path": "experiments/ap-gap/ablate.mjs",
-        "sha256": "10620765c4d8ab2688dd832f07dc77da183d75f74527da6ee472213d813552dc"
+        "sha256": "a5c6491307fc5a8e5950c0e6e4f28a38028c16cd88e0bb65f6c4fb694f766c3e"
       },
       {
         "path": "experiments/ap-gap/audit.mjs",
         "sha256": "68f49b7f1e21bb70af749190d0308f4610e6524c4a2575c62139a54a0c97b1b9"
+      },
+      {
+        "path": "experiments/ap-gap/build-ffm-variants.py",
+        "sha256": "d5fe02788df2b12d087cfd11645b529e6ea4db3a760e00d589748c5af1bc2193"
+      },
+      {
+        "path": "experiments/ap-gap/build-heo-quadrature.py",
+        "sha256": "cfb9bf1d06640b06306499462c8cc9620eb809be4cbaad591a51ecff3ba6a97d"
+      },
+      {
+        "path": "experiments/ap-gap/build-heo-refinement.py",
+        "sha256": "6e2ea288ce5cbe35631413e4dc27ab049954a6d74aeccce1f2cccfc05f3975ca"
+      },
+      {
+        "path": "experiments/ap-gap/build-heo.py",
+        "sha256": "65e5df41410d765473c654af48250adddf01910df7cc3a3da5a91864f199dbd5"
       },
       {
         "path": "experiments/ap-gap/build-ussf.py",
@@ -9778,11 +11032,15 @@
       },
       {
         "path": "experiments/ap-gap/check.mjs",
-        "sha256": "c0ea971af66b87e079a434c8b7eccd40dee466a618d1ae2563cb6a04a09a7105"
+        "sha256": "04cd96e48ee396f0baf5b5c91dddad639cea19ca3ea9d5864fab03625823ae3b"
       },
       {
         "path": "experiments/ap-gap/config.json",
         "sha256": "5f4b1255d3c15f0730c528a81cdcd49be7785fdcc375587d40e318ec948a5128"
+      },
+      {
+        "path": "experiments/ap-gap/coverage.mjs",
+        "sha256": "d6fe5826abe3d9164159b91eebbf42f0efc84667d8a56836835535f59a91a36f"
       },
       {
         "path": "experiments/ap-gap/cycle.py",
@@ -9790,7 +11048,7 @@
       },
       {
         "path": "experiments/ap-gap/diagnose.mjs",
-        "sha256": "3a3588485d0a1a7c9b7dd574d47fcb82ce8712bd34ff594c5909a6fb34850f7a"
+        "sha256": "b5dce9dd3849dfe041b8b02ffeba71568f3298515e8370b26e457f007a7cbc48"
       },
       {
         "path": "experiments/ap-gap/events.mjs",
@@ -9798,15 +11056,31 @@
       },
       {
         "path": "experiments/ap-gap/finish-bodies.py",
-        "sha256": "8f8a2944f04d2cdd85363a1e1d1776716b05821be3fc433671e4cce44378c15b"
+        "sha256": "8d7747d7c483c36183d5d992251095e544715f115b64c95316ede92c86428f51"
       },
       {
         "path": "experiments/ap-gap/finish-ffm-tail.py",
         "sha256": "f63b40a8ae1b200bf00476cfc763601634ba4edeb7b6209196e6c927cf3f778d"
       },
       {
+        "path": "experiments/ap-gap/finish-isolated.py",
+        "sha256": "73241edfa578946e50fce95adb48931d785263cb365fbb8c722eb097c1297cd1"
+      },
+      {
+        "path": "experiments/ap-gap/lib/ffm-host.mjs",
+        "sha256": "e53c041d00cfa716761c0b9a82090c9c39aabac88e5a5fc5d10a445434d46c21"
+      },
+      {
         "path": "experiments/ap-gap/report.mjs",
-        "sha256": "5c7ce4471305e9832e77095d6203ee6afd1c7a9366151c1fc8dcd5275d3caaaa"
+        "sha256": "29fb609680b2bbb89e6ae8ac43e05dfbb73534ef29582d654333108f192a26df"
+      },
+      {
+        "path": "experiments/ap-gap/resume-config.json",
+        "sha256": "38ea10bb91afc4c2e981840a82a8d782448b49206e27c0656ef0f7eb5027f50d"
+      },
+      {
+        "path": "experiments/ap-gap/run-batch.py",
+        "sha256": "4bc3e4bb161a31cfa0f5aed369c3a5f63282aa1ee13e26352fcc0bc35055906d"
       },
       {
         "path": "experiments/ap-gap/ussf-xp.mjs",
@@ -10325,6 +11599,90 @@
       "sha256": "cfe9acaa9dd1fff3908883eb083b77cff6fa4836e41062b8d84f9b54b5c495ed"
     },
     {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO12/inputs-0.json",
+      "sha256": "5ee9e6628b6017ca33e0585e61bf1296d8a29917bd992c9af29825a37c30cf77"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO12-heap/inputs-0.json",
+      "sha256": "5ee9e6628b6017ca33e0585e61bf1296d8a29917bd992c9af29825a37c30cf77"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-heap/inputs-0.json",
+      "sha256": "5ee9e6628b6017ca33e0585e61bf1296d8a29917bd992c9af29825a37c30cf77"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-0.json",
+      "sha256": "71286c04803de62765e723010cf585b84591a93efcc199b1593c07ff6bfdfbf5"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-1.json",
+      "sha256": "8e2a63568f7f9f2e96373e26f5ed385e2c84a067f7583166ca0ca87996412e56"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-10.json",
+      "sha256": "f7e27ac09f8ced5966dc6327399d0b31589e03815af49428e9f15f4bc430b573"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-2.json",
+      "sha256": "ba768098f136766e06b77a7590dd5b2970062b9dca21bd2ada6b533137440d1c"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-4.json",
+      "sha256": "5d952a8a07ed8f76e9f587377eafeec86250635dedac37f98749a51fd5efb22d"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-5.json",
+      "sha256": "ba768098f136766e06b77a7590dd5b2970062b9dca21bd2ada6b533137440d1c"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-6.json",
+      "sha256": "167c29f26c58d405c5e04e58da70d1b3dd29bce99594e03c1522cbf40b9deefc"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-7.json",
+      "sha256": "7ce789bc18aafd7df368e59e01c905e4453f27d9f2475989a5224fb6502d710b"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-8.json",
+      "sha256": "ef6805faae265c61d352955ca41f01cf330805d947627e0eb3ddf47db69c211b"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q16/inputs-9.json",
+      "sha256": "110c507c58e32fb851887c5c7097c7def08acfde975d7e02bc5af3446c7ea80b"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-0.json",
+      "sha256": "50bb3310e8b8f67120305c0b53049717a1cdc178b27e8e52a690884bcf9b2b88"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-1.json",
+      "sha256": "626446a1df2a36cca9fcb76d10440b1ea616e8391967a855e35fc6c8166d9b91"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-2.json",
+      "sha256": "2f5f1721cf93ab76388f260541aa234f932d79f5367b271f409fcd21083e9291"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-3.json",
+      "sha256": "b11219372d78d9d5894cd7a382fe0307c0673015ac87be06d0d9338a147201e7"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-4.json",
+      "sha256": "002e48d47017c81cc068d02922cce60df796fd0916aa4553d110b02047161903"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-5.json",
+      "sha256": "6571e4a23fa9bd28f260a597501fc7e9f622f50923b885b3d08c0f414d82f558"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-6.json",
+      "sha256": "167c29f26c58d405c5e04e58da70d1b3dd29bce99594e03c1522cbf40b9deefc"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-HEO20-q4/inputs-7.json",
+      "sha256": "897d69fb9f4352e83600f708895dbbf393c4372937992f53c65a1a2d2333f87c"
+    },
+    {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-NOFRAME/inputs-0.json",
       "sha256": "953bb8d197efb09cfebe7628a8b36b20be883f2d9e46af80d1fc23a3e73c96d2"
     },
@@ -10585,6 +11943,686 @@
       "sha256": "60ccc76ae499a2f5a6578558c17cbb335703ab7ca9a77df6d4b6662cf5474fe3"
     },
     {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2000.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2001.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2002.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2003.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2004.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2005.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2006.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2007.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2008.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2009.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2010.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2011.json",
+      "sha256": "2a60f10a92b2431ee67da2c39c400cfdb5371c2868338284eaed31f963c93568"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2012.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2013.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2014.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2015.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2016.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2017.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2018.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2019.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2020.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2021.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2022.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2023.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2024.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2025.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2026.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2027.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2028.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2029.json",
+      "sha256": "2a60f10a92b2431ee67da2c39c400cfdb5371c2868338284eaed31f963c93568"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2030.json",
+      "sha256": "2a60f10a92b2431ee67da2c39c400cfdb5371c2868338284eaed31f963c93568"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2031.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2032.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2033.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2034.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2035.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2036.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2037.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2038.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2039.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2040.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2041.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2042.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2043.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2044.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2045.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2046.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2047.json",
+      "sha256": "e410f1556c670c1f475a17dad3b3bf3634118f8a7fa566c0df6493647b998f71"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2048.json",
+      "sha256": "2a60f10a92b2431ee67da2c39c400cfdb5371c2868338284eaed31f963c93568"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2049.json",
+      "sha256": "a776a63f007e81046ce689bc34c4c699648ff49ae944255871185ad187b0461c"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2050.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2051.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2052.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2053.json",
+      "sha256": "2d790a47f9da7ec6ca99dd952d0b6f318ab7ca21b6a20296a89d9ad365dc6528"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2054.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2055.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2056.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2057.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2058.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2059.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2060.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2061.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2062.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2063.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2064.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2065.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2066.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2067.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2068.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2069.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2070.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2071.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2072.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2073.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2074.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2075.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2076.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2077.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2078.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2079.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2080.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2081.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2082.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2083.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2084.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2085.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2086.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2087.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2088.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2089.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2090.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2091.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2092.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2093.json",
+      "sha256": "6e0d27666c340e89f0ff55be58fca173ff4b1846e60259416b1532f5204c7c79"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2094.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2095.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2096.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2097.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2098.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2099.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2100.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2101.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2102.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2103.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2104.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2105.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2106.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2107.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2108.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2109.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2110.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2111.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2112.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2113.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2114.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2115.json",
+      "sha256": "6e0d27666c340e89f0ff55be58fca173ff4b1846e60259416b1532f5204c7c79"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2116.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2117.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2118.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2119.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2120.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2121.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2122.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2123.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2124.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2125.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2126.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2127.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2128.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2129.json",
+      "sha256": "6e0d27666c340e89f0ff55be58fca173ff4b1846e60259416b1532f5204c7c79"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2130.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2131.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2132.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2133.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2134.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2135.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2136.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2137.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2138.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2139.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2140.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2141.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2142.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2143.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2144.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2145.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2146.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2147.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2148.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2149.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2150.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2151.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2152.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2153.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2154.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2155.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2156.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2157.json",
+      "sha256": "044c9971505d560bd3c6a3db8fb828ba8ad6b16ac7d62d5d060f1dcf5012a8d2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2158.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2159.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2160.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2161.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2162.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2163.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2164.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2165.json",
+      "sha256": "5bda620c84a692a07e1afc8c1d61b112c33e3d32faec04e464f747ce65534947"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2166.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2167.json",
+      "sha256": "338491b8184d33de39a85d8b3a2c007811e5ca8c5f39c56b7778e9d222ffb503"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2168.json",
+      "sha256": "6e0d27666c340e89f0ff55be58fca173ff4b1846e60259416b1532f5204c7c79"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-2169.json",
+      "sha256": "6e0d27666c340e89f0ff55be58fca173ff4b1846e60259416b1532f5204c7c79"
+    },
+    {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-3.json",
       "sha256": "359e46170ac78c0b2a014cf5822682ab84139871482ad08c7d11f7a699857312"
     },
@@ -10611,6 +12649,54 @@
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm/inputs-9.json",
       "sha256": "78447fb4eaa73a17c45e39de42fcb6437ffc959010e863df9dd7275931bd8a78"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3000.json",
+      "sha256": "a65cee2ba8402c7febf921be78c222986331504840252007466ae91fa485f917"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3001.json",
+      "sha256": "079434f3d673a044bc829e16899814c71a21196998ce863c38ffe3cc1d20fb4a"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3002.json",
+      "sha256": "19c189d316b3ace1362f596a46c7e78f98d78482d689123ce35f690bb26c68d1"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3003.json",
+      "sha256": "55e48be579e67336312db3bb213c2d18ae0114dcdf82c3f9a8eac57cc78ee82c"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3004.json",
+      "sha256": "ed9193287e147030e038d99ae352deedaf7c5c77af80e3a4b25fcf3349bec910"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3005.json",
+      "sha256": "19c189d316b3ace1362f596a46c7e78f98d78482d689123ce35f690bb26c68d1"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3006.json",
+      "sha256": "faaed094487c9e7b15cb9f397a9bbf16ff565442b593ccb5c0d300cee9714112"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3007.json",
+      "sha256": "562e05988b75ed5324060839ffe5abe4a1fa8c1df9d562073912682d17c297a0"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3008.json",
+      "sha256": "2ab1f8d23308dd048cb79e3b54203058393add8fca273edbb5a58b38becf184a"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3009.json",
+      "sha256": "20867ff191e682ec28964519742f11280b6d7c357262fa709ed47b30ebd5efc2"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3010.json",
+      "sha256": "46996b9e11306551320d774d3ad4e7889025ff06043ad4036290632a11fc1761"
+    },
+    {
+      "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-ffm-isolated/inputs-3011.json",
+      "sha256": "d395787f5bd3c8902bc271fba6351fbce0195d4fe8ef1a4aa6d1fbf378721821"
     },
     {
       "path": "/opt/data/sdn-archive/operator-theory/ap-gap/resume-frame/inputs-0.json",
@@ -10812,9 +12898,20 @@
   },
   "methodStatus": {
     "1": "complete",
-    "2": "partial: shadow and zonal-only isolation unavailable",
+    "2": "complete",
     "3": "complete",
-    "4": "partial: extended resonant terms not implemented",
+    "4": "complete",
     "5": "complete"
-  }
+  },
+  "ffmBodyMissing": 0,
+  "isolatedWindows": 426,
+  "heoWindows": [
+    26,
+    26
+  ],
+  "heoRuntimeFailures": [
+    0,
+    0
+  ],
+  "eventContrastMeasured": false
 }
