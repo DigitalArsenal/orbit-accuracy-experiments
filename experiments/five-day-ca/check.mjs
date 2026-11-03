@@ -35,6 +35,7 @@ assert(manifests>0,'no resumed registration manifests');
 const pc=await openPc();let oracleError=0;
 try{for(const [v,h]of [[10000,10],[2500,100]])oracleError=Math.max(oracleError,Math.abs(await pc.pc([v,0,v],h)+Math.expm1(-h*h/(2*v))));assert(oracleError<=1e-12);}finally{await pc.close();}
 for(const file of ['statistics.json','ca-reach.json','encounters.json'])check(fs.existsSync(`results/five-day-ca/${file}`),`${file} unmeasured`);
+if(fs.existsSync('results/five-day-ca/encounters.json'))check(JSON.parse(fs.readFileSync('results/five-day-ca/encounters.json')).complete===true,'synthetic arms and paired scores incomplete');
 let statisticalCells=0,pairedCells=0,reachCells=0,reachExclusions=0;
 if(fs.existsSync('results/five-day-ca/statistics.json')){
  const s=JSON.parse(fs.readFileSync('results/five-day-ca/statistics.json'));assert.deepEqual(s.inputs,now.inputs,'statistics input snapshot');statisticalCells=s.cells.length;pairedCells=s.paired.length;
