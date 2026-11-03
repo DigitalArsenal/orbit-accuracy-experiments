@@ -36,3 +36,7 @@ NO_SUN retains Moon; NO_MOON retains Sun. TESS12/TESS31 select the tesseral degr
 ## Amendment 2026-11-03: primary FFM arc
 
 Before the first FFM subtraction, restrict method 2 to the task's primary 72 h fits at every AP6 cutoff. The inherited exploratory 24 h, 168 h, and 336 h FFM arcs are not needed to diagnose the specified 72 h gaps. This preserves all primary windows and saves time for the requested 24 h GN fitter arms. AP variants retain the inherited extra arcs.
+
+## Amendment 2026-11-03: pinned FFM wire format
+
+AP6's openFfmHost pins FFM 2.0.4 and estimation 0.7.0. Its fit_batch propagation answers encode the force fields in PRWForceConfiguration, the predecessor of the current module's PCFForceModel. Keep that pinned AP6 baseline for comparability; report this deviation from the requested literal PCF interface. The pinned wrapper exposes no isolated shadow-model switch. No claim is made that SRP-off isolates shadow, or that degree-20 isolates zonals alone.
