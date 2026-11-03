@@ -1,0 +1,297 @@
+{
+ "code": "experiments/ffm-short-arc/table.mjs as registered at commit ea70019501c02fc7d84007688198da35132eacfb (git show), run unchanged on the stored rows",
+ "codeSha256": "390d7ed450437dd280e5d06a6da4e72be36659cb19b58be27931d3848e1340ab",
+ "rowsDigest": "9d81b46099d9",
+ "rows": 1370,
+ "cells": 1456,
+ "verdicts": {
+  "P1": {
+   "family": "P",
+   "arm": "A12",
+   "ref": "P",
+   "form": "xm",
+   "leads": [
+    1,
+    2,
+    3,
+    7
+   ],
+   "tested": true,
+   "status": "PASS",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    },
+    {
+     "lead": 7,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "P2": {
+   "family": "P",
+   "arm": "A12",
+   "ref": "F2",
+   "form": "rule1",
+   "leads": [
+    1,
+    2,
+    3
+   ],
+   "tested": true,
+   "status": "PASS",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "P3": {
+   "family": "P",
+   "arm": "A12c",
+   "ref": "P",
+   "form": "xm",
+   "leads": [
+    1,
+    2,
+    3,
+    7
+   ],
+   "tested": true,
+   "status": "PASS",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    },
+    {
+     "lead": 7,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "P4": {
+   "family": "P",
+   "arm": "A24",
+   "ref": "P",
+   "form": "xm",
+   "leads": [
+    1,
+    2,
+    3,
+    7
+   ],
+   "tested": true,
+   "status": "PASS",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    },
+    {
+     "lead": 7,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "P5": {
+   "family": "P",
+   "arm": "A12",
+   "ref": "F2",
+   "form": "rule1",
+   "leads": [
+    7
+   ],
+   "tested": true,
+   "status": "FAIL",
+   "passed": false,
+   "perLeadMet": [
+    {
+     "lead": 7,
+     "met": false
+    }
+   ],
+   "beside": {
+    "at95": false,
+    "orbitWeek": false
+   }
+  },
+  "P6": {
+   "family": "P",
+   "arm": "A24c",
+   "ref": "P",
+   "form": "xm",
+   "leads": [
+    1,
+    2,
+    3,
+    7
+   ],
+   "tested": false,
+   "status": "not tested",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    },
+    {
+     "lead": 7,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "S1": {
+   "family": "S",
+   "arm": "A24",
+   "ref": "P",
+   "form": "rule1",
+   "leads": [
+    1,
+    2,
+    3
+   ],
+   "tested": true,
+   "status": "PASS",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "S2": {
+   "family": "S",
+   "arm": "A24",
+   "ref": "F2",
+   "form": "rule1",
+   "leads": [
+    1,
+    2,
+    3
+   ],
+   "tested": true,
+   "status": "PASS",
+   "passed": true,
+   "perLeadMet": [
+    {
+     "lead": 1,
+     "met": true
+    },
+    {
+     "lead": 2,
+     "met": true
+    },
+    {
+     "lead": 3,
+     "met": true
+    }
+   ],
+   "beside": {
+    "at95": true,
+    "orbitWeek": true
+   }
+  },
+  "S3": {
+   "family": "S",
+   "arm": "A12",
+   "ref": "F2",
+   "form": "prediction-above0",
+   "leads": [
+    7
+   ],
+   "tested": true,
+   "status": "not confirmed",
+   "passed": false,
+   "perLeadMet": [
+    {
+     "lead": 7,
+     "met": false
+    }
+   ],
+   "beside": {
+    "at95": false,
+    "orbitWeek": false
+   }
+  }
+ }
+}
