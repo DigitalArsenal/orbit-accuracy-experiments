@@ -74,3 +74,11 @@ LS (75) and DO (150). Those existing rows are disclosed as prior reads too;
 prospective timing applies only to subsequent unread rows. Tables must not
 hide this discrepancy or represent prior rows as unread. No new sample is
 introduced. No new propagation occurred during resume 3.
+
+## Coordinator ruling — 2026-11-03, resume note 5
+
+The Space Force U library has query-order dependence measured in [propagator-ca-frontier, Amendment A1](../propagator-ca-frontier/PLAN.md#amendment-a1--2026-10-26-reference-order-diagnostic); U replay accepts at most 1 m per scalar and reports every difference and the maximum, while AP, XP, S and F retain exact equality.
+Install the staged U replay under that rule. For synthetic covariance only,
+use AP 0.4.1's shipped best-minimax table if landed on modules main before
+execution, otherwise AP 0.4.0's table; label either UNVERIFIED. Forecast
+states retain the original AP 0.4.0 build so the old leads remain comparable.
