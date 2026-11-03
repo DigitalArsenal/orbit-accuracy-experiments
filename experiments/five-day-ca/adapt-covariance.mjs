@@ -4,6 +4,7 @@ import {STATIC} from '../operator-theory/lib/regimes.mjs';
 import {config,registration,analysisProvenance,hash} from './guard.mjs';
 import {readRows} from './statistics.mjs';
 import {arcs as expectedArcs} from './coverage.mjs';
+import {openPairStatistics} from './lib/covariance-modules.mjs';
 import {gOf,scaled,axesMleRef,median,truthTerm,availableAt} from '../ffm-covariance-adaptive/lib/model.mjs';
 registration();
 const constants=JSON.parse(fs.readFileSync('results/ffm-covariance-adaptive/frozen-constants.json')).classes;
@@ -27,6 +28,11 @@ for(const r of rows){const p=constants[r.class];if(!p)continue;const E=Date.pars
   }
  }
 }
+// C2/C3 are defined in predicted RTN; the common artificial encounter is in truth RTN.
+const pairModule=await openPairStatistics();let rotatedArmDays=0;
+try{const todo=[];for(const r of rows)for(const [arm,a]of Object.entries(r.arms))for(const v of Object.values(a.days??{})){if(!v.errorM||!v.covarianceM2)continue;if(arm.startsWith('S')){v.axes='truth RTN';continue;}if(!v.predictedState||!v.truthState)throw Error('carried product lacks frame states');todo.push(v);}
+ for(let start=0;start<todo.length;start+=512){const batch=todo.slice(start,start+512),stats=await pairModule.stats(batch.map(v=>({predicted:{...v.predictedState,covariance:v.covarianceM2,covarianceAxes:'RTN'},truth:v.truthState})),'truth');for(let i=0;i<batch.length;i++){const v=batch[i];v.calibrationErrorM=v.errorM;v.calibrationCovarianceM2=v.covarianceM2;v.errorM=stats[i].errorRtn;v.covarianceM2=stats[i].predictedRtn;v.axes='truth RTN';rotatedArmDays++;}}
+}finally{await pairModule.close();}
 const nominal=new Map();for(const label of ['regimes','truth2','truth'])for(const phase of ['cheap','ffm'])for(const r of readRows(`${config.store}/${phase}/${label}`)){const key=`${label}|${r.key}`;if(!nominal.has(key))nominal.set(key,{arms:{}});Object.assign(nominal.get(key).arms,r.arms);}
 for(const r of rows)for(const [arm,a]of Object.entries(r.arms))for(const day of config.leads)if(!a.days[day]){const source=nominal.get(`${r.labelSource}|${r.key}`)?.arms[arm];a.days[day]={error:a.error??(source&&!source.days?.[day]?'lead grid below 90%':'carried covariance product not run')};}
 const coverage=new Map(),carried=new Map(rows.map(r=>[`${r.labelSource}|${r.key}`,r]));
@@ -36,4 +42,4 @@ for(const label of ['regimes','truth2','truth']){const gp=new Map(readRows(`${co
  for(const day of config.leads){const d=c.gpArmDays;d.expected++;if(valid(g?.days[day]))d.scored++;else if(g)d.excluded++;else d.missing++;}
 }}
 const out=`${config.store}/adapted-covariance.jsonl`;fs.writeFileSync(out,rows.map(r=>JSON.stringify(r)).join('\n')+'\n');
-fs.writeFileSync('results/five-day-ca/covariance.json',JSON.stringify({provenance:analysisProvenance(),inputs,gpExtraction,counts,coverage:[...coverage.values()],rows:rows.length,outputSha256:hash(fs.readFileSync(out)),truthTerm:'used only when estimating history scale; forecast covariance excludes reference measurement variance'},null,2)+'\n');console.log(JSON.stringify(counts));
+fs.writeFileSync('results/five-day-ca/covariance.json',JSON.stringify({provenance:analysisProvenance(),inputs,gpExtraction,counts,rotatedArmDays,coverage:[...coverage.values()],rows:rows.length,outputSha256:hash(fs.readFileSync(out)),truthTerm:'used only when estimating history scale; forecast covariance excludes reference measurement variance'},null,2)+'\n');console.log(JSON.stringify(counts));

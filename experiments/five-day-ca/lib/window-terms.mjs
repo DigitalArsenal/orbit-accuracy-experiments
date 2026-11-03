@@ -70,7 +70,7 @@ export async function windowTerms(ctx, pairs, fit, E, leads, settings) {
     for (const [name, m] of Object.entries(terms)) { pairList.push({ predicted: { ...predicted, covariance: m, covarianceAxes: 'INERTIAL' }, truth }); keys.push([i, name]); }
   });
   const stats = pairList.length ? await pairs.stats(pairList, 'predicted') : [];
-  const out = leads.map((x, i) => ({ L: x.L, epoch: x.line.epoch, truthSigmaM: x.line.sigma ?? null, errRtnM: null, terms: {} }));
+  const out = leads.map((x, i) => ({ L: x.L, epoch: x.line.epoch, truthSigmaM: x.line.sigma ?? null, errRtnM: null, predictedState:{position:at.get(leadMs[i]).state.slice(0,3),velocity:at.get(leadMs[i]).state.slice(3,6)},truthState:{position:x.line.r.map(q=>q*1000),velocity:x.line.v.map(q=>q*1000)},terms: {} }));
   stats.forEach((s, k) => { const [i, name] = keys[k]; out[i].terms[name] = s.predictedRtn; out[i].errRtnM ??= s.errorRtn; });
   return { leads: out, cov0Scale: scale, samples: grid.length };
 }
