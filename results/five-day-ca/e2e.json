@@ -1,6 +1,6 @@
 {
   "verdict": "FAIL",
-  "testedCommit": "90c6862326b0d7c241621901ddc3f41d79355764",
+  "testedCommit": "b23e23bb9360346e64999b159af9e3249cde6c98",
   "replayedScalars": 96,
   "replayDifferences": 4,
   "replayMaxAbsKm": 1.9593805697937228e-06,
