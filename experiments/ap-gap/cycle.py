@@ -1,5 +1,5 @@
 """Run bounded batches in registered order, preserving partial output."""
-import subprocess, os, json, time
+import subprocess, os, json, time, sys
 from pathlib import Path
 root=Path('/opt/data/sdn-archive/operator-theory/ap-gap')
 env=dict(os.environ,SDN_MODULES_ROOT='/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules')
@@ -15,11 +15,14 @@ def batch(label,groups,method='ap',arm=None,wasm=base,extra=None):
  print(label,'exits',[p.wait() for p in ps],flush=True)
  if time.time()>1793677729:raise SystemExit('registered time box')
 if __name__=='__main__':
- batch('resume-heo','HX,HE')
- subprocess.run(['python3','experiments/ap-gap/build-variants.py'],check=True)
- manifest=json.loads(Path('/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/manifest.json').read_text())
- for name,v in manifest.items():
-  if name!='AGOM_FIXED' and v['returncode']==0:batch('resume-'+name,'GD,IG,GE,LS,DO,HX,HE',arm='AP',wasm=v['path'])
+ if '--from-ffm' not in sys.argv:
+  batch('resume-heo','HX,HE')
+  subprocess.run(['python3','experiments/ap-gap/build-variants.py'],check=True)
+  manifest=json.loads(Path('/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/manifest.json').read_text())
+  for name,v in manifest.items():
+   if name!='AGOM_FIXED' and v['returncode']==0:batch('resume-'+name,'GD,IG,GE,LS,DO,HX,HE',arm='AP',wasm=v['path'])
+ else:
+  manifest=json.loads(Path('/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/manifest.json').read_text())
  batch('resume-ffm','GD,IG,GE,LS,DO,HX,HE',method='ffm')
  subprocess.run(['python3','experiments/ap-gap/build-ussf.py'],check=True)
  u=json.loads(Path('/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ussf/manifest.json').read_text())
