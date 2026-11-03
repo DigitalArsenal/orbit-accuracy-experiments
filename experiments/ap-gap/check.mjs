@@ -30,6 +30,7 @@ assert(JSON.stringify(quadrature(all))===JSON.stringify(status.quadrature),'quad
 assert(JSON.stringify(quadrature(all,'resume-HEO20-q4','resume-HEO20-q16'))===JSON.stringify(status.heoRefinement),'refined quadrature claim disagrees');
 assert(measured.methodsComplete===status.methodsComplete,'completion count disagrees');
 assert(measured.methodsComplete===5||status.missing.length>0,'partial coverage must state missing work');
+for(const f of status.historicalFiles)assert(hash(f.path)===f.sha256,'historical control changed: '+f.path);
 for(const f of status.rowFiles)assert(hash(f.path)===f.sha256,'aggregate row hash changed: '+f.path);
 for(const f of status.inputManifests)assert(hash(f.path)===f.sha256,'input manifest changed: '+f.path);
 assert(hash(status.provenance.eventLabels.path)===status.provenance.eventLabels.sha256,'event labels changed');
@@ -50,7 +51,7 @@ assert(zonalIdentityPairs>0&&maxZonalIdentityDeltaM<=0.001,'degree-20 high-orbit
 
 const run=(label,key,options)=>{
  const out=path.join(root,`check-${Date.now()}-${label}`);
- const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--primary-only','true','--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:300000});
+ const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--primary-only','true','--verification','true','--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:300000});
  assert(child.status===0,`${label} failed: ${child.stderr}`);
  const file=path.join(out,'rows-0.jsonl');assert(fs.existsSync(file),`${label} produced no row (including expired deadline)`);
  const parsed=fs.readFileSync(file,'utf8').trim().split('\n').map(JSON.parse);assert(parsed.length===1&&parsed[0].key===key,'unexpected check rows');
@@ -58,6 +59,7 @@ const run=(label,key,options)=>{
 };
 const baseline=[];
 for(const trial of [1,2]){const r=run('baseline-'+trial,'GD|LAGEOS 1|2025-10-11',['--arm','AP']);const e=r.arms.AP72?.days?.[3]?.e*1000;assert(Number.isFinite(e),'nonfinite baseline forward error');baseline.push(e);}
+assert(baseline.every(e=>Math.abs(e-18.111801967038385)<=0.001),'registered baseline forward error changed');
 const repeatDeltaM=Math.abs(baseline[0]-baseline[1]);
 const reproduced=[];
 const iso=all.filter(r=>r.batch==='resume-ffm-isolated');
@@ -76,6 +78,8 @@ for(const degree of [12,20]){
  const e=r.arms.AP72?.days?.[3]?.e*1000;assert(Number.isFinite(e),`nonfinite ${name} forward error`);
  reproduced.push({arm:name,key:reference.key,forwardDay3M:e,referenceDay3M:reference.arms.AP72.days[3].e*1000,deltaM:Math.abs(e-reference.arms.AP72.days[3].e*1000)});
 }
+const q4=JSON.parse(fs.readFileSync(new URL('heo-quadrature-builds.json',results))).variants.HEO20_Q4;
+assert(q4.returncode===0&&hash(q4.path)===q4.sha256,'fourfold variant artifact mismatch');
 const refined=JSON.parse(fs.readFileSync(new URL('heo-refinement-builds.json',results))).variants.HEO20_Q16;
 assert(refined.returncode===0&&hash(refined.path)===refined.sha256,'refined variant artifact mismatch');
 const refinedReference=all.find(r=>r.batch==='resume-HEO20-q16'&&r.key==='HE|TESS|2026-07-27');
@@ -88,5 +92,5 @@ const maxVariantRepeatDeltaM=Math.max(...reproduced.map(r=>r.deltaM));
 assert(repeatDeltaM<=0.001&&maxVariantRepeatDeltaM<=0.001,'forward repeatability exceeds 0.001 m');
 assert(fixedArms>0&&maxFixedAgom<=1e-15,'fixed AGOM check failed');
 assert(maxURebuildDeltaM<=0.001,'Space Force rebuild control differs');
-const result={verdict:'PASS_SCOPED',binaryControlsMatched:true,zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
+const result={reportStatusSha256:hash(new URL('status.json',results)),verdict:'PASS_SCOPED',binaryControlsMatched:true,zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
 fs.writeFileSync(path.join(root,'check-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
