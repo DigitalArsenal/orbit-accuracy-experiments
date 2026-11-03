@@ -81,7 +81,7 @@ async function work(scratch, pin, norads, tag) {
         const m = meta[j];
         if (r.missing || !r.sets?.[0]) { ++counts.missing; return; }
         ++counts.rows;
-        out.write(`${JSON.stringify({ norad, setMs: m.s.ms, gpId: m.s.gpId, t: m.t, b: m.b, k: m.k, age: Number(r.sets[0].ageDays.toPrecision(12)), rtn: r.sets[0].rtn.map((x) => Number(x.toPrecision(9))), regime: regimeOf.get(m.s.gpId) ?? null, gnss: gnss ? 1 : 0, sp3: m.span.sp3 })}\n`);
+        out.write(`${JSON.stringify({ norad, setMs: m.s.ms, gpId: m.s.gpId, t: m.t, b: m.b, k: m.k, age: r.sets[0].ageDays, rtn: r.sets[0].rtn, regime: regimeOf.get(m.s.gpId) ?? null, gnss: gnss ? 1 : 0, sp3: m.span.sp3 })}\n`);
       });
     }
   }

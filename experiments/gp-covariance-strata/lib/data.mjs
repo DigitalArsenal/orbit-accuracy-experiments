@@ -8,13 +8,15 @@ import { FIXED, gnssClusters } from './clusters.mjs';
 import { auditRetained, HoldAudit } from './holds.mjs';
 
 export const COLS = ['norad', 'setMs', 't', 'b', 'k', 'age', 'eR', 'eT', 'eN', 'vR', 'vT', 'vN', 'regime', 'cluster', 'gnss'];
-export async function loadRows(scratch) {
-  const cache = path.join(scratch, 'cols.json.gz');
+export async function loadRows(dirs) {
+  dirs = [dirs].flat();
+  const scratch = dirs[0];
+  const cache = path.join(scratch, 'cols-all.json.gz');
   if (fs.existsSync(cache)) return JSON.parse(zlib.gunzipSync(fs.readFileSync(cache)));
   const rows = [];
   const sp3Of = new Map();
-  for (const f of fs.readdirSync(scratch).filter((n) => /^rows-w\d+\.jsonl\.gz$/.test(n)).sort()) {
-    const rl = readline.createInterface({ input: fs.createReadStream(path.join(scratch, f)).pipe(zlib.createGunzip()), crlfDelay: Infinity });
+  for (const dir of dirs) for (const f of fs.readdirSync(dir).filter((n) => /^rows-w\d+\.jsonl\.gz$/.test(n)).sort()) {
+    const rl = readline.createInterface({ input: fs.createReadStream(path.join(dir, f)).pipe(zlib.createGunzip()), crlfDelay: Infinity });
     for await (const line of rl) { if (!line) continue; const r = JSON.parse(line); rows.push(r); if (r.sp3 && r.gnss) sp3Of.set(r.norad, r.sp3[0]); }
   }
   // GNSS plane clusters from the ascending node and inclination of one set per object (the first, in time order)

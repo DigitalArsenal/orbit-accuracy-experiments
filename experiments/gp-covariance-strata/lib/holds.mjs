@@ -8,6 +8,7 @@ export const GRACEFO = [43476, 43477];
 export const COSMIC2 = [44343, 44349, 44350, 44351, 44353, 44358];
 export const S1 = { A: 39634, C: 62261, D: 66315 };
 export const C2_HELD_OBJECTS = { 31698: 'TerraSAR-X', 22824: 'Stella', 66315: 'Sentinel-1D', 8820: 'LAGEOS-1', 44350: 'COSMIC-2 FM4 (44350)' };
+export const ILRS_C2 = [19751, 20026, 22195]; // LAGEOS-2 and Etalon-1/2: C2 R3 calibration objects (the table in its PLAN.md); held from 06-01 as the conservative reading
 export const ISS = 25544;
 export const TIME_HOLDS = {
   swarmGracefoFrom: ts('2026-10-31'),   // until E13b scores
@@ -15,7 +16,7 @@ export const TIME_HOLDS = {
   issFrom: ts('2025-01-01'),
 };
 // The C2 calibration objects for the time hold: Swarm, GRACE-FO, S1A, S1C, COSMIC-2 and every ESA GNSS satellite.
-export function isC2Calibration(norad, gnss) { return SWARM.includes(norad) || GRACEFO.includes(norad) || norad === S1.A || norad === S1.C || COSMIC2.includes(norad) || !!gnss; }
+export function isC2Calibration(norad, gnss) { return SWARM.includes(norad) || GRACEFO.includes(norad) || norad === S1.A || norad === S1.C || COSMIC2.includes(norad) || ILRS_C2.includes(norad) || !!gnss; }
 
 export const PREDICATES = ['name-starlink', 'name-galileo-gsat', 'sp3-prn-E', 'norad-c2-held', 'iss-state-2025', 'swarm-gracefo-2026-10-31', 'c2-calibration-2026-06-01', 'vendors-held-list'];
 export class HoldAudit {
