@@ -1,1 +1,36 @@
-{"frozen":true,"exploratory":true,"groups":["GD","IG","GE","LS","DO","HX","HE"],"leadDays":[1,3,7],"baselineWasm":"/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm","baselineSha256":"715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0","deadline":"2026-11-03T03:48:49Z"}
+{
+  "frozen": true,
+  "exploratory": true,
+  "groups": [
+    "GD",
+    "IG",
+    "GE",
+    "LS",
+    "DO",
+    "HX",
+    "HE"
+  ],
+  "leadDays": [
+    1,
+    3,
+    7
+  ],
+  "baselineWasm": "/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm",
+  "baselineSha256": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
+  "deadline": "2026-11-03T03:48:49Z",
+  "EXCLUDE_NORADS": [
+    43567,
+    37847,
+    41862,
+    41174,
+    43055,
+    41175,
+    39451,
+    39452,
+    39453,
+    43476,
+    43477
+  ],
+  "EXCLUDE_NAME_PATTERN": "STARLINK",
+  "exclusionPolicy": "Swarm and GRACE-FO excluded at all dates (stronger than post-2026-10-31); every Starlink excluded by closed source selection and name guard."
+}

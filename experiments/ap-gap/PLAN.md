@@ -16,3 +16,7 @@ A subtraction is a candidate explanation if its paired errors approach AP; this 
 Raw rows and input manifests: /opt/data/sdn-archive/operator-theory/ap-gap. Only aggregates in results/ap-gap. Scratch: /Users/tj/software/terrain-work/body-look/codex-apgap-d9. Maximum 12 workers. Stop by 2026-11-03T03:48:49Z; retain and report partial work.
 
 E2E: run the real module on a registered archive window twice; forward day-3 error must be finite and repeat within 0.001 m. Require every registered method and group to have completed or explicit missing status; incomplete coverage is not a full-task pass. Pin registration, runner, inputs, module bytes and aggregate inputs by SHA-256. No acceptance claim may be manufactured from the task's rounded reference numbers.
+
+## Amendment 2026-11-03: coordinator disposition
+
+The inherited MGEX selector decoded all six held Galileo files in memory before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation; the replacement selector filters NORAD filenames before decoding. EXCLUDE_NORADS now also excludes Swarm and GRACE-FO at every date; closed source selection and a name guard exclude every Starlink. Fresh results use resume-* stores; the interrupted five LS rows remain historical.
