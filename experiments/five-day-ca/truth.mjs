@@ -85,7 +85,14 @@ for (const w of list) {
         await run('U', async () => {
           const f = await U.fit(oem);
           if (!f.ok) throw new Error(f.error);
-          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
+          const byTime = new Map();
+            for (const leads of [[1,2,3,7],[4,5]]) {
+              const times = entered.filter(k => leads.includes(k)).flatMap(k => bins[k]).map(l => l.epoch);
+              if (!times.length) continue;
+              const states = await U.propagate(f.omm, S.gridBytes(times), times.length);
+              times.forEach((t,i) => byTime.set(t,states[i]));
+            }
+            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(epochs.map(t=>byTime.get(t)), epochs, 'GCRF'), truth)) };
         });
       }
       await run('AP', async () => {
