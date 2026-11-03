@@ -25,6 +25,27 @@ const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, tracks: TRACKS })}\n`);
   console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
+/**
+ * A product's states on a uniform grid, so the worked examples show AP's short-period terms as smooth curves: one minute below 8,400 km, five above. Eight-point Lagrange in the product's own
+ * states, a data step. A grid time whose eight nearest states span a gap in the product is left out.
+ */
+const onGrid = (lines, stepMs) => {
+  const ts = lines.map((l) => Date.parse(l.epoch)), cadence = [...ts.slice(1).map((t, i) => t - ts[i])].sort((a, b) => a - b)[(ts.length - 1) >> 1];
+  const out = [];
+  let i = 0;
+  for (let t = ts[0] + stepMs; t <= ts.at(-1); t += stepMs) {
+    while (i + 1 < ts.length && ts[i + 1] <= t) i += 1;
+    const lo = Math.max(0, Math.min(ts.length - 8, i - 3));
+    if (ts[lo + 7] - ts[lo] > 10 * cadence) continue;
+    const idx = Array.from({ length: 8 }, (_, k) => lo + k);
+    const w = idx.map((a) => idx.reduce((acc, b) => (a === b ? acc : (acc * (t - ts[b])) / (ts[a] - ts[b])), 1));
+    const mix = (get) => [0, 1, 2].map((c) => idx.reduce((s, a, k) => s + w[k] * get(lines[a])[c], 0));
+    out.push({ epoch: new Date(t).toISOString(), r: mix((l) => l.r), v: mix((l) => l.v) });
+  }
+  return out;
+};
+// FFM's module takes at most 10,000 samples a call; each call flies from the same fitted state, so batches change nothing.
+const inBatches = async (epochs, fly) => { const out = []; for (let i = 0; i < epochs.length; i += 9000) out.push(...(await fly(epochs.slice(i, i + 9000)))); return out; };
 const nearestMedian = (list, value) => { const v = list.map(value).filter(Number.isFinite).sort((a, b) => a - b); if (!v.length) return []; const m = v[Math.floor((v.length - 1) / 2)]; return [...list].filter((r) => Number.isFinite(value(r))).sort((a, b) => Math.abs(value(a) - m) - Math.abs(value(b) - m) || String(a.key).localeCompare(String(b.key))); };
 
 if (MODE === 'next') {
@@ -83,7 +104,7 @@ if (MODE === 'next') {
     const newer = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.newerStart);
     if (!apP || !xpP || !ffP || !newer) { console.error(`${id}: a stored product is missing`); continue; }
     const older = lines(apP.forecastOem), next = lines(newer.forecastOem);
-    const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), step = (leo ? 120 : 300) * 1000, end = tn + 3 * HOUR;
+    const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
     const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
     const reference = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
     const keep = ms.map((_, i) => !!reference[i]);
@@ -176,7 +197,7 @@ if (MODE === 'next') {
         const next = ISS ? await issFile(pick.newerStart) : newP && lines(newP.forecastOem);
         if (!older || !next) continue;
         const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), leo = Math.hypot(...older[0].r) < 8400;
-        const step = (leo ? 120 : 300) * 1000, end = tn + 3 * HOUR;
+        const step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
         const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
         const refs = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
         const epochsMs = ms.filter((_, i) => refs[i]), epochs = epochsMs.map(isoMs), reference = refs.filter(Boolean), gridB = S.gridBytes(epochs);
@@ -301,9 +322,9 @@ if (MODE === 'next') {
         const raw = between(from, D0);
         const thin = T.thinned(raw).chosen;
         const high = Math.hypot(...thin[0].r) >= 8400;
-        const want = (high ? 300 : 120) * 1000, step = Math.max(want, Math.ceil(want / stepNative) * stepNative);
+        const step = (high ? 300 : 60) * 1000;
         const whole = between(from, to), t0 = ms(whole[0].epoch);
-        const grid = whole.filter((l) => (ms(l.epoch) - t0) % step === 0 && ms(l.epoch) > t0);
+        const grid = onGrid(whole, step);
         const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
         let ex, spw;
         if (!vacuum) {
@@ -329,7 +350,7 @@ if (MODE === 'next') {
           XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
           XPU: (await m.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((s) => s.r),
           SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
-          FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((s) => s.r),
+          FFM: (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((s) => s.r),
         };
         write({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider, satellite: name, fitHours: arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
         done = true;
@@ -383,10 +404,10 @@ if (MODE === 'next') {
           const coverage = raw.length > 1 ? raw.length / ((cut.arc * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0;
           if (coverage < MIN_COV) continue;
           const thin = T.thinned(raw).chosen;
-          const high = Math.hypot(...thin[0].r) >= 8400, step = (high ? 300 : 120) * 1000;
+          const high = Math.hypot(...thin[0].r) >= 8400, step = (high ? 300 : 60) * 1000;
           const whole = [...raw, ...T.series(o, D0 + 1, to).lines];
           const t0 = ms(whole[0].epoch);
-          const grid = whole.filter((l) => (ms(l.epoch) - t0) % step === 0 && ms(l.epoch) > t0);
+          const grid = onGrid(whole, step);
           if (grid.length < 100) continue;
           const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
           const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
@@ -410,7 +431,7 @@ if (MODE === 'next') {
             XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
             XPU: (await m.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((s) => s.r),
             SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
-            FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((s) => s.r),
+            FFM: (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((s) => s.r),
           };
           const publicName = name;
           write({ id, reference: 'truth', regime: cut.regime, provider: cut.provider, satellite: publicName, fitHours: cut.arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
