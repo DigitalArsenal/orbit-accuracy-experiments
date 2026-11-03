@@ -60,3 +60,7 @@ Space Force build correction: the current checkout's root dependencies did not r
 ## Amendment 2026-11-03: separate Space Force rebuild control
 
 Even the artifact commit and recorded dependency versions did not reproduce the prescribed binary hash; the unmodified Space Force library hash still matches exactly. Before any GN row is run, add U_REBUILT beside the unchanged prescribed U. Compare U_FIXED to this source-matched rebuild, not directly to U. Measure maximum state separation between U and U_REBUILT through the module at every forecast epoch. Attribution to the prescribed build requires ≤0.001 m on every paired window; otherwise method 3 remains partial and the rebuilt pair is reported separately. This replaces the stricter byte-identity gate with an explicit measured control, without replacing the prescribed baseline.
+
+## Amendment 2026-11-03: finite FFM tail queue
+
+After most shards finished, pause this lane's stage supervisor and terminate its remaining workers by exact PID. Enumerate only unfinished keys against the completed AP control, run that finite list with at most 12 workers, and append each result once to its original shard. Keep each task's original row, command manifest, and input audit under ap-gap/ffm-tail; tail-index.json records the merge. No arm or window changes, no error-ratio selection, and no self-spawning workers. Resume the stage supervisor only after all tail jobs exit.
