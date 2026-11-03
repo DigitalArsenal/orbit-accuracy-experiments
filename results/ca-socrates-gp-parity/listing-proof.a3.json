@@ -1,0 +1,43 @@
+{
+  "compare": {
+    "reference": 5,
+    "found": 1,
+    "recallStatus": "fail",
+    "misses": 4,
+    "labels": {
+      "beforeLastValid": "not labeled unscreened",
+      "afterFirstRefusal": "object not screened at this TCA",
+      "refusedFromCallStart": "object not screened at this TCA",
+      "consoleCouldNotSample": "object not screened at this TCA"
+    },
+    "listings": {
+      "not-sampled": {
+        "objects": 1,
+        "objectSlices": 1
+      },
+      "refused-part-way": {
+        "objects": 2,
+        "objectSlices": 2
+      },
+      "refused-from-start": {
+        "objects": 1,
+        "objectSlices": 1
+      }
+    }
+  },
+  "excuse": {
+    "oneArmEncounters": 6,
+    "defects": 3,
+    "excused": 3,
+    "byRule": {
+      "threshold crossing within its band's largest |Δmiss|": 1,
+      "window edge": 1,
+      "an object the console path could not sample over the window (skipped, as the console skips it)": 1
+    },
+    "excusedAndListedBySocrates": 1,
+    "itsOutcome": {
+      "a miss in comparison (i)": 1
+    },
+    "stopsWhenComparisonIDoesNotReportIt": true
+  }
+}
