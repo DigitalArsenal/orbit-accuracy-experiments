@@ -1,0 +1,101 @@
+{
+ "status": "DRAFT: items marked PENDING await Part 1",
+ "freezeDeadlineUtc": "2026-11-09T23:59:00Z",
+ "codeSha256": "e0eeaaebe03c724f3244c65335df8fa99af8bf273b0d9bfd16799a36eeb9fdc5",
+ "codeFilesSha256": {
+  "PLAN.md": "c12bb546d205826dfd2d4edb723019ac20446c0d69961faf9687ed7468ad409a",
+  "audit.mjs": "377bda408fedbbc9fbee2ade8e8d8d6ee392294840223045347650dd4f4837b4",
+  "build-truth.mjs": "4f7955a687ed77779bf55adb148600c6e68ddbec79b501e0840cc7159ad58401",
+  "daily-worker.mjs": "9d55c61033c37e02882b97a98b7e6e04e1b859505df7278920ca8fad7136f2d4",
+  "daily.mjs": "f1acaf89fc1d39613998bb5929ad17f8c3f4607c77eba9da485966840755f554",
+  "denominators.mjs": "ec893d3f103da2fd445c6c7b374f160401db287a771541800954912129d4bd38",
+  "freeze.mjs": "ab1f7348bcedbfb87073e5fc802bcddde023004e96d0b9f19e9a8b8c97a0e240",
+  "index-worker.mjs": "12452a39268f5d88ff4b9a3ac04bb2366e5039959621f90eb9af8098af085025",
+  "index.mjs": "7887c0c58e5b8e2fe852694cf5a44bcc07fedc2521b2d8677726ebf1f773f5ef",
+  "lib/archive.mjs": "2395e5ff6396f730ebe0570542e328420a08b57b938cb40f78f6dac8346f8209",
+  "lib/hold.mjs": "8b995d9e3217a189032ad93bc909dc7809d03574fdfca09909a6aa525be431f4",
+  "lib/inflate.mjs": "c6e439b6ac32811a7a199efa36a84aae31ac7dd7425e5b82e01855ba5bc429eb",
+  "lib/linalg.mjs": "a9d734397d89c203eba416a696dd1f8700b3ffedfe6eba75701d02d39a25f5ac",
+  "lib/n0sim.mjs": "aa62fc1097e566318f1ca90b4b662cd9da0ebf63be704ac3aacfe603cd2bc176",
+  "lib/pairs.mjs": "36f843f6a173b439bf7526dba118d05ad3fb333bc61c4967aae0574f9d12646a",
+  "lib/sgp4.mjs": "86471b532bd9885bc4be1b5c449b0b9a74242a191d1c6e4d02447ab1d7a89aa1",
+  "lib/synth.mjs": "190e1e81e22fd2c7c0059bfd79d2ef96d12ab8437565b6e9c510243ba478f651",
+  "n0.mjs": "909429279a9928914d805df38bd3d88d51e3e563dcc2849bbe9bc56da8e5a580",
+  "pairs-worker.mjs": "da0b41b92983635c4dd36e869fd9841367af36d038587cf9eabee351cbabcea1",
+  "pairs.mjs": "4bd93386904f8c02765ecaf8b7191fb73dc3aabffda86e45a58711389c6d14dc",
+  "run.mjs": "87ffe6c88fe85d89b702071648fffe43423adeaa268921932df98de8f84932ee",
+  "truth-objects.json": "5f45018e27985460e5891e7030ee5acd9db48fa9efeb458ad47be3fa57b1e875"
+ },
+ "inputs": {
+  "provenanceAuditSha256": "70fec72c39270449b4a848c0c962a6ac08fad09c1d6b72019538d1c653e43b5c",
+  "truthObjectsSha256": "5f45018e27985460e5891e7030ee5acd9db48fa9efeb458ad47be3fa57b1e875",
+  "vendorsBlob": "e9dd6db5b4df53fd9df0132faf59c12cae07947d",
+  "sgp4Pins": "lib/sgp4.mjs PINS (space-data-network-modules origin/main 3ae1eb289)"
+ },
+ "part1FrozenConstantsSha256": {
+  "status": "PENDING",
+  "reason": "Part 1 results/gp-covariance-strata/frozen-constants.json not yet committed"
+ },
+ "denominatorsSha256": "e880e5ed71cd1aa84fac1bd54e39f6f264cdbc7f781a4aead2256869073dd861",
+ "devValuesUnderAR": {
+  "devPairsManifestSha256": "54d99919ead870ba2ed80031470958c3113be8ccce740e1b5e7221f88c4b7343",
+  "clusterMomentsSha256": "f73b1929e1e94b04810361e9e0a535df5642cf1002e5681669ad09a7a122968d"
+ },
+ "n0": {
+  "status": "PROVISIONAL: block length and admitted bins await Part 1",
+  "seed": 20261109,
+  "blockDays": 8,
+  "histories": 2000,
+  "rows": [
+   {
+    "n0": 5,
+    "histories": 1997,
+    "pFlagU0": 0.20430645968953431,
+    "medianRatioAtLn4": 0.7389943705179227
+   },
+   {
+    "n0": 10,
+    "histories": 1997,
+    "pFlagU0": 0.19529293940911366,
+    "medianRatioAtLn4": 0.7149592736069321
+   },
+   {
+    "n0": 20,
+    "histories": 1997,
+    "pFlagU0": 0.18377566349524285,
+    "medianRatioAtLn4": 0.6788232379948262
+   },
+   {
+    "n0": 40,
+    "histories": 1997,
+    "pFlagU0": 0.16725087631447172,
+    "medianRatioAtLn4": 0.6224564446737568
+   }
+  ],
+  "n0": null,
+  "note": "No n0 meets both rules on the provisional run, so Part 2 is report-only if that holds at the freeze"
+ },
+ "admittedBins": {
+  "status": "PENDING",
+  "reason": "needs Part 1 dev truth moments by cluster"
+ },
+ "s2_1": {
+  "null": {
+   "status": "PENDING",
+   "reason": "needs Part 1 coverage rows"
+  },
+  "power": {
+   "status": "PENDING",
+   "reason": "needs Part 1 coverage rows"
+  }
+ },
+ "states": {
+  "S2_1": "PENDING",
+  "S2_2": "PENDING",
+  "S2_3": "PENDING"
+ },
+ "gnssListsFromPart1": {
+  "status": "PENDING",
+  "reason": "GNSS NORAD lists and regime edges recomputed against Part 1 when it freezes; any object changing stratum is flagged"
+ }
+}

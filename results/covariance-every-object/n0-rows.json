@@ -1,0 +1,33 @@
+{
+ "status": "PROVISIONAL: block length and admitted bins await Part 1",
+ "seed": 20261109,
+ "blockDays": 8,
+ "histories": 2000,
+ "rows": [
+  {
+   "n0": 5,
+   "histories": 1997,
+   "pFlagU0": 0.20430645968953431,
+   "medianRatioAtLn4": 0.7389943705179227
+  },
+  {
+   "n0": 10,
+   "histories": 1997,
+   "pFlagU0": 0.19529293940911366,
+   "medianRatioAtLn4": 0.7149592736069321
+  },
+  {
+   "n0": 20,
+   "histories": 1997,
+   "pFlagU0": 0.18377566349524285,
+   "medianRatioAtLn4": 0.6788232379948262
+  },
+  {
+   "n0": 40,
+   "histories": 1997,
+   "pFlagU0": 0.16725087631447172,
+   "medianRatioAtLn4": 0.6224564446737568
+  }
+ ],
+ "n0": null
+}

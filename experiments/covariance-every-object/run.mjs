@@ -1,4 +1,6 @@
 // Part 2 acceptance runner. `--check`: each item prints PASS, FAIL, PENDING or NOT EVALUABLE; exit 0 unless an item FAILs.
+import fs from 'node:fs'; import crypto from 'node:crypto';
+import { TRUTH, C2_HELD_NORADS } from './lib/hold.mjs';
 import { rng, normal, synthP } from './lib/synth.mjs';
 import { floorCov, minGenEig, dFactors, uHat, encounterBasis, project } from './lib/inflate.mjs';
 
@@ -26,15 +28,51 @@ export function acceptanceA() {
     plantedLe0Objects: nLe0, plantedLe0NotEqualBase: badEq, report: { estimatorBaseShareAtPlantedLe0: estLe0 ? estBase / estLe0 : null, objectsWhereDPDAloneWouldShrink: shrinkDP } };
 }
 
+if (process.argv[1]?.endsWith('run.mjs') && process.argv.includes('--day')) {
+  const { runDay } = await import('./daily.mjs'), i = process.argv.indexOf('--day'), l = process.argv.indexOf('--limit');
+  console.log(JSON.stringify(await runDay(process.argv[i + 1], l > 0 ? Number(process.argv[l + 1]) : 0), null, 1)); process.exit(0);
+}
+export function acceptanceD() {
+  const here = new URL('.', import.meta.url).pathname, repo = here.replace(/experiments\/covariance-every-object\/$/, '');
+  const au = JSON.parse(fs.readFileSync(`${repo}results/covariance-every-object/provenance-audit.json`)), fails = [];
+  const sha = crypto.createHash('sha256').update(fs.readFileSync(`${here}truth-objects.json`)).digest('hex');
+  if (sha !== au.truthObjectsSha256) fails.push('truth-objects.json differs from the audited file');
+  for (const k of ['catalogRows', 'freshRows', 'c2CalibrationRowsFromCutoff', 'c2HeldObjectRows', 'issRowsFromHold', 'swarmGraceRowsFromHold', 'outsideSpanRows', 'nsgfOrHeldPaths']) if (au[k] !== 0) fails.push(`${k}=${au[k]}`);
+  for (const o of TRUTH.objects) {
+    if (C2_HELD_NORADS.has(o.norad) || /TerraSAR|Stella|Sentinel-1D|LAGEOS-1\b|Galileo|nsgf/i.test(o.name)) fails.push(`held object in table: ${o.name}`);
+    if (o.c2cal && o.to >= '2026-06-01') fails.push(`${o.name} span reaches the C2 cutoff`);
+    if (o.cluster === 'iss' && o.to >= '2025-01-01') fails.push('ISS span reaches 2025');
+  }
+  return { status: fails.length ? 'FAIL' : 'PASS', pairRows: au.pairRows, droppedByPredicate: au.dropped, heldRowsRetained: 0, fails };
+}
+export async function acceptanceB() {
+  const repo = new URL('../../', import.meta.url).pathname, res = `${repo}results/covariance-every-object/`, f = JSON.parse(fs.readFileSync(`${res}n0-rows.json`));
+  const AR = '/opt/data/sdn-archive/covariance-every-object/dev-pairs';
+  if (!fs.existsSync(AR)) return { status: 'PENDING', reason: 'dev pairs under AR absent on this machine; the committed rows are not recomputed' };
+  const { loadPairs, simulate, blockDays } = await import('./lib/n0sim.mjs');
+  const den = JSON.parse(fs.readFileSync(`${res}denominators.json`)).strata, a = Object.fromEntries(Object.entries(den).map(([k, v]) => [k, v.a_RTN_m2]));
+  const objs = loadPairs(AR, TRUTH), rows = simulate(objs, a, { seed: f.seed, histories: f.histories, L: blockDays(objs, a) });
+  const worst = Math.max(...rows.map((r, i) => Math.max(Math.abs(r.pFlagU0 - f.rows[i].pFlagU0), Math.abs(r.medianRatioAtLn4 - f.rows[i].medianRatioAtLn4))));
+  const failing = rows.filter((r) => !(r.pFlagU0 <= 0.05 && r.medianRatioAtLn4 >= 0.8 && r.medianRatioAtLn4 <= 1.25));
+  if (worst > 0.005) return { status: 'FAIL', reason: `recomputed rows differ from the frozen seed's rows by ${worst}` };
+  return failing.length ? { status: 'REPORT-ONLY', maxDifference: worst, provisional: f.status, failingRows: failing } : { status: 'PASS', maxDifference: worst };
+}
+export function acceptanceF() {
+  const repo = new URL('../../', import.meta.url).pathname, res = `${repo}results/covariance-every-object/`, bad = [];
+  for (const x of fs.readdirSync(res, { recursive: true })) { const p = res + x; if (fs.statSync(p).isFile() && /"norad"|"gpId"|"MEAN_MOTION"/.test(fs.readFileSync(p, 'utf8'))) bad.push(x); }
+  const man = fs.existsSync(`${res}manifest.json`) ? JSON.parse(fs.readFileSync(`${res}manifest.json`)) : {}, mism = [];
+  for (const [file, h] of Object.entries(man)) { const p = `/opt/data/sdn-archive/covariance-every-object/daily/${file}`; if (fs.existsSync(p) && crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex') !== h) mism.push(file); }
+  return { status: bad.length || mism.length ? 'FAIL' : 'PASS', perObjectValueFiles: bad, manifestMismatches: mism, dailyFilesListed: Object.keys(man).length };
+}
 const PENDING = (why) => ({ status: 'PENDING', reason: why });
 if (process.argv[1] && process.argv[1].endsWith('run.mjs') && process.argv.includes('--check')) {
   const items = {
     a: acceptanceA(),
-    b: PENDING('n0 rows need Part 1 dev rows and the dev pairs'),
+    b: await acceptanceB(),
     c: PENDING('admission needs Part 1 truth moments'),
-    d: PENDING('denominator provenance audit runs on the dev pair build'),
+    d: acceptanceD(),
     e: PENDING('Part 1 frozen-constants.json not yet committed'),
-    f: PENDING('no daily files before 2026-11-10'),
+    f: acceptanceF(),
     g: { S2_1: 'PENDING', S2_2: 'PENDING', S2_3: 'PENDING' },
   };
   console.log(JSON.stringify(items, null, 2));

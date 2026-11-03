@@ -1,0 +1,53 @@
+{
+ "day": "2026-10-20",
+ "issueTime": "2026-10-20T00:00:00Z",
+ "objects": 1200,
+ "n0": 20,
+ "n0ReportOnly": true,
+ "provisionalAllBins": true,
+ "limit": 150,
+ "droppedByPredicate": {
+  "name:starlink|galileo|gsat": 6189744,
+  "c2-held-object": 2792,
+  "iss>=2025-01-01": 816,
+  "swarm-gracefo>=2026-10-31": 0,
+  "c2-calibration>=2026-06-01": 39512
+ },
+ "byRegime": {
+  "MEO": {
+   "objects": 67,
+   "base": 0,
+   "flagged": 0
+  },
+  "LEO-H": {
+   "objects": 777,
+   "base": 0,
+   "flagged": 151
+  },
+  "LEO-L": {
+   "objects": 11,
+   "base": 0,
+   "flagged": 1
+  },
+  "LEO-M": {
+   "objects": 223,
+   "base": 0,
+   "flagged": 8
+  },
+  "HEO": {
+   "objects": 40,
+   "base": 0,
+   "flagged": 0
+  },
+  "BASE-no-regime": {
+   "objects": 32,
+   "base": 32,
+   "flagged": 0
+  },
+  "GEO": {
+   "objects": 50,
+   "base": 0,
+   "flagged": 0
+  }
+ }
+}
