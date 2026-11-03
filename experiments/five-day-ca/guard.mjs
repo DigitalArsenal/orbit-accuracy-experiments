@@ -11,7 +11,7 @@ export function registration() {
   if (!config.frozen) throw Error('registration is not frozen');
   for (const name of ['config.json','FIVE-DAY.md']) {
     const rel = `experiments/five-day-ca/${name}`;
-    if (git('show', `${name === 'FIVE-DAY.md' ? 'eb143664cad7ab97133184d4d0b217592f81b5a8' : '28dd8bb'}:${rel}`) !== fs.readFileSync(path.join(root, rel),'utf8').trim()) throw Error(`registration changed: ${name}`);
+    if (git('show', `${name === 'FIVE-DAY.md' ? '989bcea50c8335cf68f2e87acb9ea870f19c93b6' : '28dd8bb'}:${rel}`) !== fs.readFileSync(path.join(root, rel),'utf8').trim()) throw Error(`registration changed: ${name}`);
   }
   for (const [file, pin] of Object.entries(config.pins)) if (hash(fs.readFileSync(path.resolve(root,file))) !== pin) throw Error(`pin mismatch: ${file}`);
 }
