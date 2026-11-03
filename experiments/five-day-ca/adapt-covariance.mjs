@@ -26,5 +26,7 @@ for(const r of rows){const p=constants[r.class];if(!p)continue;const E=Date.pars
   }
  }
 }
+const nominal=new Map();for(const label of ['regimes','truth2','truth'])for(const phase of ['cheap','ffm'])for(const r of readRows(`${config.store}/${phase}/${label}`)){const key=`${label}|${r.key}`;if(!nominal.has(key))nominal.set(key,{arms:{}});Object.assign(nominal.get(key).arms,r.arms);}
+for(const r of rows)for(const [arm,a]of Object.entries(r.arms))for(const day of config.leads)if(!a.days[day]){const source=nominal.get(`${r.labelSource}|${r.key}`)?.arms[arm];a.days[day]={error:a.error??(source&&!source.days?.[day]?'lead grid below 90%':'carried covariance product not run')};}
 const out=`${config.store}/adapted-covariance.jsonl`;fs.writeFileSync(out,rows.map(r=>JSON.stringify(r)).join('\n')+'\n');
 fs.writeFileSync('results/five-day-ca/covariance.json',JSON.stringify({provenance:analysisProvenance(),inputs,gpExtraction,counts,rows:rows.length,outputSha256:hash(fs.readFileSync(out)),truthTerm:'used only when estimating history scale; forecast covariance excludes reference measurement variance'},null,2)+'\n');console.log(JSON.stringify(counts));
