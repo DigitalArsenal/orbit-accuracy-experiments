@@ -70,3 +70,7 @@ Tail merge audit: four original rows completed after the pending-key snapshot. P
 ## Amendment 2026-11-03: frame reader routing correction
 
 The mixed frame batch used AP6's weather store for GN, producing 740 missing-weather exclusions. Retain that attempt and rerun GN alone with XP2F_CONTROL=1, under resume-frame-gn; IG/GE retain their AP6 configuration. No error ratios were read before this correction. Normalize DO overlap epoch keys with the shared UTC parser before final classification, so equivalent timestamp spellings join correctly.
+
+## Amendment 2026-11-03: individual-body completion
+
+After the primary report, complete the already registered NO_SUN and NO_MOON arms on remaining eligible FFM windows. Selection is absence of the arm, not error magnitude. Preserve the prior canonical rows under ffm-bodies/before and each new row separately; merge only new arm keys. A finite 12-worker queue stops by 03:46:40 UTC, leaving time to preserve the final report. This does not close the missing shadow, zonal-only, or extended-resonance tests.
