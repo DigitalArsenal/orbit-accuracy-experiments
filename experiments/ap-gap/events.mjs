@@ -6,9 +6,9 @@ import {openModules} from '../xp-atmosphere-merit/lib/modules.mjs';
 const out='/opt/data/sdn-archive/operator-theory/ap-gap/events';fs.mkdirSync(out,{recursive:true});
 const m=await openModules(), rows=[], day=86400000;
 for(const o of STATIC.filter(o=>o.group==='DO')) {
- const byEpoch=new Map(), diffs=[];
+ const byEpoch=new Map(), diffs=[];let norad;
  for(const file of o.files()) {
-  const ref=readReference(file), a=[],b=[],epochs=[];
+  const ref=readReference(file);norad=ref.norad;const a=[],b=[],epochs=[];
   for(const l of ref.lines) {
    const previous=byEpoch.get(l.epoch)||[];
    for(const p of previous){a.push(l);b.push(p);epochs.push(Date.parse(l.epoch));}
@@ -18,7 +18,7 @@ for(const o of STATIC.filter(o=>o.group==='DO')) {
  }
  for(const t of o.cutoffs) {
   const d=diffs.filter(x=>x.t>=t-3*day&&x.t<=t+7*day);
-  rows.push({key:windowKey('DO',o.name,t),name:o.name,cutoff:new Date(t).toISOString(),overlapPairs:d.length,maxM:d.length?Math.max(...d.map(x=>x.meters)):null,label:d.some(x=>x.meters>1000)?'event':d.length?'quiet':'unknown'});
+  rows.push({norad,key:windowKey('DO',o.name,t),name:o.name,cutoff:new Date(t).toISOString(),overlapPairs:d.length,maxM:d.length?Math.max(...d.map(x=>x.meters)):null,label:d.some(x=>x.meters>1000)?'event':d.length?'quiet':'unknown'});
  }
 }
 fs.writeFileSync(`${out}/labels.json`,JSON.stringify(rows,null,2)+'\n');writeAudit(out,0);console.log(JSON.stringify({windows:rows.length,counts:Object.fromEntries(['event','quiet','unknown'].map(l=>[l,rows.filter(r=>r.label===l).length]))}));process.exit(0);
