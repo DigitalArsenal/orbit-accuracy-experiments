@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
 // The Space Force's SGP4-XP: propagator/sgp4-xp, whose library is the unmodified US Space Force Sgp4Prop 9.1.1.0 XP build, through that module's fit and propagate. A black box here: nothing
 // reads the library's source. The library has no fitter; the module's fit is ours, and every evaluation in it runs the library. Our whiteroom XP is the AP module with FORCES and FIT unset.
 import path from 'node:path';
@@ -13,6 +15,7 @@ export async function openUssfXp(override) {
   const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
   const h = await createStandaloneHarness('browser', file, { surface: 'direct' });
   return {
+    provenance: { path: file, sha256: crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex') },
     async fit(oem) {
       let r;
       try { r = await h.invoke({ methodId: 'fit', inputs: [{ portId: 'ephemeris', typeRef: TYPE('OEM'), payload: oem }] }); } catch (error) { return { ok: false, error: short(error) }; }
